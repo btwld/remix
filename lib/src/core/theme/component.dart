@@ -1,7 +1,6 @@
 import '../../components/accordion/accordion.dart';
 import '../../components/avatar/avatar.dart';
 import '../../components/badge/badge.dart';
-import '../../components/button/button.dart';
 import '../../components/callout/callout.dart';
 import '../../components/card/card.dart';
 import '../../components/checkbox/checkbox.dart';
@@ -27,7 +26,7 @@ class RemixComponentTheme {
   final AccordionStyle accordion;
   final AvatarStyle avatar;
   final BadgeStyle badge;
-  final ButtonStyle button;
+  // final ButtonStyle button;
   final CalloutStyle callout;
   final CardStyle card;
   final CheckboxStyle checkbox;
@@ -53,7 +52,7 @@ class RemixComponentTheme {
     required this.accordion,
     required this.avatar,
     required this.badge,
-    required this.button,
+    // required this.button,
     required this.callout,
     required this.card,
     required this.checkbox,
@@ -81,7 +80,7 @@ class RemixComponentTheme {
       accordion: AccordionStyle(),
       avatar: AvatarStyle(),
       badge: BadgeStyle(),
-      button: ButtonStyle(),
+      // button: ButtonStyle(),
       callout: CalloutStyle(),
       card: CardStyle(),
       checkbox: CheckboxStyle(),
@@ -110,7 +109,7 @@ class RemixComponentTheme {
       accordion: const AccordionDarkStyle(),
       avatar: const AvatarDarkStyle(),
       badge: const BadgeDarkStyle(),
-      button: const ButtonDarkStyle(),
+      // button: const ButtonDarkStyle(),
       callout: const CalloutDarkStyle(),
       card: const CardDarkStyle(),
       checkbox: const CheckboxDarkStyle(),
@@ -138,7 +137,7 @@ class RemixComponentTheme {
     AccordionStyle? accordion,
     AvatarStyle? avatar,
     BadgeStyle? badge,
-    ButtonStyle? button,
+    // ButtonStyle? button,
     CalloutStyle? callout,
     CardStyle? card,
     CheckboxStyle? checkbox,
@@ -164,7 +163,7 @@ class RemixComponentTheme {
       accordion: accordion ?? this.accordion,
       avatar: avatar ?? this.avatar,
       badge: badge ?? this.badge,
-      button: button ?? this.button,
+      // button: button ?? this.button,
       callout: callout ?? this.callout,
       card: card ?? this.card,
       checkbox: checkbox ?? this.checkbox,
