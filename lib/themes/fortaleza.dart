@@ -1,7 +1,6 @@
 library remix.fortaleza;
 
 export '../src/themes/fortaleza/components.dart';
-export '../src/themes/fortaleza/components/accordion_theme.dart';
 export '../src/themes/fortaleza/components/avatar_theme.dart';
 export '../src/themes/fortaleza/components/badge_theme.dart';
 export '../src/themes/fortaleza/components/button_theme.dart';
@@ -12,7 +11,6 @@ export '../src/themes/fortaleza/components/chip_theme.dart';
 export '../src/themes/fortaleza/components/dialog_theme.dart';
 export '../src/themes/fortaleza/components/divider_theme.dart';
 export '../src/themes/fortaleza/components/header_theme.dart';
-export '../src/themes/fortaleza/components/icon_button_theme.dart';
 export '../src/themes/fortaleza/components/menu_item_theme.dart';
 export '../src/themes/fortaleza/components/progress_theme.dart';
 export '../src/themes/fortaleza/components/radio_theme.dart';

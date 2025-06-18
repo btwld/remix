@@ -1,5 +1,3 @@
-import '../../components/action/icon_button/icon_button.dart';
-import '../../components/content_presentation/accordion/accordion.dart';
 import '../../components/content_presentation/avatar/avatar.dart';
 import '../../components/content_presentation/card/card.dart';
 import '../../components/content_presentation/chip/chip.dart';
@@ -23,7 +21,6 @@ import '../../components/utility/badge/badge.dart';
 import '../../components/utility/dropdown_menu/dropdown_menu.dart';
 
 class RemixComponentTheme {
-  final AccordionStyle accordion;
   final AvatarStyle avatar;
   final BadgeStyle badge;
   // final ButtonStyle button;
@@ -34,7 +31,7 @@ class RemixComponentTheme {
   final ChipStyle chip;
   final DividerStyle divider;
   final HeaderStyle header;
-  final IconButtonStyle iconButton;
+
   final MenuItemStyle menuItem;
   final ProgressStyle progress;
   final RadioStyle radio;
@@ -49,7 +46,6 @@ class RemixComponentTheme {
   final DropdownMenuStyle dropdownMenu;
 
   const RemixComponentTheme({
-    required this.accordion,
     required this.avatar,
     required this.badge,
     // required this.button,
@@ -60,7 +56,6 @@ class RemixComponentTheme {
     required this.chip,
     required this.divider,
     required this.header,
-    required this.iconButton,
     required this.menuItem,
     required this.progress,
     required this.radio,
@@ -77,7 +72,6 @@ class RemixComponentTheme {
 
   factory RemixComponentTheme.light() {
     return const RemixComponentTheme(
-      accordion: AccordionStyle(),
       avatar: AvatarStyle(),
       badge: BadgeStyle(),
       // button: ButtonStyle(),
@@ -88,7 +82,6 @@ class RemixComponentTheme {
       chip: ChipStyle(),
       divider: DividerStyle(),
       header: HeaderStyle(),
-      iconButton: IconButtonStyle(),
       menuItem: MenuItemStyle(),
       progress: ProgressStyle(),
       radio: RadioStyle(),
@@ -106,7 +99,6 @@ class RemixComponentTheme {
 
   factory RemixComponentTheme.dark() {
     return RemixComponentTheme.light().copyWith(
-      accordion: const AccordionDarkStyle(),
       avatar: const AvatarDarkStyle(),
       badge: const BadgeDarkStyle(),
       // button: const ButtonDarkStyle(),
@@ -117,7 +109,6 @@ class RemixComponentTheme {
       chip: const ChipDarkStyle(),
       divider: const DividerDarkStyle(),
       header: const HeaderDarkStyle(),
-      iconButton: const IconButtonDarkStyle(),
       menuItem: const MenuItemDarkStyle(),
       progress: const ProgressDarkStyle(),
       radio: const RadioDarkStyle(),
@@ -134,7 +125,6 @@ class RemixComponentTheme {
   }
 
   RemixComponentTheme copyWith({
-    AccordionStyle? accordion,
     AvatarStyle? avatar,
     BadgeStyle? badge,
     // ButtonStyle? button,
@@ -145,7 +135,6 @@ class RemixComponentTheme {
     ChipStyle? chip,
     DividerStyle? divider,
     HeaderStyle? header,
-    IconButtonStyle? iconButton,
     MenuItemStyle? menuItem,
     ProgressStyle? progress,
     RadioStyle? radio,
@@ -160,7 +149,6 @@ class RemixComponentTheme {
     DropdownMenuStyle? dropdownMenu,
   }) {
     return RemixComponentTheme(
-      accordion: accordion ?? this.accordion,
       avatar: avatar ?? this.avatar,
       badge: badge ?? this.badge,
       // button: button ?? this.button,
@@ -171,7 +159,6 @@ class RemixComponentTheme {
       chip: chip ?? this.chip,
       divider: divider ?? this.divider,
       header: header ?? this.header,
-      iconButton: iconButton ?? this.iconButton,
       menuItem: menuItem ?? this.menuItem,
       progress: progress ?? this.progress,
       radio: radio ?? this.radio,
