@@ -1,0 +1,9 @@
+targets:
+  $default:
+    builders:
+      mix_generator|spec:
+        generate_for:
+          - lib/**/*.dart
+      mix_generator|property:
+        generate_for:
+          - lib/components/**/*.dart
