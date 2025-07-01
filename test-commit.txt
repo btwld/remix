@@ -1,2 +1,0 @@
-This is a test file to verify git commits are working correctly.
-Created on: 2025-07-01
