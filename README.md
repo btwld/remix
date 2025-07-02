@@ -1,16 +1,10 @@
-# remix_ui
+# Remix
 
-A new Flutter project.
+Remix is a modern, expressive design system built on top of Naked and Mix. **Remix** focuses purely on give the developers the full expressive power of Mix to define appearance with clarity and control.
 
-## Getting Started
+## Key Features
+- Powerful styling via Mix’s utility-first system
+- Prebuilt UI components ready to customize or compose
+- Reactive styles driven by component state and context
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Whether you’re creating your own design system or scaling a product UI, Remix gives you the tools to build expressive, consistent, and fully themeable interfaces—while keeping business logic entirely in your hands.
