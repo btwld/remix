@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:remix/remix.dart' hide Scaffold;
+import 'package:remix/remix.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,14 +13,7 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       home: Scaffold(
         body: Center(
-          child: RxMenuItem(
-            title: 'Menu Item',
-            subtitle: 'Subtitle',
-            leading: CircleAvatar(
-              child: Text('LF'),
-            ),
-            trailing: Icon(Icons.chevron_right),
-          ),
+          child: RxDivider(),
         ),
       ),
     );

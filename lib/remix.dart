@@ -43,6 +43,7 @@ export 'src/components/navigation/segmented_control/segmented_control.dart';
 export 'src/components/overlay/tooltip.dart';
 export 'src/components/utility/badge/badge.dart';
 export 'src/components/utility/dropdown_menu/dropdown_menu.dart';
+export 'src/helpers/style_mix_ext.dart';
 
 /// APP
 export 'src/core/remix_app.dart';

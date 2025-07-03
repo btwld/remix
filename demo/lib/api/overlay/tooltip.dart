@@ -10,16 +10,21 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: Scaffold(
         body: Center(
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            spacing: 16,
             children: [
-              const RxSpinner(),
-              RxSpinner(
-                style: RxSpinnerStyle()..style.dotted(),
+              RxTooltip(
+                tooltipChild: Text(
+                  'This is a tooltip',
+                  style: TextStyle(color: Colors.white),
+                ),
+                child: Text('Hello'),
+              ),
+              Tooltip(
+                message: 'This is a tooltip',
+                child: Text('Hello Mate'),
               ),
             ],
           ),

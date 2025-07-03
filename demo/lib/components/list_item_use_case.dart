@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart' hide Scaffold;
+import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
@@ -7,7 +7,7 @@ final _key = GlobalKey();
 
 @widgetbook.UseCase(
   name: 'Menu Item Component',
-  type: RxMenuItem,
+  type: RxListItem,
 )
 Widget buildButtonUseCase(BuildContext context) {
   return KeyedSubtree(
@@ -16,7 +16,7 @@ Widget buildButtonUseCase(BuildContext context) {
       body: Center(
         child: SizedBox(
           width: 350,
-          child: RxMenuItem(
+          child: RxListItem(
             title: context.knobs.string(
               label: 'Title',
               initialValue: 'Menu Item',
