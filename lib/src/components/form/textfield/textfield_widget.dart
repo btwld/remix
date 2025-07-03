@@ -54,7 +54,8 @@ class RxTextField extends StatefulWidget implements Disableable, Errorable {
     this.scrollPhysics,
     this.clipBehavior = Clip.hardEdge,
     this.restorationId,
-    this.stylusHandwritingEnabled = EditableText.defaultStylusHandwritingEnabled,
+    this.stylusHandwritingEnabled =
+        EditableText.defaultStylusHandwritingEnabled,
     this.enableIMEPersonalizedLearning = true,
     this.autofillHints = const <String>[],
     this.contentInsertionConfiguration,
@@ -120,7 +121,7 @@ class RxTextField extends StatefulWidget implements Disableable, Errorable {
   final VoidCallback? onEditingComplete;
   final ValueChanged<String>? onSubmitted;
   final List<TextInputFormatter>? inputFormatters;
-  void Function(PointerUpEvent)? onPressUpOutside;
+  final void Function(PointerUpEvent)? onPressUpOutside;
   @override
   final bool error;
 
