@@ -1,0 +1,49 @@
+name: Flutter CI
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+# Cancel any in-progress runs of the same workflow for the same PR/branch.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    strategy:
+      # Keep running other jobs in the matrix even if one fails.
+      fail-fast: false
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          flutter-version: 3.32.0
+          cache: true
+
+      - name: Install root dependencies
+        run: flutter pub get
+
+      - name: Analyze root project
+        run: flutter analyze
+
+      - name: Run root tests
+        run: flutter test --coverage 
+
+      - uses: VeryGoodOpenSource/very_good_coverage@v2
+        with:
+          path: 'coverage/lcov.info'
+          min_coverage: 85
