@@ -2,7 +2,6 @@ part of 'segmented_control.dart';
 
 const selectedItem = Variant('selectedItem');
 
-// TODO: Try out the divider using CustomPainter
 class SegmentedControl extends StatefulWidget {
   const SegmentedControl({
     super.key,

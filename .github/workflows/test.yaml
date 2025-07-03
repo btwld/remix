@@ -35,7 +35,7 @@ jobs:
           cache: true
 
       - name: Install root dependencies
-        run: flutter pub get
+        run: flutter pub get && cd demo && flutter pub get
 
       - name: Analyze root project
         run: flutter analyze
