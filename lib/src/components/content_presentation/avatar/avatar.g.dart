@@ -38,46 +38,14 @@ mixin _$AvatarSpec on Spec<AvatarSpec> {
   AvatarSpec copyWith({
     BoxSpec? container,
     TextStyle? textStyle,
-    ImageSpec? image,
+    IconThemeData? icon,
     AnimatedData? animated,
   }) {
     return AvatarSpec(
       container: container ?? _$this.container,
       textStyle: textStyle ?? _$this.textStyle,
-      image: image ?? _$this.image,
+      icon: icon ?? _$this.icon,
       animated: animated ?? _$this.animated,
-    );
-  }
-
-  /// Linearly interpolates between this [AvatarSpec] and another [AvatarSpec] based on the given parameter [t].
-  ///
-  /// The parameter [t] represents the interpolation factor, typically ranging from 0.0 to 1.0.
-  /// When [t] is 0.0, the current [AvatarSpec] is returned. When [t] is 1.0, the [other] [AvatarSpec] is returned.
-  /// For values of [t] between 0.0 and 1.0, an interpolated [AvatarSpec] is returned.
-  ///
-  /// If [other] is null, this method returns the current [AvatarSpec] instance.
-  ///
-  /// The interpolation is performed on each property of the [AvatarSpec] using the appropriate
-  /// interpolation method:
-  /// - [BoxSpec.lerp] for [container].
-  /// - [MixHelpers.lerpTextStyle] for [textStyle].
-  /// - [ImageSpec.lerp] for [image].
-  /// For [animated], the interpolation is performed using a step function.
-  /// If [t] is less than 0.5, the value from the current [AvatarSpec] is used. Otherwise, the value
-  /// from the [other] [AvatarSpec] is used.
-  ///
-  /// This method is typically used in animations to smoothly transition between
-  /// different [AvatarSpec] configurations.
-  @override
-  AvatarSpec lerp(AvatarSpec? other, double t) {
-    if (other == null) return _$this;
-
-    return AvatarSpec(
-      container: _$this.container.lerp(other.container, t),
-      textStyle:
-          MixHelpers.lerpTextStyle(_$this.textStyle, other.textStyle, t)!,
-      image: _$this.image.lerp(other.image, t),
-      animated: _$this.animated ?? other.animated,
     );
   }
 
@@ -89,7 +57,7 @@ mixin _$AvatarSpec on Spec<AvatarSpec> {
   List<Object?> get props => [
         _$this.container,
         _$this.textStyle,
-        _$this.image,
+        _$this.icon,
         _$this.animated,
       ];
 
@@ -106,12 +74,12 @@ mixin _$AvatarSpec on Spec<AvatarSpec> {
 class AvatarSpecAttribute extends SpecAttribute<AvatarSpec> {
   final BoxSpecAttribute? container;
   final TextStyleDto? textStyle;
-  final ImageSpecAttribute? image;
+  final IconThemeDataDto? icon;
 
   const AvatarSpecAttribute({
     this.container,
     this.textStyle,
-    this.image,
+    this.icon,
     super.animated,
   });
 
@@ -128,7 +96,7 @@ class AvatarSpecAttribute extends SpecAttribute<AvatarSpec> {
     return AvatarSpec(
       container: container?.resolve(mix),
       textStyle: textStyle?.resolve(mix),
-      image: image?.resolve(mix),
+      icon: icon?.resolve(mix),
       animated: animated?.resolve(mix) ?? mix.animation,
     );
   }
@@ -148,7 +116,7 @@ class AvatarSpecAttribute extends SpecAttribute<AvatarSpec> {
     return AvatarSpecAttribute(
       container: container?.merge(other.container) ?? other.container,
       textStyle: textStyle?.merge(other.textStyle) ?? other.textStyle,
-      image: image?.merge(other.image) ?? other.image,
+      icon: icon?.merge(other.icon) ?? other.icon,
       animated: animated?.merge(other.animated) ?? other.animated,
     );
   }
@@ -161,7 +129,7 @@ class AvatarSpecAttribute extends SpecAttribute<AvatarSpec> {
   List<Object?> get props => [
         container,
         textStyle,
-        image,
+        icon,
         animated,
       ];
 }
@@ -178,8 +146,8 @@ class AvatarSpecUtility<T extends SpecAttribute>
   /// Utility for defining [AvatarSpecAttribute.textStyle]
   late final textStyle = TextStyleUtility((v) => only(textStyle: v));
 
-  /// Utility for defining [AvatarSpecAttribute.image]
-  late final image = ImageSpecUtility((v) => only(image: v));
+  /// Utility for defining [AvatarSpecAttribute.icon]
+  late final icon = IconThemeDataUtility((v) => only(icon: v));
 
   /// Utility for defining [AvatarSpecAttribute.animated]
   late final animated = AnimatedUtility((v) => only(animated: v));
@@ -206,13 +174,13 @@ class AvatarSpecUtility<T extends SpecAttribute>
   T only({
     BoxSpecAttribute? container,
     TextStyleDto? textStyle,
-    ImageSpecAttribute? image,
+    IconThemeDataDto? icon,
     AnimatedDataDto? animated,
   }) {
     return builder(AvatarSpecAttribute(
       container: container,
       textStyle: textStyle,
-      image: image,
+      icon: icon,
       animated: animated,
     ));
   }

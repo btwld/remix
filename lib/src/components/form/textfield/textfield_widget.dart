@@ -54,7 +54,7 @@ class RxTextField extends StatefulWidget implements Disableable, Errorable {
     this.scrollPhysics,
     this.clipBehavior = Clip.hardEdge,
     this.restorationId,
-    this.scribbleEnabled = true,
+    this.stylusHandwritingEnabled = EditableText.defaultStylusHandwritingEnabled,
     this.enableIMEPersonalizedLearning = true,
     this.autofillHints = const <String>[],
     this.contentInsertionConfiguration,
@@ -75,6 +75,7 @@ class RxTextField extends StatefulWidget implements Disableable, Errorable {
     this.helperText,
     this.prefix,
     this.suffix,
+    this.onPressUpOutside,
   })  : assert(maxLength == null ||
             maxLength == RxTextField.noMaxLength ||
             maxLength > 0),
@@ -119,6 +120,7 @@ class RxTextField extends StatefulWidget implements Disableable, Errorable {
   final VoidCallback? onEditingComplete;
   final ValueChanged<String>? onSubmitted;
   final List<TextInputFormatter>? inputFormatters;
+  void Function(PointerUpEvent)? onPressUpOutside;
   @override
   final bool error;
 
@@ -194,7 +196,7 @@ class RxTextField extends StatefulWidget implements Disableable, Errorable {
   final ScrollPhysics? scrollPhysics;
   final Clip clipBehavior;
   final String? restorationId;
-  final bool scribbleEnabled;
+  final bool stylusHandwritingEnabled;
   final bool enableIMEPersonalizedLearning;
 
   final Iterable<String>? autofillHints;
@@ -286,7 +288,8 @@ class _RxTextFieldState extends State<RxTextField>
           contentInsertionConfiguration: widget.contentInsertionConfiguration,
           clipBehavior: widget.clipBehavior,
           restorationId: widget.restorationId,
-          scribbleEnabled: widget.scribbleEnabled,
+          stylusHandwritingEnabled: widget.stylusHandwritingEnabled,
+          onPressUpOutside: widget.onPressUpOutside,
           enableIMEPersonalizedLearning: widget.enableIMEPersonalizedLearning,
           contextMenuBuilder: widget.contextMenuBuilder,
           canRequestFocus: widget.canRequestFocus,
