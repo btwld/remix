@@ -2,7 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 import 'package:mix_annotations/mix_annotations.dart';
-import 'package:naked/naked.dart';
+import 'package:naked_ui/naked_ui.dart';
+import 'package:remix/src/helpers/style_mix_ext.dart';
 
 import '../../../helpers/mix_controller_mixin.dart';
 import '../../../helpers/remix_builder.dart';

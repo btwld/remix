@@ -3,7 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:mix/mix.dart';
 import 'package:mix_annotations/mix_annotations.dart';
-import 'package:naked/naked.dart';
+import 'package:naked_ui/naked_ui.dart';
 
 import '../../../core/attributes/icon_theme_data.dart';
 import '../../../helpers/mix_controller_mixin.dart';
