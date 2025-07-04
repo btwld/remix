@@ -1,4 +1,3 @@
-import 'package:demo/addons/theme_addon.dart';
 import 'package:flutter/material.dart' hide Scaffold, ThemeMode;
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
@@ -10,19 +9,15 @@ import 'main.directories.g.dart';
   cloudAddonsConfigs: {
     'dark fortaleza': [
       BrightnessAddonConfig(WidgetBookBrightness.dark),
-      ComponentThemeAddonConfig(ComponentTheme.fortaleza),
     ],
     'light fortaleza': [
       BrightnessAddonConfig(WidgetBookBrightness.light),
-      ComponentThemeAddonConfig(ComponentTheme.fortaleza),
     ],
     'dark base': [
       BrightnessAddonConfig(WidgetBookBrightness.dark),
-      ComponentThemeAddonConfig(ComponentTheme.base),
     ],
     'light base': [
       BrightnessAddonConfig(WidgetBookBrightness.light),
-      ComponentThemeAddonConfig(ComponentTheme.base),
     ],
   },
 )
@@ -38,7 +33,6 @@ class HotReload extends StatelessWidget {
     return Widgetbook(
       addons: [
         BrightnessAddon(),
-        ComponentThemeAddon(),
         InspectorAddon(),
       ],
       appBuilder: (context, child) => child,

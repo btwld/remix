@@ -20,25 +20,31 @@ Widget buildRadioUseCase(BuildContext context) {
       child: ListenableBuilder(
         listenable: _state,
         builder: (context, child) {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: Theme.values
-                .map(
-                  (theme) => Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: RxRadio<Theme>(
-                      value: theme,
-                      enabled: context.knobs.boolean(
-                        label: 'Enabled',
-                        initialValue: true,
+          return RxRadioGroup(
+            value: _state.value,
+            onChanged: (value) {
+              _state.update(value!);
+            },
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: Theme.values
+                  .map(
+                    (theme) => Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: RxRadio<Theme>(
+                        value: theme,
+                        enabled: context.knobs.boolean(
+                          label: 'Enabled',
+                          initialValue: true,
+                        ),
+                        label: theme.name.capitalize(),
                       ),
-                      label: theme.name.capitalize(),
                     ),
-                  ),
-                )
-                .toList(),
+                  )
+                  .toList(),
+            ),
           );
         },
       ),
