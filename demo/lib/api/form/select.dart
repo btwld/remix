@@ -30,8 +30,8 @@ class _MyAppState extends State<MyApp> {
         body: Center(
           child: Row(
             children: [
-              RxSelect<Options>(
-                items: const [
+              const RxSelect<Options>(
+                items: [
                   RxSelectItem<Options>.raw(
                     value: Options.apple,
                     child: Row(
