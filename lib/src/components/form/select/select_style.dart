@@ -6,6 +6,7 @@ class RxSelectStyle extends SelectSpecUtility<SelectSpecAttribute> {
   factory RxSelectStyle._default() {
     return RxSelectStyle()
       ..trigger.container.flex.mainAxisSize.min()
+      ..trigger.container.flex.mainAxisAlignment.spaceBetween()
       ..trigger.container.color.white()
       ..trigger.container.padding(8)
       ..trigger.container.padding.left(12)

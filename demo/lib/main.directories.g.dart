@@ -17,20 +17,15 @@ import 'package:demo/components/callout_use_case.dart' as _i5;
 import 'package:demo/components/card_use_case.dart' as _i6;
 import 'package:demo/components/checkbox_use_case.dart' as _i7;
 import 'package:demo/components/chip.dart' as _i8;
-import 'package:demo/components/dialog_use_case.dart' as _i9;
-import 'package:demo/components/divider_use_case.dart' as _i10;
-import 'package:demo/components/dropdown_menu.dart' as _i11;
-
-import 'package:demo/components/list_item_use_case.dart' as _i13;
-import 'package:demo/components/progress_use_case.dart' as _i14;
-import 'package:demo/components/radio_use_case.dart' as _i15;
-import 'package:demo/components/segmented_control_use_case.dart' as _i16;
-import 'package:demo/components/select.dart' as _i17;
-import 'package:demo/components/slider.dart' as _i18;
-import 'package:demo/components/spinner_use_case.dart' as _i19;
-import 'package:demo/components/switch_use_case.dart' as _i20;
-import 'package:demo/components/textfield_use_case.dart' as _i21;
-import 'package:demo/components/toast_use_case.dart' as _i22;
+import 'package:demo/components/divider_use_case.dart' as _i9;
+import 'package:demo/components/list_item_use_case.dart' as _i10;
+import 'package:demo/components/progress_use_case.dart' as _i11;
+import 'package:demo/components/radio_use_case.dart' as _i12;
+import 'package:demo/components/select.dart' as _i13;
+import 'package:demo/components/slider.dart' as _i14;
+import 'package:demo/components/spinner_use_case.dart' as _i15;
+import 'package:demo/components/switch_use_case.dart' as _i16;
+import 'package:demo/components/textfield_use_case.dart' as _i17;
 import 'package:widgetbook/widgetbook.dart' as _i1;
 
 final directories = <_i1.WidgetbookNode>[
@@ -38,143 +33,115 @@ final directories = <_i1.WidgetbookNode>[
     name: 'components',
     children: [
       _i1.WidgetbookLeafComponent(
-        name: 'Accordion',
+        name: 'RxAccordion',
         useCase: _i1.WidgetbookUseCase(
           name: 'Accordion Component',
           builder: _i2.buildAccordionUseCase,
         ),
       ),
       _i1.WidgetbookLeafComponent(
-        name: 'Avatar',
+        name: 'RxAvatar',
         useCase: _i1.WidgetbookUseCase(
           name: 'Avatar Component',
           builder: _i3.buildAvatarUseCase,
         ),
       ),
       _i1.WidgetbookLeafComponent(
-        name: 'Badge',
+        name: 'RxBadge',
         useCase: _i1.WidgetbookUseCase(
           name: 'Badge Component',
           builder: _i4.buildAvatarUseCase,
         ),
       ),
       _i1.WidgetbookLeafComponent(
-        name: 'Callout',
+        name: 'RxCallout',
         useCase: _i1.WidgetbookUseCase(
           name: 'Callout Component',
           builder: _i5.buildCalloutUseCase,
         ),
       ),
       _i1.WidgetbookLeafComponent(
-        name: 'Card',
+        name: 'RxCard',
         useCase: _i1.WidgetbookUseCase(
           name: 'Card Component',
           builder: _i6.buildCard,
         ),
       ),
       _i1.WidgetbookLeafComponent(
-        name: 'Checkbox',
+        name: 'RxCheckbox',
         useCase: _i1.WidgetbookUseCase(
           name: 'Checkbox Component',
           builder: _i7.buildCheckboxUseCase,
         ),
       ),
       _i1.WidgetbookLeafComponent(
-        name: 'Chip',
+        name: 'RxChip',
         useCase: _i1.WidgetbookUseCase(
           name: 'Chip Component',
           builder: _i8.buildChipUseCase,
         ),
       ),
       _i1.WidgetbookLeafComponent(
-        name: 'Dialog',
-        useCase: _i1.WidgetbookUseCase(
-          name: 'Dialog Component',
-          builder: _i9.buildButtonUseCase,
-        ),
-      ),
-      _i1.WidgetbookLeafComponent(
-        name: 'Divider',
+        name: 'RxDivider',
         useCase: _i1.WidgetbookUseCase(
           name: 'Divider Component',
-          builder: _i10.buildDivider,
+          builder: _i9.buildDivider,
         ),
       ),
       _i1.WidgetbookLeafComponent(
-        name: 'DropdownMenu',
-        useCase: _i1.WidgetbookUseCase(
-          name: 'DropdownMenu Component',
-          builder: _i11.buildDropdownMenu,
-        ),
-      ),
-      _i1.WidgetbookLeafComponent(
-        name: 'MenuItem',
+        name: 'RxListItem',
         useCase: _i1.WidgetbookUseCase(
           name: 'Menu Item Component',
-          builder: _i13.buildButtonUseCase,
+          builder: _i10.buildButtonUseCase,
         ),
       ),
       _i1.WidgetbookLeafComponent(
-        name: 'Progress',
+        name: 'RxProgress',
         useCase: _i1.WidgetbookUseCase(
           name: 'Progress Component',
-          builder: _i14.buildProgressUseCase,
+          builder: _i11.buildProgressUseCase,
         ),
       ),
       _i1.WidgetbookLeafComponent(
-        name: 'Radio',
+        name: 'RxRadio',
         useCase: _i1.WidgetbookUseCase(
           name: 'Radio Component',
-          builder: _i15.buildRadioUseCase,
+          builder: _i12.buildRadioUseCase,
         ),
       ),
       _i1.WidgetbookLeafComponent(
-        name: 'SegmentedControl',
-        useCase: _i1.WidgetbookUseCase(
-          name: 'SegmentedControl Component',
-          builder: _i16.buildAccordionUseCase,
-        ),
-      ),
-      _i1.WidgetbookLeafComponent(
-        name: 'Select',
+        name: 'RxSelect',
         useCase: _i1.WidgetbookUseCase(
           name: 'Select Component',
-          builder: _i17.buildSelect,
+          builder: _i13.buildSelect,
         ),
       ),
       _i1.WidgetbookLeafComponent(
-        name: 'Slider',
+        name: 'RxSlider',
         useCase: _i1.WidgetbookUseCase(
           name: 'Slider Component',
-          builder: _i18.buildButtonUseCase,
+          builder: _i14.buildButtonUseCase,
         ),
       ),
       _i1.WidgetbookLeafComponent(
-        name: 'Spinner',
+        name: 'RxSpinner',
         useCase: _i1.WidgetbookUseCase(
           name: 'Spinner Component',
-          builder: _i19.buildSpinnerUseCase,
+          builder: _i15.buildSpinnerUseCase,
         ),
       ),
       _i1.WidgetbookLeafComponent(
-        name: 'Switch',
+        name: 'RxSwitch',
         useCase: _i1.WidgetbookUseCase(
           name: 'Switch Component',
-          builder: _i20.buildSwitchUseCase,
+          builder: _i16.buildSwitchUseCase,
         ),
       ),
       _i1.WidgetbookLeafComponent(
-        name: 'TextField',
+        name: 'RxTextField',
         useCase: _i1.WidgetbookUseCase(
           name: 'TextField Component',
-          builder: _i21.buildButtonUseCase,
-        ),
-      ),
-      _i1.WidgetbookLeafComponent(
-        name: 'Toast',
-        useCase: _i1.WidgetbookUseCase(
-          name: 'Toast Component',
-          builder: _i22.buildButtonUseCase,
+          builder: _i17.buildButtonUseCase,
         ),
       ),
     ],

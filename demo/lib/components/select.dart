@@ -48,7 +48,7 @@ class _SelectDemoState extends State<SelectDemo> {
                   label: items[index],
                 ),
               ),
-              child: Text(selectedValue),
+              child: RxSelectTrigger(label: selectedValue),
             ),
           ),
         ],
