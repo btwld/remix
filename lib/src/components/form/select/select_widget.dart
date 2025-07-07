@@ -72,10 +72,6 @@ class RxSelect<T> extends StatefulWidget {
   /// Only used when [allowMultiple] is true.
   final ValueChanged<Set<T>>? onSelectedValuesChanged;
 
-  /// Whether to allow selecting multiple items.
-  /// When true, [selectedValues] and [onSelectedValuesChanged] must be provided.
-  // final bool allowMultiple;
-
   /// Whether the select is enabled and can be interacted with.
   /// When false, all interaction is disabled and the trigger shows a forbidden cursor.
   final bool enabled;

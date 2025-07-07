@@ -35,7 +35,6 @@ const _widgetSpecBuilder = '';
 /// {@template remix.component.style}
 /// Customizes the component's appearance with unique or specific styling.
 /// {@endtemplate}
-// const _useStyleFromContext = '';
 ///
 /// {@template remix.component.enabled}
 /// When enabled, the component will respond to user interaction and will

@@ -3,10 +3,10 @@ import 'package:flutter/widgets.dart';
 import 'package:mix/mix.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:naked_ui/naked_ui.dart';
-import 'package:remix/src/helpers/style_mix_ext.dart';
 
 import '../../../helpers/mix_controller_mixin.dart';
 import '../../../helpers/remix_builder.dart';
+import '../../../helpers/style_mix_ext.dart';
 
 part 'chip.g.dart';
 part 'chip_style.dart';
