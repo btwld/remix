@@ -12,7 +12,7 @@ class StyleScope<U extends SpecUtility> extends InheritedWidget {
   });
 
   static StyleScope<U>? of<U extends SpecUtility>(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<StyleScope<U>>();
+    return context.dependOnInheritedWidgetOfExactType();
   }
 
   final U style;

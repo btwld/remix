@@ -76,7 +76,6 @@ base class AccordionSpec extends Spec<AccordionSpec> with _$AccordionSpec {
       contentContainer: _$this.contentContainer.lerp(other.contentContainer, t),
       headerContainer: _$this.headerContainer.lerp(other.headerContainer, t),
       leadingIcon: IconThemeData.lerp(_$this.leadingIcon, other.leadingIcon, t),
-      // trailingIcon: IconData.lerp(_$this.trailingIcon, other.trailingIcon, t),
       titleStyle:
           MixHelpers.lerpTextStyle(_$this.titleStyle, other.titleStyle, t)!,
       contentStyle:
