@@ -10,9 +10,7 @@ class RxProgressStyle extends ProgressSpecUtility<ProgressSpecAttribute> {
       ..container.shape.stadium()
       ..fill.color.black()
       ..fill.borderRadius(99)
-      ..track.color.grey.shade100()
-      ..container.border.width(1)
-      ..container.border.strokeAlign.outside();
+      ..track.color.grey.shade200();
   }
 
   @override
