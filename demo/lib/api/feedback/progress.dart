@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:remix/remix.dart';
+import 'package:remix/remix_new.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,12 +10,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: Scaffold(
         body: Center(
-          child: RxProgress(
-            value: 0.3,
-            style: RxProgressStyle()..container.width(200),
+          child: SizedBox(
+            width: 200,
+            child: RemixProgress(
+              value: 0.3,
+            ),
           ),
         ),
       ),

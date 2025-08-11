@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:remix/remix.dart';
+import 'package:remix/remix_new.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,10 +19,15 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         body: Center(
-          child: RxCheckbox(
+          child: RemixCheckbox(
             label: 'Checkbox',
             selected: _value,
-            style: RxCheckboxStyle(),
+            style: CheckboxStyle()
+              .color(Colors.blue)
+              .onHovered(
+                CheckboxStyle()
+                  .color(Colors.blue.shade700)
+              ),
             onChanged: (value) {
               setState(() {
                 _value = value;

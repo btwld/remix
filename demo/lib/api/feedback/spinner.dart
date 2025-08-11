@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:remix/remix.dart';
+import 'package:remix/remix_new.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,16 +10,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: Scaffold(
         body: Center(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             spacing: 16,
-            children: [
-              const RxSpinner(),
-              RxSpinner(
-                style: RxSpinnerStyle()..style.dotted(),
+            children: <Widget>[
+              RemixSpinner(),
+              RemixSpinner(
+                // Note: Style system differs in new implementation
               ),
             ],
           ),

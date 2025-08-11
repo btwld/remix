@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:remix/remix.dart';
+import 'package:remix/remix_new.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             spacing: 8,
             children: [
-              RxLabel(
+              RemixLabel(
                 'Remix is awesome!',
                 icon: Icons.music_note,
               ),

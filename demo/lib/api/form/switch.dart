@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:remix/remix.dart';
+import 'package:remix/remix_new.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,8 +19,8 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         body: Center(
-          child: RxSwitch(
-            selected: _value,
+          child: RemixSwitch(
+            value: _value,
             onChanged: (value) {
               setState(() {
                 _value = value;

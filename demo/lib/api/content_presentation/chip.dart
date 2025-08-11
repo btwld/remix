@@ -1,7 +1,8 @@
 import 'dart:developer';
 
-import 'package:flutter/material.dart';
-import 'package:remix/remix.dart';
+import 'package:flutter/material.dart' hide ButtonStyle;
+import 'package:mix/mix.dart';
+import 'package:remix/remix_new.dart';
 
 void main() {
   runApp(const MyApp());
@@ -27,18 +28,28 @@ class _MyAppState extends State<MyApp> {
             mainAxisAlignment: MainAxisAlignment.center,
             spacing: 8,
             children: [
-              RxChip(
+              RemixChip(
                 label: 'Click Me',
                 selected: selected,
-                onChanged: (value) {
+                onSelected: (value) {
                   setState(() {
                     selected = value;
                   });
                 },
-                iconRight: Icons.add,
-                style: RxChipStyle(),
+                leadingIcon: Icons.add,
+                style: ChipStyle()
+                  .onHovered(
+                    ChipStyle(
+                      container: BoxMix(decoration: BoxDecorationMix(color: Colors.grey.shade100))
+                    )
+                  )
+                  .onSelected(
+                    ChipStyle(
+                      container: BoxMix(decoration: BoxDecorationMix(color: Colors.blue))
+                    )
+                  ),
               ),
-              RxButton.icon(
+              RemixButton.icon(
                 Icons.add,
                 onPressed: () {
                   log('Button pressed!');

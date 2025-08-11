@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:remix/remix.dart';
+import 'package:remix/remix_new.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,9 +13,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         body: ListView.builder(
-          itemCount: null,
+          itemCount: 20,
           itemBuilder: (context, index) {
-            return RxListItem(
+            return RemixListItem(
               title: 'Item $index',
               subtitle: 'Subtitle for item $index',
               leading: CircleAvatar(
