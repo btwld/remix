@@ -15,7 +15,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  mix: 1.7.0
+  mix:
+    path: ../../Projects/mix/packages/mix
   mix_annotations: ^1.7.0
   naked_ui:
     git:

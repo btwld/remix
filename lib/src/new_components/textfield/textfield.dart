@@ -1,0 +1,15 @@
+library remix_textfield;
+
+import 'dart:ui';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:mix/mix.dart';
+
+import '../_internal/mix_controller_mixin.dart';
+
+part 'textfield_spec.dart';
+part 'textfield_style.dart';
+part 'textfield_widget.dart';

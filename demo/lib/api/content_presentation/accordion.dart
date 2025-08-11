@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
-import 'package:remix/remix.dart';
+import 'package:remix/remix_new.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,29 +19,30 @@ class MyApp extends StatelessWidget {
         body: Center(
           child: SizedBox(
             width: 300,
-            child: RxAccordion(
+            child: RemixAccordion(
               defaultTrailingIcon: Icons.keyboard_arrow_down_rounded,
-              style: RxAccordionStyle()
-                ..itemContainer.animated.ease(200.ms)
-                ..trailingIcon.wrap.transform(Matrix4.identity())
-                ..trailingIcon.animated.ease(200.ms)
-                ..on.selected(
-                  RxAccordionStyle()
-                    ..itemContainer.color.grey.shade50()
-                    ..trailingIcon.wrap.transform(Matrix4.rotationZ(pi)),
+              style: AccordionStyle(
+                animation: AnimationConfig.easeInOut(const Duration(milliseconds: 200)),
+              ).onSelected(
+                AccordionStyle(
+                  itemContainer: BoxMix(
+                    decoration: BoxDecorationMix(color: Colors.grey.shade50),
+                    transform: Matrix4.rotationZ(pi),
+                  ),
                 ),
+              ),
               children: [
-                RxAccordionItem(
+                RemixAccordionItem(
                   title: 'Section 1',
                   value: 'section1',
                   child: const Text('Content for section 1'),
                 ),
-                RxAccordionItem(
+                RemixAccordionItem(
                   title: 'Section 2',
                   value: 'section2',
                   child: const Text('Content for section 2'),
                 ),
-                RxAccordionItem(
+                RemixAccordionItem(
                   title: 'Section 3',
                   value: 'section3',
                   child: const Text('Content for section 3'),

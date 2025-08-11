@@ -24,6 +24,9 @@ abstract class Errorable {
 
 mixin MixControllerMixin<T extends StatefulWidget> on State<T> {
   late final WidgetStatesController mixController;
+  
+  // Alias for new components using stateController naming
+  WidgetStatesController get stateController => mixController;
 
   @override
   void initState() {

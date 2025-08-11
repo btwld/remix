@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:remix/remix.dart';
+import 'package:remix/remix_new.dart';
 
 void main() {
   runApp(const MyApp());
@@ -26,32 +26,42 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         body: Center(
-          child: RxRadioGroup(
-            value: _value,
-            onChanged: (value) {
-              setState(() {
-                _value = value;
-              });
-            },
-            child: const Column(
-              spacing: 8,
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                RxRadio(
-                  label: 'Banana',
-                  value: Options.banana,
-                ),
-                RxRadio(
-                  label: 'Apple',
-                  value: Options.apple,
-                ),
-                RxRadio(
-                  label: 'Orange',
-                  value: Options.orange,
-                ),
-              ],
-            ),
+          child: Column(
+            spacing: 8,
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              RemixRadio<Options>(
+                label: 'Banana',
+                value: Options.banana,
+                groupValue: _value,
+                onChanged: (value) {
+                  setState(() {
+                    _value = value;
+                  });
+                },
+              ),
+              RemixRadio<Options>(
+                label: 'Apple',
+                value: Options.apple,
+                groupValue: _value,
+                onChanged: (value) {
+                  setState(() {
+                    _value = value;
+                  });
+                },
+              ),
+              RemixRadio<Options>(
+                label: 'Orange',
+                value: Options.orange,
+                groupValue: _value,
+                onChanged: (value) {
+                  setState(() {
+                    _value = value;
+                  });
+                },
+              ),
+            ],
           ),
         ),
       ),

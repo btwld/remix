@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:remix/remix.dart';
+import 'package:remix/remix_new.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
         body: Center(
           child: SizedBox(
             width: 300,
-            child: RxCard(
+            child: RemixCard(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    'This is an example of a card component using RxCard.',
+                    'This is an example of a card component using RemixCard.',
                     style: TextStyle(fontSize: 14),
                   ),
                 ],

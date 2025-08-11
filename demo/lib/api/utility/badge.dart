@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:remix/remix.dart';
+import 'package:remix/remix_new.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,18 +10,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: Scaffold(
         backgroundColor: Colors.white,
         body: Center(
           child: Column(
             spacing: 16,
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              RxBadge(
+            children: <Widget>[
+              RemixBadge(
                 label: 'New',
               ),
-              RxBadge(
+              RemixBadge(
                 label: 'person',
                 icon: Icons.person,
               ),

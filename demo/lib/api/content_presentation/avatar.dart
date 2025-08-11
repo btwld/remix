@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:remix/remix.dart';
+import 'package:remix/remix_new.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,25 +17,26 @@ class MyApp extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             spacing: 8,
             children: [
-              RxAvatar(
+              const RemixAvatar(
                 label: 'CA',
                 backgroundImage:
-                    const NetworkImage('https://i.pravatar.cc/150?img=48'),
+                    NetworkImage('https://i.pravatar.cc/150?img=48'),
               ),
-              RxAvatar(
+              const RemixAvatar(
                 label: 'CA',
                 foregroundImage:
-                    const NetworkImage('https://i.pravatar.cc/150?img=48'),
+                    NetworkImage('https://i.pravatar.cc/150?img=48'),
               ),
-              const RxAvatar.raw(
+              const RemixAvatar(
                 foregroundImage:
                     NetworkImage('https://i.pravatar.cc/150?img=48'),
-                child: Icon(Icons.person),
+                icon: Icons.person,
               ),
-              const RxAvatar.raw(
+              RemixAvatar(
                 backgroundImage:
-                    NetworkImage('https://i.pravatar.cc/150?img=48'),
-                child: Icon(Icons.person, color: Colors.white),
+                    const NetworkImage('https://i.pravatar.cc/150?img=48'),
+                icon: Icons.person,
+                style: AvatarStyle.iconColor(Colors.white),
               ),
             ],
           ),

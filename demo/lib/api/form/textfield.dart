@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:remix/remix.dart';
+import 'package:remix/remix_new.dart';
 
 void main() {
   runApp(const MyApp());
@@ -32,12 +32,11 @@ class _NewWidgetState extends State<NewWidget> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
-        child: RxTextField(
-          label: 'Username',
-          hintText: 'Remix',
+        child: RemixTextField(
+          hintText: 'Enter username here',
           helperText: 'This is your public display name.',
           controller: controller,
-          style: RxTextFieldStyle()..container.width(300),
+          textFieldStyle: TextFieldStyle().width(300),
         ),
       ),
     );
