@@ -1,34 +1,54 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
-import 'package:mix_annotations/mix_annotations.dart';
 
-part 'composited_transform_follower_spec.g.dart';
-
-@MixableSpec()
-class CompositedTransformFollowerSpec
-    extends Spec<CompositedTransformFollowerSpec>
-    with _$CompositedTransformFollowerSpec, Diagnosticable {
-  final Offset offset;
-  final AlignmentGeometry targetAnchor;
-  final AlignmentGeometry followerAnchor;
-
-  /// {@macro composited_transform_follower_spec_of}
-  static const of = _$CompositedTransformFollowerSpec.of;
-
-  static const from = _$CompositedTransformFollowerSpec.from;
+// Temporary stub for CompositedTransformFollowerSpec
+// This will be replaced when Mix 2.0 migration is complete
+class CompositedTransformFollowerSpec extends Spec<CompositedTransformFollowerSpec> {
+  final LayerLink? link;
+  final bool? showWhenUnlinked;
+  final Offset? offset;
+  final AlignmentGeometry? targetAnchor;
+  final AlignmentGeometry? followerAnchor;
 
   const CompositedTransformFollowerSpec({
+    this.link,
+    this.showWhenUnlinked,
+    this.offset,
+    this.targetAnchor,
+    this.followerAnchor,
+  });
+
+  static CompositedTransformFollowerSpec? of(BuildContext context) => null;
+  
+  @override
+  CompositedTransformFollowerSpec copyWith({
+    LayerLink? link,
+    bool? showWhenUnlinked,
     Offset? offset,
     AlignmentGeometry? targetAnchor,
     AlignmentGeometry? followerAnchor,
-  })  : offset = offset ?? Offset.zero,
-        targetAnchor = targetAnchor ?? Alignment.center,
-        followerAnchor = followerAnchor ?? Alignment.topCenter;
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    _debugFillProperties(properties);
+  }) {
+    return CompositedTransformFollowerSpec(
+      link: link ?? this.link,
+      showWhenUnlinked: showWhenUnlinked ?? this.showWhenUnlinked,
+      offset: offset ?? this.offset,
+      targetAnchor: targetAnchor ?? this.targetAnchor,
+      followerAnchor: followerAnchor ?? this.followerAnchor,
+    );
   }
+  
+  @override
+  CompositedTransformFollowerSpec lerp(CompositedTransformFollowerSpec? other, double t) {
+    if (other == null) return this;
+    return CompositedTransformFollowerSpec(
+      link: t < 0.5 ? link : other.link,
+      showWhenUnlinked: t < 0.5 ? showWhenUnlinked : other.showWhenUnlinked,
+      offset: Offset.lerp(offset, other.offset, t),
+      targetAnchor: AlignmentGeometry.lerp(targetAnchor, other.targetAnchor, t),
+      followerAnchor: AlignmentGeometry.lerp(followerAnchor, other.followerAnchor, t),
+    );
+  }
+  
+  @override
+  get props => [link, showWhenUnlinked, offset, targetAnchor, followerAnchor];
 }

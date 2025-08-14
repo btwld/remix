@@ -1,7 +1,7 @@
 import 'package:demo/addons/icon_data_knob.dart';
 import 'package:demo/helpers/use_case_state.dart';
 import 'package:flutter/material.dart';
-import 'package:remix/remix_new.dart';
+import 'package:remix/remix.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 

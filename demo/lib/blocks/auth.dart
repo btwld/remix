@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
-import 'package:remix/remix_new.dart' as remix;
+import 'package:remix/remix.dart' as remix;
 
 void main() {
   runApp(const MyApp());
