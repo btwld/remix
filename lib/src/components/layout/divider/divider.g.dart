@@ -37,8 +37,8 @@ mixin _$DividerSpec on Spec<DividerSpec> {
   @override
   DividerSpec copyWith({
     BoxSpec? container,
-    AnimatedData? animated,
-    WidgetModifiersConfig? modifiers,
+    dynamic? animated,
+    dynamic? modifiers,
   }) {
     return DividerSpec(
       container: container ?? _$this.container,
@@ -71,7 +71,7 @@ mixin _$DividerSpec on Spec<DividerSpec> {
     return DividerSpec(
       container: _$this.container.lerp(other.container, t),
       animated: _$this.animated ?? other.animated,
-      modifiers: other.modifiers,
+      modifiers: t < 0.5 ? _$this.modifiers : other.modifiers,
     );
   }
 
@@ -127,8 +127,8 @@ class DividerSpecAttribute extends SpecAttribute<DividerSpec>
   DividerSpec resolve(MixContext mix) {
     return DividerSpec(
       container: container?.resolve(mix),
-      animated: animated?.resolve(mix) ?? mix.animation,
-      modifiers: modifiers?.resolve(mix),
+      animated: animated,
+      modifiers: modifiers,
     );
   }
 
@@ -146,8 +146,8 @@ class DividerSpecAttribute extends SpecAttribute<DividerSpec>
 
     return DividerSpecAttribute(
       container: container?.merge(other.container) ?? other.container,
-      animated: animated?.merge(other.animated) ?? other.animated,
-      modifiers: modifiers?.merge(other.modifiers) ?? other.modifiers,
+      animated: other.animated ?? animated,
+      modifiers: other.modifiers ?? modifiers,
     );
   }
 
@@ -184,10 +184,10 @@ class DividerSpecUtility<T extends SpecAttribute>
   late final container = BoxSpecUtility((v) => only(container: v));
 
   /// Utility for defining [DividerSpecAttribute.animated]
-  late final animated = AnimatedUtility((v) => only(animated: v));
+  late final animated = GenericUtility<T, dynamic>((v) => only(animated: v));
 
   /// Utility for defining [DividerSpecAttribute.modifiers]
-  late final wrap = SpecModifierUtility((v) => only(modifiers: v));
+  late final modifiers = GenericUtility<T, dynamic>((v) => only(modifiers: v));
 
   DividerSpecUtility(
     super.builder, {
@@ -210,8 +210,8 @@ class DividerSpecUtility<T extends SpecAttribute>
   @override
   T only({
     BoxSpecAttribute? container,
-    AnimatedDataDto? animated,
-    WidgetModifiersConfigDto? modifiers,
+    dynamic? animated,
+    dynamic? modifiers,
   }) {
     return builder(DividerSpecAttribute(
       container: container,

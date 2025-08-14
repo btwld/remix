@@ -32,13 +32,24 @@ class RemixSelect<T> extends StatefulWidget {
     this.onOpen,
     this.selectedValue,
     this.onSelectedValueChanged,
+    this.selectedValues,
+    this.onSelectedValuesChanged,
+    this.multiSelect = false,
     this.enabled = true,
     this.semanticLabel,
     this.closeOnSelect = true,
     this.autofocus = true,
-    this.style,
-    this.variants = const [],
-  });
+    this.enableTypeAhead = true,
+    this.typeAheadDebounceTime = const Duration(milliseconds: 500),
+    this.style = const SelectStyle.create(),
+  })  : assert(
+          !(multiSelect == true && selectedValue != null),
+          'Cannot use selectedValue with multiSelect mode',
+        ),
+        assert(
+          !(multiSelect == false && selectedValues != null),
+          'Cannot use selectedValues without multiSelect mode',
+        );
 
   /// The target widget that triggers the select dropdown.
   /// This should typically be a [RemixSelectTrigger].
@@ -56,6 +67,16 @@ class RemixSelect<T> extends StatefulWidget {
 
   /// Called when the selected value changes in single selection mode.
   final ValueChanged<T?>? onSelectedValueChanged;
+
+  /// The currently selected values in multi-selection mode.
+  final Set<T>? selectedValues;
+
+  /// Called when the selected values change in multi-selection mode.
+  final ValueChanged<Set<T>>? onSelectedValuesChanged;
+
+  /// Whether to enable multi-selection mode.
+  /// When true, multiple items can be selected.
+  final bool multiSelect;
 
   /// Whether the select is enabled and can be interacted with.
   /// When false, all interaction is disabled and the trigger shows a forbidden cursor.
@@ -76,36 +97,270 @@ class RemixSelect<T> extends StatefulWidget {
   /// Called when the menu is opened.
   final VoidCallback? onOpen;
 
-  /// The style configuration for the select.
-  final SelectStyle? style;
+  /// Whether to enable type-ahead selection for quick keyboard navigation.
+  /// When true, typing characters will focus matching items.
+  final bool enableTypeAhead;
 
-  /// List of style variants to apply.
-  final List<Variant> variants;
+  /// Duration before resetting the type-ahead search buffer.
+  /// Controls how long to wait between keystrokes when matching items.
+  final Duration typeAheadDebounceTime;
+
+  /// The style configuration for the select.
+  final SelectStyle style;
 
   @override
   State<RemixSelect<T>> createState() => _RemixSelectState<T>();
 }
 
-class _RemixSelectState<T> extends State<RemixSelect<T>> {
-  SelectStyle get _style =>
-      DefaultSelectStyle.merge(widget.style ?? SelectStyle());
+class _RemixSelectState<T> extends State<RemixSelect<T>>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController animationController;
+
+  @override
+  void initState() {
+    super.initState();
+    animationController = AnimationController(vsync: this);
+  }
+
+  @override
+  void dispose() {
+    animationController.dispose();
+    super.dispose();
+  }
+
+  SelectStyle get _style => DefaultSelectStyle.merge(widget.style);
 
   @override
   Widget build(BuildContext context) {
-    return StyleBuilder(
+    return StyleScope<SelectStyle>(
       style: _style,
-      builder: (context, spec) {
-        // Simplified implementation for demonstration
-        // In a real implementation, this would integrate with NakedSelect
-        // and handle menu positioning, animations, etc.
-        return GestureDetector(
-          onTap: widget.enabled
-              ? () {
-                  // Show menu logic here
-                  widget.onOpen?.call();
+      child: StyleBuilder(
+        style: _style,
+        builder: (context, spec) {
+          // Use default animation values since AnimatedData doesn't exist in Mix 2.0
+          const duration = Duration(milliseconds: 150);
+          const curve = Curves.easeInOut;
+
+          if (widget.multiSelect) {
+            // Multi-selection mode
+            return _MultiSelectWrapper<T>(
+              menu: _AnimatedOverlayMenu(
+                controller: animationController,
+                duration: duration,
+                curve: curve,
+                menuContainer: spec.menuContainer,
+                items: widget.items,
+              ),
+              selectedValues: widget.selectedValues ?? {},
+              onSelectedValuesChanged: widget.onSelectedValuesChanged,
+              onStateChange: (value) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (value == OverlayChildLifecycleState.present) {
+                    animationController.forward();
+                  }
+                });
+
+                if (value == OverlayChildLifecycleState.pendingRemoval) {
+                  animationController.reverse();
                 }
-              : null,
-          child: widget.child,
+              },
+              removalDelay: duration,
+              onClose: widget.onClose,
+              onOpen: widget.onOpen,
+              enabled: widget.enabled,
+              semanticLabel: widget.semanticLabel,
+              closeOnSelect: widget.closeOnSelect,
+              autofocus: widget.autofocus,
+              enableTypeAhead: widget.enableTypeAhead,
+              typeAheadDebounceTime: widget.typeAheadDebounceTime,
+              child: widget.child,
+            );
+          } // Single selection mode (existing behavior)
+
+          return NakedSelect<T>(
+            menu: _AnimatedOverlayMenu(
+              controller: animationController,
+              duration: duration,
+              curve: curve,
+              menuContainer: spec.menuContainer,
+              items: widget.items,
+            ),
+            onClose: widget.onClose,
+            onOpen: widget.onOpen,
+            selectedValue: widget.selectedValue,
+            onStateChange: (value) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (value == OverlayChildLifecycleState.present) {
+                  animationController.forward();
+                }
+              });
+
+              if (value == OverlayChildLifecycleState.pendingRemoval) {
+                animationController.reverse();
+              }
+            },
+            removalDelay: duration,
+            onSelectedValueChanged: widget.onSelectedValueChanged,
+            enabled: widget.enabled,
+            semanticLabel: widget.semanticLabel,
+            closeOnSelect: widget.closeOnSelect,
+            autofocus: widget.autofocus,
+            enableTypeAhead: widget.enableTypeAhead,
+            typeAheadDebounceTime: widget.typeAheadDebounceTime,
+            child: widget.child,
+          );
+        },
+      ),
+    );
+  }
+}
+
+/// A wrapper widget for multi-selection mode that manages multiple selected values.
+class _MultiSelectWrapper<T> extends StatefulWidget {
+  const _MultiSelectWrapper({
+    required this.menu,
+    required this.selectedValues,
+    required this.onSelectedValuesChanged,
+    required this.child,
+    required this.onStateChange,
+    required this.removalDelay,
+    this.onClose,
+    this.onOpen,
+    this.enabled = true,
+    this.semanticLabel,
+    this.closeOnSelect = false, // Default to false for multi-select
+    this.autofocus = true,
+    this.enableTypeAhead = true,
+    this.typeAheadDebounceTime = const Duration(milliseconds: 500),
+  });
+
+  final Widget menu;
+  final Set<T> selectedValues;
+  final ValueChanged<Set<T>>? onSelectedValuesChanged;
+  final Widget child;
+  final ValueChanged<OverlayChildLifecycleState> onStateChange;
+  final Duration removalDelay;
+  final VoidCallback? onClose;
+  final VoidCallback? onOpen;
+  final bool enabled;
+  final String? semanticLabel;
+  final bool closeOnSelect;
+  final bool autofocus;
+  final bool enableTypeAhead;
+  final Duration typeAheadDebounceTime;
+
+  @override
+  State<_MultiSelectWrapper<T>> createState() => _MultiSelectWrapperState<T>();
+}
+
+class _MultiSelectWrapperState<T> extends State<_MultiSelectWrapper<T>> {
+  late Set<T> _selectedValues;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedValues = Set.of(widget.selectedValues);
+  }
+
+  void _handleItemSelection(T value) {
+    setState(() {
+      if (_selectedValues.contains(value)) {
+        _selectedValues.remove(value);
+      } else {
+        _selectedValues.add(value);
+      }
+    });
+    widget.onSelectedValuesChanged?.call(_selectedValues);
+  }
+
+  @override
+  void didUpdateWidget(covariant _MultiSelectWrapper<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (!setEquals(oldWidget.selectedValues, widget.selectedValues)) {
+      _selectedValues = Set.of(widget.selectedValues);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Use NakedSelect with custom handling for multi-selection
+    return NakedSelect<T>(
+      menu: widget.menu,
+      onClose: widget.onClose,
+      onOpen: widget.onOpen,
+      selectedValue: null, // We don't use single selection
+      onStateChange: widget.onStateChange,
+      removalDelay: widget.removalDelay,
+      onSelectedValueChanged: (value) {
+        if (value != null) {
+          _handleItemSelection(value);
+        }
+      },
+      enabled: widget.enabled,
+      semanticLabel: widget.semanticLabel,
+      closeOnSelect: widget.closeOnSelect,
+      autofocus: widget.autofocus,
+      enableTypeAhead: widget.enableTypeAhead,
+      typeAheadDebounceTime: widget.typeAheadDebounceTime,
+      child: widget.child,
+    );
+  }
+}
+
+class _AnimatedOverlayMenu extends StatefulWidget {
+  const _AnimatedOverlayMenu({
+    required this.controller,
+    required this.duration,
+    required this.curve,
+    required this.menuContainer,
+    required this.items,
+  });
+
+  final AnimationController controller;
+  final Duration duration;
+  final Curve curve;
+  final BoxSpec menuContainer;
+  final List<Widget> items;
+
+  @override
+  State<_AnimatedOverlayMenu> createState() => _AnimatedOverlayMenuState();
+}
+
+class _AnimatedOverlayMenuState extends State<_AnimatedOverlayMenu> {
+  late final Animation<double> fadeAnimation;
+  late final Animation<double> scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    widget.controller.duration = widget.duration;
+    fadeAnimation = CurvedAnimation(
+      parent: widget.controller,
+      curve: widget.curve,
+    );
+    scaleAnimation = CurvedAnimation(
+      parent: widget.controller,
+      curve: widget.curve,
+    ).drive(Tween<double>(begin: 0.95, end: 1.0));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: fadeAnimation,
+      builder: (context, child) {
+        return Transform.scale(
+          scale: scaleAnimation.value,
+          child: Opacity(
+            opacity: fadeAnimation.value,
+            child: widget.menuContainer(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: widget.items,
+              ),
+            ),
+          ),
         );
       },
     );
@@ -172,19 +427,22 @@ class RemixSelectTrigger extends StatefulWidget implements Disableable {
 
 class _RemixSelectTriggerState extends State<RemixSelectTrigger>
     with MixControllerMixin, DisableableMixin {
+  StyleScope<SelectStyle>? get styleScope {
+    return StyleScope.of(context);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return NakedButton(
-      onPressed: widget.enabled ? () {} : null,
-      onHoverState: (state) => stateController.hovered = state,
-      onPressedState: (state) => stateController.pressed = state,
-      onFocusState: (state) => stateController.focused = state,
+    return NakedSelectTrigger(
+      onHoveredState: (value) => stateController.hovered = value,
+      onPressedState: (value) => stateController.pressed = value,
+      onFocusedState: (value) => stateController.focused = value,
       semanticLabel: widget.semanticLabel,
       cursor: widget.cursor,
       enableHapticFeedback: widget.enableHapticFeedback,
       focusNode: widget.focusNode,
       child: StyleBuilder(
-        style: DefaultSelectStyle,
+        style: styleScope?.style ?? const SelectStyle.create(),
         builder: (context, spec) {
           final triggerSpec = spec.trigger;
 
@@ -273,30 +531,61 @@ class RemixSelectItem<T> extends StatefulWidget implements Disableable {
 
 class _RemixSelectItemState<T> extends State<RemixSelectItem<T>>
     with MixControllerMixin, DisableableMixin {
+  bool get _isMultiSelect {
+    // Check if we're in multi-select mode by looking for MultiSelectWrapper ancestor
+    return context.findAncestorWidgetOfExactType<_MultiSelectWrapper>() != null;
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    // For multi-select, check if the value is in the selected set
+    if (_isMultiSelect) {
+      final multiSelectWrapper =
+          context.findAncestorStateOfType<_MultiSelectWrapperState<T>>();
+      if (multiSelectWrapper != null) {
+        stateController.selected =
+            multiSelectWrapper._selectedValues.contains(widget.value);
+      }
+    } else {
+      final inherited = NakedSelectScope.of<T>(context);
+      stateController.selected = inherited.isSelected(context, widget.value);
+    }
+  }
+
+  StyleScope<SelectStyle>? get _styleScope {
+    return StyleScope.of(context);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return NakedButton(
-      onPressed: widget.enabled
-          ? () {
-              // Handle selection logic here
-            }
-          : null,
-      onHoverState: (state) => stateController.hovered = state,
-      onPressedState: (state) => stateController.pressed = state,
-      onFocusState: (state) => stateController.focused = state,
+    return NakedSelectItem<T>(
+      value: widget.value,
+      onHoveredState: (value) => stateController.hovered = value,
+      onPressedState: (value) => stateController.pressed = value,
+      onFocusedState: (value) => stateController.focused = value,
+      onSelectState: (value) => stateController.selected = value,
       enabled: widget.enabled,
       semanticLabel: widget.semanticLabel,
       cursor: widget.cursor,
       enableHapticFeedback: widget.enableHapticFeedback,
       focusNode: widget.focusNode,
       child: StyleBuilder(
-        style: DefaultSelectStyle,
+        style: _styleScope?.style ?? const SelectStyle.create(),
         builder: (context, spec) {
           final itemSpec = spec.item;
 
+          // Use checkbox icon for multi-select, check icon for single select
+          final IconData selectionIcon = _isMultiSelect
+              ? (stateController.selected
+                  ? Icons.check_box
+                  : Icons.check_box_outline_blank)
+              : widget.trailingIcon;
+
           final defaultChild = itemSpec.container.flex(
             direction: Axis.horizontal,
-            children: [Text(widget.label), Icon(widget.trailingIcon)],
+            children: [Text(widget.label), Icon(selectionIcon)],
           );
 
           return IconTheme(

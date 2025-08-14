@@ -40,12 +40,12 @@ class _MyAppState extends State<MyApp> {
                 style: ChipStyle()
                   .onHovered(
                     ChipStyle(
-                      container: BoxMix(decoration: BoxDecorationMix(color: Colors.grey.shade100))
+                      container: FlexBoxMix(box: BoxMix(decoration: BoxDecorationMix(color: Colors.grey.shade100)))
                     )
                   )
                   .onSelected(
                     ChipStyle(
-                      container: BoxMix(decoration: BoxDecorationMix(color: Colors.blue))
+                      container: FlexBoxMix(box: BoxMix(decoration: BoxDecorationMix(color: Colors.blue)))
                     )
                   ),
               ),

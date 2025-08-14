@@ -1,22 +1,22 @@
 part of 'list_item.dart';
 
 class ListItemSpec extends Spec<ListItemSpec> with Diagnosticable {
-  final BoxSpec container;
-  final BoxSpec contentContainer;
+  final FlexBoxSpec container;
+  final FlexBoxSpec contentContainer;
   final TextSpec title;
   final TextSpec subtitle;
   final IconSpec leadingIcon;
   final IconSpec trailingIcon;
 
   const ListItemSpec({
-    BoxSpec? container,
-    BoxSpec? contentContainer,
+    FlexBoxSpec? container,
+    FlexBoxSpec? contentContainer,
     TextSpec? title,
     TextSpec? subtitle,
     IconSpec? leadingIcon,
     IconSpec? trailingIcon,
-  })  : container = container ?? const BoxSpec(),
-        contentContainer = contentContainer ?? const BoxSpec(),
+  })  : container = container ?? const FlexBoxSpec(),
+        contentContainer = contentContainer ?? const FlexBoxSpec(),
         title = title ?? const TextSpec(),
         subtitle = subtitle ?? const TextSpec(),
         leadingIcon = leadingIcon ?? const IconSpec(),
@@ -24,8 +24,8 @@ class ListItemSpec extends Spec<ListItemSpec> with Diagnosticable {
 
   @override
   ListItemSpec copyWith({
-    BoxSpec? container,
-    BoxSpec? contentContainer,
+    FlexBoxSpec? container,
+    FlexBoxSpec? contentContainer,
     TextSpec? title,
     TextSpec? subtitle,
     IconSpec? leadingIcon,

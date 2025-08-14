@@ -40,8 +40,8 @@ mixin _$ProgressSpec on Spec<ProgressSpec> {
     BoxSpec? track,
     BoxSpec? fill,
     BoxSpec? outerContainer,
-    AnimatedData? animated,
-    WidgetModifiersConfig? modifiers,
+    dynamic? animated,
+    dynamic? modifiers,
   }) {
     return ProgressSpec(
       container: container ?? _$this.container,
@@ -80,7 +80,7 @@ mixin _$ProgressSpec on Spec<ProgressSpec> {
       fill: _$this.fill.lerp(other.fill, t),
       outerContainer: _$this.outerContainer.lerp(other.outerContainer, t),
       animated: _$this.animated ?? other.animated,
-      modifiers: other.modifiers,
+      modifiers: t < 0.5 ? _$this.modifiers : other.modifiers,
     );
   }
 
@@ -154,8 +154,8 @@ class ProgressSpecAttribute extends SpecAttribute<ProgressSpec>
       track: track?.resolve(mix),
       fill: fill?.resolve(mix),
       outerContainer: outerContainer?.resolve(mix),
-      animated: animated?.resolve(mix) ?? mix.animation,
-      modifiers: modifiers?.resolve(mix),
+      animated: animated,
+      modifiers: modifiers,
     );
   }
 
@@ -177,8 +177,8 @@ class ProgressSpecAttribute extends SpecAttribute<ProgressSpec>
       fill: fill?.merge(other.fill) ?? other.fill,
       outerContainer:
           outerContainer?.merge(other.outerContainer) ?? other.outerContainer,
-      animated: animated?.merge(other.animated) ?? other.animated,
-      modifiers: modifiers?.merge(other.modifiers) ?? other.modifiers,
+      animated: other.animated ?? animated,
+      modifiers: other.modifiers ?? modifiers,
     );
   }
 
@@ -231,10 +231,10 @@ class ProgressSpecUtility<T extends SpecAttribute>
   late final outerContainer = BoxSpecUtility((v) => only(outerContainer: v));
 
   /// Utility for defining [ProgressSpecAttribute.animated]
-  late final animated = AnimatedUtility((v) => only(animated: v));
+  late final animated = GenericUtility<T, dynamic>((v) => only(animated: v));
 
   /// Utility for defining [ProgressSpecAttribute.modifiers]
-  late final wrap = SpecModifierUtility((v) => only(modifiers: v));
+  late final modifiers = GenericUtility<T, dynamic>((v) => only(modifiers: v));
 
   ProgressSpecUtility(
     super.builder, {
@@ -260,8 +260,8 @@ class ProgressSpecUtility<T extends SpecAttribute>
     BoxSpecAttribute? track,
     BoxSpecAttribute? fill,
     BoxSpecAttribute? outerContainer,
-    AnimatedDataDto? animated,
-    WidgetModifiersConfigDto? modifiers,
+    dynamic? animated,
+    dynamic? modifiers,
   }) {
     return builder(ProgressSpecAttribute(
       container: container,

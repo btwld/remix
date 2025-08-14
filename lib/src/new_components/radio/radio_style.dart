@@ -2,13 +2,13 @@ part of 'radio.dart';
 
 class RadioStyle extends Style<RadioSpec>
     with StyleModifierMixin<RadioStyle, RadioSpec>, StyleVariantMixin<RadioStyle, RadioSpec> {
-  final Prop<BoxSpec>? $container;
+  final Prop<FlexBoxSpec>? $container;
   final Prop<BoxSpec>? $indicatorContainer;
   final Prop<BoxSpec>? $indicator;
   final Prop<TextSpec>? $label;
 
   const RadioStyle.create({
-    Prop<BoxSpec>? container,
+    Prop<FlexBoxSpec>? container,
     Prop<BoxSpec>? indicatorContainer,
     Prop<BoxSpec>? indicator,
     Prop<TextSpec>? label,
@@ -22,7 +22,7 @@ class RadioStyle extends Style<RadioSpec>
         $label = label;
 
   RadioStyle({
-    BoxMix? container,
+    FlexBoxMix? container,
     BoxMix? indicatorContainer,
     BoxMix? indicator,
     TextMix? label,
@@ -43,7 +43,7 @@ class RadioStyle extends Style<RadioSpec>
         );
 
   factory RadioStyle.value(RadioSpec spec) => RadioStyle(
-        container: BoxMix.maybeValue(spec.container),
+        container: FlexBoxMix.maybeValue(spec.container),
         indicatorContainer: BoxMix.maybeValue(spec.indicatorContainer),
         indicator: BoxMix.maybeValue(spec.indicator),
         label: TextMix.maybeValue(spec.label),
@@ -105,7 +105,15 @@ class RadioStyle extends Style<RadioSpec>
 }
 
 final DefaultRadioStyle = RadioStyle(
-  container: BoxMix(alignment: Alignment.centerLeft),
+  container: FlexBoxMix(
+    box: BoxMix(alignment: Alignment.centerLeft),
+    flex: FlexMix(
+      direction: Axis.horizontal,
+      gap: 8,
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+    ),
+  ),
   indicatorContainer: BoxMix(
     alignment: Alignment.center,
     constraints: BoxConstraintsMix(
@@ -137,3 +145,134 @@ final DefaultRadioStyle = RadioStyle(
   ),
   label: TextMix(style: TextStyleMix(color: Colors.black, fontSize: 14)),
 );
+
+extension RadioVariants on RadioStyle {
+  /// Primary radio variant with blue colors
+  static RadioStyle get primary => RadioStyle(
+        container: FlexBoxMix(
+          box: BoxMix(alignment: Alignment.centerLeft),
+          flex: FlexMix(
+            direction: Axis.horizontal,
+            gap: 8,
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+          ),
+        ),
+        indicatorContainer: BoxMix(
+          alignment: Alignment.center,
+          constraints: BoxConstraintsMix(
+            minWidth: 20,
+            maxWidth: 20,
+            minHeight: 20,
+            maxHeight: 20,
+          ),
+          decoration: BoxDecorationMix(
+            border: BoxBorderMix.all(BorderSideMix(
+              color: Colors.blue[500]!,
+              width: 1.5,
+            )),
+            shape: BoxShape.circle,
+            color: Colors.blue[50],
+          ),
+        ),
+        indicator: BoxMix(
+          constraints: BoxConstraintsMix(
+            minWidth: 10,
+            maxWidth: 10,
+            minHeight: 10,
+            maxHeight: 10,
+          ),
+          decoration: BoxDecorationMix(
+            shape: BoxShape.circle,
+            color: Colors.blue[500],
+          ),
+        ),
+        label: TextMix(style: TextStyleMix(color: Colors.black, fontSize: 14)),
+      );
+
+  /// Secondary radio variant with grey colors
+  static RadioStyle get secondary => RadioStyle(
+        container: FlexBoxMix(
+          box: BoxMix(alignment: Alignment.centerLeft),
+          flex: FlexMix(
+            direction: Axis.horizontal,
+            gap: 8,
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+          ),
+        ),
+        indicatorContainer: BoxMix(
+          alignment: Alignment.center,
+          constraints: BoxConstraintsMix(
+            minWidth: 20,
+            maxWidth: 20,
+            minHeight: 20,
+            maxHeight: 20,
+          ),
+          decoration: BoxDecorationMix(
+            border: BoxBorderMix.all(BorderSideMix(
+              color: Colors.grey[500]!,
+              width: 1.5,
+            )),
+            shape: BoxShape.circle,
+            color: Colors.grey[50],
+          ),
+        ),
+        indicator: BoxMix(
+          constraints: BoxConstraintsMix(
+            minWidth: 10,
+            maxWidth: 10,
+            minHeight: 10,
+            maxHeight: 10,
+          ),
+          decoration: BoxDecorationMix(
+            shape: BoxShape.circle,
+            color: Colors.grey[600],
+          ),
+        ),
+        label: TextMix(style: TextStyleMix(color: Colors.black, fontSize: 14)),
+      );
+
+  /// Compact radio variant with smaller size
+  static RadioStyle get compact => RadioStyle(
+        container: FlexBoxMix(
+          box: BoxMix(alignment: Alignment.centerLeft),
+          flex: FlexMix(
+            direction: Axis.horizontal,
+            gap: 6,
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+          ),
+        ),
+        indicatorContainer: BoxMix(
+          alignment: Alignment.center,
+          constraints: BoxConstraintsMix(
+            minWidth: 16,
+            maxWidth: 16,
+            minHeight: 16,
+            maxHeight: 16,
+          ),
+          decoration: BoxDecorationMix(
+            border: BoxBorderMix.all(BorderSideMix(
+              color: Colors.grey[400]!,
+              width: 1.5,
+            )),
+            shape: BoxShape.circle,
+            color: Colors.white,
+          ),
+        ),
+        indicator: BoxMix(
+          constraints: BoxConstraintsMix(
+            minWidth: 8,
+            maxWidth: 8,
+            minHeight: 8,
+            maxHeight: 8,
+          ),
+          decoration: BoxDecorationMix(
+            shape: BoxShape.circle,
+            color: Colors.black,
+          ),
+        ),
+        label: TextMix(style: TextStyleMix(color: Colors.black, fontSize: 12)),
+      );
+}

@@ -1,6 +1,6 @@
 import 'package:demo/helpers/string.dart';
 import 'package:flutter/material.dart';
-import 'package:remix/remix.dart';
+import 'package:remix/remix_new.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
@@ -12,7 +12,7 @@ enum Theme {
 
 @widgetbook.UseCase(
   name: 'Radio Component',
-  type: RxRadio,
+  type: RemixRadio,
 )
 Widget buildRadioUseCase(BuildContext context) {
   return Scaffold(
@@ -20,31 +20,31 @@ Widget buildRadioUseCase(BuildContext context) {
       child: ListenableBuilder(
         listenable: _state,
         builder: (context, child) {
-          return RxRadioGroup(
-            value: _state.value,
-            onChanged: (value) {
-              _state.update(value!);
-            },
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: Theme.values
-                  .map(
-                    (theme) => Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: RxRadio<Theme>(
-                        value: theme,
-                        enabled: context.knobs.boolean(
-                          label: 'Enabled',
-                          initialValue: true,
-                        ),
-                        label: theme.name.capitalize(),
+          // Note: RemixRadioGroup doesn't exist in new API
+          // Using Column with individual RemixRadio widgets
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: Theme.values
+                .map(
+                  (theme) => Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: RemixRadio<Theme>(
+                      value: theme,
+                      groupValue: _state.value,
+                      onChanged: (value) {
+                        _state.update(value!);
+                      },
+                      enabled: context.knobs.boolean(
+                        label: 'Enabled',
+                        initialValue: true,
                       ),
+                      label: theme.name.capitalize(),
                     ),
-                  )
-                  .toList(),
-            ),
+                  ),
+                )
+                .toList(),
           );
         },
       ),

@@ -44,7 +44,7 @@ mixin _$AccordionSpec on Spec<AccordionSpec> {
     IconSpec? trailingIcon,
     TextStyle? titleStyle,
     TextStyle? contentStyle,
-    AnimatedData? animated,
+    dynamic? animated,
   }) {
     return AccordionSpec(
       itemContainer: itemContainer ?? _$this.itemContainer,
@@ -122,7 +122,7 @@ class AccordionSpecAttribute extends SpecAttribute<AccordionSpec> {
       trailingIcon: trailingIcon?.resolve(mix),
       titleStyle: titleStyle?.resolve(mix),
       contentStyle: contentStyle?.resolve(mix),
-      animated: animated?.resolve(mix) ?? mix.animation,
+      animated: animated,
     );
   }
 
@@ -151,7 +151,7 @@ class AccordionSpecAttribute extends SpecAttribute<AccordionSpec> {
       titleStyle: titleStyle?.merge(other.titleStyle) ?? other.titleStyle,
       contentStyle:
           contentStyle?.merge(other.contentStyle) ?? other.contentStyle,
-      animated: animated?.merge(other.animated) ?? other.animated,
+      animated: other.animated ?? animated,
     );
   }
 
@@ -202,7 +202,7 @@ class AccordionSpecUtility<T extends SpecAttribute>
   late final contentStyle = TextStyleUtility((v) => only(contentStyle: v));
 
   /// Utility for defining [AccordionSpecAttribute.animated]
-  late final animated = AnimatedUtility((v) => only(animated: v));
+  late final animated = GenericUtility<T, dynamic>((v) => only(animated: v));
 
   AccordionSpecUtility(
     super.builder, {
@@ -231,7 +231,7 @@ class AccordionSpecUtility<T extends SpecAttribute>
     IconSpecAttribute? trailingIcon,
     TextStyleDto? titleStyle,
     TextStyleDto? contentStyle,
-    AnimatedDataDto? animated,
+    dynamic? animated,
   }) {
     return builder(AccordionSpecAttribute(
       itemContainer: itemContainer,

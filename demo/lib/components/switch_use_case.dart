@@ -1,6 +1,6 @@
 import 'package:demo/helpers/use_case_state.dart';
 import 'package:flutter/material.dart';
-import 'package:remix/remix.dart';
+import 'package:remix/remix_new.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
@@ -8,7 +8,7 @@ final _key = GlobalKey();
 
 @widgetbook.UseCase(
   name: 'Switch Component',
-  type: RxSwitch,
+  type: RemixSwitch,
 )
 Widget buildSwitchUseCase(BuildContext context) {
   final knobState = WidgetbookState.of(context);
@@ -17,7 +17,7 @@ Widget buildSwitchUseCase(BuildContext context) {
     key: _key,
     child: Scaffold(
       body: Center(
-        child: RxSwitch(
+        child: RemixSwitch(
           selected: context.knobs.boolean(label: 'Toggle', initialValue: true),
           enabled: context.knobs.boolean(label: 'Enabled', initialValue: true),
           onChanged: (value) => knobState.updateKnob('Toggle', value),

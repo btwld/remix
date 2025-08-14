@@ -4,22 +4,23 @@ class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
   final TextStyle style;
   final Color? hintTextColor;
   final TextAlign textAlign;
-  
+
   final double cursorWidth;
   final double? cursorHeight;
   final Radius? cursorRadius;
   final Color? cursorColor;
   final Offset cursorOffset;
   final bool? cursorOpacityAnimates;
-  
+
   final BoxHeightStyle selectionHeightStyle;
   final BoxWidthStyle selectionWidthStyle;
-  
+
   final EdgeInsets scrollPadding;
   final Brightness? keyboardAppearance;
   final double spacing;
   final FlexBoxSpec container;
   final TextSpec helperText;
+  final TextSpec label;
 
   const TextFieldSpec({
     TextStyle? style,
@@ -38,6 +39,7 @@ class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
     double? spacing,
     FlexBoxSpec? container,
     TextSpec? helperText,
+    TextSpec? label,
   })  : style = style ?? const TextStyle(),
         textAlign = textAlign ?? TextAlign.start,
         cursorWidth = cursorWidth ?? 2.0,
@@ -46,6 +48,7 @@ class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
         selectionWidthStyle = selectionWidthStyle ?? BoxWidthStyle.tight,
         scrollPadding = scrollPadding ?? const EdgeInsets.all(20.0),
         helperText = helperText ?? const TextSpec(),
+        label = label ?? const TextSpec(),
         container = container ?? const FlexBoxSpec(),
         spacing = spacing ?? 4;
 
@@ -67,6 +70,7 @@ class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
     double? spacing,
     FlexBoxSpec? container,
     TextSpec? helperText,
+    TextSpec? label,
   }) {
     return TextFieldSpec(
       style: style ?? this.style,
@@ -77,14 +81,16 @@ class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
       cursorRadius: cursorRadius ?? this.cursorRadius,
       cursorColor: cursorColor ?? this.cursorColor,
       cursorOffset: cursorOffset ?? this.cursorOffset,
-      cursorOpacityAnimates: cursorOpacityAnimates ?? this.cursorOpacityAnimates,
       selectionHeightStyle: selectionHeightStyle ?? this.selectionHeightStyle,
       selectionWidthStyle: selectionWidthStyle ?? this.selectionWidthStyle,
       scrollPadding: scrollPadding ?? this.scrollPadding,
       keyboardAppearance: keyboardAppearance ?? this.keyboardAppearance,
+      cursorOpacityAnimates:
+          cursorOpacityAnimates ?? this.cursorOpacityAnimates,
       spacing: spacing ?? this.spacing,
       container: container ?? this.container,
       helperText: helperText ?? this.helperText,
+      label: label ?? this.label,
     );
   }
 
@@ -101,14 +107,19 @@ class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
       cursorRadius: Radius.lerp(cursorRadius, other.cursorRadius, t),
       cursorColor: Color.lerp(cursorColor, other.cursorColor, t),
       cursorOffset: Offset.lerp(cursorOffset, other.cursorOffset, t),
-      cursorOpacityAnimates: t < 0.5 ? cursorOpacityAnimates : other.cursorOpacityAnimates,
-      selectionHeightStyle: t < 0.5 ? selectionHeightStyle : other.selectionHeightStyle,
-      selectionWidthStyle: t < 0.5 ? selectionWidthStyle : other.selectionWidthStyle,
+      selectionHeightStyle:
+          t < 0.5 ? selectionHeightStyle : other.selectionHeightStyle,
+      selectionWidthStyle:
+          t < 0.5 ? selectionWidthStyle : other.selectionWidthStyle,
       scrollPadding: EdgeInsets.lerp(scrollPadding, other.scrollPadding, t),
-      keyboardAppearance: t < 0.5 ? keyboardAppearance : other.keyboardAppearance,
+      keyboardAppearance:
+          t < 0.5 ? keyboardAppearance : other.keyboardAppearance,
+      cursorOpacityAnimates:
+          t < 0.5 ? cursorOpacityAnimates : other.cursorOpacityAnimates,
       spacing: lerpDouble(spacing, other.spacing, t),
       container: MixOps.lerp(container, other.container, t)!,
       helperText: MixOps.lerp(helperText, other.helperText, t)!,
+      label: MixOps.lerp(label, other.label, t)!,
     );
   }
 
@@ -116,21 +127,58 @@ class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty('style', style, defaultValue: null));
-    properties.add(ColorProperty('hintTextColor', hintTextColor, defaultValue: null));
-    properties.add(EnumProperty<TextAlign>('textAlign', textAlign, defaultValue: TextAlign.start));
-    properties.add(DoubleProperty('cursorWidth', cursorWidth, defaultValue: 2.0));
-    properties.add(DoubleProperty('cursorHeight', cursorHeight, defaultValue: null));
-    properties.add(DiagnosticsProperty('cursorRadius', cursorRadius, defaultValue: null));
-    properties.add(ColorProperty('cursorColor', cursorColor, defaultValue: null));
-    properties.add(DiagnosticsProperty('cursorOffset', cursorOffset, defaultValue: Offset.zero));
-    properties.add(DiagnosticsProperty('cursorOpacityAnimates', cursorOpacityAnimates, defaultValue: null));
-    properties.add(EnumProperty<BoxHeightStyle>('selectionHeightStyle', selectionHeightStyle, defaultValue: BoxHeightStyle.tight));
-    properties.add(EnumProperty<BoxWidthStyle>('selectionWidthStyle', selectionWidthStyle, defaultValue: BoxWidthStyle.tight));
-    properties.add(DiagnosticsProperty('scrollPadding', scrollPadding, defaultValue: null));
-    properties.add(EnumProperty<Brightness>('keyboardAppearance', keyboardAppearance, defaultValue: null));
+    properties
+        .add(ColorProperty('hintTextColor', hintTextColor, defaultValue: null));
+    properties.add(EnumProperty<TextAlign>(
+      'textAlign',
+      textAlign,
+      defaultValue: TextAlign.start,
+    ));
+    properties
+        .add(DoubleProperty('cursorWidth', cursorWidth, defaultValue: 2.0));
+    properties
+        .add(DoubleProperty('cursorHeight', cursorHeight, defaultValue: null));
+    properties.add(
+      DiagnosticsProperty('cursorRadius', cursorRadius, defaultValue: null),
+    );
+    properties
+        .add(ColorProperty('cursorColor', cursorColor, defaultValue: null));
+    properties.add(DiagnosticsProperty(
+      'cursorOffset',
+      cursorOffset,
+      defaultValue: Offset.zero,
+    ));
+    properties.add(DiagnosticsProperty(
+      'cursorOpacityAnimates',
+      cursorOpacityAnimates,
+      defaultValue: null,
+    ));
+    properties.add(EnumProperty<BoxHeightStyle>(
+      'selectionHeightStyle',
+      selectionHeightStyle,
+      defaultValue: BoxHeightStyle.tight,
+    ));
+    properties.add(EnumProperty<BoxWidthStyle>(
+      'selectionWidthStyle',
+      selectionWidthStyle,
+      defaultValue: BoxWidthStyle.tight,
+    ));
+    properties.add(DiagnosticsProperty(
+      'scrollPadding',
+      scrollPadding,
+      defaultValue: null,
+    ));
+    properties.add(EnumProperty<Brightness>(
+      'keyboardAppearance',
+      keyboardAppearance,
+      defaultValue: null,
+    ));
     properties.add(DoubleProperty('spacing', spacing, defaultValue: 4));
-    properties.add(DiagnosticsProperty('container', container, defaultValue: null));
-    properties.add(DiagnosticsProperty('helperText', helperText, defaultValue: null));
+    properties
+        .add(DiagnosticsProperty('container', container, defaultValue: null));
+    properties
+        .add(DiagnosticsProperty('helperText', helperText, defaultValue: null));
+    properties.add(DiagnosticsProperty('label', label, defaultValue: null));
   }
 
   @override
@@ -151,5 +199,6 @@ class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
         spacing,
         container,
         helperText,
+        label,
       ];
 }

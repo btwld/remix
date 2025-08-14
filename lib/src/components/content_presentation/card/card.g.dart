@@ -37,8 +37,8 @@ mixin _$CardSpec on Spec<CardSpec> {
   @override
   CardSpec copyWith({
     BoxSpec? container,
-    WidgetModifiersConfig? modifiers,
-    AnimatedData? animated,
+    dynamic? modifiers,
+    dynamic? animated,
   }) {
     return CardSpec(
       container: container ?? _$this.container,
@@ -70,7 +70,7 @@ mixin _$CardSpec on Spec<CardSpec> {
 
     return CardSpec(
       container: _$this.container.lerp(other.container, t),
-      modifiers: other.modifiers,
+      modifiers: t < 0.5 ? _$this.modifiers : other.modifiers,
       animated: _$this.animated ?? other.animated,
     );
   }
@@ -126,8 +126,8 @@ class CardSpecAttribute extends SpecAttribute<CardSpec> with Diagnosticable {
   CardSpec resolve(MixContext mix) {
     return CardSpec(
       container: container?.resolve(mix),
-      modifiers: modifiers?.resolve(mix),
-      animated: animated?.resolve(mix) ?? mix.animation,
+      modifiers: modifiers,
+      animated: animated,
     );
   }
 
@@ -145,8 +145,8 @@ class CardSpecAttribute extends SpecAttribute<CardSpec> with Diagnosticable {
 
     return CardSpecAttribute(
       container: container?.merge(other.container) ?? other.container,
-      modifiers: modifiers?.merge(other.modifiers) ?? other.modifiers,
-      animated: animated?.merge(other.animated) ?? other.animated,
+      modifiers: other.modifiers ?? modifiers,
+      animated: other.animated ?? animated,
     );
   }
 
@@ -183,10 +183,10 @@ class CardSpecUtility<T extends SpecAttribute>
   late final container = BoxSpecUtility((v) => only(container: v));
 
   /// Utility for defining [CardSpecAttribute.modifiers]
-  late final wrap = SpecModifierUtility((v) => only(modifiers: v));
+  late final modifiers = GenericUtility<T, dynamic>((v) => only(modifiers: v));
 
   /// Utility for defining [CardSpecAttribute.animated]
-  late final animated = AnimatedUtility((v) => only(animated: v));
+  late final animated = GenericUtility<T, dynamic>((v) => only(animated: v));
 
   CardSpecUtility(
     super.builder, {
@@ -209,8 +209,8 @@ class CardSpecUtility<T extends SpecAttribute>
   @override
   T only({
     BoxSpecAttribute? container,
-    WidgetModifiersConfigDto? modifiers,
-    AnimatedDataDto? animated,
+    dynamic? modifiers,
+    dynamic? animated,
   }) {
     return builder(CardSpecAttribute(
       container: container,

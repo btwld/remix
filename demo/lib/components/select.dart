@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:remix/remix.dart';
+import 'package:remix/remix_new.dart';
 
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 @widgetbook.UseCase(
   name: 'Select Component',
-  type: RxSelect,
+  type: RemixSelect,
 )
 Widget buildSelect(BuildContext context) {
   return const Scaffold(
@@ -37,18 +37,18 @@ class _SelectDemoState extends State<SelectDemo> {
         children: [
           SizedBox(
             width: 200,
-            child: RxSelect<String>(
+            child: RemixSelect<String>(
               selectedValue: selectedValue,
               onSelectedValueChanged: (value) =>
                   setState(() => selectedValue = value ?? ''),
               items: List.generate(
                 items.length,
-                (index) => RxSelectItem<String>(
+                (index) => RemixSelectItem<String>(
                   value: items[index],
                   label: items[index],
                 ),
               ),
-              child: RxSelectTrigger(label: selectedValue),
+              child: RemixSelectTrigger(label: selectedValue),
             ),
           ),
         ],

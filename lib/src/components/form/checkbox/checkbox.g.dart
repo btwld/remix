@@ -40,8 +40,8 @@ mixin _$CheckboxSpec on Spec<CheckboxSpec> {
     IconSpec? indicator,
     FlexBoxSpec? container,
     TextSpec? label,
-    WidgetModifiersConfig? modifiers,
-    AnimatedData? animated,
+    dynamic? modifiers,
+    dynamic? animated,
   }) {
     return CheckboxSpec(
       indicatorContainer: indicatorContainer ?? _$this.indicatorContainer,
@@ -83,7 +83,7 @@ mixin _$CheckboxSpec on Spec<CheckboxSpec> {
       indicator: _$this.indicator.lerp(other.indicator, t),
       container: _$this.container.lerp(other.container, t),
       label: _$this.label.lerp(other.label, t),
-      modifiers: other.modifiers,
+      modifiers: t < 0.5 ? _$this.modifiers : other.modifiers,
       animated: _$this.animated ?? other.animated,
     );
   }
@@ -159,8 +159,8 @@ class CheckboxSpecAttribute extends SpecAttribute<CheckboxSpec>
       indicator: indicator?.resolve(mix),
       container: container?.resolve(mix),
       label: label?.resolve(mix),
-      modifiers: modifiers?.resolve(mix),
-      animated: animated?.resolve(mix) ?? mix.animation,
+      modifiers: modifiers,
+      animated: animated,
     );
   }
 
@@ -182,8 +182,8 @@ class CheckboxSpecAttribute extends SpecAttribute<CheckboxSpec>
       indicator: indicator?.merge(other.indicator) ?? other.indicator,
       container: container?.merge(other.container) ?? other.container,
       label: label?.merge(other.label) ?? other.label,
-      modifiers: modifiers?.merge(other.modifiers) ?? other.modifiers,
-      animated: animated?.merge(other.animated) ?? other.animated,
+      modifiers: other.modifiers ?? modifiers,
+      animated: other.animated ?? animated,
     );
   }
 
@@ -238,10 +238,10 @@ class CheckboxSpecUtility<T extends SpecAttribute>
   late final label = TextSpecUtility((v) => only(label: v));
 
   /// Utility for defining [CheckboxSpecAttribute.modifiers]
-  late final wrap = SpecModifierUtility((v) => only(modifiers: v));
+  late final modifiers = GenericUtility<T, dynamic>((v) => only(modifiers: v));
 
   /// Utility for defining [CheckboxSpecAttribute.animated]
-  late final animated = AnimatedUtility((v) => only(animated: v));
+  late final animated = GenericUtility<T, dynamic>((v) => only(animated: v));
 
   CheckboxSpecUtility(
     super.builder, {
@@ -267,8 +267,8 @@ class CheckboxSpecUtility<T extends SpecAttribute>
     IconSpecAttribute? indicator,
     FlexBoxSpecAttribute? container,
     TextSpecAttribute? label,
-    WidgetModifiersConfigDto? modifiers,
-    AnimatedDataDto? animated,
+    dynamic? modifiers,
+    dynamic? animated,
   }) {
     return builder(CheckboxSpecAttribute(
       indicatorContainer: indicatorContainer,

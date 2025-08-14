@@ -53,8 +53,8 @@ mixin _$TextFieldSpec on Spec<TextFieldSpec> {
     double? spacing,
     FlexBoxSpec? container,
     TextSpec? helperText,
-    AnimatedData? animated,
-    WidgetModifiersConfig? modifiers,
+    dynamic? animated,
+    dynamic? modifiers,
   }) {
     return TextFieldSpec(
       style: style ?? _$this.style,
@@ -132,7 +132,7 @@ mixin _$TextFieldSpec on Spec<TextFieldSpec> {
       container: _$this.container.lerp(other.container, t),
       helperText: _$this.helperText.lerp(other.helperText, t),
       animated: _$this.animated ?? other.animated,
-      modifiers: other.modifiers,
+      modifiers: t < 0.5 ? _$this.modifiers : other.modifiers,
     );
   }
 
@@ -282,8 +282,8 @@ class TextFieldSpecAttribute extends SpecAttribute<TextFieldSpec>
       spacing: spacing,
       container: container?.resolve(mix),
       helperText: helperText?.resolve(mix),
-      animated: animated?.resolve(mix) ?? mix.animation,
-      modifiers: modifiers?.resolve(mix),
+      animated: animated,
+      modifiers: modifiers,
     );
   }
 
@@ -319,8 +319,8 @@ class TextFieldSpecAttribute extends SpecAttribute<TextFieldSpec>
       spacing: other.spacing ?? spacing,
       container: container?.merge(other.container) ?? other.container,
       helperText: helperText?.merge(other.helperText) ?? other.helperText,
-      animated: animated?.merge(other.animated) ?? other.animated,
-      modifiers: modifiers?.merge(other.modifiers) ?? other.modifiers,
+      animated: other.animated ?? animated,
+      modifiers: other.modifiers ?? modifiers,
     );
   }
 
@@ -452,10 +452,10 @@ class TextFieldSpecUtility<T extends SpecAttribute>
   late final helperText = TextSpecUtility((v) => only(helperText: v));
 
   /// Utility for defining [TextFieldSpecAttribute.animated]
-  late final animated = AnimatedUtility((v) => only(animated: v));
+  late final animated = GenericUtility<T, dynamic>((v) => only(animated: v));
 
   /// Utility for defining [TextFieldSpecAttribute.modifiers]
-  late final wrap = SpecModifierUtility((v) => only(modifiers: v));
+  late final modifiers = GenericUtility<T, dynamic>((v) => only(modifiers: v));
 
   TextFieldSpecUtility(
     super.builder, {
@@ -493,8 +493,8 @@ class TextFieldSpecUtility<T extends SpecAttribute>
     double? spacing,
     FlexBoxSpecAttribute? container,
     TextSpecAttribute? helperText,
-    AnimatedDataDto? animated,
-    WidgetModifiersConfigDto? modifiers,
+    dynamic? animated,
+    dynamic? modifiers,
   }) {
     return builder(TextFieldSpecAttribute(
       style: style,

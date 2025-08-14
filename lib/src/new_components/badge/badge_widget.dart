@@ -15,18 +15,22 @@ part of 'badge.dart';
 /// ```
 class RemixBadge extends StatelessWidget {
   /// Creates a badge widget.
-  const RemixBadge({
+  RemixBadge({
     super.key,
-    this.label,
-    this.icon,
+    String? label,
+    IconData? icon,
     this.style = const BadgeStyle.create(),
+  }) : child = RemixLabel(label ?? '', icon: icon);
+
+  /// Creates a badge with custom content.
+  const RemixBadge.raw({
+    super.key,
+    this.style = const BadgeStyle.create(),
+    required this.child,
   });
 
-  /// The text label to display in the badge.
-  final String? label;
-
-  /// The icon to display in the badge.
-  final IconData? icon;
+  /// The child widget to display in the badge.
+  final Widget child;
 
   /// The style configuration for the badge.
   final BadgeStyle style;
@@ -36,23 +40,20 @@ class RemixBadge extends StatelessWidget {
     return StyleBuilder(
       style: DefaultBadgeStyle.merge(style),
       builder: (context, spec) {
-        // Build content with label and/or icon
-        Widget? content;
-
-        if (label != null || icon != null) {
-          // Use the migrated RemixLabel for consistent text/icon layout
-          content = RemixLabel(
-            label ?? '',
-            icon: icon,
-            style: LabelStyle(
-              spacing: 4,
-              label: TextMix.maybeValue(spec.text),
-              icon: IconMix.maybeValue(spec.icon),
+        return DefaultTextStyle(
+          style: TextStyle(
+            color: spec.text.style?.color,
+            fontSize: spec.text.style?.fontSize,
+            fontWeight: spec.text.style?.fontWeight,
+          ),
+          child: IconTheme(
+            data: IconThemeData(
+              size: spec.icon.size,
+              color: spec.icon.color,
             ),
-          );
-        }
-
-        return spec.container(child: content);
+            child: spec.container(child: child),
+          ),
+        );
       },
     );
   }

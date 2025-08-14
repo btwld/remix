@@ -39,7 +39,7 @@ mixin _$AvatarSpec on Spec<AvatarSpec> {
     BoxSpec? container,
     TextStyle? textStyle,
     IconThemeData? icon,
-    AnimatedData? animated,
+    dynamic? animated,
   }) {
     return AvatarSpec(
       container: container ?? _$this.container,
@@ -97,7 +97,7 @@ class AvatarSpecAttribute extends SpecAttribute<AvatarSpec> {
       container: container?.resolve(mix),
       textStyle: textStyle?.resolve(mix),
       icon: icon?.resolve(mix),
-      animated: animated?.resolve(mix) ?? mix.animation,
+      animated: animated,
     );
   }
 
@@ -117,7 +117,7 @@ class AvatarSpecAttribute extends SpecAttribute<AvatarSpec> {
       container: container?.merge(other.container) ?? other.container,
       textStyle: textStyle?.merge(other.textStyle) ?? other.textStyle,
       icon: icon?.merge(other.icon) ?? other.icon,
-      animated: animated?.merge(other.animated) ?? other.animated,
+      animated: other.animated ?? animated,
     );
   }
 
@@ -150,7 +150,7 @@ class AvatarSpecUtility<T extends SpecAttribute>
   late final icon = IconThemeDataUtility((v) => only(icon: v));
 
   /// Utility for defining [AvatarSpecAttribute.animated]
-  late final animated = AnimatedUtility((v) => only(animated: v));
+  late final animated = GenericUtility<T, dynamic>((v) => only(animated: v));
 
   AvatarSpecUtility(
     super.builder, {
@@ -175,7 +175,7 @@ class AvatarSpecUtility<T extends SpecAttribute>
     BoxSpecAttribute? container,
     TextStyleDto? textStyle,
     IconThemeDataDto? icon,
-    AnimatedDataDto? animated,
+    dynamic? animated,
   }) {
     return builder(AvatarSpecAttribute(
       container: container,

@@ -164,3 +164,137 @@ final DefaultAccordionStyle = AccordionStyle(
     ),
   ),
 );
+
+extension AccordionVariants on AccordionStyle {
+  /// Default accordion variant (same as DefaultAccordionStyle)
+  static AccordionStyle get defaultVariant => AccordionStyle(
+        itemContainer: BoxMix(
+          margin: EdgeInsetsMix(bottom: 12),
+          decoration: BoxDecorationMix(
+            border: BoxBorderMix.all(BorderSideMix(
+              color: Colors.grey[300]!,
+              width: 1,
+            )),
+            borderRadius: BorderRadiusMix.circular(12),
+          ),
+        ),
+        contentContainer: BoxMix(
+          padding: EdgeInsetsMix.fromLTRB(12, 0, 12, 12),
+          constraints: BoxConstraintsMix(minWidth: double.infinity),
+        ),
+        headerContainer: FlexBoxMix(
+          box: BoxMix(
+            padding: EdgeInsetsMix.all(12),
+          ),
+          flex: FlexMix(
+            direction: Axis.horizontal,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+          ),
+        ),
+        leadingIcon: IconMix(size: 20),
+        trailingIcon: IconMix(size: 20),
+        titleStyle: TextMix(
+          style: TextStyleMix(
+            color: Colors.grey[800],
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        contentStyle: TextMix(
+          style: TextStyleMix(
+            color: Colors.grey[800],
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+      );
+
+  /// Compact accordion variant with smaller padding
+  static AccordionStyle get compact => AccordionStyle(
+        itemContainer: BoxMix(
+          margin: EdgeInsetsMix(bottom: 8),
+          decoration: BoxDecorationMix(
+            border: BoxBorderMix.all(BorderSideMix(
+              color: Colors.grey[300]!,
+              width: 1,
+            )),
+            borderRadius: BorderRadiusMix.circular(8),
+          ),
+        ),
+        contentContainer: BoxMix(
+          padding: EdgeInsetsMix.fromLTRB(8, 0, 8, 8),
+          constraints: BoxConstraintsMix(minWidth: double.infinity),
+        ),
+        headerContainer: FlexBoxMix(
+          box: BoxMix(
+            padding: EdgeInsetsMix.all(8),
+          ),
+          flex: FlexMix(
+            direction: Axis.horizontal,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+          ),
+        ),
+        leadingIcon: IconMix(size: 16),
+        trailingIcon: IconMix(size: 16),
+        titleStyle: TextMix(
+          style: TextStyleMix(
+            color: Colors.grey[800],
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        contentStyle: TextMix(
+          style: TextStyleMix(
+            color: Colors.grey[800],
+            fontSize: 12,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+      );
+
+  /// Bordered accordion variant with prominent borders
+  static AccordionStyle get bordered => AccordionStyle(
+        itemContainer: BoxMix(
+          margin: EdgeInsetsMix(bottom: 12),
+          decoration: BoxDecorationMix(
+            border: BoxBorderMix.all(BorderSideMix(
+              color: Colors.grey[500]!,
+              width: 2,
+            )),
+            borderRadius: BorderRadiusMix.circular(12),
+          ),
+        ),
+        contentContainer: BoxMix(
+          padding: EdgeInsetsMix.fromLTRB(16, 0, 16, 16),
+          constraints: BoxConstraintsMix(minWidth: double.infinity),
+        ),
+        headerContainer: FlexBoxMix(
+          box: BoxMix(
+            padding: EdgeInsetsMix.all(16),
+          ),
+          flex: FlexMix(
+            direction: Axis.horizontal,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+          ),
+        ),
+        leadingIcon: IconMix(size: 20),
+        trailingIcon: IconMix(size: 20),
+        titleStyle: TextMix(
+          style: TextStyleMix(
+            color: Colors.grey[800],
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        contentStyle: TextMix(
+          style: TextStyleMix(
+            color: Colors.grey[800],
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+      );
+}

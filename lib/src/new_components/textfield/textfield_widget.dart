@@ -16,7 +16,7 @@ part of 'textfield.dart';
 ///   style: TextFieldStyle(),
 /// )
 /// ```
-class RemixTextField extends StatefulWidget implements Disableable {
+class RemixTextField extends StatefulWidget implements Disableable, Errorable {
   const RemixTextField({
     super.key,
     this.controller,
@@ -59,6 +59,7 @@ class RemixTextField extends StatefulWidget implements Disableable {
     this.enableInteractiveSelection = true,
     this.selectionControls,
     this.onTap,
+    this.onTapOutside,
     this.mouseCursor,
     this.buildCounter,
     this.scrollController,
@@ -70,8 +71,12 @@ class RemixTextField extends StatefulWidget implements Disableable {
     this.canRequestFocus = true,
     this.hintText,
     this.helperText,
-    this.textFieldStyle,
-    this.variants = const [],
+    this.label,
+    this.error = false,
+    this.prefix,
+    this.suffix,
+    this.onPressed,
+    this.textFieldStyle = const TextFieldStyle.create(),
   });
 
   /// Controls the text being edited.
@@ -195,6 +200,9 @@ class RemixTextField extends StatefulWidget implements Disableable {
   /// Called when the user taps on this text field.
   final GestureTapCallback? onTap;
 
+  /// Called when the user taps outside of this text field.
+  final TapRegionCallback? onTapOutside;
+
   /// The cursor for a mouse pointer when it enters or is hovering over the widget.
   final MouseCursor? mouseCursor;
 
@@ -228,28 +236,41 @@ class RemixTextField extends StatefulWidget implements Disableable {
   /// Helper text to display below the text field.
   final String? helperText;
 
-  /// The style configuration for the text field.
-  final TextFieldStyle? textFieldStyle;
+  /// Label text to display above the text field.
+  final String? label;
 
-  /// List of style variants to apply.
-  final List<Variant> variants;
+  /// Whether the text field is in error state.
+  @override
+  final bool error;
+
+  /// A widget to display before the text field.
+  final Widget? prefix;
+
+  /// A widget to display after the text field.
+  final Widget? suffix;
+
+  /// Called when the text field is pressed (for tap interactions).
+  final VoidCallback? onPressed;
+
+  /// The style configuration for the text field.
+  final TextFieldStyle textFieldStyle;
 
   @override
   State<RemixTextField> createState() => _RemixTextFieldState();
 }
 
 class _RemixTextFieldState extends State<RemixTextField>
-    with MixControllerMixin, DisableableMixin {
+    with MixControllerMixin, DisableableMixin, ErrorableMixin {
   TextFieldStyle get _style =>
-      DefaultTextFieldStyle.merge(widget.textFieldStyle ?? TextFieldStyle());
+      DefaultTextFieldStyle.merge(widget.textFieldStyle);
 
   @override
   Widget build(BuildContext context) {
     return StyleBuilder(
       style: _style,
       builder: (context, spec) {
-        // Build the text field with helper text if provided
-        final textField = TextField(
+        // Build the base text field
+        final baseTextField = TextField(
           controller: widget.controller,
           focusNode: widget.focusNode,
           keyboardType: widget.keyboardType,
@@ -289,7 +310,8 @@ class _RemixTextFieldState extends State<RemixTextField>
           dragStartBehavior: widget.dragStartBehavior,
           enableInteractiveSelection: widget.enableInteractiveSelection,
           selectionControls: widget.selectionControls,
-          onTap: widget.onTap,
+          onTap: widget.onPressed ?? widget.onTap,
+          onTapOutside: widget.onTapOutside,
           mouseCursor: widget.mouseCursor,
           buildCounter: widget.buildCounter,
           scrollController: widget.scrollController,
@@ -308,26 +330,41 @@ class _RemixTextFieldState extends State<RemixTextField>
               ),
         );
 
-        // Build the final widget
-        final Widget finalWidget;
+        // Wrap with prefix/suffix if provided
+        final Widget textField = (widget.prefix != null || widget.suffix != null)
+            ? spec.container.flex(
+                direction: Axis.horizontal,
+                children: [
+                  if (widget.prefix != null) widget.prefix!,
+                  Expanded(child: baseTextField),
+                  if (widget.suffix != null) widget.suffix!,
+                ],
+              )
+            : spec.container.box(child: baseTextField);
+
+        // Build the final widget with label and/or helper text if provided
+        final List<Widget> columnChildren = [];
+        
+        if (widget.label != null) {
+          columnChildren.add(spec.label(widget.label!));
+        }
+        
+        columnChildren.add(textField);
         
         if (widget.helperText != null) {
-          // If helper text is provided, wrap in a column
-          finalWidget = Column(
+          columnChildren.add(spec.helperText(widget.helperText!));
+        }
+        
+        if (columnChildren.length > 1) {
+          return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
-            children: [
-              textField,
-              SizedBox(height: spec.spacing),
-              spec.helperText(widget.helperText!),
-            ],
+            spacing: spec.spacing,
+            children: columnChildren,
           );
-        } else {
-          finalWidget = textField;
         }
-
-        // Apply container styling
-        return spec.container.box(child: finalWidget);
+        
+        return textField;
       },
       controller: stateController,
     );

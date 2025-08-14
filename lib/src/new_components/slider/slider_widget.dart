@@ -26,8 +26,7 @@ class RemixSlider extends StatefulWidget implements Disableable {
     required this.value,
     this.onChangeEnd,
     this.onChangeStart,
-    this.style,
-    this.variants = const [],
+    this.style = const SliderStyle.create(),
     this.enabled = true,
     this.focusNode,
   }) : assert(
@@ -50,10 +49,7 @@ class RemixSlider extends StatefulWidget implements Disableable {
   final double value;
 
   /// The style configuration for the slider.
-  final SliderStyle? style;
-
-  /// List of style variants to apply.
-  final List<Variant> variants;
+  final SliderStyle style;
 
   /// Whether the slider is enabled for interaction.
   @override
@@ -86,7 +82,7 @@ class _RemixSliderState extends State<RemixSlider>
   }
 
   SliderStyle get _style =>
-      DefaultSliderStyle.merge(widget.style ?? SliderStyle());
+      DefaultSliderStyle.merge(widget.style);
 
   @override
   Widget build(BuildContext context) {
@@ -97,9 +93,9 @@ class _RemixSliderState extends State<RemixSlider>
       onChanged: widget.onChanged,
       onDragStart: () => widget.onChangeStart?.call(widget.value),
       onDragEnd: widget.onChangeEnd,
-      onHoverState: (state) => stateController.hovered = state,
-      onDraggingState: (state) => stateController.dragged = state,
-      onFocusState: (state) => stateController.focused = state,
+      onHoveredState: (state) => stateController.hovered = state,
+      onDraggedState: (state) => stateController.dragged = state,
+      onFocusedState: (state) => stateController.focused = state,
       enabled: widget.enabled,
       focusNode: widget.focusNode,
       direction: Axis.horizontal,

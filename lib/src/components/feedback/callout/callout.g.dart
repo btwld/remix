@@ -39,8 +39,8 @@ mixin _$CalloutSpec on Spec<CalloutSpec> {
     FlexBoxSpec? container,
     IconThemeData? icon,
     TextStyle? textStyle,
-    WidgetModifiersConfig? modifiers,
-    AnimatedData? animated,
+    dynamic? modifiers,
+    dynamic? animated,
   }) {
     return CalloutSpec(
       container: container ?? _$this.container,
@@ -101,8 +101,8 @@ class CalloutSpecAttribute extends SpecAttribute<CalloutSpec> {
       container: container?.resolve(mix),
       icon: icon?.resolve(mix),
       textStyle: textStyle?.resolve(mix),
-      modifiers: modifiers?.resolve(mix),
-      animated: animated?.resolve(mix) ?? mix.animation,
+      modifiers: modifiers,
+      animated: animated,
     );
   }
 
@@ -122,8 +122,8 @@ class CalloutSpecAttribute extends SpecAttribute<CalloutSpec> {
       container: container?.merge(other.container) ?? other.container,
       icon: icon?.merge(other.icon) ?? other.icon,
       textStyle: textStyle?.merge(other.textStyle) ?? other.textStyle,
-      modifiers: modifiers?.merge(other.modifiers) ?? other.modifiers,
-      animated: animated?.merge(other.animated) ?? other.animated,
+      modifiers: other.modifiers ?? modifiers,
+      animated: other.animated ?? animated,
     );
   }
 
@@ -157,10 +157,10 @@ class CalloutSpecUtility<T extends SpecAttribute>
   late final textStyle = TextStyleUtility((v) => only(textStyle: v));
 
   /// Utility for defining [CalloutSpecAttribute.modifiers]
-  late final wrap = SpecModifierUtility((v) => only(modifiers: v));
+  late final modifiers = GenericUtility<T, dynamic>((v) => only(modifiers: v));
 
   /// Utility for defining [CalloutSpecAttribute.animated]
-  late final animated = AnimatedUtility((v) => only(animated: v));
+  late final animated = GenericUtility<T, dynamic>((v) => only(animated: v));
 
   CalloutSpecUtility(
     super.builder, {
@@ -185,8 +185,8 @@ class CalloutSpecUtility<T extends SpecAttribute>
     FlexBoxSpecAttribute? container,
     IconThemeDataDto? icon,
     TextStyleDto? textStyle,
-    WidgetModifiersConfigDto? modifiers,
-    AnimatedDataDto? animated,
+    dynamic? modifiers,
+    dynamic? animated,
   }) {
     return builder(CalloutSpecAttribute(
       container: container,

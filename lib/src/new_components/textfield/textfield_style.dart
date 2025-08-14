@@ -20,6 +20,7 @@ class TextFieldStyle extends Style<TextFieldSpec> with StyleModifierMixin<TextFi
   final Prop<double>? $spacing;
   final Prop<FlexBoxSpec>? $container;
   final Prop<TextSpec>? $helperText;
+  final Prop<TextSpec>? $label;
 
   const TextFieldStyle.create({
     Prop<TextStyle>? style,
@@ -38,6 +39,7 @@ class TextFieldStyle extends Style<TextFieldSpec> with StyleModifierMixin<TextFi
     Prop<double>? spacing,
     Prop<FlexBoxSpec>? container,
     Prop<TextSpec>? helperText,
+    Prop<TextSpec>? label,
     super.variants,
     super.animation,
     super.modifier,
@@ -57,7 +59,8 @@ class TextFieldStyle extends Style<TextFieldSpec> with StyleModifierMixin<TextFi
         $keyboardAppearance = keyboardAppearance,
         $spacing = spacing,
         $container = container,
-        $helperText = helperText;
+        $helperText = helperText,
+        $label = label;
 
   TextFieldStyle({
     TextStyle? style,
@@ -76,6 +79,7 @@ class TextFieldStyle extends Style<TextFieldSpec> with StyleModifierMixin<TextFi
     double? spacing,
     FlexBoxMix? container,
     TextMix? helperText,
+    TextMix? label,
     AnimationConfig? animation,
     List<VariantStyle<TextFieldSpec>>? variants,
     ModifierConfig? modifier,
@@ -97,6 +101,7 @@ class TextFieldStyle extends Style<TextFieldSpec> with StyleModifierMixin<TextFi
           spacing: Prop.maybe(spacing),
           container: container != null ? Prop.mix(container) : null,
           helperText: helperText != null ? Prop.mix(helperText) : null,
+          label: label != null ? Prop.mix(label) : null,
           variants: variants,
           animation: animation,
           modifier: modifier,
@@ -237,6 +242,7 @@ class TextFieldStyle extends Style<TextFieldSpec> with StyleModifierMixin<TextFi
       spacing: MixOps.resolve(context, $spacing),
       container: MixOps.resolve(context, $container),
       helperText: MixOps.resolve(context, $helperText),
+      label: MixOps.resolve(context, $label),
     );
   }
 
@@ -390,3 +396,131 @@ final TextFieldDisabledStyle = TextFieldStyle(
     ),
   ),
 );
+
+extension TextFieldVariants on TextFieldStyle {
+  /// Primary text field variant with blue accents
+  static TextFieldStyle get primary => TextFieldStyle(
+        style: TextStyle(
+          fontSize: 14,
+          color: Colors.black87,
+        ),
+        hintTextColor: Colors.grey.shade400,
+        textAlign: TextAlign.start,
+        cursorWidth: 2.0,
+        cursorColor: Colors.blue[500],
+        cursorOffset: Offset.zero,
+        selectionHeightStyle: BoxHeightStyle.tight,
+        selectionWidthStyle: BoxWidthStyle.tight,
+        scrollPadding: const EdgeInsets.all(20.0),
+        spacing: 4,
+        container: FlexBoxMix(
+          box: BoxMix(
+            padding: EdgeInsetsMix.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecorationMix(
+              borderRadius: BorderRadiusMix.circular(6),
+              border: BoxBorderMix.all(
+                BorderSideMix(
+                  color: Colors.blue[500]!,
+                  width: 1,
+                ),
+              ),
+              color: Colors.blue[25],
+            ),
+          ),
+          flex: FlexMix(
+            direction: Axis.vertical,
+            crossAxisAlignment: CrossAxisAlignment.start,
+          ),
+        ),
+        helperText: TextMix(
+          style: TextStyleMix(
+            fontSize: 12,
+            color: Colors.blue.shade600,
+          ),
+        ),
+      );
+
+  /// Outlined text field variant with prominent border
+  static TextFieldStyle get outlined => TextFieldStyle(
+        style: TextStyle(
+          fontSize: 14,
+          color: Colors.black87,
+        ),
+        hintTextColor: Colors.grey.shade400,
+        textAlign: TextAlign.start,
+        cursorWidth: 2.0,
+        cursorColor: Colors.blue,
+        cursorOffset: Offset.zero,
+        selectionHeightStyle: BoxHeightStyle.tight,
+        selectionWidthStyle: BoxWidthStyle.tight,
+        scrollPadding: const EdgeInsets.all(20.0),
+        spacing: 4,
+        container: FlexBoxMix(
+          box: BoxMix(
+            padding: EdgeInsetsMix.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecorationMix(
+              borderRadius: BorderRadiusMix.circular(6),
+              border: BoxBorderMix.all(
+                BorderSideMix(
+                  color: Colors.grey.shade400,
+                  width: 2,
+                ),
+              ),
+              color: Colors.transparent,
+            ),
+          ),
+          flex: FlexMix(
+            direction: Axis.vertical,
+            crossAxisAlignment: CrossAxisAlignment.start,
+          ),
+        ),
+        helperText: TextMix(
+          style: TextStyleMix(
+            fontSize: 12,
+            color: Colors.grey.shade600,
+          ),
+        ),
+      );
+
+  /// Filled text field variant with background color
+  static TextFieldStyle get filled => TextFieldStyle(
+        style: TextStyle(
+          fontSize: 14,
+          color: Colors.black87,
+        ),
+        hintTextColor: Colors.grey.shade500,
+        textAlign: TextAlign.start,
+        cursorWidth: 2.0,
+        cursorColor: Colors.blue,
+        cursorOffset: Offset.zero,
+        selectionHeightStyle: BoxHeightStyle.tight,
+        selectionWidthStyle: BoxWidthStyle.tight,
+        scrollPadding: const EdgeInsets.all(20.0),
+        spacing: 4,
+        container: FlexBoxMix(
+          box: BoxMix(
+            padding: EdgeInsetsMix.symmetric(horizontal: 12, vertical: 12),
+            decoration: BoxDecorationMix(
+              borderRadius: BorderRadiusMix.circular(8),
+              color: Colors.grey.shade100,
+              border: BoxBorderMix.all(
+                BorderSideMix(
+                  color: Colors.transparent,
+                  width: 1,
+                ),
+              ),
+            ),
+          ),
+          flex: FlexMix(
+            direction: Axis.vertical,
+            crossAxisAlignment: CrossAxisAlignment.start,
+          ),
+        ),
+        helperText: TextMix(
+          style: TextStyleMix(
+            fontSize: 12,
+            color: Colors.grey.shade600,
+          ),
+        ),
+      );
+}

@@ -40,8 +40,8 @@ mixin _$RadioSpec on Spec<RadioSpec> {
     BoxSpec? indicator,
     FlexBoxSpec? container,
     TextSpec? text,
-    WidgetModifiersConfig? modifiers,
-    AnimatedData? animated,
+    dynamic? modifiers,
+    dynamic? animated,
   }) {
     return RadioSpec(
       indicatorContainer: indicatorContainer ?? _$this.indicatorContainer,
@@ -82,7 +82,7 @@ mixin _$RadioSpec on Spec<RadioSpec> {
       indicator: _$this.indicator.lerp(other.indicator, t),
       container: _$this.container.lerp(other.container, t),
       text: _$this.text.lerp(other.text, t),
-      modifiers: other.modifiers,
+      modifiers: t < 0.5 ? _$this.modifiers : other.modifiers,
       animated: _$this.animated ?? other.animated,
     );
   }
@@ -157,8 +157,8 @@ class RadioSpecAttribute extends SpecAttribute<RadioSpec> with Diagnosticable {
       indicator: indicator?.resolve(mix),
       container: container?.resolve(mix),
       text: text?.resolve(mix),
-      modifiers: modifiers?.resolve(mix),
-      animated: animated?.resolve(mix) ?? mix.animation,
+      modifiers: modifiers,
+      animated: animated,
     );
   }
 
@@ -180,8 +180,8 @@ class RadioSpecAttribute extends SpecAttribute<RadioSpec> with Diagnosticable {
       indicator: indicator?.merge(other.indicator) ?? other.indicator,
       container: container?.merge(other.container) ?? other.container,
       text: text?.merge(other.text) ?? other.text,
-      modifiers: modifiers?.merge(other.modifiers) ?? other.modifiers,
-      animated: animated?.merge(other.animated) ?? other.animated,
+      modifiers: other.modifiers ?? modifiers,
+      animated: other.animated ?? animated,
     );
   }
 
@@ -236,10 +236,10 @@ class RadioSpecUtility<T extends SpecAttribute>
   late final text = TextSpecUtility((v) => only(text: v));
 
   /// Utility for defining [RadioSpecAttribute.modifiers]
-  late final wrap = SpecModifierUtility((v) => only(modifiers: v));
+  late final modifiers = GenericUtility<T, dynamic>((v) => only(modifiers: v));
 
   /// Utility for defining [RadioSpecAttribute.animated]
-  late final animated = AnimatedUtility((v) => only(animated: v));
+  late final animated = GenericUtility<T, dynamic>((v) => only(animated: v));
 
   RadioSpecUtility(
     super.builder, {
@@ -265,8 +265,8 @@ class RadioSpecUtility<T extends SpecAttribute>
     BoxSpecAttribute? indicator,
     FlexBoxSpecAttribute? container,
     TextSpecAttribute? text,
-    WidgetModifiersConfigDto? modifiers,
-    AnimatedDataDto? animated,
+    dynamic? modifiers,
+    dynamic? animated,
   }) {
     return builder(RadioSpecAttribute(
       indicatorContainer: indicatorContainer,

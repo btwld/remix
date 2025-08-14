@@ -1,24 +1,24 @@
 part of 'chip.dart';
 
 class ChipSpec extends Spec<ChipSpec> with Diagnosticable {
-  final BoxSpec container;
+  final FlexBoxSpec container;
   final TextSpec label;
   final IconSpec leadingIcon;
   final IconSpec trailingIcon;
 
   const ChipSpec({
-    BoxSpec? container,
+    FlexBoxSpec? container,
     TextSpec? label,
     IconSpec? leadingIcon,
     IconSpec? trailingIcon,
-  })  : container = container ?? const BoxSpec(),
+  })  : container = container ?? const FlexBoxSpec(),
         label = label ?? const TextSpec(),
         leadingIcon = leadingIcon ?? const IconSpec(),
         trailingIcon = trailingIcon ?? const IconSpec();
 
   @override
   ChipSpec copyWith({
-    BoxSpec? container,
+    FlexBoxSpec? container,
     TextSpec? label,
     IconSpec? leadingIcon,
     IconSpec? trailingIcon,

@@ -190,3 +190,109 @@ final DefaultAvatarStyle = AvatarStyle(
   ),
   icon: IconMix(color: Colors.black, size: 24),
 );
+
+extension AvatarVariants on AvatarStyle {
+  /// Primary avatar variant with blue background and white text
+  static AvatarStyle get primary => AvatarStyle(
+        container: BoxMix(
+          alignment: Alignment.center,
+          constraints: BoxConstraintsMix(
+            minWidth: 50,
+            maxWidth: 50,
+            minHeight: 50,
+            maxHeight: 50,
+          ),
+          decoration: BoxDecorationMix(
+            shape: BoxShape.circle,
+            color: Colors.blue[500],
+          ),
+          clipBehavior: Clip.antiAlias,
+        ),
+        text: TextMix(
+          style: TextStyleMix(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        icon: IconMix(color: Colors.white, size: 24),
+      );
+
+  /// Secondary avatar variant with grey background
+  static AvatarStyle get secondary => AvatarStyle(
+        container: BoxMix(
+          alignment: Alignment.center,
+          constraints: BoxConstraintsMix(
+            minWidth: 50,
+            maxWidth: 50,
+            minHeight: 50,
+            maxHeight: 50,
+          ),
+          decoration: BoxDecorationMix(
+            shape: BoxShape.circle,
+            color: Colors.grey[500],
+          ),
+          clipBehavior: Clip.antiAlias,
+        ),
+        text: TextMix(
+          style: TextStyleMix(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+        icon: IconMix(color: Colors.white, size: 24),
+      );
+
+  /// Small avatar variant (32x32)
+  static AvatarStyle get small => AvatarStyle(
+        container: BoxMix(
+          alignment: Alignment.center,
+          constraints: BoxConstraintsMix(
+            minWidth: 32,
+            maxWidth: 32,
+            minHeight: 32,
+            maxHeight: 32,
+          ),
+          decoration: BoxDecorationMix(
+            shape: BoxShape.circle,
+            color: Colors.grey[300],
+          ),
+          clipBehavior: Clip.antiAlias,
+        ),
+        text: TextMix(
+          style: TextStyleMix(
+            color: Colors.black,
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+        icon: IconMix(color: Colors.black, size: 16),
+      );
+
+  /// Large avatar variant (64x64)
+  static AvatarStyle get large => AvatarStyle(
+        container: BoxMix(
+          alignment: Alignment.center,
+          constraints: BoxConstraintsMix(
+            minWidth: 64,
+            maxWidth: 64,
+            minHeight: 64,
+            maxHeight: 64,
+          ),
+          decoration: BoxDecorationMix(
+            shape: BoxShape.circle,
+            color: Colors.grey[300],
+          ),
+          clipBehavior: Clip.antiAlias,
+        ),
+        text: TextMix(
+          style: TextStyleMix(
+            color: Colors.black,
+            fontSize: 24,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+        icon: IconMix(color: Colors.black, size: 32),
+      );
+}

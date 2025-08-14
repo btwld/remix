@@ -39,9 +39,9 @@ mixin _$ButtonSpec on Spec<ButtonSpec> {
     BoxSpec? container,
     IconThemeData? icon,
     TextStyle? textStyle,
-    WidgetModifiersConfig? modifiers,
+    dynamic? modifiers,
     SpinnerSpec? spinner,
-    AnimatedData? animated,
+    dynamic? animated,
   }) {
     return ButtonSpec(
       container: container ?? _$this.container,
@@ -122,9 +122,9 @@ class ButtonSpecAttribute extends SpecAttribute<ButtonSpec>
       container: container?.resolve(mix),
       icon: icon?.resolve(mix),
       textStyle: textStyle?.resolve(mix),
-      modifiers: modifiers?.resolve(mix),
+      modifiers: modifiers,
       spinner: spinner?.resolve(mix),
-      animated: animated?.resolve(mix) ?? mix.animation,
+      animated: animated,
     );
   }
 
@@ -144,9 +144,9 @@ class ButtonSpecAttribute extends SpecAttribute<ButtonSpec>
       container: container?.merge(other.container) ?? other.container,
       icon: icon?.merge(other.icon) ?? other.icon,
       textStyle: textStyle?.merge(other.textStyle) ?? other.textStyle,
-      modifiers: modifiers?.merge(other.modifiers) ?? other.modifiers,
+      modifiers: other.modifiers ?? modifiers,
       spinner: spinner?.merge(other.spinner) ?? other.spinner,
-      animated: animated?.merge(other.animated) ?? other.animated,
+      animated: other.animated ?? animated,
     );
   }
 
@@ -196,13 +196,13 @@ class ButtonSpecUtility<T extends SpecAttribute>
   late final textStyle = TextStyleUtility((v) => only(textStyle: v));
 
   /// Utility for defining [ButtonSpecAttribute.modifiers]
-  late final wrap = SpecModifierUtility((v) => only(modifiers: v));
+  late final modifiers = GenericUtility<T, dynamic>((v) => only(modifiers: v));
 
   /// Utility for defining [ButtonSpecAttribute.spinner]
   late final spinner = SpinnerSpecUtility((v) => only(spinner: v));
 
   /// Utility for defining [ButtonSpecAttribute.animated]
-  late final animated = AnimatedUtility((v) => only(animated: v));
+  late final animated = GenericUtility<T, dynamic>((v) => only(animated: v));
 
   ButtonSpecUtility(
     super.builder, {
@@ -227,9 +227,9 @@ class ButtonSpecUtility<T extends SpecAttribute>
     BoxSpecAttribute? container,
     IconThemeDataDto? icon,
     TextStyleDto? textStyle,
-    WidgetModifiersConfigDto? modifiers,
+    dynamic? modifiers,
     SpinnerSpecAttribute? spinner,
-    AnimatedDataDto? animated,
+    dynamic? animated,
   }) {
     return builder(ButtonSpecAttribute(
       container: container,

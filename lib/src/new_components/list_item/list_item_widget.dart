@@ -15,14 +15,17 @@ part of 'list_item.dart';
 ///   },
 /// )
 /// ```
-class RemixListItem extends StatelessWidget {
+class RemixListItem extends StatefulWidget {
   const RemixListItem({
     super.key,
     this.title,
     this.subtitle,
     this.leading,
     this.trailing,
-    this.onTap,
+    this.onPress,
+    this.enabled = true,
+    this.focusNode,
+    this.enableHapticFeedback = true,
     this.style = const ListItemStyle.create(),
   });
 
@@ -38,76 +41,95 @@ class RemixListItem extends StatelessWidget {
   /// A widget to display after the title.
   final Widget? trailing;
 
-  /// Called when the user taps this list item.
-  final VoidCallback? onTap;
+  /// Called when the user presses this list item.
+  final VoidCallback? onPress;
+  
+  /// Whether this list item is enabled.
+  final bool enabled;
+  
+  /// The focus node for the list item.
+  final FocusNode? focusNode;
+  
+  /// Whether to provide haptic feedback when pressed.
+  final bool enableHapticFeedback;
 
   /// The style configuration for the list item.
   final ListItemStyle style;
 
   @override
+  State<RemixListItem> createState() => _RemixListItemState();
+}
+
+class _RemixListItemState extends State<RemixListItem>
+    with MixControllerMixin {
+  @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
+    return NakedButton(
+      onPressed: widget.onPress,
+      onHoveredState: (state) => stateController.hovered = state,
+      onPressedState: (state) => stateController.pressed = state,
+      onFocusedState: (state) => stateController.focused = state,
+      onDisabledState: (state) => stateController.disabled = state,
+      enabled: widget.enabled,
+      enableHapticFeedback: widget.enableHapticFeedback,
+      focusNode: widget.focusNode,
       child: StyleBuilder(
-        style: DefaultListItemStyle.merge(style),
+        style: DefaultListItemStyle.merge(widget.style),
         builder: (context, spec) {
           final children = <Widget>[];
 
           // Leading widget
-          if (leading != null) {
+          if (widget.leading != null) {
             children.add(
               IconTheme(
                 data: IconThemeData(
                   size: spec.leadingIcon.size,
                   color: spec.leadingIcon.color,
                 ),
-                child: leading!,
+                child: widget.leading!,
               ),
             );
-            children.add(const SizedBox(width: 16));
           }
 
           // Title and subtitle
           final textWidgets = <Widget>[];
-          if (title != null) {
-            textWidgets.add(spec.title(title!));
+          if (widget.title != null) {
+            textWidgets.add(spec.title(widget.title!));
           }
-          if (subtitle != null) {
-            textWidgets.add(spec.subtitle(subtitle!));
+          if (widget.subtitle != null) {
+            textWidgets.add(spec.subtitle(widget.subtitle!));
           }
 
           if (textWidgets.isNotEmpty) {
             children.add(
               Expanded(
                 child: spec.contentContainer(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: textWidgets,
-                  ),
+                  direction: Axis.vertical,
+                  children: textWidgets,
                 ),
               ),
             );
           }
 
           // Trailing widget
-          if (trailing != null) {
-            if (textWidgets.isNotEmpty) {
-              children.add(const SizedBox(width: 16));
-            }
+          if (widget.trailing != null) {
             children.add(
               IconTheme(
                 data: IconThemeData(
                   size: spec.trailingIcon.size,
                   color: spec.trailingIcon.color,
                 ),
-                child: trailing!,
+                child: widget.trailing!,
               ),
             );
           }
 
-          return spec.container(child: Row(children: children));
+          return spec.container(
+            direction: Axis.horizontal,
+            children: children,
+          );
         },
+        controller: stateController,
       ),
     );
   }

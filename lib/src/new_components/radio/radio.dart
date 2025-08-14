@@ -9,3 +9,4 @@ import '../_internal/mix_controller_mixin.dart';
 part 'radio_spec.dart';
 part 'radio_style.dart';
 part 'radio_widget.dart';
+part 'radio_group_widget.dart';

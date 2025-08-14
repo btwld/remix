@@ -19,12 +19,13 @@ dependencies:
     path: ../../Projects/mix/packages/mix
   mix_annotations: ^1.7.0
   naked_ui:
-    git:
-      url: https://github.com/btwld/naked_ui
+    path: ../naked_ui
   meta: ^1.15.0
 
 dev_dependencies:
   flutter_test:
+    sdk: flutter
+  integration_test:
     sdk: flutter
   mix_generator: ^1.7.0
   build_runner: ^2.4.9

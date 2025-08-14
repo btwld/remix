@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:remix/remix.dart';
+import 'package:remix/remix_new.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
@@ -7,7 +7,7 @@ final _key = GlobalKey();
 
 @widgetbook.UseCase(
   name: 'Menu Item Component',
-  type: RxListItem,
+  type: RemixListItem,
 )
 Widget buildButtonUseCase(BuildContext context) {
   return KeyedSubtree(
@@ -16,7 +16,7 @@ Widget buildButtonUseCase(BuildContext context) {
       body: Center(
         child: SizedBox(
           width: 350,
-          child: RxListItem(
+          child: RemixListItem(
             title: context.knobs.string(
               label: 'Title',
               initialValue: 'Menu Item',
@@ -26,15 +26,12 @@ Widget buildButtonUseCase(BuildContext context) {
               initialValue: 'Subtitle',
             ),
             onPress: () {},
-            enabled: context.knobs.boolean(
-              label: 'Disabled',
-              initialValue: false,
-            ),
+            // Note: enabled parameter not available in RemixListItem
             leading: context.knobs.boolean(
               label: 'Show leading widget',
               initialValue: false,
             )
-                ? const RxAvatar.raw(child: Text('LF'))
+                ? RemixAvatar(label: 'LF')
                 : const SizedBox.shrink(),
             trailing: context.knobs.boolean(
               label: 'Show trailing widget',

@@ -152,3 +152,93 @@ final SliderDisabledStyle = SliderStyle(
     strokeCap: StrokeCap.round,
   ),
 );
+
+extension SliderVariants on SliderStyle {
+  /// Primary slider variant with blue colors
+  static SliderStyle get primary => SliderStyle(
+        thumb: BoxMix(
+          decoration: BoxDecorationMix(
+            border: BoxBorderMix.all(BorderSideMix(color: Colors.blue[500]!, width: 2)),
+            shape: BoxShape.circle,
+            color: Colors.white,
+            boxShadow: [
+              BoxShadowMix(
+                color: Colors.blue.withValues(alpha: 0.3),
+                offset: const Offset(0, 2),
+                blurRadius: 4,
+              ),
+            ],
+          ),
+        ),
+        baseTrack: PaintData(
+          strokeWidth: 8,
+          color: Colors.blue[100]!,
+          strokeCap: StrokeCap.round,
+        ),
+        activeTrack: PaintData(
+          strokeWidth: 8,
+          color: Colors.blue[500]!,
+          strokeCap: StrokeCap.round,
+        ),
+        division: PaintData(
+          strokeWidth: 8,
+          color: Colors.blue[300]!.withValues(alpha: 0.5),
+          strokeCap: StrokeCap.round,
+        ),
+        animation: AnimationConfig.easeInOut(const Duration(milliseconds: 200)),
+      );
+
+  /// Secondary slider variant with grey colors
+  static SliderStyle get secondary => SliderStyle(
+        thumb: BoxMix(
+          decoration: BoxDecorationMix(
+            border: BoxBorderMix.all(BorderSideMix(color: Colors.grey[600]!, width: 2)),
+            shape: BoxShape.circle,
+            color: Colors.white,
+          ),
+        ),
+        baseTrack: PaintData(
+          strokeWidth: 8,
+          color: Colors.grey[300]!,
+          strokeCap: StrokeCap.round,
+        ),
+        activeTrack: PaintData(
+          strokeWidth: 8,
+          color: Colors.grey[600]!,
+          strokeCap: StrokeCap.round,
+        ),
+        division: PaintData(
+          strokeWidth: 8,
+          color: Colors.grey[500]!.withValues(alpha: 0.5),
+          strokeCap: StrokeCap.round,
+        ),
+        animation: AnimationConfig.easeInOut(const Duration(milliseconds: 200)),
+      );
+
+  /// Compact slider variant with smaller track
+  static SliderStyle get compact => SliderStyle(
+        thumb: BoxMix(
+          decoration: BoxDecorationMix(
+            border: BoxBorderMix.all(BorderSideMix(color: Colors.black, width: 1.5)),
+            shape: BoxShape.circle,
+            color: Colors.white,
+          ),
+        ),
+        baseTrack: const PaintData(
+          strokeWidth: 4,
+          color: Colors.grey,
+          strokeCap: StrokeCap.round,
+        ),
+        activeTrack: const PaintData(
+          strokeWidth: 4,
+          color: Colors.black,
+          strokeCap: StrokeCap.round,
+        ),
+        division: PaintData(
+          strokeWidth: 4,
+          color: Colors.black.withValues(alpha: 0.26),
+          strokeCap: StrokeCap.round,
+        ),
+        animation: AnimationConfig.easeInOut(const Duration(milliseconds: 200)),
+      );
+}

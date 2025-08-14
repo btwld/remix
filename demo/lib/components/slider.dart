@@ -1,6 +1,6 @@
 import 'package:demo/helpers/use_case_state.dart';
 import 'package:flutter/material.dart';
-import 'package:remix/remix.dart';
+import 'package:remix/remix_new.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
@@ -8,7 +8,7 @@ final _key = GlobalKey();
 
 @widgetbook.UseCase(
   name: 'Slider Component',
-  type: RxSlider,
+  type: RemixSlider,
 )
 Widget buildButtonUseCase(BuildContext context) {
   final knobState = WidgetbookState.of(context);
@@ -18,7 +18,7 @@ Widget buildButtonUseCase(BuildContext context) {
       body: Center(
         child: SizedBox(
           width: 200,
-          child: RxSlider(
+          child: RemixSlider(
             onChanged: (value) => knobState.updateKnob('value', value),
             enabled: context.knobs.boolean(
               label: 'enabled',

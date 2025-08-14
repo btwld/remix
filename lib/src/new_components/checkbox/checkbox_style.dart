@@ -4,13 +4,13 @@ class CheckboxStyle extends Style<CheckboxSpec>
     with
         StyleModifierMixin<CheckboxStyle, CheckboxSpec>,
         StyleVariantMixin<CheckboxStyle, CheckboxSpec> {
-  final Prop<BoxSpec>? $container;
+  final Prop<FlexBoxSpec>? $container;
   final Prop<BoxSpec>? $indicatorContainer;
   final Prop<IconSpec>? $indicator;
   final Prop<TextSpec>? $label;
 
   const CheckboxStyle.create({
-    Prop<BoxSpec>? container,
+    Prop<FlexBoxSpec>? container,
     Prop<BoxSpec>? indicatorContainer,
     Prop<IconSpec>? indicator,
     Prop<TextSpec>? label,
@@ -24,7 +24,7 @@ class CheckboxStyle extends Style<CheckboxSpec>
         $label = label;
 
   CheckboxStyle({
-    BoxMix? container,
+    FlexBoxMix? container,
     BoxMix? indicatorContainer,
     IconMix? indicator,
     TextMix? label,
@@ -45,7 +45,7 @@ class CheckboxStyle extends Style<CheckboxSpec>
         );
 
   factory CheckboxStyle.value(CheckboxSpec spec) => CheckboxStyle(
-        container: BoxMix.maybeValue(spec.container),
+        container: FlexBoxMix.maybeValue(spec.container),
         indicatorContainer: BoxMix.maybeValue(spec.indicatorContainer),
         indicator: IconMix.maybeValue(spec.indicator),
         label: TextMix.maybeValue(spec.label),
@@ -195,7 +195,15 @@ class CheckboxStyle extends Style<CheckboxSpec>
 }
 
 final DefaultCheckboxStyle = CheckboxStyle(
-  container: BoxMix(alignment: Alignment.centerLeft),
+  container: FlexBoxMix(
+    box: BoxMix(alignment: Alignment.centerLeft),
+    flex: FlexMix(
+      direction: Axis.horizontal,
+      gap: 8,
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+    ),
+  ),
   indicatorContainer: BoxMix(
     alignment: Alignment.center,
     constraints: BoxConstraintsMix(
@@ -218,3 +226,107 @@ final DefaultCheckboxStyle = CheckboxStyle(
     style: TextStyleMix(color: Colors.black, fontSize: 14),
   ),
 );
+
+extension CheckboxVariants on CheckboxStyle {
+  /// Primary checkbox variant with blue colors
+  static CheckboxStyle get primary => CheckboxStyle(
+        container: FlexBoxMix(
+          box: BoxMix(alignment: Alignment.centerLeft),
+          flex: FlexMix(
+            direction: Axis.horizontal,
+            gap: 8,
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+          ),
+        ),
+        indicatorContainer: BoxMix(
+          alignment: Alignment.center,
+          constraints: BoxConstraintsMix(
+            minWidth: 20,
+            maxWidth: 20,
+            minHeight: 20,
+            maxHeight: 20,
+          ),
+          decoration: BoxDecorationMix(
+            border: BoxBorderMix.all(BorderSideMix(
+              color: Colors.blue[500]!,
+              width: 1.5,
+            )),
+            borderRadius: BorderRadiusMix.circular(4),
+            color: Colors.blue[50],
+          ),
+        ),
+        indicator: IconMix(color: Colors.blue[500], size: 16),
+        label: TextMix(
+          style: TextStyleMix(color: Colors.black, fontSize: 14),
+        ),
+      );
+
+  /// Secondary checkbox variant with grey colors
+  static CheckboxStyle get secondary => CheckboxStyle(
+        container: FlexBoxMix(
+          box: BoxMix(alignment: Alignment.centerLeft),
+          flex: FlexMix(
+            direction: Axis.horizontal,
+            gap: 8,
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+          ),
+        ),
+        indicatorContainer: BoxMix(
+          alignment: Alignment.center,
+          constraints: BoxConstraintsMix(
+            minWidth: 20,
+            maxWidth: 20,
+            minHeight: 20,
+            maxHeight: 20,
+          ),
+          decoration: BoxDecorationMix(
+            border: BoxBorderMix.all(BorderSideMix(
+              color: Colors.grey[500]!,
+              width: 1.5,
+            )),
+            borderRadius: BorderRadiusMix.circular(4),
+            color: Colors.grey[50],
+          ),
+        ),
+        indicator: IconMix(color: Colors.grey[600], size: 16),
+        label: TextMix(
+          style: TextStyleMix(color: Colors.black, fontSize: 14),
+        ),
+      );
+
+  /// Compact checkbox variant with smaller size
+  static CheckboxStyle get compact => CheckboxStyle(
+        container: FlexBoxMix(
+          box: BoxMix(alignment: Alignment.centerLeft),
+          flex: FlexMix(
+            direction: Axis.horizontal,
+            gap: 6,
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+          ),
+        ),
+        indicatorContainer: BoxMix(
+          alignment: Alignment.center,
+          constraints: BoxConstraintsMix(
+            minWidth: 16,
+            maxWidth: 16,
+            minHeight: 16,
+            maxHeight: 16,
+          ),
+          decoration: BoxDecorationMix(
+            border: BoxBorderMix.all(BorderSideMix(
+              color: Colors.grey[400]!,
+              width: 1.5,
+            )),
+            borderRadius: BorderRadiusMix.circular(3),
+            color: Colors.white,
+          ),
+        ),
+        indicator: IconMix(color: Colors.black, size: 12),
+        label: TextMix(
+          style: TextStyleMix(color: Colors.black, fontSize: 12),
+        ),
+      );
+}

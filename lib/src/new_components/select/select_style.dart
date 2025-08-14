@@ -369,3 +369,185 @@ final DefaultSelectStyle = SelectStyle(
   ),
   animation: AnimationConfig.easeInOut(const Duration(milliseconds: 150)),
 );
+
+extension SelectVariants on SelectStyle {
+  /// Primary select variant with blue accents
+  static SelectStyle get primary => SelectStyle(
+        menuContainer: BoxMix(
+          padding: EdgeInsetsMix.symmetric(vertical: 4),
+          decoration: BoxDecorationMix(
+            borderRadius: BorderRadiusMix.circular(8),
+            color: Colors.white,
+            boxShadow: [
+              BoxShadowMix(
+                color: Colors.blue.withValues(alpha: 0.2),
+                offset: const Offset(0, 2),
+                blurRadius: 8,
+              ),
+            ],
+          ),
+        ),
+        trigger: SelectTriggerStyle(
+          container: FlexBoxMix(
+            box: BoxMix(
+              padding: EdgeInsetsMix.symmetric(vertical: 8, horizontal: 12),
+              decoration: BoxDecorationMix(
+                border: BoxBorderMix.all(
+                  BorderSideMix(color: Colors.blue[500]!, width: 1),
+                ),
+                borderRadius: BorderRadiusMix.circular(6),
+                color: Colors.blue[50],
+              ),
+            ),
+            flex: FlexMix(
+              direction: Axis.horizontal,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+            ),
+          ),
+          label: TextMix(style: TextStyleMix(color: Colors.blue[700], fontSize: 14)),
+          icon: IconThemeData(size: 20, color: Colors.blue[600]),
+        ),
+        item: SelectMenuItemStyle(
+          container: FlexBoxMix(
+            box: BoxMix(
+              padding: EdgeInsetsMix.symmetric(vertical: 8, horizontal: 12),
+            ),
+            flex: FlexMix(
+              direction: Axis.horizontal,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+            ),
+          ),
+          textStyle: TextStyle(color: Colors.black87, fontSize: 14),
+          icon: IconThemeData(size: 16, color: Colors.blue[500]),
+        ),
+        position: CompositedTransformFollowerStyle(
+          targetAnchor: Alignment.bottomLeft,
+          followerAnchor: Alignment.topLeft,
+          offset: const Offset(0, 4),
+        ),
+        animation: AnimationConfig.easeInOut(const Duration(milliseconds: 150)),
+      );
+
+  /// Secondary select variant with grey styling
+  static SelectStyle get secondary => SelectStyle(
+        menuContainer: BoxMix(
+          padding: EdgeInsetsMix.symmetric(vertical: 4),
+          decoration: BoxDecorationMix(
+            borderRadius: BorderRadiusMix.circular(8),
+            color: Colors.white,
+            boxShadow: [
+              BoxShadowMix(
+                color: Colors.grey.withValues(alpha: 0.2),
+                offset: const Offset(0, 2),
+                blurRadius: 8,
+              ),
+            ],
+          ),
+        ),
+        trigger: SelectTriggerStyle(
+          container: FlexBoxMix(
+            box: BoxMix(
+              padding: EdgeInsetsMix.symmetric(vertical: 8, horizontal: 12),
+              decoration: BoxDecorationMix(
+                border: BoxBorderMix.all(
+                  BorderSideMix(color: Colors.grey[500]!, width: 1),
+                ),
+                borderRadius: BorderRadiusMix.circular(6),
+                color: Colors.grey[50],
+              ),
+            ),
+            flex: FlexMix(
+              direction: Axis.horizontal,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+            ),
+          ),
+          label: TextMix(style: TextStyleMix(color: Colors.grey[700], fontSize: 14)),
+          icon: IconThemeData(size: 20, color: Colors.grey[600]),
+        ),
+        item: SelectMenuItemStyle(
+          container: FlexBoxMix(
+            box: BoxMix(
+              padding: EdgeInsetsMix.symmetric(vertical: 8, horizontal: 12),
+            ),
+            flex: FlexMix(
+              direction: Axis.horizontal,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+            ),
+          ),
+          textStyle: TextStyle(color: Colors.black87, fontSize: 14),
+          icon: IconThemeData(size: 16, color: Colors.grey[500]),
+        ),
+        position: CompositedTransformFollowerStyle(
+          targetAnchor: Alignment.bottomLeft,
+          followerAnchor: Alignment.topLeft,
+          offset: const Offset(0, 4),
+        ),
+        animation: AnimationConfig.easeInOut(const Duration(milliseconds: 150)),
+      );
+
+  /// Outlined select variant with no background fill
+  static SelectStyle get outlined => SelectStyle(
+        menuContainer: BoxMix(
+          padding: EdgeInsetsMix.symmetric(vertical: 4),
+          decoration: BoxDecorationMix(
+            borderRadius: BorderRadiusMix.circular(8),
+            color: Colors.white,
+            border: BoxBorderMix.all(
+              BorderSideMix(color: Colors.grey[300]!, width: 1),
+            ),
+            boxShadow: [
+              BoxShadowMix(
+                color: Colors.black.withValues(alpha: 0.1),
+                offset: const Offset(0, 2),
+                blurRadius: 8,
+              ),
+            ],
+          ),
+        ),
+        trigger: SelectTriggerStyle(
+          container: FlexBoxMix(
+            box: BoxMix(
+              padding: EdgeInsetsMix.symmetric(vertical: 8, horizontal: 12),
+              decoration: BoxDecorationMix(
+                border: BoxBorderMix.all(
+                  BorderSideMix(color: Colors.grey[400]!, width: 2),
+                ),
+                borderRadius: BorderRadiusMix.circular(6),
+                color: Colors.transparent,
+              ),
+            ),
+            flex: FlexMix(
+              direction: Axis.horizontal,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+            ),
+          ),
+          label: TextMix(style: TextStyleMix(color: Colors.black87, fontSize: 14)),
+          icon: IconThemeData(size: 20, color: Colors.black54),
+        ),
+        item: SelectMenuItemStyle(
+          container: FlexBoxMix(
+            box: BoxMix(
+              padding: EdgeInsetsMix.symmetric(vertical: 8, horizontal: 12),
+            ),
+            flex: FlexMix(
+              direction: Axis.horizontal,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+            ),
+          ),
+          textStyle: TextStyle(color: Colors.black87, fontSize: 14),
+          icon: IconThemeData(size: 16, color: Colors.black54),
+        ),
+        position: CompositedTransformFollowerStyle(
+          targetAnchor: Alignment.bottomLeft,
+          followerAnchor: Alignment.topLeft,
+          offset: const Offset(0, 4),
+        ),
+        animation: AnimationConfig.easeInOut(const Duration(milliseconds: 150)),
+      );
+}

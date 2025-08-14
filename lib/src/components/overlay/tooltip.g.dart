@@ -37,8 +37,8 @@ mixin _$TooltipSpec on Spec<TooltipSpec> {
   @override
   TooltipSpec copyWith({
     BoxSpec? container,
-    WidgetModifiersConfig? modifiers,
-    AnimatedData? animated,
+    dynamic? modifiers,
+    dynamic? animated,
   }) {
     return TooltipSpec(
       container: container ?? _$this.container,
@@ -70,7 +70,7 @@ mixin _$TooltipSpec on Spec<TooltipSpec> {
 
     return TooltipSpec(
       container: _$this.container.lerp(other.container, t),
-      modifiers: other.modifiers,
+      modifiers: t < 0.5 ? _$this.modifiers : other.modifiers,
       animated: _$this.animated ?? other.animated,
     );
   }
@@ -127,8 +127,8 @@ class TooltipSpecAttribute extends SpecAttribute<TooltipSpec>
   TooltipSpec resolve(MixContext mix) {
     return TooltipSpec(
       container: container?.resolve(mix),
-      modifiers: modifiers?.resolve(mix),
-      animated: animated?.resolve(mix) ?? mix.animation,
+      modifiers: modifiers,
+      animated: animated,
     );
   }
 
@@ -146,8 +146,8 @@ class TooltipSpecAttribute extends SpecAttribute<TooltipSpec>
 
     return TooltipSpecAttribute(
       container: container?.merge(other.container) ?? other.container,
-      modifiers: modifiers?.merge(other.modifiers) ?? other.modifiers,
-      animated: animated?.merge(other.animated) ?? other.animated,
+      modifiers: other.modifiers ?? modifiers,
+      animated: other.animated ?? animated,
     );
   }
 
@@ -184,10 +184,10 @@ class TooltipSpecUtility<T extends SpecAttribute>
   late final container = BoxSpecUtility((v) => only(container: v));
 
   /// Utility for defining [TooltipSpecAttribute.modifiers]
-  late final wrap = SpecModifierUtility((v) => only(modifiers: v));
+  late final modifiers = GenericUtility<T, dynamic>((v) => only(modifiers: v));
 
   /// Utility for defining [TooltipSpecAttribute.animated]
-  late final animated = AnimatedUtility((v) => only(animated: v));
+  late final animated = GenericUtility<T, dynamic>((v) => only(animated: v));
 
   TooltipSpecUtility(
     super.builder, {
@@ -210,8 +210,8 @@ class TooltipSpecUtility<T extends SpecAttribute>
   @override
   T only({
     BoxSpecAttribute? container,
-    WidgetModifiersConfigDto? modifiers,
-    AnimatedDataDto? animated,
+    dynamic? modifiers,
+    dynamic? animated,
   }) {
     return builder(TooltipSpecAttribute(
       container: container,
