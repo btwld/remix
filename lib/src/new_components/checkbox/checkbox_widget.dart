@@ -69,9 +69,9 @@ class _RemixCheckboxState extends State<RemixCheckbox>
       onChanged: widget.enabled && widget.onChanged != null
           ? (value) => widget.onChanged!(value ?? false)
           : null,
-      onHoverState: (state) => stateController.hovered = state,
+      onHoveredState: (state) => stateController.hovered = state,
       onPressedState: (state) => stateController.pressed = state,
-      onFocusState: (state) => stateController.focused = state,
+      onFocusedState: (state) => stateController.focused = state,
       enabled: widget.enabled,
       focusNode: widget.focusNode,
       child: StyleBuilder(
@@ -95,14 +95,11 @@ class _RemixCheckboxState extends State<RemixCheckbox>
           }
 
           return spec.container(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                checkbox,
-                const SizedBox(width: 8),
-                spec.label(widget.label!),
-              ],
-            ),
+            direction: Axis.horizontal,
+            children: [
+              checkbox,
+              spec.label(widget.label!),
+            ],
           );
         },
       ),

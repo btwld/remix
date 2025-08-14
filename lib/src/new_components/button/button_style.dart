@@ -45,37 +45,64 @@ class ButtonStyle extends Style<ButtonSpec>
 
   /// Factory for background color
   factory ButtonStyle.color(Color value) {
-    return ButtonStyle(container: BoxMix(decoration: BoxDecorationMix(color: value)));
+    return ButtonStyle(
+      container: BoxMix(decoration: BoxDecorationMix(color: value)),
+    );
   }
-  
+
   /// Factory for padding
   factory ButtonStyle.padding(double value) {
     return ButtonStyle(container: BoxMix(padding: EdgeInsetsMix.all(value)));
   }
-  
+
   /// Factory for border radius
   factory ButtonStyle.borderRadius(double radius) {
-    return ButtonStyle(container: BoxMix(decoration: BoxDecorationMix(borderRadius: BorderRadiusMix.circular(radius))));
+    return ButtonStyle(
+      container: BoxMix(
+        decoration: BoxDecorationMix(
+          borderRadius: BorderRadiusMix.circular(radius),
+        ),
+      ),
+    );
   }
-  
+
   /// Factory for width
   factory ButtonStyle.width(double value) {
-    return ButtonStyle(container: BoxMix(constraints: BoxConstraintsMix(minWidth: value, maxWidth: value)));
+    return ButtonStyle(
+      container: BoxMix(
+        constraints: BoxConstraintsMix(minWidth: value, maxWidth: value),
+      ),
+    );
   }
-  
+
   /// Factory for height
   factory ButtonStyle.height(double value) {
-    return ButtonStyle(container: BoxMix(constraints: BoxConstraintsMix(minHeight: value, maxHeight: value)));
+    return ButtonStyle(
+      container: BoxMix(
+        constraints: BoxConstraintsMix(minHeight: value, maxHeight: value),
+      ),
+    );
   }
-  
+
   /// Factory for size (width and height)
   factory ButtonStyle.size(double width, double height) {
-    return ButtonStyle(container: BoxMix(constraints: BoxConstraintsMix(minWidth: width, maxWidth: width, minHeight: height, maxHeight: height)));
+    return ButtonStyle(
+      container: BoxMix(
+        constraints: BoxConstraintsMix(
+          minWidth: width,
+          maxWidth: width,
+          minHeight: height,
+          maxHeight: height,
+        ),
+      ),
+    );
   }
-  
+
   /// Factory for border
   factory ButtonStyle.border(BoxBorderMix value) {
-    return ButtonStyle(container: BoxMix(decoration: BoxDecorationMix(border: value)));
+    return ButtonStyle(
+      container: BoxMix(decoration: BoxDecorationMix(border: value)),
+    );
   }
 
   // Instance methods for fluent API (return new instances)
@@ -84,37 +111,37 @@ class ButtonStyle extends Style<ButtonSpec>
   }
 
   // Instance methods (chainable)
-  
+
   /// Sets background color
   ButtonStyle color(Color value) {
     return merge(ButtonStyle.color(value));
   }
-  
+
   /// Sets padding
   ButtonStyle padding(double value) {
     return merge(ButtonStyle.padding(value));
   }
-  
+
   /// Sets border radius
   ButtonStyle borderRadius(double radius) {
     return merge(ButtonStyle.borderRadius(radius));
   }
-  
+
   /// Sets width
   ButtonStyle width(double value) {
     return merge(ButtonStyle.width(value));
   }
-  
+
   /// Sets height
   ButtonStyle height(double value) {
     return merge(ButtonStyle.height(value));
   }
-  
+
   /// Sets size (width and height)
   ButtonStyle size(double width, double height) {
     return merge(ButtonStyle.size(width, height));
   }
-  
+
   /// Sets border
   ButtonStyle border(BoxBorderMix value) {
     return merge(ButtonStyle.border(value));
@@ -125,22 +152,6 @@ class ButtonStyle extends Style<ButtonSpec>
     return merge(ButtonStyle(animation: animation));
   }
 
-  // Variant support
-  @override
-  ButtonStyle variant(Variant variant, ButtonStyle style) {
-    return merge(ButtonStyle(variants: [VariantStyle(variant, style)]));
-  }
-  
-  @override
-  ButtonStyle variants(List<VariantStyle<ButtonSpec>> value) {
-    return merge(ButtonStyle(variants: value));
-  }
-  
-  // Modifier support
-  @override
-  ButtonStyle wrap(ModifierConfig value) {
-    return merge(ButtonStyle(modifier: value));
-  }
 
   RemixButton call({
     required String label,
@@ -151,7 +162,6 @@ class ButtonStyle extends Style<ButtonSpec>
     bool enableHapticFeedback = true,
     required VoidCallback? onPressed,
     FocusNode? focusNode,
-    List<Variant> variants = const [],
   }) {
     return RemixButton(
       label: label,
@@ -162,9 +172,25 @@ class ButtonStyle extends Style<ButtonSpec>
       enableHapticFeedback: enableHapticFeedback,
       onPressed: onPressed,
       focusNode: focusNode,
-      variants: variants,
       style: this,
     );
+  }
+
+  // Variant support
+  @override
+  ButtonStyle variant(Variant variant, ButtonStyle style) {
+    return merge(ButtonStyle(variants: [VariantStyle(variant, style)]));
+  }
+
+  @override
+  ButtonStyle variants(List<VariantStyle<ButtonSpec>> value) {
+    return merge(ButtonStyle(variants: value));
+  }
+
+  // Modifier support
+  @override
+  ButtonStyle wrap(ModifierConfig value) {
+    return merge(ButtonStyle(modifier: value));
   }
 
   @override
@@ -214,6 +240,107 @@ final DefaultButtonStyle = ButtonStyle(
     icon: IconMix.color(Colors.white).size(18),
   ),
 );
+
+extension ButtonVariants on ButtonStyle {
+  /// Primary button variant with blue background
+  static ButtonStyle get primary => ButtonStyle(
+        container: BoxMix(
+          padding: EdgeInsetsMix.all(10),
+          decoration: BoxDecorationMix(
+            borderRadius: BorderRadiusMix.circular(8),
+            color: Colors.blue[500],
+          ),
+        ),
+        label: LabelStyle(
+          spacing: 8,
+          label: TextMix.color(Colors.white),
+          icon: IconMix.color(Colors.white).size(18),
+        ),
+      );
+
+  /// Secondary button variant with grey background
+  static ButtonStyle get secondary => ButtonStyle(
+        container: BoxMix(
+          padding: EdgeInsetsMix.all(10),
+          decoration: BoxDecorationMix(
+            borderRadius: BorderRadiusMix.circular(8),
+            color: Colors.grey[600],
+          ),
+        ),
+        label: LabelStyle(
+          spacing: 8,
+          label: TextMix.color(Colors.white),
+          icon: IconMix.color(Colors.white).size(18),
+        ),
+      );
+
+  /// Success button variant with green background
+  static ButtonStyle get success => ButtonStyle(
+        container: BoxMix(
+          padding: EdgeInsetsMix.all(10),
+          decoration: BoxDecorationMix(
+            borderRadius: BorderRadiusMix.circular(8),
+            color: Colors.green[500],
+          ),
+        ),
+        label: LabelStyle(
+          spacing: 8,
+          label: TextMix.color(Colors.white),
+          icon: IconMix.color(Colors.white).size(18),
+        ),
+      );
+
+  /// Danger button variant with red background
+  static ButtonStyle get danger => ButtonStyle(
+        container: BoxMix(
+          padding: EdgeInsetsMix.all(10),
+          decoration: BoxDecorationMix(
+            borderRadius: BorderRadiusMix.circular(8),
+            color: Colors.red[500],
+          ),
+        ),
+        label: LabelStyle(
+          spacing: 8,
+          label: TextMix.color(Colors.white),
+          icon: IconMix.color(Colors.white).size(18),
+        ),
+      );
+
+  /// Ghost button variant with transparent background
+  static ButtonStyle get ghost => ButtonStyle(
+        container: BoxMix(
+          padding: EdgeInsetsMix.all(10),
+          decoration: BoxDecorationMix(
+            borderRadius: BorderRadiusMix.circular(8),
+            color: Colors.transparent,
+          ),
+        ),
+        label: LabelStyle(
+          spacing: 8,
+          label: TextMix.color(Colors.black),
+          icon: IconMix.color(Colors.black).size(18),
+        ),
+      );
+
+  /// Outline button variant with border
+  static ButtonStyle get outline => ButtonStyle(
+        container: BoxMix(
+          padding: EdgeInsetsMix.all(10),
+          decoration: BoxDecorationMix(
+            color: Colors.transparent,
+            borderRadius: BorderRadiusMix.circular(8),
+            border: BoxBorderMix.all(
+              BorderSideMix(color: Colors.grey[400]!, width: 1),
+            ),
+          ),
+        ),
+        label: LabelStyle(
+          spacing: 8,
+          label: TextMix.color(Colors.black),
+          icon: IconMix.color(Colors.black).size(18),
+        ),
+      );
+}
 
 // COMMENTED OUT FOR REVIEW - ORIGINAL FROM MAIN BRANCH
 // This file was fetched from main branch and commented out for review

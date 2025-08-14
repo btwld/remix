@@ -2,16 +2,16 @@ part of 'list_item.dart';
 
 class ListItemStyle extends Style<ListItemSpec>
     with StyleModifierMixin<ListItemStyle, ListItemSpec>, StyleVariantMixin<ListItemStyle, ListItemSpec> {
-  final Prop<BoxSpec>? $container;
-  final Prop<BoxSpec>? $contentContainer;
+  final Prop<FlexBoxSpec>? $container;
+  final Prop<FlexBoxSpec>? $contentContainer;
   final Prop<TextSpec>? $title;
   final Prop<TextSpec>? $subtitle;
   final Prop<IconSpec>? $leadingIcon;
   final Prop<IconSpec>? $trailingIcon;
 
   const ListItemStyle.create({
-    Prop<BoxSpec>? container,
-    Prop<BoxSpec>? contentContainer,
+    Prop<FlexBoxSpec>? container,
+    Prop<FlexBoxSpec>? contentContainer,
     Prop<TextSpec>? title,
     Prop<TextSpec>? subtitle,
     Prop<IconSpec>? leadingIcon,
@@ -28,8 +28,8 @@ class ListItemStyle extends Style<ListItemSpec>
         $trailingIcon = trailingIcon;
 
   ListItemStyle({
-    BoxMix? container,
-    BoxMix? contentContainer,
+    FlexBoxMix? container,
+    FlexBoxMix? contentContainer,
     TextMix? title,
     TextMix? subtitle,
     IconMix? leadingIcon,
@@ -114,10 +114,24 @@ class ListItemStyle extends Style<ListItemSpec>
 }
 
 final DefaultListItemStyle = ListItemStyle(
-  container: BoxMix(
-    padding: EdgeInsetsMix.symmetric(vertical: 12, horizontal: 16),
+  container: FlexBoxMix(
+    box: BoxMix(
+      padding: EdgeInsetsMix.symmetric(vertical: 12, horizontal: 16),
+    ),
+    flex: FlexMix(
+      direction: Axis.horizontal,
+      gap: 16,
+      crossAxisAlignment: CrossAxisAlignment.center,
+    ),
   ),
-  contentContainer: BoxMix(),
+  contentContainer: FlexBoxMix(
+    flex: FlexMix(
+      direction: Axis.vertical,
+      gap: 2,
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+    ),
+  ),
   title: TextMix(
     style: TextStyleMix(fontSize: 16, fontWeight: FontWeight.w500),
   ),

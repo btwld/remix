@@ -20,7 +20,7 @@ class _MyAppState extends State<MyApp> {
       home: Scaffold(
         body: Center(
           child: RemixSwitch(
-            value: _value,
+            selected: _value,
             onChanged: (value) {
               setState(() {
                 _value = value;

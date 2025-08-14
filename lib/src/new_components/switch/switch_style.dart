@@ -128,3 +128,116 @@ final DefaultSwitchStyle = SwitchStyle(
     ),
   ),
 );
+
+extension SwitchVariants on SwitchStyle {
+  /// Primary switch variant with blue colors
+  static SwitchStyle get primary => SwitchStyle(
+        container: BoxMix(),
+        animation: AnimationConfig.easeInOut(const Duration(milliseconds: 200)),
+        track: BoxMix(
+          constraints: BoxConstraintsMix(
+            minWidth: 44,
+            maxWidth: 44,
+            minHeight: 24,
+            maxHeight: 24,
+          ),
+          decoration: BoxDecorationMix(
+            borderRadius: BorderRadiusMix.circular(12),
+            color: Colors.blue[100],
+          ),
+        ),
+        thumb: BoxMix(
+          constraints: BoxConstraintsMix(
+            minWidth: 20,
+            maxWidth: 20,
+            minHeight: 20,
+            maxHeight: 20,
+          ),
+          decoration: BoxDecorationMix(
+            shape: BoxShape.circle,
+            color: Colors.blue[500],
+            boxShadow: [
+              BoxShadowMix(
+                color: Colors.blue.withValues(alpha: 0.3),
+                offset: const Offset(0, 1),
+                blurRadius: 2,
+              ),
+            ],
+          ),
+        ),
+      );
+
+  /// Secondary switch variant with grey colors
+  static SwitchStyle get secondary => SwitchStyle(
+        container: BoxMix(),
+        animation: AnimationConfig.easeInOut(const Duration(milliseconds: 200)),
+        track: BoxMix(
+          constraints: BoxConstraintsMix(
+            minWidth: 44,
+            maxWidth: 44,
+            minHeight: 24,
+            maxHeight: 24,
+          ),
+          decoration: BoxDecorationMix(
+            borderRadius: BorderRadiusMix.circular(12),
+            color: Colors.grey[200],
+          ),
+        ),
+        thumb: BoxMix(
+          constraints: BoxConstraintsMix(
+            minWidth: 20,
+            maxWidth: 20,
+            minHeight: 20,
+            maxHeight: 20,
+          ),
+          decoration: BoxDecorationMix(
+            shape: BoxShape.circle,
+            color: Colors.grey[600],
+            boxShadow: [
+              BoxShadowMix(
+                color: Colors.grey.withValues(alpha: 0.3),
+                offset: const Offset(0, 1),
+                blurRadius: 2,
+              ),
+            ],
+          ),
+        ),
+      );
+
+  /// Compact switch variant with smaller size
+  static SwitchStyle get compact => SwitchStyle(
+        container: BoxMix(),
+        animation: AnimationConfig.easeInOut(const Duration(milliseconds: 200)),
+        track: BoxMix(
+          constraints: BoxConstraintsMix(
+            minWidth: 36,
+            maxWidth: 36,
+            minHeight: 20,
+            maxHeight: 20,
+          ),
+          decoration: BoxDecorationMix(
+            borderRadius: BorderRadiusMix.circular(10),
+            color: Colors.grey[300],
+          ),
+        ),
+        thumb: BoxMix(
+          constraints: BoxConstraintsMix(
+            minWidth: 16,
+            maxWidth: 16,
+            minHeight: 16,
+            maxHeight: 16,
+          ),
+          decoration: BoxDecorationMix(
+            shape: BoxShape.circle,
+            color: Colors.white,
+            boxShadow: [
+              BoxShadowMix(
+                color: Colors.black.withValues(alpha: 0.1),
+                offset: const Offset(0, 1),
+                blurRadius: 1,
+              ),
+            ],
+          ),
+        ),
+      );
+}

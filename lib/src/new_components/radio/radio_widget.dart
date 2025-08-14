@@ -20,9 +20,10 @@ class RemixRadio<T> extends StatefulWidget implements Disableable {
   const RemixRadio({
     super.key,
     required this.value,
-    required this.groupValue,
+    this.groupValue,
     this.onChanged,
     this.enabled = true,
+    this.enableHapticFeedback = true,
     this.style = const RadioStyle.create(),
     this.label,
     this.focusNode,
@@ -41,6 +42,9 @@ class RemixRadio<T> extends StatefulWidget implements Disableable {
   @override
   final bool enabled;
 
+  /// Whether to enable haptic feedback when selected.
+  final bool enableHapticFeedback;
+
   /// The style configuration for the radio button.
   final RadioStyle style;
 
@@ -58,37 +62,84 @@ class RemixRadio<T> extends StatefulWidget implements Disableable {
 
 class _RemixRadioState<T> extends State<RemixRadio<T>>
     with MixControllerMixin, DisableableMixin, SelectableMixin {
+  
+  T? get _groupValue {
+    // Check if we're inside a RadioGroup
+    final groupScope = _RadioGroupScope.maybeOf<T>(context);
+    if (groupScope != null) {
+      return groupScope.groupValue;
+    }
+    // Otherwise use the provided groupValue
+    return widget.groupValue;
+  }
+
+  ValueChanged<T?>? get _onChanged {
+    // Check if we're inside a RadioGroup
+    final groupScope = _RadioGroupScope.maybeOf<T>(context);
+    if (groupScope != null) {
+      return widget.enabled && groupScope.enabled ? groupScope.onChanged : null;
+    }
+    // Otherwise use the provided onChanged
+    return widget.onChanged;
+  }
+
+  bool get _enabled {
+    // Check if we're inside a RadioGroup
+    final groupScope = _RadioGroupScope.maybeOf<T>(context);
+    if (groupScope != null) {
+      return widget.enabled && groupScope.enabled;
+    }
+    return widget.enabled;
+  }
+
+  RadioStyle get _style {
+    // Check if we're inside a RadioGroup
+    final groupScope = _RadioGroupScope.maybeOf<T>(context);
+    if (groupScope != null && groupScope.style != null) {
+      return groupScope.style!.merge(widget.style);
+    }
+    return widget.style;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final isSelected = widget.value == _groupValue;
+    
     return GestureDetector(
-      onTap: widget.enabled && widget.onChanged != null
-          ? () => widget.onChanged!(widget.value)
+      onTap: _enabled && _onChanged != null 
+          ? () => _onChanged!(widget.value) 
           : null,
       child: MouseRegion(
         onEnter: (_) => stateController.hovered = true,
         onExit: (_) => stateController.hovered = false,
-        child: StyleBuilder(
-          style: DefaultRadioStyle.merge(widget.style),
-          builder: (context, spec) {
-            final radio = spec.indicatorContainer(
-              child: widget.selected ? spec.indicator() : null,
-            );
+        cursor: _enabled 
+            ? SystemMouseCursors.click 
+            : SystemMouseCursors.forbidden,
+        child: FocusableActionDetector(
+          enabled: _enabled,
+          focusNode: widget.focusNode,
+          onFocusChange: (focused) => stateController.focused = focused,
+          child: StyleBuilder(
+            style: DefaultRadioStyle.merge(_style),
+            builder: (context, spec) {
+              final radio = spec.indicatorContainer(
+                child: isSelected ? spec.indicator() : null,
+              );
 
-            if (widget.label == null) {
-              return radio;
-            }
+              if (widget.label == null) {
+                return radio;
+              }
 
-            return spec.container(
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
+              return spec.container(
+                direction: Axis.horizontal,
                 children: [
                   radio,
-                  const SizedBox(width: 8),
-                  spec.label(widget.label!),
-                ],
-              ),
-            );
-          },
+                  spec.label(widget.label!)
+                ]
+              );
+            },
+            controller: stateController,
+          ),
         ),
       ),
     );

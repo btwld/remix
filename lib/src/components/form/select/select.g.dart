@@ -40,8 +40,8 @@ mixin _$SelectSpec on Spec<SelectSpec> {
     BoxSpec? menuContainer,
     SelectMenuItemSpec? item,
     CompositedTransformFollowerSpec? position,
-    WidgetModifiersConfig? modifiers,
-    AnimatedData? animated,
+    dynamic? modifiers,
+    dynamic? animated,
   }) {
     return SelectSpec(
       trigger: trigger ?? _$this.trigger,
@@ -82,7 +82,7 @@ mixin _$SelectSpec on Spec<SelectSpec> {
       menuContainer: _$this.menuContainer.lerp(other.menuContainer, t),
       item: _$this.item.lerp(other.item, t),
       position: _$this.position.lerp(other.position, t),
-      modifiers: other.modifiers,
+      modifiers: t < 0.5 ? _$this.modifiers : other.modifiers,
       animated: _$this.animated ?? other.animated,
     );
   }
@@ -157,8 +157,8 @@ class SelectSpecAttribute extends SpecAttribute<SelectSpec>
       menuContainer: menuContainer?.resolve(mix),
       item: item?.resolve(mix),
       position: position?.resolve(mix),
-      modifiers: modifiers?.resolve(mix),
-      animated: animated?.resolve(mix) ?? mix.animation,
+      modifiers: modifiers,
+      animated: animated,
     );
   }
 
@@ -180,8 +180,8 @@ class SelectSpecAttribute extends SpecAttribute<SelectSpec>
           menuContainer?.merge(other.menuContainer) ?? other.menuContainer,
       item: item?.merge(other.item) ?? other.item,
       position: position?.merge(other.position) ?? other.position,
-      modifiers: modifiers?.merge(other.modifiers) ?? other.modifiers,
-      animated: animated?.merge(other.animated) ?? other.animated,
+      modifiers: other.modifiers ?? modifiers,
+      animated: other.animated ?? animated,
     );
   }
 
@@ -235,10 +235,10 @@ class SelectSpecUtility<T extends SpecAttribute>
       CompositedTransformFollowerSpecUtility((v) => only(position: v));
 
   /// Utility for defining [SelectSpecAttribute.modifiers]
-  late final wrap = SpecModifierUtility((v) => only(modifiers: v));
+  late final modifiers = GenericUtility<T, dynamic>((v) => only(modifiers: v));
 
   /// Utility for defining [SelectSpecAttribute.animated]
-  late final animated = AnimatedUtility((v) => only(animated: v));
+  late final animated = GenericUtility<T, dynamic>((v) => only(animated: v));
 
   SelectSpecUtility(
     super.builder, {
@@ -264,8 +264,8 @@ class SelectSpecUtility<T extends SpecAttribute>
     BoxSpecAttribute? menuContainer,
     SelectMenuItemSpecAttribute? item,
     CompositedTransformFollowerSpecAttribute? position,
-    WidgetModifiersConfigDto? modifiers,
-    AnimatedDataDto? animated,
+    dynamic? modifiers,
+    dynamic? animated,
   }) {
     return builder(SelectSpecAttribute(
       trigger: trigger,
@@ -334,8 +334,8 @@ mixin _$SelectMenuItemSpec on Spec<SelectMenuItemSpec> {
     IconThemeData? icon,
     TextStyle? textStyle,
     FlexBoxSpec? container,
-    WidgetModifiersConfig? modifiers,
-    AnimatedData? animated,
+    dynamic? modifiers,
+    dynamic? animated,
   }) {
     return SelectMenuItemSpec(
       icon: icon ?? _$this.icon,
@@ -410,8 +410,8 @@ class SelectMenuItemSpecAttribute extends SpecAttribute<SelectMenuItemSpec>
       icon: icon?.resolve(mix),
       textStyle: textStyle?.resolve(mix),
       container: container?.resolve(mix),
-      modifiers: modifiers?.resolve(mix),
-      animated: animated?.resolve(mix) ?? mix.animation,
+      modifiers: modifiers,
+      animated: animated,
     );
   }
 
@@ -431,8 +431,8 @@ class SelectMenuItemSpecAttribute extends SpecAttribute<SelectMenuItemSpec>
       icon: icon?.merge(other.icon) ?? other.icon,
       textStyle: textStyle?.merge(other.textStyle) ?? other.textStyle,
       container: container?.merge(other.container) ?? other.container,
-      modifiers: modifiers?.merge(other.modifiers) ?? other.modifiers,
-      animated: animated?.merge(other.animated) ?? other.animated,
+      modifiers: other.modifiers ?? modifiers,
+      animated: other.animated ?? animated,
     );
   }
 
@@ -480,10 +480,10 @@ class SelectMenuItemSpecUtility<T extends SpecAttribute>
   late final container = FlexBoxSpecUtility((v) => only(container: v));
 
   /// Utility for defining [SelectMenuItemSpecAttribute.modifiers]
-  late final wrap = SpecModifierUtility((v) => only(modifiers: v));
+  late final modifiers = GenericUtility<T, dynamic>((v) => only(modifiers: v));
 
   /// Utility for defining [SelectMenuItemSpecAttribute.animated]
-  late final animated = AnimatedUtility((v) => only(animated: v));
+  late final animated = GenericUtility<T, dynamic>((v) => only(animated: v));
 
   SelectMenuItemSpecUtility(
     super.builder, {
@@ -509,8 +509,8 @@ class SelectMenuItemSpecUtility<T extends SpecAttribute>
     IconThemeDataDto? icon,
     TextStyleDto? textStyle,
     FlexBoxSpecAttribute? container,
-    WidgetModifiersConfigDto? modifiers,
-    AnimatedDataDto? animated,
+    dynamic? modifiers,
+    dynamic? animated,
   }) {
     return builder(SelectMenuItemSpecAttribute(
       icon: icon,
@@ -578,8 +578,8 @@ mixin _$SelectTriggerSpec on Spec<SelectTriggerSpec> {
     FlexBoxSpec? container,
     IconThemeData? icon,
     TextSpec? label,
-    WidgetModifiersConfig? modifiers,
-    AnimatedData? animated,
+    dynamic? modifiers,
+    dynamic? animated,
   }) {
     return SelectTriggerSpec(
       container: container ?? _$this.container,
@@ -654,8 +654,8 @@ class SelectTriggerSpecAttribute extends SpecAttribute<SelectTriggerSpec>
       container: container?.resolve(mix),
       icon: icon?.resolve(mix),
       label: label?.resolve(mix),
-      modifiers: modifiers?.resolve(mix),
-      animated: animated?.resolve(mix) ?? mix.animation,
+      modifiers: modifiers,
+      animated: animated,
     );
   }
 
@@ -675,8 +675,8 @@ class SelectTriggerSpecAttribute extends SpecAttribute<SelectTriggerSpec>
       container: container?.merge(other.container) ?? other.container,
       icon: icon?.merge(other.icon) ?? other.icon,
       label: label?.merge(other.label) ?? other.label,
-      modifiers: modifiers?.merge(other.modifiers) ?? other.modifiers,
-      animated: animated?.merge(other.animated) ?? other.animated,
+      modifiers: other.modifiers ?? modifiers,
+      animated: other.animated ?? animated,
     );
   }
 
@@ -723,10 +723,10 @@ class SelectTriggerSpecUtility<T extends SpecAttribute>
   late final label = TextSpecUtility((v) => only(label: v));
 
   /// Utility for defining [SelectTriggerSpecAttribute.modifiers]
-  late final wrap = SpecModifierUtility((v) => only(modifiers: v));
+  late final modifiers = GenericUtility<T, dynamic>((v) => only(modifiers: v));
 
   /// Utility for defining [SelectTriggerSpecAttribute.animated]
-  late final animated = AnimatedUtility((v) => only(animated: v));
+  late final animated = GenericUtility<T, dynamic>((v) => only(animated: v));
 
   SelectTriggerSpecUtility(
     super.builder, {
@@ -752,8 +752,8 @@ class SelectTriggerSpecUtility<T extends SpecAttribute>
     FlexBoxSpecAttribute? container,
     IconThemeDataDto? icon,
     TextSpecAttribute? label,
-    WidgetModifiersConfigDto? modifiers,
-    AnimatedDataDto? animated,
+    dynamic? modifiers,
+    dynamic? animated,
   }) {
     return builder(SelectTriggerSpecAttribute(
       container: container,

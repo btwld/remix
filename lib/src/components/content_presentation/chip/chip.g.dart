@@ -39,8 +39,8 @@ mixin _$ChipSpec on Spec<ChipSpec> {
     FlexBoxSpec? container,
     IconSpec? icon,
     TextSpec? label,
-    WidgetModifiersConfig? modifiers,
-    AnimatedData? animated,
+    dynamic? modifiers,
+    dynamic? animated,
   }) {
     return ChipSpec(
       container: container ?? _$this.container,
@@ -78,7 +78,7 @@ mixin _$ChipSpec on Spec<ChipSpec> {
       container: _$this.container.lerp(other.container, t),
       icon: _$this.icon.lerp(other.icon, t),
       label: _$this.label.lerp(other.label, t),
-      modifiers: other.modifiers,
+      modifiers: t < 0.5 ? _$this.modifiers : other.modifiers,
       animated: _$this.animated ?? other.animated,
     );
   }
@@ -146,8 +146,8 @@ class ChipSpecAttribute extends SpecAttribute<ChipSpec> with Diagnosticable {
       container: container?.resolve(mix),
       icon: icon?.resolve(mix),
       label: label?.resolve(mix),
-      modifiers: modifiers?.resolve(mix),
-      animated: animated?.resolve(mix) ?? mix.animation,
+      modifiers: modifiers,
+      animated: animated,
     );
   }
 
@@ -167,8 +167,8 @@ class ChipSpecAttribute extends SpecAttribute<ChipSpec> with Diagnosticable {
       container: container?.merge(other.container) ?? other.container,
       icon: icon?.merge(other.icon) ?? other.icon,
       label: label?.merge(other.label) ?? other.label,
-      modifiers: modifiers?.merge(other.modifiers) ?? other.modifiers,
-      animated: animated?.merge(other.animated) ?? other.animated,
+      modifiers: other.modifiers ?? modifiers,
+      animated: other.animated ?? animated,
     );
   }
 
@@ -215,10 +215,10 @@ class ChipSpecUtility<T extends SpecAttribute>
   late final label = TextSpecUtility((v) => only(label: v));
 
   /// Utility for defining [ChipSpecAttribute.modifiers]
-  late final wrap = SpecModifierUtility((v) => only(modifiers: v));
+  late final modifiers = GenericUtility<T, dynamic>((v) => only(modifiers: v));
 
   /// Utility for defining [ChipSpecAttribute.animated]
-  late final animated = AnimatedUtility((v) => only(animated: v));
+  late final animated = GenericUtility<T, dynamic>((v) => only(animated: v));
 
   ChipSpecUtility(
     super.builder, {
@@ -243,8 +243,8 @@ class ChipSpecUtility<T extends SpecAttribute>
     FlexBoxSpecAttribute? container,
     IconSpecAttribute? icon,
     TextSpecAttribute? label,
-    WidgetModifiersConfigDto? modifiers,
-    AnimatedDataDto? animated,
+    dynamic? modifiers,
+    dynamic? animated,
   }) {
     return builder(ChipSpecAttribute(
       container: container,

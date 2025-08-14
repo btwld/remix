@@ -38,8 +38,8 @@ mixin _$SwitchSpec on Spec<SwitchSpec> {
   SwitchSpec copyWith({
     BoxSpec? container,
     BoxSpec? indicator,
-    AnimatedData? animated,
-    WidgetModifiersConfig? modifiers,
+    dynamic? animated,
+    dynamic? modifiers,
   }) {
     return SwitchSpec(
       container: container ?? _$this.container,
@@ -74,7 +74,7 @@ mixin _$SwitchSpec on Spec<SwitchSpec> {
       container: _$this.container.lerp(other.container, t),
       indicator: _$this.indicator.lerp(other.indicator, t),
       animated: _$this.animated ?? other.animated,
-      modifiers: other.modifiers,
+      modifiers: t < 0.5 ? _$this.modifiers : other.modifiers,
     );
   }
 
@@ -136,8 +136,8 @@ class SwitchSpecAttribute extends SpecAttribute<SwitchSpec>
     return SwitchSpec(
       container: container?.resolve(mix),
       indicator: indicator?.resolve(mix),
-      animated: animated?.resolve(mix) ?? mix.animation,
-      modifiers: modifiers?.resolve(mix),
+      animated: animated,
+      modifiers: modifiers,
     );
   }
 
@@ -156,8 +156,8 @@ class SwitchSpecAttribute extends SpecAttribute<SwitchSpec>
     return SwitchSpecAttribute(
       container: container?.merge(other.container) ?? other.container,
       indicator: indicator?.merge(other.indicator) ?? other.indicator,
-      animated: animated?.merge(other.animated) ?? other.animated,
-      modifiers: modifiers?.merge(other.modifiers) ?? other.modifiers,
+      animated: other.animated ?? animated,
+      modifiers: other.modifiers ?? modifiers,
     );
   }
 
@@ -200,10 +200,10 @@ class SwitchSpecUtility<T extends SpecAttribute>
   late final indicator = BoxSpecUtility((v) => only(indicator: v));
 
   /// Utility for defining [SwitchSpecAttribute.animated]
-  late final animated = AnimatedUtility((v) => only(animated: v));
+  late final animated = GenericUtility<T, dynamic>((v) => only(animated: v));
 
   /// Utility for defining [SwitchSpecAttribute.modifiers]
-  late final wrap = SpecModifierUtility((v) => only(modifiers: v));
+  late final modifiers = GenericUtility<T, dynamic>((v) => only(modifiers: v));
 
   SwitchSpecUtility(
     super.builder, {
@@ -227,8 +227,8 @@ class SwitchSpecUtility<T extends SpecAttribute>
   T only({
     BoxSpecAttribute? container,
     BoxSpecAttribute? indicator,
-    AnimatedDataDto? animated,
-    WidgetModifiersConfigDto? modifiers,
+    dynamic? animated,
+    dynamic? modifiers,
   }) {
     return builder(SwitchSpecAttribute(
       container: container,

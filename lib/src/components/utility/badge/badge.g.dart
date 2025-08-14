@@ -39,7 +39,7 @@ mixin _$BadgeSpec on Spec<BadgeSpec> {
     BoxSpec? container,
     IconThemeData? icon,
     TextStyle? textStyle,
-    AnimatedData? animated,
+    dynamic? animated,
   }) {
     return BadgeSpec(
       container: container ?? _$this.container,
@@ -97,7 +97,7 @@ class BadgeSpecAttribute extends SpecAttribute<BadgeSpec> {
       container: container?.resolve(mix),
       icon: icon?.resolve(mix),
       textStyle: textStyle?.resolve(mix),
-      animated: animated?.resolve(mix) ?? mix.animation,
+      animated: animated,
     );
   }
 
@@ -117,7 +117,7 @@ class BadgeSpecAttribute extends SpecAttribute<BadgeSpec> {
       container: container?.merge(other.container) ?? other.container,
       icon: icon?.merge(other.icon) ?? other.icon,
       textStyle: textStyle?.merge(other.textStyle) ?? other.textStyle,
-      animated: animated?.merge(other.animated) ?? other.animated,
+      animated: other.animated ?? animated,
     );
   }
 
@@ -150,7 +150,7 @@ class BadgeSpecUtility<T extends SpecAttribute>
   late final textStyle = TextStyleUtility((v) => only(textStyle: v));
 
   /// Utility for defining [BadgeSpecAttribute.animated]
-  late final animated = AnimatedUtility((v) => only(animated: v));
+  late final animated = GenericUtility<T, dynamic>((v) => only(animated: v));
 
   BadgeSpecUtility(
     super.builder, {
@@ -175,7 +175,7 @@ class BadgeSpecUtility<T extends SpecAttribute>
     BoxSpecAttribute? container,
     IconThemeDataDto? icon,
     TextStyleDto? textStyle,
-    AnimatedDataDto? animated,
+    dynamic? animated,
   }) {
     return builder(BadgeSpecAttribute(
       container: container,

@@ -1,24 +1,24 @@
 part of 'checkbox.dart';
 
 class CheckboxSpec extends Spec<CheckboxSpec> with Diagnosticable {
-  final BoxSpec container;
+  final FlexBoxSpec container;
   final BoxSpec indicatorContainer;
   final IconSpec indicator;
   final TextSpec label;
 
   const CheckboxSpec({
-    BoxSpec? container,
+    FlexBoxSpec? container,
     BoxSpec? indicatorContainer,
     IconSpec? indicator,
     TextSpec? label,
-  })  : container = container ?? const BoxSpec(),
+  })  : container = container ?? const FlexBoxSpec(),
         indicatorContainer = indicatorContainer ?? const BoxSpec(),
         indicator = indicator ?? const IconSpec(),
         label = label ?? const TextSpec();
 
   @override
   CheckboxSpec copyWith({
-    BoxSpec? container,
+    FlexBoxSpec? container,
     BoxSpec? indicatorContainer,
     IconSpec? indicator,
     TextSpec? label,

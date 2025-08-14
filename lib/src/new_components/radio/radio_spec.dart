@@ -1,24 +1,24 @@
 part of 'radio.dart';
 
 class RadioSpec extends Spec<RadioSpec> with Diagnosticable {
-  final BoxSpec container;
+  final FlexBoxSpec container;
   final BoxSpec indicatorContainer;
   final BoxSpec indicator;
   final TextSpec label;
 
   const RadioSpec({
-    BoxSpec? container,
+    FlexBoxSpec? container,
     BoxSpec? indicatorContainer,
     BoxSpec? indicator,
     TextSpec? label,
-  })  : container = container ?? const BoxSpec(),
+  })  : container = container ?? const FlexBoxSpec(),
         indicatorContainer = indicatorContainer ?? const BoxSpec(),
         indicator = indicator ?? const BoxSpec(),
         label = label ?? const TextSpec();
 
   @override
   RadioSpec copyWith({
-    BoxSpec? container,
+    FlexBoxSpec? container,
     BoxSpec? indicatorContainer,
     BoxSpec? indicator,
     TextSpec? label,

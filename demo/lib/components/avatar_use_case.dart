@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:remix/remix.dart';
+import 'package:remix/remix_new.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
@@ -7,7 +7,7 @@ final _key = GlobalKey();
 
 @widgetbook.UseCase(
   name: 'Avatar Component',
-  type: RxAvatar,
+  type: RemixAvatar,
 )
 Widget buildAvatarUseCase(BuildContext context) {
   final imageUrl = context.knobs.string(
@@ -22,7 +22,7 @@ Widget buildAvatarUseCase(BuildContext context) {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            RxAvatar(
+            RemixAvatar(
               foregroundImage:
                   imageUrl.isNotEmpty ? NetworkImage(imageUrl) : null,
               label: 'CA',

@@ -22,8 +22,6 @@ class CompositedTransformFollowerSpec
     Offset? offset,
     AlignmentGeometry? targetAnchor,
     AlignmentGeometry? followerAnchor,
-    super.modifiers,
-    super.animated,
   })  : offset = offset ?? Offset.zero,
         targetAnchor = targetAnchor ?? Alignment.center,
         followerAnchor = followerAnchor ?? Alignment.topCenter;

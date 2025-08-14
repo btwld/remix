@@ -118,3 +118,73 @@ final DefaultProgressStyle = ProgressStyle(
   ),
   outerContainer: BoxMix(),
 );
+
+extension ProgressVariants on ProgressStyle {
+  /// Primary progress variant with blue fill
+  static ProgressStyle get primary => ProgressStyle(
+        container: BoxMix(
+          constraints: BoxConstraintsMix(minHeight: 6, maxHeight: 6),
+          decoration: BoxDecorationMix(borderRadius: BorderRadiusMix.circular(99)),
+          clipBehavior: Clip.antiAlias,
+        ),
+        track: BoxMix(decoration: BoxDecorationMix(color: Colors.blue[100])),
+        fill: BoxMix(
+          decoration: BoxDecorationMix(
+            borderRadius: BorderRadiusMix.circular(99),
+            color: Colors.blue[500],
+          ),
+        ),
+        outerContainer: BoxMix(),
+      );
+
+  /// Secondary progress variant with grey fill
+  static ProgressStyle get secondary => ProgressStyle(
+        container: BoxMix(
+          constraints: BoxConstraintsMix(minHeight: 6, maxHeight: 6),
+          decoration: BoxDecorationMix(borderRadius: BorderRadiusMix.circular(99)),
+          clipBehavior: Clip.antiAlias,
+        ),
+        track: BoxMix(decoration: BoxDecorationMix(color: Colors.grey[200])),
+        fill: BoxMix(
+          decoration: BoxDecorationMix(
+            borderRadius: BorderRadiusMix.circular(99),
+            color: Colors.grey[600],
+          ),
+        ),
+        outerContainer: BoxMix(),
+      );
+
+  /// Success progress variant with green fill
+  static ProgressStyle get success => ProgressStyle(
+        container: BoxMix(
+          constraints: BoxConstraintsMix(minHeight: 6, maxHeight: 6),
+          decoration: BoxDecorationMix(borderRadius: BorderRadiusMix.circular(99)),
+          clipBehavior: Clip.antiAlias,
+        ),
+        track: BoxMix(decoration: BoxDecorationMix(color: Colors.green[100])),
+        fill: BoxMix(
+          decoration: BoxDecorationMix(
+            borderRadius: BorderRadiusMix.circular(99),
+            color: Colors.green[500],
+          ),
+        ),
+        outerContainer: BoxMix(),
+      );
+
+  /// Warning progress variant with orange fill
+  static ProgressStyle get warning => ProgressStyle(
+        container: BoxMix(
+          constraints: BoxConstraintsMix(minHeight: 6, maxHeight: 6),
+          decoration: BoxDecorationMix(borderRadius: BorderRadiusMix.circular(99)),
+          clipBehavior: Clip.antiAlias,
+        ),
+        track: BoxMix(decoration: BoxDecorationMix(color: Colors.orange[100])),
+        fill: BoxMix(
+          decoration: BoxDecorationMix(
+            borderRadius: BorderRadiusMix.circular(99),
+            color: Colors.orange[500],
+          ),
+        ),
+        outerContainer: BoxMix(),
+      );
+}

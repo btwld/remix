@@ -1,49 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
-import 'package:remix/remix.dart';
+import 'package:remix/remix_new.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 @widgetbook.UseCase(
   name: 'Card Component',
-  type: RxCard,
+  type: RemixCard,
 )
 Widget buildCard(BuildContext context) {
   return Scaffold(
     body: Center(
-      child: RxCard(
+      child: RemixCard(
         child: HBox(
-          style: Style(
-            $flex.gap(12),
-            $flex.mainAxisSize.min(),
-          ),
+          style: $flexbox
+            ..gap(12)
+            ..mainAxisSize(MainAxisSize.min),
           children: [
-            const RxAvatar.raw(child: Text('LF')),
+            RemixAvatar(label: 'LF'),
             Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 StyledText(
                   'Leo Farias',
-                  style: Style(
-                    $text
-                      ..style.fontSize(14)
-                      ..style.fontWeight.bold()
-                      ..style.color.black87(),
-                    $on.dark(
-                      $text.style.color.white(),
-                    ),
-                  ),
+                  style: $text
+                    ..style.fontSize(14)
+                    ..style.fontWeight(FontWeight.bold)
+                    ..style.color.black87(),
                 ),
                 StyledText(
                   'Flutter Engineer',
-                  style: Style(
-                    $text
-                      ..style.fontSize(12)
-                      ..style.color.black54(),
-                    $on.dark(
-                      $text.style.color.white70(),
-                    ),
-                  ),
+                  style: $text
+                    ..style.fontSize(12)
+                    ..style.color.black54(),
                 ),
               ],
             ),

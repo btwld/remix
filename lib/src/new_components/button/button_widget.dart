@@ -44,24 +44,20 @@ class RemixButton extends StatefulWidget implements Disableable {
   ///
   /// The [label] and [onPressed] parameters are required unless [child] is provided.
   /// If [child] is provided, it overrides the label and icon parameters.
-  RemixButton({
+  const RemixButton({
     super.key,
-    String? label,
+    required String label,
     IconData? icon,
-    Widget? child,
     this.enabled = true,
     this.loading = false,
     this.spinnerBuilder,
     this.enableHapticFeedback = true,
     required this.onPressed,
     this.focusNode,
-    this.variants = const [],
-    this.style,
-  })  : assert(child != null || label != null,
-            'Either child or label must be provided'),
-        label = label,
+    this.style = const ButtonStyle.create(),
+  })  : label = label,
         icon = icon,
-        child = child;
+        child = null;
 
   /// Creates a Remix button with only an icon.
   ///
@@ -85,8 +81,7 @@ class RemixButton extends StatefulWidget implements Disableable {
     this.enableHapticFeedback = true,
     required this.onPressed,
     this.focusNode,
-    this.variants = const [],
-    this.style,
+    this.style = const ButtonStyle.create(),
   })  : label = null,
         icon = icon,
         child = Icon(icon);
@@ -113,8 +108,7 @@ class RemixButton extends StatefulWidget implements Disableable {
     this.enableHapticFeedback = true,
     required this.onPressed,
     this.focusNode,
-    this.variants = const [],
-    this.style,
+    this.style = const ButtonStyle.create(),
   })  : label = null,
         icon = null,
         child = child;
@@ -177,9 +171,6 @@ class RemixButton extends StatefulWidget implements Disableable {
   /// If provided, overrides [label] and [icon].
   final Widget? child;
 
-  /// {@macro remix.component.variants}
-  final List<Variant> variants;
-
   @override
   State<RemixButton> createState() => _RemixButtonState();
 }
@@ -213,9 +204,9 @@ class _RemixButtonState extends State<RemixButton> with MixControllerMixin {
   Widget build(BuildContext context) {
     return NakedButton(
       onPressed: widget.onPressed,
-      onHoverState: (state) => stateController.hovered = state,
+      onHoveredState: (state) => stateController.hovered = state,
       onPressedState: (state) => stateController.pressed = state,
-      onFocusState: (state) => stateController.focused = state,
+      onFocusedState: (state) => stateController.focused = state,
       onDisabledState: (state) => stateController.disabled = state,
       enabled: _isEnabled,
       enableHapticFeedback: widget.enableHapticFeedback,
@@ -223,7 +214,6 @@ class _RemixButtonState extends State<RemixButton> with MixControllerMixin {
       child: StyleBuilder(
         style: DefaultButtonStyle.merge(widget.style),
         builder: (context, spec) {
-
           // Create the child widget based on whether custom child is provided
           final effectiveChild = widget.child ??
               RemixLabel(

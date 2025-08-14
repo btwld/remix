@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:remix/remix.dart';
+import 'package:remix/remix_new.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
         body: Center(
           child: Row(
             children: [
-              RxTooltip(
+              RemixTooltip(
                 tooltipChild: Text(
                   'This is a tooltip',
                   style: TextStyle(color: Colors.white),

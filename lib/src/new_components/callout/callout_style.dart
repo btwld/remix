@@ -117,3 +117,109 @@ final DefaultCalloutStyle = CalloutStyle(
     size: 16,
   ),
 );
+
+extension CalloutVariants on CalloutStyle {
+  /// Info callout variant with blue colors
+  static CalloutStyle get info => CalloutStyle(
+        container: BoxMix(
+          padding: EdgeInsetsMix.all(12),
+          decoration: BoxDecorationMix(
+            border: BoxBorderMix.all(BorderSideMix(
+              color: Colors.blue[300]!,
+              width: 1,
+            )),
+            borderRadius: BorderRadiusMix.circular(6),
+            color: Colors.blue[50],
+          ),
+        ),
+        text: TextMix(
+          style: TextStyleMix(
+            color: Colors.blue[700],
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        icon: IconMix(
+          color: Colors.blue[600],
+          size: 16,
+        ),
+      );
+
+  /// Success callout variant with green colors
+  static CalloutStyle get success => CalloutStyle(
+        container: BoxMix(
+          padding: EdgeInsetsMix.all(12),
+          decoration: BoxDecorationMix(
+            border: BoxBorderMix.all(BorderSideMix(
+              color: Colors.green[300]!,
+              width: 1,
+            )),
+            borderRadius: BorderRadiusMix.circular(6),
+            color: Colors.green[50],
+          ),
+        ),
+        text: TextMix(
+          style: TextStyleMix(
+            color: Colors.green[700],
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        icon: IconMix(
+          color: Colors.green[600],
+          size: 16,
+        ),
+      );
+
+  /// Warning callout variant with orange colors
+  static CalloutStyle get warning => CalloutStyle(
+        container: BoxMix(
+          padding: EdgeInsetsMix.all(12),
+          decoration: BoxDecorationMix(
+            border: BoxBorderMix.all(BorderSideMix(
+              color: Colors.orange[300]!,
+              width: 1,
+            )),
+            borderRadius: BorderRadiusMix.circular(6),
+            color: Colors.orange[50],
+          ),
+        ),
+        text: TextMix(
+          style: TextStyleMix(
+            color: Colors.orange[700],
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        icon: IconMix(
+          color: Colors.orange[600],
+          size: 16,
+        ),
+      );
+
+  /// Error callout variant with red colors
+  static CalloutStyle get error => CalloutStyle(
+        container: BoxMix(
+          padding: EdgeInsetsMix.all(12),
+          decoration: BoxDecorationMix(
+            border: BoxBorderMix.all(BorderSideMix(
+              color: Colors.red[300]!,
+              width: 1,
+            )),
+            borderRadius: BorderRadiusMix.circular(6),
+            color: Colors.red[50],
+          ),
+        ),
+        text: TextMix(
+          style: TextStyleMix(
+            color: Colors.red[700],
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        icon: IconMix(
+          color: Colors.red[600],
+          size: 16,
+        ),
+      );
+}

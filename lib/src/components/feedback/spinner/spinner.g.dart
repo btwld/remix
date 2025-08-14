@@ -41,8 +41,8 @@ mixin _$SpinnerSpec on Spec<SpinnerSpec> {
     Color? color,
     Duration? duration,
     SpinnerTypeStyle? style,
-    WidgetModifiersConfig? modifiers,
-    AnimatedData? animated,
+    dynamic? modifiers,
+    dynamic? animated,
   }) {
     return SpinnerSpec(
       size: size ?? _$this.size,
@@ -84,7 +84,7 @@ mixin _$SpinnerSpec on Spec<SpinnerSpec> {
       color: Color.lerp(_$this.color, other.color, t)!,
       duration: t < 0.5 ? _$this.duration : other.duration,
       style: t < 0.5 ? _$this.style : other.style,
-      modifiers: other.modifiers,
+      modifiers: t < 0.5 ? _$this.modifiers : other.modifiers,
       animated: _$this.animated ?? other.animated,
     );
   }
@@ -165,8 +165,8 @@ class SpinnerSpecAttribute extends SpecAttribute<SpinnerSpec>
       color: color?.resolve(mix),
       duration: duration,
       style: style,
-      modifiers: modifiers?.resolve(mix),
-      animated: animated?.resolve(mix) ?? mix.animation,
+      modifiers: modifiers,
+      animated: animated,
     );
   }
 
@@ -188,8 +188,8 @@ class SpinnerSpecAttribute extends SpecAttribute<SpinnerSpec>
       color: color?.merge(other.color) ?? other.color,
       duration: other.duration ?? duration,
       style: other.style ?? style,
-      modifiers: modifiers?.merge(other.modifiers) ?? other.modifiers,
-      animated: animated?.merge(other.animated) ?? other.animated,
+      modifiers: other.modifiers ?? modifiers,
+      animated: other.animated ?? animated,
     );
   }
 
@@ -247,10 +247,10 @@ class SpinnerSpecUtility<T extends SpecAttribute>
   late final style = SpinnerTypeStyleUtility((v) => only(style: v));
 
   /// Utility for defining [SpinnerSpecAttribute.modifiers]
-  late final wrap = SpecModifierUtility((v) => only(modifiers: v));
+  late final modifiers = GenericUtility<T, dynamic>((v) => only(modifiers: v));
 
   /// Utility for defining [SpinnerSpecAttribute.animated]
-  late final animated = AnimatedUtility((v) => only(animated: v));
+  late final animated = GenericUtility<T, dynamic>((v) => only(animated: v));
 
   SpinnerSpecUtility(
     super.builder, {
@@ -277,8 +277,8 @@ class SpinnerSpecUtility<T extends SpecAttribute>
     ColorDto? color,
     Duration? duration,
     SpinnerTypeStyle? style,
-    WidgetModifiersConfigDto? modifiers,
-    AnimatedDataDto? animated,
+    dynamic? modifiers,
+    dynamic? animated,
   }) {
     return builder(SpinnerSpecAttribute(
       size: size,

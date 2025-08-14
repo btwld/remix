@@ -39,8 +39,8 @@ mixin _$LabelSpec on Spec<LabelSpec> {
     double? spacing,
     IconSpec? icon,
     TextSpec? label,
-    WidgetModifiersConfig? modifiers,
-    AnimatedData? animated,
+    dynamic? modifiers,
+    dynamic? animated,
   }) {
     return LabelSpec(
       spacing: spacing ?? _$this.spacing,
@@ -78,7 +78,7 @@ mixin _$LabelSpec on Spec<LabelSpec> {
       spacing: MixHelpers.lerpDouble(_$this.spacing, other.spacing, t)!,
       icon: _$this.icon.lerp(other.icon, t),
       label: _$this.label.lerp(other.label, t),
-      modifiers: other.modifiers,
+      modifiers: t < 0.5 ? _$this.modifiers : other.modifiers,
       animated: _$this.animated ?? other.animated,
     );
   }
@@ -146,8 +146,8 @@ class LabelSpecAttribute extends SpecAttribute<LabelSpec> with Diagnosticable {
       spacing: spacing,
       icon: icon?.resolve(mix),
       label: label?.resolve(mix),
-      modifiers: modifiers?.resolve(mix),
-      animated: animated?.resolve(mix) ?? mix.animation,
+      modifiers: modifiers,
+      animated: animated,
     );
   }
 
@@ -167,8 +167,8 @@ class LabelSpecAttribute extends SpecAttribute<LabelSpec> with Diagnosticable {
       spacing: other.spacing ?? spacing,
       icon: icon?.merge(other.icon) ?? other.icon,
       label: label?.merge(other.label) ?? other.label,
-      modifiers: modifiers?.merge(other.modifiers) ?? other.modifiers,
-      animated: animated?.merge(other.animated) ?? other.animated,
+      modifiers: other.modifiers ?? modifiers,
+      animated: other.animated ?? animated,
     );
   }
 
@@ -214,10 +214,10 @@ class LabelSpecUtility<T extends SpecAttribute>
   late final label = TextSpecUtility((v) => only(label: v));
 
   /// Utility for defining [LabelSpecAttribute.modifiers]
-  late final wrap = SpecModifierUtility((v) => only(modifiers: v));
+  late final modifiers = GenericUtility<T, dynamic>((v) => only(modifiers: v));
 
   /// Utility for defining [LabelSpecAttribute.animated]
-  late final animated = AnimatedUtility((v) => only(animated: v));
+  late final animated = GenericUtility<T, dynamic>((v) => only(animated: v));
 
   LabelSpecUtility(
     super.builder, {
@@ -242,8 +242,8 @@ class LabelSpecUtility<T extends SpecAttribute>
     double? spacing,
     IconSpecAttribute? icon,
     TextSpecAttribute? label,
-    WidgetModifiersConfigDto? modifiers,
-    AnimatedDataDto? animated,
+    dynamic? modifiers,
+    dynamic? animated,
   }) {
     return builder(LabelSpecAttribute(
       spacing: spacing,

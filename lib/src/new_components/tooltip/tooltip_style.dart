@@ -87,11 +87,77 @@ final DefaultTooltipStyle = TooltipStyle(
       borderRadius: BorderRadiusMix.circular(8),
     ),
   ),
-  animation: AnimationConfig.ease(const Duration(milliseconds: 100)),
   text: TextMix(
     style: TextStyleMix(
       color: Colors.white,
       fontSize: 14,
     ),
   ),
+  animation: AnimationConfig.ease(const Duration(milliseconds: 100)),
 );
+
+extension TooltipVariants on TooltipStyle {
+  /// Dark tooltip variant (same as default)
+  static TooltipStyle get dark => TooltipStyle(
+        container: BoxMix(
+          padding: EdgeInsetsMix.all(10),
+          decoration: BoxDecorationMix(
+            color: Colors.black.withValues(alpha: 0.9),
+            borderRadius: BorderRadiusMix.circular(8),
+          ),
+        ),
+        animation: AnimationConfig.ease(const Duration(milliseconds: 100)),
+        text: TextMix(
+          style: TextStyleMix(
+            color: Colors.white,
+            fontSize: 14,
+          ),
+        ),
+      );
+
+  /// Light tooltip variant with white background
+  static TooltipStyle get light => TooltipStyle(
+        container: BoxMix(
+          padding: EdgeInsetsMix.all(10),
+          decoration: BoxDecorationMix(
+            color: Colors.white,
+            borderRadius: BorderRadiusMix.circular(8),
+            border: BoxBorderMix.all(
+              BorderSideMix(color: Colors.grey[300]!, width: 1),
+            ),
+            boxShadow: [
+              BoxShadowMix(
+                color: Colors.black.withValues(alpha: 0.1),
+                offset: const Offset(0, 2),
+                blurRadius: 8,
+              ),
+            ],
+          ),
+        ),
+        animation: AnimationConfig.ease(const Duration(milliseconds: 100)),
+        text: TextMix(
+          style: TextStyleMix(
+            color: Colors.black87,
+            fontSize: 14,
+          ),
+        ),
+      );
+
+  /// Primary tooltip variant with blue colors
+  static TooltipStyle get primary => TooltipStyle(
+        container: BoxMix(
+          padding: EdgeInsetsMix.all(10),
+          decoration: BoxDecorationMix(
+            color: Colors.blue[600],
+            borderRadius: BorderRadiusMix.circular(8),
+          ),
+        ),
+        animation: AnimationConfig.ease(const Duration(milliseconds: 100)),
+        text: TextMix(
+          style: TextStyleMix(
+            color: Colors.white,
+            fontSize: 14,
+          ),
+        ),
+      );
+}

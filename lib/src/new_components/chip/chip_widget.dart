@@ -22,15 +22,46 @@ class RemixChip extends StatefulWidget implements Disableable, Selectable {
   const RemixChip({
     super.key,
     required this.label,
-    this.leadingIcon,
-    this.deleteIcon,
+    IconData? leadingIcon,
+    IconData? deleteIcon,
+    @Deprecated('Use leadingIcon instead') IconData? iconLeft,
+    @Deprecated('Use deleteIcon instead') IconData? iconRight,
+    ValueChanged<bool>? onSelected,
+    @Deprecated('Use onSelected instead') ValueChanged<bool>? onChanged,
+    this.onDeleted,
+    this.selected = false,
+    this.enabled = true,
+    this.style = const ChipStyle.create(),
+    this.focusNode,
+  })  : leadingIcon = leadingIcon ?? iconLeft,
+        deleteIcon = deleteIcon ?? iconRight,
+        onSelected = onSelected ?? onChanged,
+        child = null;
+
+  /// Creates a Remix chip with custom content.
+  ///
+  /// This constructor allows for custom chip content beyond the default layout.
+  ///
+  /// Example:
+  /// ```dart
+  /// RemixChip.raw(
+  ///   child: Icon(Icons.star),
+  ///   onSelected: (bool isSelected) {},
+  ///   style: ChipStyle(),
+  /// )
+  /// ```
+  const RemixChip.raw({
+    super.key,
+    required this.child,
     this.onSelected,
     this.onDeleted,
     this.selected = false,
     this.enabled = true,
     this.style = const ChipStyle.create(),
     this.focusNode,
-  });
+  })  : label = '',
+        leadingIcon = null,
+        deleteIcon = null;
 
   /// The text label for the chip.
   final String label;
@@ -41,6 +72,9 @@ class RemixChip extends StatefulWidget implements Disableable, Selectable {
   /// Optional delete icon. If onDeleted is provided but deleteIcon is null,
   /// defaults to Icons.close.
   final IconData? deleteIcon;
+
+  /// Custom child widget for raw constructor.
+  final Widget? child;
 
   /// Called when the user taps the chip.
   final ValueChanged<bool>? onSelected;
@@ -68,22 +102,28 @@ class RemixChip extends StatefulWidget implements Disableable, Selectable {
 
 class _RemixChipState extends State<RemixChip>
     with MixControllerMixin, DisableableMixin, SelectableMixin {
-  void _handleTap() {
-    if (widget.enabled && widget.onSelected != null) {
-      widget.onSelected!(!widget.selected);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: _handleTap,
-      child: MouseRegion(
-        onEnter: (_) => stateController.hovered = true,
-        onExit: (_) => stateController.hovered = false,
-        child: StyleBuilder(
-          style: DefaultChipStyle.merge(widget.style),
-          builder: (context, spec) {
+    return NakedCheckbox(
+      value: widget.selected,
+      onChanged: (value) => widget.onSelected?.call(value ?? false),
+      onHoveredState: (state) => stateController.hovered = state,
+      onPressedState: (state) => stateController.pressed = state,
+      onFocusedState: (state) => stateController.focused = state,
+      enabled: widget.enabled,
+      focusNode: widget.focusNode,
+      child: StyleBuilder(
+        style: DefaultChipStyle.merge(widget.style),
+        builder: (context, spec) {
+            // If custom child is provided, use it directly
+            if (widget.child != null) {
+              return spec.container(
+                direction: Axis.horizontal,
+                children: [widget.child!],
+              );
+            }
+            
+            // Otherwise build standard chip layout
             final children = <Widget>[];
 
             // Leading icon
@@ -93,15 +133,15 @@ class _RemixChipState extends State<RemixChip>
                 size: spec.leadingIcon.size,
                 color: spec.leadingIcon.color,
               ));
-              children.add(const SizedBox(width: 4));
             }
 
             // Label
-            children.add(spec.label(widget.label));
+            if (widget.label.isNotEmpty) {
+              children.add(spec.label(widget.label));
+            }
 
             // Delete icon
             if (widget.onDeleted != null) {
-              children.add(const SizedBox(width: 4));
               children.add(GestureDetector(
                 onTap: widget.enabled ? widget.onDeleted : null,
                 child: Icon(
@@ -113,14 +153,12 @@ class _RemixChipState extends State<RemixChip>
             }
 
             return spec.container(
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: children,
-              ),
+              direction: Axis.horizontal,
+              children: children,
             );
           },
+          controller: stateController,
         ),
-      ),
     );
   }
 }

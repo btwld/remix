@@ -39,8 +39,8 @@ mixin _$SliderSpec on Spec<SliderSpec> {
     PaintData? baseTrack,
     PaintData? activeTrack,
     PaintData? division,
-    WidgetModifiersConfig? modifiers,
-    AnimatedData? animated,
+    dynamic? modifiers,
+    dynamic? animated,
   }) {
     return SliderSpec(
       thumb: thumb ?? _$this.thumb,
@@ -79,7 +79,7 @@ mixin _$SliderSpec on Spec<SliderSpec> {
       baseTrack: _$this.baseTrack.lerp(other.baseTrack, t),
       activeTrack: _$this.activeTrack.lerp(other.activeTrack, t),
       division: _$this.division.lerp(other.division, t),
-      modifiers: other.modifiers,
+      modifiers: t < 0.5 ? _$this.modifiers : other.modifiers,
       animated: _$this.animated ?? other.animated,
     );
   }
@@ -154,8 +154,8 @@ class SliderSpecAttribute extends SpecAttribute<SliderSpec>
       baseTrack: baseTrack?.resolve(mix),
       activeTrack: activeTrack?.resolve(mix),
       division: division?.resolve(mix),
-      modifiers: modifiers?.resolve(mix),
-      animated: animated?.resolve(mix) ?? mix.animation,
+      modifiers: modifiers,
+      animated: animated,
     );
   }
 
@@ -176,8 +176,8 @@ class SliderSpecAttribute extends SpecAttribute<SliderSpec>
       baseTrack: baseTrack?.merge(other.baseTrack) ?? other.baseTrack,
       activeTrack: activeTrack?.merge(other.activeTrack) ?? other.activeTrack,
       division: division?.merge(other.division) ?? other.division,
-      modifiers: modifiers?.merge(other.modifiers) ?? other.modifiers,
-      animated: animated?.merge(other.animated) ?? other.animated,
+      modifiers: other.modifiers ?? modifiers,
+      animated: other.animated ?? animated,
     );
   }
 
@@ -231,10 +231,10 @@ class SliderSpecUtility<T extends SpecAttribute>
   late final division = PaintDataUtility((v) => only(division: v));
 
   /// Utility for defining [SliderSpecAttribute.modifiers]
-  late final wrap = SpecModifierUtility((v) => only(modifiers: v));
+  late final modifiers = GenericUtility<T, dynamic>((v) => only(modifiers: v));
 
   /// Utility for defining [SliderSpecAttribute.animated]
-  late final animated = AnimatedUtility((v) => only(animated: v));
+  late final animated = GenericUtility<T, dynamic>((v) => only(animated: v));
 
   SliderSpecUtility(
     super.builder, {
@@ -260,8 +260,8 @@ class SliderSpecUtility<T extends SpecAttribute>
     PaintDataAttribute? baseTrack,
     PaintDataAttribute? activeTrack,
     PaintDataAttribute? division,
-    WidgetModifiersConfigDto? modifiers,
-    AnimatedDataDto? animated,
+    dynamic? modifiers,
+    dynamic? animated,
   }) {
     return builder(SliderSpecAttribute(
       thumb: thumb,

@@ -40,8 +40,8 @@ mixin _$ListItemSpec on Spec<ListItemSpec> {
     FlexBoxSpec? titleSubtitleContainer,
     TextSpec? title,
     TextSpec? subtitle,
-    WidgetModifiersConfig? modifiers,
-    AnimatedData? animated,
+    dynamic? modifiers,
+    dynamic? animated,
   }) {
     return ListItemSpec(
       container: container ?? _$this.container,
@@ -82,7 +82,7 @@ mixin _$ListItemSpec on Spec<ListItemSpec> {
           _$this.titleSubtitleContainer.lerp(other.titleSubtitleContainer, t),
       title: _$this.title.lerp(other.title, t),
       subtitle: _$this.subtitle.lerp(other.subtitle, t),
-      modifiers: other.modifiers,
+      modifiers: t < 0.5 ? _$this.modifiers : other.modifiers,
       animated: _$this.animated ?? other.animated,
     );
   }
@@ -158,8 +158,8 @@ class ListItemSpecAttribute extends SpecAttribute<ListItemSpec>
       titleSubtitleContainer: titleSubtitleContainer?.resolve(mix),
       title: title?.resolve(mix),
       subtitle: subtitle?.resolve(mix),
-      modifiers: modifiers?.resolve(mix),
-      animated: animated?.resolve(mix) ?? mix.animation,
+      modifiers: modifiers,
+      animated: animated,
     );
   }
 
@@ -182,8 +182,8 @@ class ListItemSpecAttribute extends SpecAttribute<ListItemSpec>
               other.titleSubtitleContainer,
       title: title?.merge(other.title) ?? other.title,
       subtitle: subtitle?.merge(other.subtitle) ?? other.subtitle,
-      modifiers: modifiers?.merge(other.modifiers) ?? other.modifiers,
-      animated: animated?.merge(other.animated) ?? other.animated,
+      modifiers: other.modifiers ?? modifiers,
+      animated: other.animated ?? animated,
     );
   }
 
@@ -239,10 +239,10 @@ class ListItemSpecUtility<T extends SpecAttribute>
   late final subtitle = TextSpecUtility((v) => only(subtitle: v));
 
   /// Utility for defining [ListItemSpecAttribute.modifiers]
-  late final wrap = SpecModifierUtility((v) => only(modifiers: v));
+  late final modifiers = GenericUtility<T, dynamic>((v) => only(modifiers: v));
 
   /// Utility for defining [ListItemSpecAttribute.animated]
-  late final animated = AnimatedUtility((v) => only(animated: v));
+  late final animated = GenericUtility<T, dynamic>((v) => only(animated: v));
 
   ListItemSpecUtility(
     super.builder, {
@@ -268,8 +268,8 @@ class ListItemSpecUtility<T extends SpecAttribute>
     FlexBoxSpecAttribute? titleSubtitleContainer,
     TextSpecAttribute? title,
     TextSpecAttribute? subtitle,
-    WidgetModifiersConfigDto? modifiers,
-    AnimatedDataDto? animated,
+    dynamic? modifiers,
+    dynamic? animated,
   }) {
     return builder(ListItemSpecAttribute(
       container: container,

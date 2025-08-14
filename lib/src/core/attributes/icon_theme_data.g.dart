@@ -26,9 +26,9 @@ mixin _$IconThemeDataDto on Mixable<IconThemeData> {
       weight: _$this.weight,
       grade: _$this.grade,
       opticalSize: _$this.opticalSize,
-      color: _$this.color?.resolve(mix),
+      color: _$this.color,
       opacity: _$this.opacity,
-      shadows: _$this.shadows?.map((e) => e.resolve(mix)).toList(),
+      shadows: _$this.shadows,
       applyTextScaling: _$this.applyTextScaling,
     );
   }
@@ -51,7 +51,7 @@ mixin _$IconThemeDataDto on Mixable<IconThemeData> {
       weight: other.weight ?? _$this.weight,
       grade: other.grade ?? _$this.grade,
       opticalSize: other.opticalSize ?? _$this.opticalSize,
-      color: _$this.color?.merge(other.color) ?? other.color,
+      color: other.color ?? _$this.color,
       opacity: other.opacity ?? _$this.opacity,
       shadows: MixHelpers.mergeList(_$this.shadows, other.shadows),
       applyTextScaling: other.applyTextScaling ?? _$this.applyTextScaling,
@@ -101,13 +101,13 @@ class IconThemeDataUtility<T extends StyleElement>
   late final opticalSize = DoubleUtility((v) => only(opticalSize: v));
 
   /// Utility for defining [IconThemeDataDto.color]
-  late final color = ColorUtility((v) => only(color: v));
+  late final color = GenericUtility<T, InvalidType>((v) => only(color: v));
 
   /// Utility for defining [IconThemeDataDto.opacity]
   late final opacity = DoubleUtility((v) => only(opacity: v));
 
   /// Utility for defining [IconThemeDataDto.shadows]
-  late final shadows = ShadowListUtility((v) => only(shadows: v));
+  late final shadows = ListUtility<T, InvalidType>((v) => only(shadows: v));
 
   /// Utility for defining [IconThemeDataDto.applyTextScaling]
   late final applyTextScaling = BoolUtility((v) => only(applyTextScaling: v));
@@ -122,9 +122,9 @@ class IconThemeDataUtility<T extends StyleElement>
     double? weight,
     double? grade,
     double? opticalSize,
-    ColorDto? color,
+    InvalidType? color,
     double? opacity,
-    List<ShadowDto>? shadows,
+    List<InvalidType>? shadows,
     bool? applyTextScaling,
   }) {
     return builder(IconThemeDataDto(
@@ -146,9 +146,9 @@ class IconThemeDataUtility<T extends StyleElement>
     double? weight,
     double? grade,
     double? opticalSize,
-    Color? color,
+    InvalidType? color,
     double? opacity,
-    List<Shadow>? shadows,
+    List<InvalidType>? shadows,
     bool? applyTextScaling,
   }) {
     return only(
@@ -157,9 +157,9 @@ class IconThemeDataUtility<T extends StyleElement>
       weight: weight,
       grade: grade,
       opticalSize: opticalSize,
-      color: color?.toDto(),
+      color: color,
       opacity: opacity,
-      shadows: shadows?.map((e) => e.toDto()).toList(),
+      shadows: shadows,
       applyTextScaling: applyTextScaling,
     );
   }
