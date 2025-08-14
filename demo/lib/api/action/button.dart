@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart' hide ButtonStyle;
 import 'package:mix/mix.dart';
-import 'package:remix/remix_new.dart';
+import 'package:remix/remix.dart';
 
 void main() {
   runApp(const MyApp());

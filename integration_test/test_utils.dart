@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:remix/remix_new.dart';
+import 'package:remix/remix.dart';
 
 /// Base class for integration test setup
 class IntegrationTestHelper {
