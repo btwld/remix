@@ -1,7 +1,9 @@
 part of 'spinner.dart';
 
 class SpinnerStyle extends Style<SpinnerSpec>
-    with StyleModifierMixin<SpinnerStyle, SpinnerSpec>, StyleVariantMixin<SpinnerStyle, SpinnerSpec> {
+    with
+        StyleModifierMixin<SpinnerStyle, SpinnerSpec>,
+        StyleVariantMixin<SpinnerStyle, SpinnerSpec> {
   final Prop<double>? $size;
   final Prop<double>? $strokeWidth;
   final Prop<Color>? $color;
@@ -77,16 +79,14 @@ class SpinnerStyle extends Style<SpinnerSpec>
     return merge(SpinnerStyle(animation: animation));
   }
 
+  RemixSpinner call() {
+    return RemixSpinner(style: this);
+  }
+
   // Variant support
   @override
   SpinnerStyle variant(Variant variant, SpinnerStyle style) {
     return merge(SpinnerStyle(variants: [VariantStyle(variant, style)]));
-  }
-
-  RemixSpinner call() {
-    return RemixSpinner(
-      style: this,
-    );
   }
 
   @override

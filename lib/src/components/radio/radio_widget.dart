@@ -16,7 +16,8 @@ part of 'radio.dart';
 ///   label: 'Option 1',
 /// )
 /// ```
-class RemixRadio<T> extends StatefulWidget implements Disableable {
+class RemixRadio<T> extends StatefulWidget
+    with Disableable, Selectable, Focusable {
   const RemixRadio({
     super.key,
     required this.value,
@@ -39,7 +40,6 @@ class RemixRadio<T> extends StatefulWidget implements Disableable {
   final ValueChanged<T?>? onChanged;
 
   /// Whether this radio button is enabled.
-  @override
   final bool enabled;
 
   /// Whether to enable haptic feedback when selected.
@@ -54,6 +54,7 @@ class RemixRadio<T> extends StatefulWidget implements Disableable {
   /// The focus node for the radio button.
   final FocusNode? focusNode;
 
+  @override
   bool get selected => value == groupValue;
 
   @override
@@ -61,87 +62,73 @@ class RemixRadio<T> extends StatefulWidget implements Disableable {
 }
 
 class _RemixRadioState<T> extends State<RemixRadio<T>>
-    with MixControllerMixin, DisableableMixin, SelectableMixin {
-  
-  T? get _groupValue {
-    // Check if we're inside a RadioGroup
-    final groupScope = _RadioGroupScope.maybeOf<T>(context);
-    if (groupScope != null) {
-      return groupScope.groupValue;
-    }
-    // Otherwise use the provided groupValue
-    return widget.groupValue;
-  }
+    with WidgetStateMixin, DisableableMixin, SelectableMixin {
+  Widget _buildRadioChild(RadioStyle style, bool isSelected) {
+    return StyleBuilder(
+      style: DefaultRadioStyle.merge(style),
+      builder: (context, spec) {
+        final radio = spec.indicatorContainer(
+          child: isSelected ? spec.indicator() : null,
+        );
 
-  ValueChanged<T?>? get _onChanged {
-    // Check if we're inside a RadioGroup
-    final groupScope = _RadioGroupScope.maybeOf<T>(context);
-    if (groupScope != null) {
-      return widget.enabled && groupScope.enabled ? groupScope.onChanged : null;
-    }
-    // Otherwise use the provided onChanged
-    return widget.onChanged;
-  }
+        if (widget.label == null) {
+          return radio;
+        }
 
-  bool get _enabled {
-    // Check if we're inside a RadioGroup
-    final groupScope = _RadioGroupScope.maybeOf<T>(context);
-    if (groupScope != null) {
-      return widget.enabled && groupScope.enabled;
-    }
-    return widget.enabled;
-  }
-
-  RadioStyle get _style {
-    // Check if we're inside a RadioGroup
-    final groupScope = _RadioGroupScope.maybeOf<T>(context);
-    if (groupScope != null && groupScope.style != null) {
-      return groupScope.style!.merge(widget.style);
-    }
-    return widget.style;
+        return spec.container(
+          direction: Axis.horizontal,
+          children: [radio, spec.label(widget.label!)],
+        );
+      },
+      controller: controller,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final isSelected = widget.value == _groupValue;
-    
-    return GestureDetector(
-      onTap: _enabled && _onChanged != null 
-          ? () => _onChanged!(widget.value) 
-          : null,
-      child: MouseRegion(
-        onEnter: (_) => stateController.hovered = true,
-        onExit: (_) => stateController.hovered = false,
-        cursor: _enabled 
-            ? SystemMouseCursors.click 
-            : SystemMouseCursors.forbidden,
-        child: FocusableActionDetector(
-          enabled: _enabled,
-          focusNode: widget.focusNode,
-          onFocusChange: (focused) => stateController.focused = focused,
-          child: StyleBuilder(
-            style: DefaultRadioStyle.merge(_style),
-            builder: (context, spec) {
-              final radio = spec.indicatorContainer(
-                child: isSelected ? spec.indicator() : null,
-              );
+    // Check if we're in a NakedRadioGroup by looking for NakedRadioGroupScope
+    final nakedGroupScope = NakedRadioGroupScope.maybeOf<T>(context);
+    final isInGroup = nakedGroupScope != null;
 
-              if (widget.label == null) {
-                return radio;
-              }
+    // Get style from StyleProvider if in RemixRadioGroup, otherwise use widget style
+    final inheritedStyle = StyleProvider.maybeOf<RadioSpec>(context);
+    final RadioStyle style = inheritedStyle != null
+        ? (inheritedStyle as RadioStyle).merge(widget.style)
+        : widget.style;
 
-              return spec.container(
-                direction: Axis.horizontal,
-                children: [
-                  radio,
-                  spec.label(widget.label!)
-                ]
-              );
-            },
-            controller: stateController,
-          ),
-        ),
-      ),
+    // Get values from NakedRadioGroupScope or widget properties
+    final T? groupValue = nakedGroupScope?.groupValue ?? widget.groupValue;
+    final bool enabled = nakedGroupScope != null
+        ? (widget.enabled && nakedGroupScope.state.widget.enabled)
+        : widget.enabled;
+
+    // Calculate selected state for visual display
+    final isSelected = widget.value == groupValue;
+
+    // Build the NakedRadio with common configuration
+    final nakedRadio = NakedRadio<T>(
+      value: widget.value,
+      onHoveredState: (state) => controller.hovered = state,
+      onPressedState: (state) => controller.pressed = state,
+      onSelectedState: (state) => controller.selected = state,
+      onFocusedState: (state) => controller.focused = state,
+      enabled: enabled,
+      enableHapticFeedback: widget.enableHapticFeedback,
+      focusNode: widget.focusNode,
+      child: _buildRadioChild(style, isSelected),
     );
+
+    // Only wrap with NakedRadioGroup when NOT in a group
+    // When in a group, the parent RemixRadioGroup already provides NakedRadioGroup
+    if (!isInGroup) {
+      return NakedRadioGroup<T>(
+        groupValue: groupValue,
+        onChanged: widget.onChanged,
+        enabled: enabled,
+        child: nakedRadio,
+      );
+    }
+
+    return nakedRadio;
   }
 }

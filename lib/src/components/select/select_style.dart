@@ -1,7 +1,9 @@
 part of 'select.dart';
 
 class SelectStyle extends Style<SelectSpec>
-    with StyleModifierMixin<SelectStyle, SelectSpec>, StyleVariantMixin<SelectStyle, SelectSpec> {
+    with
+        StyleModifierMixin<SelectStyle, SelectSpec>,
+        StyleVariantMixin<SelectStyle, SelectSpec> {
   final Prop<BoxSpec>? $menuContainer;
   final Prop<SelectTriggerSpec>? $trigger;
   final Prop<SelectMenuItemSpec>? $item;
@@ -405,7 +407,9 @@ extension SelectVariants on SelectStyle {
               crossAxisAlignment: CrossAxisAlignment.center,
             ),
           ),
-          label: TextMix(style: TextStyleMix(color: Colors.blue[700], fontSize: 14)),
+          label: TextMix(
+            style: TextStyleMix(color: Colors.blue[700], fontSize: 14),
+          ),
           icon: IconThemeData(size: 20, color: Colors.blue[600]),
         ),
         item: SelectMenuItemStyle(
@@ -464,7 +468,9 @@ extension SelectVariants on SelectStyle {
               crossAxisAlignment: CrossAxisAlignment.center,
             ),
           ),
-          label: TextMix(style: TextStyleMix(color: Colors.grey[700], fontSize: 14)),
+          label: TextMix(
+            style: TextStyleMix(color: Colors.grey[700], fontSize: 14),
+          ),
           icon: IconThemeData(size: 20, color: Colors.grey[600]),
         ),
         item: SelectMenuItemStyle(
@@ -494,11 +500,11 @@ extension SelectVariants on SelectStyle {
         menuContainer: BoxMix(
           padding: EdgeInsetsMix.symmetric(vertical: 4),
           decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(8),
-            color: Colors.white,
             border: BoxBorderMix.all(
               BorderSideMix(color: Colors.grey[300]!, width: 1),
             ),
+            borderRadius: BorderRadiusMix.circular(8),
+            color: Colors.white,
             boxShadow: [
               BoxShadowMix(
                 color: Colors.black.withValues(alpha: 0.1),
@@ -526,7 +532,8 @@ extension SelectVariants on SelectStyle {
               crossAxisAlignment: CrossAxisAlignment.center,
             ),
           ),
-          label: TextMix(style: TextStyleMix(color: Colors.black87, fontSize: 14)),
+          label:
+              TextMix(style: TextStyleMix(color: Colors.black87, fontSize: 14)),
           icon: IconThemeData(size: 20, color: Colors.black54),
         ),
         item: SelectMenuItemStyle(

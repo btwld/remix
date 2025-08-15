@@ -17,7 +17,8 @@ part of 'checkbox.dart';
 ///   label: 'Accept Terms',
 /// )
 /// ```
-class RemixCheckbox extends StatefulWidget implements Disableable, Selectable {
+class RemixCheckbox extends StatefulWidget
+    with Disableable, Selectable, Focusable {
   const RemixCheckbox({
     super.key,
     this.enabled = true,
@@ -31,11 +32,9 @@ class RemixCheckbox extends StatefulWidget implements Disableable, Selectable {
   });
 
   /// Whether the checkbox is enabled for interaction.
-  @override
   final bool enabled;
 
   /// Whether the checkbox is currently selected.
-  @override
   final bool selected;
 
   /// The icon to display when the checkbox is checked.
@@ -61,7 +60,7 @@ class RemixCheckbox extends StatefulWidget implements Disableable, Selectable {
 }
 
 class _RemixCheckboxState extends State<RemixCheckbox>
-    with MixControllerMixin, DisableableMixin, SelectableMixin {
+    with WidgetStateMixin, DisableableMixin, SelectableMixin {
   @override
   Widget build(BuildContext context) {
     return NakedCheckbox(
@@ -69,9 +68,9 @@ class _RemixCheckboxState extends State<RemixCheckbox>
       onChanged: widget.enabled && widget.onChanged != null
           ? (value) => widget.onChanged!(value ?? false)
           : null,
-      onHoveredState: (state) => stateController.hovered = state,
-      onPressedState: (state) => stateController.pressed = state,
-      onFocusedState: (state) => stateController.focused = state,
+      onHoveredState: (state) => controller.hovered = state,
+      onPressedState: (state) => controller.pressed = state,
+      onFocusedState: (state) => controller.focused = state,
       enabled: widget.enabled,
       focusNode: widget.focusNode,
       child: StyleBuilder(
@@ -96,10 +95,7 @@ class _RemixCheckboxState extends State<RemixCheckbox>
 
           return spec.container(
             direction: Axis.horizontal,
-            children: [
-              checkbox,
-              spec.label(widget.label!),
-            ],
+            children: [checkbox, spec.label(widget.label!)],
           );
         },
       ),

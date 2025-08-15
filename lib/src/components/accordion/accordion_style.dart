@@ -1,7 +1,9 @@
 part of 'accordion.dart';
 
 class AccordionStyle extends Style<AccordionSpec>
-    with StyleModifierMixin<AccordionStyle, AccordionSpec>, StyleVariantMixin<AccordionStyle, AccordionSpec> {
+    with
+        StyleModifierMixin<AccordionStyle, AccordionSpec>,
+        StyleVariantMixin<AccordionStyle, AccordionSpec> {
   final Prop<BoxSpec>? $itemContainer;
   final Prop<BoxSpec>? $contentContainer;
   final Prop<FlexBoxSpec>? $headerContainer;
@@ -95,7 +97,7 @@ class AccordionStyle extends Style<AccordionSpec>
   AccordionStyle variant(Variant variant, AccordionStyle style) {
     return merge(AccordionStyle(variants: [VariantStyle(variant, style)]));
   }
-  
+
   @override
   AccordionStyle variants(List<VariantStyle<AccordionSpec>> value) {
     return merge(AccordionStyle(variants: value));
@@ -138,9 +140,7 @@ final DefaultAccordionStyle = AccordionStyle(
     constraints: BoxConstraintsMix(minWidth: double.infinity),
   ),
   headerContainer: FlexBoxMix(
-    box: BoxMix(
-      padding: EdgeInsetsMix.all(12),
-    ),
+    box: BoxMix(padding: EdgeInsetsMix.all(12)),
     flex: FlexMix(
       direction: Axis.horizontal,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -183,9 +183,7 @@ extension AccordionVariants on AccordionStyle {
           constraints: BoxConstraintsMix(minWidth: double.infinity),
         ),
         headerContainer: FlexBoxMix(
-          box: BoxMix(
-            padding: EdgeInsetsMix.all(12),
-          ),
+          box: BoxMix(padding: EdgeInsetsMix.all(12)),
           flex: FlexMix(
             direction: Axis.horizontal,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -227,9 +225,7 @@ extension AccordionVariants on AccordionStyle {
           constraints: BoxConstraintsMix(minWidth: double.infinity),
         ),
         headerContainer: FlexBoxMix(
-          box: BoxMix(
-            padding: EdgeInsetsMix.all(8),
-          ),
+          box: BoxMix(padding: EdgeInsetsMix.all(8)),
           flex: FlexMix(
             direction: Axis.horizontal,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -271,9 +267,7 @@ extension AccordionVariants on AccordionStyle {
           constraints: BoxConstraintsMix(minWidth: double.infinity),
         ),
         headerContainer: FlexBoxMix(
-          box: BoxMix(
-            padding: EdgeInsetsMix.all(16),
-          ),
+          box: BoxMix(padding: EdgeInsetsMix.all(16)),
           flex: FlexMix(
             direction: Axis.horizontal,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

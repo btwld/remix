@@ -1,7 +1,9 @@
 part of 'tooltip.dart';
 
 class TooltipStyle extends Style<TooltipSpec>
-    with StyleModifierMixin<TooltipStyle, TooltipSpec>, StyleVariantMixin<TooltipStyle, TooltipSpec> {
+    with
+        StyleModifierMixin<TooltipStyle, TooltipSpec>,
+        StyleVariantMixin<TooltipStyle, TooltipSpec> {
   final Prop<BoxSpec>? $container;
   final Prop<TextSpec>? $text;
 
@@ -62,7 +64,7 @@ class TooltipStyle extends Style<TooltipSpec>
   TooltipStyle variants(List<VariantStyle<TooltipSpec>> value) {
     return merge(TooltipStyle(variants: value));
   }
-  
+
   @override
   TooltipStyle wrap(ModifierConfig value) {
     return merge(TooltipStyle(modifier: value));
@@ -83,16 +85,11 @@ final DefaultTooltipStyle = TooltipStyle(
   container: BoxMix(
     padding: EdgeInsetsMix.all(10),
     decoration: BoxDecorationMix(
-      color: Colors.black.withValues(alpha: 0.8),
       borderRadius: BorderRadiusMix.circular(8),
+      color: Colors.black.withValues(alpha: 0.8),
     ),
   ),
-  text: TextMix(
-    style: TextStyleMix(
-      color: Colors.white,
-      fontSize: 14,
-    ),
-  ),
+  text: TextMix(style: TextStyleMix(color: Colors.white, fontSize: 14)),
   animation: AnimationConfig.ease(const Duration(milliseconds: 100)),
 );
 
@@ -102,17 +99,14 @@ extension TooltipVariants on TooltipStyle {
         container: BoxMix(
           padding: EdgeInsetsMix.all(10),
           decoration: BoxDecorationMix(
-            color: Colors.black.withValues(alpha: 0.9),
             borderRadius: BorderRadiusMix.circular(8),
+            color: Colors.black.withValues(alpha: 0.9),
           ),
+        ),
+        text: TextMix(
+          style: TextStyleMix(color: Colors.white, fontSize: 14),
         ),
         animation: AnimationConfig.ease(const Duration(milliseconds: 100)),
-        text: TextMix(
-          style: TextStyleMix(
-            color: Colors.white,
-            fontSize: 14,
-          ),
-        ),
       );
 
   /// Light tooltip variant with white background
@@ -120,11 +114,11 @@ extension TooltipVariants on TooltipStyle {
         container: BoxMix(
           padding: EdgeInsetsMix.all(10),
           decoration: BoxDecorationMix(
-            color: Colors.white,
-            borderRadius: BorderRadiusMix.circular(8),
             border: BoxBorderMix.all(
               BorderSideMix(color: Colors.grey[300]!, width: 1),
             ),
+            borderRadius: BorderRadiusMix.circular(8),
+            color: Colors.white,
             boxShadow: [
               BoxShadowMix(
                 color: Colors.black.withValues(alpha: 0.1),
@@ -134,13 +128,10 @@ extension TooltipVariants on TooltipStyle {
             ],
           ),
         ),
-        animation: AnimationConfig.ease(const Duration(milliseconds: 100)),
         text: TextMix(
-          style: TextStyleMix(
-            color: Colors.black87,
-            fontSize: 14,
-          ),
+          style: TextStyleMix(color: Colors.black87, fontSize: 14),
         ),
+        animation: AnimationConfig.ease(const Duration(milliseconds: 100)),
       );
 
   /// Primary tooltip variant with blue colors
@@ -148,16 +139,13 @@ extension TooltipVariants on TooltipStyle {
         container: BoxMix(
           padding: EdgeInsetsMix.all(10),
           decoration: BoxDecorationMix(
-            color: Colors.blue[600],
             borderRadius: BorderRadiusMix.circular(8),
+            color: Colors.blue[600],
           ),
+        ),
+        text: TextMix(
+          style: TextStyleMix(color: Colors.white, fontSize: 14),
         ),
         animation: AnimationConfig.ease(const Duration(milliseconds: 100)),
-        text: TextMix(
-          style: TextStyleMix(
-            color: Colors.white,
-            fontSize: 14,
-          ),
-        ),
       );
 }

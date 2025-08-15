@@ -1,7 +1,9 @@
 part of 'switch.dart';
 
 class SwitchStyle extends Style<SwitchSpec>
-    with StyleModifierMixin<SwitchStyle, SwitchSpec>, StyleVariantMixin<SwitchStyle, SwitchSpec> {
+    with
+        StyleModifierMixin<SwitchStyle, SwitchSpec>,
+        StyleVariantMixin<SwitchStyle, SwitchSpec> {
   final Prop<BoxSpec>? $container;
   final Prop<BoxSpec>? $track;
   final Prop<BoxSpec>? $thumb;
@@ -95,7 +97,6 @@ class SwitchStyle extends Style<SwitchSpec>
 
 final DefaultSwitchStyle = SwitchStyle(
   container: BoxMix(),
-  animation: AnimationConfig.easeInOut(const Duration(milliseconds: 200)),
   track: BoxMix(
     constraints: BoxConstraintsMix(
       minWidth: 44,
@@ -127,13 +128,13 @@ final DefaultSwitchStyle = SwitchStyle(
       ],
     ),
   ),
+  animation: AnimationConfig.easeInOut(const Duration(milliseconds: 200)),
 );
 
 extension SwitchVariants on SwitchStyle {
   /// Primary switch variant with blue colors
   static SwitchStyle get primary => SwitchStyle(
         container: BoxMix(),
-        animation: AnimationConfig.easeInOut(const Duration(milliseconds: 200)),
         track: BoxMix(
           constraints: BoxConstraintsMix(
             minWidth: 44,
@@ -165,12 +166,12 @@ extension SwitchVariants on SwitchStyle {
             ],
           ),
         ),
+        animation: AnimationConfig.easeInOut(const Duration(milliseconds: 200)),
       );
 
   /// Secondary switch variant with grey colors
   static SwitchStyle get secondary => SwitchStyle(
         container: BoxMix(),
-        animation: AnimationConfig.easeInOut(const Duration(milliseconds: 200)),
         track: BoxMix(
           constraints: BoxConstraintsMix(
             minWidth: 44,
@@ -202,12 +203,12 @@ extension SwitchVariants on SwitchStyle {
             ],
           ),
         ),
+        animation: AnimationConfig.easeInOut(const Duration(milliseconds: 200)),
       );
 
   /// Compact switch variant with smaller size
   static SwitchStyle get compact => SwitchStyle(
         container: BoxMix(),
-        animation: AnimationConfig.easeInOut(const Duration(milliseconds: 200)),
         track: BoxMix(
           constraints: BoxConstraintsMix(
             minWidth: 36,
@@ -239,5 +240,6 @@ extension SwitchVariants on SwitchStyle {
             ],
           ),
         ),
+        animation: AnimationConfig.easeInOut(const Duration(milliseconds: 200)),
       );
 }

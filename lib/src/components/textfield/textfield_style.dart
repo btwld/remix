@@ -1,20 +1,23 @@
 part of 'textfield.dart';
 
-class TextFieldStyle extends Style<TextFieldSpec> with StyleModifierMixin<TextFieldStyle, TextFieldSpec>, StyleVariantMixin<TextFieldStyle, TextFieldSpec> {
+class TextFieldStyle extends Style<TextFieldSpec>
+    with
+        StyleModifierMixin<TextFieldStyle, TextFieldSpec>,
+        StyleVariantMixin<TextFieldStyle, TextFieldSpec> {
   final Prop<TextStyle>? $style;
   final Prop<Color>? $hintTextColor;
   final Prop<TextAlign>? $textAlign;
-  
+
   final Prop<double>? $cursorWidth;
   final Prop<double>? $cursorHeight;
   final Prop<Radius>? $cursorRadius;
   final Prop<Color>? $cursorColor;
   final Prop<Offset>? $cursorOffset;
   final Prop<bool>? $cursorOpacityAnimates;
-  
+
   final Prop<BoxHeightStyle>? $selectionHeightStyle;
   final Prop<BoxWidthStyle>? $selectionWidthStyle;
-  
+
   final Prop<EdgeInsets>? $scrollPadding;
   final Prop<Brightness>? $keyboardAppearance;
   final Prop<double>? $spacing;
@@ -109,104 +112,108 @@ class TextFieldStyle extends Style<TextFieldSpec> with StyleModifierMixin<TextFi
         );
 
   // Factory methods for common properties
-  
+
   /// Factory for text color
   factory TextFieldStyle.color(Color value) {
     return TextFieldStyle(style: TextStyle(color: value));
   }
-  
+
   /// Factory for background color
   factory TextFieldStyle.backgroundColor(Color value) {
     return TextFieldStyle(container: FlexBoxMix.color(value));
   }
-  
+
   /// Factory for border radius
   factory TextFieldStyle.borderRadius(double radius) {
-    return TextFieldStyle(container: FlexBoxMix.borderRadius(BorderRadiusMix.circular(radius)));
+    return TextFieldStyle(
+      container: FlexBoxMix.borderRadius(BorderRadiusMix.circular(radius)),
+    );
   }
-  
+
   /// Factory for padding
   factory TextFieldStyle.padding(double value) {
-    return TextFieldStyle(container: FlexBoxMix.padding(EdgeInsetsMix.all(value)));
+    return TextFieldStyle(
+      container: FlexBoxMix.padding(EdgeInsetsMix.all(value)),
+    );
   }
-  
+
   /// Factory for border
   factory TextFieldStyle.border(BoxBorderMix value) {
     return TextFieldStyle(container: FlexBoxMix.border(value));
   }
-  
+
   /// Factory for width
   factory TextFieldStyle.width(double value) {
     return TextFieldStyle(container: FlexBoxMix.width(value));
   }
-  
+
   /// Factory for height
   factory TextFieldStyle.height(double value) {
     return TextFieldStyle(container: FlexBoxMix.height(value));
   }
-  
+
   /// Factory for cursor color
   factory TextFieldStyle.cursorColor(Color value) {
     return TextFieldStyle(cursorColor: value);
   }
-  
+
   /// Factory for hint text color
   factory TextFieldStyle.hintColor(Color value) {
     return TextFieldStyle(hintTextColor: value);
   }
 
   // Instance methods (chainable)
-  
+
   /// Sets text color
   TextFieldStyle color(Color value) {
     return merge(TextFieldStyle.color(value));
   }
-  
+
   /// Sets background color
   TextFieldStyle backgroundColor(Color value) {
     return merge(TextFieldStyle.backgroundColor(value));
   }
-  
+
   /// Sets border radius
   TextFieldStyle borderRadius(double radius) {
     return merge(TextFieldStyle.borderRadius(radius));
   }
-  
+
   /// Sets padding
   TextFieldStyle padding(double value) {
     return merge(TextFieldStyle.padding(value));
   }
-  
+
   /// Sets border
   TextFieldStyle border(BoxBorderMix value) {
     return merge(TextFieldStyle.border(value));
   }
-  
+
   /// Sets width
   TextFieldStyle width(double value) {
     return merge(TextFieldStyle.width(value));
   }
-  
+
   /// Sets height
   TextFieldStyle height(double value) {
     return merge(TextFieldStyle.height(value));
   }
-  
+
   /// Sets cursor color
   TextFieldStyle cursorColor(Color value) {
     return merge(TextFieldStyle.cursorColor(value));
   }
-  
+
   /// Sets hint text color
   TextFieldStyle hintColor(Color value) {
     return merge(TextFieldStyle.hintColor(value));
   }
-  
+
   /// Sets animation
   TextFieldStyle animate(AnimationConfig animation) {
     return merge(TextFieldStyle(animation: animation));
   }
-  
+
   /// Sets variant
   @override
   TextFieldStyle variant(Variant variant, TextFieldStyle style) {
@@ -234,11 +241,11 @@ class TextFieldStyle extends Style<TextFieldSpec> with StyleModifierMixin<TextFi
       cursorRadius: MixOps.resolve(context, $cursorRadius),
       cursorColor: MixOps.resolve(context, $cursorColor),
       cursorOffset: MixOps.resolve(context, $cursorOffset),
-      cursorOpacityAnimates: MixOps.resolve(context, $cursorOpacityAnimates),
       selectionHeightStyle: MixOps.resolve(context, $selectionHeightStyle),
       selectionWidthStyle: MixOps.resolve(context, $selectionWidthStyle),
       scrollPadding: MixOps.resolve(context, $scrollPadding),
       keyboardAppearance: MixOps.resolve(context, $keyboardAppearance),
+      cursorOpacityAnimates: MixOps.resolve(context, $cursorOpacityAnimates),
       spacing: MixOps.resolve(context, $spacing),
       container: MixOps.resolve(context, $container),
       helperText: MixOps.resolve(context, $helperText),
@@ -259,11 +266,15 @@ class TextFieldStyle extends Style<TextFieldSpec> with StyleModifierMixin<TextFi
       cursorRadius: MixOps.merge($cursorRadius, other.$cursorRadius),
       cursorColor: MixOps.merge($cursorColor, other.$cursorColor),
       cursorOffset: MixOps.merge($cursorOffset, other.$cursorOffset),
-      cursorOpacityAnimates: MixOps.merge($cursorOpacityAnimates, other.$cursorOpacityAnimates),
-      selectionHeightStyle: MixOps.merge($selectionHeightStyle, other.$selectionHeightStyle),
-      selectionWidthStyle: MixOps.merge($selectionWidthStyle, other.$selectionWidthStyle),
+      cursorOpacityAnimates:
+          MixOps.merge($cursorOpacityAnimates, other.$cursorOpacityAnimates),
+      selectionHeightStyle:
+          MixOps.merge($selectionHeightStyle, other.$selectionHeightStyle),
+      selectionWidthStyle:
+          MixOps.merge($selectionWidthStyle, other.$selectionWidthStyle),
       scrollPadding: MixOps.merge($scrollPadding, other.$scrollPadding),
-      keyboardAppearance: MixOps.merge($keyboardAppearance, other.$keyboardAppearance),
+      keyboardAppearance:
+          MixOps.merge($keyboardAppearance, other.$keyboardAppearance),
       spacing: MixOps.merge($spacing, other.$spacing),
       container: MixOps.merge($container, other.$container),
       helperText: MixOps.merge($helperText, other.$helperText),
@@ -301,10 +312,7 @@ class TextFieldStyle extends Style<TextFieldSpec> with StyleModifierMixin<TextFi
 
 // Default style
 final DefaultTextFieldStyle = TextFieldStyle(
-  style: TextStyle(
-    fontSize: 14,
-    color: Colors.black87,
-  ),
+  style: TextStyle(color: Colors.black87, fontSize: 14),
   hintTextColor: Colors.grey.shade400,
   textAlign: TextAlign.start,
   cursorWidth: 2.0,
@@ -316,15 +324,12 @@ final DefaultTextFieldStyle = TextFieldStyle(
   spacing: 4,
   container: FlexBoxMix(
     box: BoxMix(
-      padding: EdgeInsetsMix.symmetric(horizontal: 12, vertical: 8),
+      padding: EdgeInsetsMix.symmetric(vertical: 8, horizontal: 12),
       decoration: BoxDecorationMix(
-        borderRadius: BorderRadiusMix.circular(6),
         border: BoxBorderMix.all(
-          BorderSideMix(
-            color: Colors.grey.shade300,
-            width: 1,
-          ),
+          BorderSideMix(color: Colors.grey.shade300, width: 1),
         ),
+        borderRadius: BorderRadiusMix.circular(6),
       ),
     ),
     flex: FlexMix(
@@ -333,10 +338,7 @@ final DefaultTextFieldStyle = TextFieldStyle(
     ),
   ),
   helperText: TextMix(
-    style: TextStyleMix(
-      fontSize: 12,
-      color: Colors.grey.shade600,
-    ),
+    style: TextStyleMix(color: Colors.grey.shade600, fontSize: 12),
   ),
 );
 
@@ -346,10 +348,7 @@ final TextFieldFocusStyle = TextFieldStyle(
     box: BoxMix(
       decoration: BoxDecorationMix(
         border: BoxBorderMix.all(
-          BorderSideMix(
-            color: Colors.blue,
-            width: 2,
-          ),
+          BorderSideMix(color: Colors.blue, width: 2),
         ),
       ),
     ),
@@ -361,37 +360,23 @@ final TextFieldErrorStyle = TextFieldStyle(
   container: FlexBoxMix(
     box: BoxMix(
       decoration: BoxDecorationMix(
-        border: BoxBorderMix.all(
-          BorderSideMix(
-            color: Colors.red,
-            width: 1,
-          ),
-        ),
+        border: BoxBorderMix.all(BorderSideMix(color: Colors.red, width: 1)),
       ),
     ),
   ),
-  helperText: TextMix(
-    style: TextStyleMix(
-      color: Colors.red,
-    ),
-  ),
+  helperText: TextMix(style: TextStyleMix(color: Colors.red)),
 );
 
 // Disabled style
 final TextFieldDisabledStyle = TextFieldStyle(
-  style: TextStyle(
-    color: Colors.grey.shade500,
-  ),
+  style: TextStyle(color: Colors.grey.shade500),
   container: FlexBoxMix(
     box: BoxMix(
       decoration: BoxDecorationMix(
-        color: Colors.grey.shade100,
         border: BoxBorderMix.all(
-          BorderSideMix(
-            color: Colors.grey.shade300,
-            width: 1,
-          ),
+          BorderSideMix(color: Colors.grey.shade300, width: 1),
         ),
+        color: Colors.grey.shade100,
       ),
     ),
   ),
@@ -400,10 +385,7 @@ final TextFieldDisabledStyle = TextFieldStyle(
 extension TextFieldVariants on TextFieldStyle {
   /// Primary text field variant with blue accents
   static TextFieldStyle get primary => TextFieldStyle(
-        style: TextStyle(
-          fontSize: 14,
-          color: Colors.black87,
-        ),
+        style: TextStyle(color: Colors.black87, fontSize: 14),
         hintTextColor: Colors.grey.shade400,
         textAlign: TextAlign.start,
         cursorWidth: 2.0,
@@ -415,15 +397,12 @@ extension TextFieldVariants on TextFieldStyle {
         spacing: 4,
         container: FlexBoxMix(
           box: BoxMix(
-            padding: EdgeInsetsMix.symmetric(horizontal: 12, vertical: 8),
+            padding: EdgeInsetsMix.symmetric(vertical: 8, horizontal: 12),
             decoration: BoxDecorationMix(
-              borderRadius: BorderRadiusMix.circular(6),
               border: BoxBorderMix.all(
-                BorderSideMix(
-                  color: Colors.blue[500]!,
-                  width: 1,
-                ),
+                BorderSideMix(color: Colors.blue[500]!, width: 1),
               ),
+              borderRadius: BorderRadiusMix.circular(6),
               color: Colors.blue[25],
             ),
           ),
@@ -433,19 +412,13 @@ extension TextFieldVariants on TextFieldStyle {
           ),
         ),
         helperText: TextMix(
-          style: TextStyleMix(
-            fontSize: 12,
-            color: Colors.blue.shade600,
-          ),
+          style: TextStyleMix(color: Colors.blue.shade600, fontSize: 12),
         ),
       );
 
   /// Outlined text field variant with prominent border
   static TextFieldStyle get outlined => TextFieldStyle(
-        style: TextStyle(
-          fontSize: 14,
-          color: Colors.black87,
-        ),
+        style: TextStyle(color: Colors.black87, fontSize: 14),
         hintTextColor: Colors.grey.shade400,
         textAlign: TextAlign.start,
         cursorWidth: 2.0,
@@ -457,15 +430,12 @@ extension TextFieldVariants on TextFieldStyle {
         spacing: 4,
         container: FlexBoxMix(
           box: BoxMix(
-            padding: EdgeInsetsMix.symmetric(horizontal: 12, vertical: 8),
+            padding: EdgeInsetsMix.symmetric(vertical: 8, horizontal: 12),
             decoration: BoxDecorationMix(
-              borderRadius: BorderRadiusMix.circular(6),
               border: BoxBorderMix.all(
-                BorderSideMix(
-                  color: Colors.grey.shade400,
-                  width: 2,
-                ),
+                BorderSideMix(color: Colors.grey.shade400, width: 2),
               ),
+              borderRadius: BorderRadiusMix.circular(6),
               color: Colors.transparent,
             ),
           ),
@@ -475,19 +445,13 @@ extension TextFieldVariants on TextFieldStyle {
           ),
         ),
         helperText: TextMix(
-          style: TextStyleMix(
-            fontSize: 12,
-            color: Colors.grey.shade600,
-          ),
+          style: TextStyleMix(color: Colors.grey.shade600, fontSize: 12),
         ),
       );
 
   /// Filled text field variant with background color
   static TextFieldStyle get filled => TextFieldStyle(
-        style: TextStyle(
-          fontSize: 14,
-          color: Colors.black87,
-        ),
+        style: TextStyle(color: Colors.black87, fontSize: 14),
         hintTextColor: Colors.grey.shade500,
         textAlign: TextAlign.start,
         cursorWidth: 2.0,
@@ -499,16 +463,13 @@ extension TextFieldVariants on TextFieldStyle {
         spacing: 4,
         container: FlexBoxMix(
           box: BoxMix(
-            padding: EdgeInsetsMix.symmetric(horizontal: 12, vertical: 12),
+            padding: EdgeInsetsMix.symmetric(vertical: 12, horizontal: 12),
             decoration: BoxDecorationMix(
+              border: BoxBorderMix.all(
+                BorderSideMix(color: Colors.transparent, width: 1),
+              ),
               borderRadius: BorderRadiusMix.circular(8),
               color: Colors.grey.shade100,
-              border: BoxBorderMix.all(
-                BorderSideMix(
-                  color: Colors.transparent,
-                  width: 1,
-                ),
-              ),
             ),
           ),
           flex: FlexMix(
@@ -517,10 +478,7 @@ extension TextFieldVariants on TextFieldStyle {
           ),
         ),
         helperText: TextMix(
-          style: TextStyleMix(
-            fontSize: 12,
-            color: Colors.grey.shade600,
-          ),
+          style: TextStyleMix(color: Colors.grey.shade600, fontSize: 12),
         ),
       );
 }

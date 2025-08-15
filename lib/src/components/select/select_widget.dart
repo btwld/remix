@@ -132,7 +132,7 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
 
   @override
   Widget build(BuildContext context) {
-    return StyleScope<SelectStyle>(
+    return StyleProvider<SelectSpec>(
       style: _style,
       child: StyleBuilder(
         style: _style,
@@ -367,7 +367,7 @@ class _AnimatedOverlayMenuState extends State<_AnimatedOverlayMenu> {
   }
 }
 
-class RemixSelectTrigger extends StatefulWidget implements Disableable {
+class RemixSelectTrigger extends StatefulWidget with Disableable, Focusable {
   const RemixSelectTrigger({
     super.key,
     this.enabled = true,
@@ -396,7 +396,6 @@ class RemixSelectTrigger extends StatefulWidget implements Disableable {
 
   /// Whether the trigger is enabled and can be interacted with.
   /// When false, all interaction is disabled.
-  @override
   final bool enabled;
 
   /// The label to display on the trigger.
@@ -426,23 +425,21 @@ class RemixSelectTrigger extends StatefulWidget implements Disableable {
 }
 
 class _RemixSelectTriggerState extends State<RemixSelectTrigger>
-    with MixControllerMixin, DisableableMixin {
-  StyleScope<SelectStyle>? get styleScope {
-    return StyleScope.of(context);
-  }
-
+    with WidgetStateMixin, DisableableMixin {
   @override
   Widget build(BuildContext context) {
+    final inheritedStyle = StyleProvider.maybeOf<SelectSpec>(context);
+
     return NakedSelectTrigger(
-      onHoveredState: (value) => stateController.hovered = value,
-      onPressedState: (value) => stateController.pressed = value,
-      onFocusedState: (value) => stateController.focused = value,
+      onHoveredState: (value) => controller.hovered = value,
+      onPressedState: (value) => controller.pressed = value,
+      onFocusedState: (value) => controller.focused = value,
       semanticLabel: widget.semanticLabel,
       cursor: widget.cursor,
       enableHapticFeedback: widget.enableHapticFeedback,
       focusNode: widget.focusNode,
       child: StyleBuilder(
-        style: styleScope?.style ?? const SelectStyle.create(),
+        style: inheritedStyle ?? const SelectStyle.create(),
         builder: (context, spec) {
           final triggerSpec = spec.trigger;
 
@@ -460,13 +457,13 @@ class _RemixSelectTriggerState extends State<RemixSelectTrigger>
                 triggerSpec.container.box(child: widget.child ?? defaultChild),
           );
         },
-        controller: stateController,
+        controller: controller,
       ),
     );
   }
 }
 
-class RemixSelectItem<T> extends StatefulWidget implements Disableable {
+class RemixSelectItem<T> extends StatefulWidget with Disableable, Focusable {
   const RemixSelectItem({
     super.key,
     required this.value,
@@ -503,7 +500,6 @@ class RemixSelectItem<T> extends StatefulWidget implements Disableable {
 
   /// Whether this item is enabled and can be selected.
   /// When false, all interaction is disabled.
-  @override
   final bool enabled;
 
   /// Semantic label for accessibility.
@@ -530,55 +526,55 @@ class RemixSelectItem<T> extends StatefulWidget implements Disableable {
 }
 
 class _RemixSelectItemState<T> extends State<RemixSelectItem<T>>
-    with MixControllerMixin, DisableableMixin {
-  bool get _isMultiSelect {
-    // Check if we're in multi-select mode by looking for MultiSelectWrapper ancestor
-    return context.findAncestorWidgetOfExactType<_MultiSelectWrapper>() != null;
-  }
-
+    with WidgetStateMixin, DisableableMixin {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
+    // Check if we're in multi-select mode by looking for MultiSelectWrapper ancestor
+    final isMultiSelect =
+        context.findAncestorWidgetOfExactType<_MultiSelectWrapper>() != null;
+
     // For multi-select, check if the value is in the selected set
-    if (_isMultiSelect) {
+    if (isMultiSelect) {
       final multiSelectWrapper =
           context.findAncestorStateOfType<_MultiSelectWrapperState<T>>();
       if (multiSelectWrapper != null) {
-        stateController.selected =
+        controller.selected =
             multiSelectWrapper._selectedValues.contains(widget.value);
       }
     } else {
       final inherited = NakedSelectScope.of<T>(context);
-      stateController.selected = inherited.isSelected(context, widget.value);
+      controller.selected = inherited.isSelected(context, widget.value);
     }
-  }
-
-  StyleScope<SelectStyle>? get _styleScope {
-    return StyleScope.of(context);
   }
 
   @override
   Widget build(BuildContext context) {
+    // Get style from provider in build method
+    final styleFromProvider = StyleProvider.maybeOf<SelectSpec>(context);
+    // Check if we're in multi-select mode
+    final isMultiSelect =
+        context.findAncestorWidgetOfExactType<_MultiSelectWrapper>() != null;
+
     return NakedSelectItem<T>(
       value: widget.value,
-      onHoveredState: (value) => stateController.hovered = value,
-      onPressedState: (value) => stateController.pressed = value,
-      onFocusedState: (value) => stateController.focused = value,
-      onSelectState: (value) => stateController.selected = value,
+      onHoveredState: (value) => controller.hovered = value,
+      onPressedState: (value) => controller.pressed = value,
+      onFocusedState: (value) => controller.focused = value,
       enabled: widget.enabled,
       semanticLabel: widget.semanticLabel,
       cursor: widget.cursor,
       enableHapticFeedback: widget.enableHapticFeedback,
       focusNode: widget.focusNode,
       child: StyleBuilder(
-        style: _styleScope?.style ?? const SelectStyle.create(),
+        style: styleFromProvider ?? const SelectStyle.create(),
         builder: (context, spec) {
           final itemSpec = spec.item;
 
           // Use checkbox icon for multi-select, check icon for single select
-          final IconData selectionIcon = _isMultiSelect
-              ? (stateController.selected
+          final IconData selectionIcon = isMultiSelect
+              ? (controller.selected
                   ? Icons.check_box
                   : Icons.check_box_outline_blank)
               : widget.trailingIcon;
@@ -598,7 +594,7 @@ class _RemixSelectItemState<T> extends State<RemixSelectItem<T>>
             ),
           );
         },
-        controller: stateController,
+        controller: controller,
       ),
     );
   }

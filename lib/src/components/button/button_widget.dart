@@ -39,7 +39,7 @@ part of 'button.dart';
 /// )
 /// ```
 ///
-class RemixButton extends StatefulWidget implements Disableable {
+class RemixButton extends StatefulWidget with Disableable, Focusable {
   /// Creates a Remix button.
   ///
   /// The [label] and [onPressed] parameters are required unless [child] is provided.
@@ -50,7 +50,6 @@ class RemixButton extends StatefulWidget implements Disableable {
     IconData? icon,
     this.enabled = true,
     this.loading = false,
-    this.spinnerBuilder,
     this.enableHapticFeedback = true,
     required this.onPressed,
     this.focusNode,
@@ -77,7 +76,6 @@ class RemixButton extends StatefulWidget implements Disableable {
     super.key,
     this.enabled = true,
     this.loading = false,
-    this.spinnerBuilder,
     this.enableHapticFeedback = true,
     required this.onPressed,
     this.focusNode,
@@ -104,7 +102,6 @@ class RemixButton extends StatefulWidget implements Disableable {
     required Widget child,
     this.enabled = true,
     this.loading = false,
-    this.spinnerBuilder,
     this.enableHapticFeedback = true,
     required this.onPressed,
     this.focusNode,
@@ -117,7 +114,6 @@ class RemixButton extends StatefulWidget implements Disableable {
   ///
   /// When false, the button will not respond to user interaction and
   /// will be visually styled as disabled.
-  @override
   final bool enabled;
 
   /// Whether the button is in a loading state.
@@ -133,21 +129,6 @@ class RemixButton extends StatefulWidget implements Disableable {
 
   /// Optional focus node to control the button's focus behavior.
   final FocusNode? focusNode;
-
-  /// Custom widget to display when the button is in loading state.
-  ///
-  /// If not provided, a default spinner from the button's spec will be used.
-  ///
-  /// Example:
-  /// ```dart
-  /// RemixButton(
-  ///   label: 'Submit',
-  ///   loading: true,
-  ///   spinnerBuilder: (context) => CircularProgressIndicator(),
-  ///   onPressed: () {},
-  /// )
-  /// ```
-  final WidgetBuilder? spinnerBuilder;
 
   /// The style configuration for the button.
   ///
@@ -175,15 +156,11 @@ class RemixButton extends StatefulWidget implements Disableable {
   State<RemixButton> createState() => _RemixButtonState();
 }
 
-class _RemixButtonState extends State<RemixButton> with MixControllerMixin {
+class _RemixButtonState extends State<RemixButton>
+    with WidgetStateMixin, DisableableMixin {
   /// Builds the loading overlay that shows a spinner while preserving layout.
-  Widget _buildLoadingOverlay(
-    ButtonSpec? spec,
-    Widget child,
-    BuildContext context,
-  ) {
-    final Widget spinner = widget.spinnerBuilder?.call(context) ??
-        spec?.spinner() ??
+  Widget _buildLoadingOverlay(ButtonSpec? spec, Widget child) {
+    final Widget spinner = spec?.spinner() ??
         SizedBox(
           width: 16,
           height: 16,
@@ -204,10 +181,10 @@ class _RemixButtonState extends State<RemixButton> with MixControllerMixin {
   Widget build(BuildContext context) {
     return NakedButton(
       onPressed: widget.onPressed,
-      onHoveredState: (state) => stateController.hovered = state,
-      onPressedState: (state) => stateController.pressed = state,
-      onFocusedState: (state) => stateController.focused = state,
-      onDisabledState: (state) => stateController.disabled = state,
+      onHoveredState: (state) => controller.hovered = state,
+      onPressedState: (state) => controller.pressed = state,
+      onFocusedState: (state) => controller.focused = state,
+      onDisabledState: (state) => controller.disabled = state,
       enabled: _isEnabled,
       enableHapticFeedback: widget.enableHapticFeedback,
       focusNode: widget.focusNode,
@@ -225,16 +202,12 @@ class _RemixButtonState extends State<RemixButton> with MixControllerMixin {
           return spec.container(
             child: widget.loading
                 ? Builder(builder: (context) {
-                    return _buildLoadingOverlay(
-                      spec,
-                      effectiveChild,
-                      context,
-                    );
+                    return _buildLoadingOverlay(spec, effectiveChild);
                   })
                 : effectiveChild,
           );
         },
-        controller: stateController,
+        controller: controller,
       ),
     );
   }

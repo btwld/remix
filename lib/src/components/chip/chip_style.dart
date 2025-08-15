@@ -1,6 +1,9 @@
 part of 'chip.dart';
 
-class ChipStyle extends Style<ChipSpec> with StyleModifierMixin<ChipStyle, ChipSpec>, StyleVariantMixin<ChipStyle, ChipSpec> {
+class ChipStyle extends Style<ChipSpec>
+    with
+        StyleModifierMixin<ChipStyle, ChipSpec>,
+        StyleVariantMixin<ChipStyle, ChipSpec> {
   final Prop<FlexBoxSpec>? $container;
   final Prop<TextSpec>? $label;
   final Prop<IconSpec>? $leadingIcon;
@@ -104,31 +107,24 @@ class ChipStyle extends Style<ChipSpec> with StyleModifierMixin<ChipStyle, ChipS
 final DefaultChipStyle = ChipStyle(
   container: FlexBoxMix(
     box: BoxMix(
-      padding: EdgeInsetsMix.symmetric(horizontal: 12, vertical: 6),
+      padding: EdgeInsetsMix.symmetric(vertical: 6, horizontal: 12),
       decoration: BoxDecorationMix(
-        color: Colors.grey[200],
         borderRadius: BorderRadiusMix.circular(16),
+        color: Colors.grey[200],
       ),
     ),
     flex: FlexMix(
       direction: Axis.horizontal,
-      gap: 4,
-      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      gap: 4,
     ),
   ),
   label: TextMix(
-    style: TextStyleMix(
-      fontSize: 14,
-      fontWeight: FontWeight.w500
-    )
+    style: TextStyleMix(fontSize: 14, fontWeight: FontWeight.w500),
   ),
-  leadingIcon: IconMix(
-    size: 16
-  ),
-  trailingIcon: IconMix(
-    size: 16
-  )
+  leadingIcon: IconMix(size: 16),
+  trailingIcon: IconMix(size: 16),
 );
 
 extension ChipVariants on ChipStyle {
@@ -136,147 +132,123 @@ extension ChipVariants on ChipStyle {
   static ChipStyle get primary => ChipStyle(
         container: FlexBoxMix(
           box: BoxMix(
-            padding: EdgeInsetsMix.symmetric(horizontal: 12, vertical: 6),
+            padding: EdgeInsetsMix.symmetric(vertical: 6, horizontal: 12),
             decoration: BoxDecorationMix(
-              color: Colors.blue[100],
-              borderRadius: BorderRadiusMix.circular(16),
               border: BoxBorderMix.all(
                 BorderSideMix(color: Colors.blue[300]!, width: 1),
               ),
+              borderRadius: BorderRadiusMix.circular(16),
+              color: Colors.blue[100],
             ),
           ),
           flex: FlexMix(
             direction: Axis.horizontal,
-            gap: 4,
-            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            gap: 4,
           ),
         ),
         label: TextMix(
           style: TextStyleMix(
+            color: Colors.blue[700],
             fontSize: 14,
             fontWeight: FontWeight.w500,
-            color: Colors.blue[700],
           ),
         ),
-        leadingIcon: IconMix(
-          size: 16,
-          color: Colors.blue[600],
-        ),
-        trailingIcon: IconMix(
-          size: 16,
-          color: Colors.blue[600],
-        ),
+        leadingIcon: IconMix(color: Colors.blue[600], size: 16),
+        trailingIcon: IconMix(color: Colors.blue[600], size: 16),
       );
 
   /// Secondary chip variant with grey colors
   static ChipStyle get secondary => ChipStyle(
         container: FlexBoxMix(
           box: BoxMix(
-            padding: EdgeInsetsMix.symmetric(horizontal: 12, vertical: 6),
+            padding: EdgeInsetsMix.symmetric(vertical: 6, horizontal: 12),
             decoration: BoxDecorationMix(
-              color: Colors.grey[100],
-              borderRadius: BorderRadiusMix.circular(16),
               border: BoxBorderMix.all(
                 BorderSideMix(color: Colors.grey[400]!, width: 1),
               ),
+              borderRadius: BorderRadiusMix.circular(16),
+              color: Colors.grey[100],
             ),
           ),
           flex: FlexMix(
             direction: Axis.horizontal,
-            gap: 4,
-            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            gap: 4,
           ),
         ),
         label: TextMix(
           style: TextStyleMix(
+            color: Colors.grey[700],
             fontSize: 14,
             fontWeight: FontWeight.w500,
-            color: Colors.grey[700],
           ),
         ),
-        leadingIcon: IconMix(
-          size: 16,
-          color: Colors.grey[600],
-        ),
-        trailingIcon: IconMix(
-          size: 16,
-          color: Colors.grey[600],
-        ),
+        leadingIcon: IconMix(color: Colors.grey[600], size: 16),
+        trailingIcon: IconMix(color: Colors.grey[600], size: 16),
       );
 
   /// Success chip variant with green colors
   static ChipStyle get success => ChipStyle(
         container: FlexBoxMix(
           box: BoxMix(
-            padding: EdgeInsetsMix.symmetric(horizontal: 12, vertical: 6),
+            padding: EdgeInsetsMix.symmetric(vertical: 6, horizontal: 12),
             decoration: BoxDecorationMix(
-              color: Colors.green[100],
-              borderRadius: BorderRadiusMix.circular(16),
               border: BoxBorderMix.all(
                 BorderSideMix(color: Colors.green[300]!, width: 1),
               ),
+              borderRadius: BorderRadiusMix.circular(16),
+              color: Colors.green[100],
             ),
           ),
           flex: FlexMix(
             direction: Axis.horizontal,
-            gap: 4,
-            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            gap: 4,
           ),
         ),
         label: TextMix(
           style: TextStyleMix(
+            color: Colors.green[700],
             fontSize: 14,
             fontWeight: FontWeight.w500,
-            color: Colors.green[700],
           ),
         ),
-        leadingIcon: IconMix(
-          size: 16,
-          color: Colors.green[600],
-        ),
-        trailingIcon: IconMix(
-          size: 16,
-          color: Colors.green[600],
-        ),
+        leadingIcon: IconMix(color: Colors.green[600], size: 16),
+        trailingIcon: IconMix(color: Colors.green[600], size: 16),
       );
 
   /// Warning chip variant with orange colors
   static ChipStyle get warning => ChipStyle(
         container: FlexBoxMix(
           box: BoxMix(
-            padding: EdgeInsetsMix.symmetric(horizontal: 12, vertical: 6),
+            padding: EdgeInsetsMix.symmetric(vertical: 6, horizontal: 12),
             decoration: BoxDecorationMix(
-              color: Colors.orange[100],
-              borderRadius: BorderRadiusMix.circular(16),
               border: BoxBorderMix.all(
                 BorderSideMix(color: Colors.orange[300]!, width: 1),
               ),
+              borderRadius: BorderRadiusMix.circular(16),
+              color: Colors.orange[100],
             ),
           ),
           flex: FlexMix(
             direction: Axis.horizontal,
-            gap: 4,
-            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            gap: 4,
           ),
         ),
         label: TextMix(
           style: TextStyleMix(
+            color: Colors.orange[700],
             fontSize: 14,
             fontWeight: FontWeight.w500,
-            color: Colors.orange[700],
           ),
         ),
-        leadingIcon: IconMix(
-          size: 16,
-          color: Colors.orange[600],
-        ),
-        trailingIcon: IconMix(
-          size: 16,
-          color: Colors.orange[600],
-        ),
+        leadingIcon: IconMix(color: Colors.orange[600], size: 16),
+        trailingIcon: IconMix(color: Colors.orange[600], size: 16),
       );
 }
