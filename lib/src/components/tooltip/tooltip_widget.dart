@@ -8,7 +8,7 @@ class RemixTooltip extends StatelessWidget {
     this.showDuration = const Duration(seconds: 1),
     this.waitDuration = Duration.zero,
     this.tooltipSemantics,
-    this.style = const TooltipStyle.create(),
+    this.style = const RemixTooltipStyle.create(),
   });
 
   /// The widget to display in the tooltip.
@@ -27,12 +27,12 @@ class RemixTooltip extends StatelessWidget {
   final String? tooltipSemantics;
 
   /// The style for the tooltip.
-  final TooltipStyle style;
+  final RemixTooltipStyle style;
 
   @override
   Widget build(BuildContext context) {
     return StyleBuilder(
-      style: DefaultTooltipStyle.merge(style),
+      style: DefaultRemixTooltipStyle.merge(style),
       builder: (context, spec) {
         return NakedTooltip(
           tooltipBuilder: (context) => spec.container(

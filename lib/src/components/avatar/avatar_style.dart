@@ -1,11 +1,11 @@
 part of 'avatar.dart';
 
-class AvatarStyle extends Style<AvatarSpec> with StyleModifierMixin<AvatarStyle, AvatarSpec>, StyleVariantMixin<AvatarStyle, AvatarSpec> {
+class RemixAvatarStyle extends Style<AvatarSpec> with StyleModifierMixin<RemixAvatarStyle, AvatarSpec>, StyleVariantMixin<RemixAvatarStyle, AvatarSpec> {
   final Prop<BoxSpec>? $container;
   final Prop<TextSpec>? $text;
   final Prop<IconSpec>? $icon;
 
-  const AvatarStyle.create({
+  const RemixAvatarStyle.create({
     Prop<BoxSpec>? container,
     Prop<TextSpec>? text,
     Prop<IconSpec>? icon,
@@ -17,7 +17,7 @@ class AvatarStyle extends Style<AvatarSpec> with StyleModifierMixin<AvatarStyle,
         $text = text,
         $icon = icon;
 
-  AvatarStyle({
+  RemixAvatarStyle({
     BoxMix? container,
     TextMix? text,
     IconMix? icon,
@@ -35,15 +35,15 @@ class AvatarStyle extends Style<AvatarSpec> with StyleModifierMixin<AvatarStyle,
           inherit: inherit,
         );
 
-  factory AvatarStyle.value(AvatarSpec spec) => AvatarStyle(
+  factory RemixAvatarStyle.value(AvatarSpec spec) => RemixAvatarStyle(
         container: BoxMix.maybeValue(spec.container),
         text: TextMix.maybeValue(spec.text),
         icon: IconMix.maybeValue(spec.icon),
       );
 
   /// Factory for avatar size
-  factory AvatarStyle.size(double value) {
-    return AvatarStyle(
+  factory RemixAvatarStyle.size(double value) {
+    return RemixAvatarStyle(
       container: BoxMix(
         constraints: BoxConstraintsMix(
           minWidth: value,
@@ -56,13 +56,13 @@ class AvatarStyle extends Style<AvatarSpec> with StyleModifierMixin<AvatarStyle,
   }
 
   /// Factory for background color
-  factory AvatarStyle.color(Color value) {
-    return AvatarStyle(container: BoxMix(decoration: BoxDecorationMix(color: value)));
+  factory RemixAvatarStyle.color(Color value) {
+    return RemixAvatarStyle(container: BoxMix(decoration: BoxDecorationMix(color: value)));
   }
 
   /// Factory for border radius (for non-circular avatars)
-  factory AvatarStyle.borderRadius(double radius) {
-    return AvatarStyle(
+  factory RemixAvatarStyle.borderRadius(double radius) {
+    return RemixAvatarStyle(
       container: BoxMix(
         decoration: BoxDecorationMix(
           borderRadius: BorderRadiusMix.circular(radius),
@@ -73,61 +73,61 @@ class AvatarStyle extends Style<AvatarSpec> with StyleModifierMixin<AvatarStyle,
   }
 
   /// Factory for text color
-  factory AvatarStyle.textColor(Color value) {
-    return AvatarStyle(text: TextMix(style: TextStyleMix(color: value)));
+  factory RemixAvatarStyle.textColor(Color value) {
+    return RemixAvatarStyle(text: TextMix(style: TextStyleMix(color: value)));
   }
 
   /// Factory for icon color
-  factory AvatarStyle.iconColor(Color value) {
-    return AvatarStyle(icon: IconMix(color: value));
+  factory RemixAvatarStyle.iconColor(Color value) {
+    return RemixAvatarStyle(icon: IconMix(color: value));
   }
 
   // Instance methods (chainable)
 
   /// Sets avatar size
-  AvatarStyle size(double value) {
-    return merge(AvatarStyle.size(value));
+  RemixAvatarStyle size(double value) {
+    return merge(RemixAvatarStyle.size(value));
   }
 
   /// Sets background color
-  AvatarStyle color(Color value) {
-    return merge(AvatarStyle.color(value));
+  RemixAvatarStyle color(Color value) {
+    return merge(RemixAvatarStyle.color(value));
   }
 
   /// Sets border radius
-  AvatarStyle borderRadius(double radius) {
-    return merge(AvatarStyle.borderRadius(radius));
+  RemixAvatarStyle borderRadius(double radius) {
+    return merge(RemixAvatarStyle.borderRadius(radius));
   }
 
   /// Sets text color
-  AvatarStyle textColor(Color value) {
-    return merge(AvatarStyle.textColor(value));
+  RemixAvatarStyle textColor(Color value) {
+    return merge(RemixAvatarStyle.textColor(value));
   }
 
   /// Sets icon color
-  AvatarStyle iconColor(Color value) {
-    return merge(AvatarStyle.iconColor(value));
+  RemixAvatarStyle iconColor(Color value) {
+    return merge(RemixAvatarStyle.iconColor(value));
   }
 
   /// Sets animation
-  AvatarStyle animate(AnimationConfig animation) {
-    return merge(AvatarStyle(animation: animation));
+  RemixAvatarStyle animate(AnimationConfig animation) {
+    return merge(RemixAvatarStyle(animation: animation));
   }
 
   /// Sets variant
   @override
-  AvatarStyle variant(Variant variant, AvatarStyle style) {
-    return merge(AvatarStyle(variants: [VariantStyle(variant, style)]));
+  RemixAvatarStyle variant(Variant variant, RemixAvatarStyle style) {
+    return merge(RemixAvatarStyle(variants: [VariantStyle(variant, style)]));
   }
 
   @override
-  AvatarStyle variants(List<VariantStyle<AvatarSpec>> value) {
-    return merge(AvatarStyle(variants: value));
+  RemixAvatarStyle variants(List<VariantStyle<AvatarSpec>> value) {
+    return merge(RemixAvatarStyle(variants: value));
   }
 
   @override
-  AvatarStyle wrap(ModifierConfig value) {
-    return merge(AvatarStyle(modifier: value));
+  RemixAvatarStyle wrap(ModifierConfig value) {
+    return merge(RemixAvatarStyle(modifier: value));
   }
 
   @override
@@ -140,10 +140,10 @@ class AvatarStyle extends Style<AvatarSpec> with StyleModifierMixin<AvatarStyle,
   }
 
   @override
-  AvatarStyle merge(AvatarStyle? other) {
+  RemixAvatarStyle merge(RemixAvatarStyle? other) {
     if (other == null) return this;
 
-    return AvatarStyle.create(
+    return RemixAvatarStyle.create(
       container: MixOps.merge($container, other.$container),
       text: MixOps.merge($text, other.$text),
       icon: MixOps.merge($icon, other.$icon),
@@ -166,7 +166,7 @@ class AvatarStyle extends Style<AvatarSpec> with StyleModifierMixin<AvatarStyle,
       ];
 }
 
-final DefaultAvatarStyle = AvatarStyle(
+final DefaultRemixAvatarStyle = RemixAvatarStyle(
   container: BoxMix(
     alignment: Alignment.center,
     constraints: BoxConstraintsMix(
@@ -191,9 +191,9 @@ final DefaultAvatarStyle = AvatarStyle(
   icon: IconMix(color: Colors.black, size: 24),
 );
 
-extension AvatarVariants on AvatarStyle {
+extension AvatarVariants on RemixAvatarStyle {
   /// Primary avatar variant with blue background and white text
-  static AvatarStyle get primary => AvatarStyle(
+  static RemixAvatarStyle get primary => RemixAvatarStyle(
         container: BoxMix(
           alignment: Alignment.center,
           constraints: BoxConstraintsMix(
@@ -219,7 +219,7 @@ extension AvatarVariants on AvatarStyle {
       );
 
   /// Secondary avatar variant with grey background
-  static AvatarStyle get secondary => AvatarStyle(
+  static RemixAvatarStyle get secondary => RemixAvatarStyle(
         container: BoxMix(
           alignment: Alignment.center,
           constraints: BoxConstraintsMix(
@@ -245,7 +245,7 @@ extension AvatarVariants on AvatarStyle {
       );
 
   /// Small avatar variant (32x32)
-  static AvatarStyle get small => AvatarStyle(
+  static RemixAvatarStyle get small => RemixAvatarStyle(
         container: BoxMix(
           alignment: Alignment.center,
           constraints: BoxConstraintsMix(
@@ -271,7 +271,7 @@ extension AvatarVariants on AvatarStyle {
       );
 
   /// Large avatar variant (64x64)
-  static AvatarStyle get large => AvatarStyle(
+  static RemixAvatarStyle get large => RemixAvatarStyle(
         container: BoxMix(
           alignment: Alignment.center,
           constraints: BoxConstraintsMix(

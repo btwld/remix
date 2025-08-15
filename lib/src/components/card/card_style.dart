@@ -1,9 +1,9 @@
 part of 'card.dart';
 
-class CardStyle extends Style<CardSpec> with StyleModifierMixin<CardStyle, CardSpec>, StyleVariantMixin<CardStyle, CardSpec> {
+class RemixCardStyle extends Style<CardSpec> with StyleModifierMixin<RemixCardStyle, CardSpec>, StyleVariantMixin<RemixCardStyle, CardSpec> {
   final Prop<BoxSpec>? $container;
 
-  const CardStyle.create({
+  const RemixCardStyle.create({
     Prop<BoxSpec>? container,
     super.variants,
     super.animation,
@@ -11,7 +11,7 @@ class CardStyle extends Style<CardSpec> with StyleModifierMixin<CardStyle, CardS
     super.inherit,
   }) : $container = container;
 
-  CardStyle({
+  RemixCardStyle({
     BoxMix? container,
     AnimationConfig? animation,
     List<VariantStyle<CardSpec>>? variants,
@@ -25,7 +25,7 @@ class CardStyle extends Style<CardSpec> with StyleModifierMixin<CardStyle, CardS
           inherit: inherit,
         );
 
-  factory CardStyle.value(CardSpec spec) => CardStyle(
+  factory RemixCardStyle.value(CardSpec spec) => RemixCardStyle(
         container: BoxMix.maybeValue(spec.container),
       );
 
@@ -35,10 +35,10 @@ class CardStyle extends Style<CardSpec> with StyleModifierMixin<CardStyle, CardS
   }
 
   @override
-  CardStyle merge(CardStyle? other) {
+  RemixCardStyle merge(RemixCardStyle? other) {
     if (other == null) return this;
 
-    return CardStyle.create(
+    return RemixCardStyle.create(
       container: MixOps.merge($container, other.$container),
       variants: mergeVariantLists($variants, other.$variants),
       animation: other.$animation ?? $animation,
@@ -48,18 +48,18 @@ class CardStyle extends Style<CardSpec> with StyleModifierMixin<CardStyle, CardS
   }
 
   @override
-  CardStyle variant(Variant variant, CardStyle style) {
-    return merge(CardStyle(variants: [VariantStyle(variant, style)]));
+  RemixCardStyle variant(Variant variant, RemixCardStyle style) {
+    return merge(RemixCardStyle(variants: [VariantStyle(variant, style)]));
   }
 
   @override
-  CardStyle variants(List<VariantStyle<CardSpec>> value) {
-    return merge(CardStyle(variants: value));
+  RemixCardStyle variants(List<VariantStyle<CardSpec>> value) {
+    return merge(RemixCardStyle(variants: value));
   }
 
   @override
-  CardStyle wrap(ModifierConfig value) {
-    return merge(CardStyle(modifier: value));
+  RemixCardStyle wrap(ModifierConfig value) {
+    return merge(RemixCardStyle(modifier: value));
   }
 
   @override
@@ -72,7 +72,7 @@ class CardStyle extends Style<CardSpec> with StyleModifierMixin<CardStyle, CardS
       ];
 }
 
-final DefaultCardStyle = CardStyle(
+final DefaultRemixCardStyle = RemixCardStyle(
   container: BoxMix(
     padding: EdgeInsetsMix.all(16),
     decoration: BoxDecorationMix(
@@ -90,9 +90,9 @@ final DefaultCardStyle = CardStyle(
 );
 
 /// Default card styles and variants
-class CardStyles {
+class RemixCardStyles {
   /// Default card style
-  static CardStyle get defaultStyle => CardStyle(
+  static RemixCardStyle get defaultStyle => RemixCardStyle(
         container: BoxMix(
           padding: EdgeInsetsMix.all(16),
           decoration: BoxDecorationMix(
@@ -110,7 +110,7 @@ class CardStyles {
       );
 
   /// Elevated card variant with stronger shadow
-  static CardStyle get elevated => CardStyle(
+  static RemixCardStyle get elevated => RemixCardStyle(
         container: BoxMix(
           padding: EdgeInsetsMix.all(16),
           decoration: BoxDecorationMix(
@@ -128,7 +128,7 @@ class CardStyles {
       );
 
   /// Outlined card variant with border
-  static CardStyle get outlined => CardStyle(
+  static RemixCardStyle get outlined => RemixCardStyle(
         container: BoxMix(
           padding: EdgeInsetsMix.all(16),
           decoration: BoxDecorationMix(
@@ -142,7 +142,7 @@ class CardStyles {
       );
 
   /// Flat card variant without shadow
-  static CardStyle get flat => CardStyle(
+  static RemixCardStyle get flat => RemixCardStyle(
         container: BoxMix(
           padding: EdgeInsetsMix.all(16),
           decoration: BoxDecorationMix(

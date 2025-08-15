@@ -23,7 +23,7 @@ class _MyAppState extends State<MyApp> {
             width: 200,
             child: RemixSlider(
               value: _value,
-              style: SliderStyle(),
+              style: RemixSliderStyle(),
               onChanged: (value) {
                 setState(() {
                   _value = value;

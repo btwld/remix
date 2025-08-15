@@ -1,15 +1,15 @@
 part of 'select.dart';
 
-class SelectStyle extends Style<SelectSpec>
+class RemixSelectStyle extends Style<SelectSpec>
     with
-        StyleModifierMixin<SelectStyle, SelectSpec>,
-        StyleVariantMixin<SelectStyle, SelectSpec> {
+        StyleModifierMixin<RemixSelectStyle, SelectSpec>,
+        StyleVariantMixin<RemixSelectStyle, SelectSpec> {
   final Prop<BoxSpec>? $menuContainer;
   final Prop<SelectTriggerSpec>? $trigger;
   final Prop<SelectMenuItemSpec>? $item;
   final Prop<CompositedTransformFollowerSpec>? $position;
 
-  const SelectStyle.create({
+  const RemixSelectStyle.create({
     Prop<BoxSpec>? menuContainer,
     Prop<SelectTriggerSpec>? trigger,
     Prop<SelectMenuItemSpec>? item,
@@ -23,11 +23,11 @@ class SelectStyle extends Style<SelectSpec>
         $item = item,
         $position = position;
 
-  SelectStyle({
+  RemixSelectStyle({
     BoxMix? menuContainer,
-    SelectTriggerStyle? trigger,
-    SelectMenuItemStyle? item,
-    CompositedTransformFollowerStyle? position,
+    RemixSelectTriggerStyle? trigger,
+    RemixSelectMenuItemStyle? item,
+    RemixCompositedTransformFollowerStyle? position,
     AnimationConfig? animation,
     List<VariantStyle<SelectSpec>>? variants,
     ModifierConfig? modifier,
@@ -44,17 +44,17 @@ class SelectStyle extends Style<SelectSpec>
         );
 
   @override
-  SelectStyle variants(List<VariantStyle<SelectSpec>> value) {
-    return merge(SelectStyle(variants: value));
+  RemixSelectStyle variants(List<VariantStyle<SelectSpec>> value) {
+    return merge(RemixSelectStyle(variants: value));
   }
 
   @override
-  SelectStyle wrap(ModifierConfig value) {
-    return merge(SelectStyle(modifier: value));
+  RemixSelectStyle wrap(ModifierConfig value) {
+    return merge(RemixSelectStyle(modifier: value));
   }
 
   @override
-  SelectStyle variant(Variant variant, SelectStyle style) {
+  RemixSelectStyle variant(Variant variant, RemixSelectStyle style) {
     return merge(style);
   }
 
@@ -69,10 +69,10 @@ class SelectStyle extends Style<SelectSpec>
   }
 
   @override
-  SelectStyle merge(SelectStyle? other) {
+  RemixSelectStyle merge(RemixSelectStyle? other) {
     if (other == null) return this;
 
-    return SelectStyle.create(
+    return RemixSelectStyle.create(
       menuContainer: MixOps.merge($menuContainer, other.$menuContainer),
       trigger: MixOps.merge($trigger, other.$trigger),
       item: MixOps.merge($item, other.$item),
@@ -98,12 +98,12 @@ class SelectStyle extends Style<SelectSpec>
 }
 
 // Style classes for sub-specs
-class SelectTriggerStyle extends Style<SelectTriggerSpec> {
+class RemixSelectTriggerStyle extends Style<SelectTriggerSpec> {
   final Prop<FlexBoxSpec>? $container;
   final Prop<TextSpec>? $label;
   final Prop<IconThemeData>? $icon;
 
-  const SelectTriggerStyle.create({
+  const RemixSelectTriggerStyle.create({
     Prop<FlexBoxSpec>? container,
     Prop<TextSpec>? label,
     Prop<IconThemeData>? icon,
@@ -115,7 +115,7 @@ class SelectTriggerStyle extends Style<SelectTriggerSpec> {
         $label = label,
         $icon = icon;
 
-  SelectTriggerStyle({
+  RemixSelectTriggerStyle({
     FlexBoxMix? container,
     TextMix? label,
     IconThemeData? icon,
@@ -143,10 +143,10 @@ class SelectTriggerStyle extends Style<SelectTriggerSpec> {
   }
 
   @override
-  SelectTriggerStyle merge(SelectTriggerStyle? other) {
+  RemixSelectTriggerStyle merge(RemixSelectTriggerStyle? other) {
     if (other == null) return this;
 
-    return SelectTriggerStyle.create(
+    return RemixSelectTriggerStyle.create(
       container: MixOps.merge($container, other.$container),
       label: MixOps.merge($label, other.$label),
       icon: other.$icon ?? $icon,
@@ -169,12 +169,12 @@ class SelectTriggerStyle extends Style<SelectTriggerSpec> {
       ];
 }
 
-class SelectMenuItemStyle extends Style<SelectMenuItemSpec> {
+class RemixSelectMenuItemStyle extends Style<SelectMenuItemSpec> {
   final Prop<FlexBoxSpec>? $container;
   final Prop<TextStyle>? $textStyle;
   final Prop<IconThemeData>? $icon;
 
-  const SelectMenuItemStyle.create({
+  const RemixSelectMenuItemStyle.create({
     Prop<FlexBoxSpec>? container,
     Prop<TextStyle>? textStyle,
     Prop<IconThemeData>? icon,
@@ -186,7 +186,7 @@ class SelectMenuItemStyle extends Style<SelectMenuItemSpec> {
         $textStyle = textStyle,
         $icon = icon;
 
-  SelectMenuItemStyle({
+  RemixSelectMenuItemStyle({
     FlexBoxMix? container,
     TextStyle? textStyle,
     IconThemeData? icon,
@@ -214,10 +214,10 @@ class SelectMenuItemStyle extends Style<SelectMenuItemSpec> {
   }
 
   @override
-  SelectMenuItemStyle merge(SelectMenuItemStyle? other) {
+  RemixSelectMenuItemStyle merge(RemixSelectMenuItemStyle? other) {
     if (other == null) return this;
 
-    return SelectMenuItemStyle.create(
+    return RemixSelectMenuItemStyle.create(
       container: MixOps.merge($container, other.$container),
       textStyle: other.$textStyle ?? $textStyle,
       icon: other.$icon ?? $icon,
@@ -240,13 +240,13 @@ class SelectMenuItemStyle extends Style<SelectMenuItemSpec> {
       ];
 }
 
-class CompositedTransformFollowerStyle
+class RemixCompositedTransformFollowerStyle
     extends Style<CompositedTransformFollowerSpec> {
   final Prop<Alignment>? $targetAnchor;
   final Prop<Alignment>? $followerAnchor;
   final Prop<Offset>? $offset;
 
-  const CompositedTransformFollowerStyle.create({
+  const RemixCompositedTransformFollowerStyle.create({
     Prop<Alignment>? targetAnchor,
     Prop<Alignment>? followerAnchor,
     Prop<Offset>? offset,
@@ -258,7 +258,7 @@ class CompositedTransformFollowerStyle
         $followerAnchor = followerAnchor,
         $offset = offset;
 
-  CompositedTransformFollowerStyle({
+  RemixCompositedTransformFollowerStyle({
     Alignment? targetAnchor,
     Alignment? followerAnchor,
     Offset? offset,
@@ -286,12 +286,12 @@ class CompositedTransformFollowerStyle
   }
 
   @override
-  CompositedTransformFollowerStyle merge(
-    CompositedTransformFollowerStyle? other,
+  RemixCompositedTransformFollowerStyle merge(
+    RemixCompositedTransformFollowerStyle? other,
   ) {
     if (other == null) return this;
 
-    return CompositedTransformFollowerStyle.create(
+    return RemixCompositedTransformFollowerStyle.create(
       targetAnchor: other.$targetAnchor ?? $targetAnchor,
       followerAnchor: other.$followerAnchor ?? $followerAnchor,
       offset: other.$offset ?? $offset,
@@ -315,7 +315,7 @@ class CompositedTransformFollowerStyle
 }
 
 // Default styles
-final DefaultSelectStyle = SelectStyle(
+final DefaultRemixSelectStyle = RemixSelectStyle(
   menuContainer: BoxMix(
     padding: EdgeInsetsMix.symmetric(vertical: 4),
     decoration: BoxDecorationMix(
@@ -330,7 +330,7 @@ final DefaultSelectStyle = SelectStyle(
       ],
     ),
   ),
-  trigger: SelectTriggerStyle(
+  trigger: RemixSelectTriggerStyle(
     container: FlexBoxMix(
       box: BoxMix(
         padding: EdgeInsetsMix.symmetric(vertical: 8, horizontal: 12),
@@ -350,7 +350,7 @@ final DefaultSelectStyle = SelectStyle(
     label: TextMix(style: TextStyleMix(color: Colors.black87, fontSize: 14)),
     icon: IconThemeData(size: 20, color: Colors.black54),
   ),
-  item: SelectMenuItemStyle(
+  item: RemixSelectMenuItemStyle(
     container: FlexBoxMix(
       box: BoxMix(
         padding: EdgeInsetsMix.symmetric(vertical: 8, horizontal: 12),
@@ -364,7 +364,7 @@ final DefaultSelectStyle = SelectStyle(
     textStyle: TextStyle(color: Colors.black87, fontSize: 14),
     icon: IconThemeData(size: 16, color: Colors.black54),
   ),
-  position: CompositedTransformFollowerStyle(
+  position: RemixCompositedTransformFollowerStyle(
     targetAnchor: Alignment.bottomLeft,
     followerAnchor: Alignment.topLeft,
     offset: const Offset(0, 4),
@@ -372,9 +372,9 @@ final DefaultSelectStyle = SelectStyle(
   animation: AnimationConfig.easeInOut(const Duration(milliseconds: 150)),
 );
 
-extension SelectVariants on SelectStyle {
+extension RemixSelectVariants on RemixSelectStyle {
   /// Primary select variant with blue accents
-  static SelectStyle get primary => SelectStyle(
+  static RemixSelectStyle get primary => RemixSelectStyle(
         menuContainer: BoxMix(
           padding: EdgeInsetsMix.symmetric(vertical: 4),
           decoration: BoxDecorationMix(
@@ -389,7 +389,7 @@ extension SelectVariants on SelectStyle {
             ],
           ),
         ),
-        trigger: SelectTriggerStyle(
+        trigger: RemixSelectTriggerStyle(
           container: FlexBoxMix(
             box: BoxMix(
               padding: EdgeInsetsMix.symmetric(vertical: 8, horizontal: 12),
@@ -412,7 +412,7 @@ extension SelectVariants on SelectStyle {
           ),
           icon: IconThemeData(size: 20, color: Colors.blue[600]),
         ),
-        item: SelectMenuItemStyle(
+        item: RemixSelectMenuItemStyle(
           container: FlexBoxMix(
             box: BoxMix(
               padding: EdgeInsetsMix.symmetric(vertical: 8, horizontal: 12),
@@ -426,7 +426,7 @@ extension SelectVariants on SelectStyle {
           textStyle: TextStyle(color: Colors.black87, fontSize: 14),
           icon: IconThemeData(size: 16, color: Colors.blue[500]),
         ),
-        position: CompositedTransformFollowerStyle(
+        position: RemixCompositedTransformFollowerStyle(
           targetAnchor: Alignment.bottomLeft,
           followerAnchor: Alignment.topLeft,
           offset: const Offset(0, 4),
@@ -435,7 +435,7 @@ extension SelectVariants on SelectStyle {
       );
 
   /// Secondary select variant with grey styling
-  static SelectStyle get secondary => SelectStyle(
+  static RemixSelectStyle get secondary => RemixSelectStyle(
         menuContainer: BoxMix(
           padding: EdgeInsetsMix.symmetric(vertical: 4),
           decoration: BoxDecorationMix(
@@ -450,7 +450,7 @@ extension SelectVariants on SelectStyle {
             ],
           ),
         ),
-        trigger: SelectTriggerStyle(
+        trigger: RemixSelectTriggerStyle(
           container: FlexBoxMix(
             box: BoxMix(
               padding: EdgeInsetsMix.symmetric(vertical: 8, horizontal: 12),
@@ -473,7 +473,7 @@ extension SelectVariants on SelectStyle {
           ),
           icon: IconThemeData(size: 20, color: Colors.grey[600]),
         ),
-        item: SelectMenuItemStyle(
+        item: RemixSelectMenuItemStyle(
           container: FlexBoxMix(
             box: BoxMix(
               padding: EdgeInsetsMix.symmetric(vertical: 8, horizontal: 12),
@@ -487,7 +487,7 @@ extension SelectVariants on SelectStyle {
           textStyle: TextStyle(color: Colors.black87, fontSize: 14),
           icon: IconThemeData(size: 16, color: Colors.grey[500]),
         ),
-        position: CompositedTransformFollowerStyle(
+        position: RemixCompositedTransformFollowerStyle(
           targetAnchor: Alignment.bottomLeft,
           followerAnchor: Alignment.topLeft,
           offset: const Offset(0, 4),
@@ -496,7 +496,7 @@ extension SelectVariants on SelectStyle {
       );
 
   /// Outlined select variant with no background fill
-  static SelectStyle get outlined => SelectStyle(
+  static RemixSelectStyle get outlined => RemixSelectStyle(
         menuContainer: BoxMix(
           padding: EdgeInsetsMix.symmetric(vertical: 4),
           decoration: BoxDecorationMix(
@@ -514,7 +514,7 @@ extension SelectVariants on SelectStyle {
             ],
           ),
         ),
-        trigger: SelectTriggerStyle(
+        trigger: RemixSelectTriggerStyle(
           container: FlexBoxMix(
             box: BoxMix(
               padding: EdgeInsetsMix.symmetric(vertical: 8, horizontal: 12),
@@ -536,7 +536,7 @@ extension SelectVariants on SelectStyle {
               TextMix(style: TextStyleMix(color: Colors.black87, fontSize: 14)),
           icon: IconThemeData(size: 20, color: Colors.black54),
         ),
-        item: SelectMenuItemStyle(
+        item: RemixSelectMenuItemStyle(
           container: FlexBoxMix(
             box: BoxMix(
               padding: EdgeInsetsMix.symmetric(vertical: 8, horizontal: 12),
@@ -550,7 +550,7 @@ extension SelectVariants on SelectStyle {
           textStyle: TextStyle(color: Colors.black87, fontSize: 14),
           icon: IconThemeData(size: 16, color: Colors.black54),
         ),
-        position: CompositedTransformFollowerStyle(
+        position: RemixCompositedTransformFollowerStyle(
           targetAnchor: Alignment.bottomLeft,
           followerAnchor: Alignment.topLeft,
           offset: const Offset(0, 4),

@@ -62,20 +62,20 @@ void main() {
       controller.dispose();
     });
 
-    testWidgets('should work with prefix and suffix widgets', (tester) async {
+    testWidgets('should work with leading and trailing widgets', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: RemixTextField(
-              prefix: const Icon(Icons.person),
-              suffix: const Icon(Icons.clear),
+              leading: const Icon(Icons.person),
+              trailing: const Icon(Icons.clear),
               hintText: 'Username',
             ),
           ),
         ),
       );
 
-      // Verify prefix and suffix widgets are displayed
+      // Verify leading and trailing widgets are displayed
       expect(find.byIcon(Icons.person), findsOneWidget);
       expect(find.byIcon(Icons.clear), findsOneWidget);
     });

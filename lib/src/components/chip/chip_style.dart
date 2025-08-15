@@ -1,15 +1,15 @@
 part of 'chip.dart';
 
-class ChipStyle extends Style<ChipSpec>
+class RemixChipStyle extends Style<ChipSpec>
     with
-        StyleModifierMixin<ChipStyle, ChipSpec>,
-        StyleVariantMixin<ChipStyle, ChipSpec> {
+        StyleModifierMixin<RemixChipStyle, ChipSpec>,
+        StyleVariantMixin<RemixChipStyle, ChipSpec> {
   final Prop<FlexBoxSpec>? $container;
   final Prop<TextSpec>? $label;
   final Prop<IconSpec>? $leadingIcon;
   final Prop<IconSpec>? $trailingIcon;
 
-  const ChipStyle.create({
+  const RemixChipStyle.create({
     Prop<FlexBoxSpec>? container,
     Prop<TextSpec>? label,
     Prop<IconSpec>? leadingIcon,
@@ -23,7 +23,7 @@ class ChipStyle extends Style<ChipSpec>
         $leadingIcon = leadingIcon,
         $trailingIcon = trailingIcon;
 
-  ChipStyle({
+  RemixChipStyle({
     FlexBoxMix? container,
     TextMix? label,
     IconMix? leadingIcon,
@@ -43,7 +43,7 @@ class ChipStyle extends Style<ChipSpec>
           inherit: inherit,
         );
 
-  factory ChipStyle.value(ChipSpec spec) => ChipStyle(
+  factory RemixChipStyle.value(ChipSpec spec) => RemixChipStyle(
         container: FlexBoxMix.maybeValue(spec.container),
         label: TextMix.maybeValue(spec.label),
         leadingIcon: IconMix.maybeValue(spec.leadingIcon),
@@ -61,10 +61,10 @@ class ChipStyle extends Style<ChipSpec>
   }
 
   @override
-  ChipStyle merge(ChipStyle? other) {
+  RemixChipStyle merge(RemixChipStyle? other) {
     if (other == null) return this;
 
-    return ChipStyle.create(
+    return RemixChipStyle.create(
       container: MixOps.merge($container, other.$container),
       label: MixOps.merge($label, other.$label),
       leadingIcon: MixOps.merge($leadingIcon, other.$leadingIcon),
@@ -77,18 +77,18 @@ class ChipStyle extends Style<ChipSpec>
   }
 
   @override
-  ChipStyle variant(Variant variant, ChipStyle style) {
-    return merge(ChipStyle(variants: [VariantStyle(variant, style)]));
+  RemixChipStyle variant(Variant variant, RemixChipStyle style) {
+    return merge(RemixChipStyle(variants: [VariantStyle(variant, style)]));
   }
 
   @override
-  ChipStyle variants(List<VariantStyle<ChipSpec>> value) {
-    return merge(ChipStyle(variants: value));
+  RemixChipStyle variants(List<VariantStyle<ChipSpec>> value) {
+    return merge(RemixChipStyle(variants: value));
   }
 
   @override
-  ChipStyle wrap(ModifierConfig value) {
-    return merge(ChipStyle(modifier: value));
+  RemixChipStyle wrap(ModifierConfig value) {
+    return merge(RemixChipStyle(modifier: value));
   }
 
   @override
@@ -104,7 +104,7 @@ class ChipStyle extends Style<ChipSpec>
       ];
 }
 
-final DefaultChipStyle = ChipStyle(
+final DefaultRemixChipStyle = RemixChipStyle(
   container: FlexBoxMix(
     box: BoxMix(
       padding: EdgeInsetsMix.symmetric(vertical: 6, horizontal: 12),
@@ -127,9 +127,9 @@ final DefaultChipStyle = ChipStyle(
   trailingIcon: IconMix(size: 16),
 );
 
-extension ChipVariants on ChipStyle {
+extension ChipVariants on RemixChipStyle {
   /// Primary chip variant with blue colors
-  static ChipStyle get primary => ChipStyle(
+  static RemixChipStyle get primary => RemixChipStyle(
         container: FlexBoxMix(
           box: BoxMix(
             padding: EdgeInsetsMix.symmetric(vertical: 6, horizontal: 12),
@@ -160,7 +160,7 @@ extension ChipVariants on ChipStyle {
       );
 
   /// Secondary chip variant with grey colors
-  static ChipStyle get secondary => ChipStyle(
+  static RemixChipStyle get secondary => RemixChipStyle(
         container: FlexBoxMix(
           box: BoxMix(
             padding: EdgeInsetsMix.symmetric(vertical: 6, horizontal: 12),
@@ -191,7 +191,7 @@ extension ChipVariants on ChipStyle {
       );
 
   /// Success chip variant with green colors
-  static ChipStyle get success => ChipStyle(
+  static RemixChipStyle get success => RemixChipStyle(
         container: FlexBoxMix(
           box: BoxMix(
             padding: EdgeInsetsMix.symmetric(vertical: 6, horizontal: 12),
@@ -222,7 +222,7 @@ extension ChipVariants on ChipStyle {
       );
 
   /// Warning chip variant with orange colors
-  static ChipStyle get warning => ChipStyle(
+  static RemixChipStyle get warning => RemixChipStyle(
         container: FlexBoxMix(
           box: BoxMix(
             padding: EdgeInsetsMix.symmetric(vertical: 6, horizontal: 12),

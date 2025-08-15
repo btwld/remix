@@ -1,9 +1,9 @@
 part of 'accordion.dart';
 
-class AccordionStyle extends Style<AccordionSpec>
+class RemixAccordionStyle extends Style<AccordionSpec>
     with
-        StyleModifierMixin<AccordionStyle, AccordionSpec>,
-        StyleVariantMixin<AccordionStyle, AccordionSpec> {
+        StyleModifierMixin<RemixAccordionStyle, AccordionSpec>,
+        StyleVariantMixin<RemixAccordionStyle, AccordionSpec> {
   final Prop<BoxSpec>? $itemContainer;
   final Prop<BoxSpec>? $contentContainer;
   final Prop<FlexBoxSpec>? $headerContainer;
@@ -12,7 +12,7 @@ class AccordionStyle extends Style<AccordionSpec>
   final Prop<TextSpec>? $titleStyle;
   final Prop<TextSpec>? $contentStyle;
 
-  const AccordionStyle.create({
+  const RemixAccordionStyle.create({
     Prop<BoxSpec>? itemContainer,
     Prop<BoxSpec>? contentContainer,
     Prop<FlexBoxSpec>? headerContainer,
@@ -32,7 +32,7 @@ class AccordionStyle extends Style<AccordionSpec>
         $titleStyle = titleStyle,
         $contentStyle = contentStyle;
 
-  AccordionStyle({
+  RemixAccordionStyle({
     BoxMix? itemContainer,
     BoxMix? contentContainer,
     FlexBoxMix? headerContainer,
@@ -74,10 +74,10 @@ class AccordionStyle extends Style<AccordionSpec>
   }
 
   @override
-  AccordionStyle merge(AccordionStyle? other) {
+  RemixAccordionStyle merge(RemixAccordionStyle? other) {
     if (other == null) return this;
 
-    return AccordionStyle.create(
+    return RemixAccordionStyle.create(
       itemContainer: MixOps.merge($itemContainer, other.$itemContainer),
       contentContainer:
           MixOps.merge($contentContainer, other.$contentContainer),
@@ -94,18 +94,18 @@ class AccordionStyle extends Style<AccordionSpec>
   }
 
   @override
-  AccordionStyle variant(Variant variant, AccordionStyle style) {
-    return merge(AccordionStyle(variants: [VariantStyle(variant, style)]));
+  RemixAccordionStyle variant(Variant variant, RemixAccordionStyle style) {
+    return merge(RemixAccordionStyle(variants: [VariantStyle(variant, style)]));
   }
 
   @override
-  AccordionStyle variants(List<VariantStyle<AccordionSpec>> value) {
-    return merge(AccordionStyle(variants: value));
+  RemixAccordionStyle variants(List<VariantStyle<AccordionSpec>> value) {
+    return merge(RemixAccordionStyle(variants: value));
   }
 
   @override
-  AccordionStyle wrap(ModifierConfig value) {
-    return merge(AccordionStyle(modifier: value));
+  RemixAccordionStyle wrap(ModifierConfig value) {
+    return merge(RemixAccordionStyle(modifier: value));
   }
 
   @override
@@ -124,7 +124,7 @@ class AccordionStyle extends Style<AccordionSpec>
       ];
 }
 
-final DefaultAccordionStyle = AccordionStyle(
+final DefaultRemixAccordionStyle = RemixAccordionStyle(
   itemContainer: BoxMix(
     margin: EdgeInsetsMix(bottom: 12),
     decoration: BoxDecorationMix(
@@ -165,9 +165,9 @@ final DefaultAccordionStyle = AccordionStyle(
   ),
 );
 
-extension AccordionVariants on AccordionStyle {
+extension AccordionVariants on RemixAccordionStyle {
   /// Default accordion variant (same as DefaultAccordionStyle)
-  static AccordionStyle get defaultVariant => AccordionStyle(
+  static RemixAccordionStyle get defaultVariant => RemixAccordionStyle(
         itemContainer: BoxMix(
           margin: EdgeInsetsMix(bottom: 12),
           decoration: BoxDecorationMix(
@@ -209,7 +209,7 @@ extension AccordionVariants on AccordionStyle {
       );
 
   /// Compact accordion variant with smaller padding
-  static AccordionStyle get compact => AccordionStyle(
+  static RemixAccordionStyle get compact => RemixAccordionStyle(
         itemContainer: BoxMix(
           margin: EdgeInsetsMix(bottom: 8),
           decoration: BoxDecorationMix(
@@ -251,7 +251,7 @@ extension AccordionVariants on AccordionStyle {
       );
 
   /// Bordered accordion variant with prominent borders
-  static AccordionStyle get bordered => AccordionStyle(
+  static RemixAccordionStyle get bordered => RemixAccordionStyle(
         itemContainer: BoxMix(
           margin: EdgeInsetsMix(bottom: 12),
           decoration: BoxDecorationMix(

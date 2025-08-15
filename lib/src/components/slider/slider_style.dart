@@ -1,13 +1,13 @@
 part of 'slider.dart';
 
-class SliderStyle extends Style<SliderSpec>
-    with StyleModifierMixin<SliderStyle, SliderSpec>, StyleVariantMixin<SliderStyle, SliderSpec> {
+class RemixSliderStyle extends Style<SliderSpec>
+    with StyleModifierMixin<RemixSliderStyle, SliderSpec>, StyleVariantMixin<RemixSliderStyle, SliderSpec> {
   final Prop<BoxSpec>? $thumb;
   final Prop<PaintData>? $baseTrack;
   final Prop<PaintData>? $activeTrack;
   final Prop<PaintData>? $division;
 
-  const SliderStyle.create({
+  const RemixSliderStyle.create({
     Prop<BoxSpec>? thumb,
     Prop<PaintData>? baseTrack,
     Prop<PaintData>? activeTrack,
@@ -21,7 +21,7 @@ class SliderStyle extends Style<SliderSpec>
         $activeTrack = activeTrack,
         $division = division;
 
-  SliderStyle({
+  RemixSliderStyle({
     BoxMix? thumb,
     PaintData? baseTrack,
     PaintData? activeTrack,
@@ -52,10 +52,10 @@ class SliderStyle extends Style<SliderSpec>
   }
 
   @override
-  SliderStyle merge(SliderStyle? other) {
+  RemixSliderStyle merge(RemixSliderStyle? other) {
     if (other == null) return this;
 
-    return SliderStyle.create(
+    return RemixSliderStyle.create(
       thumb: MixOps.merge($thumb, other.$thumb),
       baseTrack: MixOps.merge($baseTrack, other.$baseTrack),
       activeTrack: MixOps.merge($activeTrack, other.$activeTrack),
@@ -68,18 +68,18 @@ class SliderStyle extends Style<SliderSpec>
   }
 
   @override
-  SliderStyle variant(Variant variant, SliderStyle style) {
-    return merge(SliderStyle(variants: [VariantStyle(variant, style)]));
+  RemixSliderStyle variant(Variant variant, RemixSliderStyle style) {
+    return merge(RemixSliderStyle(variants: [VariantStyle(variant, style)]));
   }
 
   @override
-  SliderStyle variants(List<VariantStyle<SliderSpec>> value) {
-    return merge(SliderStyle(variants: value));
+  RemixSliderStyle variants(List<VariantStyle<SliderSpec>> value) {
+    return merge(RemixSliderStyle(variants: value));
   }
   
   @override
-  SliderStyle wrap(ModifierConfig value) {
-    return merge(SliderStyle(modifier: value));
+  RemixSliderStyle wrap(ModifierConfig value) {
+    return merge(RemixSliderStyle(modifier: value));
   }
 
   @override
@@ -96,7 +96,7 @@ class SliderStyle extends Style<SliderSpec>
 }
 
 // Default style
-final DefaultSliderStyle = SliderStyle(
+final DefaultRemixSliderStyle = RemixSliderStyle(
   thumb: BoxMix(
     decoration: BoxDecorationMix(
       border: BoxBorderMix.all(BorderSideMix(color: Colors.black, width: 2)),
@@ -123,7 +123,7 @@ final DefaultSliderStyle = SliderStyle(
 );
 
 // Hover style
-final SliderHoverStyle = SliderStyle(
+final RemixSliderHoverStyle = RemixSliderStyle(
   thumb: BoxMix(
     decoration: BoxDecorationMix(
       border: BoxBorderMix.all(BorderSideMix(color: Colors.blue, width: 2)),
@@ -132,7 +132,7 @@ final SliderHoverStyle = SliderStyle(
 );
 
 // Disabled style
-final SliderDisabledStyle = SliderStyle(
+final RemixSliderDisabledStyle = RemixSliderStyle(
   thumb: BoxMix(
     decoration: BoxDecorationMix(
       border: BoxBorderMix.all(
@@ -153,9 +153,9 @@ final SliderDisabledStyle = SliderStyle(
   ),
 );
 
-extension SliderVariants on SliderStyle {
+extension SliderVariants on RemixSliderStyle {
   /// Primary slider variant with blue colors
-  static SliderStyle get primary => SliderStyle(
+  static RemixSliderStyle get primary => RemixSliderStyle(
         thumb: BoxMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(color: Colors.blue[500]!, width: 2)),
@@ -189,7 +189,7 @@ extension SliderVariants on SliderStyle {
       );
 
   /// Secondary slider variant with grey colors
-  static SliderStyle get secondary => SliderStyle(
+  static RemixSliderStyle get secondary => RemixSliderStyle(
         thumb: BoxMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(color: Colors.grey[600]!, width: 2)),
@@ -216,7 +216,7 @@ extension SliderVariants on SliderStyle {
       );
 
   /// Compact slider variant with smaller track
-  static SliderStyle get compact => SliderStyle(
+  static RemixSliderStyle get compact => RemixSliderStyle(
         thumb: BoxMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(color: Colors.black, width: 1.5)),

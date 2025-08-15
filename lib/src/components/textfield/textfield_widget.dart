@@ -16,7 +16,8 @@ part of 'textfield.dart';
 ///   style: TextFieldStyle(),
 /// )
 /// ```
-class RemixTextField extends StatefulWidget with Disableable, Errorable, Focusable {
+class RemixTextField extends StatefulWidget
+    with HasEnabled, HasError, HasFocused {
   const RemixTextField({
     super.key,
     this.controller,
@@ -48,7 +49,6 @@ class RemixTextField extends StatefulWidget with Disableable, Errorable, Focusab
     this.dragStartBehavior = DragStartBehavior.start,
     this.enableInteractiveSelection = true,
     this.selectionControls,
-    this.onTap,
     this.onTapOutside,
     this.onPressUpOutside,
     this.onTapAlwaysCalled = false,
@@ -71,10 +71,10 @@ class RemixTextField extends StatefulWidget with Disableable, Errorable, Focusab
     this.helperText,
     this.label,
     this.error = false,
-    this.prefix,
-    this.suffix,
+    this.leading,
+    this.trailing,
     this.onPressed,
-    this.textFieldStyle = const TextFieldStyle.create(),
+    this.style = const RemixTextFieldStyle.create(),
   });
 
   /// Controls the text being edited.
@@ -170,8 +170,6 @@ class RemixTextField extends StatefulWidget with Disableable, Errorable, Focusab
   /// Optional delegate for building the text selection handles and toolbar.
   final TextSelectionControls? selectionControls;
 
-  /// Called when the user taps on this text field.
-  final GestureTapCallback? onTap;
 
   /// Called when the user taps outside of this text field.
   final TapRegionCallback? onTapOutside;
@@ -233,26 +231,30 @@ class RemixTextField extends StatefulWidget with Disableable, Errorable, Focusab
   /// Whether the text field is in error state.
   final bool error;
 
-  /// A widget to display before the text field.
-  final Widget? prefix;
+  /// A widget to display at the leading edge of the text field.
+  final Widget? leading;
 
-  /// A widget to display after the text field.
-  final Widget? suffix;
+  /// A widget to display at the trailing edge of the text field.
+  final Widget? trailing;
 
   /// Called when the text field is pressed (for tap interactions).
   final VoidCallback? onPressed;
 
   /// The style configuration for the text field.
-  final TextFieldStyle textFieldStyle;
+  final RemixTextFieldStyle style;
 
   @override
   State<RemixTextField> createState() => _RemixTextFieldState();
 }
 
 class _RemixTextFieldState extends State<RemixTextField>
-    with WidgetStateMixin, DisableableMixin, ErrorableMixin, FocusableMixin {
-  TextFieldStyle get _style =>
-      DefaultTextFieldStyle.merge(widget.textFieldStyle);
+    with
+        HasWidgetStateController,
+        HasEnabledState,
+        HasErrorState,
+        HasFocusedState {
+  RemixTextFieldStyle get _style =>
+      DefaultRemixTextFieldStyle.merge(widget.style);
 
   TextEditingController? _internalController;
   TextEditingController get _controller =>
@@ -280,6 +282,7 @@ class _RemixTextFieldState extends State<RemixTextField>
   Widget build(BuildContext context) {
     return StyleBuilder(
       style: _style,
+      controller: controller,
       builder: (context, spec) {
         return NakedTextField(
           groupId: widget.groupId,
@@ -323,9 +326,9 @@ class _RemixTextFieldState extends State<RemixTextField>
           dragStartBehavior: widget.dragStartBehavior,
           enableInteractiveSelection: widget.enableInteractiveSelection,
           selectionControls: widget.selectionControls,
-          onPressed: widget.onPressed ?? widget.onTap,
+          onPressed: widget.onPressed,
           onTapAlwaysCalled: widget.onTapAlwaysCalled,
-          onPressedState: (state) => controller.pressed = state,
+          onPressChange: (state) => controller.pressed = state,
           onTapOutside: widget.onTapOutside,
           scrollController: widget.scrollController,
           scrollPhysics: widget.scrollPhysics,
@@ -340,9 +343,10 @@ class _RemixTextFieldState extends State<RemixTextField>
           canRequestFocus: widget.canRequestFocus,
           spellCheckConfiguration: widget.spellCheckConfiguration,
           magnifierConfiguration: widget.magnifierConfiguration,
-          onHoveredState: (state) => controller.hovered = state,
-          onFocusedState: (state) => controller.focused = state,
+          onHoverChange: (state) => controller.hovered = state,
+          onFocusChange: (state) => controller.focused = state,
           style: spec.style,
+          ignorePointers: widget.ignorePointers,
           builder: (context, editableText) {
             // Core text field with optional hint
             final textArea = widget.hintText == null
@@ -368,14 +372,14 @@ class _RemixTextFieldState extends State<RemixTextField>
                     ],
                   );
 
-            // Container with optional prefix/suffix
-            final textField = (widget.prefix != null || widget.suffix != null)
+            // Container with optional leading/trailing
+            final textField = (widget.leading != null || widget.trailing != null)
                 ? spec.container.flex(
                     direction: Axis.horizontal,
                     children: [
-                      if (widget.prefix != null) widget.prefix!,
+                      if (widget.leading != null) widget.leading!,
                       Expanded(child: textArea),
-                      if (widget.suffix != null) widget.suffix!,
+                      if (widget.trailing != null) widget.trailing!,
                     ],
                   )
                 : spec.container.box(child: textArea);
@@ -397,10 +401,8 @@ class _RemixTextFieldState extends State<RemixTextField>
               ],
             );
           },
-          ignorePointers: widget.ignorePointers,
         );
       },
-      controller: controller,
     );
   }
 }

@@ -1,15 +1,15 @@
 part of 'radio.dart';
 
-class RadioStyle extends Style<RadioSpec>
+class RemixRadioStyle extends Style<RadioSpec>
     with
-        StyleModifierMixin<RadioStyle, RadioSpec>,
-        StyleVariantMixin<RadioStyle, RadioSpec> {
+        StyleModifierMixin<RemixRadioStyle, RadioSpec>,
+        StyleVariantMixin<RemixRadioStyle, RadioSpec> {
   final Prop<FlexBoxSpec>? $container;
   final Prop<BoxSpec>? $indicatorContainer;
   final Prop<BoxSpec>? $indicator;
   final Prop<TextSpec>? $label;
 
-  const RadioStyle.create({
+  const RemixRadioStyle.create({
     Prop<FlexBoxSpec>? container,
     Prop<BoxSpec>? indicatorContainer,
     Prop<BoxSpec>? indicator,
@@ -23,7 +23,7 @@ class RadioStyle extends Style<RadioSpec>
         $indicator = indicator,
         $label = label;
 
-  RadioStyle({
+  RemixRadioStyle({
     FlexBoxMix? container,
     BoxMix? indicatorContainer,
     BoxMix? indicator,
@@ -44,7 +44,7 @@ class RadioStyle extends Style<RadioSpec>
           inherit: inherit,
         );
 
-  factory RadioStyle.value(RadioSpec spec) => RadioStyle(
+  factory RemixRadioStyle.value(RadioSpec spec) => RemixRadioStyle(
         container: FlexBoxMix.maybeValue(spec.container),
         indicatorContainer: BoxMix.maybeValue(spec.indicatorContainer),
         indicator: BoxMix.maybeValue(spec.indicator),
@@ -52,18 +52,18 @@ class RadioStyle extends Style<RadioSpec>
       );
 
   @override
-  RadioStyle variant(Variant variant, RadioStyle style) {
-    return merge(RadioStyle(variants: [VariantStyle(variant, style)]));
+  RemixRadioStyle variant(Variant variant, RemixRadioStyle style) {
+    return merge(RemixRadioStyle(variants: [VariantStyle(variant, style)]));
   }
 
   @override
-  RadioStyle variants(List<VariantStyle<RadioSpec>> value) {
-    return merge(RadioStyle(variants: value));
+  RemixRadioStyle variants(List<VariantStyle<RadioSpec>> value) {
+    return merge(RemixRadioStyle(variants: value));
   }
 
   @override
-  RadioStyle wrap(ModifierConfig value) {
-    return merge(RadioStyle(modifier: value));
+  RemixRadioStyle wrap(ModifierConfig value) {
+    return merge(RemixRadioStyle(modifier: value));
   }
 
   @override
@@ -77,10 +77,10 @@ class RadioStyle extends Style<RadioSpec>
   }
 
   @override
-  RadioStyle merge(RadioStyle? other) {
+  RemixRadioStyle merge(RemixRadioStyle? other) {
     if (other == null) return this;
 
-    return RadioStyle.create(
+    return RemixRadioStyle.create(
       container: MixOps.merge($container, other.$container),
       indicatorContainer:
           MixOps.merge($indicatorContainer, other.$indicatorContainer),
@@ -106,7 +106,7 @@ class RadioStyle extends Style<RadioSpec>
       ];
 }
 
-final DefaultRadioStyle = RadioStyle(
+final DefaultRemixRadioStyle = RemixRadioStyle(
   container: FlexBoxMix(
     box: BoxMix(alignment: Alignment.centerLeft),
     flex: FlexMix(
@@ -148,9 +148,9 @@ final DefaultRadioStyle = RadioStyle(
   label: TextMix(style: TextStyleMix(color: Colors.black, fontSize: 14)),
 );
 
-extension RadioVariants on RadioStyle {
+extension RadioVariants on RemixRadioStyle {
   /// Primary radio variant with blue colors
-  static RadioStyle get primary => RadioStyle(
+  static RemixRadioStyle get primary => RemixRadioStyle(
         container: FlexBoxMix(
           box: BoxMix(alignment: Alignment.centerLeft),
           flex: FlexMix(
@@ -193,7 +193,7 @@ extension RadioVariants on RadioStyle {
       );
 
   /// Secondary radio variant with grey colors
-  static RadioStyle get secondary => RadioStyle(
+  static RemixRadioStyle get secondary => RemixRadioStyle(
         container: FlexBoxMix(
           box: BoxMix(alignment: Alignment.centerLeft),
           flex: FlexMix(
@@ -236,7 +236,7 @@ extension RadioVariants on RadioStyle {
       );
 
   /// Compact radio variant with smaller size
-  static RadioStyle get compact => RadioStyle(
+  static RemixRadioStyle get compact => RemixRadioStyle(
         container: FlexBoxMix(
           box: BoxMix(alignment: Alignment.centerLeft),
           flex: FlexMix(

@@ -1,13 +1,13 @@
 part of 'progress.dart';
 
-class ProgressStyle extends Style<ProgressSpec>
-    with StyleModifierMixin<ProgressStyle, ProgressSpec>, StyleVariantMixin<ProgressStyle, ProgressSpec> {
+class RemixProgressStyle extends Style<ProgressSpec>
+    with StyleModifierMixin<RemixProgressStyle, ProgressSpec>, StyleVariantMixin<RemixProgressStyle, ProgressSpec> {
   final Prop<BoxSpec>? $container;
   final Prop<BoxSpec>? $track;
   final Prop<BoxSpec>? $fill;
   final Prop<BoxSpec>? $outerContainer;
 
-  const ProgressStyle.create({
+  const RemixProgressStyle.create({
     Prop<BoxSpec>? container,
     Prop<BoxSpec>? track,
     Prop<BoxSpec>? fill,
@@ -21,7 +21,7 @@ class ProgressStyle extends Style<ProgressSpec>
         $fill = fill,
         $outerContainer = outerContainer;
 
-  ProgressStyle({
+  RemixProgressStyle({
     BoxMix? container,
     BoxMix? track,
     BoxMix? fill,
@@ -42,7 +42,7 @@ class ProgressStyle extends Style<ProgressSpec>
           inherit: inherit,
         );
 
-  factory ProgressStyle.value(ProgressSpec spec) => ProgressStyle(
+  factory RemixProgressStyle.value(ProgressSpec spec) => RemixProgressStyle(
         container: BoxMix.maybeValue(spec.container),
         track: BoxMix.maybeValue(spec.track),
         fill: BoxMix.maybeValue(spec.fill),
@@ -50,18 +50,18 @@ class ProgressStyle extends Style<ProgressSpec>
       );
 
   @override
-  ProgressStyle variant(Variant variant, ProgressStyle style) {
-    return merge(ProgressStyle(variants: [VariantStyle(variant, style)]));
+  RemixProgressStyle variant(Variant variant, RemixProgressStyle style) {
+    return merge(RemixProgressStyle(variants: [VariantStyle(variant, style)]));
   }
 
   @override
-  ProgressStyle variants(List<VariantStyle<ProgressSpec>> value) {
-    return merge(ProgressStyle(variants: value));
+  RemixProgressStyle variants(List<VariantStyle<ProgressSpec>> value) {
+    return merge(RemixProgressStyle(variants: value));
   }
 
   @override
-  ProgressStyle wrap(ModifierConfig value) {
-    return merge(ProgressStyle(modifier: value));
+  RemixProgressStyle wrap(ModifierConfig value) {
+    return merge(RemixProgressStyle(modifier: value));
   }
 
   @override
@@ -75,10 +75,10 @@ class ProgressStyle extends Style<ProgressSpec>
   }
 
   @override
-  ProgressStyle merge(ProgressStyle? other) {
+  RemixProgressStyle merge(RemixProgressStyle? other) {
     if (other == null) return this;
 
-    return ProgressStyle.create(
+    return RemixProgressStyle.create(
       container: MixOps.merge($container, other.$container),
       track: MixOps.merge($track, other.$track),
       fill: MixOps.merge($fill, other.$fill),
@@ -103,7 +103,7 @@ class ProgressStyle extends Style<ProgressSpec>
       ];
 }
 
-final DefaultProgressStyle = ProgressStyle(
+final DefaultRemixProgressStyle = RemixProgressStyle(
   container: BoxMix(
     constraints: BoxConstraintsMix(minHeight: 6, maxHeight: 6),
     decoration: BoxDecorationMix(borderRadius: BorderRadiusMix.circular(99)),
@@ -119,9 +119,9 @@ final DefaultProgressStyle = ProgressStyle(
   outerContainer: BoxMix(),
 );
 
-extension ProgressVariants on ProgressStyle {
+extension ProgressVariants on RemixProgressStyle {
   /// Primary progress variant with blue fill
-  static ProgressStyle get primary => ProgressStyle(
+  static RemixProgressStyle get primary => RemixProgressStyle(
         container: BoxMix(
           constraints: BoxConstraintsMix(minHeight: 6, maxHeight: 6),
           decoration: BoxDecorationMix(borderRadius: BorderRadiusMix.circular(99)),
@@ -138,7 +138,7 @@ extension ProgressVariants on ProgressStyle {
       );
 
   /// Secondary progress variant with grey fill
-  static ProgressStyle get secondary => ProgressStyle(
+  static RemixProgressStyle get secondary => RemixProgressStyle(
         container: BoxMix(
           constraints: BoxConstraintsMix(minHeight: 6, maxHeight: 6),
           decoration: BoxDecorationMix(borderRadius: BorderRadiusMix.circular(99)),
@@ -155,7 +155,7 @@ extension ProgressVariants on ProgressStyle {
       );
 
   /// Success progress variant with green fill
-  static ProgressStyle get success => ProgressStyle(
+  static RemixProgressStyle get success => RemixProgressStyle(
         container: BoxMix(
           constraints: BoxConstraintsMix(minHeight: 6, maxHeight: 6),
           decoration: BoxDecorationMix(borderRadius: BorderRadiusMix.circular(99)),
@@ -172,7 +172,7 @@ extension ProgressVariants on ProgressStyle {
       );
 
   /// Warning progress variant with orange fill
-  static ProgressStyle get warning => ProgressStyle(
+  static RemixProgressStyle get warning => RemixProgressStyle(
         container: BoxMix(
           constraints: BoxConstraintsMix(minHeight: 6, maxHeight: 6),
           decoration: BoxDecorationMix(borderRadius: BorderRadiusMix.circular(99)),

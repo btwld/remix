@@ -15,7 +15,7 @@ class RemixProgress extends StatelessWidget {
   const RemixProgress({
     super.key,
     required this.value,
-    this.style = const ProgressStyle.create(),
+    this.style = const RemixProgressStyle.create(),
   }) : assert(
           value >= 0 && value <= 1,
           'Progress value must be between 0 and 1',
@@ -28,12 +28,12 @@ class RemixProgress extends StatelessWidget {
   final double value;
 
   /// The style configuration for the progress bar.
-  final ProgressStyle style;
+  final RemixProgressStyle style;
 
   @override
   Widget build(BuildContext context) {
     return StyleBuilder(
-      style: DefaultProgressStyle.merge(style),
+      style: DefaultRemixProgressStyle.merge(style),
       builder: (context, spec) {
         return spec.container(
           child: Stack(

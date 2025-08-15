@@ -36,7 +36,7 @@ class RemixRadioGroup<T> extends StatelessWidget {
     required this.onChanged,
     required this.child,
     this.enabled = true,
-    this.style = const RadioStyle.create(),
+    this.style = const RemixRadioStyle.create(),
   });
 
   /// The currently selected value for the group.
@@ -52,7 +52,7 @@ class RemixRadioGroup<T> extends StatelessWidget {
   final bool enabled;
 
   /// The style configuration for the radio group.
-  final RadioStyle style;
+  final RemixRadioStyle style;
 
   @override
   Widget build(BuildContext context) {

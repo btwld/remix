@@ -1,27 +1,29 @@
 import 'package:flutter/widgets.dart';
 import 'package:mix/mix.dart';
 
-mixin Disableable on StatefulWidget {
+mixin HasEnabled on StatefulWidget {
   /// {@macro remix.component.enabled}
   bool get enabled;
 }
 
-mixin Selectable on StatefulWidget {
+mixin HasSelected on StatefulWidget {
   /// {@macro remix.component.selected}
   bool get selected;
 }
 
-mixin Errorable on StatefulWidget {
+mixin HasError on StatefulWidget {
   /// {@macro remix.component.error}
   bool get error;
 }
 
-mixin Focusable on StatefulWidget {
+mixin HasFocused on StatefulWidget {
   /// {@macro remix.component.focusNode}
   FocusNode? get focusNode;
+
+  bool get autofocus;
 }
 
-mixin WidgetStateMixin<T extends StatefulWidget> on State<T> {
+mixin HasWidgetStateController<T extends StatefulWidget> on State<T> {
   late final WidgetStatesController controller;
 
   @override
@@ -37,7 +39,7 @@ mixin WidgetStateMixin<T extends StatefulWidget> on State<T> {
   }
 }
 
-mixin DisableableMixin<T extends Disableable> on WidgetStateMixin<T> {
+mixin HasEnabledState<T extends HasEnabled> on HasWidgetStateController<T> {
   @override
   void initState() {
     super.initState();
@@ -47,14 +49,14 @@ mixin DisableableMixin<T extends Disableable> on WidgetStateMixin<T> {
   @override
   void didUpdateWidget(T oldWidget) {
     super.didUpdateWidget(oldWidget);
-    final oldDisableable = oldWidget as Disableable;
-    if (oldDisableable.enabled != widget.enabled) {
+
+    if (oldWidget.enabled != widget.enabled) {
       controller.disabled = !widget.enabled;
     }
   }
 }
 
-mixin SelectableMixin<T extends Selectable> on WidgetStateMixin<T> {
+mixin HasSelectedState<T extends HasSelected> on HasWidgetStateController<T> {
   @override
   void initState() {
     super.initState();
@@ -64,14 +66,14 @@ mixin SelectableMixin<T extends Selectable> on WidgetStateMixin<T> {
   @override
   void didUpdateWidget(T oldWidget) {
     super.didUpdateWidget(oldWidget);
-    final oldSelectable = oldWidget as Selectable;
-    if (oldSelectable.selected != widget.selected) {
+
+    if (oldWidget.selected != widget.selected) {
       controller.selected = widget.selected;
     }
   }
 }
 
-mixin ErrorableMixin<T extends Errorable> on WidgetStateMixin<T> {
+mixin HasErrorState<T extends HasError> on HasWidgetStateController<T> {
   @override
   void initState() {
     super.initState();
@@ -81,14 +83,14 @@ mixin ErrorableMixin<T extends Errorable> on WidgetStateMixin<T> {
   @override
   void didUpdateWidget(T oldWidget) {
     super.didUpdateWidget(oldWidget);
-    final oldErrorable = oldWidget as Errorable;
-    if (oldErrorable.error != widget.error) {
+
+    if (oldWidget.error != widget.error) {
       controller.error = widget.error;
     }
   }
 }
 
-mixin FocusableMixin<T extends Focusable> on WidgetStateMixin<T> {
+mixin HasFocusedState<T extends HasFocused> on HasWidgetStateController<T> {
   FocusNode? _internalFocusNode;
 
   /// Returns the focus node to use - either the provided one or the internal one
@@ -107,20 +109,25 @@ mixin FocusableMixin<T extends Focusable> on WidgetStateMixin<T> {
     if (widget.focusNode == null) {
       _internalFocusNode = FocusNode();
     }
+
+    effectiveFocusNode.addListener(_onFocusChange);
+  }
+
+  void _onFocusChange() {
+    controller.focused = effectiveFocusNode.hasFocus;
   }
 
   @override
   void didUpdateWidget(T oldWidget) {
     super.didUpdateWidget(oldWidget);
-    final oldFocusable = oldWidget as Focusable;
 
     // Handle transitions between external and internal focus nodes
-    if (oldFocusable.focusNode != widget.focusNode) {
-      if (oldFocusable.focusNode == null && widget.focusNode != null) {
+    if (oldWidget.focusNode != widget.focusNode) {
+      if (oldWidget.focusNode == null && widget.focusNode != null) {
         // Switching from internal to external - dispose internal
         _internalFocusNode?.dispose();
         _internalFocusNode = null;
-      } else if (oldFocusable.focusNode != null && widget.focusNode == null) {
+      } else if (oldWidget.focusNode != null && widget.focusNode == null) {
         // Switching from external to internal - create internal
         _internalFocusNode = FocusNode();
       }
@@ -129,7 +136,7 @@ mixin FocusableMixin<T extends Focusable> on WidgetStateMixin<T> {
 
   @override
   void dispose() {
-    // Only dispose the internal focus node if we created it
+    effectiveFocusNode.removeListener(_onFocusChange);
     _internalFocusNode?.dispose();
     super.dispose();
   }

@@ -15,15 +15,16 @@ part of 'switch.dart';
 /// )
 /// ```
 class RemixSwitch extends StatefulWidget
-    with Disableable, Selectable, Focusable {
+    with HasEnabled, HasSelected, HasFocused {
   const RemixSwitch({
     super.key,
     this.enabled = true,
     required this.selected,
     required this.onChanged,
-    this.style = const SwitchStyle.create(),
+    this.style = const RemixSwitchStyle.create(),
     this.enableHapticFeedback = true,
     this.focusNode,
+    this.autofocus = false,
   });
 
   /// Whether this switch is enabled.
@@ -36,7 +37,7 @@ class RemixSwitch extends StatefulWidget
   final ValueChanged<bool> onChanged;
 
   /// The style configuration for the switch.
-  final SwitchStyle style;
+  final RemixSwitchStyle style;
 
   /// Whether to enable haptic feedback when toggled.
   final bool enableHapticFeedback;
@@ -44,25 +45,30 @@ class RemixSwitch extends StatefulWidget
   /// The focus node for the switch.
   final FocusNode? focusNode;
 
+  /// Whether the switch should automatically request focus when it is created.
+  final bool autofocus;
+
   @override
   State<RemixSwitch> createState() => _RemixSwitchState();
 }
 
 class _RemixSwitchState extends State<RemixSwitch>
-    with WidgetStateMixin, DisableableMixin, SelectableMixin {
+    with HasWidgetStateController, HasEnabledState, HasSelectedState {
   @override
   Widget build(BuildContext context) {
     return NakedCheckbox(
       value: widget.selected,
       onChanged: (value) => widget.onChanged(value ?? false),
-      onHoveredState: (state) => controller.hovered = state,
-      onPressedState: (state) => controller.pressed = state,
-      onFocusedState: (state) => controller.focused = state,
+      onHoverChange: (state) => controller.hovered = state,
+      onPressChange: (state) => controller.pressed = state,
+      onFocusChange: (state) => controller.focused = state,
       enabled: widget.enabled,
       enableHapticFeedback: widget.enableHapticFeedback,
       focusNode: widget.focusNode,
+      autofocus: widget.autofocus,
       child: StyleBuilder(
-        style: DefaultSwitchStyle.merge(widget.style),
+        style: DefaultRemixSwitchStyle.merge(widget.style),
+        controller: controller,
         builder: (context, spec) {
           return spec.container(
             child: spec.track(
@@ -78,7 +84,6 @@ class _RemixSwitchState extends State<RemixSwitch>
             ),
           );
         },
-        controller: controller,
       ),
     );
   }

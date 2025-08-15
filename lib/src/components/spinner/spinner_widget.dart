@@ -10,11 +10,11 @@ part of 'spinner.dart';
 /// RemixSpinner()
 ///
 /// // Primary spinner
-/// RemixSpinner(style: SpinnerStyles.primary)
+/// RemixSpinner(style: RemixSpinnerStyles.primary)
 ///
 /// // Custom spinner
 /// RemixSpinner(
-///   style: SpinnerStyle(
+///   style: RemixSpinnerStyle(
 ///     size: 32,
 ///     color: Colors.blue,
 ///     style: SpinnerStyleType.dotted,
@@ -22,32 +22,32 @@ part of 'spinner.dart';
 /// )
 /// ```
 class RemixSpinner extends StatelessWidget {
-  const RemixSpinner({super.key, this.style = const SpinnerStyle.create()});
+  const RemixSpinner({super.key, this.style = const RemixSpinnerStyle.create()});
 
   /// The style configuration for the spinner.
-  final SpinnerStyle style;
+  final RemixSpinnerStyle style;
 
   @override
   Widget build(BuildContext context) {
     return StyleBuilder(
-      style: DefaultSpinnerStyle.merge(style),
+      style: DefaultRemixSpinnerStyle.merge(style),
       builder: (context, spec) {
-        return SpinnerWidget(spec: spec);
+        return SpinnerSpecWidget(spec: spec);
       },
     );
   }
 }
 
-class SpinnerWidget extends StatefulWidget {
-  const SpinnerWidget({super.key, required this.spec});
+class SpinnerSpecWidget extends StatefulWidget {
+  const SpinnerSpecWidget({super.key, required this.spec});
 
   final SpinnerSpec spec;
 
   @override
-  State createState() => _SpinnerWidgetState();
+  State createState() => _SpinnerSpecWidgetState();
 }
 
-class _SpinnerWidgetState extends State<SpinnerWidget>
+class _SpinnerSpecWidgetState extends State<SpinnerSpecWidget>
     with SingleTickerProviderStateMixin {
   late AnimationController controller;
 
@@ -61,7 +61,7 @@ class _SpinnerWidgetState extends State<SpinnerWidget>
   }
 
   @override
-  void didUpdateWidget(covariant SpinnerWidget oldWidget) {
+  void didUpdateWidget(covariant SpinnerSpecWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
     final newDuration =
         widget.spec.duration ?? const Duration(milliseconds: 1000);

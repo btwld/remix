@@ -84,7 +84,7 @@ class _AuthBlockState extends State<AuthBlock> {
                       controller: passwordController,
                       obscureText: !showPassword,
                       hintText: 'Password',
-                      suffix: remix.RemixButton(
+                      trailing: remix.RemixButton(
                         onPressed: () {
                           setState(() {
                             showPassword = !showPassword;

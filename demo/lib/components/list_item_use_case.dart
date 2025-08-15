@@ -25,7 +25,7 @@ Widget buildButtonUseCase(BuildContext context) {
               label: 'Subtitle',
               initialValue: 'Subtitle',
             ),
-            onPress: () {},
+            onPressed: () {},
             // Note: enabled parameter not available in RemixListItem
             leading: context.knobs.boolean(
               label: 'Show leading widget',

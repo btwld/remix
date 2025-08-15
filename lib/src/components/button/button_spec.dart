@@ -3,32 +3,19 @@ part of 'button.dart';
 class ButtonSpec extends Spec<ButtonSpec> with Diagnosticable {
   final BoxSpec container;
   final LabelSpec label;
+  final SpinnerSpec spinner;
 
-  const ButtonSpec({BoxSpec? container, LabelSpec? label})
+  const ButtonSpec({BoxSpec? container, LabelSpec? label, SpinnerSpec? spinner})
       : container = container ?? const BoxSpec(),
-        label = label ?? const LabelSpec();
-
-  /// Creates a default spinner widget for loading states.
-  /// Uses the label's icon styling to determine spinner color and size.
-  Widget spinner() {
-    return SizedBox(
-      width: label.icon.size ?? 16,
-      height: label.icon.size ?? 16,
-      child: RemixSpinner(
-        style: SpinnerStyle(
-          size: label.icon.size ?? 16,
-          strokeWidth: 1.5,
-          color: label.icon.color ?? Colors.white,
-        ),
-      ),
-    );
-  }
+        label = label ?? const LabelSpec(),
+        spinner = spinner ?? const SpinnerSpec();
 
   @override
-  ButtonSpec copyWith({BoxSpec? container, LabelSpec? label}) {
+  ButtonSpec copyWith({BoxSpec? container, LabelSpec? label, SpinnerSpec? spinner}) {
     return ButtonSpec(
       container: container ?? this.container,
       label: label ?? this.label,
+      spinner: spinner ?? this.spinner,
     );
   }
 
@@ -39,6 +26,7 @@ class ButtonSpec extends Spec<ButtonSpec> with Diagnosticable {
     return ButtonSpec(
       container: MixOps.lerp(container, other.container, t)!,
       label: MixOps.lerp(label, other.label, t)!,
+      spinner: MixOps.lerp(spinner, other.spinner, t)!,
     );
   }
 
@@ -48,8 +36,9 @@ class ButtonSpec extends Spec<ButtonSpec> with Diagnosticable {
     properties
         .add(DiagnosticsProperty('container', container, defaultValue: null));
     properties.add(DiagnosticsProperty('label', label, defaultValue: null));
+    properties.add(DiagnosticsProperty('spinner', spinner, defaultValue: null));
   }
 
   @override
-  List<Object?> get props => [container, label];
+  List<Object?> get props => [container, label, spinner];
 }

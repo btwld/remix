@@ -25,7 +25,7 @@ class RemixAvatar extends StatelessWidget {
     ImageProvider? foregroundImage,
     ImageErrorListener? onBackgroundImageError,
     ImageErrorListener? onForegroundImageError,
-    AvatarStyle style = const AvatarStyle.create(),
+    RemixAvatarStyle style = const RemixAvatarStyle.create(),
     String? label,
   }) {
     return RemixAvatar.raw(
@@ -50,7 +50,7 @@ class RemixAvatar extends StatelessWidget {
   ///   backgroundImage: NetworkImage('https://example.com/avatar.png'),
   ///   foregroundImage: NetworkImage('https://example.com/badge.png'),
   ///   child: Icon(Icons.person),
-  ///   style: AvatarStyle.create(),
+  ///   style: RemixAvatarStyle.create(),
   /// )
   /// ```
   const RemixAvatar.raw({
@@ -60,7 +60,7 @@ class RemixAvatar extends StatelessWidget {
     this.onBackgroundImageError,
     this.onForegroundImageError,
     this.child,
-    this.style = const AvatarStyle.create(),
+    this.style = const RemixAvatarStyle.create(),
   })  : assert(backgroundImage != null || onBackgroundImageError == null),
         assert(foregroundImage != null || onForegroundImageError == null);
 
@@ -77,7 +77,7 @@ class RemixAvatar extends StatelessWidget {
   final ImageErrorListener? onForegroundImageError;
 
   /// The style configuration for the avatar.
-  final AvatarStyle style;
+  final RemixAvatarStyle style;
 
   /// The child widget to display inside the avatar.
   final Widget? child;
@@ -86,7 +86,7 @@ class RemixAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StyleBuilder(
-      style: DefaultAvatarStyle.merge(style),
+      style: DefaultRemixAvatarStyle.merge(style),
       builder: (context, spec) {
         return IconTheme(
           data: IconThemeData(size: spec.icon.size, color: spec.icon.color),

@@ -16,7 +16,7 @@ part of 'slider.dart';
 ///   style: SliderStyle(),
 /// )
 /// ```
-class RemixSlider extends StatefulWidget with Disableable, Focusable {
+class RemixSlider extends StatefulWidget with HasEnabled, HasFocused {
   const RemixSlider({
     super.key,
     this.min = 0.0,
@@ -26,9 +26,10 @@ class RemixSlider extends StatefulWidget with Disableable, Focusable {
     required this.value,
     this.onChangeEnd,
     this.onChangeStart,
-    this.style = const SliderStyle.create(),
+    this.style = const RemixSliderStyle.create(),
     this.enabled = true,
     this.focusNode,
+    this.autofocus = false,
   }) : assert(
           value >= min && value <= max,
           'Slider value must be between min and max values',
@@ -44,12 +45,15 @@ class RemixSlider extends StatefulWidget with Disableable, Focusable {
   /// If it's 0, the slider moves continuously.
   final int? divisions;
 
+  /// Whether the slider should automatically request focus when it is created.
+  final bool autofocus;
+
   /// The current value of the slider.
   /// Must be between [min] and [max].
   final double value;
 
   /// The style configuration for the slider.
-  final SliderStyle style;
+  final RemixSliderStyle style;
 
   /// Whether the slider is enabled for interaction.
   final bool enabled;
@@ -71,10 +75,7 @@ class RemixSlider extends StatefulWidget with Disableable, Focusable {
 }
 
 class _RemixSliderState extends State<RemixSlider>
-    with
-        TickerProviderStateMixin,
-        WidgetStateMixin,
-        DisableableMixin {
+    with TickerProviderStateMixin, HasWidgetStateController, HasEnabledState {
   int? get _divisions {
     if (widget.divisions == 0) {
       return null;
@@ -83,7 +84,7 @@ class _RemixSliderState extends State<RemixSlider>
     return widget.divisions;
   }
 
-  SliderStyle get _style => DefaultSliderStyle.merge(widget.style);
+  RemixSliderStyle get _style => DefaultRemixSliderStyle.merge(widget.style);
 
   @override
   Widget build(BuildContext context) {
@@ -94,15 +95,17 @@ class _RemixSliderState extends State<RemixSlider>
       onChanged: widget.onChanged,
       onDragStart: () => widget.onChangeStart?.call(widget.value),
       onDragEnd: widget.onChangeEnd,
-      onHoveredState: (state) => controller.hovered = state,
-      onDraggedState: (state) => controller.dragged = state,
-      onFocusedState: (state) => controller.focused = state,
+      onHoverChange: (state) => controller.hovered = state,
+      onDragChange: (state) => controller.dragged = state,
+      onFocusChange: (state) => controller.focused = state,
       enabled: widget.enabled,
       focusNode: widget.focusNode,
+      autofocus: widget.autofocus,
       direction: Axis.horizontal,
       divisions: _divisions,
       child: StyleBuilder(
         style: _style,
+        controller: controller,
         builder: (context, spec) {
           // Use a fixed thumb size for simplicity
           final height = 24.0;
@@ -149,7 +152,6 @@ class _RemixSliderState extends State<RemixSlider>
             ),
           );
         },
-        controller: controller,
       ),
     );
   }

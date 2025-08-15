@@ -36,7 +36,7 @@ class _NewWidgetState extends State<NewWidget> {
           hintText: 'Enter username here',
           helperText: 'This is your public display name.',
           controller: controller,
-          textFieldStyle: TextFieldStyle().width(300),
+          style: RemixTextFieldStyle().width(300),
         ),
       ),
     );

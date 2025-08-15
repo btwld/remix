@@ -1,25 +1,29 @@
 part of 'button.dart';
 
-class ButtonStyle extends Style<ButtonSpec>
+class RemixButtonStyle extends Style<ButtonSpec>
     with
-        StyleModifierMixin<ButtonStyle, ButtonSpec>,
-        StyleVariantMixin<ButtonStyle, ButtonSpec> {
+        StyleModifierMixin<RemixButtonStyle, ButtonSpec>,
+        StyleVariantMixin<RemixButtonStyle, ButtonSpec> {
   final Prop<BoxSpec>? $container;
   final Prop<LabelSpec>? $label;
+  final Prop<SpinnerSpec>? $spinner;
 
-  const ButtonStyle.create({
+  const RemixButtonStyle.create({
     Prop<BoxSpec>? container,
     Prop<LabelSpec>? label,
+    Prop<SpinnerSpec>? spinner,
     super.variants,
     super.animation,
     super.modifier,
     super.inherit,
   })  : $container = container,
-        $label = label;
+        $label = label,
+        $spinner = spinner;
 
-  ButtonStyle({
+  RemixButtonStyle({
     BoxMix? container,
-    LabelStyle? label,
+    RemixLabelStyle? label,
+    RemixSpinnerStyle? spinner,
     AnimationConfig? animation,
     List<VariantStyle<ButtonSpec>>? variants,
     ModifierConfig? modifier,
@@ -27,37 +31,43 @@ class ButtonStyle extends Style<ButtonSpec>
   }) : this.create(
           container: container != null ? Prop.mix(container) : null,
           label: label != null ? Prop.mix(label) : null,
+          spinner: spinner != null ? Prop.mix(spinner) : null,
           variants: variants,
           animation: animation,
           modifier: modifier,
           inherit: inherit,
         );
 
-  factory ButtonStyle.value(ButtonSpec spec) => ButtonStyle(
+  factory RemixButtonStyle.value(ButtonSpec spec) => RemixButtonStyle(
         container: BoxMix.maybeValue(spec.container),
-        label: LabelStyle.value(spec.label),
+        label: RemixLabelStyle.value(spec.label),
+        spinner: RemixSpinnerStyle.value(spec.spinner),
       );
 
   // Factory constructors for common patterns
-  factory ButtonStyle.label(LabelStyle value) {
-    return ButtonStyle(label: value);
+  factory RemixButtonStyle.label(RemixLabelStyle value) {
+    return RemixButtonStyle(label: value);
+  }
+
+  factory RemixButtonStyle.spinner(RemixSpinnerStyle value) {
+    return RemixButtonStyle(spinner: value);
   }
 
   /// Factory for background color
-  factory ButtonStyle.color(Color value) {
-    return ButtonStyle(
+  factory RemixButtonStyle.color(Color value) {
+    return RemixButtonStyle(
       container: BoxMix(decoration: BoxDecorationMix(color: value)),
     );
   }
 
   /// Factory for padding
-  factory ButtonStyle.padding(double value) {
-    return ButtonStyle(container: BoxMix(padding: EdgeInsetsMix.all(value)));
+  factory RemixButtonStyle.padding(double value) {
+    return RemixButtonStyle(container: BoxMix(padding: EdgeInsetsMix.all(value)));
   }
 
   /// Factory for border radius
-  factory ButtonStyle.borderRadius(double radius) {
-    return ButtonStyle(
+  factory RemixButtonStyle.borderRadius(double radius) {
+    return RemixButtonStyle(
       container: BoxMix(
         decoration: BoxDecorationMix(
           borderRadius: BorderRadiusMix.circular(radius),
@@ -67,8 +77,8 @@ class ButtonStyle extends Style<ButtonSpec>
   }
 
   /// Factory for width
-  factory ButtonStyle.width(double value) {
-    return ButtonStyle(
+  factory RemixButtonStyle.width(double value) {
+    return RemixButtonStyle(
       container: BoxMix(
         constraints: BoxConstraintsMix(minWidth: value, maxWidth: value),
       ),
@@ -76,8 +86,8 @@ class ButtonStyle extends Style<ButtonSpec>
   }
 
   /// Factory for height
-  factory ButtonStyle.height(double value) {
-    return ButtonStyle(
+  factory RemixButtonStyle.height(double value) {
+    return RemixButtonStyle(
       container: BoxMix(
         constraints: BoxConstraintsMix(minHeight: value, maxHeight: value),
       ),
@@ -85,8 +95,8 @@ class ButtonStyle extends Style<ButtonSpec>
   }
 
   /// Factory for size (width and height)
-  factory ButtonStyle.size(double width, double height) {
-    return ButtonStyle(
+  factory RemixButtonStyle.size(double width, double height) {
+    return RemixButtonStyle(
       container: BoxMix(
         constraints: BoxConstraintsMix(
           minWidth: width,
@@ -99,57 +109,61 @@ class ButtonStyle extends Style<ButtonSpec>
   }
 
   /// Factory for border
-  factory ButtonStyle.border(BoxBorderMix value) {
-    return ButtonStyle(
+  factory RemixButtonStyle.border(BoxBorderMix value) {
+    return RemixButtonStyle(
       container: BoxMix(decoration: BoxDecorationMix(border: value)),
     );
   }
 
   // Instance methods for fluent API (return new instances)
-  ButtonStyle label(LabelStyle value) {
-    return merge(ButtonStyle.label(value));
+  RemixButtonStyle label(RemixLabelStyle value) {
+    return merge(RemixButtonStyle.label(value));
+  }
+
+  RemixButtonStyle spinner(RemixSpinnerStyle value) {
+    return merge(RemixButtonStyle.spinner(value));
   }
 
   // Instance methods (chainable)
 
   /// Sets background color
-  ButtonStyle color(Color value) {
-    return merge(ButtonStyle.color(value));
+  RemixButtonStyle color(Color value) {
+    return merge(RemixButtonStyle.color(value));
   }
 
   /// Sets padding
-  ButtonStyle padding(double value) {
-    return merge(ButtonStyle.padding(value));
+  RemixButtonStyle padding(double value) {
+    return merge(RemixButtonStyle.padding(value));
   }
 
   /// Sets border radius
-  ButtonStyle borderRadius(double radius) {
-    return merge(ButtonStyle.borderRadius(radius));
+  RemixButtonStyle borderRadius(double radius) {
+    return merge(RemixButtonStyle.borderRadius(radius));
   }
 
   /// Sets width
-  ButtonStyle width(double value) {
-    return merge(ButtonStyle.width(value));
+  RemixButtonStyle width(double value) {
+    return merge(RemixButtonStyle.width(value));
   }
 
   /// Sets height
-  ButtonStyle height(double value) {
-    return merge(ButtonStyle.height(value));
+  RemixButtonStyle height(double value) {
+    return merge(RemixButtonStyle.height(value));
   }
 
   /// Sets size (width and height)
-  ButtonStyle size(double width, double height) {
-    return merge(ButtonStyle.size(width, height));
+  RemixButtonStyle size(double width, double height) {
+    return merge(RemixButtonStyle.size(width, height));
   }
 
   /// Sets border
-  ButtonStyle border(BoxBorderMix value) {
-    return merge(ButtonStyle.border(value));
+  RemixButtonStyle border(BoxBorderMix value) {
+    return merge(RemixButtonStyle.border(value));
   }
 
   // Animate support
-  ButtonStyle animate(AnimationConfig animation) {
-    return merge(ButtonStyle(animation: animation));
+  RemixButtonStyle animate(AnimationConfig animation) {
+    return merge(RemixButtonStyle(animation: animation));
   }
 
   RemixButton call({
@@ -175,19 +189,19 @@ class ButtonStyle extends Style<ButtonSpec>
 
   // Variant support
   @override
-  ButtonStyle variant(Variant variant, ButtonStyle style) {
-    return merge(ButtonStyle(variants: [VariantStyle(variant, style)]));
+  RemixButtonStyle variant(Variant variant, RemixButtonStyle style) {
+    return merge(RemixButtonStyle(variants: [VariantStyle(variant, style)]));
   }
 
   @override
-  ButtonStyle variants(List<VariantStyle<ButtonSpec>> value) {
-    return merge(ButtonStyle(variants: value));
+  RemixButtonStyle variants(List<VariantStyle<ButtonSpec>> value) {
+    return merge(RemixButtonStyle(variants: value));
   }
 
   // Modifier support
   @override
-  ButtonStyle wrap(ModifierConfig value) {
-    return merge(ButtonStyle(modifier: value));
+  RemixButtonStyle wrap(ModifierConfig value) {
+    return merge(RemixButtonStyle(modifier: value));
   }
 
   @override
@@ -195,16 +209,18 @@ class ButtonStyle extends Style<ButtonSpec>
     return ButtonSpec(
       container: MixOps.resolve(context, $container),
       label: MixOps.resolve(context, $label),
+      spinner: MixOps.resolve(context, $spinner),
     );
   }
 
   @override
-  ButtonStyle merge(ButtonStyle? other) {
+  RemixButtonStyle merge(RemixButtonStyle? other) {
     if (other == null) return this;
 
-    return ButtonStyle.create(
+    return RemixButtonStyle.create(
       container: MixOps.merge($container, other.$container),
       label: MixOps.merge($label, other.$label),
+      spinner: MixOps.merge($spinner, other.$spinner),
       variants: mergeVariantLists($variants, other.$variants),
       animation: other.$animation ?? $animation,
       modifier: $modifier?.merge(other.$modifier) ?? other.$modifier,
@@ -216,6 +232,7 @@ class ButtonStyle extends Style<ButtonSpec>
   List<Object?> get props => [
         $container,
         $label,
+        $spinner,
         $variants,
         $animation,
         $modifier,
@@ -223,7 +240,7 @@ class ButtonStyle extends Style<ButtonSpec>
       ];
 }
 
-final DefaultButtonStyle = ButtonStyle(
+final DefaultRemixButtonStyle = RemixButtonStyle(
   container: BoxMix(
     padding: EdgeInsetsMix.all(10),
     decoration: BoxDecorationMix(
@@ -231,16 +248,23 @@ final DefaultButtonStyle = ButtonStyle(
       color: Colors.black,
     ),
   ),
-  label: LabelStyle(
+  label: RemixLabelStyle(
     spacing: 8,
     label: TextMix.color(Colors.white),
     icon: IconMix.color(Colors.white).size(18),
   ),
+  spinner: RemixSpinnerStyle(
+    size: 16,
+    strokeWidth: 1.5,
+    color: Colors.white,
+    duration: const Duration(milliseconds: 1000),
+    style: SpinnerStyleType.solid,
+  ),
 );
 
-extension ButtonVariants on ButtonStyle {
+extension ButtonVariants on RemixButtonStyle {
   /// Primary button variant with blue background
-  static ButtonStyle get primary => ButtonStyle(
+  static RemixButtonStyle get primary => RemixButtonStyle(
         container: BoxMix(
           padding: EdgeInsetsMix.all(10),
           decoration: BoxDecorationMix(
@@ -248,7 +272,7 @@ extension ButtonVariants on ButtonStyle {
             color: Colors.blue[500],
           ),
         ),
-        label: LabelStyle(
+        label: RemixLabelStyle(
           spacing: 8,
           label: TextMix.color(Colors.white),
           icon: IconMix.color(Colors.white).size(18),
@@ -256,7 +280,7 @@ extension ButtonVariants on ButtonStyle {
       );
 
   /// Secondary button variant with grey background
-  static ButtonStyle get secondary => ButtonStyle(
+  static RemixButtonStyle get secondary => RemixButtonStyle(
         container: BoxMix(
           padding: EdgeInsetsMix.all(10),
           decoration: BoxDecorationMix(
@@ -264,7 +288,7 @@ extension ButtonVariants on ButtonStyle {
             color: Colors.grey[600],
           ),
         ),
-        label: LabelStyle(
+        label: RemixLabelStyle(
           spacing: 8,
           label: TextMix.color(Colors.white),
           icon: IconMix.color(Colors.white).size(18),
@@ -272,7 +296,7 @@ extension ButtonVariants on ButtonStyle {
       );
 
   /// Success button variant with green background
-  static ButtonStyle get success => ButtonStyle(
+  static RemixButtonStyle get success => RemixButtonStyle(
         container: BoxMix(
           padding: EdgeInsetsMix.all(10),
           decoration: BoxDecorationMix(
@@ -280,7 +304,7 @@ extension ButtonVariants on ButtonStyle {
             color: Colors.green[500],
           ),
         ),
-        label: LabelStyle(
+        label: RemixLabelStyle(
           spacing: 8,
           label: TextMix.color(Colors.white),
           icon: IconMix.color(Colors.white).size(18),
@@ -288,7 +312,7 @@ extension ButtonVariants on ButtonStyle {
       );
 
   /// Danger button variant with red background
-  static ButtonStyle get danger => ButtonStyle(
+  static RemixButtonStyle get danger => RemixButtonStyle(
         container: BoxMix(
           padding: EdgeInsetsMix.all(10),
           decoration: BoxDecorationMix(
@@ -296,7 +320,7 @@ extension ButtonVariants on ButtonStyle {
             color: Colors.red[500],
           ),
         ),
-        label: LabelStyle(
+        label: RemixLabelStyle(
           spacing: 8,
           label: TextMix.color(Colors.white),
           icon: IconMix.color(Colors.white).size(18),
@@ -304,7 +328,7 @@ extension ButtonVariants on ButtonStyle {
       );
 
   /// Ghost button variant with transparent background
-  static ButtonStyle get ghost => ButtonStyle(
+  static RemixButtonStyle get ghost => RemixButtonStyle(
         container: BoxMix(
           padding: EdgeInsetsMix.all(10),
           decoration: BoxDecorationMix(
@@ -312,7 +336,7 @@ extension ButtonVariants on ButtonStyle {
             color: Colors.transparent,
           ),
         ),
-        label: LabelStyle(
+        label: RemixLabelStyle(
           spacing: 8,
           label: TextMix.color(Colors.black),
           icon: IconMix.color(Colors.black).size(18),
@@ -320,7 +344,7 @@ extension ButtonVariants on ButtonStyle {
       );
 
   /// Outline button variant with border
-  static ButtonStyle get outline => ButtonStyle(
+  static RemixButtonStyle get outline => RemixButtonStyle(
         container: BoxMix(
           padding: EdgeInsetsMix.all(10),
           decoration: BoxDecorationMix(
@@ -331,7 +355,7 @@ extension ButtonVariants on ButtonStyle {
             color: Colors.transparent,
           ),
         ),
-        label: LabelStyle(
+        label: RemixLabelStyle(
           spacing: 8,
           label: TextMix.color(Colors.black),
           icon: IconMix.color(Colors.black).size(18),

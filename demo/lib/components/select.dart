@@ -39,7 +39,7 @@ class _SelectDemoState extends State<SelectDemo> {
             width: 200,
             child: RemixSelect<String>(
               selectedValue: selectedValue,
-              onSelectedValueChanged: (value) =>
+              onChanged: (value) =>
                   setState(() => selectedValue = value ?? ''),
               items: List.generate(
                 items.length,
