@@ -25,13 +25,10 @@ class MyApp extends StatelessWidget {
                 onPressed: () {
                   log('Button pressed!');
                 },
-                style: ButtonStyle()
-                  .color(Colors.black)
-                  .animate(AnimationConfig.linear(const Duration(milliseconds: 100)))
-                  .onHovered(
-                    ButtonStyle()
-                      .color(Colors.grey.shade800)
-                  ),
+                style: RemixButtonStyle()
+                    .color(Colors.black)
+                    .animate(AnimationConfig.linear(100.ms))
+                    .onHovered(RemixButtonStyle().color(Colors.grey.shade800)),
               ),
               RemixButton.icon(
                 Icons.add,

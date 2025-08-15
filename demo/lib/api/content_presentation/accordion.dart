@@ -21,10 +21,10 @@ class MyApp extends StatelessWidget {
             width: 300,
             child: RemixAccordion(
               defaultTrailingIcon: Icons.keyboard_arrow_down_rounded,
-              style: AccordionStyle(
+              style: RemixAccordionStyle(
                 animation: AnimationConfig.easeInOut(const Duration(milliseconds: 200)),
               ).onSelected(
-                AccordionStyle(
+                RemixAccordionStyle(
                   itemContainer: BoxMix(
                     decoration: BoxDecorationMix(color: Colors.grey.shade50),
                     transform: Matrix4.rotationZ(pi),

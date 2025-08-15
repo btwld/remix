@@ -1,16 +1,16 @@
 part of 'spinner.dart';
 
-class SpinnerStyle extends Style<SpinnerSpec>
+class RemixSpinnerStyle extends Style<SpinnerSpec>
     with
-        StyleModifierMixin<SpinnerStyle, SpinnerSpec>,
-        StyleVariantMixin<SpinnerStyle, SpinnerSpec> {
+        StyleModifierMixin<RemixSpinnerStyle, SpinnerSpec>,
+        StyleVariantMixin<RemixSpinnerStyle, SpinnerSpec> {
   final Prop<double>? $size;
   final Prop<double>? $strokeWidth;
   final Prop<Color>? $color;
   final Prop<Duration>? $duration;
   final Prop<SpinnerStyleType>? $style;
 
-  const SpinnerStyle.create({
+  const RemixSpinnerStyle.create({
     Prop<double>? size,
     Prop<double>? strokeWidth,
     Prop<Color>? color,
@@ -26,7 +26,7 @@ class SpinnerStyle extends Style<SpinnerSpec>
         $duration = duration,
         $style = style;
 
-  SpinnerStyle({
+  RemixSpinnerStyle({
     double? size,
     double? strokeWidth,
     Color? color,
@@ -48,7 +48,7 @@ class SpinnerStyle extends Style<SpinnerSpec>
           inherit: inherit,
         );
 
-  factory SpinnerStyle.value(SpinnerSpec spec) => SpinnerStyle(
+  factory RemixSpinnerStyle.value(SpinnerSpec spec) => RemixSpinnerStyle(
         size: spec.size,
         strokeWidth: spec.strokeWidth,
         color: spec.color,
@@ -57,26 +57,26 @@ class SpinnerStyle extends Style<SpinnerSpec>
       );
 
   // Factory constructors for common patterns
-  factory SpinnerStyle.size(double value) {
-    return SpinnerStyle(size: value);
+  factory RemixSpinnerStyle.size(double value) {
+    return RemixSpinnerStyle(size: value);
   }
 
-  factory SpinnerStyle.color(Color value) {
-    return SpinnerStyle(color: value);
+  factory RemixSpinnerStyle.color(Color value) {
+    return RemixSpinnerStyle(color: value);
   }
 
   // Instance methods for fluent API (return new instances)
-  SpinnerStyle size(double value) {
-    return merge(SpinnerStyle.size(value));
+  RemixSpinnerStyle size(double value) {
+    return merge(RemixSpinnerStyle.size(value));
   }
 
-  SpinnerStyle color(Color value) {
-    return merge(SpinnerStyle.color(value));
+  RemixSpinnerStyle color(Color value) {
+    return merge(RemixSpinnerStyle.color(value));
   }
 
   // Animate support
-  SpinnerStyle animate(AnimationConfig animation) {
-    return merge(SpinnerStyle(animation: animation));
+  RemixSpinnerStyle animate(AnimationConfig animation) {
+    return merge(RemixSpinnerStyle(animation: animation));
   }
 
   RemixSpinner call() {
@@ -85,18 +85,18 @@ class SpinnerStyle extends Style<SpinnerSpec>
 
   // Variant support
   @override
-  SpinnerStyle variant(Variant variant, SpinnerStyle style) {
-    return merge(SpinnerStyle(variants: [VariantStyle(variant, style)]));
+  RemixSpinnerStyle variant(Variant variant, RemixSpinnerStyle style) {
+    return merge(RemixSpinnerStyle(variants: [VariantStyle(variant, style)]));
   }
 
   @override
-  SpinnerStyle variants(List<VariantStyle<SpinnerSpec>> value) {
-    return merge(SpinnerStyle(variants: value));
+  RemixSpinnerStyle variants(List<VariantStyle<SpinnerSpec>> value) {
+    return merge(RemixSpinnerStyle(variants: value));
   }
 
   @override
-  SpinnerStyle wrap(ModifierConfig value) {
-    return merge(SpinnerStyle(modifier: value));
+  RemixSpinnerStyle wrap(ModifierConfig value) {
+    return merge(RemixSpinnerStyle(modifier: value));
   }
 
   @override
@@ -111,10 +111,10 @@ class SpinnerStyle extends Style<SpinnerSpec>
   }
 
   @override
-  SpinnerStyle merge(SpinnerStyle? other) {
+  RemixSpinnerStyle merge(RemixSpinnerStyle? other) {
     if (other == null) return this;
 
-    return SpinnerStyle.create(
+    return RemixSpinnerStyle.create(
       size: MixOps.merge($size, other.$size),
       strokeWidth: MixOps.merge($strokeWidth, other.$strokeWidth),
       color: MixOps.merge($color, other.$color),
@@ -141,7 +141,7 @@ class SpinnerStyle extends Style<SpinnerSpec>
       ];
 }
 
-final DefaultSpinnerStyle = SpinnerStyle(
+final DefaultRemixSpinnerStyle = RemixSpinnerStyle(
   size: 24,
   strokeWidth: 1.5,
   color: Colors.black,
@@ -150,9 +150,9 @@ final DefaultSpinnerStyle = SpinnerStyle(
 );
 
 /// Default spinner styles and variants
-class SpinnerStyles {
+class RemixSpinnerStyles {
   /// Default spinner style
-  static SpinnerStyle get defaultStyle => SpinnerStyle(
+  static RemixSpinnerStyle get defaultStyle => RemixSpinnerStyle(
         size: 24,
         strokeWidth: 1.5,
         color: Colors.black,
@@ -161,7 +161,7 @@ class SpinnerStyles {
       );
 
   /// Primary spinner variant
-  static SpinnerStyle get primary => SpinnerStyle(
+  static RemixSpinnerStyle get primary => RemixSpinnerStyle(
         size: 24,
         strokeWidth: 1.5,
         color: Colors.blue,
@@ -170,7 +170,7 @@ class SpinnerStyles {
       );
 
   /// Secondary spinner variant
-  static SpinnerStyle get secondary => SpinnerStyle(
+  static RemixSpinnerStyle get secondary => RemixSpinnerStyle(
         size: 24,
         strokeWidth: 1.5,
         color: Colors.grey,
@@ -179,7 +179,7 @@ class SpinnerStyles {
       );
 
   /// Small spinner variant
-  static SpinnerStyle get small => SpinnerStyle(
+  static RemixSpinnerStyle get small => RemixSpinnerStyle(
         size: 16,
         strokeWidth: 1,
         color: Colors.black,
@@ -188,7 +188,7 @@ class SpinnerStyles {
       );
 
   /// Large spinner variant
-  static SpinnerStyle get large => SpinnerStyle(
+  static RemixSpinnerStyle get large => RemixSpinnerStyle(
         size: 32,
         strokeWidth: 2,
         color: Colors.black,
@@ -197,7 +197,7 @@ class SpinnerStyles {
       );
 
   /// Dotted spinner variant
-  static SpinnerStyle get dotted => SpinnerStyle(
+  static RemixSpinnerStyle get dotted => RemixSpinnerStyle(
         size: 24,
         strokeWidth: 1.5,
         color: Colors.black,

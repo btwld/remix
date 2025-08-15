@@ -1,13 +1,13 @@
 part of 'label.dart';
 
-class LabelStyle extends Style<LabelSpec>
-    with StyleModifierMixin<LabelStyle, LabelSpec>, StyleVariantMixin<LabelStyle, LabelSpec> {
+class RemixLabelStyle extends Style<LabelSpec>
+    with StyleModifierMixin<RemixLabelStyle, LabelSpec>, StyleVariantMixin<RemixLabelStyle, LabelSpec> {
   final Prop<double>? $spacing;
   final Prop<TextSpec>? $label;
   final Prop<IconSpec>? $icon;
   final Prop<IconPosition>? $iconPosition;
 
-  const LabelStyle.create({
+  const RemixLabelStyle.create({
     Prop<double>? spacing,
     Prop<TextSpec>? label,
     Prop<IconSpec>? icon,
@@ -21,7 +21,7 @@ class LabelStyle extends Style<LabelSpec>
         $icon = icon,
         $iconPosition = iconPosition;
 
-  LabelStyle({
+  RemixLabelStyle({
     double? spacing,
     TextMix? label,
     IconMix? icon,
@@ -41,7 +41,7 @@ class LabelStyle extends Style<LabelSpec>
           inherit: inherit,
         );
 
-  factory LabelStyle.value(LabelSpec spec) => LabelStyle(
+  factory RemixLabelStyle.value(LabelSpec spec) => RemixLabelStyle(
         spacing: spec.spacing,
         label: TextMix.maybeValue(spec.label),
         icon: IconMix.maybeValue(spec.icon),
@@ -49,18 +49,18 @@ class LabelStyle extends Style<LabelSpec>
       );
 
   @override
-  LabelStyle variant(Variant variant, LabelStyle style) {
-    return merge(LabelStyle(variants: [VariantStyle(variant, style)]));
+  RemixLabelStyle variant(Variant variant, RemixLabelStyle style) {
+    return merge(RemixLabelStyle(variants: [VariantStyle(variant, style)]));
   }
 
   @override
-  LabelStyle variants(List<VariantStyle<LabelSpec>> value) {
-    return merge(LabelStyle(variants: value));
+  RemixLabelStyle variants(List<VariantStyle<LabelSpec>> value) {
+    return merge(RemixLabelStyle(variants: value));
   }
 
   @override
-  LabelStyle wrap(ModifierConfig value) {
-    return merge(LabelStyle(modifier: value));
+  RemixLabelStyle wrap(ModifierConfig value) {
+    return merge(RemixLabelStyle(modifier: value));
   }
 
   @override
@@ -74,10 +74,10 @@ class LabelStyle extends Style<LabelSpec>
   }
 
   @override
-  LabelStyle merge(LabelStyle? other) {
+  RemixLabelStyle merge(RemixLabelStyle? other) {
     if (other == null) return this;
 
-    return LabelStyle.create(
+    return RemixLabelStyle.create(
       spacing: MixOps.merge($spacing, other.$spacing),
       label: MixOps.merge($label, other.$label),
       icon: MixOps.merge($icon, other.$icon),
@@ -103,12 +103,12 @@ class LabelStyle extends Style<LabelSpec>
 }
 
 /// Default label styles and variants
-class LabelStyles {
+class RemixRemixLabelStyles {
   /// Default label style
-  static LabelStyle get defaultStyle => LabelStyle(spacing: 8);
+  static RemixLabelStyle get defaultStyle => RemixLabelStyle(spacing: 8);
 
   /// Primary label variant
-  static LabelStyle get primary => LabelStyle(
+  static RemixLabelStyle get primary => RemixLabelStyle(
         spacing: 8,
         label: TextMix(
           style: TextStyleMix(
@@ -120,7 +120,7 @@ class LabelStyles {
       );
 
   /// Secondary label variant
-  static LabelStyle get secondary => LabelStyle(
+  static RemixLabelStyle get secondary => RemixLabelStyle(
         spacing: 8,
         label: TextMix(
           style: TextStyleMix(
@@ -132,14 +132,14 @@ class LabelStyles {
       );
 
   /// Compact label variant with reduced spacing
-  static LabelStyle get compact => LabelStyle(
+  static RemixLabelStyle get compact => RemixLabelStyle(
         spacing: 4,
         label: TextMix(),
         icon: IconMix(size: 16),
       );
 
   /// Large label variant with increased spacing
-  static LabelStyle get large => LabelStyle(
+  static RemixLabelStyle get large => RemixLabelStyle(
         spacing: 12,
         label: TextMix(style: TextStyleMix(fontSize: 16)),
         icon: IconMix(size: 24),

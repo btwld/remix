@@ -12,7 +12,7 @@ void main() {
             body: Center(
               child: RemixSelect<String>(
                 selectedValue: 'Apple',
-                onSelectedValueChanged: (_) {},
+                onChanged: (_) {},
                 items: [
                   RemixSelectItem<String>(value: 'Apple', label: 'Apple'),
                   RemixSelectItem<String>(value: 'Banana', label: 'Banana'),
@@ -35,7 +35,7 @@ void main() {
             body: Center(
               child: RemixSelect<String>(
                 selectedValue: 'Apple',
-                onSelectedValueChanged: (_) {},
+                onChanged: (_) {},
                 items: [
                   RemixSelectItem<String>(value: 'Apple', label: 'Apple'),
                   RemixSelectItem<String>(value: 'Banana', label: 'Banana'),
@@ -69,7 +69,7 @@ void main() {
                 builder: (context, setState) {
                   return RemixSelect<String>(
                     selectedValue: selectedValue,
-                    onSelectedValueChanged: (value) {
+                    onChanged: (value) {
                       setState(() {
                         selectedValue = value;
                       });
@@ -106,7 +106,7 @@ void main() {
             body: Center(
               child: RemixSelect<String>(
                 selectedValue: 'Apple',
-                onSelectedValueChanged: (_) {},
+                onChanged: (_) {},
                 items: [
                   RemixSelectItem<String>(value: 'Apple', label: 'Apple'),
                   RemixSelectItem<String>(value: 'Banana', label: 'Banana'),
@@ -140,7 +140,7 @@ void main() {
             body: Center(
               child: RemixSelect<String>(
                 selectedValue: null,
-                onSelectedValueChanged: (_) {},
+                onChanged: (_) {},
                 items: const [],
                 child: const RemixSelectTrigger(label: 'No items'),
               ),
@@ -160,7 +160,7 @@ void main() {
             body: Center(
               child: RemixSelect<String>(
                 selectedValue: null,
-                onSelectedValueChanged: (_) {},
+                onChanged: (_) {},
                 items: [
                   RemixSelectItem<String>(value: 'Apple', label: 'Apple'),
                   RemixSelectItem<String>(value: 'Banana', label: 'Banana'),
@@ -189,7 +189,7 @@ void main() {
                     children: [
                       RemixSelect<String>(
                         selectedValue: selectedValue,
-                        onSelectedValueChanged: (value) {
+                        onChanged: (value) {
                           setState(() {
                             selectedValue = value;
                           });
@@ -243,7 +243,7 @@ void main() {
               child: RemixSelect<String>(
                 selectedValue: 'Apple',
                 enabled: false,
-                onSelectedValueChanged: (_) {
+                onChanged: (_) {
                   wasCalled = true;
                 },
                 items: [
@@ -280,7 +280,7 @@ void main() {
                 Center(
                   child: RemixSelect<String>(
                     selectedValue: 'Apple',
-                    onSelectedValueChanged: (_) {},
+                    onChanged: (_) {},
                     items: [
                       RemixSelectItem<String>(value: 'Apple', label: 'Apple'),
                       RemixSelectItem<String>(value: 'Banana', label: 'Banana'),
@@ -316,7 +316,7 @@ void main() {
             body: Center(
               child: RemixSelect<String>(
                 selectedValue: 'Apple',
-                onSelectedValueChanged: (_) {},
+                onChanged: (_) {},
                 items: [
                   RemixSelectItem<String>(value: 'Apple', label: 'Apple'),
                   RemixSelectItem<String>(value: 'Banana', label: 'Banana'),
@@ -347,7 +347,7 @@ void main() {
             body: Center(
               child: RemixSelect<String>(
                 selectedValue: 'Apple',
-                onSelectedValueChanged: (_) {},
+                onChanged: (_) {},
                 items: [
                   RemixSelectItem<String>(
                     value: 'Apple',
@@ -381,7 +381,7 @@ void main() {
             body: Center(
               child: RemixSelect<String>(
                 selectedValue: 'Apple',
-                onSelectedValueChanged: (_) {},
+                onChanged: (_) {},
                 items: [
                   RemixSelectItem<String>(value: 'Apple', label: 'Apple'),
                   RemixSelectItem<String>(value: 'Banana', label: 'Banana'),
@@ -411,7 +411,7 @@ void main() {
             body: Center(
               child: RemixSelect<String>(
                 selectedValue: 'Apple',
-                onSelectedValueChanged: (_) {},
+                onChanged: (_) {},
                 items: [
                   RemixSelectItem<String>(value: 'Apple', label: 'Apple'),
                   RemixSelectItem<String>(value: 'Banana', label: 'Banana'),
@@ -446,7 +446,7 @@ void main() {
                 builder: (context, setState) {
                   return RemixSelect<_User>(
                     selectedValue: selectedUser,
-                    onSelectedValueChanged: (value) {
+                    onChanged: (value) {
                       setState(() {
                         selectedUser = value;
                       });

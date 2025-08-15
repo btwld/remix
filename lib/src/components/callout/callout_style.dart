@@ -1,14 +1,14 @@
 part of 'callout.dart';
 
-class CalloutStyle extends Style<CalloutSpec>
+class RemixCalloutStyle extends Style<CalloutSpec>
     with
-        StyleModifierMixin<CalloutStyle, CalloutSpec>,
-        StyleVariantMixin<CalloutStyle, CalloutSpec> {
+        StyleModifierMixin<RemixCalloutStyle, CalloutSpec>,
+        StyleVariantMixin<RemixCalloutStyle, CalloutSpec> {
   final Prop<BoxSpec>? $container;
   final Prop<TextSpec>? $text;
   final Prop<IconSpec>? $icon;
 
-  const CalloutStyle.create({
+  const RemixCalloutStyle.create({
     Prop<BoxSpec>? container,
     Prop<TextSpec>? text,
     Prop<IconSpec>? icon,
@@ -20,7 +20,7 @@ class CalloutStyle extends Style<CalloutSpec>
         $text = text,
         $icon = icon;
 
-  CalloutStyle({
+  RemixCalloutStyle({
     BoxMix? container,
     TextMix? text,
     IconMix? icon,
@@ -38,7 +38,7 @@ class CalloutStyle extends Style<CalloutSpec>
           inherit: inherit,
         );
 
-  factory CalloutStyle.value(CalloutSpec spec) => CalloutStyle(
+  factory RemixCalloutStyle.value(CalloutSpec spec) => RemixCalloutStyle(
         container: BoxMix.maybeValue(spec.container),
         text: TextMix.maybeValue(spec.text),
         icon: IconMix.maybeValue(spec.icon),
@@ -54,10 +54,10 @@ class CalloutStyle extends Style<CalloutSpec>
   }
 
   @override
-  CalloutStyle merge(CalloutStyle? other) {
+  RemixCalloutStyle merge(RemixCalloutStyle? other) {
     if (other == null) return this;
 
-    return CalloutStyle.create(
+    return RemixCalloutStyle.create(
       container: MixOps.merge($container, other.$container),
       text: MixOps.merge($text, other.$text),
       icon: MixOps.merge($icon, other.$icon),
@@ -69,18 +69,18 @@ class CalloutStyle extends Style<CalloutSpec>
   }
 
   @override
-  CalloutStyle variant(Variant variant, CalloutStyle style) {
-    return merge(CalloutStyle(variants: [VariantStyle(variant, style)]));
+  RemixCalloutStyle variant(Variant variant, RemixCalloutStyle style) {
+    return merge(RemixCalloutStyle(variants: [VariantStyle(variant, style)]));
   }
 
   @override
-  CalloutStyle variants(List<VariantStyle<CalloutSpec>> value) {
-    return merge(CalloutStyle(variants: value));
+  RemixCalloutStyle variants(List<VariantStyle<CalloutSpec>> value) {
+    return merge(RemixCalloutStyle(variants: value));
   }
 
   @override
-  CalloutStyle wrap(ModifierConfig value) {
-    return merge(CalloutStyle(modifier: value));
+  RemixCalloutStyle wrap(ModifierConfig value) {
+    return merge(RemixCalloutStyle(modifier: value));
   }
 
   @override
@@ -95,7 +95,7 @@ class CalloutStyle extends Style<CalloutSpec>
       ];
 }
 
-final DefaultCalloutStyle = CalloutStyle(
+final DefaultRemixCalloutStyle = RemixCalloutStyle(
   container: BoxMix(
     padding: EdgeInsetsMix.all(12),
     decoration: BoxDecorationMix(
@@ -117,9 +117,9 @@ final DefaultCalloutStyle = CalloutStyle(
   icon: IconMix(color: Colors.black, size: 16),
 );
 
-extension CalloutVariants on CalloutStyle {
+extension CalloutVariants on RemixCalloutStyle {
   /// Info callout variant with blue colors
-  static CalloutStyle get info => CalloutStyle(
+  static RemixCalloutStyle get info => RemixCalloutStyle(
         container: BoxMix(
           padding: EdgeInsetsMix.all(12),
           decoration: BoxDecorationMix(
@@ -142,7 +142,7 @@ extension CalloutVariants on CalloutStyle {
       );
 
   /// Success callout variant with green colors
-  static CalloutStyle get success => CalloutStyle(
+  static RemixCalloutStyle get success => RemixCalloutStyle(
         container: BoxMix(
           padding: EdgeInsetsMix.all(12),
           decoration: BoxDecorationMix(
@@ -165,7 +165,7 @@ extension CalloutVariants on CalloutStyle {
       );
 
   /// Warning callout variant with orange colors
-  static CalloutStyle get warning => CalloutStyle(
+  static RemixCalloutStyle get warning => RemixCalloutStyle(
         container: BoxMix(
           padding: EdgeInsetsMix.all(12),
           decoration: BoxDecorationMix(
@@ -188,7 +188,7 @@ extension CalloutVariants on CalloutStyle {
       );
 
   /// Error callout variant with red colors
-  static CalloutStyle get error => CalloutStyle(
+  static RemixCalloutStyle get error => RemixCalloutStyle(
         container: BoxMix(
           padding: EdgeInsetsMix.all(12),
           decoration: BoxDecorationMix(

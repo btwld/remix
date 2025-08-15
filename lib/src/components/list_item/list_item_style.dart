@@ -1,9 +1,9 @@
 part of 'list_item.dart';
 
-class ListItemStyle extends Style<ListItemSpec>
+class RemixListItemStyle extends Style<ListItemSpec>
     with
-        StyleModifierMixin<ListItemStyle, ListItemSpec>,
-        StyleVariantMixin<ListItemStyle, ListItemSpec> {
+        StyleModifierMixin<RemixListItemStyle, ListItemSpec>,
+        StyleVariantMixin<RemixListItemStyle, ListItemSpec> {
   final Prop<FlexBoxSpec>? $container;
   final Prop<FlexBoxSpec>? $contentContainer;
   final Prop<TextSpec>? $title;
@@ -11,7 +11,7 @@ class ListItemStyle extends Style<ListItemSpec>
   final Prop<IconSpec>? $leadingIcon;
   final Prop<IconSpec>? $trailingIcon;
 
-  const ListItemStyle.create({
+  const RemixListItemStyle.create({
     Prop<FlexBoxSpec>? container,
     Prop<FlexBoxSpec>? contentContainer,
     Prop<TextSpec>? title,
@@ -29,7 +29,7 @@ class ListItemStyle extends Style<ListItemSpec>
         $leadingIcon = leadingIcon,
         $trailingIcon = trailingIcon;
 
-  ListItemStyle({
+  RemixListItemStyle({
     FlexBoxMix? container,
     FlexBoxMix? contentContainer,
     TextMix? title,
@@ -67,25 +67,25 @@ class ListItemStyle extends Style<ListItemSpec>
   }
 
   @override
-  ListItemStyle variant(Variant variant, ListItemStyle style) {
-    return merge(ListItemStyle(variants: [VariantStyle(variant, style)]));
+  RemixListItemStyle variant(Variant variant, RemixListItemStyle style) {
+    return merge(RemixListItemStyle(variants: [VariantStyle(variant, style)]));
   }
 
   @override
-  ListItemStyle variants(List<VariantStyle<ListItemSpec>> value) {
-    return merge(ListItemStyle(variants: value));
+  RemixListItemStyle variants(List<VariantStyle<ListItemSpec>> value) {
+    return merge(RemixListItemStyle(variants: value));
   }
 
   @override
-  ListItemStyle wrap(ModifierConfig value) {
-    return merge(ListItemStyle(modifier: value));
+  RemixListItemStyle wrap(ModifierConfig value) {
+    return merge(RemixListItemStyle(modifier: value));
   }
 
   @override
-  ListItemStyle merge(ListItemStyle? other) {
+  RemixListItemStyle merge(RemixListItemStyle? other) {
     if (other == null) return this;
 
-    return ListItemStyle.create(
+    return RemixListItemStyle.create(
       container: MixOps.merge($container, other.$container),
       contentContainer:
           MixOps.merge($contentContainer, other.$contentContainer),
@@ -115,7 +115,7 @@ class ListItemStyle extends Style<ListItemSpec>
       ];
 }
 
-final DefaultListItemStyle = ListItemStyle(
+final DefaultRemixListItemStyle = RemixListItemStyle(
   container: FlexBoxMix(
     box: BoxMix(
       padding: EdgeInsetsMix.symmetric(vertical: 12, horizontal: 16),

@@ -1,14 +1,14 @@
 part of 'switch.dart';
 
-class SwitchStyle extends Style<SwitchSpec>
+class RemixSwitchStyle extends Style<SwitchSpec>
     with
-        StyleModifierMixin<SwitchStyle, SwitchSpec>,
-        StyleVariantMixin<SwitchStyle, SwitchSpec> {
+        StyleModifierMixin<RemixSwitchStyle, SwitchSpec>,
+        StyleVariantMixin<RemixSwitchStyle, SwitchSpec> {
   final Prop<BoxSpec>? $container;
   final Prop<BoxSpec>? $track;
   final Prop<BoxSpec>? $thumb;
 
-  const SwitchStyle.create({
+  const RemixSwitchStyle.create({
     Prop<BoxSpec>? container,
     Prop<BoxSpec>? track,
     Prop<BoxSpec>? thumb,
@@ -20,7 +20,7 @@ class SwitchStyle extends Style<SwitchSpec>
         $track = track,
         $thumb = thumb;
 
-  SwitchStyle({
+  RemixSwitchStyle({
     BoxMix? container,
     BoxMix? track,
     BoxMix? thumb,
@@ -38,7 +38,7 @@ class SwitchStyle extends Style<SwitchSpec>
           inherit: inherit,
         );
 
-  factory SwitchStyle.value(SwitchSpec spec) => SwitchStyle(
+  factory RemixSwitchStyle.value(SwitchSpec spec) => RemixSwitchStyle(
         container: BoxMix.maybeValue(spec.container),
         track: BoxMix.maybeValue(spec.track),
         thumb: BoxMix.maybeValue(spec.thumb),
@@ -54,10 +54,10 @@ class SwitchStyle extends Style<SwitchSpec>
   }
 
   @override
-  SwitchStyle merge(SwitchStyle? other) {
+  RemixSwitchStyle merge(RemixSwitchStyle? other) {
     if (other == null) return this;
 
-    return SwitchStyle.create(
+    return RemixSwitchStyle.create(
       container: MixOps.merge($container, other.$container),
       track: MixOps.merge($track, other.$track),
       thumb: MixOps.merge($thumb, other.$thumb),
@@ -69,18 +69,18 @@ class SwitchStyle extends Style<SwitchSpec>
   }
 
   @override
-  SwitchStyle variant(Variant variant, SwitchStyle style) {
-    return merge(SwitchStyle(variants: [VariantStyle(variant, style)]));
+  RemixSwitchStyle variant(Variant variant, RemixSwitchStyle style) {
+    return merge(RemixSwitchStyle(variants: [VariantStyle(variant, style)]));
   }
 
   @override
-  SwitchStyle variants(List<VariantStyle<SwitchSpec>> value) {
-    return merge(SwitchStyle(variants: value));
+  RemixSwitchStyle variants(List<VariantStyle<SwitchSpec>> value) {
+    return merge(RemixSwitchStyle(variants: value));
   }
 
   @override
-  SwitchStyle wrap(ModifierConfig value) {
-    return merge(SwitchStyle(modifier: value));
+  RemixSwitchStyle wrap(ModifierConfig value) {
+    return merge(RemixSwitchStyle(modifier: value));
   }
 
   @override
@@ -95,7 +95,7 @@ class SwitchStyle extends Style<SwitchSpec>
       ];
 }
 
-final DefaultSwitchStyle = SwitchStyle(
+final DefaultRemixSwitchStyle = RemixSwitchStyle(
   container: BoxMix(),
   track: BoxMix(
     constraints: BoxConstraintsMix(
@@ -131,9 +131,9 @@ final DefaultSwitchStyle = SwitchStyle(
   animation: AnimationConfig.easeInOut(const Duration(milliseconds: 200)),
 );
 
-extension SwitchVariants on SwitchStyle {
+extension SwitchVariants on RemixSwitchStyle {
   /// Primary switch variant with blue colors
-  static SwitchStyle get primary => SwitchStyle(
+  static RemixSwitchStyle get primary => RemixSwitchStyle(
         container: BoxMix(),
         track: BoxMix(
           constraints: BoxConstraintsMix(
@@ -170,7 +170,7 @@ extension SwitchVariants on SwitchStyle {
       );
 
   /// Secondary switch variant with grey colors
-  static SwitchStyle get secondary => SwitchStyle(
+  static RemixSwitchStyle get secondary => RemixSwitchStyle(
         container: BoxMix(),
         track: BoxMix(
           constraints: BoxConstraintsMix(
@@ -207,7 +207,7 @@ extension SwitchVariants on SwitchStyle {
       );
 
   /// Compact switch variant with smaller size
-  static SwitchStyle get compact => SwitchStyle(
+  static RemixSwitchStyle get compact => RemixSwitchStyle(
         container: BoxMix(),
         track: BoxMix(
           constraints: BoxConstraintsMix(

@@ -15,13 +15,13 @@ part of 'label.dart';
 /// RemixLabel(
 ///   'Settings',
 ///   icon: Icons.settings,
-///   style: LabelStyles.primary,
+///   style: RemixLabelStyles.primary,
 /// )
 ///
 /// // Custom styling
 /// RemixLabel(
 ///   'Custom',
-///   style: LabelStyle(
+///   style: RemixLabelStyle(
 ///     spacing: 12,
 ///     label: TextMix(style: TextStyleMix(color: Colors.blue)),
 ///     icon: IconMix(color: Colors.blue, size: 20),
@@ -37,7 +37,7 @@ class RemixLabel extends StatelessWidget {
     this.label, {
     super.key,
     this.icon,
-    this.style = const LabelStyle.create(),
+    this.style = const RemixLabelStyle.create(),
   });
 
   /// The text to display in the label.
@@ -47,7 +47,7 @@ class RemixLabel extends StatelessWidget {
   final IconData? icon;
 
   /// The style configuration for the label.
-  final LabelStyle style;
+  final RemixLabelStyle style;
 
   @override
   Widget build(BuildContext context) {

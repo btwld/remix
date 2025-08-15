@@ -19,13 +19,13 @@ class RemixBadge extends StatelessWidget {
     super.key,
     String? label,
     IconData? icon,
-    this.style = const BadgeStyle.create(),
+    this.style = const RemixBadgeStyle.create(),
   }) : child = RemixLabel(label ?? '', icon: icon);
 
   /// Creates a badge with custom content.
   const RemixBadge.raw({
     super.key,
-    this.style = const BadgeStyle.create(),
+    this.style = const RemixBadgeStyle.create(),
     required this.child,
   });
 
@@ -33,12 +33,12 @@ class RemixBadge extends StatelessWidget {
   final Widget child;
 
   /// The style configuration for the badge.
-  final BadgeStyle style;
+  final RemixBadgeStyle style;
 
   @override
   Widget build(BuildContext context) {
     return StyleBuilder(
-      style: DefaultBadgeStyle.merge(style),
+      style: DefaultRemixBadgeStyle.merge(style),
       builder: (context, spec) {
         return DefaultTextStyle(
           style: TextStyle(

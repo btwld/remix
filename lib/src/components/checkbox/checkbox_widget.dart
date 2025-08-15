@@ -18,15 +18,16 @@ part of 'checkbox.dart';
 /// )
 /// ```
 class RemixCheckbox extends StatefulWidget
-    with Disableable, Selectable, Focusable {
+    with HasEnabled, HasSelected, HasFocused {
   const RemixCheckbox({
     super.key,
     this.enabled = true,
     required this.selected,
     this.onChanged,
+    this.autofocus = false,
     this.iconChecked = Icons.check_rounded,
     this.iconUnchecked,
-    this.style = const CheckboxStyle.create(),
+    this.style = const RemixCheckboxStyle.create(),
     this.label,
     this.focusNode,
   });
@@ -40,6 +41,9 @@ class RemixCheckbox extends StatefulWidget
   /// The icon to display when the checkbox is checked.
   final IconData iconChecked;
 
+  /// Whether the checkbox should automatically request focus when it is created.
+  final bool autofocus;
+
   /// The icon to display when the checkbox is unchecked.
   final IconData? iconUnchecked;
 
@@ -47,7 +51,7 @@ class RemixCheckbox extends StatefulWidget
   final ValueChanged<bool>? onChanged;
 
   /// The style configuration for the checkbox.
-  final CheckboxStyle style;
+  final RemixCheckboxStyle style;
 
   /// An optional label that will be displayed next to the checkbox.
   final String? label;
@@ -60,7 +64,7 @@ class RemixCheckbox extends StatefulWidget
 }
 
 class _RemixCheckboxState extends State<RemixCheckbox>
-    with WidgetStateMixin, DisableableMixin, SelectableMixin {
+    with HasWidgetStateController, HasEnabledState, HasSelectedState {
   @override
   Widget build(BuildContext context) {
     return NakedCheckbox(
@@ -68,13 +72,14 @@ class _RemixCheckboxState extends State<RemixCheckbox>
       onChanged: widget.enabled && widget.onChanged != null
           ? (value) => widget.onChanged!(value ?? false)
           : null,
-      onHoveredState: (state) => controller.hovered = state,
-      onPressedState: (state) => controller.pressed = state,
-      onFocusedState: (state) => controller.focused = state,
+      onHoverChange: (state) => controller.hovered = state,
+      onPressChange: (state) => controller.pressed = state,
+      onFocusChange: (state) => controller.focused = state,
       enabled: widget.enabled,
       focusNode: widget.focusNode,
+      autofocus: widget.autofocus,
       child: StyleBuilder(
-        style: DefaultCheckboxStyle.merge(widget.style),
+        style: DefaultRemixCheckboxStyle.merge(widget.style),
         builder: (context, spec) {
           final iconData =
               widget.selected ? widget.iconChecked : widget.iconUnchecked;

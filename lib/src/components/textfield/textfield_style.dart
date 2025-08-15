@@ -1,9 +1,9 @@
 part of 'textfield.dart';
 
-class TextFieldStyle extends Style<TextFieldSpec>
+class RemixTextFieldStyle extends Style<TextFieldSpec>
     with
-        StyleModifierMixin<TextFieldStyle, TextFieldSpec>,
-        StyleVariantMixin<TextFieldStyle, TextFieldSpec> {
+        StyleModifierMixin<RemixTextFieldStyle, TextFieldSpec>,
+        StyleVariantMixin<RemixTextFieldStyle, TextFieldSpec> {
   final Prop<TextStyle>? $style;
   final Prop<Color>? $hintTextColor;
   final Prop<TextAlign>? $textAlign;
@@ -25,7 +25,7 @@ class TextFieldStyle extends Style<TextFieldSpec>
   final Prop<TextSpec>? $helperText;
   final Prop<TextSpec>? $label;
 
-  const TextFieldStyle.create({
+  const RemixTextFieldStyle.create({
     Prop<TextStyle>? style,
     Prop<Color>? hintTextColor,
     Prop<TextAlign>? textAlign,
@@ -65,7 +65,7 @@ class TextFieldStyle extends Style<TextFieldSpec>
         $helperText = helperText,
         $label = label;
 
-  TextFieldStyle({
+  RemixTextFieldStyle({
     TextStyle? style,
     Color? hintTextColor,
     TextAlign? textAlign,
@@ -114,120 +114,120 @@ class TextFieldStyle extends Style<TextFieldSpec>
   // Factory methods for common properties
 
   /// Factory for text color
-  factory TextFieldStyle.color(Color value) {
-    return TextFieldStyle(style: TextStyle(color: value));
+  factory RemixTextFieldStyle.color(Color value) {
+    return RemixTextFieldStyle(style: TextStyle(color: value));
   }
 
   /// Factory for background color
-  factory TextFieldStyle.backgroundColor(Color value) {
-    return TextFieldStyle(container: FlexBoxMix.color(value));
+  factory RemixTextFieldStyle.backgroundColor(Color value) {
+    return RemixTextFieldStyle(container: FlexBoxMix.color(value));
   }
 
   /// Factory for border radius
-  factory TextFieldStyle.borderRadius(double radius) {
-    return TextFieldStyle(
+  factory RemixTextFieldStyle.borderRadius(double radius) {
+    return RemixTextFieldStyle(
       container: FlexBoxMix.borderRadius(BorderRadiusMix.circular(radius)),
     );
   }
 
   /// Factory for padding
-  factory TextFieldStyle.padding(double value) {
-    return TextFieldStyle(
+  factory RemixTextFieldStyle.padding(double value) {
+    return RemixTextFieldStyle(
       container: FlexBoxMix.padding(EdgeInsetsMix.all(value)),
     );
   }
 
   /// Factory for border
-  factory TextFieldStyle.border(BoxBorderMix value) {
-    return TextFieldStyle(container: FlexBoxMix.border(value));
+  factory RemixTextFieldStyle.border(BoxBorderMix value) {
+    return RemixTextFieldStyle(container: FlexBoxMix.border(value));
   }
 
   /// Factory for width
-  factory TextFieldStyle.width(double value) {
-    return TextFieldStyle(container: FlexBoxMix.width(value));
+  factory RemixTextFieldStyle.width(double value) {
+    return RemixTextFieldStyle(container: FlexBoxMix.width(value));
   }
 
   /// Factory for height
-  factory TextFieldStyle.height(double value) {
-    return TextFieldStyle(container: FlexBoxMix.height(value));
+  factory RemixTextFieldStyle.height(double value) {
+    return RemixTextFieldStyle(container: FlexBoxMix.height(value));
   }
 
   /// Factory for cursor color
-  factory TextFieldStyle.cursorColor(Color value) {
-    return TextFieldStyle(cursorColor: value);
+  factory RemixTextFieldStyle.cursorColor(Color value) {
+    return RemixTextFieldStyle(cursorColor: value);
   }
 
   /// Factory for hint text color
-  factory TextFieldStyle.hintColor(Color value) {
-    return TextFieldStyle(hintTextColor: value);
+  factory RemixTextFieldStyle.hintColor(Color value) {
+    return RemixTextFieldStyle(hintTextColor: value);
   }
 
   // Instance methods (chainable)
 
   /// Sets text color
-  TextFieldStyle color(Color value) {
-    return merge(TextFieldStyle.color(value));
+  RemixTextFieldStyle color(Color value) {
+    return merge(RemixTextFieldStyle.color(value));
   }
 
   /// Sets background color
-  TextFieldStyle backgroundColor(Color value) {
-    return merge(TextFieldStyle.backgroundColor(value));
+  RemixTextFieldStyle backgroundColor(Color value) {
+    return merge(RemixTextFieldStyle.backgroundColor(value));
   }
 
   /// Sets border radius
-  TextFieldStyle borderRadius(double radius) {
-    return merge(TextFieldStyle.borderRadius(radius));
+  RemixTextFieldStyle borderRadius(double radius) {
+    return merge(RemixTextFieldStyle.borderRadius(radius));
   }
 
   /// Sets padding
-  TextFieldStyle padding(double value) {
-    return merge(TextFieldStyle.padding(value));
+  RemixTextFieldStyle padding(double value) {
+    return merge(RemixTextFieldStyle.padding(value));
   }
 
   /// Sets border
-  TextFieldStyle border(BoxBorderMix value) {
-    return merge(TextFieldStyle.border(value));
+  RemixTextFieldStyle border(BoxBorderMix value) {
+    return merge(RemixTextFieldStyle.border(value));
   }
 
   /// Sets width
-  TextFieldStyle width(double value) {
-    return merge(TextFieldStyle.width(value));
+  RemixTextFieldStyle width(double value) {
+    return merge(RemixTextFieldStyle.width(value));
   }
 
   /// Sets height
-  TextFieldStyle height(double value) {
-    return merge(TextFieldStyle.height(value));
+  RemixTextFieldStyle height(double value) {
+    return merge(RemixTextFieldStyle.height(value));
   }
 
   /// Sets cursor color
-  TextFieldStyle cursorColor(Color value) {
-    return merge(TextFieldStyle.cursorColor(value));
+  RemixTextFieldStyle cursorColor(Color value) {
+    return merge(RemixTextFieldStyle.cursorColor(value));
   }
 
   /// Sets hint text color
-  TextFieldStyle hintColor(Color value) {
-    return merge(TextFieldStyle.hintColor(value));
+  RemixTextFieldStyle hintColor(Color value) {
+    return merge(RemixTextFieldStyle.hintColor(value));
   }
 
   /// Sets animation
-  TextFieldStyle animate(AnimationConfig animation) {
-    return merge(TextFieldStyle(animation: animation));
+  RemixTextFieldStyle animate(AnimationConfig animation) {
+    return merge(RemixTextFieldStyle(animation: animation));
   }
 
   /// Sets variant
   @override
-  TextFieldStyle variant(Variant variant, TextFieldStyle style) {
-    return merge(TextFieldStyle(variants: [VariantStyle(variant, style)]));
+  RemixTextFieldStyle variant(Variant variant, RemixTextFieldStyle style) {
+    return merge(RemixTextFieldStyle(variants: [VariantStyle(variant, style)]));
   }
 
   @override
-  TextFieldStyle variants(List<VariantStyle<TextFieldSpec>> value) {
-    return merge(TextFieldStyle(variants: value));
+  RemixTextFieldStyle variants(List<VariantStyle<TextFieldSpec>> value) {
+    return merge(RemixTextFieldStyle(variants: value));
   }
 
   @override
-  TextFieldStyle wrap(ModifierConfig value) {
-    return merge(TextFieldStyle(modifier: value));
+  RemixTextFieldStyle wrap(ModifierConfig value) {
+    return merge(RemixTextFieldStyle(modifier: value));
   }
 
   @override
@@ -254,10 +254,10 @@ class TextFieldStyle extends Style<TextFieldSpec>
   }
 
   @override
-  TextFieldStyle merge(TextFieldStyle? other) {
+  RemixTextFieldStyle merge(RemixTextFieldStyle? other) {
     if (other == null) return this;
 
-    return TextFieldStyle.create(
+    return RemixTextFieldStyle.create(
       style: MixOps.merge($style, other.$style),
       hintTextColor: MixOps.merge($hintTextColor, other.$hintTextColor),
       textAlign: MixOps.merge($textAlign, other.$textAlign),
@@ -311,7 +311,7 @@ class TextFieldStyle extends Style<TextFieldSpec>
 }
 
 // Default style
-final DefaultTextFieldStyle = TextFieldStyle(
+final DefaultRemixTextFieldStyle = RemixTextFieldStyle(
   style: TextStyle(color: Colors.black87, fontSize: 14),
   hintTextColor: Colors.grey.shade400,
   textAlign: TextAlign.start,
@@ -343,7 +343,7 @@ final DefaultTextFieldStyle = TextFieldStyle(
 );
 
 // Focus style
-final TextFieldFocusStyle = TextFieldStyle(
+final RemixTextFieldFocusStyle = RemixTextFieldStyle(
   container: FlexBoxMix(
     box: BoxMix(
       decoration: BoxDecorationMix(
@@ -356,7 +356,7 @@ final TextFieldFocusStyle = TextFieldStyle(
 );
 
 // Error style
-final TextFieldErrorStyle = TextFieldStyle(
+final RemixTextFieldErrorStyle = RemixTextFieldStyle(
   container: FlexBoxMix(
     box: BoxMix(
       decoration: BoxDecorationMix(
@@ -368,7 +368,7 @@ final TextFieldErrorStyle = TextFieldStyle(
 );
 
 // Disabled style
-final TextFieldDisabledStyle = TextFieldStyle(
+final RemixTextFieldDisabledStyle = RemixTextFieldStyle(
   style: TextStyle(color: Colors.grey.shade500),
   container: FlexBoxMix(
     box: BoxMix(
@@ -382,9 +382,9 @@ final TextFieldDisabledStyle = TextFieldStyle(
   ),
 );
 
-extension TextFieldVariants on TextFieldStyle {
+extension RemixTextFieldVariants on RemixTextFieldStyle {
   /// Primary text field variant with blue accents
-  static TextFieldStyle get primary => TextFieldStyle(
+  static RemixTextFieldStyle get primary => RemixTextFieldStyle(
         style: TextStyle(color: Colors.black87, fontSize: 14),
         hintTextColor: Colors.grey.shade400,
         textAlign: TextAlign.start,
@@ -417,7 +417,7 @@ extension TextFieldVariants on TextFieldStyle {
       );
 
   /// Outlined text field variant with prominent border
-  static TextFieldStyle get outlined => TextFieldStyle(
+  static RemixTextFieldStyle get outlined => RemixTextFieldStyle(
         style: TextStyle(color: Colors.black87, fontSize: 14),
         hintTextColor: Colors.grey.shade400,
         textAlign: TextAlign.start,
@@ -450,7 +450,7 @@ extension TextFieldVariants on TextFieldStyle {
       );
 
   /// Filled text field variant with background color
-  static TextFieldStyle get filled => TextFieldStyle(
+  static RemixTextFieldStyle get filled => RemixTextFieldStyle(
         style: TextStyle(color: Colors.black87, fontSize: 14),
         hintTextColor: Colors.grey.shade500,
         textAlign: TextAlign.start,

@@ -1,13 +1,13 @@
 part of 'tooltip.dart';
 
-class TooltipStyle extends Style<TooltipSpec>
+class RemixTooltipStyle extends Style<TooltipSpec>
     with
-        StyleModifierMixin<TooltipStyle, TooltipSpec>,
-        StyleVariantMixin<TooltipStyle, TooltipSpec> {
+        StyleModifierMixin<RemixTooltipStyle, TooltipSpec>,
+        StyleVariantMixin<RemixTooltipStyle, TooltipSpec> {
   final Prop<BoxSpec>? $container;
   final Prop<TextSpec>? $text;
 
-  const TooltipStyle.create({
+  const RemixTooltipStyle.create({
     Prop<BoxSpec>? container,
     Prop<TextSpec>? text,
     super.variants,
@@ -17,7 +17,7 @@ class TooltipStyle extends Style<TooltipSpec>
   })  : $container = container,
         $text = text;
 
-  TooltipStyle({
+  RemixTooltipStyle({
     BoxMix? container,
     TextMix? text,
     AnimationConfig? animation,
@@ -42,10 +42,10 @@ class TooltipStyle extends Style<TooltipSpec>
   }
 
   @override
-  TooltipStyle merge(TooltipStyle? other) {
+  RemixTooltipStyle merge(RemixTooltipStyle? other) {
     if (other == null) return this;
 
-    return TooltipStyle.create(
+    return RemixTooltipStyle.create(
       container: MixOps.merge($container, other.$container),
       text: MixOps.merge($text, other.$text),
       variants: mergeVariantLists($variants, other.$variants),
@@ -56,18 +56,18 @@ class TooltipStyle extends Style<TooltipSpec>
   }
 
   @override
-  TooltipStyle variant(Variant variant, TooltipStyle style) {
-    return merge(TooltipStyle(variants: [VariantStyle(variant, style)]));
+  RemixTooltipStyle variant(Variant variant, RemixTooltipStyle style) {
+    return merge(RemixTooltipStyle(variants: [VariantStyle(variant, style)]));
   }
 
   @override
-  TooltipStyle variants(List<VariantStyle<TooltipSpec>> value) {
-    return merge(TooltipStyle(variants: value));
+  RemixTooltipStyle variants(List<VariantStyle<TooltipSpec>> value) {
+    return merge(RemixTooltipStyle(variants: value));
   }
 
   @override
-  TooltipStyle wrap(ModifierConfig value) {
-    return merge(TooltipStyle(modifier: value));
+  RemixTooltipStyle wrap(ModifierConfig value) {
+    return merge(RemixTooltipStyle(modifier: value));
   }
 
   @override
@@ -81,7 +81,7 @@ class TooltipStyle extends Style<TooltipSpec>
       ];
 }
 
-final DefaultTooltipStyle = TooltipStyle(
+final DefaultRemixTooltipStyle = RemixTooltipStyle(
   container: BoxMix(
     padding: EdgeInsetsMix.all(10),
     decoration: BoxDecorationMix(
@@ -93,9 +93,9 @@ final DefaultTooltipStyle = TooltipStyle(
   animation: AnimationConfig.ease(const Duration(milliseconds: 100)),
 );
 
-extension TooltipVariants on TooltipStyle {
+extension RemixTooltipVariants on RemixTooltipStyle {
   /// Dark tooltip variant (same as default)
-  static TooltipStyle get dark => TooltipStyle(
+  static RemixTooltipStyle get dark => RemixTooltipStyle(
         container: BoxMix(
           padding: EdgeInsetsMix.all(10),
           decoration: BoxDecorationMix(
@@ -110,7 +110,7 @@ extension TooltipVariants on TooltipStyle {
       );
 
   /// Light tooltip variant with white background
-  static TooltipStyle get light => TooltipStyle(
+  static RemixTooltipStyle get light => RemixTooltipStyle(
         container: BoxMix(
           padding: EdgeInsetsMix.all(10),
           decoration: BoxDecorationMix(
@@ -135,7 +135,7 @@ extension TooltipVariants on TooltipStyle {
       );
 
   /// Primary tooltip variant with blue colors
-  static TooltipStyle get primary => TooltipStyle(
+  static RemixTooltipStyle get primary => RemixTooltipStyle(
         container: BoxMix(
           padding: EdgeInsetsMix.all(10),
           decoration: BoxDecorationMix(

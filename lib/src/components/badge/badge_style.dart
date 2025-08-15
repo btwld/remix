@@ -1,11 +1,11 @@
 part of 'badge.dart';
 
-class BadgeStyle extends Style<BadgeSpec> with StyleModifierMixin<BadgeStyle, BadgeSpec>, StyleVariantMixin<BadgeStyle, BadgeSpec> {
+class RemixBadgeStyle extends Style<BadgeSpec> with StyleModifierMixin<RemixBadgeStyle, BadgeSpec>, StyleVariantMixin<RemixBadgeStyle, BadgeSpec> {
   final Prop<BoxSpec>? $container;
   final Prop<TextSpec>? $text;
   final Prop<IconSpec>? $icon;
 
-  const BadgeStyle.create({
+  const RemixBadgeStyle.create({
     Prop<BoxSpec>? container,
     Prop<TextSpec>? text,
     Prop<IconSpec>? icon,
@@ -17,7 +17,7 @@ class BadgeStyle extends Style<BadgeSpec> with StyleModifierMixin<BadgeStyle, Ba
         $text = text,
         $icon = icon;
 
-  BadgeStyle({
+  RemixBadgeStyle({
     BoxMix? container,
     TextMix? text,
     IconMix? icon,
@@ -35,73 +35,73 @@ class BadgeStyle extends Style<BadgeSpec> with StyleModifierMixin<BadgeStyle, Ba
           inherit: inherit,
         );
 
-  factory BadgeStyle.value(BadgeSpec spec) => BadgeStyle(
+  factory RemixBadgeStyle.value(BadgeSpec spec) => RemixBadgeStyle(
         container: BoxMix.maybeValue(spec.container),
         text: TextMix.maybeValue(spec.text),
         icon: IconMix.maybeValue(spec.icon),
       );
 
   /// Factory for background color
-  factory BadgeStyle.color(Color value) {
-    return BadgeStyle(container: BoxMix(decoration: BoxDecorationMix(color: value)));
+  factory RemixBadgeStyle.color(Color value) {
+    return RemixBadgeStyle(container: BoxMix(decoration: BoxDecorationMix(color: value)));
   }
 
   /// Factory for border radius
-  factory BadgeStyle.borderRadius(double radius) {
-    return BadgeStyle(container: BoxMix(decoration: BoxDecorationMix(borderRadius: BorderRadiusMix.circular(radius))));
+  factory RemixBadgeStyle.borderRadius(double radius) {
+    return RemixBadgeStyle(container: BoxMix(decoration: BoxDecorationMix(borderRadius: BorderRadiusMix.circular(radius))));
   }
 
   /// Factory for padding
-  factory BadgeStyle.padding(double value) {
-    return BadgeStyle(container: BoxMix(padding: EdgeInsetsMix.all(value)));
+  factory RemixBadgeStyle.padding(double value) {
+    return RemixBadgeStyle(container: BoxMix(padding: EdgeInsetsMix.all(value)));
   }
 
   /// Factory for text color
-  factory BadgeStyle.textColor(Color value) {
-    return BadgeStyle(text: TextMix(style: TextStyleMix(color: value)));
+  factory RemixBadgeStyle.textColor(Color value) {
+    return RemixBadgeStyle(text: TextMix(style: TextStyleMix(color: value)));
   }
 
   // Instance methods (chainable)
 
   /// Sets background color
-  BadgeStyle color(Color value) {
-    return merge(BadgeStyle.color(value));
+  RemixBadgeStyle color(Color value) {
+    return merge(RemixBadgeStyle.color(value));
   }
 
   /// Sets border radius
-  BadgeStyle borderRadius(double radius) {
-    return merge(BadgeStyle.borderRadius(radius));
+  RemixBadgeStyle borderRadius(double radius) {
+    return merge(RemixBadgeStyle.borderRadius(radius));
   }
 
   /// Sets padding
-  BadgeStyle padding(double value) {
-    return merge(BadgeStyle.padding(value));
+  RemixBadgeStyle padding(double value) {
+    return merge(RemixBadgeStyle.padding(value));
   }
 
   /// Sets text color
-  BadgeStyle textColor(Color value) {
-    return merge(BadgeStyle.textColor(value));
+  RemixBadgeStyle textColor(Color value) {
+    return merge(RemixBadgeStyle.textColor(value));
   }
 
   /// Sets animation
-  BadgeStyle animate(AnimationConfig animation) {
-    return merge(BadgeStyle(animation: animation));
+  RemixBadgeStyle animate(AnimationConfig animation) {
+    return merge(RemixBadgeStyle(animation: animation));
   }
 
   /// Sets variant
   @override
-  BadgeStyle variant(Variant variant, BadgeStyle style) {
-    return merge(BadgeStyle(variants: [VariantStyle(variant, style)]));
+  RemixBadgeStyle variant(Variant variant, RemixBadgeStyle style) {
+    return merge(RemixBadgeStyle(variants: [VariantStyle(variant, style)]));
   }
 
   @override
-  BadgeStyle variants(List<VariantStyle<BadgeSpec>> value) {
-    return merge(BadgeStyle(variants: value));
+  RemixBadgeStyle variants(List<VariantStyle<BadgeSpec>> value) {
+    return merge(RemixBadgeStyle(variants: value));
   }
 
   @override
-  BadgeStyle wrap(ModifierConfig value) {
-    return merge(BadgeStyle(modifier: value));
+  RemixBadgeStyle wrap(ModifierConfig value) {
+    return merge(RemixBadgeStyle(modifier: value));
   }
 
   @override
@@ -114,10 +114,10 @@ class BadgeStyle extends Style<BadgeSpec> with StyleModifierMixin<BadgeStyle, Ba
   }
 
   @override
-  BadgeStyle merge(BadgeStyle? other) {
+  RemixBadgeStyle merge(RemixBadgeStyle? other) {
     if (other == null) return this;
 
-    return BadgeStyle.create(
+    return RemixBadgeStyle.create(
       container: MixOps.merge($container, other.$container),
       text: MixOps.merge($text, other.$text),
       icon: MixOps.merge($icon, other.$icon),
@@ -140,7 +140,7 @@ class BadgeStyle extends Style<BadgeSpec> with StyleModifierMixin<BadgeStyle, Ba
       ];
 }
 
-final DefaultBadgeStyle = BadgeStyle(
+final DefaultRemixBadgeStyle = RemixBadgeStyle(
   container: BoxMix(
     padding: EdgeInsetsMix.symmetric(vertical: 4, horizontal: 8),
     decoration: BoxDecorationMix(
@@ -155,9 +155,9 @@ final DefaultBadgeStyle = BadgeStyle(
 );
 
 /// Default badge styles and variants
-class BadgeStyles {
+class RemixBadgeStyles {
   /// Default badge style
-  static BadgeStyle get defaultStyle => BadgeStyle(
+  static RemixBadgeStyle get defaultStyle => RemixBadgeStyle(
         container: BoxMix(
           padding: EdgeInsetsMix.symmetric(vertical: 4, horizontal: 8),
           decoration: BoxDecorationMix(
@@ -172,7 +172,7 @@ class BadgeStyles {
       );
 
   /// Primary badge variant
-  static BadgeStyle get primary => BadgeStyle(
+  static RemixBadgeStyle get primary => RemixBadgeStyle(
         container: BoxMix(
           padding: EdgeInsetsMix.symmetric(vertical: 4, horizontal: 8),
           decoration: BoxDecorationMix(
@@ -191,7 +191,7 @@ class BadgeStyles {
       );
 
   /// Success badge variant
-  static BadgeStyle get success => BadgeStyle(
+  static RemixBadgeStyle get success => RemixBadgeStyle(
         container: BoxMix(
           padding: EdgeInsetsMix.symmetric(vertical: 4, horizontal: 8),
           decoration: BoxDecorationMix(
@@ -210,7 +210,7 @@ class BadgeStyles {
       );
 
   /// Warning badge variant
-  static BadgeStyle get warning => BadgeStyle(
+  static RemixBadgeStyle get warning => RemixBadgeStyle(
         container: BoxMix(
           padding: EdgeInsetsMix.symmetric(vertical: 4, horizontal: 8),
           decoration: BoxDecorationMix(
@@ -229,7 +229,7 @@ class BadgeStyles {
       );
 
   /// Danger badge variant
-  static BadgeStyle get danger => BadgeStyle(
+  static RemixBadgeStyle get danger => RemixBadgeStyle(
         container: BoxMix(
           padding: EdgeInsetsMix.symmetric(vertical: 4, horizontal: 8),
           decoration: BoxDecorationMix(

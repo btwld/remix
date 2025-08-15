@@ -1,10 +1,10 @@
 part of 'divider.dart';
 
-class DividerStyle extends Style<DividerSpec>
-    with StyleModifierMixin<DividerStyle, DividerSpec>, StyleVariantMixin<DividerStyle, DividerSpec> {
+class RemixDividerStyle extends Style<DividerSpec>
+    with StyleModifierMixin<RemixDividerStyle, DividerSpec>, StyleVariantMixin<RemixDividerStyle, DividerSpec> {
   final Prop<BoxSpec>? $container;
 
-  const DividerStyle.create({
+  const RemixDividerStyle.create({
     Prop<BoxSpec>? container,
     super.variants,
     super.animation,
@@ -12,7 +12,7 @@ class DividerStyle extends Style<DividerSpec>
     super.inherit,
   }) : $container = container;
 
-  DividerStyle({
+  RemixDividerStyle({
     BoxMix? container,
     AnimationConfig? animation,
     List<VariantStyle<DividerSpec>>? variants,
@@ -26,23 +26,23 @@ class DividerStyle extends Style<DividerSpec>
           inherit: inherit,
         );
 
-  factory DividerStyle.value(DividerSpec spec) => DividerStyle(
+  factory RemixDividerStyle.value(DividerSpec spec) => RemixDividerStyle(
         container: BoxMix.maybeValue(spec.container),
       );
 
   @override
-  DividerStyle variant(Variant variant, DividerStyle style) {
-    return merge(DividerStyle(variants: [VariantStyle(variant, style)]));
+  RemixDividerStyle variant(Variant variant, RemixDividerStyle style) {
+    return merge(RemixDividerStyle(variants: [VariantStyle(variant, style)]));
   }
   
   @override
-  DividerStyle variants(List<VariantStyle<DividerSpec>> value) {
-    return merge(DividerStyle(variants: value));
+  RemixDividerStyle variants(List<VariantStyle<DividerSpec>> value) {
+    return merge(RemixDividerStyle(variants: value));
   }
   
   @override
-  DividerStyle wrap(ModifierConfig value) {
-    return merge(DividerStyle(modifier: value));
+  RemixDividerStyle wrap(ModifierConfig value) {
+    return merge(RemixDividerStyle(modifier: value));
   }
 
   @override
@@ -51,10 +51,10 @@ class DividerStyle extends Style<DividerSpec>
   }
 
   @override
-  DividerStyle merge(DividerStyle? other) {
+  RemixDividerStyle merge(RemixDividerStyle? other) {
     if (other == null) return this;
 
-    return DividerStyle.create(
+    return RemixDividerStyle.create(
       container: MixOps.merge($container, other.$container),
       variants: mergeVariantLists($variants, other.$variants),
       animation: other.$animation ?? $animation,
@@ -73,7 +73,7 @@ class DividerStyle extends Style<DividerSpec>
       ];
 }
 
-final DefaultDividerStyle = DividerStyle(
+final DefaultRemixDividerStyle = RemixDividerStyle(
   container: BoxMix(
     constraints: BoxConstraintsMix(
       minWidth: double.infinity,
@@ -88,9 +88,9 @@ final DefaultDividerStyle = DividerStyle(
 );
 
 /// Default divider styles and variants
-class DividerStyles {
+class RemixDividerStyles {
   /// Default divider style
-  static DividerStyle get defaultStyle => DividerStyle(
+  static RemixDividerStyle get defaultStyle => RemixDividerStyle(
         container: BoxMix(
           constraints: BoxConstraintsMix(
             minWidth: double.infinity,
@@ -105,7 +105,7 @@ class DividerStyles {
       );
 
   /// Vertical divider variant
-  static DividerStyle get vertical => DividerStyle(
+  static RemixDividerStyle get vertical => RemixDividerStyle(
         container: BoxMix(
           constraints: BoxConstraintsMix(
             minWidth: 1,
@@ -120,7 +120,7 @@ class DividerStyles {
       );
 
   /// Thick divider variant
-  static DividerStyle get thick => DividerStyle(
+  static RemixDividerStyle get thick => RemixDividerStyle(
         container: BoxMix(
           constraints: BoxConstraintsMix(
             minWidth: double.infinity,
@@ -135,7 +135,7 @@ class DividerStyles {
       );
 
   /// Dark divider variant
-  static DividerStyle get dark => DividerStyle(
+  static RemixDividerStyle get dark => RemixDividerStyle(
         container: BoxMix(
           constraints: BoxConstraintsMix(
             minWidth: double.infinity,

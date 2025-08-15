@@ -9,7 +9,7 @@ part of 'select.dart';
 /// ```dart
 /// RemixSelect<String>(
 ///   selectedValue: _value,
-///   onSelectedValueChanged: (value) {
+///   onChanged: (value) {
 ///     setState(() {
 ///       _value = value;
 ///     });
@@ -31,8 +31,12 @@ class RemixSelect<T> extends StatefulWidget {
     this.onClose,
     this.onOpen,
     this.selectedValue,
+    this.onChanged,
+    @Deprecated('Use onChanged instead. Will be removed in next major version.')
     this.onSelectedValueChanged,
     this.selectedValues,
+    this.onChangedMultiple,
+    @Deprecated('Use onChangedMultiple instead. Will be removed in next major version.')
     this.onSelectedValuesChanged,
     this.multiSelect = false,
     this.enabled = true,
@@ -41,7 +45,7 @@ class RemixSelect<T> extends StatefulWidget {
     this.autofocus = true,
     this.enableTypeAhead = true,
     this.typeAheadDebounceTime = const Duration(milliseconds: 500),
-    this.style = const SelectStyle.create(),
+    this.style = const RemixSelectStyle.create(),
   })  : assert(
           !(multiSelect == true && selectedValue != null),
           'Cannot use selectedValue with multiSelect mode',
@@ -66,12 +70,20 @@ class RemixSelect<T> extends StatefulWidget {
   final T? selectedValue;
 
   /// Called when the selected value changes in single selection mode.
+  final ValueChanged<T?>? onChanged;
+
+  /// Called when the selected value changes in single selection mode.
+  @Deprecated('Use onChanged instead. Will be removed in next major version.')
   final ValueChanged<T?>? onSelectedValueChanged;
 
   /// The currently selected values in multi-selection mode.
   final Set<T>? selectedValues;
 
   /// Called when the selected values change in multi-selection mode.
+  final ValueChanged<Set<T>>? onChangedMultiple;
+
+  /// Called when the selected values change in multi-selection mode.
+  @Deprecated('Use onChangedMultiple instead. Will be removed in next major version.')
   final ValueChanged<Set<T>>? onSelectedValuesChanged;
 
   /// Whether to enable multi-selection mode.
@@ -106,7 +118,7 @@ class RemixSelect<T> extends StatefulWidget {
   final Duration typeAheadDebounceTime;
 
   /// The style configuration for the select.
-  final SelectStyle style;
+  final RemixSelectStyle style;
 
   @override
   State<RemixSelect<T>> createState() => _RemixSelectState<T>();
@@ -128,7 +140,7 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
     super.dispose();
   }
 
-  SelectStyle get _style => DefaultSelectStyle.merge(widget.style);
+  RemixSelectStyle get _style => DefaultRemixSelectStyle.merge(widget.style);
 
   @override
   Widget build(BuildContext context) {
@@ -152,7 +164,7 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
                 items: widget.items,
               ),
               selectedValues: widget.selectedValues ?? {},
-              onSelectedValuesChanged: widget.onSelectedValuesChanged,
+              onSelectedValuesChanged: widget.onChangedMultiple ?? widget.onSelectedValuesChanged,
               onStateChange: (value) {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   if (value == OverlayChildLifecycleState.present) {
@@ -200,7 +212,7 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
               }
             },
             removalDelay: duration,
-            onSelectedValueChanged: widget.onSelectedValueChanged,
+            onSelectedValueChanged: widget.onChanged ?? widget.onSelectedValueChanged,
             enabled: widget.enabled,
             semanticLabel: widget.semanticLabel,
             closeOnSelect: widget.closeOnSelect,
@@ -367,7 +379,7 @@ class _AnimatedOverlayMenuState extends State<_AnimatedOverlayMenu> {
   }
 }
 
-class RemixSelectTrigger extends StatefulWidget with Disableable, Focusable {
+class RemixSelectTrigger extends StatefulWidget with HasEnabled, HasFocused {
   const RemixSelectTrigger({
     super.key,
     this.enabled = true,
@@ -375,6 +387,7 @@ class RemixSelectTrigger extends StatefulWidget with Disableable, Focusable {
     this.cursor = SystemMouseCursors.click,
     this.enableHapticFeedback = true,
     this.focusNode,
+    this.autofocus = false,
     required this.label,
     this.trailingIcon = Icons.keyboard_arrow_down,
   }) : child = null;
@@ -386,6 +399,7 @@ class RemixSelectTrigger extends StatefulWidget with Disableable, Focusable {
     this.cursor = SystemMouseCursors.click,
     this.enableHapticFeedback = true,
     this.focusNode,
+    this.autofocus = false,
     required this.child,
   })  : label = '',
         trailingIcon = null;
@@ -417,6 +431,9 @@ class RemixSelectTrigger extends StatefulWidget with Disableable, Focusable {
   /// If not provided, a new focus node will be created.
   final FocusNode? focusNode;
 
+  /// Whether the trigger should automatically request focus when it is created.
+  final bool autofocus;
+
   /// The icon to display on the trigger.
   final IconData? trailingIcon;
 
@@ -425,21 +442,23 @@ class RemixSelectTrigger extends StatefulWidget with Disableable, Focusable {
 }
 
 class _RemixSelectTriggerState extends State<RemixSelectTrigger>
-    with WidgetStateMixin, DisableableMixin {
+    with HasWidgetStateController, HasEnabledState {
   @override
   Widget build(BuildContext context) {
     final inheritedStyle = StyleProvider.maybeOf<SelectSpec>(context);
 
     return NakedSelectTrigger(
-      onHoveredState: (value) => controller.hovered = value,
-      onPressedState: (value) => controller.pressed = value,
-      onFocusedState: (value) => controller.focused = value,
+      onHoverChange: (value) => controller.hovered = value,
+      onPressChange: (value) => controller.pressed = value,
+      onFocusChange: (value) => controller.focused = value,
       semanticLabel: widget.semanticLabel,
       cursor: widget.cursor,
       enableHapticFeedback: widget.enableHapticFeedback,
       focusNode: widget.focusNode,
+      autofocus: widget.autofocus,
       child: StyleBuilder(
-        style: inheritedStyle ?? const SelectStyle.create(),
+        style: inheritedStyle ?? const RemixSelectStyle.create(),
+        controller: controller,
         builder: (context, spec) {
           final triggerSpec = spec.trigger;
 
@@ -457,13 +476,12 @@ class _RemixSelectTriggerState extends State<RemixSelectTrigger>
                 triggerSpec.container.box(child: widget.child ?? defaultChild),
           );
         },
-        controller: controller,
       ),
     );
   }
 }
 
-class RemixSelectItem<T> extends StatefulWidget with Disableable, Focusable {
+class RemixSelectItem<T> extends StatefulWidget with HasEnabled, HasFocused {
   const RemixSelectItem({
     super.key,
     required this.value,
@@ -474,6 +492,7 @@ class RemixSelectItem<T> extends StatefulWidget with Disableable, Focusable {
     this.cursor = SystemMouseCursors.click,
     this.enableHapticFeedback = true,
     this.focusNode,
+    this.autofocus = false,
   }) : child = null;
 
   const RemixSelectItem.raw({
@@ -485,6 +504,7 @@ class RemixSelectItem<T> extends StatefulWidget with Disableable, Focusable {
     this.cursor = SystemMouseCursors.click,
     this.enableHapticFeedback = true,
     this.focusNode,
+    this.autofocus = false,
   })  : label = '',
         trailingIcon = Icons.check;
 
@@ -518,6 +538,9 @@ class RemixSelectItem<T> extends StatefulWidget with Disableable, Focusable {
   /// If not provided, a new focus node will be created.
   final FocusNode? focusNode;
 
+  /// Whether the item should automatically request focus when it is created.
+  final bool autofocus;
+
   /// The icon to display on the item.
   final Widget? child;
 
@@ -526,7 +549,7 @@ class RemixSelectItem<T> extends StatefulWidget with Disableable, Focusable {
 }
 
 class _RemixSelectItemState<T> extends State<RemixSelectItem<T>>
-    with WidgetStateMixin, DisableableMixin {
+    with HasWidgetStateController, HasEnabledState {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -559,16 +582,18 @@ class _RemixSelectItemState<T> extends State<RemixSelectItem<T>>
 
     return NakedSelectItem<T>(
       value: widget.value,
-      onHoveredState: (value) => controller.hovered = value,
-      onPressedState: (value) => controller.pressed = value,
-      onFocusedState: (value) => controller.focused = value,
+      onHoverChange: (value) => controller.hovered = value,
+      onPressChange: (value) => controller.pressed = value,
+      onFocusChange: (value) => controller.focused = value,
       enabled: widget.enabled,
       semanticLabel: widget.semanticLabel,
       cursor: widget.cursor,
       enableHapticFeedback: widget.enableHapticFeedback,
       focusNode: widget.focusNode,
+      autofocus: widget.autofocus,
       child: StyleBuilder(
-        style: styleFromProvider ?? const SelectStyle.create(),
+        style: styleFromProvider ?? const RemixSelectStyle.create(),
+        controller: controller,
         builder: (context, spec) {
           final itemSpec = spec.item;
 
@@ -594,7 +619,6 @@ class _RemixSelectItemState<T> extends State<RemixSelectItem<T>>
             ),
           );
         },
-        controller: controller,
       ),
     );
   }

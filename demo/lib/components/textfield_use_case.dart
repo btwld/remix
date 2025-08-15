@@ -18,13 +18,13 @@ Widget buildButtonUseCase(BuildContext context) {
         child: SizedBox(
           width: 300,
           child: RemixTextField(
-            suffix: context.knobs.boolean(label: 'Show Suffix', initialValue: false)
+            trailing: context.knobs.boolean(label: 'Show Trailing', initialValue: false)
                 ? RemixButton.icon(
                     Icons.close_rounded,
                     onPressed: () {},
                   )
                 : null,
-            prefix: context.knobs.boolean(label: 'Show Prefix', initialValue: false)
+            leading: context.knobs.boolean(label: 'Show Leading', initialValue: false)
                 ? const Icon(Icons.search)
                 : null,
             maxLines: context.knobs.int.input(

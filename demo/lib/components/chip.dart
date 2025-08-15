@@ -20,7 +20,7 @@ Widget buildChipUseCase(BuildContext context) {
       body: Center(
         child: RemixChip(
           selected: context.knobs.boolean(label: 'Checked', initialValue: true),
-          onSelected: (value) => knobState.updateKnob('Checked', value),
+          onChanged: (value) => knobState.updateKnob('Checked', value),
           label: context.knobs.string(
             label: 'Label',
             initialValue: 'Chip',
@@ -33,9 +33,9 @@ Widget buildChipUseCase(BuildContext context) {
             label: 'Leading Icon',
             initialValue: null,
           ),
-          // Note: deleteIcon can be used for trailing icon
-          deleteIcon: context.knobs.iconData(
-            label: 'Delete Icon',
+          // Note: trailingIcon can be used for trailing icon
+          trailingIcon: context.knobs.iconData(
+            label: 'Trailing Icon',
             initialValue: null,
           ),
         ),

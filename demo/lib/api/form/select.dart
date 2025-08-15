@@ -36,7 +36,7 @@ class _MyAppState extends State<MyApp> {
               // Simple select implementation for demo purposes
               RemixSelect<Options>(
                 selectedValue: _value,
-                onSelectedValueChanged: (value) {
+                onChanged: (value) {
                   setState(() {
                     _value = value;
                   });

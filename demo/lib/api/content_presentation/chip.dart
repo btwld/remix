@@ -31,20 +31,20 @@ class _MyAppState extends State<MyApp> {
               RemixChip(
                 label: 'Click Me',
                 selected: selected,
-                onSelected: (value) {
+                onChanged: (value) {
                   setState(() {
                     selected = value;
                   });
                 },
                 leadingIcon: Icons.add,
-                style: ChipStyle()
+                style: RemixChipStyle()
                   .onHovered(
-                    ChipStyle(
+                    RemixChipStyle(
                       container: FlexBoxMix(box: BoxMix(decoration: BoxDecorationMix(color: Colors.grey.shade100)))
                     )
                   )
                   .onSelected(
-                    ChipStyle(
+                    RemixChipStyle(
                       container: FlexBoxMix(box: BoxMix(decoration: BoxDecorationMix(color: Colors.blue)))
                     )
                   ),

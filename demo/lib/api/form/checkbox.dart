@@ -22,10 +22,10 @@ class _MyAppState extends State<MyApp> {
           child: RemixCheckbox(
             label: 'Checkbox',
             selected: _value,
-            style: CheckboxStyle()
+            style: RemixCheckboxStyle()
               .color(Colors.blue)
               .onHovered(
-                CheckboxStyle()
+                RemixCheckboxStyle()
                   .color(Colors.blue.shade700)
               ),
             onChanged: (value) {

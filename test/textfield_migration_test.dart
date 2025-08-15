@@ -38,8 +38,8 @@ void main() {
           home: Scaffold(
             body: RemixTextField(
               hintText: 'Test',
-              onTap: () {
-                // Tap callback should work
+              onPressed: () {
+                // Press callback should work
               },
             ),
           ),
@@ -81,7 +81,7 @@ void main() {
           home: Scaffold(
             body: RemixTextField(
               hintText: 'Styled field',
-              textFieldStyle: const TextFieldStyle.create(),
+              style: const RemixTextFieldStyle.create(),
             ),
           ),
         ),

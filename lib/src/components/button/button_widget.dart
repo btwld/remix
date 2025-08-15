@@ -39,24 +39,27 @@ part of 'button.dart';
 /// )
 /// ```
 ///
-class RemixButton extends StatefulWidget with Disableable, Focusable {
+class RemixButton extends StatefulWidget with HasEnabled, HasFocused {
   /// Creates a Remix button.
   ///
-  /// The [label] and [onPressed] parameters are required unless [child] is provided.
+  /// Must provide either [label], [icon], or [child].
   /// If [child] is provided, it overrides the label and icon parameters.
   const RemixButton({
     super.key,
-    required String label,
-    IconData? icon,
+    this.label,
+    this.icon,
+    this.child,
     this.enabled = true,
+    this.autofocus = false,
     this.loading = false,
     this.enableHapticFeedback = true,
     required this.onPressed,
     this.focusNode,
-    this.style = const ButtonStyle.create(),
-  })  : label = label,
-        icon = icon,
-        child = null;
+    this.style = const RemixButtonStyle.create(),
+  }) : assert(
+          label != null || icon != null || child != null,
+          'Must provide either label, icon, or child',
+        );
 
   /// Creates a Remix button with only an icon.
   ///
@@ -75,40 +78,17 @@ class RemixButton extends StatefulWidget with Disableable, Focusable {
     IconData icon, {
     super.key,
     this.enabled = true,
+    this.autofocus = false,
     this.loading = false,
     this.enableHapticFeedback = true,
     required this.onPressed,
     this.focusNode,
-    this.style = const ButtonStyle.create(),
+    this.style = const RemixButtonStyle.create(),
   })  : label = null,
         icon = icon,
         child = Icon(icon);
 
-  /// Creates a Remix button with a raw child widget.
-  ///
-  /// This constructor allows for custom button content beyond the default layout.
-  /// The [child] parameter must be provided and will be used as the button's content.
-  ///
-  /// Example:
-  /// ```dart
-  /// RemixButton.raw(
-  ///   child: Icon(Icons.star),
-  ///   onPressed: () {},
-  ///   style: ButtonStyles.primary,
-  /// )
-  /// ```
-  const RemixButton.raw({
-    super.key,
-    required Widget child,
-    this.enabled = true,
-    this.loading = false,
-    this.enableHapticFeedback = true,
-    required this.onPressed,
-    this.focusNode,
-    this.style = const ButtonStyle.create(),
-  })  : label = null,
-        icon = null,
-        child = child;
+  static late final styleFrom = RemixButtonStyle.new;
 
   /// Whether the button is enabled.
   ///
@@ -133,12 +113,15 @@ class RemixButton extends StatefulWidget with Disableable, Focusable {
   /// The style configuration for the button.
   ///
   /// Controls visual properties like colors, padding, typography etc.
-  final ButtonStyle? style;
+  final RemixButtonStyle? style;
 
   /// Whether to provide haptic feedback when the button is pressed.
   ///
   /// Defaults to true.
   final bool enableHapticFeedback;
+
+  /// Whether the button should automatically request focus when it is created.
+  final bool autofocus;
 
   /// The label text to display in the button.
   /// If [child] is provided, this is ignored.
@@ -157,57 +140,50 @@ class RemixButton extends StatefulWidget with Disableable, Focusable {
 }
 
 class _RemixButtonState extends State<RemixButton>
-    with WidgetStateMixin, DisableableMixin {
-  /// Builds the loading overlay that shows a spinner while preserving layout.
-  Widget _buildLoadingOverlay(ButtonSpec? spec, Widget child) {
-    final Widget spinner = spec?.spinner() ??
-        SizedBox(
-          width: 16,
-          height: 16,
-          child: RemixSpinner(style: DefaultSpinnerStyle),
-        );
-
-    return widget.loading
-        ? Stack(
-            alignment: Alignment.center,
-            children: [spinner, Opacity(opacity: 0.0, child: child)],
-          )
-        : child;
-  }
-
-  bool get _isEnabled => widget.enabled && !widget.loading;
+    with HasWidgetStateController, HasEnabledState, HasFocusedState {
+  bool get _isEnabled =>
+      widget.enabled && !widget.loading && widget.onPressed != null;
 
   @override
   Widget build(BuildContext context) {
     return NakedButton(
       onPressed: widget.onPressed,
-      onHoveredState: (state) => controller.hovered = state,
-      onPressedState: (state) => controller.pressed = state,
-      onFocusedState: (state) => controller.focused = state,
-      onDisabledState: (state) => controller.disabled = state,
+      onHoverChange: (state) => controller.hovered = state,
+      onPressChange: (state) => controller.pressed = state,
       enabled: _isEnabled,
       enableHapticFeedback: widget.enableHapticFeedback,
       focusNode: widget.focusNode,
+      autofocus: widget.autofocus,
       child: StyleBuilder(
-        style: DefaultButtonStyle.merge(widget.style),
+        style: DefaultRemixButtonStyle.merge(widget.style),
+        controller: controller,
         builder: (context, spec) {
           // Create the child widget based on whether custom child is provided
           final effectiveChild = widget.child ??
               RemixLabel(
-                widget.label!,
+                widget.label ?? '',
                 icon: widget.icon,
-                style: LabelStyle.value(spec.label),
+                style: RemixLabelStyle.value(spec.label),
               );
 
-          return spec.container(
-            child: widget.loading
-                ? Builder(builder: (context) {
-                    return _buildLoadingOverlay(spec, effectiveChild);
-                  })
-                : effectiveChild,
-          );
+          final content = widget.loading
+              ? Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    RemixSpinner(style: RemixSpinnerStyle.value(spec.spinner)),
+                    Visibility(
+                      visible: false,
+                      maintainState: true,
+                      maintainAnimation: true,
+                      maintainSize: true,
+                      child: effectiveChild,
+                    ),
+                  ],
+                )
+              : effectiveChild;
+
+          return spec.container(child: content);
         },
-        controller: controller,
       ),
     );
   }
