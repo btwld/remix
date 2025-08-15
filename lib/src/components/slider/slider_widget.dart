@@ -16,7 +16,7 @@ part of 'slider.dart';
 ///   style: SliderStyle(),
 /// )
 /// ```
-class RemixSlider extends StatefulWidget implements Disableable {
+class RemixSlider extends StatefulWidget with Disableable, Focusable {
   const RemixSlider({
     super.key,
     this.min = 0.0,
@@ -52,7 +52,6 @@ class RemixSlider extends StatefulWidget implements Disableable {
   final SliderStyle style;
 
   /// Whether the slider is enabled for interaction.
-  @override
   final bool enabled;
 
   /// Called when the user starts dragging the slider.
@@ -72,7 +71,10 @@ class RemixSlider extends StatefulWidget implements Disableable {
 }
 
 class _RemixSliderState extends State<RemixSlider>
-    with TickerProviderStateMixin, MixControllerMixin, DisableableMixin {
+    with
+        TickerProviderStateMixin,
+        WidgetStateMixin,
+        DisableableMixin {
   int? get _divisions {
     if (widget.divisions == 0) {
       return null;
@@ -81,8 +83,7 @@ class _RemixSliderState extends State<RemixSlider>
     return widget.divisions;
   }
 
-  SliderStyle get _style =>
-      DefaultSliderStyle.merge(widget.style);
+  SliderStyle get _style => DefaultSliderStyle.merge(widget.style);
 
   @override
   Widget build(BuildContext context) {
@@ -93,9 +94,9 @@ class _RemixSliderState extends State<RemixSlider>
       onChanged: widget.onChanged,
       onDragStart: () => widget.onChangeStart?.call(widget.value),
       onDragEnd: widget.onChangeEnd,
-      onHoveredState: (state) => stateController.hovered = state,
-      onDraggedState: (state) => stateController.dragged = state,
-      onFocusedState: (state) => stateController.focused = state,
+      onHoveredState: (state) => controller.hovered = state,
+      onDraggedState: (state) => controller.dragged = state,
+      onFocusedState: (state) => controller.focused = state,
       enabled: widget.enabled,
       focusNode: widget.focusNode,
       direction: Axis.horizontal,
@@ -148,7 +149,7 @@ class _RemixSliderState extends State<RemixSlider>
             ),
           );
         },
-        controller: stateController,
+        controller: controller,
       ),
     );
   }

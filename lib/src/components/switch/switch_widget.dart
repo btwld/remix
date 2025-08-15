@@ -14,7 +14,8 @@ part of 'switch.dart';
 ///   },
 /// )
 /// ```
-class RemixSwitch extends StatefulWidget implements Disableable, Selectable {
+class RemixSwitch extends StatefulWidget
+    with Disableable, Selectable, Focusable {
   const RemixSwitch({
     super.key,
     this.enabled = true,
@@ -26,11 +27,9 @@ class RemixSwitch extends StatefulWidget implements Disableable, Selectable {
   });
 
   /// Whether this switch is enabled.
-  @override
   final bool enabled;
-  
+
   /// Whether the switch is currently selected.
-  @override
   final bool selected;
 
   /// Called when the user toggles the switch.
@@ -50,15 +49,15 @@ class RemixSwitch extends StatefulWidget implements Disableable, Selectable {
 }
 
 class _RemixSwitchState extends State<RemixSwitch>
-    with MixControllerMixin, DisableableMixin, SelectableMixin {
+    with WidgetStateMixin, DisableableMixin, SelectableMixin {
   @override
   Widget build(BuildContext context) {
     return NakedCheckbox(
       value: widget.selected,
       onChanged: (value) => widget.onChanged(value ?? false),
-      onHoveredState: (state) => stateController.hovered = state,
-      onPressedState: (state) => stateController.pressed = state,
-      onFocusedState: (state) => stateController.focused = state,
+      onHoveredState: (state) => controller.hovered = state,
+      onPressedState: (state) => controller.pressed = state,
+      onFocusedState: (state) => controller.focused = state,
       enabled: widget.enabled,
       enableHapticFeedback: widget.enableHapticFeedback,
       focusNode: widget.focusNode,
@@ -79,7 +78,7 @@ class _RemixSwitchState extends State<RemixSwitch>
             ),
           );
         },
-        controller: stateController,
+        controller: controller,
       ),
     );
   }

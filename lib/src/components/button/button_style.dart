@@ -152,13 +152,11 @@ class ButtonStyle extends Style<ButtonSpec>
     return merge(ButtonStyle(animation: animation));
   }
 
-
   RemixButton call({
     required String label,
     IconData? icon,
     bool enabled = true,
     bool loading = false,
-    WidgetBuilder? spinnerBuilder,
     bool enableHapticFeedback = true,
     required VoidCallback? onPressed,
     FocusNode? focusNode,
@@ -168,7 +166,6 @@ class ButtonStyle extends Style<ButtonSpec>
       icon: icon,
       enabled: enabled,
       loading: loading,
-      spinnerBuilder: spinnerBuilder,
       enableHapticFeedback: enableHapticFeedback,
       onPressed: onPressed,
       focusNode: focusNode,
@@ -327,11 +324,11 @@ extension ButtonVariants on ButtonStyle {
         container: BoxMix(
           padding: EdgeInsetsMix.all(10),
           decoration: BoxDecorationMix(
-            color: Colors.transparent,
-            borderRadius: BorderRadiusMix.circular(8),
             border: BoxBorderMix.all(
               BorderSideMix(color: Colors.grey[400]!, width: 1),
             ),
+            borderRadius: BorderRadiusMix.circular(8),
+            color: Colors.transparent,
           ),
         ),
         label: LabelStyle(

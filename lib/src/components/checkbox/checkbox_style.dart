@@ -142,12 +142,12 @@ class CheckboxStyle extends Style<CheckboxSpec>
   CheckboxStyle variant(Variant variant, CheckboxStyle style) {
     return merge(CheckboxStyle(variants: [VariantStyle(variant, style)]));
   }
-  
+
   @override
   CheckboxStyle variants(List<VariantStyle<CheckboxSpec>> value) {
     return merge(CheckboxStyle(variants: value));
   }
-  
+
   // Modifier support
   @override
   CheckboxStyle wrap(ModifierConfig value) {
@@ -199,9 +199,9 @@ final DefaultCheckboxStyle = CheckboxStyle(
     box: BoxMix(alignment: Alignment.centerLeft),
     flex: FlexMix(
       direction: Axis.horizontal,
-      gap: 8,
-      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      gap: 8,
     ),
   ),
   indicatorContainer: BoxMix(
@@ -222,9 +222,7 @@ final DefaultCheckboxStyle = CheckboxStyle(
     ),
   ),
   indicator: IconMix(color: Colors.black, size: 16),
-  label: TextMix(
-    style: TextStyleMix(color: Colors.black, fontSize: 14),
-  ),
+  label: TextMix(style: TextStyleMix(color: Colors.black, fontSize: 14)),
 );
 
 extension CheckboxVariants on CheckboxStyle {
@@ -234,9 +232,9 @@ extension CheckboxVariants on CheckboxStyle {
           box: BoxMix(alignment: Alignment.centerLeft),
           flex: FlexMix(
             direction: Axis.horizontal,
-            gap: 8,
-            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            gap: 8,
           ),
         ),
         indicatorContainer: BoxMix(
@@ -268,9 +266,9 @@ extension CheckboxVariants on CheckboxStyle {
           box: BoxMix(alignment: Alignment.centerLeft),
           flex: FlexMix(
             direction: Axis.horizontal,
-            gap: 8,
-            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            gap: 8,
           ),
         ),
         indicatorContainer: BoxMix(
@@ -302,9 +300,9 @@ extension CheckboxVariants on CheckboxStyle {
           box: BoxMix(alignment: Alignment.centerLeft),
           flex: FlexMix(
             direction: Axis.horizontal,
-            gap: 6,
-            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            gap: 6,
           ),
         ),
         indicatorContainer: BoxMix(

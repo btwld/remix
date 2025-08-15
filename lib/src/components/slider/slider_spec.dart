@@ -47,9 +47,13 @@ class SliderSpec extends Spec<SliderSpec> with Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty('thumb', thumb, defaultValue: null));
-    properties.add(DiagnosticsProperty('baseTrack', baseTrack, defaultValue: null));
-    properties.add(DiagnosticsProperty('activeTrack', activeTrack, defaultValue: null));
-    properties.add(DiagnosticsProperty('division', division, defaultValue: null));
+    properties
+        .add(DiagnosticsProperty('baseTrack', baseTrack, defaultValue: null));
+    properties.add(
+      DiagnosticsProperty('activeTrack', activeTrack, defaultValue: null),
+    );
+    properties
+        .add(DiagnosticsProperty('division', division, defaultValue: null));
   }
 
   @override
@@ -61,11 +65,8 @@ class PaintData extends Spec<PaintData> with Diagnosticable {
   final Color color;
   final StrokeCap strokeCap;
 
-  const PaintData({
-    double? strokeWidth,
-    Color? color,
-    StrokeCap? strokeCap,
-  })  : strokeWidth = strokeWidth ?? 8,
+  const PaintData({double? strokeWidth, Color? color, StrokeCap? strokeCap})
+      : strokeWidth = strokeWidth ?? 8,
         color = color ?? Colors.grey,
         strokeCap = strokeCap ?? StrokeCap.round;
 
@@ -98,16 +99,17 @@ class PaintData extends Spec<PaintData> with Diagnosticable {
     super.debugFillProperties(properties);
     properties.add(DoubleProperty('strokeWidth', strokeWidth, defaultValue: 8));
     properties.add(ColorProperty('color', color, defaultValue: Colors.grey));
-    properties.add(EnumProperty<StrokeCap>('strokeCap', strokeCap, defaultValue: StrokeCap.round));
+    properties.add(EnumProperty<StrokeCap>(
+      'strokeCap',
+      strokeCap,
+      defaultValue: StrokeCap.round,
+    ));
   }
-
-  @override
-  List<Object?> get props => [strokeWidth, color, strokeCap];
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    
+
     return other is PaintData &&
         other.strokeWidth == strokeWidth &&
         other.color == color &&
@@ -115,5 +117,9 @@ class PaintData extends Spec<PaintData> with Diagnosticable {
   }
 
   @override
-  int get hashCode => strokeWidth.hashCode ^ color.hashCode ^ strokeCap.hashCode;
+  List<Object?> get props => [strokeWidth, color, strokeCap];
+
+  @override
+  int get hashCode =>
+      strokeWidth.hashCode ^ color.hashCode ^ strokeCap.hashCode;
 }

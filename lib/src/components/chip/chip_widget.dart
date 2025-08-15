@@ -18,25 +18,19 @@ part of 'chip.dart';
 ///   },
 /// )
 /// ```
-class RemixChip extends StatefulWidget implements Disableable, Selectable {
+class RemixChip extends StatefulWidget with Disableable, Selectable, Focusable {
   const RemixChip({
     super.key,
     required this.label,
-    IconData? leadingIcon,
-    IconData? deleteIcon,
-    @Deprecated('Use leadingIcon instead') IconData? iconLeft,
-    @Deprecated('Use deleteIcon instead') IconData? iconRight,
-    ValueChanged<bool>? onSelected,
-    @Deprecated('Use onSelected instead') ValueChanged<bool>? onChanged,
+    this.leadingIcon,
+    this.deleteIcon,
+    this.onSelected,
     this.onDeleted,
     this.selected = false,
     this.enabled = true,
     this.style = const ChipStyle.create(),
     this.focusNode,
-  })  : leadingIcon = leadingIcon ?? iconLeft,
-        deleteIcon = deleteIcon ?? iconRight,
-        onSelected = onSelected ?? onChanged,
-        child = null;
+  }) : child = null;
 
   /// Creates a Remix chip with custom content.
   ///
@@ -83,11 +77,9 @@ class RemixChip extends StatefulWidget implements Disableable, Selectable {
   final VoidCallback? onDeleted;
 
   /// Whether this chip is selected.
-  @override
   final bool selected;
 
   /// Whether this chip is enabled.
-  @override
   final bool enabled;
 
   /// The style configuration for the chip.
@@ -101,64 +93,64 @@ class RemixChip extends StatefulWidget implements Disableable, Selectable {
 }
 
 class _RemixChipState extends State<RemixChip>
-    with MixControllerMixin, DisableableMixin, SelectableMixin {
+    with WidgetStateMixin, DisableableMixin, SelectableMixin {
   @override
   Widget build(BuildContext context) {
     return NakedCheckbox(
       value: widget.selected,
       onChanged: (value) => widget.onSelected?.call(value ?? false),
-      onHoveredState: (state) => stateController.hovered = state,
-      onPressedState: (state) => stateController.pressed = state,
-      onFocusedState: (state) => stateController.focused = state,
+      onHoveredState: (state) => controller.hovered = state,
+      onPressedState: (state) => controller.pressed = state,
+      onFocusedState: (state) => controller.focused = state,
       enabled: widget.enabled,
       focusNode: widget.focusNode,
       child: StyleBuilder(
         style: DefaultChipStyle.merge(widget.style),
         builder: (context, spec) {
-            // If custom child is provided, use it directly
-            if (widget.child != null) {
-              return spec.container(
-                direction: Axis.horizontal,
-                children: [widget.child!],
-              );
-            }
-            
-            // Otherwise build standard chip layout
-            final children = <Widget>[];
-
-            // Leading icon
-            if (widget.leadingIcon != null) {
-              children.add(Icon(
-                widget.leadingIcon,
-                size: spec.leadingIcon.size,
-                color: spec.leadingIcon.color,
-              ));
-            }
-
-            // Label
-            if (widget.label.isNotEmpty) {
-              children.add(spec.label(widget.label));
-            }
-
-            // Delete icon
-            if (widget.onDeleted != null) {
-              children.add(GestureDetector(
-                onTap: widget.enabled ? widget.onDeleted : null,
-                child: Icon(
-                  widget.deleteIcon ?? Icons.close,
-                  size: spec.trailingIcon.size,
-                  color: spec.trailingIcon.color,
-                ),
-              ));
-            }
-
+          // If custom child is provided, use it directly
+          if (widget.child != null) {
             return spec.container(
               direction: Axis.horizontal,
-              children: children,
+              children: [widget.child!],
             );
-          },
-          controller: stateController,
-        ),
+          }
+
+          // Otherwise build standard chip layout
+          final children = <Widget>[];
+
+          // Leading icon
+          if (widget.leadingIcon != null) {
+            children.add(Icon(
+              widget.leadingIcon,
+              size: spec.leadingIcon.size,
+              color: spec.leadingIcon.color,
+            ));
+          }
+
+          // Label
+          if (widget.label.isNotEmpty) {
+            children.add(spec.label(widget.label));
+          }
+
+          // Delete icon
+          if (widget.onDeleted != null) {
+            children.add(GestureDetector(
+              onTap: widget.enabled ? widget.onDeleted : null,
+              child: Icon(
+                widget.deleteIcon ?? Icons.close,
+                size: spec.trailingIcon.size,
+                color: spec.trailingIcon.color,
+              ),
+            ));
+          }
+
+          return spec.container(
+            direction: Axis.horizontal,
+            children: children,
+          );
+        },
+        controller: controller,
+      ),
     );
   }
 }

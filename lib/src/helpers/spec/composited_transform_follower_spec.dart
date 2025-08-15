@@ -18,7 +18,7 @@ class CompositedTransformFollowerSpec extends Spec<CompositedTransformFollowerSp
     this.followerAnchor,
   });
 
-  static CompositedTransformFollowerSpec? of(BuildContext context) => null;
+  static CompositedTransformFollowerSpec? of(BuildContext _) => null;
   
   @override
   CompositedTransformFollowerSpec copyWith({
@@ -40,6 +40,7 @@ class CompositedTransformFollowerSpec extends Spec<CompositedTransformFollowerSp
   @override
   CompositedTransformFollowerSpec lerp(CompositedTransformFollowerSpec? other, double t) {
     if (other == null) return this;
+    
     return CompositedTransformFollowerSpec(
       link: t < 0.5 ? link : other.link,
       showWhenUnlinked: t < 0.5 ? showWhenUnlinked : other.showWhenUnlinked,

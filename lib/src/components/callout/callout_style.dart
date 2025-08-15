@@ -1,7 +1,9 @@
 part of 'callout.dart';
 
 class CalloutStyle extends Style<CalloutSpec>
-    with StyleModifierMixin<CalloutStyle, CalloutSpec>, StyleVariantMixin<CalloutStyle, CalloutSpec> {
+    with
+        StyleModifierMixin<CalloutStyle, CalloutSpec>,
+        StyleVariantMixin<CalloutStyle, CalloutSpec> {
   final Prop<BoxSpec>? $container;
   final Prop<TextSpec>? $text;
   final Prop<IconSpec>? $icon;
@@ -75,7 +77,7 @@ class CalloutStyle extends Style<CalloutSpec>
   CalloutStyle variants(List<VariantStyle<CalloutSpec>> value) {
     return merge(CalloutStyle(variants: value));
   }
-  
+
   @override
   CalloutStyle wrap(ModifierConfig value) {
     return merge(CalloutStyle(modifier: value));
@@ -112,10 +114,7 @@ final DefaultCalloutStyle = CalloutStyle(
       fontWeight: FontWeight.w500,
     ),
   ),
-  icon: IconMix(
-    color: Colors.black,
-    size: 16,
-  ),
+  icon: IconMix(color: Colors.black, size: 16),
 );
 
 extension CalloutVariants on CalloutStyle {
@@ -139,10 +138,7 @@ extension CalloutVariants on CalloutStyle {
             fontWeight: FontWeight.w500,
           ),
         ),
-        icon: IconMix(
-          color: Colors.blue[600],
-          size: 16,
-        ),
+        icon: IconMix(color: Colors.blue[600], size: 16),
       );
 
   /// Success callout variant with green colors
@@ -165,10 +161,7 @@ extension CalloutVariants on CalloutStyle {
             fontWeight: FontWeight.w500,
           ),
         ),
-        icon: IconMix(
-          color: Colors.green[600],
-          size: 16,
-        ),
+        icon: IconMix(color: Colors.green[600], size: 16),
       );
 
   /// Warning callout variant with orange colors
@@ -191,10 +184,7 @@ extension CalloutVariants on CalloutStyle {
             fontWeight: FontWeight.w500,
           ),
         ),
-        icon: IconMix(
-          color: Colors.orange[600],
-          size: 16,
-        ),
+        icon: IconMix(color: Colors.orange[600], size: 16),
       );
 
   /// Error callout variant with red colors
@@ -217,9 +207,6 @@ extension CalloutVariants on CalloutStyle {
             fontWeight: FontWeight.w500,
           ),
         ),
-        icon: IconMix(
-          color: Colors.red[600],
-          size: 16,
-        ),
+        icon: IconMix(color: Colors.red[600], size: 16),
       );
 }

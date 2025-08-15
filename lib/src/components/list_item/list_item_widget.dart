@@ -15,7 +15,7 @@ part of 'list_item.dart';
 ///   },
 /// )
 /// ```
-class RemixListItem extends StatefulWidget {
+class RemixListItem extends StatefulWidget with Focusable {
   const RemixListItem({
     super.key,
     this.title,
@@ -43,13 +43,13 @@ class RemixListItem extends StatefulWidget {
 
   /// Called when the user presses this list item.
   final VoidCallback? onPress;
-  
+
   /// Whether this list item is enabled.
   final bool enabled;
-  
+
   /// The focus node for the list item.
   final FocusNode? focusNode;
-  
+
   /// Whether to provide haptic feedback when pressed.
   final bool enableHapticFeedback;
 
@@ -61,15 +61,15 @@ class RemixListItem extends StatefulWidget {
 }
 
 class _RemixListItemState extends State<RemixListItem>
-    with MixControllerMixin {
+    with WidgetStateMixin {
   @override
   Widget build(BuildContext context) {
     return NakedButton(
       onPressed: widget.onPress,
-      onHoveredState: (state) => stateController.hovered = state,
-      onPressedState: (state) => stateController.pressed = state,
-      onFocusedState: (state) => stateController.focused = state,
-      onDisabledState: (state) => stateController.disabled = state,
+      onHoveredState: (state) => controller.hovered = state,
+      onPressedState: (state) => controller.pressed = state,
+      onFocusedState: (state) => controller.focused = state,
+      onDisabledState: (state) => controller.disabled = state,
       enabled: widget.enabled,
       enableHapticFeedback: widget.enableHapticFeedback,
       focusNode: widget.focusNode,
@@ -129,7 +129,7 @@ class _RemixListItemState extends State<RemixListItem>
             children: children,
           );
         },
-        controller: stateController,
+        controller: controller,
       ),
     );
   }

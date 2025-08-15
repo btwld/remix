@@ -1,7 +1,9 @@
 part of 'radio.dart';
 
 class RadioStyle extends Style<RadioSpec>
-    with StyleModifierMixin<RadioStyle, RadioSpec>, StyleVariantMixin<RadioStyle, RadioSpec> {
+    with
+        StyleModifierMixin<RadioStyle, RadioSpec>,
+        StyleVariantMixin<RadioStyle, RadioSpec> {
   final Prop<FlexBoxSpec>? $container;
   final Prop<BoxSpec>? $indicatorContainer;
   final Prop<BoxSpec>? $indicator;
@@ -109,9 +111,9 @@ final DefaultRadioStyle = RadioStyle(
     box: BoxMix(alignment: Alignment.centerLeft),
     flex: FlexMix(
       direction: Axis.horizontal,
-      gap: 8,
-      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      gap: 8,
     ),
   ),
   indicatorContainer: BoxMix(
@@ -153,9 +155,9 @@ extension RadioVariants on RadioStyle {
           box: BoxMix(alignment: Alignment.centerLeft),
           flex: FlexMix(
             direction: Axis.horizontal,
-            gap: 8,
-            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            gap: 8,
           ),
         ),
         indicatorContainer: BoxMix(
@@ -196,9 +198,9 @@ extension RadioVariants on RadioStyle {
           box: BoxMix(alignment: Alignment.centerLeft),
           flex: FlexMix(
             direction: Axis.horizontal,
-            gap: 8,
-            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            gap: 8,
           ),
         ),
         indicatorContainer: BoxMix(
@@ -239,9 +241,9 @@ extension RadioVariants on RadioStyle {
           box: BoxMix(alignment: Alignment.centerLeft),
           flex: FlexMix(
             direction: Axis.horizontal,
-            gap: 6,
-            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            gap: 6,
           ),
         ),
         indicatorContainer: BoxMix(

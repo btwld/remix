@@ -1,7 +1,9 @@
 part of 'list_item.dart';
 
 class ListItemStyle extends Style<ListItemSpec>
-    with StyleModifierMixin<ListItemStyle, ListItemSpec>, StyleVariantMixin<ListItemStyle, ListItemSpec> {
+    with
+        StyleModifierMixin<ListItemStyle, ListItemSpec>,
+        StyleVariantMixin<ListItemStyle, ListItemSpec> {
   final Prop<FlexBoxSpec>? $container;
   final Prop<FlexBoxSpec>? $contentContainer;
   final Prop<TextSpec>? $title;
@@ -64,11 +66,11 @@ class ListItemStyle extends Style<ListItemSpec>
     );
   }
 
-@override
+  @override
   ListItemStyle variant(Variant variant, ListItemStyle style) {
     return merge(ListItemStyle(variants: [VariantStyle(variant, style)]));
   }
-  
+
   @override
   ListItemStyle variants(List<VariantStyle<ListItemSpec>> value) {
     return merge(ListItemStyle(variants: value));
@@ -120,26 +122,23 @@ final DefaultListItemStyle = ListItemStyle(
     ),
     flex: FlexMix(
       direction: Axis.horizontal,
-      gap: 16,
       crossAxisAlignment: CrossAxisAlignment.center,
+      gap: 16,
     ),
   ),
   contentContainer: FlexBoxMix(
     flex: FlexMix(
       direction: Axis.vertical,
-      gap: 2,
-      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      gap: 2,
     ),
   ),
   title: TextMix(
     style: TextStyleMix(fontSize: 16, fontWeight: FontWeight.w500),
   ),
   subtitle: TextMix(
-    style: TextStyleMix(
-      color: Colors.grey[600],
-      fontSize: 14,
-    ),
+    style: TextStyleMix(color: Colors.grey[600], fontSize: 14),
   ),
   leadingIcon: IconMix(size: 24),
   trailingIcon: IconMix(size: 20),

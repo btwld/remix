@@ -29,7 +29,7 @@ part of 'radio.dart';
 ///   ],
 /// )
 /// ```
-class RemixRadioGroup<T> extends StatefulWidget {
+class RemixRadioGroup<T> extends StatelessWidget {
   const RemixRadioGroup({
     super.key,
     required this.value,
@@ -55,102 +55,14 @@ class RemixRadioGroup<T> extends StatefulWidget {
   final RadioStyle style;
 
   @override
-  State<RemixRadioGroup<T>> createState() => _RemixRadioGroupState<T>();
-}
-
-class _RemixRadioGroupState<T> extends State<RemixRadioGroup<T>> {
-  T? _value;
-
-  @override
-  void initState() {
-    super.initState();
-    _value = widget.value;
-  }
-
-  void _handleRadioValueChange(T? value) {
-    setState(() {
-      _value = value;
-    });
-    widget.onChanged?.call(value);
-  }
-
-  @override
-  void didUpdateWidget(covariant RemixRadioGroup<T> oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.value != widget.value) {
-      _value = widget.value;
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return _RadioGroupScope<T>(
-      groupValue: _value,
-      onChanged: widget.enabled ? _handleRadioValueChange : null,
-      enabled: widget.enabled,
-      style: widget.style,
-      child: widget.child,
-    );
-  }
-}
-
-/// An InheritedWidget that provides radio group state to descendant radio buttons.
-class _RadioGroupScope<T> extends InheritedWidget {
-  const _RadioGroupScope({
-    required super.child,
-    required this.groupValue,
-    required this.onChanged,
-    required this.enabled,
-    this.style,
-  });
-
-  static _RadioGroupScope<T>? maybeOf<T>(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType();
-  }
-
-  final T? groupValue;
-  final ValueChanged<T?>? onChanged;
-  final bool enabled;
-  final RadioStyle? style;
-
-  @override
-  bool updateShouldNotify(_RadioGroupScope<T> oldWidget) {
-    return groupValue != oldWidget.groupValue ||
-        onChanged != oldWidget.onChanged ||
-        enabled != oldWidget.enabled ||
-        style != oldWidget.style;
-  }
-}
-
-/// Extension to make RemixRadio work seamlessly with RemixRadioGroup
-extension RemixRadioGroupExtension<T> on RemixRadio<T> {
-  /// Creates a version of this radio button that works with a RemixRadioGroup.
-  ///
-  /// When used inside a RemixRadioGroup, the groupValue and onChanged
-  /// are automatically managed by the group.
-  Widget inGroup() {
-    return Builder(
-      builder: (context) {
-        final groupScope = _RadioGroupScope.maybeOf<T>(context);
-
-        if (groupScope == null) {
-          // If not in a group, use the radio as-is
-          return this;
-        }
-
-        // Create a new radio with group-managed properties
-        return RemixRadio<T>(
-          key: key,
-          value: value,
-          groupValue: groupScope.groupValue,
-          onChanged:
-              groupScope.enabled && enabled ? groupScope.onChanged : null,
-          enabled: groupScope.enabled && enabled,
-          style: style,
-          label: label,
-          focusNode: focusNode,
-        );
-      },
+    // Wrap with NakedRadioGroup for keyboard navigation and focus management
+    // NakedRadioGroupScope is automatically provided by NakedRadioGroup
+    return NakedRadioGroup<T>(
+      groupValue: value,
+      onChanged: enabled ? onChanged : null,
+      enabled: enabled,
+      child: StyleProvider<RadioSpec>(style: style, child: child),
     );
   }
 }

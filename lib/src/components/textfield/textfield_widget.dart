@@ -16,19 +16,14 @@ part of 'textfield.dart';
 ///   style: TextFieldStyle(),
 /// )
 /// ```
-class RemixTextField extends StatefulWidget implements Disableable, Errorable {
+class RemixTextField extends StatefulWidget with Disableable, Errorable, Focusable {
   const RemixTextField({
     super.key,
     this.controller,
     this.focusNode,
-    this.decoration,
     this.keyboardType,
     this.textInputAction,
     this.textCapitalization = TextCapitalization.none,
-    this.style,
-    this.strutStyle,
-    this.textAlign = TextAlign.start,
-    this.textAlignVertical,
     this.textDirection,
     this.readOnly = false,
     this.showCursor,
@@ -37,38 +32,41 @@ class RemixTextField extends StatefulWidget implements Disableable, Errorable {
     this.obscureText = false,
     this.autocorrect = true,
     this.enableSuggestions = true,
+    this.smartDashesType,
+    this.smartQuotesType,
     this.maxLines = 1,
     this.minLines,
     this.expands = false,
     this.maxLength,
+    this.maxLengthEnforcement,
     this.onChanged,
     this.onEditingComplete,
     this.onSubmitted,
     this.onAppPrivateCommand,
     this.inputFormatters,
     this.enabled = true,
-    this.cursorWidth = 2.0,
-    this.cursorHeight,
-    this.cursorRadius,
-    this.cursorColor,
-    this.selectionHeightStyle = BoxHeightStyle.tight,
-    this.selectionWidthStyle = BoxWidthStyle.tight,
-    this.keyboardAppearance,
-    this.scrollPadding = const EdgeInsets.all(20.0),
     this.dragStartBehavior = DragStartBehavior.start,
     this.enableInteractiveSelection = true,
     this.selectionControls,
     this.onTap,
     this.onTapOutside,
-    this.mouseCursor,
-    this.buildCounter,
+    this.onPressUpOutside,
+    this.onTapAlwaysCalled = false,
     this.scrollController,
     this.scrollPhysics,
     this.autofillHints,
+    this.contentInsertionConfiguration,
+    this.clipBehavior = Clip.hardEdge,
     this.restorationId,
+    this.stylusHandwritingEnabled = true,
     this.enableIMEPersonalizedLearning = true,
     this.contextMenuBuilder,
+    this.spellCheckConfiguration,
+    this.magnifierConfiguration,
     this.canRequestFocus = true,
+    this.ignorePointers,
+    this.undoController,
+    this.groupId = EditableText,
     this.hintText,
     this.helperText,
     this.label,
@@ -85,8 +83,11 @@ class RemixTextField extends StatefulWidget implements Disableable, Errorable {
   /// Defines the keyboard focus for this widget.
   final FocusNode? focusNode;
 
-  /// The decoration to show around the text field.
-  final InputDecoration? decoration;
+  /// Undo controller for managing undo/redo operations.
+  final UndoHistoryController? undoController;
+
+  /// The group ID for the text field.
+  final Object groupId;
 
   /// The type of keyboard to use for editing the text.
   final TextInputType? keyboardType;
@@ -96,18 +97,6 @@ class RemixTextField extends StatefulWidget implements Disableable, Errorable {
 
   /// Configures how the platform keyboard will select an uppercase or lowercase keyboard.
   final TextCapitalization textCapitalization;
-
-  /// The style to use for the text being edited.
-  final TextStyle? style;
-
-  /// The strut style used for the vertical layout.
-  final StrutStyle? strutStyle;
-
-  /// How the text should be aligned horizontally.
-  final TextAlign textAlign;
-
-  /// How the text should be aligned vertically.
-  final TextAlignVertical? textAlignVertical;
 
   /// The directionality of the text.
   final TextDirection? textDirection;
@@ -121,17 +110,23 @@ class RemixTextField extends StatefulWidget implements Disableable, Errorable {
   /// Whether this text field should focus itself if nothing else is already focused.
   final bool autofocus;
 
-  /// Character used for obscuring text if obscureText is true.
-  final String obscuringCharacter;
-
   /// Whether to hide the text being edited.
   final bool obscureText;
+
+  /// Character used for obscuring text if obscureText is true.
+  final String obscuringCharacter;
 
   /// Whether to enable autocorrect.
   final bool autocorrect;
 
   /// Whether to show input suggestions as the user types.
   final bool enableSuggestions;
+
+  /// Configuration for smart dashes.
+  final SmartDashesType? smartDashesType;
+
+  /// Configuration for smart quotes.
+  final SmartQuotesType? smartQuotesType;
 
   /// The maximum number of lines for the text to span.
   final int? maxLines;
@@ -144,6 +139,9 @@ class RemixTextField extends StatefulWidget implements Disableable, Errorable {
 
   /// The maximum number of characters to allow in the text field.
   final int? maxLength;
+
+  /// How the maxLength limit should be enforced.
+  final MaxLengthEnforcement? maxLengthEnforcement;
 
   /// Called when the user initiates a change to the TextField's value.
   final ValueChanged<String>? onChanged;
@@ -161,34 +159,9 @@ class RemixTextField extends StatefulWidget implements Disableable, Errorable {
   final List<TextInputFormatter>? inputFormatters;
 
   /// Whether the text field is enabled.
-  @override
   final bool enabled;
 
-  /// How thick the cursor will be.
-  final double cursorWidth;
-
-  /// How tall the cursor will be.
-  final double? cursorHeight;
-
-  /// How rounded the corners of the cursor should be.
-  final Radius? cursorRadius;
-
-  /// The color to use when painting the cursor.
-  final Color? cursorColor;
-
-  /// Controls how tall the selection highlight boxes are computed to be.
-  final BoxHeightStyle selectionHeightStyle;
-
-  /// Controls how wide the selection highlight boxes are computed to be.
-  final BoxWidthStyle selectionWidthStyle;
-
-  /// The appearance of the keyboard.
-  final Brightness? keyboardAppearance;
-
-  /// Configures padding to edges surrounding a Scrollable when the TextField scrolls into view.
-  final EdgeInsets scrollPadding;
-
-  /// Determines the way that drag start behavior is handled.
+  /// Defines how to handle drag start behavior.
   final DragStartBehavior dragStartBehavior;
 
   /// Whether to enable user interface affordances for changing the text selection.
@@ -203,11 +176,11 @@ class RemixTextField extends StatefulWidget implements Disableable, Errorable {
   /// Called when the user taps outside of this text field.
   final TapRegionCallback? onTapOutside;
 
-  /// The cursor for a mouse pointer when it enters or is hovering over the widget.
-  final MouseCursor? mouseCursor;
+  /// Called when tap up is detected outside of this text field.
+  final TapRegionUpCallback? onPressUpOutside;
 
-  /// Callback that generates a custom InputDecoration.counter widget.
-  final InputCounterWidgetBuilder? buildCounter;
+  /// Whether onTap should be called for every tap.
+  final bool onTapAlwaysCalled;
 
   /// The ScrollController to use when vertically scrolling the input.
   final ScrollController? scrollController;
@@ -218,8 +191,17 @@ class RemixTextField extends StatefulWidget implements Disableable, Errorable {
   /// A list of strings that helps the autofill service identify the type of this text input.
   final Iterable<String>? autofillHints;
 
+  /// Configuration for content insertion.
+  final ContentInsertionConfiguration? contentInsertionConfiguration;
+
+  /// The content will be clipped (or not) according to this option.
+  final Clip clipBehavior;
+
   /// Restoration ID to save and restore the state of the text field.
   final String? restorationId;
+
+  /// Whether stylus handwriting is enabled.
+  final bool stylusHandwritingEnabled;
 
   /// Whether to enable that the IME update personalized data.
   final bool enableIMEPersonalizedLearning;
@@ -227,8 +209,17 @@ class RemixTextField extends StatefulWidget implements Disableable, Errorable {
   /// A context menu builder for the text field.
   final EditableTextContextMenuBuilder? contextMenuBuilder;
 
+  /// Configuration for spell checking.
+  final SpellCheckConfiguration? spellCheckConfiguration;
+
+  /// Configuration for text magnification.
+  final TextMagnifierConfiguration? magnifierConfiguration;
+
   /// Whether this text field can request focus.
   final bool canRequestFocus;
+
+  /// Whether to ignore pointer events.
+  final bool? ignorePointers;
 
   /// Hint text to display when the text field is empty.
   final String? hintText;
@@ -240,7 +231,6 @@ class RemixTextField extends StatefulWidget implements Disableable, Errorable {
   final String? label;
 
   /// Whether the text field is in error state.
-  @override
   final bool error;
 
   /// A widget to display before the text field.
@@ -260,26 +250,46 @@ class RemixTextField extends StatefulWidget implements Disableable, Errorable {
 }
 
 class _RemixTextFieldState extends State<RemixTextField>
-    with MixControllerMixin, DisableableMixin, ErrorableMixin {
+    with WidgetStateMixin, DisableableMixin, ErrorableMixin, FocusableMixin {
   TextFieldStyle get _style =>
       DefaultTextFieldStyle.merge(widget.textFieldStyle);
+
+  TextEditingController? _internalController;
+  TextEditingController get _controller =>
+      widget.controller ?? (_internalController ??= TextEditingController());
+
+  @override
+  void didUpdateWidget(covariant RemixTextField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Clean up internal controller if external one is now provided
+    if (oldWidget.controller == null &&
+        widget.controller != null &&
+        _internalController != null) {
+      _internalController!.dispose();
+      _internalController = null;
+    }
+  }
+
+  @override
+  void dispose() {
+    _internalController?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return StyleBuilder(
       style: _style,
       builder: (context, spec) {
-        // Build the base text field
-        final baseTextField = TextField(
-          controller: widget.controller,
+        return NakedTextField(
+          groupId: widget.groupId,
+          controller: _controller,
           focusNode: widget.focusNode,
+          undoController: widget.undoController,
           keyboardType: widget.keyboardType,
           textInputAction: widget.textInputAction,
           textCapitalization: widget.textCapitalization,
-          style: spec.style.merge(widget.style),
-          strutStyle: widget.strutStyle,
           textAlign: spec.textAlign,
-          textAlignVertical: widget.textAlignVertical,
           textDirection: widget.textDirection,
           readOnly: widget.readOnly,
           showCursor: widget.showCursor,
@@ -287,11 +297,14 @@ class _RemixTextFieldState extends State<RemixTextField>
           obscuringCharacter: widget.obscuringCharacter,
           obscureText: widget.obscureText,
           autocorrect: widget.autocorrect,
+          smartDashesType: widget.smartDashesType,
+          smartQuotesType: widget.smartQuotesType,
           enableSuggestions: widget.enableSuggestions,
           maxLines: widget.maxLines,
           minLines: widget.minLines,
           expands: widget.expands,
           maxLength: widget.maxLength,
+          maxLengthEnforcement: widget.maxLengthEnforcement,
           onChanged: widget.onChanged,
           onEditingComplete: widget.onEditingComplete,
           onSubmitted: widget.onSubmitted,
@@ -301,8 +314,8 @@ class _RemixTextFieldState extends State<RemixTextField>
           cursorWidth: spec.cursorWidth,
           cursorHeight: spec.cursorHeight,
           cursorRadius: spec.cursorRadius,
-          cursorColor: spec.cursorColor,
           cursorOpacityAnimates: spec.cursorOpacityAnimates,
+          cursorColor: spec.cursorColor,
           selectionHeightStyle: spec.selectionHeightStyle,
           selectionWidthStyle: spec.selectionWidthStyle,
           keyboardAppearance: spec.keyboardAppearance,
@@ -310,63 +323,84 @@ class _RemixTextFieldState extends State<RemixTextField>
           dragStartBehavior: widget.dragStartBehavior,
           enableInteractiveSelection: widget.enableInteractiveSelection,
           selectionControls: widget.selectionControls,
-          onTap: widget.onPressed ?? widget.onTap,
+          onPressed: widget.onPressed ?? widget.onTap,
+          onTapAlwaysCalled: widget.onTapAlwaysCalled,
+          onPressedState: (state) => controller.pressed = state,
           onTapOutside: widget.onTapOutside,
-          mouseCursor: widget.mouseCursor,
-          buildCounter: widget.buildCounter,
           scrollController: widget.scrollController,
           scrollPhysics: widget.scrollPhysics,
           autofillHints: widget.autofillHints,
+          contentInsertionConfiguration: widget.contentInsertionConfiguration,
+          clipBehavior: widget.clipBehavior,
           restorationId: widget.restorationId,
+          onPressUpOutside: widget.onPressUpOutside,
+          stylusHandwritingEnabled: widget.stylusHandwritingEnabled,
           enableIMEPersonalizedLearning: widget.enableIMEPersonalizedLearning,
           contextMenuBuilder: widget.contextMenuBuilder,
           canRequestFocus: widget.canRequestFocus,
-          decoration: widget.decoration ??
-              InputDecoration(
-                hintText: widget.hintText,
-                hintStyle: TextStyle(color: spec.hintTextColor),
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.zero,
-              ),
+          spellCheckConfiguration: widget.spellCheckConfiguration,
+          magnifierConfiguration: widget.magnifierConfiguration,
+          onHoveredState: (state) => controller.hovered = state,
+          onFocusedState: (state) => controller.focused = state,
+          style: spec.style,
+          builder: (context, editableText) {
+            // Core text field with optional hint
+            final textArea = widget.hintText == null
+                ? editableText
+                : Stack(
+                    alignment: AlignmentDirectional.centerStart,
+                    children: [
+                      // Hint text that hides when controller has text
+                      ListenableBuilder(
+                        listenable: _controller,
+                        builder: (context, child) {
+                          return _controller.text.isEmpty
+                              ? Text(
+                                  widget.hintText!,
+                                  style: spec.style.copyWith(
+                                    color: spec.hintTextColor,
+                                  ),
+                                )
+                              : const SizedBox.shrink();
+                        },
+                      ),
+                      editableText,
+                    ],
+                  );
+
+            // Container with optional prefix/suffix
+            final textField = (widget.prefix != null || widget.suffix != null)
+                ? spec.container.flex(
+                    direction: Axis.horizontal,
+                    children: [
+                      if (widget.prefix != null) widget.prefix!,
+                      Expanded(child: textArea),
+                      if (widget.suffix != null) widget.suffix!,
+                    ],
+                  )
+                : spec.container.box(child: textArea);
+
+            // Add label/helper if needed
+            if (widget.label == null && widget.helperText == null) {
+              return textField;
+            }
+
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: spec.spacing,
+              children: [
+                if (widget.label != null) spec.label(widget.label!),
+                textField,
+                if (widget.helperText != null)
+                  spec.helperText(widget.helperText!),
+              ],
+            );
+          },
+          ignorePointers: widget.ignorePointers,
         );
-
-        // Wrap with prefix/suffix if provided
-        final Widget textField = (widget.prefix != null || widget.suffix != null)
-            ? spec.container.flex(
-                direction: Axis.horizontal,
-                children: [
-                  if (widget.prefix != null) widget.prefix!,
-                  Expanded(child: baseTextField),
-                  if (widget.suffix != null) widget.suffix!,
-                ],
-              )
-            : spec.container.box(child: baseTextField);
-
-        // Build the final widget with label and/or helper text if provided
-        final List<Widget> columnChildren = [];
-        
-        if (widget.label != null) {
-          columnChildren.add(spec.label(widget.label!));
-        }
-        
-        columnChildren.add(textField);
-        
-        if (widget.helperText != null) {
-          columnChildren.add(spec.helperText(widget.helperText!));
-        }
-        
-        if (columnChildren.length > 1) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            spacing: spec.spacing,
-            children: columnChildren,
-          );
-        }
-        
-        return textField;
       },
-      controller: stateController,
+      controller: controller,
     );
   }
 }

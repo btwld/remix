@@ -4,17 +4,12 @@ class TooltipSpec extends Spec<TooltipSpec> with Diagnosticable {
   final BoxSpec container;
   final TextSpec text;
 
-  const TooltipSpec({
-    BoxSpec? container,
-    TextSpec? text
-  })  : container = container ?? const BoxSpec(),
+  const TooltipSpec({BoxSpec? container, TextSpec? text})
+      : container = container ?? const BoxSpec(),
         text = text ?? const TextSpec();
 
   @override
-  TooltipSpec copyWith({
-    BoxSpec? container,
-    TextSpec? text
-  }) {
+  TooltipSpec copyWith({BoxSpec? container, TextSpec? text}) {
     return TooltipSpec(
       container: container ?? this.container,
       text: text ?? this.text,
@@ -37,9 +32,7 @@ class TooltipSpec extends Spec<TooltipSpec> with Diagnosticable {
     properties.add(
       DiagnosticsProperty('container', container, defaultValue: null),
     );
-    properties.add(
-      DiagnosticsProperty('text', text, defaultValue: null)
-    );
+    properties.add(DiagnosticsProperty('text', text, defaultValue: null));
   }
 
   @override

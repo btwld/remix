@@ -76,7 +76,7 @@ class _InheritedAccordionStyle extends InheritedWidget {
 }
 
 // Accordion Item Widget
-class RemixAccordionItem<T> extends StatefulWidget implements Disableable {
+class RemixAccordionItem<T> extends StatefulWidget with Disableable, Focusable {
   RemixAccordionItem({
     super.key,
     required String title,
@@ -90,7 +90,6 @@ class RemixAccordionItem<T> extends StatefulWidget implements Disableable {
 
   final Widget header;
   final Widget child;
-  @override
   final bool enabled;
   final T value;
   final FocusNode? focusNode;
@@ -101,7 +100,7 @@ class RemixAccordionItem<T> extends StatefulWidget implements Disableable {
 }
 
 class _RemixAccordionItemState<T> extends State<RemixAccordionItem<T>>
-    with MixControllerMixin, DisableableMixin {
+    with WidgetStateMixin, DisableableMixin {
   static const _kAnimationDuration = Duration(milliseconds: 100);
   static const _kAnimationCurve = Curves.easeInOut;
 
@@ -118,15 +117,15 @@ class _RemixAccordionItemState<T> extends State<RemixAccordionItem<T>>
               // Update state after frame
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 if (mounted) {
-                  stateController.selected = isExpanded;
+                  controller.selected = isExpanded;
                 }
               });
 
               return GestureDetector(
                 onTap: widget.enabled ? toggle : null,
                 child: MouseRegion(
-                  onEnter: (_) => stateController.hovered = true,
-                  onExit: (_) => stateController.hovered = false,
+                  onEnter: (_) => controller.hovered = true,
+                  onExit: (_) => controller.hovered = false,
                   child: spec.headerContainer(
                     direction: Axis.horizontal,
                     children: [
