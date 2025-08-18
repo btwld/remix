@@ -70,15 +70,19 @@ class _RemixSwitchState extends State<RemixSwitch>
         style: DefaultRemixSwitchStyle.merge(widget.style),
         controller: controller,
         builder: (context, spec) {
-          return spec.container(
-            child: spec.track(
+          final Container = spec.container;
+          final Track = spec.track;
+          final Thumb = spec.thumb;
+
+          return Container(
+            child: Track(
               child: Align(
                 alignment: widget.selected
                     ? Alignment.centerRight
                     : Alignment.centerLeft,
                 child: Padding(
                   padding: const EdgeInsets.all(2),
-                  child: spec.thumb(),
+                  child: Thumb(),
                 ),
               ),
             ),

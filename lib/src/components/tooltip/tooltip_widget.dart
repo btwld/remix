@@ -34,17 +34,10 @@ class RemixTooltip extends StatelessWidget {
     return StyleBuilder(
       style: DefaultRemixTooltipStyle.merge(style),
       builder: (context, spec) {
+        final Container = spec.container;
+
         return NakedTooltip(
-          tooltipBuilder: (context) => spec.container(
-            child: DefaultTextStyle(
-              style: TextStyle(
-                color: spec.text.style?.color,
-                fontSize: spec.text.style?.fontSize,
-                fontWeight: spec.text.style?.fontWeight,
-              ),
-              child: tooltipChild,
-            ),
-          ),
+          tooltipBuilder: (context) => Container(child: tooltipChild),
           showDuration: showDuration,
           waitDuration: waitDuration,
           tooltipSemantics: tooltipSemantics,

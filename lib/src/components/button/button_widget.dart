@@ -86,7 +86,7 @@ class RemixButton extends StatefulWidget with HasEnabled, HasFocused {
     this.style = const RemixButtonStyle.create(),
   })  : label = null,
         icon = icon,
-        child = Icon(icon);
+        child = StyledIcon(icon: icon);
 
   static late final styleFrom = RemixButtonStyle.new;
 
@@ -150,6 +150,8 @@ class _RemixButtonState extends State<RemixButton>
       onPressed: widget.onPressed,
       onHoverChange: (state) => controller.hovered = state,
       onPressChange: (state) => controller.pressed = state,
+      onFocusChange: (state) => controller.focused = state,
+      onDisabledChange: (state) => controller.disabled = state,
       enabled: _isEnabled,
       enableHapticFeedback: widget.enableHapticFeedback,
       focusNode: widget.focusNode,
@@ -158,19 +160,19 @@ class _RemixButtonState extends State<RemixButton>
         style: DefaultRemixButtonStyle.merge(widget.style),
         controller: controller,
         builder: (context, spec) {
+          final Label = spec.label;
+          final Spinner = spec.spinner;
+          final Container = spec.container;
+
           // Create the child widget based on whether custom child is provided
           final effectiveChild = widget.child ??
-              RemixLabel(
-                widget.label ?? '',
-                icon: widget.icon,
-                style: RemixLabelStyle.value(spec.label),
-              );
+              Label(text: widget.label ?? '', leadingIcon: widget.icon);
 
           final content = widget.loading
               ? Stack(
                   alignment: Alignment.center,
                   children: [
-                    RemixSpinner(style: RemixSpinnerStyle.value(spec.spinner)),
+                    Spinner(),
                     Visibility(
                       visible: false,
                       maintainState: true,
@@ -182,7 +184,7 @@ class _RemixButtonState extends State<RemixButton>
                 )
               : effectiveChild;
 
-          return spec.container(child: content);
+          return Container(child: content);
         },
       ),
     );

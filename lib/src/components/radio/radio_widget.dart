@@ -67,27 +67,6 @@ class RemixRadio<T> extends StatefulWidget
 
 class _RemixRadioState<T> extends State<RemixRadio<T>>
     with HasWidgetStateController, HasEnabledState, HasSelectedState {
-  Widget _buildRadioChild(RemixRadioStyle style, bool isSelected) {
-    return StyleBuilder(
-      style: DefaultRemixRadioStyle.merge(style),
-      controller: controller,
-      builder: (context, spec) {
-        final radio = spec.indicatorContainer(
-          child: isSelected ? spec.indicator() : null,
-        );
-
-        if (widget.label == null) {
-          return radio;
-        }
-
-        return spec.container(
-          direction: Axis.horizontal,
-          children: [radio, spec.label(widget.label!)],
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     // Check if we're in a NakedRadioGroup by looking for NakedRadioGroupScope
@@ -120,7 +99,31 @@ class _RemixRadioState<T> extends State<RemixRadio<T>>
       enableHapticFeedback: widget.enableHapticFeedback,
       focusNode: widget.focusNode,
       autofocus: widget.autofocus,
-      child: _buildRadioChild(style, isSelected),
+      child: StyleBuilder(
+        style: DefaultRemixRadioStyle.merge(style),
+        controller: controller,
+        builder: (context, spec) {
+          final IndicatorContainer = spec.indicatorContainer;
+          final Indicator = spec.indicator;
+          final Container = spec.container;
+          final Label = spec.label;
+
+          // Build the radio indicator
+          final radioIndicator = IndicatorContainer(
+            child: isSelected ? Indicator() : null,
+          );
+
+          // Add label if present
+          final radioWithLabel = widget.label != null
+              ? Container(
+                  direction: Axis.horizontal,
+                  children: [radioIndicator, Label(widget.label!)],
+                )
+              : radioIndicator;
+
+          return radioWithLabel;
+        },
+      ),
     );
 
     // Only wrap with NakedRadioGroup when NOT in a group

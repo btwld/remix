@@ -81,34 +81,31 @@ class _RemixListItemState extends State<RemixListItem>
         style: DefaultRemixListItemStyle.merge(widget.style),
         controller: controller,
         builder: (context, spec) {
+          final Container = spec.container;
+          final ContentContainer = spec.contentContainer;
+          final Title = spec.title;
+          final Subtitle = spec.subtitle;
+
           final children = <Widget>[];
 
           // Leading widget
           if (widget.leading != null) {
-            children.add(
-              IconTheme(
-                data: IconThemeData(
-                  size: spec.leadingIcon.size,
-                  color: spec.leadingIcon.color,
-                ),
-                child: widget.leading!,
-              ),
-            );
+            children.add(widget.leading!);
           }
 
           // Title and subtitle
           final textWidgets = <Widget>[];
           if (widget.title != null) {
-            textWidgets.add(spec.title(widget.title!));
+            textWidgets.add(Title(widget.title!));
           }
           if (widget.subtitle != null) {
-            textWidgets.add(spec.subtitle(widget.subtitle!));
+            textWidgets.add(Subtitle(widget.subtitle!));
           }
 
           if (textWidgets.isNotEmpty) {
             children.add(
               Expanded(
-                child: spec.contentContainer(
+                child: ContentContainer(
                   direction: Axis.vertical,
                   children: textWidgets,
                 ),
@@ -118,21 +115,10 @@ class _RemixListItemState extends State<RemixListItem>
 
           // Trailing widget
           if (widget.trailing != null) {
-            children.add(
-              IconTheme(
-                data: IconThemeData(
-                  size: spec.trailingIcon.size,
-                  color: spec.trailingIcon.color,
-                ),
-                child: widget.trailing!,
-              ),
-            );
+            children.add(widget.trailing!);
           }
 
-          return spec.container(
-            direction: Axis.horizontal,
-            children: children,
-          );
+          return Container(direction: Axis.horizontal, children: children);
         },
       ),
     );

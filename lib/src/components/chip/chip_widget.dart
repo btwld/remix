@@ -22,53 +22,24 @@ class RemixChip extends StatefulWidget
     with HasEnabled, HasSelected, HasFocused {
   const RemixChip({
     super.key,
-    required this.label,
+    this.label,
     this.leadingIcon,
     this.trailingIcon,
-    @Deprecated('Use trailingIcon instead. Will be removed in next major version.')
-    this.deleteIcon,
     this.onChanged,
-    @Deprecated('Use onChanged instead. Will be removed in next major version.')
-    this.onSelected,
     this.onDeleted,
     this.selected = false,
     this.enabled = true,
     this.style = const RemixChipStyle.create(),
     this.focusNode,
     this.autofocus = false,
-  }) : child = null;
-
-  /// Creates a Remix chip with custom content.
-  ///
-  /// This constructor allows for custom chip content beyond the default layout.
-  ///
-  /// Example:
-  /// ```dart
-  /// RemixChip.raw(
-  ///   child: Icon(Icons.star),
-  ///   onChanged: (bool isSelected) {},
-  ///   style: RemixChipStyle(),
-  /// )
-  /// ```
-  const RemixChip.raw({
-    super.key,
-    required this.child,
-    this.onChanged,
-    @Deprecated('Use onChanged instead. Will be removed in next major version.')
-    this.onSelected,
-    this.onDeleted,
-    this.selected = false,
-    this.enabled = true,
-    this.style = const RemixChipStyle.create(),
-    this.focusNode,
-    this.autofocus = false,
-  })  : label = '',
-        leadingIcon = null,
-        trailingIcon = null,
-        deleteIcon = null;
+    this.child,
+  }) : assert(
+          label != null || child != null,
+          'Must provide either label or child',
+        );
 
   /// The text label for the chip.
-  final String label;
+  final String? label;
 
   /// Optional leading icon.
   final IconData? leadingIcon;
@@ -77,20 +48,11 @@ class RemixChip extends StatefulWidget
   /// defaults to Icons.close.
   final IconData? trailingIcon;
 
-  /// Optional delete icon. If onDeleted is provided but deleteIcon is null,
-  /// defaults to Icons.close.
-  @Deprecated('Use trailingIcon instead. Will be removed in next major version.')
-  final IconData? deleteIcon;
-
-  /// Custom child widget for raw constructor.
+  /// Custom child widget that overrides the default label and icon layout.
   final Widget? child;
 
   /// Called when the user taps the chip.
   final ValueChanged<bool>? onChanged;
-
-  /// Called when the user taps the chip.
-  @Deprecated('Use onChanged instead. Will be removed in next major version.')
-  final ValueChanged<bool>? onSelected;
 
   /// Called when the user taps the delete icon.
   final VoidCallback? onDeleted;
@@ -120,7 +82,7 @@ class _RemixChipState extends State<RemixChip>
   Widget build(BuildContext context) {
     return NakedCheckbox(
       value: widget.selected,
-      onChanged: (value) => (widget.onChanged ?? widget.onSelected)?.call(value ?? false),
+      onChanged: (value) => widget.onChanged?.call(value ?? false),
       onHoverChange: (state) => controller.hovered = state,
       onPressChange: (state) => controller.pressed = state,
       onFocusChange: (state) => controller.focused = state,
@@ -131,47 +93,41 @@ class _RemixChipState extends State<RemixChip>
         style: DefaultRemixChipStyle.merge(widget.style),
         controller: controller,
         builder: (context, spec) {
-          // If custom child is provided, use it directly
+          final Container = spec.container;
+          final LeadingIcon = spec.leadingIcon;
+          final Label = spec.label;
+          final TrailingIcon = spec.trailingIcon;
+
+          // Use custom child if provided
           if (widget.child != null) {
-            return spec.container(
+            return Container(
               direction: Axis.horizontal,
               children: [widget.child!],
             );
           }
 
-          // Otherwise build standard chip layout
+          // Build chip content progressively
           final children = <Widget>[];
 
-          // Leading icon
+          // Add leading icon
           if (widget.leadingIcon != null) {
-            children.add(Icon(
-              widget.leadingIcon,
-              size: spec.leadingIcon.size,
-              color: spec.leadingIcon.color,
-            ));
+            children.add(LeadingIcon(icon: widget.leadingIcon!));
           }
 
-          // Label
-          if (widget.label.isNotEmpty) {
-            children.add(spec.label(widget.label));
+          // Add label
+          if (widget.label != null) {
+            children.add(Label(widget.label!));
           }
 
-          // Delete icon
+          // Add delete button
           if (widget.onDeleted != null) {
             children.add(GestureDetector(
               onTap: widget.enabled ? widget.onDeleted : null,
-              child: Icon(
-                widget.trailingIcon ?? widget.deleteIcon ?? Icons.close,
-                size: spec.trailingIcon.size,
-                color: spec.trailingIcon.color,
-              ),
+              child: TrailingIcon(icon: widget.trailingIcon ?? Icons.close),
             ));
           }
 
-          return spec.container(
-            direction: Axis.horizontal,
-            children: children,
-          );
+          return Container(direction: Axis.horizontal, children: children);
         },
       ),
     );

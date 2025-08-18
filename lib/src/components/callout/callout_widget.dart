@@ -18,7 +18,7 @@ class RemixCallout extends StatelessWidget {
     IconData? icon,
     required String text,
     this.style = const RemixCalloutStyle.create(),
-  }) : child = RemixLabel(text, icon: icon);
+  }) : child = RemixLabel(text, leadingIcon: icon);
 
   /// This constructor allows for more advanced customization by directly providing a [child] widget.
   const RemixCallout.raw({
@@ -38,17 +38,9 @@ class RemixCallout extends StatelessWidget {
     return StyleBuilder(
       style: DefaultRemixCalloutStyle.merge(style),
       builder: (context, spec) {
-        return IconTheme(
-          data: IconThemeData(size: spec.icon.size, color: spec.icon.color),
-          child: DefaultTextStyle(
-            style: TextStyle(
-              color: spec.text.style?.color,
-              fontSize: spec.text.style?.fontSize,
-              fontWeight: spec.text.style?.fontWeight,
-            ),
-            child: spec.container(child: child),
-          ),
-        );
+        final Container = spec.container;
+
+        return Container(child: child);
       },
     );
   }

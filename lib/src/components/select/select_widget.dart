@@ -32,12 +32,8 @@ class RemixSelect<T> extends StatefulWidget {
     this.onOpen,
     this.selectedValue,
     this.onChanged,
-    @Deprecated('Use onChanged instead. Will be removed in next major version.')
-    this.onSelectedValueChanged,
     this.selectedValues,
     this.onChangedMultiple,
-    @Deprecated('Use onChangedMultiple instead. Will be removed in next major version.')
-    this.onSelectedValuesChanged,
     this.multiSelect = false,
     this.enabled = true,
     this.semanticLabel,
@@ -72,19 +68,11 @@ class RemixSelect<T> extends StatefulWidget {
   /// Called when the selected value changes in single selection mode.
   final ValueChanged<T?>? onChanged;
 
-  /// Called when the selected value changes in single selection mode.
-  @Deprecated('Use onChanged instead. Will be removed in next major version.')
-  final ValueChanged<T?>? onSelectedValueChanged;
-
   /// The currently selected values in multi-selection mode.
   final Set<T>? selectedValues;
 
   /// Called when the selected values change in multi-selection mode.
   final ValueChanged<Set<T>>? onChangedMultiple;
-
-  /// Called when the selected values change in multi-selection mode.
-  @Deprecated('Use onChangedMultiple instead. Will be removed in next major version.')
-  final ValueChanged<Set<T>>? onSelectedValuesChanged;
 
   /// Whether to enable multi-selection mode.
   /// When true, multiple items can be selected.
@@ -164,7 +152,7 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
                 items: widget.items,
               ),
               selectedValues: widget.selectedValues ?? {},
-              onSelectedValuesChanged: widget.onChangedMultiple ?? widget.onSelectedValuesChanged,
+              onSelectedValuesChanged: widget.onChangedMultiple,
               onStateChange: (value) {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   if (value == OverlayChildLifecycleState.present) {
@@ -212,7 +200,7 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
               }
             },
             removalDelay: duration,
-            onSelectedValueChanged: widget.onChanged ?? widget.onSelectedValueChanged,
+            onSelectedValueChanged: widget.onChanged,
             enabled: widget.enabled,
             semanticLabel: widget.semanticLabel,
             closeOnSelect: widget.closeOnSelect,
@@ -388,21 +376,13 @@ class RemixSelectTrigger extends StatefulWidget with HasEnabled, HasFocused {
     this.enableHapticFeedback = true,
     this.focusNode,
     this.autofocus = false,
-    required this.label,
+    this.label,
     this.trailingIcon = Icons.keyboard_arrow_down,
-  }) : child = null;
-
-  const RemixSelectTrigger.raw({
-    super.key,
-    this.enabled = true,
-    this.semanticLabel,
-    this.cursor = SystemMouseCursors.click,
-    this.enableHapticFeedback = true,
-    this.focusNode,
-    this.autofocus = false,
-    required this.child,
-  })  : label = '',
-        trailingIcon = null;
+    this.child,
+  }) : assert(
+          label != null || child != null,
+          'Must provide either label or child',
+        );
 
   /// The child widget to display in the trigger.
   /// This is used when the raw constructor is used.
@@ -413,7 +393,7 @@ class RemixSelectTrigger extends StatefulWidget with HasEnabled, HasFocused {
   final bool enabled;
 
   /// The label to display on the trigger.
-  final String label;
+  final String? label;
 
   /// Semantic label for accessibility.
   /// Used by screen readers to identify the trigger.
@@ -461,20 +441,32 @@ class _RemixSelectTriggerState extends State<RemixSelectTrigger>
         controller: controller,
         builder: (context, spec) {
           final triggerSpec = spec.trigger;
+          final TriggerContainer = triggerSpec.container;
+          final TriggerLabel = triggerSpec.label;
 
-          final defaultChild = triggerSpec.container.flex(
+          // Build trigger content progressively
+          Widget triggerContent = widget.child ?? const SizedBox.shrink();
+
+          // If no custom child, build default content with label
+          if (widget.child == null && widget.label != null) {
+            triggerContent = TriggerLabel(widget.label!);
+
+            // Add trailing icon if present
+            if (widget.trailingIcon != null) {
+              triggerContent = TriggerContainer(
+                direction: Axis.horizontal,
+                children: [triggerContent, Icon(widget.trailingIcon!)],
+              );
+            }
+          }
+
+          // Wrap with container
+          triggerContent = TriggerContainer(
             direction: Axis.horizontal,
-            children: [
-              triggerSpec.label(widget.label),
-              if (widget.trailingIcon != null) Icon(widget.trailingIcon!),
-            ],
+            children: [triggerContent],
           );
 
-          return IconTheme(
-            data: triggerSpec.icon,
-            child:
-                triggerSpec.container.box(child: widget.child ?? defaultChild),
-          );
+          return triggerContent;
         },
       ),
     );
@@ -485,7 +477,7 @@ class RemixSelectItem<T> extends StatefulWidget with HasEnabled, HasFocused {
   const RemixSelectItem({
     super.key,
     required this.value,
-    required this.label,
+    this.label,
     this.trailingIcon = Icons.check,
     this.enabled = true,
     this.semanticLabel,
@@ -493,27 +485,18 @@ class RemixSelectItem<T> extends StatefulWidget with HasEnabled, HasFocused {
     this.enableHapticFeedback = true,
     this.focusNode,
     this.autofocus = false,
-  }) : child = null;
-
-  const RemixSelectItem.raw({
-    super.key,
-    required this.value,
-    required this.child,
-    this.enabled = true,
-    this.semanticLabel,
-    this.cursor = SystemMouseCursors.click,
-    this.enableHapticFeedback = true,
-    this.focusNode,
-    this.autofocus = false,
-  })  : label = '',
-        trailingIcon = Icons.check;
+    this.child,
+  }) : assert(
+          label != null || child != null,
+          'Must provide either label or child',
+        );
 
   /// The value associated with this item.
   /// This value will be passed to the select's onChange callback when selected.
   final T value;
 
   /// The label to display on the item.
-  final String label;
+  final String? label;
 
   /// The icon to display on the item.
   final IconData trailingIcon;
@@ -541,7 +524,7 @@ class RemixSelectItem<T> extends StatefulWidget with HasEnabled, HasFocused {
   /// Whether the item should automatically request focus when it is created.
   final bool autofocus;
 
-  /// The icon to display on the item.
+  /// Custom child widget that overrides the default label and icon layout.
   final Widget? child;
 
   @override
@@ -596,6 +579,7 @@ class _RemixSelectItemState<T> extends State<RemixSelectItem<T>>
         controller: controller,
         builder: (context, spec) {
           final itemSpec = spec.item;
+          final ItemContainer = itemSpec.container;
 
           // Use checkbox icon for multi-select, check icon for single select
           final IconData selectionIcon = isMultiSelect
@@ -604,20 +588,29 @@ class _RemixSelectItemState<T> extends State<RemixSelectItem<T>>
                   : Icons.check_box_outline_blank)
               : widget.trailingIcon;
 
-          final defaultChild = itemSpec.container.flex(
+          // Build item content progressively
+          Widget itemContent = widget.child ?? const SizedBox.shrink();
+
+          // If no custom child, build default content with label
+          if (widget.child == null && widget.label != null) {
+            final ItemText = itemSpec.text;
+            final ItemIcon = itemSpec.icon;
+            itemContent = ItemText(widget.label!);
+
+            // Add selection icon
+            itemContent = ItemContainer(
+              direction: Axis.horizontal,
+              children: [itemContent, ItemIcon(icon: selectionIcon)],
+            );
+          }
+
+          // Wrap with container
+          itemContent = ItemContainer(
             direction: Axis.horizontal,
-            children: [Text(widget.label), Icon(selectionIcon)],
+            children: [itemContent],
           );
 
-          return IconTheme(
-            data: itemSpec.icon,
-            child: DefaultTextStyle(
-              style: itemSpec.textStyle,
-              child: itemSpec.container.box(
-                child: widget.child ?? defaultChild,
-              ),
-            ),
-          );
+          return itemContent;
         },
       ),
     );

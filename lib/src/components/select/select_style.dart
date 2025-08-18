@@ -101,12 +101,12 @@ class RemixSelectStyle extends Style<SelectSpec>
 class RemixSelectTriggerStyle extends Style<SelectTriggerSpec> {
   final Prop<FlexBoxSpec>? $container;
   final Prop<TextSpec>? $label;
-  final Prop<IconThemeData>? $icon;
+  final Prop<IconSpec>? $icon;
 
   const RemixSelectTriggerStyle.create({
     Prop<FlexBoxSpec>? container,
     Prop<TextSpec>? label,
-    Prop<IconThemeData>? icon,
+    Prop<IconSpec>? icon,
     super.variants,
     super.animation,
     super.modifier,
@@ -118,7 +118,7 @@ class RemixSelectTriggerStyle extends Style<SelectTriggerSpec> {
   RemixSelectTriggerStyle({
     FlexBoxMix? container,
     TextMix? label,
-    IconThemeData? icon,
+    IconMix? icon,
     AnimationConfig? animation,
     List<VariantStyle<SelectTriggerSpec>>? variants,
     ModifierConfig? modifier,
@@ -126,7 +126,7 @@ class RemixSelectTriggerStyle extends Style<SelectTriggerSpec> {
   }) : this.create(
           container: container != null ? Prop.mix(container) : null,
           label: label != null ? Prop.mix(label) : null,
-          icon: Prop.maybe(icon),
+          icon: icon != null ? Prop.mix(icon) : null,
           variants: variants,
           animation: animation,
           modifier: modifier,
@@ -171,33 +171,33 @@ class RemixSelectTriggerStyle extends Style<SelectTriggerSpec> {
 
 class RemixSelectMenuItemStyle extends Style<SelectMenuItemSpec> {
   final Prop<FlexBoxSpec>? $container;
-  final Prop<TextStyle>? $textStyle;
-  final Prop<IconThemeData>? $icon;
+  final Prop<TextSpec>? $text;
+  final Prop<IconSpec>? $icon;
 
   const RemixSelectMenuItemStyle.create({
     Prop<FlexBoxSpec>? container,
-    Prop<TextStyle>? textStyle,
-    Prop<IconThemeData>? icon,
+    Prop<TextSpec>? text,
+    Prop<IconSpec>? icon,
     super.variants,
     super.animation,
     super.modifier,
     super.inherit,
   })  : $container = container,
-        $textStyle = textStyle,
+        $text = text,
         $icon = icon;
 
   RemixSelectMenuItemStyle({
     FlexBoxMix? container,
-    TextStyle? textStyle,
-    IconThemeData? icon,
+    TextMix? text,
+    IconMix? icon,
     AnimationConfig? animation,
     List<VariantStyle<SelectMenuItemSpec>>? variants,
     ModifierConfig? modifier,
     bool? inherit,
   }) : this.create(
           container: container != null ? Prop.mix(container) : null,
-          textStyle: Prop.maybe(textStyle),
-          icon: Prop.maybe(icon),
+          text: text != null ? Prop.mix(text) : null,
+          icon: icon != null ? Prop.mix(icon) : null,
           variants: variants,
           animation: animation,
           modifier: modifier,
@@ -208,7 +208,7 @@ class RemixSelectMenuItemStyle extends Style<SelectMenuItemSpec> {
   SelectMenuItemSpec resolve(BuildContext context) {
     return SelectMenuItemSpec(
       container: MixOps.resolve(context, $container),
-      textStyle: MixOps.resolve(context, $textStyle),
+      text: MixOps.resolve(context, $text),
       icon: MixOps.resolve(context, $icon),
     );
   }
@@ -219,7 +219,7 @@ class RemixSelectMenuItemStyle extends Style<SelectMenuItemSpec> {
 
     return RemixSelectMenuItemStyle.create(
       container: MixOps.merge($container, other.$container),
-      textStyle: other.$textStyle ?? $textStyle,
+      text: other.$text ?? $text,
       icon: other.$icon ?? $icon,
       variants: mergeVariantLists($variants, other.$variants),
       animation: other.$animation ?? $animation,
@@ -231,7 +231,7 @@ class RemixSelectMenuItemStyle extends Style<SelectMenuItemSpec> {
   @override
   List<Object?> get props => [
         $container,
-        $textStyle,
+        $text,
         $icon,
         $variants,
         $animation,
@@ -348,7 +348,7 @@ final DefaultRemixSelectStyle = RemixSelectStyle(
       ),
     ),
     label: TextMix(style: TextStyleMix(color: Colors.black87, fontSize: 14)),
-    icon: IconThemeData(size: 20, color: Colors.black54),
+    icon: IconMix(size: 20, color: Colors.black54),
   ),
   item: RemixSelectMenuItemStyle(
     container: FlexBoxMix(
@@ -361,8 +361,8 @@ final DefaultRemixSelectStyle = RemixSelectStyle(
         crossAxisAlignment: CrossAxisAlignment.center,
       ),
     ),
-    textStyle: TextStyle(color: Colors.black87, fontSize: 14),
-    icon: IconThemeData(size: 16, color: Colors.black54),
+    text: TextMix(style: TextStyleMix(color: Colors.black87, fontSize: 14)),
+    icon: IconMix(size: 16, color: Colors.black54),
   ),
   position: RemixCompositedTransformFollowerStyle(
     targetAnchor: Alignment.bottomLeft,
@@ -410,7 +410,7 @@ extension RemixSelectVariants on RemixSelectStyle {
           label: TextMix(
             style: TextStyleMix(color: Colors.blue[700], fontSize: 14),
           ),
-          icon: IconThemeData(size: 20, color: Colors.blue[600]),
+          icon: IconMix(size: 20, color: Colors.blue[600]),
         ),
         item: RemixSelectMenuItemStyle(
           container: FlexBoxMix(
@@ -423,8 +423,8 @@ extension RemixSelectVariants on RemixSelectStyle {
               crossAxisAlignment: CrossAxisAlignment.center,
             ),
           ),
-          textStyle: TextStyle(color: Colors.black87, fontSize: 14),
-          icon: IconThemeData(size: 16, color: Colors.blue[500]),
+          text: TextMix(style: TextStyleMix(color: Colors.black87, fontSize: 14)),
+          icon: IconMix(size: 16, color: Colors.blue[500]),
         ),
         position: RemixCompositedTransformFollowerStyle(
           targetAnchor: Alignment.bottomLeft,
@@ -471,7 +471,7 @@ extension RemixSelectVariants on RemixSelectStyle {
           label: TextMix(
             style: TextStyleMix(color: Colors.grey[700], fontSize: 14),
           ),
-          icon: IconThemeData(size: 20, color: Colors.grey[600]),
+          icon: IconMix(size: 20, color: Colors.grey[600]),
         ),
         item: RemixSelectMenuItemStyle(
           container: FlexBoxMix(
@@ -484,8 +484,8 @@ extension RemixSelectVariants on RemixSelectStyle {
               crossAxisAlignment: CrossAxisAlignment.center,
             ),
           ),
-          textStyle: TextStyle(color: Colors.black87, fontSize: 14),
-          icon: IconThemeData(size: 16, color: Colors.grey[500]),
+          text: TextMix(style: TextStyleMix(color: Colors.black87, fontSize: 14)),
+          icon: IconMix(size: 16, color: Colors.grey[500]),
         ),
         position: RemixCompositedTransformFollowerStyle(
           targetAnchor: Alignment.bottomLeft,
@@ -534,7 +534,7 @@ extension RemixSelectVariants on RemixSelectStyle {
           ),
           label:
               TextMix(style: TextStyleMix(color: Colors.black87, fontSize: 14)),
-          icon: IconThemeData(size: 20, color: Colors.black54),
+          icon: IconMix(size: 20, color: Colors.black54),
         ),
         item: RemixSelectMenuItemStyle(
           container: FlexBoxMix(
@@ -547,8 +547,8 @@ extension RemixSelectVariants on RemixSelectStyle {
               crossAxisAlignment: CrossAxisAlignment.center,
             ),
           ),
-          textStyle: TextStyle(color: Colors.black87, fontSize: 14),
-          icon: IconThemeData(size: 16, color: Colors.black54),
+          text: TextMix(style: TextStyleMix(color: Colors.black87, fontSize: 14)),
+          icon: IconMix(size: 16, color: Colors.black54),
         ),
         position: RemixCompositedTransformFollowerStyle(
           targetAnchor: Alignment.bottomLeft,

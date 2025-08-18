@@ -170,7 +170,6 @@ class RemixTextField extends StatefulWidget
   /// Optional delegate for building the text selection handles and toolbar.
   final TextSelectionControls? selectionControls;
 
-
   /// Called when the user taps outside of this text field.
   final TapRegionCallback? onTapOutside;
 
@@ -345,61 +344,67 @@ class _RemixTextFieldState extends State<RemixTextField>
           magnifierConfiguration: widget.magnifierConfiguration,
           onHoverChange: (state) => controller.hovered = state,
           onFocusChange: (state) => controller.focused = state,
-          style: spec.style,
+          style: spec.text.style ?? const TextStyle(),
           ignorePointers: widget.ignorePointers,
           builder: (context, editableText) {
-            // Core text field with optional hint
-            final textArea = widget.hintText == null
-                ? editableText
-                : Stack(
+            // Build the core editable with hint overlay if needed
+            final editableWithHint = widget.hintText != null
+                ? Stack(
                     alignment: AlignmentDirectional.centerStart,
                     children: [
-                      // Hint text that hides when controller has text
                       ListenableBuilder(
                         listenable: _controller,
-                        builder: (context, child) {
-                          return _controller.text.isEmpty
-                              ? Text(
-                                  widget.hintText!,
-                                  style: spec.style.copyWith(
-                                    color: spec.hintTextColor,
-                                  ),
-                                )
-                              : const SizedBox.shrink();
-                        },
+                        builder: (context, _) => Visibility(
+                          visible: _controller.text.isEmpty,
+                          child: Builder(
+                            builder: (context) {
+                              final HintText = spec.hintText;
+                              return HintText(widget.hintText!);
+                            },
+                          ),
+                        ),
                       ),
                       editableText,
                     ],
-                  );
+                  )
+                : editableText;
 
-            // Container with optional leading/trailing
-            final textField = (widget.leading != null || widget.trailing != null)
-                ? spec.container.flex(
-                    direction: Axis.horizontal,
+            final Container = spec.container;
+            final Label = spec.label;
+            final HelperText = spec.helperText;
+
+            // Add leading/trailing widgets if present
+            final withAccessories =
+                (widget.leading != null || widget.trailing != null)
+                    ? Container(
+                        direction: Axis.horizontal,
+                        children: [
+                          if (widget.leading != null) widget.leading!,
+                          Expanded(child: editableWithHint),
+                          if (widget.trailing != null) widget.trailing!,
+                        ],
+                      )
+                    : Container(
+                        direction: Axis.horizontal,
+                        children: [editableWithHint]);
+
+            // Add label and helper text if present
+            final needsWrapper =
+                widget.label != null || widget.helperText != null;
+
+            return needsWrapper
+                ? Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: spec.spacing,
                     children: [
-                      if (widget.leading != null) widget.leading!,
-                      Expanded(child: textArea),
-                      if (widget.trailing != null) widget.trailing!,
+                      if (widget.label != null) Label(widget.label!),
+                      withAccessories,
+                      if (widget.helperText != null)
+                        HelperText(widget.helperText!),
                     ],
                   )
-                : spec.container.box(child: textArea);
-
-            // Add label/helper if needed
-            if (widget.label == null && widget.helperText == null) {
-              return textField;
-            }
-
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: spec.spacing,
-              children: [
-                if (widget.label != null) spec.label(widget.label!),
-                textField,
-                if (widget.helperText != null)
-                  spec.helperText(widget.helperText!),
-              ],
-            );
+                : withAccessories;
           },
         );
       },

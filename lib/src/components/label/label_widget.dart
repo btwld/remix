@@ -11,10 +11,10 @@ part of 'label.dart';
 /// // Basic label
 /// RemixLabel('Hello World')
 ///
-/// // Label with icon
+/// // Label with leading icon
 /// RemixLabel(
 ///   'Settings',
-///   icon: Icons.settings,
+///   leadingIcon: Icons.settings,
 ///   style: RemixLabelStyles.primary,
 /// )
 ///
@@ -24,11 +24,11 @@ part of 'label.dart';
 ///   style: RemixLabelStyle(
 ///     spacing: 12,
 ///     label: TextMix(style: TextStyleMix(color: Colors.blue)),
-///     icon: IconMix(color: Colors.blue, size: 20),
+///     leadingIcon: IconMix(color: Colors.blue, size: 20),
 ///   ),
 /// )
 /// ```
-class RemixLabel extends StatelessWidget {
+class RemixLabel extends StyleWidget<LabelSpec> {
   /// Creates a Remix label.
   ///
   /// The [label] parameter is required.
@@ -36,39 +36,76 @@ class RemixLabel extends StatelessWidget {
   const RemixLabel(
     this.label, {
     super.key,
-    this.icon,
-    this.style = const RemixLabelStyle.create(),
+    this.leadingIcon,
+    this.trailingIcon,
+    super.style = const RemixLabelStyle.create(),
   });
 
-  /// The text to display in the label.
+  /// The text to display in the label.f
   final String label;
 
-  /// Optional icon to display alongside the text.
-  final IconData? icon;
+  /// Optional icon to display at the start/left of the text.
+  final IconData? leadingIcon;
 
-  /// The style configuration for the label.
-  final RemixLabelStyle style;
+  /// Optional icon to display at the end/right of the text.
+  final IconData? trailingIcon;
 
   @override
-  Widget build(BuildContext context) {
-    return StyleBuilder(
-      style: style,
-      builder: (context, spec) {
-        final children = <Widget>[spec.label(label)];
+  Widget build(BuildContext context, LabelSpec spec) {
+    return createLabelWidget(
+      spec,
+      text: label,
+      leadingIcon: leadingIcon,
+      trailingIcon: trailingIcon,
+    );
+  }
+}
 
-        if (icon != null) {
-          children.insert(
-            spec.iconPosition == IconPosition.start ? 0 : children.length,
-            spec.icon(icon: icon),
-          );
-        }
+Widget createLabelWidget(
+  LabelSpec spec, {
+  required String text,
+  IconData? leadingIcon,
+  IconData? trailingIcon,
+}) {
+  final TextWidget = spec.label;
+  final LeadingIconWidget = spec.leadingIcon;
+  final TrailingIconWidget = spec.trailingIcon;
 
-        return Row(
-          mainAxisSize: MainAxisSize.min,
-          spacing: spec.spacing,
-          children: children,
-        );
-      },
+  final children = <Widget>[];
+
+  // Add leading icon
+  if (leadingIcon != null) {
+    children.add(LeadingIconWidget(icon: leadingIcon));
+  }
+
+  // Add text
+  children.add(TextWidget(text));
+
+  // Add trailing icon
+  if (trailingIcon != null) {
+    children.add(TrailingIconWidget(icon: trailingIcon));
+  }
+
+  return Row(
+    mainAxisSize: MainAxisSize.min,
+    spacing: spec.spacing,
+    children: children,
+  );
+}
+
+/// Extension on LabelSpec to provide call() method for creating widgets
+extension LabelSpecWidget on LabelSpec {
+  /// Renders the LabelSpec into a Row widget with text and optional icons
+  Widget call({
+    required String text,
+    IconData? leadingIcon,
+    IconData? trailingIcon,
+  }) {
+    return createLabelWidget(
+      this,
+      text: text,
+      leadingIcon: leadingIcon,
+      trailingIcon: trailingIcon,
     );
   }
 }

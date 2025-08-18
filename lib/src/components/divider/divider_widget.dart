@@ -19,7 +19,8 @@ part of 'divider.dart';
 /// ```
 class RemixDivider extends StatelessWidget {
   /// Creates a Remix divider.
-  const RemixDivider({super.key, this.style = const RemixDividerStyle.create()});
+  const RemixDivider(
+      {super.key, this.style = const RemixDividerStyle.create()});
 
   /// The style configuration for the divider.
   final RemixDividerStyle style;
@@ -29,7 +30,9 @@ class RemixDivider extends StatelessWidget {
     return StyleBuilder(
       style: DefaultRemixDividerStyle.merge(style),
       builder: (context, spec) {
-        return spec.container();
+        final Container = spec.container;
+
+        return Container();
       },
     );
   }

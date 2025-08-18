@@ -8,14 +8,14 @@ class RemixSpinnerStyle extends Style<SpinnerSpec>
   final Prop<double>? $strokeWidth;
   final Prop<Color>? $color;
   final Prop<Duration>? $duration;
-  final Prop<SpinnerStyleType>? $style;
+  final Prop<SpinnerStyle>? $style;
 
   const RemixSpinnerStyle.create({
     Prop<double>? size,
     Prop<double>? strokeWidth,
     Prop<Color>? color,
     Prop<Duration>? duration,
-    Prop<SpinnerStyleType>? style,
+    Prop<SpinnerStyle>? style,
     super.variants,
     super.animation,
     super.modifier,
@@ -31,7 +31,7 @@ class RemixSpinnerStyle extends Style<SpinnerSpec>
     double? strokeWidth,
     Color? color,
     Duration? duration,
-    SpinnerStyleType? style,
+    SpinnerStyle? style,
     AnimationConfig? animation,
     List<VariantStyle<SpinnerSpec>>? variants,
     ModifierConfig? modifier,
@@ -146,7 +146,7 @@ final DefaultRemixSpinnerStyle = RemixSpinnerStyle(
   strokeWidth: 1.5,
   color: Colors.black,
   duration: const Duration(milliseconds: 1000),
-  style: SpinnerStyleType.solid,
+  style: SpinnerStyle.solid,
 );
 
 /// Default spinner styles and variants
@@ -157,7 +157,7 @@ class RemixSpinnerStyles {
         strokeWidth: 1.5,
         color: Colors.black,
         duration: const Duration(milliseconds: 1000),
-        style: SpinnerStyleType.solid,
+        style: SpinnerStyle.solid,
       );
 
   /// Primary spinner variant
@@ -166,7 +166,7 @@ class RemixSpinnerStyles {
         strokeWidth: 1.5,
         color: Colors.blue,
         duration: const Duration(milliseconds: 1000),
-        style: SpinnerStyleType.solid,
+        style: SpinnerStyle.solid,
       );
 
   /// Secondary spinner variant
@@ -175,7 +175,7 @@ class RemixSpinnerStyles {
         strokeWidth: 1.5,
         color: Colors.grey,
         duration: const Duration(milliseconds: 1000),
-        style: SpinnerStyleType.solid,
+        style: SpinnerStyle.solid,
       );
 
   /// Small spinner variant
@@ -184,7 +184,7 @@ class RemixSpinnerStyles {
         strokeWidth: 1,
         color: Colors.black,
         duration: const Duration(milliseconds: 1000),
-        style: SpinnerStyleType.solid,
+        style: SpinnerStyle.solid,
       );
 
   /// Large spinner variant
@@ -193,7 +193,7 @@ class RemixSpinnerStyles {
         strokeWidth: 2,
         color: Colors.black,
         duration: const Duration(milliseconds: 1000),
-        style: SpinnerStyleType.solid,
+        style: SpinnerStyle.solid,
       );
 
   /// Dotted spinner variant
@@ -202,6 +202,6 @@ class RemixSpinnerStyles {
         strokeWidth: 1.5,
         color: Colors.black,
         duration: const Duration(milliseconds: 1000),
-        style: SpinnerStyleType.dotted,
+        style: SpinnerStyle.dotted,
       );
 }
