@@ -87,7 +87,7 @@ class RemixAccordionItem<T> extends StatefulWidget with HasEnabled, HasFocused {
     this.enabled = true,
     this.trailingIconBuilder,
     IconData? leadingIcon,
-  }) : header = RemixLabel(title, icon: leadingIcon);
+  }) : header = RemixLabel(title, leadingIcon: leadingIcon);
 
   final Widget header;
   final Widget child;
@@ -131,29 +131,21 @@ class _RemixAccordionItemState<T> extends State<RemixAccordionItem<T>>
           style: inheritedData.style,
           controller: controller,
           builder: (context, spec) {
-            return spec.itemContainer(
+            final ItemContainer = spec.itemContainer;
+            final ContentContainer = spec.contentContainer;
+
+            return ItemContainer(
               child: NakedAccordionItem<T>(
                 trigger: (_, isExpanded) {
                   // The trigger is purely for building UI
                   // No state updates should happen here
-                  return spec.headerContainer(
+                  final HeaderContainer = spec.headerContainer;
+
+                  return HeaderContainer(
                     direction: Axis.horizontal,
                     children: [
                       Expanded(
-                        child: DefaultTextStyle(
-                          style: TextStyle(
-                            color: spec.titleStyle.style?.color,
-                            fontSize: spec.titleStyle.style?.fontSize,
-                            fontWeight: spec.titleStyle.style?.fontWeight,
-                          ),
-                          child: IconTheme(
-                            data: IconThemeData(
-                              size: spec.leadingIcon.size,
-                              color: spec.leadingIcon.color,
-                            ),
-                            child: widget.header,
-                          ),
-                        ),
+                        child: widget.header,
                       ),
                       if (widget.trailingIconBuilder != null)
                         widget.trailingIconBuilder!(isExpanded)
@@ -187,14 +179,7 @@ class _RemixAccordionItemState<T> extends State<RemixAccordionItem<T>>
                 onFocusChange: (state) => controller.focused = state,
                 enabled: widget.enabled,
                 focusNode: widget.focusNode,
-                child: DefaultTextStyle(
-                  style: TextStyle(
-                    color: spec.contentStyle.style?.color,
-                    fontSize: spec.contentStyle.style?.fontSize,
-                    fontWeight: spec.contentStyle.style?.fontWeight,
-                  ),
-                  child: spec.contentContainer(child: widget.child),
-                ),
+                child: ContentContainer(child: widget.child),
               ),
             );
           },

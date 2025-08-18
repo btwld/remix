@@ -22,7 +22,8 @@ part of 'spinner.dart';
 /// )
 /// ```
 class RemixSpinner extends StatelessWidget {
-  const RemixSpinner({super.key, this.style = const RemixSpinnerStyle.create()});
+  const RemixSpinner(
+      {super.key, this.style = const RemixSpinnerStyle.create()});
 
   /// The style configuration for the spinner.
   final RemixSpinnerStyle style;
@@ -85,9 +86,9 @@ class _SpinnerSpecWidgetState extends State<SpinnerSpecWidget>
     final color = spec.color ?? Colors.black;
     final strokeWidth = spec.strokeWidth ?? 1.5;
     final size = spec.size ?? 24;
-    final style = spec.style ?? SpinnerStyleType.solid;
+    final style = spec.style ?? SpinnerStyle.solid;
 
-    final painter = style == SpinnerStyleType.dotted
+    final painter = style == SpinnerStyle.dotted
         ? DottedSpinnerPainter(
             animation: controller,
             strokeWidth: strokeWidth,
@@ -105,5 +106,13 @@ class _SpinnerSpecWidgetState extends State<SpinnerSpecWidget>
         return CustomPaint(painter: painter, size: Size(size, size));
       },
     );
+  }
+}
+
+/// Extension on SpinnerSpec to provide call() method for creating widgets
+extension SpinnerSpecWidgetExtension on SpinnerSpec {
+  /// Renders the SpinnerSpec into a SpinnerSpecWidget
+  Widget call() {
+    return SpinnerSpecWidget(spec: this);
   }
 }

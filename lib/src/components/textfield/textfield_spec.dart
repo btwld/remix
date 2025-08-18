@@ -1,8 +1,8 @@
 part of 'textfield.dart';
 
 class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
-  final TextStyle style;
-  final Color? hintTextColor;
+  final TextSpec text;
+  final TextSpec hintText;
   final TextAlign textAlign;
 
   final double cursorWidth;
@@ -23,8 +23,8 @@ class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
   final TextSpec label;
 
   const TextFieldSpec({
-    TextStyle? style,
-    this.hintTextColor,
+    TextSpec? text,
+    TextSpec? hintText,
     TextAlign? textAlign,
     double? cursorWidth,
     this.cursorHeight,
@@ -40,7 +40,8 @@ class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
     FlexBoxSpec? container,
     TextSpec? helperText,
     TextSpec? label,
-  })  : style = style ?? const TextStyle(),
+  })  : text = text ?? const TextSpec(),
+        hintText = hintText ?? const TextSpec(),
         textAlign = textAlign ?? TextAlign.start,
         cursorWidth = cursorWidth ?? 2.0,
         cursorOffset = cursorOffset ?? Offset.zero,
@@ -54,8 +55,8 @@ class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
 
   @override
   TextFieldSpec copyWith({
-    TextStyle? style,
-    Color? hintTextColor,
+    TextSpec? text,
+    TextSpec? hintText,
     TextAlign? textAlign,
     double? cursorWidth,
     double? cursorHeight,
@@ -73,8 +74,8 @@ class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
     TextSpec? label,
   }) {
     return TextFieldSpec(
-      style: style ?? this.style,
-      hintTextColor: hintTextColor ?? this.hintTextColor,
+      text: text ?? this.text,
+      hintText: hintText ?? this.hintText,
       textAlign: textAlign ?? this.textAlign,
       cursorWidth: cursorWidth ?? this.cursorWidth,
       cursorHeight: cursorHeight ?? this.cursorHeight,
@@ -99,8 +100,8 @@ class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
     if (other == null) return this;
 
     return TextFieldSpec(
-      style: TextStyle.lerp(style, other.style, t),
-      hintTextColor: Color.lerp(hintTextColor, other.hintTextColor, t),
+      text: MixOps.lerp(text, other.text, t)!,
+      hintText: MixOps.lerp(hintText, other.hintText, t)!,
       textAlign: t < 0.5 ? textAlign : other.textAlign,
       cursorWidth: lerpDouble(cursorWidth, other.cursorWidth, t),
       cursorHeight: lerpDouble(cursorHeight, other.cursorHeight, t),
@@ -126,9 +127,8 @@ class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty('style', style, defaultValue: null));
-    properties
-        .add(ColorProperty('hintTextColor', hintTextColor, defaultValue: null));
+    properties.add(DiagnosticsProperty('text', text, defaultValue: null));
+    properties.add(DiagnosticsProperty('hintText', hintText, defaultValue: null));
     properties.add(EnumProperty<TextAlign>(
       'textAlign',
       textAlign,
@@ -183,8 +183,8 @@ class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
 
   @override
   List<Object?> get props => [
-        style,
-        hintTextColor,
+        text,
+        hintText,
         textAlign,
         cursorWidth,
         cursorHeight,

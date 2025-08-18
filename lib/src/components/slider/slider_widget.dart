@@ -160,11 +160,10 @@ class _RemixSliderState extends State<RemixSlider>
 // Custom painter for the track
 class _TrackPainter extends CustomPainter {
   final double value;
-  final PaintData active;
-  final PaintData baseTrack;
+  final Paint active;
+  final Paint baseTrack;
   final int? divisions;
-  final PaintData division;
-  final Color color;
+  final Paint division;
 
   const _TrackPainter({
     required this.value,
@@ -172,7 +171,6 @@ class _TrackPainter extends CustomPainter {
     required this.baseTrack,
     required this.divisions,
     required this.division,
-    required this.color,
   });
 
   List<Offset> calculateDivisionsPositions(int divisions, Size size) {
@@ -185,15 +183,10 @@ class _TrackPainter extends CustomPainter {
   }
 
   void drawDivisions(Canvas canvas, Size size) {
-    final divisionsPaint = Paint()
-      ..color = division.color
-      ..strokeWidth = division.strokeWidth
-      ..strokeCap = StrokeCap.round;
-
     canvas.drawPoints(
       PointMode.points,
       calculateDivisionsPositions(divisions!, size),
-      divisionsPaint,
+      division,
     );
   }
 
@@ -201,15 +194,9 @@ class _TrackPainter extends CustomPainter {
     Canvas canvas,
     Offset initialOffset,
     Offset endOffset,
-    PaintData data,
-    Color color,
+    Paint paint,
   ) {
-    final trackPaint = Paint()
-      ..color = color
-      ..strokeWidth = data.strokeWidth
-      ..strokeCap = data.strokeCap;
-
-    canvas.drawLine(initialOffset, endOffset, trackPaint);
+    canvas.drawLine(initialOffset, endOffset, paint);
   }
 
   @override
@@ -217,7 +204,7 @@ class _TrackPainter extends CustomPainter {
     final initialOffset = Offset(0, size.midY);
     final endOffset = Offset(size.width, size.midY);
 
-    drawTrack(canvas, initialOffset, endOffset, baseTrack, baseTrack.color);
+    drawTrack(canvas, initialOffset, endOffset, baseTrack);
 
     if (divisions != null) {
       drawDivisions(canvas, size);
@@ -228,7 +215,6 @@ class _TrackPainter extends CustomPainter {
       initialOffset,
       Offset(size.width * value, size.midY),
       active,
-      color,
     );
   }
 
@@ -258,10 +244,10 @@ class _AnimatedTrack extends StatefulWidget {
   });
 
   final double value;
-  final PaintData active;
-  final PaintData baseTrack;
+  final Paint active;
+  final Paint baseTrack;
   final int? divisions;
-  final PaintData division;
+  final Paint division;
   final Duration duration;
   final Curve curve;
 
@@ -313,7 +299,6 @@ class _AnimatedTrackState extends State<_AnimatedTrack> {
             baseTrack: value.baseTrack,
             divisions: widget.divisions,
             division: value.division,
-            color: value.active.color,
           ),
         );
       },
@@ -323,9 +308,9 @@ class _AnimatedTrackState extends State<_AnimatedTrack> {
 
 // Helper class for animating track properties
 class _Tracks {
-  final PaintData active;
-  final PaintData baseTrack;
-  final PaintData division;
+  final Paint active;
+  final Paint baseTrack;
+  final Paint division;
 
   const _Tracks({
     required this.active,
@@ -352,9 +337,9 @@ class _TracksTween extends Tween<_Tracks> {
   @override
   _Tracks lerp(double t) {
     return _Tracks(
-      active: begin!.active.lerp(end!.active, t),
-      baseTrack: begin!.baseTrack.lerp(end!.baseTrack, t),
-      division: begin!.division.lerp(end!.division, t),
+      active: lerpPaint(begin!.active, end!.active, t),
+      baseTrack: lerpPaint(begin!.baseTrack, end!.baseTrack, t),
+      division: lerpPaint(begin!.division, end!.division, t),
     );
   }
 }

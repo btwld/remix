@@ -1,27 +1,70 @@
 part of 'slider.dart';
 
+/// Linearly interpolates between two Paint objects
+/// 
+/// The [t] argument represents position on timeline (0.0 to 1.0)
+/// Returns [a] when t=0.0, [b] when t=1.0, interpolated values between
+Paint lerpPaint(Paint? a, Paint? b, double t) {
+  if (a == null && b == null) return _defaultPaint;
+  if (a == null) return Paint.from(b!);
+  if (b == null) return Paint.from(a);
+  
+  return Paint()
+    ..color = Color.lerp(a.color, b.color, t) ?? Colors.grey
+    ..strokeWidth = lerpDouble(a.strokeWidth, b.strokeWidth, t) ?? 8.0
+    ..strokeCap = t < 0.5 ? a.strokeCap : b.strokeCap
+    ..style = PaintingStyle.stroke  // Always stroke for slider tracks
+    ..isAntiAlias = t < 0.5 ? a.isAntiAlias : b.isAntiAlias;
+}
+
+// Default paint for fallback
+final _defaultPaint = Paint()
+  ..color = Colors.grey
+  ..strokeWidth = 8.0
+  ..strokeCap = StrokeCap.round
+  ..style = PaintingStyle.stroke;
+
+// Default Paint configurations (replacing PaintData defaults)
+final _defaultBaseTrackPaint = Paint()
+  ..color = Colors.grey
+  ..strokeWidth = 8.0
+  ..strokeCap = StrokeCap.round
+  ..style = PaintingStyle.stroke;
+
+final _defaultActiveTrackPaint = Paint()
+  ..color = Colors.black
+  ..strokeWidth = 8.0
+  ..strokeCap = StrokeCap.round
+  ..style = PaintingStyle.stroke;
+
+final _defaultDivisionPaint = Paint()
+  ..color = const Color(0x42000000) // Colors.black.withAlpha(66)
+  ..strokeWidth = 8.0
+  ..strokeCap = StrokeCap.round
+  ..style = PaintingStyle.stroke;
+
 class SliderSpec extends Spec<SliderSpec> with Diagnosticable {
   final BoxSpec thumb;
-  final PaintData baseTrack;
-  final PaintData activeTrack;
-  final PaintData division;
+  final Paint baseTrack;
+  final Paint activeTrack;
+  final Paint division;
 
-  const SliderSpec({
+  SliderSpec({
     BoxSpec? thumb,
-    PaintData? baseTrack,
-    PaintData? activeTrack,
-    PaintData? division,
+    Paint? baseTrack,
+    Paint? activeTrack,
+    Paint? division,
   })  : thumb = thumb ?? const BoxSpec(),
-        baseTrack = baseTrack ?? const PaintData(),
-        activeTrack = activeTrack ?? const PaintData(),
-        division = division ?? const PaintData();
+        baseTrack = baseTrack ?? _defaultBaseTrackPaint,
+        activeTrack = activeTrack ?? _defaultActiveTrackPaint,
+        division = division ?? _defaultDivisionPaint;
 
   @override
   SliderSpec copyWith({
     BoxSpec? thumb,
-    PaintData? baseTrack,
-    PaintData? activeTrack,
-    PaintData? division,
+    Paint? baseTrack,
+    Paint? activeTrack,
+    Paint? division,
   }) {
     return SliderSpec(
       thumb: thumb ?? this.thumb,
@@ -37,9 +80,9 @@ class SliderSpec extends Spec<SliderSpec> with Diagnosticable {
 
     return SliderSpec(
       thumb: MixOps.lerp(thumb, other.thumb, t)!,
-      baseTrack: MixOps.lerp(baseTrack, other.baseTrack, t)!,
-      activeTrack: MixOps.lerp(activeTrack, other.activeTrack, t)!,
-      division: MixOps.lerp(division, other.division, t)!,
+      baseTrack: lerpPaint(baseTrack, other.baseTrack, t),
+      activeTrack: lerpPaint(activeTrack, other.activeTrack, t),
+      division: lerpPaint(division, other.division, t),
     );
   }
 
@@ -58,68 +101,4 @@ class SliderSpec extends Spec<SliderSpec> with Diagnosticable {
 
   @override
   List<Object?> get props => [thumb, baseTrack, activeTrack, division];
-}
-
-class PaintData extends Spec<PaintData> with Diagnosticable {
-  final double strokeWidth;
-  final Color color;
-  final StrokeCap strokeCap;
-
-  const PaintData({double? strokeWidth, Color? color, StrokeCap? strokeCap})
-      : strokeWidth = strokeWidth ?? 8,
-        color = color ?? Colors.grey,
-        strokeCap = strokeCap ?? StrokeCap.round;
-
-  @override
-  PaintData copyWith({
-    double? strokeWidth,
-    Color? color,
-    StrokeCap? strokeCap,
-  }) {
-    return PaintData(
-      strokeWidth: strokeWidth ?? this.strokeWidth,
-      color: color ?? this.color,
-      strokeCap: strokeCap ?? this.strokeCap,
-    );
-  }
-
-  @override
-  PaintData lerp(PaintData? other, double t) {
-    if (other == null) return this;
-
-    return PaintData(
-      strokeWidth: lerpDouble(strokeWidth, other.strokeWidth, t),
-      color: Color.lerp(color, other.color, t),
-      strokeCap: t < 0.5 ? strokeCap : other.strokeCap,
-    );
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(DoubleProperty('strokeWidth', strokeWidth, defaultValue: 8));
-    properties.add(ColorProperty('color', color, defaultValue: Colors.grey));
-    properties.add(EnumProperty<StrokeCap>(
-      'strokeCap',
-      strokeCap,
-      defaultValue: StrokeCap.round,
-    ));
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is PaintData &&
-        other.strokeWidth == strokeWidth &&
-        other.color == color &&
-        other.strokeCap == strokeCap;
-  }
-
-  @override
-  List<Object?> get props => [strokeWidth, color, strokeCap];
-
-  @override
-  int get hashCode =>
-      strokeWidth.hashCode ^ color.hashCode ^ strokeCap.hashCode;
 }

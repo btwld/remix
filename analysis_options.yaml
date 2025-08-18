@@ -24,6 +24,7 @@ dart_code_metrics:
     prefer-prefixed-global-constants: false
     avoid-returning-widgets: false
     avoid-unnecessary-overrides: false
+    move-variable-closer-to-its-usage: false
     arguments-ordering:
       first:
         - key

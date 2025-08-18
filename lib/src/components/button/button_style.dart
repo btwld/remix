@@ -62,7 +62,9 @@ class RemixButtonStyle extends Style<ButtonSpec>
 
   /// Factory for padding
   factory RemixButtonStyle.padding(double value) {
-    return RemixButtonStyle(container: BoxMix(padding: EdgeInsetsMix.all(value)));
+    return RemixButtonStyle(
+      container: BoxMix(padding: EdgeInsetsMix.all(value)),
+    );
   }
 
   /// Factory for border radius
@@ -251,116 +253,152 @@ final DefaultRemixButtonStyle = RemixButtonStyle(
   label: RemixLabelStyle(
     spacing: 8,
     label: TextMix.color(Colors.white),
-    icon: IconMix.color(Colors.white).size(18),
+    leadingIcon: IconMix.color(Colors.white).size(18),
   ),
   spinner: RemixSpinnerStyle(
     size: 16,
     strokeWidth: 1.5,
     color: Colors.white,
     duration: const Duration(milliseconds: 1000),
-    style: SpinnerStyleType.solid,
+    style: SpinnerStyle.solid,
   ),
 );
 
 extension ButtonVariants on RemixButtonStyle {
-  /// Primary button variant with blue background
-  static RemixButtonStyle get primary => RemixButtonStyle(
+  // Primary colors
+  static RemixButtonStyle get primary =>
+      _createVariant(Colors.blue, Colors.white);
+  static RemixButtonStyle get secondary =>
+      _createVariant(Colors.grey[600]!, Colors.white);
+  static RemixButtonStyle get success =>
+      _createVariant(Colors.green, Colors.white);
+  static RemixButtonStyle get danger =>
+      _createVariant(Colors.red, Colors.white);
+  static RemixButtonStyle get warning =>
+      _createVariant(Colors.orange, Colors.white);
+
+  // Outline variants
+  static RemixButtonStyle get primaryOutline =>
+      _createOutlineVariant(Colors.blue);
+  static RemixButtonStyle get secondaryOutline =>
+      _createOutlineVariant(Colors.grey[600]!);
+  static RemixButtonStyle get successOutline =>
+      _createOutlineVariant(Colors.green);
+  static RemixButtonStyle get dangerOutline =>
+      _createOutlineVariant(Colors.red);
+
+  // Ghost variants (no background, no border)
+  static RemixButtonStyle get primaryGhost => _createGhostVariant(Colors.blue);
+  static RemixButtonStyle get secondaryGhost =>
+      _createGhostVariant(Colors.grey[600]!);
+  static RemixButtonStyle get successGhost => _createGhostVariant(Colors.green);
+  static RemixButtonStyle get dangerGhost => _createGhostVariant(Colors.red);
+
+  // Soft variants (subtle background)
+  static RemixButtonStyle get primarySoft => _createSoftVariant(Colors.blue);
+  static RemixButtonStyle get secondarySoft =>
+      _createSoftVariant(Colors.grey[600]!);
+  static RemixButtonStyle get successSoft => _createSoftVariant(Colors.green);
+  static RemixButtonStyle get dangerSoft => _createSoftVariant(Colors.red);
+
+  // Size variants
+  static RemixButtonStyle get small => RemixButtonStyle(
         container: BoxMix(
-          padding: EdgeInsetsMix.all(10),
-          decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(8),
-            color: Colors.blue[500],
-          ),
+          padding: EdgeInsetsMix.all(6),
+          constraints: BoxConstraintsMix(minHeight: 32),
         ),
-        label: RemixLabelStyle(
-          spacing: 8,
-          label: TextMix.color(Colors.white),
-          icon: IconMix.color(Colors.white).size(18),
-        ),
+        label: RemixLabelStyle(spacing: 6, leadingIcon: IconMix.size(16)),
       );
 
-  /// Secondary button variant with grey background
-  static RemixButtonStyle get secondary => RemixButtonStyle(
+  static RemixButtonStyle get medium => RemixButtonStyle(
         container: BoxMix(
           padding: EdgeInsetsMix.all(10),
-          decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(8),
-            color: Colors.grey[600],
-          ),
+          constraints: BoxConstraintsMix(minHeight: 40),
         ),
-        label: RemixLabelStyle(
-          spacing: 8,
-          label: TextMix.color(Colors.white),
-          icon: IconMix.color(Colors.white).size(18),
-        ),
+        label: RemixLabelStyle(spacing: 8, leadingIcon: IconMix.size(18)),
       );
 
-  /// Success button variant with green background
-  static RemixButtonStyle get success => RemixButtonStyle(
+  static RemixButtonStyle get large => RemixButtonStyle(
         container: BoxMix(
-          padding: EdgeInsetsMix.all(10),
-          decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(8),
-            color: Colors.green[500],
-          ),
+          padding: EdgeInsetsMix.all(14),
+          constraints: BoxConstraintsMix(minHeight: 48),
         ),
-        label: RemixLabelStyle(
-          spacing: 8,
-          label: TextMix.color(Colors.white),
-          icon: IconMix.color(Colors.white).size(18),
-        ),
+        label: RemixLabelStyle(spacing: 10, leadingIcon: IconMix.size(20)),
       );
 
-  /// Danger button variant with red background
-  static RemixButtonStyle get danger => RemixButtonStyle(
-        container: BoxMix(
-          padding: EdgeInsetsMix.all(10),
-          decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(8),
-            color: Colors.red[500],
-          ),
-        ),
-        label: RemixLabelStyle(
-          spacing: 8,
-          label: TextMix.color(Colors.white),
-          icon: IconMix.color(Colors.white).size(18),
-        ),
-      );
+  // Legacy aliases for backward compatibility
+  static RemixButtonStyle get outline => primaryOutline;
+  static RemixButtonStyle get ghost => primaryGhost;
 
-  /// Ghost button variant with transparent background
-  static RemixButtonStyle get ghost => RemixButtonStyle(
-        container: BoxMix(
-          padding: EdgeInsetsMix.all(10),
-          decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(8),
-            color: Colors.transparent,
-          ),
+  // Helper methods to create variants
+  static RemixButtonStyle _createVariant(Color bgColor, Color fgColor) {
+    return RemixButtonStyle(
+      container: BoxMix(
+        padding: EdgeInsetsMix.all(10),
+        decoration: BoxDecorationMix(
+          borderRadius: BorderRadiusMix.circular(8),
+          color: bgColor,
         ),
-        label: RemixLabelStyle(
-          spacing: 8,
-          label: TextMix.color(Colors.black),
-          icon: IconMix.color(Colors.black).size(18),
-        ),
-      );
+      ),
+      label: RemixLabelStyle(
+        spacing: 8,
+        label: TextMix.color(fgColor),
+        leadingIcon: IconMix.color(fgColor).size(18),
+      ),
+    );
+  }
 
-  /// Outline button variant with border
-  static RemixButtonStyle get outline => RemixButtonStyle(
-        container: BoxMix(
-          padding: EdgeInsetsMix.all(10),
-          decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(
-              BorderSideMix(color: Colors.grey[400]!, width: 1),
-            ),
-            borderRadius: BorderRadiusMix.circular(8),
-            color: Colors.transparent,
-          ),
+  static RemixButtonStyle _createOutlineVariant(Color color) {
+    return RemixButtonStyle(
+      container: BoxMix(
+        padding: EdgeInsetsMix.all(10),
+        decoration: BoxDecorationMix(
+          border: BoxBorderMix.all(BorderSideMix(color: color, width: 1)),
+          borderRadius: BorderRadiusMix.circular(8),
+          color: Colors.transparent,
         ),
-        label: RemixLabelStyle(
-          spacing: 8,
-          label: TextMix.color(Colors.black),
-          icon: IconMix.color(Colors.black).size(18),
+      ),
+      label: RemixLabelStyle(
+        spacing: 8,
+        label: TextMix.color(color),
+        leadingIcon: IconMix.color(color).size(18),
+      ),
+    );
+  }
+
+  static RemixButtonStyle _createGhostVariant(Color color) {
+    return RemixButtonStyle(
+      container: BoxMix(
+        padding: EdgeInsetsMix.all(10),
+        decoration: BoxDecorationMix(
+          borderRadius: BorderRadiusMix.circular(8),
+          color: Colors.transparent,
         ),
-      );
+      ),
+      label: RemixLabelStyle(
+        spacing: 8,
+        label: TextMix.color(color),
+        leadingIcon: IconMix.color(color).size(18),
+      ),
+    );
+  }
+
+  static RemixButtonStyle _createSoftVariant(Color color) {
+    return RemixButtonStyle(
+      container: BoxMix(
+        padding: EdgeInsetsMix.all(10),
+        decoration: BoxDecorationMix(
+          borderRadius: BorderRadiusMix.circular(8),
+          color: color.withValues(alpha: 0.1),
+        ),
+      ),
+      label: RemixLabelStyle(
+        spacing: 8,
+        label: TextMix.color(color),
+        leadingIcon: IconMix.color(color).size(18),
+      ),
+    );
+  }
 }
 
 // COMMENTED OUT FOR REVIEW - ORIGINAL FROM MAIN BRANCH

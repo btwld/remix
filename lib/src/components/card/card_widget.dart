@@ -38,7 +38,9 @@ class RemixCard extends StatelessWidget {
     return StyleBuilder(
       style: DefaultRemixCardStyle.merge(style),
       builder: (context, spec) {
-        return spec.container(child: child);
+        final Container = spec.container;
+
+        return Container(child: child);
       },
     );
   }

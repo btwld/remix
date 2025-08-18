@@ -35,7 +35,7 @@ class RemixAvatar extends StatelessWidget {
       onBackgroundImageError: onBackgroundImageError,
       onForegroundImageError: onForegroundImageError,
       style: style,
-      child: label != null ? Text(label) : null,
+      child: label != null ? _AvatarText(label: label) : null,
     );
   }
 
@@ -88,40 +88,50 @@ class RemixAvatar extends StatelessWidget {
     return StyleBuilder(
       style: DefaultRemixAvatarStyle.merge(style),
       builder: (context, spec) {
-        return IconTheme(
-          data: IconThemeData(size: spec.icon.size, color: spec.icon.color),
-          child: DefaultTextStyle(
-            style: TextStyle(
-              color: spec.text.style?.color,
-              fontSize: spec.text.style?.fontSize,
-              fontWeight: spec.text.style?.fontWeight,
-            ),
-            child: spec.container(
-              child: Container(
-                alignment: Alignment.center,
-                decoration: backgroundImage != null
-                    ? BoxDecoration(
-                        image: DecorationImage(
-                          image: backgroundImage!,
-                          onError: onBackgroundImageError,
-                          fit: BoxFit.cover,
-                        ),
-                      )
-                    : null,
-                foregroundDecoration: foregroundImage != null
-                    ? BoxDecoration(
-                        image: DecorationImage(
-                          image: foregroundImage!,
-                          onError: onForegroundImageError,
-                          fit: BoxFit.cover,
-                        ),
-                      )
-                    : null,
-                child: child,
-              ),
-            ),
+        final ContainerWidget = spec.container;
+        
+        return ContainerWidget(
+          child: Container(
+            alignment: Alignment.center,
+            decoration: backgroundImage != null
+                ? BoxDecoration(
+                    image: DecorationImage(
+                      image: backgroundImage!,
+                      onError: onBackgroundImageError,
+                      fit: BoxFit.cover,
+                    ),
+                  )
+                : null,
+            foregroundDecoration: foregroundImage != null
+                ? BoxDecoration(
+                    image: DecorationImage(
+                      image: foregroundImage!,
+                      onError: onForegroundImageError,
+                      fit: BoxFit.cover,
+                    ),
+                  )
+                : null,
+            child: child,
           ),
         );
+      },
+    );
+  }
+}
+
+class _AvatarText extends StatelessWidget {
+  const _AvatarText({required this.label});
+  
+  final String label;
+  
+  @override
+  Widget build(BuildContext context) {
+    return StyleBuilder(
+      style: const RemixAvatarStyle.create(),
+      builder: (context, spec) {
+        final TextWidget = spec.text;
+        
+        return TextWidget(label);
       },
     );
   }

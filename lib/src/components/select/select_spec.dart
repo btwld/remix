@@ -60,21 +60,21 @@ class SelectSpec extends Spec<SelectSpec> with Diagnosticable {
 class SelectTriggerSpec extends Spec<SelectTriggerSpec> with Diagnosticable {
   final FlexBoxSpec container;
   final TextSpec label;
-  final IconThemeData icon;
+  final IconSpec icon;
 
   const SelectTriggerSpec({
     FlexBoxSpec? container,
     TextSpec? label,
-    IconThemeData? icon,
+    IconSpec? icon,
   })  : container = container ?? const FlexBoxSpec(),
         label = label ?? const TextSpec(),
-        icon = icon ?? const IconThemeData();
+        icon = icon ?? const IconSpec();
 
   @override
   SelectTriggerSpec copyWith({
     FlexBoxSpec? container,
     TextSpec? label,
-    IconThemeData? icon,
+    IconSpec? icon,
   }) {
     return SelectTriggerSpec(
       container: container ?? this.container,
@@ -90,7 +90,7 @@ class SelectTriggerSpec extends Spec<SelectTriggerSpec> with Diagnosticable {
     return SelectTriggerSpec(
       container: MixOps.lerp(container, other.container, t)!,
       label: MixOps.lerp(label, other.label, t)!,
-      icon: IconThemeData.lerp(icon, other.icon, t),
+      icon: MixOps.lerp(icon, other.icon, t)!,
     );
   }
 
@@ -109,26 +109,26 @@ class SelectTriggerSpec extends Spec<SelectTriggerSpec> with Diagnosticable {
 
 class SelectMenuItemSpec extends Spec<SelectMenuItemSpec> with Diagnosticable {
   final FlexBoxSpec container;
-  final TextStyle textStyle;
-  final IconThemeData icon;
+  final TextSpec text;
+  final IconSpec icon;
 
   const SelectMenuItemSpec({
     FlexBoxSpec? container,
-    TextStyle? textStyle,
-    IconThemeData? icon,
+    TextSpec? text,
+    IconSpec? icon,
   })  : container = container ?? const FlexBoxSpec(),
-        textStyle = textStyle ?? const TextStyle(),
-        icon = icon ?? const IconThemeData();
+        text = text ?? const TextSpec(),
+        icon = icon ?? const IconSpec();
 
   @override
   SelectMenuItemSpec copyWith({
     FlexBoxSpec? container,
-    TextStyle? textStyle,
-    IconThemeData? icon,
+    TextSpec? text,
+    IconSpec? icon,
   }) {
     return SelectMenuItemSpec(
       container: container ?? this.container,
-      textStyle: textStyle ?? this.textStyle,
+      text: text ?? this.text,
       icon: icon ?? this.icon,
     );
   }
@@ -139,8 +139,8 @@ class SelectMenuItemSpec extends Spec<SelectMenuItemSpec> with Diagnosticable {
 
     return SelectMenuItemSpec(
       container: MixOps.lerp(container, other.container, t)!,
-      textStyle: TextStyle.lerp(textStyle, other.textStyle, t)!,
-      icon: IconThemeData.lerp(icon, other.icon, t),
+      text: MixOps.lerp(text, other.text, t)!,
+      icon: MixOps.lerp(icon, other.icon, t)!,
     );
   }
 
@@ -149,10 +149,10 @@ class SelectMenuItemSpec extends Spec<SelectMenuItemSpec> with Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty('container', container, defaultValue: null));
-    properties.add(DiagnosticsProperty('textStyle', textStyle, defaultValue: null));
+    properties.add(DiagnosticsProperty('text', text, defaultValue: null));
     properties.add(DiagnosticsProperty('icon', icon, defaultValue: null));
   }
 
   @override
-  List<Object?> get props => [container, textStyle, icon];
+  List<Object?> get props => [container, text, icon];
 }

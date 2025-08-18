@@ -263,3 +263,4 @@ app.*.symbols
 .gclient_previous_custom_vars
 .gclient_previous_sync_commits
 .vscode/*
+docs/audit/checklists/accordion_checklist.md

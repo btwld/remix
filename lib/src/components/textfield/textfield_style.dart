@@ -4,8 +4,8 @@ class RemixTextFieldStyle extends Style<TextFieldSpec>
     with
         StyleModifierMixin<RemixTextFieldStyle, TextFieldSpec>,
         StyleVariantMixin<RemixTextFieldStyle, TextFieldSpec> {
-  final Prop<TextStyle>? $style;
-  final Prop<Color>? $hintTextColor;
+  final Prop<TextSpec>? $text;
+  final Prop<TextSpec>? $hintText;
   final Prop<TextAlign>? $textAlign;
 
   final Prop<double>? $cursorWidth;
@@ -26,8 +26,8 @@ class RemixTextFieldStyle extends Style<TextFieldSpec>
   final Prop<TextSpec>? $label;
 
   const RemixTextFieldStyle.create({
-    Prop<TextStyle>? style,
-    Prop<Color>? hintTextColor,
+    Prop<TextSpec>? text,
+    Prop<TextSpec>? hintText,
     Prop<TextAlign>? textAlign,
     Prop<double>? cursorWidth,
     Prop<double>? cursorHeight,
@@ -47,8 +47,8 @@ class RemixTextFieldStyle extends Style<TextFieldSpec>
     super.animation,
     super.modifier,
     super.inherit,
-  })  : $style = style,
-        $hintTextColor = hintTextColor,
+  })  : $text = text,
+        $hintText = hintText,
         $textAlign = textAlign,
         $cursorWidth = cursorWidth,
         $cursorHeight = cursorHeight,
@@ -66,8 +66,8 @@ class RemixTextFieldStyle extends Style<TextFieldSpec>
         $label = label;
 
   RemixTextFieldStyle({
-    TextStyle? style,
-    Color? hintTextColor,
+    TextMix? text,
+    TextMix? hintText,
     TextAlign? textAlign,
     double? cursorWidth,
     double? cursorHeight,
@@ -88,8 +88,8 @@ class RemixTextFieldStyle extends Style<TextFieldSpec>
     ModifierConfig? modifier,
     bool? inherit,
   }) : this.create(
-          style: Prop.maybe(style),
-          hintTextColor: Prop.maybe(hintTextColor),
+          text: text != null ? Prop.mix(text) : null,
+          hintText: hintText != null ? Prop.mix(hintText) : null,
           textAlign: Prop.maybe(textAlign),
           cursorWidth: Prop.maybe(cursorWidth),
           cursorHeight: Prop.maybe(cursorHeight),
@@ -115,7 +115,7 @@ class RemixTextFieldStyle extends Style<TextFieldSpec>
 
   /// Factory for text color
   factory RemixTextFieldStyle.color(Color value) {
-    return RemixTextFieldStyle(style: TextStyle(color: value));
+    return RemixTextFieldStyle(text: TextMix(style: TextStyleMix(color: value)));
   }
 
   /// Factory for background color
@@ -159,7 +159,7 @@ class RemixTextFieldStyle extends Style<TextFieldSpec>
 
   /// Factory for hint text color
   factory RemixTextFieldStyle.hintColor(Color value) {
-    return RemixTextFieldStyle(hintTextColor: value);
+    return RemixTextFieldStyle(hintText: TextMix(style: TextStyleMix(color: value)));
   }
 
   // Instance methods (chainable)
@@ -233,8 +233,8 @@ class RemixTextFieldStyle extends Style<TextFieldSpec>
   @override
   TextFieldSpec resolve(BuildContext context) {
     return TextFieldSpec(
-      style: MixOps.resolve(context, $style),
-      hintTextColor: MixOps.resolve(context, $hintTextColor),
+      text: MixOps.resolve(context, $text),
+      hintText: MixOps.resolve(context, $hintText),
       textAlign: MixOps.resolve(context, $textAlign),
       cursorWidth: MixOps.resolve(context, $cursorWidth),
       cursorHeight: MixOps.resolve(context, $cursorHeight),
@@ -258,8 +258,8 @@ class RemixTextFieldStyle extends Style<TextFieldSpec>
     if (other == null) return this;
 
     return RemixTextFieldStyle.create(
-      style: MixOps.merge($style, other.$style),
-      hintTextColor: MixOps.merge($hintTextColor, other.$hintTextColor),
+      text: MixOps.merge($text, other.$text),
+      hintText: MixOps.merge($hintText, other.$hintText),
       textAlign: MixOps.merge($textAlign, other.$textAlign),
       cursorWidth: MixOps.merge($cursorWidth, other.$cursorWidth),
       cursorHeight: MixOps.merge($cursorHeight, other.$cursorHeight),
@@ -287,8 +287,8 @@ class RemixTextFieldStyle extends Style<TextFieldSpec>
 
   @override
   List<Object?> get props => [
-        $style,
-        $hintTextColor,
+        $text,
+        $hintText,
         $textAlign,
         $cursorWidth,
         $cursorHeight,
@@ -312,8 +312,8 @@ class RemixTextFieldStyle extends Style<TextFieldSpec>
 
 // Default style
 final DefaultRemixTextFieldStyle = RemixTextFieldStyle(
-  style: TextStyle(color: Colors.black87, fontSize: 14),
-  hintTextColor: Colors.grey.shade400,
+  text: TextMix(style: TextStyleMix(color: Colors.black87, fontSize: 14)),
+  hintText: TextMix(style: TextStyleMix(color: Colors.grey.shade400)),
   textAlign: TextAlign.start,
   cursorWidth: 2.0,
   cursorColor: Colors.blue,
@@ -369,7 +369,7 @@ final RemixTextFieldErrorStyle = RemixTextFieldStyle(
 
 // Disabled style
 final RemixTextFieldDisabledStyle = RemixTextFieldStyle(
-  style: TextStyle(color: Colors.grey.shade500),
+  text: TextMix(style: TextStyleMix(color: Colors.grey.shade500)),
   container: FlexBoxMix(
     box: BoxMix(
       decoration: BoxDecorationMix(
@@ -385,8 +385,8 @@ final RemixTextFieldDisabledStyle = RemixTextFieldStyle(
 extension RemixTextFieldVariants on RemixTextFieldStyle {
   /// Primary text field variant with blue accents
   static RemixTextFieldStyle get primary => RemixTextFieldStyle(
-        style: TextStyle(color: Colors.black87, fontSize: 14),
-        hintTextColor: Colors.grey.shade400,
+        text: TextMix(style: TextStyleMix(color: Colors.black87, fontSize: 14)),
+        hintText: TextMix(style: TextStyleMix(color: Colors.grey.shade400)),
         textAlign: TextAlign.start,
         cursorWidth: 2.0,
         cursorColor: Colors.blue[500],
@@ -418,8 +418,8 @@ extension RemixTextFieldVariants on RemixTextFieldStyle {
 
   /// Outlined text field variant with prominent border
   static RemixTextFieldStyle get outlined => RemixTextFieldStyle(
-        style: TextStyle(color: Colors.black87, fontSize: 14),
-        hintTextColor: Colors.grey.shade400,
+        text: TextMix(style: TextStyleMix(color: Colors.black87, fontSize: 14)),
+        hintText: TextMix(style: TextStyleMix(color: Colors.grey.shade400)),
         textAlign: TextAlign.start,
         cursorWidth: 2.0,
         cursorColor: Colors.blue,
@@ -451,8 +451,8 @@ extension RemixTextFieldVariants on RemixTextFieldStyle {
 
   /// Filled text field variant with background color
   static RemixTextFieldStyle get filled => RemixTextFieldStyle(
-        style: TextStyle(color: Colors.black87, fontSize: 14),
-        hintTextColor: Colors.grey.shade500,
+        text: TextMix(style: TextStyleMix(color: Colors.black87, fontSize: 14)),
+        hintText: TextMix(style: TextStyleMix(color: Colors.grey.shade500)),
         textAlign: TextAlign.start,
         cursorWidth: 2.0,
         cursorColor: Colors.blue,

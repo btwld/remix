@@ -3,15 +3,15 @@ part of 'slider.dart';
 class RemixSliderStyle extends Style<SliderSpec>
     with StyleModifierMixin<RemixSliderStyle, SliderSpec>, StyleVariantMixin<RemixSliderStyle, SliderSpec> {
   final Prop<BoxSpec>? $thumb;
-  final Prop<PaintData>? $baseTrack;
-  final Prop<PaintData>? $activeTrack;
-  final Prop<PaintData>? $division;
+  final Prop<Paint>? $baseTrack;
+  final Prop<Paint>? $activeTrack;
+  final Prop<Paint>? $division;
 
   const RemixSliderStyle.create({
     Prop<BoxSpec>? thumb,
-    Prop<PaintData>? baseTrack,
-    Prop<PaintData>? activeTrack,
-    Prop<PaintData>? division,
+    Prop<Paint>? baseTrack,
+    Prop<Paint>? activeTrack,
+    Prop<Paint>? division,
     super.variants,
     super.animation,
     super.modifier,
@@ -23,18 +23,18 @@ class RemixSliderStyle extends Style<SliderSpec>
 
   RemixSliderStyle({
     BoxMix? thumb,
-    PaintData? baseTrack,
-    PaintData? activeTrack,
-    PaintData? division,
+    Paint? baseTrack,
+    Paint? activeTrack,
+    Paint? division,
     AnimationConfig? animation,
     List<VariantStyle<SliderSpec>>? variants,
     ModifierConfig? modifier,
     bool? inherit,
   }) : this.create(
           thumb: thumb != null ? Prop.mix(thumb) : null,
-          baseTrack: Prop.maybe(baseTrack),
-          activeTrack: Prop.maybe(activeTrack),
-          division: Prop.maybe(division),
+          baseTrack: baseTrack != null ? Prop.value(baseTrack) : null,
+          activeTrack: activeTrack != null ? Prop.value(activeTrack) : null,
+          division: division != null ? Prop.value(division) : null,
           variants: variants,
           animation: animation,
           modifier: modifier,
@@ -104,21 +104,21 @@ final DefaultRemixSliderStyle = RemixSliderStyle(
       color: Colors.white,
     ),
   ),
-  baseTrack: const PaintData(
-    strokeWidth: 8,
-    color: Colors.grey,
-    strokeCap: StrokeCap.round,
-  ),
-  activeTrack: const PaintData(
-    strokeWidth: 8,
-    color: Colors.black,
-    strokeCap: StrokeCap.round,
-  ),
-  division: PaintData(
-    strokeWidth: 8,
-    color: Colors.black.withValues(alpha: 0.26),
-    strokeCap: StrokeCap.round,
-  ),
+  baseTrack: Paint()
+    ..strokeWidth = 8
+    ..color = Colors.grey
+    ..strokeCap = StrokeCap.round
+    ..style = PaintingStyle.stroke,
+  activeTrack: Paint()
+    ..strokeWidth = 8
+    ..color = Colors.black
+    ..strokeCap = StrokeCap.round
+    ..style = PaintingStyle.stroke,
+  division: Paint()
+    ..strokeWidth = 8
+    ..color = Colors.black.withValues(alpha: 0.26)
+    ..strokeCap = StrokeCap.round
+    ..style = PaintingStyle.stroke,
   animation: AnimationConfig.easeInOut(const Duration(milliseconds: 200)),
 );
 
@@ -141,16 +141,16 @@ final RemixSliderDisabledStyle = RemixSliderStyle(
       color: Colors.grey.shade300,
     ),
   ),
-  baseTrack: PaintData(
-    strokeWidth: 8,
-    color: Colors.grey.shade300,
-    strokeCap: StrokeCap.round,
-  ),
-  activeTrack: PaintData(
-    strokeWidth: 8,
-    color: Colors.grey.shade400,
-    strokeCap: StrokeCap.round,
-  ),
+  baseTrack: Paint()
+    ..strokeWidth = 8
+    ..color = Colors.grey.shade300
+    ..strokeCap = StrokeCap.round
+    ..style = PaintingStyle.stroke,
+  activeTrack: Paint()
+    ..strokeWidth = 8
+    ..color = Colors.grey.shade400
+    ..strokeCap = StrokeCap.round
+    ..style = PaintingStyle.stroke,
 );
 
 extension SliderVariants on RemixSliderStyle {
@@ -170,21 +170,21 @@ extension SliderVariants on RemixSliderStyle {
             ],
           ),
         ),
-        baseTrack: PaintData(
-          strokeWidth: 8,
-          color: Colors.blue[100]!,
-          strokeCap: StrokeCap.round,
-        ),
-        activeTrack: PaintData(
-          strokeWidth: 8,
-          color: Colors.blue[500]!,
-          strokeCap: StrokeCap.round,
-        ),
-        division: PaintData(
-          strokeWidth: 8,
-          color: Colors.blue[300]!.withValues(alpha: 0.5),
-          strokeCap: StrokeCap.round,
-        ),
+        baseTrack: Paint()
+          ..strokeWidth = 8
+          ..color = Colors.blue[100]!
+          ..strokeCap = StrokeCap.round
+          ..style = PaintingStyle.stroke,
+        activeTrack: Paint()
+          ..strokeWidth = 8
+          ..color = Colors.blue[500]!
+          ..strokeCap = StrokeCap.round
+          ..style = PaintingStyle.stroke,
+        division: Paint()
+          ..strokeWidth = 8
+          ..color = Colors.blue[300]!.withValues(alpha: 0.5)
+          ..strokeCap = StrokeCap.round
+          ..style = PaintingStyle.stroke,
         animation: AnimationConfig.easeInOut(const Duration(milliseconds: 200)),
       );
 
@@ -197,21 +197,21 @@ extension SliderVariants on RemixSliderStyle {
             color: Colors.white,
           ),
         ),
-        baseTrack: PaintData(
-          strokeWidth: 8,
-          color: Colors.grey[300]!,
-          strokeCap: StrokeCap.round,
-        ),
-        activeTrack: PaintData(
-          strokeWidth: 8,
-          color: Colors.grey[600]!,
-          strokeCap: StrokeCap.round,
-        ),
-        division: PaintData(
-          strokeWidth: 8,
-          color: Colors.grey[500]!.withValues(alpha: 0.5),
-          strokeCap: StrokeCap.round,
-        ),
+        baseTrack: Paint()
+          ..strokeWidth = 8
+          ..color = Colors.grey[300]!
+          ..strokeCap = StrokeCap.round
+          ..style = PaintingStyle.stroke,
+        activeTrack: Paint()
+          ..strokeWidth = 8
+          ..color = Colors.grey[600]!
+          ..strokeCap = StrokeCap.round
+          ..style = PaintingStyle.stroke,
+        division: Paint()
+          ..strokeWidth = 8
+          ..color = Colors.grey[500]!.withValues(alpha: 0.5)
+          ..strokeCap = StrokeCap.round
+          ..style = PaintingStyle.stroke,
         animation: AnimationConfig.easeInOut(const Duration(milliseconds: 200)),
       );
 
@@ -224,21 +224,21 @@ extension SliderVariants on RemixSliderStyle {
             color: Colors.white,
           ),
         ),
-        baseTrack: const PaintData(
-          strokeWidth: 4,
-          color: Colors.grey,
-          strokeCap: StrokeCap.round,
-        ),
-        activeTrack: const PaintData(
-          strokeWidth: 4,
-          color: Colors.black,
-          strokeCap: StrokeCap.round,
-        ),
-        division: PaintData(
-          strokeWidth: 4,
-          color: Colors.black.withValues(alpha: 0.26),
-          strokeCap: StrokeCap.round,
-        ),
+        baseTrack: Paint()
+          ..strokeWidth = 4
+          ..color = Colors.grey
+          ..strokeCap = StrokeCap.round
+          ..style = PaintingStyle.stroke,
+        activeTrack: Paint()
+          ..strokeWidth = 4
+          ..color = Colors.black
+          ..strokeCap = StrokeCap.round
+          ..style = PaintingStyle.stroke,
+        division: Paint()
+          ..strokeWidth = 4
+          ..color = Colors.black.withValues(alpha: 0.26)
+          ..strokeCap = StrokeCap.round
+          ..style = PaintingStyle.stroke,
         animation: AnimationConfig.easeInOut(const Duration(milliseconds: 200)),
       );
 }

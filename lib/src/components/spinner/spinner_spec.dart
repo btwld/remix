@@ -1,6 +1,6 @@
 part of 'spinner.dart';
 
-enum SpinnerStyleType {
+enum SpinnerStyle {
   solid,
   dotted,
 }
@@ -10,7 +10,7 @@ class SpinnerSpec extends Spec<SpinnerSpec> with Diagnosticable {
   final double? strokeWidth;
   final Color? color;
   final Duration? duration;
-  final SpinnerStyleType? style;
+  final SpinnerStyle? style;
 
   const SpinnerSpec({
     this.size,
@@ -20,14 +20,13 @@ class SpinnerSpec extends Spec<SpinnerSpec> with Diagnosticable {
     this.style,
   });
 
-
   @override
   SpinnerSpec copyWith({
     double? size,
     double? strokeWidth,
     Color? color,
     Duration? duration,
-    SpinnerStyleType? style,
+    SpinnerStyle? style,
   }) {
     return SpinnerSpec(
       size: size ?? this.size,

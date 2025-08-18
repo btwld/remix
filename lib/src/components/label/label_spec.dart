@@ -1,38 +1,33 @@
 part of 'label.dart';
 
-enum IconPosition {
-  start,
-  end,
-}
-
 class LabelSpec extends Spec<LabelSpec> with Diagnosticable {
   final double spacing;
   final TextSpec label;
-  final IconSpec icon;
-  final IconPosition iconPosition;
+  final IconSpec leadingIcon;
+  final IconSpec trailingIcon;
 
   const LabelSpec({
     double? spacing,
     TextSpec? label,
-    IconSpec? icon,
-    IconPosition? iconPosition,
+    IconSpec? leadingIcon,
+    IconSpec? trailingIcon,
   })  : spacing = spacing ?? 8,
         label = label ?? const TextSpec(),
-        icon = icon ?? const IconSpec(),
-        iconPosition = iconPosition ?? IconPosition.start;
+        leadingIcon = leadingIcon ?? const IconSpec(),
+        trailingIcon = trailingIcon ?? const IconSpec();
 
   @override
   LabelSpec copyWith({
     double? spacing,
     TextSpec? label,
-    IconSpec? icon,
-    IconPosition? iconPosition,
+    IconSpec? leadingIcon,
+    IconSpec? trailingIcon,
   }) {
     return LabelSpec(
       spacing: spacing ?? this.spacing,
       label: label ?? this.label,
-      icon: icon ?? this.icon,
-      iconPosition: iconPosition ?? this.iconPosition,
+      leadingIcon: leadingIcon ?? this.leadingIcon,
+      trailingIcon: trailingIcon ?? this.trailingIcon,
     );
   }
 
@@ -43,8 +38,8 @@ class LabelSpec extends Spec<LabelSpec> with Diagnosticable {
     return LabelSpec(
       spacing: MixOps.lerp(spacing, other.spacing, t),
       label: MixOps.lerp(label, other.label, t),
-      icon: MixOps.lerp(icon, other.icon, t),
-      iconPosition: MixOps.lerp(iconPosition, other.iconPosition, t),
+      leadingIcon: MixOps.lerp(leadingIcon, other.leadingIcon, t),
+      trailingIcon: MixOps.lerp(trailingIcon, other.trailingIcon, t),
     );
   }
 
@@ -55,12 +50,12 @@ class LabelSpec extends Spec<LabelSpec> with Diagnosticable {
       DiagnosticsProperty('spacing', spacing, defaultValue: null),
     );
     properties.add(DiagnosticsProperty('label', label, defaultValue: null));
-    properties.add(DiagnosticsProperty('icon', icon, defaultValue: null));
+    properties.add(DiagnosticsProperty('leadingIcon', leadingIcon, defaultValue: null));
     properties.add(
-      DiagnosticsProperty('iconPosition', iconPosition, defaultValue: null),
+      DiagnosticsProperty('trailingIcon', trailingIcon, defaultValue: null),
     );
   }
 
   @override
-  List<Object?> get props => [spacing, label, icon, iconPosition];
+  List<Object?> get props => [spacing, label, leadingIcon, trailingIcon];
 }
