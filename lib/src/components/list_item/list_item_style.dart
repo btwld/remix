@@ -8,16 +8,16 @@ class RemixListItemStyle extends Style<ListItemSpec>
   final Prop<FlexBoxSpec>? $contentContainer;
   final Prop<TextSpec>? $title;
   final Prop<TextSpec>? $subtitle;
-  final Prop<IconSpec>? $leadingIcon;
-  final Prop<IconSpec>? $trailingIcon;
+  final Prop<IconSpec>? $leading;
+  final Prop<IconSpec>? $trailing;
 
   const RemixListItemStyle.create({
     Prop<FlexBoxSpec>? container,
     Prop<FlexBoxSpec>? contentContainer,
     Prop<TextSpec>? title,
     Prop<TextSpec>? subtitle,
-    Prop<IconSpec>? leadingIcon,
-    Prop<IconSpec>? trailingIcon,
+    Prop<IconSpec>? leading,
+    Prop<IconSpec>? trailing,
     super.variants,
     super.animation,
     super.modifier,
@@ -26,16 +26,16 @@ class RemixListItemStyle extends Style<ListItemSpec>
         $contentContainer = contentContainer,
         $title = title,
         $subtitle = subtitle,
-        $leadingIcon = leadingIcon,
-        $trailingIcon = trailingIcon;
+        $leading = leading,
+        $trailing = trailing;
 
   RemixListItemStyle({
     FlexBoxMix? container,
     FlexBoxMix? contentContainer,
     TextMix? title,
     TextMix? subtitle,
-    IconMix? leadingIcon,
-    IconMix? trailingIcon,
+    IconMix? leading,
+    IconMix? trailing,
     AnimationConfig? animation,
     List<VariantStyle<ListItemSpec>>? variants,
     ModifierConfig? modifier,
@@ -46,8 +46,8 @@ class RemixListItemStyle extends Style<ListItemSpec>
               contentContainer != null ? Prop.mix(contentContainer) : null,
           title: title != null ? Prop.mix(title) : null,
           subtitle: subtitle != null ? Prop.mix(subtitle) : null,
-          leadingIcon: leadingIcon != null ? Prop.mix(leadingIcon) : null,
-          trailingIcon: trailingIcon != null ? Prop.mix(trailingIcon) : null,
+          leading: leading != null ? Prop.mix(leading) : null,
+          trailing: trailing != null ? Prop.mix(trailing) : null,
           variants: variants,
           animation: animation,
           modifier: modifier,
@@ -61,8 +61,8 @@ class RemixListItemStyle extends Style<ListItemSpec>
       contentContainer: MixOps.resolve(context, $contentContainer),
       title: MixOps.resolve(context, $title),
       subtitle: MixOps.resolve(context, $subtitle),
-      leadingIcon: MixOps.resolve(context, $leadingIcon),
-      trailingIcon: MixOps.resolve(context, $trailingIcon),
+      leading: MixOps.resolve(context, $leading),
+      trailing: MixOps.resolve(context, $trailing),
     );
   }
 
@@ -91,8 +91,8 @@ class RemixListItemStyle extends Style<ListItemSpec>
           MixOps.merge($contentContainer, other.$contentContainer),
       title: MixOps.merge($title, other.$title),
       subtitle: MixOps.merge($subtitle, other.$subtitle),
-      leadingIcon: MixOps.merge($leadingIcon, other.$leadingIcon),
-      trailingIcon: MixOps.merge($trailingIcon, other.$trailingIcon),
+      leading: MixOps.merge($leading, other.$leading),
+      trailing: MixOps.merge($trailing, other.$trailing),
       variants: mergeVariantLists($variants, other.$variants),
       animation: other.$animation ?? $animation,
       modifier: $modifier?.merge(other.$modifier) ?? other.$modifier,
@@ -106,8 +106,8 @@ class RemixListItemStyle extends Style<ListItemSpec>
         $contentContainer,
         $title,
         $subtitle,
-        $leadingIcon,
-        $trailingIcon,
+        $leading,
+        $trailing,
         $variants,
         $animation,
         $modifier,
@@ -140,6 +140,6 @@ final DefaultRemixListItemStyle = RemixListItemStyle(
   subtitle: TextMix(
     style: TextStyleMix(color: Colors.grey[600], fontSize: 14),
   ),
-  leadingIcon: IconMix(size: 24),
-  trailingIcon: IconMix(size: 20),
+  leading: IconMix(size: 24),
+  trailing: IconMix(size: 20),
 );

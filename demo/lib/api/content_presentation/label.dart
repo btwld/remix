@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
             children: [
               RemixLabel(
                 'Remix is awesome!',
-                leadingIcon: Icons.music_note,
+                leading: Icons.music_note,
               ),
             ],
           ),

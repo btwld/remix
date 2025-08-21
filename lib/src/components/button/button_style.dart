@@ -253,7 +253,7 @@ final DefaultRemixButtonStyle = RemixButtonStyle(
   label: RemixLabelStyle(
     spacing: 8,
     label: TextMix.color(Colors.white),
-    leadingIcon: IconMix.color(Colors.white).size(18),
+    leading: IconMix.color(Colors.white).size(18),
   ),
   spinner: RemixSpinnerStyle(
     size: 16,
@@ -307,7 +307,7 @@ extension ButtonVariants on RemixButtonStyle {
           padding: EdgeInsetsMix.all(6),
           constraints: BoxConstraintsMix(minHeight: 32),
         ),
-        label: RemixLabelStyle(spacing: 6, leadingIcon: IconMix.size(16)),
+        label: RemixLabelStyle(spacing: 6, leading: IconMix.size(16)),
       );
 
   static RemixButtonStyle get medium => RemixButtonStyle(
@@ -315,7 +315,7 @@ extension ButtonVariants on RemixButtonStyle {
           padding: EdgeInsetsMix.all(10),
           constraints: BoxConstraintsMix(minHeight: 40),
         ),
-        label: RemixLabelStyle(spacing: 8, leadingIcon: IconMix.size(18)),
+        label: RemixLabelStyle(spacing: 8, leading: IconMix.size(18)),
       );
 
   static RemixButtonStyle get large => RemixButtonStyle(
@@ -323,7 +323,7 @@ extension ButtonVariants on RemixButtonStyle {
           padding: EdgeInsetsMix.all(14),
           constraints: BoxConstraintsMix(minHeight: 48),
         ),
-        label: RemixLabelStyle(spacing: 10, leadingIcon: IconMix.size(20)),
+        label: RemixLabelStyle(spacing: 10, leading: IconMix.size(20)),
       );
 
   // Legacy aliases for backward compatibility
@@ -343,7 +343,7 @@ extension ButtonVariants on RemixButtonStyle {
       label: RemixLabelStyle(
         spacing: 8,
         label: TextMix.color(fgColor),
-        leadingIcon: IconMix.color(fgColor).size(18),
+        leading: IconMix.color(fgColor).size(18),
       ),
     );
   }
@@ -361,7 +361,7 @@ extension ButtonVariants on RemixButtonStyle {
       label: RemixLabelStyle(
         spacing: 8,
         label: TextMix.color(color),
-        leadingIcon: IconMix.color(color).size(18),
+        leading: IconMix.color(color).size(18),
       ),
     );
   }
@@ -378,7 +378,7 @@ extension ButtonVariants on RemixButtonStyle {
       label: RemixLabelStyle(
         spacing: 8,
         label: TextMix.color(color),
-        leadingIcon: IconMix.color(color).size(18),
+        leading: IconMix.color(color).size(18),
       ),
     );
   }
@@ -395,7 +395,7 @@ extension ButtonVariants on RemixButtonStyle {
       label: RemixLabelStyle(
         spacing: 8,
         label: TextMix.color(color),
-        leadingIcon: IconMix.color(color).size(18),
+        leading: IconMix.color(color).size(18),
       ),
     );
   }

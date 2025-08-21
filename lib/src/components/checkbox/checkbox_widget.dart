@@ -13,7 +13,7 @@ part of 'checkbox.dart';
 ///       _isChecked = value;
 ///     });
 ///   },
-///   iconChecked: Icons.check_rounded,
+///   checked: Icons.check_rounded,
 ///   label: 'Accept Terms',
 /// )
 /// ```
@@ -25,8 +25,9 @@ class RemixCheckbox extends StatefulWidget
     required this.selected,
     this.onChanged,
     this.autofocus = false,
-    this.iconChecked = Icons.check_rounded,
-    this.iconUnchecked,
+    this.checked = Icons.check_rounded,
+    this.unchecked,
+    this.enableHapticFeedback = true,
     this.style = const RemixCheckboxStyle.create(),
     this.label,
     this.focusNode,
@@ -39,13 +40,13 @@ class RemixCheckbox extends StatefulWidget
   final bool selected;
 
   /// The icon to display when the checkbox is checked.
-  final IconData iconChecked;
+  final IconData checked;
 
   /// Whether the checkbox should automatically request focus when it is created.
   final bool autofocus;
 
   /// The icon to display when the checkbox is unchecked.
-  final IconData? iconUnchecked;
+  final IconData? unchecked;
 
   /// The callback function that is called when the checkbox is tapped.
   final ValueChanged<bool>? onChanged;
@@ -55,6 +56,10 @@ class RemixCheckbox extends StatefulWidget
 
   /// An optional label that will be displayed next to the checkbox.
   final String? label;
+
+  /// Whether to provide haptic feedback when the checkbox is toggled.
+  /// Defaults to true.
+  final bool enableHapticFeedback;
 
   /// The focus node for the checkbox.
   final FocusNode? focusNode;
@@ -76,6 +81,7 @@ class _RemixCheckboxState extends State<RemixCheckbox>
       onPressChange: (state) => controller.pressed = state,
       onFocusChange: (state) => controller.focused = state,
       enabled: widget.enabled,
+      enableHapticFeedback: widget.enableHapticFeedback,
       focusNode: widget.focusNode,
       autofocus: widget.autofocus,
       child: StyleBuilder(
@@ -87,7 +93,7 @@ class _RemixCheckboxState extends State<RemixCheckbox>
           final Label = spec.label;
 
           final iconData =
-              widget.selected ? widget.iconChecked : widget.iconUnchecked;
+              widget.selected ? widget.checked : widget.unchecked;
 
           final checkbox = IndicatorContainer(
             child: iconData != null ? Indicator(icon: iconData) : null,

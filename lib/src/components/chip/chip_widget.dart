@@ -23,12 +23,13 @@ class RemixChip extends StatefulWidget
   const RemixChip({
     super.key,
     this.label,
-    this.leadingIcon,
-    this.trailingIcon,
+    this.leading,
+    this.trailing,
     this.onChanged,
     this.onDeleted,
     this.selected = false,
     this.enabled = true,
+    this.enableHapticFeedback = true,
     this.style = const RemixChipStyle.create(),
     this.focusNode,
     this.autofocus = false,
@@ -42,11 +43,11 @@ class RemixChip extends StatefulWidget
   final String? label;
 
   /// Optional leading icon.
-  final IconData? leadingIcon;
+  final IconData? leading;
 
-  /// Optional trailing icon. If onDeleted is provided but trailingIcon is null,
+  /// Optional trailing icon. If onDeleted is provided but trailing is null,
   /// defaults to Icons.close.
-  final IconData? trailingIcon;
+  final IconData? trailing;
 
   /// Custom child widget that overrides the default label and icon layout.
   final Widget? child;
@@ -62,6 +63,10 @@ class RemixChip extends StatefulWidget
 
   /// Whether this chip is enabled.
   final bool enabled;
+
+  /// Whether to provide haptic feedback when the chip is toggled.
+  /// Defaults to true.
+  final bool enableHapticFeedback;
 
   /// The style configuration for the chip.
   final RemixChipStyle style;
@@ -87,6 +92,7 @@ class _RemixChipState extends State<RemixChip>
       onPressChange: (state) => controller.pressed = state,
       onFocusChange: (state) => controller.focused = state,
       enabled: widget.enabled,
+      enableHapticFeedback: widget.enableHapticFeedback,
       focusNode: widget.focusNode,
       autofocus: widget.autofocus,
       child: StyleBuilder(
@@ -94,9 +100,9 @@ class _RemixChipState extends State<RemixChip>
         controller: controller,
         builder: (context, spec) {
           final Container = spec.container;
-          final LeadingIcon = spec.leadingIcon;
+          final LeadingIcon = spec.leading;
           final Label = spec.label;
-          final TrailingIcon = spec.trailingIcon;
+          final TrailingIcon = spec.trailing;
 
           // Use custom child if provided
           if (widget.child != null) {
@@ -110,8 +116,8 @@ class _RemixChipState extends State<RemixChip>
           final children = <Widget>[];
 
           // Add leading icon
-          if (widget.leadingIcon != null) {
-            children.add(LeadingIcon(icon: widget.leadingIcon!));
+          if (widget.leading != null) {
+            children.add(LeadingIcon(icon: widget.leading!));
           }
 
           // Add label
@@ -123,7 +129,7 @@ class _RemixChipState extends State<RemixChip>
           if (widget.onDeleted != null) {
             children.add(GestureDetector(
               onTap: widget.enabled ? widget.onDeleted : null,
-              child: TrailingIcon(icon: widget.trailingIcon ?? Icons.close),
+              child: TrailingIcon(icon: widget.trailing ?? Icons.close),
             ));
           }
 

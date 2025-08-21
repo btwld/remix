@@ -7,8 +7,8 @@ class RemixAccordionStyle extends Style<AccordionSpec>
   final Prop<BoxSpec>? $itemContainer;
   final Prop<BoxSpec>? $contentContainer;
   final Prop<FlexBoxSpec>? $headerContainer;
-  final Prop<IconSpec>? $leadingIcon;
-  final Prop<IconSpec>? $trailingIcon;
+  final Prop<IconSpec>? $leading;
+  final Prop<IconSpec>? $trailing;
   final Prop<TextSpec>? $titleStyle;
   final Prop<TextSpec>? $contentStyle;
 
@@ -16,8 +16,8 @@ class RemixAccordionStyle extends Style<AccordionSpec>
     Prop<BoxSpec>? itemContainer,
     Prop<BoxSpec>? contentContainer,
     Prop<FlexBoxSpec>? headerContainer,
-    Prop<IconSpec>? leadingIcon,
-    Prop<IconSpec>? trailingIcon,
+    Prop<IconSpec>? leading,
+    Prop<IconSpec>? trailing,
     Prop<TextSpec>? titleStyle,
     Prop<TextSpec>? contentStyle,
     super.variants,
@@ -27,8 +27,8 @@ class RemixAccordionStyle extends Style<AccordionSpec>
   })  : $itemContainer = itemContainer,
         $contentContainer = contentContainer,
         $headerContainer = headerContainer,
-        $leadingIcon = leadingIcon,
-        $trailingIcon = trailingIcon,
+        $leading = leading,
+        $trailing = trailing,
         $titleStyle = titleStyle,
         $contentStyle = contentStyle;
 
@@ -36,8 +36,8 @@ class RemixAccordionStyle extends Style<AccordionSpec>
     BoxMix? itemContainer,
     BoxMix? contentContainer,
     FlexBoxMix? headerContainer,
-    IconMix? leadingIcon,
-    IconMix? trailingIcon,
+    IconMix? leading,
+    IconMix? trailing,
     TextMix? titleStyle,
     TextMix? contentStyle,
     AnimationConfig? animation,
@@ -50,8 +50,8 @@ class RemixAccordionStyle extends Style<AccordionSpec>
               contentContainer != null ? Prop.mix(contentContainer) : null,
           headerContainer:
               headerContainer != null ? Prop.mix(headerContainer) : null,
-          leadingIcon: leadingIcon != null ? Prop.mix(leadingIcon) : null,
-          trailingIcon: trailingIcon != null ? Prop.mix(trailingIcon) : null,
+          leading: leading != null ? Prop.mix(leading) : null,
+          trailing: trailing != null ? Prop.mix(trailing) : null,
           titleStyle: titleStyle != null ? Prop.mix(titleStyle) : null,
           contentStyle: contentStyle != null ? Prop.mix(contentStyle) : null,
           variants: variants,
@@ -66,8 +66,8 @@ class RemixAccordionStyle extends Style<AccordionSpec>
       itemContainer: MixOps.resolve(context, $itemContainer),
       contentContainer: MixOps.resolve(context, $contentContainer),
       headerContainer: MixOps.resolve(context, $headerContainer),
-      leadingIcon: MixOps.resolve(context, $leadingIcon),
-      trailingIcon: MixOps.resolve(context, $trailingIcon),
+      leading: MixOps.resolve(context, $leading),
+      trailing: MixOps.resolve(context, $trailing),
       titleStyle: MixOps.resolve(context, $titleStyle),
       contentStyle: MixOps.resolve(context, $contentStyle),
     );
@@ -82,8 +82,8 @@ class RemixAccordionStyle extends Style<AccordionSpec>
       contentContainer:
           MixOps.merge($contentContainer, other.$contentContainer),
       headerContainer: MixOps.merge($headerContainer, other.$headerContainer),
-      leadingIcon: MixOps.merge($leadingIcon, other.$leadingIcon),
-      trailingIcon: MixOps.merge($trailingIcon, other.$trailingIcon),
+      leading: MixOps.merge($leading, other.$leading),
+      trailing: MixOps.merge($trailing, other.$trailing),
       titleStyle: MixOps.merge($titleStyle, other.$titleStyle),
       contentStyle: MixOps.merge($contentStyle, other.$contentStyle),
       variants: mergeVariantLists($variants, other.$variants),
@@ -113,8 +113,8 @@ class RemixAccordionStyle extends Style<AccordionSpec>
         $itemContainer,
         $contentContainer,
         $headerContainer,
-        $leadingIcon,
-        $trailingIcon,
+        $leading,
+        $trailing,
         $titleStyle,
         $contentStyle,
         $variants,
@@ -147,8 +147,8 @@ final DefaultRemixAccordionStyle = RemixAccordionStyle(
       crossAxisAlignment: CrossAxisAlignment.center,
     ),
   ),
-  leadingIcon: IconMix(size: 20),
-  trailingIcon: IconMix(size: 20),
+  leading: IconMix(size: 20),
+  trailing: IconMix(size: 20),
   titleStyle: TextMix(
     style: TextStyleMix(
       color: Colors.grey[800],
@@ -190,8 +190,8 @@ extension AccordionVariants on RemixAccordionStyle {
             crossAxisAlignment: CrossAxisAlignment.center,
           ),
         ),
-        leadingIcon: IconMix(size: 20),
-        trailingIcon: IconMix(size: 20),
+        leading: IconMix(size: 20),
+        trailing: IconMix(size: 20),
         titleStyle: TextMix(
           style: TextStyleMix(
             color: Colors.grey[800],
@@ -232,8 +232,8 @@ extension AccordionVariants on RemixAccordionStyle {
             crossAxisAlignment: CrossAxisAlignment.center,
           ),
         ),
-        leadingIcon: IconMix(size: 16),
-        trailingIcon: IconMix(size: 16),
+        leading: IconMix(size: 16),
+        trailing: IconMix(size: 16),
         titleStyle: TextMix(
           style: TextStyleMix(
             color: Colors.grey[800],
@@ -274,8 +274,8 @@ extension AccordionVariants on RemixAccordionStyle {
             crossAxisAlignment: CrossAxisAlignment.center,
           ),
         ),
-        leadingIcon: IconMix(size: 20),
-        trailingIcon: IconMix(size: 20),
+        leading: IconMix(size: 20),
+        trailing: IconMix(size: 20),
         titleStyle: TextMix(
           style: TextStyleMix(
             color: Colors.grey[800],

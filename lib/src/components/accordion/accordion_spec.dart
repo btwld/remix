@@ -4,8 +4,8 @@ class AccordionSpec extends Spec<AccordionSpec> with Diagnosticable {
   final BoxSpec itemContainer;
   final BoxSpec contentContainer;
   final FlexBoxSpec headerContainer;
-  final IconSpec leadingIcon;
-  final IconSpec trailingIcon;
+  final IconSpec leading;
+  final IconSpec trailing;
   final TextSpec titleStyle;
   final TextSpec contentStyle;
 
@@ -13,15 +13,15 @@ class AccordionSpec extends Spec<AccordionSpec> with Diagnosticable {
     BoxSpec? itemContainer,
     BoxSpec? contentContainer,
     FlexBoxSpec? headerContainer,
-    IconSpec? leadingIcon,
-    IconSpec? trailingIcon,
+    IconSpec? leading,
+    IconSpec? trailing,
     TextSpec? titleStyle,
     TextSpec? contentStyle,
   })  : itemContainer = itemContainer ?? const BoxSpec(),
         contentContainer = contentContainer ?? const BoxSpec(),
         headerContainer = headerContainer ?? const FlexBoxSpec(),
-        leadingIcon = leadingIcon ?? const IconSpec(),
-        trailingIcon = trailingIcon ?? const IconSpec(),
+        leading = leading ?? const IconSpec(),
+        trailing = trailing ?? const IconSpec(),
         titleStyle = titleStyle ?? const TextSpec(),
         contentStyle = contentStyle ?? const TextSpec();
 
@@ -30,8 +30,8 @@ class AccordionSpec extends Spec<AccordionSpec> with Diagnosticable {
     BoxSpec? itemContainer,
     BoxSpec? contentContainer,
     FlexBoxSpec? headerContainer,
-    IconSpec? leadingIcon,
-    IconSpec? trailingIcon,
+    IconSpec? leading,
+    IconSpec? trailing,
     TextSpec? titleStyle,
     TextSpec? contentStyle,
   }) {
@@ -39,8 +39,8 @@ class AccordionSpec extends Spec<AccordionSpec> with Diagnosticable {
       itemContainer: itemContainer ?? this.itemContainer,
       contentContainer: contentContainer ?? this.contentContainer,
       headerContainer: headerContainer ?? this.headerContainer,
-      leadingIcon: leadingIcon ?? this.leadingIcon,
-      trailingIcon: trailingIcon ?? this.trailingIcon,
+      leading: leading ?? this.leading,
+      trailing: trailing ?? this.trailing,
       titleStyle: titleStyle ?? this.titleStyle,
       contentStyle: contentStyle ?? this.contentStyle,
     );
@@ -55,8 +55,8 @@ class AccordionSpec extends Spec<AccordionSpec> with Diagnosticable {
       contentContainer:
           MixOps.lerp(contentContainer, other.contentContainer, t)!,
       headerContainer: MixOps.lerp(headerContainer, other.headerContainer, t)!,
-      leadingIcon: MixOps.lerp(leadingIcon, other.leadingIcon, t)!,
-      trailingIcon: MixOps.lerp(trailingIcon, other.trailingIcon, t)!,
+      leading: MixOps.lerp(leading, other.leading, t)!,
+      trailing: MixOps.lerp(trailing, other.trailing, t)!,
       titleStyle: MixOps.lerp(titleStyle, other.titleStyle, t)!,
       contentStyle: MixOps.lerp(contentStyle, other.contentStyle, t)!,
     );
@@ -81,10 +81,10 @@ class AccordionSpec extends Spec<AccordionSpec> with Diagnosticable {
       defaultValue: null,
     ));
     properties.add(
-      DiagnosticsProperty('leadingIcon', leadingIcon, defaultValue: null),
+      DiagnosticsProperty('leading', leading, defaultValue: null),
     );
     properties.add(
-      DiagnosticsProperty('trailingIcon', trailingIcon, defaultValue: null),
+      DiagnosticsProperty('trailing', trailing, defaultValue: null),
     );
     properties
         .add(DiagnosticsProperty('titleStyle', titleStyle, defaultValue: null));
@@ -98,8 +98,8 @@ class AccordionSpec extends Spec<AccordionSpec> with Diagnosticable {
         itemContainer,
         contentContainer,
         headerContainer,
-        leadingIcon,
-        trailingIcon,
+        leading,
+        trailing,
         titleStyle,
         contentStyle,
       ];

@@ -6,28 +6,28 @@ class RemixLabelStyle extends Style<LabelSpec>
         StyleVariantMixin<RemixLabelStyle, LabelSpec> {
   final Prop<double>? $spacing;
   final Prop<TextSpec>? $label;
-  final Prop<IconSpec>? $leadingIcon;
-  final Prop<IconSpec>? $trailingIcon;
+  final Prop<IconSpec>? $leading;
+  final Prop<IconSpec>? $trailing;
 
   const RemixLabelStyle.create({
     Prop<double>? spacing,
     Prop<TextSpec>? label,
-    Prop<IconSpec>? leadingIcon,
-    Prop<IconSpec>? trailingIcon,
+    Prop<IconSpec>? leading,
+    Prop<IconSpec>? trailing,
     super.variants,
     super.animation,
     super.modifier,
     super.inherit,
   })  : $spacing = spacing,
         $label = label,
-        $leadingIcon = leadingIcon,
-        $trailingIcon = trailingIcon;
+        $leading = leading,
+        $trailing = trailing;
 
   RemixLabelStyle({
     double? spacing,
     TextMix? label,
-    IconMix? leadingIcon,
-    IconMix? trailingIcon,
+    IconMix? leading,
+    IconMix? trailing,
     AnimationConfig? animation,
     List<VariantStyle<LabelSpec>>? variants,
     ModifierConfig? modifier,
@@ -35,8 +35,8 @@ class RemixLabelStyle extends Style<LabelSpec>
   }) : this.create(
           spacing: Prop.maybe(spacing),
           label: label != null ? Prop.mix(label) : null,
-          leadingIcon: leadingIcon != null ? Prop.mix(leadingIcon) : null,
-          trailingIcon: trailingIcon != null ? Prop.mix(trailingIcon) : null,
+          leading: leading != null ? Prop.mix(leading) : null,
+          trailing: trailing != null ? Prop.mix(trailing) : null,
           variants: variants,
           animation: animation,
           modifier: modifier,
@@ -46,8 +46,8 @@ class RemixLabelStyle extends Style<LabelSpec>
   factory RemixLabelStyle.value(LabelSpec spec) => RemixLabelStyle(
         spacing: spec.spacing,
         label: TextMix.maybeValue(spec.label),
-        leadingIcon: IconMix.maybeValue(spec.leadingIcon),
-        trailingIcon: IconMix.maybeValue(spec.trailingIcon),
+        leading: IconMix.maybeValue(spec.leading),
+        trailing: IconMix.maybeValue(spec.trailing),
       );
 
   @override
@@ -70,8 +70,8 @@ class RemixLabelStyle extends Style<LabelSpec>
     return LabelSpec(
       spacing: MixOps.resolve(context, $spacing),
       label: MixOps.resolve(context, $label),
-      leadingIcon: MixOps.resolve(context, $leadingIcon),
-      trailingIcon: MixOps.resolve(context, $trailingIcon),
+      leading: MixOps.resolve(context, $leading),
+      trailing: MixOps.resolve(context, $trailing),
     );
   }
 
@@ -82,8 +82,8 @@ class RemixLabelStyle extends Style<LabelSpec>
     return RemixLabelStyle.create(
       spacing: MixOps.merge($spacing, other.$spacing),
       label: MixOps.merge($label, other.$label),
-      leadingIcon: MixOps.merge($leadingIcon, other.$leadingIcon),
-      trailingIcon: MixOps.merge($trailingIcon, other.$trailingIcon),
+      leading: MixOps.merge($leading, other.$leading),
+      trailing: MixOps.merge($trailing, other.$trailing),
       variants: mergeVariantLists($variants, other.$variants),
       animation: other.$animation ?? $animation,
       modifier: $modifier?.merge(other.$modifier) ?? other.$modifier,
@@ -95,8 +95,8 @@ class RemixLabelStyle extends Style<LabelSpec>
   List<Object?> get props => [
         $spacing,
         $label,
-        $leadingIcon,
-        $trailingIcon,
+        $leading,
+        $trailing,
         $variants,
         $animation,
         $modifier,
@@ -118,7 +118,7 @@ class RemixRemixLabelStyles {
             fontWeight: FontWeight.w500,
           ),
         ),
-        leadingIcon: IconMix(color: Colors.blue, size: 20),
+        leading: IconMix(color: Colors.blue, size: 20),
       );
 
   /// Secondary label variant
@@ -130,20 +130,20 @@ class RemixRemixLabelStyles {
             fontWeight: FontWeight.w400,
           ),
         ),
-        leadingIcon: IconMix(color: Colors.grey, size: 20),
+        leading: IconMix(color: Colors.grey, size: 20),
       );
 
   /// Compact label variant with reduced spacing
   static RemixLabelStyle get compact => RemixLabelStyle(
         spacing: 4,
         label: TextMix(),
-        leadingIcon: IconMix(size: 16),
+        leading: IconMix(size: 16),
       );
 
   /// Large label variant with increased spacing
   static RemixLabelStyle get large => RemixLabelStyle(
         spacing: 12,
         label: TextMix(style: TextStyleMix(fontSize: 16)),
-        leadingIcon: IconMix(size: 24),
+        leading: IconMix(size: 24),
       );
 }

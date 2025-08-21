@@ -20,7 +20,7 @@ class RemixBadge extends StatelessWidget {
     String? label,
     IconData? icon,
     this.style = const RemixBadgeStyle.create(),
-  }) : child = RemixLabel(label ?? '', leadingIcon: icon);
+  }) : child = RemixLabel(label ?? '', leading: icon);
 
   /// Creates a badge with custom content.
   const RemixBadge.raw({

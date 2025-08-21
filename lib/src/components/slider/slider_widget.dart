@@ -28,6 +28,7 @@ class RemixSlider extends StatefulWidget with HasEnabled, HasFocused {
     this.onChangeStart,
     this.style = const RemixSliderStyle.create(),
     this.enabled = true,
+    this.enableHapticFeedback = true,
     this.focusNode,
     this.autofocus = false,
   }) : assert(
@@ -57,6 +58,10 @@ class RemixSlider extends StatefulWidget with HasEnabled, HasFocused {
 
   /// Whether the slider is enabled for interaction.
   final bool enabled;
+
+  /// Whether to provide haptic feedback during value changes.
+  /// Defaults to true.
+  final bool enableHapticFeedback;
 
   /// Called when the user starts dragging the slider.
   final ValueChanged<double>? onChangeStart;
