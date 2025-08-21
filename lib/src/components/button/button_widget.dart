@@ -132,7 +132,7 @@ class RemixButton extends StatefulWidget with HasEnabled, HasFocused {
   final IconData? icon;
 
   /// The child widget to display inside the button.
-  /// If provided, overrides [label] and [icon].
+  /// If provided, overrides [label] and [leading].
   final Widget? child;
 
   @override
@@ -166,7 +166,7 @@ class _RemixButtonState extends State<RemixButton>
 
           // Create the child widget based on whether custom child is provided
           final effectiveChild = widget.child ??
-              Label(text: widget.label ?? '', leadingIcon: widget.icon);
+              Label(text: widget.label ?? '', leading: widget.icon);
 
           final content = widget.loading
               ? Stack(

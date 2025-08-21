@@ -36,7 +36,7 @@ class _MyAppState extends State<MyApp> {
                     selected = value;
                   });
                 },
-                leadingIcon: Icons.add,
+                leading: Icons.add,
                 style: RemixChipStyle()
                   .onHovered(
                     RemixChipStyle(

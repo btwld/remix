@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
           child: SizedBox(
             width: 300,
             child: RemixAccordion(
-              defaultTrailingIcon: Icons.keyboard_arrow_down_rounded,
+              defaultTrailing: Icons.keyboard_arrow_down_rounded,
               style: RemixAccordionStyle(
                 animation: AnimationConfig.easeInOut(const Duration(milliseconds: 200)),
               ).onSelected(

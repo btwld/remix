@@ -14,7 +14,7 @@ part of 'label.dart';
 /// // Label with leading icon
 /// RemixLabel(
 ///   'Settings',
-///   leadingIcon: Icons.settings,
+///   leading: Icons.settings,
 ///   style: RemixLabelStyles.primary,
 /// )
 ///
@@ -24,7 +24,7 @@ part of 'label.dart';
 ///   style: RemixLabelStyle(
 ///     spacing: 12,
 ///     label: TextMix(style: TextStyleMix(color: Colors.blue)),
-///     leadingIcon: IconMix(color: Colors.blue, size: 20),
+///     leading: IconMix(color: Colors.blue, size: 20),
 ///   ),
 /// )
 /// ```
@@ -36,8 +36,8 @@ class RemixLabel extends StyleWidget<LabelSpec> {
   const RemixLabel(
     this.label, {
     super.key,
-    this.leadingIcon,
-    this.trailingIcon,
+    this.leading,
+    this.trailing,
     super.style = const RemixLabelStyle.create(),
   });
 
@@ -45,18 +45,18 @@ class RemixLabel extends StyleWidget<LabelSpec> {
   final String label;
 
   /// Optional icon to display at the start/left of the text.
-  final IconData? leadingIcon;
+  final IconData? leading;
 
   /// Optional icon to display at the end/right of the text.
-  final IconData? trailingIcon;
+  final IconData? trailing;
 
   @override
   Widget build(BuildContext context, LabelSpec spec) {
     return createLabelWidget(
       spec,
       text: label,
-      leadingIcon: leadingIcon,
-      trailingIcon: trailingIcon,
+      leading: leading,
+      trailing: trailing,
     );
   }
 }
@@ -64,26 +64,26 @@ class RemixLabel extends StyleWidget<LabelSpec> {
 Widget createLabelWidget(
   LabelSpec spec, {
   required String text,
-  IconData? leadingIcon,
-  IconData? trailingIcon,
+  IconData? leading,
+  IconData? trailing,
 }) {
   final TextWidget = spec.label;
-  final LeadingIconWidget = spec.leadingIcon;
-  final TrailingIconWidget = spec.trailingIcon;
+  final LeadingIconWidget = spec.leading;
+  final TrailingIconWidget = spec.trailing;
 
   final children = <Widget>[];
 
   // Add leading icon
-  if (leadingIcon != null) {
-    children.add(LeadingIconWidget(icon: leadingIcon));
+  if (leading != null) {
+    children.add(LeadingIconWidget(icon: leading));
   }
 
   // Add text
   children.add(TextWidget(text));
 
   // Add trailing icon
-  if (trailingIcon != null) {
-    children.add(TrailingIconWidget(icon: trailingIcon));
+  if (trailing != null) {
+    children.add(TrailingIconWidget(icon: trailing));
   }
 
   return Row(
@@ -98,14 +98,14 @@ extension LabelSpecWidget on LabelSpec {
   /// Renders the LabelSpec into a Row widget with text and optional icons
   Widget call({
     required String text,
-    IconData? leadingIcon,
-    IconData? trailingIcon,
+    IconData? leading,
+    IconData? trailing,
   }) {
     return createLabelWidget(
       this,
       text: text,
-      leadingIcon: leadingIcon,
-      trailingIcon: trailingIcon,
+      leading: leading,
+      trailing: trailing,
     );
   }
 }

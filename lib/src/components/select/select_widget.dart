@@ -38,7 +38,8 @@ class RemixSelect<T> extends StatefulWidget {
     this.enabled = true,
     this.semanticLabel,
     this.closeOnSelect = true,
-    this.autofocus = true,
+    this.autofocus = false,
+    this.focusNode,
     this.enableTypeAhead = true,
     this.typeAheadDebounceTime = const Duration(milliseconds: 500),
     this.style = const RemixSelectStyle.create(),
@@ -104,6 +105,9 @@ class RemixSelect<T> extends StatefulWidget {
   /// Duration before resetting the type-ahead search buffer.
   /// Controls how long to wait between keystrokes when matching items.
   final Duration typeAheadDebounceTime;
+
+  /// Optional focus node to control focus behavior.
+  final FocusNode? focusNode;
 
   /// The style configuration for the select.
   final RemixSelectStyle style;
@@ -229,7 +233,7 @@ class _MultiSelectWrapper<T> extends StatefulWidget {
     this.enabled = true,
     this.semanticLabel,
     this.closeOnSelect = false, // Default to false for multi-select
-    this.autofocus = true,
+    this.autofocus = false,
     this.enableTypeAhead = true,
     this.typeAheadDebounceTime = const Duration(milliseconds: 500),
   });
@@ -377,7 +381,7 @@ class RemixSelectTrigger extends StatefulWidget with HasEnabled, HasFocused {
     this.focusNode,
     this.autofocus = false,
     this.label,
-    this.trailingIcon = Icons.keyboard_arrow_down,
+    this.trailing = Icons.keyboard_arrow_down,
     this.child,
   }) : assert(
           label != null || child != null,
@@ -415,7 +419,7 @@ class RemixSelectTrigger extends StatefulWidget with HasEnabled, HasFocused {
   final bool autofocus;
 
   /// The icon to display on the trigger.
-  final IconData? trailingIcon;
+  final IconData? trailing;
 
   @override
   State<RemixSelectTrigger> createState() => _RemixSelectTriggerState();
@@ -452,10 +456,10 @@ class _RemixSelectTriggerState extends State<RemixSelectTrigger>
             triggerContent = TriggerLabel(widget.label!);
 
             // Add trailing icon if present
-            if (widget.trailingIcon != null) {
+            if (widget.trailing != null) {
               triggerContent = TriggerContainer(
                 direction: Axis.horizontal,
-                children: [triggerContent, Icon(widget.trailingIcon!)],
+                children: [triggerContent, Icon(widget.trailing!)],
               );
             }
           }
@@ -478,7 +482,7 @@ class RemixSelectItem<T> extends StatefulWidget with HasEnabled, HasFocused {
     super.key,
     required this.value,
     this.label,
-    this.trailingIcon = Icons.check,
+    this.trailing = Icons.check,
     this.enabled = true,
     this.semanticLabel,
     this.cursor = SystemMouseCursors.click,
@@ -499,7 +503,7 @@ class RemixSelectItem<T> extends StatefulWidget with HasEnabled, HasFocused {
   final String? label;
 
   /// The icon to display on the item.
-  final IconData trailingIcon;
+  final IconData trailing;
 
   /// Whether this item is enabled and can be selected.
   /// When false, all interaction is disabled.
@@ -586,7 +590,7 @@ class _RemixSelectItemState<T> extends State<RemixSelectItem<T>>
               ? (controller.selected
                   ? Icons.check_box
                   : Icons.check_box_outline_blank)
-              : widget.trailingIcon;
+              : widget.trailing;
 
           // Build item content progressively
           Widget itemContent = widget.child ?? const SizedBox.shrink();

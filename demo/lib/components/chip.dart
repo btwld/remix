@@ -29,12 +29,12 @@ Widget buildChipUseCase(BuildContext context) {
             label: 'Enabled',
             initialValue: true,
           ),
-          leadingIcon: context.knobs.iconData(
+          leading: context.knobs.iconData(
             label: 'Leading Icon',
             initialValue: null,
           ),
-          // Note: trailingIcon can be used for trailing icon
-          trailingIcon: context.knobs.iconData(
+          // Note: trailing can be used for trailing icon
+          trailing: context.knobs.iconData(
             label: 'Trailing Icon',
             initialValue: null,
           ),

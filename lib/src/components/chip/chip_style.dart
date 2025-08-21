@@ -6,28 +6,28 @@ class RemixChipStyle extends Style<ChipSpec>
         StyleVariantMixin<RemixChipStyle, ChipSpec> {
   final Prop<FlexBoxSpec>? $container;
   final Prop<TextSpec>? $label;
-  final Prop<IconSpec>? $leadingIcon;
-  final Prop<IconSpec>? $trailingIcon;
+  final Prop<IconSpec>? $leading;
+  final Prop<IconSpec>? $trailing;
 
   const RemixChipStyle.create({
     Prop<FlexBoxSpec>? container,
     Prop<TextSpec>? label,
-    Prop<IconSpec>? leadingIcon,
-    Prop<IconSpec>? trailingIcon,
+    Prop<IconSpec>? leading,
+    Prop<IconSpec>? trailing,
     super.variants,
     super.animation,
     super.modifier,
     super.inherit,
   })  : $container = container,
         $label = label,
-        $leadingIcon = leadingIcon,
-        $trailingIcon = trailingIcon;
+        $leading = leading,
+        $trailing = trailing;
 
   RemixChipStyle({
     FlexBoxMix? container,
     TextMix? label,
-    IconMix? leadingIcon,
-    IconMix? trailingIcon,
+    IconMix? leading,
+    IconMix? trailing,
     AnimationConfig? animation,
     List<VariantStyle<ChipSpec>>? variants,
     ModifierConfig? modifier,
@@ -35,8 +35,8 @@ class RemixChipStyle extends Style<ChipSpec>
   }) : this.create(
           container: container != null ? Prop.mix(container) : null,
           label: label != null ? Prop.mix(label) : null,
-          leadingIcon: leadingIcon != null ? Prop.mix(leadingIcon) : null,
-          trailingIcon: trailingIcon != null ? Prop.mix(trailingIcon) : null,
+          leading: leading != null ? Prop.mix(leading) : null,
+          trailing: trailing != null ? Prop.mix(trailing) : null,
           variants: variants,
           animation: animation,
           modifier: modifier,
@@ -46,8 +46,8 @@ class RemixChipStyle extends Style<ChipSpec>
   factory RemixChipStyle.value(ChipSpec spec) => RemixChipStyle(
         container: FlexBoxMix.maybeValue(spec.container),
         label: TextMix.maybeValue(spec.label),
-        leadingIcon: IconMix.maybeValue(spec.leadingIcon),
-        trailingIcon: IconMix.maybeValue(spec.trailingIcon),
+        leading: IconMix.maybeValue(spec.leading),
+        trailing: IconMix.maybeValue(spec.trailing),
       );
 
   @override
@@ -55,8 +55,8 @@ class RemixChipStyle extends Style<ChipSpec>
     return ChipSpec(
       container: MixOps.resolve(context, $container),
       label: MixOps.resolve(context, $label),
-      leadingIcon: MixOps.resolve(context, $leadingIcon),
-      trailingIcon: MixOps.resolve(context, $trailingIcon),
+      leading: MixOps.resolve(context, $leading),
+      trailing: MixOps.resolve(context, $trailing),
     );
   }
 
@@ -67,8 +67,8 @@ class RemixChipStyle extends Style<ChipSpec>
     return RemixChipStyle.create(
       container: MixOps.merge($container, other.$container),
       label: MixOps.merge($label, other.$label),
-      leadingIcon: MixOps.merge($leadingIcon, other.$leadingIcon),
-      trailingIcon: MixOps.merge($trailingIcon, other.$trailingIcon),
+      leading: MixOps.merge($leading, other.$leading),
+      trailing: MixOps.merge($trailing, other.$trailing),
       variants: mergeVariantLists($variants, other.$variants),
       animation: other.$animation ?? $animation,
       modifier: $modifier?.merge(other.$modifier) ?? other.$modifier,
@@ -95,8 +95,8 @@ class RemixChipStyle extends Style<ChipSpec>
   List<Object?> get props => [
         $container,
         $label,
-        $leadingIcon,
-        $trailingIcon,
+        $leading,
+        $trailing,
         $variants,
         $animation,
         $modifier,
@@ -123,8 +123,8 @@ final DefaultRemixChipStyle = RemixChipStyle(
   label: TextMix(
     style: TextStyleMix(fontSize: 14, fontWeight: FontWeight.w500),
   ),
-  leadingIcon: IconMix(size: 16),
-  trailingIcon: IconMix(size: 16),
+  leading: IconMix(size: 16),
+  trailing: IconMix(size: 16),
 );
 
 extension ChipVariants on RemixChipStyle {
@@ -155,8 +155,8 @@ extension ChipVariants on RemixChipStyle {
             fontWeight: FontWeight.w500,
           ),
         ),
-        leadingIcon: IconMix(color: Colors.blue[600], size: 16),
-        trailingIcon: IconMix(color: Colors.blue[600], size: 16),
+        leading: IconMix(color: Colors.blue[600], size: 16),
+        trailing: IconMix(color: Colors.blue[600], size: 16),
       );
 
   /// Secondary chip variant with grey colors
@@ -186,8 +186,8 @@ extension ChipVariants on RemixChipStyle {
             fontWeight: FontWeight.w500,
           ),
         ),
-        leadingIcon: IconMix(color: Colors.grey[600], size: 16),
-        trailingIcon: IconMix(color: Colors.grey[600], size: 16),
+        leading: IconMix(color: Colors.grey[600], size: 16),
+        trailing: IconMix(color: Colors.grey[600], size: 16),
       );
 
   /// Success chip variant with green colors
@@ -217,8 +217,8 @@ extension ChipVariants on RemixChipStyle {
             fontWeight: FontWeight.w500,
           ),
         ),
-        leadingIcon: IconMix(color: Colors.green[600], size: 16),
-        trailingIcon: IconMix(color: Colors.green[600], size: 16),
+        leading: IconMix(color: Colors.green[600], size: 16),
+        trailing: IconMix(color: Colors.green[600], size: 16),
       );
 
   /// Warning chip variant with orange colors
@@ -248,7 +248,7 @@ extension ChipVariants on RemixChipStyle {
             fontWeight: FontWeight.w500,
           ),
         ),
-        leadingIcon: IconMix(color: Colors.orange[600], size: 16),
-        trailingIcon: IconMix(color: Colors.orange[600], size: 16),
+        leading: IconMix(color: Colors.orange[600], size: 16),
+        trailing: IconMix(color: Colors.orange[600], size: 16),
       );
 }

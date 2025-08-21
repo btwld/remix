@@ -13,14 +13,14 @@ class RemixAccordion<T> extends StatefulWidget {
     this.initialExpandedValues = const [],
     this.controller,
     this.style = const RemixAccordionStyle.create(),
-    this.defaultTrailingIcon = Icons.keyboard_arrow_down_rounded,
+    this.defaultTrailing = Icons.keyboard_arrow_down_rounded,
   });
 
   final List<RemixAccordionItem<T>> children;
   final List<T> initialExpandedValues;
   final RemixAccordionController<T>? controller;
   final RemixAccordionStyle style;
-  final IconData defaultTrailingIcon;
+  final IconData defaultTrailing;
 
   @override
   State<RemixAccordion<T>> createState() => _RemixAccordionState<T>();
@@ -42,7 +42,7 @@ class _RemixAccordionState<T> extends State<RemixAccordion<T>> {
   Widget build(BuildContext context) {
     return _InheritedAccordionStyle(
       style: DefaultRemixAccordionStyle.merge(widget.style),
-      defaultTrailingIcon: widget.defaultTrailingIcon,
+      defaultTrailing: widget.defaultTrailing,
       child: NakedAccordion<T>(
         controller: _controller,
         initialExpandedValues: widget.initialExpandedValues,
@@ -57,7 +57,7 @@ class _InheritedAccordionStyle extends InheritedWidget {
   const _InheritedAccordionStyle({
     required super.child,
     required this.style,
-    required this.defaultTrailingIcon,
+    required this.defaultTrailing,
   });
 
   static _InheritedAccordionStyle of(BuildContext context) {
@@ -66,12 +66,12 @@ class _InheritedAccordionStyle extends InheritedWidget {
   }
 
   final RemixAccordionStyle style;
-  final IconData defaultTrailingIcon;
+  final IconData defaultTrailing;
 
   @override
   bool updateShouldNotify(_InheritedAccordionStyle oldWidget) {
     return style != oldWidget.style ||
-        defaultTrailingIcon != oldWidget.defaultTrailingIcon;
+        defaultTrailing != oldWidget.defaultTrailing;
   }
 }
 
@@ -85,9 +85,9 @@ class RemixAccordionItem<T> extends StatefulWidget with HasEnabled, HasFocused {
     this.focusNode,
     this.autofocus = false,
     this.enabled = true,
-    this.trailingIconBuilder,
-    IconData? leadingIcon,
-  }) : header = RemixLabel(title, leadingIcon: leadingIcon);
+    this.trailingBuilder,
+    IconData? leading,
+  }) : header = RemixLabel(title, leading: leading);
 
   final Widget header;
   final Widget child;
@@ -95,7 +95,7 @@ class RemixAccordionItem<T> extends StatefulWidget with HasEnabled, HasFocused {
   final T value;
   final bool autofocus;
   final FocusNode? focusNode;
-  final Widget Function(bool)? trailingIconBuilder;
+  final Widget Function(bool)? trailingBuilder;
 
   @override
   State<RemixAccordionItem<T>> createState() => _RemixAccordionItemState<T>();
@@ -147,13 +147,13 @@ class _RemixAccordionItemState<T> extends State<RemixAccordionItem<T>>
                       Expanded(
                         child: widget.header,
                       ),
-                      if (widget.trailingIconBuilder != null)
-                        widget.trailingIconBuilder!(isExpanded)
+                      if (widget.trailingBuilder != null)
+                        widget.trailingBuilder!(isExpanded)
                       else
                         Icon(
-                          inheritedData.defaultTrailingIcon,
-                          size: spec.trailingIcon.size,
-                          color: spec.trailingIcon.color,
+                          inheritedData.defaultTrailing,
+                          size: spec.trailing.size,
+                          color: spec.trailing.color,
                         ),
                     ],
                   );

@@ -14,7 +14,7 @@ Widget buildAccordionUseCase(BuildContext context) {
       child: SizedBox(
         width: 300,
         child: RemixAccordion(
-          defaultTrailingIcon: context.knobs.iconData(label: 'Trailing Icon') ??
+          defaultTrailing: context.knobs.iconData(label: 'Trailing Icon') ??
               Icons.keyboard_arrow_down_rounded,
           children: [
             RemixAccordionItem(
