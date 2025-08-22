@@ -1,25 +1,25 @@
 part of 'select.dart';
 
-class SelectSpec extends Spec<SelectSpec> with Diagnosticable {
+class SelectSpec extends WidgetSpec<SelectSpec> {
   final SelectTriggerSpec trigger;
-  final BoxSpec menuContainer;
+  final WidgetContainerProperties menuContainer;
   final SelectMenuItemSpec item;
   final CompositedTransformFollowerSpec position;
 
   const SelectSpec({
     SelectTriggerSpec? trigger,
-    BoxSpec? menuContainer,
+    WidgetContainerProperties? menuContainer,
     SelectMenuItemSpec? item,
     CompositedTransformFollowerSpec? position,
   })  : trigger = trigger ?? const SelectTriggerSpec(),
         item = item ?? const SelectMenuItemSpec(),
-        menuContainer = menuContainer ?? const BoxSpec(),
+        menuContainer = menuContainer ?? const WidgetContainerProperties(),
         position = position ?? const CompositedTransformFollowerSpec();
 
   @override
   SelectSpec copyWith({
     SelectTriggerSpec? trigger,
-    BoxSpec? menuContainer,
+    WidgetContainerProperties? menuContainer,
     SelectMenuItemSpec? item,
     CompositedTransformFollowerSpec? position,
   }) {
@@ -47,37 +47,43 @@ class SelectSpec extends Spec<SelectSpec> with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty('trigger', trigger, defaultValue: null));
-    properties.add(DiagnosticsProperty('menuContainer', menuContainer, defaultValue: null));
-    properties.add(DiagnosticsProperty('item', item, defaultValue: null));
-    properties.add(DiagnosticsProperty('position', position, defaultValue: null));
+    properties
+      ..add(DiagnosticsProperty('trigger', trigger))
+      ..add(DiagnosticsProperty('menuContainer', menuContainer))
+      ..add(DiagnosticsProperty('item', item))
+      ..add(DiagnosticsProperty('position', position));
   }
 
   @override
   List<Object?> get props => [trigger, menuContainer, item, position];
 }
 
-class SelectTriggerSpec extends Spec<SelectTriggerSpec> with Diagnosticable {
-  final FlexBoxSpec container;
+class SelectTriggerSpec extends WidgetSpec<SelectTriggerSpec> {
+  final WidgetContainerProperties container;
+  final WidgetFlexProperties flex;
   final TextSpec label;
   final IconSpec icon;
 
   const SelectTriggerSpec({
-    FlexBoxSpec? container,
+    WidgetContainerProperties? container,
+    WidgetFlexProperties? flex,
     TextSpec? label,
     IconSpec? icon,
-  })  : container = container ?? const FlexBoxSpec(),
+  })  : container = container ?? const WidgetContainerProperties(),
+        flex = flex ?? const WidgetFlexProperties(),
         label = label ?? const TextSpec(),
         icon = icon ?? const IconSpec();
 
   @override
   SelectTriggerSpec copyWith({
-    FlexBoxSpec? container,
+    WidgetContainerProperties? container,
+    WidgetFlexProperties? flex,
     TextSpec? label,
     IconSpec? icon,
   }) {
     return SelectTriggerSpec(
       container: container ?? this.container,
+      flex: flex ?? this.flex,
       label: label ?? this.label,
       icon: icon ?? this.icon,
     );
@@ -89,6 +95,7 @@ class SelectTriggerSpec extends Spec<SelectTriggerSpec> with Diagnosticable {
 
     return SelectTriggerSpec(
       container: MixOps.lerp(container, other.container, t)!,
+      flex: MixOps.lerp(flex, other.flex, t)!,
       label: MixOps.lerp(label, other.label, t)!,
       icon: MixOps.lerp(icon, other.icon, t)!,
     );
@@ -98,36 +105,43 @@ class SelectTriggerSpec extends Spec<SelectTriggerSpec> with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty('container', container, defaultValue: null));
-    properties.add(DiagnosticsProperty('label', label, defaultValue: null));
-    properties.add(DiagnosticsProperty('icon', icon, defaultValue: null));
+    properties
+      ..add(DiagnosticsProperty('container', container))
+      ..add(DiagnosticsProperty('flex', flex))
+      ..add(DiagnosticsProperty('label', label))
+      ..add(DiagnosticsProperty('icon', icon));
   }
 
   @override
-  List<Object?> get props => [container, label, icon];
+  List<Object?> get props => [container, flex, label, icon];
 }
 
-class SelectMenuItemSpec extends Spec<SelectMenuItemSpec> with Diagnosticable {
-  final FlexBoxSpec container;
+class SelectMenuItemSpec extends WidgetSpec<SelectMenuItemSpec> {
+  final WidgetContainerProperties container;
+  final WidgetFlexProperties flex;
   final TextSpec text;
   final IconSpec icon;
 
   const SelectMenuItemSpec({
-    FlexBoxSpec? container,
+    WidgetContainerProperties? container,
+    WidgetFlexProperties? flex,
     TextSpec? text,
     IconSpec? icon,
-  })  : container = container ?? const FlexBoxSpec(),
+  })  : container = container ?? const WidgetContainerProperties(),
+        flex = flex ?? const WidgetFlexProperties(),
         text = text ?? const TextSpec(),
         icon = icon ?? const IconSpec();
 
   @override
   SelectMenuItemSpec copyWith({
-    FlexBoxSpec? container,
+    WidgetContainerProperties? container,
+    WidgetFlexProperties? flex,
     TextSpec? text,
     IconSpec? icon,
   }) {
     return SelectMenuItemSpec(
       container: container ?? this.container,
+      flex: flex ?? this.flex,
       text: text ?? this.text,
       icon: icon ?? this.icon,
     );
@@ -139,6 +153,7 @@ class SelectMenuItemSpec extends Spec<SelectMenuItemSpec> with Diagnosticable {
 
     return SelectMenuItemSpec(
       container: MixOps.lerp(container, other.container, t)!,
+      flex: MixOps.lerp(flex, other.flex, t)!,
       text: MixOps.lerp(text, other.text, t)!,
       icon: MixOps.lerp(icon, other.icon, t)!,
     );
@@ -148,11 +163,13 @@ class SelectMenuItemSpec extends Spec<SelectMenuItemSpec> with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty('container', container, defaultValue: null));
-    properties.add(DiagnosticsProperty('text', text, defaultValue: null));
-    properties.add(DiagnosticsProperty('icon', icon, defaultValue: null));
+    properties
+      ..add(DiagnosticsProperty('container', container))
+      ..add(DiagnosticsProperty('flex', flex))
+      ..add(DiagnosticsProperty('text', text))
+      ..add(DiagnosticsProperty('icon', icon));
   }
 
   @override
-  List<Object?> get props => [container, text, icon];
+  List<Object?> get props => [container, flex, text, icon];
 }

@@ -1,10 +1,10 @@
 part of 'card.dart';
 
 class RemixCardStyle extends Style<CardSpec> with StyleModifierMixin<RemixCardStyle, CardSpec>, StyleVariantMixin<RemixCardStyle, CardSpec> {
-  final Prop<BoxSpec>? $container;
+  final Prop<WidgetContainerProperties>? $container;
 
   const RemixCardStyle.create({
-    Prop<BoxSpec>? container,
+    Prop<WidgetContainerProperties>? container,
     super.variants,
     super.animation,
     super.modifier,
@@ -12,7 +12,7 @@ class RemixCardStyle extends Style<CardSpec> with StyleModifierMixin<RemixCardSt
   }) : $container = container;
 
   RemixCardStyle({
-    BoxMix? container,
+    WidgetContainerPropertiesMix? container,
     AnimationConfig? animation,
     List<VariantStyle<CardSpec>>? variants,
     ModifierConfig? modifier,
@@ -26,7 +26,7 @@ class RemixCardStyle extends Style<CardSpec> with StyleModifierMixin<RemixCardSt
         );
 
   factory RemixCardStyle.value(CardSpec spec) => RemixCardStyle(
-        container: BoxMix.maybeValue(spec.container),
+        container: WidgetContainerPropertiesMix.maybeValue(spec.container),
       );
 
   @override
@@ -73,8 +73,8 @@ class RemixCardStyle extends Style<CardSpec> with StyleModifierMixin<RemixCardSt
 }
 
 final DefaultRemixCardStyle = RemixCardStyle(
-  container: BoxMix(
-    padding: EdgeInsetsMix.all(16),
+  container: WidgetContainerPropertiesMix(
+    padding: EdgeInsetsGeometryMix.all(16),
     decoration: BoxDecorationMix(
       borderRadius: BorderRadiusMix.circular(8),
       color: Colors.white,
@@ -93,8 +93,8 @@ final DefaultRemixCardStyle = RemixCardStyle(
 class RemixCardStyles {
   /// Default card style
   static RemixCardStyle get defaultStyle => RemixCardStyle(
-        container: BoxMix(
-          padding: EdgeInsetsMix.all(16),
+        container: WidgetContainerPropertiesMix(
+          padding: EdgeInsetsGeometryMix.all(16),
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(8),
             color: Colors.white,
@@ -111,8 +111,8 @@ class RemixCardStyles {
 
   /// Elevated card variant with stronger shadow
   static RemixCardStyle get elevated => RemixCardStyle(
-        container: BoxMix(
-          padding: EdgeInsetsMix.all(16),
+        container: WidgetContainerPropertiesMix(
+          padding: EdgeInsetsGeometryMix.all(16),
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(8),
             color: Colors.white,
@@ -129,8 +129,8 @@ class RemixCardStyles {
 
   /// Outlined card variant with border
   static RemixCardStyle get outlined => RemixCardStyle(
-        container: BoxMix(
-          padding: EdgeInsetsMix.all(16),
+        container: WidgetContainerPropertiesMix(
+          padding: EdgeInsetsGeometryMix.all(16),
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(
               BorderSideMix(color: Colors.grey[300]!, width: 1),
@@ -143,8 +143,8 @@ class RemixCardStyles {
 
   /// Flat card variant without shadow
   static RemixCardStyle get flat => RemixCardStyle(
-        container: BoxMix(
-          padding: EdgeInsetsMix.all(16),
+        container: WidgetContainerPropertiesMix(
+          padding: EdgeInsetsGeometryMix.all(16),
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(8),
             color: Colors.grey[100],

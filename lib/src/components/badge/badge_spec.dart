@@ -1,17 +1,17 @@
 part of 'badge.dart';
 
-class BadgeSpec extends Spec<BadgeSpec> with Diagnosticable {
-  final BoxSpec container;
+class BadgeSpec extends WidgetSpec<BadgeSpec> {
+  final WidgetContainerProperties container;
   final TextSpec text;
   final IconSpec icon;
 
-  const BadgeSpec({BoxSpec? container, TextSpec? text, IconSpec? icon})
-      : container = container ?? const BoxSpec(),
+  const BadgeSpec({WidgetContainerProperties? container, TextSpec? text, IconSpec? icon})
+      : container = container ?? const WidgetContainerProperties(),
         text = text ?? const TextSpec(),
         icon = icon ?? const IconSpec();
 
   @override
-  BadgeSpec copyWith({BoxSpec? container, TextSpec? text, IconSpec? icon}) {
+  BadgeSpec copyWith({WidgetContainerProperties? container, TextSpec? text, IconSpec? icon}) {
     return BadgeSpec(
       container: container ?? this.container,
       text: text ?? this.text,
@@ -34,9 +34,9 @@ class BadgeSpec extends Spec<BadgeSpec> with Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-        .add(DiagnosticsProperty('container', container, defaultValue: null));
-    properties.add(DiagnosticsProperty('text', text, defaultValue: null));
-    properties.add(DiagnosticsProperty('icon', icon, defaultValue: null));
+      ..add(DiagnosticsProperty('container', container))
+      ..add(DiagnosticsProperty('text', text))
+      ..add(DiagnosticsProperty('icon', icon));
   }
 
   @override

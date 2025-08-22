@@ -1,22 +1,28 @@
 part of 'list_item.dart';
 
-class ListItemSpec extends Spec<ListItemSpec> with Diagnosticable {
-  final FlexBoxSpec container;
-  final FlexBoxSpec contentContainer;
+class ListItemSpec extends WidgetSpec<ListItemSpec> {
+  final WidgetContainerProperties container;
+  final WidgetFlexProperties flex;
+  final WidgetContainerProperties contentContainer;
+  final WidgetFlexProperties contentFlex;
   final TextSpec title;
   final TextSpec subtitle;
   final IconSpec leading;
   final IconSpec trailing;
 
   const ListItemSpec({
-    FlexBoxSpec? container,
-    FlexBoxSpec? contentContainer,
+    WidgetContainerProperties? container,
+    WidgetFlexProperties? flex,
+    WidgetContainerProperties? contentContainer,
+    WidgetFlexProperties? contentFlex,
     TextSpec? title,
     TextSpec? subtitle,
     IconSpec? leading,
     IconSpec? trailing,
-  })  : container = container ?? const FlexBoxSpec(),
-        contentContainer = contentContainer ?? const FlexBoxSpec(),
+  })  : container = container ?? const WidgetContainerProperties(),
+        flex = flex ?? const WidgetFlexProperties(),
+        contentContainer = contentContainer ?? const WidgetContainerProperties(),
+        contentFlex = contentFlex ?? const WidgetFlexProperties(),
         title = title ?? const TextSpec(),
         subtitle = subtitle ?? const TextSpec(),
         leading = leading ?? const IconSpec(),
@@ -24,8 +30,10 @@ class ListItemSpec extends Spec<ListItemSpec> with Diagnosticable {
 
   @override
   ListItemSpec copyWith({
-    FlexBoxSpec? container,
-    FlexBoxSpec? contentContainer,
+    WidgetContainerProperties? container,
+    WidgetFlexProperties? flex,
+    WidgetContainerProperties? contentContainer,
+    WidgetFlexProperties? contentFlex,
     TextSpec? title,
     TextSpec? subtitle,
     IconSpec? leading,
@@ -33,7 +41,9 @@ class ListItemSpec extends Spec<ListItemSpec> with Diagnosticable {
   }) {
     return ListItemSpec(
       container: container ?? this.container,
+      flex: flex ?? this.flex,
       contentContainer: contentContainer ?? this.contentContainer,
+      contentFlex: contentFlex ?? this.contentFlex,
       title: title ?? this.title,
       subtitle: subtitle ?? this.subtitle,
       leading: leading ?? this.leading,
@@ -47,8 +57,10 @@ class ListItemSpec extends Spec<ListItemSpec> with Diagnosticable {
 
     return ListItemSpec(
       container: MixOps.lerp(container, other.container, t)!,
+      flex: MixOps.lerp(flex, other.flex, t)!,
       contentContainer:
           MixOps.lerp(contentContainer, other.contentContainer, t)!,
+      contentFlex: MixOps.lerp(contentFlex, other.contentFlex, t)!,
       title: MixOps.lerp(title, other.title, t)!,
       subtitle: MixOps.lerp(subtitle, other.subtitle, t)!,
       leading: MixOps.lerp(leading, other.leading, t)!,
@@ -60,24 +72,17 @@ class ListItemSpec extends Spec<ListItemSpec> with Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-        .add(DiagnosticsProperty('container', container, defaultValue: null));
-    properties.add(DiagnosticsProperty(
-      'contentContainer',
-      contentContainer,
-      defaultValue: null,
-    ));
-    properties.add(DiagnosticsProperty('title', title, defaultValue: null));
-    properties
-        .add(DiagnosticsProperty('subtitle', subtitle, defaultValue: null));
-    properties.add(
-      DiagnosticsProperty('leading', leading, defaultValue: null),
-    );
-    properties.add(
-      DiagnosticsProperty('trailing', trailing, defaultValue: null),
-    );
+      ..add(DiagnosticsProperty('container', container))
+      ..add(DiagnosticsProperty('flex', flex))
+      ..add(DiagnosticsProperty('contentContainer', contentContainer))
+      ..add(DiagnosticsProperty('contentFlex', contentFlex))
+      ..add(DiagnosticsProperty('title', title))
+      ..add(DiagnosticsProperty('subtitle', subtitle))
+      ..add(DiagnosticsProperty('leading', leading))
+      ..add(DiagnosticsProperty('trailing', trailing));
   }
 
   @override
   List<Object?> get props =>
-      [container, contentContainer, title, subtitle, leading, trailing];
+      [container, flex, contentContainer, contentFlex, title, subtitle, leading, trailing];
 }

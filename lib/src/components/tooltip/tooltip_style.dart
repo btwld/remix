@@ -4,11 +4,11 @@ class RemixTooltipStyle extends Style<TooltipSpec>
     with
         StyleModifierMixin<RemixTooltipStyle, TooltipSpec>,
         StyleVariantMixin<RemixTooltipStyle, TooltipSpec> {
-  final Prop<BoxSpec>? $container;
+  final Prop<WidgetContainerProperties>? $container;
   final Prop<TextSpec>? $text;
 
   const RemixTooltipStyle.create({
-    Prop<BoxSpec>? container,
+    Prop<WidgetContainerProperties>? container,
     Prop<TextSpec>? text,
     super.variants,
     super.animation,
@@ -18,7 +18,7 @@ class RemixTooltipStyle extends Style<TooltipSpec>
         $text = text;
 
   RemixTooltipStyle({
-    BoxMix? container,
+    WidgetContainerPropertiesMix? container,
     TextMix? text,
     AnimationConfig? animation,
     List<VariantStyle<TooltipSpec>>? variants,
@@ -82,12 +82,12 @@ class RemixTooltipStyle extends Style<TooltipSpec>
 }
 
 final DefaultRemixTooltipStyle = RemixTooltipStyle(
-  container: BoxMix(
-    padding: EdgeInsetsMix.all(10),
+  container: WidgetContainerPropertiesMix(
     decoration: BoxDecorationMix(
       borderRadius: BorderRadiusMix.circular(8),
       color: Colors.black.withValues(alpha: 0.8),
     ),
+    padding: EdgeInsetsMix.all(10),
   ),
   text: TextMix(style: TextStyleMix(color: Colors.white, fontSize: 14)),
   animation: AnimationConfig.ease(const Duration(milliseconds: 100)),
@@ -96,12 +96,12 @@ final DefaultRemixTooltipStyle = RemixTooltipStyle(
 extension RemixTooltipVariants on RemixTooltipStyle {
   /// Dark tooltip variant (same as default)
   static RemixTooltipStyle get dark => RemixTooltipStyle(
-        container: BoxMix(
-          padding: EdgeInsetsMix.all(10),
+        container: WidgetContainerPropertiesMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(8),
             color: Colors.black.withValues(alpha: 0.9),
           ),
+          padding: EdgeInsetsGeometryMix.all(10),
         ),
         text: TextMix(
           style: TextStyleMix(color: Colors.white, fontSize: 14),
@@ -111,8 +111,7 @@ extension RemixTooltipVariants on RemixTooltipStyle {
 
   /// Light tooltip variant with white background
   static RemixTooltipStyle get light => RemixTooltipStyle(
-        container: BoxMix(
-          padding: EdgeInsetsMix.all(10),
+        container: WidgetContainerPropertiesMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(
               BorderSideMix(color: Colors.grey[300]!, width: 1),
@@ -127,6 +126,7 @@ extension RemixTooltipVariants on RemixTooltipStyle {
               ),
             ],
           ),
+          padding: EdgeInsetsGeometryMix.all(10),
         ),
         text: TextMix(
           style: TextStyleMix(color: Colors.black87, fontSize: 14),
@@ -136,12 +136,12 @@ extension RemixTooltipVariants on RemixTooltipStyle {
 
   /// Primary tooltip variant with blue colors
   static RemixTooltipStyle get primary => RemixTooltipStyle(
-        container: BoxMix(
-          padding: EdgeInsetsMix.all(10),
+        container: WidgetContainerPropertiesMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(8),
             color: Colors.blue[600],
           ),
+          padding: EdgeInsetsGeometryMix.all(10),
         ),
         text: TextMix(
           style: TextStyleMix(color: Colors.white, fontSize: 14),

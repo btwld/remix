@@ -9,59 +9,53 @@ part of 'radio.dart';
 ///
 /// ```dart
 /// RemixRadioGroup<String>(
-///   value: _selectedValue,
+///   groupValue: _selectedValue,
 ///   onChanged: (value) {
 ///     setState(() {
 ///       _selectedValue = value;
 ///     });
 ///   },
-///   children: [
-///     RemixRadio<String>(
-///       value: 'option1',
-///       groupValue: _selectedValue,
-///       label: 'Option 1',
-///     ),
-///     RemixRadio<String>(
-///       value: 'option2',
-///       groupValue: _selectedValue,
-///       label: 'Option 2',
-///     ),
-///   ],
+///   child: Column(
+///     children: [
+///       RemixRadio<String>(
+///         value: 'option1',
+///         label: 'Option 1',
+///       ),
+///       RemixRadio<String>(
+///         value: 'option2',
+///         label: 'Option 2',
+///       ),
+///     ],
+///   ),
 /// )
 /// ```
 class RemixRadioGroup<T> extends StatelessWidget {
   const RemixRadioGroup({
     super.key,
-    required this.value,
+    required this.groupValue,
     required this.onChanged,
     required this.child,
-    this.enabled = true,
     this.style = const RemixRadioStyle.create(),
   });
 
   /// The currently selected value for the group.
-  final T? value;
+  final T? groupValue;
 
   /// Called when a radio button in the group is selected.
-  final ValueChanged<T?>? onChanged;
+  final ValueChanged<T?> onChanged;
 
   /// The child widget that contains the radio buttons.
   final Widget child;
-
-  /// Whether the radio group is enabled.
-  final bool enabled;
 
   /// The style configuration for the radio group.
   final RemixRadioStyle style;
 
   @override
   Widget build(BuildContext context) {
-    // Wrap with NakedRadioGroup for keyboard navigation and focus management
-    // NakedRadioGroupScope is automatically provided by NakedRadioGroup
+    // Thin wrapper matching NakedRadioGroup API
     return NakedRadioGroup<T>(
-      groupValue: value,
-      onChanged: enabled ? onChanged : null,
-      enabled: enabled,
+      groupValue: groupValue,
+      onChanged: onChanged,
       child: StyleProvider<RadioSpec>(style: style, child: child),
     );
   }

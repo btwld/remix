@@ -1,15 +1,15 @@
 part of 'tooltip.dart';
 
-class TooltipSpec extends Spec<TooltipSpec> with Diagnosticable {
-  final BoxSpec container;
+class TooltipSpec extends WidgetSpec<TooltipSpec> {
+  final WidgetContainerProperties container;
   final TextSpec text;
 
-  const TooltipSpec({BoxSpec? container, TextSpec? text})
-      : container = container ?? const BoxSpec(),
+  const TooltipSpec({WidgetContainerProperties? container, TextSpec? text})
+      : container = container ?? const WidgetContainerProperties(),
         text = text ?? const TextSpec();
 
   @override
-  TooltipSpec copyWith({BoxSpec? container, TextSpec? text}) {
+  TooltipSpec copyWith({WidgetContainerProperties? container, TextSpec? text}) {
     return TooltipSpec(
       container: container ?? this.container,
       text: text ?? this.text,
@@ -29,10 +29,9 @@ class TooltipSpec extends Spec<TooltipSpec> with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(
-      DiagnosticsProperty('container', container, defaultValue: null),
-    );
-    properties.add(DiagnosticsProperty('text', text, defaultValue: null));
+    properties
+      ..add(DiagnosticsProperty('container', container))
+      ..add(DiagnosticsProperty('text', text));
   }
 
   @override

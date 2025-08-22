@@ -1,30 +1,35 @@
 part of 'radio.dart';
 
-class RadioSpec extends Spec<RadioSpec> with Diagnosticable {
-  final FlexBoxSpec container;
-  final BoxSpec indicatorContainer;
-  final BoxSpec indicator;
+class RadioSpec extends WidgetSpec<RadioSpec> {
+  final WidgetContainerProperties container;
+  final WidgetFlexProperties flex;
+  final WidgetContainerProperties indicatorContainer;
+  final WidgetContainerProperties indicator;
   final TextSpec label;
 
   const RadioSpec({
-    FlexBoxSpec? container,
-    BoxSpec? indicatorContainer,
-    BoxSpec? indicator,
+    WidgetContainerProperties? container,
+    WidgetFlexProperties? flex,
+    WidgetContainerProperties? indicatorContainer,
+    WidgetContainerProperties? indicator,
     TextSpec? label,
-  })  : container = container ?? const FlexBoxSpec(),
-        indicatorContainer = indicatorContainer ?? const BoxSpec(),
-        indicator = indicator ?? const BoxSpec(),
+  })  : container = container ?? const WidgetContainerProperties(),
+        flex = flex ?? const WidgetFlexProperties(),
+        indicatorContainer = indicatorContainer ?? const WidgetContainerProperties(),
+        indicator = indicator ?? const WidgetContainerProperties(),
         label = label ?? const TextSpec();
 
   @override
   RadioSpec copyWith({
-    FlexBoxSpec? container,
-    BoxSpec? indicatorContainer,
-    BoxSpec? indicator,
+    WidgetContainerProperties? container,
+    WidgetFlexProperties? flex,
+    WidgetContainerProperties? indicatorContainer,
+    WidgetContainerProperties? indicator,
     TextSpec? label,
   }) {
     return RadioSpec(
       container: container ?? this.container,
+      flex: flex ?? this.flex,
       indicatorContainer: indicatorContainer ?? this.indicatorContainer,
       indicator: indicator ?? this.indicator,
       label: label ?? this.label,
@@ -37,6 +42,7 @@ class RadioSpec extends Spec<RadioSpec> with Diagnosticable {
 
     return RadioSpec(
       container: MixOps.lerp(container, other.container, t)!,
+      flex: MixOps.lerp(flex, other.flex, t)!,
       indicatorContainer:
           MixOps.lerp(indicatorContainer, other.indicatorContainer, t)!,
       indicator: MixOps.lerp(indicator, other.indicator, t)!,
@@ -48,17 +54,13 @@ class RadioSpec extends Spec<RadioSpec> with Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-        .add(DiagnosticsProperty('container', container, defaultValue: null));
-    properties.add(DiagnosticsProperty(
-      'indicatorContainer',
-      indicatorContainer,
-      defaultValue: null,
-    ));
-    properties
-        .add(DiagnosticsProperty('indicator', indicator, defaultValue: null));
-    properties.add(DiagnosticsProperty('label', label, defaultValue: null));
+      ..add(DiagnosticsProperty('container', container))
+      ..add(DiagnosticsProperty('flex', flex))
+      ..add(DiagnosticsProperty('indicatorContainer', indicatorContainer))
+      ..add(DiagnosticsProperty('indicator', indicator))
+      ..add(DiagnosticsProperty('label', label));
   }
 
   @override
-  List<Object?> get props => [container, indicatorContainer, indicator, label];
+  List<Object?> get props => [container, flex, indicatorContainer, indicator, label];
 }

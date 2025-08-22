@@ -43,25 +43,25 @@ final _defaultDivisionPaint = Paint()
   ..strokeCap = StrokeCap.round
   ..style = PaintingStyle.stroke;
 
-class SliderSpec extends Spec<SliderSpec> with Diagnosticable {
-  final BoxSpec thumb;
+class SliderSpec extends WidgetSpec<SliderSpec> {
+  final WidgetContainerProperties thumb;
   final Paint baseTrack;
   final Paint activeTrack;
   final Paint division;
 
   SliderSpec({
-    BoxSpec? thumb,
+    WidgetContainerProperties? thumb,
     Paint? baseTrack,
     Paint? activeTrack,
     Paint? division,
-  })  : thumb = thumb ?? const BoxSpec(),
+  })  : thumb = thumb ?? const WidgetContainerProperties(),
         baseTrack = baseTrack ?? _defaultBaseTrackPaint,
         activeTrack = activeTrack ?? _defaultActiveTrackPaint,
         division = division ?? _defaultDivisionPaint;
 
   @override
   SliderSpec copyWith({
-    BoxSpec? thumb,
+    WidgetContainerProperties? thumb,
     Paint? baseTrack,
     Paint? activeTrack,
     Paint? division,
@@ -89,14 +89,11 @@ class SliderSpec extends Spec<SliderSpec> with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty('thumb', thumb, defaultValue: null));
     properties
-        .add(DiagnosticsProperty('baseTrack', baseTrack, defaultValue: null));
-    properties.add(
-      DiagnosticsProperty('activeTrack', activeTrack, defaultValue: null),
-    );
-    properties
-        .add(DiagnosticsProperty('division', division, defaultValue: null));
+      ..add(DiagnosticsProperty('thumb', thumb))
+      ..add(DiagnosticsProperty('baseTrack', baseTrack))
+      ..add(DiagnosticsProperty('activeTrack', activeTrack))
+      ..add(DiagnosticsProperty('division', division));
   }
 
   @override

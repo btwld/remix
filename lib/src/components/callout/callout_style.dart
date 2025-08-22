@@ -4,12 +4,12 @@ class RemixCalloutStyle extends Style<CalloutSpec>
     with
         StyleModifierMixin<RemixCalloutStyle, CalloutSpec>,
         StyleVariantMixin<RemixCalloutStyle, CalloutSpec> {
-  final Prop<BoxSpec>? $container;
+  final Prop<WidgetContainerProperties>? $container;
   final Prop<TextSpec>? $text;
   final Prop<IconSpec>? $icon;
 
   const RemixCalloutStyle.create({
-    Prop<BoxSpec>? container,
+    Prop<WidgetContainerProperties>? container,
     Prop<TextSpec>? text,
     Prop<IconSpec>? icon,
     super.variants,
@@ -21,7 +21,7 @@ class RemixCalloutStyle extends Style<CalloutSpec>
         $icon = icon;
 
   RemixCalloutStyle({
-    BoxMix? container,
+    WidgetContainerPropertiesMix? container,
     TextMix? text,
     IconMix? icon,
     AnimationConfig? animation,
@@ -39,7 +39,7 @@ class RemixCalloutStyle extends Style<CalloutSpec>
         );
 
   factory RemixCalloutStyle.value(CalloutSpec spec) => RemixCalloutStyle(
-        container: BoxMix.maybeValue(spec.container),
+        container: WidgetContainerPropertiesMix.maybeValue(spec.container),
         text: TextMix.maybeValue(spec.text),
         icon: IconMix.maybeValue(spec.icon),
       );
@@ -96,7 +96,7 @@ class RemixCalloutStyle extends Style<CalloutSpec>
 }
 
 final DefaultRemixCalloutStyle = RemixCalloutStyle(
-  container: BoxMix(
+  container: WidgetContainerPropertiesMix(
     padding: EdgeInsetsMix.all(12),
     decoration: BoxDecorationMix(
       border: BoxBorderMix.all(BorderSideMix(
@@ -120,8 +120,8 @@ final DefaultRemixCalloutStyle = RemixCalloutStyle(
 extension CalloutVariants on RemixCalloutStyle {
   /// Info callout variant with blue colors
   static RemixCalloutStyle get info => RemixCalloutStyle(
-        container: BoxMix(
-          padding: EdgeInsetsMix.all(12),
+        container: WidgetContainerPropertiesMix(
+          padding: EdgeInsetsGeometryMix.all(12),
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
               color: Colors.blue[300]!,
@@ -143,8 +143,8 @@ extension CalloutVariants on RemixCalloutStyle {
 
   /// Success callout variant with green colors
   static RemixCalloutStyle get success => RemixCalloutStyle(
-        container: BoxMix(
-          padding: EdgeInsetsMix.all(12),
+        container: WidgetContainerPropertiesMix(
+          padding: EdgeInsetsGeometryMix.all(12),
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
               color: Colors.green[300]!,
@@ -166,8 +166,8 @@ extension CalloutVariants on RemixCalloutStyle {
 
   /// Warning callout variant with orange colors
   static RemixCalloutStyle get warning => RemixCalloutStyle(
-        container: BoxMix(
-          padding: EdgeInsetsMix.all(12),
+        container: WidgetContainerPropertiesMix(
+          padding: EdgeInsetsGeometryMix.all(12),
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
               color: Colors.orange[300]!,
@@ -189,8 +189,8 @@ extension CalloutVariants on RemixCalloutStyle {
 
   /// Error callout variant with red colors
   static RemixCalloutStyle get error => RemixCalloutStyle(
-        container: BoxMix(
-          padding: EdgeInsetsMix.all(12),
+        container: WidgetContainerPropertiesMix(
+          padding: EdgeInsetsGeometryMix.all(12),
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
               color: Colors.red[300]!,

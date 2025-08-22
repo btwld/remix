@@ -70,9 +70,6 @@ class _RemixListItemState extends State<RemixListItem>
   Widget build(BuildContext context) {
     return NakedButton(
       onPressed: widget.onPressed,
-      onHoverChange: (state) => controller.hovered = state,
-      onPressChange: (state) => controller.pressed = state,
-      onFocusChange: (state) => controller.focused = state,
       enabled: widget.enabled,
       enableHapticFeedback: widget.enableHapticFeedback,
       focusNode: widget.focusNode,
@@ -82,7 +79,9 @@ class _RemixListItemState extends State<RemixListItem>
         controller: controller,
         builder: (context, spec) {
           final Container = spec.container;
+          final Flex = spec.flex;
           final ContentContainer = spec.contentContainer;
+          final ContentFlex = spec.contentFlex;
           final Title = spec.title;
           final Subtitle = spec.subtitle;
 
@@ -104,10 +103,13 @@ class _RemixListItemState extends State<RemixListItem>
 
           if (textWidgets.isNotEmpty) {
             children.add(
+              // ignore: avoid-flexible-outside-flex
               Expanded(
                 child: ContentContainer(
-                  direction: Axis.vertical,
-                  children: textWidgets,
+                  child: ContentFlex(
+                    direction: Axis.vertical,
+                    children: textWidgets,
+                  ),
                 ),
               ),
             );
@@ -118,7 +120,9 @@ class _RemixListItemState extends State<RemixListItem>
             children.add(widget.trailing!);
           }
 
-          return Container(direction: Axis.horizontal, children: children);
+          return Container(
+            child: Flex(direction: Axis.horizontal, children: children),
+          );
         },
       ),
     );

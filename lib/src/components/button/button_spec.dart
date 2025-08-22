@@ -1,17 +1,17 @@
 part of 'button.dart';
 
-class ButtonSpec extends Spec<ButtonSpec> with Diagnosticable {
-  final BoxSpec container;
+class ButtonSpec extends WidgetSpec<ButtonSpec> {
+  final WidgetContainerProperties container;
   final LabelSpec label;
   final SpinnerSpec spinner;
 
-  const ButtonSpec({BoxSpec? container, LabelSpec? label, SpinnerSpec? spinner})
-      : container = container ?? const BoxSpec(),
+  const ButtonSpec({WidgetContainerProperties? container, LabelSpec? label, SpinnerSpec? spinner})
+      : container = container ?? const WidgetContainerProperties(),
         label = label ?? const LabelSpec(),
         spinner = spinner ?? const SpinnerSpec();
 
   @override
-  ButtonSpec copyWith({BoxSpec? container, LabelSpec? label, SpinnerSpec? spinner}) {
+  ButtonSpec copyWith({WidgetContainerProperties? container, LabelSpec? label, SpinnerSpec? spinner}) {
     return ButtonSpec(
       container: container ?? this.container,
       label: label ?? this.label,
@@ -34,9 +34,9 @@ class ButtonSpec extends Spec<ButtonSpec> with Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-        .add(DiagnosticsProperty('container', container, defaultValue: null));
-    properties.add(DiagnosticsProperty('label', label, defaultValue: null));
-    properties.add(DiagnosticsProperty('spinner', spinner, defaultValue: null));
+      ..add(DiagnosticsProperty('container', container))
+      ..add(DiagnosticsProperty('label', label))
+      ..add(DiagnosticsProperty('spinner', spinner));
   }
 
   @override

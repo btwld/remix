@@ -1,17 +1,17 @@
 part of 'callout.dart';
 
-class CalloutSpec extends Spec<CalloutSpec> with Diagnosticable {
-  final BoxSpec container;
+class CalloutSpec extends WidgetSpec<CalloutSpec> {
+  final WidgetContainerProperties container;
   final TextSpec text;
   final IconSpec icon;
 
-  const CalloutSpec({BoxSpec? container, TextSpec? text, IconSpec? icon})
-      : container = container ?? const BoxSpec(),
+  const CalloutSpec({WidgetContainerProperties? container, TextSpec? text, IconSpec? icon})
+      : container = container ?? const WidgetContainerProperties(),
         text = text ?? const TextSpec(),
         icon = icon ?? const IconSpec();
 
   @override
-  CalloutSpec copyWith({BoxSpec? container, TextSpec? text, IconSpec? icon}) {
+  CalloutSpec copyWith({WidgetContainerProperties? container, TextSpec? text, IconSpec? icon}) {
     return CalloutSpec(
       container: container ?? this.container,
       text: text ?? this.text,
@@ -34,9 +34,9 @@ class CalloutSpec extends Spec<CalloutSpec> with Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-        .add(DiagnosticsProperty('container', container, defaultValue: null));
-    properties.add(DiagnosticsProperty('text', text, defaultValue: null));
-    properties.add(DiagnosticsProperty('icon', icon, defaultValue: null));
+      ..add(DiagnosticsProperty('container', container))
+      ..add(DiagnosticsProperty('text', text))
+      ..add(DiagnosticsProperty('icon', icon));
   }
 
   @override

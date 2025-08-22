@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 import 'package:remix/remix.dart';
+import 'package:remix/src/helpers/spec/widget_container_properties_mix.dart';
 
 void main() {
   runApp(const MyApp());
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
                 animation: AnimationConfig.easeInOut(const Duration(milliseconds: 200)),
               ).onSelected(
                 RemixAccordionStyle(
-                  itemContainer: BoxMix(
+                  itemContainer: WidgetContainerPropertiesMix(
                     decoration: BoxDecorationMix(color: Colors.grey.shade50),
                     transform: Matrix4.rotationZ(pi),
                   ),

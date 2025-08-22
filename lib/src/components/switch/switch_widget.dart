@@ -59,13 +59,11 @@ class _RemixSwitchState extends State<RemixSwitch>
     return NakedCheckbox(
       value: widget.selected,
       onChanged: (value) => widget.onChanged(value ?? false),
-      onHoverChange: (state) => controller.hovered = state,
-      onPressChange: (state) => controller.pressed = state,
-      onFocusChange: (state) => controller.focused = state,
       enabled: widget.enabled,
       enableHapticFeedback: widget.enableHapticFeedback,
       focusNode: widget.focusNode,
       autofocus: widget.autofocus,
+      statesController: controller,
       child: StyleBuilder(
         style: DefaultRemixSwitchStyle.merge(widget.style),
         controller: controller,

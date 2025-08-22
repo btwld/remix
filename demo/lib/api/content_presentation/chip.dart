@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart' hide ButtonStyle;
 import 'package:mix/mix.dart';
 import 'package:remix/remix.dart';
+import 'package:remix/src/helpers/spec/widget_container_properties_mix.dart';
 
 void main() {
   runApp(const MyApp());
@@ -40,12 +41,12 @@ class _MyAppState extends State<MyApp> {
                 style: RemixChipStyle()
                   .onHovered(
                     RemixChipStyle(
-                      container: FlexBoxMix(box: BoxMix(decoration: BoxDecorationMix(color: Colors.grey.shade100)))
+                      container: WidgetContainerPropertiesMix(decoration: BoxDecorationMix(color: Colors.grey.shade100))
                     )
                   )
                   .onSelected(
                     RemixChipStyle(
-                      container: FlexBoxMix(box: BoxMix(decoration: BoxDecorationMix(color: Colors.blue)))
+                      container: WidgetContainerPropertiesMix(decoration: BoxDecorationMix(color: Colors.blue))
                     )
                   ),
               ),

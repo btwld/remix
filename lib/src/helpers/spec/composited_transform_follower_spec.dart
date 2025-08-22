@@ -1,9 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 
 // Temporary stub for CompositedTransformFollowerSpec
 // This will be replaced when Mix 2.0 migration is complete
-class CompositedTransformFollowerSpec extends Spec<CompositedTransformFollowerSpec> {
+class CompositedTransformFollowerSpec extends WidgetSpec<CompositedTransformFollowerSpec> {
   final LayerLink? link;
   final bool? showWhenUnlinked;
   final Offset? offset;
@@ -48,6 +49,17 @@ class CompositedTransformFollowerSpec extends Spec<CompositedTransformFollowerSp
       targetAnchor: AlignmentGeometry.lerp(targetAnchor, other.targetAnchor, t),
       followerAnchor: AlignmentGeometry.lerp(followerAnchor, other.followerAnchor, t),
     );
+  }
+  
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('link', link))
+      ..add(DiagnosticsProperty('showWhenUnlinked', showWhenUnlinked))
+      ..add(DiagnosticsProperty('offset', offset))
+      ..add(DiagnosticsProperty('targetAnchor', targetAnchor))
+      ..add(DiagnosticsProperty('followerAnchor', followerAnchor));
   }
   
   @override

@@ -1,17 +1,17 @@
 part of 'switch.dart';
 
-class SwitchSpec extends Spec<SwitchSpec> with Diagnosticable {
-  final BoxSpec container;
-  final BoxSpec track;
-  final BoxSpec thumb;
+class SwitchSpec extends WidgetSpec<SwitchSpec> {
+  final WidgetContainerProperties container;
+  final WidgetContainerProperties track;
+  final WidgetContainerProperties thumb;
 
-  const SwitchSpec({BoxSpec? container, BoxSpec? track, BoxSpec? thumb})
-      : container = container ?? const BoxSpec(),
-        track = track ?? const BoxSpec(),
-        thumb = thumb ?? const BoxSpec();
+  const SwitchSpec({WidgetContainerProperties? container, WidgetContainerProperties? track, WidgetContainerProperties? thumb})
+      : container = container ?? const WidgetContainerProperties(),
+        track = track ?? const WidgetContainerProperties(),
+        thumb = thumb ?? const WidgetContainerProperties();
 
   @override
-  SwitchSpec copyWith({BoxSpec? container, BoxSpec? track, BoxSpec? thumb}) {
+  SwitchSpec copyWith({WidgetContainerProperties? container, WidgetContainerProperties? track, WidgetContainerProperties? thumb}) {
     return SwitchSpec(
       container: container ?? this.container,
       track: track ?? this.track,
@@ -34,9 +34,9 @@ class SwitchSpec extends Spec<SwitchSpec> with Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-        .add(DiagnosticsProperty('container', container, defaultValue: null));
-    properties.add(DiagnosticsProperty('track', track, defaultValue: null));
-    properties.add(DiagnosticsProperty('thumb', thumb, defaultValue: null));
+      ..add(DiagnosticsProperty('container', container))
+      ..add(DiagnosticsProperty('track', track))
+      ..add(DiagnosticsProperty('thumb', thumb));
   }
 
   @override

@@ -148,14 +148,11 @@ class _RemixButtonState extends State<RemixButton>
   Widget build(BuildContext context) {
     return NakedButton(
       onPressed: widget.onPressed,
-      onHoverChange: (state) => controller.hovered = state,
-      onPressChange: (state) => controller.pressed = state,
-      onFocusChange: (state) => controller.focused = state,
-      onDisabledChange: (state) => controller.disabled = state,
       enabled: _isEnabled,
       enableHapticFeedback: widget.enableHapticFeedback,
       focusNode: widget.focusNode,
       autofocus: widget.autofocus,
+      statesController: controller,
       child: StyleBuilder(
         style: DefaultRemixButtonStyle.merge(widget.style),
         controller: controller,

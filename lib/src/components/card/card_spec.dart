@@ -1,13 +1,13 @@
 part of 'card.dart';
 
-class CardSpec extends Spec<CardSpec> with Diagnosticable {
-  final BoxSpec container;
+class CardSpec extends WidgetSpec<CardSpec> {
+  final WidgetContainerProperties container;
 
-  const CardSpec({BoxSpec? container})
-      : container = container ?? const BoxSpec();
+  const CardSpec({WidgetContainerProperties? container})
+      : container = container ?? const WidgetContainerProperties();
 
   @override
-  CardSpec copyWith({BoxSpec? container}) {
+  CardSpec copyWith({WidgetContainerProperties? container}) {
     return CardSpec(container: container ?? this.container);
   }
 
@@ -22,7 +22,7 @@ class CardSpec extends Spec<CardSpec> with Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-        .add(DiagnosticsProperty('container', container, defaultValue: null));
+      ..add(DiagnosticsProperty('container', container));
   }
 
   @override

@@ -4,12 +4,12 @@ class RemixButtonStyle extends Style<ButtonSpec>
     with
         StyleModifierMixin<RemixButtonStyle, ButtonSpec>,
         StyleVariantMixin<RemixButtonStyle, ButtonSpec> {
-  final Prop<BoxSpec>? $container;
+  final Prop<WidgetContainerProperties>? $container;
   final Prop<LabelSpec>? $label;
   final Prop<SpinnerSpec>? $spinner;
 
   const RemixButtonStyle.create({
-    Prop<BoxSpec>? container,
+    Prop<WidgetContainerProperties>? container,
     Prop<LabelSpec>? label,
     Prop<SpinnerSpec>? spinner,
     super.variants,
@@ -21,7 +21,7 @@ class RemixButtonStyle extends Style<ButtonSpec>
         $spinner = spinner;
 
   RemixButtonStyle({
-    BoxMix? container,
+    WidgetContainerPropertiesMix? container,
     RemixLabelStyle? label,
     RemixSpinnerStyle? spinner,
     AnimationConfig? animation,
@@ -39,7 +39,7 @@ class RemixButtonStyle extends Style<ButtonSpec>
         );
 
   factory RemixButtonStyle.value(ButtonSpec spec) => RemixButtonStyle(
-        container: BoxMix.maybeValue(spec.container),
+        container: WidgetContainerPropertiesMix.maybeValue(spec.container),
         label: RemixLabelStyle.value(spec.label),
         spinner: RemixSpinnerStyle.value(spec.spinner),
       );
@@ -56,21 +56,21 @@ class RemixButtonStyle extends Style<ButtonSpec>
   /// Factory for background color
   factory RemixButtonStyle.color(Color value) {
     return RemixButtonStyle(
-      container: BoxMix(decoration: BoxDecorationMix(color: value)),
+      container: WidgetContainerPropertiesMix.color(value),
     );
   }
 
   /// Factory for padding
   factory RemixButtonStyle.padding(double value) {
     return RemixButtonStyle(
-      container: BoxMix(padding: EdgeInsetsMix.all(value)),
+      container: WidgetContainerPropertiesMix.padding(EdgeInsetsGeometryMix.all(value)),
     );
   }
 
   /// Factory for border radius
   factory RemixButtonStyle.borderRadius(double radius) {
     return RemixButtonStyle(
-      container: BoxMix(
+      container: WidgetContainerPropertiesMix(
         decoration: BoxDecorationMix(
           borderRadius: BorderRadiusMix.circular(radius),
         ),
@@ -81,8 +81,8 @@ class RemixButtonStyle extends Style<ButtonSpec>
   /// Factory for width
   factory RemixButtonStyle.width(double value) {
     return RemixButtonStyle(
-      container: BoxMix(
-        constraints: BoxConstraintsMix(minWidth: value, maxWidth: value),
+      container: WidgetContainerPropertiesMix.constraints(
+        BoxConstraintsMix(minWidth: value, maxWidth: value),
       ),
     );
   }
@@ -90,8 +90,8 @@ class RemixButtonStyle extends Style<ButtonSpec>
   /// Factory for height
   factory RemixButtonStyle.height(double value) {
     return RemixButtonStyle(
-      container: BoxMix(
-        constraints: BoxConstraintsMix(minHeight: value, maxHeight: value),
+      container: WidgetContainerPropertiesMix.constraints(
+        BoxConstraintsMix(minHeight: value, maxHeight: value),
       ),
     );
   }
@@ -99,8 +99,8 @@ class RemixButtonStyle extends Style<ButtonSpec>
   /// Factory for size (width and height)
   factory RemixButtonStyle.size(double width, double height) {
     return RemixButtonStyle(
-      container: BoxMix(
-        constraints: BoxConstraintsMix(
+      container: WidgetContainerPropertiesMix.constraints(
+        BoxConstraintsMix(
           minWidth: width,
           maxWidth: width,
           minHeight: height,
@@ -113,7 +113,9 @@ class RemixButtonStyle extends Style<ButtonSpec>
   /// Factory for border
   factory RemixButtonStyle.border(BoxBorderMix value) {
     return RemixButtonStyle(
-      container: BoxMix(decoration: BoxDecorationMix(border: value)),
+      container: WidgetContainerPropertiesMix(
+        decoration: BoxDecorationMix(border: value),
+      ),
     );
   }
 
@@ -243,8 +245,8 @@ class RemixButtonStyle extends Style<ButtonSpec>
 }
 
 final DefaultRemixButtonStyle = RemixButtonStyle(
-  container: BoxMix(
-    padding: EdgeInsetsMix.all(10),
+  container: WidgetContainerPropertiesMix(
+    padding: EdgeInsetsGeometryMix.all(10),
     decoration: BoxDecorationMix(
       borderRadius: BorderRadiusMix.circular(8),
       color: Colors.black,
@@ -303,24 +305,24 @@ extension ButtonVariants on RemixButtonStyle {
 
   // Size variants
   static RemixButtonStyle get small => RemixButtonStyle(
-        container: BoxMix(
-          padding: EdgeInsetsMix.all(6),
+        container: WidgetContainerPropertiesMix(
+          padding: EdgeInsetsGeometryMix.all(6),
           constraints: BoxConstraintsMix(minHeight: 32),
         ),
         label: RemixLabelStyle(spacing: 6, leading: IconMix.size(16)),
       );
 
   static RemixButtonStyle get medium => RemixButtonStyle(
-        container: BoxMix(
-          padding: EdgeInsetsMix.all(10),
+        container: WidgetContainerPropertiesMix(
+          padding: EdgeInsetsGeometryMix.all(10),
           constraints: BoxConstraintsMix(minHeight: 40),
         ),
         label: RemixLabelStyle(spacing: 8, leading: IconMix.size(18)),
       );
 
   static RemixButtonStyle get large => RemixButtonStyle(
-        container: BoxMix(
-          padding: EdgeInsetsMix.all(14),
+        container: WidgetContainerPropertiesMix(
+          padding: EdgeInsetsGeometryMix.all(14),
           constraints: BoxConstraintsMix(minHeight: 48),
         ),
         label: RemixLabelStyle(spacing: 10, leading: IconMix.size(20)),
@@ -333,8 +335,8 @@ extension ButtonVariants on RemixButtonStyle {
   // Helper methods to create variants
   static RemixButtonStyle _createVariant(Color bgColor, Color fgColor) {
     return RemixButtonStyle(
-      container: BoxMix(
-        padding: EdgeInsetsMix.all(10),
+      container: WidgetContainerPropertiesMix(
+        padding: EdgeInsetsGeometryMix.all(10),
         decoration: BoxDecorationMix(
           borderRadius: BorderRadiusMix.circular(8),
           color: bgColor,
@@ -350,8 +352,8 @@ extension ButtonVariants on RemixButtonStyle {
 
   static RemixButtonStyle _createOutlineVariant(Color color) {
     return RemixButtonStyle(
-      container: BoxMix(
-        padding: EdgeInsetsMix.all(10),
+      container: WidgetContainerPropertiesMix(
+        padding: EdgeInsetsGeometryMix.all(10),
         decoration: BoxDecorationMix(
           border: BoxBorderMix.all(BorderSideMix(color: color, width: 1)),
           borderRadius: BorderRadiusMix.circular(8),
@@ -368,8 +370,8 @@ extension ButtonVariants on RemixButtonStyle {
 
   static RemixButtonStyle _createGhostVariant(Color color) {
     return RemixButtonStyle(
-      container: BoxMix(
-        padding: EdgeInsetsMix.all(10),
+      container: WidgetContainerPropertiesMix(
+        padding: EdgeInsetsGeometryMix.all(10),
         decoration: BoxDecorationMix(
           borderRadius: BorderRadiusMix.circular(8),
           color: Colors.transparent,
@@ -385,8 +387,8 @@ extension ButtonVariants on RemixButtonStyle {
 
   static RemixButtonStyle _createSoftVariant(Color color) {
     return RemixButtonStyle(
-      container: BoxMix(
-        padding: EdgeInsetsMix.all(10),
+      container: WidgetContainerPropertiesMix(
+        padding: EdgeInsetsGeometryMix.all(10),
         decoration: BoxDecorationMix(
           borderRadius: BorderRadiusMix.circular(8),
           color: color.withValues(alpha: 0.1),
