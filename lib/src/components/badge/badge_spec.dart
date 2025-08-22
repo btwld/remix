@@ -1,21 +1,38 @@
 part of 'badge.dart';
 
 class BadgeSpec extends WidgetSpec<BadgeSpec> {
-  final WidgetContainerProperties container;
+  final ContainerProperties container;
   final TextSpec text;
   final IconSpec icon;
 
-  const BadgeSpec({WidgetContainerProperties? container, TextSpec? text, IconSpec? icon})
-      : container = container ?? const WidgetContainerProperties(),
+  const BadgeSpec({
+    ContainerProperties? container,
+    TextSpec? text,
+    IconSpec? icon,
+    AnimationConfig? animation,
+    List<Modifier>? widgetModifiers,
+    bool? inherit,
+  })  : container = container ?? const ContainerProperties(),
         text = text ?? const TextSpec(),
-        icon = icon ?? const IconSpec();
+        icon = icon ?? const IconSpec(),
+        super(animation: animation, widgetModifiers: widgetModifiers, inherit: inherit);
 
   @override
-  BadgeSpec copyWith({WidgetContainerProperties? container, TextSpec? text, IconSpec? icon}) {
+  BadgeSpec copyWith({
+    ContainerProperties? container,
+    TextSpec? text,
+    IconSpec? icon,
+    AnimationConfig? animation,
+    List<Modifier>? widgetModifiers,
+    bool? inherit,
+  }) {
     return BadgeSpec(
       container: container ?? this.container,
       text: text ?? this.text,
       icon: icon ?? this.icon,
+      animation: animation ?? this.animation,
+      widgetModifiers: widgetModifiers ?? this.widgetModifiers,
+      inherit: inherit ?? this.inherit,
     );
   }
 
@@ -27,6 +44,9 @@ class BadgeSpec extends WidgetSpec<BadgeSpec> {
       container: MixOps.lerp(container, other.container, t)!,
       text: MixOps.lerp(text, other.text, t)!,
       icon: MixOps.lerp(icon, other.icon, t)!,
+      animation: MixOps.lerp(animation, other.animation, t),
+      widgetModifiers: MixOps.lerp(widgetModifiers, other.widgetModifiers, t),
+      inherit: MixOps.lerp(inherit, other.inherit, t),
     );
   }
 
@@ -40,5 +60,5 @@ class BadgeSpec extends WidgetSpec<BadgeSpec> {
   }
 
   @override
-  List<Object?> get props => [container, text, icon];
+  List<Object?> get props => [...super.props, container, text, icon];
 }

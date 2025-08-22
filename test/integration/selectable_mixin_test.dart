@@ -13,83 +13,33 @@ void main() {
           home: Scaffold(
             body: StatefulBuilder(
               builder: (context, setState) {
-                return Column(
-                  children: [
-                    RemixRadio<String>(
-                      key: const Key('radio1'),
-                      value: 'option1',
-                      groupValue: groupValue,
-                      onChanged: (value) {
-                        setState(() {
-                          groupValue = value!;
-                        });
-                      },
-                    ),
-                    RemixRadio<String>(
-                      key: const Key('radio2'),
-                      value: 'option2',
-                      groupValue: groupValue,
-                      onChanged: (value) {
-                        setState(() {
-                          groupValue = value!;
-                        });
-                      },
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        setState(() {
-                          groupValue = groupValue == 'option1' ? 'option2' : 'option1';
-                        });
-                      },
-                      child: const Text('Toggle'),
-                    ),
-                  ],
-                );
-              },
-            ),
-          ),
-        ),
-      );
-
-      // Initially, radio1 is selected
-      // Note: We can't directly access stateController as it's private
-      // The test verifies behavior through UI interactions
-      
-      // Toggle selection externally
-      await tester.tap(find.text('Toggle'));
-      await tester.pumpAndSettle();
-      
-      // Now radio2 should be selected
-      // The visual state should update correctly
-      
-      // Toggle back
-      await tester.tap(find.text('Toggle'));
-      await tester.pumpAndSettle();
-      
-      // radio1 should be selected again
-      
-      // Test passes if no exceptions are thrown
-      expect(find.byType(RemixRadio<String>), findsNWidgets(2));
-    });
-
-    testWidgets('RemixRadio handles computed selected getter correctly', 
-        (tester) async {
-      // Test that the computed selected getter works with SelectableMixin
-      String? groupValue;
-
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: StatefulBuilder(
-              builder: (context, setState) {
-                return RemixRadio<String>(
-                  value: 'testValue',
+                return RemixRadioGroup<String>(
                   groupValue: groupValue,
                   onChanged: (value) {
                     setState(() {
-                      groupValue = value;
+                      groupValue = value!;
                     });
                   },
+                  child: Column(
+                    children: [
+                      RemixRadio<String>(
+                        key: const Key('radio1'),
+                        value: 'option1',
+                      ),
+                      RemixRadio<String>(
+                        key: const Key('radio2'),
+                        value: 'option2',
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          setState(() {
+                            groupValue = groupValue == 'option1' ? 'option2' : 'option1';
+                          });
+                        },
+                        child: const Text('Toggle'),
+                      ),
+                    ],
+                  ),
                 );
               },
             ),
@@ -97,130 +47,22 @@ void main() {
         ),
       );
 
-      // Initially unselected (groupValue is null)
-      expect(find.byType(RemixRadio<String>), findsOneWidget);
-      
-      // Select the radio
-      await tester.tap(find.byType(RemixRadio<String>));
+      // Initial state verification
+      expect(groupValue, 'option1');
+
+      // Tap toggle button to change group value externally
+      await tester.tap(find.text('Toggle'));
       await tester.pumpAndSettle();
-      
-      // Should now be selected
-      expect(find.byType(RemixRadio<String>), findsOneWidget);
-    });
+      expect(groupValue, 'option2');
 
-    testWidgets('RemixCheckbox with stored selected property works correctly', 
-        (tester) async {
-      // Test that checkbox with stored selected property works
-      bool isSelected = false;
-
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: StatefulBuilder(
-              builder: (context, setState) {
-                return RemixCheckbox(
-                  selected: isSelected,
-                  onChanged: (value) {
-                    setState(() {
-                      isSelected = value;
-                    });
-                  },
-                );
-              },
-            ),
-          ),
-        ),
-      );
-
-      // Initially unselected
-      expect(find.byType(RemixCheckbox), findsOneWidget);
-      
-      // Toggle the checkbox
-      await tester.tap(find.byType(RemixCheckbox));
+      // Tap radio directly to change selection
+      await tester.tap(find.byKey(const Key('radio1')));
       await tester.pumpAndSettle();
-      
-      // Should now be selected
-      expect(find.byType(RemixCheckbox), findsOneWidget);
+      expect(groupValue, 'option1');
     });
 
-    testWidgets('RemixSwitch with stored selected property works correctly', 
+    testWidgets('RemixRadio in group context properly manages selected state', 
         (tester) async {
-      // Test that switch with stored selected property works
-      bool isSelected = false;
-
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: StatefulBuilder(
-              builder: (context, setState) {
-                return RemixSwitch(
-                  selected: isSelected,
-                  onChanged: (value) {
-                    setState(() {
-                      isSelected = value;
-                    });
-                  },
-                );
-              },
-            ),
-          ),
-        ),
-      );
-
-      // Initially unselected
-      expect(find.byType(RemixSwitch), findsOneWidget);
-      
-      // Toggle the switch
-      await tester.tap(find.byType(RemixSwitch));
-      await tester.pumpAndSettle();
-      
-      // Should now be selected
-      expect(find.byType(RemixSwitch), findsOneWidget);
-    });
-
-    testWidgets('SelectableMixin initialization with computed vs stored properties', 
-        (tester) async {
-      // This test verifies that SelectableMixin works correctly
-      // with both computed (Radio) and stored (Checkbox/Switch) properties
-      
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Column(
-              children: [
-                // Radio with computed selected
-                RemixRadio<int>(
-                  value: 1,
-                  groupValue: 1, // selected = true (computed)
-                  onChanged: (_) {},
-                ),
-                // Checkbox with stored selected
-                RemixCheckbox(
-                  selected: true, // selected = true (stored)
-                  onChanged: (_) {},
-                ),
-                // Switch with stored selected
-                RemixSwitch(
-                  selected: true, // selected = true (stored)
-                  onChanged: (_) {},
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-
-      // All widgets should be rendered and functional
-      expect(find.byType(RemixRadio<int>), findsOneWidget);
-      expect(find.byType(RemixCheckbox), findsOneWidget);
-      expect(find.byType(RemixSwitch), findsOneWidget);
-    });
-
-    testWidgets('RemixRadio state synchronization with groupValue changes', 
-        (tester) async {
-      // This test specifically checks if the stateController is properly
-      // synchronized when groupValue changes
-      
       String groupValue = 'A';
 
       await tester.pumpWidget(
@@ -228,35 +70,215 @@ void main() {
           home: Scaffold(
             body: StatefulBuilder(
               builder: (context, setState) {
+                return RemixRadioGroup<String>(
+                  groupValue: groupValue,
+                  onChanged: (value) {
+                    setState(() {
+                      groupValue = value!;
+                    });
+                  },
+                  child: Column(
+                    children: [
+                      RemixRadio<String>(
+                        key: const Key('radioA'),
+                        value: 'A',
+                      ),
+                      RemixRadio<String>(
+                        key: const Key('radioB'),
+                        value: 'B',
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+      );
+
+      // Initial state - A should be selected
+      expect(groupValue, 'A');
+
+      // Select B
+      await tester.tap(find.byKey(const Key('radioB')));
+      await tester.pumpAndSettle();
+      expect(groupValue, 'B');
+
+      // Select A again
+      await tester.tap(find.byKey(const Key('radioA')));
+      await tester.pumpAndSettle();
+      expect(groupValue, 'A');
+    });
+
+    testWidgets('RemixCheckbox properly handles nullable bool in onChanged', 
+        (tester) async {
+      bool? isChecked = false;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: StatefulBuilder(
+              builder: (context, setState) {
+                return RemixCheckbox(
+                  selected: isChecked ?? false,
+                  onChanged: (value) {
+                    setState(() {
+                      isChecked = value ?? false; // Handle nullable bool
+                    });
+                  },
+                );
+              },
+            ),
+          ),
+        ),
+      );
+
+      // Initially unchecked
+      expect(isChecked, false);
+
+      // Tap to check
+      await tester.tap(find.byType(RemixCheckbox));
+      await tester.pumpAndSettle();
+      expect(isChecked, true);
+
+      // Tap to uncheck
+      await tester.tap(find.byType(RemixCheckbox));
+      await tester.pumpAndSettle();
+      expect(isChecked, false);
+    });
+
+    testWidgets('RemixCheckbox tristate functionality', (tester) async {
+      bool? tristateValue;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: StatefulBuilder(
+              builder: (context, setState) {
+                return RemixCheckbox(
+                  tristate: true,
+                  selected: tristateValue,
+                  onChanged: (value) {
+                    setState(() {
+                      tristateValue = value;
+                    });
+                  },
+                );
+              },
+            ),
+          ),
+        ),
+      );
+
+      // Initially null (indeterminate)
+      expect(tristateValue, isNull);
+
+      // First tap: null -> true
+      await tester.tap(find.byType(RemixCheckbox));
+      await tester.pumpAndSettle();
+      expect(tristateValue, true);
+
+      // Second tap: true -> false  
+      await tester.tap(find.byType(RemixCheckbox));
+      await tester.pumpAndSettle();
+      expect(tristateValue, false);
+
+      // Third tap: false -> null
+      await tester.tap(find.byType(RemixCheckbox));
+      await tester.pumpAndSettle();
+      expect(tristateValue, isNull);
+    });
+
+    testWidgets('Multiple RemixRadio widgets in group maintain mutual exclusivity', 
+        (tester) async {
+      String? selectedValue = 'first';
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: StatefulBuilder(
+              builder: (context, setState) {
+                return RemixRadioGroup<String>(
+                  groupValue: selectedValue,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedValue = value;
+                    });
+                  },
+                  child: Column(
+                    children: [
+                      RemixRadio<String>(
+                        key: const Key('first'),
+                        value: 'first',
+                        label: 'First Option',
+                      ),
+                      RemixRadio<String>(
+                        key: const Key('second'),
+                        value: 'second',
+                        label: 'Second Option',
+                      ),
+                      RemixRadio<String>(
+                        key: const Key('third'),
+                        value: 'third',
+                        label: 'Third Option',
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+      );
+
+      // Initially first should be selected
+      expect(selectedValue, 'first');
+
+      // Select second - should deselect first
+      await tester.tap(find.byKey(const Key('second')));
+      await tester.pumpAndSettle();
+      expect(selectedValue, 'second');
+
+      // Select third - should deselect second
+      await tester.tap(find.byKey(const Key('third')));
+      await tester.pumpAndSettle();
+      expect(selectedValue, 'third');
+
+      // Select first again - should deselect third
+      await tester.tap(find.byKey(const Key('first')));
+      await tester.pumpAndSettle();
+      expect(selectedValue, 'first');
+    });
+
+    testWidgets('RemixCheckbox handles both regular and tristate modes', (tester) async {
+      bool regularChecked = false;
+      bool? tristateValue = false;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: StatefulBuilder(
+              builder: (context, setState) {
                 return Column(
                   children: [
-                    RemixRadio<String>(
-                      key: const Key('radioA'),
-                      value: 'A',
-                      groupValue: groupValue,
+                    // Regular checkbox
+                    RemixCheckbox(
+                      key: const Key('regular'),
+                      selected: regularChecked,
                       onChanged: (value) {
                         setState(() {
-                          groupValue = value!;
+                          regularChecked = value ?? false;
                         });
                       },
                     ),
-                    RemixRadio<String>(
-                      key: const Key('radioB'),
-                      value: 'B',
-                      groupValue: groupValue,
+                    // Tristate checkbox  
+                    RemixCheckbox(
+                      key: const Key('tristate'),
+                      tristate: true,
+                      selected: tristateValue,
                       onChanged: (value) {
                         setState(() {
-                          groupValue = value!;
-                        });
-                      },
-                    ),
-                    RemixRadio<String>(
-                      key: const Key('radioC'),
-                      value: 'C',
-                      groupValue: groupValue,
-                      onChanged: (value) {
-                        setState(() {
-                          groupValue = value!;
+                          tristateValue = value;
                         });
                       },
                     ),
@@ -268,25 +290,21 @@ void main() {
         ),
       );
 
-      // Initially A is selected
-      expect(groupValue, 'A');
-      
-      // Select B by tapping
-      await tester.tap(find.byKey(const Key('radioB')));
+      // Test regular checkbox
+      expect(regularChecked, false);
+      await tester.tap(find.byKey(const Key('regular')));
       await tester.pumpAndSettle();
-      expect(groupValue, 'B');
-      
-      // Select C by tapping
-      await tester.tap(find.byKey(const Key('radioC')));
+      expect(regularChecked, true);
+
+      // Test tristate checkbox
+      expect(tristateValue, false);
+      await tester.tap(find.byKey(const Key('tristate')));
       await tester.pumpAndSettle();
-      expect(groupValue, 'C');
-      
-      // Select A again
-      await tester.tap(find.byKey(const Key('radioA')));
+      expect(tristateValue, true);
+
+      await tester.tap(find.byKey(const Key('tristate')));
       await tester.pumpAndSettle();
-      expect(groupValue, 'A');
-      
-      // All state transitions should work smoothly
+      expect(tristateValue, isNull);
     });
   });
 }

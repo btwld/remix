@@ -16,7 +16,7 @@ void main() {
                   selected: isChecked,
                   onChanged: (value) {
                     setState(() {
-                      isChecked = value;
+                      isChecked = value ?? false; // Handle nullable bool
                     });
                   },
                 );
@@ -65,7 +65,7 @@ void main() {
               selected: isChecked,
               enabled: false,
               onChanged: (value) {
-                isChecked = value;
+                isChecked = value ?? false; // Handle nullable bool
               },
             ),
           ),

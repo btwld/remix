@@ -1,43 +1,50 @@
 part of 'list_item.dart';
 
 class ListItemSpec extends WidgetSpec<ListItemSpec> {
-  final WidgetContainerProperties container;
-  final WidgetFlexProperties flex;
-  final WidgetContainerProperties contentContainer;
-  final WidgetFlexProperties contentFlex;
+  final ContainerProperties container;
+  final FlexProperties flex;
+  final ContainerProperties contentContainer;
+  final FlexProperties contentFlex;
   final TextSpec title;
   final TextSpec subtitle;
   final IconSpec leading;
   final IconSpec trailing;
 
   const ListItemSpec({
-    WidgetContainerProperties? container,
-    WidgetFlexProperties? flex,
-    WidgetContainerProperties? contentContainer,
-    WidgetFlexProperties? contentFlex,
+    ContainerProperties? container,
+    FlexProperties? flex,
+    ContainerProperties? contentContainer,
+    FlexProperties? contentFlex,
     TextSpec? title,
     TextSpec? subtitle,
     IconSpec? leading,
     IconSpec? trailing,
-  })  : container = container ?? const WidgetContainerProperties(),
-        flex = flex ?? const WidgetFlexProperties(),
-        contentContainer = contentContainer ?? const WidgetContainerProperties(),
-        contentFlex = contentFlex ?? const WidgetFlexProperties(),
+    AnimationConfig? animation,
+    List<Modifier>? widgetModifiers,
+    bool? inherit,
+  })  : container = container ?? const ContainerProperties(),
+        flex = flex ?? const FlexProperties(),
+        contentContainer = contentContainer ?? const ContainerProperties(),
+        contentFlex = contentFlex ?? const FlexProperties(),
         title = title ?? const TextSpec(),
         subtitle = subtitle ?? const TextSpec(),
         leading = leading ?? const IconSpec(),
-        trailing = trailing ?? const IconSpec();
+        trailing = trailing ?? const IconSpec(),
+        super(animation: animation, widgetModifiers: widgetModifiers, inherit: inherit);
 
   @override
   ListItemSpec copyWith({
-    WidgetContainerProperties? container,
-    WidgetFlexProperties? flex,
-    WidgetContainerProperties? contentContainer,
-    WidgetFlexProperties? contentFlex,
+    ContainerProperties? container,
+    FlexProperties? flex,
+    ContainerProperties? contentContainer,
+    FlexProperties? contentFlex,
     TextSpec? title,
     TextSpec? subtitle,
     IconSpec? leading,
     IconSpec? trailing,
+    AnimationConfig? animation,
+    List<Modifier>? widgetModifiers,
+    bool? inherit,
   }) {
     return ListItemSpec(
       container: container ?? this.container,
@@ -48,6 +55,9 @@ class ListItemSpec extends WidgetSpec<ListItemSpec> {
       subtitle: subtitle ?? this.subtitle,
       leading: leading ?? this.leading,
       trailing: trailing ?? this.trailing,
+      animation: animation ?? this.animation,
+      widgetModifiers: widgetModifiers ?? this.widgetModifiers,
+      inherit: inherit ?? this.inherit,
     );
   }
 
@@ -65,6 +75,9 @@ class ListItemSpec extends WidgetSpec<ListItemSpec> {
       subtitle: MixOps.lerp(subtitle, other.subtitle, t)!,
       leading: MixOps.lerp(leading, other.leading, t)!,
       trailing: MixOps.lerp(trailing, other.trailing, t)!,
+      animation: MixOps.lerp(animation, other.animation, t),
+      widgetModifiers: MixOps.lerp(widgetModifiers, other.widgetModifiers, t),
+      inherit: MixOps.lerp(inherit, other.inherit, t),
     );
   }
 
@@ -83,6 +96,15 @@ class ListItemSpec extends WidgetSpec<ListItemSpec> {
   }
 
   @override
-  List<Object?> get props =>
-      [container, flex, contentContainer, contentFlex, title, subtitle, leading, trailing];
+  List<Object?> get props => [
+        ...super.props,
+        container,
+        flex,
+        contentContainer,
+        contentFlex,
+        title,
+        subtitle,
+        leading,
+        trailing,
+      ];
 }

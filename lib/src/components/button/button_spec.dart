@@ -1,21 +1,38 @@
 part of 'button.dart';
 
 class ButtonSpec extends WidgetSpec<ButtonSpec> {
-  final WidgetContainerProperties container;
+  final ContainerProperties container;
   final LabelSpec label;
   final SpinnerSpec spinner;
 
-  const ButtonSpec({WidgetContainerProperties? container, LabelSpec? label, SpinnerSpec? spinner})
-      : container = container ?? const WidgetContainerProperties(),
+  const ButtonSpec({
+    ContainerProperties? container,
+    LabelSpec? label,
+    SpinnerSpec? spinner,
+    AnimationConfig? animation,
+    List<Modifier>? widgetModifiers,
+    bool? inherit,
+  })  : container = container ?? const ContainerProperties(),
         label = label ?? const LabelSpec(),
-        spinner = spinner ?? const SpinnerSpec();
+        spinner = spinner ?? const SpinnerSpec(),
+        super(animation: animation, widgetModifiers: widgetModifiers, inherit: inherit);
 
   @override
-  ButtonSpec copyWith({WidgetContainerProperties? container, LabelSpec? label, SpinnerSpec? spinner}) {
+  ButtonSpec copyWith({
+    ContainerProperties? container,
+    LabelSpec? label,
+    SpinnerSpec? spinner,
+    AnimationConfig? animation,
+    List<Modifier>? widgetModifiers,
+    bool? inherit,
+  }) {
     return ButtonSpec(
       container: container ?? this.container,
       label: label ?? this.label,
       spinner: spinner ?? this.spinner,
+      animation: animation ?? this.animation,
+      widgetModifiers: widgetModifiers ?? this.widgetModifiers,
+      inherit: inherit ?? this.inherit,
     );
   }
 
@@ -27,6 +44,9 @@ class ButtonSpec extends WidgetSpec<ButtonSpec> {
       container: MixOps.lerp(container, other.container, t)!,
       label: MixOps.lerp(label, other.label, t)!,
       spinner: MixOps.lerp(spinner, other.spinner, t)!,
+      animation: MixOps.lerp(animation, other.animation, t),
+      widgetModifiers: MixOps.lerp(widgetModifiers, other.widgetModifiers, t),
+      inherit: MixOps.lerp(inherit, other.inherit, t),
     );
   }
 
@@ -40,5 +60,5 @@ class ButtonSpec extends WidgetSpec<ButtonSpec> {
   }
 
   @override
-  List<Object?> get props => [container, label, spinner];
+  List<Object?> get props => [...super.props, container, label, spinner];
 }

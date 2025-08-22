@@ -22,8 +22,10 @@ part of 'spinner.dart';
 /// )
 /// ```
 class RemixSpinner extends StatelessWidget {
-  const RemixSpinner(
-      {super.key, this.style = const RemixSpinnerStyle.create()});
+  const RemixSpinner({
+    super.key,
+    this.style = const RemixSpinnerStyle.create(),
+  });
 
   /// The style configuration for the spinner.
   final RemixSpinnerStyle style;

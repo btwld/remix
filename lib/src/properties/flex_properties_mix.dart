@@ -2,12 +2,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 
-import 'widget_flex_properties.dart';
+import 'flex_properties.dart';
 
-/// Mix class for configuring [WidgetFlexProperties] properties.
+/// Mix class for configuring [FlexProperties] properties.
 ///
 /// Encapsulates flex layout properties with support for proper Mix framework integration.
-final class WidgetFlexPropertiesMix extends Mix<WidgetFlexProperties>
+final class FlexPropertiesMix extends Mix<FlexProperties>
     with Diagnosticable {
   final Prop<Decoration>? $decoration;
   final Prop<EdgeInsetsGeometry>? $padding;
@@ -22,7 +22,7 @@ final class WidgetFlexPropertiesMix extends Mix<WidgetFlexProperties>
   final Prop<double>? $gap;
 
   /// Main constructor with user-friendly Mix types
-  WidgetFlexPropertiesMix({
+  FlexPropertiesMix({
     DecorationMix? decoration,
     EdgeInsetsGeometryMix? padding,
     AlignmentGeometry? alignment,
@@ -49,7 +49,7 @@ final class WidgetFlexPropertiesMix extends Mix<WidgetFlexProperties>
         );
 
   /// Create constructor with Prop<T> types for internal use
-  const WidgetFlexPropertiesMix.create({
+  const FlexPropertiesMix.create({
     Prop<Decoration>? decoration,
     Prop<EdgeInsetsGeometry>? padding,
     Prop<AlignmentGeometry>? alignment,
@@ -73,8 +73,8 @@ final class WidgetFlexPropertiesMix extends Mix<WidgetFlexProperties>
         $textBaseline = textBaseline,
         $gap = gap;
 
-  /// Constructor that accepts a [WidgetFlexProperties] value and extracts its properties.
-  WidgetFlexPropertiesMix.value(WidgetFlexProperties spec)
+  /// Constructor that accepts a [FlexProperties] value and extracts its properties.
+  FlexPropertiesMix.value(FlexProperties spec)
       : this(
           decoration: DecorationMix.maybeValue(spec.decoration),
           padding: EdgeInsetsGeometryMix.maybeValue(spec.padding),
@@ -92,45 +92,45 @@ final class WidgetFlexPropertiesMix extends Mix<WidgetFlexProperties>
   // Factory constructors for common use cases
 
   /// Color factory
-  factory WidgetFlexPropertiesMix.color(Color value) {
-    return WidgetFlexPropertiesMix(decoration: DecorationMix.color(value));
+  factory FlexPropertiesMix.color(Color value) {
+    return FlexPropertiesMix(decoration: DecorationMix.color(value));
   }
 
   /// Decoration factory
-  factory WidgetFlexPropertiesMix.decoration(DecorationMix value) {
-    return WidgetFlexPropertiesMix(decoration: value);
+  factory FlexPropertiesMix.decoration(DecorationMix value) {
+    return FlexPropertiesMix(decoration: value);
   }
 
   /// Alignment factory
-  factory WidgetFlexPropertiesMix.alignment(AlignmentGeometry value) {
-    return WidgetFlexPropertiesMix(alignment: value);
+  factory FlexPropertiesMix.alignment(AlignmentGeometry value) {
+    return FlexPropertiesMix(alignment: value);
   }
 
   /// Padding factory
-  factory WidgetFlexPropertiesMix.padding(EdgeInsetsGeometryMix value) {
-    return WidgetFlexPropertiesMix(padding: value);
+  factory FlexPropertiesMix.padding(EdgeInsetsGeometryMix value) {
+    return FlexPropertiesMix(padding: value);
   }
 
   /// Direction factory
-  factory WidgetFlexPropertiesMix.direction(Axis value) {
-    return WidgetFlexPropertiesMix(direction: value);
+  factory FlexPropertiesMix.direction(Axis value) {
+    return FlexPropertiesMix(direction: value);
   }
 
   /// Gap factory
-  factory WidgetFlexPropertiesMix.gap(double value) {
-    return WidgetFlexPropertiesMix(gap: value);
+  factory FlexPropertiesMix.gap(double value) {
+    return FlexPropertiesMix(gap: value);
   }
 
   // Flex-specific factories
 
   /// Horizontal flex factory
-  factory WidgetFlexPropertiesMix.horizontal({
-    MainAxisAlignment? mainAxisAlignment = MainAxisAlignment.start,
-    CrossAxisAlignment? crossAxisAlignment = CrossAxisAlignment.center,
-    MainAxisSize? mainAxisSize = MainAxisSize.max,
+  factory FlexPropertiesMix.horizontal({
+    MainAxisAlignment mainAxisAlignment = MainAxisAlignment.start,
+    CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment.center,
+    MainAxisSize mainAxisSize = MainAxisSize.max,
     double? gap,
   }) {
-    return WidgetFlexPropertiesMix(
+    return FlexPropertiesMix(
       direction: Axis.horizontal,
       mainAxisAlignment: mainAxisAlignment,
       crossAxisAlignment: crossAxisAlignment,
@@ -140,13 +140,13 @@ final class WidgetFlexPropertiesMix extends Mix<WidgetFlexProperties>
   }
 
   /// Vertical flex factory
-  factory WidgetFlexPropertiesMix.vertical({
-    MainAxisAlignment? mainAxisAlignment = MainAxisAlignment.start,
-    CrossAxisAlignment? crossAxisAlignment = CrossAxisAlignment.center,
-    MainAxisSize? mainAxisSize = MainAxisSize.max,
+  factory FlexPropertiesMix.vertical({
+    MainAxisAlignment mainAxisAlignment = MainAxisAlignment.start,
+    CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment.center,
+    MainAxisSize mainAxisSize = MainAxisSize.max,
     double? gap,
   }) {
-    return WidgetFlexPropertiesMix(
+    return FlexPropertiesMix(
       direction: Axis.vertical,
       mainAxisAlignment: mainAxisAlignment,
       crossAxisAlignment: crossAxisAlignment,
@@ -156,13 +156,13 @@ final class WidgetFlexPropertiesMix extends Mix<WidgetFlexProperties>
   }
 
   /// Row factory (horizontal shorthand)
-  factory WidgetFlexPropertiesMix.row({
-    MainAxisAlignment? mainAxisAlignment = MainAxisAlignment.start,
-    CrossAxisAlignment? crossAxisAlignment = CrossAxisAlignment.center,
-    MainAxisSize? mainAxisSize = MainAxisSize.max,
+  factory FlexPropertiesMix.row({
+    MainAxisAlignment mainAxisAlignment = MainAxisAlignment.start,
+    CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment.center,
+    MainAxisSize mainAxisSize = MainAxisSize.max,
     double? gap,
   }) {
-    return WidgetFlexPropertiesMix.horizontal(
+    return FlexPropertiesMix.horizontal(
       mainAxisAlignment: mainAxisAlignment,
       crossAxisAlignment: crossAxisAlignment,
       mainAxisSize: mainAxisSize,
@@ -171,13 +171,13 @@ final class WidgetFlexPropertiesMix extends Mix<WidgetFlexProperties>
   }
 
   /// Column factory (vertical shorthand)
-  factory WidgetFlexPropertiesMix.column({
-    MainAxisAlignment? mainAxisAlignment = MainAxisAlignment.start,
-    CrossAxisAlignment? crossAxisAlignment = CrossAxisAlignment.center,
-    MainAxisSize? mainAxisSize = MainAxisSize.max,
+  factory FlexPropertiesMix.column({
+    MainAxisAlignment mainAxisAlignment = MainAxisAlignment.start,
+    CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment.center,
+    MainAxisSize mainAxisSize = MainAxisSize.max,
     double? gap,
   }) {
-    return WidgetFlexPropertiesMix.vertical(
+    return FlexPropertiesMix.vertical(
       mainAxisAlignment: mainAxisAlignment,
       crossAxisAlignment: crossAxisAlignment,
       mainAxisSize: mainAxisSize,
@@ -185,54 +185,54 @@ final class WidgetFlexPropertiesMix extends Mix<WidgetFlexProperties>
     );
   }
 
-  /// Constructor that accepts a nullable [WidgetFlexProperties] value.
+  /// Constructor that accepts a nullable [FlexProperties] value.
   ///
-  /// Returns null if the input is null, otherwise uses [WidgetFlexPropertiesMix.value].
-  static WidgetFlexPropertiesMix? maybeValue(WidgetFlexProperties? spec) {
-    return spec != null ? WidgetFlexPropertiesMix.value(spec) : null;
+  /// Returns null if the input is null, otherwise uses [FlexPropertiesMix.value].
+  static FlexPropertiesMix? maybeValue(FlexProperties? spec) {
+    return spec != null ? FlexPropertiesMix.value(spec) : null;
   }
 
   // Chainable instance methods
 
   /// Returns a copy with the specified color.
-  WidgetFlexPropertiesMix color(Color value) {
-    return merge(WidgetFlexPropertiesMix.color(value));
+  FlexPropertiesMix color(Color value) {
+    return merge(FlexPropertiesMix.color(value));
   }
 
   /// Returns a copy with the specified decoration.
-  WidgetFlexPropertiesMix decoration(DecorationMix value) {
-    return merge(WidgetFlexPropertiesMix.decoration(value));
+  FlexPropertiesMix decoration(DecorationMix value) {
+    return merge(FlexPropertiesMix.decoration(value));
   }
 
   /// Returns a copy with the specified alignment.
-  WidgetFlexPropertiesMix alignment(AlignmentGeometry value) {
-    return merge(WidgetFlexPropertiesMix.alignment(value));
+  FlexPropertiesMix alignment(AlignmentGeometry value) {
+    return merge(FlexPropertiesMix.alignment(value));
   }
 
   /// Returns a copy with the specified padding.
-  WidgetFlexPropertiesMix padding(EdgeInsetsGeometryMix value) {
-    return merge(WidgetFlexPropertiesMix.padding(value));
+  FlexPropertiesMix padding(EdgeInsetsGeometryMix value) {
+    return merge(FlexPropertiesMix.padding(value));
   }
 
   /// Returns a copy with the specified direction.
-  WidgetFlexPropertiesMix direction(Axis value) {
-    return merge(WidgetFlexPropertiesMix.direction(value));
+  FlexPropertiesMix direction(Axis value) {
+    return merge(FlexPropertiesMix.direction(value));
   }
 
   /// Returns a copy with the specified gap.
-  WidgetFlexPropertiesMix gap(double value) {
-    return merge(WidgetFlexPropertiesMix.gap(value));
+  FlexPropertiesMix gap(double value) {
+    return merge(FlexPropertiesMix.gap(value));
   }
 
   /// Returns a copy with the specified main axis alignment.
-  WidgetFlexPropertiesMix mainAxisAlignment(MainAxisAlignment value) {
-    return merge(WidgetFlexPropertiesMix(mainAxisAlignment: value));
+  FlexPropertiesMix mainAxisAlignment(MainAxisAlignment value) {
+    return merge(FlexPropertiesMix(mainAxisAlignment: value));
   }
 
-  /// Resolves to [WidgetFlexProperties] using the provided [BuildContext].
+  /// Resolves to [FlexProperties] using the provided [BuildContext].
   @override
-  WidgetFlexProperties resolve(BuildContext context) {
-    return WidgetFlexProperties(
+  FlexProperties resolve(BuildContext context) {
+    return FlexProperties(
       decoration: MixOps.resolve(context, $decoration),
       padding: MixOps.resolve(context, $padding),
       alignment: MixOps.resolve(context, $alignment),
@@ -247,20 +247,23 @@ final class WidgetFlexPropertiesMix extends Mix<WidgetFlexProperties>
     );
   }
 
-  /// Merges the properties of this [WidgetFlexPropertiesMix] with the properties of [other].
+  /// Merges the properties of this [FlexPropertiesMix] with the properties of [other].
   @override
-  WidgetFlexPropertiesMix merge(WidgetFlexPropertiesMix? other) {
+  FlexPropertiesMix merge(FlexPropertiesMix? other) {
     if (other == null) return this;
 
-    return WidgetFlexPropertiesMix.create(
+    return FlexPropertiesMix.create(
       decoration: MixOps.merge($decoration, other.$decoration),
       padding: MixOps.merge($padding, other.$padding),
       alignment: MixOps.merge($alignment, other.$alignment),
       direction: MixOps.merge($direction, other.$direction),
-      mainAxisAlignment: MixOps.merge($mainAxisAlignment, other.$mainAxisAlignment),
-      crossAxisAlignment: MixOps.merge($crossAxisAlignment, other.$crossAxisAlignment),
+      mainAxisAlignment:
+          MixOps.merge($mainAxisAlignment, other.$mainAxisAlignment),
+      crossAxisAlignment:
+          MixOps.merge($crossAxisAlignment, other.$crossAxisAlignment),
       mainAxisSize: MixOps.merge($mainAxisSize, other.$mainAxisSize),
-      verticalDirection: MixOps.merge($verticalDirection, other.$verticalDirection),
+      verticalDirection:
+          MixOps.merge($verticalDirection, other.$verticalDirection),
       textDirection: MixOps.merge($textDirection, other.$textDirection),
       textBaseline: MixOps.merge($textBaseline, other.$textBaseline),
       gap: MixOps.merge($gap, other.$gap),

@@ -11,10 +11,14 @@ class LabelSpec extends WidgetSpec<LabelSpec> {
     TextSpec? label,
     IconSpec? leading,
     IconSpec? trailing,
+    AnimationConfig? animation,
+    List<Modifier>? widgetModifiers,
+    bool? inherit,
   })  : spacing = spacing ?? 8,
         label = label ?? const TextSpec(),
         leading = leading ?? const IconSpec(),
-        trailing = trailing ?? const IconSpec();
+        trailing = trailing ?? const IconSpec(),
+        super(animation: animation, widgetModifiers: widgetModifiers, inherit: inherit);
 
   @override
   LabelSpec copyWith({
@@ -22,12 +26,18 @@ class LabelSpec extends WidgetSpec<LabelSpec> {
     TextSpec? label,
     IconSpec? leading,
     IconSpec? trailing,
+    AnimationConfig? animation,
+    List<Modifier>? widgetModifiers,
+    bool? inherit,
   }) {
     return LabelSpec(
       spacing: spacing ?? this.spacing,
       label: label ?? this.label,
       leading: leading ?? this.leading,
       trailing: trailing ?? this.trailing,
+      animation: animation ?? this.animation,
+      widgetModifiers: widgetModifiers ?? this.widgetModifiers,
+      inherit: inherit ?? this.inherit,
     );
   }
 
@@ -40,6 +50,9 @@ class LabelSpec extends WidgetSpec<LabelSpec> {
       label: MixOps.lerp(label, other.label, t),
       leading: MixOps.lerp(leading, other.leading, t),
       trailing: MixOps.lerp(trailing, other.trailing, t),
+      animation: MixOps.lerp(animation, other.animation, t),
+      widgetModifiers: MixOps.lerp(widgetModifiers, other.widgetModifiers, t),
+      inherit: MixOps.lerp(inherit, other.inherit, t),
     );
   }
 
@@ -54,5 +67,5 @@ class LabelSpec extends WidgetSpec<LabelSpec> {
   }
 
   @override
-  List<Object?> get props => [spacing, label, leading, trailing];
+  List<Object?> get props => [...super.props, spacing, label, leading, trailing];
 }

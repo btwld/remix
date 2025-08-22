@@ -4,15 +4,15 @@ class RemixChipStyle extends Style<ChipSpec>
     with
         StyleModifierMixin<RemixChipStyle, ChipSpec>,
         StyleVariantMixin<RemixChipStyle, ChipSpec> {
-  final Prop<WidgetContainerProperties>? $container;
-  final Prop<WidgetFlexProperties>? $flex;
+  final Prop<ContainerProperties>? $container;
+  final Prop<FlexProperties>? $flex;
   final Prop<TextSpec>? $label;
   final Prop<IconSpec>? $leading;
   final Prop<IconSpec>? $trailing;
 
   const RemixChipStyle.create({
-    Prop<WidgetContainerProperties>? container,
-    Prop<WidgetFlexProperties>? flex,
+    Prop<ContainerProperties>? container,
+    Prop<FlexProperties>? flex,
     Prop<TextSpec>? label,
     Prop<IconSpec>? leading,
     Prop<IconSpec>? trailing,
@@ -27,8 +27,8 @@ class RemixChipStyle extends Style<ChipSpec>
         $trailing = trailing;
 
   RemixChipStyle({
-    WidgetContainerPropertiesMix? container,
-    WidgetFlexPropertiesMix? flex,
+    ContainerPropertiesMix? container,
+    FlexPropertiesMix? flex,
     TextMix? label,
     IconMix? leading,
     IconMix? trailing,
@@ -49,8 +49,8 @@ class RemixChipStyle extends Style<ChipSpec>
         );
 
   factory RemixChipStyle.value(ChipSpec spec) => RemixChipStyle(
-        container: WidgetContainerPropertiesMix.maybeValue(spec.container),
-        flex: WidgetFlexPropertiesMix.maybeValue(spec.flex),
+        container: ContainerPropertiesMix.maybeValue(spec.container),
+        flex: FlexPropertiesMix.maybeValue(spec.flex),
         label: TextMix.maybeValue(spec.label),
         leading: IconMix.maybeValue(spec.leading),
         trailing: IconMix.maybeValue(spec.trailing),
@@ -114,14 +114,14 @@ class RemixChipStyle extends Style<ChipSpec>
 }
 
 final DefaultRemixChipStyle = RemixChipStyle(
-  container: WidgetContainerPropertiesMix(
-    padding: EdgeInsetsMix.symmetric(vertical: 6, horizontal: 12),
+  container: ContainerPropertiesMix(
     decoration: BoxDecorationMix(
       borderRadius: BorderRadiusMix.circular(16),
       color: Colors.grey[200],
     ),
+    padding: EdgeInsetsMix.symmetric(vertical: 6, horizontal: 12),
   ),
-  flex: WidgetFlexPropertiesMix(
+  flex: FlexPropertiesMix(
     direction: Axis.horizontal,
     crossAxisAlignment: CrossAxisAlignment.center,
     mainAxisSize: MainAxisSize.min,
@@ -137,8 +137,7 @@ final DefaultRemixChipStyle = RemixChipStyle(
 extension ChipVariants on RemixChipStyle {
   /// Primary chip variant with blue colors
   static RemixChipStyle get primary => RemixChipStyle(
-        container: WidgetContainerPropertiesMix(
-          padding: EdgeInsetsMix.symmetric(vertical: 6, horizontal: 12),
+        container: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(
               BorderSideMix(color: Colors.blue[300]!, width: 1),
@@ -146,8 +145,9 @@ extension ChipVariants on RemixChipStyle {
             borderRadius: BorderRadiusMix.circular(16),
             color: Colors.blue[100],
           ),
+          padding: EdgeInsetsMix.symmetric(vertical: 6, horizontal: 12),
         ),
-        flex: WidgetFlexPropertiesMix(
+        flex: FlexPropertiesMix(
           direction: Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
@@ -166,8 +166,7 @@ extension ChipVariants on RemixChipStyle {
 
   /// Secondary chip variant with grey colors
   static RemixChipStyle get secondary => RemixChipStyle(
-        container: WidgetContainerPropertiesMix(
-          padding: EdgeInsetsMix.symmetric(vertical: 6, horizontal: 12),
+        container: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(
               BorderSideMix(color: Colors.grey[400]!, width: 1),
@@ -175,8 +174,9 @@ extension ChipVariants on RemixChipStyle {
             borderRadius: BorderRadiusMix.circular(16),
             color: Colors.grey[100],
           ),
+          padding: EdgeInsetsMix.symmetric(vertical: 6, horizontal: 12),
         ),
-        flex: WidgetFlexPropertiesMix(
+        flex: FlexPropertiesMix(
           direction: Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
@@ -195,8 +195,7 @@ extension ChipVariants on RemixChipStyle {
 
   /// Success chip variant with green colors
   static RemixChipStyle get success => RemixChipStyle(
-        container: WidgetContainerPropertiesMix(
-          padding: EdgeInsetsMix.symmetric(vertical: 6, horizontal: 12),
+        container: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(
               BorderSideMix(color: Colors.green[300]!, width: 1),
@@ -204,8 +203,9 @@ extension ChipVariants on RemixChipStyle {
             borderRadius: BorderRadiusMix.circular(16),
             color: Colors.green[100],
           ),
+          padding: EdgeInsetsMix.symmetric(vertical: 6, horizontal: 12),
         ),
-        flex: WidgetFlexPropertiesMix(
+        flex: FlexPropertiesMix(
           direction: Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
@@ -224,8 +224,7 @@ extension ChipVariants on RemixChipStyle {
 
   /// Warning chip variant with orange colors
   static RemixChipStyle get warning => RemixChipStyle(
-        container: WidgetContainerPropertiesMix(
-          padding: EdgeInsetsMix.symmetric(vertical: 6, horizontal: 12),
+        container: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(
               BorderSideMix(color: Colors.orange[300]!, width: 1),
@@ -233,8 +232,9 @@ extension ChipVariants on RemixChipStyle {
             borderRadius: BorderRadiusMix.circular(16),
             color: Colors.orange[100],
           ),
+          padding: EdgeInsetsMix.symmetric(vertical: 6, horizontal: 12),
         ),
-        flex: WidgetFlexPropertiesMix(
+        flex: FlexPropertiesMix(
           direction: Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,

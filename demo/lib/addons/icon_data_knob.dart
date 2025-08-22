@@ -18,7 +18,7 @@ class IconDataKnob extends Knob<IconData?> {
 
   @override
   List<Field> get fields => [
-        ListField<IconDataEnum>(
+        ObjectDropdownField<IconDataEnum>(
           name: label,
           initialValue: IconDataEnum.none,
           labelBuilder: (value) => value.name,

@@ -22,9 +22,17 @@ class RemixSwitch extends StatefulWidget
     required this.selected,
     required this.onChanged,
     this.style = const RemixSwitchStyle.create(),
-    this.enableHapticFeedback = true,
+    this.enableFeedback = true,
     this.focusNode,
     this.autofocus = false,
+    this.onFocusChange,
+    this.onHoverChange,
+    this.onHighlightChanged,
+    this.onStateChange,
+    this.semanticLabel,
+    this.semanticHint,
+    this.excludeSemantics = false,
+    this.mouseCursor = SystemMouseCursors.click,
   });
 
   /// Whether this switch is enabled.
@@ -40,13 +48,37 @@ class RemixSwitch extends StatefulWidget
   final RemixSwitchStyle style;
 
   /// Whether to enable haptic feedback when toggled.
-  final bool enableHapticFeedback;
+  final bool enableFeedback;
 
   /// The focus node for the switch.
   final FocusNode? focusNode;
 
   /// Whether the switch should automatically request focus when it is created.
   final bool autofocus;
+
+  /// Called when focus state changes.
+  final ValueChanged<bool>? onFocusChange;
+
+  /// Called when hover state changes.
+  final ValueChanged<bool>? onHoverChange;
+
+  /// Called when highlight (pressed) state changes.
+  final ValueChanged<bool>? onHighlightChanged;
+
+  /// Called when any widget state changes.
+  final ValueChanged<Set<WidgetState>>? onStateChange;
+
+  /// The semantic label for the switch.
+  final String? semanticLabel;
+
+  /// The semantic hint for the switch.
+  final String? semanticHint;
+
+  /// Whether to exclude child semantics.
+  final bool excludeSemantics;
+
+  /// Cursor when hovering over the switch.
+  final MouseCursor mouseCursor;
 
   @override
   State<RemixSwitch> createState() => _RemixSwitchState();
@@ -60,9 +92,17 @@ class _RemixSwitchState extends State<RemixSwitch>
       value: widget.selected,
       onChanged: (value) => widget.onChanged(value ?? false),
       enabled: widget.enabled,
-      enableHapticFeedback: widget.enableHapticFeedback,
+      semanticLabel: widget.semanticLabel,
+      semanticHint: widget.semanticHint,
+      excludeSemantics: widget.excludeSemantics,
+      mouseCursor: widget.mouseCursor,
+      enableFeedback: widget.enableFeedback,
       focusNode: widget.focusNode,
       autofocus: widget.autofocus,
+      onFocusChange: widget.onFocusChange,
+      onHoverChange: widget.onHoverChange,
+      onPressChanged: widget.onHighlightChanged,
+      onStatesChange: widget.onStateChange,
       statesController: controller,
       child: StyleBuilder(
         style: DefaultRemixSwitchStyle.merge(widget.style),

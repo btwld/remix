@@ -2,15 +2,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 
-import 'widget_container_properties.dart';
+import 'container_properties.dart';
 
-/// Mix class for configuring [WidgetContainerProperties] properties.
+/// Mix class for configuring [ContainerProperties] properties.
 ///
 /// Encapsulates alignment, padding, margin, constraints, decoration,
 /// and other styling properties for container layouts with support for
 /// proper Mix framework integration. Note: BoxMix mixins require Style<T>
 /// so they cannot be used here since this extends Mix<T>.
-final class WidgetContainerPropertiesMix extends Mix<WidgetContainerProperties>
+final class ContainerPropertiesMix extends Mix<ContainerProperties>
     with Diagnosticable {
   final Prop<Decoration>? $decoration;
   final Prop<Decoration>? $foregroundDecoration;
@@ -23,7 +23,7 @@ final class WidgetContainerPropertiesMix extends Mix<WidgetContainerProperties>
   final Prop<Clip>? $clipBehavior;
 
   /// Main constructor with user-friendly Mix types
-  WidgetContainerPropertiesMix({
+  ContainerPropertiesMix({
     DecorationMix? decoration,
     DecorationMix? foregroundDecoration,
     EdgeInsetsGeometryMix? padding,
@@ -46,7 +46,7 @@ final class WidgetContainerPropertiesMix extends Mix<WidgetContainerProperties>
         );
 
   /// Create constructor with Prop<T> types for internal use
-  const WidgetContainerPropertiesMix.create({
+  const ContainerPropertiesMix.create({
     Prop<Decoration>? decoration,
     Prop<Decoration>? foregroundDecoration,
     Prop<EdgeInsetsGeometry>? padding,
@@ -66,8 +66,8 @@ final class WidgetContainerPropertiesMix extends Mix<WidgetContainerProperties>
         $transformAlignment = transformAlignment,
         $clipBehavior = clipBehavior;
 
-  /// Constructor that accepts a [WidgetContainerProperties] value and extracts its properties.
-  WidgetContainerPropertiesMix.value(WidgetContainerProperties spec)
+  /// Constructor that accepts a [ContainerProperties] value and extracts its properties.
+  ContainerPropertiesMix.value(ContainerProperties spec)
       : this(
           decoration: DecorationMix.maybeValue(spec.decoration),
           foregroundDecoration:
@@ -84,119 +84,119 @@ final class WidgetContainerPropertiesMix extends Mix<WidgetContainerProperties>
   // Factory constructors for common use cases
 
   /// Color factory
-  factory WidgetContainerPropertiesMix.color(Color value) {
-    return WidgetContainerPropertiesMix(decoration: DecorationMix.color(value));
+  factory ContainerPropertiesMix.color(Color value) {
+    return ContainerPropertiesMix(decoration: DecorationMix.color(value));
   }
 
   /// Decoration factory
-  factory WidgetContainerPropertiesMix.decoration(DecorationMix value) {
-    return WidgetContainerPropertiesMix(decoration: value);
+  factory ContainerPropertiesMix.decoration(DecorationMix value) {
+    return ContainerPropertiesMix(decoration: value);
   }
 
   /// Foreground decoration factory
-  factory WidgetContainerPropertiesMix.foregroundDecoration(DecorationMix value) {
-    return WidgetContainerPropertiesMix(foregroundDecoration: value);
+  factory ContainerPropertiesMix.foregroundDecoration(DecorationMix value) {
+    return ContainerPropertiesMix(foregroundDecoration: value);
   }
 
   /// Alignment factory
-  factory WidgetContainerPropertiesMix.alignment(AlignmentGeometry value) {
-    return WidgetContainerPropertiesMix(alignment: value);
+  factory ContainerPropertiesMix.alignment(AlignmentGeometry value) {
+    return ContainerPropertiesMix(alignment: value);
   }
 
   /// Padding factory
-  factory WidgetContainerPropertiesMix.padding(EdgeInsetsGeometryMix value) {
-    return WidgetContainerPropertiesMix(padding: value);
+  factory ContainerPropertiesMix.padding(EdgeInsetsGeometryMix value) {
+    return ContainerPropertiesMix(padding: value);
   }
 
   /// Margin factory
-  factory WidgetContainerPropertiesMix.margin(EdgeInsetsGeometryMix value) {
-    return WidgetContainerPropertiesMix(margin: value);
+  factory ContainerPropertiesMix.margin(EdgeInsetsGeometryMix value) {
+    return ContainerPropertiesMix(margin: value);
   }
 
   /// Transform factory
-  factory WidgetContainerPropertiesMix.transform(Matrix4 value) {
-    return WidgetContainerPropertiesMix(transform: value);
+  factory ContainerPropertiesMix.transform(Matrix4 value) {
+    return ContainerPropertiesMix(transform: value);
   }
 
   /// Transform alignment factory
-  factory WidgetContainerPropertiesMix.transformAlignment(AlignmentGeometry value) {
-    return WidgetContainerPropertiesMix(transformAlignment: value);
+  factory ContainerPropertiesMix.transformAlignment(AlignmentGeometry value) {
+    return ContainerPropertiesMix(transformAlignment: value);
   }
 
   /// Clip behavior factory
-  factory WidgetContainerPropertiesMix.clipBehavior(Clip value) {
-    return WidgetContainerPropertiesMix(clipBehavior: value);
+  factory ContainerPropertiesMix.clipBehavior(Clip value) {
+    return ContainerPropertiesMix(clipBehavior: value);
   }
 
   /// Constraints factory
-  factory WidgetContainerPropertiesMix.constraints(BoxConstraintsMix value) {
-    return WidgetContainerPropertiesMix(constraints: value);
+  factory ContainerPropertiesMix.constraints(BoxConstraintsMix value) {
+    return ContainerPropertiesMix(constraints: value);
   }
 
 
-  /// Constructor that accepts a nullable [WidgetContainerProperties] value.
+  /// Constructor that accepts a nullable [ContainerProperties] value.
   ///
-  /// Returns null if the input is null, otherwise uses [WidgetContainerPropertiesMix.value].
-  static WidgetContainerPropertiesMix? maybeValue(WidgetContainerProperties? spec) {
-    return spec != null ? WidgetContainerPropertiesMix.value(spec) : null;
+  /// Returns null if the input is null, otherwise uses [ContainerPropertiesMix.value].
+  static ContainerPropertiesMix? maybeValue(ContainerProperties? spec) {
+    return spec != null ? ContainerPropertiesMix.value(spec) : null;
   }
 
   // Chainable instance methods
 
   /// Returns a copy with the specified color.
-  WidgetContainerPropertiesMix color(Color value) {
-    return merge(WidgetContainerPropertiesMix.color(value));
+  ContainerPropertiesMix color(Color value) {
+    return merge(ContainerPropertiesMix.color(value));
   }
 
   /// Returns a copy with the specified decoration.
-  WidgetContainerPropertiesMix decoration(DecorationMix value) {
-    return merge(WidgetContainerPropertiesMix.decoration(value));
+  ContainerPropertiesMix decoration(DecorationMix value) {
+    return merge(ContainerPropertiesMix.decoration(value));
   }
 
   /// Returns a copy with the specified foreground decoration.
-  WidgetContainerPropertiesMix foregroundDecoration(DecorationMix value) {
-    return merge(WidgetContainerPropertiesMix.foregroundDecoration(value));
+  ContainerPropertiesMix foregroundDecoration(DecorationMix value) {
+    return merge(ContainerPropertiesMix.foregroundDecoration(value));
   }
 
   /// Returns a copy with the specified alignment.
-  WidgetContainerPropertiesMix alignment(AlignmentGeometry value) {
-    return merge(WidgetContainerPropertiesMix.alignment(value));
+  ContainerPropertiesMix alignment(AlignmentGeometry value) {
+    return merge(ContainerPropertiesMix.alignment(value));
   }
 
   /// Returns a copy with the specified padding.
-  WidgetContainerPropertiesMix padding(EdgeInsetsGeometryMix value) {
-    return merge(WidgetContainerPropertiesMix.padding(value));
+  ContainerPropertiesMix padding(EdgeInsetsGeometryMix value) {
+    return merge(ContainerPropertiesMix.padding(value));
   }
 
   /// Returns a copy with the specified margin.
-  WidgetContainerPropertiesMix margin(EdgeInsetsGeometryMix value) {
-    return merge(WidgetContainerPropertiesMix.margin(value));
+  ContainerPropertiesMix margin(EdgeInsetsGeometryMix value) {
+    return merge(ContainerPropertiesMix.margin(value));
   }
 
   /// Returns a copy with the specified transform.
-  WidgetContainerPropertiesMix transform(Matrix4 value) {
-    return merge(WidgetContainerPropertiesMix.transform(value));
+  ContainerPropertiesMix transform(Matrix4 value) {
+    return merge(ContainerPropertiesMix.transform(value));
   }
 
   /// Returns a copy with the specified transform alignment.
-  WidgetContainerPropertiesMix transformAlignment(AlignmentGeometry value) {
-    return merge(WidgetContainerPropertiesMix.transformAlignment(value));
+  ContainerPropertiesMix transformAlignment(AlignmentGeometry value) {
+    return merge(ContainerPropertiesMix.transformAlignment(value));
   }
 
   /// Returns a copy with the specified clip behavior.
-  WidgetContainerPropertiesMix clipBehavior(Clip value) {
-    return merge(WidgetContainerPropertiesMix.clipBehavior(value));
+  ContainerPropertiesMix clipBehavior(Clip value) {
+    return merge(ContainerPropertiesMix.clipBehavior(value));
   }
 
   /// Returns a copy with the specified constraints.
-  WidgetContainerPropertiesMix constraints(BoxConstraintsMix value) {
-    return merge(WidgetContainerPropertiesMix.constraints(value));
+  ContainerPropertiesMix constraints(BoxConstraintsMix value) {
+    return merge(ContainerPropertiesMix.constraints(value));
   }
 
-  /// Resolves to [WidgetContainerProperties] using the provided [BuildContext].
+  /// Resolves to [ContainerProperties] using the provided [BuildContext].
   @override
-  WidgetContainerProperties resolve(BuildContext context) {
-    return WidgetContainerProperties(
+  ContainerProperties resolve(BuildContext context) {
+    return ContainerProperties(
       decoration: MixOps.resolve(context, $decoration),
       foregroundDecoration: MixOps.resolve(context, $foregroundDecoration),
       padding: MixOps.resolve(context, $padding),
@@ -209,12 +209,12 @@ final class WidgetContainerPropertiesMix extends Mix<WidgetContainerProperties>
     );
   }
 
-  /// Merges the properties of this [WidgetContainerPropertiesMix] with the properties of [other].
+  /// Merges the properties of this [ContainerPropertiesMix] with the properties of [other].
   @override
-  WidgetContainerPropertiesMix merge(WidgetContainerPropertiesMix? other) {
+  ContainerPropertiesMix merge(ContainerPropertiesMix? other) {
     if (other == null) return this;
 
-    return WidgetContainerPropertiesMix.create(
+    return ContainerPropertiesMix.create(
       decoration: MixOps.merge($decoration, other.$decoration),
       foregroundDecoration:
           MixOps.merge($foregroundDecoration, other.$foregroundDecoration),

@@ -359,6 +359,7 @@ class _RemixTextFieldState extends State<RemixTextField>
                           child: Builder(
                             builder: (context) {
                               final HintText = spec.hintText;
+
                               return HintText(widget.hintText!);
                             },
                           ),

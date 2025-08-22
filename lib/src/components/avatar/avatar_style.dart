@@ -1,12 +1,15 @@
 part of 'avatar.dart';
 
-class RemixAvatarStyle extends Style<AvatarSpec> with StyleModifierMixin<RemixAvatarStyle, AvatarSpec>, StyleVariantMixin<RemixAvatarStyle, AvatarSpec> {
-  final Prop<WidgetContainerProperties>? $container;
+class RemixAvatarStyle extends Style<AvatarSpec>
+    with
+        StyleModifierMixin<RemixAvatarStyle, AvatarSpec>,
+        StyleVariantMixin<RemixAvatarStyle, AvatarSpec> {
+  final Prop<ContainerProperties>? $container;
   final Prop<TextSpec>? $text;
   final Prop<IconSpec>? $icon;
 
   const RemixAvatarStyle.create({
-    Prop<WidgetContainerProperties>? container,
+    Prop<ContainerProperties>? container,
     Prop<TextSpec>? text,
     Prop<IconSpec>? icon,
     super.variants,
@@ -18,7 +21,7 @@ class RemixAvatarStyle extends Style<AvatarSpec> with StyleModifierMixin<RemixAv
         $icon = icon;
 
   RemixAvatarStyle({
-    WidgetContainerPropertiesMix? container,
+    ContainerPropertiesMix? container,
     TextMix? text,
     IconMix? icon,
     AnimationConfig? animation,
@@ -36,7 +39,7 @@ class RemixAvatarStyle extends Style<AvatarSpec> with StyleModifierMixin<RemixAv
         );
 
   factory RemixAvatarStyle.value(AvatarSpec spec) => RemixAvatarStyle(
-        container: WidgetContainerPropertiesMix.maybeValue(spec.container),
+        container: ContainerPropertiesMix.maybeValue(spec.container),
         text: TextMix.maybeValue(spec.text),
         icon: IconMix.maybeValue(spec.icon),
       );
@@ -44,7 +47,7 @@ class RemixAvatarStyle extends Style<AvatarSpec> with StyleModifierMixin<RemixAv
   /// Factory for avatar size
   factory RemixAvatarStyle.size(double value) {
     return RemixAvatarStyle(
-      container: WidgetContainerPropertiesMix(
+      container: ContainerPropertiesMix(
         constraints: BoxConstraintsMix(
           minWidth: value,
           maxWidth: value,
@@ -57,13 +60,17 @@ class RemixAvatarStyle extends Style<AvatarSpec> with StyleModifierMixin<RemixAv
 
   /// Factory for background color
   factory RemixAvatarStyle.color(Color value) {
-    return RemixAvatarStyle(container: WidgetContainerPropertiesMix(decoration: BoxDecorationMix(color: value)));
+    return RemixAvatarStyle(
+      container: ContainerPropertiesMix(
+        decoration: BoxDecorationMix(color: value),
+      ),
+    );
   }
 
   /// Factory for border radius (for non-circular avatars)
   factory RemixAvatarStyle.borderRadius(double radius) {
     return RemixAvatarStyle(
-      container: WidgetContainerPropertiesMix(
+      container: ContainerPropertiesMix(
         decoration: BoxDecorationMix(
           borderRadius: BorderRadiusMix.circular(radius),
           shape: BoxShape.rectangle,
@@ -167,17 +174,17 @@ class RemixAvatarStyle extends Style<AvatarSpec> with StyleModifierMixin<RemixAv
 }
 
 final DefaultRemixAvatarStyle = RemixAvatarStyle(
-  container: WidgetContainerPropertiesMix(
+  container: ContainerPropertiesMix(
+    decoration: BoxDecorationMix(
+      shape: BoxShape.circle,
+      color: Colors.grey[300],
+    ),
     alignment: Alignment.center,
     constraints: BoxConstraintsMix(
       minWidth: 50,
       maxWidth: 50,
       minHeight: 50,
       maxHeight: 50,
-    ),
-    decoration: BoxDecorationMix(
-      shape: BoxShape.circle,
-      color: Colors.grey[300],
     ),
     clipBehavior: Clip.antiAlias,
   ),
@@ -194,17 +201,17 @@ final DefaultRemixAvatarStyle = RemixAvatarStyle(
 extension AvatarVariants on RemixAvatarStyle {
   /// Primary avatar variant with blue background and white text
   static RemixAvatarStyle get primary => RemixAvatarStyle(
-        container: WidgetContainerPropertiesMix(
+        container: ContainerPropertiesMix(
+          decoration: BoxDecorationMix(
+            shape: BoxShape.circle,
+            color: Colors.blue[500],
+          ),
           alignment: Alignment.center,
           constraints: BoxConstraintsMix(
             minWidth: 50,
             maxWidth: 50,
             minHeight: 50,
             maxHeight: 50,
-          ),
-          decoration: BoxDecorationMix(
-            shape: BoxShape.circle,
-            color: Colors.blue[500],
           ),
           clipBehavior: Clip.antiAlias,
         ),
@@ -220,17 +227,17 @@ extension AvatarVariants on RemixAvatarStyle {
 
   /// Secondary avatar variant with grey background
   static RemixAvatarStyle get secondary => RemixAvatarStyle(
-        container: WidgetContainerPropertiesMix(
+        container: ContainerPropertiesMix(
+          decoration: BoxDecorationMix(
+            shape: BoxShape.circle,
+            color: Colors.grey[500],
+          ),
           alignment: Alignment.center,
           constraints: BoxConstraintsMix(
             minWidth: 50,
             maxWidth: 50,
             minHeight: 50,
             maxHeight: 50,
-          ),
-          decoration: BoxDecorationMix(
-            shape: BoxShape.circle,
-            color: Colors.grey[500],
           ),
           clipBehavior: Clip.antiAlias,
         ),
@@ -246,17 +253,17 @@ extension AvatarVariants on RemixAvatarStyle {
 
   /// Small avatar variant (32x32)
   static RemixAvatarStyle get small => RemixAvatarStyle(
-        container: WidgetContainerPropertiesMix(
+        container: ContainerPropertiesMix(
+          decoration: BoxDecorationMix(
+            shape: BoxShape.circle,
+            color: Colors.grey[300],
+          ),
           alignment: Alignment.center,
           constraints: BoxConstraintsMix(
             minWidth: 32,
             maxWidth: 32,
             minHeight: 32,
             maxHeight: 32,
-          ),
-          decoration: BoxDecorationMix(
-            shape: BoxShape.circle,
-            color: Colors.grey[300],
           ),
           clipBehavior: Clip.antiAlias,
         ),
@@ -272,17 +279,17 @@ extension AvatarVariants on RemixAvatarStyle {
 
   /// Large avatar variant (64x64)
   static RemixAvatarStyle get large => RemixAvatarStyle(
-        container: WidgetContainerPropertiesMix(
+        container: ContainerPropertiesMix(
+          decoration: BoxDecorationMix(
+            shape: BoxShape.circle,
+            color: Colors.grey[300],
+          ),
           alignment: Alignment.center,
           constraints: BoxConstraintsMix(
             minWidth: 64,
             maxWidth: 64,
             minHeight: 64,
             maxHeight: 64,
-          ),
-          decoration: BoxDecorationMix(
-            shape: BoxShape.circle,
-            color: Colors.grey[300],
           ),
           clipBehavior: Clip.antiAlias,
         ),
