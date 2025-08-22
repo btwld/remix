@@ -4,29 +4,33 @@ class RemixRadioStyle extends Style<RadioSpec>
     with
         StyleModifierMixin<RemixRadioStyle, RadioSpec>,
         StyleVariantMixin<RemixRadioStyle, RadioSpec> {
-  final Prop<FlexBoxSpec>? $container;
-  final Prop<BoxSpec>? $indicatorContainer;
-  final Prop<BoxSpec>? $indicator;
+  final Prop<WidgetContainerProperties>? $container;
+  final Prop<WidgetFlexProperties>? $flex;
+  final Prop<WidgetContainerProperties>? $indicatorContainer;
+  final Prop<WidgetContainerProperties>? $indicator;
   final Prop<TextSpec>? $label;
 
   const RemixRadioStyle.create({
-    Prop<FlexBoxSpec>? container,
-    Prop<BoxSpec>? indicatorContainer,
-    Prop<BoxSpec>? indicator,
+    Prop<WidgetContainerProperties>? container,
+    Prop<WidgetFlexProperties>? flex,
+    Prop<WidgetContainerProperties>? indicatorContainer,
+    Prop<WidgetContainerProperties>? indicator,
     Prop<TextSpec>? label,
     super.variants,
     super.animation,
     super.modifier,
     super.inherit,
   })  : $container = container,
+        $flex = flex,
         $indicatorContainer = indicatorContainer,
         $indicator = indicator,
         $label = label;
 
   RemixRadioStyle({
-    FlexBoxMix? container,
-    BoxMix? indicatorContainer,
-    BoxMix? indicator,
+    WidgetContainerPropertiesMix? container,
+    WidgetFlexPropertiesMix? flex,
+    WidgetContainerPropertiesMix? indicatorContainer,
+    WidgetContainerPropertiesMix? indicator,
     TextMix? label,
     AnimationConfig? animation,
     List<VariantStyle<RadioSpec>>? variants,
@@ -34,6 +38,7 @@ class RemixRadioStyle extends Style<RadioSpec>
     bool? inherit,
   }) : this.create(
           container: container != null ? Prop.mix(container) : null,
+          flex: flex != null ? Prop.mix(flex) : null,
           indicatorContainer:
               indicatorContainer != null ? Prop.mix(indicatorContainer) : null,
           indicator: indicator != null ? Prop.mix(indicator) : null,
@@ -45,9 +50,10 @@ class RemixRadioStyle extends Style<RadioSpec>
         );
 
   factory RemixRadioStyle.value(RadioSpec spec) => RemixRadioStyle(
-        container: FlexBoxMix.maybeValue(spec.container),
-        indicatorContainer: BoxMix.maybeValue(spec.indicatorContainer),
-        indicator: BoxMix.maybeValue(spec.indicator),
+        container: WidgetContainerPropertiesMix.maybeValue(spec.container),
+        flex: WidgetFlexPropertiesMix.maybeValue(spec.flex),
+        indicatorContainer: WidgetContainerPropertiesMix.maybeValue(spec.indicatorContainer),
+        indicator: WidgetContainerPropertiesMix.maybeValue(spec.indicator),
         label: TextMix.maybeValue(spec.label),
       );
 
@@ -70,6 +76,7 @@ class RemixRadioStyle extends Style<RadioSpec>
   RadioSpec resolve(BuildContext context) {
     return RadioSpec(
       container: MixOps.resolve(context, $container),
+      flex: MixOps.resolve(context, $flex),
       indicatorContainer: MixOps.resolve(context, $indicatorContainer),
       indicator: MixOps.resolve(context, $indicator),
       label: MixOps.resolve(context, $label),
@@ -82,6 +89,7 @@ class RemixRadioStyle extends Style<RadioSpec>
 
     return RemixRadioStyle.create(
       container: MixOps.merge($container, other.$container),
+      flex: MixOps.merge($flex, other.$flex),
       indicatorContainer:
           MixOps.merge($indicatorContainer, other.$indicatorContainer),
       indicator: MixOps.merge($indicator, other.$indicator),
@@ -96,6 +104,7 @@ class RemixRadioStyle extends Style<RadioSpec>
   @override
   List<Object?> get props => [
         $container,
+        $flex,
         $indicatorContainer,
         $indicator,
         $label,
@@ -107,16 +116,16 @@ class RemixRadioStyle extends Style<RadioSpec>
 }
 
 final DefaultRemixRadioStyle = RemixRadioStyle(
-  container: FlexBoxMix(
-    box: BoxMix(alignment: Alignment.centerLeft),
-    flex: FlexMix(
-      direction: Axis.horizontal,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisSize: MainAxisSize.min,
-      gap: 8,
-    ),
+  container: WidgetContainerPropertiesMix(
+    alignment: Alignment.centerLeft,
   ),
-  indicatorContainer: BoxMix(
+  flex: WidgetFlexPropertiesMix(
+    direction: Axis.horizontal,
+    crossAxisAlignment: CrossAxisAlignment.center,
+    mainAxisSize: MainAxisSize.min,
+    gap: 8,
+  ),
+  indicatorContainer: WidgetContainerPropertiesMix(
     alignment: Alignment.center,
     constraints: BoxConstraintsMix(
       minWidth: 20,
@@ -133,7 +142,7 @@ final DefaultRemixRadioStyle = RemixRadioStyle(
       color: Colors.white,
     ),
   ),
-  indicator: BoxMix(
+  indicator: WidgetContainerPropertiesMix(
     constraints: BoxConstraintsMix(
       minWidth: 10,
       maxWidth: 10,
@@ -151,16 +160,16 @@ final DefaultRemixRadioStyle = RemixRadioStyle(
 extension RadioVariants on RemixRadioStyle {
   /// Primary radio variant with blue colors
   static RemixRadioStyle get primary => RemixRadioStyle(
-        container: FlexBoxMix(
-          box: BoxMix(alignment: Alignment.centerLeft),
-          flex: FlexMix(
-            direction: Axis.horizontal,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            gap: 8,
-          ),
+        container: WidgetContainerPropertiesMix(
+          alignment: Alignment.centerLeft,
         ),
-        indicatorContainer: BoxMix(
+        flex: WidgetFlexPropertiesMix(
+          direction: Axis.horizontal,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          gap: 8,
+        ),
+        indicatorContainer: WidgetContainerPropertiesMix(
           alignment: Alignment.center,
           constraints: BoxConstraintsMix(
             minWidth: 20,
@@ -177,7 +186,7 @@ extension RadioVariants on RemixRadioStyle {
             color: Colors.blue[50],
           ),
         ),
-        indicator: BoxMix(
+        indicator: WidgetContainerPropertiesMix(
           constraints: BoxConstraintsMix(
             minWidth: 10,
             maxWidth: 10,
@@ -194,16 +203,16 @@ extension RadioVariants on RemixRadioStyle {
 
   /// Secondary radio variant with grey colors
   static RemixRadioStyle get secondary => RemixRadioStyle(
-        container: FlexBoxMix(
-          box: BoxMix(alignment: Alignment.centerLeft),
-          flex: FlexMix(
-            direction: Axis.horizontal,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            gap: 8,
-          ),
+        container: WidgetContainerPropertiesMix(
+          alignment: Alignment.centerLeft,
         ),
-        indicatorContainer: BoxMix(
+        flex: WidgetFlexPropertiesMix(
+          direction: Axis.horizontal,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          gap: 8,
+        ),
+        indicatorContainer: WidgetContainerPropertiesMix(
           alignment: Alignment.center,
           constraints: BoxConstraintsMix(
             minWidth: 20,
@@ -220,7 +229,7 @@ extension RadioVariants on RemixRadioStyle {
             color: Colors.grey[50],
           ),
         ),
-        indicator: BoxMix(
+        indicator: WidgetContainerPropertiesMix(
           constraints: BoxConstraintsMix(
             minWidth: 10,
             maxWidth: 10,
@@ -237,16 +246,16 @@ extension RadioVariants on RemixRadioStyle {
 
   /// Compact radio variant with smaller size
   static RemixRadioStyle get compact => RemixRadioStyle(
-        container: FlexBoxMix(
-          box: BoxMix(alignment: Alignment.centerLeft),
-          flex: FlexMix(
-            direction: Axis.horizontal,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            gap: 6,
-          ),
+        container: WidgetContainerPropertiesMix(
+          alignment: Alignment.centerLeft,
         ),
-        indicatorContainer: BoxMix(
+        flex: WidgetFlexPropertiesMix(
+          direction: Axis.horizontal,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          gap: 6,
+        ),
+        indicatorContainer: WidgetContainerPropertiesMix(
           alignment: Alignment.center,
           constraints: BoxConstraintsMix(
             minWidth: 16,
@@ -263,7 +272,7 @@ extension RadioVariants on RemixRadioStyle {
             color: Colors.white,
           ),
         ),
-        indicator: BoxMix(
+        indicator: WidgetContainerPropertiesMix(
           constraints: BoxConstraintsMix(
             minWidth: 8,
             maxWidth: 8,

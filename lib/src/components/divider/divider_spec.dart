@@ -1,13 +1,13 @@
 part of 'divider.dart';
 
-class DividerSpec extends Spec<DividerSpec> with Diagnosticable {
-  final BoxSpec container;
+class DividerSpec extends WidgetSpec<DividerSpec> {
+  final WidgetContainerProperties container;
 
-  const DividerSpec({BoxSpec? container})
-      : container = container ?? const BoxSpec();
+  const DividerSpec({WidgetContainerProperties? container})
+      : container = container ?? const WidgetContainerProperties();
 
   @override
-  DividerSpec copyWith({BoxSpec? container}) {
+  DividerSpec copyWith({WidgetContainerProperties? container}) {
     return DividerSpec(container: container ?? this.container);
   }
 
@@ -24,7 +24,7 @@ class DividerSpec extends Spec<DividerSpec> with Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-        .add(DiagnosticsProperty('container', container, defaultValue: null));
+      ..add(DiagnosticsProperty('container', container));
   }
 
   @override

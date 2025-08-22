@@ -1,6 +1,6 @@
 part of 'label.dart';
 
-class LabelSpec extends Spec<LabelSpec> with Diagnosticable {
+class LabelSpec extends WidgetSpec<LabelSpec> {
   final double spacing;
   final TextSpec label;
   final IconSpec leading;
@@ -46,14 +46,11 @@ class LabelSpec extends Spec<LabelSpec> with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(
-      DiagnosticsProperty('spacing', spacing, defaultValue: null),
-    );
-    properties.add(DiagnosticsProperty('label', label, defaultValue: null));
-    properties.add(DiagnosticsProperty('leading', leading, defaultValue: null));
-    properties.add(
-      DiagnosticsProperty('trailing', trailing, defaultValue: null),
-    );
+    properties
+      ..add(DiagnosticsProperty('spacing', spacing))
+      ..add(DiagnosticsProperty('label', label))
+      ..add(DiagnosticsProperty('leading', leading))
+      ..add(DiagnosticsProperty('trailing', trailing));
   }
 
   @override

@@ -1,17 +1,17 @@
 part of 'avatar.dart';
 
-class AvatarSpec extends Spec<AvatarSpec> with Diagnosticable {
-  final BoxSpec container;
+class AvatarSpec extends WidgetSpec<AvatarSpec> {
+  final WidgetContainerProperties container;
   final TextSpec text;
   final IconSpec icon;
 
-  const AvatarSpec({BoxSpec? container, TextSpec? text, IconSpec? icon})
-      : container = container ?? const BoxSpec(),
+  const AvatarSpec({WidgetContainerProperties? container, TextSpec? text, IconSpec? icon})
+      : container = container ?? const WidgetContainerProperties(),
         text = text ?? const TextSpec(),
         icon = icon ?? const IconSpec();
 
   @override
-  AvatarSpec copyWith({BoxSpec? container, TextSpec? text, IconSpec? icon}) {
+  AvatarSpec copyWith({WidgetContainerProperties? container, TextSpec? text, IconSpec? icon}) {
     return AvatarSpec(
       container: container ?? this.container,
       text: text ?? this.text,
@@ -34,9 +34,9 @@ class AvatarSpec extends Spec<AvatarSpec> with Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-        .add(DiagnosticsProperty('container', container, defaultValue: null));
-    properties.add(DiagnosticsProperty('text', text, defaultValue: null));
-    properties.add(DiagnosticsProperty('icon', icon, defaultValue: null));
+      ..add(DiagnosticsProperty('container', container))
+      ..add(DiagnosticsProperty('text', text))
+      ..add(DiagnosticsProperty('icon', icon));
   }
 
   @override

@@ -7,12 +7,6 @@ part of 'radio.dart';
 /// ```dart
 /// RemixRadio<String>(
 ///   value: 'option1',
-///   groupValue: _selectedValue,
-///   onChanged: (value) {
-///     setState(() {
-///       _selectedValue = value;
-///     });
-///   },
 ///   label: 'Option 1',
 /// )
 /// ```
@@ -21,24 +15,25 @@ class RemixRadio<T> extends StatefulWidget
   const RemixRadio({
     super.key,
     required this.value,
-    this.groupValue,
     this.autofocus = false,
-    this.onChanged,
     this.enabled = true,
-    this.enableHapticFeedback = true,
+    this.toggleable = false,
     this.style = const RemixRadioStyle.create(),
     this.label,
     this.focusNode,
+    this.cursor,
+    this.onFocusChange,
+    this.onHoverChange,
+    this.onHighlightChanged,
+    this.onStateChange,
+    this.statesController,
+    this.semanticLabel,
+    this.semanticHint,
+    this.excludeSemantics = false,
   });
 
   /// The value represented by this radio button.
   final T value;
-
-  /// The currently selected value for a group of radio buttons.
-  final T? groupValue;
-
-  /// Called when the user selects this radio button.
-  final ValueChanged<T?>? onChanged;
 
   /// Whether this radio button is enabled.
   final bool enabled;
@@ -46,8 +41,8 @@ class RemixRadio<T> extends StatefulWidget
   /// Whether the radio button should automatically request focus when it is created.
   final bool autofocus;
 
-  /// Whether to enable haptic feedback when selected.
-  final bool enableHapticFeedback;
+  /// Whether the radio button is toggleable (can be unselected).
+  final bool toggleable;
 
   /// The style configuration for the radio button.
   final RemixRadioStyle style;
@@ -58,20 +53,63 @@ class RemixRadio<T> extends StatefulWidget
   /// The focus node for the radio button.
   final FocusNode? focusNode;
 
+  /// The mouse cursor to use when hovering over the radio button.
+  final MouseCursor? cursor;
+
+  // State change callbacks
+  final ValueChanged<bool>? onFocusChange;
+  final ValueChanged<bool>? onHoverChange;
+  final ValueChanged<bool>? onHighlightChanged; // For pressed state
+  final ValueChanged<Set<WidgetState>>? onStateChange;
+
+  final WidgetStatesController? statesController;
+  final String? semanticLabel;
+  final String? semanticHint;
+  final bool excludeSemantics;
+
   @override
-  bool get selected => value == groupValue;
+  bool get selected => false; // Selected state comes from RadioGroup context
 
   @override
   State<RemixRadio<T>> createState() => _RemixRadioState<T>();
 }
 
 class _RemixRadioState<T> extends State<RemixRadio<T>>
-    with HasWidgetStateController, HasEnabledState, HasSelectedState {
+    with HasWidgetStateController, HasEnabledState, HasFocusedState {
   @override
   Widget build(BuildContext context) {
-    // Check if we're in a NakedRadioGroup by looking for NakedRadioGroupScope
-    final nakedGroupScope = NakedRadioGroupScope.maybeOf<T>(context);
-    final isInGroup = nakedGroupScope != null;
+    final registry = RadioGroup.maybeOf<T>(context);
+
+    // Always require registry - same as NakedRadio
+    if (registry == null) {
+      throw FlutterError.fromParts([
+        ErrorSummary(
+          'RemixRadio<$T> must be used within a RemixRadioGroup<$T>.',
+        ),
+        ErrorDescription(
+          'No RemixRadioGroup<$T> ancestor was found in the widget tree.',
+        ),
+        ErrorHint(
+          'Wrap your RemixRadio widgets with a RemixRadioGroup:\n'
+          'RemixRadioGroup<$T>(\n'
+          '  groupValue: selectedValue,\n'
+          '  onChanged: (value) { ... },\n'
+          '  child: Column(\n'
+          '    children: [\n'
+          '      RemixRadio<$T>(value: ...),\n'
+          '      RemixRadio<$T>(value: ...),\n'
+          '    ],\n'
+          '  ),\n'
+          ')',
+        ),
+      ]);
+    }
+
+    // Check if selected
+    final isSelected = registry.groupValue == widget.value;
+
+    // Update controller selected state
+    controller.selected = isSelected;
 
     // Get style from StyleProvider if in RemixRadioGroup, otherwise use widget style
     final inheritedStyle = StyleProvider.maybeOf<RadioSpec>(context);
@@ -79,33 +117,31 @@ class _RemixRadioState<T> extends State<RemixRadio<T>>
         ? (inheritedStyle as RemixRadioStyle).merge(widget.style)
         : widget.style;
 
-    // Get values from NakedRadioGroupScope or widget properties
-    final T? groupValue = nakedGroupScope?.groupValue ?? widget.groupValue;
-    final bool enabled = nakedGroupScope != null
-        ? (widget.enabled && nakedGroupScope.state.widget.enabled)
-        : widget.enabled;
+    // Remove effectiveCursor since NakedRadio handles cursor internally
 
-    // Calculate selected state for visual display
-    final isSelected = widget.value == groupValue;
-
-    // Build the NakedRadio with common configuration
-    final nakedRadio = NakedRadio<T>(
+    return NakedRadio<T>(
       value: widget.value,
-      onHoverChange: (state) => controller.hovered = state,
-      onPressChange: (state) => controller.pressed = state,
-      onSelectChange: (state) => controller.selected = state,
-      onFocusChange: (state) => controller.focused = state,
-      enabled: enabled,
-      enableHapticFeedback: widget.enableHapticFeedback,
+      enabled: widget.enabled,
+      cursor: widget.cursor,
       focusNode: widget.focusNode,
       autofocus: widget.autofocus,
+      toggleable: widget.toggleable,
+      onFocusChange: widget.onFocusChange,
+      onHoverChange: widget.onHoverChange,
+      onHighlightChanged: widget.onHighlightChanged,
+      statesController: widget.statesController ?? controller,
+      semanticLabel: widget.semanticLabel ?? widget.label,
+      semanticHint: widget.semanticHint,
+      excludeSemantics: widget.excludeSemantics,
+      // Use child instead of builder for simplicity
       child: StyleBuilder(
         style: DefaultRemixRadioStyle.merge(style),
-        controller: controller,
+        controller: widget.statesController ?? controller,
         builder: (context, spec) {
           final IndicatorContainer = spec.indicatorContainer;
           final Indicator = spec.indicator;
           final Container = spec.container;
+          final Flex = spec.flex;
           final Label = spec.label;
 
           // Build the radio indicator
@@ -116,8 +152,10 @@ class _RemixRadioState<T> extends State<RemixRadio<T>>
           // Add label if present
           final radioWithLabel = widget.label != null
               ? Container(
-                  direction: Axis.horizontal,
-                  children: [radioIndicator, Label(widget.label!)],
+                  child: Flex(
+                    direction: Axis.horizontal,
+                    children: [radioIndicator, Label(widget.label!)],
+                  ),
                 )
               : radioIndicator;
 
@@ -125,18 +163,5 @@ class _RemixRadioState<T> extends State<RemixRadio<T>>
         },
       ),
     );
-
-    // Only wrap with NakedRadioGroup when NOT in a group
-    // When in a group, the parent RemixRadioGroup already provides NakedRadioGroup
-    if (!isInGroup) {
-      return NakedRadioGroup<T>(
-        groupValue: groupValue,
-        onChanged: widget.onChanged,
-        enabled: enabled,
-        child: nakedRadio,
-      );
-    }
-
-    return nakedRadio;
   }
 }

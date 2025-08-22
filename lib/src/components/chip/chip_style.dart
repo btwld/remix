@@ -4,13 +4,15 @@ class RemixChipStyle extends Style<ChipSpec>
     with
         StyleModifierMixin<RemixChipStyle, ChipSpec>,
         StyleVariantMixin<RemixChipStyle, ChipSpec> {
-  final Prop<FlexBoxSpec>? $container;
+  final Prop<WidgetContainerProperties>? $container;
+  final Prop<WidgetFlexProperties>? $flex;
   final Prop<TextSpec>? $label;
   final Prop<IconSpec>? $leading;
   final Prop<IconSpec>? $trailing;
 
   const RemixChipStyle.create({
-    Prop<FlexBoxSpec>? container,
+    Prop<WidgetContainerProperties>? container,
+    Prop<WidgetFlexProperties>? flex,
     Prop<TextSpec>? label,
     Prop<IconSpec>? leading,
     Prop<IconSpec>? trailing,
@@ -19,12 +21,14 @@ class RemixChipStyle extends Style<ChipSpec>
     super.modifier,
     super.inherit,
   })  : $container = container,
+        $flex = flex,
         $label = label,
         $leading = leading,
         $trailing = trailing;
 
   RemixChipStyle({
-    FlexBoxMix? container,
+    WidgetContainerPropertiesMix? container,
+    WidgetFlexPropertiesMix? flex,
     TextMix? label,
     IconMix? leading,
     IconMix? trailing,
@@ -34,6 +38,7 @@ class RemixChipStyle extends Style<ChipSpec>
     bool? inherit,
   }) : this.create(
           container: container != null ? Prop.mix(container) : null,
+          flex: flex != null ? Prop.mix(flex) : null,
           label: label != null ? Prop.mix(label) : null,
           leading: leading != null ? Prop.mix(leading) : null,
           trailing: trailing != null ? Prop.mix(trailing) : null,
@@ -44,7 +49,8 @@ class RemixChipStyle extends Style<ChipSpec>
         );
 
   factory RemixChipStyle.value(ChipSpec spec) => RemixChipStyle(
-        container: FlexBoxMix.maybeValue(spec.container),
+        container: WidgetContainerPropertiesMix.maybeValue(spec.container),
+        flex: WidgetFlexPropertiesMix.maybeValue(spec.flex),
         label: TextMix.maybeValue(spec.label),
         leading: IconMix.maybeValue(spec.leading),
         trailing: IconMix.maybeValue(spec.trailing),
@@ -54,6 +60,7 @@ class RemixChipStyle extends Style<ChipSpec>
   ChipSpec resolve(BuildContext context) {
     return ChipSpec(
       container: MixOps.resolve(context, $container),
+      flex: MixOps.resolve(context, $flex),
       label: MixOps.resolve(context, $label),
       leading: MixOps.resolve(context, $leading),
       trailing: MixOps.resolve(context, $trailing),
@@ -66,6 +73,7 @@ class RemixChipStyle extends Style<ChipSpec>
 
     return RemixChipStyle.create(
       container: MixOps.merge($container, other.$container),
+      flex: MixOps.merge($flex, other.$flex),
       label: MixOps.merge($label, other.$label),
       leading: MixOps.merge($leading, other.$leading),
       trailing: MixOps.merge($trailing, other.$trailing),
@@ -94,6 +102,7 @@ class RemixChipStyle extends Style<ChipSpec>
   @override
   List<Object?> get props => [
         $container,
+        $flex,
         $label,
         $leading,
         $trailing,
@@ -105,20 +114,18 @@ class RemixChipStyle extends Style<ChipSpec>
 }
 
 final DefaultRemixChipStyle = RemixChipStyle(
-  container: FlexBoxMix(
-    box: BoxMix(
-      padding: EdgeInsetsMix.symmetric(vertical: 6, horizontal: 12),
-      decoration: BoxDecorationMix(
-        borderRadius: BorderRadiusMix.circular(16),
-        color: Colors.grey[200],
-      ),
+  container: WidgetContainerPropertiesMix(
+    padding: EdgeInsetsMix.symmetric(vertical: 6, horizontal: 12),
+    decoration: BoxDecorationMix(
+      borderRadius: BorderRadiusMix.circular(16),
+      color: Colors.grey[200],
     ),
-    flex: FlexMix(
-      direction: Axis.horizontal,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisSize: MainAxisSize.min,
-      gap: 4,
-    ),
+  ),
+  flex: WidgetFlexPropertiesMix(
+    direction: Axis.horizontal,
+    crossAxisAlignment: CrossAxisAlignment.center,
+    mainAxisSize: MainAxisSize.min,
+    gap: 4,
   ),
   label: TextMix(
     style: TextStyleMix(fontSize: 14, fontWeight: FontWeight.w500),
@@ -130,23 +137,21 @@ final DefaultRemixChipStyle = RemixChipStyle(
 extension ChipVariants on RemixChipStyle {
   /// Primary chip variant with blue colors
   static RemixChipStyle get primary => RemixChipStyle(
-        container: FlexBoxMix(
-          box: BoxMix(
-            padding: EdgeInsetsMix.symmetric(vertical: 6, horizontal: 12),
-            decoration: BoxDecorationMix(
-              border: BoxBorderMix.all(
-                BorderSideMix(color: Colors.blue[300]!, width: 1),
-              ),
-              borderRadius: BorderRadiusMix.circular(16),
-              color: Colors.blue[100],
+        container: WidgetContainerPropertiesMix(
+          padding: EdgeInsetsMix.symmetric(vertical: 6, horizontal: 12),
+          decoration: BoxDecorationMix(
+            border: BoxBorderMix.all(
+              BorderSideMix(color: Colors.blue[300]!, width: 1),
             ),
+            borderRadius: BorderRadiusMix.circular(16),
+            color: Colors.blue[100],
           ),
-          flex: FlexMix(
-            direction: Axis.horizontal,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            gap: 4,
-          ),
+        ),
+        flex: WidgetFlexPropertiesMix(
+          direction: Axis.horizontal,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          gap: 4,
         ),
         label: TextMix(
           style: TextStyleMix(
@@ -161,23 +166,21 @@ extension ChipVariants on RemixChipStyle {
 
   /// Secondary chip variant with grey colors
   static RemixChipStyle get secondary => RemixChipStyle(
-        container: FlexBoxMix(
-          box: BoxMix(
-            padding: EdgeInsetsMix.symmetric(vertical: 6, horizontal: 12),
-            decoration: BoxDecorationMix(
-              border: BoxBorderMix.all(
-                BorderSideMix(color: Colors.grey[400]!, width: 1),
-              ),
-              borderRadius: BorderRadiusMix.circular(16),
-              color: Colors.grey[100],
+        container: WidgetContainerPropertiesMix(
+          padding: EdgeInsetsMix.symmetric(vertical: 6, horizontal: 12),
+          decoration: BoxDecorationMix(
+            border: BoxBorderMix.all(
+              BorderSideMix(color: Colors.grey[400]!, width: 1),
             ),
+            borderRadius: BorderRadiusMix.circular(16),
+            color: Colors.grey[100],
           ),
-          flex: FlexMix(
-            direction: Axis.horizontal,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            gap: 4,
-          ),
+        ),
+        flex: WidgetFlexPropertiesMix(
+          direction: Axis.horizontal,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          gap: 4,
         ),
         label: TextMix(
           style: TextStyleMix(
@@ -192,23 +195,21 @@ extension ChipVariants on RemixChipStyle {
 
   /// Success chip variant with green colors
   static RemixChipStyle get success => RemixChipStyle(
-        container: FlexBoxMix(
-          box: BoxMix(
-            padding: EdgeInsetsMix.symmetric(vertical: 6, horizontal: 12),
-            decoration: BoxDecorationMix(
-              border: BoxBorderMix.all(
-                BorderSideMix(color: Colors.green[300]!, width: 1),
-              ),
-              borderRadius: BorderRadiusMix.circular(16),
-              color: Colors.green[100],
+        container: WidgetContainerPropertiesMix(
+          padding: EdgeInsetsMix.symmetric(vertical: 6, horizontal: 12),
+          decoration: BoxDecorationMix(
+            border: BoxBorderMix.all(
+              BorderSideMix(color: Colors.green[300]!, width: 1),
             ),
+            borderRadius: BorderRadiusMix.circular(16),
+            color: Colors.green[100],
           ),
-          flex: FlexMix(
-            direction: Axis.horizontal,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            gap: 4,
-          ),
+        ),
+        flex: WidgetFlexPropertiesMix(
+          direction: Axis.horizontal,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          gap: 4,
         ),
         label: TextMix(
           style: TextStyleMix(
@@ -223,23 +224,21 @@ extension ChipVariants on RemixChipStyle {
 
   /// Warning chip variant with orange colors
   static RemixChipStyle get warning => RemixChipStyle(
-        container: FlexBoxMix(
-          box: BoxMix(
-            padding: EdgeInsetsMix.symmetric(vertical: 6, horizontal: 12),
-            decoration: BoxDecorationMix(
-              border: BoxBorderMix.all(
-                BorderSideMix(color: Colors.orange[300]!, width: 1),
-              ),
-              borderRadius: BorderRadiusMix.circular(16),
-              color: Colors.orange[100],
+        container: WidgetContainerPropertiesMix(
+          padding: EdgeInsetsMix.symmetric(vertical: 6, horizontal: 12),
+          decoration: BoxDecorationMix(
+            border: BoxBorderMix.all(
+              BorderSideMix(color: Colors.orange[300]!, width: 1),
             ),
+            borderRadius: BorderRadiusMix.circular(16),
+            color: Colors.orange[100],
           ),
-          flex: FlexMix(
-            direction: Axis.horizontal,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            gap: 4,
-          ),
+        ),
+        flex: WidgetFlexPropertiesMix(
+          direction: Axis.horizontal,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          gap: 4,
         ),
         label: TextMix(
           style: TextStyleMix(

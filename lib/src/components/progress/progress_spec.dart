@@ -1,27 +1,27 @@
 part of 'progress.dart';
 
-class ProgressSpec extends Spec<ProgressSpec> with Diagnosticable {
-  final BoxSpec container;
-  final BoxSpec track;
-  final BoxSpec fill;
-  final BoxSpec outerContainer;
+class ProgressSpec extends WidgetSpec<ProgressSpec> {
+  final WidgetContainerProperties container;
+  final WidgetContainerProperties track;
+  final WidgetContainerProperties fill;
+  final WidgetContainerProperties outerContainer;
 
   const ProgressSpec({
-    BoxSpec? container,
-    BoxSpec? track,
-    BoxSpec? fill,
-    BoxSpec? outerContainer,
-  })  : container = container ?? const BoxSpec(),
-        track = track ?? const BoxSpec(),
-        fill = fill ?? const BoxSpec(),
-        outerContainer = outerContainer ?? const BoxSpec();
+    WidgetContainerProperties? container,
+    WidgetContainerProperties? track,
+    WidgetContainerProperties? fill,
+    WidgetContainerProperties? outerContainer,
+  })  : container = container ?? const WidgetContainerProperties(),
+        track = track ?? const WidgetContainerProperties(),
+        fill = fill ?? const WidgetContainerProperties(),
+        outerContainer = outerContainer ?? const WidgetContainerProperties();
 
   @override
   ProgressSpec copyWith({
-    BoxSpec? container,
-    BoxSpec? track,
-    BoxSpec? fill,
-    BoxSpec? outerContainer,
+    WidgetContainerProperties? container,
+    WidgetContainerProperties? track,
+    WidgetContainerProperties? fill,
+    WidgetContainerProperties? outerContainer,
   }) {
     return ProgressSpec(
       container: container ?? this.container,
@@ -47,12 +47,10 @@ class ProgressSpec extends Spec<ProgressSpec> with Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-        .add(DiagnosticsProperty('container', container, defaultValue: null));
-    properties.add(DiagnosticsProperty('track', track, defaultValue: null));
-    properties.add(DiagnosticsProperty('fill', fill, defaultValue: null));
-    properties.add(
-      DiagnosticsProperty('outerContainer', outerContainer, defaultValue: null),
-    );
+      ..add(DiagnosticsProperty('container', container))
+      ..add(DiagnosticsProperty('track', track))
+      ..add(DiagnosticsProperty('fill', fill))
+      ..add(DiagnosticsProperty('outerContainer', outerContainer));
   }
 
   @override

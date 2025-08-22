@@ -140,22 +140,24 @@ class _RemixAccordionItemState<T> extends State<RemixAccordionItem<T>>
                   // The trigger is purely for building UI
                   // No state updates should happen here
                   final HeaderContainer = spec.headerContainer;
+                  final HeaderFlex = spec.headerFlex;
 
                   return HeaderContainer(
-                    direction: Axis.horizontal,
-                    children: [
-                      Expanded(
-                        child: widget.header,
-                      ),
-                      if (widget.trailingBuilder != null)
-                        widget.trailingBuilder!(isExpanded)
-                      else
-                        Icon(
-                          inheritedData.defaultTrailing,
-                          size: spec.trailing.size,
-                          color: spec.trailing.color,
-                        ),
-                    ],
+                    child: HeaderFlex(
+                      direction: Axis.horizontal,
+                      children: [
+                        // ignore: avoid-flexible-outside-flex
+                        Expanded(child: widget.header),
+                        if (widget.trailingBuilder != null)
+                          widget.trailingBuilder!(isExpanded)
+                        else
+                          Icon(
+                            inheritedData.defaultTrailing,
+                            size: spec.trailing.size,
+                            color: spec.trailing.color,
+                          ),
+                      ],
+                    ),
                   );
                 },
                 value: widget.value,
@@ -174,11 +176,9 @@ class _RemixAccordionItemState<T> extends State<RemixAccordionItem<T>>
                   },
                   child: child,
                 ),
-                onHoverChange: (state) => controller.hovered = state,
-                onPressChange: (state) => controller.pressed = state,
-                onFocusChange: (state) => controller.focused = state,
                 enabled: widget.enabled,
                 focusNode: widget.focusNode,
+                controller: controller,
                 child: ContentContainer(child: widget.child),
               ),
             );

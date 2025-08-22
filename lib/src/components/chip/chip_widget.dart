@@ -88,18 +88,17 @@ class _RemixChipState extends State<RemixChip>
     return NakedCheckbox(
       value: widget.selected,
       onChanged: (value) => widget.onChanged?.call(value ?? false),
-      onHoverChange: (state) => controller.hovered = state,
-      onPressChange: (state) => controller.pressed = state,
-      onFocusChange: (state) => controller.focused = state,
       enabled: widget.enabled,
       enableHapticFeedback: widget.enableHapticFeedback,
       focusNode: widget.focusNode,
       autofocus: widget.autofocus,
+      statesController: controller,
       child: StyleBuilder(
         style: DefaultRemixChipStyle.merge(widget.style),
         controller: controller,
         builder: (context, spec) {
           final Container = spec.container;
+          final Flex = spec.flex;
           final LeadingIcon = spec.leading;
           final Label = spec.label;
           final TrailingIcon = spec.trailing;
@@ -107,8 +106,10 @@ class _RemixChipState extends State<RemixChip>
           // Use custom child if provided
           if (widget.child != null) {
             return Container(
-              direction: Axis.horizontal,
-              children: [widget.child!],
+              child: Flex(
+                direction: Axis.horizontal,
+                children: [widget.child!],
+              ),
             );
           }
 
@@ -133,7 +134,12 @@ class _RemixChipState extends State<RemixChip>
             ));
           }
 
-          return Container(direction: Axis.horizontal, children: children);
+          return Container(
+            child: Flex(
+              direction: Axis.horizontal,
+              children: children,
+            ),
+          );
         },
       ),
     );

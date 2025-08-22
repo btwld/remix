@@ -4,14 +4,14 @@ class RemixSwitchStyle extends Style<SwitchSpec>
     with
         StyleModifierMixin<RemixSwitchStyle, SwitchSpec>,
         StyleVariantMixin<RemixSwitchStyle, SwitchSpec> {
-  final Prop<BoxSpec>? $container;
-  final Prop<BoxSpec>? $track;
-  final Prop<BoxSpec>? $thumb;
+  final Prop<WidgetContainerProperties>? $container;
+  final Prop<WidgetContainerProperties>? $track;
+  final Prop<WidgetContainerProperties>? $thumb;
 
   const RemixSwitchStyle.create({
-    Prop<BoxSpec>? container,
-    Prop<BoxSpec>? track,
-    Prop<BoxSpec>? thumb,
+    Prop<WidgetContainerProperties>? container,
+    Prop<WidgetContainerProperties>? track,
+    Prop<WidgetContainerProperties>? thumb,
     super.variants,
     super.animation,
     super.modifier,
@@ -21,9 +21,9 @@ class RemixSwitchStyle extends Style<SwitchSpec>
         $thumb = thumb;
 
   RemixSwitchStyle({
-    BoxMix? container,
-    BoxMix? track,
-    BoxMix? thumb,
+    WidgetContainerPropertiesMix? container,
+    WidgetContainerPropertiesMix? track,
+    WidgetContainerPropertiesMix? thumb,
     AnimationConfig? animation,
     List<VariantStyle<SwitchSpec>>? variants,
     ModifierConfig? modifier,
@@ -39,9 +39,9 @@ class RemixSwitchStyle extends Style<SwitchSpec>
         );
 
   factory RemixSwitchStyle.value(SwitchSpec spec) => RemixSwitchStyle(
-        container: BoxMix.maybeValue(spec.container),
-        track: BoxMix.maybeValue(spec.track),
-        thumb: BoxMix.maybeValue(spec.thumb),
+        container: WidgetContainerPropertiesMix.maybeValue(spec.container),
+        track: WidgetContainerPropertiesMix.maybeValue(spec.track),
+        thumb: WidgetContainerPropertiesMix.maybeValue(spec.thumb),
       );
 
   @override
@@ -96,26 +96,20 @@ class RemixSwitchStyle extends Style<SwitchSpec>
 }
 
 final DefaultRemixSwitchStyle = RemixSwitchStyle(
-  container: BoxMix(),
-  track: BoxMix(
+  container: WidgetContainerPropertiesMix(),
+  track: WidgetContainerPropertiesMix(
+    decoration: BoxDecorationMix(
+      borderRadius: BorderRadiusMix.circular(12),
+      color: Colors.grey[300],
+    ),
     constraints: BoxConstraintsMix(
       minWidth: 44,
       maxWidth: 44,
       minHeight: 24,
       maxHeight: 24,
     ),
-    decoration: BoxDecorationMix(
-      borderRadius: BorderRadiusMix.circular(12),
-      color: Colors.grey[300],
-    ),
   ),
-  thumb: BoxMix(
-    constraints: BoxConstraintsMix(
-      minWidth: 20,
-      maxWidth: 20,
-      minHeight: 20,
-      maxHeight: 20,
-    ),
+  thumb: WidgetContainerPropertiesMix(
     decoration: BoxDecorationMix(
       shape: BoxShape.circle,
       color: Colors.white,
@@ -127,6 +121,12 @@ final DefaultRemixSwitchStyle = RemixSwitchStyle(
         ),
       ],
     ),
+    constraints: BoxConstraintsMix(
+      minWidth: 20,
+      maxWidth: 20,
+      minHeight: 20,
+      maxHeight: 20,
+    ),
   ),
   animation: AnimationConfig.easeInOut(const Duration(milliseconds: 200)),
 );
@@ -134,26 +134,20 @@ final DefaultRemixSwitchStyle = RemixSwitchStyle(
 extension SwitchVariants on RemixSwitchStyle {
   /// Primary switch variant with blue colors
   static RemixSwitchStyle get primary => RemixSwitchStyle(
-        container: BoxMix(),
-        track: BoxMix(
+        container: WidgetContainerPropertiesMix(),
+        track: WidgetContainerPropertiesMix(
+          decoration: BoxDecorationMix(
+            borderRadius: BorderRadiusMix.circular(12),
+            color: Colors.blue[100],
+          ),
           constraints: BoxConstraintsMix(
             minWidth: 44,
             maxWidth: 44,
             minHeight: 24,
             maxHeight: 24,
           ),
-          decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(12),
-            color: Colors.blue[100],
-          ),
         ),
-        thumb: BoxMix(
-          constraints: BoxConstraintsMix(
-            minWidth: 20,
-            maxWidth: 20,
-            minHeight: 20,
-            maxHeight: 20,
-          ),
+        thumb: WidgetContainerPropertiesMix(
           decoration: BoxDecorationMix(
             shape: BoxShape.circle,
             color: Colors.blue[500],
@@ -165,32 +159,32 @@ extension SwitchVariants on RemixSwitchStyle {
               ),
             ],
           ),
-        ),
-        animation: AnimationConfig.easeInOut(const Duration(milliseconds: 200)),
-      );
-
-  /// Secondary switch variant with grey colors
-  static RemixSwitchStyle get secondary => RemixSwitchStyle(
-        container: BoxMix(),
-        track: BoxMix(
-          constraints: BoxConstraintsMix(
-            minWidth: 44,
-            maxWidth: 44,
-            minHeight: 24,
-            maxHeight: 24,
-          ),
-          decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(12),
-            color: Colors.grey[200],
-          ),
-        ),
-        thumb: BoxMix(
           constraints: BoxConstraintsMix(
             minWidth: 20,
             maxWidth: 20,
             minHeight: 20,
             maxHeight: 20,
           ),
+        ),
+        animation: AnimationConfig.easeInOut(const Duration(milliseconds: 200)),
+      );
+
+  /// Secondary switch variant with grey colors
+  static RemixSwitchStyle get secondary => RemixSwitchStyle(
+        container: WidgetContainerPropertiesMix(),
+        track: WidgetContainerPropertiesMix(
+          decoration: BoxDecorationMix(
+            borderRadius: BorderRadiusMix.circular(12),
+            color: Colors.grey[200],
+          ),
+          constraints: BoxConstraintsMix(
+            minWidth: 44,
+            maxWidth: 44,
+            minHeight: 24,
+            maxHeight: 24,
+          ),
+        ),
+        thumb: WidgetContainerPropertiesMix(
           decoration: BoxDecorationMix(
             shape: BoxShape.circle,
             color: Colors.grey[600],
@@ -202,32 +196,32 @@ extension SwitchVariants on RemixSwitchStyle {
               ),
             ],
           ),
+          constraints: BoxConstraintsMix(
+            minWidth: 20,
+            maxWidth: 20,
+            minHeight: 20,
+            maxHeight: 20,
+          ),
         ),
         animation: AnimationConfig.easeInOut(const Duration(milliseconds: 200)),
       );
 
   /// Compact switch variant with smaller size
   static RemixSwitchStyle get compact => RemixSwitchStyle(
-        container: BoxMix(),
-        track: BoxMix(
+        container: WidgetContainerPropertiesMix(),
+        track: WidgetContainerPropertiesMix(
+          decoration: BoxDecorationMix(
+            borderRadius: BorderRadiusMix.circular(10),
+            color: Colors.grey[300],
+          ),
           constraints: BoxConstraintsMix(
             minWidth: 36,
             maxWidth: 36,
             minHeight: 20,
             maxHeight: 20,
           ),
-          decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(10),
-            color: Colors.grey[300],
-          ),
         ),
-        thumb: BoxMix(
-          constraints: BoxConstraintsMix(
-            minWidth: 16,
-            maxWidth: 16,
-            minHeight: 16,
-            maxHeight: 16,
-          ),
+        thumb: WidgetContainerPropertiesMix(
           decoration: BoxDecorationMix(
             shape: BoxShape.circle,
             color: Colors.white,
@@ -238,6 +232,12 @@ extension SwitchVariants on RemixSwitchStyle {
                 blurRadius: 1,
               ),
             ],
+          ),
+          constraints: BoxConstraintsMix(
+            minWidth: 16,
+            maxWidth: 16,
+            minHeight: 16,
+            maxHeight: 16,
           ),
         ),
         animation: AnimationConfig.easeInOut(const Duration(milliseconds: 200)),

@@ -13,7 +13,7 @@ part of 'checkbox.dart';
 ///       _isChecked = value;
 ///     });
 ///   },
-///   checked: Icons.check_rounded,
+///   checkedIcon: Icons.check_rounded,
 ///   label: 'Accept Terms',
 /// )
 /// ```
@@ -25,8 +25,8 @@ class RemixCheckbox extends StatefulWidget
     required this.selected,
     this.onChanged,
     this.autofocus = false,
-    this.checked = Icons.check_rounded,
-    this.unchecked,
+    this.checkedIcon = Icons.check_rounded,
+    this.uncheckedIcon,
     this.enableHapticFeedback = true,
     this.style = const RemixCheckboxStyle.create(),
     this.label,
@@ -40,13 +40,13 @@ class RemixCheckbox extends StatefulWidget
   final bool selected;
 
   /// The icon to display when the checkbox is checked.
-  final IconData checked;
+  final IconData checkedIcon;
 
   /// Whether the checkbox should automatically request focus when it is created.
   final bool autofocus;
 
   /// The icon to display when the checkbox is unchecked.
-  final IconData? unchecked;
+  final IconData? uncheckedIcon;
 
   /// The callback function that is called when the checkbox is tapped.
   final ValueChanged<bool>? onChanged;
@@ -77,23 +77,22 @@ class _RemixCheckboxState extends State<RemixCheckbox>
       onChanged: widget.enabled && widget.onChanged != null
           ? (value) => widget.onChanged!(value ?? false)
           : null,
-      onHoverChange: (state) => controller.hovered = state,
-      onPressChange: (state) => controller.pressed = state,
-      onFocusChange: (state) => controller.focused = state,
       enabled: widget.enabled,
       enableHapticFeedback: widget.enableHapticFeedback,
       focusNode: widget.focusNode,
       autofocus: widget.autofocus,
+      statesController: controller,
       child: StyleBuilder(
         style: DefaultRemixCheckboxStyle.merge(widget.style),
         builder: (context, spec) {
           final IndicatorContainer = spec.indicatorContainer;
           final Indicator = spec.indicator;
           final Container = spec.container;
+          final Flex = spec.flex;
           final Label = spec.label;
 
           final iconData =
-              widget.selected ? widget.checked : widget.unchecked;
+              widget.selected ? widget.checkedIcon : widget.uncheckedIcon;
 
           final checkbox = IndicatorContainer(
             child: iconData != null ? Indicator(icon: iconData) : null,
@@ -104,8 +103,10 @@ class _RemixCheckboxState extends State<RemixCheckbox>
           }
 
           return Container(
-            direction: Axis.horizontal,
-            children: [checkbox, Label(widget.label!)],
+            child: Flex(
+              direction: Axis.horizontal,
+              children: [checkbox, Label(widget.label!)],
+            ),
           );
         },
       ),

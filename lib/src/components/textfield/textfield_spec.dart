@@ -1,6 +1,6 @@
 part of 'textfield.dart';
 
-class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
+class TextFieldSpec extends WidgetSpec<TextFieldSpec> {
   final TextSpec text;
   final TextSpec hintText;
   final TextAlign textAlign;
@@ -18,7 +18,8 @@ class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
   final EdgeInsets scrollPadding;
   final Brightness? keyboardAppearance;
   final double spacing;
-  final FlexBoxSpec container;
+  final WidgetContainerProperties container;
+  final WidgetFlexProperties flex;
   final TextSpec helperText;
   final TextSpec label;
 
@@ -37,7 +38,8 @@ class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
     this.keyboardAppearance,
     this.cursorOpacityAnimates,
     double? spacing,
-    FlexBoxSpec? container,
+    WidgetContainerProperties? container,
+    WidgetFlexProperties? flex,
     TextSpec? helperText,
     TextSpec? label,
   })  : text = text ?? const TextSpec(),
@@ -50,7 +52,8 @@ class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
         scrollPadding = scrollPadding ?? const EdgeInsets.all(20.0),
         helperText = helperText ?? const TextSpec(),
         label = label ?? const TextSpec(),
-        container = container ?? const FlexBoxSpec(),
+        container = container ?? const WidgetContainerProperties(),
+        flex = flex ?? const WidgetFlexProperties(),
         spacing = spacing ?? 4;
 
   @override
@@ -69,7 +72,8 @@ class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
     EdgeInsets? scrollPadding,
     Brightness? keyboardAppearance,
     double? spacing,
-    FlexBoxSpec? container,
+    WidgetContainerProperties? container,
+    WidgetFlexProperties? flex,
     TextSpec? helperText,
     TextSpec? label,
   }) {
@@ -90,6 +94,7 @@ class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
           cursorOpacityAnimates ?? this.cursorOpacityAnimates,
       spacing: spacing ?? this.spacing,
       container: container ?? this.container,
+      flex: flex ?? this.flex,
       helperText: helperText ?? this.helperText,
       label: label ?? this.label,
     );
@@ -119,6 +124,7 @@ class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
           t < 0.5 ? cursorOpacityAnimates : other.cursorOpacityAnimates,
       spacing: lerpDouble(spacing, other.spacing, t),
       container: MixOps.lerp(container, other.container, t)!,
+      flex: MixOps.lerp(flex, other.flex, t)!,
       helperText: MixOps.lerp(helperText, other.helperText, t)!,
       label: MixOps.lerp(label, other.label, t)!,
     );
@@ -127,58 +133,25 @@ class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty('text', text, defaultValue: null));
-    properties.add(DiagnosticsProperty('hintText', hintText, defaultValue: null));
-    properties.add(EnumProperty<TextAlign>(
-      'textAlign',
-      textAlign,
-      defaultValue: TextAlign.start,
-    ));
     properties
-        .add(DoubleProperty('cursorWidth', cursorWidth, defaultValue: 2.0));
-    properties
-        .add(DoubleProperty('cursorHeight', cursorHeight, defaultValue: null));
-    properties.add(
-      DiagnosticsProperty('cursorRadius', cursorRadius, defaultValue: null),
-    );
-    properties
-        .add(ColorProperty('cursorColor', cursorColor, defaultValue: null));
-    properties.add(DiagnosticsProperty(
-      'cursorOffset',
-      cursorOffset,
-      defaultValue: Offset.zero,
-    ));
-    properties.add(DiagnosticsProperty(
-      'cursorOpacityAnimates',
-      cursorOpacityAnimates,
-      defaultValue: null,
-    ));
-    properties.add(EnumProperty<BoxHeightStyle>(
-      'selectionHeightStyle',
-      selectionHeightStyle,
-      defaultValue: BoxHeightStyle.tight,
-    ));
-    properties.add(EnumProperty<BoxWidthStyle>(
-      'selectionWidthStyle',
-      selectionWidthStyle,
-      defaultValue: BoxWidthStyle.tight,
-    ));
-    properties.add(DiagnosticsProperty(
-      'scrollPadding',
-      scrollPadding,
-      defaultValue: null,
-    ));
-    properties.add(EnumProperty<Brightness>(
-      'keyboardAppearance',
-      keyboardAppearance,
-      defaultValue: null,
-    ));
-    properties.add(DoubleProperty('spacing', spacing, defaultValue: 4));
-    properties
-        .add(DiagnosticsProperty('container', container, defaultValue: null));
-    properties
-        .add(DiagnosticsProperty('helperText', helperText, defaultValue: null));
-    properties.add(DiagnosticsProperty('label', label, defaultValue: null));
+      ..add(DiagnosticsProperty('text', text))
+      ..add(DiagnosticsProperty('hintText', hintText))
+      ..add(EnumProperty<TextAlign>('textAlign', textAlign))
+      ..add(DoubleProperty('cursorWidth', cursorWidth))
+      ..add(DoubleProperty('cursorHeight', cursorHeight))
+      ..add(DiagnosticsProperty('cursorRadius', cursorRadius))
+      ..add(ColorProperty('cursorColor', cursorColor))
+      ..add(DiagnosticsProperty('cursorOffset', cursorOffset))
+      ..add(DiagnosticsProperty('cursorOpacityAnimates', cursorOpacityAnimates))
+      ..add(EnumProperty<BoxHeightStyle>('selectionHeightStyle', selectionHeightStyle))
+      ..add(EnumProperty<BoxWidthStyle>('selectionWidthStyle', selectionWidthStyle))
+      ..add(DiagnosticsProperty('scrollPadding', scrollPadding))
+      ..add(EnumProperty<Brightness>('keyboardAppearance', keyboardAppearance))
+      ..add(DoubleProperty('spacing', spacing))
+      ..add(DiagnosticsProperty('container', container))
+      ..add(DiagnosticsProperty('flex', flex))
+      ..add(DiagnosticsProperty('helperText', helperText))
+      ..add(DiagnosticsProperty('label', label));
   }
 
   @override
@@ -198,6 +171,7 @@ class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
         keyboardAppearance,
         spacing,
         container,
+        flex,
         helperText,
         label,
       ];

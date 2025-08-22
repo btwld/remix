@@ -5,7 +5,7 @@ enum SpinnerStyle {
   dotted,
 }
 
-class SpinnerSpec extends Spec<SpinnerSpec> with Diagnosticable {
+class SpinnerSpec extends WidgetSpec<SpinnerSpec> {
   final double? size;
   final double? strokeWidth;
   final Color? color;
@@ -53,15 +53,12 @@ class SpinnerSpec extends Spec<SpinnerSpec> with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty('size', size, defaultValue: null));
-    properties.add(
-      DiagnosticsProperty('strokeWidth', strokeWidth, defaultValue: null),
-    );
-    properties.add(DiagnosticsProperty('color', color, defaultValue: null));
-    properties.add(
-      DiagnosticsProperty('duration', duration, defaultValue: null),
-    );
-    properties.add(DiagnosticsProperty('style', style, defaultValue: null));
+    properties
+      ..add(DiagnosticsProperty('size', size))
+      ..add(DiagnosticsProperty('strokeWidth', strokeWidth))
+      ..add(DiagnosticsProperty('color', color))
+      ..add(DiagnosticsProperty('duration', duration))
+      ..add(DiagnosticsProperty('style', style));
   }
 
   @override

@@ -323,7 +323,7 @@ class _AnimatedOverlayMenu extends StatefulWidget {
   final AnimationController controller;
   final Duration duration;
   final Curve curve;
-  final BoxSpec menuContainer;
+  final WidgetContainerProperties menuContainer;
   final List<Widget> items;
 
   @override
@@ -432,20 +432,19 @@ class _RemixSelectTriggerState extends State<RemixSelectTrigger>
     final inheritedStyle = StyleProvider.maybeOf<SelectSpec>(context);
 
     return NakedSelectTrigger(
-      onHoverChange: (value) => controller.hovered = value,
-      onPressChange: (value) => controller.pressed = value,
-      onFocusChange: (value) => controller.focused = value,
       semanticLabel: widget.semanticLabel,
       cursor: widget.cursor,
       enableHapticFeedback: widget.enableHapticFeedback,
       focusNode: widget.focusNode,
       autofocus: widget.autofocus,
+      statesController: controller,
       child: StyleBuilder(
         style: inheritedStyle ?? const RemixSelectStyle.create(),
         controller: controller,
         builder: (context, spec) {
           final triggerSpec = spec.trigger;
           final TriggerContainer = triggerSpec.container;
+          final TriggerFlex = triggerSpec.flex;
           final TriggerLabel = triggerSpec.label;
 
           // Build trigger content progressively
@@ -458,16 +457,20 @@ class _RemixSelectTriggerState extends State<RemixSelectTrigger>
             // Add trailing icon if present
             if (widget.trailing != null) {
               triggerContent = TriggerContainer(
-                direction: Axis.horizontal,
-                children: [triggerContent, Icon(widget.trailing!)],
+                child: TriggerFlex(
+                  direction: Axis.horizontal,
+                  children: [triggerContent, Icon(widget.trailing!)],
+                ),
               );
             }
           }
 
           // Wrap with container
           triggerContent = TriggerContainer(
-            direction: Axis.horizontal,
-            children: [triggerContent],
+            child: TriggerFlex(
+              direction: Axis.horizontal,
+              children: [triggerContent],
+            ),
           );
 
           return triggerContent;
@@ -569,21 +572,20 @@ class _RemixSelectItemState<T> extends State<RemixSelectItem<T>>
 
     return NakedSelectItem<T>(
       value: widget.value,
-      onHoverChange: (value) => controller.hovered = value,
-      onPressChange: (value) => controller.pressed = value,
-      onFocusChange: (value) => controller.focused = value,
       enabled: widget.enabled,
       semanticLabel: widget.semanticLabel,
       cursor: widget.cursor,
       enableHapticFeedback: widget.enableHapticFeedback,
       focusNode: widget.focusNode,
       autofocus: widget.autofocus,
+      statesController: controller,
       child: StyleBuilder(
         style: styleFromProvider ?? const RemixSelectStyle.create(),
         controller: controller,
         builder: (context, spec) {
           final itemSpec = spec.item;
           final ItemContainer = itemSpec.container;
+          final ItemFlex = itemSpec.flex;
 
           // Use checkbox icon for multi-select, check icon for single select
           final IconData selectionIcon = isMultiSelect
@@ -603,15 +605,19 @@ class _RemixSelectItemState<T> extends State<RemixSelectItem<T>>
 
             // Add selection icon
             itemContent = ItemContainer(
-              direction: Axis.horizontal,
-              children: [itemContent, ItemIcon(icon: selectionIcon)],
+              child: ItemFlex(
+                direction: Axis.horizontal,
+                children: [itemContent, ItemIcon(icon: selectionIcon)],
+              ),
             );
           }
 
           // Wrap with container
           itemContent = ItemContainer(
-            direction: Axis.horizontal,
-            children: [itemContent],
+            child: ItemFlex(
+              direction: Axis.horizontal,
+              children: [itemContent],
+            ),
           );
 
           return itemContent;

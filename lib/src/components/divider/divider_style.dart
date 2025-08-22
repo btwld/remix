@@ -2,10 +2,10 @@ part of 'divider.dart';
 
 class RemixDividerStyle extends Style<DividerSpec>
     with StyleModifierMixin<RemixDividerStyle, DividerSpec>, StyleVariantMixin<RemixDividerStyle, DividerSpec> {
-  final Prop<BoxSpec>? $container;
+  final Prop<WidgetContainerProperties>? $container;
 
   const RemixDividerStyle.create({
-    Prop<BoxSpec>? container,
+    Prop<WidgetContainerProperties>? container,
     super.variants,
     super.animation,
     super.modifier,
@@ -13,7 +13,7 @@ class RemixDividerStyle extends Style<DividerSpec>
   }) : $container = container;
 
   RemixDividerStyle({
-    BoxMix? container,
+    WidgetContainerPropertiesMix? container,
     AnimationConfig? animation,
     List<VariantStyle<DividerSpec>>? variants,
     ModifierConfig? modifier,
@@ -27,7 +27,7 @@ class RemixDividerStyle extends Style<DividerSpec>
         );
 
   factory RemixDividerStyle.value(DividerSpec spec) => RemixDividerStyle(
-        container: BoxMix.maybeValue(spec.container),
+        container: WidgetContainerPropertiesMix.maybeValue(spec.container),
       );
 
   @override
@@ -74,7 +74,7 @@ class RemixDividerStyle extends Style<DividerSpec>
 }
 
 final DefaultRemixDividerStyle = RemixDividerStyle(
-  container: BoxMix(
+  container: WidgetContainerPropertiesMix(
     constraints: BoxConstraintsMix(
       minWidth: double.infinity,
       minHeight: 1,
@@ -91,7 +91,7 @@ final DefaultRemixDividerStyle = RemixDividerStyle(
 class RemixDividerStyles {
   /// Default divider style
   static RemixDividerStyle get defaultStyle => RemixDividerStyle(
-        container: BoxMix(
+        container: WidgetContainerPropertiesMix(
           constraints: BoxConstraintsMix(
             minWidth: double.infinity,
             minHeight: 1,
@@ -106,7 +106,7 @@ class RemixDividerStyles {
 
   /// Vertical divider variant
   static RemixDividerStyle get vertical => RemixDividerStyle(
-        container: BoxMix(
+        container: WidgetContainerPropertiesMix(
           constraints: BoxConstraintsMix(
             minWidth: 1,
             maxWidth: 1,
@@ -121,7 +121,7 @@ class RemixDividerStyles {
 
   /// Thick divider variant
   static RemixDividerStyle get thick => RemixDividerStyle(
-        container: BoxMix(
+        container: WidgetContainerPropertiesMix(
           constraints: BoxConstraintsMix(
             minWidth: double.infinity,
             minHeight: 2,
@@ -136,7 +136,7 @@ class RemixDividerStyles {
 
   /// Dark divider variant
   static RemixDividerStyle get dark => RemixDividerStyle(
-        container: BoxMix(
+        container: WidgetContainerPropertiesMix(
           constraints: BoxConstraintsMix(
             minWidth: double.infinity,
             minHeight: 1,

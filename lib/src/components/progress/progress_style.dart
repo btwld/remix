@@ -2,16 +2,16 @@ part of 'progress.dart';
 
 class RemixProgressStyle extends Style<ProgressSpec>
     with StyleModifierMixin<RemixProgressStyle, ProgressSpec>, StyleVariantMixin<RemixProgressStyle, ProgressSpec> {
-  final Prop<BoxSpec>? $container;
-  final Prop<BoxSpec>? $track;
-  final Prop<BoxSpec>? $fill;
-  final Prop<BoxSpec>? $outerContainer;
+  final Prop<WidgetContainerProperties>? $container;
+  final Prop<WidgetContainerProperties>? $track;
+  final Prop<WidgetContainerProperties>? $fill;
+  final Prop<WidgetContainerProperties>? $outerContainer;
 
   const RemixProgressStyle.create({
-    Prop<BoxSpec>? container,
-    Prop<BoxSpec>? track,
-    Prop<BoxSpec>? fill,
-    Prop<BoxSpec>? outerContainer,
+    Prop<WidgetContainerProperties>? container,
+    Prop<WidgetContainerProperties>? track,
+    Prop<WidgetContainerProperties>? fill,
+    Prop<WidgetContainerProperties>? outerContainer,
     super.variants,
     super.animation,
     super.modifier,
@@ -22,10 +22,10 @@ class RemixProgressStyle extends Style<ProgressSpec>
         $outerContainer = outerContainer;
 
   RemixProgressStyle({
-    BoxMix? container,
-    BoxMix? track,
-    BoxMix? fill,
-    BoxMix? outerContainer,
+    WidgetContainerPropertiesMix? container,
+    WidgetContainerPropertiesMix? track,
+    WidgetContainerPropertiesMix? fill,
+    WidgetContainerPropertiesMix? outerContainer,
     AnimationConfig? animation,
     List<VariantStyle<ProgressSpec>>? variants,
     ModifierConfig? modifier,
@@ -43,10 +43,10 @@ class RemixProgressStyle extends Style<ProgressSpec>
         );
 
   factory RemixProgressStyle.value(ProgressSpec spec) => RemixProgressStyle(
-        container: BoxMix.maybeValue(spec.container),
-        track: BoxMix.maybeValue(spec.track),
-        fill: BoxMix.maybeValue(spec.fill),
-        outerContainer: BoxMix.maybeValue(spec.outerContainer),
+        container: WidgetContainerPropertiesMix.maybeValue(spec.container),
+        track: WidgetContainerPropertiesMix.maybeValue(spec.track),
+        fill: WidgetContainerPropertiesMix.maybeValue(spec.fill),
+        outerContainer: WidgetContainerPropertiesMix.maybeValue(spec.outerContainer),
       );
 
   @override
@@ -104,87 +104,87 @@ class RemixProgressStyle extends Style<ProgressSpec>
 }
 
 final DefaultRemixProgressStyle = RemixProgressStyle(
-  container: BoxMix(
+  container: WidgetContainerPropertiesMix(
     constraints: BoxConstraintsMix(minHeight: 6, maxHeight: 6),
     decoration: BoxDecorationMix(borderRadius: BorderRadiusMix.circular(99)),
     clipBehavior: Clip.antiAlias,
   ),
-  track: BoxMix(decoration: BoxDecorationMix(color: Colors.grey[200])),
-  fill: BoxMix(
+  track: WidgetContainerPropertiesMix(decoration: BoxDecorationMix(color: Colors.grey[200])),
+  fill: WidgetContainerPropertiesMix(
     decoration: BoxDecorationMix(
       borderRadius: BorderRadiusMix.circular(99),
       color: Colors.black,
     ),
   ),
-  outerContainer: BoxMix(),
+  outerContainer: WidgetContainerPropertiesMix(),
 );
 
 extension ProgressVariants on RemixProgressStyle {
   /// Primary progress variant with blue fill
   static RemixProgressStyle get primary => RemixProgressStyle(
-        container: BoxMix(
+        container: WidgetContainerPropertiesMix(
           constraints: BoxConstraintsMix(minHeight: 6, maxHeight: 6),
           decoration: BoxDecorationMix(borderRadius: BorderRadiusMix.circular(99)),
           clipBehavior: Clip.antiAlias,
         ),
-        track: BoxMix(decoration: BoxDecorationMix(color: Colors.blue[100])),
-        fill: BoxMix(
+        track: WidgetContainerPropertiesMix(decoration: BoxDecorationMix(color: Colors.blue[100])),
+        fill: WidgetContainerPropertiesMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(99),
             color: Colors.blue[500],
           ),
         ),
-        outerContainer: BoxMix(),
+        outerContainer: WidgetContainerPropertiesMix(),
       );
 
   /// Secondary progress variant with grey fill
   static RemixProgressStyle get secondary => RemixProgressStyle(
-        container: BoxMix(
+        container: WidgetContainerPropertiesMix(
           constraints: BoxConstraintsMix(minHeight: 6, maxHeight: 6),
           decoration: BoxDecorationMix(borderRadius: BorderRadiusMix.circular(99)),
           clipBehavior: Clip.antiAlias,
         ),
-        track: BoxMix(decoration: BoxDecorationMix(color: Colors.grey[200])),
-        fill: BoxMix(
+        track: WidgetContainerPropertiesMix(decoration: BoxDecorationMix(color: Colors.grey[200])),
+        fill: WidgetContainerPropertiesMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(99),
             color: Colors.grey[600],
           ),
         ),
-        outerContainer: BoxMix(),
+        outerContainer: WidgetContainerPropertiesMix(),
       );
 
   /// Success progress variant with green fill
   static RemixProgressStyle get success => RemixProgressStyle(
-        container: BoxMix(
+        container: WidgetContainerPropertiesMix(
           constraints: BoxConstraintsMix(minHeight: 6, maxHeight: 6),
           decoration: BoxDecorationMix(borderRadius: BorderRadiusMix.circular(99)),
           clipBehavior: Clip.antiAlias,
         ),
-        track: BoxMix(decoration: BoxDecorationMix(color: Colors.green[100])),
-        fill: BoxMix(
+        track: WidgetContainerPropertiesMix(decoration: BoxDecorationMix(color: Colors.green[100])),
+        fill: WidgetContainerPropertiesMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(99),
             color: Colors.green[500],
           ),
         ),
-        outerContainer: BoxMix(),
+        outerContainer: WidgetContainerPropertiesMix(),
       );
 
   /// Warning progress variant with orange fill
   static RemixProgressStyle get warning => RemixProgressStyle(
-        container: BoxMix(
+        container: WidgetContainerPropertiesMix(
           constraints: BoxConstraintsMix(minHeight: 6, maxHeight: 6),
           decoration: BoxDecorationMix(borderRadius: BorderRadiusMix.circular(99)),
           clipBehavior: Clip.antiAlias,
         ),
-        track: BoxMix(decoration: BoxDecorationMix(color: Colors.orange[100])),
-        fill: BoxMix(
+        track: WidgetContainerPropertiesMix(decoration: BoxDecorationMix(color: Colors.orange[100])),
+        fill: WidgetContainerPropertiesMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(99),
             color: Colors.orange[500],
           ),
         ),
-        outerContainer: BoxMix(),
+        outerContainer: WidgetContainerPropertiesMix(),
       );
 }

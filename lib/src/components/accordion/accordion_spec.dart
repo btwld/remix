@@ -1,25 +1,28 @@
 part of 'accordion.dart';
 
-class AccordionSpec extends Spec<AccordionSpec> with Diagnosticable {
-  final BoxSpec itemContainer;
-  final BoxSpec contentContainer;
-  final FlexBoxSpec headerContainer;
+class AccordionSpec extends WidgetSpec<AccordionSpec> {
+  final WidgetContainerProperties itemContainer;
+  final WidgetContainerProperties contentContainer;
+  final WidgetContainerProperties headerContainer;
+  final WidgetFlexProperties headerFlex;
   final IconSpec leading;
   final IconSpec trailing;
   final TextSpec titleStyle;
   final TextSpec contentStyle;
 
   const AccordionSpec({
-    BoxSpec? itemContainer,
-    BoxSpec? contentContainer,
-    FlexBoxSpec? headerContainer,
+    WidgetContainerProperties? itemContainer,
+    WidgetContainerProperties? contentContainer,
+    WidgetContainerProperties? headerContainer,
+    WidgetFlexProperties? headerFlex,
     IconSpec? leading,
     IconSpec? trailing,
     TextSpec? titleStyle,
     TextSpec? contentStyle,
-  })  : itemContainer = itemContainer ?? const BoxSpec(),
-        contentContainer = contentContainer ?? const BoxSpec(),
-        headerContainer = headerContainer ?? const FlexBoxSpec(),
+  })  : itemContainer = itemContainer ?? const WidgetContainerProperties(),
+        contentContainer = contentContainer ?? const WidgetContainerProperties(),
+        headerContainer = headerContainer ?? const WidgetContainerProperties(),
+        headerFlex = headerFlex ?? const WidgetFlexProperties(),
         leading = leading ?? const IconSpec(),
         trailing = trailing ?? const IconSpec(),
         titleStyle = titleStyle ?? const TextSpec(),
@@ -27,9 +30,10 @@ class AccordionSpec extends Spec<AccordionSpec> with Diagnosticable {
 
   @override
   AccordionSpec copyWith({
-    BoxSpec? itemContainer,
-    BoxSpec? contentContainer,
-    FlexBoxSpec? headerContainer,
+    WidgetContainerProperties? itemContainer,
+    WidgetContainerProperties? contentContainer,
+    WidgetContainerProperties? headerContainer,
+    WidgetFlexProperties? headerFlex,
     IconSpec? leading,
     IconSpec? trailing,
     TextSpec? titleStyle,
@@ -39,6 +43,7 @@ class AccordionSpec extends Spec<AccordionSpec> with Diagnosticable {
       itemContainer: itemContainer ?? this.itemContainer,
       contentContainer: contentContainer ?? this.contentContainer,
       headerContainer: headerContainer ?? this.headerContainer,
+      headerFlex: headerFlex ?? this.headerFlex,
       leading: leading ?? this.leading,
       trailing: trailing ?? this.trailing,
       titleStyle: titleStyle ?? this.titleStyle,
@@ -55,6 +60,7 @@ class AccordionSpec extends Spec<AccordionSpec> with Diagnosticable {
       contentContainer:
           MixOps.lerp(contentContainer, other.contentContainer, t)!,
       headerContainer: MixOps.lerp(headerContainer, other.headerContainer, t)!,
+      headerFlex: MixOps.lerp(headerFlex, other.headerFlex, t)!,
       leading: MixOps.lerp(leading, other.leading, t)!,
       trailing: MixOps.lerp(trailing, other.trailing, t)!,
       titleStyle: MixOps.lerp(titleStyle, other.titleStyle, t)!,
@@ -65,32 +71,15 @@ class AccordionSpec extends Spec<AccordionSpec> with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty(
-      'itemContainer',
-      itemContainer,
-      defaultValue: null,
-    ));
-    properties.add(DiagnosticsProperty(
-      'contentContainer',
-      contentContainer,
-      defaultValue: null,
-    ));
-    properties.add(DiagnosticsProperty(
-      'headerContainer',
-      headerContainer,
-      defaultValue: null,
-    ));
-    properties.add(
-      DiagnosticsProperty('leading', leading, defaultValue: null),
-    );
-    properties.add(
-      DiagnosticsProperty('trailing', trailing, defaultValue: null),
-    );
     properties
-        .add(DiagnosticsProperty('titleStyle', titleStyle, defaultValue: null));
-    properties.add(
-      DiagnosticsProperty('contentStyle', contentStyle, defaultValue: null),
-    );
+      ..add(DiagnosticsProperty('itemContainer', itemContainer))
+      ..add(DiagnosticsProperty('contentContainer', contentContainer))
+      ..add(DiagnosticsProperty('headerContainer', headerContainer))
+      ..add(DiagnosticsProperty('headerFlex', headerFlex))
+      ..add(DiagnosticsProperty('leading', leading))
+      ..add(DiagnosticsProperty('trailing', trailing))
+      ..add(DiagnosticsProperty('titleStyle', titleStyle))
+      ..add(DiagnosticsProperty('contentStyle', contentStyle));
   }
 
   @override
@@ -98,6 +87,7 @@ class AccordionSpec extends Spec<AccordionSpec> with Diagnosticable {
         itemContainer,
         contentContainer,
         headerContainer,
+        headerFlex,
         leading,
         trailing,
         titleStyle,
