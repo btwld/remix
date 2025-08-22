@@ -30,7 +30,7 @@ class _MyAppState extends State<MyApp> {
               ),
             onChanged: (value) {
               setState(() {
-                _value = value;
+                _value = value ?? false;
               });
             },
           ),

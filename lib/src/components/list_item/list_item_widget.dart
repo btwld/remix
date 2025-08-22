@@ -26,7 +26,7 @@ class RemixListItem extends StatefulWidget with HasFocused {
     this.enabled = true,
     this.focusNode,
     this.autofocus = false,
-    this.enableHapticFeedback = true,
+    this.enableFeedback = true,
     this.style = const RemixListItemStyle.create(),
   });
 
@@ -54,8 +54,8 @@ class RemixListItem extends StatefulWidget with HasFocused {
   /// Whether the list item should automatically request focus when it is created.
   final bool autofocus;
 
-  /// Whether to provide haptic feedback when pressed.
-  final bool enableHapticFeedback;
+  /// Whether to provide acoustic and/or haptic feedback when pressed.
+  final bool enableFeedback;
 
   /// The style configuration for the list item.
   final RemixListItemStyle style;
@@ -69,9 +69,9 @@ class _RemixListItemState extends State<RemixListItem>
   @override
   Widget build(BuildContext context) {
     return NakedButton(
+      enableFeedback: widget.enableFeedback,
       onPressed: widget.onPressed,
       enabled: widget.enabled,
-      enableHapticFeedback: widget.enableHapticFeedback,
       focusNode: widget.focusNode,
       autofocus: widget.autofocus,
       child: StyleBuilder(

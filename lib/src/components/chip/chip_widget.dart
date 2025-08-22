@@ -29,7 +29,7 @@ class RemixChip extends StatefulWidget
     this.onDeleted,
     this.selected = false,
     this.enabled = true,
-    this.enableHapticFeedback = true,
+    this.enableFeedback = true,
     this.style = const RemixChipStyle.create(),
     this.focusNode,
     this.autofocus = false,
@@ -66,7 +66,7 @@ class RemixChip extends StatefulWidget
 
   /// Whether to provide haptic feedback when the chip is toggled.
   /// Defaults to true.
-  final bool enableHapticFeedback;
+  final bool enableFeedback;
 
   /// The style configuration for the chip.
   final RemixChipStyle style;
@@ -89,7 +89,7 @@ class _RemixChipState extends State<RemixChip>
       value: widget.selected,
       onChanged: (value) => widget.onChanged?.call(value ?? false),
       enabled: widget.enabled,
-      enableHapticFeedback: widget.enableHapticFeedback,
+      enableFeedback: widget.enableFeedback,
       focusNode: widget.focusNode,
       autofocus: widget.autofocus,
       statesController: controller,
@@ -135,10 +135,7 @@ class _RemixChipState extends State<RemixChip>
           }
 
           return Container(
-            child: Flex(
-              direction: Axis.horizontal,
-              children: children,
-            ),
+            child: Flex(direction: Axis.horizontal, children: children),
           );
         },
       ),

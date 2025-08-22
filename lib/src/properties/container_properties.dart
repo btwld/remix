@@ -2,10 +2,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 
-/// A Spec class for widget container properties.
+/// A property bag for Container widget configuration.
 ///
-/// This extends Spec to provide resolved container styling values for widgets.
-class WidgetContainerProperties extends Spec<WidgetContainerProperties>
+/// This Spec provides resolved container styling values that can be applied 
+/// to Container widgets. It encapsulates common container properties like
+/// decoration, padding, alignment, and constraints.
+class ContainerProperties extends Spec<ContainerProperties>
     with Diagnosticable {
   final Decoration? decoration;
   final Decoration? foregroundDecoration;
@@ -17,7 +19,7 @@ class WidgetContainerProperties extends Spec<WidgetContainerProperties>
   final AlignmentGeometry? transformAlignment;
   final Clip? clipBehavior;
 
-  const WidgetContainerProperties({
+  const ContainerProperties({
     this.decoration,
     this.foregroundDecoration,
     this.padding,
@@ -30,7 +32,7 @@ class WidgetContainerProperties extends Spec<WidgetContainerProperties>
   });
 
   @override
-  WidgetContainerProperties copyWith({
+  ContainerProperties copyWith({
     Decoration? decoration,
     Decoration? foregroundDecoration,
     EdgeInsetsGeometry? padding,
@@ -41,7 +43,7 @@ class WidgetContainerProperties extends Spec<WidgetContainerProperties>
     AlignmentGeometry? transformAlignment,
     Clip? clipBehavior,
   }) {
-    return WidgetContainerProperties(
+    return ContainerProperties(
       decoration: decoration ?? this.decoration,
       foregroundDecoration: foregroundDecoration ?? this.foregroundDecoration,
       padding: padding ?? this.padding,
@@ -55,10 +57,10 @@ class WidgetContainerProperties extends Spec<WidgetContainerProperties>
   }
 
   @override
-  WidgetContainerProperties lerp(WidgetContainerProperties? other, double t) {
+  ContainerProperties lerp(ContainerProperties? other, double t) {
     if (other == null) return this;
 
-    return WidgetContainerProperties(
+    return ContainerProperties(
       decoration: MixOps.lerp(decoration, other.decoration, t),
       foregroundDecoration: MixOps.lerp(foregroundDecoration, other.foregroundDecoration, t),
       padding: MixOps.lerp(padding, other.padding, t),
@@ -100,9 +102,15 @@ class WidgetContainerProperties extends Spec<WidgetContainerProperties>
       ];
 }
 
-/// Extension to convert [WidgetContainerProperties] directly to a [Container] widget.
-extension WidgetContainerPropertiesWidget on WidgetContainerProperties {
+/// Extension to convert [ContainerProperties] directly to a [Container] widget.
+extension ContainerPropertiesX on ContainerProperties {
+  /// Backward compatible call operator to build a Container widget.
   Container call({Widget? child}) {
+    return toContainer(child: child);
+  }
+
+  /// Explicitly build a Container widget with the specified properties.
+  Container toContainer({Widget? child}) {
     return Container(
       alignment: alignment,
       padding: padding,

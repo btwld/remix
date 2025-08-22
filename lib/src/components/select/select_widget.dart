@@ -323,7 +323,7 @@ class _AnimatedOverlayMenu extends StatefulWidget {
   final AnimationController controller;
   final Duration duration;
   final Curve curve;
-  final WidgetContainerProperties menuContainer;
+  final ContainerProperties menuContainer;
   final List<Widget> items;
 
   @override
@@ -377,7 +377,7 @@ class RemixSelectTrigger extends StatefulWidget with HasEnabled, HasFocused {
     this.enabled = true,
     this.semanticLabel,
     this.cursor = SystemMouseCursors.click,
-    this.enableHapticFeedback = true,
+    this.enableFeedback = true,
     this.focusNode,
     this.autofocus = false,
     this.label,
@@ -409,7 +409,7 @@ class RemixSelectTrigger extends StatefulWidget with HasEnabled, HasFocused {
 
   /// Whether to provide haptic feedback when tapped.
   /// Defaults to true.
-  final bool enableHapticFeedback;
+  final bool enableFeedback;
 
   /// Optional focus node to control focus behavior.
   /// If not provided, a new focus node will be created.
@@ -433,8 +433,7 @@ class _RemixSelectTriggerState extends State<RemixSelectTrigger>
 
     return NakedSelectTrigger(
       semanticLabel: widget.semanticLabel,
-      cursor: widget.cursor,
-      enableHapticFeedback: widget.enableHapticFeedback,
+      enableFeedback: widget.enableFeedback,
       focusNode: widget.focusNode,
       autofocus: widget.autofocus,
       statesController: controller,
@@ -489,7 +488,7 @@ class RemixSelectItem<T> extends StatefulWidget with HasEnabled, HasFocused {
     this.enabled = true,
     this.semanticLabel,
     this.cursor = SystemMouseCursors.click,
-    this.enableHapticFeedback = true,
+    this.enableFeedback = true,
     this.focusNode,
     this.autofocus = false,
     this.child,
@@ -522,7 +521,7 @@ class RemixSelectItem<T> extends StatefulWidget with HasEnabled, HasFocused {
 
   /// Whether to provide haptic feedback when selected.
   /// Defaults to true.
-  final bool enableHapticFeedback;
+  final bool enableFeedback;
 
   /// Optional focus node to control focus behavior.
   /// If not provided, a new focus node will be created.
@@ -574,8 +573,7 @@ class _RemixSelectItemState<T> extends State<RemixSelectItem<T>>
       value: widget.value,
       enabled: widget.enabled,
       semanticLabel: widget.semanticLabel,
-      cursor: widget.cursor,
-      enableHapticFeedback: widget.enableHapticFeedback,
+      enableFeedback: widget.enableFeedback,
       focusNode: widget.focusNode,
       autofocus: widget.autofocus,
       statesController: controller,

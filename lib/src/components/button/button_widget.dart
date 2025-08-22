@@ -52,10 +52,21 @@ class RemixButton extends StatefulWidget with HasEnabled, HasFocused {
     this.enabled = true,
     this.autofocus = false,
     this.loading = false,
-    this.enableHapticFeedback = true,
+    this.enableFeedback = true,
     required this.onPressed,
+    this.onLongPress,
+    this.onDoubleTap,
+    this.onFocusChange,
+    this.onHoverChange,
+    this.onPressChanged,
+    this.onStatesChange,
     this.focusNode,
     this.style = const RemixButtonStyle.create(),
+    this.isSemanticButton = true,
+    this.semanticLabel,
+    this.semanticHint,
+    this.excludeSemantics = false,
+    this.mouseCursor = SystemMouseCursors.click,
   }) : assert(
           label != null || icon != null || child != null,
           'Must provide either label, icon, or child',
@@ -80,10 +91,21 @@ class RemixButton extends StatefulWidget with HasEnabled, HasFocused {
     this.enabled = true,
     this.autofocus = false,
     this.loading = false,
-    this.enableHapticFeedback = true,
+    this.enableFeedback = true,
     required this.onPressed,
+    this.onLongPress,
+    this.onDoubleTap,
+    this.onFocusChange,
+    this.onHoverChange,
+    this.onPressChanged,
+    this.onStatesChange,
     this.focusNode,
     this.style = const RemixButtonStyle.create(),
+    this.isSemanticButton = true,
+    this.semanticLabel,
+    this.semanticHint,
+    this.excludeSemantics = false,
+    this.mouseCursor = SystemMouseCursors.click,
   })  : label = null,
         icon = icon,
         child = StyledIcon(icon: icon);
@@ -107,6 +129,24 @@ class RemixButton extends StatefulWidget with HasEnabled, HasFocused {
   /// If null, the button will be considered disabled.
   final VoidCallback? onPressed;
 
+  /// Callback function called when the button is long pressed.
+  final VoidCallback? onLongPress;
+
+  /// Callback function called when the button is double tapped.
+  final VoidCallback? onDoubleTap;
+
+  /// Called when focus state changes.
+  final ValueChanged<bool>? onFocusChange;
+
+  /// Called when hover state changes.
+  final ValueChanged<bool>? onHoverChange;
+
+  /// Called when pressed state changes.
+  final ValueChanged<bool>? onPressChanged;
+
+  /// Called when any widget state changes.
+  final ValueChanged<Set<WidgetState>>? onStatesChange;
+
   /// Optional focus node to control the button's focus behavior.
   final FocusNode? focusNode;
 
@@ -115,10 +155,10 @@ class RemixButton extends StatefulWidget with HasEnabled, HasFocused {
   /// Controls visual properties like colors, padding, typography etc.
   final RemixButtonStyle? style;
 
-  /// Whether to provide haptic feedback when the button is pressed.
+  /// Whether to provide feedback when the button is pressed.
   ///
   /// Defaults to true.
-  final bool enableHapticFeedback;
+  final bool enableFeedback;
 
   /// Whether the button should automatically request focus when it is created.
   final bool autofocus;
@@ -135,6 +175,33 @@ class RemixButton extends StatefulWidget with HasEnabled, HasFocused {
   /// If provided, overrides [label] and [leading].
   final Widget? child;
 
+  /// Whether the button should be treated as a semantic button.
+  ///
+  /// When true, the button will have proper button semantics for accessibility.
+  /// Defaults to true.
+  final bool isSemanticButton;
+
+  /// The semantic label for the button.
+  ///
+  /// Used by screen readers to describe the button.
+  final String? semanticLabel;
+
+  /// The semantic hint for the button.
+  ///
+  /// Provides additional context about what will happen when the button is activated.
+  final String? semanticHint;
+
+  /// Whether to exclude child semantics.
+  ///
+  /// When true, the semantics of child widgets will be excluded.
+  /// Defaults to false.
+  final bool excludeSemantics;
+
+  /// Cursor when hovering over the button.
+  ///
+  /// Defaults to [SystemMouseCursors.click] when enabled.
+  final MouseCursor mouseCursor;
+
   @override
   State<RemixButton> createState() => _RemixButtonState();
 }
@@ -148,10 +215,21 @@ class _RemixButtonState extends State<RemixButton>
   Widget build(BuildContext context) {
     return NakedButton(
       onPressed: widget.onPressed,
+      onLongPress: widget.onLongPress,
+      onDoubleTap: widget.onDoubleTap,
       enabled: _isEnabled,
-      enableHapticFeedback: widget.enableHapticFeedback,
+      isSemanticButton: widget.isSemanticButton,
+      semanticLabel: widget.semanticLabel ?? widget.label,
+      semanticHint: widget.semanticHint,
+      mouseCursor: widget.mouseCursor,
+      enableFeedback: widget.enableFeedback,
       focusNode: widget.focusNode,
       autofocus: widget.autofocus,
+      excludeSemantics: widget.excludeSemantics,
+      onFocusChange: widget.onFocusChange,
+      onHoverChange: widget.onHoverChange,
+      onPressChanged: widget.onPressChanged,
+      onStatesChange: widget.onStatesChange,
       statesController: controller,
       child: StyleBuilder(
         style: DefaultRemixButtonStyle.merge(widget.style),

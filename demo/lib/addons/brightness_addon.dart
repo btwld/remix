@@ -33,7 +33,7 @@ class BrightnessAddon extends WidgetbookAddon<String> {
   @override
   List<Field<String>> get fields {
     return [
-      ListField<String>(
+      ObjectDropdownField<String>(
         name: 'brightness',
         initialValue: initialBrightness,
         values: [

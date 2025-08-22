@@ -17,7 +17,10 @@ class CompositedTransformFollowerSpec extends WidgetSpec<CompositedTransformFoll
     this.offset,
     this.targetAnchor,
     this.followerAnchor,
-  });
+    AnimationConfig? animation,
+    List<Modifier>? widgetModifiers,
+    bool? inherit,
+  }) : super(animation: animation, widgetModifiers: widgetModifiers, inherit: inherit);
 
   static CompositedTransformFollowerSpec? of(BuildContext _) => null;
   
@@ -28,6 +31,9 @@ class CompositedTransformFollowerSpec extends WidgetSpec<CompositedTransformFoll
     Offset? offset,
     AlignmentGeometry? targetAnchor,
     AlignmentGeometry? followerAnchor,
+    AnimationConfig? animation,
+    List<Modifier>? widgetModifiers,
+    bool? inherit,
   }) {
     return CompositedTransformFollowerSpec(
       link: link ?? this.link,
@@ -35,6 +41,9 @@ class CompositedTransformFollowerSpec extends WidgetSpec<CompositedTransformFoll
       offset: offset ?? this.offset,
       targetAnchor: targetAnchor ?? this.targetAnchor,
       followerAnchor: followerAnchor ?? this.followerAnchor,
+      animation: animation ?? this.animation,
+      widgetModifiers: widgetModifiers ?? this.widgetModifiers,
+      inherit: inherit ?? this.inherit,
     );
   }
   
@@ -48,6 +57,9 @@ class CompositedTransformFollowerSpec extends WidgetSpec<CompositedTransformFoll
       offset: Offset.lerp(offset, other.offset, t),
       targetAnchor: AlignmentGeometry.lerp(targetAnchor, other.targetAnchor, t),
       followerAnchor: AlignmentGeometry.lerp(followerAnchor, other.followerAnchor, t),
+      animation: MixOps.lerp(animation, other.animation, t),
+      widgetModifiers: MixOps.lerp(widgetModifiers, other.widgetModifiers, t),
+      inherit: MixOps.lerp(inherit, other.inherit, t),
     );
   }
   
@@ -63,5 +75,5 @@ class CompositedTransformFollowerSpec extends WidgetSpec<CompositedTransformFoll
   }
   
   @override
-  get props => [link, showWhenUnlinked, offset, targetAnchor, followerAnchor];
+  get props => [...super.props, link, showWhenUnlinked, offset, targetAnchor, followerAnchor];
 }

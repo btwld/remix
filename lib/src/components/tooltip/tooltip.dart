@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 import 'package:naked_ui/naked_ui.dart';
 
-import '../../helpers/spec/widget_container_properties.dart';
-import '../../helpers/spec/widget_container_properties_mix.dart';
+import '../../properties/container_properties.dart';
+import '../../properties/container_properties_mix.dart';
 
 part 'tooltip_spec.dart';
 part 'tooltip_style.dart';

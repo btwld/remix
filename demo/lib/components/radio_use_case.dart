@@ -20,31 +20,31 @@ Widget buildRadioUseCase(BuildContext context) {
       child: ListenableBuilder(
         listenable: _state,
         builder: (context, child) {
-          // Note: RemixRadioGroup doesn't exist in new API
-          // Using Column with individual RemixRadio widgets
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: Theme.values
-                .map(
-                  (theme) => Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: RemixRadio<Theme>(
-                      value: theme,
-                      groupValue: _state.value,
-                      onChanged: (value) {
-                        _state.update(value!);
-                      },
-                      enabled: context.knobs.boolean(
-                        label: 'Enabled',
-                        initialValue: true,
+          return RemixRadioGroup<Theme>(
+            groupValue: _state.value,
+            onChanged: (value) {
+              _state.update(value!);
+            },
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: Theme.values
+                  .map(
+                    (theme) => Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: RemixRadio<Theme>(
+                        value: theme,
+                        enabled: context.knobs.boolean(
+                          label: 'Enabled',
+                          initialValue: true,
+                        ),
+                        label: theme.name.capitalize(),
                       ),
-                      label: theme.name.capitalize(),
                     ),
-                  ),
-                )
-                .toList(),
+                  )
+                  .toList(),
+            ),
           );
         },
       ),

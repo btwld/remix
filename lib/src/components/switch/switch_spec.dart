@@ -1,21 +1,38 @@
 part of 'switch.dart';
 
 class SwitchSpec extends WidgetSpec<SwitchSpec> {
-  final WidgetContainerProperties container;
-  final WidgetContainerProperties track;
-  final WidgetContainerProperties thumb;
+  final ContainerProperties container;
+  final ContainerProperties track;
+  final ContainerProperties thumb;
 
-  const SwitchSpec({WidgetContainerProperties? container, WidgetContainerProperties? track, WidgetContainerProperties? thumb})
-      : container = container ?? const WidgetContainerProperties(),
-        track = track ?? const WidgetContainerProperties(),
-        thumb = thumb ?? const WidgetContainerProperties();
+  const SwitchSpec({
+    ContainerProperties? container,
+    ContainerProperties? track,
+    ContainerProperties? thumb,
+    AnimationConfig? animation,
+    List<Modifier>? widgetModifiers,
+    bool? inherit,
+  })  : container = container ?? const ContainerProperties(),
+        track = track ?? const ContainerProperties(),
+        thumb = thumb ?? const ContainerProperties(),
+        super(animation: animation, widgetModifiers: widgetModifiers, inherit: inherit);
 
   @override
-  SwitchSpec copyWith({WidgetContainerProperties? container, WidgetContainerProperties? track, WidgetContainerProperties? thumb}) {
+  SwitchSpec copyWith({
+    ContainerProperties? container,
+    ContainerProperties? track,
+    ContainerProperties? thumb,
+    AnimationConfig? animation,
+    List<Modifier>? widgetModifiers,
+    bool? inherit,
+  }) {
     return SwitchSpec(
       container: container ?? this.container,
       track: track ?? this.track,
       thumb: thumb ?? this.thumb,
+      animation: animation ?? this.animation,
+      widgetModifiers: widgetModifiers ?? this.widgetModifiers,
+      inherit: inherit ?? this.inherit,
     );
   }
 
@@ -27,6 +44,9 @@ class SwitchSpec extends WidgetSpec<SwitchSpec> {
       container: MixOps.lerp(container, other.container, t)!,
       track: MixOps.lerp(track, other.track, t)!,
       thumb: MixOps.lerp(thumb, other.thumb, t)!,
+      animation: MixOps.lerp(animation, other.animation, t),
+      widgetModifiers: MixOps.lerp(widgetModifiers, other.widgetModifiers, t),
+      inherit: MixOps.lerp(inherit, other.inherit, t),
     );
   }
 
@@ -40,5 +60,5 @@ class SwitchSpec extends WidgetSpec<SwitchSpec> {
   }
 
   @override
-  List<Object?> get props => [container, track, thumb];
+  List<Object?> get props => [...super.props, container, track, thumb];
 }

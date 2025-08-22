@@ -1,10 +1,13 @@
 part of 'card.dart';
 
-class RemixCardStyle extends Style<CardSpec> with StyleModifierMixin<RemixCardStyle, CardSpec>, StyleVariantMixin<RemixCardStyle, CardSpec> {
-  final Prop<WidgetContainerProperties>? $container;
+class RemixCardStyle extends Style<CardSpec>
+    with
+        StyleModifierMixin<RemixCardStyle, CardSpec>,
+        StyleVariantMixin<RemixCardStyle, CardSpec> {
+  final Prop<ContainerProperties>? $container;
 
   const RemixCardStyle.create({
-    Prop<WidgetContainerProperties>? container,
+    Prop<ContainerProperties>? container,
     super.variants,
     super.animation,
     super.modifier,
@@ -12,7 +15,7 @@ class RemixCardStyle extends Style<CardSpec> with StyleModifierMixin<RemixCardSt
   }) : $container = container;
 
   RemixCardStyle({
-    WidgetContainerPropertiesMix? container,
+    ContainerPropertiesMix? container,
     AnimationConfig? animation,
     List<VariantStyle<CardSpec>>? variants,
     ModifierConfig? modifier,
@@ -26,7 +29,7 @@ class RemixCardStyle extends Style<CardSpec> with StyleModifierMixin<RemixCardSt
         );
 
   factory RemixCardStyle.value(CardSpec spec) => RemixCardStyle(
-        container: WidgetContainerPropertiesMix.maybeValue(spec.container),
+        container: ContainerPropertiesMix.maybeValue(spec.container),
       );
 
   @override
@@ -73,8 +76,7 @@ class RemixCardStyle extends Style<CardSpec> with StyleModifierMixin<RemixCardSt
 }
 
 final DefaultRemixCardStyle = RemixCardStyle(
-  container: WidgetContainerPropertiesMix(
-    padding: EdgeInsetsGeometryMix.all(16),
+  container: ContainerPropertiesMix(
     decoration: BoxDecorationMix(
       borderRadius: BorderRadiusMix.circular(8),
       color: Colors.white,
@@ -86,6 +88,7 @@ final DefaultRemixCardStyle = RemixCardStyle(
         ),
       ],
     ),
+    padding: EdgeInsetsGeometryMix.all(16),
   ),
 );
 
@@ -93,8 +96,7 @@ final DefaultRemixCardStyle = RemixCardStyle(
 class RemixCardStyles {
   /// Default card style
   static RemixCardStyle get defaultStyle => RemixCardStyle(
-        container: WidgetContainerPropertiesMix(
-          padding: EdgeInsetsGeometryMix.all(16),
+        container: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(8),
             color: Colors.white,
@@ -106,13 +108,13 @@ class RemixCardStyles {
               ),
             ],
           ),
+          padding: EdgeInsetsGeometryMix.all(16),
         ),
       );
 
   /// Elevated card variant with stronger shadow
   static RemixCardStyle get elevated => RemixCardStyle(
-        container: WidgetContainerPropertiesMix(
-          padding: EdgeInsetsGeometryMix.all(16),
+        container: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(8),
             color: Colors.white,
@@ -124,13 +126,13 @@ class RemixCardStyles {
               ),
             ],
           ),
+          padding: EdgeInsetsGeometryMix.all(16),
         ),
       );
 
   /// Outlined card variant with border
   static RemixCardStyle get outlined => RemixCardStyle(
-        container: WidgetContainerPropertiesMix(
-          padding: EdgeInsetsGeometryMix.all(16),
+        container: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(
               BorderSideMix(color: Colors.grey[300]!, width: 1),
@@ -138,17 +140,18 @@ class RemixCardStyles {
             borderRadius: BorderRadiusMix.circular(8),
             color: Colors.white,
           ),
+          padding: EdgeInsetsGeometryMix.all(16),
         ),
       );
 
   /// Flat card variant without shadow
   static RemixCardStyle get flat => RemixCardStyle(
-        container: WidgetContainerPropertiesMix(
-          padding: EdgeInsetsGeometryMix.all(16),
+        container: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(8),
             color: Colors.grey[100],
           ),
+          padding: EdgeInsetsGeometryMix.all(16),
         ),
       );
 }

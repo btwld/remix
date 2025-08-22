@@ -1,43 +1,50 @@
 part of 'accordion.dart';
 
 class AccordionSpec extends WidgetSpec<AccordionSpec> {
-  final WidgetContainerProperties itemContainer;
-  final WidgetContainerProperties contentContainer;
-  final WidgetContainerProperties headerContainer;
-  final WidgetFlexProperties headerFlex;
+  final ContainerProperties itemContainer;
+  final ContainerProperties contentContainer;
+  final ContainerProperties headerContainer;
+  final FlexProperties headerFlex;
   final IconSpec leading;
   final IconSpec trailing;
   final TextSpec titleStyle;
   final TextSpec contentStyle;
 
   const AccordionSpec({
-    WidgetContainerProperties? itemContainer,
-    WidgetContainerProperties? contentContainer,
-    WidgetContainerProperties? headerContainer,
-    WidgetFlexProperties? headerFlex,
+    ContainerProperties? itemContainer,
+    ContainerProperties? contentContainer,
+    ContainerProperties? headerContainer,
+    FlexProperties? headerFlex,
     IconSpec? leading,
     IconSpec? trailing,
     TextSpec? titleStyle,
     TextSpec? contentStyle,
-  })  : itemContainer = itemContainer ?? const WidgetContainerProperties(),
-        contentContainer = contentContainer ?? const WidgetContainerProperties(),
-        headerContainer = headerContainer ?? const WidgetContainerProperties(),
-        headerFlex = headerFlex ?? const WidgetFlexProperties(),
+    AnimationConfig? animation,
+    List<Modifier>? widgetModifiers,
+    bool? inherit,
+  })  : itemContainer = itemContainer ?? const ContainerProperties(),
+        contentContainer = contentContainer ?? const ContainerProperties(),
+        headerContainer = headerContainer ?? const ContainerProperties(),
+        headerFlex = headerFlex ?? const FlexProperties(),
         leading = leading ?? const IconSpec(),
         trailing = trailing ?? const IconSpec(),
         titleStyle = titleStyle ?? const TextSpec(),
-        contentStyle = contentStyle ?? const TextSpec();
+        contentStyle = contentStyle ?? const TextSpec(),
+        super(animation: animation, widgetModifiers: widgetModifiers, inherit: inherit);
 
   @override
   AccordionSpec copyWith({
-    WidgetContainerProperties? itemContainer,
-    WidgetContainerProperties? contentContainer,
-    WidgetContainerProperties? headerContainer,
-    WidgetFlexProperties? headerFlex,
+    ContainerProperties? itemContainer,
+    ContainerProperties? contentContainer,
+    ContainerProperties? headerContainer,
+    FlexProperties? headerFlex,
     IconSpec? leading,
     IconSpec? trailing,
     TextSpec? titleStyle,
     TextSpec? contentStyle,
+    AnimationConfig? animation,
+    List<Modifier>? widgetModifiers,
+    bool? inherit,
   }) {
     return AccordionSpec(
       itemContainer: itemContainer ?? this.itemContainer,
@@ -48,6 +55,9 @@ class AccordionSpec extends WidgetSpec<AccordionSpec> {
       trailing: trailing ?? this.trailing,
       titleStyle: titleStyle ?? this.titleStyle,
       contentStyle: contentStyle ?? this.contentStyle,
+      animation: animation ?? this.animation,
+      widgetModifiers: widgetModifiers ?? this.widgetModifiers,
+      inherit: inherit ?? this.inherit,
     );
   }
 
@@ -65,6 +75,9 @@ class AccordionSpec extends WidgetSpec<AccordionSpec> {
       trailing: MixOps.lerp(trailing, other.trailing, t)!,
       titleStyle: MixOps.lerp(titleStyle, other.titleStyle, t)!,
       contentStyle: MixOps.lerp(contentStyle, other.contentStyle, t)!,
+      animation: MixOps.lerp(animation, other.animation, t),
+      widgetModifiers: MixOps.lerp(widgetModifiers, other.widgetModifiers, t),
+      inherit: MixOps.lerp(inherit, other.inherit, t),
     );
   }
 
@@ -84,6 +97,7 @@ class AccordionSpec extends WidgetSpec<AccordionSpec> {
 
   @override
   List<Object?> get props => [
+        ...super.props,
         itemContainer,
         contentContainer,
         headerContainer,

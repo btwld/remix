@@ -1,14 +1,29 @@
 part of 'divider.dart';
 
 class DividerSpec extends WidgetSpec<DividerSpec> {
-  final WidgetContainerProperties container;
+  final ContainerProperties container;
 
-  const DividerSpec({WidgetContainerProperties? container})
-      : container = container ?? const WidgetContainerProperties();
+  const DividerSpec({
+    ContainerProperties? container,
+    AnimationConfig? animation,
+    List<Modifier>? widgetModifiers,
+    bool? inherit,
+  })  : container = container ?? const ContainerProperties(),
+        super(animation: animation, widgetModifiers: widgetModifiers, inherit: inherit);
 
   @override
-  DividerSpec copyWith({WidgetContainerProperties? container}) {
-    return DividerSpec(container: container ?? this.container);
+  DividerSpec copyWith({
+    ContainerProperties? container,
+    AnimationConfig? animation,
+    List<Modifier>? widgetModifiers,
+    bool? inherit,
+  }) {
+    return DividerSpec(
+      container: container ?? this.container,
+      animation: animation ?? this.animation,
+      widgetModifiers: widgetModifiers ?? this.widgetModifiers,
+      inherit: inherit ?? this.inherit,
+    );
   }
 
   @override
@@ -17,6 +32,9 @@ class DividerSpec extends WidgetSpec<DividerSpec> {
 
     return DividerSpec(
       container: MixOps.lerp(container, other.container, t)!,
+      animation: MixOps.lerp(animation, other.animation, t),
+      widgetModifiers: MixOps.lerp(widgetModifiers, other.widgetModifiers, t),
+      inherit: MixOps.lerp(inherit, other.inherit, t),
     );
   }
 
@@ -28,5 +46,5 @@ class DividerSpec extends WidgetSpec<DividerSpec> {
   }
 
   @override
-  List<Object?> get props => [container];
+  List<Object?> get props => [...super.props, container];
 }

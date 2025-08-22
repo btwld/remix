@@ -2,32 +2,42 @@ part of 'select.dart';
 
 class SelectSpec extends WidgetSpec<SelectSpec> {
   final SelectTriggerSpec trigger;
-  final WidgetContainerProperties menuContainer;
+  final ContainerProperties menuContainer;
   final SelectMenuItemSpec item;
   final CompositedTransformFollowerSpec position;
 
   const SelectSpec({
     SelectTriggerSpec? trigger,
-    WidgetContainerProperties? menuContainer,
+    ContainerProperties? menuContainer,
     SelectMenuItemSpec? item,
     CompositedTransformFollowerSpec? position,
+    AnimationConfig? animation,
+    List<Modifier>? widgetModifiers,
+    bool? inherit,
   })  : trigger = trigger ?? const SelectTriggerSpec(),
         item = item ?? const SelectMenuItemSpec(),
-        menuContainer = menuContainer ?? const WidgetContainerProperties(),
-        position = position ?? const CompositedTransformFollowerSpec();
+        menuContainer = menuContainer ?? const ContainerProperties(),
+        position = position ?? const CompositedTransformFollowerSpec(),
+        super(animation: animation, widgetModifiers: widgetModifiers, inherit: inherit);
 
   @override
   SelectSpec copyWith({
     SelectTriggerSpec? trigger,
-    WidgetContainerProperties? menuContainer,
+    ContainerProperties? menuContainer,
     SelectMenuItemSpec? item,
     CompositedTransformFollowerSpec? position,
+    AnimationConfig? animation,
+    List<Modifier>? widgetModifiers,
+    bool? inherit,
   }) {
     return SelectSpec(
       trigger: trigger ?? this.trigger,
       menuContainer: menuContainer ?? this.menuContainer,
       item: item ?? this.item,
       position: position ?? this.position,
+      animation: animation ?? this.animation,
+      widgetModifiers: widgetModifiers ?? this.widgetModifiers,
+      inherit: inherit ?? this.inherit,
     );
   }
 
@@ -40,6 +50,9 @@ class SelectSpec extends WidgetSpec<SelectSpec> {
       menuContainer: MixOps.lerp(menuContainer, other.menuContainer, t)!,
       item: MixOps.lerp(item, other.item, t)!,
       position: MixOps.lerp(position, other.position, t)!,
+      animation: MixOps.lerp(animation, other.animation, t),
+      widgetModifiers: MixOps.lerp(widgetModifiers, other.widgetModifiers, t),
+      inherit: MixOps.lerp(inherit, other.inherit, t),
     );
   }
 
@@ -55,37 +68,47 @@ class SelectSpec extends WidgetSpec<SelectSpec> {
   }
 
   @override
-  List<Object?> get props => [trigger, menuContainer, item, position];
+  List<Object?> get props => [...super.props, trigger, menuContainer, item, position];
 }
 
 class SelectTriggerSpec extends WidgetSpec<SelectTriggerSpec> {
-  final WidgetContainerProperties container;
-  final WidgetFlexProperties flex;
+  final ContainerProperties container;
+  final FlexProperties flex;
   final TextSpec label;
   final IconSpec icon;
 
   const SelectTriggerSpec({
-    WidgetContainerProperties? container,
-    WidgetFlexProperties? flex,
+    ContainerProperties? container,
+    FlexProperties? flex,
     TextSpec? label,
     IconSpec? icon,
-  })  : container = container ?? const WidgetContainerProperties(),
-        flex = flex ?? const WidgetFlexProperties(),
+    AnimationConfig? animation,
+    List<Modifier>? widgetModifiers,
+    bool? inherit,
+  })  : container = container ?? const ContainerProperties(),
+        flex = flex ?? const FlexProperties(),
         label = label ?? const TextSpec(),
-        icon = icon ?? const IconSpec();
+        icon = icon ?? const IconSpec(),
+        super(animation: animation, widgetModifiers: widgetModifiers, inherit: inherit);
 
   @override
   SelectTriggerSpec copyWith({
-    WidgetContainerProperties? container,
-    WidgetFlexProperties? flex,
+    ContainerProperties? container,
+    FlexProperties? flex,
     TextSpec? label,
     IconSpec? icon,
+    AnimationConfig? animation,
+    List<Modifier>? widgetModifiers,
+    bool? inherit,
   }) {
     return SelectTriggerSpec(
       container: container ?? this.container,
       flex: flex ?? this.flex,
       label: label ?? this.label,
       icon: icon ?? this.icon,
+      animation: animation ?? this.animation,
+      widgetModifiers: widgetModifiers ?? this.widgetModifiers,
+      inherit: inherit ?? this.inherit,
     );
   }
 
@@ -98,6 +121,9 @@ class SelectTriggerSpec extends WidgetSpec<SelectTriggerSpec> {
       flex: MixOps.lerp(flex, other.flex, t)!,
       label: MixOps.lerp(label, other.label, t)!,
       icon: MixOps.lerp(icon, other.icon, t)!,
+      animation: MixOps.lerp(animation, other.animation, t),
+      widgetModifiers: MixOps.lerp(widgetModifiers, other.widgetModifiers, t),
+      inherit: MixOps.lerp(inherit, other.inherit, t),
     );
   }
 
@@ -113,37 +139,47 @@ class SelectTriggerSpec extends WidgetSpec<SelectTriggerSpec> {
   }
 
   @override
-  List<Object?> get props => [container, flex, label, icon];
+  List<Object?> get props => [...super.props, container, flex, label, icon];
 }
 
 class SelectMenuItemSpec extends WidgetSpec<SelectMenuItemSpec> {
-  final WidgetContainerProperties container;
-  final WidgetFlexProperties flex;
+  final ContainerProperties container;
+  final FlexProperties flex;
   final TextSpec text;
   final IconSpec icon;
 
   const SelectMenuItemSpec({
-    WidgetContainerProperties? container,
-    WidgetFlexProperties? flex,
+    ContainerProperties? container,
+    FlexProperties? flex,
     TextSpec? text,
     IconSpec? icon,
-  })  : container = container ?? const WidgetContainerProperties(),
-        flex = flex ?? const WidgetFlexProperties(),
+    AnimationConfig? animation,
+    List<Modifier>? widgetModifiers,
+    bool? inherit,
+  })  : container = container ?? const ContainerProperties(),
+        flex = flex ?? const FlexProperties(),
         text = text ?? const TextSpec(),
-        icon = icon ?? const IconSpec();
+        icon = icon ?? const IconSpec(),
+        super(animation: animation, widgetModifiers: widgetModifiers, inherit: inherit);
 
   @override
   SelectMenuItemSpec copyWith({
-    WidgetContainerProperties? container,
-    WidgetFlexProperties? flex,
+    ContainerProperties? container,
+    FlexProperties? flex,
     TextSpec? text,
     IconSpec? icon,
+    AnimationConfig? animation,
+    List<Modifier>? widgetModifiers,
+    bool? inherit,
   }) {
     return SelectMenuItemSpec(
       container: container ?? this.container,
       flex: flex ?? this.flex,
       text: text ?? this.text,
       icon: icon ?? this.icon,
+      animation: animation ?? this.animation,
+      widgetModifiers: widgetModifiers ?? this.widgetModifiers,
+      inherit: inherit ?? this.inherit,
     );
   }
 
@@ -156,6 +192,9 @@ class SelectMenuItemSpec extends WidgetSpec<SelectMenuItemSpec> {
       flex: MixOps.lerp(flex, other.flex, t)!,
       text: MixOps.lerp(text, other.text, t)!,
       icon: MixOps.lerp(icon, other.icon, t)!,
+      animation: MixOps.lerp(animation, other.animation, t),
+      widgetModifiers: MixOps.lerp(widgetModifiers, other.widgetModifiers, t),
+      inherit: MixOps.lerp(inherit, other.inherit, t),
     );
   }
 
@@ -171,5 +210,5 @@ class SelectMenuItemSpec extends WidgetSpec<SelectMenuItemSpec> {
   }
 
   @override
-  List<Object?> get props => [container, flex, text, icon];
+  List<Object?> get props => [...super.props, container, flex, text, icon];
 }

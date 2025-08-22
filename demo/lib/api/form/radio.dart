@@ -26,42 +26,32 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         body: Center(
-          child: Column(
-            spacing: 8,
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              RemixRadio<Options>(
-                label: 'Banana',
-                value: Options.banana,
-                groupValue: _value,
-                onChanged: (value) {
-                  setState(() {
-                    _value = value;
-                  });
-                },
-              ),
-              RemixRadio<Options>(
-                label: 'Apple',
-                value: Options.apple,
-                groupValue: _value,
-                onChanged: (value) {
-                  setState(() {
-                    _value = value;
-                  });
-                },
-              ),
-              RemixRadio<Options>(
-                label: 'Orange',
-                value: Options.orange,
-                groupValue: _value,
-                onChanged: (value) {
-                  setState(() {
-                    _value = value;
-                  });
-                },
-              ),
-            ],
+          child: RemixRadioGroup<Options>(
+            groupValue: _value,
+            onChanged: (value) {
+              setState(() {
+                _value = value;
+              });
+            },
+            child: const Column(
+              spacing: 8,
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                RemixRadio<Options>(
+                  label: 'Banana',
+                  value: Options.banana,
+                ),
+                RemixRadio<Options>(
+                  label: 'Apple',
+                  value: Options.apple,
+                ),
+                RemixRadio<Options>(
+                  label: 'Orange',
+                  value: Options.orange,
+                ),
+              ],
+            ),
           ),
         ),
       ),

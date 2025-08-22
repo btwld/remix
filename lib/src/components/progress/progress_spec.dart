@@ -1,33 +1,43 @@
 part of 'progress.dart';
 
 class ProgressSpec extends WidgetSpec<ProgressSpec> {
-  final WidgetContainerProperties container;
-  final WidgetContainerProperties track;
-  final WidgetContainerProperties fill;
-  final WidgetContainerProperties outerContainer;
+  final ContainerProperties container;
+  final ContainerProperties track;
+  final ContainerProperties fill;
+  final ContainerProperties outerContainer;
 
   const ProgressSpec({
-    WidgetContainerProperties? container,
-    WidgetContainerProperties? track,
-    WidgetContainerProperties? fill,
-    WidgetContainerProperties? outerContainer,
-  })  : container = container ?? const WidgetContainerProperties(),
-        track = track ?? const WidgetContainerProperties(),
-        fill = fill ?? const WidgetContainerProperties(),
-        outerContainer = outerContainer ?? const WidgetContainerProperties();
+    ContainerProperties? container,
+    ContainerProperties? track,
+    ContainerProperties? fill,
+    ContainerProperties? outerContainer,
+    AnimationConfig? animation,
+    List<Modifier>? widgetModifiers,
+    bool? inherit,
+  })  : container = container ?? const ContainerProperties(),
+        track = track ?? const ContainerProperties(),
+        fill = fill ?? const ContainerProperties(),
+        outerContainer = outerContainer ?? const ContainerProperties(),
+        super(animation: animation, widgetModifiers: widgetModifiers, inherit: inherit);
 
   @override
   ProgressSpec copyWith({
-    WidgetContainerProperties? container,
-    WidgetContainerProperties? track,
-    WidgetContainerProperties? fill,
-    WidgetContainerProperties? outerContainer,
+    ContainerProperties? container,
+    ContainerProperties? track,
+    ContainerProperties? fill,
+    ContainerProperties? outerContainer,
+    AnimationConfig? animation,
+    List<Modifier>? widgetModifiers,
+    bool? inherit,
   }) {
     return ProgressSpec(
       container: container ?? this.container,
       track: track ?? this.track,
       fill: fill ?? this.fill,
       outerContainer: outerContainer ?? this.outerContainer,
+      animation: animation ?? this.animation,
+      widgetModifiers: widgetModifiers ?? this.widgetModifiers,
+      inherit: inherit ?? this.inherit,
     );
   }
 
@@ -40,6 +50,9 @@ class ProgressSpec extends WidgetSpec<ProgressSpec> {
       track: MixOps.lerp(track, other.track, t)!,
       fill: MixOps.lerp(fill, other.fill, t)!,
       outerContainer: MixOps.lerp(outerContainer, other.outerContainer, t)!,
+      animation: MixOps.lerp(animation, other.animation, t),
+      widgetModifiers: MixOps.lerp(widgetModifiers, other.widgetModifiers, t),
+      inherit: MixOps.lerp(inherit, other.inherit, t),
     );
   }
 
@@ -54,5 +67,5 @@ class ProgressSpec extends WidgetSpec<ProgressSpec> {
   }
 
   @override
-  List<Object?> get props => [container, track, fill, outerContainer];
+  List<Object?> get props => [...super.props, container, track, fill, outerContainer];
 }

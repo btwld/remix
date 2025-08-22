@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mix/mix.dart';
-import 'package:remix/src/helpers/spec/widget_flex_properties.dart';
-import 'package:remix/src/helpers/spec/widget_flex_properties_mix.dart';
+import 'package:remix/src/properties/flex_properties.dart';
+import 'package:remix/src/properties/flex_properties_mix.dart';
 
 void main() {
-  group('WidgetFlexProperties Tests', () {
+  group('FlexProperties Tests', () {
     test('creates with default values', () {
-      const spec = WidgetFlexProperties();
+      const spec = FlexProperties();
       
       expect(spec.decoration, isNull);
       expect(spec.padding, isNull);
@@ -25,7 +25,7 @@ void main() {
       const crossAxisAlignment = CrossAxisAlignment.center;
       const gap = 8.0;
 
-      const spec = WidgetFlexProperties(
+      const spec = FlexProperties(
         decoration: decoration,
         padding: padding,
         alignment: alignment,
@@ -45,7 +45,7 @@ void main() {
     });
 
     test('copyWith works correctly', () {
-      const originalSpec = WidgetFlexProperties(
+      const originalSpec = FlexProperties(
         decoration: BoxDecoration(color: Colors.blue),
         padding: EdgeInsets.all(16),
         direction: Axis.vertical,
@@ -64,12 +64,12 @@ void main() {
     });
 
     test('lerp interpolates correctly', () {
-      const spec1 = WidgetFlexProperties(
+      const spec1 = FlexProperties(
         padding: EdgeInsets.all(10),
         gap: 5.0,
         direction: Axis.horizontal,
       );
-      const spec2 = WidgetFlexProperties(
+      const spec2 = FlexProperties(
         padding: EdgeInsets.all(20),
         gap: 15.0,
         direction: Axis.vertical,
@@ -79,21 +79,21 @@ void main() {
 
       expect(result.padding, equals(const EdgeInsets.all(15)));
       expect(result.gap, equals(10.0));
-      expect(result.direction, equals(Axis.horizontal)); // t < 0.5, so spec1 value
+      expect(result.direction, equals(Axis.vertical)); // t = 0.5, so spec2 value
     });
 
     test('props equality works correctly', () {
-      const spec1 = WidgetFlexProperties(
+      const spec1 = FlexProperties(
         decoration: BoxDecoration(color: Colors.blue),
         direction: Axis.horizontal,
         gap: 8.0,
       );
-      const spec2 = WidgetFlexProperties(
+      const spec2 = FlexProperties(
         decoration: BoxDecoration(color: Colors.blue),
         direction: Axis.horizontal,
         gap: 8.0,
       );
-      const spec3 = WidgetFlexProperties(
+      const spec3 = FlexProperties(
         decoration: BoxDecoration(color: Colors.red),
         direction: Axis.horizontal,
         gap: 8.0,
@@ -104,13 +104,13 @@ void main() {
     });
   });
 
-  group('WidgetFlexPropertiesMix Tests', () {
+  group('FlexPropertiesMix Tests', () {
     testWidgets('resolves correctly with BuildContext', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Builder(
             builder: (context) {
-              final mix = WidgetFlexPropertiesMix(
+              final mix = FlexPropertiesMix(
                 decoration: BoxDecorationMix(color: Colors.blue),
                 padding: EdgeInsetsGeometryMix.all(16),
                 direction: Axis.horizontal,
@@ -134,63 +134,63 @@ void main() {
     });
 
     test('merge works correctly', () {
-      final mix1 = WidgetFlexPropertiesMix(
+      final mix1 = FlexPropertiesMix(
         decoration: BoxDecorationMix(color: Colors.blue),
         direction: Axis.horizontal,
         gap: 4.0,
       );
 
-      final mix2 = WidgetFlexPropertiesMix(
+      final mix2 = FlexPropertiesMix(
         decoration: BoxDecorationMix(color: Colors.red),
         mainAxisAlignment: MainAxisAlignment.center,
       );
 
       final merged = mix1.merge(mix2);
 
-      expect(merged, isA<WidgetFlexPropertiesMix>());
+      expect(merged, isA<FlexPropertiesMix>());
     });
 
     test('factory constructors work correctly', () {
-      final colorMix = WidgetFlexPropertiesMix.color(Colors.red);
-      expect(colorMix, isA<WidgetFlexPropertiesMix>());
+      final colorMix = FlexPropertiesMix.color(Colors.red);
+      expect(colorMix, isA<FlexPropertiesMix>());
 
-      final horizontalMix = WidgetFlexPropertiesMix.horizontal(
+      final horizontalMix = FlexPropertiesMix.horizontal(
         mainAxisAlignment: MainAxisAlignment.center,
         gap: 8.0,
       );
-      expect(horizontalMix, isA<WidgetFlexPropertiesMix>());
+      expect(horizontalMix, isA<FlexPropertiesMix>());
 
-      final verticalMix = WidgetFlexPropertiesMix.vertical(
+      final verticalMix = FlexPropertiesMix.vertical(
         crossAxisAlignment: CrossAxisAlignment.start,
       );
-      expect(verticalMix, isA<WidgetFlexPropertiesMix>());
+      expect(verticalMix, isA<FlexPropertiesMix>());
 
-      final rowMix = WidgetFlexPropertiesMix.row(gap: 12.0);
-      expect(rowMix, isA<WidgetFlexPropertiesMix>());
+      final rowMix = FlexPropertiesMix.row(gap: 12.0);
+      expect(rowMix, isA<FlexPropertiesMix>());
 
-      final columnMix = WidgetFlexPropertiesMix.column(gap: 6.0);
-      expect(columnMix, isA<WidgetFlexPropertiesMix>());
+      final columnMix = FlexPropertiesMix.column(gap: 6.0);
+      expect(columnMix, isA<FlexPropertiesMix>());
     });
 
     test('chainable methods work correctly', () {
-      final mix = WidgetFlexPropertiesMix()
+      final mix = FlexPropertiesMix()
           .color(Colors.green)
           .direction(Axis.vertical)
           .gap(10.0)
           .mainAxisAlignment(MainAxisAlignment.spaceEvenly);
 
-      expect(mix, isA<WidgetFlexPropertiesMix>());
+      expect(mix, isA<FlexPropertiesMix>());
     });
 
     test('maybeValue handles null correctly', () {
-      final result = WidgetFlexPropertiesMix.maybeValue(null);
+      final result = FlexPropertiesMix.maybeValue(null);
       expect(result, isNull);
 
-      const spec = WidgetFlexProperties(
+      const spec = FlexProperties(
         direction: Axis.horizontal,
         gap: 8.0,
       );
-      final nonNullResult = WidgetFlexPropertiesMix.maybeValue(spec);
+      final nonNullResult = FlexPropertiesMix.maybeValue(spec);
       expect(nonNullResult, isNotNull);
     });
   });

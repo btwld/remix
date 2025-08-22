@@ -13,7 +13,7 @@ Widget buildCard(BuildContext context) {
       child: RemixCard(
         child: HBox(
           style: $flexbox
-            ..gap(12)
+            ..spacing(12)
             ..mainAxisSize(MainAxisSize.min),
           children: [
             RemixAvatar(label: 'LF'),

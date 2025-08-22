@@ -18,7 +18,10 @@ class SpinnerSpec extends WidgetSpec<SpinnerSpec> {
     this.color,
     this.duration,
     this.style,
-  });
+    AnimationConfig? animation,
+    List<Modifier>? widgetModifiers,
+    bool? inherit,
+  }) : super(animation: animation, widgetModifiers: widgetModifiers, inherit: inherit);
 
   @override
   SpinnerSpec copyWith({
@@ -27,6 +30,9 @@ class SpinnerSpec extends WidgetSpec<SpinnerSpec> {
     Color? color,
     Duration? duration,
     SpinnerStyle? style,
+    AnimationConfig? animation,
+    List<Modifier>? widgetModifiers,
+    bool? inherit,
   }) {
     return SpinnerSpec(
       size: size ?? this.size,
@@ -34,6 +40,9 @@ class SpinnerSpec extends WidgetSpec<SpinnerSpec> {
       color: color ?? this.color,
       duration: duration ?? this.duration,
       style: style ?? this.style,
+      animation: animation ?? this.animation,
+      widgetModifiers: widgetModifiers ?? this.widgetModifiers,
+      inherit: inherit ?? this.inherit,
     );
   }
 
@@ -47,6 +56,9 @@ class SpinnerSpec extends WidgetSpec<SpinnerSpec> {
       color: MixOps.lerp(color, other.color, t),
       duration: MixOps.lerpSnap(duration, other.duration, t),
       style: MixOps.lerpSnap(style, other.style, t),
+      animation: MixOps.lerp(animation, other.animation, t),
+      widgetModifiers: MixOps.lerp(widgetModifiers, other.widgetModifiers, t),
+      inherit: MixOps.lerp(inherit, other.inherit, t),
     );
   }
 
@@ -62,5 +74,5 @@ class SpinnerSpec extends WidgetSpec<SpinnerSpec> {
   }
 
   @override
-  List<Object?> get props => [size, strokeWidth, color, duration, style];
+  List<Object?> get props => [...super.props, size, strokeWidth, color, duration, style];
 }

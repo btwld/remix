@@ -1,31 +1,38 @@
 part of 'chip.dart';
 
 class ChipSpec extends WidgetSpec<ChipSpec> {
-  final WidgetContainerProperties container;
-  final WidgetFlexProperties flex;
+  final ContainerProperties container;
+  final FlexProperties flex;
   final TextSpec label;
   final IconSpec leading;
   final IconSpec trailing;
 
   const ChipSpec({
-    WidgetContainerProperties? container,
-    WidgetFlexProperties? flex,
+    ContainerProperties? container,
+    FlexProperties? flex,
     TextSpec? label,
     IconSpec? leading,
     IconSpec? trailing,
-  })  : container = container ?? const WidgetContainerProperties(),
-        flex = flex ?? const WidgetFlexProperties(),
+    AnimationConfig? animation,
+    List<Modifier>? widgetModifiers,
+    bool? inherit,
+  })  : container = container ?? const ContainerProperties(),
+        flex = flex ?? const FlexProperties(),
         label = label ?? const TextSpec(),
         leading = leading ?? const IconSpec(),
-        trailing = trailing ?? const IconSpec();
+        trailing = trailing ?? const IconSpec(),
+        super(animation: animation, widgetModifiers: widgetModifiers, inherit: inherit);
 
   @override
   ChipSpec copyWith({
-    WidgetContainerProperties? container,
-    WidgetFlexProperties? flex,
+    ContainerProperties? container,
+    FlexProperties? flex,
     TextSpec? label,
     IconSpec? leading,
     IconSpec? trailing,
+    AnimationConfig? animation,
+    List<Modifier>? widgetModifiers,
+    bool? inherit,
   }) {
     return ChipSpec(
       container: container ?? this.container,
@@ -33,6 +40,9 @@ class ChipSpec extends WidgetSpec<ChipSpec> {
       label: label ?? this.label,
       leading: leading ?? this.leading,
       trailing: trailing ?? this.trailing,
+      animation: animation ?? this.animation,
+      widgetModifiers: widgetModifiers ?? this.widgetModifiers,
+      inherit: inherit ?? this.inherit,
     );
   }
 
@@ -46,6 +56,9 @@ class ChipSpec extends WidgetSpec<ChipSpec> {
       label: MixOps.lerp(label, other.label, t)!,
       leading: MixOps.lerp(leading, other.leading, t)!,
       trailing: MixOps.lerp(trailing, other.trailing, t)!,
+      animation: MixOps.lerp(animation, other.animation, t),
+      widgetModifiers: MixOps.lerp(widgetModifiers, other.widgetModifiers, t),
+      inherit: MixOps.lerp(inherit, other.inherit, t),
     );
   }
 
@@ -61,5 +74,5 @@ class ChipSpec extends WidgetSpec<ChipSpec> {
   }
 
   @override
-  List<Object?> get props => [container, flex, label, leading, trailing];
+  List<Object?> get props => [...super.props, container, flex, label, leading, trailing];
 }

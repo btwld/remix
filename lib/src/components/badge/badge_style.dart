@@ -1,12 +1,15 @@
 part of 'badge.dart';
 
-class RemixBadgeStyle extends Style<BadgeSpec> with StyleModifierMixin<RemixBadgeStyle, BadgeSpec>, StyleVariantMixin<RemixBadgeStyle, BadgeSpec> {
-  final Prop<WidgetContainerProperties>? $container;
+class RemixBadgeStyle extends Style<BadgeSpec>
+    with
+        StyleModifierMixin<RemixBadgeStyle, BadgeSpec>,
+        StyleVariantMixin<RemixBadgeStyle, BadgeSpec> {
+  final Prop<ContainerProperties>? $container;
   final Prop<TextSpec>? $text;
   final Prop<IconSpec>? $icon;
 
   const RemixBadgeStyle.create({
-    Prop<WidgetContainerProperties>? container,
+    Prop<ContainerProperties>? container,
     Prop<TextSpec>? text,
     Prop<IconSpec>? icon,
     super.variants,
@@ -18,7 +21,7 @@ class RemixBadgeStyle extends Style<BadgeSpec> with StyleModifierMixin<RemixBadg
         $icon = icon;
 
   RemixBadgeStyle({
-    WidgetContainerPropertiesMix? container,
+    ContainerPropertiesMix? container,
     TextMix? text,
     IconMix? icon,
     AnimationConfig? animation,
@@ -36,24 +39,36 @@ class RemixBadgeStyle extends Style<BadgeSpec> with StyleModifierMixin<RemixBadg
         );
 
   factory RemixBadgeStyle.value(BadgeSpec spec) => RemixBadgeStyle(
-        container: WidgetContainerPropertiesMix.maybeValue(spec.container),
+        container: ContainerPropertiesMix.maybeValue(spec.container),
         text: TextMix.maybeValue(spec.text),
         icon: IconMix.maybeValue(spec.icon),
       );
 
   /// Factory for background color
   factory RemixBadgeStyle.color(Color value) {
-    return RemixBadgeStyle(container: WidgetContainerPropertiesMix.color(value));
+    return RemixBadgeStyle(
+      container: ContainerPropertiesMix.color(value),
+    );
   }
 
   /// Factory for border radius
   factory RemixBadgeStyle.borderRadius(double radius) {
-    return RemixBadgeStyle(container: WidgetContainerPropertiesMix(decoration: BoxDecorationMix(borderRadius: BorderRadiusMix.circular(radius))));
+    return RemixBadgeStyle(
+      container: ContainerPropertiesMix(
+        decoration: BoxDecorationMix(
+          borderRadius: BorderRadiusMix.circular(radius),
+        ),
+      ),
+    );
   }
 
   /// Factory for padding
   factory RemixBadgeStyle.padding(double value) {
-    return RemixBadgeStyle(container: WidgetContainerPropertiesMix.padding(EdgeInsetsGeometryMix.all(value)));
+    return RemixBadgeStyle(
+      container: ContainerPropertiesMix.padding(
+        EdgeInsetsGeometryMix.all(value),
+      ),
+    );
   }
 
   /// Factory for text color
@@ -141,12 +156,12 @@ class RemixBadgeStyle extends Style<BadgeSpec> with StyleModifierMixin<RemixBadg
 }
 
 final DefaultRemixBadgeStyle = RemixBadgeStyle(
-  container: WidgetContainerPropertiesMix(
-    padding: EdgeInsetsGeometryMix.symmetric(vertical: 4, horizontal: 8),
+  container: ContainerPropertiesMix(
     decoration: BoxDecorationMix(
       borderRadius: BorderRadiusMix.circular(4),
       color: Colors.grey[200],
     ),
+    padding: EdgeInsetsGeometryMix.symmetric(vertical: 4, horizontal: 8),
   ),
   text: TextMix(
     style: TextStyleMix(fontSize: 12, fontWeight: FontWeight.w500),
@@ -158,12 +173,12 @@ final DefaultRemixBadgeStyle = RemixBadgeStyle(
 class RemixBadgeStyles {
   /// Default badge style
   static RemixBadgeStyle get defaultStyle => RemixBadgeStyle(
-        container: WidgetContainerPropertiesMix(
-          padding: EdgeInsetsGeometryMix.symmetric(vertical: 4, horizontal: 8),
+        container: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(4),
             color: Colors.grey[200],
           ),
+          padding: EdgeInsetsGeometryMix.symmetric(vertical: 4, horizontal: 8),
         ),
         text: TextMix(
           style: TextStyleMix(fontSize: 12, fontWeight: FontWeight.w500),
@@ -173,12 +188,12 @@ class RemixBadgeStyles {
 
   /// Primary badge variant
   static RemixBadgeStyle get primary => RemixBadgeStyle(
-        container: WidgetContainerPropertiesMix(
-          padding: EdgeInsetsGeometryMix.symmetric(vertical: 4, horizontal: 8),
+        container: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(4),
             color: Colors.blue,
           ),
+          padding: EdgeInsetsGeometryMix.symmetric(vertical: 4, horizontal: 8),
         ),
         text: TextMix(
           style: TextStyleMix(
@@ -192,12 +207,12 @@ class RemixBadgeStyles {
 
   /// Success badge variant
   static RemixBadgeStyle get success => RemixBadgeStyle(
-        container: WidgetContainerPropertiesMix(
-          padding: EdgeInsetsGeometryMix.symmetric(vertical: 4, horizontal: 8),
+        container: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(4),
             color: Colors.green,
           ),
+          padding: EdgeInsetsGeometryMix.symmetric(vertical: 4, horizontal: 8),
         ),
         text: TextMix(
           style: TextStyleMix(
@@ -211,12 +226,12 @@ class RemixBadgeStyles {
 
   /// Warning badge variant
   static RemixBadgeStyle get warning => RemixBadgeStyle(
-        container: WidgetContainerPropertiesMix(
-          padding: EdgeInsetsGeometryMix.symmetric(vertical: 4, horizontal: 8),
+        container: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(4),
             color: Colors.orange,
           ),
+          padding: EdgeInsetsGeometryMix.symmetric(vertical: 4, horizontal: 8),
         ),
         text: TextMix(
           style: TextStyleMix(
@@ -230,12 +245,12 @@ class RemixBadgeStyles {
 
   /// Danger badge variant
   static RemixBadgeStyle get danger => RemixBadgeStyle(
-        container: WidgetContainerPropertiesMix(
-          padding: EdgeInsetsGeometryMix.symmetric(vertical: 4, horizontal: 8),
+        container: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(4),
             color: Colors.red,
           ),
+          padding: EdgeInsetsGeometryMix.symmetric(vertical: 4, horizontal: 8),
         ),
         text: TextMix(
           style: TextStyleMix(

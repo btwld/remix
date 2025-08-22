@@ -101,7 +101,31 @@ Widget buildButtonUseCase(BuildContext context) {
 
           return RemixButton(
             onPressed: () {
-              debugPrint('RemixButton pressed');
+              debugPrint('✅ RemixButton pressed');
+            },
+            onLongPress: context.knobs.boolean(
+              label: 'Enable Long Press',
+              initialValue: true,
+            ) ? () {
+              debugPrint('⏳ RemixButton long pressed');
+            } : null,
+            onDoubleTap: context.knobs.boolean(
+              label: 'Enable Double Tap',
+              initialValue: true,
+            ) ? () {
+              debugPrint('⚡ RemixButton double tapped');
+            } : null,
+            onHoverChange: (hovered) {
+              debugPrint('🖱️  Hover state changed: $hovered');
+            },
+            onPressChanged: (pressed) {
+              debugPrint('🔴 Pressed state changed: $pressed');
+            },
+            onFocusChange: (focused) {
+              debugPrint('⌨️  Focus state changed: $focused');
+            },
+            onStatesChange: (states) {
+              debugPrint('📊 Widget states: ${states.map((s) => s.name).join(', ')}');
             },
             enabled: context.knobs.boolean(
               label: 'Enabled',
@@ -113,11 +137,11 @@ Widget buildButtonUseCase(BuildContext context) {
             ),
             label: context.knobs.string(
               label: 'label',
-              initialValue: 'Button',
+              initialValue: 'Interactive Button',
             ),
             icon: context.knobs.iconData(
               label: 'Icon',
-              initialValue: null,
+              initialValue: Icons.touch_app,
             ),
             style: buttonStyle,
           );

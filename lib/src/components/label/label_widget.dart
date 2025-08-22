@@ -96,11 +96,7 @@ Widget createLabelWidget(
 /// Extension on LabelSpec to provide call() method for creating widgets
 extension LabelSpecWidget on LabelSpec {
   /// Renders the LabelSpec into a Row widget with text and optional icons
-  Widget call({
-    required String text,
-    IconData? leading,
-    IconData? trailing,
-  }) {
+  Widget call({required String text, IconData? leading, IconData? trailing}) {
     return createLabelWidget(
       this,
       text: text,

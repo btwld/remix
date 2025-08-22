@@ -16,11 +16,13 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: Center(
-              child: RemixRadio<String>(
-                value: 'option1',
+              child: RemixRadioGroup<String>(
                 groupValue: 'option1',
                 onChanged: (_) {},
-                label: 'Option 1',
+                child: RemixRadio<String>(
+                  value: 'option1',
+                  label: 'Option 1',
+                ),
               ),
             ),
           ),
@@ -36,10 +38,12 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: Center(
-              child: RemixRadio<String>(
-                value: 'option1',
+              child: RemixRadioGroup<String>(
                 groupValue: 'option1',
                 onChanged: (_) {},
+                child: RemixRadio<String>(
+                  value: 'option1',
+                ),
               ),
             ),
           ),
@@ -54,10 +58,12 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: Center(
-              child: RemixRadio<String>(
-                value: 'selected',
+              child: RemixRadioGroup<String>(
                 groupValue: 'selected',
                 onChanged: (_) {},
+                child: RemixRadio<String>(
+                  value: 'selected',
+                ),
               ),
             ),
           ),
@@ -73,10 +79,12 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: Center(
-              child: RemixRadio<String>(
-                value: 'option1',
+              child: RemixRadioGroup<String>(
                 groupValue: 'option2',
                 onChanged: (_) {},
+                child: RemixRadio<String>(
+                  value: 'option1',
+                ),
               ),
             ),
           ),
@@ -94,12 +102,14 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: Center(
-              child: RemixRadio<String>(
-                value: 'option1',
+              child: RemixRadioGroup<String>(
                 groupValue: 'option2',
                 onChanged: (value) {
                   selectedValue = value;
                 },
+                child: RemixRadio<String>(
+                  value: 'option1',
+                ),
               ),
             ),
           ),
@@ -119,13 +129,15 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: Center(
-              child: RemixRadio<String>(
-                value: 'option1',
+              child: RemixRadioGroup<String>(
                 groupValue: 'option2',
-                enabled: false,
                 onChanged: (_) {
                   wasCalled = true;
                 },
+                child: RemixRadio<String>(
+                  value: 'option1',
+                  enabled: false,
+                ),
               ),
             ),
           ),
@@ -147,21 +159,23 @@ void main() {
             body: Center(
               child: StatefulBuilder(
                 builder: (context, setState) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: TestOption.values.map((option) {
-                      return RemixRadio<TestOption>(
-                        key: Key(option.name),
-                        value: option,
-                        groupValue: selectedOption,
-                        onChanged: (value) {
-                          setState(() {
-                            selectedOption = value;
-                          });
-                        },
-                        label: option.name,
-                      );
-                    }).toList(),
+                  return RemixRadioGroup<TestOption>(
+                    groupValue: selectedOption,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedOption = value;
+                      });
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: TestOption.values.map((option) {
+                        return RemixRadio<TestOption>(
+                          key: Key(option.name),
+                          value: option,
+                          label: option.name,
+                        );
+                      }).toList(),
+                    ),
                   );
                 },
               ),
@@ -198,20 +212,22 @@ void main() {
             body: Center(
               child: StatefulBuilder(
                 builder: (context, setState) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: ['A', 'B', 'C'].map((value) {
-                      return RemixRadio<String>(
-                        key: Key(value),
-                        value: value,
-                        groupValue: groupValue,
-                        onChanged: (newValue) {
-                          setState(() {
-                            groupValue = newValue;
-                          });
-                        },
-                      );
-                    }).toList(),
+                  return RemixRadioGroup<String>(
+                    groupValue: groupValue,
+                    onChanged: (newValue) {
+                      setState(() {
+                        groupValue = newValue;
+                      });
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: ['A', 'B', 'C'].map((value) {
+                        return RemixRadio<String>(
+                          key: Key(value),
+                          value: value,
+                        );
+                      }).toList(),
+                    ),
                   );
                 },
               ),
@@ -238,13 +254,15 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: Center(
-              child: RemixRadio<String>(
-                value: 'option1',
+              child: RemixRadioGroup<String>(
                 groupValue: 'option2',
                 onChanged: (value) {
                   selectedValue = value;
                 },
-                label: 'Click me',
+                child: RemixRadio<String>(
+                  value: 'option1',
+                  label: 'Click me',
+                ),
               ),
             ),
           ),
@@ -263,10 +281,12 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: Center(
-              child: RemixRadio<String>(
-                value: 'option1',
+              child: RemixRadioGroup<String>(
                 groupValue: 'option2',
                 onChanged: (_) {},
+                child: RemixRadio<String>(
+                  value: 'option1',
+                ),
               ),
             ),
           ),
@@ -292,10 +312,12 @@ void main() {
             body: Center(
               child: Focus(
                 autofocus: true,
-                child: RemixRadio<String>(
-                  value: 'option1',
+                child: RemixRadioGroup<String>(
                   groupValue: 'option2',
                   onChanged: (_) {},
+                  child: RemixRadio<String>(
+                    value: 'option1',
+                  ),
                 ),
               ),
             ),
@@ -320,15 +342,19 @@ void main() {
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      RemixRadio<String>(
-                        value: 'option1',
+                      RemixRadioGroup<String>(
                         groupValue: externalValue,
                         onChanged: (_) {},
-                      ),
-                      RemixRadio<String>(
-                        value: 'option2',
-                        groupValue: externalValue,
-                        onChanged: (_) {},
+                        child: Column(
+                          children: [
+                            RemixRadio<String>(
+                              value: 'option1',
+                            ),
+                            RemixRadio<String>(
+                              value: 'option2',
+                            ),
+                          ],
+                        ),
                       ),
                       TextButton(
                         onPressed: () {
@@ -360,11 +386,13 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: Center(
-              child: RemixRadio<String>(
-                value: 'option1',
+              child: RemixRadioGroup<String>(
                 groupValue: 'option1',
-                enabled: false,
                 onChanged: (_) {},
+                child: RemixRadio<String>(
+                  value: 'option1',
+                  enabled: false,
+                ),
               ),
             ),
           ),
@@ -386,11 +414,13 @@ void main() {
             body: Center(
               child: Semantics(
                 label: 'Select theme',
-                child: RemixRadio<String>(
-                  value: 'dark',
+                child: RemixRadioGroup<String>(
                   groupValue: 'light',
                   onChanged: (_) {},
-                  label: 'Dark mode',
+                  child: RemixRadio<String>(
+                    value: 'dark',
+                    label: 'Dark mode',
+                  ),
                 ),
               ),
             ),
@@ -413,21 +443,23 @@ void main() {
             body: Center(
               child: StatefulBuilder(
                 builder: (context, setState) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: ['A', 'B', 'C'].map((value) {
-                      return RemixRadio<String>(
-                        key: Key(value),
-                        value: value,
-                        groupValue: currentValue,
-                        onChanged: (newValue) {
-                          changeCount++;
-                          setState(() {
-                            currentValue = newValue;
-                          });
-                        },
-                      );
-                    }).toList(),
+                  return RemixRadioGroup<String>(
+                    groupValue: currentValue,
+                    onChanged: (newValue) {
+                      changeCount++;
+                      setState(() {
+                        currentValue = newValue;
+                      });
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: ['A', 'B', 'C'].map((value) {
+                        return RemixRadio<String>(
+                          key: Key(value),
+                          value: value,
+                        );
+                      }).toList(),
+                    ),
                   );
                 },
               ),
@@ -460,21 +492,23 @@ void main() {
             body: Center(
               child: StatefulBuilder(
                 builder: (context, setState) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [date1, date2, date3].map((date) {
-                      return RemixRadio<DateTime>(
-                        key: Key(date.toString()),
-                        value: date,
-                        groupValue: selectedDate,
-                        onChanged: (value) {
-                          setState(() {
-                            selectedDate = value;
-                          });
-                        },
-                        label: '${date.month}/${date.year}',
-                      );
-                    }).toList(),
+                  return RemixRadioGroup<DateTime>(
+                    groupValue: selectedDate,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedDate = value;
+                      });
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [date1, date2, date3].map((date) {
+                        return RemixRadio<DateTime>(
+                          key: Key(date.toString()),
+                          value: date,
+                          label: '${date.month}/${date.year}',
+                        );
+                      }).toList(),
+                    ),
                   );
                 },
               ),

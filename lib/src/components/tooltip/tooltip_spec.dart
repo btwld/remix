@@ -1,18 +1,33 @@
 part of 'tooltip.dart';
 
 class TooltipSpec extends WidgetSpec<TooltipSpec> {
-  final WidgetContainerProperties container;
+  final ContainerProperties container;
   final TextSpec text;
 
-  const TooltipSpec({WidgetContainerProperties? container, TextSpec? text})
-      : container = container ?? const WidgetContainerProperties(),
-        text = text ?? const TextSpec();
+  const TooltipSpec({
+    ContainerProperties? container,
+    TextSpec? text,
+    AnimationConfig? animation,
+    List<Modifier>? widgetModifiers,
+    bool? inherit,
+  })  : container = container ?? const ContainerProperties(),
+        text = text ?? const TextSpec(),
+        super(animation: animation, widgetModifiers: widgetModifiers, inherit: inherit);
 
   @override
-  TooltipSpec copyWith({WidgetContainerProperties? container, TextSpec? text}) {
+  TooltipSpec copyWith({
+    ContainerProperties? container,
+    TextSpec? text,
+    AnimationConfig? animation,
+    List<Modifier>? widgetModifiers,
+    bool? inherit,
+  }) {
     return TooltipSpec(
       container: container ?? this.container,
       text: text ?? this.text,
+      animation: animation ?? this.animation,
+      widgetModifiers: widgetModifiers ?? this.widgetModifiers,
+      inherit: inherit ?? this.inherit,
     );
   }
 
@@ -23,6 +38,9 @@ class TooltipSpec extends WidgetSpec<TooltipSpec> {
     return TooltipSpec(
       container: MixOps.lerp(container, other.container, t)!,
       text: MixOps.lerp(text, other.text, t)!,
+      animation: MixOps.lerp(animation, other.animation, t),
+      widgetModifiers: MixOps.lerp(widgetModifiers, other.widgetModifiers, t),
+      inherit: MixOps.lerp(inherit, other.inherit, t),
     );
   }
 
@@ -35,5 +53,5 @@ class TooltipSpec extends WidgetSpec<TooltipSpec> {
   }
 
   @override
-  List<Object?> get props => [container, text];
+  List<Object?> get props => [...super.props, container, text];
 }
