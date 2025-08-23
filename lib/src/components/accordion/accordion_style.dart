@@ -66,8 +66,7 @@ class RemixAccordionStyle extends Style<AccordionSpec>
         );
 
   factory RemixAccordionStyle.value(AccordionSpec spec) => RemixAccordionStyle(
-        itemContainer:
-            ContainerPropertiesMix.maybeValue(spec.itemContainer),
+        itemContainer: ContainerPropertiesMix.maybeValue(spec.itemContainer),
         contentContainer:
             ContainerPropertiesMix.maybeValue(spec.contentContainer),
         headerContainer:
@@ -146,7 +145,7 @@ final DefaultRemixAccordionStyle = RemixAccordionStyle(
   itemContainer: ContainerPropertiesMix(
     decoration: BoxDecorationMix(
       border: BoxBorderMix.all(BorderSideMix(
-        color: Colors.grey[300]!,
+        color: RemixTokens.border(),
         width: 1,
       )),
       borderRadius: BorderRadiusMix.circular(12),
@@ -157,9 +156,7 @@ final DefaultRemixAccordionStyle = RemixAccordionStyle(
     padding: EdgeInsetsMix.fromLTRB(12, 0, 12, 12),
     constraints: BoxConstraintsMix(minWidth: double.infinity),
   ),
-  headerContainer: ContainerPropertiesMix(
-    padding: EdgeInsetsMix.all(12),
-  ),
+  headerContainer: ContainerPropertiesMix(padding: EdgeInsetsMix.all(12)),
   headerFlex: FlexPropertiesMix(
     direction: Axis.horizontal,
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -169,14 +166,14 @@ final DefaultRemixAccordionStyle = RemixAccordionStyle(
   trailing: IconMix(size: 20),
   titleStyle: TextMix(
     style: TextStyleMix(
-      color: Colors.grey[800],
+      color: RemixTokens.textPrimary(),
       fontSize: 14,
       fontWeight: FontWeight.w500,
     ),
   ),
   contentStyle: TextMix(
     style: TextStyleMix(
-      color: Colors.grey[800],
+      color: RemixTokens.textPrimary(),
       fontSize: 14,
       fontWeight: FontWeight.w400,
     ),
@@ -189,7 +186,7 @@ extension AccordionVariants on RemixAccordionStyle {
         itemContainer: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
-              color: Colors.grey[300]!,
+              color: RemixTokens.border(),
               width: 1,
             )),
             borderRadius: BorderRadiusMix.circular(12),
@@ -212,14 +209,14 @@ extension AccordionVariants on RemixAccordionStyle {
         trailing: IconMix(size: 20),
         titleStyle: TextMix(
           style: TextStyleMix(
-            color: Colors.grey[800],
+            color: RemixTokens.textPrimary(),
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
         ),
         contentStyle: TextMix(
           style: TextStyleMix(
-            color: Colors.grey[800],
+            color: RemixTokens.textPrimary(),
             fontSize: 14,
             fontWeight: FontWeight.w400,
           ),
@@ -231,7 +228,7 @@ extension AccordionVariants on RemixAccordionStyle {
         itemContainer: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
-              color: Colors.grey[300]!,
+              color: RemixTokens.border(),
               width: 1,
             )),
             borderRadius: BorderRadiusMix.circular(8),
@@ -254,14 +251,14 @@ extension AccordionVariants on RemixAccordionStyle {
         trailing: IconMix(size: 16),
         titleStyle: TextMix(
           style: TextStyleMix(
-            color: Colors.grey[800],
+            color: RemixTokens.textPrimary(),
             fontSize: 12,
             fontWeight: FontWeight.w500,
           ),
         ),
         contentStyle: TextMix(
           style: TextStyleMix(
-            color: Colors.grey[800],
+            color: RemixTokens.textPrimary(),
             fontSize: 12,
             fontWeight: FontWeight.w400,
           ),
@@ -273,7 +270,7 @@ extension AccordionVariants on RemixAccordionStyle {
         itemContainer: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
-              color: Colors.grey[500]!,
+              color: RemixTokens.textSecondary(),
               width: 2,
             )),
             borderRadius: BorderRadiusMix.circular(12),
@@ -296,14 +293,14 @@ extension AccordionVariants on RemixAccordionStyle {
         trailing: IconMix(size: 20),
         titleStyle: TextMix(
           style: TextStyleMix(
-            color: Colors.grey[800],
+            color: RemixTokens.textPrimary(),
             fontSize: 16,
             fontWeight: FontWeight.w600,
           ),
         ),
         contentStyle: TextMix(
           style: TextStyleMix(
-            color: Colors.grey[800],
+            color: RemixTokens.textPrimary(),
             fontSize: 14,
             fontWeight: FontWeight.w400,
           ),

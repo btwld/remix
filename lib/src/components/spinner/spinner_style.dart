@@ -142,9 +142,9 @@ class RemixSpinnerStyle extends Style<SpinnerSpec>
 }
 
 final DefaultRemixSpinnerStyle = RemixSpinnerStyle(
-  size: 24,
+  size: RemixTokens.iconSizeXl(),
   strokeWidth: 1.5,
-  color: Colors.black,
+  color: RemixTokens.textPrimary(),
   duration: const Duration(milliseconds: 1000),
   style: SpinnerStyle.solid,
 );
@@ -153,9 +153,9 @@ final DefaultRemixSpinnerStyle = RemixSpinnerStyle(
 class RemixSpinnerStyles {
   /// Default spinner style
   static RemixSpinnerStyle get defaultStyle => RemixSpinnerStyle(
-        size: 24,
+        size: RemixTokens.iconSizeXl(),
         strokeWidth: 1.5,
-        color: Colors.black,
+        color: RemixTokens.textPrimary(),
         duration: const Duration(milliseconds: 1000),
         style: SpinnerStyle.solid,
       );
@@ -164,7 +164,7 @@ class RemixSpinnerStyles {
   static RemixSpinnerStyle get primary => RemixSpinnerStyle(
         size: 24,
         strokeWidth: 1.5,
-        color: Colors.blue,
+        color: RemixTokens.primary(),
         duration: const Duration(milliseconds: 1000),
         style: SpinnerStyle.solid,
       );
@@ -173,7 +173,7 @@ class RemixSpinnerStyles {
   static RemixSpinnerStyle get secondary => RemixSpinnerStyle(
         size: 24,
         strokeWidth: 1.5,
-        color: Colors.grey,
+        color: RemixTokens.textSecondary(),
         duration: const Duration(milliseconds: 1000),
         style: SpinnerStyle.solid,
       );
@@ -182,7 +182,7 @@ class RemixSpinnerStyles {
   static RemixSpinnerStyle get small => RemixSpinnerStyle(
         size: 16,
         strokeWidth: 1,
-        color: Colors.black,
+        color: RemixTokens.textPrimary(),
         duration: const Duration(milliseconds: 1000),
         style: SpinnerStyle.solid,
       );
@@ -191,16 +191,16 @@ class RemixSpinnerStyles {
   static RemixSpinnerStyle get large => RemixSpinnerStyle(
         size: 32,
         strokeWidth: 2,
-        color: Colors.black,
+        color: RemixTokens.textPrimary(),
         duration: const Duration(milliseconds: 1000),
         style: SpinnerStyle.solid,
       );
 
   /// Dotted spinner variant
   static RemixSpinnerStyle get dotted => RemixSpinnerStyle(
-        size: 24,
+        size: RemixTokens.iconSizeXl(),
         strokeWidth: 1.5,
-        color: Colors.black,
+        color: RemixTokens.textPrimary(),
         duration: const Duration(milliseconds: 1000),
         style: SpinnerStyle.dotted,
       );

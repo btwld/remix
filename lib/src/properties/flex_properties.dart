@@ -4,12 +4,11 @@ import 'package:mix/mix.dart';
 
 /// A property bag for Flex widget configuration.
 ///
-/// This Spec provides resolved flex layout values that can be applied 
+/// This Spec provides resolved flex layout values that can be applied
 /// to Row, Column, or Flex widgets. It encapsulates flex-specific properties
 /// like direction, alignment, and spacing, as well as optional decoration
 /// properties that will wrap the Flex when present.
-class FlexProperties extends Spec<FlexProperties>
-    with Diagnosticable {
+class FlexProperties extends Spec<FlexProperties> with Diagnosticable {
   final Decoration? decoration;
   final EdgeInsetsGeometry? padding;
   final AlignmentGeometry? alignment;
@@ -74,10 +73,13 @@ class FlexProperties extends Spec<FlexProperties>
       padding: MixOps.lerp(padding, other.padding, t),
       alignment: MixOps.lerp(alignment, other.alignment, t),
       direction: MixOps.lerpSnap(direction, other.direction, t),
-      mainAxisAlignment: MixOps.lerpSnap(mainAxisAlignment, other.mainAxisAlignment, t),
-      crossAxisAlignment: MixOps.lerpSnap(crossAxisAlignment, other.crossAxisAlignment, t),
+      mainAxisAlignment:
+          MixOps.lerpSnap(mainAxisAlignment, other.mainAxisAlignment, t),
+      crossAxisAlignment:
+          MixOps.lerpSnap(crossAxisAlignment, other.crossAxisAlignment, t),
       mainAxisSize: MixOps.lerpSnap(mainAxisSize, other.mainAxisSize, t),
-      verticalDirection: MixOps.lerpSnap(verticalDirection, other.verticalDirection, t),
+      verticalDirection:
+          MixOps.lerpSnap(verticalDirection, other.verticalDirection, t),
       textDirection: MixOps.lerpSnap(textDirection, other.textDirection, t),
       textBaseline: MixOps.lerpSnap(textBaseline, other.textBaseline, t),
       gap: MixOps.lerp(gap, other.gap, t),
@@ -92,10 +94,13 @@ class FlexProperties extends Spec<FlexProperties>
       ..add(DiagnosticsProperty('padding', padding))
       ..add(DiagnosticsProperty('alignment', alignment))
       ..add(EnumProperty<Axis>('direction', direction))
-      ..add(EnumProperty<MainAxisAlignment>('mainAxisAlignment', mainAxisAlignment))
-      ..add(EnumProperty<CrossAxisAlignment>('crossAxisAlignment', crossAxisAlignment))
+      ..add(EnumProperty<MainAxisAlignment>(
+          'mainAxisAlignment', mainAxisAlignment))
+      ..add(EnumProperty<CrossAxisAlignment>(
+          'crossAxisAlignment', crossAxisAlignment))
       ..add(EnumProperty<MainAxisSize>('mainAxisSize', mainAxisSize))
-      ..add(EnumProperty<VerticalDirection>('verticalDirection', verticalDirection))
+      ..add(EnumProperty<VerticalDirection>(
+          'verticalDirection', verticalDirection))
       ..add(EnumProperty<TextDirection>('textDirection', textDirection))
       ..add(EnumProperty<TextBaseline>('textBaseline', textBaseline))
       ..add(DoubleProperty('gap', gap));
@@ -125,15 +130,15 @@ extension FlexPropertiesX on FlexProperties {
   }
 
   /// Explicitly build a Flex widget with the specified properties.
-  /// 
+  ///
   /// If decoration, padding, or alignment are set, the Flex will be wrapped
   /// with the appropriate wrapper widgets (DecoratedBox, Padding, Align).
-  /// 
+  ///
   /// Gap is handled by interleaving SizedBox widgets between children along
   /// the main axis.
   Widget toFlex({required Axis direction, List<Widget> children = const []}) {
     final resolvedDirection = this.direction ?? direction;
-    
+
     // Handle gap by interleaving SizedBox widgets
     List<Widget> childrenWithGaps = children;
     if (gap != null && gap! > 0 && children.length > 1) {
@@ -164,24 +169,15 @@ extension FlexPropertiesX on FlexProperties {
 
     // Apply wrappers if needed
     if (padding != null) {
-      flex = Padding(
-        padding: padding!,
-        child: flex,
-      );
+      flex = Padding(padding: padding!, child: flex);
     }
 
     if (decoration != null) {
-      flex = DecoratedBox(
-        decoration: decoration!,
-        child: flex,
-      );
+      flex = DecoratedBox(decoration: decoration!, child: flex);
     }
 
     if (alignment != null) {
-      flex = Align(
-        alignment: alignment!,
-        child: flex,
-      );
+      flex = Align(alignment: alignment!, child: flex);
     }
 
     return flex;

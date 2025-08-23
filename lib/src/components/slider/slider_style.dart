@@ -103,24 +103,24 @@ class RemixSliderStyle extends Style<SliderSpec>
 final DefaultRemixSliderStyle = RemixSliderStyle(
   thumb: ContainerPropertiesMix(
     decoration: BoxDecorationMix(
-      border: BoxBorderMix.all(BorderSideMix(color: Colors.black, width: 2)),
+      border: BoxBorderMix.all(BorderSideMix(color: RemixTokens.textPrimary(), width: 2)),
       shape: BoxShape.circle,
-      color: Colors.white,
+      color: RemixTokens.background(),
     ),
   ),
   baseTrack: Paint()
     ..strokeWidth = 8
-    ..color = Colors.grey
+    ..color = RemixTokens.border()
     ..strokeCap = StrokeCap.round
     ..style = PaintingStyle.stroke,
   activeTrack: Paint()
     ..strokeWidth = 8
-    ..color = Colors.black
+    ..color = RemixTokens.textPrimary()
     ..strokeCap = StrokeCap.round
     ..style = PaintingStyle.stroke,
   division: Paint()
     ..strokeWidth = 8
-    ..color = Colors.black.withValues(alpha: 0.26)
+    ..color = RemixTokens.textPrimary().withValues(alpha: 0.26)
     ..strokeCap = StrokeCap.round
     ..style = PaintingStyle.stroke,
   animation: AnimationConfig.easeInOut(const Duration(milliseconds: 200)),
@@ -130,7 +130,7 @@ final DefaultRemixSliderStyle = RemixSliderStyle(
 final RemixSliderHoverStyle = RemixSliderStyle(
   thumb: ContainerPropertiesMix(
     decoration: BoxDecorationMix(
-      border: BoxBorderMix.all(BorderSideMix(color: Colors.blue, width: 2)),
+      border: BoxBorderMix.all(BorderSideMix(color: RemixTokens.primary(), width: 2)),
     ),
   ),
 );
@@ -140,19 +140,19 @@ final RemixSliderDisabledStyle = RemixSliderStyle(
   thumb: ContainerPropertiesMix(
     decoration: BoxDecorationMix(
       border: BoxBorderMix.all(
-        BorderSideMix(color: Colors.grey.shade400, width: 2),
+        BorderSideMix(color: RemixTokens.border(), width: 2),
       ),
-      color: Colors.grey.shade300,
+      color: RemixTokens.surface(),
     ),
   ),
   baseTrack: Paint()
     ..strokeWidth = 8
-    ..color = Colors.grey.shade300
+    ..color = RemixTokens.surface()
     ..strokeCap = StrokeCap.round
     ..style = PaintingStyle.stroke,
   activeTrack: Paint()
     ..strokeWidth = 8
-    ..color = Colors.grey.shade400
+    ..color = RemixTokens.border()
     ..strokeCap = StrokeCap.round
     ..style = PaintingStyle.stroke,
 );
@@ -162,12 +162,12 @@ extension SliderVariants on RemixSliderStyle {
   static RemixSliderStyle get primary => RemixSliderStyle(
         thumb: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(BorderSideMix(color: Colors.blue[500]!, width: 2)),
+            border: BoxBorderMix.all(BorderSideMix(color: RemixTokens.primary(), width: 2)),
             shape: BoxShape.circle,
-            color: Colors.white,
+            color: RemixTokens.background(),
             boxShadow: [
               BoxShadowMix(
-                color: Colors.blue.withValues(alpha: 0.3),
+                color: RemixTokens.primary().withValues(alpha: 0.3),
                 offset: const Offset(0, 2),
                 blurRadius: 4,
               ),
@@ -176,17 +176,17 @@ extension SliderVariants on RemixSliderStyle {
         ),
         baseTrack: Paint()
           ..strokeWidth = 8
-          ..color = Colors.blue[100]!
+          ..color = RemixTokens.primary().withValues(alpha: 0.2)
           ..strokeCap = StrokeCap.round
           ..style = PaintingStyle.stroke,
         activeTrack: Paint()
           ..strokeWidth = 8
-          ..color = Colors.blue[500]!
+          ..color = RemixTokens.primary()
           ..strokeCap = StrokeCap.round
           ..style = PaintingStyle.stroke,
         division: Paint()
           ..strokeWidth = 8
-          ..color = Colors.blue[300]!.withValues(alpha: 0.5)
+          ..color = RemixTokens.primary().withValues(alpha: 0.5)
           ..strokeCap = StrokeCap.round
           ..style = PaintingStyle.stroke,
         animation: AnimationConfig.easeInOut(const Duration(milliseconds: 200)),
@@ -196,24 +196,24 @@ extension SliderVariants on RemixSliderStyle {
   static RemixSliderStyle get secondary => RemixSliderStyle(
         thumb: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(BorderSideMix(color: Colors.grey[600]!, width: 2)),
+            border: BoxBorderMix.all(BorderSideMix(color: RemixTokens.textSecondary(), width: 2)),
             shape: BoxShape.circle,
-            color: Colors.white,
+            color: RemixTokens.background(),
           ),
         ),
         baseTrack: Paint()
           ..strokeWidth = 8
-          ..color = Colors.grey[300]!
+          ..color = RemixTokens.surface()
           ..strokeCap = StrokeCap.round
           ..style = PaintingStyle.stroke,
         activeTrack: Paint()
           ..strokeWidth = 8
-          ..color = Colors.grey[600]!
+          ..color = RemixTokens.textSecondary()
           ..strokeCap = StrokeCap.round
           ..style = PaintingStyle.stroke,
         division: Paint()
           ..strokeWidth = 8
-          ..color = Colors.grey[500]!.withValues(alpha: 0.5)
+          ..color = RemixTokens.textSecondary().withValues(alpha: 0.5)
           ..strokeCap = StrokeCap.round
           ..style = PaintingStyle.stroke,
         animation: AnimationConfig.easeInOut(const Duration(milliseconds: 200)),
@@ -223,24 +223,24 @@ extension SliderVariants on RemixSliderStyle {
   static RemixSliderStyle get compact => RemixSliderStyle(
         thumb: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(BorderSideMix(color: Colors.black, width: 1.5)),
+            border: BoxBorderMix.all(BorderSideMix(color: RemixTokens.textPrimary(), width: 1.5)),
             shape: BoxShape.circle,
-            color: Colors.white,
+            color: RemixTokens.background(),
           ),
         ),
         baseTrack: Paint()
           ..strokeWidth = 4
-          ..color = Colors.grey
+          ..color = RemixTokens.border()
           ..strokeCap = StrokeCap.round
           ..style = PaintingStyle.stroke,
         activeTrack: Paint()
           ..strokeWidth = 4
-          ..color = Colors.black
+          ..color = RemixTokens.textPrimary()
           ..strokeCap = StrokeCap.round
           ..style = PaintingStyle.stroke,
         division: Paint()
           ..strokeWidth = 4
-          ..color = Colors.black.withValues(alpha: 0.26)
+          ..color = RemixTokens.textPrimary().withValues(alpha: 0.26)
           ..strokeCap = StrokeCap.round
           ..style = PaintingStyle.stroke,
         animation: AnimationConfig.easeInOut(const Duration(milliseconds: 200)),

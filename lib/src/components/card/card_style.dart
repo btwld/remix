@@ -78,17 +78,11 @@ class RemixCardStyle extends Style<CardSpec>
 final DefaultRemixCardStyle = RemixCardStyle(
   container: ContainerPropertiesMix(
     decoration: BoxDecorationMix(
-      borderRadius: BorderRadiusMix.circular(8),
-      color: Colors.white,
-      boxShadow: [
-        BoxShadowMix(
-          color: Colors.black.withValues(alpha: 0.1),
-          offset: const Offset(0, 2),
-          blurRadius: 4,
-        ),
-      ],
+      borderRadius: BorderRadiusMix.circular(RemixTokens.radiusLg()),
+      color: RemixTokens.surface(),
+      boxShadow: RemixTokens.elevationMd(),
     ),
-    padding: EdgeInsetsGeometryMix.all(16),
+    padding: EdgeInsetsGeometryMix.all(RemixTokens.spaceLg()),
   ),
 );
 
@@ -98,17 +92,11 @@ class RemixCardStyles {
   static RemixCardStyle get defaultStyle => RemixCardStyle(
         container: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(8),
-            color: Colors.white,
-            boxShadow: [
-              BoxShadowMix(
-                color: Colors.black.withValues(alpha: 0.1),
-                offset: const Offset(0, 2),
-                blurRadius: 4,
-              ),
-            ],
+            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusLg()),
+            color: RemixTokens.surface(),
+            boxShadow: RemixTokens.elevationMd(),
           ),
-          padding: EdgeInsetsGeometryMix.all(16),
+          padding: EdgeInsetsGeometryMix.all(RemixTokens.spaceLg()),
         ),
       );
 
@@ -116,17 +104,11 @@ class RemixCardStyles {
   static RemixCardStyle get elevated => RemixCardStyle(
         container: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(8),
-            color: Colors.white,
-            boxShadow: [
-              BoxShadowMix(
-                color: Colors.black.withValues(alpha: 0.15),
-                offset: const Offset(0, 4),
-                blurRadius: 8,
-              ),
-            ],
+            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusLg()),
+            color: RemixTokens.surface(),
+            boxShadow: RemixTokens.elevationHigh(),
           ),
-          padding: EdgeInsetsGeometryMix.all(16),
+          padding: EdgeInsetsGeometryMix.all(RemixTokens.spaceLg()),
         ),
       );
 
@@ -135,12 +117,12 @@ class RemixCardStyles {
         container: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(
-              BorderSideMix(color: Colors.grey[300]!, width: 1),
+              BorderSideMix(color: RemixTokens.border(), width: 1),
             ),
-            borderRadius: BorderRadiusMix.circular(8),
-            color: Colors.white,
+            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusLg()),
+            color: RemixTokens.surface(),
           ),
-          padding: EdgeInsetsGeometryMix.all(16),
+          padding: EdgeInsetsGeometryMix.all(RemixTokens.spaceLg()),
         ),
       );
 
@@ -148,10 +130,10 @@ class RemixCardStyles {
   static RemixCardStyle get flat => RemixCardStyle(
         container: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(8),
-            color: Colors.grey[100],
+            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusLg()),
+            color: RemixTokens.surfaceVariant(),
           ),
-          padding: EdgeInsetsGeometryMix.all(16),
+          padding: EdgeInsetsGeometryMix.all(RemixTokens.spaceLg()),
         ),
       );
 }

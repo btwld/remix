@@ -6,6 +6,7 @@ import 'package:mix/mix.dart';
 
 import '../../properties/container_properties.dart';
 import '../../properties/container_properties_mix.dart';
+import '../../theme/remix_tokens.dart';
 
 part 'avatar_spec.dart';
 part 'avatar_style.dart';

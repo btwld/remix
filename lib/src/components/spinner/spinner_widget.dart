@@ -16,7 +16,7 @@ part of 'spinner.dart';
 /// RemixSpinner(
 ///   style: RemixSpinnerStyle(
 ///     size: 32,
-///     color: Colors.blue,
+///     color: RemixTokens.primary(),
 ///     style: SpinnerStyleType.dotted,
 ///   ),
 /// )
@@ -85,7 +85,7 @@ class _SpinnerSpecWidgetState extends State<SpinnerSpecWidget>
   @override
   Widget build(BuildContext context) {
     final spec = widget.spec;
-    final color = spec.color ?? Colors.black;
+    final color = spec.color ?? Colors.grey;
     final strokeWidth = spec.strokeWidth ?? 1.5;
     final size = spec.size ?? 24;
     final style = spec.style ?? SpinnerStyle.solid;

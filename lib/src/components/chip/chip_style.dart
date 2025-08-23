@@ -116,22 +116,22 @@ class RemixChipStyle extends Style<ChipSpec>
 final DefaultRemixChipStyle = RemixChipStyle(
   container: ContainerPropertiesMix(
     decoration: BoxDecorationMix(
-      borderRadius: BorderRadiusMix.circular(16),
-      color: Colors.grey[200],
+      borderRadius: BorderRadiusMix.circular(RemixTokens.radiusXl()),
+      color: RemixTokens.surfaceVariant(),
     ),
-    padding: EdgeInsetsMix.symmetric(vertical: 6, horizontal: 12),
+    padding: EdgeInsetsMix.symmetric(vertical: RemixTokens.spaceXs(), horizontal: RemixTokens.spaceMd()),
   ),
   flex: FlexPropertiesMix(
     direction: Axis.horizontal,
     crossAxisAlignment: CrossAxisAlignment.center,
     mainAxisSize: MainAxisSize.min,
-    gap: 4,
+    gap: RemixTokens.spaceXs(),
   ),
   label: TextMix(
-    style: TextStyleMix(fontSize: 14, fontWeight: FontWeight.w500),
+    style: TextStyleMix(fontSize: RemixTokens.fontSizeMd(), fontWeight: FontWeight.w500),
   ),
-  leading: IconMix(size: 16),
-  trailing: IconMix(size: 16),
+  leading: IconMix(size: RemixTokens.iconSizeMd()),
+  trailing: IconMix(size: RemixTokens.iconSizeMd()),
 );
 
 extension ChipVariants on RemixChipStyle {
@@ -139,29 +139,26 @@ extension ChipVariants on RemixChipStyle {
   static RemixChipStyle get primary => RemixChipStyle(
         container: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(
-              BorderSideMix(color: Colors.blue[300]!, width: 1),
-            ),
-            borderRadius: BorderRadiusMix.circular(16),
-            color: Colors.blue[100],
+            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusXl()),
+            color: RemixTokens.primary().withValues(alpha: 0.1),
           ),
-          padding: EdgeInsetsMix.symmetric(vertical: 6, horizontal: 12),
+          padding: EdgeInsetsMix.symmetric(vertical: RemixTokens.spaceXs(), horizontal: RemixTokens.spaceMd()),
         ),
         flex: FlexPropertiesMix(
           direction: Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
-          gap: 4,
+          gap: RemixTokens.spaceXs(),
         ),
         label: TextMix(
           style: TextStyleMix(
-            color: Colors.blue[700],
-            fontSize: 14,
+            color: RemixTokens.primary(),
+            fontSize: RemixTokens.fontSizeMd(),
             fontWeight: FontWeight.w500,
           ),
         ),
-        leading: IconMix(color: Colors.blue[600], size: 16),
-        trailing: IconMix(color: Colors.blue[600], size: 16),
+        leading: IconMix(color: RemixTokens.primary(), size: RemixTokens.iconSizeMd()),
+        trailing: IconMix(color: RemixTokens.primary(), size: RemixTokens.iconSizeMd()),
       );
 
   /// Secondary chip variant with grey colors
@@ -169,85 +166,79 @@ extension ChipVariants on RemixChipStyle {
         container: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(
-              BorderSideMix(color: Colors.grey[400]!, width: 1),
+              BorderSideMix(color: RemixTokens.border(), width: 1),
             ),
-            borderRadius: BorderRadiusMix.circular(16),
-            color: Colors.grey[100],
+            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusXl()),
+            color: RemixTokens.surface(),
           ),
-          padding: EdgeInsetsMix.symmetric(vertical: 6, horizontal: 12),
+          padding: EdgeInsetsMix.symmetric(vertical: RemixTokens.spaceXs(), horizontal: RemixTokens.spaceMd()),
         ),
         flex: FlexPropertiesMix(
           direction: Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
-          gap: 4,
+          gap: RemixTokens.spaceXs(),
         ),
         label: TextMix(
           style: TextStyleMix(
-            color: Colors.grey[700],
-            fontSize: 14,
+            color: RemixTokens.textPrimary(),
+            fontSize: RemixTokens.fontSizeMd(),
             fontWeight: FontWeight.w500,
           ),
         ),
-        leading: IconMix(color: Colors.grey[600], size: 16),
-        trailing: IconMix(color: Colors.grey[600], size: 16),
+        leading: IconMix(color: RemixTokens.textSecondary(), size: RemixTokens.iconSizeMd()),
+        trailing: IconMix(color: RemixTokens.textSecondary(), size: RemixTokens.iconSizeMd()),
       );
 
   /// Success chip variant with green colors
   static RemixChipStyle get success => RemixChipStyle(
         container: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(
-              BorderSideMix(color: Colors.green[300]!, width: 1),
-            ),
-            borderRadius: BorderRadiusMix.circular(16),
-            color: Colors.green[100],
+            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusXl()),
+            color: RemixTokens.success().withValues(alpha: 0.1),
           ),
-          padding: EdgeInsetsMix.symmetric(vertical: 6, horizontal: 12),
+          padding: EdgeInsetsMix.symmetric(vertical: RemixTokens.spaceXs(), horizontal: RemixTokens.spaceMd()),
         ),
         flex: FlexPropertiesMix(
           direction: Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
-          gap: 4,
+          gap: RemixTokens.spaceXs(),
         ),
         label: TextMix(
           style: TextStyleMix(
-            color: Colors.green[700],
-            fontSize: 14,
+            color: RemixTokens.success(),
+            fontSize: RemixTokens.fontSizeMd(),
             fontWeight: FontWeight.w500,
           ),
         ),
-        leading: IconMix(color: Colors.green[600], size: 16),
-        trailing: IconMix(color: Colors.green[600], size: 16),
+        leading: IconMix(color: RemixTokens.success(), size: RemixTokens.iconSizeMd()),
+        trailing: IconMix(color: RemixTokens.success(), size: RemixTokens.iconSizeMd()),
       );
 
   /// Warning chip variant with orange colors
   static RemixChipStyle get warning => RemixChipStyle(
         container: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(
-              BorderSideMix(color: Colors.orange[300]!, width: 1),
-            ),
-            borderRadius: BorderRadiusMix.circular(16),
-            color: Colors.orange[100],
+            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusXl()),
+            color: RemixTokens.warning().withValues(alpha: 0.1),
           ),
-          padding: EdgeInsetsMix.symmetric(vertical: 6, horizontal: 12),
+          padding: EdgeInsetsMix.symmetric(vertical: RemixTokens.spaceXs(), horizontal: RemixTokens.spaceMd()),
         ),
         flex: FlexPropertiesMix(
           direction: Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
-          gap: 4,
+          gap: RemixTokens.spaceXs(),
         ),
         label: TextMix(
           style: TextStyleMix(
-            color: Colors.orange[700],
-            fontSize: 14,
+            color: RemixTokens.warning(),
+            fontSize: RemixTokens.fontSizeMd(),
             fontWeight: FontWeight.w500,
           ),
         ),
-        leading: IconMix(color: Colors.orange[600], size: 16),
-        trailing: IconMix(color: Colors.orange[600], size: 16),
+        leading: IconMix(color: RemixTokens.warning(), size: RemixTokens.iconSizeMd()),
+        trailing: IconMix(color: RemixTokens.warning(), size: RemixTokens.iconSizeMd()),
       );
 }

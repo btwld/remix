@@ -46,9 +46,7 @@ class RemixBadgeStyle extends Style<BadgeSpec>
 
   /// Factory for background color
   factory RemixBadgeStyle.color(Color value) {
-    return RemixBadgeStyle(
-      container: ContainerPropertiesMix.color(value),
-    );
+    return RemixBadgeStyle(container: ContainerPropertiesMix.color(value));
   }
 
   /// Factory for border radius
@@ -158,15 +156,20 @@ class RemixBadgeStyle extends Style<BadgeSpec>
 final DefaultRemixBadgeStyle = RemixBadgeStyle(
   container: ContainerPropertiesMix(
     decoration: BoxDecorationMix(
-      borderRadius: BorderRadiusMix.circular(4),
-      color: Colors.grey[200],
+      borderRadius: BorderRadiusMix.circular(RemixTokens.radiusSm()),
+      color: RemixTokens.surfaceVariant(),
     ),
-    padding: EdgeInsetsGeometryMix.symmetric(vertical: 4, horizontal: 8),
+    padding: EdgeInsetsGeometryMix.symmetric(
+        vertical: RemixTokens.spaceXs(), horizontal: RemixTokens.spaceSm()),
   ),
   text: TextMix(
-    style: TextStyleMix(fontSize: 12, fontWeight: FontWeight.w500),
+    style: TextStyleMix(
+        color: RemixTokens.textPrimary(),
+        fontSize: RemixTokens.fontSizeSm(),
+        fontWeight: FontWeight.w500),
   ),
-  icon: IconMix(size: 14),
+  icon:
+      IconMix(color: RemixTokens.textPrimary(), size: RemixTokens.iconSizeSm()),
 );
 
 /// Default badge styles and variants
@@ -175,90 +178,108 @@ class RemixBadgeStyles {
   static RemixBadgeStyle get defaultStyle => RemixBadgeStyle(
         container: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(4),
-            color: Colors.grey[200],
+            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusSm()),
+            color: RemixTokens.surfaceVariant(),
           ),
-          padding: EdgeInsetsGeometryMix.symmetric(vertical: 4, horizontal: 8),
+          padding: EdgeInsetsGeometryMix.symmetric(
+              vertical: RemixTokens.spaceXs(),
+              horizontal: RemixTokens.spaceSm()),
         ),
         text: TextMix(
-          style: TextStyleMix(fontSize: 12, fontWeight: FontWeight.w500),
+          style: TextStyleMix(
+              color: RemixTokens.textPrimary(),
+              fontSize: RemixTokens.fontSizeSm(),
+              fontWeight: FontWeight.w500),
         ),
-        icon: IconMix(size: 14),
+        icon: IconMix(
+            color: RemixTokens.textPrimary(), size: RemixTokens.iconSizeSm()),
       );
 
   /// Primary badge variant
   static RemixBadgeStyle get primary => RemixBadgeStyle(
         container: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(4),
-            color: Colors.blue,
+            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusSm()),
+            color: RemixTokens.primary(),
           ),
-          padding: EdgeInsetsGeometryMix.symmetric(vertical: 4, horizontal: 8),
+          padding: EdgeInsetsGeometryMix.symmetric(
+              vertical: RemixTokens.spaceXs(),
+              horizontal: RemixTokens.spaceSm()),
         ),
         text: TextMix(
           style: TextStyleMix(
-            color: Colors.white,
-            fontSize: 12,
+            color: RemixTokens.surface(),
+            fontSize: RemixTokens.fontSizeSm(),
             fontWeight: FontWeight.w500,
           ),
         ),
-        icon: IconMix(color: Colors.white, size: 14),
+        icon: IconMix(
+            color: RemixTokens.surface(), size: RemixTokens.iconSizeSm()),
       );
 
   /// Success badge variant
   static RemixBadgeStyle get success => RemixBadgeStyle(
         container: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(4),
-            color: Colors.green,
+            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusSm()),
+            color: RemixTokens.success(),
           ),
-          padding: EdgeInsetsGeometryMix.symmetric(vertical: 4, horizontal: 8),
+          padding: EdgeInsetsGeometryMix.symmetric(
+              vertical: RemixTokens.spaceXs(),
+              horizontal: RemixTokens.spaceSm()),
         ),
         text: TextMix(
           style: TextStyleMix(
-            color: Colors.white,
-            fontSize: 12,
+            color: RemixTokens.surface(),
+            fontSize: RemixTokens.fontSizeSm(),
             fontWeight: FontWeight.w500,
           ),
         ),
-        icon: IconMix(color: Colors.white, size: 14),
+        icon: IconMix(
+            color: RemixTokens.surface(), size: RemixTokens.iconSizeSm()),
       );
 
   /// Warning badge variant
   static RemixBadgeStyle get warning => RemixBadgeStyle(
         container: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(4),
-            color: Colors.orange,
+            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusSm()),
+            color: RemixTokens.warning(),
           ),
-          padding: EdgeInsetsGeometryMix.symmetric(vertical: 4, horizontal: 8),
+          padding: EdgeInsetsGeometryMix.symmetric(
+              vertical: RemixTokens.spaceXs(),
+              horizontal: RemixTokens.spaceSm()),
         ),
         text: TextMix(
           style: TextStyleMix(
-            color: Colors.white,
-            fontSize: 12,
+            color: RemixTokens.surface(),
+            fontSize: RemixTokens.fontSizeSm(),
             fontWeight: FontWeight.w500,
           ),
         ),
-        icon: IconMix(color: Colors.white, size: 14),
+        icon: IconMix(
+            color: RemixTokens.surface(), size: RemixTokens.iconSizeSm()),
       );
 
   /// Danger badge variant
   static RemixBadgeStyle get danger => RemixBadgeStyle(
         container: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(4),
-            color: Colors.red,
+            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusSm()),
+            color: RemixTokens.danger(),
           ),
-          padding: EdgeInsetsGeometryMix.symmetric(vertical: 4, horizontal: 8),
+          padding: EdgeInsetsGeometryMix.symmetric(
+              vertical: RemixTokens.spaceXs(),
+              horizontal: RemixTokens.spaceSm()),
         ),
         text: TextMix(
           style: TextStyleMix(
-            color: Colors.white,
-            fontSize: 12,
+            color: RemixTokens.surface(),
+            fontSize: RemixTokens.fontSizeSm(),
             fontWeight: FontWeight.w500,
           ),
         ),
-        icon: IconMix(color: Colors.white, size: 14),
+        icon: IconMix(
+            color: RemixTokens.surface(), size: RemixTokens.iconSizeSm()),
       );
 }

@@ -6,6 +6,7 @@ import 'package:mix/mix.dart';
 
 import '../../properties/container_properties.dart';
 import '../../properties/container_properties_mix.dart';
+import '../../theme/remix_tokens.dart';
 
 part 'divider_spec.dart';
 part 'divider_style.dart';

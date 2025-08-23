@@ -21,6 +21,10 @@ export 'src/components/switch/switch.dart';
 export 'src/components/textfield/textfield.dart';
 export 'src/components/tooltip/tooltip.dart';
 
+/// THEME
+export 'src/theme/remix_theme.dart';
+export 'src/theme/remix_tokens.dart';
+
 /// HELPERS
 export 'src/helpers/spec/composited_transform_follower_spec.dart';
 export 'src/properties/container_properties.dart';

@@ -216,16 +216,16 @@ final DefaultRemixCheckboxStyle = RemixCheckboxStyle(
     direction: Axis.horizontal,
     crossAxisAlignment: CrossAxisAlignment.center,
     mainAxisSize: MainAxisSize.min,
-    gap: 8,
+    gap: RemixTokens.spaceSm(),
   ),
   indicatorContainer: ContainerPropertiesMix(
     decoration: BoxDecorationMix(
       border: BoxBorderMix.all(BorderSideMix(
-        color: Colors.grey[400]!,
+        color: RemixTokens.border(),
         width: 1.5,
       )),
-      borderRadius: BorderRadiusMix.circular(4),
-      color: Colors.white,
+      borderRadius: BorderRadiusMix.circular(RemixTokens.radiusSm()),
+      color: RemixTokens.background(),
     ),
     alignment: Alignment.center,
     constraints: BoxConstraintsMix(
@@ -235,30 +235,32 @@ final DefaultRemixCheckboxStyle = RemixCheckboxStyle(
       maxHeight: 20,
     ),
   ),
-  indicator: IconMix(color: Colors.black, size: 16),
-  label: TextMix(style: TextStyleMix(color: Colors.black, fontSize: 14)),
+  indicator:
+      IconMix(color: RemixTokens.textPrimary(), size: RemixTokens.iconSizeMd()),
+  label: TextMix(
+      style: TextStyleMix(
+          color: RemixTokens.textPrimary(),
+          fontSize: RemixTokens.fontSizeMd())),
 );
 
 extension CheckboxVariants on RemixCheckboxStyle {
   /// Primary checkbox variant with blue colors
   static RemixCheckboxStyle get primary => RemixCheckboxStyle(
-        container: ContainerPropertiesMix(
-          alignment: Alignment.centerLeft,
-        ),
+        container: ContainerPropertiesMix(alignment: Alignment.centerLeft),
         flex: FlexPropertiesMix(
           direction: Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
-          gap: 8,
+          gap: RemixTokens.spaceSm(),
         ),
         indicatorContainer: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
-              color: Colors.blue[500]!,
+              color: RemixTokens.primary(),
               width: 1.5,
             )),
-            borderRadius: BorderRadiusMix.circular(4),
-            color: Colors.blue[50],
+            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusSm()),
+            color: RemixTokens.primary().withValues(alpha: 0.1),
           ),
           alignment: Alignment.center,
           constraints: BoxConstraintsMix(
@@ -268,31 +270,32 @@ extension CheckboxVariants on RemixCheckboxStyle {
             maxHeight: 20,
           ),
         ),
-        indicator: IconMix(color: Colors.blue[500], size: 16),
+        indicator: IconMix(
+            color: RemixTokens.primary(), size: RemixTokens.iconSizeMd()),
         label: TextMix(
-          style: TextStyleMix(color: Colors.black, fontSize: 14),
+          style: TextStyleMix(
+              color: RemixTokens.textPrimary(),
+              fontSize: RemixTokens.fontSizeMd()),
         ),
       );
 
   /// Secondary checkbox variant with grey colors
   static RemixCheckboxStyle get secondary => RemixCheckboxStyle(
-        container: ContainerPropertiesMix(
-          alignment: Alignment.centerLeft,
-        ),
+        container: ContainerPropertiesMix(alignment: Alignment.centerLeft),
         flex: FlexPropertiesMix(
           direction: Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
-          gap: 8,
+          gap: RemixTokens.spaceSm(),
         ),
         indicatorContainer: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
-              color: Colors.grey[500]!,
+              color: RemixTokens.textSecondary(),
               width: 1.5,
             )),
-            borderRadius: BorderRadiusMix.circular(4),
-            color: Colors.grey[50],
+            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusSm()),
+            color: RemixTokens.surface(),
           ),
           alignment: Alignment.center,
           constraints: BoxConstraintsMix(
@@ -302,31 +305,32 @@ extension CheckboxVariants on RemixCheckboxStyle {
             maxHeight: 20,
           ),
         ),
-        indicator: IconMix(color: Colors.grey[600], size: 16),
+        indicator: IconMix(
+            color: RemixTokens.textSecondary(), size: RemixTokens.iconSizeMd()),
         label: TextMix(
-          style: TextStyleMix(color: Colors.black, fontSize: 14),
+          style: TextStyleMix(
+              color: RemixTokens.textPrimary(),
+              fontSize: RemixTokens.fontSizeMd()),
         ),
       );
 
   /// Compact checkbox variant with smaller size
   static RemixCheckboxStyle get compact => RemixCheckboxStyle(
-        container: ContainerPropertiesMix(
-          alignment: Alignment.centerLeft,
-        ),
+        container: ContainerPropertiesMix(alignment: Alignment.centerLeft),
         flex: FlexPropertiesMix(
           direction: Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
-          gap: 6,
+          gap: RemixTokens.spaceXs(),
         ),
         indicatorContainer: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
-              color: Colors.grey[400]!,
+              color: RemixTokens.border(),
               width: 1.5,
             )),
             borderRadius: BorderRadiusMix.circular(3),
-            color: Colors.white,
+            color: RemixTokens.background(),
           ),
           alignment: Alignment.center,
           constraints: BoxConstraintsMix(
@@ -336,9 +340,12 @@ extension CheckboxVariants on RemixCheckboxStyle {
             maxHeight: 16,
           ),
         ),
-        indicator: IconMix(color: Colors.black, size: 12),
+        indicator: IconMix(
+            color: RemixTokens.textPrimary(), size: RemixTokens.iconSizeSm()),
         label: TextMix(
-          style: TextStyleMix(color: Colors.black, fontSize: 12),
+          style: TextStyleMix(
+              color: RemixTokens.textPrimary(),
+              fontSize: RemixTokens.fontSizeSm()),
         ),
       );
 }

@@ -55,9 +55,7 @@ class RemixButtonStyle extends Style<ButtonSpec>
 
   /// Factory for background color
   factory RemixButtonStyle.color(Color value) {
-    return RemixButtonStyle(
-      container: ContainerPropertiesMix.color(value),
-    );
+    return RemixButtonStyle(container: ContainerPropertiesMix.color(value));
   }
 
   /// Factory for padding
@@ -249,20 +247,22 @@ class RemixButtonStyle extends Style<ButtonSpec>
 final DefaultRemixButtonStyle = RemixButtonStyle(
   container: ContainerPropertiesMix(
     decoration: BoxDecorationMix(
-      borderRadius: BorderRadiusMix.circular(8),
-      color: Colors.black,
+      borderRadius: BorderRadiusMix.circular(RemixTokens.radiusLg()),
+      color: RemixTokens.primary(),
     ),
-    padding: EdgeInsetsGeometryMix.all(10),
+    padding: EdgeInsetsGeometryMix.all(RemixTokens.spaceMd()),
   ),
   label: RemixLabelStyle(
-    spacing: 8,
-    label: TextMix.color(Colors.white),
-    leading: IconMix.color(Colors.white).size(18),
+    spacing: RemixTokens.spaceSm(),
+    label:
+        TextMix.color(RemixTokens.surface()).fontSize(RemixTokens.fontSizeMd()),
+    leading:
+        IconMix.color(RemixTokens.surface()).size(RemixTokens.iconSizeLg()),
   ),
   spinner: RemixSpinnerStyle(
-    size: 16,
+    size: RemixTokens.iconSizeMd(),
     strokeWidth: 1.5,
-    color: Colors.white,
+    color: RemixTokens.surface(),
     duration: const Duration(milliseconds: 1000),
     style: SpinnerStyle.solid,
   ),
@@ -271,63 +271,81 @@ final DefaultRemixButtonStyle = RemixButtonStyle(
 extension ButtonVariants on RemixButtonStyle {
   // Primary colors
   static RemixButtonStyle get primary =>
-      _createVariant(Colors.blue, Colors.white);
+      _createVariant(RemixTokens.primary(), RemixTokens.surface());
   static RemixButtonStyle get secondary =>
-      _createVariant(Colors.grey[600]!, Colors.white);
+      _createVariant(RemixTokens.secondary(), RemixTokens.surface());
   static RemixButtonStyle get success =>
-      _createVariant(Colors.green, Colors.white);
+      _createVariant(RemixTokens.success(), RemixTokens.surface());
   static RemixButtonStyle get danger =>
-      _createVariant(Colors.red, Colors.white);
+      _createVariant(RemixTokens.danger(), RemixTokens.surface());
   static RemixButtonStyle get warning =>
-      _createVariant(Colors.orange, Colors.white);
+      _createVariant(RemixTokens.warning(), RemixTokens.surface());
 
   // Outline variants
   static RemixButtonStyle get primaryOutline =>
-      _createOutlineVariant(Colors.blue);
+      _createOutlineVariant(RemixTokens.primary());
   static RemixButtonStyle get secondaryOutline =>
-      _createOutlineVariant(Colors.grey[600]!);
+      _createOutlineVariant(RemixTokens.secondary());
   static RemixButtonStyle get successOutline =>
-      _createOutlineVariant(Colors.green);
+      _createOutlineVariant(RemixTokens.success());
   static RemixButtonStyle get dangerOutline =>
-      _createOutlineVariant(Colors.red);
+      _createOutlineVariant(RemixTokens.danger());
 
   // Ghost variants (no background, no border)
-  static RemixButtonStyle get primaryGhost => _createGhostVariant(Colors.blue);
+  static RemixButtonStyle get primaryGhost =>
+      _createGhostVariant(RemixTokens.primary());
   static RemixButtonStyle get secondaryGhost =>
-      _createGhostVariant(Colors.grey[600]!);
-  static RemixButtonStyle get successGhost => _createGhostVariant(Colors.green);
-  static RemixButtonStyle get dangerGhost => _createGhostVariant(Colors.red);
+      _createGhostVariant(RemixTokens.secondary());
+  static RemixButtonStyle get successGhost =>
+      _createGhostVariant(RemixTokens.success());
+  static RemixButtonStyle get dangerGhost =>
+      _createGhostVariant(RemixTokens.danger());
 
   // Soft variants (subtle background)
-  static RemixButtonStyle get primarySoft => _createSoftVariant(Colors.blue);
+  static RemixButtonStyle get primarySoft =>
+      _createSoftVariant(RemixTokens.primary());
   static RemixButtonStyle get secondarySoft =>
-      _createSoftVariant(Colors.grey[600]!);
-  static RemixButtonStyle get successSoft => _createSoftVariant(Colors.green);
-  static RemixButtonStyle get dangerSoft => _createSoftVariant(Colors.red);
+      _createSoftVariant(RemixTokens.secondary());
+  static RemixButtonStyle get successSoft =>
+      _createSoftVariant(RemixTokens.success());
+  static RemixButtonStyle get dangerSoft =>
+      _createSoftVariant(RemixTokens.danger());
 
   // Size variants
   static RemixButtonStyle get small => RemixButtonStyle(
         container: ContainerPropertiesMix(
-          padding: EdgeInsetsGeometryMix.all(6),
+          padding: EdgeInsetsGeometryMix.all(RemixTokens.spaceXs()),
           constraints: BoxConstraintsMix(minHeight: 32),
         ),
-        label: RemixLabelStyle(spacing: 6, leading: IconMix.size(16)),
+        label: RemixLabelStyle(
+          spacing: RemixTokens.spaceXs(),
+          label: TextMix.fontSize(RemixTokens.fontSizeSm()),
+          leading: IconMix.size(RemixTokens.iconSizeSm()),
+        ),
       );
 
   static RemixButtonStyle get medium => RemixButtonStyle(
         container: ContainerPropertiesMix(
-          padding: EdgeInsetsGeometryMix.all(10),
+          padding: EdgeInsetsGeometryMix.all(RemixTokens.spaceSm()),
           constraints: BoxConstraintsMix(minHeight: 40),
         ),
-        label: RemixLabelStyle(spacing: 8, leading: IconMix.size(18)),
+        label: RemixLabelStyle(
+          spacing: RemixTokens.spaceSm(),
+          label: TextMix.fontSize(RemixTokens.fontSizeMd()),
+          leading: IconMix.size(RemixTokens.iconSizeMd()),
+        ),
       );
 
   static RemixButtonStyle get large => RemixButtonStyle(
         container: ContainerPropertiesMix(
-          padding: EdgeInsetsGeometryMix.all(14),
+          padding: EdgeInsetsGeometryMix.all(RemixTokens.spaceLg()),
           constraints: BoxConstraintsMix(minHeight: 48),
         ),
-        label: RemixLabelStyle(spacing: 10, leading: IconMix.size(20)),
+        label: RemixLabelStyle(
+          spacing: RemixTokens.spaceMd(),
+          label: TextMix.fontSize(RemixTokens.fontSizeLg()),
+          leading: IconMix.size(RemixTokens.iconSizeXl()),
+        ),
       );
 
   // Legacy aliases for backward compatibility
@@ -339,15 +357,15 @@ extension ButtonVariants on RemixButtonStyle {
     return RemixButtonStyle(
       container: ContainerPropertiesMix(
         decoration: BoxDecorationMix(
-          borderRadius: BorderRadiusMix.circular(8),
+          borderRadius: BorderRadiusMix.circular(RemixTokens.radiusLg()),
           color: bgColor,
         ),
-        padding: EdgeInsetsGeometryMix.all(10),
+        padding: EdgeInsetsGeometryMix.all(RemixTokens.spaceMd()),
       ),
       label: RemixLabelStyle(
-        spacing: 8,
-        label: TextMix.color(fgColor),
-        leading: IconMix.color(fgColor).size(18),
+        spacing: RemixTokens.spaceSm(),
+        label: TextMix.color(fgColor).fontSize(RemixTokens.fontSizeMd()),
+        leading: IconMix.color(fgColor).size(RemixTokens.iconSizeLg()),
       ),
     )
         .onHovered(
@@ -382,12 +400,12 @@ extension ButtonVariants on RemixButtonStyle {
           RemixButtonStyle(
             container: ContainerPropertiesMix(
               decoration: BoxDecorationMix(
-                color: Colors.grey.withValues(alpha: 0.3),
+                color: RemixTokens.textDisabled(),
               ),
             ),
             label: RemixLabelStyle(
-              label: TextMix.color(Colors.grey.withValues(alpha: 0.5)),
-              leading: IconMix.color(Colors.grey.withValues(alpha: 0.5)),
+              label: TextMix.color(RemixTokens.textTertiary()),
+              leading: IconMix.color(RemixTokens.textTertiary()),
             ),
           ),
         );
@@ -398,15 +416,15 @@ extension ButtonVariants on RemixButtonStyle {
       container: ContainerPropertiesMix(
         decoration: BoxDecorationMix(
           border: BoxBorderMix.all(BorderSideMix(color: color, width: 1)),
-          borderRadius: BorderRadiusMix.circular(8),
-          color: Colors.transparent,
+          borderRadius: BorderRadiusMix.circular(RemixTokens.radiusLg()),
+          color: RemixTokens.surface().withValues(alpha: 0.0),
         ),
-        padding: EdgeInsetsGeometryMix.all(10),
+        padding: EdgeInsetsGeometryMix.all(RemixTokens.spaceMd()),
       ),
       label: RemixLabelStyle(
-        spacing: 8,
-        label: TextMix.color(color),
-        leading: IconMix.color(color).size(18),
+        spacing: RemixTokens.spaceSm(),
+        label: TextMix.color(color).fontSize(RemixTokens.fontSizeMd()),
+        leading: IconMix.color(color).size(RemixTokens.iconSizeLg()),
       ),
     )
         .onHovered(
@@ -445,15 +463,15 @@ extension ButtonVariants on RemixButtonStyle {
               decoration: BoxDecorationMix(
                 border: BoxBorderMix.all(
                   BorderSideMix(
-                    color: Colors.grey.withValues(alpha: 0.3),
+                    color: RemixTokens.textDisabled().withValues(alpha: 0.3),
                     width: 1,
                   ),
                 ),
               ),
             ),
             label: RemixLabelStyle(
-              label: TextMix.color(Colors.grey.withValues(alpha: 0.5)),
-              leading: IconMix.color(Colors.grey.withValues(alpha: 0.5)),
+              label: TextMix.color(RemixTokens.textDisabled()),
+              leading: IconMix.color(RemixTokens.textDisabled()),
             ),
           ),
         );
@@ -463,15 +481,15 @@ extension ButtonVariants on RemixButtonStyle {
     return RemixButtonStyle(
       container: ContainerPropertiesMix(
         decoration: BoxDecorationMix(
-          borderRadius: BorderRadiusMix.circular(8),
-          color: Colors.transparent,
+          borderRadius: BorderRadiusMix.circular(RemixTokens.radiusLg()),
+          color: RemixTokens.surface().withValues(alpha: 0.0),
         ),
-        padding: EdgeInsetsGeometryMix.all(10),
+        padding: EdgeInsetsGeometryMix.all(RemixTokens.spaceMd()),
       ),
       label: RemixLabelStyle(
-        spacing: 8,
-        label: TextMix.color(color),
-        leading: IconMix.color(color).size(18),
+        spacing: RemixTokens.spaceSm(),
+        label: TextMix.color(color).fontSize(RemixTokens.fontSizeMd()),
+        leading: IconMix.color(color).size(RemixTokens.iconSizeLg()),
       ),
     )
         .onHovered(
@@ -505,8 +523,8 @@ extension ButtonVariants on RemixButtonStyle {
         .onDisabled(
           RemixButtonStyle(
             label: RemixLabelStyle(
-              label: TextMix.color(Colors.grey.withValues(alpha: 0.5)),
-              leading: IconMix.color(Colors.grey.withValues(alpha: 0.5)),
+              label: TextMix.color(RemixTokens.textDisabled()),
+              leading: IconMix.color(RemixTokens.textDisabled()),
             ),
           ),
         );
@@ -516,15 +534,15 @@ extension ButtonVariants on RemixButtonStyle {
     return RemixButtonStyle(
       container: ContainerPropertiesMix(
         decoration: BoxDecorationMix(
-          borderRadius: BorderRadiusMix.circular(8),
+          borderRadius: BorderRadiusMix.circular(RemixTokens.radiusLg()),
           color: color.withValues(alpha: 0.1),
         ),
-        padding: EdgeInsetsGeometryMix.all(10),
+        padding: EdgeInsetsGeometryMix.all(RemixTokens.spaceMd()),
       ),
       label: RemixLabelStyle(
-        spacing: 8,
-        label: TextMix.color(color),
-        leading: IconMix.color(color).size(18),
+        spacing: RemixTokens.spaceSm(),
+        label: TextMix.color(color).fontSize(RemixTokens.fontSizeMd()),
+        leading: IconMix.color(color).size(RemixTokens.iconSizeLg()),
       ),
     )
         .onHovered(
@@ -557,12 +575,12 @@ extension ButtonVariants on RemixButtonStyle {
           RemixButtonStyle(
             container: ContainerPropertiesMix(
               decoration: BoxDecorationMix(
-                color: Colors.grey.withValues(alpha: 0.1),
+                color: RemixTokens.textDisabled().withValues(alpha: 0.1),
               ),
             ),
             label: RemixLabelStyle(
-              label: TextMix.color(Colors.grey.withValues(alpha: 0.5)),
-              leading: IconMix.color(Colors.grey.withValues(alpha: 0.5)),
+              label: TextMix.color(RemixTokens.textDisabled()),
+              leading: IconMix.color(RemixTokens.textDisabled()),
             ),
           ),
         );

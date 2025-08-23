@@ -344,31 +344,32 @@ class RemixTextFieldStyle extends Style<TextFieldSpec>
 
 // Default style
 final DefaultRemixTextFieldStyle = RemixTextFieldStyle(
-  text: TextMix(style: TextStyleMix(color: Colors.black87, fontSize: 14)),
-  hintText: TextMix(style: TextStyleMix(color: Colors.grey.shade400)),
+  text: TextMix(style: TextStyleMix(color: RemixTokens.textPrimary(), fontSize: RemixTokens.fontSizeMd())),
+  hintText: TextMix(style: TextStyleMix(color: RemixTokens.textTertiary())),
   textAlign: TextAlign.start,
   cursorWidth: 2.0,
-  cursorColor: Colors.blue,
+  cursorColor: RemixTokens.primary(),
   cursorOffset: Offset.zero,
   selectionHeightStyle: BoxHeightStyle.tight,
   selectionWidthStyle: BoxWidthStyle.tight,
-  scrollPadding: const EdgeInsets.all(20.0),
-  spacing: 4,
+  scrollPadding: EdgeInsets.all(RemixTokens.spaceLg()),
+  spacing: RemixTokens.spaceXs(),
   container: ContainerPropertiesMix(
     decoration: BoxDecorationMix(
       border: BoxBorderMix.all(
-        BorderSideMix(color: Colors.grey.shade300, width: 1),
+        BorderSideMix(color: RemixTokens.border(), width: 1),
       ),
-      borderRadius: BorderRadiusMix.circular(6),
+      borderRadius: BorderRadiusMix.circular(RemixTokens.radiusMd()),
+      color: RemixTokens.surface(),
     ),
-    padding: EdgeInsetsMix.symmetric(vertical: 8, horizontal: 12),
+    padding: EdgeInsetsMix.symmetric(vertical: RemixTokens.spaceSm(), horizontal: RemixTokens.spaceMd()),
   ),
   flex: FlexPropertiesMix(
     direction: Axis.vertical,
     crossAxisAlignment: CrossAxisAlignment.start,
   ),
   helperText: TextMix(
-    style: TextStyleMix(color: Colors.grey.shade600, fontSize: 12),
+    style: TextStyleMix(color: RemixTokens.textSecondary(), fontSize: RemixTokens.fontSizeSm()),
   ),
 );
 
@@ -376,7 +377,7 @@ final DefaultRemixTextFieldStyle = RemixTextFieldStyle(
 final RemixTextFieldFocusStyle = RemixTextFieldStyle(
   container: ContainerPropertiesMix(
     decoration: BoxDecorationMix(
-      border: BoxBorderMix.all(BorderSideMix(color: Colors.blue, width: 2)),
+      border: BoxBorderMix.all(BorderSideMix(color: RemixTokens.primary(), width: 2)),
     ),
   ),
 );
@@ -385,21 +386,21 @@ final RemixTextFieldFocusStyle = RemixTextFieldStyle(
 final RemixTextFieldErrorStyle = RemixTextFieldStyle(
   container: ContainerPropertiesMix(
     decoration: BoxDecorationMix(
-      border: BoxBorderMix.all(BorderSideMix(color: Colors.red, width: 1)),
+      border: BoxBorderMix.all(BorderSideMix(color: RemixTokens.danger(), width: 1)),
     ),
   ),
-  helperText: TextMix(style: TextStyleMix(color: Colors.red)),
+  helperText: TextMix(style: TextStyleMix(color: RemixTokens.danger())),
 );
 
 // Disabled style
 final RemixTextFieldDisabledStyle = RemixTextFieldStyle(
-  text: TextMix(style: TextStyleMix(color: Colors.grey.shade500)),
+  text: TextMix(style: TextStyleMix(color: RemixTokens.textDisabled())),
   container: ContainerPropertiesMix(
     decoration: BoxDecorationMix(
       border: BoxBorderMix.all(
-        BorderSideMix(color: Colors.grey.shade300, width: 1),
+        BorderSideMix(color: RemixTokens.borderSubtle(), width: 1),
       ),
-      color: Colors.grey.shade100,
+      color: RemixTokens.surfaceVariant(),
     ),
   ),
 );
@@ -407,11 +408,11 @@ final RemixTextFieldDisabledStyle = RemixTextFieldStyle(
 extension RemixTextFieldVariants on RemixTextFieldStyle {
   /// Primary text field variant with blue accents
   static RemixTextFieldStyle get primary => RemixTextFieldStyle(
-        text: TextMix(style: TextStyleMix(color: Colors.black87, fontSize: 14)),
-        hintText: TextMix(style: TextStyleMix(color: Colors.grey.shade400)),
+        text: TextMix(style: TextStyleMix(color: RemixTokens.textPrimary(), fontSize: RemixTokens.fontSizeMd())),
+        hintText: TextMix(style: TextStyleMix(color: RemixTokens.textSecondary())),
         textAlign: TextAlign.start,
         cursorWidth: 2.0,
-        cursorColor: Colors.blue[500],
+        cursorColor: RemixTokens.primary(),
         cursorOffset: Offset.zero,
         selectionHeightStyle: BoxHeightStyle.tight,
         selectionWidthStyle: BoxWidthStyle.tight,
@@ -420,10 +421,10 @@ extension RemixTextFieldVariants on RemixTextFieldStyle {
         container: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(
-              BorderSideMix(color: Colors.blue[500]!, width: 1),
+              BorderSideMix(color: RemixTokens.primary(), width: 1),
             ),
             borderRadius: BorderRadiusMix.circular(6),
-            color: Colors.blue[25],
+            color: RemixTokens.primary().withValues(alpha: 0.05),
           ),
           padding: EdgeInsetsMix.symmetric(vertical: 8, horizontal: 12),
         ),
@@ -432,17 +433,17 @@ extension RemixTextFieldVariants on RemixTextFieldStyle {
           crossAxisAlignment: CrossAxisAlignment.start,
         ),
         helperText: TextMix(
-          style: TextStyleMix(color: Colors.blue.shade600, fontSize: 12),
+          style: TextStyleMix(color: RemixTokens.primary(), fontSize: RemixTokens.fontSizeSm()),
         ),
       );
 
   /// Outlined text field variant with prominent border
   static RemixTextFieldStyle get outlined => RemixTextFieldStyle(
-        text: TextMix(style: TextStyleMix(color: Colors.black87, fontSize: 14)),
-        hintText: TextMix(style: TextStyleMix(color: Colors.grey.shade400)),
+        text: TextMix(style: TextStyleMix(color: RemixTokens.textPrimary(), fontSize: RemixTokens.fontSizeMd())),
+        hintText: TextMix(style: TextStyleMix(color: RemixTokens.textSecondary())),
         textAlign: TextAlign.start,
         cursorWidth: 2.0,
-        cursorColor: Colors.blue,
+        cursorColor: RemixTokens.primary(),
         cursorOffset: Offset.zero,
         selectionHeightStyle: BoxHeightStyle.tight,
         selectionWidthStyle: BoxWidthStyle.tight,
@@ -451,10 +452,10 @@ extension RemixTextFieldVariants on RemixTextFieldStyle {
         container: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(
-              BorderSideMix(color: Colors.grey.shade400, width: 2),
+              BorderSideMix(color: RemixTokens.border(), width: 2),
             ),
             borderRadius: BorderRadiusMix.circular(6),
-            color: Colors.transparent,
+            color: RemixTokens.surface().withValues(alpha: 0.0),
           ),
           padding: EdgeInsetsMix.symmetric(vertical: 8, horizontal: 12),
         ),
@@ -463,17 +464,17 @@ extension RemixTextFieldVariants on RemixTextFieldStyle {
           crossAxisAlignment: CrossAxisAlignment.start,
         ),
         helperText: TextMix(
-          style: TextStyleMix(color: Colors.grey.shade600, fontSize: 12),
+          style: TextStyleMix(color: RemixTokens.textSecondary(), fontSize: RemixTokens.fontSizeSm()),
         ),
       );
 
   /// Filled text field variant with background color
   static RemixTextFieldStyle get filled => RemixTextFieldStyle(
-        text: TextMix(style: TextStyleMix(color: Colors.black87, fontSize: 14)),
-        hintText: TextMix(style: TextStyleMix(color: Colors.grey.shade500)),
+        text: TextMix(style: TextStyleMix(color: RemixTokens.textPrimary(), fontSize: RemixTokens.fontSizeMd())),
+        hintText: TextMix(style: TextStyleMix(color: RemixTokens.textTertiary())),
         textAlign: TextAlign.start,
         cursorWidth: 2.0,
-        cursorColor: Colors.blue,
+        cursorColor: RemixTokens.primary(),
         cursorOffset: Offset.zero,
         selectionHeightStyle: BoxHeightStyle.tight,
         selectionWidthStyle: BoxWidthStyle.tight,
@@ -482,10 +483,10 @@ extension RemixTextFieldVariants on RemixTextFieldStyle {
         container: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(
-              BorderSideMix(color: Colors.transparent, width: 1),
+              BorderSideMix(color: RemixTokens.surface().withValues(alpha: 0.0), width: 1),
             ),
             borderRadius: BorderRadiusMix.circular(8),
-            color: Colors.grey.shade100,
+            color: RemixTokens.surface(),
           ),
           padding: EdgeInsetsMix.symmetric(vertical: 12, horizontal: 12),
         ),
@@ -494,7 +495,7 @@ extension RemixTextFieldVariants on RemixTextFieldStyle {
           crossAxisAlignment: CrossAxisAlignment.start,
         ),
         helperText: TextMix(
-          style: TextStyleMix(color: Colors.grey.shade600, fontSize: 12),
+          style: TextStyleMix(color: RemixTokens.textSecondary(), fontSize: RemixTokens.fontSizeSm()),
         ),
       );
 }

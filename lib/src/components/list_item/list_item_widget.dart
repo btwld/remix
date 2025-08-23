@@ -69,9 +69,9 @@ class _RemixListItemState extends State<RemixListItem>
   @override
   Widget build(BuildContext context) {
     return NakedButton(
-      enableFeedback: widget.enableFeedback,
       onPressed: widget.onPressed,
       enabled: widget.enabled,
+      enableFeedback: widget.enableFeedback,
       focusNode: widget.focusNode,
       autofocus: widget.autofocus,
       child: StyleBuilder(

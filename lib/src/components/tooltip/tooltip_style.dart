@@ -85,11 +85,11 @@ final DefaultRemixTooltipStyle = RemixTooltipStyle(
   container: ContainerPropertiesMix(
     decoration: BoxDecorationMix(
       borderRadius: BorderRadiusMix.circular(8),
-      color: Colors.black.withValues(alpha: 0.8),
+      color: RemixTokens.textPrimary().withValues(alpha: 0.8),
     ),
     padding: EdgeInsetsMix.all(10),
   ),
-  text: TextMix(style: TextStyleMix(color: Colors.white, fontSize: 14)),
+  text: TextMix(style: TextStyleMix(color: RemixTokens.background(), fontSize: RemixTokens.fontSizeSm())),
   animation: AnimationConfig.ease(const Duration(milliseconds: 100)),
 );
 
@@ -99,12 +99,12 @@ extension RemixTooltipVariants on RemixTooltipStyle {
         container: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(8),
-            color: Colors.black.withValues(alpha: 0.9),
+            color: RemixTokens.textPrimary().withValues(alpha: 0.9),
           ),
           padding: EdgeInsetsGeometryMix.all(10),
         ),
         text: TextMix(
-          style: TextStyleMix(color: Colors.white, fontSize: 14),
+          style: TextStyleMix(color: RemixTokens.background(), fontSize: RemixTokens.fontSizeSm()),
         ),
         animation: AnimationConfig.ease(const Duration(milliseconds: 100)),
       );
@@ -114,13 +114,13 @@ extension RemixTooltipVariants on RemixTooltipStyle {
         container: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(
-              BorderSideMix(color: Colors.grey[300]!, width: 1),
+              BorderSideMix(color: RemixTokens.border(), width: 1),
             ),
             borderRadius: BorderRadiusMix.circular(8),
-            color: Colors.white,
+            color: RemixTokens.background(),
             boxShadow: [
               BoxShadowMix(
-                color: Colors.black.withValues(alpha: 0.1),
+                color: RemixTokens.textPrimary().withValues(alpha: 0.1),
                 offset: const Offset(0, 2),
                 blurRadius: 8,
               ),
@@ -129,7 +129,7 @@ extension RemixTooltipVariants on RemixTooltipStyle {
           padding: EdgeInsetsGeometryMix.all(10),
         ),
         text: TextMix(
-          style: TextStyleMix(color: Colors.black87, fontSize: 14),
+          style: TextStyleMix(color: RemixTokens.textPrimary(), fontSize: RemixTokens.fontSizeSm()),
         ),
         animation: AnimationConfig.ease(const Duration(milliseconds: 100)),
       );
@@ -139,12 +139,12 @@ extension RemixTooltipVariants on RemixTooltipStyle {
         container: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(8),
-            color: Colors.blue[600],
+            color: RemixTokens.primary(),
           ),
           padding: EdgeInsetsGeometryMix.all(10),
         ),
         text: TextMix(
-          style: TextStyleMix(color: Colors.white, fontSize: 14),
+          style: TextStyleMix(color: RemixTokens.background(), fontSize: RemixTokens.fontSizeSm()),
         ),
         animation: AnimationConfig.ease(const Duration(milliseconds: 100)),
       );

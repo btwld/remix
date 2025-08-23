@@ -99,22 +99,22 @@ final DefaultRemixCalloutStyle = RemixCalloutStyle(
   container: ContainerPropertiesMix(
     decoration: BoxDecorationMix(
       border: BoxBorderMix.all(BorderSideMix(
-        color: Colors.grey[300]!,
+        color: RemixTokens.border(),
         width: 1,
       )),
       borderRadius: BorderRadiusMix.circular(6),
-      color: Colors.white,
+      color: RemixTokens.background(),
     ),
     padding: EdgeInsetsMix.all(12),
   ),
   text: TextMix(
     style: TextStyleMix(
-      color: Colors.black,
+      color: RemixTokens.textPrimary(),
       fontSize: 14,
       fontWeight: FontWeight.w500,
     ),
   ),
-  icon: IconMix(color: Colors.black, size: 16),
+  icon: IconMix(color: RemixTokens.textPrimary(), size: 16),
 );
 
 extension CalloutVariants on RemixCalloutStyle {
@@ -123,22 +123,22 @@ extension CalloutVariants on RemixCalloutStyle {
         container: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
-              color: Colors.blue[300]!,
+              color: RemixTokens.primary().withValues(alpha: 0.6),
               width: 1,
             )),
             borderRadius: BorderRadiusMix.circular(6),
-            color: Colors.blue[50],
+            color: RemixTokens.primary().withValues(alpha: 0.1),
           ),
           padding: EdgeInsetsGeometryMix.all(12),
         ),
         text: TextMix(
           style: TextStyleMix(
-            color: Colors.blue[700],
+            color: RemixTokens.primary(),
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
         ),
-        icon: IconMix(color: Colors.blue[600], size: 16),
+        icon: IconMix(color: RemixTokens.primary(), size: 16),
       );
 
   /// Success callout variant with green colors
@@ -146,22 +146,22 @@ extension CalloutVariants on RemixCalloutStyle {
         container: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
-              color: Colors.green[300]!,
+              color: RemixTokens.success().withValues(alpha: 0.6),
               width: 1,
             )),
             borderRadius: BorderRadiusMix.circular(6),
-            color: Colors.green[50],
+            color: RemixTokens.success().withValues(alpha: 0.1),
           ),
           padding: EdgeInsetsGeometryMix.all(12),
         ),
         text: TextMix(
           style: TextStyleMix(
-            color: Colors.green[700],
+            color: RemixTokens.success(),
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
         ),
-        icon: IconMix(color: Colors.green[600], size: 16),
+        icon: IconMix(color: RemixTokens.success(), size: 16),
       );
 
   /// Warning callout variant with orange colors
@@ -169,22 +169,22 @@ extension CalloutVariants on RemixCalloutStyle {
         container: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
-              color: Colors.orange[300]!,
+              color: RemixTokens.warning().withValues(alpha: 0.6),
               width: 1,
             )),
             borderRadius: BorderRadiusMix.circular(6),
-            color: Colors.orange[50],
+            color: RemixTokens.warning().withValues(alpha: 0.1),
           ),
           padding: EdgeInsetsGeometryMix.all(12),
         ),
         text: TextMix(
           style: TextStyleMix(
-            color: Colors.orange[700],
+            color: RemixTokens.warning(),
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
         ),
-        icon: IconMix(color: Colors.orange[600], size: 16),
+        icon: IconMix(color: RemixTokens.warning(), size: 16),
       );
 
   /// Error callout variant with red colors
@@ -192,21 +192,21 @@ extension CalloutVariants on RemixCalloutStyle {
         container: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
-              color: Colors.red[300]!,
+              color: RemixTokens.danger().withValues(alpha: 0.6),
               width: 1,
             )),
             borderRadius: BorderRadiusMix.circular(6),
-            color: Colors.red[50],
+            color: RemixTokens.danger().withValues(alpha: 0.1),
           ),
           padding: EdgeInsetsGeometryMix.all(12),
         ),
         text: TextMix(
           style: TextStyleMix(
-            color: Colors.red[700],
+            color: RemixTokens.danger(),
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
         ),
-        icon: IconMix(color: Colors.red[600], size: 16),
+        icon: IconMix(color: RemixTokens.danger(), size: 16),
       );
 }
