@@ -165,10 +165,10 @@ packages:
     dependency: "direct dev"
     description:
       name: dart_code_metrics_presets
-      sha256: f1bab78d6e02e08948bef84d637e0d19ee7122ceb4b52b9ea77fe87ec5e9e588
+      sha256: "54abaa9a3f1b39a008e15346190838b74059f78bba6823a7d7958e215c9cada4"
       url: "https://pub.dev"
     source: hosted
-    version: "2.24.0"
+    version: "2.25.1"
   dart_style:
     dependency: transitive
     description:

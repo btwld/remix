@@ -158,7 +158,7 @@ final DefaultRemixListItemStyle = RemixListItemStyle(
     style: TextStyleMix(fontSize: 16, fontWeight: FontWeight.w500),
   ),
   subtitle: TextMix(
-    style: TextStyleMix(color: Colors.grey[600], fontSize: 14),
+    style: TextStyleMix(color: RemixTokens.textSecondary(), fontSize: RemixTokens.fontSizeSm()),
   ),
   leading: IconMix(size: 24),
   trailing: IconMix(size: 20),

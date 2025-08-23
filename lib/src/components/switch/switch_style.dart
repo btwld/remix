@@ -99,8 +99,8 @@ final DefaultRemixSwitchStyle = RemixSwitchStyle(
   container: ContainerPropertiesMix(),
   track: ContainerPropertiesMix(
     decoration: BoxDecorationMix(
-      borderRadius: BorderRadiusMix.circular(12),
-      color: Colors.grey[300],
+      borderRadius: BorderRadiusMix.circular(RemixTokens.radiusXl()),
+      color: RemixTokens.border(),
     ),
     constraints: BoxConstraintsMix(
       minWidth: 44,
@@ -112,10 +112,10 @@ final DefaultRemixSwitchStyle = RemixSwitchStyle(
   thumb: ContainerPropertiesMix(
     decoration: BoxDecorationMix(
       shape: BoxShape.circle,
-      color: Colors.white,
+      color: RemixTokens.background(),
       boxShadow: [
         BoxShadowMix(
-          color: Colors.black.withValues(alpha: 0.2),
+          color: RemixTokens.textPrimary().withValues(alpha: 0.2),
           offset: const Offset(0, 1),
           blurRadius: 2,
         ),
@@ -137,8 +137,8 @@ extension SwitchVariants on RemixSwitchStyle {
         container: ContainerPropertiesMix(),
         track: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(12),
-            color: Colors.blue[100],
+            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusXl()),
+            color: RemixTokens.primary().withValues(alpha: 0.2),
           ),
           constraints: BoxConstraintsMix(
             minWidth: 44,
@@ -150,10 +150,10 @@ extension SwitchVariants on RemixSwitchStyle {
         thumb: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             shape: BoxShape.circle,
-            color: Colors.blue[500],
+            color: RemixTokens.primary(),
             boxShadow: [
               BoxShadowMix(
-                color: Colors.blue.withValues(alpha: 0.3),
+                color: RemixTokens.primary().withValues(alpha: 0.3),
                 offset: const Offset(0, 1),
                 blurRadius: 2,
               ),
@@ -174,8 +174,8 @@ extension SwitchVariants on RemixSwitchStyle {
         container: ContainerPropertiesMix(),
         track: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(12),
-            color: Colors.grey[200],
+            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusXl()),
+            color: RemixTokens.surface(),
           ),
           constraints: BoxConstraintsMix(
             minWidth: 44,
@@ -187,10 +187,10 @@ extension SwitchVariants on RemixSwitchStyle {
         thumb: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             shape: BoxShape.circle,
-            color: Colors.grey[600],
+            color: RemixTokens.textSecondary(),
             boxShadow: [
               BoxShadowMix(
-                color: Colors.grey.withValues(alpha: 0.3),
+                color: RemixTokens.textSecondary().withValues(alpha: 0.3),
                 offset: const Offset(0, 1),
                 blurRadius: 2,
               ),
@@ -211,8 +211,8 @@ extension SwitchVariants on RemixSwitchStyle {
         container: ContainerPropertiesMix(),
         track: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(10),
-            color: Colors.grey[300],
+            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusLg()),
+            color: RemixTokens.border(),
           ),
           constraints: BoxConstraintsMix(
             minWidth: 36,
@@ -224,10 +224,10 @@ extension SwitchVariants on RemixSwitchStyle {
         thumb: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             shape: BoxShape.circle,
-            color: Colors.white,
+            color: RemixTokens.background(),
             boxShadow: [
               BoxShadowMix(
-                color: Colors.black.withValues(alpha: 0.1),
+                color: RemixTokens.textPrimary().withValues(alpha: 0.1),
                 offset: const Offset(0, 1),
                 blurRadius: 1,
               ),

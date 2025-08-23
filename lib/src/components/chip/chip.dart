@@ -10,6 +10,7 @@ import '../../properties/container_properties.dart';
 import '../../properties/container_properties_mix.dart';
 import '../../properties/flex_properties.dart';
 import '../../properties/flex_properties_mix.dart';
+import '../../theme/remix_tokens.dart';
 
 part 'chip_spec.dart';
 part 'chip_style.dart';

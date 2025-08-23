@@ -23,8 +23,8 @@ part of 'label.dart';
 ///   'Custom',
 ///   style: RemixLabelStyle(
 ///     spacing: 12,
-///     label: TextMix(style: TextStyleMix(color: Colors.blue)),
-///     leading: IconMix(color: Colors.blue, size: 20),
+///     label: TextMix(style: TextStyleMix(color: RemixTokens.primary())),
+///     leading: IconMix(color: RemixTokens.primary(), size: 20),
 ///   ),
 /// )
 /// ```

@@ -11,6 +11,7 @@ import '../../properties/container_properties.dart';
 import '../../properties/container_properties_mix.dart';
 import '../../properties/flex_properties.dart';
 import '../../properties/flex_properties_mix.dart';
+import '../../theme/remix_tokens.dart';
 
 part 'select_spec.dart';
 part 'select_style.dart';

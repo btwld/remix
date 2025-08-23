@@ -113,12 +113,12 @@ final DefaultRemixProgressStyle = RemixProgressStyle(
     clipBehavior: Clip.antiAlias,
   ),
   track: ContainerPropertiesMix(
-    decoration: BoxDecorationMix(color: Colors.grey[200]),
+    decoration: BoxDecorationMix(color: RemixTokens.surface()),
   ),
   fill: ContainerPropertiesMix(
     decoration: BoxDecorationMix(
       borderRadius: BorderRadiusMix.circular(99),
-      color: Colors.black,
+      color: RemixTokens.textPrimary(),
     ),
   ),
   outerContainer: ContainerPropertiesMix(),
@@ -134,12 +134,12 @@ extension ProgressVariants on RemixProgressStyle {
           clipBehavior: Clip.antiAlias,
         ),
         track: ContainerPropertiesMix(
-          decoration: BoxDecorationMix(color: Colors.blue[100]),
+          decoration: BoxDecorationMix(color: RemixTokens.primary().withValues(alpha: 0.2)),
         ),
         fill: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(99),
-            color: Colors.blue[500],
+            color: RemixTokens.primary(),
           ),
         ),
         outerContainer: ContainerPropertiesMix(),
@@ -154,12 +154,12 @@ extension ProgressVariants on RemixProgressStyle {
           clipBehavior: Clip.antiAlias,
         ),
         track: ContainerPropertiesMix(
-          decoration: BoxDecorationMix(color: Colors.grey[200]),
+          decoration: BoxDecorationMix(color: RemixTokens.surface()),
         ),
         fill: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(99),
-            color: Colors.grey[600],
+            color: RemixTokens.textSecondary(),
           ),
         ),
         outerContainer: ContainerPropertiesMix(),
@@ -174,12 +174,12 @@ extension ProgressVariants on RemixProgressStyle {
           clipBehavior: Clip.antiAlias,
         ),
         track: ContainerPropertiesMix(
-          decoration: BoxDecorationMix(color: Colors.green[100]),
+          decoration: BoxDecorationMix(color: RemixTokens.success().withValues(alpha: 0.2)),
         ),
         fill: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(99),
-            color: Colors.green[500],
+            color: RemixTokens.success(),
           ),
         ),
         outerContainer: ContainerPropertiesMix(),
@@ -194,12 +194,12 @@ extension ProgressVariants on RemixProgressStyle {
           clipBehavior: Clip.antiAlias,
         ),
         track: ContainerPropertiesMix(
-          decoration: BoxDecorationMix(color: Colors.orange[100]),
+          decoration: BoxDecorationMix(color: RemixTokens.warning().withValues(alpha: 0.2)),
         ),
         fill: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(99),
-            color: Colors.orange[500],
+            color: RemixTokens.warning(),
           ),
         ),
         outerContainer: ContainerPropertiesMix(),

@@ -79,7 +79,7 @@ final DefaultRemixDividerStyle = RemixDividerStyle(
   container: ContainerPropertiesMix(
     decoration: BoxDecorationMix(
       borderRadius: BorderRadiusMix.circular(99),
-      color: Colors.grey[300],
+      color: RemixTokens.border(),
     ),
     constraints: BoxConstraintsMix(
       minWidth: double.infinity,
@@ -96,7 +96,7 @@ class RemixDividerStyles {
         container: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(99),
-            color: Colors.grey[300],
+            color: RemixTokens.border(),
           ),
           constraints: BoxConstraintsMix(
             minWidth: double.infinity,
@@ -111,7 +111,7 @@ class RemixDividerStyles {
         container: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(99),
-            color: Colors.grey[300],
+            color: RemixTokens.border(),
           ),
           constraints: BoxConstraintsMix(
             minWidth: 1,
@@ -126,7 +126,7 @@ class RemixDividerStyles {
         container: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(99),
-            color: Colors.grey[300],
+            color: RemixTokens.border(),
           ),
           constraints: BoxConstraintsMix(
             minWidth: double.infinity,
@@ -141,7 +141,7 @@ class RemixDividerStyles {
         container: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(99),
-            color: Colors.grey[600],
+            color: RemixTokens.textSecondary(),
           ),
           constraints: BoxConstraintsMix(
             minWidth: double.infinity,

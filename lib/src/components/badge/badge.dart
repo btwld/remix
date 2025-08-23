@@ -6,6 +6,7 @@ import 'package:mix/mix.dart';
 
 import '../../properties/container_properties.dart';
 import '../../properties/container_properties_mix.dart';
+import '../../theme/remix_tokens.dart';
 import '../label/label.dart';
 
 part 'badge_spec.dart';

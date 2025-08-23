@@ -114,11 +114,11 @@ class RemixRemixLabelStyles {
         spacing: 8,
         label: TextMix(
           style: TextStyleMix(
-            color: Colors.blue,
+            color: RemixTokens.primary(),
             fontWeight: FontWeight.w500,
           ),
         ),
-        leading: IconMix(color: Colors.blue, size: 20),
+        leading: IconMix(color: RemixTokens.primary(), size: 20),
       );
 
   /// Secondary label variant
@@ -126,11 +126,11 @@ class RemixRemixLabelStyles {
         spacing: 8,
         label: TextMix(
           style: TextStyleMix(
-            color: Colors.grey,
+            color: RemixTokens.textSecondary(),
             fontWeight: FontWeight.w400,
           ),
         ),
-        leading: IconMix(color: Colors.grey, size: 20),
+        leading: IconMix(color: RemixTokens.textSecondary(), size: 20),
       );
 
   /// Compact label variant with reduced spacing

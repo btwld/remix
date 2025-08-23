@@ -352,10 +352,10 @@ final DefaultRemixSelectStyle = RemixSelectStyle(
   menuContainer: ContainerPropertiesMix(
     decoration: BoxDecorationMix(
       borderRadius: BorderRadiusMix.circular(8),
-      color: Colors.white,
+      color: RemixTokens.background(),
       boxShadow: [
         BoxShadowMix(
-          color: Colors.black.withValues(alpha: 0.1),
+          color: RemixTokens.textPrimary().withValues(alpha: 0.1),
           offset: const Offset(0, 2),
           blurRadius: 8,
         ),
@@ -367,7 +367,7 @@ final DefaultRemixSelectStyle = RemixSelectStyle(
     container: ContainerPropertiesMix(
       decoration: BoxDecorationMix(
         border: BoxBorderMix.all(
-          BorderSideMix(color: Colors.grey.shade300, width: 1),
+          BorderSideMix(color: RemixTokens.border(), width: 1),
         ),
         borderRadius: BorderRadiusMix.circular(6),
       ),
@@ -378,8 +378,8 @@ final DefaultRemixSelectStyle = RemixSelectStyle(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
     ),
-    label: TextMix(style: TextStyleMix(color: Colors.black87, fontSize: 14)),
-    icon: IconMix(color: Colors.black54, size: 20),
+    label: TextMix(style: TextStyleMix(color: RemixTokens.textPrimary(), fontSize: RemixTokens.fontSizeSm())),
+    icon: IconMix(color: RemixTokens.textSecondary(), size: 20),
   ),
   item: RemixSelectMenuItemStyle(
     container: ContainerPropertiesMix(
@@ -390,8 +390,8 @@ final DefaultRemixSelectStyle = RemixSelectStyle(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
     ),
-    text: TextMix(style: TextStyleMix(color: Colors.black87, fontSize: 14)),
-    icon: IconMix(color: Colors.black54, size: 16),
+    text: TextMix(style: TextStyleMix(color: RemixTokens.textPrimary(), fontSize: RemixTokens.fontSizeSm())),
+    icon: IconMix(color: RemixTokens.textSecondary(), size: 16),
   ),
   position: RemixCompositedTransformFollowerStyle(
     targetAnchor: Alignment.bottomLeft,
@@ -407,10 +407,10 @@ extension RemixSelectVariants on RemixSelectStyle {
         menuContainer: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(8),
-            color: Colors.white,
+            color: RemixTokens.background(),
             boxShadow: [
               BoxShadowMix(
-                color: Colors.blue.withValues(alpha: 0.2),
+                color: RemixTokens.primary().withValues(alpha: 0.2),
                 offset: const Offset(0, 2),
                 blurRadius: 8,
               ),
@@ -422,10 +422,10 @@ extension RemixSelectVariants on RemixSelectStyle {
           container: ContainerPropertiesMix(
             decoration: BoxDecorationMix(
               border: BoxBorderMix.all(
-                BorderSideMix(color: Colors.blue[500]!, width: 1),
+                BorderSideMix(color: RemixTokens.primary(), width: 1),
               ),
               borderRadius: BorderRadiusMix.circular(6),
-              color: Colors.blue[50],
+              color: RemixTokens.primary().withValues(alpha: 0.1),
             ),
             padding: EdgeInsetsMix.symmetric(vertical: 8, horizontal: 12),
           ),
@@ -435,9 +435,9 @@ extension RemixSelectVariants on RemixSelectStyle {
             crossAxisAlignment: CrossAxisAlignment.center,
           ),
           label: TextMix(
-            style: TextStyleMix(color: Colors.blue[700], fontSize: 14),
+            style: TextStyleMix(color: RemixTokens.primary(), fontSize: RemixTokens.fontSizeSm()),
           ),
-          icon: IconMix(color: Colors.blue[600], size: 20),
+          icon: IconMix(color: RemixTokens.primary(), size: 20),
         ),
         item: RemixSelectMenuItemStyle(
           container: ContainerPropertiesMix(
@@ -449,8 +449,8 @@ extension RemixSelectVariants on RemixSelectStyle {
             crossAxisAlignment: CrossAxisAlignment.center,
           ),
           text:
-              TextMix(style: TextStyleMix(color: Colors.black87, fontSize: 14)),
-          icon: IconMix(color: Colors.blue[500], size: 16),
+              TextMix(style: TextStyleMix(color: RemixTokens.textPrimary(), fontSize: RemixTokens.fontSizeSm())),
+          icon: IconMix(color: RemixTokens.primary(), size: 16),
         ),
         position: RemixCompositedTransformFollowerStyle(
           targetAnchor: Alignment.bottomLeft,
@@ -465,10 +465,10 @@ extension RemixSelectVariants on RemixSelectStyle {
         menuContainer: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(8),
-            color: Colors.white,
+            color: RemixTokens.background(),
             boxShadow: [
               BoxShadowMix(
-                color: Colors.grey.withValues(alpha: 0.2),
+                color: RemixTokens.textSecondary().withValues(alpha: 0.2),
                 offset: const Offset(0, 2),
                 blurRadius: 8,
               ),
@@ -480,10 +480,10 @@ extension RemixSelectVariants on RemixSelectStyle {
           container: ContainerPropertiesMix(
             decoration: BoxDecorationMix(
               border: BoxBorderMix.all(
-                BorderSideMix(color: Colors.grey[500]!, width: 1),
+                BorderSideMix(color: RemixTokens.textSecondary(), width: 1),
               ),
               borderRadius: BorderRadiusMix.circular(6),
-              color: Colors.grey[50],
+              color: RemixTokens.surface(),
             ),
             padding: EdgeInsetsMix.symmetric(vertical: 8, horizontal: 12),
           ),
@@ -493,9 +493,9 @@ extension RemixSelectVariants on RemixSelectStyle {
             crossAxisAlignment: CrossAxisAlignment.center,
           ),
           label: TextMix(
-            style: TextStyleMix(color: Colors.grey[700], fontSize: 14),
+            style: TextStyleMix(color: RemixTokens.textSecondary(), fontSize: RemixTokens.fontSizeSm()),
           ),
-          icon: IconMix(color: Colors.grey[600], size: 20),
+          icon: IconMix(color: RemixTokens.textSecondary(), size: 20),
         ),
         item: RemixSelectMenuItemStyle(
           container: ContainerPropertiesMix(
@@ -507,8 +507,8 @@ extension RemixSelectVariants on RemixSelectStyle {
             crossAxisAlignment: CrossAxisAlignment.center,
           ),
           text:
-              TextMix(style: TextStyleMix(color: Colors.black87, fontSize: 14)),
-          icon: IconMix(color: Colors.grey[500], size: 16),
+              TextMix(style: TextStyleMix(color: RemixTokens.textPrimary(), fontSize: RemixTokens.fontSizeSm())),
+          icon: IconMix(color: RemixTokens.textSecondary(), size: 16),
         ),
         position: RemixCompositedTransformFollowerStyle(
           targetAnchor: Alignment.bottomLeft,
@@ -523,13 +523,13 @@ extension RemixSelectVariants on RemixSelectStyle {
         menuContainer: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(
-              BorderSideMix(color: Colors.grey[300]!, width: 1),
+              BorderSideMix(color: RemixTokens.border(), width: 1),
             ),
             borderRadius: BorderRadiusMix.circular(8),
-            color: Colors.white,
+            color: RemixTokens.background(),
             boxShadow: [
               BoxShadowMix(
-                color: Colors.black.withValues(alpha: 0.1),
+                color: RemixTokens.textPrimary().withValues(alpha: 0.1),
                 offset: const Offset(0, 2),
                 blurRadius: 8,
               ),
@@ -541,10 +541,10 @@ extension RemixSelectVariants on RemixSelectStyle {
           container: ContainerPropertiesMix(
             decoration: BoxDecorationMix(
               border: BoxBorderMix.all(
-                BorderSideMix(color: Colors.grey[400]!, width: 2),
+                BorderSideMix(color: RemixTokens.border(), width: 2),
               ),
               borderRadius: BorderRadiusMix.circular(6),
-              color: Colors.transparent,
+              color: RemixTokens.surface().withValues(alpha: 0.0),
             ),
             padding: EdgeInsetsMix.symmetric(vertical: 8, horizontal: 12),
           ),
@@ -554,8 +554,8 @@ extension RemixSelectVariants on RemixSelectStyle {
             crossAxisAlignment: CrossAxisAlignment.center,
           ),
           label:
-              TextMix(style: TextStyleMix(color: Colors.black87, fontSize: 14)),
-          icon: IconMix(color: Colors.black54, size: 20),
+              TextMix(style: TextStyleMix(color: RemixTokens.textPrimary(), fontSize: RemixTokens.fontSizeSm())),
+          icon: IconMix(color: RemixTokens.textSecondary(), size: 20),
         ),
         item: RemixSelectMenuItemStyle(
           container: ContainerPropertiesMix(
@@ -567,8 +567,8 @@ extension RemixSelectVariants on RemixSelectStyle {
             crossAxisAlignment: CrossAxisAlignment.center,
           ),
           text:
-              TextMix(style: TextStyleMix(color: Colors.black87, fontSize: 14)),
-          icon: IconMix(color: Colors.black54, size: 16),
+              TextMix(style: TextStyleMix(color: RemixTokens.textPrimary(), fontSize: RemixTokens.fontSizeSm())),
+          icon: IconMix(color: RemixTokens.textSecondary(), size: 16),
         ),
         position: RemixCompositedTransformFollowerStyle(
           targetAnchor: Alignment.bottomLeft,

@@ -177,7 +177,7 @@ final DefaultRemixAvatarStyle = RemixAvatarStyle(
   container: ContainerPropertiesMix(
     decoration: BoxDecorationMix(
       shape: BoxShape.circle,
-      color: Colors.grey[300],
+      color: RemixTokens.surface(),
     ),
     alignment: Alignment.center,
     constraints: BoxConstraintsMix(
@@ -190,12 +190,12 @@ final DefaultRemixAvatarStyle = RemixAvatarStyle(
   ),
   text: TextMix(
     style: TextStyleMix(
-      color: Colors.black,
+      color: RemixTokens.textPrimary(),
       fontSize: 18,
       fontWeight: FontWeight.w400,
     ),
   ),
-  icon: IconMix(color: Colors.black, size: 24),
+  icon: IconMix(color: RemixTokens.textPrimary(), size: 24),
 );
 
 extension AvatarVariants on RemixAvatarStyle {
@@ -204,7 +204,7 @@ extension AvatarVariants on RemixAvatarStyle {
         container: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             shape: BoxShape.circle,
-            color: Colors.blue[500],
+            color: RemixTokens.primary(),
           ),
           alignment: Alignment.center,
           constraints: BoxConstraintsMix(
@@ -217,12 +217,12 @@ extension AvatarVariants on RemixAvatarStyle {
         ),
         text: TextMix(
           style: TextStyleMix(
-            color: Colors.white,
+            color: RemixTokens.background(),
             fontSize: 18,
             fontWeight: FontWeight.w500,
           ),
         ),
-        icon: IconMix(color: Colors.white, size: 24),
+        icon: IconMix(color: RemixTokens.background(), size: 24),
       );
 
   /// Secondary avatar variant with grey background
@@ -230,7 +230,7 @@ extension AvatarVariants on RemixAvatarStyle {
         container: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             shape: BoxShape.circle,
-            color: Colors.grey[500],
+            color: RemixTokens.textSecondary(),
           ),
           alignment: Alignment.center,
           constraints: BoxConstraintsMix(
@@ -243,12 +243,12 @@ extension AvatarVariants on RemixAvatarStyle {
         ),
         text: TextMix(
           style: TextStyleMix(
-            color: Colors.white,
+            color: RemixTokens.background(),
             fontSize: 18,
             fontWeight: FontWeight.w400,
           ),
         ),
-        icon: IconMix(color: Colors.white, size: 24),
+        icon: IconMix(color: RemixTokens.background(), size: 24),
       );
 
   /// Small avatar variant (32x32)
@@ -256,7 +256,7 @@ extension AvatarVariants on RemixAvatarStyle {
         container: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             shape: BoxShape.circle,
-            color: Colors.grey[300],
+            color: RemixTokens.surface(),
           ),
           alignment: Alignment.center,
           constraints: BoxConstraintsMix(
@@ -269,12 +269,12 @@ extension AvatarVariants on RemixAvatarStyle {
         ),
         text: TextMix(
           style: TextStyleMix(
-            color: Colors.black,
+            color: RemixTokens.textPrimary(),
             fontSize: 14,
             fontWeight: FontWeight.w400,
           ),
         ),
-        icon: IconMix(color: Colors.black, size: 16),
+        icon: IconMix(color: RemixTokens.textPrimary(), size: 16),
       );
 
   /// Large avatar variant (64x64)
@@ -282,7 +282,7 @@ extension AvatarVariants on RemixAvatarStyle {
         container: ContainerPropertiesMix(
           decoration: BoxDecorationMix(
             shape: BoxShape.circle,
-            color: Colors.grey[300],
+            color: RemixTokens.surface(),
           ),
           alignment: Alignment.center,
           constraints: BoxConstraintsMix(
@@ -295,11 +295,11 @@ extension AvatarVariants on RemixAvatarStyle {
         ),
         text: TextMix(
           style: TextStyleMix(
-            color: Colors.black,
+            color: RemixTokens.textPrimary(),
             fontSize: 24,
             fontWeight: FontWeight.w400,
           ),
         ),
-        icon: IconMix(color: Colors.black, size: 32),
+        icon: IconMix(color: RemixTokens.textPrimary(), size: 32),
       );
 }
