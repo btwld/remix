@@ -86,16 +86,24 @@ Widget createLabelWidget(
     children.add(TrailingIconWidget(icon: trailing));
   }
 
-  return Row(
-    mainAxisSize: MainAxisSize.min,
-    spacing: spec.spacing,
+  return Flex(
+    direction: spec.flex.direction ?? Axis.horizontal,
+    mainAxisAlignment: spec.flex.mainAxisAlignment ?? MainAxisAlignment.start,
+    mainAxisSize: spec.flex.mainAxisSize ?? MainAxisSize.min,
+    crossAxisAlignment:
+        spec.flex.crossAxisAlignment ?? CrossAxisAlignment.center,
+    textDirection: spec.flex.textDirection,
+    verticalDirection: spec.flex.verticalDirection ?? VerticalDirection.down,
+    textBaseline: spec.flex.textBaseline,
+    clipBehavior: spec.flex.clipBehavior ?? Clip.none,
+    spacing: spec.flex.spacing ?? 0,
     children: children,
   );
 }
 
 /// Extension on LabelSpec to provide call() method for creating widgets
 extension LabelSpecWidget on LabelSpec {
-  /// Renders the LabelSpec into a Row widget with text and optional icons
+  /// Renders the LabelSpec into a Flex widget with text and optional icons
   Widget call({required String text, IconData? leading, IconData? trailing}) {
     return createLabelWidget(
       this,

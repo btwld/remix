@@ -4,61 +4,40 @@ class RemixAccordionStyle extends Style<AccordionSpec>
     with
         StyleModifierMixin<RemixAccordionStyle, AccordionSpec>,
         StyleVariantMixin<RemixAccordionStyle, AccordionSpec> {
-  final Prop<ContainerSpec>? $itemContainer;
-  final Prop<ContainerSpec>? $contentContainer;
-  final Prop<ContainerSpec>? $headerContainer;
-  final Prop<FlexProperties>? $headerFlex;
-  final Prop<IconSpec>? $leading;
-  final Prop<IconSpec>? $trailing;
-  final Prop<TextSpec>? $titleStyle;
-  final Prop<TextSpec>? $contentStyle;
+  final Prop<ContainerSpec>? $container;
+  final Prop<ContainerSpec>? $content;
+  final Prop<FlexContainerSpec>? $header;
+  final Prop<LabelSpec>? $headerLabel;
 
   const RemixAccordionStyle.create({
-    Prop<ContainerSpec>? itemContainer,
-    Prop<ContainerSpec>? contentContainer,
-    Prop<ContainerSpec>? headerContainer,
-    Prop<FlexProperties>? headerFlex,
-    Prop<IconSpec>? leading,
-    Prop<IconSpec>? trailing,
-    Prop<TextSpec>? titleStyle,
-    Prop<TextSpec>? contentStyle,
+    Prop<ContainerSpec>? container,
+    Prop<ContainerSpec>? content,
+    Prop<FlexContainerSpec>? header,
+    Prop<LabelSpec>? headerLabel,
     super.variants,
     super.animation,
     super.modifier,
     super.inherit,
-  })  : $itemContainer = itemContainer,
-        $contentContainer = contentContainer,
-        $headerContainer = headerContainer,
-        $headerFlex = headerFlex,
-        $leading = leading,
-        $trailing = trailing,
-        $titleStyle = titleStyle,
-        $contentStyle = contentStyle;
+  })  : $container = container,
+        $content = content,
+        $header = header,
+        $headerLabel = headerLabel;
 
   RemixAccordionStyle({
-    ContainerSpecMix? itemContainer,
-    ContainerSpecMix? contentContainer,
-    ContainerSpecMix? headerContainer,
-    FlexPropertiesMix? headerFlex,
-    IconMix? leading,
-    IconMix? trailing,
-    TextMix? titleStyle,
-    TextMix? contentStyle,
+    ContainerMix? container,
+    ContainerMix? content,
+    FlexContainerMix? header,
+    RemixLabelStyle? headerLabel,
     AnimationConfig? animation,
     List<VariantStyle<AccordionSpec>>? variants,
     ModifierConfig? modifier,
     bool? inherit,
   }) : this.create(
-          itemContainer: itemContainer != null ? Prop.mix(itemContainer) : null,
-          contentContainer:
-              contentContainer != null ? Prop.mix(contentContainer) : null,
-          headerContainer:
-              headerContainer != null ? Prop.mix(headerContainer) : null,
-          headerFlex: headerFlex != null ? Prop.mix(headerFlex) : null,
-          leading: leading != null ? Prop.mix(leading) : null,
-          trailing: trailing != null ? Prop.mix(trailing) : null,
-          titleStyle: titleStyle != null ? Prop.mix(titleStyle) : null,
-          contentStyle: contentStyle != null ? Prop.mix(contentStyle) : null,
+          container: container != null ? Prop.mix(container) : null,
+          content:
+              content != null ? Prop.mix(content) : null,
+          header: header != null ? Prop.mix(header) : null,
+          headerLabel: headerLabel != null ? Prop.mix(headerLabel) : null,
           variants: variants,
           animation: animation,
           modifier: modifier,
@@ -66,25 +45,19 @@ class RemixAccordionStyle extends Style<AccordionSpec>
         );
 
   factory RemixAccordionStyle.value(AccordionSpec spec) => RemixAccordionStyle(
-        itemContainer: ContainerSpecMix.maybeValue(spec.itemContainer),
-        contentContainer:
-            ContainerSpecMix.maybeValue(spec.contentContainer),
-        headerContainer:
-            ContainerSpecMix.maybeValue(spec.headerContainer),
-        headerFlex: FlexPropertiesMix.maybeValue(spec.headerFlex),
+        container: ContainerMix.maybeValue(spec.container),
+        content: ContainerMix.maybeValue(spec.content),
+        header: FlexContainerMix.maybeValue(spec.header),
+        headerLabel: RemixLabelStyle.value(spec.headerLabel),
       );
 
   @override
   AccordionSpec resolve(BuildContext context) {
     return AccordionSpec(
-      itemContainer: MixOps.resolve(context, $itemContainer),
-      contentContainer: MixOps.resolve(context, $contentContainer),
-      headerContainer: MixOps.resolve(context, $headerContainer),
-      headerFlex: MixOps.resolve(context, $headerFlex),
-      leading: MixOps.resolve(context, $leading),
-      trailing: MixOps.resolve(context, $trailing),
-      titleStyle: MixOps.resolve(context, $titleStyle),
-      contentStyle: MixOps.resolve(context, $contentStyle),
+      container: MixOps.resolve(context, $container),
+      content: MixOps.resolve(context, $content),
+      header: MixOps.resolve(context, $header),
+      headerLabel: MixOps.resolve(context, $headerLabel),
     );
   }
 
@@ -93,15 +66,11 @@ class RemixAccordionStyle extends Style<AccordionSpec>
     if (other == null) return this;
 
     return RemixAccordionStyle.create(
-      itemContainer: MixOps.merge($itemContainer, other.$itemContainer),
-      contentContainer:
-          MixOps.merge($contentContainer, other.$contentContainer),
-      headerContainer: MixOps.merge($headerContainer, other.$headerContainer),
-      headerFlex: MixOps.merge($headerFlex, other.$headerFlex),
-      leading: MixOps.merge($leading, other.$leading),
-      trailing: MixOps.merge($trailing, other.$trailing),
-      titleStyle: MixOps.merge($titleStyle, other.$titleStyle),
-      contentStyle: MixOps.merge($contentStyle, other.$contentStyle),
+      container: MixOps.merge($container, other.$container),
+      content:
+          MixOps.merge($content, other.$content),
+      header: MixOps.merge($header, other.$header),
+      headerLabel: MixOps.merge($headerLabel, other.$headerLabel),
       variants: mergeVariantLists($variants, other.$variants),
       animation: other.$animation ?? $animation,
       modifier: $modifier?.merge(other.$modifier) ?? other.$modifier,
@@ -126,14 +95,10 @@ class RemixAccordionStyle extends Style<AccordionSpec>
 
   @override
   List<Object?> get props => [
-        $itemContainer,
-        $contentContainer,
-        $headerContainer,
-        $headerFlex,
-        $leading,
-        $trailing,
-        $titleStyle,
-        $contentStyle,
+        $container,
+        $content,
+        $header,
+        $headerLabel,
         $variants,
         $animation,
         $modifier,
@@ -142,7 +107,7 @@ class RemixAccordionStyle extends Style<AccordionSpec>
 }
 
 final DefaultRemixAccordionStyle = RemixAccordionStyle(
-  itemContainer: ContainerSpecMix(
+  container: ContainerMix(
     decoration: BoxDecorationMix(
       border: BoxBorderMix.all(BorderSideMix(
         color: RemixTokens.border(),
@@ -152,38 +117,34 @@ final DefaultRemixAccordionStyle = RemixAccordionStyle(
     ),
     margin: EdgeInsetsMix(bottom: 12),
   ),
-  contentContainer: ContainerSpecMix(
+  content: ContainerMix(
     padding: EdgeInsetsMix.fromLTRB(12, 0, 12, 12),
     constraints: BoxConstraintsMix(minWidth: double.infinity),
   ),
-  headerContainer: ContainerSpecMix(padding: EdgeInsetsMix.all(12)),
-  headerFlex: FlexPropertiesMix(
+  header: FlexContainerMix(
+    padding: EdgeInsetsMix.all(12),
     direction: Axis.horizontal,
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     crossAxisAlignment: CrossAxisAlignment.center,
   ),
-  leading: IconMix(size: 20),
-  trailing: IconMix(size: 20),
-  titleStyle: TextMix(
-    style: TextStyleMix(
-      color: RemixTokens.textPrimary(),
-      fontSize: 14,
-      fontWeight: FontWeight.w500,
+  headerLabel: RemixLabelStyle(
+    label: TypographyMix(
+      style: TextStyleMix(
+        color: RemixTokens.textPrimary(),
+        fontSize: 14,
+        fontWeight: FontWeight.w500,
+      ),
     ),
-  ),
-  contentStyle: TextMix(
-    style: TextStyleMix(
-      color: RemixTokens.textPrimary(),
-      fontSize: 14,
-      fontWeight: FontWeight.w400,
-    ),
+    leading: IconographyMix(size: 20),
+    trailing: IconographyMix(size: 20),
+    flex: FlexLayoutMix(spacing: 8),
   ),
 );
 
 extension AccordionVariants on RemixAccordionStyle {
   /// Default accordion variant (same as DefaultAccordionStyle)
   static RemixAccordionStyle get defaultVariant => RemixAccordionStyle(
-        itemContainer: ContainerSpecMix(
+        container: ContainerMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
               color: RemixTokens.border(),
@@ -193,39 +154,33 @@ extension AccordionVariants on RemixAccordionStyle {
           ),
           margin: EdgeInsetsMix(bottom: 12),
         ),
-        contentContainer: ContainerSpecMix(
+        content: ContainerMix(
           padding: EdgeInsetsMix.fromLTRB(12, 0, 12, 12),
           constraints: BoxConstraintsMix(minWidth: double.infinity),
         ),
-        headerContainer: ContainerSpecMix(
+        header: FlexContainerMix(
           padding: EdgeInsetsMix.all(12),
-        ),
-        headerFlex: FlexPropertiesMix(
           direction: Axis.horizontal,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
         ),
-        leading: IconMix(size: 20),
-        trailing: IconMix(size: 20),
-        titleStyle: TextMix(
-          style: TextStyleMix(
-            color: RemixTokens.textPrimary(),
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
+        headerLabel: RemixLabelStyle(
+          label: TypographyMix(
+            style: TextStyleMix(
+              color: RemixTokens.textPrimary(),
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
           ),
-        ),
-        contentStyle: TextMix(
-          style: TextStyleMix(
-            color: RemixTokens.textPrimary(),
-            fontSize: 14,
-            fontWeight: FontWeight.w400,
-          ),
+          leading: IconographyMix(size: 20),
+          trailing: IconographyMix(size: 20),
+          flex: FlexLayoutMix(spacing: 8),
         ),
       );
 
   /// Compact accordion variant with smaller padding
   static RemixAccordionStyle get compact => RemixAccordionStyle(
-        itemContainer: ContainerSpecMix(
+        container: ContainerMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
               color: RemixTokens.border(),
@@ -235,39 +190,33 @@ extension AccordionVariants on RemixAccordionStyle {
           ),
           margin: EdgeInsetsMix(bottom: 8),
         ),
-        contentContainer: ContainerSpecMix(
+        content: ContainerMix(
           padding: EdgeInsetsMix.fromLTRB(8, 0, 8, 8),
           constraints: BoxConstraintsMix(minWidth: double.infinity),
         ),
-        headerContainer: ContainerSpecMix(
+        header: FlexContainerMix(
           padding: EdgeInsetsMix.all(8),
-        ),
-        headerFlex: FlexPropertiesMix(
           direction: Axis.horizontal,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
         ),
-        leading: IconMix(size: 16),
-        trailing: IconMix(size: 16),
-        titleStyle: TextMix(
-          style: TextStyleMix(
-            color: RemixTokens.textPrimary(),
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
+        headerLabel: RemixLabelStyle(
+          label: TypographyMix(
+            style: TextStyleMix(
+              color: RemixTokens.textPrimary(),
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
           ),
-        ),
-        contentStyle: TextMix(
-          style: TextStyleMix(
-            color: RemixTokens.textPrimary(),
-            fontSize: 12,
-            fontWeight: FontWeight.w400,
-          ),
+          leading: IconographyMix(size: 16),
+          trailing: IconographyMix(size: 16),
+          flex: FlexLayoutMix(spacing: 6),
         ),
       );
 
   /// Bordered accordion variant with prominent borders
   static RemixAccordionStyle get bordered => RemixAccordionStyle(
-        itemContainer: ContainerSpecMix(
+        container: ContainerMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
               color: RemixTokens.textSecondary(),
@@ -277,33 +226,27 @@ extension AccordionVariants on RemixAccordionStyle {
           ),
           margin: EdgeInsetsMix(bottom: 12),
         ),
-        contentContainer: ContainerSpecMix(
+        content: ContainerMix(
           padding: EdgeInsetsMix.fromLTRB(16, 0, 16, 16),
           constraints: BoxConstraintsMix(minWidth: double.infinity),
         ),
-        headerContainer: ContainerSpecMix(
+        header: FlexContainerMix(
           padding: EdgeInsetsMix.all(16),
-        ),
-        headerFlex: FlexPropertiesMix(
           direction: Axis.horizontal,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
         ),
-        leading: IconMix(size: 20),
-        trailing: IconMix(size: 20),
-        titleStyle: TextMix(
-          style: TextStyleMix(
-            color: RemixTokens.textPrimary(),
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
+        headerLabel: RemixLabelStyle(
+          label: TypographyMix(
+            style: TextStyleMix(
+              color: RemixTokens.textPrimary(),
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
           ),
-        ),
-        contentStyle: TextMix(
-          style: TextStyleMix(
-            color: RemixTokens.textPrimary(),
-            fontSize: 14,
-            fontWeight: FontWeight.w400,
-          ),
+          leading: IconographyMix(size: 20),
+          trailing: IconographyMix(size: 20),
+          flex: FlexLayoutMix(spacing: 10),
         ),
       );
 }

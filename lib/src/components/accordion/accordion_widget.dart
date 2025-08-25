@@ -77,25 +77,26 @@ class _InheritedAccordionStyle extends InheritedWidget {
 
 // Accordion Item Widget
 class RemixAccordionItem<T> extends StatefulWidget with HasEnabled, HasFocused {
-  RemixAccordionItem({
+  const RemixAccordionItem({
     super.key,
-    required String title,
+    required this.title,
     required this.child,
     required this.value,
     this.focusNode,
     this.autofocus = false,
     this.enabled = true,
-    this.trailingBuilder,
-    IconData? leading,
-  }) : header = RemixLabel(title, leading: leading);
+    this.leading,
+    this.trailing,
+  });
 
-  final Widget header;
+  final String title;
+  final IconData? leading;
+  final Widget? trailing;
   final Widget child;
   final bool enabled;
   final T value;
   final bool autofocus;
   final FocusNode? focusNode;
-  final Widget Function(bool)? trailingBuilder;
 
   @override
   State<RemixAccordionItem<T>> createState() => _RemixAccordionItemState<T>();
@@ -131,33 +132,35 @@ class _RemixAccordionItemState<T> extends State<RemixAccordionItem<T>>
           style: inheritedData.style,
           controller: controller,
           builder: (context, spec) {
-            final ItemContainer = spec.itemContainer;
-            final ContentContainer = spec.contentContainer;
+            final ItemContainer = spec.container;
+            final ContentContainer = spec.content;
 
             return ItemContainer(
               child: NakedAccordionItem<T>(
                 trigger: (_, isExpanded) {
                   // The trigger is purely for building UI
                   // No state updates should happen here
-                  final HeaderContainer = spec.headerContainer;
-                  final HeaderFlex = spec.headerFlex;
+                  final Header = spec.header;
 
-                  return HeaderContainer(
-                    child: HeaderFlex(
-                      direction: Axis.horizontal,
-                      children: [
-                        // ignore: avoid-flexible-outside-flex
-                        Expanded(child: widget.header),
-                        if (widget.trailingBuilder != null)
-                          widget.trailingBuilder!(isExpanded)
-                        else
-                          Icon(
-                            inheritedData.defaultTrailing,
-                            size: spec.trailing.size,
-                            color: spec.trailing.color,
-                          ),
-                      ],
-                    ),
+                  return Header(
+                    direction: Axis.horizontal,
+                    children: [
+                      // ignore: avoid-flexible-outside-flex
+                      Expanded(
+                        child: spec.headerLabel(
+                          text: widget.title,
+                          leading: widget.leading,
+                          trailing: null,  // Don't use label's trailing since we handle it separately
+                        ),
+                      ),
+                      // Handle trailing icon with proper styling
+                      widget.trailing ??
+                      Icon(
+                        isExpanded ? Icons.expand_less : inheritedData.defaultTrailing,
+                        size: spec.headerLabel.trailing.size,
+                        color: spec.headerLabel.trailing.color,
+                      ),
+                    ],
                   );
                 },
                 value: widget.value,
@@ -178,7 +181,6 @@ class _RemixAccordionItemState<T> extends State<RemixAccordionItem<T>>
                 ),
                 enabled: widget.enabled,
                 focusNode: widget.focusNode,
-                controller: controller,
                 child: ContentContainer(child: widget.child),
               ),
             );

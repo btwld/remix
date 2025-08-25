@@ -16,21 +16,21 @@ Widget buildAccordionUseCase(BuildContext context) {
         child: RemixAccordion(
           defaultTrailing: context.knobs.iconData(label: 'Trailing Icon') ??
               Icons.keyboard_arrow_down_rounded,
-          children: [
+          children: const [
             RemixAccordionItem(
               title: 'Section 1',
               value: 'section1',
-              child: const Text('Content for section 1'),
+              child: Text('Content for section 1'),
             ),
             RemixAccordionItem(
               title: 'Section 2',
               value: 'section2',
-              child: const Text('Content for section 2'),
+              child: Text('Content for section 2'),
             ),
             RemixAccordionItem(
               title: 'Section 3',
               value: 'section3',
-              child: const Text('Content for section 3'),
+              child: Text('Content for section 3'),
             ),
           ],
         ),

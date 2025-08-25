@@ -2,6 +2,8 @@
 // Extracted from commit effa079
 // Generated on: Sat Aug 23 10:56:08 EDT 2025
 
+import 'dart:math' as math;
+
 import 'package:flutter/painting.dart';
 
 /// Radix color swatch
@@ -2126,32 +2128,19 @@ const _yellowDarkAlpha = ColorSwatch(
 
 
 // ============================================================================
-// COLOR UTILITIES
+// RADIX COLOR UTILITIES
 // ============================================================================
 
-import 'dart:math' as math;
-
-import 'package:flutter/widgets.dart';
-import 'package:mix/mix.dart';
-
-extension ColorUtilityExt<T extends StyleElement> on ColorUtility<T> {
-  T alphaBlend(Color foreground, Color background) =>
-      call(Color.alphaBlend(foreground, background));
-}
-
-double _calculateContrast(Color backgroundColor, Color textColor) {
-  /// Calculates the contrast ratio between two colors.
-  ///
-  /// The contrast ratio is a measure of the perceived difference in brightness
-  /// between the text color and the background color. A higher ratio indicates
-  /// better readability.
-  ///
-  /// The calculation involves:
-  /// 1. Computing the relative luminance of each color.
-  /// 2. Finding the lighter (brightest) and darker (darkest) colors.
-  /// 3. Applying the contrast ratio formula: (brightest + 0.05) / (darkest + 0.05)
-  ///
-  /// Note: Relative luminance calculation is computationally expensive.
+/// Calculates the contrast ratio between two colors for accessibility.
+///
+/// The contrast ratio is a measure of the perceived difference in brightness
+/// between the text color and the background color. A higher ratio indicates
+/// better readability.
+///
+/// Returns a value between 1 and 21, where:
+/// - 4.5:1 is the minimum for normal text (WCAG AA)
+/// - 7:1 is enhanced contrast (WCAG AAA)
+double calculateRadixContrast(Color backgroundColor, Color textColor) {
   var lum1 = textColor.computeLuminance();
   var lum2 = backgroundColor.computeLuminance();
 
@@ -2161,44 +2150,22 @@ double _calculateContrast(Color backgroundColor, Color textColor) {
   return (brightest + 0.05) / (darkest + 0.05);
 }
 
-class RXColor {
-  final Color color;
-  final ColorSwatch<int> swatch;
-
-  RXColor(this.color) : swatch = getColorSwatch(color);
-
-  Color get shade50 => swatch[50]!;
-  Color get shade100 => swatch[100]!;
-  Color get shade200 => swatch[200]!;
-  Color get shade300 => swatch[300]!;
-  Color get shade400 => swatch[400]!;
-  Color get shade500 => swatch[500]!;
-  Color get shade600 => swatch[600]!;
-  Color get shade700 => swatch[700]!;
-  Color get shade800 => swatch[800]!;
-  Color get shade900 => swatch[900]!;
-}
-
-ColorSwatch<int> getColorSwatch(Color color) {
+/// Generates a color swatch from a base color using HSL manipulation.
+///
+/// Creates a Material Design style swatch with shades from 50 to 900,
+/// where 500 is the base color.
+ColorSwatch<int> generateColorSwatch(Color color) {
   final hslColor = HSLColor.fromColor(color);
   final lightness = hslColor.lightness;
 
-  /// if [500] is the default color, there are at LEAST five
-  /// steps below [500]. (i.e. 400, 300, 200, 100, 50.) A
-  /// divisor of 5 would mean [50] is a lightness of 1.0 or
-  /// a color of #ffffff. A value of six would be near white
-  /// but not quite.
+  // Calculate step sizes for lighter and darker shades
   const lowDivisor = 6;
-
-  /// if [500] is the default color, there are at LEAST four
-  /// steps above [500]. A divisor of 4 would mean [900] is
-  /// a lightness of 0.0 or color of #000000
   const highDivisor = 5;
 
   final lowStep = (1.0 - lightness) / lowDivisor;
   final highStep = lightness / highDivisor;
 
-  return ColorSwatch(color.toInt32, {
+  return ColorSwatch(color.toARGB32(), {
     50: (hslColor.withLightness(lightness + (lowStep * 5))).toColor(),
     100: (hslColor.withLightness(lightness + (lowStep * 4))).toColor(),
     200: (hslColor.withLightness(lightness + (lowStep * 3))).toColor(),
@@ -2212,10 +2179,14 @@ ColorSwatch<int> getColorSwatch(Color color) {
   });
 }
 
-Color getTextColor(Color background) {
+/// Determines an accessible text color for a given background.
+///
+/// Returns white for dark backgrounds and a very light or dark color
+/// for light backgrounds based on contrast requirements.
+Color getAccessibleTextColor(Color background) {
   const white = Color(0xFFFFFFFF);
 
-  final contrastRatio = _calculateContrast(white, background);
+  final contrastRatio = calculateRadixContrast(white, background);
 
   if (contrastRatio <= 4.5) {
     final hslBackground = HSLColor.fromColor(background);
@@ -2230,512 +2201,4 @@ Color getTextColor(Color background) {
   }
 
   return white;
-}
-
-extension on Color {
-  static int floatToInt8(double x) {
-    return (x * 255.0).round() & 0xff;
-  }
-
-  /// A 32 bit value representing this color.
-  ///
-  /// The bits are assigned as follows:
-  ///
-  /// * Bits 24-31 are the alpha value.
-  /// * Bits 16-23 are the red value.
-  /// * Bits 8-15 are the green value.
-  /// * Bits 0-7 are the blue value.
-  int get toInt32 {
-    return floatToInt8(a) << 24 |
-        floatToInt8(r) << 16 |
-        floatToInt8(g) << 8 |
-        floatToInt8(b) << 0;
-  }
-}
-
-
-// ============================================================================
-// TOKEN SYSTEM
-// ============================================================================
-
-import 'package:flutter/widgets.dart';
-import 'package:mix/mix.dart';
-import 'package:mix_annotations/mix_annotations.dart';
-
-import '../../helpers/color_palette.dart';
-
-part 'tokens.g.dart';
-
-class FortalezaTokens {
-  final FortalezaColor colors;
-  final FortalezaRadius radii;
-  final FortalezaSpace spaces;
-  final FortalezaTextStyle textStyles;
-
-  const FortalezaTokens({
-    required this.colors,
-    required this.radii,
-    required this.spaces,
-    required this.textStyles,
-  });
-
-  factory FortalezaTokens.light() {
-    return FortalezaTokens(
-      colors: FortalezaColor(
-        black: const Color(0xFF1C2024),
-        white: const Color(0xFFFFFFFF),
-        accent: RadixColors.indigo.swatch,
-        accentAlpha: RadixColors.indigo.alphaSwatch,
-        neutral: RadixColors.slate.swatch,
-        neutralAlpha: RadixColors.slate.alphaSwatch,
-      ),
-      radii: FortalezaRadius.values([4, 8, 12, 16, 24, 32]),
-      spaces: FortalezaSpace.values([4, 8, 12, 16, 24, 32, 40, 48, 64]),
-      textStyles: const FortalezaTextStyle(
-        text1: TextStyle(fontSize: 12, letterSpacing: 0.0025, height: 1.33),
-        text2: TextStyle(fontSize: 14, letterSpacing: 0, height: 1.43),
-        text3: TextStyle(fontSize: 16, letterSpacing: 0, height: 1.50),
-        text4: TextStyle(fontSize: 18, letterSpacing: -0.0025, height: 1.44),
-        text5: TextStyle(fontSize: 20, letterSpacing: -0.005, height: 1.40),
-        text6: TextStyle(fontSize: 24, letterSpacing: -0.00625, height: 1.25),
-        text7: TextStyle(fontSize: 28, letterSpacing: -0.0075, height: 1.29),
-        text8: TextStyle(fontSize: 35, letterSpacing: -0.01, height: 1.14),
-        text9: TextStyle(fontSize: 60, letterSpacing: -0.025, height: 1.00),
-      ),
-    );
-  }
-
-  factory FortalezaTokens.dark() {
-    return FortalezaTokens.light().copyWith(
-      colors: FortalezaColor(
-        black: const Color(0xFF1C2024),
-        white: const Color(0xFFFFFFFF),
-        accent: RadixColors.indigoDark.swatch,
-        accentAlpha: RadixColors.indigoDark.alphaSwatch,
-        neutral: RadixColors.slateDark.swatch,
-        neutralAlpha: RadixColors.slateDark.alphaSwatch,
-      ),
-    );
-  }
-
-  MixThemeData toThemeData() {
-    return MixThemeData(
-      colors: colors.toMap(),
-      spaces: spaces.toMap(),
-      textStyles: textStyles.toMap(),
-      radii: radii.toMap(),
-    );
-  }
-
-  FortalezaTokens copyWith({
-    FortalezaColor? colors,
-    FortalezaRadius? radii,
-    FortalezaSpace? spaces,
-    FortalezaTextStyle? textStyles,
-  }) {
-    return FortalezaTokens(
-      colors: colors ?? this.colors,
-      radii: radii ?? this.radii,
-      spaces: spaces ?? this.spaces,
-      textStyles: textStyles ?? this.textStyles,
-    );
-  }
-}
-
-@MixableToken(Color)
-class FortalezaColor {
-  final Color black;
-  final Color white;
-
-  @MixableSwatchColorToken(scale: 12, defaultValue: 9)
-  final Color accent;
-  @MixableSwatchColorToken(scale: 12, defaultValue: 9)
-  final Color accentAlpha;
-  @MixableSwatchColorToken(scale: 12, defaultValue: 9)
-  final Color neutral;
-  @MixableSwatchColorToken(scale: 12, defaultValue: 9)
-  final Color neutralAlpha;
-
-  const FortalezaColor({
-    required this.black,
-    required this.white,
-    required this.accent,
-    required this.accentAlpha,
-    required this.neutral,
-    required this.neutralAlpha,
-  });
-
-  Map<ColorToken, Color> toMap() => _$FortalezaColorToMap(this);
-}
-
-@MixableToken(Radius)
-class FortalezaRadius {
-  final Radius radius1;
-  final Radius radius2;
-  final Radius radius3;
-  final Radius radius4;
-  final Radius radius5;
-  final Radius radius6;
-
-  const FortalezaRadius({
-    required this.radius1,
-    required this.radius2,
-    required this.radius3,
-    required this.radius4,
-    required this.radius5,
-    required this.radius6,
-  });
-
-  factory FortalezaRadius.values(List<double> values) {
-    assert(values.length == 6, 'Expected 6 values, got ${values.length}');
-
-    return FortalezaRadius(
-      radius1: Radius.circular(values[0]),
-      radius2: Radius.circular(values[1]),
-      radius3: Radius.circular(values[2]),
-      radius4: Radius.circular(values[3]),
-      radius5: Radius.circular(values[4]),
-      radius6: Radius.circular(values[5]),
-    );
-  }
-
-  Map<RadiusToken, Radius> toMap() => _$FortalezaRadiusToMap(this);
-}
-
-@MixableToken(double)
-class FortalezaSpace {
-  final double space1;
-  final double space2;
-  final double space3;
-  final double space4;
-  final double space5;
-  final double space6;
-  final double space7;
-  final double space8;
-  final double space9;
-
-  const FortalezaSpace({
-    required this.space1,
-    required this.space2,
-    required this.space3,
-    required this.space4,
-    required this.space5,
-    required this.space6,
-    required this.space7,
-    required this.space8,
-    required this.space9,
-  });
-
-  factory FortalezaSpace.values(List<double> values) {
-    assert(values.length == 9, 'Expected 9 values, got ${values.length}');
-
-    return FortalezaSpace(
-      space1: values[0],
-      space2: values[1],
-      space3: values[2],
-      space4: values[3],
-      space5: values[4],
-      space6: values[5],
-      space7: values[6],
-      space8: values[7],
-      space9: values[8],
-    );
-  }
-
-  Map<SpaceToken, double> toMap() => _$FortalezaSpaceToMap(this);
-}
-
-@MixableToken(TextStyle)
-class FortalezaTextStyle {
-  final TextStyle text1;
-  final TextStyle text2;
-  final TextStyle text3;
-  final TextStyle text4;
-  final TextStyle text5;
-  final TextStyle text6;
-  final TextStyle text7;
-  final TextStyle text8;
-  final TextStyle text9;
-
-  const FortalezaTextStyle({
-    required this.text1,
-    required this.text2,
-    required this.text3,
-    required this.text4,
-    required this.text5,
-    required this.text6,
-    required this.text7,
-    required this.text8,
-    required this.text9,
-  });
-
-  Map<TextStyleToken, TextStyle> toMap() => _$FortalezaTextStyleToMap(this);
-}
-
-
-// ============================================================================
-// GENERATED TOKEN EXTENSIONS
-// ============================================================================
-
-// GENERATED CODE - DO NOT MODIFY BY HAND
-
-part of 'tokens.dart';
-
-// **************************************************************************
-// MixGenerator
-// **************************************************************************
-
-// GENERATED CODE - DO NOT MODIFY BY HAND
-
-// Token code for FortalezaColor
-class _$FortalezaColorStruct {
-  _$FortalezaColorStruct();
-
-  final ColorToken black = const ColorToken('black');
-  final ColorToken white = const ColorToken('white');
-  final ColorSwatchToken accent = ColorSwatchToken.scale('accent', 12);
-  final ColorSwatchToken accentAlpha =
-      ColorSwatchToken.scale('accentAlpha', 12);
-  final ColorSwatchToken neutral = ColorSwatchToken.scale('neutral', 12);
-  final ColorSwatchToken neutralAlpha =
-      ColorSwatchToken.scale('neutralAlpha', 12);
-}
-
-final _structFortalezaColor = _$FortalezaColorStruct();
-
-Map<ColorToken, Color> _$FortalezaColorToMap(FortalezaColor tokens) {
-  return {
-    _structFortalezaColor.black: tokens.black,
-    _structFortalezaColor.white: tokens.white,
-    _structFortalezaColor.accent: tokens.accent,
-    _structFortalezaColor.accentAlpha: tokens.accentAlpha,
-    _structFortalezaColor.neutral: tokens.neutral,
-    _structFortalezaColor.neutralAlpha: tokens.neutralAlpha,
-  };
-}
-
-extension $FortalezaColorColorUtilityX<T extends StyleElement>
-    on ColorUtility<T> {
-  T $black() => ref(_structFortalezaColor.black);
-  T $white() => ref(_structFortalezaColor.white);
-  T $accent([int step = 9]) => ref(_structFortalezaColor.accent[step]);
-  T $accentAlpha([int step = 9]) =>
-      ref(_structFortalezaColor.accentAlpha[step]);
-  T $neutral([int step = 9]) => ref(_structFortalezaColor.neutral[step]);
-  T $neutralAlpha([int step = 9]) =>
-      ref(_structFortalezaColor.neutralAlpha[step]);
-}
-
-class BuildContextFortalezaColorMethods {
-  const BuildContextFortalezaColorMethods(this.context);
-
-  final BuildContext context;
-  Color black() => _structFortalezaColor.black.resolve(context);
-  Color white() => _structFortalezaColor.white.resolve(context);
-  Color accent([int step = 9]) =>
-      _structFortalezaColor.accent[step].resolve(context);
-  Color accentAlpha([int step = 9]) =>
-      _structFortalezaColor.accentAlpha[step].resolve(context);
-  Color neutral([int step = 9]) =>
-      _structFortalezaColor.neutral[step].resolve(context);
-  Color neutralAlpha([int step = 9]) =>
-      _structFortalezaColor.neutralAlpha[step].resolve(context);
-}
-
-extension $BuildContextFortalezaColorX on BuildContext {
-  BuildContextFortalezaColorMethods get $color =>
-      BuildContextFortalezaColorMethods(this);
-}
-
-// Token code for FortalezaRadius
-class _$FortalezaRadiusStruct {
-  _$FortalezaRadiusStruct();
-
-  final RadiusToken radius1 = const RadiusToken('radius1');
-  final RadiusToken radius2 = const RadiusToken('radius2');
-  final RadiusToken radius3 = const RadiusToken('radius3');
-  final RadiusToken radius4 = const RadiusToken('radius4');
-  final RadiusToken radius5 = const RadiusToken('radius5');
-  final RadiusToken radius6 = const RadiusToken('radius6');
-}
-
-final _structFortalezaRadius = _$FortalezaRadiusStruct();
-
-Map<RadiusToken, Radius> _$FortalezaRadiusToMap(FortalezaRadius tokens) {
-  return {
-    _structFortalezaRadius.radius1: tokens.radius1,
-    _structFortalezaRadius.radius2: tokens.radius2,
-    _structFortalezaRadius.radius3: tokens.radius3,
-    _structFortalezaRadius.radius4: tokens.radius4,
-    _structFortalezaRadius.radius5: tokens.radius5,
-    _structFortalezaRadius.radius6: tokens.radius6,
-  };
-}
-
-extension $FortalezaRadiusRadiusUtilityX<T extends StyleElement>
-    on RadiusUtility<T> {
-  T $radius1() => ref(_structFortalezaRadius.radius1);
-  T $radius2() => ref(_structFortalezaRadius.radius2);
-  T $radius3() => ref(_structFortalezaRadius.radius3);
-  T $radius4() => ref(_structFortalezaRadius.radius4);
-  T $radius5() => ref(_structFortalezaRadius.radius5);
-  T $radius6() => ref(_structFortalezaRadius.radius6);
-}
-
-class BuildContextFortalezaRadiusMethods {
-  const BuildContextFortalezaRadiusMethods(this.context);
-
-  final BuildContext context;
-  Radius radius1() => _structFortalezaRadius.radius1.resolve(context);
-  Radius radius2() => _structFortalezaRadius.radius2.resolve(context);
-  Radius radius3() => _structFortalezaRadius.radius3.resolve(context);
-  Radius radius4() => _structFortalezaRadius.radius4.resolve(context);
-  Radius radius5() => _structFortalezaRadius.radius5.resolve(context);
-  Radius radius6() => _structFortalezaRadius.radius6.resolve(context);
-}
-
-extension $BuildContextFortalezaRadiusX on BuildContext {
-  BuildContextFortalezaRadiusMethods get $radius =>
-      BuildContextFortalezaRadiusMethods(this);
-}
-
-// Token code for FortalezaSpace
-class _$FortalezaSpaceStruct {
-  _$FortalezaSpaceStruct();
-
-  final SpaceToken space1 = const SpaceToken('space1');
-  final SpaceToken space2 = const SpaceToken('space2');
-  final SpaceToken space3 = const SpaceToken('space3');
-  final SpaceToken space4 = const SpaceToken('space4');
-  final SpaceToken space5 = const SpaceToken('space5');
-  final SpaceToken space6 = const SpaceToken('space6');
-  final SpaceToken space7 = const SpaceToken('space7');
-  final SpaceToken space8 = const SpaceToken('space8');
-  final SpaceToken space9 = const SpaceToken('space9');
-}
-
-final _structFortalezaSpace = _$FortalezaSpaceStruct();
-
-Map<SpaceToken, double> _$FortalezaSpaceToMap(FortalezaSpace tokens) {
-  return {
-    _structFortalezaSpace.space1: tokens.space1,
-    _structFortalezaSpace.space2: tokens.space2,
-    _structFortalezaSpace.space3: tokens.space3,
-    _structFortalezaSpace.space4: tokens.space4,
-    _structFortalezaSpace.space5: tokens.space5,
-    _structFortalezaSpace.space6: tokens.space6,
-    _structFortalezaSpace.space7: tokens.space7,
-    _structFortalezaSpace.space8: tokens.space8,
-    _structFortalezaSpace.space9: tokens.space9,
-  };
-}
-
-extension $FortalezaSpaceSpacingSideUtilityX<T extends StyleElement>
-    on SpacingSideUtility<T> {
-  T $space1() => ref(_structFortalezaSpace.space1);
-  T $space2() => ref(_structFortalezaSpace.space2);
-  T $space3() => ref(_structFortalezaSpace.space3);
-  T $space4() => ref(_structFortalezaSpace.space4);
-  T $space5() => ref(_structFortalezaSpace.space5);
-  T $space6() => ref(_structFortalezaSpace.space6);
-  T $space7() => ref(_structFortalezaSpace.space7);
-  T $space8() => ref(_structFortalezaSpace.space8);
-  T $space9() => ref(_structFortalezaSpace.space9);
-}
-
-extension $FortalezaSpaceGapUtilityX<T extends StyleElement> on GapUtility<T> {
-  T $space1() => ref(_structFortalezaSpace.space1);
-  T $space2() => ref(_structFortalezaSpace.space2);
-  T $space3() => ref(_structFortalezaSpace.space3);
-  T $space4() => ref(_structFortalezaSpace.space4);
-  T $space5() => ref(_structFortalezaSpace.space5);
-  T $space6() => ref(_structFortalezaSpace.space6);
-  T $space7() => ref(_structFortalezaSpace.space7);
-  T $space8() => ref(_structFortalezaSpace.space8);
-  T $space9() => ref(_structFortalezaSpace.space9);
-}
-
-class BuildContextFortalezaSpaceMethods {
-  const BuildContextFortalezaSpaceMethods(this.context);
-
-  final BuildContext context;
-  double space1() => _structFortalezaSpace.space1.resolve(context);
-  double space2() => _structFortalezaSpace.space2.resolve(context);
-  double space3() => _structFortalezaSpace.space3.resolve(context);
-  double space4() => _structFortalezaSpace.space4.resolve(context);
-  double space5() => _structFortalezaSpace.space5.resolve(context);
-  double space6() => _structFortalezaSpace.space6.resolve(context);
-  double space7() => _structFortalezaSpace.space7.resolve(context);
-  double space8() => _structFortalezaSpace.space8.resolve(context);
-  double space9() => _structFortalezaSpace.space9.resolve(context);
-}
-
-extension $BuildContextFortalezaSpaceX on BuildContext {
-  BuildContextFortalezaSpaceMethods get $space =>
-      BuildContextFortalezaSpaceMethods(this);
-}
-
-// Token code for FortalezaTextStyle
-class _$FortalezaTextStyleStruct {
-  _$FortalezaTextStyleStruct();
-
-  final TextStyleToken text1 = const TextStyleToken('text1');
-  final TextStyleToken text2 = const TextStyleToken('text2');
-  final TextStyleToken text3 = const TextStyleToken('text3');
-  final TextStyleToken text4 = const TextStyleToken('text4');
-  final TextStyleToken text5 = const TextStyleToken('text5');
-  final TextStyleToken text6 = const TextStyleToken('text6');
-  final TextStyleToken text7 = const TextStyleToken('text7');
-  final TextStyleToken text8 = const TextStyleToken('text8');
-  final TextStyleToken text9 = const TextStyleToken('text9');
-}
-
-final _structFortalezaTextStyle = _$FortalezaTextStyleStruct();
-
-Map<TextStyleToken, TextStyle> _$FortalezaTextStyleToMap(
-    FortalezaTextStyle tokens) {
-  return {
-    _structFortalezaTextStyle.text1: tokens.text1,
-    _structFortalezaTextStyle.text2: tokens.text2,
-    _structFortalezaTextStyle.text3: tokens.text3,
-    _structFortalezaTextStyle.text4: tokens.text4,
-    _structFortalezaTextStyle.text5: tokens.text5,
-    _structFortalezaTextStyle.text6: tokens.text6,
-    _structFortalezaTextStyle.text7: tokens.text7,
-    _structFortalezaTextStyle.text8: tokens.text8,
-    _structFortalezaTextStyle.text9: tokens.text9,
-  };
-}
-
-extension $FortalezaTextStyleTextStyleUtilityX<T extends StyleElement>
-    on TextStyleUtility<T> {
-  T $text1() => ref(_structFortalezaTextStyle.text1);
-  T $text2() => ref(_structFortalezaTextStyle.text2);
-  T $text3() => ref(_structFortalezaTextStyle.text3);
-  T $text4() => ref(_structFortalezaTextStyle.text4);
-  T $text5() => ref(_structFortalezaTextStyle.text5);
-  T $text6() => ref(_structFortalezaTextStyle.text6);
-  T $text7() => ref(_structFortalezaTextStyle.text7);
-  T $text8() => ref(_structFortalezaTextStyle.text8);
-  T $text9() => ref(_structFortalezaTextStyle.text9);
-}
-
-class BuildContextFortalezaTextStyleMethods {
-  const BuildContextFortalezaTextStyleMethods(this.context);
-
-  final BuildContext context;
-  TextStyle text1() => _structFortalezaTextStyle.text1.resolve(context);
-  TextStyle text2() => _structFortalezaTextStyle.text2.resolve(context);
-  TextStyle text3() => _structFortalezaTextStyle.text3.resolve(context);
-  TextStyle text4() => _structFortalezaTextStyle.text4.resolve(context);
-  TextStyle text5() => _structFortalezaTextStyle.text5.resolve(context);
-  TextStyle text6() => _structFortalezaTextStyle.text6.resolve(context);
-  TextStyle text7() => _structFortalezaTextStyle.text7.resolve(context);
-  TextStyle text8() => _structFortalezaTextStyle.text8.resolve(context);
-  TextStyle text9() => _structFortalezaTextStyle.text9.resolve(context);
-}
-
-extension $BuildContextFortalezaTextStyleX on BuildContext {
-  BuildContextFortalezaTextStyleMethods get $textStyle =>
-      BuildContextFortalezaTextStyleMethods(this);
 }

@@ -1,8 +1,8 @@
 part of 'textfield.dart';
 
 class TextFieldSpec extends WidgetSpec<TextFieldSpec> {
-  final TextSpec text;
-  final TextSpec hintText;
+  final TypographySpec text;
+  final TypographySpec hintText;
   final TextAlign textAlign;
 
   final double cursorWidth;
@@ -19,13 +19,13 @@ class TextFieldSpec extends WidgetSpec<TextFieldSpec> {
   final Brightness? keyboardAppearance;
   final double spacing;
   final ContainerSpec container;
-  final FlexProperties flex;
-  final TextSpec helperText;
-  final TextSpec label;
+  final FlexLayoutSpec flex;
+  final TypographySpec helperText;
+  final TypographySpec label;
 
   const TextFieldSpec({
-    TextSpec? text,
-    TextSpec? hintText,
+    TypographySpec? text,
+    TypographySpec? hintText,
     TextAlign? textAlign,
     double? cursorWidth,
     this.cursorHeight,
@@ -39,31 +39,35 @@ class TextFieldSpec extends WidgetSpec<TextFieldSpec> {
     this.cursorOpacityAnimates,
     double? spacing,
     ContainerSpec? container,
-    FlexProperties? flex,
-    TextSpec? helperText,
-    TextSpec? label,
+    FlexLayoutSpec? flex,
+    TypographySpec? helperText,
+    TypographySpec? label,
     AnimationConfig? animation,
     List<Modifier>? widgetModifiers,
     bool? inherit,
-  })  : text = text ?? const TextSpec(),
-        hintText = hintText ?? const TextSpec(),
+  })  : text = text ?? const TypographySpec(),
+        hintText = hintText ?? const TypographySpec(),
         textAlign = textAlign ?? TextAlign.start,
         cursorWidth = cursorWidth ?? 2.0,
         cursorOffset = cursorOffset ?? Offset.zero,
         selectionHeightStyle = selectionHeightStyle ?? BoxHeightStyle.tight,
         selectionWidthStyle = selectionWidthStyle ?? BoxWidthStyle.tight,
         scrollPadding = scrollPadding ?? const EdgeInsets.all(20.0),
-        helperText = helperText ?? const TextSpec(),
-        label = label ?? const TextSpec(),
+        helperText = helperText ?? const TypographySpec(),
+        label = label ?? const TypographySpec(),
         container = container ?? const ContainerSpec(),
-        flex = flex ?? const FlexProperties(),
+        flex = flex ?? const FlexLayoutSpec(),
         spacing = spacing ?? 4,
-        super(animation: animation, widgetModifiers: widgetModifiers, inherit: inherit);
+        super(
+          animation: animation,
+          widgetModifiers: widgetModifiers,
+          inherit: inherit,
+        );
 
   @override
   TextFieldSpec copyWith({
-    TextSpec? text,
-    TextSpec? hintText,
+    TypographySpec? text,
+    TypographySpec? hintText,
     TextAlign? textAlign,
     double? cursorWidth,
     double? cursorHeight,
@@ -77,9 +81,9 @@ class TextFieldSpec extends WidgetSpec<TextFieldSpec> {
     Brightness? keyboardAppearance,
     double? spacing,
     ContainerSpec? container,
-    FlexProperties? flex,
-    TextSpec? helperText,
-    TextSpec? label,
+    FlexLayoutSpec? flex,
+    TypographySpec? helperText,
+    TypographySpec? label,
     AnimationConfig? animation,
     List<Modifier>? widgetModifiers,
     bool? inherit,
@@ -156,8 +160,14 @@ class TextFieldSpec extends WidgetSpec<TextFieldSpec> {
       ..add(ColorProperty('cursorColor', cursorColor))
       ..add(DiagnosticsProperty('cursorOffset', cursorOffset))
       ..add(DiagnosticsProperty('cursorOpacityAnimates', cursorOpacityAnimates))
-      ..add(EnumProperty<BoxHeightStyle>('selectionHeightStyle', selectionHeightStyle))
-      ..add(EnumProperty<BoxWidthStyle>('selectionWidthStyle', selectionWidthStyle))
+      ..add(EnumProperty<BoxHeightStyle>(
+        'selectionHeightStyle',
+        selectionHeightStyle,
+      ))
+      ..add(EnumProperty<BoxWidthStyle>(
+        'selectionWidthStyle',
+        selectionWidthStyle,
+      ))
       ..add(DiagnosticsProperty('scrollPadding', scrollPadding))
       ..add(EnumProperty<Brightness>('keyboardAppearance', keyboardAppearance))
       ..add(DoubleProperty('spacing', spacing))

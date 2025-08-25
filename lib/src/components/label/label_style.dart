@@ -4,39 +4,39 @@ class RemixLabelStyle extends Style<LabelSpec>
     with
         StyleModifierMixin<RemixLabelStyle, LabelSpec>,
         StyleVariantMixin<RemixLabelStyle, LabelSpec> {
-  final Prop<double>? $spacing;
-  final Prop<TextSpec>? $label;
-  final Prop<IconSpec>? $leading;
-  final Prop<IconSpec>? $trailing;
+  final Prop<TypographySpec>? $label;
+  final Prop<IconographySpec>? $leading;
+  final Prop<IconographySpec>? $trailing;
+  final Prop<FlexLayoutSpec>? $flex;
 
   const RemixLabelStyle.create({
-    Prop<double>? spacing,
-    Prop<TextSpec>? label,
-    Prop<IconSpec>? leading,
-    Prop<IconSpec>? trailing,
+    Prop<TypographySpec>? label,
+    Prop<IconographySpec>? leading,
+    Prop<IconographySpec>? trailing,
+    Prop<FlexLayoutSpec>? flex,
     super.variants,
     super.animation,
     super.modifier,
     super.inherit,
-  })  : $spacing = spacing,
-        $label = label,
+  })  : $label = label,
         $leading = leading,
-        $trailing = trailing;
+        $trailing = trailing,
+        $flex = flex;
 
   RemixLabelStyle({
-    double? spacing,
-    TextMix? label,
-    IconMix? leading,
-    IconMix? trailing,
+    TypographyMix? label,
+    IconographyMix? leading,
+    IconographyMix? trailing,
+    FlexLayoutMix? flex,
     AnimationConfig? animation,
     List<VariantStyle<LabelSpec>>? variants,
     ModifierConfig? modifier,
     bool? inherit,
   }) : this.create(
-          spacing: Prop.maybe(spacing),
           label: label != null ? Prop.mix(label) : null,
           leading: leading != null ? Prop.mix(leading) : null,
           trailing: trailing != null ? Prop.mix(trailing) : null,
+          flex: flex != null ? Prop.mix(flex) : null,
           variants: variants,
           animation: animation,
           modifier: modifier,
@@ -44,10 +44,10 @@ class RemixLabelStyle extends Style<LabelSpec>
         );
 
   factory RemixLabelStyle.value(LabelSpec spec) => RemixLabelStyle(
-        spacing: spec.spacing,
-        label: TextMix.maybeValue(spec.label),
-        leading: IconMix.maybeValue(spec.leading),
-        trailing: IconMix.maybeValue(spec.trailing),
+        label: TypographyMix.maybeValue(spec.label),
+        leading: IconographyMix.maybeValue(spec.leading),
+        trailing: IconographyMix.maybeValue(spec.trailing),
+        flex: FlexLayoutMix.maybeValue(spec.flex),
       );
 
   @override
@@ -68,10 +68,10 @@ class RemixLabelStyle extends Style<LabelSpec>
   @override
   LabelSpec resolve(BuildContext context) {
     return LabelSpec(
-      spacing: MixOps.resolve(context, $spacing),
       label: MixOps.resolve(context, $label),
       leading: MixOps.resolve(context, $leading),
       trailing: MixOps.resolve(context, $trailing),
+      flex: MixOps.resolve(context, $flex),
     );
   }
 
@@ -80,10 +80,10 @@ class RemixLabelStyle extends Style<LabelSpec>
     if (other == null) return this;
 
     return RemixLabelStyle.create(
-      spacing: MixOps.merge($spacing, other.$spacing),
       label: MixOps.merge($label, other.$label),
       leading: MixOps.merge($leading, other.$leading),
       trailing: MixOps.merge($trailing, other.$trailing),
+      flex: MixOps.merge($flex, other.$flex),
       variants: mergeVariantLists($variants, other.$variants),
       animation: other.$animation ?? $animation,
       modifier: $modifier?.merge(other.$modifier) ?? other.$modifier,
@@ -93,10 +93,10 @@ class RemixLabelStyle extends Style<LabelSpec>
 
   @override
   List<Object?> get props => [
-        $spacing,
         $label,
         $leading,
         $trailing,
+        $flex,
         $variants,
         $animation,
         $modifier,
@@ -107,43 +107,45 @@ class RemixLabelStyle extends Style<LabelSpec>
 /// Default label styles and variants
 class RemixRemixLabelStyles {
   /// Default label style
-  static RemixLabelStyle get defaultStyle => RemixLabelStyle(spacing: 8);
+  static RemixLabelStyle get defaultStyle => RemixLabelStyle(
+        flex: FlexLayoutMix(spacing: 8),
+      );
 
   /// Primary label variant
   static RemixLabelStyle get primary => RemixLabelStyle(
-        spacing: 8,
-        label: TextMix(
+        label: TypographyMix(
           style: TextStyleMix(
             color: RemixTokens.primary(),
             fontWeight: FontWeight.w500,
           ),
         ),
-        leading: IconMix(color: RemixTokens.primary(), size: 20),
+        leading: IconographyMix(color: RemixTokens.primary(), size: 20),
+        flex: FlexLayoutMix(spacing: 8),
       );
 
   /// Secondary label variant
   static RemixLabelStyle get secondary => RemixLabelStyle(
-        spacing: 8,
-        label: TextMix(
+        label: TypographyMix(
           style: TextStyleMix(
             color: RemixTokens.textSecondary(),
             fontWeight: FontWeight.w400,
           ),
         ),
-        leading: IconMix(color: RemixTokens.textSecondary(), size: 20),
+        leading: IconographyMix(color: RemixTokens.textSecondary(), size: 20),
+        flex: FlexLayoutMix(spacing: 8),
       );
 
   /// Compact label variant with reduced spacing
   static RemixLabelStyle get compact => RemixLabelStyle(
-        spacing: 4,
-        label: TextMix(),
-        leading: IconMix(size: 16),
+        label: TypographyMix(),
+        leading: IconographyMix(size: 16),
+        flex: FlexLayoutMix(spacing: 4),
       );
 
   /// Large label variant with increased spacing
   static RemixLabelStyle get large => RemixLabelStyle(
-        spacing: 12,
-        label: TextMix(style: TextStyleMix(fontSize: 16)),
-        leading: IconMix(size: 24),
+        label: TypographyMix(style: TextStyleMix(fontSize: 16)),
+        leading: IconographyMix(size: 24),
+        flex: FlexLayoutMix(spacing: 12),
       );
 }
