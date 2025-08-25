@@ -1,33 +1,33 @@
 part of 'checkbox.dart';
 
 class CheckboxSpec extends WidgetSpec<CheckboxSpec> {
-  final ContainerProperties container;
+  final ContainerSpec container;
   final FlexProperties flex;
-  final ContainerProperties indicatorContainer;
+  final ContainerSpec indicatorContainer;
   final IconSpec indicator;
   final TextSpec label;
 
   const CheckboxSpec({
-    ContainerProperties? container,
+    ContainerSpec? container,
     FlexProperties? flex,
-    ContainerProperties? indicatorContainer,
+    ContainerSpec? indicatorContainer,
     IconSpec? indicator,
     TextSpec? label,
     AnimationConfig? animation,
     List<Modifier>? widgetModifiers,
     bool? inherit,
-  })  : container = container ?? const ContainerProperties(),
+  })  : container = container ?? const ContainerSpec(),
         flex = flex ?? const FlexProperties(),
-        indicatorContainer = indicatorContainer ?? const ContainerProperties(),
+        indicatorContainer = indicatorContainer ?? const ContainerSpec(),
         indicator = indicator ?? const IconSpec(),
         label = label ?? const TextSpec(),
         super(animation: animation, widgetModifiers: widgetModifiers, inherit: inherit);
 
   @override
   CheckboxSpec copyWith({
-    ContainerProperties? container,
+    ContainerSpec? container,
     FlexProperties? flex,
-    ContainerProperties? indicatorContainer,
+    ContainerSpec? indicatorContainer,
     IconSpec? indicator,
     TextSpec? label,
     AnimationConfig? animation,

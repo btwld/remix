@@ -44,20 +44,20 @@ final _defaultDivisionPaint = Paint()
   ..style = PaintingStyle.stroke;
 
 class SliderSpec extends WidgetSpec<SliderSpec> {
-  final ContainerProperties thumb;
+  final ContainerSpec thumb;
   final Paint baseTrack;
   final Paint activeTrack;
   final Paint division;
 
   SliderSpec({
-    ContainerProperties? thumb,
+    ContainerSpec? thumb,
     Paint? baseTrack,
     Paint? activeTrack,
     Paint? division,
     AnimationConfig? animation,
     List<Modifier>? widgetModifiers,
     bool? inherit,
-  })  : thumb = thumb ?? const ContainerProperties(),
+  })  : thumb = thumb ?? const ContainerSpec(),
         baseTrack = baseTrack ?? _defaultBaseTrackPaint,
         activeTrack = activeTrack ?? _defaultActiveTrackPaint,
         division = division ?? _defaultDivisionPaint,
@@ -65,7 +65,7 @@ class SliderSpec extends WidgetSpec<SliderSpec> {
 
   @override
   SliderSpec copyWith({
-    ContainerProperties? thumb,
+    ContainerSpec? thumb,
     Paint? baseTrack,
     Paint? activeTrack,
     Paint? division,

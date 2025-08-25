@@ -1,34 +1,34 @@
 part of 'radio.dart';
 
 class RadioSpec extends WidgetSpec<RadioSpec> {
-  final ContainerProperties container;
+  final ContainerSpec container;
   final FlexProperties flex;
-  final ContainerProperties indicatorContainer;
-  final ContainerProperties indicator;
+  final ContainerSpec indicatorContainer;
+  final ContainerSpec indicator;
   final TextSpec label;
 
   const RadioSpec({
-    ContainerProperties? container,
+    ContainerSpec? container,
     FlexProperties? flex,
-    ContainerProperties? indicatorContainer,
-    ContainerProperties? indicator,
+    ContainerSpec? indicatorContainer,
+    ContainerSpec? indicator,
     TextSpec? label,
     AnimationConfig? animation,
     List<Modifier>? widgetModifiers,
     bool? inherit,
-  })  : container = container ?? const ContainerProperties(),
+  })  : container = container ?? const ContainerSpec(),
         flex = flex ?? const FlexProperties(),
-        indicatorContainer = indicatorContainer ?? const ContainerProperties(),
-        indicator = indicator ?? const ContainerProperties(),
+        indicatorContainer = indicatorContainer ?? const ContainerSpec(),
+        indicator = indicator ?? const ContainerSpec(),
         label = label ?? const TextSpec(),
         super(animation: animation, widgetModifiers: widgetModifiers, inherit: inherit);
 
   @override
   RadioSpec copyWith({
-    ContainerProperties? container,
+    ContainerSpec? container,
     FlexProperties? flex,
-    ContainerProperties? indicatorContainer,
-    ContainerProperties? indicator,
+    ContainerSpec? indicatorContainer,
+    ContainerSpec? indicator,
     TextSpec? label,
     AnimationConfig? animation,
     List<Modifier>? widgetModifiers,

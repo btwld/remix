@@ -1,25 +1,25 @@
 part of 'badge.dart';
 
 class BadgeSpec extends WidgetSpec<BadgeSpec> {
-  final ContainerProperties container;
+  final ContainerSpec container;
   final TextSpec text;
   final IconSpec icon;
 
   const BadgeSpec({
-    ContainerProperties? container,
+    ContainerSpec? container,
     TextSpec? text,
     IconSpec? icon,
     AnimationConfig? animation,
     List<Modifier>? widgetModifiers,
     bool? inherit,
-  })  : container = container ?? const ContainerProperties(),
+  })  : container = container ?? const ContainerSpec(),
         text = text ?? const TextSpec(),
         icon = icon ?? const IconSpec(),
         super(animation: animation, widgetModifiers: widgetModifiers, inherit: inherit);
 
   @override
   BadgeSpec copyWith({
-    ContainerProperties? container,
+    ContainerSpec? container,
     TextSpec? text,
     IconSpec? icon,
     AnimationConfig? animation,

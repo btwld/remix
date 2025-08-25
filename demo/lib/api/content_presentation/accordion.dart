@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
                 animation: AnimationConfig.easeInOut(const Duration(milliseconds: 200)),
               ).onSelected(
                 RemixAccordionStyle(
-                  itemContainer: ContainerPropertiesMix(
+                  itemContainer: ContainerSpecMix(
                     decoration: BoxDecorationMix(color: Colors.grey.shade50),
                     transform: Matrix4.rotationZ(pi),
                   ),

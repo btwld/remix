@@ -4,9 +4,9 @@ class RemixAccordionStyle extends Style<AccordionSpec>
     with
         StyleModifierMixin<RemixAccordionStyle, AccordionSpec>,
         StyleVariantMixin<RemixAccordionStyle, AccordionSpec> {
-  final Prop<ContainerProperties>? $itemContainer;
-  final Prop<ContainerProperties>? $contentContainer;
-  final Prop<ContainerProperties>? $headerContainer;
+  final Prop<ContainerSpec>? $itemContainer;
+  final Prop<ContainerSpec>? $contentContainer;
+  final Prop<ContainerSpec>? $headerContainer;
   final Prop<FlexProperties>? $headerFlex;
   final Prop<IconSpec>? $leading;
   final Prop<IconSpec>? $trailing;
@@ -14,9 +14,9 @@ class RemixAccordionStyle extends Style<AccordionSpec>
   final Prop<TextSpec>? $contentStyle;
 
   const RemixAccordionStyle.create({
-    Prop<ContainerProperties>? itemContainer,
-    Prop<ContainerProperties>? contentContainer,
-    Prop<ContainerProperties>? headerContainer,
+    Prop<ContainerSpec>? itemContainer,
+    Prop<ContainerSpec>? contentContainer,
+    Prop<ContainerSpec>? headerContainer,
     Prop<FlexProperties>? headerFlex,
     Prop<IconSpec>? leading,
     Prop<IconSpec>? trailing,
@@ -36,9 +36,9 @@ class RemixAccordionStyle extends Style<AccordionSpec>
         $contentStyle = contentStyle;
 
   RemixAccordionStyle({
-    ContainerPropertiesMix? itemContainer,
-    ContainerPropertiesMix? contentContainer,
-    ContainerPropertiesMix? headerContainer,
+    ContainerSpecMix? itemContainer,
+    ContainerSpecMix? contentContainer,
+    ContainerSpecMix? headerContainer,
     FlexPropertiesMix? headerFlex,
     IconMix? leading,
     IconMix? trailing,
@@ -66,11 +66,11 @@ class RemixAccordionStyle extends Style<AccordionSpec>
         );
 
   factory RemixAccordionStyle.value(AccordionSpec spec) => RemixAccordionStyle(
-        itemContainer: ContainerPropertiesMix.maybeValue(spec.itemContainer),
+        itemContainer: ContainerSpecMix.maybeValue(spec.itemContainer),
         contentContainer:
-            ContainerPropertiesMix.maybeValue(spec.contentContainer),
+            ContainerSpecMix.maybeValue(spec.contentContainer),
         headerContainer:
-            ContainerPropertiesMix.maybeValue(spec.headerContainer),
+            ContainerSpecMix.maybeValue(spec.headerContainer),
         headerFlex: FlexPropertiesMix.maybeValue(spec.headerFlex),
       );
 
@@ -142,7 +142,7 @@ class RemixAccordionStyle extends Style<AccordionSpec>
 }
 
 final DefaultRemixAccordionStyle = RemixAccordionStyle(
-  itemContainer: ContainerPropertiesMix(
+  itemContainer: ContainerSpecMix(
     decoration: BoxDecorationMix(
       border: BoxBorderMix.all(BorderSideMix(
         color: RemixTokens.border(),
@@ -152,11 +152,11 @@ final DefaultRemixAccordionStyle = RemixAccordionStyle(
     ),
     margin: EdgeInsetsMix(bottom: 12),
   ),
-  contentContainer: ContainerPropertiesMix(
+  contentContainer: ContainerSpecMix(
     padding: EdgeInsetsMix.fromLTRB(12, 0, 12, 12),
     constraints: BoxConstraintsMix(minWidth: double.infinity),
   ),
-  headerContainer: ContainerPropertiesMix(padding: EdgeInsetsMix.all(12)),
+  headerContainer: ContainerSpecMix(padding: EdgeInsetsMix.all(12)),
   headerFlex: FlexPropertiesMix(
     direction: Axis.horizontal,
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -183,7 +183,7 @@ final DefaultRemixAccordionStyle = RemixAccordionStyle(
 extension AccordionVariants on RemixAccordionStyle {
   /// Default accordion variant (same as DefaultAccordionStyle)
   static RemixAccordionStyle get defaultVariant => RemixAccordionStyle(
-        itemContainer: ContainerPropertiesMix(
+        itemContainer: ContainerSpecMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
               color: RemixTokens.border(),
@@ -193,11 +193,11 @@ extension AccordionVariants on RemixAccordionStyle {
           ),
           margin: EdgeInsetsMix(bottom: 12),
         ),
-        contentContainer: ContainerPropertiesMix(
+        contentContainer: ContainerSpecMix(
           padding: EdgeInsetsMix.fromLTRB(12, 0, 12, 12),
           constraints: BoxConstraintsMix(minWidth: double.infinity),
         ),
-        headerContainer: ContainerPropertiesMix(
+        headerContainer: ContainerSpecMix(
           padding: EdgeInsetsMix.all(12),
         ),
         headerFlex: FlexPropertiesMix(
@@ -225,7 +225,7 @@ extension AccordionVariants on RemixAccordionStyle {
 
   /// Compact accordion variant with smaller padding
   static RemixAccordionStyle get compact => RemixAccordionStyle(
-        itemContainer: ContainerPropertiesMix(
+        itemContainer: ContainerSpecMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
               color: RemixTokens.border(),
@@ -235,11 +235,11 @@ extension AccordionVariants on RemixAccordionStyle {
           ),
           margin: EdgeInsetsMix(bottom: 8),
         ),
-        contentContainer: ContainerPropertiesMix(
+        contentContainer: ContainerSpecMix(
           padding: EdgeInsetsMix.fromLTRB(8, 0, 8, 8),
           constraints: BoxConstraintsMix(minWidth: double.infinity),
         ),
-        headerContainer: ContainerPropertiesMix(
+        headerContainer: ContainerSpecMix(
           padding: EdgeInsetsMix.all(8),
         ),
         headerFlex: FlexPropertiesMix(
@@ -267,7 +267,7 @@ extension AccordionVariants on RemixAccordionStyle {
 
   /// Bordered accordion variant with prominent borders
   static RemixAccordionStyle get bordered => RemixAccordionStyle(
-        itemContainer: ContainerPropertiesMix(
+        itemContainer: ContainerSpecMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
               color: RemixTokens.textSecondary(),
@@ -277,11 +277,11 @@ extension AccordionVariants on RemixAccordionStyle {
           ),
           margin: EdgeInsetsMix(bottom: 12),
         ),
-        contentContainer: ContainerPropertiesMix(
+        contentContainer: ContainerSpecMix(
           padding: EdgeInsetsMix.fromLTRB(16, 0, 16, 16),
           constraints: BoxConstraintsMix(minWidth: double.infinity),
         ),
-        headerContainer: ContainerPropertiesMix(
+        headerContainer: ContainerSpecMix(
           padding: EdgeInsetsMix.all(16),
         ),
         headerFlex: FlexPropertiesMix(

@@ -8,8 +8,6 @@ import 'package:mix/mix.dart';
 import 'package:naked_ui/naked_ui.dart';
 
 import '../_internal/widget_state_controller_mixin.dart';
-import '../../properties/container_properties.dart';
-import '../../properties/container_properties_mix.dart';
 import '../../theme/remix_tokens.dart';
 
 part 'slider_spec.dart';

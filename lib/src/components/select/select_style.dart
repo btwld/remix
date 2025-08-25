@@ -4,13 +4,13 @@ class RemixSelectStyle extends Style<SelectSpec>
     with
         StyleModifierMixin<RemixSelectStyle, SelectSpec>,
         StyleVariantMixin<RemixSelectStyle, SelectSpec> {
-  final Prop<ContainerProperties>? $menuContainer;
+  final Prop<ContainerSpec>? $menuContainer;
   final Prop<SelectTriggerSpec>? $trigger;
   final Prop<SelectMenuItemSpec>? $item;
   final Prop<CompositedTransformFollowerSpec>? $position;
 
   const RemixSelectStyle.create({
-    Prop<ContainerProperties>? menuContainer,
+    Prop<ContainerSpec>? menuContainer,
     Prop<SelectTriggerSpec>? trigger,
     Prop<SelectMenuItemSpec>? item,
     Prop<CompositedTransformFollowerSpec>? position,
@@ -24,7 +24,7 @@ class RemixSelectStyle extends Style<SelectSpec>
         $position = position;
 
   RemixSelectStyle({
-    ContainerPropertiesMix? menuContainer,
+    ContainerSpecMix? menuContainer,
     RemixSelectTriggerStyle? trigger,
     RemixSelectMenuItemStyle? item,
     RemixCompositedTransformFollowerStyle? position,
@@ -45,7 +45,7 @@ class RemixSelectStyle extends Style<SelectSpec>
 
   factory RemixSelectStyle.value(SelectSpec spec) => RemixSelectStyle(
         menuContainer:
-            ContainerPropertiesMix.maybeValue(spec.menuContainer),
+            ContainerSpecMix.maybeValue(spec.menuContainer),
       );
 
   @override
@@ -104,13 +104,13 @@ class RemixSelectStyle extends Style<SelectSpec>
 
 // Style classes for sub-specs
 class RemixSelectTriggerStyle extends Style<SelectTriggerSpec> {
-  final Prop<ContainerProperties>? $container;
+  final Prop<ContainerSpec>? $container;
   final Prop<FlexProperties>? $flex;
   final Prop<TextSpec>? $label;
   final Prop<IconSpec>? $icon;
 
   const RemixSelectTriggerStyle.create({
-    Prop<ContainerProperties>? container,
+    Prop<ContainerSpec>? container,
     Prop<FlexProperties>? flex,
     Prop<TextSpec>? label,
     Prop<IconSpec>? icon,
@@ -124,7 +124,7 @@ class RemixSelectTriggerStyle extends Style<SelectTriggerSpec> {
         $icon = icon;
 
   RemixSelectTriggerStyle({
-    ContainerPropertiesMix? container,
+    ContainerSpecMix? container,
     FlexPropertiesMix? flex,
     TextMix? label,
     IconMix? icon,
@@ -145,7 +145,7 @@ class RemixSelectTriggerStyle extends Style<SelectTriggerSpec> {
 
   factory RemixSelectTriggerStyle.value(SelectTriggerSpec spec) =>
       RemixSelectTriggerStyle(
-        container: ContainerPropertiesMix.maybeValue(spec.container),
+        container: ContainerSpecMix.maybeValue(spec.container),
         flex: FlexPropertiesMix.maybeValue(spec.flex),
       );
 
@@ -189,13 +189,13 @@ class RemixSelectTriggerStyle extends Style<SelectTriggerSpec> {
 }
 
 class RemixSelectMenuItemStyle extends Style<SelectMenuItemSpec> {
-  final Prop<ContainerProperties>? $container;
+  final Prop<ContainerSpec>? $container;
   final Prop<FlexProperties>? $flex;
   final Prop<TextSpec>? $text;
   final Prop<IconSpec>? $icon;
 
   const RemixSelectMenuItemStyle.create({
-    Prop<ContainerProperties>? container,
+    Prop<ContainerSpec>? container,
     Prop<FlexProperties>? flex,
     Prop<TextSpec>? text,
     Prop<IconSpec>? icon,
@@ -209,7 +209,7 @@ class RemixSelectMenuItemStyle extends Style<SelectMenuItemSpec> {
         $icon = icon;
 
   RemixSelectMenuItemStyle({
-    ContainerPropertiesMix? container,
+    ContainerSpecMix? container,
     FlexPropertiesMix? flex,
     TextMix? text,
     IconMix? icon,
@@ -230,7 +230,7 @@ class RemixSelectMenuItemStyle extends Style<SelectMenuItemSpec> {
 
   factory RemixSelectMenuItemStyle.value(SelectMenuItemSpec spec) =>
       RemixSelectMenuItemStyle(
-        container: ContainerPropertiesMix.maybeValue(spec.container),
+        container: ContainerSpecMix.maybeValue(spec.container),
         flex: FlexPropertiesMix.maybeValue(spec.flex),
       );
 
@@ -349,7 +349,7 @@ class RemixCompositedTransformFollowerStyle
 
 // Default styles
 final DefaultRemixSelectStyle = RemixSelectStyle(
-  menuContainer: ContainerPropertiesMix(
+  menuContainer: ContainerSpecMix(
     decoration: BoxDecorationMix(
       borderRadius: BorderRadiusMix.circular(8),
       color: RemixTokens.background(),
@@ -364,7 +364,7 @@ final DefaultRemixSelectStyle = RemixSelectStyle(
     padding: EdgeInsetsMix.symmetric(vertical: 4),
   ),
   trigger: RemixSelectTriggerStyle(
-    container: ContainerPropertiesMix(
+    container: ContainerSpecMix(
       decoration: BoxDecorationMix(
         border: BoxBorderMix.all(
           BorderSideMix(color: RemixTokens.border(), width: 1),
@@ -382,7 +382,7 @@ final DefaultRemixSelectStyle = RemixSelectStyle(
     icon: IconMix(color: RemixTokens.textSecondary(), size: 20),
   ),
   item: RemixSelectMenuItemStyle(
-    container: ContainerPropertiesMix(
+    container: ContainerSpecMix(
       padding: EdgeInsetsMix.symmetric(vertical: 8, horizontal: 12),
     ),
     flex: FlexPropertiesMix(
@@ -404,7 +404,7 @@ final DefaultRemixSelectStyle = RemixSelectStyle(
 extension RemixSelectVariants on RemixSelectStyle {
   /// Primary select variant with blue accents
   static RemixSelectStyle get primary => RemixSelectStyle(
-        menuContainer: ContainerPropertiesMix(
+        menuContainer: ContainerSpecMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(8),
             color: RemixTokens.background(),
@@ -419,7 +419,7 @@ extension RemixSelectVariants on RemixSelectStyle {
           padding: EdgeInsetsMix.symmetric(vertical: 4),
         ),
         trigger: RemixSelectTriggerStyle(
-          container: ContainerPropertiesMix(
+          container: ContainerSpecMix(
             decoration: BoxDecorationMix(
               border: BoxBorderMix.all(
                 BorderSideMix(color: RemixTokens.primary(), width: 1),
@@ -440,7 +440,7 @@ extension RemixSelectVariants on RemixSelectStyle {
           icon: IconMix(color: RemixTokens.primary(), size: 20),
         ),
         item: RemixSelectMenuItemStyle(
-          container: ContainerPropertiesMix(
+          container: ContainerSpecMix(
             padding: EdgeInsetsMix.symmetric(vertical: 8, horizontal: 12),
           ),
           flex: FlexPropertiesMix(
@@ -462,7 +462,7 @@ extension RemixSelectVariants on RemixSelectStyle {
 
   /// Secondary select variant with grey styling
   static RemixSelectStyle get secondary => RemixSelectStyle(
-        menuContainer: ContainerPropertiesMix(
+        menuContainer: ContainerSpecMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(8),
             color: RemixTokens.background(),
@@ -477,7 +477,7 @@ extension RemixSelectVariants on RemixSelectStyle {
           padding: EdgeInsetsMix.symmetric(vertical: 4),
         ),
         trigger: RemixSelectTriggerStyle(
-          container: ContainerPropertiesMix(
+          container: ContainerSpecMix(
             decoration: BoxDecorationMix(
               border: BoxBorderMix.all(
                 BorderSideMix(color: RemixTokens.textSecondary(), width: 1),
@@ -498,7 +498,7 @@ extension RemixSelectVariants on RemixSelectStyle {
           icon: IconMix(color: RemixTokens.textSecondary(), size: 20),
         ),
         item: RemixSelectMenuItemStyle(
-          container: ContainerPropertiesMix(
+          container: ContainerSpecMix(
             padding: EdgeInsetsMix.symmetric(vertical: 8, horizontal: 12),
           ),
           flex: FlexPropertiesMix(
@@ -520,7 +520,7 @@ extension RemixSelectVariants on RemixSelectStyle {
 
   /// Outlined select variant with no background fill
   static RemixSelectStyle get outlined => RemixSelectStyle(
-        menuContainer: ContainerPropertiesMix(
+        menuContainer: ContainerSpecMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(
               BorderSideMix(color: RemixTokens.border(), width: 1),
@@ -538,7 +538,7 @@ extension RemixSelectVariants on RemixSelectStyle {
           padding: EdgeInsetsMix.symmetric(vertical: 4),
         ),
         trigger: RemixSelectTriggerStyle(
-          container: ContainerPropertiesMix(
+          container: ContainerSpecMix(
             decoration: BoxDecorationMix(
               border: BoxBorderMix.all(
                 BorderSideMix(color: RemixTokens.border(), width: 2),
@@ -558,7 +558,7 @@ extension RemixSelectVariants on RemixSelectStyle {
           icon: IconMix(color: RemixTokens.textSecondary(), size: 20),
         ),
         item: RemixSelectMenuItemStyle(
-          container: ContainerPropertiesMix(
+          container: ContainerSpecMix(
             padding: EdgeInsetsMix.symmetric(vertical: 8, horizontal: 12),
           ),
           flex: FlexPropertiesMix(

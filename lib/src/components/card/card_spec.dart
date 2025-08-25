@@ -1,19 +1,19 @@
 part of 'card.dart';
 
 class CardSpec extends WidgetSpec<CardSpec> {
-  final ContainerProperties container;
+  final ContainerSpec container;
 
   const CardSpec({
-    ContainerProperties? container,
+    ContainerSpec? container,
     AnimationConfig? animation,
     List<Modifier>? widgetModifiers,
     bool? inherit,
-  })  : container = container ?? const ContainerProperties(),
+  })  : container = container ?? const ContainerSpec(),
         super(animation: animation, widgetModifiers: widgetModifiers, inherit: inherit);
 
   @override
   CardSpec copyWith({
-    ContainerProperties? container,
+    ContainerSpec? container,
     AnimationConfig? animation,
     List<Modifier>? widgetModifiers,
     bool? inherit,

@@ -4,11 +4,11 @@ class RemixTooltipStyle extends Style<TooltipSpec>
     with
         StyleModifierMixin<RemixTooltipStyle, TooltipSpec>,
         StyleVariantMixin<RemixTooltipStyle, TooltipSpec> {
-  final Prop<ContainerProperties>? $container;
+  final Prop<ContainerSpec>? $container;
   final Prop<TextSpec>? $text;
 
   const RemixTooltipStyle.create({
-    Prop<ContainerProperties>? container,
+    Prop<ContainerSpec>? container,
     Prop<TextSpec>? text,
     super.variants,
     super.animation,
@@ -18,7 +18,7 @@ class RemixTooltipStyle extends Style<TooltipSpec>
         $text = text;
 
   RemixTooltipStyle({
-    ContainerPropertiesMix? container,
+    ContainerSpecMix? container,
     TextMix? text,
     AnimationConfig? animation,
     List<VariantStyle<TooltipSpec>>? variants,
@@ -82,7 +82,7 @@ class RemixTooltipStyle extends Style<TooltipSpec>
 }
 
 final DefaultRemixTooltipStyle = RemixTooltipStyle(
-  container: ContainerPropertiesMix(
+  container: ContainerSpecMix(
     decoration: BoxDecorationMix(
       borderRadius: BorderRadiusMix.circular(8),
       color: RemixTokens.textPrimary().withValues(alpha: 0.8),
@@ -96,7 +96,7 @@ final DefaultRemixTooltipStyle = RemixTooltipStyle(
 extension RemixTooltipVariants on RemixTooltipStyle {
   /// Dark tooltip variant (same as default)
   static RemixTooltipStyle get dark => RemixTooltipStyle(
-        container: ContainerPropertiesMix(
+        container: ContainerSpecMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(8),
             color: RemixTokens.textPrimary().withValues(alpha: 0.9),
@@ -111,7 +111,7 @@ extension RemixTooltipVariants on RemixTooltipStyle {
 
   /// Light tooltip variant with white background
   static RemixTooltipStyle get light => RemixTooltipStyle(
-        container: ContainerPropertiesMix(
+        container: ContainerSpecMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(
               BorderSideMix(color: RemixTokens.border(), width: 1),
@@ -136,7 +136,7 @@ extension RemixTooltipVariants on RemixTooltipStyle {
 
   /// Primary tooltip variant with blue colors
   static RemixTooltipStyle get primary => RemixTooltipStyle(
-        container: ContainerPropertiesMix(
+        container: ContainerSpecMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(8),
             color: RemixTokens.primary(),

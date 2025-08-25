@@ -1,27 +1,27 @@
 part of 'switch.dart';
 
 class SwitchSpec extends WidgetSpec<SwitchSpec> {
-  final ContainerProperties container;
-  final ContainerProperties track;
-  final ContainerProperties thumb;
+  final ContainerSpec container;
+  final ContainerSpec track;
+  final ContainerSpec thumb;
 
   const SwitchSpec({
-    ContainerProperties? container,
-    ContainerProperties? track,
-    ContainerProperties? thumb,
+    ContainerSpec? container,
+    ContainerSpec? track,
+    ContainerSpec? thumb,
     AnimationConfig? animation,
     List<Modifier>? widgetModifiers,
     bool? inherit,
-  })  : container = container ?? const ContainerProperties(),
-        track = track ?? const ContainerProperties(),
-        thumb = thumb ?? const ContainerProperties(),
+  })  : container = container ?? const ContainerSpec(),
+        track = track ?? const ContainerSpec(),
+        thumb = thumb ?? const ContainerSpec(),
         super(animation: animation, widgetModifiers: widgetModifiers, inherit: inherit);
 
   @override
   SwitchSpec copyWith({
-    ContainerProperties? container,
-    ContainerProperties? track,
-    ContainerProperties? thumb,
+    ContainerSpec? container,
+    ContainerSpec? track,
+    ContainerSpec? thumb,
     AnimationConfig? animation,
     List<Modifier>? widgetModifiers,
     bool? inherit,

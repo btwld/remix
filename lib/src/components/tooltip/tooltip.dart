@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 import 'package:naked_ui/naked_ui.dart';
 
-import '../../properties/container_properties.dart';
-import '../../properties/container_properties_mix.dart';
 import '../../theme/remix_tokens.dart';
 
 part 'tooltip_spec.dart';

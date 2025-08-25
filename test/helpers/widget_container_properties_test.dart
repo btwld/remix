@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mix/mix.dart';
-import 'package:remix/src/properties/container_properties.dart';
-import 'package:remix/src/properties/container_properties_mix.dart';
 
 void main() {
-  group('ContainerProperties Tests', () {
+  group('ContainerSpec Tests', () {
     test('creates with default values', () {
-      const spec = ContainerProperties();
+      const spec = ContainerSpec();
       
       expect(spec.decoration, isNull);
       expect(spec.foregroundDecoration, isNull);
@@ -26,7 +24,7 @@ void main() {
       const alignment = Alignment.center;
       const clipBehavior = Clip.antiAlias;
 
-      const spec = ContainerProperties(
+      const spec = ContainerSpec(
         decoration: decoration,
         padding: padding,
         alignment: alignment,
@@ -40,7 +38,7 @@ void main() {
     });
 
     test('copyWith works correctly', () {
-      const originalSpec = ContainerProperties(
+      const originalSpec = ContainerSpec(
         decoration: BoxDecoration(color: Colors.blue),
         padding: EdgeInsets.all(16),
       );
@@ -56,7 +54,7 @@ void main() {
     });
 
     test('copyWith with null values preserves original', () {
-      const originalSpec = ContainerProperties(
+      const originalSpec = ContainerSpec(
         decoration: BoxDecoration(color: Colors.blue),
         padding: EdgeInsets.all(16),
       );
@@ -68,12 +66,12 @@ void main() {
     });
 
     test('lerp interpolates correctly', () {
-      const spec1 = ContainerProperties(
+      const spec1 = ContainerSpec(
         padding: EdgeInsets.all(10),
         alignment: Alignment.topLeft,
         margin: EdgeInsets.all(5),
       );
-      const spec2 = ContainerProperties(
+      const spec2 = ContainerSpec(
         padding: EdgeInsets.all(20),
         alignment: Alignment.bottomRight,
         margin: EdgeInsets.all(15),
@@ -87,21 +85,21 @@ void main() {
     });
 
     test('lerp with null other returns original', () {
-      const spec = ContainerProperties(padding: EdgeInsets.all(16));
+      const spec = ContainerSpec(padding: EdgeInsets.all(16));
       final result = spec.lerp(null, 0.5);
       expect(result, equals(spec));
     });
 
     test('props equality works correctly', () {
-      const spec1 = ContainerProperties(
+      const spec1 = ContainerSpec(
         decoration: BoxDecoration(color: Colors.blue),
         padding: EdgeInsets.all(16),
       );
-      const spec2 = ContainerProperties(
+      const spec2 = ContainerSpec(
         decoration: BoxDecoration(color: Colors.blue),
         padding: EdgeInsets.all(16),
       );
-      const spec3 = ContainerProperties(
+      const spec3 = ContainerSpec(
         decoration: BoxDecoration(color: Colors.red),
         padding: EdgeInsets.all(16),
       );
@@ -111,13 +109,13 @@ void main() {
     });
   });
 
-  group('ContainerPropertiesMix Tests', () {
+  group('ContainerSpecMix Tests', () {
     testWidgets('resolves correctly with BuildContext', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Builder(
             builder: (context) {
-              final mix = ContainerPropertiesMix(
+              final mix = ContainerSpecMix(
                 decoration: BoxDecorationMix(color: Colors.blue),
                 padding: EdgeInsetsMix.all(16),
                 alignment: Alignment.center,
@@ -143,12 +141,12 @@ void main() {
     });
 
     test('merge works correctly', () {
-      final mix1 = ContainerPropertiesMix(
+      final mix1 = ContainerSpecMix(
         decoration: BoxDecorationMix(color: Colors.blue),
         padding: EdgeInsetsMix.all(16),
       );
 
-      final mix2 = ContainerPropertiesMix(
+      final mix2 = ContainerSpecMix(
         decoration: BoxDecorationMix(color: Colors.red),
         margin: EdgeInsetsMix.all(8),
       );
@@ -156,11 +154,11 @@ void main() {
       final merged = mix1.merge(mix2);
 
       // Test that the merged mix has the expected properties
-      expect(merged, isA<ContainerPropertiesMix>());
+      expect(merged, isA<ContainerSpecMix>());
     });
 
     test('merge with null returns original', () {
-      final mix = ContainerPropertiesMix(
+      final mix = ContainerSpecMix(
         padding: EdgeInsetsMix.all(16),
       );
 
@@ -170,44 +168,44 @@ void main() {
 
     test('factory constructors work correctly', () {
       // Test that factory constructors create valid mixes
-      final colorMix = ContainerPropertiesMix.color(Colors.red);
-      expect(colorMix, isA<ContainerPropertiesMix>());
+      final colorMix = ContainerSpecMix.color(Colors.red);
+      expect(colorMix, isA<ContainerSpecMix>());
 
-      final decorationMix = ContainerPropertiesMix.decoration(
+      final decorationMix = ContainerSpecMix.decoration(
         BoxDecorationMix(color: Colors.blue),
       );
-      expect(decorationMix, isA<ContainerPropertiesMix>());
+      expect(decorationMix, isA<ContainerSpecMix>());
 
-      final paddingMix = ContainerPropertiesMix.padding(EdgeInsetsMix.all(20));
-      expect(paddingMix, isA<ContainerPropertiesMix>());
+      final paddingMix = ContainerSpecMix.padding(EdgeInsetsMix.all(20));
+      expect(paddingMix, isA<ContainerSpecMix>());
 
-      final alignmentMix = ContainerPropertiesMix.alignment(Alignment.center);
-      expect(alignmentMix, isA<ContainerPropertiesMix>());
+      final alignmentMix = ContainerSpecMix.alignment(Alignment.center);
+      expect(alignmentMix, isA<ContainerSpecMix>());
 
-      final marginMix = ContainerPropertiesMix.margin(EdgeInsetsMix.all(12));
-      expect(marginMix, isA<ContainerPropertiesMix>());
+      final marginMix = ContainerSpecMix.margin(EdgeInsetsMix.all(12));
+      expect(marginMix, isA<ContainerSpecMix>());
 
-      final transformMix = ContainerPropertiesMix.transform(Matrix4.identity());
-      expect(transformMix, isA<ContainerPropertiesMix>());
+      final transformMix = ContainerSpecMix.transform(Matrix4.identity());
+      expect(transformMix, isA<ContainerSpecMix>());
 
-      final clipMix = ContainerPropertiesMix.clipBehavior(Clip.antiAlias);
-      expect(clipMix, isA<ContainerPropertiesMix>());
+      final clipMix = ContainerSpecMix.clipBehavior(Clip.antiAlias);
+      expect(clipMix, isA<ContainerSpecMix>());
 
-      final constraintsMix = ContainerPropertiesMix.constraints(
+      final constraintsMix = ContainerSpecMix.constraints(
         BoxConstraintsMix(minWidth: 100),
       );
-      expect(constraintsMix, isA<ContainerPropertiesMix>());
+      expect(constraintsMix, isA<ContainerSpecMix>());
     });
 
     test('chainable methods work correctly', () {
-      final mix = ContainerPropertiesMix()
+      final mix = ContainerSpecMix()
           .color(Colors.green)
           .padding(EdgeInsetsMix.all(12))
           .alignment(Alignment.bottomRight)
           .clipBehavior(Clip.hardEdge);
 
       // Test that chainable methods return valid mixes
-      expect(mix, isA<ContainerPropertiesMix>());
+      expect(mix, isA<ContainerSpecMix>());
     });
 
     testWidgets('value constructor works correctly', (tester) async {
@@ -215,7 +213,7 @@ void main() {
         MaterialApp(
           home: Builder(
             builder: (context) {
-              const spec = ContainerProperties(
+              const spec = ContainerSpec(
                 decoration: BoxDecoration(color: Colors.blue),
                 padding: EdgeInsets.all(16),
                 alignment: Alignment.center,
@@ -223,7 +221,7 @@ void main() {
                 clipBehavior: Clip.hardEdge,
               );
 
-              final mix = ContainerPropertiesMix.value(spec);
+              final mix = ContainerSpecMix.value(spec);
               final resolved = mix.resolve(context);
 
               // Check that all values are preserved correctly
@@ -241,24 +239,24 @@ void main() {
     });
 
     test('maybeValue handles null correctly', () {
-      final result = ContainerPropertiesMix.maybeValue(null);
+      final result = ContainerSpecMix.maybeValue(null);
       expect(result, isNull);
 
-      const spec = ContainerProperties(padding: EdgeInsets.all(16));
-      final nonNullResult = ContainerPropertiesMix.maybeValue(spec);
+      const spec = ContainerSpec(padding: EdgeInsets.all(16));
+      final nonNullResult = ContainerSpecMix.maybeValue(spec);
       expect(nonNullResult, isNotNull);
     });
 
     test('props equality works correctly', () {
-      final mix1 = ContainerPropertiesMix(
+      final mix1 = ContainerSpecMix(
         decoration: BoxDecorationMix(color: Colors.blue),
         padding: EdgeInsetsMix.all(16),
       );
-      final mix2 = ContainerPropertiesMix(
+      final mix2 = ContainerSpecMix(
         decoration: BoxDecorationMix(color: Colors.blue),
         padding: EdgeInsetsMix.all(16),
       );
-      final mix3 = ContainerPropertiesMix(
+      final mix3 = ContainerSpecMix(
         decoration: BoxDecorationMix(color: Colors.red),
         padding: EdgeInsetsMix.all(16),
       );
@@ -268,14 +266,14 @@ void main() {
     });
 
     test('can chain multiple operations', () {
-      final mix = ContainerPropertiesMix.color(Colors.blue)
+      final mix = ContainerSpecMix.color(Colors.blue)
           .padding(EdgeInsetsMix.all(16))
           .margin(EdgeInsetsMix.symmetric(horizontal: 8))
           .alignment(Alignment.center)
           .clipBehavior(Clip.antiAlias);
 
       // Test that chained operations return valid mix
-      expect(mix, isA<ContainerPropertiesMix>());
+      expect(mix, isA<ContainerSpecMix>());
     });
 
     testWidgets('works in real widget context', (tester) async {
@@ -284,7 +282,7 @@ void main() {
           home: Scaffold(
             body: Builder(
               builder: (context) {
-                final mix = ContainerPropertiesMix.color(Colors.blue)
+                final mix = ContainerSpecMix.color(Colors.blue)
                     .padding(EdgeInsetsMix.all(16))
                     .alignment(Alignment.center)
                     .margin(EdgeInsetsMix.all(8))

@@ -21,7 +21,7 @@ class RemixTextFieldStyle extends Style<TextFieldSpec>
   final Prop<EdgeInsets>? $scrollPadding;
   final Prop<Brightness>? $keyboardAppearance;
   final Prop<double>? $spacing;
-  final Prop<ContainerProperties>? $container;
+  final Prop<ContainerSpec>? $container;
   final Prop<FlexProperties>? $flex;
   final Prop<TextSpec>? $helperText;
   final Prop<TextSpec>? $label;
@@ -41,7 +41,7 @@ class RemixTextFieldStyle extends Style<TextFieldSpec>
     Prop<EdgeInsets>? scrollPadding,
     Prop<Brightness>? keyboardAppearance,
     Prop<double>? spacing,
-    Prop<ContainerProperties>? container,
+    Prop<ContainerSpec>? container,
     Prop<FlexProperties>? flex,
     Prop<TextSpec>? helperText,
     Prop<TextSpec>? label,
@@ -83,7 +83,7 @@ class RemixTextFieldStyle extends Style<TextFieldSpec>
     EdgeInsets? scrollPadding,
     Brightness? keyboardAppearance,
     double? spacing,
-    ContainerPropertiesMix? container,
+    ContainerSpecMix? container,
     FlexPropertiesMix? flex,
     TextMix? helperText,
     TextMix? label,
@@ -128,7 +128,7 @@ class RemixTextFieldStyle extends Style<TextFieldSpec>
   /// Factory for background color
   factory RemixTextFieldStyle.backgroundColor(Color value) {
     return RemixTextFieldStyle(
-      container: ContainerPropertiesMix(
+      container: ContainerSpecMix(
         decoration: BoxDecorationMix(color: value),
       ),
     );
@@ -137,7 +137,7 @@ class RemixTextFieldStyle extends Style<TextFieldSpec>
   /// Factory for border radius
   factory RemixTextFieldStyle.borderRadius(double radius) {
     return RemixTextFieldStyle(
-      container: ContainerPropertiesMix(
+      container: ContainerSpecMix(
         decoration:
             BoxDecorationMix(borderRadius: BorderRadiusMix.circular(radius)),
       ),
@@ -148,14 +148,14 @@ class RemixTextFieldStyle extends Style<TextFieldSpec>
   factory RemixTextFieldStyle.padding(double value) {
     return RemixTextFieldStyle(
       container:
-          ContainerPropertiesMix(padding: EdgeInsetsMix.all(value)),
+          ContainerSpecMix(padding: EdgeInsetsMix.all(value)),
     );
   }
 
   /// Factory for border
   factory RemixTextFieldStyle.border(BoxBorderMix value) {
     return RemixTextFieldStyle(
-      container: ContainerPropertiesMix(
+      container: ContainerSpecMix(
         decoration: BoxDecorationMix(border: value),
       ),
     );
@@ -164,7 +164,7 @@ class RemixTextFieldStyle extends Style<TextFieldSpec>
   /// Factory for width
   factory RemixTextFieldStyle.width(double value) {
     return RemixTextFieldStyle(
-      container: ContainerPropertiesMix(
+      container: ContainerSpecMix(
         constraints: BoxConstraintsMix(minWidth: value, maxWidth: value),
       ),
     );
@@ -173,7 +173,7 @@ class RemixTextFieldStyle extends Style<TextFieldSpec>
   /// Factory for height
   factory RemixTextFieldStyle.height(double value) {
     return RemixTextFieldStyle(
-      container: ContainerPropertiesMix(
+      container: ContainerSpecMix(
         constraints: BoxConstraintsMix(minHeight: value, maxHeight: value),
       ),
     );
@@ -354,7 +354,7 @@ final DefaultRemixTextFieldStyle = RemixTextFieldStyle(
   selectionWidthStyle: BoxWidthStyle.tight,
   scrollPadding: EdgeInsets.all(RemixTokens.spaceLg()),
   spacing: RemixTokens.spaceXs(),
-  container: ContainerPropertiesMix(
+  container: ContainerSpecMix(
     decoration: BoxDecorationMix(
       border: BoxBorderMix.all(
         BorderSideMix(color: RemixTokens.border(), width: 1),
@@ -375,7 +375,7 @@ final DefaultRemixTextFieldStyle = RemixTextFieldStyle(
 
 // Focus style
 final RemixTextFieldFocusStyle = RemixTextFieldStyle(
-  container: ContainerPropertiesMix(
+  container: ContainerSpecMix(
     decoration: BoxDecorationMix(
       border: BoxBorderMix.all(BorderSideMix(color: RemixTokens.primary(), width: 2)),
     ),
@@ -384,7 +384,7 @@ final RemixTextFieldFocusStyle = RemixTextFieldStyle(
 
 // Error style
 final RemixTextFieldErrorStyle = RemixTextFieldStyle(
-  container: ContainerPropertiesMix(
+  container: ContainerSpecMix(
     decoration: BoxDecorationMix(
       border: BoxBorderMix.all(BorderSideMix(color: RemixTokens.danger(), width: 1)),
     ),
@@ -395,7 +395,7 @@ final RemixTextFieldErrorStyle = RemixTextFieldStyle(
 // Disabled style
 final RemixTextFieldDisabledStyle = RemixTextFieldStyle(
   text: TextMix(style: TextStyleMix(color: RemixTokens.textDisabled())),
-  container: ContainerPropertiesMix(
+  container: ContainerSpecMix(
     decoration: BoxDecorationMix(
       border: BoxBorderMix.all(
         BorderSideMix(color: RemixTokens.borderSubtle(), width: 1),
@@ -418,7 +418,7 @@ extension RemixTextFieldVariants on RemixTextFieldStyle {
         selectionWidthStyle: BoxWidthStyle.tight,
         scrollPadding: const EdgeInsets.all(20.0),
         spacing: 4,
-        container: ContainerPropertiesMix(
+        container: ContainerSpecMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(
               BorderSideMix(color: RemixTokens.primary(), width: 1),
@@ -449,7 +449,7 @@ extension RemixTextFieldVariants on RemixTextFieldStyle {
         selectionWidthStyle: BoxWidthStyle.tight,
         scrollPadding: const EdgeInsets.all(20.0),
         spacing: 4,
-        container: ContainerPropertiesMix(
+        container: ContainerSpecMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(
               BorderSideMix(color: RemixTokens.border(), width: 2),
@@ -480,7 +480,7 @@ extension RemixTextFieldVariants on RemixTextFieldStyle {
         selectionWidthStyle: BoxWidthStyle.tight,
         scrollPadding: const EdgeInsets.all(20.0),
         spacing: 4,
-        container: ContainerPropertiesMix(
+        container: ContainerSpecMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(
               BorderSideMix(color: RemixTokens.surface().withValues(alpha: 0.0), width: 1),

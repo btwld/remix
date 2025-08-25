@@ -1,19 +1,19 @@
 part of 'divider.dart';
 
 class DividerSpec extends WidgetSpec<DividerSpec> {
-  final ContainerProperties container;
+  final ContainerSpec container;
 
   const DividerSpec({
-    ContainerProperties? container,
+    ContainerSpec? container,
     AnimationConfig? animation,
     List<Modifier>? widgetModifiers,
     bool? inherit,
-  })  : container = container ?? const ContainerProperties(),
+  })  : container = container ?? const ContainerSpec(),
         super(animation: animation, widgetModifiers: widgetModifiers, inherit: inherit);
 
   @override
   DividerSpec copyWith({
-    ContainerProperties? container,
+    ContainerSpec? container,
     AnimationConfig? animation,
     List<Modifier>? widgetModifiers,
     bool? inherit,

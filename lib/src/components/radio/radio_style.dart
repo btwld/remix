@@ -4,17 +4,17 @@ class RemixRadioStyle extends Style<RadioSpec>
     with
         StyleModifierMixin<RemixRadioStyle, RadioSpec>,
         StyleVariantMixin<RemixRadioStyle, RadioSpec> {
-  final Prop<ContainerProperties>? $container;
+  final Prop<ContainerSpec>? $container;
   final Prop<FlexProperties>? $flex;
-  final Prop<ContainerProperties>? $indicatorContainer;
-  final Prop<ContainerProperties>? $indicator;
+  final Prop<ContainerSpec>? $indicatorContainer;
+  final Prop<ContainerSpec>? $indicator;
   final Prop<TextSpec>? $label;
 
   const RemixRadioStyle.create({
-    Prop<ContainerProperties>? container,
+    Prop<ContainerSpec>? container,
     Prop<FlexProperties>? flex,
-    Prop<ContainerProperties>? indicatorContainer,
-    Prop<ContainerProperties>? indicator,
+    Prop<ContainerSpec>? indicatorContainer,
+    Prop<ContainerSpec>? indicator,
     Prop<TextSpec>? label,
     super.variants,
     super.animation,
@@ -27,10 +27,10 @@ class RemixRadioStyle extends Style<RadioSpec>
         $label = label;
 
   RemixRadioStyle({
-    ContainerPropertiesMix? container,
+    ContainerSpecMix? container,
     FlexPropertiesMix? flex,
-    ContainerPropertiesMix? indicatorContainer,
-    ContainerPropertiesMix? indicator,
+    ContainerSpecMix? indicatorContainer,
+    ContainerSpecMix? indicator,
     TextMix? label,
     AnimationConfig? animation,
     List<VariantStyle<RadioSpec>>? variants,
@@ -50,11 +50,11 @@ class RemixRadioStyle extends Style<RadioSpec>
         );
 
   factory RemixRadioStyle.value(RadioSpec spec) => RemixRadioStyle(
-        container: ContainerPropertiesMix.maybeValue(spec.container),
+        container: ContainerSpecMix.maybeValue(spec.container),
         flex: FlexPropertiesMix.maybeValue(spec.flex),
         indicatorContainer:
-            ContainerPropertiesMix.maybeValue(spec.indicatorContainer),
-        indicator: ContainerPropertiesMix.maybeValue(spec.indicator),
+            ContainerSpecMix.maybeValue(spec.indicatorContainer),
+        indicator: ContainerSpecMix.maybeValue(spec.indicator),
         label: TextMix.maybeValue(spec.label),
       );
 
@@ -117,14 +117,14 @@ class RemixRadioStyle extends Style<RadioSpec>
 }
 
 final DefaultRemixRadioStyle = RemixRadioStyle(
-  container: ContainerPropertiesMix(alignment: Alignment.centerLeft),
+  container: ContainerSpecMix(alignment: Alignment.centerLeft),
   flex: FlexPropertiesMix(
     direction: Axis.horizontal,
     crossAxisAlignment: CrossAxisAlignment.center,
     mainAxisSize: MainAxisSize.min,
-    gap: RemixTokens.spaceSm(),
+    spacing: RemixTokens.spaceSm(),
   ),
-  indicatorContainer: ContainerPropertiesMix(
+  indicatorContainer: ContainerSpecMix(
     decoration: BoxDecorationMix(
       border: BoxBorderMix.all(BorderSideMix(
         color: RemixTokens.border(),
@@ -141,7 +141,7 @@ final DefaultRemixRadioStyle = RemixRadioStyle(
       maxHeight: 20,
     ),
   ),
-  indicator: ContainerPropertiesMix(
+  indicator: ContainerSpecMix(
     decoration: BoxDecorationMix(
       shape: BoxShape.circle,
       color: RemixTokens.textPrimary(),
@@ -154,22 +154,24 @@ final DefaultRemixRadioStyle = RemixRadioStyle(
     ),
   ),
   label: TextMix(
-      style: TextStyleMix(
-          color: RemixTokens.textPrimary(),
-          fontSize: RemixTokens.fontSizeMd())),
+    style: TextStyleMix(
+      color: RemixTokens.textPrimary(),
+      fontSize: RemixTokens.fontSizeMd(),
+    ),
+  ),
 );
 
 extension RadioVariants on RemixRadioStyle {
   /// Primary radio variant with blue colors
   static RemixRadioStyle get primary => RemixRadioStyle(
-        container: ContainerPropertiesMix(alignment: Alignment.centerLeft),
+        container: ContainerSpecMix(alignment: Alignment.centerLeft),
         flex: FlexPropertiesMix(
           direction: Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
-          gap: RemixTokens.spaceSm(),
+          spacing: RemixTokens.spaceSm(),
         ),
-        indicatorContainer: ContainerPropertiesMix(
+        indicatorContainer: ContainerSpecMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
               color: RemixTokens.primary(),
@@ -186,7 +188,7 @@ extension RadioVariants on RemixRadioStyle {
             maxHeight: 20,
           ),
         ),
-        indicator: ContainerPropertiesMix(
+        indicator: ContainerSpecMix(
           decoration: BoxDecorationMix(
             shape: BoxShape.circle,
             color: RemixTokens.primary(),
@@ -199,21 +201,23 @@ extension RadioVariants on RemixRadioStyle {
           ),
         ),
         label: TextMix(
-            style: TextStyleMix(
-                color: RemixTokens.textPrimary(),
-                fontSize: RemixTokens.fontSizeMd())),
+          style: TextStyleMix(
+            color: RemixTokens.textPrimary(),
+            fontSize: RemixTokens.fontSizeMd(),
+          ),
+        ),
       );
 
   /// Secondary radio variant with grey colors
   static RemixRadioStyle get secondary => RemixRadioStyle(
-        container: ContainerPropertiesMix(alignment: Alignment.centerLeft),
+        container: ContainerSpecMix(alignment: Alignment.centerLeft),
         flex: FlexPropertiesMix(
           direction: Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
-          gap: RemixTokens.spaceSm(),
+          spacing: RemixTokens.spaceSm(),
         ),
-        indicatorContainer: ContainerPropertiesMix(
+        indicatorContainer: ContainerSpecMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
               color: RemixTokens.textSecondary(),
@@ -230,7 +234,7 @@ extension RadioVariants on RemixRadioStyle {
             maxHeight: 20,
           ),
         ),
-        indicator: ContainerPropertiesMix(
+        indicator: ContainerSpecMix(
           decoration: BoxDecorationMix(
             shape: BoxShape.circle,
             color: RemixTokens.textSecondary(),
@@ -243,21 +247,23 @@ extension RadioVariants on RemixRadioStyle {
           ),
         ),
         label: TextMix(
-            style: TextStyleMix(
-                color: RemixTokens.textPrimary(),
-                fontSize: RemixTokens.fontSizeMd())),
+          style: TextStyleMix(
+            color: RemixTokens.textPrimary(),
+            fontSize: RemixTokens.fontSizeMd(),
+          ),
+        ),
       );
 
   /// Compact radio variant with smaller size
   static RemixRadioStyle get compact => RemixRadioStyle(
-        container: ContainerPropertiesMix(alignment: Alignment.centerLeft),
+        container: ContainerSpecMix(alignment: Alignment.centerLeft),
         flex: FlexPropertiesMix(
           direction: Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
-          gap: RemixTokens.spaceXs(),
+          spacing: RemixTokens.spaceXs(),
         ),
-        indicatorContainer: ContainerPropertiesMix(
+        indicatorContainer: ContainerSpecMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
               color: RemixTokens.border(),
@@ -274,7 +280,7 @@ extension RadioVariants on RemixRadioStyle {
             maxHeight: 16,
           ),
         ),
-        indicator: ContainerPropertiesMix(
+        indicator: ContainerSpecMix(
           decoration: BoxDecorationMix(
             shape: BoxShape.circle,
             color: RemixTokens.textPrimary(),
@@ -287,8 +293,10 @@ extension RadioVariants on RemixRadioStyle {
           ),
         ),
         label: TextMix(
-            style: TextStyleMix(
-                color: RemixTokens.textPrimary(),
-                fontSize: RemixTokens.fontSizeSm())),
+          style: TextStyleMix(
+            color: RemixTokens.textPrimary(),
+            fontSize: RemixTokens.fontSizeSm(),
+          ),
+        ),
       );
 }
