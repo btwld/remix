@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mix/mix.dart';
-import 'package:remix/src/properties/flex_properties.dart';
-import 'package:remix/src/properties/flex_properties_mix.dart';
 
 void main() {
   group('FlexProperties Tests', () {

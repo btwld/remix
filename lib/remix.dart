@@ -27,7 +27,3 @@ export 'src/theme/remix_tokens.dart';
 
 /// HELPERS
 export 'src/helpers/spec/composited_transform_follower_spec.dart';
-export 'src/properties/container_properties.dart';
-export 'src/properties/container_properties_mix.dart';
-export 'src/properties/flex_properties.dart';
-export 'src/properties/flex_properties_mix.dart';

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mix/mix.dart';
 import 'package:remix/remix.dart';
 
 void main() {
@@ -184,19 +185,19 @@ void main() {
             child: MaterialApp(
               theme: ThemeData(brightness: brightness),
               home: createRemixScope(
-                child: const Scaffold(
+                child: Scaffold(
                   body: Column(
                     children: [
-                      RemixBadge(child: Text('Default')),
-                      RemixBadge(
+                      RemixBadge.raw(child: Text('Default')),
+                      RemixBadge.raw(
                         style: RemixBadgeStyles.primary,
                         child: Text('Primary'),
                       ),
-                      RemixBadge(
+                      RemixBadge.raw(
                         style: RemixBadgeStyles.success,
                         child: Text('Success'),
                       ),
-                      RemixBadge(
+                      RemixBadge.raw(
                         style: RemixBadgeStyles.danger,
                         child: Text('Danger'),
                       ),

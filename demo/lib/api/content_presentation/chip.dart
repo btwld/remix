@@ -41,12 +41,12 @@ class _MyAppState extends State<MyApp> {
                 style: RemixChipStyle()
                   .onHovered(
                     RemixChipStyle(
-                      container: ContainerPropertiesMix(decoration: BoxDecorationMix(color: Colors.grey.shade100))
+                      container: ContainerSpecMix(decoration: BoxDecorationMix(color: Colors.grey.shade100))
                     )
                   )
                   .onSelected(
                     RemixChipStyle(
-                      container: ContainerPropertiesMix(decoration: BoxDecorationMix(color: Colors.blue))
+                      container: ContainerSpecMix(decoration: BoxDecorationMix(color: Colors.blue))
                     )
                   ),
               ),

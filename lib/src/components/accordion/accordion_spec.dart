@@ -1,9 +1,9 @@
 part of 'accordion.dart';
 
 class AccordionSpec extends WidgetSpec<AccordionSpec> {
-  final ContainerProperties itemContainer;
-  final ContainerProperties contentContainer;
-  final ContainerProperties headerContainer;
+  final ContainerSpec itemContainer;
+  final ContainerSpec contentContainer;
+  final ContainerSpec headerContainer;
   final FlexProperties headerFlex;
   final IconSpec leading;
   final IconSpec trailing;
@@ -11,9 +11,9 @@ class AccordionSpec extends WidgetSpec<AccordionSpec> {
   final TextSpec contentStyle;
 
   const AccordionSpec({
-    ContainerProperties? itemContainer,
-    ContainerProperties? contentContainer,
-    ContainerProperties? headerContainer,
+    ContainerSpec? itemContainer,
+    ContainerSpec? contentContainer,
+    ContainerSpec? headerContainer,
     FlexProperties? headerFlex,
     IconSpec? leading,
     IconSpec? trailing,
@@ -22,9 +22,9 @@ class AccordionSpec extends WidgetSpec<AccordionSpec> {
     AnimationConfig? animation,
     List<Modifier>? widgetModifiers,
     bool? inherit,
-  })  : itemContainer = itemContainer ?? const ContainerProperties(),
-        contentContainer = contentContainer ?? const ContainerProperties(),
-        headerContainer = headerContainer ?? const ContainerProperties(),
+  })  : itemContainer = itemContainer ?? const ContainerSpec(),
+        contentContainer = contentContainer ?? const ContainerSpec(),
+        headerContainer = headerContainer ?? const ContainerSpec(),
         headerFlex = headerFlex ?? const FlexProperties(),
         leading = leading ?? const IconSpec(),
         trailing = trailing ?? const IconSpec(),
@@ -34,9 +34,9 @@ class AccordionSpec extends WidgetSpec<AccordionSpec> {
 
   @override
   AccordionSpec copyWith({
-    ContainerProperties? itemContainer,
-    ContainerProperties? contentContainer,
-    ContainerProperties? headerContainer,
+    ContainerSpec? itemContainer,
+    ContainerSpec? contentContainer,
+    ContainerSpec? headerContainer,
     FlexProperties? headerFlex,
     IconSpec? leading,
     IconSpec? trailing,

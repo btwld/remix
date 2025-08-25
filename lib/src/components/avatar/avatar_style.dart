@@ -4,12 +4,12 @@ class RemixAvatarStyle extends Style<AvatarSpec>
     with
         StyleModifierMixin<RemixAvatarStyle, AvatarSpec>,
         StyleVariantMixin<RemixAvatarStyle, AvatarSpec> {
-  final Prop<ContainerProperties>? $container;
+  final Prop<ContainerSpec>? $container;
   final Prop<TextSpec>? $text;
   final Prop<IconSpec>? $icon;
 
   const RemixAvatarStyle.create({
-    Prop<ContainerProperties>? container,
+    Prop<ContainerSpec>? container,
     Prop<TextSpec>? text,
     Prop<IconSpec>? icon,
     super.variants,
@@ -21,7 +21,7 @@ class RemixAvatarStyle extends Style<AvatarSpec>
         $icon = icon;
 
   RemixAvatarStyle({
-    ContainerPropertiesMix? container,
+    ContainerSpecMix? container,
     TextMix? text,
     IconMix? icon,
     AnimationConfig? animation,
@@ -39,7 +39,7 @@ class RemixAvatarStyle extends Style<AvatarSpec>
         );
 
   factory RemixAvatarStyle.value(AvatarSpec spec) => RemixAvatarStyle(
-        container: ContainerPropertiesMix.maybeValue(spec.container),
+        container: ContainerSpecMix.maybeValue(spec.container),
         text: TextMix.maybeValue(spec.text),
         icon: IconMix.maybeValue(spec.icon),
       );
@@ -47,7 +47,7 @@ class RemixAvatarStyle extends Style<AvatarSpec>
   /// Factory for avatar size
   factory RemixAvatarStyle.size(double value) {
     return RemixAvatarStyle(
-      container: ContainerPropertiesMix(
+      container: ContainerSpecMix(
         constraints: BoxConstraintsMix(
           minWidth: value,
           maxWidth: value,
@@ -61,7 +61,7 @@ class RemixAvatarStyle extends Style<AvatarSpec>
   /// Factory for background color
   factory RemixAvatarStyle.color(Color value) {
     return RemixAvatarStyle(
-      container: ContainerPropertiesMix(
+      container: ContainerSpecMix(
         decoration: BoxDecorationMix(color: value),
       ),
     );
@@ -70,7 +70,7 @@ class RemixAvatarStyle extends Style<AvatarSpec>
   /// Factory for border radius (for non-circular avatars)
   factory RemixAvatarStyle.borderRadius(double radius) {
     return RemixAvatarStyle(
-      container: ContainerPropertiesMix(
+      container: ContainerSpecMix(
         decoration: BoxDecorationMix(
           borderRadius: BorderRadiusMix.circular(radius),
           shape: BoxShape.rectangle,
@@ -174,7 +174,7 @@ class RemixAvatarStyle extends Style<AvatarSpec>
 }
 
 final DefaultRemixAvatarStyle = RemixAvatarStyle(
-  container: ContainerPropertiesMix(
+  container: ContainerSpecMix(
     decoration: BoxDecorationMix(
       shape: BoxShape.circle,
       color: RemixTokens.surface(),
@@ -201,7 +201,7 @@ final DefaultRemixAvatarStyle = RemixAvatarStyle(
 extension AvatarVariants on RemixAvatarStyle {
   /// Primary avatar variant with blue background and white text
   static RemixAvatarStyle get primary => RemixAvatarStyle(
-        container: ContainerPropertiesMix(
+        container: ContainerSpecMix(
           decoration: BoxDecorationMix(
             shape: BoxShape.circle,
             color: RemixTokens.primary(),
@@ -227,7 +227,7 @@ extension AvatarVariants on RemixAvatarStyle {
 
   /// Secondary avatar variant with grey background
   static RemixAvatarStyle get secondary => RemixAvatarStyle(
-        container: ContainerPropertiesMix(
+        container: ContainerSpecMix(
           decoration: BoxDecorationMix(
             shape: BoxShape.circle,
             color: RemixTokens.textSecondary(),
@@ -253,7 +253,7 @@ extension AvatarVariants on RemixAvatarStyle {
 
   /// Small avatar variant (32x32)
   static RemixAvatarStyle get small => RemixAvatarStyle(
-        container: ContainerPropertiesMix(
+        container: ContainerSpecMix(
           decoration: BoxDecorationMix(
             shape: BoxShape.circle,
             color: RemixTokens.surface(),
@@ -279,7 +279,7 @@ extension AvatarVariants on RemixAvatarStyle {
 
   /// Large avatar variant (64x64)
   static RemixAvatarStyle get large => RemixAvatarStyle(
-        container: ContainerPropertiesMix(
+        container: ContainerSpecMix(
           decoration: BoxDecorationMix(
             shape: BoxShape.circle,
             color: RemixTokens.surface(),

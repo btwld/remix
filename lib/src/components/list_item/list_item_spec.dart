@@ -1,9 +1,9 @@
 part of 'list_item.dart';
 
 class ListItemSpec extends WidgetSpec<ListItemSpec> {
-  final ContainerProperties container;
+  final ContainerSpec container;
   final FlexProperties flex;
-  final ContainerProperties contentContainer;
+  final ContainerSpec contentContainer;
   final FlexProperties contentFlex;
   final TextSpec title;
   final TextSpec subtitle;
@@ -11,9 +11,9 @@ class ListItemSpec extends WidgetSpec<ListItemSpec> {
   final IconSpec trailing;
 
   const ListItemSpec({
-    ContainerProperties? container,
+    ContainerSpec? container,
     FlexProperties? flex,
-    ContainerProperties? contentContainer,
+    ContainerSpec? contentContainer,
     FlexProperties? contentFlex,
     TextSpec? title,
     TextSpec? subtitle,
@@ -22,9 +22,9 @@ class ListItemSpec extends WidgetSpec<ListItemSpec> {
     AnimationConfig? animation,
     List<Modifier>? widgetModifiers,
     bool? inherit,
-  })  : container = container ?? const ContainerProperties(),
+  })  : container = container ?? const ContainerSpec(),
         flex = flex ?? const FlexProperties(),
-        contentContainer = contentContainer ?? const ContainerProperties(),
+        contentContainer = contentContainer ?? const ContainerSpec(),
         contentFlex = contentFlex ?? const FlexProperties(),
         title = title ?? const TextSpec(),
         subtitle = subtitle ?? const TextSpec(),
@@ -34,9 +34,9 @@ class ListItemSpec extends WidgetSpec<ListItemSpec> {
 
   @override
   ListItemSpec copyWith({
-    ContainerProperties? container,
+    ContainerSpec? container,
     FlexProperties? flex,
-    ContainerProperties? contentContainer,
+    ContainerSpec? contentContainer,
     FlexProperties? contentFlex,
     TextSpec? title,
     TextSpec? subtitle,

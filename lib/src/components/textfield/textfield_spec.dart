@@ -18,7 +18,7 @@ class TextFieldSpec extends WidgetSpec<TextFieldSpec> {
   final EdgeInsets scrollPadding;
   final Brightness? keyboardAppearance;
   final double spacing;
-  final ContainerProperties container;
+  final ContainerSpec container;
   final FlexProperties flex;
   final TextSpec helperText;
   final TextSpec label;
@@ -38,7 +38,7 @@ class TextFieldSpec extends WidgetSpec<TextFieldSpec> {
     this.keyboardAppearance,
     this.cursorOpacityAnimates,
     double? spacing,
-    ContainerProperties? container,
+    ContainerSpec? container,
     FlexProperties? flex,
     TextSpec? helperText,
     TextSpec? label,
@@ -55,7 +55,7 @@ class TextFieldSpec extends WidgetSpec<TextFieldSpec> {
         scrollPadding = scrollPadding ?? const EdgeInsets.all(20.0),
         helperText = helperText ?? const TextSpec(),
         label = label ?? const TextSpec(),
-        container = container ?? const ContainerProperties(),
+        container = container ?? const ContainerSpec(),
         flex = flex ?? const FlexProperties(),
         spacing = spacing ?? 4,
         super(animation: animation, widgetModifiers: widgetModifiers, inherit: inherit);
@@ -76,7 +76,7 @@ class TextFieldSpec extends WidgetSpec<TextFieldSpec> {
     EdgeInsets? scrollPadding,
     Brightness? keyboardAppearance,
     double? spacing,
-    ContainerProperties? container,
+    ContainerSpec? container,
     FlexProperties? flex,
     TextSpec? helperText,
     TextSpec? label,

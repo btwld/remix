@@ -4,12 +4,12 @@ class RemixCalloutStyle extends Style<CalloutSpec>
     with
         StyleModifierMixin<RemixCalloutStyle, CalloutSpec>,
         StyleVariantMixin<RemixCalloutStyle, CalloutSpec> {
-  final Prop<ContainerProperties>? $container;
+  final Prop<ContainerSpec>? $container;
   final Prop<TextSpec>? $text;
   final Prop<IconSpec>? $icon;
 
   const RemixCalloutStyle.create({
-    Prop<ContainerProperties>? container,
+    Prop<ContainerSpec>? container,
     Prop<TextSpec>? text,
     Prop<IconSpec>? icon,
     super.variants,
@@ -21,7 +21,7 @@ class RemixCalloutStyle extends Style<CalloutSpec>
         $icon = icon;
 
   RemixCalloutStyle({
-    ContainerPropertiesMix? container,
+    ContainerSpecMix? container,
     TextMix? text,
     IconMix? icon,
     AnimationConfig? animation,
@@ -39,7 +39,7 @@ class RemixCalloutStyle extends Style<CalloutSpec>
         );
 
   factory RemixCalloutStyle.value(CalloutSpec spec) => RemixCalloutStyle(
-        container: ContainerPropertiesMix.maybeValue(spec.container),
+        container: ContainerSpecMix.maybeValue(spec.container),
         text: TextMix.maybeValue(spec.text),
         icon: IconMix.maybeValue(spec.icon),
       );
@@ -96,7 +96,7 @@ class RemixCalloutStyle extends Style<CalloutSpec>
 }
 
 final DefaultRemixCalloutStyle = RemixCalloutStyle(
-  container: ContainerPropertiesMix(
+  container: ContainerSpecMix(
     decoration: BoxDecorationMix(
       border: BoxBorderMix.all(BorderSideMix(
         color: RemixTokens.border(),
@@ -120,7 +120,7 @@ final DefaultRemixCalloutStyle = RemixCalloutStyle(
 extension CalloutVariants on RemixCalloutStyle {
   /// Info callout variant with blue colors
   static RemixCalloutStyle get info => RemixCalloutStyle(
-        container: ContainerPropertiesMix(
+        container: ContainerSpecMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
               color: RemixTokens.primary().withValues(alpha: 0.6),
@@ -143,7 +143,7 @@ extension CalloutVariants on RemixCalloutStyle {
 
   /// Success callout variant with green colors
   static RemixCalloutStyle get success => RemixCalloutStyle(
-        container: ContainerPropertiesMix(
+        container: ContainerSpecMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
               color: RemixTokens.success().withValues(alpha: 0.6),
@@ -166,7 +166,7 @@ extension CalloutVariants on RemixCalloutStyle {
 
   /// Warning callout variant with orange colors
   static RemixCalloutStyle get warning => RemixCalloutStyle(
-        container: ContainerPropertiesMix(
+        container: ContainerSpecMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
               color: RemixTokens.warning().withValues(alpha: 0.6),
@@ -189,7 +189,7 @@ extension CalloutVariants on RemixCalloutStyle {
 
   /// Error callout variant with red colors
   static RemixCalloutStyle get error => RemixCalloutStyle(
-        container: ContainerPropertiesMix(
+        container: ContainerSpecMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
               color: RemixTokens.danger().withValues(alpha: 0.6),

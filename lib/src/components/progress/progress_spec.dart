@@ -1,31 +1,31 @@
 part of 'progress.dart';
 
 class ProgressSpec extends WidgetSpec<ProgressSpec> {
-  final ContainerProperties container;
-  final ContainerProperties track;
-  final ContainerProperties fill;
-  final ContainerProperties outerContainer;
+  final ContainerSpec container;
+  final ContainerSpec track;
+  final ContainerSpec fill;
+  final ContainerSpec outerContainer;
 
   const ProgressSpec({
-    ContainerProperties? container,
-    ContainerProperties? track,
-    ContainerProperties? fill,
-    ContainerProperties? outerContainer,
+    ContainerSpec? container,
+    ContainerSpec? track,
+    ContainerSpec? fill,
+    ContainerSpec? outerContainer,
     AnimationConfig? animation,
     List<Modifier>? widgetModifiers,
     bool? inherit,
-  })  : container = container ?? const ContainerProperties(),
-        track = track ?? const ContainerProperties(),
-        fill = fill ?? const ContainerProperties(),
-        outerContainer = outerContainer ?? const ContainerProperties(),
+  })  : container = container ?? const ContainerSpec(),
+        track = track ?? const ContainerSpec(),
+        fill = fill ?? const ContainerSpec(),
+        outerContainer = outerContainer ?? const ContainerSpec(),
         super(animation: animation, widgetModifiers: widgetModifiers, inherit: inherit);
 
   @override
   ProgressSpec copyWith({
-    ContainerProperties? container,
-    ContainerProperties? track,
-    ContainerProperties? fill,
-    ContainerProperties? outerContainer,
+    ContainerSpec? container,
+    ContainerSpec? track,
+    ContainerSpec? fill,
+    ContainerSpec? outerContainer,
     AnimationConfig? animation,
     List<Modifier>? widgetModifiers,
     bool? inherit,

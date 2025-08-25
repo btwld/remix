@@ -1,25 +1,25 @@
 part of 'button.dart';
 
 class ButtonSpec extends WidgetSpec<ButtonSpec> {
-  final ContainerProperties container;
+  final ContainerSpec container;
   final LabelSpec label;
   final SpinnerSpec spinner;
 
   const ButtonSpec({
-    ContainerProperties? container,
+    ContainerSpec? container,
     LabelSpec? label,
     SpinnerSpec? spinner,
     AnimationConfig? animation,
     List<Modifier>? widgetModifiers,
     bool? inherit,
-  })  : container = container ?? const ContainerProperties(),
+  })  : container = container ?? const ContainerSpec(),
         label = label ?? const LabelSpec(),
         spinner = spinner ?? const SpinnerSpec(),
         super(animation: animation, widgetModifiers: widgetModifiers, inherit: inherit);
 
   @override
   ButtonSpec copyWith({
-    ContainerProperties? container,
+    ContainerSpec? container,
     LabelSpec? label,
     SpinnerSpec? spinner,
     AnimationConfig? animation,

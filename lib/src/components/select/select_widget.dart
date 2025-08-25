@@ -323,7 +323,7 @@ class _AnimatedOverlayMenu extends StatefulWidget {
   final AnimationController controller;
   final Duration duration;
   final Curve curve;
-  final ContainerProperties menuContainer;
+  final ContainerSpec menuContainer;
   final List<Widget> items;
 
   @override

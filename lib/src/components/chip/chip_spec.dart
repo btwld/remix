@@ -1,14 +1,14 @@
 part of 'chip.dart';
 
 class ChipSpec extends WidgetSpec<ChipSpec> {
-  final ContainerProperties container;
+  final ContainerSpec container;
   final FlexProperties flex;
   final TextSpec label;
   final IconSpec leading;
   final IconSpec trailing;
 
   const ChipSpec({
-    ContainerProperties? container,
+    ContainerSpec? container,
     FlexProperties? flex,
     TextSpec? label,
     IconSpec? leading,
@@ -16,7 +16,7 @@ class ChipSpec extends WidgetSpec<ChipSpec> {
     AnimationConfig? animation,
     List<Modifier>? widgetModifiers,
     bool? inherit,
-  })  : container = container ?? const ContainerProperties(),
+  })  : container = container ?? const ContainerSpec(),
         flex = flex ?? const FlexProperties(),
         label = label ?? const TextSpec(),
         leading = leading ?? const IconSpec(),
@@ -25,7 +25,7 @@ class ChipSpec extends WidgetSpec<ChipSpec> {
 
   @override
   ChipSpec copyWith({
-    ContainerProperties? container,
+    ContainerSpec? container,
     FlexProperties? flex,
     TextSpec? label,
     IconSpec? leading,

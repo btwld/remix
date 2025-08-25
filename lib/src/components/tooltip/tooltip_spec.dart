@@ -1,22 +1,22 @@
 part of 'tooltip.dart';
 
 class TooltipSpec extends WidgetSpec<TooltipSpec> {
-  final ContainerProperties container;
+  final ContainerSpec container;
   final TextSpec text;
 
   const TooltipSpec({
-    ContainerProperties? container,
+    ContainerSpec? container,
     TextSpec? text,
     AnimationConfig? animation,
     List<Modifier>? widgetModifiers,
     bool? inherit,
-  })  : container = container ?? const ContainerProperties(),
+  })  : container = container ?? const ContainerSpec(),
         text = text ?? const TextSpec(),
         super(animation: animation, widgetModifiers: widgetModifiers, inherit: inherit);
 
   @override
   TooltipSpec copyWith({
-    ContainerProperties? container,
+    ContainerSpec? container,
     TextSpec? text,
     AnimationConfig? animation,
     List<Modifier>? widgetModifiers,

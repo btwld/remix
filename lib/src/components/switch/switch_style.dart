@@ -4,14 +4,14 @@ class RemixSwitchStyle extends Style<SwitchSpec>
     with
         StyleModifierMixin<RemixSwitchStyle, SwitchSpec>,
         StyleVariantMixin<RemixSwitchStyle, SwitchSpec> {
-  final Prop<ContainerProperties>? $container;
-  final Prop<ContainerProperties>? $track;
-  final Prop<ContainerProperties>? $thumb;
+  final Prop<ContainerSpec>? $container;
+  final Prop<ContainerSpec>? $track;
+  final Prop<ContainerSpec>? $thumb;
 
   const RemixSwitchStyle.create({
-    Prop<ContainerProperties>? container,
-    Prop<ContainerProperties>? track,
-    Prop<ContainerProperties>? thumb,
+    Prop<ContainerSpec>? container,
+    Prop<ContainerSpec>? track,
+    Prop<ContainerSpec>? thumb,
     super.variants,
     super.animation,
     super.modifier,
@@ -21,9 +21,9 @@ class RemixSwitchStyle extends Style<SwitchSpec>
         $thumb = thumb;
 
   RemixSwitchStyle({
-    ContainerPropertiesMix? container,
-    ContainerPropertiesMix? track,
-    ContainerPropertiesMix? thumb,
+    ContainerSpecMix? container,
+    ContainerSpecMix? track,
+    ContainerSpecMix? thumb,
     AnimationConfig? animation,
     List<VariantStyle<SwitchSpec>>? variants,
     ModifierConfig? modifier,
@@ -39,9 +39,9 @@ class RemixSwitchStyle extends Style<SwitchSpec>
         );
 
   factory RemixSwitchStyle.value(SwitchSpec spec) => RemixSwitchStyle(
-        container: ContainerPropertiesMix.maybeValue(spec.container),
-        track: ContainerPropertiesMix.maybeValue(spec.track),
-        thumb: ContainerPropertiesMix.maybeValue(spec.thumb),
+        container: ContainerSpecMix.maybeValue(spec.container),
+        track: ContainerSpecMix.maybeValue(spec.track),
+        thumb: ContainerSpecMix.maybeValue(spec.thumb),
       );
 
   @override
@@ -96,8 +96,8 @@ class RemixSwitchStyle extends Style<SwitchSpec>
 }
 
 final DefaultRemixSwitchStyle = RemixSwitchStyle(
-  container: ContainerPropertiesMix(),
-  track: ContainerPropertiesMix(
+  container: ContainerSpecMix(),
+  track: ContainerSpecMix(
     decoration: BoxDecorationMix(
       borderRadius: BorderRadiusMix.circular(RemixTokens.radiusXl()),
       color: RemixTokens.border(),
@@ -109,7 +109,7 @@ final DefaultRemixSwitchStyle = RemixSwitchStyle(
       maxHeight: 24,
     ),
   ),
-  thumb: ContainerPropertiesMix(
+  thumb: ContainerSpecMix(
     decoration: BoxDecorationMix(
       shape: BoxShape.circle,
       color: RemixTokens.background(),
@@ -134,8 +134,8 @@ final DefaultRemixSwitchStyle = RemixSwitchStyle(
 extension SwitchVariants on RemixSwitchStyle {
   /// Primary switch variant with blue colors
   static RemixSwitchStyle get primary => RemixSwitchStyle(
-        container: ContainerPropertiesMix(),
-        track: ContainerPropertiesMix(
+        container: ContainerSpecMix(),
+        track: ContainerSpecMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(RemixTokens.radiusXl()),
             color: RemixTokens.primary().withValues(alpha: 0.2),
@@ -147,7 +147,7 @@ extension SwitchVariants on RemixSwitchStyle {
             maxHeight: 24,
           ),
         ),
-        thumb: ContainerPropertiesMix(
+        thumb: ContainerSpecMix(
           decoration: BoxDecorationMix(
             shape: BoxShape.circle,
             color: RemixTokens.primary(),
@@ -171,8 +171,8 @@ extension SwitchVariants on RemixSwitchStyle {
 
   /// Secondary switch variant with grey colors
   static RemixSwitchStyle get secondary => RemixSwitchStyle(
-        container: ContainerPropertiesMix(),
-        track: ContainerPropertiesMix(
+        container: ContainerSpecMix(),
+        track: ContainerSpecMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(RemixTokens.radiusXl()),
             color: RemixTokens.surface(),
@@ -184,7 +184,7 @@ extension SwitchVariants on RemixSwitchStyle {
             maxHeight: 24,
           ),
         ),
-        thumb: ContainerPropertiesMix(
+        thumb: ContainerSpecMix(
           decoration: BoxDecorationMix(
             shape: BoxShape.circle,
             color: RemixTokens.textSecondary(),
@@ -208,8 +208,8 @@ extension SwitchVariants on RemixSwitchStyle {
 
   /// Compact switch variant with smaller size
   static RemixSwitchStyle get compact => RemixSwitchStyle(
-        container: ContainerPropertiesMix(),
-        track: ContainerPropertiesMix(
+        container: ContainerSpecMix(),
+        track: ContainerSpecMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(RemixTokens.radiusLg()),
             color: RemixTokens.border(),
@@ -221,7 +221,7 @@ extension SwitchVariants on RemixSwitchStyle {
             maxHeight: 20,
           ),
         ),
-        thumb: ContainerPropertiesMix(
+        thumb: ContainerSpecMix(
           decoration: BoxDecorationMix(
             shape: BoxShape.circle,
             color: RemixTokens.background(),

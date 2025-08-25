@@ -4,9 +4,9 @@ class RemixListItemStyle extends Style<ListItemSpec>
     with
         StyleModifierMixin<RemixListItemStyle, ListItemSpec>,
         StyleVariantMixin<RemixListItemStyle, ListItemSpec> {
-  final Prop<ContainerProperties>? $container;
+  final Prop<ContainerSpec>? $container;
   final Prop<FlexProperties>? $flex;
-  final Prop<ContainerProperties>? $contentContainer;
+  final Prop<ContainerSpec>? $contentContainer;
   final Prop<FlexProperties>? $contentFlex;
   final Prop<TextSpec>? $title;
   final Prop<TextSpec>? $subtitle;
@@ -14,9 +14,9 @@ class RemixListItemStyle extends Style<ListItemSpec>
   final Prop<IconSpec>? $trailing;
 
   const RemixListItemStyle.create({
-    Prop<ContainerProperties>? container,
+    Prop<ContainerSpec>? container,
     Prop<FlexProperties>? flex,
-    Prop<ContainerProperties>? contentContainer,
+    Prop<ContainerSpec>? contentContainer,
     Prop<FlexProperties>? contentFlex,
     Prop<TextSpec>? title,
     Prop<TextSpec>? subtitle,
@@ -36,9 +36,9 @@ class RemixListItemStyle extends Style<ListItemSpec>
         $trailing = trailing;
 
   RemixListItemStyle({
-    ContainerPropertiesMix? container,
+    ContainerSpecMix? container,
     FlexPropertiesMix? flex,
-    ContainerPropertiesMix? contentContainer,
+    ContainerSpecMix? contentContainer,
     FlexPropertiesMix? contentFlex,
     TextMix? title,
     TextMix? subtitle,
@@ -65,9 +65,9 @@ class RemixListItemStyle extends Style<ListItemSpec>
         );
 
   factory RemixListItemStyle.value(ListItemSpec spec) => RemixListItemStyle(
-        container: ContainerPropertiesMix.maybeValue(spec.container),
+        container: ContainerSpecMix.maybeValue(spec.container),
         flex: FlexPropertiesMix.maybeValue(spec.flex),
-        contentContainer: ContainerPropertiesMix.maybeValue(spec.contentContainer),
+        contentContainer: ContainerSpecMix.maybeValue(spec.contentContainer),
         contentFlex: FlexPropertiesMix.maybeValue(spec.contentFlex),
       );
 
@@ -139,20 +139,20 @@ class RemixListItemStyle extends Style<ListItemSpec>
 }
 
 final DefaultRemixListItemStyle = RemixListItemStyle(
-  container: ContainerPropertiesMix(
+  container: ContainerSpecMix(
     padding: EdgeInsetsMix.symmetric(vertical: 12, horizontal: 16),
   ),
   flex: FlexPropertiesMix(
     direction: Axis.horizontal,
     crossAxisAlignment: CrossAxisAlignment.center,
-    gap: 16,
+    spacing: 16,
   ),
-  contentContainer: ContainerPropertiesMix(),
+  contentContainer: ContainerSpecMix(),
   contentFlex: FlexPropertiesMix(
     direction: Axis.vertical,
     crossAxisAlignment: CrossAxisAlignment.start,
     mainAxisSize: MainAxisSize.min,
-    gap: 2,
+    spacing: 2,
   ),
   title: TextMix(
     style: TextStyleMix(fontSize: 16, fontWeight: FontWeight.w500),

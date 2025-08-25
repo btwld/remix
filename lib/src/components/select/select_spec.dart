@@ -2,13 +2,13 @@ part of 'select.dart';
 
 class SelectSpec extends WidgetSpec<SelectSpec> {
   final SelectTriggerSpec trigger;
-  final ContainerProperties menuContainer;
+  final ContainerSpec menuContainer;
   final SelectMenuItemSpec item;
   final CompositedTransformFollowerSpec position;
 
   const SelectSpec({
     SelectTriggerSpec? trigger,
-    ContainerProperties? menuContainer,
+    ContainerSpec? menuContainer,
     SelectMenuItemSpec? item,
     CompositedTransformFollowerSpec? position,
     AnimationConfig? animation,
@@ -16,14 +16,14 @@ class SelectSpec extends WidgetSpec<SelectSpec> {
     bool? inherit,
   })  : trigger = trigger ?? const SelectTriggerSpec(),
         item = item ?? const SelectMenuItemSpec(),
-        menuContainer = menuContainer ?? const ContainerProperties(),
+        menuContainer = menuContainer ?? const ContainerSpec(),
         position = position ?? const CompositedTransformFollowerSpec(),
         super(animation: animation, widgetModifiers: widgetModifiers, inherit: inherit);
 
   @override
   SelectSpec copyWith({
     SelectTriggerSpec? trigger,
-    ContainerProperties? menuContainer,
+    ContainerSpec? menuContainer,
     SelectMenuItemSpec? item,
     CompositedTransformFollowerSpec? position,
     AnimationConfig? animation,
@@ -72,20 +72,20 @@ class SelectSpec extends WidgetSpec<SelectSpec> {
 }
 
 class SelectTriggerSpec extends WidgetSpec<SelectTriggerSpec> {
-  final ContainerProperties container;
+  final ContainerSpec container;
   final FlexProperties flex;
   final TextSpec label;
   final IconSpec icon;
 
   const SelectTriggerSpec({
-    ContainerProperties? container,
+    ContainerSpec? container,
     FlexProperties? flex,
     TextSpec? label,
     IconSpec? icon,
     AnimationConfig? animation,
     List<Modifier>? widgetModifiers,
     bool? inherit,
-  })  : container = container ?? const ContainerProperties(),
+  })  : container = container ?? const ContainerSpec(),
         flex = flex ?? const FlexProperties(),
         label = label ?? const TextSpec(),
         icon = icon ?? const IconSpec(),
@@ -93,7 +93,7 @@ class SelectTriggerSpec extends WidgetSpec<SelectTriggerSpec> {
 
   @override
   SelectTriggerSpec copyWith({
-    ContainerProperties? container,
+    ContainerSpec? container,
     FlexProperties? flex,
     TextSpec? label,
     IconSpec? icon,
@@ -143,20 +143,20 @@ class SelectTriggerSpec extends WidgetSpec<SelectTriggerSpec> {
 }
 
 class SelectMenuItemSpec extends WidgetSpec<SelectMenuItemSpec> {
-  final ContainerProperties container;
+  final ContainerSpec container;
   final FlexProperties flex;
   final TextSpec text;
   final IconSpec icon;
 
   const SelectMenuItemSpec({
-    ContainerProperties? container,
+    ContainerSpec? container,
     FlexProperties? flex,
     TextSpec? text,
     IconSpec? icon,
     AnimationConfig? animation,
     List<Modifier>? widgetModifiers,
     bool? inherit,
-  })  : container = container ?? const ContainerProperties(),
+  })  : container = container ?? const ContainerSpec(),
         flex = flex ?? const FlexProperties(),
         text = text ?? const TextSpec(),
         icon = icon ?? const IconSpec(),
@@ -164,7 +164,7 @@ class SelectMenuItemSpec extends WidgetSpec<SelectMenuItemSpec> {
 
   @override
   SelectMenuItemSpec copyWith({
-    ContainerProperties? container,
+    ContainerSpec? container,
     FlexProperties? flex,
     TextSpec? text,
     IconSpec? icon,

@@ -2,13 +2,13 @@ part of 'slider.dart';
 
 class RemixSliderStyle extends Style<SliderSpec>
     with StyleModifierMixin<RemixSliderStyle, SliderSpec>, StyleVariantMixin<RemixSliderStyle, SliderSpec> {
-  final Prop<ContainerProperties>? $thumb;
+  final Prop<ContainerSpec>? $thumb;
   final Prop<Paint>? $baseTrack;
   final Prop<Paint>? $activeTrack;
   final Prop<Paint>? $division;
 
   const RemixSliderStyle.create({
-    Prop<ContainerProperties>? thumb,
+    Prop<ContainerSpec>? thumb,
     Prop<Paint>? baseTrack,
     Prop<Paint>? activeTrack,
     Prop<Paint>? division,
@@ -22,7 +22,7 @@ class RemixSliderStyle extends Style<SliderSpec>
         $division = division;
 
   RemixSliderStyle({
-    ContainerPropertiesMix? thumb,
+    ContainerSpecMix? thumb,
     Paint? baseTrack,
     Paint? activeTrack,
     Paint? division,
@@ -42,7 +42,7 @@ class RemixSliderStyle extends Style<SliderSpec>
         );
 
   factory RemixSliderStyle.value(SliderSpec spec) => RemixSliderStyle(
-        thumb: ContainerPropertiesMix.maybeValue(spec.thumb),
+        thumb: ContainerSpecMix.maybeValue(spec.thumb),
       );
 
   @override
@@ -101,7 +101,7 @@ class RemixSliderStyle extends Style<SliderSpec>
 
 // Default style
 final DefaultRemixSliderStyle = RemixSliderStyle(
-  thumb: ContainerPropertiesMix(
+  thumb: ContainerSpecMix(
     decoration: BoxDecorationMix(
       border: BoxBorderMix.all(BorderSideMix(color: RemixTokens.textPrimary(), width: 2)),
       shape: BoxShape.circle,
@@ -128,7 +128,7 @@ final DefaultRemixSliderStyle = RemixSliderStyle(
 
 // Hover style
 final RemixSliderHoverStyle = RemixSliderStyle(
-  thumb: ContainerPropertiesMix(
+  thumb: ContainerSpecMix(
     decoration: BoxDecorationMix(
       border: BoxBorderMix.all(BorderSideMix(color: RemixTokens.primary(), width: 2)),
     ),
@@ -137,7 +137,7 @@ final RemixSliderHoverStyle = RemixSliderStyle(
 
 // Disabled style
 final RemixSliderDisabledStyle = RemixSliderStyle(
-  thumb: ContainerPropertiesMix(
+  thumb: ContainerSpecMix(
     decoration: BoxDecorationMix(
       border: BoxBorderMix.all(
         BorderSideMix(color: RemixTokens.border(), width: 2),
@@ -160,7 +160,7 @@ final RemixSliderDisabledStyle = RemixSliderStyle(
 extension SliderVariants on RemixSliderStyle {
   /// Primary slider variant with blue colors
   static RemixSliderStyle get primary => RemixSliderStyle(
-        thumb: ContainerPropertiesMix(
+        thumb: ContainerSpecMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(color: RemixTokens.primary(), width: 2)),
             shape: BoxShape.circle,
@@ -194,7 +194,7 @@ extension SliderVariants on RemixSliderStyle {
 
   /// Secondary slider variant with grey colors
   static RemixSliderStyle get secondary => RemixSliderStyle(
-        thumb: ContainerPropertiesMix(
+        thumb: ContainerSpecMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(color: RemixTokens.textSecondary(), width: 2)),
             shape: BoxShape.circle,
@@ -221,7 +221,7 @@ extension SliderVariants on RemixSliderStyle {
 
   /// Compact slider variant with smaller track
   static RemixSliderStyle get compact => RemixSliderStyle(
-        thumb: ContainerPropertiesMix(
+        thumb: ContainerSpecMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(color: RemixTokens.textPrimary(), width: 1.5)),
             shape: BoxShape.circle,
