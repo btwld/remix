@@ -1,40 +1,40 @@
 part of 'label.dart';
 
 class LabelSpec extends WidgetSpec<LabelSpec> {
-  final double spacing;
-  final TextSpec label;
-  final IconSpec leading;
-  final IconSpec trailing;
+  final TypographySpec label;
+  final IconographySpec leading;
+  final IconographySpec trailing;
+  final FlexLayoutSpec flex;
 
   const LabelSpec({
-    double? spacing,
-    TextSpec? label,
-    IconSpec? leading,
-    IconSpec? trailing,
+    TypographySpec? label,
+    IconographySpec? leading,
+    IconographySpec? trailing,
+    FlexLayoutSpec? flex,
     AnimationConfig? animation,
     List<Modifier>? widgetModifiers,
     bool? inherit,
-  })  : spacing = spacing ?? 8,
-        label = label ?? const TextSpec(),
-        leading = leading ?? const IconSpec(),
-        trailing = trailing ?? const IconSpec(),
+  })  : label = label ?? const TypographySpec(),
+        leading = leading ?? const IconographySpec(),
+        trailing = trailing ?? const IconographySpec(),
+        flex = flex ?? const FlexLayoutSpec(),
         super(animation: animation, widgetModifiers: widgetModifiers, inherit: inherit);
 
   @override
   LabelSpec copyWith({
-    double? spacing,
-    TextSpec? label,
-    IconSpec? leading,
-    IconSpec? trailing,
+    TypographySpec? label,
+    IconographySpec? leading,
+    IconographySpec? trailing,
+    FlexLayoutSpec? flex,
     AnimationConfig? animation,
     List<Modifier>? widgetModifiers,
     bool? inherit,
   }) {
     return LabelSpec(
-      spacing: spacing ?? this.spacing,
       label: label ?? this.label,
       leading: leading ?? this.leading,
       trailing: trailing ?? this.trailing,
+      flex: flex ?? this.flex,
       animation: animation ?? this.animation,
       widgetModifiers: widgetModifiers ?? this.widgetModifiers,
       inherit: inherit ?? this.inherit,
@@ -46,10 +46,10 @@ class LabelSpec extends WidgetSpec<LabelSpec> {
     if (other == null) return this;
 
     return LabelSpec(
-      spacing: MixOps.lerp(spacing, other.spacing, t),
       label: MixOps.lerp(label, other.label, t),
       leading: MixOps.lerp(leading, other.leading, t),
       trailing: MixOps.lerp(trailing, other.trailing, t),
+      flex: MixOps.lerp(flex, other.flex, t),
       animation: MixOps.lerp(animation, other.animation, t),
       widgetModifiers: MixOps.lerp(widgetModifiers, other.widgetModifiers, t),
       inherit: MixOps.lerp(inherit, other.inherit, t),
@@ -60,12 +60,12 @@ class LabelSpec extends WidgetSpec<LabelSpec> {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(DiagnosticsProperty('spacing', spacing))
       ..add(DiagnosticsProperty('label', label))
       ..add(DiagnosticsProperty('leading', leading))
-      ..add(DiagnosticsProperty('trailing', trailing));
+      ..add(DiagnosticsProperty('trailing', trailing))
+      ..add(DiagnosticsProperty('flex', flex));
   }
 
   @override
-  List<Object?> get props => [...super.props, spacing, label, leading, trailing];
+  List<Object?> get props => [...super.props, label, leading, trailing, flex];
 }

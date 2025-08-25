@@ -2,34 +2,38 @@ part of 'chip.dart';
 
 class ChipSpec extends WidgetSpec<ChipSpec> {
   final ContainerSpec container;
-  final FlexProperties flex;
-  final TextSpec label;
-  final IconSpec leading;
-  final IconSpec trailing;
+  final FlexLayoutSpec flex;
+  final TypographySpec label;
+  final IconographySpec leading;
+  final IconographySpec trailing;
 
   const ChipSpec({
     ContainerSpec? container,
-    FlexProperties? flex,
-    TextSpec? label,
-    IconSpec? leading,
-    IconSpec? trailing,
+    FlexLayoutSpec? flex,
+    TypographySpec? label,
+    IconographySpec? leading,
+    IconographySpec? trailing,
     AnimationConfig? animation,
     List<Modifier>? widgetModifiers,
     bool? inherit,
   })  : container = container ?? const ContainerSpec(),
-        flex = flex ?? const FlexProperties(),
-        label = label ?? const TextSpec(),
-        leading = leading ?? const IconSpec(),
-        trailing = trailing ?? const IconSpec(),
-        super(animation: animation, widgetModifiers: widgetModifiers, inherit: inherit);
+        flex = flex ?? const FlexLayoutSpec(),
+        label = label ?? const TypographySpec(),
+        leading = leading ?? const IconographySpec(),
+        trailing = trailing ?? const IconographySpec(),
+        super(
+          animation: animation,
+          widgetModifiers: widgetModifiers,
+          inherit: inherit,
+        );
 
   @override
   ChipSpec copyWith({
     ContainerSpec? container,
-    FlexProperties? flex,
-    TextSpec? label,
-    IconSpec? leading,
-    IconSpec? trailing,
+    FlexLayoutSpec? flex,
+    TypographySpec? label,
+    IconographySpec? leading,
+    IconographySpec? trailing,
     AnimationConfig? animation,
     List<Modifier>? widgetModifiers,
     bool? inherit,
@@ -74,5 +78,6 @@ class ChipSpec extends WidgetSpec<ChipSpec> {
   }
 
   @override
-  List<Object?> get props => [...super.props, container, flex, label, leading, trailing];
+  List<Object?> get props =>
+      [...super.props, container, flex, label, leading, trailing];
 }

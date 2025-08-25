@@ -2,34 +2,38 @@ part of 'checkbox.dart';
 
 class CheckboxSpec extends WidgetSpec<CheckboxSpec> {
   final ContainerSpec container;
-  final FlexProperties flex;
+  final FlexLayoutSpec flex;
   final ContainerSpec indicatorContainer;
-  final IconSpec indicator;
-  final TextSpec label;
+  final IconographySpec indicator;
+  final TypographySpec label;
 
   const CheckboxSpec({
     ContainerSpec? container,
-    FlexProperties? flex,
+    FlexLayoutSpec? flex,
     ContainerSpec? indicatorContainer,
-    IconSpec? indicator,
-    TextSpec? label,
+    IconographySpec? indicator,
+    TypographySpec? label,
     AnimationConfig? animation,
     List<Modifier>? widgetModifiers,
     bool? inherit,
   })  : container = container ?? const ContainerSpec(),
-        flex = flex ?? const FlexProperties(),
+        flex = flex ?? const FlexLayoutSpec(),
         indicatorContainer = indicatorContainer ?? const ContainerSpec(),
-        indicator = indicator ?? const IconSpec(),
-        label = label ?? const TextSpec(),
-        super(animation: animation, widgetModifiers: widgetModifiers, inherit: inherit);
+        indicator = indicator ?? const IconographySpec(),
+        label = label ?? const TypographySpec(),
+        super(
+          animation: animation,
+          widgetModifiers: widgetModifiers,
+          inherit: inherit,
+        );
 
   @override
   CheckboxSpec copyWith({
     ContainerSpec? container,
-    FlexProperties? flex,
+    FlexLayoutSpec? flex,
     ContainerSpec? indicatorContainer,
-    IconSpec? indicator,
-    TextSpec? label,
+    IconographySpec? indicator,
+    TypographySpec? label,
     AnimationConfig? animation,
     List<Modifier>? widgetModifiers,
     bool? inherit,
@@ -75,5 +79,6 @@ class CheckboxSpec extends WidgetSpec<CheckboxSpec> {
   }
 
   @override
-  List<Object?> get props => [...super.props, container, flex, indicatorContainer, indicator, label];
+  List<Object?> get props =>
+      [...super.props, container, flex, indicatorContainer, indicator, label];
 }

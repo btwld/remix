@@ -9,7 +9,7 @@ part of 'button.dart';
 /// // Basic button
 /// RemixButton(
 ///   label: 'Click Me',
-///   icon: Icons.star,
+///   leading: Icons.star,
 ///   onPressed: () => print('Button pressed!'),
 /// )
 ///
@@ -21,7 +21,7 @@ part of 'button.dart';
 ///
 /// RemixButton.secondary(
 ///   label: 'Secondary Button',
-///   icon: Icons.settings,
+///   leading: Icons.settings,
 ///   onPressed: () => print('Secondary pressed!'),
 /// )
 ///
@@ -42,12 +42,13 @@ part of 'button.dart';
 class RemixButton extends StatefulWidget with HasEnabled, HasFocused {
   /// Creates a Remix button.
   ///
-  /// Must provide either [label], [icon], or [child].
+  /// Must provide either [label], [leading], [trailing], or [child].
   /// If [child] is provided, it overrides the label and icon parameters.
   const RemixButton({
     super.key,
     this.label,
-    this.icon,
+    this.leading,
+    this.trailing,
     this.child,
     this.enabled = true,
     this.autofocus = false,
@@ -68,8 +69,8 @@ class RemixButton extends StatefulWidget with HasEnabled, HasFocused {
     this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
   }) : assert(
-          label != null || icon != null || child != null,
-          'Must provide either label, icon, or child',
+          label != null || leading != null || trailing != null || child != null,
+          'Must provide either label, leading, trailing, or child',
         );
 
   /// Creates a Remix button with only an icon.
@@ -107,7 +108,8 @@ class RemixButton extends StatefulWidget with HasEnabled, HasFocused {
     this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
   })  : label = null,
-        icon = icon,
+        leading = icon,
+        trailing = null,
         child = StyledIcon(icon: icon);
 
   static late final styleFrom = RemixButtonStyle.new;
@@ -167,12 +169,16 @@ class RemixButton extends StatefulWidget with HasEnabled, HasFocused {
   /// If [child] is provided, this is ignored.
   final String? label;
 
-  /// The icon to display in the button.
+  /// The leading icon to display in the button.
   /// If [child] is provided, this is ignored.
-  final IconData? icon;
+  final IconData? leading;
+
+  /// The trailing icon to display in the button.
+  /// If [child] is provided, this is ignored.
+  final IconData? trailing;
 
   /// The child widget to display inside the button.
-  /// If provided, overrides [label] and [leading].
+  /// If provided, overrides [label], [leading], and [trailing].
   final Widget? child;
 
   /// Whether the button should be treated as a semantic button.
@@ -228,7 +234,7 @@ class _RemixButtonState extends State<RemixButton>
       excludeSemantics: widget.excludeSemantics,
       onFocusChange: widget.onFocusChange,
       onHoverChange: widget.onHoverChange,
-      onPressChanged: widget.onPressChanged,
+      onPressChange: widget.onPressChanged,
       onStatesChange: widget.onStatesChange,
       statesController: controller,
       child: StyleBuilder(
@@ -241,7 +247,7 @@ class _RemixButtonState extends State<RemixButton>
 
           // Create the child widget based on whether custom child is provided
           final effectiveChild = widget.child ??
-              Label(text: widget.label ?? '', leading: widget.icon);
+              Label(text: widget.label ?? '', leading: widget.leading, trailing: widget.trailing);
 
           final content = widget.loading
               ? Stack(

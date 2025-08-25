@@ -22,7 +22,8 @@ class MyApp extends StatelessWidget {
             child: RemixAccordion(
               defaultTrailing: Icons.keyboard_arrow_down_rounded,
               style: RemixAccordionStyle(
-                animation: AnimationConfig.easeInOut(const Duration(milliseconds: 200)),
+                animation: AnimationConfig.easeInOut(
+                    const Duration(milliseconds: 200)),
               ).onSelected(
                 RemixAccordionStyle(
                   itemContainer: ContainerSpecMix(
@@ -31,21 +32,21 @@ class MyApp extends StatelessWidget {
                   ),
                 ),
               ),
-              children: [
+              children: const [
                 RemixAccordionItem(
                   title: 'Section 1',
                   value: 'section1',
-                  child: const Text('Content for section 1'),
+                  child: Text('Content for section 1'),
                 ),
                 RemixAccordionItem(
                   title: 'Section 2',
                   value: 'section2',
-                  child: const Text('Content for section 2'),
+                  child: Text('Content for section 2'),
                 ),
                 RemixAccordionItem(
                   title: 'Section 3',
                   value: 'section3',
-                  child: const Text('Content for section 3'),
+                  child: Text('Content for section 3'),
                 ),
               ],
             ),

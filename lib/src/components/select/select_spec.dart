@@ -18,7 +18,11 @@ class SelectSpec extends WidgetSpec<SelectSpec> {
         item = item ?? const SelectMenuItemSpec(),
         menuContainer = menuContainer ?? const ContainerSpec(),
         position = position ?? const CompositedTransformFollowerSpec(),
-        super(animation: animation, widgetModifiers: widgetModifiers, inherit: inherit);
+        super(
+          animation: animation,
+          widgetModifiers: widgetModifiers,
+          inherit: inherit,
+        );
 
   @override
   SelectSpec copyWith({
@@ -56,7 +60,6 @@ class SelectSpec extends WidgetSpec<SelectSpec> {
     );
   }
 
-
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
@@ -68,35 +71,40 @@ class SelectSpec extends WidgetSpec<SelectSpec> {
   }
 
   @override
-  List<Object?> get props => [...super.props, trigger, menuContainer, item, position];
+  List<Object?> get props =>
+      [...super.props, trigger, menuContainer, item, position];
 }
 
 class SelectTriggerSpec extends WidgetSpec<SelectTriggerSpec> {
   final ContainerSpec container;
-  final FlexProperties flex;
-  final TextSpec label;
-  final IconSpec icon;
+  final FlexLayoutSpec flex;
+  final TypographySpec label;
+  final IconographySpec icon;
 
   const SelectTriggerSpec({
     ContainerSpec? container,
-    FlexProperties? flex,
-    TextSpec? label,
-    IconSpec? icon,
+    FlexLayoutSpec? flex,
+    TypographySpec? label,
+    IconographySpec? icon,
     AnimationConfig? animation,
     List<Modifier>? widgetModifiers,
     bool? inherit,
   })  : container = container ?? const ContainerSpec(),
-        flex = flex ?? const FlexProperties(),
-        label = label ?? const TextSpec(),
-        icon = icon ?? const IconSpec(),
-        super(animation: animation, widgetModifiers: widgetModifiers, inherit: inherit);
+        flex = flex ?? const FlexLayoutSpec(),
+        label = label ?? const TypographySpec(),
+        icon = icon ?? const IconographySpec(),
+        super(
+          animation: animation,
+          widgetModifiers: widgetModifiers,
+          inherit: inherit,
+        );
 
   @override
   SelectTriggerSpec copyWith({
     ContainerSpec? container,
-    FlexProperties? flex,
-    TextSpec? label,
-    IconSpec? icon,
+    FlexLayoutSpec? flex,
+    TypographySpec? label,
+    IconographySpec? icon,
     AnimationConfig? animation,
     List<Modifier>? widgetModifiers,
     bool? inherit,
@@ -127,7 +135,6 @@ class SelectTriggerSpec extends WidgetSpec<SelectTriggerSpec> {
     );
   }
 
-
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
@@ -144,30 +151,34 @@ class SelectTriggerSpec extends WidgetSpec<SelectTriggerSpec> {
 
 class SelectMenuItemSpec extends WidgetSpec<SelectMenuItemSpec> {
   final ContainerSpec container;
-  final FlexProperties flex;
-  final TextSpec text;
-  final IconSpec icon;
+  final FlexLayoutSpec flex;
+  final TypographySpec text;
+  final IconographySpec icon;
 
   const SelectMenuItemSpec({
     ContainerSpec? container,
-    FlexProperties? flex,
-    TextSpec? text,
-    IconSpec? icon,
+    FlexLayoutSpec? flex,
+    TypographySpec? text,
+    IconographySpec? icon,
     AnimationConfig? animation,
     List<Modifier>? widgetModifiers,
     bool? inherit,
   })  : container = container ?? const ContainerSpec(),
-        flex = flex ?? const FlexProperties(),
-        text = text ?? const TextSpec(),
-        icon = icon ?? const IconSpec(),
-        super(animation: animation, widgetModifiers: widgetModifiers, inherit: inherit);
+        flex = flex ?? const FlexLayoutSpec(),
+        text = text ?? const TypographySpec(),
+        icon = icon ?? const IconographySpec(),
+        super(
+          animation: animation,
+          widgetModifiers: widgetModifiers,
+          inherit: inherit,
+        );
 
   @override
   SelectMenuItemSpec copyWith({
     ContainerSpec? container,
-    FlexProperties? flex,
-    TextSpec? text,
-    IconSpec? icon,
+    FlexLayoutSpec? flex,
+    TypographySpec? text,
+    IconographySpec? icon,
     AnimationConfig? animation,
     List<Modifier>? widgetModifiers,
     bool? inherit,
@@ -197,7 +208,6 @@ class SelectMenuItemSpec extends WidgetSpec<SelectMenuItemSpec> {
       inherit: MixOps.lerp(inherit, other.inherit, t),
     );
   }
-
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
