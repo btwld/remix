@@ -128,7 +128,7 @@ class _RemixRadioState<T> extends State<RemixRadio<T>>
       toggleable: widget.toggleable,
       onFocusChange: widget.onFocusChange,
       onHoverChange: widget.onHoverChange,
-      onPressChanged: widget.onHighlightChanged,
+      onPressChange: widget.onHighlightChanged,
       statesController: widget.statesController ?? controller,
       semanticLabel: widget.semanticLabel ?? widget.label,
       semanticHint: widget.semanticHint,

@@ -247,7 +247,11 @@ class _RemixButtonState extends State<RemixButton>
 
           // Create the child widget based on whether custom child is provided
           final effectiveChild = widget.child ??
-              Label(text: widget.label ?? '', leading: widget.leading, trailing: widget.trailing);
+              Label(
+                text: widget.label ?? '',
+                leading: widget.leading,
+                trailing: widget.trailing,
+              );
 
           final content = widget.loading
               ? Stack(

@@ -323,7 +323,7 @@ class _AnimatedOverlayMenu extends StatefulWidget {
   final AnimationController controller;
   final Duration duration;
   final Curve curve;
-  final ContainerSpec menuContainer;
+  final BoxSpec menuContainer;
   final List<Widget> items;
 
   @override
@@ -443,7 +443,7 @@ class _RemixSelectTriggerState extends State<RemixSelectTrigger>
         builder: (context, spec) {
           final triggerSpec = spec.trigger;
           final TriggerContainer = triggerSpec.container;
-          final TriggerFlex = triggerSpec.flex;
+
           final TriggerLabel = triggerSpec.label;
 
           // Build trigger content progressively
@@ -456,21 +456,17 @@ class _RemixSelectTriggerState extends State<RemixSelectTrigger>
             // Add trailing icon if present
             if (widget.trailing != null) {
               triggerContent = TriggerContainer(
-                child: TriggerFlex(
-                  direction: Axis.horizontal,
+                child: Row(
                   children: [triggerContent, Icon(widget.trailing!)],
                 ),
               );
             }
-          }
 
-          // Wrap with container
-          triggerContent = TriggerContainer(
-            child: TriggerFlex(
-              direction: Axis.horizontal,
-              children: [triggerContent],
-            ),
-          );
+            // Wrap with container
+            triggerContent = TriggerContainer(
+              child: Row(children: [triggerContent]),
+            );
+          }
 
           return triggerContent;
         },
@@ -583,7 +579,6 @@ class _RemixSelectItemState<T> extends State<RemixSelectItem<T>>
         builder: (context, spec) {
           final itemSpec = spec.item;
           final ItemContainer = itemSpec.container;
-          final ItemFlex = itemSpec.flex;
 
           // Use checkbox icon for multi-select, check icon for single select
           final IconData selectionIcon = isMultiSelect
@@ -603,20 +598,14 @@ class _RemixSelectItemState<T> extends State<RemixSelectItem<T>>
 
             // Add selection icon
             itemContent = ItemContainer(
-              child: ItemFlex(
-                direction: Axis.horizontal,
+              child: Row(
                 children: [itemContent, ItemIcon(icon: selectionIcon)],
               ),
             );
           }
 
           // Wrap with container
-          itemContent = ItemContainer(
-            child: ItemFlex(
-              direction: Axis.horizontal,
-              children: [itemContent],
-            ),
-          );
+          itemContent = ItemContainer(child: Row(children: [itemContent]));
 
           return itemContent;
         },

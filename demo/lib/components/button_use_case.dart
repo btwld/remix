@@ -139,7 +139,7 @@ Widget buildButtonUseCase(BuildContext context) {
               label: 'label',
               initialValue: 'Interactive Button',
             ),
-            icon: context.knobs.iconData(
+            leading: context.knobs.iconData(
               label: 'Icon',
               initialValue: Icons.touch_app,
             ),

@@ -1,19 +1,19 @@
 part of 'slider.dart';
 
 /// Linearly interpolates between two Paint objects
-/// 
+///
 /// The [t] argument represents position on timeline (0.0 to 1.0)
 /// Returns [a] when t=0.0, [b] when t=1.0, interpolated values between
 Paint lerpPaint(Paint? a, Paint? b, double t) {
   if (a == null && b == null) return _defaultPaint;
   if (a == null) return Paint.from(b!);
   if (b == null) return Paint.from(a);
-  
+
   return Paint()
     ..color = Color.lerp(a.color, b.color, t) ?? Colors.grey
     ..strokeWidth = lerpDouble(a.strokeWidth, b.strokeWidth, t) ?? 8.0
     ..strokeCap = t < 0.5 ? a.strokeCap : b.strokeCap
-    ..style = PaintingStyle.stroke  // Always stroke for slider tracks
+    ..style = PaintingStyle.stroke // Always stroke for slider tracks
     ..isAntiAlias = t < 0.5 ? a.isAntiAlias : b.isAntiAlias;
 }
 
@@ -43,48 +43,36 @@ final _defaultDivisionPaint = Paint()
   ..strokeCap = StrokeCap.round
   ..style = PaintingStyle.stroke;
 
-class SliderSpec extends WidgetSpec<SliderSpec> {
-  final ContainerSpec thumb;
+class SliderSpec extends Spec<SliderSpec> with Diagnosticable {
+  final BoxSpec thumb;
   final Paint baseTrack;
   final Paint activeTrack;
   final Paint division;
 
   SliderSpec({
-    ContainerSpec? thumb,
+    BoxSpec? thumb,
     Paint? baseTrack,
     Paint? activeTrack,
     Paint? division,
-    AnimationConfig? animation,
-    List<Modifier>? widgetModifiers,
-    bool? inherit,
-  })  : thumb = thumb ?? const ContainerSpec(),
+  })  : thumb = thumb ?? const BoxSpec(),
         baseTrack = baseTrack ?? _defaultBaseTrackPaint,
         activeTrack = activeTrack ?? _defaultActiveTrackPaint,
-        division = division ?? _defaultDivisionPaint,
-        super(animation: animation, widgetModifiers: widgetModifiers, inherit: inherit);
+        division = division ?? _defaultDivisionPaint;
 
-  @override
   SliderSpec copyWith({
-    ContainerSpec? thumb,
+    BoxSpec? thumb,
     Paint? baseTrack,
     Paint? activeTrack,
     Paint? division,
-    AnimationConfig? animation,
-    List<Modifier>? widgetModifiers,
-    bool? inherit,
   }) {
     return SliderSpec(
       thumb: thumb ?? this.thumb,
       baseTrack: baseTrack ?? this.baseTrack,
       activeTrack: activeTrack ?? this.activeTrack,
       division: division ?? this.division,
-      animation: animation ?? this.animation,
-      widgetModifiers: widgetModifiers ?? this.widgetModifiers,
-      inherit: inherit ?? this.inherit,
     );
   }
 
-  @override
   SliderSpec lerp(SliderSpec? other, double t) {
     if (other == null) return this;
 
@@ -93,9 +81,6 @@ class SliderSpec extends WidgetSpec<SliderSpec> {
       baseTrack: lerpPaint(baseTrack, other.baseTrack, t),
       activeTrack: lerpPaint(activeTrack, other.activeTrack, t),
       division: lerpPaint(division, other.division, t),
-      animation: MixOps.lerp(animation, other.animation, t),
-      widgetModifiers: MixOps.lerp(widgetModifiers, other.widgetModifiers, t),
-      inherit: MixOps.lerp(inherit, other.inherit, t),
     );
   }
 
@@ -110,5 +95,5 @@ class SliderSpec extends WidgetSpec<SliderSpec> {
   }
 
   @override
-  List<Object?> get props => [...super.props, thumb, baseTrack, activeTrack, division];
+  List<Object?> get props => [thumb, baseTrack, activeTrack, division];
 }

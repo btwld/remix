@@ -133,7 +133,6 @@ class _RemixCheckboxState extends State<RemixCheckbox>
       autofocus: widget.autofocus,
       onFocusChange: widget.onFocusChange,
       onHoverChange: widget.onHoverChange,
-      onPressChanged: widget.onHighlightChanged,
       onStatesChange: widget.onStateChange,
       statesController: controller,
       child: StyleBuilder(
@@ -142,7 +141,6 @@ class _RemixCheckboxState extends State<RemixCheckbox>
           final IndicatorContainer = spec.indicatorContainer;
           final Indicator = spec.indicator;
           final Container = spec.container;
-          final Flex = spec.flex;
           final Label = spec.label;
 
           final iconData = widget.tristate && widget.selected == null

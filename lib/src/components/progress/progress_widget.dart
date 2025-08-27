@@ -39,7 +39,7 @@ class RemixProgress extends StatelessWidget {
         final Track = spec.track;
         final Fill = spec.fill;
         final OuterContainer = spec.outerContainer;
-        
+
         return Container(
           child: Stack(
             children: [

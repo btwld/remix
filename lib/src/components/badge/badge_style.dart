@@ -4,12 +4,12 @@ class RemixBadgeStyle extends Style<BadgeSpec>
     with
         StyleModifierMixin<RemixBadgeStyle, BadgeSpec>,
         StyleVariantMixin<RemixBadgeStyle, BadgeSpec> {
-  final Prop<ContainerSpec>? $container;
+  final Prop<BoxSpec>? $container;
   final Prop<TextSpec>? $text;
   final Prop<IconSpec>? $icon;
 
   const RemixBadgeStyle.create({
-    Prop<ContainerSpec>? container,
+    Prop<BoxSpec>? container,
     Prop<TextSpec>? text,
     Prop<IconSpec>? icon,
     super.variants,
@@ -21,7 +21,7 @@ class RemixBadgeStyle extends Style<BadgeSpec>
         $icon = icon;
 
   RemixBadgeStyle({
-    ContainerSpecMix? container,
+    BoxMix? container,
     TextMix? text,
     IconMix? icon,
     AnimationConfig? animation,
@@ -29,9 +29,9 @@ class RemixBadgeStyle extends Style<BadgeSpec>
     ModifierConfig? modifier,
     bool? inherit,
   }) : this.create(
-          container: container != null ? Prop.mix(container) : null,
-          text: text != null ? Prop.mix(text) : null,
-          icon: icon != null ? Prop.mix(icon) : null,
+          container: Prop.maybeMix(container),
+          text: Prop.maybeMix(text),
+          icon: Prop.maybeMix(icon),
           variants: variants,
           animation: animation,
           modifier: modifier,
@@ -39,20 +39,20 @@ class RemixBadgeStyle extends Style<BadgeSpec>
         );
 
   factory RemixBadgeStyle.value(BadgeSpec spec) => RemixBadgeStyle(
-        container: ContainerSpecMix.maybeValue(spec.container),
+        container: BoxMix.maybeValue(spec.container),
         text: TextMix.maybeValue(spec.text),
         icon: IconMix.maybeValue(spec.icon),
       );
 
   /// Factory for background color
   factory RemixBadgeStyle.color(Color value) {
-    return RemixBadgeStyle(container: ContainerSpecMix.color(value));
+    return RemixBadgeStyle(container: BoxMix.color(value));
   }
 
   /// Factory for border radius
   factory RemixBadgeStyle.borderRadius(double radius) {
     return RemixBadgeStyle(
-      container: ContainerSpecMix(
+      container: BoxMix(
         decoration: BoxDecorationMix(
           borderRadius: BorderRadiusMix.circular(radius),
         ),
@@ -63,7 +63,7 @@ class RemixBadgeStyle extends Style<BadgeSpec>
   /// Factory for padding
   factory RemixBadgeStyle.padding(double value) {
     return RemixBadgeStyle(
-      container: ContainerSpecMix.padding(EdgeInsetsGeometryMix.all(value)),
+      container: BoxMix.padding(EdgeInsetsGeometryMix.all(value)),
     );
   }
 
@@ -116,11 +116,16 @@ class RemixBadgeStyle extends Style<BadgeSpec>
   }
 
   @override
-  BadgeSpec resolve(BuildContext context) {
-    return BadgeSpec(
-      container: MixOps.resolve(context, $container),
-      text: MixOps.resolve(context, $text),
-      icon: MixOps.resolve(context, $icon),
+  WidgetSpec<BadgeSpec> resolve(BuildContext context) {
+    return WidgetSpec(
+      spec: BadgeSpec(
+        container: MixOps.resolve(context, $container),
+        text: MixOps.resolve(context, $text),
+        icon: MixOps.resolve(context, $icon),
+      ),
+      animation: $animation,
+      widgetModifiers: $modifier?.resolve(context),
+      inherit: $inherit,
     );
   }
 
@@ -152,7 +157,7 @@ class RemixBadgeStyle extends Style<BadgeSpec>
 }
 
 final DefaultRemixBadgeStyle = RemixBadgeStyle(
-  container: ContainerSpecMix(
+  container: BoxMix(
     decoration: BoxDecorationMix(
       borderRadius: BorderRadiusMix.circular(RemixTokens.radiusSm()),
       color: RemixTokens.surfaceVariant(),
@@ -169,15 +174,17 @@ final DefaultRemixBadgeStyle = RemixBadgeStyle(
       fontWeight: FontWeight.w500,
     ),
   ),
-  icon:
-      IconMix(color: RemixTokens.textPrimary(), size: RemixTokens.iconSizeSm()),
+  icon: IconMix(
+    color: RemixTokens.textPrimary(),
+    size: RemixTokens.iconSizeSm(),
+  ),
 );
 
 /// Default badge styles and variants
 class RemixBadgeStyles {
   /// Default badge style
   static RemixBadgeStyle get defaultStyle => RemixBadgeStyle(
-        container: ContainerSpecMix(
+        container: BoxMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(RemixTokens.radiusSm()),
             color: RemixTokens.surfaceVariant(),
@@ -202,7 +209,7 @@ class RemixBadgeStyles {
 
   /// Primary badge variant
   static RemixBadgeStyle get primary => RemixBadgeStyle(
-        container: ContainerSpecMix(
+        container: BoxMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(RemixTokens.radiusSm()),
             color: RemixTokens.primary(),
@@ -227,7 +234,7 @@ class RemixBadgeStyles {
 
   /// Success badge variant
   static RemixBadgeStyle get success => RemixBadgeStyle(
-        container: ContainerSpecMix(
+        container: BoxMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(RemixTokens.radiusSm()),
             color: RemixTokens.success(),
@@ -252,7 +259,7 @@ class RemixBadgeStyles {
 
   /// Warning badge variant
   static RemixBadgeStyle get warning => RemixBadgeStyle(
-        container: ContainerSpecMix(
+        container: BoxMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(RemixTokens.radiusSm()),
             color: RemixTokens.warning(),
@@ -277,7 +284,7 @@ class RemixBadgeStyles {
 
   /// Danger badge variant
   static RemixBadgeStyle get danger => RemixBadgeStyle(
-        container: ContainerSpecMix(
+        container: BoxMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(RemixTokens.radiusSm()),
             color: RemixTokens.danger(),

@@ -1,42 +1,30 @@
 part of 'checkbox.dart';
 
-class CheckboxSpec extends WidgetSpec<CheckboxSpec> {
-  final ContainerSpec container;
-  final FlexLayoutSpec flex;
-  final ContainerSpec indicatorContainer;
-  final IconographySpec indicator;
-  final TypographySpec label;
+class CheckboxSpec extends Spec<CheckboxSpec> with Diagnosticable {
+  final BoxSpec container;
+  final FlexSpec flex;
+  final BoxSpec indicatorContainer;
+  final IconSpec indicator;
+  final TextSpec label;
 
   const CheckboxSpec({
-    ContainerSpec? container,
-    FlexLayoutSpec? flex,
-    ContainerSpec? indicatorContainer,
-    IconographySpec? indicator,
-    TypographySpec? label,
-    AnimationConfig? animation,
-    List<Modifier>? widgetModifiers,
-    bool? inherit,
-  })  : container = container ?? const ContainerSpec(),
-        flex = flex ?? const FlexLayoutSpec(),
-        indicatorContainer = indicatorContainer ?? const ContainerSpec(),
-        indicator = indicator ?? const IconographySpec(),
-        label = label ?? const TypographySpec(),
-        super(
-          animation: animation,
-          widgetModifiers: widgetModifiers,
-          inherit: inherit,
-        );
+    BoxSpec? container,
+    FlexSpec? flex,
+    BoxSpec? indicatorContainer,
+    IconSpec? indicator,
+    TextSpec? label,
+  })  : container = container ?? const BoxSpec(),
+        flex = flex ?? const FlexSpec(),
+        indicatorContainer = indicatorContainer ?? const BoxSpec(),
+        indicator = indicator ?? const IconSpec(),
+        label = label ?? const TextSpec();
 
-  @override
   CheckboxSpec copyWith({
-    ContainerSpec? container,
-    FlexLayoutSpec? flex,
-    ContainerSpec? indicatorContainer,
-    IconographySpec? indicator,
-    TypographySpec? label,
-    AnimationConfig? animation,
-    List<Modifier>? widgetModifiers,
-    bool? inherit,
+    BoxSpec? container,
+    FlexSpec? flex,
+    BoxSpec? indicatorContainer,
+    IconSpec? indicator,
+    TextSpec? label,
   }) {
     return CheckboxSpec(
       container: container ?? this.container,
@@ -44,13 +32,9 @@ class CheckboxSpec extends WidgetSpec<CheckboxSpec> {
       indicatorContainer: indicatorContainer ?? this.indicatorContainer,
       indicator: indicator ?? this.indicator,
       label: label ?? this.label,
-      animation: animation ?? this.animation,
-      widgetModifiers: widgetModifiers ?? this.widgetModifiers,
-      inherit: inherit ?? this.inherit,
     );
   }
 
-  @override
   CheckboxSpec lerp(CheckboxSpec? other, double t) {
     if (other == null) return this;
 
@@ -61,9 +45,6 @@ class CheckboxSpec extends WidgetSpec<CheckboxSpec> {
           MixOps.lerp(indicatorContainer, other.indicatorContainer, t)!,
       indicator: MixOps.lerp(indicator, other.indicator, t)!,
       label: MixOps.lerp(label, other.label, t)!,
-      animation: MixOps.lerp(animation, other.animation, t),
-      widgetModifiers: MixOps.lerp(widgetModifiers, other.widgetModifiers, t),
-      inherit: MixOps.lerp(inherit, other.inherit, t),
     );
   }
 
@@ -80,5 +61,5 @@ class CheckboxSpec extends WidgetSpec<CheckboxSpec> {
 
   @override
   List<Object?> get props =>
-      [...super.props, container, flex, indicatorContainer, indicator, label];
+      [container, flex, indicatorContainer, indicator, label];
 }

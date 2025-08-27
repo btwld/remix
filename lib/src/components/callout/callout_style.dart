@@ -4,12 +4,12 @@ class RemixCalloutStyle extends Style<CalloutSpec>
     with
         StyleModifierMixin<RemixCalloutStyle, CalloutSpec>,
         StyleVariantMixin<RemixCalloutStyle, CalloutSpec> {
-  final Prop<ContainerSpec>? $container;
+  final Prop<BoxSpec>? $container;
   final Prop<TextSpec>? $text;
   final Prop<IconSpec>? $icon;
 
   const RemixCalloutStyle.create({
-    Prop<ContainerSpec>? container,
+    Prop<BoxSpec>? container,
     Prop<TextSpec>? text,
     Prop<IconSpec>? icon,
     super.variants,
@@ -21,7 +21,7 @@ class RemixCalloutStyle extends Style<CalloutSpec>
         $icon = icon;
 
   RemixCalloutStyle({
-    ContainerSpecMix? container,
+    BoxMix? container,
     TextMix? text,
     IconMix? icon,
     AnimationConfig? animation,
@@ -29,9 +29,9 @@ class RemixCalloutStyle extends Style<CalloutSpec>
     ModifierConfig? modifier,
     bool? inherit,
   }) : this.create(
-          container: container != null ? Prop.mix(container) : null,
-          text: text != null ? Prop.mix(text) : null,
-          icon: icon != null ? Prop.mix(icon) : null,
+          container: Prop.maybeMix(container),
+          text: Prop.maybeMix(text),
+          icon: Prop.maybeMix(icon),
           variants: variants,
           animation: animation,
           modifier: modifier,
@@ -39,17 +39,22 @@ class RemixCalloutStyle extends Style<CalloutSpec>
         );
 
   factory RemixCalloutStyle.value(CalloutSpec spec) => RemixCalloutStyle(
-        container: ContainerSpecMix.maybeValue(spec.container),
+        container: BoxMix.maybeValue(spec.container),
         text: TextMix.maybeValue(spec.text),
         icon: IconMix.maybeValue(spec.icon),
       );
 
   @override
-  CalloutSpec resolve(BuildContext context) {
-    return CalloutSpec(
-      container: MixOps.resolve(context, $container),
-      text: MixOps.resolve(context, $text),
-      icon: MixOps.resolve(context, $icon),
+  WidgetSpec<CalloutSpec> resolve(BuildContext context) {
+    return WidgetSpec(
+      spec: CalloutSpec(
+        container: MixOps.resolve(context, $container),
+        text: MixOps.resolve(context, $text),
+        icon: MixOps.resolve(context, $icon),
+      ),
+      animation: $animation,
+      widgetModifiers: $modifier?.resolve(context),
+      inherit: $inherit,
     );
   }
 
@@ -96,7 +101,7 @@ class RemixCalloutStyle extends Style<CalloutSpec>
 }
 
 final DefaultRemixCalloutStyle = RemixCalloutStyle(
-  container: ContainerSpecMix(
+  container: BoxMix(
     decoration: BoxDecorationMix(
       border: BoxBorderMix.all(BorderSideMix(
         color: RemixTokens.border(),
@@ -120,7 +125,7 @@ final DefaultRemixCalloutStyle = RemixCalloutStyle(
 extension CalloutVariants on RemixCalloutStyle {
   /// Info callout variant with blue colors
   static RemixCalloutStyle get info => RemixCalloutStyle(
-        container: ContainerSpecMix(
+        container: BoxMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
               color: RemixTokens.primary().withValues(alpha: 0.6),
@@ -143,7 +148,7 @@ extension CalloutVariants on RemixCalloutStyle {
 
   /// Success callout variant with green colors
   static RemixCalloutStyle get success => RemixCalloutStyle(
-        container: ContainerSpecMix(
+        container: BoxMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
               color: RemixTokens.success().withValues(alpha: 0.6),
@@ -166,7 +171,7 @@ extension CalloutVariants on RemixCalloutStyle {
 
   /// Warning callout variant with orange colors
   static RemixCalloutStyle get warning => RemixCalloutStyle(
-        container: ContainerSpecMix(
+        container: BoxMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
               color: RemixTokens.warning().withValues(alpha: 0.6),
@@ -189,7 +194,7 @@ extension CalloutVariants on RemixCalloutStyle {
 
   /// Error callout variant with red colors
   static RemixCalloutStyle get error => RemixCalloutStyle(
-        container: ContainerSpecMix(
+        container: BoxMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
               color: RemixTokens.danger().withValues(alpha: 0.6),

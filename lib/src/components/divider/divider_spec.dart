@@ -1,50 +1,29 @@
 part of 'divider.dart';
 
-class DividerSpec extends WidgetSpec<DividerSpec> {
-  final ContainerSpec container;
+class DividerSpec extends Spec<DividerSpec> with Diagnosticable {
+  final BoxSpec container;
 
-  const DividerSpec({
-    ContainerSpec? container,
-    AnimationConfig? animation,
-    List<Modifier>? widgetModifiers,
-    bool? inherit,
-  })  : container = container ?? const ContainerSpec(),
-        super(animation: animation, widgetModifiers: widgetModifiers, inherit: inherit);
+  const DividerSpec({BoxSpec? container})
+      : container = container ?? const BoxSpec();
 
-  @override
-  DividerSpec copyWith({
-    ContainerSpec? container,
-    AnimationConfig? animation,
-    List<Modifier>? widgetModifiers,
-    bool? inherit,
-  }) {
-    return DividerSpec(
-      container: container ?? this.container,
-      animation: animation ?? this.animation,
-      widgetModifiers: widgetModifiers ?? this.widgetModifiers,
-      inherit: inherit ?? this.inherit,
-    );
+  DividerSpec copyWith({BoxSpec? container}) {
+    return DividerSpec(container: container ?? this.container);
   }
 
-  @override
   DividerSpec lerp(DividerSpec? other, double t) {
     if (other == null) return this;
 
     return DividerSpec(
       container: MixOps.lerp(container, other.container, t)!,
-      animation: MixOps.lerp(animation, other.animation, t),
-      widgetModifiers: MixOps.lerp(widgetModifiers, other.widgetModifiers, t),
-      inherit: MixOps.lerp(inherit, other.inherit, t),
     );
   }
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('container', container));
+    properties..add(DiagnosticsProperty('container', container));
   }
 
   @override
-  List<Object?> get props => [...super.props, container];
+  List<Object?> get props => [container];
 }

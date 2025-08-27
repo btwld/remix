@@ -13,7 +13,7 @@ void main() {
           RemixButton(
             key: const ValueKey(TestDataBuilder.defaultButtonKey),
             label: TestDataBuilder.sampleLabel,
-            icon: Icons.star,
+            leading: Icons.star,
             onPressed: () {
               // Button tap handler
             },
@@ -160,7 +160,7 @@ void main() {
           RemixButton(
             key: const ValueKey('button_leading'),
             label: 'Leading Icon',
-            icon: Icons.arrow_back,
+            leading: Icons.arrow_back,
             onPressed: () {
               // Button tap handler
             },
@@ -176,7 +176,7 @@ void main() {
           RemixButton(
             key: const ValueKey('button_trailing'),
             label: 'Trailing Icon',
-            icon: Icons.arrow_forward,
+            leading: Icons.arrow_forward,
             onPressed: () {
               // Button tap handler
             },
@@ -328,7 +328,7 @@ void main() {
           RemixButton(
             key: const ValueKey(TestDataBuilder.defaultButtonKey),
             label: 'Orientation Test',
-            icon: Icons.screen_rotation,
+            leading: Icons.screen_rotation,
             onPressed: () {
               // Button tap handler
             },

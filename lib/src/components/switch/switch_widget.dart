@@ -101,7 +101,6 @@ class _RemixSwitchState extends State<RemixSwitch>
       autofocus: widget.autofocus,
       onFocusChange: widget.onFocusChange,
       onHoverChange: widget.onHoverChange,
-      onPressChanged: widget.onHighlightChanged,
       onStatesChange: widget.onStateChange,
       statesController: controller,
       child: StyleBuilder(

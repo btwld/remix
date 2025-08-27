@@ -98,19 +98,13 @@ class _RemixChipState extends State<RemixChip>
         controller: controller,
         builder: (context, spec) {
           final Container = spec.container;
-          final Flex = spec.flex;
           final LeadingIcon = spec.leading;
           final Label = spec.label;
           final TrailingIcon = spec.trailing;
 
           // Use custom child if provided
           if (widget.child != null) {
-            return Container(
-              child: Flex(
-                direction: Axis.horizontal,
-                children: [widget.child!],
-              ),
-            );
+            return Container(child: Row(children: [widget.child!]));
           }
 
           // Build chip content progressively

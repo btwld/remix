@@ -70,34 +70,14 @@ Widget createLabelWidget(
   final TextWidget = spec.label;
   final LeadingIconWidget = spec.leading;
   final TrailingIconWidget = spec.trailing;
+  final FlexWidget = spec.flex;
 
-  final children = <Widget>[];
-
-  // Add leading icon
-  if (leading != null) {
-    children.add(LeadingIconWidget(icon: leading));
-  }
-
-  // Add text
-  children.add(TextWidget(text));
-
-  // Add trailing icon
-  if (trailing != null) {
-    children.add(TrailingIconWidget(icon: trailing));
-  }
-
-  return Flex(
-    direction: spec.flex.direction ?? Axis.horizontal,
-    mainAxisAlignment: spec.flex.mainAxisAlignment ?? MainAxisAlignment.start,
-    mainAxisSize: spec.flex.mainAxisSize ?? MainAxisSize.min,
-    crossAxisAlignment:
-        spec.flex.crossAxisAlignment ?? CrossAxisAlignment.center,
-    textDirection: spec.flex.textDirection,
-    verticalDirection: spec.flex.verticalDirection ?? VerticalDirection.down,
-    textBaseline: spec.flex.textBaseline,
-    clipBehavior: spec.flex.clipBehavior ?? Clip.none,
-    spacing: spec.flex.spacing ?? 0,
-    children: children,
+  return FlexWidget(
+    children: [
+      if (leading != null) LeadingIconWidget(icon: leading),
+      TextWidget(text),
+      if (trailing != null) TrailingIconWidget(icon: trailing),
+    ],
   );
 }
 
