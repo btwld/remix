@@ -4,15 +4,13 @@ class RemixRadioStyle extends Style<RadioSpec>
     with
         StyleModifierMixin<RemixRadioStyle, RadioSpec>,
         StyleVariantMixin<RemixRadioStyle, RadioSpec> {
-  final Prop<BoxSpec>? $container;
-  final Prop<FlexSpec>? $flex;
+  final Prop<FlexBoxSpec>? $container;
   final Prop<BoxSpec>? $indicatorContainer;
   final Prop<BoxSpec>? $indicator;
   final Prop<TextSpec>? $label;
 
   const RemixRadioStyle.create({
-    Prop<BoxSpec>? container,
-    Prop<FlexSpec>? flex,
+    Prop<FlexBoxSpec>? container,
     Prop<BoxSpec>? indicatorContainer,
     Prop<BoxSpec>? indicator,
     Prop<TextSpec>? label,
@@ -21,14 +19,12 @@ class RemixRadioStyle extends Style<RadioSpec>
     super.modifier,
     super.inherit,
   })  : $container = container,
-        $flex = flex,
         $indicatorContainer = indicatorContainer,
         $indicator = indicator,
         $label = label;
 
   RemixRadioStyle({
-    BoxMix? container,
-    FlexMix? flex,
+    FlexBoxMix? container,
     BoxMix? indicatorContainer,
     BoxMix? indicator,
     TextMix? label,
@@ -38,7 +34,6 @@ class RemixRadioStyle extends Style<RadioSpec>
     bool? inherit,
   }) : this.create(
           container: Prop.maybeMix(container),
-          flex: Prop.maybeMix(flex),
           indicatorContainer: Prop.maybeMix(indicatorContainer),
           indicator: Prop.maybeMix(indicator),
           label: Prop.maybeMix(label),
@@ -49,8 +44,7 @@ class RemixRadioStyle extends Style<RadioSpec>
         );
 
   factory RemixRadioStyle.value(RadioSpec spec) => RemixRadioStyle(
-        container: BoxMix.maybeValue(spec.container),
-        flex: FlexMix.maybeValue(spec.flex),
+        container: FlexBoxMix.maybeValue(spec.container),
         indicatorContainer: BoxMix.maybeValue(spec.indicatorContainer),
         indicator: BoxMix.maybeValue(spec.indicator),
         label: TextMix.maybeValue(spec.label),
@@ -76,7 +70,6 @@ class RemixRadioStyle extends Style<RadioSpec>
     return WidgetSpec(
       spec: RadioSpec(
         container: MixOps.resolve(context, $container),
-        flex: MixOps.resolve(context, $flex),
         indicatorContainer: MixOps.resolve(context, $indicatorContainer),
         indicator: MixOps.resolve(context, $indicator),
         label: MixOps.resolve(context, $label),
@@ -93,7 +86,6 @@ class RemixRadioStyle extends Style<RadioSpec>
 
     return RemixRadioStyle.create(
       container: MixOps.merge($container, other.$container),
-      flex: MixOps.merge($flex, other.$flex),
       indicatorContainer:
           MixOps.merge($indicatorContainer, other.$indicatorContainer),
       indicator: MixOps.merge($indicator, other.$indicator),
@@ -108,7 +100,6 @@ class RemixRadioStyle extends Style<RadioSpec>
   @override
   List<Object?> get props => [
         $container,
-        $flex,
         $indicatorContainer,
         $indicator,
         $label,
@@ -120,12 +111,14 @@ class RemixRadioStyle extends Style<RadioSpec>
 }
 
 final DefaultRemixRadioStyle = RemixRadioStyle(
-  container: BoxMix(alignment: Alignment.centerLeft),
-  flex: FlexMix(
-    direction: Axis.horizontal,
-    crossAxisAlignment: CrossAxisAlignment.center,
-    mainAxisSize: MainAxisSize.min,
-    spacing: RemixTokens.spaceSm(),
+  container: FlexBoxMix(
+    box: BoxMix(alignment: Alignment.centerLeft),
+    flex: FlexMix(
+      direction: Axis.horizontal,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      spacing: RemixTokens.spaceSm(),
+    ),
   ),
   indicatorContainer: BoxMix(
     decoration: BoxDecorationMix(
@@ -167,12 +160,14 @@ final DefaultRemixRadioStyle = RemixRadioStyle(
 extension RadioVariants on RemixRadioStyle {
   /// Primary radio variant with blue colors
   static RemixRadioStyle get primary => RemixRadioStyle(
-        container: BoxMix(alignment: Alignment.centerLeft),
-        flex: FlexMix(
-          direction: Axis.horizontal,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          spacing: RemixTokens.spaceSm(),
+        container: FlexBoxMix(
+          box: BoxMix(alignment: Alignment.centerLeft),
+          flex: FlexMix(
+            direction: Axis.horizontal,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            spacing: RemixTokens.spaceSm(),
+          ),
         ),
         indicatorContainer: BoxMix(
           decoration: BoxDecorationMix(
@@ -213,12 +208,14 @@ extension RadioVariants on RemixRadioStyle {
 
   /// Secondary radio variant with grey colors
   static RemixRadioStyle get secondary => RemixRadioStyle(
-        container: BoxMix(alignment: Alignment.centerLeft),
-        flex: FlexMix(
-          direction: Axis.horizontal,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          spacing: RemixTokens.spaceSm(),
+        container: FlexBoxMix(
+          box: BoxMix(alignment: Alignment.centerLeft),
+          flex: FlexMix(
+            direction: Axis.horizontal,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            spacing: RemixTokens.spaceSm(),
+          ),
         ),
         indicatorContainer: BoxMix(
           decoration: BoxDecorationMix(
@@ -259,12 +256,14 @@ extension RadioVariants on RemixRadioStyle {
 
   /// Compact radio variant with smaller size
   static RemixRadioStyle get compact => RemixRadioStyle(
-        container: BoxMix(alignment: Alignment.centerLeft),
-        flex: FlexMix(
-          direction: Axis.horizontal,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          spacing: RemixTokens.spaceXs(),
+        container: FlexBoxMix(
+          box: BoxMix(alignment: Alignment.centerLeft),
+          flex: FlexMix(
+            direction: Axis.horizontal,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            spacing: RemixTokens.spaceXs(),
+          ),
         ),
         indicatorContainer: BoxMix(
           decoration: BoxDecorationMix(

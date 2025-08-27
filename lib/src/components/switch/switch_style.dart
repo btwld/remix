@@ -120,7 +120,7 @@ final DefaultRemixSwitchStyle = RemixSwitchStyle(
       color: RemixTokens.background(),
       boxShadow: [
         BoxShadowMix(
-          color: RemixTokens.textPrimary().withValues(alpha: 0.2),
+          color: Colors.black.withValues(alpha: 0.2),
           offset: const Offset(0, 1),
           blurRadius: 2,
         ),
@@ -143,7 +143,7 @@ extension SwitchVariants on RemixSwitchStyle {
         track: BoxMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(RemixTokens.radiusXl()),
-            color: RemixTokens.primary().withValues(alpha: 0.2),
+            color: RemixTokens.primary(),
           ),
           constraints: BoxConstraintsMix(
             minWidth: 44,
@@ -158,7 +158,7 @@ extension SwitchVariants on RemixSwitchStyle {
             color: RemixTokens.primary(),
             boxShadow: [
               BoxShadowMix(
-                color: RemixTokens.primary().withValues(alpha: 0.3),
+                color: Colors.black.withValues(alpha: 0.3),
                 offset: const Offset(0, 1),
                 blurRadius: 2,
               ),
@@ -195,7 +195,7 @@ extension SwitchVariants on RemixSwitchStyle {
             color: RemixTokens.textSecondary(),
             boxShadow: [
               BoxShadowMix(
-                color: RemixTokens.textSecondary().withValues(alpha: 0.3),
+                color: Colors.black.withValues(alpha: 0.3),
                 offset: const Offset(0, 1),
                 blurRadius: 2,
               ),
@@ -232,7 +232,7 @@ extension SwitchVariants on RemixSwitchStyle {
             color: RemixTokens.background(),
             boxShadow: [
               BoxShadowMix(
-                color: RemixTokens.textPrimary().withValues(alpha: 0.1),
+                color: Colors.black.withValues(alpha: 0.1),
                 offset: const Offset(0, 1),
                 blurRadius: 1,
               ),

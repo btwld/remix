@@ -4,44 +4,50 @@ import 'package:remix/remix.dart';
 
 void main() {
   group('SelectableMixin Behavior Tests', () {
-    testWidgets('RemixRadio updates stateController.selected when groupValue changes', 
+    testWidgets(
+        'RemixRadio updates stateController.selected when groupValue changes',
         (tester) async {
       String groupValue = 'option1';
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: StatefulBuilder(
-              builder: (context, setState) {
-                return RemixRadioGroup<String>(
-                  groupValue: groupValue,
-                  onChanged: (value) {
-                    setState(() {
-                      groupValue = value!;
-                    });
-                  },
-                  child: Column(
-                    children: [
-                      RemixRadio<String>(
-                        key: const Key('radio1'),
-                        value: 'option1',
-                      ),
-                      RemixRadio<String>(
-                        key: const Key('radio2'),
-                        value: 'option2',
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          setState(() {
-                            groupValue = groupValue == 'option1' ? 'option2' : 'option1';
-                          });
-                        },
-                        child: const Text('Toggle'),
-                      ),
-                    ],
-                  ),
-                );
-              },
+        createRemixScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: StatefulBuilder(
+                builder: (context, setState) {
+                  return RemixRadioGroup<String>(
+                    groupValue: groupValue,
+                    onChanged: (value) {
+                      setState(() {
+                        groupValue = value!;
+                      });
+                    },
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        RemixRadio<String>(
+                          key: const Key('radio1'),
+                          value: 'option1',
+                        ),
+                        RemixRadio<String>(
+                          key: const Key('radio2'),
+                          value: 'option2',
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            setState(() {
+                              groupValue = groupValue == 'option1'
+                                  ? 'option2'
+                                  : 'option1';
+                            });
+                          },
+                          child: const Text('Toggle'),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
             ),
           ),
         ),
@@ -61,36 +67,39 @@ void main() {
       expect(groupValue, 'option1');
     });
 
-    testWidgets('RemixRadio in group context properly manages selected state', 
+    testWidgets('RemixRadio in group context properly manages selected state',
         (tester) async {
       String groupValue = 'A';
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: StatefulBuilder(
-              builder: (context, setState) {
-                return RemixRadioGroup<String>(
-                  groupValue: groupValue,
-                  onChanged: (value) {
-                    setState(() {
-                      groupValue = value!;
-                    });
-                  },
-                  child: Column(
-                    children: [
-                      RemixRadio<String>(
-                        key: const Key('radioA'),
-                        value: 'A',
-                      ),
-                      RemixRadio<String>(
-                        key: const Key('radioB'),
-                        value: 'B',
-                      ),
-                    ],
-                  ),
-                );
-              },
+        createRemixScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: StatefulBuilder(
+                builder: (context, setState) {
+                  return RemixRadioGroup<String>(
+                    groupValue: groupValue,
+                    onChanged: (value) {
+                      setState(() {
+                        groupValue = value!;
+                      });
+                    },
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        RemixRadio<String>(
+                          key: const Key('radioA'),
+                          value: 'A',
+                        ),
+                        RemixRadio<String>(
+                          key: const Key('radioB'),
+                          value: 'B',
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
             ),
           ),
         ),
@@ -110,7 +119,7 @@ void main() {
       expect(groupValue, 'A');
     });
 
-    testWidgets('RemixCheckbox properly handles nullable bool in onChanged', 
+    testWidgets('RemixCheckbox properly handles nullable bool in onChanged',
         (tester) async {
       bool? isChecked = false;
 
@@ -178,7 +187,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(tristateValue, true);
 
-      // Second tap: true -> false  
+      // Second tap: true -> false
       await tester.tap(find.byType(RemixCheckbox));
       await tester.pumpAndSettle();
       expect(tristateValue, false);
@@ -189,43 +198,47 @@ void main() {
       expect(tristateValue, isNull);
     });
 
-    testWidgets('Multiple RemixRadio widgets in group maintain mutual exclusivity', 
+    testWidgets(
+        'Multiple RemixRadio widgets in group maintain mutual exclusivity',
         (tester) async {
       String? selectedValue = 'first';
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: StatefulBuilder(
-              builder: (context, setState) {
-                return RemixRadioGroup<String>(
-                  groupValue: selectedValue,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedValue = value;
-                    });
-                  },
-                  child: Column(
-                    children: [
-                      RemixRadio<String>(
-                        key: const Key('first'),
-                        value: 'first',
-                        label: 'First Option',
-                      ),
-                      RemixRadio<String>(
-                        key: const Key('second'),
-                        value: 'second',
-                        label: 'Second Option',
-                      ),
-                      RemixRadio<String>(
-                        key: const Key('third'),
-                        value: 'third',
-                        label: 'Third Option',
-                      ),
-                    ],
-                  ),
-                );
-              },
+        createRemixScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: StatefulBuilder(
+                builder: (context, setState) {
+                  return RemixRadioGroup<String>(
+                    groupValue: selectedValue,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedValue = value;
+                      });
+                    },
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        RemixRadio<String>(
+                          key: const Key('first'),
+                          value: 'first',
+                          label: 'First Option',
+                        ),
+                        RemixRadio<String>(
+                          key: const Key('second'),
+                          value: 'second',
+                          label: 'Second Option',
+                        ),
+                        RemixRadio<String>(
+                          key: const Key('third'),
+                          value: 'third',
+                          label: 'Third Option',
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
             ),
           ),
         ),
@@ -250,41 +263,44 @@ void main() {
       expect(selectedValue, 'first');
     });
 
-    testWidgets('RemixCheckbox handles both regular and tristate modes', (tester) async {
+    testWidgets('RemixCheckbox handles both regular and tristate modes',
+        (tester) async {
       bool regularChecked = false;
       bool? tristateValue = false;
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: StatefulBuilder(
-              builder: (context, setState) {
-                return Column(
-                  children: [
-                    // Regular checkbox
-                    RemixCheckbox(
-                      key: const Key('regular'),
-                      selected: regularChecked,
-                      onChanged: (value) {
-                        setState(() {
-                          regularChecked = value ?? false;
-                        });
-                      },
-                    ),
-                    // Tristate checkbox  
-                    RemixCheckbox(
-                      key: const Key('tristate'),
-                      tristate: true,
-                      selected: tristateValue,
-                      onChanged: (value) {
-                        setState(() {
-                          tristateValue = value;
-                        });
-                      },
-                    ),
-                  ],
-                );
-              },
+        createRemixScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: StatefulBuilder(
+                builder: (context, setState) {
+                  return Column(
+                    children: [
+                      // Regular checkbox
+                      RemixCheckbox(
+                        key: const Key('regular'),
+                        selected: regularChecked,
+                        onChanged: (value) {
+                          setState(() {
+                            regularChecked = value ?? false;
+                          });
+                        },
+                      ),
+                      // Tristate checkbox
+                      RemixCheckbox(
+                        key: const Key('tristate'),
+                        tristate: true,
+                        selected: tristateValue,
+                        onChanged: (value) {
+                          setState(() {
+                            tristateValue = value;
+                          });
+                        },
+                      ),
+                    ],
+                  );
+                },
+              ),
             ),
           ),
         ),

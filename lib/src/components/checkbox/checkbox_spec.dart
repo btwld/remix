@@ -1,34 +1,29 @@
 part of 'checkbox.dart';
 
 class CheckboxSpec extends Spec<CheckboxSpec> with Diagnosticable {
-  final BoxSpec container;
-  final FlexSpec flex;
+  final FlexBoxSpec container;
   final BoxSpec indicatorContainer;
   final IconSpec indicator;
   final TextSpec label;
 
   const CheckboxSpec({
-    BoxSpec? container,
-    FlexSpec? flex,
+    FlexBoxSpec? container,
     BoxSpec? indicatorContainer,
     IconSpec? indicator,
     TextSpec? label,
-  })  : container = container ?? const BoxSpec(),
-        flex = flex ?? const FlexSpec(),
+  })  : container = container ?? const FlexBoxSpec(),
         indicatorContainer = indicatorContainer ?? const BoxSpec(),
         indicator = indicator ?? const IconSpec(),
         label = label ?? const TextSpec();
 
   CheckboxSpec copyWith({
-    BoxSpec? container,
-    FlexSpec? flex,
+    FlexBoxSpec? container,
     BoxSpec? indicatorContainer,
     IconSpec? indicator,
     TextSpec? label,
   }) {
     return CheckboxSpec(
       container: container ?? this.container,
-      flex: flex ?? this.flex,
       indicatorContainer: indicatorContainer ?? this.indicatorContainer,
       indicator: indicator ?? this.indicator,
       label: label ?? this.label,
@@ -40,7 +35,6 @@ class CheckboxSpec extends Spec<CheckboxSpec> with Diagnosticable {
 
     return CheckboxSpec(
       container: MixOps.lerp(container, other.container, t)!,
-      flex: MixOps.lerp(flex, other.flex, t)!,
       indicatorContainer:
           MixOps.lerp(indicatorContainer, other.indicatorContainer, t)!,
       indicator: MixOps.lerp(indicator, other.indicator, t)!,
@@ -53,7 +47,6 @@ class CheckboxSpec extends Spec<CheckboxSpec> with Diagnosticable {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', container))
-      ..add(DiagnosticsProperty('flex', flex))
       ..add(DiagnosticsProperty('indicatorContainer', indicatorContainer))
       ..add(DiagnosticsProperty('indicator', indicator))
       ..add(DiagnosticsProperty('label', label));
@@ -61,5 +54,5 @@ class CheckboxSpec extends Spec<CheckboxSpec> with Diagnosticable {
 
   @override
   List<Object?> get props =>
-      [container, flex, indicatorContainer, indicator, label];
+      [container, indicatorContainer, indicator, label];
 }

@@ -55,13 +55,15 @@ class RemixButtonStyle extends Style<ButtonSpec>
 
   /// Factory for background color
   factory RemixButtonStyle.color(Color value) {
-    return RemixButtonStyle(container: BoxMix.color(value));
+    return RemixButtonStyle(
+      container: BoxMix(decoration: BoxDecorationMix(color: value)),
+    );
   }
 
   /// Factory for padding
   factory RemixButtonStyle.padding(double value) {
     return RemixButtonStyle(
-      container: BoxMix.padding(EdgeInsetsGeometryMix.all(value)),
+      container: BoxMix(padding: EdgeInsetsGeometryMix.all(value)),
     );
   }
 
@@ -79,8 +81,8 @@ class RemixButtonStyle extends Style<ButtonSpec>
   /// Factory for width
   factory RemixButtonStyle.width(double value) {
     return RemixButtonStyle(
-      container: BoxMix.constraints(
-        BoxConstraintsMix(minWidth: value, maxWidth: value),
+      container: BoxMix(
+        constraints: BoxConstraintsMix(minWidth: value, maxWidth: value),
       ),
     );
   }
@@ -88,8 +90,8 @@ class RemixButtonStyle extends Style<ButtonSpec>
   /// Factory for height
   factory RemixButtonStyle.height(double value) {
     return RemixButtonStyle(
-      container: BoxMix.constraints(
-        BoxConstraintsMix(minHeight: value, maxHeight: value),
+      container: BoxMix(
+        constraints: BoxConstraintsMix(minHeight: value, maxHeight: value),
       ),
     );
   }
@@ -97,8 +99,8 @@ class RemixButtonStyle extends Style<ButtonSpec>
   /// Factory for size (width and height)
   factory RemixButtonStyle.size(double width, double height) {
     return RemixButtonStyle(
-      container: BoxMix.constraints(
-        BoxConstraintsMix(
+      container: BoxMix(
+        constraints: BoxConstraintsMix(
           minWidth: width,
           maxWidth: width,
           minHeight: height,
@@ -292,7 +294,7 @@ final DefaultRemixButtonStyle = RemixButtonStyle(
     strokeWidth: 1.5,
     color: RemixTokens.surface(),
     duration: const Duration(milliseconds: 1000),
-    style: SpinnerStyle.solid,
+    style: SpinnerType.solid,
   ),
 );
 

@@ -370,23 +370,19 @@ class _RemixTextFieldState extends State<RemixTextField>
                   )
                 : editableText;
 
-            final Container = spec.container;
+            final FlexContainer = spec.container;
             final Label = spec.label;
             final HelperText = spec.helperText;
 
             // Add leading/trailing widgets if present
-            final withAccessories =
-                (widget.leading != null || widget.trailing != null)
-                    ? Container(
-                        child: Row(
-                          children: [
-                            if (widget.leading != null) widget.leading!,
-                            Expanded(child: editableWithHint),
-                            if (widget.trailing != null) widget.trailing!,
-                          ],
-                        ),
-                      )
-                    : Container(child: Row(children: [editableWithHint]));
+            final withAccessories = FlexContainer(
+              direction: Axis.horizontal,
+              children: [
+                if (widget.leading != null) widget.leading!,
+                Expanded(child: editableWithHint),
+                if (widget.trailing != null) widget.trailing!,
+              ],
+            );
 
             // Add label and helper text if present
             final needsWrapper =

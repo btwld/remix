@@ -46,7 +46,9 @@ class RemixBadgeStyle extends Style<BadgeSpec>
 
   /// Factory for background color
   factory RemixBadgeStyle.color(Color value) {
-    return RemixBadgeStyle(container: BoxMix.color(value));
+    return RemixBadgeStyle(
+      container: BoxMix(decoration: BoxDecorationMix(color: value)),
+    );
   }
 
   /// Factory for border radius
@@ -63,7 +65,7 @@ class RemixBadgeStyle extends Style<BadgeSpec>
   /// Factory for padding
   factory RemixBadgeStyle.padding(double value) {
     return RemixBadgeStyle(
-      container: BoxMix.padding(EdgeInsetsGeometryMix.all(value)),
+      container: BoxMix(padding: EdgeInsetsGeometryMix.all(value)),
     );
   }
 

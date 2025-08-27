@@ -140,8 +140,7 @@ class _RemixRadioState<T> extends State<RemixRadio<T>>
         builder: (context, spec) {
           final IndicatorContainer = spec.indicatorContainer;
           final Indicator = spec.indicator;
-          final Container = spec.container;
-          final Flex = spec.flex;
+          final FlexContainer = spec.container;
           final Label = spec.label;
 
           // Build the radio indicator
@@ -150,16 +149,14 @@ class _RemixRadioState<T> extends State<RemixRadio<T>>
           );
 
           // Add label if present
-          final radioWithLabel = widget.label != null
-              ? Container(
-                  child: Flex(
-                    direction: Axis.horizontal,
-                    children: [radioIndicator, Label(widget.label!)],
-                  ),
-                )
-              : radioIndicator;
+          if (widget.label == null) {
+            return radioIndicator;
+          }
 
-          return radioWithLabel;
+          return FlexContainer(
+            direction: Axis.horizontal,
+            children: [radioIndicator, Label(widget.label!)],
+          );
         },
       ),
     );

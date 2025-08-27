@@ -6,21 +6,23 @@ void main() {
   group('RemixCheckbox Simple Tests', () {
     testWidgets('renders and toggles', (tester) async {
       bool isChecked = false;
-      
+
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: StatefulBuilder(
-              builder: (context, setState) {
-                return RemixCheckbox(
-                  selected: isChecked,
-                  onChanged: (value) {
-                    setState(() {
-                      isChecked = value ?? false; // Handle nullable bool
-                    });
-                  },
-                );
-              },
+        createRemixScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: StatefulBuilder(
+                builder: (context, setState) {
+                  return RemixCheckbox(
+                    selected: isChecked,
+                    onChanged: (value) {
+                      setState(() {
+                        isChecked = value ?? false; // Handle nullable bool
+                      });
+                    },
+                  );
+                },
+              ),
             ),
           ),
         ),
@@ -28,12 +30,12 @@ void main() {
 
       // Initially unchecked
       expect(isChecked, false);
-      
+
       // Tap to check
       await tester.tap(find.byType(RemixCheckbox));
       await tester.pumpAndSettle();
       expect(isChecked, true);
-      
+
       // Tap to uncheck
       await tester.tap(find.byType(RemixCheckbox));
       await tester.pumpAndSettle();
@@ -42,11 +44,13 @@ void main() {
 
     testWidgets('shows label', (tester) async {
       await tester.pumpWidget(
-        const MaterialApp(
-          home: Scaffold(
-            body: RemixCheckbox(
-              selected: false,
-              label: 'Accept Terms',
+        createRemixScope(
+          child: const MaterialApp(
+            home: Scaffold(
+              body: RemixCheckbox(
+                selected: false,
+                label: 'Accept Terms',
+              ),
             ),
           ),
         ),
@@ -57,16 +61,18 @@ void main() {
 
     testWidgets('respects disabled state', (tester) async {
       bool isChecked = false;
-      
+
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: RemixCheckbox(
-              selected: isChecked,
-              enabled: false,
-              onChanged: (value) {
-                isChecked = value ?? false; // Handle nullable bool
-              },
+        createRemixScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: RemixCheckbox(
+                selected: isChecked,
+                enabled: false,
+                onChanged: (value) {
+                  isChecked = value ?? false; // Handle nullable bool
+                },
+              ),
             ),
           ),
         ),
@@ -74,7 +80,7 @@ void main() {
 
       await tester.tap(find.byType(RemixCheckbox));
       await tester.pumpAndSettle();
-      
+
       // Should not change when disabled
       expect(isChecked, false);
     });

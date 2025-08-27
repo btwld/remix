@@ -4,15 +4,13 @@ class RemixCheckboxStyle extends Style<CheckboxSpec>
     with
         StyleModifierMixin<RemixCheckboxStyle, CheckboxSpec>,
         StyleVariantMixin<RemixCheckboxStyle, CheckboxSpec> {
-  final Prop<BoxSpec>? $container;
-  final Prop<FlexSpec>? $flex;
+  final Prop<FlexBoxSpec>? $container;
   final Prop<BoxSpec>? $indicatorContainer;
   final Prop<IconSpec>? $indicator;
   final Prop<TextSpec>? $label;
 
   const RemixCheckboxStyle.create({
-    Prop<BoxSpec>? container,
-    Prop<FlexSpec>? flex,
+    Prop<FlexBoxSpec>? container,
     Prop<BoxSpec>? indicatorContainer,
     Prop<IconSpec>? indicator,
     Prop<TextSpec>? label,
@@ -21,14 +19,12 @@ class RemixCheckboxStyle extends Style<CheckboxSpec>
     super.modifier,
     super.inherit,
   })  : $container = container,
-        $flex = flex,
         $indicatorContainer = indicatorContainer,
         $indicator = indicator,
         $label = label;
 
   RemixCheckboxStyle({
-    BoxMix? container,
-    FlexMix? flex,
+    FlexBoxMix? container,
     BoxMix? indicatorContainer,
     IconMix? indicator,
     TextMix? label,
@@ -38,7 +34,6 @@ class RemixCheckboxStyle extends Style<CheckboxSpec>
     bool? inherit,
   }) : this.create(
           container: Prop.maybeMix(container),
-          flex: Prop.maybeMix(flex),
           indicatorContainer: Prop.maybeMix(indicatorContainer),
           indicator: Prop.maybeMix(indicator),
           label: Prop.maybeMix(label),
@@ -49,8 +44,7 @@ class RemixCheckboxStyle extends Style<CheckboxSpec>
         );
 
   factory RemixCheckboxStyle.value(CheckboxSpec spec) => RemixCheckboxStyle(
-        container: BoxMix.maybeValue(spec.container),
-        flex: FlexMix.maybeValue(spec.flex),
+        container: FlexBoxMix.maybeValue(spec.container),
         indicatorContainer: BoxMix.maybeValue(spec.indicatorContainer),
         indicator: IconMix.maybeValue(spec.indicator),
         label: TextMix.maybeValue(spec.label),
@@ -168,7 +162,6 @@ class RemixCheckboxStyle extends Style<CheckboxSpec>
     return WidgetSpec(
       spec: CheckboxSpec(
         container: MixOps.resolve(context, $container),
-        flex: MixOps.resolve(context, $flex),
         indicatorContainer: MixOps.resolve(context, $indicatorContainer),
         indicator: MixOps.resolve(context, $indicator),
         label: MixOps.resolve(context, $label),
@@ -185,7 +178,6 @@ class RemixCheckboxStyle extends Style<CheckboxSpec>
 
     return RemixCheckboxStyle.create(
       container: MixOps.merge($container, other.$container),
-      flex: MixOps.merge($flex, other.$flex),
       indicatorContainer:
           MixOps.merge($indicatorContainer, other.$indicatorContainer),
       indicator: MixOps.merge($indicator, other.$indicator),
@@ -200,7 +192,6 @@ class RemixCheckboxStyle extends Style<CheckboxSpec>
   @override
   List<Object?> get props => [
         $container,
-        $flex,
         $indicatorContainer,
         $indicator,
         $label,
@@ -212,12 +203,14 @@ class RemixCheckboxStyle extends Style<CheckboxSpec>
 }
 
 final DefaultRemixCheckboxStyle = RemixCheckboxStyle(
-  container: BoxMix(alignment: Alignment.centerLeft),
-  flex: FlexMix(
-    direction: Axis.horizontal,
-    crossAxisAlignment: CrossAxisAlignment.center,
-    mainAxisSize: MainAxisSize.min,
-    spacing: RemixTokens.spaceSm(),
+  container: FlexBoxMix(
+    box: BoxMix(alignment: Alignment.centerLeft),
+    flex: FlexMix(
+      direction: Axis.horizontal,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      spacing: RemixTokens.spaceSm(),
+    ),
   ),
   indicatorContainer: BoxMix(
     decoration: BoxDecorationMix(
@@ -251,12 +244,14 @@ final DefaultRemixCheckboxStyle = RemixCheckboxStyle(
 extension CheckboxVariants on RemixCheckboxStyle {
   /// Primary checkbox variant with blue colors
   static RemixCheckboxStyle get primary => RemixCheckboxStyle(
-        container: BoxMix(alignment: Alignment.centerLeft),
-        flex: FlexMix(
-          direction: Axis.horizontal,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          spacing: RemixTokens.spaceSm(),
+        container: FlexBoxMix(
+          box: BoxMix(alignment: Alignment.centerLeft),
+          flex: FlexMix(
+            direction: Axis.horizontal,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            spacing: RemixTokens.spaceSm(),
+          ),
         ),
         indicatorContainer: BoxMix(
           decoration: BoxDecorationMix(
@@ -289,12 +284,14 @@ extension CheckboxVariants on RemixCheckboxStyle {
 
   /// Secondary checkbox variant with grey colors
   static RemixCheckboxStyle get secondary => RemixCheckboxStyle(
-        container: BoxMix(alignment: Alignment.centerLeft),
-        flex: FlexMix(
-          direction: Axis.horizontal,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          spacing: RemixTokens.spaceSm(),
+        container: FlexBoxMix(
+          box: BoxMix(alignment: Alignment.centerLeft),
+          flex: FlexMix(
+            direction: Axis.horizontal,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            spacing: RemixTokens.spaceSm(),
+          ),
         ),
         indicatorContainer: BoxMix(
           decoration: BoxDecorationMix(
@@ -327,12 +324,14 @@ extension CheckboxVariants on RemixCheckboxStyle {
 
   /// Compact checkbox variant with smaller size
   static RemixCheckboxStyle get compact => RemixCheckboxStyle(
-        container: BoxMix(alignment: Alignment.centerLeft),
-        flex: FlexMix(
-          direction: Axis.horizontal,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          spacing: RemixTokens.spaceXs(),
+        container: FlexBoxMix(
+          box: BoxMix(alignment: Alignment.centerLeft),
+          flex: FlexMix(
+            direction: Axis.horizontal,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            spacing: RemixTokens.spaceXs(),
+          ),
         ),
         indicatorContainer: BoxMix(
           decoration: BoxDecorationMix(

@@ -442,8 +442,7 @@ class _RemixSelectTriggerState extends State<RemixSelectTrigger>
         controller: controller,
         builder: (context, spec) {
           final triggerSpec = spec.trigger;
-          final TriggerContainer = triggerSpec.container;
-
+          final FlexContainer = triggerSpec.container;
           final TriggerLabel = triggerSpec.label;
 
           // Build trigger content progressively
@@ -451,20 +450,12 @@ class _RemixSelectTriggerState extends State<RemixSelectTrigger>
 
           // If no custom child, build default content with label
           if (widget.child == null && widget.label != null) {
-            triggerContent = TriggerLabel(widget.label!);
-
-            // Add trailing icon if present
-            if (widget.trailing != null) {
-              triggerContent = TriggerContainer(
-                child: Row(
-                  children: [triggerContent, Icon(widget.trailing!)],
-                ),
-              );
-            }
-
-            // Wrap with container
-            triggerContent = TriggerContainer(
-              child: Row(children: [triggerContent]),
+            triggerContent = FlexContainer(
+              direction: Axis.horizontal,
+              children: [
+                Expanded(child: TriggerLabel(widget.label!)),
+                if (widget.trailing != null) Icon(widget.trailing!),
+              ],
             );
           }
 
@@ -578,7 +569,7 @@ class _RemixSelectItemState<T> extends State<RemixSelectItem<T>>
         controller: controller,
         builder: (context, spec) {
           final itemSpec = spec.item;
-          final ItemContainer = itemSpec.container;
+          final FlexContainer = itemSpec.container;
 
           // Use checkbox icon for multi-select, check icon for single select
           final IconData selectionIcon = isMultiSelect
@@ -597,15 +588,14 @@ class _RemixSelectItemState<T> extends State<RemixSelectItem<T>>
             itemContent = ItemText(widget.label!);
 
             // Add selection icon
-            itemContent = ItemContainer(
-              child: Row(
-                children: [itemContent, ItemIcon(icon: selectionIcon)],
-              ),
+            itemContent = FlexContainer(
+              direction: Axis.horizontal,
+              children: [itemContent, ItemIcon(icon: selectionIcon)],
             );
           }
 
           // Wrap with container
-          itemContent = ItemContainer(child: Row(children: [itemContent]));
+          itemContent = FlexContainer(direction: Axis.horizontal, children: [itemContent]);
 
           return itemContent;
         },

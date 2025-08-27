@@ -56,30 +56,25 @@ class SelectSpec extends Spec<SelectSpec> with Diagnosticable {
 }
 
 class SelectTriggerSpec extends Spec<SelectTriggerSpec> with Diagnosticable {
-  final BoxSpec container;
-  final FlexSpec flex;
+  final FlexBoxSpec container;
   final TextSpec label;
   final IconSpec icon;
 
   const SelectTriggerSpec({
-    BoxSpec? container,
-    FlexSpec? flex,
+    FlexBoxSpec? container,
     TextSpec? label,
     IconSpec? icon,
-  })  : container = container ?? const BoxSpec(),
-        flex = flex ?? const FlexSpec(),
+  })  : container = container ?? const FlexBoxSpec(),
         label = label ?? const TextSpec(),
         icon = icon ?? const IconSpec();
 
   SelectTriggerSpec copyWith({
-    BoxSpec? container,
-    FlexSpec? flex,
+    FlexBoxSpec? container,
     TextSpec? label,
     IconSpec? icon,
   }) {
     return SelectTriggerSpec(
       container: container ?? this.container,
-      flex: flex ?? this.flex,
       label: label ?? this.label,
       icon: icon ?? this.icon,
     );
@@ -90,7 +85,6 @@ class SelectTriggerSpec extends Spec<SelectTriggerSpec> with Diagnosticable {
 
     return SelectTriggerSpec(
       container: MixOps.lerp(container, other.container, t)!,
-      flex: MixOps.lerp(flex, other.flex, t)!,
       label: MixOps.lerp(label, other.label, t)!,
       icon: MixOps.lerp(icon, other.icon, t)!,
     );
@@ -101,40 +95,34 @@ class SelectTriggerSpec extends Spec<SelectTriggerSpec> with Diagnosticable {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', container))
-      ..add(DiagnosticsProperty('flex', flex))
       ..add(DiagnosticsProperty('label', label))
       ..add(DiagnosticsProperty('icon', icon));
   }
 
   @override
-  List<Object?> get props => [container, flex, label, icon];
+  List<Object?> get props => [container, label, icon];
 }
 
 class SelectMenuItemSpec extends Spec<SelectMenuItemSpec> with Diagnosticable {
-  final BoxSpec container;
-  final FlexSpec flex;
+  final FlexBoxSpec container;
   final TextSpec text;
   final IconSpec icon;
 
   const SelectMenuItemSpec({
-    BoxSpec? container,
-    FlexSpec? flex,
+    FlexBoxSpec? container,
     TextSpec? text,
     IconSpec? icon,
-  })  : container = container ?? const BoxSpec(),
-        flex = flex ?? const FlexSpec(),
+  })  : container = container ?? const FlexBoxSpec(),
         text = text ?? const TextSpec(),
         icon = icon ?? const IconSpec();
 
   SelectMenuItemSpec copyWith({
-    BoxSpec? container,
-    FlexSpec? flex,
+    FlexBoxSpec? container,
     TextSpec? text,
     IconSpec? icon,
   }) {
     return SelectMenuItemSpec(
       container: container ?? this.container,
-      flex: flex ?? this.flex,
       text: text ?? this.text,
       icon: icon ?? this.icon,
     );
@@ -145,7 +133,6 @@ class SelectMenuItemSpec extends Spec<SelectMenuItemSpec> with Diagnosticable {
 
     return SelectMenuItemSpec(
       container: MixOps.lerp(container, other.container, t)!,
-      flex: MixOps.lerp(flex, other.flex, t)!,
       text: MixOps.lerp(text, other.text, t)!,
       icon: MixOps.lerp(icon, other.icon, t)!,
     );
@@ -156,11 +143,10 @@ class SelectMenuItemSpec extends Spec<SelectMenuItemSpec> with Diagnosticable {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', container))
-      ..add(DiagnosticsProperty('flex', flex))
       ..add(DiagnosticsProperty('text', text))
       ..add(DiagnosticsProperty('icon', icon));
   }
 
   @override
-  List<Object?> get props => [container, flex, text, icon];
+  List<Object?> get props => [container, text, icon];
 }
