@@ -16,7 +16,7 @@ void main() {
             onPressed: () {
               // Button tap handler
             },
-            icon: Icons.star,
+            leading: Icons.star,
           ),
         );
 
@@ -204,7 +204,7 @@ void main() {
             onPressed: () {
               // Orientation test handler
             },
-            icon: Icons.screen_rotation,
+            leading: Icons.screen_rotation,
           ),
         );
 

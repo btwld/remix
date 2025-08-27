@@ -82,14 +82,13 @@ class RemixAvatar extends StatelessWidget {
   /// The child widget to display inside the avatar.
   final Widget? child;
 
-
   @override
   Widget build(BuildContext context) {
     return StyleBuilder(
       style: DefaultRemixAvatarStyle.merge(style),
       builder: (context, spec) {
         final ContainerWidget = spec.container;
-        
+
         return ContainerWidget(
           child: Container(
             alignment: Alignment.center,
@@ -121,16 +120,16 @@ class RemixAvatar extends StatelessWidget {
 
 class _AvatarText extends StatelessWidget {
   const _AvatarText({required this.label});
-  
+
   final String label;
-  
+
   @override
   Widget build(BuildContext context) {
     return StyleBuilder(
       style: const RemixAvatarStyle.create(),
       builder: (context, spec) {
         final TextWidget = spec.text;
-        
+
         return TextWidget(label);
       },
     );

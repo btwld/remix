@@ -125,19 +125,19 @@ class _AuthBlockState extends State<AuthBlock> {
                 remix.RemixButton(
                   label: 'Continue with Apple',
                   onPressed: () {},
-                  icon: Icons.apple,
+                  leading: Icons.apple,
                   // style: SocialMediaButtonStyle(),
                 ),
                 remix.RemixButton(
                   label: 'Continue with Facebook',
                   onPressed: () {},
-                  icon: Icons.facebook,
+                  leading: Icons.facebook,
                   // style: SocialMediaButtonStyle(),
                 ),
                 remix.RemixButton(
                   label: 'Show more options',
                   onPressed: () {},
-                  icon: Icons.add,
+                  leading: Icons.add,
                   // style: SocialMediaButtonStyle(),
                 ),
               ],

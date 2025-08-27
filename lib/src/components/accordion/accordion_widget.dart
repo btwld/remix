@@ -140,27 +140,32 @@ class _RemixAccordionItemState<T> extends State<RemixAccordionItem<T>>
                 trigger: (_, isExpanded) {
                   // The trigger is purely for building UI
                   // No state updates should happen here
-                  final Header = spec.header;
+                  final HeaderContainer = spec.header;
 
-                  return Header(
-                    direction: Axis.horizontal,
-                    children: [
-                      // ignore: avoid-flexible-outside-flex
-                      Expanded(
-                        child: spec.headerLabel(
-                          text: widget.title,
-                          leading: widget.leading,
-                          trailing: null,  // Don't use label's trailing since we handle it separately
+                  return HeaderContainer(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: spec.headerLabel(
+                            text: widget.title,
+                            leading: widget.leading,
+                            trailing:
+                                null, // Don't use label's trailing since we handle it separately
+                          ),
                         ),
-                      ),
-                      // Handle trailing icon with proper styling
-                      widget.trailing ??
-                      Icon(
-                        isExpanded ? Icons.expand_less : inheritedData.defaultTrailing,
-                        size: spec.headerLabel.trailing.size,
-                        color: spec.headerLabel.trailing.color,
-                      ),
-                    ],
+                        // Handle trailing icon with proper styling
+                        widget.trailing ??
+                            Icon(
+                              isExpanded
+                                  ? Icons.expand_less
+                                  : inheritedData.defaultTrailing,
+                              size: spec.headerLabel.trailing.size,
+                              color: spec.headerLabel.trailing.color,
+                            ),
+                      ],
+                    ),
                   );
                 },
                 value: widget.value,

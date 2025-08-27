@@ -4,10 +4,10 @@ class RemixDividerStyle extends Style<DividerSpec>
     with
         StyleModifierMixin<RemixDividerStyle, DividerSpec>,
         StyleVariantMixin<RemixDividerStyle, DividerSpec> {
-  final Prop<ContainerSpec>? $container;
+  final Prop<BoxSpec>? $container;
 
   const RemixDividerStyle.create({
-    Prop<ContainerSpec>? container,
+    Prop<BoxSpec>? container,
     super.variants,
     super.animation,
     super.modifier,
@@ -15,13 +15,13 @@ class RemixDividerStyle extends Style<DividerSpec>
   }) : $container = container;
 
   RemixDividerStyle({
-    ContainerSpecMix? container,
+    BoxMix? container,
     AnimationConfig? animation,
     List<VariantStyle<DividerSpec>>? variants,
     ModifierConfig? modifier,
     bool? inherit,
   }) : this.create(
-          container: container != null ? Prop.mix(container) : null,
+          container: Prop.maybeMix(container),
           variants: variants,
           animation: animation,
           modifier: modifier,
@@ -29,7 +29,7 @@ class RemixDividerStyle extends Style<DividerSpec>
         );
 
   factory RemixDividerStyle.value(DividerSpec spec) => RemixDividerStyle(
-        container: ContainerSpecMix.maybeValue(spec.container),
+        container: BoxMix.maybeValue(spec.container),
       );
 
   @override
@@ -48,8 +48,13 @@ class RemixDividerStyle extends Style<DividerSpec>
   }
 
   @override
-  DividerSpec resolve(BuildContext context) {
-    return DividerSpec(container: MixOps.resolve(context, $container));
+  WidgetSpec<DividerSpec> resolve(BuildContext context) {
+    return WidgetSpec(
+      spec: DividerSpec(container: MixOps.resolve(context, $container)),
+      animation: $animation,
+      widgetModifiers: $modifier?.resolve(context),
+      inherit: $inherit,
+    );
   }
 
   @override
@@ -76,7 +81,7 @@ class RemixDividerStyle extends Style<DividerSpec>
 }
 
 final DefaultRemixDividerStyle = RemixDividerStyle(
-  container: ContainerSpecMix(
+  container: BoxMix(
     decoration: BoxDecorationMix(
       borderRadius: BorderRadiusMix.circular(99),
       color: RemixTokens.border(),
@@ -93,7 +98,7 @@ final DefaultRemixDividerStyle = RemixDividerStyle(
 class RemixDividerStyles {
   /// Default divider style
   static RemixDividerStyle get defaultStyle => RemixDividerStyle(
-        container: ContainerSpecMix(
+        container: BoxMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(99),
             color: RemixTokens.border(),
@@ -108,7 +113,7 @@ class RemixDividerStyles {
 
   /// Vertical divider variant
   static RemixDividerStyle get vertical => RemixDividerStyle(
-        container: ContainerSpecMix(
+        container: BoxMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(99),
             color: RemixTokens.border(),
@@ -123,7 +128,7 @@ class RemixDividerStyles {
 
   /// Thick divider variant
   static RemixDividerStyle get thick => RemixDividerStyle(
-        container: ContainerSpecMix(
+        container: BoxMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(99),
             color: RemixTokens.border(),
@@ -138,7 +143,7 @@ class RemixDividerStyles {
 
   /// Dark divider variant
   static RemixDividerStyle get dark => RemixDividerStyle(
-        container: ContainerSpecMix(
+        container: BoxMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(99),
             color: RemixTokens.textSecondary(),

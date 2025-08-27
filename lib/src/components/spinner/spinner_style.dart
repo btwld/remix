@@ -100,13 +100,18 @@ class RemixSpinnerStyle extends Style<SpinnerSpec>
   }
 
   @override
-  SpinnerSpec resolve(BuildContext context) {
-    return SpinnerSpec(
-      size: MixOps.resolve(context, $size),
-      strokeWidth: MixOps.resolve(context, $strokeWidth),
-      color: MixOps.resolve(context, $color),
-      duration: MixOps.resolve(context, $duration),
-      style: MixOps.resolve(context, $style),
+  WidgetSpec<SpinnerSpec> resolve(BuildContext context) {
+    return WidgetSpec(
+      spec: SpinnerSpec(
+        size: MixOps.resolve(context, $size),
+        strokeWidth: MixOps.resolve(context, $strokeWidth),
+        color: MixOps.resolve(context, $color),
+        duration: MixOps.resolve(context, $duration),
+        style: MixOps.resolve(context, $style),
+      ),
+      animation: $animation,
+      widgetModifiers: $modifier?.resolve(context),
+      inherit: $inherit,
     );
   }
 

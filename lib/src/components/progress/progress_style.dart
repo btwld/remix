@@ -4,16 +4,16 @@ class RemixProgressStyle extends Style<ProgressSpec>
     with
         StyleModifierMixin<RemixProgressStyle, ProgressSpec>,
         StyleVariantMixin<RemixProgressStyle, ProgressSpec> {
-  final Prop<ContainerSpec>? $container;
-  final Prop<ContainerSpec>? $track;
-  final Prop<ContainerSpec>? $fill;
-  final Prop<ContainerSpec>? $outerContainer;
+  final Prop<BoxSpec>? $container;
+  final Prop<BoxSpec>? $track;
+  final Prop<BoxSpec>? $fill;
+  final Prop<BoxSpec>? $outerContainer;
 
   const RemixProgressStyle.create({
-    Prop<ContainerSpec>? container,
-    Prop<ContainerSpec>? track,
-    Prop<ContainerSpec>? fill,
-    Prop<ContainerSpec>? outerContainer,
+    Prop<BoxSpec>? container,
+    Prop<BoxSpec>? track,
+    Prop<BoxSpec>? fill,
+    Prop<BoxSpec>? outerContainer,
     super.variants,
     super.animation,
     super.modifier,
@@ -24,20 +24,19 @@ class RemixProgressStyle extends Style<ProgressSpec>
         $outerContainer = outerContainer;
 
   RemixProgressStyle({
-    ContainerSpecMix? container,
-    ContainerSpecMix? track,
-    ContainerSpecMix? fill,
-    ContainerSpecMix? outerContainer,
+    BoxMix? container,
+    BoxMix? track,
+    BoxMix? fill,
+    BoxMix? outerContainer,
     AnimationConfig? animation,
     List<VariantStyle<ProgressSpec>>? variants,
     ModifierConfig? modifier,
     bool? inherit,
   }) : this.create(
-          container: container != null ? Prop.mix(container) : null,
-          track: track != null ? Prop.mix(track) : null,
-          fill: fill != null ? Prop.mix(fill) : null,
-          outerContainer:
-              outerContainer != null ? Prop.mix(outerContainer) : null,
+          container: Prop.maybeMix(container),
+          track: Prop.maybeMix(track),
+          fill: Prop.maybeMix(fill),
+          outerContainer: Prop.maybeMix(outerContainer),
           variants: variants,
           animation: animation,
           modifier: modifier,
@@ -45,11 +44,10 @@ class RemixProgressStyle extends Style<ProgressSpec>
         );
 
   factory RemixProgressStyle.value(ProgressSpec spec) => RemixProgressStyle(
-        container: ContainerSpecMix.maybeValue(spec.container),
-        track: ContainerSpecMix.maybeValue(spec.track),
-        fill: ContainerSpecMix.maybeValue(spec.fill),
-        outerContainer:
-            ContainerSpecMix.maybeValue(spec.outerContainer),
+        container: BoxMix.maybeValue(spec.container),
+        track: BoxMix.maybeValue(spec.track),
+        fill: BoxMix.maybeValue(spec.fill),
+        outerContainer: BoxMix.maybeValue(spec.outerContainer),
       );
 
   @override
@@ -68,12 +66,17 @@ class RemixProgressStyle extends Style<ProgressSpec>
   }
 
   @override
-  ProgressSpec resolve(BuildContext context) {
-    return ProgressSpec(
-      container: MixOps.resolve(context, $container),
-      track: MixOps.resolve(context, $track),
-      fill: MixOps.resolve(context, $fill),
-      outerContainer: MixOps.resolve(context, $outerContainer),
+  WidgetSpec<ProgressSpec> resolve(BuildContext context) {
+    return WidgetSpec(
+      spec: ProgressSpec(
+        container: MixOps.resolve(context, $container),
+        track: MixOps.resolve(context, $track),
+        fill: MixOps.resolve(context, $fill),
+        outerContainer: MixOps.resolve(context, $outerContainer),
+      ),
+      animation: $animation,
+      widgetModifiers: $modifier?.resolve(context),
+      inherit: $inherit,
     );
   }
 
@@ -107,101 +110,105 @@ class RemixProgressStyle extends Style<ProgressSpec>
 }
 
 final DefaultRemixProgressStyle = RemixProgressStyle(
-  container: ContainerSpecMix(
+  container: BoxMix(
     decoration: BoxDecorationMix(borderRadius: BorderRadiusMix.circular(99)),
     constraints: BoxConstraintsMix(minHeight: 6, maxHeight: 6),
     clipBehavior: Clip.antiAlias,
   ),
-  track: ContainerSpecMix(
-    decoration: BoxDecorationMix(color: RemixTokens.surface()),
-  ),
-  fill: ContainerSpecMix(
+  track: BoxMix(decoration: BoxDecorationMix(color: RemixTokens.surface())),
+  fill: BoxMix(
     decoration: BoxDecorationMix(
       borderRadius: BorderRadiusMix.circular(99),
       color: RemixTokens.textPrimary(),
     ),
   ),
-  outerContainer: ContainerSpecMix(),
+  outerContainer: BoxMix(),
 );
 
 extension ProgressVariants on RemixProgressStyle {
   /// Primary progress variant with blue fill
   static RemixProgressStyle get primary => RemixProgressStyle(
-        container: ContainerSpecMix(
+        container: BoxMix(
           decoration:
               BoxDecorationMix(borderRadius: BorderRadiusMix.circular(99)),
           constraints: BoxConstraintsMix(minHeight: 6, maxHeight: 6),
           clipBehavior: Clip.antiAlias,
         ),
-        track: ContainerSpecMix(
-          decoration: BoxDecorationMix(color: RemixTokens.primary().withValues(alpha: 0.2)),
+        track: BoxMix(
+          decoration: BoxDecorationMix(
+            color: RemixTokens.primary().withValues(alpha: 0.2),
+          ),
         ),
-        fill: ContainerSpecMix(
+        fill: BoxMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(99),
             color: RemixTokens.primary(),
           ),
         ),
-        outerContainer: ContainerSpecMix(),
+        outerContainer: BoxMix(),
       );
 
   /// Secondary progress variant with grey fill
   static RemixProgressStyle get secondary => RemixProgressStyle(
-        container: ContainerSpecMix(
+        container: BoxMix(
           decoration:
               BoxDecorationMix(borderRadius: BorderRadiusMix.circular(99)),
           constraints: BoxConstraintsMix(minHeight: 6, maxHeight: 6),
           clipBehavior: Clip.antiAlias,
         ),
-        track: ContainerSpecMix(
+        track: BoxMix(
           decoration: BoxDecorationMix(color: RemixTokens.surface()),
         ),
-        fill: ContainerSpecMix(
+        fill: BoxMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(99),
             color: RemixTokens.textSecondary(),
           ),
         ),
-        outerContainer: ContainerSpecMix(),
+        outerContainer: BoxMix(),
       );
 
   /// Success progress variant with green fill
   static RemixProgressStyle get success => RemixProgressStyle(
-        container: ContainerSpecMix(
+        container: BoxMix(
           decoration:
               BoxDecorationMix(borderRadius: BorderRadiusMix.circular(99)),
           constraints: BoxConstraintsMix(minHeight: 6, maxHeight: 6),
           clipBehavior: Clip.antiAlias,
         ),
-        track: ContainerSpecMix(
-          decoration: BoxDecorationMix(color: RemixTokens.success().withValues(alpha: 0.2)),
+        track: BoxMix(
+          decoration: BoxDecorationMix(
+            color: RemixTokens.success().withValues(alpha: 0.2),
+          ),
         ),
-        fill: ContainerSpecMix(
+        fill: BoxMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(99),
             color: RemixTokens.success(),
           ),
         ),
-        outerContainer: ContainerSpecMix(),
+        outerContainer: BoxMix(),
       );
 
   /// Warning progress variant with orange fill
   static RemixProgressStyle get warning => RemixProgressStyle(
-        container: ContainerSpecMix(
+        container: BoxMix(
           decoration:
               BoxDecorationMix(borderRadius: BorderRadiusMix.circular(99)),
           constraints: BoxConstraintsMix(minHeight: 6, maxHeight: 6),
           clipBehavior: Clip.antiAlias,
         ),
-        track: ContainerSpecMix(
-          decoration: BoxDecorationMix(color: RemixTokens.warning().withValues(alpha: 0.2)),
+        track: BoxMix(
+          decoration: BoxDecorationMix(
+            color: RemixTokens.warning().withValues(alpha: 0.2),
+          ),
         ),
-        fill: ContainerSpecMix(
+        fill: BoxMix(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(99),
             color: RemixTokens.warning(),
           ),
         ),
-        outerContainer: ContainerSpecMix(),
+        outerContainer: BoxMix(),
       );
 }

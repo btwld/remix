@@ -1,8 +1,8 @@
 part of 'textfield.dart';
 
-class TextFieldSpec extends WidgetSpec<TextFieldSpec> {
-  final TypographySpec text;
-  final TypographySpec hintText;
+class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
+  final TextSpec text;
+  final TextSpec hintText;
   final TextAlign textAlign;
 
   final double cursorWidth;
@@ -18,14 +18,14 @@ class TextFieldSpec extends WidgetSpec<TextFieldSpec> {
   final EdgeInsets scrollPadding;
   final Brightness? keyboardAppearance;
   final double spacing;
-  final ContainerSpec container;
-  final FlexLayoutSpec flex;
-  final TypographySpec helperText;
-  final TypographySpec label;
+  final BoxSpec container;
+  final FlexSpec flex;
+  final TextSpec helperText;
+  final TextSpec label;
 
   const TextFieldSpec({
-    TypographySpec? text,
-    TypographySpec? hintText,
+    TextSpec? text,
+    TextSpec? hintText,
     TextAlign? textAlign,
     double? cursorWidth,
     this.cursorHeight,
@@ -38,36 +38,27 @@ class TextFieldSpec extends WidgetSpec<TextFieldSpec> {
     this.keyboardAppearance,
     this.cursorOpacityAnimates,
     double? spacing,
-    ContainerSpec? container,
-    FlexLayoutSpec? flex,
-    TypographySpec? helperText,
-    TypographySpec? label,
-    AnimationConfig? animation,
-    List<Modifier>? widgetModifiers,
-    bool? inherit,
-  })  : text = text ?? const TypographySpec(),
-        hintText = hintText ?? const TypographySpec(),
+    BoxSpec? container,
+    FlexSpec? flex,
+    TextSpec? helperText,
+    TextSpec? label,
+  })  : text = text ?? const TextSpec(),
+        hintText = hintText ?? const TextSpec(),
         textAlign = textAlign ?? TextAlign.start,
         cursorWidth = cursorWidth ?? 2.0,
         cursorOffset = cursorOffset ?? Offset.zero,
         selectionHeightStyle = selectionHeightStyle ?? BoxHeightStyle.tight,
         selectionWidthStyle = selectionWidthStyle ?? BoxWidthStyle.tight,
         scrollPadding = scrollPadding ?? const EdgeInsets.all(20.0),
-        helperText = helperText ?? const TypographySpec(),
-        label = label ?? const TypographySpec(),
-        container = container ?? const ContainerSpec(),
-        flex = flex ?? const FlexLayoutSpec(),
-        spacing = spacing ?? 4,
-        super(
-          animation: animation,
-          widgetModifiers: widgetModifiers,
-          inherit: inherit,
-        );
+        helperText = helperText ?? const TextSpec(),
+        label = label ?? const TextSpec(),
+        container = container ?? const BoxSpec(),
+        flex = flex ?? const FlexSpec(),
+        spacing = spacing ?? 4;
 
-  @override
   TextFieldSpec copyWith({
-    TypographySpec? text,
-    TypographySpec? hintText,
+    TextSpec? text,
+    TextSpec? hintText,
     TextAlign? textAlign,
     double? cursorWidth,
     double? cursorHeight,
@@ -80,13 +71,10 @@ class TextFieldSpec extends WidgetSpec<TextFieldSpec> {
     EdgeInsets? scrollPadding,
     Brightness? keyboardAppearance,
     double? spacing,
-    ContainerSpec? container,
-    FlexLayoutSpec? flex,
-    TypographySpec? helperText,
-    TypographySpec? label,
-    AnimationConfig? animation,
-    List<Modifier>? widgetModifiers,
-    bool? inherit,
+    BoxSpec? container,
+    FlexSpec? flex,
+    TextSpec? helperText,
+    TextSpec? label,
   }) {
     return TextFieldSpec(
       text: text ?? this.text,
@@ -108,13 +96,9 @@ class TextFieldSpec extends WidgetSpec<TextFieldSpec> {
       flex: flex ?? this.flex,
       helperText: helperText ?? this.helperText,
       label: label ?? this.label,
-      animation: animation ?? this.animation,
-      widgetModifiers: widgetModifiers ?? this.widgetModifiers,
-      inherit: inherit ?? this.inherit,
     );
   }
 
-  @override
   TextFieldSpec lerp(TextFieldSpec? other, double t) {
     if (other == null) return this;
 
@@ -141,9 +125,6 @@ class TextFieldSpec extends WidgetSpec<TextFieldSpec> {
       flex: MixOps.lerp(flex, other.flex, t)!,
       helperText: MixOps.lerp(helperText, other.helperText, t)!,
       label: MixOps.lerp(label, other.label, t)!,
-      animation: MixOps.lerp(animation, other.animation, t),
-      widgetModifiers: MixOps.lerp(widgetModifiers, other.widgetModifiers, t),
-      inherit: MixOps.lerp(inherit, other.inherit, t),
     );
   }
 
@@ -179,7 +160,6 @@ class TextFieldSpec extends WidgetSpec<TextFieldSpec> {
 
   @override
   List<Object?> get props => [
-        ...super.props,
         text,
         hintText,
         textAlign,

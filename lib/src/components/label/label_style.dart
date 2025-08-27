@@ -4,16 +4,16 @@ class RemixLabelStyle extends Style<LabelSpec>
     with
         StyleModifierMixin<RemixLabelStyle, LabelSpec>,
         StyleVariantMixin<RemixLabelStyle, LabelSpec> {
-  final Prop<TypographySpec>? $label;
-  final Prop<IconographySpec>? $leading;
-  final Prop<IconographySpec>? $trailing;
-  final Prop<FlexLayoutSpec>? $flex;
+  final Prop<TextSpec>? $label;
+  final Prop<IconSpec>? $leading;
+  final Prop<IconSpec>? $trailing;
+  final Prop<FlexSpec>? $flex;
 
   const RemixLabelStyle.create({
-    Prop<TypographySpec>? label,
-    Prop<IconographySpec>? leading,
-    Prop<IconographySpec>? trailing,
-    Prop<FlexLayoutSpec>? flex,
+    Prop<TextSpec>? label,
+    Prop<IconSpec>? leading,
+    Prop<IconSpec>? trailing,
+    Prop<FlexSpec>? flex,
     super.variants,
     super.animation,
     super.modifier,
@@ -24,19 +24,19 @@ class RemixLabelStyle extends Style<LabelSpec>
         $flex = flex;
 
   RemixLabelStyle({
-    TypographyMix? label,
-    IconographyMix? leading,
-    IconographyMix? trailing,
-    FlexLayoutMix? flex,
+    TextMix? label,
+    IconMix? leading,
+    IconMix? trailing,
+    FlexMix? flex,
     AnimationConfig? animation,
     List<VariantStyle<LabelSpec>>? variants,
     ModifierConfig? modifier,
     bool? inherit,
   }) : this.create(
-          label: label != null ? Prop.mix(label) : null,
-          leading: leading != null ? Prop.mix(leading) : null,
-          trailing: trailing != null ? Prop.mix(trailing) : null,
-          flex: flex != null ? Prop.mix(flex) : null,
+          label: Prop.maybeMix(label),
+          leading: Prop.maybeMix(leading),
+          trailing: Prop.maybeMix(trailing),
+          flex: Prop.maybeMix(flex),
           variants: variants,
           animation: animation,
           modifier: modifier,
@@ -44,10 +44,10 @@ class RemixLabelStyle extends Style<LabelSpec>
         );
 
   factory RemixLabelStyle.value(LabelSpec spec) => RemixLabelStyle(
-        label: TypographyMix.maybeValue(spec.label),
-        leading: IconographyMix.maybeValue(spec.leading),
-        trailing: IconographyMix.maybeValue(spec.trailing),
-        flex: FlexLayoutMix.maybeValue(spec.flex),
+        label: TextMix.maybeValue(spec.label),
+        leading: IconMix.maybeValue(spec.leading),
+        trailing: IconMix.maybeValue(spec.trailing),
+        flex: FlexMix.maybeValue(spec.flex),
       );
 
   @override
@@ -66,12 +66,17 @@ class RemixLabelStyle extends Style<LabelSpec>
   }
 
   @override
-  LabelSpec resolve(BuildContext context) {
-    return LabelSpec(
-      label: MixOps.resolve(context, $label),
-      leading: MixOps.resolve(context, $leading),
-      trailing: MixOps.resolve(context, $trailing),
-      flex: MixOps.resolve(context, $flex),
+  WidgetSpec<LabelSpec> resolve(BuildContext context) {
+    return WidgetSpec(
+      spec: LabelSpec(
+        label: MixOps.resolve(context, $label),
+        leading: MixOps.resolve(context, $leading),
+        trailing: MixOps.resolve(context, $trailing),
+        flex: MixOps.resolve(context, $flex),
+      ),
+      animation: $animation,
+      widgetModifiers: $modifier?.resolve(context),
+      inherit: $inherit,
     );
   }
 
@@ -108,44 +113,44 @@ class RemixLabelStyle extends Style<LabelSpec>
 class RemixRemixLabelStyles {
   /// Default label style
   static RemixLabelStyle get defaultStyle => RemixLabelStyle(
-        flex: FlexLayoutMix(spacing: 8),
+        flex: FlexMix(spacing: 8),
       );
 
   /// Primary label variant
   static RemixLabelStyle get primary => RemixLabelStyle(
-        label: TypographyMix(
+        label: TextMix(
           style: TextStyleMix(
             color: RemixTokens.primary(),
             fontWeight: FontWeight.w500,
           ),
         ),
-        leading: IconographyMix(color: RemixTokens.primary(), size: 20),
-        flex: FlexLayoutMix(spacing: 8),
+        leading: IconMix(color: RemixTokens.primary(), size: 20),
+        flex: FlexMix(spacing: 8),
       );
 
   /// Secondary label variant
   static RemixLabelStyle get secondary => RemixLabelStyle(
-        label: TypographyMix(
+        label: TextMix(
           style: TextStyleMix(
             color: RemixTokens.textSecondary(),
             fontWeight: FontWeight.w400,
           ),
         ),
-        leading: IconographyMix(color: RemixTokens.textSecondary(), size: 20),
-        flex: FlexLayoutMix(spacing: 8),
+        leading: IconMix(color: RemixTokens.textSecondary(), size: 20),
+        flex: FlexMix(spacing: 8),
       );
 
   /// Compact label variant with reduced spacing
   static RemixLabelStyle get compact => RemixLabelStyle(
-        label: TypographyMix(),
-        leading: IconographyMix(size: 16),
-        flex: FlexLayoutMix(spacing: 4),
+        label: TextMix(),
+        leading: IconMix(size: 16),
+        flex: FlexMix(spacing: 4),
       );
 
   /// Large label variant with increased spacing
   static RemixLabelStyle get large => RemixLabelStyle(
-        label: TypographyMix(style: TextStyleMix(fontSize: 16)),
-        leading: IconographyMix(size: 24),
-        flex: FlexLayoutMix(spacing: 12),
+        label: TextMix(style: TextStyleMix(fontSize: 16)),
+        leading: IconMix(size: 24),
+        flex: FlexMix(spacing: 12),
       );
 }

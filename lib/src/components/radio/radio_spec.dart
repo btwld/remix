@@ -1,42 +1,30 @@
 part of 'radio.dart';
 
-class RadioSpec extends WidgetSpec<RadioSpec> {
-  final ContainerSpec container;
-  final FlexLayoutSpec flex;
-  final ContainerSpec indicatorContainer;
-  final ContainerSpec indicator;
-  final TypographySpec label;
+class RadioSpec extends Spec<RadioSpec> with Diagnosticable {
+  final BoxSpec container;
+  final FlexSpec flex;
+  final BoxSpec indicatorContainer;
+  final BoxSpec indicator;
+  final TextSpec label;
 
   const RadioSpec({
-    ContainerSpec? container,
-    FlexLayoutSpec? flex,
-    ContainerSpec? indicatorContainer,
-    ContainerSpec? indicator,
-    TypographySpec? label,
-    AnimationConfig? animation,
-    List<Modifier>? widgetModifiers,
-    bool? inherit,
-  })  : container = container ?? const ContainerSpec(),
-        flex = flex ?? const FlexLayoutSpec(),
-        indicatorContainer = indicatorContainer ?? const ContainerSpec(),
-        indicator = indicator ?? const ContainerSpec(),
-        label = label ?? const TypographySpec(),
-        super(
-          animation: animation,
-          widgetModifiers: widgetModifiers,
-          inherit: inherit,
-        );
+    BoxSpec? container,
+    FlexSpec? flex,
+    BoxSpec? indicatorContainer,
+    BoxSpec? indicator,
+    TextSpec? label,
+  })  : container = container ?? const BoxSpec(),
+        flex = flex ?? const FlexSpec(),
+        indicatorContainer = indicatorContainer ?? const BoxSpec(),
+        indicator = indicator ?? const BoxSpec(),
+        label = label ?? const TextSpec();
 
-  @override
   RadioSpec copyWith({
-    ContainerSpec? container,
-    FlexLayoutSpec? flex,
-    ContainerSpec? indicatorContainer,
-    ContainerSpec? indicator,
-    TypographySpec? label,
-    AnimationConfig? animation,
-    List<Modifier>? widgetModifiers,
-    bool? inherit,
+    BoxSpec? container,
+    FlexSpec? flex,
+    BoxSpec? indicatorContainer,
+    BoxSpec? indicator,
+    TextSpec? label,
   }) {
     return RadioSpec(
       container: container ?? this.container,
@@ -44,13 +32,9 @@ class RadioSpec extends WidgetSpec<RadioSpec> {
       indicatorContainer: indicatorContainer ?? this.indicatorContainer,
       indicator: indicator ?? this.indicator,
       label: label ?? this.label,
-      animation: animation ?? this.animation,
-      widgetModifiers: widgetModifiers ?? this.widgetModifiers,
-      inherit: inherit ?? this.inherit,
     );
   }
 
-  @override
   RadioSpec lerp(RadioSpec? other, double t) {
     if (other == null) return this;
 
@@ -61,9 +45,6 @@ class RadioSpec extends WidgetSpec<RadioSpec> {
           MixOps.lerp(indicatorContainer, other.indicatorContainer, t)!,
       indicator: MixOps.lerp(indicator, other.indicator, t)!,
       label: MixOps.lerp(label, other.label, t)!,
-      animation: MixOps.lerp(animation, other.animation, t),
-      widgetModifiers: MixOps.lerp(widgetModifiers, other.widgetModifiers, t),
-      inherit: MixOps.lerp(inherit, other.inherit, t),
     );
   }
 
@@ -80,5 +61,5 @@ class RadioSpec extends WidgetSpec<RadioSpec> {
 
   @override
   List<Object?> get props =>
-      [...super.props, container, flex, indicatorContainer, indicator, label];
+      [container, flex, indicatorContainer, indicator, label];
 }

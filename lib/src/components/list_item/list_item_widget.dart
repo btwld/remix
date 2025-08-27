@@ -79,9 +79,7 @@ class _RemixListItemState extends State<RemixListItem>
         controller: controller,
         builder: (context, spec) {
           final Container = spec.container;
-          final Flex = spec.flex;
           final ContentContainer = spec.contentContainer;
-          final ContentFlex = spec.contentFlex;
           final Title = spec.title;
           final Subtitle = spec.subtitle;
 
@@ -106,8 +104,8 @@ class _RemixListItemState extends State<RemixListItem>
               // ignore: avoid-flexible-outside-flex
               Expanded(
                 child: ContentContainer(
-                  child: ContentFlex(
-                    direction: Axis.vertical,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: textWidgets,
                   ),
                 ),
@@ -120,9 +118,7 @@ class _RemixListItemState extends State<RemixListItem>
             children.add(widget.trailing!);
           }
 
-          return Container(
-            child: Flex(direction: Axis.horizontal, children: children),
-          );
+          return Container(child: Row(children: children));
         },
       ),
     );
