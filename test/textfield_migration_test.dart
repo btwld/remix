@@ -10,13 +10,15 @@ void main() {
       final controller = TextEditingController();
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: RemixTextField(
-              controller: controller,
-              hintText: 'Test hint',
-              enabled: true,
-              autofocus: false,
+        createRemixScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: RemixTextField(
+                controller: controller,
+                hintText: 'Test hint',
+                enabled: true,
+                autofocus: false,
+              ),
             ),
           ),
         ),
@@ -34,13 +36,15 @@ void main() {
 
     testWidgets('state callbacks should work correctly', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: RemixTextField(
-              hintText: 'Test',
-              onPressed: () {
-                // Press callback should work
-              },
+        createRemixScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: RemixTextField(
+                hintText: 'Test',
+                onPressed: () {
+                  // Press callback should work
+                },
+              ),
             ),
           ),
         ),
@@ -56,17 +60,19 @@ void main() {
 
     testWidgets('all new properties should be accepted', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: RemixTextField(
-              groupId: 'test-group',
-              ignorePointers: false,
-              clipBehavior: Clip.antiAlias,
-              stylusHandwritingEnabled: false,
-              onTapAlwaysCalled: true,
-              smartDashesType: SmartDashesType.enabled,
-              smartQuotesType: SmartQuotesType.enabled,
-              maxLengthEnforcement: MaxLengthEnforcement.enforced,
+        createRemixScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: RemixTextField(
+                groupId: 'test-group',
+                ignorePointers: false,
+                clipBehavior: Clip.antiAlias,
+                stylusHandwritingEnabled: false,
+                onTapAlwaysCalled: true,
+                smartDashesType: SmartDashesType.enabled,
+                smartQuotesType: SmartQuotesType.enabled,
+                maxLengthEnforcement: MaxLengthEnforcement.enforced,
+              ),
             ),
           ),
         ),
@@ -77,11 +83,13 @@ void main() {
 
     testWidgets('styling through TextFieldSpec should work', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: RemixTextField(
-              hintText: 'Styled field',
-              style: const RemixTextFieldStyle.create(),
+        createRemixScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: RemixTextField(
+                hintText: 'Styled field',
+                style: const RemixTextFieldStyle.create(),
+              ),
             ),
           ),
         ),

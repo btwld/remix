@@ -168,44 +168,40 @@ void main() {
       expect(result, equals(mix));
     });
 
-    test('factory constructors work correctly', () {
-      // Test that factory constructors create valid mixes
-      final colorMix = BoxMix.color(Colors.red);
+    test('constructors via named args create valid mixes', () {
+      final colorMix = BoxMix(decoration: BoxDecorationMix(color: Colors.red));
       expect(colorMix, isA<BoxMix>());
 
-      final decorationMix = BoxMix.decoration(
-        BoxDecorationMix(color: Colors.blue),
-      );
+      final decorationMix =
+          BoxMix(decoration: BoxDecorationMix(color: Colors.blue));
       expect(decorationMix, isA<BoxMix>());
 
-      final paddingMix = BoxMix.padding(EdgeInsetsMix.all(20));
+      final paddingMix = BoxMix(padding: EdgeInsetsMix.all(20));
       expect(paddingMix, isA<BoxMix>());
 
-      final alignmentMix = BoxMix.alignment(Alignment.center);
+      final alignmentMix = BoxMix(alignment: Alignment.center);
       expect(alignmentMix, isA<BoxMix>());
 
-      final marginMix = BoxMix.margin(EdgeInsetsMix.all(12));
+      final marginMix = BoxMix(margin: EdgeInsetsMix.all(12));
       expect(marginMix, isA<BoxMix>());
 
-      final transformMix = BoxMix.transform(Matrix4.identity());
+      final transformMix = BoxMix(transform: Matrix4.identity());
       expect(transformMix, isA<BoxMix>());
 
-      final clipMix = BoxMix.clipBehavior(Clip.antiAlias);
+      final clipMix = BoxMix(clipBehavior: Clip.antiAlias);
       expect(clipMix, isA<BoxMix>());
 
-      final constraintsMix = BoxMix.constraints(
-        BoxConstraintsMix(minWidth: 100),
-      );
+      final constraintsMix =
+          BoxMix(constraints: BoxConstraintsMix(minWidth: 100));
       expect(constraintsMix, isA<BoxMix>());
     });
 
-    test('chainable methods work correctly', () {
-      final mix = BoxMix.color(Colors.green)
-          .merge(BoxMix.padding(EdgeInsetsMix.all(12)))
-          .merge(BoxMix.alignment(Alignment.bottomRight))
-          .merge(BoxMix.clipBehavior(Clip.hardEdge));
+    test('merge composition works correctly', () {
+      final mix = BoxMix(decoration: BoxDecorationMix(color: Colors.green))
+          .merge(BoxMix(padding: EdgeInsetsMix.all(12)))
+          .merge(BoxMix(alignment: Alignment.bottomRight))
+          .merge(BoxMix(clipBehavior: Clip.hardEdge));
 
-      // Test that factory-based merges return valid mixes
       expect(mix, isA<BoxMix>());
     });
 
@@ -267,13 +263,12 @@ void main() {
     });
 
     test('can compose multiple operations via merge', () {
-      final mix = BoxMix.color(Colors.blue)
-          .merge(BoxMix.padding(EdgeInsetsMix.all(16)))
-          .merge(BoxMix.margin(EdgeInsetsMix.symmetric(horizontal: 8)))
-          .merge(BoxMix.alignment(Alignment.center))
-          .merge(BoxMix.clipBehavior(Clip.antiAlias));
+      final mix = BoxMix(decoration: BoxDecorationMix(color: Colors.blue))
+          .merge(BoxMix(padding: EdgeInsetsMix.all(16)))
+          .merge(BoxMix(margin: EdgeInsetsMix.symmetric(horizontal: 8)))
+          .merge(BoxMix(alignment: Alignment.center))
+          .merge(BoxMix(clipBehavior: Clip.antiAlias));
 
-      // Test that composed operations return valid mix
       expect(mix, isA<BoxMix>());
     });
 
@@ -283,11 +278,12 @@ void main() {
           home: Scaffold(
             body: Builder(
               builder: (context) {
-                final mix = BoxMix.color(Colors.blue)
-                    .padding(EdgeInsetsMix.all(16))
-                    .alignment(Alignment.center)
-                    .margin(EdgeInsetsMix.all(8))
-                    .clipBehavior(Clip.antiAlias);
+                final mix =
+                    BoxMix(decoration: BoxDecorationMix(color: Colors.blue))
+                        .merge(BoxMix(padding: EdgeInsetsMix.all(16)))
+                        .merge(BoxMix(alignment: Alignment.center))
+                        .merge(BoxMix(margin: EdgeInsetsMix.all(8)))
+                        .merge(BoxMix(clipBehavior: Clip.antiAlias));
 
                 final spec = mix.resolve(context);
 

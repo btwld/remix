@@ -8,12 +8,14 @@ void main() {
   group('RemixSwitch Integration Tests', () {
     testWidgets('renders correctly with default state', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: RemixSwitch(
-                selected: false,
-                onChanged: (_) {},
+        createRemixScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: RemixSwitch(
+                  selected: false,
+                  onChanged: (_) {},
+                ),
               ),
             ),
           ),
@@ -21,7 +23,7 @@ void main() {
       );
 
       expect(find.byType(RemixSwitch), findsOneWidget);
-      
+
       // Verify switch track is visible
       final switchFinder = find.byType(RemixSwitch);
       expect(switchFinder, findsOneWidget);
@@ -29,12 +31,14 @@ void main() {
 
     testWidgets('renders with selected state', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: RemixSwitch(
-                selected: true,
-                onChanged: (_) {},
+        createRemixScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: RemixSwitch(
+                  selected: true,
+                  onChanged: (_) {},
+                ),
               ),
             ),
           ),
@@ -48,20 +52,22 @@ void main() {
       bool switchValue = false;
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: StatefulBuilder(
-                builder: (context, setState) {
-                  return RemixSwitch(
-                    selected: switchValue,
-                    onChanged: (value) {
-                      setState(() {
-                        switchValue = value;
-                      });
-                    },
-                  );
-                },
+        createRemixScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: StatefulBuilder(
+                  builder: (context, setState) {
+                    return RemixSwitch(
+                      selected: switchValue,
+                      onChanged: (value) {
+                        setState(() {
+                          switchValue = value;
+                        });
+                      },
+                    );
+                  },
+                ),
               ),
             ),
           ),
@@ -85,15 +91,17 @@ void main() {
       bool switchValue = false;
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: RemixSwitch(
-                selected: switchValue,
-                enabled: false,
-                onChanged: (value) {
-                  switchValue = value;
-                },
+        createRemixScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: RemixSwitch(
+                  selected: switchValue,
+                  enabled: false,
+                  onChanged: (value) {
+                    switchValue = value;
+                  },
+                ),
               ),
             ),
           ),
@@ -102,7 +110,7 @@ void main() {
 
       await tester.tap(find.byType(RemixSwitch));
       await tester.pumpAndSettle();
-      
+
       // Value should not change when disabled
       expect(switchValue, false);
     });
@@ -111,14 +119,16 @@ void main() {
       bool? callbackValue;
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: RemixSwitch(
-                selected: false,
-                onChanged: (value) {
-                  callbackValue = value;
-                },
+        createRemixScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: RemixSwitch(
+                  selected: false,
+                  onChanged: (value) {
+                    callbackValue = value;
+                  },
+                ),
               ),
             ),
           ),
@@ -127,7 +137,7 @@ void main() {
 
       await tester.tap(find.byType(RemixSwitch));
       await tester.pumpAndSettle();
-      
+
       expect(callbackValue, true);
     });
 
@@ -135,33 +145,35 @@ void main() {
       bool switchValue = true;
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: StatefulBuilder(
-                builder: (context, setState) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      RemixSwitch(
-                        selected: switchValue,
-                        onChanged: (value) {
-                          setState(() {
-                            switchValue = value;
-                          });
-                        },
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          setState(() {
-                            // Force rebuild
-                          });
-                        },
-                        child: const Text('Rebuild'),
-                      ),
-                    ],
-                  );
-                },
+        createRemixScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: StatefulBuilder(
+                  builder: (context, setState) {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        RemixSwitch(
+                          selected: switchValue,
+                          onChanged: (value) {
+                            setState(() {
+                              switchValue = value;
+                            });
+                          },
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            setState(() {
+                              // Force rebuild
+                            });
+                          },
+                          child: const Text('Rebuild'),
+                        ),
+                      ],
+                    );
+                  },
+                ),
               ),
             ),
           ),
@@ -182,14 +194,16 @@ void main() {
       int toggleCount = 0;
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: RemixSwitch(
-                selected: false,
-                onChanged: (_) {
-                  toggleCount++;
-                },
+        createRemixScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: RemixSwitch(
+                  selected: false,
+                  onChanged: (_) {
+                    toggleCount++;
+                  },
+                ),
               ),
             ),
           ),
@@ -211,22 +225,24 @@ void main() {
       bool switchValue = false;
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: Focus(
-                autofocus: true,
-                child: StatefulBuilder(
-                  builder: (context, setState) {
-                    return RemixSwitch(
-                      selected: switchValue,
-                      onChanged: (value) {
-                        setState(() {
-                          switchValue = value;
-                        });
-                      },
-                    );
-                  },
+        createRemixScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: Focus(
+                  autofocus: true,
+                  child: StatefulBuilder(
+                    builder: (context, setState) {
+                      return RemixSwitch(
+                        selected: switchValue,
+                        onChanged: (value) {
+                          setState(() {
+                            switchValue = value;
+                          });
+                        },
+                      );
+                    },
+                  ),
                 ),
               ),
             ),
@@ -251,20 +267,22 @@ void main() {
       bool switchValue = false;
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: StatefulBuilder(
-                builder: (context, setState) {
-                  return RemixSwitch(
-                    selected: switchValue,
-                    onChanged: (value) {
-                      setState(() {
-                        switchValue = value;
-                      });
-                    },
-                  );
-                },
+        createRemixScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: StatefulBuilder(
+                  builder: (context, setState) {
+                    return RemixSwitch(
+                      selected: switchValue,
+                      onChanged: (value) {
+                        setState(() {
+                          switchValue = value;
+                        });
+                      },
+                    );
+                  },
+                ),
               ),
             ),
           ),
@@ -273,12 +291,12 @@ void main() {
 
       // Toggle and verify animation runs
       await tester.tap(find.byType(RemixSwitch));
-      
+
       // Pump a few frames to verify animation
       for (int i = 0; i < 5; i++) {
         await tester.pump(const Duration(milliseconds: 50));
       }
-      
+
       await tester.pumpAndSettle();
       expect(switchValue, true);
     });
@@ -291,36 +309,38 @@ void main() {
       };
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: StatefulBuilder(
-                builder: (context, setState) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: settings.entries.map((entry) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(entry.key),
-                            const SizedBox(width: 16),
-                            RemixSwitch(
-                              key: Key(entry.key),
-                              selected: entry.value,
-                              onChanged: (value) {
-                                setState(() {
-                                  settings[entry.key] = value;
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                      );
-                    }).toList(),
-                  );
-                },
+        createRemixScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: StatefulBuilder(
+                  builder: (context, setState) {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: settings.entries.map((entry) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(entry.key),
+                              const SizedBox(width: 16),
+                              RemixSwitch(
+                                key: Key(entry.key),
+                                selected: entry.value,
+                                onChanged: (value) {
+                                  setState(() {
+                                    settings[entry.key] = value;
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    );
+                  },
+                ),
               ),
             ),
           ),
@@ -346,12 +366,14 @@ void main() {
 
     testWidgets('handles hover state', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: RemixSwitch(
-                selected: false,
-                onChanged: (_) {},
+        createRemixScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: RemixSwitch(
+                  selected: false,
+                  onChanged: (_) {},
+                ),
               ),
             ),
           ),
@@ -370,33 +392,36 @@ void main() {
       expect(find.byType(RemixSwitch), findsOneWidget);
     });
 
-    testWidgets('updates visual state when selected changes externally', (tester) async {
+    testWidgets('updates visual state when selected changes externally',
+        (tester) async {
       bool externalValue = false;
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: StatefulBuilder(
-                builder: (context, setState) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      RemixSwitch(
-                        selected: externalValue,
-                        onChanged: (_) {},
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          setState(() {
-                            externalValue = !externalValue;
-                          });
-                        },
-                        child: const Text('Toggle Externally'),
-                      ),
-                    ],
-                  );
-                },
+        createRemixScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: StatefulBuilder(
+                  builder: (context, setState) {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        RemixSwitch(
+                          selected: externalValue,
+                          onChanged: (_) {},
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            setState(() {
+                              externalValue = !externalValue;
+                            });
+                          },
+                          child: const Text('Toggle Externally'),
+                        ),
+                      ],
+                    );
+                  },
+                ),
               ),
             ),
           ),
@@ -413,13 +438,15 @@ void main() {
 
     testWidgets('handles null onChanged callback', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: RemixSwitch(
-                selected: true,
-                enabled: false,
-                onChanged: (_) {},
+        createRemixScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: RemixSwitch(
+                  selected: true,
+                  enabled: false,
+                  onChanged: (_) {},
+                ),
               ),
             ),
           ),
@@ -436,14 +463,16 @@ void main() {
 
     testWidgets('preserves accessibility semantics', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: Semantics(
-                label: 'Enable notifications',
-                child: RemixSwitch(
-                  selected: false,
-                  onChanged: (_) {},
+        createRemixScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: Semantics(
+                  label: 'Enable notifications',
+                  child: RemixSwitch(
+                    selected: false,
+                    onChanged: (_) {},
+                  ),
                 ),
               ),
             ),
@@ -460,14 +489,16 @@ void main() {
       bool switchValue = false;
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: RemixSwitch(
-                selected: switchValue,
-                onChanged: (value) {
-                  switchValue = value;
-                },
+        createRemixScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: RemixSwitch(
+                  selected: switchValue,
+                  onChanged: (value) {
+                    switchValue = value;
+                  },
+                ),
               ),
             ),
           ),
@@ -475,7 +506,8 @@ void main() {
       );
 
       // Start a tap but cancel it
-      final gesture = await tester.startGesture(tester.getCenter(find.byType(RemixSwitch)));
+      final gesture =
+          await tester.startGesture(tester.getCenter(find.byType(RemixSwitch)));
       await tester.pump(const Duration(milliseconds: 100));
       await gesture.cancel();
       await tester.pumpAndSettle();

@@ -18,8 +18,7 @@ class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
   final EdgeInsets scrollPadding;
   final Brightness? keyboardAppearance;
   final double spacing;
-  final BoxSpec container;
-  final FlexSpec flex;
+  final FlexBoxSpec container;
   final TextSpec helperText;
   final TextSpec label;
 
@@ -38,8 +37,7 @@ class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
     this.keyboardAppearance,
     this.cursorOpacityAnimates,
     double? spacing,
-    BoxSpec? container,
-    FlexSpec? flex,
+    FlexBoxSpec? container,
     TextSpec? helperText,
     TextSpec? label,
   })  : text = text ?? const TextSpec(),
@@ -52,8 +50,7 @@ class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
         scrollPadding = scrollPadding ?? const EdgeInsets.all(20.0),
         helperText = helperText ?? const TextSpec(),
         label = label ?? const TextSpec(),
-        container = container ?? const BoxSpec(),
-        flex = flex ?? const FlexSpec(),
+        container = container ?? const FlexBoxSpec(),
         spacing = spacing ?? 4;
 
   TextFieldSpec copyWith({
@@ -71,8 +68,7 @@ class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
     EdgeInsets? scrollPadding,
     Brightness? keyboardAppearance,
     double? spacing,
-    BoxSpec? container,
-    FlexSpec? flex,
+    FlexBoxSpec? container,
     TextSpec? helperText,
     TextSpec? label,
   }) {
@@ -93,7 +89,6 @@ class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
           cursorOpacityAnimates ?? this.cursorOpacityAnimates,
       spacing: spacing ?? this.spacing,
       container: container ?? this.container,
-      flex: flex ?? this.flex,
       helperText: helperText ?? this.helperText,
       label: label ?? this.label,
     );
@@ -122,7 +117,6 @@ class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
           t < 0.5 ? cursorOpacityAnimates : other.cursorOpacityAnimates,
       spacing: lerpDouble(spacing, other.spacing, t),
       container: MixOps.lerp(container, other.container, t)!,
-      flex: MixOps.lerp(flex, other.flex, t)!,
       helperText: MixOps.lerp(helperText, other.helperText, t)!,
       label: MixOps.lerp(label, other.label, t)!,
     );
@@ -153,7 +147,6 @@ class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
       ..add(EnumProperty<Brightness>('keyboardAppearance', keyboardAppearance))
       ..add(DoubleProperty('spacing', spacing))
       ..add(DiagnosticsProperty('container', container))
-      ..add(DiagnosticsProperty('flex', flex))
       ..add(DiagnosticsProperty('helperText', helperText))
       ..add(DiagnosticsProperty('label', label));
   }
@@ -175,7 +168,6 @@ class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
         keyboardAppearance,
         spacing,
         container,
-        flex,
         helperText,
         label,
       ];

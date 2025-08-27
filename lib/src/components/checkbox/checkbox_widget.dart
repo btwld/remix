@@ -140,7 +140,7 @@ class _RemixCheckboxState extends State<RemixCheckbox>
         builder: (context, spec) {
           final IndicatorContainer = spec.indicatorContainer;
           final Indicator = spec.indicator;
-          final Container = spec.container;
+          final FlexContainer = spec.container;
           final Label = spec.label;
 
           final iconData = widget.tristate && widget.selected == null
@@ -157,11 +157,9 @@ class _RemixCheckboxState extends State<RemixCheckbox>
             return checkbox;
           }
 
-          return Container(
-            child: Flex(
-              direction: Axis.horizontal,
-              children: [checkbox, Label(widget.label!)],
-            ),
+          return FlexContainer(
+            direction: Axis.horizontal,
+            children: [checkbox, Label(widget.label!)],
           );
         },
       ),

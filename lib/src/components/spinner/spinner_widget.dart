@@ -88,9 +88,9 @@ class _SpinnerSpecWidgetState extends State<SpinnerSpecWidget>
     final color = spec.color ?? Colors.grey;
     final strokeWidth = spec.strokeWidth ?? 1.5;
     final size = spec.size ?? 24;
-    final style = spec.style ?? SpinnerStyle.solid;
+    final style = spec.style ?? SpinnerType.solid;
 
-    final painter = style == SpinnerStyle.dotted
+    final painter = style == SpinnerType.dotted
         ? DottedSpinnerPainter(
             animation: controller,
             strokeWidth: strokeWidth,
