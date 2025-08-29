@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:remix/remix.dart';
 
 /// Extension methods for WidgetTester to simplify test setup and interactions
 extension WidgetTesterHelpers on WidgetTester {
   /// Pumps a Remix widget wrapped in a MaterialApp with Scaffold
   Future<void> pumpRemixApp(Widget widget) async {
     await pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: Center(child: widget),
+      createRemixScope(
+        child: MaterialApp(
+          home: Scaffold(
+            body: Center(child: widget),
+          ),
         ),
       ),
     );
@@ -16,7 +19,7 @@ extension WidgetTesterHelpers on WidgetTester {
 
   /// Pumps a widget with custom scaffold
   Future<void> pumpRemixAppWithScaffold(Widget scaffold) async {
-    await pumpWidget(MaterialApp(home: scaffold));
+    await pumpWidget(createRemixScope(child: MaterialApp(home: scaffold)));
   }
 
   /// Finds a widget by its key string

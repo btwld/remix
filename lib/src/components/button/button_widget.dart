@@ -219,59 +219,61 @@ class _RemixButtonState extends State<RemixButton>
 
   @override
   Widget build(BuildContext context) {
-    return NakedButton(
-      onPressed: widget.onPressed,
-      onLongPress: widget.onLongPress,
-      onDoubleTap: widget.onDoubleTap,
-      enabled: _isEnabled,
-      isSemanticButton: widget.isSemanticButton,
-      semanticLabel: widget.semanticLabel ?? widget.label,
-      semanticHint: widget.semanticHint,
-      mouseCursor: widget.mouseCursor,
-      enableFeedback: widget.enableFeedback,
-      focusNode: widget.focusNode,
-      autofocus: widget.autofocus,
-      excludeSemantics: widget.excludeSemantics,
-      onFocusChange: widget.onFocusChange,
-      onHoverChange: widget.onHoverChange,
-      onPressChange: widget.onPressChanged,
-      onStatesChange: widget.onStatesChange,
-      statesController: controller,
-      child: StyleBuilder(
-        style: DefaultRemixButtonStyle.merge(widget.style),
-        controller: controller,
-        builder: (context, spec) {
-          final Label = spec.label;
-          final Spinner = spec.spinner;
-          final Container = spec.container;
+    return StyleBuilder(
+      style: DefaultRemixButtonStyle.merge(widget.style),
+      controller: controller,
+      builder: (context, spec) {
+        final Label = spec.label;
+        final Spinner = spec.spinner;
+        final Container = spec.container;
 
-          // Create the child widget based on whether custom child is provided
-          final effectiveChild = widget.child ??
-              Label(
-                text: widget.label ?? '',
-                leading: widget.leading,
-                trailing: widget.trailing,
-              );
+        // Create the child widget based on whether custom child is provided
+        final effectiveChild = widget.child ??
+            Label(
+              text: widget.label ?? '',
+              leading: widget.leading,
+              trailing: widget.trailing,
+            );
 
-          final content = widget.loading
-              ? Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Spinner(),
-                    Visibility(
-                      visible: false,
-                      maintainState: true,
-                      maintainAnimation: true,
-                      maintainSize: true,
-                      child: effectiveChild,
-                    ),
-                  ],
-                )
-              : effectiveChild;
+        final content = widget.loading
+            ? Stack(
+                alignment: Alignment.center,
+                children: [
+                  Spinner(),
+                  Visibility(
+                    visible: false,
+                    maintainState: true,
+                    maintainAnimation: true,
+                    maintainSize: true,
+                    child: effectiveChild,
+                  ),
+                ],
+              )
+            : effectiveChild;
 
-          return Container(child: content);
-        },
-      ),
+        final buttonChild = Container(child: content);
+
+        return NakedButton(
+          onPressed: widget.onPressed,
+          onLongPress: widget.onLongPress,
+          onDoubleTap: widget.onDoubleTap,
+          enabled: _isEnabled,
+          isSemanticButton: widget.isSemanticButton,
+          semanticLabel: widget.semanticLabel ?? widget.label,
+          semanticHint: widget.semanticHint,
+          mouseCursor: widget.mouseCursor,
+          enableFeedback: widget.enableFeedback,
+          focusNode: widget.focusNode,
+          autofocus: widget.autofocus,
+          excludeSemantics: widget.excludeSemantics,
+          onFocusChange: widget.onFocusChange,
+          onHoverChange: widget.onHoverChange,
+          onPressChange: widget.onPressChanged,
+          onStatesChange: widget.onStatesChange,
+          statesController: controller,
+          child: buttonChild,
+        );
+      },
     );
   }
 }

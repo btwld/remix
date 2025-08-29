@@ -11,7 +11,6 @@ class RemixDividerStyle extends Style<DividerSpec>
     super.variants,
     super.animation,
     super.modifier,
-    super.inherit,
   }) : $container = container;
 
   RemixDividerStyle({
@@ -19,13 +18,11 @@ class RemixDividerStyle extends Style<DividerSpec>
     AnimationConfig? animation,
     List<VariantStyle<DividerSpec>>? variants,
     ModifierConfig? modifier,
-    bool? inherit,
   }) : this.create(
           container: Prop.maybeMix(container),
           variants: variants,
           animation: animation,
           modifier: modifier,
-          inherit: inherit,
         );
 
   @override
@@ -49,7 +46,6 @@ class RemixDividerStyle extends Style<DividerSpec>
       spec: DividerSpec(container: MixOps.resolve(context, $container)),
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
-      inherit: $inherit,
     );
   }
 
@@ -62,18 +58,11 @@ class RemixDividerStyle extends Style<DividerSpec>
       variants: mergeVariantLists($variants, other.$variants),
       animation: other.$animation ?? $animation,
       modifier: $modifier?.merge(other.$modifier) ?? other.$modifier,
-      inherit: other.$inherit ?? $inherit,
     );
   }
 
   @override
-  List<Object?> get props => [
-        $container,
-        $variants,
-        $animation,
-        $modifier,
-        $inherit,
-      ];
+  List<Object?> get props => [$container, $variants, $animation, $modifier];
 }
 
 final DefaultRemixDividerStyle = RemixDividerStyle(

@@ -93,71 +93,73 @@ class _RemixSliderState extends State<RemixSlider>
 
   @override
   Widget build(BuildContext context) {
-    return NakedSlider(
-      value: widget.value,
-      min: widget.min,
-      max: widget.max,
-      onChanged: widget.onChanged,
-      onDragStart: () => widget.onChangeStart?.call(widget.value),
-      onDragEnd: widget.onChangeEnd,
-      onHoverChange: (state) => controller.hovered = state,
-      onDragChange: (state) => controller.dragged = state,
-      onFocusChange: (state) => controller.focused = state,
-      enabled: widget.enabled,
-      focusNode: widget.focusNode,
-      autofocus: widget.autofocus,
-      direction: Axis.horizontal,
-      divisions: _divisions,
-      child: StyleBuilder(
-        style: _style,
-        controller: controller,
-        builder: (context, spec) {
-          // Use a fixed thumb size for simplicity
-          final height = 24.0;
-          final horizontalPadding = height;
+    return StyleBuilder(
+      style: _style,
+      controller: controller,
+      builder: (context, spec) {
+        // Use a fixed thumb size for simplicity
+        final height = 24.0;
+        final horizontalPadding = height;
 
-          return SizedBox(
-            height: height,
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                final normalizedValue =
-                    (widget.value - widget.min) / (widget.max - widget.min);
-                final thumbPosition =
-                    (constraints.maxWidth - horizontalPadding) *
-                        normalizedValue;
+        final sliderChild = SizedBox(
+          height: height,
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final normalizedValue =
+                  (widget.value - widget.min) / (widget.max - widget.min);
+              final thumbPosition =
+                  (constraints.maxWidth - horizontalPadding) *
+                      normalizedValue;
 
-                return Stack(
-                  alignment: Alignment.centerLeft,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: horizontalPadding / 2,
-                      ),
-                      child: SizedBox(
-                        width: constraints.maxWidth,
-                        height: constraints.maxHeight,
-                        child: _AnimatedTrack(
-                          value: normalizedValue,
-                          active: spec.activeTrack,
-                          baseTrack: spec.baseTrack,
-                          divisions: _divisions,
-                          division: spec.division,
-                          duration: const Duration(milliseconds: 200),
-                          curve: Curves.linear,
-                        ),
+              return Stack(
+                alignment: Alignment.centerLeft,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: horizontalPadding / 2,
+                    ),
+                    child: SizedBox(
+                      width: constraints.maxWidth,
+                      height: constraints.maxHeight,
+                      child: _AnimatedTrack(
+                        value: normalizedValue,
+                        active: spec.activeTrack,
+                        baseTrack: spec.baseTrack,
+                        divisions: _divisions,
+                        division: spec.division,
+                        duration: const Duration(milliseconds: 200),
+                        curve: Curves.linear,
                       ),
                     ),
-                    Transform.translate(
-                      offset: Offset(thumbPosition, 0),
-                      child: spec.thumb(),
-                    ),
-                  ],
-                );
-              },
-            ),
-          );
-        },
-      ),
+                  ),
+                  Transform.translate(
+                    offset: Offset(thumbPosition, 0),
+                    child: spec.thumb(),
+                  ),
+                ],
+              );
+            },
+          ),
+        );
+
+        return NakedSlider(
+          value: widget.value,
+          min: widget.min,
+          max: widget.max,
+          onChanged: widget.onChanged,
+          onDragStart: () => widget.onChangeStart?.call(widget.value),
+          onDragEnd: widget.onChangeEnd,
+          onHoverChange: (state) => controller.hovered = state,
+          onDragChange: (state) => controller.dragged = state,
+          onFocusChange: (state) => controller.focused = state,
+          enabled: widget.enabled,
+          focusNode: widget.focusNode,
+          autofocus: widget.autofocus,
+          direction: Axis.horizontal,
+          divisions: _divisions,
+          child: sliderChild,
+        );
+      },
     );
   }
 }

@@ -25,7 +25,6 @@ class RemixListItemStyle extends Style<ListItemSpec>
     super.variants,
     super.animation,
     super.modifier,
-    super.inherit,
   })  : $container = container,
         $flex = flex,
         $contentContainer = contentContainer,
@@ -47,7 +46,6 @@ class RemixListItemStyle extends Style<ListItemSpec>
     AnimationConfig? animation,
     List<VariantStyle<ListItemSpec>>? variants,
     ModifierConfig? modifier,
-    bool? inherit,
   }) : this.create(
           container: Prop.maybeMix(container),
           flex: Prop.maybeMix(flex),
@@ -60,9 +58,7 @@ class RemixListItemStyle extends Style<ListItemSpec>
           variants: variants,
           animation: animation,
           modifier: modifier,
-          inherit: inherit,
         );
-
 
   @override
   WidgetSpec<ListItemSpec> resolve(BuildContext context) {
@@ -79,7 +75,6 @@ class RemixListItemStyle extends Style<ListItemSpec>
       ),
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
-      inherit: $inherit,
     );
   }
 
@@ -115,7 +110,6 @@ class RemixListItemStyle extends Style<ListItemSpec>
       variants: mergeVariantLists($variants, other.$variants),
       animation: other.$animation ?? $animation,
       modifier: $modifier?.merge(other.$modifier) ?? other.$modifier,
-      inherit: other.$inherit ?? $inherit,
     );
   }
 
@@ -132,7 +126,6 @@ class RemixListItemStyle extends Style<ListItemSpec>
         $variants,
         $animation,
         $modifier,
-        $inherit,
       ];
 }
 

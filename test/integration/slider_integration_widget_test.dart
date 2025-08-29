@@ -7,7 +7,8 @@ void main() {
   group('RemixSlider Integration Tests', () {
     testWidgets('renders with initial value', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        createRemixScope(
+          child: MaterialApp(
           home: Scaffold(
             body: Center(
               child: SizedBox(
@@ -20,6 +21,7 @@ void main() {
             ),
           ),
         ),
+        ),
       );
 
       expect(find.byType(RemixSlider), findsOneWidget);
@@ -29,7 +31,8 @@ void main() {
       double sliderValue = 0.5;
 
       await tester.pumpWidget(
-        MaterialApp(
+        createRemixScope(
+          child: MaterialApp(
           home: Scaffold(
             body: Center(
               child: StatefulBuilder(
@@ -50,6 +53,7 @@ void main() {
             ),
           ),
         ),
+        ),
       );
 
       // Drag slider to the right
@@ -68,7 +72,8 @@ void main() {
       double sliderValue = 50.0;
 
       await tester.pumpWidget(
-        MaterialApp(
+        createRemixScope(
+          child: MaterialApp(
           home: Scaffold(
             body: Center(
               child: StatefulBuilder(
@@ -91,6 +96,7 @@ void main() {
             ),
           ),
         ),
+        ),
       );
 
       // Value should be within bounds
@@ -111,7 +117,8 @@ void main() {
       double sliderValue = 0.0;
 
       await tester.pumpWidget(
-        MaterialApp(
+        createRemixScope(
+          child: MaterialApp(
           home: Scaffold(
             body: Center(
               child: StatefulBuilder(
@@ -132,6 +139,7 @@ void main() {
               ),
             ),
           ),
+        ),
         ),
       );
 
@@ -155,7 +163,8 @@ void main() {
       double sliderValue = 0.5;
 
       await tester.pumpWidget(
-        MaterialApp(
+        createRemixScope(
+          child: MaterialApp(
           home: Scaffold(
             body: Center(
               child: SizedBox(
@@ -170,6 +179,7 @@ void main() {
               ),
             ),
           ),
+        ),
         ),
       );
 
@@ -189,7 +199,8 @@ void main() {
       double? changedValue;
 
       await tester.pumpWidget(
-        MaterialApp(
+        createRemixScope(
+          child: MaterialApp(
           home: Scaffold(
             body: Center(
               child: SizedBox(
@@ -203,6 +214,7 @@ void main() {
               ),
             ),
           ),
+        ),
         ),
       );
 
@@ -229,7 +241,8 @@ void main() {
       double sliderValue = 0.75;
 
       await tester.pumpWidget(
-        MaterialApp(
+        createRemixScope(
+          child: MaterialApp(
           home: Scaffold(
             body: Center(
               child: StatefulBuilder(
@@ -263,6 +276,7 @@ void main() {
             ),
           ),
         ),
+        ),
       );
 
       expect(sliderValue, 0.75);
@@ -277,7 +291,8 @@ void main() {
 
     testWidgets('handles hover state', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        createRemixScope(
+          child: MaterialApp(
           home: Scaffold(
             body: Center(
               child: SizedBox(
@@ -289,6 +304,7 @@ void main() {
               ),
             ),
           ),
+        ),
         ),
       );
 
@@ -308,7 +324,8 @@ void main() {
       final values = <double>[];
 
       await tester.pumpWidget(
-        MaterialApp(
+        createRemixScope(
+          child: MaterialApp(
           home: Scaffold(
             body: Center(
               child: SizedBox(
@@ -322,6 +339,7 @@ void main() {
               ),
             ),
           ),
+        ),
         ),
       );
 
@@ -353,7 +371,8 @@ void main() {
       double sliderValue = 0.0;
 
       await tester.pumpWidget(
-        MaterialApp(
+        createRemixScope(
+          child: MaterialApp(
           home: Scaffold(
             body: Center(
               child: StatefulBuilder(
@@ -380,6 +399,7 @@ void main() {
             ),
           ),
         ),
+        ),
       );
 
       expect(find.text('Value: 0.00'), findsOneWidget);
@@ -401,7 +421,8 @@ void main() {
       double sliderValue = 0.0;
 
       await tester.pumpWidget(
-        MaterialApp(
+        createRemixScope(
+          child: MaterialApp(
           home: Scaffold(
             body: Center(
               child: StatefulBuilder(
@@ -421,6 +442,7 @@ void main() {
               ),
             ),
           ),
+        ),
         ),
       );
 
@@ -445,7 +467,8 @@ void main() {
 
     testWidgets('preserves accessibility semantics', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        createRemixScope(
+          child: MaterialApp(
           home: Scaffold(
             body: Center(
               child: SizedBox(
@@ -458,6 +481,7 @@ void main() {
             ),
           ),
         ),
+        ),
       );
 
       // Verify component is accessible (has semantics)
@@ -469,7 +493,8 @@ void main() {
 
     testWidgets('handles null onChanged callback', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        createRemixScope(
+          child: MaterialApp(
           home: Scaffold(
             body: Center(
               child: SizedBox(
@@ -482,6 +507,7 @@ void main() {
               ),
             ),
           ),
+        ),
         ),
       );
 
@@ -497,7 +523,8 @@ void main() {
       double sliderValue = 0.5;
 
       await tester.pumpWidget(
-        MaterialApp(
+        createRemixScope(
+          child: MaterialApp(
           home: Scaffold(
             body: Center(
               child: StatefulBuilder(
@@ -545,6 +572,7 @@ void main() {
               ),
             ),
           ),
+        ),
         ),
       );
 

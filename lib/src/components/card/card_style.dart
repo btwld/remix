@@ -11,7 +11,6 @@ class RemixCardStyle extends Style<CardSpec>
     super.variants,
     super.animation,
     super.modifier,
-    super.inherit,
   }) : $container = container;
 
   RemixCardStyle({
@@ -19,15 +18,12 @@ class RemixCardStyle extends Style<CardSpec>
     AnimationConfig? animation,
     List<VariantStyle<CardSpec>>? variants,
     ModifierConfig? modifier,
-    bool? inherit,
   }) : this.create(
           container: Prop.maybeMix(container),
           variants: variants,
           animation: animation,
           modifier: modifier,
-          inherit: inherit,
         );
-
 
   @override
   WidgetSpec<CardSpec> resolve(BuildContext context) {
@@ -35,7 +31,6 @@ class RemixCardStyle extends Style<CardSpec>
       spec: CardSpec(container: MixOps.resolve(context, $container)),
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
-      inherit: $inherit,
     );
   }
 
@@ -48,7 +43,6 @@ class RemixCardStyle extends Style<CardSpec>
       variants: mergeVariantLists($variants, other.$variants),
       animation: other.$animation ?? $animation,
       modifier: $modifier?.merge(other.$modifier) ?? other.$modifier,
-      inherit: other.$inherit ?? $inherit,
     );
   }
 
@@ -68,13 +62,7 @@ class RemixCardStyle extends Style<CardSpec>
   }
 
   @override
-  List<Object?> get props => [
-        $container,
-        $variants,
-        $animation,
-        $modifier,
-        $inherit,
-      ];
+  List<Object?> get props => [$container, $variants, $animation, $modifier];
 }
 
 final DefaultRemixCardStyle = RemixCardStyle(

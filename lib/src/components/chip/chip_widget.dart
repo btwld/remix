@@ -85,54 +85,67 @@ class _RemixChipState extends State<RemixChip>
     with HasWidgetStateController, HasEnabledState, HasSelectedState {
   @override
   Widget build(BuildContext context) {
-    return NakedCheckbox(
-      value: widget.selected,
-      onChanged: (value) => widget.onChanged?.call(value ?? false),
-      enabled: widget.enabled,
-      enableFeedback: widget.enableFeedback,
-      focusNode: widget.focusNode,
-      autofocus: widget.autofocus,
-      statesController: controller,
-      child: StyleBuilder(
-        style: DefaultRemixChipStyle.merge(widget.style),
-        controller: controller,
-        builder: (context, spec) {
-          final Container = spec.container;
-          final LeadingIcon = spec.leading;
-          final Label = spec.label;
-          final TrailingIcon = spec.trailing;
+    return StyleBuilder(
+      style: DefaultRemixChipStyle.merge(widget.style),
+      controller: controller,
+      builder: (context, spec) {
+        final Container = spec.container;
+        final LeadingIcon = spec.leading;
+        final Label = spec.label;
+        final TrailingIcon = spec.trailing;
 
-          // Use custom child if provided
-          if (widget.child != null) {
-            return Container(child: Row(children: [widget.child!]));
-          }
-
-          // Build chip content progressively
-          final children = <Widget>[];
-
-          // Add leading icon
-          if (widget.leading != null) {
-            children.add(LeadingIcon(icon: widget.leading!));
-          }
-
-          // Add label
-          if (widget.label != null) {
-            children.add(Label(widget.label!));
-          }
-
-          // Add delete button
-          if (widget.onDeleted != null) {
-            children.add(GestureDetector(
-              onTap: widget.enabled ? widget.onDeleted : null,
-              child: TrailingIcon(icon: widget.trailing ?? Icons.close),
-            ));
-          }
-
-          return Container(
-            child: Flex(direction: Axis.horizontal, children: children),
+        // Use custom child if provided
+        if (widget.child != null) {
+          final chipChild = Container(child: Row(children: [widget.child!]));
+          
+          return NakedCheckbox(
+            value: widget.selected,
+            onChanged: (value) => widget.onChanged?.call(value ?? false),
+            enabled: widget.enabled,
+            enableFeedback: widget.enableFeedback,
+            focusNode: widget.focusNode,
+            autofocus: widget.autofocus,
+            statesController: controller,
+            child: chipChild,
           );
-        },
-      ),
+        }
+
+        // Build chip content progressively
+        final children = <Widget>[];
+
+        // Add leading icon
+        if (widget.leading != null) {
+          children.add(LeadingIcon(icon: widget.leading!));
+        }
+
+        // Add label
+        if (widget.label != null) {
+          children.add(Label(widget.label!));
+        }
+
+        // Add delete button
+        if (widget.onDeleted != null) {
+          children.add(GestureDetector(
+            onTap: widget.enabled ? widget.onDeleted : null,
+            child: TrailingIcon(icon: widget.trailing ?? Icons.close),
+          ));
+        }
+
+        final chipChild = Container(
+          child: Flex(direction: Axis.horizontal, children: children),
+        );
+
+        return NakedCheckbox(
+          value: widget.selected,
+          onChanged: (value) => widget.onChanged?.call(value ?? false),
+          enabled: widget.enabled,
+          enableFeedback: widget.enableFeedback,
+          focusNode: widget.focusNode,
+          autofocus: widget.autofocus,
+          statesController: controller,
+          child: chipChild,
+        );
+      },
     );
   }
 }

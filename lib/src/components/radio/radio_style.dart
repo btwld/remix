@@ -17,7 +17,6 @@ class RemixRadioStyle extends Style<RadioSpec>
     super.variants,
     super.animation,
     super.modifier,
-    super.inherit,
   })  : $container = container,
         $indicatorContainer = indicatorContainer,
         $indicator = indicator,
@@ -31,7 +30,6 @@ class RemixRadioStyle extends Style<RadioSpec>
     AnimationConfig? animation,
     List<VariantStyle<RadioSpec>>? variants,
     ModifierConfig? modifier,
-    bool? inherit,
   }) : this.create(
           container: Prop.maybeMix(container),
           indicatorContainer: Prop.maybeMix(indicatorContainer),
@@ -40,7 +38,6 @@ class RemixRadioStyle extends Style<RadioSpec>
           variants: variants,
           animation: animation,
           modifier: modifier,
-          inherit: inherit,
         );
 
   @override
@@ -69,7 +66,6 @@ class RemixRadioStyle extends Style<RadioSpec>
       ),
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
-      inherit: $inherit,
     );
   }
 
@@ -86,7 +82,6 @@ class RemixRadioStyle extends Style<RadioSpec>
       variants: mergeVariantLists($variants, other.$variants),
       animation: other.$animation ?? $animation,
       modifier: $modifier?.merge(other.$modifier) ?? other.$modifier,
-      inherit: other.$inherit ?? $inherit,
     );
   }
 
@@ -99,7 +94,6 @@ class RemixRadioStyle extends Style<RadioSpec>
         $variants,
         $animation,
         $modifier,
-        $inherit,
       ];
 }
 

@@ -88,30 +88,30 @@ class _RemixSwitchState extends State<RemixSwitch>
     with HasWidgetStateController, HasEnabledState, HasSelectedState {
   @override
   Widget build(BuildContext context) {
-    return NakedCheckbox(
-      value: widget.selected,
-      onChanged: (value) => widget.onChanged(value ?? false),
-      enabled: widget.enabled,
-      semanticLabel: widget.semanticLabel,
-      semanticHint: widget.semanticHint,
-      excludeSemantics: widget.excludeSemantics,
-      mouseCursor: widget.mouseCursor,
-      enableFeedback: widget.enableFeedback,
-      focusNode: widget.focusNode,
-      autofocus: widget.autofocus,
-      onFocusChange: widget.onFocusChange,
-      onHoverChange: widget.onHoverChange,
-      onStatesChange: widget.onStateChange,
-      statesController: controller,
-      child: StyleBuilder(
-        style: DefaultRemixSwitchStyle.merge(widget.style),
-        controller: controller,
-        builder: (context, spec) {
-          final Container = spec.container;
-          final Track = spec.track;
-          final Thumb = spec.thumb;
+    return StyleBuilder(
+      style: DefaultRemixSwitchStyle.merge(widget.style),
+      controller: controller,
+      builder: (context, spec) {
+        final Container = spec.container;
+        final Track = spec.track;
+        final Thumb = spec.thumb;
 
-          return Container(
+        return NakedCheckbox(
+          value: widget.selected,
+          onChanged: (value) => widget.onChanged(value ?? false),
+          enabled: widget.enabled,
+          semanticLabel: widget.semanticLabel,
+          semanticHint: widget.semanticHint,
+          excludeSemantics: widget.excludeSemantics,
+          mouseCursor: widget.mouseCursor,
+          enableFeedback: widget.enableFeedback,
+          focusNode: widget.focusNode,
+          autofocus: widget.autofocus,
+          onFocusChange: widget.onFocusChange,
+          onHoverChange: widget.onHoverChange,
+          onStatesChange: widget.onStateChange,
+          statesController: controller,
+          child: Container(
             child: Track(
               child: Align(
                 alignment: widget.selected
@@ -123,9 +123,9 @@ class _RemixSwitchState extends State<RemixSwitch>
                 ),
               ),
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

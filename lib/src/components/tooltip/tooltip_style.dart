@@ -13,7 +13,6 @@ class RemixTooltipStyle extends Style<TooltipSpec>
     super.variants,
     super.animation,
     super.modifier,
-    super.inherit,
   })  : $container = container,
         $text = text;
 
@@ -23,14 +22,12 @@ class RemixTooltipStyle extends Style<TooltipSpec>
     AnimationConfig? animation,
     List<VariantStyle<TooltipSpec>>? variants,
     ModifierConfig? modifier,
-    bool? inherit,
   }) : this.create(
           container: Prop.maybeMix(container),
           text: Prop.maybeMix(text),
           variants: variants,
           animation: animation,
           modifier: modifier,
-          inherit: inherit,
         );
 
   @override
@@ -42,7 +39,6 @@ class RemixTooltipStyle extends Style<TooltipSpec>
       ),
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
-      inherit: $inherit,
     );
   }
 
@@ -56,7 +52,6 @@ class RemixTooltipStyle extends Style<TooltipSpec>
       variants: mergeVariantLists($variants, other.$variants),
       animation: other.$animation ?? $animation,
       modifier: $modifier?.merge(other.$modifier) ?? other.$modifier,
-      inherit: other.$inherit ?? $inherit,
     );
   }
 
@@ -82,7 +77,6 @@ class RemixTooltipStyle extends Style<TooltipSpec>
         $variants,
         $animation,
         $modifier,
-        $inherit,
       ];
 }
 

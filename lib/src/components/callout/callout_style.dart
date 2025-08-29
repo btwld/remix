@@ -15,7 +15,6 @@ class RemixCalloutStyle extends Style<CalloutSpec>
     super.variants,
     super.animation,
     super.modifier,
-    super.inherit,
   })  : $container = container,
         $text = text,
         $icon = icon;
@@ -27,7 +26,6 @@ class RemixCalloutStyle extends Style<CalloutSpec>
     AnimationConfig? animation,
     List<VariantStyle<CalloutSpec>>? variants,
     ModifierConfig? modifier,
-    bool? inherit,
   }) : this.create(
           container: Prop.maybeMix(container),
           text: Prop.maybeMix(text),
@@ -35,9 +33,7 @@ class RemixCalloutStyle extends Style<CalloutSpec>
           variants: variants,
           animation: animation,
           modifier: modifier,
-          inherit: inherit,
         );
-
 
   @override
   WidgetSpec<CalloutSpec> resolve(BuildContext context) {
@@ -49,7 +45,6 @@ class RemixCalloutStyle extends Style<CalloutSpec>
       ),
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
-      inherit: $inherit,
     );
   }
 
@@ -64,7 +59,6 @@ class RemixCalloutStyle extends Style<CalloutSpec>
       variants: mergeVariantLists($variants, other.$variants),
       animation: other.$animation ?? $animation,
       modifier: $modifier?.merge(other.$modifier) ?? other.$modifier,
-      inherit: other.$inherit ?? $inherit,
     );
   }
 
@@ -91,7 +85,6 @@ class RemixCalloutStyle extends Style<CalloutSpec>
         $variants,
         $animation,
         $modifier,
-        $inherit,
       ];
 }
 

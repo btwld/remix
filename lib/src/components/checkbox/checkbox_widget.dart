@@ -116,53 +116,53 @@ class _RemixCheckboxState extends State<RemixCheckbox>
     // Update controller selected state
     controller.selected = widget.selected ?? false;
 
-    return NakedCheckbox(
-      value: widget.selected,
-      tristate: widget.tristate,
-      onChanged: widget.enabled && widget.onChanged != null
-          ? (value) =>
-              widget.onChanged!(widget.tristate ? value : (value ?? false))
-          : null,
-      enabled: widget.enabled,
-      semanticLabel: widget.semanticLabel ?? widget.label,
-      semanticHint: widget.semanticHint,
-      excludeSemantics: widget.excludeSemantics,
-      mouseCursor: widget.mouseCursor,
-      enableFeedback: widget.enableFeedback,
-      focusNode: widget.focusNode,
-      autofocus: widget.autofocus,
-      onFocusChange: widget.onFocusChange,
-      onHoverChange: widget.onHoverChange,
-      onStatesChange: widget.onStateChange,
-      statesController: controller,
-      child: StyleBuilder(
-        style: DefaultRemixCheckboxStyle.merge(widget.style),
-        builder: (context, spec) {
-          final IndicatorContainer = spec.indicatorContainer;
-          final Indicator = spec.indicator;
-          final FlexContainer = spec.container;
-          final Label = spec.label;
+    return StyleBuilder(
+      style: DefaultRemixCheckboxStyle.merge(widget.style),
+      builder: (context, spec) {
+        final IndicatorContainer = spec.indicatorContainer;
+        final Indicator = spec.indicator;
+        final FlexContainer = spec.container;
+        final Label = spec.label;
 
-          final iconData = widget.tristate && widget.selected == null
-              ? widget.indeterminateIcon
-              : widget.selected == true
-                  ? widget.checkedIcon
-                  : widget.uncheckedIcon;
+        final iconData = widget.tristate && widget.selected == null
+            ? widget.indeterminateIcon
+            : widget.selected == true
+                ? widget.checkedIcon
+                : widget.uncheckedIcon;
 
-          final checkbox = IndicatorContainer(
-            child: iconData != null ? Indicator(icon: iconData) : null,
-          );
+        final checkbox = IndicatorContainer(
+          child: iconData != null ? Indicator(icon: iconData) : null,
+        );
 
-          if (widget.label == null) {
-            return checkbox;
-          }
+        final checkboxChild = widget.label == null
+            ? checkbox
+            : FlexContainer(
+                direction: Axis.horizontal,
+                children: [checkbox, Label(widget.label!)],
+              );
 
-          return FlexContainer(
-            direction: Axis.horizontal,
-            children: [checkbox, Label(widget.label!)],
-          );
-        },
-      ),
+        return NakedCheckbox(
+          value: widget.selected,
+          tristate: widget.tristate,
+          onChanged: widget.enabled && widget.onChanged != null
+              ? (value) =>
+                  widget.onChanged!(widget.tristate ? value : (value ?? false))
+              : null,
+          enabled: widget.enabled,
+          semanticLabel: widget.semanticLabel ?? widget.label,
+          semanticHint: widget.semanticHint,
+          excludeSemantics: widget.excludeSemantics,
+          mouseCursor: widget.mouseCursor,
+          enableFeedback: widget.enableFeedback,
+          focusNode: widget.focusNode,
+          autofocus: widget.autofocus,
+          onFocusChange: widget.onFocusChange,
+          onHoverChange: widget.onHoverChange,
+          onStatesChange: widget.onStateChange,
+          statesController: controller,
+          child: checkboxChild,
+        );
+      },
     );
   }
 }

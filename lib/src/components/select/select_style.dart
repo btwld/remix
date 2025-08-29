@@ -17,7 +17,6 @@ class RemixSelectStyle extends Style<SelectSpec>
     super.variants,
     super.animation,
     super.modifier,
-    super.inherit,
   })  : $menuContainer = menuContainer,
         $trigger = trigger,
         $item = item,
@@ -31,7 +30,6 @@ class RemixSelectStyle extends Style<SelectSpec>
     AnimationConfig? animation,
     List<VariantStyle<SelectSpec>>? variants,
     ModifierConfig? modifier,
-    bool? inherit,
   }) : this.create(
           menuContainer: Prop.maybeMix(menuContainer),
           trigger: Prop.maybeMix(trigger),
@@ -40,7 +38,6 @@ class RemixSelectStyle extends Style<SelectSpec>
           variants: variants,
           animation: animation,
           modifier: modifier,
-          inherit: inherit,
         );
 
   @override
@@ -69,7 +66,6 @@ class RemixSelectStyle extends Style<SelectSpec>
       ),
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
-      inherit: $inherit,
     );
   }
 
@@ -85,7 +81,6 @@ class RemixSelectStyle extends Style<SelectSpec>
       variants: mergeVariantLists($variants, other.$variants),
       animation: other.$animation ?? $animation,
       modifier: $modifier?.merge(other.$modifier) ?? other.$modifier,
-      inherit: other.$inherit ?? $inherit,
     );
   }
 
@@ -98,7 +93,6 @@ class RemixSelectStyle extends Style<SelectSpec>
         $variants,
         $animation,
         $modifier,
-        $inherit,
       ];
 }
 
@@ -115,7 +109,6 @@ class RemixSelectTriggerStyle extends Style<SelectTriggerSpec> {
     super.variants,
     super.animation,
     super.modifier,
-    super.inherit,
   })  : $container = container,
         $label = label,
         $icon = icon;
@@ -127,7 +120,6 @@ class RemixSelectTriggerStyle extends Style<SelectTriggerSpec> {
     AnimationConfig? animation,
     List<VariantStyle<SelectTriggerSpec>>? variants,
     ModifierConfig? modifier,
-    bool? inherit,
   }) : this.create(
           container: Prop.maybeMix(container),
           label: Prop.maybeMix(label),
@@ -135,9 +127,7 @@ class RemixSelectTriggerStyle extends Style<SelectTriggerSpec> {
           variants: variants,
           animation: animation,
           modifier: modifier,
-          inherit: inherit,
         );
-
 
   @override
   WidgetSpec<SelectTriggerSpec> resolve(BuildContext context) {
@@ -149,7 +139,6 @@ class RemixSelectTriggerStyle extends Style<SelectTriggerSpec> {
       ),
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
-      inherit: $inherit,
     );
   }
 
@@ -164,7 +153,6 @@ class RemixSelectTriggerStyle extends Style<SelectTriggerSpec> {
       variants: mergeVariantLists($variants, other.$variants),
       animation: other.$animation ?? $animation,
       modifier: $modifier?.merge(other.$modifier) ?? other.$modifier,
-      inherit: other.$inherit ?? $inherit,
     );
   }
 
@@ -176,7 +164,6 @@ class RemixSelectTriggerStyle extends Style<SelectTriggerSpec> {
         $variants,
         $animation,
         $modifier,
-        $inherit,
       ];
 }
 
@@ -192,7 +179,6 @@ class RemixSelectMenuItemStyle extends Style<SelectMenuItemSpec> {
     super.variants,
     super.animation,
     super.modifier,
-    super.inherit,
   })  : $container = container,
         $text = text,
         $icon = icon;
@@ -204,7 +190,6 @@ class RemixSelectMenuItemStyle extends Style<SelectMenuItemSpec> {
     AnimationConfig? animation,
     List<VariantStyle<SelectMenuItemSpec>>? variants,
     ModifierConfig? modifier,
-    bool? inherit,
   }) : this.create(
           container: Prop.maybeMix(container),
           text: Prop.maybeMix(text),
@@ -212,9 +197,7 @@ class RemixSelectMenuItemStyle extends Style<SelectMenuItemSpec> {
           variants: variants,
           animation: animation,
           modifier: modifier,
-          inherit: inherit,
         );
-
 
   @override
   WidgetSpec<SelectMenuItemSpec> resolve(BuildContext context) {
@@ -226,7 +209,6 @@ class RemixSelectMenuItemStyle extends Style<SelectMenuItemSpec> {
       ),
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
-      inherit: $inherit,
     );
   }
 
@@ -241,7 +223,6 @@ class RemixSelectMenuItemStyle extends Style<SelectMenuItemSpec> {
       variants: mergeVariantLists($variants, other.$variants),
       animation: other.$animation ?? $animation,
       modifier: $modifier?.merge(other.$modifier) ?? other.$modifier,
-      inherit: other.$inherit ?? $inherit,
     );
   }
 
@@ -253,7 +234,6 @@ class RemixSelectMenuItemStyle extends Style<SelectMenuItemSpec> {
         $variants,
         $animation,
         $modifier,
-        $inherit,
       ];
 }
 
@@ -270,7 +250,6 @@ class RemixCompositedTransformFollowerStyle
     super.variants,
     super.animation,
     super.modifier,
-    super.inherit,
   })  : $targetAnchor = targetAnchor,
         $followerAnchor = followerAnchor,
         $offset = offset;
@@ -282,7 +261,6 @@ class RemixCompositedTransformFollowerStyle
     AnimationConfig? animation,
     List<VariantStyle<CompositedTransformFollowerSpec>>? variants,
     ModifierConfig? modifier,
-    bool? inherit,
   }) : this.create(
           targetAnchor: Prop.maybe(targetAnchor),
           followerAnchor: Prop.maybe(followerAnchor),
@@ -290,7 +268,6 @@ class RemixCompositedTransformFollowerStyle
           variants: variants,
           animation: animation,
           modifier: modifier,
-          inherit: inherit,
         );
 
   @override
@@ -303,7 +280,6 @@ class RemixCompositedTransformFollowerStyle
       ),
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
-      inherit: $inherit,
     );
   }
 
@@ -320,7 +296,6 @@ class RemixCompositedTransformFollowerStyle
       variants: mergeVariantLists($variants, other.$variants),
       animation: other.$animation ?? $animation,
       modifier: $modifier?.merge(other.$modifier) ?? other.$modifier,
-      inherit: other.$inherit ?? $inherit,
     );
   }
 
@@ -332,7 +307,6 @@ class RemixCompositedTransformFollowerStyle
         $variants,
         $animation,
         $modifier,
-        $inherit,
       ];
 }
 

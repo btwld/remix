@@ -42,7 +42,7 @@ class RemixSpinner extends StatelessWidget {
 }
 
 class _SpinnerSpecWidget extends StatefulWidget {
-  const _SpinnerSpecWidget({super.key, required this.spec});
+  const _SpinnerSpecWidget({required this.spec});
 
   final SpinnerSpec spec;
 

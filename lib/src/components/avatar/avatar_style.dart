@@ -15,7 +15,6 @@ class RemixAvatarStyle extends Style<AvatarSpec>
     super.variants,
     super.animation,
     super.modifier,
-    super.inherit,
   })  : $container = container,
         $text = text,
         $icon = icon;
@@ -27,7 +26,6 @@ class RemixAvatarStyle extends Style<AvatarSpec>
     AnimationConfig? animation,
     List<VariantStyle<AvatarSpec>>? variants,
     ModifierConfig? modifier,
-    bool? inherit,
   }) : this.create(
           container: Prop.maybeMix(container),
           text: Prop.maybeMix(text),
@@ -35,7 +33,6 @@ class RemixAvatarStyle extends Style<AvatarSpec>
           variants: variants,
           animation: animation,
           modifier: modifier,
-          inherit: inherit,
         );
 
   /// Factory for avatar size
@@ -141,7 +138,6 @@ class RemixAvatarStyle extends Style<AvatarSpec>
       ),
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
-      inherit: $inherit,
     );
   }
 
@@ -156,7 +152,6 @@ class RemixAvatarStyle extends Style<AvatarSpec>
       variants: mergeVariantLists($variants, other.$variants),
       animation: other.$animation ?? $animation,
       modifier: $modifier?.merge(other.$modifier) ?? other.$modifier,
-      inherit: other.$inherit ?? $inherit,
     );
   }
 
@@ -168,7 +163,6 @@ class RemixAvatarStyle extends Style<AvatarSpec>
         $variants,
         $animation,
         $modifier,
-        $inherit,
       ];
 }
 
