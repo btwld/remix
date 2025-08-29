@@ -4,14 +4,14 @@ class RemixSwitchStyle extends Style<SwitchSpec>
     with
         StyleModifierMixin<RemixSwitchStyle, SwitchSpec>,
         StyleVariantMixin<RemixSwitchStyle, SwitchSpec> {
-  final Prop<BoxSpec>? $container;
-  final Prop<BoxSpec>? $track;
-  final Prop<BoxSpec>? $thumb;
+  final Prop<WidgetSpec<BoxSpec>>? $container;
+  final Prop<WidgetSpec<BoxSpec>>? $track;
+  final Prop<WidgetSpec<BoxSpec>>? $thumb;
 
   const RemixSwitchStyle.create({
-    Prop<BoxSpec>? container,
-    Prop<BoxSpec>? track,
-    Prop<BoxSpec>? thumb,
+    Prop<WidgetSpec<BoxSpec>>? container,
+    Prop<WidgetSpec<BoxSpec>>? track,
+    Prop<WidgetSpec<BoxSpec>>? thumb,
     super.variants,
     super.animation,
     super.modifier,
@@ -21,9 +21,9 @@ class RemixSwitchStyle extends Style<SwitchSpec>
         $thumb = thumb;
 
   RemixSwitchStyle({
-    BoxMix? container,
-    BoxMix? track,
-    BoxMix? thumb,
+    BoxStyle? container,
+    BoxStyle? track,
+    BoxStyle? thumb,
     AnimationConfig? animation,
     List<VariantStyle<SwitchSpec>>? variants,
     ModifierConfig? modifier,
@@ -38,11 +38,6 @@ class RemixSwitchStyle extends Style<SwitchSpec>
           inherit: inherit,
         );
 
-  factory RemixSwitchStyle.value(SwitchSpec spec) => RemixSwitchStyle(
-        container: BoxMix.maybeValue(spec.container),
-        track: BoxMix.maybeValue(spec.track),
-        thumb: BoxMix.maybeValue(spec.thumb),
-      );
 
   @override
   WidgetSpec<SwitchSpec> resolve(BuildContext context) {
@@ -101,36 +96,36 @@ class RemixSwitchStyle extends Style<SwitchSpec>
 }
 
 final DefaultRemixSwitchStyle = RemixSwitchStyle(
-  container: BoxMix(),
-  track: BoxMix(
-    decoration: BoxDecorationMix(
-      borderRadius: BorderRadiusMix.circular(RemixTokens.radiusXl()),
-      color: RemixTokens.border(),
-    ),
+  container: BoxStyle(),
+  track: BoxStyle(
     constraints: BoxConstraintsMix(
       minWidth: 44,
       maxWidth: 44,
       minHeight: 24,
       maxHeight: 24,
     ),
-  ),
-  thumb: BoxMix(
     decoration: BoxDecorationMix(
-      shape: BoxShape.circle,
-      color: RemixTokens.background(),
-      boxShadow: [
-        BoxShadowMix(
-          color: Colors.black.withValues(alpha: 0.2),
-          offset: const Offset(0, 1),
-          blurRadius: 2,
-        ),
-      ],
+      borderRadius: BorderRadiusMix.circular(RemixTokens.radiusXl()),
+      color: RemixTokens.border(),
     ),
+  ),
+  thumb: BoxStyle(
     constraints: BoxConstraintsMix(
       minWidth: 20,
       maxWidth: 20,
       minHeight: 20,
       maxHeight: 20,
+    ),
+    decoration: BoxDecorationMix(
+      shape: BoxShape.circle,
+      color: RemixTokens.background(),
+      boxShadow: [
+        BoxShadowMix(
+          color: RemixTokens.textPrimary().withValues(alpha: 0.2),
+          offset: const Offset(0, 1),
+          blurRadius: 2,
+        ),
+      ],
     ),
   ),
   animation: AnimationConfig.easeInOut(const Duration(milliseconds: 200)),
@@ -139,36 +134,36 @@ final DefaultRemixSwitchStyle = RemixSwitchStyle(
 extension SwitchVariants on RemixSwitchStyle {
   /// Primary switch variant with blue colors
   static RemixSwitchStyle get primary => RemixSwitchStyle(
-        container: BoxMix(),
-        track: BoxMix(
-          decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusXl()),
-            color: RemixTokens.primary(),
-          ),
+        container: BoxStyle(),
+        track: BoxStyle(
           constraints: BoxConstraintsMix(
             minWidth: 44,
             maxWidth: 44,
             minHeight: 24,
             maxHeight: 24,
           ),
-        ),
-        thumb: BoxMix(
           decoration: BoxDecorationMix(
-            shape: BoxShape.circle,
-            color: RemixTokens.primary(),
-            boxShadow: [
-              BoxShadowMix(
-                color: Colors.black.withValues(alpha: 0.3),
-                offset: const Offset(0, 1),
-                blurRadius: 2,
-              ),
-            ],
+            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusXl()),
+            color: RemixTokens.primary().withValues(alpha: 0.2),
           ),
+        ),
+        thumb: BoxStyle(
           constraints: BoxConstraintsMix(
             minWidth: 20,
             maxWidth: 20,
             minHeight: 20,
             maxHeight: 20,
+          ),
+          decoration: BoxDecorationMix(
+            shape: BoxShape.circle,
+            color: RemixTokens.primary(),
+            boxShadow: [
+              BoxShadowMix(
+                color: RemixTokens.primary().withValues(alpha: 0.3),
+                offset: const Offset(0, 1),
+                blurRadius: 2,
+              ),
+            ],
           ),
         ),
         animation: AnimationConfig.easeInOut(const Duration(milliseconds: 200)),
@@ -176,36 +171,36 @@ extension SwitchVariants on RemixSwitchStyle {
 
   /// Secondary switch variant with grey colors
   static RemixSwitchStyle get secondary => RemixSwitchStyle(
-        container: BoxMix(),
-        track: BoxMix(
-          decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusXl()),
-            color: RemixTokens.surface(),
-          ),
+        container: BoxStyle(),
+        track: BoxStyle(
           constraints: BoxConstraintsMix(
             minWidth: 44,
             maxWidth: 44,
             minHeight: 24,
             maxHeight: 24,
           ),
-        ),
-        thumb: BoxMix(
           decoration: BoxDecorationMix(
-            shape: BoxShape.circle,
-            color: RemixTokens.textSecondary(),
-            boxShadow: [
-              BoxShadowMix(
-                color: Colors.black.withValues(alpha: 0.3),
-                offset: const Offset(0, 1),
-                blurRadius: 2,
-              ),
-            ],
+            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusXl()),
+            color: RemixTokens.surface(),
           ),
+        ),
+        thumb: BoxStyle(
           constraints: BoxConstraintsMix(
             minWidth: 20,
             maxWidth: 20,
             minHeight: 20,
             maxHeight: 20,
+          ),
+          decoration: BoxDecorationMix(
+            shape: BoxShape.circle,
+            color: RemixTokens.textSecondary(),
+            boxShadow: [
+              BoxShadowMix(
+                color: RemixTokens.textSecondary().withValues(alpha: 0.3),
+                offset: const Offset(0, 1),
+                blurRadius: 2,
+              ),
+            ],
           ),
         ),
         animation: AnimationConfig.easeInOut(const Duration(milliseconds: 200)),
@@ -213,36 +208,36 @@ extension SwitchVariants on RemixSwitchStyle {
 
   /// Compact switch variant with smaller size
   static RemixSwitchStyle get compact => RemixSwitchStyle(
-        container: BoxMix(),
-        track: BoxMix(
-          decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusLg()),
-            color: RemixTokens.border(),
-          ),
+        container: BoxStyle(),
+        track: BoxStyle(
           constraints: BoxConstraintsMix(
             minWidth: 36,
             maxWidth: 36,
             minHeight: 20,
             maxHeight: 20,
           ),
-        ),
-        thumb: BoxMix(
           decoration: BoxDecorationMix(
-            shape: BoxShape.circle,
-            color: RemixTokens.background(),
-            boxShadow: [
-              BoxShadowMix(
-                color: Colors.black.withValues(alpha: 0.1),
-                offset: const Offset(0, 1),
-                blurRadius: 1,
-              ),
-            ],
+            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusLg()),
+            color: RemixTokens.border(),
           ),
+        ),
+        thumb: BoxStyle(
           constraints: BoxConstraintsMix(
             minWidth: 16,
             maxWidth: 16,
             minHeight: 16,
             maxHeight: 16,
+          ),
+          decoration: BoxDecorationMix(
+            shape: BoxShape.circle,
+            color: RemixTokens.background(),
+            boxShadow: [
+              BoxShadowMix(
+                color: RemixTokens.textPrimary().withValues(alpha: 0.1),
+                offset: const Offset(0, 1),
+                blurRadius: 1,
+              ),
+            ],
           ),
         ),
         animation: AnimationConfig.easeInOut(const Duration(milliseconds: 200)),

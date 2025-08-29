@@ -4,13 +4,13 @@ class RemixSelectStyle extends Style<SelectSpec>
     with
         StyleModifierMixin<RemixSelectStyle, SelectSpec>,
         StyleVariantMixin<RemixSelectStyle, SelectSpec> {
-  final Prop<BoxSpec>? $menuContainer;
+  final Prop<WidgetSpec<BoxSpec>>? $menuContainer;
   final Prop<WidgetSpec<SelectTriggerSpec>>? $trigger;
   final Prop<WidgetSpec<SelectMenuItemSpec>>? $item;
   final Prop<WidgetSpec<CompositedTransformFollowerSpec>>? $position;
 
   const RemixSelectStyle.create({
-    Prop<BoxSpec>? menuContainer,
+    Prop<WidgetSpec<BoxSpec>>? menuContainer,
     Prop<WidgetSpec<SelectTriggerSpec>>? trigger,
     Prop<WidgetSpec<SelectMenuItemSpec>>? item,
     Prop<WidgetSpec<CompositedTransformFollowerSpec>>? position,
@@ -24,7 +24,7 @@ class RemixSelectStyle extends Style<SelectSpec>
         $position = position;
 
   RemixSelectStyle({
-    BoxMix? menuContainer,
+    BoxStyle? menuContainer,
     RemixSelectTriggerStyle? trigger,
     RemixSelectMenuItemStyle? item,
     RemixCompositedTransformFollowerStyle? position,
@@ -42,10 +42,6 @@ class RemixSelectStyle extends Style<SelectSpec>
           modifier: modifier,
           inherit: inherit,
         );
-
-  factory RemixSelectStyle.value(SelectSpec spec) => RemixSelectStyle(
-        menuContainer: BoxMix.maybeValue(spec.menuContainer),
-      );
 
   @override
   RemixSelectStyle variants(List<VariantStyle<SelectSpec>> value) {
@@ -66,10 +62,10 @@ class RemixSelectStyle extends Style<SelectSpec>
   WidgetSpec<SelectSpec> resolve(BuildContext context) {
     return WidgetSpec(
       spec: SelectSpec(
-        trigger: MixOps.resolve(context, $trigger)?.spec,
+        trigger: MixOps.resolve(context, $trigger),
         menuContainer: MixOps.resolve(context, $menuContainer),
-        item: MixOps.resolve(context, $item)?.spec,
-        position: MixOps.resolve(context, $position)?.spec,
+        item: MixOps.resolve(context, $item),
+        position: MixOps.resolve(context, $position),
       ),
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
@@ -108,14 +104,14 @@ class RemixSelectStyle extends Style<SelectSpec>
 
 // Style classes for sub-specs
 class RemixSelectTriggerStyle extends Style<SelectTriggerSpec> {
-  final Prop<FlexBoxSpec>? $container;
-  final Prop<TextSpec>? $label;
-  final Prop<IconSpec>? $icon;
+  final Prop<WidgetSpec<FlexBoxSpec>>? $container;
+  final Prop<WidgetSpec<TextSpec>>? $label;
+  final Prop<WidgetSpec<IconSpec>>? $icon;
 
   const RemixSelectTriggerStyle.create({
-    Prop<FlexBoxSpec>? container,
-    Prop<TextSpec>? label,
-    Prop<IconSpec>? icon,
+    Prop<WidgetSpec<FlexBoxSpec>>? container,
+    Prop<WidgetSpec<TextSpec>>? label,
+    Prop<WidgetSpec<IconSpec>>? icon,
     super.variants,
     super.animation,
     super.modifier,
@@ -125,9 +121,9 @@ class RemixSelectTriggerStyle extends Style<SelectTriggerSpec> {
         $icon = icon;
 
   RemixSelectTriggerStyle({
-    FlexBoxMix? container,
-    TextMix? label,
-    IconMix? icon,
+    FlexBoxStyle? container,
+    TextStyling? label,
+    IconStyle? icon,
     AnimationConfig? animation,
     List<VariantStyle<SelectTriggerSpec>>? variants,
     ModifierConfig? modifier,
@@ -142,12 +138,6 @@ class RemixSelectTriggerStyle extends Style<SelectTriggerSpec> {
           inherit: inherit,
         );
 
-  factory RemixSelectTriggerStyle.value(SelectTriggerSpec spec) =>
-      RemixSelectTriggerStyle(
-        container: FlexBoxMix.maybeValue(spec.container),
-        label: TextMix.maybeValue(spec.label),
-        icon: IconMix.maybeValue(spec.icon),
-      );
 
   @override
   WidgetSpec<SelectTriggerSpec> resolve(BuildContext context) {
@@ -191,14 +181,14 @@ class RemixSelectTriggerStyle extends Style<SelectTriggerSpec> {
 }
 
 class RemixSelectMenuItemStyle extends Style<SelectMenuItemSpec> {
-  final Prop<FlexBoxSpec>? $container;
-  final Prop<TextSpec>? $text;
-  final Prop<IconSpec>? $icon;
+  final Prop<WidgetSpec<FlexBoxSpec>>? $container;
+  final Prop<WidgetSpec<TextSpec>>? $text;
+  final Prop<WidgetSpec<IconSpec>>? $icon;
 
   const RemixSelectMenuItemStyle.create({
-    Prop<FlexBoxSpec>? container,
-    Prop<TextSpec>? text,
-    Prop<IconSpec>? icon,
+    Prop<WidgetSpec<FlexBoxSpec>>? container,
+    Prop<WidgetSpec<TextSpec>>? text,
+    Prop<WidgetSpec<IconSpec>>? icon,
     super.variants,
     super.animation,
     super.modifier,
@@ -208,9 +198,9 @@ class RemixSelectMenuItemStyle extends Style<SelectMenuItemSpec> {
         $icon = icon;
 
   RemixSelectMenuItemStyle({
-    FlexBoxMix? container,
-    TextMix? text,
-    IconMix? icon,
+    FlexBoxStyle? container,
+    TextStyling? text,
+    IconStyle? icon,
     AnimationConfig? animation,
     List<VariantStyle<SelectMenuItemSpec>>? variants,
     ModifierConfig? modifier,
@@ -225,12 +215,6 @@ class RemixSelectMenuItemStyle extends Style<SelectMenuItemSpec> {
           inherit: inherit,
         );
 
-  factory RemixSelectMenuItemStyle.value(SelectMenuItemSpec spec) =>
-      RemixSelectMenuItemStyle(
-        container: FlexBoxMix.maybeValue(spec.container),
-        text: TextMix.maybeValue(spec.text),
-        icon: IconMix.maybeValue(spec.icon),
-      );
 
   @override
   WidgetSpec<SelectMenuItemSpec> resolve(BuildContext context) {
@@ -354,7 +338,8 @@ class RemixCompositedTransformFollowerStyle
 
 // Default styles
 final DefaultRemixSelectStyle = RemixSelectStyle(
-  menuContainer: BoxMix(
+  menuContainer: BoxStyle(
+    padding: EdgeInsetsMix.symmetric(vertical: 4),
     decoration: BoxDecorationMix(
       borderRadius: BorderRadiusMix.circular(8),
       color: RemixTokens.background(),
@@ -366,64 +351,56 @@ final DefaultRemixSelectStyle = RemixSelectStyle(
         ),
       ],
     ),
-    padding: EdgeInsetsMix.symmetric(vertical: 4),
   ),
   trigger: RemixSelectTriggerStyle(
-    container: FlexBoxMix(
-      box: BoxMix(
-        decoration: BoxDecorationMix(
-          border: BoxBorderMix.all(
-            BorderSideMix(color: RemixTokens.border(), width: 1),
-          ),
-          borderRadius: BorderRadiusMix.circular(6),
+    container: FlexBoxStyle(
+      decoration: BoxDecorationMix(
+        border: BoxBorderMix.all(
+          BorderSideMix(color: RemixTokens.border(), width: 1),
         ),
-        padding: EdgeInsetsMix.symmetric(vertical: 8, horizontal: 12),
+        borderRadius: BorderRadiusMix.circular(6),
       ),
-      flex: FlexMix(
-        direction: Axis.horizontal,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-      ),
+      padding: EdgeInsetsGeometryMix.symmetric(vertical: 8, horizontal: 12),
+      direction: Axis.horizontal,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
     ),
-    label: TextMix(
+    label: TextStyling(
       style: TextStyleMix(
         color: RemixTokens.textPrimary(),
         fontSize: RemixTokens.fontSizeSm(),
       ),
     ),
-    icon: IconMix(color: RemixTokens.textSecondary(), size: 20),
+    icon: IconStyle(color: RemixTokens.textSecondary(), size: 20),
   ),
   item: RemixSelectMenuItemStyle(
-    container: FlexBoxMix(
-      box: BoxMix(
-        padding: EdgeInsetsMix.symmetric(vertical: 8, horizontal: 12),
-      ),
-      flex: FlexMix(
-        direction: Axis.horizontal,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-      ),
+    container: FlexBoxStyle(
+      padding: EdgeInsetsGeometryMix.symmetric(vertical: 8, horizontal: 12),
+      direction: Axis.horizontal,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
     ),
-    text: TextMix(
+    text: TextStyling(
       style: TextStyleMix(
         color: RemixTokens.textPrimary(),
         fontSize: RemixTokens.fontSizeSm(),
       ),
     ),
-    icon: IconMix(color: RemixTokens.textSecondary(), size: 16),
+    icon: IconStyle(color: RemixTokens.textSecondary(), size: 16),
   ),
   position: RemixCompositedTransformFollowerStyle(
     targetAnchor: Alignment.bottomLeft,
     followerAnchor: Alignment.topLeft,
     offset: const Offset(0, 4),
   ),
-  animation: AnimationConfig.easeInOut(const Duration(milliseconds: 150)),
+  animation: AnimationConfig.easeInOut(Duration(milliseconds: 150)),
 );
 
 extension RemixSelectVariants on RemixSelectStyle {
   /// Primary select variant with blue accents
   static RemixSelectStyle get primary => RemixSelectStyle(
-        menuContainer: BoxMix(
+        menuContainer: BoxStyle(
+          padding: EdgeInsetsMix.symmetric(vertical: 4),
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(8),
             color: RemixTokens.background(),
@@ -435,52 +412,45 @@ extension RemixSelectVariants on RemixSelectStyle {
               ),
             ],
           ),
-          padding: EdgeInsetsMix.symmetric(vertical: 4),
         ),
         trigger: RemixSelectTriggerStyle(
-          container: FlexBoxMix(
-            box: BoxMix(
-              decoration: BoxDecorationMix(
-                border: BoxBorderMix.all(
-                  BorderSideMix(color: RemixTokens.primary(), width: 1),
-                ),
-                borderRadius: BorderRadiusMix.circular(6),
-                color: RemixTokens.primary().withValues(alpha: 0.1),
+          container: FlexBoxStyle(
+            decoration: BoxDecorationMix(
+              border: BoxBorderMix.all(
+                BorderSideMix(color: RemixTokens.primary(), width: 1),
               ),
-              padding: EdgeInsetsMix.symmetric(vertical: 8, horizontal: 12),
+              borderRadius: BorderRadiusMix.circular(6),
+              color: RemixTokens.primary().withValues(alpha: 0.1),
             ),
-            flex: FlexMix(
-              direction: Axis.horizontal,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-            ),
+            padding:
+                EdgeInsetsGeometryMix.symmetric(vertical: 8, horizontal: 12),
+            direction: Axis.horizontal,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
           ),
-          label: TextMix(
+          label: TextStyling(
             style: TextStyleMix(
               color: RemixTokens.primary(),
               fontSize: RemixTokens.fontSizeSm(),
             ),
           ),
-          icon: IconMix(color: RemixTokens.primary(), size: 20),
+          icon: IconStyle(color: RemixTokens.primary(), size: 20),
         ),
         item: RemixSelectMenuItemStyle(
-          container: FlexBoxMix(
-            box: BoxMix(
-              padding: EdgeInsetsMix.symmetric(vertical: 8, horizontal: 12),
-            ),
-            flex: FlexMix(
-              direction: Axis.horizontal,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-            ),
+          container: FlexBoxStyle(
+            padding:
+                EdgeInsetsGeometryMix.symmetric(vertical: 8, horizontal: 12),
+            direction: Axis.horizontal,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
           ),
-          text: TextMix(
+          text: TextStyling(
             style: TextStyleMix(
               color: RemixTokens.textPrimary(),
               fontSize: RemixTokens.fontSizeSm(),
             ),
           ),
-          icon: IconMix(color: RemixTokens.primary(), size: 16),
+          icon: IconStyle(color: RemixTokens.primary(), size: 16),
         ),
         position: RemixCompositedTransformFollowerStyle(
           targetAnchor: Alignment.bottomLeft,
@@ -492,7 +462,8 @@ extension RemixSelectVariants on RemixSelectStyle {
 
   /// Secondary select variant with grey styling
   static RemixSelectStyle get secondary => RemixSelectStyle(
-        menuContainer: BoxMix(
+        menuContainer: BoxStyle(
+          padding: EdgeInsetsMix.symmetric(vertical: 4),
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(8),
             color: RemixTokens.background(),
@@ -504,52 +475,45 @@ extension RemixSelectVariants on RemixSelectStyle {
               ),
             ],
           ),
-          padding: EdgeInsetsMix.symmetric(vertical: 4),
         ),
         trigger: RemixSelectTriggerStyle(
-          container: FlexBoxMix(
-            box: BoxMix(
-              decoration: BoxDecorationMix(
-                border: BoxBorderMix.all(
-                  BorderSideMix(color: RemixTokens.textSecondary(), width: 1),
-                ),
-                borderRadius: BorderRadiusMix.circular(6),
-                color: RemixTokens.surface(),
+          container: FlexBoxStyle(
+            decoration: BoxDecorationMix(
+              border: BoxBorderMix.all(
+                BorderSideMix(color: RemixTokens.textSecondary(), width: 1),
               ),
-              padding: EdgeInsetsMix.symmetric(vertical: 8, horizontal: 12),
+              borderRadius: BorderRadiusMix.circular(6),
+              color: RemixTokens.surface(),
             ),
-            flex: FlexMix(
-              direction: Axis.horizontal,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-            ),
+            padding:
+                EdgeInsetsGeometryMix.symmetric(vertical: 8, horizontal: 12),
+            direction: Axis.horizontal,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
           ),
-          label: TextMix(
+          label: TextStyling(
             style: TextStyleMix(
               color: RemixTokens.textSecondary(),
               fontSize: RemixTokens.fontSizeSm(),
             ),
           ),
-          icon: IconMix(color: RemixTokens.textSecondary(), size: 20),
+          icon: IconStyle(color: RemixTokens.textSecondary(), size: 20),
         ),
         item: RemixSelectMenuItemStyle(
-          container: FlexBoxMix(
-            box: BoxMix(
-              padding: EdgeInsetsMix.symmetric(vertical: 8, horizontal: 12),
-            ),
-            flex: FlexMix(
-              direction: Axis.horizontal,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-            ),
+          container: FlexBoxStyle(
+            padding:
+                EdgeInsetsGeometryMix.symmetric(vertical: 8, horizontal: 12),
+            direction: Axis.horizontal,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
           ),
-          text: TextMix(
+          text: TextStyling(
             style: TextStyleMix(
               color: RemixTokens.textPrimary(),
               fontSize: RemixTokens.fontSizeSm(),
             ),
           ),
-          icon: IconMix(color: RemixTokens.textSecondary(), size: 16),
+          icon: IconStyle(color: RemixTokens.textSecondary(), size: 16),
         ),
         position: RemixCompositedTransformFollowerStyle(
           targetAnchor: Alignment.bottomLeft,
@@ -561,7 +525,8 @@ extension RemixSelectVariants on RemixSelectStyle {
 
   /// Outlined select variant with no background fill
   static RemixSelectStyle get outlined => RemixSelectStyle(
-        menuContainer: BoxMix(
+        menuContainer: BoxStyle(
+          padding: EdgeInsetsMix.symmetric(vertical: 4),
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(
               BorderSideMix(color: RemixTokens.border(), width: 1),
@@ -576,52 +541,45 @@ extension RemixSelectVariants on RemixSelectStyle {
               ),
             ],
           ),
-          padding: EdgeInsetsMix.symmetric(vertical: 4),
         ),
         trigger: RemixSelectTriggerStyle(
-          container: FlexBoxMix(
-            box: BoxMix(
-              decoration: BoxDecorationMix(
-                border: BoxBorderMix.all(
-                  BorderSideMix(color: RemixTokens.border(), width: 2),
-                ),
-                borderRadius: BorderRadiusMix.circular(6),
-                color: RemixTokens.surface().withValues(alpha: 0.0),
+          container: FlexBoxStyle(
+            decoration: BoxDecorationMix(
+              border: BoxBorderMix.all(
+                BorderSideMix(color: RemixTokens.border(), width: 2),
               ),
-              padding: EdgeInsetsMix.symmetric(vertical: 8, horizontal: 12),
+              borderRadius: BorderRadiusMix.circular(6),
+              color: RemixTokens.surface().withValues(alpha: 0.0),
             ),
-            flex: FlexMix(
-              direction: Axis.horizontal,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-            ),
+            padding:
+                EdgeInsetsGeometryMix.symmetric(vertical: 8, horizontal: 12),
+            direction: Axis.horizontal,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
           ),
-          label: TextMix(
+          label: TextStyling(
             style: TextStyleMix(
               color: RemixTokens.textPrimary(),
               fontSize: RemixTokens.fontSizeSm(),
             ),
           ),
-          icon: IconMix(color: RemixTokens.textSecondary(), size: 20),
+          icon: IconStyle(color: RemixTokens.textSecondary(), size: 20),
         ),
         item: RemixSelectMenuItemStyle(
-          container: FlexBoxMix(
-            box: BoxMix(
-              padding: EdgeInsetsMix.symmetric(vertical: 8, horizontal: 12),
-            ),
-            flex: FlexMix(
-              direction: Axis.horizontal,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-            ),
+          container: FlexBoxStyle(
+            padding:
+                EdgeInsetsGeometryMix.symmetric(vertical: 8, horizontal: 12),
+            direction: Axis.horizontal,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
           ),
-          text: TextMix(
+          text: TextStyling(
             style: TextStyleMix(
               color: RemixTokens.textPrimary(),
               fontSize: RemixTokens.fontSizeSm(),
             ),
           ),
-          icon: IconMix(color: RemixTokens.textSecondary(), size: 16),
+          icon: IconStyle(color: RemixTokens.textSecondary(), size: 16),
         ),
         position: RemixCompositedTransformFollowerStyle(
           targetAnchor: Alignment.bottomLeft,

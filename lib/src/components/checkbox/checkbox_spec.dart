@@ -1,26 +1,26 @@
 part of 'checkbox.dart';
 
 class CheckboxSpec extends Spec<CheckboxSpec> with Diagnosticable {
-  final FlexBoxSpec container;
-  final BoxSpec indicatorContainer;
-  final IconSpec indicator;
-  final TextSpec label;
+  final WidgetSpec<FlexBoxSpec> container;
+  final WidgetSpec<BoxSpec> indicatorContainer;
+  final WidgetSpec<IconSpec> indicator;
+  final WidgetSpec<TextSpec> label;
 
   const CheckboxSpec({
-    FlexBoxSpec? container,
-    BoxSpec? indicatorContainer,
-    IconSpec? indicator,
-    TextSpec? label,
-  })  : container = container ?? const FlexBoxSpec(),
-        indicatorContainer = indicatorContainer ?? const BoxSpec(),
-        indicator = indicator ?? const IconSpec(),
-        label = label ?? const TextSpec();
+    WidgetSpec<FlexBoxSpec>? container,
+    WidgetSpec<BoxSpec>? indicatorContainer,
+    WidgetSpec<IconSpec>? indicator,
+    WidgetSpec<TextSpec>? label,
+  })  : container = container ?? const WidgetSpec(spec: FlexBoxSpec()),
+        indicatorContainer = indicatorContainer ?? const WidgetSpec(spec: BoxSpec()),
+        indicator = indicator ?? const WidgetSpec(spec: IconSpec()),
+        label = label ?? const WidgetSpec(spec: TextSpec());
 
   CheckboxSpec copyWith({
-    FlexBoxSpec? container,
-    BoxSpec? indicatorContainer,
-    IconSpec? indicator,
-    TextSpec? label,
+    WidgetSpec<FlexBoxSpec>? container,
+    WidgetSpec<BoxSpec>? indicatorContainer,
+    WidgetSpec<IconSpec>? indicator,
+    WidgetSpec<TextSpec>? label,
   }) {
     return CheckboxSpec(
       container: container ?? this.container,

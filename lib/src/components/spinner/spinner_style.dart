@@ -48,13 +48,6 @@ class RemixSpinnerStyle extends Style<SpinnerSpec>
           inherit: inherit,
         );
 
-  factory RemixSpinnerStyle.value(SpinnerSpec spec) => RemixSpinnerStyle(
-        size: spec.size,
-        strokeWidth: spec.strokeWidth,
-        color: spec.color,
-        duration: spec.duration,
-        style: spec.style,
-      );
 
   // Factory constructors for common patterns
   factory RemixSpinnerStyle.size(double value) {

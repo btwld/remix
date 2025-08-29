@@ -44,23 +44,23 @@ final _defaultDivisionPaint = Paint()
   ..style = PaintingStyle.stroke;
 
 class SliderSpec extends Spec<SliderSpec> with Diagnosticable {
-  final BoxSpec thumb;
+  final WidgetSpec<BoxSpec> thumb;
   final Paint baseTrack;
   final Paint activeTrack;
   final Paint division;
 
   SliderSpec({
-    BoxSpec? thumb,
+    WidgetSpec<BoxSpec>? thumb,
     Paint? baseTrack,
     Paint? activeTrack,
     Paint? division,
-  })  : thumb = thumb ?? const BoxSpec(),
+  })  : thumb = thumb ?? const WidgetSpec(spec: BoxSpec()),
         baseTrack = baseTrack ?? _defaultBaseTrackPaint,
         activeTrack = activeTrack ?? _defaultActiveTrackPaint,
         division = division ?? _defaultDivisionPaint;
 
   SliderSpec copyWith({
-    BoxSpec? thumb,
+    WidgetSpec<BoxSpec>? thumb,
     Paint? baseTrack,
     Paint? activeTrack,
     Paint? division,

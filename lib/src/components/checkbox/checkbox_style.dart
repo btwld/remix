@@ -4,16 +4,16 @@ class RemixCheckboxStyle extends Style<CheckboxSpec>
     with
         StyleModifierMixin<RemixCheckboxStyle, CheckboxSpec>,
         StyleVariantMixin<RemixCheckboxStyle, CheckboxSpec> {
-  final Prop<FlexBoxSpec>? $container;
-  final Prop<BoxSpec>? $indicatorContainer;
-  final Prop<IconSpec>? $indicator;
-  final Prop<TextSpec>? $label;
+  final Prop<WidgetSpec<FlexBoxSpec>>? $container;
+  final Prop<WidgetSpec<BoxSpec>>? $indicatorContainer;
+  final Prop<WidgetSpec<IconSpec>>? $indicator;
+  final Prop<WidgetSpec<TextSpec>>? $label;
 
   const RemixCheckboxStyle.create({
-    Prop<FlexBoxSpec>? container,
-    Prop<BoxSpec>? indicatorContainer,
-    Prop<IconSpec>? indicator,
-    Prop<TextSpec>? label,
+    Prop<WidgetSpec<FlexBoxSpec>>? container,
+    Prop<WidgetSpec<BoxSpec>>? indicatorContainer,
+    Prop<WidgetSpec<IconSpec>>? indicator,
+    Prop<WidgetSpec<TextSpec>>? label,
     super.variants,
     super.animation,
     super.modifier,
@@ -24,10 +24,10 @@ class RemixCheckboxStyle extends Style<CheckboxSpec>
         $label = label;
 
   RemixCheckboxStyle({
-    FlexBoxMix? container,
-    BoxMix? indicatorContainer,
-    IconMix? indicator,
-    TextMix? label,
+    FlexBoxStyle? container,
+    BoxStyle? indicatorContainer,
+    IconStyle? indicator,
+    TextStyling? label,
     AnimationConfig? animation,
     List<VariantStyle<CheckboxSpec>>? variants,
     ModifierConfig? modifier,
@@ -43,17 +43,10 @@ class RemixCheckboxStyle extends Style<CheckboxSpec>
           inherit: inherit,
         );
 
-  factory RemixCheckboxStyle.value(CheckboxSpec spec) => RemixCheckboxStyle(
-        container: FlexBoxMix.maybeValue(spec.container),
-        indicatorContainer: BoxMix.maybeValue(spec.indicatorContainer),
-        indicator: IconMix.maybeValue(spec.indicator),
-        label: TextMix.maybeValue(spec.label),
-      );
-
   /// Factory for checkbox size (indicator container size)
   factory RemixCheckboxStyle.size(double value) {
     return RemixCheckboxStyle(
-      indicatorContainer: BoxMix(
+      indicatorContainer: BoxStyle(
         constraints: BoxConstraintsMix(
           minWidth: value,
           maxWidth: value,
@@ -67,14 +60,14 @@ class RemixCheckboxStyle extends Style<CheckboxSpec>
   /// Factory for checkbox background color
   factory RemixCheckboxStyle.color(Color value) {
     return RemixCheckboxStyle(
-      indicatorContainer: BoxMix(decoration: BoxDecorationMix(color: value)),
+      indicatorContainer: BoxStyle(decoration: BoxDecorationMix(color: value)),
     );
   }
 
   /// Factory for checkbox border radius
   factory RemixCheckboxStyle.borderRadius(double radius) {
     return RemixCheckboxStyle(
-      indicatorContainer: BoxMix(
+      indicatorContainer: BoxStyle(
         decoration: BoxDecorationMix(
           borderRadius: BorderRadiusMix.circular(radius),
         ),
@@ -85,7 +78,7 @@ class RemixCheckboxStyle extends Style<CheckboxSpec>
   /// Factory for checkbox border
   factory RemixCheckboxStyle.border(BoxBorderMix value) {
     return RemixCheckboxStyle(
-      indicatorContainer: BoxMix(
+      indicatorContainer: BoxStyle(
         decoration: BoxDecorationMix(border: value),
       ),
     );
@@ -93,13 +86,13 @@ class RemixCheckboxStyle extends Style<CheckboxSpec>
 
   /// Factory for indicator color
   factory RemixCheckboxStyle.indicatorColor(Color value) {
-    return RemixCheckboxStyle(indicator: IconMix(color: value));
+    return RemixCheckboxStyle(indicator: IconStyle(color: value));
   }
 
   /// Factory for label color
   factory RemixCheckboxStyle.labelColor(Color value) {
     return RemixCheckboxStyle(
-      label: TextMix(style: TextStyleMix(color: value)),
+      label: TextStyling(style: TextStyleMix(color: value)),
     );
   }
 
@@ -203,16 +196,21 @@ class RemixCheckboxStyle extends Style<CheckboxSpec>
 }
 
 final DefaultRemixCheckboxStyle = RemixCheckboxStyle(
-  container: FlexBoxMix(
-    box: BoxMix(alignment: Alignment.centerLeft),
-    flex: FlexMix(
-      direction: Axis.horizontal,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisSize: MainAxisSize.min,
-      spacing: RemixTokens.spaceSm(),
-    ),
+  container: FlexBoxStyle(
+    alignment: Alignment.centerLeft,
+    direction: Axis.horizontal,
+    crossAxisAlignment: CrossAxisAlignment.center,
+    mainAxisSize: MainAxisSize.min,
+    spacing: 8.0,
   ),
-  indicatorContainer: BoxMix(
+  indicatorContainer: BoxStyle(
+    alignment: Alignment.center,
+    constraints: BoxConstraintsMix(
+      minWidth: 20,
+      maxWidth: 20,
+      minHeight: 20,
+      maxHeight: 20,
+    ),
     decoration: BoxDecorationMix(
       border: BoxBorderMix.all(BorderSideMix(
         color: RemixTokens.border(),
@@ -221,39 +219,31 @@ final DefaultRemixCheckboxStyle = RemixCheckboxStyle(
       borderRadius: BorderRadiusMix.circular(RemixTokens.radiusSm()),
       color: RemixTokens.background(),
     ),
-    alignment: Alignment.center,
-    constraints: BoxConstraintsMix(
-      minWidth: 20,
-      maxWidth: 20,
-      minHeight: 20,
-      maxHeight: 20,
-    ),
   ),
-  indicator: IconMix(
-    color: RemixTokens.textPrimary(),
-    size: RemixTokens.iconSizeMd(),
-  ),
-  label: TextMix(
-    style: TextStyleMix(
-      color: RemixTokens.textPrimary(),
-      fontSize: RemixTokens.fontSizeMd(),
-    ),
+  indicator: IconStyle(color: RemixTokens.textPrimary(), size: 16.0),
+  label: TextStyling(
+    style: TextStyleMix(color: RemixTokens.textPrimary(), fontSize: 14.0),
   ),
 );
 
 extension CheckboxVariants on RemixCheckboxStyle {
   /// Primary checkbox variant with blue colors
   static RemixCheckboxStyle get primary => RemixCheckboxStyle(
-        container: FlexBoxMix(
-          box: BoxMix(alignment: Alignment.centerLeft),
-          flex: FlexMix(
-            direction: Axis.horizontal,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            spacing: RemixTokens.spaceSm(),
-          ),
+        container: FlexBoxStyle(
+          alignment: Alignment.centerLeft,
+          direction: Axis.horizontal,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          spacing: 8.0,
         ),
-        indicatorContainer: BoxMix(
+        indicatorContainer: BoxStyle(
+          alignment: Alignment.center,
+          constraints: BoxConstraintsMix(
+            minWidth: 20,
+            maxWidth: 20,
+            minHeight: 20,
+            maxHeight: 20,
+          ),
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
               color: RemixTokens.primary(),
@@ -262,6 +252,26 @@ extension CheckboxVariants on RemixCheckboxStyle {
             borderRadius: BorderRadiusMix.circular(RemixTokens.radiusSm()),
             color: RemixTokens.primary().withValues(alpha: 0.1),
           ),
+        ),
+        indicator: IconStyle(color: RemixTokens.primary(), size: 16.0),
+        label: TextStyling(
+          style: TextStyleMix(
+            color: RemixTokens.textPrimary(),
+            fontSize: 14.0,
+          ),
+        ),
+      );
+
+  /// Secondary checkbox variant with grey colors
+  static RemixCheckboxStyle get secondary => RemixCheckboxStyle(
+        container: FlexBoxStyle(
+          alignment: Alignment.centerLeft,
+          direction: Axis.horizontal,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          spacing: 8.0,
+        ),
+        indicatorContainer: BoxStyle(
           alignment: Alignment.center,
           constraints: BoxConstraintsMix(
             minWidth: 20,
@@ -269,31 +279,6 @@ extension CheckboxVariants on RemixCheckboxStyle {
             minHeight: 20,
             maxHeight: 20,
           ),
-        ),
-        indicator: IconMix(
-          color: RemixTokens.primary(),
-          size: RemixTokens.iconSizeMd(),
-        ),
-        label: TextMix(
-          style: TextStyleMix(
-            color: RemixTokens.textPrimary(),
-            fontSize: RemixTokens.fontSizeMd(),
-          ),
-        ),
-      );
-
-  /// Secondary checkbox variant with grey colors
-  static RemixCheckboxStyle get secondary => RemixCheckboxStyle(
-        container: FlexBoxMix(
-          box: BoxMix(alignment: Alignment.centerLeft),
-          flex: FlexMix(
-            direction: Axis.horizontal,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            spacing: RemixTokens.spaceSm(),
-          ),
-        ),
-        indicatorContainer: BoxMix(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
               color: RemixTokens.textSecondary(),
@@ -302,38 +287,33 @@ extension CheckboxVariants on RemixCheckboxStyle {
             borderRadius: BorderRadiusMix.circular(RemixTokens.radiusSm()),
             color: RemixTokens.surface(),
           ),
-          alignment: Alignment.center,
-          constraints: BoxConstraintsMix(
-            minWidth: 20,
-            maxWidth: 20,
-            minHeight: 20,
-            maxHeight: 20,
-          ),
         ),
-        indicator: IconMix(
-          color: RemixTokens.textSecondary(),
-          size: RemixTokens.iconSizeMd(),
-        ),
-        label: TextMix(
+        indicator: IconStyle(color: RemixTokens.textSecondary(), size: 16.0),
+        label: TextStyling(
           style: TextStyleMix(
             color: RemixTokens.textPrimary(),
-            fontSize: RemixTokens.fontSizeMd(),
+            fontSize: 14.0,
           ),
         ),
       );
 
   /// Compact checkbox variant with smaller size
   static RemixCheckboxStyle get compact => RemixCheckboxStyle(
-        container: FlexBoxMix(
-          box: BoxMix(alignment: Alignment.centerLeft),
-          flex: FlexMix(
-            direction: Axis.horizontal,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            spacing: RemixTokens.spaceXs(),
-          ),
+        container: FlexBoxStyle(
+          alignment: Alignment.centerLeft,
+          direction: Axis.horizontal,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          spacing: 4.0,
         ),
-        indicatorContainer: BoxMix(
+        indicatorContainer: BoxStyle(
+          alignment: Alignment.center,
+          constraints: BoxConstraintsMix(
+            minWidth: 16,
+            maxWidth: 16,
+            minHeight: 16,
+            maxHeight: 16,
+          ),
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
               color: RemixTokens.border(),
@@ -342,22 +322,12 @@ extension CheckboxVariants on RemixCheckboxStyle {
             borderRadius: BorderRadiusMix.circular(3),
             color: RemixTokens.background(),
           ),
-          alignment: Alignment.center,
-          constraints: BoxConstraintsMix(
-            minWidth: 16,
-            maxWidth: 16,
-            minHeight: 16,
-            maxHeight: 16,
-          ),
         ),
-        indicator: IconMix(
-          color: RemixTokens.textPrimary(),
-          size: RemixTokens.iconSizeSm(),
-        ),
-        label: TextMix(
+        indicator: IconStyle(color: RemixTokens.textPrimary(), size: 14.0),
+        label: TextStyling(
           style: TextStyleMix(
             color: RemixTokens.textPrimary(),
-            fontSize: RemixTokens.fontSizeSm(),
+            fontSize: 12.0,
           ),
         ),
       );

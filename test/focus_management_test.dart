@@ -4,9 +4,10 @@ import 'package:remix/remix.dart';
 
 void main() {
   group('Focus Management Tests', () {
-    testWidgets('Components create internal focus nodes when none provided', (tester) async {
-      await tester.pumpWidget(
-        MaterialApp(
+    testWidgets('Components create internal focus nodes when none provided',
+        (tester) async {
+      await tester.pumpWidget(createRemixScope(
+        child: MaterialApp(
           home: Scaffold(
             body: Column(
               children: [
@@ -18,7 +19,7 @@ void main() {
             ),
           ),
         ),
-      );
+      ));
 
       // Verify widgets build without focus node provided
       expect(find.byType(RemixButton), findsOneWidget);
@@ -29,9 +30,9 @@ void main() {
 
     testWidgets('Components respect external focus nodes', (tester) async {
       final focusNode = FocusNode();
-      
-      await tester.pumpWidget(
-        MaterialApp(
+
+      await tester.pumpWidget(createRemixScope(
+        child: MaterialApp(
           home: Scaffold(
             body: RemixButton(
               label: 'Test Button',
@@ -40,17 +41,17 @@ void main() {
             ),
           ),
         ),
-      );
+      ));
 
       // Verify widget uses external focus node
       expect(find.byType(RemixButton), findsOneWidget);
-      
+
       // Focus the external node
       focusNode.requestFocus();
       await tester.pump();
-      
+
       expect(focusNode.hasFocus, isTrue);
-      
+
       focusNode.dispose();
     });
 
@@ -58,8 +59,8 @@ void main() {
       final externalFocusNode = FocusNode();
       bool useExternalFocus = false;
 
-      await tester.pumpWidget(
-        MaterialApp(
+      await tester.pumpWidget(createRemixScope(
+        child: MaterialApp(
           home: StatefulBuilder(
             builder: (context, setState) {
               return Scaffold(
@@ -84,7 +85,7 @@ void main() {
             },
           ),
         ),
-      );
+      ));
 
       // Initially using internal focus node
       expect(find.byType(RemixButton), findsOneWidget);

@@ -4,24 +4,24 @@ class RemixListItemStyle extends Style<ListItemSpec>
     with
         StyleModifierMixin<RemixListItemStyle, ListItemSpec>,
         StyleVariantMixin<RemixListItemStyle, ListItemSpec> {
-  final Prop<BoxSpec>? $container;
-  final Prop<FlexSpec>? $flex;
-  final Prop<BoxSpec>? $contentContainer;
-  final Prop<FlexSpec>? $contentFlex;
-  final Prop<TextSpec>? $title;
-  final Prop<TextSpec>? $subtitle;
-  final Prop<IconSpec>? $leading;
-  final Prop<IconSpec>? $trailing;
+  final Prop<WidgetSpec<BoxSpec>>? $container;
+  final Prop<WidgetSpec<FlexSpec>>? $flex;
+  final Prop<WidgetSpec<BoxSpec>>? $contentContainer;
+  final Prop<WidgetSpec<FlexSpec>>? $contentFlex;
+  final Prop<WidgetSpec<TextSpec>>? $title;
+  final Prop<WidgetSpec<TextSpec>>? $subtitle;
+  final Prop<WidgetSpec<IconSpec>>? $leading;
+  final Prop<WidgetSpec<IconSpec>>? $trailing;
 
   const RemixListItemStyle.create({
-    Prop<BoxSpec>? container,
-    Prop<FlexSpec>? flex,
-    Prop<BoxSpec>? contentContainer,
-    Prop<FlexSpec>? contentFlex,
-    Prop<TextSpec>? title,
-    Prop<TextSpec>? subtitle,
-    Prop<IconSpec>? leading,
-    Prop<IconSpec>? trailing,
+    Prop<WidgetSpec<BoxSpec>>? container,
+    Prop<WidgetSpec<FlexSpec>>? flex,
+    Prop<WidgetSpec<BoxSpec>>? contentContainer,
+    Prop<WidgetSpec<FlexSpec>>? contentFlex,
+    Prop<WidgetSpec<TextSpec>>? title,
+    Prop<WidgetSpec<TextSpec>>? subtitle,
+    Prop<WidgetSpec<IconSpec>>? leading,
+    Prop<WidgetSpec<IconSpec>>? trailing,
     super.variants,
     super.animation,
     super.modifier,
@@ -36,14 +36,14 @@ class RemixListItemStyle extends Style<ListItemSpec>
         $trailing = trailing;
 
   RemixListItemStyle({
-    BoxMix? container,
-    FlexMix? flex,
-    BoxMix? contentContainer,
-    FlexMix? contentFlex,
-    TextMix? title,
-    TextMix? subtitle,
-    IconMix? leading,
-    IconMix? trailing,
+    BoxStyle? container,
+    FlexStyle? flex,
+    BoxStyle? contentContainer,
+    FlexStyle? contentFlex,
+    TextStyling? title,
+    TextStyling? subtitle,
+    IconStyle? leading,
+    IconStyle? trailing,
     AnimationConfig? animation,
     List<VariantStyle<ListItemSpec>>? variants,
     ModifierConfig? modifier,
@@ -63,12 +63,6 @@ class RemixListItemStyle extends Style<ListItemSpec>
           inherit: inherit,
         );
 
-  factory RemixListItemStyle.value(ListItemSpec spec) => RemixListItemStyle(
-        container: BoxMix.maybeValue(spec.container),
-        flex: FlexMix.maybeValue(spec.flex),
-        contentContainer: BoxMix.maybeValue(spec.contentContainer),
-        contentFlex: FlexMix.maybeValue(spec.contentFlex),
-      );
 
   @override
   WidgetSpec<ListItemSpec> resolve(BuildContext context) {
@@ -143,30 +137,30 @@ class RemixListItemStyle extends Style<ListItemSpec>
 }
 
 final DefaultRemixListItemStyle = RemixListItemStyle(
-  container: BoxMix(
+  container: BoxStyle(
     padding: EdgeInsetsMix.symmetric(vertical: 12, horizontal: 16),
   ),
-  flex: FlexMix(
+  flex: FlexStyle(
     direction: Axis.horizontal,
     crossAxisAlignment: CrossAxisAlignment.center,
     spacing: 16,
   ),
-  contentContainer: BoxMix(),
-  contentFlex: FlexMix(
+  contentContainer: BoxStyle(),
+  contentFlex: FlexStyle(
     direction: Axis.vertical,
     crossAxisAlignment: CrossAxisAlignment.start,
     mainAxisSize: MainAxisSize.min,
     spacing: 2,
   ),
-  title: TextMix(
+  title: TextStyling(
     style: TextStyleMix(fontSize: 16, fontWeight: FontWeight.w500),
   ),
-  subtitle: TextMix(
+  subtitle: TextStyling(
     style: TextStyleMix(
       color: RemixTokens.textSecondary(),
       fontSize: RemixTokens.fontSizeSm(),
     ),
   ),
-  leading: IconMix(size: 24),
-  trailing: IconMix(size: 20),
+  leading: IconStyle(size: 24),
+  trailing: IconStyle(size: 20),
 );

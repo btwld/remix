@@ -4,18 +4,18 @@ class RemixChipStyle extends Style<ChipSpec>
     with
         StyleModifierMixin<RemixChipStyle, ChipSpec>,
         StyleVariantMixin<RemixChipStyle, ChipSpec> {
-  final Prop<BoxSpec>? $container;
-  final Prop<FlexSpec>? $flex;
-  final Prop<TextSpec>? $label;
-  final Prop<IconSpec>? $leading;
-  final Prop<IconSpec>? $trailing;
+  final Prop<WidgetSpec<BoxSpec>>? $container;
+  final Prop<WidgetSpec<FlexSpec>>? $flex;
+  final Prop<WidgetSpec<TextSpec>>? $label;
+  final Prop<WidgetSpec<IconSpec>>? $leading;
+  final Prop<WidgetSpec<IconSpec>>? $trailing;
 
   const RemixChipStyle.create({
-    Prop<BoxSpec>? container,
-    Prop<FlexSpec>? flex,
-    Prop<TextSpec>? label,
-    Prop<IconSpec>? leading,
-    Prop<IconSpec>? trailing,
+    Prop<WidgetSpec<BoxSpec>>? container,
+    Prop<WidgetSpec<FlexSpec>>? flex,
+    Prop<WidgetSpec<TextSpec>>? label,
+    Prop<WidgetSpec<IconSpec>>? leading,
+    Prop<WidgetSpec<IconSpec>>? trailing,
     super.variants,
     super.animation,
     super.modifier,
@@ -27,11 +27,11 @@ class RemixChipStyle extends Style<ChipSpec>
         $trailing = trailing;
 
   RemixChipStyle({
-    BoxMix? container,
-    FlexMix? flex,
-    TextMix? label,
-    IconMix? leading,
-    IconMix? trailing,
+    BoxStyle? container,
+    FlexStyle? flex,
+    TextStyling? label,
+    IconStyle? leading,
+    IconStyle? trailing,
     AnimationConfig? animation,
     List<VariantStyle<ChipSpec>>? variants,
     ModifierConfig? modifier,
@@ -47,14 +47,6 @@ class RemixChipStyle extends Style<ChipSpec>
           modifier: modifier,
           inherit: inherit,
         );
-
-  factory RemixChipStyle.value(ChipSpec spec) => RemixChipStyle(
-        container: BoxMix.maybeValue(spec.container),
-        flex: FlexMix.maybeValue(spec.flex),
-        label: TextMix.maybeValue(spec.label),
-        leading: IconMix.maybeValue(spec.leading),
-        trailing: IconMix.maybeValue(spec.trailing),
-      );
 
   @override
   WidgetSpec<ChipSpec> resolve(BuildContext context) {
@@ -119,63 +111,63 @@ class RemixChipStyle extends Style<ChipSpec>
 }
 
 final DefaultRemixChipStyle = RemixChipStyle(
-  container: BoxMix(
-    decoration: BoxDecorationMix(
-      borderRadius: BorderRadiusMix.circular(RemixTokens.radiusXl()),
-      color: RemixTokens.surfaceVariant(),
-    ),
+  container: BoxStyle(
     padding: EdgeInsetsMix.symmetric(
       vertical: RemixTokens.spaceXs(),
       horizontal: RemixTokens.spaceMd(),
     ),
+    decoration: BoxDecorationMix(
+      borderRadius: BorderRadiusMix.circular(RemixTokens.radiusXl()),
+      color: RemixTokens.surfaceVariant(),
+    ),
   ),
-  flex: FlexMix(
+  flex: FlexStyle(
     direction: Axis.horizontal,
     crossAxisAlignment: CrossAxisAlignment.center,
     mainAxisSize: MainAxisSize.min,
     spacing: RemixTokens.spaceXs(),
   ),
-  label: TextMix(
+  label: TextStyling(
     style: TextStyleMix(
       fontSize: RemixTokens.fontSizeMd(),
       fontWeight: FontWeight.w500,
     ),
   ),
-  leading: IconMix(size: RemixTokens.iconSizeMd()),
-  trailing: IconMix(size: RemixTokens.iconSizeMd()),
+  leading: IconStyle(size: RemixTokens.iconSizeMd()),
+  trailing: IconStyle(size: RemixTokens.iconSizeMd()),
 );
 
 extension ChipVariants on RemixChipStyle {
   /// Primary chip variant with blue colors
   static RemixChipStyle get primary => RemixChipStyle(
-        container: BoxMix(
-          decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusXl()),
-            color: RemixTokens.primary().withValues(alpha: 0.1),
-          ),
+        container: BoxStyle(
           padding: EdgeInsetsMix.symmetric(
             vertical: RemixTokens.spaceXs(),
             horizontal: RemixTokens.spaceMd(),
           ),
+          decoration: BoxDecorationMix(
+            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusXl()),
+            color: RemixTokens.primary().withValues(alpha: 0.1),
+          ),
         ),
-        flex: FlexMix(
+        flex: FlexStyle(
           direction: Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           spacing: RemixTokens.spaceXs(),
         ),
-        label: TextMix(
+        label: TextStyling(
           style: TextStyleMix(
             color: RemixTokens.primary(),
             fontSize: RemixTokens.fontSizeMd(),
             fontWeight: FontWeight.w500,
           ),
         ),
-        leading: IconMix(
+        leading: IconStyle(
           color: RemixTokens.primary(),
           size: RemixTokens.iconSizeMd(),
         ),
-        trailing: IconMix(
+        trailing: IconStyle(
           color: RemixTokens.primary(),
           size: RemixTokens.iconSizeMd(),
         ),
@@ -183,7 +175,11 @@ extension ChipVariants on RemixChipStyle {
 
   /// Secondary chip variant with grey colors
   static RemixChipStyle get secondary => RemixChipStyle(
-        container: BoxMix(
+        container: BoxStyle(
+          padding: EdgeInsetsMix.symmetric(
+            vertical: RemixTokens.spaceXs(),
+            horizontal: RemixTokens.spaceMd(),
+          ),
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(
               BorderSideMix(color: RemixTokens.border(), width: 1),
@@ -191,29 +187,25 @@ extension ChipVariants on RemixChipStyle {
             borderRadius: BorderRadiusMix.circular(RemixTokens.radiusXl()),
             color: RemixTokens.surface(),
           ),
-          padding: EdgeInsetsMix.symmetric(
-            vertical: RemixTokens.spaceXs(),
-            horizontal: RemixTokens.spaceMd(),
-          ),
         ),
-        flex: FlexMix(
+        flex: FlexStyle(
           direction: Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           spacing: RemixTokens.spaceXs(),
         ),
-        label: TextMix(
+        label: TextStyling(
           style: TextStyleMix(
             color: RemixTokens.textPrimary(),
             fontSize: RemixTokens.fontSizeMd(),
             fontWeight: FontWeight.w500,
           ),
         ),
-        leading: IconMix(
+        leading: IconStyle(
           color: RemixTokens.textSecondary(),
           size: RemixTokens.iconSizeMd(),
         ),
-        trailing: IconMix(
+        trailing: IconStyle(
           color: RemixTokens.textSecondary(),
           size: RemixTokens.iconSizeMd(),
         ),
@@ -221,34 +213,34 @@ extension ChipVariants on RemixChipStyle {
 
   /// Success chip variant with green colors
   static RemixChipStyle get success => RemixChipStyle(
-        container: BoxMix(
-          decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusXl()),
-            color: RemixTokens.success().withValues(alpha: 0.1),
-          ),
+        container: BoxStyle(
           padding: EdgeInsetsMix.symmetric(
             vertical: RemixTokens.spaceXs(),
             horizontal: RemixTokens.spaceMd(),
           ),
+          decoration: BoxDecorationMix(
+            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusXl()),
+            color: RemixTokens.success().withValues(alpha: 0.1),
+          ),
         ),
-        flex: FlexMix(
+        flex: FlexStyle(
           direction: Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           spacing: RemixTokens.spaceXs(),
         ),
-        label: TextMix(
+        label: TextStyling(
           style: TextStyleMix(
             color: RemixTokens.success(),
             fontSize: RemixTokens.fontSizeMd(),
             fontWeight: FontWeight.w500,
           ),
         ),
-        leading: IconMix(
+        leading: IconStyle(
           color: RemixTokens.success(),
           size: RemixTokens.iconSizeMd(),
         ),
-        trailing: IconMix(
+        trailing: IconStyle(
           color: RemixTokens.success(),
           size: RemixTokens.iconSizeMd(),
         ),
@@ -256,34 +248,34 @@ extension ChipVariants on RemixChipStyle {
 
   /// Warning chip variant with orange colors
   static RemixChipStyle get warning => RemixChipStyle(
-        container: BoxMix(
-          decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusXl()),
-            color: RemixTokens.warning().withValues(alpha: 0.1),
-          ),
+        container: BoxStyle(
           padding: EdgeInsetsMix.symmetric(
             vertical: RemixTokens.spaceXs(),
             horizontal: RemixTokens.spaceMd(),
           ),
+          decoration: BoxDecorationMix(
+            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusXl()),
+            color: RemixTokens.warning().withValues(alpha: 0.1),
+          ),
         ),
-        flex: FlexMix(
+        flex: FlexStyle(
           direction: Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           spacing: RemixTokens.spaceXs(),
         ),
-        label: TextMix(
+        label: TextStyling(
           style: TextStyleMix(
             color: RemixTokens.warning(),
             fontSize: RemixTokens.fontSizeMd(),
             fontWeight: FontWeight.w500,
           ),
         ),
-        leading: IconMix(
+        leading: IconStyle(
           color: RemixTokens.warning(),
           size: RemixTokens.iconSizeMd(),
         ),
-        trailing: IconMix(
+        trailing: IconStyle(
           color: RemixTokens.warning(),
           size: RemixTokens.iconSizeMd(),
         ),

@@ -4,7 +4,7 @@ import 'package:mix/mix.dart';
 import 'remix_tokens.dart';
 
 /// Provides pre-configured token definitions for light and dark themes.
-/// 
+///
 /// These token definitions map [RemixTokens] to actual values, enabling
 /// theme-aware styling across all Remix components.
 
@@ -13,7 +13,7 @@ import 'remix_tokens.dart';
 // ============================================================================
 
 /// Light theme token definitions for the Remix design system.
-/// 
+///
 /// Provides a clean, professional light theme with high contrast for readability
 /// and accessibility.
 final Set<TokenDefinition> remixLightTokens = {
@@ -97,12 +97,13 @@ final Set<TokenDefinition> remixLightTokens = {
 // ============================================================================
 
 /// Dark theme token definitions for the Remix design system.
-/// 
+///
 /// Provides a modern dark theme with appropriate contrast and visual hierarchy
 /// for comfortable viewing in low-light environments.
 final Set<TokenDefinition> remixDarkTokens = {
   // Color tokens - Dark theme (adapted for dark backgrounds)
-  RemixTokens.primary.defineValue(const Color(0xFF3B82F6)), // Blue-500 (slightly lighter)
+  RemixTokens.primary
+      .defineValue(const Color(0xFF3B82F6)), // Blue-500 (slightly lighter)
   RemixTokens.secondary.defineValue(const Color(0xFF9CA3AF)), // Gray-400
   RemixTokens.success.defineValue(const Color(0xFF10B981)), // Green-500
   RemixTokens.warning.defineValue(const Color(0xFFF59E0B)), // Amber-500
@@ -181,7 +182,7 @@ final Set<TokenDefinition> remixDarkTokens = {
 // ============================================================================
 
 /// Determines the appropriate token set based on the current brightness.
-/// 
+///
 /// This utility function checks the platform brightness and returns the
 /// corresponding token definitions.
 Set<TokenDefinition> getRemixTokensForBrightness(Brightness brightness) {
@@ -189,7 +190,7 @@ Set<TokenDefinition> getRemixTokensForBrightness(Brightness brightness) {
 }
 
 /// Creates a MixScope with Remix tokens configured for the current theme.
-/// 
+///
 /// This is a convenience function that sets up a MixScope with the appropriate
 /// Remix tokens based on the context's brightness.
 Widget createRemixScope({

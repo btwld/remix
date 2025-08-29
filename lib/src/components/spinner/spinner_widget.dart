@@ -35,14 +35,14 @@ class RemixSpinner extends StatelessWidget {
     return StyleBuilder(
       style: DefaultRemixSpinnerStyle.merge(style),
       builder: (context, spec) {
-        return SpinnerSpecWidget(spec: spec);
+        return _SpinnerSpecWidget(spec: spec);
       },
     );
   }
 }
 
-class SpinnerSpecWidget extends StatefulWidget {
-  const SpinnerSpecWidget({super.key, required this.spec});
+class _SpinnerSpecWidget extends StatefulWidget {
+  const _SpinnerSpecWidget({super.key, required this.spec});
 
   final SpinnerSpec spec;
 
@@ -50,7 +50,7 @@ class SpinnerSpecWidget extends StatefulWidget {
   State createState() => _SpinnerSpecWidgetState();
 }
 
-class _SpinnerSpecWidgetState extends State<SpinnerSpecWidget>
+class _SpinnerSpecWidgetState extends State<_SpinnerSpecWidget>
     with SingleTickerProviderStateMixin {
   late AnimationController controller;
 
@@ -64,7 +64,7 @@ class _SpinnerSpecWidgetState extends State<SpinnerSpecWidget>
   }
 
   @override
-  void didUpdateWidget(covariant SpinnerSpecWidget oldWidget) {
+  void didUpdateWidget(covariant _SpinnerSpecWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
     final newDuration =
         widget.spec.duration ?? const Duration(milliseconds: 1000);
@@ -111,10 +111,26 @@ class _SpinnerSpecWidgetState extends State<SpinnerSpecWidget>
   }
 }
 
+Widget createSpinnerWidget(SpinnerSpec spec) {
+  return _SpinnerSpecWidget(spec: spec);
+}
+
 /// Extension on SpinnerSpec to provide call() method for creating widgets
-extension SpinnerSpecWidgetExtension on SpinnerSpec {
+extension SpinnerSpecWidget on SpinnerSpec {
   /// Renders the SpinnerSpec into a SpinnerSpecWidget
   Widget call() {
-    return SpinnerSpecWidget(spec: this);
+    return createSpinnerWidget(this);
+  }
+}
+
+/// Extension on WidgetSpec<SpinnerSpec> to provide call() method for creating widgets
+extension SpinnerSpecWrappedWidget on WidgetSpec<SpinnerSpec> {
+  Widget call() {
+    return WidgetSpecBuilder(
+      wrappedSpec: this,
+      builder: (context, spec) {
+        return createSpinnerWidget(spec);
+      },
+    );
   }
 }

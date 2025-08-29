@@ -1,42 +1,42 @@
 part of 'list_item.dart';
 
 class ListItemSpec extends Spec<ListItemSpec> with Diagnosticable {
-  final BoxSpec container;
-  final FlexSpec flex;
-  final BoxSpec contentContainer;
-  final FlexSpec contentFlex;
-  final TextSpec title;
-  final TextSpec subtitle;
-  final IconSpec leading;
-  final IconSpec trailing;
+  final WidgetSpec<BoxSpec> container;
+  final WidgetSpec<FlexSpec> flex;
+  final WidgetSpec<BoxSpec> contentContainer;
+  final WidgetSpec<FlexSpec> contentFlex;
+  final WidgetSpec<TextSpec> title;
+  final WidgetSpec<TextSpec> subtitle;
+  final WidgetSpec<IconSpec> leading;
+  final WidgetSpec<IconSpec> trailing;
 
   const ListItemSpec({
-    BoxSpec? container,
-    FlexSpec? flex,
-    BoxSpec? contentContainer,
-    FlexSpec? contentFlex,
-    TextSpec? title,
-    TextSpec? subtitle,
-    IconSpec? leading,
-    IconSpec? trailing,
-  })  : container = container ?? const BoxSpec(),
-        flex = flex ?? const FlexSpec(),
-        contentContainer = contentContainer ?? const BoxSpec(),
-        contentFlex = contentFlex ?? const FlexSpec(),
-        title = title ?? const TextSpec(),
-        subtitle = subtitle ?? const TextSpec(),
-        leading = leading ?? const IconSpec(),
-        trailing = trailing ?? const IconSpec();
+    WidgetSpec<BoxSpec>? container,
+    WidgetSpec<FlexSpec>? flex,
+    WidgetSpec<BoxSpec>? contentContainer,
+    WidgetSpec<FlexSpec>? contentFlex,
+    WidgetSpec<TextSpec>? title,
+    WidgetSpec<TextSpec>? subtitle,
+    WidgetSpec<IconSpec>? leading,
+    WidgetSpec<IconSpec>? trailing,
+  })  : container = container ?? const WidgetSpec(spec: BoxSpec()),
+        flex = flex ?? const WidgetSpec(spec: FlexSpec()),
+        contentContainer = contentContainer ?? const WidgetSpec(spec: BoxSpec()),
+        contentFlex = contentFlex ?? const WidgetSpec(spec: FlexSpec()),
+        title = title ?? const WidgetSpec(spec: TextSpec()),
+        subtitle = subtitle ?? const WidgetSpec(spec: TextSpec()),
+        leading = leading ?? const WidgetSpec(spec: IconSpec()),
+        trailing = trailing ?? const WidgetSpec(spec: IconSpec());
 
   ListItemSpec copyWith({
-    BoxSpec? container,
-    FlexSpec? flex,
-    BoxSpec? contentContainer,
-    FlexSpec? contentFlex,
-    TextSpec? title,
-    TextSpec? subtitle,
-    IconSpec? leading,
-    IconSpec? trailing,
+    WidgetSpec<BoxSpec>? container,
+    WidgetSpec<FlexSpec>? flex,
+    WidgetSpec<BoxSpec>? contentContainer,
+    WidgetSpec<FlexSpec>? contentFlex,
+    WidgetSpec<TextSpec>? title,
+    WidgetSpec<TextSpec>? subtitle,
+    WidgetSpec<IconSpec>? leading,
+    WidgetSpec<IconSpec>? trailing,
   }) {
     return ListItemSpec(
       container: container ?? this.container,

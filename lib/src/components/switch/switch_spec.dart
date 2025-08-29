@@ -1,16 +1,16 @@
 part of 'switch.dart';
 
 class SwitchSpec extends Spec<SwitchSpec> with Diagnosticable {
-  final BoxSpec container;
-  final BoxSpec track;
-  final BoxSpec thumb;
+  final WidgetSpec<BoxSpec> container;
+  final WidgetSpec<BoxSpec> track;
+  final WidgetSpec<BoxSpec> thumb;
 
-  const SwitchSpec({BoxSpec? container, BoxSpec? track, BoxSpec? thumb})
-      : container = container ?? const BoxSpec(),
-        track = track ?? const BoxSpec(),
-        thumb = thumb ?? const BoxSpec();
+  const SwitchSpec({WidgetSpec<BoxSpec>? container, WidgetSpec<BoxSpec>? track, WidgetSpec<BoxSpec>? thumb})
+      : container = container ?? const WidgetSpec(spec: BoxSpec()),
+        track = track ?? const WidgetSpec(spec: BoxSpec()),
+        thumb = thumb ?? const WidgetSpec(spec: BoxSpec());
 
-  SwitchSpec copyWith({BoxSpec? container, BoxSpec? track, BoxSpec? thumb}) {
+  SwitchSpec copyWith({WidgetSpec<BoxSpec>? container, WidgetSpec<BoxSpec>? track, WidgetSpec<BoxSpec>? thumb}) {
     return SwitchSpec(
       container: container ?? this.container,
       track: track ?? this.track,
