@@ -1,8 +1,8 @@
 part of 'textfield.dart';
 
 class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
-  final TextSpec text;
-  final TextSpec hintText;
+  final WidgetSpec<TextSpec> text;
+  final WidgetSpec<TextSpec> hintText;
   final TextAlign textAlign;
 
   final double cursorWidth;
@@ -18,13 +18,13 @@ class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
   final EdgeInsets scrollPadding;
   final Brightness? keyboardAppearance;
   final double spacing;
-  final FlexBoxSpec container;
-  final TextSpec helperText;
-  final TextSpec label;
+  final WidgetSpec<FlexBoxSpec> container;
+  final WidgetSpec<TextSpec> helperText;
+  final WidgetSpec<TextSpec> label;
 
   const TextFieldSpec({
-    TextSpec? text,
-    TextSpec? hintText,
+    WidgetSpec<TextSpec>? text,
+    WidgetSpec<TextSpec>? hintText,
     TextAlign? textAlign,
     double? cursorWidth,
     this.cursorHeight,
@@ -37,25 +37,25 @@ class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
     this.keyboardAppearance,
     this.cursorOpacityAnimates,
     double? spacing,
-    FlexBoxSpec? container,
-    TextSpec? helperText,
-    TextSpec? label,
-  })  : text = text ?? const TextSpec(),
-        hintText = hintText ?? const TextSpec(),
+    WidgetSpec<FlexBoxSpec>? container,
+    WidgetSpec<TextSpec>? helperText,
+    WidgetSpec<TextSpec>? label,
+  })  : text = text ?? const WidgetSpec(spec: TextSpec()),
+        hintText = hintText ?? const WidgetSpec(spec: TextSpec()),
         textAlign = textAlign ?? TextAlign.start,
         cursorWidth = cursorWidth ?? 2.0,
         cursorOffset = cursorOffset ?? Offset.zero,
         selectionHeightStyle = selectionHeightStyle ?? BoxHeightStyle.tight,
         selectionWidthStyle = selectionWidthStyle ?? BoxWidthStyle.tight,
         scrollPadding = scrollPadding ?? const EdgeInsets.all(20.0),
-        helperText = helperText ?? const TextSpec(),
-        label = label ?? const TextSpec(),
-        container = container ?? const FlexBoxSpec(),
+        helperText = helperText ?? const WidgetSpec(spec: TextSpec()),
+        label = label ?? const WidgetSpec(spec: TextSpec()),
+        container = container ?? const WidgetSpec(spec: FlexBoxSpec()),
         spacing = spacing ?? 4;
 
   TextFieldSpec copyWith({
-    TextSpec? text,
-    TextSpec? hintText,
+    WidgetSpec<TextSpec>? text,
+    WidgetSpec<TextSpec>? hintText,
     TextAlign? textAlign,
     double? cursorWidth,
     double? cursorHeight,
@@ -68,9 +68,9 @@ class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
     EdgeInsets? scrollPadding,
     Brightness? keyboardAppearance,
     double? spacing,
-    FlexBoxSpec? container,
-    TextSpec? helperText,
-    TextSpec? label,
+    WidgetSpec<FlexBoxSpec>? container,
+    WidgetSpec<TextSpec>? helperText,
+    WidgetSpec<TextSpec>? label,
   }) {
     return TextFieldSpec(
       text: text ?? this.text,

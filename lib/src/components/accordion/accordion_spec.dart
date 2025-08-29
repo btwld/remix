@@ -1,26 +1,26 @@
 part of 'accordion.dart';
 
 class AccordionSpec extends Spec<AccordionSpec> with Diagnosticable {
-  final BoxSpec container;
-  final BoxSpec content;
-  final BoxSpec header;
-  final LabelSpec headerLabel;
+  final WidgetSpec<BoxSpec> container;
+  final WidgetSpec<BoxSpec> content;
+  final WidgetSpec<BoxSpec> header;
+  final WidgetSpec<LabelSpec> headerLabel;
 
   AccordionSpec({
-    BoxSpec? container,
-    BoxSpec? content,
-    BoxSpec? header,
-    LabelSpec? headerLabel,
-  })  : container = container ?? const BoxSpec(),
-        content = content ?? const BoxSpec(),
-        header = header ?? const BoxSpec(),
-        headerLabel = headerLabel ?? LabelSpec();
+    WidgetSpec<BoxSpec>? container,
+    WidgetSpec<BoxSpec>? content,
+    WidgetSpec<BoxSpec>? header,
+    WidgetSpec<LabelSpec>? headerLabel,
+  })  : container = container ?? const WidgetSpec(spec: BoxSpec()),
+        content = content ?? const WidgetSpec(spec: BoxSpec()),
+        header = header ?? const WidgetSpec(spec: BoxSpec()),
+        headerLabel = headerLabel ?? const WidgetSpec(spec: LabelSpec());
 
   AccordionSpec copyWith({
-    BoxSpec? container,
-    BoxSpec? content,
-    BoxSpec? header,
-    LabelSpec? headerLabel,
+    WidgetSpec<BoxSpec>? container,
+    WidgetSpec<BoxSpec>? content,
+    WidgetSpec<BoxSpec>? header,
+    WidgetSpec<LabelSpec>? headerLabel,
   }) {
     return AccordionSpec(
       container: container ?? this.container,

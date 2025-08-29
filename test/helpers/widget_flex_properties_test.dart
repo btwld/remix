@@ -81,24 +81,24 @@ void main() {
     });
   });
 
-  group('FlexMix Tests', () {
+  group('FlexStyle Tests', () {
     testWidgets('resolves correctly with BuildContext', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Builder(
             builder: (context) {
-              final mix = FlexMix(
+              final mix = FlexStyle(
                 direction: Axis.horizontal,
                 mainAxisAlignment: MainAxisAlignment.center,
                 spacing: 8.0,
               );
 
               final resolved = mix.resolve(context);
+              final spec = resolved.spec;
 
-              expect(resolved.direction, equals(Axis.horizontal));
-              expect(
-                  resolved.mainAxisAlignment, equals(MainAxisAlignment.center));
-              expect(resolved.spacing, equals(8.0));
+              expect(spec.direction, equals(Axis.horizontal));
+              expect(spec.mainAxisAlignment, equals(MainAxisAlignment.center));
+              expect(spec.spacing, equals(8.0));
 
               return Container();
             },
@@ -108,42 +108,31 @@ void main() {
     });
 
     test('merge works correctly', () {
-      final mix1 = FlexMix(
+      final mix1 = FlexStyle(
         direction: Axis.horizontal,
         spacing: 4.0,
       );
 
-      final mix2 = FlexMix(
+      final mix2 = FlexStyle(
         mainAxisAlignment: MainAxisAlignment.center,
       );
 
       final merged = mix1.merge(mix2);
 
-      expect(merged, isA<FlexMix>());
+      expect(merged, isA<FlexStyle>());
     });
 
-    // Removed deprecated factory constructors; FlexMix focuses on flex props only
+    // Removed deprecated factory constructors; FlexStyle focuses on flex props only
 
     test('construct with props works correctly', () {
-      final mix = FlexMix(
+      final mix = FlexStyle(
         direction: Axis.vertical,
         spacing: 10.0,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       );
 
-      expect(mix, isA<FlexMix>());
+      expect(mix, isA<FlexStyle>());
     });
 
-    test('maybeValue handles null correctly', () {
-      final result = FlexMix.maybeValue(null);
-      expect(result, isNull);
-
-      const spec = FlexSpec(
-        direction: Axis.horizontal,
-        spacing: 8.0,
-      );
-      final nonNullResult = FlexMix.maybeValue(spec);
-      expect(nonNullResult, isNotNull);
-    });
   });
 }

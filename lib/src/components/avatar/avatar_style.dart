@@ -4,14 +4,14 @@ class RemixAvatarStyle extends Style<AvatarSpec>
     with
         StyleModifierMixin<RemixAvatarStyle, AvatarSpec>,
         StyleVariantMixin<RemixAvatarStyle, AvatarSpec> {
-  final Prop<BoxSpec>? $container;
-  final Prop<TextSpec>? $text;
-  final Prop<IconSpec>? $icon;
+  final Prop<WidgetSpec<BoxSpec>>? $container;
+  final Prop<WidgetSpec<TextSpec>>? $text;
+  final Prop<WidgetSpec<IconSpec>>? $icon;
 
   const RemixAvatarStyle.create({
-    Prop<BoxSpec>? container,
-    Prop<TextSpec>? text,
-    Prop<IconSpec>? icon,
+    Prop<WidgetSpec<BoxSpec>>? container,
+    Prop<WidgetSpec<TextSpec>>? text,
+    Prop<WidgetSpec<IconSpec>>? icon,
     super.variants,
     super.animation,
     super.modifier,
@@ -21,9 +21,9 @@ class RemixAvatarStyle extends Style<AvatarSpec>
         $icon = icon;
 
   RemixAvatarStyle({
-    BoxMix? container,
-    TextMix? text,
-    IconMix? icon,
+    BoxStyle? container,
+    TextStyling? text,
+    IconStyle? icon,
     AnimationConfig? animation,
     List<VariantStyle<AvatarSpec>>? variants,
     ModifierConfig? modifier,
@@ -38,16 +38,10 @@ class RemixAvatarStyle extends Style<AvatarSpec>
           inherit: inherit,
         );
 
-  factory RemixAvatarStyle.value(AvatarSpec spec) => RemixAvatarStyle(
-        container: BoxMix.maybeValue(spec.container),
-        text: TextMix.maybeValue(spec.text),
-        icon: IconMix.maybeValue(spec.icon),
-      );
-
   /// Factory for avatar size
   factory RemixAvatarStyle.size(double value) {
     return RemixAvatarStyle(
-      container: BoxMix(
+      container: BoxStyle(
         constraints: BoxConstraintsMix(
           minWidth: value,
           maxWidth: value,
@@ -61,14 +55,14 @@ class RemixAvatarStyle extends Style<AvatarSpec>
   /// Factory for background color
   factory RemixAvatarStyle.color(Color value) {
     return RemixAvatarStyle(
-      container: BoxMix(decoration: BoxDecorationMix(color: value)),
+      container: BoxStyle(decoration: BoxDecorationMix(color: value)),
     );
   }
 
   /// Factory for border radius (for non-circular avatars)
   factory RemixAvatarStyle.borderRadius(double radius) {
     return RemixAvatarStyle(
-      container: BoxMix(
+      container: BoxStyle(
         decoration: BoxDecorationMix(
           borderRadius: BorderRadiusMix.circular(radius),
           shape: BoxShape.rectangle,
@@ -80,13 +74,13 @@ class RemixAvatarStyle extends Style<AvatarSpec>
   /// Factory for text color
   factory RemixAvatarStyle.textColor(Color value) {
     return RemixAvatarStyle(
-      text: TextMix(style: TextStyleMix(color: value)),
+      text: TextStyling(style: TextStyleMix(color: value)),
     );
   }
 
   /// Factory for icon color
   factory RemixAvatarStyle.iconColor(Color value) {
-    return RemixAvatarStyle(icon: IconMix(color: value));
+    return RemixAvatarStyle(icon: IconStyle(color: value));
   }
 
   // Instance methods (chainable)
@@ -179,11 +173,7 @@ class RemixAvatarStyle extends Style<AvatarSpec>
 }
 
 final DefaultRemixAvatarStyle = RemixAvatarStyle(
-  container: BoxMix(
-    decoration: BoxDecorationMix(
-      shape: BoxShape.circle,
-      color: RemixTokens.surface(),
-    ),
+  container: BoxStyle(
     alignment: Alignment.center,
     constraints: BoxConstraintsMix(
       minWidth: 50,
@@ -191,26 +181,26 @@ final DefaultRemixAvatarStyle = RemixAvatarStyle(
       minHeight: 50,
       maxHeight: 50,
     ),
+    decoration: BoxDecorationMix(
+      shape: BoxShape.circle,
+      color: RemixTokens.surface(),
+    ),
     clipBehavior: Clip.antiAlias,
   ),
-  text: TextMix(
+  text: TextStyling(
     style: TextStyleMix(
       color: RemixTokens.textPrimary(),
       fontSize: 18,
       fontWeight: FontWeight.w400,
     ),
   ),
-  icon: IconMix(color: RemixTokens.textPrimary(), size: 24),
+  icon: IconStyle(color: RemixTokens.textPrimary(), size: 24),
 );
 
 extension AvatarVariants on RemixAvatarStyle {
   /// Primary avatar variant with blue background and white text
   static RemixAvatarStyle get primary => RemixAvatarStyle(
-        container: BoxMix(
-          decoration: BoxDecorationMix(
-            shape: BoxShape.circle,
-            color: RemixTokens.primary(),
-          ),
+        container: BoxStyle(
           alignment: Alignment.center,
           constraints: BoxConstraintsMix(
             minWidth: 50,
@@ -218,25 +208,25 @@ extension AvatarVariants on RemixAvatarStyle {
             minHeight: 50,
             maxHeight: 50,
           ),
+          decoration: BoxDecorationMix(
+            shape: BoxShape.circle,
+            color: RemixTokens.primary(),
+          ),
           clipBehavior: Clip.antiAlias,
         ),
-        text: TextMix(
+        text: TextStyling(
           style: TextStyleMix(
             color: RemixTokens.background(),
             fontSize: 18,
             fontWeight: FontWeight.w500,
           ),
         ),
-        icon: IconMix(color: RemixTokens.background(), size: 24),
+        icon: IconStyle(color: RemixTokens.background(), size: 24),
       );
 
   /// Secondary avatar variant with grey background
   static RemixAvatarStyle get secondary => RemixAvatarStyle(
-        container: BoxMix(
-          decoration: BoxDecorationMix(
-            shape: BoxShape.circle,
-            color: RemixTokens.textSecondary(),
-          ),
+        container: BoxStyle(
           alignment: Alignment.center,
           constraints: BoxConstraintsMix(
             minWidth: 50,
@@ -244,25 +234,25 @@ extension AvatarVariants on RemixAvatarStyle {
             minHeight: 50,
             maxHeight: 50,
           ),
+          decoration: BoxDecorationMix(
+            shape: BoxShape.circle,
+            color: RemixTokens.textSecondary(),
+          ),
           clipBehavior: Clip.antiAlias,
         ),
-        text: TextMix(
+        text: TextStyling(
           style: TextStyleMix(
             color: RemixTokens.background(),
             fontSize: 18,
             fontWeight: FontWeight.w400,
           ),
         ),
-        icon: IconMix(color: RemixTokens.background(), size: 24),
+        icon: IconStyle(color: RemixTokens.background(), size: 24),
       );
 
   /// Small avatar variant (32x32)
   static RemixAvatarStyle get small => RemixAvatarStyle(
-        container: BoxMix(
-          decoration: BoxDecorationMix(
-            shape: BoxShape.circle,
-            color: RemixTokens.surface(),
-          ),
+        container: BoxStyle(
           alignment: Alignment.center,
           constraints: BoxConstraintsMix(
             minWidth: 32,
@@ -270,25 +260,25 @@ extension AvatarVariants on RemixAvatarStyle {
             minHeight: 32,
             maxHeight: 32,
           ),
+          decoration: BoxDecorationMix(
+            shape: BoxShape.circle,
+            color: RemixTokens.surface(),
+          ),
           clipBehavior: Clip.antiAlias,
         ),
-        text: TextMix(
+        text: TextStyling(
           style: TextStyleMix(
             color: RemixTokens.textPrimary(),
             fontSize: 14,
             fontWeight: FontWeight.w400,
           ),
         ),
-        icon: IconMix(color: RemixTokens.textPrimary(), size: 16),
+        icon: IconStyle(color: RemixTokens.textPrimary(), size: 16),
       );
 
   /// Large avatar variant (64x64)
   static RemixAvatarStyle get large => RemixAvatarStyle(
-        container: BoxMix(
-          decoration: BoxDecorationMix(
-            shape: BoxShape.circle,
-            color: RemixTokens.surface(),
-          ),
+        container: BoxStyle(
           alignment: Alignment.center,
           constraints: BoxConstraintsMix(
             minWidth: 64,
@@ -296,15 +286,19 @@ extension AvatarVariants on RemixAvatarStyle {
             minHeight: 64,
             maxHeight: 64,
           ),
+          decoration: BoxDecorationMix(
+            shape: BoxShape.circle,
+            color: RemixTokens.surface(),
+          ),
           clipBehavior: Clip.antiAlias,
         ),
-        text: TextMix(
+        text: TextStyling(
           style: TextStyleMix(
             color: RemixTokens.textPrimary(),
             fontSize: 24,
             fontWeight: FontWeight.w400,
           ),
         ),
-        icon: IconMix(color: RemixTokens.textPrimary(), size: 32),
+        icon: IconStyle(color: RemixTokens.textPrimary(), size: 32),
       );
 }

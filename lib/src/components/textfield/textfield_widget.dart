@@ -344,7 +344,7 @@ class _RemixTextFieldState extends State<RemixTextField>
           magnifierConfiguration: widget.magnifierConfiguration,
           onHoverChange: (state) => controller.hovered = state,
           onFocusChange: (state) => controller.focused = state,
-          style: spec.text.style ?? const TextStyle(),
+          style: spec.text.spec.style ?? const TextStyle(),
           ignorePointers: widget.ignorePointers,
           builder: (context, editableText) {
             // Build the core editable with hint overlay if needed

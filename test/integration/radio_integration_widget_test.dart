@@ -13,15 +13,17 @@ void main() {
   group('RemixRadio Integration Tests', () {
     testWidgets('renders correctly with label', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: RemixRadioGroup<String>(
-                groupValue: 'option1',
-                onChanged: (_) {},
-                child: RemixRadio<String>(
-                  value: 'option1',
-                  label: 'Option 1',
+        createRemixScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: RemixRadioGroup<String>(
+                  groupValue: 'option1',
+                  onChanged: (_) {},
+                  child: RemixRadio<String>(
+                    value: 'option1',
+                    label: 'Option 1',
+                  ),
                 ),
               ),
             ),
@@ -35,14 +37,16 @@ void main() {
 
     testWidgets('renders correctly without label', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: RemixRadioGroup<String>(
-                groupValue: 'option1',
-                onChanged: (_) {},
-                child: RemixRadio<String>(
-                  value: 'option1',
+        createRemixScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: RemixRadioGroup<String>(
+                  groupValue: 'option1',
+                  onChanged: (_) {},
+                  child: RemixRadio<String>(
+                    value: 'option1',
+                  ),
                 ),
               ),
             ),
@@ -53,16 +57,19 @@ void main() {
       expect(find.byType(RemixRadio<String>), findsOneWidget);
     });
 
-    testWidgets('shows selected state when value matches groupValue', (tester) async {
+    testWidgets('shows selected state when value matches groupValue',
+        (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: RemixRadioGroup<String>(
-                groupValue: 'selected',
-                onChanged: (_) {},
-                child: RemixRadio<String>(
-                  value: 'selected',
+        createRemixScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: RemixRadioGroup<String>(
+                  groupValue: 'selected',
+                  onChanged: (_) {},
+                  child: RemixRadio<String>(
+                    value: 'selected',
+                  ),
                 ),
               ),
             ),
@@ -74,16 +81,19 @@ void main() {
       expect(find.byType(RemixRadio<String>), findsOneWidget);
     });
 
-    testWidgets('shows unselected state when value does not match groupValue', (tester) async {
+    testWidgets('shows unselected state when value does not match groupValue',
+        (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: RemixRadioGroup<String>(
-                groupValue: 'option2',
-                onChanged: (_) {},
-                child: RemixRadio<String>(
-                  value: 'option1',
+        createRemixScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: RemixRadioGroup<String>(
+                  groupValue: 'option2',
+                  onChanged: (_) {},
+                  child: RemixRadio<String>(
+                    value: 'option1',
+                  ),
                 ),
               ),
             ),
@@ -95,20 +105,23 @@ void main() {
       expect(find.byType(RemixRadio<String>), findsOneWidget);
     });
 
-    testWidgets('calls onChanged with correct value when tapped', (tester) async {
+    testWidgets('calls onChanged with correct value when tapped',
+        (tester) async {
       String? selectedValue;
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: RemixRadioGroup<String>(
-                groupValue: 'option2',
-                onChanged: (value) {
-                  selectedValue = value;
-                },
-                child: RemixRadio<String>(
-                  value: 'option1',
+        createRemixScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: RemixRadioGroup<String>(
+                  groupValue: 'option2',
+                  onChanged: (value) {
+                    selectedValue = value;
+                  },
+                  child: RemixRadio<String>(
+                    value: 'option1',
+                  ),
                 ),
               ),
             ),
@@ -126,17 +139,19 @@ void main() {
       bool wasCalled = false;
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: RemixRadioGroup<String>(
-                groupValue: 'option2',
-                onChanged: (_) {
-                  wasCalled = true;
-                },
-                child: RemixRadio<String>(
-                  value: 'option1',
-                  enabled: false,
+        createRemixScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: RemixRadioGroup<String>(
+                  groupValue: 'option2',
+                  onChanged: (_) {
+                    wasCalled = true;
+                  },
+                  child: RemixRadio<String>(
+                    value: 'option1',
+                    enabled: false,
+                  ),
                 ),
               ),
             ),
@@ -154,30 +169,32 @@ void main() {
       TestOption? selectedOption = TestOption.option1;
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: StatefulBuilder(
-                builder: (context, setState) {
-                  return RemixRadioGroup<TestOption>(
-                    groupValue: selectedOption,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedOption = value;
-                      });
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: TestOption.values.map((option) {
-                        return RemixRadio<TestOption>(
-                          key: Key(option.name),
-                          value: option,
-                          label: option.name,
-                        );
-                      }).toList(),
-                    ),
-                  );
-                },
+        createRemixScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: StatefulBuilder(
+                  builder: (context, setState) {
+                    return RemixRadioGroup<TestOption>(
+                      groupValue: selectedOption,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedOption = value;
+                        });
+                      },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: TestOption.values.map((option) {
+                          return RemixRadio<TestOption>(
+                            key: Key(option.name),
+                            value: option,
+                            label: option.name,
+                          );
+                        }).toList(),
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
           ),
@@ -207,29 +224,31 @@ void main() {
       String? groupValue = 'A';
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: StatefulBuilder(
-                builder: (context, setState) {
-                  return RemixRadioGroup<String>(
-                    groupValue: groupValue,
-                    onChanged: (newValue) {
-                      setState(() {
-                        groupValue = newValue;
-                      });
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: ['A', 'B', 'C'].map((value) {
-                        return RemixRadio<String>(
-                          key: Key(value),
-                          value: value,
-                        );
-                      }).toList(),
-                    ),
-                  );
-                },
+        createRemixScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: StatefulBuilder(
+                  builder: (context, setState) {
+                    return RemixRadioGroup<String>(
+                      groupValue: groupValue,
+                      onChanged: (newValue) {
+                        setState(() {
+                          groupValue = newValue;
+                        });
+                      },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: ['A', 'B', 'C'].map((value) {
+                          return RemixRadio<String>(
+                            key: Key(value),
+                            value: value,
+                          );
+                        }).toList(),
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
           ),
@@ -251,17 +270,19 @@ void main() {
       String? selectedValue;
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: RemixRadioGroup<String>(
-                groupValue: 'option2',
-                onChanged: (value) {
-                  selectedValue = value;
-                },
-                child: RemixRadio<String>(
-                  value: 'option1',
-                  label: 'Click me',
+        createRemixScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: RemixRadioGroup<String>(
+                  groupValue: 'option2',
+                  onChanged: (value) {
+                    selectedValue = value;
+                  },
+                  child: RemixRadio<String>(
+                    value: 'option1',
+                    label: 'Click me',
+                  ),
                 ),
               ),
             ),
@@ -278,14 +299,16 @@ void main() {
 
     testWidgets('handles hover state', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: RemixRadioGroup<String>(
-                groupValue: 'option2',
-                onChanged: (_) {},
-                child: RemixRadio<String>(
-                  value: 'option1',
+        createRemixScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: RemixRadioGroup<String>(
+                  groupValue: 'option2',
+                  onChanged: (_) {},
+                  child: RemixRadio<String>(
+                    value: 'option1',
+                  ),
                 ),
               ),
             ),
@@ -307,16 +330,18 @@ void main() {
 
     testWidgets('handles focus state', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: Focus(
-                autofocus: true,
-                child: RemixRadioGroup<String>(
-                  groupValue: 'option2',
-                  onChanged: (_) {},
-                  child: RemixRadio<String>(
-                    value: 'option1',
+        createRemixScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: Focus(
+                  autofocus: true,
+                  child: RemixRadioGroup<String>(
+                    groupValue: 'option2',
+                    onChanged: (_) {},
+                    child: RemixRadio<String>(
+                      value: 'option1',
+                    ),
                   ),
                 ),
               ),
@@ -330,43 +355,48 @@ void main() {
       expect(find.byType(RemixRadio<String>), findsOneWidget);
     });
 
-    testWidgets('updates visual state when groupValue changes externally', (tester) async {
+    testWidgets('updates visual state when groupValue changes externally',
+        (tester) async {
       String externalValue = 'option1';
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: StatefulBuilder(
-                builder: (context, setState) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      RemixRadioGroup<String>(
-                        groupValue: externalValue,
-                        onChanged: (_) {},
-                        child: Column(
-                          children: [
-                            RemixRadio<String>(
-                              value: 'option1',
-                            ),
-                            RemixRadio<String>(
-                              value: 'option2',
-                            ),
-                          ],
+        createRemixScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: StatefulBuilder(
+                  builder: (context, setState) {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        RemixRadioGroup<String>(
+                          groupValue: externalValue,
+                          onChanged: (_) {},
+                          child: Column(
+                            children: [
+                              RemixRadio<String>(
+                                value: 'option1',
+                              ),
+                              RemixRadio<String>(
+                                value: 'option2',
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          setState(() {
-                            externalValue = externalValue == 'option1' ? 'option2' : 'option1';
-                          });
-                        },
-                        child: const Text('Toggle Externally'),
-                      ),
-                    ],
-                  );
-                },
+                        TextButton(
+                          onPressed: () {
+                            setState(() {
+                              externalValue = externalValue == 'option1'
+                                  ? 'option2'
+                                  : 'option1';
+                            });
+                          },
+                          child: const Text('Toggle Externally'),
+                        ),
+                      ],
+                    );
+                  },
+                ),
               ),
             ),
           ),
@@ -383,15 +413,17 @@ void main() {
 
     testWidgets('handles null onChanged callback', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: RemixRadioGroup<String>(
-                groupValue: 'option1',
-                onChanged: (_) {},
-                child: RemixRadio<String>(
-                  value: 'option1',
-                  enabled: false,
+        createRemixScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: RemixRadioGroup<String>(
+                  groupValue: 'option1',
+                  onChanged: (_) {},
+                  child: RemixRadio<String>(
+                    value: 'option1',
+                    enabled: false,
+                  ),
                 ),
               ),
             ),
@@ -409,17 +441,19 @@ void main() {
 
     testWidgets('preserves accessibility semantics', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: Semantics(
-                label: 'Select theme',
-                child: RemixRadioGroup<String>(
-                  groupValue: 'light',
-                  onChanged: (_) {},
-                  child: RemixRadio<String>(
-                    value: 'dark',
-                    label: 'Dark mode',
+        createRemixScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: Semantics(
+                  label: 'Select theme',
+                  child: RemixRadioGroup<String>(
+                    groupValue: 'light',
+                    onChanged: (_) {},
+                    child: RemixRadio<String>(
+                      value: 'dark',
+                      label: 'Dark mode',
+                    ),
                   ),
                 ),
               ),
@@ -438,30 +472,32 @@ void main() {
       String? currentValue = 'A';
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: StatefulBuilder(
-                builder: (context, setState) {
-                  return RemixRadioGroup<String>(
-                    groupValue: currentValue,
-                    onChanged: (newValue) {
-                      changeCount++;
-                      setState(() {
-                        currentValue = newValue;
-                      });
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: ['A', 'B', 'C'].map((value) {
-                        return RemixRadio<String>(
-                          key: Key(value),
-                          value: value,
-                        );
-                      }).toList(),
-                    ),
-                  );
-                },
+        createRemixScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: StatefulBuilder(
+                  builder: (context, setState) {
+                    return RemixRadioGroup<String>(
+                      groupValue: currentValue,
+                      onChanged: (newValue) {
+                        changeCount++;
+                        setState(() {
+                          currentValue = newValue;
+                        });
+                      },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: ['A', 'B', 'C'].map((value) {
+                          return RemixRadio<String>(
+                            key: Key(value),
+                            value: value,
+                          );
+                        }).toList(),
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
           ),
@@ -487,30 +523,32 @@ void main() {
       final date3 = DateTime(2024, 3, 1);
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: StatefulBuilder(
-                builder: (context, setState) {
-                  return RemixRadioGroup<DateTime>(
-                    groupValue: selectedDate,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedDate = value;
-                      });
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [date1, date2, date3].map((date) {
-                        return RemixRadio<DateTime>(
-                          key: Key(date.toString()),
-                          value: date,
-                          label: '${date.month}/${date.year}',
-                        );
-                      }).toList(),
-                    ),
-                  );
-                },
+        createRemixScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: StatefulBuilder(
+                  builder: (context, setState) {
+                    return RemixRadioGroup<DateTime>(
+                      groupValue: selectedDate,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedDate = value;
+                        });
+                      },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [date1, date2, date3].map((date) {
+                          return RemixRadio<DateTime>(
+                            key: Key(date.toString()),
+                            value: date,
+                            label: '${date.month}/${date.year}',
+                          );
+                        }).toList(),
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
           ),

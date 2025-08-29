@@ -4,10 +4,10 @@ class RemixDividerStyle extends Style<DividerSpec>
     with
         StyleModifierMixin<RemixDividerStyle, DividerSpec>,
         StyleVariantMixin<RemixDividerStyle, DividerSpec> {
-  final Prop<BoxSpec>? $container;
+  final Prop<WidgetSpec<BoxSpec>>? $container;
 
   const RemixDividerStyle.create({
-    Prop<BoxSpec>? container,
+    Prop<WidgetSpec<BoxSpec>>? container,
     super.variants,
     super.animation,
     super.modifier,
@@ -15,7 +15,7 @@ class RemixDividerStyle extends Style<DividerSpec>
   }) : $container = container;
 
   RemixDividerStyle({
-    BoxMix? container,
+    BoxStyle? container,
     AnimationConfig? animation,
     List<VariantStyle<DividerSpec>>? variants,
     ModifierConfig? modifier,
@@ -27,10 +27,6 @@ class RemixDividerStyle extends Style<DividerSpec>
           modifier: modifier,
           inherit: inherit,
         );
-
-  factory RemixDividerStyle.value(DividerSpec spec) => RemixDividerStyle(
-        container: BoxMix.maybeValue(spec.container),
-      );
 
   @override
   RemixDividerStyle variant(Variant variant, RemixDividerStyle style) {
@@ -81,15 +77,15 @@ class RemixDividerStyle extends Style<DividerSpec>
 }
 
 final DefaultRemixDividerStyle = RemixDividerStyle(
-  container: BoxMix(
-    decoration: BoxDecorationMix(
-      borderRadius: BorderRadiusMix.circular(99),
-      color: RemixTokens.border(),
-    ),
+  container: BoxStyle(
     constraints: BoxConstraintsMix(
       minWidth: double.infinity,
       minHeight: 1,
       maxHeight: 1,
+    ),
+    decoration: BoxDecorationMix(
+      borderRadius: BorderRadiusMix.circular(99),
+      color: RemixTokens.border(),
     ),
   ),
 );
@@ -98,60 +94,60 @@ final DefaultRemixDividerStyle = RemixDividerStyle(
 class RemixDividerStyles {
   /// Default divider style
   static RemixDividerStyle get defaultStyle => RemixDividerStyle(
-        container: BoxMix(
-          decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(99),
-            color: RemixTokens.border(),
-          ),
+        container: BoxStyle(
           constraints: BoxConstraintsMix(
             minWidth: double.infinity,
             minHeight: 1,
             maxHeight: 1,
+          ),
+          decoration: BoxDecorationMix(
+            borderRadius: BorderRadiusMix.circular(99),
+            color: RemixTokens.border(),
           ),
         ),
       );
 
   /// Vertical divider variant
   static RemixDividerStyle get vertical => RemixDividerStyle(
-        container: BoxMix(
-          decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(99),
-            color: RemixTokens.border(),
-          ),
+        container: BoxStyle(
           constraints: BoxConstraintsMix(
             minWidth: 1,
             maxWidth: 1,
             minHeight: double.infinity,
+          ),
+          decoration: BoxDecorationMix(
+            borderRadius: BorderRadiusMix.circular(99),
+            color: RemixTokens.border(),
           ),
         ),
       );
 
   /// Thick divider variant
   static RemixDividerStyle get thick => RemixDividerStyle(
-        container: BoxMix(
-          decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(99),
-            color: RemixTokens.border(),
-          ),
+        container: BoxStyle(
           constraints: BoxConstraintsMix(
             minWidth: double.infinity,
             minHeight: 2,
             maxHeight: 2,
+          ),
+          decoration: BoxDecorationMix(
+            borderRadius: BorderRadiusMix.circular(99),
+            color: RemixTokens.border(),
           ),
         ),
       );
 
   /// Dark divider variant
   static RemixDividerStyle get dark => RemixDividerStyle(
-        container: BoxMix(
-          decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(99),
-            color: RemixTokens.textSecondary(),
-          ),
+        container: BoxStyle(
           constraints: BoxConstraintsMix(
             minWidth: double.infinity,
             minHeight: 1,
             maxHeight: 1,
+          ),
+          decoration: BoxDecorationMix(
+            borderRadius: BorderRadiusMix.circular(99),
+            color: RemixTokens.textSecondary(),
           ),
         ),
       );

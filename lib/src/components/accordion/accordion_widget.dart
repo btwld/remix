@@ -161,8 +161,8 @@ class _RemixAccordionItemState<T> extends State<RemixAccordionItem<T>>
                               isExpanded
                                   ? Icons.expand_less
                                   : inheritedData.defaultTrailing,
-                              size: spec.headerLabel.trailing.size,
-                              color: spec.headerLabel.trailing.color,
+                              size: spec.headerLabel.spec.trailing.spec.size,
+                              color: spec.headerLabel.spec.trailing.spec.color,
                             ),
                       ],
                     ),

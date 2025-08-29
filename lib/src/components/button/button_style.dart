@@ -4,12 +4,12 @@ class RemixButtonStyle extends Style<ButtonSpec>
     with
         StyleModifierMixin<RemixButtonStyle, ButtonSpec>,
         StyleVariantMixin<RemixButtonStyle, ButtonSpec> {
-  final Prop<BoxSpec>? $container;
+  final Prop<WidgetSpec<BoxSpec>>? $container;
   final Prop<WidgetSpec<LabelSpec>>? $label;
   final Prop<WidgetSpec<SpinnerSpec>>? $spinner;
 
   const RemixButtonStyle.create({
-    Prop<BoxSpec>? container,
+    Prop<WidgetSpec<BoxSpec>>? container,
     Prop<WidgetSpec<LabelSpec>>? label,
     Prop<WidgetSpec<SpinnerSpec>>? spinner,
     super.variants,
@@ -21,7 +21,7 @@ class RemixButtonStyle extends Style<ButtonSpec>
         $spinner = spinner;
 
   RemixButtonStyle({
-    BoxMix? container,
+    BoxStyle? container,
     RemixLabelStyle? label,
     RemixSpinnerStyle? spinner,
     AnimationConfig? animation,
@@ -38,12 +38,6 @@ class RemixButtonStyle extends Style<ButtonSpec>
           inherit: inherit,
         );
 
-  factory RemixButtonStyle.value(ButtonSpec spec) => RemixButtonStyle(
-        container: BoxMix.maybeValue(spec.container),
-        label: RemixLabelStyle.value(spec.label),
-        spinner: RemixSpinnerStyle.value(spec.spinner),
-      );
-
   // Factory constructors for common patterns
   factory RemixButtonStyle.label(RemixLabelStyle value) {
     return RemixButtonStyle(label: value);
@@ -56,21 +50,21 @@ class RemixButtonStyle extends Style<ButtonSpec>
   /// Factory for background color
   factory RemixButtonStyle.color(Color value) {
     return RemixButtonStyle(
-      container: BoxMix(decoration: BoxDecorationMix(color: value)),
+      container: BoxStyle(decoration: BoxDecorationMix(color: value)),
     );
   }
 
   /// Factory for padding
   factory RemixButtonStyle.padding(double value) {
     return RemixButtonStyle(
-      container: BoxMix(padding: EdgeInsetsGeometryMix.all(value)),
+      container: BoxStyle(padding: EdgeInsetsGeometryMix.all(value)),
     );
   }
 
   /// Factory for border radius
   factory RemixButtonStyle.borderRadius(double radius) {
     return RemixButtonStyle(
-      container: BoxMix(
+      container: BoxStyle(
         decoration: BoxDecorationMix(
           borderRadius: BorderRadiusMix.circular(radius),
         ),
@@ -81,7 +75,7 @@ class RemixButtonStyle extends Style<ButtonSpec>
   /// Factory for width
   factory RemixButtonStyle.width(double value) {
     return RemixButtonStyle(
-      container: BoxMix(
+      container: BoxStyle(
         constraints: BoxConstraintsMix(minWidth: value, maxWidth: value),
       ),
     );
@@ -90,7 +84,7 @@ class RemixButtonStyle extends Style<ButtonSpec>
   /// Factory for height
   factory RemixButtonStyle.height(double value) {
     return RemixButtonStyle(
-      container: BoxMix(
+      container: BoxStyle(
         constraints: BoxConstraintsMix(minHeight: value, maxHeight: value),
       ),
     );
@@ -99,7 +93,7 @@ class RemixButtonStyle extends Style<ButtonSpec>
   /// Factory for size (width and height)
   factory RemixButtonStyle.size(double width, double height) {
     return RemixButtonStyle(
-      container: BoxMix(
+      container: BoxStyle(
         constraints: BoxConstraintsMix(
           minWidth: width,
           maxWidth: width,
@@ -113,7 +107,7 @@ class RemixButtonStyle extends Style<ButtonSpec>
   /// Factory for border
   factory RemixButtonStyle.border(BoxBorderMix value) {
     return RemixButtonStyle(
-      container: BoxMix(decoration: BoxDecorationMix(border: value)),
+      container: BoxStyle(decoration: BoxDecorationMix(border: value)),
     );
   }
 
@@ -166,7 +160,7 @@ class RemixButtonStyle extends Style<ButtonSpec>
   // Icon control methods
 
   /// Sets base icon styling for both leading and trailing icons
-  RemixButtonStyle icon(IconMix value) {
+  RemixButtonStyle icon(IconStyle value) {
     return merge(
       RemixButtonStyle(
         label: RemixLabelStyle(leading: value, trailing: value),
@@ -175,12 +169,12 @@ class RemixButtonStyle extends Style<ButtonSpec>
   }
 
   /// Sets styling specifically for the leading icon
-  RemixButtonStyle leading(IconMix value) {
+  RemixButtonStyle leading(IconStyle value) {
     return merge(RemixButtonStyle(label: RemixLabelStyle(leading: value)));
   }
 
   /// Sets styling specifically for the trailing icon
-  RemixButtonStyle trailing(IconMix value) {
+  RemixButtonStyle trailing(IconStyle value) {
     return merge(RemixButtonStyle(label: RemixLabelStyle(trailing: value)));
   }
 
@@ -234,8 +228,8 @@ class RemixButtonStyle extends Style<ButtonSpec>
     return WidgetSpec(
       spec: ButtonSpec(
         container: MixOps.resolve(context, $container),
-        label: MixOps.resolve(context, $label)?.spec,
-        spinner: MixOps.resolve(context, $spinner)?.spec,
+        label: MixOps.resolve(context, $label),
+        spinner: MixOps.resolve(context, $spinner),
       ),
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
@@ -271,23 +265,23 @@ class RemixButtonStyle extends Style<ButtonSpec>
 }
 
 final DefaultRemixButtonStyle = RemixButtonStyle(
-  container: BoxMix(
+  container: BoxStyle(
+    padding: EdgeInsetsGeometryMix.all(RemixTokens.spaceMd()),
     decoration: BoxDecorationMix(
       borderRadius: BorderRadiusMix.circular(RemixTokens.radiusLg()),
       color: RemixTokens.primary(),
     ),
-    padding: EdgeInsetsGeometryMix.all(RemixTokens.spaceMd()),
   ),
   label: RemixLabelStyle(
-    label: TextMix(
+    label: TextStyling(
       style: TextStyleMix.color(RemixTokens.surface())
           .fontSize(RemixTokens.fontSizeMd()),
     ),
-    leading: IconMix(
+    leading: IconStyle(
       color: RemixTokens.surface(),
       size: RemixTokens.iconSizeLg(),
     ),
-    flex: FlexMix(spacing: RemixTokens.spaceSm()),
+    flex: FlexStyle(spacing: RemixTokens.spaceSm()),
   ),
   spinner: RemixSpinnerStyle(
     size: RemixTokens.iconSizeMd(),
@@ -343,44 +337,44 @@ extension ButtonVariants on RemixButtonStyle {
 
   // Size variants
   static RemixButtonStyle get small => RemixButtonStyle(
-        container: BoxMix(
+        container: BoxStyle(
           padding: EdgeInsetsGeometryMix.all(RemixTokens.spaceXs()),
           constraints: BoxConstraintsMix(minHeight: 32),
         ),
         label: RemixLabelStyle(
-          label: TextMix(
+          label: TextStyling(
             style: TextStyleMix.fontSize(RemixTokens.fontSizeSm()),
           ),
-          leading: IconMix(size: RemixTokens.iconSizeSm()),
-          flex: FlexMix(spacing: RemixTokens.spaceXs()),
+          leading: IconStyle(size: RemixTokens.iconSizeSm()),
+          flex: FlexStyle(spacing: RemixTokens.spaceXs()),
         ),
       );
 
   static RemixButtonStyle get medium => RemixButtonStyle(
-        container: BoxMix(
+        container: BoxStyle(
           padding: EdgeInsetsGeometryMix.all(RemixTokens.spaceSm()),
           constraints: BoxConstraintsMix(minHeight: 40),
         ),
         label: RemixLabelStyle(
-          label: TextMix(
+          label: TextStyling(
             style: TextStyleMix.fontSize(RemixTokens.fontSizeMd()),
           ),
-          leading: IconMix(size: RemixTokens.iconSizeMd()),
-          flex: FlexMix(spacing: RemixTokens.spaceSm()),
+          leading: IconStyle(size: RemixTokens.iconSizeMd()),
+          flex: FlexStyle(spacing: RemixTokens.spaceSm()),
         ),
       );
 
   static RemixButtonStyle get large => RemixButtonStyle(
-        container: BoxMix(
+        container: BoxStyle(
           padding: EdgeInsetsGeometryMix.all(RemixTokens.spaceLg()),
           constraints: BoxConstraintsMix(minHeight: 48),
         ),
         label: RemixLabelStyle(
-          label: TextMix(
+          label: TextStyling(
             style: TextStyleMix.fontSize(RemixTokens.fontSizeLg()),
           ),
-          leading: IconMix(size: RemixTokens.iconSizeXl()),
-          flex: FlexMix(spacing: RemixTokens.spaceMd()),
+          leading: IconStyle(size: RemixTokens.iconSizeXl()),
+          flex: FlexStyle(spacing: RemixTokens.spaceMd()),
         ),
       );
 
@@ -391,31 +385,31 @@ extension ButtonVariants on RemixButtonStyle {
   // Helper methods to create variants
   static RemixButtonStyle _createVariant(Color bgColor, Color fgColor) {
     return RemixButtonStyle(
-      container: BoxMix(
+      container: BoxStyle(
+        padding: EdgeInsetsGeometryMix.all(RemixTokens.spaceMd()),
         decoration: BoxDecorationMix(
           borderRadius: BorderRadiusMix.circular(RemixTokens.radiusLg()),
           color: bgColor,
         ),
-        padding: EdgeInsetsGeometryMix.all(RemixTokens.spaceMd()),
       ),
       label: RemixLabelStyle(
-        label: TextMix(
+        label: TextStyling(
           style: TextStyleMix.color(fgColor).fontSize(RemixTokens.fontSizeMd()),
         ),
-        leading: IconMix(color: fgColor, size: RemixTokens.iconSizeLg()),
-        flex: FlexMix(spacing: RemixTokens.spaceSm()),
+        leading: IconStyle(color: fgColor, size: RemixTokens.iconSizeLg()),
+        flex: FlexStyle(spacing: RemixTokens.spaceSm()),
       ),
     )
         .onHovered(
           RemixButtonStyle(
-            container: BoxMix(
+            container: BoxStyle(
               decoration: BoxDecorationMix(color: _darkenColor(bgColor, 0.1)),
             ),
           ),
         )
         .onPressed(
           RemixButtonStyle(
-            container: BoxMix(
+            container: BoxStyle(
               decoration: BoxDecorationMix(color: _darkenColor(bgColor, 0.2)),
             ),
           ),
@@ -429,16 +423,16 @@ extension ButtonVariants on RemixButtonStyle {
         )
         .onDisabled(
           RemixButtonStyle(
-            container: BoxMix(
+            container: BoxStyle(
               decoration: BoxDecorationMix(
                 color: RemixTokens.textDisabled(),
               ),
             ),
             label: RemixLabelStyle(
-              label: TextMix(
+              label: TextStyling(
                 style: TextStyleMix.color(RemixTokens.textTertiary()),
               ),
-              leading: IconMix(color: RemixTokens.textTertiary()),
+              leading: IconStyle(color: RemixTokens.textTertiary()),
             ),
           ),
         );
@@ -446,28 +440,29 @@ extension ButtonVariants on RemixButtonStyle {
 
   static RemixButtonStyle _createOutlineVariant(Color color) {
     return RemixButtonStyle(
-      container: BoxMix(
+      container: BoxStyle(
+        padding: EdgeInsetsGeometryMix.all(RemixTokens.spaceMd()),
         decoration: BoxDecorationMix(
           border: BoxBorderMix.all(BorderSideMix(color: color, width: 1)),
           borderRadius: BorderRadiusMix.circular(RemixTokens.radiusLg()),
           color: RemixTokens.surface().withValues(alpha: 0.0),
         ),
-        padding: EdgeInsetsGeometryMix.all(RemixTokens.spaceMd()),
       ),
       label: RemixLabelStyle(
-        label: TextMix(
+        label: TextStyling(
           style: TextStyleMix.color(color).fontSize(RemixTokens.fontSizeMd()),
         ),
-        leading: IconMix(color: color, size: RemixTokens.iconSizeLg()),
-        flex: FlexMix(spacing: RemixTokens.spaceSm()),
+        leading: IconStyle(color: color, size: RemixTokens.iconSizeLg()),
+        flex: FlexStyle(spacing: RemixTokens.spaceSm()),
       ),
     )
         .onHovered(
           RemixButtonStyle(
-            container: BoxMix(
+            container: BoxStyle(
               decoration: BoxDecorationMix(
-                border:
-                    BoxBorderMix.all(BorderSideMix(color: color, width: 1.5)),
+                border: BoxBorderMix.all(
+                  BorderSideMix(color: color, width: 1.5),
+                ),
                 color: color.withValues(alpha: 0.05),
               ),
             ),
@@ -475,7 +470,7 @@ extension ButtonVariants on RemixButtonStyle {
         )
         .onPressed(
           RemixButtonStyle(
-            container: BoxMix(
+            container: BoxStyle(
               decoration: BoxDecorationMix(
                 border: BoxBorderMix.all(BorderSideMix(color: color, width: 2)),
                 color: color.withValues(alpha: 0.1),
@@ -485,7 +480,7 @@ extension ButtonVariants on RemixButtonStyle {
         )
         .onFocused(
           RemixButtonStyle(
-            container: BoxMix(
+            container: BoxStyle(
               decoration: BoxDecorationMix(
                 border: BoxBorderMix.all(BorderSideMix(color: color, width: 2)),
               ),
@@ -494,7 +489,7 @@ extension ButtonVariants on RemixButtonStyle {
         )
         .onDisabled(
           RemixButtonStyle(
-            container: BoxMix(
+            container: BoxStyle(
               decoration: BoxDecorationMix(
                 border: BoxBorderMix.all(
                   BorderSideMix(
@@ -505,10 +500,10 @@ extension ButtonVariants on RemixButtonStyle {
               ),
             ),
             label: RemixLabelStyle(
-              label: TextMix(
+              label: TextStyling(
                 style: TextStyleMix.color(RemixTokens.textDisabled()),
               ),
-              leading: IconMix(color: RemixTokens.textDisabled()),
+              leading: IconStyle(color: RemixTokens.textDisabled()),
             ),
           ),
         );
@@ -516,24 +511,24 @@ extension ButtonVariants on RemixButtonStyle {
 
   static RemixButtonStyle _createGhostVariant(Color color) {
     return RemixButtonStyle(
-      container: BoxMix(
+      container: BoxStyle(
+        padding: EdgeInsetsGeometryMix.all(RemixTokens.spaceMd()),
         decoration: BoxDecorationMix(
           borderRadius: BorderRadiusMix.circular(RemixTokens.radiusLg()),
           color: RemixTokens.surface().withValues(alpha: 0.0),
         ),
-        padding: EdgeInsetsGeometryMix.all(RemixTokens.spaceMd()),
       ),
       label: RemixLabelStyle(
-        label: TextMix(
+        label: TextStyling(
           style: TextStyleMix.color(color).fontSize(RemixTokens.fontSizeMd()),
         ),
-        leading: IconMix(color: color, size: RemixTokens.iconSizeLg()),
-        flex: FlexMix(spacing: RemixTokens.spaceSm()),
+        leading: IconStyle(color: color, size: RemixTokens.iconSizeLg()),
+        flex: FlexStyle(spacing: RemixTokens.spaceSm()),
       ),
     )
         .onHovered(
           RemixButtonStyle(
-            container: BoxMix(
+            container: BoxStyle(
               decoration:
                   BoxDecorationMix(color: color.withValues(alpha: 0.08)),
             ),
@@ -541,7 +536,7 @@ extension ButtonVariants on RemixButtonStyle {
         )
         .onPressed(
           RemixButtonStyle(
-            container: BoxMix(
+            container: BoxStyle(
               decoration:
                   BoxDecorationMix(color: color.withValues(alpha: 0.12)),
             ),
@@ -549,10 +544,13 @@ extension ButtonVariants on RemixButtonStyle {
         )
         .onFocused(
           RemixButtonStyle(
-            container: BoxMix(
+            container: BoxStyle(
               decoration: BoxDecorationMix(
                 border: BoxBorderMix.all(
-                  BorderSideMix(color: color.withValues(alpha: 0.5), width: 2),
+                  BorderSideMix(
+                    color: color.withValues(alpha: 0.5),
+                    width: 2,
+                  ),
                 ),
                 color: color.withValues(alpha: 0.05),
               ),
@@ -562,10 +560,10 @@ extension ButtonVariants on RemixButtonStyle {
         .onDisabled(
           RemixButtonStyle(
             label: RemixLabelStyle(
-              label: TextMix(
+              label: TextStyling(
                 style: TextStyleMix.color(RemixTokens.textDisabled()),
               ),
-              leading: IconMix(color: RemixTokens.textDisabled()),
+              leading: IconStyle(color: RemixTokens.textDisabled()),
             ),
           ),
         );
@@ -573,24 +571,24 @@ extension ButtonVariants on RemixButtonStyle {
 
   static RemixButtonStyle _createSoftVariant(Color color) {
     return RemixButtonStyle(
-      container: BoxMix(
+      container: BoxStyle(
+        padding: EdgeInsetsGeometryMix.all(RemixTokens.spaceMd()),
         decoration: BoxDecorationMix(
           borderRadius: BorderRadiusMix.circular(RemixTokens.radiusLg()),
           color: color.withValues(alpha: 0.1),
         ),
-        padding: EdgeInsetsGeometryMix.all(RemixTokens.spaceMd()),
       ),
       label: RemixLabelStyle(
-        label: TextMix(
+        label: TextStyling(
           style: TextStyleMix.color(color).fontSize(RemixTokens.fontSizeMd()),
         ),
-        leading: IconMix(color: color, size: RemixTokens.iconSizeLg()),
-        flex: FlexMix(spacing: RemixTokens.spaceSm()),
+        leading: IconStyle(color: color, size: RemixTokens.iconSizeLg()),
+        flex: FlexStyle(spacing: RemixTokens.spaceSm()),
       ),
     )
         .onHovered(
           RemixButtonStyle(
-            container: BoxMix(
+            container: BoxStyle(
               decoration:
                   BoxDecorationMix(color: color.withValues(alpha: 0.15)),
             ),
@@ -598,17 +596,20 @@ extension ButtonVariants on RemixButtonStyle {
         )
         .onPressed(
           RemixButtonStyle(
-            container: BoxMix(
+            container: BoxStyle(
               decoration: BoxDecorationMix(color: color.withValues(alpha: 0.2)),
             ),
           ),
         )
         .onFocused(
           RemixButtonStyle(
-            container: BoxMix(
+            container: BoxStyle(
               decoration: BoxDecorationMix(
                 border: BoxBorderMix.all(
-                  BorderSideMix(color: color.withValues(alpha: 0.5), width: 2),
+                  BorderSideMix(
+                    color: color.withValues(alpha: 0.5),
+                    width: 2,
+                  ),
                 ),
               ),
             ),
@@ -616,16 +617,16 @@ extension ButtonVariants on RemixButtonStyle {
         )
         .onDisabled(
           RemixButtonStyle(
-            container: BoxMix(
+            container: BoxStyle(
               decoration: BoxDecorationMix(
                 color: RemixTokens.textDisabled().withValues(alpha: 0.1),
               ),
             ),
             label: RemixLabelStyle(
-              label: TextMix(
+              label: TextStyling(
                 style: TextStyleMix.color(RemixTokens.textDisabled()),
               ),
-              leading: IconMix(color: RemixTokens.textDisabled()),
+              leading: IconStyle(color: RemixTokens.textDisabled()),
             ),
           ),
         );

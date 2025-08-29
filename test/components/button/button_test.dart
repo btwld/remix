@@ -96,7 +96,7 @@ void main() {
         tester.expectWidgetVisible(TestDataBuilder.defaultButtonKey);
 
         // Verify loading indicator is shown (SpinnerSpecWidget is used directly)
-        expect(find.byType(SpinnerSpecWidget), findsOneWidget);
+        expect(find.byType(CustomPaint), findsOneWidget);
       },
     );
 
@@ -229,18 +229,18 @@ void main() {
 
         // Initially button should be enabled and not loading
         tester.expectWidgetVisible(TestDataBuilder.defaultButtonKey);
-        expect(find.byType(SpinnerSpecWidget), findsNothing);
+        expect(find.byType(CustomPaint), findsNothing);
 
         // Tap to start loading
         await tester.tapRemixButton(TestDataBuilder.defaultButtonKey);
-        expect(find.byType(SpinnerSpecWidget), findsOneWidget);
+        expect(find.byType(CustomPaint), findsOneWidget);
 
         // Toggle enabled state
         await tester.tapRemixButton('toggle_enabled');
 
         // Try to tap disabled button (should not change loading state)
         await tester.tapRemixButton(TestDataBuilder.defaultButtonKey);
-        expect(find.byType(SpinnerSpecWidget), findsOneWidget);
+        expect(find.byType(CustomPaint), findsOneWidget);
       },
     );
 

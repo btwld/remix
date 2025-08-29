@@ -1,22 +1,22 @@
 part of 'button.dart';
 
 class ButtonSpec extends Spec<ButtonSpec> with Diagnosticable {
-  final BoxSpec container;
-  final LabelSpec label;
-  final SpinnerSpec spinner;
+  final WidgetSpec<BoxSpec> container;
+  final WidgetSpec<LabelSpec> label;
+  final WidgetSpec<SpinnerSpec> spinner;
 
   const ButtonSpec({
-    BoxSpec? container,
-    LabelSpec? label,
-    SpinnerSpec? spinner,
-  })  : container = container ?? const BoxSpec(),
-        label = label ?? const LabelSpec(),
-        spinner = spinner ?? const SpinnerSpec();
+    WidgetSpec<BoxSpec>? container,
+    WidgetSpec<LabelSpec>? label,
+    WidgetSpec<SpinnerSpec>? spinner,
+  })  : container = container ?? const WidgetSpec(spec: BoxSpec()),
+        label = label ?? const WidgetSpec(spec: LabelSpec()),
+        spinner = spinner ?? const WidgetSpec(spec: SpinnerSpec());
 
   ButtonSpec copyWith({
-    BoxSpec? container,
-    LabelSpec? label,
-    SpinnerSpec? spinner,
+    WidgetSpec<BoxSpec>? container,
+    WidgetSpec<LabelSpec>? label,
+    WidgetSpec<SpinnerSpec>? spinner,
   }) {
     return ButtonSpec(
       container: container ?? this.container,

@@ -1,26 +1,26 @@
 part of 'label.dart';
 
 class LabelSpec extends Spec<LabelSpec> with Diagnosticable {
-  final TextSpec label;
-  final IconSpec leading;
-  final IconSpec trailing;
-  final FlexSpec flex;
+  final WidgetSpec<TextSpec> label;
+  final WidgetSpec<IconSpec> leading;
+  final WidgetSpec<IconSpec> trailing;
+  final WidgetSpec<FlexSpec> flex;
 
   const LabelSpec({
-    TextSpec? label,
-    IconSpec? leading,
-    IconSpec? trailing,
-    FlexSpec? flex,
-  })  : label = label ?? const TextSpec(),
-        leading = leading ?? const IconSpec(),
-        trailing = trailing ?? const IconSpec(),
-        flex = flex ?? const FlexSpec();
+    WidgetSpec<TextSpec>? label,
+    WidgetSpec<IconSpec>? leading,
+    WidgetSpec<IconSpec>? trailing,
+    WidgetSpec<FlexSpec>? flex,
+  })  : label = label ?? const WidgetSpec(spec: TextSpec()),
+        leading = leading ?? const WidgetSpec(spec: IconSpec()),
+        trailing = trailing ?? const WidgetSpec(spec: IconSpec()),
+        flex = flex ?? const WidgetSpec(spec: FlexSpec());
 
   LabelSpec copyWith({
-    TextSpec? label,
-    IconSpec? leading,
-    IconSpec? trailing,
-    FlexSpec? flex,
+    WidgetSpec<TextSpec>? label,
+    WidgetSpec<IconSpec>? leading,
+    WidgetSpec<IconSpec>? trailing,
+    WidgetSpec<FlexSpec>? flex,
   }) {
     return LabelSpec(
       label: label ?? this.label,

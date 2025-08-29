@@ -4,14 +4,14 @@ class RemixCalloutStyle extends Style<CalloutSpec>
     with
         StyleModifierMixin<RemixCalloutStyle, CalloutSpec>,
         StyleVariantMixin<RemixCalloutStyle, CalloutSpec> {
-  final Prop<BoxSpec>? $container;
-  final Prop<TextSpec>? $text;
-  final Prop<IconSpec>? $icon;
+  final Prop<WidgetSpec<BoxSpec>>? $container;
+  final Prop<WidgetSpec<TextSpec>>? $text;
+  final Prop<WidgetSpec<IconSpec>>? $icon;
 
   const RemixCalloutStyle.create({
-    Prop<BoxSpec>? container,
-    Prop<TextSpec>? text,
-    Prop<IconSpec>? icon,
+    Prop<WidgetSpec<BoxSpec>>? container,
+    Prop<WidgetSpec<TextSpec>>? text,
+    Prop<WidgetSpec<IconSpec>>? icon,
     super.variants,
     super.animation,
     super.modifier,
@@ -21,9 +21,9 @@ class RemixCalloutStyle extends Style<CalloutSpec>
         $icon = icon;
 
   RemixCalloutStyle({
-    BoxMix? container,
-    TextMix? text,
-    IconMix? icon,
+    BoxStyle? container,
+    TextStyling? text,
+    IconStyle? icon,
     AnimationConfig? animation,
     List<VariantStyle<CalloutSpec>>? variants,
     ModifierConfig? modifier,
@@ -38,11 +38,6 @@ class RemixCalloutStyle extends Style<CalloutSpec>
           inherit: inherit,
         );
 
-  factory RemixCalloutStyle.value(CalloutSpec spec) => RemixCalloutStyle(
-        container: BoxMix.maybeValue(spec.container),
-        text: TextMix.maybeValue(spec.text),
-        icon: IconMix.maybeValue(spec.icon),
-      );
 
   @override
   WidgetSpec<CalloutSpec> resolve(BuildContext context) {
@@ -101,7 +96,8 @@ class RemixCalloutStyle extends Style<CalloutSpec>
 }
 
 final DefaultRemixCalloutStyle = RemixCalloutStyle(
-  container: BoxMix(
+  container: BoxStyle(
+    padding: EdgeInsetsMix.all(12),
     decoration: BoxDecorationMix(
       border: BoxBorderMix.all(BorderSideMix(
         color: RemixTokens.border(),
@@ -110,22 +106,22 @@ final DefaultRemixCalloutStyle = RemixCalloutStyle(
       borderRadius: BorderRadiusMix.circular(6),
       color: RemixTokens.background(),
     ),
-    padding: EdgeInsetsMix.all(12),
   ),
-  text: TextMix(
+  text: TextStyling(
     style: TextStyleMix(
       color: RemixTokens.textPrimary(),
       fontSize: 14,
       fontWeight: FontWeight.w500,
     ),
   ),
-  icon: IconMix(color: RemixTokens.textPrimary(), size: 16),
+  icon: IconStyle(color: RemixTokens.textPrimary(), size: 16),
 );
 
 extension CalloutVariants on RemixCalloutStyle {
   /// Info callout variant with blue colors
   static RemixCalloutStyle get info => RemixCalloutStyle(
-        container: BoxMix(
+        container: BoxStyle(
+          padding: EdgeInsetsGeometryMix.all(12),
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
               color: RemixTokens.primary().withValues(alpha: 0.6),
@@ -134,21 +130,21 @@ extension CalloutVariants on RemixCalloutStyle {
             borderRadius: BorderRadiusMix.circular(6),
             color: RemixTokens.primary().withValues(alpha: 0.1),
           ),
-          padding: EdgeInsetsGeometryMix.all(12),
         ),
-        text: TextMix(
+        text: TextStyling(
           style: TextStyleMix(
             color: RemixTokens.primary(),
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
         ),
-        icon: IconMix(color: RemixTokens.primary(), size: 16),
+        icon: IconStyle(color: RemixTokens.primary(), size: 16),
       );
 
   /// Success callout variant with green colors
   static RemixCalloutStyle get success => RemixCalloutStyle(
-        container: BoxMix(
+        container: BoxStyle(
+          padding: EdgeInsetsGeometryMix.all(12),
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
               color: RemixTokens.success().withValues(alpha: 0.6),
@@ -157,21 +153,21 @@ extension CalloutVariants on RemixCalloutStyle {
             borderRadius: BorderRadiusMix.circular(6),
             color: RemixTokens.success().withValues(alpha: 0.1),
           ),
-          padding: EdgeInsetsGeometryMix.all(12),
         ),
-        text: TextMix(
+        text: TextStyling(
           style: TextStyleMix(
             color: RemixTokens.success(),
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
         ),
-        icon: IconMix(color: RemixTokens.success(), size: 16),
+        icon: IconStyle(color: RemixTokens.success(), size: 16),
       );
 
   /// Warning callout variant with orange colors
   static RemixCalloutStyle get warning => RemixCalloutStyle(
-        container: BoxMix(
+        container: BoxStyle(
+          padding: EdgeInsetsGeometryMix.all(12),
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
               color: RemixTokens.warning().withValues(alpha: 0.6),
@@ -180,21 +176,21 @@ extension CalloutVariants on RemixCalloutStyle {
             borderRadius: BorderRadiusMix.circular(6),
             color: RemixTokens.warning().withValues(alpha: 0.1),
           ),
-          padding: EdgeInsetsGeometryMix.all(12),
         ),
-        text: TextMix(
+        text: TextStyling(
           style: TextStyleMix(
             color: RemixTokens.warning(),
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
         ),
-        icon: IconMix(color: RemixTokens.warning(), size: 16),
+        icon: IconStyle(color: RemixTokens.warning(), size: 16),
       );
 
   /// Error callout variant with red colors
   static RemixCalloutStyle get error => RemixCalloutStyle(
-        container: BoxMix(
+        container: BoxStyle(
+          padding: EdgeInsetsGeometryMix.all(12),
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
               color: RemixTokens.danger().withValues(alpha: 0.6),
@@ -203,15 +199,14 @@ extension CalloutVariants on RemixCalloutStyle {
             borderRadius: BorderRadiusMix.circular(6),
             color: RemixTokens.danger().withValues(alpha: 0.1),
           ),
-          padding: EdgeInsetsGeometryMix.all(12),
         ),
-        text: TextMix(
+        text: TextStyling(
           style: TextStyleMix(
             color: RemixTokens.danger(),
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
         ),
-        icon: IconMix(color: RemixTokens.danger(), size: 16),
+        icon: IconStyle(color: RemixTokens.danger(), size: 16),
       );
 }

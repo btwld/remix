@@ -1,26 +1,26 @@
 part of 'progress.dart';
 
 class ProgressSpec extends Spec<ProgressSpec> with Diagnosticable {
-  final BoxSpec container;
-  final BoxSpec track;
-  final BoxSpec fill;
-  final BoxSpec outerContainer;
+  final WidgetSpec<BoxSpec> container;
+  final WidgetSpec<BoxSpec> track;
+  final WidgetSpec<BoxSpec> fill;
+  final WidgetSpec<BoxSpec> outerContainer;
 
   const ProgressSpec({
-    BoxSpec? container,
-    BoxSpec? track,
-    BoxSpec? fill,
-    BoxSpec? outerContainer,
-  })  : container = container ?? const BoxSpec(),
-        track = track ?? const BoxSpec(),
-        fill = fill ?? const BoxSpec(),
-        outerContainer = outerContainer ?? const BoxSpec();
+    WidgetSpec<BoxSpec>? container,
+    WidgetSpec<BoxSpec>? track,
+    WidgetSpec<BoxSpec>? fill,
+    WidgetSpec<BoxSpec>? outerContainer,
+  })  : container = container ?? const WidgetSpec(spec: BoxSpec()),
+        track = track ?? const WidgetSpec(spec: BoxSpec()),
+        fill = fill ?? const WidgetSpec(spec: BoxSpec()),
+        outerContainer = outerContainer ?? const WidgetSpec(spec: BoxSpec());
 
   ProgressSpec copyWith({
-    BoxSpec? container,
-    BoxSpec? track,
-    BoxSpec? fill,
-    BoxSpec? outerContainer,
+    WidgetSpec<BoxSpec>? container,
+    WidgetSpec<BoxSpec>? track,
+    WidgetSpec<BoxSpec>? fill,
+    WidgetSpec<BoxSpec>? outerContainer,
   }) {
     return ProgressSpec(
       container: container ?? this.container,

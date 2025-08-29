@@ -1,26 +1,26 @@
 part of 'radio.dart';
 
 class RadioSpec extends Spec<RadioSpec> with Diagnosticable {
-  final FlexBoxSpec container;
-  final BoxSpec indicatorContainer;
-  final BoxSpec indicator;
-  final TextSpec label;
+  final WidgetSpec<FlexBoxSpec> container;
+  final WidgetSpec<BoxSpec> indicatorContainer;
+  final WidgetSpec<BoxSpec> indicator;
+  final WidgetSpec<TextSpec> label;
 
   const RadioSpec({
-    FlexBoxSpec? container,
-    BoxSpec? indicatorContainer,
-    BoxSpec? indicator,
-    TextSpec? label,
-  })  : container = container ?? const FlexBoxSpec(),
-        indicatorContainer = indicatorContainer ?? const BoxSpec(),
-        indicator = indicator ?? const BoxSpec(),
-        label = label ?? const TextSpec();
+    WidgetSpec<FlexBoxSpec>? container,
+    WidgetSpec<BoxSpec>? indicatorContainer,
+    WidgetSpec<BoxSpec>? indicator,
+    WidgetSpec<TextSpec>? label,
+  })  : container = container ?? const WidgetSpec(spec: FlexBoxSpec()),
+        indicatorContainer = indicatorContainer ?? const WidgetSpec(spec: BoxSpec()),
+        indicator = indicator ?? const WidgetSpec(spec: BoxSpec()),
+        label = label ?? const WidgetSpec(spec: TextSpec());
 
   RadioSpec copyWith({
-    FlexBoxSpec? container,
-    BoxSpec? indicatorContainer,
-    BoxSpec? indicator,
-    TextSpec? label,
+    WidgetSpec<FlexBoxSpec>? container,
+    WidgetSpec<BoxSpec>? indicatorContainer,
+    WidgetSpec<BoxSpec>? indicator,
+    WidgetSpec<TextSpec>? label,
   }) {
     return RadioSpec(
       container: container ?? this.container,

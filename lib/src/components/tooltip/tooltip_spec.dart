@@ -1,14 +1,14 @@
 part of 'tooltip.dart';
 
 class TooltipSpec extends Spec<TooltipSpec> with Diagnosticable {
-  final BoxSpec container;
-  final TextSpec text;
+  final WidgetSpec<BoxSpec> container;
+  final WidgetSpec<TextSpec> text;
 
-  const TooltipSpec({BoxSpec? container, TextSpec? text})
-      : container = container ?? const BoxSpec(),
-        text = text ?? const TextSpec();
+  const TooltipSpec({WidgetSpec<BoxSpec>? container, WidgetSpec<TextSpec>? text})
+      : container = container ?? const WidgetSpec(spec: BoxSpec()),
+        text = text ?? const WidgetSpec(spec: TextSpec());
 
-  TooltipSpec copyWith({BoxSpec? container, TextSpec? text}) {
+  TooltipSpec copyWith({WidgetSpec<BoxSpec>? container, WidgetSpec<TextSpec>? text}) {
     return TooltipSpec(
       container: container ?? this.container,
       text: text ?? this.text,

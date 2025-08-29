@@ -1,16 +1,16 @@
 part of 'badge.dart';
 
 class BadgeSpec extends Spec<BadgeSpec> with Diagnosticable {
-  final BoxSpec container;
-  final TextSpec text;
-  final IconSpec icon;
+  final WidgetSpec<BoxSpec> container;
+  final WidgetSpec<TextSpec> text;
+  final WidgetSpec<IconSpec> icon;
 
-  const BadgeSpec({BoxSpec? container, TextSpec? text, IconSpec? icon})
-      : container = container ?? const BoxSpec(),
-        text = text ?? const TextSpec(),
-        icon = icon ?? const IconSpec();
+  const BadgeSpec({WidgetSpec<BoxSpec>? container, WidgetSpec<TextSpec>? text, WidgetSpec<IconSpec>? icon})
+      : container = container ?? const WidgetSpec(spec: BoxSpec()),
+        text = text ?? const WidgetSpec(spec: TextSpec()),
+        icon = icon ?? const WidgetSpec(spec: IconSpec());
 
-  BadgeSpec copyWith({BoxSpec? container, TextSpec? text, IconSpec? icon}) {
+  BadgeSpec copyWith({WidgetSpec<BoxSpec>? container, WidgetSpec<TextSpec>? text, WidgetSpec<IconSpec>? icon}) {
     return BadgeSpec(
       container: container ?? this.container,
       text: text ?? this.text,

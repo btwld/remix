@@ -323,7 +323,7 @@ class _AnimatedOverlayMenu extends StatefulWidget {
   final AnimationController controller;
   final Duration duration;
   final Curve curve;
-  final BoxSpec menuContainer;
+  final WidgetSpec<BoxSpec> menuContainer;
   final List<Widget> items;
 
   @override
@@ -358,11 +358,16 @@ class _AnimatedOverlayMenuState extends State<_AnimatedOverlayMenu> {
           scale: scaleAnimation.value,
           child: Opacity(
             opacity: fadeAnimation.value,
-            child: widget.menuContainer(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: widget.items,
-              ),
+            child: WidgetSpecBuilder(
+              wrappedSpec: widget.menuContainer,
+              builder: (context, containerSpec) {
+                return containerSpec(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: widget.items,
+                  ),
+                );
+              },
             ),
           ),
         );
@@ -442,20 +447,15 @@ class _RemixSelectTriggerState extends State<RemixSelectTrigger>
         controller: controller,
         builder: (context, spec) {
           final triggerSpec = spec.trigger;
-          final FlexContainer = triggerSpec.container;
-          final TriggerLabel = triggerSpec.label;
 
           // Build trigger content progressively
           Widget triggerContent = widget.child ?? const SizedBox.shrink();
 
           // If no custom child, build default content with label
           if (widget.child == null && widget.label != null) {
-            triggerContent = FlexContainer(
-              direction: Axis.horizontal,
-              children: [
-                Expanded(child: TriggerLabel(widget.label!)),
-                if (widget.trailing != null) Icon(widget.trailing!),
-              ],
+            triggerContent = triggerSpec(
+              label: widget.label!,
+              trailing: widget.trailing,
             );
           }
 
@@ -569,7 +569,6 @@ class _RemixSelectItemState<T> extends State<RemixSelectItem<T>>
         controller: controller,
         builder: (context, spec) {
           final itemSpec = spec.item;
-          final FlexContainer = itemSpec.container;
 
           // Use checkbox icon for multi-select, check icon for single select
           final IconData selectionIcon = isMultiSelect
@@ -583,19 +582,12 @@ class _RemixSelectItemState<T> extends State<RemixSelectItem<T>>
 
           // If no custom child, build default content with label
           if (widget.child == null && widget.label != null) {
-            final ItemText = itemSpec.text;
-            final ItemIcon = itemSpec.icon;
-            itemContent = ItemText(widget.label!);
-
-            // Add selection icon
-            itemContent = FlexContainer(
-              direction: Axis.horizontal,
-              children: [itemContent, ItemIcon(icon: selectionIcon)],
+            itemContent = itemSpec(
+              text: widget.label!,
+              icon: selectionIcon,
+              selected: controller.selected,
             );
           }
-
-          // Wrap with container
-          itemContent = FlexContainer(direction: Axis.horizontal, children: [itemContent]);
 
           return itemContent;
         },
