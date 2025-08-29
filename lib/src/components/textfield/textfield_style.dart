@@ -46,7 +46,6 @@ class RemixTextFieldStyle extends Style<TextFieldSpec>
     super.variants,
     super.animation,
     super.modifier,
-    super.inherit,
   })  : $text = text,
         $hintText = hintText,
         $textAlign = textAlign,
@@ -86,7 +85,6 @@ class RemixTextFieldStyle extends Style<TextFieldSpec>
     AnimationConfig? animation,
     List<VariantStyle<TextFieldSpec>>? variants,
     ModifierConfig? modifier,
-    bool? inherit,
   }) : this.create(
           text: Prop.maybeMix(text),
           hintText: Prop.maybeMix(hintText),
@@ -108,7 +106,6 @@ class RemixTextFieldStyle extends Style<TextFieldSpec>
           variants: variants,
           animation: animation,
           modifier: modifier,
-          inherit: inherit,
         );
 
   // Factory methods for common properties
@@ -273,7 +270,6 @@ class RemixTextFieldStyle extends Style<TextFieldSpec>
       ),
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
-      inherit: $inherit,
     );
   }
 
@@ -306,7 +302,6 @@ class RemixTextFieldStyle extends Style<TextFieldSpec>
       variants: mergeVariantLists($variants, other.$variants),
       animation: other.$animation ?? $animation,
       modifier: $modifier?.merge(other.$modifier) ?? other.$modifier,
-      inherit: other.$inherit ?? $inherit,
     );
   }
 
@@ -331,7 +326,6 @@ class RemixTextFieldStyle extends Style<TextFieldSpec>
         $variants,
         $animation,
         $modifier,
-        $inherit,
       ];
 }
 

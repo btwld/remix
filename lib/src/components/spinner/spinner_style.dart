@@ -19,7 +19,6 @@ class RemixSpinnerStyle extends Style<SpinnerSpec>
     super.variants,
     super.animation,
     super.modifier,
-    super.inherit,
   })  : $size = size,
         $strokeWidth = strokeWidth,
         $color = color,
@@ -35,7 +34,6 @@ class RemixSpinnerStyle extends Style<SpinnerSpec>
     AnimationConfig? animation,
     List<VariantStyle<SpinnerSpec>>? variants,
     ModifierConfig? modifier,
-    bool? inherit,
   }) : this.create(
           size: Prop.maybe(size),
           strokeWidth: Prop.maybe(strokeWidth),
@@ -45,9 +43,7 @@ class RemixSpinnerStyle extends Style<SpinnerSpec>
           variants: variants,
           animation: animation,
           modifier: modifier,
-          inherit: inherit,
         );
-
 
   // Factory constructors for common patterns
   factory RemixSpinnerStyle.size(double value) {
@@ -104,7 +100,6 @@ class RemixSpinnerStyle extends Style<SpinnerSpec>
       ),
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
-      inherit: $inherit,
     );
   }
 
@@ -121,7 +116,6 @@ class RemixSpinnerStyle extends Style<SpinnerSpec>
       variants: mergeVariantLists($variants, other.$variants),
       animation: other.$animation ?? $animation,
       modifier: $modifier?.merge(other.$modifier) ?? other.$modifier,
-      inherit: other.$inherit ?? $inherit,
     );
   }
 
@@ -135,7 +129,6 @@ class RemixSpinnerStyle extends Style<SpinnerSpec>
         $variants,
         $animation,
         $modifier,
-        $inherit,
       ];
 }
 

@@ -15,7 +15,6 @@ class RemixSwitchStyle extends Style<SwitchSpec>
     super.variants,
     super.animation,
     super.modifier,
-    super.inherit,
   })  : $container = container,
         $track = track,
         $thumb = thumb;
@@ -27,7 +26,6 @@ class RemixSwitchStyle extends Style<SwitchSpec>
     AnimationConfig? animation,
     List<VariantStyle<SwitchSpec>>? variants,
     ModifierConfig? modifier,
-    bool? inherit,
   }) : this.create(
           container: Prop.maybeMix(container),
           track: Prop.maybeMix(track),
@@ -35,9 +33,7 @@ class RemixSwitchStyle extends Style<SwitchSpec>
           variants: variants,
           animation: animation,
           modifier: modifier,
-          inherit: inherit,
         );
-
 
   @override
   WidgetSpec<SwitchSpec> resolve(BuildContext context) {
@@ -49,7 +45,6 @@ class RemixSwitchStyle extends Style<SwitchSpec>
       ),
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
-      inherit: $inherit,
     );
   }
 
@@ -64,7 +59,6 @@ class RemixSwitchStyle extends Style<SwitchSpec>
       variants: mergeVariantLists($variants, other.$variants),
       animation: other.$animation ?? $animation,
       modifier: $modifier?.merge(other.$modifier) ?? other.$modifier,
-      inherit: other.$inherit ?? $inherit,
     );
   }
 
@@ -91,7 +85,6 @@ class RemixSwitchStyle extends Style<SwitchSpec>
         $variants,
         $animation,
         $modifier,
-        $inherit,
       ];
 }
 

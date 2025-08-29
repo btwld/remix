@@ -17,7 +17,6 @@ class RemixCheckboxStyle extends Style<CheckboxSpec>
     super.variants,
     super.animation,
     super.modifier,
-    super.inherit,
   })  : $container = container,
         $indicatorContainer = indicatorContainer,
         $indicator = indicator,
@@ -31,7 +30,6 @@ class RemixCheckboxStyle extends Style<CheckboxSpec>
     AnimationConfig? animation,
     List<VariantStyle<CheckboxSpec>>? variants,
     ModifierConfig? modifier,
-    bool? inherit,
   }) : this.create(
           container: Prop.maybeMix(container),
           indicatorContainer: Prop.maybeMix(indicatorContainer),
@@ -40,7 +38,6 @@ class RemixCheckboxStyle extends Style<CheckboxSpec>
           variants: variants,
           animation: animation,
           modifier: modifier,
-          inherit: inherit,
         );
 
   /// Factory for checkbox size (indicator container size)
@@ -161,7 +158,6 @@ class RemixCheckboxStyle extends Style<CheckboxSpec>
       ),
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
-      inherit: $inherit,
     );
   }
 
@@ -178,7 +174,6 @@ class RemixCheckboxStyle extends Style<CheckboxSpec>
       variants: mergeVariantLists($variants, other.$variants),
       animation: other.$animation ?? $animation,
       modifier: $modifier?.merge(other.$modifier) ?? other.$modifier,
-      inherit: other.$inherit ?? $inherit,
     );
   }
 
@@ -191,7 +186,6 @@ class RemixCheckboxStyle extends Style<CheckboxSpec>
         $variants,
         $animation,
         $modifier,
-        $inherit,
       ];
 }
 

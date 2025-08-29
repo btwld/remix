@@ -19,7 +19,6 @@ class RemixChipStyle extends Style<ChipSpec>
     super.variants,
     super.animation,
     super.modifier,
-    super.inherit,
   })  : $container = container,
         $flex = flex,
         $label = label,
@@ -35,7 +34,6 @@ class RemixChipStyle extends Style<ChipSpec>
     AnimationConfig? animation,
     List<VariantStyle<ChipSpec>>? variants,
     ModifierConfig? modifier,
-    bool? inherit,
   }) : this.create(
           container: Prop.maybeMix(container),
           flex: Prop.maybeMix(flex),
@@ -45,7 +43,6 @@ class RemixChipStyle extends Style<ChipSpec>
           variants: variants,
           animation: animation,
           modifier: modifier,
-          inherit: inherit,
         );
 
   @override
@@ -60,7 +57,6 @@ class RemixChipStyle extends Style<ChipSpec>
       ),
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
-      inherit: $inherit,
     );
   }
 
@@ -77,7 +73,6 @@ class RemixChipStyle extends Style<ChipSpec>
       variants: mergeVariantLists($variants, other.$variants),
       animation: other.$animation ?? $animation,
       modifier: $modifier?.merge(other.$modifier) ?? other.$modifier,
-      inherit: other.$inherit ?? $inherit,
     );
   }
 
@@ -106,7 +101,6 @@ class RemixChipStyle extends Style<ChipSpec>
         $variants,
         $animation,
         $modifier,
-        $inherit,
       ];
 }
 

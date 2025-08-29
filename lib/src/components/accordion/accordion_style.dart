@@ -17,7 +17,6 @@ class RemixAccordionStyle extends Style<AccordionSpec>
     super.variants,
     super.animation,
     super.modifier,
-    super.inherit,
   })  : $container = container,
         $content = content,
         $header = header,
@@ -31,7 +30,6 @@ class RemixAccordionStyle extends Style<AccordionSpec>
     AnimationConfig? animation,
     List<VariantStyle<AccordionSpec>>? variants,
     ModifierConfig? modifier,
-    bool? inherit,
   }) : this.create(
           container: Prop.maybeMix(container),
           content: Prop.maybeMix(content),
@@ -40,9 +38,7 @@ class RemixAccordionStyle extends Style<AccordionSpec>
           variants: variants,
           animation: animation,
           modifier: modifier,
-          inherit: inherit,
         );
-
 
   @override
   WidgetSpec<AccordionSpec> resolve(BuildContext context) {
@@ -55,7 +51,6 @@ class RemixAccordionStyle extends Style<AccordionSpec>
       ),
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
-      inherit: $inherit,
     );
   }
 
@@ -71,7 +66,6 @@ class RemixAccordionStyle extends Style<AccordionSpec>
       variants: mergeVariantLists($variants, other.$variants),
       animation: other.$animation ?? $animation,
       modifier: $modifier?.merge(other.$modifier) ?? other.$modifier,
-      inherit: other.$inherit ?? $inherit,
     );
   }
 
@@ -99,7 +93,6 @@ class RemixAccordionStyle extends Style<AccordionSpec>
         $variants,
         $animation,
         $modifier,
-        $inherit,
       ];
 }
 

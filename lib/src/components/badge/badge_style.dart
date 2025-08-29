@@ -15,7 +15,6 @@ class RemixBadgeStyle extends Style<BadgeSpec>
     super.variants,
     super.animation,
     super.modifier,
-    super.inherit,
   })  : $container = container,
         $text = text,
         $icon = icon;
@@ -27,7 +26,6 @@ class RemixBadgeStyle extends Style<BadgeSpec>
     AnimationConfig? animation,
     List<VariantStyle<BadgeSpec>>? variants,
     ModifierConfig? modifier,
-    bool? inherit,
   }) : this.create(
           container: Prop.maybeMix(container),
           text: Prop.maybeMix(text),
@@ -35,7 +33,6 @@ class RemixBadgeStyle extends Style<BadgeSpec>
           variants: variants,
           animation: animation,
           modifier: modifier,
-          inherit: inherit,
         );
 
   /// Factory for background color
@@ -123,7 +120,6 @@ class RemixBadgeStyle extends Style<BadgeSpec>
       ),
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
-      inherit: $inherit,
     );
   }
 
@@ -138,7 +134,6 @@ class RemixBadgeStyle extends Style<BadgeSpec>
       variants: mergeVariantLists($variants, other.$variants),
       animation: other.$animation ?? $animation,
       modifier: $modifier?.merge(other.$modifier) ?? other.$modifier,
-      inherit: other.$inherit ?? $inherit,
     );
   }
 
@@ -150,7 +145,6 @@ class RemixBadgeStyle extends Style<BadgeSpec>
         $variants,
         $animation,
         $modifier,
-        $inherit,
       ];
 }
 

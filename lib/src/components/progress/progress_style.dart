@@ -17,7 +17,6 @@ class RemixProgressStyle extends Style<ProgressSpec>
     super.variants,
     super.animation,
     super.modifier,
-    super.inherit,
   })  : $container = container,
         $track = track,
         $fill = fill,
@@ -31,7 +30,6 @@ class RemixProgressStyle extends Style<ProgressSpec>
     AnimationConfig? animation,
     List<VariantStyle<ProgressSpec>>? variants,
     ModifierConfig? modifier,
-    bool? inherit,
   }) : this.create(
           container: Prop.maybeMix(container),
           track: Prop.maybeMix(track),
@@ -40,9 +38,7 @@ class RemixProgressStyle extends Style<ProgressSpec>
           variants: variants,
           animation: animation,
           modifier: modifier,
-          inherit: inherit,
         );
-
 
   @override
   RemixProgressStyle variant(Variant variant, RemixProgressStyle style) {
@@ -70,7 +66,6 @@ class RemixProgressStyle extends Style<ProgressSpec>
       ),
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
-      inherit: $inherit,
     );
   }
 
@@ -86,7 +81,6 @@ class RemixProgressStyle extends Style<ProgressSpec>
       variants: mergeVariantLists($variants, other.$variants),
       animation: other.$animation ?? $animation,
       modifier: $modifier?.merge(other.$modifier) ?? other.$modifier,
-      inherit: other.$inherit ?? $inherit,
     );
   }
 
@@ -99,7 +93,6 @@ class RemixProgressStyle extends Style<ProgressSpec>
         $variants,
         $animation,
         $modifier,
-        $inherit,
       ];
 }
 

@@ -119,46 +119,45 @@ class _RemixRadioState<T> extends State<RemixRadio<T>>
 
     // Remove effectiveCursor since NakedRadio handles cursor internally
 
-    return NakedRadio<T>(
-      value: widget.value,
-      enabled: widget.enabled,
-      mouseCursor: widget.cursor,
-      focusNode: widget.focusNode,
-      autofocus: widget.autofocus,
-      toggleable: widget.toggleable,
-      onFocusChange: widget.onFocusChange,
-      onHoverChange: widget.onHoverChange,
-      onPressChange: widget.onHighlightChanged,
-      statesController: widget.statesController ?? controller,
-      semanticLabel: widget.semanticLabel ?? widget.label,
-      semanticHint: widget.semanticHint,
-      excludeSemantics: widget.excludeSemantics,
-      // Use child instead of builder for simplicity
-      child: StyleBuilder(
-        style: DefaultRemixRadioStyle.merge(style),
-        controller: widget.statesController ?? controller,
-        builder: (context, spec) {
-          final IndicatorContainer = spec.indicatorContainer;
-          final Indicator = spec.indicator;
-          final FlexContainer = spec.container;
-          final Label = spec.label;
+    return StyleBuilder(
+      style: DefaultRemixRadioStyle.merge(style),
+      controller: widget.statesController ?? controller,
+      builder: (context, spec) {
+        final IndicatorContainer = spec.indicatorContainer;
+        final Indicator = spec.indicator;
+        final FlexContainer = spec.container;
+        final Label = spec.label;
 
-          // Build the radio indicator
-          final radioIndicator = IndicatorContainer(
-            child: isSelected ? Indicator() : null,
-          );
+        // Build the radio indicator
+        final radioIndicator = IndicatorContainer(
+          child: isSelected ? Indicator() : null,
+        );
 
-          // Add label if present
-          if (widget.label == null) {
-            return radioIndicator;
-          }
+        // Add label if present
+        final radioWidget = widget.label == null 
+            ? radioIndicator
+            : FlexContainer(
+                direction: Axis.horizontal,
+                children: [radioIndicator, Label(widget.label!)],
+              );
 
-          return FlexContainer(
-            direction: Axis.horizontal,
-            children: [radioIndicator, Label(widget.label!)],
-          );
-        },
-      ),
+        return NakedRadio<T>(
+          value: widget.value,
+          enabled: widget.enabled,
+          mouseCursor: widget.cursor,
+          focusNode: widget.focusNode,
+          autofocus: widget.autofocus,
+          toggleable: widget.toggleable,
+          onFocusChange: widget.onFocusChange,
+          onHoverChange: widget.onHoverChange,
+          onPressChange: widget.onHighlightChanged,
+          statesController: widget.statesController ?? controller,
+          semanticLabel: widget.semanticLabel ?? widget.label,
+          semanticHint: widget.semanticHint,
+          excludeSemantics: widget.excludeSemantics,
+          child: radioWidget,
+        );
+      },
     );
   }
 }

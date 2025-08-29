@@ -7,7 +7,8 @@ void main() {
   group('RemixSelect Integration Tests', () {
     testWidgets('renders with initial value', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        createRemixScope(
+          child: MaterialApp(
           home: Scaffold(
             body: Center(
               child: RemixSelect<String>(
@@ -22,6 +23,7 @@ void main() {
             ),
           ),
         ),
+        ),
       );
 
       expect(find.byType(RemixSelect<String>), findsOneWidget);
@@ -30,7 +32,8 @@ void main() {
 
     testWidgets('opens dropdown when trigger is tapped', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        createRemixScope(
+          child: MaterialApp(
           home: Scaffold(
             body: Center(
               child: RemixSelect<String>(
@@ -45,6 +48,7 @@ void main() {
               ),
             ),
           ),
+        ),
         ),
       );
 
@@ -62,7 +66,8 @@ void main() {
       String? selectedValue = 'Apple';
 
       await tester.pumpWidget(
-        MaterialApp(
+        createRemixScope(
+          child: MaterialApp(
           home: Scaffold(
             body: Center(
               child: StatefulBuilder(
@@ -86,6 +91,7 @@ void main() {
             ),
           ),
         ),
+        ),
       );
 
       // Open dropdown
@@ -101,7 +107,8 @@ void main() {
 
     testWidgets('closes dropdown after selection', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        createRemixScope(
+          child: MaterialApp(
           home: Scaffold(
             body: Center(
               child: RemixSelect<String>(
@@ -115,6 +122,7 @@ void main() {
               ),
             ),
           ),
+        ),
         ),
       );
 
@@ -135,7 +143,8 @@ void main() {
 
     testWidgets('handles empty items list', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        createRemixScope(
+          child: MaterialApp(
           home: Scaffold(
             body: Center(
               child: RemixSelect<String>(
@@ -147,6 +156,7 @@ void main() {
             ),
           ),
         ),
+        ),
       );
 
       expect(find.byType(RemixSelect<String>), findsOneWidget);
@@ -155,7 +165,8 @@ void main() {
 
     testWidgets('handles null selected value', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        createRemixScope(
+          child: MaterialApp(
           home: Scaffold(
             body: Center(
               child: RemixSelect<String>(
@@ -170,6 +181,7 @@ void main() {
             ),
           ),
         ),
+        ),
       );
 
       expect(find.text('Select an option'), findsOneWidget);
@@ -179,7 +191,8 @@ void main() {
       String? selectedValue = 'Apple';
 
       await tester.pumpWidget(
-        MaterialApp(
+        createRemixScope(
+          child: MaterialApp(
           home: Scaffold(
             body: Center(
               child: StatefulBuilder(
@@ -215,6 +228,7 @@ void main() {
             ),
           ),
         ),
+        ),
       );
 
       // Select Banana
@@ -237,7 +251,8 @@ void main() {
       bool wasCalled = false;
 
       await tester.pumpWidget(
-        MaterialApp(
+        createRemixScope(
+          child: MaterialApp(
           home: Scaffold(
             body: Center(
               child: RemixSelect<String>(
@@ -255,6 +270,7 @@ void main() {
             ),
           ),
         ),
+        ),
       );
 
       // Try to tap trigger
@@ -268,7 +284,8 @@ void main() {
 
     testWidgets('closes dropdown when tapping outside', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        createRemixScope(
+          child: MaterialApp(
           home: Scaffold(
             body: Stack(
               children: [
@@ -292,6 +309,7 @@ void main() {
             ),
           ),
         ),
+        ),
       );
 
       // Open dropdown
@@ -311,7 +329,8 @@ void main() {
 
     testWidgets('handles hover state', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        createRemixScope(
+          child: MaterialApp(
           home: Scaffold(
             body: Center(
               child: RemixSelect<String>(
@@ -325,6 +344,7 @@ void main() {
               ),
             ),
           ),
+        ),
         ),
       );
 
@@ -342,7 +362,8 @@ void main() {
 
     testWidgets('supports custom item widgets', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        createRemixScope(
+          child: MaterialApp(
           home: Scaffold(
             body: Center(
               child: RemixSelect<String>(
@@ -363,6 +384,7 @@ void main() {
             ),
           ),
         ),
+        ),
       );
 
       // Open dropdown
@@ -376,7 +398,8 @@ void main() {
 
     testWidgets('handles rapid open/close', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        createRemixScope(
+          child: MaterialApp(
           home: Scaffold(
             body: Center(
               child: RemixSelect<String>(
@@ -390,6 +413,7 @@ void main() {
               ),
             ),
           ),
+        ),
         ),
       );
 
@@ -406,7 +430,8 @@ void main() {
 
     testWidgets('preserves accessibility semantics', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        createRemixScope(
+          child: MaterialApp(
           home: Scaffold(
             body: Center(
               child: RemixSelect<String>(
@@ -420,6 +445,7 @@ void main() {
               ),
             ),
           ),
+        ),
         ),
       );
 
@@ -439,7 +465,8 @@ void main() {
       _User? selectedUser = user1;
 
       await tester.pumpWidget(
-        MaterialApp(
+        createRemixScope(
+          child: MaterialApp(
           home: Scaffold(
             body: Center(
               child: StatefulBuilder(
@@ -462,6 +489,7 @@ void main() {
               ),
             ),
           ),
+        ),
         ),
       );
 

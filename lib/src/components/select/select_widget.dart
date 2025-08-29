@@ -436,32 +436,32 @@ class _RemixSelectTriggerState extends State<RemixSelectTrigger>
   Widget build(BuildContext context) {
     final inheritedStyle = StyleProvider.maybeOf<SelectSpec>(context);
 
-    return NakedSelectTrigger(
-      semanticLabel: widget.semanticLabel,
-      enableFeedback: widget.enableFeedback,
-      focusNode: widget.focusNode,
-      autofocus: widget.autofocus,
-      statesController: controller,
-      child: StyleBuilder(
-        style: inheritedStyle ?? const RemixSelectStyle.create(),
-        controller: controller,
-        builder: (context, spec) {
-          final triggerSpec = spec.trigger;
+    return StyleBuilder(
+      style: inheritedStyle ?? const RemixSelectStyle.create(),
+      controller: controller,
+      builder: (context, spec) {
+        final triggerSpec = spec.trigger;
 
-          // Build trigger content progressively
-          Widget triggerContent = widget.child ?? const SizedBox.shrink();
+        // Build trigger content progressively
+        Widget triggerContent = widget.child ?? const SizedBox.shrink();
 
-          // If no custom child, build default content with label
-          if (widget.child == null && widget.label != null) {
-            triggerContent = triggerSpec(
-              label: widget.label!,
-              trailing: widget.trailing,
-            );
-          }
+        // If no custom child, build default content with label
+        if (widget.child == null && widget.label != null) {
+          triggerContent = triggerSpec(
+            label: widget.label!,
+            trailing: widget.trailing,
+          );
+        }
 
-          return triggerContent;
-        },
-      ),
+        return NakedSelectTrigger(
+          semanticLabel: widget.semanticLabel,
+          enableFeedback: widget.enableFeedback,
+          focusNode: widget.focusNode,
+          autofocus: widget.autofocus,
+          statesController: controller,
+          child: triggerContent,
+        );
+      },
     );
   }
 }
@@ -556,42 +556,42 @@ class _RemixSelectItemState<T> extends State<RemixSelectItem<T>>
     final isMultiSelect =
         context.findAncestorWidgetOfExactType<_MultiSelectWrapper>() != null;
 
-    return NakedSelectItem<T>(
-      value: widget.value,
-      enabled: widget.enabled,
-      semanticLabel: widget.semanticLabel,
-      enableFeedback: widget.enableFeedback,
-      focusNode: widget.focusNode,
-      autofocus: widget.autofocus,
-      statesController: controller,
-      child: StyleBuilder(
-        style: styleFromProvider ?? const RemixSelectStyle.create(),
-        controller: controller,
-        builder: (context, spec) {
-          final itemSpec = spec.item;
+    return StyleBuilder(
+      style: styleFromProvider ?? const RemixSelectStyle.create(),
+      controller: controller,
+      builder: (context, spec) {
+        final itemSpec = spec.item;
 
-          // Use checkbox icon for multi-select, check icon for single select
-          final IconData selectionIcon = isMultiSelect
-              ? (controller.selected
-                  ? Icons.check_box
-                  : Icons.check_box_outline_blank)
-              : widget.trailing;
+        // Use checkbox icon for multi-select, check icon for single select
+        final IconData selectionIcon = isMultiSelect
+            ? (controller.selected
+                ? Icons.check_box
+                : Icons.check_box_outline_blank)
+            : widget.trailing;
 
-          // Build item content progressively
-          Widget itemContent = widget.child ?? const SizedBox.shrink();
+        // Build item content progressively
+        Widget itemContent = widget.child ?? const SizedBox.shrink();
 
-          // If no custom child, build default content with label
-          if (widget.child == null && widget.label != null) {
-            itemContent = itemSpec(
-              text: widget.label!,
-              icon: selectionIcon,
-              selected: controller.selected,
-            );
-          }
+        // If no custom child, build default content with label
+        if (widget.child == null && widget.label != null) {
+          itemContent = itemSpec(
+            text: widget.label!,
+            icon: selectionIcon,
+            selected: controller.selected,
+          );
+        }
 
-          return itemContent;
-        },
-      ),
+        return NakedSelectItem<T>(
+          value: widget.value,
+          enabled: widget.enabled,
+          semanticLabel: widget.semanticLabel,
+          enableFeedback: widget.enableFeedback,
+          focusNode: widget.focusNode,
+          autofocus: widget.autofocus,
+          statesController: controller,
+          child: itemContent,
+        );
+      },
     );
   }
 }

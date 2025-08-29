@@ -15,7 +15,6 @@ class RemixButtonStyle extends Style<ButtonSpec>
     super.variants,
     super.animation,
     super.modifier,
-    super.inherit,
   })  : $container = container,
         $label = label,
         $spinner = spinner;
@@ -27,7 +26,6 @@ class RemixButtonStyle extends Style<ButtonSpec>
     AnimationConfig? animation,
     List<VariantStyle<ButtonSpec>>? variants,
     ModifierConfig? modifier,
-    bool? inherit,
   }) : this.create(
           container: Prop.maybeMix(container),
           label: Prop.maybeMix(label),
@@ -35,7 +33,6 @@ class RemixButtonStyle extends Style<ButtonSpec>
           variants: variants,
           animation: animation,
           modifier: modifier,
-          inherit: inherit,
         );
 
   // Factory constructors for common patterns
@@ -233,7 +230,6 @@ class RemixButtonStyle extends Style<ButtonSpec>
       ),
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
-      inherit: $inherit,
     );
   }
 
@@ -248,7 +244,6 @@ class RemixButtonStyle extends Style<ButtonSpec>
       variants: mergeVariantLists($variants, other.$variants),
       animation: other.$animation ?? $animation,
       modifier: $modifier?.merge(other.$modifier) ?? other.$modifier,
-      inherit: other.$inherit ?? $inherit,
     );
   }
 
@@ -260,7 +255,6 @@ class RemixButtonStyle extends Style<ButtonSpec>
         $variants,
         $animation,
         $modifier,
-        $inherit,
       ];
 }
 

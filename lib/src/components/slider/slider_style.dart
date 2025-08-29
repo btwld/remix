@@ -17,7 +17,6 @@ class RemixSliderStyle extends Style<SliderSpec>
     super.variants,
     super.animation,
     super.modifier,
-    super.inherit,
   })  : $thumb = thumb,
         $baseTrack = baseTrack,
         $activeTrack = activeTrack,
@@ -31,7 +30,6 @@ class RemixSliderStyle extends Style<SliderSpec>
     AnimationConfig? animation,
     List<VariantStyle<SliderSpec>>? variants,
     ModifierConfig? modifier,
-    bool? inherit,
   }) : this.create(
           thumb: Prop.maybeMix(thumb),
           baseTrack: baseTrack != null ? Prop.value(baseTrack) : null,
@@ -40,7 +38,6 @@ class RemixSliderStyle extends Style<SliderSpec>
           variants: variants,
           animation: animation,
           modifier: modifier,
-          inherit: inherit,
         );
 
   @override
@@ -54,7 +51,6 @@ class RemixSliderStyle extends Style<SliderSpec>
       ),
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
-      inherit: $inherit,
     );
   }
 
@@ -70,7 +66,6 @@ class RemixSliderStyle extends Style<SliderSpec>
       variants: mergeVariantLists($variants, other.$variants),
       animation: other.$animation ?? $animation,
       modifier: $modifier?.merge(other.$modifier) ?? other.$modifier,
-      inherit: other.$inherit ?? $inherit,
     );
   }
 
@@ -98,7 +93,6 @@ class RemixSliderStyle extends Style<SliderSpec>
         $variants,
         $animation,
         $modifier,
-        $inherit,
       ];
 }
 

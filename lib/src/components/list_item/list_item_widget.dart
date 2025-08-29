@@ -68,59 +68,62 @@ class _RemixListItemState extends State<RemixListItem>
     with HasWidgetStateController {
   @override
   Widget build(BuildContext context) {
-    return NakedButton(
-      onPressed: widget.onPressed,
-      enabled: widget.enabled,
-      enableFeedback: widget.enableFeedback,
-      focusNode: widget.focusNode,
-      autofocus: widget.autofocus,
-      child: StyleBuilder(
-        style: DefaultRemixListItemStyle.merge(widget.style),
-        controller: controller,
-        builder: (context, spec) {
-          final Container = spec.container;
-          final ContentContainer = spec.contentContainer;
-          final Title = spec.title;
-          final Subtitle = spec.subtitle;
+    return StyleBuilder(
+      style: DefaultRemixListItemStyle.merge(widget.style),
+      controller: controller,
+      builder: (context, spec) {
+        final Container = spec.container;
+        final ContentContainer = spec.contentContainer;
+        final Title = spec.title;
+        final Subtitle = spec.subtitle;
 
-          final children = <Widget>[];
+        final children = <Widget>[];
 
-          // Leading widget
-          if (widget.leading != null) {
-            children.add(widget.leading!);
-          }
+        // Leading widget
+        if (widget.leading != null) {
+          children.add(widget.leading!);
+        }
 
-          // Title and subtitle
-          final textWidgets = <Widget>[];
-          if (widget.title != null) {
-            textWidgets.add(Title(widget.title!));
-          }
-          if (widget.subtitle != null) {
-            textWidgets.add(Subtitle(widget.subtitle!));
-          }
+        // Title and subtitle
+        final textWidgets = <Widget>[];
+        if (widget.title != null) {
+          textWidgets.add(Title(widget.title!));
+        }
+        if (widget.subtitle != null) {
+          textWidgets.add(Subtitle(widget.subtitle!));
+        }
 
-          if (textWidgets.isNotEmpty) {
-            children.add(
-              // ignore: avoid-flexible-outside-flex
-              Expanded(
-                child: ContentContainer(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: textWidgets,
-                  ),
+        if (textWidgets.isNotEmpty) {
+          children.add(
+            // ignore: avoid-flexible-outside-flex
+            Expanded(
+              child: ContentContainer(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: textWidgets,
                 ),
               ),
-            );
-          }
+            ),
+          );
+        }
 
-          // Trailing widget
-          if (widget.trailing != null) {
-            children.add(widget.trailing!);
-          }
+        // Trailing widget
+        if (widget.trailing != null) {
+          children.add(widget.trailing!);
+        }
 
-          return Container(child: Row(children: children));
-        },
-      ),
+        final listItemChild = Container(child: Row(children: children));
+
+        return NakedButton(
+          onPressed: widget.onPressed,
+          enabled: widget.enabled,
+          enableFeedback: widget.enableFeedback,
+          focusNode: widget.focusNode,
+          autofocus: widget.autofocus,
+          statesController: controller,
+          child: listItemChild,
+        );
+      },
     );
   }
 }

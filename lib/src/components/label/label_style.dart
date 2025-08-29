@@ -17,7 +17,6 @@ class RemixLabelStyle extends Style<LabelSpec>
     super.variants,
     super.animation,
     super.modifier,
-    super.inherit,
   })  : $label = label,
         $leading = leading,
         $trailing = trailing,
@@ -31,7 +30,6 @@ class RemixLabelStyle extends Style<LabelSpec>
     AnimationConfig? animation,
     List<VariantStyle<LabelSpec>>? variants,
     ModifierConfig? modifier,
-    bool? inherit,
   }) : this.create(
           label: Prop.maybeMix(label),
           leading: Prop.maybeMix(leading),
@@ -40,9 +38,7 @@ class RemixLabelStyle extends Style<LabelSpec>
           variants: variants,
           animation: animation,
           modifier: modifier,
-          inherit: inherit,
         );
-
 
   @override
   RemixLabelStyle variant(Variant variant, RemixLabelStyle style) {
@@ -70,7 +66,6 @@ class RemixLabelStyle extends Style<LabelSpec>
       ),
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
-      inherit: $inherit,
     );
   }
 
@@ -86,7 +81,6 @@ class RemixLabelStyle extends Style<LabelSpec>
       variants: mergeVariantLists($variants, other.$variants),
       animation: other.$animation ?? $animation,
       modifier: $modifier?.merge(other.$modifier) ?? other.$modifier,
-      inherit: other.$inherit ?? $inherit,
     );
   }
 
@@ -99,7 +93,6 @@ class RemixLabelStyle extends Style<LabelSpec>
         $variants,
         $animation,
         $modifier,
-        $inherit,
       ];
 }
 
