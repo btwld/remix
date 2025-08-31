@@ -56,9 +56,9 @@ class RemixSwitchStyle extends Style<SwitchSpec>
       container: MixOps.merge($container, other.$container),
       track: MixOps.merge($track, other.$track),
       thumb: MixOps.merge($thumb, other.$thumb),
-      variants: mergeVariantLists($variants, other.$variants),
-      animation: other.$animation ?? $animation,
-      modifier: $modifier?.merge(other.$modifier) ?? other.$modifier,
+      variants: MixOps.mergeVariants($variants, other.$variants),
+      animation: MixOps.mergeAnimation($animation, other.$animation),
+      modifier: MixOps.mergeModifier($modifier, other.$modifier),
     );
   }
 

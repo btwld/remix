@@ -241,9 +241,9 @@ class RemixButtonStyle extends Style<ButtonSpec>
       container: MixOps.merge($container, other.$container),
       label: MixOps.merge($label, other.$label),
       spinner: MixOps.merge($spinner, other.$spinner),
-      variants: mergeVariantLists($variants, other.$variants),
-      animation: other.$animation ?? $animation,
-      modifier: $modifier?.merge(other.$modifier) ?? other.$modifier,
+      variants: MixOps.mergeVariants($variants, other.$variants),
+      animation: MixOps.mergeAnimation($animation, other.$animation),
+      modifier: MixOps.mergeModifier($modifier, other.$modifier),
     );
   }
 

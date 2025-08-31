@@ -55,9 +55,9 @@ class RemixDividerStyle extends Style<DividerSpec>
 
     return RemixDividerStyle.create(
       container: MixOps.merge($container, other.$container),
-      variants: mergeVariantLists($variants, other.$variants),
-      animation: other.$animation ?? $animation,
-      modifier: $modifier?.merge(other.$modifier) ?? other.$modifier,
+      variants: MixOps.mergeVariants($variants, other.$variants),
+      animation: MixOps.mergeAnimation($animation, other.$animation),
+      modifier: MixOps.mergeModifier($modifier, other.$modifier),
     );
   }
 

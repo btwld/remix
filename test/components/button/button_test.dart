@@ -95,8 +95,8 @@ void main() {
         // Verify button is rendered
         tester.expectWidgetVisible(TestDataBuilder.defaultButtonKey);
 
-        // Verify loading indicator is shown (SpinnerSpecWidget is used directly)
-        expect(find.byType(CustomPaint), findsOneWidget);
+        // Verify loading indicator is shown
+        expect(find.byType(RemixSpinner), findsOneWidget);
       },
     );
 
@@ -130,17 +130,15 @@ void main() {
         bool wasLongPressed = false;
 
         await tester.pumpRemixApp(
-          GestureDetector(
+          RemixButton(
+            key: const ValueKey(TestDataBuilder.defaultButtonKey),
+            label: 'Long Press Me',
+            onPressed: () {
+              // Button tap handler
+            },
             onLongPress: () {
               wasLongPressed = true;
             },
-            child: RemixButton(
-              key: const ValueKey(TestDataBuilder.defaultButtonKey),
-              label: 'Long Press Me',
-              onPressed: () {
-              // Button tap handler
-            },
-            ),
           ),
         );
 
@@ -229,18 +227,18 @@ void main() {
 
         // Initially button should be enabled and not loading
         tester.expectWidgetVisible(TestDataBuilder.defaultButtonKey);
-        expect(find.byType(CustomPaint), findsNothing);
+        expect(find.byType(RemixSpinner), findsNothing);
 
         // Tap to start loading
         await tester.tapRemixButton(TestDataBuilder.defaultButtonKey);
-        expect(find.byType(CustomPaint), findsOneWidget);
+        expect(find.byType(RemixSpinner), findsOneWidget);
 
         // Toggle enabled state
         await tester.tapRemixButton('toggle_enabled');
 
         // Try to tap disabled button (should not change loading state)
         await tester.tapRemixButton(TestDataBuilder.defaultButtonKey);
-        expect(find.byType(CustomPaint), findsOneWidget);
+        expect(find.byType(RemixSpinner), findsOneWidget);
       },
     );
 

@@ -78,9 +78,9 @@ class RemixProgressStyle extends Style<ProgressSpec>
       track: MixOps.merge($track, other.$track),
       fill: MixOps.merge($fill, other.$fill),
       outerContainer: MixOps.merge($outerContainer, other.$outerContainer),
-      variants: mergeVariantLists($variants, other.$variants),
-      animation: other.$animation ?? $animation,
-      modifier: $modifier?.merge(other.$modifier) ?? other.$modifier,
+      variants: MixOps.mergeVariants($variants, other.$variants),
+      animation: MixOps.mergeAnimation($animation, other.$animation),
+      modifier: MixOps.mergeModifier($modifier, other.$modifier),
     );
   }
 

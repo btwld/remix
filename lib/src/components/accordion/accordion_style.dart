@@ -63,9 +63,9 @@ class RemixAccordionStyle extends Style<AccordionSpec>
       content: MixOps.merge($content, other.$content),
       header: MixOps.merge($header, other.$header),
       headerLabel: MixOps.merge($headerLabel, other.$headerLabel),
-      variants: mergeVariantLists($variants, other.$variants),
-      animation: other.$animation ?? $animation,
-      modifier: $modifier?.merge(other.$modifier) ?? other.$modifier,
+      variants: MixOps.mergeVariants($variants, other.$variants),
+      animation: MixOps.mergeAnimation($animation, other.$animation),
+      modifier: MixOps.mergeModifier($modifier, other.$modifier),
     );
   }
 

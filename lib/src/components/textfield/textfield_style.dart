@@ -299,9 +299,9 @@ class RemixTextFieldStyle extends Style<TextFieldSpec>
       container: MixOps.merge($container, other.$container),
       helperText: MixOps.merge($helperText, other.$helperText),
       label: MixOps.merge($label, other.$label),
-      variants: mergeVariantLists($variants, other.$variants),
-      animation: other.$animation ?? $animation,
-      modifier: $modifier?.merge(other.$modifier) ?? other.$modifier,
+      variants: MixOps.mergeVariants($variants, other.$variants),
+      animation: MixOps.mergeAnimation($animation, other.$animation),
+      modifier: MixOps.mergeModifier($modifier, other.$modifier),
     );
   }
 
