@@ -4,16 +4,16 @@ class RemixAccordionStyle extends Style<AccordionSpec>
     with
         StyleModifierMixin<RemixAccordionStyle, AccordionSpec>,
         StyleVariantMixin<RemixAccordionStyle, AccordionSpec> {
-  final Prop<WidgetSpec<BoxSpec>>? $container;
-  final Prop<WidgetSpec<BoxSpec>>? $content;
-  final Prop<WidgetSpec<BoxSpec>>? $header;
-  final Prop<WidgetSpec<LabelSpec>>? $headerLabel;
+  final Prop<StyleSpec<BoxSpec>>? $container;
+  final Prop<StyleSpec<BoxSpec>>? $content;
+  final Prop<StyleSpec<BoxSpec>>? $header;
+  final Prop<StyleSpec<LabelSpec>>? $headerLabel;
 
   const RemixAccordionStyle.create({
-    Prop<WidgetSpec<BoxSpec>>? container,
-    Prop<WidgetSpec<BoxSpec>>? content,
-    Prop<WidgetSpec<BoxSpec>>? header,
-    Prop<WidgetSpec<LabelSpec>>? headerLabel,
+    Prop<StyleSpec<BoxSpec>>? container,
+    Prop<StyleSpec<BoxSpec>>? content,
+    Prop<StyleSpec<BoxSpec>>? header,
+    Prop<StyleSpec<LabelSpec>>? headerLabel,
     super.variants,
     super.animation,
     super.modifier,
@@ -23,9 +23,9 @@ class RemixAccordionStyle extends Style<AccordionSpec>
         $headerLabel = headerLabel;
 
   RemixAccordionStyle({
-    BoxStyle? container,
-    BoxStyle? content,
-    BoxStyle? header,
+    BoxStyler? container,
+    BoxStyler? content,
+    BoxStyler? header,
     RemixLabelStyle? headerLabel,
     AnimationConfig? animation,
     List<VariantStyle<AccordionSpec>>? variants,
@@ -41,8 +41,8 @@ class RemixAccordionStyle extends Style<AccordionSpec>
         );
 
   @override
-  WidgetSpec<AccordionSpec> resolve(BuildContext context) {
-    return WidgetSpec(
+  StyleSpec<AccordionSpec> resolve(BuildContext context) {
+    return StyleSpec(
       spec: AccordionSpec(
         container: MixOps.resolve(context, $container),
         content: MixOps.resolve(context, $content),
@@ -97,7 +97,7 @@ class RemixAccordionStyle extends Style<AccordionSpec>
 }
 
 final DefaultRemixAccordionStyle = RemixAccordionStyle(
-  container: BoxStyle(
+  container: BoxStyler(
     margin: EdgeInsetsMix(bottom: 12),
     decoration: BoxDecorationMix(
       border: BoxBorderMix.all(BorderSideMix(
@@ -107,29 +107,29 @@ final DefaultRemixAccordionStyle = RemixAccordionStyle(
       borderRadius: BorderRadiusMix.circular(12),
     ),
   ),
-  content: BoxStyle(
+  content: BoxStyler(
     padding: EdgeInsetsMix.fromLTRB(12, 0, 12, 12),
     constraints: BoxConstraintsMix(minWidth: double.infinity),
   ),
-  header: BoxStyle(padding: EdgeInsetsMix.all(12)),
+  header: BoxStyler(padding: EdgeInsetsMix.all(12)),
   headerLabel: RemixLabelStyle(
-    label: TextStyling(
+    label: TextStyler(
       style: TextStyleMix(
         color: RemixTokens.textPrimary(),
         fontSize: 14,
         fontWeight: FontWeight.w500,
       ),
     ),
-    leading: IconStyle(size: 20),
-    trailing: IconStyle(size: 20),
-    flex: FlexStyle(spacing: 8),
+    leading: IconStyler(size: 20),
+    trailing: IconStyler(size: 20),
+    flex: FlexStyler(spacing: 8),
   ),
 );
 
 extension AccordionVariants on RemixAccordionStyle {
   /// Default accordion variant (same as DefaultAccordionStyle)
   static RemixAccordionStyle get defaultVariant => RemixAccordionStyle(
-        container: BoxStyle(
+        container: BoxStyler(
           margin: EdgeInsetsMix(bottom: 12),
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
@@ -139,28 +139,28 @@ extension AccordionVariants on RemixAccordionStyle {
             borderRadius: BorderRadiusMix.circular(12),
           ),
         ),
-        content: BoxStyle(
+        content: BoxStyler(
           padding: EdgeInsetsMix.fromLTRB(12, 0, 12, 12),
           constraints: BoxConstraintsMix(minWidth: double.infinity),
         ),
-        header: BoxStyle(padding: EdgeInsetsMix.all(12)),
+        header: BoxStyler(padding: EdgeInsetsMix.all(12)),
         headerLabel: RemixLabelStyle(
-          label: TextStyling(
+          label: TextStyler(
             style: TextStyleMix(
               color: RemixTokens.textPrimary(),
               fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
           ),
-          leading: IconStyle(size: 20),
-          trailing: IconStyle(size: 20),
-          flex: FlexStyle(spacing: 8),
+          leading: IconStyler(size: 20),
+          trailing: IconStyler(size: 20),
+          flex: FlexStyler(spacing: 8),
         ),
       );
 
   /// Compact accordion variant with smaller padding
   static RemixAccordionStyle get compact => RemixAccordionStyle(
-        container: BoxStyle(
+        container: BoxStyler(
           margin: EdgeInsetsMix(bottom: 8),
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
@@ -170,28 +170,28 @@ extension AccordionVariants on RemixAccordionStyle {
             borderRadius: BorderRadiusMix.circular(8),
           ),
         ),
-        content: BoxStyle(
+        content: BoxStyler(
           padding: EdgeInsetsMix.fromLTRB(8, 0, 8, 8),
           constraints: BoxConstraintsMix(minWidth: double.infinity),
         ),
-        header: BoxStyle(padding: EdgeInsetsMix.all(8)),
+        header: BoxStyler(padding: EdgeInsetsMix.all(8)),
         headerLabel: RemixLabelStyle(
-          label: TextStyling(
+          label: TextStyler(
             style: TextStyleMix(
               color: RemixTokens.textPrimary(),
               fontSize: 12,
               fontWeight: FontWeight.w500,
             ),
           ),
-          leading: IconStyle(size: 16),
-          trailing: IconStyle(size: 16),
-          flex: FlexStyle(spacing: 6),
+          leading: IconStyler(size: 16),
+          trailing: IconStyler(size: 16),
+          flex: FlexStyler(spacing: 6),
         ),
       );
 
   /// Bordered accordion variant with prominent borders
   static RemixAccordionStyle get bordered => RemixAccordionStyle(
-        container: BoxStyle(
+        container: BoxStyler(
           margin: EdgeInsetsMix(bottom: 12),
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
@@ -201,22 +201,22 @@ extension AccordionVariants on RemixAccordionStyle {
             borderRadius: BorderRadiusMix.circular(12),
           ),
         ),
-        content: BoxStyle(
+        content: BoxStyler(
           padding: EdgeInsetsMix.fromLTRB(16, 0, 16, 16),
           constraints: BoxConstraintsMix(minWidth: double.infinity),
         ),
-        header: BoxStyle(padding: EdgeInsetsMix.all(16)),
+        header: BoxStyler(padding: EdgeInsetsMix.all(16)),
         headerLabel: RemixLabelStyle(
-          label: TextStyling(
+          label: TextStyler(
             style: TextStyleMix(
               color: RemixTokens.textPrimary(),
               fontSize: 16,
               fontWeight: FontWeight.w600,
             ),
           ),
-          leading: IconStyle(size: 20),
-          trailing: IconStyle(size: 20),
-          flex: FlexStyle(spacing: 10),
+          leading: IconStyler(size: 20),
+          trailing: IconStyler(size: 20),
+          flex: FlexStyler(spacing: 10),
         ),
       );
 }

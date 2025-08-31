@@ -3,24 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
+import '../helpers/test_helpers.dart';
+
 void main() {
   group('RemixSlider Integration Tests', () {
     testWidgets('renders with initial value', (tester) async {
-      await tester.pumpWidget(
-        createRemixScope(
-          child: MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: SizedBox(
-                width: 300,
-                child: RemixSlider(
-                  value: 0.5,
-                  onChanged: (_) {},
-                ),
-              ),
-            ),
+      await tester.pumpRemixApp(
+        SizedBox(
+          width: 300,
+          child: RemixSlider(
+            value: 0.5,
+            onChanged: (_) {},
           ),
-        ),
         ),
       );
 
@@ -30,29 +24,21 @@ void main() {
     testWidgets('updates value when dragged', (tester) async {
       double sliderValue = 0.5;
 
-      await tester.pumpWidget(
-        createRemixScope(
-          child: MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: StatefulBuilder(
-                builder: (context, setState) {
-                  return SizedBox(
-                    width: 300,
-                    child: RemixSlider(
-                      value: sliderValue,
-                      onChanged: (value) {
-                        setState(() {
-                          sliderValue = value;
-                        });
-                      },
-                    ),
-                  );
+      await tester.pumpRemixApp(
+        StatefulBuilder(
+          builder: (context, setState) {
+            return SizedBox(
+              width: 300,
+              child: RemixSlider(
+                value: sliderValue,
+                onChanged: (value) {
+                  setState(() {
+                    sliderValue = value;
+                  });
                 },
               ),
-            ),
-          ),
-        ),
+            );
+          },
         ),
       );
 
@@ -60,7 +46,7 @@ void main() {
       final sliderFinder = find.byType(RemixSlider);
       final center = tester.getCenter(sliderFinder);
       final rightEdge = tester.getTopRight(sliderFinder);
-      
+
       await tester.dragFrom(center, Offset(rightEdge.dx - center.dx, 0));
       await tester.pumpAndSettle();
 
@@ -71,75 +57,60 @@ void main() {
     testWidgets('respects min and max values', (tester) async {
       double sliderValue = 50.0;
 
-      await tester.pumpWidget(
-        createRemixScope(
-          child: MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: StatefulBuilder(
-                builder: (context, setState) {
-                  return SizedBox(
-                    width: 300,
-                    child: RemixSlider(
-                      value: sliderValue,
-                      min: 0.0,
-                      max: 100.0,
-                      onChanged: (value) {
-                        setState(() {
-                          sliderValue = value;
-                        });
-                      },
-                    ),
-                  );
+      await tester.pumpRemixApp(
+        StatefulBuilder(
+          builder: (context, setState) {
+            return SizedBox(
+              width: 300,
+              child: RemixSlider(
+                value: sliderValue,
+                min: 0.0,
+                max: 100.0,
+                onChanged: (value) {
+                  setState(() {
+                    sliderValue = value;
+                  });
                 },
               ),
-            ),
-          ),
-        ),
+            );
+          },
         ),
       );
 
       // Value should be within bounds
       expect(sliderValue, 50.0);
-      
+
       // Drag to max
       final sliderFinder = find.byType(RemixSlider);
       final center = tester.getCenter(sliderFinder);
       final rightEdge = tester.getTopRight(sliderFinder);
-      
+
       await tester.dragFrom(center, Offset(rightEdge.dx - center.dx, 0));
       await tester.pumpAndSettle();
-      
+
       expect(sliderValue, lessThanOrEqualTo(100.0));
     });
 
     testWidgets('handles divisions correctly', (tester) async {
       double sliderValue = 0.0;
 
-      await tester.pumpWidget(
-        createRemixScope(
-          child: MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: StatefulBuilder(
-                builder: (context, setState) {
-                  return SizedBox(
-                    width: 300,
-                    child: RemixSlider(
-                      value: sliderValue,
-                      divisions: 4, // 5 discrete positions: 0, 0.25, 0.5, 0.75, 1
-                      onChanged: (value) {
-                        setState(() {
-                          sliderValue = value;
-                        });
-                      },
-                    ),
-                  );
+      await tester.pumpRemixApp(
+        StatefulBuilder(
+          builder: (context, setState) {
+            return SizedBox(
+              width: 300,
+              child: RemixSlider(
+                value: sliderValue,
+                divisions: 4, // 5 discrete positions: 0, 0.25, 0.5, 0.75, 1
+
+                onChanged: (value) {
+                  setState(() {
+                    sliderValue = value;
+                  });
                 },
               ),
-            ),
-          ),
-        ),
+            );
+          },
         ),
       );
 
@@ -147,7 +118,7 @@ void main() {
       final sliderFinder = find.byType(RemixSlider);
       final leftEdge = tester.getTopLeft(sliderFinder);
       final center = tester.getCenter(sliderFinder);
-      
+
       // Drag from left edge to center
       await tester.dragFrom(
         Offset(leftEdge.dx, center.dy),
@@ -162,24 +133,16 @@ void main() {
     testWidgets('does not respond when disabled', (tester) async {
       double sliderValue = 0.5;
 
-      await tester.pumpWidget(
-        createRemixScope(
-          child: MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: SizedBox(
-                width: 300,
-                child: RemixSlider(
-                  value: sliderValue,
-                  enabled: false,
-                  onChanged: (value) {
-                    sliderValue = value;
-                  },
-                ),
-              ),
-            ),
+      await tester.pumpRemixApp(
+        SizedBox(
+          width: 300,
+          child: RemixSlider(
+            value: sliderValue,
+            enabled: false,
+            onChanged: (value) {
+              sliderValue = value;
+            },
           ),
-        ),
         ),
       );
 
@@ -187,7 +150,7 @@ void main() {
       final sliderFinder = find.byType(RemixSlider);
       final center = tester.getCenter(sliderFinder);
       final rightEdge = tester.getTopRight(sliderFinder);
-      
+
       await tester.dragFrom(center, Offset(rightEdge.dx - center.dx, 0));
       await tester.pumpAndSettle();
 
@@ -198,23 +161,15 @@ void main() {
     testWidgets('calls onChanged with correct value', (tester) async {
       double? changedValue;
 
-      await tester.pumpWidget(
-        createRemixScope(
-          child: MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: SizedBox(
-                width: 300,
-                child: RemixSlider(
-                  value: 0.0,
-                  onChanged: (value) {
-                    changedValue = value;
-                  },
-                ),
-              ),
-            ),
+      await tester.pumpRemixApp(
+        SizedBox(
+          width: 300,
+          child: RemixSlider(
+            value: 0.0,
+            onChanged: (value) {
+              changedValue = value;
+            },
           ),
-        ),
         ),
       );
 
@@ -224,7 +179,7 @@ void main() {
       final rightEdge = tester.getTopRight(sliderFinder);
       final quarterX = leftEdge.dx + (rightEdge.dx - leftEdge.dx) * 0.25;
       final centerY = tester.getCenter(sliderFinder).dy;
-      
+
       // Drag from left edge to 1/4 position
       await tester.dragFrom(
         Offset(leftEdge.dx, centerY),
@@ -240,42 +195,34 @@ void main() {
     testWidgets('maintains value during widget rebuild', (tester) async {
       double sliderValue = 0.75;
 
-      await tester.pumpWidget(
-        createRemixScope(
-          child: MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: StatefulBuilder(
-                builder: (context, setState) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        width: 300,
-                        child: RemixSlider(
-                          value: sliderValue,
-                          onChanged: (value) {
-                            setState(() {
-                              sliderValue = value;
-                            });
-                          },
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          setState(() {
-                            // Force rebuild
-                          });
-                        },
-                        child: const Text('Rebuild'),
-                      ),
-                    ],
-                  );
-                },
-              ),
-            ),
-          ),
-        ),
+      await tester.pumpRemixApp(
+        StatefulBuilder(
+          builder: (context, setState) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 300,
+                  child: RemixSlider(
+                    value: sliderValue,
+                    onChanged: (value) {
+                      setState(() {
+                        sliderValue = value;
+                      });
+                    },
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      // Force rebuild
+                    });
+                  },
+                  child: const Text('Rebuild'),
+                ),
+              ],
+            );
+          },
         ),
       );
 
@@ -290,21 +237,13 @@ void main() {
     });
 
     testWidgets('handles hover state', (tester) async {
-      await tester.pumpWidget(
-        createRemixScope(
-          child: MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: SizedBox(
-                width: 300,
-                child: RemixSlider(
-                  value: 0.5,
-                  onChanged: (_) {},
-                ),
-              ),
-            ),
+      await tester.pumpRemixApp(
+        SizedBox(
+          width: 300,
+          child: RemixSlider(
+            value: 0.5,
+            onChanged: (_) {},
           ),
-        ),
         ),
       );
 
@@ -323,23 +262,15 @@ void main() {
     testWidgets('handles continuous dragging', (tester) async {
       final values = <double>[];
 
-      await tester.pumpWidget(
-        createRemixScope(
-          child: MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: SizedBox(
-                width: 300,
-                child: RemixSlider(
-                  value: 0.0,
-                  onChanged: (value) {
-                    values.add(value);
-                  },
-                ),
-              ),
-            ),
+      await tester.pumpRemixApp(
+        SizedBox(
+          width: 300,
+          child: RemixSlider(
+            value: 0.0,
+            onChanged: (value) {
+              values.add(value);
+            },
           ),
-        ),
         ),
       );
 
@@ -347,9 +278,10 @@ void main() {
       final sliderFinder = find.byType(RemixSlider);
       final leftEdge = tester.getTopLeft(sliderFinder);
       final rightEdge = tester.getTopRight(sliderFinder);
-      
-      final gesture = await tester.startGesture(Offset(leftEdge.dx + 10, tester.getCenter(sliderFinder).dy));
-      
+
+      final gesture = await tester.startGesture(
+          Offset(leftEdge.dx + 10, tester.getCenter(sliderFinder).dy));
+
       // Drag across the slider
       for (int i = 1; i <= 5; i++) {
         await gesture.moveTo(Offset(
@@ -358,7 +290,7 @@ void main() {
         ));
         await tester.pump();
       }
-      
+
       await gesture.up();
       await tester.pumpAndSettle();
 
@@ -370,35 +302,27 @@ void main() {
     testWidgets('updates visual feedback during drag', (tester) async {
       double sliderValue = 0.0;
 
-      await tester.pumpWidget(
-        createRemixScope(
-          child: MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: StatefulBuilder(
-                builder: (context, setState) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        width: 300,
-                        child: RemixSlider(
-                          value: sliderValue,
-                          onChanged: (value) {
-                            setState(() {
-                              sliderValue = value;
-                            });
-                          },
-                        ),
-                      ),
-                      Text('Value: ${sliderValue.toStringAsFixed(2)}'),
-                    ],
-                  );
-                },
-              ),
-            ),
-          ),
-        ),
+      await tester.pumpRemixApp(
+        StatefulBuilder(
+          builder: (context, setState) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 300,
+                  child: RemixSlider(
+                    value: sliderValue,
+                    onChanged: (value) {
+                      setState(() {
+                        sliderValue = value;
+                      });
+                    },
+                  ),
+                ),
+                Text('Value: ${sliderValue.toStringAsFixed(2)}'),
+              ],
+            );
+          },
         ),
       );
 
@@ -408,7 +332,7 @@ void main() {
       final sliderFinder = find.byType(RemixSlider);
       final center = tester.getCenter(sliderFinder);
       final rightEdge = tester.getTopRight(sliderFinder);
-      
+
       await tester.dragFrom(center, Offset((rightEdge.dx - center.dx) / 2, 0));
       await tester.pumpAndSettle();
 
@@ -420,29 +344,21 @@ void main() {
     testWidgets('handles drag to position', (tester) async {
       double sliderValue = 0.0;
 
-      await tester.pumpWidget(
-        createRemixScope(
-          child: MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: StatefulBuilder(
-                builder: (context, setState) {
-                  return SizedBox(
-                    width: 300,
-                    child: RemixSlider(
-                      value: sliderValue,
-                      onChanged: (value) {
-                        setState(() {
-                          sliderValue = value;
-                        });
-                      },
-                    ),
-                  );
+      await tester.pumpRemixApp(
+        StatefulBuilder(
+          builder: (context, setState) {
+            return SizedBox(
+              width: 300,
+              child: RemixSlider(
+                value: sliderValue,
+                onChanged: (value) {
+                  setState(() {
+                    sliderValue = value;
+                  });
                 },
               ),
-            ),
-          ),
-        ),
+            );
+          },
         ),
       );
 
@@ -452,7 +368,7 @@ void main() {
       final rightEdge = tester.getTopRight(sliderFinder);
       final threeQuarterX = leftEdge.dx + (rightEdge.dx - leftEdge.dx) * 0.75;
       final centerY = tester.getCenter(sliderFinder).dy;
-      
+
       // Drag from left edge to 3/4 position
       await tester.dragFrom(
         Offset(leftEdge.dx, centerY),
@@ -466,21 +382,13 @@ void main() {
     });
 
     testWidgets('preserves accessibility semantics', (tester) async {
-      await tester.pumpWidget(
-        createRemixScope(
-          child: MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: SizedBox(
-                width: 300,
-                child: RemixSlider(
-                  value: 0.5,
-                  onChanged: (_) {},
-                ),
-              ),
-            ),
+      await tester.pumpRemixApp(
+        SizedBox(
+          width: 300,
+          child: RemixSlider(
+            value: 0.5,
+            onChanged: (_) {},
           ),
-        ),
         ),
       );
 
@@ -492,22 +400,14 @@ void main() {
     });
 
     testWidgets('handles null onChanged callback', (tester) async {
-      await tester.pumpWidget(
-        createRemixScope(
-          child: MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: SizedBox(
-                width: 300,
-                child: RemixSlider(
-                  value: 0.5,
-                  enabled: false,
-                  onChanged: (_) {},
-                ),
-              ),
-            ),
+      await tester.pumpRemixApp(
+        SizedBox(
+          width: 300,
+          child: RemixSlider(
+            value: 0.5,
+            enabled: false,
+            onChanged: (_) {},
           ),
-        ),
         ),
       );
 
@@ -522,57 +422,49 @@ void main() {
     testWidgets('handles edge values correctly', (tester) async {
       double sliderValue = 0.5;
 
-      await tester.pumpWidget(
-        createRemixScope(
-          child: MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: StatefulBuilder(
-                builder: (context, setState) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        width: 300,
-                        child: RemixSlider(
-                          value: sliderValue,
-                          min: 0.0,
-                          max: 1.0,
-                          onChanged: (value) {
-                            setState(() {
-                              sliderValue = value;
-                            });
-                          },
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          TextButton(
-                            onPressed: () {
-                              setState(() {
-                                sliderValue = 0.0;
-                              });
-                            },
-                            child: const Text('Min'),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              setState(() {
-                                sliderValue = 1.0;
-                              });
-                            },
-                            child: const Text('Max'),
-                          ),
-                        ],
-                      ),
-                    ],
-                  );
-                },
-              ),
-            ),
-          ),
-        ),
+      await tester.pumpRemixApp(
+        StatefulBuilder(
+          builder: (context, setState) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 300,
+                  child: RemixSlider(
+                    value: sliderValue,
+                    min: 0.0,
+                    max: 1.0,
+                    onChanged: (value) {
+                      setState(() {
+                        sliderValue = value;
+                      });
+                    },
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        setState(() {
+                          sliderValue = 0.0;
+                        });
+                      },
+                      child: const Text('Min'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        setState(() {
+                          sliderValue = 1.0;
+                        });
+                      },
+                      child: const Text('Max'),
+                    ),
+                  ],
+                ),
+              ],
+            );
+          },
         ),
       );
 

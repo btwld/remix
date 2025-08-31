@@ -1,12 +1,12 @@
 part of 'card.dart';
 
 class CardSpec extends Spec<CardSpec> with Diagnosticable {
-  final WidgetSpec<BoxSpec> container;
+  final StyleSpec<BoxSpec> container;
 
-  const CardSpec({WidgetSpec<BoxSpec>? container})
-      : container = container ?? const WidgetSpec(spec: BoxSpec());
+  const CardSpec({StyleSpec<BoxSpec>? container})
+      : container = container ?? const StyleSpec(spec: BoxSpec());
 
-  CardSpec copyWith({WidgetSpec<BoxSpec>? container}) {
+  CardSpec copyWith({StyleSpec<BoxSpec>? container}) {
     return CardSpec(container: container ?? this.container);
   }
 

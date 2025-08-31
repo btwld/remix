@@ -4,16 +4,16 @@ class RemixProgressStyle extends Style<ProgressSpec>
     with
         StyleModifierMixin<RemixProgressStyle, ProgressSpec>,
         StyleVariantMixin<RemixProgressStyle, ProgressSpec> {
-  final Prop<WidgetSpec<BoxSpec>>? $container;
-  final Prop<WidgetSpec<BoxSpec>>? $track;
-  final Prop<WidgetSpec<BoxSpec>>? $fill;
-  final Prop<WidgetSpec<BoxSpec>>? $outerContainer;
+  final Prop<StyleSpec<BoxSpec>>? $container;
+  final Prop<StyleSpec<BoxSpec>>? $track;
+  final Prop<StyleSpec<BoxSpec>>? $fill;
+  final Prop<StyleSpec<BoxSpec>>? $outerContainer;
 
   const RemixProgressStyle.create({
-    Prop<WidgetSpec<BoxSpec>>? container,
-    Prop<WidgetSpec<BoxSpec>>? track,
-    Prop<WidgetSpec<BoxSpec>>? fill,
-    Prop<WidgetSpec<BoxSpec>>? outerContainer,
+    Prop<StyleSpec<BoxSpec>>? container,
+    Prop<StyleSpec<BoxSpec>>? track,
+    Prop<StyleSpec<BoxSpec>>? fill,
+    Prop<StyleSpec<BoxSpec>>? outerContainer,
     super.variants,
     super.animation,
     super.modifier,
@@ -23,10 +23,10 @@ class RemixProgressStyle extends Style<ProgressSpec>
         $outerContainer = outerContainer;
 
   RemixProgressStyle({
-    BoxStyle? container,
-    BoxStyle? track,
-    BoxStyle? fill,
-    BoxStyle? outerContainer,
+    BoxStyler? container,
+    BoxStyler? track,
+    BoxStyler? fill,
+    BoxStyler? outerContainer,
     AnimationConfig? animation,
     List<VariantStyle<ProgressSpec>>? variants,
     ModifierConfig? modifier,
@@ -56,8 +56,8 @@ class RemixProgressStyle extends Style<ProgressSpec>
   }
 
   @override
-  WidgetSpec<ProgressSpec> resolve(BuildContext context) {
-    return WidgetSpec(
+  StyleSpec<ProgressSpec> resolve(BuildContext context) {
+    return StyleSpec(
       spec: ProgressSpec(
         container: MixOps.resolve(context, $container),
         track: MixOps.resolve(context, $track),
@@ -97,105 +97,105 @@ class RemixProgressStyle extends Style<ProgressSpec>
 }
 
 final DefaultRemixProgressStyle = RemixProgressStyle(
-  container: BoxStyle(
+  container: BoxStyler(
     constraints: BoxConstraintsMix(minHeight: 6, maxHeight: 6),
     decoration: BoxDecorationMix(borderRadius: BorderRadiusMix.circular(99)),
     clipBehavior: Clip.antiAlias,
   ),
-  track: BoxStyle(decoration: BoxDecorationMix(color: RemixTokens.surface())),
-  fill: BoxStyle(
+  track: BoxStyler(decoration: BoxDecorationMix(color: RemixTokens.surface())),
+  fill: BoxStyler(
     decoration: BoxDecorationMix(
       borderRadius: BorderRadiusMix.circular(99),
       color: RemixTokens.textPrimary(),
     ),
   ),
-  outerContainer: BoxStyle(),
+  outerContainer: BoxStyler(),
 );
 
 extension ProgressVariants on RemixProgressStyle {
   /// Primary progress variant with blue fill
   static RemixProgressStyle get primary => RemixProgressStyle(
-        container: BoxStyle(
+        container: BoxStyler(
           constraints: BoxConstraintsMix(minHeight: 6, maxHeight: 6),
           decoration:
               BoxDecorationMix(borderRadius: BorderRadiusMix.circular(99)),
           clipBehavior: Clip.antiAlias,
         ),
-        track: BoxStyle(
+        track: BoxStyler(
           decoration: BoxDecorationMix(
             color: RemixTokens.primary().withValues(alpha: 0.2),
           ),
         ),
-        fill: BoxStyle(
+        fill: BoxStyler(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(99),
             color: RemixTokens.primary(),
           ),
         ),
-        outerContainer: BoxStyle(),
+        outerContainer: BoxStyler(),
       );
 
   /// Secondary progress variant with grey fill
   static RemixProgressStyle get secondary => RemixProgressStyle(
-        container: BoxStyle(
+        container: BoxStyler(
           constraints: BoxConstraintsMix(minHeight: 6, maxHeight: 6),
           decoration:
               BoxDecorationMix(borderRadius: BorderRadiusMix.circular(99)),
           clipBehavior: Clip.antiAlias,
         ),
-        track: BoxStyle(
+        track: BoxStyler(
           decoration: BoxDecorationMix(color: RemixTokens.surface()),
         ),
-        fill: BoxStyle(
+        fill: BoxStyler(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(99),
             color: RemixTokens.textSecondary(),
           ),
         ),
-        outerContainer: BoxStyle(),
+        outerContainer: BoxStyler(),
       );
 
   /// Success progress variant with green fill
   static RemixProgressStyle get success => RemixProgressStyle(
-        container: BoxStyle(
+        container: BoxStyler(
           constraints: BoxConstraintsMix(minHeight: 6, maxHeight: 6),
           decoration:
               BoxDecorationMix(borderRadius: BorderRadiusMix.circular(99)),
           clipBehavior: Clip.antiAlias,
         ),
-        track: BoxStyle(
+        track: BoxStyler(
           decoration: BoxDecorationMix(
             color: RemixTokens.success().withValues(alpha: 0.2),
           ),
         ),
-        fill: BoxStyle(
+        fill: BoxStyler(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(99),
             color: RemixTokens.success(),
           ),
         ),
-        outerContainer: BoxStyle(),
+        outerContainer: BoxStyler(),
       );
 
   /// Warning progress variant with orange fill
   static RemixProgressStyle get warning => RemixProgressStyle(
-        container: BoxStyle(
+        container: BoxStyler(
           constraints: BoxConstraintsMix(minHeight: 6, maxHeight: 6),
           decoration:
               BoxDecorationMix(borderRadius: BorderRadiusMix.circular(99)),
           clipBehavior: Clip.antiAlias,
         ),
-        track: BoxStyle(
+        track: BoxStyler(
           decoration: BoxDecorationMix(
             color: RemixTokens.warning().withValues(alpha: 0.2),
           ),
         ),
-        fill: BoxStyle(
+        fill: BoxStyler(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(99),
             color: RemixTokens.warning(),
           ),
         ),
-        outerContainer: BoxStyle(),
+        outerContainer: BoxStyler(),
       );
 }

@@ -4,16 +4,16 @@ class RemixRadioStyle extends Style<RadioSpec>
     with
         StyleModifierMixin<RemixRadioStyle, RadioSpec>,
         StyleVariantMixin<RemixRadioStyle, RadioSpec> {
-  final Prop<WidgetSpec<FlexBoxSpec>>? $container;
-  final Prop<WidgetSpec<BoxSpec>>? $indicatorContainer;
-  final Prop<WidgetSpec<BoxSpec>>? $indicator;
-  final Prop<WidgetSpec<TextSpec>>? $label;
+  final Prop<StyleSpec<FlexBoxSpec>>? $container;
+  final Prop<StyleSpec<BoxSpec>>? $indicatorContainer;
+  final Prop<StyleSpec<BoxSpec>>? $indicator;
+  final Prop<StyleSpec<TextSpec>>? $label;
 
   const RemixRadioStyle.create({
-    Prop<WidgetSpec<FlexBoxSpec>>? container,
-    Prop<WidgetSpec<BoxSpec>>? indicatorContainer,
-    Prop<WidgetSpec<BoxSpec>>? indicator,
-    Prop<WidgetSpec<TextSpec>>? label,
+    Prop<StyleSpec<FlexBoxSpec>>? container,
+    Prop<StyleSpec<BoxSpec>>? indicatorContainer,
+    Prop<StyleSpec<BoxSpec>>? indicator,
+    Prop<StyleSpec<TextSpec>>? label,
     super.variants,
     super.animation,
     super.modifier,
@@ -23,10 +23,10 @@ class RemixRadioStyle extends Style<RadioSpec>
         $label = label;
 
   RemixRadioStyle({
-    FlexBoxStyle? container,
-    BoxStyle? indicatorContainer,
-    BoxStyle? indicator,
-    TextStyling? label,
+    FlexBoxStyler? container,
+    BoxStyler? indicatorContainer,
+    BoxStyler? indicator,
+    TextStyler? label,
     AnimationConfig? animation,
     List<VariantStyle<RadioSpec>>? variants,
     ModifierConfig? modifier,
@@ -56,8 +56,8 @@ class RemixRadioStyle extends Style<RadioSpec>
   }
 
   @override
-  WidgetSpec<RadioSpec> resolve(BuildContext context) {
-    return WidgetSpec(
+  StyleSpec<RadioSpec> resolve(BuildContext context) {
+    return StyleSpec(
       spec: RadioSpec(
         container: MixOps.resolve(context, $container),
         indicatorContainer: MixOps.resolve(context, $indicatorContainer),
@@ -98,14 +98,14 @@ class RemixRadioStyle extends Style<RadioSpec>
 }
 
 final DefaultRemixRadioStyle = RemixRadioStyle(
-  container: FlexBoxStyle(
+  container: FlexBoxStyler(
     alignment: Alignment.centerLeft,
     direction: Axis.horizontal,
     crossAxisAlignment: CrossAxisAlignment.center,
     mainAxisSize: MainAxisSize.min,
     spacing: RemixTokens.spaceSm(),
   ),
-  indicatorContainer: BoxStyle(
+  indicatorContainer: BoxStyler(
     alignment: Alignment.center,
     constraints: BoxConstraintsMix(
       minWidth: 20,
@@ -122,7 +122,7 @@ final DefaultRemixRadioStyle = RemixRadioStyle(
       color: RemixTokens.background(),
     ),
   ),
-  indicator: BoxStyle(
+  indicator: BoxStyler(
     constraints: BoxConstraintsMix(
       minWidth: 10,
       maxWidth: 10,
@@ -134,7 +134,7 @@ final DefaultRemixRadioStyle = RemixRadioStyle(
       color: RemixTokens.textPrimary(),
     ),
   ),
-  label: TextStyling(
+  label: TextStyler(
     style: TextStyleMix(
       color: RemixTokens.textPrimary(),
       fontSize: RemixTokens.fontSizeMd(),
@@ -145,14 +145,14 @@ final DefaultRemixRadioStyle = RemixRadioStyle(
 extension RadioVariants on RemixRadioStyle {
   /// Primary radio variant with blue colors
   static RemixRadioStyle get primary => RemixRadioStyle(
-        container: FlexBoxStyle(
+        container: FlexBoxStyler(
           alignment: Alignment.centerLeft,
           direction: Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           spacing: RemixTokens.spaceSm(),
         ),
-        indicatorContainer: BoxStyle(
+        indicatorContainer: BoxStyler(
           alignment: Alignment.center,
           constraints: BoxConstraintsMix(
             minWidth: 20,
@@ -169,7 +169,7 @@ extension RadioVariants on RemixRadioStyle {
             color: RemixTokens.primary().withValues(alpha: 0.1),
           ),
         ),
-        indicator: BoxStyle(
+        indicator: BoxStyler(
           constraints: BoxConstraintsMix(
             minWidth: 10,
             maxWidth: 10,
@@ -181,7 +181,7 @@ extension RadioVariants on RemixRadioStyle {
             color: RemixTokens.primary(),
           ),
         ),
-        label: TextStyling(
+        label: TextStyler(
           style: TextStyleMix(
             color: RemixTokens.textPrimary(),
             fontSize: RemixTokens.fontSizeMd(),
@@ -191,14 +191,14 @@ extension RadioVariants on RemixRadioStyle {
 
   /// Secondary radio variant with grey colors
   static RemixRadioStyle get secondary => RemixRadioStyle(
-        container: FlexBoxStyle(
+        container: FlexBoxStyler(
           alignment: Alignment.centerLeft,
           direction: Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           spacing: RemixTokens.spaceSm(),
         ),
-        indicatorContainer: BoxStyle(
+        indicatorContainer: BoxStyler(
           alignment: Alignment.center,
           constraints: BoxConstraintsMix(
             minWidth: 20,
@@ -215,7 +215,7 @@ extension RadioVariants on RemixRadioStyle {
             color: RemixTokens.surface(),
           ),
         ),
-        indicator: BoxStyle(
+        indicator: BoxStyler(
           constraints: BoxConstraintsMix(
             minWidth: 10,
             maxWidth: 10,
@@ -227,7 +227,7 @@ extension RadioVariants on RemixRadioStyle {
             color: RemixTokens.textSecondary(),
           ),
         ),
-        label: TextStyling(
+        label: TextStyler(
           style: TextStyleMix(
             color: RemixTokens.textPrimary(),
             fontSize: RemixTokens.fontSizeMd(),
@@ -237,14 +237,14 @@ extension RadioVariants on RemixRadioStyle {
 
   /// Compact radio variant with smaller size
   static RemixRadioStyle get compact => RemixRadioStyle(
-        container: FlexBoxStyle(
+        container: FlexBoxStyler(
           alignment: Alignment.centerLeft,
           direction: Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           spacing: RemixTokens.spaceXs(),
         ),
-        indicatorContainer: BoxStyle(
+        indicatorContainer: BoxStyler(
           alignment: Alignment.center,
           constraints: BoxConstraintsMix(
             minWidth: 16,
@@ -261,7 +261,7 @@ extension RadioVariants on RemixRadioStyle {
             color: RemixTokens.background(),
           ),
         ),
-        indicator: BoxStyle(
+        indicator: BoxStyler(
           constraints: BoxConstraintsMix(
             minWidth: 8,
             maxWidth: 8,
@@ -273,7 +273,7 @@ extension RadioVariants on RemixRadioStyle {
             color: RemixTokens.textPrimary(),
           ),
         ),
-        label: TextStyling(
+        label: TextStyler(
           style: TextStyleMix(
             color: RemixTokens.textPrimary(),
             fontSize: RemixTokens.fontSizeSm(),

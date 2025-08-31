@@ -1,26 +1,26 @@
 part of 'progress.dart';
 
 class ProgressSpec extends Spec<ProgressSpec> with Diagnosticable {
-  final WidgetSpec<BoxSpec> container;
-  final WidgetSpec<BoxSpec> track;
-  final WidgetSpec<BoxSpec> fill;
-  final WidgetSpec<BoxSpec> outerContainer;
+  final StyleSpec<BoxSpec> container;
+  final StyleSpec<BoxSpec> track;
+  final StyleSpec<BoxSpec> fill;
+  final StyleSpec<BoxSpec> outerContainer;
 
   const ProgressSpec({
-    WidgetSpec<BoxSpec>? container,
-    WidgetSpec<BoxSpec>? track,
-    WidgetSpec<BoxSpec>? fill,
-    WidgetSpec<BoxSpec>? outerContainer,
-  })  : container = container ?? const WidgetSpec(spec: BoxSpec()),
-        track = track ?? const WidgetSpec(spec: BoxSpec()),
-        fill = fill ?? const WidgetSpec(spec: BoxSpec()),
-        outerContainer = outerContainer ?? const WidgetSpec(spec: BoxSpec());
+    StyleSpec<BoxSpec>? container,
+    StyleSpec<BoxSpec>? track,
+    StyleSpec<BoxSpec>? fill,
+    StyleSpec<BoxSpec>? outerContainer,
+  })  : container = container ?? const StyleSpec(spec: BoxSpec()),
+        track = track ?? const StyleSpec(spec: BoxSpec()),
+        fill = fill ?? const StyleSpec(spec: BoxSpec()),
+        outerContainer = outerContainer ?? const StyleSpec(spec: BoxSpec());
 
   ProgressSpec copyWith({
-    WidgetSpec<BoxSpec>? container,
-    WidgetSpec<BoxSpec>? track,
-    WidgetSpec<BoxSpec>? fill,
-    WidgetSpec<BoxSpec>? outerContainer,
+    StyleSpec<BoxSpec>? container,
+    StyleSpec<BoxSpec>? track,
+    StyleSpec<BoxSpec>? fill,
+    StyleSpec<BoxSpec>? outerContainer,
   }) {
     return ProgressSpec(
       container: container ?? this.container,

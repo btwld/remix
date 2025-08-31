@@ -4,17 +4,17 @@ class RemixDividerStyle extends Style<DividerSpec>
     with
         StyleModifierMixin<RemixDividerStyle, DividerSpec>,
         StyleVariantMixin<RemixDividerStyle, DividerSpec> {
-  final Prop<WidgetSpec<BoxSpec>>? $container;
+  final Prop<StyleSpec<BoxSpec>>? $container;
 
   const RemixDividerStyle.create({
-    Prop<WidgetSpec<BoxSpec>>? container,
+    Prop<StyleSpec<BoxSpec>>? container,
     super.variants,
     super.animation,
     super.modifier,
   }) : $container = container;
 
   RemixDividerStyle({
-    BoxStyle? container,
+    BoxStyler? container,
     AnimationConfig? animation,
     List<VariantStyle<DividerSpec>>? variants,
     ModifierConfig? modifier,
@@ -41,8 +41,8 @@ class RemixDividerStyle extends Style<DividerSpec>
   }
 
   @override
-  WidgetSpec<DividerSpec> resolve(BuildContext context) {
-    return WidgetSpec(
+  StyleSpec<DividerSpec> resolve(BuildContext context) {
+    return StyleSpec(
       spec: DividerSpec(container: MixOps.resolve(context, $container)),
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
@@ -66,7 +66,7 @@ class RemixDividerStyle extends Style<DividerSpec>
 }
 
 final DefaultRemixDividerStyle = RemixDividerStyle(
-  container: BoxStyle(
+  container: BoxStyler(
     constraints: BoxConstraintsMix(
       minWidth: double.infinity,
       minHeight: 1,
@@ -83,7 +83,7 @@ final DefaultRemixDividerStyle = RemixDividerStyle(
 class RemixDividerStyles {
   /// Default divider style
   static RemixDividerStyle get defaultStyle => RemixDividerStyle(
-        container: BoxStyle(
+        container: BoxStyler(
           constraints: BoxConstraintsMix(
             minWidth: double.infinity,
             minHeight: 1,
@@ -98,7 +98,7 @@ class RemixDividerStyles {
 
   /// Vertical divider variant
   static RemixDividerStyle get vertical => RemixDividerStyle(
-        container: BoxStyle(
+        container: BoxStyler(
           constraints: BoxConstraintsMix(
             minWidth: 1,
             maxWidth: 1,
@@ -113,7 +113,7 @@ class RemixDividerStyles {
 
   /// Thick divider variant
   static RemixDividerStyle get thick => RemixDividerStyle(
-        container: BoxStyle(
+        container: BoxStyler(
           constraints: BoxConstraintsMix(
             minWidth: double.infinity,
             minHeight: 2,
@@ -128,7 +128,7 @@ class RemixDividerStyles {
 
   /// Dark divider variant
   static RemixDividerStyle get dark => RemixDividerStyle(
-        container: BoxStyle(
+        container: BoxStyler(
           constraints: BoxConstraintsMix(
             minWidth: double.infinity,
             minHeight: 1,

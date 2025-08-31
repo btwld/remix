@@ -323,7 +323,7 @@ class _AnimatedOverlayMenu extends StatefulWidget {
   final AnimationController controller;
   final Duration duration;
   final Curve curve;
-  final WidgetSpec<BoxSpec> menuContainer;
+  final StyleSpec<BoxSpec> menuContainer;
   final List<Widget> items;
 
   @override
@@ -358,7 +358,7 @@ class _AnimatedOverlayMenuState extends State<_AnimatedOverlayMenu> {
           scale: scaleAnimation.value,
           child: Opacity(
             opacity: fadeAnimation.value,
-            child: WidgetSpecBuilder(
+            child: StyleSpecBuilder(
               wrappedSpec: widget.menuContainer,
               builder: (context, containerSpec) {
                 return containerSpec(

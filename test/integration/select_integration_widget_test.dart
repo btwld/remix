@@ -3,26 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
+import '../helpers/test_helpers.dart';
+
 void main() {
   group('RemixSelect Integration Tests', () {
     testWidgets('renders with initial value', (tester) async {
-      await tester.pumpWidget(
-        createRemixScope(
-          child: MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: RemixSelect<String>(
-                selectedValue: 'Apple',
-                onChanged: (_) {},
-                items: [
-                  RemixSelectItem<String>(value: 'Apple', label: 'Apple'),
-                  RemixSelectItem<String>(value: 'Banana', label: 'Banana'),
-                ],
-                child: const RemixSelectTrigger(label: 'Apple'),
-              ),
-            ),
-          ),
-        ),
+      await tester.pumpRemixApp(
+        RemixSelect<String>(
+          selectedValue: 'Apple',
+          onChanged: (_) {},
+          items: [
+            RemixSelectItem<String>(value: 'Apple', label: 'Apple'),
+            RemixSelectItem<String>(value: 'Banana', label: 'Banana'),
+          ],
+          child: const RemixSelectTrigger(label: 'Apple'),
         ),
       );
 
@@ -31,24 +25,16 @@ void main() {
     });
 
     testWidgets('opens dropdown when trigger is tapped', (tester) async {
-      await tester.pumpWidget(
-        createRemixScope(
-          child: MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: RemixSelect<String>(
-                selectedValue: 'Apple',
-                onChanged: (_) {},
-                items: [
-                  RemixSelectItem<String>(value: 'Apple', label: 'Apple'),
-                  RemixSelectItem<String>(value: 'Banana', label: 'Banana'),
-                  RemixSelectItem<String>(value: 'Orange', label: 'Orange'),
-                ],
-                child: const RemixSelectTrigger(label: 'Apple'),
-              ),
-            ),
-          ),
-        ),
+      await tester.pumpRemixApp(
+        RemixSelect<String>(
+          selectedValue: 'Apple',
+          onChanged: (_) {},
+          items: [
+            RemixSelectItem<String>(value: 'Apple', label: 'Apple'),
+            RemixSelectItem<String>(value: 'Banana', label: 'Banana'),
+            RemixSelectItem<String>(value: 'Orange', label: 'Orange'),
+          ],
+          child: const RemixSelectTrigger(label: 'Apple'),
         ),
       );
 
@@ -65,32 +51,24 @@ void main() {
     testWidgets('selects item when tapped', (tester) async {
       String? selectedValue = 'Apple';
 
-      await tester.pumpWidget(
-        createRemixScope(
-          child: MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: StatefulBuilder(
-                builder: (context, setState) {
-                  return RemixSelect<String>(
-                    selectedValue: selectedValue,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedValue = value;
-                      });
-                    },
-                    items: [
-                      RemixSelectItem<String>(value: 'Apple', label: 'Apple'),
-                      RemixSelectItem<String>(value: 'Banana', label: 'Banana'),
-                      RemixSelectItem<String>(value: 'Orange', label: 'Orange'),
-                    ],
-                    child: RemixSelectTrigger(label: selectedValue ?? 'Select'),
-                  );
-                },
-              ),
-            ),
-          ),
-        ),
+      await tester.pumpRemixApp(
+        StatefulBuilder(
+          builder: (context, setState) {
+            return RemixSelect<String>(
+              selectedValue: selectedValue,
+              onChanged: (value) {
+                setState(() {
+                  selectedValue = value;
+                });
+              },
+              items: [
+                RemixSelectItem<String>(value: 'Apple', label: 'Apple'),
+                RemixSelectItem<String>(value: 'Banana', label: 'Banana'),
+                RemixSelectItem<String>(value: 'Orange', label: 'Orange'),
+              ],
+              child: RemixSelectTrigger(label: selectedValue ?? 'Select'),
+            );
+          },
         ),
       );
 
@@ -106,23 +84,15 @@ void main() {
     });
 
     testWidgets('closes dropdown after selection', (tester) async {
-      await tester.pumpWidget(
-        createRemixScope(
-          child: MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: RemixSelect<String>(
-                selectedValue: 'Apple',
-                onChanged: (_) {},
-                items: [
-                  RemixSelectItem<String>(value: 'Apple', label: 'Apple'),
-                  RemixSelectItem<String>(value: 'Banana', label: 'Banana'),
-                ],
-                child: const RemixSelectTrigger(label: 'Apple'),
-              ),
-            ),
-          ),
-        ),
+      await tester.pumpRemixApp(
+        RemixSelect<String>(
+          selectedValue: 'Apple',
+          onChanged: (_) {},
+          items: [
+            RemixSelectItem<String>(value: 'Apple', label: 'Apple'),
+            RemixSelectItem<String>(value: 'Banana', label: 'Banana'),
+          ],
+          child: const RemixSelectTrigger(label: 'Apple'),
         ),
       );
 
@@ -142,20 +112,12 @@ void main() {
     });
 
     testWidgets('handles empty items list', (tester) async {
-      await tester.pumpWidget(
-        createRemixScope(
-          child: MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: RemixSelect<String>(
-                selectedValue: null,
-                onChanged: (_) {},
-                items: const [],
-                child: const RemixSelectTrigger(label: 'No items'),
-              ),
-            ),
-          ),
-        ),
+      await tester.pumpRemixApp(
+        RemixSelect<String>(
+          selectedValue: null,
+          onChanged: (_) {},
+          items: const [],
+          child: const RemixSelectTrigger(label: 'No items'),
         ),
       );
 
@@ -164,23 +126,15 @@ void main() {
     });
 
     testWidgets('handles null selected value', (tester) async {
-      await tester.pumpWidget(
-        createRemixScope(
-          child: MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: RemixSelect<String>(
-                selectedValue: null,
-                onChanged: (_) {},
-                items: [
-                  RemixSelectItem<String>(value: 'Apple', label: 'Apple'),
-                  RemixSelectItem<String>(value: 'Banana', label: 'Banana'),
-                ],
-                child: const RemixSelectTrigger(label: 'Select an option'),
-              ),
-            ),
-          ),
-        ),
+      await tester.pumpRemixApp(
+        RemixSelect<String>(
+          selectedValue: null,
+          onChanged: (_) {},
+          items: [
+            RemixSelectItem<String>(value: 'Apple', label: 'Apple'),
+            RemixSelectItem<String>(value: 'Banana', label: 'Banana'),
+          ],
+          child: const RemixSelectTrigger(label: 'Select an option'),
         ),
       );
 
@@ -190,44 +144,36 @@ void main() {
     testWidgets('maintains selection after widget rebuild', (tester) async {
       String? selectedValue = 'Apple';
 
-      await tester.pumpWidget(
-        createRemixScope(
-          child: MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: StatefulBuilder(
-                builder: (context, setState) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      RemixSelect<String>(
-                        selectedValue: selectedValue,
-                        onChanged: (value) {
-                          setState(() {
-                            selectedValue = value;
-                          });
-                        },
-                        items: [
-                          RemixSelectItem<String>(value: 'Apple', label: 'Apple'),
-                          RemixSelectItem<String>(value: 'Banana', label: 'Banana'),
-                        ],
-                        child: RemixSelectTrigger(label: selectedValue ?? 'Select'),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          setState(() {
-                            // Force rebuild
-                          });
-                        },
-                        child: const Text('Rebuild'),
-                      ),
-                    ],
-                  );
-                },
-              ),
-            ),
-          ),
-        ),
+      await tester.pumpRemixApp(
+        StatefulBuilder(
+          builder: (context, setState) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                RemixSelect<String>(
+                  selectedValue: selectedValue,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedValue = value;
+                    });
+                  },
+                  items: [
+                    RemixSelectItem<String>(value: 'Apple', label: 'Apple'),
+                    RemixSelectItem<String>(value: 'Banana', label: 'Banana'),
+                  ],
+                  child: RemixSelectTrigger(label: selectedValue ?? 'Select'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      // Force rebuild
+                    });
+                  },
+                  child: const Text('Rebuild'),
+                ),
+              ],
+            );
+          },
         ),
       );
 
@@ -250,26 +196,18 @@ void main() {
     testWidgets('handles disabled state', (tester) async {
       bool wasCalled = false;
 
-      await tester.pumpWidget(
-        createRemixScope(
-          child: MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: RemixSelect<String>(
-                selectedValue: 'Apple',
-                enabled: false,
-                onChanged: (_) {
-                  wasCalled = true;
-                },
-                items: [
-                  RemixSelectItem<String>(value: 'Apple', label: 'Apple'),
-                  RemixSelectItem<String>(value: 'Banana', label: 'Banana'),
-                ],
-                child: const RemixSelectTrigger(label: 'Apple'),
-              ),
-            ),
-          ),
-        ),
+      await tester.pumpRemixApp(
+        RemixSelect<String>(
+          selectedValue: 'Apple',
+          enabled: false,
+          onChanged: (_) {
+            wasCalled = true;
+          },
+          items: [
+            RemixSelectItem<String>(value: 'Apple', label: 'Apple'),
+            RemixSelectItem<String>(value: 'Banana', label: 'Banana'),
+          ],
+          child: const RemixSelectTrigger(label: 'Apple'),
         ),
       );
 
@@ -283,32 +221,26 @@ void main() {
     });
 
     testWidgets('closes dropdown when tapping outside', (tester) async {
-      await tester.pumpWidget(
-        createRemixScope(
-          child: MaterialApp(
-          home: Scaffold(
-            body: Stack(
-              children: [
-                const Positioned(
-                  top: 50,
-                  left: 50,
-                  child: Text('Outside'),
-                ),
-                Center(
-                  child: RemixSelect<String>(
-                    selectedValue: 'Apple',
-                    onChanged: (_) {},
-                    items: [
-                      RemixSelectItem<String>(value: 'Apple', label: 'Apple'),
-                      RemixSelectItem<String>(value: 'Banana', label: 'Banana'),
-                    ],
-                    child: const RemixSelectTrigger(label: 'Apple'),
-                  ),
-                ),
-              ],
+      await tester.pumpRemixApp(
+        Stack(
+          children: [
+            const Positioned(
+              top: 50,
+              left: 50,
+              child: Text('Outside'),
             ),
-          ),
-        ),
+            Center(
+              child: RemixSelect<String>(
+                selectedValue: 'Apple',
+                onChanged: (_) {},
+                items: [
+                  RemixSelectItem<String>(value: 'Apple', label: 'Apple'),
+                  RemixSelectItem<String>(value: 'Banana', label: 'Banana'),
+                ],
+                child: const RemixSelectTrigger(label: 'Apple'),
+              ),
+            ),
+          ],
         ),
       );
 
@@ -328,23 +260,15 @@ void main() {
     });
 
     testWidgets('handles hover state', (tester) async {
-      await tester.pumpWidget(
-        createRemixScope(
-          child: MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: RemixSelect<String>(
-                selectedValue: 'Apple',
-                onChanged: (_) {},
-                items: [
-                  RemixSelectItem<String>(value: 'Apple', label: 'Apple'),
-                  RemixSelectItem<String>(value: 'Banana', label: 'Banana'),
-                ],
-                child: const RemixSelectTrigger(label: 'Apple'),
-              ),
-            ),
-          ),
-        ),
+      await tester.pumpRemixApp(
+        RemixSelect<String>(
+          selectedValue: 'Apple',
+          onChanged: (_) {},
+          items: [
+            RemixSelectItem<String>(value: 'Apple', label: 'Apple'),
+            RemixSelectItem<String>(value: 'Banana', label: 'Banana'),
+          ],
+          child: const RemixSelectTrigger(label: 'Apple'),
         ),
       );
 
@@ -361,29 +285,21 @@ void main() {
     });
 
     testWidgets('supports custom item widgets', (tester) async {
-      await tester.pumpWidget(
-        createRemixScope(
-          child: MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: RemixSelect<String>(
-                selectedValue: 'Apple',
-                onChanged: (_) {},
-                items: [
-                  RemixSelectItem<String>(
-                    value: 'Apple',
-                    label: '🍎 Apple',
-                  ),
-                  RemixSelectItem<String>(
-                    value: 'Banana',
-                    label: '🍌 Banana',
-                  ),
-                ],
-                child: const RemixSelectTrigger(label: 'Select fruit'),
-              ),
+      await tester.pumpRemixApp(
+        RemixSelect<String>(
+          selectedValue: 'Apple',
+          onChanged: (_) {},
+          items: [
+            RemixSelectItem<String>(
+              value: 'Apple',
+              label: '🍎 Apple',
             ),
-          ),
-        ),
+            RemixSelectItem<String>(
+              value: 'Banana',
+              label: '🍌 Banana',
+            ),
+          ],
+          child: const RemixSelectTrigger(label: 'Select fruit'),
         ),
       );
 
@@ -397,23 +313,15 @@ void main() {
     });
 
     testWidgets('handles rapid open/close', (tester) async {
-      await tester.pumpWidget(
-        createRemixScope(
-          child: MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: RemixSelect<String>(
-                selectedValue: 'Apple',
-                onChanged: (_) {},
-                items: [
-                  RemixSelectItem<String>(value: 'Apple', label: 'Apple'),
-                  RemixSelectItem<String>(value: 'Banana', label: 'Banana'),
-                ],
-                child: const RemixSelectTrigger(label: 'Apple'),
-              ),
-            ),
-          ),
-        ),
+      await tester.pumpRemixApp(
+        RemixSelect<String>(
+          selectedValue: 'Apple',
+          onChanged: (_) {},
+          items: [
+            RemixSelectItem<String>(value: 'Apple', label: 'Apple'),
+            RemixSelectItem<String>(value: 'Banana', label: 'Banana'),
+          ],
+          child: const RemixSelectTrigger(label: 'Apple'),
         ),
       );
 
@@ -429,23 +337,15 @@ void main() {
     });
 
     testWidgets('preserves accessibility semantics', (tester) async {
-      await tester.pumpWidget(
-        createRemixScope(
-          child: MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: RemixSelect<String>(
-                selectedValue: 'Apple',
-                onChanged: (_) {},
-                items: [
-                  RemixSelectItem<String>(value: 'Apple', label: 'Apple'),
-                  RemixSelectItem<String>(value: 'Banana', label: 'Banana'),
-                ],
-                child: const RemixSelectTrigger(label: 'Apple'),
-              ),
-            ),
-          ),
-        ),
+      await tester.pumpRemixApp(
+        RemixSelect<String>(
+          selectedValue: 'Apple',
+          onChanged: (_) {},
+          items: [
+            RemixSelectItem<String>(value: 'Apple', label: 'Apple'),
+            RemixSelectItem<String>(value: 'Banana', label: 'Banana'),
+          ],
+          child: const RemixSelectTrigger(label: 'Apple'),
         ),
       );
 
@@ -464,32 +364,24 @@ void main() {
       
       _User? selectedUser = user1;
 
-      await tester.pumpWidget(
-        createRemixScope(
-          child: MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: StatefulBuilder(
-                builder: (context, setState) {
-                  return RemixSelect<_User>(
-                    selectedValue: selectedUser,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedUser = value;
-                      });
-                    },
-                    items: [
-                      RemixSelectItem<_User>(value: user1, label: user1.name),
-                      RemixSelectItem<_User>(value: user2, label: user2.name),
-                      RemixSelectItem<_User>(value: user3, label: user3.name),
-                    ],
-                    child: RemixSelectTrigger(label: selectedUser?.name ?? 'Select user'),
-                  );
-                },
-              ),
-            ),
-          ),
-        ),
+      await tester.pumpRemixApp(
+        StatefulBuilder(
+          builder: (context, setState) {
+            return RemixSelect<_User>(
+              selectedValue: selectedUser,
+              onChanged: (value) {
+                setState(() {
+                  selectedUser = value;
+                });
+              },
+              items: [
+                RemixSelectItem<_User>(value: user1, label: user1.name),
+                RemixSelectItem<_User>(value: user2, label: user2.name),
+                RemixSelectItem<_User>(value: user3, label: user3.name),
+              ],
+              child: RemixSelectTrigger(label: selectedUser?.name ?? 'Select user'),
+            );
+          },
         ),
       );
 

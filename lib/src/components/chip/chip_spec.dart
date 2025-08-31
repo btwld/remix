@@ -1,30 +1,30 @@
 part of 'chip.dart';
 
 class ChipSpec extends Spec<ChipSpec> with Diagnosticable {
-  final WidgetSpec<BoxSpec> container;
-  final WidgetSpec<FlexSpec> flex;
-  final WidgetSpec<TextSpec> label;
-  final WidgetSpec<IconSpec> leading;
-  final WidgetSpec<IconSpec> trailing;
+  final StyleSpec<BoxSpec> container;
+  final StyleSpec<FlexSpec> flex;
+  final StyleSpec<TextSpec> label;
+  final StyleSpec<IconSpec> leading;
+  final StyleSpec<IconSpec> trailing;
 
   const ChipSpec({
-    WidgetSpec<BoxSpec>? container,
-    WidgetSpec<FlexSpec>? flex,
-    WidgetSpec<TextSpec>? label,
-    WidgetSpec<IconSpec>? leading,
-    WidgetSpec<IconSpec>? trailing,
-  })  : container = container ?? const WidgetSpec(spec: BoxSpec()),
-        flex = flex ?? const WidgetSpec(spec: FlexSpec()),
-        label = label ?? const WidgetSpec(spec: TextSpec()),
-        leading = leading ?? const WidgetSpec(spec: IconSpec()),
-        trailing = trailing ?? const WidgetSpec(spec: IconSpec());
+    StyleSpec<BoxSpec>? container,
+    StyleSpec<FlexSpec>? flex,
+    StyleSpec<TextSpec>? label,
+    StyleSpec<IconSpec>? leading,
+    StyleSpec<IconSpec>? trailing,
+  })  : container = container ?? const StyleSpec(spec: BoxSpec()),
+        flex = flex ?? const StyleSpec(spec: FlexSpec()),
+        label = label ?? const StyleSpec(spec: TextSpec()),
+        leading = leading ?? const StyleSpec(spec: IconSpec()),
+        trailing = trailing ?? const StyleSpec(spec: IconSpec());
 
   ChipSpec copyWith({
-    WidgetSpec<BoxSpec>? container,
-    WidgetSpec<FlexSpec>? flex,
-    WidgetSpec<TextSpec>? label,
-    WidgetSpec<IconSpec>? leading,
-    WidgetSpec<IconSpec>? trailing,
+    StyleSpec<BoxSpec>? container,
+    StyleSpec<FlexSpec>? flex,
+    StyleSpec<TextSpec>? label,
+    StyleSpec<IconSpec>? leading,
+    StyleSpec<IconSpec>? trailing,
   }) {
     return ChipSpec(
       container: container ?? this.container,

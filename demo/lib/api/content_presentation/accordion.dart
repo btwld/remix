@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
                     const Duration(milliseconds: 200)),
               ).onSelected(
                 RemixAccordionStyle(
-                  container: BoxStyle(
+                  container: BoxStyler(
                     decoration: BoxDecorationMix(color: Colors.grey.shade50),
                     transform: Matrix4.rotationZ(pi),
                   ),
