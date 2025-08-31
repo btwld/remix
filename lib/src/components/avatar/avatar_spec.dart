@@ -1,16 +1,16 @@
 part of 'avatar.dart';
 
 class AvatarSpec extends Spec<AvatarSpec> with Diagnosticable {
-  final WidgetSpec<BoxSpec> container;
-  final WidgetSpec<TextSpec> text;
-  final WidgetSpec<IconSpec> icon;
+  final StyleSpec<BoxSpec> container;
+  final StyleSpec<TextSpec> text;
+  final StyleSpec<IconSpec> icon;
 
-  const AvatarSpec({WidgetSpec<BoxSpec>? container, WidgetSpec<TextSpec>? text, WidgetSpec<IconSpec>? icon})
-      : container = container ?? const WidgetSpec(spec: BoxSpec()),
-        text = text ?? const WidgetSpec(spec: TextSpec()),
-        icon = icon ?? const WidgetSpec(spec: IconSpec());
+  const AvatarSpec({StyleSpec<BoxSpec>? container, StyleSpec<TextSpec>? text, StyleSpec<IconSpec>? icon})
+      : container = container ?? const StyleSpec(spec: BoxSpec()),
+        text = text ?? const StyleSpec(spec: TextSpec()),
+        icon = icon ?? const StyleSpec(spec: IconSpec());
 
-  AvatarSpec copyWith({WidgetSpec<BoxSpec>? container, WidgetSpec<TextSpec>? text, WidgetSpec<IconSpec>? icon}) {
+  AvatarSpec copyWith({StyleSpec<BoxSpec>? container, StyleSpec<TextSpec>? text, StyleSpec<IconSpec>? icon}) {
     return AvatarSpec(
       container: container ?? this.container,
       text: text ?? this.text,

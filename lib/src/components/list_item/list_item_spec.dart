@@ -1,42 +1,42 @@
 part of 'list_item.dart';
 
 class ListItemSpec extends Spec<ListItemSpec> with Diagnosticable {
-  final WidgetSpec<BoxSpec> container;
-  final WidgetSpec<FlexSpec> flex;
-  final WidgetSpec<BoxSpec> contentContainer;
-  final WidgetSpec<FlexSpec> contentFlex;
-  final WidgetSpec<TextSpec> title;
-  final WidgetSpec<TextSpec> subtitle;
-  final WidgetSpec<IconSpec> leading;
-  final WidgetSpec<IconSpec> trailing;
+  final StyleSpec<BoxSpec> container;
+  final StyleSpec<FlexSpec> flex;
+  final StyleSpec<BoxSpec> contentContainer;
+  final StyleSpec<FlexSpec> contentFlex;
+  final StyleSpec<TextSpec> title;
+  final StyleSpec<TextSpec> subtitle;
+  final StyleSpec<IconSpec> leading;
+  final StyleSpec<IconSpec> trailing;
 
   const ListItemSpec({
-    WidgetSpec<BoxSpec>? container,
-    WidgetSpec<FlexSpec>? flex,
-    WidgetSpec<BoxSpec>? contentContainer,
-    WidgetSpec<FlexSpec>? contentFlex,
-    WidgetSpec<TextSpec>? title,
-    WidgetSpec<TextSpec>? subtitle,
-    WidgetSpec<IconSpec>? leading,
-    WidgetSpec<IconSpec>? trailing,
-  })  : container = container ?? const WidgetSpec(spec: BoxSpec()),
-        flex = flex ?? const WidgetSpec(spec: FlexSpec()),
-        contentContainer = contentContainer ?? const WidgetSpec(spec: BoxSpec()),
-        contentFlex = contentFlex ?? const WidgetSpec(spec: FlexSpec()),
-        title = title ?? const WidgetSpec(spec: TextSpec()),
-        subtitle = subtitle ?? const WidgetSpec(spec: TextSpec()),
-        leading = leading ?? const WidgetSpec(spec: IconSpec()),
-        trailing = trailing ?? const WidgetSpec(spec: IconSpec());
+    StyleSpec<BoxSpec>? container,
+    StyleSpec<FlexSpec>? flex,
+    StyleSpec<BoxSpec>? contentContainer,
+    StyleSpec<FlexSpec>? contentFlex,
+    StyleSpec<TextSpec>? title,
+    StyleSpec<TextSpec>? subtitle,
+    StyleSpec<IconSpec>? leading,
+    StyleSpec<IconSpec>? trailing,
+  })  : container = container ?? const StyleSpec(spec: BoxSpec()),
+        flex = flex ?? const StyleSpec(spec: FlexSpec()),
+        contentContainer = contentContainer ?? const StyleSpec(spec: BoxSpec()),
+        contentFlex = contentFlex ?? const StyleSpec(spec: FlexSpec()),
+        title = title ?? const StyleSpec(spec: TextSpec()),
+        subtitle = subtitle ?? const StyleSpec(spec: TextSpec()),
+        leading = leading ?? const StyleSpec(spec: IconSpec()),
+        trailing = trailing ?? const StyleSpec(spec: IconSpec());
 
   ListItemSpec copyWith({
-    WidgetSpec<BoxSpec>? container,
-    WidgetSpec<FlexSpec>? flex,
-    WidgetSpec<BoxSpec>? contentContainer,
-    WidgetSpec<FlexSpec>? contentFlex,
-    WidgetSpec<TextSpec>? title,
-    WidgetSpec<TextSpec>? subtitle,
-    WidgetSpec<IconSpec>? leading,
-    WidgetSpec<IconSpec>? trailing,
+    StyleSpec<BoxSpec>? container,
+    StyleSpec<FlexSpec>? flex,
+    StyleSpec<BoxSpec>? contentContainer,
+    StyleSpec<FlexSpec>? contentFlex,
+    StyleSpec<TextSpec>? title,
+    StyleSpec<TextSpec>? subtitle,
+    StyleSpec<IconSpec>? leading,
+    StyleSpec<IconSpec>? trailing,
   }) {
     return ListItemSpec(
       container: container ?? this.container,

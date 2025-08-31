@@ -183,7 +183,7 @@ Widget _buildSizeRow() {
                 ButtonVariants.primary.merge(RemixButtonStyle.padding(8)).merge(
                       RemixButtonStyle.label(
                         RemixLabelStyle(
-                          label: TextStyling(style: TextStyleMix(fontSize: 12)),
+                          label: TextStyler(style: TextStyleMix(fontSize: 12)),
                         ),
                       ),
                     ),
@@ -197,7 +197,7 @@ Widget _buildSizeRow() {
                 .merge(
                   RemixButtonStyle.label(
                     RemixLabelStyle(
-                      label: TextStyling(style: TextStyleMix(fontSize: 14)),
+                      label: TextStyler(style: TextStyleMix(fontSize: 14)),
                     ),
                   ),
                 ),
@@ -211,7 +211,7 @@ Widget _buildSizeRow() {
                 .merge(
                   RemixButtonStyle.label(
                     RemixLabelStyle(
-                      label: TextStyling(style: TextStyleMix(fontSize: 16)),
+                      label: TextStyler(style: TextStyleMix(fontSize: 16)),
                     ),
                   ),
                 ),

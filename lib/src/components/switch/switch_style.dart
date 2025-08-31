@@ -4,14 +4,14 @@ class RemixSwitchStyle extends Style<SwitchSpec>
     with
         StyleModifierMixin<RemixSwitchStyle, SwitchSpec>,
         StyleVariantMixin<RemixSwitchStyle, SwitchSpec> {
-  final Prop<WidgetSpec<BoxSpec>>? $container;
-  final Prop<WidgetSpec<BoxSpec>>? $track;
-  final Prop<WidgetSpec<BoxSpec>>? $thumb;
+  final Prop<StyleSpec<BoxSpec>>? $container;
+  final Prop<StyleSpec<BoxSpec>>? $track;
+  final Prop<StyleSpec<BoxSpec>>? $thumb;
 
   const RemixSwitchStyle.create({
-    Prop<WidgetSpec<BoxSpec>>? container,
-    Prop<WidgetSpec<BoxSpec>>? track,
-    Prop<WidgetSpec<BoxSpec>>? thumb,
+    Prop<StyleSpec<BoxSpec>>? container,
+    Prop<StyleSpec<BoxSpec>>? track,
+    Prop<StyleSpec<BoxSpec>>? thumb,
     super.variants,
     super.animation,
     super.modifier,
@@ -20,9 +20,9 @@ class RemixSwitchStyle extends Style<SwitchSpec>
         $thumb = thumb;
 
   RemixSwitchStyle({
-    BoxStyle? container,
-    BoxStyle? track,
-    BoxStyle? thumb,
+    BoxStyler? container,
+    BoxStyler? track,
+    BoxStyler? thumb,
     AnimationConfig? animation,
     List<VariantStyle<SwitchSpec>>? variants,
     ModifierConfig? modifier,
@@ -36,8 +36,8 @@ class RemixSwitchStyle extends Style<SwitchSpec>
         );
 
   @override
-  WidgetSpec<SwitchSpec> resolve(BuildContext context) {
-    return WidgetSpec(
+  StyleSpec<SwitchSpec> resolve(BuildContext context) {
+    return StyleSpec(
       spec: SwitchSpec(
         container: MixOps.resolve(context, $container),
         track: MixOps.resolve(context, $track),
@@ -89,8 +89,8 @@ class RemixSwitchStyle extends Style<SwitchSpec>
 }
 
 final DefaultRemixSwitchStyle = RemixSwitchStyle(
-  container: BoxStyle(),
-  track: BoxStyle(
+  container: BoxStyler(),
+  track: BoxStyler(
     constraints: BoxConstraintsMix(
       minWidth: 44,
       maxWidth: 44,
@@ -102,7 +102,7 @@ final DefaultRemixSwitchStyle = RemixSwitchStyle(
       color: RemixTokens.border(),
     ),
   ),
-  thumb: BoxStyle(
+  thumb: BoxStyler(
     constraints: BoxConstraintsMix(
       minWidth: 20,
       maxWidth: 20,
@@ -127,8 +127,8 @@ final DefaultRemixSwitchStyle = RemixSwitchStyle(
 extension SwitchVariants on RemixSwitchStyle {
   /// Primary switch variant with blue colors
   static RemixSwitchStyle get primary => RemixSwitchStyle(
-        container: BoxStyle(),
-        track: BoxStyle(
+        container: BoxStyler(),
+        track: BoxStyler(
           constraints: BoxConstraintsMix(
             minWidth: 44,
             maxWidth: 44,
@@ -140,7 +140,7 @@ extension SwitchVariants on RemixSwitchStyle {
             color: RemixTokens.primary().withValues(alpha: 0.2),
           ),
         ),
-        thumb: BoxStyle(
+        thumb: BoxStyler(
           constraints: BoxConstraintsMix(
             minWidth: 20,
             maxWidth: 20,
@@ -164,8 +164,8 @@ extension SwitchVariants on RemixSwitchStyle {
 
   /// Secondary switch variant with grey colors
   static RemixSwitchStyle get secondary => RemixSwitchStyle(
-        container: BoxStyle(),
-        track: BoxStyle(
+        container: BoxStyler(),
+        track: BoxStyler(
           constraints: BoxConstraintsMix(
             minWidth: 44,
             maxWidth: 44,
@@ -177,7 +177,7 @@ extension SwitchVariants on RemixSwitchStyle {
             color: RemixTokens.surface(),
           ),
         ),
-        thumb: BoxStyle(
+        thumb: BoxStyler(
           constraints: BoxConstraintsMix(
             minWidth: 20,
             maxWidth: 20,
@@ -201,8 +201,8 @@ extension SwitchVariants on RemixSwitchStyle {
 
   /// Compact switch variant with smaller size
   static RemixSwitchStyle get compact => RemixSwitchStyle(
-        container: BoxStyle(),
-        track: BoxStyle(
+        container: BoxStyler(),
+        track: BoxStyler(
           constraints: BoxConstraintsMix(
             minWidth: 36,
             maxWidth: 36,
@@ -214,7 +214,7 @@ extension SwitchVariants on RemixSwitchStyle {
             color: RemixTokens.border(),
           ),
         ),
-        thumb: BoxStyle(
+        thumb: BoxStyler(
           constraints: BoxConstraintsMix(
             minWidth: 16,
             maxWidth: 16,

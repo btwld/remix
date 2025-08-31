@@ -2,24 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
+import 'helpers/test_helpers.dart';
+
 void main() {
   group('Focus Management Tests', () {
     testWidgets('Components create internal focus nodes when none provided',
         (tester) async {
-      await tester.pumpWidget(createRemixScope(
-        child: MaterialApp(
-          home: Scaffold(
-            body: Column(
-              children: [
-                RemixButton(label: 'Test Button', onPressed: () {}),
-                RemixCheckbox(selected: false, onChanged: (_) {}),
-                RemixTextField(),
-                RemixSwitch(selected: false, onChanged: (_) {}),
-              ],
-            ),
-          ),
+      await tester.pumpRemixApp(
+        Column(
+          children: [
+            RemixButton(label: 'Test Button', onPressed: () {}),
+            RemixCheckbox(selected: false, onChanged: (_) {}),
+            RemixTextField(),
+            RemixSwitch(selected: false, onChanged: (_) {}),
+          ],
         ),
-      ));
+      );
 
       // Verify widgets build without focus node provided
       expect(find.byType(RemixButton), findsOneWidget);
@@ -31,17 +29,13 @@ void main() {
     testWidgets('Components respect external focus nodes', (tester) async {
       final focusNode = FocusNode();
 
-      await tester.pumpWidget(createRemixScope(
-        child: MaterialApp(
-          home: Scaffold(
-            body: RemixButton(
-              label: 'Test Button',
-              focusNode: focusNode,
-              onPressed: () {},
-            ),
-          ),
+      await tester.pumpRemixApp(
+        RemixButton(
+          label: 'Test Button',
+          focusNode: focusNode,
+          onPressed: () {},
         ),
-      ));
+      );
 
       // Verify widget uses external focus node
       expect(find.byType(RemixButton), findsOneWidget);
@@ -59,33 +53,29 @@ void main() {
       final externalFocusNode = FocusNode();
       bool useExternalFocus = false;
 
-      await tester.pumpWidget(createRemixScope(
-        child: MaterialApp(
-          home: StatefulBuilder(
-            builder: (context, setState) {
-              return Scaffold(
-                body: Column(
-                  children: [
-                    RemixButton(
-                      label: 'Test Button',
-                      focusNode: useExternalFocus ? externalFocusNode : null,
-                      onPressed: () {},
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          useExternalFocus = !useExternalFocus;
-                        });
-                      },
-                      child: Text('Toggle Focus Node'),
-                    ),
-                  ],
+      await tester.pumpRemixApp(
+        StatefulBuilder(
+          builder: (context, setState) {
+            return Column(
+              children: [
+                RemixButton(
+                  label: 'Test Button',
+                  focusNode: useExternalFocus ? externalFocusNode : null,
+                  onPressed: () {},
                 ),
-              );
-            },
-          ),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      useExternalFocus = !useExternalFocus;
+                    });
+                  },
+                  child: Text('Toggle Focus Node'),
+                ),
+              ],
+            );
+          },
         ),
-      ));
+      );
 
       // Initially using internal focus node
       expect(find.byType(RemixButton), findsOneWidget);

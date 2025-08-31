@@ -29,7 +29,7 @@ class RemixCheckbox extends StatefulWidget with HasEnabled, HasFocused {
     this.uncheckedIcon,
     this.indeterminateIcon = Icons.horizontal_rule,
     this.enableFeedback = true,
-    this.style = const RemixCheckboxStyle.create(),
+    this.style = const RemixCheckBoxStyler.create(),
     this.label,
     this.focusNode,
     this.onFocusChange,
@@ -81,7 +81,7 @@ class RemixCheckbox extends StatefulWidget with HasEnabled, HasFocused {
   final ValueChanged<Set<WidgetState>>? onStateChange;
 
   /// The style configuration for the checkbox.
-  final RemixCheckboxStyle style;
+  final RemixCheckBoxStyler style;
 
   /// An optional label that will be displayed next to the checkbox.
   final String? label;
@@ -117,7 +117,7 @@ class _RemixCheckboxState extends State<RemixCheckbox>
     controller.selected = widget.selected ?? false;
 
     return StyleBuilder(
-      style: DefaultRemixCheckboxStyle.merge(widget.style),
+      style: DefaultRemixCheckBoxStyler.merge(widget.style),
       builder: (context, spec) {
         final IndicatorContainer = spec.indicatorContainer;
         final Indicator = spec.indicator;

@@ -109,13 +109,13 @@ void main() {
     });
   });
 
-  group('BoxStyle Tests', () {
+  group('BoxStyler Tests', () {
     testWidgets('resolves correctly with BuildContext', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Builder(
             builder: (context) {
-              final mix = BoxStyle(
+              final mix = BoxStyler(
                 decoration: BoxDecorationMix(color: Colors.blue),
                 padding: EdgeInsetsMix.all(16),
                 alignment: Alignment.center,
@@ -145,12 +145,12 @@ void main() {
     });
 
     test('merge works correctly', () {
-      final mix1 = BoxStyle(
+      final mix1 = BoxStyler(
         decoration: BoxDecorationMix(color: Colors.blue),
         padding: EdgeInsetsMix.all(16),
       );
 
-      final mix2 = BoxStyle(
+      final mix2 = BoxStyler(
         decoration: BoxDecorationMix(color: Colors.red),
         margin: EdgeInsetsMix.all(8),
       );
@@ -158,11 +158,11 @@ void main() {
       final merged = mix1.merge(mix2);
 
       // Test that the merged mix has the expected properties
-      expect(merged, isA<BoxStyle>());
+      expect(merged, isA<BoxStyler>());
     });
 
     test('merge with null returns original', () {
-      final mix = BoxStyle(
+      final mix = BoxStyler(
         padding: EdgeInsetsMix.all(16),
       );
 
@@ -172,53 +172,52 @@ void main() {
 
     test('constructors via named args create valid mixes', () {
       final colorMix =
-          BoxStyle(decoration: BoxDecorationMix(color: Colors.red));
-      expect(colorMix, isA<BoxStyle>());
+          BoxStyler(decoration: BoxDecorationMix(color: Colors.red));
+      expect(colorMix, isA<BoxStyler>());
 
       final decorationMix =
-          BoxStyle(decoration: BoxDecorationMix(color: Colors.blue));
-      expect(decorationMix, isA<BoxStyle>());
+          BoxStyler(decoration: BoxDecorationMix(color: Colors.blue));
+      expect(decorationMix, isA<BoxStyler>());
 
-      final paddingMix = BoxStyle(padding: EdgeInsetsMix.all(20));
-      expect(paddingMix, isA<BoxStyle>());
+      final paddingMix = BoxStyler(padding: EdgeInsetsMix.all(20));
+      expect(paddingMix, isA<BoxStyler>());
 
-      final alignmentMix = BoxStyle(alignment: Alignment.center);
-      expect(alignmentMix, isA<BoxStyle>());
+      final alignmentMix = BoxStyler(alignment: Alignment.center);
+      expect(alignmentMix, isA<BoxStyler>());
 
-      final marginMix = BoxStyle(margin: EdgeInsetsMix.all(12));
-      expect(marginMix, isA<BoxStyle>());
+      final marginMix = BoxStyler(margin: EdgeInsetsMix.all(12));
+      expect(marginMix, isA<BoxStyler>());
 
-      final transformMix = BoxStyle(transform: Matrix4.identity());
-      expect(transformMix, isA<BoxStyle>());
+      final transformMix = BoxStyler(transform: Matrix4.identity());
+      expect(transformMix, isA<BoxStyler>());
 
-      final clipMix = BoxStyle(clipBehavior: Clip.antiAlias);
-      expect(clipMix, isA<BoxStyle>());
+      final clipMix = BoxStyler(clipBehavior: Clip.antiAlias);
+      expect(clipMix, isA<BoxStyler>());
 
       final constraintsMix =
-          BoxStyle(constraints: BoxConstraintsMix(minWidth: 100));
-      expect(constraintsMix, isA<BoxStyle>());
+          BoxStyler(constraints: BoxConstraintsMix(minWidth: 100));
+      expect(constraintsMix, isA<BoxStyler>());
     });
 
     test('merge composition works correctly', () {
-      final mix = BoxStyle(decoration: BoxDecorationMix(color: Colors.green))
-          .merge(BoxStyle(padding: EdgeInsetsMix.all(12)))
-          .merge(BoxStyle(alignment: Alignment.bottomRight))
-          .merge(BoxStyle(clipBehavior: Clip.hardEdge));
+      final mix = BoxStyler(decoration: BoxDecorationMix(color: Colors.green))
+          .merge(BoxStyler(padding: EdgeInsetsMix.all(12)))
+          .merge(BoxStyler(alignment: Alignment.bottomRight))
+          .merge(BoxStyler(clipBehavior: Clip.hardEdge));
 
-      expect(mix, isA<BoxStyle>());
+      expect(mix, isA<BoxStyler>());
     });
 
-
     test('props equality works correctly', () {
-      final mix1 = BoxStyle(
+      final mix1 = BoxStyler(
         decoration: BoxDecorationMix(color: Colors.blue),
         padding: EdgeInsetsMix.all(16),
       );
-      final mix2 = BoxStyle(
+      final mix2 = BoxStyler(
         decoration: BoxDecorationMix(color: Colors.blue),
         padding: EdgeInsetsMix.all(16),
       );
-      final mix3 = BoxStyle(
+      final mix3 = BoxStyler(
         decoration: BoxDecorationMix(color: Colors.red),
         padding: EdgeInsetsMix.all(16),
       );
@@ -228,13 +227,13 @@ void main() {
     });
 
     test('can compose multiple operations via merge', () {
-      final mix = BoxStyle(decoration: BoxDecorationMix(color: Colors.blue))
-          .merge(BoxStyle(padding: EdgeInsetsMix.all(16)))
-          .merge(BoxStyle(margin: EdgeInsetsMix.symmetric(horizontal: 8)))
-          .merge(BoxStyle(alignment: Alignment.center))
-          .merge(BoxStyle(clipBehavior: Clip.antiAlias));
+      final mix = BoxStyler(decoration: BoxDecorationMix(color: Colors.blue))
+          .merge(BoxStyler(padding: EdgeInsetsMix.all(16)))
+          .merge(BoxStyler(margin: EdgeInsetsMix.symmetric(horizontal: 8)))
+          .merge(BoxStyler(alignment: Alignment.center))
+          .merge(BoxStyler(clipBehavior: Clip.antiAlias));
 
-      expect(mix, isA<BoxStyle>());
+      expect(mix, isA<BoxStyler>());
     });
 
     testWidgets('works in real widget context', (tester) async {
@@ -244,11 +243,11 @@ void main() {
             body: Builder(
               builder: (context) {
                 final mix =
-                    BoxStyle(decoration: BoxDecorationMix(color: Colors.blue))
-                        .merge(BoxStyle(padding: EdgeInsetsMix.all(16)))
-                        .merge(BoxStyle(alignment: Alignment.center))
-                        .merge(BoxStyle(margin: EdgeInsetsMix.all(8)))
-                        .merge(BoxStyle(clipBehavior: Clip.antiAlias));
+                    BoxStyler(decoration: BoxDecorationMix(color: Colors.blue))
+                        .merge(BoxStyler(padding: EdgeInsetsMix.all(16)))
+                        .merge(BoxStyler(alignment: Alignment.center))
+                        .merge(BoxStyler(margin: EdgeInsetsMix.all(8)))
+                        .merge(BoxStyler(clipBehavior: Clip.antiAlias));
 
                 final resolvedSpec = mix.resolve(context);
                 final spec = resolvedSpec.spec;

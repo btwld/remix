@@ -379,7 +379,7 @@ class _RemixTextFieldState extends State<RemixTextField>
               direction: Axis.horizontal,
               children: [
                 if (widget.leading != null) widget.leading!,
-                Expanded(child: editableWithHint),
+                Flexible(fit: FlexFit.loose, child: editableWithHint),
                 if (widget.trailing != null) widget.trailing!,
               ],
             );

@@ -1,16 +1,23 @@
 part of 'callout.dart';
 
 class CalloutSpec extends Spec<CalloutSpec> with Diagnosticable {
-  final WidgetSpec<BoxSpec> container;
-  final WidgetSpec<TextSpec> text;
-  final WidgetSpec<IconSpec> icon;
+  final StyleSpec<BoxSpec> container;
+  final StyleSpec<TextSpec> text;
+  final StyleSpec<IconSpec> icon;
 
-  const CalloutSpec({WidgetSpec<BoxSpec>? container, WidgetSpec<TextSpec>? text, WidgetSpec<IconSpec>? icon})
-      : container = container ?? const WidgetSpec(spec: BoxSpec()),
-        text = text ?? const WidgetSpec(spec: TextSpec()),
-        icon = icon ?? const WidgetSpec(spec: IconSpec());
+  const CalloutSpec({
+    StyleSpec<BoxSpec>? container,
+    StyleSpec<TextSpec>? text,
+    StyleSpec<IconSpec>? icon,
+  })  : container = container ?? const StyleSpec(spec: BoxSpec()),
+        text = text ?? const StyleSpec(spec: TextSpec()),
+        icon = icon ?? const StyleSpec(spec: IconSpec());
 
-  CalloutSpec copyWith({WidgetSpec<BoxSpec>? container, WidgetSpec<TextSpec>? text, WidgetSpec<IconSpec>? icon}) {
+  CalloutSpec copyWith({
+    StyleSpec<BoxSpec>? container,
+    StyleSpec<TextSpec>? text,
+    StyleSpec<IconSpec>? icon,
+  }) {
     return CalloutSpec(
       container: container ?? this.container,
       text: text ?? this.text,

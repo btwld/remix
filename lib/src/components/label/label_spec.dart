@@ -1,26 +1,26 @@
 part of 'label.dart';
 
 class LabelSpec extends Spec<LabelSpec> with Diagnosticable {
-  final WidgetSpec<TextSpec> label;
-  final WidgetSpec<IconSpec> leading;
-  final WidgetSpec<IconSpec> trailing;
-  final WidgetSpec<FlexSpec> flex;
+  final StyleSpec<TextSpec> label;
+  final StyleSpec<IconSpec> leading;
+  final StyleSpec<IconSpec> trailing;
+  final StyleSpec<FlexSpec> flex;
 
   const LabelSpec({
-    WidgetSpec<TextSpec>? label,
-    WidgetSpec<IconSpec>? leading,
-    WidgetSpec<IconSpec>? trailing,
-    WidgetSpec<FlexSpec>? flex,
-  })  : label = label ?? const WidgetSpec(spec: TextSpec()),
-        leading = leading ?? const WidgetSpec(spec: IconSpec()),
-        trailing = trailing ?? const WidgetSpec(spec: IconSpec()),
-        flex = flex ?? const WidgetSpec(spec: FlexSpec());
+    StyleSpec<TextSpec>? label,
+    StyleSpec<IconSpec>? leading,
+    StyleSpec<IconSpec>? trailing,
+    StyleSpec<FlexSpec>? flex,
+  })  : label = label ?? const StyleSpec(spec: TextSpec()),
+        leading = leading ?? const StyleSpec(spec: IconSpec()),
+        trailing = trailing ?? const StyleSpec(spec: IconSpec()),
+        flex = flex ?? const StyleSpec(spec: FlexSpec());
 
   LabelSpec copyWith({
-    WidgetSpec<TextSpec>? label,
-    WidgetSpec<IconSpec>? leading,
-    WidgetSpec<IconSpec>? trailing,
-    WidgetSpec<FlexSpec>? flex,
+    StyleSpec<TextSpec>? label,
+    StyleSpec<IconSpec>? leading,
+    StyleSpec<IconSpec>? trailing,
+    StyleSpec<FlexSpec>? flex,
   }) {
     return LabelSpec(
       label: label ?? this.label,

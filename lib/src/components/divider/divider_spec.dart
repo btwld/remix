@@ -1,12 +1,12 @@
 part of 'divider.dart';
 
 class DividerSpec extends Spec<DividerSpec> with Diagnosticable {
-  final WidgetSpec<BoxSpec> container;
+  final StyleSpec<BoxSpec> container;
 
-  const DividerSpec({WidgetSpec<BoxSpec>? container})
-      : container = container ?? const WidgetSpec(spec: BoxSpec());
+  const DividerSpec({StyleSpec<BoxSpec>? container})
+      : container = container ?? const StyleSpec(spec: BoxSpec());
 
-  DividerSpec copyWith({WidgetSpec<BoxSpec>? container}) {
+  DividerSpec copyWith({StyleSpec<BoxSpec>? container}) {
     return DividerSpec(container: container ?? this.container);
   }
 

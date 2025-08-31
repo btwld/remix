@@ -81,13 +81,13 @@ void main() {
     });
   });
 
-  group('FlexStyle Tests', () {
+  group('FlexStyler Tests', () {
     testWidgets('resolves correctly with BuildContext', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Builder(
             builder: (context) {
-              final mix = FlexStyle(
+              final mix = FlexStyler(
                 direction: Axis.horizontal,
                 mainAxisAlignment: MainAxisAlignment.center,
                 spacing: 8.0,
@@ -108,31 +108,30 @@ void main() {
     });
 
     test('merge works correctly', () {
-      final mix1 = FlexStyle(
+      final mix1 = FlexStyler(
         direction: Axis.horizontal,
         spacing: 4.0,
       );
 
-      final mix2 = FlexStyle(
+      final mix2 = FlexStyler(
         mainAxisAlignment: MainAxisAlignment.center,
       );
 
       final merged = mix1.merge(mix2);
 
-      expect(merged, isA<FlexStyle>());
+      expect(merged, isA<FlexStyler>());
     });
 
-    // Removed deprecated factory constructors; FlexStyle focuses on flex props only
+    // Removed deprecated factory constructors; FlexStyler focuses on flex props only
 
     test('construct with props works correctly', () {
-      final mix = FlexStyle(
+      final mix = FlexStyler(
         direction: Axis.vertical,
         spacing: 10.0,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       );
 
-      expect(mix, isA<FlexStyle>());
+      expect(mix, isA<FlexStyler>());
     });
-
   });
 }

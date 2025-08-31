@@ -1,10 +1,10 @@
 import 'package:mix/mix.dart';
 
 void main() {
-  // Test FlexBoxStyle parameters
-  final flexBox = FlexBoxStyle(
+  // Test FlexBoxStyler parameters
+  final flexBox = FlexBoxStyler(
       // Let's try common parameters one by one
       );
 
-  print('FlexBoxStyle: $flexBox');
+  print('FlexBoxStyler: $flexBox');
 }

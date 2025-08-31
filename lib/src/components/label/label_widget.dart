@@ -23,8 +23,8 @@ part of 'label.dart';
 ///   'Custom',
 ///   style: RemixLabelStyle(
 ///     spacing: 12,
-///     label: TextStyling(style: TextStyleMix(color: RemixTokens.primary())),
-///     leading: IconStyle(color: RemixTokens.primary(), size: 20),
+///     label: TextStyler(style: TextStyleMix(color: RemixTokens.primary())),
+///     leading: IconStyler(color: RemixTokens.primary(), size: 20),
 ///   ),
 /// )
 /// ```
@@ -94,10 +94,10 @@ extension LabelSpecWidget on LabelSpec {
   }
 }
 
-/// Extension on WidgetSpec<LabelSpec> to provide call() method for creating widgets
-extension LabelSpecWrappedWidget on WidgetSpec<LabelSpec> {
+/// Extension on StyleSpec<LabelSpec> to provide call() method for creating widgets
+extension LabelSpecWrappedWidget on StyleSpec<LabelSpec> {
   Widget call({required String text, IconData? leading, IconData? trailing}) {
-    return WidgetSpecBuilder(
+    return StyleSpecBuilder(
       wrappedSpec: this,
       builder: (context, spec) {
         return createLabelWidget(

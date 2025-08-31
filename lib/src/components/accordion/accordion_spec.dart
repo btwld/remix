@@ -1,26 +1,26 @@
 part of 'accordion.dart';
 
 class AccordionSpec extends Spec<AccordionSpec> with Diagnosticable {
-  final WidgetSpec<BoxSpec> container;
-  final WidgetSpec<BoxSpec> content;
-  final WidgetSpec<BoxSpec> header;
-  final WidgetSpec<LabelSpec> headerLabel;
+  final StyleSpec<BoxSpec> container;
+  final StyleSpec<BoxSpec> content;
+  final StyleSpec<BoxSpec> header;
+  final StyleSpec<LabelSpec> headerLabel;
 
   AccordionSpec({
-    WidgetSpec<BoxSpec>? container,
-    WidgetSpec<BoxSpec>? content,
-    WidgetSpec<BoxSpec>? header,
-    WidgetSpec<LabelSpec>? headerLabel,
-  })  : container = container ?? const WidgetSpec(spec: BoxSpec()),
-        content = content ?? const WidgetSpec(spec: BoxSpec()),
-        header = header ?? const WidgetSpec(spec: BoxSpec()),
-        headerLabel = headerLabel ?? const WidgetSpec(spec: LabelSpec());
+    StyleSpec<BoxSpec>? container,
+    StyleSpec<BoxSpec>? content,
+    StyleSpec<BoxSpec>? header,
+    StyleSpec<LabelSpec>? headerLabel,
+  })  : container = container ?? const StyleSpec(spec: BoxSpec()),
+        content = content ?? const StyleSpec(spec: BoxSpec()),
+        header = header ?? const StyleSpec(spec: BoxSpec()),
+        headerLabel = headerLabel ?? const StyleSpec(spec: LabelSpec());
 
   AccordionSpec copyWith({
-    WidgetSpec<BoxSpec>? container,
-    WidgetSpec<BoxSpec>? content,
-    WidgetSpec<BoxSpec>? header,
-    WidgetSpec<LabelSpec>? headerLabel,
+    StyleSpec<BoxSpec>? container,
+    StyleSpec<BoxSpec>? content,
+    StyleSpec<BoxSpec>? header,
+    StyleSpec<LabelSpec>? headerLabel,
   }) {
     return AccordionSpec(
       container: container ?? this.container,

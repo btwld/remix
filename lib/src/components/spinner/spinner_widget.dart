@@ -123,10 +123,10 @@ extension SpinnerSpecWidget on SpinnerSpec {
   }
 }
 
-/// Extension on WidgetSpec<SpinnerSpec> to provide call() method for creating widgets
-extension SpinnerSpecWrappedWidget on WidgetSpec<SpinnerSpec> {
+/// Extension on StyleSpec<SpinnerSpec> to provide call() method for creating widgets
+extension SpinnerSpecWrappedWidget on StyleSpec<SpinnerSpec> {
   Widget call() {
-    return WidgetSpecBuilder(
+    return StyleSpecBuilder(
       wrappedSpec: this,
       builder: (context, spec) {
         return createSpinnerWidget(spec);

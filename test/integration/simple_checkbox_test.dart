@@ -2,29 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
+import '../helpers/test_helpers.dart';
+
 void main() {
   group('RemixCheckbox Simple Tests', () {
     testWidgets('renders and toggles', (tester) async {
       bool isChecked = false;
 
-      await tester.pumpWidget(
-        createRemixScope(
-          child: MaterialApp(
-            home: Scaffold(
-              body: StatefulBuilder(
-                builder: (context, setState) {
-                  return RemixCheckbox(
-                    selected: isChecked,
-                    onChanged: (value) {
-                      setState(() {
-                        isChecked = value ?? false; // Handle nullable bool
-                      });
-                    },
-                  );
-                },
-              ),
-            ),
-          ),
+      await tester.pumpRemixApp(
+        StatefulBuilder(
+          builder: (context, setState) {
+            return RemixCheckbox(
+              selected: isChecked,
+              onChanged: (value) {
+                setState(() {
+                  isChecked = value ?? false; // Handle nullable bool
+                });
+              },
+            );
+          },
         ),
       );
 
@@ -43,16 +39,10 @@ void main() {
     });
 
     testWidgets('shows label', (tester) async {
-      await tester.pumpWidget(
-        createRemixScope(
-          child: const MaterialApp(
-            home: Scaffold(
-              body: RemixCheckbox(
-                selected: false,
-                label: 'Accept Terms',
-              ),
-            ),
-          ),
+      await tester.pumpRemixApp(
+        const RemixCheckbox(
+          selected: false,
+          label: 'Accept Terms',
         ),
       );
 
@@ -62,19 +52,13 @@ void main() {
     testWidgets('respects disabled state', (tester) async {
       bool isChecked = false;
 
-      await tester.pumpWidget(
-        createRemixScope(
-          child: MaterialApp(
-            home: Scaffold(
-              body: RemixCheckbox(
-                selected: isChecked,
-                enabled: false,
-                onChanged: (value) {
-                  isChecked = value ?? false; // Handle nullable bool
-                },
-              ),
-            ),
-          ),
+      await tester.pumpRemixApp(
+        RemixCheckbox(
+          selected: isChecked,
+          enabled: false,
+          onChanged: (value) {
+            isChecked = value ?? false; // Handle nullable bool
+          },
         ),
       );
 

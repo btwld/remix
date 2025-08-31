@@ -4,16 +4,16 @@ class RemixLabelStyle extends Style<LabelSpec>
     with
         StyleModifierMixin<RemixLabelStyle, LabelSpec>,
         StyleVariantMixin<RemixLabelStyle, LabelSpec> {
-  final Prop<WidgetSpec<TextSpec>>? $label;
-  final Prop<WidgetSpec<IconSpec>>? $leading;
-  final Prop<WidgetSpec<IconSpec>>? $trailing;
-  final Prop<WidgetSpec<FlexSpec>>? $flex;
+  final Prop<StyleSpec<TextSpec>>? $label;
+  final Prop<StyleSpec<IconSpec>>? $leading;
+  final Prop<StyleSpec<IconSpec>>? $trailing;
+  final Prop<StyleSpec<FlexSpec>>? $flex;
 
   const RemixLabelStyle.create({
-    Prop<WidgetSpec<TextSpec>>? label,
-    Prop<WidgetSpec<IconSpec>>? leading,
-    Prop<WidgetSpec<IconSpec>>? trailing,
-    Prop<WidgetSpec<FlexSpec>>? flex,
+    Prop<StyleSpec<TextSpec>>? label,
+    Prop<StyleSpec<IconSpec>>? leading,
+    Prop<StyleSpec<IconSpec>>? trailing,
+    Prop<StyleSpec<FlexSpec>>? flex,
     super.variants,
     super.animation,
     super.modifier,
@@ -23,10 +23,10 @@ class RemixLabelStyle extends Style<LabelSpec>
         $flex = flex;
 
   RemixLabelStyle({
-    TextStyling? label,
-    IconStyle? leading,
-    IconStyle? trailing,
-    FlexStyle? flex,
+    TextStyler? label,
+    IconStyler? leading,
+    IconStyler? trailing,
+    FlexStyler? flex,
     AnimationConfig? animation,
     List<VariantStyle<LabelSpec>>? variants,
     ModifierConfig? modifier,
@@ -56,8 +56,8 @@ class RemixLabelStyle extends Style<LabelSpec>
   }
 
   @override
-  WidgetSpec<LabelSpec> resolve(BuildContext context) {
-    return WidgetSpec(
+  StyleSpec<LabelSpec> resolve(BuildContext context) {
+    return StyleSpec(
       spec: LabelSpec(
         label: MixOps.resolve(context, $label),
         leading: MixOps.resolve(context, $leading),
@@ -100,44 +100,44 @@ class RemixLabelStyle extends Style<LabelSpec>
 class RemixRemixLabelStyles {
   /// Default label style
   static RemixLabelStyle get defaultStyle => RemixLabelStyle(
-        flex: FlexStyle(spacing: 8),
+        flex: FlexStyler(spacing: 8),
       );
 
   /// Primary label variant
   static RemixLabelStyle get primary => RemixLabelStyle(
-        label: TextStyling(
+        label: TextStyler(
           style: TextStyleMix(
             color: RemixTokens.primary(),
             fontWeight: FontWeight.w500,
           ),
         ),
-        leading: IconStyle(color: RemixTokens.primary(), size: 20),
-        flex: FlexStyle(spacing: 8),
+        leading: IconStyler(color: RemixTokens.primary(), size: 20),
+        flex: FlexStyler(spacing: 8),
       );
 
   /// Secondary label variant
   static RemixLabelStyle get secondary => RemixLabelStyle(
-        label: TextStyling(
+        label: TextStyler(
           style: TextStyleMix(
             color: RemixTokens.textSecondary(),
             fontWeight: FontWeight.w400,
           ),
         ),
-        leading: IconStyle(color: RemixTokens.textSecondary(), size: 20),
-        flex: FlexStyle(spacing: 8),
+        leading: IconStyler(color: RemixTokens.textSecondary(), size: 20),
+        flex: FlexStyler(spacing: 8),
       );
 
   /// Compact label variant with reduced spacing
   static RemixLabelStyle get compact => RemixLabelStyle(
-        label: TextStyling(),
-        leading: IconStyle(size: 16),
-        flex: FlexStyle(spacing: 4),
+        label: TextStyler(),
+        leading: IconStyler(size: 16),
+        flex: FlexStyler(spacing: 4),
       );
 
   /// Large label variant with increased spacing
   static RemixLabelStyle get large => RemixLabelStyle(
-        label: TextStyling(style: TextStyleMix(fontSize: 16)),
-        leading: IconStyle(size: 24),
-        flex: FlexStyle(spacing: 12),
+        label: TextStyler(style: TextStyleMix(fontSize: 16)),
+        leading: IconStyler(size: 24),
+        flex: FlexStyler(spacing: 12),
       );
 }

@@ -1,26 +1,27 @@
 part of 'checkbox.dart';
 
 class CheckboxSpec extends Spec<CheckboxSpec> with Diagnosticable {
-  final WidgetSpec<FlexBoxSpec> container;
-  final WidgetSpec<BoxSpec> indicatorContainer;
-  final WidgetSpec<IconSpec> indicator;
-  final WidgetSpec<TextSpec> label;
+  final StyleSpec<FlexBoxSpec> container;
+  final StyleSpec<BoxSpec> indicatorContainer;
+  final StyleSpec<IconSpec> indicator;
+  final StyleSpec<TextSpec> label;
 
   const CheckboxSpec({
-    WidgetSpec<FlexBoxSpec>? container,
-    WidgetSpec<BoxSpec>? indicatorContainer,
-    WidgetSpec<IconSpec>? indicator,
-    WidgetSpec<TextSpec>? label,
-  })  : container = container ?? const WidgetSpec(spec: FlexBoxSpec()),
-        indicatorContainer = indicatorContainer ?? const WidgetSpec(spec: BoxSpec()),
-        indicator = indicator ?? const WidgetSpec(spec: IconSpec()),
-        label = label ?? const WidgetSpec(spec: TextSpec());
+    StyleSpec<FlexBoxSpec>? container,
+    StyleSpec<BoxSpec>? indicatorContainer,
+    StyleSpec<IconSpec>? indicator,
+    StyleSpec<TextSpec>? label,
+  })  : container = container ?? const StyleSpec(spec: FlexBoxSpec()),
+        indicatorContainer =
+            indicatorContainer ?? const StyleSpec(spec: BoxSpec()),
+        indicator = indicator ?? const StyleSpec(spec: IconSpec()),
+        label = label ?? const StyleSpec(spec: TextSpec());
 
   CheckboxSpec copyWith({
-    WidgetSpec<FlexBoxSpec>? container,
-    WidgetSpec<BoxSpec>? indicatorContainer,
-    WidgetSpec<IconSpec>? indicator,
-    WidgetSpec<TextSpec>? label,
+    StyleSpec<FlexBoxSpec>? container,
+    StyleSpec<BoxSpec>? indicatorContainer,
+    StyleSpec<IconSpec>? indicator,
+    StyleSpec<TextSpec>? label,
   }) {
     return CheckboxSpec(
       container: container ?? this.container,
@@ -53,6 +54,5 @@ class CheckboxSpec extends Spec<CheckboxSpec> with Diagnosticable {
   }
 
   @override
-  List<Object?> get props =>
-      [container, indicatorContainer, indicator, label];
+  List<Object?> get props => [container, indicatorContainer, indicator, label];
 }

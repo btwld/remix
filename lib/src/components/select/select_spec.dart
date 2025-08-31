@@ -1,27 +1,27 @@
 part of 'select.dart';
 
 class SelectSpec extends Spec<SelectSpec> with Diagnosticable {
-  final WidgetSpec<SelectTriggerSpec> trigger;
-  final WidgetSpec<BoxSpec> menuContainer;
-  final WidgetSpec<SelectMenuItemSpec> item;
-  final WidgetSpec<CompositedTransformFollowerSpec> position;
+  final StyleSpec<SelectTriggerSpec> trigger;
+  final StyleSpec<BoxSpec> menuContainer;
+  final StyleSpec<SelectMenuItemSpec> item;
+  final StyleSpec<CompositedTransformFollowerSpec> position;
 
   const SelectSpec({
-    WidgetSpec<SelectTriggerSpec>? trigger,
-    WidgetSpec<BoxSpec>? menuContainer,
-    WidgetSpec<SelectMenuItemSpec>? item,
-    WidgetSpec<CompositedTransformFollowerSpec>? position,
-  })  : trigger = trigger ?? const WidgetSpec(spec: SelectTriggerSpec()),
-        item = item ?? const WidgetSpec(spec: SelectMenuItemSpec()),
-        menuContainer = menuContainer ?? const WidgetSpec(spec: BoxSpec()),
+    StyleSpec<SelectTriggerSpec>? trigger,
+    StyleSpec<BoxSpec>? menuContainer,
+    StyleSpec<SelectMenuItemSpec>? item,
+    StyleSpec<CompositedTransformFollowerSpec>? position,
+  })  : trigger = trigger ?? const StyleSpec(spec: SelectTriggerSpec()),
+        item = item ?? const StyleSpec(spec: SelectMenuItemSpec()),
+        menuContainer = menuContainer ?? const StyleSpec(spec: BoxSpec()),
         position = position ??
-            const WidgetSpec(spec: CompositedTransformFollowerSpec());
+            const StyleSpec(spec: CompositedTransformFollowerSpec());
 
   SelectSpec copyWith({
-    WidgetSpec<SelectTriggerSpec>? trigger,
-    WidgetSpec<BoxSpec>? menuContainer,
-    WidgetSpec<SelectMenuItemSpec>? item,
-    WidgetSpec<CompositedTransformFollowerSpec>? position,
+    StyleSpec<SelectTriggerSpec>? trigger,
+    StyleSpec<BoxSpec>? menuContainer,
+    StyleSpec<SelectMenuItemSpec>? item,
+    StyleSpec<CompositedTransformFollowerSpec>? position,
   }) {
     return SelectSpec(
       trigger: trigger ?? this.trigger,
@@ -57,22 +57,22 @@ class SelectSpec extends Spec<SelectSpec> with Diagnosticable {
 }
 
 class SelectTriggerSpec extends Spec<SelectTriggerSpec> with Diagnosticable {
-  final WidgetSpec<FlexBoxSpec> container;
-  final WidgetSpec<TextSpec> label;
-  final WidgetSpec<IconSpec> icon;
+  final StyleSpec<FlexBoxSpec> container;
+  final StyleSpec<TextSpec> label;
+  final StyleSpec<IconSpec> icon;
 
   const SelectTriggerSpec({
-    WidgetSpec<FlexBoxSpec>? container,
-    WidgetSpec<TextSpec>? label,
-    WidgetSpec<IconSpec>? icon,
-  })  : container = container ?? const WidgetSpec(spec: FlexBoxSpec()),
-        label = label ?? const WidgetSpec(spec: TextSpec()),
-        icon = icon ?? const WidgetSpec(spec: IconSpec());
+    StyleSpec<FlexBoxSpec>? container,
+    StyleSpec<TextSpec>? label,
+    StyleSpec<IconSpec>? icon,
+  })  : container = container ?? const StyleSpec(spec: FlexBoxSpec()),
+        label = label ?? const StyleSpec(spec: TextSpec()),
+        icon = icon ?? const StyleSpec(spec: IconSpec());
 
   SelectTriggerSpec copyWith({
-    WidgetSpec<FlexBoxSpec>? container,
-    WidgetSpec<TextSpec>? label,
-    WidgetSpec<IconSpec>? icon,
+    StyleSpec<FlexBoxSpec>? container,
+    StyleSpec<TextSpec>? label,
+    StyleSpec<IconSpec>? icon,
   }) {
     return SelectTriggerSpec(
       container: container ?? this.container,
@@ -105,22 +105,22 @@ class SelectTriggerSpec extends Spec<SelectTriggerSpec> with Diagnosticable {
 }
 
 class SelectMenuItemSpec extends Spec<SelectMenuItemSpec> with Diagnosticable {
-  final WidgetSpec<FlexBoxSpec> container;
-  final WidgetSpec<TextSpec> text;
-  final WidgetSpec<IconSpec> icon;
+  final StyleSpec<FlexBoxSpec> container;
+  final StyleSpec<TextSpec> text;
+  final StyleSpec<IconSpec> icon;
 
   const SelectMenuItemSpec({
-    WidgetSpec<FlexBoxSpec>? container,
-    WidgetSpec<TextSpec>? text,
-    WidgetSpec<IconSpec>? icon,
-  })  : container = container ?? const WidgetSpec(spec: FlexBoxSpec()),
-        text = text ?? const WidgetSpec(spec: TextSpec()),
-        icon = icon ?? const WidgetSpec(spec: IconSpec());
+    StyleSpec<FlexBoxSpec>? container,
+    StyleSpec<TextSpec>? text,
+    StyleSpec<IconSpec>? icon,
+  })  : container = container ?? const StyleSpec(spec: FlexBoxSpec()),
+        text = text ?? const StyleSpec(spec: TextSpec()),
+        icon = icon ?? const StyleSpec(spec: IconSpec());
 
   SelectMenuItemSpec copyWith({
-    WidgetSpec<FlexBoxSpec>? container,
-    WidgetSpec<TextSpec>? text,
-    WidgetSpec<IconSpec>? icon,
+    StyleSpec<FlexBoxSpec>? container,
+    StyleSpec<TextSpec>? text,
+    StyleSpec<IconSpec>? icon,
   }) {
     return SelectMenuItemSpec(
       container: container ?? this.container,
@@ -192,18 +192,14 @@ Widget createSelectMenuItemWidget(
 /// Extension on SelectTriggerSpec to provide call() method for creating widgets
 extension SelectTriggerSpecWidget on SelectTriggerSpec {
   Widget call({required String label, IconData? trailing}) {
-    return createSelectTriggerWidget(
-      this,
-      label: label,
-      trailing: trailing
-    );
+    return createSelectTriggerWidget(this, label: label, trailing: trailing);
   }
 }
 
-/// Extension on WidgetSpec<SelectTriggerSpec> to provide call() method for creating widgets  
-extension SelectTriggerSpecWrappedWidget on WidgetSpec<SelectTriggerSpec> {
+/// Extension on StyleSpec<SelectTriggerSpec> to provide call() method for creating widgets
+extension SelectTriggerSpecWrappedWidget on StyleSpec<SelectTriggerSpec> {
   Widget call({required String label, IconData? trailing}) {
-    return WidgetSpecBuilder(
+    return StyleSpecBuilder(
       wrappedSpec: this,
       builder: (context, spec) {
         return createSelectTriggerWidget(
@@ -228,10 +224,10 @@ extension SelectMenuItemSpecWidget on SelectMenuItemSpec {
   }
 }
 
-/// Extension on WidgetSpec<SelectMenuItemSpec> to provide call() method for creating widgets
-extension SelectMenuItemSpecWrappedWidget on WidgetSpec<SelectMenuItemSpec> {
+/// Extension on StyleSpec<SelectMenuItemSpec> to provide call() method for creating widgets
+extension SelectMenuItemSpecWrappedWidget on StyleSpec<SelectMenuItemSpec> {
   Widget call({required String text, IconData? icon, bool selected = false}) {
-    return WidgetSpecBuilder(
+    return StyleSpecBuilder(
       wrappedSpec: this,
       builder: (context, spec) {
         return createSelectMenuItemWidget(

@@ -89,8 +89,8 @@ class RemixSpinnerStyle extends Style<SpinnerSpec>
   }
 
   @override
-  WidgetSpec<SpinnerSpec> resolve(BuildContext context) {
-    return WidgetSpec(
+  StyleSpec<SpinnerSpec> resolve(BuildContext context) {
+    return StyleSpec(
       spec: SpinnerSpec(
         size: MixOps.resolve(context, $size),
         strokeWidth: MixOps.resolve(context, $strokeWidth),

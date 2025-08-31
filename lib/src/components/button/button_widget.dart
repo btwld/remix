@@ -224,7 +224,7 @@ class _RemixButtonState extends State<RemixButton>
       controller: controller,
       builder: (context, spec) {
         final Label = spec.label;
-        final Spinner = spec.spinner;
+        // final Spinner = spec.spinner; // Spinner spec not directly used when loading
         final Container = spec.container;
 
         // Create the child widget based on whether custom child is provided
@@ -239,7 +239,7 @@ class _RemixButtonState extends State<RemixButton>
             ? Stack(
                 alignment: Alignment.center,
                 children: [
-                  Spinner(),
+                  const RemixSpinner(),
                   Visibility(
                     visible: false,
                     maintainState: true,
@@ -268,7 +268,8 @@ class _RemixButtonState extends State<RemixButton>
           excludeSemantics: widget.excludeSemantics,
           onFocusChange: widget.onFocusChange,
           onHoverChange: widget.onHoverChange,
-          onPressChange: widget.onPressChanged,
+          onPressChange:
+              widget.onLongPress == null ? null : widget.onPressChanged,
           onStatesChange: widget.onStatesChange,
           statesController: controller,
           child: buttonChild,

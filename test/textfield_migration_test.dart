@@ -3,24 +3,20 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
+import 'helpers/test_helpers.dart';
+
 void main() {
   group('TextField NakedTextField Migration', () {
     testWidgets('should properly use NakedTextField under the hood',
         (tester) async {
       final controller = TextEditingController();
 
-      await tester.pumpWidget(
-        createRemixScope(
-          child: MaterialApp(
-            home: Scaffold(
-              body: RemixTextField(
-                controller: controller,
-                hintText: 'Test hint',
-                enabled: true,
-                autofocus: false,
-              ),
-            ),
-          ),
+      await tester.pumpRemixApp(
+        RemixTextField(
+          controller: controller,
+          hintText: 'Test hint',
+          enabled: true,
+          autofocus: false,
         ),
       );
 
@@ -35,18 +31,12 @@ void main() {
     });
 
     testWidgets('state callbacks should work correctly', (tester) async {
-      await tester.pumpWidget(
-        createRemixScope(
-          child: MaterialApp(
-            home: Scaffold(
-              body: RemixTextField(
-                hintText: 'Test',
-                onPressed: () {
-                  // Press callback should work
-                },
-              ),
-            ),
-          ),
+      await tester.pumpRemixApp(
+        RemixTextField(
+          hintText: 'Test',
+          onPressed: () {
+            // Press callback should work
+          },
         ),
       );
 
@@ -59,22 +49,16 @@ void main() {
     });
 
     testWidgets('all new properties should be accepted', (tester) async {
-      await tester.pumpWidget(
-        createRemixScope(
-          child: MaterialApp(
-            home: Scaffold(
-              body: RemixTextField(
-                groupId: 'test-group',
-                ignorePointers: false,
-                clipBehavior: Clip.antiAlias,
-                stylusHandwritingEnabled: false,
-                onTapAlwaysCalled: true,
-                smartDashesType: SmartDashesType.enabled,
-                smartQuotesType: SmartQuotesType.enabled,
-                maxLengthEnforcement: MaxLengthEnforcement.enforced,
-              ),
-            ),
-          ),
+      await tester.pumpRemixApp(
+        RemixTextField(
+          groupId: 'test-group',
+          ignorePointers: false,
+          clipBehavior: Clip.antiAlias,
+          stylusHandwritingEnabled: false,
+          onTapAlwaysCalled: true,
+          smartDashesType: SmartDashesType.enabled,
+          smartQuotesType: SmartQuotesType.enabled,
+          maxLengthEnforcement: MaxLengthEnforcement.enforced,
         ),
       );
 
@@ -82,16 +66,10 @@ void main() {
     });
 
     testWidgets('styling through TextFieldSpec should work', (tester) async {
-      await tester.pumpWidget(
-        createRemixScope(
-          child: MaterialApp(
-            home: Scaffold(
-              body: RemixTextField(
-                hintText: 'Styled field',
-                style: const RemixTextFieldStyle.create(),
-              ),
-            ),
-          ),
+      await tester.pumpRemixApp(
+        RemixTextField(
+          hintText: 'Styled field',
+          style: const RemixTextFieldStyle.create(),
         ),
       );
 

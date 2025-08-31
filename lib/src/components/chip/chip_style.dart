@@ -4,18 +4,18 @@ class RemixChipStyle extends Style<ChipSpec>
     with
         StyleModifierMixin<RemixChipStyle, ChipSpec>,
         StyleVariantMixin<RemixChipStyle, ChipSpec> {
-  final Prop<WidgetSpec<BoxSpec>>? $container;
-  final Prop<WidgetSpec<FlexSpec>>? $flex;
-  final Prop<WidgetSpec<TextSpec>>? $label;
-  final Prop<WidgetSpec<IconSpec>>? $leading;
-  final Prop<WidgetSpec<IconSpec>>? $trailing;
+  final Prop<StyleSpec<BoxSpec>>? $container;
+  final Prop<StyleSpec<FlexSpec>>? $flex;
+  final Prop<StyleSpec<TextSpec>>? $label;
+  final Prop<StyleSpec<IconSpec>>? $leading;
+  final Prop<StyleSpec<IconSpec>>? $trailing;
 
   const RemixChipStyle.create({
-    Prop<WidgetSpec<BoxSpec>>? container,
-    Prop<WidgetSpec<FlexSpec>>? flex,
-    Prop<WidgetSpec<TextSpec>>? label,
-    Prop<WidgetSpec<IconSpec>>? leading,
-    Prop<WidgetSpec<IconSpec>>? trailing,
+    Prop<StyleSpec<BoxSpec>>? container,
+    Prop<StyleSpec<FlexSpec>>? flex,
+    Prop<StyleSpec<TextSpec>>? label,
+    Prop<StyleSpec<IconSpec>>? leading,
+    Prop<StyleSpec<IconSpec>>? trailing,
     super.variants,
     super.animation,
     super.modifier,
@@ -26,11 +26,11 @@ class RemixChipStyle extends Style<ChipSpec>
         $trailing = trailing;
 
   RemixChipStyle({
-    BoxStyle? container,
-    FlexStyle? flex,
-    TextStyling? label,
-    IconStyle? leading,
-    IconStyle? trailing,
+    BoxStyler? container,
+    FlexStyler? flex,
+    TextStyler? label,
+    IconStyler? leading,
+    IconStyler? trailing,
     AnimationConfig? animation,
     List<VariantStyle<ChipSpec>>? variants,
     ModifierConfig? modifier,
@@ -46,8 +46,8 @@ class RemixChipStyle extends Style<ChipSpec>
         );
 
   @override
-  WidgetSpec<ChipSpec> resolve(BuildContext context) {
-    return WidgetSpec(
+  StyleSpec<ChipSpec> resolve(BuildContext context) {
+    return StyleSpec(
       spec: ChipSpec(
         container: MixOps.resolve(context, $container),
         flex: MixOps.resolve(context, $flex),
@@ -105,7 +105,7 @@ class RemixChipStyle extends Style<ChipSpec>
 }
 
 final DefaultRemixChipStyle = RemixChipStyle(
-  container: BoxStyle(
+  container: BoxStyler(
     padding: EdgeInsetsMix.symmetric(
       vertical: RemixTokens.spaceXs(),
       horizontal: RemixTokens.spaceMd(),
@@ -115,26 +115,26 @@ final DefaultRemixChipStyle = RemixChipStyle(
       color: RemixTokens.surfaceVariant(),
     ),
   ),
-  flex: FlexStyle(
+  flex: FlexStyler(
     direction: Axis.horizontal,
     crossAxisAlignment: CrossAxisAlignment.center,
     mainAxisSize: MainAxisSize.min,
     spacing: RemixTokens.spaceXs(),
   ),
-  label: TextStyling(
+  label: TextStyler(
     style: TextStyleMix(
       fontSize: RemixTokens.fontSizeMd(),
       fontWeight: FontWeight.w500,
     ),
   ),
-  leading: IconStyle(size: RemixTokens.iconSizeMd()),
-  trailing: IconStyle(size: RemixTokens.iconSizeMd()),
+  leading: IconStyler(size: RemixTokens.iconSizeMd()),
+  trailing: IconStyler(size: RemixTokens.iconSizeMd()),
 );
 
 extension ChipVariants on RemixChipStyle {
   /// Primary chip variant with blue colors
   static RemixChipStyle get primary => RemixChipStyle(
-        container: BoxStyle(
+        container: BoxStyler(
           padding: EdgeInsetsMix.symmetric(
             vertical: RemixTokens.spaceXs(),
             horizontal: RemixTokens.spaceMd(),
@@ -144,24 +144,24 @@ extension ChipVariants on RemixChipStyle {
             color: RemixTokens.primary().withValues(alpha: 0.1),
           ),
         ),
-        flex: FlexStyle(
+        flex: FlexStyler(
           direction: Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           spacing: RemixTokens.spaceXs(),
         ),
-        label: TextStyling(
+        label: TextStyler(
           style: TextStyleMix(
             color: RemixTokens.primary(),
             fontSize: RemixTokens.fontSizeMd(),
             fontWeight: FontWeight.w500,
           ),
         ),
-        leading: IconStyle(
+        leading: IconStyler(
           color: RemixTokens.primary(),
           size: RemixTokens.iconSizeMd(),
         ),
-        trailing: IconStyle(
+        trailing: IconStyler(
           color: RemixTokens.primary(),
           size: RemixTokens.iconSizeMd(),
         ),
@@ -169,7 +169,7 @@ extension ChipVariants on RemixChipStyle {
 
   /// Secondary chip variant with grey colors
   static RemixChipStyle get secondary => RemixChipStyle(
-        container: BoxStyle(
+        container: BoxStyler(
           padding: EdgeInsetsMix.symmetric(
             vertical: RemixTokens.spaceXs(),
             horizontal: RemixTokens.spaceMd(),
@@ -182,24 +182,24 @@ extension ChipVariants on RemixChipStyle {
             color: RemixTokens.surface(),
           ),
         ),
-        flex: FlexStyle(
+        flex: FlexStyler(
           direction: Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           spacing: RemixTokens.spaceXs(),
         ),
-        label: TextStyling(
+        label: TextStyler(
           style: TextStyleMix(
             color: RemixTokens.textPrimary(),
             fontSize: RemixTokens.fontSizeMd(),
             fontWeight: FontWeight.w500,
           ),
         ),
-        leading: IconStyle(
+        leading: IconStyler(
           color: RemixTokens.textSecondary(),
           size: RemixTokens.iconSizeMd(),
         ),
-        trailing: IconStyle(
+        trailing: IconStyler(
           color: RemixTokens.textSecondary(),
           size: RemixTokens.iconSizeMd(),
         ),
@@ -207,7 +207,7 @@ extension ChipVariants on RemixChipStyle {
 
   /// Success chip variant with green colors
   static RemixChipStyle get success => RemixChipStyle(
-        container: BoxStyle(
+        container: BoxStyler(
           padding: EdgeInsetsMix.symmetric(
             vertical: RemixTokens.spaceXs(),
             horizontal: RemixTokens.spaceMd(),
@@ -217,24 +217,24 @@ extension ChipVariants on RemixChipStyle {
             color: RemixTokens.success().withValues(alpha: 0.1),
           ),
         ),
-        flex: FlexStyle(
+        flex: FlexStyler(
           direction: Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           spacing: RemixTokens.spaceXs(),
         ),
-        label: TextStyling(
+        label: TextStyler(
           style: TextStyleMix(
             color: RemixTokens.success(),
             fontSize: RemixTokens.fontSizeMd(),
             fontWeight: FontWeight.w500,
           ),
         ),
-        leading: IconStyle(
+        leading: IconStyler(
           color: RemixTokens.success(),
           size: RemixTokens.iconSizeMd(),
         ),
-        trailing: IconStyle(
+        trailing: IconStyler(
           color: RemixTokens.success(),
           size: RemixTokens.iconSizeMd(),
         ),
@@ -242,7 +242,7 @@ extension ChipVariants on RemixChipStyle {
 
   /// Warning chip variant with orange colors
   static RemixChipStyle get warning => RemixChipStyle(
-        container: BoxStyle(
+        container: BoxStyler(
           padding: EdgeInsetsMix.symmetric(
             vertical: RemixTokens.spaceXs(),
             horizontal: RemixTokens.spaceMd(),
@@ -252,24 +252,24 @@ extension ChipVariants on RemixChipStyle {
             color: RemixTokens.warning().withValues(alpha: 0.1),
           ),
         ),
-        flex: FlexStyle(
+        flex: FlexStyler(
           direction: Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           spacing: RemixTokens.spaceXs(),
         ),
-        label: TextStyling(
+        label: TextStyler(
           style: TextStyleMix(
             color: RemixTokens.warning(),
             fontSize: RemixTokens.fontSizeMd(),
             fontWeight: FontWeight.w500,
           ),
         ),
-        leading: IconStyle(
+        leading: IconStyler(
           color: RemixTokens.warning(),
           size: RemixTokens.iconSizeMd(),
         ),
-        trailing: IconStyle(
+        trailing: IconStyler(
           color: RemixTokens.warning(),
           size: RemixTokens.iconSizeMd(),
         ),
