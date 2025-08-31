@@ -171,9 +171,9 @@ class RemixCheckBoxStyler extends Style<CheckboxSpec>
           MixOps.merge($indicatorContainer, other.$indicatorContainer),
       indicator: MixOps.merge($indicator, other.$indicator),
       label: MixOps.merge($label, other.$label),
-      variants: mergeVariantLists($variants, other.$variants),
-      animation: other.$animation ?? $animation,
-      modifier: $modifier?.merge(other.$modifier) ?? other.$modifier,
+      variants: MixOps.mergeVariants($variants, other.$variants),
+      animation: MixOps.mergeAnimation($animation, other.$animation),
+      modifier: MixOps.mergeModifier($modifier, other.$modifier),
     );
   }
 

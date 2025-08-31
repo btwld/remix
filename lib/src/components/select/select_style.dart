@@ -78,9 +78,9 @@ class RemixSelectStyle extends Style<SelectSpec>
       trigger: MixOps.merge($trigger, other.$trigger),
       item: MixOps.merge($item, other.$item),
       position: MixOps.merge($position, other.$position),
-      variants: mergeVariantLists($variants, other.$variants),
-      animation: other.$animation ?? $animation,
-      modifier: $modifier?.merge(other.$modifier) ?? other.$modifier,
+      variants: MixOps.mergeVariants($variants, other.$variants),
+      animation: MixOps.mergeAnimation($animation, other.$animation),
+      modifier: MixOps.mergeModifier($modifier, other.$modifier),
     );
   }
 
@@ -150,9 +150,9 @@ class RemixSelectTriggerStyle extends Style<SelectTriggerSpec> {
       container: MixOps.merge($container, other.$container),
       label: MixOps.merge($label, other.$label),
       icon: other.$icon ?? $icon,
-      variants: mergeVariantLists($variants, other.$variants),
-      animation: other.$animation ?? $animation,
-      modifier: $modifier?.merge(other.$modifier) ?? other.$modifier,
+      variants: MixOps.mergeVariants($variants, other.$variants),
+      animation: MixOps.mergeAnimation($animation, other.$animation),
+      modifier: MixOps.mergeModifier($modifier, other.$modifier),
     );
   }
 
@@ -220,9 +220,9 @@ class RemixSelectMenuItemStyle extends Style<SelectMenuItemSpec> {
       container: MixOps.merge($container, other.$container),
       text: other.$text ?? $text,
       icon: other.$icon ?? $icon,
-      variants: mergeVariantLists($variants, other.$variants),
-      animation: other.$animation ?? $animation,
-      modifier: $modifier?.merge(other.$modifier) ?? other.$modifier,
+      variants: MixOps.mergeVariants($variants, other.$variants),
+      animation: MixOps.mergeAnimation($animation, other.$animation),
+      modifier: MixOps.mergeModifier($modifier, other.$modifier),
     );
   }
 
@@ -293,9 +293,9 @@ class RemixCompositedTransformFollowerStyle
       targetAnchor: other.$targetAnchor ?? $targetAnchor,
       followerAnchor: other.$followerAnchor ?? $followerAnchor,
       offset: other.$offset ?? $offset,
-      variants: mergeVariantLists($variants, other.$variants),
-      animation: other.$animation ?? $animation,
-      modifier: $modifier?.merge(other.$modifier) ?? other.$modifier,
+      variants: MixOps.mergeVariants($variants, other.$variants),
+      animation: MixOps.mergeAnimation($animation, other.$animation),
+      modifier: MixOps.mergeModifier($modifier, other.$modifier),
     );
   }
 

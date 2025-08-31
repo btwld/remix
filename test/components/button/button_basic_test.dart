@@ -211,13 +211,15 @@ void main() {
         // Test in portrait
         await tester.binding.setSurfaceSize(const Size(400, 800));
         await tester.pumpAndSettle();
-        expect(find.byKey(const ValueKey('orientation_button')), findsOneWidget);
+        expect(
+            find.byKey(const ValueKey('orientation_button')), findsOneWidget);
         expect(find.text('Orientation Test'), findsOneWidget);
 
         // Test in landscape
         await tester.binding.setSurfaceSize(const Size(800, 400));
         await tester.pumpAndSettle();
-        expect(find.byKey(const ValueKey('orientation_button')), findsOneWidget);
+        expect(
+            find.byKey(const ValueKey('orientation_button')), findsOneWidget);
         expect(find.text('Orientation Test'), findsOneWidget);
         expect(find.byIcon(Icons.screen_rotation), findsOneWidget);
       },
@@ -323,17 +325,15 @@ void main() {
         bool wasLongPressed = false;
 
         await tester.pumpRemixApp(
-          GestureDetector(
+          RemixButton(
+            key: const ValueKey('long_press_button'),
+            label: 'Long Press Me',
+            onPressed: () {
+              // Regular press handler
+            },
             onLongPress: () {
               wasLongPressed = true;
             },
-            child: RemixButton(
-              key: const ValueKey('long_press_button'),
-              label: 'Long Press Me',
-              onPressed: () {
-                // Regular press handler
-              },
-            ),
           ),
         );
 

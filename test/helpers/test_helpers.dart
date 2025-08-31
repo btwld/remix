@@ -145,9 +145,11 @@ class PerformanceTestHelper {
   ) async {
     final stopwatch = Stopwatch()..start();
     await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: Center(child: widget),
+      createRemixScope(
+        child: MaterialApp(
+          home: Scaffold(
+            body: Center(child: widget),
+          ),
         ),
       ),
     );
