@@ -7,30 +7,26 @@ class RemixChipStyle extends Style<ChipSpec>
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<FlexSpec>>? $flex;
   final Prop<StyleSpec<TextSpec>>? $label;
-  final Prop<StyleSpec<IconSpec>>? $leading;
-  final Prop<StyleSpec<IconSpec>>? $trailing;
+  final Prop<StyleSpec<IconSpec>>? $icon;
 
   const RemixChipStyle.create({
     Prop<StyleSpec<BoxSpec>>? container,
     Prop<StyleSpec<FlexSpec>>? flex,
     Prop<StyleSpec<TextSpec>>? label,
-    Prop<StyleSpec<IconSpec>>? leading,
-    Prop<StyleSpec<IconSpec>>? trailing,
+    Prop<StyleSpec<IconSpec>>? icon,
     super.variants,
     super.animation,
     super.modifier,
   })  : $container = container,
         $flex = flex,
         $label = label,
-        $leading = leading,
-        $trailing = trailing;
+        $icon = icon;
 
   RemixChipStyle({
     BoxStyler? container,
     FlexStyler? flex,
     TextStyler? label,
-    IconStyler? leading,
-    IconStyler? trailing,
+    IconStyler? icon,
     AnimationConfig? animation,
     List<VariantStyle<ChipSpec>>? variants,
     ModifierConfig? modifier,
@@ -38,8 +34,7 @@ class RemixChipStyle extends Style<ChipSpec>
           container: Prop.maybeMix(container),
           flex: Prop.maybeMix(flex),
           label: Prop.maybeMix(label),
-          leading: Prop.maybeMix(leading),
-          trailing: Prop.maybeMix(trailing),
+          icon: Prop.maybeMix(icon),
           variants: variants,
           animation: animation,
           modifier: modifier,
@@ -52,8 +47,7 @@ class RemixChipStyle extends Style<ChipSpec>
         container: MixOps.resolve(context, $container),
         flex: MixOps.resolve(context, $flex),
         label: MixOps.resolve(context, $label),
-        leading: MixOps.resolve(context, $leading),
-        trailing: MixOps.resolve(context, $trailing),
+        icon: MixOps.resolve(context, $icon),
       ),
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
@@ -68,8 +62,7 @@ class RemixChipStyle extends Style<ChipSpec>
       container: MixOps.merge($container, other.$container),
       flex: MixOps.merge($flex, other.$flex),
       label: MixOps.merge($label, other.$label),
-      leading: MixOps.merge($leading, other.$leading),
-      trailing: MixOps.merge($trailing, other.$trailing),
+      icon: MixOps.merge($icon, other.$icon),
       variants: MixOps.mergeVariants($variants, other.$variants),
       animation: MixOps.mergeAnimation($animation, other.$animation),
       modifier: MixOps.mergeModifier($modifier, other.$modifier),
@@ -96,8 +89,7 @@ class RemixChipStyle extends Style<ChipSpec>
         $container,
         $flex,
         $label,
-        $leading,
-        $trailing,
+        $icon,
         $variants,
         $animation,
         $modifier,
@@ -127,8 +119,7 @@ final DefaultRemixChipStyle = RemixChipStyle(
       fontWeight: FontWeight.w500,
     ),
   ),
-  leading: IconStyler(size: RemixTokens.iconSizeMd()),
-  trailing: IconStyler(size: RemixTokens.iconSizeMd()),
+  icon: IconStyler(size: RemixTokens.iconSizeMd()),
 );
 
 extension ChipVariants on RemixChipStyle {
@@ -157,11 +148,7 @@ extension ChipVariants on RemixChipStyle {
             fontWeight: FontWeight.w500,
           ),
         ),
-        leading: IconStyler(
-          color: RemixTokens.primary(),
-          size: RemixTokens.iconSizeMd(),
-        ),
-        trailing: IconStyler(
+        icon: IconStyler(
           color: RemixTokens.primary(),
           size: RemixTokens.iconSizeMd(),
         ),
@@ -195,11 +182,7 @@ extension ChipVariants on RemixChipStyle {
             fontWeight: FontWeight.w500,
           ),
         ),
-        leading: IconStyler(
-          color: RemixTokens.textSecondary(),
-          size: RemixTokens.iconSizeMd(),
-        ),
-        trailing: IconStyler(
+        icon: IconStyler(
           color: RemixTokens.textSecondary(),
           size: RemixTokens.iconSizeMd(),
         ),
@@ -230,11 +213,7 @@ extension ChipVariants on RemixChipStyle {
             fontWeight: FontWeight.w500,
           ),
         ),
-        leading: IconStyler(
-          color: RemixTokens.success(),
-          size: RemixTokens.iconSizeMd(),
-        ),
-        trailing: IconStyler(
+        icon: IconStyler(
           color: RemixTokens.success(),
           size: RemixTokens.iconSizeMd(),
         ),
@@ -265,11 +244,7 @@ extension ChipVariants on RemixChipStyle {
             fontWeight: FontWeight.w500,
           ),
         ),
-        leading: IconStyler(
-          color: RemixTokens.warning(),
-          size: RemixTokens.iconSizeMd(),
-        ),
-        trailing: IconStyler(
+        icon: IconStyler(
           color: RemixTokens.warning(),
           size: RemixTokens.iconSizeMd(),
         ),

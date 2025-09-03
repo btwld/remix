@@ -22,6 +22,7 @@ class RemixRadio<T> extends StatefulWidget
     this.label,
     this.focusNode,
     this.cursor,
+    this.onChanged,
     this.onFocusChange,
     this.onHoverChange,
     this.onHighlightChanged,
@@ -55,6 +56,9 @@ class RemixRadio<T> extends StatefulWidget
 
   /// The mouse cursor to use when hovering over the radio button.
   final MouseCursor? cursor;
+
+  /// Called when the selection state changes.
+  final ValueChanged<bool>? onChanged;
 
   // State change callbacks
   final ValueChanged<bool>? onFocusChange;
@@ -123,10 +127,10 @@ class _RemixRadioState<T> extends State<RemixRadio<T>>
       style: DefaultRemixRadioStyle.merge(style),
       controller: widget.statesController ?? controller,
       builder: (context, spec) {
-        final IndicatorContainer = spec.indicatorContainer;
-        final Indicator = spec.indicator;
-        final FlexContainer = spec.container;
-        final Label = spec.label;
+        final IndicatorContainer = spec.indicatorContainer.createWidget;
+        final Indicator = spec.indicator.createWidget;
+        final FlexContainer = spec.container.createWidget;
+        final Label = spec.label.createWidget;
 
         // Build the radio indicator
         final radioIndicator = IndicatorContainer(

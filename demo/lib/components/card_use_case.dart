@@ -11,7 +11,7 @@ Widget buildCard(BuildContext context) {
   return Scaffold(
     body: Center(
       child: RemixCard(
-        child: HBox(
+        child: RowBox(
           style: $flexbox
             ..spacing(12)
             ..mainAxisSize(MainAxisSize.min),

@@ -148,8 +148,7 @@ RemixAccordionStyle get DefaultRemixAccordionStyle => RemixAccordionStyle(
             fontWeight: FontWeight.w500,
           ),
         ),
-        leading: IconStyler(color: _kLightIcon, size: 20),
-        trailing: IconStyler(color: _kLightIcon, size: 20),
+        icon: IconStyler(color: _kLightIcon, size: 20),
         flex: FlexStyler(spacing: 8),
       ),
     )
@@ -197,8 +196,7 @@ RemixAccordionStyle get DefaultRemixAccordionStyle => RemixAccordionStyle(
             headerLabel: RemixLabelStyle(
               label:
                   TextStyler(style: TextStyleMix(color: _kLightDisabledText)),
-              leading: IconStyler(color: _kLightDisabledIcon),
-              trailing: IconStyler(color: _kLightDisabledIcon),
+              icon: IconStyler(color: _kLightDisabledIcon),
             ),
           ),
         )
@@ -241,8 +239,7 @@ RemixAccordionStyle get DefaultRemixAccordionStyle => RemixAccordionStyle(
                 style:
                     TextStyleMix(color: const Color.fromARGB(255, 242, 0, 255)),
               ),
-              leading: IconStyler(color: _kDarkIcon),
-              trailing: IconStyler(color: _kDarkIcon),
+              icon: IconStyler(color: _kDarkIcon),
             ),
           )
               .onHovered(
@@ -291,8 +288,7 @@ RemixAccordionStyle get DefaultRemixAccordionStyle => RemixAccordionStyle(
                     label: TextStyler(
                       style: TextStyleMix(color: _kDarkDisabledText),
                     ),
-                    leading: IconStyler(color: _kDarkDisabledIcon),
-                    trailing: IconStyler(color: _kDarkDisabledIcon),
+                    icon: IconStyler(color: _kDarkDisabledIcon),
                   ),
                 ),
               )
@@ -333,8 +329,7 @@ extension AccordionVariants on RemixAccordionStyle {
               fontWeight: FontWeight.w500,
             ),
           ),
-          leading: IconStyler(color: Colors.black45, size: 20),
-          trailing: IconStyler(color: Colors.black45, size: 20),
+          icon: IconStyler(color: Colors.black45, size: 20),
           flex: FlexStyler(spacing: 8),
         ),
       )
@@ -358,8 +353,7 @@ extension AccordionVariants on RemixAccordionStyle {
               ),
               headerLabel: RemixLabelStyle(
                 label: TextStyler(style: TextStyleMix(color: Colors.white)),
-                leading: IconStyler(color: Colors.white70),
-                trailing: IconStyler(color: Colors.white70),
+                icon: IconStyler(color: Colors.white70),
               ),
             ).onSelected(
               RemixAccordionStyle(
@@ -396,8 +390,7 @@ extension AccordionVariants on RemixAccordionStyle {
               fontWeight: FontWeight.w500,
             ),
           ),
-          leading: IconStyler(color: Colors.black45, size: 16),
-          trailing: IconStyler(color: Colors.black45, size: 16),
+          icon: IconStyler(color: Colors.black45, size: 16),
           flex: FlexStyler(spacing: 6),
         ),
       )
@@ -421,8 +414,7 @@ extension AccordionVariants on RemixAccordionStyle {
               ),
               headerLabel: RemixLabelStyle(
                 label: TextStyler(style: TextStyleMix(color: Colors.white)),
-                leading: IconStyler(color: Colors.white70),
-                trailing: IconStyler(color: Colors.white70),
+                icon: IconStyler(color: Colors.white70),
               ),
             ).onSelected(
               RemixAccordionStyle(
@@ -459,8 +451,7 @@ extension AccordionVariants on RemixAccordionStyle {
               fontWeight: FontWeight.w600,
             ),
           ),
-          leading: IconStyler(color: Colors.black45, size: 20),
-          trailing: IconStyler(color: Colors.black45, size: 20),
+          icon: IconStyler(color: Colors.black45, size: 20),
           flex: FlexStyler(spacing: 10),
         ),
       )
@@ -484,8 +475,7 @@ extension AccordionVariants on RemixAccordionStyle {
               ),
               headerLabel: RemixLabelStyle(
                 label: TextStyler(style: TextStyleMix(color: Colors.white)),
-                leading: IconStyler(color: Colors.white70),
-                trailing: IconStyler(color: Colors.white70),
+                icon: IconStyler(color: Colors.white70),
               ),
             ).onSelected(
               RemixAccordionStyle(

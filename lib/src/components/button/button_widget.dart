@@ -223,17 +223,40 @@ class _RemixButtonState extends State<RemixButton>
       style: DefaultRemixButtonStyle.merge(widget.style),
       controller: controller,
       builder: (context, spec) {
-        final Label = spec.label;
+        final LabelSpec = spec.label;
+        final Label = spec.label.createWidget;
         // final Spinner = spec.spinner; // Spinner spec not directly used when loading
-        final Container = spec.container;
+        final Container = spec.container.createWidget;
 
         // Create the child widget based on whether custom child is provided
-        final effectiveChild = widget.child ??
-            Label(
-              text: widget.label ?? '',
-              leading: widget.leading,
-              trailing: widget.trailing,
-            );
+        Widget effectiveChild;
+        if (widget.child != null) {
+          effectiveChild = widget.child!;
+        } else if (widget.leading != null && widget.trailing != null) {
+          // If both icons are present, we need to create a custom layout
+          final labelSpec = LabelSpec.spec;
+          final textFactory = labelSpec.label.createWidget;
+          final iconFactory = labelSpec.icon.createWidget;
+          final flexFactory = labelSpec.flex.createWidget;
+          effectiveChild = flexFactory(
+            children: [
+              iconFactory(icon: widget.leading!),
+              if (widget.label != null) textFactory(widget.label!),
+              iconFactory(icon: widget.trailing!),
+            ],
+          );
+        } else {
+          // Use the label with single icon
+          final icon = widget.leading ?? widget.trailing;
+          final position = widget.leading != null 
+              ? IconPosition.leading 
+              : IconPosition.trailing;
+          effectiveChild = Label(
+            text: widget.label ?? '',
+            icon: icon,
+            iconPosition: position,
+          );
+        }
 
         final content = widget.loading
             ? Stack(

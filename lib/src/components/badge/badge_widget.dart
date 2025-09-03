@@ -20,7 +20,7 @@ class RemixBadge extends StatelessWidget {
     String? label,
     IconData? icon,
     this.style = const RemixBadgeStyle.create(),
-  }) : child = RemixLabel(label ?? '', leading: icon);
+  }) : child = RemixLabel(label ?? '', icon: icon);
 
   /// Creates a badge with custom content.
   const RemixBadge.raw({
@@ -40,7 +40,7 @@ class RemixBadge extends StatelessWidget {
     return StyleBuilder(
       style: DefaultRemixBadgeStyle.merge(style),
       builder: (context, spec) {
-        final Container = spec.container;
+        final Container = spec.container.createWidget;
 
         return Container(child: child);
       },

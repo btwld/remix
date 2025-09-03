@@ -156,23 +156,13 @@ class RemixButtonStyle extends Style<ButtonSpec>
 
   // Icon control methods
 
-  /// Sets base icon styling for both leading and trailing icons
+  /// Sets base icon styling for the label's icon
   RemixButtonStyle icon(IconStyler value) {
     return merge(
       RemixButtonStyle(
-        label: RemixLabelStyle(leading: value, trailing: value),
+        label: RemixLabelStyle(icon: value),
       ),
     );
-  }
-
-  /// Sets styling specifically for the leading icon
-  RemixButtonStyle leading(IconStyler value) {
-    return merge(RemixButtonStyle(label: RemixLabelStyle(leading: value)));
-  }
-
-  /// Sets styling specifically for the trailing icon
-  RemixButtonStyle trailing(IconStyler value) {
-    return merge(RemixButtonStyle(label: RemixLabelStyle(trailing: value)));
   }
 
   // Animate support
@@ -271,7 +261,7 @@ final DefaultRemixButtonStyle = RemixButtonStyle(
       style: TextStyleMix.color(RemixTokens.surface())
           .fontSize(RemixTokens.fontSizeMd()),
     ),
-    leading: IconStyler(
+    icon: IconStyler(
       color: RemixTokens.surface(),
       size: RemixTokens.iconSizeLg(),
     ),
@@ -339,7 +329,7 @@ extension ButtonVariants on RemixButtonStyle {
           label: TextStyler(
             style: TextStyleMix.fontSize(RemixTokens.fontSizeSm()),
           ),
-          leading: IconStyler(size: RemixTokens.iconSizeSm()),
+          icon: IconStyler(size: RemixTokens.iconSizeSm()),
           flex: FlexStyler(spacing: RemixTokens.spaceXs()),
         ),
       );
@@ -353,7 +343,7 @@ extension ButtonVariants on RemixButtonStyle {
           label: TextStyler(
             style: TextStyleMix.fontSize(RemixTokens.fontSizeMd()),
           ),
-          leading: IconStyler(size: RemixTokens.iconSizeMd()),
+          icon: IconStyler(size: RemixTokens.iconSizeMd()),
           flex: FlexStyler(spacing: RemixTokens.spaceSm()),
         ),
       );
@@ -367,7 +357,7 @@ extension ButtonVariants on RemixButtonStyle {
           label: TextStyler(
             style: TextStyleMix.fontSize(RemixTokens.fontSizeLg()),
           ),
-          leading: IconStyler(size: RemixTokens.iconSizeXl()),
+          icon: IconStyler(size: RemixTokens.iconSizeXl()),
           flex: FlexStyler(spacing: RemixTokens.spaceMd()),
         ),
       );
@@ -390,7 +380,7 @@ extension ButtonVariants on RemixButtonStyle {
         label: TextStyler(
           style: TextStyleMix.color(fgColor).fontSize(RemixTokens.fontSizeMd()),
         ),
-        leading: IconStyler(color: fgColor, size: RemixTokens.iconSizeLg()),
+        icon: IconStyler(color: fgColor, size: RemixTokens.iconSizeLg()),
         flex: FlexStyler(spacing: RemixTokens.spaceSm()),
       ),
     )
@@ -426,7 +416,7 @@ extension ButtonVariants on RemixButtonStyle {
               label: TextStyler(
                 style: TextStyleMix.color(RemixTokens.textTertiary()),
               ),
-              leading: IconStyler(color: RemixTokens.textTertiary()),
+              icon: IconStyler(color: RemixTokens.textTertiary()),
             ),
           ),
         );
@@ -446,7 +436,7 @@ extension ButtonVariants on RemixButtonStyle {
         label: TextStyler(
           style: TextStyleMix.color(color).fontSize(RemixTokens.fontSizeMd()),
         ),
-        leading: IconStyler(color: color, size: RemixTokens.iconSizeLg()),
+        icon: IconStyler(color: color, size: RemixTokens.iconSizeLg()),
         flex: FlexStyler(spacing: RemixTokens.spaceSm()),
       ),
     )
@@ -497,7 +487,7 @@ extension ButtonVariants on RemixButtonStyle {
               label: TextStyler(
                 style: TextStyleMix.color(RemixTokens.textDisabled()),
               ),
-              leading: IconStyler(color: RemixTokens.textDisabled()),
+              icon: IconStyler(color: RemixTokens.textDisabled()),
             ),
           ),
         );
@@ -516,7 +506,7 @@ extension ButtonVariants on RemixButtonStyle {
         label: TextStyler(
           style: TextStyleMix.color(color).fontSize(RemixTokens.fontSizeMd()),
         ),
-        leading: IconStyler(color: color, size: RemixTokens.iconSizeLg()),
+        icon: IconStyler(color: color, size: RemixTokens.iconSizeLg()),
         flex: FlexStyler(spacing: RemixTokens.spaceSm()),
       ),
     )
@@ -557,7 +547,7 @@ extension ButtonVariants on RemixButtonStyle {
               label: TextStyler(
                 style: TextStyleMix.color(RemixTokens.textDisabled()),
               ),
-              leading: IconStyler(color: RemixTokens.textDisabled()),
+              icon: IconStyler(color: RemixTokens.textDisabled()),
             ),
           ),
         );
@@ -576,7 +566,7 @@ extension ButtonVariants on RemixButtonStyle {
         label: TextStyler(
           style: TextStyleMix.color(color).fontSize(RemixTokens.fontSizeMd()),
         ),
-        leading: IconStyler(color: color, size: RemixTokens.iconSizeLg()),
+        icon: IconStyler(color: color, size: RemixTokens.iconSizeLg()),
         flex: FlexStyler(spacing: RemixTokens.spaceSm()),
       ),
     )
@@ -620,7 +610,7 @@ extension ButtonVariants on RemixButtonStyle {
               label: TextStyler(
                 style: TextStyleMix.color(RemixTokens.textDisabled()),
               ),
-              leading: IconStyler(color: RemixTokens.textDisabled()),
+              icon: IconStyler(color: RemixTokens.textDisabled()),
             ),
           ),
         );

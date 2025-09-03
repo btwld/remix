@@ -33,6 +33,7 @@ class RemixChip extends StatefulWidget
     this.style = const RemixChipStyle.create(),
     this.focusNode,
     this.autofocus = false,
+    this.onFocusChange,
     this.child,
   }) : assert(
           label != null || child != null,
@@ -77,6 +78,9 @@ class RemixChip extends StatefulWidget
   /// Whether the chip should automatically request focus when it is created.
   final bool autofocus;
 
+  /// Called when the focus state of the chip changes.
+  final ValueChanged<bool>? onFocusChange;
+
   @override
   State<RemixChip> createState() => _RemixChipState();
 }
@@ -89,10 +93,9 @@ class _RemixChipState extends State<RemixChip>
       style: DefaultRemixChipStyle.merge(widget.style),
       controller: controller,
       builder: (context, spec) {
-        final Container = spec.container;
-        final LeadingIcon = spec.leading;
-        final Label = spec.label;
-        final TrailingIcon = spec.trailing;
+        final Container = spec.container.createWidget;
+        final Icon = spec.icon.createWidget;
+        final Label = spec.label.createWidget;
 
         // Use custom child if provided
         if (widget.child != null) {
@@ -115,7 +118,7 @@ class _RemixChipState extends State<RemixChip>
 
         // Add leading icon
         if (widget.leading != null) {
-          children.add(LeadingIcon(icon: widget.leading!));
+          children.add(Icon(icon: widget.leading!));
         }
 
         // Add label
@@ -127,7 +130,7 @@ class _RemixChipState extends State<RemixChip>
         if (widget.onDeleted != null) {
           children.add(GestureDetector(
             onTap: widget.enabled ? widget.onDeleted : null,
-            child: TrailingIcon(icon: widget.trailing ?? Icons.close),
+            child: Icon(icon: widget.trailing ?? Icons.close),
           ));
         }
 
