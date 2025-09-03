@@ -60,6 +60,7 @@ class RemixListItemStyle extends Style<ListItemSpec>
           modifier: modifier,
         );
 
+
   @override
   StyleSpec<ListItemSpec> resolve(BuildContext context) {
     return StyleSpec(

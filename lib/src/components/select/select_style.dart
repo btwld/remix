@@ -64,7 +64,7 @@ class RemixSelectStyle extends Style<SelectSpec>
         item: MixOps.resolve(context, $item),
         position: MixOps.resolve(context, $position),
       ),
-      animation: $animation,
+            animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
     );
   }
@@ -137,7 +137,7 @@ class RemixSelectTriggerStyle extends Style<SelectTriggerSpec> {
         label: MixOps.resolve(context, $label),
         icon: MixOps.resolve(context, $icon),
       ),
-      animation: $animation,
+            animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
     );
   }
@@ -207,7 +207,7 @@ class RemixSelectMenuItemStyle extends Style<SelectMenuItemSpec> {
         text: MixOps.resolve(context, $text),
         icon: MixOps.resolve(context, $icon),
       ),
-      animation: $animation,
+            animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
     );
   }
@@ -278,7 +278,7 @@ class RemixCompositedTransformFollowerStyle
         targetAnchor: MixOps.resolve(context, $targetAnchor),
         followerAnchor: MixOps.resolve(context, $followerAnchor),
       ),
-      animation: $animation,
+            animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
     );
   }

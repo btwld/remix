@@ -35,6 +35,7 @@ class RemixCalloutStyle extends Style<CalloutSpec>
           modifier: modifier,
         );
 
+
   @override
   StyleSpec<CalloutSpec> resolve(BuildContext context) {
     return StyleSpec(
