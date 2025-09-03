@@ -5,35 +5,30 @@ class RemixLabelStyle extends Style<LabelSpec>
         StyleModifierMixin<RemixLabelStyle, LabelSpec>,
         StyleVariantMixin<RemixLabelStyle, LabelSpec> {
   final Prop<StyleSpec<TextSpec>>? $label;
-  final Prop<StyleSpec<IconSpec>>? $leading;
-  final Prop<StyleSpec<IconSpec>>? $trailing;
+  final Prop<StyleSpec<IconSpec>>? $icon;
   final Prop<StyleSpec<FlexSpec>>? $flex;
 
   const RemixLabelStyle.create({
     Prop<StyleSpec<TextSpec>>? label,
-    Prop<StyleSpec<IconSpec>>? leading,
-    Prop<StyleSpec<IconSpec>>? trailing,
+    Prop<StyleSpec<IconSpec>>? icon,
     Prop<StyleSpec<FlexSpec>>? flex,
     super.variants,
     super.animation,
     super.modifier,
   })  : $label = label,
-        $leading = leading,
-        $trailing = trailing,
+        $icon = icon,
         $flex = flex;
 
   RemixLabelStyle({
     TextStyler? label,
-    IconStyler? leading,
-    IconStyler? trailing,
+    IconStyler? icon,
     FlexStyler? flex,
     AnimationConfig? animation,
     List<VariantStyle<LabelSpec>>? variants,
     ModifierConfig? modifier,
   }) : this.create(
           label: Prop.maybeMix(label),
-          leading: Prop.maybeMix(leading),
-          trailing: Prop.maybeMix(trailing),
+          icon: Prop.maybeMix(icon),
           flex: Prop.maybeMix(flex),
           variants: variants,
           animation: animation,
@@ -60,8 +55,7 @@ class RemixLabelStyle extends Style<LabelSpec>
     return StyleSpec(
       spec: LabelSpec(
         label: MixOps.resolve(context, $label),
-        leading: MixOps.resolve(context, $leading),
-        trailing: MixOps.resolve(context, $trailing),
+        icon: MixOps.resolve(context, $icon),
         flex: MixOps.resolve(context, $flex),
       ),
       animation: $animation,
@@ -75,8 +69,7 @@ class RemixLabelStyle extends Style<LabelSpec>
 
     return RemixLabelStyle.create(
       label: MixOps.merge($label, other.$label),
-      leading: MixOps.merge($leading, other.$leading),
-      trailing: MixOps.merge($trailing, other.$trailing),
+      icon: MixOps.merge($icon, other.$icon),
       flex: MixOps.merge($flex, other.$flex),
       variants: MixOps.mergeVariants($variants, other.$variants),
       animation: MixOps.mergeAnimation($animation, other.$animation),
@@ -87,8 +80,7 @@ class RemixLabelStyle extends Style<LabelSpec>
   @override
   List<Object?> get props => [
         $label,
-        $leading,
-        $trailing,
+        $icon,
         $flex,
         $variants,
         $animation,
@@ -111,7 +103,7 @@ class RemixRemixLabelStyles {
             fontWeight: FontWeight.w500,
           ),
         ),
-        leading: IconStyler(color: RemixTokens.primary(), size: 20),
+        icon: IconStyler(color: RemixTokens.primary(), size: 20),
         flex: FlexStyler(spacing: 8),
       );
 
@@ -123,21 +115,21 @@ class RemixRemixLabelStyles {
             fontWeight: FontWeight.w400,
           ),
         ),
-        leading: IconStyler(color: RemixTokens.textSecondary(), size: 20),
+        icon: IconStyler(color: RemixTokens.textSecondary(), size: 20),
         flex: FlexStyler(spacing: 8),
       );
 
   /// Compact label variant with reduced spacing
   static RemixLabelStyle get compact => RemixLabelStyle(
         label: TextStyler(),
-        leading: IconStyler(size: 16),
+        icon: IconStyler(size: 16),
         flex: FlexStyler(spacing: 4),
       );
 
   /// Large label variant with increased spacing
   static RemixLabelStyle get large => RemixLabelStyle(
         label: TextStyler(style: TextStyleMix(fontSize: 16)),
-        leading: IconStyler(size: 24),
+        icon: IconStyler(size: 24),
         flex: FlexStyler(spacing: 12),
       );
 }

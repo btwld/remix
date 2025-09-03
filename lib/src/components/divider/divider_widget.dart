@@ -32,7 +32,7 @@ class RemixDivider extends StatelessWidget {
     return StyleBuilder(
       style: DefaultRemixDividerStyle.merge(style),
       builder: (context, spec) {
-        final Container = spec.container;
+        final Container = spec.container.createWidget;
 
         return Container();
       },

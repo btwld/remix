@@ -92,9 +92,9 @@ class _RemixSwitchState extends State<RemixSwitch>
       style: DefaultRemixSwitchStyle.merge(widget.style),
       controller: controller,
       builder: (context, spec) {
-        final Container = spec.container;
-        final Track = spec.track;
-        final Thumb = spec.thumb;
+        final Container = spec.container.createWidget;
+        final Track = spec.track.createWidget;
+        final Thumb = spec.thumb.createWidget;
 
         return NakedCheckbox(
           value: widget.selected,

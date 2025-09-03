@@ -87,6 +87,7 @@ class RemixAccordionItem<T> extends StatefulWidget with HasEnabled, HasFocused {
     this.enabled = true,
     this.leading,
     this.trailing,
+    this.onFocusChange,
   });
 
   final String title;
@@ -97,6 +98,7 @@ class RemixAccordionItem<T> extends StatefulWidget with HasEnabled, HasFocused {
   final T value;
   final bool autofocus;
   final FocusNode? focusNode;
+  final ValueChanged<bool>? onFocusChange;
 
   @override
   State<RemixAccordionItem<T>> createState() => _RemixAccordionItemState<T>();
@@ -132,15 +134,15 @@ class _RemixAccordionItemState<T> extends State<RemixAccordionItem<T>>
           style: inheritedData.style,
           controller: controller,
           builder: (context, spec) {
-            final ItemContainer = spec.container;
-            final ContentContainer = spec.content;
+            final ItemContainer = spec.container.createWidget;
+            final ContentContainer = spec.content.createWidget;
 
             return ItemContainer(
               child: NakedAccordionItem<T>(
                 trigger: (_, isExpanded) {
                   // The trigger is purely for building UI
                   // No state updates should happen here
-                  final HeaderContainer = spec.header;
+                  final HeaderContainer = spec.header.createWidget;
 
                   return HeaderContainer(
                     child: Row(
@@ -148,11 +150,10 @@ class _RemixAccordionItemState<T> extends State<RemixAccordionItem<T>>
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Expanded(
-                          child: spec.headerLabel(
+                          child: spec.headerLabel.createWidget(
                             text: widget.title,
-                            leading: widget.leading,
-                            trailing:
-                                null, // Don't use label's trailing since we handle it separately
+                            icon: widget.leading,
+                            iconPosition: IconPosition.leading,
                           ),
                         ),
                         // Handle trailing icon with proper styling
@@ -161,8 +162,8 @@ class _RemixAccordionItemState<T> extends State<RemixAccordionItem<T>>
                               isExpanded
                                   ? Icons.expand_less
                                   : inheritedData.defaultTrailing,
-                              size: spec.headerLabel.spec.trailing.spec.size,
-                              color: spec.headerLabel.spec.trailing.spec.color,
+                              size: spec.headerLabel.spec.icon.spec.size,
+                              color: spec.headerLabel.spec.icon.spec.color,
                             ),
                       ],
                     ),

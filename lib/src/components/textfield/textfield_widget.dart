@@ -75,6 +75,7 @@ class RemixTextField extends StatefulWidget
     this.trailing,
     this.onPressed,
     this.style = const RemixTextFieldStyle.create(),
+    this.onFocusChange,
   });
 
   /// Controls the text being edited.
@@ -242,6 +243,9 @@ class RemixTextField extends StatefulWidget
   /// The style configuration for the text field.
   final RemixTextFieldStyle style;
 
+  /// Called when the focus state of the text field changes.
+  final ValueChanged<bool>? onFocusChange;
+
   @override
   State<RemixTextField> createState() => _RemixTextFieldState();
 }
@@ -358,7 +362,7 @@ class _RemixTextFieldState extends State<RemixTextField>
                           visible: _controller.text.isEmpty,
                           child: Builder(
                             builder: (context) {
-                              final HintText = spec.hintText;
+                              final HintText = spec.hintText.createWidget;
 
                               return HintText(widget.hintText!);
                             },
@@ -370,9 +374,9 @@ class _RemixTextFieldState extends State<RemixTextField>
                   )
                 : editableText;
 
-            final FlexContainer = spec.container;
-            final Label = spec.label;
-            final HelperText = spec.helperText;
+            final FlexContainer = spec.container.createWidget;
+            final Label = spec.label.createWidget;
+            final HelperText = spec.helperText.createWidget;
 
             // Add leading/trailing widgets if present
             final withAccessories = FlexContainer(

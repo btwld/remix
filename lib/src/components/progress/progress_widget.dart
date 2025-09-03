@@ -35,10 +35,10 @@ class RemixProgress extends StatelessWidget {
     return StyleBuilder(
       style: DefaultRemixProgressStyle.merge(style),
       builder: (context, spec) {
-        final Container = spec.container;
-        final Track = spec.track;
-        final Fill = spec.fill;
-        final OuterContainer = spec.outerContainer;
+        final Container = spec.container.createWidget;
+        final Track = spec.track.createWidget;
+        final Fill = spec.fill.createWidget;
+        final OuterContainer = spec.outerContainer.createWidget;
 
         return Container(
           child: Stack(

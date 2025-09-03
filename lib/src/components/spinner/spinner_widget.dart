@@ -115,22 +115,32 @@ Widget createSpinnerWidget(SpinnerSpec spec) {
   return _SpinnerSpecWidget(spec: spec);
 }
 
-/// Extension on SpinnerSpec to provide call() method for creating widgets
+/// Extension on SpinnerSpec to provide createWidget method for creating widgets
 extension SpinnerSpecWidget on SpinnerSpec {
   /// Renders the SpinnerSpec into a SpinnerSpecWidget
-  Widget call() {
+  Widget createWidget() {
     return createSpinnerWidget(this);
+  }
+
+  @Deprecated('Use .createWidget() instead')
+  Widget call() {
+    return createWidget();
   }
 }
 
-/// Extension on StyleSpec<SpinnerSpec> to provide call() method for creating widgets
+/// Extension on StyleSpec<SpinnerSpec> to provide createWidget method for creating widgets
 extension SpinnerSpecWrappedWidget on StyleSpec<SpinnerSpec> {
-  Widget call() {
+  Widget createWidget() {
     return StyleSpecBuilder(
-      wrappedSpec: this,
+      styleSpec: this,
       builder: (context, spec) {
         return createSpinnerWidget(spec);
       },
     );
+  }
+
+  @Deprecated('Use .createWidget() instead')
+  Widget call() {
+    return createWidget();
   }
 }

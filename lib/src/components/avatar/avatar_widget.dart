@@ -87,7 +87,7 @@ class RemixAvatar extends StatelessWidget {
     return StyleBuilder(
       style: DefaultRemixAvatarStyle.merge(style),
       builder: (context, spec) {
-        final ContainerWidget = spec.container;
+        final ContainerWidget = spec.container.createWidget;
 
         return ContainerWidget(
           child: Container(
@@ -128,7 +128,7 @@ class _AvatarText extends StatelessWidget {
     return StyleBuilder(
       style: const RemixAvatarStyle.create(),
       builder: (context, spec) {
-        final TextWidget = spec.text;
+        final TextWidget = spec.text.createWidget;
 
         return TextWidget(label);
       },

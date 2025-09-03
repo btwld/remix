@@ -11,11 +11,18 @@ part of 'label.dart';
 /// // Basic label
 /// RemixLabel('Hello World')
 ///
-/// // Label with leading icon
+/// // Label with icon at leading position
 /// RemixLabel(
 ///   'Settings',
-///   leading: Icons.settings,
+///   icon: Icons.settings,
 ///   style: RemixLabelStyles.primary,
+/// )
+///
+/// // Label with icon at trailing position
+/// RemixLabel(
+///   'Next',
+///   icon: Icons.arrow_forward,
+///   iconPosition: IconPosition.trailing,
 /// )
 ///
 /// // Custom styling
@@ -24,89 +31,191 @@ part of 'label.dart';
 ///   style: RemixLabelStyle(
 ///     spacing: 12,
 ///     label: TextStyler(style: TextStyleMix(color: RemixTokens.primary())),
-///     leading: IconStyler(color: RemixTokens.primary(), size: 20),
+///     icon: IconStyler(color: RemixTokens.primary(), size: 20),
 ///   ),
 /// )
 /// ```
 class RemixLabel extends StyleWidget<LabelSpec> {
-  /// Creates a Remix label.
+  /// Creates a Remix label with optional builders.
   ///
   /// The [label] parameter is required.
   /// Other parameters allow customizing the label's appearance.
   const RemixLabel(
-    this.label, {
+    String label, {
     super.key,
-    this.leading,
-    this.trailing,
+    this.icon,
+    this.iconPosition = IconPosition.leading,
+    this.textBuilder,
+    this.iconBuilder,
+    this.builder,
     super.style = const RemixLabelStyle.create(),
-  });
+  }) : label = label;
 
-  /// The text to display in the label.f
+  /// The text to display in the label.
   final String label;
 
-  /// Optional icon to display at the start/left of the text.
-  final IconData? leading;
+  /// Optional icon to display with the label.
+  final IconData? icon;
 
-  /// Optional icon to display at the end/right of the text.
-  final IconData? trailing;
+  /// Position of the icon relative to the text.
+  final IconPosition iconPosition;
+
+  /// Builder for customizing the text rendering.
+  final RemixTextBuilder? textBuilder;
+
+  /// Builder for customizing the icon rendering.
+  final RemixIconBuilder? iconBuilder;
+
+  /// Full builder for complete control over label rendering.
+  final RemixLabelBuilder? builder;
 
   @override
   Widget build(BuildContext context, LabelSpec spec) {
-    return createLabelWidget(
+    // Full builder takes precedence
+    if (builder != null) {
+      return builder!(context, spec, label);
+    }
+
+    // Delegate to _buildLabel with builders
+    return _buildLabel(
+      context,
       spec,
       text: label,
-      leading: leading,
-      trailing: trailing,
+      icon: icon,
+      iconPosition: iconPosition,
+      textBuilder: textBuilder,
+      iconBuilder: iconBuilder,
     );
   }
 }
 
-Widget createLabelWidget(
+Widget _buildLabel(
+  BuildContext context,
   LabelSpec spec, {
   required String text,
-  IconData? leading,
-  IconData? trailing,
+  IconData? icon,
+  IconPosition iconPosition = IconPosition.leading,
+  RemixTextBuilder? textBuilder,
+  RemixIconBuilder? iconBuilder,
 }) {
-  final TextWidget = spec.label;
-  final LeadingIconWidget = spec.leading;
-  final TrailingIconWidget = spec.trailing;
-  final FlexWidget = spec.flex;
+  final textFactory = spec.label;
+  final iconFactory = spec.icon;
+  final flexFactory = spec.flex.createWidget;
 
-  return FlexWidget(
-    children: [
-      if (leading != null) LeadingIconWidget(icon: leading),
-      TextWidget(text),
-      if (trailing != null) TrailingIconWidget(icon: trailing),
-    ],
-  );
+  // Text widget
+  final Widget textWidget = textBuilder != null
+      ? textBuilder(context, textFactory.spec, text)
+      : textFactory.createWidget(text);
+
+  // Icon widget: if a builder exists, always call it (even when icon is null)
+  final Widget? iconWidget = iconBuilder != null
+      ? iconBuilder(context, iconFactory.spec, icon, iconPosition)
+      : (icon != null ? iconFactory.createWidget(icon: icon) : null);
+
+  // Arrange children based on icon position
+  final List<Widget> children = iconPosition == IconPosition.leading
+      ? [
+          if (iconWidget != null) iconWidget,
+          textWidget
+        ]
+      : [
+          textWidget,
+          if (iconWidget != null) iconWidget
+        ];
+
+  return flexFactory(children: children);
 }
 
-/// Extension on LabelSpec to provide call() method for creating widgets
+/// Extension on LabelSpec to provide createWidget method for creating widgets
 extension LabelSpecWidget on LabelSpec {
-  /// Renders the LabelSpec into a Flex widget with text and optional icons
-  Widget call({required String text, IconData? leading, IconData? trailing}) {
-    return createLabelWidget(
-      this,
+  /// Renders the LabelSpec into a Flex widget with text and optional icon
+  Widget createWidget({
+    required String text,
+    IconData? icon,
+    IconPosition iconPosition = IconPosition.leading,
+  }) {
+    return Builder(
+      builder: (context) => _buildLabel(
+        context,
+        this,
+        text: text,
+        icon: icon,
+        iconPosition: iconPosition,
+      ),
+    );
+  }
+
+  @Deprecated('Use .createWidget() instead')
+  Widget widget({
+    required String text,
+    IconData? icon,
+    IconPosition iconPosition = IconPosition.leading,
+  }) {
+    return createWidget(
       text: text,
-      leading: leading,
-      trailing: trailing,
+      icon: icon,
+      iconPosition: iconPosition,
+    );
+  }
+
+  @Deprecated('Use .createWidget() instead')
+  Widget call({
+    required String text,
+    IconData? icon,
+    IconPosition iconPosition = IconPosition.leading,
+  }) {
+    return createWidget(
+      text: text,
+      icon: icon,
+      iconPosition: iconPosition,
     );
   }
 }
 
-/// Extension on StyleSpec<LabelSpec> to provide call() method for creating widgets
+/// Extension on StyleSpec<LabelSpec> to provide createWidget method for creating widgets
 extension LabelSpecWrappedWidget on StyleSpec<LabelSpec> {
-  Widget call({required String text, IconData? leading, IconData? trailing}) {
+  Widget createWidget({
+    required String text,
+    IconData? icon,
+    IconPosition iconPosition = IconPosition.leading,
+  }) {
     return StyleSpecBuilder(
-      wrappedSpec: this,
+      styleSpec: this,
       builder: (context, spec) {
-        return createLabelWidget(
+        return _buildLabel(
+          context,
           spec,
           text: text,
-          leading: leading,
-          trailing: trailing,
+          icon: icon,
+          iconPosition: iconPosition,
         );
       },
+    );
+  }
+
+  @Deprecated('Use .createWidget() instead')
+  Widget widget({
+    required String text,
+    IconData? icon,
+    IconPosition iconPosition = IconPosition.leading,
+  }) {
+    return createWidget(
+      text: text,
+      icon: icon,
+      iconPosition: iconPosition,
+    );
+  }
+
+  @Deprecated('Use .createWidget() instead')
+  Widget call({
+    required String text,
+    IconData? icon,
+    IconPosition iconPosition = IconPosition.leading,
+  }) {
+    return createWidget(
+      text: text,
+      icon: icon,
+      iconPosition: iconPosition,
     );
   }
 }

@@ -31,6 +31,7 @@ class RemixSlider extends StatefulWidget with HasEnabled, HasFocused {
     this.enableHapticFeedback = true,
     this.focusNode,
     this.autofocus = false,
+    this.onFocusChange,
   }) : assert(
           value >= min && value <= max,
           'Slider value must be between min and max values',
@@ -74,6 +75,9 @@ class RemixSlider extends StatefulWidget with HasEnabled, HasFocused {
 
   /// The focus node for the slider.
   final FocusNode? focusNode;
+
+  /// Called when the focus state of the slider changes.
+  final ValueChanged<bool>? onFocusChange;
 
   @override
   State<RemixSlider> createState() => _RemixSliderState();
@@ -134,7 +138,7 @@ class _RemixSliderState extends State<RemixSlider>
                   ),
                   Transform.translate(
                     offset: Offset(thumbPosition, 0),
-                    child: spec.thumb(),
+                    child: spec.thumb.createWidget(),
                   ),
                 ],
               );

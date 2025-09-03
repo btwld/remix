@@ -26,6 +26,7 @@ class RemixListItem extends StatefulWidget with HasFocused {
     this.enabled = true,
     this.focusNode,
     this.autofocus = false,
+    this.onFocusChange,
     this.enableFeedback = true,
     this.style = const RemixListItemStyle.create(),
   });
@@ -54,6 +55,9 @@ class RemixListItem extends StatefulWidget with HasFocused {
   /// Whether the list item should automatically request focus when it is created.
   final bool autofocus;
 
+  /// Called when the focus state of the list item changes.
+  final ValueChanged<bool>? onFocusChange;
+
   /// Whether to provide acoustic and/or haptic feedback when pressed.
   final bool enableFeedback;
 
@@ -72,10 +76,10 @@ class _RemixListItemState extends State<RemixListItem>
       style: DefaultRemixListItemStyle.merge(widget.style),
       controller: controller,
       builder: (context, spec) {
-        final Container = spec.container;
-        final ContentContainer = spec.contentContainer;
-        final Title = spec.title;
-        final Subtitle = spec.subtitle;
+        final Container = spec.container.createWidget;
+        final ContentContainer = spec.contentContainer.createWidget;
+        final Title = spec.title.createWidget;
+        final Subtitle = spec.subtitle.createWidget;
 
         final children = <Widget>[];
 

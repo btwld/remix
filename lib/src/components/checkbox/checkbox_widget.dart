@@ -119,10 +119,10 @@ class _RemixCheckboxState extends State<RemixCheckbox>
     return StyleBuilder(
       style: DefaultRemixCheckBoxStyler.merge(widget.style),
       builder: (context, spec) {
-        final IndicatorContainer = spec.indicatorContainer;
-        final Indicator = spec.indicator;
-        final FlexContainer = spec.container;
-        final Label = spec.label;
+        final IndicatorContainer = spec.indicatorContainer.createWidget;
+        final Indicator = spec.indicator.createWidget;
+        final FlexContainer = spec.container.createWidget;
+        final Label = spec.label.createWidget;
 
         final iconData = widget.tristate && widget.selected == null
             ? widget.indeterminateIcon
