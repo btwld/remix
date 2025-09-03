@@ -9,6 +9,7 @@ mixin HasEnabled on StatefulWidget {
 mixin HasSelected on StatefulWidget {
   /// {@macro remix.component.selected}
   bool get selected;
+  ValueChanged<bool>? get onChanged;
 }
 
 mixin HasError on StatefulWidget {
@@ -21,6 +22,7 @@ mixin HasFocused on StatefulWidget {
   FocusNode? get focusNode;
 
   bool get autofocus;
+  ValueChanged<bool>? get onFocusChange;
 }
 
 mixin HasWidgetStateController<T extends StatefulWidget> on State<T> {

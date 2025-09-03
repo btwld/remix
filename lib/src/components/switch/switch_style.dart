@@ -35,6 +35,7 @@ class RemixSwitchStyle extends Style<SwitchSpec>
           modifier: modifier,
         );
 
+
   @override
   StyleSpec<SwitchSpec> resolve(BuildContext context) {
     return StyleSpec(

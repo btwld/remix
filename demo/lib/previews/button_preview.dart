@@ -1,0 +1,156 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/widget_previews.dart';
+import 'package:remix/remix.dart';
+
+import 'preview_helper.dart';
+
+@Preview(name: 'Basic Buttons', size: Size(350, 200))
+Widget previewBasicButtons() {
+  return createRemixPreview(
+    const Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        RemixButton(
+          label: 'Primary Button',
+          onPressed: null, // No-op for preview
+        ),
+        SizedBox(height: 12),
+        RemixButton(
+          label: 'Button with Icon',
+          leading: Icons.star,
+          onPressed: null,
+        ),
+        SizedBox(height: 12),
+        RemixButton(
+          label: 'Trailing Icon',
+          trailing: Icons.arrow_forward,
+          onPressed: null,
+        ),
+      ],
+    ),
+  );
+}
+
+@Preview(name: 'Button States', size: Size(350, 250))
+Widget previewButtonStates() {
+  return createRemixPreview(
+    const Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        RemixButton(
+          label: 'Enabled Button',
+          onPressed: null,
+        ),
+        SizedBox(height: 12),
+        RemixButton(
+          label: 'Disabled Button',
+          enabled: false,
+          onPressed: null,
+        ),
+        SizedBox(height: 12),
+        RemixButton(
+          label: 'Loading Button',
+          loading: true,
+          onPressed: null,
+        ),
+        SizedBox(height: 12),
+        RemixButton(
+          label: 'Icon Loading',
+          leading: Icons.download,
+          loading: true,
+          onPressed: null,
+        ),
+      ],
+    ),
+  );
+}
+
+@Preview(name: 'Icon-Only Buttons', size: Size(350, 150))
+Widget previewIconButtons() {
+  return createRemixPreview(
+    Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        RemixButton.icon(
+          Icons.add,
+          onPressed: null,
+        ),
+        const SizedBox(width: 12),
+        RemixButton.icon(
+          Icons.edit,
+          onPressed: null,
+        ),
+        const SizedBox(width: 12),
+        RemixButton.icon(
+          Icons.delete,
+          onPressed: null,
+        ),
+        const SizedBox(width: 12),
+        RemixButton.icon(
+          Icons.settings,
+          onPressed: null,
+        ),
+      ],
+    ),
+  );
+}
+
+@Preview(name: 'Button Variations', size: Size(400, 300))
+Widget previewButtonVariations() {
+  return createRemixPreview(
+    Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            RemixButton(
+              label: 'Save',
+              leading: Icons.save,
+              onPressed: null,
+            ),
+            SizedBox(width: 12),
+            RemixButton(
+              label: 'Cancel',
+              onPressed: null,
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        const RemixButton(
+          label: 'Download File',
+          leading: Icons.download,
+          trailing: Icons.arrow_downward,
+          onPressed: null,
+        ),
+        const SizedBox(height: 16),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            RemixButton.icon(
+              Icons.thumb_up,
+              onPressed: null,
+            ),
+            const SizedBox(width: 8),
+            RemixButton.icon(
+              Icons.thumb_down,
+              onPressed: null,
+            ),
+            const SizedBox(width: 8),
+            RemixButton.icon(
+              Icons.share,
+              onPressed: null,
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        const RemixButton(
+          label: 'Processing...',
+          leading: Icons.sync,
+          loading: true,
+          onPressed: null,
+        ),
+      ],
+    ),
+  );
+}
