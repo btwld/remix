@@ -16,7 +16,7 @@ part of 'slider.dart';
 ///   style: SliderStyle(),
 /// )
 /// ```
-class RemixSlider extends StatefulWidget with HasEnabled, HasFocused {
+class RemixSlider extends StatefulWidget with HasEnabled {
   const RemixSlider({
     super.key,
     this.min = 0.0,
@@ -31,7 +31,6 @@ class RemixSlider extends StatefulWidget with HasEnabled, HasFocused {
     this.enableHapticFeedback = true,
     this.focusNode,
     this.autofocus = false,
-    this.onFocusChange,
   }) : assert(
           value >= min && value <= max,
           'Slider value must be between min and max values',
@@ -75,9 +74,6 @@ class RemixSlider extends StatefulWidget with HasEnabled, HasFocused {
 
   /// The focus node for the slider.
   final FocusNode? focusNode;
-
-  /// Called when the focus state of the slider changes.
-  final ValueChanged<bool>? onFocusChange;
 
   @override
   State<RemixSlider> createState() => _RemixSliderState();
@@ -153,9 +149,6 @@ class _RemixSliderState extends State<RemixSlider>
           onChanged: widget.onChanged,
           onDragStart: () => widget.onChangeStart?.call(widget.value),
           onDragEnd: widget.onChangeEnd,
-          onHoverChange: (state) => controller.hovered = state,
-          onDragChange: (state) => controller.dragged = state,
-          onFocusChange: (state) => controller.focused = state,
           enabled: widget.enabled,
           focusNode: widget.focusNode,
           autofocus: widget.autofocus,

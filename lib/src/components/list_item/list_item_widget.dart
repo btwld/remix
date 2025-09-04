@@ -15,7 +15,7 @@ part of 'list_item.dart';
 ///   },
 /// )
 /// ```
-class RemixListItem extends StatefulWidget with HasFocused {
+class RemixListItem extends StatefulWidget {
   const RemixListItem({
     super.key,
     this.title,
@@ -26,7 +26,6 @@ class RemixListItem extends StatefulWidget with HasFocused {
     this.enabled = true,
     this.focusNode,
     this.autofocus = false,
-    this.onFocusChange,
     this.enableFeedback = true,
     this.style = const RemixListItemStyle.create(),
   });
@@ -54,9 +53,6 @@ class RemixListItem extends StatefulWidget with HasFocused {
 
   /// Whether the list item should automatically request focus when it is created.
   final bool autofocus;
-
-  /// Called when the focus state of the list item changes.
-  final ValueChanged<bool>? onFocusChange;
 
   /// Whether to provide acoustic and/or haptic feedback when pressed.
   final bool enableFeedback;
@@ -88,7 +84,7 @@ class _RemixListItemState extends State<RemixListItem>
           children.add(widget.leading!);
         }
 
-        // Title and subtitle
+        // Title and subtitle content
         final textWidgets = <Widget>[];
         if (widget.title != null) {
           textWidgets.add(Title(widget.title!));
@@ -104,7 +100,13 @@ class _RemixListItemState extends State<RemixListItem>
               child: ContentContainer(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: textWidgets,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    for (int i = 0; i < textWidgets.length; i++) ...[
+                      textWidgets[i],
+                      if (i < textWidgets.length - 1) const SizedBox(height: 2),
+                    ],
+                  ],
                 ),
               ),
             ),
@@ -116,7 +118,19 @@ class _RemixListItemState extends State<RemixListItem>
           children.add(widget.trailing!);
         }
 
-        final listItemChild = Container(child: Row(children: children));
+        // Create list item with Row layout
+        final listItemChild = Container(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              for (int i = 0; i < children.length; i++) ...[
+                children[i],
+                if (i < children.length - 1 && !(children[i] is Expanded)) 
+                  const SizedBox(width: 16),
+              ],
+            ],
+          ),
+        );
 
         return NakedButton(
           onPressed: widget.onPressed,

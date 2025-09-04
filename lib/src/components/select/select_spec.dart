@@ -153,8 +153,8 @@ class SelectMenuItemSpec extends Spec<SelectMenuItemSpec> with Diagnosticable {
 }
 
 Widget createSelectTriggerWidget(
-  SelectTriggerSpec spec, {
-  required String label,
+  SelectTriggerSpec spec,
+  String text, {
   IconData? trailing,
 }) {
   final ContainerWidget = spec.container.createWidget;
@@ -164,15 +164,15 @@ Widget createSelectTriggerWidget(
   return ContainerWidget(
     direction: Axis.horizontal,
     children: [
-      Expanded(child: LabelWidget(label)),
+      Expanded(child: LabelWidget(text)),
       if (trailing != null) IconWidget(icon: trailing),
     ],
   );
 }
 
 Widget createSelectMenuItemWidget(
-  SelectMenuItemSpec spec, {
-  required String text,
+  SelectMenuItemSpec spec,
+  String text, {
   IconData? icon,
   bool selected = false,
 }) {
@@ -191,63 +191,59 @@ Widget createSelectMenuItemWidget(
 
 /// Extension on SelectTriggerSpec to provide createWidget method for creating widgets
 extension SelectTriggerSpecWidget on SelectTriggerSpec {
-  Widget createWidget({required String label, IconData? trailing}) {
-    return createSelectTriggerWidget(this, label: label, trailing: trailing);
+  Widget createWidget(String text, {IconData? trailing}) {
+    return createSelectTriggerWidget(this, text, trailing: trailing);
   }
 
   @Deprecated('Use .createWidget() instead')
-  Widget call({required String label, IconData? trailing}) {
-    return createWidget(label: label, trailing: trailing);
+  Widget call(String text, {IconData? trailing}) {
+    return createWidget(text, trailing: trailing);
   }
 }
 
 /// Extension on StyleSpec<SelectTriggerSpec> to provide createWidget method for creating widgets
 extension SelectTriggerSpecWrappedWidget on StyleSpec<SelectTriggerSpec> {
-  Widget createWidget({required String label, IconData? trailing}) {
+  Widget createWidget(String text, {IconData? trailing}) {
     return StyleSpecBuilder(
       styleSpec: this,
       builder: (context, spec) {
-        return createSelectTriggerWidget(
-          spec,
-          label: label,
-          trailing: trailing,
-        );
+        return createSelectTriggerWidget(spec, text, trailing: trailing);
       },
     );
   }
 
   @Deprecated('Use .createWidget() instead')
-  Widget call({required String label, IconData? trailing}) {
-    return createWidget(label: label, trailing: trailing);
+  Widget call(String text, {IconData? trailing}) {
+    return createWidget(text, trailing: trailing);
   }
 }
 
 /// Extension on SelectMenuItemSpec to provide createWidget method for creating widgets
 extension SelectMenuItemSpecWidget on SelectMenuItemSpec {
-  Widget createWidget({required String text, IconData? icon, bool selected = false}) {
+  Widget createWidget(String text, {IconData? icon, bool selected = false}) {
     return createSelectMenuItemWidget(
       this,
-      text: text,
+      text,
       icon: icon,
       selected: selected,
     );
   }
 
   @Deprecated('Use .createWidget() instead')
-  Widget call({required String text, IconData? icon, bool selected = false}) {
-    return createWidget(text: text, icon: icon, selected: selected);
+  Widget call(String text, {IconData? icon, bool selected = false}) {
+    return createWidget(text, icon: icon, selected: selected);
   }
 }
 
 /// Extension on StyleSpec<SelectMenuItemSpec> to provide createWidget method for creating widgets
 extension SelectMenuItemSpecWrappedWidget on StyleSpec<SelectMenuItemSpec> {
-  Widget createWidget({required String text, IconData? icon, bool selected = false}) {
+  Widget createWidget(String text, {IconData? icon, bool selected = false}) {
     return StyleSpecBuilder(
       styleSpec: this,
       builder: (context, spec) {
         return createSelectMenuItemWidget(
           spec,
-          text: text,
+          text,
           icon: icon,
           selected: selected,
         );
@@ -256,7 +252,7 @@ extension SelectMenuItemSpecWrappedWidget on StyleSpec<SelectMenuItemSpec> {
   }
 
   @Deprecated('Use .createWidget() instead')
-  Widget call({required String text, IconData? icon, bool selected = false}) {
-    return createWidget(text: text, icon: icon, selected: selected);
+  Widget call(String text, {IconData? icon, bool selected = false}) {
+    return createWidget(text, icon: icon, selected: selected);
   }
 }

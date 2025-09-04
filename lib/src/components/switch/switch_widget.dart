@@ -15,7 +15,7 @@ part of 'switch.dart';
 /// )
 /// ```
 class RemixSwitch extends StatefulWidget
-    with HasEnabled, HasSelected, HasFocused {
+    with HasEnabled, HasSelected {
   const RemixSwitch({
     super.key,
     this.enabled = true,
@@ -25,10 +25,6 @@ class RemixSwitch extends StatefulWidget
     this.enableFeedback = true,
     this.focusNode,
     this.autofocus = false,
-    this.onFocusChange,
-    this.onHoverChange,
-    this.onHighlightChanged,
-    this.onStateChange,
     this.semanticLabel,
     this.semanticHint,
     this.excludeSemantics = false,
@@ -55,18 +51,6 @@ class RemixSwitch extends StatefulWidget
 
   /// Whether the switch should automatically request focus when it is created.
   final bool autofocus;
-
-  /// Called when focus state changes.
-  final ValueChanged<bool>? onFocusChange;
-
-  /// Called when hover state changes.
-  final ValueChanged<bool>? onHoverChange;
-
-  /// Called when highlight (pressed) state changes.
-  final ValueChanged<bool>? onHighlightChanged;
-
-  /// Called when any widget state changes.
-  final ValueChanged<Set<WidgetState>>? onStateChange;
 
   /// The semantic label for the switch.
   final String? semanticLabel;
@@ -107,9 +91,6 @@ class _RemixSwitchState extends State<RemixSwitch>
           enableFeedback: widget.enableFeedback,
           focusNode: widget.focusNode,
           autofocus: widget.autofocus,
-          onFocusChange: widget.onFocusChange,
-          onHoverChange: widget.onHoverChange,
-          onStatesChange: widget.onStateChange,
           statesController: controller,
           child: Container(
             child: Track(

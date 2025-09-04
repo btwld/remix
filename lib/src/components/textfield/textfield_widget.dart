@@ -16,8 +16,7 @@ part of 'textfield.dart';
 ///   style: TextFieldStyle(),
 /// )
 /// ```
-class RemixTextField extends StatefulWidget
-    with HasEnabled, HasError, HasFocused {
+class RemixTextField extends StatefulWidget with HasEnabled, HasError {
   const RemixTextField({
     super.key,
     this.controller,
@@ -75,7 +74,6 @@ class RemixTextField extends StatefulWidget
     this.trailing,
     this.onPressed,
     this.style = const RemixTextFieldStyle.create(),
-    this.onFocusChange,
   });
 
   /// Controls the text being edited.
@@ -243,19 +241,12 @@ class RemixTextField extends StatefulWidget
   /// The style configuration for the text field.
   final RemixTextFieldStyle style;
 
-  /// Called when the focus state of the text field changes.
-  final ValueChanged<bool>? onFocusChange;
-
   @override
   State<RemixTextField> createState() => _RemixTextFieldState();
 }
 
 class _RemixTextFieldState extends State<RemixTextField>
-    with
-        HasWidgetStateController,
-        HasEnabledState,
-        HasErrorState,
-        HasFocusedState {
+    with HasWidgetStateController {
   RemixTextFieldStyle get _style =>
       DefaultRemixTextFieldStyle.merge(widget.style);
 
@@ -331,7 +322,6 @@ class _RemixTextFieldState extends State<RemixTextField>
           selectionControls: widget.selectionControls,
           onPressed: widget.onPressed,
           onTapAlwaysCalled: widget.onTapAlwaysCalled,
-          onPressChange: (state) => controller.pressed = state,
           onTapOutside: widget.onTapOutside,
           scrollController: widget.scrollController,
           scrollPhysics: widget.scrollPhysics,
@@ -346,8 +336,6 @@ class _RemixTextFieldState extends State<RemixTextField>
           canRequestFocus: widget.canRequestFocus,
           spellCheckConfiguration: widget.spellCheckConfiguration,
           magnifierConfiguration: widget.magnifierConfiguration,
-          onHoverChange: (state) => controller.hovered = state,
-          onFocusChange: (state) => controller.focused = state,
           style: spec.text.spec.style ?? const TextStyle(),
           ignorePointers: widget.ignorePointers,
           builder: (context, editableText) {

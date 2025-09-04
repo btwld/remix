@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
               RemixAvatar.raw(
                 backgroundImage:
                     const NetworkImage('https://i.pravatar.cc/150?img=48'),
-                style: RemixAvatarStyle.iconColor(Colors.white),
+                style: RemixAvatarStyle().iconColor(Colors.white),
                 child: const Icon(Icons.person),
               ),
             ],

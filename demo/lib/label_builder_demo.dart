@@ -32,10 +32,10 @@ class LabelBuilderDemo extends StatelessWidget {
             const SizedBox(height: 8),
             
             // With icon at trailing position
-            const RemixLabel(
+            RemixLabel(
               'Next',
               icon: Icons.arrow_forward,
-              iconPosition: IconPosition.trailing,
+              style: RemixLabelStyle(iconPosition: IconPosition.trailing),
             ),
             
             const Divider(height: 32),
@@ -112,7 +112,7 @@ class LabelBuilderDemo extends StatelessWidget {
                     children: [
                       const Icon(Icons.dashboard, size: 32),
                       const SizedBox(height: 8),
-                      spec.widget(text: text),
+                      spec.createWidget(text),
                     ],
                   ),
                 );

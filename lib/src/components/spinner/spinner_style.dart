@@ -45,22 +45,26 @@ class RemixSpinnerStyle extends Style<SpinnerSpec>
           modifier: modifier,
         );
 
-  // Factory constructors for common patterns
-  factory RemixSpinnerStyle.size(double value) {
-    return RemixSpinnerStyle(size: value);
-  }
-
-  factory RemixSpinnerStyle.color(Color value) {
-    return RemixSpinnerStyle(color: value);
-  }
 
   // Instance methods for fluent API (return new instances)
   RemixSpinnerStyle size(double value) {
-    return merge(RemixSpinnerStyle.size(value));
+    return merge(RemixSpinnerStyle(size: value));
   }
 
   RemixSpinnerStyle color(Color value) {
-    return merge(RemixSpinnerStyle.color(value));
+    return merge(RemixSpinnerStyle(color: value));
+  }
+
+  RemixSpinnerStyle strokeWidth(double value) {
+    return merge(RemixSpinnerStyle(strokeWidth: value));
+  }
+
+  RemixSpinnerStyle duration(Duration value) {
+    return merge(RemixSpinnerStyle(duration: value));
+  }
+
+  RemixSpinnerStyle spinnerType(SpinnerType value) {
+    return merge(RemixSpinnerStyle(style: value));
   }
 
   // Animate support
@@ -132,13 +136,6 @@ class RemixSpinnerStyle extends Style<SpinnerSpec>
       ];
 }
 
-final DefaultRemixSpinnerStyle = RemixSpinnerStyle(
-  size: RemixTokens.iconSizeXl(),
-  strokeWidth: 1.5,
-  color: RemixTokens.textPrimary(),
-  duration: const Duration(milliseconds: 1000),
-  style: SpinnerType.solid,
-);
 
 /// Default spinner styles and variants
 class RemixSpinnerStyles {

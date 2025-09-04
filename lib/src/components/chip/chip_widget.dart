@@ -19,7 +19,7 @@ part of 'chip.dart';
 /// )
 /// ```
 class RemixChip extends StatefulWidget
-    with HasEnabled, HasSelected, HasFocused {
+    with HasEnabled, HasSelected {
   const RemixChip({
     super.key,
     this.label,
@@ -33,7 +33,6 @@ class RemixChip extends StatefulWidget
     this.style = const RemixChipStyle.create(),
     this.focusNode,
     this.autofocus = false,
-    this.onFocusChange,
     this.child,
   }) : assert(
           label != null || child != null,
@@ -78,9 +77,6 @@ class RemixChip extends StatefulWidget
   /// Whether the chip should automatically request focus when it is created.
   final bool autofocus;
 
-  /// Called when the focus state of the chip changes.
-  final ValueChanged<bool>? onFocusChange;
-
   @override
   State<RemixChip> createState() => _RemixChipState();
 }
@@ -90,7 +86,7 @@ class _RemixChipState extends State<RemixChip>
   @override
   Widget build(BuildContext context) {
     return StyleBuilder(
-      style: DefaultRemixChipStyle.merge(widget.style),
+      style: RemixChipStyles.defaultStyle.merge(widget.style),
       controller: controller,
       builder: (context, spec) {
         final Container = spec.container.createWidget;
@@ -99,7 +95,10 @@ class _RemixChipState extends State<RemixChip>
 
         // Use custom child if provided
         if (widget.child != null) {
-          final chipChild = Container(child: Row(children: [widget.child!]));
+          final chipChild = Container(
+            direction: Axis.horizontal,
+            children: [widget.child!],
+          );
           
           return NakedCheckbox(
             value: widget.selected,
@@ -135,7 +134,8 @@ class _RemixChipState extends State<RemixChip>
         }
 
         final chipChild = Container(
-          child: Flex(direction: Axis.horizontal, children: children),
+          direction: Axis.horizontal,
+          children: children,
         );
 
         return NakedCheckbox(
