@@ -17,7 +17,7 @@ part of 'checkbox.dart';
 ///   label: 'Accept Terms',
 /// )
 /// ```
-class RemixCheckbox extends StatefulWidget with HasEnabled, HasFocused {
+class RemixCheckbox extends StatefulWidget with HasEnabled {
   const RemixCheckbox({
     super.key,
     this.enabled = true,
@@ -32,10 +32,6 @@ class RemixCheckbox extends StatefulWidget with HasEnabled, HasFocused {
     this.style = const RemixCheckBoxStyler.create(),
     this.label,
     this.focusNode,
-    this.onFocusChange,
-    this.onHoverChange,
-    this.onHighlightChanged,
-    this.onStateChange,
     this.semanticLabel,
     this.semanticHint,
     this.excludeSemantics = false,
@@ -67,18 +63,6 @@ class RemixCheckbox extends StatefulWidget with HasEnabled, HasFocused {
   /// The callback function that is called when the checkbox is tapped.
   /// When [tristate] is true, the value can be null.
   final ValueChanged<bool?>? onChanged;
-
-  /// Called when focus state changes.
-  final ValueChanged<bool>? onFocusChange;
-
-  /// Called when hover state changes.
-  final ValueChanged<bool>? onHoverChange;
-
-  /// Called when highlight (pressed) state changes.
-  final ValueChanged<bool>? onHighlightChanged;
-
-  /// Called when any widget state changes.
-  final ValueChanged<Set<WidgetState>>? onStateChange;
 
   /// The style configuration for the checkbox.
   final RemixCheckBoxStyler style;
@@ -156,9 +140,6 @@ class _RemixCheckboxState extends State<RemixCheckbox>
           enableFeedback: widget.enableFeedback,
           focusNode: widget.focusNode,
           autofocus: widget.autofocus,
-          onFocusChange: widget.onFocusChange,
-          onHoverChange: widget.onHoverChange,
-          onStatesChange: widget.onStateChange,
           statesController: controller,
           child: checkboxChild,
         );

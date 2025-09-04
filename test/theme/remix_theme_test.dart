@@ -111,8 +111,8 @@ void main() {
           home: createRemixScope(
             child: Scaffold(
               body: RemixButton(
+                label: 'Test Button',
                 onPressed: () {},
-                child: const Text('Test Button'),
               ),
             ),
           ),
@@ -135,8 +135,8 @@ void main() {
             home: createRemixScope(
               child: Scaffold(
                 body: RemixButton(
+                  label: 'Test Button',
                   onPressed: () {},
-                  child: const Text('Test Button'),
                 ),
               ),
             ),
@@ -258,12 +258,12 @@ void main() {
                   body: Column(
                     children: [
                       RemixButton(
+                        label: 'Enabled',
                         onPressed: () {},
-                        child: const Text('Enabled'),
                       ),
                       const RemixButton(
+                        label: 'Disabled',
                         onPressed: null,
-                        child: Text('Disabled'),
                       ),
                     ],
                   ),

@@ -13,7 +13,7 @@ void main() {
           RemixButton(
             key: const ValueKey(TestDataBuilder.defaultButtonKey),
             label: TestDataBuilder.sampleLabel,
-            leading: Icons.star,
+            icon: Icons.star,
             onPressed: () {
               // Button tap handler
             },
@@ -153,28 +153,28 @@ void main() {
     testWidgets(
       'RemixButton with different icon positions',
       (WidgetTester tester) async {
-        // Test with leading icon (default)
+        // Test with icon icon (default)
         await tester.pumpRemixApp(
           RemixButton(
-            key: const ValueKey('button_leading'),
-            label: 'Leading Icon',
-            leading: Icons.arrow_back,
+            key: const ValueKey('button_icon'),
+            label: 'icon Icon',
+            icon: Icons.arrow_back,
             onPressed: () {
               // Button tap handler
             },
           ),
         );
 
-        tester.expectWidgetVisible('button_leading');
+        tester.expectWidgetVisible('button_icon');
         tester.expectIconVisible(Icons.arrow_back);
-        tester.expectTextVisible('Leading Icon');
+        tester.expectTextVisible('icon Icon');
 
         // Test with trailing icon
         await tester.pumpRemixApp(
           RemixButton(
             key: const ValueKey('button_trailing'),
             label: 'Trailing Icon',
-            leading: Icons.arrow_forward,
+            icon: Icons.arrow_forward,
             onPressed: () {
               // Button tap handler
             },
@@ -326,7 +326,7 @@ void main() {
           RemixButton(
             key: const ValueKey(TestDataBuilder.defaultButtonKey),
             label: 'Orientation Test',
-            leading: Icons.screen_rotation,
+            icon: Icons.screen_rotation,
             onPressed: () {
               // Button tap handler
             },

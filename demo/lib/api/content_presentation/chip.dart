@@ -40,11 +40,11 @@ class _MyAppState extends State<MyApp> {
                 leading: Icons.add,
                 style: RemixChipStyle()
                     .onHovered(RemixChipStyle(
-                        container: BoxStyler(
+                        container: FlexBoxStyler(
                             decoration:
                                 BoxDecorationMix(color: Colors.grey.shade100))))
                     .onSelected(RemixChipStyle(
-                        container: BoxStyler(
+                        container: FlexBoxStyler(
                             decoration: BoxDecorationMix(color: Colors.blue)))),
               ),
               RemixButton.icon(

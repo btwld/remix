@@ -19,7 +19,7 @@ Widget buildButtonRealWorldExamples(BuildContext context) {
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
+
             // Form Integration
             _buildSection(
               'Form Integration',
@@ -27,7 +27,7 @@ Widget buildButtonRealWorldExamples(BuildContext context) {
                 _FormExample(),
               ],
             ),
-            
+
             // Loading States
             _buildSection(
               'Async Operations & Loading States',
@@ -35,7 +35,7 @@ Widget buildButtonRealWorldExamples(BuildContext context) {
                 _LoadingStatesExample(),
               ],
             ),
-            
+
             // Confirmation Flows
             _buildSection(
               'Confirmation & Destructive Actions',
@@ -43,7 +43,7 @@ Widget buildButtonRealWorldExamples(BuildContext context) {
                 _ConfirmationFlowExample(),
               ],
             ),
-            
+
             // Navigation & Actions
             _buildSection(
               'Navigation & Action Patterns',
@@ -51,7 +51,7 @@ Widget buildButtonRealWorldExamples(BuildContext context) {
                 _NavigationExample(),
               ],
             ),
-            
+
             // Accessibility Demo
             _buildSection(
               'Accessibility & Keyboard Navigation',
@@ -100,21 +100,21 @@ class _FormExampleState extends State<_FormExample> {
     super.dispose();
   }
 
-  bool get _isFormValid => 
-    _emailController.text.isNotEmpty && 
-    _passwordController.text.isNotEmpty && 
-    _agreedToTerms;
+  bool get _isFormValid =>
+      _emailController.text.isNotEmpty &&
+      _passwordController.text.isNotEmpty &&
+      _agreedToTerms;
 
   Future<void> _submitForm() async {
     if (!_formKey.currentState!.validate()) return;
-    
+
     setState(() => _isSubmitting = true);
-    
+
     // Simulate API call
     await Future.delayed(const Duration(seconds: 2));
-    
+
     setState(() => _isSubmitting = false);
-    
+
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Form submitted successfully!')),
@@ -146,8 +146,8 @@ class _FormExampleState extends State<_FormExample> {
                 labelText: 'Email',
                 border: OutlineInputBorder(),
               ),
-              validator: (value) => 
-                value?.isEmpty == true ? 'Email is required' : null,
+              validator: (value) =>
+                  value?.isEmpty == true ? 'Email is required' : null,
               onChanged: (_) => setState(() {}),
             ),
             const SizedBox(height: 12),
@@ -158,14 +158,15 @@ class _FormExampleState extends State<_FormExample> {
                 labelText: 'Password',
                 border: OutlineInputBorder(),
               ),
-              validator: (value) => 
-                value?.isEmpty == true ? 'Password is required' : null,
+              validator: (value) =>
+                  value?.isEmpty == true ? 'Password is required' : null,
               onChanged: (_) => setState(() {}),
             ),
             const SizedBox(height: 12),
             CheckboxListTile(
               value: _agreedToTerms,
-              onChanged: (value) => setState(() => _agreedToTerms = value ?? false),
+              onChanged: (value) =>
+                  setState(() => _agreedToTerms = value ?? false),
               title: const Text('I agree to the Terms and Conditions'),
               controlAffinity: ListTileControlAffinity.leading,
               contentPadding: EdgeInsets.zero,
@@ -175,8 +176,8 @@ class _FormExampleState extends State<_FormExample> {
               children: [
                 RemixButton(
                   label: _isSubmitting ? 'Submitting...' : 'Submit',
-                  leading: _isSubmitting ? Icons.hourglass_empty : Icons.send,
-                  style: ButtonVariants.primary,
+                  icon: _isSubmitting ? Icons.hourglass_empty : Icons.send,
+                  style: RemixButtonStyles.primary,
                   loading: _isSubmitting,
                   enabled: _isFormValid && !_isSubmitting,
                   onPressed: _submitForm,
@@ -184,8 +185,8 @@ class _FormExampleState extends State<_FormExample> {
                 const SizedBox(width: 12),
                 RemixButton(
                   label: 'Reset',
-                  leading: Icons.refresh,
-                  style: ButtonVariants.secondaryOutline,
+                  icon: Icons.refresh,
+                  style: RemixButtonStyles.secondaryOutline,
                   enabled: !_isSubmitting,
                   onPressed: () {
                     _formKey.currentState?.reset();
@@ -213,11 +214,12 @@ class _LoadingStatesExampleState extends State<_LoadingStatesExample> {
   bool _uploadLoading = false;
   bool _syncLoading = false;
 
-  Future<void> _simulateOperation(String operation, Function(bool) setLoading) async {
+  Future<void> _simulateOperation(
+      String operation, Function(bool) setLoading) async {
     setLoading(true);
     await Future.delayed(const Duration(seconds: 3));
     setLoading(false);
-    
+
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('$operation completed!')),
@@ -233,33 +235,39 @@ class _LoadingStatesExampleState extends State<_LoadingStatesExample> {
       children: [
         RemixButton(
           label: _downloadLoading ? 'Downloading...' : 'Download',
-          leading: _downloadLoading ? Icons.download : Icons.download_rounded,
-          style: ButtonVariants.primary,
+          icon: _downloadLoading ? Icons.download : Icons.download_rounded,
+          style: RemixButtonStyles.primary,
           loading: _downloadLoading,
-          onPressed: _downloadLoading ? null : () => _simulateOperation(
-            'Download', 
-            (loading) => setState(() => _downloadLoading = loading),
-          ),
+          onPressed: _downloadLoading
+              ? null
+              : () => _simulateOperation(
+                    'Download',
+                    (loading) => setState(() => _downloadLoading = loading),
+                  ),
         ),
         RemixButton(
           label: _uploadLoading ? 'Uploading...' : 'Upload',
-          leading: _uploadLoading ? Icons.upload : Icons.upload_rounded,
-          style: ButtonVariants.success,
+          icon: _uploadLoading ? Icons.upload : Icons.upload_rounded,
+          style: RemixButtonStyles.success,
           loading: _uploadLoading,
-          onPressed: _uploadLoading ? null : () => _simulateOperation(
-            'Upload', 
-            (loading) => setState(() => _uploadLoading = loading),
-          ),
+          onPressed: _uploadLoading
+              ? null
+              : () => _simulateOperation(
+                    'Upload',
+                    (loading) => setState(() => _uploadLoading = loading),
+                  ),
         ),
         RemixButton(
           label: _syncLoading ? 'Syncing...' : 'Sync',
-          leading: _syncLoading ? Icons.sync : Icons.sync_rounded,
-          style: ButtonVariants.secondary,
+          icon: _syncLoading ? Icons.sync : Icons.sync_rounded,
+          style: RemixButtonStyles.secondary,
           loading: _syncLoading,
-          onPressed: _syncLoading ? null : () => _simulateOperation(
-            'Sync', 
-            (loading) => setState(() => _syncLoading = loading),
-          ),
+          onPressed: _syncLoading
+              ? null
+              : () => _simulateOperation(
+                    'Sync',
+                    (loading) => setState(() => _syncLoading = loading),
+                  ),
         ),
       ],
     );
@@ -268,7 +276,8 @@ class _LoadingStatesExampleState extends State<_LoadingStatesExample> {
 
 class _ConfirmationFlowExample extends StatefulWidget {
   @override
-  State<_ConfirmationFlowExample> createState() => _ConfirmationFlowExampleState();
+  State<_ConfirmationFlowExample> createState() =>
+      _ConfirmationFlowExampleState();
 }
 
 class _ConfirmationFlowExampleState extends State<_ConfirmationFlowExample> {
@@ -287,8 +296,8 @@ class _ConfirmationFlowExampleState extends State<_ConfirmationFlowExample> {
             children: [
               RemixButton(
                 label: 'Save Changes',
-                leading: Icons.save,
-                style: ButtonVariants.primary,
+                icon: Icons.save,
+                style: RemixButtonStyles.primary,
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Changes saved!')),
@@ -297,14 +306,14 @@ class _ConfirmationFlowExampleState extends State<_ConfirmationFlowExample> {
               ),
               RemixButton(
                 label: 'Delete Item',
-                leading: Icons.delete,
-                style: ButtonVariants.danger,
+                icon: Icons.delete,
+                style: RemixButtonStyles.danger,
                 onPressed: () => setState(() => _showDeleteConfirmation = true),
               ),
               RemixButton(
                 label: 'Archive',
-                leading: Icons.archive,
-                style: ButtonVariants.warning,
+                icon: Icons.archive,
+                style: RemixButtonStyles.warning,
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Item archived!')),
@@ -339,37 +348,44 @@ class _ConfirmationFlowExampleState extends State<_ConfirmationFlowExample> {
                   ],
                 ),
                 const SizedBox(height: 12),
-                const Text('Are you sure you want to delete this item? This action cannot be undone.'),
+                const Text(
+                    'Are you sure you want to delete this item? This action cannot be undone.'),
                 const SizedBox(height: 16),
                 Row(
                   children: [
                     RemixButton(
                       label: _isDeleting ? 'Deleting...' : 'Yes, Delete',
-                      leading: _isDeleting ? Icons.hourglass_empty : Icons.delete_forever,
-                      style: ButtonVariants.danger,
+                      icon: _isDeleting
+                          ? Icons.hourglass_empty
+                          : Icons.delete_forever,
+                      style: RemixButtonStyles.danger,
                       loading: _isDeleting,
-                      onPressed: _isDeleting ? null : () async {
-                        final messenger = ScaffoldMessenger.of(context);
-                        setState(() => _isDeleting = true);
-                        await Future.delayed(const Duration(seconds: 2));
-                        if (mounted) {
-                          setState(() {
-                            _isDeleting = false;
-                            _showDeleteConfirmation = false;
-                          });
-                          messenger.showSnackBar(
-                            const SnackBar(content: Text('Item deleted!')),
-                          );
-                        }
-                      },
+                      onPressed: _isDeleting
+                          ? null
+                          : () async {
+                              final messenger = ScaffoldMessenger.of(context);
+                              setState(() => _isDeleting = true);
+                              await Future.delayed(const Duration(seconds: 2));
+                              if (mounted) {
+                                setState(() {
+                                  _isDeleting = false;
+                                  _showDeleteConfirmation = false;
+                                });
+                                messenger.showSnackBar(
+                                  const SnackBar(
+                                      content: Text('Item deleted!')),
+                                );
+                              }
+                            },
                     ),
                     const SizedBox(width: 12),
                     RemixButton(
                       label: 'Cancel',
-                      leading: Icons.cancel,
-                      style: ButtonVariants.secondaryOutline,
+                      icon: Icons.cancel,
+                      style: RemixButtonStyles.secondaryOutline,
                       enabled: !_isDeleting,
-                      onPressed: () => setState(() => _showDeleteConfirmation = false),
+                      onPressed: () =>
+                          setState(() => _showDeleteConfirmation = false),
                     ),
                   ],
                 ),
@@ -391,8 +407,8 @@ class _NavigationExample extends StatelessWidget {
       children: [
         RemixButton(
           label: 'Go Back',
-          leading: Icons.arrow_back,
-          style: ButtonVariants.secondaryOutline,
+          icon: Icons.arrow_back,
+          style: RemixButtonStyles.secondaryOutline,
           onPressed: () {
             final navigator = Navigator.of(context);
             final messenger = ScaffoldMessenger.of(context);
@@ -407,8 +423,8 @@ class _NavigationExample extends StatelessWidget {
         ),
         RemixButton(
           label: 'Next Step',
-          leading: Icons.arrow_forward,
-          style: ButtonVariants.primary,
+          icon: Icons.arrow_forward,
+          style: RemixButtonStyles.primary,
           onPressed: () {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Moving to next step...')),
@@ -417,16 +433,16 @@ class _NavigationExample extends StatelessWidget {
         ),
         RemixButton(
           label: 'Open Menu',
-          leading: Icons.menu,
-          style: ButtonVariants.primaryGhost,
+          icon: Icons.menu,
+          style: RemixButtonStyles.primaryGhost,
           onPressed: () {
             Scaffold.of(context).openDrawer();
           },
         ),
         RemixButton(
           label: 'Show More Options',
-          leading: Icons.more_vert,
-          style: ButtonVariants.secondaryGhost,
+          icon: Icons.more_vert,
+          style: RemixButtonStyles.secondaryGhost,
           onPressed: () {
             showModalBottomSheet(
               context: context,
@@ -467,7 +483,7 @@ class _AccessibilityExample extends StatefulWidget {
 }
 
 class _AccessibilityExampleState extends State<_AccessibilityExample> {
-  int _focusedButtonIndex = -1;
+  final int _focusedButtonIndex = -1;
 
   @override
   Widget build(BuildContext context) {
@@ -486,7 +502,8 @@ class _AccessibilityExampleState extends State<_AccessibilityExample> {
             children: [
               Row(
                 children: [
-                  Icon(Icons.accessibility, color: Colors.blue.shade700, size: 16),
+                  Icon(Icons.accessibility,
+                      color: Colors.blue.shade700, size: 16),
                   const SizedBox(width: 8),
                   Text(
                     'Accessibility Features:',
@@ -524,8 +541,8 @@ class _AccessibilityExampleState extends State<_AccessibilityExample> {
           children: [
             RemixButton(
               label: 'First Button',
-              leading: Icons.looks_one,
-              style: ButtonVariants.primary,
+              icon: Icons.looks_one,
+              style: RemixButtonStyles.primary,
               semanticLabel: 'First button for accessibility demo',
               semanticHint: 'Activate to perform first action',
               autofocus: true,
@@ -534,14 +551,11 @@ class _AccessibilityExampleState extends State<_AccessibilityExample> {
                   const SnackBar(content: Text('First button activated!')),
                 );
               },
-              onFocusChange: (focused) {
-                setState(() => _focusedButtonIndex = focused ? 0 : -1);
-              },
             ),
             RemixButton(
               label: 'Second Button',
-              leading: Icons.looks_two,
-              style: ButtonVariants.secondary,
+              icon: Icons.looks_two,
+              style: RemixButtonStyles.secondary,
               semanticLabel: 'Second button for accessibility demo',
               semanticHint: 'Activate to perform second action',
               onPressed: () {
@@ -549,14 +563,11 @@ class _AccessibilityExampleState extends State<_AccessibilityExample> {
                   const SnackBar(content: Text('Second button activated!')),
                 );
               },
-              onFocusChange: (focused) {
-                setState(() => _focusedButtonIndex = focused ? 1 : -1);
-              },
             ),
             RemixButton(
               label: 'Third Button',
-              leading: Icons.looks_3,
-              style: ButtonVariants.success,
+              icon: Icons.looks_3,
+              style: RemixButtonStyles.success,
               semanticLabel: 'Third button for accessibility demo',
               semanticHint: 'Activate to perform third action',
               onPressed: () {
@@ -564,14 +575,11 @@ class _AccessibilityExampleState extends State<_AccessibilityExample> {
                   const SnackBar(content: Text('Third button activated!')),
                 );
               },
-              onFocusChange: (focused) {
-                setState(() => _focusedButtonIndex = focused ? 2 : -1);
-              },
             ),
             RemixButton(
               label: 'Disabled Button',
-              leading: Icons.block,
-              style: ButtonVariants.primaryOutline,
+              icon: Icons.block,
+              style: RemixButtonStyles.primaryOutline,
               enabled: false,
               semanticLabel: 'Disabled button example',
               semanticHint: 'This button is disabled and cannot be activated',

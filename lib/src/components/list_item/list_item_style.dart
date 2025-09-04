@@ -5,9 +5,7 @@ class RemixListItemStyle extends Style<ListItemSpec>
         StyleModifierMixin<RemixListItemStyle, ListItemSpec>,
         StyleVariantMixin<RemixListItemStyle, ListItemSpec> {
   final Prop<StyleSpec<BoxSpec>>? $container;
-  final Prop<StyleSpec<FlexSpec>>? $flex;
   final Prop<StyleSpec<BoxSpec>>? $contentContainer;
-  final Prop<StyleSpec<FlexSpec>>? $contentFlex;
   final Prop<StyleSpec<TextSpec>>? $title;
   final Prop<StyleSpec<TextSpec>>? $subtitle;
   final Prop<StyleSpec<IconSpec>>? $leading;
@@ -15,9 +13,7 @@ class RemixListItemStyle extends Style<ListItemSpec>
 
   const RemixListItemStyle.create({
     Prop<StyleSpec<BoxSpec>>? container,
-    Prop<StyleSpec<FlexSpec>>? flex,
     Prop<StyleSpec<BoxSpec>>? contentContainer,
-    Prop<StyleSpec<FlexSpec>>? contentFlex,
     Prop<StyleSpec<TextSpec>>? title,
     Prop<StyleSpec<TextSpec>>? subtitle,
     Prop<StyleSpec<IconSpec>>? leading,
@@ -26,9 +22,7 @@ class RemixListItemStyle extends Style<ListItemSpec>
     super.animation,
     super.modifier,
   })  : $container = container,
-        $flex = flex,
         $contentContainer = contentContainer,
-        $contentFlex = contentFlex,
         $title = title,
         $subtitle = subtitle,
         $leading = leading,
@@ -36,9 +30,7 @@ class RemixListItemStyle extends Style<ListItemSpec>
 
   RemixListItemStyle({
     BoxStyler? container,
-    FlexStyler? flex,
     BoxStyler? contentContainer,
-    FlexStyler? contentFlex,
     TextStyler? title,
     TextStyler? subtitle,
     IconStyler? leading,
@@ -48,9 +40,7 @@ class RemixListItemStyle extends Style<ListItemSpec>
     ModifierConfig? modifier,
   }) : this.create(
           container: Prop.maybeMix(container),
-          flex: Prop.maybeMix(flex),
           contentContainer: Prop.maybeMix(contentContainer),
-          contentFlex: Prop.maybeMix(contentFlex),
           title: Prop.maybeMix(title),
           subtitle: Prop.maybeMix(subtitle),
           leading: Prop.maybeMix(leading),
@@ -60,15 +50,12 @@ class RemixListItemStyle extends Style<ListItemSpec>
           modifier: modifier,
         );
 
-
   @override
   StyleSpec<ListItemSpec> resolve(BuildContext context) {
     return StyleSpec(
       spec: ListItemSpec(
         container: MixOps.resolve(context, $container),
-        flex: MixOps.resolve(context, $flex),
         contentContainer: MixOps.resolve(context, $contentContainer),
-        contentFlex: MixOps.resolve(context, $contentFlex),
         title: MixOps.resolve(context, $title),
         subtitle: MixOps.resolve(context, $subtitle),
         leading: MixOps.resolve(context, $leading),
@@ -77,11 +64,6 @@ class RemixListItemStyle extends Style<ListItemSpec>
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
     );
-  }
-
-  @override
-  RemixListItemStyle variant(Variant variant, RemixListItemStyle style) {
-    return merge(RemixListItemStyle(variants: [VariantStyle(variant, style)]));
   }
 
   @override
@@ -94,16 +76,69 @@ class RemixListItemStyle extends Style<ListItemSpec>
     return merge(RemixListItemStyle(modifier: value));
   }
 
+  // Convenience methods that delegate to container and contentContainer
+  
+  /// Sets container padding
+  RemixListItemStyle padding(double value) {
+    return merge(RemixListItemStyle(
+      container: BoxStyler(padding: EdgeInsetsGeometryMix.all(value)),
+    ));
+  }
+
+  /// Sets container margin
+  RemixListItemStyle margin(double value) {
+    return merge(RemixListItemStyle(
+      container: BoxStyler(margin: EdgeInsetsGeometryMix.all(value)),
+    ));
+  }
+
+  /// Sets container background color
+  RemixListItemStyle color(Color value) {
+    return merge(RemixListItemStyle(
+      container: BoxStyler(decoration: BoxDecorationMix(color: value)),
+    ));
+  }
+
+  /// Sets container decoration
+  RemixListItemStyle decoration(DecorationMix value) {
+    return merge(RemixListItemStyle(
+      container: BoxStyler(decoration: value),
+    ));
+  }
+
+  /// Sets container constraints
+  RemixListItemStyle constraints(BoxConstraintsMix value) {
+    return merge(RemixListItemStyle(
+      container: BoxStyler(constraints: value),
+    ));
+  }
+
+  /// Sets container border radius
+  RemixListItemStyle borderRadius(double radius) {
+    return merge(RemixListItemStyle(
+      container: BoxStyler(
+        decoration: BoxDecorationMix(
+          borderRadius: BorderRadiusMix.circular(radius),
+        ),
+      ),
+    ));
+  }
+
+  /// Sets container border
+  RemixListItemStyle border(BoxBorderMix value) {
+    return merge(RemixListItemStyle(
+      container: BoxStyler(decoration: BoxDecorationMix(border: value)),
+    ));
+  }
+
   @override
   RemixListItemStyle merge(RemixListItemStyle? other) {
     if (other == null) return this;
 
     return RemixListItemStyle.create(
       container: MixOps.merge($container, other.$container),
-      flex: MixOps.merge($flex, other.$flex),
       contentContainer:
           MixOps.merge($contentContainer, other.$contentContainer),
-      contentFlex: MixOps.merge($contentFlex, other.$contentFlex),
       title: MixOps.merge($title, other.$title),
       subtitle: MixOps.merge($subtitle, other.$subtitle),
       leading: MixOps.merge($leading, other.$leading),
@@ -117,9 +152,7 @@ class RemixListItemStyle extends Style<ListItemSpec>
   @override
   List<Object?> get props => [
         $container,
-        $flex,
         $contentContainer,
-        $contentFlex,
         $title,
         $subtitle,
         $leading,
@@ -134,18 +167,7 @@ final DefaultRemixListItemStyle = RemixListItemStyle(
   container: BoxStyler(
     padding: EdgeInsetsMix.symmetric(vertical: 12, horizontal: 16),
   ),
-  flex: FlexStyler(
-    direction: Axis.horizontal,
-    crossAxisAlignment: CrossAxisAlignment.center,
-    spacing: 16,
-  ),
   contentContainer: BoxStyler(),
-  contentFlex: FlexStyler(
-    direction: Axis.vertical,
-    crossAxisAlignment: CrossAxisAlignment.start,
-    mainAxisSize: MainAxisSize.min,
-    spacing: 2,
-  ),
   title: TextStyler(
     style: TextStyleMix(fontSize: 16, fontWeight: FontWeight.w500),
   ),

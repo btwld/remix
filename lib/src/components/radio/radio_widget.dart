@@ -11,7 +11,7 @@ part of 'radio.dart';
 /// )
 /// ```
 class RemixRadio<T> extends StatefulWidget
-    with HasEnabled, HasSelected, HasFocused {
+    with HasEnabled, HasSelected {
   const RemixRadio({
     super.key,
     required this.value,
@@ -23,10 +23,6 @@ class RemixRadio<T> extends StatefulWidget
     this.focusNode,
     this.cursor,
     this.onChanged,
-    this.onFocusChange,
-    this.onHoverChange,
-    this.onHighlightChanged,
-    this.onStateChange,
     this.statesController,
     this.semanticLabel,
     this.semanticHint,
@@ -60,12 +56,6 @@ class RemixRadio<T> extends StatefulWidget
   /// Called when the selection state changes.
   final ValueChanged<bool>? onChanged;
 
-  // State change callbacks
-  final ValueChanged<bool>? onFocusChange;
-  final ValueChanged<bool>? onHoverChange;
-  final ValueChanged<bool>? onHighlightChanged; // For pressed state
-  final ValueChanged<Set<WidgetState>>? onStateChange;
-
   final WidgetStatesController? statesController;
   final String? semanticLabel;
   final String? semanticHint;
@@ -74,12 +64,13 @@ class RemixRadio<T> extends StatefulWidget
   @override
   bool get selected => false; // Selected state comes from RadioGroup context
 
+
   @override
   State<RemixRadio<T>> createState() => _RemixRadioState<T>();
 }
 
 class _RemixRadioState<T> extends State<RemixRadio<T>>
-    with HasWidgetStateController, HasEnabledState, HasFocusedState {
+    with HasWidgetStateController, HasEnabledState {
   @override
   Widget build(BuildContext context) {
     final registry = RadioGroup.maybeOf<T>(context);
@@ -152,9 +143,6 @@ class _RemixRadioState<T> extends State<RemixRadio<T>>
           focusNode: widget.focusNode,
           autofocus: widget.autofocus,
           toggleable: widget.toggleable,
-          onFocusChange: widget.onFocusChange,
-          onHoverChange: widget.onHoverChange,
-          onPressChange: widget.onHighlightChanged,
           statesController: widget.statesController ?? controller,
           semanticLabel: widget.semanticLabel ?? widget.label,
           semanticHint: widget.semanticHint,

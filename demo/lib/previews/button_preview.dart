@@ -17,13 +17,13 @@ Widget previewBasicButtons() {
         SizedBox(height: 12),
         RemixButton(
           label: 'Button with Icon',
-          leading: Icons.star,
+          icon: Icons.star,
           onPressed: null,
         ),
         SizedBox(height: 12),
         RemixButton(
           label: 'Trailing Icon',
-          trailing: Icons.arrow_forward,
+          icon: Icons.arrow_forward,
           onPressed: null,
         ),
       ],
@@ -56,7 +56,7 @@ Widget previewButtonStates() {
         SizedBox(height: 12),
         RemixButton(
           label: 'Icon Loading',
-          leading: Icons.download,
+          icon: Icons.download,
           loading: true,
           onPressed: null,
         ),
@@ -106,7 +106,7 @@ Widget previewButtonVariations() {
           children: [
             RemixButton(
               label: 'Save',
-              leading: Icons.save,
+              icon: Icons.save,
               onPressed: null,
             ),
             SizedBox(width: 12),
@@ -119,8 +119,7 @@ Widget previewButtonVariations() {
         const SizedBox(height: 16),
         const RemixButton(
           label: 'Download File',
-          leading: Icons.download,
-          trailing: Icons.arrow_downward,
+          icon: Icons.download,
           onPressed: null,
         ),
         const SizedBox(height: 16),
@@ -146,7 +145,7 @@ Widget previewButtonVariations() {
         const SizedBox(height: 16),
         const RemixButton(
           label: 'Processing...',
-          leading: Icons.sync,
+          icon: Icons.sync,
           loading: true,
           onPressed: null,
         ),

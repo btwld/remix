@@ -108,121 +108,118 @@ class RemixTextFieldStyle extends Style<TextFieldSpec>
           modifier: modifier,
         );
 
-  // Factory methods for common properties
-
-  /// Factory for text color
-  factory RemixTextFieldStyle.color(Color value) {
-    return RemixTextFieldStyle(
-      text: TextStyler(style: TextStyleMix(color: value)),
-    );
-  }
-
-  /// Factory for background color
-  factory RemixTextFieldStyle.backgroundColor(Color value) {
-    return RemixTextFieldStyle(
-      container: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
-    );
-  }
-
-  /// Factory for border radius
-  factory RemixTextFieldStyle.borderRadius(double radius) {
-    return RemixTextFieldStyle(
-      container: FlexBoxStyler(
-        decoration:
-            BoxDecorationMix(borderRadius: BorderRadiusMix.circular(radius)),
-      ),
-    );
-  }
-
-  /// Factory for padding
-  factory RemixTextFieldStyle.padding(double value) {
-    return RemixTextFieldStyle(
-      container: FlexBoxStyler(padding: EdgeInsetsGeometryMix.all(value)),
-    );
-  }
-
-  /// Factory for border
-  factory RemixTextFieldStyle.border(BoxBorderMix value) {
-    return RemixTextFieldStyle(
-      container: FlexBoxStyler(decoration: BoxDecorationMix(border: value)),
-    );
-  }
-
-  /// Factory for width
-  factory RemixTextFieldStyle.width(double value) {
-    return RemixTextFieldStyle(
-      container: FlexBoxStyler(
-        constraints: BoxConstraintsMix(minWidth: value, maxWidth: value),
-      ),
-    );
-  }
-
-  /// Factory for height
-  factory RemixTextFieldStyle.height(double value) {
-    return RemixTextFieldStyle(
-      container: FlexBoxStyler(
-        constraints: BoxConstraintsMix(minHeight: value, maxHeight: value),
-      ),
-    );
-  }
-
-  /// Factory for cursor color
-  factory RemixTextFieldStyle.cursorColor(Color value) {
-    return RemixTextFieldStyle(cursorColor: value);
-  }
-
-  /// Factory for hint text color
-  factory RemixTextFieldStyle.hintColor(Color value) {
-    return RemixTextFieldStyle(
-      hintText: TextStyler(style: TextStyleMix(color: value)),
-    );
-  }
 
   // Instance methods (chainable)
 
   /// Sets text color
   RemixTextFieldStyle color(Color value) {
-    return merge(RemixTextFieldStyle.color(value));
+    return merge(RemixTextFieldStyle(
+      text: TextStyler(style: TextStyleMix(color: value)),
+    ));
   }
 
   /// Sets background color
   RemixTextFieldStyle backgroundColor(Color value) {
-    return merge(RemixTextFieldStyle.backgroundColor(value));
+    return merge(RemixTextFieldStyle(
+      container: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
+    ));
   }
 
   /// Sets border radius
   RemixTextFieldStyle borderRadius(double radius) {
-    return merge(RemixTextFieldStyle.borderRadius(radius));
+    return merge(RemixTextFieldStyle(
+      container: FlexBoxStyler(
+        decoration:
+            BoxDecorationMix(borderRadius: BorderRadiusMix.circular(radius)),
+      ),
+    ));
   }
 
   /// Sets padding
   RemixTextFieldStyle padding(double value) {
-    return merge(RemixTextFieldStyle.padding(value));
+    return merge(RemixTextFieldStyle(
+      container: FlexBoxStyler(padding: EdgeInsetsGeometryMix.all(value)),
+    ));
   }
 
   /// Sets border
   RemixTextFieldStyle border(BoxBorderMix value) {
-    return merge(RemixTextFieldStyle.border(value));
+    return merge(RemixTextFieldStyle(
+      container: FlexBoxStyler(decoration: BoxDecorationMix(border: value)),
+    ));
   }
 
   /// Sets width
   RemixTextFieldStyle width(double value) {
-    return merge(RemixTextFieldStyle.width(value));
+    return merge(RemixTextFieldStyle(
+      container: FlexBoxStyler(
+        constraints: BoxConstraintsMix(minWidth: value, maxWidth: value),
+      ),
+    ));
   }
 
   /// Sets height
   RemixTextFieldStyle height(double value) {
-    return merge(RemixTextFieldStyle.height(value));
+    return merge(RemixTextFieldStyle(
+      container: FlexBoxStyler(
+        constraints: BoxConstraintsMix(minHeight: value, maxHeight: value),
+      ),
+    ));
   }
 
   /// Sets cursor color
   RemixTextFieldStyle cursorColor(Color value) {
-    return merge(RemixTextFieldStyle.cursorColor(value));
+    return merge(RemixTextFieldStyle(cursorColor: value));
   }
 
   /// Sets hint text color
   RemixTextFieldStyle hintColor(Color value) {
-    return merge(RemixTextFieldStyle.hintColor(value));
+    return merge(RemixTextFieldStyle(
+      hintText: TextStyler(style: TextStyleMix(color: value)),
+    ));
+  }
+
+  // Additional convenience methods that delegate to container
+  
+  /// Sets margin
+  RemixTextFieldStyle margin(double value) {
+    return merge(RemixTextFieldStyle(
+      container: FlexBoxStyler(margin: EdgeInsetsGeometryMix.all(value)),
+    ));
+  }
+
+  /// Sets decoration
+  RemixTextFieldStyle decoration(DecorationMix value) {
+    return merge(RemixTextFieldStyle(
+      container: FlexBoxStyler(decoration: value),
+    ));
+  }
+
+  /// Sets constraints
+  RemixTextFieldStyle constraints(BoxConstraintsMix value) {
+    return merge(RemixTextFieldStyle(
+      container: FlexBoxStyler(constraints: value),
+    ));
+  }
+
+  /// Sets text alignment
+  RemixTextFieldStyle textAlign(TextAlign value) {
+    return merge(RemixTextFieldStyle(textAlign: value));
+  }
+
+  /// Sets spacing
+  RemixTextFieldStyle spacing(double value) {
+    return merge(RemixTextFieldStyle(spacing: value));
+  }
+
+  /// Sets label text
+  RemixTextFieldStyle label(TextStyler value) {
+    return merge(RemixTextFieldStyle(label: value));
+  }
+
+  /// Sets helper text
+  RemixTextFieldStyle helperText(TextStyler value) {
+    return merge(RemixTextFieldStyle(helperText: value));
   }
 
   /// Sets animation

@@ -36,7 +36,7 @@ class RemixCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StyleBuilder(
-      style: DefaultRemixCardStyle.merge(style),
+      style: RemixCardStyles.defaultStyle.merge(style),
       builder: (context, spec) {
         final Container = spec.container.createWidget;
 

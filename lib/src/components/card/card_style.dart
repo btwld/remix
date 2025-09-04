@@ -65,24 +65,6 @@ class RemixCardStyle extends Style<CardSpec>
   List<Object?> get props => [$container, $variants, $animation, $modifier];
 }
 
-final DefaultRemixCardStyle = RemixCardStyle(
-  container: BoxStyler(
-    padding: EdgeInsetsMix.all(RemixTokens.spaceLg()),
-    decoration: BoxDecorationMix(
-      borderRadius: BorderRadiusMix.circular(RemixTokens.radiusLg()),
-      color: RemixTokens.surface(),
-      boxShadow: [
-        BoxShadowMix(
-          color: RemixTokens.textPrimary().withValues(alpha: 0.1),
-          offset: const Offset(0, 2),
-          blurRadius: 4,
-          spreadRadius: 0,
-        ),
-      ],
-    ),
-  ),
-);
-
 /// Default card styles and variants
 class RemixCardStyles {
   /// Default card style
@@ -102,7 +84,53 @@ class RemixCardStyles {
             ],
           ),
         ),
-      );
+      )
+          .onHovered(
+            RemixCardStyle(
+              container: BoxStyler(
+                decoration: BoxDecorationMix(
+                  boxShadow: [
+                    BoxShadowMix(
+                      color: RemixTokens.textPrimary().withValues(alpha: 0.15),
+                      offset: const Offset(0, 4),
+                      blurRadius: 8,
+                      spreadRadius: 0,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          )
+          .onPressed(
+            RemixCardStyle(
+              container: BoxStyler(
+                decoration: BoxDecorationMix(
+                  boxShadow: [
+                    BoxShadowMix(
+                      color: RemixTokens.textPrimary().withValues(alpha: 0.08),
+                      offset: const Offset(0, 1),
+                      blurRadius: 2,
+                      spreadRadius: 0,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          )
+          .onFocused(
+            RemixCardStyle(
+              container: BoxStyler(
+                decoration: BoxDecorationMix(
+                  border: BoxBorderMix.all(
+                    BorderSideMix(
+                      color: RemixTokens.primary().withValues(alpha: 0.5),
+                      width: 2,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
 
   /// Elevated card variant with stronger shadow
   static RemixCardStyle get elevated => RemixCardStyle(
@@ -121,7 +149,39 @@ class RemixCardStyles {
             ],
           ),
         ),
-      );
+      )
+          .onHovered(
+            RemixCardStyle(
+              container: BoxStyler(
+                decoration: BoxDecorationMix(
+                  boxShadow: [
+                    BoxShadowMix(
+                      color: RemixTokens.textPrimary().withValues(alpha: 0.2),
+                      offset: const Offset(0, 8),
+                      blurRadius: 16,
+                      spreadRadius: 0,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          )
+          .onPressed(
+            RemixCardStyle(
+              container: BoxStyler(
+                decoration: BoxDecorationMix(
+                  boxShadow: [
+                    BoxShadowMix(
+                      color: RemixTokens.textPrimary().withValues(alpha: 0.12),
+                      offset: const Offset(0, 2),
+                      blurRadius: 4,
+                      spreadRadius: 0,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
 
   /// Outlined card variant with border
   static RemixCardStyle get outlined => RemixCardStyle(
@@ -135,7 +195,31 @@ class RemixCardStyles {
             color: RemixTokens.surface(),
           ),
         ),
-      );
+      )
+          .onHovered(
+            RemixCardStyle(
+              container: BoxStyler(
+                decoration: BoxDecorationMix(
+                  border: BoxBorderMix.all(
+                    BorderSideMix(color: RemixTokens.border(), width: 1.5),
+                  ),
+                  color: RemixTokens.surfaceVariant().withValues(alpha: 0.5),
+                ),
+              ),
+            ),
+          )
+          .onPressed(
+            RemixCardStyle(
+              container: BoxStyler(
+                decoration: BoxDecorationMix(
+                  border: BoxBorderMix.all(
+                    BorderSideMix(color: RemixTokens.border(), width: 2),
+                  ),
+                  color: RemixTokens.surfaceVariant().withValues(alpha: 0.8),
+                ),
+              ),
+            ),
+          );
 
   /// Flat card variant without shadow
   static RemixCardStyle get flat => RemixCardStyle(
@@ -146,5 +230,43 @@ class RemixCardStyles {
             color: RemixTokens.surfaceVariant(),
           ),
         ),
+      )
+          .onHovered(
+            RemixCardStyle(
+              container: BoxStyler(
+                decoration: BoxDecorationMix(
+                  color: RemixTokens.surfaceVariant().withValues(alpha: 0.8),
+                ),
+              ),
+            ),
+          )
+          .onPressed(
+            RemixCardStyle(
+              container: BoxStyler(
+                decoration: BoxDecorationMix(
+                  color: RemixTokens.surfaceVariant().withValues(alpha: 0.9),
+                ),
+              ),
+            ),
+          );
+
+  /// Compact card variant with reduced padding
+  static RemixCardStyle get compact => RemixCardStyle(
+        container: BoxStyler(
+          padding: EdgeInsetsMix.all(RemixTokens.spaceMd()),
+          decoration: BoxDecorationMix(
+            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusMd()),
+            color: RemixTokens.surface(),
+            boxShadow: [
+              BoxShadowMix(
+                color: RemixTokens.textPrimary().withValues(alpha: 0.08),
+                offset: const Offset(0, 1),
+                blurRadius: 2,
+                spreadRadius: 0,
+              ),
+            ],
+          ),
+        ),
       );
 }
+

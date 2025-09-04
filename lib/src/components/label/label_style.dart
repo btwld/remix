@@ -7,22 +7,26 @@ class RemixLabelStyle extends Style<LabelSpec>
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<StyleSpec<IconSpec>>? $icon;
   final Prop<StyleSpec<FlexSpec>>? $flex;
+  final Prop<IconPosition>? $iconPosition;
 
   const RemixLabelStyle.create({
     Prop<StyleSpec<TextSpec>>? label,
     Prop<StyleSpec<IconSpec>>? icon,
     Prop<StyleSpec<FlexSpec>>? flex,
+    Prop<IconPosition>? iconPosition,
     super.variants,
     super.animation,
     super.modifier,
   })  : $label = label,
         $icon = icon,
-        $flex = flex;
+        $flex = flex,
+        $iconPosition = iconPosition;
 
   RemixLabelStyle({
     TextStyler? label,
     IconStyler? icon,
     FlexStyler? flex,
+    IconPosition? iconPosition,
     AnimationConfig? animation,
     List<VariantStyle<LabelSpec>>? variants,
     ModifierConfig? modifier,
@@ -30,6 +34,7 @@ class RemixLabelStyle extends Style<LabelSpec>
           label: Prop.maybeMix(label),
           icon: Prop.maybeMix(icon),
           flex: Prop.maybeMix(flex),
+          iconPosition: iconPosition != null ? Prop.value(iconPosition) : null,
           variants: variants,
           animation: animation,
           modifier: modifier,
@@ -57,6 +62,7 @@ class RemixLabelStyle extends Style<LabelSpec>
         label: MixOps.resolve(context, $label),
         icon: MixOps.resolve(context, $icon),
         flex: MixOps.resolve(context, $flex),
+        iconPosition: MixOps.resolve(context, $iconPosition) ?? IconPosition.leading,
       ),
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
@@ -71,6 +77,7 @@ class RemixLabelStyle extends Style<LabelSpec>
       label: MixOps.merge($label, other.$label),
       icon: MixOps.merge($icon, other.$icon),
       flex: MixOps.merge($flex, other.$flex),
+      iconPosition: MixOps.merge($iconPosition, other.$iconPosition),
       variants: MixOps.mergeVariants($variants, other.$variants),
       animation: MixOps.mergeAnimation($animation, other.$animation),
       modifier: MixOps.mergeModifier($modifier, other.$modifier),
@@ -82,6 +89,7 @@ class RemixLabelStyle extends Style<LabelSpec>
         $label,
         $icon,
         $flex,
+        $iconPosition,
         $variants,
         $animation,
         $modifier,
@@ -89,7 +97,7 @@ class RemixLabelStyle extends Style<LabelSpec>
 }
 
 /// Default label styles and variants
-class RemixRemixLabelStyles {
+class RemixLabelStyles {
   /// Default label style
   static RemixLabelStyle get defaultStyle => RemixLabelStyle(
         flex: FlexStyler(spacing: 8),

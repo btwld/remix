@@ -1,5 +1,26 @@
 part of 'button.dart';
 
+/// Builder function for customizing button text rendering.
+typedef RemixButtonTextBuilder = Widget Function(
+  BuildContext context,
+  TextSpec spec,
+  String text,
+);
+
+/// Builder function for customizing button icon rendering.
+typedef RemixButtonIconBuilder = Widget Function(
+  BuildContext context,
+  IconSpec spec,
+  IconData? icon,
+  IconPosition position,
+);
+
+/// Builder function for customizing button loading state rendering.
+typedef RemixButtonLoadingBuilder = Widget Function(
+  BuildContext context,
+  SpinnerSpec spec,
+);
+
 /// A customizable button component that supports icons, loading states, and styling.
 /// The button integrates with the Mix styling system and follows Remix design patterns.
 ///
@@ -39,17 +60,18 @@ part of 'button.dart';
 /// )
 /// ```
 ///
-class RemixButton extends StatefulWidget with HasEnabled, HasFocused {
+class RemixButton extends StatefulWidget with HasEnabled {
   /// Creates a Remix button.
   ///
-  /// Must provide either [label], [leading], [trailing], or [child].
-  /// If [child] is provided, it overrides the label and icon parameters.
+  /// Must provide either [label] or [icon].
+  /// Use builders to customize rendering of specific parts.
   const RemixButton({
     super.key,
     this.label,
-    this.leading,
-    this.trailing,
-    this.child,
+    this.icon,
+    this.textBuilder,
+    this.iconBuilder,
+    this.loadingBuilder,
     this.enabled = true,
     this.autofocus = false,
     this.loading = false,
@@ -57,10 +79,6 @@ class RemixButton extends StatefulWidget with HasEnabled, HasFocused {
     required this.onPressed,
     this.onLongPress,
     this.onDoubleTap,
-    this.onFocusChange,
-    this.onHoverChange,
-    this.onPressChanged,
-    this.onStatesChange,
     this.focusNode,
     this.style = const RemixButtonStyle.create(),
     this.isSemanticButton = true,
@@ -69,8 +87,8 @@ class RemixButton extends StatefulWidget with HasEnabled, HasFocused {
     this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
   }) : assert(
-          label != null || leading != null || trailing != null || child != null,
-          'Must provide either label, leading, trailing, or child',
+          label != null || icon != null,
+          'Must provide either label or icon',
         );
 
   /// Creates a Remix button with only an icon.
@@ -96,10 +114,6 @@ class RemixButton extends StatefulWidget with HasEnabled, HasFocused {
     required this.onPressed,
     this.onLongPress,
     this.onDoubleTap,
-    this.onFocusChange,
-    this.onHoverChange,
-    this.onPressChanged,
-    this.onStatesChange,
     this.focusNode,
     this.style = const RemixButtonStyle.create(),
     this.isSemanticButton = true,
@@ -108,9 +122,10 @@ class RemixButton extends StatefulWidget with HasEnabled, HasFocused {
     this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
   })  : label = null,
-        leading = icon,
-        trailing = null,
-        child = StyledIcon(icon: icon);
+        icon = icon,
+        textBuilder = null,
+        iconBuilder = null,
+        loadingBuilder = null;
 
   static late final styleFrom = RemixButtonStyle.new;
 
@@ -137,18 +152,6 @@ class RemixButton extends StatefulWidget with HasEnabled, HasFocused {
   /// Callback function called when the button is double tapped.
   final VoidCallback? onDoubleTap;
 
-  /// Called when focus state changes.
-  final ValueChanged<bool>? onFocusChange;
-
-  /// Called when hover state changes.
-  final ValueChanged<bool>? onHoverChange;
-
-  /// Called when pressed state changes.
-  final ValueChanged<bool>? onPressChanged;
-
-  /// Called when any widget state changes.
-  final ValueChanged<Set<WidgetState>>? onStatesChange;
-
   /// Optional focus node to control the button's focus behavior.
   final FocusNode? focusNode;
 
@@ -166,20 +169,21 @@ class RemixButton extends StatefulWidget with HasEnabled, HasFocused {
   final bool autofocus;
 
   /// The label text to display in the button.
-  /// If [child] is provided, this is ignored.
+  /// If [builder] is provided, this is ignored.
   final String? label;
 
-  /// The leading icon to display in the button.
-  /// If [child] is provided, this is ignored.
-  final IconData? leading;
+  /// The icon to display in the button.
+  /// If [builder] is provided, this is ignored.
+  final IconData? icon;
 
-  /// The trailing icon to display in the button.
-  /// If [child] is provided, this is ignored.
-  final IconData? trailing;
+  /// Builder for customizing the text rendering.
+  final RemixButtonTextBuilder? textBuilder;
 
-  /// The child widget to display inside the button.
-  /// If provided, overrides [label], [leading], and [trailing].
-  final Widget? child;
+  /// Builder for customizing the icon rendering.
+  final RemixButtonIconBuilder? iconBuilder;
+
+  /// Builder for customizing the loading state rendering.
+  final RemixButtonLoadingBuilder? loadingBuilder;
 
   /// Whether the button should be treated as a semantic button.
   ///
@@ -213,68 +217,45 @@ class RemixButton extends StatefulWidget with HasEnabled, HasFocused {
 }
 
 class _RemixButtonState extends State<RemixButton>
-    with HasWidgetStateController, HasEnabledState, HasFocusedState {
+    with HasWidgetStateController, HasEnabledState {
   bool get _isEnabled =>
       widget.enabled && !widget.loading && widget.onPressed != null;
 
   @override
   Widget build(BuildContext context) {
     return StyleBuilder(
-      style: DefaultRemixButtonStyle.merge(widget.style),
+      style: RemixButtonStyles.defaultStyle.merge(widget.style),
       controller: controller,
       builder: (context, spec) {
-        final LabelSpec = spec.label;
-        final Label = spec.label.createWidget;
-        // final Spinner = spec.spinner; // Spinner spec not directly used when loading
-        final Container = spec.container.createWidget;
+        final ContainerWidget = spec.container.createWidget;
+        final LabelWidget = spec.label.createWidget;
+        final SpinnerWidget = spec.spinner.createWidget;
 
-        // Create the child widget based on whether custom child is provided
-        Widget effectiveChild;
-        if (widget.child != null) {
-          effectiveChild = widget.child!;
-        } else if (widget.leading != null && widget.trailing != null) {
-          // If both icons are present, we need to create a custom layout
-          final labelSpec = LabelSpec.spec;
-          final textFactory = labelSpec.label.createWidget;
-          final iconFactory = labelSpec.icon.createWidget;
-          final flexFactory = labelSpec.flex.createWidget;
-          effectiveChild = flexFactory(
-            children: [
-              iconFactory(icon: widget.leading!),
-              if (widget.label != null) textFactory(widget.label!),
-              iconFactory(icon: widget.trailing!),
-            ],
-          );
-        } else {
-          // Use the label with single icon
-          final icon = widget.leading ?? widget.trailing;
-          final position = widget.leading != null 
-              ? IconPosition.leading 
-              : IconPosition.trailing;
-          effectiveChild = Label(
-            text: widget.label ?? '',
-            icon: icon,
-            iconPosition: position,
-          );
-        }
+        // Build the button content using enhanced createWidget
+        Widget content = LabelWidget(
+          widget.label ?? '',
+          icon: widget.icon,
+          textBuilder: widget.textBuilder,
+          iconBuilder: widget.iconBuilder,
+        );
 
-        final content = widget.loading
-            ? Stack(
-                alignment: Alignment.center,
-                children: [
-                  const RemixSpinner(),
-                  Visibility(
-                    visible: false,
-                    maintainState: true,
-                    maintainAnimation: true,
-                    maintainSize: true,
-                    child: effectiveChild,
-                  ),
-                ],
+        // Handle loading state
+
+        final Widget spinner = widget.loadingBuilder != null
+            ? StyleSpecBuilder(
+                styleSpec: spec.spinner,
+                builder: (context, spinnerSpec) =>
+                    widget.loadingBuilder!(context, spinnerSpec),
               )
-            : effectiveChild;
+            : SpinnerWidget();
 
-        final buttonChild = Container(child: content);
+        content = Stack(
+          alignment: Alignment.center,
+          children: [
+            content,
+            Visibility(visible: widget.loading, child: spinner),
+          ],
+        );
 
         return NakedButton(
           onPressed: widget.onPressed,
@@ -289,13 +270,9 @@ class _RemixButtonState extends State<RemixButton>
           focusNode: widget.focusNode,
           autofocus: widget.autofocus,
           excludeSemantics: widget.excludeSemantics,
-          onFocusChange: widget.onFocusChange,
-          onHoverChange: widget.onHoverChange,
-          onPressChange:
-              widget.onLongPress == null ? null : widget.onPressChanged,
-          onStatesChange: widget.onStatesChange,
+          onFocusChange: (focused) => controller.focused = focused,
           statesController: controller,
-          child: buttonChild,
+          child: ContainerWidget(child: content),
         );
       },
     );

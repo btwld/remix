@@ -39,7 +39,7 @@ void main() {
             body: RemixLabel(
               'Next',
               icon: Icons.arrow_forward,
-              iconPosition: IconPosition.trailing,
+              style: RemixLabelStyle(iconPosition: IconPosition.trailing),
             ),
           ),
         ),
@@ -111,7 +111,7 @@ void main() {
             body: RemixLabel(
               'Next',
               icon: Icons.arrow_forward,
-              iconPosition: IconPosition.trailing,
+              style: RemixLabelStyle(iconPosition: IconPosition.trailing),
               iconBuilder: (context, iconSpec, icon, position) {
                 // Position should be trailing
                 expect(position, IconPosition.trailing);
@@ -139,7 +139,7 @@ void main() {
                   children: [
                     Icon(Icons.dashboard),
                     const SizedBox(height: 4),
-                    spec.widget(text: text),
+                    spec.createWidget(text),
                   ],
                 );
               },

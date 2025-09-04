@@ -32,70 +32,70 @@ Widget buildButtonUseCase(BuildContext context) {
           switch (styleVariant) {
             // Solid variants
             case 'primary':
-              buttonStyle = ButtonVariants.primary;
+              buttonStyle = RemixButtonStyles.primary;
               break;
             case 'secondary':
-              buttonStyle = ButtonVariants.secondary;
+              buttonStyle = RemixButtonStyles.secondary;
               break;
             case 'success':
-              buttonStyle = ButtonVariants.success;
+              buttonStyle = RemixButtonStyles.success;
               break;
             case 'danger':
-              buttonStyle = ButtonVariants.danger;
+              buttonStyle = RemixButtonStyles.danger;
               break;
             case 'warning':
-              buttonStyle = ButtonVariants.warning;
+              buttonStyle = RemixButtonStyles.warning;
               break;
             // Outline variants
             case 'primaryOutline':
-              buttonStyle = ButtonVariants.primaryOutline;
+              buttonStyle = RemixButtonStyles.primaryOutline;
               break;
             case 'secondaryOutline':
-              buttonStyle = ButtonVariants.secondaryOutline;
+              buttonStyle = RemixButtonStyles.secondaryOutline;
               break;
             case 'successOutline':
-              buttonStyle = ButtonVariants.successOutline;
+              buttonStyle = RemixButtonStyles.successOutline;
               break;
             case 'dangerOutline':
-              buttonStyle = ButtonVariants.dangerOutline;
+              buttonStyle = RemixButtonStyles.dangerOutline;
               break;
             // Ghost variants
             case 'primaryGhost':
-              buttonStyle = ButtonVariants.primaryGhost;
+              buttonStyle = RemixButtonStyles.primaryGhost;
               break;
             case 'secondaryGhost':
-              buttonStyle = ButtonVariants.secondaryGhost;
+              buttonStyle = RemixButtonStyles.secondaryGhost;
               break;
             case 'successGhost':
-              buttonStyle = ButtonVariants.successGhost;
+              buttonStyle = RemixButtonStyles.successGhost;
               break;
             case 'dangerGhost':
-              buttonStyle = ButtonVariants.dangerGhost;
+              buttonStyle = RemixButtonStyles.dangerGhost;
               break;
             // Soft variants
             case 'primarySoft':
-              buttonStyle = ButtonVariants.primarySoft;
+              buttonStyle = RemixButtonStyles.primarySoft;
               break;
             case 'secondarySoft':
-              buttonStyle = ButtonVariants.secondarySoft;
+              buttonStyle = RemixButtonStyles.secondarySoft;
               break;
             case 'successSoft':
-              buttonStyle = ButtonVariants.successSoft;
+              buttonStyle = RemixButtonStyles.successSoft;
               break;
             case 'dangerSoft':
-              buttonStyle = ButtonVariants.dangerSoft;
+              buttonStyle = RemixButtonStyles.dangerSoft;
               break;
             default:
-              buttonStyle = ButtonVariants.primary;
+              buttonStyle = RemixButtonStyles.primary;
           }
           
           // Apply size
           switch (sizeVariant) {
             case 'small':
-              buttonStyle = buttonStyle.merge(ButtonVariants.small);
+              buttonStyle = buttonStyle.merge(RemixButtonStyles.small);
               break;
             case 'large':
-              buttonStyle = buttonStyle.merge(ButtonVariants.large);
+              buttonStyle = buttonStyle.merge(RemixButtonStyles.large);
               break;
           }
 
@@ -115,18 +115,6 @@ Widget buildButtonUseCase(BuildContext context) {
             ) ? () {
               debugPrint('⚡ RemixButton double tapped');
             } : null,
-            onHoverChange: (hovered) {
-              debugPrint('🖱️  Hover state changed: $hovered');
-            },
-            onPressChanged: (pressed) {
-              debugPrint('🔴 Pressed state changed: $pressed');
-            },
-            onFocusChange: (focused) {
-              debugPrint('⌨️  Focus state changed: $focused');
-            },
-            onStatesChange: (states) {
-              debugPrint('📊 Widget states: ${states.map((s) => s.name).join(', ')}');
-            },
             enabled: context.knobs.boolean(
               label: 'Enabled',
               initialValue: true,
@@ -139,7 +127,7 @@ Widget buildButtonUseCase(BuildContext context) {
               label: 'label',
               initialValue: 'Interactive Button',
             ),
-            leading: context.knobs.iconData(
+            icon: context.knobs.iconData(
               label: 'Icon',
               initialValue: Icons.touch_app,
             ),

@@ -1,30 +1,25 @@
 part of 'chip.dart';
 
 class ChipSpec extends Spec<ChipSpec> with Diagnosticable {
-  final StyleSpec<BoxSpec> container;
-  final StyleSpec<FlexSpec> flex;
+  final StyleSpec<FlexBoxSpec> container;
   final StyleSpec<TextSpec> label;
   final StyleSpec<IconSpec> icon;
 
   const ChipSpec({
-    StyleSpec<BoxSpec>? container,
-    StyleSpec<FlexSpec>? flex,
+    StyleSpec<FlexBoxSpec>? container,
     StyleSpec<TextSpec>? label,
     StyleSpec<IconSpec>? icon,
-  })  : container = container ?? const StyleSpec(spec: BoxSpec()),
-        flex = flex ?? const StyleSpec(spec: FlexSpec()),
+  })  : container = container ?? const StyleSpec(spec: FlexBoxSpec()),
         label = label ?? const StyleSpec(spec: TextSpec()),
         icon = icon ?? const StyleSpec(spec: IconSpec());
 
   ChipSpec copyWith({
-    StyleSpec<BoxSpec>? container,
-    StyleSpec<FlexSpec>? flex,
+    StyleSpec<FlexBoxSpec>? container,
     StyleSpec<TextSpec>? label,
     StyleSpec<IconSpec>? icon,
   }) {
     return ChipSpec(
       container: container ?? this.container,
-      flex: flex ?? this.flex,
       label: label ?? this.label,
       icon: icon ?? this.icon,
     );
@@ -35,7 +30,6 @@ class ChipSpec extends Spec<ChipSpec> with Diagnosticable {
 
     return ChipSpec(
       container: MixOps.lerp(container, other.container, t)!,
-      flex: MixOps.lerp(flex, other.flex, t)!,
       label: MixOps.lerp(label, other.label, t)!,
       icon: MixOps.lerp(icon, other.icon, t)!,
     );
@@ -46,11 +40,10 @@ class ChipSpec extends Spec<ChipSpec> with Diagnosticable {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', container))
-      ..add(DiagnosticsProperty('flex', flex))
       ..add(DiagnosticsProperty('label', label))
       ..add(DiagnosticsProperty('icon', icon));
   }
 
   @override
-  List<Object?> get props => [container, flex, label, icon];
+  List<Object?> get props => [container, label, icon];
 }

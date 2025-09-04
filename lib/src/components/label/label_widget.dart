@@ -44,7 +44,6 @@ class RemixLabel extends StyleWidget<LabelSpec> {
     String label, {
     super.key,
     this.icon,
-    this.iconPosition = IconPosition.leading,
     this.textBuilder,
     this.iconBuilder,
     this.builder,
@@ -56,9 +55,6 @@ class RemixLabel extends StyleWidget<LabelSpec> {
 
   /// Optional icon to display with the label.
   final IconData? icon;
-
-  /// Position of the icon relative to the text.
-  final IconPosition iconPosition;
 
   /// Builder for customizing the text rendering.
   final RemixTextBuilder? textBuilder;
@@ -78,11 +74,9 @@ class RemixLabel extends StyleWidget<LabelSpec> {
 
     // Delegate to _buildLabel with builders
     return _buildLabel(
-      context,
       spec,
       text: label,
       icon: icon,
-      iconPosition: iconPosition,
       textBuilder: textBuilder,
       iconBuilder: iconBuilder,
     );
@@ -90,132 +84,101 @@ class RemixLabel extends StyleWidget<LabelSpec> {
 }
 
 Widget _buildLabel(
-  BuildContext context,
   LabelSpec spec, {
   required String text,
   IconData? icon,
-  IconPosition iconPosition = IconPosition.leading,
   RemixTextBuilder? textBuilder,
   RemixIconBuilder? iconBuilder,
 }) {
-  final textFactory = spec.label;
-  final iconFactory = spec.icon;
-  final flexFactory = spec.flex.createWidget;
+  final TextWidget = spec.label.createWidget;
+  final IconWidget = spec.icon.createWidget;
+  final FlexWidget = spec.flex.createWidget;
 
   // Text widget
   final Widget textWidget = textBuilder != null
-      ? textBuilder(context, textFactory.spec, text)
-      : textFactory.createWidget(text);
+      ? StyleSpecBuilder(
+          styleSpec: spec.label,
+          builder: (context, spec) => textBuilder(context, spec, text),
+        )
+      : TextWidget(text);
 
   // Icon widget: if a builder exists, always call it (even when icon is null)
   final Widget? iconWidget = iconBuilder != null
-      ? iconBuilder(context, iconFactory.spec, icon, iconPosition)
-      : (icon != null ? iconFactory.createWidget(icon: icon) : null);
+      ? StyleSpecBuilder(
+          styleSpec: spec.icon,
+          builder: (context, iconSpec) =>
+              iconBuilder(context, iconSpec, icon, spec.iconPosition),
+        )
+      : (icon != null ? IconWidget(icon: icon) : null);
 
-  // Arrange children based on icon position
-  final List<Widget> children = iconPosition == IconPosition.leading
-      ? [
-          if (iconWidget != null) iconWidget,
-          textWidget
-        ]
-      : [
-          textWidget,
-          if (iconWidget != null) iconWidget
-        ];
+  // Arrange children based on icon position from spec
+  final List<Widget> children = spec.iconPosition == IconPosition.leading
+      ? [if (iconWidget != null) iconWidget, textWidget]
+      : [textWidget, if (iconWidget != null) iconWidget];
 
-  return flexFactory(children: children);
+  return FlexWidget(children: children);
 }
 
 /// Extension on LabelSpec to provide createWidget method for creating widgets
 extension LabelSpecWidget on LabelSpec {
   /// Renders the LabelSpec into a Flex widget with text and optional icon
-  Widget createWidget({
-    required String text,
+  Widget createWidget(
+    String text, {
     IconData? icon,
-    IconPosition iconPosition = IconPosition.leading,
+    RemixTextBuilder? textBuilder,
+    RemixIconBuilder? iconBuilder,
   }) {
     return Builder(
       builder: (context) => _buildLabel(
-        context,
         this,
         text: text,
         icon: icon,
-        iconPosition: iconPosition,
+        textBuilder: textBuilder,
+        iconBuilder: iconBuilder,
       ),
     );
   }
 
   @Deprecated('Use .createWidget() instead')
-  Widget widget({
-    required String text,
-    IconData? icon,
-    IconPosition iconPosition = IconPosition.leading,
-  }) {
-    return createWidget(
-      text: text,
-      icon: icon,
-      iconPosition: iconPosition,
-    );
+  Widget widget(String text, {IconData? icon}) {
+    return createWidget(text, icon: icon);
   }
 
   @Deprecated('Use .createWidget() instead')
-  Widget call({
-    required String text,
-    IconData? icon,
-    IconPosition iconPosition = IconPosition.leading,
-  }) {
-    return createWidget(
-      text: text,
-      icon: icon,
-      iconPosition: iconPosition,
-    );
+  Widget call(String text, {IconData? icon}) {
+    return createWidget(text, icon: icon);
   }
 }
 
 /// Extension on StyleSpec<LabelSpec> to provide createWidget method for creating widgets
 extension LabelSpecWrappedWidget on StyleSpec<LabelSpec> {
-  Widget createWidget({
-    required String text,
+  Widget createWidget(
+    String text, {
     IconData? icon,
-    IconPosition iconPosition = IconPosition.leading,
+    RemixTextBuilder? textBuilder,
+    RemixIconBuilder? iconBuilder,
   }) {
     return StyleSpecBuilder(
       styleSpec: this,
       builder: (context, spec) {
         return _buildLabel(
-          context,
           spec,
           text: text,
           icon: icon,
-          iconPosition: iconPosition,
+          textBuilder: textBuilder,
+          iconBuilder: iconBuilder,
         );
       },
     );
   }
 
   @Deprecated('Use .createWidget() instead')
-  Widget widget({
-    required String text,
-    IconData? icon,
-    IconPosition iconPosition = IconPosition.leading,
-  }) {
-    return createWidget(
-      text: text,
-      icon: icon,
-      iconPosition: iconPosition,
-    );
+  Widget widget(String text, {IconData? icon}) {
+    return createWidget(text, icon: icon);
   }
 
   @Deprecated('Use .createWidget() instead')
-  Widget call({
-    required String text,
-    IconData? icon,
-    IconPosition iconPosition = IconPosition.leading,
-  }) {
-    return createWidget(
-      text: text,
-      icon: icon,
-      iconPosition: iconPosition,
-    );
+  Widget call(String text, {IconData? icon}) {
+    return createWidget(text, icon: icon);
   }
 }

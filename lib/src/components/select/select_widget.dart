@@ -376,7 +376,7 @@ class _AnimatedOverlayMenuState extends State<_AnimatedOverlayMenu> {
   }
 }
 
-class RemixSelectTrigger extends StatefulWidget with HasEnabled, HasFocused {
+class RemixSelectTrigger extends StatefulWidget with HasEnabled {
   const RemixSelectTrigger({
     super.key,
     this.enabled = true,
@@ -385,7 +385,6 @@ class RemixSelectTrigger extends StatefulWidget with HasEnabled, HasFocused {
     this.enableFeedback = true,
     this.focusNode,
     this.autofocus = false,
-    this.onFocusChange,
     this.label,
     this.trailing = Icons.keyboard_arrow_down,
     this.child,
@@ -424,9 +423,6 @@ class RemixSelectTrigger extends StatefulWidget with HasEnabled, HasFocused {
   /// Whether the trigger should automatically request focus when it is created.
   final bool autofocus;
 
-  /// Called when the focus state of the trigger changes.
-  final ValueChanged<bool>? onFocusChange;
-
   /// The icon to display on the trigger.
   final IconData? trailing;
 
@@ -452,7 +448,7 @@ class _RemixSelectTriggerState extends State<RemixSelectTrigger>
         // If no custom child, build default content with label
         if (widget.child == null && widget.label != null) {
           triggerContent = triggerSpec.createWidget(
-            label: widget.label!,
+            widget.label!,
             trailing: widget.trailing,
           );
         }
@@ -470,7 +466,7 @@ class _RemixSelectTriggerState extends State<RemixSelectTrigger>
   }
 }
 
-class RemixSelectItem<T> extends StatefulWidget with HasEnabled, HasFocused {
+class RemixSelectItem<T> extends StatefulWidget with HasEnabled {
   const RemixSelectItem({
     super.key,
     required this.value,
@@ -482,7 +478,6 @@ class RemixSelectItem<T> extends StatefulWidget with HasEnabled, HasFocused {
     this.enableFeedback = true,
     this.focusNode,
     this.autofocus = false,
-    this.onFocusChange,
     this.child,
   }) : assert(
           label != null || child != null,
@@ -521,9 +516,6 @@ class RemixSelectItem<T> extends StatefulWidget with HasEnabled, HasFocused {
 
   /// Whether the item should automatically request focus when it is created.
   final bool autofocus;
-
-  /// Called when the focus state of the item changes.
-  final ValueChanged<bool>? onFocusChange;
 
   /// Custom child widget that overrides the default label and icon layout.
   final Widget? child;
@@ -583,7 +575,7 @@ class _RemixSelectItemState<T> extends State<RemixSelectItem<T>>
         // If no custom child, build default content with label
         if (widget.child == null && widget.label != null) {
           itemContent = itemSpec.createWidget(
-            text: widget.label!,
+            widget.label!,
             icon: selectionIcon,
             selected: controller.selected,
           );

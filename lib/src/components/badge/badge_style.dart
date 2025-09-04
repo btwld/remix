@@ -35,58 +35,69 @@ class RemixBadgeStyle extends Style<BadgeSpec>
           modifier: modifier,
         );
 
-  /// Factory for background color
-  factory RemixBadgeStyle.color(Color value) {
-    return RemixBadgeStyle(
-      container: BoxStyler(decoration: BoxDecorationMix(color: value)),
-    );
-  }
-
-  /// Factory for border radius
-  factory RemixBadgeStyle.borderRadius(double radius) {
-    return RemixBadgeStyle(
-      container: BoxStyler(
-        decoration: BoxDecorationMix(
-          borderRadius: BorderRadiusMix.circular(radius),
-        ),
-      ),
-    );
-  }
-
-  /// Factory for padding
-  factory RemixBadgeStyle.padding(double value) {
-    return RemixBadgeStyle(
-      container: BoxStyler(padding: EdgeInsetsMix.all(value)),
-    );
-  }
-
-  /// Factory for text color
-  factory RemixBadgeStyle.textColor(Color value) {
-    return RemixBadgeStyle(
-      text: TextStyler(style: TextStyleMix(color: value)),
-    );
-  }
 
   // Instance methods (chainable)
 
   /// Sets background color
   RemixBadgeStyle color(Color value) {
-    return merge(RemixBadgeStyle.color(value));
+    return merge(RemixBadgeStyle(
+      container: BoxStyler(decoration: BoxDecorationMix(color: value)),
+    ));
   }
 
   /// Sets border radius
   RemixBadgeStyle borderRadius(double radius) {
-    return merge(RemixBadgeStyle.borderRadius(radius));
+    return merge(RemixBadgeStyle(
+      container: BoxStyler(
+        decoration: BoxDecorationMix(
+          borderRadius: BorderRadiusMix.circular(radius),
+        ),
+      ),
+    ));
   }
 
   /// Sets padding
   RemixBadgeStyle padding(double value) {
-    return merge(RemixBadgeStyle.padding(value));
+    return merge(RemixBadgeStyle(
+      container: BoxStyler(padding: EdgeInsetsGeometryMix.all(value)),
+    ));
   }
 
   /// Sets text color
   RemixBadgeStyle textColor(Color value) {
-    return merge(RemixBadgeStyle.textColor(value));
+    return merge(RemixBadgeStyle(
+      text: TextStyler(style: TextStyleMix(color: value)),
+    ));
+  }
+
+  /// Sets icon color
+  RemixBadgeStyle iconColor(Color value) {
+    return merge(RemixBadgeStyle(
+      icon: IconStyler(color: value),
+    ));
+  }
+
+  // Additional convenience methods that delegate to container
+  
+  /// Sets margin
+  RemixBadgeStyle margin(double value) {
+    return merge(RemixBadgeStyle(
+      container: BoxStyler(margin: EdgeInsetsGeometryMix.all(value)),
+    ));
+  }
+
+  /// Sets decoration
+  RemixBadgeStyle decoration(DecorationMix value) {
+    return merge(RemixBadgeStyle(
+      container: BoxStyler(decoration: value),
+    ));
+  }
+
+  /// Sets constraints
+  RemixBadgeStyle constraints(BoxConstraintsMix value) {
+    return merge(RemixBadgeStyle(
+      container: BoxStyler(constraints: value),
+    ));
   }
 
   /// Sets animation
@@ -148,29 +159,6 @@ class RemixBadgeStyle extends Style<BadgeSpec>
       ];
 }
 
-final DefaultRemixBadgeStyle = RemixBadgeStyle(
-  container: BoxStyler(
-    padding: EdgeInsetsMix.symmetric(
-      vertical: RemixTokens.spaceXs(),
-      horizontal: RemixTokens.spaceSm(),
-    ),
-    decoration: BoxDecorationMix(
-      borderRadius: BorderRadiusMix.circular(RemixTokens.radiusSm()),
-      color: RemixTokens.surfaceVariant(),
-    ),
-  ),
-  text: TextStyler(
-    style: TextStyleMix(
-      color: RemixTokens.textPrimary(),
-      fontSize: RemixTokens.fontSizeSm(),
-      fontWeight: FontWeight.w500,
-    ),
-  ),
-  icon: IconStyler(
-    color: RemixTokens.textPrimary(),
-    size: RemixTokens.iconSizeSm(),
-  ),
-);
 
 /// Default badge styles and variants
 class RemixBadgeStyles {

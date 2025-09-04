@@ -41,7 +41,7 @@ class _RemixAccordionState<T> extends State<RemixAccordion<T>> {
   @override
   Widget build(BuildContext context) {
     return _InheritedAccordionStyle(
-      style: DefaultRemixAccordionStyle.merge(widget.style),
+      style: RemixAccordionStyles.defaultStyle.merge(widget.style),
       defaultTrailing: widget.defaultTrailing,
       child: NakedAccordion<T>(
         controller: _controller,
@@ -76,7 +76,7 @@ class _InheritedAccordionStyle extends InheritedWidget {
 }
 
 // Accordion Item Widget
-class RemixAccordionItem<T> extends StatefulWidget with HasEnabled, HasFocused {
+class RemixAccordionItem<T> extends StatefulWidget with HasEnabled {
   const RemixAccordionItem({
     super.key,
     required this.title,
@@ -87,7 +87,6 @@ class RemixAccordionItem<T> extends StatefulWidget with HasEnabled, HasFocused {
     this.enabled = true,
     this.leading,
     this.trailing,
-    this.onFocusChange,
   });
 
   final String title;
@@ -98,8 +97,6 @@ class RemixAccordionItem<T> extends StatefulWidget with HasEnabled, HasFocused {
   final T value;
   final bool autofocus;
   final FocusNode? focusNode;
-  final ValueChanged<bool>? onFocusChange;
-
   @override
   State<RemixAccordionItem<T>> createState() => _RemixAccordionItemState<T>();
 }
@@ -151,9 +148,8 @@ class _RemixAccordionItemState<T> extends State<RemixAccordionItem<T>>
                       children: [
                         Expanded(
                           child: spec.headerLabel.createWidget(
-                            text: widget.title,
+                            widget.title,
                             icon: widget.leading,
-                            iconPosition: IconPosition.leading,
                           ),
                         ),
                         // Handle trailing icon with proper styling
