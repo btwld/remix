@@ -35,8 +35,8 @@ class RemixCallout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StyleBuilder(
-      style: DefaultRemixCalloutStyle.merge(style),
+    return StyleBuilder<CalloutSpec>(
+      style: RemixCalloutStyles.defaultStyle.merge(style),
       builder: (context, spec) {
         final Container = spec.container.createWidget;
 

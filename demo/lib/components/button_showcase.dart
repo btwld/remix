@@ -178,27 +178,20 @@ Widget _buildSizeRow() {
             label: 'Small',
             icon: Icons.circle,
             onPressed: () => debugPrint('Small button pressed'),
-            style:
-                RemixButtonStyles.primary.merge(RemixButtonStyle().padding(EdgeInsetsGeometryMix.all(8))).merge(
-                      RemixButtonStyle(
-                        label: RemixLabelStyle(
-                          label: TextStyler(style: TextStyleMix(fontSize: 12)),
-                        ),
-                      ),
-                    ),
+            style: RemixButtonStyles.primary
+                .padding(EdgeInsetsGeometryMix.all(RemixTokens.spaceSm()))
+                .label(
+                  RemixLabelStyle().fontSize(RemixTokens.fontSizeSm()),
+                ),
           ),
           RemixButton(
             label: 'Medium',
             icon: Icons.circle,
             onPressed: () => debugPrint('Medium button pressed'),
             style: RemixButtonStyles.primary
-                .merge(RemixButtonStyle().padding(EdgeInsetsGeometryMix.all(12)))
-                .merge(
-                  RemixButtonStyle(
-                    label: RemixLabelStyle(
-                      label: TextStyler(style: TextStyleMix(fontSize: 14)),
-                    ),
-                  ),
+                .padding(EdgeInsetsGeometryMix.all(RemixTokens.spaceMd()))
+                .label(
+                  RemixLabelStyle().fontSize(RemixTokens.fontSizeMd()),
                 ),
           ),
           RemixButton(
@@ -206,13 +199,9 @@ Widget _buildSizeRow() {
             icon: Icons.circle,
             onPressed: () => debugPrint('Large button pressed'),
             style: RemixButtonStyles.primary
-                .merge(RemixButtonStyle().padding(EdgeInsetsGeometryMix.all(16)))
-                .merge(
-                  RemixButtonStyle(
-                    label: RemixLabelStyle(
-                      label: TextStyler(style: TextStyleMix(fontSize: 16)),
-                    ),
-                  ),
+                .padding(EdgeInsetsGeometryMix.all(RemixTokens.spaceLg()))
+                .label(
+                  RemixLabelStyle().fontSize(RemixTokens.fontSizeLg()),
                 ),
           ),
         ],
