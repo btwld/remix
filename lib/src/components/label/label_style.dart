@@ -1,5 +1,17 @@
 part of 'label.dart';
 
+// Private per-component constants
+const _kBlack = Color(0xFF000000);
+const _kWhite = Color(0xFFFFFFFF);
+const _kDisabled = Color(0xFF9E9E9E);
+
+const _kSpaceSm = 8.0;
+const _kSpaceMd = 12.0;
+
+const _kFontSizeSm = 12.0;
+const _kFontSizeMd = 14.0;
+const _kFontSizeLg = 16.0;
+
 class RemixLabelStyle extends Style<LabelSpec>
     with
         StyleModifierMixin<RemixLabelStyle, LabelSpec>,
@@ -150,46 +162,12 @@ class RemixLabelStyle extends Style<LabelSpec>
 
 /// Default label styles and variants
 class RemixLabelStyles {
-  /// Default label style
+  /// Default label style (simple)
   static RemixLabelStyle get defaultStyle => RemixLabelStyle(
-        flex: FlexStyler(spacing: 8),
-      );
-
-  /// Primary label variant
-  static RemixLabelStyle get primary => RemixLabelStyle(
         label: TextStyler(
-          style: TextStyleMix(
-            color: RemixTokens.primary(),
-            fontWeight: FontWeight.w500,
-          ),
+          style: TextStyleMix(color: _kBlack, fontSize: _kFontSizeMd),
         ),
-        icon: IconStyler(color: RemixTokens.primary(), size: 20),
-        flex: FlexStyler(spacing: 8),
-      );
-
-  /// Secondary label variant
-  static RemixLabelStyle get secondary => RemixLabelStyle(
-        label: TextStyler(
-          style: TextStyleMix(
-            color: RemixTokens.textSecondary(),
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-        icon: IconStyler(color: RemixTokens.textSecondary(), size: 20),
-        flex: FlexStyler(spacing: 8),
-      );
-
-  /// Compact label variant with reduced spacing
-  static RemixLabelStyle get compact => RemixLabelStyle(
-        label: TextStyler(),
-        icon: IconStyler(size: 16),
-        flex: FlexStyler(spacing: 4),
-      );
-
-  /// Large label variant with increased spacing
-  static RemixLabelStyle get large => RemixLabelStyle(
-        label: TextStyler(style: TextStyleMix(fontSize: 16)),
-        icon: IconStyler(size: 24),
-        flex: FlexStyler(spacing: 12),
+        icon: IconStyler(color: _kBlack, size: 20),
+        flex: FlexStyler(spacing: _kSpaceSm),
       );
 }

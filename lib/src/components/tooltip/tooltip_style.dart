@@ -1,5 +1,13 @@
 part of 'tooltip.dart';
 
+// Private per-component constants
+const _kBlack = Color(0xFF000000);
+const _kWhite = Color(0xFFFFFFFF);
+
+const _kSpaceSm = 10.0;
+const _kRadiusMd = 8.0;
+const _kFontSizeSm = 12.0;
+
 class RemixTooltipStyle extends Style<TooltipSpec>
     with
         StyleModifierMixin<RemixTooltipStyle, TooltipSpec>,
@@ -106,25 +114,32 @@ class RemixTooltipStyle extends Style<TooltipSpec>
   }
 
   // Abstract method implementations for mixins
-  
+
   @override
   RemixTooltipStyle animate(AnimationConfig config) {
     return merge(RemixTooltipStyle(animation: config));
   }
-  
+
   @override
   RemixTooltipStyle constraints(BoxConstraintsMix value) {
     return merge(RemixTooltipStyle(container: BoxStyler(constraints: value)));
   }
-  
+
   @override
   RemixTooltipStyle foregroundDecoration(DecorationMix value) {
-    return merge(RemixTooltipStyle(container: BoxStyler(foregroundDecoration: value)));
+    return merge(
+      RemixTooltipStyle(container: BoxStyler(foregroundDecoration: value)),
+    );
   }
-  
+
   @override
-  RemixTooltipStyle transform(Matrix4 value, {AlignmentGeometry alignment = Alignment.center}) {
-    return merge(RemixTooltipStyle(container: BoxStyler(transform: value, alignment: alignment)));
+  RemixTooltipStyle transform(
+    Matrix4 value, {
+    AlignmentGeometry alignment = Alignment.center,
+  }) {
+    return merge(RemixTooltipStyle(
+      container: BoxStyler(alignment: alignment, transform: value),
+    ));
   }
 
   @override
@@ -139,83 +154,16 @@ class RemixTooltipStyle extends Style<TooltipSpec>
 
 final DefaultRemixTooltipStyle = RemixTooltipStyle(
   container: BoxStyler(
-    padding: EdgeInsetsMix.all(10),
+    padding: EdgeInsetsMix.all(_kSpaceSm),
     decoration: BoxDecorationMix(
-      borderRadius: BorderRadiusMix.circular(8),
-      color: RemixTokens.textPrimary().withValues(alpha: 0.8),
+      borderRadius: BorderRadiusMix.circular(_kRadiusMd),
+      color: _kBlack.withValues(alpha: 0.8),
     ),
   ),
   text: TextStyler(
-    style: TextStyleMix(
-      color: RemixTokens.background(),
-      fontSize: RemixTokens.fontSizeSm(),
-    ),
+    style: TextStyleMix(color: _kWhite, fontSize: _kFontSizeSm),
   ),
   animation: AnimationConfig.ease(const Duration(milliseconds: 100)),
 );
 
-extension RemixTooltipVariants on RemixTooltipStyle {
-  /// Dark tooltip variant (same as default)
-  static RemixTooltipStyle get dark => RemixTooltipStyle(
-        container: BoxStyler(
-          padding: EdgeInsetsGeometryMix.all(10),
-          decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(8),
-            color: RemixTokens.textPrimary().withValues(alpha: 0.9),
-          ),
-        ),
-        text: TextStyler(
-          style: TextStyleMix(
-            color: RemixTokens.background(),
-            fontSize: RemixTokens.fontSizeSm(),
-          ),
-        ),
-        animation: AnimationConfig.ease(const Duration(milliseconds: 100)),
-      );
-
-  /// Light tooltip variant with white background
-  static RemixTooltipStyle get light => RemixTooltipStyle(
-        container: BoxStyler(
-          padding: EdgeInsetsGeometryMix.all(10),
-          decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(
-              BorderSideMix(color: RemixTokens.border(), width: 1),
-            ),
-            borderRadius: BorderRadiusMix.circular(8),
-            color: RemixTokens.background(),
-            boxShadow: [
-              BoxShadowMix(
-                color: RemixTokens.textPrimary().withValues(alpha: 0.1),
-                offset: const Offset(0, 2),
-                blurRadius: 8,
-              ),
-            ],
-          ),
-        ),
-        text: TextStyler(
-          style: TextStyleMix(
-            color: RemixTokens.textPrimary(),
-            fontSize: RemixTokens.fontSizeSm(),
-          ),
-        ),
-        animation: AnimationConfig.ease(const Duration(milliseconds: 100)),
-      );
-
-  /// Primary tooltip variant with blue colors
-  static RemixTooltipStyle get primary => RemixTooltipStyle(
-        container: BoxStyler(
-          padding: EdgeInsetsGeometryMix.all(10),
-          decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(8),
-            color: RemixTokens.primary(),
-          ),
-        ),
-        text: TextStyler(
-          style: TextStyleMix(
-            color: RemixTokens.background(),
-            fontSize: RemixTokens.fontSizeSm(),
-          ),
-        ),
-        animation: AnimationConfig.ease(const Duration(milliseconds: 100)),
-      );
-}
+// Removed colorful variants; using a single defaultStyle only

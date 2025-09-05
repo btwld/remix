@@ -1,5 +1,27 @@
 part of 'accordion.dart';
 
+// Private per-component constants (no shared tokens)
+const _kBlack = Color(0xFF000000);
+const _kWhite = Color(0xFFFFFFFF);
+const _kDisabled = Color(0xFF9E9E9E);
+
+const _kSpaceXs = 4.0;
+const _kSpaceSm = 8.0;
+const _kSpaceMd = 12.0;
+const _kSpaceLg = 16.0;
+
+const _kRadiusSm = 4.0;
+const _kRadiusMd = 6.0;
+const _kRadiusLg = 8.0;
+
+const _kFontSizeSm = 12.0;
+const _kFontSizeMd = 14.0;
+const _kFontSizeLg = 16.0;
+
+const _kIconSizeMd = 16.0;
+const _kIconSizeLg = 18.0;
+const _kIconSizeXl = 20.0;
+
 class RemixAccordionStyle extends Style<AccordionSpec>
     with
         StyleModifierMixin<RemixAccordionStyle, AccordionSpec>,
@@ -139,25 +161,32 @@ class RemixAccordionStyle extends Style<AccordionSpec>
   }
 
   // Abstract method implementations for mixins
-  
+
   @override
   RemixAccordionStyle animate(AnimationConfig config) {
     return merge(RemixAccordionStyle(animation: config));
   }
-  
+
   @override
   RemixAccordionStyle constraints(BoxConstraintsMix value) {
     return merge(RemixAccordionStyle(container: BoxStyler(constraints: value)));
   }
-  
+
   @override
   RemixAccordionStyle foregroundDecoration(DecorationMix value) {
-    return merge(RemixAccordionStyle(container: BoxStyler(foregroundDecoration: value)));
+    return merge(
+      RemixAccordionStyle(container: BoxStyler(foregroundDecoration: value)),
+    );
   }
-  
+
   @override
-  RemixAccordionStyle transform(Matrix4 value, {AlignmentGeometry alignment = Alignment.center}) {
-    return merge(RemixAccordionStyle(container: BoxStyler(transform: value, alignment: alignment)));
+  RemixAccordionStyle transform(
+    Matrix4 value, {
+    AlignmentGeometry alignment = Alignment.center,
+  }) {
+    return merge(RemixAccordionStyle(
+      container: BoxStyler(alignment: alignment, transform: value),
+    ));
   }
 
   @override
@@ -175,53 +204,51 @@ class RemixAccordionStyle extends Style<AccordionSpec>
 
 /// Default accordion styles and variants
 class RemixAccordionStyles {
-  /// Default accordion style
-  static RemixAccordionStyle get defaultStyle => RemixAccordionStyle(
+  /// Solid accordion style (default)
+  static RemixAccordionStyle get solid => RemixAccordionStyle(
         container: BoxStyler(
-          margin: EdgeInsetsMix(bottom: RemixTokens.spaceMd()),
+          margin: EdgeInsetsMix(bottom: _kSpaceMd),
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(
-              BorderSideMix(color: RemixTokens.border(), width: 1),
+              BorderSideMix(color: _kBlack.withValues(alpha: 0.2), width: 1),
             ),
-            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusLg()),
+            borderRadius: BorderRadiusMix.circular(_kRadiusLg),
+            color: _kWhite,
           ),
         ),
         content: BoxStyler(
           padding: EdgeInsetsMix.fromLTRB(
-            RemixTokens.spaceMd(),
+            _kSpaceMd,
             0,
-            RemixTokens.spaceMd(),
-            RemixTokens.spaceMd(),
+            _kSpaceMd,
+            _kSpaceMd,
           ),
           constraints: BoxConstraintsMix(minWidth: double.infinity),
         ),
         contentText: TextStyler(
-          style: TextStyleMix(
-            color: RemixTokens.textPrimary(),
-            fontSize: RemixTokens.fontSizeMd(),
-          ),
+          style: TextStyleMix(color: _kBlack, fontSize: _kFontSizeMd),
         ),
-        header: BoxStyler(padding: EdgeInsetsMix.all(RemixTokens.spaceMd())),
+        header: BoxStyler(padding: EdgeInsetsMix.all(_kSpaceMd)),
         headerLabel: RemixLabelStyle(
           label: TextStyler(
             style: TextStyleMix(
-              color: RemixTokens.textPrimary(),
-              fontSize: RemixTokens.fontSizeMd(),
+              color: _kBlack,
+              fontSize: _kFontSizeMd,
               fontWeight: FontWeight.w500,
             ),
           ),
           icon: IconStyler(
-            color: RemixTokens.textSecondary(),
-            size: RemixTokens.iconSizeLg(),
+            color: _kBlack.withValues(alpha: 0.6),
+            size: _kIconSizeLg,
           ),
-          flex: FlexStyler(spacing: RemixTokens.spaceSm()),
+          flex: FlexStyler(spacing: _kSpaceSm),
         ),
       )
           .onHovered(
             RemixAccordionStyle(
               container: BoxStyler(
                 decoration: BoxDecorationMix(
-                  color: RemixTokens.surfaceVariant().withValues(alpha: 0.5),
+                  color: _kBlack.withValues(alpha: 0.03),
                 ),
               ),
             ),
@@ -230,7 +257,7 @@ class RemixAccordionStyles {
             RemixAccordionStyle(
               container: BoxStyler(
                 decoration: BoxDecorationMix(
-                  color: RemixTokens.surfaceVariant().withValues(alpha: 0.8),
+                  color: _kBlack.withValues(alpha: 0.06),
                 ),
               ),
             ),
@@ -241,7 +268,7 @@ class RemixAccordionStyles {
                 decoration: BoxDecorationMix(
                   border: BoxBorderMix.all(
                     BorderSideMix(
-                      color: RemixTokens.primary().withValues(alpha: 0.5),
+                      color: _kBlack.withValues(alpha: 0.5),
                       width: 2,
                     ),
                   ),
@@ -255,17 +282,15 @@ class RemixAccordionStyles {
                 decoration: BoxDecorationMix(
                   border: BoxBorderMix.all(
                     BorderSideMix(
-                      color: RemixTokens.border().withValues(alpha: 0.5),
+                      color: _kBlack.withValues(alpha: 0.2),
                       width: 1,
                     ),
                   ),
                 ),
               ),
               headerLabel: RemixLabelStyle(
-                label: TextStyler(
-                  style: TextStyleMix(color: RemixTokens.textDisabled()),
-                ),
-                icon: IconStyler(color: RemixTokens.textDisabled()),
+                label: TextStyler(style: TextStyleMix(color: _kDisabled)),
+                icon: IconStyler(color: _kDisabled),
               ),
             ),
           )
@@ -273,245 +298,131 @@ class RemixAccordionStyles {
             RemixAccordionStyle(
               container: BoxStyler(
                 decoration: BoxDecorationMix(
-                  color: RemixTokens.primary().withValues(alpha: 0.05),
+                  color: _kBlack.withValues(alpha: 0.05),
                 ),
               ),
             ),
           );
 
-  /// Compact accordion variant with smaller padding
-  static RemixAccordionStyle get compact => RemixAccordionStyle(
+  /// Outline accordion style (transparent bg, solid border)
+  static RemixAccordionStyle get outline => RemixAccordionStyle(
         container: BoxStyler(
-          margin: EdgeInsetsMix(bottom: RemixTokens.spaceSm()),
+          margin: EdgeInsetsMix(bottom: _kSpaceMd),
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(
-              BorderSideMix(color: RemixTokens.border(), width: 1),
+              BorderSideMix(color: _kBlack, width: 1),
             ),
-            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusMd()),
+            borderRadius: BorderRadiusMix.circular(_kRadiusLg),
+            color: _kWhite.withValues(alpha: 0.0),
           ),
         ),
         content: BoxStyler(
           padding: EdgeInsetsMix.fromLTRB(
-            RemixTokens.spaceSm(),
+            _kSpaceMd,
             0,
-            RemixTokens.spaceSm(),
-            RemixTokens.spaceSm(),
+            _kSpaceMd,
+            _kSpaceMd,
           ),
           constraints: BoxConstraintsMix(minWidth: double.infinity),
         ),
         contentText: TextStyler(
-          style: TextStyleMix(
-            color: RemixTokens.textPrimary(),
-            fontSize: RemixTokens.fontSizeSm(),
-          ),
+          style: TextStyleMix(color: _kBlack, fontSize: _kFontSizeMd),
         ),
-        header: BoxStyler(padding: EdgeInsetsMix.all(RemixTokens.spaceSm())),
+        header: BoxStyler(padding: EdgeInsetsMix.all(_kSpaceMd)),
         headerLabel: RemixLabelStyle(
           label: TextStyler(
             style: TextStyleMix(
-              color: RemixTokens.textPrimary(),
-              fontSize: RemixTokens.fontSizeSm(),
+              color: _kBlack,
+              fontSize: _kFontSizeMd,
               fontWeight: FontWeight.w500,
             ),
           ),
-          icon: IconStyler(
-            color: RemixTokens.textSecondary(),
-            size: RemixTokens.iconSizeMd(),
-          ),
-          flex: FlexStyler(spacing: RemixTokens.spaceXs()),
-        ),
-      ).onSelected(
-        RemixAccordionStyle(
-          container: BoxStyler(
-            decoration: BoxDecorationMix(
-              color: RemixTokens.primary().withValues(alpha: 0.05),
-            ),
-          ),
-        ),
-      );
-
-  /// Bordered accordion variant with prominent borders
-  static RemixAccordionStyle get bordered => RemixAccordionStyle(
-        container: BoxStyler(
-          margin: EdgeInsetsMix(bottom: RemixTokens.spaceMd()),
-          decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(
-              BorderSideMix(color: RemixTokens.border(), width: 2),
-            ),
-            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusLg()),
-          ),
-        ),
-        content: BoxStyler(
-          padding: EdgeInsetsMix.fromLTRB(
-            RemixTokens.spaceLg(),
-            0,
-            RemixTokens.spaceLg(),
-            RemixTokens.spaceLg(),
-          ),
-          constraints: BoxConstraintsMix(minWidth: double.infinity),
-        ),
-        contentText: TextStyler(
-          style: TextStyleMix(
-            color: RemixTokens.textPrimary(),
-            fontSize: RemixTokens.fontSizeMd(),
-          ),
-        ),
-        header: BoxStyler(padding: EdgeInsetsMix.all(RemixTokens.spaceLg())),
-        headerLabel: RemixLabelStyle(
-          label: TextStyler(
-            style: TextStyleMix(
-              color: RemixTokens.textPrimary(),
-              fontSize: RemixTokens.fontSizeLg(),
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          icon: IconStyler(
-            color: RemixTokens.textSecondary(),
-            size: RemixTokens.iconSizeXl(),
-          ),
-          flex: FlexStyler(spacing: RemixTokens.spaceMd()),
+          icon: IconStyler(color: _kBlack, size: _kIconSizeLg),
+          flex: FlexStyler(spacing: _kSpaceSm),
         ),
       )
-          .onSelected(
+          .onHovered(
             RemixAccordionStyle(
               container: BoxStyler(
                 decoration: BoxDecorationMix(
-                  color: RemixTokens.primary().withValues(alpha: 0.05),
+                  color: _kBlack.withValues(alpha: 0.03),
                 ),
               ),
             ),
           )
-          .onHovered(
+          .onPressed(
+            RemixAccordionStyle(
+              container: BoxStyler(
+                decoration: BoxDecorationMix(
+                  color: _kBlack.withValues(alpha: 0.06),
+                ),
+              ),
+            ),
+          )
+          .onFocused(
             RemixAccordionStyle(
               container: BoxStyler(
                 decoration: BoxDecorationMix(
                   border: BoxBorderMix.all(
-                    BorderSideMix(color: RemixTokens.primary(), width: 2),
+                    BorderSideMix(
+                      color: _kBlack.withValues(alpha: 0.5),
+                      width: 2,
+                    ),
                   ),
                 ),
               ),
             ),
-          );
-
-  /// Primary accordion variant with primary color theme
-  static RemixAccordionStyle get primary => RemixAccordionStyle(
-        container: BoxStyler(
-          margin: EdgeInsetsMix(bottom: RemixTokens.spaceMd()),
-          decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(
-              BorderSideMix(color: RemixTokens.primary(), width: 1),
-            ),
-            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusLg()),
-          ),
-        ),
-        content: BoxStyler(
-          padding: EdgeInsetsMix.fromLTRB(
-            RemixTokens.spaceMd(),
-            0,
-            RemixTokens.spaceMd(),
-            RemixTokens.spaceMd(),
-          ),
-          constraints: BoxConstraintsMix(minWidth: double.infinity),
-        ),
-        contentText: TextStyler(
-          style: TextStyleMix(
-            color: RemixTokens.textPrimary(),
-            fontSize: RemixTokens.fontSizeMd(),
-          ),
-        ),
-        header: BoxStyler(padding: EdgeInsetsMix.all(RemixTokens.spaceMd())),
-        headerLabel: RemixLabelStyle(
-          label: TextStyler(
-            style: TextStyleMix(
-              color: RemixTokens.primary(),
-              fontSize: RemixTokens.fontSizeMd(),
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          icon: IconStyler(
-            color: RemixTokens.primary(),
-            size: RemixTokens.iconSizeLg(),
-          ),
-          flex: FlexStyler(spacing: RemixTokens.spaceSm()),
-        ),
-      )
-          .onSelected(
-            RemixAccordionStyle(
-              container: BoxStyler(
-                decoration: BoxDecorationMix(
-                  color: RemixTokens.primary().withValues(alpha: 0.1),
-                ),
-              ),
-            ),
           )
-          .onHovered(
+          .onDisabled(
             RemixAccordionStyle(
-              container: BoxStyler(
-                decoration: BoxDecorationMix(
-                  color: RemixTokens.primary().withValues(alpha: 0.05),
-                ),
+              headerLabel: RemixLabelStyle(
+                label: TextStyler(style: TextStyleMix(color: _kDisabled)),
+                icon: IconStyler(color: _kDisabled),
               ),
             ),
           );
 
-  /// Secondary accordion variant with secondary color theme
-  static RemixAccordionStyle get secondary => RemixAccordionStyle(
+  /// Compact size variant (reduced spacing and radius)
+  static RemixAccordionStyle get compact => RemixAccordionStyle(
         container: BoxStyler(
-          margin: EdgeInsetsMix(bottom: RemixTokens.spaceMd()),
+          margin: EdgeInsetsMix(bottom: _kSpaceSm),
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(
-              BorderSideMix(color: RemixTokens.secondary(), width: 1),
+              BorderSideMix(color: _kBlack.withValues(alpha: 0.2), width: 1),
             ),
-            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusLg()),
+            borderRadius: BorderRadiusMix.circular(_kRadiusMd),
+            color: _kWhite,
           ),
         ),
         content: BoxStyler(
           padding: EdgeInsetsMix.fromLTRB(
-            RemixTokens.spaceMd(),
+            _kSpaceSm,
             0,
-            RemixTokens.spaceMd(),
-            RemixTokens.spaceMd(),
+            _kSpaceSm,
+            _kSpaceSm,
           ),
           constraints: BoxConstraintsMix(minWidth: double.infinity),
         ),
         contentText: TextStyler(
-          style: TextStyleMix(
-            color: RemixTokens.textPrimary(),
-            fontSize: RemixTokens.fontSizeMd(),
-          ),
+          style: TextStyleMix(color: _kBlack, fontSize: _kFontSizeSm),
         ),
-        header: BoxStyler(padding: EdgeInsetsMix.all(RemixTokens.spaceMd())),
+        header: BoxStyler(padding: EdgeInsetsMix.all(_kSpaceSm)),
         headerLabel: RemixLabelStyle(
           label: TextStyler(
             style: TextStyleMix(
-              color: RemixTokens.secondary(),
-              fontSize: RemixTokens.fontSizeMd(),
+              color: _kBlack,
+              fontSize: _kFontSizeSm,
               fontWeight: FontWeight.w500,
             ),
           ),
           icon: IconStyler(
-            color: RemixTokens.secondary(),
-            size: RemixTokens.iconSizeLg(),
+            color: _kBlack.withValues(alpha: 0.6),
+            size: _kIconSizeMd,
           ),
-          flex: FlexStyler(spacing: RemixTokens.spaceSm()),
+          flex: FlexStyler(spacing: _kSpaceXs),
         ),
-      )
-          .onSelected(
-            RemixAccordionStyle(
-              container: BoxStyler(
-                decoration: BoxDecorationMix(
-                  color: RemixTokens.secondary().withValues(alpha: 0.1),
-                ),
-              ),
-            ),
-          )
-          .onHovered(
-            RemixAccordionStyle(
-              container: BoxStyler(
-                decoration: BoxDecorationMix(
-                  color: RemixTokens.secondary().withValues(alpha: 0.05),
-                ),
-              ),
-            ),
-          );
+      );
+
+  /// Default style alias
+  static RemixAccordionStyle get defaultStyle => solid;
 }

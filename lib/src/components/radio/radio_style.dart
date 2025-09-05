@@ -1,5 +1,13 @@
 part of 'radio.dart';
 
+// Private per-component constants
+const _kBlack = Color(0xFF000000);
+const _kWhite = Color(0xFFFFFFFF);
+
+const _kDisabled = Color(0xFF9E9E9E);
+const _kSpaceSm = 8.0;
+const _kFontSizeMd = 14.0;
+
 class RemixRadioStyle extends Style<RadioSpec>
     with
         StyleModifierMixin<RemixRadioStyle, RadioSpec>,
@@ -108,25 +116,32 @@ class RemixRadioStyle extends Style<RadioSpec>
   }
 
   // Abstract method implementations for mixins
-  
+
   @override
   RemixRadioStyle animate(AnimationConfig config) {
     return merge(RemixRadioStyle(animation: config));
   }
-  
+
   @override
   RemixRadioStyle constraints(BoxConstraintsMix value) {
     return merge(RemixRadioStyle(container: FlexBoxStyler(constraints: value)));
   }
-  
+
   @override
   RemixRadioStyle foregroundDecoration(DecorationMix value) {
-    return merge(RemixRadioStyle(container: FlexBoxStyler(foregroundDecoration: value)));
+    return merge(
+      RemixRadioStyle(container: FlexBoxStyler(foregroundDecoration: value)),
+    );
   }
-  
+
   @override
-  RemixRadioStyle transform(Matrix4 value, {AlignmentGeometry alignment = Alignment.center}) {
-    return merge(RemixRadioStyle(container: FlexBoxStyler(transform: value, alignment: alignment)));
+  RemixRadioStyle transform(
+    Matrix4 value, {
+    AlignmentGeometry alignment = Alignment.center,
+  }) {
+    return merge(RemixRadioStyle(
+      container: FlexBoxStyler(alignment: alignment, transform: value),
+    ));
   }
 
   @override
@@ -177,7 +192,7 @@ final DefaultRemixRadioStyle = RemixRadioStyle(
     direction: Axis.horizontal,
     crossAxisAlignment: CrossAxisAlignment.center,
     mainAxisSize: MainAxisSize.min,
-    spacing: RemixTokens.spaceSm(),
+    spacing: _kSpaceSm,
   ),
   indicatorContainer: BoxStyler(
     alignment: Alignment.center,
@@ -188,12 +203,9 @@ final DefaultRemixRadioStyle = RemixRadioStyle(
       maxHeight: 20,
     ),
     decoration: BoxDecorationMix(
-      border: BoxBorderMix.all(BorderSideMix(
-        color: RemixTokens.border(),
-        width: 1.5,
-      )),
+      border: BoxBorderMix.all(BorderSideMix(color: _kBlack, width: 1.5)),
       shape: BoxShape.circle,
-      color: RemixTokens.background(),
+      color: _kWhite,
     ),
   ),
   indicator: BoxStyler(
@@ -203,28 +215,22 @@ final DefaultRemixRadioStyle = RemixRadioStyle(
       minHeight: 10,
       maxHeight: 10,
     ),
-    decoration: BoxDecorationMix(
-      shape: BoxShape.circle,
-      color: RemixTokens.textPrimary(),
-    ),
+    decoration: BoxDecorationMix(shape: BoxShape.circle, color: _kBlack),
   ),
   label: TextStyler(
-    style: TextStyleMix(
-      color: RemixTokens.textPrimary(),
-      fontSize: RemixTokens.fontSizeMd(),
-    ),
+    style: TextStyleMix(color: _kBlack, fontSize: _kFontSizeMd),
   ),
 );
 
 extension RadioVariants on RemixRadioStyle {
-  /// Primary radio variant with blue colors
-  static RemixRadioStyle get primary => RemixRadioStyle(
+  /// Solid radio
+  static RemixRadioStyle get solid => RemixRadioStyle(
         container: FlexBoxStyler(
           alignment: Alignment.centerLeft,
           direction: Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
-          spacing: RemixTokens.spaceSm(),
+          spacing: _kSpaceSm,
         ),
         indicatorContainer: BoxStyler(
           alignment: Alignment.center,
@@ -235,12 +241,9 @@ extension RadioVariants on RemixRadioStyle {
             maxHeight: 20,
           ),
           decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(BorderSideMix(
-              color: RemixTokens.primary(),
-              width: 1.5,
-            )),
+            border: BoxBorderMix.all(BorderSideMix(color: _kBlack, width: 1.5)),
             shape: BoxShape.circle,
-            color: RemixTokens.primary().withValues(alpha: 0.1),
+            color: _kBlack,
           ),
         ),
         indicator: BoxStyler(
@@ -252,25 +255,22 @@ extension RadioVariants on RemixRadioStyle {
           ),
           decoration: BoxDecorationMix(
             shape: BoxShape.circle,
-            color: RemixTokens.primary(),
+            color: _kWhite,
           ),
         ),
         label: TextStyler(
-          style: TextStyleMix(
-            color: RemixTokens.textPrimary(),
-            fontSize: RemixTokens.fontSizeMd(),
-          ),
+          style: TextStyleMix(color: _kBlack, fontSize: _kFontSizeMd),
         ),
       );
 
-  /// Secondary radio variant with grey colors
-  static RemixRadioStyle get secondary => RemixRadioStyle(
+  /// Outline radio
+  static RemixRadioStyle get outline => RemixRadioStyle(
         container: FlexBoxStyler(
           alignment: Alignment.centerLeft,
           direction: Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
-          spacing: RemixTokens.spaceSm(),
+          spacing: _kSpaceSm,
         ),
         indicatorContainer: BoxStyler(
           alignment: Alignment.center,
@@ -281,12 +281,9 @@ extension RadioVariants on RemixRadioStyle {
             maxHeight: 20,
           ),
           decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(BorderSideMix(
-              color: RemixTokens.textSecondary(),
-              width: 1.5,
-            )),
+            border: BoxBorderMix.all(BorderSideMix(color: _kBlack, width: 1.5)),
             shape: BoxShape.circle,
-            color: RemixTokens.surface(),
+            color: _kWhite,
           ),
         ),
         indicator: BoxStyler(
@@ -298,60 +295,11 @@ extension RadioVariants on RemixRadioStyle {
           ),
           decoration: BoxDecorationMix(
             shape: BoxShape.circle,
-            color: RemixTokens.textSecondary(),
+            color: _kBlack,
           ),
         ),
         label: TextStyler(
-          style: TextStyleMix(
-            color: RemixTokens.textPrimary(),
-            fontSize: RemixTokens.fontSizeMd(),
-          ),
-        ),
-      );
-
-  /// Compact radio variant with smaller size
-  static RemixRadioStyle get compact => RemixRadioStyle(
-        container: FlexBoxStyler(
-          alignment: Alignment.centerLeft,
-          direction: Axis.horizontal,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          spacing: RemixTokens.spaceXs(),
-        ),
-        indicatorContainer: BoxStyler(
-          alignment: Alignment.center,
-          constraints: BoxConstraintsMix(
-            minWidth: 16,
-            maxWidth: 16,
-            minHeight: 16,
-            maxHeight: 16,
-          ),
-          decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(BorderSideMix(
-              color: RemixTokens.border(),
-              width: 1.5,
-            )),
-            shape: BoxShape.circle,
-            color: RemixTokens.background(),
-          ),
-        ),
-        indicator: BoxStyler(
-          constraints: BoxConstraintsMix(
-            minWidth: 8,
-            maxWidth: 8,
-            minHeight: 8,
-            maxHeight: 8,
-          ),
-          decoration: BoxDecorationMix(
-            shape: BoxShape.circle,
-            color: RemixTokens.textPrimary(),
-          ),
-        ),
-        label: TextStyler(
-          style: TextStyleMix(
-            color: RemixTokens.textPrimary(),
-            fontSize: RemixTokens.fontSizeSm(),
-          ),
+          style: TextStyleMix(color: _kBlack, fontSize: _kFontSizeMd),
         ),
       );
 }

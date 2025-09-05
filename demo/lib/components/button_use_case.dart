@@ -21,7 +21,7 @@ Widget buildButtonUseCase(BuildContext context) {
             label: 'Style',
             initialValue: 'primary',
           );
-          
+
           final sizeVariant = context.knobs.string(
             label: 'Size',
             initialValue: 'medium',
@@ -30,65 +30,17 @@ Widget buildButtonUseCase(BuildContext context) {
           // Map style variants
           RemixButtonStyle? buttonStyle;
           switch (styleVariant) {
-            // Solid variants
-            case 'primary':
-              buttonStyle = RemixButtonStyles.primary;
+            // Only foundational variants are supported now
+            case 'solid':
+              buttonStyle = RemixButtonStyles.solid;
               break;
-            case 'secondary':
-              buttonStyle = RemixButtonStyles.secondary;
-              break;
-            case 'success':
-              buttonStyle = RemixButtonStyles.success;
-              break;
-            case 'danger':
-              buttonStyle = RemixButtonStyles.danger;
-              break;
-            case 'warning':
-              buttonStyle = RemixButtonStyles.warning;
-              break;
-            // Outline variants
-            case 'primaryOutline':
-              buttonStyle = RemixButtonStyles.primaryOutline;
-              break;
-            case 'secondaryOutline':
-              buttonStyle = RemixButtonStyles.secondaryOutline;
-              break;
-            case 'successOutline':
-              buttonStyle = RemixButtonStyles.successOutline;
-              break;
-            case 'dangerOutline':
-              buttonStyle = RemixButtonStyles.dangerOutline;
-              break;
-            // Ghost variants
-            case 'primaryGhost':
-              buttonStyle = RemixButtonStyles.primaryGhost;
-              break;
-            case 'secondaryGhost':
-              buttonStyle = RemixButtonStyles.secondaryGhost;
-              break;
-            case 'successGhost':
-              buttonStyle = RemixButtonStyles.successGhost;
-              break;
-            case 'dangerGhost':
-              buttonStyle = RemixButtonStyles.dangerGhost;
-              break;
-            // Soft variants
-            case 'primarySoft':
-              buttonStyle = RemixButtonStyles.primarySoft;
-              break;
-            case 'secondarySoft':
-              buttonStyle = RemixButtonStyles.secondarySoft;
-              break;
-            case 'successSoft':
-              buttonStyle = RemixButtonStyles.successSoft;
-              break;
-            case 'dangerSoft':
-              buttonStyle = RemixButtonStyles.dangerSoft;
+            case 'outline':
+              buttonStyle = RemixButtonStyles.outline;
               break;
             default:
-              buttonStyle = RemixButtonStyles.primary;
+              buttonStyle = RemixButtonStyles.solid;
           }
-          
+
           // Apply size
           switch (sizeVariant) {
             case 'small':
@@ -106,15 +58,19 @@ Widget buildButtonUseCase(BuildContext context) {
             onLongPress: context.knobs.boolean(
               label: 'Enable Long Press',
               initialValue: true,
-            ) ? () {
-              debugPrint('⏳ RemixButton long pressed');
-            } : null,
+            )
+                ? () {
+                    debugPrint('⏳ RemixButton long pressed');
+                  }
+                : null,
             onDoubleTap: context.knobs.boolean(
               label: 'Enable Double Tap',
               initialValue: true,
-            ) ? () {
-              debugPrint('⚡ RemixButton double tapped');
-            } : null,
+            )
+                ? () {
+                    debugPrint('⚡ RemixButton double tapped');
+                  }
+                : null,
             enabled: context.knobs.boolean(
               label: 'Enabled',
               initialValue: true,
