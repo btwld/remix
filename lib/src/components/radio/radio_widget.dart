@@ -10,8 +10,7 @@ part of 'radio.dart';
 ///   label: 'Option 1',
 /// )
 /// ```
-class RemixRadio<T> extends StatefulWidget
-    with HasEnabled, HasSelected {
+class RemixRadio<T> extends StatefulWidget with HasEnabled, HasSelected {
   const RemixRadio({
     super.key,
     required this.value,
@@ -63,7 +62,6 @@ class RemixRadio<T> extends StatefulWidget
 
   @override
   bool get selected => false; // Selected state comes from RadioGroup context
-
 
   @override
   State<RemixRadio<T>> createState() => _RemixRadioState<T>();
@@ -129,25 +127,35 @@ class _RemixRadioState<T> extends State<RemixRadio<T>>
         );
 
         // Add label if present
-        final radioWidget = widget.label == null 
+        final radioWidget = widget.label == null
             ? radioIndicator
             : FlexContainer(
                 direction: Axis.horizontal,
                 children: [radioIndicator, Label(widget.label!)],
               );
 
-        return NakedRadio<T>(
-          value: widget.value,
-          enabled: widget.enabled,
-          mouseCursor: widget.cursor,
-          focusNode: widget.focusNode,
-          autofocus: widget.autofocus,
-          toggleable: widget.toggleable,
-          statesController: widget.statesController ?? controller,
-          semanticLabel: widget.semanticLabel ?? widget.label,
-          semanticHint: widget.semanticHint,
+        // Simplified widget tree with integrated semantics
+        return Semantics(
           excludeSemantics: widget.excludeSemantics,
-          child: radioWidget,
+          enabled: widget.enabled,
+          checked: controller.selected,
+          focusable: widget.enabled,
+          inMutuallyExclusiveGroup: true,
+          label: widget.semanticLabel ?? widget.label,
+          hint: widget.semanticHint,
+          onTap: widget.enabled && widget.onChanged != null
+              ? () => widget.onChanged!(true)
+              : null,
+          child: NakedRadio<T>(
+            value: widget.value,
+            enabled: widget.enabled,
+            mouseCursor: widget.cursor,
+            focusNode: widget.focusNode,
+            autofocus: widget.autofocus,
+            toggleable: widget.toggleable,
+            statesController: widget.statesController ?? controller,
+            child: radioWidget,
+          ),
         );
       },
     );

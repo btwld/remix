@@ -165,5 +165,3 @@ final DefaultRemixTooltipStyle = RemixTooltipStyle(
   ),
   animation: AnimationConfig.ease(const Duration(milliseconds: 100)),
 );
-
-// Removed colorful variants; using a single defaultStyle only

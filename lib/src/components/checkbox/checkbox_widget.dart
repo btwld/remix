@@ -126,23 +126,33 @@ class _RemixCheckboxState extends State<RemixCheckbox>
                 children: [checkbox, Label(widget.label!)],
               );
 
-        return NakedCheckbox(
-          value: widget.selected,
-          tristate: widget.tristate,
-          onChanged: widget.enabled && widget.onChanged != null
-              ? (value) =>
-                  widget.onChanged!(widget.tristate ? value : (value ?? false))
-              : null,
-          enabled: widget.enabled,
-          semanticLabel: widget.semanticLabel ?? widget.label,
-          semanticHint: widget.semanticHint,
+        // Simplified widget tree with integrated semantics
+        return Semantics(
           excludeSemantics: widget.excludeSemantics,
-          mouseCursor: widget.mouseCursor,
-          enableFeedback: widget.enableFeedback,
-          focusNode: widget.focusNode,
-          autofocus: widget.autofocus,
-          statesController: controller,
-          child: checkboxChild,
+          enabled: widget.enabled,
+          checked: widget.selected,
+          mixed: widget.tristate && widget.selected == null,
+          focusable: widget.enabled,
+          label: widget.semanticLabel ?? widget.label,
+          hint: widget.semanticHint,
+          onTap: widget.enabled && widget.onChanged != null
+              ? () => widget.onChanged!(!(widget.selected ?? false))
+              : null,
+          child: NakedCheckbox(
+            value: widget.selected,
+            tristate: widget.tristate,
+            onChanged: widget.enabled && widget.onChanged != null
+                ? (value) => widget
+                    .onChanged!(widget.tristate ? value : (value ?? false))
+                : null,
+            enabled: widget.enabled,
+            mouseCursor: widget.mouseCursor,
+            enableFeedback: widget.enableFeedback,
+            focusNode: widget.focusNode,
+            autofocus: widget.autofocus,
+            statesController: controller,
+            child: checkboxChild,
+          ),
         );
       },
     );

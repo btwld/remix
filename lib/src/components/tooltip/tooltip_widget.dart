@@ -36,14 +36,18 @@ class RemixTooltip extends StatelessWidget {
       builder: (context, spec) {
         final Container = spec.container.createWidget;
 
-        return NakedTooltip(
+        // Simplified widget tree - only add semantics if needed
+        final tooltip = NakedTooltip(
           tooltipBuilder: (context) => Container(child: tooltipChild),
           showDuration: showDuration,
           waitDuration: waitDuration,
-          tooltipSemantics: tooltipSemantics,
           removalDelay: const Duration(milliseconds: 100),
           child: child,
         );
+
+        return tooltipSemantics != null
+            ? Semantics(tooltip: tooltipSemantics, child: tooltip)
+            : tooltip;
       },
     );
   }
