@@ -4,7 +4,6 @@ part of 'radio.dart';
 const _kBlack = Color(0xFF000000);
 const _kWhite = Color(0xFFFFFFFF);
 
-const _kDisabled = Color(0xFF9E9E9E);
 const _kSpaceSm = 8.0;
 const _kFontSizeMd = 14.0;
 

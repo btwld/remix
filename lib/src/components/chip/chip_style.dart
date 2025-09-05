@@ -9,8 +9,6 @@ const _kSpaceXs = 4.0;
 const _kSpaceSm = 8.0;
 const _kSpaceMd = 12.0;
 
-const _kRadiusSm = 4.0;
-const _kRadiusMd = 6.0;
 const _kRadiusLg = 8.0;
 const _kRadiusXl = 12.0;
 

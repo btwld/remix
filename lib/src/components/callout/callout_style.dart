@@ -3,24 +3,14 @@ part of 'callout.dart';
 // Private per-component constants (no shared tokens)
 const _kBlack = Color(0xFF000000);
 const _kWhite = Color(0xFFFFFFFF);
-const _kDisabled = Color(0xFF9E9E9E);
 
-const _kSpaceXs = 4.0;
-const _kSpaceSm = 8.0;
 const _kSpaceMd = 12.0;
-const _kSpaceLg = 16.0;
 
-const _kRadiusSm = 4.0;
 const _kRadiusMd = 6.0;
-const _kRadiusLg = 8.0;
 
-const _kFontSizeSm = 12.0;
 const _kFontSizeMd = 14.0;
-const _kFontSizeLg = 16.0;
 
-const _kIconSizeSm = 14.0;
 const _kIconSizeMd = 16.0;
-const _kIconSizeLg = 18.0;
 
 class RemixCalloutStyle extends Style<CalloutSpec>
     with

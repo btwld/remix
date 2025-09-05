@@ -3,7 +3,6 @@ part of 'avatar.dart';
 // Private per-component constants (no shared tokens)
 const _kBlack = Color(0xFF000000);
 const _kWhite = Color(0xFFFFFFFF);
-const _kDisabled = Color(0xFF9E9E9E);
 
 const _kSizeSmall = 32.0;
 const _kSizeMedium = 50.0;

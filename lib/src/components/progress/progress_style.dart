@@ -2,9 +2,6 @@ part of 'progress.dart';
 
 // Private per-component constants
 const _kBlack = Color(0xFF000000);
-const _kWhite = Color(0xFFFFFFFF);
-const _kDisabled = Color(0xFF9E9E9E);
-
 const _kRadiusMax = 99.0;
 const _kBarHeight = 6.0;
 

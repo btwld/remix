@@ -3,16 +3,13 @@ part of 'textfield.dart';
 // Private per-component constants
 const _kBlack = Color(0xFF000000);
 const _kWhite = Color(0xFFFFFFFF);
-const _kDisabled = Color(0xFF9E9E9E);
 
 const _kSpaceXs = 4.0;
 const _kSpaceSm = 8.0;
 const _kSpaceMd = 12.0;
 const _kSpaceLg = 16.0;
 
-const _kRadiusSm = 4.0;
 const _kRadiusMd = 6.0;
-const _kRadiusLg = 8.0;
 
 const _kFontSizeSm = 12.0;
 const _kFontSizeMd = 14.0;
@@ -440,9 +437,11 @@ extension RemixTextFieldVariants on RemixTextFieldStyle {
   /// Solid text field variant (default) - white background, black text, subtle border
   static RemixTextFieldStyle get solid => RemixTextFieldStyle(
         text: TextStyler(
-            style: TextStyleMix(color: _kBlack, fontSize: _kFontSizeMd)),
+          style: TextStyleMix(color: _kBlack, fontSize: _kFontSizeMd),
+        ),
         hintText: TextStyler(
-            style: TextStyleMix(color: _kBlack.withValues(alpha: 0.5))),
+          style: TextStyleMix(color: _kBlack.withValues(alpha: 0.5)),
+        ),
         textAlign: TextAlign.start,
         cursorWidth: 2.0,
         cursorColor: _kBlack,
@@ -465,16 +464,20 @@ extension RemixTextFieldVariants on RemixTextFieldStyle {
         ),
         helperText: TextStyler(
           style: TextStyleMix(
-              color: _kBlack.withValues(alpha: 0.7), fontSize: _kFontSizeSm),
+            color: _kBlack.withValues(alpha: 0.7),
+            fontSize: _kFontSizeSm,
+          ),
         ),
       );
 
   /// Outline text field variant - transparent background, black border
   static RemixTextFieldStyle get outline => RemixTextFieldStyle(
         text: TextStyler(
-            style: TextStyleMix(color: _kBlack, fontSize: _kFontSizeMd)),
+          style: TextStyleMix(color: _kBlack, fontSize: _kFontSizeMd),
+        ),
         hintText: TextStyler(
-            style: TextStyleMix(color: _kBlack.withValues(alpha: 0.5))),
+          style: TextStyleMix(color: _kBlack.withValues(alpha: 0.5)),
+        ),
         textAlign: TextAlign.start,
         cursorWidth: 2.0,
         cursorColor: _kBlack,
@@ -497,7 +500,9 @@ extension RemixTextFieldVariants on RemixTextFieldStyle {
         ),
         helperText: TextStyler(
           style: TextStyleMix(
-              color: _kBlack.withValues(alpha: 0.7), fontSize: _kFontSizeSm),
+            color: _kBlack.withValues(alpha: 0.7),
+            fontSize: _kFontSizeSm,
+          ),
         ),
       );
 }
