@@ -1,5 +1,26 @@
 part of 'card.dart';
 
+// Private per-component constants (no shared tokens)
+const _kBlack = Color(0xFF000000);
+const _kWhite = Color(0xFFFFFFFF);
+const _kDisabled = Color(0xFF9E9E9E);
+
+const _kSpaceSm = 8.0;
+const _kSpaceMd = 12.0;
+const _kSpaceLg = 16.0;
+
+const _kRadiusSm = 4.0;
+const _kRadiusMd = 6.0;
+const _kRadiusLg = 8.0;
+
+const _kFontSizeSm = 12.0;
+const _kFontSizeMd = 14.0;
+const _kFontSizeLg = 16.0;
+
+const _kIconSizeSm = 14.0;
+const _kIconSizeMd = 16.0;
+const _kIconSizeLg = 18.0;
+
 class RemixCardStyle extends Style<CardSpec>
     with
         StyleModifierMixin<RemixCardStyle, CardSpec>,
@@ -97,26 +118,32 @@ class RemixCardStyle extends Style<CardSpec>
   }
 
   // Abstract method implementations for mixins
-  
+
   @override
   RemixCardStyle animate(AnimationConfig config) {
     return merge(RemixCardStyle(animation: config));
   }
-  
+
   @override
   RemixCardStyle constraints(BoxConstraintsMix value) {
     return merge(RemixCardStyle(container: BoxStyler(constraints: value)));
   }
-  
-  
+
   @override
   RemixCardStyle foregroundDecoration(DecorationMix value) {
-    return merge(RemixCardStyle(container: BoxStyler(foregroundDecoration: value)));
+    return merge(
+      RemixCardStyle(container: BoxStyler(foregroundDecoration: value)),
+    );
   }
-  
+
   @override
-  RemixCardStyle transform(Matrix4 value, {AlignmentGeometry alignment = Alignment.center}) {
-    return merge(RemixCardStyle(container: BoxStyler(transform: value, alignment: alignment)));
+  RemixCardStyle transform(
+    Matrix4 value, {
+    AlignmentGeometry alignment = Alignment.center,
+  }) {
+    return merge(RemixCardStyle(
+      container: BoxStyler(alignment: alignment, transform: value),
+    ));
   }
 
   @override
@@ -124,17 +151,40 @@ class RemixCardStyle extends Style<CardSpec>
 }
 
 /// Default card styles and variants
+final DefaultRemixCardStyle = RemixCardStyle(
+  container: BoxStyler(
+    padding: EdgeInsetsMix.all(_kSpaceLg),
+    decoration: BoxDecorationMix(
+      borderRadius: BorderRadiusMix.circular(_kRadiusLg),
+      color: _kWhite,
+      boxShadow: [
+        BoxShadowMix(
+          color: _kBlack.withValues(alpha: 0.1),
+          offset: const Offset(0, 2),
+          blurRadius: 4,
+          spreadRadius: 0,
+        ),
+      ],
+    ),
+  ),
+);
+
 class RemixCardStyles {
   /// Default card style
-  static RemixCardStyle get defaultStyle => RemixCardStyle(
+  static RemixCardStyle get defaultStyle => DefaultRemixCardStyle;
+}
+
+extension CardVariants on RemixCardStyle {
+  /// Solid card variant (default)
+  static RemixCardStyle get solid => RemixCardStyle(
         container: BoxStyler(
-          padding: EdgeInsetsMix.all(RemixTokens.spaceLg()),
+          padding: EdgeInsetsMix.all(_kSpaceLg),
           decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusLg()),
-            color: RemixTokens.surface(),
+            borderRadius: BorderRadiusMix.circular(_kRadiusLg),
+            color: _kWhite,
             boxShadow: [
               BoxShadowMix(
-                color: RemixTokens.textPrimary().withValues(alpha: 0.1),
+                color: _kBlack.withValues(alpha: 0.1),
                 offset: const Offset(0, 2),
                 blurRadius: 4,
                 spreadRadius: 0,
@@ -142,187 +192,16 @@ class RemixCardStyles {
             ],
           ),
         ),
-      )
-          .onHovered(
-            RemixCardStyle(
-              container: BoxStyler(
-                decoration: BoxDecorationMix(
-                  boxShadow: [
-                    BoxShadowMix(
-                      color: RemixTokens.textPrimary().withValues(alpha: 0.15),
-                      offset: const Offset(0, 4),
-                      blurRadius: 8,
-                      spreadRadius: 0,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          )
-          .onPressed(
-            RemixCardStyle(
-              container: BoxStyler(
-                decoration: BoxDecorationMix(
-                  boxShadow: [
-                    BoxShadowMix(
-                      color: RemixTokens.textPrimary().withValues(alpha: 0.08),
-                      offset: const Offset(0, 1),
-                      blurRadius: 2,
-                      spreadRadius: 0,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          )
-          .onFocused(
-            RemixCardStyle(
-              container: BoxStyler(
-                decoration: BoxDecorationMix(
-                  border: BoxBorderMix.all(
-                    BorderSideMix(
-                      color: RemixTokens.primary().withValues(alpha: 0.5),
-                      width: 2,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          );
+      );
 
-  /// Elevated card variant with stronger shadow
-  static RemixCardStyle get elevated => RemixCardStyle(
+  /// Outline card variant
+  static RemixCardStyle get outline => RemixCardStyle(
         container: BoxStyler(
-          padding: EdgeInsetsMix.all(RemixTokens.spaceLg()),
+          padding: EdgeInsetsMix.all(_kSpaceLg),
           decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusLg()),
-            color: RemixTokens.surface(),
-            boxShadow: [
-              BoxShadowMix(
-                color: RemixTokens.textPrimary().withValues(alpha: 0.15),
-                offset: const Offset(0, 4),
-                blurRadius: 8,
-                spreadRadius: 0,
-              ),
-            ],
-          ),
-        ),
-      )
-          .onHovered(
-            RemixCardStyle(
-              container: BoxStyler(
-                decoration: BoxDecorationMix(
-                  boxShadow: [
-                    BoxShadowMix(
-                      color: RemixTokens.textPrimary().withValues(alpha: 0.2),
-                      offset: const Offset(0, 8),
-                      blurRadius: 16,
-                      spreadRadius: 0,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          )
-          .onPressed(
-            RemixCardStyle(
-              container: BoxStyler(
-                decoration: BoxDecorationMix(
-                  boxShadow: [
-                    BoxShadowMix(
-                      color: RemixTokens.textPrimary().withValues(alpha: 0.12),
-                      offset: const Offset(0, 2),
-                      blurRadius: 4,
-                      spreadRadius: 0,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-
-  /// Outlined card variant with border
-  static RemixCardStyle get outlined => RemixCardStyle(
-        container: BoxStyler(
-          padding: EdgeInsetsMix.all(RemixTokens.spaceLg()),
-          decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(
-              BorderSideMix(color: RemixTokens.border(), width: 1),
-            ),
-            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusLg()),
-            color: RemixTokens.surface(),
-          ),
-        ),
-      )
-          .onHovered(
-            RemixCardStyle(
-              container: BoxStyler(
-                decoration: BoxDecorationMix(
-                  border: BoxBorderMix.all(
-                    BorderSideMix(color: RemixTokens.border(), width: 1.5),
-                  ),
-                  color: RemixTokens.surfaceVariant().withValues(alpha: 0.5),
-                ),
-              ),
-            ),
-          )
-          .onPressed(
-            RemixCardStyle(
-              container: BoxStyler(
-                decoration: BoxDecorationMix(
-                  border: BoxBorderMix.all(
-                    BorderSideMix(color: RemixTokens.border(), width: 2),
-                  ),
-                  color: RemixTokens.surfaceVariant().withValues(alpha: 0.8),
-                ),
-              ),
-            ),
-          );
-
-  /// Flat card variant without shadow
-  static RemixCardStyle get flat => RemixCardStyle(
-        container: BoxStyler(
-          padding: EdgeInsetsMix.all(RemixTokens.spaceLg()),
-          decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusLg()),
-            color: RemixTokens.surfaceVariant(),
-          ),
-        ),
-      )
-          .onHovered(
-            RemixCardStyle(
-              container: BoxStyler(
-                decoration: BoxDecorationMix(
-                  color: RemixTokens.surfaceVariant().withValues(alpha: 0.8),
-                ),
-              ),
-            ),
-          )
-          .onPressed(
-            RemixCardStyle(
-              container: BoxStyler(
-                decoration: BoxDecorationMix(
-                  color: RemixTokens.surfaceVariant().withValues(alpha: 0.9),
-                ),
-              ),
-            ),
-          );
-
-  /// Compact card variant with reduced padding
-  static RemixCardStyle get compact => RemixCardStyle(
-        container: BoxStyler(
-          padding: EdgeInsetsMix.all(RemixTokens.spaceMd()),
-          decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusMd()),
-            color: RemixTokens.surface(),
-            boxShadow: [
-              BoxShadowMix(
-                color: RemixTokens.textPrimary().withValues(alpha: 0.08),
-                offset: const Offset(0, 1),
-                blurRadius: 2,
-                spreadRadius: 0,
-              ),
-            ],
+            border: BoxBorderMix.all(BorderSideMix(color: _kBlack, width: 1)),
+            borderRadius: BorderRadiusMix.circular(_kRadiusLg),
+            color: _kWhite,
           ),
         ),
       );

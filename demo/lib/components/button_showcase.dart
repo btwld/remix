@@ -23,48 +23,45 @@ Widget buildButtonShowcase(BuildContext context) {
 
             // Primary variants
             _buildSection(
-              'Primary Variants',
+              'Foundational Variants',
               [
-                _buildButtonRow('Primary', RemixButtonStyles.primary),
-                _buildButtonRow(
-                    'Primary Outline', RemixButtonStyles.primaryOutline),
+                _buildButtonRow('Solid', RemixButtonStyles.solid),
+                _buildButtonRow('Outline', RemixButtonStyles.outline),
               ],
             ),
 
             // Secondary variants
             _buildSection(
-              'Secondary Variants',
+              'Sizes',
               [
-                _buildButtonRow('Secondary', RemixButtonStyles.secondary),
-                _buildButtonRow(
-                    'Secondary Outline', RemixButtonStyles.secondaryOutline),
+                _buildButtonRow('Small', RemixButtonStyles.small),
+                _buildButtonRow('Medium', RemixButtonStyles.medium),
               ],
             ),
 
             // Success variants
             _buildSection(
-              'Success Variants',
+              'Large',
               [
-                _buildButtonRow('Success', RemixButtonStyles.success),
-                _buildButtonRow(
-                    'Success Outline', RemixButtonStyles.successOutline),
+                _buildButtonRow('Large', RemixButtonStyles.large),
+                _buildButtonRow('Success Outline', RemixButtonStyles.outline),
               ],
             ),
 
             // Danger variants
             _buildSection(
-              'Danger Variants',
+              'Outline',
               [
-                _buildButtonRow('Danger', RemixButtonStyles.danger),
-                _buildButtonRow('Danger Outline', RemixButtonStyles.dangerOutline),
+                _buildButtonRow('Danger', RemixButtonStyles.outline),
+                _buildButtonRow('Danger Outline', RemixButtonStyles.outline),
               ],
             ),
 
             // Warning variants
             _buildSection(
-              'Warning Variants',
+              'Sizes',
               [
-                _buildButtonRow('Warning', RemixButtonStyles.warning),
+                _buildButtonRow('Warning', RemixButtonStyles.large),
               ],
             ),
 
@@ -178,30 +175,30 @@ Widget _buildSizeRow() {
             label: 'Small',
             icon: Icons.circle,
             onPressed: () => debugPrint('Small button pressed'),
-            style: RemixButtonStyles.primary
-                .padding(EdgeInsetsGeometryMix.all(RemixTokens.spaceSm()))
+            style: RemixButtonStyles.solid
+                .padding(EdgeInsetsGeometryMix.all(8.0))
                 .label(
-                  RemixLabelStyle().fontSize(RemixTokens.fontSizeSm()),
+                  RemixLabelStyle().fontSize(12.0),
                 ),
           ),
           RemixButton(
             label: 'Medium',
             icon: Icons.circle,
             onPressed: () => debugPrint('Medium button pressed'),
-            style: RemixButtonStyles.primary
-                .padding(EdgeInsetsGeometryMix.all(RemixTokens.spaceMd()))
+            style: RemixButtonStyles.solid
+                .padding(EdgeInsetsGeometryMix.all(12.0))
                 .label(
-                  RemixLabelStyle().fontSize(RemixTokens.fontSizeMd()),
+                  RemixLabelStyle().fontSize(14.0),
                 ),
           ),
           RemixButton(
             label: 'Large',
             icon: Icons.circle,
             onPressed: () => debugPrint('Large button pressed'),
-            style: RemixButtonStyles.primary
-                .padding(EdgeInsetsGeometryMix.all(RemixTokens.spaceLg()))
+            style: RemixButtonStyles.solid
+                .padding(EdgeInsetsGeometryMix.all(16.0))
                 .label(
-                  RemixLabelStyle().fontSize(RemixTokens.fontSizeLg()),
+                  RemixLabelStyle().fontSize(16.0),
                 ),
           ),
         ],
@@ -219,21 +216,21 @@ Widget _buildStatesRow() {
         label: 'Enabled',
         icon: Icons.check,
         onPressed: () => debugPrint('Enabled button pressed'),
-        style: RemixButtonStyles.primary,
+        style: RemixButtonStyles.solid,
       ),
       RemixButton(
         label: 'Disabled',
         icon: Icons.block,
         enabled: false,
         onPressed: () => debugPrint('This should not print'),
-        style: RemixButtonStyles.primary,
+        style: RemixButtonStyles.solid,
       ),
       RemixButton(
         label: 'Loading',
         icon: Icons.refresh,
         loading: true,
         onPressed: () => debugPrint('Loading button pressed'),
-        style: RemixButtonStyles.primary,
+        style: RemixButtonStyles.solid,
       ),
     ],
   );
@@ -363,7 +360,7 @@ Widget _buildInteractiveStateDemo() {
         child: RemixButton(
           label: 'Interactive Demo',
           icon: Icons.touch_app,
-          style: RemixButtonStyles.primary,
+          style: RemixButtonStyles.solid,
           onPressed: () => debugPrint('Primary button pressed'),
           onLongPress: () => debugPrint('Primary button long pressed'),
           onDoubleTap: () => debugPrint('Primary button double tapped'),
@@ -375,7 +372,7 @@ Widget _buildInteractiveStateDemo() {
         child: RemixButton(
           label: 'Hover & Click Me',
           icon: Icons.mouse,
-          style: RemixButtonStyles.primaryOutline,
+          style: RemixButtonStyles.outline,
           onPressed: () => debugPrint('Outline button pressed'),
           onLongPress: () => debugPrint('Outline button long pressed'),
           onDoubleTap: () => debugPrint('Outline button double tapped'),
@@ -387,7 +384,7 @@ Widget _buildInteractiveStateDemo() {
         child: RemixButton(
           label: 'Focus & Press Me',
           icon: Icons.keyboard,
-          style: RemixButtonStyles.primaryGhost,
+          style: RemixButtonStyles.outline,
           onPressed: () => debugPrint('Ghost button pressed'),
           onLongPress: () => debugPrint('Ghost button long pressed'),
           onDoubleTap: () => debugPrint('Ghost button double tapped'),
@@ -413,7 +410,7 @@ Widget _buildStateCallbacksDemo() {
           RemixButton(
             label: 'Press Events',
             icon: Icons.tap_and_play,
-            style: RemixButtonStyles.success,
+            style: RemixButtonStyles.large,
             onPressed: () => debugPrint('✅ Single Press'),
             onLongPress: () => debugPrint('⏳ Long Press (Hold for 500ms)'),
             onDoubleTap: () => debugPrint('⚡ Double Tap'),
@@ -421,19 +418,19 @@ Widget _buildStateCallbacksDemo() {
           RemixButton(
             label: 'Hover Events',
             icon: Icons.mouse,
-            style: RemixButtonStyles.primary,
+            style: RemixButtonStyles.solid,
             onPressed: () => debugPrint('Button clicked'),
           ),
           RemixButton(
             label: 'Focus Events',
             icon: Icons.keyboard,
-            style: RemixButtonStyles.secondary,
+            style: RemixButtonStyles.small,
             onPressed: () => debugPrint('Focused button clicked'),
           ),
           RemixButton(
             label: 'All State Changes',
             icon: Icons.analytics,
-            style: RemixButtonStyles.warning,
+            style: RemixButtonStyles.outline,
             onPressed: () => debugPrint('State tracking button clicked'),
           ),
         ],

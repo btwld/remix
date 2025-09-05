@@ -1,5 +1,26 @@
 part of 'list_item.dart';
 
+// Private per-component constants
+const _kBlack = Color(0xFF000000);
+const _kWhite = Color(0xFFFFFFFF);
+const _kDisabled = Color(0xFF9E9E9E);
+
+const _kSpaceSm = 8.0;
+const _kSpaceMd = 12.0;
+const _kSpaceLg = 16.0;
+
+const _kRadiusSm = 4.0;
+const _kRadiusMd = 6.0;
+const _kRadiusLg = 8.0;
+
+const _kFontSizeSm = 12.0;
+const _kFontSizeMd = 14.0;
+const _kFontSizeLg = 16.0;
+
+const _kIconSizeSm = 16.0;
+const _kIconSizeMd = 20.0;
+const _kIconSizeLg = 24.0;
+
 class RemixListItemStyle extends Style<ListItemSpec>
     with
         StyleModifierMixin<RemixListItemStyle, ListItemSpec>,
@@ -124,25 +145,32 @@ class RemixListItemStyle extends Style<ListItemSpec>
   }
 
   // Abstract method implementations for mixins
-  
+
   @override
   RemixListItemStyle animate(AnimationConfig config) {
     return merge(RemixListItemStyle(animation: config));
   }
-  
+
   @override
   RemixListItemStyle constraints(BoxConstraintsMix value) {
     return merge(RemixListItemStyle(container: BoxStyler(constraints: value)));
   }
-  
+
   @override
   RemixListItemStyle foregroundDecoration(DecorationMix value) {
-    return merge(RemixListItemStyle(container: BoxStyler(foregroundDecoration: value)));
+    return merge(
+      RemixListItemStyle(container: BoxStyler(foregroundDecoration: value)),
+    );
   }
-  
+
   @override
-  RemixListItemStyle transform(Matrix4 value, {AlignmentGeometry alignment = Alignment.center}) {
-    return merge(RemixListItemStyle(container: BoxStyler(transform: value, alignment: alignment)));
+  RemixListItemStyle transform(
+    Matrix4 value, {
+    AlignmentGeometry alignment = Alignment.center,
+  }) {
+    return merge(RemixListItemStyle(
+      container: BoxStyler(alignment: alignment, transform: value),
+    ));
   }
 
   @override
@@ -179,18 +207,23 @@ class RemixListItemStyle extends Style<ListItemSpec>
 
 final DefaultRemixListItemStyle = RemixListItemStyle(
   container: BoxStyler(
-    padding: EdgeInsetsMix.symmetric(vertical: 12, horizontal: 16),
+    padding:
+        EdgeInsetsMix.symmetric(vertical: _kSpaceMd, horizontal: _kSpaceLg),
   ),
   contentContainer: BoxStyler(),
   title: TextStyler(
-    style: TextStyleMix(fontSize: 16, fontWeight: FontWeight.w500),
+    style: TextStyleMix(
+      color: _kBlack,
+      fontSize: _kFontSizeLg,
+      fontWeight: FontWeight.w500,
+    ),
   ),
   subtitle: TextStyler(
     style: TextStyleMix(
-      color: RemixTokens.textSecondary(),
-      fontSize: RemixTokens.fontSizeSm(),
+      color: _kBlack.withValues(alpha: 0.6),
+      fontSize: _kFontSizeSm,
     ),
   ),
-  leading: IconStyler(size: 24),
-  trailing: IconStyler(size: 20),
+  leading: IconStyler(color: _kBlack, size: _kIconSizeLg),
+  trailing: IconStyler(color: _kBlack, size: _kIconSizeMd),
 );

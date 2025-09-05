@@ -1,5 +1,17 @@
 part of 'spinner.dart';
 
+// Private per-component constants
+const _kBlack = Color(0xFF000000);
+const _kWhite = Color(0xFFFFFFFF);
+const _kDisabled = Color(0xFF9E9E9E);
+
+const _kSizeSm = 16.0;
+const _kSizeMd = 24.0;
+const _kSizeLg = 32.0;
+const _kStrokeSm = 1.0;
+const _kStrokeMd = 1.5;
+const _kDurationMs = 1000;
+
 class RemixSpinnerStyle extends Style<SpinnerSpec>
     with
         StyleModifierMixin<RemixSpinnerStyle, SpinnerSpec>,
@@ -44,7 +56,6 @@ class RemixSpinnerStyle extends Style<SpinnerSpec>
           animation: animation,
           modifier: modifier,
         );
-
 
   // Instance methods for fluent API (return new instances)
   RemixSpinnerStyle size(double value) {
@@ -132,60 +143,41 @@ class RemixSpinnerStyle extends Style<SpinnerSpec>
       ];
 }
 
-
 /// Default spinner styles and variants
 class RemixSpinnerStyles {
   /// Default spinner style
   static RemixSpinnerStyle get defaultStyle => RemixSpinnerStyle(
-        size: RemixTokens.iconSizeXl(),
-        strokeWidth: 1.5,
-        color: RemixTokens.textPrimary(),
-        duration: const Duration(milliseconds: 1000),
+        size: _kSizeMd,
+        strokeWidth: _kStrokeMd,
+        color: _kBlack,
+        duration: const Duration(milliseconds: _kDurationMs),
         style: SpinnerType.solid,
       );
 
-  /// Primary spinner variant
-  static RemixSpinnerStyle get primary => RemixSpinnerStyle(
-        size: 24,
-        strokeWidth: 1.5,
-        color: RemixTokens.primary(),
-        duration: const Duration(milliseconds: 1000),
-        style: SpinnerType.solid,
-      );
-
-  /// Secondary spinner variant
-  static RemixSpinnerStyle get secondary => RemixSpinnerStyle(
-        size: 24,
-        strokeWidth: 1.5,
-        color: RemixTokens.textSecondary(),
-        duration: const Duration(milliseconds: 1000),
-        style: SpinnerType.solid,
-      );
-
-  /// Small spinner variant
+  /// Small spinner style
   static RemixSpinnerStyle get small => RemixSpinnerStyle(
-        size: 16,
-        strokeWidth: 1,
-        color: RemixTokens.textPrimary(),
-        duration: const Duration(milliseconds: 1000),
+        size: _kSizeSm,
+        strokeWidth: _kStrokeSm,
+        color: _kBlack,
+        duration: const Duration(milliseconds: _kDurationMs),
         style: SpinnerType.solid,
       );
 
-  /// Large spinner variant
+  /// Large spinner style
   static RemixSpinnerStyle get large => RemixSpinnerStyle(
-        size: 32,
-        strokeWidth: 2,
-        color: RemixTokens.textPrimary(),
-        duration: const Duration(milliseconds: 1000),
+        size: _kSizeLg,
+        strokeWidth: 2.0,
+        color: _kBlack,
+        duration: const Duration(milliseconds: _kDurationMs),
         style: SpinnerType.solid,
       );
 
-  /// Dotted spinner variant
+  /// Dotted spinner style
   static RemixSpinnerStyle get dotted => RemixSpinnerStyle(
-        size: RemixTokens.iconSizeXl(),
-        strokeWidth: 1.5,
-        color: RemixTokens.textPrimary(),
-        duration: const Duration(milliseconds: 1000),
+        size: _kSizeMd,
+        strokeWidth: _kStrokeMd,
+        color: _kBlack,
+        duration: const Duration(milliseconds: _kDurationMs),
         style: SpinnerType.dotted,
       );
 }

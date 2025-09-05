@@ -1,5 +1,25 @@
 part of 'chip.dart';
 
+// Private per-component constants (no shared tokens)
+const _kBlack = Color(0xFF000000);
+const _kWhite = Color(0xFFFFFFFF);
+const _kDisabled = Color(0xFF9E9E9E);
+
+const _kSpaceXs = 4.0;
+const _kSpaceSm = 8.0;
+const _kSpaceMd = 12.0;
+
+const _kRadiusSm = 4.0;
+const _kRadiusMd = 6.0;
+const _kRadiusLg = 8.0;
+const _kRadiusXl = 12.0;
+
+const _kFontSizeSm = 12.0;
+const _kFontSizeMd = 14.0;
+
+const _kIconSizeSm = 14.0;
+const _kIconSizeMd = 16.0;
+
 class RemixChipStyle extends Style<ChipSpec>
     with
         StyleModifierMixin<RemixChipStyle, ChipSpec>,
@@ -153,20 +173,27 @@ class RemixChipStyle extends Style<ChipSpec>
   }
 
   // Abstract method implementations for mixins
-  
+
   @override
   RemixChipStyle animate(AnimationConfig config) {
     return merge(RemixChipStyle(animation: config));
   }
-  
+
   @override
   RemixChipStyle foregroundDecoration(DecorationMix value) {
-    return merge(RemixChipStyle(container: FlexBoxStyler(foregroundDecoration: value)));
+    return merge(
+      RemixChipStyle(container: FlexBoxStyler(foregroundDecoration: value)),
+    );
   }
-  
+
   @override
-  RemixChipStyle transform(Matrix4 value, {AlignmentGeometry alignment = Alignment.center}) {
-    return merge(RemixChipStyle(container: FlexBoxStyler(transform: value, alignment: alignment)));
+  RemixChipStyle transform(
+    Matrix4 value, {
+    AlignmentGeometry alignment = Alignment.center,
+  }) {
+    return merge(RemixChipStyle(
+      container: FlexBoxStyler(alignment: alignment, transform: value),
+    ));
   }
 
   @override
@@ -186,54 +213,33 @@ class RemixChipStyles {
   static RemixChipStyle get defaultStyle => RemixChipStyle(
         container: FlexBoxStyler(
           decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusXl()),
-            color: RemixTokens.surfaceVariant(),
+            borderRadius: BorderRadiusMix.circular(_kRadiusXl),
+            color: _kWhite,
           ),
           padding: EdgeInsetsGeometryMix.symmetric(
-            vertical: RemixTokens.spaceXs(),
-            horizontal: RemixTokens.spaceMd(),
+            vertical: _kSpaceXs,
+            horizontal: _kSpaceMd,
           ),
           direction: Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
-          spacing: RemixTokens.spaceXs(),
+          spacing: _kSpaceXs,
         ),
         label: TextStyler(
           style: TextStyleMix(
-            fontSize: RemixTokens.fontSizeMd(),
+            color: _kBlack,
+            fontSize: _kFontSizeMd,
             fontWeight: FontWeight.w500,
           ),
         ),
-        icon: IconStyler(size: RemixTokens.iconSizeMd()),
+        icon: IconStyler(color: _kBlack, size: _kIconSizeMd),
       )
-          .onHovered(
-            RemixChipStyle(
-              container: FlexBoxStyler(
-                decoration: BoxDecorationMix(
-                  color: RemixTokens.surfaceVariant().withValues(alpha: 0.8),
-                ),
-              ),
-            ),
-          )
-          .onPressed(
-            RemixChipStyle(
-              container: FlexBoxStyler(
-                decoration: BoxDecorationMix(
-                  color: RemixTokens.surfaceVariant().withValues(alpha: 0.9),
-                ),
-              ),
-            ),
-          )
           .onFocused(
             RemixChipStyle(
               container: FlexBoxStyler(
                 decoration: BoxDecorationMix(
-                  border: BoxBorderMix.all(
-                    BorderSideMix(
-                      color: RemixTokens.primary().withValues(alpha: 0.5),
-                      width: 2,
-                    ),
-                  ),
+                  border:
+                      BoxBorderMix.all(BorderSideMix(color: _kBlack, width: 2)),
                 ),
               ),
             ),
@@ -242,273 +248,82 @@ class RemixChipStyles {
             RemixChipStyle(
               container: FlexBoxStyler(
                 decoration: BoxDecorationMix(
-                  color: RemixTokens.surfaceVariant().withValues(alpha: 0.5),
+                  color: _kWhite.withValues(alpha: 0.5),
                 ),
               ),
-              label: TextStyler(
-                style: TextStyleMix(color: RemixTokens.textDisabled()),
-              ),
-              icon: IconStyler(color: RemixTokens.textDisabled()),
+              label: TextStyler(style: TextStyleMix(color: _kDisabled)),
+              icon: IconStyler(color: _kDisabled),
             ),
           );
 
-  /// Primary chip variant with blue colors
-  static RemixChipStyle get primary => RemixChipStyle(
+  /// Solid chip variant
+  static RemixChipStyle get solid => RemixChipStyle(
         container: FlexBoxStyler(
           decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusXl()),
-            color: RemixTokens.primary().withValues(alpha: 0.1),
+            borderRadius: BorderRadiusMix.circular(_kRadiusXl),
+            color: _kBlack,
           ),
           padding: EdgeInsetsMix.symmetric(
-            vertical: RemixTokens.spaceXs(),
-            horizontal: RemixTokens.spaceMd(),
+            vertical: _kSpaceXs,
+            horizontal: _kSpaceMd,
           ),
         ),
         label: TextStyler(
           style: TextStyleMix(
-            color: RemixTokens.primary(),
-            fontSize: RemixTokens.fontSizeMd(),
+            color: _kWhite,
+            fontSize: _kFontSizeMd,
             fontWeight: FontWeight.w500,
           ),
         ),
-        icon: IconStyler(
-          color: RemixTokens.primary(),
-          size: RemixTokens.iconSizeMd(),
-        ),
-      )
-          .onHovered(
-            RemixChipStyle(
-              container: FlexBoxStyler(
-                decoration: BoxDecorationMix(
-                  color: RemixTokens.primary().withValues(alpha: 0.15),
-                ),
-              ),
-            ),
-          )
-          .onPressed(
-            RemixChipStyle(
-              container: FlexBoxStyler(
-                decoration: BoxDecorationMix(
-                  color: RemixTokens.primary().withValues(alpha: 0.2),
-                ),
-              ),
-            ),
-          )
-          .onFocused(
-            RemixChipStyle(
-              container: FlexBoxStyler(
-                decoration: BoxDecorationMix(
-                  border: BoxBorderMix.all(
-                    BorderSideMix(color: RemixTokens.primary(), width: 2),
-                  ),
-                ),
-              ),
-            ),
-          );
+        icon: IconStyler(color: _kWhite, size: _kIconSizeMd),
+      );
 
-  /// Secondary chip variant with grey colors
-  static RemixChipStyle get secondary => RemixChipStyle(
+  /// Outline chip variant
+  static RemixChipStyle get outline => RemixChipStyle(
         container: FlexBoxStyler(
           decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(
-              BorderSideMix(color: RemixTokens.border(), width: 1),
-            ),
-            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusXl()),
-            color: RemixTokens.surface(),
+            border: BoxBorderMix.all(BorderSideMix(color: _kBlack, width: 1)),
+            borderRadius: BorderRadiusMix.circular(_kRadiusXl),
+            color: _kWhite,
           ),
           padding: EdgeInsetsMix.symmetric(
-            vertical: RemixTokens.spaceXs(),
-            horizontal: RemixTokens.spaceMd(),
+            vertical: _kSpaceXs,
+            horizontal: _kSpaceMd,
           ),
         ),
         label: TextStyler(
           style: TextStyleMix(
-            color: RemixTokens.textPrimary(),
-            fontSize: RemixTokens.fontSizeMd(),
+            color: _kBlack,
+            fontSize: _kFontSizeMd,
             fontWeight: FontWeight.w500,
           ),
         ),
-        icon: IconStyler(
-          color: RemixTokens.textSecondary(),
-          size: RemixTokens.iconSizeMd(),
-        ),
-      )
-          .onHovered(
-            RemixChipStyle(
-              container: FlexBoxStyler(
-                decoration: BoxDecorationMix(
-                  border: BoxBorderMix.all(
-                    BorderSideMix(color: RemixTokens.border(), width: 1.5),
-                  ),
-                  color: RemixTokens.surfaceVariant().withValues(alpha: 0.5),
-                ),
-              ),
-            ),
-          )
-          .onPressed(
-            RemixChipStyle(
-              container: FlexBoxStyler(
-                decoration: BoxDecorationMix(
-                  border: BoxBorderMix.all(
-                    BorderSideMix(color: RemixTokens.border(), width: 2),
-                  ),
-                  color: RemixTokens.surfaceVariant().withValues(alpha: 0.8),
-                ),
-              ),
-            ),
-          );
+        icon: IconStyler(color: _kBlack, size: _kIconSizeMd),
+      );
 
-  /// Success chip variant with green colors
-  static RemixChipStyle get success => RemixChipStyle(
-        container: FlexBoxStyler(
-          decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusXl()),
-            color: RemixTokens.success().withValues(alpha: 0.1),
-          ),
-          padding: EdgeInsetsMix.symmetric(
-            vertical: RemixTokens.spaceXs(),
-            horizontal: RemixTokens.spaceMd(),
-          ),
-        ),
-        label: TextStyler(
-          style: TextStyleMix(
-            color: RemixTokens.success(),
-            fontSize: RemixTokens.fontSizeMd(),
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        icon: IconStyler(
-          color: RemixTokens.success(),
-          size: RemixTokens.iconSizeMd(),
-        ),
-      )
-          .onHovered(
-            RemixChipStyle(
-              container: FlexBoxStyler(
-                decoration: BoxDecorationMix(
-                  color: RemixTokens.success().withValues(alpha: 0.15),
-                ),
-              ),
-            ),
-          )
-          .onPressed(
-            RemixChipStyle(
-              container: FlexBoxStyler(
-                decoration: BoxDecorationMix(
-                  color: RemixTokens.success().withValues(alpha: 0.2),
-                ),
-              ),
-            ),
-          );
-
-  /// Warning chip variant with orange colors
-  static RemixChipStyle get warning => RemixChipStyle(
-        container: FlexBoxStyler(
-          decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusXl()),
-            color: RemixTokens.warning().withValues(alpha: 0.1),
-          ),
-          padding: EdgeInsetsMix.symmetric(
-            vertical: RemixTokens.spaceXs(),
-            horizontal: RemixTokens.spaceMd(),
-          ),
-        ),
-        label: TextStyler(
-          style: TextStyleMix(
-            color: RemixTokens.warning(),
-            fontSize: RemixTokens.fontSizeMd(),
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        icon: IconStyler(
-          color: RemixTokens.warning(),
-          size: RemixTokens.iconSizeMd(),
-        ),
-      )
-          .onHovered(
-            RemixChipStyle(
-              container: FlexBoxStyler(
-                decoration: BoxDecorationMix(
-                  color: RemixTokens.warning().withValues(alpha: 0.15),
-                ),
-              ),
-            ),
-          )
-          .onPressed(
-            RemixChipStyle(
-              container: FlexBoxStyler(
-                decoration: BoxDecorationMix(
-                  color: RemixTokens.warning().withValues(alpha: 0.2),
-                ),
-              ),
-            ),
-          );
-
-  /// Danger chip variant with red colors
-  static RemixChipStyle get danger => RemixChipStyle(
-        container: FlexBoxStyler(
-          decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusXl()),
-            color: RemixTokens.danger().withValues(alpha: 0.1),
-          ),
-          padding: EdgeInsetsMix.symmetric(
-            vertical: RemixTokens.spaceXs(),
-            horizontal: RemixTokens.spaceMd(),
-          ),
-        ),
-        label: TextStyler(
-          style: TextStyleMix(
-            color: RemixTokens.danger(),
-            fontSize: RemixTokens.fontSizeMd(),
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        icon: IconStyler(
-          color: RemixTokens.danger(),
-          size: RemixTokens.iconSizeMd(),
-        ),
-      )
-          .onHovered(
-            RemixChipStyle(
-              container: FlexBoxStyler(
-                decoration: BoxDecorationMix(
-                  color: RemixTokens.danger().withValues(alpha: 0.15),
-                ),
-              ),
-            ),
-          )
-          .onPressed(
-            RemixChipStyle(
-              container: FlexBoxStyler(
-                decoration: BoxDecorationMix(
-                  color: RemixTokens.danger().withValues(alpha: 0.2),
-                ),
-              ),
-            ),
-          );
-
-  /// Compact chip variant with reduced padding
+  /// Compact chip variant (size-only utility)
   static RemixChipStyle get compact => RemixChipStyle(
         container: FlexBoxStyler(
           decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusLg()),
-            color: RemixTokens.surfaceVariant(),
+            borderRadius: BorderRadiusMix.circular(_kRadiusLg),
+            color: _kWhite,
           ),
           padding: EdgeInsetsMix.symmetric(
-            vertical: RemixTokens.spaceXs() * 0.5,
-            horizontal: RemixTokens.spaceSm(),
+            vertical: _kSpaceXs * 0.5,
+            horizontal: _kSpaceSm,
           ),
           direction: Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
-          spacing: RemixTokens.spaceXs() * 0.5,
+          spacing: _kSpaceXs * 0.5,
         ),
         label: TextStyler(
           style: TextStyleMix(
-            fontSize: RemixTokens.fontSizeSm(),
+            color: _kBlack,
+            fontSize: _kFontSizeSm,
             fontWeight: FontWeight.w500,
           ),
         ),
-        icon: IconStyler(size: RemixTokens.iconSizeSm()),
+        icon: IconStyler(color: _kBlack, size: _kIconSizeSm),
       );
 }

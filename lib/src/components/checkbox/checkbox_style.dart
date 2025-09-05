@@ -1,5 +1,26 @@
 part of 'checkbox.dart';
 
+// Private per-component constants (no shared tokens)
+const _kBlack = Color(0xFF000000);
+const _kWhite = Color(0xFFFFFFFF);
+const _kDisabled = Color(0xFF9E9E9E);
+
+const _kSpaceSm = 8.0;
+const _kSpaceMd = 12.0;
+const _kSpaceLg = 16.0;
+
+const _kRadiusSm = 4.0;
+const _kRadiusMd = 6.0;
+const _kRadiusLg = 8.0;
+
+const _kFontSizeSm = 12.0;
+const _kFontSizeMd = 14.0;
+const _kFontSizeLg = 16.0;
+
+const _kIconSizeSm = 14.0;
+const _kIconSizeMd = 16.0;
+const _kIconSizeLg = 18.0;
+
 class RemixCheckboxStyle extends Style<CheckboxSpec>
     with
         StyleModifierMixin<RemixCheckboxStyle, CheckboxSpec>,
@@ -251,7 +272,7 @@ final DefaultRemixCheckboxStyle = RemixCheckboxStyle(
     direction: Axis.horizontal,
     crossAxisAlignment: CrossAxisAlignment.center,
     mainAxisSize: MainAxisSize.min,
-    spacing: 8.0,
+    spacing: _kSpaceSm,
   ),
   indicatorContainer: BoxStyler(
     alignment: Alignment.center,
@@ -262,29 +283,26 @@ final DefaultRemixCheckboxStyle = RemixCheckboxStyle(
       maxHeight: 20,
     ),
     decoration: BoxDecorationMix(
-      border: BoxBorderMix.all(BorderSideMix(
-        color: RemixTokens.border(),
-        width: 1.5,
-      )),
-      borderRadius: BorderRadiusMix.circular(RemixTokens.radiusSm()),
-      color: RemixTokens.background(),
+      border: BoxBorderMix.all(BorderSideMix(color: _kBlack, width: 1.5)),
+      borderRadius: BorderRadiusMix.circular(_kRadiusSm),
+      color: _kWhite,
     ),
   ),
-  indicator: IconStyler(color: RemixTokens.textPrimary(), size: 16.0),
+  indicator: IconStyler(color: _kBlack, size: _kIconSizeMd),
   label: TextStyler(
-    style: TextStyleMix(color: RemixTokens.textPrimary(), fontSize: 14.0),
+    style: TextStyleMix(color: _kBlack, fontSize: _kFontSizeMd),
   ),
 );
 
 extension CheckboxVariants on RemixCheckboxStyle {
-  /// Primary checkbox variant with blue colors
-  static RemixCheckboxStyle get primary => RemixCheckboxStyle(
+  /// Solid checkbox - filled black box with white check
+  static RemixCheckboxStyle get solid => RemixCheckboxStyle(
         container: FlexBoxStyler(
           alignment: Alignment.centerLeft,
           direction: Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
-          spacing: 8.0,
+          spacing: _kSpaceSm,
         ),
         indicatorContainer: BoxStyler(
           alignment: Alignment.center,
@@ -295,31 +313,25 @@ extension CheckboxVariants on RemixCheckboxStyle {
             maxHeight: 20,
           ),
           decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(BorderSideMix(
-              color: RemixTokens.primary(),
-              width: 1.5,
-            )),
-            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusSm()),
-            color: RemixTokens.primary().withValues(alpha: 0.1),
+            border: BoxBorderMix.all(BorderSideMix(color: _kBlack, width: 1.5)),
+            borderRadius: BorderRadiusMix.circular(_kRadiusSm),
+            color: _kBlack,
           ),
         ),
-        indicator: IconStyler(color: RemixTokens.primary(), size: 16.0),
+        indicator: IconStyler(color: _kWhite, size: _kIconSizeMd),
         label: TextStyler(
-          style: TextStyleMix(
-            color: RemixTokens.textPrimary(),
-            fontSize: 14.0,
-          ),
+          style: TextStyleMix(color: _kBlack, fontSize: _kFontSizeMd),
         ),
       );
 
-  /// Secondary checkbox variant with grey colors
-  static RemixCheckboxStyle get secondary => RemixCheckboxStyle(
+  /// Outline checkbox - white box with black border and black check
+  static RemixCheckboxStyle get outline => RemixCheckboxStyle(
         container: FlexBoxStyler(
           alignment: Alignment.centerLeft,
           direction: Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
-          spacing: 8.0,
+          spacing: _kSpaceSm,
         ),
         indicatorContainer: BoxStyler(
           alignment: Alignment.center,
@@ -330,55 +342,14 @@ extension CheckboxVariants on RemixCheckboxStyle {
             maxHeight: 20,
           ),
           decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(BorderSideMix(
-              color: RemixTokens.textSecondary(),
-              width: 1.5,
-            )),
-            borderRadius: BorderRadiusMix.circular(RemixTokens.radiusSm()),
-            color: RemixTokens.surface(),
+            border: BoxBorderMix.all(BorderSideMix(color: _kBlack, width: 1.5)),
+            borderRadius: BorderRadiusMix.circular(_kRadiusSm),
+            color: _kWhite,
           ),
         ),
-        indicator: IconStyler(color: RemixTokens.textSecondary(), size: 16.0),
+        indicator: IconStyler(color: _kBlack, size: _kIconSizeMd),
         label: TextStyler(
-          style: TextStyleMix(
-            color: RemixTokens.textPrimary(),
-            fontSize: 14.0,
-          ),
-        ),
-      );
-
-  /// Compact checkbox variant with smaller size
-  static RemixCheckboxStyle get compact => RemixCheckboxStyle(
-        container: FlexBoxStyler(
-          alignment: Alignment.centerLeft,
-          direction: Axis.horizontal,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          spacing: 4.0,
-        ),
-        indicatorContainer: BoxStyler(
-          alignment: Alignment.center,
-          constraints: BoxConstraintsMix(
-            minWidth: 16,
-            maxWidth: 16,
-            minHeight: 16,
-            maxHeight: 16,
-          ),
-          decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(BorderSideMix(
-              color: RemixTokens.border(),
-              width: 1.5,
-            )),
-            borderRadius: BorderRadiusMix.circular(3),
-            color: RemixTokens.background(),
-          ),
-        ),
-        indicator: IconStyler(color: RemixTokens.textPrimary(), size: 14.0),
-        label: TextStyler(
-          style: TextStyleMix(
-            color: RemixTokens.textPrimary(),
-            fontSize: 12.0,
-          ),
+          style: TextStyleMix(color: _kBlack, fontSize: _kFontSizeMd),
         ),
       );
 }

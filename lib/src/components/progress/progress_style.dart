@@ -1,5 +1,13 @@
 part of 'progress.dart';
 
+// Private per-component constants
+const _kBlack = Color(0xFF000000);
+const _kWhite = Color(0xFFFFFFFF);
+const _kDisabled = Color(0xFF9E9E9E);
+
+const _kRadiusMax = 99.0;
+const _kBarHeight = 6.0;
+
 class RemixProgressStyle extends Style<ProgressSpec>
     with
         StyleModifierMixin<RemixProgressStyle, ProgressSpec>,
@@ -98,40 +106,47 @@ class RemixProgressStyle extends Style<ProgressSpec>
   }
 
   // Abstract method implementations for mixins
-  
+
   @override
   RemixProgressStyle animate(AnimationConfig config) {
     return merge(RemixProgressStyle(animation: config));
   }
-  
+
   @override
   RemixProgressStyle constraints(BoxConstraintsMix value) {
     return merge(RemixProgressStyle(container: BoxStyler(constraints: value)));
   }
-  
+
   @override
   RemixProgressStyle decoration(DecorationMix value) {
     return merge(RemixProgressStyle(container: BoxStyler(decoration: value)));
   }
-  
+
   @override
   RemixProgressStyle margin(EdgeInsetsGeometryMix value) {
     return merge(RemixProgressStyle(container: BoxStyler(margin: value)));
   }
-  
+
   @override
   RemixProgressStyle padding(EdgeInsetsGeometryMix value) {
     return merge(RemixProgressStyle(container: BoxStyler(padding: value)));
   }
-  
+
   @override
   RemixProgressStyle foregroundDecoration(DecorationMix value) {
-    return merge(RemixProgressStyle(container: BoxStyler(foregroundDecoration: value)));
+    return merge(
+      RemixProgressStyle(container: BoxStyler(foregroundDecoration: value)),
+    );
   }
-  
+
   @override
-  RemixProgressStyle transform(Matrix4 value, {AlignmentGeometry alignment = Alignment.center}) {
-    return merge(RemixProgressStyle(container: BoxStyler(transform: value, alignment: alignment)));
+  RemixProgressStyle transform(
+    Matrix4 value, {
+    AlignmentGeometry alignment = Alignment.center,
+  }) {
+    return merge(RemixProgressStyle(
+      container: BoxStyler(alignment: alignment, transform: value),
+    ));
   }
 
   @override
@@ -177,104 +192,22 @@ class RemixProgressStyle extends Style<ProgressSpec>
 
 final DefaultRemixProgressStyle = RemixProgressStyle(
   container: BoxStyler(
-    constraints: BoxConstraintsMix(minHeight: 6, maxHeight: 6),
-    decoration: BoxDecorationMix(borderRadius: BorderRadiusMix.circular(99)),
+    constraints:
+        BoxConstraintsMix(minHeight: _kBarHeight, maxHeight: _kBarHeight),
+    decoration:
+        BoxDecorationMix(borderRadius: BorderRadiusMix.circular(_kRadiusMax)),
     clipBehavior: Clip.antiAlias,
   ),
-  track: BoxStyler(decoration: BoxDecorationMix(color: RemixTokens.surface())),
+  track: BoxStyler(
+    decoration: BoxDecorationMix(color: _kBlack.withValues(alpha: 0.15)),
+  ),
   indicator: BoxStyler(
     decoration: BoxDecorationMix(
-      borderRadius: BorderRadiusMix.circular(99),
-      color: RemixTokens.textPrimary(),
+      borderRadius: BorderRadiusMix.circular(_kRadiusMax),
+      color: _kBlack,
     ),
   ),
   trackContainer: BoxStyler(),
 );
 
-extension ProgressVariants on RemixProgressStyle {
-  /// Primary progress variant with blue fill
-  static RemixProgressStyle get primary => RemixProgressStyle(
-        container: BoxStyler(
-          constraints: BoxConstraintsMix(minHeight: 6, maxHeight: 6),
-          decoration:
-              BoxDecorationMix(borderRadius: BorderRadiusMix.circular(99)),
-          clipBehavior: Clip.antiAlias,
-        ),
-        track: BoxStyler(
-          decoration: BoxDecorationMix(
-            color: RemixTokens.primary().withValues(alpha: 0.2),
-          ),
-        ),
-        indicator: BoxStyler(
-          decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(99),
-            color: RemixTokens.primary(),
-          ),
-        ),
-        trackContainer: BoxStyler(),
-      );
-
-  /// Secondary progress variant with grey fill
-  static RemixProgressStyle get secondary => RemixProgressStyle(
-        container: BoxStyler(
-          constraints: BoxConstraintsMix(minHeight: 6, maxHeight: 6),
-          decoration:
-              BoxDecorationMix(borderRadius: BorderRadiusMix.circular(99)),
-          clipBehavior: Clip.antiAlias,
-        ),
-        track: BoxStyler(
-          decoration: BoxDecorationMix(color: RemixTokens.surface()),
-        ),
-        indicator: BoxStyler(
-          decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(99),
-            color: RemixTokens.textSecondary(),
-          ),
-        ),
-        trackContainer: BoxStyler(),
-      );
-
-  /// Success progress variant with green fill
-  static RemixProgressStyle get success => RemixProgressStyle(
-        container: BoxStyler(
-          constraints: BoxConstraintsMix(minHeight: 6, maxHeight: 6),
-          decoration:
-              BoxDecorationMix(borderRadius: BorderRadiusMix.circular(99)),
-          clipBehavior: Clip.antiAlias,
-        ),
-        track: BoxStyler(
-          decoration: BoxDecorationMix(
-            color: RemixTokens.success().withValues(alpha: 0.2),
-          ),
-        ),
-        indicator: BoxStyler(
-          decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(99),
-            color: RemixTokens.success(),
-          ),
-        ),
-        trackContainer: BoxStyler(),
-      );
-
-  /// Warning progress variant with orange fill
-  static RemixProgressStyle get warning => RemixProgressStyle(
-        container: BoxStyler(
-          constraints: BoxConstraintsMix(minHeight: 6, maxHeight: 6),
-          decoration:
-              BoxDecorationMix(borderRadius: BorderRadiusMix.circular(99)),
-          clipBehavior: Clip.antiAlias,
-        ),
-        track: BoxStyler(
-          decoration: BoxDecorationMix(
-            color: RemixTokens.warning().withValues(alpha: 0.2),
-          ),
-        ),
-        indicator: BoxStyler(
-          decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(99),
-            color: RemixTokens.warning(),
-          ),
-        ),
-        trackContainer: BoxStyler(),
-      );
-}
+// Removed colorful variants; using simple defaultStyle only

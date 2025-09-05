@@ -1,5 +1,13 @@
 part of 'slider.dart';
 
+// Private per-component constants
+const _kBlack = Color(0xFF000000);
+const _kWhite = Color(0xFFFFFFFF);
+const _kDisabled = Color(0xFF9E9E9E);
+
+const _kTrackWidth = 8.0;
+const _kThumbBorderWidth = 2.0;
+
 class RemixSliderStyle extends Style<SliderSpec>
     with
         StyleModifierMixin<RemixSliderStyle, SliderSpec>,
@@ -130,31 +138,29 @@ final DefaultRemixSliderStyle = RemixSliderStyle(
   thumb: BoxStyler(
     decoration: BoxDecorationMix(
       border: BoxBorderMix.all(
-        BorderSideMix(color: RemixTokens.textPrimary(), width: 2),
+        BorderSideMix(color: _kBlack, width: _kThumbBorderWidth),
       ),
       shape: BoxShape.circle,
-      color: RemixTokens.background(),
+      color: _kWhite,
     ),
   ),
 ).builder((context) {
   return RemixSliderStyle(
     baseTrack: Paint()
-      ..strokeWidth = 8
-      ..color = RemixTokens.border.resolve(context)
+      ..strokeWidth = _kTrackWidth
+      ..color = _kBlack.withValues(alpha: 0.2)
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke,
     activeTrack: Paint()
-      ..strokeWidth = 8
-      ..color = RemixTokens.textPrimary.resolve(context)
+      ..strokeWidth = _kTrackWidth
+      ..color = _kBlack
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke,
     division: Paint()
-      ..strokeWidth = 8
-      ..color = RemixTokens.textPrimary.resolve(context).withValues(alpha: 0.26)
+      ..strokeWidth = _kTrackWidth
+      ..color = _kBlack.withValues(alpha: 0.26)
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke,
-    // Disable default style animations to avoid persistent timers in tests.
-    animation: null,
   );
 });
 
@@ -163,7 +169,7 @@ final RemixSliderHoverStyle = RemixSliderStyle(
   thumb: BoxStyler(
     decoration: BoxDecorationMix(
       border: BoxBorderMix.all(
-        BorderSideMix(color: RemixTokens.primary(), width: 2),
+        BorderSideMix(color: _kBlack, width: _kThumbBorderWidth),
       ),
     ),
   ),
@@ -174,115 +180,24 @@ final RemixSliderDisabledStyle = RemixSliderStyle(
   thumb: BoxStyler(
     decoration: BoxDecorationMix(
       border: BoxBorderMix.all(
-        BorderSideMix(color: RemixTokens.border(), width: 2),
+        BorderSideMix(
+          color: _kBlack.withValues(alpha: 0.4),
+          width: _kThumbBorderWidth,
+        ),
       ),
-      color: RemixTokens.surface(),
+      color: _kBlack.withValues(alpha: 0.08),
     ),
   ),
   baseTrack: Paint()
-    ..strokeWidth = 8
-    ..color = RemixTokens.surface()
+    ..strokeWidth = _kTrackWidth
+    ..color = _kBlack.withValues(alpha: 0.08)
     ..strokeCap = StrokeCap.round
     ..style = PaintingStyle.stroke,
   activeTrack: Paint()
-    ..strokeWidth = 8
-    ..color = RemixTokens.border()
+    ..strokeWidth = _kTrackWidth
+    ..color = _kBlack.withValues(alpha: 0.2)
     ..strokeCap = StrokeCap.round
     ..style = PaintingStyle.stroke,
 );
 
-extension SliderVariants on RemixSliderStyle {
-  /// Primary slider variant with blue colors
-  static RemixSliderStyle get primary => RemixSliderStyle(
-        thumb: BoxStyler(
-          decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(
-              BorderSideMix(color: RemixTokens.primary(), width: 2),
-            ),
-            shape: BoxShape.circle,
-            color: RemixTokens.background(),
-            boxShadow: [
-              BoxShadowMix(
-                color: RemixTokens.primary().withValues(alpha: 0.3),
-                offset: const Offset(0, 2),
-                blurRadius: 4,
-              ),
-            ],
-          ),
-        ),
-        baseTrack: Paint()
-          ..strokeWidth = 8
-          ..color = RemixTokens.primary().withValues(alpha: 0.2)
-          ..strokeCap = StrokeCap.round
-          ..style = PaintingStyle.stroke,
-        activeTrack: Paint()
-          ..strokeWidth = 8
-          ..color = RemixTokens.primary()
-          ..strokeCap = StrokeCap.round
-          ..style = PaintingStyle.stroke,
-        division: Paint()
-          ..strokeWidth = 8
-          ..color = RemixTokens.primary().withValues(alpha: 0.5)
-          ..strokeCap = StrokeCap.round
-          ..style = PaintingStyle.stroke,
-        animation: null,
-      );
-
-  /// Secondary slider variant with grey colors
-  static RemixSliderStyle get secondary => RemixSliderStyle(
-        thumb: BoxStyler(
-          decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(
-              BorderSideMix(color: RemixTokens.textSecondary(), width: 2),
-            ),
-            shape: BoxShape.circle,
-            color: RemixTokens.background(),
-          ),
-        ),
-        baseTrack: Paint()
-          ..strokeWidth = 8
-          ..color = RemixTokens.surface()
-          ..strokeCap = StrokeCap.round
-          ..style = PaintingStyle.stroke,
-        activeTrack: Paint()
-          ..strokeWidth = 8
-          ..color = RemixTokens.textSecondary()
-          ..strokeCap = StrokeCap.round
-          ..style = PaintingStyle.stroke,
-        division: Paint()
-          ..strokeWidth = 8
-          ..color = RemixTokens.textSecondary().withValues(alpha: 0.5)
-          ..strokeCap = StrokeCap.round
-          ..style = PaintingStyle.stroke,
-        animation: null,
-      );
-
-  /// Compact slider variant with smaller track
-  static RemixSliderStyle get compact => RemixSliderStyle(
-        thumb: BoxStyler(
-          decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(
-              BorderSideMix(color: RemixTokens.textPrimary(), width: 1.5),
-            ),
-            shape: BoxShape.circle,
-            color: RemixTokens.background(),
-          ),
-        ),
-        baseTrack: Paint()
-          ..strokeWidth = 4
-          ..color = RemixTokens.border()
-          ..strokeCap = StrokeCap.round
-          ..style = PaintingStyle.stroke,
-        activeTrack: Paint()
-          ..strokeWidth = 4
-          ..color = RemixTokens.textPrimary()
-          ..strokeCap = StrokeCap.round
-          ..style = PaintingStyle.stroke,
-        division: Paint()
-          ..strokeWidth = 4
-          ..color = RemixTokens.textPrimary().withValues(alpha: 0.26)
-          ..strokeCap = StrokeCap.round
-          ..style = PaintingStyle.stroke,
-        animation: null,
-      );
-}
+// Removed colorful variants; slider uses single defaultStyle only

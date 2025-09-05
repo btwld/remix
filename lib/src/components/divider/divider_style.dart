@@ -1,5 +1,15 @@
 part of 'divider.dart';
 
+// Private per-component constants
+const _kBlack = Color(0xFF000000);
+const _kWhite = Color(0xFFFFFFFF);
+const _kDisabled = Color(0xFF9E9E9E);
+
+const _kSpaceSm = 8.0;
+const _kSpaceMd = 12.0;
+
+const _kRadiusMax = 99.0;
+
 class RemixDividerStyle extends Style<DividerSpec>
     with
         StyleModifierMixin<RemixDividerStyle, DividerSpec>,
@@ -76,25 +86,32 @@ class RemixDividerStyle extends Style<DividerSpec>
   }
 
   // Abstract method implementations for mixins
-  
+
   @override
   RemixDividerStyle animate(AnimationConfig config) {
     return merge(RemixDividerStyle(animation: config));
   }
-  
+
   @override
   RemixDividerStyle constraints(BoxConstraintsMix value) {
     return merge(RemixDividerStyle(container: BoxStyler(constraints: value)));
   }
-  
+
   @override
   RemixDividerStyle foregroundDecoration(DecorationMix value) {
-    return merge(RemixDividerStyle(container: BoxStyler(foregroundDecoration: value)));
+    return merge(
+      RemixDividerStyle(container: BoxStyler(foregroundDecoration: value)),
+    );
   }
-  
+
   @override
-  RemixDividerStyle transform(Matrix4 value, {AlignmentGeometry alignment = Alignment.center}) {
-    return merge(RemixDividerStyle(container: BoxStyler(transform: value, alignment: alignment)));
+  RemixDividerStyle transform(
+    Matrix4 value, {
+    AlignmentGeometry alignment = Alignment.center,
+  }) {
+    return merge(RemixDividerStyle(
+      container: BoxStyler(alignment: alignment, transform: value),
+    ));
   }
 
   @override
@@ -133,8 +150,8 @@ class RemixDividerStyles {
             maxHeight: 1,
           ),
           decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(99),
-            color: RemixTokens.border(),
+            borderRadius: BorderRadiusMix.circular(_kRadiusMax),
+            color: _kBlack.withValues(alpha: 0.2),
           ),
         ),
       );
@@ -148,8 +165,8 @@ class RemixDividerStyles {
             minHeight: double.infinity,
           ),
           decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(99),
-            color: RemixTokens.border(),
+            borderRadius: BorderRadiusMix.circular(_kRadiusMax),
+            color: _kBlack.withValues(alpha: 0.2),
           ),
         ),
       );
@@ -163,24 +180,12 @@ class RemixDividerStyles {
             maxHeight: 2,
           ),
           decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(99),
-            color: RemixTokens.border(),
+            borderRadius: BorderRadiusMix.circular(_kRadiusMax),
+            color: _kBlack.withValues(alpha: 0.3),
           ),
         ),
       );
 
   /// Dark divider variant
-  static RemixDividerStyle get dark => RemixDividerStyle(
-        container: BoxStyler(
-          constraints: BoxConstraintsMix(
-            minWidth: double.infinity,
-            minHeight: 1,
-            maxHeight: 1,
-          ),
-          decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(99),
-            color: RemixTokens.textSecondary(),
-          ),
-        ),
-      );
+  // Removed colorful variants; keeping simple default and utility variants only
 }

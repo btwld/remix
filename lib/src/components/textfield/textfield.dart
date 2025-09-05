@@ -10,7 +10,6 @@ import 'package:mix/mix.dart';
 import 'package:naked_ui/naked_ui.dart';
 
 import '../_internal/widget_state_controller_mixin.dart';
-import '../../theme/remix_tokens.dart';
 
 part 'textfield_spec.dart';
 part 'textfield_style.dart';
