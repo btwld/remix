@@ -3,7 +3,16 @@ part of 'list_item.dart';
 class RemixListItemStyle extends Style<ListItemSpec>
     with
         StyleModifierMixin<RemixListItemStyle, ListItemSpec>,
-        StyleVariantMixin<RemixListItemStyle, ListItemSpec> {
+        StyleVariantMixin<RemixListItemStyle, ListItemSpec>,
+        DecorationStyleMixin<RemixListItemStyle>,
+        ModifierStyleMixin<RemixListItemStyle, ListItemSpec>,
+        BorderStyleMixin<RemixListItemStyle>,
+        BorderRadiusStyleMixin<RemixListItemStyle>,
+        ShadowStyleMixin<RemixListItemStyle>,
+        SpacingStyleMixin<RemixListItemStyle>,
+        TransformStyleMixin<RemixListItemStyle>,
+        ConstraintStyleMixin<RemixListItemStyle>,
+        AnimationStyleMixin<ListItemSpec, RemixListItemStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<BoxSpec>>? $contentContainer;
   final Prop<StyleSpec<TextSpec>>? $title;
@@ -50,6 +59,44 @@ class RemixListItemStyle extends Style<ListItemSpec>
           modifier: modifier,
         );
 
+  // Convenience methods that delegate to container and contentContainer
+
+  /// Sets container padding
+  RemixListItemStyle padding(EdgeInsetsGeometryMix value) {
+    return merge(RemixListItemStyle(container: BoxStyler(padding: value)));
+  }
+
+  /// Sets container background color
+  RemixListItemStyle color(Color value) {
+    return merge(RemixListItemStyle(
+      container: BoxStyler(decoration: BoxDecorationMix(color: value)),
+    ));
+  }
+
+  /// Sets container border radius
+  RemixListItemStyle borderRadius(BorderRadiusGeometryMix radius) {
+    return merge(RemixListItemStyle(
+      container: BoxStyler(
+        decoration: BoxDecorationMix(borderRadius: radius),
+      ),
+    ));
+  }
+
+  /// Sets container margin
+  RemixListItemStyle margin(EdgeInsetsGeometryMix value) {
+    return merge(RemixListItemStyle(container: BoxStyler(margin: value)));
+  }
+
+  /// Sets container decoration
+  RemixListItemStyle decoration(DecorationMix value) {
+    return merge(RemixListItemStyle(container: BoxStyler(decoration: value)));
+  }
+
+  /// Sets content container styling
+  RemixListItemStyle content(BoxStyler value) {
+    return merge(RemixListItemStyle(contentContainer: value));
+  }
+
   @override
   StyleSpec<ListItemSpec> resolve(BuildContext context) {
     return StyleSpec(
@@ -76,59 +123,26 @@ class RemixListItemStyle extends Style<ListItemSpec>
     return merge(RemixListItemStyle(modifier: value));
   }
 
-  // Convenience methods that delegate to container and contentContainer
+  // Abstract method implementations for mixins
   
-  /// Sets container padding
-  RemixListItemStyle padding(double value) {
-    return merge(RemixListItemStyle(
-      container: BoxStyler(padding: EdgeInsetsGeometryMix.all(value)),
-    ));
+  @override
+  RemixListItemStyle animate(AnimationConfig config) {
+    return merge(RemixListItemStyle(animation: config));
   }
-
-  /// Sets container margin
-  RemixListItemStyle margin(double value) {
-    return merge(RemixListItemStyle(
-      container: BoxStyler(margin: EdgeInsetsGeometryMix.all(value)),
-    ));
-  }
-
-  /// Sets container background color
-  RemixListItemStyle color(Color value) {
-    return merge(RemixListItemStyle(
-      container: BoxStyler(decoration: BoxDecorationMix(color: value)),
-    ));
-  }
-
-  /// Sets container decoration
-  RemixListItemStyle decoration(DecorationMix value) {
-    return merge(RemixListItemStyle(
-      container: BoxStyler(decoration: value),
-    ));
-  }
-
-  /// Sets container constraints
+  
+  @override
   RemixListItemStyle constraints(BoxConstraintsMix value) {
-    return merge(RemixListItemStyle(
-      container: BoxStyler(constraints: value),
-    ));
+    return merge(RemixListItemStyle(container: BoxStyler(constraints: value)));
   }
-
-  /// Sets container border radius
-  RemixListItemStyle borderRadius(double radius) {
-    return merge(RemixListItemStyle(
-      container: BoxStyler(
-        decoration: BoxDecorationMix(
-          borderRadius: BorderRadiusMix.circular(radius),
-        ),
-      ),
-    ));
+  
+  @override
+  RemixListItemStyle foregroundDecoration(DecorationMix value) {
+    return merge(RemixListItemStyle(container: BoxStyler(foregroundDecoration: value)));
   }
-
-  /// Sets container border
-  RemixListItemStyle border(BoxBorderMix value) {
-    return merge(RemixListItemStyle(
-      container: BoxStyler(decoration: BoxDecorationMix(border: value)),
-    ));
+  
+  @override
+  RemixListItemStyle transform(Matrix4 value, {AlignmentGeometry alignment = Alignment.center}) {
+    return merge(RemixListItemStyle(container: BoxStyler(transform: value, alignment: alignment)));
   }
 
   @override

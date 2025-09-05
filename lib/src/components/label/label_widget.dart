@@ -138,16 +138,6 @@ extension LabelSpecWidget on LabelSpec {
       ),
     );
   }
-
-  @Deprecated('Use .createWidget() instead')
-  Widget widget(String text, {IconData? icon}) {
-    return createWidget(text, icon: icon);
-  }
-
-  @Deprecated('Use .createWidget() instead')
-  Widget call(String text, {IconData? icon}) {
-    return createWidget(text, icon: icon);
-  }
 }
 
 /// Extension on StyleSpec<LabelSpec> to provide createWidget method for creating widgets
@@ -170,15 +160,5 @@ extension LabelSpecWrappedWidget on StyleSpec<LabelSpec> {
         );
       },
     );
-  }
-
-  @Deprecated('Use .createWidget() instead')
-  Widget widget(String text, {IconData? icon}) {
-    return createWidget(text, icon: icon);
-  }
-
-  @Deprecated('Use .createWidget() instead')
-  Widget call(String text, {IconData? icon}) {
-    return createWidget(text, icon: icon);
   }
 }

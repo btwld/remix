@@ -45,8 +45,7 @@ class ListItemSpec extends Spec<ListItemSpec> with Diagnosticable {
 
     return ListItemSpec(
       container: MixOps.lerp(container, other.container, t)!,
-      contentContainer:
-          MixOps.lerp(contentContainer, other.contentContainer, t)!,
+      contentContainer: MixOps.lerp(contentContainer, other.contentContainer, t)!,
       title: MixOps.lerp(title, other.title, t)!,
       subtitle: MixOps.lerp(subtitle, other.subtitle, t)!,
       leading: MixOps.lerp(leading, other.leading, t)!,

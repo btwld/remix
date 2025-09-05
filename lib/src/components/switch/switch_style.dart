@@ -3,7 +3,16 @@ part of 'switch.dart';
 class RemixSwitchStyle extends Style<SwitchSpec>
     with
         StyleModifierMixin<RemixSwitchStyle, SwitchSpec>,
-        StyleVariantMixin<RemixSwitchStyle, SwitchSpec> {
+        StyleVariantMixin<RemixSwitchStyle, SwitchSpec>,
+        ModifierStyleMixin<RemixSwitchStyle, SwitchSpec>,
+        BorderStyleMixin<RemixSwitchStyle>,
+        BorderRadiusStyleMixin<RemixSwitchStyle>,
+        ShadowStyleMixin<RemixSwitchStyle>,
+        DecorationStyleMixin<RemixSwitchStyle>,
+        SpacingStyleMixin<RemixSwitchStyle>,
+        TransformStyleMixin<RemixSwitchStyle>,
+        ConstraintStyleMixin<RemixSwitchStyle>,
+        AnimationStyleMixin<SwitchSpec, RemixSwitchStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<BoxSpec>>? $track;
   final Prop<StyleSpec<BoxSpec>>? $thumb;
@@ -35,6 +44,29 @@ class RemixSwitchStyle extends Style<SwitchSpec>
           modifier: modifier,
         );
 
+  /// Sets track color
+  RemixSwitchStyle trackColor(Color value) {
+    return merge(RemixSwitchStyle(
+      track: BoxStyler(decoration: BoxDecorationMix(color: value)),
+    ));
+  }
+
+  /// Sets thumb color
+  RemixSwitchStyle thumbColor(Color value) {
+    return merge(RemixSwitchStyle(
+      thumb: BoxStyler(decoration: BoxDecorationMix(color: value)),
+    ));
+  }
+
+  /// Sets track styling
+  RemixSwitchStyle track(BoxStyler value) {
+    return merge(RemixSwitchStyle(track: value));
+  }
+
+  /// Sets thumb styling
+  RemixSwitchStyle thumb(BoxStyler value) {
+    return merge(RemixSwitchStyle(thumb: value));
+  }
 
   @override
   StyleSpec<SwitchSpec> resolve(BuildContext context) {
@@ -63,10 +95,6 @@ class RemixSwitchStyle extends Style<SwitchSpec>
     );
   }
 
-  @override
-  RemixSwitchStyle variant(Variant variant, RemixSwitchStyle style) {
-    return merge(RemixSwitchStyle(variants: [VariantStyle(variant, style)]));
-  }
 
   @override
   RemixSwitchStyle variants(List<VariantStyle<SwitchSpec>> value) {
@@ -76,6 +104,43 @@ class RemixSwitchStyle extends Style<SwitchSpec>
   @override
   RemixSwitchStyle wrap(ModifierConfig value) {
     return merge(RemixSwitchStyle(modifier: value));
+  }
+
+  // Abstract method implementations for mixins
+  
+  @override
+  RemixSwitchStyle animate(AnimationConfig config) {
+    return merge(RemixSwitchStyle(animation: config));
+  }
+  
+  @override
+  RemixSwitchStyle constraints(BoxConstraintsMix value) {
+    return merge(RemixSwitchStyle(container: BoxStyler(constraints: value)));
+  }
+  
+  @override
+  RemixSwitchStyle decoration(DecorationMix value) {
+    return merge(RemixSwitchStyle(container: BoxStyler(decoration: value)));
+  }
+  
+  @override
+  RemixSwitchStyle margin(EdgeInsetsGeometryMix value) {
+    return merge(RemixSwitchStyle(container: BoxStyler(margin: value)));
+  }
+  
+  @override
+  RemixSwitchStyle padding(EdgeInsetsGeometryMix value) {
+    return merge(RemixSwitchStyle(container: BoxStyler(padding: value)));
+  }
+  
+  @override
+  RemixSwitchStyle foregroundDecoration(DecorationMix value) {
+    return merge(RemixSwitchStyle(container: BoxStyler(foregroundDecoration: value)));
+  }
+  
+  @override
+  RemixSwitchStyle transform(Matrix4 value, {AlignmentGeometry alignment = Alignment.center}) {
+    return merge(RemixSwitchStyle(container: BoxStyler(transform: value, alignment: alignment)));
   }
 
   @override

@@ -194,11 +194,6 @@ extension SelectTriggerSpecWidget on SelectTriggerSpec {
   Widget createWidget(String text, {IconData? trailing}) {
     return createSelectTriggerWidget(this, text, trailing: trailing);
   }
-
-  @Deprecated('Use .createWidget() instead')
-  Widget call(String text, {IconData? trailing}) {
-    return createWidget(text, trailing: trailing);
-  }
 }
 
 /// Extension on StyleSpec<SelectTriggerSpec> to provide createWidget method for creating widgets
@@ -211,11 +206,6 @@ extension SelectTriggerSpecWrappedWidget on StyleSpec<SelectTriggerSpec> {
       },
     );
   }
-
-  @Deprecated('Use .createWidget() instead')
-  Widget call(String text, {IconData? trailing}) {
-    return createWidget(text, trailing: trailing);
-  }
 }
 
 /// Extension on SelectMenuItemSpec to provide createWidget method for creating widgets
@@ -227,11 +217,6 @@ extension SelectMenuItemSpecWidget on SelectMenuItemSpec {
       icon: icon,
       selected: selected,
     );
-  }
-
-  @Deprecated('Use .createWidget() instead')
-  Widget call(String text, {IconData? icon, bool selected = false}) {
-    return createWidget(text, icon: icon, selected: selected);
   }
 }
 
@@ -249,10 +234,5 @@ extension SelectMenuItemSpecWrappedWidget on StyleSpec<SelectMenuItemSpec> {
         );
       },
     );
-  }
-
-  @Deprecated('Use .createWidget() instead')
-  Widget call(String text, {IconData? icon, bool selected = false}) {
-    return createWidget(text, icon: icon, selected: selected);
   }
 }

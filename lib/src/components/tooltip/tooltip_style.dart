@@ -3,7 +3,16 @@ part of 'tooltip.dart';
 class RemixTooltipStyle extends Style<TooltipSpec>
     with
         StyleModifierMixin<RemixTooltipStyle, TooltipSpec>,
-        StyleVariantMixin<RemixTooltipStyle, TooltipSpec> {
+        StyleVariantMixin<RemixTooltipStyle, TooltipSpec>,
+        ModifierStyleMixin<RemixTooltipStyle, TooltipSpec>,
+        BorderStyleMixin<RemixTooltipStyle>,
+        BorderRadiusStyleMixin<RemixTooltipStyle>,
+        ShadowStyleMixin<RemixTooltipStyle>,
+        DecorationStyleMixin<RemixTooltipStyle>,
+        SpacingStyleMixin<RemixTooltipStyle>,
+        TransformStyleMixin<RemixTooltipStyle>,
+        ConstraintStyleMixin<RemixTooltipStyle>,
+        AnimationStyleMixin<TooltipSpec, RemixTooltipStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $text;
 
@@ -29,6 +38,37 @@ class RemixTooltipStyle extends Style<TooltipSpec>
           animation: animation,
           modifier: modifier,
         );
+
+  /// Sets container padding
+  RemixTooltipStyle padding(EdgeInsetsGeometryMix value) {
+    return merge(RemixTooltipStyle(container: BoxStyler(padding: value)));
+  }
+
+  /// Sets container margin
+  RemixTooltipStyle margin(EdgeInsetsGeometryMix value) {
+    return merge(RemixTooltipStyle(container: BoxStyler(margin: value)));
+  }
+
+  /// Sets container background color
+  RemixTooltipStyle color(Color value) {
+    return merge(RemixTooltipStyle(
+      container: BoxStyler(decoration: BoxDecorationMix(color: value)),
+    ));
+  }
+
+  /// Sets container border radius
+  RemixTooltipStyle borderRadius(BorderRadiusGeometryMix radius) {
+    return merge(RemixTooltipStyle(
+      container: BoxStyler(
+        decoration: BoxDecorationMix(borderRadius: radius),
+      ),
+    ));
+  }
+
+  /// Sets container decoration
+  RemixTooltipStyle decoration(DecorationMix value) {
+    return merge(RemixTooltipStyle(container: BoxStyler(decoration: value)));
+  }
 
   @override
   StyleSpec<TooltipSpec> resolve(BuildContext context) {
@@ -56,11 +96,6 @@ class RemixTooltipStyle extends Style<TooltipSpec>
   }
 
   @override
-  RemixTooltipStyle variant(Variant variant, RemixTooltipStyle style) {
-    return merge(RemixTooltipStyle(variants: [VariantStyle(variant, style)]));
-  }
-
-  @override
   RemixTooltipStyle variants(List<VariantStyle<TooltipSpec>> value) {
     return merge(RemixTooltipStyle(variants: value));
   }
@@ -68,6 +103,28 @@ class RemixTooltipStyle extends Style<TooltipSpec>
   @override
   RemixTooltipStyle wrap(ModifierConfig value) {
     return merge(RemixTooltipStyle(modifier: value));
+  }
+
+  // Abstract method implementations for mixins
+  
+  @override
+  RemixTooltipStyle animate(AnimationConfig config) {
+    return merge(RemixTooltipStyle(animation: config));
+  }
+  
+  @override
+  RemixTooltipStyle constraints(BoxConstraintsMix value) {
+    return merge(RemixTooltipStyle(container: BoxStyler(constraints: value)));
+  }
+  
+  @override
+  RemixTooltipStyle foregroundDecoration(DecorationMix value) {
+    return merge(RemixTooltipStyle(container: BoxStyler(foregroundDecoration: value)));
+  }
+  
+  @override
+  RemixTooltipStyle transform(Matrix4 value, {AlignmentGeometry alignment = Alignment.center}) {
+    return merge(RemixTooltipStyle(container: BoxStyler(transform: value, alignment: alignment)));
   }
 
   @override

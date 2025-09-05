@@ -179,9 +179,9 @@ Widget _buildSizeRow() {
             icon: Icons.circle,
             onPressed: () => debugPrint('Small button pressed'),
             style:
-                RemixButtonStyles.primary.merge(RemixButtonStyle().padding(8)).merge(
-                      RemixButtonStyle.label(
-                        RemixLabelStyle(
+                RemixButtonStyles.primary.merge(RemixButtonStyle().padding(EdgeInsetsGeometryMix.all(8))).merge(
+                      RemixButtonStyle(
+                        label: RemixLabelStyle(
                           label: TextStyler(style: TextStyleMix(fontSize: 12)),
                         ),
                       ),
@@ -192,10 +192,10 @@ Widget _buildSizeRow() {
             icon: Icons.circle,
             onPressed: () => debugPrint('Medium button pressed'),
             style: RemixButtonStyles.primary
-                .merge(RemixButtonStyle().padding(12))
+                .merge(RemixButtonStyle().padding(EdgeInsetsGeometryMix.all(12)))
                 .merge(
-                  RemixButtonStyle.label(
-                    RemixLabelStyle(
+                  RemixButtonStyle(
+                    label: RemixLabelStyle(
                       label: TextStyler(style: TextStyleMix(fontSize: 14)),
                     ),
                   ),
@@ -206,10 +206,10 @@ Widget _buildSizeRow() {
             icon: Icons.circle,
             onPressed: () => debugPrint('Large button pressed'),
             style: RemixButtonStyles.primary
-                .merge(RemixButtonStyle().padding(16))
+                .merge(RemixButtonStyle().padding(EdgeInsetsGeometryMix.all(16)))
                 .merge(
-                  RemixButtonStyle.label(
-                    RemixLabelStyle(
+                  RemixButtonStyle(
+                    label: RemixLabelStyle(
                       label: TextStyler(style: TextStyleMix(fontSize: 16)),
                     ),
                   ),

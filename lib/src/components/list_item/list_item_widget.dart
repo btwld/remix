@@ -99,8 +99,8 @@ class _RemixListItemState extends State<RemixListItem>
             Expanded(
               child: ContentContainer(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     for (int i = 0; i < textWidgets.length; i++) ...[
                       textWidgets[i],
@@ -125,7 +125,7 @@ class _RemixListItemState extends State<RemixListItem>
             children: [
               for (int i = 0; i < children.length; i++) ...[
                 children[i],
-                if (i < children.length - 1 && !(children[i] is Expanded)) 
+                if (i < children.length - 1 && !(children[i] is Expanded))
                   const SizedBox(width: 16),
               ],
             ],

@@ -3,7 +3,16 @@ part of 'badge.dart';
 class RemixBadgeStyle extends Style<BadgeSpec>
     with
         StyleModifierMixin<RemixBadgeStyle, BadgeSpec>,
-        StyleVariantMixin<RemixBadgeStyle, BadgeSpec> {
+        StyleVariantMixin<RemixBadgeStyle, BadgeSpec>,
+        ModifierStyleMixin<RemixBadgeStyle, BadgeSpec>,
+        BorderStyleMixin<RemixBadgeStyle>,
+        BorderRadiusStyleMixin<RemixBadgeStyle>,
+        ShadowStyleMixin<RemixBadgeStyle>,
+        DecorationStyleMixin<RemixBadgeStyle>,
+        SpacingStyleMixin<RemixBadgeStyle>,
+        TransformStyleMixin<RemixBadgeStyle>,
+        ConstraintStyleMixin<RemixBadgeStyle>,
+        AnimationStyleMixin<BadgeSpec, RemixBadgeStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $text;
   final Prop<StyleSpec<IconSpec>>? $icon;
@@ -35,7 +44,6 @@ class RemixBadgeStyle extends Style<BadgeSpec>
           modifier: modifier,
         );
 
-
   // Instance methods (chainable)
 
   /// Sets background color
@@ -46,21 +54,17 @@ class RemixBadgeStyle extends Style<BadgeSpec>
   }
 
   /// Sets border radius
-  RemixBadgeStyle borderRadius(double radius) {
+  RemixBadgeStyle borderRadius(BorderRadiusGeometryMix radius) {
     return merge(RemixBadgeStyle(
       container: BoxStyler(
-        decoration: BoxDecorationMix(
-          borderRadius: BorderRadiusMix.circular(radius),
-        ),
+        decoration: BoxDecorationMix(borderRadius: radius),
       ),
     ));
   }
 
   /// Sets padding
-  RemixBadgeStyle padding(double value) {
-    return merge(RemixBadgeStyle(
-      container: BoxStyler(padding: EdgeInsetsGeometryMix.all(value)),
-    ));
+  RemixBadgeStyle padding(EdgeInsetsGeometryMix value) {
+    return merge(RemixBadgeStyle(container: BoxStyler(padding: value)));
   }
 
   /// Sets text color
@@ -72,43 +76,31 @@ class RemixBadgeStyle extends Style<BadgeSpec>
 
   /// Sets icon color
   RemixBadgeStyle iconColor(Color value) {
-    return merge(RemixBadgeStyle(
-      icon: IconStyler(color: value),
-    ));
+    return merge(RemixBadgeStyle(icon: IconStyler(color: value)));
   }
 
   // Additional convenience methods that delegate to container
-  
+
   /// Sets margin
-  RemixBadgeStyle margin(double value) {
-    return merge(RemixBadgeStyle(
-      container: BoxStyler(margin: EdgeInsetsGeometryMix.all(value)),
-    ));
+  RemixBadgeStyle margin(EdgeInsetsGeometryMix value) {
+    return merge(RemixBadgeStyle(container: BoxStyler(margin: value)));
   }
 
   /// Sets decoration
   RemixBadgeStyle decoration(DecorationMix value) {
-    return merge(RemixBadgeStyle(
-      container: BoxStyler(decoration: value),
-    ));
+    return merge(RemixBadgeStyle(container: BoxStyler(decoration: value)));
   }
 
   /// Sets constraints
+  @override
   RemixBadgeStyle constraints(BoxConstraintsMix value) {
-    return merge(RemixBadgeStyle(
-      container: BoxStyler(constraints: value),
-    ));
+    return merge(RemixBadgeStyle(container: BoxStyler(constraints: value)));
   }
 
   /// Sets animation
+  @override
   RemixBadgeStyle animate(AnimationConfig animation) {
     return merge(RemixBadgeStyle(animation: animation));
-  }
-
-  /// Sets variant
-  @override
-  RemixBadgeStyle variant(Variant variant, RemixBadgeStyle style) {
-    return merge(RemixBadgeStyle(variants: [VariantStyle(variant, style)]));
   }
 
   @override
@@ -119,6 +111,21 @@ class RemixBadgeStyle extends Style<BadgeSpec>
   @override
   RemixBadgeStyle wrap(ModifierConfig value) {
     return merge(RemixBadgeStyle(modifier: value));
+  }
+
+  // Abstract method implementations for mixins
+
+  @override
+  RemixBadgeStyle foregroundDecoration(DecorationMix value) {
+    return merge(
+        RemixBadgeStyle(container: BoxStyler(foregroundDecoration: value)));
+  }
+
+  @override
+  RemixBadgeStyle transform(Matrix4 value,
+      {AlignmentGeometry alignment = Alignment.center}) {
+    return merge(RemixBadgeStyle(
+        container: BoxStyler(alignment: alignment, transform: value)));
   }
 
   @override
@@ -158,7 +165,6 @@ class RemixBadgeStyle extends Style<BadgeSpec>
         $modifier,
       ];
 }
-
 
 /// Default badge styles and variants
 class RemixBadgeStyles {

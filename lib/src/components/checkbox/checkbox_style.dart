@@ -3,7 +3,16 @@ part of 'checkbox.dart';
 class RemixCheckBoxStyler extends Style<CheckboxSpec>
     with
         StyleModifierMixin<RemixCheckBoxStyler, CheckboxSpec>,
-        StyleVariantMixin<RemixCheckBoxStyler, CheckboxSpec> {
+        StyleVariantMixin<RemixCheckBoxStyler, CheckboxSpec>,
+        ModifierStyleMixin<RemixCheckBoxStyler, CheckboxSpec>,
+        BorderStyleMixin<RemixCheckBoxStyler>,
+        BorderRadiusStyleMixin<RemixCheckBoxStyler>,
+        ShadowStyleMixin<RemixCheckBoxStyler>,
+        DecorationStyleMixin<RemixCheckBoxStyler>,
+        SpacingStyleMixin<RemixCheckBoxStyler>,
+        TransformStyleMixin<RemixCheckBoxStyler>,
+        ConstraintStyleMixin<RemixCheckBoxStyler>,
+        AnimationStyleMixin<CheckboxSpec, RemixCheckBoxStyler> {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<BoxSpec>>? $indicatorContainer;
   final Prop<StyleSpec<IconSpec>>? $indicator;
@@ -40,9 +49,12 @@ class RemixCheckBoxStyler extends Style<CheckboxSpec>
           modifier: modifier,
         );
 
-  /// Factory for checkbox size (indicator container size)
-  factory RemixCheckBoxStyler.size(double value) {
-    return RemixCheckBoxStyler(
+
+  // Instance methods (chainable)
+
+  /// Sets checkbox size
+  RemixCheckBoxStyler checkboxSize(double value) {
+    return merge(RemixCheckBoxStyler(
       indicatorContainer: BoxStyler(
         constraints: BoxConstraintsMix(
           minWidth: value,
@@ -51,90 +63,100 @@ class RemixCheckBoxStyler extends Style<CheckboxSpec>
           maxHeight: value,
         ),
       ),
-    );
+    ));
+  }
+  
+  /// Sets checkbox size with separate width and height
+  @override
+  RemixCheckBoxStyler size(double width, double height) {
+    return merge(RemixCheckBoxStyler(
+      indicatorContainer: BoxStyler(
+        constraints: BoxConstraintsMix(
+          minWidth: width,
+          maxWidth: width,
+          minHeight: height,
+          maxHeight: height,
+        ),
+      ),
+    ));
   }
 
-  /// Factory for checkbox background color
-  factory RemixCheckBoxStyler.color(Color value) {
-    return RemixCheckBoxStyler(
+  /// Sets checkbox background color
+  RemixCheckBoxStyler color(Color value) {
+    return merge(RemixCheckBoxStyler(
       indicatorContainer: BoxStyler(decoration: BoxDecorationMix(color: value)),
-    );
+    ));
   }
 
-  /// Factory for checkbox border radius
-  factory RemixCheckBoxStyler.borderRadius(double radius) {
-    return RemixCheckBoxStyler(
+  /// Sets checkbox border radius
+  RemixCheckBoxStyler checkboxBorderRadius(double radius) {
+    return merge(RemixCheckBoxStyler(
       indicatorContainer: BoxStyler(
         decoration: BoxDecorationMix(
           borderRadius: BorderRadiusMix.circular(radius),
         ),
       ),
-    );
+    ));
   }
-
-  /// Factory for checkbox border
-  factory RemixCheckBoxStyler.border(BoxBorderMix value) {
-    return RemixCheckBoxStyler(
-      indicatorContainer: BoxStyler(
-        decoration: BoxDecorationMix(border: value),
+  
+  /// Sets checkbox border radius with full geometry support
+  @override
+  RemixCheckBoxStyler borderRadius(BorderRadiusGeometryMix radius) {
+    return merge(RemixCheckBoxStyler(
+      container: FlexBoxStyler(
+        decoration: BoxDecorationMix(
+          borderRadius: radius,
+        ),
       ),
-    );
-  }
-
-  /// Factory for indicator color
-  factory RemixCheckBoxStyler.indicatorColor(Color value) {
-    return RemixCheckBoxStyler(indicator: IconStyler(color: value));
-  }
-
-  /// Factory for label color
-  factory RemixCheckBoxStyler.labelColor(Color value) {
-    return RemixCheckBoxStyler(
-      label: TextStyler(style: TextStyleMix(color: value)),
-    );
-  }
-
-  // Instance methods (chainable)
-
-  /// Sets checkbox size
-  RemixCheckBoxStyler size(double value) {
-    return merge(RemixCheckBoxStyler.size(value));
-  }
-
-  /// Sets checkbox background color
-  RemixCheckBoxStyler color(Color value) {
-    return merge(RemixCheckBoxStyler.color(value));
-  }
-
-  /// Sets checkbox border radius
-  RemixCheckBoxStyler borderRadius(double radius) {
-    return merge(RemixCheckBoxStyler.borderRadius(radius));
+    ));
   }
 
   /// Sets checkbox border
   RemixCheckBoxStyler border(BoxBorderMix value) {
-    return merge(RemixCheckBoxStyler.border(value));
+    return merge(RemixCheckBoxStyler(
+      indicatorContainer: BoxStyler(
+        decoration: BoxDecorationMix(border: value),
+      ),
+    ));
   }
 
   /// Sets indicator color
   RemixCheckBoxStyler indicatorColor(Color value) {
-    return merge(RemixCheckBoxStyler.indicatorColor(value));
+    return merge(RemixCheckBoxStyler(indicator: IconStyler(color: value)));
+  }
+
+  /// Sets container padding
+  RemixCheckBoxStyler padding(EdgeInsetsGeometryMix value) {
+    return merge(RemixCheckBoxStyler(
+      container: FlexBoxStyler(padding: value),
+    ));
+  }
+
+  /// Sets flex spacing
+  RemixCheckBoxStyler spacing(double value) {
+    return merge(RemixCheckBoxStyler(
+      container: FlexBoxStyler(spacing: value),
+    ));
+  }
+
+  /// Sets indicator container styling
+  RemixCheckBoxStyler indicatorContainer(BoxStyler value) {
+    return merge(RemixCheckBoxStyler(indicatorContainer: value));
   }
 
   /// Sets label color
   RemixCheckBoxStyler labelColor(Color value) {
-    return merge(RemixCheckBoxStyler.labelColor(value));
+    return merge(RemixCheckBoxStyler(
+      label: TextStyler(style: TextStyleMix(color: value)),
+    ));
   }
 
   /// Sets animation
+  @override
   RemixCheckBoxStyler animate(AnimationConfig animation) {
     return merge(RemixCheckBoxStyler(animation: animation));
   }
 
-  /// Sets variant
-  @override
-  RemixCheckBoxStyler variant(Variant variant, RemixCheckBoxStyler style) {
-    return merge(RemixCheckBoxStyler(variants: [VariantStyle(variant, style)]));
-  }
 
   @override
   RemixCheckBoxStyler variants(List<VariantStyle<CheckboxSpec>> value) {
@@ -145,6 +167,33 @@ class RemixCheckBoxStyler extends Style<CheckboxSpec>
   @override
   RemixCheckBoxStyler wrap(ModifierConfig value) {
     return merge(RemixCheckBoxStyler(modifier: value));
+  }
+
+  // Abstract method implementations for mixins
+  
+  @override
+  RemixCheckBoxStyler constraints(BoxConstraintsMix value) {
+    return merge(RemixCheckBoxStyler(container: FlexBoxStyler(constraints: value)));
+  }
+  
+  @override
+  RemixCheckBoxStyler decoration(DecorationMix value) {
+    return merge(RemixCheckBoxStyler(container: FlexBoxStyler(decoration: value)));
+  }
+  
+  @override
+  RemixCheckBoxStyler margin(EdgeInsetsGeometryMix value) {
+    return merge(RemixCheckBoxStyler(container: FlexBoxStyler(margin: value)));
+  }
+  
+  @override
+  RemixCheckBoxStyler foregroundDecoration(DecorationMix value) {
+    return merge(RemixCheckBoxStyler(container: FlexBoxStyler(foregroundDecoration: value)));
+  }
+  
+  @override
+  RemixCheckBoxStyler transform(Matrix4 value, {AlignmentGeometry alignment = Alignment.center}) {
+    return merge(RemixCheckBoxStyler(container: FlexBoxStyler(transform: value, alignment: alignment)));
   }
 
   @override

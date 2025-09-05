@@ -77,10 +77,6 @@ class RemixSpinnerStyle extends Style<SpinnerSpec>
   }
 
   // Variant support
-  @override
-  RemixSpinnerStyle variant(Variant variant, RemixSpinnerStyle style) {
-    return merge(RemixSpinnerStyle(variants: [VariantStyle(variant, style)]));
-  }
 
   @override
   RemixSpinnerStyle variants(List<VariantStyle<SpinnerSpec>> value) {
