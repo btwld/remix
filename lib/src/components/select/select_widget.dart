@@ -206,7 +206,6 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
             removalDelay: duration,
             onSelectedValueChanged: widget.onChanged,
             enabled: widget.enabled,
-            semanticLabel: widget.semanticLabel,
             closeOnSelect: widget.closeOnSelect,
             autofocus: widget.autofocus,
             enableTypeAhead: widget.enableTypeAhead,
@@ -301,7 +300,6 @@ class _MultiSelectWrapperState<T> extends State<_MultiSelectWrapper<T>> {
         }
       },
       enabled: widget.enabled,
-      semanticLabel: widget.semanticLabel,
       closeOnSelect: widget.closeOnSelect,
       autofocus: widget.autofocus,
       enableTypeAhead: widget.enableTypeAhead,
@@ -453,13 +451,20 @@ class _RemixSelectTriggerState extends State<RemixSelectTrigger>
           );
         }
 
-        return NakedSelectTrigger(
-          semanticLabel: widget.semanticLabel,
-          enableFeedback: widget.enableFeedback,
-          focusNode: widget.focusNode,
-          autofocus: widget.autofocus,
-          statesController: controller,
-          child: triggerContent,
+        // Simplified widget tree with integrated semantics
+        return Semantics(
+          enabled: widget.enabled,
+          button: true,
+          focusable: widget.enabled,
+          label: widget.semanticLabel ?? widget.label,
+          onTap: widget.enabled ? () {} : null, // Trigger opens menu
+          child: NakedSelectTrigger(
+            enableFeedback: widget.enableFeedback,
+            focusNode: widget.focusNode,
+            autofocus: widget.autofocus,
+            statesController: controller,
+            child: triggerContent,
+          ),
         );
       },
     );
@@ -581,15 +586,23 @@ class _RemixSelectItemState<T> extends State<RemixSelectItem<T>>
           );
         }
 
-        return NakedSelectItem<T>(
-          value: widget.value,
+        // Simplified widget tree with integrated semantics
+        return Semantics(
           enabled: widget.enabled,
-          semanticLabel: widget.semanticLabel,
-          enableFeedback: widget.enableFeedback,
-          focusNode: widget.focusNode,
-          autofocus: widget.autofocus,
-          statesController: controller,
-          child: itemContent,
+          selected: controller.selected,
+          button: true,
+          focusable: widget.enabled,
+          label: widget.semanticLabel ?? widget.label,
+          onTap: widget.enabled ? () {} : null, // Item selection
+          child: NakedSelectItem<T>(
+            value: widget.value,
+            enabled: widget.enabled,
+            enableFeedback: widget.enableFeedback,
+            focusNode: widget.focusNode,
+            autofocus: widget.autofocus,
+            statesController: controller,
+            child: itemContent,
+          ),
         );
       },
     );

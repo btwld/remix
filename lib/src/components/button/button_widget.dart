@@ -239,8 +239,13 @@ class _RemixButtonState extends State<RemixButton>
           iconBuilder: widget.iconBuilder,
         );
 
-        // Handle loading state
+        // Avoid duplicate semantics when treating this as a semantic button.
+        // The outer NakedButton provides the semantics via semanticLabel.
+        if (widget.isSemanticButton) {
+          content = ExcludeSemantics(child: content);
+        }
 
+        // Build spinner (used when loading)
         final Widget spinner = widget.loadingBuilder != null
             ? StyleSpecBuilder(
                 styleSpec: spec.spinner,
@@ -249,30 +254,59 @@ class _RemixButtonState extends State<RemixButton>
               )
             : SpinnerWidget();
 
-        content = Stack(
+        // Use a layered approach that preserves size and state of the content
+        // while showing a centered spinner on top when loading.
+        // Hide content visually (and from semantics when not using isSemanticButton)
+        // but keep it mounted to preserve its state.
+        final Widget layered = Stack(
           alignment: Alignment.center,
           children: [
-            content,
-            Visibility(visible: widget.loading, child: spinner),
+            // Underlying content: keep in the tree with state, but hide when loading
+            Visibility(
+              visible: !widget.loading,
+              maintainState: true,
+              maintainAnimation: true,
+              maintainSize: true,
+              child: ExcludeSemantics(child: content),
+            ),
+            // Spinner overlay, visible only when loading
+            Visibility(
+              visible: widget.loading,
+              maintainState: true,
+              maintainAnimation: true,
+              maintainSize: true,
+              child: ExcludeSemantics(child: Center(child: spinner)),
+            ),
           ],
         );
 
-        return NakedButton(
-          onPressed: widget.onPressed,
-          onLongPress: widget.onLongPress,
-          onDoubleTap: widget.onDoubleTap,
-          enabled: _isEnabled,
-          isSemanticButton: widget.isSemanticButton,
-          semanticLabel: widget.semanticLabel ?? widget.label,
-          semanticHint: widget.semanticHint,
-          mouseCursor: widget.mouseCursor,
-          enableFeedback: widget.enableFeedback,
-          focusNode: widget.focusNode,
-          autofocus: widget.autofocus,
+        // Use NakedPressable directly with integrated semantics - cleaner widget tree
+        return Semantics(
           excludeSemantics: widget.excludeSemantics,
-          onFocusChange: (focused) => controller.focused = focused,
-          statesController: controller,
-          child: ContainerWidget(child: content),
+          enabled: _isEnabled,
+          button: widget.isSemanticButton,
+          focusable: _isEnabled,
+          liveRegion: widget.loading,
+          label: widget.semanticLabel ?? widget.label,
+          value: widget.loading ? 'Loading' : null,
+          hint: widget.semanticHint,
+          onTap:
+              widget.isSemanticButton && _isEnabled ? widget.onPressed : null,
+          child: pressable.NakedPressable(
+            onPressed: _isEnabled ? widget.onPressed : null,
+            onDoubleTap: _isEnabled ? widget.onDoubleTap : null,
+            onLongPress: _isEnabled ? widget.onLongPress : null,
+            enabled: _isEnabled,
+            mouseCursor: widget.mouseCursor,
+            disabledMouseCursor: SystemMouseCursors.basic,
+            focusNode: widget.focusNode,
+            autofocus: widget.autofocus,
+            onFocusChange: (focused) => controller.focused = focused,
+            statesController: controller,
+            enableFeedback: widget.enableFeedback,
+            child: ContainerWidget(child: layered),
+            builder: (context, states, child) => child!,
+          ),
         );
       },
     );

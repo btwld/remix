@@ -14,8 +14,7 @@ part of 'switch.dart';
 ///   },
 /// )
 /// ```
-class RemixSwitch extends StatefulWidget
-    with HasEnabled, HasSelected {
+class RemixSwitch extends StatefulWidget with HasEnabled, HasSelected {
   const RemixSwitch({
     super.key,
     this.enabled = true,
@@ -80,27 +79,35 @@ class _RemixSwitchState extends State<RemixSwitch>
         final Track = spec.track.createWidget;
         final Thumb = spec.thumb.createWidget;
 
-        return NakedCheckbox(
-          value: widget.selected,
-          onChanged: (value) => widget.onChanged(value ?? false),
-          enabled: widget.enabled,
-          semanticLabel: widget.semanticLabel,
-          semanticHint: widget.semanticHint,
+        // Simplified widget tree with integrated semantics
+        return Semantics(
           excludeSemantics: widget.excludeSemantics,
-          mouseCursor: widget.mouseCursor,
-          enableFeedback: widget.enableFeedback,
-          focusNode: widget.focusNode,
-          autofocus: widget.autofocus,
-          statesController: controller,
-          child: Container(
-            child: Track(
-              child: Align(
-                alignment: widget.selected
-                    ? Alignment.centerRight
-                    : Alignment.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.all(2),
-                  child: Thumb(),
+          enabled: widget.enabled,
+          toggled: widget.selected,
+          focusable: widget.enabled,
+          label: widget.semanticLabel,
+          hint: widget.semanticHint,
+          onTap:
+              widget.enabled ? () => widget.onChanged(!widget.selected) : null,
+          child: NakedCheckbox(
+            value: widget.selected,
+            onChanged: (value) => widget.onChanged(value ?? false),
+            enabled: widget.enabled,
+            mouseCursor: widget.mouseCursor,
+            enableFeedback: widget.enableFeedback,
+            focusNode: widget.focusNode,
+            autofocus: widget.autofocus,
+            statesController: controller,
+            child: Container(
+              child: Track(
+                child: Align(
+                  alignment: widget.selected
+                      ? Alignment.centerRight
+                      : Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.all(2),
+                    child: Thumb(),
+                  ),
                 ),
               ),
             ),

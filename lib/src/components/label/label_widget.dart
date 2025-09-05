@@ -94,13 +94,14 @@ Widget _buildLabel(
   final IconWidget = spec.icon.createWidget;
   final FlexWidget = spec.flex.createWidget;
 
-  // Text widget
-  final Widget textWidget = textBuilder != null
+  // Text widget (skip when truly empty and no builder is provided)
+  final bool hasText = text.isNotEmpty || textBuilder != null;
+  final Widget? textWidget = textBuilder != null
       ? StyleSpecBuilder(
           styleSpec: spec.label,
           builder: (context, spec) => textBuilder(context, spec, text),
         )
-      : TextWidget(text);
+      : (hasText ? TextWidget(text) : null);
 
   // Icon widget: if a builder exists, always call it (even when icon is null)
   final Widget? iconWidget = iconBuilder != null
@@ -111,10 +112,18 @@ Widget _buildLabel(
         )
       : (icon != null ? IconWidget(icon: icon) : null);
 
+  // If only icon is present, render it directly (no spacing/extra text node)
+  if (iconWidget != null && textWidget == null) {
+    return iconWidget;
+  }
+
   // Arrange children based on icon position from spec
   final List<Widget> children = spec.iconPosition == IconPosition.leading
-      ? [if (iconWidget != null) iconWidget, textWidget]
-      : [textWidget, if (iconWidget != null) iconWidget];
+      ? [if (iconWidget != null) iconWidget, if (textWidget != null) textWidget]
+      : [
+          if (textWidget != null) textWidget,
+          if (iconWidget != null) iconWidget,
+        ];
 
   return FlexWidget(children: children);
 }
