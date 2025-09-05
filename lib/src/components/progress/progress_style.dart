@@ -3,46 +3,88 @@ part of 'progress.dart';
 class RemixProgressStyle extends Style<ProgressSpec>
     with
         StyleModifierMixin<RemixProgressStyle, ProgressSpec>,
-        StyleVariantMixin<RemixProgressStyle, ProgressSpec> {
+        StyleVariantMixin<RemixProgressStyle, ProgressSpec>,
+        ModifierStyleMixin<RemixProgressStyle, ProgressSpec>,
+        BorderStyleMixin<RemixProgressStyle>,
+        BorderRadiusStyleMixin<RemixProgressStyle>,
+        ShadowStyleMixin<RemixProgressStyle>,
+        DecorationStyleMixin<RemixProgressStyle>,
+        SpacingStyleMixin<RemixProgressStyle>,
+        TransformStyleMixin<RemixProgressStyle>,
+        ConstraintStyleMixin<RemixProgressStyle>,
+        AnimationStyleMixin<ProgressSpec, RemixProgressStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<BoxSpec>>? $track;
-  final Prop<StyleSpec<BoxSpec>>? $fill;
-  final Prop<StyleSpec<BoxSpec>>? $outerContainer;
+  final Prop<StyleSpec<BoxSpec>>? $indicator;
+  final Prop<StyleSpec<BoxSpec>>? $trackContainer;
 
   const RemixProgressStyle.create({
     Prop<StyleSpec<BoxSpec>>? container,
     Prop<StyleSpec<BoxSpec>>? track,
-    Prop<StyleSpec<BoxSpec>>? fill,
-    Prop<StyleSpec<BoxSpec>>? outerContainer,
+    Prop<StyleSpec<BoxSpec>>? indicator,
+    Prop<StyleSpec<BoxSpec>>? trackContainer,
     super.variants,
     super.animation,
     super.modifier,
   })  : $container = container,
         $track = track,
-        $fill = fill,
-        $outerContainer = outerContainer;
+        $indicator = indicator,
+        $trackContainer = trackContainer;
 
   RemixProgressStyle({
     BoxStyler? container,
     BoxStyler? track,
-    BoxStyler? fill,
-    BoxStyler? outerContainer,
+    BoxStyler? indicator,
+    BoxStyler? trackContainer,
     AnimationConfig? animation,
     List<VariantStyle<ProgressSpec>>? variants,
     ModifierConfig? modifier,
   }) : this.create(
           container: Prop.maybeMix(container),
           track: Prop.maybeMix(track),
-          fill: Prop.maybeMix(fill),
-          outerContainer: Prop.maybeMix(outerContainer),
+          indicator: Prop.maybeMix(indicator),
+          trackContainer: Prop.maybeMix(trackContainer),
           variants: variants,
           animation: animation,
           modifier: modifier,
         );
 
-  @override
-  RemixProgressStyle variant(Variant variant, RemixProgressStyle style) {
-    return merge(RemixProgressStyle(variants: [VariantStyle(variant, style)]));
+  /// Sets progress height
+  RemixProgressStyle height(double value) {
+    return merge(RemixProgressStyle(
+      container: BoxStyler(
+        constraints: BoxConstraintsMix(minHeight: value, maxHeight: value),
+      ),
+    ));
+  }
+
+  /// Sets track color
+  RemixProgressStyle trackColor(Color value) {
+    return merge(RemixProgressStyle(
+      track: BoxStyler(decoration: BoxDecorationMix(color: value)),
+    ));
+  }
+
+  /// Sets fill color
+  RemixProgressStyle indicatorColor(Color value) {
+    return merge(RemixProgressStyle(
+      indicator: BoxStyler(decoration: BoxDecorationMix(color: value)),
+    ));
+  }
+
+  /// Sets track styling
+  RemixProgressStyle track(BoxStyler value) {
+    return merge(RemixProgressStyle(track: value));
+  }
+
+  /// Sets fill styling
+  RemixProgressStyle indicator(BoxStyler value) {
+    return merge(RemixProgressStyle(indicator: value));
+  }
+
+  /// Sets outer container styling
+  RemixProgressStyle trackContainer(BoxStyler value) {
+    return merge(RemixProgressStyle(trackContainer: value));
   }
 
   @override
@@ -55,14 +97,51 @@ class RemixProgressStyle extends Style<ProgressSpec>
     return merge(RemixProgressStyle(modifier: value));
   }
 
+  // Abstract method implementations for mixins
+  
+  @override
+  RemixProgressStyle animate(AnimationConfig config) {
+    return merge(RemixProgressStyle(animation: config));
+  }
+  
+  @override
+  RemixProgressStyle constraints(BoxConstraintsMix value) {
+    return merge(RemixProgressStyle(container: BoxStyler(constraints: value)));
+  }
+  
+  @override
+  RemixProgressStyle decoration(DecorationMix value) {
+    return merge(RemixProgressStyle(container: BoxStyler(decoration: value)));
+  }
+  
+  @override
+  RemixProgressStyle margin(EdgeInsetsGeometryMix value) {
+    return merge(RemixProgressStyle(container: BoxStyler(margin: value)));
+  }
+  
+  @override
+  RemixProgressStyle padding(EdgeInsetsGeometryMix value) {
+    return merge(RemixProgressStyle(container: BoxStyler(padding: value)));
+  }
+  
+  @override
+  RemixProgressStyle foregroundDecoration(DecorationMix value) {
+    return merge(RemixProgressStyle(container: BoxStyler(foregroundDecoration: value)));
+  }
+  
+  @override
+  RemixProgressStyle transform(Matrix4 value, {AlignmentGeometry alignment = Alignment.center}) {
+    return merge(RemixProgressStyle(container: BoxStyler(transform: value, alignment: alignment)));
+  }
+
   @override
   StyleSpec<ProgressSpec> resolve(BuildContext context) {
     return StyleSpec(
       spec: ProgressSpec(
         container: MixOps.resolve(context, $container),
         track: MixOps.resolve(context, $track),
-        fill: MixOps.resolve(context, $fill),
-        outerContainer: MixOps.resolve(context, $outerContainer),
+        indicator: MixOps.resolve(context, $indicator),
+        trackContainer: MixOps.resolve(context, $trackContainer),
       ),
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
@@ -76,8 +155,8 @@ class RemixProgressStyle extends Style<ProgressSpec>
     return RemixProgressStyle.create(
       container: MixOps.merge($container, other.$container),
       track: MixOps.merge($track, other.$track),
-      fill: MixOps.merge($fill, other.$fill),
-      outerContainer: MixOps.merge($outerContainer, other.$outerContainer),
+      indicator: MixOps.merge($indicator, other.$indicator),
+      trackContainer: MixOps.merge($trackContainer, other.$trackContainer),
       variants: MixOps.mergeVariants($variants, other.$variants),
       animation: MixOps.mergeAnimation($animation, other.$animation),
       modifier: MixOps.mergeModifier($modifier, other.$modifier),
@@ -88,8 +167,8 @@ class RemixProgressStyle extends Style<ProgressSpec>
   List<Object?> get props => [
         $container,
         $track,
-        $fill,
-        $outerContainer,
+        $indicator,
+        $trackContainer,
         $variants,
         $animation,
         $modifier,
@@ -103,13 +182,13 @@ final DefaultRemixProgressStyle = RemixProgressStyle(
     clipBehavior: Clip.antiAlias,
   ),
   track: BoxStyler(decoration: BoxDecorationMix(color: RemixTokens.surface())),
-  fill: BoxStyler(
+  indicator: BoxStyler(
     decoration: BoxDecorationMix(
       borderRadius: BorderRadiusMix.circular(99),
       color: RemixTokens.textPrimary(),
     ),
   ),
-  outerContainer: BoxStyler(),
+  trackContainer: BoxStyler(),
 );
 
 extension ProgressVariants on RemixProgressStyle {
@@ -126,13 +205,13 @@ extension ProgressVariants on RemixProgressStyle {
             color: RemixTokens.primary().withValues(alpha: 0.2),
           ),
         ),
-        fill: BoxStyler(
+        indicator: BoxStyler(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(99),
             color: RemixTokens.primary(),
           ),
         ),
-        outerContainer: BoxStyler(),
+        trackContainer: BoxStyler(),
       );
 
   /// Secondary progress variant with grey fill
@@ -146,13 +225,13 @@ extension ProgressVariants on RemixProgressStyle {
         track: BoxStyler(
           decoration: BoxDecorationMix(color: RemixTokens.surface()),
         ),
-        fill: BoxStyler(
+        indicator: BoxStyler(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(99),
             color: RemixTokens.textSecondary(),
           ),
         ),
-        outerContainer: BoxStyler(),
+        trackContainer: BoxStyler(),
       );
 
   /// Success progress variant with green fill
@@ -168,13 +247,13 @@ extension ProgressVariants on RemixProgressStyle {
             color: RemixTokens.success().withValues(alpha: 0.2),
           ),
         ),
-        fill: BoxStyler(
+        indicator: BoxStyler(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(99),
             color: RemixTokens.success(),
           ),
         ),
-        outerContainer: BoxStyler(),
+        trackContainer: BoxStyler(),
       );
 
   /// Warning progress variant with orange fill
@@ -190,12 +269,12 @@ extension ProgressVariants on RemixProgressStyle {
             color: RemixTokens.warning().withValues(alpha: 0.2),
           ),
         ),
-        fill: BoxStyler(
+        indicator: BoxStyler(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(99),
             color: RemixTokens.warning(),
           ),
         ),
-        outerContainer: BoxStyler(),
+        trackContainer: BoxStyler(),
       );
 }

@@ -68,8 +68,8 @@ class _AuthBlockState extends State<AuthBlock> {
               spacing: 16,
               children: [
                 FlexBox(
-                  direction: Axis.vertical,
                   style: $flexbox
+                    ..direction(Axis.vertical)
                     ..border.all.color.grey(300)
                     ..clipBehavior(Clip.antiAlias)
                     ..color.grey(300)

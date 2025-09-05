@@ -40,6 +40,40 @@ class RemixSliderStyle extends Style<SliderSpec>
           modifier: modifier,
         );
 
+  /// Sets thumb color
+  RemixSliderStyle thumbColor(Color value) {
+    return merge(RemixSliderStyle(
+      thumb: BoxStyler(decoration: BoxDecorationMix(color: value)),
+    ));
+  }
+
+  /// Sets base track color
+  RemixSliderStyle baseTrackColor(Color value) {
+    return merge(RemixSliderStyle(
+      baseTrack: Paint()
+        ..strokeWidth = 8
+        ..color = value
+        ..strokeCap = StrokeCap.round
+        ..style = PaintingStyle.stroke,
+    ));
+  }
+
+  /// Sets active track color
+  RemixSliderStyle activeTrackColor(Color value) {
+    return merge(RemixSliderStyle(
+      activeTrack: Paint()
+        ..strokeWidth = 8
+        ..color = value
+        ..strokeCap = StrokeCap.round
+        ..style = PaintingStyle.stroke,
+    ));
+  }
+
+  /// Sets thumb styling
+  RemixSliderStyle thumb(BoxStyler value) {
+    return merge(RemixSliderStyle(thumb: value));
+  }
+
   @override
   StyleSpec<SliderSpec> resolve(BuildContext context) {
     return StyleSpec(
@@ -67,11 +101,6 @@ class RemixSliderStyle extends Style<SliderSpec>
       animation: MixOps.mergeAnimation($animation, other.$animation),
       modifier: MixOps.mergeModifier($modifier, other.$modifier),
     );
-  }
-
-  @override
-  RemixSliderStyle variant(Variant variant, RemixSliderStyle style) {
-    return merge(RemixSliderStyle(variants: [VariantStyle(variant, style)]));
   }
 
   @override

@@ -3,7 +3,16 @@ part of 'textfield.dart';
 class RemixTextFieldStyle extends Style<TextFieldSpec>
     with
         StyleModifierMixin<RemixTextFieldStyle, TextFieldSpec>,
-        StyleVariantMixin<RemixTextFieldStyle, TextFieldSpec> {
+        StyleVariantMixin<RemixTextFieldStyle, TextFieldSpec>,
+        ModifierStyleMixin<RemixTextFieldStyle, TextFieldSpec>,
+        BorderStyleMixin<RemixTextFieldStyle>,
+        BorderRadiusStyleMixin<RemixTextFieldStyle>,
+        ShadowStyleMixin<RemixTextFieldStyle>,
+        DecorationStyleMixin<RemixTextFieldStyle>,
+        SpacingStyleMixin<RemixTextFieldStyle>,
+        TransformStyleMixin<RemixTextFieldStyle>,
+        ConstraintStyleMixin<RemixTextFieldStyle>,
+        AnimationStyleMixin<TextFieldSpec, RemixTextFieldStyle> {
   final Prop<StyleSpec<TextSpec>>? $text;
   final Prop<StyleSpec<TextSpec>>? $hintText;
   final Prop<TextAlign>? $textAlign;
@@ -126,19 +135,18 @@ class RemixTextFieldStyle extends Style<TextFieldSpec>
   }
 
   /// Sets border radius
-  RemixTextFieldStyle borderRadius(double radius) {
+  RemixTextFieldStyle borderRadius(BorderRadiusGeometryMix radius) {
     return merge(RemixTextFieldStyle(
       container: FlexBoxStyler(
-        decoration:
-            BoxDecorationMix(borderRadius: BorderRadiusMix.circular(radius)),
+        decoration: BoxDecorationMix(borderRadius: radius),
       ),
     ));
   }
 
   /// Sets padding
-  RemixTextFieldStyle padding(double value) {
+  RemixTextFieldStyle padding(EdgeInsetsGeometryMix value) {
     return merge(RemixTextFieldStyle(
-      container: FlexBoxStyler(padding: EdgeInsetsGeometryMix.all(value)),
+      container: FlexBoxStyler(padding: value),
     ));
   }
 
@@ -182,9 +190,16 @@ class RemixTextFieldStyle extends Style<TextFieldSpec>
   // Additional convenience methods that delegate to container
   
   /// Sets margin
-  RemixTextFieldStyle margin(double value) {
+  RemixTextFieldStyle margin(EdgeInsetsGeometryMix value) {
     return merge(RemixTextFieldStyle(
-      container: FlexBoxStyler(margin: EdgeInsetsGeometryMix.all(value)),
+      container: FlexBoxStyler(margin: value),
+    ));
+  }
+
+  /// Sets flex spacing
+  RemixTextFieldStyle spacing(double value) {
+    return merge(RemixTextFieldStyle(
+      container: FlexBoxStyler(spacing: value),
     ));
   }
 
@@ -207,10 +222,6 @@ class RemixTextFieldStyle extends Style<TextFieldSpec>
     return merge(RemixTextFieldStyle(textAlign: value));
   }
 
-  /// Sets spacing
-  RemixTextFieldStyle spacing(double value) {
-    return merge(RemixTextFieldStyle(spacing: value));
-  }
 
   /// Sets label text
   RemixTextFieldStyle label(TextStyler value) {
@@ -223,15 +234,11 @@ class RemixTextFieldStyle extends Style<TextFieldSpec>
   }
 
   /// Sets animation
+  @override
   RemixTextFieldStyle animate(AnimationConfig animation) {
     return merge(RemixTextFieldStyle(animation: animation));
   }
 
-  /// Sets variant
-  @override
-  RemixTextFieldStyle variant(Variant variant, RemixTextFieldStyle style) {
-    return merge(RemixTextFieldStyle(variants: [VariantStyle(variant, style)]));
-  }
 
   @override
   RemixTextFieldStyle variants(List<VariantStyle<TextFieldSpec>> value) {
@@ -241,6 +248,18 @@ class RemixTextFieldStyle extends Style<TextFieldSpec>
   @override
   RemixTextFieldStyle wrap(ModifierConfig value) {
     return merge(RemixTextFieldStyle(modifier: value));
+  }
+
+  // Abstract method implementations for mixins
+  
+  @override
+  RemixTextFieldStyle foregroundDecoration(DecorationMix value) {
+    return merge(RemixTextFieldStyle(container: FlexBoxStyler(foregroundDecoration: value)));
+  }
+  
+  @override
+  RemixTextFieldStyle transform(Matrix4 value, {AlignmentGeometry alignment = Alignment.center}) {
+    return merge(RemixTextFieldStyle(container: FlexBoxStyler(transform: value, alignment: alignment)));
   }
 
   @override

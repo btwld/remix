@@ -37,27 +37,27 @@ class RemixProgress extends StatelessWidget {
       builder: (context, spec) {
         final Container = spec.container.createWidget;
         final Track = spec.track.createWidget;
-        final Fill = spec.fill.createWidget;
-        final OuterContainer = spec.outerContainer.createWidget;
+        final Indicator = spec.indicator.createWidget;
+        final TrackContainer = spec.trackContainer.createWidget;
 
         return Container(
           child: Stack(
             children: [
               // Track background
               Track(),
-              // Fill foreground based on value
+              // Indicator foreground based on value
               LayoutBuilder(
                 builder: (context, constraints) {
                   final biggestSize = constraints.biggest;
 
                   return SizedBox(
                     width: biggestSize.width * value,
-                    child: Fill(),
+                    child: Indicator(),
                   );
                 },
               ),
-              // Outer container overlay (for any additional styling)
-              OuterContainer(),
+              // Track container (for any additional styling)
+              TrackContainer(),
             ],
           ),
         );

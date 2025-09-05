@@ -3,7 +3,16 @@ part of 'callout.dart';
 class RemixCalloutStyle extends Style<CalloutSpec>
     with
         StyleModifierMixin<RemixCalloutStyle, CalloutSpec>,
-        StyleVariantMixin<RemixCalloutStyle, CalloutSpec> {
+        StyleVariantMixin<RemixCalloutStyle, CalloutSpec>,
+        ModifierStyleMixin<RemixCalloutStyle, CalloutSpec>,
+        BorderStyleMixin<RemixCalloutStyle>,
+        BorderRadiusStyleMixin<RemixCalloutStyle>,
+        ShadowStyleMixin<RemixCalloutStyle>,
+        DecorationStyleMixin<RemixCalloutStyle>,
+        SpacingStyleMixin<RemixCalloutStyle>,
+        TransformStyleMixin<RemixCalloutStyle>,
+        ConstraintStyleMixin<RemixCalloutStyle>,
+        AnimationStyleMixin<CalloutSpec, RemixCalloutStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $text;
   final Prop<StyleSpec<IconSpec>>? $icon;
@@ -35,6 +44,36 @@ class RemixCalloutStyle extends Style<CalloutSpec>
           modifier: modifier,
         );
 
+  /// Sets container padding
+  RemixCalloutStyle padding(EdgeInsetsGeometryMix value) {
+    return merge(RemixCalloutStyle(container: BoxStyler(padding: value)));
+  }
+
+  /// Sets container margin
+  RemixCalloutStyle margin(EdgeInsetsGeometryMix value) {
+    return merge(RemixCalloutStyle(container: BoxStyler(margin: value)));
+  }
+
+  /// Sets container background color
+  RemixCalloutStyle color(Color value) {
+    return merge(RemixCalloutStyle(
+      container: BoxStyler(decoration: BoxDecorationMix(color: value)),
+    ));
+  }
+
+  /// Sets container border radius
+  RemixCalloutStyle borderRadius(BorderRadiusGeometryMix radius) {
+    return merge(RemixCalloutStyle(
+      container: BoxStyler(
+        decoration: BoxDecorationMix(borderRadius: radius),
+      ),
+    ));
+  }
+
+  /// Sets container decoration
+  RemixCalloutStyle decoration(DecorationMix value) {
+    return merge(RemixCalloutStyle(container: BoxStyler(decoration: value)));
+  }
 
   @override
   StyleSpec<CalloutSpec> resolve(BuildContext context) {
@@ -64,11 +103,6 @@ class RemixCalloutStyle extends Style<CalloutSpec>
   }
 
   @override
-  RemixCalloutStyle variant(Variant variant, RemixCalloutStyle style) {
-    return merge(RemixCalloutStyle(variants: [VariantStyle(variant, style)]));
-  }
-
-  @override
   RemixCalloutStyle variants(List<VariantStyle<CalloutSpec>> value) {
     return merge(RemixCalloutStyle(variants: value));
   }
@@ -76,6 +110,28 @@ class RemixCalloutStyle extends Style<CalloutSpec>
   @override
   RemixCalloutStyle wrap(ModifierConfig value) {
     return merge(RemixCalloutStyle(modifier: value));
+  }
+
+  // Abstract method implementations for mixins
+  
+  @override
+  RemixCalloutStyle animate(AnimationConfig config) {
+    return merge(RemixCalloutStyle(animation: config));
+  }
+  
+  @override
+  RemixCalloutStyle constraints(BoxConstraintsMix value) {
+    return merge(RemixCalloutStyle(container: BoxStyler(constraints: value)));
+  }
+  
+  @override
+  RemixCalloutStyle foregroundDecoration(DecorationMix value) {
+    return merge(RemixCalloutStyle(container: BoxStyler(foregroundDecoration: value)));
+  }
+  
+  @override
+  RemixCalloutStyle transform(Matrix4 value, {AlignmentGeometry alignment = Alignment.center}) {
+    return merge(RemixCalloutStyle(container: BoxStyler(transform: value, alignment: alignment)));
   }
 
   @override

@@ -3,7 +3,16 @@ part of 'button.dart';
 class RemixButtonStyle extends Style<ButtonSpec>
     with
         StyleModifierMixin<RemixButtonStyle, ButtonSpec>,
-        StyleVariantMixin<RemixButtonStyle, ButtonSpec> {
+        StyleVariantMixin<RemixButtonStyle, ButtonSpec>,
+        ModifierStyleMixin<RemixButtonStyle, ButtonSpec>,
+        BorderStyleMixin<RemixButtonStyle>,
+        BorderRadiusStyleMixin<RemixButtonStyle>,
+        ShadowStyleMixin<RemixButtonStyle>,
+        DecorationStyleMixin<RemixButtonStyle>,
+        SpacingStyleMixin<RemixButtonStyle>,
+        TransformStyleMixin<RemixButtonStyle>,
+        ConstraintStyleMixin<RemixButtonStyle>,
+        AnimationStyleMixin<ButtonSpec, RemixButtonStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<LabelSpec>>? $label;
   final Prop<StyleSpec<SpinnerSpec>>? $spinner;
@@ -35,23 +44,13 @@ class RemixButtonStyle extends Style<ButtonSpec>
           modifier: modifier,
         );
 
-  // Factory constructors for common patterns
-  factory RemixButtonStyle.label(RemixLabelStyle value) {
-    return RemixButtonStyle(label: value);
-  }
-
-  factory RemixButtonStyle.spinner(RemixSpinnerStyle value) {
-    return RemixButtonStyle(spinner: value);
-  }
-
-
   // Instance methods for fluent API (return new instances)
   RemixButtonStyle label(RemixLabelStyle value) {
-    return merge(RemixButtonStyle.label(value));
+    return merge(RemixButtonStyle(label: value));
   }
 
   RemixButtonStyle spinner(RemixSpinnerStyle value) {
-    return merge(RemixButtonStyle.spinner(value));
+    return merge(RemixButtonStyle(spinner: value));
   }
 
   // Instance methods (chainable)
@@ -64,19 +63,15 @@ class RemixButtonStyle extends Style<ButtonSpec>
   }
 
   /// Sets padding
-  RemixButtonStyle padding(double value) {
-    return merge(RemixButtonStyle(
-      container: BoxStyler(padding: EdgeInsetsGeometryMix.all(value)),
-    ));
+  RemixButtonStyle padding(EdgeInsetsGeometryMix value) {
+    return merge(RemixButtonStyle(container: BoxStyler(padding: value)));
   }
 
   /// Sets border radius
-  RemixButtonStyle borderRadius(double radius) {
+  RemixButtonStyle borderRadius(BorderRadiusGeometryMix radius) {
     return merge(RemixButtonStyle(
       container: BoxStyler(
-        decoration: BoxDecorationMix(
-          borderRadius: BorderRadiusMix.circular(radius),
-        ),
+        decoration: BoxDecorationMix(borderRadius: radius),
       ),
     ));
   }
@@ -121,26 +116,20 @@ class RemixButtonStyle extends Style<ButtonSpec>
   }
 
   // Additional convenience methods that delegate to BoxStyler
-  
+
   /// Sets margin
-  RemixButtonStyle margin(double value) {
-    return merge(RemixButtonStyle(
-      container: BoxStyler(margin: EdgeInsetsGeometryMix.all(value)),
-    ));
+  RemixButtonStyle margin(EdgeInsetsGeometryMix value) {
+    return merge(RemixButtonStyle(container: BoxStyler(margin: value)));
   }
 
   /// Sets decoration
   RemixButtonStyle decoration(DecorationMix value) {
-    return merge(RemixButtonStyle(
-      container: BoxStyler(decoration: value),
-    ));
+    return merge(RemixButtonStyle(container: BoxStyler(decoration: value)));
   }
 
   /// Sets constraints
   RemixButtonStyle constraints(BoxConstraintsMix value) {
-    return merge(RemixButtonStyle(
-      container: BoxStyler(constraints: value),
-    ));
+    return merge(RemixButtonStyle(container: BoxStyler(constraints: value)));
   }
 
   // Icon control methods
@@ -158,20 +147,15 @@ class RemixButtonStyle extends Style<ButtonSpec>
   RemixButton call({
     required String label,
     IconData? icon,
-    @Deprecated('Use icon instead') IconData? leading,
-    @Deprecated('Use icon instead') IconData? trailing,
     bool enabled = true,
     bool loading = false,
     bool enableFeedback = true,
     required VoidCallback? onPressed,
     FocusNode? focusNode,
   }) {
-    // Handle backward compatibility: leading takes precedence over trailing
-    final effectiveIcon = icon ?? leading ?? trailing;
-
     return RemixButton(
       label: label,
-      icon: effectiveIcon,
+      icon: icon,
       enabled: enabled,
       loading: loading,
       enableFeedback: enableFeedback,
@@ -181,11 +165,26 @@ class RemixButtonStyle extends Style<ButtonSpec>
     );
   }
 
-  // Variant support
+  // Abstract method implementations for mixins (only missing ones)
+
   @override
-  RemixButtonStyle variant(Variant variant, RemixButtonStyle style) {
-    return merge(RemixButtonStyle(variants: [VariantStyle(variant, style)]));
+  RemixButtonStyle foregroundDecoration(DecorationMix value) {
+    return merge(
+      RemixButtonStyle(container: BoxStyler(foregroundDecoration: value)),
+    );
   }
+
+  @override
+  RemixButtonStyle transform(
+    Matrix4 value, {
+    AlignmentGeometry alignment = Alignment.center,
+  }) {
+    return merge(RemixButtonStyle(
+      container: BoxStyler(alignment: alignment, transform: value),
+    ));
+  }
+
+  // Variant support
 
   @override
   RemixButtonStyle variants(List<VariantStyle<ButtonSpec>> value) {

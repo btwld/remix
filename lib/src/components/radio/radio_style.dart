@@ -3,7 +3,16 @@ part of 'radio.dart';
 class RemixRadioStyle extends Style<RadioSpec>
     with
         StyleModifierMixin<RemixRadioStyle, RadioSpec>,
-        StyleVariantMixin<RemixRadioStyle, RadioSpec> {
+        StyleVariantMixin<RemixRadioStyle, RadioSpec>,
+        ModifierStyleMixin<RemixRadioStyle, RadioSpec>,
+        BorderStyleMixin<RemixRadioStyle>,
+        BorderRadiusStyleMixin<RemixRadioStyle>,
+        ShadowStyleMixin<RemixRadioStyle>,
+        DecorationStyleMixin<RemixRadioStyle>,
+        SpacingStyleMixin<RemixRadioStyle>,
+        TransformStyleMixin<RemixRadioStyle>,
+        ConstraintStyleMixin<RemixRadioStyle>,
+        AnimationStyleMixin<RadioSpec, RemixRadioStyle> {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<BoxSpec>>? $indicatorContainer;
   final Prop<StyleSpec<BoxSpec>>? $indicator;
@@ -40,9 +49,52 @@ class RemixRadioStyle extends Style<RadioSpec>
           modifier: modifier,
         );
 
-  @override
-  RemixRadioStyle variant(Variant variant, RemixRadioStyle style) {
-    return merge(RemixRadioStyle(variants: [VariantStyle(variant, style)]));
+  /// Sets container padding
+  RemixRadioStyle padding(EdgeInsetsGeometryMix value) {
+    return merge(RemixRadioStyle(container: FlexBoxStyler(padding: value)));
+  }
+
+  /// Sets container margin
+  RemixRadioStyle margin(EdgeInsetsGeometryMix value) {
+    return merge(RemixRadioStyle(container: FlexBoxStyler(margin: value)));
+  }
+
+  /// Sets container background color
+  RemixRadioStyle color(Color value) {
+    return merge(RemixRadioStyle(
+      container: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
+    ));
+  }
+
+  /// Sets container border radius
+  RemixRadioStyle borderRadius(BorderRadiusGeometryMix radius) {
+    return merge(RemixRadioStyle(
+      container: FlexBoxStyler(
+        decoration: BoxDecorationMix(borderRadius: radius),
+      ),
+    ));
+  }
+
+  /// Sets container decoration
+  RemixRadioStyle decoration(DecorationMix value) {
+    return merge(RemixRadioStyle(
+      container: FlexBoxStyler(decoration: value),
+    ));
+  }
+
+  /// Sets flex spacing
+  RemixRadioStyle spacing(double value) {
+    return merge(RemixRadioStyle(container: FlexBoxStyler(spacing: value)));
+  }
+
+  /// Sets indicator container styling
+  RemixRadioStyle indicatorContainer(BoxStyler value) {
+    return merge(RemixRadioStyle(indicatorContainer: value));
+  }
+
+  /// Sets indicator styling
+  RemixRadioStyle indicator(BoxStyler value) {
+    return merge(RemixRadioStyle(indicator: value));
   }
 
   @override
@@ -53,6 +105,28 @@ class RemixRadioStyle extends Style<RadioSpec>
   @override
   RemixRadioStyle wrap(ModifierConfig value) {
     return merge(RemixRadioStyle(modifier: value));
+  }
+
+  // Abstract method implementations for mixins
+  
+  @override
+  RemixRadioStyle animate(AnimationConfig config) {
+    return merge(RemixRadioStyle(animation: config));
+  }
+  
+  @override
+  RemixRadioStyle constraints(BoxConstraintsMix value) {
+    return merge(RemixRadioStyle(container: FlexBoxStyler(constraints: value)));
+  }
+  
+  @override
+  RemixRadioStyle foregroundDecoration(DecorationMix value) {
+    return merge(RemixRadioStyle(container: FlexBoxStyler(foregroundDecoration: value)));
+  }
+  
+  @override
+  RemixRadioStyle transform(Matrix4 value, {AlignmentGeometry alignment = Alignment.center}) {
+    return merge(RemixRadioStyle(container: FlexBoxStyler(transform: value, alignment: alignment)));
   }
 
   @override

@@ -40,6 +40,28 @@ class RemixSelectStyle extends Style<SelectSpec>
           modifier: modifier,
         );
 
+  /// Sets menu container styling
+  RemixSelectStyle menuContainer(BoxStyler value) {
+    return merge(RemixSelectStyle(menuContainer: value));
+  }
+
+  // Abstract method implementations for mixins (delegating to menuContainer)
+
+  RemixSelectStyle foregroundDecoration(DecorationMix value) {
+    return merge(RemixSelectStyle(
+      menuContainer: BoxStyler(foregroundDecoration: value),
+    ));
+  }
+
+  RemixSelectStyle transform(
+    Matrix4 value, {
+    AlignmentGeometry alignment = Alignment.center,
+  }) {
+    return merge(RemixSelectStyle(
+      menuContainer: BoxStyler(alignment: alignment, transform: value),
+    ));
+  }
+
   @override
   RemixSelectStyle variants(List<VariantStyle<SelectSpec>> value) {
     return merge(RemixSelectStyle(variants: value));
@@ -51,11 +73,6 @@ class RemixSelectStyle extends Style<SelectSpec>
   }
 
   @override
-  RemixSelectStyle variant(Variant variant, RemixSelectStyle style) {
-    return merge(style);
-  }
-
-  @override
   StyleSpec<SelectSpec> resolve(BuildContext context) {
     return StyleSpec(
       spec: SelectSpec(
@@ -64,7 +81,7 @@ class RemixSelectStyle extends Style<SelectSpec>
         item: MixOps.resolve(context, $item),
         position: MixOps.resolve(context, $position),
       ),
-            animation: $animation,
+      animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
     );
   }
@@ -97,7 +114,17 @@ class RemixSelectStyle extends Style<SelectSpec>
 }
 
 // Style classes for sub-specs
-class RemixSelectTriggerStyle extends Style<SelectTriggerSpec> {
+class RemixSelectTriggerStyle extends Style<SelectTriggerSpec>
+    with
+        ModifierStyleMixin<RemixSelectTriggerStyle, SelectTriggerSpec>,
+        BorderStyleMixin<RemixSelectTriggerStyle>,
+        BorderRadiusStyleMixin<RemixSelectTriggerStyle>,
+        ShadowStyleMixin<RemixSelectTriggerStyle>,
+        DecorationStyleMixin<RemixSelectTriggerStyle>,
+        SpacingStyleMixin<RemixSelectTriggerStyle>,
+        TransformStyleMixin<RemixSelectTriggerStyle>,
+        ConstraintStyleMixin<RemixSelectTriggerStyle>,
+        AnimationStyleMixin<SelectTriggerSpec, RemixSelectTriggerStyle> {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<StyleSpec<IconSpec>>? $icon;
@@ -137,7 +164,7 @@ class RemixSelectTriggerStyle extends Style<SelectTriggerSpec> {
         label: MixOps.resolve(context, $label),
         icon: MixOps.resolve(context, $icon),
       ),
-            animation: $animation,
+      animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
     );
   }
@@ -156,6 +183,63 @@ class RemixSelectTriggerStyle extends Style<SelectTriggerSpec> {
     );
   }
 
+  // Abstract method implementations for mixins
+
+  @override
+  RemixSelectTriggerStyle animate(AnimationConfig config) {
+    return merge(RemixSelectTriggerStyle(animation: config));
+  }
+
+  @override
+  RemixSelectTriggerStyle constraints(BoxConstraintsMix value) {
+    return merge(
+      RemixSelectTriggerStyle(container: FlexBoxStyler(constraints: value)),
+    );
+  }
+
+  @override
+  RemixSelectTriggerStyle decoration(DecorationMix value) {
+    return merge(
+      RemixSelectTriggerStyle(container: FlexBoxStyler(decoration: value)),
+    );
+  }
+
+  @override
+  RemixSelectTriggerStyle margin(EdgeInsetsGeometryMix value) {
+    return merge(
+      RemixSelectTriggerStyle(container: FlexBoxStyler(margin: value)),
+    );
+  }
+
+  @override
+  RemixSelectTriggerStyle padding(EdgeInsetsGeometryMix value) {
+    return merge(
+      RemixSelectTriggerStyle(container: FlexBoxStyler(padding: value)),
+    );
+  }
+
+  @override
+  RemixSelectTriggerStyle wrap(ModifierConfig value) {
+    return merge(RemixSelectTriggerStyle(modifier: value));
+  }
+
+  @override
+  RemixSelectTriggerStyle foregroundDecoration(DecorationMix value) {
+    return merge(RemixSelectTriggerStyle(
+      container: FlexBoxStyler(foregroundDecoration: value),
+    ));
+  }
+
+  @override
+  RemixSelectTriggerStyle transform(
+    Matrix4 value, {
+    AlignmentGeometry alignment = Alignment.center,
+  }) {
+    return merge(RemixSelectTriggerStyle(
+      container: FlexBoxStyler(alignment: alignment, transform: value),
+    ));
+  }
+
   @override
   List<Object?> get props => [
         $container,
@@ -167,7 +251,17 @@ class RemixSelectTriggerStyle extends Style<SelectTriggerSpec> {
       ];
 }
 
-class RemixSelectMenuItemStyle extends Style<SelectMenuItemSpec> {
+class RemixSelectMenuItemStyle extends Style<SelectMenuItemSpec>
+    with
+        ModifierStyleMixin<RemixSelectMenuItemStyle, SelectMenuItemSpec>,
+        BorderStyleMixin<RemixSelectMenuItemStyle>,
+        BorderRadiusStyleMixin<RemixSelectMenuItemStyle>,
+        ShadowStyleMixin<RemixSelectMenuItemStyle>,
+        DecorationStyleMixin<RemixSelectMenuItemStyle>,
+        SpacingStyleMixin<RemixSelectMenuItemStyle>,
+        TransformStyleMixin<RemixSelectMenuItemStyle>,
+        ConstraintStyleMixin<RemixSelectMenuItemStyle>,
+        AnimationStyleMixin<SelectMenuItemSpec, RemixSelectMenuItemStyle> {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $text;
   final Prop<StyleSpec<IconSpec>>? $icon;
@@ -207,7 +301,7 @@ class RemixSelectMenuItemStyle extends Style<SelectMenuItemSpec> {
         text: MixOps.resolve(context, $text),
         icon: MixOps.resolve(context, $icon),
       ),
-            animation: $animation,
+      animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
     );
   }
@@ -224,6 +318,63 @@ class RemixSelectMenuItemStyle extends Style<SelectMenuItemSpec> {
       animation: MixOps.mergeAnimation($animation, other.$animation),
       modifier: MixOps.mergeModifier($modifier, other.$modifier),
     );
+  }
+
+  // Abstract method implementations for mixins
+
+  @override
+  RemixSelectMenuItemStyle animate(AnimationConfig config) {
+    return merge(RemixSelectMenuItemStyle(animation: config));
+  }
+
+  @override
+  RemixSelectMenuItemStyle constraints(BoxConstraintsMix value) {
+    return merge(
+      RemixSelectMenuItemStyle(container: FlexBoxStyler(constraints: value)),
+    );
+  }
+
+  @override
+  RemixSelectMenuItemStyle decoration(DecorationMix value) {
+    return merge(
+      RemixSelectMenuItemStyle(container: FlexBoxStyler(decoration: value)),
+    );
+  }
+
+  @override
+  RemixSelectMenuItemStyle margin(EdgeInsetsGeometryMix value) {
+    return merge(
+      RemixSelectMenuItemStyle(container: FlexBoxStyler(margin: value)),
+    );
+  }
+
+  @override
+  RemixSelectMenuItemStyle padding(EdgeInsetsGeometryMix value) {
+    return merge(
+      RemixSelectMenuItemStyle(container: FlexBoxStyler(padding: value)),
+    );
+  }
+
+  @override
+  RemixSelectMenuItemStyle wrap(ModifierConfig value) {
+    return merge(RemixSelectMenuItemStyle(modifier: value));
+  }
+
+  @override
+  RemixSelectMenuItemStyle foregroundDecoration(DecorationMix value) {
+    return merge(RemixSelectMenuItemStyle(
+      container: FlexBoxStyler(foregroundDecoration: value),
+    ));
+  }
+
+  @override
+  RemixSelectMenuItemStyle transform(
+    Matrix4 value, {
+    AlignmentGeometry alignment = Alignment.center,
+  }) {
+    return merge(RemixSelectMenuItemStyle(
+      container: FlexBoxStyler(alignment: alignment, transform: value),
+    ));
   }
 
   @override
@@ -278,7 +429,7 @@ class RemixCompositedTransformFollowerStyle
         targetAnchor: MixOps.resolve(context, $targetAnchor),
         followerAnchor: MixOps.resolve(context, $followerAnchor),
       ),
-            animation: $animation,
+      animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
     );
   }

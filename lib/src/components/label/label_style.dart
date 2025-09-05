@@ -40,10 +40,6 @@ class RemixLabelStyle extends Style<LabelSpec>
           modifier: modifier,
         );
 
-  @override
-  RemixLabelStyle variant(Variant variant, RemixLabelStyle style) {
-    return merge(RemixLabelStyle(variants: [VariantStyle(variant, style)]));
-  }
 
   @override
   RemixLabelStyle variants(List<VariantStyle<LabelSpec>> value) {

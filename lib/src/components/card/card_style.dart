@@ -3,7 +3,16 @@ part of 'card.dart';
 class RemixCardStyle extends Style<CardSpec>
     with
         StyleModifierMixin<RemixCardStyle, CardSpec>,
-        StyleVariantMixin<RemixCardStyle, CardSpec> {
+        StyleVariantMixin<RemixCardStyle, CardSpec>,
+        ModifierStyleMixin<RemixCardStyle, CardSpec>,
+        BorderStyleMixin<RemixCardStyle>,
+        BorderRadiusStyleMixin<RemixCardStyle>,
+        ShadowStyleMixin<RemixCardStyle>,
+        DecorationStyleMixin<RemixCardStyle>,
+        SpacingStyleMixin<RemixCardStyle>,
+        TransformStyleMixin<RemixCardStyle>,
+        ConstraintStyleMixin<RemixCardStyle>,
+        AnimationStyleMixin<CardSpec, RemixCardStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
 
   const RemixCardStyle.create({
@@ -24,6 +33,37 @@ class RemixCardStyle extends Style<CardSpec>
           animation: animation,
           modifier: modifier,
         );
+
+  /// Sets container padding
+  RemixCardStyle padding(EdgeInsetsGeometryMix value) {
+    return merge(RemixCardStyle(container: BoxStyler(padding: value)));
+  }
+
+  /// Sets container background color
+  RemixCardStyle color(Color value) {
+    return merge(RemixCardStyle(
+      container: BoxStyler(decoration: BoxDecorationMix(color: value)),
+    ));
+  }
+
+  /// Sets container border radius
+  RemixCardStyle borderRadius(BorderRadiusGeometryMix radius) {
+    return merge(RemixCardStyle(
+      container: BoxStyler(
+        decoration: BoxDecorationMix(borderRadius: radius),
+      ),
+    ));
+  }
+
+  /// Sets container margin
+  RemixCardStyle margin(EdgeInsetsGeometryMix value) {
+    return merge(RemixCardStyle(container: BoxStyler(margin: value)));
+  }
+
+  /// Sets container decoration
+  RemixCardStyle decoration(DecorationMix value) {
+    return merge(RemixCardStyle(container: BoxStyler(decoration: value)));
+  }
 
   @override
   StyleSpec<CardSpec> resolve(BuildContext context) {
@@ -47,11 +87,6 @@ class RemixCardStyle extends Style<CardSpec>
   }
 
   @override
-  RemixCardStyle variant(Variant variant, RemixCardStyle style) {
-    return merge(RemixCardStyle(variants: [VariantStyle(variant, style)]));
-  }
-
-  @override
   RemixCardStyle variants(List<VariantStyle<CardSpec>> value) {
     return merge(RemixCardStyle(variants: value));
   }
@@ -59,6 +94,29 @@ class RemixCardStyle extends Style<CardSpec>
   @override
   RemixCardStyle wrap(ModifierConfig value) {
     return merge(RemixCardStyle(modifier: value));
+  }
+
+  // Abstract method implementations for mixins
+  
+  @override
+  RemixCardStyle animate(AnimationConfig config) {
+    return merge(RemixCardStyle(animation: config));
+  }
+  
+  @override
+  RemixCardStyle constraints(BoxConstraintsMix value) {
+    return merge(RemixCardStyle(container: BoxStyler(constraints: value)));
+  }
+  
+  
+  @override
+  RemixCardStyle foregroundDecoration(DecorationMix value) {
+    return merge(RemixCardStyle(container: BoxStyler(foregroundDecoration: value)));
+  }
+  
+  @override
+  RemixCardStyle transform(Matrix4 value, {AlignmentGeometry alignment = Alignment.center}) {
+    return merge(RemixCardStyle(container: BoxStyler(transform: value, alignment: alignment)));
   }
 
   @override
@@ -269,4 +327,3 @@ class RemixCardStyles {
         ),
       );
 }
-

@@ -3,7 +3,16 @@ part of 'accordion.dart';
 class RemixAccordionStyle extends Style<AccordionSpec>
     with
         StyleModifierMixin<RemixAccordionStyle, AccordionSpec>,
-        StyleVariantMixin<RemixAccordionStyle, AccordionSpec> {
+        StyleVariantMixin<RemixAccordionStyle, AccordionSpec>,
+        ModifierStyleMixin<RemixAccordionStyle, AccordionSpec>,
+        BorderStyleMixin<RemixAccordionStyle>,
+        BorderRadiusStyleMixin<RemixAccordionStyle>,
+        ShadowStyleMixin<RemixAccordionStyle>,
+        DecorationStyleMixin<RemixAccordionStyle>,
+        SpacingStyleMixin<RemixAccordionStyle>,
+        TransformStyleMixin<RemixAccordionStyle>,
+        ConstraintStyleMixin<RemixAccordionStyle>,
+        AnimationStyleMixin<AccordionSpec, RemixAccordionStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<BoxSpec>>? $content;
   final Prop<StyleSpec<TextSpec>>? $contentText;
@@ -45,6 +54,49 @@ class RemixAccordionStyle extends Style<AccordionSpec>
           modifier: modifier,
         );
 
+  /// Sets container padding
+  RemixAccordionStyle padding(EdgeInsetsGeometryMix value) {
+    return merge(RemixAccordionStyle(container: BoxStyler(padding: value)));
+  }
+
+  /// Sets container background color
+  RemixAccordionStyle color(Color value) {
+    return merge(RemixAccordionStyle(
+      container: BoxStyler(decoration: BoxDecorationMix(color: value)),
+    ));
+  }
+
+  /// Sets container border radius
+  RemixAccordionStyle borderRadius(BorderRadiusGeometryMix radius) {
+    return merge(RemixAccordionStyle(
+      container: BoxStyler(
+        decoration: BoxDecorationMix(borderRadius: radius),
+      ),
+    ));
+  }
+
+  /// Sets container margin
+  RemixAccordionStyle margin(EdgeInsetsGeometryMix value) {
+    return merge(RemixAccordionStyle(container: BoxStyler(margin: value)));
+  }
+
+  /// Sets container decoration
+  RemixAccordionStyle decoration(DecorationMix value) {
+    return merge(RemixAccordionStyle(
+      container: BoxStyler(decoration: value),
+    ));
+  }
+
+  /// Sets content area styling
+  RemixAccordionStyle content(BoxStyler value) {
+    return merge(RemixAccordionStyle(content: value));
+  }
+
+  /// Sets header styling
+  RemixAccordionStyle header(BoxStyler value) {
+    return merge(RemixAccordionStyle(header: value));
+  }
+
   @override
   StyleSpec<AccordionSpec> resolve(BuildContext context) {
     return StyleSpec(
@@ -77,11 +129,6 @@ class RemixAccordionStyle extends Style<AccordionSpec>
   }
 
   @override
-  RemixAccordionStyle variant(Variant variant, RemixAccordionStyle style) {
-    return merge(RemixAccordionStyle(variants: [VariantStyle(variant, style)]));
-  }
-
-  @override
   RemixAccordionStyle variants(List<VariantStyle<AccordionSpec>> value) {
     return merge(RemixAccordionStyle(variants: value));
   }
@@ -89,6 +136,28 @@ class RemixAccordionStyle extends Style<AccordionSpec>
   @override
   RemixAccordionStyle wrap(ModifierConfig value) {
     return merge(RemixAccordionStyle(modifier: value));
+  }
+
+  // Abstract method implementations for mixins
+  
+  @override
+  RemixAccordionStyle animate(AnimationConfig config) {
+    return merge(RemixAccordionStyle(animation: config));
+  }
+  
+  @override
+  RemixAccordionStyle constraints(BoxConstraintsMix value) {
+    return merge(RemixAccordionStyle(container: BoxStyler(constraints: value)));
+  }
+  
+  @override
+  RemixAccordionStyle foregroundDecoration(DecorationMix value) {
+    return merge(RemixAccordionStyle(container: BoxStyler(foregroundDecoration: value)));
+  }
+  
+  @override
+  RemixAccordionStyle transform(Matrix4 value, {AlignmentGeometry alignment = Alignment.center}) {
+    return merge(RemixAccordionStyle(container: BoxStyler(transform: value, alignment: alignment)));
   }
 
   @override
@@ -251,16 +320,15 @@ class RemixAccordionStyles {
           ),
           flex: FlexStyler(spacing: RemixTokens.spaceXs()),
         ),
-      )
-          .onSelected(
-            RemixAccordionStyle(
-              container: BoxStyler(
-                decoration: BoxDecorationMix(
-                  color: RemixTokens.primary().withValues(alpha: 0.05),
-                ),
-              ),
+      ).onSelected(
+        RemixAccordionStyle(
+          container: BoxStyler(
+            decoration: BoxDecorationMix(
+              color: RemixTokens.primary().withValues(alpha: 0.05),
             ),
-          );
+          ),
+        ),
+      );
 
   /// Bordered accordion variant with prominent borders
   static RemixAccordionStyle get bordered => RemixAccordionStyle(
@@ -447,4 +515,3 @@ class RemixAccordionStyles {
             ),
           );
 }
-

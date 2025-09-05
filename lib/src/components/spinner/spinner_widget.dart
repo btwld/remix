@@ -121,11 +121,6 @@ extension SpinnerSpecWidget on SpinnerSpec {
   Widget createWidget() {
     return createSpinnerWidget(this);
   }
-
-  @Deprecated('Use .createWidget() instead')
-  Widget call() {
-    return createWidget();
-  }
 }
 
 /// Extension on StyleSpec<SpinnerSpec> to provide createWidget method for creating widgets
@@ -137,10 +132,5 @@ extension SpinnerSpecWrappedWidget on StyleSpec<SpinnerSpec> {
         return createSpinnerWidget(spec);
       },
     );
-  }
-
-  @Deprecated('Use .createWidget() instead')
-  Widget call() {
-    return createWidget();
   }
 }
