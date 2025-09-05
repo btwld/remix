@@ -2,9 +2,6 @@ part of 'spinner.dart';
 
 // Private per-component constants
 const _kBlack = Color(0xFF000000);
-const _kWhite = Color(0xFFFFFFFF);
-const _kDisabled = Color(0xFF9E9E9E);
-
 const _kSizeSm = 16.0;
 const _kSizeMd = 24.0;
 const _kSizeLg = 32.0;

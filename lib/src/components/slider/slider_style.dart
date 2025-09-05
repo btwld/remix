@@ -3,7 +3,6 @@ part of 'slider.dart';
 // Private per-component constants
 const _kBlack = Color(0xFF000000);
 const _kWhite = Color(0xFFFFFFFF);
-const _kDisabled = Color(0xFF9E9E9E);
 
 const _kTrackWidth = 8.0;
 const _kThumbBorderWidth = 2.0;

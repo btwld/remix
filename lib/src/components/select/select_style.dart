@@ -3,14 +3,11 @@ part of 'select.dart';
 // Private per-component constants
 const _kBlack = Color(0xFF000000);
 const _kWhite = Color(0xFFFFFFFF);
-const _kDisabled = Color(0xFF9E9E9E);
-
 const _kSpaceXs = 4.0;
 const _kSpaceSm = 8.0;
 const _kRadiusMd = 6.0;
 const _kRadiusLg = 8.0;
 const _kFontSizeSm = 12.0;
-const _kFontSizeMd = 14.0;
 
 class RemixSelectStyle extends Style<SelectSpec>
     with
