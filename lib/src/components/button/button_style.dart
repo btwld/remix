@@ -617,31 +617,3 @@ class RemixButtonStyles {
 
   static RemixButtonStyle get ghost => primaryGhost;
 }
-
-// COMMENTED OUT FOR REVIEW - ORIGINAL FROM MAIN BRANCH
-// This file was fetched from main branch and commented out for review
-// Uncomment and modify as needed for Mix 2.0 migration
-
-/*
-part of 'button.dart';
-
-class RemixButtonStyle extends ButtonSpecUtility<ButtonSpecAttribute> {
-  RemixButtonStyle() : super((v) => v);
-
-  factory RemixButtonStyle._default() {
-    final style = RemixButtonStyle()
-      ..container.color.black()
-      ..container.padding(10)
-      ..container.borderRadius(8)
-      ..icon.color.white()
-      ..icon.size(18);
-
-    return style;
-  }
-
-  @override
-  RemixButtonStyle merge(RemixButtonStyle other) {
-    return super.merge(other) as RemixButtonStyle;
-  }
-}
-*/

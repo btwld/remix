@@ -113,25 +113,32 @@ class RemixCalloutStyle extends Style<CalloutSpec>
   }
 
   // Abstract method implementations for mixins
-  
+
   @override
   RemixCalloutStyle animate(AnimationConfig config) {
     return merge(RemixCalloutStyle(animation: config));
   }
-  
+
   @override
   RemixCalloutStyle constraints(BoxConstraintsMix value) {
     return merge(RemixCalloutStyle(container: BoxStyler(constraints: value)));
   }
-  
+
   @override
   RemixCalloutStyle foregroundDecoration(DecorationMix value) {
-    return merge(RemixCalloutStyle(container: BoxStyler(foregroundDecoration: value)));
+    return merge(
+      RemixCalloutStyle(container: BoxStyler(foregroundDecoration: value)),
+    );
   }
-  
+
   @override
-  RemixCalloutStyle transform(Matrix4 value, {AlignmentGeometry alignment = Alignment.center}) {
-    return merge(RemixCalloutStyle(container: BoxStyler(transform: value, alignment: alignment)));
+  RemixCalloutStyle transform(
+    Matrix4 value, {
+    AlignmentGeometry alignment = Alignment.center,
+  }) {
+    return merge(RemixCalloutStyle(
+      container: BoxStyler(alignment: alignment, transform: value),
+    ));
   }
 
   @override
@@ -166,6 +173,10 @@ final DefaultRemixCalloutStyle = RemixCalloutStyle(
   ),
   icon: IconStyler(color: RemixTokens.textPrimary(), size: 16),
 );
+
+class RemixCalloutStyles {
+  static RemixCalloutStyle get defaultStyle => DefaultRemixCalloutStyle;
+}
 
 extension CalloutVariants on RemixCalloutStyle {
   /// Info callout variant with blue colors

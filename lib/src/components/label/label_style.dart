@@ -40,6 +40,61 @@ class RemixLabelStyle extends Style<LabelSpec>
           modifier: modifier,
         );
 
+  // ---------- Fluent helpers (text, icon, layout) ----------
+
+  /// Sets the text color for the label
+  RemixLabelStyle textColor(Color value) {
+    return merge(
+      RemixLabelStyle(label: TextStyler(style: TextStyleMix(color: value))),
+    );
+  }
+
+  /// Sets the font size for the label
+  RemixLabelStyle fontSize(double value) {
+    return merge(
+      RemixLabelStyle(
+        label: TextStyler(style: TextStyleMix.fontSize(value)),
+      ),
+    );
+  }
+
+  /// Sets the font weight for the label
+  RemixLabelStyle fontWeight(FontWeight value) {
+    return merge(
+      RemixLabelStyle(
+        label: TextStyler(style: TextStyleMix(fontWeight: value)),
+      ),
+    );
+  }
+
+  /// Sets the font style for the label
+  RemixLabelStyle fontStyle(FontStyle value) {
+    return merge(
+      RemixLabelStyle(
+        label: TextStyler(style: TextStyleMix(fontStyle: value)),
+      ),
+    );
+  }
+
+  /// Sets the icon color
+  RemixLabelStyle iconColor(Color value) {
+    return merge(RemixLabelStyle(icon: IconStyler(color: value)));
+  }
+
+  /// Sets the icon size
+  RemixLabelStyle iconSize(double value) {
+    return merge(RemixLabelStyle(icon: IconStyler(size: value)));
+  }
+
+  /// Sets the spacing between icon and label
+  RemixLabelStyle spacing(double value) {
+    return merge(RemixLabelStyle(flex: FlexStyler(spacing: value)));
+  }
+
+  /// Sets the icon position relative to the text
+  RemixLabelStyle iconPosition(IconPosition position) {
+    return merge(RemixLabelStyle(iconPosition: position));
+  }
 
   @override
   RemixLabelStyle variants(List<VariantStyle<LabelSpec>> value) {
@@ -58,7 +113,8 @@ class RemixLabelStyle extends Style<LabelSpec>
         label: MixOps.resolve(context, $label),
         icon: MixOps.resolve(context, $icon),
         flex: MixOps.resolve(context, $flex),
-        iconPosition: MixOps.resolve(context, $iconPosition) ?? IconPosition.leading,
+        iconPosition:
+            MixOps.resolve(context, $iconPosition) ?? IconPosition.leading,
       ),
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),

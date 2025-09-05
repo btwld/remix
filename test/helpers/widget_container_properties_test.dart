@@ -84,10 +84,10 @@ void main() {
       expect(lerpedSpec.margin, equals(const EdgeInsets.all(10)));
     });
 
-    test('lerp with null other returns original', () {
+    test('lerp with null other interpolates toward defaults', () {
       const spec = BoxSpec(padding: EdgeInsets.all(16));
       final result = spec.lerp(null, 0.5);
-      expect(result, equals(spec));
+      expect(result.padding, equals(const EdgeInsets.all(8)));
     });
 
     test('props equality works correctly', () {
