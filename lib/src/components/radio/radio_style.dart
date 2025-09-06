@@ -1,9 +1,6 @@
 part of 'radio.dart';
 
-// Private per-component constants
-const _kBlack = Color(0xFF000000);
-const _kWhite = Color(0xFFFFFFFF);
-
+// Private per-component constants (sizes only)
 const _kSpaceSm = 8.0;
 const _kFontSizeMd = 14.0;
 
@@ -202,9 +199,11 @@ final DefaultRemixRadioStyle = RemixRadioStyle(
       maxHeight: 20,
     ),
     decoration: BoxDecorationMix(
-      border: BoxBorderMix.all(BorderSideMix(color: _kBlack, width: 1.5)),
+      border: BoxBorderMix.all(
+        BorderSideMix(color: RemixTokens.primary(), width: 1.5),
+      ),
       shape: BoxShape.circle,
-      color: _kWhite,
+      color: Colors.transparent,
     ),
   ),
   indicator: BoxStyler(
@@ -214,10 +213,11 @@ final DefaultRemixRadioStyle = RemixRadioStyle(
       minHeight: 10,
       maxHeight: 10,
     ),
-    decoration: BoxDecorationMix(shape: BoxShape.circle, color: _kBlack),
+    decoration:
+        BoxDecorationMix(shape: BoxShape.circle, color: RemixTokens.primary()),
   ),
   label: TextStyler(
-    style: TextStyleMix(color: _kBlack, fontSize: _kFontSizeMd),
+    style: TextStyleMix(color: RemixTokens.primary(), fontSize: _kFontSizeMd),
   ),
 );
 
@@ -240,9 +240,11 @@ extension RadioVariants on RemixRadioStyle {
             maxHeight: 20,
           ),
           decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(BorderSideMix(color: _kBlack, width: 1.5)),
+            border: BoxBorderMix.all(
+              BorderSideMix(color: RemixTokens.primary(), width: 1.5),
+            ),
             shape: BoxShape.circle,
-            color: _kBlack,
+            color: RemixTokens.primary(),
           ),
         ),
         indicator: BoxStyler(
@@ -254,11 +256,14 @@ extension RadioVariants on RemixRadioStyle {
           ),
           decoration: BoxDecorationMix(
             shape: BoxShape.circle,
-            color: _kWhite,
+            color: RemixTokens.onPrimary(),
           ),
         ),
         label: TextStyler(
-          style: TextStyleMix(color: _kBlack, fontSize: _kFontSizeMd),
+          style: TextStyleMix(
+            color: RemixTokens.primary(),
+            fontSize: _kFontSizeMd,
+          ),
         ),
       );
 
@@ -280,9 +285,11 @@ extension RadioVariants on RemixRadioStyle {
             maxHeight: 20,
           ),
           decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(BorderSideMix(color: _kBlack, width: 1.5)),
+            border: BoxBorderMix.all(
+              BorderSideMix(color: RemixTokens.primary(), width: 1.5),
+            ),
             shape: BoxShape.circle,
-            color: _kWhite,
+            color: Colors.transparent,
           ),
         ),
         indicator: BoxStyler(
@@ -294,11 +301,12 @@ extension RadioVariants on RemixRadioStyle {
           ),
           decoration: BoxDecorationMix(
             shape: BoxShape.circle,
-            color: _kBlack,
+            color: RemixTokens.primary(),
           ),
         ),
         label: TextStyler(
-          style: TextStyleMix(color: _kBlack, fontSize: _kFontSizeMd),
+          style: TextStyleMix(
+              color: RemixTokens.primary(), fontSize: _kFontSizeMd),
         ),
       );
 }

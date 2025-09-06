@@ -1,15 +1,6 @@
 part of 'textfield.dart';
 
-// Private per-component constants
-const _kBlack = Color(0xFF000000);
-const _kWhite = Color(0xFFFFFFFF);
-
-const _kSpaceXs = 4.0;
-const _kSpaceSm = 8.0;
-const _kSpaceMd = 12.0;
-const _kSpaceLg = 16.0;
-
-const _kRadiusMd = 6.0;
+// Private per-component constants (sizes only)
 
 const _kFontSizeSm = 12.0;
 const _kFontSizeMd = 14.0;
@@ -366,36 +357,40 @@ class RemixTextFieldStyle extends Style<TextFieldSpec>
 // Default style
 final DefaultRemixTextFieldStyle = RemixTextFieldStyle(
   text: TextStyler(
-    style: TextStyleMix(color: _kBlack, fontSize: _kFontSizeMd),
+    style: TextStyleMix(color: RemixTokens.primary(), fontSize: _kFontSizeMd),
   ),
-  hintText:
-      TextStyler(style: TextStyleMix(color: _kBlack.withValues(alpha: 0.5))),
+  hintText: TextStyler(
+    style: TextStyleMix(color: RemixTokens.primary().withValues(alpha: 0.5)),
+  ),
   textAlign: TextAlign.start,
   cursorWidth: 2.0,
-  cursorColor: _kBlack,
+  cursorColor: RemixTokens.primary(),
   cursorOffset: Offset.zero,
   selectionHeightStyle: BoxHeightStyle.tight,
   selectionWidthStyle: BoxWidthStyle.tight,
-  scrollPadding: EdgeInsets.all(_kSpaceLg),
-  spacing: _kSpaceXs,
+  scrollPadding: EdgeInsets.all(RemixTokens.spaceLg()),
+  spacing: RemixTokens.spaceXs(),
   container: FlexBoxStyler(
     decoration: BoxDecorationMix(
       border: BoxBorderMix.all(
-        BorderSideMix(color: _kBlack.withValues(alpha: 0.2), width: 1),
+        BorderSideMix(
+          color: RemixTokens.primary().withValues(alpha: 0.2),
+          width: 1,
+        ),
       ),
-      borderRadius: BorderRadiusMix.circular(_kRadiusMd),
-      color: _kWhite,
+      borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+      color: RemixTokens.onPrimary(),
     ),
     padding: EdgeInsetsGeometryMix.symmetric(
-      vertical: _kSpaceSm,
-      horizontal: _kSpaceMd,
+      vertical: RemixTokens.spaceSm(),
+      horizontal: RemixTokens.spaceMd(),
     ),
     direction: Axis.horizontal,
     crossAxisAlignment: CrossAxisAlignment.start,
   ),
   helperText: TextStyler(
     style: TextStyleMix(
-      color: _kBlack.withValues(alpha: 0.7),
+      color: RemixTokens.primary().withValues(alpha: 0.7),
       fontSize: _kFontSizeSm,
     ),
   ),
@@ -405,7 +400,9 @@ final DefaultRemixTextFieldStyle = RemixTextFieldStyle(
 final RemixTextFieldFocusStyle = RemixTextFieldStyle(
   container: FlexBoxStyler(
     decoration: BoxDecorationMix(
-      border: BoxBorderMix.all(BorderSideMix(color: _kBlack, width: 2)),
+      border: BoxBorderMix.all(
+        BorderSideMix(color: RemixTokens.primary(), width: 2),
+      ),
     ),
   ),
 );
@@ -414,21 +411,28 @@ final RemixTextFieldFocusStyle = RemixTextFieldStyle(
 final RemixTextFieldErrorStyle = RemixTextFieldStyle(
   container: FlexBoxStyler(
     decoration: BoxDecorationMix(
-      border: BoxBorderMix.all(BorderSideMix(color: _kBlack, width: 1)),
+      border: BoxBorderMix.all(
+        BorderSideMix(color: RemixTokens.primary(), width: 1),
+      ),
     ),
   ),
-  helperText: TextStyler(style: TextStyleMix(color: _kBlack)),
+  helperText: TextStyler(style: TextStyleMix(color: RemixTokens.primary())),
 );
 
 // Disabled style
 final RemixTextFieldDisabledStyle = RemixTextFieldStyle(
-  text: TextStyler(style: TextStyleMix(color: _kBlack.withValues(alpha: 0.4))),
+  text: TextStyler(
+    style: TextStyleMix(color: RemixTokens.primary().withValues(alpha: 0.4)),
+  ),
   container: FlexBoxStyler(
     decoration: BoxDecorationMix(
       border: BoxBorderMix.all(
-        BorderSideMix(color: _kBlack.withValues(alpha: 0.1), width: 1),
+        BorderSideMix(
+          color: RemixTokens.primary().withValues(alpha: 0.1),
+          width: 1,
+        ),
       ),
-      color: _kBlack.withValues(alpha: 0.05),
+      color: RemixTokens.primary().withValues(alpha: 0.05),
     ),
   ),
 );
@@ -437,34 +441,44 @@ extension RemixTextFieldVariants on RemixTextFieldStyle {
   /// Solid text field variant (default) - white background, black text, subtle border
   static RemixTextFieldStyle get solid => RemixTextFieldStyle(
         text: TextStyler(
-          style: TextStyleMix(color: _kBlack, fontSize: _kFontSizeMd),
+          style: TextStyleMix(
+            color: RemixTokens.primary(),
+            fontSize: _kFontSizeMd,
+          ),
         ),
         hintText: TextStyler(
-          style: TextStyleMix(color: _kBlack.withValues(alpha: 0.5)),
+          style:
+              TextStyleMix(color: RemixTokens.primary().withValues(alpha: 0.5)),
         ),
         textAlign: TextAlign.start,
         cursorWidth: 2.0,
-        cursorColor: _kBlack,
+        cursorColor: RemixTokens.primary(),
         cursorOffset: Offset.zero,
         selectionHeightStyle: BoxHeightStyle.tight,
         selectionWidthStyle: BoxWidthStyle.tight,
-        scrollPadding: const EdgeInsets.all(20.0),
-        spacing: 4,
+        scrollPadding: EdgeInsets.all(RemixTokens.spaceLg()),
+        spacing: RemixTokens.spaceXs(),
         container: FlexBoxStyler(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(
-              BorderSideMix(color: _kBlack.withValues(alpha: 0.2), width: 1),
+              BorderSideMix(
+                color: RemixTokens.primary().withValues(alpha: 0.2),
+                width: 1,
+              ),
             ),
-            borderRadius: BorderRadiusMix.circular(_kRadiusMd),
-            color: _kWhite,
+            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+            color: RemixTokens.onPrimary(),
           ),
-          padding: EdgeInsetsGeometryMix.symmetric(vertical: 8, horizontal: 12),
+          padding: EdgeInsetsGeometryMix.symmetric(
+            vertical: RemixTokens.spaceSm(),
+            horizontal: RemixTokens.spaceMd(),
+          ),
           direction: Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.start,
         ),
         helperText: TextStyler(
           style: TextStyleMix(
-            color: _kBlack.withValues(alpha: 0.7),
+            color: RemixTokens.primary().withValues(alpha: 0.7),
             fontSize: _kFontSizeSm,
           ),
         ),
@@ -473,34 +487,41 @@ extension RemixTextFieldVariants on RemixTextFieldStyle {
   /// Outline text field variant - transparent background, black border
   static RemixTextFieldStyle get outline => RemixTextFieldStyle(
         text: TextStyler(
-          style: TextStyleMix(color: _kBlack, fontSize: _kFontSizeMd),
+          style: TextStyleMix(
+            color: RemixTokens.primary(),
+            fontSize: _kFontSizeMd,
+          ),
         ),
         hintText: TextStyler(
-          style: TextStyleMix(color: _kBlack.withValues(alpha: 0.5)),
+          style:
+              TextStyleMix(color: RemixTokens.primary().withValues(alpha: 0.5)),
         ),
         textAlign: TextAlign.start,
         cursorWidth: 2.0,
-        cursorColor: _kBlack,
+        cursorColor: RemixTokens.primary(),
         cursorOffset: Offset.zero,
         selectionHeightStyle: BoxHeightStyle.tight,
         selectionWidthStyle: BoxWidthStyle.tight,
-        scrollPadding: const EdgeInsets.all(20.0),
-        spacing: 4,
+        scrollPadding: EdgeInsets.all(RemixTokens.spaceLg()),
+        spacing: RemixTokens.spaceXs(),
         container: FlexBoxStyler(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(
-              BorderSideMix(color: _kBlack, width: 2),
+              BorderSideMix(color: RemixTokens.primary(), width: 2),
             ),
-            borderRadius: BorderRadiusMix.circular(_kRadiusMd),
-            color: _kWhite.withValues(alpha: 0.0),
+            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+            color: RemixTokens.onPrimary().withValues(alpha: 0.0),
           ),
-          padding: EdgeInsetsGeometryMix.symmetric(vertical: 8, horizontal: 12),
+          padding: EdgeInsetsGeometryMix.symmetric(
+            vertical: 8,
+            horizontal: 12,
+          ),
           direction: Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.start,
         ),
         helperText: TextStyler(
           style: TextStyleMix(
-            color: _kBlack.withValues(alpha: 0.7),
+            color: RemixTokens.primary().withValues(alpha: 0.7),
             fontSize: _kFontSizeSm,
           ),
         ),

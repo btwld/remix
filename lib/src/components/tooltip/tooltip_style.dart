@@ -1,11 +1,6 @@
 part of 'tooltip.dart';
 
-// Private per-component constants
-const _kBlack = Color(0xFF000000);
-const _kWhite = Color(0xFFFFFFFF);
-
-const _kSpaceSm = 10.0;
-const _kRadiusMd = 8.0;
+// Private per-component constants (sizes only)
 const _kFontSizeSm = 12.0;
 
 class RemixTooltipStyle extends Style<TooltipSpec>
@@ -154,14 +149,14 @@ class RemixTooltipStyle extends Style<TooltipSpec>
 
 final DefaultRemixTooltipStyle = RemixTooltipStyle(
   container: BoxStyler(
-    padding: EdgeInsetsMix.all(_kSpaceSm),
+    padding: EdgeInsetsMix.all(RemixTokens.spaceSm()),
     decoration: BoxDecorationMix(
-      borderRadius: BorderRadiusMix.circular(_kRadiusMd),
-      color: _kBlack.withValues(alpha: 0.8),
+      borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+      color: RemixTokens.primary().withValues(alpha: 0.8),
     ),
   ),
   text: TextStyler(
-    style: TextStyleMix(color: _kWhite, fontSize: _kFontSizeSm),
+    style: TextStyleMix(color: RemixTokens.onPrimary(), fontSize: _kFontSizeSm),
   ),
   animation: AnimationConfig.ease(const Duration(milliseconds: 100)),
 );

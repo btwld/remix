@@ -1,8 +1,6 @@
 part of 'progress.dart';
 
-// Private per-component constants
-const _kBlack = Color(0xFF000000);
-const _kRadiusMax = 99.0;
+// Private per-component constants (sizes only)
 const _kBarHeight = 6.0;
 
 class RemixProgressStyle extends Style<ProgressSpec>
@@ -191,17 +189,20 @@ final DefaultRemixProgressStyle = RemixProgressStyle(
   container: BoxStyler(
     constraints:
         BoxConstraintsMix(minHeight: _kBarHeight, maxHeight: _kBarHeight),
-    decoration:
-        BoxDecorationMix(borderRadius: BorderRadiusMix.circular(_kRadiusMax)),
+    decoration: BoxDecorationMix(
+      borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+    ),
     clipBehavior: Clip.antiAlias,
   ),
   track: BoxStyler(
-    decoration: BoxDecorationMix(color: _kBlack.withValues(alpha: 0.15)),
+    decoration: BoxDecorationMix(
+      color: RemixTokens.primary().withValues(alpha: 0.15),
+    ),
   ),
   indicator: BoxStyler(
     decoration: BoxDecorationMix(
-      borderRadius: BorderRadiusMix.circular(_kRadiusMax),
-      color: _kBlack,
+      borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+      color: RemixTokens.primary(),
     ),
   ),
   trackContainer: BoxStyler(),

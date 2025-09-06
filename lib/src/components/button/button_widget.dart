@@ -229,7 +229,6 @@ class _RemixButtonState extends State<RemixButton>
       builder: (context, spec) {
         final ContainerWidget = spec.container.createWidget;
         final LabelWidget = spec.label.createWidget;
-        final SpinnerWidget = spec.spinner.createWidget;
 
         // Build the button content using enhanced createWidget
         Widget content = LabelWidget(
@@ -252,7 +251,18 @@ class _RemixButtonState extends State<RemixButton>
                 builder: (context, spinnerSpec) =>
                     widget.loadingBuilder!(context, spinnerSpec),
               )
-            : SpinnerWidget();
+            : StyleSpecBuilder(
+                styleSpec: spec.spinner,
+                builder: (context, spinnerSpec) => RemixSpinner(
+                  style: RemixSpinnerStyle(
+                    size: spinnerSpec.size,
+                    strokeWidth: spinnerSpec.strokeWidth,
+                    color: spinnerSpec.color,
+                    duration: spinnerSpec.duration,
+                    style: spinnerSpec.style,
+                  ),
+                ),
+              );
 
         // Use a layered approach that preserves size and state of the content
         // while showing a centered spinner on top when loading.
@@ -275,7 +285,11 @@ class _RemixButtonState extends State<RemixButton>
               maintainState: true,
               maintainAnimation: true,
               maintainSize: true,
-              child: ExcludeSemantics(child: Center(child: spinner)),
+              child: ExcludeSemantics(
+                child: Center(
+                  child: widget.loading ? spinner : const SizedBox.shrink(),
+                ),
+              ),
             ),
           ],
         );

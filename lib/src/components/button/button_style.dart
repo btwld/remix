@@ -1,16 +1,7 @@
 part of 'button.dart';
 
-// Private per-component constants (no shared tokens)
-const _kBlack = Color(0xFF000000);
-const _kWhite = Color(0xFFFFFFFF);
-const _kDisabled = Color(0xFF9E9E9E);
-
-const _kSpaceXs = 4.0;
+// Private per-component constants (sizes only)
 const _kSpaceSm = 8.0;
-const _kSpaceMd = 12.0;
-const _kSpaceLg = 16.0;
-
-const _kRadiusLg = 8.0;
 
 const _kFontSizeSm = 12.0;
 const _kFontSizeMd = 14.0;
@@ -260,50 +251,55 @@ class RemixButtonStyles {
   /// Large size variant
   static RemixButtonStyle get large => RemixButtonStyle(
         container: BoxStyler(
-          padding: EdgeInsetsGeometryMix.all(_kSpaceLg),
+          padding: EdgeInsetsGeometryMix.all(RemixTokens.spaceLg()),
           constraints: BoxConstraintsMix(minHeight: 48),
         ),
         label: RemixLabelStyle(
           label: TextStyler(style: TextStyleMix(fontSize: _kFontSizeLg)),
           icon: IconStyler(size: _kIconSizeXl),
-          flex: FlexStyler(spacing: _kSpaceMd),
+          flex: FlexStyler(spacing: RemixTokens.spaceMd()),
         ),
       );
 
   /// Small size variant
   static RemixButtonStyle get small => RemixButtonStyle(
         container: BoxStyler(
-          padding: EdgeInsetsGeometryMix.all(_kSpaceXs),
+          padding: EdgeInsetsGeometryMix.all(RemixTokens.spaceXs()),
           constraints: BoxConstraintsMix(minHeight: 32),
         ),
         label: RemixLabelStyle(
           label: TextStyler(style: TextStyleMix(fontSize: _kFontSizeSm)),
           icon: IconStyler(size: _kIconSizeSm),
-          flex: FlexStyler(spacing: _kSpaceXs),
+          flex: FlexStyler(spacing: RemixTokens.spaceXs()),
         ),
       );
 
   /// Outline button style - white background with black border and black text/icon
   static RemixButtonStyle get outline => RemixButtonStyle(
         container: BoxStyler(
-          padding: EdgeInsetsGeometryMix.all(_kSpaceMd),
+          padding: EdgeInsetsGeometryMix.all(RemixTokens.spaceMd()),
           decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(BorderSideMix(color: _kBlack, width: 1)),
-            borderRadius: BorderRadiusMix.circular(_kRadiusLg),
-            color: _kWhite.withValues(alpha: 0.0),
+            border: BoxBorderMix.all(
+              BorderSideMix(color: RemixTokens.primary(), width: 1),
+            ),
+            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+            color: Colors.transparent,
           ),
         ),
         label: RemixLabelStyle(
           label: TextStyler(
-            style: TextStyleMix(color: _kBlack, fontSize: _kFontSizeMd),
+            style: TextStyleMix(
+              color: RemixTokens.primary(),
+              fontSize: _kFontSizeMd,
+            ),
           ),
-          icon: IconStyler(color: _kBlack, size: _kIconSizeLg),
-          flex: FlexStyler(spacing: _kSpaceSm),
+          icon: IconStyler(color: RemixTokens.primary(), size: _kIconSizeLg),
+          flex: FlexStyler(spacing: RemixTokens.spaceSm()),
         ),
         spinner: RemixSpinnerStyle(
           size: _kIconSizeMd,
           strokeWidth: 1.5,
-          color: _kBlack,
+          color: RemixTokens.primary(),
           duration: const Duration(milliseconds: 1000),
           style: SpinnerType.solid,
         ),
@@ -313,9 +309,9 @@ class RemixButtonStyles {
               container: BoxStyler(
                 decoration: BoxDecorationMix(
                   border: BoxBorderMix.all(
-                    BorderSideMix(color: _kBlack, width: 1.5),
+                    BorderSideMix(color: RemixTokens.primary(), width: 1.5),
                   ),
-                  color: _kBlack.withValues(alpha: 0.05),
+                  color: RemixTokens.primary().withValues(alpha: 0.05),
                 ),
               ),
             ),
@@ -324,9 +320,10 @@ class RemixButtonStyles {
             RemixButtonStyle(
               container: BoxStyler(
                 decoration: BoxDecorationMix(
-                  border:
-                      BoxBorderMix.all(BorderSideMix(color: _kBlack, width: 2)),
-                  color: _kBlack.withValues(alpha: 0.1),
+                  border: BoxBorderMix.all(
+                    BorderSideMix(color: RemixTokens.primary(), width: 2),
+                  ),
+                  color: RemixTokens.primary().withValues(alpha: 0.1),
                 ),
               ),
             ),
@@ -335,8 +332,9 @@ class RemixButtonStyles {
             RemixButtonStyle(
               container: BoxStyler(
                 decoration: BoxDecorationMix(
-                  border:
-                      BoxBorderMix.all(BorderSideMix(color: _kBlack, width: 2)),
+                  border: BoxBorderMix.all(
+                    BorderSideMix(color: RemixTokens.primary(), width: 2),
+                  ),
                 ),
               ),
             ),
@@ -347,40 +345,45 @@ class RemixButtonStyles {
                 decoration: BoxDecorationMix(
                   border: BoxBorderMix.all(
                     BorderSideMix(
-                      color: _kDisabled.withValues(alpha: 0.3),
+                      color: RemixTokens.primary().withValues(alpha: 0.3),
                       width: 1,
                     ),
                   ),
                 ),
               ),
               label: RemixLabelStyle(
-                label: TextStyler(style: TextStyleMix(color: _kDisabled)),
-                icon: IconStyler(color: _kDisabled),
+                label: TextStyler(
+                  style: TextStyleMix(color: RemixTokens.primary()),
+                ),
+                icon: IconStyler(color: RemixTokens.primary()),
               ),
-              spinner: RemixSpinnerStyle(color: _kDisabled),
+              spinner: RemixSpinnerStyle(color: RemixTokens.primary()),
             ),
           );
 
   /// Solid button style (default) - black background with white text/icon
   static RemixButtonStyle get solid => RemixButtonStyle(
         container: BoxStyler(
-          padding: EdgeInsetsGeometryMix.all(_kSpaceMd),
+          padding: EdgeInsetsGeometryMix.all(RemixTokens.spaceMd()),
           decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(_kRadiusLg),
-            color: _kBlack,
+            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+            color: RemixTokens.primary(),
           ),
         ),
         label: RemixLabelStyle(
           label: TextStyler(
-            style: TextStyleMix(color: _kWhite, fontSize: _kFontSizeMd),
+            style: TextStyleMix(
+              color: RemixTokens.onPrimary(),
+              fontSize: _kFontSizeMd,
+            ),
           ),
-          icon: IconStyler(color: _kWhite, size: _kIconSizeLg),
-          flex: FlexStyler(spacing: _kSpaceSm),
+          icon: IconStyler(color: RemixTokens.onPrimary(), size: _kIconSizeLg),
+          flex: FlexStyler(spacing: RemixTokens.spaceSm()),
         ),
         spinner: RemixSpinnerStyle(
           size: _kIconSizeMd,
           strokeWidth: 1.5,
-          color: _kWhite,
+          color: RemixTokens.onPrimary(),
           duration: const Duration(milliseconds: 1000),
           style: SpinnerType.solid,
         ),
@@ -389,7 +392,7 @@ class RemixButtonStyles {
             RemixButtonStyle(
               container: BoxStyler(
                 decoration: BoxDecorationMix(
-                  color: _kBlack.withValues(alpha: 0.8),
+                  color: RemixTokens.primary().withValues(alpha: 0.8),
                 ),
               ),
             ),
@@ -398,7 +401,7 @@ class RemixButtonStyles {
             RemixButtonStyle(
               container: BoxStyler(
                 decoration: BoxDecorationMix(
-                  color: _kBlack.withValues(alpha: 0.9),
+                  color: RemixTokens.primary().withValues(alpha: 0.9),
                 ),
               ),
             ),
@@ -409,7 +412,7 @@ class RemixButtonStyles {
                 decoration: BoxDecorationMix(
                   border: BoxBorderMix.all(
                     BorderSideMix(
-                      color: _kBlack.withValues(alpha: 0.5),
+                      color: RemixTokens.primary().withValues(alpha: 0.5),
                       width: 2,
                     ),
                   ),
@@ -420,16 +423,22 @@ class RemixButtonStyles {
           .onDisabled(
             RemixButtonStyle(
               container: BoxStyler(
-                decoration: BoxDecorationMix(color: _kDisabled),
+                decoration: BoxDecorationMix(
+                  color: RemixTokens.primary().withValues(alpha: 0.3),
+                ),
               ),
               label: RemixLabelStyle(
                 label: TextStyler(
-                  style: TextStyleMix(color: _kWhite.withValues(alpha: 0.7)),
+                  style: TextStyleMix(
+                    color: RemixTokens.onPrimary().withValues(alpha: 0.7),
+                  ),
                 ),
-                icon: IconStyler(color: _kWhite.withValues(alpha: 0.7)),
+                icon: IconStyler(
+                  color: RemixTokens.onPrimary().withValues(alpha: 0.7),
+                ),
               ),
               spinner: RemixSpinnerStyle(
-                color: _kWhite.withValues(alpha: 0.7),
+                color: RemixTokens.onPrimary().withValues(alpha: 0.7),
               ),
             ),
           );

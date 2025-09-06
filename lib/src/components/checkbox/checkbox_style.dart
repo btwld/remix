@@ -1,15 +1,8 @@
 part of 'checkbox.dart';
 
-// Private per-component constants (no shared tokens)
-const _kBlack = Color(0xFF000000);
-const _kWhite = Color(0xFFFFFFFF);
-
+// Private per-component constants (sizes only)
 const _kSpaceSm = 8.0;
-
-const _kRadiusSm = 4.0;
-
 const _kFontSizeMd = 14.0;
-
 const _kIconSizeMd = 16.0;
 
 class RemixCheckboxStyle extends Style<CheckboxSpec>
@@ -274,14 +267,16 @@ final DefaultRemixCheckboxStyle = RemixCheckboxStyle(
       maxHeight: 20,
     ),
     decoration: BoxDecorationMix(
-      border: BoxBorderMix.all(BorderSideMix(color: _kBlack, width: 1.5)),
-      borderRadius: BorderRadiusMix.circular(_kRadiusSm),
-      color: _kWhite,
+      border: BoxBorderMix.all(
+        BorderSideMix(color: RemixTokens.primary(), width: 1.5),
+      ),
+      borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+      color: Colors.transparent,
     ),
   ),
-  indicator: IconStyler(color: _kBlack, size: _kIconSizeMd),
+  indicator: IconStyler(color: RemixTokens.primary(), size: _kIconSizeMd),
   label: TextStyler(
-    style: TextStyleMix(color: _kBlack, fontSize: _kFontSizeMd),
+    style: TextStyleMix(color: RemixTokens.primary(), fontSize: _kFontSizeMd),
   ),
 );
 
@@ -304,14 +299,20 @@ extension CheckboxVariants on RemixCheckboxStyle {
             maxHeight: 20,
           ),
           decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(BorderSideMix(color: _kBlack, width: 1.5)),
-            borderRadius: BorderRadiusMix.circular(_kRadiusSm),
-            color: _kBlack,
+            border: BoxBorderMix.all(
+              BorderSideMix(color: RemixTokens.primary(), width: 1.5),
+            ),
+            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+            color: RemixTokens.primary(),
           ),
         ),
-        indicator: IconStyler(color: _kWhite, size: _kIconSizeMd),
+        indicator:
+            IconStyler(color: RemixTokens.onPrimary(), size: _kIconSizeMd),
         label: TextStyler(
-          style: TextStyleMix(color: _kBlack, fontSize: _kFontSizeMd),
+          style: TextStyleMix(
+            color: RemixTokens.primary(),
+            fontSize: _kFontSizeMd,
+          ),
         ),
       );
 
@@ -333,14 +334,19 @@ extension CheckboxVariants on RemixCheckboxStyle {
             maxHeight: 20,
           ),
           decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(BorderSideMix(color: _kBlack, width: 1.5)),
-            borderRadius: BorderRadiusMix.circular(_kRadiusSm),
-            color: _kWhite,
+            border: BoxBorderMix.all(
+              BorderSideMix(color: RemixTokens.primary(), width: 1.5),
+            ),
+            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+            color: Colors.transparent,
           ),
         ),
-        indicator: IconStyler(color: _kBlack, size: _kIconSizeMd),
+        indicator: IconStyler(color: RemixTokens.primary(), size: _kIconSizeMd),
         label: TextStyler(
-          style: TextStyleMix(color: _kBlack, fontSize: _kFontSizeMd),
+          style: TextStyleMix(
+            color: RemixTokens.primary(),
+            fontSize: _kFontSizeMd,
+          ),
         ),
       );
 }

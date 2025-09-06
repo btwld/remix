@@ -1,8 +1,6 @@
 part of 'switch.dart';
 
-// Private per-component constants
-const _kBlack = Color(0xFF000000);
-const _kWhite = Color(0xFFFFFFFF);
+// Private per-component constants (sizes only)
 const _kTrackWidth = 44.0;
 const _kTrackHeight = 24.0;
 const _kThumbSize = 20.0;
@@ -178,7 +176,7 @@ final DefaultRemixSwitchStyle = RemixSwitchStyle(
     ),
     decoration: BoxDecorationMix(
       borderRadius: BorderRadiusMix.circular(_kTrackHeight),
-      color: _kBlack.withValues(alpha: 0.2),
+      color: RemixTokens.primary().withValues(alpha: 0.2),
     ),
   ),
   thumb: BoxStyler(
@@ -190,10 +188,10 @@ final DefaultRemixSwitchStyle = RemixSwitchStyle(
     ),
     decoration: BoxDecorationMix(
       shape: BoxShape.circle,
-      color: _kWhite,
+      color: RemixTokens.onPrimary(),
       boxShadow: [
         BoxShadowMix(
-          color: _kBlack.withValues(alpha: 0.2),
+          color: RemixTokens.primary().withValues(alpha: 0.2),
           offset: const Offset(0, 1),
           blurRadius: 2,
         ),

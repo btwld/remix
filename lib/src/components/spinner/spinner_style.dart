@@ -1,7 +1,6 @@
 part of 'spinner.dart';
 
-// Private per-component constants
-const _kBlack = Color(0xFF000000);
+// Private per-component constants (sizes only)
 const _kSizeSm = 16.0;
 const _kSizeMd = 24.0;
 const _kSizeLg = 32.0;
@@ -146,7 +145,7 @@ class RemixSpinnerStyles {
   static RemixSpinnerStyle get defaultStyle => RemixSpinnerStyle(
         size: _kSizeMd,
         strokeWidth: _kStrokeMd,
-        color: _kBlack,
+        color: RemixTokens.primary(),
         duration: const Duration(milliseconds: _kDurationMs),
         style: SpinnerType.solid,
       );
@@ -155,7 +154,7 @@ class RemixSpinnerStyles {
   static RemixSpinnerStyle get small => RemixSpinnerStyle(
         size: _kSizeSm,
         strokeWidth: _kStrokeSm,
-        color: _kBlack,
+        color: RemixTokens.primary(),
         duration: const Duration(milliseconds: _kDurationMs),
         style: SpinnerType.solid,
       );
@@ -164,7 +163,7 @@ class RemixSpinnerStyles {
   static RemixSpinnerStyle get large => RemixSpinnerStyle(
         size: _kSizeLg,
         strokeWidth: 2.0,
-        color: _kBlack,
+        color: RemixTokens.primary(),
         duration: const Duration(milliseconds: _kDurationMs),
         style: SpinnerType.solid,
       );
@@ -173,7 +172,7 @@ class RemixSpinnerStyles {
   static RemixSpinnerStyle get dotted => RemixSpinnerStyle(
         size: _kSizeMd,
         strokeWidth: _kStrokeMd,
-        color: _kBlack,
+        color: RemixTokens.primary(),
         duration: const Duration(milliseconds: _kDurationMs),
         style: SpinnerType.dotted,
       );

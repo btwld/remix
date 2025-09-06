@@ -1,11 +1,6 @@
 part of 'list_item.dart';
 
-// Private per-component constants
-const _kBlack = Color(0xFF000000);
-
-const _kSpaceMd = 12.0;
-const _kSpaceLg = 16.0;
-
+// Private per-component constants (sizes only)
 const _kFontSizeSm = 12.0;
 const _kFontSizeLg = 16.0;
 
@@ -198,23 +193,25 @@ class RemixListItemStyle extends Style<ListItemSpec>
 
 final DefaultRemixListItemStyle = RemixListItemStyle(
   container: BoxStyler(
-    padding:
-        EdgeInsetsMix.symmetric(vertical: _kSpaceMd, horizontal: _kSpaceLg),
+    padding: EdgeInsetsMix.symmetric(
+      vertical: RemixTokens.spaceMd(),
+      horizontal: RemixTokens.spaceLg(),
+    ),
   ),
   contentContainer: BoxStyler(),
   title: TextStyler(
     style: TextStyleMix(
-      color: _kBlack,
+      color: RemixTokens.primary(),
       fontSize: _kFontSizeLg,
       fontWeight: FontWeight.w500,
     ),
   ),
   subtitle: TextStyler(
     style: TextStyleMix(
-      color: _kBlack.withValues(alpha: 0.6),
+      color: RemixTokens.primary().withValues(alpha: 0.6),
       fontSize: _kFontSizeSm,
     ),
   ),
-  leading: IconStyler(color: _kBlack, size: _kIconSizeLg),
-  trailing: IconStyler(color: _kBlack, size: _kIconSizeMd),
+  leading: IconStyler(color: RemixTokens.primary(), size: _kIconSizeLg),
+  trailing: IconStyler(color: RemixTokens.primary(), size: _kIconSizeMd),
 );

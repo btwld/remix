@@ -1,9 +1,6 @@
 part of 'divider.dart';
 
-// Private per-component constants
-const _kBlack = Color(0xFF000000);
-
-const _kRadiusMax = 99.0;
+// Private per-component constants (none)
 
 class RemixDividerStyle extends Style<DividerSpec>
     with
@@ -145,8 +142,8 @@ class RemixDividerStyles {
             maxHeight: 1,
           ),
           decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(_kRadiusMax),
-            color: _kBlack.withValues(alpha: 0.2),
+            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+            color: RemixTokens.primary().withValues(alpha: 0.2),
           ),
         ),
       );
@@ -160,8 +157,8 @@ class RemixDividerStyles {
             minHeight: double.infinity,
           ),
           decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(_kRadiusMax),
-            color: _kBlack.withValues(alpha: 0.2),
+            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+            color: RemixTokens.primary().withValues(alpha: 0.2),
           ),
         ),
       );
@@ -175,8 +172,8 @@ class RemixDividerStyles {
             maxHeight: 2,
           ),
           decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(_kRadiusMax),
-            color: _kBlack.withValues(alpha: 0.3),
+            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+            color: RemixTokens.primary().withValues(alpha: 0.3),
           ),
         ),
       );
