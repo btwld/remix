@@ -199,6 +199,56 @@ class RemixBadgeStyles {
         icon: IconStyler(color: RemixTokens.onPrimary(), size: _kIconSizeSm),
       );
 
+  /// Soft badge style - tinted background, no border
+  static RemixBadgeStyle get soft => RemixBadgeStyle(
+        container: BoxStyler(
+          padding: EdgeInsetsMix.symmetric(
+            vertical: RemixTokens.spaceXs(),
+            horizontal: RemixTokens.spaceSm(),
+          ),
+          decoration: BoxDecorationMix(
+            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+            color: RemixTokens.primary().withValues(alpha: 0.12),
+          ),
+        ),
+        text: TextStyler(
+          style: TextStyleMix(
+            color: RemixTokens.primary(),
+            fontSize: _kFontSizeSm,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        icon: IconStyler(color: RemixTokens.primary(), size: _kIconSizeSm),
+      );
+
+  /// Surface badge style - white background with subtle border
+  static RemixBadgeStyle get surface => RemixBadgeStyle(
+        container: BoxStyler(
+          padding: EdgeInsetsMix.symmetric(
+            vertical: RemixTokens.spaceXs(),
+            horizontal: RemixTokens.spaceSm(),
+          ),
+          decoration: BoxDecorationMix(
+            border: BoxBorderMix.all(
+              BorderSideMix(
+                color: RemixTokens.primary().withValues(alpha: 0.15),
+                width: 1,
+              ),
+            ),
+            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+            color: RemixTokens.onPrimary(),
+          ),
+        ),
+        text: TextStyler(
+          style: TextStyleMix(
+            color: RemixTokens.primary(),
+            fontSize: _kFontSizeSm,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        icon: IconStyler(color: RemixTokens.primary(), size: _kIconSizeSm),
+      );
+
   /// Outline badge style - transparent background with primary border and text/icon
   static RemixBadgeStyle get outline => RemixBadgeStyle(
         container: BoxStyler(

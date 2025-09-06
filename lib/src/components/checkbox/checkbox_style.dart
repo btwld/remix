@@ -250,37 +250,44 @@ class RemixCheckboxStyle extends Style<CheckboxSpec>
       ];
 }
 
-final DefaultRemixCheckboxStyle = RemixCheckboxStyle(
-  container: FlexBoxStyler(
-    alignment: Alignment.centerLeft,
-    direction: Axis.horizontal,
-    crossAxisAlignment: CrossAxisAlignment.center,
-    mainAxisSize: MainAxisSize.min,
-    spacing: _kSpaceSm,
-  ),
-  indicatorContainer: BoxStyler(
-    alignment: Alignment.center,
-    constraints: BoxConstraintsMix(
-      minWidth: 20,
-      maxWidth: 20,
-      minHeight: 20,
-      maxHeight: 20,
-    ),
-    decoration: BoxDecorationMix(
-      border: BoxBorderMix.all(
-        BorderSideMix(color: RemixTokens.primary(), width: 1.5),
-      ),
-      borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-      color: Colors.transparent,
-    ),
-  ),
-  indicator: IconStyler(color: RemixTokens.primary(), size: _kIconSizeMd),
-  label: TextStyler(
-    style: TextStyleMix(color: RemixTokens.primary(), fontSize: _kFontSizeMd),
-  ),
-);
+// Default style is provided by RemixCheckboxStyles.defaultStyle
 
-extension CheckboxVariants on RemixCheckboxStyle {
+// Variants are exposed via RemixCheckboxStyles
+
+/// Canonical access to default and variants
+class RemixCheckboxStyles {
+  /// Default checkbox style
+  static RemixCheckboxStyle get defaultStyle => RemixCheckboxStyle(
+        container: FlexBoxStyler(
+          alignment: Alignment.centerLeft,
+          direction: Axis.horizontal,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          spacing: _kSpaceSm,
+        ),
+        indicatorContainer: BoxStyler(
+          alignment: Alignment.center,
+          constraints: BoxConstraintsMix(
+            minWidth: 20,
+            maxWidth: 20,
+            minHeight: 20,
+            maxHeight: 20,
+          ),
+          decoration: BoxDecorationMix(
+            border: BoxBorderMix.all(
+              BorderSideMix(color: RemixTokens.primary(), width: 1.5),
+            ),
+            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+            color: Colors.transparent,
+          ),
+        ),
+        indicator: IconStyler(color: RemixTokens.primary(), size: _kIconSizeMd),
+        label: TextStyler(
+          style: TextStyleMix(
+              color: RemixTokens.primary(), fontSize: _kFontSizeMd,),
+        ),
+      );
+
   /// Solid checkbox - filled black box with white check
   static RemixCheckboxStyle get solid => RemixCheckboxStyle(
         container: FlexBoxStyler(
@@ -316,7 +323,7 @@ extension CheckboxVariants on RemixCheckboxStyle {
         ),
       );
 
-  /// Outline checkbox - white box with black border and black check
+  /// Outline checkbox - transparent background with primary border and icon
   static RemixCheckboxStyle get outline => RemixCheckboxStyle(
         container: FlexBoxStyler(
           alignment: Alignment.centerLeft,

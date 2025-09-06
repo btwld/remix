@@ -132,7 +132,8 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
     super.dispose();
   }
 
-  RemixSelectStyle get _style => DefaultRemixSelectStyle.merge(widget.style);
+  RemixSelectStyle get _style =>
+      RemixSelectStyles.defaultStyle.merge(widget.style);
 
   @override
   Widget build(BuildContext context) {
@@ -457,7 +458,7 @@ class _RemixSelectTriggerState extends State<RemixSelectTrigger>
           button: true,
           focusable: widget.enabled,
           label: widget.semanticLabel ?? widget.label,
-          onTap: widget.enabled ? () {} : null, // Trigger opens menu
+          onTap: null, // Semantics handled by child
           child: NakedSelectTrigger(
             enableFeedback: widget.enableFeedback,
             focusNode: widget.focusNode,
@@ -593,7 +594,7 @@ class _RemixSelectItemState<T> extends State<RemixSelectItem<T>>
           button: true,
           focusable: widget.enabled,
           label: widget.semanticLabel ?? widget.label,
-          onTap: widget.enabled ? () {} : null, // Item selection
+          onTap: null, // Semantics handled by child
           child: NakedSelectItem<T>(
             value: widget.value,
             enabled: widget.enabled,

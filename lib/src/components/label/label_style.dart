@@ -157,7 +157,7 @@ class RemixLabelStyles {
   static RemixLabelStyle get defaultStyle => RemixLabelStyle(
         label: TextStyler(
           style: TextStyleMix(
-              color: RemixTokens.primary(), fontSize: _kFontSizeMd),
+              color: RemixTokens.primary(), fontSize: _kFontSizeMd,),
         ),
         icon: IconStyler(color: RemixTokens.primary(), size: 20),
         flex: FlexStyler(spacing: RemixTokens.spaceSm()),

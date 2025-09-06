@@ -131,31 +131,26 @@ class RemixCardStyle extends Style<CardSpec>
   List<Object?> get props => [$container, $variants, $animation, $modifier];
 }
 
-/// Default card styles and variants
-final DefaultRemixCardStyle = RemixCardStyle(
-  container: BoxStyler(
-    padding: EdgeInsetsMix.all(RemixTokens.spaceLg()),
-    decoration: BoxDecorationMix(
-      borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-      color: RemixTokens.onPrimary(),
-      boxShadow: [
-        BoxShadowMix(
-          color: RemixTokens.primary().withValues(alpha: 0.1),
-          offset: const Offset(0, 2),
-          blurRadius: 4,
-          spreadRadius: 0,
-        ),
-      ],
-    ),
-  ),
-);
-
 class RemixCardStyles {
   /// Default card style
-  static RemixCardStyle get defaultStyle => DefaultRemixCardStyle;
-}
+  static RemixCardStyle get defaultStyle => RemixCardStyle(
+        container: BoxStyler(
+          padding: EdgeInsetsMix.all(RemixTokens.spaceLg()),
+          decoration: BoxDecorationMix(
+            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+            color: RemixTokens.onPrimary(),
+            boxShadow: [
+              BoxShadowMix(
+                color: RemixTokens.primary().withValues(alpha: 0.1),
+                offset: const Offset(0, 2),
+                blurRadius: 4,
+                spreadRadius: 0,
+              ),
+            ],
+          ),
+        ),
+      );
 
-extension CardVariants on RemixCardStyle {
   /// Solid card variant (default)
   static RemixCardStyle get solid => RemixCardStyle(
         container: BoxStyler(
@@ -189,3 +184,5 @@ extension CardVariants on RemixCardStyle {
         ),
       );
 }
+
+// Variants are exposed via RemixCardStyles
