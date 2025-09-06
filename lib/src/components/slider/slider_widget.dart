@@ -108,8 +108,7 @@ class _RemixSliderState extends State<RemixSlider>
               final normalizedValue =
                   (widget.value - widget.min) / (widget.max - widget.min);
               final thumbPosition =
-                  (constraints.maxWidth - horizontalPadding) *
-                      normalizedValue;
+                  (constraints.maxWidth - horizontalPadding) * normalizedValue;
 
               return Stack(
                 alignment: Alignment.centerLeft,
@@ -142,19 +141,28 @@ class _RemixSliderState extends State<RemixSlider>
           ),
         );
 
-        return NakedSlider(
-          value: widget.value,
-          min: widget.min,
-          max: widget.max,
-          onChanged: widget.onChanged,
-          onDragStart: () => widget.onChangeStart?.call(widget.value),
-          onDragEnd: widget.onChangeEnd,
+        final normalized =
+            (widget.value - widget.min) / (widget.max - widget.min);
+        final percent = (normalized * 100).round();
+
+        return Semantics(
           enabled: widget.enabled,
-          focusNode: widget.focusNode,
-          autofocus: widget.autofocus,
-          direction: Axis.horizontal,
-          divisions: _divisions,
-          child: sliderChild,
+          focusable: widget.enabled,
+          value: '$percent%',
+          child: NakedSlider(
+            value: widget.value,
+            min: widget.min,
+            max: widget.max,
+            onChanged: widget.onChanged,
+            onDragStart: () => widget.onChangeStart?.call(widget.value),
+            onDragEnd: widget.onChangeEnd,
+            enabled: widget.enabled,
+            focusNode: widget.focusNode,
+            autofocus: widget.autofocus,
+            direction: Axis.horizontal,
+            divisions: _divisions,
+            child: sliderChild,
+          ),
         );
       },
     );

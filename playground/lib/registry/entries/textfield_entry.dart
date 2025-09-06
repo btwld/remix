@@ -2,24 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
 
 Widget buildTextFieldExample() {
-  return SizedBox(
+  return const SizedBox(
     width: 320,
     child: Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const RemixTextField(
+        RemixTextField(
           label: 'Label',
           hintText: 'Type something…',
         ),
-        const SizedBox(height: 12),
-        const RemixTextField(
+        SizedBox(height: 12),
+        RemixTextField(
           label: 'With helper',
           hintText: 'Email',
           helperText: 'We will not share your email',
         ),
-        const SizedBox(height: 12),
-        const RemixTextField(
+        SizedBox(height: 12),
+        RemixTextField(
           label: 'Error',
           hintText: 'Invalid input',
           error: true,
@@ -28,4 +28,3 @@ Widget buildTextFieldExample() {
     ),
   );
 }
-

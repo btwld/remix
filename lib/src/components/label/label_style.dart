@@ -1,10 +1,7 @@
 part of 'label.dart';
 
-// Private per-component constants
-const _kBlack = Color(0xFF000000);
-const _kSpaceSm = 8.0;
-
-const _kFontSizeMd = 14.0;
+// Private per-component constants (sizes only)
+const _kFontSizeMd = 14.0; // keep size local for now
 
 class RemixLabelStyle extends Style<LabelSpec>
     with
@@ -159,9 +156,10 @@ class RemixLabelStyles {
   /// Default label style (simple)
   static RemixLabelStyle get defaultStyle => RemixLabelStyle(
         label: TextStyler(
-          style: TextStyleMix(color: _kBlack, fontSize: _kFontSizeMd),
+          style: TextStyleMix(
+              color: RemixTokens.primary(), fontSize: _kFontSizeMd),
         ),
-        icon: IconStyler(color: _kBlack, size: 20),
-        flex: FlexStyler(spacing: _kSpaceSm),
+        icon: IconStyler(color: RemixTokens.primary(), size: 20),
+        flex: FlexStyler(spacing: RemixTokens.spaceSm()),
       );
 }

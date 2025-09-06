@@ -1,17 +1,6 @@
 part of 'chip.dart';
 
-// Private per-component constants (no shared tokens)
-const _kBlack = Color(0xFF000000);
-const _kWhite = Color(0xFFFFFFFF);
-const _kDisabled = Color(0xFF9E9E9E);
-
-const _kSpaceXs = 4.0;
-const _kSpaceSm = 8.0;
-const _kSpaceMd = 12.0;
-
-const _kRadiusLg = 8.0;
-const _kRadiusXl = 12.0;
-
+// Private per-component constants (sizes only)
 const _kFontSizeSm = 12.0;
 const _kFontSizeMd = 14.0;
 
@@ -211,33 +200,34 @@ class RemixChipStyles {
   static RemixChipStyle get defaultStyle => RemixChipStyle(
         container: FlexBoxStyler(
           decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(_kRadiusXl),
-            color: _kWhite,
+            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+            color: RemixTokens.onPrimary(),
           ),
           padding: EdgeInsetsGeometryMix.symmetric(
-            vertical: _kSpaceXs,
-            horizontal: _kSpaceMd,
+            vertical: RemixTokens.spaceXs(),
+            horizontal: RemixTokens.spaceMd(),
           ),
           direction: Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
-          spacing: _kSpaceXs,
+          spacing: RemixTokens.spaceXs(),
         ),
         label: TextStyler(
           style: TextStyleMix(
-            color: _kBlack,
+            color: RemixTokens.primary(),
             fontSize: _kFontSizeMd,
             fontWeight: FontWeight.w500,
           ),
         ),
-        icon: IconStyler(color: _kBlack, size: _kIconSizeMd),
+        icon: IconStyler(color: RemixTokens.primary(), size: _kIconSizeMd),
       )
           .onFocused(
             RemixChipStyle(
               container: FlexBoxStyler(
                 decoration: BoxDecorationMix(
-                  border:
-                      BoxBorderMix.all(BorderSideMix(color: _kBlack, width: 2)),
+                  border: BoxBorderMix.all(
+                    BorderSideMix(color: RemixTokens.primary(), width: 2),
+                  ),
                 ),
               ),
             ),
@@ -246,11 +236,17 @@ class RemixChipStyles {
             RemixChipStyle(
               container: FlexBoxStyler(
                 decoration: BoxDecorationMix(
-                  color: _kWhite.withValues(alpha: 0.5),
+                  color: RemixTokens.onPrimary().withValues(alpha: 0.5),
                 ),
               ),
-              label: TextStyler(style: TextStyleMix(color: _kDisabled)),
-              icon: IconStyler(color: _kDisabled),
+              label: TextStyler(
+                style: TextStyleMix(
+                  color: RemixTokens.primary().withValues(alpha: 0.4),
+                ),
+              ),
+              icon: IconStyler(
+                color: RemixTokens.primary().withValues(alpha: 0.4),
+              ),
             ),
           );
 
@@ -258,70 +254,72 @@ class RemixChipStyles {
   static RemixChipStyle get solid => RemixChipStyle(
         container: FlexBoxStyler(
           decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(_kRadiusXl),
-            color: _kBlack,
+            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+            color: RemixTokens.primary(),
           ),
           padding: EdgeInsetsMix.symmetric(
-            vertical: _kSpaceXs,
-            horizontal: _kSpaceMd,
+            vertical: RemixTokens.spaceXs(),
+            horizontal: RemixTokens.spaceMd(),
           ),
         ),
         label: TextStyler(
           style: TextStyleMix(
-            color: _kWhite,
+            color: RemixTokens.onPrimary(),
             fontSize: _kFontSizeMd,
             fontWeight: FontWeight.w500,
           ),
         ),
-        icon: IconStyler(color: _kWhite, size: _kIconSizeMd),
+        icon: IconStyler(color: RemixTokens.onPrimary(), size: _kIconSizeMd),
       );
 
   /// Outline chip variant
   static RemixChipStyle get outline => RemixChipStyle(
         container: FlexBoxStyler(
           decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(BorderSideMix(color: _kBlack, width: 1)),
-            borderRadius: BorderRadiusMix.circular(_kRadiusXl),
-            color: _kWhite,
+            border: BoxBorderMix.all(
+              BorderSideMix(color: RemixTokens.primary(), width: 1),
+            ),
+            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+            color: Colors.transparent,
           ),
           padding: EdgeInsetsMix.symmetric(
-            vertical: _kSpaceXs,
-            horizontal: _kSpaceMd,
+            vertical: RemixTokens.spaceXs(),
+            horizontal: RemixTokens.spaceMd(),
           ),
         ),
         label: TextStyler(
           style: TextStyleMix(
-            color: _kBlack,
+            color: RemixTokens.primary(),
             fontSize: _kFontSizeMd,
             fontWeight: FontWeight.w500,
           ),
         ),
-        icon: IconStyler(color: _kBlack, size: _kIconSizeMd),
+        icon: IconStyler(color: RemixTokens.primary(), size: _kIconSizeMd),
       );
 
   /// Compact chip variant (size-only utility)
   static RemixChipStyle get compact => RemixChipStyle(
         container: FlexBoxStyler(
           decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(_kRadiusLg),
-            color: _kWhite,
+            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+            color: RemixTokens.onPrimary(),
           ),
           padding: EdgeInsetsMix.symmetric(
-            vertical: _kSpaceXs * 0.5,
-            horizontal: _kSpaceSm,
+            vertical: RemixTokens.spaceXs() * 0.5,
+            horizontal: RemixTokens.spaceSm(),
           ),
           direction: Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
-          spacing: _kSpaceXs * 0.5,
+          spacing: RemixTokens.spaceXs() * 0.5,
         ),
         label: TextStyler(
           style: TextStyleMix(
-            color: _kBlack,
+            color: RemixTokens.primary(),
             fontSize: _kFontSizeSm,
             fontWeight: FontWeight.w500,
           ),
         ),
-        icon: IconStyler(color: _kBlack, size: _kIconSizeSm),
+        icon: IconStyler(color: RemixTokens.primary(), size: _kIconSizeSm),
       );
 }

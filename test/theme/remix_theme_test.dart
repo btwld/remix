@@ -23,15 +23,9 @@ void main() {
         ),
       );
 
-      // Test light theme color tokens
+      // Test primary color token remains available (adaptive handled in theme)
       expect(MixScope.tokenOf(RemixTokens.primary, capturedContext),
-          const Color(0xFF2563EB));
-      expect(MixScope.tokenOf(RemixTokens.background, capturedContext),
-          Colors.white);
-      expect(MixScope.tokenOf(RemixTokens.surface, capturedContext),
-          const Color(0xFFF9FAFB));
-      expect(MixScope.tokenOf(RemixTokens.textPrimary, capturedContext),
-          const Color(0xFF111827));
+          const Color(0xFF000000));
 
       // Test spacing tokens
       expect(MixScope.tokenOf(RemixTokens.spaceXs, capturedContext), 4.0);
@@ -39,11 +33,8 @@ void main() {
       expect(MixScope.tokenOf(RemixTokens.spaceMd, capturedContext), 12.0);
       expect(MixScope.tokenOf(RemixTokens.spaceLg, capturedContext), 16.0);
 
-      // Test radius tokens
-      expect(MixScope.tokenOf(RemixTokens.radiusSm, capturedContext), 4.0);
-      expect(MixScope.tokenOf(RemixTokens.radiusMd, capturedContext), 6.0);
-      expect(MixScope.tokenOf(RemixTokens.radiusLg, capturedContext), 8.0);
-      expect(MixScope.tokenOf(RemixTokens.radiusXl, capturedContext), 12.0);
+      // Test radius tokens via SpaceTokens
+      expect(MixScope.tokenOf(SpaceTokens.radius, capturedContext), 8.0);
     });
 
     testWidgets('MixScope provides dark theme tokens correctly',
@@ -67,19 +58,13 @@ void main() {
         ),
       );
 
-      // Test dark theme color tokens
+      // Test dark theme primary token (adaptive handled in theme)
       expect(MixScope.tokenOf(RemixTokens.primary, capturedContext),
-          const Color(0xFF3B82F6));
-      expect(MixScope.tokenOf(RemixTokens.background, capturedContext),
-          const Color(0xFF111827));
-      expect(MixScope.tokenOf(RemixTokens.surface, capturedContext),
-          const Color(0xFF1F2937));
-      expect(MixScope.tokenOf(RemixTokens.textPrimary, capturedContext),
-          const Color(0xFFF9FAFB));
+          const Color(0xFFFFFFFF));
 
       // Test that spacing/radius tokens remain the same across themes
       expect(MixScope.tokenOf(RemixTokens.spaceXs, capturedContext), 4.0);
-      expect(MixScope.tokenOf(RemixTokens.radiusLg, capturedContext), 8.0);
+      expect(MixScope.tokenOf(SpaceTokens.radius, capturedContext), 8.0);
     });
 
     testWidgets('Theme switching updates token values correctly',
@@ -105,14 +90,14 @@ void main() {
 
       // Test light theme
       await tester.pumpWidget(buildApp(Brightness.light));
-      expect(MixScope.tokenOf(RemixTokens.background, capturedContext),
-          Colors.white);
+      expect(MixScope.tokenOf(RemixTokens.primary, capturedContext),
+          const Color(0xFF000000));
 
       // Switch to dark theme
       await tester.pumpWidget(buildApp(Brightness.dark));
       await tester.pump();
-      expect(MixScope.tokenOf(RemixTokens.background, capturedContext),
-          const Color(0xFF111827));
+      expect(MixScope.tokenOf(RemixTokens.primary, capturedContext),
+          const Color(0xFFFFFFFF));
     });
   });
 
@@ -224,11 +209,10 @@ void main() {
 
         await tester.pumpAndSettle();
 
-        // Verify all badge variants render correctly
+        // Verify badge examples render correctly (refactored variants)
         expect(find.text('Default'), findsOneWidget);
-        expect(find.text('Primary'), findsOneWidget);
-        expect(find.text('Success'), findsOneWidget);
-        expect(find.text('Danger'), findsOneWidget);
+        expect(find.text('Solid'), findsOneWidget);
+        expect(find.text('Outline'), findsOneWidget);
       }
     });
 

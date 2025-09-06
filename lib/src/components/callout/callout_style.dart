@@ -1,15 +1,7 @@
 part of 'callout.dart';
 
-// Private per-component constants (no shared tokens)
-const _kBlack = Color(0xFF000000);
-const _kWhite = Color(0xFFFFFFFF);
-
-const _kSpaceMd = 12.0;
-
-const _kRadiusMd = 6.0;
-
+// Private per-component constants (sizes only)
 const _kFontSizeMd = 14.0;
-
 const _kIconSizeMd = 16.0;
 
 class RemixCalloutStyle extends Style<CalloutSpec>
@@ -166,24 +158,24 @@ class RemixCalloutStyle extends Style<CalloutSpec>
 
 final DefaultRemixCalloutStyle = RemixCalloutStyle(
   container: BoxStyler(
-    padding: EdgeInsetsMix.all(_kSpaceMd),
+    padding: EdgeInsetsMix.all(RemixTokens.spaceMd()),
     decoration: BoxDecorationMix(
       border: BoxBorderMix.all(BorderSideMix(
-        color: _kBlack.withValues(alpha: 0.2),
+        color: RemixTokens.primary().withValues(alpha: 0.2),
         width: 1,
       )),
-      borderRadius: BorderRadiusMix.circular(_kRadiusMd),
-      color: _kWhite,
+      borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+      color: RemixTokens.onPrimary(),
     ),
   ),
   text: TextStyler(
     style: TextStyleMix(
-      color: _kBlack,
+      color: RemixTokens.primary(),
       fontSize: _kFontSizeMd,
       fontWeight: FontWeight.w500,
     ),
   ),
-  icon: IconStyler(color: _kBlack, size: _kIconSizeMd),
+  icon: IconStyler(color: RemixTokens.primary(), size: _kIconSizeMd),
 );
 
 class RemixCalloutStyles {
@@ -191,46 +183,48 @@ class RemixCalloutStyles {
 }
 
 extension CalloutVariants on RemixCalloutStyle {
-  /// Solid callout variant (default) - white background, black text, subtle black border
+  /// Solid callout variant (default)
   static RemixCalloutStyle get solid => RemixCalloutStyle(
         container: BoxStyler(
-          padding: EdgeInsetsGeometryMix.all(_kSpaceMd),
+          padding: EdgeInsetsGeometryMix.all(RemixTokens.spaceMd()),
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
-              color: _kBlack.withValues(alpha: 0.2),
+              color: RemixTokens.primary().withValues(alpha: 0.2),
               width: 1,
             )),
-            borderRadius: BorderRadiusMix.circular(_kRadiusMd),
-            color: _kWhite,
+            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+            color: RemixTokens.onPrimary(),
           ),
         ),
         text: TextStyler(
           style: TextStyleMix(
-            color: _kBlack,
+            color: RemixTokens.primary(),
             fontSize: _kFontSizeMd,
             fontWeight: FontWeight.w500,
           ),
         ),
-        icon: IconStyler(color: _kBlack, size: _kIconSizeMd),
+        icon: IconStyler(color: RemixTokens.primary(), size: _kIconSizeMd),
       );
 
-  /// Outline callout variant - transparent background, black border, black text
+  /// Outline callout variant
   static RemixCalloutStyle get outline => RemixCalloutStyle(
         container: BoxStyler(
-          padding: EdgeInsetsGeometryMix.all(_kSpaceMd),
+          padding: EdgeInsetsGeometryMix.all(RemixTokens.spaceMd()),
           decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(BorderSideMix(color: _kBlack, width: 1)),
-            borderRadius: BorderRadiusMix.circular(_kRadiusMd),
-            color: _kWhite.withValues(alpha: 0.0),
+            border: BoxBorderMix.all(
+              BorderSideMix(color: RemixTokens.primary(), width: 1),
+            ),
+            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+            color: RemixTokens.onPrimary().withValues(alpha: 0.0),
           ),
         ),
         text: TextStyler(
           style: TextStyleMix(
-            color: _kBlack,
+            color: RemixTokens.primary(),
             fontSize: _kFontSizeMd,
             fontWeight: FontWeight.w500,
           ),
         ),
-        icon: IconStyler(color: _kBlack, size: _kIconSizeMd),
+        icon: IconStyler(color: RemixTokens.primary(), size: _kIconSizeMd),
       );
 }

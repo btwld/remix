@@ -1,12 +1,6 @@
 part of 'card.dart';
 
-// Private per-component constants (no shared tokens)
-const _kBlack = Color(0xFF000000);
-const _kWhite = Color(0xFFFFFFFF);
-
-const _kSpaceLg = 16.0;
-
-const _kRadiusLg = 8.0;
+// Private per-component constants (sizes only)
 
 class RemixCardStyle extends Style<CardSpec>
     with
@@ -140,13 +134,13 @@ class RemixCardStyle extends Style<CardSpec>
 /// Default card styles and variants
 final DefaultRemixCardStyle = RemixCardStyle(
   container: BoxStyler(
-    padding: EdgeInsetsMix.all(_kSpaceLg),
+    padding: EdgeInsetsMix.all(RemixTokens.spaceLg()),
     decoration: BoxDecorationMix(
-      borderRadius: BorderRadiusMix.circular(_kRadiusLg),
-      color: _kWhite,
+      borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+      color: RemixTokens.onPrimary(),
       boxShadow: [
         BoxShadowMix(
-          color: _kBlack.withValues(alpha: 0.1),
+          color: RemixTokens.primary().withValues(alpha: 0.1),
           offset: const Offset(0, 2),
           blurRadius: 4,
           spreadRadius: 0,
@@ -165,13 +159,13 @@ extension CardVariants on RemixCardStyle {
   /// Solid card variant (default)
   static RemixCardStyle get solid => RemixCardStyle(
         container: BoxStyler(
-          padding: EdgeInsetsMix.all(_kSpaceLg),
+          padding: EdgeInsetsMix.all(RemixTokens.spaceLg()),
           decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(_kRadiusLg),
-            color: _kWhite,
+            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+            color: Colors.white,
             boxShadow: [
               BoxShadowMix(
-                color: _kBlack.withValues(alpha: 0.1),
+                color: RemixTokens.primary().withValues(alpha: 0.1),
                 offset: const Offset(0, 2),
                 blurRadius: 4,
                 spreadRadius: 0,
@@ -184,11 +178,13 @@ extension CardVariants on RemixCardStyle {
   /// Outline card variant
   static RemixCardStyle get outline => RemixCardStyle(
         container: BoxStyler(
-          padding: EdgeInsetsMix.all(_kSpaceLg),
+          padding: EdgeInsetsMix.all(RemixTokens.spaceLg()),
           decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(BorderSideMix(color: _kBlack, width: 1)),
-            borderRadius: BorderRadiusMix.circular(_kRadiusLg),
-            color: _kWhite,
+            border: BoxBorderMix.all(
+              BorderSideMix(color: RemixTokens.primary(), width: 1),
+            ),
+            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+            color: Colors.white,
           ),
         ),
       );

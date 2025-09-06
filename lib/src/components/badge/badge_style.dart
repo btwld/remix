@@ -1,14 +1,6 @@
 part of 'badge.dart';
 
-// Private per-component constants (no shared tokens)
-const _kBlack = Color(0xFF000000);
-const _kWhite = Color(0xFFFFFFFF);
-
-const _kSpaceXs = 4.0;
-const _kSpaceSm = 8.0;
-
-const _kRadiusSm = 4.0;
-
+// Private per-component constants (sizes only)
 const _kFontSizeSm = 12.0;
 
 const _kIconSizeSm = 14.0;
@@ -185,51 +177,51 @@ class RemixBadgeStyle extends Style<BadgeSpec>
 
 /// Default badge styles and variants
 class RemixBadgeStyles {
-  /// Solid badge style (default) - black background with white text/icon
+  /// Solid badge style (default) - primary background with onPrimary text/icon
   static RemixBadgeStyle get solid => RemixBadgeStyle(
         container: BoxStyler(
           padding: EdgeInsetsMix.symmetric(
-            vertical: _kSpaceXs,
-            horizontal: _kSpaceSm,
+            vertical: RemixTokens.spaceXs(),
+            horizontal: RemixTokens.spaceSm(),
           ),
           decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(_kRadiusSm),
-            color: _kBlack,
+            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+            color: RemixTokens.primary(),
           ),
         ),
         text: TextStyler(
           style: TextStyleMix(
-            color: _kWhite,
+            color: RemixTokens.onPrimary(),
             fontSize: _kFontSizeSm,
             fontWeight: FontWeight.w500,
           ),
         ),
-        icon: IconStyler(color: _kWhite, size: _kIconSizeSm),
+        icon: IconStyler(color: RemixTokens.onPrimary(), size: _kIconSizeSm),
       );
 
-  /// Outline badge style - white background with black border and black text/icon
+  /// Outline badge style - transparent background with primary border and text/icon
   static RemixBadgeStyle get outline => RemixBadgeStyle(
         container: BoxStyler(
           padding: EdgeInsetsMix.symmetric(
-            vertical: _kSpaceXs,
-            horizontal: _kSpaceSm,
+            vertical: RemixTokens.spaceXs(),
+            horizontal: RemixTokens.spaceSm(),
           ),
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(
-              BorderSideMix(color: _kBlack, width: 1),
+              BorderSideMix(color: RemixTokens.primary(), width: 1),
             ),
-            borderRadius: BorderRadiusMix.circular(_kRadiusSm),
-            color: _kWhite,
+            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+            color: Colors.transparent,
           ),
         ),
         text: TextStyler(
           style: TextStyleMix(
-            color: _kBlack,
+            color: RemixTokens.primary(),
             fontSize: _kFontSizeSm,
             fontWeight: FontWeight.w500,
           ),
         ),
-        icon: IconStyler(color: _kBlack, size: _kIconSizeSm),
+        icon: IconStyler(color: RemixTokens.primary(), size: _kIconSizeSm),
       );
 
   /// Default style alias

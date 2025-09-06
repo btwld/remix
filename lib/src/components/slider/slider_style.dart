@@ -1,9 +1,6 @@
 part of 'slider.dart';
 
-// Private per-component constants
-const _kBlack = Color(0xFF000000);
-const _kWhite = Color(0xFFFFFFFF);
-
+// Private per-component constants (sizes only)
 const _kTrackWidth = 8.0;
 const _kThumbBorderWidth = 2.0;
 
@@ -137,27 +134,27 @@ final DefaultRemixSliderStyle = RemixSliderStyle(
   thumb: BoxStyler(
     decoration: BoxDecorationMix(
       border: BoxBorderMix.all(
-        BorderSideMix(color: _kBlack, width: _kThumbBorderWidth),
+        BorderSideMix(color: RemixTokens.primary(), width: _kThumbBorderWidth),
       ),
       shape: BoxShape.circle,
-      color: _kWhite,
+      color: RemixTokens.onPrimary(),
     ),
   ),
 ).builder((context) {
   return RemixSliderStyle(
     baseTrack: Paint()
       ..strokeWidth = _kTrackWidth
-      ..color = _kBlack.withValues(alpha: 0.2)
+      ..color = RemixTokens.primary.resolve(context).withValues(alpha: 0.2)
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke,
     activeTrack: Paint()
       ..strokeWidth = _kTrackWidth
-      ..color = _kBlack
+      ..color = RemixTokens.primary.resolve(context)
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke,
     division: Paint()
       ..strokeWidth = _kTrackWidth
-      ..color = _kBlack.withValues(alpha: 0.26)
+      ..color = RemixTokens.primary.resolve(context).withValues(alpha: 0.26)
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke,
   );
@@ -168,7 +165,7 @@ final RemixSliderHoverStyle = RemixSliderStyle(
   thumb: BoxStyler(
     decoration: BoxDecorationMix(
       border: BoxBorderMix.all(
-        BorderSideMix(color: _kBlack, width: _kThumbBorderWidth),
+        BorderSideMix(color: RemixTokens.primary(), width: _kThumbBorderWidth),
       ),
     ),
   ),
@@ -180,21 +177,21 @@ final RemixSliderDisabledStyle = RemixSliderStyle(
     decoration: BoxDecorationMix(
       border: BoxBorderMix.all(
         BorderSideMix(
-          color: _kBlack.withValues(alpha: 0.4),
+          color: RemixTokens.primary().withValues(alpha: 0.4),
           width: _kThumbBorderWidth,
         ),
       ),
-      color: _kBlack.withValues(alpha: 0.08),
+      color: RemixTokens.primary().withValues(alpha: 0.08),
     ),
   ),
   baseTrack: Paint()
     ..strokeWidth = _kTrackWidth
-    ..color = _kBlack.withValues(alpha: 0.08)
+    ..color = RemixTokens.primary().withValues(alpha: 0.08)
     ..strokeCap = StrokeCap.round
     ..style = PaintingStyle.stroke,
   activeTrack: Paint()
     ..strokeWidth = _kTrackWidth
-    ..color = _kBlack.withValues(alpha: 0.2)
+    ..color = RemixTokens.primary().withValues(alpha: 0.2)
     ..strokeCap = StrokeCap.round
     ..style = PaintingStyle.stroke,
 );

@@ -1,9 +1,7 @@
 part of 'avatar.dart';
 
 // Private per-component constants (no shared tokens)
-const _kBlack = Color(0xFF000000);
-const _kWhite = Color(0xFFFFFFFF);
-
+// Color constants removed; using tokens
 const _kSizeSmall = 32.0;
 const _kSizeMedium = 50.0;
 const _kSizeLarge = 80.0;
@@ -223,7 +221,7 @@ class RemixAvatarStyle extends Style<AvatarSpec>
 
 /// Default avatar styles and variants
 class RemixAvatarStyles {
-  /// Solid avatar style (default) - black background with white text/icon
+  /// Solid avatar style (default) - primary background with onPrimary text/icon
   static RemixAvatarStyle get solid => RemixAvatarStyle(
         container: BoxStyler(
           alignment: Alignment.center,
@@ -235,21 +233,22 @@ class RemixAvatarStyles {
           ),
           decoration: BoxDecorationMix(
             shape: BoxShape.circle,
-            color: _kBlack,
+            color: RemixTokens.primary(),
           ),
           clipBehavior: Clip.antiAlias,
         ),
         text: TextStyler(
           style: TextStyleMix(
-            color: _kWhite,
+            color: RemixTokens.onPrimary(),
             fontSize: _kFontSizeMedium,
             fontWeight: FontWeight.w400,
           ),
         ),
-        icon: IconStyler(color: _kWhite, size: _kIconSizeMedium),
+        icon:
+            IconStyler(color: RemixTokens.onPrimary(), size: _kIconSizeMedium),
       );
 
-  /// Outline avatar style - white background with black border and black text/icon
+  /// Outline avatar style - transparent background with primary border
   static RemixAvatarStyle get outline => RemixAvatarStyle(
         container: BoxStyler(
           alignment: Alignment.center,
@@ -261,21 +260,21 @@ class RemixAvatarStyles {
           ),
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(
-              BorderSideMix(color: _kBlack, width: 1),
+              BorderSideMix(color: RemixTokens.primary(), width: 1),
             ),
             shape: BoxShape.circle,
-            color: _kWhite,
+            color: Colors.transparent,
           ),
           clipBehavior: Clip.antiAlias,
         ),
         text: TextStyler(
           style: TextStyleMix(
-            color: _kBlack,
+            color: RemixTokens.primary(),
             fontSize: _kFontSizeMedium,
             fontWeight: FontWeight.w400,
           ),
         ),
-        icon: IconStyler(color: _kBlack, size: _kIconSizeMedium),
+        icon: IconStyler(color: RemixTokens.primary(), size: _kIconSizeMedium),
       );
 
   /// Small size variant
@@ -290,18 +289,18 @@ class RemixAvatarStyles {
           ),
           decoration: BoxDecorationMix(
             shape: BoxShape.circle,
-            color: _kBlack,
+            color: RemixTokens.primary(),
           ),
           clipBehavior: Clip.antiAlias,
         ),
         text: TextStyler(
           style: TextStyleMix(
-            color: _kWhite,
+            color: RemixTokens.onPrimary(),
             fontSize: _kFontSizeSmall,
             fontWeight: FontWeight.w400,
           ),
         ),
-        icon: IconStyler(color: _kWhite, size: _kIconSizeSmall),
+        icon: IconStyler(color: RemixTokens.onPrimary(), size: _kIconSizeSmall),
       );
 
   /// Large size variant
@@ -316,18 +315,18 @@ class RemixAvatarStyles {
           ),
           decoration: BoxDecorationMix(
             shape: BoxShape.circle,
-            color: _kBlack,
+            color: RemixTokens.primary(),
           ),
           clipBehavior: Clip.antiAlias,
         ),
         text: TextStyler(
           style: TextStyleMix(
-            color: _kWhite,
+            color: RemixTokens.onPrimary(),
             fontSize: _kFontSizeLarge,
             fontWeight: FontWeight.w400,
           ),
         ),
-        icon: IconStyler(color: _kWhite, size: _kIconSizeLarge),
+        icon: IconStyler(color: RemixTokens.onPrimary(), size: _kIconSizeLarge),
       );
 
   /// Default style alias
