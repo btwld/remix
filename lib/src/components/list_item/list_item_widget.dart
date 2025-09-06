@@ -69,7 +69,7 @@ class _RemixListItemState extends State<RemixListItem>
   @override
   Widget build(BuildContext context) {
     return StyleBuilder(
-      style: DefaultRemixListItemStyle.merge(widget.style),
+      style: RemixListItemStyles.defaultStyle.merge(widget.style),
       controller: controller,
       builder: (context, spec) {
         final Container = spec.container.createWidget;

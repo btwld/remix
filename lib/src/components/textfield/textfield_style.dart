@@ -354,47 +354,7 @@ class RemixTextFieldStyle extends Style<TextFieldSpec>
       ];
 }
 
-// Default style
-final DefaultRemixTextFieldStyle = RemixTextFieldStyle(
-  text: TextStyler(
-    style: TextStyleMix(color: RemixTokens.primary(), fontSize: _kFontSizeMd),
-  ),
-  hintText: TextStyler(
-    style: TextStyleMix(color: RemixTokens.primary().withValues(alpha: 0.5)),
-  ),
-  textAlign: TextAlign.start,
-  cursorWidth: 2.0,
-  cursorColor: RemixTokens.primary(),
-  cursorOffset: Offset.zero,
-  selectionHeightStyle: BoxHeightStyle.tight,
-  selectionWidthStyle: BoxWidthStyle.tight,
-  scrollPadding: EdgeInsets.all(RemixTokens.spaceLg()),
-  spacing: RemixTokens.spaceXs(),
-  container: FlexBoxStyler(
-    decoration: BoxDecorationMix(
-      border: BoxBorderMix.all(
-        BorderSideMix(
-          color: RemixTokens.primary().withValues(alpha: 0.2),
-          width: 1,
-        ),
-      ),
-      borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-      color: RemixTokens.onPrimary(),
-    ),
-    padding: EdgeInsetsGeometryMix.symmetric(
-      vertical: RemixTokens.spaceSm(),
-      horizontal: RemixTokens.spaceMd(),
-    ),
-    direction: Axis.horizontal,
-    crossAxisAlignment: CrossAxisAlignment.start,
-  ),
-  helperText: TextStyler(
-    style: TextStyleMix(
-      color: RemixTokens.primary().withValues(alpha: 0.7),
-      fontSize: _kFontSizeSm,
-    ),
-  ),
-);
+// Default style is provided by RemixTextFieldStyles.defaultStyle
 
 // Focus style
 final RemixTextFieldFocusStyle = RemixTextFieldStyle(
@@ -437,8 +397,64 @@ final RemixTextFieldDisabledStyle = RemixTextFieldStyle(
   ),
 );
 
-extension RemixTextFieldVariants on RemixTextFieldStyle {
-  /// Solid text field variant (default) - white background, black text, subtle border
+// Variants are exposed via RemixTextFieldStyles
+
+/// Canonical access to default and common state styles
+class RemixTextFieldStyles {
+  /// Default text field style
+  static RemixTextFieldStyle get defaultStyle => RemixTextFieldStyle(
+        text: TextStyler(
+          style: TextStyleMix(
+              color: RemixTokens.primary(), fontSize: _kFontSizeMd,),
+        ),
+        hintText: TextStyler(
+          style:
+              TextStyleMix(color: RemixTokens.primary().withValues(alpha: 0.5)),
+        ),
+        textAlign: TextAlign.start,
+        cursorWidth: 2.0,
+        cursorColor: RemixTokens.primary(),
+        cursorOffset: Offset.zero,
+        selectionHeightStyle: BoxHeightStyle.tight,
+        selectionWidthStyle: BoxWidthStyle.tight,
+        scrollPadding: EdgeInsets.all(RemixTokens.spaceLg()),
+        spacing: RemixTokens.spaceXs(),
+        container: FlexBoxStyler(
+          decoration: BoxDecorationMix(
+            border: BoxBorderMix.all(
+              BorderSideMix(
+                color: RemixTokens.primary().withValues(alpha: 0.2),
+                width: 1,
+              ),
+            ),
+            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+            color: RemixTokens.onPrimary(),
+          ),
+          padding: EdgeInsetsGeometryMix.symmetric(
+            vertical: RemixTokens.spaceSm(),
+            horizontal: RemixTokens.spaceMd(),
+          ),
+          direction: Axis.horizontal,
+          crossAxisAlignment: CrossAxisAlignment.start,
+        ),
+        helperText: TextStyler(
+          style: TextStyleMix(
+            color: RemixTokens.primary().withValues(alpha: 0.7),
+            fontSize: _kFontSizeSm,
+          ),
+        ),
+      );
+
+  /// Focused state style
+  static RemixTextFieldStyle get focused => RemixTextFieldFocusStyle;
+
+  /// Error state style
+  static RemixTextFieldStyle get error => RemixTextFieldErrorStyle;
+
+  /// Disabled state style
+  static RemixTextFieldStyle get disabled => RemixTextFieldDisabledStyle;
+
+  /// Solid variant (default-like variant)
   static RemixTextFieldStyle get solid => RemixTextFieldStyle(
         text: TextStyler(
           style: TextStyleMix(
@@ -484,7 +500,7 @@ extension RemixTextFieldVariants on RemixTextFieldStyle {
         ),
       );
 
-  /// Outline text field variant - transparent background, black border
+  /// Outline variant - transparent background with emphasized border
   static RemixTextFieldStyle get outline => RemixTextFieldStyle(
         text: TextStyler(
           style: TextStyleMix(
@@ -513,8 +529,8 @@ extension RemixTextFieldVariants on RemixTextFieldStyle {
             color: RemixTokens.onPrimary().withValues(alpha: 0.0),
           ),
           padding: EdgeInsetsGeometryMix.symmetric(
-            vertical: 8,
-            horizontal: 12,
+            vertical: RemixTokens.spaceSm(),
+            horizontal: RemixTokens.spaceMd(),
           ),
           direction: Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.start,

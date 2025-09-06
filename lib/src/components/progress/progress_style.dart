@@ -185,27 +185,33 @@ class RemixProgressStyle extends Style<ProgressSpec>
       ];
 }
 
-final DefaultRemixProgressStyle = RemixProgressStyle(
-  container: BoxStyler(
-    constraints:
-        BoxConstraintsMix(minHeight: _kBarHeight, maxHeight: _kBarHeight),
-    decoration: BoxDecorationMix(
-      borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-    ),
-    clipBehavior: Clip.antiAlias,
-  ),
-  track: BoxStyler(
-    decoration: BoxDecorationMix(
-      color: RemixTokens.primary().withValues(alpha: 0.15),
-    ),
-  ),
-  indicator: BoxStyler(
-    decoration: BoxDecorationMix(
-      borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-      color: RemixTokens.primary(),
-    ),
-  ),
-  trackContainer: BoxStyler(),
-);
-
 // Removed colorful variants; using simple defaultStyle only
+
+/// Canonical access to default and variants
+class RemixProgressStyles {
+  /// Default progress style
+  static RemixProgressStyle get defaultStyle => RemixProgressStyle(
+        container: BoxStyler(
+          constraints: BoxConstraintsMix(
+            minHeight: _kBarHeight,
+            maxHeight: _kBarHeight,
+          ),
+          decoration: BoxDecorationMix(
+            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+          ),
+          clipBehavior: Clip.antiAlias,
+        ),
+        track: BoxStyler(
+          decoration: BoxDecorationMix(
+            color: RemixTokens.primary().withValues(alpha: 0.15),
+          ),
+        ),
+        indicator: BoxStyler(
+          decoration: BoxDecorationMix(
+            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+            color: RemixTokens.primary(),
+          ),
+        ),
+        trackContainer: BoxStyler(),
+      );
+}

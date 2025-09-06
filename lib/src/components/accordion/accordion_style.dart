@@ -215,7 +215,7 @@ class RemixAccordionStyles {
         ),
         contentText: TextStyler(
           style: TextStyleMix(
-              color: RemixTokens.primary(), fontSize: _kFontSizeMd),
+              color: RemixTokens.primary(), fontSize: _kFontSizeMd,),
         ),
         header: BoxStyler(padding: EdgeInsetsMix.all(RemixTokens.spaceMd())),
         headerLabel: RemixLabelStyle(
@@ -284,7 +284,7 @@ class RemixAccordionStyles {
                   ),
                 ),
                 icon: IconStyler(
-                    color: RemixTokens.primary().withValues(alpha: 0.4)),
+                    color: RemixTokens.primary().withValues(alpha: 0.4),),
               ),
             ),
           )
@@ -321,7 +321,7 @@ class RemixAccordionStyles {
         ),
         contentText: TextStyler(
           style: TextStyleMix(
-              color: RemixTokens.primary(), fontSize: _kFontSizeMd),
+              color: RemixTokens.primary(), fontSize: _kFontSizeMd,),
         ),
         header: BoxStyler(padding: EdgeInsetsMix.all(RemixTokens.spaceMd())),
         headerLabel: RemixLabelStyle(
@@ -377,7 +377,7 @@ class RemixAccordionStyles {
                   ),
                 ),
                 icon: IconStyler(
-                    color: RemixTokens.primary().withValues(alpha: 0.4)),
+                    color: RemixTokens.primary().withValues(alpha: 0.4),),
               ),
             ),
           );
@@ -408,7 +408,7 @@ class RemixAccordionStyles {
         ),
         contentText: TextStyler(
           style: TextStyleMix(
-              color: RemixTokens.primary(), fontSize: _kFontSizeSm),
+              color: RemixTokens.primary(), fontSize: _kFontSizeSm,),
         ),
         header: BoxStyler(padding: EdgeInsetsMix.all(RemixTokens.spaceSm())),
         headerLabel: RemixLabelStyle(

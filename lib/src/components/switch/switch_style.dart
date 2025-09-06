@@ -165,37 +165,41 @@ class RemixSwitchStyle extends Style<SwitchSpec>
       ];
 }
 
-final DefaultRemixSwitchStyle = RemixSwitchStyle(
-  container: BoxStyler(),
-  track: BoxStyler(
-    constraints: BoxConstraintsMix(
-      minWidth: _kTrackWidth,
-      maxWidth: _kTrackWidth,
-      minHeight: _kTrackHeight,
-      maxHeight: _kTrackHeight,
-    ),
-    decoration: BoxDecorationMix(
-      borderRadius: BorderRadiusMix.circular(_kTrackHeight),
-      color: RemixTokens.primary().withValues(alpha: 0.2),
-    ),
-  ),
-  thumb: BoxStyler(
-    constraints: BoxConstraintsMix(
-      minWidth: _kThumbSize,
-      maxWidth: _kThumbSize,
-      minHeight: _kThumbSize,
-      maxHeight: _kThumbSize,
-    ),
-    decoration: BoxDecorationMix(
-      shape: BoxShape.circle,
-      color: RemixTokens.onPrimary(),
-      boxShadow: [
-        BoxShadowMix(
-          color: RemixTokens.primary().withValues(alpha: 0.2),
-          offset: const Offset(0, 1),
-          blurRadius: 2,
+/// Canonical access to default and variants
+class RemixSwitchStyles {
+  /// Default switch style
+  static RemixSwitchStyle get defaultStyle => RemixSwitchStyle(
+        container: BoxStyler(),
+        track: BoxStyler(
+          constraints: BoxConstraintsMix(
+            minWidth: _kTrackWidth,
+            maxWidth: _kTrackWidth,
+            minHeight: _kTrackHeight,
+            maxHeight: _kTrackHeight,
+          ),
+          decoration: BoxDecorationMix(
+            borderRadius: BorderRadiusMix.circular(_kTrackHeight),
+            color: RemixTokens.primary().withValues(alpha: 0.2),
+          ),
         ),
-      ],
-    ),
-  ),
-);
+        thumb: BoxStyler(
+          constraints: BoxConstraintsMix(
+            minWidth: _kThumbSize,
+            maxWidth: _kThumbSize,
+            minHeight: _kThumbSize,
+            maxHeight: _kThumbSize,
+          ),
+          decoration: BoxDecorationMix(
+            shape: BoxShape.circle,
+            color: RemixTokens.onPrimary(),
+            boxShadow: [
+              BoxShadowMix(
+                color: RemixTokens.primary().withValues(alpha: 0.2),
+                offset: const Offset(0, 1),
+                blurRadius: 2,
+              ),
+            ],
+          ),
+        ),
+      );
+}

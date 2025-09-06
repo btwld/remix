@@ -248,7 +248,7 @@ class RemixTextField extends StatefulWidget with HasEnabled, HasError {
 class _RemixTextFieldState extends State<RemixTextField>
     with HasWidgetStateController {
   RemixTextFieldStyle get _style =>
-      DefaultRemixTextFieldStyle.merge(widget.style);
+      RemixTextFieldStyles.defaultStyle.merge(widget.style);
 
   TextEditingController? _internalController;
   TextEditingController get _controller =>

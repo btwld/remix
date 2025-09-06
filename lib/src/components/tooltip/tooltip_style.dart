@@ -147,16 +147,22 @@ class RemixTooltipStyle extends Style<TooltipSpec>
       ];
 }
 
-final DefaultRemixTooltipStyle = RemixTooltipStyle(
-  container: BoxStyler(
-    padding: EdgeInsetsMix.all(RemixTokens.spaceSm()),
-    decoration: BoxDecorationMix(
-      borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-      color: RemixTokens.primary().withValues(alpha: 0.8),
-    ),
-  ),
-  text: TextStyler(
-    style: TextStyleMix(color: RemixTokens.onPrimary(), fontSize: _kFontSizeSm),
-  ),
-  animation: AnimationConfig.ease(const Duration(milliseconds: 100)),
-);
+/// Canonical access to default and variants
+class RemixTooltipStyles {
+  /// Default tooltip style
+  static RemixTooltipStyle get defaultStyle => RemixTooltipStyle(
+        container: BoxStyler(
+          padding: EdgeInsetsMix.all(RemixTokens.spaceSm()),
+          decoration: BoxDecorationMix(
+            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+            color: RemixTokens.primary().withValues(alpha: 0.8),
+          ),
+        ),
+        text: TextStyler(
+          style: TextStyleMix(
+              color: RemixTokens.onPrimary(), fontSize: _kFontSizeSm,),
+        ),
+        animation:
+            AnimationConfig.ease(const Duration(milliseconds: 100)),
+      );
+}

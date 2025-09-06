@@ -464,69 +464,331 @@ class RemixCompositedTransformFollowerStyle
       ];
 }
 
-// Default styles
-final DefaultRemixSelectStyle = RemixSelectStyle(
-  menuContainer: BoxStyler(
-    padding: EdgeInsetsMix.symmetric(vertical: RemixTokens.spaceXs()),
-    decoration: BoxDecorationMix(
-      borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-      color: RemixTokens.onPrimary(),
-      boxShadow: [
-        BoxShadowMix(
-          color: RemixTokens.primary().withValues(alpha: 0.1),
-          offset: const Offset(0, 2),
-          blurRadius: 8,
-        ),
-      ],
-    ),
-  ),
-  trigger: RemixSelectTriggerStyle(
-    container: FlexBoxStyler(
-      decoration: BoxDecorationMix(
-        border: BoxBorderMix.all(
-            BorderSideMix(color: RemixTokens.primary(), width: 1)),
-        borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-      ),
-      padding: EdgeInsetsGeometryMix.symmetric(
-        vertical: RemixTokens.spaceSm(),
-        horizontal: RemixTokens.spaceMd(),
-      ),
-      direction: Axis.horizontal,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
-    ),
-    label: TextStyler(
-      style: TextStyleMix(color: RemixTokens.primary(), fontSize: _kFontSizeSm),
-    ),
-    icon: IconStyler(
-      color: RemixTokens.primary().withValues(alpha: 0.6),
-      size: 20,
-    ),
-  ),
-  item: RemixSelectMenuItemStyle(
-    container: FlexBoxStyler(
-      padding: EdgeInsetsGeometryMix.symmetric(
-        vertical: RemixTokens.spaceSm(),
-        horizontal: RemixTokens.spaceMd(),
-      ),
-      direction: Axis.horizontal,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
-    ),
-    text: TextStyler(
-      style: TextStyleMix(color: RemixTokens.primary(), fontSize: _kFontSizeSm),
-    ),
-    icon: IconStyler(
-      color: RemixTokens.primary().withValues(alpha: 0.6),
-      size: 16,
-    ),
-  ),
-  position: RemixCompositedTransformFollowerStyle(
-    targetAnchor: Alignment.bottomLeft,
-    followerAnchor: Alignment.topLeft,
-    offset: const Offset(0, 4),
-  ),
-  animation: AnimationConfig.easeInOut(Duration(milliseconds: 150)),
-);
-
 // Removed colorful variants; using solid/outline via black/white if needed
+
+/// Canonical access to default and variants
+class RemixSelectStyles {
+  /// Default select style
+  static RemixSelectStyle get defaultStyle => RemixSelectStyle(
+        menuContainer: BoxStyler(
+          padding: EdgeInsetsMix.symmetric(vertical: RemixTokens.spaceXs()),
+          decoration: BoxDecorationMix(
+            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+            color: RemixTokens.onPrimary(),
+            boxShadow: [
+              BoxShadowMix(
+                color: RemixTokens.primary().withValues(alpha: 0.1),
+                offset: const Offset(0, 2),
+                blurRadius: 8,
+              ),
+            ],
+          ),
+        ),
+        trigger: RemixSelectTriggerStyle(
+          container: FlexBoxStyler(
+            decoration: BoxDecorationMix(
+              border: BoxBorderMix.all(
+                BorderSideMix(color: RemixTokens.primary(), width: 1),
+              ),
+              borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+            ),
+            padding: EdgeInsetsGeometryMix.symmetric(
+              vertical: RemixTokens.spaceSm(),
+              horizontal: RemixTokens.spaceMd(),
+            ),
+            direction: Axis.horizontal,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+          ),
+          label: TextStyler(
+            style: TextStyleMix(
+                color: RemixTokens.primary(), fontSize: _kFontSizeSm,),
+          ),
+          icon: IconStyler(
+            color: RemixTokens.primary().withValues(alpha: 0.6),
+            size: 20,
+          ),
+        ),
+        item: RemixSelectMenuItemStyle(
+          container: FlexBoxStyler(
+            padding: EdgeInsetsGeometryMix.symmetric(
+              vertical: RemixTokens.spaceSm(),
+              horizontal: RemixTokens.spaceMd(),
+            ),
+            direction: Axis.horizontal,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+          ),
+          text: TextStyler(
+            style: TextStyleMix(
+                color: RemixTokens.primary(), fontSize: _kFontSizeSm,),
+          ),
+          icon: IconStyler(
+            color: RemixTokens.primary().withValues(alpha: 0.6),
+            size: 16,
+          ),
+        ),
+        position: RemixCompositedTransformFollowerStyle(
+          targetAnchor: Alignment.bottomLeft,
+          followerAnchor: Alignment.topLeft,
+          offset: const Offset(0, 4),
+        ),
+        animation:
+            AnimationConfig.easeInOut(Duration(milliseconds: 150)),
+      );
+
+  // Trigger variants (Radix: classic | surface | soft | ghost)
+
+  /// Trigger: classic — bordered, transparent background
+  static RemixSelectStyle get triggerClassic => RemixSelectStyle(
+        trigger: RemixSelectTriggerStyle(
+          container: FlexBoxStyler(
+            decoration: BoxDecorationMix(
+              border: BoxBorderMix.all(
+                BorderSideMix(color: RemixTokens.primary(), width: 1),
+              ),
+              borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+              color: Colors.transparent,
+            ),
+            padding: EdgeInsetsGeometryMix.symmetric(
+              vertical: RemixTokens.spaceSm(),
+              horizontal: RemixTokens.spaceMd(),
+            ),
+            direction: Axis.horizontal,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+          ),
+          label: TextStyler(
+            style: TextStyleMix(
+              color: RemixTokens.primary(),
+              fontSize: _kFontSizeSm,
+            ),
+          ),
+          icon: IconStyler(color: RemixTokens.primary(), size: 20),
+        ),
+      )
+          .onHovered(
+            RemixSelectStyle(
+              trigger: RemixSelectTriggerStyle(
+                container: FlexBoxStyler(
+                  decoration: BoxDecorationMix(
+                    color: RemixTokens.primary().withValues(alpha: 0.03),
+                  ),
+                ),
+              ),
+            ),
+          )
+          .onPressed(
+            RemixSelectStyle(
+              trigger: RemixSelectTriggerStyle(
+                container: FlexBoxStyler(
+                  decoration: BoxDecorationMix(
+                    color: RemixTokens.primary().withValues(alpha: 0.06),
+                  ),
+                ),
+              ),
+            ),
+          )
+          .onFocused(
+            RemixSelectStyle(
+              trigger: RemixSelectTriggerStyle(
+                container: FlexBoxStyler(
+                  decoration: BoxDecorationMix(
+                    border: BoxBorderMix.all(
+                      BorderSideMix(
+                        color: RemixTokens.primary().withValues(alpha: 0.5),
+                        width: 2,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+
+  /// Trigger: surface — white background with subtle border
+  static RemixSelectStyle get triggerSurface => RemixSelectStyle(
+        trigger: RemixSelectTriggerStyle(
+          container: FlexBoxStyler(
+            decoration: BoxDecorationMix(
+              border: BoxBorderMix.all(
+                BorderSideMix(
+                  color: RemixTokens.primary().withValues(alpha: 0.15),
+                  width: 1,
+                ),
+              ),
+              borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+              color: RemixTokens.onPrimary(),
+            ),
+            padding: EdgeInsetsGeometryMix.symmetric(
+              vertical: RemixTokens.spaceSm(),
+              horizontal: RemixTokens.spaceMd(),
+            ),
+            direction: Axis.horizontal,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+          ),
+          label: TextStyler(
+            style: TextStyleMix(
+              color: RemixTokens.primary(),
+              fontSize: _kFontSizeSm,
+            ),
+          ),
+          icon: IconStyler(
+            color: RemixTokens.primary().withValues(alpha: 0.6),
+            size: 20,
+          ),
+        ),
+      )
+          .onHovered(
+            RemixSelectStyle(
+              trigger: RemixSelectTriggerStyle(
+                container: FlexBoxStyler(
+                  decoration: BoxDecorationMix(
+                    color: RemixTokens.primary().withValues(alpha: 0.03),
+                  ),
+                ),
+              ),
+            ),
+          )
+          .onFocused(
+            RemixSelectStyle(
+              trigger: RemixSelectTriggerStyle(
+                container: FlexBoxStyler(
+                  decoration: BoxDecorationMix(
+                    border: BoxBorderMix.all(
+                      BorderSideMix(
+                        color: RemixTokens.primary().withValues(alpha: 0.4),
+                        width: 2,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+
+  /// Trigger: soft — tinted fill, no border
+  static RemixSelectStyle get triggerSoft => RemixSelectStyle(
+        trigger: RemixSelectTriggerStyle(
+          container: FlexBoxStyler(
+            decoration: BoxDecorationMix(
+              borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+              color: RemixTokens.primary().withValues(alpha: 0.08),
+            ),
+            padding: EdgeInsetsGeometryMix.symmetric(
+              vertical: RemixTokens.spaceSm(),
+              horizontal: RemixTokens.spaceMd(),
+            ),
+            direction: Axis.horizontal,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+          ),
+          label: TextStyler(
+            style: TextStyleMix(
+              color: RemixTokens.primary(),
+              fontSize: _kFontSizeSm,
+            ),
+          ),
+          icon: IconStyler(
+            color: RemixTokens.primary().withValues(alpha: 0.7),
+            size: 20,
+          ),
+        ),
+      )
+          .onHovered(
+            RemixSelectStyle(
+              trigger: RemixSelectTriggerStyle(
+                container: FlexBoxStyler(
+                  decoration: BoxDecorationMix(
+                    color: RemixTokens.primary().withValues(alpha: 0.12),
+                  ),
+                ),
+              ),
+            ),
+          );
+
+  /// Trigger: ghost — transparent, no border
+  static RemixSelectStyle get triggerGhost => RemixSelectStyle(
+        trigger: RemixSelectTriggerStyle(
+          container: FlexBoxStyler(
+            decoration: BoxDecorationMix(
+              borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+              color: Colors.transparent,
+            ),
+            padding: EdgeInsetsGeometryMix.symmetric(
+              vertical: RemixTokens.spaceSm(),
+              horizontal: RemixTokens.spaceMd(),
+            ),
+            direction: Axis.horizontal,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+          ),
+          label: TextStyler(
+            style: TextStyleMix(
+              color: RemixTokens.primary(),
+              fontSize: _kFontSizeSm,
+            ),
+          ),
+          icon: IconStyler(
+            color: RemixTokens.primary().withValues(alpha: 0.7),
+            size: 20,
+          ),
+        ),
+      )
+          .onHovered(
+            RemixSelectStyle(
+              trigger: RemixSelectTriggerStyle(
+                container: FlexBoxStyler(
+                  decoration: BoxDecorationMix(
+                    color: RemixTokens.primary().withValues(alpha: 0.06),
+                  ),
+                ),
+              ),
+            ),
+          );
+
+  // Content variants (Radix: solid | soft)
+
+  /// Content: solid — default menu container (alias)
+  static RemixSelectStyle get contentSolid => RemixSelectStyle(
+        menuContainer: BoxStyler(
+          padding: EdgeInsetsMix.symmetric(vertical: RemixTokens.spaceXs()),
+          decoration: BoxDecorationMix(
+            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+            color: RemixTokens.onPrimary(),
+            boxShadow: [
+              BoxShadowMix(
+                color: RemixTokens.primary().withValues(alpha: 0.1),
+                offset: const Offset(0, 2),
+                blurRadius: 8,
+              ),
+            ],
+          ),
+        ),
+      );
+
+  /// Content: soft — tinted background, lighter shadow
+  static RemixSelectStyle get contentSoft => RemixSelectStyle(
+        menuContainer: BoxStyler(
+          padding: EdgeInsetsMix.symmetric(vertical: RemixTokens.spaceXs()),
+          decoration: BoxDecorationMix(
+            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+            color: RemixTokens.primary().withValues(alpha: 0.06),
+            boxShadow: [
+              BoxShadowMix(
+                color: RemixTokens.primary().withValues(alpha: 0.06),
+                offset: const Offset(0, 1),
+                blurRadius: 6,
+              ),
+            ],
+          ),
+        ),
+      );
+
+  // Convenience: component-level variants mapping to trigger only
+  static RemixSelectStyle get classic => defaultStyle.merge(triggerClassic);
+  static RemixSelectStyle get surface => defaultStyle.merge(triggerSurface);
+  static RemixSelectStyle get soft => defaultStyle.merge(triggerSoft);
+  static RemixSelectStyle get ghost => defaultStyle.merge(triggerGhost);
+}

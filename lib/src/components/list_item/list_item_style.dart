@@ -191,27 +191,32 @@ class RemixListItemStyle extends Style<ListItemSpec>
       ];
 }
 
-final DefaultRemixListItemStyle = RemixListItemStyle(
-  container: BoxStyler(
-    padding: EdgeInsetsMix.symmetric(
-      vertical: RemixTokens.spaceMd(),
-      horizontal: RemixTokens.spaceLg(),
-    ),
-  ),
-  contentContainer: BoxStyler(),
-  title: TextStyler(
-    style: TextStyleMix(
-      color: RemixTokens.primary(),
-      fontSize: _kFontSizeLg,
-      fontWeight: FontWeight.w500,
-    ),
-  ),
-  subtitle: TextStyler(
-    style: TextStyleMix(
-      color: RemixTokens.primary().withValues(alpha: 0.6),
-      fontSize: _kFontSizeSm,
-    ),
-  ),
-  leading: IconStyler(color: RemixTokens.primary(), size: _kIconSizeLg),
-  trailing: IconStyler(color: RemixTokens.primary(), size: _kIconSizeMd),
-);
+/// Canonical access to default and variants
+class RemixListItemStyles {
+  /// Default list item style
+  static RemixListItemStyle get defaultStyle => RemixListItemStyle(
+        container: BoxStyler(
+          padding: EdgeInsetsMix.symmetric(
+            vertical: RemixTokens.spaceMd(),
+            horizontal: RemixTokens.spaceLg(),
+          ),
+        ),
+        contentContainer: BoxStyler(),
+        title: TextStyler(
+          style: TextStyleMix(
+            color: RemixTokens.primary(),
+            fontSize: _kFontSizeLg,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        subtitle: TextStyler(
+          style: TextStyleMix(
+            color: RemixTokens.primary().withValues(alpha: 0.6),
+            fontSize: _kFontSizeSm,
+          ),
+        ),
+        leading: IconStyler(color: RemixTokens.primary(), size: _kIconSizeLg),
+        trailing:
+            IconStyler(color: RemixTokens.primary(), size: _kIconSizeMd),
+      );
+}

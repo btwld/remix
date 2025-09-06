@@ -33,7 +33,7 @@ class RemixProgress extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StyleBuilder(
-      style: DefaultRemixProgressStyle.merge(style),
+      style: RemixProgressStyles.defaultStyle.merge(style),
       builder: (context, spec) {
         final Container = spec.container.createWidget;
         final Track = spec.track.createWidget;

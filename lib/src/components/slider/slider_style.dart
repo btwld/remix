@@ -129,36 +129,7 @@ class RemixSliderStyle extends Style<SliderSpec>
       ];
 }
 
-// Default style
-final DefaultRemixSliderStyle = RemixSliderStyle(
-  thumb: BoxStyler(
-    decoration: BoxDecorationMix(
-      border: BoxBorderMix.all(
-        BorderSideMix(color: RemixTokens.primary(), width: _kThumbBorderWidth),
-      ),
-      shape: BoxShape.circle,
-      color: RemixTokens.onPrimary(),
-    ),
-  ),
-).builder((context) {
-  return RemixSliderStyle(
-    baseTrack: Paint()
-      ..strokeWidth = _kTrackWidth
-      ..color = RemixTokens.primary.resolve(context).withValues(alpha: 0.2)
-      ..strokeCap = StrokeCap.round
-      ..style = PaintingStyle.stroke,
-    activeTrack: Paint()
-      ..strokeWidth = _kTrackWidth
-      ..color = RemixTokens.primary.resolve(context)
-      ..strokeCap = StrokeCap.round
-      ..style = PaintingStyle.stroke,
-    division: Paint()
-      ..strokeWidth = _kTrackWidth
-      ..color = RemixTokens.primary.resolve(context).withValues(alpha: 0.26)
-      ..strokeCap = StrokeCap.round
-      ..style = PaintingStyle.stroke,
-  );
-});
+// Default style is provided by RemixSliderStyles.defaultStyle
 
 // Hover style
 final RemixSliderHoverStyle = RemixSliderStyle(
@@ -197,3 +168,40 @@ final RemixSliderDisabledStyle = RemixSliderStyle(
 );
 
 // Removed colorful variants; slider uses single defaultStyle only
+
+/// Canonical access to default and variants
+class RemixSliderStyles {
+  /// Default slider style
+  static RemixSliderStyle get defaultStyle => RemixSliderStyle(
+        thumb: BoxStyler(
+          decoration: BoxDecorationMix(
+            border: BoxBorderMix.all(
+              BorderSideMix(
+                  color: RemixTokens.primary(), width: _kThumbBorderWidth,),
+            ),
+            shape: BoxShape.circle,
+            color: RemixTokens.onPrimary(),
+          ),
+        ),
+      ).builder((context) {
+        return RemixSliderStyle(
+          baseTrack: Paint()
+            ..strokeWidth = _kTrackWidth
+            ..color =
+                RemixTokens.primary.resolve(context).withValues(alpha: 0.2)
+            ..strokeCap = StrokeCap.round
+            ..style = PaintingStyle.stroke,
+          activeTrack: Paint()
+            ..strokeWidth = _kTrackWidth
+            ..color = RemixTokens.primary.resolve(context)
+            ..strokeCap = StrokeCap.round
+            ..style = PaintingStyle.stroke,
+          division: Paint()
+            ..strokeWidth = _kTrackWidth
+            ..color =
+                RemixTokens.primary.resolve(context).withValues(alpha: 0.26)
+            ..strokeCap = StrokeCap.round
+            ..style = PaintingStyle.stroke,
+        );
+      });
+}
