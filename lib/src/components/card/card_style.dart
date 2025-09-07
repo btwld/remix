@@ -139,14 +139,6 @@ class RemixCardStyles {
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
             color: RemixTokens.onPrimary(),
-            boxShadow: [
-              BoxShadowMix(
-                color: RemixTokens.primary().withValues(alpha: 0.1),
-                offset: const Offset(0, 2),
-                blurRadius: 4,
-                spreadRadius: 0,
-              ),
-            ],
           ),
         ),
       );
@@ -157,15 +149,7 @@ class RemixCardStyles {
           padding: EdgeInsetsMix.all(RemixTokens.spaceLg()),
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-            color: Colors.white,
-            boxShadow: [
-              BoxShadowMix(
-                color: RemixTokens.primary().withValues(alpha: 0.1),
-                offset: const Offset(0, 2),
-                blurRadius: 4,
-                spreadRadius: 0,
-              ),
-            ],
+            color: RemixTokens.onPrimary(),
           ),
         ),
       );
@@ -179,10 +163,12 @@ class RemixCardStyles {
               BorderSideMix(color: RemixTokens.primary(), width: 1),
             ),
             borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-            color: Colors.white,
+            color: RemixTokens.onPrimary(),
           ),
         ),
       );
+
+
 }
 
 // Variants are exposed via RemixCardStyles

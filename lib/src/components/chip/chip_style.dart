@@ -226,7 +226,10 @@ class RemixChipStyles {
               container: FlexBoxStyler(
                 decoration: BoxDecorationMix(
                   border: BoxBorderMix.all(
-                    BorderSideMix(color: RemixTokens.primary(), width: 2),
+                    BorderSideMix(
+                      color: RemixTokens.primary().withValues(alpha: 0.40),
+                      width: 2,
+                    ),
                   ),
                 ),
               ),
@@ -241,11 +244,11 @@ class RemixChipStyles {
               ),
               label: TextStyler(
                 style: TextStyleMix(
-                  color: RemixTokens.primary().withValues(alpha: 0.4),
+                  color: RemixTokens.secondary().withValues(alpha: 0.6),
                 ),
               ),
               icon: IconStyler(
-                color: RemixTokens.primary().withValues(alpha: 0.4),
+                color: RemixTokens.secondary().withValues(alpha: 0.6),
               ),
             ),
           );

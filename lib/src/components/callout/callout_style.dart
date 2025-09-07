@@ -165,7 +165,7 @@ class RemixCalloutStyles {
           padding: EdgeInsetsMix.all(RemixTokens.spaceMd()),
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
-              color: RemixTokens.primary().withValues(alpha: 0.2),
+              color: RemixTokens.primary().withValues(alpha: 0.20),
               width: 1,
             )),
             borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
@@ -188,7 +188,7 @@ class RemixCalloutStyles {
           padding: EdgeInsetsGeometryMix.all(RemixTokens.spaceMd()),
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
-              color: RemixTokens.primary().withValues(alpha: 0.2),
+              color: RemixTokens.primary().withValues(alpha: 0.20),
               width: 1,
             )),
             borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
@@ -205,13 +205,18 @@ class RemixCalloutStyles {
         icon: IconStyler(color: RemixTokens.primary(), size: _kIconSizeMd),
       );
 
+
+
   /// Outline callout variant
   static RemixCalloutStyle get outline => RemixCalloutStyle(
         container: BoxStyler(
           padding: EdgeInsetsGeometryMix.all(RemixTokens.spaceMd()),
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(
-              BorderSideMix(color: RemixTokens.primary(), width: 1),
+              BorderSideMix(
+                color: RemixTokens.primary().withValues(alpha: 0.15),
+                width: 1,
+              ),
             ),
             borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
             color: RemixTokens.onPrimary().withValues(alpha: 0.0),

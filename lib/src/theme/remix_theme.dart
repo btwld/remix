@@ -15,7 +15,9 @@ final Set<TokenDefinition> remixLightTokens = {
   // Colors (light)
   RemixTokens.primary.defineValue(const Color(0xFF000000)), // Black
   RemixTokens.onPrimary.defineValue(const Color(0xFFFFFFFF)), // White
+  // muted color tokens removed; use alpha on base tokens inline
   RemixTokens.secondary.defineValue(const Color(0xFF6B7280)), // Gray-500
+  
   RemixTokens.onSecondary.defineValue(const Color(0xFFFFFFFF)),
 
   // Spacing (static)
@@ -26,13 +28,17 @@ final Set<TokenDefinition> remixLightTokens = {
 
   // Radius (static)
   SpaceTokens.radius.defineValue(8.0),
+
+  // Opacity constants are inlined in styles (no tokens)
 };
 
 final Set<TokenDefinition> remixDarkTokens = {
   // Colors (dark)
   RemixTokens.primary.defineValue(const Color(0xFFFFFFFF)), // White
   RemixTokens.onPrimary.defineValue(const Color(0xFF111827)), // Gray-900
+  // muted color tokens removed; use alpha on base tokens inline
   RemixTokens.secondary.defineValue(const Color(0xFF9CA3AF)), // Gray-400
+  
   RemixTokens.onSecondary.defineValue(const Color(0xFF111827)),
 
   // Spacing (static)
@@ -43,6 +49,8 @@ final Set<TokenDefinition> remixDarkTokens = {
 
   // Radius (static)
   SpaceTokens.radius.defineValue(8.0),
+
+  // Opacity constants are inlined in styles (no tokens)
 };
 
 // ============================================================================

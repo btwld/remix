@@ -20,6 +20,7 @@ class RemixTokens {
   /// Secondary neutral/supporting color (outlines, subtle UI)
   static const secondary = MixToken<Color>('remix.color.secondary');
 
+
   /// Foreground that sits on top of [secondary]
   static const onSecondary = MixToken<Color>('remix.color.onSecondary');
 
@@ -41,3 +42,6 @@ class SpaceTokens {
 
   const SpaceTokens._();
 }
+
+/// Opacity/alpha tokens to normalize UI overlays and subtle elements
+// Opacity tokens removed; keep only muted color tokens above.

@@ -143,7 +143,7 @@ class RemixDividerStyles {
           ),
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-            color: RemixTokens.primary().withValues(alpha: 0.2),
+            color: RemixTokens.primary().withValues(alpha: 0.20),
           ),
         ),
       );
@@ -158,7 +158,7 @@ class RemixDividerStyles {
           ),
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-            color: RemixTokens.primary().withValues(alpha: 0.2),
+            color: RemixTokens.primary().withValues(alpha: 0.20),
           ),
         ),
       );
