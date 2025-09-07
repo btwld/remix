@@ -18,14 +18,14 @@ void main() {
       const spec = SpinnerSpec(
         size: 24,
         strokeWidth: 2,
-        color: Colors.red,
+        color: MixColors.red,
         duration: Duration(milliseconds: 500),
         style: SpinnerType.dotted,
       );
 
       expect(spec.size, 24);
       expect(spec.strokeWidth, 2);
-      expect(spec.color, Colors.red);
+      expect(spec.color, MixColors.red);
       expect(spec.duration, const Duration(milliseconds: 500));
       expect(spec.style, SpinnerType.dotted);
     });
@@ -34,19 +34,19 @@ void main() {
       const original = SpinnerSpec(
         size: 24,
         strokeWidth: 2,
-        color: Colors.red,
+        color: MixColors.red,
         duration: Duration(milliseconds: 500),
         style: SpinnerType.solid,
       );
 
       final modified = original.copyWith(
         size: 32,
-        color: Colors.blue,
+        color: MixColors.blue,
       );
 
       expect(modified.size, 32);
       expect(modified.strokeWidth, 2); // preserved
-      expect(modified.color, Colors.blue);
+      expect(modified.color, MixColors.blue);
       expect(modified.duration, const Duration(milliseconds: 500)); // preserved
       expect(modified.style, SpinnerType.solid); // preserved
     });
@@ -55,7 +55,7 @@ void main() {
       const original = SpinnerSpec(
         size: 16,
         strokeWidth: 1.5,
-        color: Colors.green,
+        color: MixColors.green,
         duration: Duration(seconds: 1),
         style: SpinnerType.dotted,
       );
@@ -80,14 +80,14 @@ void main() {
       const a = SpinnerSpec(
         size: 10,
         strokeWidth: 1,
-        color: Colors.red,
+        color: MixColors.red,
         duration: Duration(milliseconds: 500),
         style: SpinnerType.solid,
       );
       const b = SpinnerSpec(
         size: 30,
         strokeWidth: 3,
-        color: Colors.blue,
+        color: MixColors.blue,
         duration: Duration(seconds: 1),
         style: SpinnerType.dotted,
       );
@@ -108,9 +108,9 @@ void main() {
     });
 
     test('props equality works correctly', () {
-      const s1 = SpinnerSpec(size: 24, strokeWidth: 2, color: Colors.red);
-      const s2 = SpinnerSpec(size: 24, strokeWidth: 2, color: Colors.red);
-      const s3 = SpinnerSpec(size: 32, strokeWidth: 2, color: Colors.red);
+      const s1 = SpinnerSpec(size: 24, strokeWidth: 2, color: MixColors.red);
+      const s2 = SpinnerSpec(size: 24, strokeWidth: 2, color: MixColors.red);
+      const s3 = SpinnerSpec(size: 32, strokeWidth: 2, color: MixColors.red);
 
       expect(s1.props, equals(s2.props));
       expect(s1.props, isNot(equals(s3.props)));

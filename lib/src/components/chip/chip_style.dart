@@ -1,10 +1,7 @@
 part of 'chip.dart';
 
 // Private per-component constants (sizes only)
-const _kFontSizeSm = 12.0;
 const _kFontSizeMd = 14.0;
-
-const _kIconSizeSm = 14.0;
 const _kIconSizeMd = 16.0;
 
 class RemixChipStyle extends Style<ChipSpec>
@@ -283,7 +280,7 @@ class RemixChipStyles {
               BorderSideMix(color: RemixTokens.primary(), width: 1),
             ),
             borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-            color: Colors.transparent,
+            color: MixColors.transparent,
           ),
           padding: EdgeInsetsMix.symmetric(
             vertical: RemixTokens.spaceXs(),
@@ -300,29 +297,4 @@ class RemixChipStyles {
         icon: IconStyler(color: RemixTokens.primary(), size: _kIconSizeMd),
       );
 
-  /// Compact chip variant (size-only utility)
-  static RemixChipStyle get compact => RemixChipStyle(
-        container: FlexBoxStyler(
-          decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-            color: RemixTokens.onPrimary(),
-          ),
-          padding: EdgeInsetsMix.symmetric(
-            vertical: RemixTokens.spaceXs() * 0.5,
-            horizontal: RemixTokens.spaceSm(),
-          ),
-          direction: Axis.horizontal,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          spacing: RemixTokens.spaceXs() * 0.5,
-        ),
-        label: TextStyler(
-          style: TextStyleMix(
-            color: RemixTokens.primary(),
-            fontSize: _kFontSizeSm,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        icon: IconStyler(color: RemixTokens.primary(), size: _kIconSizeSm),
-      );
 }

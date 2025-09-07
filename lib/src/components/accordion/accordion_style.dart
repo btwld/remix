@@ -310,7 +310,7 @@ class RemixAccordionStyles {
               BorderSideMix(color: RemixTokens.primary(), width: 1),
             ),
             borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-            color: Colors.transparent,
+            color: MixColors.transparent,
           ),
         ),
         content: BoxStyler(
@@ -391,52 +391,6 @@ class RemixAccordionStyles {
             ),
           );
 
-  /// Compact size variant (reduced spacing and radius)
-  static RemixAccordionStyle get compact => RemixAccordionStyle(
-        container: BoxStyler(
-          margin: EdgeInsetsMix(bottom: RemixTokens.spaceSm()),
-          decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(
-              BorderSideMix(
-                color: RemixTokens.primary().withValues(alpha: 0.20),
-                width: 1,
-              ),
-            ),
-            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-            color: RemixTokens.onPrimary(),
-          ),
-        ),
-        content: BoxStyler(
-          padding: EdgeInsetsMix.fromLTRB(
-            RemixTokens.spaceSm(),
-            0,
-            RemixTokens.spaceSm(),
-            RemixTokens.spaceSm(),
-          ),
-          constraints: BoxConstraintsMix(minWidth: double.infinity),
-        ),
-        contentText: TextStyler(
-          style: TextStyleMix(
-            color: RemixTokens.primary(),
-            fontSize: _kFontSizeSm,
-          ),
-        ),
-        header: BoxStyler(padding: EdgeInsetsMix.all(RemixTokens.spaceSm())),
-        headerLabel: RemixLabelStyle(
-          label: TextStyler(
-            style: TextStyleMix(
-              color: RemixTokens.primary(),
-              fontSize: _kFontSizeSm,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          icon: IconStyler(
-            color: RemixTokens.primary().withValues(alpha: 0.60),
-            size: _kIconSizeMd,
-          ),
-          flex: FlexStyler(spacing: RemixTokens.spaceXs()),
-        ),
-      );
 
   /// Default style alias
   static RemixAccordionStyle get defaultStyle => solid;

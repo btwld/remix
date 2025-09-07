@@ -65,7 +65,7 @@ void main() {
                     Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 4, vertical: 2),
-                      color: Colors.amber,
+                      color: MixColors.amber,
                       child: const Text('NEW', style: TextStyle(fontSize: 10)),
                     ),
                   ],

@@ -190,8 +190,7 @@ class RemixProgressStyle extends Style<ProgressSpec>
 /// Canonical access to default and variants
 class RemixProgressStyles {
   /// Default progress style
-  /// Solid progress style (default filled appearance)
-  static RemixProgressStyle get solid => RemixProgressStyle(
+  static RemixProgressStyle get defaultStyle => RemixProgressStyle(
         container: BoxStyler(
           constraints: BoxConstraintsMix(
             minHeight: _kBarHeight,
@@ -215,42 +214,4 @@ class RemixProgressStyles {
         ),
         trackContainer: BoxStyler(),
       );
-
-  /// Outline progress style - bordered track with lighter colors
-  static RemixProgressStyle get outline =>
-      RemixProgressStyle().builder((context) {
-        final primary = RemixTokens.primary.resolve(context);
-
-        return RemixProgressStyle(
-          container: BoxStyler(
-            constraints: BoxConstraintsMix(
-              minHeight: _kBarHeight,
-              maxHeight: _kBarHeight,
-            ),
-            decoration: BoxDecorationMix(
-              border: BoxBorderMix.all(
-                BorderSideMix(
-                  color: primary.withValues(alpha: 0.20),
-                  width: 1,
-                ),
-              ),
-              borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-            ),
-            clipBehavior: Clip.antiAlias,
-          ),
-          track: BoxStyler(
-            decoration: BoxDecorationMix(color: Colors.transparent),
-          ),
-          indicator: BoxStyler(
-            decoration: BoxDecorationMix(
-              borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-              color: primary.withValues(alpha: 0.60),
-            ),
-          ),
-          trackContainer: BoxStyler(),
-        );
-      });
-
-  /// Default style alias
-  static RemixProgressStyle get defaultStyle => solid;
 }

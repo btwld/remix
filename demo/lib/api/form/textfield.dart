@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mix/mix.dart';
 import 'package:remix/remix.dart';
 
 void main() {
@@ -30,7 +31,7 @@ class _NewWidgetState extends State<NewWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: MixColors.white,
       body: Center(
         child: RemixTextField(
           hintText: 'Enter username here',

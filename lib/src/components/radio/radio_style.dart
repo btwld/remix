@@ -210,7 +210,7 @@ class RemixRadioStyles {
               BorderSideMix(color: RemixTokens.primary(), width: 1.5),
             ),
             shape: BoxShape.circle,
-            color: Colors.transparent,
+            color: MixColors.transparent,
           ),
         ),
         indicator: BoxStyler(
@@ -298,7 +298,7 @@ class RemixRadioStyles {
               BorderSideMix(color: RemixTokens.primary(), width: 1.5),
             ),
             shape: BoxShape.circle,
-            color: Colors.transparent,
+            color: MixColors.transparent,
           ),
         ),
         indicator: BoxStyler(

@@ -153,11 +153,13 @@ class RemixLabelStyle extends Style<LabelSpec>
 
 /// Default label styles and variants
 class RemixLabelStyles {
-  /// Default label style (simple)
+  /// Default label style (positioning component)
   static RemixLabelStyle get defaultStyle => RemixLabelStyle(
         label: TextStyler(
           style: TextStyleMix(
-              color: RemixTokens.primary(), fontSize: _kFontSizeMd,),
+            color: RemixTokens.primary(),
+            fontSize: _kFontSizeMd,
+          ),
         ),
         icon: IconStyler(color: RemixTokens.primary(), size: 20),
         flex: FlexStyler(spacing: RemixTokens.spaceSm()),
