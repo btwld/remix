@@ -66,11 +66,12 @@ class _ViewportFrame extends StatelessWidget {
       width: size.width,
       height: size.height,
       decoration: BoxDecoration(
-        color: brightness == Brightness.light ? Colors.white : Colors.black,
-        border: Border.all(color: Colors.grey.shade300),
+        color:
+            brightness == Brightness.light ? MixColors.white : MixColors.black,
+        border: Border.all(color: MixColors.greySwatch[300]!),
         borderRadius: BorderRadius.circular(8),
         boxShadow: const [
-          BoxShadow(blurRadius: 24, color: Colors.black12),
+          BoxShadow(blurRadius: 24, color: MixColors.black12),
         ],
       ),
       clipBehavior: Clip.antiAlias,
@@ -86,7 +87,7 @@ class _ViewportFrame extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(brightness: brightness),
         home: Scaffold(
-          backgroundColor: Colors.transparent,
+          backgroundColor: MixColors.transparent,
           body: Center(child: child),
         ),
       ),
@@ -99,4 +100,3 @@ class _ViewportFrame extends StatelessWidget {
     ]);
   }
 }
-

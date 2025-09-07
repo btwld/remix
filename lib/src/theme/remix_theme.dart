@@ -13,12 +13,11 @@ import 'remix_tokens.dart';
 // ============================================================================
 final Set<TokenDefinition> remixLightTokens = {
   // Colors (light)
-  RemixTokens.primary.defineValue(const Color(0xFF000000)), // Black
-  RemixTokens.onPrimary.defineValue(const Color(0xFFFFFFFF)), // White
-  // muted color tokens removed; use alpha on base tokens inline
-  RemixTokens.secondary.defineValue(const Color(0xFF6B7280)), // Gray-500
-  
-  RemixTokens.onSecondary.defineValue(const Color(0xFFFFFFFF)),
+  RemixTokens.primary.defineValue(MixColors.black), // Black
+  RemixTokens.onPrimary.defineValue(MixColors.white), // White
+  // Use MixColors swatches (no hex)
+  RemixTokens.secondary.defineValue(MixColors.greySwatch[500]!),
+  RemixTokens.onSecondary.defineValue(MixColors.white),
 
   // Spacing (static)
   RemixTokens.spaceXs.defineValue(4.0),
@@ -34,12 +33,11 @@ final Set<TokenDefinition> remixLightTokens = {
 
 final Set<TokenDefinition> remixDarkTokens = {
   // Colors (dark)
-  RemixTokens.primary.defineValue(const Color(0xFFFFFFFF)), // White
-  RemixTokens.onPrimary.defineValue(const Color(0xFF111827)), // Gray-900
-  // muted color tokens removed; use alpha on base tokens inline
-  RemixTokens.secondary.defineValue(const Color(0xFF9CA3AF)), // Gray-400
-  
-  RemixTokens.onSecondary.defineValue(const Color(0xFF111827)),
+  RemixTokens.primary.defineValue(MixColors.white), // White
+  RemixTokens.onPrimary.defineValue(MixColors.greySwatch[900]!),
+  // Use MixColors swatches (no hex)
+  RemixTokens.secondary.defineValue(MixColors.greySwatch[400]!),
+  RemixTokens.onSecondary.defineValue(MixColors.greySwatch[900]!),
 
   // Spacing (static)
   RemixTokens.spaceXs.defineValue(4.0),

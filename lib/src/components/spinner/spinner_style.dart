@@ -150,30 +150,19 @@ class RemixSpinnerStyles {
         style: SpinnerType.solid,
       );
 
-  /// Small spinner style
+
+
+  /// Size variants
+  
+  /// Small size variant
   static RemixSpinnerStyle get small => RemixSpinnerStyle(
         size: _kSizeSm,
         strokeWidth: _kStrokeSm,
-        color: RemixTokens.primary(),
-        duration: const Duration(milliseconds: _kDurationMs),
-        style: SpinnerType.solid,
       );
 
-  /// Large spinner style
+  /// Large size variant
   static RemixSpinnerStyle get large => RemixSpinnerStyle(
         size: _kSizeLg,
         strokeWidth: 2.0,
-        color: RemixTokens.primary(),
-        duration: const Duration(milliseconds: _kDurationMs),
-        style: SpinnerType.solid,
-      );
-
-  /// Dotted spinner style
-  static RemixSpinnerStyle get dotted => RemixSpinnerStyle(
-        size: _kSizeMd,
-        strokeWidth: _kStrokeMd,
-        color: RemixTokens.primary(),
-        duration: const Duration(milliseconds: _kDurationMs),
-        style: SpinnerType.dotted,
       );
 }

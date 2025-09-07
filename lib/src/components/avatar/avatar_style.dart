@@ -221,8 +221,8 @@ class RemixAvatarStyle extends Style<AvatarSpec>
 
 /// Default avatar styles and variants
 class RemixAvatarStyles {
-  /// Solid avatar style (default) - primary background with onPrimary text/icon
-  static RemixAvatarStyle get solid => RemixAvatarStyle(
+  /// Default avatar style
+  static RemixAvatarStyle get defaultStyle => RemixAvatarStyle(
         container: BoxStyler(
           alignment: Alignment.center,
           constraints: BoxConstraintsMix(
@@ -248,34 +248,6 @@ class RemixAvatarStyles {
             IconStyler(color: RemixTokens.onPrimary(), size: _kIconSizeMedium),
       );
 
-  /// Outline avatar style - transparent background with primary border
-  static RemixAvatarStyle get outline => RemixAvatarStyle(
-        container: BoxStyler(
-          alignment: Alignment.center,
-          constraints: BoxConstraintsMix(
-            minWidth: _kSizeMedium,
-            maxWidth: _kSizeMedium,
-            minHeight: _kSizeMedium,
-            maxHeight: _kSizeMedium,
-          ),
-          decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(
-              BorderSideMix(color: RemixTokens.primary(), width: 1),
-            ),
-            shape: BoxShape.circle,
-            color: Colors.transparent,
-          ),
-          clipBehavior: Clip.antiAlias,
-        ),
-        text: TextStyler(
-          style: TextStyleMix(
-            color: RemixTokens.primary(),
-            fontSize: _kFontSizeMedium,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-        icon: IconStyler(color: RemixTokens.primary(), size: _kIconSizeMedium),
-      );
 
 
   /// Small size variant
@@ -330,6 +302,4 @@ class RemixAvatarStyles {
         icon: IconStyler(color: RemixTokens.onPrimary(), size: _kIconSizeLarge),
       );
 
-  /// Default style alias
-  static RemixAvatarStyle get defaultStyle => solid;
 }

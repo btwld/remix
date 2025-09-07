@@ -216,7 +216,8 @@ class RemixListItemStyles {
           ),
         ),
         leading: IconStyler(color: RemixTokens.primary(), size: _kIconSizeLg),
-        trailing:
-            IconStyler(color: RemixTokens.primary(), size: _kIconSizeMd),
+        trailing: IconStyler(color: RemixTokens.primary(), size: _kIconSizeMd),
       );
+
+
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mix/mix.dart';
 
 // Simple mock button to test the test infrastructure
 class SimpleButton extends StatelessWidget {
@@ -7,7 +8,7 @@ class SimpleButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final bool enabled;
   final bool loading;
-  
+
   const SimpleButton({
     super.key,
     required this.label,
@@ -15,7 +16,7 @@ class SimpleButton extends StatelessWidget {
     this.enabled = true,
     this.loading = false,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -23,12 +24,12 @@ class SimpleButton extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: enabled ? Colors.blue : Colors.grey,
+          color: enabled ? MixColors.blue : MixColors.grey,
           borderRadius: BorderRadius.circular(8),
         ),
         child: loading
             ? const CircularProgressIndicator()
-            : Text(label, style: const TextStyle(color: Colors.white)),
+            : Text(label, style: const TextStyle(color: MixColors.white)),
       ),
     );
   }
@@ -49,13 +50,14 @@ void main() {
           ),
         ),
       );
-      
+
       expect(find.text('Test Button'), findsOneWidget);
     });
-    
-    testWidgets('Button responds to tap when enabled', (WidgetTester tester) async {
+
+    testWidgets('Button responds to tap when enabled',
+        (WidgetTester tester) async {
       bool wasPressed = false;
-      
+
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -70,16 +72,17 @@ void main() {
           ),
         ),
       );
-      
+
       await tester.tap(find.text('Tap Me'));
       await tester.pumpAndSettle();
-      
+
       expect(wasPressed, isTrue);
     });
-    
-    testWidgets('Button does not respond when disabled', (WidgetTester tester) async {
+
+    testWidgets('Button does not respond when disabled',
+        (WidgetTester tester) async {
       bool wasPressed = false;
-      
+
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -95,13 +98,13 @@ void main() {
           ),
         ),
       );
-      
+
       await tester.tap(find.text('Disabled'));
       await tester.pumpAndSettle();
-      
+
       expect(wasPressed, isFalse);
     });
-    
+
     testWidgets('Button shows loading state', (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
@@ -116,11 +119,11 @@ void main() {
           ),
         ),
       );
-      
+
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
       expect(find.text('Loading'), findsNothing);
     });
   });
-  
+
   print('✅ All simple button tests passed! Test infrastructure is working.');
 }

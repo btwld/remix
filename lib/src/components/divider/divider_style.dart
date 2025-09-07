@@ -133,7 +133,7 @@ class RemixDividerStyle extends Style<DividerSpec>
 
 /// Default divider styles and variants
 class RemixDividerStyles {
-  /// Default divider style
+  /// Default divider style (layout utility)
   static RemixDividerStyle get defaultStyle => RemixDividerStyle(
         container: BoxStyler(
           constraints: BoxConstraintsMix(
@@ -177,7 +177,4 @@ class RemixDividerStyles {
           ),
         ),
       );
-
-  /// Dark divider variant
-  // Removed colorful variants; keeping simple default and utility variants only
 }

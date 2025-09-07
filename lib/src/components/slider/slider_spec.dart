@@ -10,7 +10,7 @@ Paint lerpPaint(Paint? a, Paint? b, double t) {
   if (b == null) return Paint.from(a);
 
   return Paint()
-    ..color = Color.lerp(a.color, b.color, t) ?? Colors.grey
+    ..color = Color.lerp(a.color, b.color, t) ?? MixColors.grey
     ..strokeWidth = lerpDouble(a.strokeWidth, b.strokeWidth, t) ?? 8.0
     ..strokeCap = t < 0.5 ? a.strokeCap : b.strokeCap
     ..style = PaintingStyle.stroke // Always stroke for slider tracks
@@ -19,26 +19,26 @@ Paint lerpPaint(Paint? a, Paint? b, double t) {
 
 // Default paint for fallback
 final _defaultPaint = Paint()
-  ..color = Colors.grey
+  ..color = MixColors.grey
   ..strokeWidth = 8.0
   ..strokeCap = StrokeCap.round
   ..style = PaintingStyle.stroke;
 
 // Default Paint configurations (replacing PaintData defaults)
 final _defaultBaseTrackPaint = Paint()
-  ..color = Colors.grey
+  ..color = MixColors.grey
   ..strokeWidth = 8.0
   ..strokeCap = StrokeCap.round
   ..style = PaintingStyle.stroke;
 
 final _defaultActiveTrackPaint = Paint()
-  ..color = Colors.black
+  ..color = MixColors.black
   ..strokeWidth = 8.0
   ..strokeCap = StrokeCap.round
   ..style = PaintingStyle.stroke;
 
 final _defaultDivisionPaint = Paint()
-  ..color = const Color(0x42000000) // Colors.black.withAlpha(66)
+  ..color = MixColors.black.withAlpha(66)
   ..strokeWidth = 8.0
   ..strokeCap = StrokeCap.round
   ..style = PaintingStyle.stroke;

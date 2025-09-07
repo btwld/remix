@@ -19,7 +19,7 @@ void main() {
     });
 
     test('creates with specified values', () {
-      const decoration = BoxDecoration(color: Colors.blue);
+      const decoration = BoxDecoration(color: MixColors.blue);
       const padding = EdgeInsets.all(16);
       const alignment = Alignment.center;
       const clipBehavior = Clip.antiAlias;
@@ -39,7 +39,7 @@ void main() {
 
     test('copyWith works correctly', () {
       const originalSpec = BoxSpec(
-        decoration: BoxDecoration(color: Colors.blue),
+        decoration: BoxDecoration(color: MixColors.blue),
         padding: EdgeInsets.all(16),
       );
 
@@ -55,7 +55,7 @@ void main() {
 
     test('copyWith with null values preserves original', () {
       const originalSpec = BoxSpec(
-        decoration: BoxDecoration(color: Colors.blue),
+        decoration: BoxDecoration(color: MixColors.blue),
         padding: EdgeInsets.all(16),
       );
 
@@ -92,15 +92,15 @@ void main() {
 
     test('props equality works correctly', () {
       const spec1 = BoxSpec(
-        decoration: BoxDecoration(color: Colors.blue),
+        decoration: BoxDecoration(color: MixColors.blue),
         padding: EdgeInsets.all(16),
       );
       const spec2 = BoxSpec(
-        decoration: BoxDecoration(color: Colors.blue),
+        decoration: BoxDecoration(color: MixColors.blue),
         padding: EdgeInsets.all(16),
       );
       const spec3 = BoxSpec(
-        decoration: BoxDecoration(color: Colors.red),
+        decoration: BoxDecoration(color: MixColors.red),
         padding: EdgeInsets.all(16),
       );
 
@@ -116,7 +116,7 @@ void main() {
           home: Builder(
             builder: (context) {
               final mix = BoxStyler(
-                decoration: BoxDecorationMix(color: Colors.blue),
+                decoration: BoxDecorationMix(color: MixColors.blue),
                 padding: EdgeInsetsMix.all(16),
                 alignment: Alignment.center,
                 margin: EdgeInsetsMix.symmetric(horizontal: 8),
@@ -130,7 +130,7 @@ void main() {
               // Check actual resolved values
               expect(spec.decoration, isA<BoxDecoration>());
               expect((spec.decoration as BoxDecoration).color,
-                  equals(Colors.blue));
+                  equals(MixColors.blue));
               expect(spec.padding, equals(const EdgeInsets.all(16)));
               expect(spec.alignment, equals(Alignment.center));
               expect(spec.margin,
@@ -146,12 +146,12 @@ void main() {
 
     test('merge works correctly', () {
       final mix1 = BoxStyler(
-        decoration: BoxDecorationMix(color: Colors.blue),
+        decoration: BoxDecorationMix(color: MixColors.blue),
         padding: EdgeInsetsMix.all(16),
       );
 
       final mix2 = BoxStyler(
-        decoration: BoxDecorationMix(color: Colors.red),
+        decoration: BoxDecorationMix(color: MixColors.red),
         margin: EdgeInsetsMix.all(8),
       );
 
@@ -172,11 +172,11 @@ void main() {
 
     test('constructors via named args create valid mixes', () {
       final colorMix =
-          BoxStyler(decoration: BoxDecorationMix(color: Colors.red));
+          BoxStyler(decoration: BoxDecorationMix(color: MixColors.red));
       expect(colorMix, isA<BoxStyler>());
 
       final decorationMix =
-          BoxStyler(decoration: BoxDecorationMix(color: Colors.blue));
+          BoxStyler(decoration: BoxDecorationMix(color: MixColors.blue));
       expect(decorationMix, isA<BoxStyler>());
 
       final paddingMix = BoxStyler(padding: EdgeInsetsMix.all(20));
@@ -200,7 +200,7 @@ void main() {
     });
 
     test('merge composition works correctly', () {
-      final mix = BoxStyler(decoration: BoxDecorationMix(color: Colors.green))
+      final mix = BoxStyler(decoration: BoxDecorationMix(color: MixColors.green))
           .merge(BoxStyler(padding: EdgeInsetsMix.all(12)))
           .merge(BoxStyler(alignment: Alignment.bottomRight))
           .merge(BoxStyler(clipBehavior: Clip.hardEdge));
@@ -210,15 +210,15 @@ void main() {
 
     test('props equality works correctly', () {
       final mix1 = BoxStyler(
-        decoration: BoxDecorationMix(color: Colors.blue),
+        decoration: BoxDecorationMix(color: MixColors.blue),
         padding: EdgeInsetsMix.all(16),
       );
       final mix2 = BoxStyler(
-        decoration: BoxDecorationMix(color: Colors.blue),
+        decoration: BoxDecorationMix(color: MixColors.blue),
         padding: EdgeInsetsMix.all(16),
       );
       final mix3 = BoxStyler(
-        decoration: BoxDecorationMix(color: Colors.red),
+        decoration: BoxDecorationMix(color: MixColors.red),
         padding: EdgeInsetsMix.all(16),
       );
 
@@ -227,7 +227,7 @@ void main() {
     });
 
     test('can compose multiple operations via merge', () {
-      final mix = BoxStyler(decoration: BoxDecorationMix(color: Colors.blue))
+      final mix = BoxStyler(decoration: BoxDecorationMix(color: MixColors.blue))
           .merge(BoxStyler(padding: EdgeInsetsMix.all(16)))
           .merge(BoxStyler(margin: EdgeInsetsMix.symmetric(horizontal: 8)))
           .merge(BoxStyler(alignment: Alignment.center))
@@ -255,7 +255,7 @@ void main() {
                 // Verify resolved values before using in widget
                 expect(spec.decoration, isA<BoxDecoration>());
                 expect((spec.decoration as BoxDecoration).color,
-                    equals(Colors.blue));
+                    equals(MixColors.blue));
                 expect(spec.padding, equals(const EdgeInsets.all(16)));
                 expect(spec.alignment, equals(Alignment.center));
                 expect(spec.margin, equals(const EdgeInsets.all(8)));

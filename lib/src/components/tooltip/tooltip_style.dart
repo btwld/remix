@@ -160,9 +160,12 @@ class RemixTooltipStyles {
         ),
         text: TextStyler(
           style: TextStyleMix(
-              color: RemixTokens.onPrimary(), fontSize: _kFontSizeSm,),
+            color: RemixTokens.onPrimary(),
+            fontSize: _kFontSizeSm,
+          ),
         ),
-        animation:
-            AnimationConfig.ease(const Duration(milliseconds: 100)),
+        animation: AnimationConfig.ease(const Duration(milliseconds: 100)),
       );
+
+
 }

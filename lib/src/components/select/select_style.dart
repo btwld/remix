@@ -555,7 +555,7 @@ class RemixSelectStyles {
                 BorderSideMix(color: RemixTokens.primary(), width: 1),
               ),
               borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-              color: Colors.transparent,
+              color: MixColors.transparent,
             ),
             padding: EdgeInsetsGeometryMix.symmetric(
               vertical: RemixTokens.spaceSm(),

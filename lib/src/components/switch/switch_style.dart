@@ -168,8 +168,7 @@ class RemixSwitchStyle extends Style<SwitchSpec>
 /// Canonical access to default and variants
 class RemixSwitchStyles {
   /// Default switch style
-  /// Solid switch style (default filled appearance)
-  static RemixSwitchStyle get solid => RemixSwitchStyle(
+  static RemixSwitchStyle get defaultStyle => RemixSwitchStyle(
         container: BoxStyler(),
         track: BoxStyler(
           constraints: BoxConstraintsMix(
@@ -197,41 +196,5 @@ class RemixSwitchStyles {
         ),
       );
 
-  /// Outline switch style - outlined track with border
-  static RemixSwitchStyle get outline => RemixSwitchStyle(
-        container: BoxStyler(),
-        track: BoxStyler(
-          constraints: BoxConstraintsMix(
-            minWidth: _kTrackWidth,
-            maxWidth: _kTrackWidth,
-            minHeight: _kTrackHeight,
-            maxHeight: _kTrackHeight,
-          ),
-          decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(
-              BorderSideMix(
-                color: RemixTokens.primary().withValues(alpha: 0.30),
-                width: 1,
-              ),
-            ),
-            borderRadius: BorderRadiusMix.circular(_kTrackHeight),
-            color: Colors.transparent,
-          ),
-        ),
-        thumb: BoxStyler(
-          constraints: BoxConstraintsMix(
-            minWidth: _kThumbSize,
-            maxWidth: _kThumbSize,
-            minHeight: _kThumbSize,
-            maxHeight: _kThumbSize,
-          ),
-          decoration: BoxDecorationMix(
-            shape: BoxShape.circle,
-            color: RemixTokens.onPrimary(),
-          ),
-        ),
-      );
 
-  /// Default style alias
-  static RemixSwitchStyle get defaultStyle => solid;
 }

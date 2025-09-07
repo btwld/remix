@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mix/mix.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
         //
         // TRY THIS: Try running your application with "flutter run". You'll see
         // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
+        // try changing the seedColor in the colorScheme below to MixColors.green
         // and then invoke "hot reload" (save your changes or press the "hot
         // reload" button in a Flutter-supported IDE, or press "r" if you used
         // the command line to start the app).
@@ -29,7 +30,8 @@ class MyApp extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme:
+            ColorScheme.fromSeed(seedColor: MixColors.deepPurple),
       ),
     );
   }
@@ -81,7 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
         // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
+        // MixColors.amber, perhaps?) and trigger a hot reload to see the AppBar
         // change color while the other colors stay the same.
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
