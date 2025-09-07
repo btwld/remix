@@ -85,7 +85,7 @@ class _SpinnerSpecWidgetState extends State<_SpinnerSpecWidget>
   @override
   Widget build(BuildContext context) {
     final spec = widget.spec;
-    final color = spec.color ?? Colors.grey;
+    final color = spec.color ?? RemixTokens.secondary();
     final strokeWidth = spec.strokeWidth ?? 1.5;
     final size = spec.size ?? 24;
     final style = spec.style ?? SpinnerType.solid;

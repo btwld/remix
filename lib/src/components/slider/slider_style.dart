@@ -148,7 +148,7 @@ final RemixSliderDisabledStyle = RemixSliderStyle(
     decoration: BoxDecorationMix(
       border: BoxBorderMix.all(
         BorderSideMix(
-          color: RemixTokens.primary().withValues(alpha: 0.4),
+          color: RemixTokens.primary().withValues(alpha: 0.40),
           width: _kThumbBorderWidth,
         ),
       ),
@@ -162,7 +162,7 @@ final RemixSliderDisabledStyle = RemixSliderStyle(
     ..style = PaintingStyle.stroke,
   activeTrack: Paint()
     ..strokeWidth = _kTrackWidth
-    ..color = RemixTokens.primary().withValues(alpha: 0.2)
+    ..color = RemixTokens.primary().withValues(alpha: 0.20)
     ..strokeCap = StrokeCap.round
     ..style = PaintingStyle.stroke,
 );
@@ -172,12 +172,15 @@ final RemixSliderDisabledStyle = RemixSliderStyle(
 /// Canonical access to default and variants
 class RemixSliderStyles {
   /// Default slider style
-  static RemixSliderStyle get defaultStyle => RemixSliderStyle(
+  /// Solid slider style (default filled appearance)
+  static RemixSliderStyle get solid => RemixSliderStyle(
         thumb: BoxStyler(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(
               BorderSideMix(
-                  color: RemixTokens.primary(), width: _kThumbBorderWidth,),
+                color: RemixTokens.primary(),
+                width: _kThumbBorderWidth,
+              ),
             ),
             shape: BoxShape.circle,
             color: RemixTokens.onPrimary(),
@@ -188,7 +191,7 @@ class RemixSliderStyles {
           baseTrack: Paint()
             ..strokeWidth = _kTrackWidth
             ..color =
-                RemixTokens.primary.resolve(context).withValues(alpha: 0.2)
+                RemixTokens.primary.resolve(context).withValues(alpha: 0.20)
             ..strokeCap = StrokeCap.round
             ..style = PaintingStyle.stroke,
           activeTrack: Paint()
@@ -204,4 +207,39 @@ class RemixSliderStyles {
             ..style = PaintingStyle.stroke,
         );
       });
+
+  /// Outline slider style - outlined thumb with lighter track
+  static RemixSliderStyle get outline => RemixSliderStyle().builder((context) {
+        final primary = RemixTokens.primary.resolve(context);
+
+        return RemixSliderStyle(
+          thumb: BoxStyler(
+            decoration: BoxDecorationMix(
+              border: BoxBorderMix.all(
+                BorderSideMix(color: primary, width: _kThumbBorderWidth),
+              ),
+              shape: BoxShape.circle,
+              color: RemixTokens.onPrimary(),
+            ),
+          ),
+          baseTrack: Paint()
+            ..strokeWidth = _kTrackWidth
+            ..color = primary.withValues(alpha: 0.20)
+            ..strokeCap = StrokeCap.round
+            ..style = PaintingStyle.stroke,
+          activeTrack: Paint()
+            ..strokeWidth = _kTrackWidth
+            ..color = primary.withValues(alpha: 0.60)
+            ..strokeCap = StrokeCap.round
+            ..style = PaintingStyle.stroke,
+          division: Paint()
+            ..strokeWidth = _kTrackWidth
+            ..color = primary.withValues(alpha: 0.26)
+            ..strokeCap = StrokeCap.round
+            ..style = PaintingStyle.stroke,
+        );
+      });
+
+  /// Default style alias
+  static RemixSliderStyle get defaultStyle => solid;
 }

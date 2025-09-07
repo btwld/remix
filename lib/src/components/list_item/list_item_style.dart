@@ -211,7 +211,7 @@ class RemixListItemStyles {
         ),
         subtitle: TextStyler(
           style: TextStyleMix(
-            color: RemixTokens.primary().withValues(alpha: 0.6),
+            color: RemixTokens.secondary().withValues(alpha: 0.6),
             fontSize: _kFontSizeSm,
           ),
         ),

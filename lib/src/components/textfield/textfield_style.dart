@@ -382,17 +382,19 @@ final RemixTextFieldErrorStyle = RemixTextFieldStyle(
 // Disabled style
 final RemixTextFieldDisabledStyle = RemixTextFieldStyle(
   text: TextStyler(
-    style: TextStyleMix(color: RemixTokens.primary().withValues(alpha: 0.4)),
+    style: TextStyleMix(
+      color: RemixTokens.primary().withValues(alpha: 0.40),
+    ),
   ),
   container: FlexBoxStyler(
     decoration: BoxDecorationMix(
       border: BoxBorderMix.all(
         BorderSideMix(
-          color: RemixTokens.primary().withValues(alpha: 0.1),
+          color: RemixTokens.primary().withValues(alpha: 0.06),
           width: 1,
         ),
       ),
-      color: RemixTokens.primary().withValues(alpha: 0.05),
+      color: RemixTokens.primary().withValues(alpha: 0.03),
     ),
   ),
 );
@@ -405,7 +407,9 @@ class RemixTextFieldStyles {
   static RemixTextFieldStyle get defaultStyle => RemixTextFieldStyle(
         text: TextStyler(
           style: TextStyleMix(
-              color: RemixTokens.primary(), fontSize: _kFontSizeMd,),
+            color: RemixTokens.primary(),
+            fontSize: _kFontSizeMd,
+          ),
         ),
         hintText: TextStyler(
           style:
@@ -423,7 +427,7 @@ class RemixTextFieldStyles {
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(
               BorderSideMix(
-                color: RemixTokens.primary().withValues(alpha: 0.2),
+                color: RemixTokens.primary().withValues(alpha: 0.20),
                 width: 1,
               ),
             ),
@@ -439,7 +443,7 @@ class RemixTextFieldStyles {
         ),
         helperText: TextStyler(
           style: TextStyleMix(
-            color: RemixTokens.primary().withValues(alpha: 0.7),
+            color: RemixTokens.secondary().withValues(alpha: 0.6),
             fontSize: _kFontSizeSm,
           ),
         ),
@@ -478,7 +482,7 @@ class RemixTextFieldStyles {
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(
               BorderSideMix(
-                color: RemixTokens.primary().withValues(alpha: 0.2),
+                color: RemixTokens.primary().withValues(alpha: 0.20),
                 width: 1,
               ),
             ),
@@ -494,7 +498,7 @@ class RemixTextFieldStyles {
         ),
         helperText: TextStyler(
           style: TextStyleMix(
-            color: RemixTokens.primary().withValues(alpha: 0.7),
+            color: RemixTokens.secondary().withValues(alpha: 0.6),
             fontSize: _kFontSizeSm,
           ),
         ),
@@ -537,7 +541,7 @@ class RemixTextFieldStyles {
         ),
         helperText: TextStyler(
           style: TextStyleMix(
-            color: RemixTokens.primary().withValues(alpha: 0.7),
+            color: RemixTokens.secondary().withValues(alpha: 0.6),
             fontSize: _kFontSizeSm,
           ),
         ),

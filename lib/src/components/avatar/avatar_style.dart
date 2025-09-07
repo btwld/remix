@@ -277,6 +277,7 @@ class RemixAvatarStyles {
         icon: IconStyler(color: RemixTokens.primary(), size: _kIconSizeMedium),
       );
 
+
   /// Small size variant
   static RemixAvatarStyle get small => RemixAvatarStyle(
         container: BoxStyler(
