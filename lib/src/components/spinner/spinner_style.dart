@@ -154,14 +154,14 @@ class RemixSpinnerStyles {
 
   /// Size variants
   
-  /// Small size variant
-  static RemixSpinnerStyle get small => RemixSpinnerStyle(
+  /// Size 1 variant (small)
+  static RemixSpinnerStyle get size1 => RemixSpinnerStyle(
         size: _kSizeSm,
         strokeWidth: _kStrokeSm,
       );
 
-  /// Large size variant
-  static RemixSpinnerStyle get large => RemixSpinnerStyle(
+  /// Size 2 variant (large)
+  static RemixSpinnerStyle get size2 => RemixSpinnerStyle(
         size: _kSizeLg,
         strokeWidth: 2.0,
       );

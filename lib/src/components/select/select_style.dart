@@ -536,26 +536,23 @@ class RemixSelectStyles {
         animation: AnimationConfig.easeInOut(Duration(milliseconds: 150)),
       );
 
-  /// Solid select style (default trigger style) - alias to defaultStyle
-  static RemixSelectStyle get solid => defaultStyle;
-
-  /// Outline select style - transparent background with border
-  static RemixSelectStyle get outline => RemixSelectStyle(
+  /// Classic select variant (default) - surface background with border
+  static RemixSelectStyle get classic => RemixSelectStyle(
         menuContainer: BoxStyler(
           padding: EdgeInsetsMix.symmetric(vertical: RemixTokens.spaceXs()),
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-            color: RemixTokens.onPrimary(),
+            color: RemixTokens.onPrimary(), // TODO: Should be surface4 token
           ),
         ),
         trigger: RemixSelectTriggerStyle(
           container: FlexBoxStyler(
             decoration: BoxDecorationMix(
               border: BoxBorderMix.all(
-                BorderSideMix(color: RemixTokens.primary(), width: 1),
+                BorderSideMix(color: RemixTokens.primary(), width: 1), // TODO: Should be border token
               ),
               borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-              color: MixColors.transparent,
+              color: RemixTokens.onPrimary(), // TODO: Should be surface1 token
             ),
             padding: EdgeInsetsGeometryMix.symmetric(
               vertical: RemixTokens.spaceSm(),
@@ -567,12 +564,12 @@ class RemixSelectStyles {
           ),
           label: TextStyler(
             style: TextStyleMix(
-              color: RemixTokens.primary(),
+              color: RemixTokens.primary(), // TODO: Should be fg token
               fontSize: _kFontSizeSm,
             ),
           ),
           icon: IconStyler(
-            color: RemixTokens.primary().withValues(alpha: 0.70),
+            color: RemixTokens.primary().withValues(alpha: 0.70), // TODO: Should be fg token with alpha
             size: 20,
           ),
         ),
@@ -591,12 +588,12 @@ class RemixSelectStyles {
           ),
           text: TextStyler(
             style: TextStyleMix(
-              color: RemixTokens.primary(),
+              color: RemixTokens.primary(), // TODO: Should be fg token
               fontSize: _kFontSizeSm,
             ),
           ),
           icon: IconStyler(
-            color: RemixTokens.primary().withValues(alpha: 0.60),
+            color: RemixTokens.primary().withValues(alpha: 0.60), // TODO: Should be fg token with alpha
             size: 16,
           ),
         ),
@@ -611,7 +608,7 @@ class RemixSelectStyles {
               trigger: RemixSelectTriggerStyle(
                 container: FlexBoxStyler(
                   decoration: BoxDecorationMix(
-                    color: RemixTokens.primary().withValues(alpha: 0.03),
+                    color: RemixTokens.primary().withValues(alpha: 0.03), // TODO: Should be surface2 token
                   ),
                 ),
               ),
@@ -624,7 +621,7 @@ class RemixSelectStyles {
                   decoration: BoxDecorationMix(
                     border: BoxBorderMix.all(
                       BorderSideMix(
-                        color: RemixTokens.primary().withValues(alpha: 0.40),
+                        color: RemixTokens.primary().withValues(alpha: 0.40), // TODO: Should be accent token with alpha
                         width: 2,
                       ),
                     ),
@@ -633,4 +630,5 @@ class RemixSelectStyles {
               ),
             ),
           );
+
 }

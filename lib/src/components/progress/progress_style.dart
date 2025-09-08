@@ -190,26 +190,33 @@ class RemixProgressStyle extends Style<ProgressSpec>
 /// Canonical access to default and variants
 class RemixProgressStyles {
   /// Default progress style
-  static RemixProgressStyle get defaultStyle => RemixProgressStyle(
+  static RemixProgressStyle get defaultStyle => classic;
+
+  /// Classic progress variant (default) - surface background with border
+  static RemixProgressStyle get classic => RemixProgressStyle(
         container: BoxStyler(
           constraints: BoxConstraintsMix(
             minHeight: _kBarHeight,
             maxHeight: _kBarHeight,
           ),
           decoration: BoxDecorationMix(
+            border: BoxBorderMix.all(
+              BorderSideMix(color: RemixTokens.primary(), width: 1), // TODO: Should be border token
+            ),
             borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+            color: RemixTokens.onPrimary(), // TODO: Should be surface1 token
           ),
           clipBehavior: Clip.antiAlias,
         ),
         track: BoxStyler(
           decoration: BoxDecorationMix(
-            color: RemixTokens.primary().withValues(alpha: 0.20),
+            color: RemixTokens.primary().withValues(alpha: 0.20), // TODO: Should be muted token
           ),
         ),
         indicator: BoxStyler(
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-            color: RemixTokens.primary(),
+            color: RemixTokens.primary(), // TODO: Should be accent token
           ),
         ),
         trackContainer: BoxStyler(),

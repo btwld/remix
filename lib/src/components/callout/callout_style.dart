@@ -159,76 +159,31 @@ class RemixCalloutStyle extends Style<CalloutSpec>
 // Default style is provided by RemixCalloutStyles.defaultStyle
 
 // Variants are exposed via RemixCalloutStyles
+/// Canonical access to default styles
 class RemixCalloutStyles {
+  /// Default callout style
   static RemixCalloutStyle get defaultStyle => RemixCalloutStyle(
         container: BoxStyler(
           padding: EdgeInsetsMix.all(RemixTokens.spaceMd()),
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
-              color: RemixTokens.primary().withValues(alpha: 0.20),
+              color: RemixTokens.primary().withValues(alpha: 0.20), // TODO: Should be border token
               width: 1,
             )),
             borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-            color: RemixTokens.onPrimary(),
+            color: RemixTokens.onPrimary(), // TODO: Should be surface1 token
           ),
         ),
         text: TextStyler(
           style: TextStyleMix(
-            color: RemixTokens.primary(),
+            color: RemixTokens.primary(), // TODO: Should be fg token
             fontSize: _kFontSizeMd,
             fontWeight: FontWeight.w500,
           ),
         ),
-        icon: IconStyler(color: RemixTokens.primary(), size: _kIconSizeMd),
-      );
-
-  /// Solid callout variant (default)
-  static RemixCalloutStyle get solid => RemixCalloutStyle(
-        container: BoxStyler(
-          padding: EdgeInsetsGeometryMix.all(RemixTokens.spaceMd()),
-          decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(BorderSideMix(
-              color: RemixTokens.primary().withValues(alpha: 0.20),
-              width: 1,
-            )),
-            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-            color: RemixTokens.onPrimary(),
-          ),
+        icon: IconStyler(
+          color: RemixTokens.primary(), // TODO: Should be accent token
+          size: _kIconSizeMd,
         ),
-        text: TextStyler(
-          style: TextStyleMix(
-            color: RemixTokens.primary(),
-            fontSize: _kFontSizeMd,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        icon: IconStyler(color: RemixTokens.primary(), size: _kIconSizeMd),
-      );
-
-
-
-  /// Outline callout variant
-  static RemixCalloutStyle get outline => RemixCalloutStyle(
-        container: BoxStyler(
-          padding: EdgeInsetsGeometryMix.all(RemixTokens.spaceMd()),
-          decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(
-              BorderSideMix(
-                color: RemixTokens.primary().withValues(alpha: 0.15),
-                width: 1,
-              ),
-            ),
-            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-            color: RemixTokens.onPrimary().withValues(alpha: 0.0),
-          ),
-        ),
-        text: TextStyler(
-          style: TextStyleMix(
-            color: RemixTokens.primary(),
-            fontSize: _kFontSizeMd,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        icon: IconStyler(color: RemixTokens.primary(), size: _kIconSizeMd),
       );
 }

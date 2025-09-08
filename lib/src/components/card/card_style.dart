@@ -133,37 +133,18 @@ class RemixCardStyle extends Style<CardSpec>
 
 class RemixCardStyles {
   /// Default card style
-  static RemixCardStyle get defaultStyle => RemixCardStyle(
-        container: BoxStyler(
-          padding: EdgeInsetsMix.all(RemixTokens.spaceLg()),
-          decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-            color: RemixTokens.onPrimary(),
-          ),
-        ),
-      );
+  static RemixCardStyle get defaultStyle => classic;
 
-  /// Solid card variant (default)
-  static RemixCardStyle get solid => RemixCardStyle(
-        container: BoxStyler(
-          padding: EdgeInsetsMix.all(RemixTokens.spaceLg()),
-          decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-            color: RemixTokens.onPrimary(),
-          ),
-        ),
-      );
-
-  /// Outline card variant
-  static RemixCardStyle get outline => RemixCardStyle(
+  /// Classic card variant (default) - surface background with border
+  static RemixCardStyle get classic => RemixCardStyle(
         container: BoxStyler(
           padding: EdgeInsetsMix.all(RemixTokens.spaceLg()),
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(
-              BorderSideMix(color: RemixTokens.primary(), width: 1),
+              BorderSideMix(color: RemixTokens.primary(), width: 1), // TODO: Should be border token
             ),
             borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-            color: RemixTokens.onPrimary(),
+            color: RemixTokens.onPrimary(), // TODO: Should be surface1 token
           ),
         ),
       );

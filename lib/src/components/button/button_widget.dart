@@ -55,7 +55,7 @@ typedef RemixButtonLoadingBuilder = Widget Function(
 ///
 /// RemixButton.icon(
 ///   Icons.edit,
-///   style: ButtonStyles.outline,
+///   style: RemixButtonStyles.solid,
 ///   onPressed: () => print('Edit pressed!'),
 /// )
 /// ```
