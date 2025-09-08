@@ -288,8 +288,8 @@ class RemixCheckboxStyles {
         ),
       );
 
-  /// Solid checkbox - filled black box with white check
-  static RemixCheckboxStyle get solid => RemixCheckboxStyle(
+  /// Classic checkbox variant (default) - surface background with border
+  static RemixCheckboxStyle get classic => RemixCheckboxStyle(
         container: FlexBoxStyler(
           alignment: Alignment.centerLeft,
           direction: Axis.horizontal,
@@ -307,51 +307,16 @@ class RemixCheckboxStyles {
           ),
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(
-              BorderSideMix(color: RemixTokens.primary(), width: 1.5),
+              BorderSideMix(color: RemixTokens.primary(), width: 1), // TODO: Should be border token
             ),
             borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-            color: RemixTokens.primary(),
+            color: RemixTokens.onPrimary(), // TODO: Should be surface1 token
           ),
         ),
-        indicator:
-            IconStyler(color: RemixTokens.onPrimary(), size: _kIconSizeMd),
+        indicator: IconStyler(color: RemixTokens.primary(), size: _kIconSizeMd), // TODO: Should use fg tokens
         label: TextStyler(
           style: TextStyleMix(
-            color: RemixTokens.primary(),
-            fontSize: _kFontSizeMd,
-          ),
-        ),
-      );
-
-  /// Outline checkbox - transparent background with primary border and icon
-  static RemixCheckboxStyle get outline => RemixCheckboxStyle(
-        container: FlexBoxStyler(
-          alignment: Alignment.centerLeft,
-          direction: Axis.horizontal,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          spacing: _kSpaceSm,
-        ),
-        indicatorContainer: BoxStyler(
-          alignment: Alignment.center,
-          constraints: BoxConstraintsMix(
-            minWidth: 20,
-            maxWidth: 20,
-            minHeight: 20,
-            maxHeight: 20,
-          ),
-          decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(
-              BorderSideMix(color: RemixTokens.primary(), width: 1.5),
-            ),
-            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-            color: MixColors.transparent,
-          ),
-        ),
-        indicator: IconStyler(color: RemixTokens.primary(), size: _kIconSizeMd),
-        label: TextStyler(
-          style: TextStyleMix(
-            color: RemixTokens.primary(),
+            color: RemixTokens.primary(), // TODO: Should be fg token
             fontSize: _kFontSizeMd,
           ),
         ),

@@ -172,17 +172,20 @@ final RemixSliderDisabledStyle = RemixSliderStyle(
 /// Canonical access to default and variants
 class RemixSliderStyles {
   /// Default slider style
-  static RemixSliderStyle get defaultStyle => RemixSliderStyle(
+  static RemixSliderStyle get defaultStyle => classic;
+
+  /// Classic slider variant (default) - surface background with border
+  static RemixSliderStyle get classic => RemixSliderStyle(
         thumb: BoxStyler(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(
               BorderSideMix(
-                color: RemixTokens.primary(),
+                color: RemixTokens.primary(), // TODO: Should be border token
                 width: _kThumbBorderWidth,
               ),
             ),
             shape: BoxShape.circle,
-            color: RemixTokens.onPrimary(),
+            color: RemixTokens.onPrimary(), // TODO: Should be surface1 token
           ),
         ),
       ).builder((context) {
@@ -190,18 +193,18 @@ class RemixSliderStyles {
           baseTrack: Paint()
             ..strokeWidth = _kTrackWidth
             ..color =
-                RemixTokens.primary.resolve(context).withValues(alpha: 0.20)
+                RemixTokens.primary.resolve(context).withValues(alpha: 0.20) // TODO: Should be muted token
             ..strokeCap = StrokeCap.round
             ..style = PaintingStyle.stroke,
           activeTrack: Paint()
             ..strokeWidth = _kTrackWidth
-            ..color = RemixTokens.primary.resolve(context)
+            ..color = RemixTokens.primary.resolve(context) // TODO: Should be accent token
             ..strokeCap = StrokeCap.round
             ..style = PaintingStyle.stroke,
           division: Paint()
             ..strokeWidth = _kTrackWidth
             ..color =
-                RemixTokens.primary.resolve(context).withValues(alpha: 0.26)
+                RemixTokens.primary.resolve(context).withValues(alpha: 0.26) // TODO: Should be muted token
             ..strokeCap = StrokeCap.round
             ..style = PaintingStyle.stroke,
         );

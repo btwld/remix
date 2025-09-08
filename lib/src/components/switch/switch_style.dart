@@ -168,7 +168,10 @@ class RemixSwitchStyle extends Style<SwitchSpec>
 /// Canonical access to default and variants
 class RemixSwitchStyles {
   /// Default switch style
-  static RemixSwitchStyle get defaultStyle => RemixSwitchStyle(
+  static RemixSwitchStyle get defaultStyle => classic;
+
+  /// Classic switch variant (default) - surface background with border
+  static RemixSwitchStyle get classic => RemixSwitchStyle(
         container: BoxStyler(),
         track: BoxStyler(
           constraints: BoxConstraintsMix(
@@ -178,8 +181,11 @@ class RemixSwitchStyles {
             maxHeight: _kTrackHeight,
           ),
           decoration: BoxDecorationMix(
+            border: BoxBorderMix.all(
+              BorderSideMix(color: RemixTokens.primary(), width: 1), // TODO: Should be border token
+            ),
             borderRadius: BorderRadiusMix.circular(_kTrackHeight),
-            color: RemixTokens.primary().withValues(alpha: 0.20),
+            color: RemixTokens.onPrimary(), // TODO: Should be surface1 token
           ),
         ),
         thumb: BoxStyler(
@@ -191,7 +197,7 @@ class RemixSwitchStyles {
           ),
           decoration: BoxDecorationMix(
             shape: BoxShape.circle,
-            color: RemixTokens.onPrimary(),
+            color: RemixTokens.primary(), // TODO: Should be accent token
           ),
         ),
       );

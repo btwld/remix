@@ -404,50 +404,7 @@ final RemixTextFieldDisabledStyle = RemixTextFieldStyle(
 /// Canonical access to default and common state styles
 class RemixTextFieldStyles {
   /// Default text field style
-  static RemixTextFieldStyle get defaultStyle => RemixTextFieldStyle(
-        text: TextStyler(
-          style: TextStyleMix(
-            color: RemixTokens.primary(),
-            fontSize: _kFontSizeMd,
-          ),
-        ),
-        hintText: TextStyler(
-          style:
-              TextStyleMix(color: RemixTokens.primary().withValues(alpha: 0.5)),
-        ),
-        textAlign: TextAlign.start,
-        cursorWidth: 2.0,
-        cursorColor: RemixTokens.primary(),
-        cursorOffset: Offset.zero,
-        selectionHeightStyle: BoxHeightStyle.tight,
-        selectionWidthStyle: BoxWidthStyle.tight,
-        scrollPadding: EdgeInsets.all(RemixTokens.spaceLg()),
-        spacing: RemixTokens.spaceXs(),
-        container: FlexBoxStyler(
-          decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(
-              BorderSideMix(
-                color: RemixTokens.primary().withValues(alpha: 0.20),
-                width: 1,
-              ),
-            ),
-            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-            color: RemixTokens.onPrimary(),
-          ),
-          padding: EdgeInsetsGeometryMix.symmetric(
-            vertical: RemixTokens.spaceSm(),
-            horizontal: RemixTokens.spaceMd(),
-          ),
-          direction: Axis.horizontal,
-          crossAxisAlignment: CrossAxisAlignment.start,
-        ),
-        helperText: TextStyler(
-          style: TextStyleMix(
-            color: RemixTokens.secondary().withValues(alpha: 0.6),
-            fontSize: _kFontSizeSm,
-          ),
-        ),
-      );
+  static RemixTextFieldStyle get defaultStyle => classic;
 
   /// Focused state style
   static RemixTextFieldStyle get focused => RemixTextFieldFocusStyle;
@@ -458,21 +415,21 @@ class RemixTextFieldStyles {
   /// Disabled state style
   static RemixTextFieldStyle get disabled => RemixTextFieldDisabledStyle;
 
-  /// Solid variant (default-like variant)
-  static RemixTextFieldStyle get solid => RemixTextFieldStyle(
+  /// Classic text field variant (default) - surface background with border
+  static RemixTextFieldStyle get classic => RemixTextFieldStyle(
         text: TextStyler(
           style: TextStyleMix(
-            color: RemixTokens.primary(),
+            color: RemixTokens.primary(), // TODO: Should be fg token
             fontSize: _kFontSizeMd,
           ),
         ),
         hintText: TextStyler(
           style:
-              TextStyleMix(color: RemixTokens.primary().withValues(alpha: 0.5)),
+              TextStyleMix(color: RemixTokens.primary().withValues(alpha: 0.5)), // TODO: Should use placeholder token
         ),
         textAlign: TextAlign.start,
         cursorWidth: 2.0,
-        cursorColor: RemixTokens.primary(),
+        cursorColor: RemixTokens.primary(), // TODO: Should be accent token
         cursorOffset: Offset.zero,
         selectionHeightStyle: BoxHeightStyle.tight,
         selectionWidthStyle: BoxWidthStyle.tight,
@@ -482,12 +439,12 @@ class RemixTextFieldStyles {
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(
               BorderSideMix(
-                color: RemixTokens.primary().withValues(alpha: 0.20),
+                color: RemixTokens.primary(), // TODO: Should be border token
                 width: 1,
               ),
             ),
             borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-            color: RemixTokens.onPrimary(),
+            color: RemixTokens.onPrimary(), // TODO: Should be surface1 token
           ),
           padding: EdgeInsetsGeometryMix.symmetric(
             vertical: RemixTokens.spaceSm(),
@@ -498,50 +455,7 @@ class RemixTextFieldStyles {
         ),
         helperText: TextStyler(
           style: TextStyleMix(
-            color: RemixTokens.secondary().withValues(alpha: 0.6),
-            fontSize: _kFontSizeSm,
-          ),
-        ),
-      );
-
-  /// Outline variant - transparent background with emphasized border
-  static RemixTextFieldStyle get outline => RemixTextFieldStyle(
-        text: TextStyler(
-          style: TextStyleMix(
-            color: RemixTokens.primary(),
-            fontSize: _kFontSizeMd,
-          ),
-        ),
-        hintText: TextStyler(
-          style:
-              TextStyleMix(color: RemixTokens.primary().withValues(alpha: 0.5)),
-        ),
-        textAlign: TextAlign.start,
-        cursorWidth: 2.0,
-        cursorColor: RemixTokens.primary(),
-        cursorOffset: Offset.zero,
-        selectionHeightStyle: BoxHeightStyle.tight,
-        selectionWidthStyle: BoxWidthStyle.tight,
-        scrollPadding: EdgeInsets.all(RemixTokens.spaceLg()),
-        spacing: RemixTokens.spaceXs(),
-        container: FlexBoxStyler(
-          decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(
-              BorderSideMix(color: RemixTokens.primary(), width: 2),
-            ),
-            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-            color: RemixTokens.onPrimary().withValues(alpha: 0.0),
-          ),
-          padding: EdgeInsetsGeometryMix.symmetric(
-            vertical: RemixTokens.spaceSm(),
-            horizontal: RemixTokens.spaceMd(),
-          ),
-          direction: Axis.horizontal,
-          crossAxisAlignment: CrossAxisAlignment.start,
-        ),
-        helperText: TextStyler(
-          style: TextStyleMix(
-            color: RemixTokens.secondary().withValues(alpha: 0.6),
+            color: RemixTokens.secondary().withValues(alpha: 0.6), // TODO: Should be muted token
             fontSize: _kFontSizeSm,
           ),
         ),

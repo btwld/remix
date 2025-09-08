@@ -231,8 +231,8 @@ class RemixRadioStyles {
         ),
       );
 
-  /// Solid radio
-  static RemixRadioStyle get solid => RemixRadioStyle(
+  /// Classic radio variant (default) - surface background with border
+  static RemixRadioStyle get classic => RemixRadioStyle(
         container: FlexBoxStyler(
           alignment: Alignment.centerLeft,
           direction: Axis.horizontal,
@@ -250,10 +250,10 @@ class RemixRadioStyles {
           ),
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(
-              BorderSideMix(color: RemixTokens.primary(), width: 1.5),
+              BorderSideMix(color: RemixTokens.primary(), width: 1), // TODO: Should be border token
             ),
             shape: BoxShape.circle,
-            color: RemixTokens.primary(),
+            color: RemixTokens.onPrimary(), // TODO: Should be surface1 token
           ),
         ),
         indicator: BoxStyler(
@@ -265,57 +265,14 @@ class RemixRadioStyles {
           ),
           decoration: BoxDecorationMix(
             shape: BoxShape.circle,
-            color: RemixTokens.onPrimary(),
+            color: RemixTokens.primary(), // TODO: Should be accent token
           ),
         ),
         label: TextStyler(
           style: TextStyleMix(
-            color: RemixTokens.primary(),
+            color: RemixTokens.primary(), // TODO: Should be fg token
             fontSize: _kFontSizeMd,
           ),
-        ),
-      );
-
-  /// Outline radio
-  static RemixRadioStyle get outline => RemixRadioStyle(
-        container: FlexBoxStyler(
-          alignment: Alignment.centerLeft,
-          direction: Axis.horizontal,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          spacing: _kSpaceSm,
-        ),
-        indicatorContainer: BoxStyler(
-          alignment: Alignment.center,
-          constraints: BoxConstraintsMix(
-            minWidth: 20,
-            maxWidth: 20,
-            minHeight: 20,
-            maxHeight: 20,
-          ),
-          decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(
-              BorderSideMix(color: RemixTokens.primary(), width: 1.5),
-            ),
-            shape: BoxShape.circle,
-            color: MixColors.transparent,
-          ),
-        ),
-        indicator: BoxStyler(
-          constraints: BoxConstraintsMix(
-            minWidth: 10,
-            maxWidth: 10,
-            minHeight: 10,
-            maxHeight: 10,
-          ),
-          decoration: BoxDecorationMix(
-            shape: BoxShape.circle,
-            color: RemixTokens.primary(),
-          ),
-        ),
-        label: TextStyler(
-          style: TextStyleMix(
-              color: RemixTokens.primary(), fontSize: _kFontSizeMd,),
         ),
       );
 

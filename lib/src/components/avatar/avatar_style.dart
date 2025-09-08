@@ -222,7 +222,10 @@ class RemixAvatarStyle extends Style<AvatarSpec>
 /// Default avatar styles and variants
 class RemixAvatarStyles {
   /// Default avatar style
-  static RemixAvatarStyle get defaultStyle => RemixAvatarStyle(
+  static RemixAvatarStyle get defaultStyle => solid;
+
+  /// Solid avatar variant (default) - uses accent colors
+  static RemixAvatarStyle get solid => RemixAvatarStyle(
         container: BoxStyler(
           alignment: Alignment.center,
           constraints: BoxConstraintsMix(
@@ -233,25 +236,25 @@ class RemixAvatarStyles {
           ),
           decoration: BoxDecorationMix(
             shape: BoxShape.circle,
-            color: RemixTokens.primary(),
+            color: RemixTokens.primary(), // TODO: Should be accent token
           ),
           clipBehavior: Clip.antiAlias,
         ),
         text: TextStyler(
           style: TextStyleMix(
-            color: RemixTokens.onPrimary(),
+            color: RemixTokens.onPrimary(), // TODO: Should be accent-fg token
             fontSize: _kFontSizeMedium,
             fontWeight: FontWeight.w400,
           ),
         ),
         icon:
-            IconStyler(color: RemixTokens.onPrimary(), size: _kIconSizeMedium),
+            IconStyler(color: RemixTokens.onPrimary(), size: _kIconSizeMedium), // TODO: Should be accent-fg token
       );
 
 
 
-  /// Small size variant
-  static RemixAvatarStyle get small => RemixAvatarStyle(
+  /// Size 1 variant (small)
+  static RemixAvatarStyle get size1 => RemixAvatarStyle(
         container: BoxStyler(
           alignment: Alignment.center,
           constraints: BoxConstraintsMix(
@@ -276,8 +279,8 @@ class RemixAvatarStyles {
         icon: IconStyler(color: RemixTokens.onPrimary(), size: _kIconSizeSmall),
       );
 
-  /// Large size variant
-  static RemixAvatarStyle get large => RemixAvatarStyle(
+  /// Size 3 variant (large)
+  static RemixAvatarStyle get size3 => RemixAvatarStyle(
         container: BoxStyler(
           alignment: Alignment.center,
           constraints: BoxConstraintsMix(

@@ -248,8 +248,8 @@ class RemixButtonStyle extends Style<ButtonSpec>
 }
 
 class RemixButtonStyles {
-  /// Large size variant
-  static RemixButtonStyle get large => RemixButtonStyle(
+  /// Size 3 variant (large)
+  static RemixButtonStyle get size3 => RemixButtonStyle(
         container: BoxStyler(
           padding: EdgeInsetsGeometryMix.all(RemixTokens.spaceLg()),
           constraints: BoxConstraintsMix(minHeight: 48),
@@ -261,8 +261,8 @@ class RemixButtonStyles {
         ),
       );
 
-  /// Small size variant
-  static RemixButtonStyle get small => RemixButtonStyle(
+  /// Size 1 variant (small)
+  static RemixButtonStyle get size1 => RemixButtonStyle(
         container: BoxStyler(
           padding: EdgeInsetsGeometryMix.all(RemixTokens.spaceXs()),
           constraints: BoxConstraintsMix(minHeight: 32),
@@ -276,92 +276,6 @@ class RemixButtonStyles {
 
   // Note: classic variant intentionally omitted for simplicity.
 
-  /// Outline button style - white background with black border and black text/icon
-  static RemixButtonStyle get outline => RemixButtonStyle(
-        container: BoxStyler(
-          padding: EdgeInsetsGeometryMix.all(RemixTokens.spaceMd()),
-          decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(
-              BorderSideMix(color: RemixTokens.primary(), width: 1),
-            ),
-            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-            color: MixColors.transparent,
-          ),
-        ),
-        label: RemixLabelStyle(
-          label: TextStyler(
-            style: TextStyleMix(
-              color: RemixTokens.primary(),
-              fontSize: _kFontSizeMd,
-            ),
-          ),
-          icon: IconStyler(color: RemixTokens.primary(), size: _kIconSizeLg),
-          flex: FlexStyler(spacing: RemixTokens.spaceSm()),
-        ),
-        spinner: RemixSpinnerStyle(
-          size: _kIconSizeMd,
-          strokeWidth: 1.5,
-          color: RemixTokens.primary(),
-          duration: const Duration(milliseconds: 1000),
-          style: SpinnerType.solid,
-        ),
-      )
-          .onHovered(
-            RemixButtonStyle(
-              container: BoxStyler(
-                decoration: BoxDecorationMix(
-                  border: BoxBorderMix.all(
-                    BorderSideMix(color: RemixTokens.primary(), width: 1.5),
-                  ),
-                  color: RemixTokens.primary().withValues(alpha: 0.03),
-                ),
-              ),
-            ),
-          )
-          .onPressed(
-            RemixButtonStyle(
-              container: BoxStyler(
-                decoration: BoxDecorationMix(
-                  border: BoxBorderMix.all(
-                    BorderSideMix(color: RemixTokens.primary(), width: 2),
-                  ),
-                  color: RemixTokens.primary().withValues(alpha: 0.06),
-                ),
-              ),
-            ),
-          )
-          .onFocused(
-            RemixButtonStyle(
-              container: BoxStyler(
-                decoration: BoxDecorationMix(
-                  border: BoxBorderMix.all(
-                    BorderSideMix(color: RemixTokens.primary(), width: 2),
-                  ),
-                ),
-              ),
-            ),
-          )
-          .onDisabled(
-            RemixButtonStyle(
-              container: BoxStyler(
-                decoration: BoxDecorationMix(
-                  border: BoxBorderMix.all(
-                    BorderSideMix(
-                      color: RemixTokens.primary().withValues(alpha: 0.3),
-                      width: 1,
-                    ),
-                  ),
-                ),
-              ),
-              label: RemixLabelStyle(
-                label: TextStyler(
-                  style: TextStyleMix(color: RemixTokens.primary()),
-                ),
-                icon: IconStyler(color: RemixTokens.primary()),
-              ),
-              spinner: RemixSpinnerStyle(color: RemixTokens.primary()),
-            ),
-          );
 
   /// Solid button style (default) - black background with white text/icon
   static RemixButtonStyle get solid => RemixButtonStyle(
@@ -449,8 +363,8 @@ class RemixButtonStyles {
 
 
 
-  /// Medium size variant
-  static RemixButtonStyle get medium => RemixButtonStyle(
+  /// Size 2 variant (medium - default)
+  static RemixButtonStyle get size2 => RemixButtonStyle(
         container: BoxStyler(
           padding: EdgeInsetsGeometryMix.all(_kSpaceSm),
           constraints: BoxConstraintsMix(minHeight: 40),
