@@ -19,8 +19,8 @@ Widget buildButtonUseCase(BuildContext context) {
           width: 300,
           child: RemixTextField(
             trailing: context.knobs.boolean(label: 'Show Trailing', initialValue: false)
-                ? RemixButton.icon(
-                    Icons.close_rounded,
+                ? RemixIconButton(
+                    icon: Icons.close_rounded,
                     onPressed: () {},
                   )
                 : null,

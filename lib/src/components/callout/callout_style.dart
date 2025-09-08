@@ -76,14 +76,13 @@ class RemixCalloutStyle extends Style<CalloutSpec>
 
   /// Sets container decoration
   RemixCalloutStyle decoration(DecorationMix value) {
-    return merge(RemixCalloutStyle(container: FlexBoxStyler(decoration: value)));
+    return merge(
+        RemixCalloutStyle(container: FlexBoxStyler(decoration: value)));
   }
 
   /// Sets flex spacing
   RemixCalloutStyle spacing(double value) {
-    return merge(RemixCalloutStyle(
-      container: FlexBoxStyler(spacing: value),
-    ));
+    return merge(RemixCalloutStyle(container: FlexBoxStyler(spacing: value)));
   }
 
   /// Sets icon color
@@ -144,7 +143,8 @@ class RemixCalloutStyle extends Style<CalloutSpec>
 
   @override
   RemixCalloutStyle constraints(BoxConstraintsMix value) {
-    return merge(RemixCalloutStyle(container: FlexBoxStyler(constraints: value)));
+    return merge(
+        RemixCalloutStyle(container: FlexBoxStyler(constraints: value)));
   }
 
   @override
@@ -183,20 +183,21 @@ class RemixCalloutStyles {
   /// Base callout style - informational design with border
   static RemixCalloutStyle get baseStyle => RemixCalloutStyle(
         container: FlexBoxStyler(
-          alignment: Alignment.centerLeft,
-          direction: Axis.horizontal,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          spacing: RemixTokens.spaceSm(),
-          padding: EdgeInsetsMix.all(RemixTokens.spaceMd()),
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
-              color: RemixTokens.primary().withValues(alpha: 0.20), // TODO: Should be border token
+              color: RemixTokens.primary()
+                  .withValues(alpha: 0.20), // TODO: Should be border token
               width: 1,
             )),
             borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
             color: RemixTokens.onPrimary(), // TODO: Should be surface1 token
           ),
+          padding: EdgeInsetsMix.all(RemixTokens.spaceMd()),
+          alignment: Alignment.centerLeft,
+          direction: Axis.horizontal,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          spacing: RemixTokens.spaceSm(),
         ),
         text: TextStyler(
           style: TextStyleMix(

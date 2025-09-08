@@ -1,63 +1,52 @@
-part of 'button.dart';
+part of 'icon_button.dart';
 
-/// Builder function for customizing button text rendering.
-typedef RemixButtonTextBuilder = Widget Function(
-  BuildContext context,
-  TextSpec spec,
-  String text,
-);
-
-/// Builder function for customizing button icon rendering.
-typedef RemixButtonIconBuilder = Widget Function(
+/// Builder function for customizing icon button icon rendering.
+typedef RemixIconButtonIconBuilder = Widget Function(
   BuildContext context,
   IconSpec spec,
   IconData? icon,
 );
 
-/// Builder function for customizing button loading state rendering.
-typedef RemixButtonLoadingBuilder = Widget Function(
+/// Builder function for customizing icon button loading state rendering.
+typedef RemixIconButtonLoadingBuilder = Widget Function(
   BuildContext context,
   SpinnerSpec spec,
 );
 
-/// A customizable button component that supports text with optional icons, loading states, and styling.
-/// The button integrates with the Mix styling system and follows Remix design patterns.
-/// For icon-only buttons, use RemixIconButton instead.
+/// A customizable icon button component optimized for icon-only interactions.
+/// The button is square by default and centers the icon properly.
 ///
 /// ## Examples
 ///
 /// ```dart
-/// // Basic button
-/// RemixButton(
-///   label: 'Click Me',
-///   onPressed: () => print('Button pressed!'),
+/// // Basic icon button
+/// RemixIconButton(
+///   icon: Icons.add,
+///   onPressed: () => print('Add pressed!'),
 /// )
 ///
-/// // Button with icon
-/// RemixButton(
-///   label: 'Save Changes',
+/// // Custom styled icon button
+/// RemixIconButton(
+///   icon: Icons.delete,
+///   style: RemixIconButtonStyles.baseStyle.color(Colors.red),
+///   onPressed: () => print('Delete pressed!'),
+/// )
+/// 
+/// // Loading icon button
+/// RemixIconButton(
 ///   icon: Icons.save,
+///   loading: true,
 ///   onPressed: () => print('Save pressed!'),
 /// )
-///
-/// // Loading button
-/// RemixButton(
-///   label: 'Processing',
-///   loading: true,
-///   onPressed: () => print('Processing...'),
-/// )
 /// ```
-///
-class RemixButton extends StatefulWidget with HasEnabled {
-  /// Creates a Remix button.
+class RemixIconButton extends StatefulWidget with HasEnabled {
+  /// Creates a Remix icon button.
   ///
-  /// The [label] parameter is required and specifies the button text.
+  /// The [icon] parameter is required and specifies which icon to display.
   /// Use builders to customize rendering of specific parts.
-  const RemixButton({
+  const RemixIconButton({
     super.key,
-    required this.label,
-    this.icon,
-    this.textBuilder,
+    required this.icon,
     this.iconBuilder,
     this.loadingBuilder,
     this.enabled = true,
@@ -68,14 +57,14 @@ class RemixButton extends StatefulWidget with HasEnabled {
     this.onLongPress,
     this.onDoubleTap,
     this.focusNode,
-    this.style = const RemixButtonStyle.create(),
+    this.style = const RemixIconButtonStyle.create(),
     this.semanticLabel,
     this.semanticHint,
     this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
   });
 
-  static late final styleFrom = RemixButtonStyle.new;
+  static late final styleFrom = RemixIconButtonStyle.new;
 
   /// Whether the button is enabled.
   ///
@@ -86,7 +75,6 @@ class RemixButton extends StatefulWidget with HasEnabled {
   /// Whether the button is in a loading state.
   ///
   /// When true, the button will display a spinner and become non-interactive.
-  /// The spinner can be customized via [spinnerBuilder].
   final bool loading;
 
   /// Callback function called when the button is pressed.
@@ -105,8 +93,8 @@ class RemixButton extends StatefulWidget with HasEnabled {
 
   /// The style configuration for the button.
   ///
-  /// Controls visual properties like colors, padding, typography etc.
-  final RemixButtonStyle? style;
+  /// Controls visual properties like colors, padding, size etc.
+  final RemixIconButtonStyle? style;
 
   /// Whether to provide feedback when the button is pressed.
   ///
@@ -116,22 +104,14 @@ class RemixButton extends StatefulWidget with HasEnabled {
   /// Whether the button should automatically request focus when it is created.
   final bool autofocus;
 
-  /// The label text to display in the button.
-  /// If [textBuilder] is provided, this is ignored.
-  final String label;
-
   /// The icon to display in the button.
-  /// If [builder] is provided, this is ignored.
-  final IconData? icon;
-
-  /// Builder for customizing the text rendering.
-  final RemixButtonTextBuilder? textBuilder;
+  final IconData icon;
 
   /// Builder for customizing the icon rendering.
-  final RemixButtonIconBuilder? iconBuilder;
+  final RemixIconButtonIconBuilder? iconBuilder;
 
   /// Builder for customizing the loading state rendering.
-  final RemixButtonLoadingBuilder? loadingBuilder;
+  final RemixIconButtonLoadingBuilder? loadingBuilder;
 
   /// The semantic label for the button.
   ///
@@ -155,10 +135,10 @@ class RemixButton extends StatefulWidget with HasEnabled {
   final MouseCursor mouseCursor;
 
   @override
-  State<RemixButton> createState() => _RemixButtonState();
+  State<RemixIconButton> createState() => _RemixIconButtonState();
 }
 
-class _RemixButtonState extends State<RemixButton>
+class _RemixIconButtonState extends State<RemixIconButton>
     with HasWidgetStateController, HasEnabledState {
   bool get _isEnabled =>
       widget.enabled && !widget.loading && widget.onPressed != null;
@@ -166,35 +146,20 @@ class _RemixButtonState extends State<RemixButton>
   @override
   Widget build(BuildContext context) {
     return StyleBuilder(
-      style: RemixButtonStyles.baseStyle.merge(widget.style),
+      style: RemixIconButtonStyles.baseStyle.merge(widget.style),
       controller: controller,
       builder: (context, spec) {
-        final FlexContaineWidget = spec.container.createWidget;
-        final TextWidget = spec.label.createWidget;
+        final ContainerWidget = spec.container.createWidget;
         final IconWidget = spec.icon.createWidget;
 
-        // Build icon widget (optional leading icon)
-        final iconWidget = widget.icon != null || widget.iconBuilder != null
-            ? (widget.iconBuilder != null
-                ? StyleSpecBuilder(
-                    styleSpec: spec.icon,
-                    builder: (context, iconSpec) =>
-                        widget.iconBuilder!(context, iconSpec, widget.icon),
-                  )
-                : IconWidget(icon: widget.icon))
-            : null;
-
-        // Build text widget (always present since label is required)
-        final textWidget = widget.textBuilder != null
+        // Build the icon content
+        final iconWidget = widget.iconBuilder != null
             ? StyleSpecBuilder(
-                styleSpec: spec.label,
-                builder: (context, textSpec) => widget.textBuilder!(
-                  context,
-                  textSpec,
-                  widget.label,
-                ),
+                styleSpec: spec.icon,
+                builder: (context, iconSpec) =>
+                    widget.iconBuilder!(context, iconSpec, widget.icon),
               )
-            : TextWidget(widget.label);
+            : IconWidget(icon: widget.icon);
 
         // Build spinner (used when loading)
         final spinner = widget.loadingBuilder != null
@@ -216,42 +181,31 @@ class _RemixButtonState extends State<RemixButton>
                 ),
               );
 
-        // Create content with FlexBox layout
-        final List<Widget> children = [
-          if (iconWidget != null) iconWidget,
-          textWidget,
-        ];
-        Widget content = FlexContaineWidget(
-          direction: Axis.horizontal,
-          children: children,
-        );
-
-        // Use a layered approach that preserves size and state of the content
-        // while showing a centered spinner on top when loading.
-        final layered = Stack(
+        // Create content with proper layering for loading states
+        final content = Stack(
           alignment: Alignment.center,
           children: [
-            // Underlying content: keep in the tree with state, but hide when loading
+            // Underlying icon: keep in the tree with state, but hide when loading
             Visibility(
               visible: !widget.loading,
               maintainState: true,
               maintainAnimation: true,
               maintainSize: true,
-              child: content,
+              child: iconWidget,
             ),
             // Spinner overlay, visible only when loading
             if (widget.loading) Center(child: spinner),
           ],
         );
 
-        // Use NakedPressable directly with integrated semantics - cleaner widget tree
+        // Wrap in container and pressable
         return Semantics(
           excludeSemantics: widget.excludeSemantics,
           enabled: _isEnabled,
           button: true,
           focusable: _isEnabled,
           liveRegion: widget.loading,
-          label: widget.semanticLabel ?? widget.label,
+          label: widget.semanticLabel ?? 'Icon Button',
           value: widget.loading ? 'Loading' : null,
           hint: widget.semanticHint,
           onTap: _isEnabled ? widget.onPressed : null,
@@ -267,7 +221,7 @@ class _RemixButtonState extends State<RemixButton>
             onFocusChange: (focused) => controller.focused = focused,
             statesController: controller,
             enableFeedback: widget.enableFeedback,
-            child: layered,
+            child: ContainerWidget(child: content),
             builder: (context, states, child) => child!,
           ),
         );

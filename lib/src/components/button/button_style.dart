@@ -143,9 +143,9 @@ class RemixButtonStyle extends Style<ButtonSpec>
 
   /// Sets constraints
   RemixButtonStyle constraints(BoxConstraintsMix value) {
-    return merge(RemixButtonStyle(container: FlexBoxStyler(constraints: value)));
+    return merge(
+        RemixButtonStyle(container: FlexBoxStyler(constraints: value)));
   }
-
 
   // Animate support
   RemixButtonStyle animate(AnimationConfig animation) {
@@ -250,11 +250,11 @@ class RemixButtonStyles {
   /// Base button style - solid design with primary color
   static RemixButtonStyle get baseStyle => RemixButtonStyle(
         container: FlexBoxStyler(
-          padding: EdgeInsetsGeometryMix.all(RemixTokens.spaceMd()),
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
             color: RemixTokens.primary(),
           ),
+          padding: EdgeInsetsGeometryMix.all(RemixTokens.spaceMd()),
           spacing: RemixTokens.spaceSm(),
         ),
         label: TextStyler(
@@ -296,8 +296,7 @@ class RemixButtonStyles {
                 decoration: BoxDecorationMix(
                   border: BoxBorderMix.all(
                     BorderSideMix(
-                      color: RemixTokens.primary()
-                          .withValues(alpha: 0.40),
+                      color: RemixTokens.primary().withValues(alpha: 0.40),
                       width: 2,
                     ),
                   ),
@@ -325,8 +324,4 @@ class RemixButtonStyles {
               ),
             ),
           );
-
-
-
-
 }

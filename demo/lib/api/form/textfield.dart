@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mix/mix.dart';
 import 'package:remix/remix.dart';
 
 void main() {

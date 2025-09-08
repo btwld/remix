@@ -11,9 +11,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: const Scaffold(
-        body: const Center(
-          child: const RemixCallout(
+      home: Scaffold(
+        body: Center(
+          child: RemixCallout(
             text: 'Hello, world!',
             icon: Icons.info,
           ),

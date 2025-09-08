@@ -13,10 +13,10 @@ Widget buildCalloutUseCase(BuildContext context) {
   return KeyedSubtree(
     key: _key,
     child: const Scaffold(
-      body: const Center(
-        child: const SizedBox(
+      body: Center(
+        child: SizedBox(
           width: 300,
-          child: const RemixCallout(
+          child: RemixCallout(
             icon: m.Icons.info_outline,
             text: 'Lucas',
           ),
