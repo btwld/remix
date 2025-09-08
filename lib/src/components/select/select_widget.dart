@@ -133,7 +133,7 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
   }
 
   RemixSelectStyle get _style =>
-      RemixSelectStyles.defaultStyle.merge(widget.style);
+      RemixSelectStyles.baseStyle.merge(widget.style);
 
   @override
   Widget build(BuildContext context) {

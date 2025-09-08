@@ -21,47 +21,11 @@ Widget buildButtonShowcase(BuildContext context) {
             ),
             const SizedBox(height: 16),
 
-            // Primary variants
+            // Base style demonstration
             _buildSection(
-              'Foundational Variants',
+              'Base Style',
               [
-                _buildButtonRow('Solid', RemixButtonStyles.solid),
-                _buildButtonRow('Outline', RemixButtonStyles.outline),
-              ],
-            ),
-
-            // Secondary variants
-            _buildSection(
-              'Sizes',
-              [
-                _buildButtonRow('Small', RemixButtonStyles.small),
-                _buildButtonRow('Medium', RemixButtonStyles.medium),
-              ],
-            ),
-
-            // Success variants
-            _buildSection(
-              'Large',
-              [
-                _buildButtonRow('Large', RemixButtonStyles.large),
-                _buildButtonRow('Success Outline', RemixButtonStyles.outline),
-              ],
-            ),
-
-            // Danger variants
-            _buildSection(
-              'Outline',
-              [
-                _buildButtonRow('Danger', RemixButtonStyles.outline),
-                _buildButtonRow('Danger Outline', RemixButtonStyles.outline),
-              ],
-            ),
-
-            // Warning variants
-            _buildSection(
-              'Sizes',
-              [
-                _buildButtonRow('Warning', RemixButtonStyles.large),
+                _buildButtonRow('Default Button', RemixButtonStyles.baseStyle),
               ],
             ),
 
@@ -175,31 +139,19 @@ Widget _buildSizeRow() {
             label: 'Small',
             icon: Icons.circle,
             onPressed: () => debugPrint('Small button pressed'),
-            style: RemixButtonStyles.solid
-                .padding(EdgeInsetsGeometryMix.all(8.0))
-                .label(
-                  RemixLabelStyle().fontSize(12.0),
-                ),
+            style: RemixButtonStyles.baseStyle.padding(EdgeInsetsGeometryMix.all(8.0)),
           ),
           RemixButton(
             label: 'Medium',
             icon: Icons.circle,
             onPressed: () => debugPrint('Medium button pressed'),
-            style: RemixButtonStyles.solid
-                .padding(EdgeInsetsGeometryMix.all(12.0))
-                .label(
-                  RemixLabelStyle().fontSize(14.0),
-                ),
+            style: RemixButtonStyles.baseStyle.padding(EdgeInsetsGeometryMix.all(12.0)),
           ),
           RemixButton(
             label: 'Large',
             icon: Icons.circle,
             onPressed: () => debugPrint('Large button pressed'),
-            style: RemixButtonStyles.solid
-                .padding(EdgeInsetsGeometryMix.all(16.0))
-                .label(
-                  RemixLabelStyle().fontSize(16.0),
-                ),
+            style: RemixButtonStyles.baseStyle.padding(EdgeInsetsGeometryMix.all(16.0)),
           ),
         ],
       ),
@@ -216,21 +168,21 @@ Widget _buildStatesRow() {
         label: 'Enabled',
         icon: Icons.check,
         onPressed: () => debugPrint('Enabled button pressed'),
-        style: RemixButtonStyles.solid,
+        style: RemixButtonStyles.baseStyle,
       ),
       RemixButton(
         label: 'Disabled',
         icon: Icons.block,
         enabled: false,
         onPressed: () => debugPrint('This should not print'),
-        style: RemixButtonStyles.solid,
+        style: RemixButtonStyles.baseStyle,
       ),
       RemixButton(
         label: 'Loading',
         icon: Icons.refresh,
         loading: true,
         onPressed: () => debugPrint('Loading button pressed'),
-        style: RemixButtonStyles.solid,
+        style: RemixButtonStyles.baseStyle,
       ),
     ],
   );
@@ -273,9 +225,9 @@ class _StateTrackerState extends State<_StateTracker> {
               child: Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
+                  color: MixColors.grey[100],
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.grey.shade300),
+                  border: Border.all(color: MixColors.grey[300]),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -285,7 +237,7 @@ class _StateTrackerState extends State<_StateTracker> {
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: Colors.grey.shade700,
+                        color: MixColors.grey[700],
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -293,9 +245,9 @@ class _StateTrackerState extends State<_StateTracker> {
                       spacing: 4,
                       runSpacing: 4,
                       children: [
-                        _buildStateChip('Hovered', _isHovered, Colors.blue),
-                        _buildStateChip('Pressed', _isPressed, Colors.red),
-                        _buildStateChip('Focused', _isFocused, Colors.green),
+                        _buildStateChip('Hovered', _isHovered, MixColors.blue),
+                        _buildStateChip('Pressed', _isPressed, MixColors.red),
+                        _buildStateChip('Focused', _isFocused, MixColors.green),
                       ],
                     ),
                     const SizedBox(height: 8),
@@ -304,14 +256,14 @@ class _StateTrackerState extends State<_StateTracker> {
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: Colors.grey.shade700,
+                        color: MixColors.grey[700],
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       'Press: $_pressCount | Long Press: $_longPressCount | Double Tap: $_doubleTapCount',
                       style:
-                          TextStyle(fontSize: 10, color: Colors.grey.shade600),
+                          TextStyle(fontSize: 10, color: MixColors.grey[600]),
                     ),
                   ],
                 ),
@@ -327,10 +279,10 @@ class _StateTrackerState extends State<_StateTracker> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        color: isActive ? color.withValues(alpha: 0.2) : Colors.transparent,
+        color: isActive ? color.withValues(alpha: 0.2) : MixColors.transparent,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: isActive ? color : Colors.grey.shade400,
+          color: isActive ? color : MixColors.grey[400],
           width: 1,
         ),
       ),
@@ -339,7 +291,7 @@ class _StateTrackerState extends State<_StateTracker> {
         style: TextStyle(
           fontSize: 10,
           fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
-          color: isActive ? color : Colors.grey.shade600,
+          color: isActive ? color : MixColors.grey[600],
         ),
       ),
     );
@@ -360,7 +312,7 @@ Widget _buildInteractiveStateDemo() {
         child: RemixButton(
           label: 'Interactive Demo',
           icon: Icons.touch_app,
-          style: RemixButtonStyles.solid,
+          style: RemixButtonStyles.baseStyle,
           onPressed: () => debugPrint('Primary button pressed'),
           onLongPress: () => debugPrint('Primary button long pressed'),
           onDoubleTap: () => debugPrint('Primary button double tapped'),
@@ -372,7 +324,7 @@ Widget _buildInteractiveStateDemo() {
         child: RemixButton(
           label: 'Hover & Click Me',
           icon: Icons.mouse,
-          style: RemixButtonStyles.outline,
+          style: RemixButtonStyles.baseStyle,
           onPressed: () => debugPrint('Outline button pressed'),
           onLongPress: () => debugPrint('Outline button long pressed'),
           onDoubleTap: () => debugPrint('Outline button double tapped'),
@@ -384,7 +336,7 @@ Widget _buildInteractiveStateDemo() {
         child: RemixButton(
           label: 'Focus & Press Me',
           icon: Icons.keyboard,
-          style: RemixButtonStyles.outline,
+          style: RemixButtonStyles.baseStyle,
           onPressed: () => debugPrint('Ghost button pressed'),
           onLongPress: () => debugPrint('Ghost button long pressed'),
           onDoubleTap: () => debugPrint('Ghost button double tapped'),
@@ -410,7 +362,7 @@ Widget _buildStateCallbacksDemo() {
           RemixButton(
             label: 'Press Events',
             icon: Icons.tap_and_play,
-            style: RemixButtonStyles.large,
+            style: RemixButtonStyles.baseStyle,
             onPressed: () => debugPrint('✅ Single Press'),
             onLongPress: () => debugPrint('⏳ Long Press (Hold for 500ms)'),
             onDoubleTap: () => debugPrint('⚡ Double Tap'),
@@ -418,19 +370,19 @@ Widget _buildStateCallbacksDemo() {
           RemixButton(
             label: 'Hover Events',
             icon: Icons.mouse,
-            style: RemixButtonStyles.solid,
+            style: RemixButtonStyles.baseStyle,
             onPressed: () => debugPrint('Button clicked'),
           ),
           RemixButton(
             label: 'Focus Events',
             icon: Icons.keyboard,
-            style: RemixButtonStyles.small,
+            style: RemixButtonStyles.baseStyle,
             onPressed: () => debugPrint('Focused button clicked'),
           ),
           RemixButton(
             label: 'All State Changes',
             icon: Icons.analytics,
-            style: RemixButtonStyles.outline,
+            style: RemixButtonStyles.baseStyle,
             onPressed: () => debugPrint('State tracking button clicked'),
           ),
         ],
@@ -439,22 +391,22 @@ Widget _buildStateCallbacksDemo() {
       Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Colors.amber.shade50,
+          color: MixColors.amber[50],
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.amber.shade200),
+          border: Border.all(color: MixColors.amber[200]),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                Icon(Icons.info, size: 16, color: Colors.amber.shade700),
+                Icon(Icons.info, size: 16, color: MixColors.amber[700]),
                 const SizedBox(width: 8),
                 Text(
                   'Event Testing Tips:',
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
-                    color: Colors.amber.shade700,
+                    color: MixColors.amber[700],
                   ),
                 ),
               ],
@@ -468,7 +420,7 @@ Widget _buildStateCallbacksDemo() {
               '• Check debug console for detailed event logs',
               style: TextStyle(
                 fontSize: 12,
-                color: Colors.amber.shade800,
+                color: MixColors.amber[800],
               ),
             ),
           ],

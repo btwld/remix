@@ -149,8 +149,8 @@ class RemixTooltipStyle extends Style<TooltipSpec>
 
 /// Canonical access to default and variants
 class RemixTooltipStyles {
-  /// Default tooltip style
-  static RemixTooltipStyle get defaultStyle => RemixTooltipStyle(
+  /// Base tooltip style - compact overlay design
+  static RemixTooltipStyle get baseStyle => RemixTooltipStyle(
         container: BoxStyler(
           padding: EdgeInsetsMix.all(RemixTokens.spaceSm()),
           decoration: BoxDecorationMix(

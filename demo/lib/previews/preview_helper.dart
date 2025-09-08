@@ -14,7 +14,7 @@ Widget createRemixPreview(Widget child) {
     child: MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        backgroundColor: Colors.grey[50],
+        backgroundColor: MixColors.grey[50],
         body: Center(
           child: child,
         ),
@@ -31,12 +31,12 @@ Widget createRemixPreviewDark(Widget child) {
       theme: ThemeData(
         brightness: Brightness.dark,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.blueGrey,
+          seedColor: MixColors.blueGrey,
           brightness: Brightness.dark,
         ),
       ),
       home: Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: MixColors.black,
         body: Center(
           child: child,
         ),

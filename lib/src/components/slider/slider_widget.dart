@@ -90,7 +90,7 @@ class _RemixSliderState extends State<RemixSlider>
   }
 
   RemixSliderStyle get _style =>
-      RemixSliderStyles.defaultStyle.merge(widget.style);
+      RemixSliderStyles.baseStyle.merge(widget.style);
 
   @override
   Widget build(BuildContext context) {

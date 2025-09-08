@@ -32,7 +32,7 @@ class _AuthBlockState extends State<AuthBlock> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: MixColors.white,
       body: SafeArea(
         minimum: const EdgeInsets.all(20),
         child: Column(

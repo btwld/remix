@@ -133,8 +133,8 @@ class RemixDividerStyle extends Style<DividerSpec>
 
 /// Default divider styles and variants
 class RemixDividerStyles {
-  /// Default divider style (layout utility)
-  static RemixDividerStyle get defaultStyle => RemixDividerStyle(
+  /// Base divider style - horizontal with standard height
+  static RemixDividerStyle get baseStyle => RemixDividerStyle(
         container: BoxStyler(
           constraints: BoxConstraintsMix(
             minWidth: double.infinity,
@@ -144,36 +144,6 @@ class RemixDividerStyles {
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
             color: RemixTokens.primary().withValues(alpha: 0.20),
-          ),
-        ),
-      );
-
-  /// Vertical divider variant
-  static RemixDividerStyle get vertical => RemixDividerStyle(
-        container: BoxStyler(
-          constraints: BoxConstraintsMix(
-            minWidth: 1,
-            maxWidth: 1,
-            minHeight: double.infinity,
-          ),
-          decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-            color: RemixTokens.primary().withValues(alpha: 0.20),
-          ),
-        ),
-      );
-
-  /// Thick divider variant
-  static RemixDividerStyle get thick => RemixDividerStyle(
-        container: BoxStyler(
-          constraints: BoxConstraintsMix(
-            minWidth: double.infinity,
-            minHeight: 2,
-            maxHeight: 2,
-          ),
-          decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-            color: RemixTokens.primary().withValues(alpha: 0.3),
           ),
         ),
       );

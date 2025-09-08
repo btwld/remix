@@ -28,7 +28,7 @@ Widget previewBasicCard() {
                 'This is a basic card component with some content inside. Cards are great for grouping related information.',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.grey,
+                  color: MixColors.grey,
                 ),
               ),
             ],
@@ -53,7 +53,7 @@ Widget previewCardWithActions() {
             children: [
               Row(
                 children: [
-                  Icon(Icons.article, color: Colors.blue),
+                  Icon(Icons.article, color: MixColors.blue),
                   SizedBox(width: 12),
                   Text(
                     'Article Title',
@@ -69,7 +69,7 @@ Widget previewCardWithActions() {
                 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.grey,
+                  color: MixColors.grey,
                 ),
               ),
               SizedBox(height: 16),
@@ -108,11 +108,11 @@ Widget previewProfileCard() {
             children: [
               const CircleAvatar(
                 radius: 40,
-                backgroundColor: Colors.blue,
+                backgroundColor: MixColors.blue,
                 child: Icon(
                   Icons.person,
                   size: 40,
-                  color: Colors.white,
+                  color: MixColors.white,
                 ),
               ),
               const SizedBox(height: 16),
@@ -128,7 +128,7 @@ Widget previewProfileCard() {
                 'Software Developer',
                 style: TextStyle(
                   fontSize: 16,
-                  color: Colors.grey,
+                  color: MixColors.grey,
                 ),
               ),
               const SizedBox(height: 16),
@@ -137,7 +137,7 @@ Widget previewProfileCard() {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.grey,
+                  color: MixColors.grey,
                 ),
               ),
               const SizedBox(height: 20),
@@ -197,7 +197,7 @@ Widget previewStatsCard() {
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
-                          color: Colors.blue,
+                          color: MixColors.blue,
                         ),
                       ),
                       SizedBox(height: 4),
@@ -205,7 +205,7 @@ Widget previewStatsCard() {
                         'Users',
                         style: TextStyle(
                           fontSize: 12,
-                          color: Colors.grey,
+                          color: MixColors.grey,
                         ),
                       ),
                     ],
@@ -217,7 +217,7 @@ Widget previewStatsCard() {
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
-                          color: Colors.green,
+                          color: MixColors.green,
                         ),
                       ),
                       SizedBox(height: 4),
@@ -225,7 +225,7 @@ Widget previewStatsCard() {
                         'Orders',
                         style: TextStyle(
                           fontSize: 12,
-                          color: Colors.grey,
+                          color: MixColors.grey,
                         ),
                       ),
                     ],
@@ -237,7 +237,7 @@ Widget previewStatsCard() {
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
-                          color: Colors.orange,
+                          color: MixColors.orange,
                         ),
                       ),
                       SizedBox(height: 4),
@@ -245,7 +245,7 @@ Widget previewStatsCard() {
                         'Revenue',
                         style: TextStyle(
                           fontSize: 12,
-                          color: Colors.grey,
+                          color: MixColors.grey,
                         ),
                       ),
                     ],

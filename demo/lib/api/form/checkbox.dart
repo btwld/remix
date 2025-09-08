@@ -23,8 +23,8 @@ class _MyAppState extends State<MyApp> {
             label: 'Checkbox',
             selected: _value,
             style: RemixCheckboxStyle()
-                .color(Colors.blue)
-                .onHovered(RemixCheckboxStyle().color(Colors.blue.shade700)),
+                .color(MixColors.blue)
+                .onHovered(RemixCheckboxStyle().color(MixColors.blue[700]!)),
             onChanged: (value) {
               setState(() {
                 _value = value ?? false;

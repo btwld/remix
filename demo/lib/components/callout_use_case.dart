@@ -12,11 +12,11 @@ final _key = GlobalKey();
 Widget buildCalloutUseCase(BuildContext context) {
   return KeyedSubtree(
     key: _key,
-    child: Scaffold(
-      body: Center(
-        child: SizedBox(
+    child: const Scaffold(
+      body: const Center(
+        child: const SizedBox(
           width: 300,
-          child: RemixCallout(
+          child: const RemixCallout(
             icon: m.Icons.info_outline,
             text: 'Lucas',
           ),

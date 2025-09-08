@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
@@ -15,7 +14,7 @@ void main() {
     });
 
     test('creates with specified values', () {
-      const spec = SpinnerSpec(
+      final spec = SpinnerSpec(
         size: 24,
         strokeWidth: 2,
         color: MixColors.red,
@@ -31,7 +30,7 @@ void main() {
     });
 
     test('copyWith updates only provided fields', () {
-      const original = SpinnerSpec(
+      final original = SpinnerSpec(
         size: 24,
         strokeWidth: 2,
         color: MixColors.red,
@@ -52,7 +51,7 @@ void main() {
     });
 
     test('copyWith with no args returns equivalent spec', () {
-      const original = SpinnerSpec(
+      final original = SpinnerSpec(
         size: 16,
         strokeWidth: 1.5,
         color: MixColors.green,
@@ -70,14 +69,14 @@ void main() {
     });
 
     test('lerp with null other returns original', () {
-      const spec = SpinnerSpec(size: 10, strokeWidth: 1);
+      final spec = SpinnerSpec(size: 10, strokeWidth: 1);
       final result = spec.lerp(null, 0.5);
       expect(result.size, 10);
       expect(result.strokeWidth, 1);
     });
 
     test('lerp at t=0 returns this; t=1 returns other', () {
-      const a = SpinnerSpec(
+      final a = SpinnerSpec(
         size: 10,
         strokeWidth: 1,
         color: MixColors.red,

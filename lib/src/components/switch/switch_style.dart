@@ -167,11 +167,8 @@ class RemixSwitchStyle extends Style<SwitchSpec>
 
 /// Canonical access to default and variants
 class RemixSwitchStyles {
-  /// Default switch style
-  static RemixSwitchStyle get defaultStyle => classic;
-
-  /// Classic switch variant (default) - surface background with border
-  static RemixSwitchStyle get classic => RemixSwitchStyle(
+  /// Base switch style - toggle design with thumb indicator
+  static RemixSwitchStyle get baseStyle => RemixSwitchStyle(
         container: BoxStyler(),
         track: BoxStyler(
           constraints: BoxConstraintsMix(

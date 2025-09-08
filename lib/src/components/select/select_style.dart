@@ -468,8 +468,8 @@ class RemixCompositedTransformFollowerStyle
 
 /// Canonical access to default and variants
 class RemixSelectStyles {
-  /// Default select style
-  static RemixSelectStyle get defaultStyle => RemixSelectStyle(
+  /// Base select style - standard dropdown design
+  static RemixSelectStyle get baseStyle => RemixSelectStyle(
         menuContainer: BoxStyler(
           padding: EdgeInsetsMix.symmetric(vertical: RemixTokens.spaceXs()),
           decoration: BoxDecorationMix(

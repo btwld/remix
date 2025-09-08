@@ -16,40 +16,8 @@ Widget buildButtonUseCase(BuildContext context) {
     child: Scaffold(
       body: Center(
         child: Builder(builder: (context) {
-          // Style selection with simplified options
-          final styleVariant = context.knobs.string(
-            label: 'Style',
-            initialValue: 'primary',
-          );
-
-          final sizeVariant = context.knobs.string(
-            label: 'Size',
-            initialValue: 'medium',
-          );
-
-          // Map style variants
-          RemixButtonStyle? buttonStyle;
-          switch (styleVariant) {
-            // Only foundational variants are supported now
-            case 'solid':
-              buttonStyle = RemixButtonStyles.solid;
-              break;
-            case 'outline':
-              buttonStyle = RemixButtonStyles.outline;
-              break;
-            default:
-              buttonStyle = RemixButtonStyles.solid;
-          }
-
-          // Apply size
-          switch (sizeVariant) {
-            case 'small':
-              buttonStyle = buttonStyle.merge(RemixButtonStyles.small);
-              break;
-            case 'large':
-              buttonStyle = buttonStyle.merge(RemixButtonStyles.large);
-              break;
-          }
+          // Using baseStyle as the single style option
+          RemixButtonStyle buttonStyle = RemixButtonStyles.baseStyle;
 
           return RemixButton(
             onPressed: () {

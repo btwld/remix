@@ -192,11 +192,11 @@ void main() {
                     children: [
                       RemixBadge.raw(child: Text('Default')),
                       RemixBadge.raw(
-                        style: RemixBadgeStyles.solid,
+                        style: RemixBadgeStyles.baseStyle,
                         child: Text('Solid'),
                       ),
                       RemixBadge.raw(
-                        style: RemixBadgeStyles.outline,
+                        style: RemixBadgeStyles.baseStyle,
                         child: Text('Outline'),
                       ),
                     ],

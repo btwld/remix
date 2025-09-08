@@ -33,7 +33,7 @@ class RemixSpinner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StyleBuilder(
-      style: RemixSpinnerStyles.defaultStyle.merge(style),
+      style: RemixSpinnerStyles.baseStyle.merge(style),
       builder: (context, spec) {
         return _SpinnerSpecWidget(spec: spec);
       },

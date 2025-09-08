@@ -17,12 +17,12 @@ class RemixCalloutStyle extends Style<CalloutSpec>
         TransformStyleMixin<RemixCalloutStyle>,
         ConstraintStyleMixin<RemixCalloutStyle>,
         AnimationStyleMixin<CalloutSpec, RemixCalloutStyle> {
-  final Prop<StyleSpec<BoxSpec>>? $container;
+  final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $text;
   final Prop<StyleSpec<IconSpec>>? $icon;
 
   const RemixCalloutStyle.create({
-    Prop<StyleSpec<BoxSpec>>? container,
+    Prop<StyleSpec<FlexBoxSpec>>? container,
     Prop<StyleSpec<TextSpec>>? text,
     Prop<StyleSpec<IconSpec>>? icon,
     super.variants,
@@ -33,7 +33,7 @@ class RemixCalloutStyle extends Style<CalloutSpec>
         $icon = icon;
 
   RemixCalloutStyle({
-    BoxStyler? container,
+    FlexBoxStyler? container,
     TextStyler? text,
     IconStyler? icon,
     AnimationConfig? animation,
@@ -50,25 +50,25 @@ class RemixCalloutStyle extends Style<CalloutSpec>
 
   /// Sets container padding
   RemixCalloutStyle padding(EdgeInsetsGeometryMix value) {
-    return merge(RemixCalloutStyle(container: BoxStyler(padding: value)));
+    return merge(RemixCalloutStyle(container: FlexBoxStyler(padding: value)));
   }
 
   /// Sets container margin
   RemixCalloutStyle margin(EdgeInsetsGeometryMix value) {
-    return merge(RemixCalloutStyle(container: BoxStyler(margin: value)));
+    return merge(RemixCalloutStyle(container: FlexBoxStyler(margin: value)));
   }
 
   /// Sets container background color
   RemixCalloutStyle color(Color value) {
     return merge(RemixCalloutStyle(
-      container: BoxStyler(decoration: BoxDecorationMix(color: value)),
+      container: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
     ));
   }
 
   /// Sets container border radius
   RemixCalloutStyle borderRadius(BorderRadiusGeometryMix radius) {
     return merge(RemixCalloutStyle(
-      container: BoxStyler(
+      container: FlexBoxStyler(
         decoration: BoxDecorationMix(borderRadius: radius),
       ),
     ));
@@ -76,7 +76,26 @@ class RemixCalloutStyle extends Style<CalloutSpec>
 
   /// Sets container decoration
   RemixCalloutStyle decoration(DecorationMix value) {
-    return merge(RemixCalloutStyle(container: BoxStyler(decoration: value)));
+    return merge(RemixCalloutStyle(container: FlexBoxStyler(decoration: value)));
+  }
+
+  /// Sets flex spacing
+  RemixCalloutStyle spacing(double value) {
+    return merge(RemixCalloutStyle(
+      container: FlexBoxStyler(spacing: value),
+    ));
+  }
+
+  /// Sets icon color
+  RemixCalloutStyle iconColor(Color value) {
+    return merge(RemixCalloutStyle(icon: IconStyler(color: value)));
+  }
+
+  /// Sets text color
+  RemixCalloutStyle textColor(Color value) {
+    return merge(RemixCalloutStyle(
+      text: TextStyler(style: TextStyleMix(color: value)),
+    ));
   }
 
   @override
@@ -125,13 +144,13 @@ class RemixCalloutStyle extends Style<CalloutSpec>
 
   @override
   RemixCalloutStyle constraints(BoxConstraintsMix value) {
-    return merge(RemixCalloutStyle(container: BoxStyler(constraints: value)));
+    return merge(RemixCalloutStyle(container: FlexBoxStyler(constraints: value)));
   }
 
   @override
   RemixCalloutStyle foregroundDecoration(DecorationMix value) {
     return merge(
-      RemixCalloutStyle(container: BoxStyler(foregroundDecoration: value)),
+      RemixCalloutStyle(container: FlexBoxStyler(foregroundDecoration: value)),
     );
   }
 
@@ -141,7 +160,7 @@ class RemixCalloutStyle extends Style<CalloutSpec>
     AlignmentGeometry alignment = Alignment.center,
   }) {
     return merge(RemixCalloutStyle(
-      container: BoxStyler(alignment: alignment, transform: value),
+      container: FlexBoxStyler(alignment: alignment, transform: value),
     ));
   }
 
@@ -156,14 +175,19 @@ class RemixCalloutStyle extends Style<CalloutSpec>
       ];
 }
 
-// Default style is provided by RemixCalloutStyles.defaultStyle
+// Default style is provided by RemixCalloutStyles.baseStyle
 
 // Variants are exposed via RemixCalloutStyles
 /// Canonical access to default styles
 class RemixCalloutStyles {
-  /// Default callout style
-  static RemixCalloutStyle get defaultStyle => RemixCalloutStyle(
-        container: BoxStyler(
+  /// Base callout style - informational design with border
+  static RemixCalloutStyle get baseStyle => RemixCalloutStyle(
+        container: FlexBoxStyler(
+          alignment: Alignment.centerLeft,
+          direction: Axis.horizontal,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          spacing: RemixTokens.spaceSm(),
           padding: EdgeInsetsMix.all(RemixTokens.spaceMd()),
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(

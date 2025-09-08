@@ -132,11 +132,8 @@ class RemixCardStyle extends Style<CardSpec>
 }
 
 class RemixCardStyles {
-  /// Default card style
-  static RemixCardStyle get defaultStyle => classic;
-
-  /// Classic card variant (default) - surface background with border
-  static RemixCardStyle get classic => RemixCardStyle(
+  /// Base card style - surface background with border
+  static RemixCardStyle get baseStyle => RemixCardStyle(
         container: BoxStyler(
           padding: EdgeInsetsMix.all(RemixTokens.spaceLg()),
           decoration: BoxDecorationMix(

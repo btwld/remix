@@ -3,8 +3,6 @@ part of 'badge.dart';
 // Private per-component constants (sizes only)
 const _kFontSizeSm = 12.0;
 
-const _kIconSizeSm = 14.0;
-
 class RemixBadgeStyle extends Style<BadgeSpec>
     with
         StyleModifierMixin<RemixBadgeStyle, BadgeSpec>,
@@ -20,30 +18,25 @@ class RemixBadgeStyle extends Style<BadgeSpec>
         AnimationStyleMixin<BadgeSpec, RemixBadgeStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $text;
-  final Prop<StyleSpec<IconSpec>>? $icon;
 
   const RemixBadgeStyle.create({
     Prop<StyleSpec<BoxSpec>>? container,
     Prop<StyleSpec<TextSpec>>? text,
-    Prop<StyleSpec<IconSpec>>? icon,
     super.variants,
     super.animation,
     super.modifier,
   })  : $container = container,
-        $text = text,
-        $icon = icon;
+        $text = text;
 
   RemixBadgeStyle({
     BoxStyler? container,
     TextStyler? text,
-    IconStyler? icon,
     AnimationConfig? animation,
     List<VariantStyle<BadgeSpec>>? variants,
     ModifierConfig? modifier,
   }) : this.create(
           container: Prop.maybeMix(container),
           text: Prop.maybeMix(text),
-          icon: Prop.maybeMix(icon),
           variants: variants,
           animation: animation,
           modifier: modifier,
@@ -79,10 +72,6 @@ class RemixBadgeStyle extends Style<BadgeSpec>
     ));
   }
 
-  /// Sets icon color
-  RemixBadgeStyle iconColor(Color value) {
-    return merge(RemixBadgeStyle(icon: IconStyler(color: value)));
-  }
 
   // Additional convenience methods that delegate to container
 
@@ -143,7 +132,6 @@ class RemixBadgeStyle extends Style<BadgeSpec>
       spec: BadgeSpec(
         container: MixOps.resolve(context, $container),
         text: MixOps.resolve(context, $text),
-        icon: MixOps.resolve(context, $icon),
       ),
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
@@ -157,7 +145,6 @@ class RemixBadgeStyle extends Style<BadgeSpec>
     return RemixBadgeStyle.create(
       container: MixOps.merge($container, other.$container),
       text: MixOps.merge($text, other.$text),
-      icon: MixOps.merge($icon, other.$icon),
       variants: MixOps.mergeVariants($variants, other.$variants),
       animation: MixOps.mergeAnimation($animation, other.$animation),
       modifier: MixOps.mergeModifier($modifier, other.$modifier),
@@ -168,7 +155,6 @@ class RemixBadgeStyle extends Style<BadgeSpec>
   List<Object?> get props => [
         $container,
         $text,
-        $icon,
         $variants,
         $animation,
         $modifier,
@@ -177,8 +163,8 @@ class RemixBadgeStyle extends Style<BadgeSpec>
 
 /// Default badge styles and variants
 class RemixBadgeStyles {
-  /// Solid badge style (default) - primary background with onPrimary text/icon
-  static RemixBadgeStyle get solid => RemixBadgeStyle(
+  /// Base badge style - compact design with primary color
+  static RemixBadgeStyle get baseStyle => RemixBadgeStyle(
         container: BoxStyler(
           padding: EdgeInsetsMix.symmetric(
             vertical: RemixTokens.spaceXs(),
@@ -196,11 +182,5 @@ class RemixBadgeStyles {
             fontWeight: FontWeight.w500,
           ),
         ),
-        icon: IconStyler(color: RemixTokens.onPrimary(), size: _kIconSizeSm),
       );
-
-
-
-  /// Default style alias
-  static RemixBadgeStyle get defaultStyle => solid;
 }

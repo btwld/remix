@@ -113,7 +113,7 @@ class _RemixRadioState<T> extends State<RemixRadio<T>>
     // Remove effectiveCursor since NakedRadio handles cursor internally
 
     return StyleBuilder(
-      style: RemixRadioStyles.defaultStyle.merge(style),
+      style: RemixRadioStyles.baseStyle.merge(style),
       controller: widget.statesController ?? controller,
       builder: (context, spec) {
         final IndicatorContainer = spec.indicatorContainer.createWidget;

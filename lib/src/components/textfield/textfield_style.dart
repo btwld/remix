@@ -354,69 +354,10 @@ class RemixTextFieldStyle extends Style<TextFieldSpec>
       ];
 }
 
-// Default style is provided by RemixTextFieldStyles.defaultStyle
-
-// Focus style
-final RemixTextFieldFocusStyle = RemixTextFieldStyle(
-  container: FlexBoxStyler(
-    decoration: BoxDecorationMix(
-      border: BoxBorderMix.all(
-        BorderSideMix(color: RemixTokens.primary(), width: 2),
-      ),
-    ),
-  ),
-);
-
-// Error style
-final RemixTextFieldErrorStyle = RemixTextFieldStyle(
-  container: FlexBoxStyler(
-    decoration: BoxDecorationMix(
-      border: BoxBorderMix.all(
-        BorderSideMix(color: RemixTokens.primary(), width: 1),
-      ),
-    ),
-  ),
-  helperText: TextStyler(style: TextStyleMix(color: RemixTokens.primary())),
-);
-
-// Disabled style
-final RemixTextFieldDisabledStyle = RemixTextFieldStyle(
-  text: TextStyler(
-    style: TextStyleMix(
-      color: RemixTokens.primary().withValues(alpha: 0.40),
-    ),
-  ),
-  container: FlexBoxStyler(
-    decoration: BoxDecorationMix(
-      border: BoxBorderMix.all(
-        BorderSideMix(
-          color: RemixTokens.primary().withValues(alpha: 0.06),
-          width: 1,
-        ),
-      ),
-      color: RemixTokens.primary().withValues(alpha: 0.03),
-    ),
-  ),
-);
-
-// Variants are exposed via RemixTextFieldStyles
-
-/// Canonical access to default and common state styles
+/// Text field styles
 class RemixTextFieldStyles {
-  /// Default text field style
-  static RemixTextFieldStyle get defaultStyle => classic;
-
-  /// Focused state style
-  static RemixTextFieldStyle get focused => RemixTextFieldFocusStyle;
-
-  /// Error state style
-  static RemixTextFieldStyle get error => RemixTextFieldErrorStyle;
-
-  /// Disabled state style
-  static RemixTextFieldStyle get disabled => RemixTextFieldDisabledStyle;
-
-  /// Classic text field variant (default) - surface background with border
-  static RemixTextFieldStyle get classic => RemixTextFieldStyle(
+  /// Base text field style - standard design with border
+  static RemixTextFieldStyle get baseStyle => RemixTextFieldStyle(
         text: TextStyler(
           style: TextStyleMix(
             color: RemixTokens.primary(), // TODO: Should be fg token

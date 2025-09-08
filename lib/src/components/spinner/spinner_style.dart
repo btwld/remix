@@ -1,10 +1,7 @@
 part of 'spinner.dart';
 
-// Private per-component constants (sizes only)
-const _kSizeSm = 16.0;
+// Private per-component constants
 const _kSizeMd = 24.0;
-const _kSizeLg = 32.0;
-const _kStrokeSm = 1.0;
 const _kStrokeMd = 1.5;
 const _kDurationMs = 1000;
 
@@ -139,10 +136,10 @@ class RemixSpinnerStyle extends Style<SpinnerSpec>
       ];
 }
 
-/// Default spinner styles and variants
+/// Spinner styles
 class RemixSpinnerStyles {
-  /// Default spinner style
-  static RemixSpinnerStyle get defaultStyle => RemixSpinnerStyle(
+  /// Base spinner style - standard size with primary color
+  static RemixSpinnerStyle get baseStyle => RemixSpinnerStyle(
         size: _kSizeMd,
         strokeWidth: _kStrokeMd,
         color: RemixTokens.primary(),
@@ -150,19 +147,4 @@ class RemixSpinnerStyles {
         style: SpinnerType.solid,
       );
 
-
-
-  /// Size variants
-  
-  /// Size 1 variant (small)
-  static RemixSpinnerStyle get size1 => RemixSpinnerStyle(
-        size: _kSizeSm,
-        strokeWidth: _kStrokeSm,
-      );
-
-  /// Size 2 variant (large)
-  static RemixSpinnerStyle get size2 => RemixSpinnerStyle(
-        size: _kSizeLg,
-        strokeWidth: 2.0,
-      );
 }

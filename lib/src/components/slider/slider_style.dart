@@ -129,7 +129,7 @@ class RemixSliderStyle extends Style<SliderSpec>
       ];
 }
 
-// Default style is provided by RemixSliderStyles.defaultStyle
+// Default style is provided by RemixSliderStyles.baseStyle
 
 // Hover style
 final RemixSliderHoverStyle = RemixSliderStyle(
