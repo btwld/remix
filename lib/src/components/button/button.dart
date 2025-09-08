@@ -8,7 +8,6 @@ import 'package:naked_ui/src/utilities/naked_pressable.dart' as pressable;
 import '../../theme/remix_tokens.dart';
 
 import '../_internal/widget_state_controller_mixin.dart';
-import '../label/label.dart';
 import '../spinner/spinner.dart';
 
 part 'button_spec.dart';

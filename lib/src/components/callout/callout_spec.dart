@@ -1,20 +1,20 @@
 part of 'callout.dart';
 
 class CalloutSpec extends Spec<CalloutSpec> with Diagnosticable {
-  final StyleSpec<BoxSpec> container;
+  final StyleSpec<FlexBoxSpec> container;
   final StyleSpec<TextSpec> text;
   final StyleSpec<IconSpec> icon;
 
   const CalloutSpec({
-    StyleSpec<BoxSpec>? container,
+    StyleSpec<FlexBoxSpec>? container,
     StyleSpec<TextSpec>? text,
     StyleSpec<IconSpec>? icon,
-  })  : container = container ?? const StyleSpec(spec: BoxSpec()),
+  })  : container = container ?? const StyleSpec(spec: FlexBoxSpec()),
         text = text ?? const StyleSpec(spec: TextSpec()),
         icon = icon ?? const StyleSpec(spec: IconSpec());
 
   CalloutSpec copyWith({
-    StyleSpec<BoxSpec>? container,
+    StyleSpec<FlexBoxSpec>? container,
     StyleSpec<TextSpec>? text,
     StyleSpec<IconSpec>? icon,
   }) {

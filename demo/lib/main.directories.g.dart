@@ -10,12 +10,14 @@
 // **************************************************************************
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:demo/components/accordion_use_case.dart'
-    as _demo_components_accordion_use_case;
 import 'package:demo/components/avatar_use_case.dart'
     as _demo_components_avatar_use_case;
 import 'package:demo/components/badge_use_case.dart'
     as _demo_components_badge_use_case;
+import 'package:demo/components/button_real_world_examples.dart'
+    as _demo_components_button_real_world_examples;
+import 'package:demo/components/button_showcase.dart'
+    as _demo_components_button_showcase;
 import 'package:demo/components/button_use_case.dart'
     as _demo_components_button_use_case;
 import 'package:demo/components/callout_use_case.dart'
@@ -24,11 +26,8 @@ import 'package:demo/components/card_use_case.dart'
     as _demo_components_card_use_case;
 import 'package:demo/components/checkbox_use_case.dart'
     as _demo_components_checkbox_use_case;
-import 'package:demo/components/chip.dart' as _demo_components_chip;
 import 'package:demo/components/divider_use_case.dart'
     as _demo_components_divider_use_case;
-import 'package:demo/components/list_item_use_case.dart'
-    as _demo_components_list_item_use_case;
 import 'package:demo/components/progress_use_case.dart'
     as _demo_components_progress_use_case;
 import 'package:demo/components/radio_use_case.dart'
@@ -48,13 +47,6 @@ final directories = <_widgetbook.WidgetbookNode>[
     name: 'components',
     children: [
       _widgetbook.WidgetbookLeafComponent(
-        name: 'RemixAccordion',
-        useCase: _widgetbook.WidgetbookUseCase(
-          name: 'Accordion Component',
-          builder: _demo_components_accordion_use_case.buildAccordionUseCase,
-        ),
-      ),
-      _widgetbook.WidgetbookLeafComponent(
         name: 'RemixAvatar',
         useCase: _widgetbook.WidgetbookUseCase(
           name: 'Avatar Component',
@@ -68,12 +60,23 @@ final directories = <_widgetbook.WidgetbookNode>[
           builder: _demo_components_badge_use_case.buildAvatarUseCase,
         ),
       ),
-      _widgetbook.WidgetbookLeafComponent(
+      _widgetbook.WidgetbookComponent(
         name: 'RemixButton',
-        useCase: _widgetbook.WidgetbookUseCase(
-          name: 'Button Component',
-          builder: _demo_components_button_use_case.buildButtonUseCase,
-        ),
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Button Component',
+            builder: _demo_components_button_use_case.buildButtonUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Button Showcase',
+            builder: _demo_components_button_showcase.buildButtonShowcase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Real World Examples',
+            builder: _demo_components_button_real_world_examples
+                .buildButtonRealWorldExamples,
+          ),
+        ],
       ),
       _widgetbook.WidgetbookLeafComponent(
         name: 'RemixCallout',
@@ -97,24 +100,10 @@ final directories = <_widgetbook.WidgetbookNode>[
         ),
       ),
       _widgetbook.WidgetbookLeafComponent(
-        name: 'RemixChip',
-        useCase: _widgetbook.WidgetbookUseCase(
-          name: 'Chip Component',
-          builder: _demo_components_chip.buildChipUseCase,
-        ),
-      ),
-      _widgetbook.WidgetbookLeafComponent(
         name: 'RemixDivider',
         useCase: _widgetbook.WidgetbookUseCase(
           name: 'Divider Component',
           builder: _demo_components_divider_use_case.buildDivider,
-        ),
-      ),
-      _widgetbook.WidgetbookLeafComponent(
-        name: 'RemixListItem',
-        useCase: _widgetbook.WidgetbookUseCase(
-          name: 'Menu Item Component',
-          builder: _demo_components_list_item_use_case.buildButtonUseCase,
         ),
       ),
       _widgetbook.WidgetbookLeafComponent(

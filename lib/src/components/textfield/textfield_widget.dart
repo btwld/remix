@@ -73,6 +73,9 @@ class RemixTextField extends StatefulWidget with HasEnabled, HasError {
     this.leading,
     this.trailing,
     this.onPressed,
+    this.semanticLabel,
+    this.semanticHint,
+    this.excludeSemantics = false,
     this.style = const RemixTextFieldStyle.create(),
   });
 
@@ -238,6 +241,15 @@ class RemixTextField extends StatefulWidget with HasEnabled, HasError {
   /// Called when the text field is pressed (for tap interactions).
   final VoidCallback? onPressed;
 
+  /// The semantic label for the text field.
+  final String? semanticLabel;
+
+  /// The semantic hint for the text field.
+  final String? semanticHint;
+
+  /// Whether to exclude child semantics.
+  final bool excludeSemantics;
+
   /// The style configuration for the text field.
   final RemixTextFieldStyle style;
 
@@ -248,7 +260,7 @@ class RemixTextField extends StatefulWidget with HasEnabled, HasError {
 class _RemixTextFieldState extends State<RemixTextField>
     with HasWidgetStateController {
   RemixTextFieldStyle get _style =>
-      RemixTextFieldStyles.defaultStyle.merge(widget.style);
+      RemixTextFieldStyles.baseStyle.merge(widget.style);
 
   TextEditingController? _internalController;
   TextEditingController get _controller =>
@@ -278,69 +290,79 @@ class _RemixTextFieldState extends State<RemixTextField>
       style: _style,
       controller: controller,
       builder: (context, spec) {
-        return NakedTextField(
-          groupId: widget.groupId,
-          controller: _controller,
-          focusNode: widget.focusNode,
-          undoController: widget.undoController,
-          keyboardType: widget.keyboardType,
-          textInputAction: widget.textInputAction,
-          textCapitalization: widget.textCapitalization,
-          textAlign: spec.textAlign,
-          textDirection: widget.textDirection,
-          readOnly: widget.readOnly,
-          showCursor: widget.showCursor,
-          autofocus: widget.autofocus,
-          obscuringCharacter: widget.obscuringCharacter,
-          obscureText: widget.obscureText,
-          autocorrect: widget.autocorrect,
-          smartDashesType: widget.smartDashesType,
-          smartQuotesType: widget.smartQuotesType,
-          enableSuggestions: widget.enableSuggestions,
-          maxLines: widget.maxLines,
-          minLines: widget.minLines,
-          expands: widget.expands,
-          maxLength: widget.maxLength,
-          maxLengthEnforcement: widget.maxLengthEnforcement,
-          onChanged: widget.onChanged,
-          onEditingComplete: widget.onEditingComplete,
-          onSubmitted: widget.onSubmitted,
-          onAppPrivateCommand: widget.onAppPrivateCommand,
-          inputFormatters: widget.inputFormatters,
-          enabled: widget.enabled,
-          cursorWidth: spec.cursorWidth,
-          cursorHeight: spec.cursorHeight,
-          cursorRadius: spec.cursorRadius,
-          cursorOpacityAnimates: spec.cursorOpacityAnimates,
-          cursorColor: spec.cursorColor,
-          selectionHeightStyle: spec.selectionHeightStyle,
-          selectionWidthStyle: spec.selectionWidthStyle,
-          keyboardAppearance: spec.keyboardAppearance,
-          scrollPadding: spec.scrollPadding,
-          dragStartBehavior: widget.dragStartBehavior,
-          enableInteractiveSelection: widget.enableInteractiveSelection,
-          selectionControls: widget.selectionControls,
-          onPressed: widget.onPressed,
-          onTapAlwaysCalled: widget.onTapAlwaysCalled,
-          onTapOutside: widget.onTapOutside,
-          scrollController: widget.scrollController,
-          scrollPhysics: widget.scrollPhysics,
-          autofillHints: widget.autofillHints,
-          contentInsertionConfiguration: widget.contentInsertionConfiguration,
-          clipBehavior: widget.clipBehavior,
-          restorationId: widget.restorationId,
-          onPressUpOutside: widget.onPressUpOutside,
-          stylusHandwritingEnabled: widget.stylusHandwritingEnabled,
-          enableIMEPersonalizedLearning: widget.enableIMEPersonalizedLearning,
-          contextMenuBuilder: widget.contextMenuBuilder,
-          canRequestFocus: widget.canRequestFocus,
-          spellCheckConfiguration: widget.spellCheckConfiguration,
-          magnifierConfiguration: widget.magnifierConfiguration,
-          style: spec.text.spec.style ?? const TextStyle(),
-          ignorePointers: widget.ignorePointers,
-          builder: (context, editableText) {
-            // Build the core editable with hint overlay if needed
-            final editableWithHint = widget.hintText != null
+        return Semantics(
+          excludeSemantics: widget.excludeSemantics,
+          enabled: widget.enabled && !widget.readOnly,
+          focusable: widget.enabled && !widget.readOnly,
+          textField: true,
+          label: widget.semanticLabel ?? widget.label,
+          value: _controller.text,
+          hint: widget.semanticHint ?? widget.hintText,
+          obscured: widget.obscureText,
+          multiline: widget.maxLines != 1,
+          child: NakedTextField(
+            groupId: widget.groupId,
+            controller: _controller,
+            focusNode: widget.focusNode,
+            undoController: widget.undoController,
+            keyboardType: widget.keyboardType,
+            textInputAction: widget.textInputAction,
+            textCapitalization: widget.textCapitalization,
+            textAlign: spec.textAlign,
+            textDirection: widget.textDirection,
+            readOnly: widget.readOnly,
+            showCursor: widget.showCursor,
+            autofocus: widget.autofocus,
+            obscuringCharacter: widget.obscuringCharacter,
+            obscureText: widget.obscureText,
+            autocorrect: widget.autocorrect,
+            smartDashesType: widget.smartDashesType,
+            smartQuotesType: widget.smartQuotesType,
+            enableSuggestions: widget.enableSuggestions,
+            maxLines: widget.maxLines,
+            minLines: widget.minLines,
+            expands: widget.expands,
+            maxLength: widget.maxLength,
+            maxLengthEnforcement: widget.maxLengthEnforcement,
+            onChanged: widget.onChanged,
+            onEditingComplete: widget.onEditingComplete,
+            onSubmitted: widget.onSubmitted,
+            onAppPrivateCommand: widget.onAppPrivateCommand,
+            inputFormatters: widget.inputFormatters,
+            enabled: widget.enabled,
+            cursorWidth: spec.cursorWidth,
+            cursorHeight: spec.cursorHeight,
+            cursorRadius: spec.cursorRadius,
+            cursorOpacityAnimates: spec.cursorOpacityAnimates,
+            cursorColor: spec.cursorColor,
+            selectionHeightStyle: spec.selectionHeightStyle,
+            selectionWidthStyle: spec.selectionWidthStyle,
+            keyboardAppearance: spec.keyboardAppearance,
+            scrollPadding: spec.scrollPadding,
+            dragStartBehavior: widget.dragStartBehavior,
+            enableInteractiveSelection: widget.enableInteractiveSelection,
+            selectionControls: widget.selectionControls,
+            onPressed: widget.onPressed,
+            onTapAlwaysCalled: widget.onTapAlwaysCalled,
+            onTapOutside: widget.onTapOutside,
+            scrollController: widget.scrollController,
+            scrollPhysics: widget.scrollPhysics,
+            autofillHints: widget.autofillHints,
+            contentInsertionConfiguration: widget.contentInsertionConfiguration,
+            clipBehavior: widget.clipBehavior,
+            restorationId: widget.restorationId,
+            onPressUpOutside: widget.onPressUpOutside,
+            stylusHandwritingEnabled: widget.stylusHandwritingEnabled,
+            enableIMEPersonalizedLearning: widget.enableIMEPersonalizedLearning,
+            contextMenuBuilder: widget.contextMenuBuilder,
+            canRequestFocus: widget.canRequestFocus,
+            spellCheckConfiguration: widget.spellCheckConfiguration,
+            magnifierConfiguration: widget.magnifierConfiguration,
+            style: spec.text.spec.style ?? const TextStyle(),
+            ignorePointers: widget.ignorePointers,
+            builder: (context, editableText) {
+              // Build the core editable with hint overlay if needed
+              final editableWithHint = widget.hintText != null
                 ? Stack(
                     alignment: AlignmentDirectional.centerStart,
                     children: [
@@ -362,38 +384,39 @@ class _RemixTextFieldState extends State<RemixTextField>
                   )
                 : editableText;
 
-            final FlexContainer = spec.container.createWidget;
-            final Label = spec.label.createWidget;
-            final HelperText = spec.helperText.createWidget;
+              final FlexContainer = spec.container.createWidget;
+              final Label = spec.label.createWidget;
+              final HelperText = spec.helperText.createWidget;
 
-            // Add leading/trailing widgets if present
-            final withAccessories = FlexContainer(
-              direction: Axis.horizontal,
-              children: [
-                if (widget.leading != null) widget.leading!,
-                Flexible(fit: FlexFit.loose, child: editableWithHint),
-                if (widget.trailing != null) widget.trailing!,
-              ],
-            );
+              // Add leading/trailing widgets if present
+              final withAccessories = FlexContainer(
+                direction: Axis.horizontal,
+                children: [
+                  if (widget.leading != null) widget.leading!,
+                  Flexible(fit: FlexFit.loose, child: editableWithHint),
+                  if (widget.trailing != null) widget.trailing!,
+                ],
+              );
 
-            // Add label and helper text if present
-            final needsWrapper =
-                widget.label != null || widget.helperText != null;
+              // Add label and helper text if present
+              final needsWrapper =
+                  widget.label != null || widget.helperText != null;
 
-            return needsWrapper
-                ? Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: spec.spacing,
-                    children: [
-                      if (widget.label != null) Label(widget.label!),
-                      withAccessories,
-                      if (widget.helperText != null)
-                        HelperText(widget.helperText!),
-                    ],
-                  )
-                : withAccessories;
-          },
+              return needsWrapper
+                  ? Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: spec.spacing,
+                      children: [
+                        if (widget.label != null) Label(widget.label!),
+                        withAccessories,
+                        if (widget.helperText != null)
+                          HelperText(widget.helperText!),
+                      ],
+                    )
+                  : withAccessories;
+            },
+        ),
         );
       },
     );

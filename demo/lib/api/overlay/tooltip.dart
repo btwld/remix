@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
               RemixTooltip(
                 tooltipChild: Text(
                   'This is a tooltip',
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: MixColors.white),
                 ),
                 child: Text('Hello'),
               ),

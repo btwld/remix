@@ -12,7 +12,6 @@ typedef RemixButtonIconBuilder = Widget Function(
   BuildContext context,
   IconSpec spec,
   IconData? icon,
-  IconPosition position,
 );
 
 /// Builder function for customizing button loading state rendering.
@@ -81,7 +80,6 @@ class RemixButton extends StatefulWidget with HasEnabled {
     this.onDoubleTap,
     this.focusNode,
     this.style = const RemixButtonStyle.create(),
-    this.isSemanticButton = true,
     this.semanticLabel,
     this.semanticHint,
     this.excludeSemantics = false,
@@ -116,7 +114,6 @@ class RemixButton extends StatefulWidget with HasEnabled {
     this.onDoubleTap,
     this.focusNode,
     this.style = const RemixButtonStyle.create(),
-    this.isSemanticButton = true,
     this.semanticLabel,
     this.semanticHint,
     this.excludeSemantics = false,
@@ -185,12 +182,6 @@ class RemixButton extends StatefulWidget with HasEnabled {
   /// Builder for customizing the loading state rendering.
   final RemixButtonLoadingBuilder? loadingBuilder;
 
-  /// Whether the button should be treated as a semantic button.
-  ///
-  /// When true, the button will have proper button semantics for accessibility.
-  /// Defaults to true.
-  final bool isSemanticButton;
-
   /// The semantic label for the button.
   ///
   /// Used by screen readers to describe the button.
@@ -224,28 +215,47 @@ class _RemixButtonState extends State<RemixButton>
   @override
   Widget build(BuildContext context) {
     return StyleBuilder(
-      style: RemixButtonStyles.defaultStyle.merge(widget.style),
+      style: RemixButtonStyles.baseStyle.merge(widget.style),
       controller: controller,
       builder: (context, spec) {
-        final ContainerWidget = spec.container.createWidget;
-        final LabelWidget = spec.label.createWidget;
+        final FlexContaineWidget = spec.container.createWidget;
+        final TextWidget = spec.label.createWidget;
+        final IconWidget = spec.icon.createWidget;
 
-        // Build the button content using enhanced createWidget
-        Widget content = LabelWidget(
-          widget.label ?? '',
-          icon: widget.icon,
-          textBuilder: widget.textBuilder,
-          iconBuilder: widget.iconBuilder,
-        );
+        // Build the button content directly using FlexBox
+        final List<Widget> children = [];
 
-        // Avoid duplicate semantics when treating this as a semantic button.
-        // The outer NakedButton provides the semantics via semanticLabel.
-        if (widget.isSemanticButton) {
-          content = ExcludeSemantics(child: content);
+        // Add icon if present (leading icon pattern)
+        if (widget.icon != null || widget.iconBuilder != null) {
+          final iconWidget = widget.iconBuilder != null
+              ? StyleSpecBuilder(
+                  styleSpec: spec.icon,
+                  builder: (context, iconSpec) =>
+                      widget.iconBuilder!(context, iconSpec, widget.icon),
+                )
+              : (widget.icon != null
+                  ? IconWidget(icon: widget.icon)
+                  : const SizedBox.shrink());
+          children.add(iconWidget);
+        }
+
+        // Add text if present
+        if (widget.label?.isNotEmpty == true || widget.textBuilder != null) {
+          final textWidget = widget.textBuilder != null
+              ? StyleSpecBuilder(
+                  styleSpec: spec.label,
+                  builder: (context, textSpec) => widget.textBuilder!(
+                    context,
+                    textSpec,
+                    widget.label ?? '',
+                  ),
+                )
+              : TextWidget(widget.label ?? '');
+          children.add(textWidget);
         }
 
         // Build spinner (used when loading)
-        final Widget spinner = widget.loadingBuilder != null
+        final spinner = widget.loadingBuilder != null
             ? StyleSpecBuilder(
                 styleSpec: spec.spinner,
                 builder: (context, spinnerSpec) =>
@@ -264,11 +274,13 @@ class _RemixButtonState extends State<RemixButton>
                 ),
               );
 
+        // Create content with FlexBox layout
+        Widget content =
+            FlexContaineWidget(direction: Axis.horizontal, children: children);
+
         // Use a layered approach that preserves size and state of the content
         // while showing a centered spinner on top when loading.
-        // Hide content visually (and from semantics when not using isSemanticButton)
-        // but keep it mounted to preserve its state.
-        final Widget layered = Stack(
+        final layered = Stack(
           alignment: Alignment.center,
           children: [
             // Underlying content: keep in the tree with state, but hide when loading
@@ -277,20 +289,10 @@ class _RemixButtonState extends State<RemixButton>
               maintainState: true,
               maintainAnimation: true,
               maintainSize: true,
-              child: ExcludeSemantics(child: content),
+              child: content,
             ),
             // Spinner overlay, visible only when loading
-            Visibility(
-              visible: widget.loading,
-              maintainState: true,
-              maintainAnimation: true,
-              maintainSize: true,
-              child: ExcludeSemantics(
-                child: Center(
-                  child: widget.loading ? spinner : const SizedBox.shrink(),
-                ),
-              ),
-            ),
+            if (widget.loading) Center(child: spinner),
           ],
         );
 
@@ -298,14 +300,13 @@ class _RemixButtonState extends State<RemixButton>
         return Semantics(
           excludeSemantics: widget.excludeSemantics,
           enabled: _isEnabled,
-          button: widget.isSemanticButton,
+          button: true,
           focusable: _isEnabled,
           liveRegion: widget.loading,
           label: widget.semanticLabel ?? widget.label,
           value: widget.loading ? 'Loading' : null,
           hint: widget.semanticHint,
-          onTap:
-              widget.isSemanticButton && _isEnabled ? widget.onPressed : null,
+          onTap: _isEnabled ? widget.onPressed : null,
           child: pressable.NakedPressable(
             onPressed: _isEnabled ? widget.onPressed : null,
             onDoubleTap: _isEnabled ? widget.onDoubleTap : null,
@@ -318,7 +319,7 @@ class _RemixButtonState extends State<RemixButton>
             onFocusChange: (focused) => controller.focused = focused,
             statesController: controller,
             enableFeedback: widget.enableFeedback,
-            child: ContainerWidget(child: layered),
+            child: layered,
             builder: (context, states, child) => child!,
           ),
         );

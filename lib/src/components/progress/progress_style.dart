@@ -189,11 +189,8 @@ class RemixProgressStyle extends Style<ProgressSpec>
 
 /// Canonical access to default and variants
 class RemixProgressStyles {
-  /// Default progress style
-  static RemixProgressStyle get defaultStyle => classic;
-
-  /// Classic progress variant (default) - surface background with border
-  static RemixProgressStyle get classic => RemixProgressStyle(
+  /// Base progress style - surface background with border
+  static RemixProgressStyle get baseStyle => RemixProgressStyle(
         container: BoxStyler(
           constraints: BoxConstraintsMix(
             minHeight: _kBarHeight,

@@ -32,7 +32,7 @@ class RemixTooltip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StyleBuilder(
-      style: RemixTooltipStyles.defaultStyle.merge(style),
+      style: RemixTooltipStyles.baseStyle.merge(style),
       builder: (context, spec) {
         final Container = spec.container.createWidget;
 

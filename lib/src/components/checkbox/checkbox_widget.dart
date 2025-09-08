@@ -101,7 +101,7 @@ class _RemixCheckboxState extends State<RemixCheckbox>
     controller.selected = widget.selected ?? false;
 
     return StyleBuilder<CheckboxSpec>(
-      style: RemixCheckboxStyles.defaultStyle.merge(widget.style),
+      style: RemixCheckboxStyles.baseStyle.merge(widget.style),
       controller: controller,
       builder: (context, spec) {
         final IndicatorContainer = spec.indicatorContainer.createWidget;

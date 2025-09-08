@@ -127,7 +127,7 @@ class _FormExampleState extends State<_FormExample> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300),
+        border: Border.all(color: MixColors.grey[300]!),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Form(
@@ -177,7 +177,7 @@ class _FormExampleState extends State<_FormExample> {
                 RemixButton(
                   label: _isSubmitting ? 'Submitting...' : 'Submit',
                   icon: _isSubmitting ? Icons.hourglass_empty : Icons.send,
-                  style: RemixButtonStyles.solid,
+                  style: RemixButtonStyles.baseStyle,
                   loading: _isSubmitting,
                   enabled: _isFormValid && !_isSubmitting,
                   onPressed: _submitForm,
@@ -186,7 +186,7 @@ class _FormExampleState extends State<_FormExample> {
                 RemixButton(
                   label: 'Reset',
                   icon: Icons.refresh,
-                  style: RemixButtonStyles.outline,
+                  style: RemixButtonStyles.baseStyle,
                   enabled: !_isSubmitting,
                   onPressed: () {
                     _formKey.currentState?.reset();
@@ -236,7 +236,7 @@ class _LoadingStatesExampleState extends State<_LoadingStatesExample> {
         RemixButton(
           label: _downloadLoading ? 'Downloading...' : 'Download',
           icon: _downloadLoading ? Icons.download : Icons.download_rounded,
-          style: RemixButtonStyles.solid,
+          style: RemixButtonStyles.baseStyle,
           loading: _downloadLoading,
           onPressed: _downloadLoading
               ? null
@@ -248,7 +248,7 @@ class _LoadingStatesExampleState extends State<_LoadingStatesExample> {
         RemixButton(
           label: _uploadLoading ? 'Uploading...' : 'Upload',
           icon: _uploadLoading ? Icons.upload : Icons.upload_rounded,
-          style: RemixButtonStyles.solid,
+          style: RemixButtonStyles.baseStyle,
           loading: _uploadLoading,
           onPressed: _uploadLoading
               ? null
@@ -260,7 +260,7 @@ class _LoadingStatesExampleState extends State<_LoadingStatesExample> {
         RemixButton(
           label: _syncLoading ? 'Syncing...' : 'Sync',
           icon: _syncLoading ? Icons.sync : Icons.sync_rounded,
-          style: RemixButtonStyles.solid,
+          style: RemixButtonStyles.baseStyle,
           loading: _syncLoading,
           onPressed: _syncLoading
               ? null
@@ -297,7 +297,7 @@ class _ConfirmationFlowExampleState extends State<_ConfirmationFlowExample> {
               RemixButton(
                 label: 'Save Changes',
                 icon: Icons.save,
-                style: RemixButtonStyles.solid,
+                style: RemixButtonStyles.baseStyle,
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Changes saved!')),
@@ -307,13 +307,13 @@ class _ConfirmationFlowExampleState extends State<_ConfirmationFlowExample> {
               RemixButton(
                 label: 'Delete Item',
                 icon: Icons.delete,
-                style: RemixButtonStyles.outline,
+                style: RemixButtonStyles.baseStyle,
                 onPressed: () => setState(() => _showDeleteConfirmation = true),
               ),
               RemixButton(
                 label: 'Archive',
                 icon: Icons.archive,
-                style: RemixButtonStyles.outline,
+                style: RemixButtonStyles.baseStyle,
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Item archived!')),
@@ -326,8 +326,8 @@ class _ConfirmationFlowExampleState extends State<_ConfirmationFlowExample> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.red.shade50,
-              border: Border.all(color: Colors.red.shade200),
+              color: MixColors.red[50]!,
+              border: Border.all(color: MixColors.red[200]!),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Column(
@@ -335,14 +335,14 @@ class _ConfirmationFlowExampleState extends State<_ConfirmationFlowExample> {
               children: [
                 Row(
                   children: [
-                    Icon(Icons.warning, color: Colors.red.shade700, size: 20),
+                    Icon(Icons.warning, color: MixColors.red[700]!, size: 20),
                     const SizedBox(width: 8),
                     Text(
                       'Confirm Deletion',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        color: Colors.red.shade700,
+                        color: MixColors.red[700]!,
                       ),
                     ),
                   ],
@@ -358,7 +358,7 @@ class _ConfirmationFlowExampleState extends State<_ConfirmationFlowExample> {
                       icon: _isDeleting
                           ? Icons.hourglass_empty
                           : Icons.delete_forever,
-                      style: RemixButtonStyles.outline,
+                      style: RemixButtonStyles.baseStyle,
                       loading: _isDeleting,
                       onPressed: _isDeleting
                           ? null
@@ -382,7 +382,7 @@ class _ConfirmationFlowExampleState extends State<_ConfirmationFlowExample> {
                     RemixButton(
                       label: 'Cancel',
                       icon: Icons.cancel,
-                      style: RemixButtonStyles.outline,
+                      style: RemixButtonStyles.baseStyle,
                       enabled: !_isDeleting,
                       onPressed: () =>
                           setState(() => _showDeleteConfirmation = false),
@@ -408,7 +408,7 @@ class _NavigationExample extends StatelessWidget {
         RemixButton(
           label: 'Go Back',
           icon: Icons.arrow_back,
-          style: RemixButtonStyles.outline,
+          style: RemixButtonStyles.baseStyle,
           onPressed: () {
             final navigator = Navigator.of(context);
             final messenger = ScaffoldMessenger.of(context);
@@ -424,7 +424,7 @@ class _NavigationExample extends StatelessWidget {
         RemixButton(
           label: 'Next Step',
           icon: Icons.arrow_forward,
-          style: RemixButtonStyles.solid,
+          style: RemixButtonStyles.baseStyle,
           onPressed: () {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Moving to next step...')),
@@ -434,7 +434,7 @@ class _NavigationExample extends StatelessWidget {
         RemixButton(
           label: 'Open Menu',
           icon: Icons.menu,
-          style: RemixButtonStyles.outline,
+          style: RemixButtonStyles.baseStyle,
           onPressed: () {
             Scaffold.of(context).openDrawer();
           },
@@ -442,7 +442,7 @@ class _NavigationExample extends StatelessWidget {
         RemixButton(
           label: 'Show More Options',
           icon: Icons.more_vert,
-          style: RemixButtonStyles.outline,
+          style: RemixButtonStyles.baseStyle,
           onPressed: () {
             showModalBottomSheet(
               context: context,
@@ -493,9 +493,9 @@ class _AccessibilityExampleState extends State<_AccessibilityExample> {
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: Colors.blue.shade50,
+            color: MixColors.blue[50]!,
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: Colors.blue.shade200),
+            border: Border.all(color: MixColors.blue[200]!),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -503,13 +503,13 @@ class _AccessibilityExampleState extends State<_AccessibilityExample> {
               Row(
                 children: [
                   Icon(Icons.accessibility,
-                      color: Colors.blue.shade700, size: 16),
+                      color: MixColors.blue[700]!, size: 16),
                   const SizedBox(width: 8),
                   Text(
                     'Accessibility Features:',
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
-                      color: Colors.blue.shade700,
+                      color: MixColors.blue[700]!,
                     ),
                   ),
                 ],
@@ -523,7 +523,7 @@ class _AccessibilityExampleState extends State<_AccessibilityExample> {
                 '• Proper button roles and states',
                 style: TextStyle(
                   fontSize: 12,
-                  color: Colors.blue.shade800,
+                  color: MixColors.blue[800]!,
                 ),
               ),
             ],
@@ -542,7 +542,7 @@ class _AccessibilityExampleState extends State<_AccessibilityExample> {
             RemixButton(
               label: 'First Button',
               icon: Icons.looks_one,
-              style: RemixButtonStyles.solid,
+              style: RemixButtonStyles.baseStyle,
               semanticLabel: 'First button for accessibility demo',
               semanticHint: 'Activate to perform first action',
               autofocus: true,
@@ -555,7 +555,7 @@ class _AccessibilityExampleState extends State<_AccessibilityExample> {
             RemixButton(
               label: 'Second Button',
               icon: Icons.looks_two,
-              style: RemixButtonStyles.outline,
+              style: RemixButtonStyles.baseStyle,
               semanticLabel: 'Second button for accessibility demo',
               semanticHint: 'Activate to perform second action',
               onPressed: () {
@@ -567,7 +567,7 @@ class _AccessibilityExampleState extends State<_AccessibilityExample> {
             RemixButton(
               label: 'Third Button',
               icon: Icons.looks_3,
-              style: RemixButtonStyles.outline,
+              style: RemixButtonStyles.baseStyle,
               semanticLabel: 'Third button for accessibility demo',
               semanticHint: 'Activate to perform third action',
               onPressed: () {
@@ -579,7 +579,7 @@ class _AccessibilityExampleState extends State<_AccessibilityExample> {
             RemixButton(
               label: 'Disabled Button',
               icon: Icons.block,
-              style: RemixButtonStyles.outline,
+              style: RemixButtonStyles.baseStyle,
               enabled: false,
               semanticLabel: 'Disabled button example',
               semanticHint: 'This button is disabled and cannot be activated',
@@ -592,15 +592,15 @@ class _AccessibilityExampleState extends State<_AccessibilityExample> {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Colors.green.shade50,
+              color: MixColors.green[50]!,
               borderRadius: BorderRadius.circular(4),
-              border: Border.all(color: Colors.green.shade300),
+              border: Border.all(color: MixColors.green[300]!),
             ),
             child: Text(
               'Currently focused: Button ${_focusedButtonIndex + 1}',
               style: TextStyle(
                 fontSize: 12,
-                color: Colors.green.shade700,
+                color: MixColors.green[700]!,
                 fontWeight: FontWeight.w500,
               ),
             ),

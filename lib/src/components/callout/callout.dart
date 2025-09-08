@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 
 import '../../theme/remix_tokens.dart';
-import '../label/label.dart';
 
 part 'callout_spec.dart';
 part 'callout_style.dart';

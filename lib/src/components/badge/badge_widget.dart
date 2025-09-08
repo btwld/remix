@@ -1,6 +1,6 @@
 part of 'badge.dart';
 
-/// A badge widget that can display a label with an optional icon.
+/// A badge widget that displays a label.
 ///
 /// Badges are used to display small amounts of information, such as
 /// notification counts, status indicators, or labels.
@@ -10,7 +10,6 @@ part of 'badge.dart';
 /// ```dart
 /// RemixBadge(
 ///   label: 'New',
-///   icon: Icons.star,
 /// )
 /// ```
 class RemixBadge extends StatelessWidget {
@@ -18,9 +17,8 @@ class RemixBadge extends StatelessWidget {
   RemixBadge({
     super.key,
     String? label,
-    IconData? icon,
     this.style = const RemixBadgeStyle.create(),
-  }) : child = RemixLabel(label ?? '', icon: icon);
+  }) : child = Text(label ?? '');
 
   /// Creates a badge with custom content.
   const RemixBadge.raw({
@@ -38,7 +36,7 @@ class RemixBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StyleBuilder(
-      style: RemixBadgeStyles.defaultStyle.merge(style),
+      style: RemixBadgeStyles.baseStyle.merge(style),
       builder: (context, spec) {
         final Container = spec.container.createWidget;
 

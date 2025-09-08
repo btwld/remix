@@ -3,25 +3,20 @@ part of 'badge.dart';
 class BadgeSpec extends Spec<BadgeSpec> with Diagnosticable {
   final StyleSpec<BoxSpec> container;
   final StyleSpec<TextSpec> text;
-  final StyleSpec<IconSpec> icon;
 
   const BadgeSpec({
     StyleSpec<BoxSpec>? container,
     StyleSpec<TextSpec>? text,
-    StyleSpec<IconSpec>? icon,
   })  : container = container ?? const StyleSpec(spec: BoxSpec()),
-        text = text ?? const StyleSpec(spec: TextSpec()),
-        icon = icon ?? const StyleSpec(spec: IconSpec());
+        text = text ?? const StyleSpec(spec: TextSpec());
 
   BadgeSpec copyWith({
     StyleSpec<BoxSpec>? container,
     StyleSpec<TextSpec>? text,
-    StyleSpec<IconSpec>? icon,
   }) {
     return BadgeSpec(
       container: container ?? this.container,
       text: text ?? this.text,
-      icon: icon ?? this.icon,
     );
   }
 
@@ -31,7 +26,6 @@ class BadgeSpec extends Spec<BadgeSpec> with Diagnosticable {
     return BadgeSpec(
       container: MixOps.lerp(container, other.container, t)!,
       text: MixOps.lerp(text, other.text, t)!,
-      icon: MixOps.lerp(icon, other.icon, t)!,
     );
   }
 
@@ -40,10 +34,9 @@ class BadgeSpec extends Spec<BadgeSpec> with Diagnosticable {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', container))
-      ..add(DiagnosticsProperty('text', text))
-      ..add(DiagnosticsProperty('icon', icon));
+      ..add(DiagnosticsProperty('text', text));
   }
 
   @override
-  List<Object?> get props => [container, text, icon];
+  List<Object?> get props => [container, text];
 }

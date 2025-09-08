@@ -45,7 +45,7 @@ Widget buildTextFieldExample() {
             errorText: 'This field has an error',
             border: OutlineInputBorder(),
             errorBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.red),
+              borderSide: BorderSide(color: MixColors.red),
             ),
           ),
         ),

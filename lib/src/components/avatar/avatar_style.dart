@@ -1,18 +1,9 @@
 part of 'avatar.dart';
 
-// Private per-component constants (no shared tokens)
-// Color constants removed; using tokens
-const _kSizeSmall = 32.0;
+// Private per-component constants
 const _kSizeMedium = 50.0;
-const _kSizeLarge = 80.0;
-
-const _kFontSizeSmall = 12.0;
 const _kFontSizeMedium = 18.0;
-const _kFontSizeLarge = 24.0;
-
-const _kIconSizeSmall = 16.0;
 const _kIconSizeMedium = 24.0;
-const _kIconSizeLarge = 32.0;
 
 class RemixAvatarStyle extends Style<AvatarSpec>
     with
@@ -222,10 +213,8 @@ class RemixAvatarStyle extends Style<AvatarSpec>
 /// Default avatar styles and variants
 class RemixAvatarStyles {
   /// Default avatar style
-  static RemixAvatarStyle get defaultStyle => solid;
-
-  /// Solid avatar variant (default) - uses accent colors
-  static RemixAvatarStyle get solid => RemixAvatarStyle(
+  /// Base avatar style - circular design with primary color
+  static RemixAvatarStyle get baseStyle => RemixAvatarStyle(
         container: BoxStyler(
           alignment: Alignment.center,
           constraints: BoxConstraintsMix(
@@ -252,57 +241,5 @@ class RemixAvatarStyles {
       );
 
 
-
-  /// Size 1 variant (small)
-  static RemixAvatarStyle get size1 => RemixAvatarStyle(
-        container: BoxStyler(
-          alignment: Alignment.center,
-          constraints: BoxConstraintsMix(
-            minWidth: _kSizeSmall,
-            maxWidth: _kSizeSmall,
-            minHeight: _kSizeSmall,
-            maxHeight: _kSizeSmall,
-          ),
-          decoration: BoxDecorationMix(
-            shape: BoxShape.circle,
-            color: RemixTokens.primary(),
-          ),
-          clipBehavior: Clip.antiAlias,
-        ),
-        text: TextStyler(
-          style: TextStyleMix(
-            color: RemixTokens.onPrimary(),
-            fontSize: _kFontSizeSmall,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-        icon: IconStyler(color: RemixTokens.onPrimary(), size: _kIconSizeSmall),
-      );
-
-  /// Size 3 variant (large)
-  static RemixAvatarStyle get size3 => RemixAvatarStyle(
-        container: BoxStyler(
-          alignment: Alignment.center,
-          constraints: BoxConstraintsMix(
-            minWidth: _kSizeLarge,
-            maxWidth: _kSizeLarge,
-            minHeight: _kSizeLarge,
-            maxHeight: _kSizeLarge,
-          ),
-          decoration: BoxDecorationMix(
-            shape: BoxShape.circle,
-            color: RemixTokens.primary(),
-          ),
-          clipBehavior: Clip.antiAlias,
-        ),
-        text: TextStyler(
-          style: TextStyleMix(
-            color: RemixTokens.onPrimary(),
-            fontSize: _kFontSizeLarge,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-        icon: IconStyler(color: RemixTokens.onPrimary(), size: _kIconSizeLarge),
-      );
 
 }

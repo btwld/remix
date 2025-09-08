@@ -250,14 +250,14 @@ class RemixCheckboxStyle extends Style<CheckboxSpec>
       ];
 }
 
-// Default style is provided by RemixCheckboxStyles.defaultStyle
+// Default style is provided by RemixCheckboxStyles.baseStyle
 
 // Variants are exposed via RemixCheckboxStyles
 
 /// Canonical access to default and variants
 class RemixCheckboxStyles {
-  /// Default checkbox style
-  static RemixCheckboxStyle get defaultStyle => RemixCheckboxStyle(
+  /// Base checkbox style - standard design with transparent background
+  static RemixCheckboxStyle get baseStyle => RemixCheckboxStyle(
         container: FlexBoxStyler(
           alignment: Alignment.centerLeft,
           direction: Axis.horizontal,
@@ -285,40 +285,6 @@ class RemixCheckboxStyles {
         label: TextStyler(
           style: TextStyleMix(
               color: RemixTokens.primary(), fontSize: _kFontSizeMd,),
-        ),
-      );
-
-  /// Classic checkbox variant (default) - surface background with border
-  static RemixCheckboxStyle get classic => RemixCheckboxStyle(
-        container: FlexBoxStyler(
-          alignment: Alignment.centerLeft,
-          direction: Axis.horizontal,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          spacing: _kSpaceSm,
-        ),
-        indicatorContainer: BoxStyler(
-          alignment: Alignment.center,
-          constraints: BoxConstraintsMix(
-            minWidth: 20,
-            maxWidth: 20,
-            minHeight: 20,
-            maxHeight: 20,
-          ),
-          decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(
-              BorderSideMix(color: RemixTokens.primary(), width: 1), // TODO: Should be border token
-            ),
-            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-            color: RemixTokens.onPrimary(), // TODO: Should be surface1 token
-          ),
-        ),
-        indicator: IconStyler(color: RemixTokens.primary(), size: _kIconSizeMd), // TODO: Should use fg tokens
-        label: TextStyler(
-          style: TextStyleMix(
-            color: RemixTokens.primary(), // TODO: Should be fg token
-            fontSize: _kFontSizeMd,
-          ),
         ),
       );
 

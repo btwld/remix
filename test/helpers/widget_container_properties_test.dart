@@ -5,7 +5,7 @@ import 'package:mix/mix.dart';
 void main() {
   group('BoxSpec Tests', () {
     test('creates with default values', () {
-      const spec = BoxSpec();
+      final spec = BoxSpec();
 
       expect(spec.decoration, isNull);
       expect(spec.foregroundDecoration, isNull);
@@ -19,12 +19,12 @@ void main() {
     });
 
     test('creates with specified values', () {
-      const decoration = BoxDecoration(color: MixColors.blue);
+      final decoration = BoxDecoration(color: MixColors.blue);
       const padding = EdgeInsets.all(16);
       const alignment = Alignment.center;
       const clipBehavior = Clip.antiAlias;
 
-      const spec = BoxSpec(
+      final spec = BoxSpec(
         decoration: decoration,
         padding: padding,
         alignment: alignment,
@@ -38,7 +38,7 @@ void main() {
     });
 
     test('copyWith works correctly', () {
-      const originalSpec = BoxSpec(
+      final originalSpec = BoxSpec(
         decoration: BoxDecoration(color: MixColors.blue),
         padding: EdgeInsets.all(16),
       );
@@ -54,7 +54,7 @@ void main() {
     });
 
     test('copyWith with null values preserves original', () {
-      const originalSpec = BoxSpec(
+      final originalSpec = BoxSpec(
         decoration: BoxDecoration(color: MixColors.blue),
         padding: EdgeInsets.all(16),
       );
@@ -66,12 +66,12 @@ void main() {
     });
 
     test('lerp interpolates correctly', () {
-      const spec1 = BoxSpec(
+      final spec1 = BoxSpec(
         padding: EdgeInsets.all(10),
         alignment: Alignment.topLeft,
         margin: EdgeInsets.all(5),
       );
-      const spec2 = BoxSpec(
+      final spec2 = BoxSpec(
         padding: EdgeInsets.all(20),
         alignment: Alignment.bottomRight,
         margin: EdgeInsets.all(15),
@@ -85,21 +85,21 @@ void main() {
     });
 
     test('lerp with null other interpolates toward defaults', () {
-      const spec = BoxSpec(padding: EdgeInsets.all(16));
+      final spec = BoxSpec(padding: EdgeInsets.all(16));
       final result = spec.lerp(null, 0.5);
       expect(result.padding, equals(const EdgeInsets.all(8)));
     });
 
     test('props equality works correctly', () {
-      const spec1 = BoxSpec(
+      final spec1 = BoxSpec(
         decoration: BoxDecoration(color: MixColors.blue),
         padding: EdgeInsets.all(16),
       );
-      const spec2 = BoxSpec(
+      final spec2 = BoxSpec(
         decoration: BoxDecoration(color: MixColors.blue),
         padding: EdgeInsets.all(16),
       );
-      const spec3 = BoxSpec(
+      final spec3 = BoxSpec(
         decoration: BoxDecoration(color: MixColors.red),
         padding: EdgeInsets.all(16),
       );
@@ -243,7 +243,7 @@ void main() {
             body: Builder(
               builder: (context) {
                 final mix =
-                    BoxStyler(decoration: BoxDecorationMix(color: Colors.blue))
+                    BoxStyler(decoration: BoxDecorationMix(color: MixColors.blue))
                         .merge(BoxStyler(padding: EdgeInsetsMix.all(16)))
                         .merge(BoxStyler(alignment: Alignment.center))
                         .merge(BoxStyler(margin: EdgeInsetsMix.all(8)))
