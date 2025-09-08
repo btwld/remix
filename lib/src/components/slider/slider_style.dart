@@ -171,8 +171,8 @@ final RemixSliderDisabledStyle = RemixSliderStyle(
 
 /// Canonical access to default and variants
 class RemixSliderStyles {
-  /// Default slider style
-  static RemixSliderStyle get defaultStyle => classic;
+  /// Base slider style
+  static RemixSliderStyle get baseStyle => classic;
 
   /// Classic slider variant (default) - surface background with border
   static RemixSliderStyle get classic => RemixSliderStyle(

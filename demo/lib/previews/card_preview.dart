@@ -98,15 +98,15 @@ Widget previewCardWithActions() {
 @Preview(name: 'Profile Card', size: Size(400, 400))
 Widget previewProfileCard() {
   return createRemixPreview(
-    SizedBox(
+    const SizedBox(
       width: 350,
       child: RemixCard(
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: EdgeInsets.all(20.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const CircleAvatar(
+              CircleAvatar(
                 radius: 40,
                 backgroundColor: MixColors.blue,
                 child: Icon(
@@ -115,24 +115,24 @@ Widget previewProfileCard() {
                   color: MixColors.white,
                 ),
               ),
-              const SizedBox(height: 16),
-              const Text(
+              SizedBox(height: 16),
+              Text(
                 'John Doe',
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 4),
-              const Text(
+              SizedBox(height: 4),
+              Text(
                 'Software Developer',
                 style: TextStyle(
                   fontSize: 16,
                   color: MixColors.grey,
                 ),
               ),
-              const SizedBox(height: 16),
-              const Text(
+              SizedBox(height: 16),
+              Text(
                 'Passionate about creating amazing user experiences and building scalable applications.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
@@ -140,22 +140,22 @@ Widget previewProfileCard() {
                   color: MixColors.grey,
                 ),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  RemixButton.icon(
-                    Icons.email,
+                  RemixIconButton(
+                    icon: Icons.email,
                     onPressed: null,
                   ),
-                  const SizedBox(width: 12),
-                  RemixButton.icon(
-                    Icons.phone,
+                  SizedBox(width: 12),
+                  RemixIconButton(
+                    icon: Icons.phone,
                     onPressed: null,
                   ),
-                  const SizedBox(width: 12),
-                  RemixButton.icon(
-                    Icons.message,
+                  SizedBox(width: 12),
+                  RemixIconButton(
+                    icon: Icons.message,
                     onPressed: null,
                   ),
                 ],

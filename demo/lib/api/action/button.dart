@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart' hide ButtonStyle;
-import 'package:mix/mix.dart';
 import 'package:remix/remix.dart';
 
 void main() {
@@ -31,8 +30,8 @@ class MyApp extends StatelessWidget {
                     .onHovered(RemixButtonStyle()
                         .color(MixColors.greySwatch[800]!)),
               ),
-              RemixButton.icon(
-                Icons.add,
+              RemixIconButton(
+                icon: Icons.add,
                 onPressed: () {
                   log('Button pressed!');
                 },

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
 import 'controls_bar.dart';
 
 class PreviewShell extends StatefulWidget {

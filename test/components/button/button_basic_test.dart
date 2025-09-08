@@ -254,8 +254,8 @@ void main() {
       'RemixButton.icon renders only icon without label',
       (WidgetTester tester) async {
         await tester.pumpRemixApp(
-          RemixButton.icon(
-            Icons.favorite,
+          RemixIconButton(
+            icon: Icons.favorite,
             key: const ValueKey('icon_button'),
             onPressed: () {
               // Icon button handler

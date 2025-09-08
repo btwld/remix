@@ -19,8 +19,8 @@ Widget buildButtonExample() {
         loading: true,
         onPressed: null,
       ),
-      RemixButton.icon(
-        Icons.star,
+      RemixIconButton(
+        icon: Icons.star,
         onPressed: () {},
         semanticLabel: 'Favorite',
       ),

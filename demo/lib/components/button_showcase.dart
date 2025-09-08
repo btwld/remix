@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mix/mix.dart';
 import 'package:remix/remix.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
@@ -227,7 +226,7 @@ class _StateTrackerState extends State<_StateTracker> {
                 decoration: BoxDecoration(
                   color: MixColors.grey[100],
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: MixColors.grey[300]),
+                  border: Border.all(color: MixColors.grey[300]!),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -282,7 +281,7 @@ class _StateTrackerState extends State<_StateTracker> {
         color: isActive ? color.withValues(alpha: 0.2) : MixColors.transparent,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: isActive ? color : MixColors.grey[400],
+          color: isActive ? color : MixColors.grey[400]!,
           width: 1,
         ),
       ),
@@ -393,7 +392,7 @@ Widget _buildStateCallbacksDemo() {
         decoration: BoxDecoration(
           color: MixColors.amber[50],
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: MixColors.amber[200]),
+          border: Border.all(color: MixColors.amber[200]!),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

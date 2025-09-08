@@ -293,13 +293,13 @@ class _RemixTextFieldState extends State<RemixTextField>
         return Semantics(
           excludeSemantics: widget.excludeSemantics,
           enabled: widget.enabled && !widget.readOnly,
-          focusable: widget.enabled && !widget.readOnly,
           textField: true,
+          focusable: widget.enabled && !widget.readOnly,
+          obscured: widget.obscureText,
+          multiline: widget.maxLines != 1,
           label: widget.semanticLabel ?? widget.label,
           value: _controller.text,
           hint: widget.semanticHint ?? widget.hintText,
-          obscured: widget.obscureText,
-          multiline: widget.maxLines != 1,
           child: NakedTextField(
             groupId: widget.groupId,
             controller: _controller,
@@ -363,26 +363,26 @@ class _RemixTextFieldState extends State<RemixTextField>
             builder: (context, editableText) {
               // Build the core editable with hint overlay if needed
               final editableWithHint = widget.hintText != null
-                ? Stack(
-                    alignment: AlignmentDirectional.centerStart,
-                    children: [
-                      ListenableBuilder(
-                        listenable: _controller,
-                        builder: (context, _) => Visibility(
-                          visible: _controller.text.isEmpty,
-                          child: Builder(
-                            builder: (context) {
-                              final HintText = spec.hintText.createWidget;
+                  ? Stack(
+                      alignment: AlignmentDirectional.centerStart,
+                      children: [
+                        ListenableBuilder(
+                          listenable: _controller,
+                          builder: (context, _) => Visibility(
+                            visible: _controller.text.isEmpty,
+                            child: Builder(
+                              builder: (context) {
+                                final HintText = spec.hintText.createWidget;
 
-                              return HintText(widget.hintText!);
-                            },
+                                return HintText(widget.hintText!);
+                              },
+                            ),
                           ),
                         ),
-                      ),
-                      editableText,
-                    ],
-                  )
-                : editableText;
+                        editableText,
+                      ],
+                    )
+                  : editableText;
 
               final FlexContainer = spec.container.createWidget;
               final Label = spec.label.createWidget;
@@ -416,7 +416,7 @@ class _RemixTextFieldState extends State<RemixTextField>
                     )
                   : withAccessories;
             },
-        ),
+          ),
         );
       },
     );
