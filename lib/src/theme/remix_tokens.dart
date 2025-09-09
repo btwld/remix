@@ -32,15 +32,14 @@ class RemixTokens {
   static const spaceMd = MixToken<double>('remix.space.md');
   static const spaceLg = MixToken<double>('remix.space.lg');
 
+  // ============================================================================
+  // SHAPE TOKENS
+  // ============================================================================
+  /// Shared border radius value as a concrete Radius.
+  /// Use with BorderRadiusMix.all(RemixTokens.radius())
+  static const radius = MixToken<Radius>('remix.radius');
+
   const RemixTokens._();
-}
-
-/// Space-related tokens (shape, layout) kept minimal
-class SpaceTokens {
-  /// Shared border radius value (use with BorderRadiusMix.circular)
-  static const radius = MixToken<double>('space.radius');
-
-  const SpaceTokens._();
 }
 
 /// Opacity/alpha tokens to normalize UI overlays and subtle elements

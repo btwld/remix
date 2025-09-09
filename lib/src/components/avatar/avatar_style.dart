@@ -225,19 +225,19 @@ class RemixAvatarStyles {
           ),
           decoration: BoxDecorationMix(
             shape: BoxShape.circle,
-            color: RemixTokens.primary(), // TODO: Should be accent token
+            color: RemixTokens.primary(),
           ),
           clipBehavior: Clip.antiAlias,
         ),
         text: TextStyler(
           style: TextStyleMix(
-            color: RemixTokens.onPrimary(), // TODO: Should be accent-fg token
+            color: RemixTokens.onPrimary(),
             fontSize: _kFontSizeMedium,
             fontWeight: FontWeight.w400,
           ),
         ),
         icon:
-            IconStyler(color: RemixTokens.onPrimary(), size: _kIconSizeMedium), // TODO: Should be accent-fg token
+            IconStyler(color: RemixTokens.onPrimary(), size: _kIconSizeMedium),
       );
 
 

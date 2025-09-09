@@ -32,8 +32,8 @@ void main() {
       expect(MixScope.tokenOf(RemixTokens.spaceMd, capturedContext), 12.0);
       expect(MixScope.tokenOf(RemixTokens.spaceLg, capturedContext), 16.0);
 
-      // Test radius tokens via SpaceTokens
-      expect(MixScope.tokenOf(SpaceTokens.radius, capturedContext), 8.0);
+      // Test radius token
+      expect(MixScope.tokenOf(RemixTokens.radius, capturedContext), const Radius.circular(8.0));
     });
 
     testWidgets('MixScope provides dark theme tokens correctly',
@@ -63,7 +63,7 @@ void main() {
 
       // Test that spacing/radius tokens remain the same across themes
       expect(MixScope.tokenOf(RemixTokens.spaceXs, capturedContext), 4.0);
-      expect(MixScope.tokenOf(SpaceTokens.radius, capturedContext), 8.0);
+      expect(MixScope.tokenOf(RemixTokens.radius, capturedContext), const Radius.circular(8.0));
     });
 
     testWidgets('Theme switching updates token values correctly',
@@ -94,7 +94,7 @@ void main() {
 
       // Switch to dark theme
       await tester.pumpWidget(buildApp(Brightness.dark));
-      await tester.pump();
+      await tester.pumpAndSettle();
       expect(MixScope.tokenOf(RemixTokens.primary, capturedContext),
           const Color(0xFFFFFFFF));
     });

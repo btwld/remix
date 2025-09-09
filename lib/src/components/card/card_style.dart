@@ -138,10 +138,10 @@ class RemixCardStyles {
           padding: EdgeInsetsMix.all(RemixTokens.spaceLg()),
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(
-              BorderSideMix(color: RemixTokens.primary(), width: 1), // TODO: Should be border token
+              BorderSideMix(color: RemixTokens.primary(), width: 1),
             ),
-            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-            color: RemixTokens.onPrimary(), // TODO: Should be surface1 token
+            borderRadius: BorderRadiusMix.all(RemixTokens.radius()),
+            color: RemixTokens.onPrimary(),
           ),
         ),
       );

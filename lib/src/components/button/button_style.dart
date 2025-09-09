@@ -67,66 +67,9 @@ class RemixButtonStyle extends Style<ButtonSpec>
     return merge(RemixButtonStyle(spinner: value));
   }
 
-  // Instance methods (chainable)
-
-  /// Sets background color
-  RemixButtonStyle color(Color value) {
-    return merge(RemixButtonStyle(
-      container: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
-    ));
-  }
-
   /// Sets padding
   RemixButtonStyle padding(EdgeInsetsGeometryMix value) {
     return merge(RemixButtonStyle(container: FlexBoxStyler(padding: value)));
-  }
-
-  /// Sets border radius
-  RemixButtonStyle borderRadius(BorderRadiusGeometryMix radius) {
-    return merge(RemixButtonStyle(
-      container: FlexBoxStyler(
-        decoration: BoxDecorationMix(borderRadius: radius),
-      ),
-    ));
-  }
-
-  /// Sets width
-  RemixButtonStyle width(double value) {
-    return merge(RemixButtonStyle(
-      container: FlexBoxStyler(
-        constraints: BoxConstraintsMix(minWidth: value, maxWidth: value),
-      ),
-    ));
-  }
-
-  /// Sets height
-  RemixButtonStyle height(double value) {
-    return merge(RemixButtonStyle(
-      container: FlexBoxStyler(
-        constraints: BoxConstraintsMix(minHeight: value, maxHeight: value),
-      ),
-    ));
-  }
-
-  /// Sets size (width and height)
-  RemixButtonStyle size(double width, double height) {
-    return merge(RemixButtonStyle(
-      container: FlexBoxStyler(
-        constraints: BoxConstraintsMix(
-          minWidth: width,
-          maxWidth: width,
-          minHeight: height,
-          maxHeight: height,
-        ),
-      ),
-    ));
-  }
-
-  /// Sets border
-  RemixButtonStyle border(BoxBorderMix value) {
-    return merge(RemixButtonStyle(
-      container: FlexBoxStyler(decoration: BoxDecorationMix(border: value)),
-    ));
   }
 
   // Additional convenience methods that delegate to BoxStyler
@@ -141,10 +84,16 @@ class RemixButtonStyle extends Style<ButtonSpec>
     return merge(RemixButtonStyle(container: FlexBoxStyler(decoration: value)));
   }
 
+  /// Sets item spacing between icon and label (Flex spacing)
+  RemixButtonStyle spacing(double value) {
+    return merge(RemixButtonStyle(container: FlexBoxStyler(spacing: value)));
+  }
+
   /// Sets constraints
   RemixButtonStyle constraints(BoxConstraintsMix value) {
     return merge(
-        RemixButtonStyle(container: FlexBoxStyler(constraints: value)));
+      RemixButtonStyle(container: FlexBoxStyler(constraints: value)),
+    );
   }
 
   // Animate support
@@ -248,23 +197,20 @@ class RemixButtonStyle extends Style<ButtonSpec>
 
 class RemixButtonStyles {
   /// Base button style - solid design with primary color
-  static RemixButtonStyle get baseStyle => RemixButtonStyle(
-        container: FlexBoxStyler(
-          decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-            color: RemixTokens.primary(),
-          ),
-          padding: EdgeInsetsGeometryMix.all(RemixTokens.spaceMd()),
-          spacing: RemixTokens.spaceSm(),
-        ),
-        label: TextStyler(
-          style: TextStyleMix(
-            color: RemixTokens.onPrimary(),
-            fontSize: _kFontSizeMd,
-          ),
-        ),
-        icon: IconStyler(color: RemixTokens.onPrimary(), size: _kIconSizeLg),
-        spinner: RemixSpinnerStyle(
+  static RemixButtonStyle get baseStyle => RemixButtonStyle()
+      // Container visuals via mixins
+      .color(RemixTokens.primary())
+      .borderRadiusAll(RemixTokens.radius())
+      .paddingX(RemixTokens.spaceMd())
+      .paddingY(RemixTokens.spaceSm())
+      .spacing(RemixTokens.spaceSm())
+      // Content styles
+      .label(
+        TextStyler().color(RemixTokens.onPrimary()).fontSize(_kFontSizeMd),
+      )
+      .icon(IconStyler(color: RemixTokens.onPrimary(), size: _kIconSizeLg))
+      .spinner(
+        RemixSpinnerStyle(
           size: _kIconSizeMd,
           strokeWidth: 1.5,
           color: RemixTokens.onPrimary(),
@@ -272,56 +218,42 @@ class RemixButtonStyles {
           style: SpinnerType.solid,
         ),
       )
-          .onHovered(
-            RemixButtonStyle(
-              container: FlexBoxStyler(
-                decoration: BoxDecorationMix(
-                  color: RemixTokens.primary().withValues(alpha: 0.8),
-                ),
-              ),
-            ),
-          )
-          .onPressed(
-            RemixButtonStyle(
-              container: FlexBoxStyler(
-                decoration: BoxDecorationMix(
-                  color: RemixTokens.primary().withValues(alpha: 0.9),
-                ),
-              ),
-            ),
-          )
-          .onFocused(
-            RemixButtonStyle(
-              container: FlexBoxStyler(
-                decoration: BoxDecorationMix(
-                  border: BoxBorderMix.all(
-                    BorderSideMix(
-                      color: RemixTokens.primary().withValues(alpha: 0.40),
-                      width: 2,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          )
-          .onDisabled(
-            RemixButtonStyle(
-              container: FlexBoxStyler(
-                decoration: BoxDecorationMix(
-                  color: RemixTokens.primary().withValues(alpha: 0.3),
-                ),
-              ),
-              label: TextStyler(
+      // State variants
+      .onHovered(
+        RemixButtonStyle().color(
+          RemixTokens.primary().withValues(alpha: 0.8),
+        ),
+      )
+      .onPressed(
+        RemixButtonStyle().color(
+          RemixTokens.primary().withValues(alpha: 0.9),
+        ),
+      )
+      .onFocused(
+        RemixButtonStyle().borderAll(
+          color: RemixTokens.primary().withValues(alpha: 0.40),
+          width: 2,
+        ),
+      )
+      .onDisabled(
+        RemixButtonStyle()
+            .color(RemixTokens.primary().withValues(alpha: 0.3))
+            .label(
+              TextStyler(
                 style: TextStyleMix(
                   color: RemixTokens.onPrimary().withValues(alpha: 0.7),
                 ),
               ),
-              icon: IconStyler(
+            )
+            .icon(
+              IconStyler(
                 color: RemixTokens.onPrimary().withValues(alpha: 0.7),
               ),
-              spinner: RemixSpinnerStyle(
+            )
+            .spinner(
+              RemixSpinnerStyle(
                 color: RemixTokens.onPrimary().withValues(alpha: 0.7),
               ),
             ),
-          );
+      );
 }

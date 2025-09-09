@@ -154,7 +154,7 @@ class RemixTooltipStyles {
         container: BoxStyler(
           padding: EdgeInsetsMix.all(RemixTokens.spaceSm()),
           decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+            borderRadius: BorderRadiusMix.all(RemixTokens.radius()),
             color: RemixTokens.primary().withValues(alpha: 0.8),
           ),
         ),

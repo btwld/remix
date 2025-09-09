@@ -52,11 +52,13 @@ class RemixRadioGroup<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Thin wrapper matching NakedRadioGroup API
-    return NakedRadioGroup<T>(
+    // Use Flutter's RadioGroup directly (NakedRadioGroup no longer required)
+    return RadioGroup<T>(
       groupValue: groupValue,
       onChanged: onChanged,
       child: StyleProvider<RadioSpec>(style: style, child: child),
     );
   }
 }
+
+// Intentionally lean: rely on Flutter's RadioGroup for registry, semantics and keyboard.

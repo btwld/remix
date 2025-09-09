@@ -225,7 +225,7 @@ class RemixIconButtonStyles {
             maxHeight: _kIconButtonSize,
           ),
           decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+            borderRadius: BorderRadiusMix.all(RemixTokens.radius()),
             color: RemixTokens.primary(),
           ),
         ),

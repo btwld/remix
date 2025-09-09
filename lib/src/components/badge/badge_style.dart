@@ -171,7 +171,7 @@ class RemixBadgeStyles {
             horizontal: RemixTokens.spaceSm(),
           ),
           decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+            borderRadius: BorderRadiusMix.all(RemixTokens.radius()),
             color: RemixTokens.primary(),
           ),
         ),
