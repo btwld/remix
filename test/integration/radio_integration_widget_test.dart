@@ -298,9 +298,8 @@ void main() {
                 TextButton(
                   onPressed: () {
                     setState(() {
-                      externalValue = externalValue == 'option1'
-                          ? 'option2'
-                          : 'option1';
+                      externalValue =
+                          externalValue == 'option1' ? 'option2' : 'option1';
                     });
                   },
                   child: const Text('Toggle Externally'),
@@ -354,8 +353,8 @@ void main() {
         ),
       );
 
-  // Verify semantics are preserved: check the specific semantics node by label
-  expect(find.bySemanticsLabel('Select theme'), findsOneWidget);
+      // Verify semantics are preserved: check the specific semantics node by label
+      expect(find.bySemanticsLabel('Select theme'), findsOneWidget);
     });
 
     testWidgets('handles rapid selection changes', (tester) async {
