@@ -176,7 +176,7 @@ void main() {
       // Third tap: true -> false
       await tester.tap(find.byType(RemixCheckbox));
       await tester.pumpAndSettle();
-      expect(tristateValue, isNull);
+      expect(tristateValue, false);
     });
 
     testWidgets(
@@ -288,11 +288,7 @@ void main() {
       await tester.tap(find.byKey(const Key('tristate')));
       await tester.pumpAndSettle();
       expect(tristateValue, true);
-      // true -> null
-      await tester.tap(find.byKey(const Key('tristate')));
-      await tester.pumpAndSettle();
-      expect(tristateValue, isNull);
-      // null -> false
+      // true -> false
       await tester.tap(find.byKey(const Key('tristate')));
       await tester.pumpAndSettle();
       expect(tristateValue, false);

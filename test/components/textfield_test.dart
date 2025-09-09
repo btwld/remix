@@ -10,8 +10,9 @@ void main() {
       final controller = TextEditingController();
 
       await tester.pumpRemixApp(
-        ConstrainedBox(
-          constraints: BoxConstraints.tightFor(width: 400, height: 120),
+        SizedBox(
+          width: 400,
+          height: 120,
           child: RemixTextField(
             controller: controller,
             hintText: 'Enter text',
@@ -40,8 +41,9 @@ void main() {
       final controller = TextEditingController();
 
       await tester.pumpRemixApp(
-        ConstrainedBox(
-          constraints: BoxConstraints.tightFor(width: 400, height: 120),
+        SizedBox(
+          width: 400,
+          height: 120,
           child: RemixTextField(
             controller: controller,
             hintText: 'Enter text',
@@ -65,8 +67,9 @@ void main() {
     testWidgets('should work with leading and trailing widgets',
         (tester) async {
       await tester.pumpRemixApp(
-        ConstrainedBox(
-          constraints: BoxConstraints.tightFor(width: 400, height: 120),
+        SizedBox(
+          width: 400,
+          height: 120,
           child: RemixTextField(
             leading: const Icon(Icons.person),
             trailing: const Icon(Icons.clear),
@@ -82,9 +85,10 @@ void main() {
 
     testWidgets('should handle disabled state', (tester) async {
       await tester.pumpRemixApp(
-        ConstrainedBox(
-          constraints: BoxConstraints.tightFor(width: 400, height: 120),
-          child: const RemixTextField(
+        const SizedBox(
+          width: 400,
+          height: 120,
+          child: RemixTextField(
             enabled: false,
             hintText: 'Disabled field',
           ),
@@ -99,8 +103,9 @@ void main() {
       final controller = TextEditingController(text: 'password123');
 
       await tester.pumpRemixApp(
-        ConstrainedBox(
-          constraints: BoxConstraints.tightFor(width: 400, height: 120),
+        SizedBox(
+          width: 400,
+          height: 120,
           child: RemixTextField(
             controller: controller,
             obscureText: true,
@@ -118,9 +123,10 @@ void main() {
     testWidgets('should work without external controller',
         (WidgetTester tester) async {
       await tester.pumpRemixApp(
-        ConstrainedBox(
-          constraints: BoxConstraints.tightFor(width: 400, height: 120),
-          child: const RemixTextField(
+        const SizedBox(
+          width: 400,
+          height: 120,
+          child: RemixTextField(
             hintText: 'Type here',
           ),
         ),
