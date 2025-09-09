@@ -216,30 +216,32 @@ class _RemixButtonState extends State<RemixButton>
                 ),
               );
 
-        // Create content with FlexBox layout
-        final List<Widget> children = [
-          if (iconWidget != null) iconWidget,
-          textWidget,
-        ];
-        Widget content = FlexContaineWidget(
+        // Create content inside the styled container. The container remains
+        // visible in loading state to preserve background, padding and radius.
+        final Widget baseContainer = FlexContaineWidget(
           direction: Axis.horizontal,
-          children: children,
-        );
-
-        // Use a layered approach that preserves size and state of the content
-        // while showing a centered spinner on top when loading.
-        final layered = Stack(
-          alignment: Alignment.center,
           children: [
-            // Underlying content: keep in the tree with state, but hide when loading
             Visibility(
               visible: !widget.loading,
               maintainState: true,
               maintainAnimation: true,
               maintainSize: true,
-              child: content,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (iconWidget != null) iconWidget,
+                  textWidget,
+                ],
+              ),
             ),
-            // Spinner overlay, visible only when loading
+          ],
+        );
+
+        // Layer spinner above the container while keeping size stable.
+        final layered = Stack(
+          alignment: Alignment.center,
+          children: [
+            baseContainer,
             if (widget.loading) Center(child: spinner),
           ],
         );

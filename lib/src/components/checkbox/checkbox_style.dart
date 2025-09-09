@@ -1,7 +1,6 @@
 part of 'checkbox.dart';
 
 // Private per-component constants (sizes only)
-const _kSpaceSm = 8.0;
 const _kFontSizeMd = 14.0;
 const _kIconSizeMd = 16.0;
 
@@ -263,7 +262,7 @@ class RemixCheckboxStyles {
           direction: Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
-          spacing: _kSpaceSm,
+          spacing: RemixTokens.spaceSm(),
         ),
         indicatorContainer: BoxStyler(
           alignment: Alignment.center,
@@ -277,7 +276,8 @@ class RemixCheckboxStyles {
             border: BoxBorderMix.all(
               BorderSideMix(color: RemixTokens.primary(), width: 1.5),
             ),
-            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+            // Fixed small radius for classic checkbox shape
+            borderRadius: BorderRadiusMix.circular(4.0),
             color: MixColors.transparent,
           ),
         ),

@@ -180,12 +180,12 @@ class RemixSliderStyles {
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(
               BorderSideMix(
-                color: RemixTokens.primary(), // TODO: Should be border token
+                color: RemixTokens.primary(),
                 width: _kThumbBorderWidth,
               ),
             ),
             shape: BoxShape.circle,
-            color: RemixTokens.onPrimary(), // TODO: Should be surface1 token
+            color: RemixTokens.onPrimary(),
           ),
         ),
       ).builder((context) {
@@ -193,18 +193,18 @@ class RemixSliderStyles {
           baseTrack: Paint()
             ..strokeWidth = _kTrackWidth
             ..color =
-                RemixTokens.primary.resolve(context).withValues(alpha: 0.20) // TODO: Should be muted token
+                RemixTokens.primary.resolve(context).withValues(alpha: 0.20)
             ..strokeCap = StrokeCap.round
             ..style = PaintingStyle.stroke,
           activeTrack: Paint()
             ..strokeWidth = _kTrackWidth
-            ..color = RemixTokens.primary.resolve(context) // TODO: Should be accent token
+            ..color = RemixTokens.primary.resolve(context)
             ..strokeCap = StrokeCap.round
             ..style = PaintingStyle.stroke,
           division: Paint()
             ..strokeWidth = _kTrackWidth
             ..color =
-                RemixTokens.primary.resolve(context).withValues(alpha: 0.26) // TODO: Should be muted token
+                RemixTokens.primary.resolve(context).withValues(alpha: 0.26)
             ..strokeCap = StrokeCap.round
             ..style = PaintingStyle.stroke,
         );

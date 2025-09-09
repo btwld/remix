@@ -142,7 +142,7 @@ class RemixDividerStyles {
             maxHeight: 1,
           ),
           decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+            borderRadius: BorderRadiusMix.all(RemixTokens.radius()),
             color: RemixTokens.primary().withValues(alpha: 0.20),
           ),
         ),

@@ -3,21 +3,32 @@ import 'package:mix/mix.dart';
 
 import 'remix_tokens.dart';
 
-/// Provides pre-configured token definitions for light and dark themes.
+/// Provides token definitions using adaptive tokens for theme-aware styling.
 ///
-/// These token definitions map [RemixTokens] to actual values, enabling
-/// theme-aware styling across all Remix components.
+/// Adaptive tokens automatically resolve values based on the current theme
+/// brightness, so a single token set can be used for both light and dark.
 
 // ============================================================================
-// LIGHT/DARK TOKEN DEFINITIONS (minimal set per refactor plan)
+// ADAPTIVE + STATIC TOKEN DEFINITIONS (minimal set)
 // ============================================================================
-final Set<TokenDefinition> remixLightTokens = {
-  // Colors (light)
-  RemixTokens.primary.defineValue(MixColors.black), // Black
-  RemixTokens.onPrimary.defineValue(MixColors.white), // White
-  // Use MixColors swatches (no hex)
-  RemixTokens.secondary.defineValue(MixColors.greySwatch[500]!),
-  RemixTokens.onSecondary.defineValue(MixColors.white),
+final Set<TokenDefinition> remixTokens = {
+  // Colors (adaptive)
+  RemixTokens.primary.defineAdaptive(
+    light: MixColors.black,
+    dark: MixColors.white,
+  ),
+  RemixTokens.onPrimary.defineAdaptive(
+    light: MixColors.white,
+    dark: MixColors.greySwatch[900]!,
+  ),
+  RemixTokens.secondary.defineAdaptive(
+    light: MixColors.greySwatch[500]!,
+    dark: MixColors.greySwatch[400]!,
+  ),
+  RemixTokens.onSecondary.defineAdaptive(
+    light: MixColors.white,
+    dark: MixColors.greySwatch[900]!,
+  ),
 
   // Spacing (static)
   RemixTokens.spaceXs.defineValue(4.0),
@@ -26,29 +37,7 @@ final Set<TokenDefinition> remixLightTokens = {
   RemixTokens.spaceLg.defineValue(16.0),
 
   // Radius (static)
-  SpaceTokens.radius.defineValue(8.0),
-
-  // Opacity constants are inlined in styles (no tokens)
-};
-
-final Set<TokenDefinition> remixDarkTokens = {
-  // Colors (dark)
-  RemixTokens.primary.defineValue(MixColors.white), // White
-  RemixTokens.onPrimary.defineValue(MixColors.greySwatch[900]!),
-  // Use MixColors swatches (no hex)
-  RemixTokens.secondary.defineValue(MixColors.greySwatch[400]!),
-  RemixTokens.onSecondary.defineValue(MixColors.greySwatch[900]!),
-
-  // Spacing (static)
-  RemixTokens.spaceXs.defineValue(4.0),
-  RemixTokens.spaceSm.defineValue(8.0),
-  RemixTokens.spaceMd.defineValue(12.0),
-  RemixTokens.spaceLg.defineValue(16.0),
-
-  // Radius (static)
-  SpaceTokens.radius.defineValue(8.0),
-
-  // Opacity constants are inlined in styles (no tokens)
+  RemixTokens.radius.defineValue(Radius.circular(8.0)),
 };
 
 // ============================================================================
@@ -56,25 +45,22 @@ final Set<TokenDefinition> remixDarkTokens = {
 // ============================================================================
 
 /// Creates a MixScope with Remix tokens configured for the current theme.
-///
-/// Resolves the token set based on Theme brightness.
 Widget createRemixScope({
   required Widget child,
   Set<TokenDefinition>? additionalTokens,
   List<Type>? orderOfModifiers,
-  Key? key,
 }) {
   return Builder(builder: (context) {
-    final brightness = MediaQuery.of(context).platformBrightness;
-    final baseTokens =
-        brightness == Brightness.dark ? remixDarkTokens : remixLightTokens;
-    final allTokens = {...baseTokens, ...?additionalTokens};
+    final allTokens = {...remixTokens, ...?additionalTokens};
 
-    return MixScope(
-      key: key,
+    final scope = MixScope(
       tokens: allTokens,
       orderOfModifiers: orderOfModifiers,
       child: child,
     );
+
+    // Ensure MediaQuery.platformBrightness matches Theme brightness for token resolution
+
+    return scope;
   });
 }

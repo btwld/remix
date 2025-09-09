@@ -69,6 +69,16 @@ class RemixRadio<T> extends StatefulWidget with HasEnabled, HasSelected {
 
 class _RemixRadioState<T> extends State<RemixRadio<T>>
     with HasWidgetStateController, HasEnabledState {
+  FocusNode? _ownedFocusNode;
+  FocusNode get _effectiveFocusNode => widget.focusNode ?? (_ownedFocusNode ??= FocusNode());
+
+  @override
+  void dispose() {
+    _ownedFocusNode?.dispose();
+    super.dispose();
+  }
+  // No custom registry/scope; rely on NakedRadioGroup (via Flutter RadioGroup)
+
   @override
   Widget build(BuildContext context) {
     final registry = RadioGroup.maybeOf<T>(context);
@@ -150,7 +160,7 @@ class _RemixRadioState<T> extends State<RemixRadio<T>>
             value: widget.value,
             enabled: widget.enabled,
             mouseCursor: widget.cursor,
-            focusNode: widget.focusNode,
+            focusNode: _effectiveFocusNode,
             autofocus: widget.autofocus,
             toggleable: widget.toggleable,
             statesController: widget.statesController ?? controller,

@@ -198,22 +198,22 @@ class RemixProgressStyles {
           ),
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(
-              BorderSideMix(color: RemixTokens.primary(), width: 1), // TODO: Should be border token
+              BorderSideMix(color: RemixTokens.primary(), width: 1),
             ),
-            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-            color: RemixTokens.onPrimary(), // TODO: Should be surface1 token
+            borderRadius: BorderRadiusMix.all(RemixTokens.radius()),
+            color: RemixTokens.onPrimary(),
           ),
           clipBehavior: Clip.antiAlias,
         ),
         track: BoxStyler(
           decoration: BoxDecorationMix(
-            color: RemixTokens.primary().withValues(alpha: 0.20), // TODO: Should be muted token
+            color: RemixTokens.primary().withValues(alpha: 0.20),
           ),
         ),
         indicator: BoxStyler(
           decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-            color: RemixTokens.primary(), // TODO: Should be accent token
+            borderRadius: BorderRadiusMix.all(RemixTokens.radius()),
+            color: RemixTokens.primary(),
           ),
         ),
         trackContainer: BoxStyler(),

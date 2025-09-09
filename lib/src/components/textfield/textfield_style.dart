@@ -360,17 +360,17 @@ class RemixTextFieldStyles {
   static RemixTextFieldStyle get baseStyle => RemixTextFieldStyle(
         text: TextStyler(
           style: TextStyleMix(
-            color: RemixTokens.primary(), // TODO: Should be fg token
+            color: RemixTokens.primary(),
             fontSize: _kFontSizeMd,
           ),
         ),
         hintText: TextStyler(
           style:
-              TextStyleMix(color: RemixTokens.primary().withValues(alpha: 0.5)), // TODO: Should use placeholder token
+              TextStyleMix(color: RemixTokens.primary().withValues(alpha: 0.5)),
         ),
         textAlign: TextAlign.start,
         cursorWidth: 2.0,
-        cursorColor: RemixTokens.primary(), // TODO: Should be accent token
+        cursorColor: RemixTokens.primary(),
         cursorOffset: Offset.zero,
         selectionHeightStyle: BoxHeightStyle.tight,
         selectionWidthStyle: BoxWidthStyle.tight,
@@ -380,12 +380,12 @@ class RemixTextFieldStyles {
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(
               BorderSideMix(
-                color: RemixTokens.primary(), // TODO: Should be border token
+                color: RemixTokens.primary(),
                 width: 1,
               ),
             ),
-            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-            color: RemixTokens.onPrimary(), // TODO: Should be surface1 token
+            borderRadius: BorderRadiusMix.all(RemixTokens.radius()),
+            color: RemixTokens.onPrimary(),
           ),
           padding: EdgeInsetsGeometryMix.symmetric(
             vertical: RemixTokens.spaceSm(),
@@ -396,7 +396,7 @@ class RemixTextFieldStyles {
         ),
         helperText: TextStyler(
           style: TextStyleMix(
-            color: RemixTokens.secondary().withValues(alpha: 0.6), // TODO: Should be muted token
+            color: RemixTokens.secondary().withValues(alpha: 0.6),
             fontSize: _kFontSizeSm,
           ),
         ),

@@ -179,10 +179,10 @@ class RemixSwitchStyles {
           ),
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(
-              BorderSideMix(color: RemixTokens.primary(), width: 1), // TODO: Should be border token
+              BorderSideMix(color: RemixTokens.primary(), width: 1),
             ),
             borderRadius: BorderRadiusMix.circular(_kTrackHeight),
-            color: RemixTokens.onPrimary(), // TODO: Should be surface1 token
+            color: RemixTokens.onPrimary(),
           ),
         ),
         thumb: BoxStyler(
@@ -194,7 +194,7 @@ class RemixSwitchStyles {
           ),
           decoration: BoxDecorationMix(
             shape: BoxShape.circle,
-            color: RemixTokens.primary(), // TODO: Should be accent token
+            color: RemixTokens.primary(),
           ),
         ),
       );

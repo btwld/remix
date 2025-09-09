@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
+
 import '../../widgets/comparison_view.dart';
 
 Widget buildButtonExample() {
@@ -11,13 +12,17 @@ Widget buildButtonExample() {
       ),
       const RemixButton(
         label: 'Disabled',
-        enabled: false,
         onPressed: null,
       ),
       const RemixButton(
         label: 'Loading',
         loading: true,
         onPressed: null,
+      ),
+      RemixButton(
+        label: 'With Icon',
+        icon: Icons.star,
+        onPressed: () {},
       ),
       RemixIconButton(
         icon: Icons.star,
@@ -26,16 +31,16 @@ Widget buildButtonExample() {
       ),
     ],
     material: [
-      ElevatedButton(
+      FilledButton(
         onPressed: () {},
         child: const Text('Primary Button'),
       ),
-      const ElevatedButton(
+      const FilledButton(
         onPressed: null,
         child: Text('Disabled'),
       ),
       // Simulated loading state for Material (no built-in loading flag)
-      const ElevatedButton(
+      const FilledButton(
         onPressed: null,
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -50,12 +55,17 @@ Widget buildButtonExample() {
           ],
         ),
       ),
-      IconButton(
+      FilledButton.icon(
+        onPressed: () {},
+        icon: const Icon(Icons.star, size: 18),
+        label: const Text('With Icon'),
+      ),
+      IconButton.filled(
         onPressed: () {},
         tooltip: 'Favorite',
-        icon: const Icon(Icons.star),
+        iconSize: 16,
+        icon: const Icon(Icons.star, size: 16),
       ),
     ],
   );
 }
-

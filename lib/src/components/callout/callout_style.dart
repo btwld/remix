@@ -186,11 +186,11 @@ class RemixCalloutStyles {
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
               color: RemixTokens.primary()
-                  .withValues(alpha: 0.20), // TODO: Should be border token
+                  .withValues(alpha: 0.20),
               width: 1,
             )),
-            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-            color: RemixTokens.onPrimary(), // TODO: Should be surface1 token
+            borderRadius: BorderRadiusMix.all(RemixTokens.radius()),
+            color: RemixTokens.onPrimary(),
           ),
           padding: EdgeInsetsMix.all(RemixTokens.spaceMd()),
           alignment: Alignment.centerLeft,
@@ -201,13 +201,13 @@ class RemixCalloutStyles {
         ),
         text: TextStyler(
           style: TextStyleMix(
-            color: RemixTokens.primary(), // TODO: Should be fg token
+            color: RemixTokens.primary(),
             fontSize: _kFontSizeMd,
             fontWeight: FontWeight.w500,
           ),
         ),
         icon: IconStyler(
-          color: RemixTokens.primary(), // TODO: Should be accent token
+          color: RemixTokens.primary(),
           size: _kIconSizeMd,
         ),
       );

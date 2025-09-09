@@ -473,7 +473,7 @@ class RemixSelectStyles {
         menuContainer: BoxStyler(
           padding: EdgeInsetsMix.symmetric(vertical: RemixTokens.spaceXs()),
           decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+            borderRadius: BorderRadiusMix.all(RemixTokens.radius()),
             color: RemixTokens.onPrimary(),
           ),
         ),
@@ -486,7 +486,7 @@ class RemixSelectStyles {
                   width: 1,
                 ),
               ),
-              borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+              borderRadius: BorderRadiusMix.all(RemixTokens.radius()),
             ),
             padding: EdgeInsetsGeometryMix.symmetric(
               vertical: RemixTokens.spaceSm(),
@@ -541,18 +541,18 @@ class RemixSelectStyles {
         menuContainer: BoxStyler(
           padding: EdgeInsetsMix.symmetric(vertical: RemixTokens.spaceXs()),
           decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-            color: RemixTokens.onPrimary(), // TODO: Should be surface4 token
+            borderRadius: BorderRadiusMix.all(RemixTokens.radius()),
+            color: RemixTokens.onPrimary(),
           ),
         ),
         trigger: RemixSelectTriggerStyle(
           container: FlexBoxStyler(
             decoration: BoxDecorationMix(
               border: BoxBorderMix.all(
-                BorderSideMix(color: RemixTokens.primary(), width: 1), // TODO: Should be border token
+                BorderSideMix(color: RemixTokens.primary(), width: 1),
               ),
-              borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
-              color: RemixTokens.onPrimary(), // TODO: Should be surface1 token
+              borderRadius: BorderRadiusMix.all(RemixTokens.radius()),
+              color: RemixTokens.onPrimary(),
             ),
             padding: EdgeInsetsGeometryMix.symmetric(
               vertical: RemixTokens.spaceSm(),
@@ -564,19 +564,19 @@ class RemixSelectStyles {
           ),
           label: TextStyler(
             style: TextStyleMix(
-              color: RemixTokens.primary(), // TODO: Should be fg token
+              color: RemixTokens.primary(),
               fontSize: _kFontSizeSm,
             ),
           ),
           icon: IconStyler(
-            color: RemixTokens.primary().withValues(alpha: 0.70), // TODO: Should be fg token with alpha
+            color: RemixTokens.primary().withValues(alpha: 0.70),
             size: 20,
           ),
         ),
         item: RemixSelectMenuItemStyle(
           container: FlexBoxStyler(
             decoration: BoxDecorationMix(
-              borderRadius: BorderRadiusMix.circular(SpaceTokens.radius()),
+              borderRadius: BorderRadiusMix.all(RemixTokens.radius()),
             ),
             padding: EdgeInsetsGeometryMix.symmetric(
               vertical: RemixTokens.spaceSm(),
@@ -588,12 +588,12 @@ class RemixSelectStyles {
           ),
           text: TextStyler(
             style: TextStyleMix(
-              color: RemixTokens.primary(), // TODO: Should be fg token
+              color: RemixTokens.primary(),
               fontSize: _kFontSizeSm,
             ),
           ),
           icon: IconStyler(
-            color: RemixTokens.primary().withValues(alpha: 0.60), // TODO: Should be fg token with alpha
+            color: RemixTokens.primary().withValues(alpha: 0.60),
             size: 16,
           ),
         ),
@@ -608,7 +608,7 @@ class RemixSelectStyles {
               trigger: RemixSelectTriggerStyle(
                 container: FlexBoxStyler(
                   decoration: BoxDecorationMix(
-                    color: RemixTokens.primary().withValues(alpha: 0.03), // TODO: Should be surface2 token
+                    color: RemixTokens.primary().withValues(alpha: 0.03),
                   ),
                 ),
               ),
@@ -621,7 +621,7 @@ class RemixSelectStyles {
                   decoration: BoxDecorationMix(
                     border: BoxBorderMix.all(
                       BorderSideMix(
-                        color: RemixTokens.primary().withValues(alpha: 0.40), // TODO: Should be accent token with alpha
+                        color: RemixTokens.primary().withValues(alpha: 0.40),
                         width: 2,
                       ),
                     ),

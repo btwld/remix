@@ -1,7 +1,6 @@
 part of 'radio.dart';
 
 // Private per-component constants (sizes only)
-const _kSpaceSm = 8.0;
 const _kFontSizeMd = 14.0;
 
 class RemixRadioStyle extends Style<RadioSpec>
@@ -195,7 +194,7 @@ class RemixRadioStyles {
           direction: Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
-          spacing: _kSpaceSm,
+          spacing: RemixTokens.spaceSm(),
         ),
         indicatorContainer: BoxStyler(
           alignment: Alignment.center,
