@@ -5,8 +5,8 @@ const _kFontSizeSm = 12.0;
 
 class RemixSelectStyle extends Style<SelectSpec>
     with
-        StyleModifierMixin<RemixSelectStyle, SelectSpec>,
-        StyleVariantMixin<RemixSelectStyle, SelectSpec> {
+        VariantStyleMixin<RemixSelectStyle, SelectSpec>,
+        WidgetModifierStyleMixin<RemixSelectStyle, SelectSpec> {
   final Prop<StyleSpec<BoxSpec>>? $menuContainer;
   final Prop<StyleSpec<SelectTriggerSpec>>? $trigger;
   final Prop<StyleSpec<SelectMenuItemSpec>>? $item;
@@ -32,7 +32,7 @@ class RemixSelectStyle extends Style<SelectSpec>
     RemixCompositedTransformFollowerStyle? position,
     AnimationConfig? animation,
     List<VariantStyle<SelectSpec>>? variants,
-    ModifierConfig? modifier,
+    WidgetModifierConfig? modifier,
   }) : this.create(
           menuContainer: Prop.maybeMix(menuContainer),
           trigger: Prop.maybeMix(trigger),
@@ -71,7 +71,7 @@ class RemixSelectStyle extends Style<SelectSpec>
   }
 
   @override
-  RemixSelectStyle wrap(ModifierConfig value) {
+  RemixSelectStyle wrap(WidgetModifierConfig value) {
     return merge(RemixSelectStyle(modifier: value));
   }
 
@@ -119,8 +119,9 @@ class RemixSelectStyle extends Style<SelectSpec>
 // Style classes for sub-specs
 class RemixSelectTriggerStyle extends Style<SelectTriggerSpec>
     with
-        ModifierStyleMixin<RemixSelectTriggerStyle, SelectTriggerSpec>,
+        VariantStyleMixin<RemixSelectTriggerStyle, SelectTriggerSpec>,
         BorderStyleMixin<RemixSelectTriggerStyle>,
+        WidgetModifierStyleMixin<RemixSelectTriggerStyle, SelectTriggerSpec>,
         BorderRadiusStyleMixin<RemixSelectTriggerStyle>,
         ShadowStyleMixin<RemixSelectTriggerStyle>,
         DecorationStyleMixin<RemixSelectTriggerStyle>,
@@ -149,7 +150,7 @@ class RemixSelectTriggerStyle extends Style<SelectTriggerSpec>
     IconStyler? icon,
     AnimationConfig? animation,
     List<VariantStyle<SelectTriggerSpec>>? variants,
-    ModifierConfig? modifier,
+    WidgetModifierConfig? modifier,
   }) : this.create(
           container: Prop.maybeMix(container),
           label: Prop.maybeMix(label),
@@ -208,6 +209,13 @@ class RemixSelectTriggerStyle extends Style<SelectTriggerSpec>
   }
 
   @override
+  RemixSelectTriggerStyle variants(
+    List<VariantStyle<SelectTriggerSpec>> value,
+  ) {
+    return merge(RemixSelectTriggerStyle(variants: value));
+  }
+
+  @override
   RemixSelectTriggerStyle margin(EdgeInsetsGeometryMix value) {
     return merge(
       RemixSelectTriggerStyle(container: FlexBoxStyler(margin: value)),
@@ -222,7 +230,7 @@ class RemixSelectTriggerStyle extends Style<SelectTriggerSpec>
   }
 
   @override
-  RemixSelectTriggerStyle wrap(ModifierConfig value) {
+  RemixSelectTriggerStyle wrap(WidgetModifierConfig value) {
     return merge(RemixSelectTriggerStyle(modifier: value));
   }
 
@@ -256,8 +264,9 @@ class RemixSelectTriggerStyle extends Style<SelectTriggerSpec>
 
 class RemixSelectMenuItemStyle extends Style<SelectMenuItemSpec>
     with
-        ModifierStyleMixin<RemixSelectMenuItemStyle, SelectMenuItemSpec>,
+        VariantStyleMixin<RemixSelectMenuItemStyle, SelectMenuItemSpec>,
         BorderStyleMixin<RemixSelectMenuItemStyle>,
+        WidgetModifierStyleMixin<RemixSelectMenuItemStyle, SelectMenuItemSpec>,
         BorderRadiusStyleMixin<RemixSelectMenuItemStyle>,
         ShadowStyleMixin<RemixSelectMenuItemStyle>,
         DecorationStyleMixin<RemixSelectMenuItemStyle>,
@@ -286,7 +295,7 @@ class RemixSelectMenuItemStyle extends Style<SelectMenuItemSpec>
     IconStyler? icon,
     AnimationConfig? animation,
     List<VariantStyle<SelectMenuItemSpec>>? variants,
-    ModifierConfig? modifier,
+    WidgetModifierConfig? modifier,
   }) : this.create(
           container: Prop.maybeMix(container),
           text: Prop.maybeMix(text),
@@ -338,6 +347,13 @@ class RemixSelectMenuItemStyle extends Style<SelectMenuItemSpec>
   }
 
   @override
+  RemixSelectMenuItemStyle variants(
+    List<VariantStyle<SelectMenuItemSpec>> value,
+  ) {
+    return merge(RemixSelectMenuItemStyle(variants: value));
+  }
+
+  @override
   RemixSelectMenuItemStyle decoration(DecorationMix value) {
     return merge(
       RemixSelectMenuItemStyle(container: FlexBoxStyler(decoration: value)),
@@ -359,7 +375,7 @@ class RemixSelectMenuItemStyle extends Style<SelectMenuItemSpec>
   }
 
   @override
-  RemixSelectMenuItemStyle wrap(ModifierConfig value) {
+  RemixSelectMenuItemStyle wrap(WidgetModifierConfig value) {
     return merge(RemixSelectMenuItemStyle(modifier: value));
   }
 
@@ -414,7 +430,7 @@ class RemixCompositedTransformFollowerStyle
     Offset? offset,
     AnimationConfig? animation,
     List<VariantStyle<CompositedTransformFollowerSpec>>? variants,
-    ModifierConfig? modifier,
+    WidgetModifierConfig? modifier,
   }) : this.create(
           targetAnchor: Prop.maybe(targetAnchor),
           followerAnchor: Prop.maybe(followerAnchor),
@@ -482,7 +498,7 @@ class RemixSelectStyles {
             decoration: BoxDecorationMix(
               border: BoxBorderMix.all(
                 BorderSideMix(
-                  color: RemixTokens.primary().withValues(alpha: 0.15),
+                  color: RemixTokens.primary(),
                   width: 1,
                 ),
               ),
@@ -503,7 +519,7 @@ class RemixSelectStyles {
             ),
           ),
           icon: IconStyler(
-            color: RemixTokens.primary().withValues(alpha: 0.60),
+            color: RemixTokens.primary(),
             size: 20,
           ),
         ),
@@ -524,7 +540,7 @@ class RemixSelectStyles {
             ),
           ),
           icon: IconStyler(
-            color: RemixTokens.primary().withValues(alpha: 0.60),
+            color: RemixTokens.primary(),
             size: 16,
           ),
         ),
@@ -569,7 +585,7 @@ class RemixSelectStyles {
             ),
           ),
           icon: IconStyler(
-            color: RemixTokens.primary().withValues(alpha: 0.70),
+            color: RemixTokens.primary(),
             size: 20,
           ),
         ),
@@ -593,7 +609,7 @@ class RemixSelectStyles {
             ),
           ),
           icon: IconStyler(
-            color: RemixTokens.primary().withValues(alpha: 0.60),
+            color: RemixTokens.primary(),
             size: 16,
           ),
         ),
@@ -608,7 +624,7 @@ class RemixSelectStyles {
               trigger: RemixSelectTriggerStyle(
                 container: FlexBoxStyler(
                   decoration: BoxDecorationMix(
-                    color: RemixTokens.primary().withValues(alpha: 0.03),
+                    color: RemixTokens.primary(),
                   ),
                 ),
               ),
@@ -621,7 +637,7 @@ class RemixSelectStyles {
                   decoration: BoxDecorationMix(
                     border: BoxBorderMix.all(
                       BorderSideMix(
-                        color: RemixTokens.primary().withValues(alpha: 0.40),
+                        color: RemixTokens.primary(),
                         width: 2,
                       ),
                     ),
@@ -630,5 +646,4 @@ class RemixSelectStyles {
               ),
             ),
           );
-
 }

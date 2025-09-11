@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mix/mix.dart';
-import 'package:naked_ui/src/utilities/naked_pressable.dart' as pressable;
+import 'package:naked_ui/naked_ui.dart';
 import '../../theme/remix_tokens.dart';
 import '../../utilities/label_style_mixin.dart';
 import '../../utilities/icon_style_mixin.dart';

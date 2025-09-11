@@ -42,10 +42,9 @@ const _kIconSizeLg = 18.0;
 /// All methods return new instances (immutable pattern) and can be chained together.
 class RemixButtonStyle extends Style<ButtonSpec>
     with
-        StyleModifierMixin<RemixButtonStyle, ButtonSpec>,
-        StyleVariantMixin<RemixButtonStyle, ButtonSpec>,
-        ModifierStyleMixin<RemixButtonStyle, ButtonSpec>,
+        VariantStyleMixin<RemixButtonStyle, ButtonSpec>,
         BorderStyleMixin<RemixButtonStyle>,
+        WidgetModifierStyleMixin<RemixButtonStyle, ButtonSpec>,
         BorderRadiusStyleMixin<RemixButtonStyle>,
         ShadowStyleMixin<RemixButtonStyle>,
         DecorationStyleMixin<RemixButtonStyle>,
@@ -81,7 +80,7 @@ class RemixButtonStyle extends Style<ButtonSpec>
     RemixSpinnerStyle? spinner,
     AnimationConfig? animation,
     List<VariantStyle<ButtonSpec>>? variants,
-    ModifierConfig? modifier,
+    WidgetModifierConfig? modifier,
   }) : this.create(
           container: Prop.maybeMix(container),
           label: Prop.maybeMix(label),
@@ -188,7 +187,7 @@ class RemixButtonStyle extends Style<ButtonSpec>
 
   // Modifier support
   @override
-  RemixButtonStyle wrap(ModifierConfig value) {
+  RemixButtonStyle wrap(WidgetModifierConfig value) {
     return merge(RemixButtonStyle(modifier: value));
   }
 
@@ -259,28 +258,28 @@ class RemixButtonStyles {
       // State variants
       .onHovered(
         RemixButtonStyle().color(
-          RemixTokens.primary().withValues(alpha: 0.8),
+          RemixTokens.primary(),
         ),
       )
       .onPressed(
         RemixButtonStyle().color(
-          RemixTokens.primary().withValues(alpha: 0.9),
+          RemixTokens.primary(),
         ),
       )
       .onFocused(
         RemixButtonStyle().borderAll(
-          color: RemixTokens.primary().withValues(alpha: 0.40),
+          color: RemixTokens.primary(),
           width: 2,
         ),
       )
       .onDisabled(
         RemixButtonStyle()
-            .color(RemixTokens.primary().withValues(alpha: 0.3))
-            .labelColor(RemixTokens.onPrimary().withValues(alpha: 0.7))
-            .iconColor(RemixTokens.onPrimary().withValues(alpha: 0.7))
+            .color(RemixTokens.primary())
+            .labelColor(RemixTokens.onPrimary())
+            .iconColor(RemixTokens.onPrimary())
             .spinner(
               RemixSpinnerStyle(
-                color: RemixTokens.onPrimary().withValues(alpha: 0.7),
+                color: RemixTokens.onPrimary(),
               ),
             ),
       );

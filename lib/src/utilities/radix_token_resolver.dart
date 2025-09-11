@@ -129,8 +129,8 @@ class RadixColorScale {
 // MAIN TOKEN STRUCTURE
 // =============================================================================
 
-/// Complete Radix token set for theming
-class RadixTokens {
+/// Resolved color values for theming (renamed to avoid confusion with MixTokens)
+class RadixResolvedColors {
   // Full color scales for direct access
   final RadixColorScale accent;
   final RadixColorScale gray;
@@ -149,7 +149,7 @@ class RadixTokens {
   final Color accentIndicator; // Progress/slider fill (accent[9])
   final Color accentTrack; // Track background (gray[6] by default)
 
-  const RadixTokens({
+  const RadixResolvedColors({
     required this.accent,
     required this.gray,
     required this.focus,
@@ -215,7 +215,7 @@ class RadixComponentTokens {
 
 class RadixTokenBuilder {
   /// Build component-specific tokens for each variant
-  static RadixComponentTokens buildComponentTokens(RadixTokens tokens) {
+  static RadixComponentTokens buildComponentTokens(RadixResolvedColors tokens) {
     return RadixComponentTokens(
       // Solid: High emphasis with solid background
       solid: RadixVariantTokens(
@@ -618,8 +618,8 @@ class RadixTokenBuilder {
     return Color.alphaBlend(foreground, background);
   }
 
-  /// Build complete token set from theme configuration
-  static RadixTokens build(RadixTheme theme) {
+  /// Build complete resolved colors from theme configuration
+  static RadixResolvedColors build(RadixTheme theme) {
     // Get color scales
     final accent = _getAccentScale(theme.accent, theme.isDark);
     final gray = _getGrayScale(theme.gray, theme.isDark);
@@ -660,7 +660,7 @@ class RadixTokenBuilder {
     final accentContrast = _getContrastColor(theme.accent);
     final accentSurface = _generateAccentSurface(accent, colorSurface);
 
-    return RadixTokens(
+    return RadixResolvedColors(
       accent: accent,
       gray: gray,
       focus: focus,

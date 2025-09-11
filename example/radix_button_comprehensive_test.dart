@@ -2,12 +2,10 @@
 // ABOUTME: Validates that all 6 variants work correctly with different accent/gray combinations
 
 import 'package:flutter/material.dart';
-import 'package:mix/mix.dart';
 
 import '../lib/src/components/button/button.dart';
 import '../lib/src/components/button/radix_button_styles.dart';
 import '../lib/src/theme/radix_theme_data.dart';
-import '../lib/src/theme/radix_token_definitions.dart';
 import '../lib/src/utilities/radix_token_resolver.dart' as resolver;
 
 void main() {
@@ -30,30 +28,20 @@ class _RadixButtonComprehensiveTestState
 
   @override
   Widget build(BuildContext context) {
-    final radixThemeData = RadixThemeData(
-      accent: _accent,
-      gray: _gray,
-      brightness: _brightness,
-      trackVariant: resolver.TrackVariant.neutral,
-    );
-
-    final tokenDefinitions =
-        RadixTokenDefinitions.createDefinitions(radixThemeData);
-
     return MaterialApp(
-      home: MixScope(
-        tokens: tokenDefinitions.toSet(),
-        child: RadixTheme(
-          themeData: radixThemeData,
-          child: _ComprehensiveTestScreen(
-            onAccentChanged: (accent) => setState(() => _accent = accent),
-            onGrayChanged: (gray) => setState(() => _gray = gray),
-            onBrightnessChanged: (brightness) =>
-                setState(() => _brightness = brightness),
-            currentAccent: _accent,
-            currentGray: _gray,
-            currentBrightness: _brightness,
-          ),
+      home: createRadixScope(
+        accent: _accent,
+        gray: _gray,
+        brightness: _brightness,
+        trackVariant: resolver.TrackVariant.neutral,
+        child: _ComprehensiveTestScreen(
+          onAccentChanged: (accent) => setState(() => _accent = accent),
+          onGrayChanged: (gray) => setState(() => _gray = gray),
+          onBrightnessChanged: (brightness) =>
+              setState(() => _brightness = brightness),
+          currentAccent: _accent,
+          currentGray: _gray,
+          currentBrightness: _brightness,
         ),
       ),
       title: 'Radix Button Comprehensive Test',
@@ -92,7 +80,9 @@ class _ComprehensiveTestScreen extends StatelessWidget {
           PopupMenuButton<Brightness>(
             itemBuilder: (context) => [
               const PopupMenuItem(
-                  value: Brightness.light, child: Text('Light')),
+                value: Brightness.light,
+                child: Text('Light'),
+              ),
               const PopupMenuItem(value: Brightness.dark, child: Text('Dark')),
             ],
             onSelected: onBrightnessChanged,
@@ -118,29 +108,37 @@ class _ComprehensiveTestScreen extends StatelessWidget {
             const SizedBox(height: 24),
 
             // All Variants - Default Size (2)
-            const Text('All Variants - Size 2 (Default)',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            const Text(
+              'All Variants - Size 2 (Default)',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 16),
             _AllVariantsSection(size: 2),
             const SizedBox(height: 32),
 
             // Size Comparison - Solid Variant
-            const Text('Size Comparison - Solid Variant',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            const Text(
+              'Size Comparison - Solid Variant',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 16),
             _SizeComparisonSection(),
             const SizedBox(height: 32),
 
             // State Testing - Each Variant
-            const Text('State Testing - All Variants',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            const Text(
+              'State Testing - All Variants',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 16),
             _StateTestingSection(),
             const SizedBox(height: 32),
 
             // Accent Color Showcase
-            const Text('Accent Color Showcase - Solid Variant',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            const Text(
+              'Accent Color Showcase - Solid Variant',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 16),
             _AccentShowcaseSection(),
           ],
@@ -175,8 +173,10 @@ class _ThemeControls extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Theme Configuration',
-                style: TextStyle(fontWeight: FontWeight.bold)),
+            const Text(
+              'Theme Configuration',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 8),
             Row(
               children: [
@@ -185,8 +185,9 @@ class _ThemeControls extends StatelessWidget {
                     items: resolver.RadixAccentColor.values
                         .map(
                           (color) => DropdownMenuItem(
-                              value: color,
-                              child: Text('Accent: ${color.name}')),
+                            value: color,
+                            child: Text('Accent: ${color.name}'),
+                          ),
                         )
                         .toList(),
                     value: accent,
@@ -200,7 +201,9 @@ class _ThemeControls extends StatelessWidget {
                     items: resolver.RadixGrayColor.values
                         .map(
                           (color) => DropdownMenuItem(
-                              value: color, child: Text('Gray: ${color.name}')),
+                            value: color,
+                            child: Text('Gray: ${color.name}'),
+                          ),
                         )
                         .toList(),
                     value: gray,
@@ -345,10 +348,12 @@ class _StateTestingSection extends StatelessWidget {
           'Surface',
           'Outline',
           'Ghost',
-          'Classic'
+          'Classic',
         ]) ...[
-          Text('$variantName States',
-              style: const TextStyle(fontWeight: FontWeight.w600)),
+          Text(
+            '$variantName States',
+            style: const TextStyle(fontWeight: FontWeight.w600),
+          ),
           const SizedBox(height: 8),
           Wrap(
             spacing: 8,
@@ -399,23 +404,14 @@ class _AccentShowcaseSection extends StatelessWidget {
       spacing: 8,
       runSpacing: 8,
       children: popularAccents.map((accentColor) {
-        // Create temporary theme data to show the accent
-        final tempThemeData = RadixThemeData(
+        // Create temporary scope to show the accent
+        return createRadixScope(
           accent: accentColor,
           gray: resolver.RadixGrayColor.slate,
           brightness: Theme.of(context).brightness,
-        );
-        final tempTokens =
-            RadixTokenDefinitions.createDefinitions(tempThemeData);
-
-        return MixScope(
-          tokens: tempTokens.toSet(),
-          child: RadixTheme(
-            themeData: tempThemeData,
-            child: RadixButtonStyles.solid().call(
-              label: accentColor.name,
-              onPressed: () {},
-            ),
+          child: RadixButtonStyles.solid().call(
+            label: accentColor.name,
+            onPressed: () {},
           ),
         );
       }).toList(),

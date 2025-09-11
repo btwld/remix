@@ -7,10 +7,9 @@ const _kThumbSize = 20.0;
 
 class RemixSwitchStyle extends Style<SwitchSpec>
     with
-        StyleModifierMixin<RemixSwitchStyle, SwitchSpec>,
-        StyleVariantMixin<RemixSwitchStyle, SwitchSpec>,
-        ModifierStyleMixin<RemixSwitchStyle, SwitchSpec>,
+        VariantStyleMixin<RemixSwitchStyle, SwitchSpec>,
         BorderStyleMixin<RemixSwitchStyle>,
+        WidgetModifierStyleMixin<RemixSwitchStyle, SwitchSpec>,
         BorderRadiusStyleMixin<RemixSwitchStyle>,
         ShadowStyleMixin<RemixSwitchStyle>,
         DecorationStyleMixin<RemixSwitchStyle>,
@@ -39,7 +38,7 @@ class RemixSwitchStyle extends Style<SwitchSpec>
     BoxStyler? thumb,
     AnimationConfig? animation,
     List<VariantStyle<SwitchSpec>>? variants,
-    ModifierConfig? modifier,
+    WidgetModifierConfig? modifier,
   }) : this.create(
           container: Prop.maybeMix(container),
           track: Prop.maybeMix(track),
@@ -106,7 +105,7 @@ class RemixSwitchStyle extends Style<SwitchSpec>
   }
 
   @override
-  RemixSwitchStyle wrap(ModifierConfig value) {
+  RemixSwitchStyle wrap(WidgetModifierConfig value) {
     return merge(RemixSwitchStyle(modifier: value));
   }
 

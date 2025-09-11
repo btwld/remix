@@ -7,10 +7,9 @@ const _kIconSizeMedium = 24.0;
 
 class RemixAvatarStyle extends Style<AvatarSpec>
     with
-        StyleModifierMixin<RemixAvatarStyle, AvatarSpec>,
-        StyleVariantMixin<RemixAvatarStyle, AvatarSpec>,
-        ModifierStyleMixin<RemixAvatarStyle, AvatarSpec>,
+        VariantStyleMixin<RemixAvatarStyle, AvatarSpec>,
         BorderStyleMixin<RemixAvatarStyle>,
+        WidgetModifierStyleMixin<RemixAvatarStyle, AvatarSpec>,
         BorderRadiusStyleMixin<RemixAvatarStyle>,
         ShadowStyleMixin<RemixAvatarStyle>,
         DecorationStyleMixin<RemixAvatarStyle>,
@@ -39,7 +38,7 @@ class RemixAvatarStyle extends Style<AvatarSpec>
     IconStyler? icon,
     AnimationConfig? animation,
     List<VariantStyle<AvatarSpec>>? variants,
-    ModifierConfig? modifier,
+    WidgetModifierConfig? modifier,
   }) : this.create(
           container: Prop.maybeMix(container),
           text: Prop.maybeMix(text),
@@ -149,7 +148,7 @@ class RemixAvatarStyle extends Style<AvatarSpec>
   }
 
   @override
-  RemixAvatarStyle wrap(ModifierConfig value) {
+  RemixAvatarStyle wrap(WidgetModifierConfig value) {
     return merge(RemixAvatarStyle(modifier: value));
   }
 

@@ -6,8 +6,8 @@ const _kThumbBorderWidth = 2.0;
 
 class RemixSliderStyle extends Style<SliderSpec>
     with
-        StyleModifierMixin<RemixSliderStyle, SliderSpec>,
-        StyleVariantMixin<RemixSliderStyle, SliderSpec> {
+        VariantStyleMixin<RemixSliderStyle, SliderSpec>,
+        WidgetModifierStyleMixin<RemixSliderStyle, SliderSpec> {
   final Prop<StyleSpec<BoxSpec>>? $thumb;
   final Prop<Paint>? $baseTrack;
   final Prop<Paint>? $activeTrack;
@@ -33,7 +33,7 @@ class RemixSliderStyle extends Style<SliderSpec>
     Paint? division,
     AnimationConfig? animation,
     List<VariantStyle<SliderSpec>>? variants,
-    ModifierConfig? modifier,
+    WidgetModifierConfig? modifier,
   }) : this.create(
           thumb: Prop.maybeMix(thumb),
           baseTrack: baseTrack != null ? Prop.value(baseTrack) : null,
@@ -113,7 +113,7 @@ class RemixSliderStyle extends Style<SliderSpec>
   }
 
   @override
-  RemixSliderStyle wrap(ModifierConfig value) {
+  RemixSliderStyle wrap(WidgetModifierConfig value) {
     return merge(RemixSliderStyle(modifier: value));
   }
 
@@ -148,21 +148,21 @@ final RemixSliderDisabledStyle = RemixSliderStyle(
     decoration: BoxDecorationMix(
       border: BoxBorderMix.all(
         BorderSideMix(
-          color: RemixTokens.primary().withValues(alpha: 0.40),
+          color: RemixTokens.primary(),
           width: _kThumbBorderWidth,
         ),
       ),
-      color: RemixTokens.primary().withValues(alpha: 0.08),
+      color: RemixTokens.primary(),
     ),
   ),
   baseTrack: Paint()
     ..strokeWidth = _kTrackWidth
-    ..color = RemixTokens.primary().withValues(alpha: 0.08)
+    ..color = RemixTokens.primary()
     ..strokeCap = StrokeCap.round
     ..style = PaintingStyle.stroke,
   activeTrack: Paint()
     ..strokeWidth = _kTrackWidth
-    ..color = RemixTokens.primary().withValues(alpha: 0.20)
+    ..color = RemixTokens.primary()
     ..strokeCap = StrokeCap.round
     ..style = PaintingStyle.stroke,
 );
@@ -193,7 +193,7 @@ class RemixSliderStyles {
           baseTrack: Paint()
             ..strokeWidth = _kTrackWidth
             ..color =
-                RemixTokens.primary.resolve(context).withValues(alpha: 0.20)
+                RemixTokens.primary.resolve(context)
             ..strokeCap = StrokeCap.round
             ..style = PaintingStyle.stroke,
           activeTrack: Paint()
@@ -204,7 +204,7 @@ class RemixSliderStyles {
           division: Paint()
             ..strokeWidth = _kTrackWidth
             ..color =
-                RemixTokens.primary.resolve(context).withValues(alpha: 0.26)
+                RemixTokens.primary.resolve(context)
             ..strokeCap = StrokeCap.round
             ..style = PaintingStyle.stroke,
         );

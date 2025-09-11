@@ -23,56 +23,58 @@ class RadixButtonStyles {
     final sizeConfig = _getSizeConfig(size);
 
     return RemixButtonStyle()
-        // Container styling
-        .color(RadixTokens.solidBackground())
-        .borderRadiusAll(const Radius.circular(6.0))
+        // Container styling with size-specific values
+        .color(RadixTokens.accent9())
+        .borderRadiusAll(sizeConfig.radius)
         .paddingX(sizeConfig.paddingX)
         .paddingY(sizeConfig.paddingY)
-        .spacing(6.0)
-        // Content styling using helper methods
-        .labelColor(RadixTokens.solidText())
-        .labelFontSize(sizeConfig.fontSize)
-        .iconColor(RadixTokens.solidText())
+        .spacing(sizeConfig.gap)
+        .height(sizeConfig.height)
+        // Content styling with comprehensive typography
+        .label(
+          TextStyler()
+              .color(RadixTokens.accentContrast())
+              .fontSize(sizeConfig.fontSize)
+              .height(sizeConfig.lineHeight /
+                  sizeConfig.fontSize) // lineHeight as ratio
+              .letterSpacing(sizeConfig.letterSpacing)
+              .fontWeight(RadixTokens.fontWeightMedium),
+        )
+        .iconColor(RadixTokens.accentContrast())
         .iconSize(sizeConfig.iconSize)
         .spinner(
           RemixSpinnerStyle(
             size: sizeConfig.iconSize,
-            strokeWidth: 2.0,
-            color: RadixTokens.solidText(),
-            duration: const Duration(milliseconds: 1000),
+            strokeWidth: RadixTokens.borderWidth2(),
+            color: RadixTokens.accentContrast(),
+            duration: RadixTokens.transitionSlow,
             type: SpinnerType.solid,
           ),
         )
-        // State variants
+        // State variants with improved focus ring
         .onHovered(
-          RemixButtonStyle().color(RadixTokens.solidBackgroundHover()),
+          RemixButtonStyle().color(RadixTokens.accent10()),
         )
         .onPressed(
-          RemixButtonStyle().color(RadixTokens.solidBackgroundHover()),
+          RemixButtonStyle().color(RadixTokens.accent10()),
         )
         .onFocused(
           RemixButtonStyle().borderAll(
-            color: RadixTokens.solidFocusRing(),
-            width: 2,
+            color: RadixTokens.focusA8(),
+            width: RadixTokens.focusRingWidth(),
           ),
         )
         .onDisabled(
           RemixButtonStyle()
-              .color(RadixTokens.solidBackground().withValues(alpha: 0.5))
+              .color(RadixTokens.accent9())
               .label(
-                TextStyler().color(
-                  RadixTokens.solidText().withValues(alpha: 0.7),
-                ),
+                TextStyler().color(RadixTokens.accentContrast()),
               )
               .icon(
-                IconStyler(
-                  color: RadixTokens.solidText().withValues(alpha: 0.7),
-                ),
+                IconStyler(color: RadixTokens.accentContrast()),
               )
               .spinner(
-                RemixSpinnerStyle(
-                  color: RadixTokens.solidText().withValues(alpha: 0.7),
-                ),
+                RemixSpinnerStyle(color: RadixTokens.accentContrast()),
               ),
         );
   }
@@ -85,63 +87,68 @@ class RadixButtonStyles {
     final sizeConfig = _getSizeConfig(size);
 
     return RemixButtonStyle()
-        // Container styling
-        .color(RadixTokens.softBackground())
-        .borderRadiusAll(const Radius.circular(6.0))
-        .borderAll(color: RadixTokens.softBorder(), width: 1)
+        // Container styling with size-specific values
+        .color(RadixTokens.accent3())
+        .borderRadiusAll(sizeConfig.radius)
+        .borderAll(
+          color: RadixTokens.accent6(),
+          width: RadixTokens.borderWidth1(),
+        )
         .paddingX(sizeConfig.paddingX)
         .paddingY(sizeConfig.paddingY)
-        .spacing(6.0)
-        // Content styling using helper methods
-        .labelColor(RadixTokens.softText())
-        .labelFontSize(sizeConfig.fontSize)
-        .iconColor(RadixTokens.softText())
+        .spacing(sizeConfig.gap)
+        .height(sizeConfig.height)
+        // Content styling with comprehensive typography
+        .label(
+          TextStyler()
+              .color(RadixTokens.accent11())
+              .fontSize(sizeConfig.fontSize)
+              .height(sizeConfig.lineHeight / sizeConfig.fontSize)
+              .letterSpacing(sizeConfig.letterSpacing)
+              .fontWeight(RadixTokens.fontWeightMedium),
+        )
+        .iconColor(RadixTokens.accent11())
         .iconSize(sizeConfig.iconSize)
         .spinner(
           RemixSpinnerStyle(
             size: sizeConfig.iconSize,
-            strokeWidth: 2.0,
-            color: RadixTokens.softText(),
-            duration: const Duration(milliseconds: 1000),
+            strokeWidth: RadixTokens.borderWidth2(),
+            color: RadixTokens.accent11(),
+            duration: RadixTokens.transitionSlow,
             type: SpinnerType.solid,
           ),
         )
-        // State variants
+        // State variants with improved tokens
         .onHovered(
-          RemixButtonStyle()
-              .color(RadixTokens.softBackgroundHover())
-              .borderAll(color: RadixTokens.softBorderHover(), width: 1),
+          RemixButtonStyle().color(RadixTokens.accent4()).borderAll(
+                color: RadixTokens.accent7(),
+                width: RadixTokens.borderWidth1(),
+              ),
         )
         .onPressed(
-          RemixButtonStyle().color(RadixTokens.softBackgroundActive()),
+          RemixButtonStyle().color(RadixTokens.accent5()),
         )
         .onFocused(
           RemixButtonStyle().borderAll(
-            color: RadixTokens.softFocusRing(),
-            width: 2,
+            color: RadixTokens.focusA8(),
+            width: RadixTokens.focusRingWidth(),
           ),
         )
         .onDisabled(
           RemixButtonStyle()
-              .color(RadixTokens.softBackground().withValues(alpha: 0.5))
+              .color(RadixTokens.accent3())
               .borderAll(
-                color: RadixTokens.softBorder().withValues(alpha: 0.5),
-                width: 1,
+                color: RadixTokens.accent6(),
+                width: RadixTokens.borderWidth1(),
               )
               .label(
-                TextStyler().color(
-                  RadixTokens.softText().withValues(alpha: 0.7),
-                ),
+                TextStyler().color(RadixTokens.accent11()),
               )
               .icon(
-                IconStyler(
-                  color: RadixTokens.softText().withValues(alpha: 0.7),
-                ),
+                IconStyler(color: RadixTokens.accent11()),
               )
               .spinner(
-                RemixSpinnerStyle(
-                  color: RadixTokens.softText().withValues(alpha: 0.7),
-                ),
+                RemixSpinnerStyle(color: RadixTokens.accent11()),
               ),
         );
   }
@@ -154,67 +161,71 @@ class RadixButtonStyles {
     final sizeConfig = _getSizeConfig(size);
 
     return RemixButtonStyle()
-        // Container styling
-        .color(RadixTokens.surfaceBackground())
-        .borderRadiusAll(const Radius.circular(6.0))
-        .borderAll(color: RadixTokens.surfaceBorder(), width: 1)
+        // Container styling with size-specific values
+        .color(RadixTokens.accentSurface())
+        .borderRadiusAll(sizeConfig.radius)
+        .borderAll(
+          color: RadixTokens.accent6(),
+          width: RadixTokens.borderWidth1(),
+        )
         .paddingX(sizeConfig.paddingX)
         .paddingY(sizeConfig.paddingY)
-        .spacing(6.0)
-        // Content styling
+        .spacing(sizeConfig.gap)
+        .height(sizeConfig.height)
+        // Content styling with comprehensive typography
         .label(
           TextStyler()
-              .color(RadixTokens.surfaceText())
-              .fontSize(sizeConfig.fontSize),
+              .color(RadixTokens.accent11())
+              .fontSize(sizeConfig.fontSize)
+              .height(sizeConfig.lineHeight / sizeConfig.fontSize)
+              .letterSpacing(sizeConfig.letterSpacing)
+              .fontWeight(RadixTokens.fontWeightMedium),
         )
         .icon(
           IconStyler(
-            color: RadixTokens.surfaceText(),
+            color: RadixTokens.accent11(),
             size: sizeConfig.iconSize,
           ),
         )
         .spinner(
           RemixSpinnerStyle(
             size: sizeConfig.iconSize,
-            strokeWidth: 2.0,
-            color: RadixTokens.surfaceText(),
-            duration: const Duration(milliseconds: 1000),
+            strokeWidth: RadixTokens.borderWidth2(),
+            color: RadixTokens.accent11(),
+            duration: RadixTokens.transitionSlow,
             type: SpinnerType.solid,
           ),
         )
-        // State variants
+        // State variants with surface-specific hover (uses overlay calculation)
         .onHovered(
           RemixButtonStyle()
-              .color(RadixTokens.surfaceBackgroundHover())
-              .borderAll(color: RadixTokens.surfaceBorderHover(), width: 1),
+              .color(RadixTokens.accentA4()) // Uses surface hover overlay
+              .borderAll(
+                color: RadixTokens.accent7(),
+                width: RadixTokens.borderWidth1(),
+              ),
         )
         .onFocused(
           RemixButtonStyle().borderAll(
-            color: RadixTokens.surfaceFocusRing(),
-            width: 2,
+            color: RadixTokens.focusA8(),
+            width: RadixTokens.focusRingWidth(),
           ),
         )
         .onDisabled(
           RemixButtonStyle()
-              .color(RadixTokens.surfaceBackground().withValues(alpha: 0.5))
+              .color(RadixTokens.accentSurface())
               .borderAll(
-                color: RadixTokens.surfaceBorder().withValues(alpha: 0.5),
-                width: 1,
+                color: RadixTokens.accent6(),
+                width: RadixTokens.borderWidth1(),
               )
               .label(
-                TextStyler().color(
-                  RadixTokens.surfaceText().withValues(alpha: 0.7),
-                ),
+                TextStyler().color(RadixTokens.accent11()),
               )
               .icon(
-                IconStyler(
-                  color: RadixTokens.surfaceText().withValues(alpha: 0.7),
-                ),
+                IconStyler(color: RadixTokens.accent11()),
               )
               .spinner(
-                RemixSpinnerStyle(
-                  color: RadixTokens.surfaceText().withValues(alpha: 0.7),
-                ),
+                RemixSpinnerStyle(color: RadixTokens.accent11()),
               ),
         );
   }
@@ -227,66 +238,70 @@ class RadixButtonStyles {
     final sizeConfig = _getSizeConfig(size);
 
     return RemixButtonStyle()
-        // Container styling
-        .color(RadixTokens.outlineBackground())
-        .borderRadiusAll(const Radius.circular(6.0))
-        .borderAll(color: RadixTokens.outlineBorder(), width: 1)
+        // Container styling with size-specific values
+        .color(Colors.transparent)
+        .borderRadiusAll(sizeConfig.radius)
+        .borderAll(
+          color: RadixTokens.accent7(),
+          width: RadixTokens.borderWidth1(),
+        )
         .paddingX(sizeConfig.paddingX)
         .paddingY(sizeConfig.paddingY)
-        .spacing(6.0)
-        // Content styling
+        .spacing(sizeConfig.gap)
+        .height(sizeConfig.height)
+        // Content styling with comprehensive typography
         .label(
           TextStyler()
-              .color(RadixTokens.outlineText())
-              .fontSize(sizeConfig.fontSize),
+              .color(RadixTokens.accent11())
+              .fontSize(sizeConfig.fontSize)
+              .height(sizeConfig.lineHeight / sizeConfig.fontSize)
+              .letterSpacing(sizeConfig.letterSpacing)
+              .fontWeight(RadixTokens.fontWeightMedium),
         )
         .icon(
           IconStyler(
-            color: RadixTokens.outlineText(),
+            color: RadixTokens.accent11(),
             size: sizeConfig.iconSize,
           ),
         )
         .spinner(
           RemixSpinnerStyle(
             size: sizeConfig.iconSize,
-            strokeWidth: 2.0,
-            color: RadixTokens.outlineText(),
-            duration: const Duration(milliseconds: 1000),
+            strokeWidth: RadixTokens.borderWidth2(),
+            color: RadixTokens.accent11(),
+            duration: RadixTokens.transitionSlow,
             type: SpinnerType.solid,
           ),
         )
-        // State variants
+        // State variants with improved tokens
         .onHovered(
           RemixButtonStyle()
-              .color(RadixTokens.outlineBackgroundHover())
-              .borderAll(color: RadixTokens.outlineBorderHover(), width: 1),
+              .color(RadixTokens.accentA3())
+              .borderAll(
+                color: RadixTokens.accent8(),
+                width: RadixTokens.borderWidth1(),
+              ),
         )
         .onFocused(
           RemixButtonStyle().borderAll(
-            color: RadixTokens.outlineFocusRing(),
-            width: 2,
+            color: RadixTokens.focusA8(),
+            width: RadixTokens.focusRingWidth(),
           ),
         )
         .onDisabled(
           RemixButtonStyle()
               .borderAll(
-                color: RadixTokens.outlineBorder().withValues(alpha: 0.5),
-                width: 1,
+                color: RadixTokens.accent7(),
+                width: RadixTokens.borderWidth1(),
               )
               .label(
-                TextStyler().color(
-                  RadixTokens.outlineText().withValues(alpha: 0.7),
-                ),
+                TextStyler().color(RadixTokens.accent11()),
               )
               .icon(
-                IconStyler(
-                  color: RadixTokens.outlineText().withValues(alpha: 0.7),
-                ),
+                IconStyler(color: RadixTokens.accent11()),
               )
               .spinner(
-                RemixSpinnerStyle(
-                  color: RadixTokens.outlineText().withValues(alpha: 0.7),
-                ),
+                RemixSpinnerStyle(color: RadixTokens.accent11()),
               ),
         );
   }
@@ -299,62 +314,60 @@ class RadixButtonStyles {
     final sizeConfig = _getSizeConfig(size);
 
     return RemixButtonStyle()
-        // Container styling
-        .color(RadixTokens.ghostBackground())
-        .borderRadiusAll(const Radius.circular(6.0))
+        // Container styling with size-specific values
+        .color(Colors.transparent)
+        .borderRadiusAll(sizeConfig.radius)
         .paddingX(sizeConfig.paddingX)
         .paddingY(sizeConfig.paddingY)
-        .spacing(6.0)
-        // Content styling
+        .spacing(sizeConfig.gap)
+        .height(sizeConfig.height)
+        // Content styling with comprehensive typography
         .label(
           TextStyler()
-              .color(RadixTokens.ghostText())
-              .fontSize(sizeConfig.fontSize),
+              .color(RadixTokens.accent11())
+              .fontSize(sizeConfig.fontSize)
+              .height(sizeConfig.lineHeight / sizeConfig.fontSize)
+              .letterSpacing(sizeConfig.letterSpacing)
+              .fontWeight(RadixTokens.fontWeightMedium),
         )
         .icon(
           IconStyler(
-            color: RadixTokens.ghostText(),
+            color: RadixTokens.accent11(),
             size: sizeConfig.iconSize,
           ),
         )
         .spinner(
           RemixSpinnerStyle(
             size: sizeConfig.iconSize,
-            strokeWidth: 2.0,
-            color: RadixTokens.ghostText(),
-            duration: const Duration(milliseconds: 1000),
+            strokeWidth: RadixTokens.borderWidth2(),
+            color: RadixTokens.accent11(),
+            duration: RadixTokens.transitionSlow,
             type: SpinnerType.solid,
           ),
         )
-        // State variants
+        // State variants with improved tokens
         .onHovered(
-          RemixButtonStyle().color(RadixTokens.ghostBackgroundHover()),
+          RemixButtonStyle().color(RadixTokens.accentA3()),
         )
         .onPressed(
-          RemixButtonStyle().color(RadixTokens.ghostBackgroundActive()),
+          RemixButtonStyle().color(RadixTokens.accentA4()),
         )
         .onFocused(
           RemixButtonStyle().borderAll(
-            color: RadixTokens.ghostFocusRing(),
-            width: 2,
+            color: RadixTokens.focusA8(),
+            width: RadixTokens.focusRingWidth(),
           ),
         )
         .onDisabled(
           RemixButtonStyle()
               .label(
-                TextStyler().color(
-                  RadixTokens.ghostText().withValues(alpha: 0.7),
-                ),
+                TextStyler().color(RadixTokens.accent11()),
               )
               .icon(
-                IconStyler(
-                  color: RadixTokens.ghostText().withValues(alpha: 0.7),
-                ),
+                IconStyler(color: RadixTokens.accent11()),
               )
               .spinner(
-                RemixSpinnerStyle(
-                  color: RadixTokens.ghostText().withValues(alpha: 0.7),
-                ),
+                RemixSpinnerStyle(color: RadixTokens.accent11()),
               ),
         );
   }
@@ -367,79 +380,71 @@ class RadixButtonStyles {
     final sizeConfig = _getSizeConfig(size);
 
     return RemixButtonStyle()
-        // Container styling
-        .color(RadixTokens.classicBackground())
-        .borderRadiusAll(const Radius.circular(6.0))
-        .borderAll(color: RadixTokens.classicBorder(), width: 1)
+        // Container styling with size-specific values
+        .color(RadixTokens.colorSurface())
+        .borderRadiusAll(sizeConfig.radius)
+        .borderAll(
+          color: RadixTokens.gray7(),
+          width: RadixTokens.borderWidth1(),
+        )
         .paddingX(sizeConfig.paddingX)
         .paddingY(sizeConfig.paddingY)
-        .spacing(6.0)
-        // Add subtle shadow for classic feel
-        .shadow(BoxShadowMix(
-          color: Colors.black.withValues(alpha: 0.1),
-          offset: const Offset(0, 1),
-          blurRadius: 2,
-        ))
-        // Content styling
+        .spacing(sizeConfig.gap)
+        .height(sizeConfig.height)
+        // Add subtle shadow for classic feel using token
+        // TODO: Fix shadow implementation
+        // .shadow(RadixTokens.shadow2())
+        // Content styling with comprehensive typography
         .label(
           TextStyler()
-              .color(RadixTokens.classicText())
-              .fontSize(sizeConfig.fontSize),
+              .color(RadixTokens.gray12())
+              .fontSize(sizeConfig.fontSize)
+              .height(sizeConfig.lineHeight / sizeConfig.fontSize)
+              .letterSpacing(sizeConfig.letterSpacing)
+              .fontWeight(RadixTokens.fontWeightMedium),
         )
         .icon(
           IconStyler(
-            color: RadixTokens.classicText(),
+            color: RadixTokens.gray12(),
             size: sizeConfig.iconSize,
           ),
         )
         .spinner(
           RemixSpinnerStyle(
             size: sizeConfig.iconSize,
-            strokeWidth: 2.0,
-            color: RadixTokens.classicText(),
-            duration: const Duration(milliseconds: 1000),
+            strokeWidth: RadixTokens.borderWidth2(),
+            color: RadixTokens.gray12(),
+            duration: RadixTokens.transitionSlow,
             type: SpinnerType.solid,
           ),
         )
-        // State variants
+        // State variants with improved tokens
         .onHovered(
           RemixButtonStyle()
-              .color(RadixTokens.classicBackgroundHover())
-              .borderAll(color: RadixTokens.classicBorderHover(), width: 1),
+              .color(RadixTokens.gray3())
+              .borderAll(
+                color: RadixTokens.gray8(),
+                width: RadixTokens.borderWidth1(),
+              ),
         )
         .onFocused(
           RemixButtonStyle().borderAll(
-            color: RadixTokens.classicFocusRing(),
-            width: 2,
+            color: RadixTokens.focusA8(),
+            width: RadixTokens.focusRingWidth(),
           ),
         )
         .onDisabled(
           RemixButtonStyle()
-              .color(RadixTokens.classicBackground().withValues(alpha: 0.5))
+              .color(RadixTokens.colorSurface())
               .borderAll(
-                color: RadixTokens.classicBorder().withValues(alpha: 0.5),
-                width: 1,
+                color: RadixTokens.gray7(),
+                width: RadixTokens.borderWidth1(),
               )
-              .shadow(BoxShadowMix(
-                color: Colors.black.withValues(alpha: 0.05),
-                offset: const Offset(0, 1),
-                blurRadius: 1,
-              ))
-              .label(
-                TextStyler().color(
-                  RadixTokens.classicText().withValues(alpha: 0.7),
-                ),
-              )
-              .icon(
-                IconStyler(
-                  color: RadixTokens.classicText().withValues(alpha: 0.7),
-                ),
-              )
-              .spinner(
-                RemixSpinnerStyle(
-                  color: RadixTokens.classicText().withValues(alpha: 0.7),
-                ),
-              ),
+              .labelColor(RadixTokens.gray12())
+              .spinnerColor(RadixTokens.gray12())
+              // TODO: Fix shadow implementation
+              // .shadow(RadixTokens.shadow1())
+              .iconColor(RadixTokens.gray12()),
         );
   }
 
@@ -448,39 +453,64 @@ class RadixButtonStyles {
     switch (size) {
       case 1:
         return _ButtonSizeConfig(
-          fontSize: RadixTokens.size1FontSize(),
-          paddingX: RadixTokens.size1PaddingX(),
-          paddingY: RadixTokens.size1PaddingY(),
-          iconSize: RadixTokens.size1IconSize(),
+          height: 24.0,
+          paddingX: 8.0,
+          paddingY: 4.0,
+          gap: 4.0,
+          fontSize: 12.0,
+          lineHeight: 16.0,
+          letterSpacing: 0.0025,
+          radius: RadixTokens.radius2(),
+          iconSize: 12.0,
         );
       case 2:
         return _ButtonSizeConfig(
-          fontSize: RadixTokens.size2FontSize(),
-          paddingX: RadixTokens.size2PaddingX(),
-          paddingY: RadixTokens.size2PaddingY(),
-          iconSize: RadixTokens.size2IconSize(),
+          height: 32.0,
+          paddingX: 12.0,
+          paddingY: 6.0,
+          gap: 6.0,
+          fontSize: 14.0,
+          lineHeight: 20.0,
+          letterSpacing: 0.0,
+          radius: RadixTokens.radius3(),
+          iconSize: 16.0,
         );
       case 3:
         return _ButtonSizeConfig(
-          fontSize: RadixTokens.size3FontSize(),
-          paddingX: RadixTokens.size3PaddingX(),
-          paddingY: RadixTokens.size3PaddingY(),
-          iconSize: RadixTokens.size3IconSize(),
+          height: 40.0,
+          paddingX: 16.0,
+          paddingY: 8.0,
+          gap: 8.0,
+          fontSize: 16.0,
+          lineHeight: 24.0,
+          letterSpacing: 0.0,
+          radius: RadixTokens.radius4(),
+          iconSize: 20.0,
         );
       case 4:
         return _ButtonSizeConfig(
-          fontSize: RadixTokens.size4FontSize(),
-          paddingX: RadixTokens.size4PaddingX(),
-          paddingY: RadixTokens.size4PaddingY(),
-          iconSize: RadixTokens.size4IconSize(),
+          height: 48.0,
+          paddingX: 20.0,
+          paddingY: 10.0,
+          gap: 10.0,
+          fontSize: 18.0,
+          lineHeight: 26.0,
+          letterSpacing: -0.0025,
+          radius: RadixTokens.radius5(),
+          iconSize: 24.0,
         );
       default:
         // Default to size 2 if invalid size provided
         return _ButtonSizeConfig(
-          fontSize: RadixTokens.size2FontSize(),
-          paddingX: RadixTokens.size2PaddingX(),
-          paddingY: RadixTokens.size2PaddingY(),
-          iconSize: RadixTokens.size2IconSize(),
+          height: 32.0,
+          paddingX: 12.0,
+          paddingY: 6.0,
+          gap: 6.0,
+          fontSize: 14.0,
+          lineHeight: 20.0,
+          letterSpacing: 0.0,
+          radius: RadixTokens.radius3(),
+          iconSize: 16.0,
         );
     }
   }
@@ -488,15 +518,25 @@ class RadixButtonStyles {
 
 /// Internal configuration for button sizes.
 class _ButtonSizeConfig {
-  final double fontSize;
+  final double height;
   final double paddingX;
   final double paddingY;
+  final double gap;
+  final double fontSize;
+  final double lineHeight;
+  final double letterSpacing;
+  final Radius radius;
   final double iconSize;
 
   const _ButtonSizeConfig({
-    required this.fontSize,
+    required this.height,
     required this.paddingX,
     required this.paddingY,
+    required this.gap,
+    required this.fontSize,
+    required this.lineHeight,
+    required this.letterSpacing,
+    required this.radius,
     required this.iconSize,
   });
 }

@@ -1,12 +1,10 @@
 // ABOUTME: Example demonstrating the Radix button system with all variants and sizes
-// ABOUTME: Shows how to set up RadixTheme and use RadixButtonStyles
+// ABOUTME: Shows how to set up createRadixScope and use RadixButtonStyles
 
 import 'package:flutter/material.dart';
-import 'package:mix/mix.dart';
 
 import '../lib/src/components/button/radix_button_styles.dart';
 import '../lib/src/theme/radix_theme_data.dart';
-import '../lib/src/theme/radix_token_definitions.dart';
 import '../lib/src/utilities/radix_token_resolver.dart' as resolver;
 
 void main() {
@@ -18,25 +16,13 @@ class RadixButtonExampleApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Create a RadixThemeData with indigo accent and slate gray
-    final radixThemeData = RadixThemeData(
-      accent: resolver.RadixAccentColor.indigo,
-      gray: resolver.RadixGrayColor.slate,
-      brightness: Brightness.light,
-      trackVariant: resolver.TrackVariant.neutral,
-    );
-
-    // Create token definitions for the theme
-    final tokenDefinitions =
-        RadixTokenDefinitions.createDefinitions(radixThemeData);
-
     return MaterialApp(
-      home: MixScope(
-        tokens: tokenDefinitions.toSet(),
-        child: RadixTheme(
-          themeData: radixThemeData,
-          child: const RadixButtonExampleScreen(),
-        ),
+      home: createRadixScope(
+        accent: resolver.RadixAccentColor.indigo,
+        gray: resolver.RadixGrayColor.slate,
+        brightness: Brightness.light,
+        trackVariant: resolver.TrackVariant.neutral,
+        child: const RadixButtonExampleScreen(),
       ),
       title: 'Radix Button Example',
       theme: ThemeData(

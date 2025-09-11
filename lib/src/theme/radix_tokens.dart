@@ -15,199 +15,291 @@ class RadixTokens {
   // =============================================================================
   
   /// Page background color
-  static const colorBackground = MixToken<Color>('radix.color.background');
+  static const colorBackground = ColorToken('radix.color.background');
   
   /// Input and form control surface color
-  static const colorSurface = MixToken<Color>('radix.color.surface');
+  static const colorSurface = ColorToken('radix.color.surface');
   
   /// Cards, tables, menus (solid panels)
-  static const colorPanelSolid = MixToken<Color>('radix.color.panel.solid');
+  static const colorPanelSolid = ColorToken('radix.color.panel.solid');
   
   /// Translucent panels when panelBackground='translucent'
-  static const colorPanelTranslucent = MixToken<Color>('radix.color.panel.translucent');
+  static const colorPanelTranslucent = ColorToken('radix.color.panel.translucent');
   
   /// Dialog scrims/overlays
-  static const colorOverlay = MixToken<Color>('radix.color.overlay');
+  static const colorOverlay = ColorToken('radix.color.overlay');
 
   // =============================================================================
   // ACCENT FUNCTIONAL TOKENS
   // =============================================================================
   
   /// Toned accent surface for surface variants
-  static const accentSurface = MixToken<Color>('radix.accent.surface');
+  static const accentSurface = ColorToken('radix.accent.surface');
   
   /// Filled parts like progress indicators (step 9)
-  static const accentIndicator = MixToken<Color>('radix.accent.indicator');
+  static const accentIndicator = ColorToken('radix.accent.indicator');
   
   /// Tracks/rails for sliders, progress, switches
-  static const accentTrack = MixToken<Color>('radix.accent.track');
+  static const accentTrack = ColorToken('radix.accent.track');
   
   /// Legible text on accent solid backgrounds
-  static const accentContrast = MixToken<Color>('radix.accent.contrast');
+  static const accentContrast = ColorToken('radix.accent.contrast');
 
   // =============================================================================
   // FOCUS TOKENS
   // =============================================================================
   
   /// Visible outline color for focus states
-  static const focus8 = MixToken<Color>('radix.focus.8');
+  static const focus8 = ColorToken('radix.focus.8');
   
   /// Focus ring color with alpha for layering
-  static const focusA8 = MixToken<Color>('radix.focus.a8');
+  static const focusA8 = ColorToken('radix.focus.a8');
 
   // =============================================================================
-  // SOLID VARIANT TOKENS
+  // ACCENT COLOR SCALE TOKENS (12-step scale)
   // =============================================================================
   
-  /// Solid variant base background
-  static const solidBackground = MixToken<Color>('radix.solid.background');
+  /// Accent step 1: App background
+  static const accent1 = ColorToken('radix.accent.1');
   
-  /// Solid variant hover background
-  static const solidBackgroundHover = MixToken<Color>('radix.solid.background.hover');
+  /// Accent step 2: Subtle background
+  static const accent2 = ColorToken('radix.accent.2');
   
-  /// Solid variant text color
-  static const solidText = MixToken<Color>('radix.solid.text');
+  /// Accent step 3: UI element background
+  static const accent3 = ColorToken('radix.accent.3');
   
-  /// Solid variant focus ring
-  static const solidFocusRing = MixToken<Color>('radix.solid.focus.ring');
+  /// Accent step 4: Hovered UI element background
+  static const accent4 = ColorToken('radix.accent.4');
+  
+  /// Accent step 5: Active / Selected UI element background
+  static const accent5 = ColorToken('radix.accent.5');
+  
+  /// Accent step 6: Subtle borders and separators
+  static const accent6 = ColorToken('radix.accent.6');
+  
+  /// Accent step 7: UI element border and focus rings
+  static const accent7 = ColorToken('radix.accent.7');
+  
+  /// Accent step 8: Hovered UI element border
+  static const accent8 = ColorToken('radix.accent.8');
+  
+  /// Accent step 9: Solid backgrounds
+  static const accent9 = ColorToken('radix.accent.9');
+  
+  /// Accent step 10: Hovered solid backgrounds
+  static const accent10 = ColorToken('radix.accent.10');
+  
+  /// Accent step 11: Low-contrast text
+  static const accent11 = ColorToken('radix.accent.11');
+  
+  /// Accent step 12: High-contrast text
+  static const accent12 = ColorToken('radix.accent.12');
 
   // =============================================================================
-  // SOFT VARIANT TOKENS
+  // GRAY COLOR SCALE TOKENS (12-step scale)
   // =============================================================================
   
-  /// Soft variant base background
-  static const softBackground = MixToken<Color>('radix.soft.background');
+  /// Gray step 1: App background
+  static const gray1 = ColorToken('radix.gray.1');
   
-  /// Soft variant hover background
-  static const softBackgroundHover = MixToken<Color>('radix.soft.background.hover');
+  /// Gray step 2: Subtle background
+  static const gray2 = ColorToken('radix.gray.2');
   
-  /// Soft variant active background
-  static const softBackgroundActive = MixToken<Color>('radix.soft.background.active');
+  /// Gray step 3: UI element background
+  static const gray3 = ColorToken('radix.gray.3');
   
-  /// Soft variant border color
-  static const softBorder = MixToken<Color>('radix.soft.border');
+  /// Gray step 4: Hovered UI element background
+  static const gray4 = ColorToken('radix.gray.4');
   
-  /// Soft variant border hover color
-  static const softBorderHover = MixToken<Color>('radix.soft.border.hover');
+  /// Gray step 5: Active / Selected UI element background
+  static const gray5 = ColorToken('radix.gray.5');
   
-  /// Soft variant text color
-  static const softText = MixToken<Color>('radix.soft.text');
+  /// Gray step 6: Subtle borders and separators
+  static const gray6 = ColorToken('radix.gray.6');
   
-  /// Soft variant focus ring
-  static const softFocusRing = MixToken<Color>('radix.soft.focus.ring');
+  /// Gray step 7: UI element border and focus rings
+  static const gray7 = ColorToken('radix.gray.7');
+  
+  /// Gray step 8: Hovered UI element border
+  static const gray8 = ColorToken('radix.gray.8');
+  
+  /// Gray step 9: Solid backgrounds
+  static const gray9 = ColorToken('radix.gray.9');
+  
+  /// Gray step 10: Hovered solid backgrounds
+  static const gray10 = ColorToken('radix.gray.10');
+  
+  /// Gray step 11: Low-contrast text
+  static const gray11 = ColorToken('radix.gray.11');
+  
+  /// Gray step 12: High-contrast text
+  static const gray12 = ColorToken('radix.gray.12');
 
   // =============================================================================
-  // SURFACE VARIANT TOKENS
+  // ALPHA COLOR SCALE TOKENS (commonly used alpha steps)
   // =============================================================================
   
-  /// Surface variant base background
-  static const surfaceBackground = MixToken<Color>('radix.surface.background');
+  /// Accent alpha step 3: Subtle transparent backgrounds
+  static const accentA3 = ColorToken('radix.accent.a3');
   
-  /// Surface variant hover background
-  static const surfaceBackgroundHover = MixToken<Color>('radix.surface.background.hover');
+  /// Accent alpha step 4: UI element transparent backgrounds
+  static const accentA4 = ColorToken('radix.accent.a4');
   
-  /// Surface variant border color
-  static const surfaceBorder = MixToken<Color>('radix.surface.border');
-  
-  /// Surface variant border hover color
-  static const surfaceBorderHover = MixToken<Color>('radix.surface.border.hover');
-  
-  /// Surface variant text color
-  static const surfaceText = MixToken<Color>('radix.surface.text');
-  
-  /// Surface variant focus ring
-  static const surfaceFocusRing = MixToken<Color>('radix.surface.focus.ring');
+  /// Accent alpha step 8: Focus rings and borders
+  static const accentA8 = ColorToken('radix.accent.a8');
 
   // =============================================================================
-  // OUTLINE VARIANT TOKENS
+  // SPACE SCALE TOKENS (9-step scale: 4px to 64px)
   // =============================================================================
   
-  /// Outline variant base background (transparent)
-  static const outlineBackground = MixToken<Color>('radix.outline.background');
+  /// Space step 1: 4px
+  static const space1 = SpaceToken('radix.space.1');
   
-  /// Outline variant hover background
-  static const outlineBackgroundHover = MixToken<Color>('radix.outline.background.hover');
+  /// Space step 2: 8px
+  static const space2 = SpaceToken('radix.space.2');
   
-  /// Outline variant border color
-  static const outlineBorder = MixToken<Color>('radix.outline.border');
+  /// Space step 3: 12px
+  static const space3 = SpaceToken('radix.space.3');
   
-  /// Outline variant border hover color
-  static const outlineBorderHover = MixToken<Color>('radix.outline.border.hover');
+  /// Space step 4: 16px
+  static const space4 = SpaceToken('radix.space.4');
   
-  /// Outline variant text color
-  static const outlineText = MixToken<Color>('radix.outline.text');
+  /// Space step 5: 24px
+  static const space5 = SpaceToken('radix.space.5');
   
-  /// Outline variant focus ring
-  static const outlineFocusRing = MixToken<Color>('radix.outline.focus.ring');
+  /// Space step 6: 32px
+  static const space6 = SpaceToken('radix.space.6');
+  
+  /// Space step 7: 40px
+  static const space7 = SpaceToken('radix.space.7');
+  
+  /// Space step 8: 48px
+  static const space8 = SpaceToken('radix.space.8');
+  
+  /// Space step 9: 64px
+  static const space9 = SpaceToken('radix.space.9');
 
   // =============================================================================
-  // GHOST VARIANT TOKENS
+  // RADIUS SCALE TOKENS (6 steps + full)
   // =============================================================================
   
-  /// Ghost variant base background (transparent)
-  static const ghostBackground = MixToken<Color>('radix.ghost.background');
+  /// Radius step 1: 3px
+  static const radius1 = RadiusToken('radix.radius.1');
   
-  /// Ghost variant hover background
-  static const ghostBackgroundHover = MixToken<Color>('radix.ghost.background.hover');
+  /// Radius step 2: 4px
+  static const radius2 = RadiusToken('radix.radius.2');
   
-  /// Ghost variant active background
-  static const ghostBackgroundActive = MixToken<Color>('radix.ghost.background.active');
+  /// Radius step 3: 6px
+  static const radius3 = RadiusToken('radix.radius.3');
   
-  /// Ghost variant text color
-  static const ghostText = MixToken<Color>('radix.ghost.text');
+  /// Radius step 4: 8px
+  static const radius4 = RadiusToken('radix.radius.4');
   
-  /// Ghost variant focus ring
-  static const ghostFocusRing = MixToken<Color>('radix.ghost.focus.ring');
+  /// Radius step 5: 12px
+  static const radius5 = RadiusToken('radix.radius.5');
+  
+  /// Radius step 6: 16px
+  static const radius6 = RadiusToken('radix.radius.6');
+  
+  /// Full radius: 9999px (pill shape)
+  static const radiusFull = RadiusToken('radix.radius.full');
+
+  // COMMENTED OUT: Typography tokens - not used in current codebase
+  // /// Text style step 1: 12px/16px/0.0025em
+  // static const text1 = TextStyleToken('radix.text.1');
+  // /// Text style step 2: 14px/20px/0em
+  // static const text2 = TextStyleToken('radix.text.2');
+  // /// Text style step 3: 16px/24px/0em
+  // static const text3 = TextStyleToken('radix.text.3');
+  // /// Text style step 4: 18px/26px/-0.0025em
+  // static const text4 = TextStyleToken('radix.text.4');
+  // /// Text style step 5: 20px/28px/-0.005em
+  // static const text5 = TextStyleToken('radix.text.5');
+  // /// Text style step 6: 24px/30px/-0.00625em
+  // static const text6 = TextStyleToken('radix.text.6');
+  // /// Text style step 7: 28px/36px/-0.0075em
+  // static const text7 = TextStyleToken('radix.text.7');
+  // /// Text style step 8: 35px/40px/-0.01em
+  // static const text8 = TextStyleToken('radix.text.8');
+  // /// Text style step 9: 60px/60px/-0.025em
+  // static const text9 = TextStyleToken('radix.text.9');
+  
+  // COMMENTED OUT: Individual typography tokens consolidated into text1-9 above
+  // /// Line height step 1: 16px
+  // static const lineHeight1 = MixToken<double>('radix.line.height.1');
+  // /// Line height step 2: 20px
+  // static const lineHeight2 = MixToken<double>('radix.line.height.2');
+  // ... (all lineHeight tokens commented out)
+  
+  // /// Letter spacing step 1: 0.0025em
+  // static const letterSpacing1 = MixToken<double>('radix.letter.spacing.1');
+  // ... (all letterSpacing tokens commented out)
+  
+  // =============================================================================
+  // FONT WEIGHT CONSTANTS (regular Flutter types)
+  // =============================================================================
+  
+  /// Font weight: Regular (400)
+  static const fontWeightRegular = FontWeight.w400;
+  
+  /// Font weight: Medium (500)
+  static const fontWeightMedium = FontWeight.w500;
+  
+  /// Font weight: Bold (600)
+  static const fontWeightBold = FontWeight.w600;
 
   // =============================================================================
-  // CLASSIC VARIANT TOKENS
+  // VISUAL EFFECT TOKENS
   // =============================================================================
   
-  /// Classic variant base background
-  static const classicBackground = MixToken<Color>('radix.classic.background');
+  // COMMENTED OUT: Shadow tokens - not used in current codebase
+  // /// Shadow level 1: Subtle elevation
+  // static const shadow1 = BoxShadowToken('radix.shadow.1');
+  // /// Shadow level 2: Low elevation
+  // static const shadow2 = BoxShadowToken('radix.shadow.2');
+  // /// Shadow level 3: Medium elevation
+  // static const shadow3 = BoxShadowToken('radix.shadow.3');
+  // /// Shadow level 4: High elevation
+  // static const shadow4 = BoxShadowToken('radix.shadow.4');
+  // /// Shadow level 5: Very high elevation
+  // static const shadow5 = BoxShadowToken('radix.shadow.5');
+  // /// Shadow level 6: Maximum elevation
+  // static const shadow6 = BoxShadowToken('radix.shadow.6');
   
-  /// Classic variant hover background
-  static const classicBackgroundHover = MixToken<Color>('radix.classic.background.hover');
+  /// Border width: 1px
+  static const borderWidth1 = SpaceToken('radix.border.width.1');
   
-  /// Classic variant border color
-  static const classicBorder = MixToken<Color>('radix.classic.border');
+  /// Border width: 2px
+  static const borderWidth2 = SpaceToken('radix.border.width.2');
   
-  /// Classic variant border hover color
-  static const classicBorderHover = MixToken<Color>('radix.classic.border.hover');
+  // =============================================================================
+  // DURATION CONSTANTS (regular Flutter types)
+  // =============================================================================
   
-  /// Classic variant text color (neutral gray)
-  static const classicText = MixToken<Color>('radix.classic.text');
+  /// Transition: Fast (100ms)
+  static const transitionFast = Duration(milliseconds: 100);
   
-  /// Classic variant focus ring
-  static const classicFocusRing = MixToken<Color>('radix.classic.focus.ring');
+  /// Transition: Slow (300ms)
+  static const transitionSlow = Duration(milliseconds: 300);
+  
+  /// Focus ring width: 2px
+  static const focusRingWidth = SpaceToken('radix.focus.ring.width');
+  
+  /// Focus ring offset: 2px
+  static const focusRingOffset = SpaceToken('radix.focus.ring.offset');
 
-  // =============================================================================
-  // SIZE TOKENS
-  // =============================================================================
-  
-  /// Size 1: Small button dimensions
-  static const size1FontSize = MixToken<double>('radix.size.1.font.size');
-  static const size1PaddingX = MixToken<double>('radix.size.1.padding.x');
-  static const size1PaddingY = MixToken<double>('radix.size.1.padding.y');
-  static const size1IconSize = MixToken<double>('radix.size.1.icon.size');
-  
-  /// Size 2: Medium button dimensions
-  static const size2FontSize = MixToken<double>('radix.size.2.font.size');
-  static const size2PaddingX = MixToken<double>('radix.size.2.padding.x');
-  static const size2PaddingY = MixToken<double>('radix.size.2.padding.y');
-  static const size2IconSize = MixToken<double>('radix.size.2.icon.size');
-  
-  /// Size 3: Large button dimensions
-  static const size3FontSize = MixToken<double>('radix.size.3.font.size');
-  static const size3PaddingX = MixToken<double>('radix.size.3.padding.x');
-  static const size3PaddingY = MixToken<double>('radix.size.3.padding.y');
-  static const size3IconSize = MixToken<double>('radix.size.3.icon.size');
-  
-  /// Size 4: Extra large button dimensions
-  static const size4FontSize = MixToken<double>('radix.size.4.font.size');
-  static const size4PaddingX = MixToken<double>('radix.size.4.padding.x');
-  static const size4PaddingY = MixToken<double>('radix.size.4.padding.y');
-  static const size4IconSize = MixToken<double>('radix.size.4.icon.size');
+  // COMMENTED OUT: Size tokens - not used in current codebase
+  // /// Size 1: Small component dimensions
+  // static const size1Height = SpaceToken('radix.size.1.height');
+  // static const size1PaddingX = SpaceToken('radix.size.1.padding.x');
+  // static const size1PaddingY = SpaceToken('radix.size.1.padding.y');
+  // static const size1Gap = SpaceToken('radix.size.1.gap');
+  // static const size1FontSize = SpaceToken('radix.size.1.font.size');
+  // static const size1LineHeight = SpaceToken('radix.size.1.line.height');
+  // static const size1LetterSpacing = SpaceToken('radix.size.1.letter.spacing');
+  // static const size1Radius = RadiusToken('radix.size.1.radius');
+  // static const size1IconSize = SpaceToken('radix.size.1.icon.size');
+  // (Similar for size2, size3, size4 - all commented out)
 
   const RadixTokens._();
 }

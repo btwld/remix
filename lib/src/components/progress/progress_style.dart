@@ -5,10 +5,9 @@ const _kBarHeight = 6.0;
 
 class RemixProgressStyle extends Style<ProgressSpec>
     with
-        StyleModifierMixin<RemixProgressStyle, ProgressSpec>,
-        StyleVariantMixin<RemixProgressStyle, ProgressSpec>,
-        ModifierStyleMixin<RemixProgressStyle, ProgressSpec>,
+        VariantStyleMixin<RemixProgressStyle, ProgressSpec>,
         BorderStyleMixin<RemixProgressStyle>,
+        WidgetModifierStyleMixin<RemixProgressStyle, ProgressSpec>,
         BorderRadiusStyleMixin<RemixProgressStyle>,
         ShadowStyleMixin<RemixProgressStyle>,
         DecorationStyleMixin<RemixProgressStyle>,
@@ -41,7 +40,7 @@ class RemixProgressStyle extends Style<ProgressSpec>
     BoxStyler? trackContainer,
     AnimationConfig? animation,
     List<VariantStyle<ProgressSpec>>? variants,
-    ModifierConfig? modifier,
+    WidgetModifierConfig? modifier,
   }) : this.create(
           container: Prop.maybeMix(container),
           track: Prop.maybeMix(track),
@@ -96,7 +95,7 @@ class RemixProgressStyle extends Style<ProgressSpec>
   }
 
   @override
-  RemixProgressStyle wrap(ModifierConfig value) {
+  RemixProgressStyle wrap(WidgetModifierConfig value) {
     return merge(RemixProgressStyle(modifier: value));
   }
 
@@ -207,7 +206,7 @@ class RemixProgressStyles {
         ),
         track: BoxStyler(
           decoration: BoxDecorationMix(
-            color: RemixTokens.primary().withValues(alpha: 0.20),
+            color: RemixTokens.primary(),
           ),
         ),
         indicator: BoxStyler(

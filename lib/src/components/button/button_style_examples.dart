@@ -19,12 +19,14 @@ class RemixButtonStyleExamples {
   /// Example showing when to use which tier
   static void bestPracticesExample() {
     // TIER 1: Use for simple, single property changes
+    // ignore: unused_local_variable
     final simpleButton = RemixButtonStyle()
         .labelColor(Colors.blue)
         .iconSize(20.0)
         .spinnerColor(Colors.blue);
 
     // TIER 2: Use when setting multiple text properties
+    // ignore: unused_local_variable
     final textStyledButton = RemixButtonStyle().labelTextStyle(TextStyleMix(
       color: Colors.blue,
       fontSize: 16.0,
@@ -33,6 +35,7 @@ class RemixButtonStyleExamples {
     ));
 
     // TIER 3: Use for advanced text features or complex styling
+    // ignore: unused_local_variable
     final advancedButton = RemixButtonStyle().label(TextStyler()
         .style(TextStyleMix(color: Colors.blue, fontSize: 16.0))
         .uppercase()

@@ -7,10 +7,9 @@ const _kFontSizeMd = 14.0;
 
 class RemixTextFieldStyle extends Style<TextFieldSpec>
     with
-        StyleModifierMixin<RemixTextFieldStyle, TextFieldSpec>,
-        StyleVariantMixin<RemixTextFieldStyle, TextFieldSpec>,
-        ModifierStyleMixin<RemixTextFieldStyle, TextFieldSpec>,
+        VariantStyleMixin<RemixTextFieldStyle, TextFieldSpec>,
         BorderStyleMixin<RemixTextFieldStyle>,
+        WidgetModifierStyleMixin<RemixTextFieldStyle, TextFieldSpec>,
         BorderRadiusStyleMixin<RemixTextFieldStyle>,
         ShadowStyleMixin<RemixTextFieldStyle>,
         DecorationStyleMixin<RemixTextFieldStyle>,
@@ -98,7 +97,7 @@ class RemixTextFieldStyle extends Style<TextFieldSpec>
     TextStyler? label,
     AnimationConfig? animation,
     List<VariantStyle<TextFieldSpec>>? variants,
-    ModifierConfig? modifier,
+    WidgetModifierConfig? modifier,
   }) : this.create(
           text: Prop.maybeMix(text),
           hintText: Prop.maybeMix(hintText),
@@ -248,7 +247,7 @@ class RemixTextFieldStyle extends Style<TextFieldSpec>
   }
 
   @override
-  RemixTextFieldStyle wrap(ModifierConfig value) {
+  RemixTextFieldStyle wrap(WidgetModifierConfig value) {
     return merge(RemixTextFieldStyle(modifier: value));
   }
 
@@ -366,7 +365,7 @@ class RemixTextFieldStyles {
         ),
         hintText: TextStyler(
           style:
-              TextStyleMix(color: RemixTokens.primary().withValues(alpha: 0.5)),
+              TextStyleMix(color: RemixTokens.primary()),
         ),
         textAlign: TextAlign.start,
         cursorWidth: 2.0,
@@ -393,7 +392,7 @@ class RemixTextFieldStyles {
         ),
         helperText: TextStyler(
           style: TextStyleMix(
-            color: RemixTokens.secondary().withValues(alpha: 0.6),
+            color: RemixTokens.secondary(),
             fontSize: _kFontSizeSm,
           ),
         ),

@@ -170,7 +170,7 @@ void main() {
 
       expect(remixSem.label, equals(materialSem.label));
       // Both should have no value text and expose tap action
-      expect(remixSem.value ?? '', equals(materialSem.value ?? ''));
+      expect(remixSem.value, equals(materialSem.value));
     });
 
     testWidgets('enabled buttons expose matching core flags and actions',

@@ -6,10 +6,9 @@ const _kIconSizeMd = 16.0;
 
 class RemixCheckboxStyle extends Style<CheckboxSpec>
     with
-        StyleModifierMixin<RemixCheckboxStyle, CheckboxSpec>,
-        StyleVariantMixin<RemixCheckboxStyle, CheckboxSpec>,
-        ModifierStyleMixin<RemixCheckboxStyle, CheckboxSpec>,
+        VariantStyleMixin<RemixCheckboxStyle, CheckboxSpec>,
         BorderStyleMixin<RemixCheckboxStyle>,
+        WidgetModifierStyleMixin<RemixCheckboxStyle, CheckboxSpec>,
         BorderRadiusStyleMixin<RemixCheckboxStyle>,
         ShadowStyleMixin<RemixCheckboxStyle>,
         DecorationStyleMixin<RemixCheckboxStyle>,
@@ -42,7 +41,7 @@ class RemixCheckboxStyle extends Style<CheckboxSpec>
     TextStyler? label,
     AnimationConfig? animation,
     List<VariantStyle<CheckboxSpec>>? variants,
-    ModifierConfig? modifier,
+    WidgetModifierConfig? modifier,
   }) : this.create(
           container: Prop.maybeMix(container),
           indicatorContainer: Prop.maybeMix(indicatorContainer),
@@ -165,7 +164,7 @@ class RemixCheckboxStyle extends Style<CheckboxSpec>
 
   // Modifier support
   @override
-  RemixCheckboxStyle wrap(ModifierConfig value) {
+  RemixCheckboxStyle wrap(WidgetModifierConfig value) {
     return merge(RemixCheckboxStyle(modifier: value));
   }
 

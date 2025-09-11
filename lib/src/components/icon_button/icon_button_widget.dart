@@ -31,7 +31,7 @@ typedef RemixIconButtonLoadingBuilder = Widget Function(
 ///   style: RemixIconButtonStyles.baseStyle.color(Colors.red),
 ///   onPressed: () => print('Delete pressed!'),
 /// )
-/// 
+///
 /// // Loading icon button
 /// RemixIconButton(
 ///   icon: Icons.save,
@@ -209,18 +209,18 @@ class _RemixIconButtonState extends State<RemixIconButton>
           value: widget.loading ? 'Loading' : null,
           hint: widget.semanticHint,
           onTap: _isEnabled ? widget.onPressed : null,
-          child: pressable.NakedPressable(
+          child: NakedButton(
             onPressed: _isEnabled ? widget.onPressed : null,
-            onDoubleTap: _isEnabled ? widget.onDoubleTap : null,
             onLongPress: _isEnabled ? widget.onLongPress : null,
+            onDoubleTap: _isEnabled ? widget.onDoubleTap : null,
             enabled: _isEnabled,
             mouseCursor: widget.mouseCursor,
-            disabledMouseCursor: SystemMouseCursors.basic,
+            enableFeedback: widget.enableFeedback,
             focusNode: widget.focusNode,
             autofocus: widget.autofocus,
             onFocusChange: (focused) => controller.focused = focused,
-            statesController: controller,
-            enableFeedback: widget.enableFeedback,
+            onHoverChange: (hovered) => controller.hovered = hovered,
+            onPressChange: (pressed) => controller.pressed = pressed,
             child: ContainerWidget(child: content),
             builder: (context, states, child) => child!,
           ),
