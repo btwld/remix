@@ -143,3 +143,30 @@ class RemixCardStyles {
 }
 
 // Variants are exposed via RemixCardStyles
+
+/// Extension providing Radix card size methods for fluent API.
+///
+/// Enables the pattern: `RadixCardStyles.surface().size2()`
+/// instead of: `RadixCardStyles.size2().merge(RadixCardStyles.surface())`
+extension RadixCardStyleExt on RemixCardStyle {
+  /// Creates a size 1 card style (small).
+  ///
+  /// Small cards for compact layouts and dense interfaces.
+  RemixCardStyle size1() {
+    return merge(RadixCardStyles.size1());
+  }
+
+  /// Creates a size 2 card style (medium - default).
+  ///
+  /// Standard cards for most common use cases.
+  RemixCardStyle size2() {
+    return merge(RadixCardStyles.size2());
+  }
+
+  /// Creates a size 3 card style (large).
+  ///
+  /// Large cards for prominent content and accessibility needs.
+  RemixCardStyle size3() {
+    return merge(RadixCardStyles.size3());
+  }
+}

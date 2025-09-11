@@ -194,3 +194,27 @@ class RemixSwitchStyles {
 
 
 }
+
+/// Extension for adding Radix size methods to RemixSwitchStyle
+extension RadixSwitchStyleExt on RemixSwitchStyle {
+  /// Creates a size 1 switch style (small).
+  ///
+  /// Small switches for compact layouts and dense interfaces.
+  RemixSwitchStyle size1() {
+    return merge(RadixSwitchStyles.size1());
+  }
+
+  /// Creates a size 2 switch style (medium - default).
+  ///
+  /// Standard switches for most common use cases.
+  RemixSwitchStyle size2() {
+    return merge(RadixSwitchStyles.size2());
+  }
+
+  /// Creates a size 3 switch style (large).
+  ///
+  /// Large switches for accessibility needs and prominent forms.
+  RemixSwitchStyle size3() {
+    return merge(RadixSwitchStyles.size3());
+  }
+}

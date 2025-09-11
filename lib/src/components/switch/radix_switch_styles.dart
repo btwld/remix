@@ -1,11 +1,13 @@
 // ABOUTME: Factory for creating RemixSwitchStyle instances using Radix design tokens
 // ABOUTME: Provides 3 Radix switch variants with proper token-based styling
 
-import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 
 import '../../theme/radix_tokens.dart';
 import 'switch.dart';
+
+// Export the extension so it's available when importing this file
+export 'switch.dart' show RadixSwitchStyleExt;
 
 /// Factory class for creating Radix-compliant switch styles.
 ///
@@ -17,36 +19,23 @@ class RadixSwitchStyles {
   /// Creates a classic variant switch style.
   ///
   /// Classic switches use neutral track color with accent when checked.
-  /// Used for standard form controls.
-  static RemixSwitchStyle classic({int size = 2}) {
-    final sizeConfig = _getSizeConfig(size);
-
+  /// Used for standard form controls. Compose with size methods like .size2().
+  static RemixSwitchStyle classic() {
     return RemixSwitchStyle()
-        // Container styling
-        .container(
-          BoxStyler()
-              .width(sizeConfig.trackWidth)
-              .height(sizeConfig.trackHeight),
-        )
-        // Track styling (unchecked state)
+        // Track styling (unchecked state) - no size properties
         .track(
           BoxStyler()
               .color(RadixTokens.accentTrack()) // gray6 equivalent
-              .borderRadius(RadixTokens.radiusFull())
-              .width(sizeConfig.trackWidth)
-              .height(sizeConfig.trackHeight),
+              .borderRadius(BorderRadiusMix.circular(999)),
         )
-        // Thumb styling (unchecked state)
+        // Thumb styling (unchecked state) - no size properties
         .thumb(
           BoxStyler()
               .color(RadixTokens.colorSurface())
-              .borderRadius(RadixTokens.radiusFull())
-              .width(sizeConfig.thumbSize)
-              .height(sizeConfig.thumbSize),
+              .borderRadius(BorderRadiusMix.circular(999)),
         )
-        // Checked state - use .onVariant for state changes
-        .onVariant(
-          'checked',
+        // Checked state - use .onSelected for state changes
+        .onSelected(
           RemixSwitchStyle()
               .track(
                 BoxStyler().color(RadixTokens.accent9()),
@@ -79,36 +68,23 @@ class RadixSwitchStyles {
   /// Creates a surface variant switch style.
   ///
   /// Surface switches use neutral track with neutral thumb when checked.
-  /// Used for forms with softer visual appearance.
-  static RemixSwitchStyle surface({int size = 2}) {
-    final sizeConfig = _getSizeConfig(size);
-
+  /// Used for forms with softer visual appearance. Compose with size methods like .size2().
+  static RemixSwitchStyle surface() {
     return RemixSwitchStyle()
-        // Container styling
-        .container(
-          BoxStyler()
-              .width(sizeConfig.trackWidth)
-              .height(sizeConfig.trackHeight),
-        )
-        // Track styling (unchecked state)
+        // Track styling (unchecked state) - no size properties
         .track(
           BoxStyler()
               .color(RadixTokens.accentTrack()) // gray6 equivalent
-              .borderRadius(RadixTokens.radiusFull())
-              .width(sizeConfig.trackWidth)
-              .height(sizeConfig.trackHeight),
+              .borderRadius(BorderRadiusMix.circular(999)),
         )
-        // Thumb styling (unchecked state)
+        // Thumb styling (unchecked state) - no size properties
         .thumb(
           BoxStyler()
               .color(RadixTokens.colorSurface())
-              .borderRadius(RadixTokens.radiusFull())
-              .width(sizeConfig.thumbSize)
-              .height(sizeConfig.thumbSize),
+              .borderRadius(BorderRadiusMix.circular(999)),
         )
         // Checked state - different from classic (thumb stays colorSurface)
-        .onVariant(
-          'checked',
+        .onSelected(
           RemixSwitchStyle()
               .track(
                 BoxStyler().color(RadixTokens.accent9()),
@@ -141,36 +117,23 @@ class RadixSwitchStyles {
   /// Creates a soft variant switch style.
   ///
   /// Soft switches use accent-tinted track with accent thumb.
-  /// Used for forms that need accent color integration.
-  static RemixSwitchStyle soft({int size = 2}) {
-    final sizeConfig = _getSizeConfig(size);
-
+  /// Used for forms that need accent color integration. Compose with size methods like .size2().
+  static RemixSwitchStyle soft() {
     return RemixSwitchStyle()
-        // Container styling
-        .container(
-          BoxStyler()
-              .width(sizeConfig.trackWidth)
-              .height(sizeConfig.trackHeight),
-        )
-        // Track styling (unchecked state) - uses accent3 instead of gray
+        // Track styling (unchecked state) - uses accent3 instead of gray, no size properties
         .track(
           BoxStyler()
               .color(RadixTokens.accent3())
-              .borderRadius(RadixTokens.radiusFull())
-              .width(sizeConfig.trackWidth)
-              .height(sizeConfig.trackHeight),
+              .borderRadius(BorderRadiusMix.circular(999)),
         )
-        // Thumb styling (unchecked state) - uses accent11
+        // Thumb styling (unchecked state) - uses accent11, no size properties
         .thumb(
           BoxStyler()
               .color(RadixTokens.accent11())
-              .borderRadius(RadixTokens.radiusFull())
-              .width(sizeConfig.thumbSize)
-              .height(sizeConfig.thumbSize),
+              .borderRadius(BorderRadiusMix.circular(999)),
         )
         // Checked state - track becomes accent5, thumb stays accent11
-        .onVariant(
-          'checked',
+        .onSelected(
           RemixSwitchStyle()
               .track(
                 BoxStyler().color(RadixTokens.accent5()),
@@ -200,47 +163,48 @@ class RadixSwitchStyles {
         );
   }
 
-  /// Gets size configuration for the given size index.
-  static _SwitchSizeConfig _getSizeConfig(int size) {
-    switch (size) {
-      case 1:
-        return _SwitchSizeConfig(
-          trackWidth: 32.0,
-          trackHeight: 18.0,
-          thumbSize: 14.0,
-        );
-      case 2:
-        return _SwitchSizeConfig(
-          trackWidth: 44.0,
-          trackHeight: 24.0,
-          thumbSize: 20.0,
-        );
-      case 3:
-        return _SwitchSizeConfig(
-          trackWidth: 56.0,
-          trackHeight: 30.0,
-          thumbSize: 26.0,
-        );
-      default:
-        // Default to size 2 if invalid size provided
-        return _SwitchSizeConfig(
-          trackWidth: 44.0,
-          trackHeight: 24.0,
-          thumbSize: 20.0,
-        );
-    }
+  /// Creates a size 1 switch style (small).
+  ///
+  /// Small switches for compact layouts and dense interfaces.
+  /// Compose with variant methods like .classic().
+  static RemixSwitchStyle size1() {
+    return RemixSwitchStyle(
+      track: BoxStyler()
+        .width(32.0)
+        .height(20.0),
+      thumb: BoxStyler()
+        .width(16.0)
+        .height(16.0),
+    );
   }
-}
 
-/// Internal configuration for switch sizes.
-class _SwitchSizeConfig {
-  final double trackWidth;
-  final double trackHeight;
-  final double thumbSize;
+  /// Creates a size 2 switch style (medium - default).
+  ///
+  /// Standard switches for most common use cases.
+  /// Compose with variant methods like .classic().
+  static RemixSwitchStyle size2() {
+    return RemixSwitchStyle(
+      track: BoxStyler()
+        .width(40.0)
+        .height(24.0),
+      thumb: BoxStyler()
+        .width(20.0)
+        .height(20.0),
+    );
+  }
 
-  const _SwitchSizeConfig({
-    required this.trackWidth,
-    required this.trackHeight,
-    required this.thumbSize,
-  });
+  /// Creates a size 3 switch style (large).
+  ///
+  /// Large switches for accessibility needs and prominent forms.
+  /// Compose with variant methods like .classic().
+  static RemixSwitchStyle size3() {
+    return RemixSwitchStyle(
+      track: BoxStyler()
+        .width(48.0)
+        .height(28.0),
+      thumb: BoxStyler()
+        .width(24.0)
+        .height(24.0),
+    );
+  }
 }

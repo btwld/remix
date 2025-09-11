@@ -1,7 +1,6 @@
 // ABOUTME: Factory for creating RemixProgressStyle instances using Radix design tokens
 // ABOUTME: Provides 3 Radix progress variants with proper token-based styling
 
-import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 
 import '../../theme/radix_tokens.dart';
@@ -17,125 +16,150 @@ class RadixProgressStyles {
   /// Creates a classic variant progress style.
   ///
   /// Classic progress uses accent track and indicator colors.
-  /// Used for standard progress indicators.
-  static RemixProgressStyle classic({int size = 2}) {
-    final sizeConfig = _getSizeConfig(size);
-
+  /// Used for standard progress indicators. Compose with size methods like .size2().
+  static RemixProgressStyle classic() {
     return RemixProgressStyle()
-        // Container styling
+        // Container styling - no size properties
         .container(
           BoxStyler()
-              .width(double.infinity)
-              .height(sizeConfig.height),
+              .width(double.infinity),
         )
         // Track styling (background bar)
         .track(
           BoxStyler()
               .color(RadixTokens.accentTrack()) // gray6 equivalent
-              .borderRadius(RadixTokens.radiusFull())
-              .width(double.infinity)
-              .height(sizeConfig.height),
+              .borderRadius(BorderRadiusMix.all(RadixTokens.radiusFull()))
+              .width(double.infinity),
         )
         // Indicator styling (progress fill)
         .indicator(
           BoxStyler()
               .color(RadixTokens.accentIndicator()) // accent9 equivalent
-              .borderRadius(RadixTokens.radiusFull())
-              .height(sizeConfig.height),
+              .borderRadius(BorderRadiusMix.all(RadixTokens.radiusFull())),
         );
   }
 
   /// Creates a surface variant progress style.
   ///
   /// Surface progress uses the same colors as classic.
-  /// Used for forms with consistent visual appearance.
-  static RemixProgressStyle surface({int size = 2}) {
-    final sizeConfig = _getSizeConfig(size);
-
+  /// Used for forms with consistent visual appearance. Compose with size methods like .size2().
+  static RemixProgressStyle surface() {
     return RemixProgressStyle()
-        // Container styling
+        // Container styling - no size properties
         .container(
           BoxStyler()
-              .width(double.infinity)
-              .height(sizeConfig.height),
+              .width(double.infinity),
         )
         // Track styling (background bar) - same as classic
         .track(
           BoxStyler()
               .color(RadixTokens.accentTrack()) // gray6 equivalent
-              .borderRadius(RadixTokens.radiusFull())
-              .width(double.infinity)
-              .height(sizeConfig.height),
+              .borderRadius(BorderRadiusMix.all(RadixTokens.radiusFull()))
+              .width(double.infinity),
         )
         // Indicator styling (progress fill) - same as classic
         .indicator(
           BoxStyler()
               .color(RadixTokens.accentIndicator()) // accent9 equivalent
-              .borderRadius(RadixTokens.radiusFull())
-              .height(sizeConfig.height),
+              .borderRadius(BorderRadiusMix.all(RadixTokens.radiusFull())),
         );
   }
 
   /// Creates a soft variant progress style.
   ///
   /// Soft progress uses accent color scale for track and indicator.
-  /// Used for progress indicators that need accent color integration.
-  static RemixProgressStyle soft({int size = 2}) {
-    final sizeConfig = _getSizeConfig(size);
-
+  /// Used for progress indicators that need accent color integration. Compose with size methods like .size2().
+  static RemixProgressStyle soft() {
     return RemixProgressStyle()
-        // Container styling
+        // Container styling - no size properties
         .container(
           BoxStyler()
-              .width(double.infinity)
-              .height(sizeConfig.height),
+              .width(double.infinity),
         )
         // Track styling (background bar) - uses accent4 instead of gray
         .track(
           BoxStyler()
               .color(RadixTokens.accent4())
-              .borderRadius(RadixTokens.radiusFull())
-              .width(double.infinity)
-              .height(sizeConfig.height),
+              .borderRadius(BorderRadiusMix.all(RadixTokens.radiusFull()))
+              .width(double.infinity),
         )
         // Indicator styling (progress fill) - uses accent9
         .indicator(
           BoxStyler()
               .color(RadixTokens.accent9())
-              .borderRadius(RadixTokens.radiusFull())
-              .height(sizeConfig.height),
+              .borderRadius(BorderRadiusMix.all(RadixTokens.radiusFull())),
         );
   }
 
-  /// Gets size configuration for the given size index.
-  static _ProgressSizeConfig _getSizeConfig(int size) {
-    switch (size) {
-      case 1:
-        return _ProgressSizeConfig(
-          height: 4.0,
+  /// Creates size 1 progress style.
+  ///
+  /// Smallest progress size with 4px height.
+  static RemixProgressStyle size1() {
+    return RemixProgressStyle()
+        .container(
+          BoxStyler().height(4.0),
+        )
+        .track(
+          BoxStyler()
+              .height(4.0)
+              .borderRadius(BorderRadiusMix.all(RadixTokens.radius1())),
+        )
+        .indicator(
+          BoxStyler()
+              .height(4.0)
+              .borderRadius(BorderRadiusMix.all(RadixTokens.radius1())),
         );
-      case 2:
-        return _ProgressSizeConfig(
-          height: 6.0,
+  }
+
+  /// Creates size 2 progress style.
+  ///
+  /// Default progress size with 8px height.
+  static RemixProgressStyle size2() {
+    return RemixProgressStyle()
+        .container(
+          BoxStyler().height(8.0),
+        )
+        .track(
+          BoxStyler()
+              .height(8.0)
+              .borderRadius(BorderRadiusMix.all(RadixTokens.radius2())),
+        )
+        .indicator(
+          BoxStyler()
+              .height(8.0)
+              .borderRadius(BorderRadiusMix.all(RadixTokens.radius2())),
         );
-      case 3:
-        return _ProgressSizeConfig(
-          height: 8.0,
+  }
+
+  /// Creates size 3 progress style.
+  ///
+  /// Largest progress size with 12px height.
+  static RemixProgressStyle size3() {
+    return RemixProgressStyle()
+        .container(
+          BoxStyler().height(12.0),
+        )
+        .track(
+          BoxStyler()
+              .height(12.0)
+              .borderRadius(BorderRadiusMix.all(RadixTokens.radius3())),
+        )
+        .indicator(
+          BoxStyler()
+              .height(12.0)
+              .borderRadius(BorderRadiusMix.all(RadixTokens.radius3())),
         );
-      default:
-        // Default to size 2 if invalid size provided
-        return _ProgressSizeConfig(
-          height: 6.0,
-        );
-    }
   }
 }
 
-/// Internal configuration for progress sizes.
-class _ProgressSizeConfig {
-  final double height;
+/// Extension methods for sizing progress components.
+extension RadixProgressStyleExt on RemixProgressStyle {
+  /// Applies size 1 styling (4px height).
+  RemixProgressStyle size1() => merge(RadixProgressStyles.size1());
 
-  const _ProgressSizeConfig({
-    required this.height,
-  });
+  /// Applies size 2 styling (8px height).
+  RemixProgressStyle size2() => merge(RadixProgressStyles.size2());
+
+  /// Applies size 3 styling (12px height).
+  RemixProgressStyle size3() => merge(RadixProgressStyles.size3());
 }
