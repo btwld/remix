@@ -17,7 +17,7 @@ part of 'spinner.dart';
 ///   style: RemixSpinnerStyle(
 ///     size: 32,
 ///     color: RemixTokens.primary(),
-///     style: SpinnerStyleType.dotted,
+///     type: SpinnerType.dotted,
 ///   ),
 /// )
 /// ```
@@ -88,9 +88,9 @@ class _SpinnerSpecWidgetState extends State<_SpinnerSpecWidget>
     final color = spec.color ?? RemixTokens.secondary();
     final strokeWidth = spec.strokeWidth ?? 1.5;
     final size = spec.size ?? 24;
-    final style = spec.style ?? SpinnerType.solid;
+    final type = spec._type ?? SpinnerType.solid;
 
-    final painter = style == SpinnerType.dotted
+    final painter = type == SpinnerType.dotted
         ? DottedSpinnerPainter(
             animation: controller,
             strokeWidth: strokeWidth,

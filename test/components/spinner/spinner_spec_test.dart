@@ -10,7 +10,7 @@ void main() {
       expect(spec.strokeWidth, isNull);
       expect(spec.color, isNull);
       expect(spec.duration, isNull);
-      expect(spec.style, isNull);
+      expect(spec.spinnerType, isNull);
     });
 
     test('creates with specified values', () {
@@ -19,14 +19,14 @@ void main() {
         strokeWidth: 2,
         color: MixColors.red,
         duration: Duration(milliseconds: 500),
-        style: SpinnerType.dotted,
+        type: SpinnerType.dotted,
       );
 
       expect(spec.size, 24);
       expect(spec.strokeWidth, 2);
       expect(spec.color, MixColors.red);
       expect(spec.duration, const Duration(milliseconds: 500));
-      expect(spec.style, SpinnerType.dotted);
+      expect(spec.spinnerType, SpinnerType.dotted);
     });
 
     test('copyWith updates only provided fields', () {
@@ -35,7 +35,7 @@ void main() {
         strokeWidth: 2,
         color: MixColors.red,
         duration: Duration(milliseconds: 500),
-        style: SpinnerType.solid,
+        type: SpinnerType.solid,
       );
 
       final modified = original.copyWith(
@@ -47,7 +47,7 @@ void main() {
       expect(modified.strokeWidth, 2); // preserved
       expect(modified.color, MixColors.blue);
       expect(modified.duration, const Duration(milliseconds: 500)); // preserved
-      expect(modified.style, SpinnerType.solid); // preserved
+      expect(modified.spinnerType, SpinnerType.solid); // preserved
     });
 
     test('copyWith with no args returns equivalent spec', () {
@@ -56,7 +56,7 @@ void main() {
         strokeWidth: 1.5,
         color: MixColors.green,
         duration: Duration(seconds: 1),
-        style: SpinnerType.dotted,
+        type: SpinnerType.dotted,
       );
 
       final same = original.copyWith();
@@ -65,7 +65,7 @@ void main() {
       expect(same.strokeWidth, original.strokeWidth);
       expect(same.color, original.color);
       expect(same.duration, original.duration);
-      expect(same.style, original.style);
+      expect(same.spinnerType, original.spinnerType);
     });
 
     test('lerp with null other returns original', () {
@@ -81,14 +81,14 @@ void main() {
         strokeWidth: 1,
         color: MixColors.red,
         duration: Duration(milliseconds: 500),
-        style: SpinnerType.solid,
+        type: SpinnerType.solid,
       );
       const b = SpinnerSpec(
         size: 30,
         strokeWidth: 3,
         color: MixColors.blue,
         duration: Duration(seconds: 1),
-        style: SpinnerType.dotted,
+        type: SpinnerType.dotted,
       );
 
       final at0 = a.lerp(b, 0.0);
@@ -96,14 +96,14 @@ void main() {
       expect(at0.strokeWidth, a.strokeWidth);
       expect(at0.color?.toARGB32(), a.color?.toARGB32());
       expect(at0.duration, a.duration);
-      expect(at0.style, a.style);
+      expect(at0.spinnerType, a.spinnerType);
 
       final at1 = a.lerp(b, 1.0);
       expect(at1.size, b.size);
       expect(at1.strokeWidth, b.strokeWidth);
       expect(at1.color?.toARGB32(), b.color?.toARGB32());
       expect(at1.duration, b.duration);
-      expect(at1.style, b.style);
+      expect(at1.spinnerType, b.spinnerType);
     });
 
     test('props equality works correctly', () {

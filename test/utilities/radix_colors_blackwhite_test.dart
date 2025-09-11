@@ -41,7 +41,7 @@ void main() {
       }
 
       // default equals 9
-      expect(swatch.value, swatch[9]!.toARGB32(),
+      expect(swatch.toARGB32(), swatch[9]!.toARGB32(),
           reason: '$refKey default should equal index 9');
     }
   });

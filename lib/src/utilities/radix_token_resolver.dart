@@ -238,7 +238,10 @@ class RadixTokenBuilder {
       // Surface: Subtle with accent-tinted surface
       surface: RadixVariantTokens(
         background: tokens.accentSurface,
+        backgroundHover:
+            _generateSurfaceHover(tokens.accent, tokens.colorSurface),
         border: tokens.accent.step(6),
+        borderHover: tokens.accent.step(7),
         text: tokens.accent.step(11),
         focusRing: tokens.focus.alphaStep(8),
       ),
@@ -264,7 +267,10 @@ class RadixTokenBuilder {
 
       // Classic: Pre-flat UI style with NEUTRAL text by default
       classic: RadixVariantTokens(
-        background: tokens.colorPanelSolid,
+        background: tokens
+            .colorSurface, // CORRECTED: Use --color-surface per Radix spec
+        backgroundHover:
+            tokens.gray.step(3), // Based on Radix spec: {gray}[3] on hover
         border: tokens.gray.step(7),
         borderHover: tokens.gray.step(8),
         text: tokens.gray.step(12), // CORRECTED: Neutral text by default
@@ -506,69 +512,86 @@ class RadixTokenBuilder {
 
   /// Get gray scale for the theme
   static RadixColorScale _getGrayScale(RadixGrayColor color, bool isDark) {
-    switch (color) {
-      case RadixGrayColor.gray:
-        return RadixColorScale(
+    return switch (color) {
+      RadixGrayColor.gray => RadixColorScale(
           isDark ? RadixColors.grayDark.swatch : RadixColors.gray.swatch,
           isDark
               ? RadixColors.grayDark.alphaSwatch
               : RadixColors.gray.alphaSwatch,
-        );
-      case RadixGrayColor.mauve:
-        return RadixColorScale(
+        ),
+      RadixGrayColor.mauve => RadixColorScale(
           isDark ? RadixColors.mauveDark.swatch : RadixColors.mauve.swatch,
           isDark
               ? RadixColors.mauveDark.alphaSwatch
               : RadixColors.mauve.alphaSwatch,
-        );
-      case RadixGrayColor.slate:
-        return RadixColorScale(
+        ),
+      RadixGrayColor.slate => RadixColorScale(
           isDark ? RadixColors.slateDark.swatch : RadixColors.slate.swatch,
           isDark
               ? RadixColors.slateDark.alphaSwatch
               : RadixColors.slate.alphaSwatch,
-        );
-      case RadixGrayColor.sage:
-        return RadixColorScale(
+        ),
+      RadixGrayColor.sage => RadixColorScale(
           isDark ? RadixColors.sageDark.swatch : RadixColors.sage.swatch,
           isDark
               ? RadixColors.sageDark.alphaSwatch
               : RadixColors.sage.alphaSwatch,
-        );
-      case RadixGrayColor.olive:
-        return RadixColorScale(
+        ),
+      RadixGrayColor.olive => RadixColorScale(
           isDark ? RadixColors.oliveDark.swatch : RadixColors.olive.swatch,
           isDark
               ? RadixColors.oliveDark.alphaSwatch
               : RadixColors.olive.alphaSwatch,
-        );
-      case RadixGrayColor.sand:
-        return RadixColorScale(
+        ),
+      RadixGrayColor.sand => RadixColorScale(
           isDark ? RadixColors.sandDark.swatch : RadixColors.sand.swatch,
           isDark
               ? RadixColors.sandDark.alphaSwatch
               : RadixColors.sand.alphaSwatch,
-        );
-    }
+        ),
+    };
   }
 
   /// CORRECTED: Get contrast color for text on accent step 9
   /// Based on verified Radix documentation
   static Color _getContrastColor(RadixAccentColor accent) {
     // Typed neutral swatches for bright palettes (keeps palette-typed values)
-    switch (accent) {
-      case RadixAccentColor.sky:
-        return RadixColors.slate.swatch[12]!; // #1C2024 (exact)
-      case RadixAccentColor.mint:
-        return RadixColors.sage.swatch[12]!; // close to #1A211E
-      case RadixAccentColor.lime:
-        return RadixColors.olive.swatch[12]!; // close to #1D211C
-      case RadixAccentColor.yellow:
-      case RadixAccentColor.amber:
-        return RadixColors.sand.swatch[12]!; // close to #21201C
-      default:
-        return const Color(0xFFFFFFFF);
-    }
+    return switch (accent) {
+      RadixAccentColor.sky => RadixColors.slate.swatch[12]!, // #1C2024 (exact)
+      RadixAccentColor.mint => RadixColors.sage.swatch[12]!, // close to #1A211E
+      RadixAccentColor.lime =>
+        RadixColors.olive.swatch[12]!, // close to #1D211C
+      RadixAccentColor.yellow ||
+      RadixAccentColor.amber =>
+        RadixColors.sand.swatch[12]!, // close to #21201C
+      RadixAccentColor.blue ||
+      RadixAccentColor.bronze ||
+      RadixAccentColor.brown ||
+      RadixAccentColor.crimson ||
+      RadixAccentColor.cyan ||
+      RadixAccentColor.gold ||
+      RadixAccentColor.grass ||
+      RadixAccentColor.gray ||
+      RadixAccentColor.green ||
+      RadixAccentColor.indigo ||
+      RadixAccentColor.iris ||
+      RadixAccentColor.jade ||
+      RadixAccentColor.mauve ||
+      RadixAccentColor.olive ||
+      RadixAccentColor.orange ||
+      RadixAccentColor.pink ||
+      RadixAccentColor.plum ||
+      RadixAccentColor.purple ||
+      RadixAccentColor.red ||
+      RadixAccentColor.ruby ||
+      RadixAccentColor.sand ||
+      RadixAccentColor.sage ||
+      RadixAccentColor.slate ||
+      RadixAccentColor.teal ||
+      RadixAccentColor.tomato ||
+      RadixAccentColor.violet =>
+        const Color(0xFFFFFFFF),
+    };
   }
 
   /// Generate accent surface color by overlaying low-alpha accent on surface
@@ -578,6 +601,15 @@ class RadixTokenBuilder {
     final accentAlpha = accent.alphaStep(3);
 
     return Color.alphaBlend(accentAlpha, surface);
+  }
+
+  /// Generate surface hover color by overlaying accent alpha[4] on surface
+  /// Based on Radix spec: overlay({accent}Alpha[a4], --color-surface)
+  static Color _generateSurfaceHover(RadixColorScale accent, Color surface) {
+    // Overlay accent alpha[4] on the surface color for hover state
+    final accentAlpha = accent.alphaStep(4);
+
+    return _blendColors(accentAlpha, surface);
   }
 
   /// Blend two colors using Porter-Duff "over" operation

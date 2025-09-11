@@ -90,7 +90,6 @@ class _RemixSwitchState extends State<RemixSwitch>
           onTap:
               widget.enabled ? () => widget.onChanged(!widget.selected) : null,
           child: NakedCheckbox(
-            statesController: controller,
             value: widget.selected,
             onChanged: (value) => widget.onChanged(value ?? false),
             enabled: widget.enabled,
@@ -98,6 +97,7 @@ class _RemixSwitchState extends State<RemixSwitch>
             enableFeedback: widget.enableFeedback,
             focusNode: widget.focusNode,
             autofocus: widget.autofocus,
+            statesController: controller,
             child: Container(
               child: Track(
                 child: Align(

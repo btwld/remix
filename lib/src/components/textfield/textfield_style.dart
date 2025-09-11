@@ -379,10 +379,7 @@ class RemixTextFieldStyles {
         container: FlexBoxStyler(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(
-              BorderSideMix(
-                color: RemixTokens.primary(),
-                width: 1,
-              ),
+              BorderSideMix(color: RemixTokens.primary(), width: 1),
             ),
             borderRadius: BorderRadiusMix.all(RemixTokens.radius()),
             color: RemixTokens.onPrimary(),

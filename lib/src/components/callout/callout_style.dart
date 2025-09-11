@@ -77,7 +77,8 @@ class RemixCalloutStyle extends Style<CalloutSpec>
   /// Sets container decoration
   RemixCalloutStyle decoration(DecorationMix value) {
     return merge(
-        RemixCalloutStyle(container: FlexBoxStyler(decoration: value)));
+      RemixCalloutStyle(container: FlexBoxStyler(decoration: value)),
+    );
   }
 
   /// Sets flex spacing
@@ -144,7 +145,8 @@ class RemixCalloutStyle extends Style<CalloutSpec>
   @override
   RemixCalloutStyle constraints(BoxConstraintsMix value) {
     return merge(
-        RemixCalloutStyle(container: FlexBoxStyler(constraints: value)));
+      RemixCalloutStyle(container: FlexBoxStyler(constraints: value)),
+    );
   }
 
   @override
@@ -185,8 +187,7 @@ class RemixCalloutStyles {
         container: FlexBoxStyler(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
-              color: RemixTokens.primary()
-                  .withValues(alpha: 0.20),
+              color: RemixTokens.primary().withValues(alpha: 0.20),
               width: 1,
             )),
             borderRadius: BorderRadiusMix.all(RemixTokens.radius()),
@@ -206,9 +207,6 @@ class RemixCalloutStyles {
             fontWeight: FontWeight.w500,
           ),
         ),
-        icon: IconStyler(
-          color: RemixTokens.primary(),
-          size: _kIconSizeMd,
-        ),
+        icon: IconStyler(color: RemixTokens.primary(), size: _kIconSizeMd),
       );
 }

@@ -5,6 +5,41 @@ const _kFontSizeMd = 14.0;
 const _kIconSizeMd = 16.0;
 const _kIconSizeLg = 18.0;
 
+/// Style class for RemixButton with comprehensive fluent API.
+///
+/// Provides three tiers of styling convenience:
+///
+/// **Tier 1 - Individual Property Helpers** (Most common):
+/// ```dart
+/// RemixButtonStyle()
+///   .labelColor(Colors.white)
+///   .labelFontSize(16.0)
+///   .iconColor(Colors.blue)
+///   .iconSize(20.0)
+///   .spinnerColor(Colors.white)
+///   .spinnerSize(16.0)
+/// ```
+///
+/// **Tier 2 - TextStyleMix Helper** (Multiple properties):
+/// ```dart
+/// RemixButtonStyle()
+///   .labelTextStyle(TextStyleMix(
+///     color: Colors.white,
+///     fontSize: 16.0,
+///     fontWeight: FontWeight.bold,
+///   ))
+/// ```
+///
+/// **Tier 3 - Full Control** (Complex scenarios):
+/// ```dart
+/// RemixButtonStyle()
+///   .label(TextStyler()
+///     .style(TextStyleMix(...))
+///     .uppercase()
+///     .maxLines(1))
+/// ```
+///
+/// All methods return new instances (immutable pattern) and can be chained together.
 class RemixButtonStyle extends Style<ButtonSpec>
     with
         StyleModifierMixin<RemixButtonStyle, ButtonSpec>,
@@ -17,7 +52,10 @@ class RemixButtonStyle extends Style<ButtonSpec>
         SpacingStyleMixin<RemixButtonStyle>,
         TransformStyleMixin<RemixButtonStyle>,
         ConstraintStyleMixin<RemixButtonStyle>,
-        AnimationStyleMixin<ButtonSpec, RemixButtonStyle> {
+        AnimationStyleMixin<ButtonSpec, RemixButtonStyle>,
+        LabelStyleMixin<RemixButtonStyle>,
+        IconStyleMixin<RemixButtonStyle>,
+        SpinnerStyleMixin<RemixButtonStyle> {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<StyleSpec<IconSpec>>? $icon;
@@ -204,18 +242,18 @@ class RemixButtonStyles {
       .paddingX(RemixTokens.spaceMd())
       .paddingY(RemixTokens.spaceSm())
       .spacing(RemixTokens.spaceSm())
-      // Content styles
-      .label(
-        TextStyler().color(RemixTokens.onPrimary()).fontSize(_kFontSizeMd),
-      )
-      .icon(IconStyler(color: RemixTokens.onPrimary(), size: _kIconSizeLg))
+      // Content styles using new helper methods
+      .labelColor(RemixTokens.onPrimary())
+      .labelFontSize(_kFontSizeMd)
+      .iconColor(RemixTokens.onPrimary())
+      .iconSize(_kIconSizeLg)
       .spinner(
         RemixSpinnerStyle(
           size: _kIconSizeMd,
           strokeWidth: 1.5,
           color: RemixTokens.onPrimary(),
           duration: const Duration(milliseconds: 1000),
-          style: SpinnerType.solid,
+          type: SpinnerType.solid,
         ),
       )
       // State variants
@@ -238,18 +276,8 @@ class RemixButtonStyles {
       .onDisabled(
         RemixButtonStyle()
             .color(RemixTokens.primary().withValues(alpha: 0.3))
-            .label(
-              TextStyler(
-                style: TextStyleMix(
-                  color: RemixTokens.onPrimary().withValues(alpha: 0.7),
-                ),
-              ),
-            )
-            .icon(
-              IconStyler(
-                color: RemixTokens.onPrimary().withValues(alpha: 0.7),
-              ),
-            )
+            .labelColor(RemixTokens.onPrimary().withValues(alpha: 0.7))
+            .iconColor(RemixTokens.onPrimary().withValues(alpha: 0.7))
             .spinner(
               RemixSpinnerStyle(
                 color: RemixTokens.onPrimary().withValues(alpha: 0.7),
