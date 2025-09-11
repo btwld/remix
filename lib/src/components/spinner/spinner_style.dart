@@ -5,10 +5,7 @@ const _kSizeMd = 24.0;
 const _kStrokeMd = 1.5;
 const _kDurationMs = 1000;
 
-class RemixSpinnerStyle extends Style<SpinnerSpec>
-    with
-        VariantStyleMixin<RemixSpinnerStyle, SpinnerSpec>,
-        WidgetModifierStyleMixin<RemixSpinnerStyle, SpinnerSpec> {
+class RemixSpinnerStyle extends RemixStyle<SpinnerSpec, RemixSpinnerStyle> {
   final Prop<double>? $size;
   final Prop<double>? $strokeWidth;
   final Prop<Color>? $color;

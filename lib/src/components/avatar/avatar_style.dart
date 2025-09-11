@@ -5,18 +5,7 @@ const _kSizeMedium = 50.0;
 const _kFontSizeMedium = 18.0;
 const _kIconSizeMedium = 24.0;
 
-class RemixAvatarStyle extends Style<AvatarSpec>
-    with
-        VariantStyleMixin<RemixAvatarStyle, AvatarSpec>,
-        BorderStyleMixin<RemixAvatarStyle>,
-        WidgetModifierStyleMixin<RemixAvatarStyle, AvatarSpec>,
-        BorderRadiusStyleMixin<RemixAvatarStyle>,
-        ShadowStyleMixin<RemixAvatarStyle>,
-        DecorationStyleMixin<RemixAvatarStyle>,
-        SpacingStyleMixin<RemixAvatarStyle>,
-        TransformStyleMixin<RemixAvatarStyle>,
-        ConstraintStyleMixin<RemixAvatarStyle>,
-        AnimationStyleMixin<AvatarSpec, RemixAvatarStyle> {
+class RemixAvatarStyle extends RemixContainerStyle<AvatarSpec, RemixAvatarStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $text;
   final Prop<StyleSpec<IconSpec>>? $icon;

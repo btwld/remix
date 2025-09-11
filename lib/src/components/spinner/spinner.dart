@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 
 import '../../theme/remix_tokens.dart';
+import '../../utilities/remix_style.dart';
 
 part 'spinner_painter.dart';
 part 'spinner_spec.dart';

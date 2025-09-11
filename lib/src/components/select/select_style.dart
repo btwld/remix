@@ -3,10 +3,7 @@ part of 'select.dart';
 // Private per-component constants (sizes only)
 const _kFontSizeSm = 12.0;
 
-class RemixSelectStyle extends Style<SelectSpec>
-    with
-        VariantStyleMixin<RemixSelectStyle, SelectSpec>,
-        WidgetModifierStyleMixin<RemixSelectStyle, SelectSpec> {
+class RemixSelectStyle extends RemixStyle<SelectSpec, RemixSelectStyle> {
   final Prop<StyleSpec<BoxSpec>>? $menuContainer;
   final Prop<StyleSpec<SelectTriggerSpec>>? $trigger;
   final Prop<StyleSpec<SelectMenuItemSpec>>? $item;
@@ -76,6 +73,11 @@ class RemixSelectStyle extends Style<SelectSpec>
   }
 
   @override
+  RemixSelectStyle animate(AnimationConfig animation) {
+    return merge(RemixSelectStyle(animation: animation));
+  }
+
+  @override
   StyleSpec<SelectSpec> resolve(BuildContext context) {
     return StyleSpec(
       spec: SelectSpec(
@@ -117,18 +119,7 @@ class RemixSelectStyle extends Style<SelectSpec>
 }
 
 // Style classes for sub-specs
-class RemixSelectTriggerStyle extends Style<SelectTriggerSpec>
-    with
-        VariantStyleMixin<RemixSelectTriggerStyle, SelectTriggerSpec>,
-        BorderStyleMixin<RemixSelectTriggerStyle>,
-        WidgetModifierStyleMixin<RemixSelectTriggerStyle, SelectTriggerSpec>,
-        BorderRadiusStyleMixin<RemixSelectTriggerStyle>,
-        ShadowStyleMixin<RemixSelectTriggerStyle>,
-        DecorationStyleMixin<RemixSelectTriggerStyle>,
-        SpacingStyleMixin<RemixSelectTriggerStyle>,
-        TransformStyleMixin<RemixSelectTriggerStyle>,
-        ConstraintStyleMixin<RemixSelectTriggerStyle>,
-        AnimationStyleMixin<SelectTriggerSpec, RemixSelectTriggerStyle> {
+class RemixSelectTriggerStyle extends RemixFlexContainerStyle<SelectTriggerSpec, RemixSelectTriggerStyle> {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<StyleSpec<IconSpec>>? $icon;
@@ -251,6 +242,12 @@ class RemixSelectTriggerStyle extends Style<SelectTriggerSpec>
     ));
   }
 
+  // FlexStyleMixin implementation
+  @override
+  RemixSelectTriggerStyle flex(FlexStyler value) {
+    return merge(RemixSelectTriggerStyle(container: FlexBoxStyler()));
+  }
+
   @override
   List<Object?> get props => [
         $container,
@@ -262,18 +259,7 @@ class RemixSelectTriggerStyle extends Style<SelectTriggerSpec>
       ];
 }
 
-class RemixSelectMenuItemStyle extends Style<SelectMenuItemSpec>
-    with
-        VariantStyleMixin<RemixSelectMenuItemStyle, SelectMenuItemSpec>,
-        BorderStyleMixin<RemixSelectMenuItemStyle>,
-        WidgetModifierStyleMixin<RemixSelectMenuItemStyle, SelectMenuItemSpec>,
-        BorderRadiusStyleMixin<RemixSelectMenuItemStyle>,
-        ShadowStyleMixin<RemixSelectMenuItemStyle>,
-        DecorationStyleMixin<RemixSelectMenuItemStyle>,
-        SpacingStyleMixin<RemixSelectMenuItemStyle>,
-        TransformStyleMixin<RemixSelectMenuItemStyle>,
-        ConstraintStyleMixin<RemixSelectMenuItemStyle>,
-        AnimationStyleMixin<SelectMenuItemSpec, RemixSelectMenuItemStyle> {
+class RemixSelectMenuItemStyle extends RemixFlexContainerStyle<SelectMenuItemSpec, RemixSelectMenuItemStyle> {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $text;
   final Prop<StyleSpec<IconSpec>>? $icon;
@@ -394,6 +380,12 @@ class RemixSelectMenuItemStyle extends Style<SelectMenuItemSpec>
     return merge(RemixSelectMenuItemStyle(
       container: FlexBoxStyler(alignment: alignment, transform: value),
     ));
+  }
+
+  // FlexStyleMixin implementation
+  @override
+  RemixSelectMenuItemStyle flex(FlexStyler value) {
+    return merge(RemixSelectMenuItemStyle(container: FlexBoxStyler()));
   }
 
   @override

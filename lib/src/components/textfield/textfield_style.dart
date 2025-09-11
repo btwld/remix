@@ -5,18 +5,7 @@ part of 'textfield.dart';
 const _kFontSizeSm = 12.0;
 const _kFontSizeMd = 14.0;
 
-class RemixTextFieldStyle extends Style<TextFieldSpec>
-    with
-        VariantStyleMixin<RemixTextFieldStyle, TextFieldSpec>,
-        BorderStyleMixin<RemixTextFieldStyle>,
-        WidgetModifierStyleMixin<RemixTextFieldStyle, TextFieldSpec>,
-        BorderRadiusStyleMixin<RemixTextFieldStyle>,
-        ShadowStyleMixin<RemixTextFieldStyle>,
-        DecorationStyleMixin<RemixTextFieldStyle>,
-        SpacingStyleMixin<RemixTextFieldStyle>,
-        TransformStyleMixin<RemixTextFieldStyle>,
-        ConstraintStyleMixin<RemixTextFieldStyle>,
-        AnimationStyleMixin<TextFieldSpec, RemixTextFieldStyle> {
+class RemixTextFieldStyle extends RemixFlexContainerStyle<TextFieldSpec, RemixTextFieldStyle> {
   final Prop<StyleSpec<TextSpec>>? $text;
   final Prop<StyleSpec<TextSpec>>? $hintText;
   final Prop<TextAlign>? $textAlign;
@@ -327,6 +316,12 @@ class RemixTextFieldStyle extends Style<TextFieldSpec>
       animation: MixOps.mergeAnimation($animation, other.$animation),
       modifier: MixOps.mergeModifier($modifier, other.$modifier),
     );
+  }
+
+  // FlexStyleMixin implementation
+  @override
+  RemixTextFieldStyle flex(FlexStyler value) {
+    return merge(RemixTextFieldStyle(container: FlexBoxStyler()));
   }
 
   @override

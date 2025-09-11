@@ -4,10 +4,7 @@ part of 'slider.dart';
 const _kTrackWidth = 8.0;
 const _kThumbBorderWidth = 2.0;
 
-class RemixSliderStyle extends Style<SliderSpec>
-    with
-        VariantStyleMixin<RemixSliderStyle, SliderSpec>,
-        WidgetModifierStyleMixin<RemixSliderStyle, SliderSpec> {
+class RemixSliderStyle extends RemixStyle<SliderSpec, RemixSliderStyle> {
   final Prop<StyleSpec<BoxSpec>>? $thumb;
   final Prop<Paint>? $baseTrack;
   final Prop<Paint>? $activeTrack;
@@ -115,6 +112,11 @@ class RemixSliderStyle extends Style<SliderSpec>
   @override
   RemixSliderStyle wrap(WidgetModifierConfig value) {
     return merge(RemixSliderStyle(modifier: value));
+  }
+
+  @override
+  RemixSliderStyle animate(AnimationConfig animation) {
+    return merge(RemixSliderStyle(animation: animation));
   }
 
   @override

@@ -3,18 +3,7 @@ part of 'radio.dart';
 // Private per-component constants (sizes only)
 const _kFontSizeMd = 14.0;
 
-class RemixRadioStyle extends Style<RadioSpec>
-    with
-        VariantStyleMixin<RemixRadioStyle, RadioSpec>,
-        BorderStyleMixin<RemixRadioStyle>,
-        WidgetModifierStyleMixin<RemixRadioStyle, RadioSpec>,
-        BorderRadiusStyleMixin<RemixRadioStyle>,
-        ShadowStyleMixin<RemixRadioStyle>,
-        DecorationStyleMixin<RemixRadioStyle>,
-        SpacingStyleMixin<RemixRadioStyle>,
-        TransformStyleMixin<RemixRadioStyle>,
-        ConstraintStyleMixin<RemixRadioStyle>,
-        AnimationStyleMixin<RadioSpec, RemixRadioStyle> {
+class RemixRadioStyle extends RemixFlexContainerStyle<RadioSpec, RemixRadioStyle> {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<BoxSpec>>? $indicatorContainer;
   final Prop<StyleSpec<BoxSpec>>? $indicator;
@@ -138,6 +127,16 @@ class RemixRadioStyle extends Style<RadioSpec>
     ));
   }
 
+  /// Sets container styling
+  RemixRadioStyle container(FlexBoxStyler value) {
+    return merge(RemixRadioStyle(container: value));
+  }
+
+  /// Sets label styling
+  RemixRadioStyle label(TextStyler value) {
+    return merge(RemixRadioStyle(label: value));
+  }
+
   @override
   StyleSpec<RadioSpec> resolve(BuildContext context) {
     return StyleSpec(
@@ -166,6 +165,12 @@ class RemixRadioStyle extends Style<RadioSpec>
       animation: MixOps.mergeAnimation($animation, other.$animation),
       modifier: MixOps.mergeModifier($modifier, other.$modifier),
     );
+  }
+
+  // FlexStyleMixin implementation
+  @override
+  RemixRadioStyle flex(FlexStyler value) {
+    return merge(RemixRadioStyle(container: FlexBoxStyler()));
   }
 
   @override

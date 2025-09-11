@@ -3,18 +3,7 @@ part of 'progress.dart';
 // Private per-component constants (sizes only)
 const _kBarHeight = 6.0;
 
-class RemixProgressStyle extends Style<ProgressSpec>
-    with
-        VariantStyleMixin<RemixProgressStyle, ProgressSpec>,
-        BorderStyleMixin<RemixProgressStyle>,
-        WidgetModifierStyleMixin<RemixProgressStyle, ProgressSpec>,
-        BorderRadiusStyleMixin<RemixProgressStyle>,
-        ShadowStyleMixin<RemixProgressStyle>,
-        DecorationStyleMixin<RemixProgressStyle>,
-        SpacingStyleMixin<RemixProgressStyle>,
-        TransformStyleMixin<RemixProgressStyle>,
-        ConstraintStyleMixin<RemixProgressStyle>,
-        AnimationStyleMixin<ProgressSpec, RemixProgressStyle> {
+class RemixProgressStyle extends RemixContainerStyle<ProgressSpec, RemixProgressStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<BoxSpec>>? $track;
   final Prop<StyleSpec<BoxSpec>>? $indicator;
@@ -87,6 +76,11 @@ class RemixProgressStyle extends Style<ProgressSpec>
   /// Sets outer container styling
   RemixProgressStyle trackContainer(BoxStyler value) {
     return merge(RemixProgressStyle(trackContainer: value));
+  }
+
+  /// Sets container styling
+  RemixProgressStyle container(BoxStyler value) {
+    return merge(RemixProgressStyle(container: value));
   }
 
   @override

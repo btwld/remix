@@ -2,18 +2,7 @@ part of 'card.dart';
 
 // Private per-component constants (sizes only)
 
-class RemixCardStyle extends Style<CardSpec>
-    with
-        VariantStyleMixin<RemixCardStyle, CardSpec>,
-        BorderStyleMixin<RemixCardStyle>,
-        WidgetModifierStyleMixin<RemixCardStyle, CardSpec>,
-        BorderRadiusStyleMixin<RemixCardStyle>,
-        ShadowStyleMixin<RemixCardStyle>,
-        DecorationStyleMixin<RemixCardStyle>,
-        SpacingStyleMixin<RemixCardStyle>,
-        TransformStyleMixin<RemixCardStyle>,
-        ConstraintStyleMixin<RemixCardStyle>,
-        AnimationStyleMixin<CardSpec, RemixCardStyle> {
+class RemixCardStyle extends RemixContainerStyle<CardSpec, RemixCardStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
 
   const RemixCardStyle.create({
@@ -124,6 +113,11 @@ class RemixCardStyle extends Style<CardSpec>
     return merge(RemixCardStyle(
       container: BoxStyler(alignment: alignment, transform: value),
     ));
+  }
+
+  /// Sets container styling
+  RemixCardStyle container(BoxStyler value) {
+    return merge(RemixCardStyle(container: value));
   }
 
   @override

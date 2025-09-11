@@ -4,18 +4,7 @@ part of 'checkbox.dart';
 const _kFontSizeMd = 14.0;
 const _kIconSizeMd = 16.0;
 
-class RemixCheckboxStyle extends Style<CheckboxSpec>
-    with
-        VariantStyleMixin<RemixCheckboxStyle, CheckboxSpec>,
-        BorderStyleMixin<RemixCheckboxStyle>,
-        WidgetModifierStyleMixin<RemixCheckboxStyle, CheckboxSpec>,
-        BorderRadiusStyleMixin<RemixCheckboxStyle>,
-        ShadowStyleMixin<RemixCheckboxStyle>,
-        DecorationStyleMixin<RemixCheckboxStyle>,
-        SpacingStyleMixin<RemixCheckboxStyle>,
-        TransformStyleMixin<RemixCheckboxStyle>,
-        ConstraintStyleMixin<RemixCheckboxStyle>,
-        AnimationStyleMixin<CheckboxSpec, RemixCheckboxStyle> {
+class RemixCheckboxStyle extends RemixFlexContainerStyle<CheckboxSpec, RemixCheckboxStyle> {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<BoxSpec>>? $indicatorContainer;
   final Prop<StyleSpec<IconSpec>>? $indicator;
@@ -69,6 +58,7 @@ class RemixCheckboxStyle extends Style<CheckboxSpec>
   }
 
   /// Sets checkbox background color
+  @override
   RemixCheckboxStyle color(Color value) {
     return merge(RemixCheckboxStyle(
       indicatorContainer: BoxStyler(decoration: BoxDecorationMix(color: value)),
@@ -166,6 +156,12 @@ class RemixCheckboxStyle extends Style<CheckboxSpec>
   @override
   RemixCheckboxStyle wrap(WidgetModifierConfig value) {
     return merge(RemixCheckboxStyle(modifier: value));
+  }
+
+  // FlexStyleMixin implementation
+  @override
+  RemixCheckboxStyle flex(FlexStyler value) {
+    return merge(RemixCheckboxStyle(container: FlexBoxStyler()));
   }
 
   // Abstract method implementations for mixins
@@ -288,4 +284,31 @@ class RemixCheckboxStyles {
       );
 
 
+}
+
+/// Extension providing Radix checkbox size methods for fluent API.
+///
+/// Enables the pattern: `RadixCheckboxStyles.classic().size1()`
+/// instead of: `RadixCheckboxStyles.size1().merge(RadixCheckboxStyles.classic())`
+extension RadixCheckboxStyleExt on RemixCheckboxStyle {
+  /// Creates a size 1 checkbox style (small).
+  ///
+  /// Small checkboxes for compact layouts and dense interfaces.
+  RemixCheckboxStyle size1() {
+    return merge(RadixCheckboxStyles.size1());
+  }
+
+  /// Creates a size 2 checkbox style (medium - default).
+  ///
+  /// Standard checkboxes for most common use cases.
+  RemixCheckboxStyle size2() {
+    return merge(RadixCheckboxStyles.size2());
+  }
+
+  /// Creates a size 3 checkbox style (large).
+  ///
+  /// Large checkboxes for accessibility needs and prominent forms.
+  RemixCheckboxStyle size3() {
+    return merge(RadixCheckboxStyles.size3());
+  }
 }
