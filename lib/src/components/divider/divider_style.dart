@@ -2,18 +2,7 @@ part of 'divider.dart';
 
 // Private per-component constants (none)
 
-class RemixDividerStyle extends Style<DividerSpec>
-    with
-        VariantStyleMixin<RemixDividerStyle, DividerSpec>,
-        BorderStyleMixin<RemixDividerStyle>,
-        WidgetModifierStyleMixin<RemixDividerStyle, DividerSpec>,
-        BorderRadiusStyleMixin<RemixDividerStyle>,
-        ShadowStyleMixin<RemixDividerStyle>,
-        DecorationStyleMixin<RemixDividerStyle>,
-        SpacingStyleMixin<RemixDividerStyle>,
-        TransformStyleMixin<RemixDividerStyle>,
-        ConstraintStyleMixin<RemixDividerStyle>,
-        AnimationStyleMixin<DividerSpec, RemixDividerStyle> {
+class RemixDividerStyle extends RemixContainerStyle<DividerSpec, RemixDividerStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
 
   const RemixDividerStyle.create({

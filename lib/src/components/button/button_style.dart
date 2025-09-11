@@ -40,18 +40,9 @@ const _kIconSizeLg = 18.0;
 /// ```
 ///
 /// All methods return new instances (immutable pattern) and can be chained together.
-class RemixButtonStyle extends Style<ButtonSpec>
+class RemixButtonStyle
+    extends RemixFlexContainerStyle<ButtonSpec, RemixButtonStyle>
     with
-        VariantStyleMixin<RemixButtonStyle, ButtonSpec>,
-        BorderStyleMixin<RemixButtonStyle>,
-        WidgetModifierStyleMixin<RemixButtonStyle, ButtonSpec>,
-        BorderRadiusStyleMixin<RemixButtonStyle>,
-        ShadowStyleMixin<RemixButtonStyle>,
-        DecorationStyleMixin<RemixButtonStyle>,
-        SpacingStyleMixin<RemixButtonStyle>,
-        TransformStyleMixin<RemixButtonStyle>,
-        ConstraintStyleMixin<RemixButtonStyle>,
-        AnimationStyleMixin<ButtonSpec, RemixButtonStyle>,
         LabelStyleMixin<RemixButtonStyle>,
         IconStyleMixin<RemixButtonStyle>,
         SpinnerStyleMixin<RemixButtonStyle> {
@@ -133,11 +124,6 @@ class RemixButtonStyle extends Style<ButtonSpec>
     );
   }
 
-  // Animate support
-  RemixButtonStyle animate(AnimationConfig animation) {
-    return merge(RemixButtonStyle(animation: animation));
-  }
-
   RemixButton call({
     required String label,
     IconData? icon,
@@ -159,6 +145,20 @@ class RemixButtonStyle extends Style<ButtonSpec>
     );
   }
 
+  // Animate support
+  @override
+  RemixButtonStyle animate(AnimationConfig animation) {
+    return merge(RemixButtonStyle(animation: animation));
+  }
+
+  // FlexStyleMixin implementation
+  @override
+  RemixButtonStyle flex(FlexStyler value) {
+    // The FlexStyler should be used to create a new FlexBoxStyler
+    // For now, delegate to the merge pattern
+    return merge(RemixButtonStyle(container: FlexBoxStyler()));
+  }
+
   // Abstract method implementations for mixins (only missing ones)
 
   @override
@@ -175,6 +175,13 @@ class RemixButtonStyle extends Style<ButtonSpec>
   }) {
     return merge(RemixButtonStyle(
       container: FlexBoxStyler(alignment: alignment, transform: value),
+    ));
+  }
+
+  @override
+  RemixButtonStyle color(Color value) {
+    return merge(RemixButtonStyle(
+      container: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
     ));
   }
 
@@ -256,32 +263,17 @@ class RemixButtonStyles {
         ),
       )
       // State variants
-      .onHovered(
-        RemixButtonStyle().color(
-          RemixTokens.primary(),
-        ),
-      )
-      .onPressed(
-        RemixButtonStyle().color(
-          RemixTokens.primary(),
-        ),
-      )
+      .onHovered(RemixButtonStyle().color(RemixTokens.primary()))
+      .onPressed(RemixButtonStyle().color(RemixTokens.primary()))
       .onFocused(
-        RemixButtonStyle().borderAll(
-          color: RemixTokens.primary(),
-          width: 2,
-        ),
+        RemixButtonStyle().borderAll(color: RemixTokens.primary(), width: 2),
       )
       .onDisabled(
         RemixButtonStyle()
             .color(RemixTokens.primary())
             .labelColor(RemixTokens.onPrimary())
             .iconColor(RemixTokens.onPrimary())
-            .spinner(
-              RemixSpinnerStyle(
-                color: RemixTokens.onPrimary(),
-              ),
-            ),
+            .spinner(RemixSpinnerStyle(color: RemixTokens.onPrimary())),
       );
 }
 

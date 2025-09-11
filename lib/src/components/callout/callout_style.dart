@@ -4,18 +4,8 @@ part of 'callout.dart';
 const _kFontSizeMd = 14.0;
 const _kIconSizeMd = 16.0;
 
-class RemixCalloutStyle extends Style<CalloutSpec>
-    with
-        VariantStyleMixin<RemixCalloutStyle, CalloutSpec>,
-        BorderStyleMixin<RemixCalloutStyle>,
-        WidgetModifierStyleMixin<RemixCalloutStyle, CalloutSpec>,
-        BorderRadiusStyleMixin<RemixCalloutStyle>,
-        ShadowStyleMixin<RemixCalloutStyle>,
-        DecorationStyleMixin<RemixCalloutStyle>,
-        SpacingStyleMixin<RemixCalloutStyle>,
-        TransformStyleMixin<RemixCalloutStyle>,
-        ConstraintStyleMixin<RemixCalloutStyle>,
-        AnimationStyleMixin<CalloutSpec, RemixCalloutStyle> {
+class RemixCalloutStyle
+    extends RemixFlexContainerStyle<CalloutSpec, RemixCalloutStyle> {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $text;
   final Prop<StyleSpec<IconSpec>>? $icon;
@@ -163,6 +153,12 @@ class RemixCalloutStyle extends Style<CalloutSpec>
     return merge(RemixCalloutStyle(
       container: FlexBoxStyler(alignment: alignment, transform: value),
     ));
+  }
+
+  // FlexStyleMixin implementation
+  @override
+  RemixCalloutStyle flex(FlexStyler value) {
+    return merge(RemixCalloutStyle(container: FlexBoxStyler()));
   }
 
   @override

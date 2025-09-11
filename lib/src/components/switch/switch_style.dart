@@ -5,18 +5,7 @@ const _kTrackWidth = 44.0;
 const _kTrackHeight = 24.0;
 const _kThumbSize = 20.0;
 
-class RemixSwitchStyle extends Style<SwitchSpec>
-    with
-        VariantStyleMixin<RemixSwitchStyle, SwitchSpec>,
-        BorderStyleMixin<RemixSwitchStyle>,
-        WidgetModifierStyleMixin<RemixSwitchStyle, SwitchSpec>,
-        BorderRadiusStyleMixin<RemixSwitchStyle>,
-        ShadowStyleMixin<RemixSwitchStyle>,
-        DecorationStyleMixin<RemixSwitchStyle>,
-        SpacingStyleMixin<RemixSwitchStyle>,
-        TransformStyleMixin<RemixSwitchStyle>,
-        ConstraintStyleMixin<RemixSwitchStyle>,
-        AnimationStyleMixin<SwitchSpec, RemixSwitchStyle> {
+class RemixSwitchStyle extends RemixContainerStyle<SwitchSpec, RemixSwitchStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<BoxSpec>>? $track;
   final Prop<StyleSpec<BoxSpec>>? $thumb;
@@ -70,6 +59,11 @@ class RemixSwitchStyle extends Style<SwitchSpec>
   /// Sets thumb styling
   RemixSwitchStyle thumb(BoxStyler value) {
     return merge(RemixSwitchStyle(thumb: value));
+  }
+
+  /// Sets container styling
+  RemixSwitchStyle container(BoxStyler value) {
+    return merge(RemixSwitchStyle(container: value));
   }
 
   @override

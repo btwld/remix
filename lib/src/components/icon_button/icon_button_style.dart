@@ -1,18 +1,12 @@
 part of 'icon_button.dart';
 
-class RemixIconButtonStyle extends Style<IconButtonSpec>
+// Private per-component constants
+const _kIconButtonSize = 40.0;
+const _kIconSizeMd = 20.0;
+
+class RemixIconButtonStyle extends RemixContainerStyle<IconButtonSpec, RemixIconButtonStyle>
     with
-        VariantStyleMixin<RemixIconButtonStyle, IconButtonSpec>,
-        BorderStyleMixin<RemixIconButtonStyle>,
-        WidgetModifierStyleMixin<RemixIconButtonStyle, IconButtonSpec>,
-        BorderRadiusStyleMixin<RemixIconButtonStyle>,
-        ShadowStyleMixin<RemixIconButtonStyle>,
-        DecorationStyleMixin<RemixIconButtonStyle>,
-        SpacingStyleMixin<RemixIconButtonStyle>,
-        TransformStyleMixin<RemixIconButtonStyle>,
-        AnimationStyleMixin<IconButtonSpec, RemixIconButtonStyle>,
-        IconStyleMixin<RemixIconButtonStyle>,
-        ConstraintStyleMixin<RemixIconButtonStyle> {
+        IconStyleMixin<RemixIconButtonStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<IconSpec>>? $icon;
   final Prop<StyleSpec<SpinnerSpec>>? $spinner;

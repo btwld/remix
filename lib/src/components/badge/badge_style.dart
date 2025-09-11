@@ -3,18 +3,7 @@ part of 'badge.dart';
 // Private per-component constants (sizes only)
 const _kFontSizeSm = 12.0;
 
-class RemixBadgeStyle extends Style<BadgeSpec>
-    with
-        VariantStyleMixin<RemixBadgeStyle, BadgeSpec>,
-        BorderStyleMixin<RemixBadgeStyle>,
-        WidgetModifierStyleMixin<RemixBadgeStyle, BadgeSpec>,
-        BorderRadiusStyleMixin<RemixBadgeStyle>,
-        ShadowStyleMixin<RemixBadgeStyle>,
-        DecorationStyleMixin<RemixBadgeStyle>,
-        SpacingStyleMixin<RemixBadgeStyle>,
-        TransformStyleMixin<RemixBadgeStyle>,
-        ConstraintStyleMixin<RemixBadgeStyle>,
-        AnimationStyleMixin<BadgeSpec, RemixBadgeStyle> {
+class RemixBadgeStyle extends RemixContainerStyle<BadgeSpec, RemixBadgeStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $text;
 
@@ -182,4 +171,31 @@ class RemixBadgeStyles {
           ),
         ),
       );
+}
+
+/// Extension providing Radix badge size methods for fluent API.
+///
+/// Enables the pattern: `RadixBadgeStyles.solid().size1()`
+/// instead of: `RadixBadgeStyles.size1().merge(RadixBadgeStyles.solid())`
+extension RadixBadgeStyleExt on RemixBadgeStyle {
+  /// Creates a size 1 badge style (small).
+  ///
+  /// Small badges for compact layouts and dense interfaces.
+  RemixBadgeStyle size1() {
+    return merge(RadixBadgeStyles.size1());
+  }
+
+  /// Creates a size 2 badge style (medium - default).
+  ///
+  /// Standard badges for most common use cases.
+  RemixBadgeStyle size2() {
+    return merge(RadixBadgeStyles.size2());
+  }
+
+  /// Creates a size 3 badge style (large).
+  ///
+  /// Large badges for prominent status indicators.
+  RemixBadgeStyle size3() {
+    return merge(RadixBadgeStyles.size3());
+  }
 }

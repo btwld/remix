@@ -30,8 +30,8 @@ class RadixCardStyles {
                 color: RadixTokens.gray6(),
                 width: RadixTokens.borderWidth1(),
               )
-              .borderRadius(sizeConfig.radius)
-              .padding(sizeConfig.padding),
+              .borderRadius(BorderRadiusMix.all(sizeConfig.radius))
+              .padding(EdgeInsetsGeometryMix.fromEdgeInsets(sizeConfig.padding)),
         );
   }
 
@@ -71,8 +71,8 @@ class RadixCardStyles {
         .container(
           BoxStyler()
               .color(Colors.transparent)
-              .borderRadius(sizeConfig.radius)
-              .padding(sizeConfig.padding),
+              .borderRadius(BorderRadiusMix.all(sizeConfig.radius))
+              .padding(EdgeInsetsGeometryMix.fromEdgeInsets(sizeConfig.padding)),
         );
   }
 

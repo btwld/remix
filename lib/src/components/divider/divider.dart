@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 
 import '../../theme/remix_tokens.dart';
+import '../../utilities/remix_style.dart';
 
 part 'divider_spec.dart';
 part 'divider_style.dart';
