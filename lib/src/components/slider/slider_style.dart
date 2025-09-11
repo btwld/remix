@@ -188,7 +188,7 @@ class RemixSliderStyles {
             color: RemixTokens.onPrimary(),
           ),
         ),
-      ).builder((context) {
+      ).onBuilder((context) {
         return RemixSliderStyle(
           baseTrack: Paint()
             ..strokeWidth = _kTrackWidth

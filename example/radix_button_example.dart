@@ -143,17 +143,17 @@ class _SizeSection extends StatelessWidget {
         Wrap(
           spacing: 8,
           children: [
-            RadixButtonStyles.solid(size: 1).call(
+            RadixButtonStyles.solid().size1().call(
               label: 'Solid',
               icon: Icons.check,
               onPressed: () {},
             ),
-            RadixButtonStyles.soft(size: 1).call(
+            RadixButtonStyles.soft().size1().call(
               label: 'Soft',
               icon: Icons.star,
               onPressed: () {},
             ),
-            RadixButtonStyles.outline(size: 1).call(
+            RadixButtonStyles.outline().size1().call(
               label: 'Outline',
               icon: Icons.favorite,
               onPressed: () {},
@@ -166,17 +166,17 @@ class _SizeSection extends StatelessWidget {
         Wrap(
           spacing: 8,
           children: [
-            RadixButtonStyles.solid(size: 2).call(
+            RadixButtonStyles.solid().size2().call(
               label: 'Solid',
               icon: Icons.check,
               onPressed: () {},
             ),
-            RadixButtonStyles.soft(size: 2).call(
+            RadixButtonStyles.soft().size2().call(
               label: 'Soft',
               icon: Icons.star,
               onPressed: () {},
             ),
-            RadixButtonStyles.outline(size: 2).call(
+            RadixButtonStyles.outline().size2().call(
               label: 'Outline',
               icon: Icons.favorite,
               onPressed: () {},
@@ -189,17 +189,17 @@ class _SizeSection extends StatelessWidget {
         Wrap(
           spacing: 8,
           children: [
-            RadixButtonStyles.solid(size: 3).call(
+            RadixButtonStyles.solid().size3().call(
               label: 'Solid',
               icon: Icons.check,
               onPressed: () {},
             ),
-            RadixButtonStyles.soft(size: 3).call(
+            RadixButtonStyles.soft().size3().call(
               label: 'Soft',
               icon: Icons.star,
               onPressed: () {},
             ),
-            RadixButtonStyles.outline(size: 3).call(
+            RadixButtonStyles.outline().size3().call(
               label: 'Outline',
               icon: Icons.favorite,
               onPressed: () {},
@@ -212,17 +212,17 @@ class _SizeSection extends StatelessWidget {
         Wrap(
           spacing: 8,
           children: [
-            RadixButtonStyles.solid(size: 4).call(
+            RadixButtonStyles.solid().size4().call(
               label: 'Solid',
               icon: Icons.check,
               onPressed: () {},
             ),
-            RadixButtonStyles.soft(size: 4).call(
+            RadixButtonStyles.soft().size4().call(
               label: 'Soft',
               icon: Icons.star,
               onPressed: () {},
             ),
-            RadixButtonStyles.outline(size: 4).call(
+            RadixButtonStyles.outline().size4().call(
               label: 'Outline',
               icon: Icons.favorite,
               onPressed: () {},

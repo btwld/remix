@@ -230,49 +230,59 @@ class _AllVariantsSection extends StatelessWidget {
         .showSnackBar(SnackBar(content: Text(message)));
   }
 
-  @override
+  RemixButtonStyle _getSizedStyle(RemixButtonStyle Function() styleFactory) {
+    final baseStyle = styleFactory();
+    return switch (size) {
+      1 => baseStyle.size1(),
+      2 => baseStyle.size2(),
+      3 => baseStyle.size3(),
+      4 => baseStyle.size4(),
+      _ => baseStyle.size2(), // Default to size 2
+    };
+  }
+
   Widget build(BuildContext context) {
     return Wrap(
       spacing: 12,
       runSpacing: 12,
       children: [
         // Solid
-        RadixButtonStyles.solid(size: size).call(
+        _getSizedStyle(() => RadixButtonStyles.solid()).call(
           label: 'Solid',
           icon: Icons.check_circle,
           onPressed: () => _showSnackBar(context, 'Solid pressed'),
         ),
 
         // Soft
-        RadixButtonStyles.soft(size: size).call(
+        _getSizedStyle(() => RadixButtonStyles.soft()).call(
           label: 'Soft',
           icon: Icons.favorite,
           onPressed: () => _showSnackBar(context, 'Soft pressed'),
         ),
 
         // Surface
-        RadixButtonStyles.surface(size: size).call(
+        _getSizedStyle(() => RadixButtonStyles.surface()).call(
           label: 'Surface',
           icon: Icons.layers,
           onPressed: () => _showSnackBar(context, 'Surface pressed'),
         ),
 
         // Outline
-        RadixButtonStyles.outline(size: size).call(
+        _getSizedStyle(() => RadixButtonStyles.outline()).call(
           label: 'Outline',
           icon: Icons.crop_free,
           onPressed: () => _showSnackBar(context, 'Outline pressed'),
         ),
 
         // Ghost
-        RadixButtonStyles.ghost(size: size).call(
+        _getSizedStyle(() => RadixButtonStyles.ghost()).call(
           label: 'Ghost',
           icon: Icons.visibility_off,
           onPressed: () => _showSnackBar(context, 'Ghost pressed'),
         ),
 
         // Classic
-        RadixButtonStyles.classic(size: size).call(
+        _getSizedStyle(() => RadixButtonStyles.classic()).call(
           label: 'Classic',
           icon: Icons.style,
           onPressed: () => _showSnackBar(context, 'Classic pressed'),
@@ -292,22 +302,22 @@ class _SizeComparisonSection extends StatelessWidget {
       children: [
         const Text('Size 1 (Small)'),
         const SizedBox(height: 8),
-        RadixButtonStyles.solid(size: 1)
+        RadixButtonStyles.solid().size1()
             .call(label: 'Size 1', onPressed: () {}),
         const SizedBox(height: 16),
         const Text('Size 2 (Medium - Default)'),
         const SizedBox(height: 8),
-        RadixButtonStyles.solid(size: 2)
+        RadixButtonStyles.solid().size2()
             .call(label: 'Size 2', onPressed: () {}),
         const SizedBox(height: 16),
         const Text('Size 3 (Large)'),
         const SizedBox(height: 8),
-        RadixButtonStyles.solid(size: 3)
+        RadixButtonStyles.solid().size3()
             .call(label: 'Size 3', onPressed: () {}),
         const SizedBox(height: 16),
         const Text('Size 4 (Extra Large)'),
         const SizedBox(height: 8),
-        RadixButtonStyles.solid(size: 4)
+        RadixButtonStyles.solid().size4()
             .call(label: 'Size 4', onPressed: () {}),
       ],
     );
