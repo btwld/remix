@@ -5,10 +5,9 @@ const _kFontSizeSm = 12.0;
 
 class RemixTooltipStyle extends Style<TooltipSpec>
     with
-        StyleModifierMixin<RemixTooltipStyle, TooltipSpec>,
-        StyleVariantMixin<RemixTooltipStyle, TooltipSpec>,
-        ModifierStyleMixin<RemixTooltipStyle, TooltipSpec>,
+        VariantStyleMixin<RemixTooltipStyle, TooltipSpec>,
         BorderStyleMixin<RemixTooltipStyle>,
+        WidgetModifierStyleMixin<RemixTooltipStyle, TooltipSpec>,
         BorderRadiusStyleMixin<RemixTooltipStyle>,
         ShadowStyleMixin<RemixTooltipStyle>,
         DecorationStyleMixin<RemixTooltipStyle>,
@@ -33,7 +32,7 @@ class RemixTooltipStyle extends Style<TooltipSpec>
     TextStyler? text,
     AnimationConfig? animation,
     List<VariantStyle<TooltipSpec>>? variants,
-    ModifierConfig? modifier,
+    WidgetModifierConfig? modifier,
   }) : this.create(
           container: Prop.maybeMix(container),
           text: Prop.maybeMix(text),
@@ -104,7 +103,7 @@ class RemixTooltipStyle extends Style<TooltipSpec>
   }
 
   @override
-  RemixTooltipStyle wrap(ModifierConfig value) {
+  RemixTooltipStyle wrap(WidgetModifierConfig value) {
     return merge(RemixTooltipStyle(modifier: value));
   }
 
@@ -155,7 +154,7 @@ class RemixTooltipStyles {
           padding: EdgeInsetsMix.all(RemixTokens.spaceSm()),
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.all(RemixTokens.radius()),
-            color: RemixTokens.primary().withValues(alpha: 0.8),
+            color: RemixTokens.primary(),
           ),
         ),
         text: TextStyler(

@@ -5,10 +5,9 @@ const _kFontSizeMd = 14.0;
 
 class RemixRadioStyle extends Style<RadioSpec>
     with
-        StyleModifierMixin<RemixRadioStyle, RadioSpec>,
-        StyleVariantMixin<RemixRadioStyle, RadioSpec>,
-        ModifierStyleMixin<RemixRadioStyle, RadioSpec>,
+        VariantStyleMixin<RemixRadioStyle, RadioSpec>,
         BorderStyleMixin<RemixRadioStyle>,
+        WidgetModifierStyleMixin<RemixRadioStyle, RadioSpec>,
         BorderRadiusStyleMixin<RemixRadioStyle>,
         ShadowStyleMixin<RemixRadioStyle>,
         DecorationStyleMixin<RemixRadioStyle>,
@@ -41,7 +40,7 @@ class RemixRadioStyle extends Style<RadioSpec>
     TextStyler? label,
     AnimationConfig? animation,
     List<VariantStyle<RadioSpec>>? variants,
-    ModifierConfig? modifier,
+    WidgetModifierConfig? modifier,
   }) : this.create(
           container: Prop.maybeMix(container),
           indicatorContainer: Prop.maybeMix(indicatorContainer),
@@ -106,7 +105,7 @@ class RemixRadioStyle extends Style<RadioSpec>
   }
 
   @override
-  RemixRadioStyle wrap(ModifierConfig value) {
+  RemixRadioStyle wrap(WidgetModifierConfig value) {
     return merge(RemixRadioStyle(modifier: value));
   }
 
@@ -226,10 +225,9 @@ class RemixRadioStyles {
         ),
         label: TextStyler(
           style: TextStyleMix(
-              color: RemixTokens.primary(), fontSize: _kFontSizeMd,),
+            color: RemixTokens.primary(),
+            fontSize: _kFontSizeMd,
+          ),
         ),
       );
-
-
-
 }

@@ -6,10 +6,9 @@ const _kIconSizeMd = 16.0;
 
 class RemixCalloutStyle extends Style<CalloutSpec>
     with
-        StyleModifierMixin<RemixCalloutStyle, CalloutSpec>,
-        StyleVariantMixin<RemixCalloutStyle, CalloutSpec>,
-        ModifierStyleMixin<RemixCalloutStyle, CalloutSpec>,
+        VariantStyleMixin<RemixCalloutStyle, CalloutSpec>,
         BorderStyleMixin<RemixCalloutStyle>,
+        WidgetModifierStyleMixin<RemixCalloutStyle, CalloutSpec>,
         BorderRadiusStyleMixin<RemixCalloutStyle>,
         ShadowStyleMixin<RemixCalloutStyle>,
         DecorationStyleMixin<RemixCalloutStyle>,
@@ -38,7 +37,7 @@ class RemixCalloutStyle extends Style<CalloutSpec>
     IconStyler? icon,
     AnimationConfig? animation,
     List<VariantStyle<CalloutSpec>>? variants,
-    ModifierConfig? modifier,
+    WidgetModifierConfig? modifier,
   }) : this.create(
           container: Prop.maybeMix(container),
           text: Prop.maybeMix(text),
@@ -131,7 +130,7 @@ class RemixCalloutStyle extends Style<CalloutSpec>
   }
 
   @override
-  RemixCalloutStyle wrap(ModifierConfig value) {
+  RemixCalloutStyle wrap(WidgetModifierConfig value) {
     return merge(RemixCalloutStyle(modifier: value));
   }
 
@@ -187,7 +186,7 @@ class RemixCalloutStyles {
         container: FlexBoxStyler(
           decoration: BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(
-              color: RemixTokens.primary().withValues(alpha: 0.20),
+              color: RemixTokens.primary(),
               width: 1,
             )),
             borderRadius: BorderRadiusMix.all(RemixTokens.radius()),

@@ -150,7 +150,9 @@ class _RemixCheckboxState extends State<RemixCheckbox>
             enableFeedback: widget.enableFeedback,
             focusNode: widget.focusNode,
             autofocus: widget.autofocus,
-            statesController: controller,
+            onFocusChange: (focused) => controller.focused = focused,
+            onHoverChange: (hovered) => controller.hovered = hovered,
+            onPressChange: (pressed) => controller.pressed = pressed,
             child: checkboxChild,
           ),
         );

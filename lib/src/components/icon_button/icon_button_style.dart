@@ -6,10 +6,9 @@ const _kIconButtonSize = 40.0;
 
 class RemixIconButtonStyle extends Style<IconButtonSpec>
     with
-        StyleModifierMixin<RemixIconButtonStyle, IconButtonSpec>,
-        StyleVariantMixin<RemixIconButtonStyle, IconButtonSpec>,
-        ModifierStyleMixin<RemixIconButtonStyle, IconButtonSpec>,
+        VariantStyleMixin<RemixIconButtonStyle, IconButtonSpec>,
         BorderStyleMixin<RemixIconButtonStyle>,
+        WidgetModifierStyleMixin<RemixIconButtonStyle, IconButtonSpec>,
         BorderRadiusStyleMixin<RemixIconButtonStyle>,
         ShadowStyleMixin<RemixIconButtonStyle>,
         DecorationStyleMixin<RemixIconButtonStyle>,
@@ -37,7 +36,7 @@ class RemixIconButtonStyle extends Style<IconButtonSpec>
     RemixSpinnerStyle? spinner,
     AnimationConfig? animation,
     List<VariantStyle<IconButtonSpec>>? variants,
-    ModifierConfig? modifier,
+    WidgetModifierConfig? modifier,
   }) : this.create(
           container: Prop.maybeMix(container),
           icon: Prop.maybeMix(icon),
@@ -171,7 +170,7 @@ class RemixIconButtonStyle extends Style<IconButtonSpec>
 
   // Modifier support
   @override
-  RemixIconButtonStyle wrap(ModifierConfig value) {
+  RemixIconButtonStyle wrap(WidgetModifierConfig value) {
     return merge(RemixIconButtonStyle(modifier: value));
   }
 
@@ -243,7 +242,7 @@ class RemixIconButtonStyles {
             RemixIconButtonStyle(
               container: BoxStyler(
                 decoration: BoxDecorationMix(
-                  color: RemixTokens.primary().withValues(alpha: 0.8),
+                  color: RemixTokens.primary(),
                 ),
               ),
             ),
@@ -252,7 +251,7 @@ class RemixIconButtonStyles {
             RemixIconButtonStyle(
               container: BoxStyler(
                 decoration: BoxDecorationMix(
-                  color: RemixTokens.primary().withValues(alpha: 0.9),
+                  color: RemixTokens.primary(),
                 ),
               ),
             ),
@@ -263,7 +262,7 @@ class RemixIconButtonStyles {
                 decoration: BoxDecorationMix(
                   border: BoxBorderMix.all(
                     BorderSideMix(
-                      color: RemixTokens.primary().withValues(alpha: 0.40),
+                      color: RemixTokens.primary(),
                       width: 2,
                     ),
                   ),
@@ -275,14 +274,14 @@ class RemixIconButtonStyles {
             RemixIconButtonStyle(
               container: BoxStyler(
                 decoration: BoxDecorationMix(
-                  color: RemixTokens.primary().withValues(alpha: 0.3),
+                  color: RemixTokens.primary(),
                 ),
               ),
               icon: IconStyler(
-                color: RemixTokens.onPrimary().withValues(alpha: 0.7),
+                color: RemixTokens.onPrimary(),
               ),
               spinner: RemixSpinnerStyle(
-                color: RemixTokens.onPrimary().withValues(alpha: 0.7),
+                color: RemixTokens.onPrimary(),
               ),
             ),
           );

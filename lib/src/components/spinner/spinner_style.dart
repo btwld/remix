@@ -7,8 +7,8 @@ const _kDurationMs = 1000;
 
 class RemixSpinnerStyle extends Style<SpinnerSpec>
     with
-        StyleModifierMixin<RemixSpinnerStyle, SpinnerSpec>,
-        StyleVariantMixin<RemixSpinnerStyle, SpinnerSpec> {
+        VariantStyleMixin<RemixSpinnerStyle, SpinnerSpec>,
+        WidgetModifierStyleMixin<RemixSpinnerStyle, SpinnerSpec> {
   final Prop<double>? $size;
   final Prop<double>? $strokeWidth;
   final Prop<Color>? $color;
@@ -38,7 +38,7 @@ class RemixSpinnerStyle extends Style<SpinnerSpec>
     SpinnerType? type,
     AnimationConfig? animation,
     List<VariantStyle<SpinnerSpec>>? variants,
-    ModifierConfig? modifier,
+    WidgetModifierConfig? modifier,
   }) : this.create(
           size: Prop.maybe(size),
           strokeWidth: Prop.maybe(strokeWidth),
@@ -88,7 +88,7 @@ class RemixSpinnerStyle extends Style<SpinnerSpec>
   }
 
   @override
-  RemixSpinnerStyle wrap(ModifierConfig value) {
+  RemixSpinnerStyle wrap(WidgetModifierConfig value) {
     return merge(RemixSpinnerStyle(modifier: value));
   }
 

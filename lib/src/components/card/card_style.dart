@@ -4,10 +4,9 @@ part of 'card.dart';
 
 class RemixCardStyle extends Style<CardSpec>
     with
-        StyleModifierMixin<RemixCardStyle, CardSpec>,
-        StyleVariantMixin<RemixCardStyle, CardSpec>,
-        ModifierStyleMixin<RemixCardStyle, CardSpec>,
+        VariantStyleMixin<RemixCardStyle, CardSpec>,
         BorderStyleMixin<RemixCardStyle>,
+        WidgetModifierStyleMixin<RemixCardStyle, CardSpec>,
         BorderRadiusStyleMixin<RemixCardStyle>,
         ShadowStyleMixin<RemixCardStyle>,
         DecorationStyleMixin<RemixCardStyle>,
@@ -28,7 +27,7 @@ class RemixCardStyle extends Style<CardSpec>
     BoxStyler? container,
     AnimationConfig? animation,
     List<VariantStyle<CardSpec>>? variants,
-    ModifierConfig? modifier,
+    WidgetModifierConfig? modifier,
   }) : this.create(
           container: Prop.maybeMix(container),
           variants: variants,
@@ -94,7 +93,7 @@ class RemixCardStyle extends Style<CardSpec>
   }
 
   @override
-  RemixCardStyle wrap(ModifierConfig value) {
+  RemixCardStyle wrap(WidgetModifierConfig value) {
     return merge(RemixCardStyle(modifier: value));
   }
 

@@ -1,43 +1,62 @@
-import 'package:flutter/material.dart';
-import 'package:mix/mix.dart';
+import 'radix_tokens.dart';
 
-/// Design tokens for the Remix component library.
+/// Legacy Design tokens for the Remix component library.
 ///
-/// Provides a centralized system for colors, spacing, typography, and other
-/// design values that can be used across all Remix components. These tokens
-/// integrate with the Mix framework's token system for theme-aware styling.
+/// **DEPRECATED**: This class now internally maps to RadixTokens for consistency.
+/// New components should use RadixTokens directly for better flexibility and
+/// alignment with the Radix UI design system.
+/// 
+/// These tokens maintain backward compatibility while leveraging the comprehensive
+/// RadixTokens system under the hood.
 class RemixTokens {
   // ============================================================================
-  // MINIMAL COLOR TOKENS (ADAPTIVE)
+  // LEGACY COLOR TOKENS (NOW MAPPED TO RADIX)
   // ============================================================================
 
   /// Primary color for main emphasis and solid surfaces
-  static const primary = MixToken<Color>('remix.color.primary');
+  /// Maps to RadixTokens.accent9() (solid accent color)
+  static const primary = RadixTokens.accent9;
 
   /// Foreground that sits on top of [primary]
-  static const onPrimary = MixToken<Color>('remix.color.onPrimary');
+  /// Maps to RadixTokens.accentContrast() (legible text on accent backgrounds)
+  static const onPrimary = RadixTokens.accentContrast;
 
   /// Secondary neutral/supporting color (outlines, subtle UI)
-  static const secondary = MixToken<Color>('remix.color.secondary');
-
+  /// Maps to RadixTokens.gray7() (UI borders and subtle elements)
+  static const secondary = RadixTokens.gray7;
 
   /// Foreground that sits on top of [secondary]
-  static const onSecondary = MixToken<Color>('remix.color.onSecondary');
+  /// Maps to RadixTokens.gray12() (high-contrast text)
+  static const onSecondary = RadixTokens.gray12;
 
   // ============================================================================
-  // MINIMAL SPACING TOKENS
+  // LEGACY SPACING TOKENS (NOW MAPPED TO RADIX)
   // ============================================================================
-  static const spaceXs = MixToken<double>('remix.space.xs');
-  static const spaceSm = MixToken<double>('remix.space.sm');
-  static const spaceMd = MixToken<double>('remix.space.md');
-  static const spaceLg = MixToken<double>('remix.space.lg');
+  
+  /// Extra small spacing: 4px
+  /// Maps to RadixTokens.space1()
+  static const spaceXs = RadixTokens.space1;
+  
+  /// Small spacing: 8px
+  /// Maps to RadixTokens.space2()
+  static const spaceSm = RadixTokens.space2;
+  
+  /// Medium spacing: 12px  
+  /// Maps to RadixTokens.space3()
+  static const spaceMd = RadixTokens.space3;
+  
+  /// Large spacing: 16px
+  /// Maps to RadixTokens.space4()
+  static const spaceLg = RadixTokens.space4;
 
   // ============================================================================
-  // SHAPE TOKENS
+  // LEGACY SHAPE TOKENS (NOW MAPPED TO RADIX)
   // ============================================================================
-  /// Shared border radius value as a concrete Radius.
+  
+  /// Shared border radius value: 8px
+  /// Maps to RadixTokens.radius4()
   /// Use with BorderRadiusMix.all(RemixTokens.radius())
-  static const radius = MixToken<Radius>('remix.radius');
+  static const radius = RadixTokens.radius4;
 
   const RemixTokens._();
 }

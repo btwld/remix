@@ -4,10 +4,9 @@ part of 'divider.dart';
 
 class RemixDividerStyle extends Style<DividerSpec>
     with
-        StyleModifierMixin<RemixDividerStyle, DividerSpec>,
-        StyleVariantMixin<RemixDividerStyle, DividerSpec>,
-        ModifierStyleMixin<RemixDividerStyle, DividerSpec>,
+        VariantStyleMixin<RemixDividerStyle, DividerSpec>,
         BorderStyleMixin<RemixDividerStyle>,
+        WidgetModifierStyleMixin<RemixDividerStyle, DividerSpec>,
         BorderRadiusStyleMixin<RemixDividerStyle>,
         ShadowStyleMixin<RemixDividerStyle>,
         DecorationStyleMixin<RemixDividerStyle>,
@@ -28,7 +27,7 @@ class RemixDividerStyle extends Style<DividerSpec>
     BoxStyler? container,
     AnimationConfig? animation,
     List<VariantStyle<DividerSpec>>? variants,
-    ModifierConfig? modifier,
+    WidgetModifierConfig? modifier,
   }) : this.create(
           container: Prop.maybeMix(container),
           variants: variants,
@@ -73,7 +72,7 @@ class RemixDividerStyle extends Style<DividerSpec>
   }
 
   @override
-  RemixDividerStyle wrap(ModifierConfig value) {
+  RemixDividerStyle wrap(WidgetModifierConfig value) {
     return merge(RemixDividerStyle(modifier: value));
   }
 
@@ -143,7 +142,7 @@ class RemixDividerStyles {
           ),
           decoration: BoxDecorationMix(
             borderRadius: BorderRadiusMix.all(RemixTokens.radius()),
-            color: RemixTokens.primary().withValues(alpha: 0.20),
+            color: RemixTokens.primary(),
           ),
         ),
       );

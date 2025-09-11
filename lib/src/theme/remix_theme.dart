@@ -1,66 +1,94 @@
+// ABOUTME: Legacy Remix theme system that now uses RadixTokens internally
+// ABOUTME: Provides backward compatibility while leveraging the comprehensive Radix design system
+
 import 'package:flutter/material.dart';
-import 'package:mix/mix.dart';
 
-import 'remix_tokens.dart';
+import 'radix_theme_data.dart';
+import '../utilities/radix_token_resolver.dart' as resolver;
 
-/// Provides token definitions using adaptive tokens for theme-aware styling.
+/// Creates a MixScope with legacy Remix tokens, now powered by RadixTokens.
 ///
-/// Adaptive tokens automatically resolve values based on the current theme
-/// brightness, so a single token set can be used for both light and dark.
-
-// ============================================================================
-// ADAPTIVE + STATIC TOKEN DEFINITIONS (minimal set)
-// ============================================================================
-final Set<TokenDefinition> remixTokens = {
-  // Colors (adaptive)
-  RemixTokens.primary.defineAdaptive(
-    light: MixColors.black,
-    dark: MixColors.white,
-  ),
-  RemixTokens.onPrimary.defineAdaptive(
-    light: MixColors.white,
-    dark: MixColors.greySwatch[900]!,
-  ),
-  RemixTokens.secondary.defineAdaptive(
-    light: MixColors.greySwatch[500]!,
-    dark: MixColors.greySwatch[400]!,
-  ),
-  RemixTokens.onSecondary.defineAdaptive(
-    light: MixColors.white,
-    dark: MixColors.greySwatch[900]!,
-  ),
-
-  // Spacing (static)
-  RemixTokens.spaceXs.defineValue(4.0),
-  RemixTokens.spaceSm.defineValue(8.0),
-  RemixTokens.spaceMd.defineValue(12.0),
-  RemixTokens.spaceLg.defineValue(16.0),
-
-  // Radius (static)
-  RemixTokens.radius.defineValue(Radius.circular(8.0)),
-};
-
-// ============================================================================
-// THEME UTILITIES
-// ============================================================================
-
-/// Creates a MixScope with Remix tokens configured for the current theme.
+/// **DEPRECATED**: This function now uses createRadixScope internally for
+/// better design system consistency. New applications should use createRadixScope
+/// directly with RadixTokens.
+///
+/// This function automatically adapts to the current theme brightness and provides
+/// sensible defaults for accent and gray colors.
+///
+/// Example usage:
+/// ```dart
+/// createRemixScope(
+///   child: MyApp(),
+/// )
+/// ```
 Widget createRemixScope({
   required Widget child,
-  Set<TokenDefinition>? additionalTokens,
   List<Type>? orderOfModifiers,
+  resolver.RadixAccentColor accent = resolver.RadixAccentColor.indigo,
+  resolver.RadixGrayColor gray = resolver.RadixGrayColor.slate,
 }) {
   return Builder(builder: (context) {
-    final allTokens = {...remixTokens, ...?additionalTokens};
+    // Determine theme brightness
+    final theme = Theme.of(context);
+    final brightness = theme.brightness;
 
-    final scope = MixScope(
-      tokens: allTokens,
+    // Use createRadixScope which provides all the token values
+    // RemixTokens now just references RadixTokens, so this provides everything
+    return createRadixScope(
+      accent: accent,
+      gray: gray,
+      brightness: brightness,
       orderOfModifiers: orderOfModifiers,
       child: child,
     );
-
-    // Ensure MediaQuery.platformBrightness matches Theme brightness for token resolution
-
-    return scope;
   });
+}
+
+/// Configuration data for a legacy Remix theme.
+///
+/// **DEPRECATED**: This class is maintained for backward compatibility.
+/// New applications should use createRadixScope() directly.
+@immutable
+class RemixThemeConfig {
+  final resolver.RadixAccentColor accent;
+  final resolver.RadixGrayColor gray;
+
+  const RemixThemeConfig({
+    this.accent = resolver.RadixAccentColor.indigo,
+    this.gray = resolver.RadixGrayColor.slate,
+  });
+
+  /// Creates a MixScope with this theme configuration
+  Widget createScope({List<Type>? orderOfModifiers, required Widget child}) {
+    return createRemixScope(
+      child: child,
+      orderOfModifiers: orderOfModifiers,
+      accent: accent,
+      gray: gray,
+    );
+  }
+
+  /// Creates a copy of this config with the given fields replaced.
+  RemixThemeConfig copyWith({
+    resolver.RadixAccentColor? accent,
+    resolver.RadixGrayColor? gray,
+  }) {
+    return RemixThemeConfig(
+      accent: accent ?? this.accent,
+      gray: gray ?? this.gray,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other.runtimeType != runtimeType) return false;
+
+    return other is RemixThemeConfig &&
+        other.accent == accent &&
+        other.gray == gray;
+  }
+
+  @override
+  int get hashCode => Object.hash(accent, gray);
 }

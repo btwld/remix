@@ -5,10 +5,9 @@ const _kFontSizeSm = 12.0;
 
 class RemixBadgeStyle extends Style<BadgeSpec>
     with
-        StyleModifierMixin<RemixBadgeStyle, BadgeSpec>,
-        StyleVariantMixin<RemixBadgeStyle, BadgeSpec>,
-        ModifierStyleMixin<RemixBadgeStyle, BadgeSpec>,
+        VariantStyleMixin<RemixBadgeStyle, BadgeSpec>,
         BorderStyleMixin<RemixBadgeStyle>,
+        WidgetModifierStyleMixin<RemixBadgeStyle, BadgeSpec>,
         BorderRadiusStyleMixin<RemixBadgeStyle>,
         ShadowStyleMixin<RemixBadgeStyle>,
         DecorationStyleMixin<RemixBadgeStyle>,
@@ -33,7 +32,7 @@ class RemixBadgeStyle extends Style<BadgeSpec>
     TextStyler? text,
     AnimationConfig? animation,
     List<VariantStyle<BadgeSpec>>? variants,
-    ModifierConfig? modifier,
+    WidgetModifierConfig? modifier,
   }) : this.create(
           container: Prop.maybeMix(container),
           text: Prop.maybeMix(text),
@@ -103,7 +102,7 @@ class RemixBadgeStyle extends Style<BadgeSpec>
   }
 
   @override
-  RemixBadgeStyle wrap(ModifierConfig value) {
+  RemixBadgeStyle wrap(WidgetModifierConfig value) {
     return merge(RemixBadgeStyle(modifier: value));
   }
 

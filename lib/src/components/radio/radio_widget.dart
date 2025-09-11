@@ -163,7 +163,9 @@ class _RemixRadioState<T> extends State<RemixRadio<T>>
             focusNode: _effectiveFocusNode,
             autofocus: widget.autofocus,
             toggleable: widget.toggleable,
-            statesController: widget.statesController ?? controller,
+            onFocusChange: (focused) => controller.focused = focused,
+            onHoverChange: (hovered) => controller.hovered = hovered,
+            onPressChange: (pressed) => controller.pressed = pressed,
             child: radioWidget,
           ),
         );
