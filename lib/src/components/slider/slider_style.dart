@@ -192,8 +192,7 @@ class RemixSliderStyles {
         return RemixSliderStyle(
           baseTrack: Paint()
             ..strokeWidth = _kTrackWidth
-            ..color =
-                RemixTokens.primary.resolve(context)
+            ..color = RemixTokens.primary.resolve(context)
             ..strokeCap = StrokeCap.round
             ..style = PaintingStyle.stroke,
           activeTrack: Paint()
@@ -203,12 +202,9 @@ class RemixSliderStyles {
             ..style = PaintingStyle.stroke,
           division: Paint()
             ..strokeWidth = _kTrackWidth
-            ..color =
-                RemixTokens.primary.resolve(context)
+            ..color = RemixTokens.primary.resolve(context)
             ..strokeCap = StrokeCap.round
             ..style = PaintingStyle.stroke,
         );
       });
-
-
 }
