@@ -1,6 +1,8 @@
 // ABOUTME: Factory for creating RemixSpinnerStyle instances using Radix design tokens
 // ABOUTME: Provides default Radix spinner style with proper token-based styling
 
+// Export for convenience access to Radix spinner style extensions
+
 import '../../theme/radix_tokens.dart';
 import 'spinner.dart';
 
@@ -15,38 +17,56 @@ class RadixSpinnerStyles {
   ///
   /// Uses accent color for the stroke. According to the Radix spec,
   /// spinners only have a single default variant.
-  static RemixSpinnerStyle defaultStyle({int size = 2}) {
-    final sizeConfig = _getSizeConfig(size);
-
+  static RemixSpinnerStyle defaultStyle() {
     return RemixSpinnerStyle(
-      size: sizeConfig.size,
-      strokeWidth: sizeConfig.strokeWidth,
       color: RadixTokens.accent9(), // Uses accent step 9 as per spec
       duration: RadixTokens.transitionSlow(), // 300ms animation
       type: SpinnerType.solid,
     );
   }
 
-  /// Gets size configuration for the given size index.
-  static _SpinnerSizeConfig _getSizeConfig(int size) {
-    switch (size) {
-      case 1:
-        return _SpinnerSizeConfig(size: 16.0, strokeWidth: 1.0);
-      case 2:
-        return _SpinnerSizeConfig(size: 24.0, strokeWidth: 1.5);
-      case 3:
-        return _SpinnerSizeConfig(size: 32.0, strokeWidth: 2.0);
-      default:
-        // Default to size 2 if invalid size provided
-        return _SpinnerSizeConfig(size: 24.0, strokeWidth: 1.5);
-    }
+  /// Small spinner size (16px with 1.5px stroke).
+  static RemixSpinnerStyle size1() {
+    return RemixSpinnerStyle(
+      size: 16.0,
+      strokeWidth: 1.5,
+      color: RadixTokens.accent9(),
+      duration: RadixTokens.transitionSlow(),
+      type: SpinnerType.solid,
+    );
+  }
+
+  /// Medium spinner size (20px with 2.0px stroke).
+  static RemixSpinnerStyle size2() {
+    return RemixSpinnerStyle(
+      size: 20.0,
+      strokeWidth: 2.0,
+      color: RadixTokens.accent9(),
+      duration: RadixTokens.transitionSlow(),
+      type: SpinnerType.solid,
+    );
+  }
+
+  /// Large spinner size (24px with 2.5px stroke).
+  static RemixSpinnerStyle size3() {
+    return RemixSpinnerStyle(
+      size: 24.0,
+      strokeWidth: 2.5,
+      color: RadixTokens.accent9(),
+      duration: RadixTokens.transitionSlow(),
+      type: SpinnerType.solid,
+    );
   }
 }
 
-/// Internal configuration for spinner sizes.
-class _SpinnerSizeConfig {
-  final double size;
-  final double strokeWidth;
+/// Extension for RadixSpinnerStyles providing convenient access to size methods.
+extension RadixSpinnerStyleExt on RadixSpinnerStyles {
+  /// Small spinner size (16px with 1.5px stroke).
+  RemixSpinnerStyle get size1 => RadixSpinnerStyles.size1();
 
-  const _SpinnerSizeConfig({required this.size, required this.strokeWidth});
+  /// Medium spinner size (20px with 2.0px stroke).
+  RemixSpinnerStyle get size2 => RadixSpinnerStyles.size2();
+
+  /// Large spinner size (24px with 2.5px stroke).
+  RemixSpinnerStyle get size3 => RadixSpinnerStyles.size3();
 }
