@@ -4,7 +4,7 @@
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 
-import '../../theme/radix_tokens.dart';
+import '../../radix/radix.dart';
 import 'slider.dart';
 
 // Export the extension so it's available when importing this file

@@ -3,7 +3,7 @@
 
 // Export for convenience access to Radix spinner style extensions
 
-import '../../theme/radix_tokens.dart';
+import '../../radix/radix.dart';
 import 'spinner.dart';
 
 /// Factory class for creating Radix-compliant spinner styles.

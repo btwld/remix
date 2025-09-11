@@ -201,12 +201,12 @@ void main() {
           .getSemantics(find.byKey(const ValueKey('material_enabled_sem')))
           .getSemanticsData();
 
-      expect(remix.hasFlag(SemanticsFlag.isButton), isTrue);
-      expect(material.hasFlag(SemanticsFlag.isButton), isTrue);
+      expect(remix.flagsCollection.isButton, isTrue);
+      expect(material.flagsCollection.isButton, isTrue);
       expect(remix.hasAction(SemanticsAction.tap), isTrue);
       expect(material.hasAction(SemanticsAction.tap), isTrue);
-      expect(remix.hasFlag(SemanticsFlag.isFocusable), isTrue);
-      expect(material.hasFlag(SemanticsFlag.isFocusable), isTrue);
+      expect(remix.flagsCollection.isFocusable, isTrue);
+      expect(material.flagsCollection.isFocusable, isTrue);
     });
 
     testWidgets('disabled buttons remove tap action and focusability',
@@ -240,8 +240,8 @@ void main() {
 
       expect(remix.hasAction(SemanticsAction.tap), isFalse);
       expect(material.hasAction(SemanticsAction.tap), isFalse);
-      expect(remix.hasFlag(SemanticsFlag.isFocusable), isFalse);
-      expect(material.hasFlag(SemanticsFlag.isFocusable), isFalse);
+      expect(remix.flagsCollection.isFocusable, isFalse);
+      expect(material.flagsCollection.isFocusable, isFalse);
     });
 
     testWidgets('disabled text buttons have matching semantics and behavior',

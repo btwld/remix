@@ -1,4 +1,4 @@
-part of 'radix_colors.dart';
+part of 'colors.dart';
 
 const _amber = ColorSwatch(
   0xffffc53d,

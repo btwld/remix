@@ -3,7 +3,7 @@
 
 import 'package:mix/mix.dart';
 
-import '../../theme/radix_tokens.dart';
+import '../../radix/radix.dart';
 import 'progress.dart';
 
 /// Factory class for creating Radix-compliant progress styles.

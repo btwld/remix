@@ -271,7 +271,7 @@ But this pattern does NOT work for variants because variants change:
 
 ## Token Mapping Source of Truth
 
-Use `/Users/leofarias/bitwild/remix/lib/src/utilities/radix_colors/component_tokens_ref.json` as the authoritative source for:
+Use `/Users/leofarias/bitwild/remix/lib/src/radix/colors/component_tokens_ref.json` as the authoritative source for:
 - Which variants each component supports
 - Exact token mappings for each variant
 - State variations (hover, active, focus)
@@ -545,5 +545,5 @@ Each component should support 3 standard sizes:
 The Radix token system is now simplified and more maintainable:
 - **Direct Scale Access**: `accent1()` through `accent12()`, `gray1()` through `gray12()`
 - **No More Variant Duplication**: Removed 30+ variant-specific tokens
-- **Single Source of Truth**: All colors come from `RadixResolvedColors` scales
+- **Single Source of Truth**: All colors come from `RadixThemeColors` scales
 - **Matches Radix Spec**: Uses `{accent}[9]` notation directly in code

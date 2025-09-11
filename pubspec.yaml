@@ -21,6 +21,8 @@ dependencies:
   naked_ui:
     path: ../naked_ui
   meta: ^1.15.0
+  prism: ^2.0.0
+  prism_flutter: ^2.0.0
 
 dev_dependencies:
   flutter_test:

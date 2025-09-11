@@ -1,4 +1,4 @@
-import 'radix_tokens.dart';
+import '../radix/radix.dart';
 
 /// Legacy Design tokens for the Remix component library.
 ///

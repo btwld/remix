@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 
 import '../lib/src/components/button/button.dart';
 import '../lib/src/components/button/radix_button_styles.dart';
-import '../lib/src/theme/radix_theme_data.dart';
-import '../lib/src/utilities/radix_token_resolver.dart' as resolver;
+import '../lib/src/radix/radix_theme.dart';
+import '../lib/src/radix/radix.dart' as resolver;
 
 void main() {
   runApp(const RadixButtonComprehensiveTest());
@@ -33,7 +33,6 @@ class _RadixButtonComprehensiveTestState
         accent: _accent,
         gray: _gray,
         brightness: _brightness,
-        trackVariant: resolver.TrackVariant.neutral,
         child: _ComprehensiveTestScreen(
           onAccentChanged: (accent) => setState(() => _accent = accent),
           onGrayChanged: (gray) => setState(() => _gray = gray),
@@ -232,6 +231,7 @@ class _AllVariantsSection extends StatelessWidget {
 
   RemixButtonStyle _getSizedStyle(RemixButtonStyle Function() styleFactory) {
     final baseStyle = styleFactory();
+
     return switch (size) {
       1 => baseStyle.size1(),
       2 => baseStyle.size2(),
@@ -302,22 +302,26 @@ class _SizeComparisonSection extends StatelessWidget {
       children: [
         const Text('Size 1 (Small)'),
         const SizedBox(height: 8),
-        RadixButtonStyles.solid().size1()
+        RadixButtonStyles.solid()
+            .size1()
             .call(label: 'Size 1', onPressed: () {}),
         const SizedBox(height: 16),
         const Text('Size 2 (Medium - Default)'),
         const SizedBox(height: 8),
-        RadixButtonStyles.solid().size2()
+        RadixButtonStyles.solid()
+            .size2()
             .call(label: 'Size 2', onPressed: () {}),
         const SizedBox(height: 16),
         const Text('Size 3 (Large)'),
         const SizedBox(height: 8),
-        RadixButtonStyles.solid().size3()
+        RadixButtonStyles.solid()
+            .size3()
             .call(label: 'Size 3', onPressed: () {}),
         const SizedBox(height: 16),
         const Text('Size 4 (Extra Large)'),
         const SizedBox(height: 8),
-        RadixButtonStyles.solid().size4()
+        RadixButtonStyles.solid()
+            .size4()
             .call(label: 'Size 4', onPressed: () {}),
       ],
     );

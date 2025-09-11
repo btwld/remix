@@ -4,7 +4,7 @@
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 
-import '../../theme/radix_tokens.dart';
+import '../../radix/radix.dart';
 import '../spinner/spinner.dart';
 import 'button.dart';
 

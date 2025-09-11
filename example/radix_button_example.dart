@@ -4,8 +4,8 @@
 import 'package:flutter/material.dart';
 
 import '../lib/src/components/button/radix_button_styles.dart';
-import '../lib/src/theme/radix_theme_data.dart';
-import '../lib/src/utilities/radix_token_resolver.dart' as resolver;
+import '../lib/src/radix/radix_theme.dart';
+import '../lib/src/radix/radix.dart' as resolver;
 
 void main() {
   runApp(const RadixButtonExampleApp());
@@ -21,7 +21,6 @@ class RadixButtonExampleApp extends StatelessWidget {
         accent: resolver.RadixAccentColor.indigo,
         gray: resolver.RadixGrayColor.slate,
         brightness: Brightness.light,
-        trackVariant: resolver.TrackVariant.neutral,
         child: const RadixButtonExampleScreen(),
       ),
       title: 'Radix Button Example',
@@ -144,20 +143,20 @@ class _SizeSection extends StatelessWidget {
           spacing: 8,
           children: [
             RadixButtonStyles.solid().size1().call(
-              label: 'Solid',
-              icon: Icons.check,
-              onPressed: () {},
-            ),
+                  label: 'Solid',
+                  icon: Icons.check,
+                  onPressed: () {},
+                ),
             RadixButtonStyles.soft().size1().call(
-              label: 'Soft',
-              icon: Icons.star,
-              onPressed: () {},
-            ),
+                  label: 'Soft',
+                  icon: Icons.star,
+                  onPressed: () {},
+                ),
             RadixButtonStyles.outline().size1().call(
-              label: 'Outline',
-              icon: Icons.favorite,
-              onPressed: () {},
-            ),
+                  label: 'Outline',
+                  icon: Icons.favorite,
+                  onPressed: () {},
+                ),
           ],
         ),
         const SizedBox(height: 16),
@@ -167,20 +166,20 @@ class _SizeSection extends StatelessWidget {
           spacing: 8,
           children: [
             RadixButtonStyles.solid().size2().call(
-              label: 'Solid',
-              icon: Icons.check,
-              onPressed: () {},
-            ),
+                  label: 'Solid',
+                  icon: Icons.check,
+                  onPressed: () {},
+                ),
             RadixButtonStyles.soft().size2().call(
-              label: 'Soft',
-              icon: Icons.star,
-              onPressed: () {},
-            ),
+                  label: 'Soft',
+                  icon: Icons.star,
+                  onPressed: () {},
+                ),
             RadixButtonStyles.outline().size2().call(
-              label: 'Outline',
-              icon: Icons.favorite,
-              onPressed: () {},
-            ),
+                  label: 'Outline',
+                  icon: Icons.favorite,
+                  onPressed: () {},
+                ),
           ],
         ),
         const SizedBox(height: 16),
@@ -190,20 +189,20 @@ class _SizeSection extends StatelessWidget {
           spacing: 8,
           children: [
             RadixButtonStyles.solid().size3().call(
-              label: 'Solid',
-              icon: Icons.check,
-              onPressed: () {},
-            ),
+                  label: 'Solid',
+                  icon: Icons.check,
+                  onPressed: () {},
+                ),
             RadixButtonStyles.soft().size3().call(
-              label: 'Soft',
-              icon: Icons.star,
-              onPressed: () {},
-            ),
+                  label: 'Soft',
+                  icon: Icons.star,
+                  onPressed: () {},
+                ),
             RadixButtonStyles.outline().size3().call(
-              label: 'Outline',
-              icon: Icons.favorite,
-              onPressed: () {},
-            ),
+                  label: 'Outline',
+                  icon: Icons.favorite,
+                  onPressed: () {},
+                ),
           ],
         ),
         const SizedBox(height: 16),
@@ -213,20 +212,20 @@ class _SizeSection extends StatelessWidget {
           spacing: 8,
           children: [
             RadixButtonStyles.solid().size4().call(
-              label: 'Solid',
-              icon: Icons.check,
-              onPressed: () {},
-            ),
+                  label: 'Solid',
+                  icon: Icons.check,
+                  onPressed: () {},
+                ),
             RadixButtonStyles.soft().size4().call(
-              label: 'Soft',
-              icon: Icons.star,
-              onPressed: () {},
-            ),
+                  label: 'Soft',
+                  icon: Icons.star,
+                  onPressed: () {},
+                ),
             RadixButtonStyles.outline().size4().call(
-              label: 'Outline',
-              icon: Icons.favorite,
-              onPressed: () {},
-            ),
+                  label: 'Outline',
+                  icon: Icons.favorite,
+                  onPressed: () {},
+                ),
           ],
         ),
       ],

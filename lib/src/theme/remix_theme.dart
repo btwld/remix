@@ -3,8 +3,8 @@
 
 import 'package:flutter/material.dart';
 
-import 'radix_theme_data.dart';
-import '../utilities/radix_token_resolver.dart' as resolver;
+import '../radix/radix.dart' as resolver;
+import '../radix/radix_theme.dart';
 
 /// Creates a MixScope with legacy Remix tokens, now powered by RadixTokens.
 ///
@@ -61,10 +61,10 @@ class RemixThemeConfig {
   /// Creates a MixScope with this theme configuration
   Widget createScope({List<Type>? orderOfModifiers, required Widget child}) {
     return createRemixScope(
-      child: child,
       orderOfModifiers: orderOfModifiers,
       accent: accent,
       gray: gray,
+      child: child,
     );
   }
 

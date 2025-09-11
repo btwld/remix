@@ -1,4 +1,4 @@
-part of 'radix_colors.dart';
+part of 'colors.dart';
 
 const _amberDark = ColorSwatch(
   0xffffc53d,
