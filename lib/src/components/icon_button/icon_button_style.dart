@@ -1,9 +1,5 @@
 part of 'icon_button.dart';
 
-// Private per-component constants
-const _kIconSizeMd = 16.0;
-const _kIconButtonSize = 40.0;
-
 class RemixIconButtonStyle extends Style<IconButtonSpec>
     with
         VariantStyleMixin<RemixIconButtonStyle, IconButtonSpec>,
@@ -14,7 +10,9 @@ class RemixIconButtonStyle extends Style<IconButtonSpec>
         DecorationStyleMixin<RemixIconButtonStyle>,
         SpacingStyleMixin<RemixIconButtonStyle>,
         TransformStyleMixin<RemixIconButtonStyle>,
-        AnimationStyleMixin<IconButtonSpec, RemixIconButtonStyle> {
+        AnimationStyleMixin<IconButtonSpec, RemixIconButtonStyle>,
+        IconStyleMixin<RemixIconButtonStyle>,
+        ConstraintStyleMixin<RemixIconButtonStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<IconSpec>>? $icon;
   final Prop<StyleSpec<SpinnerSpec>>? $spinner;
@@ -116,6 +114,44 @@ class RemixIconButtonStyle extends Style<IconButtonSpec>
     return merge(
       RemixIconButtonStyle(container: BoxStyler(constraints: value)),
     );
+  }
+
+  /// Sets icon color
+  RemixIconButtonStyle iconColor(Color value) {
+    return merge(RemixIconButtonStyle(
+      icon: IconStyler(color: value),
+    ));
+  }
+
+  /// Sets icon size
+  RemixIconButtonStyle iconSize(double value) {
+    return merge(RemixIconButtonStyle(
+      icon: IconStyler(size: value),
+    ));
+  }
+
+  /// Sets width
+  RemixIconButtonStyle width(double value) {
+    return merge(RemixIconButtonStyle(
+      container: BoxStyler(
+        constraints: BoxConstraintsMix(
+          minWidth: value,
+          maxWidth: value,
+        ),
+      ),
+    ));
+  }
+
+  /// Sets height
+  RemixIconButtonStyle height(double value) {
+    return merge(RemixIconButtonStyle(
+      container: BoxStyler(
+        constraints: BoxConstraintsMix(
+          minHeight: value,
+          maxHeight: value,
+        ),
+      ),
+    ));
   }
 
   // Animation support
@@ -241,18 +277,14 @@ class RemixIconButtonStyles {
           .onHovered(
             RemixIconButtonStyle(
               container: BoxStyler(
-                decoration: BoxDecorationMix(
-                  color: RemixTokens.primary(),
-                ),
+                decoration: BoxDecorationMix(color: RemixTokens.primary()),
               ),
             ),
           )
           .onPressed(
             RemixIconButtonStyle(
               container: BoxStyler(
-                decoration: BoxDecorationMix(
-                  color: RemixTokens.primary(),
-                ),
+                decoration: BoxDecorationMix(color: RemixTokens.primary()),
               ),
             ),
           )
@@ -261,10 +293,7 @@ class RemixIconButtonStyles {
               container: BoxStyler(
                 decoration: BoxDecorationMix(
                   border: BoxBorderMix.all(
-                    BorderSideMix(
-                      color: RemixTokens.primary(),
-                      width: 2,
-                    ),
+                    BorderSideMix(color: RemixTokens.primary(), width: 2),
                   ),
                 ),
               ),
@@ -273,16 +302,10 @@ class RemixIconButtonStyles {
           .onDisabled(
             RemixIconButtonStyle(
               container: BoxStyler(
-                decoration: BoxDecorationMix(
-                  color: RemixTokens.primary(),
-                ),
+                decoration: BoxDecorationMix(color: RemixTokens.primary()),
               ),
-              icon: IconStyler(
-                color: RemixTokens.onPrimary(),
-              ),
-              spinner: RemixSpinnerStyle(
-                color: RemixTokens.onPrimary(),
-              ),
+              icon: IconStyler(color: RemixTokens.onPrimary()),
+              spinner: RemixSpinnerStyle(color: RemixTokens.onPrimary()),
             ),
           );
 }

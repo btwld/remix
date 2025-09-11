@@ -284,3 +284,37 @@ class RemixButtonStyles {
             ),
       );
 }
+
+/// Extension providing Radix button size methods for fluent API.
+///
+/// Enables the pattern: `RadixButtonStyles.solid().size1()`
+/// instead of: `RadixButtonStyles.size1().merge(RadixButtonStyles.solid())`
+extension RadixButtonStyleExt on RemixButtonStyle {
+  /// Creates a size 1 button style (small).
+  ///
+  /// Small buttons for compact layouts, toolbars, and dense interfaces.
+  RemixButtonStyle size1() {
+    return merge(RadixButtonStyles.size1());
+  }
+
+  /// Creates a size 2 button style (medium - default).
+  ///
+  /// Standard buttons for most common use cases.
+  RemixButtonStyle size2() {
+    return merge(RadixButtonStyles.size2());
+  }
+
+  /// Creates a size 3 button style (large).
+  ///
+  /// Large buttons for prominent CTAs and accessibility needs.
+  RemixButtonStyle size3() {
+    return merge(RadixButtonStyles.size3());
+  }
+
+  /// Creates a size 4 button style (extra large).
+  ///
+  /// Extra large buttons for maximum prominence and accessibility.
+  RemixButtonStyle size4() {
+    return merge(RadixButtonStyles.size4());
+  }
+}
