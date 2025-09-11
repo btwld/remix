@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:remix/src/utilities/radix_colors/radix_colors.dart';
+import 'package:remix/src/radix/colors/colors.dart';
 
 int parseRefHexToArgb(String cssHex) {
   final hex = cssHex.replaceAll('#', '').toLowerCase();
@@ -22,7 +22,7 @@ int parseRefHexToArgb(String cssHex) {
 
 void main() {
   test('dark palettes match dark_ref.json', () {
-    final file = File('lib/src/utilities/radix_colors/dark_ref.json');
+    final file = File('lib/src/radix/colors/dark_ref.json');
     expect(file.existsSync(), isTrue, reason: 'Missing dark_ref.json');
     final jsonMap =
         json.decode(file.readAsStringSync()) as Map<String, dynamic>;
@@ -84,10 +84,10 @@ void main() {
         final dartColor = swatch[i];
         expect(dartColor, isNotNull,
             reason: 'Missing index $i in $paletteKey swatch');
-        expect(dartColor!.value, refArgb, reason: '$paletteKey[$i] mismatch');
+        expect(dartColor!.toARGB32(), refArgb, reason: '$paletteKey[$i] mismatch');
       }
 
-      expect(swatch.value, swatch[9]!.value,
+      expect(swatch.toARGB32(), swatch[9]!.toARGB32(),
           reason: '$paletteKey default should equal index 9');
     }
   });

@@ -1,11 +1,10 @@
-library radix_colors;
+library radix_colors; // moved to radix/colors/
 
 import 'package:flutter/painting.dart';
 
-part 'black_a.dart';
+part 'black_white.dart';
 part 'dark.dart';
 part 'light.dart';
-part 'white_a.dart';
 
 class RadixColors {
   final ColorSwatch<int> swatch;

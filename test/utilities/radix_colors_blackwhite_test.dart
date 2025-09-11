@@ -3,11 +3,11 @@ import 'dart:io';
 
 import 'package:flutter/painting.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:remix/src/utilities/radix_colors/radix_colors.dart';
+import 'package:remix/src/radix/colors/colors.dart';
 
 void main() {
   test('black/white alpha palettes match blackwhite_ref.json', () {
-    final file = File('lib/src/utilities/radix_colors/blackwhite_ref.json');
+    final file = File('lib/src/radix/colors/blackwhite_ref.json');
     expect(file.existsSync(), isTrue, reason: 'Missing blackwhite_ref.json');
     final jsonMap =
         json.decode(file.readAsStringSync()) as Map<String, dynamic>;

@@ -7,7 +7,7 @@
       "Token names verified against official Radix Themes documentation",
       "Background tokens: --color-background, --color-surface, --color-panel-solid, --color-panel-translucent, --color-overlay",
       "Accent functional tokens: --accent-surface, --accent-indicator, --accent-track, --accent-contrast",
-      "Focus tokens use accent color scale: --focus-8 and --focus-a8",
+      "Focus uses a dedicated color scale keyed to the accent: --focus-1..12 and --focus-a1..a12; most components use --focus-8/--focus-a8",
       "Some tokens use custom alpha values rather than direct step mappings"
     ],
     "step_roles": {
@@ -33,70 +33,71 @@
     "--color-background": {
       "light": "{gray}[1]",
       "dark": "{gray}Dark[1]",
-      "purpose": "Page background",
+      "purpose": "Page background. Alias for var(--gray-1).",
       "verified": true
     },
     "--color-surface": {
-      "light": "rgba(255, 255, 255, 0.85)",
-      "dark": "rgba(0, 0, 0, 0.25)",
-      "purpose": "Inputs and form control surfaces. Uses custom alpha values, not direct step mapping",
-      "verified": true,
-      "note": "Custom alpha blending for optimal visual results"
+      "light": "{gray}[2]",
+      "dark": "{gray}Dark[2]",
+      "purpose": "Inputs and form control surfaces. Alias for var(--gray-2).",
+      "verified": true
     },
     "--color-panel-solid": {
       "light": "{gray}[2]",
       "dark": "{gray}Dark[2]",
-      "purpose": "Cards, tables, menus (solid panels)",
+      "purpose": "Cards, tables, menus (solid panels). Alias for var(--gray-2).",
       "verified": true
     },
     "--color-panel-translucent": {
-      "light": "{gray}Alpha[a2]",
-      "dark": "{gray}DarkAlpha[a2]",
-      "purpose": "Translucent panels when Theme.panelBackground='translucent'",
+      "light": "var(--color-panel-translucent)",
+      "dark": "var(--color-panel-translucent)",
+      "purpose": "Translucent panels. Alias for var(--gray-a2).",
       "verified": true,
-      "note": "Uses alpha step 2 for translucency"
+      "note": "Radix precomputes this. If you need a fallback, gray-a2 is a decent approximation."
     },
     "--color-overlay": {
-      "light": "blackAlpha[a6]",
-      "dark": "blackAlpha[a8]",
-      "purpose": "Dialog scrims/overlays",
-      "verified": true,
-      "note": "Uses black alpha variants for consistent overlay darkness"
-    },
-    "--accent-surface": {
-      "light": "overlay({accent}Alpha[a3], --color-surface)",
-      "dark": "overlay({accent}DarkAlpha[a3], --color-surface)",
-      "purpose": "Toned accent surface for surface variants",
+      "light": "var(--color-overlay)",
+      "dark": "var(--color-overlay)",
+      "purpose": "Dialog scrims/overlays. Alias for var(--black-a6) or var(--black-a8).",
       "verified": true
     },
+    "--accent-surface": {
+      "light": "var(--accent-surface)",
+      "dark": "var(--accent-surface)",
+      "purpose": "Toned accent surface for surface variants. Precomputed by Radix.",
+      "verified": true,
+      "note": "Treat as opaque functional token; your previous overlay() was an approximation."
+    },
     "--accent-indicator": {
-      "light": "{accent}[9]",
-      "dark": "{accent}Dark[9]",
-      "purpose": "Filled parts like progress indicators. Step 9 is highest chroma",
+      "light": "var(--accent-indicator)",
+      "dark": "var(--accent-indicator)",
+      "purpose": "Filled parts like progress indicators. Alias for var(--accent-9).",
       "verified": true
     },
     "--accent-track": {
-      "light": "{gray}[6]",
-      "dark": "{gray}Dark[6]",
-      "purpose": "Tracks/rails for sliders, progress, switches",
-      "verified": true
+      "light": "var(--accent-track)",
+      "dark": "var(--accent-track)",
+      "purpose": "Tracks/rails for sliders, progress, switches. Alias for var(--accent-track).",
+      "verified": true,
+      "note": "Defaults to step 9. Radix applies a color-mix in dark mode for bright scales (e.g., sky, yellow, lime, amber), which needs to be handled in the implementation."
     },
     "--accent-contrast": {
-      "light": "contrastText({accent}[9], lightMode)",
-      "dark": "contrastText({accent}Dark[9], darkMode)",
-      "purpose": "Legible text on accent solid backgrounds. Dark text for sky/mint/lime/yellow/amber, white for others",
-      "verified": true
+      "light": "var(--accent-contrast)",
+      "dark": "var(--accent-contrast)",
+      "purpose": "Legible text on accent solid backgrounds. Precomputed by Radix.",
+      "verified": true,
+      "note": "This is a pre-computed token from Radix that determines if text should be light or dark based on the accent color."
     },
     "--focus-8": {
       "light": "{accent}[8]",
       "dark": "{accent}Dark[8]",
-      "purpose": "Visible outline color for focus states",
+      "purpose": "Visible outline color for focus states. Alias for var(--accent-8).",
       "verified": true
     },
     "--focus-a8": {
       "light": "{accent}Alpha[a8]",
       "dark": "{accent}DarkAlpha[a8]",
-      "purpose": "Focus ring color with alpha for layering",
+      "purpose": "Focus ring color with alpha for layering. Alias for var(--accent-a8).",
       "verified": true
     }
   },
@@ -340,7 +341,7 @@
       "verified": true,
       "variants": {
         "default": {
-          "stroke": "{accent}[9]"
+          "note": "Spinner has no Radix 'variant' prop; color/contrast are driven by theme tokens."
         }
       }
     },
@@ -657,7 +658,7 @@
     {
       "component": "Tabs",
       "sizes": ["1", "2"],
-      "verified": true,
+      "verified": "partial",
       "variants": {
         "default": {
           "list": {
@@ -705,7 +706,7 @@
     },
     {
       "component": "Code",
-      "sizes": ["1", "2", "3"],
+      "sizes": ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
       "verified": true,
       "note": "Inline code snippets and blocks",
       "variants": {

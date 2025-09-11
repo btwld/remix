@@ -3,7 +3,7 @@
 
 import 'package:mix/mix.dart';
 
-import '../../theme/radix_tokens.dart';
+import '../../radix/radix.dart';
 import 'textfield.dart';
 
 // Export the extension so it's available when importing this file

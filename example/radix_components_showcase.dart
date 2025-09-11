@@ -15,7 +15,6 @@ import '../lib/src/components/icon_button/icon_button.dart';
 import '../lib/src/components/icon_button/radix_icon_button_styles.dart';
 import '../lib/src/components/progress/progress.dart';
 import '../lib/src/components/progress/radix_progress_styles.dart';
-import '../lib/src/components/radio/radio.dart';
 import '../lib/src/components/radio/radix_radio_styles.dart';
 import '../lib/src/components/slider/radix_slider_styles.dart';
 import '../lib/src/components/slider/slider.dart';
@@ -25,8 +24,8 @@ import '../lib/src/components/switch/radix_switch_styles.dart';
 import '../lib/src/components/switch/switch.dart';
 import '../lib/src/components/textfield/radix_textfield_styles.dart';
 import '../lib/src/components/textfield/textfield.dart';
-import '../lib/src/theme/radix_theme_data.dart';
-import '../lib/src/utilities/radix_token_resolver.dart' as resolver;
+import '../lib/src/radix/radix_theme.dart';
+import '../lib/src/radix/radix.dart' as resolver;
 
 void main() {
   runApp(const RadixComponentsShowcaseApp());
@@ -53,7 +52,6 @@ class _RadixComponentsShowcaseAppState
         accent: _accent,
         gray: _gray,
         brightness: _brightness,
-        trackVariant: resolver.TrackVariant.neutral,
         child: _ShowcaseScreen(
           onAccentChanged: (accent) => setState(() => _accent = accent),
           onGrayChanged: (gray) => setState(() => _gray = gray),
@@ -95,10 +93,25 @@ class _ShowcaseScreen extends StatefulWidget {
 
 class _ShowcaseScreenState extends State<_ShowcaseScreen> {
   bool _checkboxValue = false;
-  String _radioValue = 'option1';
+  String? _radioValue = 'option1';
   bool _switchValue = false;
   double _sliderValue = 0.5;
   double _progressValue = 0.7;
+
+  Widget _buildSection(String title, Widget content) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 16),
+        content,
+        const SizedBox(height: 32),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -141,16 +154,10 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
             const SizedBox(height: 32),
 
             // Buttons Section
-            _buildSection(
-              'Buttons',
-              _ButtonsSection(),
-            ),
+            _buildSection('Buttons', _ButtonsSection()),
 
             // Icon Buttons Section
-            _buildSection(
-              'Icon Buttons',
-              _IconButtonsSection(),
-            ),
+            _buildSection('Icon Buttons', _IconButtonsSection()),
 
             // Form Controls Section
             _buildSection(
@@ -159,18 +166,23 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Checkboxes
-                  const Text('Checkboxes',
-                      style: TextStyle(fontWeight: FontWeight.w600)),
+                  const Text(
+                    'Checkboxes',
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
                   const SizedBox(height: 8),
                   _CheckboxSection(
                     value: _checkboxValue,
-                    onChanged: (value) => setState(() => _checkboxValue = value),
+                    onChanged: (value) =>
+                        setState(() => _checkboxValue = value ?? false),
                   ),
                   const SizedBox(height: 16),
 
                   // Radio buttons
-                  const Text('Radio Buttons',
-                      style: TextStyle(fontWeight: FontWeight.w600)),
+                  const Text(
+                    'Radio Buttons',
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
                   const SizedBox(height: 8),
                   _RadioSection(
                     value: _radioValue,
@@ -179,18 +191,23 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
                   const SizedBox(height: 16),
 
                   // Switches
-                  const Text('Switches',
-                      style: TextStyle(fontWeight: FontWeight.w600)),
+                  const Text(
+                    'Switches',
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
                   const SizedBox(height: 8),
                   _SwitchSection(
                     value: _switchValue,
-                    onChanged: (value) => setState(() => _switchValue = value),
+                    onChanged: (value) =>
+                        setState(() => _switchValue = value ?? false),
                   ),
                   const SizedBox(height: 16),
 
                   // Text Fields
-                  const Text('Text Fields',
-                      style: TextStyle(fontWeight: FontWeight.w600)),
+                  const Text(
+                    'Text Fields',
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
                   const SizedBox(height: 8),
                   _TextFieldSection(),
                 ],
@@ -204,22 +221,28 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Badges
-                  const Text('Badges',
-                      style: TextStyle(fontWeight: FontWeight.w600)),
+                  const Text(
+                    'Badges',
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
                   const SizedBox(height: 8),
                   _BadgeSection(),
                   const SizedBox(height: 16),
 
                   // Progress
-                  const Text('Progress',
-                      style: TextStyle(fontWeight: FontWeight.w600)),
+                  const Text(
+                    'Progress',
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
                   const SizedBox(height: 8),
                   _ProgressSection(value: _progressValue),
                   const SizedBox(height: 16),
 
                   // Spinners
-                  const Text('Spinners',
-                      style: TextStyle(fontWeight: FontWeight.w600)),
+                  const Text(
+                    'Spinners',
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
                   const SizedBox(height: 8),
                   _SpinnerSection(),
                 ],
@@ -233,8 +256,10 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Sliders
-                  const Text('Sliders',
-                      style: TextStyle(fontWeight: FontWeight.w600)),
+                  const Text(
+                    'Sliders',
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
                   const SizedBox(height: 8),
                   _SliderSection(
                     value: _sliderValue,
@@ -245,31 +270,13 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
             ),
 
             // Layout Section
-            _buildSection(
-              'Layout',
-              _CardSection(),
-            ),
+            _buildSection('Layout', _CardSection()),
           ],
         ),
       ),
       backgroundColor: widget.currentBrightness == Brightness.dark
           ? Colors.grey.shade900
           : Colors.white,
-    );
-  }
-
-  Widget _buildSection(String title, Widget content) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 16),
-        content,
-        const SizedBox(height: 32),
-      ],
     );
   }
 }
@@ -352,40 +359,40 @@ class _ButtonsSection extends StatelessWidget {
       runSpacing: 12,
       children: [
         RemixButton(
-          style: RadixButtonStyles.solid(),
           label: 'Solid',
           icon: Icons.check_circle,
           onPressed: () {},
+          style: RadixButtonStyles.solid(),
         ),
         RemixButton(
-          style: RadixButtonStyles.soft(),
           label: 'Soft',
           icon: Icons.favorite,
           onPressed: () {},
+          style: RadixButtonStyles.soft(),
         ),
         RemixButton(
-          style: RadixButtonStyles.surface(),
           label: 'Surface',
           icon: Icons.layers,
           onPressed: () {},
+          style: RadixButtonStyles.surface(),
         ),
         RemixButton(
-          style: RadixButtonStyles.outline(),
           label: 'Outline',
           icon: Icons.crop_free,
           onPressed: () {},
+          style: RadixButtonStyles.outline(),
         ),
         RemixButton(
-          style: RadixButtonStyles.ghost(),
           label: 'Ghost',
           icon: Icons.visibility_off,
           onPressed: () {},
+          style: RadixButtonStyles.ghost(),
         ),
         RemixButton(
-          style: RadixButtonStyles.classic(),
           label: 'Classic',
           icon: Icons.style,
           onPressed: () {},
+          style: RadixButtonStyles.classic(),
         ),
       ],
     );
@@ -402,34 +409,34 @@ class _IconButtonsSection extends StatelessWidget {
       runSpacing: 12,
       children: [
         RemixIconButton(
-          style: RadixIconButtonStyles.solid(),
           icon: Icons.check_circle,
           onPressed: () {},
+          style: RadixIconButtonStyles.solid(),
         ),
         RemixIconButton(
-          style: RadixIconButtonStyles.soft(),
           icon: Icons.favorite,
           onPressed: () {},
+          style: RadixIconButtonStyles.soft(),
         ),
         RemixIconButton(
-          style: RadixIconButtonStyles.surface(),
           icon: Icons.layers,
           onPressed: () {},
+          style: RadixIconButtonStyles.surface(),
         ),
         RemixIconButton(
-          style: RadixIconButtonStyles.outline(),
           icon: Icons.crop_free,
           onPressed: () {},
+          style: RadixIconButtonStyles.outline(),
         ),
         RemixIconButton(
-          style: RadixIconButtonStyles.ghost(),
           icon: Icons.visibility_off,
           onPressed: () {},
+          style: RadixIconButtonStyles.ghost(),
         ),
         RemixIconButton(
-          style: RadixIconButtonStyles.classic(),
           icon: Icons.style,
           onPressed: () {},
+          style: RadixIconButtonStyles.classic(),
         ),
       ],
     );
@@ -437,36 +444,33 @@ class _IconButtonsSection extends StatelessWidget {
 }
 
 class _CheckboxSection extends StatelessWidget {
-  const _CheckboxSection({
-    required this.value,
-    required this.onChanged,
-  });
+  const _CheckboxSection({required this.value, required this.onChanged});
 
   final bool value;
-  final ValueChanged<bool> onChanged;
+  final ValueChanged<bool?> onChanged;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         RemixCheckbox(
-          style: RadixCheckboxStyles.classic(),
-          checked: value,
+          selected: value,
           onChanged: onChanged,
+          style: RadixCheckboxStyles.classic(),
           label: 'Classic Checkbox',
         ),
         const SizedBox(height: 8),
         RemixCheckbox(
-          style: RadixCheckboxStyles.surface(),
-          checked: value,
+          selected: value,
           onChanged: onChanged,
+          style: RadixCheckboxStyles.surface(),
           label: 'Surface Checkbox',
         ),
         const SizedBox(height: 8),
         RemixCheckbox(
-          style: RadixCheckboxStyles.soft(),
-          checked: value,
+          selected: value,
           onChanged: onChanged,
+          style: RadixCheckboxStyles.soft(),
           label: 'Soft Checkbox',
         ),
       ],
@@ -475,54 +479,46 @@ class _CheckboxSection extends StatelessWidget {
 }
 
 class _RadioSection extends StatelessWidget {
-  const _RadioSection({
-    required this.value,
-    required this.onChanged,
-  });
+  const _RadioSection({required this.value, required this.onChanged});
 
-  final String value;
-  final ValueChanged<String> onChanged;
+  final String? value;
+  final ValueChanged<String?> onChanged;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        RemixRadio(
-          style: RadixRadioStyles.classic(),
-          value: 'option1',
-          groupValue: value,
-          onChanged: onChanged,
-          label: 'Classic Option 1',
-        ),
-        const SizedBox(height: 8),
-        RemixRadio(
-          style: RadixRadioStyles.surface(),
-          value: 'option2',
-          groupValue: value,
-          onChanged: onChanged,
-          label: 'Surface Option 2',
-        ),
-        const SizedBox(height: 8),
-        RemixRadio(
-          style: RadixRadioStyles.soft(),
-          value: 'option3',
-          groupValue: value,
-          onChanged: onChanged,
-          label: 'Soft Option 3',
-        ),
-      ],
+    return RemixRadioGroup<String>(
+      groupValue: value,
+      onChanged: onChanged,
+      child: Column(
+        children: [
+          RemixRadio(
+            value: 'option1',
+            style: RadixRadioStyles.classic(),
+            label: 'Classic Option 1',
+          ),
+          const SizedBox(height: 8),
+          RemixRadio(
+            value: 'option2',
+            style: RadixRadioStyles.surface(),
+            label: 'Surface Option 2',
+          ),
+          const SizedBox(height: 8),
+          RemixRadio(
+            value: 'option3',
+            style: RadixRadioStyles.soft(),
+            label: 'Soft Option 3',
+          ),
+        ],
+      ),
     );
   }
 }
 
 class _SwitchSection extends StatelessWidget {
-  const _SwitchSection({
-    required this.value,
-    required this.onChanged,
-  });
+  const _SwitchSection({required this.value, required this.onChanged});
 
   final bool value;
-  final ValueChanged<bool> onChanged;
+  final ValueChanged<bool?> onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -531,9 +527,9 @@ class _SwitchSection extends StatelessWidget {
         Row(
           children: [
             RemixSwitch(
-              style: RadixSwitchStyles.classic(),
-              value: value,
+              selected: value,
               onChanged: onChanged,
+              style: RadixSwitchStyles.classic(),
             ),
             const SizedBox(width: 8),
             const Text('Classic Switch'),
@@ -543,9 +539,9 @@ class _SwitchSection extends StatelessWidget {
         Row(
           children: [
             RemixSwitch(
-              style: RadixSwitchStyles.surface(),
-              value: value,
+              selected: value,
               onChanged: onChanged,
+              style: RadixSwitchStyles.surface(),
             ),
             const SizedBox(width: 8),
             const Text('Surface Switch'),
@@ -555,9 +551,9 @@ class _SwitchSection extends StatelessWidget {
         Row(
           children: [
             RemixSwitch(
-              style: RadixSwitchStyles.soft(),
-              value: value,
+              selected: value,
               onChanged: onChanged,
+              style: RadixSwitchStyles.soft(),
             ),
             const SizedBox(width: 8),
             const Text('Soft Switch'),
@@ -576,18 +572,18 @@ class _TextFieldSection extends StatelessWidget {
     return Column(
       children: [
         RemixTextField(
+          hintText: 'Classic TextField',
           style: RadixTextFieldStyles.classic(),
-          placeholder: 'Classic TextField',
         ),
         const SizedBox(height: 12),
         RemixTextField(
+          hintText: 'Surface TextField',
           style: RadixTextFieldStyles.surface(),
-          placeholder: 'Surface TextField',
         ),
         const SizedBox(height: 12),
         RemixTextField(
+          hintText: 'Soft TextField',
           style: RadixTextFieldStyles.soft(),
-          placeholder: 'Soft TextField',
         ),
       ],
     );
@@ -603,10 +599,10 @@ class _BadgeSection extends StatelessWidget {
       spacing: 8,
       runSpacing: 8,
       children: [
-        RemixBadge(style: RadixBadgeStyles.solid(), text: 'Solid'),
-        RemixBadge(style: RadixBadgeStyles.soft(), text: 'Soft'),
-        RemixBadge(style: RadixBadgeStyles.surface(), text: 'Surface'),
-        RemixBadge(style: RadixBadgeStyles.outline(), text: 'Outline'),
+        RemixBadge(label: 'Solid', style: RadixBadgeStyles.solid()),
+        RemixBadge(label: 'Soft', style: RadixBadgeStyles.soft()),
+        RemixBadge(label: 'Surface', style: RadixBadgeStyles.surface()),
+        RemixBadge(label: 'Outline', style: RadixBadgeStyles.outline()),
       ],
     );
   }
@@ -621,11 +617,11 @@ class _ProgressSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        RemixProgress(style: RadixProgressStyles.classic(), value: value),
+        RemixProgress(value: value, style: RadixProgressStyles.classic()),
         const SizedBox(height: 12),
-        RemixProgress(style: RadixProgressStyles.surface(), value: value),
+        RemixProgress(value: value, style: RadixProgressStyles.surface()),
         const SizedBox(height: 12),
-        RemixProgress(style: RadixProgressStyles.soft(), value: value),
+        RemixProgress(value: value, style: RadixProgressStyles.soft()),
       ],
     );
   }
@@ -640,19 +636,16 @@ class _SpinnerSection extends StatelessWidget {
       spacing: 16,
       runSpacing: 16,
       children: [
-        RemixSpinner(style: RadixSpinnerStyles.defaultStyle(size: 1)),
-        RemixSpinner(style: RadixSpinnerStyles.defaultStyle(size: 2)),
-        RemixSpinner(style: RadixSpinnerStyles.defaultStyle(size: 3)),
+        RemixSpinner(style: RadixSpinnerStyles.size1()),
+        RemixSpinner(style: RadixSpinnerStyles.size2()),
+        RemixSpinner(style: RadixSpinnerStyles.size3()),
       ],
     );
   }
 }
 
 class _SliderSection extends StatelessWidget {
-  const _SliderSection({
-    required this.value,
-    required this.onChanged,
-  });
+  const _SliderSection({required this.value, required this.onChanged});
 
   final double value;
   final ValueChanged<double> onChanged;
@@ -662,21 +655,21 @@ class _SliderSection extends StatelessWidget {
     return Column(
       children: [
         RemixSlider(
+          onChanged: onChanged,
+          value: value,
           style: RadixSliderStyles.classic(),
-          value: value,
-          onChanged: onChanged,
         ),
         const SizedBox(height: 16),
         RemixSlider(
+          onChanged: onChanged,
+          value: value,
           style: RadixSliderStyles.surface(),
-          value: value,
-          onChanged: onChanged,
         ),
         const SizedBox(height: 16),
         RemixSlider(
-          style: RadixSliderStyles.soft(),
-          value: value,
           onChanged: onChanged,
+          value: value,
+          style: RadixSliderStyles.soft(),
         ),
       ],
     );

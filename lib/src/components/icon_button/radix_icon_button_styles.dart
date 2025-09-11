@@ -3,7 +3,7 @@
 
 import 'package:flutter/material.dart';
 
-import '../../theme/radix_tokens.dart';
+import '../../radix/radix.dart';
 import '../spinner/spinner.dart';
 import 'icon_button.dart';
 

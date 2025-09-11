@@ -3,7 +3,7 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:mix/mix.dart';
-import '../components/spinner/spinner.dart';
+import '../../components/spinner/spinner.dart';
 
 /// Mixin that provides convenient spinner styling methods for component styles.
 /// 

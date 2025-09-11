@@ -6,9 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:mix/mix.dart';
 import 'package:naked_ui/naked_ui.dart';
 import '../../theme/remix_tokens.dart';
-import '../../utilities/label_style_mixin.dart';
-import '../../utilities/icon_style_mixin.dart';
-import '../../utilities/spinner_style_mixin.dart';
+import '../../radix/radix.dart';
+import '../../style/style.dart';
 import '../../utilities/remix_style.dart';
 
 import '../_internal/widget_state_controller_mixin.dart';
