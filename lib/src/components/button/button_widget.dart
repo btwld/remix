@@ -211,7 +211,7 @@ class _RemixButtonState extends State<RemixButton>
                     strokeWidth: spinnerSpec.strokeWidth,
                     color: spinnerSpec.color,
                     duration: spinnerSpec.duration,
-                    style: spinnerSpec.style,
+                    type: spinnerSpec.spinnerType,
                   ),
                 ),
               );
@@ -228,10 +228,7 @@ class _RemixButtonState extends State<RemixButton>
               maintainSize: true,
               child: Row(
                 mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (iconWidget != null) iconWidget,
-                  textWidget,
-                ],
+                children: [if (iconWidget != null) iconWidget, textWidget],
               ),
             ),
           ],

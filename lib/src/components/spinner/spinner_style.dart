@@ -13,14 +13,14 @@ class RemixSpinnerStyle extends Style<SpinnerSpec>
   final Prop<double>? $strokeWidth;
   final Prop<Color>? $color;
   final Prop<Duration>? $duration;
-  final Prop<SpinnerType>? $style;
+  final Prop<SpinnerType>? $type;
 
   const RemixSpinnerStyle.create({
     Prop<double>? size,
     Prop<double>? strokeWidth,
     Prop<Color>? color,
     Prop<Duration>? duration,
-    Prop<SpinnerType>? style,
+    Prop<SpinnerType>? type,
     super.variants,
     super.animation,
     super.modifier,
@@ -28,14 +28,14 @@ class RemixSpinnerStyle extends Style<SpinnerSpec>
         $strokeWidth = strokeWidth,
         $color = color,
         $duration = duration,
-        $style = style;
+        $type = type;
 
   RemixSpinnerStyle({
     double? size,
     double? strokeWidth,
     Color? color,
     Duration? duration,
-    SpinnerType? style,
+    SpinnerType? type,
     AnimationConfig? animation,
     List<VariantStyle<SpinnerSpec>>? variants,
     ModifierConfig? modifier,
@@ -44,7 +44,7 @@ class RemixSpinnerStyle extends Style<SpinnerSpec>
           strokeWidth: Prop.maybe(strokeWidth),
           color: Prop.maybe(color),
           duration: Prop.maybe(duration),
-          style: Prop.maybe(style),
+          type: Prop.maybe(type),
           variants: variants,
           animation: animation,
           modifier: modifier,
@@ -68,7 +68,7 @@ class RemixSpinnerStyle extends Style<SpinnerSpec>
   }
 
   RemixSpinnerStyle spinnerType(SpinnerType value) {
-    return merge(RemixSpinnerStyle(style: value));
+    return merge(RemixSpinnerStyle(type: value));
   }
 
   // Animate support
@@ -100,7 +100,7 @@ class RemixSpinnerStyle extends Style<SpinnerSpec>
         strokeWidth: MixOps.resolve(context, $strokeWidth),
         color: MixOps.resolve(context, $color),
         duration: MixOps.resolve(context, $duration),
-        style: MixOps.resolve(context, $style),
+        type: MixOps.resolve(context, $type),
       ),
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
@@ -116,7 +116,7 @@ class RemixSpinnerStyle extends Style<SpinnerSpec>
       strokeWidth: MixOps.merge($strokeWidth, other.$strokeWidth),
       color: MixOps.merge($color, other.$color),
       duration: MixOps.merge($duration, other.$duration),
-      style: MixOps.merge($style, other.$style),
+      type: MixOps.merge($type, other.$type),
       variants: MixOps.mergeVariants($variants, other.$variants),
       animation: MixOps.mergeAnimation($animation, other.$animation),
       modifier: MixOps.mergeModifier($modifier, other.$modifier),
@@ -129,7 +129,7 @@ class RemixSpinnerStyle extends Style<SpinnerSpec>
         $strokeWidth,
         $color,
         $duration,
-        $style,
+        $type,
         $variants,
         $animation,
         $modifier,
@@ -144,7 +144,7 @@ class RemixSpinnerStyles {
         strokeWidth: _kStrokeMd,
         color: RemixTokens.primary(),
         duration: const Duration(milliseconds: _kDurationMs),
-        style: SpinnerType.solid,
+        type: SpinnerType.solid,
       );
 
 }

@@ -176,7 +176,7 @@ class _RemixIconButtonState extends State<RemixIconButton>
                     strokeWidth: spinnerSpec.strokeWidth,
                     color: spinnerSpec.color,
                     duration: spinnerSpec.duration,
-                    style: spinnerSpec.style,
+                    type: spinnerSpec.spinnerType,
                   ),
                 ),
               );

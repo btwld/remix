@@ -115,7 +115,8 @@ class RemixIconButtonStyle extends Style<IconButtonSpec>
   /// Sets constraints
   RemixIconButtonStyle constraints(BoxConstraintsMix value) {
     return merge(
-        RemixIconButtonStyle(container: BoxStyler(constraints: value)));
+      RemixIconButtonStyle(container: BoxStyler(constraints: value)),
+    );
   }
 
   // Animation support
@@ -235,7 +236,7 @@ class RemixIconButtonStyles {
           strokeWidth: 1.5,
           color: RemixTokens.onPrimary(),
           duration: const Duration(milliseconds: 1000),
-          style: SpinnerType.solid,
+          type: SpinnerType.solid,
         ),
       )
           .onHovered(
