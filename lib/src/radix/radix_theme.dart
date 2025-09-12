@@ -5,6 +5,7 @@ import 'package:mix/mix.dart';
 
 import 'computed.dart' as radix_comp;
 import 'types.dart' as radix;
+// OKLab mixing lives in computed.dart; no direct dependency here.
 
 /// Design tokens for the Radix UI system, providing access to all colors, spacing, typography, and other design primitives.
 ///
@@ -267,6 +268,18 @@ class RadixTokens {
   static const gray12 = ColorToken('radix.gray.12');
 
   // ============================================================================
+  // GRAY ROLE TOKENS (parity with generated JSON roles)
+  // ============================================================================
+  /// Neutral surface baseline for the selected gray scale (matches JSON surface)
+  static const graySurface = ColorToken('radix.gray.surface');
+  /// Neutral indicator color (typically gray step 9)
+  static const grayIndicator = ColorToken('radix.gray.indicator');
+  /// Neutral track color (typically gray step 9)
+  static const grayTrack = ColorToken('radix.gray.track');
+  /// Contrast color for content over neutral solid backgrounds (white)
+  static const grayContrast = ColorToken('radix.gray.contrast');
+
+  // ============================================================================
   // COMMONLY USED ALPHA VARIANTS
   // ============================================================================
   
@@ -285,6 +298,23 @@ class RadixTokens {
   /// Translucent version of the focus color, useful for
   /// focus indicators that need to work over different backgrounds.
   static const accentA8 = ColorToken('radix.accent.a8');
+
+  // ============================================================================
+  // NEUTRALS FOR SHADOWS (HELPER TOKENS)
+  // ============================================================================
+  /// Gray alpha step used in Radix shadow border mixes.
+  static const grayA6 = ColorToken('radix.gray.a6');
+
+  /// Black alpha steps used in layered shadows.
+  static const blackA3 = ColorToken('radix.black.a3');
+  static const blackA4 = ColorToken('radix.black.a4');
+  static const blackA5 = ColorToken('radix.black.a5');
+  static const blackA6 = ColorToken('radix.black.a6');
+  static const blackA7 = ColorToken('radix.black.a7');
+  static const blackA11 = ColorToken('radix.black.a11');
+
+  /// OKLab-mixed shadow stroke: color-mix(in oklab, gray-a6, gray-6 25%).
+  static const shadowStroke = ColorToken('radix.shadow.stroke');
 
   // ============================================================================
   // SPACING SCALE (9 STEPS)
@@ -618,22 +648,39 @@ Widget createRadixScope({
     RadixTokens.gray10: tokens.gray.step(10),
     RadixTokens.gray11: tokens.gray.step(11),
     RadixTokens.gray12: tokens.gray.step(12),
+    // Gray role tokens (from resolved colors)
+    RadixTokens.graySurface: tokens.graySurface,
+    RadixTokens.grayIndicator: tokens.grayIndicator,
+    RadixTokens.grayTrack: tokens.grayTrack,
+    RadixTokens.grayContrast: tokens.grayContrast,
     RadixTokens.accentA3: tokens.accent.alphaStep(3),
     RadixTokens.accentA4: tokens.accent.alphaStep(4),
     RadixTokens.accentA8: tokens.accent.alphaStep(8),
+    // Neutral helpers exposed as tokens from resolved colors
+    RadixTokens.grayA6: tokens.grayA6,
+    RadixTokens.blackA3: tokens.blackA3,
+    RadixTokens.blackA4: tokens.blackA4,
+    RadixTokens.blackA5: tokens.blackA5,
+    RadixTokens.blackA6: tokens.blackA6,
+    RadixTokens.blackA7: tokens.blackA7,
+    RadixTokens.blackA11: tokens.blackA11,
+    // Shadow stroke (OKLab mix)
+    RadixTokens.shadowStroke: tokens.shadowStroke,
   };
 
+  // Build base tokens map
   final allTokens = <MixToken, Object>{
     ...colorTokens,
+    // Defaults (may be overridden by JSON tokens below)
     RadixTokens.space1: 4.0,
     RadixTokens.space2: 8.0,
     RadixTokens.space3: 12.0,
     RadixTokens.space4: 16.0,
-    RadixTokens.space5: 20.0,
-    RadixTokens.space6: 24.0,
-    RadixTokens.space7: 28.0,
-    RadixTokens.space8: 32.0,
-    RadixTokens.space9: 36.0,
+    RadixTokens.space5: 24.0,
+    RadixTokens.space6: 32.0,
+    RadixTokens.space7: 40.0,
+    RadixTokens.space8: 48.0,
+    RadixTokens.space9: 64.0,
     RadixTokens.radius1: const Radius.circular(3.0),
     RadixTokens.radius2: const Radius.circular(4.0),
     RadixTokens.radius3: const Radius.circular(6.0),
@@ -643,31 +690,75 @@ Widget createRadixScope({
     RadixTokens.radiusFull: const Radius.circular(9999.0),
 
     // Shadow lists
-    RadixTokens.shadow1: const [
-      BoxShadow(color: Color(0x14000000), offset: Offset(0, 1), blurRadius: 2),
-    ],
-    RadixTokens.shadow2: const [
-      BoxShadow(color: Color(0x1A000000), offset: Offset(0, 2), blurRadius: 4),
-    ],
-    RadixTokens.shadow3: const [
-      BoxShadow(color: Color(0x1F000000), offset: Offset(0, 4), blurRadius: 8),
-    ],
-    RadixTokens.shadow4: const [
-      BoxShadow(color: Color(0x26000000), offset: Offset(0, 6), blurRadius: 12),
-    ],
-    RadixTokens.shadow5: const [
+    // Layered shadows approximating Radix Themes CSS tokens
+    // shadow-1: Radix uses inset layers; Flutter lacks inset. Approximate with subtle stroke + small ambient.
+    RadixTokens.shadow1: [
       BoxShadow(
-        color: Color(0x2B000000),
-        offset: Offset(0, 10),
-        blurRadius: 20,
+        color: colorTokens[RadixTokens.grayA6] as Color,
+        offset: const Offset(0, 0),
+        blurRadius: 0,
+        spreadRadius: 1,
+      ),
+      BoxShadow(
+        color: colorTokens[RadixTokens.blackA5] as Color,
+        offset: const Offset(0, 1),
+        blurRadius: 2,
+        spreadRadius: 0,
       ),
     ],
-    RadixTokens.shadow6: const [
+    // shadow-2
+    RadixTokens.shadow2: [
+      // 0 0 0 1px color-mix(in oklab, gray-a6, gray-6 25%)
       BoxShadow(
-        color: Color(0x33000000),
-        offset: Offset(0, 14),
-        blurRadius: 28,
+        color: colorTokens[RadixTokens.shadowStroke] as Color,
+        offset: const Offset(0, 0),
+        blurRadius: 0,
+        spreadRadius: 1,
       ),
+      // 0 0 0 0.5px black-a3 -> approximate with small blur instead of half-px spread
+      BoxShadow(color: colorTokens[RadixTokens.blackA3] as Color, offset: const Offset(0, 0), blurRadius: 0.5, spreadRadius: 0),
+      // 0 1px 1px 0 black-a6
+      BoxShadow(color: colorTokens[RadixTokens.blackA6] as Color, offset: const Offset(0, 1), blurRadius: 1, spreadRadius: 0),
+      // 0 2px 1px -1px black-a6
+      BoxShadow(color: colorTokens[RadixTokens.blackA6] as Color, offset: const Offset(0, 2), blurRadius: 1, spreadRadius: -1),
+      // 0 1px 3px 0 black-a5
+      BoxShadow(color: colorTokens[RadixTokens.blackA5] as Color, offset: const Offset(0, 1), blurRadius: 3, spreadRadius: 0),
+    ],
+    // shadow-3
+    RadixTokens.shadow3: [
+      BoxShadow(color: colorTokens[RadixTokens.shadowStroke] as Color, offset: const Offset(0, 0), blurRadius: 0, spreadRadius: 1),
+      // 0 2px 3px -2px black-a3
+      BoxShadow(color: colorTokens[RadixTokens.blackA3] as Color, offset: const Offset(0, 2), blurRadius: 3, spreadRadius: -2),
+      // 0 3px 8px -2px black-a6
+      BoxShadow(color: colorTokens[RadixTokens.blackA6] as Color, offset: const Offset(0, 3), blurRadius: 8, spreadRadius: -2),
+      // 0 4px 12px -4px black-a7
+      BoxShadow(color: colorTokens[RadixTokens.blackA7] as Color, offset: const Offset(0, 4), blurRadius: 12, spreadRadius: -4),
+    ],
+    // shadow-4
+    RadixTokens.shadow4: [
+      BoxShadow(color: colorTokens[RadixTokens.shadowStroke] as Color, offset: const Offset(0, 0), blurRadius: 0, spreadRadius: 1),
+      // 0 8px 40px black-a3
+      BoxShadow(color: colorTokens[RadixTokens.blackA3] as Color, offset: const Offset(0, 8), blurRadius: 40, spreadRadius: 0),
+      // 0 12px 32px -16px black-a5
+      BoxShadow(color: colorTokens[RadixTokens.blackA5] as Color, offset: const Offset(0, 12), blurRadius: 32, spreadRadius: -16),
+    ],
+    // shadow-5
+    RadixTokens.shadow5: [
+      BoxShadow(color: colorTokens[RadixTokens.shadowStroke] as Color, offset: const Offset(0, 0), blurRadius: 0, spreadRadius: 1),
+      // 0 12px 60px black-a5
+      BoxShadow(color: colorTokens[RadixTokens.blackA5] as Color, offset: const Offset(0, 12), blurRadius: 60, spreadRadius: 0),
+      // 0 12px 32px -16px black-a7
+      BoxShadow(color: colorTokens[RadixTokens.blackA7] as Color, offset: const Offset(0, 12), blurRadius: 32, spreadRadius: -16),
+    ],
+    // shadow-6
+    RadixTokens.shadow6: [
+      BoxShadow(color: colorTokens[RadixTokens.shadowStroke] as Color, offset: const Offset(0, 0), blurRadius: 0, spreadRadius: 1),
+      // 0 12px 60px black-a4
+      BoxShadow(color: colorTokens[RadixTokens.blackA4] as Color, offset: const Offset(0, 12), blurRadius: 60, spreadRadius: 0),
+      // 0 16px 64px black-a6
+      BoxShadow(color: colorTokens[RadixTokens.blackA6] as Color, offset: const Offset(0, 16), blurRadius: 64, spreadRadius: 0),
+      // 0 16px 36px -20px black-a11
+      BoxShadow(color: colorTokens[RadixTokens.blackA11] as Color, offset: const Offset(0, 16), blurRadius: 36, spreadRadius: -20),
     ],
     RadixTokens.borderWidth1: 1.0,
     RadixTokens.borderWidth2: 2.0,
@@ -712,7 +803,8 @@ Widget createRadixScope({
     // Font weights (token values)
     RadixTokens.fontWeightRegular: FontWeight.w400,
     RadixTokens.fontWeightMedium: FontWeight.w500,
-    RadixTokens.fontWeightBold: FontWeight.w600,
+    // Match Radix Themes font weights (bold = 700)
+    RadixTokens.fontWeightBold: FontWeight.w700,
 
     // Durations (token values)
     RadixTokens.transitionFast: Duration(milliseconds: 100),
@@ -725,6 +817,8 @@ Widget createRadixScope({
     child: child,
   );
 }
+
+// OKLab mixing implemented in computed.dart; no helper here.
 
 /// Immutable configuration object for Radix theme settings.
 ///
