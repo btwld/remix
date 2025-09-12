@@ -2,80 +2,162 @@ library radix_colors; // moved to radix/colors/
 
 import 'package:flutter/painting.dart';
 
-part 'black_white.dart';
-part 'dark.dart';
-part 'light.dart';
+part 'colors_generated.dart';
 
-class RadixColors {
-  final ColorSwatch<int> swatch;
-  final ColorSwatch<int> alphaSwatch;
+// Radix color families
+//
+// Accent colors:
+// - amber, blue, bronze, brown, crimson, cyan, gold, grass, gray,
+//   green, indigo, iris, jade, lime, mauve, mint, olive, orange,
+//   pink, plum, purple, red, ruby, sand, sage, sky, slate, teal,
+//   tomato, violet, yellow
+//
+// Gray colors (neutral families):
+// - gray:  Pure gray
+// - mauve: Purple-tinted gray
+// - slate: Blue-tinted gray
+// - sage:  Green-tinted gray
+// - olive: Yellow-green tinted gray
+// - sand:  Yellow-tinted gray
 
-  static const amber = RadixColors(_amber, _amberAlpha);
-  static const amberDark = RadixColors(_amberDark, _amberDarkAlpha);
-  // ignore: unused_field
-  static const blackAlpha = RadixColors(_blackAlpha, _blackAlpha);
-  static const blue = RadixColors(_blue, _blueAlpha);
-  static const blueDark = RadixColors(_blueDark, _blueDarkAlpha);
-  static const bronze = RadixColors(_bronze, _bronzeAlpha);
-  static const bronzeDark = RadixColors(_bronzeDark, _bronzeDarkAlpha);
-  static const brown = RadixColors(_brown, _brownAlpha);
-  static const brownDark = RadixColors(_brownDark, _brownDarkAlpha);
-  static const crimson = RadixColors(_crimson, _crimsonAlpha);
-  static const crimsonDark = RadixColors(_crimsonDark, _crimsonDarkAlpha);
-  static const cyan = RadixColors(_cyan, _cyanAlpha);
-  static const cyanDark = RadixColors(_cyanDark, _cyanDarkAlpha);
-  static const gold = RadixColors(_gold, _goldAlpha);
-  static const goldDark = RadixColors(_goldDark, _goldDarkAlpha);
-  static const grass = RadixColors(_grass, _grassAlpha);
-  static const grassDark = RadixColors(_grassDark, _grassDarkAlpha);
-  static const gray = RadixColors(_gray, _grayAlpha);
-  static const grayDark = RadixColors(_grayDark, _grayDarkAlpha);
-  static const green = RadixColors(_green, _greenAlpha);
-  static const greenDark = RadixColors(_greenDark, _greenDarkAlpha);
-  static const indigo = RadixColors(_indigo, _indigoAlpha);
-  static const indigoDark = RadixColors(_indigoDark, _indigoDarkAlpha);
-  static const iris = RadixColors(_iris, _irisAlpha);
-  static const irisDark = RadixColors(_irisDark, _irisDarkAlpha);
-  static const jade = RadixColors(_jade, _jadeAlpha);
-  static const jadeDark = RadixColors(_jadeDark, _jadeDarkAlpha);
-  static const lime = RadixColors(_lime, _limeAlpha);
-  static const limeDark = RadixColors(_limeDark, _limeDarkAlpha);
-  static const mauve = RadixColors(_mauve, _mauveAlpha);
-  static const mauveDark = RadixColors(_mauveDark, _mauveDarkAlpha);
-  static const mint = RadixColors(_mint, _mintAlpha);
-  static const mintDark = RadixColors(_mintDark, _mintDarkAlpha);
-  static const orange = RadixColors(_orange, _orangeAlpha);
-  static const orangeDark = RadixColors(_orangeDark, _orangeDarkAlpha);
-  static const pink = RadixColors(_pink, _pinkAlpha);
-  static const pinkDark = RadixColors(_pinkDark, _pinkDarkAlpha);
-  static const plum = RadixColors(_plum, _plumAlpha);
-  static const plumDark = RadixColors(_plumDark, _plumDarkAlpha);
-  static const purple = RadixColors(_purple, _purpleAlpha);
-  static const purpleDark = RadixColors(_purpleDark, _purpleDarkAlpha);
-  static const red = RadixColors(_red, _redAlpha);
-  static const redDark = RadixColors(_redDark, _redDarkAlpha);
-  static const ruby = RadixColors(_ruby, _rubyAlpha);
-  static const rubyDark = RadixColors(_rubyDark, _rubyDarkAlpha);
-  static const sand = RadixColors(_sand, _sandAlpha);
-  static const sandDark = RadixColors(_sandDark, _sandDarkAlpha);
-  static const sky = RadixColors(_sky, _skyAlpha);
-  static const skyDark = RadixColors(_skyDark, _skyDarkAlpha);
-  static const slate = RadixColors(_slate, _slateAlpha);
-  static const slateDark = RadixColors(_slateDark, _slateDarkAlpha);
-  static const teal = RadixColors(_teal, _tealAlpha);
-  static const tealDark = RadixColors(_tealDark, _tealDarkAlpha);
-  static const tomato = RadixColors(_tomato, _tomatoAlpha);
-  static const tomatoDark = RadixColors(_tomatoDark, _tomatoDarkAlpha);
-  static const violet = RadixColors(_violet, _violetAlpha);
-  static const violetDark = RadixColors(_violetDark, _violetDarkAlpha);
-  static const yellow = RadixColors(_yellow, _yellowAlpha);
-  static const yellowDark = RadixColors(_yellowDark, _yellowDarkAlpha);
-  static const olive = RadixColors(_olive, _oliveAlpha);
-  static const oliveDark = RadixColors(_oliveDark, _oliveDarkAlpha);
-  // ignore: unused_field
-  static const whiteAlpha = RadixColors(_whiteAlpha, _whiteAlpha);
-  static const sage = RadixColors(_sage, _sageAlpha);
-  static const sageDark = RadixColors(_sageDark, _sageDarkAlpha);
+class RadixColor {
+  final RadixColorScale scale;
+  final Color surface;
+  final Color indicator;
+  final Color track;
+  final Color contrast;
 
-  const RadixColors(this.swatch, this.alphaSwatch);
+  const RadixColor(
+    this.scale,
+    this.surface,
+    this.indicator,
+    this.track,
+    this.contrast,
+  );
+}
+
+class RadixColorTheme {
+  final RadixColor light;
+  final RadixColor dark;
+
+  const RadixColorTheme(this.light, this.dark);
+}
+
+class RadixColorScale {
+  final ColorSwatch<int> solid;
+  final ColorSwatch<int> alpha;
+
+  const RadixColorScale(this.solid, this.alpha);
+
+  // ============================================================================
+  // SEMANTIC COLOR ACCESSORS
+  // ============================================================================
+  //
+  // These getters provide semantic access to color steps based on their
+  // intended usage in the Radix design system. Use these instead of direct
+  // step numbers when possible for better code readability and maintenance.
+  //
+
+  // Steps 1-2: App and layout backgrounds
+  /// The most subtle background color (step 1).
+  ///
+  /// Use for main app backgrounds and large layout areas.
+  /// Provides subtle color presence without interfering with content.
+  Color get appBackground => step(1);
+
+  /// Subtle background with slightly more presence (step 2).
+  ///
+  /// Good for cards, panels, and content areas that need slight
+  /// visual separation from the main background.
+  Color get subtleBackground => step(2);
+
+  // Steps 3-5: Interactive component backgrounds
+  /// Default background for interactive components (step 3).
+  ///
+  /// Use for buttons, form inputs, and other interactive elements
+  /// in their resting state.
+  Color get componentBackground => step(3);
+
+  /// Background color for components on hover (step 4).
+  ///
+  /// Provides clear feedback when users hover over interactive elements.
+  Color get componentBackgroundHover => step(4);
+
+  /// Background color for active/pressed components (step 5).
+  ///
+  /// Used when components are pressed, selected, or in an active state.
+  Color get componentBackgroundActive => step(5);
+
+  // Steps 6-8: Borders and separators
+  /// Subtle border color for gentle separation (step 6).
+  ///
+  /// Use for dividers and borders that should be present but not prominent.
+  Color get subtleBorder => step(6);
+
+  /// Standard border color for components (step 7).
+  ///
+  /// Default border for form inputs, cards, and interactive elements.
+  Color get componentBorder => step(7);
+
+  /// Border color for hover and focus states (step 8).
+  ///
+  /// Provides visual feedback for interactive borders and focus rings.
+  Color get componentBorderHover => step(8);
+
+  // Steps 9-10: Solid accent backgrounds
+  /// Primary solid background color (step 9).
+  ///
+  /// The main brand/accent color for buttons, badges, and prominent elements.
+  /// This is typically what users recognize as "the brand color".
+  Color get solidBackground => step(9);
+
+  /// Solid background color on hover (step 10).
+  ///
+  /// Darker/lighter variant of step 9 for hover states on solid elements.
+  Color get solidBackgroundHover => step(10);
+
+  // Steps 11-12: Text and content colors
+  /// Low contrast text color (step 11).
+  ///
+  /// For secondary text, descriptions, and content that should be
+  /// readable but not prominent. Still meets accessibility standards.
+  Color get lowContrastText => step(11);
+
+  /// High contrast text color (step 12).
+  ///
+  /// For primary text, headings, and content requiring maximum readability.
+  /// Provides the highest contrast while maintaining color harmony.
+  Color get highContrastText => step(12);
+
+  // ============================================================================
+  // DIRECT STEP ACCESS
+  // ============================================================================
+
+  /// Gets a solid color from the 12-step scale.
+  ///
+  /// Steps must be between 1 and 12. Each step has semantic meaning
+  /// in the Radix color system - prefer using the semantic getters
+  /// (like [componentBackground]) when possible for better code clarity.
+  ///
+  /// Falls back to step 9 (solid background) if the requested step
+  /// is not available in the color swatch.
+  Color step(int n) {
+    assert(n >= 1 && n <= 12, 'Step must be between 1 and 12');
+
+    return solid[n] ?? solid[9]!;
+  }
+
+  /// Gets a translucent color from the 12-step alpha scale.
+  ///
+  /// Alpha variants maintain the original color's saturation when composited,
+  /// unlike simple opacity adjustments. This creates more vibrant and
+  /// visually consistent translucent effects.
+  ///
+  /// Steps correspond to the same semantic meanings as solid colors.
+  /// Falls back to alpha step 9 if the requested step is not available.
+  Color alphaStep(int n) {
+    assert(n >= 1 && n <= 12, 'Step must be between 1 and 12');
+
+    return alpha[n] ?? alpha[9]!;
+  }
 }

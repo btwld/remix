@@ -57,14 +57,14 @@ const Color _neutralSurfaceDark = Color(0x80212121); // ≈50% #212121
 ///
 /// **Usage in Components:**
 /// - Button text on solid accent buttons
-/// - Badge text on solid accent badges  
+/// - Badge text on solid accent badges
 /// - Any foreground content over solid accent backgrounds
 ///
 /// Example:
 /// ```dart
 /// // White for most colors
 /// _accentContrastFor(RadixAccentColor.blue)  // → #FFFFFF
-/// 
+///
 /// // Near-black for bright colors
 /// _accentContrastFor(RadixAccentColor.lime)  // → #1D211C
 /// ```
@@ -108,6 +108,27 @@ double? _darkTrackMixTowards9For(RadixAccentColor accent) => switch (accent) {
       // ignore: avoid-wildcard-cases-with-enums
       _ => null,
     };
+
+// ============================================================================
+// GENERIC COLOR MIXING (CSS parity)
+// ============================================================================
+
+/// Mixes two colors in OKLab like CSS `color-mix(in oklab, A, B p%)`.
+///
+/// - [a]: first color (equivalent to CSS A)
+/// - [b]: second color (equivalent to CSS B)
+/// - [bPercent]: percentage towards [b] (0..100)
+Color computeColorMixOklab({
+  required Color a,
+  required Color b,
+  required double bPercent,
+}) {
+  final t = (bPercent.isNaN ? 0.0 : bPercent).clamp(0.0, 100.0) / 100.0;
+  final oa = a.toRayRgb8().toOklab();
+  final ob = b.toRayRgb8().toOklab();
+
+  return oa.lerp(ob, t).toRgb8().toColor();
+}
 
 // ============================================================================
 // FUNCTIONAL / COMPUTED IMPLEMENTATIONS
@@ -209,10 +230,11 @@ Color computeAccentTrack({
   final mix = _darkTrackMixTowards9For(accentKind);
   if (mix == null) return accent.step(9);
 
-  final o8 = accent.step(8).toRayRgb8().toOklab();
-  final o9 = accent.step(9).toRayRgb8().toOklab();
-
-  return o8.lerp(o9, mix).toRgb8().toColor();
+  return computeColorMixOklab(
+    a: accent.step(8),
+    b: accent.step(9),
+    bPercent: mix * 100.0,
+  );
 }
 
 /// Computes a subtle accent-tinted surface for soft interactive elements.
@@ -278,6 +300,7 @@ Color computeAccentSurface({
 /// // Use in focus ring: Style($box.border.color(focusColor))
 /// ```
 Color computeFocus8(RadixColorScale accent) => accent.step(8);
+
 /// Computes translucent focus ring color from the accent scale.
 ///
 /// **Alternative to Solid Focus:**
@@ -429,6 +452,16 @@ Color computeNeutralSurface({required bool isDark}) =>
     isDark ? _neutralSurfaceDark : _neutralSurfaceLight;
 
 // ============================================================================
+// SHADOWS
+// ============================================================================
+
+/// Computes the OKLab-mixed shadow stroke color used in Radix shadows.
+///
+/// Matches: color-mix(in oklab, var(--gray-a6), var(--gray-6) 25%)
+Color computeShadowStroke(RadixColorScale gray) =>
+    computeColorMixOklab(a: gray.alphaStep(6), b: gray.step(6), bPercent: 25);
+
+// ============================================================================
 // RESOLVER (merged from resolver.dart)
 // ============================================================================
 
@@ -456,7 +489,7 @@ Color computeNeutralSurface({required bool isDark}) =>
 /// ```dart
 /// final theme = RadixTheme(accent: RadixAccentColor.blue, isDark: false);
 /// final colors = resolveRadixTokens(theme);
-/// 
+///
 /// // Access computed colors
 /// final buttonColor = colors.accent.solidBackground;
 /// final textColor = colors.accentContrast;
@@ -464,6 +497,13 @@ Color computeNeutralSurface({required bool isDark}) =>
 class RadixThemeColors {
   final RadixColorScale accent;
   final RadixColorScale gray;
+  final RadixColorScale blackAlpha;
+  final RadixColorScale whiteAlpha;
+  // Gray (neutral) role colors to mirror generated JSON roles
+  final Color graySurface; // neutral surface baseline
+  final Color grayIndicator; // usually gray.step(9)
+  final Color grayTrack; // usually gray.step(9)
+  final Color grayContrast; // usually white
   final Color colorBackground;
   final Color colorSurface;
   final Color colorPanelSolid;
@@ -475,10 +515,25 @@ class RadixThemeColors {
   final Color accentTrack;
   final Color focus8;
   final Color focusA8;
+  // Neutral helpers for shadows
+  final Color grayA6;
+  final Color blackA3;
+  final Color blackA4;
+  final Color blackA5;
+  final Color blackA6;
+  final Color blackA7;
+  final Color blackA11;
+  final Color shadowStroke;
 
   const RadixThemeColors({
     required this.accent,
     required this.gray,
+    required this.blackAlpha,
+    required this.whiteAlpha,
+    required this.graySurface,
+    required this.grayIndicator,
+    required this.grayTrack,
+    required this.grayContrast,
     required this.colorBackground,
     required this.colorSurface,
     required this.colorPanelSolid,
@@ -490,6 +545,14 @@ class RadixThemeColors {
     required this.accentTrack,
     required this.focus8,
     required this.focusA8,
+    required this.grayA6,
+    required this.blackA3,
+    required this.blackA4,
+    required this.blackA5,
+    required this.blackA6,
+    required this.blackA7,
+    required this.blackA11,
+    required this.shadowStroke,
   });
 }
 
@@ -538,96 +601,6 @@ const Map<RadixGrayColor, _ScalePair> _grayPairs = {
   RadixGrayColor.sand: (RadixColors.sand, RadixColors.sandDark),
 };
 
-RadixColorScale _scaleFromPair(_ScalePair pair, bool isDark) {
-  final colors = isDark ? pair.$2 : pair.$1;
-
-  return RadixColorScale(colors.swatch, colors.alphaSwatch);
-}
-
-RadixColorScale _getAccentScale(RadixAccentColor color, bool isDark) {
-  final pair = _accentPairs[color];
-  assert(pair != null, 'Unsupported accent color: $color');
-
-  return _scaleFromPair(pair!, isDark);
-}
-
-RadixColorScale _getGrayScale(RadixGrayColor color, bool isDark) {
-  final pair = _grayPairs[color];
-  assert(pair != null, 'Unsupported gray color: $color');
-
-  return _scaleFromPair(pair!, isDark);
-}
-
-final Map<String, RadixThemeColors> _resolvedCache = {};
-
-/// Resolves a complete [RadixThemeColors] object from theme configuration.
-///
-/// This is the main entry point for computing all Radix design tokens
-/// from a theme specification. It performs all the color computations,
-/// functional role assignments, and algorithmic adjustments needed
-/// to create a complete, cohesive color system.
-///
-/// **Performance Optimization:**
-/// Results are cached by theme configuration to avoid expensive recomputation.
-/// The cache key includes accent color, gray color, and brightness mode.
-///
-/// **What Gets Computed:**
-/// - Raw 12-step color scales for accent and gray
-/// - Background and surface colors
-/// - Functional accent roles (surface, track, indicator, contrast)
-/// - Focus ring colors
-/// - All algorithmic adjustments for dark mode and bright colors
-///
-/// **Thread Safety:**
-/// The cache is implemented as a simple Map and should only be accessed
-/// from the main thread (typical Flutter usage).
-///
-/// Example:
-/// ```dart
-/// final theme = RadixTheme(
-///   accent: RadixAccentColor.green,
-///   gray: RadixGrayColor.sage,
-///   isDark: true,
-/// );
-/// 
-/// final colors = resolveRadixTokens(theme);
-/// // Use colors.accent.step(9) for solid green
-/// ```
-RadixThemeColors resolveRadixTokens(RadixTheme theme) {
-  final key =
-      '${theme.accent.index}-${theme.gray.index}-${theme.isDark ? 1 : 0}';
-  final cached = _resolvedCache[key];
-  if (cached != null) return cached;
-  final resolved = _buildResolvedColors(theme);
-  _resolvedCache[key] = resolved;
-
-  return resolved;
-}
-
-/// Internal function that performs the actual color computation.
-///
-/// This function does the heavy lifting of:
-/// 1. Retrieving the appropriate color scales for the theme
-/// 2. Computing all functional color roles using the compute functions
-/// 3. Assembling everything into a [RadixThemeColors] object
-///
-/// **Color Computation Pipeline:**
-/// 1. Get accent and gray scales based on theme selection
-/// 2. Compute background colors (page, panel, surface, overlay)
-/// 3. Compute functional accent colors (indicator, track, surface, contrast)
-/// 4. Compute focus ring colors
-/// 5. Assemble into final result object
-///
-/// **Algorithm Considerations:**
-/// - Uses OKLab color mixing for bright colors in dark mode
-/// - Applies different contrast strategies for bright vs normal colors  
-/// - Handles special cases like yellow indicator in light mode
-///
-/// Called by [resolveRadixTokens] when cache miss occurs.
-RadixThemeColors _buildResolvedColors(RadixTheme theme) {
-  final accent = _getAccentScale(theme.accent, theme.isDark);
-  final gray = _getGrayScale(theme.gray, theme.isDark);
-
   final colorBackground = computeColorBackground(gray);
   final colorPanelSolid = computeColorPanelSolid(gray);
   final colorPanelTranslucent = computeColorPanelTranslucent(gray);
@@ -655,19 +628,50 @@ RadixThemeColors _buildResolvedColors(RadixTheme theme) {
   final Color focus8 = computeFocus8(accent);
   final Color focusA8 = computeFocusA8(accent);
 
+  // Neutral helpers for shadows
+  final Color grayA6 = gray.alphaStep(6);
+  final Color blackA3 = RadixColors.blackAlpha.alphaSwatch[3]!;
+  final Color blackA4 = RadixColors.blackAlpha.alphaSwatch[4]!;
+  final Color blackA5 = RadixColors.blackAlpha.alphaSwatch[5]!;
+  final Color blackA6 = RadixColors.blackAlpha.alphaSwatch[6]!;
+  final Color blackA7 = RadixColors.blackAlpha.alphaSwatch[7]!;
+  final Color blackA11 = RadixColors.blackAlpha.alphaSwatch[11]!;
+  final Color shadowStroke = computeShadowStroke(gray);
+
+  // Gray role colors (mirroring JSON roles for gray scale)
+  final Color roleGraySurface = computeNeutralSurface(isDark: theme.isDark);
+  final Color roleGrayIndicator = gray.step(9);
+  final Color roleGrayTrack = gray.step(9);
+  final Color roleGrayContrast = const Color(0xFFFFFFFF);
+
   return RadixThemeColors(
-    accent: accent,
-    gray: gray,
-    colorBackground: colorBackground,
-    colorSurface: colorSurface,
-    colorPanelSolid: colorPanelSolid,
-    colorPanelTranslucent: colorPanelTranslucent,
-    colorOverlay: colorOverlay,
-    accentContrast: accentContrast,
-    accentSurface: accentSurface,
-    accentIndicator: accentIndicator,
-    accentTrack: accentTrack,
-    focus8: focus8,
-    focusA8: focusA8,
+    accent = accent,
+    gray = gray,
+    blackAlpha = blackA,
+    whiteAlpha = whiteA,
+    graySurface = roleGraySurface,
+    grayIndicator = roleGrayIndicator,
+    grayTrack = roleGrayTrack,
+    grayContrast = roleGrayContrast,
+    colorBackground = colorBackground,
+    colorSurface = colorSurface,
+    colorPanelSolid = colorPanelSolid,
+    colorPanelTranslucent = colorPanelTranslucent,
+    colorOverlay = colorOverlay,
+    accentContrast = accentContrast,
+    accentSurface = accentSurface,
+    accentIndicator = accentIndicator,
+    accentTrack = accentTrack,
+    focus8 = focus8,
+    focusA8 = focusA8,
+    // Shadow helpers
+    grayA6 = grayA6,
+    blackA3 = blackA3,
+    blackA4 = blackA4,
+    blackA5 = blackA5,
+    blackA6 = blackA6,
+    blackA7 = blackA7,
+    blackA11 = blackA11,
+    shadowStroke = shadowStroke,
   );
 }
