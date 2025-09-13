@@ -25,13 +25,11 @@ class RadixCardStyles {
     return RemixCardStyle()
         // Visual styling only - no size properties
         .container(
-          BoxStyler()
-              .color(RadixTokens.colorPanelSolid())
-              .borderAll(
-                color: RadixTokens.gray6(),
-                width: RadixTokens.borderWidth1(),
-              ),
-        );
+      BoxStyler().color(RadixTokens.colorPanelSolid()).borderAll(
+            color: RadixTokens.gray6(),
+            width: RadixTokens.borderWidth1(),
+          ),
+    );
   }
 
   /// Creates a classic variant card style.
@@ -42,17 +40,12 @@ class RadixCardStyles {
   static RemixCardStyle classic() {
     return RemixCardStyle()
         // Visual styling only - no size properties
-        .container(
-          BoxStyler()
-              .color(RadixTokens.colorPanelSolid())
-              .borderAll(
-                color: RadixTokens.gray7(),
-                width: RadixTokens.borderWidth1(),
-              )
-              // TODO: Add shadow when shadow tokens are available
-              // .shadow(RadixTokens.shadow2)
-              ,
-        );
+        .container(BoxStyler().color(RadixTokens.colorPanelSolid()).borderAll(
+              color: RadixTokens.gray7(),
+              width: RadixTokens.borderWidth1(),
+            ))
+        // Add subtle layered shadow for elevation
+        .shadows(RadixTokens.shadow2().map(BoxShadowMix.value).toList());
   }
 
   /// Creates a ghost variant card style.
@@ -63,9 +56,7 @@ class RadixCardStyles {
   static RemixCardStyle ghost() {
     return RemixCardStyle()
         // Visual styling only - no size properties
-        .container(
-          BoxStyler().color(Colors.transparent),
-        );
+        .container(BoxStyler().color(Colors.transparent));
   }
 
   /// Creates a size 1 card style (small).

@@ -2,6 +2,7 @@
 // ABOUTME: Provides all 6 Radix icon button variants with proper token-based styling
 
 import 'package:flutter/material.dart';
+import 'package:mix/mix.dart';
 
 import '../../radix/radix.dart';
 import '../spinner/spinner.dart';
@@ -28,7 +29,7 @@ class RadixIconButtonStyles {
           RemixSpinnerStyle(
             strokeWidth: RadixTokens.borderWidth2(),
             color: RadixTokens.accentContrast(),
-            duration: RadixTokens.transitionSlow(),
+            duration: const Duration(milliseconds: 800),
             type: SpinnerType.solid,
           ),
         )
@@ -69,7 +70,7 @@ class RadixIconButtonStyles {
           RemixSpinnerStyle(
             strokeWidth: RadixTokens.borderWidth2(),
             color: RadixTokens.accent11(),
-            duration: RadixTokens.transitionSlow(),
+            duration: const Duration(milliseconds: 800),
             type: SpinnerType.solid,
           ),
         )
@@ -117,7 +118,7 @@ class RadixIconButtonStyles {
           RemixSpinnerStyle(
             strokeWidth: RadixTokens.borderWidth2(),
             color: RadixTokens.accent11(),
-            duration: RadixTokens.transitionSlow(),
+            duration: const Duration(milliseconds: 800),
             type: SpinnerType.solid,
           ),
         )
@@ -167,7 +168,7 @@ class RadixIconButtonStyles {
           RemixSpinnerStyle(
             strokeWidth: RadixTokens.borderWidth2(),
             color: RadixTokens.accent11(),
-            duration: RadixTokens.transitionSlow(),
+            duration: const Duration(milliseconds: 800),
             type: SpinnerType.solid,
           ),
         )
@@ -209,7 +210,7 @@ class RadixIconButtonStyles {
           RemixSpinnerStyle(
             strokeWidth: RadixTokens.borderWidth2(),
             color: RadixTokens.accent11(),
-            duration: RadixTokens.transitionSlow(),
+            duration: const Duration(milliseconds: 800),
             type: SpinnerType.solid,
           ),
         )
@@ -242,21 +243,30 @@ class RadixIconButtonStyles {
           color: RadixTokens.gray7(),
           width: RadixTokens.borderWidth1(),
         )
+        // Add subtle shadow for classic feel using token
+        .shadows(
+          RadixTokens.shadow2().map(BoxShadowMix.value).toList(),
+        )
         // Icon styling
         .iconColor(RadixTokens.gray12())
         .spinner(
           RemixSpinnerStyle(
             strokeWidth: RadixTokens.borderWidth2(),
             color: RadixTokens.gray12(),
-            duration: RadixTokens.transitionSlow(),
+            duration: const Duration(milliseconds: 800),
             type: SpinnerType.solid,
           ),
         )
         // State variants
         .onHovered(
-          RemixIconButtonStyle().color(RadixTokens.gray3()).borderAll(
+          RemixIconButtonStyle()
+              .color(RadixTokens.gray3())
+              .borderAll(
                 color: RadixTokens.gray8(),
                 width: RadixTokens.borderWidth1(),
+              )
+              .shadows(
+                RadixTokens.shadow2().map(BoxShadowMix.value).toList(),
               ),
         )
         .onFocused(
@@ -273,7 +283,10 @@ class RadixIconButtonStyles {
                 width: RadixTokens.borderWidth1(),
               )
               .iconColor(RadixTokens.gray12())
-              .spinner(RemixSpinnerStyle(color: RadixTokens.gray12())),
+              .spinner(RemixSpinnerStyle(color: RadixTokens.gray12()))
+              .shadows(
+                RadixTokens.shadow1().map(BoxShadowMix.value).toList(),
+              ),
         );
   }
 

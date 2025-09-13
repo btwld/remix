@@ -20,7 +20,7 @@ class RadixSpinnerStyles {
   static RemixSpinnerStyle defaultStyle() {
     return RemixSpinnerStyle(
       color: RadixTokens.accent9(), // Uses accent step 9 as per spec
-      duration: RadixTokens.transitionSlow(), // 300ms animation
+      duration: const Duration(milliseconds: 800), // per component token
       type: SpinnerType.solid,
     );
   }
@@ -31,7 +31,7 @@ class RadixSpinnerStyles {
       size: 16.0,
       strokeWidth: 1.5,
       color: RadixTokens.accent9(),
-      duration: RadixTokens.transitionSlow(),
+      duration: const Duration(milliseconds: 800),
       type: SpinnerType.solid,
     );
   }
@@ -42,7 +42,7 @@ class RadixSpinnerStyles {
       size: 20.0,
       strokeWidth: 2.0,
       color: RadixTokens.accent9(),
-      duration: RadixTokens.transitionSlow(),
+      duration: const Duration(milliseconds: 800),
       type: SpinnerType.solid,
     );
   }
@@ -53,7 +53,7 @@ class RadixSpinnerStyles {
       size: 24.0,
       strokeWidth: 2.5,
       color: RadixTokens.accent9(),
-      duration: RadixTokens.transitionSlow(),
+      duration: const Duration(milliseconds: 800),
       type: SpinnerType.solid,
     );
   }

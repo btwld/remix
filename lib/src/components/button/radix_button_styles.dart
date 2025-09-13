@@ -37,7 +37,8 @@ class RadixButtonStyles {
           RemixSpinnerStyle(
             strokeWidth: RadixTokens.borderWidth2(),
             color: RadixTokens.accentContrast(),
-            duration: RadixTokens.transitionSlow(),
+            // Match Radix spinner token (800ms)
+            duration: const Duration(milliseconds: 800),
             type: SpinnerType.solid,
           ),
         )
@@ -84,7 +85,7 @@ class RadixButtonStyles {
           RemixSpinnerStyle(
             strokeWidth: RadixTokens.borderWidth2(),
             color: RadixTokens.accent11(),
-            duration: RadixTokens.transitionSlow(),
+            duration: const Duration(milliseconds: 800),
             type: SpinnerType.solid,
           ),
         )
@@ -138,7 +139,7 @@ class RadixButtonStyles {
           RemixSpinnerStyle(
             strokeWidth: RadixTokens.borderWidth2(),
             color: RadixTokens.accent11(),
-            duration: RadixTokens.transitionSlow(),
+            duration: const Duration(milliseconds: 800),
             type: SpinnerType.solid,
           ),
         )
@@ -194,7 +195,7 @@ class RadixButtonStyles {
           RemixSpinnerStyle(
             strokeWidth: RadixTokens.borderWidth2(),
             color: RadixTokens.accent11(),
-            duration: RadixTokens.transitionSlow(),
+            duration: const Duration(milliseconds: 800),
             type: SpinnerType.solid,
           ),
         )
@@ -242,7 +243,7 @@ class RadixButtonStyles {
           RemixSpinnerStyle(
             strokeWidth: RadixTokens.borderWidth2(),
             color: RadixTokens.accent11(),
-            duration: RadixTokens.transitionSlow(),
+            duration: const Duration(milliseconds: 800),
             type: SpinnerType.solid,
           ),
         )
@@ -277,8 +278,7 @@ class RadixButtonStyles {
           width: RadixTokens.borderWidth1(),
         )
         // Add subtle shadow for classic feel using token
-        // TODO: Fix shadow implementation
-        // .shadow(RadixTokens.shadow2())
+        .shadows(RadixTokens.shadow2().map(BoxShadowMix.value).toList())
         // Content styling
         .label(
           TextStyler()
@@ -290,15 +290,20 @@ class RadixButtonStyles {
           RemixSpinnerStyle(
             strokeWidth: RadixTokens.borderWidth2(),
             color: RadixTokens.gray12(),
-            duration: RadixTokens.transitionSlow(),
+            duration: const Duration(milliseconds: 800),
             type: SpinnerType.solid,
           ),
         )
         // State variants
         .onHovered(
-          RemixButtonStyle().color(RadixTokens.gray3()).borderAll(
+          RemixButtonStyle()
+              .color(RadixTokens.gray3())
+              .borderAll(
                 color: RadixTokens.gray8(),
                 width: RadixTokens.borderWidth1(),
+              )
+              .shadows(
+                RadixTokens.shadow2().map(BoxShadowMix.value).toList(),
               ),
         )
         .onFocused(
@@ -316,8 +321,9 @@ class RadixButtonStyles {
               )
               .labelColor(RadixTokens.gray12())
               .spinnerColor(RadixTokens.gray12())
-              // TODO: Fix shadow implementation
-              // .shadow(RadixTokens.shadow1())
+              .shadows(
+                RadixTokens.shadow1().map(BoxShadowMix.value).toList(),
+              )
               .iconColor(RadixTokens.gray12()),
         );
   }
@@ -350,6 +356,7 @@ class RadixButtonStyles {
   static RemixButtonStyle size2() {
     return RemixButtonStyle()
         .height(32.0)
+        // Generic size padding (ghost-specific overrides provided via ghostSize*)
         .paddingX(RadixTokens.space3())
         .paddingY(RadixTokens.space2())
         .spacing(RadixTokens.space2())
