@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:remix/src/radix/tokens/css_var_parser.dart';
 
-// Consolidated: minimal Radix CSS parsing helpers (avoid separate lib file)
+// Minimal Radix CSS parsing helpers
 class _RadixScaleSection {
   final Map<String, String> solid;
   final Map<String, String> alpha;
@@ -34,9 +34,8 @@ class _RadixScaleSection {
 
 class _ParsedRadixScale {
   final _RadixScaleSection? light;
-  final _RadixScaleSection? dark; // not used currently
 
-  const _ParsedRadixScale({this.light, this.dark});
+  const _ParsedRadixScale({this.light});
 }
 
 _ParsedRadixScale _parseRadixCss(String css, String scale) {
@@ -128,11 +127,11 @@ const Map<String, String> kNeutralPaths = {
   'whiteA': 'white-alpha.css',
 };
 
-// Single base tokens CSS per Radix Themes release note exports
+// Base tokens CSS from Radix Themes
 const kBaseTokensPath = 'tokens/base.css';
 
 Future<void> main(List<String> args) async {
-  // Defaults that can be overridden via flags
+  // Default URLs and versions
   var themesBase = 'https://unpkg.com/@radix-ui/themes';
   var themesVersion = kRadixThemesVersion;
   var colorsBase = 'https://cdn.jsdelivr.net/npm/@radix-ui/colors';
@@ -150,7 +149,7 @@ Future<void> main(List<String> args) async {
   colorsBase = _readFlag('--colors-base') ?? colorsBase;
   colorsVersion = _readFlag('--colors-version') ?? colorsVersion;
 
-  // Colors: scales (full) — included here to keep radix_tokens as the single source
+  // Extract color scales from Radix Themes
   final outScales = <String, Map<String, dynamic>>{};
   for (final entry in kThemeScalePaths.entries) {
     final scale = entry.key;
@@ -168,7 +167,7 @@ Future<void> main(List<String> args) async {
     Map<String, dynamic> sectionToJson(_RadixScaleSection? s) =>
         s?.toJson() ?? const {};
     final lightJson = sectionToJson(parsed.light);
-    final darkJson = sectionToJson(parsed.dark);
+    final darkJson = const <String, dynamic>{};
 
     final map = <String, dynamic>{};
     if (lightJson.isNotEmpty) map['light'] = lightJson;
@@ -176,7 +175,7 @@ Future<void> main(List<String> args) async {
     outScales[scale] = map;
   }
 
-  // Colors: neutrals
+  // Extract neutral color scales
   final neutralsOut = <String, Map<String, dynamic>>{};
   for (final entry in kNeutralPaths.entries) {
     final keyOut = entry.key; // e.g., 'blackA'
@@ -194,14 +193,12 @@ Future<void> main(List<String> args) async {
     }
 
     final parsed = _parseRadixCss(css, scaleForCss);
-    final alpha = parsed.light?.alpha.isNotEmpty == true
-        ? parsed.light!.alpha
-        : (parsed.dark?.alpha ?? const <String, String>{});
+    final alpha = parsed.light?.alpha ?? const <String, String>{};
 
     neutralsOut[keyOut] = {if (alpha.isNotEmpty) 'alpha': alpha};
   }
 
-  // Other token categories from Themes (via consolidated base tokens)
+  // Extract other token categories from base tokens
   final categories = <String, Map<String, String>>{};
   final baseUrl = '$themesBase@$themesVersion/$kBaseTokensPath';
   stdout.writeln('[fetch] base tokens <- $baseUrl');
@@ -235,7 +232,7 @@ Future<void> main(List<String> args) async {
     );
   }
 
-  // Minimal theme references (using token paths)
+  // Basic theme configuration
   final theme = <String, dynamic>{
     'defaultAccent': 'indigo',
     'light': {

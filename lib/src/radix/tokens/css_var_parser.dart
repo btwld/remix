@@ -1,10 +1,9 @@
 import 'dart:convert';
 
-/// Parse generic CSS variable declarations into a flat map.
+/// Parses CSS variable declarations into a flat map.
 ///
-/// - Strips @supports P3 blocks
-/// - Reads declarations of the form `--name: value;`
-/// - If [prefix] is provided, only variables starting with that prefix are returned
+/// Strips @supports P3 blocks and extracts `--name: value;` declarations.
+/// Optionally filters by [prefix].
 Map<String, String> parseCssVariables(String css, {String? prefix}) {
   final filtered = _stripP3Blocks(css);
   final declRe = RegExp(r'^\s*--([a-z0-9-]+):\s*([^;]+);', caseSensitive: false);
@@ -18,6 +17,7 @@ Map<String, String> parseCssVariables(String css, {String? prefix}) {
     if (prefix != null && !name.startsWith(prefix)) continue;
     out[name] = value;
   }
+
   return out;
 }
 
@@ -56,6 +56,7 @@ int _countChar(String s, String ch) {
   for (var i = 0; i < s.length; i++) {
     if (s[i] == ch) c++;
   }
+
   return c;
 }
 
