@@ -7,80 +7,40 @@ import 'computed.dart';
 
 // OKLab mixing lives in computed.dart; no direct dependency here.
 
-/// Design tokens for the Radix UI system, providing access to all colors, spacing, typography, and other design primitives.
+/// Design tokens for the Radix UI system.
 ///
-/// This class contains all the design tokens that power the Radix theming system.
-/// Tokens are organized into semantic categories following Radix UI conventions:
+/// Provides color scales (12-step accent/gray), spacing (9-step), radius (6-step),
+/// shadows (6-level), typography (9-size), and functional colors.
 ///
-/// **Color System:**
-/// - Background and surface colors for layouts
-/// - 12-step accent color scales for branding
-/// - 12-step gray scales for neutral elements
-/// - Functional colors (focus, contrast, indicators)
-/// - Alpha variants for translucent effects
-///
-/// **Layout System:**
-/// - 9-step spacing scale (4px to 36px)
-/// - 6-step radius scale plus full radius
-/// - 6-step shadow elevation system
-/// - Border widths and focus ring sizing
-///
-/// **Typography:**
-/// - 9-step text size scale (12px to 60px)
-/// - Font weight tokens (regular, medium, bold)
-/// - Carefully tuned letter spacing and line heights
-///
-/// Example usage:
+/// Example:
 /// ```dart
-/// // Use in Mix styles
 /// Style(
 ///   $box.color.ref(RadixTokens.accent9),
 ///   $text.style.ref(RadixTokens.text3),
 ///   $box.padding.ref(RadixTokens.space4),
-///   $box.borderRadius.ref(RadixTokens.radius3),
 /// )
-///
-/// // Access colors directly (after scope setup)
-/// final accentColor = context.mix.tokens.colorValue(RadixTokens.accent9);
 /// ```
 ///
-/// All tokens must be used within a [createRadixScope] to provide actual values.
-/// The scope resolves tokens based on the selected accent color, gray scale,
-/// and brightness (light/dark mode).
+/// Must be used within [createRadixScope] to resolve actual values.
 class RadixTokens {
   // ============================================================================
   // BACKGROUND AND SURFACE COLORS
   // ============================================================================
 
   /// Page background color (gray step 1).
-  ///
-  /// The primary background for app screens and layouts.
-  /// Provides subtle contrast from pure white/black.
   static const colorBackground = ColorToken('radix.color.background');
 
   /// Neutral surface color for input fields and controls.
-  ///
-  /// Used for form inputs, card surfaces, and interactive elements
-  /// that need a subtle background different from the page background.
   static const colorSurface = ColorToken('radix.color.surface');
 
   /// Solid panel background (gray step 2).
-  ///
-  /// For cards, modals, and other contained content areas.
-  /// Provides clear separation from the page background.
   static const colorPanelSolid = ColorToken('radix.color.panel.solid');
 
   /// Translucent panel background with alpha transparency.
-  ///
-  /// Used for overlays, tooltips, and floating panels that need
-  /// to show content underneath while providing visual separation.
   static const colorPanelTranslucent =
       ColorToken('radix.color.panel.translucent');
 
   /// Dark overlay for modals and dialogs.
-  ///
-  /// Provides a semi-transparent black background that dims
-  /// the content behind modal dialogs and drawers.
   static const colorOverlay = ColorToken('radix.color.overlay');
 
   // ============================================================================
@@ -88,31 +48,15 @@ class RadixTokens {
   // ============================================================================
 
   /// Subtle accent surface for soft button variants and chips.
-  ///
-  /// A lightly tinted surface that provides accent color context
-  /// without being too prominent. Created by compositing accent alpha
-  /// over neutral surface.
   static const accentSurface = ColorToken('radix.accent.surface');
 
   /// Active indicator color for progress bars and sliders.
-  ///
-  /// The solid accent color used to show progress, selected ranges,
-  /// and other active states. Typically accent step 9, but may vary
-  /// by color (yellow uses step 10 in light mode for better contrast).
   static const accentIndicator = ColorToken('radix.accent.indicator');
 
   /// Track/rail background color for sliders and progress bars.
-  ///
-  /// The background behind indicators in range controls.
-  /// In dark mode for bright colors, uses OKLab color mixing
-  /// to reduce visual glare.
   static const accentTrack = ColorToken('radix.accent.track');
 
   /// High contrast foreground for solid accent backgrounds.
-  ///
-  /// Text and icon color for buttons and badges with solid accent
-  /// backgrounds. White for most colors, near-black for bright colors
-  /// (sky, mint, lime, yellow, amber) to ensure readability.
   static const accentContrast = ColorToken('radix.accent.contrast');
 
   // ============================================================================
@@ -120,15 +64,9 @@ class RadixTokens {
   // ============================================================================
 
   /// Solid focus ring color (accent step 8).
-  ///
-  /// Used for focus outlines and keyboard navigation indicators.
-  /// Provides clear visual feedback for interactive elements.
   static const focus8 = ColorToken('radix.focus.8');
 
   /// Translucent focus ring color with alpha transparency.
-  ///
-  /// Alternative to solid focus ring, useful when focus outline
-  /// needs to blend with varying background colors.
   static const focusA8 = ColorToken('radix.focus.a8');
 
   // ============================================================================
@@ -145,75 +83,39 @@ class RadixTokens {
   //
 
   /// Accent step 1 - App background, most subtle.
-  ///
-  /// Very subtle accent tint for page backgrounds.
-  /// Provides barely perceptible brand color presence.
   static const accent1 = ColorToken('radix.accent.1');
 
   /// Accent step 2 - Subtle background.
-  ///
-  /// For hover states over step 1, or card backgrounds
-  /// that need slightly more accent presence.
   static const accent2 = ColorToken('radix.accent.2');
 
   /// Accent step 3 - Component background at rest.
-  ///
-  /// Default background for buttons, input fields, and other
-  /// interactive components in their resting state.
   static const accent3 = ColorToken('radix.accent.3');
 
   /// Accent step 4 - Component background on hover.
-  ///
-  /// Hover state background for components, providing
-  /// clear feedback for interactive elements.
   static const accent4 = ColorToken('radix.accent.4');
 
   /// Accent step 5 - Component background when active/pressed.
-  ///
-  /// Active state background, used when components are pressed
-  /// or selected. Provides clear feedback for user actions.
   static const accent5 = ColorToken('radix.accent.5');
 
   /// Accent step 6 - Subtle borders and separators.
-  ///
-  /// For borders that need to be visible but not prominent.
-  /// Provides gentle visual separation between elements.
   static const accent6 = ColorToken('radix.accent.6');
 
   /// Accent step 7 - Component borders at rest.
-  ///
-  /// Standard border color for form inputs, cards, and other
-  /// components in their default state.
   static const accent7 = ColorToken('radix.accent.7');
 
   /// Accent step 8 - Component borders on hover and focus.
-  ///
-  /// Border color for interactive states, also used for
-  /// focus rings to provide clear keyboard navigation feedback.
   static const accent8 = ColorToken('radix.accent.8');
 
   /// Accent step 9 - Primary solid background.
-  ///
-  /// The main accent color for buttons, badges, and other prominent
-  /// elements. This is typically what users think of as "the brand color".
   static const accent9 = ColorToken('radix.accent.9');
 
   /// Accent step 10 - Solid background on hover.
-  ///
-  /// Hover state for solid accent backgrounds, slightly darker/lighter
-  /// than step 9 to provide clear interactive feedback.
   static const accent10 = ColorToken('radix.accent.10');
 
   /// Accent step 11 - Low contrast text.
-  ///
-  /// Accent-colored text that works well on light backgrounds.
-  /// Used for links, secondary text, and less prominent content.
   static const accent11 = ColorToken('radix.accent.11');
 
   /// Accent step 12 - High contrast text.
-  ///
-  /// The highest contrast accent text color, used for headings,
-  /// important content, and when maximum readability is needed.
   static const accent12 = ColorToken('radix.accent.12');
 
   // ============================================================================
@@ -226,39 +128,21 @@ class RadixTokens {
   //
 
   /// Gray step 1 - Page background.
-  ///
-  /// Primary background color for app layouts and screens.
-  /// Provides subtle warmth compared to pure white/black.
   static const gray1 = ColorToken('radix.gray.1');
 
   /// Gray step 2 - Panel and card backgrounds.
-  ///
-  /// Background for contained content areas like cards,
-  /// modals, and form panels.
   static const gray2 = ColorToken('radix.gray.2');
 
   /// Gray step 3 - Input backgrounds and pressed states.
-  ///
-  /// Default background for form inputs and active states
-  /// of interactive elements.
   static const gray3 = ColorToken('radix.gray.3');
 
   /// Gray step 4 - Input backgrounds on hover.
-  ///
-  /// Hover state background for form elements,
-  /// providing clear interactive feedback.
   static const gray4 = ColorToken('radix.gray.4');
 
   /// Gray step 5 - Active states and disabled backgrounds.
-  ///
-  /// For pressed states and backgrounds of disabled elements
-  /// that still need to be distinguishable.
   static const gray5 = ColorToken('radix.gray.5');
 
   /// Gray step 6 - Subtle borders and dividers.
-  ///
-  /// For separators and borders that should be present
-  /// but not draw attention.
   static const gray6 = ColorToken('radix.gray.6');
 
   /// Gray step 7 - Standard borders and outlines.
@@ -313,32 +197,41 @@ class RadixTokens {
   static const grayContrast = ColorToken('radix.gray.contrast');
 
   // ============================================================================
-  // COMMONLY USED ALPHA VARIANTS
+  // ALPHA VARIANTS (FULL 12-STEP FOR ACCENT AND GRAY)
   // ============================================================================
 
-  /// Accent step 3 with alpha transparency.
-  ///
-  /// Translucent version of accent3, useful for overlays
-  /// and effects that need to show background content.
+  // Accent alpha steps a1..a12
+  static const accentA1 = ColorToken('radix.accent.a1');
+  static const accentA2 = ColorToken('radix.accent.a2');
   static const accentA3 = ColorToken('radix.accent.a3');
-
-  /// Accent step 4 with alpha transparency.
-  ///
-  /// Translucent hover state that works over varying backgrounds
-  /// while maintaining consistent visual weight.
   static const accentA4 = ColorToken('radix.accent.a4');
-
-  /// Accent step 8 with alpha transparency.
-  ///
-  /// Translucent version of the focus color, useful for
-  /// focus indicators that need to work over different backgrounds.
+  static const accentA5 = ColorToken('radix.accent.a5');
+  static const accentA6 = ColorToken('radix.accent.a6');
+  static const accentA7 = ColorToken('radix.accent.a7');
   static const accentA8 = ColorToken('radix.accent.a8');
+  static const accentA9 = ColorToken('radix.accent.a9');
+  static const accentA10 = ColorToken('radix.accent.a10');
+  static const accentA11 = ColorToken('radix.accent.a11');
+  static const accentA12 = ColorToken('radix.accent.a12');
+
+  // Gray alpha steps a1..a12
+  static const grayA1 = ColorToken('radix.gray.a1');
+  static const grayA2 = ColorToken('radix.gray.a2');
+  static const grayA3 = ColorToken('radix.gray.a3');
+  static const grayA4 = ColorToken('radix.gray.a4');
+  static const grayA5 = ColorToken('radix.gray.a5');
+  static const grayA6 = ColorToken('radix.gray.a6');
+  static const grayA7 = ColorToken('radix.gray.a7');
+  static const grayA8 = ColorToken('radix.gray.a8');
+  static const grayA9 = ColorToken('radix.gray.a9');
+  static const grayA10 = ColorToken('radix.gray.a10');
+  static const grayA11 = ColorToken('radix.gray.a11');
+  static const grayA12 = ColorToken('radix.gray.a12');
 
   // ============================================================================
   // NEUTRALS FOR SHADOWS (HELPER TOKENS)
   // ============================================================================
-  /// Gray alpha step used in Radix shadow border mixes.
-  static const grayA6 = ColorToken('radix.gray.a6');
+  /// Gray alpha steps are declared above (grayA1..grayA12).
 
   /// Black alpha steps used in layered shadows.
   static const blackA3 = ColorToken('radix.black.a3');
@@ -687,6 +580,7 @@ Widget createRadixScope({
   final tokens = resolveRadixTokens(theme);
 
   final colorTokens = {
+    // Role and functional tokens
     RadixTokens.colorBackground: tokens.colorBackground,
     RadixTokens.colorSurface: tokens.colorSurface,
     RadixTokens.colorPanelSolid: tokens.colorPanelSolid,
@@ -698,6 +592,7 @@ Widget createRadixScope({
     RadixTokens.accentContrast: tokens.accent.contrast,
     RadixTokens.focus8: tokens.focus8,
     RadixTokens.focusA8: tokens.focusA8,
+    // Accent steps (explicit for clarity)
     RadixTokens.accent1: tokens.accent.scale.step(1),
     RadixTokens.accent2: tokens.accent.scale.step(2),
     RadixTokens.accent3: tokens.accent.scale.step(3),
@@ -710,6 +605,7 @@ Widget createRadixScope({
     RadixTokens.accent10: tokens.accent.scale.step(10),
     RadixTokens.accent11: tokens.accent.scale.step(11),
     RadixTokens.accent12: tokens.accent.scale.step(12),
+    // Gray steps
     RadixTokens.gray1: tokens.gray.scale.step(1),
     RadixTokens.gray2: tokens.gray.scale.step(2),
     RadixTokens.gray3: tokens.gray.scale.step(3),
@@ -727,11 +623,34 @@ Widget createRadixScope({
     RadixTokens.grayIndicator: tokens.gray.indicator,
     RadixTokens.grayTrack: tokens.gray.track,
     RadixTokens.grayContrast: tokens.gray.contrast,
+    // Accent alpha a1..a12
+    RadixTokens.accentA1: tokens.accent.scale.alphaStep(1),
+    RadixTokens.accentA2: tokens.accent.scale.alphaStep(2),
     RadixTokens.accentA3: tokens.accent.scale.alphaStep(3),
     RadixTokens.accentA4: tokens.accent.scale.alphaStep(4),
+    RadixTokens.accentA5: tokens.accent.scale.alphaStep(5),
+    RadixTokens.accentA6: tokens.accent.scale.alphaStep(6),
+    RadixTokens.accentA7: tokens.accent.scale.alphaStep(7),
     RadixTokens.accentA8: tokens.accent.scale.alphaStep(8),
-    // Neutral helpers derived from primitives (not stored in RadixThemeColors)
+    RadixTokens.accentA9: tokens.accent.scale.alphaStep(9),
+    RadixTokens.accentA10: tokens.accent.scale.alphaStep(10),
+    RadixTokens.accentA11: tokens.accent.scale.alphaStep(11),
+    RadixTokens.accentA12: tokens.accent.scale.alphaStep(12),
+
+    // Gray alpha a1..a12
+    RadixTokens.grayA1: tokens.gray.scale.alphaStep(1),
+    RadixTokens.grayA2: tokens.gray.scale.alphaStep(2),
+    RadixTokens.grayA3: tokens.gray.scale.alphaStep(3),
+    RadixTokens.grayA4: tokens.gray.scale.alphaStep(4),
+    RadixTokens.grayA5: tokens.gray.scale.alphaStep(5),
     RadixTokens.grayA6: tokens.gray.scale.alphaStep(6),
+    RadixTokens.grayA7: tokens.gray.scale.alphaStep(7),
+    RadixTokens.grayA8: tokens.gray.scale.alphaStep(8),
+    RadixTokens.grayA9: tokens.gray.scale.alphaStep(9),
+    RadixTokens.grayA10: tokens.gray.scale.alphaStep(10),
+    RadixTokens.grayA11: tokens.gray.scale.alphaStep(11),
+    RadixTokens.grayA12: tokens.gray.scale.alphaStep(12),
+    // Neutral helpers derived from primitives
     RadixTokens.blackA3: tokens.blackAlpha[3]!,
     RadixTokens.blackA4: tokens.blackAlpha[4]!,
     RadixTokens.blackA5: tokens.blackAlpha[5]!,
@@ -927,6 +846,7 @@ Widget createRadixScope({
     RadixTokens.borderWidth1: 1.0,
     RadixTokens.borderWidth2: 2.0,
     RadixTokens.focusRingWidth: 2.0,
+    RadixTokens.focusRingOffset: 2.0,
     RadixTokens.text1: TextStyleMix(
       fontSize: 12.0,
       letterSpacing: 0.0025 * 12.0,
@@ -984,6 +904,8 @@ Widget createRadixScope({
 }
 
 // OKLab mixing implemented in computed.dart; no helper here.
+
+// (No internal helpers needed; explicit step mapping kept for clarity.)
 
 /// Available accent colors matching Radix Themes names.
 enum RadixAccentColor {
