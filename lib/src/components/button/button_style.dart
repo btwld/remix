@@ -309,4 +309,5 @@ extension RadixButtonStyleExt on RemixButtonStyle {
   RemixButtonStyle size4() {
     return merge(RadixButtonStyles.size4());
   }
+
 }
