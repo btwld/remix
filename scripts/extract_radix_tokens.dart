@@ -3,7 +3,88 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:remix/src/radix/tokens/css_var_parser.dart';
-import 'package:remix/src/radix/tokens/radix_css_parser.dart';
+
+// Consolidated: minimal Radix CSS parsing helpers (avoid separate lib file)
+class _RadixScaleSection {
+  final Map<String, String> solid;
+  final Map<String, String> alpha;
+  final String? surface;
+  final String? indicator;
+  final String? track;
+  final String? contrast;
+
+  const _RadixScaleSection({
+    required this.solid,
+    required this.alpha,
+    this.surface,
+    this.indicator,
+    this.track,
+    this.contrast,
+  });
+
+  Map<String, dynamic> toJson() => {
+        if (solid.isNotEmpty) 'solid': solid,
+        if (alpha.isNotEmpty) 'alpha': alpha,
+        if (surface != null) 'surface': surface,
+        if (indicator != null) 'indicator': indicator,
+        if (track != null) 'track': track,
+        if (contrast != null) 'contrast': contrast,
+      };
+}
+
+class _ParsedRadixScale {
+  final _RadixScaleSection? light;
+  final _RadixScaleSection? dark; // not used currently
+
+  const _ParsedRadixScale({this.light, this.dark});
+}
+
+_ParsedRadixScale _parseRadixCss(String css, String scale) {
+  final vars = parseCssVariables(css);
+
+  String? _resolve(String? v) {
+    if (v == null) return null;
+    final s = v.trim();
+    if (s.startsWith('var(')) {
+      final name = s.substring(4, s.length - 1).trim(); // --foo
+      final key = name.startsWith('--') ? name.substring(2) : name;
+      return _resolve(vars[key]);
+    }
+    if (s == 'white') return '#ffffff';
+    if (s == 'black') return '#000000';
+    return s;
+  }
+
+  String solidKey(int i) => '$scale-$i';
+  String alphaKey(int i) => '$scale-a$i';
+
+  final solid = <String, String>{};
+  for (var i = 1; i <= 12; i++) {
+    final raw = vars[solidKey(i)];
+    final v = _resolve(raw);
+    if (v != null) solid['$i'] = v;
+  }
+
+  final alpha = <String, String>{};
+  for (var i = 1; i <= 12; i++) {
+    final raw = vars[alphaKey(i)];
+    final v = _resolve(raw);
+    if (v != null) alpha['a$i'] = v;
+  }
+
+  String? role(String name) => _resolve(vars['$scale-$name']);
+
+  final section = _RadixScaleSection(
+    solid: solid,
+    alpha: alpha,
+    surface: role('surface'),
+    indicator: role('indicator'),
+    track: role('track'),
+    contrast: role('contrast'),
+  );
+
+  return _ParsedRadixScale(light: section);
+}
 
 const String kRadixThemesVersion = '3.2.1';
 const String kRadixColorsVersion = '3.0.0';
@@ -83,8 +164,8 @@ Future<void> main(List<String> args) async {
       continue;
     }
 
-    final parsed = parseRadixCss(css, scale);
-    Map<String, dynamic> sectionToJson(RadixScaleSection? s) =>
+    final parsed = _parseRadixCss(css, scale);
+    Map<String, dynamic> sectionToJson(_RadixScaleSection? s) =>
         s?.toJson() ?? const {};
     final lightJson = sectionToJson(parsed.light);
     final darkJson = sectionToJson(parsed.dark);
@@ -112,7 +193,7 @@ Future<void> main(List<String> args) async {
       continue;
     }
 
-    final parsed = parseRadixCss(css, scaleForCss);
+    final parsed = _parseRadixCss(css, scaleForCss);
     final alpha = parsed.light?.alpha.isNotEmpty == true
         ? parsed.light!.alpha
         : (parsed.dark?.alpha ?? const <String, String>{});

@@ -17,29 +17,26 @@
 ///    across component theming.
 ///
 /// Implementation notes
-///  - OKLab mixing is performed via `package:prism` to match CSS
-///    `color-mix(in oklab, ...)` behavior used by Radix for some track colors.
-///  - Neutral surface baselines match Radix "feel": ~80% white in light,
-///    ~50% #212121 in dark. `--accent-surface` is approximated by compositing
-///    `accent a3` over those baselines (close to Radix's per-scale constants).
-///  - Helpers below use Dart 3 **switch expressions** per Effective Dart.
+///  - Role colors (surface, indicator, track, contrast) come directly from
+///    the generated RadixColor instances; we do not re-derive them here.
+///  - Backgrounds and panels use the selected gray scale (step 1/2), and the
+///    translucent panel uses the gray alpha scale (a2).
+///  - Modal overlay follows Radix guidance: black alpha a6 (light) / a8 (dark).
+///  - Focus colors are derived from the accent scale (8 / a8) for consistency.
+///  - OKLab mixing is used only for the shadow stroke helper to match Radix CSS.
 
 // Documentation for all public APIs is provided below
 
 import 'dart:ui' show Color;
 
+import 'package:flutter/painting.dart' show ColorSwatch;
 import 'package:prism_flutter/prism_flutter.dart';
 
 import 'colors/colors.dart';
-import 'types.dart';
 
 // ============================================================================
 // CONSTANTS
 // ============================================================================
-
-/// Neutral surface baselines aligned to Radix feel (`--gray-surface`).
-const Color _neutralSurfaceLight = Color(0xCCFFFFFF); // ≈80% white
-const Color _neutralSurfaceDark = Color(0x80212121); // ≈50% #212121
 
 // Overlay comes from Radix black alpha swatch (a6 light / a8 dark).
 
@@ -57,57 +54,6 @@ const Color _neutralSurfaceDark = Color(0x80212121); // ≈50% #212121
 ///
 /// **Usage in Components:**
 /// - Button text on solid accent buttons
-/// - Badge text on solid accent badges
-/// - Any foreground content over solid accent backgrounds
-///
-/// Example:
-/// ```dart
-/// // White for most colors
-/// _accentContrastFor(RadixAccentColor.blue)  // → #FFFFFF
-///
-/// // Near-black for bright colors
-/// _accentContrastFor(RadixAccentColor.lime)  // → #1D211C
-/// ```
-Color _accentContrastFor(RadixAccentColor accent) => switch (accent) {
-      RadixAccentColor.sky => const Color(0xFF1C2024),
-      RadixAccentColor.mint => const Color(0xFF1A211E),
-      RadixAccentColor.lime => const Color(0xFF1D211C),
-      RadixAccentColor.yellow => const Color(0xFF21201C),
-      // ignore: no-equal-switch-expression-cases
-      RadixAccentColor.amber => const Color(0xFF21201C),
-      // ignore: avoid-wildcard-cases-with-enums
-      _ => const Color(0xFFFFFFFF),
-    };
-
-/// Returns the OKLab color mixing ratio for dark mode track colors.
-///
-/// **Visual Problem Solved:**
-/// Bright accent colors (sky, mint, lime, yellow, amber) can cause visual
-/// glare in dark mode when used at full intensity for slider tracks and
-/// progress bar backgrounds. This function provides mixing ratios to
-/// tone down these colors.
-///
-/// **Color Science:**
-/// Uses OKLab color space for perceptually uniform color mixing,
-/// blending between step 8 (less intense) and step 9 (full intensity)
-/// to create more comfortable viewing experiences.
-///
-/// **Mix Ratios:**
-/// - sky, mint, lime, yellow: 65% towards step 9 (more conservative)
-/// - amber: 75% towards step 9 (slightly more intense)
-/// - all other colors: null (use step 9 unchanged)
-///
-/// Returns null for non-bright colors, indicating no mixing is needed.
-double? _darkTrackMixTowards9For(RadixAccentColor accent) => switch (accent) {
-      RadixAccentColor.sky ||
-      RadixAccentColor.mint ||
-      RadixAccentColor.lime ||
-      RadixAccentColor.yellow =>
-        0.65,
-      RadixAccentColor.amber => 0.75,
-      // ignore: avoid-wildcard-cases-with-enums
-      _ => null,
-    };
 
 // ============================================================================
 // GENERIC COLOR MIXING (CSS parity)
@@ -145,139 +91,6 @@ Color computeColorMixOklab({
 /// - Icon colors on accent backgrounds
 /// - Any content that needs high contrast on accent colors
 ///
-/// **Accessibility:**
-/// All returned colors meet or exceed WCAG contrast requirements
-/// for normal text on their respective accent backgrounds.
-///
-/// Example:
-/// ```dart
-/// final contrast = computeAccentContrast(RadixAccentColor.blue);
-/// // Use for button text: Style($text.color(contrast))
-/// ```
-Color computeAccentContrast(RadixAccentColor accent) =>
-    _accentContrastFor(accent);
-
-/// Computes the solid color for active indicators and progress elements.
-///
-/// **Purpose:**
-/// This color represents "progress" or "active state" in range controls
-/// like sliders, progress bars, and toggle switches. It's typically the
-/// most prominent accent color in these components.
-///
-/// **Color Selection Logic:**
-/// - Most colors: Use step 9 (primary solid accent)
-/// - Yellow in light mode: Use step 10 for better contrast
-/// - All dark mode: Use step 9 consistently
-///
-/// **Special Case - Yellow:**
-/// Yellow step 9 can be difficult to see against light backgrounds,
-/// so light mode uses the slightly darker step 10 for better visibility.
-///
-/// Example usage:
-/// ```dart
-/// // Progress bar fill
-/// final indicatorColor = computeAccentIndicator(
-///   accent: accentScale,
-///   accentKind: RadixAccentColor.blue,
-///   isDark: false,
-/// );
-/// ```
-Color computeAccentIndicator({
-  required RadixColorScale accent,
-  required RadixAccentColor accentKind,
-  required bool isDark,
-}) {
-  if (!isDark && accentKind == RadixAccentColor.yellow) return accent.step(10);
-
-  return accent.step(9);
-}
-
-/// Computes the background track color for range controls.
-///
-/// **Purpose:**
-/// This color serves as the background "rail" or "track" behind indicators
-/// in sliders, progress bars, and similar range controls. It should be
-/// visible but not competing with the indicator for attention.
-///
-/// **Algorithm:**
-/// - **Light mode**: Always uses step 9 (solid accent)
-/// - **Dark mode (normal colors)**: Uses step 9
-/// - **Dark mode (bright colors)**: Mixes step 8 and 9 using OKLab color space
-///
-/// **Why OKLab Mixing:**
-/// Bright colors can cause eye strain in dark environments. By mixing
-/// step 8 (less intense) with step 9 (full intensity), we create more
-/// comfortable viewing while maintaining brand recognition.
-///
-/// The mixing ratios are carefully chosen based on each color's perceptual
-/// intensity and user testing feedback from the Radix team.
-///
-/// Example:
-/// ```dart
-/// // Slider track background
-/// final trackColor = computeAccentTrack(
-///   accent: accentScale,
-///   accentKind: RadixAccentColor.lime,  // Bright color
-///   isDark: true,  // Will use OKLab mixing
-/// );
-/// ```
-Color computeAccentTrack({
-  required RadixColorScale accent,
-  required RadixAccentColor accentKind,
-  required bool isDark,
-}) {
-  if (!isDark) return accent.step(9);
-  final mix = _darkTrackMixTowards9For(accentKind);
-  if (mix == null) return accent.step(9);
-
-  return computeColorMixOklab(
-    a: accent.step(8),
-    b: accent.step(9),
-    bPercent: mix * 100.0,
-  );
-}
-
-/// Computes a subtle accent-tinted surface for soft interactive elements.
-///
-/// **Purpose:**
-/// Creates lightly branded backgrounds for "soft" or "ghost" button variants,
-/// chips, hover states, and other elements that need accent color context
-/// without being too prominent or attention-grabbing.
-///
-/// **Algorithm:**
-/// Uses alpha blending to composite accent alpha step 3 over carefully
-/// chosen neutral surface baselines. This maintains the accent color's
-/// character while keeping it subtle enough for comfortable viewing.
-///
-/// **Surface Baselines:**
-/// - Light mode: ~80% white (Color(0xCCFFFFFF))
-/// - Dark mode: ~50% of #212121 (Color(0x80212121))
-///
-/// These baselines are chosen to match Radix's neutral surface feeling
-/// while providing good contrast for text and other content.
-///
-/// **Use Cases:**
-/// - Ghost button backgrounds
-/// - Chip and tag backgrounds
-/// - Hover states for subtle interactions
-/// - Table row highlights
-///
-/// Example:
-/// ```dart
-/// final surface = computeAccentSurface(
-///   accent: accentScale,
-///   isDark: false,
-/// );
-/// // Use for: Style($box.color(surface))
-/// ```
-Color computeAccentSurface({
-  required RadixColorScale accent,
-  required bool isDark,
-}) {
-  final base = isDark ? _neutralSurfaceDark : _neutralSurfaceLight;
-
-  return Color.alphaBlend(accent.alphaStep(3), base);
-}
 
 /// Computes solid focus ring color from the accent scale.
 ///
@@ -419,37 +232,8 @@ Color computeColorPanelTranslucent(RadixColorScale gray) => gray.alphaStep(2);
 /// final overlay = computeColorOverlay(isDark: false);
 /// // Use for modal backdrop: Style($box.color(overlay))
 /// ```
-Color computeColorOverlay({required bool isDark}) => isDark
-    ? RadixColors.blackAlpha.alphaSwatch[8]!
-    : RadixColors.blackAlpha.alphaSwatch[6]!;
-
-/// Computes the neutral control surface color for component internals.
-///
-/// **Purpose:**
-/// Provides the baseline surface color for component elements like
-/// slider thumbs, switch toggles, input field backgrounds, and other
-/// interactive control surfaces that need to feel neutral and tactile.
-///
-/// **Color Values:**
-/// - Light mode: ~80% white opacity (creates soft, lifted feeling)
-/// - Dark mode: ~50% of #212121 (provides subtle contrast in dark themes)
-///
-/// **Design Intent:**
-/// These colors are specifically chosen to feel like physical, touchable
-/// surfaces that users can interact with. They provide enough contrast
-/// to be clearly interactive while remaining neutral enough to work
-/// with any accent color.
-///
-/// **Usage:**
-/// Internal component styling - not typically used directly in app code.
-///
-/// Example:
-/// ```dart
-/// final surface = computeNeutralSurface(isDark: true);
-/// // Used internally by slider thumb styling
-/// ```
-Color computeNeutralSurface({required bool isDark}) =>
-    isDark ? _neutralSurfaceDark : _neutralSurfaceLight;
+Color computeColorOverlay({required bool isDark}) =>
+    isDark ? blackAlpha[8]! : blackAlpha[6]!;
 
 // ============================================================================
 // SHADOWS
@@ -495,183 +279,121 @@ Color computeShadowStroke(RadixColorScale gray) =>
 /// final textColor = colors.accentContrast;
 /// ```
 class RadixThemeColors {
-  final RadixColorScale accent;
-  final RadixColorScale gray;
-  final RadixColorScale blackAlpha;
-  final RadixColorScale whiteAlpha;
-  // Gray (neutral) role colors to mirror generated JSON roles
-  final Color graySurface; // neutral surface baseline
-  final Color grayIndicator; // usually gray.step(9)
-  final Color grayTrack; // usually gray.step(9)
-  final Color grayContrast; // usually white
+  final RadixColor accent;
+  final RadixColor gray;
+  final ColorSwatch<int> blackAlpha;
+  final ColorSwatch<int> whiteAlpha;
+
+  // Functional colors
   final Color colorBackground;
   final Color colorSurface;
   final Color colorPanelSolid;
   final Color colorPanelTranslucent;
   final Color colorOverlay;
-  final Color accentContrast;
-  final Color accentSurface;
-  final Color accentIndicator;
-  final Color accentTrack;
+
+  // Focus
   final Color focus8;
   final Color focusA8;
-  // Neutral helpers for shadows
-  final Color grayA6;
-  final Color blackA3;
-  final Color blackA4;
-  final Color blackA5;
-  final Color blackA6;
-  final Color blackA7;
-  final Color blackA11;
-  final Color shadowStroke;
 
   const RadixThemeColors({
     required this.accent,
     required this.gray,
     required this.blackAlpha,
     required this.whiteAlpha,
-    required this.graySurface,
-    required this.grayIndicator,
-    required this.grayTrack,
-    required this.grayContrast,
     required this.colorBackground,
     required this.colorSurface,
     required this.colorPanelSolid,
     required this.colorPanelTranslucent,
     required this.colorOverlay,
-    required this.accentContrast,
-    required this.accentSurface,
-    required this.accentIndicator,
-    required this.accentTrack,
     required this.focus8,
     required this.focusA8,
-    required this.grayA6,
-    required this.blackA3,
-    required this.blackA4,
-    required this.blackA5,
-    required this.blackA6,
-    required this.blackA7,
-    required this.blackA11,
-    required this.shadowStroke,
   });
 }
 
-typedef _ScalePair = (RadixColors, RadixColors);
-
-const Map<RadixAccentColor, _ScalePair> _accentPairs = {
-  RadixAccentColor.amber: (RadixColors.amber, RadixColors.amberDark),
-  RadixAccentColor.blue: (RadixColors.blue, RadixColors.blueDark),
-  RadixAccentColor.bronze: (RadixColors.bronze, RadixColors.bronzeDark),
-  RadixAccentColor.brown: (RadixColors.brown, RadixColors.brownDark),
-  RadixAccentColor.crimson: (RadixColors.crimson, RadixColors.crimsonDark),
-  RadixAccentColor.cyan: (RadixColors.cyan, RadixColors.cyanDark),
-  RadixAccentColor.gold: (RadixColors.gold, RadixColors.goldDark),
-  RadixAccentColor.grass: (RadixColors.grass, RadixColors.grassDark),
-  RadixAccentColor.green: (RadixColors.green, RadixColors.greenDark),
-  RadixAccentColor.indigo: (RadixColors.indigo, RadixColors.indigoDark),
-  RadixAccentColor.iris: (RadixColors.iris, RadixColors.irisDark),
-  RadixAccentColor.jade: (RadixColors.jade, RadixColors.jadeDark),
-  RadixAccentColor.lime: (RadixColors.lime, RadixColors.limeDark),
-  RadixAccentColor.mint: (RadixColors.mint, RadixColors.mintDark),
-  RadixAccentColor.orange: (RadixColors.orange, RadixColors.orangeDark),
-  RadixAccentColor.pink: (RadixColors.pink, RadixColors.pinkDark),
-  RadixAccentColor.plum: (RadixColors.plum, RadixColors.plumDark),
-  RadixAccentColor.purple: (RadixColors.purple, RadixColors.purpleDark),
-  RadixAccentColor.red: (RadixColors.red, RadixColors.redDark),
-  RadixAccentColor.ruby: (RadixColors.ruby, RadixColors.rubyDark),
-  RadixAccentColor.sky: (RadixColors.sky, RadixColors.skyDark),
-  RadixAccentColor.teal: (RadixColors.teal, RadixColors.tealDark),
-  RadixAccentColor.tomato: (RadixColors.tomato, RadixColors.tomatoDark),
-  RadixAccentColor.violet: (RadixColors.violet, RadixColors.violetDark),
-  RadixAccentColor.yellow: (RadixColors.yellow, RadixColors.yellowDark),
-  RadixAccentColor.gray: (RadixColors.gray, RadixColors.grayDark),
-  RadixAccentColor.mauve: (RadixColors.mauve, RadixColors.mauveDark),
-  RadixAccentColor.slate: (RadixColors.slate, RadixColors.slateDark),
-  RadixAccentColor.sage: (RadixColors.sage, RadixColors.sageDark),
-  RadixAccentColor.olive: (RadixColors.olive, RadixColors.oliveDark),
-  RadixAccentColor.sand: (RadixColors.sand, RadixColors.sandDark),
+// Map by enum .name to generated RadixColorTheme instances (light/dark contained).
+const Map<String, RadixColorTheme> _accentThemesByName = {
+  'amber': amber,
+  'blue': blue,
+  'bronze': bronze,
+  'brown': brown,
+  'crimson': crimson,
+  'cyan': cyan,
+  'gold': gold,
+  'grass': grass,
+  'green': green,
+  'indigo': indigo,
+  'iris': iris,
+  'jade': jade,
+  'lime': lime,
+  'mint': mint,
+  'orange': orange,
+  'pink': pink,
+  'plum': plum,
+  'purple': purple,
+  'red': red,
+  'ruby': ruby,
+  'sky': sky,
+  'teal': teal,
+  'tomato': tomato,
+  'violet': violet,
+  'yellow': yellow,
+  // neutrals also exist as accent enums for convenience
+  'gray': gray,
+  'mauve': mauve,
+  'slate': slate,
+  'sage': sage,
+  'olive': olive,
+  'sand': sand,
 };
 
-const Map<RadixGrayColor, _ScalePair> _grayPairs = {
-  RadixGrayColor.gray: (RadixColors.gray, RadixColors.grayDark),
-  RadixGrayColor.mauve: (RadixColors.mauve, RadixColors.mauveDark),
-  RadixGrayColor.slate: (RadixColors.slate, RadixColors.slateDark),
-  RadixGrayColor.sage: (RadixColors.sage, RadixColors.sageDark),
-  RadixGrayColor.olive: (RadixColors.olive, RadixColors.oliveDark),
-  RadixGrayColor.sand: (RadixColors.sand, RadixColors.sandDark),
+const Map<String, RadixColorTheme> _grayThemesByName = {
+  'gray': gray,
+  'mauve': mauve,
+  'slate': slate,
+  'sage': sage,
+  'olive': olive,
+  'sand': sand,
 };
 
-  final colorBackground = computeColorBackground(gray);
-  final colorPanelSolid = computeColorPanelSolid(gray);
-  final colorPanelTranslucent = computeColorPanelTranslucent(gray);
-  final colorSurface = computeNeutralSurface(isDark: theme.isDark);
-  final colorOverlay = computeColorOverlay(isDark: theme.isDark);
+/// Resolve all computed tokens for a given theme configuration.
+RadixThemeColors resolveRadixTokens(dynamic theme) {
+  // Pick light/dark RadixColor for accent and neutral using enum .name keys
+  final RadixColorTheme accentTheme = _accentThemesByName[theme.accent.name]!;
+  final RadixColorTheme grayTheme = _grayThemesByName[theme.gray.name]!;
+  final RadixColor accentRC =
+      theme.isDark ? accentTheme.dark : accentTheme.light;
+  final RadixColor grayRC = theme.isDark ? grayTheme.dark : grayTheme.light;
 
-  final accentIndicator = computeAccentIndicator(
-    accent: accent,
-    accentKind: theme.accent,
-    isDark: theme.isDark,
-  );
+  // Extract scales
+  final RadixColorScale accent = accentRC.scale;
+  final RadixColorScale gray = grayRC.scale;
 
-  final accentTrack = computeAccentTrack(
-    accent: accent,
-    accentKind: theme.accent,
-    isDark: theme.isDark,
-  );
+  // Neutral alpha swatches
+  final ColorSwatch<int> blackA = blackAlpha;
+  final ColorSwatch<int> whiteA = whiteAlpha;
 
-  final accentContrast = computeAccentContrast(theme.accent);
-  final accentSurface = computeAccentSurface(
-    accent: accent,
-    isDark: theme.isDark,
-  );
+  // Backgrounds/panels/overlay
+  final Color colorBackground = computeColorBackground(gray);
+  final Color colorPanelSolid = computeColorPanelSolid(gray);
+  final Color colorPanelTranslucent = computeColorPanelTranslucent(gray);
+  final Color colorSurface = grayRC.surface;
+  final Color colorOverlay = computeColorOverlay(isDark: theme.isDark);
 
+  // Focus
   final Color focus8 = computeFocus8(accent);
   final Color focusA8 = computeFocusA8(accent);
 
-  // Neutral helpers for shadows
-  final Color grayA6 = gray.alphaStep(6);
-  final Color blackA3 = RadixColors.blackAlpha.alphaSwatch[3]!;
-  final Color blackA4 = RadixColors.blackAlpha.alphaSwatch[4]!;
-  final Color blackA5 = RadixColors.blackAlpha.alphaSwatch[5]!;
-  final Color blackA6 = RadixColors.blackAlpha.alphaSwatch[6]!;
-  final Color blackA7 = RadixColors.blackAlpha.alphaSwatch[7]!;
-  final Color blackA11 = RadixColors.blackAlpha.alphaSwatch[11]!;
-  final Color shadowStroke = computeShadowStroke(gray);
-
-  // Gray role colors (mirroring JSON roles for gray scale)
-  final Color roleGraySurface = computeNeutralSurface(isDark: theme.isDark);
-  final Color roleGrayIndicator = gray.step(9);
-  final Color roleGrayTrack = gray.step(9);
-  final Color roleGrayContrast = const Color(0xFFFFFFFF);
-
   return RadixThemeColors(
-    accent = accent,
-    gray = gray,
-    blackAlpha = blackA,
-    whiteAlpha = whiteA,
-    graySurface = roleGraySurface,
-    grayIndicator = roleGrayIndicator,
-    grayTrack = roleGrayTrack,
-    grayContrast = roleGrayContrast,
-    colorBackground = colorBackground,
-    colorSurface = colorSurface,
-    colorPanelSolid = colorPanelSolid,
-    colorPanelTranslucent = colorPanelTranslucent,
-    colorOverlay = colorOverlay,
-    accentContrast = accentContrast,
-    accentSurface = accentSurface,
-    accentIndicator = accentIndicator,
-    accentTrack = accentTrack,
-    focus8 = focus8,
-    focusA8 = focusA8,
-    // Shadow helpers
-    grayA6 = grayA6,
-    blackA3 = blackA3,
-    blackA4 = blackA4,
-    blackA5 = blackA5,
-    blackA6 = blackA6,
-    blackA7 = blackA7,
-    blackA11 = blackA11,
-    shadowStroke = shadowStroke,
+    accent: accentRC,
+    gray: grayRC,
+    blackAlpha: blackA,
+    whiteAlpha: whiteA,
+    colorBackground: colorBackground,
+    colorSurface: colorSurface,
+    colorPanelSolid: colorPanelSolid,
+    colorPanelTranslucent: colorPanelTranslucent,
+    colorOverlay: colorOverlay,
+    focus8: focus8,
+    focusA8: focusA8,
   );
 }
