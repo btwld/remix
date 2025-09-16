@@ -33,7 +33,7 @@ class _MyAppState extends State<MyApp> {
                 _value = value;
               });
             },
-            child: const Column(
+            child: Column(
               spacing: 8,
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,

@@ -10,11 +10,11 @@ Widget buildButtonExample() {
         label: 'Primary Button',
         onPressed: () {},
       ),
-      const RemixButton(
+      RemixButton(
         label: 'Disabled',
         onPressed: null,
       ),
-      const RemixButton(
+      RemixButton(
         label: 'Loading',
         loading: true,
         onPressed: null,

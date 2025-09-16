@@ -24,7 +24,7 @@ part of 'select.dart';
 /// )
 /// ```
 class RemixSelect<T> extends StatefulWidget {
-  const RemixSelect({
+  RemixSelect({
     super.key,
     required this.child,
     required this.items,
@@ -132,14 +132,13 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
     super.dispose();
   }
 
-  RemixSelectStyle get _style =>
-      RemixSelectStyles.baseStyle.merge(widget.style);
+  RemixSelectStyle get _style => widget.style;
 
   @override
   Widget build(BuildContext context) {
     return StyleProvider<SelectSpec>(
       style: _style,
-      child: StyleBuilder(
+      child: StyleBuilder<SelectSpec>(
         style: _style,
         builder: (context, spec) {
           // Use default animation values since AnimatedData doesn't exist in Mix 2.0
@@ -436,8 +435,8 @@ class _RemixSelectTriggerState extends State<RemixSelectTrigger>
   Widget build(BuildContext context) {
     final inheritedStyle = StyleProvider.maybeOf<SelectSpec>(context);
 
-    return StyleBuilder(
-      style: inheritedStyle ?? const RemixSelectStyle.create(),
+    return StyleBuilder<SelectSpec>(
+      style: inheritedStyle ?? RadixSelectStyles.triggerSurface(),
       controller: controller,
       builder: (context, spec) {
         final triggerSpec = spec.trigger;
@@ -565,8 +564,8 @@ class _RemixSelectItemState<T> extends State<RemixSelectItem<T>>
     final isMultiSelect =
         context.findAncestorWidgetOfExactType<_MultiSelectWrapper>() != null;
 
-    return StyleBuilder(
-      style: styleFromProvider ?? const RemixSelectStyle.create(),
+    return StyleBuilder<SelectSpec>(
+      style: styleFromProvider ?? RadixSelectStyles.contentSolid(),
       controller: controller,
       builder: (context, spec) {
         final itemSpec = spec.item;

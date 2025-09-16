@@ -6,6 +6,8 @@ import 'package:mix/mix.dart';
 
 import '../../utilities/remix_style.dart';
 
+export 'radix_badge_styles.dart';
+
 part 'badge_spec.dart';
 part 'badge_style.dart';
 part 'badge_widget.dart';

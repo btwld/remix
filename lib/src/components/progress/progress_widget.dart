@@ -32,8 +32,8 @@ class RemixProgress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StyleBuilder(
-      style: RemixProgressStyles.baseStyle.merge(style),
+    return StyleBuilder<ProgressSpec>(
+      style: style,
       builder: (context, spec) {
         final Container = spec.container.createWidget;
         final Track = spec.track.createWidget;

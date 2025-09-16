@@ -15,7 +15,7 @@ part of 'switch.dart';
 /// )
 /// ```
 class RemixSwitch extends StatefulWidget with HasEnabled, HasSelected {
-  const RemixSwitch({
+  RemixSwitch({
     super.key,
     this.enabled = true,
     required this.selected,
@@ -71,8 +71,8 @@ class _RemixSwitchState extends State<RemixSwitch>
     with HasWidgetStateController, HasEnabledState, HasSelectedState {
   @override
   Widget build(BuildContext context) {
-    return StyleBuilder(
-      style: RemixSwitchStyles.baseStyle.merge(widget.style),
+    return StyleBuilder<SwitchSpec>(
+      style: widget.style,
       controller: controller,
       builder: (context, spec) {
         final Container = spec.container.createWidget;
@@ -107,7 +107,8 @@ class _RemixSwitchState extends State<RemixSwitch>
                       ? Alignment.centerRight
                       : Alignment.centerLeft,
                   child: Padding(
-                    padding: const EdgeInsets.all(2),
+                    // Per JSON: switch-thumb-inset = 1px
+                    padding: const EdgeInsets.all(1),
                     child: Thumb(),
                   ),
                 ),

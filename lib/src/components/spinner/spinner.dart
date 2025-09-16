@@ -6,8 +6,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 
-
 import '../../utilities/remix_style.dart';
+
+export 'radix_spinner_styles.dart';
 
 part 'spinner_painter.dart';
 part 'spinner_spec.dart';

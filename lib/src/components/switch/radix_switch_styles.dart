@@ -172,9 +172,14 @@ class RadixSwitchStyles {
           track: BoxStyler().width(32.0).height(20.0),
           thumb: BoxStyler().width(16.0).height(16.0),
         ),
+      // Per JSON:
+      // switch-height = var(--space-5) = 20px
+      // switch-width = calc(height * 1.75) = 35px
+      // switch-thumb-inset = 1px (handled in widget)
+      // switch-thumb-size = calc(height - inset*2) = 18px
       RadixSwitchSize.size2 => RemixSwitchStyle(
-          track: BoxStyler().width(40.0).height(24.0),
-          thumb: BoxStyler().width(20.0).height(20.0),
+          track: BoxStyler().width(35.0).height(20.0),
+          thumb: BoxStyler().width(18.0).height(18.0),
         ),
       RadixSwitchSize.size3 => RemixSwitchStyle(
           track: BoxStyler().width(48.0).height(28.0),

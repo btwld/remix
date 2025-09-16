@@ -18,7 +18,7 @@ part of 'checkbox.dart';
 /// )
 /// ```
 class RemixCheckbox extends StatefulWidget with HasEnabled {
-  const RemixCheckbox({
+  RemixCheckbox({
     super.key,
     this.enabled = true,
     required this.selected,
@@ -101,7 +101,7 @@ class _RemixCheckboxState extends State<RemixCheckbox>
     controller.selected = widget.selected ?? false;
 
     return StyleBuilder<CheckboxSpec>(
-      style: RemixCheckboxStyles.baseStyle.merge(widget.style),
+      style: widget.style,
       controller: controller,
       builder: (context, spec) {
         final IndicatorContainer = spec.indicatorContainer.createWidget;

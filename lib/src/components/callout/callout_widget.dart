@@ -24,8 +24,8 @@ class RemixCallout extends StatelessWidget {
     super.key,
     this.style = const RemixCalloutStyle.create(),
     required this.child,
-  }) : text = null,
-       icon = null;
+  })  : text = null,
+        icon = null;
 
   /// The text to display in the callout.
   final String? text;
@@ -42,7 +42,7 @@ class RemixCallout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StyleBuilder<CalloutSpec>(
-      style: RemixCalloutStyles.baseStyle.merge(style),
+      style: style,
       builder: (context, spec) {
         final ContainerWidget = spec.container.createWidget;
         final TextWidget = spec.text.createWidget;
@@ -50,12 +50,13 @@ class RemixCallout extends StatelessWidget {
 
         // For raw constructor, use provided child directly
         if (child != null) {
-          return ContainerWidget(direction: Axis.horizontal, children: [child!]);
+          return ContainerWidget(
+              direction: Axis.horizontal, children: [child!]);
         }
 
         // Build the callout content with text and optional icon
         final List<Widget> children = [];
-        
+
         // Add icon if present
         if (icon != null) {
           children.add(IconWidget(icon: icon));
