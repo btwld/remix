@@ -1,8 +1,6 @@
 part of 'icon_button.dart';
 
-// Private per-component constants
-const _kIconButtonSize = 40.0;
-const _kIconSizeMd = 20.0;
+
 
 class RemixIconButtonStyle
     extends RemixContainerStyle<IconButtonSpec, RemixIconButtonStyle>

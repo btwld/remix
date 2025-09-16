@@ -1,7 +1,6 @@
 part of 'badge.dart';
 
-// Private per-component constants (sizes only)
-const _kFontSizeSm = 12.0;
+
 
 class RemixBadgeStyle extends RemixContainerStyle<BadgeSpec, RemixBadgeStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;

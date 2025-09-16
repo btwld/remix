@@ -1,7 +1,6 @@
 part of 'radio.dart';
 
-// Private per-component constants (sizes only)
-const _kFontSizeMd = 14.0;
+
 
 class RemixRadioStyle
     extends RemixFlexContainerStyle<RadioSpec, RemixRadioStyle> {

@@ -1,9 +1,6 @@
 part of 'spinner.dart';
 
-// Private per-component constants
-const _kSizeMd = 24.0;
-const _kStrokeMd = 1.5;
-const _kDurationMs = 1000;
+
 
 class RemixSpinnerStyle extends RemixStyle<SpinnerSpec, RemixSpinnerStyle> {
   final Prop<double>? $size;

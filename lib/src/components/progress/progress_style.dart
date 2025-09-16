@@ -1,7 +1,6 @@
 part of 'progress.dart';
 
-// Private per-component constants (sizes only)
-const _kBarHeight = 6.0;
+
 
 class RemixProgressStyle
     extends RemixContainerStyle<ProgressSpec, RemixProgressStyle> {
