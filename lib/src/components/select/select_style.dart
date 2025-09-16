@@ -1,7 +1,6 @@
 part of 'select.dart';
 
-// Private per-component constants (sizes only)
-const _kFontSizeSm = 12.0;
+
 
 class RemixSelectStyle extends RemixStyle<SelectSpec, RemixSelectStyle> {
   final Prop<StyleSpec<BoxSpec>>? $menuContainer;

@@ -1,8 +1,6 @@
 part of 'callout.dart';
 
-// Private per-component constants (sizes only)
-const _kFontSizeMd = 14.0;
-const _kIconSizeMd = 16.0;
+
 
 class RemixCalloutStyle
     extends RemixFlexContainerStyle<CalloutSpec, RemixCalloutStyle> {

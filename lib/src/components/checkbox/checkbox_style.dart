@@ -1,8 +1,6 @@
 part of 'checkbox.dart';
 
-// Private per-component constants (sizes only)
-const _kFontSizeMd = 14.0;
-const _kIconSizeMd = 16.0;
+
 
 class RemixCheckboxStyle
     extends RemixFlexContainerStyle<CheckboxSpec, RemixCheckboxStyle> {

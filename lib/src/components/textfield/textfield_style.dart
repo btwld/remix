@@ -1,9 +1,6 @@
 part of 'textfield.dart';
 
-// Private per-component constants (sizes only)
 
-const _kFontSizeSm = 12.0;
-const _kFontSizeMd = 14.0;
 
 class RemixTextFieldStyle extends RemixFlexContainerStyle<TextFieldSpec, RemixTextFieldStyle> {
   final Prop<StyleSpec<TextSpec>>? $text;

@@ -1,9 +1,6 @@
 part of 'avatar.dart';
 
-// Private per-component constants
-const _kSizeMedium = 50.0;
-const _kFontSizeMedium = 18.0;
-const _kIconSizeMedium = 24.0;
+
 
 class RemixAvatarStyle extends RemixContainerStyle<AvatarSpec, RemixAvatarStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;

@@ -1,8 +1,6 @@
 part of 'slider.dart';
 
-// Private per-component constants (sizes only)
-const _kTrackWidth = 8.0;
-const _kThumbBorderWidth = 2.0;
+
 
 class RemixSliderStyle extends RemixStyle<SliderSpec, RemixSliderStyle> {
   final Prop<StyleSpec<BoxSpec>>? $thumb;

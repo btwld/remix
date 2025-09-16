@@ -1,7 +1,6 @@
 part of 'tooltip.dart';
 
-// Private per-component constants (sizes only)
-const _kFontSizeSm = 12.0;
+
 
 class RemixTooltipStyle extends RemixContainerStyle<TooltipSpec, RemixTooltipStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;

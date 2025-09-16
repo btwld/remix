@@ -1,9 +1,6 @@
 part of 'switch.dart';
 
-// Private per-component constants (sizes only)
-const _kTrackWidth = 44.0;
-const _kTrackHeight = 24.0;
-const _kThumbSize = 20.0;
+
 
 class RemixSwitchStyle extends RemixContainerStyle<SwitchSpec, RemixSwitchStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
