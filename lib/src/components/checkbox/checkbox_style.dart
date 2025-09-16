@@ -287,29 +287,3 @@ class RemixCheckboxStyles {
       );
 }
 
-/// Extension providing Radix checkbox size methods for fluent API.
-///
-/// Enables the pattern: `RadixCheckboxStyles.classic().size1()`
-/// instead of: `RadixCheckboxStyles.size1().merge(RadixCheckboxStyles.classic())`
-extension RadixCheckboxStyleExt on RemixCheckboxStyle {
-  /// Creates a size 1 checkbox style (small).
-  ///
-  /// Small checkboxes for compact layouts and dense interfaces.
-  RemixCheckboxStyle size1() {
-    return merge(RadixCheckboxStyles.size1());
-  }
-
-  /// Creates a size 2 checkbox style (medium - default).
-  ///
-  /// Standard checkboxes for most common use cases.
-  RemixCheckboxStyle size2() {
-    return merge(RadixCheckboxStyles.size2());
-  }
-
-  /// Creates a size 3 checkbox style (large).
-  ///
-  /// Large checkboxes for accessibility needs and prominent forms.
-  RemixCheckboxStyle size3() {
-    return merge(RadixCheckboxStyles.size3());
-  }
-}

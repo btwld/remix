@@ -10,7 +10,6 @@ import '../../utilities/remix_style.dart';
 import 'package:naked_ui/naked_ui.dart';
 
 import '../_internal/widget_state_controller_mixin.dart';
-import 'radix_slider_styles.dart';
 
 part 'slider_spec.dart';
 part 'slider_style.dart';

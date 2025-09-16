@@ -394,29 +394,3 @@ class RemixTextFieldStyles {
       );
 }
 
-/// Extension providing Radix textfield size methods for fluent API.
-///
-/// Enables the pattern: `RadixTextFieldStyles.classic().size2()`
-/// instead of: `RadixTextFieldStyles.size2().merge(RadixTextFieldStyles.classic())`
-extension RadixTextFieldStyleExt on RemixTextFieldStyle {
-  /// Creates a size 1 textfield style (small).
-  ///
-  /// Small textfields for compact layouts and dense interfaces.
-  RemixTextFieldStyle size1() {
-    return merge(RadixTextFieldStyles.size1());
-  }
-
-  /// Creates a size 2 textfield style (medium - default).
-  ///
-  /// Standard textfields for most common use cases.
-  RemixTextFieldStyle size2() {
-    return merge(RadixTextFieldStyles.size2());
-  }
-
-  /// Creates a size 3 textfield style (large).
-  ///
-  /// Large textfields for prominent forms and accessibility needs.
-  RemixTextFieldStyle size3() {
-    return merge(RadixTextFieldStyles.size3());
-  }
-}

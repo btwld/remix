@@ -6,8 +6,17 @@ import 'package:mix/mix.dart';
 import '../../radix/radix.dart';
 import 'switch.dart';
 
-// Export the extension so it's available when importing this file
-export 'switch.dart' show RadixSwitchStyleExt;
+enum RadixSwitchSize {
+  size1,
+  size2,
+  size3,
+}
+
+enum RadixSwitchVariant {
+  classic,
+  surface,
+  soft,
+}
 
 /// Factory class for creating Radix-compliant switch styles.
 ///
@@ -16,12 +25,46 @@ export 'switch.dart' show RadixSwitchStyleExt;
 class RadixSwitchStyles {
   const RadixSwitchStyles._();
 
+  /// Factory constructor for RadixSwitchStyle with variant and size parameters.
+  ///
+  /// Returns a RemixSwitchStyle configured with Radix design tokens.
+  /// Defaults to classic variant with size2.
+  static RemixSwitchStyle create({
+    RadixSwitchVariant variant = RadixSwitchVariant.classic,
+    RadixSwitchSize size = RadixSwitchSize.size2,
+  }) {
+    return switch (variant) {
+      RadixSwitchVariant.classic => classic(size: size),
+      RadixSwitchVariant.surface => surface(size: size),
+      RadixSwitchVariant.soft => soft(size: size),
+    };
+  }
+
+  static RemixSwitchStyle base({
+    RadixSwitchSize size = RadixSwitchSize.size2,
+  }) {
+    return RemixSwitchStyle()
+        // Focus state (generic)
+        .onFocused(
+          RemixSwitchStyle().track(
+            BoxStyler().borderAll(
+              color: RadixTokens.focusA8(),
+              width: RadixTokens.focusRingWidth(),
+            ),
+          ),
+        )
+        // Merge with size-specific styles
+        .merge(_sizeStyle(size));
+  }
+
   /// Creates a classic variant switch style.
   ///
   /// Classic switches use neutral track color with accent when checked.
-  /// Used for standard form controls. Compose with size methods like .size2().
-  static RemixSwitchStyle classic() {
-    return RemixSwitchStyle()
+  /// Used for standard form controls.
+  static RemixSwitchStyle classic({
+    RadixSwitchSize size = RadixSwitchSize.size2,
+  }) {
+    return base(size: size)
         // Track styling (unchecked state) - no size properties
         .track(
           BoxStyler()
@@ -40,15 +83,6 @@ class RadixSwitchStyles {
               .track(BoxStyler().color(RadixTokens.accent9()))
               .thumb(BoxStyler().color(RadixTokens.accentContrast())),
         )
-        // Focus state
-        .onFocused(
-          RemixSwitchStyle().track(
-            BoxStyler().borderAll(
-              color: RadixTokens.focusA8(),
-              width: RadixTokens.focusRingWidth(),
-            ),
-          ),
-        )
         // Disabled state
         .onDisabled(
           RemixSwitchStyle()
@@ -60,9 +94,11 @@ class RadixSwitchStyles {
   /// Creates a surface variant switch style.
   ///
   /// Surface switches use neutral track with neutral thumb when checked.
-  /// Used for forms with softer visual appearance. Compose with size methods like .size2().
-  static RemixSwitchStyle surface() {
-    return RemixSwitchStyle()
+  /// Used for forms with softer visual appearance.
+  static RemixSwitchStyle surface({
+    RadixSwitchSize size = RadixSwitchSize.size2,
+  }) {
+    return base(size: size)
         // Track styling (unchecked state) - no size properties
         .track(
           BoxStyler()
@@ -84,15 +120,6 @@ class RadixSwitchStyles {
                     .color(RadixTokens.colorSurface()), // Stays white/surface
               ),
         )
-        // Focus state
-        .onFocused(
-          RemixSwitchStyle().track(
-            BoxStyler().borderAll(
-              color: RadixTokens.focusA8(),
-              width: RadixTokens.focusRingWidth(),
-            ),
-          ),
-        )
         // Disabled state
         .onDisabled(
           RemixSwitchStyle()
@@ -104,9 +131,11 @@ class RadixSwitchStyles {
   /// Creates a soft variant switch style.
   ///
   /// Soft switches use accent-tinted track with accent thumb.
-  /// Used for forms that need accent color integration. Compose with size methods like .size2().
-  static RemixSwitchStyle soft() {
-    return RemixSwitchStyle()
+  /// Used for forms that need accent color integration.
+  static RemixSwitchStyle soft({
+    RadixSwitchSize size = RadixSwitchSize.size2,
+  }) {
+    return base(size: size)
         // Track styling (unchecked state) - uses accent3 instead of gray, no size properties
         .track(
           BoxStyler()
@@ -125,15 +154,6 @@ class RadixSwitchStyles {
               .track(BoxStyler().color(RadixTokens.accent5()))
               .thumb(BoxStyler().color(RadixTokens.accent11())),
         )
-        // Focus state
-        .onFocused(
-          RemixSwitchStyle().track(
-            BoxStyler().borderAll(
-              color: RadixTokens.focusA8(),
-              width: RadixTokens.focusRingWidth(),
-            ),
-          ),
-        )
         // Disabled state
         .onDisabled(
           RemixSwitchStyle()
@@ -142,36 +162,24 @@ class RadixSwitchStyles {
         );
   }
 
-  /// Creates a size 1 switch style (small).
-  ///
-  /// Small switches for compact layouts and dense interfaces.
-  /// Compose with variant methods like .classic().
-  static RemixSwitchStyle size1() {
-    return RemixSwitchStyle(
-      track: BoxStyler().width(32.0).height(20.0),
-      thumb: BoxStyler().width(16.0).height(16.0),
-    );
-  }
+  // ---------------------------------------------------------------------------
+  // Internal builders
+  // ---------------------------------------------------------------------------
 
-  /// Creates a size 2 switch style (medium - default).
-  ///
-  /// Standard switches for most common use cases.
-  /// Compose with variant methods like .classic().
-  static RemixSwitchStyle size2() {
-    return RemixSwitchStyle(
-      track: BoxStyler().width(40.0).height(24.0),
-      thumb: BoxStyler().width(20.0).height(20.0),
-    );
-  }
-
-  /// Creates a size 3 switch style (large).
-  ///
-  /// Large switches for accessibility needs and prominent forms.
-  /// Compose with variant methods like .classic().
-  static RemixSwitchStyle size3() {
-    return RemixSwitchStyle(
-      track: BoxStyler().width(48.0).height(28.0),
-      thumb: BoxStyler().width(24.0).height(24.0),
-    );
+  static RemixSwitchStyle _sizeStyle(RadixSwitchSize size) {
+    return switch (size) {
+      RadixSwitchSize.size1 => RemixSwitchStyle(
+          track: BoxStyler().width(32.0).height(20.0),
+          thumb: BoxStyler().width(16.0).height(16.0),
+        ),
+      RadixSwitchSize.size2 => RemixSwitchStyle(
+          track: BoxStyler().width(40.0).height(24.0),
+          thumb: BoxStyler().width(20.0).height(20.0),
+        ),
+      RadixSwitchSize.size3 => RemixSwitchStyle(
+          track: BoxStyler().width(48.0).height(28.0),
+          thumb: BoxStyler().width(24.0).height(24.0),
+        ),
+    };
   }
 }

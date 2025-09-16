@@ -8,6 +8,22 @@ import '../../radix/radix.dart';
 import '../spinner/spinner.dart';
 import 'icon_button.dart';
 
+enum RadixIconButtonSize {
+  size1,
+  size2,
+  size3,
+  size4,
+}
+
+enum RadixIconButtonVariant {
+  solid,
+  soft,
+  surface,
+  outline,
+  ghost,
+  classic,
+}
+
 /// Factory class for creating Radix-compliant icon button styles.
 ///
 /// Provides static methods to create RemixIconButtonStyle instances for all
@@ -15,12 +31,41 @@ import 'icon_button.dart';
 class RadixIconButtonStyles {
   const RadixIconButtonStyles._();
 
+  /// Factory constructor for RadixIconButtonStyle with variant and size parameters.
+  ///
+  /// Returns a RemixIconButtonStyle configured with Radix design tokens.
+  /// Defaults to solid variant with size2.
+  static RemixIconButtonStyle create({
+    RadixIconButtonVariant variant = RadixIconButtonVariant.solid,
+    RadixIconButtonSize size = RadixIconButtonSize.size2,
+  }) {
+    return switch (variant) {
+      RadixIconButtonVariant.solid => solid(size: size),
+      RadixIconButtonVariant.soft => soft(size: size),
+      RadixIconButtonVariant.surface => surface(size: size),
+      RadixIconButtonVariant.outline => outline(size: size),
+      RadixIconButtonVariant.ghost => ghost(size: size),
+      RadixIconButtonVariant.classic => classic(size: size),
+    };
+  }
+
+  static RemixIconButtonStyle base({
+    RadixIconButtonSize size = RadixIconButtonSize.size2,
+  }) {
+    return RemixIconButtonStyle()
+        // Focus state (generic)
+        // Merge with size-specific styles
+        .merge(_sizeStyle(size));
+  }
+
   /// Creates a solid variant icon button style.
   ///
   /// Solid icon buttons have high emphasis with solid accent background color.
-  /// Used for primary icon actions. Compose with size methods like .size2().
-  static RemixIconButtonStyle solid() {
-    return RemixIconButtonStyle()
+  /// Used for primary icon actions.
+  static RemixIconButtonStyle solid({
+    RadixIconButtonSize size = RadixIconButtonSize.size2,
+  }) {
+    return base(size: size)
         // Visual styling only - no size properties
         .color(RadixTokens.accent9())
         // Icon styling
@@ -36,12 +81,6 @@ class RadixIconButtonStyles {
         // State variants
         .onHovered(RemixIconButtonStyle().color(RadixTokens.accent10()))
         .onPressed(RemixIconButtonStyle().color(RadixTokens.accent10()))
-        .onFocused(
-          RemixIconButtonStyle().borderAll(
-            color: RadixTokens.focusA8(),
-            width: RadixTokens.focusRingWidth(),
-          ),
-        )
         .onDisabled(
           RemixIconButtonStyle()
               .color(RadixTokens.accent9())
@@ -55,9 +94,11 @@ class RadixIconButtonStyles {
   /// Creates a soft variant icon button style.
   ///
   /// Soft icon buttons have medium emphasis with subtle accent tinted background.
-  /// Used for secondary icon actions. Compose with size methods like .size2().
-  static RemixIconButtonStyle soft() {
-    return RemixIconButtonStyle()
+  /// Used for secondary icon actions.
+  static RemixIconButtonStyle soft({
+    RadixIconButtonSize size = RadixIconButtonSize.size2,
+  }) {
+    return base(size: size)
         // Visual styling only - no size properties
         .color(RadixTokens.accent3())
         .borderAll(
@@ -82,12 +123,6 @@ class RadixIconButtonStyles {
               ),
         )
         .onPressed(RemixIconButtonStyle().color(RadixTokens.accent5()))
-        .onFocused(
-          RemixIconButtonStyle().borderAll(
-            color: RadixTokens.focusA8(),
-            width: RadixTokens.focusRingWidth(),
-          ),
-        )
         .onDisabled(
           RemixIconButtonStyle()
               .color(RadixTokens.accent3())
@@ -103,9 +138,11 @@ class RadixIconButtonStyles {
   /// Creates a surface variant icon button style.
   ///
   /// Surface icon buttons have subtle emphasis with accent-tinted surface.
-  /// Used for tertiary icon actions. Compose with size methods like .size2().
-  static RemixIconButtonStyle surface() {
-    return RemixIconButtonStyle()
+  /// Used for tertiary icon actions.
+  static RemixIconButtonStyle surface({
+    RadixIconButtonSize size = RadixIconButtonSize.size2,
+  }) {
+    return base(size: size)
         // Visual styling only - no size properties
         .color(RadixTokens.accentSurface())
         .borderAll(
@@ -131,12 +168,6 @@ class RadixIconButtonStyles {
                 width: RadixTokens.borderWidth1(),
               ),
         )
-        .onFocused(
-          RemixIconButtonStyle().borderAll(
-            color: RadixTokens.focusA8(),
-            width: RadixTokens.focusRingWidth(),
-          ),
-        )
         .onDisabled(
           RemixIconButtonStyle()
               .color(RadixTokens.accentSurface())
@@ -153,9 +184,10 @@ class RadixIconButtonStyles {
   ///
   /// Outline icon buttons have border-focused emphasis with transparent background.
   /// Used for secondary icon actions where more emphasis is needed than ghost.
-  /// Compose with size methods like .size2().
-  static RemixIconButtonStyle outline() {
-    return RemixIconButtonStyle()
+  static RemixIconButtonStyle outline({
+    RadixIconButtonSize size = RadixIconButtonSize.size2,
+  }) {
+    return base(size: size)
         // Visual styling only - no size properties
         .color(Colors.transparent)
         .borderAll(
@@ -179,12 +211,6 @@ class RadixIconButtonStyles {
                 width: RadixTokens.borderWidth1(),
               ),
         )
-        .onFocused(
-          RemixIconButtonStyle().borderAll(
-            color: RadixTokens.focusA8(),
-            width: RadixTokens.focusRingWidth(),
-          ),
-        )
         .onDisabled(
           RemixIconButtonStyle()
               .borderAll(
@@ -199,9 +225,11 @@ class RadixIconButtonStyles {
   /// Creates a ghost variant icon button style.
   ///
   /// Ghost icon buttons have minimal emphasis with no visible container.
-  /// Used for very subtle icon actions. Compose with size methods like .size2().
-  static RemixIconButtonStyle ghost() {
-    return RemixIconButtonStyle()
+  /// Used for very subtle icon actions.
+  static RemixIconButtonStyle ghost({
+    RadixIconButtonSize size = RadixIconButtonSize.size2,
+  }) {
+    return base(size: size)
         // Visual styling only - no size properties
         .color(Colors.transparent)
         // Icon styling
@@ -217,12 +245,6 @@ class RadixIconButtonStyles {
         // State variants
         .onHovered(RemixIconButtonStyle().color(RadixTokens.accentA3()))
         .onPressed(RemixIconButtonStyle().color(RadixTokens.accentA4()))
-        .onFocused(
-          RemixIconButtonStyle().borderAll(
-            color: RadixTokens.focusA8(),
-            width: RadixTokens.focusRingWidth(),
-          ),
-        )
         .onDisabled(
           RemixIconButtonStyle()
               .iconColor(RadixTokens.accent11())
@@ -234,9 +256,10 @@ class RadixIconButtonStyles {
   ///
   /// Classic icon buttons have pre-flat UI style with neutral colors and shadows.
   /// Used when a more traditional icon button appearance is needed.
-  /// Compose with size methods like .size2().
-  static RemixIconButtonStyle classic() {
-    return RemixIconButtonStyle()
+  static RemixIconButtonStyle classic({
+    RadixIconButtonSize size = RadixIconButtonSize.size2,
+  }) {
+    return base(size: size)
         // Visual styling only - no size properties
         .color(RadixTokens.colorSurface())
         .borderAll(
@@ -267,12 +290,6 @@ class RadixIconButtonStyles {
                 RadixTokens.shadow2().map(BoxShadowMix.value).toList(),
               ),
         )
-        .onFocused(
-          RemixIconButtonStyle().borderAll(
-            color: RadixTokens.focusA8(),
-            width: RadixTokens.focusRingWidth(),
-          ),
-        )
         .onDisabled(
           RemixIconButtonStyle()
               .color(RadixTokens.colorSurface())
@@ -288,55 +305,36 @@ class RadixIconButtonStyles {
         );
   }
 
-  /// Creates a size 1 icon button style (small).
-  ///
-  /// Small icon buttons for compact layouts, toolbars, and dense interfaces.
-  /// Compose with variant methods like .solid().
-  static RemixIconButtonStyle size1() {
-    return RemixIconButtonStyle()
-        .width(24.0)
-        .height(24.0)
-        .borderRadiusAll(RadixTokens.radius2())
-        .iconSize(12.0)
-        .spinner(RemixSpinnerStyle(size: 12.0));
-  }
+  // ---------------------------------------------------------------------------
+  // Internal builders
+  // ---------------------------------------------------------------------------
 
-  /// Creates a size 2 icon button style (medium - default).
-  ///
-  /// Standard icon buttons for most common use cases.
-  /// Compose with variant methods like .solid().
-  static RemixIconButtonStyle size2() {
-    return RemixIconButtonStyle()
-        .width(32.0)
-        .height(32.0)
-        .borderRadiusAll(RadixTokens.radius3())
-        .iconSize(16.0)
-        .spinner(RemixSpinnerStyle(size: 16.0));
-  }
-
-  /// Creates a size 3 icon button style (large).
-  ///
-  /// Large icon buttons for prominent actions and accessibility needs.
-  /// Compose with variant methods like .solid().
-  static RemixIconButtonStyle size3() {
-    return RemixIconButtonStyle()
-        .width(40.0)
-        .height(40.0)
-        .borderRadiusAll(RadixTokens.radius4())
-        .iconSize(20.0)
-        .spinner(RemixSpinnerStyle(size: 20.0));
-  }
-
-  /// Creates a size 4 icon button style (extra large).
-  ///
-  /// Extra large icon buttons for maximum prominence and accessibility.
-  /// Compose with variant methods like .solid().
-  static RemixIconButtonStyle size4() {
-    return RemixIconButtonStyle()
-        .width(48.0)
-        .height(48.0)
-        .borderRadiusAll(RadixTokens.radius5())
-        .iconSize(24.0)
-        .spinner(RemixSpinnerStyle(size: 24.0));
+  static RemixIconButtonStyle _sizeStyle(RadixIconButtonSize size) {
+    return switch (size) {
+      RadixIconButtonSize.size1 => RemixIconButtonStyle()
+          .width(24.0)
+          .height(24.0)
+          .borderRadiusAll(RadixTokens.radius2())
+          .iconSize(12.0)
+          .spinner(RemixSpinnerStyle(size: 12.0)),
+      RadixIconButtonSize.size2 => RemixIconButtonStyle()
+          .width(32.0)
+          .height(32.0)
+          .borderRadiusAll(RadixTokens.radius3())
+          .iconSize(16.0)
+          .spinner(RemixSpinnerStyle(size: 16.0)),
+      RadixIconButtonSize.size3 => RemixIconButtonStyle()
+          .width(40.0)
+          .height(40.0)
+          .borderRadiusAll(RadixTokens.radius4())
+          .iconSize(20.0)
+          .spinner(RemixSpinnerStyle(size: 20.0)),
+      RadixIconButtonSize.size4 => RemixIconButtonStyle()
+          .width(48.0)
+          .height(48.0)
+          .borderRadiusAll(RadixTokens.radius5())
+          .iconSize(24.0)
+          .spinner(RemixSpinnerStyle(size: 24.0)),
+    };
   }
 }

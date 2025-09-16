@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 import '../../theme/remix_tokens.dart';
 import '../../utilities/remix_style.dart';
-import 'radix_badge_styles.dart';
 
 part 'badge_spec.dart';
 part 'badge_style.dart';

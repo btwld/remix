@@ -7,8 +7,18 @@ import 'package:mix/mix.dart';
 import '../../radix/radix.dart';
 import 'card.dart';
 
-// Export the extension so it's available when importing this file
-export 'card.dart' show RadixCardStyleExt;
+
+enum RadixCardSize {
+  size1,
+  size2,
+  size3,
+}
+
+enum RadixCardVariant {
+  surface,
+  classic,
+  ghost,
+}
 
 /// Factory class for creating Radix-compliant card styles.
 ///
@@ -17,12 +27,33 @@ export 'card.dart' show RadixCardStyleExt;
 class RadixCardStyles {
   const RadixCardStyles._();
 
+  /// Factory constructor for RadixCardStyle with variant and size parameters.
+  ///
+  /// Returns a RemixCardStyle configured with Radix design tokens.
+  /// Defaults to surface variant with size2.
+  static RemixCardStyle create({
+    RadixCardVariant variant = RadixCardVariant.surface,
+    RadixCardSize size = RadixCardSize.size2,
+  }) {
+    return switch (variant) {
+      RadixCardVariant.surface => surface(size: size),
+      RadixCardVariant.classic => classic(size: size),
+      RadixCardVariant.ghost => ghost(size: size),
+    };
+  }
+
+  static RemixCardStyle base({RadixCardSize size = RadixCardSize.size2}) {
+    return RemixCardStyle()
+        // Merge with size-specific styles
+        .merge(_sizeStyle(size));
+  }
+
   /// Creates a surface variant card style.
   ///
   /// Surface cards use panel solid background with subtle borders.
-  /// Used for standard content containers. Compose with size methods like .size2().
-  static RemixCardStyle surface() {
-    return RemixCardStyle()
+  /// Used for standard content containers.
+  static RemixCardStyle surface({RadixCardSize size = RadixCardSize.size2}) {
+    return base(size: size)
         // Visual styling only - no size properties
         .container(
       BoxStyler().color(RadixTokens.colorPanelSolid()).borderAll(
@@ -36,9 +67,8 @@ class RadixCardStyles {
   ///
   /// Classic cards use panel solid background with stronger borders and shadow.
   /// Used for elevated content containers with traditional appearance.
-  /// Compose with size methods like .size2().
-  static RemixCardStyle classic() {
-    return RemixCardStyle()
+  static RemixCardStyle classic({RadixCardSize size = RadixCardSize.size2}) {
+    return base(size: size)
         // Visual styling only - no size properties
         .container(BoxStyler().color(RadixTokens.colorPanelSolid()).borderAll(
               color: RadixTokens.gray7(),
@@ -52,37 +82,27 @@ class RadixCardStyles {
   ///
   /// Ghost cards have no background or border.
   /// Used for subtle content grouping without visual container.
-  /// Compose with size methods like .size2().
-  static RemixCardStyle ghost() {
-    return RemixCardStyle()
+  static RemixCardStyle ghost({RadixCardSize size = RadixCardSize.size2}) {
+    return base(size: size)
         // Visual styling only - no size properties
         .container(BoxStyler().color(Colors.transparent));
   }
 
-  /// Creates a size 1 card style (small).
-  ///
-  /// Small cards for compact layouts and dense interfaces.
-  static RemixCardStyle size1() {
-    return RemixCardStyle()
-        .padding(EdgeInsetsGeometryMix.all(12.0))
-        .borderRadius(BorderRadiusMix.all(RadixTokens.radius2()));
-  }
+  // ---------------------------------------------------------------------------
+  // Internal builders
+  // ---------------------------------------------------------------------------
 
-  /// Creates a size 2 card style (medium - default).
-  ///
-  /// Standard cards for most common use cases.
-  static RemixCardStyle size2() {
-    return RemixCardStyle()
-        .padding(EdgeInsetsGeometryMix.all(16.0))
-        .borderRadius(BorderRadiusMix.all(RadixTokens.radius3()));
-  }
-
-  /// Creates a size 3 card style (large).
-  ///
-  /// Large cards for prominent content and accessibility needs.
-  static RemixCardStyle size3() {
-    return RemixCardStyle()
-        .padding(EdgeInsetsGeometryMix.all(20.0))
-        .borderRadius(BorderRadiusMix.all(RadixTokens.radius4()));
+  static RemixCardStyle _sizeStyle(RadixCardSize size) {
+    return switch (size) {
+      RadixCardSize.size1 => RemixCardStyle()
+          .padding(EdgeInsetsGeometryMix.all(12.0))
+          .borderRadius(BorderRadiusMix.all(RadixTokens.radius2())),
+      RadixCardSize.size2 => RemixCardStyle()
+          .padding(EdgeInsetsGeometryMix.all(16.0))
+          .borderRadius(BorderRadiusMix.all(RadixTokens.radius3())),
+      RadixCardSize.size3 => RemixCardStyle()
+          .padding(EdgeInsetsGeometryMix.all(20.0))
+          .borderRadius(BorderRadiusMix.all(RadixTokens.radius4())),
+    };
   }
 }
