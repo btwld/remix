@@ -62,6 +62,7 @@ class HexColor extends Color {
               '0x color literal must be 8 hex digits (AARRGGBB); got ${body.length} in "$hex".',
             );
           }
+
           return int.parse(body, radix: 16);
         }(),
 
@@ -75,7 +76,8 @@ class HexColor extends Color {
             // #RGB -> #RRGGBB
             3 => _argb(0xFF, _dup(body[0]), _dup(body[1]), _dup(body[2])),
             // #RGBA -> #RRGGBBAA (alpha last)
-            4 => _argb(_dup(body[3]), _dup(body[0]), _dup(body[1]), _dup(body[2])),
+            4 =>
+              _argb(_dup(body[3]), _dup(body[0]), _dup(body[1]), _dup(body[2])),
             // #RRGGBB
             6 => _argb(0xFF, _h2(body, 0), _h2(body, 2), _h2(body, 4)),
             // #RRGGBBAA (alpha last)

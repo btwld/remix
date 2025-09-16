@@ -231,7 +231,7 @@ class RemixTextFieldStyle extends RemixFlexContainerStyle<TextFieldSpec, RemixTe
   }
 
   @override
-  RemixTextFieldStyle variants(List<VariantStyle<TextFieldSpec>> value) {
+  RemixTextFieldStyle withVariants(List<VariantStyle<TextFieldSpec>> value) {
     return merge(RemixTextFieldStyle(variants: value));
   }
 

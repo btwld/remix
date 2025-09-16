@@ -23,45 +23,43 @@ class RadixTextFieldStyles {
   /// Compose with size methods like .size2().
   static RemixTextFieldStyle classic() {
     return RemixTextFieldStyle(
-        // Background and container styling - no size properties
-        text: TextStyler()
-            .color(RadixTokens.gray12())
-            .fontWeight(RadixTokens.fontWeightRegular()),
-        hintText: TextStyler()
-            .color(RadixTokens.gray10())
-            .fontWeight(RadixTokens.fontWeightRegular()),
-        cursorColor: RadixTokens.gray12(),
-        cursorWidth: 1.5,
-        label: TextStyler()
-            .color(RadixTokens.gray12())
-            .fontWeight(RadixTokens.fontWeightMedium()),
-        helperText: TextStyler()
-            .color(RadixTokens.gray11())
-            .fontWeight(RadixTokens.fontWeightRegular()),
-      )
-      .color(RadixTokens.colorSurface())
-      .borderAll(
-        color: RadixTokens.gray7(),
-        width: RadixTokens.borderWidth1(),
-      )
-      // State variants
-      .onFocused(
-        RemixTextFieldStyle().borderAll(
-          color: RadixTokens.accent8(),
-          width: RadixTokens.borderWidth1(),
-        ),
-      )
-      .onDisabled(
-        RemixTextFieldStyle(
-          text: TextStyler().color(RadixTokens.gray10()),
-          hintText: TextStyler().color(RadixTokens.gray8()),
-        )
+      // Background and container styling - no size properties
+      text: TextStyler()
+          .color(RadixTokens.gray12())
+          .fontWeight(RadixTokens.fontWeightRegular()),
+      hintText: TextStyler()
+          .color(RadixTokens.gray10())
+          .fontWeight(RadixTokens.fontWeightRegular()),
+      cursorWidth: 1.5,
+      cursorColor: RadixTokens.gray12(),
+      helperText: TextStyler()
+          .color(RadixTokens.gray11())
+          .fontWeight(RadixTokens.fontWeightRegular()),
+      label: TextStyler()
+          .color(RadixTokens.gray12())
+          .fontWeight(RadixTokens.fontWeightMedium()),
+    )
         .color(RadixTokens.colorSurface())
         .borderAll(
           color: RadixTokens.gray7(),
           width: RadixTokens.borderWidth1(),
-        ),
-      );
+        )
+        // State variants
+        .onFocused(
+          RemixTextFieldStyle().borderAll(
+            color: RadixTokens.accent8(),
+            width: RadixTokens.borderWidth1(),
+          ),
+        )
+        .onDisabled(
+          RemixTextFieldStyle(
+            text: TextStyler().color(RadixTokens.gray10()),
+            hintText: TextStyler().color(RadixTokens.gray8()),
+          ).color(RadixTokens.colorSurface()).borderAll(
+                color: RadixTokens.gray7(),
+                width: RadixTokens.borderWidth1(),
+              ),
+        );
   }
 
   /// Creates a surface variant textfield style.
@@ -70,44 +68,42 @@ class RadixTextFieldStyles {
   /// Used for forms with softer visual appearance. Compose with size methods like .size2().
   static RemixTextFieldStyle surface() {
     return RemixTextFieldStyle(
-        text: TextStyler()
-            .color(RadixTokens.gray12())
-            .fontWeight(RadixTokens.fontWeightRegular()),
-        hintText: TextStyler()
-            .color(RadixTokens.gray10())
-            .fontWeight(RadixTokens.fontWeightRegular()),
-        cursorColor: RadixTokens.gray12(),
-        cursorWidth: 1.5,
-        label: TextStyler()
-            .color(RadixTokens.gray12())
-            .fontWeight(RadixTokens.fontWeightMedium()),
-        helperText: TextStyler()
-            .color(RadixTokens.gray11())
-            .fontWeight(RadixTokens.fontWeightRegular()),
-      )
-      .color(RadixTokens.colorSurface())
-      .borderAll(
-        color: RadixTokens.gray6(),
-        width: RadixTokens.borderWidth1(),
-      )
-      // State variants
-      .onFocused(
-        RemixTextFieldStyle().borderAll(
-          color: RadixTokens.accent7(),
-          width: RadixTokens.borderWidth1(),
-        ),
-      )
-      .onDisabled(
-        RemixTextFieldStyle(
-          text: TextStyler().color(RadixTokens.gray10()),
-          hintText: TextStyler().color(RadixTokens.gray8()),
-        )
+      text: TextStyler()
+          .color(RadixTokens.gray12())
+          .fontWeight(RadixTokens.fontWeightRegular()),
+      hintText: TextStyler()
+          .color(RadixTokens.gray10())
+          .fontWeight(RadixTokens.fontWeightRegular()),
+      cursorWidth: 1.5,
+      cursorColor: RadixTokens.gray12(),
+      helperText: TextStyler()
+          .color(RadixTokens.gray11())
+          .fontWeight(RadixTokens.fontWeightRegular()),
+      label: TextStyler()
+          .color(RadixTokens.gray12())
+          .fontWeight(RadixTokens.fontWeightMedium()),
+    )
         .color(RadixTokens.colorSurface())
         .borderAll(
           color: RadixTokens.gray6(),
           width: RadixTokens.borderWidth1(),
-        ),
-      );
+        )
+        // State variants
+        .onFocused(
+          RemixTextFieldStyle().borderAll(
+            color: RadixTokens.accent7(),
+            width: RadixTokens.borderWidth1(),
+          ),
+        )
+        .onDisabled(
+          RemixTextFieldStyle(
+            text: TextStyler().color(RadixTokens.gray10()),
+            hintText: TextStyler().color(RadixTokens.gray8()),
+          ).color(RadixTokens.colorSurface()).borderAll(
+                color: RadixTokens.gray6(),
+                width: RadixTokens.borderWidth1(),
+              ),
+        );
   }
 
   /// Creates a soft variant textfield style.
@@ -116,44 +112,42 @@ class RadixTextFieldStyles {
   /// Used for forms that need accent color integration. Compose with size methods like .size2().
   static RemixTextFieldStyle soft() {
     return RemixTextFieldStyle(
-        text: TextStyler()
-            .color(RadixTokens.accent12())
-            .fontWeight(RadixTokens.fontWeightRegular()),
-        hintText: TextStyler()
-            .color(RadixTokens.accent10())
-            .fontWeight(RadixTokens.fontWeightRegular()),
-        cursorColor: RadixTokens.accent12(),
-        cursorWidth: 1.5,
-        label: TextStyler()
-            .color(RadixTokens.gray12())
-            .fontWeight(RadixTokens.fontWeightMedium()),
-        helperText: TextStyler()
-            .color(RadixTokens.gray11())
-            .fontWeight(RadixTokens.fontWeightRegular()),
-      )
-      .color(RadixTokens.accent3())
-      .borderAll(
-        color: RadixTokens.accent6(),
-        width: RadixTokens.borderWidth1(),
-      )
-      // State variants
-      .onFocused(
-        RemixTextFieldStyle().borderAll(
-          color: RadixTokens.accent8(),
-          width: RadixTokens.borderWidth1(),
-        ),
-      )
-      .onDisabled(
-        RemixTextFieldStyle(
-          text: TextStyler().color(RadixTokens.accent11()),
-          hintText: TextStyler().color(RadixTokens.accent9()),
-        )
+      text: TextStyler()
+          .color(RadixTokens.accent12())
+          .fontWeight(RadixTokens.fontWeightRegular()),
+      hintText: TextStyler()
+          .color(RadixTokens.accent10())
+          .fontWeight(RadixTokens.fontWeightRegular()),
+      cursorWidth: 1.5,
+      cursorColor: RadixTokens.accent12(),
+      helperText: TextStyler()
+          .color(RadixTokens.gray11())
+          .fontWeight(RadixTokens.fontWeightRegular()),
+      label: TextStyler()
+          .color(RadixTokens.gray12())
+          .fontWeight(RadixTokens.fontWeightMedium()),
+    )
         .color(RadixTokens.accent3())
         .borderAll(
           color: RadixTokens.accent6(),
           width: RadixTokens.borderWidth1(),
-        ),
-      );
+        )
+        // State variants
+        .onFocused(
+          RemixTextFieldStyle().borderAll(
+            color: RadixTokens.accent8(),
+            width: RadixTokens.borderWidth1(),
+          ),
+        )
+        .onDisabled(
+          RemixTextFieldStyle(
+            text: TextStyler().color(RadixTokens.accent11()),
+            hintText: TextStyler().color(RadixTokens.accent9()),
+          ).color(RadixTokens.accent3()).borderAll(
+                color: RadixTokens.accent6(),
+                width: RadixTokens.borderWidth1(),
+              ),
+        );
   }
 
   /// Creates a size 1 textfield style (small).
@@ -163,12 +157,9 @@ class RadixTextFieldStyles {
     return RemixTextFieldStyle(
       text: TextStyler().fontSize(12.0),
       hintText: TextStyler().fontSize(12.0),
-      label: TextStyler().fontSize(11.0),
       helperText: TextStyler().fontSize(11.0),
-    )
-    .borderRadiusAll(RadixTokens.radius2())
-    .paddingAll(8.0)
-    .height(32.0);
+      label: TextStyler().fontSize(11.0),
+    ).borderRadiusAll(RadixTokens.radius2()).paddingAll(8.0).height(32.0);
   }
 
   /// Creates a size 2 textfield style (medium - default).
@@ -178,12 +169,9 @@ class RadixTextFieldStyles {
     return RemixTextFieldStyle(
       text: TextStyler().fontSize(14.0),
       hintText: TextStyler().fontSize(14.0),
-      label: TextStyler().fontSize(13.0),
       helperText: TextStyler().fontSize(12.0),
-    )
-    .borderRadiusAll(RadixTokens.radius3())
-    .paddingAll(12.0)
-    .height(40.0);
+      label: TextStyler().fontSize(13.0),
+    ).borderRadiusAll(RadixTokens.radius3()).paddingAll(12.0).height(40.0);
   }
 
   /// Creates a size 3 textfield style (large).
@@ -193,12 +181,9 @@ class RadixTextFieldStyles {
     return RemixTextFieldStyle(
       text: TextStyler().fontSize(16.0),
       hintText: TextStyler().fontSize(16.0),
-      label: TextStyler().fontSize(15.0),
       helperText: TextStyler().fontSize(14.0),
-    )
-    .borderRadiusAll(RadixTokens.radius4())
-    .paddingAll(16.0)
-    .height(48.0);
+      label: TextStyler().fontSize(15.0),
+    ).borderRadiusAll(RadixTokens.radius4()).paddingAll(16.0).height(48.0);
   }
 }
 

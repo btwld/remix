@@ -55,6 +55,11 @@ class RemixCardStyle extends RemixContainerStyle<CardSpec, RemixCardStyle> {
     return merge(RemixCardStyle(container: BoxStyler(decoration: value)));
   }
 
+  /// Sets container styling
+  RemixCardStyle container(BoxStyler value) {
+    return merge(RemixCardStyle(container: value));
+  }
+
   @override
   StyleSpec<CardSpec> resolve(BuildContext context) {
     return StyleSpec(
@@ -77,7 +82,7 @@ class RemixCardStyle extends RemixContainerStyle<CardSpec, RemixCardStyle> {
   }
 
   @override
-  RemixCardStyle variants(List<VariantStyle<CardSpec>> value) {
+  RemixCardStyle withVariants(List<VariantStyle<CardSpec>> value) {
     return merge(RemixCardStyle(variants: value));
   }
 
@@ -115,11 +120,6 @@ class RemixCardStyle extends RemixContainerStyle<CardSpec, RemixCardStyle> {
     ));
   }
 
-  /// Sets container styling
-  RemixCardStyle container(BoxStyler value) {
-    return merge(RemixCardStyle(container: value));
-  }
-
   @override
   List<Object?> get props => [$container, $variants, $animation, $modifier];
 }
@@ -138,8 +138,6 @@ class RemixCardStyles {
           ),
         ),
       );
-
-
 }
 
 // Variants are exposed via RemixCardStyles

@@ -94,7 +94,7 @@ class RemixSwitchStyle extends RemixContainerStyle<SwitchSpec, RemixSwitchStyle>
   }
 
   @override
-  RemixSwitchStyle variants(List<VariantStyle<SwitchSpec>> value) {
+  RemixSwitchStyle withVariants(List<VariantStyle<SwitchSpec>> value) {
     return merge(RemixSwitchStyle(variants: value));
   }
 

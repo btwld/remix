@@ -192,7 +192,6 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
             ),
             onClose: widget.onClose,
             onOpen: widget.onOpen,
-            selectedValue: widget.selectedValue,
             onStateChange: (value) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 if (value == OverlayChildLifecycleState.present) {
@@ -204,8 +203,9 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
                 animationController.reverse();
               }
             },
-            removalDelay: duration,
+            selectedValue: widget.selectedValue,
             onSelectedValueChanged: widget.onChanged,
+            removalDelay: duration,
             enabled: widget.enabled,
             closeOnSelect: widget.closeOnSelect,
             autofocus: widget.autofocus,
@@ -292,14 +292,15 @@ class _MultiSelectWrapperState<T> extends State<_MultiSelectWrapper<T>> {
       menu: widget.menu,
       onClose: widget.onClose,
       onOpen: widget.onOpen,
-      selectedValue: null, // We don't use single selection
+      // We don't use single selection
       onStateChange: widget.onStateChange,
-      removalDelay: widget.removalDelay,
+      selectedValue: null,
       onSelectedValueChanged: (value) {
         if (value != null) {
           _handleItemSelection(value);
         }
       },
+      removalDelay: widget.removalDelay,
       enabled: widget.enabled,
       closeOnSelect: widget.closeOnSelect,
       autofocus: widget.autofocus,

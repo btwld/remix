@@ -3,7 +3,8 @@ part of 'radio.dart';
 // Private per-component constants (sizes only)
 const _kFontSizeMd = 14.0;
 
-class RemixRadioStyle extends RemixFlexContainerStyle<RadioSpec, RemixRadioStyle> {
+class RemixRadioStyle
+    extends RemixFlexContainerStyle<RadioSpec, RemixRadioStyle> {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<BoxSpec>>? $indicatorContainer;
   final Prop<StyleSpec<BoxSpec>>? $indicator;
@@ -88,8 +89,18 @@ class RemixRadioStyle extends RemixFlexContainerStyle<RadioSpec, RemixRadioStyle
     return merge(RemixRadioStyle(indicator: value));
   }
 
+  /// Sets container styling
+  RemixRadioStyle container(FlexBoxStyler value) {
+    return merge(RemixRadioStyle(container: value));
+  }
+
+  /// Sets label styling
+  RemixRadioStyle label(TextStyler value) {
+    return merge(RemixRadioStyle(label: value));
+  }
+
   @override
-  RemixRadioStyle variants(List<VariantStyle<RadioSpec>> value) {
+  RemixRadioStyle withVariants(List<VariantStyle<RadioSpec>> value) {
     return merge(RemixRadioStyle(variants: value));
   }
 
@@ -125,16 +136,6 @@ class RemixRadioStyle extends RemixFlexContainerStyle<RadioSpec, RemixRadioStyle
     return merge(RemixRadioStyle(
       container: FlexBoxStyler(alignment: alignment, transform: value),
     ));
-  }
-
-  /// Sets container styling
-  RemixRadioStyle container(FlexBoxStyler value) {
-    return merge(RemixRadioStyle(container: value));
-  }
-
-  /// Sets label styling
-  RemixRadioStyle label(TextStyler value) {
-    return merge(RemixRadioStyle(label: value));
   }
 
   @override

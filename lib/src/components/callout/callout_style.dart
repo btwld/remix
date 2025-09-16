@@ -115,7 +115,7 @@ class RemixCalloutStyle
   }
 
   @override
-  RemixCalloutStyle variants(List<VariantStyle<CalloutSpec>> value) {
+  RemixCalloutStyle withVariants(List<VariantStyle<CalloutSpec>> value) {
     return merge(RemixCalloutStyle(variants: value));
   }
 

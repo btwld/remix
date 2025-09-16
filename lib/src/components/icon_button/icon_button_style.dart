@@ -4,9 +4,9 @@ part of 'icon_button.dart';
 const _kIconButtonSize = 40.0;
 const _kIconSizeMd = 20.0;
 
-class RemixIconButtonStyle extends RemixContainerStyle<IconButtonSpec, RemixIconButtonStyle>
-    with
-        IconStyleMixin<RemixIconButtonStyle> {
+class RemixIconButtonStyle
+    extends RemixContainerStyle<IconButtonSpec, RemixIconButtonStyle>
+    with IconStyleMixin<RemixIconButtonStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<IconSpec>>? $icon;
   final Prop<StyleSpec<SpinnerSpec>>? $spinner;
@@ -112,26 +112,19 @@ class RemixIconButtonStyle extends RemixContainerStyle<IconButtonSpec, RemixIcon
 
   /// Sets icon color
   RemixIconButtonStyle iconColor(Color value) {
-    return merge(RemixIconButtonStyle(
-      icon: IconStyler(color: value),
-    ));
+    return merge(RemixIconButtonStyle(icon: IconStyler(color: value)));
   }
 
   /// Sets icon size
   RemixIconButtonStyle iconSize(double value) {
-    return merge(RemixIconButtonStyle(
-      icon: IconStyler(size: value),
-    ));
+    return merge(RemixIconButtonStyle(icon: IconStyler(size: value)));
   }
 
   /// Sets width
   RemixIconButtonStyle width(double value) {
     return merge(RemixIconButtonStyle(
       container: BoxStyler(
-        constraints: BoxConstraintsMix(
-          minWidth: value,
-          maxWidth: value,
-        ),
+        constraints: BoxConstraintsMix(minWidth: value, maxWidth: value),
       ),
     ));
   }
@@ -140,10 +133,7 @@ class RemixIconButtonStyle extends RemixContainerStyle<IconButtonSpec, RemixIcon
   RemixIconButtonStyle height(double value) {
     return merge(RemixIconButtonStyle(
       container: BoxStyler(
-        constraints: BoxConstraintsMix(
-          minHeight: value,
-          maxHeight: value,
-        ),
+        constraints: BoxConstraintsMix(minHeight: value, maxHeight: value),
       ),
     ));
   }
@@ -194,7 +184,7 @@ class RemixIconButtonStyle extends RemixContainerStyle<IconButtonSpec, RemixIcon
   // Variant support
 
   @override
-  RemixIconButtonStyle variants(List<VariantStyle<IconButtonSpec>> value) {
+  RemixIconButtonStyle withVariants(List<VariantStyle<IconButtonSpec>> value) {
     return merge(RemixIconButtonStyle(variants: value));
   }
 

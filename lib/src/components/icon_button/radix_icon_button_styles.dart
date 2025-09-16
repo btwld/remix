@@ -244,9 +244,7 @@ class RadixIconButtonStyles {
           width: RadixTokens.borderWidth1(),
         )
         // Add subtle shadow for classic feel using token
-        .shadows(
-          RadixTokens.shadow2().map(BoxShadowMix.value).toList(),
-        )
+        .shadows(RadixTokens.shadow2().map(BoxShadowMix.value).toList())
         // Icon styling
         .iconColor(RadixTokens.gray12())
         .spinner(
