@@ -198,36 +198,4 @@ class RemixAvatarStyle extends RemixContainerStyle<AvatarSpec, RemixAvatarStyle>
       ];
 }
 
-/// Default avatar styles and variants
-class RemixAvatarStyles {
-  /// Default avatar style
-  /// Base avatar style - circular design with primary color
-  static RemixAvatarStyle get baseStyle => RemixAvatarStyle(
-        container: BoxStyler(
-          alignment: Alignment.center,
-          constraints: BoxConstraintsMix(
-            minWidth: _kSizeMedium,
-            maxWidth: _kSizeMedium,
-            minHeight: _kSizeMedium,
-            maxHeight: _kSizeMedium,
-          ),
-          decoration: BoxDecorationMix(
-            shape: BoxShape.circle,
-            color: RemixTokens.primary(),
-          ),
-          clipBehavior: Clip.antiAlias,
-        ),
-        text: TextStyler(
-          style: TextStyleMix(
-            color: RemixTokens.onPrimary(),
-            fontSize: _kFontSizeMedium,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-        icon:
-            IconStyler(color: RemixTokens.onPrimary(), size: _kIconSizeMedium),
-      );
 
-
-
-}

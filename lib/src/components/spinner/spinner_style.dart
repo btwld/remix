@@ -133,27 +133,4 @@ class RemixSpinnerStyle extends RemixStyle<SpinnerSpec, RemixSpinnerStyle> {
       ];
 }
 
-/// Spinner styles
-class RemixSpinnerStyles {
-  /// Base spinner style - standard size with primary color
-  static RemixSpinnerStyle get baseStyle => RemixSpinnerStyle(
-        size: _kSizeMd,
-        strokeWidth: _kStrokeMd,
-        color: RemixTokens.primary(),
-        duration: const Duration(milliseconds: _kDurationMs),
-        type: SpinnerType.solid,
-      );
 
-}
-
-/// Extension for convenience access to size methods
-extension RemixSpinnerStyleExt on RemixSpinnerStyles {
-  /// Small spinner size
-  RemixSpinnerStyle get size1 => RemixSpinnerStyles.baseStyle.size(16.0).strokeWidth(1.5);
-  
-  /// Medium spinner size  
-  RemixSpinnerStyle get size2 => RemixSpinnerStyles.baseStyle.size(20.0).strokeWidth(2.0);
-  
-  /// Large spinner size
-  RemixSpinnerStyle get size3 => RemixSpinnerStyles.baseStyle.size(24.0).strokeWidth(2.5);
-}

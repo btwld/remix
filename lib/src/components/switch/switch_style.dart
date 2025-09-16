@@ -158,40 +158,5 @@ class RemixSwitchStyle extends RemixContainerStyle<SwitchSpec, RemixSwitchStyle>
       ];
 }
 
-/// Canonical access to default and variants
-class RemixSwitchStyles {
-  /// Base switch style - toggle design with thumb indicator
-  static RemixSwitchStyle get baseStyle => RemixSwitchStyle(
-        container: BoxStyler(),
-        track: BoxStyler(
-          constraints: BoxConstraintsMix(
-            minWidth: _kTrackWidth,
-            maxWidth: _kTrackWidth,
-            minHeight: _kTrackHeight,
-            maxHeight: _kTrackHeight,
-          ),
-          decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(
-              BorderSideMix(color: RemixTokens.primary(), width: 1),
-            ),
-            borderRadius: BorderRadiusMix.circular(_kTrackHeight),
-            color: RemixTokens.onPrimary(),
-          ),
-        ),
-        thumb: BoxStyler(
-          constraints: BoxConstraintsMix(
-            minWidth: _kThumbSize,
-            maxWidth: _kThumbSize,
-            minHeight: _kThumbSize,
-            maxHeight: _kThumbSize,
-          ),
-          decoration: BoxDecorationMix(
-            shape: BoxShape.circle,
-            color: RemixTokens.primary(),
-          ),
-        ),
-      );
 
-
-}
 

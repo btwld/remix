@@ -119,20 +119,4 @@ class RemixDividerStyle extends RemixContainerStyle<DividerSpec, RemixDividerSty
   List<Object?> get props => [$container, $variants, $animation, $modifier];
 }
 
-/// Default divider styles and variants
-class RemixDividerStyles {
-  /// Base divider style - horizontal with standard height
-  static RemixDividerStyle get baseStyle => RemixDividerStyle(
-        container: BoxStyler(
-          constraints: BoxConstraintsMix(
-            minWidth: double.infinity,
-            minHeight: 1,
-            maxHeight: 1,
-          ),
-          decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.all(RemixTokens.radius()),
-            color: RemixTokens.primary(),
-          ),
-        ),
-      );
-}
+

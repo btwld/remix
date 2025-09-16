@@ -149,27 +149,5 @@ class RemixBadgeStyle extends RemixContainerStyle<BadgeSpec, RemixBadgeStyle> {
       ];
 }
 
-/// Default badge styles and variants
-class RemixBadgeStyles {
-  /// Base badge style - compact design with primary color
-  static RemixBadgeStyle get baseStyle => RemixBadgeStyle(
-        container: BoxStyler(
-          padding: EdgeInsetsMix.symmetric(
-            vertical: RemixTokens.spaceXs(),
-            horizontal: RemixTokens.spaceSm(),
-          ),
-          decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.all(RemixTokens.radius()),
-            color: RemixTokens.primary(),
-          ),
-        ),
-        text: TextStyler(
-          style: TextStyleMix(
-            color: RemixTokens.onPrimary(),
-            fontSize: _kFontSizeSm,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      );
-}
+
 

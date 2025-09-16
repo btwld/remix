@@ -135,25 +135,4 @@ class RemixTooltipStyle extends RemixContainerStyle<TooltipSpec, RemixTooltipSty
       ];
 }
 
-/// Canonical access to default and variants
-class RemixTooltipStyles {
-  /// Base tooltip style - compact overlay design
-  static RemixTooltipStyle get baseStyle => RemixTooltipStyle(
-        container: BoxStyler(
-          padding: EdgeInsetsMix.all(RemixTokens.spaceSm()),
-          decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.all(RemixTokens.radius()),
-            color: RemixTokens.primary(),
-          ),
-        ),
-        text: TextStyler(
-          style: TextStyleMix(
-            color: RemixTokens.onPrimary(),
-            fontSize: _kFontSizeSm,
-          ),
-        ),
-        animation: AnimationConfig.ease(const Duration(milliseconds: 100)),
-      );
 
-
-}
