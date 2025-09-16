@@ -12,7 +12,6 @@ import '../../utilities/remix_style.dart';
 import 'package:naked_ui/naked_ui.dart';
 
 import '../_internal/widget_state_controller_mixin.dart';
-import 'radix_textfield_styles.dart';
 
 part 'textfield_spec.dart';
 part 'textfield_style.dart';

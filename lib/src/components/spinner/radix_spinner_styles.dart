@@ -1,72 +1,72 @@
-// ABOUTME: Factory for creating RemixSpinnerStyle instances using Radix design tokens
-// ABOUTME: Provides default Radix spinner style with proper token-based styling
-
-// Export for convenience access to Radix spinner style extensions
+// ABOUTME: Factory constructors for RemixSpinnerStyle variants using Radix design tokens
+// ABOUTME: Provides RadixSpinnerStyle subclass with size aware composition
 
 import '../../radix/radix.dart';
 import 'spinner.dart';
 
-/// Factory class for creating Radix-compliant spinner styles.
+enum RadixSpinnerSize {
+  size1,
+  size2,
+  size3,
+}
+
+/// RadixSpinnerStyle utility class for creating Radix-themed spinner styles.
 ///
-/// Provides static methods to create RemixSpinnerStyle instances using
-/// the RadixTokens system. Spinners only have a default variant.
-class RadixSpinnerStyles {
-  const RadixSpinnerStyles._();
+/// Provides factory constructor with size parameters plus named
+/// static methods for direct access. Composes the correct base metrics
+/// and size-specific styles sourced from the Radix token JSON.
+class RadixSpinnerStyle {
+  const RadixSpinnerStyle._();
 
-  /// Creates the default spinner style.
+  /// Factory constructor for RadixSpinnerStyle with size parameters.
   ///
-  /// Uses accent color for the stroke. According to the Radix spec,
-  /// spinners only have a single default variant.
-  static RemixSpinnerStyle defaultStyle() {
-    return RemixSpinnerStyle(
-      color: RadixTokens.accent9(), // Uses accent step 9 as per spec
-      duration: const Duration(milliseconds: 800), // per component token
-      type: SpinnerType.solid,
-    );
+  /// Returns a RemixSpinnerStyle configured with Radix design tokens.
+  /// Defaults to size2. Spinners have no variants, only defaultStyle().
+  static RemixSpinnerStyle create({
+    RadixSpinnerSize size = RadixSpinnerSize.size2,
+  }) {
+    return defaultStyle(size: size);
   }
 
-  /// Small spinner size (16px with 1.5px stroke).
-  static RemixSpinnerStyle size1() {
+  static RemixSpinnerStyle base({
+    RadixSpinnerSize size = RadixSpinnerSize.size2,
+  }) {
     return RemixSpinnerStyle(
-      size: 16.0,
-      strokeWidth: 1.5,
-      color: RadixTokens.accent9(),
-      duration: const Duration(milliseconds: 800),
-      type: SpinnerType.solid,
-    );
+        // Default properties (no focus state for spinners)
+        color: RadixTokens.accent9(), // Uses accent step 9 as per spec
+        duration: const Duration(milliseconds: 800), // per component token
+        type: SpinnerType.solid,
+      )
+        // Merge with size-specific styles
+        .merge(_sizeStyle(size));
   }
 
-  /// Medium spinner size (20px with 2.0px stroke).
-  static RemixSpinnerStyle size2() {
-    return RemixSpinnerStyle(
-      size: 20.0,
-      strokeWidth: 2.0,
-      color: RadixTokens.accent9(),
-      duration: const Duration(milliseconds: 800),
-      type: SpinnerType.solid,
-    );
+  static RemixSpinnerStyle defaultStyle({
+    RadixSpinnerSize size = RadixSpinnerSize.size2,
+  }) {
+    return base(size: size);
   }
 
-  /// Large spinner size (24px with 2.5px stroke).
-  static RemixSpinnerStyle size3() {
-    return RemixSpinnerStyle(
-      size: 24.0,
-      strokeWidth: 2.5,
-      color: RadixTokens.accent9(),
-      duration: const Duration(milliseconds: 800),
-      type: SpinnerType.solid,
-    );
+
+  // ---------------------------------------------------------------------------
+  // Internal builders
+  // ---------------------------------------------------------------------------
+
+  static RemixSpinnerStyle _sizeStyle(RadixSpinnerSize size) {
+    return switch (size) {
+      RadixSpinnerSize.size1 => RemixSpinnerStyle(
+          size: 16.0,
+          strokeWidth: 1.5,
+        ),
+      RadixSpinnerSize.size2 => RemixSpinnerStyle(
+          size: 20.0,
+          strokeWidth: 2.0,
+        ),
+      RadixSpinnerSize.size3 => RemixSpinnerStyle(
+          size: 24.0,
+          strokeWidth: 2.5,
+        ),
+    };
   }
 }
 
-/// Extension for RadixSpinnerStyles providing convenient access to size methods.
-extension RadixSpinnerStyleExt on RadixSpinnerStyles {
-  /// Small spinner size (16px with 1.5px stroke).
-  RemixSpinnerStyle get size1 => RadixSpinnerStyles.size1();
-
-  /// Medium spinner size (20px with 2.0px stroke).
-  RemixSpinnerStyle get size2 => RadixSpinnerStyles.size2();
-
-  /// Large spinner size (24px with 2.5px stroke).
-  RemixSpinnerStyle get size3 => RadixSpinnerStyles.size3();
-}

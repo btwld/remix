@@ -211,29 +211,3 @@ class RemixSliderStyles {
       });
 }
 
-/// Extension providing Radix slider size methods for fluent API.
-///
-/// Enables the pattern: `RadixSliderStyles.classic().size2()`
-/// instead of: `RadixSliderStyles.size2().merge(RadixSliderStyles.classic())`
-extension RadixSliderStyleExt on RemixSliderStyle {
-  /// Creates a size 1 slider style (small).
-  ///
-  /// Small sliders for compact layouts and dense interfaces.
-  RemixSliderStyle size1() {
-    return merge(RadixSliderStyles.size1());
-  }
-
-  /// Creates a size 2 slider style (medium - default).
-  ///
-  /// Standard sliders for most common use cases.
-  RemixSliderStyle size2() {
-    return merge(RadixSliderStyles.size2());
-  }
-
-  /// Creates a size 3 slider style (large).
-  ///
-  /// Large sliders for prominent controls and accessibility needs.
-  RemixSliderStyle size3() {
-    return merge(RadixSliderStyles.size3());
-  }
-}

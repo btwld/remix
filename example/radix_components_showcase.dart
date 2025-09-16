@@ -572,17 +572,17 @@ class _TextFieldSection extends StatelessWidget {
       children: [
         RemixTextField(
           hintText: 'Classic TextField',
-          style: RadixTextFieldStyles.classic(),
+          style: RadixTextFieldStyle.classic(),
         ),
         const SizedBox(height: 12),
         RemixTextField(
           hintText: 'Surface TextField',
-          style: RadixTextFieldStyles.surface(),
+          style: RadixTextFieldStyle.surface(),
         ),
         const SizedBox(height: 12),
         RemixTextField(
           hintText: 'Soft TextField',
-          style: RadixTextFieldStyles.soft(),
+          style: RadixTextFieldStyle.soft(),
         ),
       ],
     );
@@ -616,11 +616,11 @@ class _ProgressSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        RemixProgress(value: value, style: RadixProgressStyles.classic()),
+        RemixProgress(value: value, style: RadixProgressStyle.classic()),
         const SizedBox(height: 12),
-        RemixProgress(value: value, style: RadixProgressStyles.surface()),
+        RemixProgress(value: value, style: RadixProgressStyle.surface()),
         const SizedBox(height: 12),
-        RemixProgress(value: value, style: RadixProgressStyles.soft()),
+        RemixProgress(value: value, style: RadixProgressStyle.soft()),
       ],
     );
   }
@@ -635,9 +635,9 @@ class _SpinnerSection extends StatelessWidget {
       spacing: 16,
       runSpacing: 16,
       children: [
-        RemixSpinner(style: RadixSpinnerStyles.size1()),
-        RemixSpinner(style: RadixSpinnerStyles.size2()),
-        RemixSpinner(style: RadixSpinnerStyles.size3()),
+        RemixSpinner(style: RadixSpinnerStyle.defaultStyle(size: RadixSpinnerSize.size1)),
+        RemixSpinner(style: RadixSpinnerStyle.defaultStyle(size: RadixSpinnerSize.size2)),
+        RemixSpinner(style: RadixSpinnerStyle.defaultStyle(size: RadixSpinnerSize.size3)),
       ],
     );
   }
@@ -656,19 +656,19 @@ class _SliderSection extends StatelessWidget {
         RemixSlider(
           onChanged: onChanged,
           value: value,
-          style: RadixSliderStyles.classic(),
+          style: RadixSliderStyle.classic(),
         ),
         const SizedBox(height: 16),
         RemixSlider(
           onChanged: onChanged,
           value: value,
-          style: RadixSliderStyles.surface(),
+          style: RadixSliderStyle.surface(),
         ),
         const SizedBox(height: 16),
         RemixSlider(
           onChanged: onChanged,
           value: value,
-          style: RadixSliderStyles.soft(),
+          style: RadixSliderStyle.soft(),
         ),
       ],
     );

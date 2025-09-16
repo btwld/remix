@@ -7,8 +7,18 @@ import 'package:mix/mix.dart';
 import '../../radix/radix.dart';
 import 'checkbox.dart';
 
-// Export the extension so it's available when importing this file
-export 'checkbox.dart' show RadixCheckboxStyleExt;
+
+enum RadixCheckboxSize {
+  size1,
+  size2,
+  size3,
+}
+
+enum RadixCheckboxVariant {
+  classic,
+  surface,
+  soft,
+}
 
 /// Factory class for creating Radix-compliant checkbox styles.
 ///
@@ -17,13 +27,46 @@ export 'checkbox.dart' show RadixCheckboxStyleExt;
 class RadixCheckboxStyles {
   const RadixCheckboxStyles._();
 
+  /// Factory constructor for RadixCheckboxStyle with variant and size parameters.
+  ///
+  /// Returns a RemixCheckboxStyle configured with Radix design tokens.
+  /// Defaults to classic variant with size2.
+  static RemixCheckboxStyle create({
+    RadixCheckboxVariant variant = RadixCheckboxVariant.classic,
+    RadixCheckboxSize size = RadixCheckboxSize.size2,
+  }) {
+    return switch (variant) {
+      RadixCheckboxVariant.classic => classic(size: size),
+      RadixCheckboxVariant.surface => surface(size: size),
+      RadixCheckboxVariant.soft => soft(size: size),
+    };
+  }
+
+  static RemixCheckboxStyle base({
+    RadixCheckboxSize size = RadixCheckboxSize.size2,
+  }) {
+    return RemixCheckboxStyle()
+        // Focus state (generic)
+        .onFocused(
+          RemixCheckboxStyle().indicatorContainer(
+            BoxStyler().borderAll(
+              color: RadixTokens.focusA8(),
+              width: RadixTokens.focusRingWidth(),
+            ),
+          ),
+        )
+        // Merge with size-specific styles
+        .merge(_sizeStyle(size));
+  }
+
   /// Creates a classic variant checkbox style.
   ///
   /// Classic checkboxes use neutral surface with gray borders that become
   /// accent-colored when checked. Used for standard form controls.
-  /// Compose with size methods like .size2().
-  static RemixCheckboxStyle classic() {
-    return RemixCheckboxStyle()
+  static RemixCheckboxStyle classic({
+    RadixCheckboxSize size = RadixCheckboxSize.size2,
+  }) {
+    return base(size: size)
         // Indicator container (the checkbox box itself) - no size properties
         .indicatorContainer(
           BoxStyler()
@@ -49,14 +92,6 @@ class RadixCheckboxStyles {
                 ),
           ).indicatorColor(RadixTokens.accentContrast()),
         )
-        .onFocused(
-          RemixCheckboxStyle().indicatorContainer(
-            BoxStyler().borderAll(
-              color: RadixTokens.focusA8(),
-              width: RadixTokens.focusRingWidth(),
-            ),
-          ),
-        )
         .onDisabled(
           RemixCheckboxStyle()
               .indicatorContainer(
@@ -75,9 +110,11 @@ class RadixCheckboxStyles {
   /// Creates a surface variant checkbox style.
   ///
   /// Surface checkboxes use neutral surface with subtle borders.
-  /// Used for forms with softer visual appearance. Compose with size methods like .size2().
-  static RemixCheckboxStyle surface() {
-    return RemixCheckboxStyle()
+  /// Used for forms with softer visual appearance.
+  static RemixCheckboxStyle surface({
+    RadixCheckboxSize size = RadixCheckboxSize.size2,
+  }) {
+    return base(size: size)
         // Indicator container (the checkbox box itself) - no size properties
         .indicatorContainer(
           BoxStyler()
@@ -103,14 +140,6 @@ class RadixCheckboxStyles {
                 ),
           ).indicatorColor(RadixTokens.accent9()),
         )
-        .onFocused(
-          RemixCheckboxStyle().indicatorContainer(
-            BoxStyler().borderAll(
-              color: RadixTokens.focusA8(),
-              width: RadixTokens.focusRingWidth(),
-            ),
-          ),
-        )
         .onDisabled(
           RemixCheckboxStyle()
               .indicatorContainer(
@@ -129,9 +158,11 @@ class RadixCheckboxStyles {
   /// Creates a soft variant checkbox style.
   ///
   /// Soft checkboxes use accent-tinted background with accent borders.
-  /// Used for forms that need accent color integration. Compose with size methods like .size2().
-  static RemixCheckboxStyle soft() {
-    return RemixCheckboxStyle()
+  /// Used for forms that need accent color integration.
+  static RemixCheckboxStyle soft({
+    RadixCheckboxSize size = RadixCheckboxSize.size2,
+  }) {
+    return base(size: size)
         // Indicator container (the checkbox box itself) - no size properties
         .indicatorContainer(
           BoxStyler()
@@ -157,14 +188,6 @@ class RadixCheckboxStyles {
                 ),
           ).indicatorColor(RadixTokens.accentContrast()),
         )
-        .onFocused(
-          RemixCheckboxStyle().indicatorContainer(
-            BoxStyler().borderAll(
-              color: RadixTokens.focusA8(),
-              width: RadixTokens.focusRingWidth(),
-            ),
-          ),
-        )
         .onDisabled(
           RemixCheckboxStyle()
               .indicatorContainer(
@@ -180,69 +203,57 @@ class RadixCheckboxStyles {
         );
   }
 
-  /// Creates a size 1 checkbox style (small).
-  ///
-  /// Small checkboxes for compact layouts and dense interfaces.
-  /// Compose with variant methods like .classic().
-  static RemixCheckboxStyle size1() {
-    return RemixCheckboxStyle(
-      container: FlexBoxStyler()
-        .spacing(6.0)
-        .mainAxisAlignment(MainAxisAlignment.start)
-        .crossAxisAlignment(CrossAxisAlignment.center),
-      indicatorContainer: BoxStyler()
-        .constraints(BoxConstraintsMix(
-          minWidth: 16.0,
-          maxWidth: 16.0,
-          minHeight: 16.0,
-          maxHeight: 16.0,
-        )),
-      indicator: IconStyler().size(12.0),
-      label: TextStyler().fontSize(12.0),
-    );
-  }
+  // ---------------------------------------------------------------------------
+  // Internal builders
+  // ---------------------------------------------------------------------------
 
-  /// Creates a size 2 checkbox style (medium - default).
-  ///
-  /// Standard checkboxes for most common use cases.
-  /// Compose with variant methods like .classic().
-  static RemixCheckboxStyle size2() {
-    return RemixCheckboxStyle(
-      container: FlexBoxStyler()
-        .spacing(8.0)
-        .mainAxisAlignment(MainAxisAlignment.start)
-        .crossAxisAlignment(CrossAxisAlignment.center),
-      indicatorContainer: BoxStyler()
-        .constraints(BoxConstraintsMix(
-          minWidth: 20.0,
-          maxWidth: 20.0,
-          minHeight: 20.0,
-          maxHeight: 20.0,
-        )),
-      indicator: IconStyler().size(14.0),
-      label: TextStyler().fontSize(14.0),
-    );
-  }
-
-  /// Creates a size 3 checkbox style (large).
-  ///
-  /// Large checkboxes for accessibility needs and prominent forms.
-  /// Compose with variant methods like .classic().
-  static RemixCheckboxStyle size3() {
-    return RemixCheckboxStyle(
-      container: FlexBoxStyler()
-        .spacing(10.0)
-        .mainAxisAlignment(MainAxisAlignment.start)
-        .crossAxisAlignment(CrossAxisAlignment.center),
-      indicatorContainer: BoxStyler()
-        .constraints(BoxConstraintsMix(
-          minWidth: 24.0,
-          maxWidth: 24.0,
-          minHeight: 24.0,
-          maxHeight: 24.0,
-        )),
-      indicator: IconStyler().size(16.0),
-      label: TextStyler().fontSize(16.0),
-    );
+  static RemixCheckboxStyle _sizeStyle(RadixCheckboxSize size) {
+    return switch (size) {
+      RadixCheckboxSize.size1 => RemixCheckboxStyle(
+          container: FlexBoxStyler()
+            .spacing(6.0)
+            .mainAxisAlignment(MainAxisAlignment.start)
+            .crossAxisAlignment(CrossAxisAlignment.center),
+          indicatorContainer: BoxStyler()
+            .constraints(BoxConstraintsMix(
+              minWidth: 16.0,
+              maxWidth: 16.0,
+              minHeight: 16.0,
+              maxHeight: 16.0,
+            )),
+          indicator: IconStyler().size(12.0),
+          label: TextStyler().fontSize(12.0),
+        ),
+      RadixCheckboxSize.size2 => RemixCheckboxStyle(
+          container: FlexBoxStyler()
+            .spacing(8.0)
+            .mainAxisAlignment(MainAxisAlignment.start)
+            .crossAxisAlignment(CrossAxisAlignment.center),
+          indicatorContainer: BoxStyler()
+            .constraints(BoxConstraintsMix(
+              minWidth: 20.0,
+              maxWidth: 20.0,
+              minHeight: 20.0,
+              maxHeight: 20.0,
+            )),
+          indicator: IconStyler().size(14.0),
+          label: TextStyler().fontSize(14.0),
+        ),
+      RadixCheckboxSize.size3 => RemixCheckboxStyle(
+          container: FlexBoxStyler()
+            .spacing(10.0)
+            .mainAxisAlignment(MainAxisAlignment.start)
+            .crossAxisAlignment(CrossAxisAlignment.center),
+          indicatorContainer: BoxStyler()
+            .constraints(BoxConstraintsMix(
+              minWidth: 24.0,
+              maxWidth: 24.0,
+              minHeight: 24.0,
+              maxHeight: 24.0,
+            )),
+          indicator: IconStyler().size(16.0),
+          label: TextStyler().fontSize(16.0),
+        ),
+    };
   }
 }
