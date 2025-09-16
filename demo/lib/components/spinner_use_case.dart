@@ -7,7 +7,7 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
   type: RemixSpinner,
 )
 Widget buildSpinnerUseCase(BuildContext context) {
-  return const Scaffold(
+  return Scaffold(
     body: Center(
       child: RemixSpinner(),
     ),

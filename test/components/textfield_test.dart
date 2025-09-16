@@ -85,7 +85,7 @@ void main() {
 
     testWidgets('should handle disabled state', (tester) async {
       await tester.pumpRemixApp(
-        const SizedBox(
+        SizedBox(
           width: 400,
           height: 120,
           child: RemixTextField(
@@ -123,7 +123,7 @@ void main() {
     testWidgets('should work without external controller',
         (WidgetTester tester) async {
       await tester.pumpRemixApp(
-        const SizedBox(
+        SizedBox(
           width: 400,
           height: 120,
           child: RemixTextField(

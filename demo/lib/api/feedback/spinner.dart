@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       home: Scaffold(
         body: Center(
           child: Row(
@@ -19,8 +19,8 @@ class MyApp extends StatelessWidget {
             children: <Widget>[
               RemixSpinner(),
               RemixSpinner(
-                // Note: Style system differs in new implementation
-              ),
+                  // Note: Style system differs in new implementation
+                  ),
             ],
           ),
         ),

@@ -84,8 +84,8 @@ class RemixAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StyleBuilder(
-      style: RemixAvatarStyles.baseStyle.merge(style),
+    return StyleBuilder<AvatarSpec>(
+      style: style,
       builder: (context, spec) {
         final ContainerWidget = spec.container.createWidget;
 

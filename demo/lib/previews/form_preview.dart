@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widget_previews.dart';
 import 'package:remix/remix.dart';
+
 import 'preview_helper.dart';
 
 @Preview(name: 'Checkbox States', size: Size(300, 200))
@@ -70,32 +71,32 @@ Widget previewRadioGroup() {
     RemixRadioGroup<String>(
       groupValue: 'option1',
       onChanged: (value) {},
-      child: const Column(
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Padding(
-            padding: EdgeInsets.all(4.0),
+            padding: const EdgeInsets.all(4.0),
             child: RemixRadio<String>(
               value: 'option1',
               label: 'Selected Option',
             ),
           ),
           Padding(
-            padding: EdgeInsets.all(4.0),
+            padding: const EdgeInsets.all(4.0),
             child: RemixRadio<String>(
               value: 'option2',
               label: 'Unselected Option',
             ),
           ),
           Padding(
-            padding: EdgeInsets.all(4.0),
+            padding: const EdgeInsets.all(4.0),
             child: RemixRadio<String>(
               value: 'option3',
               label: 'Another Option',
             ),
           ),
           Padding(
-            padding: EdgeInsets.all(4.0),
+            padding: const EdgeInsets.all(4.0),
             child: RemixRadio<String>(
               value: 'option4',
               enabled: false,
@@ -111,7 +112,7 @@ Widget previewRadioGroup() {
 @Preview(name: 'Text Fields', size: Size(400, 350))
 Widget previewTextFields() {
   return createRemixPreview(
-    const SizedBox(
+    SizedBox(
       width: 350,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -119,18 +120,18 @@ Widget previewTextFields() {
           RemixTextField(
             hintText: 'Enter your name',
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           RemixTextField(
             hintText: 'Enter your email',
-            leading: Icon(Icons.email),
+            leading: const Icon(Icons.email),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           RemixTextField(
             hintText: 'Enter password',
             obscureText: true,
-            trailing: Icon(Icons.visibility),
+            trailing: const Icon(Icons.visibility),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           RemixTextField(
             hintText: 'This field is disabled',
             enabled: false,

@@ -11,7 +11,7 @@ part of 'radio.dart';
 /// )
 /// ```
 class RemixRadio<T> extends StatefulWidget with HasEnabled, HasSelected {
-  const RemixRadio({
+  RemixRadio({
     super.key,
     required this.value,
     this.autofocus = false,
@@ -70,7 +70,8 @@ class RemixRadio<T> extends StatefulWidget with HasEnabled, HasSelected {
 class _RemixRadioState<T> extends State<RemixRadio<T>>
     with HasWidgetStateController, HasEnabledState {
   FocusNode? _ownedFocusNode;
-  FocusNode get _effectiveFocusNode => widget.focusNode ?? (_ownedFocusNode ??= FocusNode());
+  FocusNode get _effectiveFocusNode =>
+      widget.focusNode ?? (_ownedFocusNode ??= FocusNode());
 
   @override
   void dispose() {
@@ -122,8 +123,8 @@ class _RemixRadioState<T> extends State<RemixRadio<T>>
 
     // Remove effectiveCursor since NakedRadio handles cursor internally
 
-    return StyleBuilder(
-      style: RemixRadioStyles.baseStyle.merge(style),
+    return StyleBuilder<RadioSpec>(
+      style: style,
       controller: widget.statesController ?? controller,
       builder: (context, spec) {
         final IndicatorContainer = spec.indicatorContainer.createWidget;

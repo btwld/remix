@@ -32,8 +32,8 @@ class RemixSpinner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StyleBuilder(
-      style: RemixSpinnerStyles.baseStyle.merge(style),
+    return StyleBuilder<SpinnerSpec>(
+      style: style,
       builder: (context, spec) {
         return _SpinnerSpecWidget(spec: spec);
       },
@@ -85,7 +85,7 @@ class _SpinnerSpecWidgetState extends State<_SpinnerSpecWidget>
   @override
   Widget build(BuildContext context) {
     final spec = widget.spec;
-    final color = spec.color ?? RemixTokens.secondary();
+    final color = spec.color ?? Theme.of(context).colorScheme.primary;
     final strokeWidth = spec.strokeWidth ?? 1.5;
     final size = spec.size ?? 24;
     final type = spec._type ?? SpinnerType.solid;

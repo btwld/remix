@@ -6,6 +6,7 @@ import 'package:mix/mix.dart';
 
 import '../../utilities/remix_style.dart';
 
+export 'radix_card_styles.dart';
 
 part 'card_spec.dart';
 part 'card_style.dart';

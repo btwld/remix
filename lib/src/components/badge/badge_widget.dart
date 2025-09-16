@@ -35,8 +35,8 @@ class RemixBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StyleBuilder(
-      style: RemixBadgeStyles.baseStyle.merge(style),
+    return StyleBuilder<BadgeSpec>(
+      style: style,
       builder: (context, spec) {
         final Container = spec.container.createWidget;
 

@@ -4,7 +4,7 @@ import 'package:remix/remix.dart';
 import '../../widgets/comparison_view.dart';
 
 Widget buildProgressExample() {
-  return const SizedBox(
+  return SizedBox(
     width: 360,
     child: ComparisonView(
       remix: [

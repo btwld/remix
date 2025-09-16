@@ -53,7 +53,7 @@ class RemixButton extends StatefulWidget with HasEnabled {
   ///
   /// The [label] parameter is required and specifies the button text.
   /// Use builders to customize rendering of specific parts.
-  const RemixButton({
+  RemixButton({
     super.key,
     required this.label,
     this.icon,
@@ -166,7 +166,7 @@ class _RemixButtonState extends State<RemixButton>
   @override
   Widget build(BuildContext context) {
     return StyleBuilder(
-      style: RadixButtonStyle.base().merge(widget.style),
+      style: widget.style!,
       controller: controller,
       builder: (context, spec) {
         final FlexContaineWidget = spec.container.createWidget;

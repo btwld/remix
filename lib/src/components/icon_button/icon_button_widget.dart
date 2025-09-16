@@ -44,7 +44,7 @@ class RemixIconButton extends StatefulWidget with HasEnabled {
   ///
   /// The [icon] parameter is required and specifies which icon to display.
   /// Use builders to customize rendering of specific parts.
-  const RemixIconButton({
+  RemixIconButton({
     super.key,
     required this.icon,
     this.iconBuilder,
@@ -94,7 +94,7 @@ class RemixIconButton extends StatefulWidget with HasEnabled {
   /// The style configuration for the button.
   ///
   /// Controls visual properties like colors, padding, size etc.
-  final RemixIconButtonStyle? style;
+  final RemixIconButtonStyle style;
 
   /// Whether to provide feedback when the button is pressed.
   ///
@@ -145,8 +145,8 @@ class _RemixIconButtonState extends State<RemixIconButton>
 
   @override
   Widget build(BuildContext context) {
-    return StyleBuilder(
-      style: RemixIconButtonStyles.baseStyle.merge(widget.style),
+    return StyleBuilder<IconButtonSpec>(
+      style: widget.style,
       controller: controller,
       builder: (context, spec) {
         final ContainerWidget = spec.container.createWidget;
@@ -154,7 +154,7 @@ class _RemixIconButtonState extends State<RemixIconButton>
 
         // Build the icon content
         final iconWidget = widget.iconBuilder != null
-            ? StyleSpecBuilder(
+            ? StyleSpecBuilder<IconSpec>(
                 styleSpec: spec.icon,
                 builder: (context, iconSpec) =>
                     widget.iconBuilder!(context, iconSpec, widget.icon),
@@ -163,12 +163,12 @@ class _RemixIconButtonState extends State<RemixIconButton>
 
         // Build spinner (used when loading)
         final spinner = widget.loadingBuilder != null
-            ? StyleSpecBuilder(
+            ? StyleSpecBuilder<SpinnerSpec>(
                 styleSpec: spec.spinner,
                 builder: (context, spinnerSpec) =>
                     widget.loadingBuilder!(context, spinnerSpec),
               )
-            : StyleSpecBuilder(
+            : StyleSpecBuilder<SpinnerSpec>(
                 styleSpec: spec.spinner,
                 builder: (context, spinnerSpec) => RemixSpinner(
                   style: RemixSpinnerStyle(

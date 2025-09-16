@@ -159,16 +159,19 @@ class RadixSliderStyle {
             ..strokeCap = StrokeCap.round
             ..style = PaintingStyle.stroke,
         ),
+      // Per JSON:
+      // slider-track-size = calc(space-2 * 1.25) = 10px
+      // slider-thumb-size = calc(track-size + space-1) = 14px
       RadixSliderSize.size2 => RemixSliderStyle(
           thumb: BoxStyler()
-              .width(20.0)
-              .height(20.0),
+              .width(14.0)
+              .height(14.0),
           baseTrack: Paint()
-            ..strokeWidth = 6.0
+            ..strokeWidth = 10.0
             ..strokeCap = StrokeCap.round
             ..style = PaintingStyle.stroke,
           activeTrack: Paint()
-            ..strokeWidth = 6.0
+            ..strokeWidth = 10.0
             ..strokeCap = StrokeCap.round
             ..style = PaintingStyle.stroke,
         ),
@@ -188,4 +191,3 @@ class RadixSliderStyle {
     };
   }
 }
-

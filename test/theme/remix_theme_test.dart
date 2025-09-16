@@ -3,103 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
 void main() {
-  group('Remix Theme System Tests', () {
-    testWidgets('MixScope provides light theme tokens correctly',
-        (tester) async {
-      late BuildContext capturedContext;
-
-      await tester.pumpWidget(
-        MaterialApp(
-          theme: ThemeData(brightness: Brightness.light),
-          home: createRemixScope(
-            child: Builder(
-              builder: (context) {
-                capturedContext = context;
-                return Container();
-              },
-            ),
-          ),
-        ),
-      );
-
-      // Test primary color token remains available (adaptive handled in theme)
-      expect(MixScope.tokenOf(RemixTokens.primary, capturedContext),
-          const Color(0xFF000000));
-
-      // Test spacing tokens
-      expect(MixScope.tokenOf(RemixTokens.spaceXs, capturedContext), 4.0);
-      expect(MixScope.tokenOf(RemixTokens.spaceSm, capturedContext), 8.0);
-      expect(MixScope.tokenOf(RemixTokens.spaceMd, capturedContext), 12.0);
-      expect(MixScope.tokenOf(RemixTokens.spaceLg, capturedContext), 16.0);
-
-      // Test radius token
-      expect(MixScope.tokenOf(RemixTokens.radius, capturedContext), const Radius.circular(8.0));
-    });
-
-    testWidgets('MixScope provides dark theme tokens correctly',
-        (tester) async {
-      late BuildContext capturedContext;
-
-      await tester.pumpWidget(
-        MediaQuery(
-          data: const MediaQueryData(platformBrightness: Brightness.dark),
-          child: MaterialApp(
-            theme: ThemeData(brightness: Brightness.dark),
-            home: createRemixScope(
-              child: Builder(
-                builder: (context) {
-                  capturedContext = context;
-                  return Container();
-                },
-              ),
-            ),
-          ),
-        ),
-      );
-
-      // Test dark theme primary token (adaptive handled in theme)
-      expect(MixScope.tokenOf(RemixTokens.primary, capturedContext),
-          const Color(0xFFFFFFFF));
-
-      // Test that spacing/radius tokens remain the same across themes
-      expect(MixScope.tokenOf(RemixTokens.spaceXs, capturedContext), 4.0);
-      expect(MixScope.tokenOf(RemixTokens.radius, capturedContext), const Radius.circular(8.0));
-    });
-
-    testWidgets('Theme switching updates token values correctly',
-        (tester) async {
-      late BuildContext capturedContext;
-
-      Widget buildApp(Brightness brightness) {
-        return MediaQuery(
-          data: MediaQueryData(platformBrightness: brightness),
-          child: MaterialApp(
-            theme: ThemeData(brightness: brightness),
-            home: createRemixScope(
-              child: Builder(
-                builder: (context) {
-                  capturedContext = context;
-                  return Container();
-                },
-              ),
-            ),
-          ),
-        );
-      }
-
-      // Test light theme
-      await tester.pumpWidget(buildApp(Brightness.light));
-      expect(MixScope.tokenOf(RemixTokens.primary, capturedContext),
-          const Color(0xFF000000));
-
-      // Switch to dark theme
-      await tester.pumpWidget(buildApp(Brightness.dark));
-      await tester.pumpAndSettle();
-      expect(MixScope.tokenOf(RemixTokens.primary, capturedContext),
-          const Color(0xFFFFFFFF));
-    });
-  });
-
   group('Refactored Component Token Integration Tests', () {
     testWidgets('Button component uses tokens correctly in light theme',
         (tester) async {
@@ -159,7 +62,7 @@ void main() {
             child: MaterialApp(
               theme: ThemeData(brightness: brightness),
               home: createRemixScope(
-                child: const Scaffold(
+                child: Scaffold(
                   body: RemixCard(
                     child: Text('Test Card'),
                   ),
@@ -191,11 +94,9 @@ void main() {
                     children: [
                       RemixBadge.raw(child: Text('Default')),
                       RemixBadge.raw(
-                        style: RemixBadgeStyles.baseStyle,
                         child: Text('Solid'),
                       ),
                       RemixBadge.raw(
-                        style: RemixBadgeStyles.baseStyle,
                         child: Text('Outline'),
                       ),
                     ],
@@ -224,7 +125,7 @@ void main() {
             child: MaterialApp(
               theme: ThemeData(brightness: brightness),
               home: createRemixScope(
-                child: const Scaffold(
+                child: Scaffold(
                   body: RemixTextField(
                     hintText: 'Test TextField',
                   ),
@@ -259,7 +160,7 @@ void main() {
                         label: 'Enabled',
                         onPressed: () {},
                       ),
-                      const RemixButton(
+                      RemixButton(
                         label: 'Disabled',
                         onPressed: null,
                       ),

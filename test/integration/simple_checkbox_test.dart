@@ -40,7 +40,7 @@ void main() {
 
     testWidgets('shows label', (tester) async {
       await tester.pumpRemixApp(
-        const RemixCheckbox(
+        RemixCheckbox(
           selected: false,
           label: 'Accept Terms',
         ),

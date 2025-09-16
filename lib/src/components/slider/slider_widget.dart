@@ -17,7 +17,7 @@ part of 'slider.dart';
 /// )
 /// ```
 class RemixSlider extends StatefulWidget with HasEnabled {
-  const RemixSlider({
+  RemixSlider({
     super.key,
     this.min = 0.0,
     this.max = 1.0,
@@ -89,12 +89,11 @@ class _RemixSliderState extends State<RemixSlider>
     return widget.divisions;
   }
 
-  RemixSliderStyle get _style =>
-      RemixSliderStyles.baseStyle.merge(widget.style);
+  RemixSliderStyle get _style => widget.style;
 
   @override
   Widget build(BuildContext context) {
-    return StyleBuilder(
+    return StyleBuilder<SliderSpec>(
       style: _style,
       controller: controller,
       builder: (context, spec) {
@@ -109,28 +108,28 @@ class _RemixSliderState extends State<RemixSlider>
               /// **Value Normalization Algorithm**
               /// Converts the slider's actual value to a 0.0-1.0 range for positioning.
               /// Formula: (current - min) / (max - min)
-              /// 
+              ///
               /// This normalization is essential because:
               /// - UI positioning works in pixel coordinates (0 to width)
               /// - Slider values can be any range (e.g., -50 to 150, 0 to 1000)
               /// - We need a consistent way to map between value space and pixel space
               final normalizedValue =
                   (widget.value - widget.min) / (widget.max - widget.min);
-              
+
               /// **Thumb Position Calculation**
               /// Maps normalized value (0.0-1.0) to actual pixel position.
-              /// 
+              ///
               /// **Algorithm:**
               /// Available space = total width - padding for thumb overflow
               /// Thumb position = available space × normalized value
-              /// 
+              ///
               /// **Why subtract horizontalPadding:**
               /// The thumb needs space to move beyond the track edges when at min/max.
               /// Without this adjustment, the thumb would be clipped at the edges.
-              /// 
+              ///
               /// **Example:**
               /// - Constraints width: 300px
-              /// - Horizontal padding: 24px  
+              /// - Horizontal padding: 24px
               /// - Available space: 276px
               /// - At 50% value: thumb positioned at 138px from left edge
               final thumbPosition =
@@ -196,33 +195,33 @@ class _RemixSliderState extends State<RemixSlider>
 }
 
 /// Custom painter for drawing slider track with optional divisions.
-/// 
+///
 /// This painter renders three visual elements:
 /// 1. **Base track**: The full-width background rail
 /// 2. **Active track**: The filled portion showing current progress
 /// 3. **Divisions**: Optional tick marks for discrete values
-/// 
+///
 /// **Coordinate System:**
 /// Uses standard Canvas coordinates where (0,0) is top-left.
 /// Track is drawn horizontally across the full width at vertical center.
-/// 
+///
 /// **Performance Considerations:**
 /// Repaints only when value, colors, or divisions change.
 /// Division positions are calculated once per paint cycle.
 class _TrackPainter extends CustomPainter {
   /// Normalized value between 0.0 and 1.0 representing current position.
   final double value;
-  
+
   /// Paint configuration for the active (filled) portion of the track.
   final Paint active;
-  
+
   /// Paint configuration for the base (unfilled) track background.
   final Paint baseTrack;
-  
+
   /// Number of discrete divisions to draw as tick marks.
   /// If null, track is continuous without divisions.
   final int? divisions;
-  
+
   /// Paint configuration for division tick marks.
   final Paint division;
 
@@ -235,26 +234,26 @@ class _TrackPainter extends CustomPainter {
   });
 
   /// Calculates pixel positions for division tick marks along the track.
-  /// 
+  ///
   /// **Algorithm:**
   /// Divides the track width into equal segments and places tick marks
   /// at the boundaries between segments (not at the start/end).
-  /// 
+  ///
   /// **Mathematical Formula:**
   /// For `n` divisions, there are `n-1` tick marks positioned at:
   /// `x = (i + 1) × width ÷ divisions` where i = 0 to n-2
-  /// 
+  ///
   /// **Why This Formula:**
   /// - Creates `divisions` number of equal value segments
   /// - Places ticks between segments, not at min/max positions
   /// - Avoids visual clutter at track endpoints where thumb sits
-  /// 
+  ///
   /// **Example:**
   /// For 4 divisions on a 200px track:
   /// - Segment size: 50px each
   /// - Tick positions: 50px, 100px, 150px (3 ticks)
   /// - Creates 4 selectable ranges: [0-50], [50-100], [100-150], [150-200]
-  /// 
+  ///
   /// All ticks are positioned at vertical center (midY) of the track.
   List<Offset> calculateDivisionsPositions(int divisions, Size size) {
     final list = <Offset>[];
@@ -266,11 +265,11 @@ class _TrackPainter extends CustomPainter {
   }
 
   /// Renders division tick marks as individual points on the canvas.
-  /// 
+  ///
   /// Uses Flutter's `drawPoints` with `PointMode.points` to efficiently
   /// draw multiple small circles in a single call. Each point represents
   /// a discrete value position that the slider can snap to.
-  /// 
+  ///
   /// **Visual Result:**
   /// Creates small circular dots along the track, styled according
   /// to the division Paint configuration (color, size, etc.).
@@ -283,16 +282,16 @@ class _TrackPainter extends CustomPainter {
   }
 
   /// Draws a horizontal line segment representing part of the slider track.
-  /// 
+  ///
   /// **Purpose:**
   /// This helper method is used to draw both the base track (full width)
   /// and the active track (partial width based on current value).
-  /// 
+  ///
   /// **Parameters:**
   /// - `initialOffset`: Starting point of the line segment
-  /// - `endOffset`: Ending point of the line segment  
+  /// - `endOffset`: Ending point of the line segment
   /// - `paint`: Visual styling for the line (color, thickness, etc.)
-  /// 
+  ///
   /// **Usage:**
   /// Called twice in paint(): once for base track, once for active track.
   void drawTrack(
@@ -305,22 +304,22 @@ class _TrackPainter extends CustomPainter {
   }
 
   /// Main painting method that renders the complete slider track.
-  /// 
+  ///
   /// **Rendering Order (important for layering):**
   /// 1. Base track (full-width background)
   /// 2. Division tick marks (if enabled)
   /// 3. Active track (progress fill)
-  /// 
+  ///
   /// **Why This Order:**
   /// - Base track provides the foundation
   /// - Divisions are drawn on top so they're visible
   /// - Active track is drawn last to cover divisions in the filled area
-  /// 
+  ///
   /// **Coordinate Calculations:**
   /// - All elements use `size.midY` for vertical centering
   /// - Base track spans full width: (0, midY) to (width, midY)
   /// - Active track spans partial width: (0, midY) to (width × value, midY)
-  /// 
+  ///
   /// **Value Mapping:**
   /// The normalized value (0.0-1.0) is multiplied by width to get
   /// the pixel position where the active track should end.
@@ -356,17 +355,17 @@ class _TrackPainter extends CustomPainter {
 }
 
 /// Convenience extension for finding the vertical center of a Size.
-/// 
+///
 /// **Purpose:**
 /// Provides a clean, readable way to get the Y coordinate for horizontally
 /// centering elements within a given height. Used extensively in track
 /// painting to ensure all elements align on the same horizontal line.
-/// 
+///
 /// **Usage:**
 /// `size.midY` instead of `size.height / 2`
 extension on Size {
   /// Returns the Y coordinate at the vertical center of this size.
-  /// 
+  ///
   /// Equivalent to `height / 2` but more semantically clear.
   double get midY => height / 2;
 }

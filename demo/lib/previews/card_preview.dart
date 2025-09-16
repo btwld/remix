@@ -7,10 +7,10 @@ import 'preview_helper.dart';
 @Preview(name: 'Basic Card', size: Size(400, 300))
 Widget previewBasicCard() {
   return createRemixPreview(
-    const SizedBox(
+    SizedBox(
       width: 350,
       child: RemixCard(
-        child: Padding(
+        child: const Padding(
           padding: EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,16 +42,16 @@ Widget previewBasicCard() {
 @Preview(name: 'Card with Actions', size: Size(400, 350))
 Widget previewCardWithActions() {
   return createRemixPreview(
-    const SizedBox(
+    SizedBox(
       width: 350,
       child: RemixCard(
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Row(
+              const Row(
                 children: [
                   Icon(Icons.article, color: MixColors.blue),
                   SizedBox(width: 12),
@@ -64,15 +64,15 @@ Widget previewCardWithActions() {
                   ),
                 ],
               ),
-              SizedBox(height: 12),
-              Text(
+              const SizedBox(height: 12),
+              const Text(
                 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
                 style: TextStyle(
                   fontSize: 14,
                   color: MixColors.grey,
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -80,7 +80,7 @@ Widget previewCardWithActions() {
                     label: 'Cancel',
                     onPressed: null,
                   ),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   RemixButton(
                     label: 'Read More',
                     onPressed: null,
@@ -98,15 +98,15 @@ Widget previewCardWithActions() {
 @Preview(name: 'Profile Card', size: Size(400, 400))
 Widget previewProfileCard() {
   return createRemixPreview(
-    const SizedBox(
+    SizedBox(
       width: 350,
       child: RemixCard(
         child: Padding(
-          padding: EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(20.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              CircleAvatar(
+              const CircleAvatar(
                 radius: 40,
                 backgroundColor: MixColors.blue,
                 child: Icon(
@@ -115,24 +115,24 @@ Widget previewProfileCard() {
                   color: MixColors.white,
                 ),
               ),
-              SizedBox(height: 16),
-              Text(
+              const SizedBox(height: 16),
+              const Text(
                 'John Doe',
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 4),
-              Text(
+              const SizedBox(height: 4),
+              const Text(
                 'Software Developer',
                 style: TextStyle(
                   fontSize: 16,
                   color: MixColors.grey,
                 ),
               ),
-              SizedBox(height: 16),
-              Text(
+              const SizedBox(height: 16),
+              const Text(
                 'Passionate about creating amazing user experiences and building scalable applications.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
@@ -140,7 +140,7 @@ Widget previewProfileCard() {
                   color: MixColors.grey,
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -148,12 +148,12 @@ Widget previewProfileCard() {
                     icon: Icons.email,
                     onPressed: null,
                   ),
-                  SizedBox(width: 12),
+                  const SizedBox(width: 12),
                   RemixIconButton(
                     icon: Icons.phone,
                     onPressed: null,
                   ),
-                  SizedBox(width: 12),
+                  const SizedBox(width: 12),
                   RemixIconButton(
                     icon: Icons.message,
                     onPressed: null,
@@ -171,10 +171,10 @@ Widget previewProfileCard() {
 @Preview(name: 'Stats Card', size: Size(400, 250))
 Widget previewStatsCard() {
   return createRemixPreview(
-    const SizedBox(
+    SizedBox(
       width: 350,
       child: RemixCard(
-        child: Padding(
+        child: const Padding(
           padding: EdgeInsets.all(20.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,

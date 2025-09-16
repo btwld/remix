@@ -29,8 +29,8 @@ class RemixDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StyleBuilder(
-      style: RemixDividerStyles.baseStyle.merge(style),
+    return StyleBuilder<DividerSpec>(
+      style: style,
       builder: (context, spec) {
         final Container = spec.container.createWidget;
 

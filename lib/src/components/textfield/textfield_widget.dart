@@ -17,7 +17,7 @@ part of 'textfield.dart';
 /// )
 /// ```
 class RemixTextField extends StatefulWidget with HasEnabled, HasError {
-  const RemixTextField({
+  RemixTextField({
     super.key,
     this.controller,
     this.focusNode,
@@ -259,8 +259,7 @@ class RemixTextField extends StatefulWidget with HasEnabled, HasError {
 
 class _RemixTextFieldState extends State<RemixTextField>
     with HasWidgetStateController {
-  RemixTextFieldStyle get _style =>
-      RemixTextFieldStyles.baseStyle.merge(widget.style);
+  RemixTextFieldStyle get _style => widget.style;
 
   TextEditingController? _internalController;
   TextEditingController get _controller =>
@@ -286,7 +285,7 @@ class _RemixTextFieldState extends State<RemixTextField>
 
   @override
   Widget build(BuildContext context) {
-    return StyleBuilder(
+    return StyleBuilder<TextFieldSpec>(
       style: _style,
       controller: controller,
       builder: (context, spec) {

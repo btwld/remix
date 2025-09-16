@@ -26,7 +26,7 @@ class _RemixRadioGroupPreview extends StatelessWidget {
     return RemixRadioGroup<String>(
       groupValue: groupValue,
       onChanged: (_) {},
-      child: const Column(
+      child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

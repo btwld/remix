@@ -7,7 +7,7 @@ Widget buildSwitchExample() {
   return SizedBox(
     width: 360,
     child: ComparisonView(
-      remix: const [
+      remix: [
         RemixSwitch(selected: true, onChanged: _noop),
         RemixSwitch(selected: false, onChanged: _noop),
         RemixSwitch(selected: false, enabled: false, onChanged: _noop),
