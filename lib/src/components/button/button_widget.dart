@@ -166,7 +166,7 @@ class _RemixButtonState extends State<RemixButton>
   @override
   Widget build(BuildContext context) {
     return StyleBuilder(
-      style: RadixButtonStyles.base().merge(widget.style),
+      style: RadixButtonStyle.base().merge(widget.style),
       controller: controller,
       builder: (context, spec) {
         final FlexContaineWidget = spec.container.createWidget;

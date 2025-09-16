@@ -32,9 +32,9 @@ class RadixRadioStyles {
                 color: RadixTokens.gray7(),
                 width: RadixTokens.borderWidth1(),
               )
-              .borderRadius(
-                BorderRadiusMix.all(RadixTokens.radiusFull()),
-              ), // Circular
+              .borderRadiusAll(RadixTokens.radiusFull()) // Circular
+
+          ,
         )
         // Radio dot indicator - no size properties
         .indicator(
@@ -95,8 +95,9 @@ class RadixRadioStyles {
                 width: RadixTokens.borderWidth1(),
               )
               .borderRadius(
-                BorderRadiusMix.all(RadixTokens.radiusFull()),
-              ), // Circular
+                  BorderRadiusMix.all(RadixTokens.radiusFull())) // Circular
+
+          ,
         )
         // Radio dot indicator - no size properties
         .indicator(
@@ -157,8 +158,9 @@ class RadixRadioStyles {
                 width: RadixTokens.borderWidth1(),
               )
               .borderRadius(
-                BorderRadiusMix.all(RadixTokens.radiusFull()),
-              ), // Circular
+                  BorderRadiusMix.all(RadixTokens.radiusFull())) // Circular
+
+          ,
         )
         // Radio dot indicator - no size properties
         .indicator(
