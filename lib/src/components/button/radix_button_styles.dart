@@ -1,5 +1,5 @@
-// ABOUTME: Factory for creating RemixButtonStyle instances using Radix design tokens
-// ABOUTME: Provides all 6 Radix button variants with proper token-based styling
+// ABOUTME: Factory constructors for RemixButtonStyle variants using Radix design tokens
+// ABOUTME: Provides RadixButtonStyle subclass with variant + size aware composition
 
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
@@ -8,15 +8,6 @@ import '../../radix/radix.dart';
 import '../spinner/spinner.dart';
 import 'button.dart';
 
-enum RadixButtonVariant {
-  solid,
-  soft,
-  surface,
-  outline,
-  ghost,
-  classic,
-}
-
 enum RadixButtonSize {
   size1,
   size2,
@@ -24,98 +15,104 @@ enum RadixButtonSize {
   size4,
 }
 
-class RadixButtonStyle extends RemixButtonStyle {
-  const RadixButtonStyle._() : super.create();
-
-  factory RadixButtonStyle({
-    RadixButtonVariant variant = RadixButtonVariant.solid,
-    RadixButtonSize size = RadixButtonSize.size2,
-  }) {}
+enum RadixButtonVariant {
+  solid,
+  soft,
+  surface,
+  outline,
+  ghost,
 }
 
-/// Factory class for creating Radix-compliant button styles.
+/// RadixButtonStyle utility class for creating Radix-themed button styles.
 ///
-/// Provides static methods to create RemixButtonStyle instances for all
-/// Radix UI button variants using the RadixTokens system.
-class RadixButtonStyles {
-  const RadixButtonStyles._();
+/// Provides factory constructor with variant and size parameters plus named
+/// static methods for direct access. Composes the correct base metrics,
+/// variant visuals, and size-specific styles sourced from the Radix token JSON.
+class RadixButtonStyle {
+  const RadixButtonStyle._();
 
-  /// Base button style with shared defaults (size2 metrics).
+  /// Factory constructor for RadixButtonStyle with variant and size parameters.
   ///
-  /// Provides: height, padding, spacing, radius, label typography,
-  /// icon size, spinner defaults, and focus ring. Variants should layer
-  /// visual intent (colors/borders) on top of this base.
-  static RemixButtonStyle base() {
+  /// Returns a RemixButtonStyle configured with Radix design tokens.
+  /// Defaults to solid variant with size2.
+  static RemixButtonStyle create({
+    RadixButtonVariant variant = RadixButtonVariant.solid,
+    RadixButtonSize size = RadixButtonSize.size2,
+  }) {
+    return switch (variant) {
+      RadixButtonVariant.solid => solid(size: size),
+      RadixButtonVariant.soft => soft(size: size),
+      RadixButtonVariant.surface => surface(size: size),
+      RadixButtonVariant.outline => outline(size: size),
+      RadixButtonVariant.ghost => ghost(size: size),
+    };
+  }
+
+  static RemixButtonStyle base({
+    RadixButtonSize size = RadixButtonSize.size2,
+  }) {
     return RemixButtonStyle()
-        // Default size (aligns to size2)
-        .height(32.0)
-        .paddingX(RadixTokens.space3())
-        .paddingY(RadixTokens.space2())
-        .spacing(RadixTokens.space2())
-        .borderRadiusAll(RadixTokens.radius3())
-        // Typography (use Radix text token for size 2)
-        .labelTextStyle(RadixTokens.text2.mix())
+        // Generic font weight (not size-specific)
         .label(TextStyler().fontWeight(RadixTokens.fontWeightMedium()))
-        // Icon / spinner defaults (colors set by variants)
-        .iconSize(16.0)
+        // Generic spinner properties (size set by _sizeStyle)
         .spinner(
           RemixSpinnerStyle(
-            size: 16.0,
             strokeWidth: RadixTokens.borderWidth2(),
             duration: const Duration(milliseconds: 800),
             type: SpinnerType.solid,
           ),
         )
-        // Focus ring
+        // Focus ring (generic)
         .onFocused(
           RemixButtonStyle().borderAll(
             color: RadixTokens.focusA8(),
             width: RadixTokens.focusRingWidth(),
           ),
-        );
+        )
+        // Merge with size-specific styles
+        .merge(_sizeStyle(size));
   }
 
-  /// Creates a solid variant button style.
-  ///
-  /// Solid buttons have high emphasis with solid accent background color.
-  /// Used for primary actions. Compose with size methods like .size2().
-  static RemixButtonStyle solid() {
-    return RemixButtonStyle()
-        // Visual styling only - no size properties
+  static RemixButtonStyle solid({
+    RadixButtonSize size = RadixButtonSize.size2,
+  }) {
+    return base(size: size)
         .color(RadixTokens.accent9())
-        // Content styling
         .label(TextStyler().color(RadixTokens.accentContrast()))
         .iconColor(RadixTokens.accentContrast())
         .spinner(RemixSpinnerStyle(color: RadixTokens.accentContrast()))
-        // State variants
         .onHovered(RemixButtonStyle().color(RadixTokens.accent10()))
-        .onPressed(RemixButtonStyle().color(RadixTokens.accent10()))
+        .onPressed(
+          RemixButtonStyle().color(RadixTokens
+              .accent10()), // NOTE: base-button-solid-active-filter: brightness(1.08) from JSON
+          // Flutter doesn't support CSS filters directly, would need ColorFiltered widget,
+        )
         .onDisabled(
           RemixButtonStyle()
               .color(RadixTokens.accent9())
               .label(TextStyler().color(RadixTokens.accentContrast()))
               .icon(IconStyler(color: RadixTokens.accentContrast()))
-              .spinner(RemixSpinnerStyle(color: RadixTokens.accentContrast())),
+              .spinner(
+                RemixSpinnerStyle(color: RadixTokens.accentContrast()),
+              ),
         );
+    // TODO: Add high-contrast mode support in the future
+    // base-button-solid-high-contrast-hover-filter: contrast(0.88) saturate(1.3) brightness(1.18)
+    // base-button-solid-high-contrast-active-filter: brightness(0.95) saturate(1.2)
   }
 
-  /// Creates a soft variant button style.
-  ///
-  /// Soft buttons have medium emphasis with subtle accent tinted background.
-  /// Used for secondary actions. Compose with size methods like .size2().
-  static RemixButtonStyle soft() {
-    return RemixButtonStyle()
-        // Visual styling only - no size properties
+  static RemixButtonStyle soft({
+    RadixButtonSize size = RadixButtonSize.size2,
+  }) {
+    return base(size: size)
         .color(RadixTokens.accent3())
         .borderAll(
           color: RadixTokens.accent6(),
           width: RadixTokens.borderWidth1(),
         )
-        // Content styling
         .label(TextStyler().color(RadixTokens.accent11()))
         .iconColor(RadixTokens.accent11())
         .spinner(RemixSpinnerStyle(color: RadixTokens.accent11()))
-        // State variants
         .onHovered(
           RemixButtonStyle().color(RadixTokens.accent4()).borderAll(
                 color: RadixTokens.accent7(),
@@ -136,27 +133,20 @@ class RadixButtonStyles {
         );
   }
 
-  /// Creates a surface variant button style.
-  ///
-  /// Surface buttons have subtle emphasis with accent-tinted surface.
-  /// Used for tertiary actions. Compose with size methods like .size2().
-  static RemixButtonStyle surface() {
-    return RemixButtonStyle()
-        // Visual styling only - no size properties
+  static RemixButtonStyle surface({
+    RadixButtonSize size = RadixButtonSize.size2,
+  }) {
+    return base(size: size)
         .color(RadixTokens.accentSurface())
         .borderAll(
           color: RadixTokens.accent6(),
           width: RadixTokens.borderWidth1(),
         )
-        // Content styling
         .label(TextStyler().color(RadixTokens.accent11()))
         .iconColor(RadixTokens.accent11())
         .spinner(RemixSpinnerStyle(color: RadixTokens.accent11()))
-        // State variants
         .onHovered(
-          RemixButtonStyle()
-              .color(RadixTokens.accentA4()) // Uses surface hover overlay
-              .borderAll(
+          RemixButtonStyle().color(RadixTokens.accentA4()).borderAll(
                 color: RadixTokens.accent7(),
                 width: RadixTokens.borderWidth1(),
               ),
@@ -174,24 +164,18 @@ class RadixButtonStyles {
         );
   }
 
-  /// Creates an outline variant button style.
-  ///
-  /// Outline buttons have border-focused emphasis with transparent background.
-  /// Used for secondary actions where more emphasis is needed than ghost.
-  /// Compose with size methods like .size2().
-  static RemixButtonStyle outline() {
-    return RemixButtonStyle()
-        // Visual styling only - no size properties
+  static RemixButtonStyle outline({
+    RadixButtonSize size = RadixButtonSize.size2,
+  }) {
+    return base(size: size)
         .color(Colors.transparent)
         .borderAll(
           color: RadixTokens.accent7(),
           width: RadixTokens.borderWidth1(),
         )
-        // Content styling
         .label(TextStyler().color(RadixTokens.accent11()))
         .iconColor(RadixTokens.accent11())
         .spinner(RemixSpinnerStyle(color: RadixTokens.accent11()))
-        // State variants
         .onHovered(
           RemixButtonStyle().color(RadixTokens.accentA3()).borderAll(
                 color: RadixTokens.accent8(),
@@ -210,19 +194,14 @@ class RadixButtonStyles {
         );
   }
 
-  /// Creates a ghost variant button style.
-  ///
-  /// Ghost buttons have minimal emphasis with no visible container.
-  /// Used for very subtle actions. Compose with size methods like .size2().
-  static RemixButtonStyle ghost() {
-    return RemixButtonStyle()
-        // Visual styling only - no size properties
+  static RemixButtonStyle ghost({
+    RadixButtonSize size = RadixButtonSize.size2,
+  }) {
+    var style = base(size: size)
         .color(Colors.transparent)
-        // Content styling
         .label(TextStyler().color(RadixTokens.accent11()))
         .iconColor(RadixTokens.accent11())
         .spinner(RemixSpinnerStyle(color: RadixTokens.accent11()))
-        // State variants
         .onHovered(RemixButtonStyle().color(RadixTokens.accentA3()))
         .onPressed(RemixButtonStyle().color(RadixTokens.accentA4()))
         .onDisabled(
@@ -231,173 +210,84 @@ class RadixButtonStyles {
               .icon(IconStyler(color: RadixTokens.accent11()))
               .spinner(RemixSpinnerStyle(color: RadixTokens.accent11())),
         );
+
+    // Ghost variant uses special padding for size2 from JSON:
+    // button-ghost-padding-x: var(--space-4)
+    // button-ghost-padding-y: var(--space-2)
+    if (size == RadixButtonSize.size2) {
+      style =
+          style.paddingX(RadixTokens.space4()).paddingY(RadixTokens.space2());
+    }
+
+    return style;
   }
 
-  /// Creates a classic variant button style.
-  ///
-  /// Classic buttons have pre-flat UI style with neutral colors and shadows.
-  /// Used when a more traditional button appearance is needed.
-  /// Compose with size methods like .size2().
-  static RemixButtonStyle classic() {
-    return RemixButtonStyle()
-        // Visual styling only - no size properties
-        .color(RadixTokens.colorSurface())
-        .borderAll(
-          color: RadixTokens.gray7(),
-          width: RadixTokens.borderWidth1(),
-        )
-        // Add subtle shadow for classic feel using token
-        .shadows(RadixTokens.shadow2().map(BoxShadowMix.value).toList())
-        // Content styling
-        .label(TextStyler().color(RadixTokens.gray12()))
-        .iconColor(RadixTokens.gray12())
-        .spinner(RemixSpinnerStyle(color: RadixTokens.gray12()))
-        // State variants
-        .onHovered(
-          RemixButtonStyle()
-              .color(RadixTokens.gray3())
-              .borderAll(
-                color: RadixTokens.gray8(),
-                width: RadixTokens.borderWidth1(),
-              )
-              .shadows(
-                RadixTokens.shadow2().map(BoxShadowMix.value).toList(),
-              ),
-        )
-        .onDisabled(
-          RemixButtonStyle()
-              .color(RadixTokens.colorSurface())
-              .borderAll(
-                color: RadixTokens.gray7(),
-                width: RadixTokens.borderWidth1(),
-              )
-              .labelColor(RadixTokens.gray12())
-              .spinnerColor(RadixTokens.gray12())
-              .shadows(
-                RadixTokens.shadow1().map(BoxShadowMix.value).toList(),
-              )
-              .iconColor(RadixTokens.gray12()),
-        );
-  }
 
-  /// Creates a size 1 button style (small).
-  ///
-  /// Small buttons for compact layouts, toolbars, and dense interfaces.
-  /// Compose with variant methods like .solid().
-  static RemixButtonStyle size1() {
-    return RemixButtonStyle()
-        .height(24.0)
-        .paddingX(RadixTokens.space2())
-        .paddingY(RadixTokens.space1())
-        .spacing(RadixTokens.space1())
-        .borderRadiusAll(RadixTokens.radius2())
-        .label(
-          TextStyler()
-              .fontSize(12.0)
-              .height(16.0 / 12.0) // lineHeight as ratio
-              .letterSpacing(0.0025),
-        )
-        .iconSize(12.0)
-        .spinner(RemixSpinnerStyle(size: 12.0));
-  }
+  // ---------------------------------------------------------------------------
+  // Internal builders
+  // ---------------------------------------------------------------------------
 
-  /// Creates a size 2 button style (medium - default).
-  ///
-  /// Standard buttons for most common use cases.
-  /// Compose with variant methods like .solid().
-  static RemixButtonStyle size2() {
-    return RemixButtonStyle()
-        .height(32.0)
-        // Generic size padding (ghost-specific overrides provided via ghostSize*)
-        .paddingX(RadixTokens.space3())
-        .paddingY(RadixTokens.space2())
-        .spacing(RadixTokens.space2())
-        .borderRadiusAll(RadixTokens.radius3())
-        .label(
-          TextStyler()
-              .fontSize(14.0)
-              .height(20.0 / 14.0) // lineHeight as ratio
-              .letterSpacing(0.0),
-        )
-        .iconSize(16.0)
-        .spinner(RemixSpinnerStyle(size: 16.0));
-  }
+  static RemixButtonStyle _sizeStyle(RadixButtonSize size) {
+    final style = RemixButtonStyle();
 
-  /// Creates a size 3 button style (large).
-  ///
-  /// Large buttons for prominent CTAs and accessibility needs.
-  /// Compose with variant methods like .solid().
-  static RemixButtonStyle size3() {
-    return RemixButtonStyle()
-        .height(40.0)
-        .paddingX(RadixTokens.space4())
-        .paddingY(RadixTokens.space3())
-        .spacing(RadixTokens.space3())
-        .borderRadiusAll(RadixTokens.radius4())
-        .label(
-          TextStyler()
-              .fontSize(16.0)
-              .height(24.0 / 16.0) // lineHeight as ratio
-              .letterSpacing(0.0),
-        )
-        .iconSize(20.0)
-        .spinner(RemixSpinnerStyle(size: 20.0));
-  }
-
-  /// Creates a size 4 button style (extra large).
-  ///
-  /// Extra large buttons for maximum prominence and accessibility.
-  /// Compose with variant methods like .solid().
-  static RemixButtonStyle size4() {
-    return RemixButtonStyle()
-        .height(48.0)
-        .paddingX(RadixTokens.space5())
-        .paddingY(RadixTokens.space4())
-        .spacing(RadixTokens.space4())
-        .borderRadiusAll(RadixTokens.radius5())
-        .label(
-          TextStyler()
-              .fontSize(18.0)
-              .height(26.0 / 18.0) // lineHeight as ratio
-              .letterSpacing(-0.0025),
-        )
-        .iconSize(24.0)
-        .spinner(RemixSpinnerStyle(size: 24.0));
-  }
-}
-
-// Removed RemixButtonStyles in favor of RadixButtonStyles.base()
-
-/// Extension providing Radix button size methods for fluent API.
-///
-/// Enables the pattern: `RadixButtonStyles.solid().size1()`
-/// instead of: `RadixButtonStyles.size1().merge(RadixButtonStyles.solid())`
-extension RadixButtonStyleExt on RemixButtonStyle {
-  /// Creates a size 1 button style (small).
-  ///
-  /// Small buttons for compact layouts, toolbars, and dense interfaces.
-  RemixButtonStyle size1() {
-    return merge(RadixButtonStyles.size1());
-  }
-
-  /// Creates a size 2 button style (medium - default).
-  ///
-  /// Standard buttons for most common use cases.
-  RemixButtonStyle size2() {
-    return merge(RadixButtonStyles.size2());
-  }
-
-  /// Creates a size 3 button style (large).
-  ///
-  /// Large buttons for prominent CTAs and accessibility needs.
-  RemixButtonStyle size3() {
-    return merge(RadixButtonStyles.size3());
-  }
-
-  /// Creates a size 4 button style (extra large).
-  ///
-  /// Extra large buttons for maximum prominence and accessibility.
-  RemixButtonStyle size4() {
-    return merge(RadixButtonStyles.size4());
+    return switch (size) {
+      RadixButtonSize.size1 => style
+          .height(24.0)
+          .paddingX(RadixTokens.space2())
+          .paddingY(RadixTokens.space1())
+          .spacing(RadixTokens.space1())
+          .borderRadiusAll(RadixTokens.radius2())
+          .label(
+            TextStyler()
+                .fontSize(12.0)
+                .height(16.0 / 12.0) // lineHeight as ratio
+                .letterSpacing(0.0025),
+          )
+          .iconSize(12.0)
+          .spinner(RemixSpinnerStyle(size: 12.0)),
+      RadixButtonSize.size2 => style
+          .height(32.0)
+          // Generic size padding (ghost overrides provided via variant config)
+          .paddingX(RadixTokens.space3())
+          .paddingY(RadixTokens.space2())
+          .spacing(RadixTokens.space2())
+          .borderRadiusAll(RadixTokens.radius3())
+          .label(
+            TextStyler()
+                .fontSize(14.0)
+                .height(20.0 / 14.0) // lineHeight as ratio
+                .letterSpacing(0.0),
+          )
+          .iconSize(16.0)
+          .spinner(RemixSpinnerStyle(size: 16.0)),
+      RadixButtonSize.size3 => style
+          .height(40.0)
+          .paddingX(RadixTokens.space4())
+          .paddingY(RadixTokens.space3())
+          .spacing(RadixTokens.space3())
+          .borderRadiusAll(RadixTokens.radius4())
+          .label(
+            TextStyler()
+                .fontSize(16.0)
+                .height(24.0 / 16.0) // lineHeight as ratio
+                .letterSpacing(0.0),
+          )
+          .iconSize(20.0)
+          .spinner(RemixSpinnerStyle(size: 20.0)),
+      RadixButtonSize.size4 => style
+          .height(48.0)
+          .paddingX(RadixTokens.space5())
+          .paddingY(RadixTokens.space4())
+          .spacing(RadixTokens.space4())
+          .borderRadiusAll(RadixTokens.radius5())
+          .label(
+            TextStyler()
+                .fontSize(18.0)
+                .height(26.0 / 18.0) // lineHeight as ratio
+                .letterSpacing(-0.0025),
+          )
+          .iconSize(24.0)
+          .spinner(RemixSpinnerStyle(size: 24.0)),
+    };
   }
 }

@@ -228,15 +228,14 @@ class _AllVariantsSection extends StatelessWidget {
         .showSnackBar(SnackBar(content: Text(message)));
   }
 
-  RemixButtonStyle _getSizedStyle(RemixButtonStyle Function() styleFactory) {
-    final baseStyle = styleFactory();
-
+  RemixButtonStyle _getSizedStyle(RemixButtonStyle Function() _) {
     return switch (size) {
-      1 => baseStyle.size1(),
-      2 => baseStyle.size2(),
-      3 => baseStyle.size3(),
-      4 => baseStyle.size4(),
-      _ => baseStyle.size2(), // Default to size 2
+      1 => RadixButtonStyle.base(size: RadixButtonSize.size1),
+      2 => RadixButtonStyle.base(size: RadixButtonSize.size2),
+      3 => RadixButtonStyle.base(size: RadixButtonSize.size3),
+      4 => RadixButtonStyle.base(size: RadixButtonSize.size4),
+      _ =>
+        RadixButtonStyle.base(size: RadixButtonSize.size2), // Default to size 2
     };
   }
 
@@ -246,45 +245,45 @@ class _AllVariantsSection extends StatelessWidget {
       runSpacing: 12,
       children: [
         // Solid
-        _getSizedStyle(() => RadixButtonStyles.solid()).call(
+        _getSizedStyle(() => RadixButtonStyle.solid()).call(
           label: 'Solid',
           icon: Icons.check_circle,
           onPressed: () => _showSnackBar(context, 'Solid pressed'),
         ),
 
         // Soft
-        _getSizedStyle(() => RadixButtonStyles.soft()).call(
+        _getSizedStyle(() => RadixButtonStyle.soft()).call(
           label: 'Soft',
           icon: Icons.favorite,
           onPressed: () => _showSnackBar(context, 'Soft pressed'),
         ),
 
         // Surface
-        _getSizedStyle(() => RadixButtonStyles.surface()).call(
+        _getSizedStyle(() => RadixButtonStyle.surface()).call(
           label: 'Surface',
           icon: Icons.layers,
           onPressed: () => _showSnackBar(context, 'Surface pressed'),
         ),
 
         // Outline
-        _getSizedStyle(() => RadixButtonStyles.outline()).call(
+        _getSizedStyle(() => RadixButtonStyle.outline()).call(
           label: 'Outline',
           icon: Icons.crop_free,
           onPressed: () => _showSnackBar(context, 'Outline pressed'),
         ),
 
         // Ghost
-        _getSizedStyle(() => RadixButtonStyles.ghost()).call(
+        _getSizedStyle(() => RadixButtonStyle.ghost()).call(
           label: 'Ghost',
           icon: Icons.visibility_off,
           onPressed: () => _showSnackBar(context, 'Ghost pressed'),
         ),
 
-        // Classic
-        _getSizedStyle(() => RadixButtonStyles.classic()).call(
-          label: 'Classic',
+        // Surface (was Classic)
+        _getSizedStyle(() => RadixButtonStyle.surface()).call(
+          label: 'Surface',
           icon: Icons.style,
-          onPressed: () => _showSnackBar(context, 'Classic pressed'),
+          onPressed: () => _showSnackBar(context, 'Surface pressed'),
         ),
       ],
     );
@@ -301,27 +300,19 @@ class _SizeComparisonSection extends StatelessWidget {
       children: [
         const Text('Size 1 (Small)'),
         const SizedBox(height: 8),
-        RadixButtonStyles.solid()
-            .size1()
-            .call(label: 'Size 1', onPressed: () {}),
+        RadixButtonStyle.solid().call(label: 'Size 1', onPressed: () {}),
         const SizedBox(height: 16),
         const Text('Size 2 (Medium - Default)'),
         const SizedBox(height: 8),
-        RadixButtonStyles.solid()
-            .size2()
-            .call(label: 'Size 2', onPressed: () {}),
+        RadixButtonStyle.solid().call(label: 'Size 2', onPressed: () {}),
         const SizedBox(height: 16),
         const Text('Size 3 (Large)'),
         const SizedBox(height: 8),
-        RadixButtonStyles.solid()
-            .size3()
-            .call(label: 'Size 3', onPressed: () {}),
+        RadixButtonStyle.solid().call(label: 'Size 3', onPressed: () {}),
         const SizedBox(height: 16),
         const Text('Size 4 (Extra Large)'),
         const SizedBox(height: 8),
-        RadixButtonStyles.solid()
-            .size4()
-            .call(label: 'Size 4', onPressed: () {}),
+        RadixButtonStyle.solid().call(label: 'Size 4', onPressed: () {}),
       ],
     );
   }
@@ -333,19 +324,17 @@ class _StateTestingSection extends StatelessWidget {
   RemixButtonStyle _getVariantButton(String variantName) {
     switch (variantName) {
       case 'Solid':
-        return RadixButtonStyles.solid();
+        return RadixButtonStyle.solid();
       case 'Soft':
-        return RadixButtonStyles.soft();
+        return RadixButtonStyle.soft();
       case 'Surface':
-        return RadixButtonStyles.surface();
+        return RadixButtonStyle.surface();
       case 'Outline':
-        return RadixButtonStyles.outline();
+        return RadixButtonStyle.outline();
       case 'Ghost':
-        return RadixButtonStyles.ghost();
-      case 'Classic':
-        return RadixButtonStyles.classic();
+        return RadixButtonStyle.ghost();
       default:
-        return RadixButtonStyles.solid();
+        return RadixButtonStyle.solid();
     }
   }
 
@@ -361,7 +350,6 @@ class _StateTestingSection extends StatelessWidget {
           'Surface',
           'Outline',
           'Ghost',
-          'Classic',
         ]) ...[
           Text(
             '$variantName States',
@@ -374,14 +362,14 @@ class _StateTestingSection extends StatelessWidget {
               // Normal
               _getVariantButton(variantName).call(
                 label: 'Normal',
-                onPressed: () {},
+                onPressed: () => print('Button pressed'),
               ),
 
               // Loading
               _getVariantButton(variantName).call(
                 label: 'Loading',
                 loading: true,
-                onPressed: () {},
+                onPressed: () => print('Button pressed'),
               ),
 
               // Disabled
@@ -422,9 +410,9 @@ class _AccentShowcaseSection extends StatelessWidget {
           accent: accentColor,
           gray: resolver.RadixGrayColor.slate,
           brightness: Theme.of(context).brightness,
-          child: RadixButtonStyles.solid().call(
+          child: RadixButtonStyle.solid().call(
             label: accentColor.name,
-            onPressed: () {},
+            onPressed: () => print('Button pressed'),
           ),
         );
       }).toList(),
