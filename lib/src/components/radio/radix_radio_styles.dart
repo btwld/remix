@@ -33,7 +33,8 @@ class RadixRadioStyles {
                 width: RadixTokens.borderWidth1(),
               )
               .borderRadius(
-                  BorderRadiusMix.all(RadixTokens.radiusFull())), // Circular
+                BorderRadiusMix.all(RadixTokens.radiusFull()),
+              ), // Circular
         )
         // Radio dot indicator - no size properties
         .indicator(
@@ -56,9 +57,7 @@ class RadixRadioStyles {
                       width: RadixTokens.borderWidth1(),
                     ),
               )
-              .indicator(
-                BoxStyler().color(RadixTokens.accentContrast()),
-              ),
+              .indicator(BoxStyler().color(RadixTokens.accentContrast())),
         )
         .onFocused(
           RemixRadioStyle().indicatorContainer(
@@ -76,12 +75,8 @@ class RadixRadioStyles {
                       width: RadixTokens.borderWidth1(),
                     ),
               )
-              .indicator(
-                BoxStyler().color(RadixTokens.gray12()),
-              )
-              .label(
-                TextStyler().color(RadixTokens.gray12()),
-              ),
+              .indicator(BoxStyler().color(RadixTokens.gray12()))
+              .label(TextStyler().color(RadixTokens.gray12())),
         );
   }
 
@@ -100,7 +95,8 @@ class RadixRadioStyles {
                 width: RadixTokens.borderWidth1(),
               )
               .borderRadius(
-                  BorderRadiusMix.all(RadixTokens.radiusFull())), // Circular
+                BorderRadiusMix.all(RadixTokens.radiusFull()),
+              ), // Circular
         )
         // Radio dot indicator - no size properties
         .indicator(
@@ -123,9 +119,7 @@ class RadixRadioStyles {
                       width: RadixTokens.borderWidth1(),
                     ),
               )
-              .indicator(
-                BoxStyler().color(RadixTokens.accent9()),
-              ),
+              .indicator(BoxStyler().color(RadixTokens.accent9())),
         )
         .onFocused(
           RemixRadioStyle().indicatorContainer(
@@ -143,12 +137,8 @@ class RadixRadioStyles {
                       width: RadixTokens.borderWidth1(),
                     ),
               )
-              .indicator(
-                BoxStyler().color(RadixTokens.accent9()),
-              )
-              .label(
-                TextStyler().color(RadixTokens.gray12()),
-              ),
+              .indicator(BoxStyler().color(RadixTokens.accent9()))
+              .label(TextStyler().color(RadixTokens.gray12())),
         );
   }
 
@@ -167,7 +157,8 @@ class RadixRadioStyles {
                 width: RadixTokens.borderWidth1(),
               )
               .borderRadius(
-                  BorderRadiusMix.all(RadixTokens.radiusFull())), // Circular
+                BorderRadiusMix.all(RadixTokens.radiusFull()),
+              ), // Circular
         )
         // Radio dot indicator - no size properties
         .indicator(
@@ -190,9 +181,7 @@ class RadixRadioStyles {
                       width: RadixTokens.borderWidth1(),
                     ),
               )
-              .indicator(
-                BoxStyler().color(RadixTokens.accent11()),
-              ),
+              .indicator(BoxStyler().color(RadixTokens.accent11())),
         )
         .onFocused(
           RemixRadioStyle().indicatorContainer(
@@ -210,12 +199,8 @@ class RadixRadioStyles {
                       width: RadixTokens.borderWidth1(),
                     ),
               )
-              .indicator(
-                BoxStyler().color(RadixTokens.accent11()),
-              )
-              .label(
-                TextStyler().color(RadixTokens.gray12()),
-              ),
+              .indicator(BoxStyler().color(RadixTokens.accent11()))
+              .label(TextStyler().color(RadixTokens.gray12())),
         );
   }
 

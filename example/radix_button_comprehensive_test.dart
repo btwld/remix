@@ -4,9 +4,8 @@
 import 'package:flutter/material.dart';
 
 import '../lib/src/components/button/button.dart';
-import '../lib/src/components/button/radix_button_styles.dart';
-import '../lib/src/radix/radix_theme.dart';
 import '../lib/src/radix/radix.dart' as resolver;
+import '../lib/src/radix/radix_theme.dart';
 
 void main() {
   runApp(const RadixButtonComprehensiveTest());

@@ -1,10 +1,5 @@
 part of 'button.dart';
 
-// Private per-component constants
-const _kFontSizeMd = 14.0;
-const _kIconSizeMd = 16.0;
-const _kIconSizeLg = 18.0;
-
 /// Style class for RemixButton with comprehensive fluent API.
 ///
 /// Provides three tiers of styling convenience:
@@ -188,7 +183,7 @@ class RemixButtonStyle
   // Variant support
 
   @override
-  RemixButtonStyle variants(List<VariantStyle<ButtonSpec>> value) {
+  RemixButtonStyle withVariants(List<VariantStyle<ButtonSpec>> value) {
     return merge(RemixButtonStyle(variants: value));
   }
 
@@ -237,77 +232,4 @@ class RemixButtonStyle
         $animation,
         $modifier,
       ];
-}
-
-class RemixButtonStyles {
-  /// Base button style - solid design with primary color
-  static RemixButtonStyle get baseStyle => RemixButtonStyle()
-      // Container visuals via mixins
-      .color(RemixTokens.primary())
-      .borderRadiusAll(RemixTokens.radius())
-      .paddingX(RemixTokens.spaceMd())
-      .paddingY(RemixTokens.spaceSm())
-      .spacing(RemixTokens.spaceSm())
-      // Content styles using new helper methods
-      .labelColor(RemixTokens.onPrimary())
-      .labelFontSize(_kFontSizeMd)
-      .iconColor(RemixTokens.onPrimary())
-      .iconSize(_kIconSizeLg)
-      .spinner(
-        RemixSpinnerStyle(
-          size: _kIconSizeMd,
-          strokeWidth: 1.5,
-          color: RemixTokens.onPrimary(),
-          duration: const Duration(milliseconds: 1000),
-          type: SpinnerType.solid,
-        ),
-      )
-      // State variants
-      .onHovered(RemixButtonStyle().color(RemixTokens.primary()))
-      .onPressed(RemixButtonStyle().color(RemixTokens.primary()))
-      .onFocused(
-        RemixButtonStyle().borderAll(color: RemixTokens.primary(), width: 2),
-      )
-      .onDisabled(
-        RemixButtonStyle()
-            .color(RemixTokens.primary())
-            .labelColor(RemixTokens.onPrimary())
-            .iconColor(RemixTokens.onPrimary())
-            .spinner(RemixSpinnerStyle(color: RemixTokens.onPrimary())),
-      );
-}
-
-/// Extension providing Radix button size methods for fluent API.
-///
-/// Enables the pattern: `RadixButtonStyles.solid().size1()`
-/// instead of: `RadixButtonStyles.size1().merge(RadixButtonStyles.solid())`
-extension RadixButtonStyleExt on RemixButtonStyle {
-  /// Creates a size 1 button style (small).
-  ///
-  /// Small buttons for compact layouts, toolbars, and dense interfaces.
-  RemixButtonStyle size1() {
-    return merge(RadixButtonStyles.size1());
-  }
-
-  /// Creates a size 2 button style (medium - default).
-  ///
-  /// Standard buttons for most common use cases.
-  RemixButtonStyle size2() {
-    return merge(RadixButtonStyles.size2());
-  }
-
-  /// Creates a size 3 button style (large).
-  ///
-  /// Large buttons for prominent CTAs and accessibility needs.
-  RemixButtonStyle size3() {
-    return merge(RadixButtonStyles.size3());
-  }
-
-  /// Creates a size 4 button style (extra large).
-  ///
-  /// Extra large buttons for maximum prominence and accessibility.
-  RemixButtonStyle size4() {
-    return merge(RadixButtonStyles.size4());
-  }
-
 }

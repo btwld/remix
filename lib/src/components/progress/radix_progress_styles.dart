@@ -20,10 +20,7 @@ class RadixProgressStyles {
   static RemixProgressStyle classic() {
     return RemixProgressStyle()
         // Container styling - no size properties
-        .container(
-          BoxStyler()
-              .width(double.infinity),
-        )
+        .container(BoxStyler().width(double.infinity))
         // Track styling (background bar)
         .track(
           BoxStyler()
@@ -46,10 +43,7 @@ class RadixProgressStyles {
   static RemixProgressStyle surface() {
     return RemixProgressStyle()
         // Container styling - no size properties
-        .container(
-          BoxStyler()
-              .width(double.infinity),
-        )
+        .container(BoxStyler().width(double.infinity))
         // Track styling (background bar) - same as classic
         .track(
           BoxStyler()
@@ -72,10 +66,7 @@ class RadixProgressStyles {
   static RemixProgressStyle soft() {
     return RemixProgressStyle()
         // Container styling - no size properties
-        .container(
-          BoxStyler()
-              .width(double.infinity),
-        )
+        .container(BoxStyler().width(double.infinity))
         // Track styling (background bar) - uses accent4 instead of gray
         .track(
           BoxStyler()
@@ -96,9 +87,7 @@ class RadixProgressStyles {
   /// Smallest progress size with 4px height.
   static RemixProgressStyle size1() {
     return RemixProgressStyle()
-        .container(
-          BoxStyler().height(4.0),
-        )
+        .container(BoxStyler().height(4.0))
         .track(
           BoxStyler()
               .height(4.0)
@@ -116,9 +105,7 @@ class RadixProgressStyles {
   /// Default progress size with 8px height.
   static RemixProgressStyle size2() {
     return RemixProgressStyle()
-        .container(
-          BoxStyler().height(8.0),
-        )
+        .container(BoxStyler().height(8.0))
         .track(
           BoxStyler()
               .height(8.0)
@@ -136,9 +123,7 @@ class RadixProgressStyles {
   /// Largest progress size with 12px height.
   static RemixProgressStyle size3() {
     return RemixProgressStyle()
-        .container(
-          BoxStyler().height(12.0),
-        )
+        .container(BoxStyler().height(12.0))
         .track(
           BoxStyler()
               .height(12.0)

@@ -7,12 +7,14 @@ void main() async {
 }
 
 class RadixColorGenerator {
-  const RadixColorGenerator();
   static const String jsonPath = 'radix_colors.generated.json';
   static const String outputPath = 'lib/src/radix/colors/colors_generated.dart';
-
+  const RadixColorGenerator();
   void _generateColorInstance(
-      StringBuffer buffer, String colorName, Map<String, dynamic> colorData) {
+    StringBuffer buffer,
+    String colorName,
+    Map<String, dynamic> colorData,
+  ) {
     final dartName = _toDartName(colorName);
     final light = colorData['light'] as Map<String, dynamic>;
     final dark = colorData['dark'] as Map<String, dynamic>;
@@ -54,7 +56,10 @@ class RadixColorGenerator {
   }
 
   void _generateNeutralInstance(
-      StringBuffer buffer, String colorName, Map<String, dynamic> colorData) {
+    StringBuffer buffer,
+    String colorName,
+    Map<String, dynamic> colorData,
+  ) {
     final dartName = _toDartName(colorName);
     final alpha = colorData['alpha'] as Map<String, dynamic>;
 
@@ -72,7 +77,10 @@ class RadixColorGenerator {
   }
 
   void _generateColorSwatch(
-      StringBuffer buffer, Map<String, dynamic> themeData, String type) {
+    StringBuffer buffer,
+    Map<String, dynamic> themeData,
+    String type,
+  ) {
     final colorMap = themeData[type] as Map<String, dynamic>;
     final primaryKey = type == 'solid' ? '9' : 'a9';
     final primaryColor = colorMap[primaryKey] as String;
@@ -223,7 +231,8 @@ class RadixColorGenerator {
     for (final colorName in scales.keys) {
       final dartName = _toDartName(colorName);
       buffer.writeln(
-          'const $dartName = RadixColorTheme(_${dartName}Light, _${dartName}Dark);');
+        'const $dartName = RadixColorTheme(_${dartName}Light, _${dartName}Dark);',
+      );
     }
 
     // Generate neutral instances

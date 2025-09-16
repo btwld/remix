@@ -4,7 +4,8 @@ part of 'checkbox.dart';
 const _kFontSizeMd = 14.0;
 const _kIconSizeMd = 16.0;
 
-class RemixCheckboxStyle extends RemixFlexContainerStyle<CheckboxSpec, RemixCheckboxStyle> {
+class RemixCheckboxStyle
+    extends RemixFlexContainerStyle<CheckboxSpec, RemixCheckboxStyle> {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<BoxSpec>>? $indicatorContainer;
   final Prop<StyleSpec<IconSpec>>? $indicator;
@@ -54,14 +55,6 @@ class RemixCheckboxStyle extends RemixFlexContainerStyle<CheckboxSpec, RemixChec
           maxHeight: value,
         ),
       ),
-    ));
-  }
-
-  /// Sets checkbox background color
-  @override
-  RemixCheckboxStyle color(Color value) {
-    return merge(RemixCheckboxStyle(
-      indicatorContainer: BoxStyler(decoration: BoxDecorationMix(color: value)),
     ));
   }
 
@@ -116,6 +109,14 @@ class RemixCheckboxStyle extends RemixFlexContainerStyle<CheckboxSpec, RemixChec
     ));
   }
 
+  /// Sets checkbox background color
+  @override
+  RemixCheckboxStyle color(Color value) {
+    return merge(RemixCheckboxStyle(
+      indicatorContainer: BoxStyler(decoration: BoxDecorationMix(color: value)),
+    ));
+  }
+
   /// Sets checkbox size with separate width and height
   @override
   RemixCheckboxStyle size(double width, double height) {
@@ -148,7 +149,7 @@ class RemixCheckboxStyle extends RemixFlexContainerStyle<CheckboxSpec, RemixChec
   }
 
   @override
-  RemixCheckboxStyle variants(List<VariantStyle<CheckboxSpec>> value) {
+  RemixCheckboxStyle withVariants(List<VariantStyle<CheckboxSpec>> value) {
     return merge(RemixCheckboxStyle(variants: value));
   }
 
@@ -279,11 +280,11 @@ class RemixCheckboxStyles {
         indicator: IconStyler(color: RemixTokens.primary(), size: _kIconSizeMd),
         label: TextStyler(
           style: TextStyleMix(
-              color: RemixTokens.primary(), fontSize: _kFontSizeMd,),
+            color: RemixTokens.primary(),
+            fontSize: _kFontSizeMd,
+          ),
         ),
       );
-
-
 }
 
 /// Extension providing Radix checkbox size methods for fluent API.

@@ -63,7 +63,7 @@ class RemixSelectStyle extends RemixStyle<SelectSpec, RemixSelectStyle> {
   }
 
   @override
-  RemixSelectStyle variants(List<VariantStyle<SelectSpec>> value) {
+  RemixSelectStyle withVariants(List<VariantStyle<SelectSpec>> value) {
     return merge(RemixSelectStyle(variants: value));
   }
 
@@ -119,7 +119,8 @@ class RemixSelectStyle extends RemixStyle<SelectSpec, RemixSelectStyle> {
 }
 
 // Style classes for sub-specs
-class RemixSelectTriggerStyle extends RemixFlexContainerStyle<SelectTriggerSpec, RemixSelectTriggerStyle> {
+class RemixSelectTriggerStyle extends RemixFlexContainerStyle<SelectTriggerSpec,
+    RemixSelectTriggerStyle> {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<StyleSpec<IconSpec>>? $icon;
@@ -200,7 +201,7 @@ class RemixSelectTriggerStyle extends RemixFlexContainerStyle<SelectTriggerSpec,
   }
 
   @override
-  RemixSelectTriggerStyle variants(
+  RemixSelectTriggerStyle withVariants(
     List<VariantStyle<SelectTriggerSpec>> value,
   ) {
     return merge(RemixSelectTriggerStyle(variants: value));
@@ -259,7 +260,8 @@ class RemixSelectTriggerStyle extends RemixFlexContainerStyle<SelectTriggerSpec,
       ];
 }
 
-class RemixSelectMenuItemStyle extends RemixFlexContainerStyle<SelectMenuItemSpec, RemixSelectMenuItemStyle> {
+class RemixSelectMenuItemStyle extends RemixFlexContainerStyle<
+    SelectMenuItemSpec, RemixSelectMenuItemStyle> {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $text;
   final Prop<StyleSpec<IconSpec>>? $icon;
@@ -333,7 +335,7 @@ class RemixSelectMenuItemStyle extends RemixFlexContainerStyle<SelectMenuItemSpe
   }
 
   @override
-  RemixSelectMenuItemStyle variants(
+  RemixSelectMenuItemStyle withVariants(
     List<VariantStyle<SelectMenuItemSpec>> value,
   ) {
     return merge(RemixSelectMenuItemStyle(variants: value));
@@ -433,6 +435,13 @@ class RemixCompositedTransformFollowerStyle
         );
 
   @override
+  RemixCompositedTransformFollowerStyle withVariants(
+    List<VariantStyle<CompositedTransformFollowerSpec>> value,
+  ) {
+    return merge(RemixCompositedTransformFollowerStyle(variants: value));
+  }
+
+  @override
   StyleSpec<CompositedTransformFollowerSpec> resolve(BuildContext context) {
     return StyleSpec(
       spec: CompositedTransformFollowerSpec(
@@ -489,10 +498,7 @@ class RemixSelectStyles {
           container: FlexBoxStyler(
             decoration: BoxDecorationMix(
               border: BoxBorderMix.all(
-                BorderSideMix(
-                  color: RemixTokens.primary(),
-                  width: 1,
-                ),
+                BorderSideMix(color: RemixTokens.primary(), width: 1),
               ),
               borderRadius: BorderRadiusMix.all(RemixTokens.radius()),
             ),
@@ -510,10 +516,7 @@ class RemixSelectStyles {
               fontSize: _kFontSizeSm,
             ),
           ),
-          icon: IconStyler(
-            color: RemixTokens.primary(),
-            size: 20,
-          ),
+          icon: IconStyler(color: RemixTokens.primary(), size: 20),
         ),
         item: RemixSelectMenuItemStyle(
           container: FlexBoxStyler(
@@ -531,10 +534,7 @@ class RemixSelectStyles {
               fontSize: _kFontSizeSm,
             ),
           ),
-          icon: IconStyler(
-            color: RemixTokens.primary(),
-            size: 16,
-          ),
+          icon: IconStyler(color: RemixTokens.primary(), size: 16),
         ),
         position: RemixCompositedTransformFollowerStyle(
           targetAnchor: Alignment.bottomLeft,
@@ -576,10 +576,7 @@ class RemixSelectStyles {
               fontSize: _kFontSizeSm,
             ),
           ),
-          icon: IconStyler(
-            color: RemixTokens.primary(),
-            size: 20,
-          ),
+          icon: IconStyler(color: RemixTokens.primary(), size: 20),
         ),
         item: RemixSelectMenuItemStyle(
           container: FlexBoxStyler(
@@ -600,10 +597,7 @@ class RemixSelectStyles {
               fontSize: _kFontSizeSm,
             ),
           ),
-          icon: IconStyler(
-            color: RemixTokens.primary(),
-            size: 16,
-          ),
+          icon: IconStyler(color: RemixTokens.primary(), size: 16),
         ),
         position: RemixCompositedTransformFollowerStyle(
           targetAnchor: Alignment.bottomLeft,
@@ -615,9 +609,7 @@ class RemixSelectStyles {
             RemixSelectStyle(
               trigger: RemixSelectTriggerStyle(
                 container: FlexBoxStyler(
-                  decoration: BoxDecorationMix(
-                    color: RemixTokens.primary(),
-                  ),
+                  decoration: BoxDecorationMix(color: RemixTokens.primary()),
                 ),
               ),
             ),
@@ -628,10 +620,7 @@ class RemixSelectStyles {
                 container: FlexBoxStyler(
                   decoration: BoxDecorationMix(
                     border: BoxBorderMix.all(
-                      BorderSideMix(
-                        color: RemixTokens.primary(),
-                        width: 2,
-                      ),
+                      BorderSideMix(color: RemixTokens.primary(), width: 2),
                     ),
                   ),
                 ),

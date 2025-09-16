@@ -852,10 +852,16 @@ Widget createRadixScope({
       letterSpacing: 0.0025 * 12.0,
       height: 16.0 / 12.0,
     ),
-    RadixTokens.text2:
-        TextStyleMix(fontSize: 14.0, letterSpacing: 0.0, height: 20.0 / 14.0),
-    RadixTokens.text3:
-        TextStyleMix(fontSize: 16.0, letterSpacing: 0.0, height: 24.0 / 16.0),
+    RadixTokens.text2: TextStyleMix(
+      fontSize: 14.0,
+      letterSpacing: 0.0,
+      height: 20.0 / 14.0,
+    ),
+    RadixTokens.text3: TextStyleMix(
+      fontSize: 16.0,
+      letterSpacing: 0.0,
+      height: 24.0 / 16.0,
+    ),
     RadixTokens.text4: TextStyleMix(
       fontSize: 18.0,
       letterSpacing: -0.0025 * 18.0,
@@ -881,8 +887,11 @@ Widget createRadixScope({
       letterSpacing: -0.01 * 35.0,
       height: 40.0 / 35.0,
     ),
-    RadixTokens.text9:
-        TextStyleMix(fontSize: 60.0, letterSpacing: -0.025 * 60.0, height: 1.0),
+    RadixTokens.text9: TextStyleMix(
+      fontSize: 60.0,
+      letterSpacing: -0.025 * 60.0,
+      height: 1.0,
+    ),
 
     // Font weights (token values)
     RadixTokens.fontWeightLight: FontWeight.w300,

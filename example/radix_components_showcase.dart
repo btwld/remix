@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import '../lib/src/components/badge/badge.dart';
 import '../lib/src/components/badge/radix_badge_styles.dart';
 import '../lib/src/components/button/button.dart';
-import '../lib/src/components/button/radix_button_styles.dart';
 import '../lib/src/components/card/card.dart';
 import '../lib/src/components/card/radix_card_styles.dart';
 import '../lib/src/components/checkbox/checkbox.dart';
@@ -24,8 +23,8 @@ import '../lib/src/components/switch/radix_switch_styles.dart';
 import '../lib/src/components/switch/switch.dart';
 import '../lib/src/components/textfield/radix_textfield_styles.dart';
 import '../lib/src/components/textfield/textfield.dart';
-import '../lib/src/radix/radix_theme.dart';
 import '../lib/src/radix/radix.dart' as resolver;
+import '../lib/src/radix/radix_theme.dart';
 
 void main() {
   runApp(const RadixComponentsShowcaseApp());

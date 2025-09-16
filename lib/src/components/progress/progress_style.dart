@@ -3,7 +3,8 @@ part of 'progress.dart';
 // Private per-component constants (sizes only)
 const _kBarHeight = 6.0;
 
-class RemixProgressStyle extends RemixContainerStyle<ProgressSpec, RemixProgressStyle> {
+class RemixProgressStyle
+    extends RemixContainerStyle<ProgressSpec, RemixProgressStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<BoxSpec>>? $track;
   final Prop<StyleSpec<BoxSpec>>? $indicator;
@@ -84,7 +85,7 @@ class RemixProgressStyle extends RemixContainerStyle<ProgressSpec, RemixProgress
   }
 
   @override
-  RemixProgressStyle variants(List<VariantStyle<ProgressSpec>> value) {
+  RemixProgressStyle withVariants(List<VariantStyle<ProgressSpec>> value) {
     return merge(RemixProgressStyle(variants: value));
   }
 
@@ -199,9 +200,7 @@ class RemixProgressStyles {
           clipBehavior: Clip.antiAlias,
         ),
         track: BoxStyler(
-          decoration: BoxDecorationMix(
-            color: RemixTokens.primary(),
-          ),
+          decoration: BoxDecorationMix(color: RemixTokens.primary()),
         ),
         indicator: BoxStyler(
           decoration: BoxDecorationMix(

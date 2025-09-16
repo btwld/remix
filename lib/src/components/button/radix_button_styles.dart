@@ -8,8 +8,30 @@ import '../../radix/radix.dart';
 import '../spinner/spinner.dart';
 import 'button.dart';
 
-// Export the extension so it's available when importing this file
-export 'button.dart' show RadixButtonStyleExt;
+enum RadixButtonVariant {
+  solid,
+  soft,
+  surface,
+  outline,
+  ghost,
+  classic,
+}
+
+enum RadixButtonSize {
+  size1,
+  size2,
+  size3,
+  size4,
+}
+
+class RadixButtonStyle extends RemixButtonStyle {
+  const RadixButtonStyle._() : super.create();
+
+  factory RadixButtonStyle({
+    RadixButtonVariant variant = RadixButtonVariant.solid,
+    RadixButtonSize size = RadixButtonSize.size2,
+  }) {}
+}
 
 /// Factory class for creating Radix-compliant button styles.
 ///
@@ -17,6 +39,41 @@ export 'button.dart' show RadixButtonStyleExt;
 /// Radix UI button variants using the RadixTokens system.
 class RadixButtonStyles {
   const RadixButtonStyles._();
+
+  /// Base button style with shared defaults (size2 metrics).
+  ///
+  /// Provides: height, padding, spacing, radius, label typography,
+  /// icon size, spinner defaults, and focus ring. Variants should layer
+  /// visual intent (colors/borders) on top of this base.
+  static RemixButtonStyle base() {
+    return RemixButtonStyle()
+        // Default size (aligns to size2)
+        .height(32.0)
+        .paddingX(RadixTokens.space3())
+        .paddingY(RadixTokens.space2())
+        .spacing(RadixTokens.space2())
+        .borderRadiusAll(RadixTokens.radius3())
+        // Typography (use Radix text token for size 2)
+        .labelTextStyle(RadixTokens.text2.mix())
+        .label(TextStyler().fontWeight(RadixTokens.fontWeightMedium()))
+        // Icon / spinner defaults (colors set by variants)
+        .iconSize(16.0)
+        .spinner(
+          RemixSpinnerStyle(
+            size: 16.0,
+            strokeWidth: RadixTokens.borderWidth2(),
+            duration: const Duration(milliseconds: 800),
+            type: SpinnerType.solid,
+          ),
+        )
+        // Focus ring
+        .onFocused(
+          RemixButtonStyle().borderAll(
+            color: RadixTokens.focusA8(),
+            width: RadixTokens.focusRingWidth(),
+          ),
+        );
+  }
 
   /// Creates a solid variant button style.
   ///
@@ -27,38 +84,18 @@ class RadixButtonStyles {
         // Visual styling only - no size properties
         .color(RadixTokens.accent9())
         // Content styling
-        .label(
-          TextStyler()
-              .color(RadixTokens.accentContrast())
-              .fontWeight(RadixTokens.fontWeightMedium()),
-        )
+        .label(TextStyler().color(RadixTokens.accentContrast()))
         .iconColor(RadixTokens.accentContrast())
-        .spinner(
-          RemixSpinnerStyle(
-            strokeWidth: RadixTokens.borderWidth2(),
-            color: RadixTokens.accentContrast(),
-            // Match Radix spinner token (800ms)
-            duration: const Duration(milliseconds: 800),
-            type: SpinnerType.solid,
-          ),
-        )
+        .spinner(RemixSpinnerStyle(color: RadixTokens.accentContrast()))
         // State variants
         .onHovered(RemixButtonStyle().color(RadixTokens.accent10()))
         .onPressed(RemixButtonStyle().color(RadixTokens.accent10()))
-        .onFocused(
-          RemixButtonStyle().borderAll(
-            color: RadixTokens.focusA8(),
-            width: RadixTokens.focusRingWidth(),
-          ),
-        )
         .onDisabled(
           RemixButtonStyle()
               .color(RadixTokens.accent9())
               .label(TextStyler().color(RadixTokens.accentContrast()))
               .icon(IconStyler(color: RadixTokens.accentContrast()))
-              .spinner(
-                RemixSpinnerStyle(color: RadixTokens.accentContrast()),
-              ),
+              .spinner(RemixSpinnerStyle(color: RadixTokens.accentContrast())),
         );
   }
 
@@ -75,20 +112,9 @@ class RadixButtonStyles {
           width: RadixTokens.borderWidth1(),
         )
         // Content styling
-        .label(
-          TextStyler()
-              .color(RadixTokens.accent11())
-              .fontWeight(RadixTokens.fontWeightMedium()),
-        )
+        .label(TextStyler().color(RadixTokens.accent11()))
         .iconColor(RadixTokens.accent11())
-        .spinner(
-          RemixSpinnerStyle(
-            strokeWidth: RadixTokens.borderWidth2(),
-            color: RadixTokens.accent11(),
-            duration: const Duration(milliseconds: 800),
-            type: SpinnerType.solid,
-          ),
-        )
+        .spinner(RemixSpinnerStyle(color: RadixTokens.accent11()))
         // State variants
         .onHovered(
           RemixButtonStyle().color(RadixTokens.accent4()).borderAll(
@@ -97,12 +123,6 @@ class RadixButtonStyles {
               ),
         )
         .onPressed(RemixButtonStyle().color(RadixTokens.accent5()))
-        .onFocused(
-          RemixButtonStyle().borderAll(
-            color: RadixTokens.focusA8(),
-            width: RadixTokens.focusRingWidth(),
-          ),
-        )
         .onDisabled(
           RemixButtonStyle()
               .color(RadixTokens.accent3())
@@ -129,20 +149,9 @@ class RadixButtonStyles {
           width: RadixTokens.borderWidth1(),
         )
         // Content styling
-        .label(
-          TextStyler()
-              .color(RadixTokens.accent11())
-              .fontWeight(RadixTokens.fontWeightMedium()),
-        )
+        .label(TextStyler().color(RadixTokens.accent11()))
         .iconColor(RadixTokens.accent11())
-        .spinner(
-          RemixSpinnerStyle(
-            strokeWidth: RadixTokens.borderWidth2(),
-            color: RadixTokens.accent11(),
-            duration: const Duration(milliseconds: 800),
-            type: SpinnerType.solid,
-          ),
-        )
+        .spinner(RemixSpinnerStyle(color: RadixTokens.accent11()))
         // State variants
         .onHovered(
           RemixButtonStyle()
@@ -151,12 +160,6 @@ class RadixButtonStyles {
                 color: RadixTokens.accent7(),
                 width: RadixTokens.borderWidth1(),
               ),
-        )
-        .onFocused(
-          RemixButtonStyle().borderAll(
-            color: RadixTokens.focusA8(),
-            width: RadixTokens.focusRingWidth(),
-          ),
         )
         .onDisabled(
           RemixButtonStyle()
@@ -185,32 +188,15 @@ class RadixButtonStyles {
           width: RadixTokens.borderWidth1(),
         )
         // Content styling
-        .label(
-          TextStyler()
-              .color(RadixTokens.accent11())
-              .fontWeight(RadixTokens.fontWeightMedium()),
-        )
+        .label(TextStyler().color(RadixTokens.accent11()))
         .iconColor(RadixTokens.accent11())
-        .spinner(
-          RemixSpinnerStyle(
-            strokeWidth: RadixTokens.borderWidth2(),
-            color: RadixTokens.accent11(),
-            duration: const Duration(milliseconds: 800),
-            type: SpinnerType.solid,
-          ),
-        )
+        .spinner(RemixSpinnerStyle(color: RadixTokens.accent11()))
         // State variants
         .onHovered(
           RemixButtonStyle().color(RadixTokens.accentA3()).borderAll(
                 color: RadixTokens.accent8(),
                 width: RadixTokens.borderWidth1(),
               ),
-        )
-        .onFocused(
-          RemixButtonStyle().borderAll(
-            color: RadixTokens.focusA8(),
-            width: RadixTokens.focusRingWidth(),
-          ),
         )
         .onDisabled(
           RemixButtonStyle()
@@ -233,29 +219,12 @@ class RadixButtonStyles {
         // Visual styling only - no size properties
         .color(Colors.transparent)
         // Content styling
-        .label(
-          TextStyler()
-              .color(RadixTokens.accent11())
-              .fontWeight(RadixTokens.fontWeightMedium()),
-        )
+        .label(TextStyler().color(RadixTokens.accent11()))
         .iconColor(RadixTokens.accent11())
-        .spinner(
-          RemixSpinnerStyle(
-            strokeWidth: RadixTokens.borderWidth2(),
-            color: RadixTokens.accent11(),
-            duration: const Duration(milliseconds: 800),
-            type: SpinnerType.solid,
-          ),
-        )
+        .spinner(RemixSpinnerStyle(color: RadixTokens.accent11()))
         // State variants
         .onHovered(RemixButtonStyle().color(RadixTokens.accentA3()))
         .onPressed(RemixButtonStyle().color(RadixTokens.accentA4()))
-        .onFocused(
-          RemixButtonStyle().borderAll(
-            color: RadixTokens.focusA8(),
-            width: RadixTokens.focusRingWidth(),
-          ),
-        )
         .onDisabled(
           RemixButtonStyle()
               .label(TextStyler().color(RadixTokens.accent11()))
@@ -280,20 +249,9 @@ class RadixButtonStyles {
         // Add subtle shadow for classic feel using token
         .shadows(RadixTokens.shadow2().map(BoxShadowMix.value).toList())
         // Content styling
-        .label(
-          TextStyler()
-              .color(RadixTokens.gray12())
-              .fontWeight(RadixTokens.fontWeightMedium()),
-        )
+        .label(TextStyler().color(RadixTokens.gray12()))
         .iconColor(RadixTokens.gray12())
-        .spinner(
-          RemixSpinnerStyle(
-            strokeWidth: RadixTokens.borderWidth2(),
-            color: RadixTokens.gray12(),
-            duration: const Duration(milliseconds: 800),
-            type: SpinnerType.solid,
-          ),
-        )
+        .spinner(RemixSpinnerStyle(color: RadixTokens.gray12()))
         // State variants
         .onHovered(
           RemixButtonStyle()
@@ -305,12 +263,6 @@ class RadixButtonStyles {
               .shadows(
                 RadixTokens.shadow2().map(BoxShadowMix.value).toList(),
               ),
-        )
-        .onFocused(
-          RemixButtonStyle().borderAll(
-            color: RadixTokens.focusA8(),
-            width: RadixTokens.focusRingWidth(),
-          ),
         )
         .onDisabled(
           RemixButtonStyle()
@@ -411,5 +363,41 @@ class RadixButtonStyles {
         )
         .iconSize(24.0)
         .spinner(RemixSpinnerStyle(size: 24.0));
+  }
+}
+
+// Removed RemixButtonStyles in favor of RadixButtonStyles.base()
+
+/// Extension providing Radix button size methods for fluent API.
+///
+/// Enables the pattern: `RadixButtonStyles.solid().size1()`
+/// instead of: `RadixButtonStyles.size1().merge(RadixButtonStyles.solid())`
+extension RadixButtonStyleExt on RemixButtonStyle {
+  /// Creates a size 1 button style (small).
+  ///
+  /// Small buttons for compact layouts, toolbars, and dense interfaces.
+  RemixButtonStyle size1() {
+    return merge(RadixButtonStyles.size1());
+  }
+
+  /// Creates a size 2 button style (medium - default).
+  ///
+  /// Standard buttons for most common use cases.
+  RemixButtonStyle size2() {
+    return merge(RadixButtonStyles.size2());
+  }
+
+  /// Creates a size 3 button style (large).
+  ///
+  /// Large buttons for prominent CTAs and accessibility needs.
+  RemixButtonStyle size3() {
+    return merge(RadixButtonStyles.size3());
+  }
+
+  /// Creates a size 4 button style (extra large).
+  ///
+  /// Extra large buttons for maximum prominence and accessibility.
+  RemixButtonStyle size4() {
+    return merge(RadixButtonStyles.size4());
   }
 }

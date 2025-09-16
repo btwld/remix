@@ -47,10 +47,12 @@ _ParsedRadixScale _parseRadixCss(String css, String scale) {
     if (s.startsWith('var(')) {
       final name = s.substring(4, s.length - 1).trim(); // --foo
       final key = name.startsWith('--') ? name.substring(2) : name;
+
       return _resolve(vars[key]);
     }
     if (s == 'white') return '#ffffff';
     if (s == 'black') return '#000000';
+
     return s;
   }
 

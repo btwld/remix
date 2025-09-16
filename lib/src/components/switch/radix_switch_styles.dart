@@ -37,12 +37,8 @@ class RadixSwitchStyles {
         // Checked state - use .onSelected for state changes
         .onSelected(
           RemixSwitchStyle()
-              .track(
-                BoxStyler().color(RadixTokens.accent9()),
-              )
-              .thumb(
-                BoxStyler().color(RadixTokens.accentContrast()),
-              ),
+              .track(BoxStyler().color(RadixTokens.accent9()))
+              .thumb(BoxStyler().color(RadixTokens.accentContrast())),
         )
         // Focus state
         .onFocused(
@@ -56,12 +52,8 @@ class RadixSwitchStyles {
         // Disabled state
         .onDisabled(
           RemixSwitchStyle()
-              .track(
-                BoxStyler().color(RadixTokens.accentTrack()),
-              )
-              .thumb(
-                BoxStyler().color(RadixTokens.colorSurface()),
-              ),
+              .track(BoxStyler().color(RadixTokens.accentTrack()))
+              .thumb(BoxStyler().color(RadixTokens.colorSurface())),
         );
   }
 
@@ -86,11 +78,10 @@ class RadixSwitchStyles {
         // Checked state - different from classic (thumb stays colorSurface)
         .onSelected(
           RemixSwitchStyle()
-              .track(
-                BoxStyler().color(RadixTokens.accent9()),
-              )
+              .track(BoxStyler().color(RadixTokens.accent9()))
               .thumb(
-                BoxStyler().color(RadixTokens.colorSurface()), // Stays white/surface
+                BoxStyler()
+                    .color(RadixTokens.colorSurface()), // Stays white/surface
               ),
         )
         // Focus state
@@ -105,12 +96,8 @@ class RadixSwitchStyles {
         // Disabled state
         .onDisabled(
           RemixSwitchStyle()
-              .track(
-                BoxStyler().color(RadixTokens.accentTrack()),
-              )
-              .thumb(
-                BoxStyler().color(RadixTokens.colorSurface()),
-              ),
+              .track(BoxStyler().color(RadixTokens.accentTrack()))
+              .thumb(BoxStyler().color(RadixTokens.colorSurface())),
         );
   }
 
@@ -135,12 +122,8 @@ class RadixSwitchStyles {
         // Checked state - track becomes accent5, thumb stays accent11
         .onSelected(
           RemixSwitchStyle()
-              .track(
-                BoxStyler().color(RadixTokens.accent5()),
-              )
-              .thumb(
-                BoxStyler().color(RadixTokens.accent11()),
-              ),
+              .track(BoxStyler().color(RadixTokens.accent5()))
+              .thumb(BoxStyler().color(RadixTokens.accent11())),
         )
         // Focus state
         .onFocused(
@@ -154,12 +137,8 @@ class RadixSwitchStyles {
         // Disabled state
         .onDisabled(
           RemixSwitchStyle()
-              .track(
-                BoxStyler().color(RadixTokens.accent3()),
-              )
-              .thumb(
-                BoxStyler().color(RadixTokens.accent11()),
-              ),
+              .track(BoxStyler().color(RadixTokens.accent3()))
+              .thumb(BoxStyler().color(RadixTokens.accent11())),
         );
   }
 
@@ -169,12 +148,8 @@ class RadixSwitchStyles {
   /// Compose with variant methods like .classic().
   static RemixSwitchStyle size1() {
     return RemixSwitchStyle(
-      track: BoxStyler()
-        .width(32.0)
-        .height(20.0),
-      thumb: BoxStyler()
-        .width(16.0)
-        .height(16.0),
+      track: BoxStyler().width(32.0).height(20.0),
+      thumb: BoxStyler().width(16.0).height(16.0),
     );
   }
 
@@ -184,12 +159,8 @@ class RadixSwitchStyles {
   /// Compose with variant methods like .classic().
   static RemixSwitchStyle size2() {
     return RemixSwitchStyle(
-      track: BoxStyler()
-        .width(40.0)
-        .height(24.0),
-      thumb: BoxStyler()
-        .width(20.0)
-        .height(20.0),
+      track: BoxStyler().width(40.0).height(24.0),
+      thumb: BoxStyler().width(20.0).height(20.0),
     );
   }
 
@@ -199,12 +170,8 @@ class RadixSwitchStyles {
   /// Compose with variant methods like .classic().
   static RemixSwitchStyle size3() {
     return RemixSwitchStyle(
-      track: BoxStyler()
-        .width(48.0)
-        .height(28.0),
-      thumb: BoxStyler()
-        .width(24.0)
-        .height(24.0),
+      track: BoxStyler().width(48.0).height(28.0),
+      thumb: BoxStyler().width(24.0).height(24.0),
     );
   }
 }

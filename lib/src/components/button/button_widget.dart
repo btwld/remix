@@ -166,7 +166,7 @@ class _RemixButtonState extends State<RemixButton>
   @override
   Widget build(BuildContext context) {
     return StyleBuilder(
-      style: RemixButtonStyles.baseStyle.merge(widget.style),
+      style: RadixButtonStyles.base().merge(widget.style),
       controller: controller,
       builder: (context, spec) {
         final FlexContaineWidget = spec.container.createWidget;
@@ -218,7 +218,7 @@ class _RemixButtonState extends State<RemixButton>
 
         // Create content inside the styled container. The container remains
         // visible in loading state to preserve background, padding and radius.
-        final Widget baseContainer = FlexContaineWidget(
+        final baseContainer = FlexContaineWidget(
           direction: Axis.horizontal,
           children: [
             Visibility(
