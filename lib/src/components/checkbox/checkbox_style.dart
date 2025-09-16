@@ -245,45 +245,5 @@ class RemixCheckboxStyle
       ];
 }
 
-// Default style is provided by RemixCheckboxStyles.baseStyle
 
-// Variants are exposed via RemixCheckboxStyles
-
-/// Canonical access to default and variants
-class RemixCheckboxStyles {
-  /// Base checkbox style - standard design with transparent background
-  static RemixCheckboxStyle get baseStyle => RemixCheckboxStyle(
-        container: FlexBoxStyler(
-          alignment: Alignment.centerLeft,
-          direction: Axis.horizontal,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          spacing: RemixTokens.spaceSm(),
-        ),
-        indicatorContainer: BoxStyler(
-          alignment: Alignment.center,
-          constraints: BoxConstraintsMix(
-            minWidth: 20,
-            maxWidth: 20,
-            minHeight: 20,
-            maxHeight: 20,
-          ),
-          decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(
-              BorderSideMix(color: RemixTokens.primary(), width: 1.5),
-            ),
-            // Fixed small radius for classic checkbox shape
-            borderRadius: BorderRadiusMix.circular(4.0),
-            color: MixColors.transparent,
-          ),
-        ),
-        indicator: IconStyler(color: RemixTokens.primary(), size: _kIconSizeMd),
-        label: TextStyler(
-          style: TextStyleMix(
-            color: RemixTokens.primary(),
-            fontSize: _kFontSizeMd,
-          ),
-        ),
-      );
-}
 

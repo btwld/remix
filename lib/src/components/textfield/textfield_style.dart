@@ -348,49 +348,5 @@ class RemixTextFieldStyle extends RemixFlexContainerStyle<TextFieldSpec, RemixTe
       ];
 }
 
-/// Text field styles
-class RemixTextFieldStyles {
-  /// Base text field style - standard design with border
-  static RemixTextFieldStyle get baseStyle => RemixTextFieldStyle(
-        text: TextStyler(
-          style: TextStyleMix(
-            color: RemixTokens.primary(),
-            fontSize: _kFontSizeMd,
-          ),
-        ),
-        hintText: TextStyler(
-          style:
-              TextStyleMix(color: RemixTokens.primary()),
-        ),
-        textAlign: TextAlign.start,
-        cursorWidth: 2.0,
-        cursorColor: RemixTokens.primary(),
-        cursorOffset: Offset.zero,
-        selectionHeightStyle: BoxHeightStyle.tight,
-        selectionWidthStyle: BoxWidthStyle.tight,
-        scrollPadding: EdgeInsets.all(RemixTokens.spaceLg()),
-        spacing: RemixTokens.spaceXs(),
-        container: FlexBoxStyler(
-          decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(
-              BorderSideMix(color: RemixTokens.primary(), width: 1),
-            ),
-            borderRadius: BorderRadiusMix.all(RemixTokens.radius()),
-            color: RemixTokens.onPrimary(),
-          ),
-          padding: EdgeInsetsGeometryMix.symmetric(
-            vertical: RemixTokens.spaceSm(),
-            horizontal: RemixTokens.spaceMd(),
-          ),
-          direction: Axis.horizontal,
-          crossAxisAlignment: CrossAxisAlignment.start,
-        ),
-        helperText: TextStyler(
-          style: TextStyleMix(
-            color: RemixTokens.secondary(),
-            fontSize: _kFontSizeSm,
-          ),
-        ),
-      );
-}
+
 

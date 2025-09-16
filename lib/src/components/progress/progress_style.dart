@@ -179,35 +179,4 @@ class RemixProgressStyle
       ];
 }
 
-// Removed colorful variants; using simple defaultStyle only
 
-/// Canonical access to default and variants
-class RemixProgressStyles {
-  /// Base progress style - surface background with border
-  static RemixProgressStyle get baseStyle => RemixProgressStyle(
-        container: BoxStyler(
-          constraints: BoxConstraintsMix(
-            minHeight: _kBarHeight,
-            maxHeight: _kBarHeight,
-          ),
-          decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(
-              BorderSideMix(color: RemixTokens.primary(), width: 1),
-            ),
-            borderRadius: BorderRadiusMix.all(RemixTokens.radius()),
-            color: RemixTokens.onPrimary(),
-          ),
-          clipBehavior: Clip.antiAlias,
-        ),
-        track: BoxStyler(
-          decoration: BoxDecorationMix(color: RemixTokens.primary()),
-        ),
-        indicator: BoxStyler(
-          decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.all(RemixTokens.radius()),
-            color: RemixTokens.primary(),
-          ),
-        ),
-        trackContainer: BoxStyler(),
-      );
-}

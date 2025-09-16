@@ -124,21 +124,5 @@ class RemixCardStyle extends RemixContainerStyle<CardSpec, RemixCardStyle> {
   List<Object?> get props => [$container, $variants, $animation, $modifier];
 }
 
-class RemixCardStyles {
-  /// Base card style - surface background with border
-  static RemixCardStyle get baseStyle => RemixCardStyle(
-        container: BoxStyler(
-          padding: EdgeInsetsMix.all(RemixTokens.spaceLg()),
-          decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(
-              BorderSideMix(color: RemixTokens.primary(), width: 1),
-            ),
-            borderRadius: BorderRadiusMix.all(RemixTokens.radius()),
-            color: RemixTokens.onPrimary(),
-          ),
-        ),
-      );
-}
 
-// Variants are exposed via RemixCardStyles
 

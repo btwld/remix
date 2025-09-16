@@ -172,36 +172,4 @@ class RemixCalloutStyle
       ];
 }
 
-// Default style is provided by RemixCalloutStyles.baseStyle
 
-// Variants are exposed via RemixCalloutStyles
-/// Canonical access to default styles
-class RemixCalloutStyles {
-  /// Base callout style - informational design with border
-  static RemixCalloutStyle get baseStyle => RemixCalloutStyle(
-        container: FlexBoxStyler(
-          decoration: BoxDecorationMix(
-            border: BoxBorderMix.all(BorderSideMix(
-              color: RemixTokens.primary(),
-              width: 1,
-            )),
-            borderRadius: BorderRadiusMix.all(RemixTokens.radius()),
-            color: RemixTokens.onPrimary(),
-          ),
-          padding: EdgeInsetsMix.all(RemixTokens.spaceMd()),
-          alignment: Alignment.centerLeft,
-          direction: Axis.horizontal,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          spacing: RemixTokens.spaceSm(),
-        ),
-        text: TextStyler(
-          style: TextStyleMix(
-            color: RemixTokens.primary(),
-            fontSize: _kFontSizeMd,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        icon: IconStyler(color: RemixTokens.primary(), size: _kIconSizeMd),
-      );
-}

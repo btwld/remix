@@ -23,7 +23,7 @@ export 'package:mix/mix.dart';
 
 /// THEME
 export 'src/theme/remix_theme.dart';
-export 'src/theme/remix_tokens.dart';
+
 
 /// HELPERS
 export 'src/helpers/spec/composited_transform_follower_spec.dart';
