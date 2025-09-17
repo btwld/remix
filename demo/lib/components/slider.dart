@@ -24,8 +24,8 @@ Widget buildButtonUseCase(BuildContext context) {
               label: 'enabled',
               initialValue: true,
             ),
-            divisions: context.knobs.int.input(
-              label: 'divisions',
+            snapDivisions: context.knobs.int.input(
+              label: 'snapDivisions',
               initialValue: 0,
             ),
             value: context.knobs.double.slider(

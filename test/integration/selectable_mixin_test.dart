@@ -197,20 +197,41 @@ void main() {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  RemixRadio<String>(
-                    key: const Key('first'),
-                    value: 'first',
-                    label: 'First Option',
+                  Wrap(
+                    spacing: 8,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      RemixRadio<String>(
+                        key: const Key('first'),
+                        value: 'first',
+                        semanticLabel: 'First Option',
+                      ),
+                      const Text('First Option'),
+                    ],
                   ),
-                  RemixRadio<String>(
-                    key: const Key('second'),
-                    value: 'second',
-                    label: 'Second Option',
+                  Wrap(
+                    spacing: 8,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      RemixRadio<String>(
+                        key: const Key('second'),
+                        value: 'second',
+                        semanticLabel: 'Second Option',
+                      ),
+                      const Text('Second Option'),
+                    ],
                   ),
-                  RemixRadio<String>(
-                    key: const Key('third'),
-                    value: 'third',
-                    label: 'Third Option',
+                  Wrap(
+                    spacing: 8,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      RemixRadio<String>(
+                        key: const Key('third'),
+                        value: 'third',
+                        semanticLabel: 'Third Option',
+                      ),
+                      const Text('Third Option'),
+                    ],
                   ),
                 ],
               ),

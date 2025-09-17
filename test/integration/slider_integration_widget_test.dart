@@ -101,7 +101,7 @@ void main() {
               width: 300,
               child: RemixSlider(
                 value: sliderValue,
-                divisions: 4, // 5 discrete positions: 0, 0.25, 0.5, 0.75, 1
+                snapDivisions: 4, // 5 discrete positions: 0, 0.25, 0.5, 0.75, 1
 
                 onChanged: (value) {
                   setState(() {
@@ -126,7 +126,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      // Should snap to 0.5 due to divisions
+      // Should snap to 0.5 due to snapDivisions
       expect(sliderValue, closeTo(0.5, 0.1));
     });
 

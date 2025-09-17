@@ -7,20 +7,20 @@ import 'preview_helper.dart';
 @Preview(name: 'Checkbox States', size: Size(300, 200))
 Widget previewCheckboxStates() {
   return createRemixPreview(
-    Column(
+    const Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const _PreviewCheckbox(
+        _PreviewCheckbox(
           selected: false,
           label: 'Unchecked',
         ),
-        const SizedBox(height: 12),
-        const _PreviewCheckbox(
+        SizedBox(height: 12),
+        _PreviewCheckbox(
           selected: true,
           label: 'Checked',
         ),
-        const SizedBox(height: 12),
-        const _PreviewCheckbox(
+        SizedBox(height: 12),
+        _PreviewCheckbox(
           selected: false,
           enabled: false,
           label: 'Disabled',
@@ -68,9 +68,9 @@ Widget previewRadioGroup() {
     RemixRadioGroup<String>(
       groupValue: 'option1',
       onChanged: (value) {},
-      child: Column(
+      child: const Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
+        children: [
           _PreviewRadio(value: 'option1', label: 'Selected Option'),
           _PreviewRadio(value: 'option2', label: 'Unselected Option'),
           _PreviewRadio(value: 'option3', label: 'Another Option'),

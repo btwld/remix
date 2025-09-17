@@ -21,7 +21,6 @@ class RemixSlider extends StatefulWidget with HasEnabled {
     super.key,
     this.min = 0.0,
     this.max = 1.0,
-    this.divisions,
     required this.onChanged,
     required this.value,
     this.onChangeEnd,
@@ -31,6 +30,7 @@ class RemixSlider extends StatefulWidget with HasEnabled {
     this.enableHapticFeedback = true,
     this.focusNode,
     this.autofocus = false,
+    this.snapDivisions,
   }) : assert(
           value >= min && value <= max,
           'Slider value must be between min and max values',
@@ -42,9 +42,10 @@ class RemixSlider extends StatefulWidget with HasEnabled {
   /// The maximum value the slider can have.
   final double max;
 
-  /// The number of discrete divisions the slider can move through.
-  /// If it's 0, the slider moves continuously.
-  final int? divisions;
+  /// Optional snapping divisions for interaction only (no visual ticks).
+  /// When provided, the slider snaps to these discrete steps but does not
+  /// render any division marks on the track.
+  final int? snapDivisions;
 
   /// Whether the slider should automatically request focus when it is created.
   final bool autofocus;
@@ -81,13 +82,6 @@ class RemixSlider extends StatefulWidget with HasEnabled {
 
 class _RemixSliderState extends State<RemixSlider>
     with TickerProviderStateMixin, HasWidgetStateController, HasEnabledState {
-  int? get _divisions {
-    if (widget.divisions == 0) {
-      return null;
-    }
-
-    return widget.divisions;
-  }
 
   RemixSliderStyle get _style => widget.style;
 
@@ -149,8 +143,6 @@ class _RemixSliderState extends State<RemixSlider>
                         value: normalizedValue,
                         active: spec.activeTrack,
                         baseTrack: spec.baseTrack,
-                        divisions: _divisions,
-                        division: spec.division,
                         duration: const Duration(milliseconds: 200),
                         curve: Curves.linear,
                       ),
@@ -185,7 +177,7 @@ class _RemixSliderState extends State<RemixSlider>
             focusNode: widget.focusNode,
             autofocus: widget.autofocus,
             direction: Axis.horizontal,
-            divisions: _divisions,
+            divisions: widget.snapDivisions,
             child: sliderChild,
           ),
         );
@@ -194,20 +186,18 @@ class _RemixSliderState extends State<RemixSlider>
   }
 }
 
-/// Custom painter for drawing slider track with optional divisions.
+/// Custom painter for drawing slider track (no divisions).
 ///
-/// This painter renders three visual elements:
+/// This painter renders two visual elements:
 /// 1. **Base track**: The full-width background rail
 /// 2. **Active track**: The filled portion showing current progress
-/// 3. **Divisions**: Optional tick marks for discrete values
 ///
 /// **Coordinate System:**
 /// Uses standard Canvas coordinates where (0,0) is top-left.
 /// Track is drawn horizontally across the full width at vertical center.
 ///
 /// **Performance Considerations:**
-/// Repaints only when value, colors, or divisions change.
-/// Division positions are calculated once per paint cycle.
+/// Repaints only when value or colors change.
 class _TrackPainter extends CustomPainter {
   /// Normalized value between 0.0 and 1.0 representing current position.
   final double value;
@@ -218,68 +208,15 @@ class _TrackPainter extends CustomPainter {
   /// Paint configuration for the base (unfilled) track background.
   final Paint baseTrack;
 
-  /// Number of discrete divisions to draw as tick marks.
-  /// If null, track is continuous without divisions.
-  final int? divisions;
-
-  /// Paint configuration for division tick marks.
-  final Paint division;
+  // Divisions removed.
 
   const _TrackPainter({
     required this.value,
     required this.active,
     required this.baseTrack,
-    required this.divisions,
-    required this.division,
   });
 
-  /// Calculates pixel positions for division tick marks along the track.
-  ///
-  /// **Algorithm:**
-  /// Divides the track width into equal segments and places tick marks
-  /// at the boundaries between segments (not at the start/end).
-  ///
-  /// **Mathematical Formula:**
-  /// For `n` divisions, there are `n-1` tick marks positioned at:
-  /// `x = (i + 1) × width ÷ divisions` where i = 0 to n-2
-  ///
-  /// **Why This Formula:**
-  /// - Creates `divisions` number of equal value segments
-  /// - Places ticks between segments, not at min/max positions
-  /// - Avoids visual clutter at track endpoints where thumb sits
-  ///
-  /// **Example:**
-  /// For 4 divisions on a 200px track:
-  /// - Segment size: 50px each
-  /// - Tick positions: 50px, 100px, 150px (3 ticks)
-  /// - Creates 4 selectable ranges: [0-50], [50-100], [100-150], [150-200]
-  ///
-  /// All ticks are positioned at vertical center (midY) of the track.
-  List<Offset> calculateDivisionsPositions(int divisions, Size size) {
-    final list = <Offset>[];
-    for (var i = 0; i < divisions; i++) {
-      list.add(Offset((i + 1) * size.width / divisions, size.midY));
-    }
-
-    return list;
-  }
-
-  /// Renders division tick marks as individual points on the canvas.
-  ///
-  /// Uses Flutter's `drawPoints` with `PointMode.points` to efficiently
-  /// draw multiple small circles in a single call. Each point represents
-  /// a discrete value position that the slider can snap to.
-  ///
-  /// **Visual Result:**
-  /// Creates small circular dots along the track, styled according
-  /// to the division Paint configuration (color, size, etc.).
-  void drawDivisions(Canvas canvas, Size size) {
-    canvas.drawPoints(
-      PointMode.points,
-      calculateDivisionsPositions(divisions!, size),
-      division,
-    );
-  }
+  // Ticks removed: no division rendering
 
   /// Draws a horizontal line segment representing part of the slider track.
   ///
@@ -307,13 +244,11 @@ class _TrackPainter extends CustomPainter {
   ///
   /// **Rendering Order (important for layering):**
   /// 1. Base track (full-width background)
-  /// 2. Division tick marks (if enabled)
-  /// 3. Active track (progress fill)
+  /// 2. Active track (progress fill)
   ///
   /// **Why This Order:**
   /// - Base track provides the foundation
-  /// - Divisions are drawn on top so they're visible
-  /// - Active track is drawn last to cover divisions in the filled area
+  /// - Active track is drawn last over it
   ///
   /// **Coordinate Calculations:**
   /// - All elements use `size.midY` for vertical centering
@@ -331,10 +266,7 @@ class _TrackPainter extends CustomPainter {
     // Draw the base track (full width background)
     drawTrack(canvas, initialOffset, endOffset, baseTrack);
 
-    // Draw division tick marks if configured
-    if (divisions != null) {
-      drawDivisions(canvas, size);
-    }
+    // Ticks removed: do not draw divisions
 
     // Draw the active track (progress fill from start to current value)
     drawTrack(
@@ -349,8 +281,7 @@ class _TrackPainter extends CustomPainter {
   bool shouldRepaint(_TrackPainter oldDelegate) {
     return value != oldDelegate.value ||
         active != oldDelegate.active ||
-        baseTrack != oldDelegate.baseTrack ||
-        divisions != oldDelegate.divisions;
+        baseTrack != oldDelegate.baseTrack;
   }
 }
 
@@ -376,8 +307,6 @@ class _AnimatedTrack extends StatefulWidget {
     required this.value,
     required this.active,
     required this.baseTrack,
-    required this.divisions,
-    required this.division,
     required this.duration,
     required this.curve,
   });
@@ -385,8 +314,6 @@ class _AnimatedTrack extends StatefulWidget {
   final double value;
   final Paint active;
   final Paint baseTrack;
-  final int? divisions;
-  final Paint division;
   final Duration duration;
   final Curve curve;
 
@@ -403,7 +330,6 @@ class _AnimatedTrackState extends State<_AnimatedTrack> {
     _oldTracks = _Tracks(
       active: widget.active,
       baseTrack: widget.baseTrack,
-      division: widget.division,
     );
   }
 
@@ -413,7 +339,6 @@ class _AnimatedTrackState extends State<_AnimatedTrack> {
     _oldTracks = _Tracks(
       active: oldWidget.active,
       baseTrack: oldWidget.baseTrack,
-      division: oldWidget.division,
     );
   }
 
@@ -425,7 +350,6 @@ class _AnimatedTrackState extends State<_AnimatedTrack> {
         end: _Tracks(
           active: widget.active,
           baseTrack: widget.baseTrack,
-          division: widget.division,
         ),
       ),
       duration: widget.duration,
@@ -436,8 +360,6 @@ class _AnimatedTrackState extends State<_AnimatedTrack> {
             value: widget.value,
             active: value.active,
             baseTrack: value.baseTrack,
-            divisions: widget.divisions,
-            division: value.division,
           ),
         );
       },
@@ -449,24 +371,21 @@ class _AnimatedTrackState extends State<_AnimatedTrack> {
 class _Tracks {
   final Paint active;
   final Paint baseTrack;
-  final Paint division;
 
   const _Tracks({
     required this.active,
     required this.baseTrack,
-    required this.division,
   });
 
   @override
   bool operator ==(Object other) {
     return other is _Tracks &&
         active == other.active &&
-        baseTrack == other.baseTrack &&
-        division == other.division;
+        baseTrack == other.baseTrack;
   }
 
   @override
-  int get hashCode => active.hashCode ^ baseTrack.hashCode ^ division.hashCode;
+  int get hashCode => active.hashCode ^ baseTrack.hashCode;
 }
 
 // Tween for animating between track states
@@ -478,7 +397,6 @@ class _TracksTween extends Tween<_Tracks> {
     return _Tracks(
       active: lerpPaint(begin!.active, end!.active, t),
       baseTrack: lerpPaint(begin!.baseTrack, end!.baseTrack, t),
-      division: lerpPaint(begin!.division, end!.division, t),
     );
   }
 }

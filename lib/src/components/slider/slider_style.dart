@@ -6,26 +6,22 @@ class RemixSliderStyle extends RemixStyle<SliderSpec, RemixSliderStyle> {
   final Prop<StyleSpec<BoxSpec>>? $thumb;
   final Prop<Paint>? $baseTrack;
   final Prop<Paint>? $activeTrack;
-  final Prop<Paint>? $division;
 
   const RemixSliderStyle.create({
     Prop<StyleSpec<BoxSpec>>? thumb,
     Prop<Paint>? baseTrack,
     Prop<Paint>? activeTrack,
-    Prop<Paint>? division,
     super.variants,
     super.animation,
     super.modifier,
   })  : $thumb = thumb,
         $baseTrack = baseTrack,
-        $activeTrack = activeTrack,
-        $division = division;
+        $activeTrack = activeTrack;
 
   RemixSliderStyle({
     BoxStyler? thumb,
     Paint? baseTrack,
     Paint? activeTrack,
-    Paint? division,
     AnimationConfig? animation,
     List<VariantStyle<SliderSpec>>? variants,
     WidgetModifierConfig? modifier,
@@ -33,7 +29,6 @@ class RemixSliderStyle extends RemixStyle<SliderSpec, RemixSliderStyle> {
           thumb: Prop.maybeMix(thumb),
           baseTrack: baseTrack != null ? Prop.value(baseTrack) : null,
           activeTrack: activeTrack != null ? Prop.value(activeTrack) : null,
-          division: division != null ? Prop.value(division) : null,
           variants: variants,
           animation: animation,
           modifier: modifier,
@@ -80,7 +75,6 @@ class RemixSliderStyle extends RemixStyle<SliderSpec, RemixSliderStyle> {
         thumb: MixOps.resolve(context, $thumb),
         baseTrack: MixOps.resolve(context, $baseTrack),
         activeTrack: MixOps.resolve(context, $activeTrack),
-        division: MixOps.resolve(context, $division),
       ),
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
@@ -95,7 +89,6 @@ class RemixSliderStyle extends RemixStyle<SliderSpec, RemixSliderStyle> {
       thumb: MixOps.merge($thumb, other.$thumb),
       baseTrack: MixOps.merge($baseTrack, other.$baseTrack),
       activeTrack: MixOps.merge($activeTrack, other.$activeTrack),
-      division: MixOps.merge($division, other.$division),
       variants: MixOps.mergeVariants($variants, other.$variants),
       animation: MixOps.mergeAnimation($animation, other.$animation),
       modifier: MixOps.mergeModifier($modifier, other.$modifier),
@@ -122,12 +115,10 @@ class RemixSliderStyle extends RemixStyle<SliderSpec, RemixSliderStyle> {
         $thumb,
         $baseTrack,
         $activeTrack,
-        $division,
         $variants,
         $animation,
         $modifier,
       ];
 }
-
 
 
