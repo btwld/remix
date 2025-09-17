@@ -29,12 +29,44 @@ class _RemixRadioGroupPreview extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          RemixRadio<String>(value: 'A', label: 'Option A'),
-          RemixRadio<String>(value: 'B', label: 'Option B'),
-          RemixRadio<String>(value: 'C', label: 'Disabled', enabled: false),
+        children: const [
+          _RemixLabeledRadio(value: 'A', label: 'Option A'),
+          _RemixLabeledRadio(value: 'B', label: 'Option B'),
+          _RemixLabeledRadio(
+            value: 'C',
+            label: 'Disabled',
+            enabled: false,
+          ),
         ],
       ),
+    );
+  }
+}
+
+class _RemixLabeledRadio extends StatelessWidget {
+  const _RemixLabeledRadio({
+    required this.value,
+    required this.label,
+    this.enabled = true,
+  });
+
+  final String value;
+  final String label;
+  final bool enabled;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        RemixRadio<String>(
+          value: value,
+          enabled: enabled,
+          semanticLabel: label,
+        ),
+        const SizedBox(width: 8),
+        Text(label),
+      ],
     );
   }
 }

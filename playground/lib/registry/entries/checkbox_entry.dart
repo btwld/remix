@@ -11,8 +11,18 @@ Widget buildCheckboxExample() {
         RemixCheckbox(selected: true, onChanged: _noopNullable),
         RemixCheckbox(selected: false, onChanged: _noopNullable),
         RemixCheckbox(tristate: true, selected: null, onChanged: _noopNullable),
-        RemixCheckbox(
-            selected: true, label: 'With label', onChanged: _noopNullable),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            RemixCheckbox(
+              selected: true,
+              onChanged: _noopNullable,
+              semanticLabel: 'With label',
+            ),
+            const SizedBox(width: 8),
+            const Text('With label'),
+          ],
+        ),
         RemixCheckbox(selected: false, enabled: false),
       ],
       material: [

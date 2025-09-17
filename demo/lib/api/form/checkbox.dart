@@ -19,17 +19,26 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         body: Center(
-          child: RemixCheckbox(
-            label: 'Checkbox',
-            selected: _value,
-            style: RemixCheckboxStyle()
-                .color(MixColors.blue)
-                .onHovered(RemixCheckboxStyle().color(MixColors.blue[700]!)),
-            onChanged: (value) {
-              setState(() {
-                _value = value ?? false;
-              });
-            },
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              RemixCheckbox(
+                selected: _value,
+                style: RemixCheckboxStyle()
+                    .color(MixColors.blue)
+                    .onHovered(
+                      RemixCheckboxStyle().color(MixColors.blue[700]!),
+                    ),
+                semanticLabel: 'Checkbox',
+                onChanged: (value) {
+                  setState(() {
+                    _value = value ?? false;
+                  });
+                },
+              ),
+              const SizedBox(width: 8),
+              const Text('Checkbox'),
+            ],
           ),
         ),
       ),

@@ -14,7 +14,17 @@ part of 'checkbox.dart';
 ///     });
 ///   },
 ///   checkedIcon: Icons.check_rounded,
-///   label: 'Accept Terms',
+/// )
+/// ```
+///
+/// Pair with your own label for accessible layouts:
+/// ```dart
+/// Row(
+///   children: [
+///     RemixCheckbox(selected: _isChecked, onChanged: _setChecked),
+///     const SizedBox(width: 8),
+///     const Text('Accept Terms'),
+///   ],
 /// )
 /// ```
 class RemixCheckbox extends StatefulWidget with HasEnabled {
@@ -30,7 +40,6 @@ class RemixCheckbox extends StatefulWidget with HasEnabled {
     this.indeterminateIcon = Icons.horizontal_rule,
     this.enableFeedback = true,
     this.style = const RemixCheckboxStyle.create(),
-    this.label,
     this.focusNode,
     this.semanticLabel,
     this.semanticHint,
@@ -66,9 +75,6 @@ class RemixCheckbox extends StatefulWidget with HasEnabled {
 
   /// The style configuration for the checkbox.
   final RemixCheckboxStyle style;
-
-  /// An optional label that will be displayed next to the checkbox.
-  final String? label;
 
   /// Whether to provide haptic feedback when the checkbox is toggled.
   /// Defaults to true.
@@ -106,8 +112,7 @@ class _RemixCheckboxState extends State<RemixCheckbox>
       builder: (context, spec) {
         final IndicatorContainer = spec.indicatorContainer.createWidget;
         final Indicator = spec.indicator.createWidget;
-        final FlexContainer = spec.container.createWidget;
-        final Label = spec.label.createWidget;
+        final Container = spec.container.createWidget;
 
         final iconData = widget.tristate && widget.selected == null
             ? widget.indeterminateIcon
@@ -119,12 +124,7 @@ class _RemixCheckboxState extends State<RemixCheckbox>
           child: iconData != null ? Indicator(icon: iconData) : null,
         );
 
-        final checkboxChild = widget.label == null
-            ? checkbox
-            : FlexContainer(
-                direction: Axis.horizontal,
-                children: [checkbox, Label(widget.label!)],
-              );
+        final control = Container(child: checkbox);
 
         // Simplified widget tree with integrated semantics
         return Semantics(
@@ -133,7 +133,7 @@ class _RemixCheckboxState extends State<RemixCheckbox>
           checked: widget.selected,
           mixed: widget.tristate && widget.selected == null,
           focusable: widget.enabled,
-          label: widget.semanticLabel ?? widget.label,
+          label: widget.semanticLabel,
           hint: widget.semanticHint,
           onTap: widget.enabled && widget.onChanged != null
               ? () => widget.onChanged!(!(widget.selected ?? false))
@@ -153,7 +153,7 @@ class _RemixCheckboxState extends State<RemixCheckbox>
             onFocusChange: (focused) => controller.focused = focused,
             onHoverChange: (hovered) => controller.hovered = hovered,
             onPressChange: (pressed) => controller.pressed = pressed,
-            child: checkboxChild,
+            child: control,
           ),
         );
       },

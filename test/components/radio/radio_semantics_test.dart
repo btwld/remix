@@ -22,11 +22,17 @@ void main() {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 spacing: 16,
-                children: [
-                  RemixRadio<String>(
-                      key: ValueKey('remix_radio_a'), value: 'A', label: 'A'),
-                  RemixRadio<String>(
-                      key: ValueKey('remix_radio_b'), value: 'B', label: 'B'),
+                children: const [
+                  _LabeledRemixRadio<String>(
+                    radioKey: ValueKey('remix_radio_a'),
+                    value: 'A',
+                    label: 'A',
+                  ),
+                  _LabeledRemixRadio<String>(
+                    radioKey: ValueKey('remix_radio_b'),
+                    value: 'B',
+                    label: 'B',
+                  ),
                 ],
               ),
             );
@@ -57,8 +63,8 @@ void main() {
         RemixRadioGroup<String>(
           groupValue: null,
           onChanged: (_) {},
-          child: RemixRadio<String>(
-            key: ValueKey('remix_radio_disabled'),
+          child: const _LabeledRemixRadio<String>(
+            radioKey: ValueKey('remix_radio_disabled'),
             value: 'X',
             label: 'X',
             enabled: false,
@@ -93,9 +99,9 @@ void main() {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     spacing: 16,
-                    children: [
-                      RemixRadio<String>(value: 'A', label: 'A'),
-                      RemixRadio<String>(value: 'B', label: 'B'),
+                    children: const [
+                      _LabeledRemixRadio<String>(value: 'A', label: 'A'),
+                      _LabeledRemixRadio<String>(value: 'B', label: 'B'),
                     ],
                   ),
                 ),
@@ -145,11 +151,17 @@ void main() {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     spacing: 16,
-                    children: [
-                      RemixRadio<String>(
-                          key: ValueKey('remix_a'), value: 'A', label: 'A'),
-                      RemixRadio<String>(
-                          key: ValueKey('remix_b'), value: 'B', label: 'B'),
+                    children: const [
+                      _LabeledRemixRadio<String>(
+                        radioKey: ValueKey('remix_a'),
+                        value: 'A',
+                        label: 'A',
+                      ),
+                      _LabeledRemixRadio<String>(
+                        radioKey: ValueKey('remix_b'),
+                        value: 'B',
+                        label: 'B',
+                      ),
                     ],
                   ),
                 ),
@@ -217,11 +229,17 @@ void main() {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       spacing: 16,
-                      children: [
-                        RemixRadio<String>(
-                            key: ValueKey('r_a'), value: 'A', label: 'A'),
-                        RemixRadio<String>(
-                            key: ValueKey('r_b'), value: 'B', label: 'B'),
+                      children: const [
+                        _LabeledRemixRadio<String>(
+                          radioKey: ValueKey('r_a'),
+                          value: 'A',
+                          label: 'A',
+                        ),
+                        _LabeledRemixRadio<String>(
+                          radioKey: ValueKey('r_b'),
+                          value: 'B',
+                          label: 'B',
+                        ),
                       ],
                     ),
                   ),
@@ -281,13 +299,22 @@ void main() {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     spacing: 16,
-                    children: [
-                      RemixRadio<String>(
-                          key: ValueKey('remix_r1'), value: 'A', label: 'A'),
-                      RemixRadio<String>(
-                          key: ValueKey('remix_r2'), value: 'B', label: 'B'),
-                      RemixRadio<String>(
-                          key: ValueKey('remix_r3'), value: 'C', label: 'C'),
+                    children: const [
+                      _LabeledRemixRadio<String>(
+                        radioKey: ValueKey('remix_r1'),
+                        value: 'A',
+                        label: 'A',
+                      ),
+                      _LabeledRemixRadio<String>(
+                        radioKey: ValueKey('remix_r2'),
+                        value: 'B',
+                        label: 'B',
+                      ),
+                      _LabeledRemixRadio<String>(
+                        radioKey: ValueKey('remix_r3'),
+                        value: 'C',
+                        label: 'C',
+                      ),
                     ],
                   ),
                 ),
@@ -352,4 +379,36 @@ void main() {
     // Flutter Material Radio does not change selection on arrow keys by default,
     // while RemixRadio (via NakedRadio) may support it. We validate Space key behavior instead.
   });
+}
+
+class _LabeledRemixRadio<T> extends StatelessWidget {
+  const _LabeledRemixRadio({
+    super.key,
+    required this.value,
+    required this.label,
+    this.enabled = true,
+    this.radioKey,
+  });
+
+  final T value;
+  final String label;
+  final bool enabled;
+  final Key? radioKey;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      spacing: 8,
+      children: [
+        RemixRadio<T>(
+          key: radioKey ?? key,
+          value: value,
+          enabled: enabled,
+          semanticLabel: label,
+        ),
+        Text(label),
+      ],
+    );
+  }
 }

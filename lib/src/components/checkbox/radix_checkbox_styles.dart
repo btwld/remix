@@ -1,7 +1,6 @@
 // ABOUTME: Factory for creating RemixCheckboxStyle instances using Radix design tokens
 // ABOUTME: Provides 3 Radix checkbox variants with proper token-based styling
 
-import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 
 import '../../radix/radix.dart';
@@ -78,8 +77,6 @@ class RadixCheckboxStyles {
         )
         // Check mark icon color
         .indicatorColor(RadixTokens.gray12())
-        // Label text color
-        .labelColor(RadixTokens.gray12())
         // State variants
         .onSelected(
           RemixCheckboxStyle()
@@ -99,8 +96,7 @@ class RadixCheckboxStyles {
                       width: RadixTokens.borderWidth1(),
                     ),
               )
-              .indicatorColor(RadixTokens.gray12())
-              .labelColor(RadixTokens.gray12()),
+              .indicatorColor(RadixTokens.gray12()),
         );
   }
 
@@ -125,8 +121,6 @@ class RadixCheckboxStyles {
         )
         // Check mark icon color
         .indicatorColor(RadixTokens.accent9())
-        // Label text color
-        .labelColor(RadixTokens.gray12())
         // State variants
         .onSelected(
           RemixCheckboxStyle()
@@ -146,8 +140,7 @@ class RadixCheckboxStyles {
                       width: RadixTokens.borderWidth1(),
                     ),
               )
-              .indicatorColor(RadixTokens.accent9())
-              .labelColor(RadixTokens.gray12()),
+              .indicatorColor(RadixTokens.accent9()),
         );
   }
 
@@ -172,8 +165,6 @@ class RadixCheckboxStyles {
         )
         // Check mark icon color
         .indicatorColor(RadixTokens.accent11())
-        // Label text color
-        .labelColor(RadixTokens.gray12())
         // State variants
         .onSelected(
           RemixCheckboxStyle()
@@ -193,8 +184,7 @@ class RadixCheckboxStyles {
                       width: RadixTokens.borderWidth1(),
                     ),
               )
-              .indicatorColor(RadixTokens.accent11())
-              .labelColor(RadixTokens.gray12()),
+              .indicatorColor(RadixTokens.accent11()),
         );
   }
 
@@ -205,11 +195,6 @@ class RadixCheckboxStyles {
   static RemixCheckboxStyle _sizeStyle(RadixCheckboxSize size) {
     return switch (size) {
       RadixCheckboxSize.size1 => RemixCheckboxStyle(
-          container: FlexBoxStyler()
-              // Use token spacing for consistency
-              .spacing(RadixTokens.space1())
-              .mainAxisAlignment(MainAxisAlignment.start)
-              .crossAxisAlignment(CrossAxisAlignment.center),
           indicatorContainer: BoxStyler().constraints(BoxConstraintsMix(
             // checkbox-size (size1) ~ space-4 (16px)
             minWidth: RadixTokens.space4(),
@@ -219,15 +204,8 @@ class RadixCheckboxStyles {
           )),
           // Indicator icon size uses token step
           indicator: IconStyler().size(RadixTokens.space3()),
-          // Label text uses tokenized text scale
-          label: TextStyler(style: RadixTokens.text1.mix()),
         ),
       RadixCheckboxSize.size2 => RemixCheckboxStyle(
-          container: FlexBoxStyler()
-              // token spacing for default size
-              .spacing(RadixTokens.space2())
-              .mainAxisAlignment(MainAxisAlignment.start)
-              .crossAxisAlignment(CrossAxisAlignment.center),
           indicatorContainer: BoxStyler().constraints(BoxConstraintsMix(
             // checkbox-size: calc(space-4 * 1.25)
             // Resolve via token at runtime and scale
@@ -238,15 +216,8 @@ class RadixCheckboxStyles {
           )),
           // JSON indicates 12px base indicator size (scaled). Use space-3 (12px).
           indicator: IconStyler().size(RadixTokens.space3()),
-          // Label text size from tokens
-          label: TextStyler(style: RadixTokens.text2.mix()),
         ),
       RadixCheckboxSize.size3 => RemixCheckboxStyle(
-          container: FlexBoxStyler()
-              // token spacing for large size
-              .spacing(RadixTokens.space3())
-              .mainAxisAlignment(MainAxisAlignment.start)
-              .crossAxisAlignment(CrossAxisAlignment.center),
           indicatorContainer: BoxStyler().constraints(BoxConstraintsMix(
             // large size uses space-5 (24px)
             minWidth: RadixTokens.space5(),
@@ -255,7 +226,6 @@ class RadixCheckboxStyles {
             maxHeight: RadixTokens.space5(),
           )),
           indicator: IconStyler().size(RadixTokens.space4()),
-          label: TextStyler(style: RadixTokens.text3.mix()),
         ),
     };
   }

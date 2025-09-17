@@ -10,22 +10,19 @@ Widget previewCheckboxStates() {
     Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        RemixCheckbox(
+        const _PreviewCheckbox(
           selected: false,
-          onChanged: (value) {},
           label: 'Unchecked',
         ),
         const SizedBox(height: 12),
-        RemixCheckbox(
+        const _PreviewCheckbox(
           selected: true,
-          onChanged: (value) {},
           label: 'Checked',
         ),
         const SizedBox(height: 12),
-        RemixCheckbox(
+        const _PreviewCheckbox(
           selected: false,
           enabled: false,
-          onChanged: (value) {},
           label: 'Disabled',
         ),
       ],
@@ -73,40 +70,79 @@ Widget previewRadioGroup() {
       onChanged: (value) {},
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: RemixRadio<String>(
-              value: 'option1',
-              label: 'Selected Option',
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: RemixRadio<String>(
-              value: 'option2',
-              label: 'Unselected Option',
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: RemixRadio<String>(
-              value: 'option3',
-              label: 'Another Option',
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: RemixRadio<String>(
-              value: 'option4',
-              enabled: false,
-              label: 'Disabled Option',
-            ),
+        children: const [
+          _PreviewRadio(value: 'option1', label: 'Selected Option'),
+          _PreviewRadio(value: 'option2', label: 'Unselected Option'),
+          _PreviewRadio(value: 'option3', label: 'Another Option'),
+          _PreviewRadio(
+            value: 'option4',
+            label: 'Disabled Option',
+            enabled: false,
           ),
         ],
       ),
     ),
   );
+}
+
+class _PreviewCheckbox extends StatelessWidget {
+  const _PreviewCheckbox({
+    required this.selected,
+    required this.label,
+    this.enabled = true,
+  });
+
+  final bool selected;
+  final String label;
+  final bool enabled;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        RemixCheckbox(
+          selected: selected,
+          enabled: enabled,
+          onChanged: (_) {},
+          semanticLabel: label,
+        ),
+        const SizedBox(width: 8),
+        Text(label),
+      ],
+    );
+  }
+}
+
+class _PreviewRadio extends StatelessWidget {
+  const _PreviewRadio({
+    required this.value,
+    required this.label,
+    this.enabled = true,
+  });
+
+  final String value;
+  final String label;
+  final bool enabled;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(4.0),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          RemixRadio<String>(
+            value: value,
+            enabled: enabled,
+            semanticLabel: label,
+          ),
+          const SizedBox(width: 8),
+          Text(label),
+        ],
+      ),
+    );
+  }
 }
 
 @Preview(name: 'Text Fields', size: Size(400, 350))

@@ -85,12 +85,6 @@ class RadixRadioStyles {
               .color(RadixTokens.gray12())
               .borderRadiusAll(RadixTokens.radiusFull()),
         )
-        // Label text - no size properties
-        .label(
-          TextStyler()
-              .color(RadixTokens.gray12())
-              .fontWeight(RadixTokens.fontWeightRegular()),
-        )
         // State variants
         .onSelected(
           RemixRadioStyle()
@@ -110,8 +104,7 @@ class RadixRadioStyles {
                       width: RadixTokens.borderWidth1(),
                     ),
               )
-              .indicator(BoxStyler().color(RadixTokens.gray12()))
-              .label(TextStyler().color(RadixTokens.gray12())),
+              .indicator(BoxStyler().color(RadixTokens.gray12())),
         );
   }
 
@@ -141,12 +134,6 @@ class RadixRadioStyles {
               .color(RadixTokens.accent9())
               .borderRadiusAll(RadixTokens.radiusFull()),
         )
-        // Label text - no size properties
-        .label(
-          TextStyler()
-              .color(RadixTokens.gray12())
-              .fontWeight(RadixTokens.fontWeightRegular()),
-        )
         // State variants
         .onSelected(
           RemixRadioStyle()
@@ -166,8 +153,7 @@ class RadixRadioStyles {
                       width: RadixTokens.borderWidth1(),
                     ),
               )
-              .indicator(BoxStyler().color(RadixTokens.accent9()))
-              .label(TextStyler().color(RadixTokens.gray12())),
+              .indicator(BoxStyler().color(RadixTokens.accent9())),
         );
   }
 
@@ -195,12 +181,6 @@ class RadixRadioStyles {
               .color(RadixTokens.accent11())
               .borderRadiusAll(RadixTokens.radiusFull()),
         )
-        // Label text - no size properties
-        .label(
-          TextStyler()
-              .color(RadixTokens.gray12())
-              .fontWeight(RadixTokens.fontWeightRegular()),
-        )
         // State variants
         .onSelected(
           RemixRadioStyle()
@@ -220,8 +200,7 @@ class RadixRadioStyles {
                       width: RadixTokens.borderWidth1(),
                     ),
               )
-              .indicator(BoxStyler().color(RadixTokens.accent11()))
-              .label(TextStyler().color(RadixTokens.gray12())),
+              .indicator(BoxStyler().color(RadixTokens.accent11())),
         );
   }
 
@@ -232,10 +211,7 @@ class RadixRadioStyles {
   static RemixRadioStyle _sizeStyle(RadixRadioSize size) {
     return switch (size) {
       RadixRadioSize.size1 => RemixRadioStyle(
-          container: FlexBoxStyler()
-              .spacing(6.0)
-              .mainAxisAlignment(MainAxisAlignment.start)
-              .crossAxisAlignment(CrossAxisAlignment.center),
+          container: BoxStyler(alignment: Alignment.center),
           indicatorContainer: BoxStyler().constraints(BoxConstraintsMix(
             minWidth: 16.0,
             maxWidth: 16.0,
@@ -248,13 +224,9 @@ class RadixRadioStyles {
             minHeight: 8.0,
             maxHeight: 8.0,
           )),
-          label: TextStyler().fontSize(12.0),
         ),
       RadixRadioSize.size2 => RemixRadioStyle(
-          container: FlexBoxStyler()
-              .spacing(8.0)
-              .mainAxisAlignment(MainAxisAlignment.start)
-              .crossAxisAlignment(CrossAxisAlignment.center),
+          container: BoxStyler(alignment: Alignment.center),
           indicatorContainer: BoxStyler().constraints(BoxConstraintsMix(
             minWidth: 20.0,
             maxWidth: 20.0,
@@ -267,13 +239,9 @@ class RadixRadioStyles {
             minHeight: 10.0,
             maxHeight: 10.0,
           )),
-          label: TextStyler().fontSize(14.0),
         ),
       RadixRadioSize.size3 => RemixRadioStyle(
-          container: FlexBoxStyler()
-              .spacing(10.0)
-              .mainAxisAlignment(MainAxisAlignment.start)
-              .crossAxisAlignment(CrossAxisAlignment.center),
+          container: BoxStyler(alignment: Alignment.center),
           indicatorContainer: BoxStyler().constraints(BoxConstraintsMix(
             minWidth: 24.0,
             maxWidth: 24.0,
@@ -286,7 +254,6 @@ class RadixRadioStyles {
             minHeight: 12.0,
             maxHeight: 12.0,
           )),
-          label: TextStyler().fontSize(16.0),
         ),
     };
   }
