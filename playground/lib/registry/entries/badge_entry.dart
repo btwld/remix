@@ -9,7 +9,7 @@ Widget buildBadgeExample() {
     child: ComparisonView(
       remix: [
         RemixBadge(label: 'New'),
-        RemixBadge.raw(child: const Text('Beta')),
+        const RemixBadge.raw(child: Text('Beta')),
       ],
       material: const [
         Chip(label: Text('New')),

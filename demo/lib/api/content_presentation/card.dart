@@ -10,14 +10,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: Scaffold(
         backgroundColor: MixColors.white,
         body: Center(
           child: SizedBox(
             width: 300,
             child: RemixCard(
-              child: const Column(
+              child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

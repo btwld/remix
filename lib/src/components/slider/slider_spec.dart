@@ -37,39 +37,28 @@ final _defaultActiveTrackPaint = Paint()
   ..strokeCap = StrokeCap.round
   ..style = PaintingStyle.stroke;
 
-final _defaultDivisionPaint = Paint()
-  ..color = MixColors.black.withAlpha(66)
-  ..strokeWidth = 8.0
-  ..strokeCap = StrokeCap.round
-  ..style = PaintingStyle.stroke;
-
 class SliderSpec extends Spec<SliderSpec> with Diagnosticable {
   final StyleSpec<BoxSpec> thumb;
   final Paint baseTrack;
   final Paint activeTrack;
-  final Paint division;
 
   SliderSpec({
     StyleSpec<BoxSpec>? thumb,
     Paint? baseTrack,
     Paint? activeTrack,
-    Paint? division,
   })  : thumb = thumb ?? const StyleSpec(spec: BoxSpec()),
         baseTrack = baseTrack ?? _defaultBaseTrackPaint,
-        activeTrack = activeTrack ?? _defaultActiveTrackPaint,
-        division = division ?? _defaultDivisionPaint;
+        activeTrack = activeTrack ?? _defaultActiveTrackPaint;
 
   SliderSpec copyWith({
     StyleSpec<BoxSpec>? thumb,
     Paint? baseTrack,
     Paint? activeTrack,
-    Paint? division,
   }) {
     return SliderSpec(
       thumb: thumb ?? this.thumb,
       baseTrack: baseTrack ?? this.baseTrack,
       activeTrack: activeTrack ?? this.activeTrack,
-      division: division ?? this.division,
     );
   }
 
@@ -80,7 +69,6 @@ class SliderSpec extends Spec<SliderSpec> with Diagnosticable {
       thumb: MixOps.lerp(thumb, other.thumb, t)!,
       baseTrack: lerpPaint(baseTrack, other.baseTrack, t),
       activeTrack: lerpPaint(activeTrack, other.activeTrack, t),
-      division: lerpPaint(division, other.division, t),
     );
   }
 
@@ -90,10 +78,9 @@ class SliderSpec extends Spec<SliderSpec> with Diagnosticable {
     properties
       ..add(DiagnosticsProperty('thumb', thumb))
       ..add(DiagnosticsProperty('baseTrack', baseTrack))
-      ..add(DiagnosticsProperty('activeTrack', activeTrack))
-      ..add(DiagnosticsProperty('division', division));
+      ..add(DiagnosticsProperty('activeTrack', activeTrack));
   }
 
   @override
-  List<Object?> get props => [thumb, baseTrack, activeTrack, division];
+  List<Object?> get props => [thumb, baseTrack, activeTrack];
 }

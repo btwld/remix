@@ -7,10 +7,10 @@ import 'preview_helper.dart';
 @Preview(name: 'Basic Card', size: Size(400, 300))
 Widget previewBasicCard() {
   return createRemixPreview(
-    SizedBox(
+    const SizedBox(
       width: 350,
       child: RemixCard(
-        child: const Padding(
+        child: Padding(
           padding: EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -171,10 +171,10 @@ Widget previewProfileCard() {
 @Preview(name: 'Stats Card', size: Size(400, 250))
 Widget previewStatsCard() {
   return createRemixPreview(
-    SizedBox(
+    const SizedBox(
       width: 350,
       child: RemixCard(
-        child: const Padding(
+        child: Padding(
           padding: EdgeInsets.all(20.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,

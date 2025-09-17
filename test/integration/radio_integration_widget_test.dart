@@ -19,15 +19,15 @@ void main() {
           child: RemixRadioGroup<String>(
             groupValue: 'option1',
             onChanged: (_) {},
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: const [
+            child: Wrap(
+              spacing: 8,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
                 RemixRadio<String>(
                   value: 'option1',
                   semanticLabel: 'Option 1',
                 ),
-                SizedBox(width: 8),
-                Text('Option 1'),
+                const Text('Option 1'),
               ],
             ),
           ),
@@ -144,15 +144,15 @@ void main() {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: TestOption.values.map((option) {
-                  return Row(
-                    mainAxisSize: MainAxisSize.min,
+                  return Wrap(
+                    spacing: 8,
+                    crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
                       RemixRadio<TestOption>(
                         key: Key(option.name),
                         value: option,
                         semanticLabel: option.name,
                       ),
-                      const SizedBox(width: 8),
                       Text(option.name),
                     ],
                   );
@@ -231,17 +231,21 @@ void main() {
           },
           child: Builder(
             builder: (context) {
-              final registry = RadioGroup.maybeOf<String>(context);
-              return Row(
-                mainAxisSize: MainAxisSize.min,
+              return Wrap(
+                spacing: 8,
+                crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
-                  const RemixRadio<String>(
+                  RemixRadio<String>(
                     value: 'option1',
                     semanticLabel: 'Click me',
                   ),
-                  const SizedBox(width: 8),
                   GestureDetector(
-                    onTap: () => registry?.onChanged?.call('option1'),
+                    onTap: () {
+                      final r = RadioGroup.maybeOf<String>(context);
+                      if (r != null) {
+                        r.onChanged('option1');
+                      }
+                    },
                     child: const Text('Click me'),
                   ),
                 ],
@@ -374,15 +378,15 @@ void main() {
           child: RemixRadioGroup<String>(
             groupValue: 'light',
             onChanged: (_) {},
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: const [
+            child: Wrap(
+              spacing: 8,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
                 RemixRadio<String>(
                   value: 'dark',
                   semanticLabel: 'Dark mode',
                 ),
-                SizedBox(width: 8),
-                Text('Dark mode'),
+                const Text('Dark mode'),
               ],
             ),
           ),
@@ -454,15 +458,15 @@ void main() {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [date1, date2, date3].map((date) {
                   final label = '${date.month}/${date.year}';
-                  return Row(
-                    mainAxisSize: MainAxisSize.min,
+                  return Wrap(
+                    spacing: 8,
+                    crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
                       RemixRadio<DateTime>(
                         key: Key(date.toString()),
                         value: date,
                         semanticLabel: label,
                       ),
-                      const SizedBox(width: 8),
                       Text(label),
                     ],
                   );

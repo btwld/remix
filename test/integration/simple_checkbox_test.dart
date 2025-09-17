@@ -40,14 +40,14 @@ void main() {
 
     testWidgets('composes with external label', (tester) async {
       await tester.pumpRemixApp(
-        Row(
-          mainAxisSize: MainAxisSize.min,
+        Wrap(
+          spacing: 8,
+          crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             RemixCheckbox(
               selected: false,
               semanticLabel: 'Accept Terms',
             ),
-            const SizedBox(width: 8),
             const Text('Accept Terms'),
           ],
         ),
