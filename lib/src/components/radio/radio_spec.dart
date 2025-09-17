@@ -1,33 +1,34 @@
 part of 'radio.dart';
 
+/// Defines the resolved styling structure for [RemixRadio].
+///
+/// The spec is populated by [RemixRadioStyle] and consumed by the widget when
+/// building the control. It provides three [StyleSpec] segments representing the
+/// outer container, the indicator container (outer ring), and the indicator fill
+/// shown when the radio is selected.
 class RadioSpec extends Spec<RadioSpec> with Diagnosticable {
-  final StyleSpec<FlexBoxSpec> container;
+  final StyleSpec<BoxSpec> container;
   final StyleSpec<BoxSpec> indicatorContainer;
   final StyleSpec<BoxSpec> indicator;
-  final StyleSpec<TextSpec> label;
 
   const RadioSpec({
-    StyleSpec<FlexBoxSpec>? container,
+    StyleSpec<BoxSpec>? container,
     StyleSpec<BoxSpec>? indicatorContainer,
     StyleSpec<BoxSpec>? indicator,
-    StyleSpec<TextSpec>? label,
-  })  : container = container ?? const StyleSpec(spec: FlexBoxSpec()),
+  })  : container = container ?? const StyleSpec(spec: BoxSpec()),
         indicatorContainer =
             indicatorContainer ?? const StyleSpec(spec: BoxSpec()),
-        indicator = indicator ?? const StyleSpec(spec: BoxSpec()),
-        label = label ?? const StyleSpec(spec: TextSpec());
+        indicator = indicator ?? const StyleSpec(spec: BoxSpec());
 
   RadioSpec copyWith({
-    StyleSpec<FlexBoxSpec>? container,
+    StyleSpec<BoxSpec>? container,
     StyleSpec<BoxSpec>? indicatorContainer,
     StyleSpec<BoxSpec>? indicator,
-    StyleSpec<TextSpec>? label,
   }) {
     return RadioSpec(
       container: container ?? this.container,
       indicatorContainer: indicatorContainer ?? this.indicatorContainer,
       indicator: indicator ?? this.indicator,
-      label: label ?? this.label,
     );
   }
 
@@ -39,7 +40,6 @@ class RadioSpec extends Spec<RadioSpec> with Diagnosticable {
       indicatorContainer:
           MixOps.lerp(indicatorContainer, other.indicatorContainer, t)!,
       indicator: MixOps.lerp(indicator, other.indicator, t)!,
-      label: MixOps.lerp(label, other.label, t)!,
     );
   }
 
@@ -49,10 +49,9 @@ class RadioSpec extends Spec<RadioSpec> with Diagnosticable {
     properties
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('indicatorContainer', indicatorContainer))
-      ..add(DiagnosticsProperty('indicator', indicator))
-      ..add(DiagnosticsProperty('label', label));
+      ..add(DiagnosticsProperty('indicator', indicator));
   }
 
   @override
-  List<Object?> get props => [container, indicatorContainer, indicator, label];
+  List<Object?> get props => [container, indicatorContainer, indicator];
 }

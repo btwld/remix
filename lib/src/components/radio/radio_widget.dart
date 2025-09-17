@@ -7,7 +7,17 @@ part of 'radio.dart';
 /// ```dart
 /// RemixRadio<String>(
 ///   value: 'option1',
-///   label: 'Option 1',
+/// )
+/// ```
+///
+/// Compose the control with your own label:
+/// ```dart
+/// Row(
+///   children: [
+///     RemixRadio<String>(value: 'option1'),
+///     const SizedBox(width: 8),
+///     const Text('Option 1'),
+///   ],
 /// )
 /// ```
 class RemixRadio<T> extends StatefulWidget with HasEnabled, HasSelected {
@@ -18,7 +28,6 @@ class RemixRadio<T> extends StatefulWidget with HasEnabled, HasSelected {
     this.enabled = true,
     this.toggleable = false,
     this.style = const RemixRadioStyle.create(),
-    this.label,
     this.focusNode,
     this.cursor,
     this.onChanged,
@@ -42,9 +51,6 @@ class RemixRadio<T> extends StatefulWidget with HasEnabled, HasSelected {
 
   /// The style configuration for the radio button.
   final RemixRadioStyle style;
-
-  /// An optional label that will be displayed next to the radio button.
-  final String? label;
 
   /// The focus node for the radio button.
   final FocusNode? focusNode;
@@ -129,21 +135,14 @@ class _RemixRadioState<T> extends State<RemixRadio<T>>
       builder: (context, spec) {
         final IndicatorContainer = spec.indicatorContainer.createWidget;
         final Indicator = spec.indicator.createWidget;
-        final FlexContainer = spec.container.createWidget;
-        final Label = spec.label.createWidget;
+        final Container = spec.container.createWidget;
 
         // Build the radio indicator
         final radioIndicator = IndicatorContainer(
           child: isSelected ? Indicator() : null,
         );
 
-        // Add label if present
-        final radioWidget = widget.label == null
-            ? radioIndicator
-            : FlexContainer(
-                direction: Axis.horizontal,
-                children: [radioIndicator, Label(widget.label!)],
-              );
+        final control = Container(child: radioIndicator);
 
         // Simplified widget tree with integrated semantics
         return Semantics(
@@ -152,7 +151,7 @@ class _RemixRadioState<T> extends State<RemixRadio<T>>
           checked: controller.selected,
           focusable: widget.enabled,
           inMutuallyExclusiveGroup: true,
-          label: widget.semanticLabel ?? widget.label,
+          label: widget.semanticLabel,
           hint: widget.semanticHint,
           onTap: widget.enabled && widget.onChanged != null
               ? () => widget.onChanged!(true)
@@ -167,7 +166,7 @@ class _RemixRadioState<T> extends State<RemixRadio<T>>
             onFocusChange: (focused) => controller.focused = focused,
             onHoverChange: (hovered) => controller.hovered = hovered,
             onPressChange: (pressed) => controller.pressed = pressed,
-            child: radioWidget,
+            child: control,
           ),
         );
       },

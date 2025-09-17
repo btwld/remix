@@ -442,26 +442,45 @@ class _CheckboxSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        RemixCheckbox(
-          selected: value,
-          onChanged: onChanged,
-          style: RadixCheckboxStyles.classic(),
-          label: 'Classic Checkbox',
+        Row(
+          children: [
+            RemixCheckbox(
+              selected: value,
+              onChanged: onChanged,
+              style: RadixCheckboxStyles.classic(),
+              semanticLabel: 'Classic Checkbox',
+            ),
+            const SizedBox(width: 8),
+            const Text('Classic Checkbox'),
+          ],
         ),
         const SizedBox(height: 8),
-        RemixCheckbox(
-          selected: value,
-          onChanged: onChanged,
-          style: RadixCheckboxStyles.surface(),
-          label: 'Surface Checkbox',
+        Row(
+          children: [
+            RemixCheckbox(
+              selected: value,
+              onChanged: onChanged,
+              style: RadixCheckboxStyles.surface(),
+              semanticLabel: 'Surface Checkbox',
+            ),
+            const SizedBox(width: 8),
+            const Text('Surface Checkbox'),
+          ],
         ),
         const SizedBox(height: 8),
-        RemixCheckbox(
-          selected: value,
-          onChanged: onChanged,
-          style: RadixCheckboxStyles.soft(),
-          label: 'Soft Checkbox',
+        Row(
+          children: [
+            RemixCheckbox(
+              selected: value,
+              onChanged: onChanged,
+              style: RadixCheckboxStyles.soft(),
+              semanticLabel: 'Soft Checkbox',
+            ),
+            const SizedBox(width: 8),
+            const Text('Soft Checkbox'),
+          ],
         ),
       ],
     );
@@ -481,22 +500,40 @@ class _RadioSection extends StatelessWidget {
       onChanged: onChanged,
       child: Column(
         children: [
-          RemixRadio(
-            value: 'option1',
-            style: RadixRadioStyles.classic(),
-            label: 'Classic Option 1',
+          Row(
+            children: [
+              RemixRadio(
+                value: 'option1',
+                style: RadixRadioStyles.classic(),
+                semanticLabel: 'Classic Option 1',
+              ),
+              const SizedBox(width: 8),
+              const Text('Classic Option 1'),
+            ],
           ),
           const SizedBox(height: 8),
-          RemixRadio(
-            value: 'option2',
-            style: RadixRadioStyles.surface(),
-            label: 'Surface Option 2',
+          Row(
+            children: [
+              RemixRadio(
+                value: 'option2',
+                style: RadixRadioStyles.surface(),
+                semanticLabel: 'Surface Option 2',
+              ),
+              const SizedBox(width: 8),
+              const Text('Surface Option 2'),
+            ],
           ),
           const SizedBox(height: 8),
-          RemixRadio(
-            value: 'option3',
-            style: RadixRadioStyles.soft(),
-            label: 'Soft Option 3',
+          Row(
+            children: [
+              RemixRadio(
+                value: 'option3',
+                style: RadixRadioStyles.soft(),
+                semanticLabel: 'Soft Option 3',
+              ),
+              const SizedBox(width: 8),
+              const Text('Soft Option 3'),
+            ],
           ),
         ],
       ),
@@ -626,9 +663,15 @@ class _SpinnerSection extends StatelessWidget {
       spacing: 16,
       runSpacing: 16,
       children: [
-        RemixSpinner(style: RadixSpinnerStyle.defaultStyle(size: RadixSpinnerSize.size1)),
-        RemixSpinner(style: RadixSpinnerStyle.defaultStyle(size: RadixSpinnerSize.size2)),
-        RemixSpinner(style: RadixSpinnerStyle.defaultStyle(size: RadixSpinnerSize.size3)),
+        RemixSpinner(
+          style: RadixSpinnerStyle.defaultStyle(size: RadixSpinnerSize.size1),
+        ),
+        RemixSpinner(
+          style: RadixSpinnerStyle.defaultStyle(size: RadixSpinnerSize.size2),
+        ),
+        RemixSpinner(
+          style: RadixSpinnerStyle.defaultStyle(size: RadixSpinnerSize.size3),
+        ),
       ],
     );
   }

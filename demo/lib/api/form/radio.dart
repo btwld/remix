@@ -33,28 +33,41 @@ class _MyAppState extends State<MyApp> {
                 _value = value;
               });
             },
-            child: Column(
+            child: const Column(
               spacing: 8,
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                RemixRadio<Options>(
-                  label: 'Banana',
-                  value: Options.banana,
-                ),
-                RemixRadio<Options>(
-                  label: 'Apple',
-                  value: Options.apple,
-                ),
-                RemixRadio<Options>(
-                  label: 'Orange',
-                  value: Options.orange,
-                ),
+                _LabeledRadio(option: Options.banana, label: 'Banana'),
+                _LabeledRadio(option: Options.apple, label: 'Apple'),
+                _LabeledRadio(option: Options.orange, label: 'Orange'),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+}
+
+class _LabeledRadio extends StatelessWidget {
+  const _LabeledRadio({required this.option, required this.label});
+
+  final Options option;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        RemixRadio<Options>(
+          value: option,
+          semanticLabel: label,
+        ),
+        const SizedBox(width: 8),
+        Text(label),
+      ],
     );
   }
 }

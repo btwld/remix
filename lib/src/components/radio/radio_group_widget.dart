@@ -17,13 +17,19 @@ part of 'radio.dart';
 ///   },
 ///   child: Column(
 ///     children: [
-///       RemixRadio<String>(
-///         value: 'option1',
-///         label: 'Option 1',
+///       Row(
+///         children: [
+///           RemixRadio<String>(value: 'option1'),
+///           const SizedBox(width: 8),
+///           const Text('Option 1'),
+///         ],
 ///       ),
-///       RemixRadio<String>(
-///         value: 'option2',
-///         label: 'Option 2',
+///       Row(
+///         children: [
+///           RemixRadio<String>(value: 'option2'),
+///           const SizedBox(width: 8),
+///           const Text('Option 2'),
+///         ],
 ///       ),
 ///     ],
 ///   ),

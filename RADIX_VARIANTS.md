@@ -331,7 +331,8 @@ RadixTokens.radius2()      // Returns RadiusRef (implements Radius, usable for b
 
 2. **Component Property Names (Actual vs. Conceptual):**
    - ✅ **Progress**: `.track()`, `.indicator()` (both need BoxStyler)
-   - ✅ **Checkbox**: `.indicatorContainer()` (box), `.indicator()` (check), `.label()`
+   - ✅ **Checkbox**: `.indicatorContainer()` (box), `.indicator()` (check)
+   - ✅ **Radio**: `.indicatorContainer()` (outer ring), `.indicator()` (inner fill)
    - ✅ **Switch**: `.track()`, `.thumb()` only - use `.onVariant('checked', ...)` for state
    - ✅ **Slider**: `.baseTrackColor()`, `.activeTrackColor()`, `.thumbColor()`
 

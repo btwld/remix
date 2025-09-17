@@ -33,13 +33,20 @@ Widget buildRadioUseCase(BuildContext context) {
                   .map(
                     (theme) => Padding(
                       padding: const EdgeInsets.all(4.0),
-                      child: RemixRadio<Theme>(
-                        value: theme,
-                        enabled: context.knobs.boolean(
-                          label: 'Enabled',
-                          initialValue: true,
-                        ),
-                        label: theme.name.capitalize(),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          RemixRadio<Theme>(
+                            value: theme,
+                            enabled: context.knobs.boolean(
+                              label: 'Enabled',
+                              initialValue: true,
+                            ),
+                            semanticLabel: theme.name.capitalize(),
+                          ),
+                          const SizedBox(width: 8),
+                          Text(theme.name.capitalize()),
+                        ],
                       ),
                     ),
                   )

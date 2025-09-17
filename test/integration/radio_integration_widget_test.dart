@@ -19,9 +19,16 @@ void main() {
           child: RemixRadioGroup<String>(
             groupValue: 'option1',
             onChanged: (_) {},
-            child: RemixRadio<String>(
-              value: 'option1',
-              label: 'Option 1',
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: const [
+                RemixRadio<String>(
+                  value: 'option1',
+                  semanticLabel: 'Option 1',
+                ),
+                SizedBox(width: 8),
+                Text('Option 1'),
+              ],
             ),
           ),
         ),
@@ -137,10 +144,17 @@ void main() {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: TestOption.values.map((option) {
-                  return RemixRadio<TestOption>(
-                    key: Key(option.name),
-                    value: option,
-                    label: option.name,
+                  return Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      RemixRadio<TestOption>(
+                        key: Key(option.name),
+                        value: option,
+                        semanticLabel: option.name,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(option.name),
+                    ],
                   );
                 }).toList(),
               ),
@@ -215,14 +229,29 @@ void main() {
           onChanged: (value) {
             selectedValue = value;
           },
-          child: RemixRadio<String>(
-            value: 'option1',
-            label: 'Click me',
+          child: Builder(
+            builder: (context) {
+              final registry = RadioGroup.maybeOf<String>(context);
+              return Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const RemixRadio<String>(
+                    value: 'option1',
+                    semanticLabel: 'Click me',
+                  ),
+                  const SizedBox(width: 8),
+                  GestureDetector(
+                    onTap: () => registry?.onChanged?.call('option1'),
+                    child: const Text('Click me'),
+                  ),
+                ],
+              );
+            },
           ),
         ),
       );
 
-      // Tap on the label text
+      // Tap on the custom label widget
       await tester.tap(find.text('Click me'));
       await tester.pumpAndSettle();
 
@@ -345,9 +374,16 @@ void main() {
           child: RemixRadioGroup<String>(
             groupValue: 'light',
             onChanged: (_) {},
-            child: RemixRadio<String>(
-              value: 'dark',
-              label: 'Dark mode',
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: const [
+                RemixRadio<String>(
+                  value: 'dark',
+                  semanticLabel: 'Dark mode',
+                ),
+                SizedBox(width: 8),
+                Text('Dark mode'),
+              ],
             ),
           ),
         ),
@@ -417,10 +453,18 @@ void main() {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [date1, date2, date3].map((date) {
-                  return RemixRadio<DateTime>(
-                    key: Key(date.toString()),
-                    value: date,
-                    label: '${date.month}/${date.year}',
+                  final label = '${date.month}/${date.year}';
+                  return Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      RemixRadio<DateTime>(
+                        key: Key(date.toString()),
+                        value: date,
+                        semanticLabel: label,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(label),
+                    ],
                   );
                 }).toList(),
               ),

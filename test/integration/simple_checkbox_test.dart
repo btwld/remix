@@ -38,11 +38,18 @@ void main() {
       expect(isChecked, false);
     });
 
-    testWidgets('shows label', (tester) async {
+    testWidgets('composes with external label', (tester) async {
       await tester.pumpRemixApp(
-        RemixCheckbox(
-          selected: false,
-          label: 'Accept Terms',
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            RemixCheckbox(
+              selected: false,
+              semanticLabel: 'Accept Terms',
+            ),
+            const SizedBox(width: 8),
+            const Text('Accept Terms'),
+          ],
         ),
       );
 

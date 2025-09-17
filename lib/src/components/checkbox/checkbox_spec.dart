@@ -10,9 +10,9 @@ part of 'checkbox.dart';
 /// 2. **Spec classes** (like [CheckboxSpec]) hold resolved styling properties
 /// 3. **Widget classes** (like [RemixCheckbox]) consume specs to render UI
 ///
-/// The CheckboxSpec contains [StyleSpec] properties for each visual element
-/// of the checkbox: the overall container, the indicator container (checkbox box),
-/// the indicator icon (checkmark), and the accompanying text label.
+/// The CheckboxSpec contains [StyleSpec] properties for the visual pieces of
+/// the checkbox: the overall container, the indicator container (checkbox box),
+/// and the indicator icon (checkmark).
 ///
 /// ## Architecture Overview
 ///
@@ -26,9 +26,8 @@ part of 'checkbox.dart';
 /// A checkbox component consists of these styled elements:
 /// ```
 /// [container]
-///   ├── [indicatorContainer] (the checkbox box)
-///   │   └── [indicator] (checkmark icon)
-///   └── [label] (accompanying text)
+///   └── [indicatorContainer] (the checkbox box)
+///       └── [indicator] (checkmark icon)
 /// ```
 ///
 /// ## Usage
@@ -40,20 +39,18 @@ part of 'checkbox.dart';
 /// // Style creates and populates the spec
 /// final style = RemixCheckboxStyle()
 ///   .indicatorColor(Colors.blue)
-///   .labelColor(Colors.black)
-///   .indicatorSize(20.0);
+///   .checkboxSize(20);
 ///
 /// // Widget receives the resolved spec
-/// RemixCheckbox('Accept terms', style: style)
+/// RemixCheckbox(selected: false, onChanged: (_) {}, style: style)
 /// ```
 ///
 /// ## Properties
 ///
 /// Each [StyleSpec] property corresponds to a visual element:
-/// - [container]: Overall layout and spacing between indicator and label
+/// - [container]: Overall wrapper around the control for padding/alignment
 /// - [indicatorContainer]: The checkbox box styling (background, border, size)
 /// - [indicator]: The checkmark icon styling (color, size)
-/// - [label]: Text styling for the checkbox label
 ///
 /// See also:
 /// - [RemixCheckboxStyle] for the styling API
@@ -62,10 +59,10 @@ part of 'checkbox.dart';
 class CheckboxSpec extends Spec<CheckboxSpec> with Diagnosticable {
   /// Styling specification for the checkbox's container.
   ///
-  /// Controls the overall layout, spacing, and arrangement between
-  /// the checkbox indicator and its label. Uses [FlexBoxSpec] to
-  /// support flexible positioning and alignment.
-  final StyleSpec<FlexBoxSpec> container;
+  /// Controls the overall layout, spacing, and arrangement for the
+  /// checkbox indicator. Uses [BoxSpec] so callers can style padding,
+  /// alignment, and decoration around the control itself.
+  final StyleSpec<BoxSpec> container;
 
   /// Styling specification for the checkbox indicator's container.
   ///
@@ -80,12 +77,6 @@ class CheckboxSpec extends Spec<CheckboxSpec> with Diagnosticable {
   /// the checkbox is in the checked state. Defines color, size,
   /// and other icon-specific properties.
   final StyleSpec<IconSpec> indicator;
-
-  /// Styling specification for the checkbox's text label.
-  ///
-  /// Defines typography, color, and text-specific properties
-  /// for the descriptive text displayed alongside the checkbox.
-  final StyleSpec<TextSpec> label;
 
   /// Creates a CheckboxSpec with optional styling specifications.
   ///
@@ -102,19 +93,16 @@ class CheckboxSpec extends Spec<CheckboxSpec> with Diagnosticable {
   /// const spec = CheckboxSpec(
   ///   indicatorContainer: StyleSpec(spec: BoxSpec()),
   ///   indicator: StyleSpec(spec: IconSpec()),
-  ///   label: StyleSpec(spec: TextSpec()),
   /// );
   /// ```
   const CheckboxSpec({
-    StyleSpec<FlexBoxSpec>? container,
+    StyleSpec<BoxSpec>? container,
     StyleSpec<BoxSpec>? indicatorContainer,
     StyleSpec<IconSpec>? indicator,
-    StyleSpec<TextSpec>? label,
-  })  : container = container ?? const StyleSpec(spec: FlexBoxSpec()),
+  })  : container = container ?? const StyleSpec(spec: BoxSpec()),
         indicatorContainer =
             indicatorContainer ?? const StyleSpec(spec: BoxSpec()),
-        indicator = indicator ?? const StyleSpec(spec: IconSpec()),
-        label = label ?? const StyleSpec(spec: TextSpec());
+        indicator = indicator ?? const StyleSpec(spec: IconSpec());
 
   /// Creates a copy of this CheckboxSpec with the given fields replaced.
   ///
@@ -126,20 +114,17 @@ class CheckboxSpec extends Spec<CheckboxSpec> with Diagnosticable {
   /// ```dart
   /// final updatedSpec = originalSpec.copyWith(
   ///   indicator: StyleSpec(spec: IconSpec()),
-  ///   label: StyleSpec(spec: TextSpec()),
   /// );
   /// ```
   CheckboxSpec copyWith({
-    StyleSpec<FlexBoxSpec>? container,
+    StyleSpec<BoxSpec>? container,
     StyleSpec<BoxSpec>? indicatorContainer,
     StyleSpec<IconSpec>? indicator,
-    StyleSpec<TextSpec>? label,
   }) {
     return CheckboxSpec(
       container: container ?? this.container,
       indicatorContainer: indicatorContainer ?? this.indicatorContainer,
       indicator: indicator ?? this.indicator,
-      label: label ?? this.label,
     );
   }
 
@@ -172,7 +157,6 @@ class CheckboxSpec extends Spec<CheckboxSpec> with Diagnosticable {
       indicatorContainer:
           MixOps.lerp(indicatorContainer, other.indicatorContainer, t)!,
       indicator: MixOps.lerp(indicator, other.indicator, t)!,
-      label: MixOps.lerp(label, other.label, t)!,
     );
   }
 
@@ -182,10 +166,9 @@ class CheckboxSpec extends Spec<CheckboxSpec> with Diagnosticable {
     properties
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('indicatorContainer', indicatorContainer))
-      ..add(DiagnosticsProperty('indicator', indicator))
-      ..add(DiagnosticsProperty('label', label));
+      ..add(DiagnosticsProperty('indicator', indicator));
   }
 
   @override
-  List<Object?> get props => [container, indicatorContainer, indicator, label];
+  List<Object?> get props => [container, indicatorContainer, indicator];
 }
