@@ -7,6 +7,8 @@ import 'package:mix/mix.dart';
 
 import '../../utilities/remix_style.dart';
 
+export 'radix_callout_styles.dart';
+
 part 'callout_spec.dart';
 part 'callout_style.dart';
 part 'callout_widget.dart';

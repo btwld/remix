@@ -46,7 +46,7 @@ class RadixProgressStyle {
   }) {
     return RemixProgressStyle()
         // Container styling - no focus for progress
-        .container(BoxStyler().width(double.infinity))
+        .width(double.infinity)
         // Merge with size-specific styles
         .merge(_sizeStyle(size));
   }
@@ -59,14 +59,14 @@ class RadixProgressStyle {
         .track(
           BoxStyler()
               .color(RadixTokens.accentTrack()) // gray6 equivalent
-              .borderRadius(BorderRadiusMix.all(RadixTokens.radiusFull()))
+              .borderRadiusAll(RadixTokens.radiusFull())
               .width(double.infinity),
         )
         // Indicator styling (progress fill)
         .indicator(
           BoxStyler()
               .color(RadixTokens.accentIndicator()) // accent9 equivalent
-              .borderRadius(BorderRadiusMix.all(RadixTokens.radiusFull())),
+              .borderRadiusAll(RadixTokens.radiusFull()),
         );
   }
 
@@ -78,14 +78,14 @@ class RadixProgressStyle {
         .track(
           BoxStyler()
               .color(RadixTokens.accentTrack()) // gray6 equivalent
-              .borderRadius(BorderRadiusMix.all(RadixTokens.radiusFull()))
+              .borderRadiusAll(RadixTokens.radiusFull())
               .width(double.infinity),
         )
         // Indicator styling (progress fill) - same as classic
         .indicator(
           BoxStyler()
               .color(RadixTokens.accentIndicator()) // accent9 equivalent
-              .borderRadius(BorderRadiusMix.all(RadixTokens.radiusFull())),
+              .borderRadiusAll(RadixTokens.radiusFull()),
         );
   }
 
@@ -97,17 +97,16 @@ class RadixProgressStyle {
         .track(
           BoxStyler()
               .color(RadixTokens.accent4())
-              .borderRadius(BorderRadiusMix.all(RadixTokens.radiusFull()))
+              .borderRadiusAll(RadixTokens.radiusFull())
               .width(double.infinity),
         )
         // Indicator styling (progress fill) - uses accent9
         .indicator(
           BoxStyler()
               .color(RadixTokens.accent9())
-              .borderRadius(BorderRadiusMix.all(RadixTokens.radiusFull())),
+              .borderRadiusAll(RadixTokens.radiusFull()),
         );
   }
-
 
   // ---------------------------------------------------------------------------
   // Internal builders
@@ -116,42 +115,29 @@ class RadixProgressStyle {
   static RemixProgressStyle _sizeStyle(RadixProgressSize size) {
     return switch (size) {
       RadixProgressSize.size1 => RemixProgressStyle()
-          .container(BoxStyler().height(4.0))
+          .height(4.0)
           .track(
-            BoxStyler()
-                .height(4.0)
-                .borderRadius(BorderRadiusMix.all(RadixTokens.radius1())),
+            BoxStyler().height(4.0).borderRadiusAll(RadixTokens.radius1()),
           )
           .indicator(
-            BoxStyler()
-                .height(4.0)
-                .borderRadius(BorderRadiusMix.all(RadixTokens.radius1())),
+            BoxStyler().height(4.0).borderRadiusAll(RadixTokens.radius1()),
           ),
       RadixProgressSize.size2 => RemixProgressStyle()
-          .container(BoxStyler().height(8.0))
+          .height(8.0)
           .track(
-            BoxStyler()
-                .height(8.0)
-                .borderRadius(BorderRadiusMix.all(RadixTokens.radius2())),
+            BoxStyler().height(8.0).borderRadiusAll(RadixTokens.radius2()),
           )
           .indicator(
-            BoxStyler()
-                .height(8.0)
-                .borderRadius(BorderRadiusMix.all(RadixTokens.radius2())),
+            BoxStyler().height(8.0).borderRadiusAll(RadixTokens.radius2()),
           ),
       RadixProgressSize.size3 => RemixProgressStyle()
-          .container(BoxStyler().height(12.0))
+          .height(12.0)
           .track(
-            BoxStyler()
-                .height(12.0)
-                .borderRadius(BorderRadiusMix.all(RadixTokens.radius3())),
+            BoxStyler().height(12.0).borderRadiusAll(RadixTokens.radius3()),
           )
           .indicator(
-            BoxStyler()
-                .height(12.0)
-                .borderRadius(BorderRadiusMix.all(RadixTokens.radius3())),
+            BoxStyler().height(12.0).borderRadiusAll(RadixTokens.radius3()),
           ),
     };
   }
 }
-

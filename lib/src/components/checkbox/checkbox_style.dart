@@ -3,7 +3,10 @@ part of 'checkbox.dart';
 
 
 class RemixCheckboxStyle
-    extends RemixFlexContainerStyle<CheckboxSpec, RemixCheckboxStyle> {
+    extends RemixFlexContainerStyle<CheckboxSpec, RemixCheckboxStyle>
+    with
+        LabelStyleMixin<RemixCheckboxStyle>,
+        IconStyleMixin<RemixCheckboxStyle> {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<BoxSpec>>? $indicatorContainer;
   final Prop<StyleSpec<IconSpec>>? $indicator;
@@ -81,6 +84,16 @@ class RemixCheckboxStyle
     return merge(RemixCheckboxStyle(indicator: IconStyler(color: value)));
   }
 
+  @override
+  RemixCheckboxStyle icon(IconStyler value) {
+    return merge(RemixCheckboxStyle(indicator: value));
+  }
+
+  @override
+  RemixCheckboxStyle label(TextStyler value) {
+    return merge(RemixCheckboxStyle(label: value));
+  }
+
   /// Sets container padding
   RemixCheckboxStyle padding(EdgeInsetsGeometryMix value) {
     return merge(RemixCheckboxStyle(
@@ -98,13 +111,6 @@ class RemixCheckboxStyle
   /// Sets indicator container styling
   RemixCheckboxStyle indicatorContainer(BoxStyler value) {
     return merge(RemixCheckboxStyle(indicatorContainer: value));
-  }
-
-  /// Sets label color
-  RemixCheckboxStyle labelColor(Color value) {
-    return merge(RemixCheckboxStyle(
-      label: TextStyler(style: TextStyleMix(color: value)),
-    ));
   }
 
   /// Sets checkbox background color
@@ -242,6 +248,5 @@ class RemixCheckboxStyle
         $modifier,
       ];
 }
-
 
 

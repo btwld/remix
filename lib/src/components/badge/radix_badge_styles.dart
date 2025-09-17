@@ -125,7 +125,7 @@ class RadixBadgeStyles {
               .constraints(BoxConstraintsMix(minHeight: 18.0, maxHeight: 18.0))
               .paddingX(6.0)
               .paddingY(2.0)
-              .borderRadius(BorderRadiusMix.all(RadixTokens.radius2())),
+              .borderRadiusAll(RadixTokens.radius2()),
           text: TextStyler().fontSize(11.0).height(16.0 / 11.0),
         ),
       RadixBadgeSize.size2 => RemixBadgeStyle(
@@ -133,7 +133,7 @@ class RadixBadgeStyles {
               .constraints(BoxConstraintsMix(minHeight: 22.0, maxHeight: 22.0))
               .paddingX(8.0)
               .paddingY(3.0)
-              .borderRadius(BorderRadiusMix.all(RadixTokens.radius3())),
+              .borderRadiusAll(RadixTokens.radius3()),
           text: TextStyler().fontSize(12.0).height(18.0 / 12.0),
         ),
       RadixBadgeSize.size3 => RemixBadgeStyle(
@@ -141,7 +141,7 @@ class RadixBadgeStyles {
               .constraints(BoxConstraintsMix(minHeight: 26.0, maxHeight: 26.0))
               .paddingX(10.0)
               .paddingY(4.0)
-              .borderRadius(BorderRadiusMix.all(RadixTokens.radius3())),
+              .borderRadiusAll(RadixTokens.radius3()),
           text: TextStyler().fontSize(13.0).height(20.0 / 13.0),
         ),
     };
