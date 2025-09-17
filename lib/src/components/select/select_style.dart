@@ -1,7 +1,5 @@
 part of 'select.dart';
 
-
-
 class RemixSelectStyle extends RemixStyle<SelectSpec, RemixSelectStyle> {
   final Prop<StyleSpec<BoxSpec>>? $menuContainer;
   final Prop<StyleSpec<SelectTriggerSpec>>? $trigger;
@@ -42,6 +40,21 @@ class RemixSelectStyle extends RemixStyle<SelectSpec, RemixSelectStyle> {
   /// Sets menu container styling
   RemixSelectStyle menuContainer(BoxStyler value) {
     return merge(RemixSelectStyle(menuContainer: value));
+  }
+
+  /// Sets trigger styling
+  RemixSelectStyle trigger(RemixSelectTriggerStyle value) {
+    return merge(RemixSelectStyle(trigger: value));
+  }
+
+  /// Sets menu item styling
+  RemixSelectStyle item(RemixSelectMenuItemStyle value) {
+    return merge(RemixSelectStyle(item: value));
+  }
+
+  /// Sets follower position styling
+  RemixSelectStyle position(RemixCompositedTransformFollowerStyle value) {
+    return merge(RemixSelectStyle(position: value));
   }
 
   // Abstract method implementations for mixins (delegating to menuContainer)
@@ -119,7 +132,10 @@ class RemixSelectStyle extends RemixStyle<SelectSpec, RemixSelectStyle> {
 
 // Style classes for sub-specs
 class RemixSelectTriggerStyle extends RemixFlexContainerStyle<SelectTriggerSpec,
-    RemixSelectTriggerStyle> {
+    RemixSelectTriggerStyle>
+    with
+        LabelStyleMixin<RemixSelectTriggerStyle>,
+        IconStyleMixin<RemixSelectTriggerStyle> {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<StyleSpec<IconSpec>>? $icon;
@@ -150,6 +166,21 @@ class RemixSelectTriggerStyle extends RemixFlexContainerStyle<SelectTriggerSpec,
           animation: animation,
           modifier: modifier,
         );
+
+  /// Sets container styling directly
+  RemixSelectTriggerStyle container(FlexBoxStyler value) {
+    return merge(RemixSelectTriggerStyle(container: value));
+  }
+
+  /// Sets label styling
+  RemixSelectTriggerStyle label(TextStyler value) {
+    return merge(RemixSelectTriggerStyle(label: value));
+  }
+
+  /// Sets icon styling
+  RemixSelectTriggerStyle icon(IconStyler value) {
+    return merge(RemixSelectTriggerStyle(icon: value));
+  }
 
   @override
   StyleSpec<SelectTriggerSpec> resolve(BuildContext context) {
@@ -260,7 +291,10 @@ class RemixSelectTriggerStyle extends RemixFlexContainerStyle<SelectTriggerSpec,
 }
 
 class RemixSelectMenuItemStyle extends RemixFlexContainerStyle<
-    SelectMenuItemSpec, RemixSelectMenuItemStyle> {
+    SelectMenuItemSpec, RemixSelectMenuItemStyle>
+    with
+        LabelStyleMixin<RemixSelectMenuItemStyle>,
+        IconStyleMixin<RemixSelectMenuItemStyle> {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $text;
   final Prop<StyleSpec<IconSpec>>? $icon;
@@ -291,6 +325,26 @@ class RemixSelectMenuItemStyle extends RemixFlexContainerStyle<
           animation: animation,
           modifier: modifier,
         );
+
+  /// Sets container styling directly
+  RemixSelectMenuItemStyle container(FlexBoxStyler value) {
+    return merge(RemixSelectMenuItemStyle(container: value));
+  }
+
+  /// Sets text styling
+  RemixSelectMenuItemStyle text(TextStyler value) {
+    return merge(RemixSelectMenuItemStyle(text: value));
+  }
+
+  /// Sets icon styling
+  RemixSelectMenuItemStyle icon(IconStyler value) {
+    return merge(RemixSelectMenuItemStyle(icon: value));
+  }
+
+  @override
+  RemixSelectMenuItemStyle label(TextStyler value) {
+    return text(value);
+  }
 
   @override
   StyleSpec<SelectMenuItemSpec> resolve(BuildContext context) {
@@ -479,5 +533,3 @@ class RemixCompositedTransformFollowerStyle
         $modifier,
       ];
 }
-
-

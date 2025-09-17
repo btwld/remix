@@ -59,13 +59,8 @@ class RadixCardStyles {
         // card-border-width: 0px
         // card-border-radius: var(--radius-6)
         // card-padding: var(--space-8)
-        .container(
-      BoxStyler().color(RadixTokens.colorPanelSolid()).decoration(
-            BoxDecorationMix(
-              borderRadius: BorderRadiusMix.all(RadixTokens.radius6()),
-            ),
-          ),
-    );
+        .color(RadixTokens.colorPanelSolid())
+        .borderRadiusAll(RadixTokens.radius6());
   }
 
   /// Creates a classic variant card style.
@@ -78,13 +73,8 @@ class RadixCardStyles {
         // card-background-color: var(--color-panel)
         // card-border-width: 0px (classic keeps elevation via shadow)
         // card-border-radius: var(--radius-6)
-        .container(
-          BoxStyler().color(RadixTokens.colorPanelSolid()).decoration(
-                BoxDecorationMix(
-                  borderRadius: BorderRadiusMix.all(RadixTokens.radius6()),
-                ),
-              ),
-        )
+        .color(RadixTokens.colorPanelSolid())
+        .borderRadiusAll(RadixTokens.radius6())
         // Add subtle layered shadow for elevation
         .shadows(RadixTokens.shadow2().map(BoxShadowMix.value).toList());
   }
@@ -96,7 +86,7 @@ class RadixCardStyles {
   static RemixCardStyle ghost({RadixCardSize size = RadixCardSize.size2}) {
     return base(size: size)
         // Visual styling only - no size properties
-        .container(BoxStyler().color(Colors.transparent));
+        .color(Colors.transparent);
   }
 
   // ---------------------------------------------------------------------------

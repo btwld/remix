@@ -56,6 +56,20 @@ class RemixProgressStyle
     ));
   }
 
+  /// Sets progress width
+  RemixProgressStyle width(double value) {
+    return merge(
+      RemixProgressStyle(
+        container: BoxStyler(
+          constraints: BoxConstraintsMix(
+            minWidth: value,
+            maxWidth: value,
+          ),
+        ),
+      ),
+    );
+  }
+
   /// Sets fill color
   RemixProgressStyle indicatorColor(Color value) {
     return merge(RemixProgressStyle(
@@ -177,5 +191,4 @@ class RemixProgressStyle
         $modifier,
       ];
 }
-
 

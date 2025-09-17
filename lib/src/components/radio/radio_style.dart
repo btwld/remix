@@ -3,7 +3,8 @@ part of 'radio.dart';
 
 
 class RemixRadioStyle
-    extends RemixFlexContainerStyle<RadioSpec, RemixRadioStyle> {
+    extends RemixFlexContainerStyle<RadioSpec, RemixRadioStyle>
+    with LabelStyleMixin<RemixRadioStyle> {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<BoxSpec>>? $indicatorContainer;
   final Prop<StyleSpec<BoxSpec>>? $indicator;
@@ -93,7 +94,7 @@ class RemixRadioStyle
     return merge(RemixRadioStyle(container: value));
   }
 
-  /// Sets label styling
+  @override
   RemixRadioStyle label(TextStyler value) {
     return merge(RemixRadioStyle(label: value));
   }
@@ -184,5 +185,4 @@ class RemixRadioStyle
         $modifier,
       ];
 }
-
 

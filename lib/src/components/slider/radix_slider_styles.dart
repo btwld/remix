@@ -75,7 +75,7 @@ class RadixSliderStyle {
                 color: RadixTokens.gray7(),
                 width: RadixTokens.borderWidth1(),
               )
-              .borderRadius(BorderRadiusMix.all(RadixTokens.radiusFull())),
+              .borderRadiusAll(RadixTokens.radiusFull()),
         )
         // Disabled state
         .onDisabled(
@@ -105,7 +105,7 @@ class RadixSliderStyle {
         .thumb(
           BoxStyler()
               .color(RadixTokens.colorSurface())
-              .borderRadius(BorderRadiusMix.all(RadixTokens.radiusFull())),
+              .borderRadiusAll(RadixTokens.radiusFull()),
         )
         // Disabled state
         .onDisabled(
@@ -128,7 +128,7 @@ class RadixSliderStyle {
         .thumb(
           BoxStyler()
               .color(RadixTokens.accent9())
-              .borderRadius(BorderRadiusMix.all(RadixTokens.radiusFull())),
+              .borderRadiusAll(RadixTokens.radiusFull()),
         )
         // Disabled state
         .onDisabled(

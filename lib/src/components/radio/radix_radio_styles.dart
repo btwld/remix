@@ -68,20 +68,22 @@ class RadixRadioStyles {
   }) {
     return base(size: size)
         // Indicator container (the radio circle itself) - no size properties
-        .indicatorContainer(BoxStyler()
-                .color(RadixTokens.colorSurface())
-                .borderAll(
-                  color: RadixTokens.gray7(),
-                  width: RadixTokens.borderWidth1(),
-                )
-                .borderRadiusAll(RadixTokens.radiusFull()) // Circular
+        .indicatorContainer(
+          BoxStyler()
+              .color(RadixTokens.colorSurface())
+              .borderAll(
+                color: RadixTokens.gray7(),
+                width: RadixTokens.borderWidth1(),
+              )
+              .borderRadiusAll(RadixTokens.radiusFull()) // Circular
 
-            )
+          ,
+        )
         // Radio dot indicator - no size properties
         .indicator(
           BoxStyler()
               .color(RadixTokens.gray12())
-              .borderRadius(BorderRadiusMix.all(RadixTokens.radiusFull())),
+              .borderRadiusAll(RadixTokens.radiusFull()),
         )
         // Label text - no size properties
         .label(
@@ -122,22 +124,22 @@ class RadixRadioStyles {
   }) {
     return base(size: size)
         // Indicator container (the radio circle itself) - no size properties
-        .indicatorContainer(BoxStyler()
-                .color(RadixTokens.colorSurface())
-                .borderAll(
-                  color: RadixTokens.gray6(),
-                  width: RadixTokens.borderWidth1(),
-                )
-                .borderRadius(
-                  BorderRadiusMix.all(RadixTokens.radiusFull()),
-                ) // Circular
+        .indicatorContainer(
+          BoxStyler()
+              .color(RadixTokens.colorSurface())
+              .borderAll(
+                color: RadixTokens.gray6(),
+                width: RadixTokens.borderWidth1(),
+              )
+              .borderRadiusAll(RadixTokens.radiusFull()) // Circular
 
-            )
+          ,
+        )
         // Radio dot indicator - no size properties
         .indicator(
           BoxStyler()
               .color(RadixTokens.accent9())
-              .borderRadius(BorderRadiusMix.all(RadixTokens.radiusFull())),
+              .borderRadiusAll(RadixTokens.radiusFull()),
         )
         // Label text - no size properties
         .label(
@@ -176,22 +178,22 @@ class RadixRadioStyles {
   static RemixRadioStyle soft({RadixRadioSize size = RadixRadioSize.size2}) {
     return base(size: size)
         // Indicator container (the radio circle itself) - no size properties
-        .indicatorContainer(BoxStyler()
-                .color(RadixTokens.accent3())
-                .borderAll(
-                  color: RadixTokens.accent6(),
-                  width: RadixTokens.borderWidth1(),
-                )
-                .borderRadius(
-                  BorderRadiusMix.all(RadixTokens.radiusFull()),
-                ) // Circular
+        .indicatorContainer(
+          BoxStyler()
+              .color(RadixTokens.accent3())
+              .borderAll(
+                color: RadixTokens.accent6(),
+                width: RadixTokens.borderWidth1(),
+              )
+              .borderRadiusAll(RadixTokens.radiusFull()) // Circular
 
-            )
+          ,
+        )
         // Radio dot indicator - no size properties
         .indicator(
           BoxStyler()
               .color(RadixTokens.accent11())
-              .borderRadius(BorderRadiusMix.all(RadixTokens.radiusFull())),
+              .borderRadiusAll(RadixTokens.radiusFull()),
         )
         // Label text - no size properties
         .label(

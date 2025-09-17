@@ -7,6 +7,8 @@ import 'package:mix/mix.dart';
 import '../../utilities/remix_style.dart';
 import 'package:naked_ui/naked_ui.dart';
 
+export 'radix_tooltip_styles.dart';
+
 part 'tooltip_spec.dart';
 part 'tooltip_style.dart';
 part 'tooltip_widget.dart';

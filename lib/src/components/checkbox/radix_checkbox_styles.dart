@@ -74,7 +74,7 @@ class RadixCheckboxStyles {
               )
               // Use token-based radius. JSON: radius ≈ 1.25 × radius-1 (~3.75),
               // closest token step is radius-2 (4px).
-              .borderRadius(BorderRadiusMix.all(RadixTokens.radius2())),
+              .borderRadiusAll(RadixTokens.radius2()),
         )
         // Check mark icon color
         .indicatorColor(RadixTokens.gray12())
@@ -121,7 +121,7 @@ class RadixCheckboxStyles {
                 width: RadixTokens.borderWidth1(),
               )
               // Use token-based radius matching JSON intent.
-              .borderRadius(BorderRadiusMix.all(RadixTokens.radius2())),
+              .borderRadiusAll(RadixTokens.radius2()),
         )
         // Check mark icon color
         .indicatorColor(RadixTokens.accent9())
@@ -168,7 +168,7 @@ class RadixCheckboxStyles {
                 width: RadixTokens.borderWidth1(),
               )
               // Use token-based radius matching JSON intent.
-              .borderRadius(BorderRadiusMix.all(RadixTokens.radius2())),
+              .borderRadiusAll(RadixTokens.radius2()),
         )
         // Check mark icon color
         .indicatorColor(RadixTokens.accent11())
