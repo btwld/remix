@@ -8,9 +8,9 @@ import 'package:naked_ui/naked_ui.dart';
 
 import '../../utilities/remix_style.dart';
 import '../_internal/widget_state_controller_mixin.dart';
-
-export 'radix_switch_styles.dart';
+import '../../fortal/fortal.dart';
 
 part 'switch_spec.dart';
 part 'switch_style.dart';
 part 'switch_widget.dart';
+part 'radix_switch_styles.dart';

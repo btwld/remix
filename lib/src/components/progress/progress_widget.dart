@@ -16,7 +16,7 @@ class RemixProgress extends StatelessWidget {
     super.key,
     required this.value,
     this.style = const RemixProgressStyle.create(),
-  }) : assert(
+  })  : assert(
           value >= 0 && value <= 1,
           'Progress value must be between 0 and 1',
         );

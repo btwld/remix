@@ -82,7 +82,6 @@ class RemixSlider extends StatefulWidget with HasEnabled {
 
 class _RemixSliderState extends State<RemixSlider>
     with TickerProviderStateMixin, HasWidgetStateController, HasEnabledState {
-
   RemixSliderStyle get _style => widget.style;
 
   @override
@@ -327,10 +326,7 @@ class _AnimatedTrackState extends State<_AnimatedTrack> {
   @override
   void initState() {
     super.initState();
-    _oldTracks = _Tracks(
-      active: widget.active,
-      baseTrack: widget.baseTrack,
-    );
+    _oldTracks = _Tracks(active: widget.active, baseTrack: widget.baseTrack);
   }
 
   @override
@@ -347,10 +343,7 @@ class _AnimatedTrackState extends State<_AnimatedTrack> {
     return TweenAnimationBuilder(
       tween: _TracksTween(
         begin: _oldTracks,
-        end: _Tracks(
-          active: widget.active,
-          baseTrack: widget.baseTrack,
-        ),
+        end: _Tracks(active: widget.active, baseTrack: widget.baseTrack),
       ),
       duration: widget.duration,
       curve: widget.curve,
@@ -372,10 +365,7 @@ class _Tracks {
   final Paint active;
   final Paint baseTrack;
 
-  const _Tracks({
-    required this.active,
-    required this.baseTrack,
-  });
+  const _Tracks({required this.active, required this.baseTrack});
 
   @override
   bool operator ==(Object other) {

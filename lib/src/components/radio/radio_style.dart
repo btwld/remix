@@ -1,7 +1,6 @@
 part of 'radio.dart';
 
-class RemixRadioStyle
-    extends RemixContainerStyle<RadioSpec, RemixRadioStyle> {
+class RemixRadioStyle extends RemixContainerStyle<RadioSpec, RemixRadioStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<BoxSpec>>? $indicatorContainer;
   final Prop<StyleSpec<BoxSpec>>? $indicator;
@@ -130,9 +129,7 @@ class RemixRadioStyle
   @override
   RemixRadioStyle foregroundDecoration(DecorationMix value) {
     return merge(
-      RemixRadioStyle(
-        container: BoxStyler(foregroundDecoration: value),
-      ),
+      RemixRadioStyle(container: BoxStyler(foregroundDecoration: value)),
     );
   }
 

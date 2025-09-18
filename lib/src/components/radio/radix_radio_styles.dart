@@ -1,57 +1,47 @@
-// ABOUTME: Factory for creating RemixRadioStyle instances using Radix design tokens
-// ABOUTME: Provides 3 Radix radio variants with proper token-based styling
+part of 'radio.dart';
 
-import 'package:flutter/material.dart';
-import 'package:mix/mix.dart';
-
-import '../../radix/radix.dart';
-import 'radio.dart';
-
-// Export the extension so it's available when importing this file
-export 'radio.dart';
-
-enum RadixRadioSize {
+enum FortalRadioSize {
   size1,
   size2,
   size3,
 }
 
-enum RadixRadioVariant {
+enum FortalRadioVariant {
   classic,
   surface,
   soft,
 }
 
-/// Factory class for creating Radix-compliant radio styles.
+/// Factory class for creating Fortal-compliant radio styles.
 ///
 /// Provides static methods to create RemixRadioStyle instances for all
-/// Radix UI radio variants using the RadixTokens system.
-class RadixRadioStyles {
-  const RadixRadioStyles._();
+/// Fortal UI radio variants using the FortalTokens system.
+class FortalRadioStyles {
+  const FortalRadioStyles._();
 
-  /// Factory constructor for RadixRadioStyle with variant and size parameters.
+  /// Factory constructor for FortalRadioStyle with variant and size parameters.
   ///
-  /// Returns a RemixRadioStyle configured with Radix design tokens.
+  /// Returns a RemixRadioStyle configured with Fortal design tokens.
   /// Defaults to classic variant with size2.
   static RemixRadioStyle create({
-    RadixRadioVariant variant = RadixRadioVariant.classic,
-    RadixRadioSize size = RadixRadioSize.size2,
+    FortalRadioVariant variant = FortalRadioVariant.classic,
+    FortalRadioSize size = FortalRadioSize.size2,
   }) {
     return switch (variant) {
-      RadixRadioVariant.classic => classic(size: size),
-      RadixRadioVariant.surface => surface(size: size),
-      RadixRadioVariant.soft => soft(size: size),
+      FortalRadioVariant.classic => classic(size: size),
+      FortalRadioVariant.surface => surface(size: size),
+      FortalRadioVariant.soft => soft(size: size),
     };
   }
 
-  static RemixRadioStyle base({RadixRadioSize size = RadixRadioSize.size2}) {
+  static RemixRadioStyle base({FortalRadioSize size = FortalRadioSize.size2}) {
     return RemixRadioStyle()
         // Focus state (generic)
         .onFocused(
           RemixRadioStyle().indicatorContainer(
             BoxStyler().borderAll(
-              color: RadixTokens.focusA8(),
-              width: RadixTokens.focusRingWidth(),
+              color: FortalTokens.focusA8(),
+              width: FortalTokens.focusRingWidth(),
             ),
           ),
         )
@@ -64,47 +54,47 @@ class RadixRadioStyles {
   /// Classic radios use neutral surface with gray borders that become
   /// accent-colored when selected. Used for standard form controls.
   static RemixRadioStyle classic({
-    RadixRadioSize size = RadixRadioSize.size2,
+    FortalRadioSize size = FortalRadioSize.size2,
   }) {
     return base(size: size)
         // Indicator container (the radio circle itself) - no size properties
         .indicatorContainer(
           BoxStyler()
-              .color(RadixTokens.colorSurface())
+              .color(FortalTokens.colorSurface())
               .borderAll(
-                color: RadixTokens.gray7(),
-                width: RadixTokens.borderWidth1(),
+                color: FortalTokens.gray7(),
+                width: FortalTokens.borderWidth1(),
               )
-              .borderRadiusAll(RadixTokens.radiusFull()) // Circular
+              .borderRadiusAll(FortalTokens.radiusFull()) // Circular
 
           ,
         )
         // Radio dot indicator - no size properties
         .indicator(
           BoxStyler()
-              .color(RadixTokens.gray12())
-              .borderRadiusAll(RadixTokens.radiusFull()),
+              .color(FortalTokens.gray12())
+              .borderRadiusAll(FortalTokens.radiusFull()),
         )
         // State variants
         .onSelected(
           RemixRadioStyle()
               .indicatorContainer(
-                BoxStyler().color(RadixTokens.colorSurface()).borderAll(
-                      color: RadixTokens.accent9(),
-                      width: RadixTokens.borderWidth1(),
+                BoxStyler().color(FortalTokens.colorSurface()).borderAll(
+                      color: FortalTokens.accent9(),
+                      width: FortalTokens.borderWidth1(),
                     ),
               )
-              .indicator(BoxStyler().color(RadixTokens.accentContrast())),
+              .indicator(BoxStyler().color(FortalTokens.accentContrast())),
         )
         .onDisabled(
           RemixRadioStyle()
               .indicatorContainer(
-                BoxStyler().color(RadixTokens.colorSurface()).borderAll(
-                      color: RadixTokens.gray7(),
-                      width: RadixTokens.borderWidth1(),
+                BoxStyler().color(FortalTokens.colorSurface()).borderAll(
+                      color: FortalTokens.gray7(),
+                      width: FortalTokens.borderWidth1(),
                     ),
               )
-              .indicator(BoxStyler().color(RadixTokens.gray12())),
+              .indicator(BoxStyler().color(FortalTokens.gray12())),
         );
   }
 
@@ -113,47 +103,47 @@ class RadixRadioStyles {
   /// Surface radios use neutral surface with subtle borders.
   /// Used for forms with softer visual appearance.
   static RemixRadioStyle surface({
-    RadixRadioSize size = RadixRadioSize.size2,
+    FortalRadioSize size = FortalRadioSize.size2,
   }) {
     return base(size: size)
         // Indicator container (the radio circle itself) - no size properties
         .indicatorContainer(
           BoxStyler()
-              .color(RadixTokens.colorSurface())
+              .color(FortalTokens.colorSurface())
               .borderAll(
-                color: RadixTokens.gray6(),
-                width: RadixTokens.borderWidth1(),
+                color: FortalTokens.gray6(),
+                width: FortalTokens.borderWidth1(),
               )
-              .borderRadiusAll(RadixTokens.radiusFull()) // Circular
+              .borderRadiusAll(FortalTokens.radiusFull()) // Circular
 
           ,
         )
         // Radio dot indicator - no size properties
         .indicator(
           BoxStyler()
-              .color(RadixTokens.accent9())
-              .borderRadiusAll(RadixTokens.radiusFull()),
+              .color(FortalTokens.accent9())
+              .borderRadiusAll(FortalTokens.radiusFull()),
         )
         // State variants
         .onSelected(
           RemixRadioStyle()
               .indicatorContainer(
-                BoxStyler().color(RadixTokens.colorSurface()).borderAll(
-                      color: RadixTokens.gray6(),
-                      width: RadixTokens.borderWidth1(),
+                BoxStyler().color(FortalTokens.colorSurface()).borderAll(
+                      color: FortalTokens.gray6(),
+                      width: FortalTokens.borderWidth1(),
                     ),
               )
-              .indicator(BoxStyler().color(RadixTokens.accent9())),
+              .indicator(BoxStyler().color(FortalTokens.accent9())),
         )
         .onDisabled(
           RemixRadioStyle()
               .indicatorContainer(
-                BoxStyler().color(RadixTokens.colorSurface()).borderAll(
-                      color: RadixTokens.gray6(),
-                      width: RadixTokens.borderWidth1(),
+                BoxStyler().color(FortalTokens.colorSurface()).borderAll(
+                      color: FortalTokens.gray6(),
+                      width: FortalTokens.borderWidth1(),
                     ),
               )
-              .indicator(BoxStyler().color(RadixTokens.accent9())),
+              .indicator(BoxStyler().color(FortalTokens.accent9())),
         );
   }
 
@@ -161,46 +151,46 @@ class RadixRadioStyles {
   ///
   /// Soft radios use accent-tinted background with accent borders.
   /// Used for forms that need accent color integration.
-  static RemixRadioStyle soft({RadixRadioSize size = RadixRadioSize.size2}) {
+  static RemixRadioStyle soft({FortalRadioSize size = FortalRadioSize.size2}) {
     return base(size: size)
         // Indicator container (the radio circle itself) - no size properties
         .indicatorContainer(
           BoxStyler()
-              .color(RadixTokens.accent3())
+              .color(FortalTokens.accent3())
               .borderAll(
-                color: RadixTokens.accent6(),
-                width: RadixTokens.borderWidth1(),
+                color: FortalTokens.accent6(),
+                width: FortalTokens.borderWidth1(),
               )
-              .borderRadiusAll(RadixTokens.radiusFull()) // Circular
+              .borderRadiusAll(FortalTokens.radiusFull()) // Circular
 
           ,
         )
         // Radio dot indicator - no size properties
         .indicator(
           BoxStyler()
-              .color(RadixTokens.accent11())
-              .borderRadiusAll(RadixTokens.radiusFull()),
+              .color(FortalTokens.accent11())
+              .borderRadiusAll(FortalTokens.radiusFull()),
         )
         // State variants
         .onSelected(
           RemixRadioStyle()
               .indicatorContainer(
-                BoxStyler().color(RadixTokens.accent3()).borderAll(
-                      color: RadixTokens.accent6(),
-                      width: RadixTokens.borderWidth1(),
+                BoxStyler().color(FortalTokens.accent3()).borderAll(
+                      color: FortalTokens.accent6(),
+                      width: FortalTokens.borderWidth1(),
                     ),
               )
-              .indicator(BoxStyler().color(RadixTokens.accent11())),
+              .indicator(BoxStyler().color(FortalTokens.accent11())),
         )
         .onDisabled(
           RemixRadioStyle()
               .indicatorContainer(
-                BoxStyler().color(RadixTokens.accent3()).borderAll(
-                      color: RadixTokens.accent6(),
-                      width: RadixTokens.borderWidth1(),
+                BoxStyler().color(FortalTokens.accent3()).borderAll(
+                      color: FortalTokens.accent6(),
+                      width: FortalTokens.borderWidth1(),
                     ),
               )
-              .indicator(BoxStyler().color(RadixTokens.accent11())),
+              .indicator(BoxStyler().color(FortalTokens.accent11())),
         );
   }
 
@@ -208,9 +198,9 @@ class RadixRadioStyles {
   // Internal builders
   // ---------------------------------------------------------------------------
 
-  static RemixRadioStyle _sizeStyle(RadixRadioSize size) {
+  static RemixRadioStyle _sizeStyle(FortalRadioSize size) {
     return switch (size) {
-      RadixRadioSize.size1 => RemixRadioStyle(
+      FortalRadioSize.size1 => RemixRadioStyle(
           container: BoxStyler(alignment: Alignment.center),
           indicatorContainer: BoxStyler().constraints(BoxConstraintsMix(
             minWidth: 16.0,
@@ -225,7 +215,7 @@ class RadixRadioStyles {
             maxHeight: 8.0,
           )),
         ),
-      RadixRadioSize.size2 => RemixRadioStyle(
+      FortalRadioSize.size2 => RemixRadioStyle(
           container: BoxStyler(alignment: Alignment.center),
           indicatorContainer: BoxStyler().constraints(BoxConstraintsMix(
             minWidth: 20.0,
@@ -240,7 +230,7 @@ class RadixRadioStyles {
             maxHeight: 10.0,
           )),
         ),
-      RadixRadioSize.size3 => RemixRadioStyle(
+      FortalRadioSize.size3 => RemixRadioStyle(
           container: BoxStyler(alignment: Alignment.center),
           indicatorContainer: BoxStyler().constraints(BoxConstraintsMix(
             minWidth: 24.0,

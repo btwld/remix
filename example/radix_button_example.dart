@@ -1,29 +1,23 @@
-// ABOUTME: Example demonstrating the Radix button system with all variants and sizes
-// ABOUTME: Shows how to set up createRadixScope and use RadixButtonStyle
-
 import 'package:flutter/material.dart';
-
-import '../lib/src/components/button/radix_button_styles.dart';
-import '../lib/src/radix/radix.dart' as resolver;
-import '../lib/src/radix/radix_theme.dart';
+import 'package:remix/remix.dart';
 
 void main() {
-  runApp(const RadixButtonExampleApp());
+  runApp(const FortalButtonExampleApp());
 }
 
-class RadixButtonExampleApp extends StatelessWidget {
-  const RadixButtonExampleApp({super.key});
+class FortalButtonExampleApp extends StatelessWidget {
+  const FortalButtonExampleApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: createRadixScope(
-        accent: resolver.RadixAccentColor.indigo,
-        gray: resolver.RadixGrayColor.slate,
+      home: createFortalScope(
+        accent: FortalAccentColor.indigo,
+        gray: FortalGrayColor.slate,
         brightness: Brightness.light,
-        child: const RadixButtonExampleScreen(),
+        child: const FortalButtonExampleScreen(),
       ),
-      title: 'Radix Button Example',
+      title: 'Fortal Button Example',
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
@@ -32,14 +26,14 @@ class RadixButtonExampleApp extends StatelessWidget {
   }
 }
 
-class RadixButtonExampleScreen extends StatelessWidget {
-  const RadixButtonExampleScreen({super.key});
+class FortalButtonExampleScreen extends StatelessWidget {
+  const FortalButtonExampleScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Radix Button Variants & Sizes'),
+        title: const Text('Fortal Button Variants & Sizes'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
       body: const SingleChildScrollView(
@@ -90,37 +84,37 @@ class _VariantSection extends StatelessWidget {
       runSpacing: 16,
       children: [
         // Solid variant
-        RadixButtonStyle.solid().call(
+        FortalButtonStyle.solid().call(
           label: 'Solid',
           onPressed: () => _showSnackBar(context, 'Solid button pressed'),
         ),
 
         // Soft variant
-        RadixButtonStyle.soft().call(
+        FortalButtonStyle.soft().call(
           label: 'Soft',
           onPressed: () => _showSnackBar(context, 'Soft button pressed'),
         ),
 
         // Surface variant
-        RadixButtonStyle.surface().call(
+        FortalButtonStyle.surface().call(
           label: 'Surface',
           onPressed: () => _showSnackBar(context, 'Surface button pressed'),
         ),
 
         // Outline variant
-        RadixButtonStyle.outline().call(
+        FortalButtonStyle.outline().call(
           label: 'Outline',
           onPressed: () => _showSnackBar(context, 'Outline button pressed'),
         ),
 
         // Ghost variant
-        RadixButtonStyle.ghost().call(
+        FortalButtonStyle.ghost().call(
           label: 'Ghost',
           onPressed: () => _showSnackBar(context, 'Ghost button pressed'),
         ),
 
         // Surface variant
-        RadixButtonStyle.surface().call(
+        FortalButtonStyle.surface().call(
           label: 'Surface',
           onPressed: () => _showSnackBar(context, 'Surface button pressed'),
         ),
@@ -142,17 +136,17 @@ class _SizeSection extends StatelessWidget {
         Wrap(
           spacing: 8,
           children: [
-            RadixButtonStyle.solid(size: RadixButtonSize.size1).call(
+            FortalButtonStyle.solid(size: FortalButtonSize.size1).call(
               label: 'Solid',
               icon: Icons.check,
               onPressed: () => print('Button pressed'),
             ),
-            RadixButtonStyle.soft(size: RadixButtonSize.size1).call(
+            FortalButtonStyle.soft(size: FortalButtonSize.size1).call(
               label: 'Soft',
               icon: Icons.star,
               onPressed: () => print('Button pressed'),
             ),
-            RadixButtonStyle.outline(size: RadixButtonSize.size1).call(
+            FortalButtonStyle.outline(size: FortalButtonSize.size1).call(
               label: 'Outline',
               icon: Icons.favorite,
               onPressed: () => print('Button pressed'),
@@ -165,17 +159,17 @@ class _SizeSection extends StatelessWidget {
         Wrap(
           spacing: 8,
           children: [
-            RadixButtonStyle.solid(size: RadixButtonSize.size2).call(
+            FortalButtonStyle.solid(size: FortalButtonSize.size2).call(
               label: 'Solid',
               icon: Icons.check,
               onPressed: () => print('Button pressed'),
             ),
-            RadixButtonStyle.soft(size: RadixButtonSize.size2).call(
+            FortalButtonStyle.soft(size: FortalButtonSize.size2).call(
               label: 'Soft',
               icon: Icons.star,
               onPressed: () => print('Button pressed'),
             ),
-            RadixButtonStyle.outline(size: RadixButtonSize.size2).call(
+            FortalButtonStyle.outline(size: FortalButtonSize.size2).call(
               label: 'Outline',
               icon: Icons.favorite,
               onPressed: () => print('Button pressed'),
@@ -188,17 +182,17 @@ class _SizeSection extends StatelessWidget {
         Wrap(
           spacing: 8,
           children: [
-            RadixButtonStyle.solid(size: RadixButtonSize.size3).call(
+            FortalButtonStyle.solid(size: FortalButtonSize.size3).call(
               label: 'Solid',
               icon: Icons.check,
               onPressed: () => print('Button pressed'),
             ),
-            RadixButtonStyle.soft(size: RadixButtonSize.size3).call(
+            FortalButtonStyle.soft(size: FortalButtonSize.size3).call(
               label: 'Soft',
               icon: Icons.star,
               onPressed: () => print('Button pressed'),
             ),
-            RadixButtonStyle.outline(size: RadixButtonSize.size3).call(
+            FortalButtonStyle.outline(size: FortalButtonSize.size3).call(
               label: 'Outline',
               icon: Icons.favorite,
               onPressed: () => print('Button pressed'),
@@ -211,17 +205,17 @@ class _SizeSection extends StatelessWidget {
         Wrap(
           spacing: 8,
           children: [
-            RadixButtonStyle.solid(size: RadixButtonSize.size4).call(
+            FortalButtonStyle.solid(size: FortalButtonSize.size4).call(
               label: 'Solid',
               icon: Icons.check,
               onPressed: () => print('Button pressed'),
             ),
-            RadixButtonStyle.soft(size: RadixButtonSize.size4).call(
+            FortalButtonStyle.soft(size: FortalButtonSize.size4).call(
               label: 'Soft',
               icon: Icons.star,
               onPressed: () => print('Button pressed'),
             ),
-            RadixButtonStyle.outline(size: RadixButtonSize.size4).call(
+            FortalButtonStyle.outline(size: FortalButtonSize.size4).call(
               label: 'Outline',
               icon: Icons.favorite,
               onPressed: () => print('Button pressed'),
@@ -243,24 +237,24 @@ class _StateSection extends StatelessWidget {
       runSpacing: 16,
       children: [
         // Normal state
-        RadixButtonStyle.solid().call(label: 'Normal', onPressed: () {}),
+        FortalButtonStyle.solid().call(label: 'Normal', onPressed: () {}),
 
         // Loading state
-        RadixButtonStyle.solid().call(
+        FortalButtonStyle.solid().call(
           label: 'Loading',
           loading: true,
           onPressed: () => print('Button pressed'),
         ),
 
         // Disabled state
-        RadixButtonStyle.solid().call(
+        FortalButtonStyle.solid().call(
           label: 'Disabled',
           enabled: false,
           onPressed: null,
         ),
 
         // With icon
-        RadixButtonStyle.solid().call(
+        FortalButtonStyle.solid().call(
           label: 'With Icon',
           icon: Icons.download,
           onPressed: () => print('Button pressed'),

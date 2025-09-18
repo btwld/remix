@@ -1,104 +1,98 @@
-// ABOUTME: Factory for creating RemixAvatarStyle instances using Radix tokens
-// ABOUTME: Provides size + variant composition following the button pattern
+part of 'avatar.dart';
 
-import 'package:mix/mix.dart';
-
-import '../../radix/radix.dart';
-import 'avatar.dart';
-
-enum RadixAvatarSize {
+enum FortalAvatarSize {
   size1,
   size2,
   size3,
   size4,
 }
 
-enum RadixAvatarVariant {
+enum FortalAvatarVariant {
   surface, // neutral surface background
   soft, // accent tinted background
   solid, // strong accent background
 }
 
-/// Radix-compliant avatar styles.
+/// Fortal-compliant avatar styles.
 ///
 /// Note: radix_components.generated.json exposes avatar-size and fallback
 /// font sizes; we apply sizes and typical backgrounds using core tokens.
-class RadixAvatarStyles {
-  const RadixAvatarStyles._();
+class FortalAvatarStyles {
+  const FortalAvatarStyles._();
 
   static RemixAvatarStyle create({
-    RadixAvatarVariant variant = RadixAvatarVariant.surface,
-    RadixAvatarSize size = RadixAvatarSize.size2,
+    FortalAvatarVariant variant = FortalAvatarVariant.surface,
+    FortalAvatarSize size = FortalAvatarSize.size2,
   }) {
     return switch (variant) {
-      RadixAvatarVariant.surface => surface(size: size),
-      RadixAvatarVariant.soft => soft(size: size),
-      RadixAvatarVariant.solid => solid(size: size),
+      FortalAvatarVariant.surface => surface(size: size),
+      FortalAvatarVariant.soft => soft(size: size),
+      FortalAvatarVariant.solid => solid(size: size),
     };
   }
 
-  static RemixAvatarStyle base({RadixAvatarSize size = RadixAvatarSize.size2}) {
+  static RemixAvatarStyle base({FortalAvatarSize size = FortalAvatarSize.size2}) {
     return RemixAvatarStyle()
-        .borderRadiusAll(RadixTokens.radiusFull())
+        .borderRadiusAll(FortalTokens.radiusFull())
         .merge(_sizeStyle(size));
   }
 
   /// Neutral background + neutral text/icon
-  static RemixAvatarStyle surface({RadixAvatarSize size = RadixAvatarSize.size2}) {
+  static RemixAvatarStyle surface({FortalAvatarSize size = FortalAvatarSize.size2}) {
     return base(size: size)
-        .color(RadixTokens.colorSurface())
+        .color(FortalTokens.colorSurface())
         .merge(
           RemixAvatarStyle(
-            text: TextStyler(style: RadixTokens.text2.mix()).color(RadixTokens.gray12()),
+            text: TextStyler(style: FortalTokens.text2.mix()).color(FortalTokens.gray12()),
           ),
         )
-        .iconColor(RadixTokens.gray12());
+        .iconColor(FortalTokens.gray12());
   }
 
   /// Accent tinted background + accent11 text/icon
-  static RemixAvatarStyle soft({RadixAvatarSize size = RadixAvatarSize.size2}) {
+  static RemixAvatarStyle soft({FortalAvatarSize size = FortalAvatarSize.size2}) {
     return base(size: size)
-        .color(RadixTokens.accent3())
+        .color(FortalTokens.accent3())
         .merge(
           RemixAvatarStyle(
-            text: TextStyler(style: RadixTokens.text2.mix()).color(RadixTokens.accent11()),
+            text: TextStyler(style: FortalTokens.text2.mix()).color(FortalTokens.accent11()),
           ),
         )
-        .iconColor(RadixTokens.accent11());
+        .iconColor(FortalTokens.accent11());
   }
 
   /// Strong accent background + contrast text/icon
-  static RemixAvatarStyle solid({RadixAvatarSize size = RadixAvatarSize.size2}) {
+  static RemixAvatarStyle solid({FortalAvatarSize size = FortalAvatarSize.size2}) {
     return base(size: size)
-        .color(RadixTokens.accent9())
+        .color(FortalTokens.accent9())
         .merge(
           RemixAvatarStyle(
-            text: TextStyler(style: RadixTokens.text2.mix()).color(RadixTokens.accentContrast()),
+            text: TextStyler(style: FortalTokens.text2.mix()).color(FortalTokens.accentContrast()),
           ),
         )
-        .iconColor(RadixTokens.accentContrast());
+        .iconColor(FortalTokens.accentContrast());
   }
 
   // ---------------------------------------------------------------------------
   // Internal builders
   // ---------------------------------------------------------------------------
-  static RemixAvatarStyle _sizeStyle(RadixAvatarSize size) {
+  static RemixAvatarStyle _sizeStyle(FortalAvatarSize size) {
     // NOTE: JSON has "avatar-size: 160px" as a token; we provide practical UI
     // sizes for typical use, and keep radius as full circle.
     // TODO: Expose tokenized avatar-size tiers when available.
     return switch (size) {
-      RadixAvatarSize.size1 => RemixAvatarStyle()
+      FortalAvatarSize.size1 => RemixAvatarStyle()
           .square(24.0)
-          .merge(RemixAvatarStyle(text: TextStyler(style: RadixTokens.text1.mix()))),
-      RadixAvatarSize.size2 => RemixAvatarStyle()
+          .merge(RemixAvatarStyle(text: TextStyler(style: FortalTokens.text1.mix()))),
+      FortalAvatarSize.size2 => RemixAvatarStyle()
           .square(32.0)
-          .merge(RemixAvatarStyle(text: TextStyler(style: RadixTokens.text2.mix()))),
-      RadixAvatarSize.size3 => RemixAvatarStyle()
+          .merge(RemixAvatarStyle(text: TextStyler(style: FortalTokens.text2.mix()))),
+      FortalAvatarSize.size3 => RemixAvatarStyle()
           .square(40.0)
-          .merge(RemixAvatarStyle(text: TextStyler(style: RadixTokens.text3.mix()))),
-      RadixAvatarSize.size4 => RemixAvatarStyle()
+          .merge(RemixAvatarStyle(text: TextStyler(style: FortalTokens.text3.mix()))),
+      FortalAvatarSize.size4 => RemixAvatarStyle()
           .square(64.0)
-          .merge(RemixAvatarStyle(text: TextStyler(style: RadixTokens.text4.mix()))),
+          .merge(RemixAvatarStyle(text: TextStyler(style: FortalTokens.text4.mix()))),
     };
   }
 }

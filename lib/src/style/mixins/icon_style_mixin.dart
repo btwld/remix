@@ -1,6 +1,3 @@
-// ABOUTME: Mixin providing convenient icon styling helper methods for component styles
-// ABOUTME: Offers direct methods for the most commonly used icon properties
-
 import 'package:flutter/widgets.dart';
 import 'package:mix/mix.dart';
 

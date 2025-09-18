@@ -1,48 +1,42 @@
-// ABOUTME: Factory constructors for RemixProgressStyle variants using Radix design tokens
-// ABOUTME: Provides RadixProgressStyle subclass with variant + size aware composition
+part of 'progress.dart';
 
-import 'package:mix/mix.dart';
-
-import '../../radix/radix.dart';
-import 'progress.dart';
-
-enum RadixProgressSize {
+enum FortalProgressSize {
   size1,
   size2,
   size3,
 }
 
-enum RadixProgressVariant {
+enum FortalProgressVariant {
   classic,
   surface,
   soft,
 }
 
-/// RadixProgressStyle utility class for creating Radix-themed progress styles.
+/// FortalProgressStyles utility class for creating Fortal-themed progress styles.
 ///
 /// Provides factory constructor with variant and size parameters plus named
 /// static methods for direct access. Composes the correct base metrics,
-/// variant visuals, and size-specific styles sourced from the Radix token JSON.
-class RadixProgressStyle {
-  const RadixProgressStyle._();
+/// variant visuals, and size-specific styles sourced from the Fortal token JSON.
+class FortalProgressStyles {
+  const FortalProgressStyles._();
 
-  /// Factory constructor for RadixProgressStyle with variant and size parameters.
+  /// Factory constructor for FortalProgressStyles with variant and size parameters.
   ///
-  /// Returns a RemixProgressStyle configured with Radix design tokens.
+  /// Returns a RemixProgressStyle configured with Fortal design tokens.
   /// Defaults to classic variant with size2.
   static RemixProgressStyle create({
-    RadixProgressVariant variant = RadixProgressVariant.classic,
-    RadixProgressSize size = RadixProgressSize.size2,
+    FortalProgressVariant variant = FortalProgressVariant.classic,
+    FortalProgressSize size = FortalProgressSize.size2,
   }) {
     return switch (variant) {
-      RadixProgressVariant.classic => classic(size: size),
-      RadixProgressVariant.surface => surface(size: size),
-      RadixProgressVariant.soft => soft(size: size),
+      FortalProgressVariant.classic => classic(size: size),
+      FortalProgressVariant.surface => surface(size: size),
+      FortalProgressVariant.soft => soft(size: size),
     };
   }
 
   static RemixProgressStyle base({
-    RadixProgressSize size = RadixProgressSize.size2,
+    FortalProgressSize size = FortalProgressSize.size2,
   }) {
     return RemixProgressStyle()
         // Container styling - no focus for progress
@@ -52,59 +46,59 @@ class RadixProgressStyle {
   }
 
   static RemixProgressStyle classic({
-    RadixProgressSize size = RadixProgressSize.size2,
+    FortalProgressSize size = FortalProgressSize.size2,
   }) {
     return base(size: size)
         // Track styling (background bar)
         .track(
           BoxStyler()
-              .color(RadixTokens.accentTrack()) // gray6 equivalent
-              .borderRadiusAll(RadixTokens.radiusFull())
+              .color(FortalTokens.accentTrack()) // gray6 equivalent
+              .borderRadiusAll(FortalTokens.radiusFull())
               .width(double.infinity),
         )
         // Indicator styling (progress fill)
         .indicator(
           BoxStyler()
-              .color(RadixTokens.accentIndicator()) // accent9 equivalent
-              .borderRadiusAll(RadixTokens.radiusFull()),
+              .color(FortalTokens.accentIndicator()) // accent9 equivalent
+              .borderRadiusAll(FortalTokens.radiusFull()),
         );
   }
 
   static RemixProgressStyle surface({
-    RadixProgressSize size = RadixProgressSize.size2,
+    FortalProgressSize size = FortalProgressSize.size2,
   }) {
     return base(size: size)
         // Track styling (background bar) - same as classic
         .track(
           BoxStyler()
-              .color(RadixTokens.accentTrack()) // gray6 equivalent
-              .borderRadiusAll(RadixTokens.radiusFull())
+              .color(FortalTokens.accentTrack()) // gray6 equivalent
+              .borderRadiusAll(FortalTokens.radiusFull())
               .width(double.infinity),
         )
         // Indicator styling (progress fill) - same as classic
         .indicator(
           BoxStyler()
-              .color(RadixTokens.accentIndicator()) // accent9 equivalent
-              .borderRadiusAll(RadixTokens.radiusFull()),
+              .color(FortalTokens.accentIndicator()) // accent9 equivalent
+              .borderRadiusAll(FortalTokens.radiusFull()),
         );
   }
 
   static RemixProgressStyle soft({
-    RadixProgressSize size = RadixProgressSize.size2,
+    FortalProgressSize size = FortalProgressSize.size2,
   }) {
     return base(size: size)
         // Track styling (background bar) - uses accent4 instead of gray
         .track(
           BoxStyler()
-              .color(RadixTokens.accent4())
-              .borderRadiusAll(RadixTokens.radiusFull())
+              .color(FortalTokens.accent4())
+              .borderRadiusAll(FortalTokens.radiusFull())
               .width(double.infinity),
         )
         // Indicator styling (progress fill) - uses accent9
         .indicator(
           BoxStyler()
-              .color(RadixTokens.accent9())
-              .borderRadiusAll(RadixTokens.radiusFull()),
+              .color(FortalTokens.accent9())
+              .borderRadiusAll(FortalTokens.radiusFull()),
         );
   }
 
@@ -112,31 +106,31 @@ class RadixProgressStyle {
   // Internal builders
   // ---------------------------------------------------------------------------
 
-  static RemixProgressStyle _sizeStyle(RadixProgressSize size) {
+  static RemixProgressStyle _sizeStyle(FortalProgressSize size) {
     return switch (size) {
-      RadixProgressSize.size1 => RemixProgressStyle()
+      FortalProgressSize.size1 => RemixProgressStyle()
           .height(4.0)
           .track(
-            BoxStyler().height(4.0).borderRadiusAll(RadixTokens.radius1()),
+            BoxStyler().height(4.0).borderRadiusAll(FortalTokens.radius1()),
           )
           .indicator(
-            BoxStyler().height(4.0).borderRadiusAll(RadixTokens.radius1()),
+            BoxStyler().height(4.0).borderRadiusAll(FortalTokens.radius1()),
           ),
-      RadixProgressSize.size2 => RemixProgressStyle()
+      FortalProgressSize.size2 => RemixProgressStyle()
           .height(8.0)
           .track(
-            BoxStyler().height(8.0).borderRadiusAll(RadixTokens.radius2()),
+            BoxStyler().height(8.0).borderRadiusAll(FortalTokens.radius2()),
           )
           .indicator(
-            BoxStyler().height(8.0).borderRadiusAll(RadixTokens.radius2()),
+            BoxStyler().height(8.0).borderRadiusAll(FortalTokens.radius2()),
           ),
-      RadixProgressSize.size3 => RemixProgressStyle()
+      FortalProgressSize.size3 => RemixProgressStyle()
           .height(12.0)
           .track(
-            BoxStyler().height(12.0).borderRadiusAll(RadixTokens.radius3()),
+            BoxStyler().height(12.0).borderRadiusAll(FortalTokens.radius3()),
           )
           .indicator(
-            BoxStyler().height(12.0).borderRadiusAll(RadixTokens.radius3()),
+            BoxStyler().height(12.0).borderRadiusAll(FortalTokens.radius3()),
           ),
     };
   }

@@ -177,7 +177,7 @@ class _FormExampleState extends State<_FormExample> {
                 RemixButton(
                   label: _isSubmitting ? 'Submitting...' : 'Submit',
                   icon: _isSubmitting ? Icons.hourglass_empty : Icons.send,
-                  style: RadixButtonStyle.solid(),
+                  style: FortalButtonStyle.solid(),
                   loading: _isSubmitting,
                   enabled: _isFormValid && !_isSubmitting,
                   onPressed: _submitForm,
@@ -186,7 +186,7 @@ class _FormExampleState extends State<_FormExample> {
                 RemixButton(
                   label: 'Reset',
                   icon: Icons.refresh,
-                  style: RadixButtonStyle.solid(),
+                  style: FortalButtonStyle.solid(),
                   enabled: !_isSubmitting,
                   onPressed: () {
                     _formKey.currentState?.reset();
@@ -236,7 +236,7 @@ class _LoadingStatesExampleState extends State<_LoadingStatesExample> {
         RemixButton(
           label: _downloadLoading ? 'Downloading...' : 'Download',
           icon: _downloadLoading ? Icons.download : Icons.download_rounded,
-          style: RadixButtonStyle.solid(),
+          style: FortalButtonStyle.solid(),
           loading: _downloadLoading,
           onPressed: _downloadLoading
               ? null
@@ -248,7 +248,7 @@ class _LoadingStatesExampleState extends State<_LoadingStatesExample> {
         RemixButton(
           label: _uploadLoading ? 'Uploading...' : 'Upload',
           icon: _uploadLoading ? Icons.upload : Icons.upload_rounded,
-          style: RadixButtonStyle.solid(),
+          style: FortalButtonStyle.solid(),
           loading: _uploadLoading,
           onPressed: _uploadLoading
               ? null
@@ -260,7 +260,7 @@ class _LoadingStatesExampleState extends State<_LoadingStatesExample> {
         RemixButton(
           label: _syncLoading ? 'Syncing...' : 'Sync',
           icon: _syncLoading ? Icons.sync : Icons.sync_rounded,
-          style: RadixButtonStyle.solid(),
+          style: FortalButtonStyle.solid(),
           loading: _syncLoading,
           onPressed: _syncLoading
               ? null
@@ -297,7 +297,7 @@ class _ConfirmationFlowExampleState extends State<_ConfirmationFlowExample> {
               RemixButton(
                 label: 'Save Changes',
                 icon: Icons.save,
-                style: RadixButtonStyle.solid(),
+                style: FortalButtonStyle.solid(),
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Changes saved!')),
@@ -307,13 +307,13 @@ class _ConfirmationFlowExampleState extends State<_ConfirmationFlowExample> {
               RemixButton(
                 label: 'Delete Item',
                 icon: Icons.delete,
-                style: RadixButtonStyle.solid(),
+                style: FortalButtonStyle.solid(),
                 onPressed: () => setState(() => _showDeleteConfirmation = true),
               ),
               RemixButton(
                 label: 'Archive',
                 icon: Icons.archive,
-                style: RadixButtonStyle.solid(),
+                style: FortalButtonStyle.solid(),
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Item archived!')),
@@ -358,7 +358,7 @@ class _ConfirmationFlowExampleState extends State<_ConfirmationFlowExample> {
                       icon: _isDeleting
                           ? Icons.hourglass_empty
                           : Icons.delete_forever,
-                      style: RadixButtonStyle.solid(),
+                      style: FortalButtonStyle.solid(),
                       loading: _isDeleting,
                       onPressed: _isDeleting
                           ? null
@@ -382,7 +382,7 @@ class _ConfirmationFlowExampleState extends State<_ConfirmationFlowExample> {
                     RemixButton(
                       label: 'Cancel',
                       icon: Icons.cancel,
-                      style: RadixButtonStyle.solid(),
+                      style: FortalButtonStyle.solid(),
                       enabled: !_isDeleting,
                       onPressed: () =>
                           setState(() => _showDeleteConfirmation = false),
@@ -408,7 +408,7 @@ class _NavigationExample extends StatelessWidget {
         RemixButton(
           label: 'Go Back',
           icon: Icons.arrow_back,
-          style: RadixButtonStyle.solid(),
+          style: FortalButtonStyle.solid(),
           onPressed: () {
             final navigator = Navigator.of(context);
             final messenger = ScaffoldMessenger.of(context);
@@ -424,7 +424,7 @@ class _NavigationExample extends StatelessWidget {
         RemixButton(
           label: 'Next Step',
           icon: Icons.arrow_forward,
-          style: RadixButtonStyle.solid(),
+          style: FortalButtonStyle.solid(),
           onPressed: () {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Moving to next step...')),
@@ -434,7 +434,7 @@ class _NavigationExample extends StatelessWidget {
         RemixButton(
           label: 'Open Menu',
           icon: Icons.menu,
-          style: RadixButtonStyle.solid(),
+          style: FortalButtonStyle.solid(),
           onPressed: () {
             Scaffold.of(context).openDrawer();
           },
@@ -442,7 +442,7 @@ class _NavigationExample extends StatelessWidget {
         RemixButton(
           label: 'Show More Options',
           icon: Icons.more_vert,
-          style: RadixButtonStyle.solid(),
+          style: FortalButtonStyle.solid(),
           onPressed: () {
             showModalBottomSheet(
               context: context,
@@ -542,7 +542,7 @@ class _AccessibilityExampleState extends State<_AccessibilityExample> {
             RemixButton(
               label: 'First Button',
               icon: Icons.looks_one,
-              style: RadixButtonStyle.solid(),
+              style: FortalButtonStyle.solid(),
               semanticLabel: 'First button for accessibility demo',
               semanticHint: 'Activate to perform first action',
               autofocus: true,
@@ -555,7 +555,7 @@ class _AccessibilityExampleState extends State<_AccessibilityExample> {
             RemixButton(
               label: 'Second Button',
               icon: Icons.looks_two,
-              style: RadixButtonStyle.solid(),
+              style: FortalButtonStyle.solid(),
               semanticLabel: 'Second button for accessibility demo',
               semanticHint: 'Activate to perform second action',
               onPressed: () {
@@ -567,7 +567,7 @@ class _AccessibilityExampleState extends State<_AccessibilityExample> {
             RemixButton(
               label: 'Third Button',
               icon: Icons.looks_3,
-              style: RadixButtonStyle.solid(),
+              style: FortalButtonStyle.solid(),
               semanticLabel: 'Third button for accessibility demo',
               semanticHint: 'Activate to perform third action',
               onPressed: () {
@@ -579,7 +579,7 @@ class _AccessibilityExampleState extends State<_AccessibilityExample> {
             RemixButton(
               label: 'Disabled Button',
               icon: Icons.block,
-              style: RadixButtonStyle.solid(),
+              style: FortalButtonStyle.solid(),
               enabled: false,
               semanticLabel: 'Disabled button example',
               semanticHint: 'This button is disabled and cannot be activated',

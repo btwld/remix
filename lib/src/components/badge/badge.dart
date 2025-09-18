@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 
 import '../../utilities/remix_style.dart';
-
-export 'radix_badge_styles.dart';
+import '../../fortal/fortal.dart';
 
 part 'badge_spec.dart';
 part 'badge_style.dart';
 part 'badge_widget.dart';
+part 'radix_badge_styles.dart';

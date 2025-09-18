@@ -1,6 +1,3 @@
-// ABOUTME: Comprehensive examples demonstrating RemixButtonStyle fluent API patterns
-// ABOUTME: Shows three-tier API usage, migration patterns, and common styling scenarios
-
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 

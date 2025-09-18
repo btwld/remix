@@ -12,7 +12,7 @@ final _key = GlobalKey();
 Widget buildCalloutUseCase(BuildContext context) {
   return KeyedSubtree(
     key: _key,
-    child: const Scaffold(
+    child: Scaffold(
       body: Center(
         child: SizedBox(
           width: 300,

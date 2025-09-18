@@ -1,8 +1,8 @@
-# Radix Variant System Implementation Plan
+# Fortal Variant System Implementation Plan
 
 ## Analysis Summary
 
-After analyzing the `component_tokens_ref.json` file, I've discovered that the Radix UI variant system is **NOT universal** - each component has different token mappings for the same variant names.
+After analyzing the `component_tokens_ref.json` file, I've discovered that the Fortal UI variant system is **NOT universal** - each component has different token mappings for the same variant names.
 
 ## Key Findings
 
@@ -89,14 +89,14 @@ Since variants are NOT universal, each component needs its own variant factory c
 ### Implementation Structure
 
 ```dart
-// 1. Keep existing RadixTokens as-is (already done)
+// 1. Keep existing FortalTokens as-is (already done)
 // Provides the building blocks for all variants
 
 // 2. Create component-specific factory classes
 // Each implements only the variants that make sense for that component
 
 // Example: Button (all 6 variants)
-class RadixButtonStyles {
+class FortalButtonStyles {
   static RemixButtonStyle solid({int size = 2}) { 
     // Uses {accent}[9], hover {accent}[10], --accent-contrast
   }
@@ -110,63 +110,63 @@ class RadixButtonStyles {
 }
 
 // Example: Checkbox (only 3 variants) - UPDATED WITH DIRECT SCALE TOKENS
-class RadixCheckboxStyles {
+class FortalCheckboxStyles {
   static RemixCheckboxStyle classic({int size = 2}) {
     return RemixCheckboxStyle()
       .indicatorContainer(BoxStyler(
         decoration: BoxDecorationMix(
-          color: RadixTokens.colorSurface(),
+          color: FortalTokens.colorSurface(),
           border: BoxBorderMix.all(
-            color: RadixTokens.gray7(),
-            width: RadixTokens.borderWidth1(),
+            color: FortalTokens.gray7(),
+            width: FortalTokens.borderWidth1(),
           ),
         ),
       ))
-      .indicatorColor(RadixTokens.gray12());
+      .indicatorColor(FortalTokens.gray12());
   }
   
   static RemixCheckboxStyle surface({int size = 2}) {
     return RemixCheckboxStyle()
       .indicatorContainer(BoxStyler(
         decoration: BoxDecorationMix(
-          color: RadixTokens.accentSurface(),
+          color: FortalTokens.accentSurface(),
           border: BoxBorderMix.all(
-            color: RadixTokens.accent6(),
-            width: RadixTokens.borderWidth1(),
+            color: FortalTokens.accent6(),
+            width: FortalTokens.borderWidth1(),
           ),
         ),
       ))
-      .indicatorColor(RadixTokens.accent11());
+      .indicatorColor(FortalTokens.accent11());
   }
   
   static RemixCheckboxStyle soft({int size = 2}) {
     return RemixCheckboxStyle()
       .indicatorContainer(BoxStyler(
         decoration: BoxDecorationMix(
-          color: RadixTokens.accent3(),
+          color: FortalTokens.accent3(),
           border: BoxBorderMix.all(
-            color: RadixTokens.accent6(),
-            width: RadixTokens.borderWidth1(),
+            color: FortalTokens.accent6(),
+            width: FortalTokens.borderWidth1(),
           ),
         ),
       ))
-      .indicatorColor(RadixTokens.accent11());
+      .indicatorColor(FortalTokens.accent11());
   }
   // No solid, outline, or ghost variants!
 }
 
 // Example: Progress (different properties entirely) - UPDATED WITH DIRECT SCALE TOKENS
-class RadixProgressStyles {
+class FortalProgressStyles {
   static RemixProgressStyle classic({int size = 2}) {
     return RemixProgressStyle()
       .track(BoxStyler(
         decoration: BoxDecorationMix(
-          color: RadixTokens.accentTrack(),  // --accent-track (gray6)
+          color: FortalTokens.accentTrack(),  // --accent-track (gray6)
         ),
       ))
       .indicator(BoxStyler(
         decoration: BoxDecorationMix(
-          color: RadixTokens.accentIndicator(), // --accent-indicator (accent9)
+          color: FortalTokens.accentIndicator(), // --accent-indicator (accent9)
         ),
       ));
   }
@@ -175,34 +175,34 @@ class RadixProgressStyles {
     return RemixProgressStyle()
       .track(BoxStyler(
         decoration: BoxDecorationMix(
-          color: RadixTokens.accent4(),  // Direct scale access
+          color: FortalTokens.accent4(),  // Direct scale access
         ),
       ))
       .indicator(BoxStyler(
         decoration: BoxDecorationMix(
-          color: RadixTokens.accent9(), // Direct scale access
+          color: FortalTokens.accent9(), // Direct scale access
         ),
       ));
   }
 }
 
 // Example: Switch - UPDATED WITH DIRECT SCALE TOKENS
-class RadixSwitchStyles {
+class FortalSwitchStyles {
   static RemixSwitchStyle classic({int size = 2}) {
     return RemixSwitchStyle()
-      .trackColor(RadixTokens.colorSurface())
-      .thumbColor(RadixTokens.gray12())
+      .trackColor(FortalTokens.colorSurface())
+      .thumbColor(FortalTokens.gray12())
       .onVariant('checked', RemixSwitchStyle()
-        .trackColor(RadixTokens.accentIndicator()) // accent9
+        .trackColor(FortalTokens.accentIndicator()) // accent9
       );
   }
   
   static RemixSwitchStyle soft({int size = 2}) {
     return RemixSwitchStyle()
-      .trackColor(RadixTokens.accent3())
-      .thumbColor(RadixTokens.colorSurface())
+      .trackColor(FortalTokens.accent3())
+      .thumbColor(FortalTokens.colorSurface())
       .onVariant('checked', RemixSwitchStyle()
-        .trackColor(RadixTokens.accent9())
+        .trackColor(FortalTokens.accent9())
       );
   }
   // No separate "checkedTrack" or "checkedThumb" properties!
@@ -210,19 +210,19 @@ class RadixSwitchStyles {
 }
 
 // Example: Slider - UPDATED WITH DIRECT SCALE TOKENS
-class RadixSliderStyles {
+class FortalSliderStyles {
   static RemixSliderStyle classic({int size = 2}) {
     return RemixSliderStyle()
-      .baseTrackColor(RadixTokens.accentTrack()) // gray6
-      .activeTrackColor(RadixTokens.accentIndicator()) // accent9  
-      .thumbColor(RadixTokens.colorSurface());
+      .baseTrackColor(FortalTokens.accentTrack()) // gray6
+      .activeTrackColor(FortalTokens.accentIndicator()) // accent9  
+      .thumbColor(FortalTokens.colorSurface());
   }
   
   static RemixSliderStyle soft({int size = 2}) {
     return RemixSliderStyle()
-      .baseTrackColor(RadixTokens.accent4())
-      .activeTrackColor(RadixTokens.accent9())
-      .thumbColor(RadixTokens.colorSurface());
+      .baseTrackColor(FortalTokens.accent4())
+      .activeTrackColor(FortalTokens.accent9())
+      .thumbColor(FortalTokens.colorSurface());
   }
   // Note: baseTrack and activeTrack use Paint objects, not BoxStyler
   // Use .baseTrackColor() and .activeTrackColor() convenience methods
@@ -279,7 +279,7 @@ Use `/Users/leofarias/bitwild/remix/lib/src/radix/colors/component_tokens_ref.js
 
 ## Benefits of This Approach
 
-1. **Accuracy**: Matches actual Radix UI behavior
+1. **Accuracy**: Matches actual Fortal UI behavior
 2. **Type Safety**: Each component gets exactly the variants it needs
 3. **Clarity**: No confusion about which variants are available
 4. **Maintainability**: Easy to update individual components
@@ -288,7 +288,7 @@ Use `/Users/leofarias/bitwild/remix/lib/src/radix/colors/component_tokens_ref.js
 
 ## Critical Implementation Notes
 
-### Available RadixTokens (CORRECTED)
+### Available FortalTokens (CORRECTED)
 
 **✅ Token Constants That Require () to Get Reference Types:**
 - **Accent Scale**: `accent1()` through `accent12()` - Full 12-step accent color scale
@@ -307,12 +307,12 @@ Use `/Users/leofarias/bitwild/remix/lib/src/radix/colors/component_tokens_ref.js
 **Why () is Required:**
 ```dart
 // Token constants return token objects
-RadixTokens.accent9        // Returns ColorToken (not usable in styles)
+FortalTokens.accent9        // Returns ColorToken (not usable in styles)
 
 // Calling () returns reference types that implement interfaces
-RadixTokens.accent9()      // Returns ColorRef (implements Color, usable in styles)
-RadixTokens.space3()       // Returns SpaceRef (implements double, usable as spacing)
-RadixTokens.radius2()      // Returns RadiusRef (implements Radius, usable for borders)
+FortalTokens.accent9()      // Returns ColorRef (implements Color, usable in styles)
+FortalTokens.space3()       // Returns SpaceRef (implements double, usable as spacing)
+FortalTokens.radius2()      // Returns RadiusRef (implements Radius, usable for borders)
 ```
 
 **❌ Removed Variant-Specific Tokens (NO LONGER EXIST):**
@@ -345,26 +345,26 @@ RadixTokens.radius2()      // Returns RadiusRef (implements Radius, usable for b
 
 ❌ **WRONG**: Using removed variant-specific tokens:
 ```dart
-RadixTokens.softBackground()    // ❌ Removed - no longer exists
-RadixTokens.classicBorder()     // ❌ Removed - no longer exists  
-RadixTokens.solidText()         // ❌ Removed - no longer exists
+FortalTokens.softBackground()    // ❌ Removed - no longer exists
+FortalTokens.classicBorder()     // ❌ Removed - no longer exists  
+FortalTokens.solidText()         // ❌ Removed - no longer exists
 ```
 
 ✅ **CORRECT**: Use direct scale tokens:
 ```dart
-RadixTokens.accent3()      // ✅ Direct access to accent step 3
-RadixTokens.gray7()        // ✅ Direct access to gray step 7
-RadixTokens.accentContrast() // ✅ For contrast text on accent9
+FortalTokens.accent3()      // ✅ Direct access to accent step 3
+FortalTokens.gray7()        // ✅ Direct access to gray step 7
+FortalTokens.accentContrast() // ✅ For contrast text on accent9
 ```
 
 ❌ **WRONG**: Direct token assignment without Styler wrappers:
 ```dart
-.track(RadixTokens.accentTrack())  // ❌ Missing BoxStyler wrapper
+.track(FortalTokens.accentTrack())  // ❌ Missing BoxStyler wrapper
 ```
 
 ✅ **CORRECT**: Wrap tokens in appropriate Stylers:
 ```dart
-.track(BoxStyler(decoration: BoxDecorationMix(color: RadixTokens.accentTrack())))
+.track(BoxStyler(decoration: BoxDecorationMix(color: FortalTokens.accentTrack())))
 ```
 
 ❌ **WRONG**: Checkbox `.box()` and `.check()` methods (don't exist)
@@ -375,14 +375,14 @@ RadixTokens.accentContrast() // ✅ For contrast text on accent9
 
 ❌ **WRONG**: Function vs constant confusion:
 ```dart
-RadixTokens.borderWidth1      // ❌ Missing parentheses
-RadixTokens.fontWeightMedium() // ❌ Unnecessary parentheses
+FortalTokens.borderWidth1      // ❌ Missing parentheses
+FortalTokens.fontWeightMedium() // ❌ Unnecessary parentheses
 ```
 
 ✅ **CORRECT**: Functions need parentheses, constants don't:
 ```dart
-RadixTokens.borderWidth1()    // ✅ Function call
-RadixTokens.fontWeightMedium  // ✅ Constant access
+FortalTokens.borderWidth1()    // ✅ Function call
+FortalTokens.fontWeightMedium  // ✅ Constant access
 ```
 
 ## Size Method Refactoring Implementation Plan
@@ -395,13 +395,13 @@ The current _SizeConfig pattern violates Mix principles by mixing size concerns 
 
 ```dart
 // ❌ WRONG: Size parameter in variant methods
-RadixButtonStyles.solid(size: 2)  // Couples size with variant
+FortalButtonStyles.solid(size: 2)  // Couples size with variant
 
 // ❌ WRONG: _SizeConfig storing wrong types  
 class _ButtonSizeConfig {
   final Radius radius;  // Type mismatch - should be RadiusRef
   const _ButtonSizeConfig({
-    required this.radius, // Gets RadixTokens.radius2() which returns RadiusRef
+    required this.radius, // Gets FortalTokens.radius2() which returns RadiusRef
   });
 }
 ```
@@ -410,17 +410,17 @@ class _ButtonSizeConfig {
 
 ```dart
 // ✅ CORRECT: Composable size and variant methods
-RadixButtonStyles.solid().size2()  // Size and variant are orthogonal
-RadixButtonStyles.soft().size1()   // Any combination possible
+FortalButtonStyles.solid().size2()  // Size and variant are orthogonal
+FortalButtonStyles.soft().size1()   // Any combination possible
 ```
 
 ### Implementation Steps
 
 #### Phase 1: Button Component (Pattern Template)
 
-1. **Add size methods to RadixButtonStyles**:
+1. **Add size methods to FortalButtonStyles**:
    ```dart
-   class RadixButtonStyles {
+   class FortalButtonStyles {
      // Remove size parameter from all variant methods
      static RemixButtonStyle solid() { ... }
      static RemixButtonStyle soft() { ... }
@@ -429,27 +429,27 @@ RadixButtonStyles.soft().size1()   // Any combination possible
      static RemixButtonStyle size1() {
        return RemixButtonStyle()
          .height(32.0)
-         .paddingHorizontal(RadixTokens.space3())
-         .paddingVertical(RadixTokens.space2())
-         .borderRadiusAll(RadixTokens.radius2())
+         .paddingHorizontal(FortalTokens.space3())
+         .paddingVertical(FortalTokens.space2())
+         .borderRadiusAll(FortalTokens.radius2())
          .text(TextStyler().fontSize(12.0));
      }
      
      static RemixButtonStyle size2() {
        return RemixButtonStyle()
          .height(40.0)
-         .paddingHorizontal(RadixTokens.space4())
-         .paddingVertical(RadixTokens.space3())
-         .borderRadiusAll(RadixTokens.radius3())
+         .paddingHorizontal(FortalTokens.space4())
+         .paddingVertical(FortalTokens.space3())
+         .borderRadiusAll(FortalTokens.radius3())
          .text(TextStyler().fontSize(14.0));
      }
      
      static RemixButtonStyle size3() {
        return RemixButtonStyle()
          .height(48.0)
-         .paddingHorizontal(RadixTokens.space5())
-         .paddingVertical(RadixTokens.space4())
-         .borderRadiusAll(RadixTokens.radius4())
+         .paddingHorizontal(FortalTokens.space5())
+         .paddingVertical(FortalTokens.space4())
+         .borderRadiusAll(FortalTokens.radius4())
          .text(TextStyler().fontSize(16.0));
      }
    }
@@ -461,10 +461,10 @@ RadixButtonStyles.soft().size1()   // Any combination possible
    ```dart
    static RemixButtonStyle solid() {
      return RemixButtonStyle()
-       .color(RadixTokens.accent9())
-       .text(TextStyler().color(RadixTokens.accentContrast()))
+       .color(FortalTokens.accent9())
+       .text(TextStyler().color(FortalTokens.accentContrast()))
        // No size-related properties here
-       .onHovered(RemixButtonStyle().color(RadixTokens.accent10()));
+       .onHovered(RemixButtonStyle().color(FortalTokens.accent10()));
    }
    ```
 
@@ -494,10 +494,10 @@ Apply the same pattern to each component:
 **Examples and Tests**:
 ```dart
 // Old pattern (remove)
-RemixButton(style: RadixButtonStyles.solid(size: 2))
+RemixButton(style: FortalButtonStyles.solid(size: 2))
 
 // New pattern (implement)
-RemixButton(style: RadixButtonStyles.solid().size2())
+RemixButton(style: FortalButtonStyles.solid().size2())
 ```
 
 ### Size Configuration Standards
@@ -523,8 +523,8 @@ Each component should support 3 standard sizes:
 3. **Size methods return partial styles** that can be composed
 4. **Use direct token calls** with () in size methods:
    ```dart
-   .paddingHorizontal(RadixTokens.space4())  // ✅ Returns SpaceRef
-   .borderRadiusAll(RadixTokens.radius3())   // ✅ Returns RadiusRef
+   .paddingHorizontal(FortalTokens.space4())  // ✅ Returns SpaceRef
+   .borderRadiusAll(FortalTokens.radius3())   // ✅ Returns RadiusRef
    ```
 
 ### Next Steps
@@ -537,14 +537,14 @@ Each component should support 3 standard sizes:
    - Remove _ButtonSizeConfig class
    - Add .size1(), .size2(), .size3() methods
    - Remove size parameter from .solid(), .soft(), etc.
-   - Test composition: `RadixButtonStyles.solid().size2()`
+   - Test composition: `FortalButtonStyles.solid().size2()`
 5. **Next**: Apply same pattern to remaining 10 components
 6. **Finally**: Update all examples and test compilation
 
 ## ✅ **Simplified Token System Complete**
 
-The Radix token system is now simplified and more maintainable:
+The Fortal token system is now simplified and more maintainable:
 - **Direct Scale Access**: `accent1()` through `accent12()`, `gray1()` through `gray12()`
 - **No More Variant Duplication**: Removed 30+ variant-specific tokens
-- **Single Source of Truth**: All colors come from `RadixThemeColors` scales
-- **Matches Radix Spec**: Uses `{accent}[9]` notation directly in code
+- **Single Source of Truth**: All colors come from `FortalThemeColors` scales
+- **Matches Fortal Spec**: Uses `{accent}[9]` notation directly in code

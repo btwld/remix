@@ -1,7 +1,5 @@
 part of 'textfield.dart';
 
-
-
 class RemixTextFieldStyle
     extends RemixFlexContainerStyle<TextFieldSpec, RemixTextFieldStyle>
     with LabelStyleMixin<RemixTextFieldStyle> {
@@ -213,15 +211,15 @@ class RemixTextFieldStyle
     return merge(RemixTextFieldStyle(textAlign: value));
   }
 
+  /// Sets helper text
+  RemixTextFieldStyle helperText(TextStyler value) {
+    return merge(RemixTextFieldStyle(helperText: value));
+  }
+
   /// Sets label text
   @override
   RemixTextFieldStyle label(TextStyler value) {
     return merge(RemixTextFieldStyle(label: value));
-  }
-
-  /// Sets helper text
-  RemixTextFieldStyle helperText(TextStyler value) {
-    return merge(RemixTextFieldStyle(helperText: value));
   }
 
   /// Sets animation
@@ -347,5 +345,3 @@ class RemixTextFieldStyle
         $modifier,
       ];
 }
-
-

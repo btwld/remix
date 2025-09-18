@@ -1,5 +1,3 @@
-// ABOUTME: ComparisonView widget for displaying side-by-side component comparisons
-// ABOUTME: Shows Remix components alongside their Material Design equivalents with consistent spacing and labeling
 import 'package:flutter/material.dart';
 import 'spaced_column.dart';
 

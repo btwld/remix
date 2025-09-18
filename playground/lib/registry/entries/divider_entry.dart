@@ -23,4 +23,3 @@ Widget buildDividerExample() {
     ),
   );
 }
-

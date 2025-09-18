@@ -16,8 +16,8 @@ Widget buildButtonUseCase(BuildContext context) {
     child: Scaffold(
       body: Center(
         child: Builder(builder: (context) {
-          // Use default Radix solid variant layered over base metrics
-          RemixButtonStyle buttonStyle = RadixButtonStyle.solid();
+          // Use default Fortal solid variant layered over base metrics
+          RemixButtonStyle buttonStyle = FortalButtonStyle.solid();
 
           return RemixButton(
             onPressed: () {

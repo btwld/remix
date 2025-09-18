@@ -10,9 +10,9 @@ import '../../style/style.dart';
 import '../../utilities/remix_style.dart';
 import '../_internal/widget_state_controller_mixin.dart';
 import '../spinner/spinner.dart';
-
-export 'radix_button_styles.dart';
+import '../../fortal/fortal.dart';
 
 part 'button_spec.dart';
 part 'button_style.dart';
 part 'button_widget.dart';
+part 'radix_button_styles.dart';

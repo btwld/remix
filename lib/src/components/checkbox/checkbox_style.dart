@@ -76,22 +76,7 @@ class RemixCheckboxStyle
 
   /// Sets indicator color.
   RemixCheckboxStyle indicatorColor(Color value) {
-    return merge(
-      RemixCheckboxStyle(indicator: IconStyler(color: value)),
-    );
-  }
-
-  @override
-  RemixCheckboxStyle icon(IconStyler value) {
-    return merge(RemixCheckboxStyle(indicator: value));
-  }
-
-  /// Sets container padding.
-  @override
-  RemixCheckboxStyle padding(EdgeInsetsGeometryMix value) {
-    return merge(
-      RemixCheckboxStyle(container: BoxStyler(padding: value)),
-    );
+    return merge(RemixCheckboxStyle(indicator: IconStyler(color: value)));
   }
 
   /// Sets indicator container styling.
@@ -102,6 +87,17 @@ class RemixCheckboxStyle
   /// Sets the outer container styling.
   RemixCheckboxStyle container(BoxStyler value) {
     return merge(RemixCheckboxStyle(container: value));
+  }
+
+  @override
+  RemixCheckboxStyle icon(IconStyler value) {
+    return merge(RemixCheckboxStyle(indicator: value));
+  }
+
+  /// Sets container padding.
+  @override
+  RemixCheckboxStyle padding(EdgeInsetsGeometryMix value) {
+    return merge(RemixCheckboxStyle(container: BoxStyler(padding: value)));
   }
 
   /// Sets checkbox background color on the indicator container.
@@ -177,17 +173,13 @@ class RemixCheckboxStyle
 
   @override
   RemixCheckboxStyle margin(EdgeInsetsGeometryMix value) {
-    return merge(
-      RemixCheckboxStyle(container: BoxStyler(margin: value)),
-    );
+    return merge(RemixCheckboxStyle(container: BoxStyler(margin: value)));
   }
 
   @override
   RemixCheckboxStyle foregroundDecoration(DecorationMix value) {
     return merge(
-      RemixCheckboxStyle(
-        container: BoxStyler(foregroundDecoration: value),
-      ),
+      RemixCheckboxStyle(container: BoxStyler(foregroundDecoration: value)),
     );
   }
 

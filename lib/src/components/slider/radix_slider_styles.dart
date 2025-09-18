@@ -1,57 +1,50 @@
-// ABOUTME: Factory constructors for RemixSliderStyle variants using Radix design tokens
-// ABOUTME: Provides RadixSliderStyle subclass with variant + size aware composition
+part of 'slider.dart';
 
-import 'package:flutter/material.dart';
-import 'package:mix/mix.dart';
-
-import '../../radix/radix.dart';
-import 'slider.dart';
-
-enum RadixSliderSize {
+enum FortalSliderSize {
   size1,
   size2,
   size3,
 }
 
-enum RadixSliderVariant {
+enum FortalSliderVariant {
   classic,
   surface,
   soft,
 }
 
-/// RadixSliderStyle utility class for creating Radix-themed slider styles.
+/// FortalSliderStyles utility class for creating Fortal-themed slider styles.
 ///
 /// Provides factory constructor with variant and size parameters plus named
 /// static methods for direct access. Composes the correct base metrics,
-/// variant visuals, and size-specific styles sourced from the Radix token JSON.
-class RadixSliderStyle {
-  const RadixSliderStyle._();
+/// variant visuals, and size-specific styles sourced from the Fortal token JSON.
+class FortalSliderStyles {
+  const FortalSliderStyles._();
 
-  /// Factory constructor for RadixSliderStyle with variant and size parameters.
+  /// Factory constructor for FortalSliderStyles with variant and size parameters.
   ///
-  /// Returns a RemixSliderStyle configured with Radix design tokens.
+  /// Returns a RemixSliderStyle configured with Fortal design tokens.
   /// Defaults to classic variant with size2.
   static RemixSliderStyle create({
-    RadixSliderVariant variant = RadixSliderVariant.classic,
-    RadixSliderSize size = RadixSliderSize.size2,
+    FortalSliderVariant variant = FortalSliderVariant.classic,
+    FortalSliderSize size = FortalSliderSize.size2,
   }) {
     return switch (variant) {
-      RadixSliderVariant.classic => classic(size: size),
-      RadixSliderVariant.surface => surface(size: size),
-      RadixSliderVariant.soft => soft(size: size),
+      FortalSliderVariant.classic => classic(size: size),
+      FortalSliderVariant.surface => surface(size: size),
+      FortalSliderVariant.soft => soft(size: size),
     };
   }
 
   static RemixSliderStyle base({
-    RadixSliderSize size = RadixSliderSize.size2,
+    FortalSliderSize size = FortalSliderSize.size2,
   }) {
     return RemixSliderStyle()
         // Focus state
         .onFocused(
           RemixSliderStyle().thumb(
             BoxStyler().borderAll(
-              color: RadixTokens.focusA8(),
-              width: RadixTokens.focusRingWidth(),
+              color: FortalTokens.focusA8(),
+              width: FortalTokens.focusRingWidth(),
             ),
           ),
         )
@@ -60,82 +53,82 @@ class RadixSliderStyle {
   }
 
   static RemixSliderStyle classic({
-    RadixSliderSize size = RadixSliderSize.size2,
+    FortalSliderSize size = FortalSliderSize.size2,
   }) {
     return base(size: size)
         // Base track styling (inactive portion)
-        .baseTrackColor(RadixTokens.accentTrack()) // gray6 equivalent
+        .baseTrackColor(FortalTokens.accentTrack()) // gray6 equivalent
         // Active track styling (active portion)
-        .activeTrackColor(RadixTokens.accentIndicator()) // accent9 equivalent
+        .activeTrackColor(FortalTokens.accentIndicator()) // accent9 equivalent
         // Thumb styling with border
         .thumb(
           BoxStyler()
-              .color(RadixTokens.colorSurface())
+              .color(FortalTokens.colorSurface())
               .borderAll(
-                color: RadixTokens.gray7(),
-                width: RadixTokens.borderWidth1(),
+                color: FortalTokens.gray7(),
+                width: FortalTokens.borderWidth1(),
               )
-              .borderRadiusAll(RadixTokens.radiusFull()),
+              .borderRadiusAll(FortalTokens.radiusFull()),
         )
         // Disabled state
         .onDisabled(
           RemixSliderStyle()
-              .baseTrackColor(RadixTokens.accentTrack())
-              .activeTrackColor(RadixTokens.accentIndicator())
+              .baseTrackColor(FortalTokens.accentTrack())
+              .activeTrackColor(FortalTokens.accentIndicator())
               .thumb(
                 BoxStyler()
-                    .color(RadixTokens.colorSurface())
+                    .color(FortalTokens.colorSurface())
                     .borderAll(
-                      color: RadixTokens.gray7(),
-                      width: RadixTokens.borderWidth1(),
+                      color: FortalTokens.gray7(),
+                      width: FortalTokens.borderWidth1(),
                     ),
               ),
         );
   }
 
   static RemixSliderStyle surface({
-    RadixSliderSize size = RadixSliderSize.size2,
+    FortalSliderSize size = FortalSliderSize.size2,
   }) {
     return base(size: size)
         // Base track styling (inactive portion)
-        .baseTrackColor(RadixTokens.accentTrack()) // gray6 equivalent
+        .baseTrackColor(FortalTokens.accentTrack()) // gray6 equivalent
         // Active track styling (active portion)
-        .activeTrackColor(RadixTokens.accentIndicator()) // accent9 equivalent
+        .activeTrackColor(FortalTokens.accentIndicator()) // accent9 equivalent
         // Thumb styling without border
         .thumb(
           BoxStyler()
-              .color(RadixTokens.colorSurface())
-              .borderRadiusAll(RadixTokens.radiusFull()),
+              .color(FortalTokens.colorSurface())
+              .borderRadiusAll(FortalTokens.radiusFull()),
         )
         // Disabled state
         .onDisabled(
           RemixSliderStyle()
-              .baseTrackColor(RadixTokens.accentTrack())
-              .activeTrackColor(RadixTokens.accentIndicator())
-              .thumbColor(RadixTokens.colorSurface()),
+              .baseTrackColor(FortalTokens.accentTrack())
+              .activeTrackColor(FortalTokens.accentIndicator())
+              .thumbColor(FortalTokens.colorSurface()),
         );
   }
 
   static RemixSliderStyle soft({
-    RadixSliderSize size = RadixSliderSize.size2,
+    FortalSliderSize size = FortalSliderSize.size2,
   }) {
     return base(size: size)
         // Base track styling (inactive portion) - uses accent4 instead of gray
-        .baseTrackColor(RadixTokens.accent4())
+        .baseTrackColor(FortalTokens.accent4())
         // Active track styling (active portion) - uses accent9
-        .activeTrackColor(RadixTokens.accent9())
+        .activeTrackColor(FortalTokens.accent9())
         // Thumb styling - uses accent9 color
         .thumb(
           BoxStyler()
-              .color(RadixTokens.accent9())
-              .borderRadiusAll(RadixTokens.radiusFull()),
+              .color(FortalTokens.accent9())
+              .borderRadiusAll(FortalTokens.radiusFull()),
         )
         // Disabled state
         .onDisabled(
           RemixSliderStyle()
-              .baseTrackColor(RadixTokens.accent4())
-              .activeTrackColor(RadixTokens.accent9())
-              .thumbColor(RadixTokens.accent9()),
+              .baseTrackColor(FortalTokens.accent4())
+              .activeTrackColor(FortalTokens.accent9())
+              .thumbColor(FortalTokens.accent9()),
         );
   }
 
@@ -144,9 +137,9 @@ class RadixSliderStyle {
   // Internal builders
   // ---------------------------------------------------------------------------
 
-  static RemixSliderStyle _sizeStyle(RadixSliderSize size) {
+  static RemixSliderStyle _sizeStyle(FortalSliderSize size) {
     return switch (size) {
-      RadixSliderSize.size1 => RemixSliderStyle(
+      FortalSliderSize.size1 => RemixSliderStyle(
           thumb: BoxStyler()
               .width(16.0)
               .height(16.0),
@@ -162,7 +155,7 @@ class RadixSliderStyle {
       // Per JSON:
       // slider-track-size = calc(space-2 * 1.25) = 10px
       // slider-thumb-size = calc(track-size + space-1) = 14px
-      RadixSliderSize.size2 => RemixSliderStyle(
+      FortalSliderSize.size2 => RemixSliderStyle(
           thumb: BoxStyler()
               .width(14.0)
               .height(14.0),
@@ -175,7 +168,7 @@ class RadixSliderStyle {
             ..strokeCap = StrokeCap.round
             ..style = PaintingStyle.stroke,
         ),
-      RadixSliderSize.size3 => RemixSliderStyle(
+      FortalSliderSize.size3 => RemixSliderStyle(
           thumb: BoxStyler()
               .width(24.0)
               .height(24.0),

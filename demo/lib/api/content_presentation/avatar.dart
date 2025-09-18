@@ -27,12 +27,12 @@ class MyApp extends StatelessWidget {
                 foregroundImage:
                     const NetworkImage('https://i.pravatar.cc/150?img=48'),
               ),
-              const RemixAvatar.raw(
+              RemixAvatar(
                 foregroundImage:
-                    NetworkImage('https://i.pravatar.cc/150?img=48'),
-                child: Icon(Icons.person),
+                    const NetworkImage('https://i.pravatar.cc/150?img=48'),
+                child: const Icon(Icons.person),
               ),
-              RemixAvatar.raw(
+              RemixAvatar(
                 backgroundImage:
                     const NetworkImage('https://i.pravatar.cc/150?img=48'),
                 style: RemixAvatarStyle().iconColor(MixColors.white),

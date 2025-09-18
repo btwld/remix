@@ -6,9 +6,9 @@ import 'package:mix/mix.dart';
 
 import '../../utilities/remix_style.dart';
 import 'package:naked_ui/naked_ui.dart';
-
-export 'radix_tooltip_styles.dart';
+import '../../fortal/fortal.dart';
 
 part 'tooltip_spec.dart';
 part 'tooltip_style.dart';
 part 'tooltip_widget.dart';
+part 'radix_tooltip_styles.dart';

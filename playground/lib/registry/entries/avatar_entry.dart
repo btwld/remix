@@ -9,7 +9,7 @@ Widget buildAvatarExample() {
     child: ComparisonView(
       remix: [
         RemixAvatar(label: 'AB'),
-        const RemixAvatar.raw(child: Icon(Icons.person)),
+        RemixAvatar(child: const Icon(Icons.person)),
       ],
       material: const [
         CircleAvatar(child: Text('AB')),
