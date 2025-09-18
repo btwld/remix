@@ -1,6 +1,3 @@
-// ABOUTME: Mixin providing convenient label/text styling helper methods for component styles
-// ABOUTME: Offers direct methods for the most commonly used text properties
-
 import 'package:flutter/widgets.dart';
 import 'package:mix/mix.dart';
 

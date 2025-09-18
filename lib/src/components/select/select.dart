@@ -9,10 +9,9 @@ import '../../helpers/spec/composited_transform_follower_spec.dart';
 import '../../style/style.dart';
 import '../../utilities/remix_style.dart';
 import '../_internal/widget_state_controller_mixin.dart';
-import 'radix_select_styles.dart';
-
-export 'radix_select_styles.dart';
+import '../../fortal/fortal.dart';
 
 part 'select_spec.dart';
 part 'select_style.dart';
 part 'select_widget.dart';
+part 'radix_select_styles.dart';

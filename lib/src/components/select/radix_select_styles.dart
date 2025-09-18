@@ -1,14 +1,8 @@
-// Provides Radix-compliant select styles mapped to token spec.
+part of 'select.dart';
 
-import 'package:flutter/material.dart';
-import 'package:mix/mix.dart';
-
-import '../../radix/radix.dart';
-import 'select.dart';
-
-/// Radix select styles for trigger and menu content.
-class RadixSelectStyles {
-  const RadixSelectStyles._();
+/// Fortal select styles for trigger and menu content.
+class FortalSelectStyles {
+  const FortalSelectStyles._();
 
   // Trigger variants
 
@@ -18,7 +12,8 @@ class RadixSelectStyles {
           RemixSelectTriggerStyle()
               // Use standard trigger padding X = space-3 (12px), Y = space-2 (8px)
               .padding(
-                EdgeInsetsGeometryMix.symmetric(vertical: 8.0, horizontal: 12.0),
+                EdgeInsetsGeometryMix.symmetric(
+                    vertical: 8.0, horizontal: 12.0),
               )
               // Per JSON: select-trigger-height = space-7 (28px)
               .constraints(
@@ -27,30 +22,30 @@ class RadixSelectStyles {
               .direction(Axis.horizontal)
               .mainAxisAlignment(MainAxisAlignment.spaceBetween)
               .crossAxisAlignment(CrossAxisAlignment.center)
-              .color(RadixTokens.colorSurface())
+              .color(FortalTokens.colorSurface())
               .borderAll(
-                color: RadixTokens.gray7(),
-                width: RadixTokens.borderWidth1(),
+                color: FortalTokens.gray7(),
+                width: FortalTokens.borderWidth1(),
               )
-              .borderRadiusAll(RadixTokens.radius3())
-              .label(TextStyler().color(RadixTokens.gray12()))
-              .icon(IconStyler(color: RadixTokens.gray12(), size: 16.0)),
+              .borderRadiusAll(FortalTokens.radius3())
+              .label(TextStyler().color(FortalTokens.gray12()))
+              .icon(IconStyler(color: FortalTokens.gray12(), size: 16.0)),
         )
         .onHovered(
           RemixSelectStyle().trigger(
-                RemixSelectTriggerStyle().borderAll(
-                  color: RadixTokens.gray8(),
-                  width: RadixTokens.borderWidth1(),
-                ),
-              ),
+            RemixSelectTriggerStyle().borderAll(
+              color: FortalTokens.gray8(),
+              width: FortalTokens.borderWidth1(),
+            ),
+          ),
         )
         .onFocused(
           RemixSelectStyle().trigger(
-                RemixSelectTriggerStyle().borderAll(
-                  color: RadixTokens.focusA8(),
-                  width: RadixTokens.focusRingWidth(),
-                ),
-              ),
+            RemixSelectTriggerStyle().borderAll(
+              color: FortalTokens.focusA8(),
+              width: FortalTokens.focusRingWidth(),
+            ),
+          ),
         );
   }
 
@@ -59,7 +54,8 @@ class RadixSelectStyles {
         .trigger(
           RemixSelectTriggerStyle()
               .padding(
-                EdgeInsetsGeometryMix.symmetric(vertical: 8.0, horizontal: 12.0),
+                EdgeInsetsGeometryMix.symmetric(
+                    vertical: 8.0, horizontal: 12.0),
               )
               .constraints(
                 BoxConstraintsMix(minHeight: 28.0, maxHeight: 28.0),
@@ -67,22 +63,22 @@ class RadixSelectStyles {
               .direction(Axis.horizontal)
               .mainAxisAlignment(MainAxisAlignment.spaceBetween)
               .crossAxisAlignment(CrossAxisAlignment.center)
-              .color(RadixTokens.colorSurface())
+              .color(FortalTokens.colorSurface())
               .borderAll(
-                color: RadixTokens.gray6(),
-                width: RadixTokens.borderWidth1(),
+                color: FortalTokens.gray6(),
+                width: FortalTokens.borderWidth1(),
               )
-              .borderRadiusAll(RadixTokens.radius3())
-              .label(TextStyler().color(RadixTokens.gray12()))
-              .icon(IconStyler(color: RadixTokens.gray12(), size: 16.0)),
+              .borderRadiusAll(FortalTokens.radius3())
+              .label(TextStyler().color(FortalTokens.gray12()))
+              .icon(IconStyler(color: FortalTokens.gray12(), size: 16.0)),
         )
         .onFocused(
           RemixSelectStyle().trigger(
-                RemixSelectTriggerStyle().borderAll(
-                  color: RadixTokens.focusA8(),
-                  width: RadixTokens.focusRingWidth(),
-                ),
-              ),
+            RemixSelectTriggerStyle().borderAll(
+              color: FortalTokens.focusA8(),
+              width: FortalTokens.focusRingWidth(),
+            ),
+          ),
         );
   }
 
@@ -91,7 +87,8 @@ class RadixSelectStyles {
         .trigger(
           RemixSelectTriggerStyle()
               .padding(
-                EdgeInsetsGeometryMix.symmetric(vertical: 8.0, horizontal: 12.0),
+                EdgeInsetsGeometryMix.symmetric(
+                    vertical: 8.0, horizontal: 12.0),
               )
               .constraints(
                 BoxConstraintsMix(minHeight: 28.0, maxHeight: 28.0),
@@ -99,22 +96,22 @@ class RadixSelectStyles {
               .direction(Axis.horizontal)
               .mainAxisAlignment(MainAxisAlignment.spaceBetween)
               .crossAxisAlignment(CrossAxisAlignment.center)
-              .color(RadixTokens.accent3())
+              .color(FortalTokens.accent3())
               .borderAll(
-                color: RadixTokens.accent6(),
-                width: RadixTokens.borderWidth1(),
+                color: FortalTokens.accent6(),
+                width: FortalTokens.borderWidth1(),
               )
-              .borderRadiusAll(RadixTokens.radius3())
-              .label(TextStyler().color(RadixTokens.accent11()))
-              .icon(IconStyler(color: RadixTokens.accent11(), size: 16.0)),
+              .borderRadiusAll(FortalTokens.radius3())
+              .label(TextStyler().color(FortalTokens.accent11()))
+              .icon(IconStyler(color: FortalTokens.accent11(), size: 16.0)),
         )
         .onFocused(
           RemixSelectStyle().trigger(
-                RemixSelectTriggerStyle().borderAll(
-                  color: RadixTokens.focusA8(),
-                  width: RadixTokens.focusRingWidth(),
-                ),
-              ),
+            RemixSelectTriggerStyle().borderAll(
+              color: FortalTokens.focusA8(),
+              width: FortalTokens.focusRingWidth(),
+            ),
+          ),
         );
   }
 
@@ -123,7 +120,8 @@ class RadixSelectStyles {
         .trigger(
           RemixSelectTriggerStyle()
               .padding(
-                EdgeInsetsGeometryMix.symmetric(vertical: 6.0, horizontal: 12.0),
+                EdgeInsetsGeometryMix.symmetric(
+                    vertical: 6.0, horizontal: 12.0),
               )
               .constraints(
                 BoxConstraintsMix(minHeight: 28.0, maxHeight: 28.0),
@@ -132,17 +130,17 @@ class RadixSelectStyles {
               .mainAxisAlignment(MainAxisAlignment.spaceBetween)
               .crossAxisAlignment(CrossAxisAlignment.center)
               .color(Colors.transparent)
-              .borderRadiusAll(RadixTokens.radius3())
-              .label(TextStyler().color(RadixTokens.gray12()))
-              .icon(IconStyler(color: RadixTokens.gray12(), size: 16.0)),
+              .borderRadiusAll(FortalTokens.radius3())
+              .label(TextStyler().color(FortalTokens.gray12()))
+              .icon(IconStyler(color: FortalTokens.gray12(), size: 16.0)),
         )
         .onFocused(
           RemixSelectStyle().trigger(
-                RemixSelectTriggerStyle().borderAll(
-                  color: RadixTokens.focusA8(),
-                  width: RadixTokens.focusRingWidth(),
-                ),
-              ),
+            RemixSelectTriggerStyle().borderAll(
+              color: FortalTokens.focusA8(),
+              width: FortalTokens.focusRingWidth(),
+            ),
+          ),
         );
   }
 
@@ -152,23 +150,21 @@ class RadixSelectStyles {
     return RemixSelectStyle()
         .menuContainer(
           BoxStyler()
-              .color(RadixTokens.colorPanelSolid())
+              .color(FortalTokens.colorPanelSolid())
               .borderAll(
-                color: RadixTokens.gray6(),
-                width: RadixTokens.borderWidth1(),
+                color: FortalTokens.gray6(),
+                width: FortalTokens.borderWidth1(),
               )
-              .borderRadiusAll(RadixTokens.radius3())
+              .borderRadiusAll(FortalTokens.radius3())
               .padding(EdgeInsetsGeometryMix.all(8.0)),
         )
         .item(
           RemixSelectMenuItemStyle()
-              .padding(
-                EdgeInsetsGeometryMix.symmetric(horizontal: 8.0),
-              )
+              .padding(EdgeInsetsGeometryMix.symmetric(horizontal: 8.0))
               .constraints(
                 BoxConstraintsMix(minHeight: 24.0, maxHeight: 24.0),
               )
-              .text(TextStyler().color(RadixTokens.gray12()))
+              .text(TextStyler().color(FortalTokens.gray12()))
               .icon(IconStyler(size: 20.0)),
         );
   }
@@ -177,23 +173,21 @@ class RadixSelectStyles {
     return RemixSelectStyle()
         .menuContainer(
           BoxStyler()
-              .color(RadixTokens.colorPanelTranslucent())
+              .color(FortalTokens.colorPanelTranslucent())
               .borderAll(
-                color: RadixTokens.gray6(),
-                width: RadixTokens.borderWidth1(),
+                color: FortalTokens.gray6(),
+                width: FortalTokens.borderWidth1(),
               )
-              .borderRadiusAll(RadixTokens.radius3())
+              .borderRadiusAll(FortalTokens.radius3())
               .padding(EdgeInsetsGeometryMix.all(8.0)),
         )
         .item(
           RemixSelectMenuItemStyle()
-              .padding(
-                EdgeInsetsGeometryMix.symmetric(horizontal: 8.0),
-              )
+              .padding(EdgeInsetsGeometryMix.symmetric(horizontal: 8.0))
               .constraints(
                 BoxConstraintsMix(minHeight: 24.0, maxHeight: 24.0),
               )
-              .text(TextStyler().color(RadixTokens.gray12()))
+              .text(TextStyler().color(FortalTokens.gray12()))
               .icon(IconStyler(size: 20.0)),
         );
   }

@@ -92,11 +92,11 @@ void main() {
                 child: Scaffold(
                   body: Column(
                     children: [
-                      RemixBadge.raw(child: Text('Default')),
-                      RemixBadge.raw(
+                      RemixBadge(child: Text('Default')),
+                      RemixBadge(
                         child: Text('Solid'),
                       ),
-                      RemixBadge.raw(
+                      RemixBadge(
                         child: Text('Outline'),
                       ),
                     ],

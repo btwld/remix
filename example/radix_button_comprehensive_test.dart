@@ -1,34 +1,28 @@
-// ABOUTME: Comprehensive test of all Radix button variants with proper spec compliance
-// ABOUTME: Validates that all 6 variants work correctly with different accent/gray combinations
-
 import 'package:flutter/material.dart';
-
-import '../lib/src/components/button/button.dart';
-import '../lib/src/radix/radix.dart' as resolver;
-import '../lib/src/radix/radix_theme.dart';
+import 'package:remix/remix.dart';
 
 void main() {
-  runApp(const RadixButtonComprehensiveTest());
+  runApp(const FortalButtonComprehensiveTest());
 }
 
-class RadixButtonComprehensiveTest extends StatefulWidget {
-  const RadixButtonComprehensiveTest({super.key});
+class FortalButtonComprehensiveTest extends StatefulWidget {
+  const FortalButtonComprehensiveTest({super.key});
 
   @override
-  State<RadixButtonComprehensiveTest> createState() =>
-      _RadixButtonComprehensiveTestState();
+  State<FortalButtonComprehensiveTest> createState() =>
+      _FortalButtonComprehensiveTestState();
 }
 
-class _RadixButtonComprehensiveTestState
-    extends State<RadixButtonComprehensiveTest> {
-  resolver.RadixAccentColor _accent = resolver.RadixAccentColor.indigo;
-  resolver.RadixGrayColor _gray = resolver.RadixGrayColor.slate;
+class _FortalButtonComprehensiveTestState
+    extends State<FortalButtonComprehensiveTest> {
+  FortalAccentColor _accent = FortalAccentColor.indigo;
+  FortalGrayColor _gray = FortalGrayColor.slate;
   Brightness _brightness = Brightness.light;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: createRadixScope(
+      home: createFortalScope(
         accent: _accent,
         gray: _gray,
         brightness: _brightness,
@@ -42,7 +36,7 @@ class _RadixButtonComprehensiveTestState
           currentBrightness: _brightness,
         ),
       ),
-      title: 'Radix Button Comprehensive Test',
+      title: 'Fortal Button Comprehensive Test',
       theme: _brightness == Brightness.light
           ? ThemeData.light(useMaterial3: true)
           : ThemeData.dark(useMaterial3: true),
@@ -60,11 +54,11 @@ class _ComprehensiveTestScreen extends StatelessWidget {
     required this.currentBrightness,
   });
 
-  final ValueChanged<resolver.RadixAccentColor> onAccentChanged;
-  final ValueChanged<resolver.RadixGrayColor> onGrayChanged;
+  final ValueChanged<FortalAccentColor> onAccentChanged;
+  final ValueChanged<FortalGrayColor> onGrayChanged;
   final ValueChanged<Brightness> onBrightnessChanged;
-  final resolver.RadixAccentColor currentAccent;
-  final resolver.RadixGrayColor currentGray;
+  final FortalAccentColor currentAccent;
+  final FortalGrayColor currentGray;
 
   final Brightness currentBrightness;
 
@@ -72,7 +66,7 @@ class _ComprehensiveTestScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Radix Button - Complete Spec Test'),
+        title: const Text('Fortal Button - Complete Spec Test'),
         actions: [
           // Theme controls
           PopupMenuButton<Brightness>(
@@ -157,11 +151,11 @@ class _ThemeControls extends StatelessWidget {
     required this.onGrayChanged,
   });
 
-  final resolver.RadixAccentColor accent;
-  final resolver.RadixGrayColor gray;
-  final ValueChanged<resolver.RadixAccentColor> onAccentChanged;
+  final FortalAccentColor accent;
+  final FortalGrayColor gray;
+  final ValueChanged<FortalAccentColor> onAccentChanged;
 
-  final ValueChanged<resolver.RadixGrayColor> onGrayChanged;
+  final ValueChanged<FortalGrayColor> onGrayChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -179,8 +173,8 @@ class _ThemeControls extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: DropdownButton<resolver.RadixAccentColor>(
-                    items: resolver.RadixAccentColor.values
+                  child: DropdownButton<FortalAccentColor>(
+                    items: FortalAccentColor.values
                         .map(
                           (color) => DropdownMenuItem(
                             value: color,
@@ -195,8 +189,8 @@ class _ThemeControls extends StatelessWidget {
                 ),
                 const SizedBox(width: 16),
                 Expanded(
-                  child: DropdownButton<resolver.RadixGrayColor>(
-                    items: resolver.RadixGrayColor.values
+                  child: DropdownButton<FortalGrayColor>(
+                    items: FortalGrayColor.values
                         .map(
                           (color) => DropdownMenuItem(
                             value: color,
@@ -230,12 +224,12 @@ class _AllVariantsSection extends StatelessWidget {
 
   RemixButtonStyle _getSizedStyle(RemixButtonStyle Function() _) {
     return switch (size) {
-      1 => RadixButtonStyle.base(size: RadixButtonSize.size1),
-      2 => RadixButtonStyle.base(size: RadixButtonSize.size2),
-      3 => RadixButtonStyle.base(size: RadixButtonSize.size3),
-      4 => RadixButtonStyle.base(size: RadixButtonSize.size4),
+      1 => FortalButtonStyle.base(size: FortalButtonSize.size1),
+      2 => FortalButtonStyle.base(size: FortalButtonSize.size2),
+      3 => FortalButtonStyle.base(size: FortalButtonSize.size3),
+      4 => FortalButtonStyle.base(size: FortalButtonSize.size4),
       _ =>
-        RadixButtonStyle.base(size: RadixButtonSize.size2), // Default to size 2
+        FortalButtonStyle.base(size: FortalButtonSize.size2), // Default to size 2
     };
   }
 
@@ -245,42 +239,42 @@ class _AllVariantsSection extends StatelessWidget {
       runSpacing: 12,
       children: [
         // Solid
-        _getSizedStyle(() => RadixButtonStyle.solid()).call(
+        _getSizedStyle(() => FortalButtonStyle.solid()).call(
           label: 'Solid',
           icon: Icons.check_circle,
           onPressed: () => _showSnackBar(context, 'Solid pressed'),
         ),
 
         // Soft
-        _getSizedStyle(() => RadixButtonStyle.soft()).call(
+        _getSizedStyle(() => FortalButtonStyle.soft()).call(
           label: 'Soft',
           icon: Icons.favorite,
           onPressed: () => _showSnackBar(context, 'Soft pressed'),
         ),
 
         // Surface
-        _getSizedStyle(() => RadixButtonStyle.surface()).call(
+        _getSizedStyle(() => FortalButtonStyle.surface()).call(
           label: 'Surface',
           icon: Icons.layers,
           onPressed: () => _showSnackBar(context, 'Surface pressed'),
         ),
 
         // Outline
-        _getSizedStyle(() => RadixButtonStyle.outline()).call(
+        _getSizedStyle(() => FortalButtonStyle.outline()).call(
           label: 'Outline',
           icon: Icons.crop_free,
           onPressed: () => _showSnackBar(context, 'Outline pressed'),
         ),
 
         // Ghost
-        _getSizedStyle(() => RadixButtonStyle.ghost()).call(
+        _getSizedStyle(() => FortalButtonStyle.ghost()).call(
           label: 'Ghost',
           icon: Icons.visibility_off,
           onPressed: () => _showSnackBar(context, 'Ghost pressed'),
         ),
 
         // Surface (was Classic)
-        _getSizedStyle(() => RadixButtonStyle.surface()).call(
+        _getSizedStyle(() => FortalButtonStyle.surface()).call(
           label: 'Surface',
           icon: Icons.style,
           onPressed: () => _showSnackBar(context, 'Surface pressed'),
@@ -300,19 +294,19 @@ class _SizeComparisonSection extends StatelessWidget {
       children: [
         const Text('Size 1 (Small)'),
         const SizedBox(height: 8),
-        RadixButtonStyle.solid().call(label: 'Size 1', onPressed: () {}),
+        FortalButtonStyle.solid().call(label: 'Size 1', onPressed: () {}),
         const SizedBox(height: 16),
         const Text('Size 2 (Medium - Default)'),
         const SizedBox(height: 8),
-        RadixButtonStyle.solid().call(label: 'Size 2', onPressed: () {}),
+        FortalButtonStyle.solid().call(label: 'Size 2', onPressed: () {}),
         const SizedBox(height: 16),
         const Text('Size 3 (Large)'),
         const SizedBox(height: 8),
-        RadixButtonStyle.solid().call(label: 'Size 3', onPressed: () {}),
+        FortalButtonStyle.solid().call(label: 'Size 3', onPressed: () {}),
         const SizedBox(height: 16),
         const Text('Size 4 (Extra Large)'),
         const SizedBox(height: 8),
-        RadixButtonStyle.solid().call(label: 'Size 4', onPressed: () {}),
+        FortalButtonStyle.solid().call(label: 'Size 4', onPressed: () {}),
       ],
     );
   }
@@ -324,17 +318,17 @@ class _StateTestingSection extends StatelessWidget {
   RemixButtonStyle _getVariantButton(String variantName) {
     switch (variantName) {
       case 'Solid':
-        return RadixButtonStyle.solid();
+        return FortalButtonStyle.solid();
       case 'Soft':
-        return RadixButtonStyle.soft();
+        return FortalButtonStyle.soft();
       case 'Surface':
-        return RadixButtonStyle.surface();
+        return FortalButtonStyle.surface();
       case 'Outline':
-        return RadixButtonStyle.outline();
+        return FortalButtonStyle.outline();
       case 'Ghost':
-        return RadixButtonStyle.ghost();
+        return FortalButtonStyle.ghost();
       default:
-        return RadixButtonStyle.solid();
+        return FortalButtonStyle.solid();
     }
   }
 
@@ -393,12 +387,12 @@ class _AccentShowcaseSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final popularAccents = [
-      resolver.RadixAccentColor.indigo,
-      resolver.RadixAccentColor.blue,
-      resolver.RadixAccentColor.green,
-      resolver.RadixAccentColor.red,
-      resolver.RadixAccentColor.purple,
-      resolver.RadixAccentColor.orange,
+      FortalAccentColor.indigo,
+      FortalAccentColor.blue,
+      FortalAccentColor.green,
+      FortalAccentColor.red,
+      FortalAccentColor.purple,
+      FortalAccentColor.orange,
     ];
 
     return Wrap(
@@ -406,11 +400,11 @@ class _AccentShowcaseSection extends StatelessWidget {
       runSpacing: 8,
       children: popularAccents.map((accentColor) {
         // Create temporary scope to show the accent
-        return createRadixScope(
+        return createFortalScope(
           accent: accentColor,
-          gray: resolver.RadixGrayColor.slate,
+          gray: FortalGrayColor.slate,
           brightness: Theme.of(context).brightness,
-          child: RadixButtonStyle.solid().call(
+          child: FortalButtonStyle.solid().call(
             label: accentColor.name,
             onPressed: () => print('Button pressed'),
           ),

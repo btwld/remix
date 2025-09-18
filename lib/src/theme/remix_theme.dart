@@ -1,16 +1,13 @@
-// ABOUTME: Legacy Remix theme system that now uses RadixTokens internally
-// ABOUTME: Provides backward compatibility while leveraging the comprehensive Radix design system
-
 import 'package:flutter/material.dart';
 
-import '../radix/radix.dart' as resolver;
-import '../radix/radix_theme.dart';
+import '../fortal/fortal.dart' as fortal;
+import '../fortal/fortal_theme.dart';
 
-/// Creates a MixScope with legacy Remix tokens, now powered by RadixTokens.
+/// Creates a MixScope with legacy Remix tokens, now powered by FortalTokens.
 ///
-/// **DEPRECATED**: This function now uses createRadixScope internally for
-/// better design system consistency. New applications should use createRadixScope
-/// directly with RadixTokens.
+/// **DEPRECATED**: This function now uses createFortalScope internally for
+/// better design system consistency. New applications should use createFortalScope
+/// directly with FortalTokens.
 ///
 /// This function automatically adapts to the current theme brightness and provides
 /// sensible defaults for accent and gray colors.
@@ -24,17 +21,17 @@ import '../radix/radix_theme.dart';
 Widget createRemixScope({
   required Widget child,
   List<Type>? orderOfModifiers,
-  resolver.RadixAccentColor accent = resolver.RadixAccentColor.indigo,
-  resolver.RadixGrayColor gray = resolver.RadixGrayColor.slate,
+  fortal.FortalAccentColor accent = fortal.FortalAccentColor.indigo,
+  fortal.FortalGrayColor gray = fortal.FortalGrayColor.slate,
 }) {
   return Builder(builder: (context) {
     // Determine theme brightness
     final theme = Theme.of(context);
     final brightness = theme.brightness;
 
-    // Use createRadixScope which provides all the token values
-    // RemixTokens now just references RadixTokens, so this provides everything
-    return createRadixScope(
+    // Use createFortalScope which provides all the token values
+    // RemixTokens now just references FortalTokens, so this provides everything
+    return createFortalScope(
       accent: accent,
       gray: gray,
       brightness: brightness,
@@ -47,15 +44,15 @@ Widget createRemixScope({
 /// Configuration data for a legacy Remix theme.
 ///
 /// **DEPRECATED**: This class is maintained for backward compatibility.
-/// New applications should use createRadixScope() directly.
+/// New applications should use createFortalScope() directly.
 @immutable
 class RemixThemeConfig {
-  final resolver.RadixAccentColor accent;
-  final resolver.RadixGrayColor gray;
+  final fortal.FortalAccentColor accent;
+  final fortal.FortalGrayColor gray;
 
   const RemixThemeConfig({
-    this.accent = resolver.RadixAccentColor.indigo,
-    this.gray = resolver.RadixGrayColor.slate,
+    this.accent = fortal.FortalAccentColor.indigo,
+    this.gray = fortal.FortalGrayColor.slate,
   });
 
   /// Creates a MixScope with this theme configuration
@@ -70,8 +67,8 @@ class RemixThemeConfig {
 
   /// Creates a copy of this config with the given fields replaced.
   RemixThemeConfig copyWith({
-    resolver.RadixAccentColor? accent,
-    resolver.RadixGrayColor? gray,
+    fortal.FortalAccentColor? accent,
+    fortal.FortalGrayColor? gray,
   }) {
     return RemixThemeConfig(
       accent: accent ?? this.accent,

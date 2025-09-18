@@ -1,21 +1,13 @@
-// ABOUTME: Factory for creating RemixIconButtonStyle instances using Radix design tokens
-// ABOUTME: Provides all 6 Radix icon button variants with proper token-based styling
+part of 'icon_button.dart';
 
-import 'package:flutter/material.dart';
-import 'package:mix/mix.dart';
-
-import '../../radix/radix.dart';
-import '../spinner/spinner.dart';
-import 'icon_button.dart';
-
-enum RadixIconButtonSize {
+enum FortalIconButtonSize {
   size1,
   size2,
   size3,
   size4,
 }
 
-enum RadixIconButtonVariant {
+enum FortalIconButtonVariant {
   solid,
   soft,
   surface,
@@ -24,33 +16,33 @@ enum RadixIconButtonVariant {
   classic,
 }
 
-/// Factory class for creating Radix-compliant icon button styles.
+/// Factory class for creating Fortal-compliant icon button styles.
 ///
 /// Provides static methods to create RemixIconButtonStyle instances for all
-/// Radix UI icon button variants using the RadixTokens system.
-class RadixIconButtonStyles {
-  const RadixIconButtonStyles._();
+/// Fortal UI icon button variants using the FortalTokens system.
+class FortalIconButtonStyles {
+  const FortalIconButtonStyles._();
 
-  /// Factory constructor for RadixIconButtonStyle with variant and size parameters.
+  /// Factory constructor for FortalIconButtonStyle with variant and size parameters.
   ///
-  /// Returns a RemixIconButtonStyle configured with Radix design tokens.
+  /// Returns a RemixIconButtonStyle configured with Fortal design tokens.
   /// Defaults to solid variant with size2.
   static RemixIconButtonStyle create({
-    RadixIconButtonVariant variant = RadixIconButtonVariant.solid,
-    RadixIconButtonSize size = RadixIconButtonSize.size2,
+    FortalIconButtonVariant variant = FortalIconButtonVariant.solid,
+    FortalIconButtonSize size = FortalIconButtonSize.size2,
   }) {
     return switch (variant) {
-      RadixIconButtonVariant.solid => solid(size: size),
-      RadixIconButtonVariant.soft => soft(size: size),
-      RadixIconButtonVariant.surface => surface(size: size),
-      RadixIconButtonVariant.outline => outline(size: size),
-      RadixIconButtonVariant.ghost => ghost(size: size),
-      RadixIconButtonVariant.classic => classic(size: size),
+      FortalIconButtonVariant.solid => solid(size: size),
+      FortalIconButtonVariant.soft => soft(size: size),
+      FortalIconButtonVariant.surface => surface(size: size),
+      FortalIconButtonVariant.outline => outline(size: size),
+      FortalIconButtonVariant.ghost => ghost(size: size),
+      FortalIconButtonVariant.classic => classic(size: size),
     };
   }
 
   static RemixIconButtonStyle base({
-    RadixIconButtonSize size = RadixIconButtonSize.size2,
+    FortalIconButtonSize size = FortalIconButtonSize.size2,
   }) {
     return RemixIconButtonStyle()
         // Focus state (generic)
@@ -63,30 +55,30 @@ class RadixIconButtonStyles {
   /// Solid icon buttons have high emphasis with solid accent background color.
   /// Used for primary icon actions.
   static RemixIconButtonStyle solid({
-    RadixIconButtonSize size = RadixIconButtonSize.size2,
+    FortalIconButtonSize size = FortalIconButtonSize.size2,
   }) {
     return base(size: size)
         // Visual styling only - no size properties
-        .color(RadixTokens.accent9())
+        .color(FortalTokens.accent9())
         // Icon styling
-        .iconColor(RadixTokens.accentContrast())
+        .iconColor(FortalTokens.accentContrast())
         .spinner(
           RemixSpinnerStyle(
-            strokeWidth: RadixTokens.borderWidth2(),
-            color: RadixTokens.accentContrast(),
+            strokeWidth: FortalTokens.borderWidth2(),
+            color: FortalTokens.accentContrast(),
             duration: const Duration(milliseconds: 800),
             type: SpinnerType.solid,
           ),
         )
         // State variants
-        .onHovered(RemixIconButtonStyle().color(RadixTokens.accent10()))
-        .onPressed(RemixIconButtonStyle().color(RadixTokens.accent10()))
+        .onHovered(RemixIconButtonStyle().color(FortalTokens.accent10()))
+        .onPressed(RemixIconButtonStyle().color(FortalTokens.accent10()))
         .onDisabled(
           RemixIconButtonStyle()
-              .color(RadixTokens.accent9())
-              .iconColor(RadixTokens.accentContrast())
+              .color(FortalTokens.accent9())
+              .iconColor(FortalTokens.accentContrast())
               .spinner(
-                RemixSpinnerStyle(color: RadixTokens.accentContrast()),
+                RemixSpinnerStyle(color: FortalTokens.accentContrast()),
               ),
         );
   }
@@ -96,42 +88,42 @@ class RadixIconButtonStyles {
   /// Soft icon buttons have medium emphasis with subtle accent tinted background.
   /// Used for secondary icon actions.
   static RemixIconButtonStyle soft({
-    RadixIconButtonSize size = RadixIconButtonSize.size2,
+    FortalIconButtonSize size = FortalIconButtonSize.size2,
   }) {
     return base(size: size)
         // Visual styling only - no size properties
-        .color(RadixTokens.accent3())
+        .color(FortalTokens.accent3())
         .borderAll(
-          color: RadixTokens.accent6(),
-          width: RadixTokens.borderWidth1(),
+          color: FortalTokens.accent6(),
+          width: FortalTokens.borderWidth1(),
         )
         // Icon styling
-        .iconColor(RadixTokens.accent11())
+        .iconColor(FortalTokens.accent11())
         .spinner(
           RemixSpinnerStyle(
-            strokeWidth: RadixTokens.borderWidth2(),
-            color: RadixTokens.accent11(),
+            strokeWidth: FortalTokens.borderWidth2(),
+            color: FortalTokens.accent11(),
             duration: const Duration(milliseconds: 800),
             type: SpinnerType.solid,
           ),
         )
         // State variants
         .onHovered(
-          RemixIconButtonStyle().color(RadixTokens.accent4()).borderAll(
-                color: RadixTokens.accent7(),
-                width: RadixTokens.borderWidth1(),
+          RemixIconButtonStyle().color(FortalTokens.accent4()).borderAll(
+                color: FortalTokens.accent7(),
+                width: FortalTokens.borderWidth1(),
               ),
         )
-        .onPressed(RemixIconButtonStyle().color(RadixTokens.accent5()))
+        .onPressed(RemixIconButtonStyle().color(FortalTokens.accent5()))
         .onDisabled(
           RemixIconButtonStyle()
-              .color(RadixTokens.accent3())
+              .color(FortalTokens.accent3())
               .borderAll(
-                color: RadixTokens.accent6(),
-                width: RadixTokens.borderWidth1(),
+                color: FortalTokens.accent6(),
+                width: FortalTokens.borderWidth1(),
               )
-              .iconColor(RadixTokens.accent11())
-              .spinner(RemixSpinnerStyle(color: RadixTokens.accent11())),
+              .iconColor(FortalTokens.accent11())
+              .spinner(RemixSpinnerStyle(color: FortalTokens.accent11())),
         );
   }
 
@@ -140,21 +132,21 @@ class RadixIconButtonStyles {
   /// Surface icon buttons have subtle emphasis with accent-tinted surface.
   /// Used for tertiary icon actions.
   static RemixIconButtonStyle surface({
-    RadixIconButtonSize size = RadixIconButtonSize.size2,
+    FortalIconButtonSize size = FortalIconButtonSize.size2,
   }) {
     return base(size: size)
         // Visual styling only - no size properties
-        .color(RadixTokens.accentSurface())
+        .color(FortalTokens.accentSurface())
         .borderAll(
-          color: RadixTokens.accent6(),
-          width: RadixTokens.borderWidth1(),
+          color: FortalTokens.accent6(),
+          width: FortalTokens.borderWidth1(),
         )
         // Icon styling
-        .iconColor(RadixTokens.accent11())
+        .iconColor(FortalTokens.accent11())
         .spinner(
           RemixSpinnerStyle(
-            strokeWidth: RadixTokens.borderWidth2(),
-            color: RadixTokens.accent11(),
+            strokeWidth: FortalTokens.borderWidth2(),
+            color: FortalTokens.accent11(),
             duration: const Duration(milliseconds: 800),
             type: SpinnerType.solid,
           ),
@@ -162,21 +154,21 @@ class RadixIconButtonStyles {
         // State variants with surface-specific hover (uses overlay calculation)
         .onHovered(
           RemixIconButtonStyle()
-              .color(RadixTokens.accentA4()) // Simplified overlay calculation
+              .color(FortalTokens.accentA4()) // Simplified overlay calculation
               .borderAll(
-                color: RadixTokens.accent7(),
-                width: RadixTokens.borderWidth1(),
+                color: FortalTokens.accent7(),
+                width: FortalTokens.borderWidth1(),
               ),
         )
         .onDisabled(
           RemixIconButtonStyle()
-              .color(RadixTokens.accentSurface())
+              .color(FortalTokens.accentSurface())
               .borderAll(
-                color: RadixTokens.accent6(),
-                width: RadixTokens.borderWidth1(),
+                color: FortalTokens.accent6(),
+                width: FortalTokens.borderWidth1(),
               )
-              .iconColor(RadixTokens.accent11())
-              .spinner(RemixSpinnerStyle(color: RadixTokens.accent11())),
+              .iconColor(FortalTokens.accent11())
+              .spinner(RemixSpinnerStyle(color: FortalTokens.accent11())),
         );
   }
 
@@ -185,40 +177,40 @@ class RadixIconButtonStyles {
   /// Outline icon buttons have border-focused emphasis with transparent background.
   /// Used for secondary icon actions where more emphasis is needed than ghost.
   static RemixIconButtonStyle outline({
-    RadixIconButtonSize size = RadixIconButtonSize.size2,
+    FortalIconButtonSize size = FortalIconButtonSize.size2,
   }) {
     return base(size: size)
         // Visual styling only - no size properties
         .color(Colors.transparent)
         .borderAll(
-          color: RadixTokens.accent7(),
-          width: RadixTokens.borderWidth1(),
+          color: FortalTokens.accent7(),
+          width: FortalTokens.borderWidth1(),
         )
         // Icon styling
-        .iconColor(RadixTokens.accent11())
+        .iconColor(FortalTokens.accent11())
         .spinner(
           RemixSpinnerStyle(
-            strokeWidth: RadixTokens.borderWidth2(),
-            color: RadixTokens.accent11(),
+            strokeWidth: FortalTokens.borderWidth2(),
+            color: FortalTokens.accent11(),
             duration: const Duration(milliseconds: 800),
             type: SpinnerType.solid,
           ),
         )
         // State variants
         .onHovered(
-          RemixIconButtonStyle().color(RadixTokens.accentA3()).borderAll(
-                color: RadixTokens.accent8(),
-                width: RadixTokens.borderWidth1(),
+          RemixIconButtonStyle().color(FortalTokens.accentA3()).borderAll(
+                color: FortalTokens.accent8(),
+                width: FortalTokens.borderWidth1(),
               ),
         )
         .onDisabled(
           RemixIconButtonStyle()
               .borderAll(
-                color: RadixTokens.accent7(),
-                width: RadixTokens.borderWidth1(),
+                color: FortalTokens.accent7(),
+                width: FortalTokens.borderWidth1(),
               )
-              .iconColor(RadixTokens.accent11())
-              .spinner(RemixSpinnerStyle(color: RadixTokens.accent11())),
+              .iconColor(FortalTokens.accent11())
+              .spinner(RemixSpinnerStyle(color: FortalTokens.accent11())),
         );
   }
 
@@ -227,28 +219,28 @@ class RadixIconButtonStyles {
   /// Ghost icon buttons have minimal emphasis with no visible container.
   /// Used for very subtle icon actions.
   static RemixIconButtonStyle ghost({
-    RadixIconButtonSize size = RadixIconButtonSize.size2,
+    FortalIconButtonSize size = FortalIconButtonSize.size2,
   }) {
     return base(size: size)
         // Visual styling only - no size properties
         .color(Colors.transparent)
         // Icon styling
-        .iconColor(RadixTokens.accent11())
+        .iconColor(FortalTokens.accent11())
         .spinner(
           RemixSpinnerStyle(
-            strokeWidth: RadixTokens.borderWidth2(),
-            color: RadixTokens.accent11(),
+            strokeWidth: FortalTokens.borderWidth2(),
+            color: FortalTokens.accent11(),
             duration: const Duration(milliseconds: 800),
             type: SpinnerType.solid,
           ),
         )
         // State variants
-        .onHovered(RemixIconButtonStyle().color(RadixTokens.accentA3()))
-        .onPressed(RemixIconButtonStyle().color(RadixTokens.accentA4()))
+        .onHovered(RemixIconButtonStyle().color(FortalTokens.accentA3()))
+        .onPressed(RemixIconButtonStyle().color(FortalTokens.accentA4()))
         .onDisabled(
           RemixIconButtonStyle()
-              .iconColor(RadixTokens.accent11())
-              .spinner(RemixSpinnerStyle(color: RadixTokens.accent11())),
+              .iconColor(FortalTokens.accent11())
+              .spinner(RemixSpinnerStyle(color: FortalTokens.accent11())),
         );
   }
 
@@ -257,23 +249,23 @@ class RadixIconButtonStyles {
   /// Classic icon buttons have pre-flat UI style with neutral colors and shadows.
   /// Used when a more traditional icon button appearance is needed.
   static RemixIconButtonStyle classic({
-    RadixIconButtonSize size = RadixIconButtonSize.size2,
+    FortalIconButtonSize size = FortalIconButtonSize.size2,
   }) {
     return base(size: size)
         // Visual styling only - no size properties
-        .color(RadixTokens.colorSurface())
+        .color(FortalTokens.colorSurface())
         .borderAll(
-          color: RadixTokens.gray7(),
-          width: RadixTokens.borderWidth1(),
+          color: FortalTokens.gray7(),
+          width: FortalTokens.borderWidth1(),
         )
         // Add subtle shadow for classic feel using token
-        .shadows(RadixTokens.shadow2().map(BoxShadowMix.value).toList())
+        .shadows(FortalTokens.shadow2().map(BoxShadowMix.value).toList())
         // Icon styling
-        .iconColor(RadixTokens.gray12())
+        .iconColor(FortalTokens.gray12())
         .spinner(
           RemixSpinnerStyle(
-            strokeWidth: RadixTokens.borderWidth2(),
-            color: RadixTokens.gray12(),
+            strokeWidth: FortalTokens.borderWidth2(),
+            color: FortalTokens.gray12(),
             duration: const Duration(milliseconds: 800),
             type: SpinnerType.solid,
           ),
@@ -281,26 +273,26 @@ class RadixIconButtonStyles {
         // State variants
         .onHovered(
           RemixIconButtonStyle()
-              .color(RadixTokens.gray3())
+              .color(FortalTokens.gray3())
               .borderAll(
-                color: RadixTokens.gray8(),
-                width: RadixTokens.borderWidth1(),
+                color: FortalTokens.gray8(),
+                width: FortalTokens.borderWidth1(),
               )
               .shadows(
-                RadixTokens.shadow2().map(BoxShadowMix.value).toList(),
+                FortalTokens.shadow2().map(BoxShadowMix.value).toList(),
               ),
         )
         .onDisabled(
           RemixIconButtonStyle()
-              .color(RadixTokens.colorSurface())
+              .color(FortalTokens.colorSurface())
               .borderAll(
-                color: RadixTokens.gray7(),
-                width: RadixTokens.borderWidth1(),
+                color: FortalTokens.gray7(),
+                width: FortalTokens.borderWidth1(),
               )
-              .iconColor(RadixTokens.gray12())
-              .spinner(RemixSpinnerStyle(color: RadixTokens.gray12()))
+              .iconColor(FortalTokens.gray12())
+              .spinner(RemixSpinnerStyle(color: FortalTokens.gray12()))
               .shadows(
-                RadixTokens.shadow1().map(BoxShadowMix.value).toList(),
+                FortalTokens.shadow1().map(BoxShadowMix.value).toList(),
               ),
         );
   }
@@ -309,30 +301,30 @@ class RadixIconButtonStyles {
   // Internal builders
   // ---------------------------------------------------------------------------
 
-  static RemixIconButtonStyle _sizeStyle(RadixIconButtonSize size) {
+  static RemixIconButtonStyle _sizeStyle(FortalIconButtonSize size) {
     return switch (size) {
-      RadixIconButtonSize.size1 => RemixIconButtonStyle()
+      FortalIconButtonSize.size1 => RemixIconButtonStyle()
           .width(24.0)
           .height(24.0)
-          .borderRadiusAll(RadixTokens.radius2())
+          .borderRadiusAll(FortalTokens.radius2())
           .iconSize(12.0)
           .spinner(RemixSpinnerStyle(size: 12.0)),
-      RadixIconButtonSize.size2 => RemixIconButtonStyle()
+      FortalIconButtonSize.size2 => RemixIconButtonStyle()
           .width(32.0)
           .height(32.0)
-          .borderRadiusAll(RadixTokens.radius3())
+          .borderRadiusAll(FortalTokens.radius3())
           .iconSize(16.0)
           .spinner(RemixSpinnerStyle(size: 16.0)),
-      RadixIconButtonSize.size3 => RemixIconButtonStyle()
+      FortalIconButtonSize.size3 => RemixIconButtonStyle()
           .width(40.0)
           .height(40.0)
-          .borderRadiusAll(RadixTokens.radius4())
+          .borderRadiusAll(FortalTokens.radius4())
           .iconSize(20.0)
           .spinner(RemixSpinnerStyle(size: 20.0)),
-      RadixIconButtonSize.size4 => RemixIconButtonStyle()
+      FortalIconButtonSize.size4 => RemixIconButtonStyle()
           .width(48.0)
           .height(48.0)
-          .borderRadiusAll(RadixTokens.radius5())
+          .borderRadiusAll(FortalTokens.radius5())
           .iconSize(24.0)
           .spinner(RemixSpinnerStyle(size: 24.0)),
     };

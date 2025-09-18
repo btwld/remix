@@ -1,6 +1,3 @@
-// ABOUTME: Mixin providing convenient spinner styling helper methods for component styles
-// ABOUTME: Offers direct methods for the most commonly used spinner properties
-
 import 'package:flutter/widgets.dart';
 import 'package:mix/mix.dart';
 import '../../components/spinner/spinner.dart';

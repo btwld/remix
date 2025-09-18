@@ -7,12 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 
 import '../../utilities/remix_style.dart';
-
-export 'radix_spinner_styles.dart';
+import '../../fortal/fortal.dart';
 
 part 'spinner_painter.dart';
 part 'spinner_spec.dart';
 part 'spinner_style.dart';
 part 'spinner_widget.dart';
+part 'radix_spinner_styles.dart';
 
 // SpinnerSpec and SpinnerMix are defined in their respective part files

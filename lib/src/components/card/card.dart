@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 
 import '../../utilities/remix_style.dart';
-
-export 'radix_card_styles.dart';
+import '../../fortal/fortal.dart';
 
 part 'card_spec.dart';
 part 'card_style.dart';
 part 'card_widget.dart';
+part 'radix_card_styles.dart';

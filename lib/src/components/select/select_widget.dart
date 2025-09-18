@@ -436,7 +436,7 @@ class _RemixSelectTriggerState extends State<RemixSelectTrigger>
     final inheritedStyle = StyleProvider.maybeOf<SelectSpec>(context);
 
     return StyleBuilder<SelectSpec>(
-      style: inheritedStyle ?? RadixSelectStyles.triggerSurface(),
+      style: inheritedStyle ?? FortalSelectStyles.triggerSurface(),
       controller: controller,
       builder: (context, spec) {
         final triggerSpec = spec.trigger;
@@ -565,7 +565,7 @@ class _RemixSelectItemState<T> extends State<RemixSelectItem<T>>
         context.findAncestorWidgetOfExactType<_MultiSelectWrapper>() != null;
 
     return StyleBuilder<SelectSpec>(
-      style: styleFromProvider ?? RadixSelectStyles.contentSolid(),
+      style: styleFromProvider ?? FortalSelectStyles.contentSolid(),
       controller: controller,
       builder: (context, spec) {
         final itemSpec = spec.item;

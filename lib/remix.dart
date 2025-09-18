@@ -23,6 +23,7 @@ export 'package:mix/mix.dart';
 
 /// THEME
 export 'src/theme/remix_theme.dart';
+export 'src/fortal/fortal.dart';
 
 
 /// HELPERS

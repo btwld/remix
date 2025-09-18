@@ -1,7 +1,5 @@
 part of 'progress.dart';
 
-
-
 class RemixProgressStyle
     extends RemixContainerStyle<ProgressSpec, RemixProgressStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
@@ -61,10 +59,7 @@ class RemixProgressStyle
     return merge(
       RemixProgressStyle(
         container: BoxStyler(
-          constraints: BoxConstraintsMix(
-            minWidth: value,
-            maxWidth: value,
-          ),
+          constraints: BoxConstraintsMix(minWidth: value, maxWidth: value),
         ),
       ),
     );
@@ -191,4 +186,3 @@ class RemixProgressStyle
         $modifier,
       ];
 }
-

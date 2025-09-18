@@ -24,7 +24,7 @@ Widget buildButtonShowcase(BuildContext context) {
             _buildSection(
               'Base Style',
               [
-                _buildButtonRow('Default Button', RadixButtonStyle.solid()),
+                _buildButtonRow('Default Button', FortalButtonStyle.solid()),
               ],
             ),
 
@@ -138,19 +138,19 @@ Widget _buildSizeRow() {
             label: 'Small',
             icon: Icons.circle,
             onPressed: () => debugPrint('Small button pressed'),
-            style: RadixButtonStyle.solid().padding(EdgeInsetsGeometryMix.all(8.0)),
+            style: FortalButtonStyle.solid().padding(EdgeInsetsGeometryMix.all(8.0)),
           ),
           RemixButton(
             label: 'Medium',
             icon: Icons.circle,
             onPressed: () => debugPrint('Medium button pressed'),
-            style: RadixButtonStyle.solid().padding(EdgeInsetsGeometryMix.all(12.0)),
+            style: FortalButtonStyle.solid().padding(EdgeInsetsGeometryMix.all(12.0)),
           ),
           RemixButton(
             label: 'Large',
             icon: Icons.circle,
             onPressed: () => debugPrint('Large button pressed'),
-            style: RadixButtonStyle.solid().padding(EdgeInsetsGeometryMix.all(16.0)),
+            style: FortalButtonStyle.solid().padding(EdgeInsetsGeometryMix.all(16.0)),
           ),
         ],
       ),
@@ -167,21 +167,21 @@ Widget _buildStatesRow() {
         label: 'Enabled',
         icon: Icons.check,
         onPressed: () => debugPrint('Enabled button pressed'),
-        style: RadixButtonStyle.solid(),
+        style: FortalButtonStyle.solid(),
       ),
       RemixButton(
         label: 'Disabled',
         icon: Icons.block,
         enabled: false,
         onPressed: () => debugPrint('This should not print'),
-        style: RadixButtonStyle.solid(),
+        style: FortalButtonStyle.solid(),
       ),
       RemixButton(
         label: 'Loading',
         icon: Icons.refresh,
         loading: true,
         onPressed: () => debugPrint('Loading button pressed'),
-        style: RadixButtonStyle.solid(),
+        style: FortalButtonStyle.solid(),
       ),
     ],
   );
@@ -311,7 +311,7 @@ Widget _buildInteractiveStateDemo() {
         child: RemixButton(
           label: 'Interactive Demo',
           icon: Icons.touch_app,
-          style: RadixButtonStyle.solid(),
+          style: FortalButtonStyle.solid(),
           onPressed: () => debugPrint('Primary button pressed'),
           onLongPress: () => debugPrint('Primary button long pressed'),
           onDoubleTap: () => debugPrint('Primary button double tapped'),
@@ -323,7 +323,7 @@ Widget _buildInteractiveStateDemo() {
         child: RemixButton(
           label: 'Hover & Click Me',
           icon: Icons.mouse,
-          style: RadixButtonStyle.solid(),
+          style: FortalButtonStyle.solid(),
           onPressed: () => debugPrint('Outline button pressed'),
           onLongPress: () => debugPrint('Outline button long pressed'),
           onDoubleTap: () => debugPrint('Outline button double tapped'),
@@ -335,7 +335,7 @@ Widget _buildInteractiveStateDemo() {
         child: RemixButton(
           label: 'Focus & Press Me',
           icon: Icons.keyboard,
-          style: RadixButtonStyle.solid(),
+          style: FortalButtonStyle.solid(),
           onPressed: () => debugPrint('Ghost button pressed'),
           onLongPress: () => debugPrint('Ghost button long pressed'),
           onDoubleTap: () => debugPrint('Ghost button double tapped'),
@@ -361,7 +361,7 @@ Widget _buildStateCallbacksDemo() {
           RemixButton(
             label: 'Press Events',
             icon: Icons.tap_and_play,
-            style: RadixButtonStyle.solid(),
+            style: FortalButtonStyle.solid(),
             onPressed: () => debugPrint('✅ Single Press'),
             onLongPress: () => debugPrint('⏳ Long Press (Hold for 500ms)'),
             onDoubleTap: () => debugPrint('⚡ Double Tap'),
@@ -369,19 +369,19 @@ Widget _buildStateCallbacksDemo() {
           RemixButton(
             label: 'Hover Events',
             icon: Icons.mouse,
-            style: RadixButtonStyle.solid(),
+            style: FortalButtonStyle.solid(),
             onPressed: () => debugPrint('Button clicked'),
           ),
           RemixButton(
             label: 'Focus Events',
             icon: Icons.keyboard,
-            style: RadixButtonStyle.solid(),
+            style: FortalButtonStyle.solid(),
             onPressed: () => debugPrint('Focused button clicked'),
           ),
           RemixButton(
             label: 'All State Changes',
             icon: Icons.analytics,
-            style: RadixButtonStyle.solid(),
+            style: FortalButtonStyle.solid(),
             onPressed: () => debugPrint('State tracking button clicked'),
           ),
         ],

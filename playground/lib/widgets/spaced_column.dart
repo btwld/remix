@@ -1,5 +1,3 @@
-// ABOUTME: SpacedColumn widget that automatically adds spacing between Column children
-// ABOUTME: Eliminates the need for manual SizedBox spacing throughout the playground
 import 'package:flutter/material.dart';
 
 class SpacedColumn extends StatelessWidget {

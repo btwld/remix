@@ -1,7 +1,8 @@
-/// Radix computed tokens and functional color utilities.
+/// Fortal computed tokens and functional color utilities.
 ///
 /// Implements computed role tokens (accent-contrast, accent-track, etc.) and
-/// background/overlay colors that mirror Radix Themes behavior.
+/// background/overlay colors that mirror Radix Themes behavior while keeping the
+/// original Radix Colors data.
 ///
 /// Components should use these functional roles rather than raw color steps.
 
@@ -12,8 +13,8 @@ import 'dart:ui' show Color;
 import 'package:flutter/painting.dart' show ColorSwatch;
 import 'package:prism_flutter/prism_flutter.dart';
 
-import 'colors/colors.dart';
-import 'radix_theme.dart';
+import '../radix/colors/colors.dart';
+import 'fortal_theme.dart';
 
 // ============================================================================
 // CONSTANTS
@@ -83,7 +84,7 @@ Color computeColorOverlay({required bool isDark}) =>
 // SHADOWS
 // ============================================================================
 
-/// Computes the OKLab-mixed shadow stroke color used in Radix shadows.
+/// Computes the OKLab-mixed shadow stroke color used in Fortal shadows.
 ///
 /// Matches: color-mix(in oklab, var(--gray-a6), var(--gray-6) 25%)
 Color computeShadowStroke(RadixColorScale gray) =>
@@ -93,11 +94,11 @@ Color computeShadowStroke(RadixColorScale gray) =>
 // RESOLVER (merged from resolver.dart)
 // ============================================================================
 
-/// Container for all computed Radix theme colors and scales.
+/// Container for all computed Fortal theme colors and scales.
 ///
 /// Holds resolved color system for a specific theme configuration.
-/// Created by [resolveRadixTokens] for internal use by the token system.
-class RadixThemeColors {
+/// Created by [resolveFortalTokens] for internal use by the token system.
+class FortalThemeColors {
   final RadixColor accent;
   final RadixColor gray;
   final ColorSwatch<int> blackAlpha;
@@ -114,7 +115,7 @@ class RadixThemeColors {
   final Color focus8;
   final Color focusA8;
 
-  const RadixThemeColors({
+  const FortalThemeColors({
     required this.accent,
     required this.gray,
     required this.blackAlpha,
@@ -175,7 +176,7 @@ const Map<String, RadixColorTheme> _grayThemesByName = {
 };
 
 /// Resolves all computed tokens for a theme configuration.
-RadixThemeColors resolveRadixTokens(RadixThemeConfig theme) {
+FortalThemeColors resolveFortalTokens(FortalThemeConfig theme) {
   // Pick light/dark RadixColor for accent and neutral using enum .name keys
   final String accentName = theme.accent.name;
   final String grayName = theme.gray.name;
@@ -204,7 +205,7 @@ RadixThemeColors resolveRadixTokens(RadixThemeConfig theme) {
   final Color focus8 = computeFocus8(accent);
   final Color focusA8 = computeFocusA8(accent);
 
-  return RadixThemeColors(
+  return FortalThemeColors(
     accent: accentRC,
     gray: grayRC,
     blackAlpha: blackA,

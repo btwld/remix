@@ -1,6 +1,3 @@
-// ABOUTME: Base abstract classes for Remix component styles with mixin inheritance hierarchy
-// ABOUTME: Provides RemixStyle, RemixContainerStyle, and RemixFlexContainerStyle base classes
-
 import 'package:mix/mix.dart' hide AnimationConfig;
 
 /// Base abstract class for all Remix component styles.

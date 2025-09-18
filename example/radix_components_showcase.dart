@@ -1,44 +1,28 @@
-// ABOUTME: Comprehensive showcase of all Radix component variants and styles
-// ABOUTME: Demonstrates the complete Radix design system implementation
-
 import 'package:flutter/material.dart';
-
-import '../lib/src/components/badge/badge.dart';
-import '../lib/src/components/button/button.dart';
-import '../lib/src/components/card/card.dart';
-import '../lib/src/components/checkbox/checkbox.dart';
-import '../lib/src/components/icon_button/icon_button.dart';
-import '../lib/src/components/progress/progress.dart';
-import '../lib/src/components/radio/radio.dart';
-import '../lib/src/components/slider/slider.dart';
-import '../lib/src/components/spinner/spinner.dart';
-import '../lib/src/components/switch/switch.dart';
-import '../lib/src/components/textfield/textfield.dart';
-import '../lib/src/radix/radix.dart' as resolver;
-import '../lib/src/radix/radix_theme.dart';
+import 'package:remix/remix.dart';
 
 void main() {
-  runApp(const RadixComponentsShowcaseApp());
+  runApp(const FortalComponentsShowcaseApp());
 }
 
-class RadixComponentsShowcaseApp extends StatefulWidget {
-  const RadixComponentsShowcaseApp({super.key});
+class FortalComponentsShowcaseApp extends StatefulWidget {
+  const FortalComponentsShowcaseApp({super.key});
 
   @override
-  State<RadixComponentsShowcaseApp> createState() =>
-      _RadixComponentsShowcaseAppState();
+  State<FortalComponentsShowcaseApp> createState() =>
+      _FortalComponentsShowcaseAppState();
 }
 
-class _RadixComponentsShowcaseAppState
-    extends State<RadixComponentsShowcaseApp> {
-  resolver.RadixAccentColor _accent = resolver.RadixAccentColor.indigo;
-  resolver.RadixGrayColor _gray = resolver.RadixGrayColor.slate;
+class _FortalComponentsShowcaseAppState
+    extends State<FortalComponentsShowcaseApp> {
+  FortalAccentColor _accent = FortalAccentColor.indigo;
+  FortalGrayColor _gray = FortalGrayColor.slate;
   Brightness _brightness = Brightness.light;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: createRadixScope(
+      home: createFortalScope(
         accent: _accent,
         gray: _gray,
         brightness: _brightness,
@@ -52,7 +36,7 @@ class _RadixComponentsShowcaseAppState
           currentBrightness: _brightness,
         ),
       ),
-      title: 'Radix Components Showcase',
+      title: 'Fortal Components Showcase',
       theme: _brightness == Brightness.light
           ? ThemeData.light(useMaterial3: true)
           : ThemeData.dark(useMaterial3: true),
@@ -70,11 +54,11 @@ class _ShowcaseScreen extends StatefulWidget {
     required this.currentBrightness,
   });
 
-  final ValueChanged<resolver.RadixAccentColor> onAccentChanged;
-  final ValueChanged<resolver.RadixGrayColor> onGrayChanged;
+  final ValueChanged<FortalAccentColor> onAccentChanged;
+  final ValueChanged<FortalGrayColor> onGrayChanged;
   final ValueChanged<Brightness> onBrightnessChanged;
-  final resolver.RadixAccentColor currentAccent;
-  final resolver.RadixGrayColor currentGray;
+  final FortalAccentColor currentAccent;
+  final FortalGrayColor currentGray;
   final Brightness currentBrightness;
 
   @override
@@ -107,7 +91,7 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Radix Components Showcase'),
+        title: const Text('Fortal Components Showcase'),
         actions: [
           // Theme controls
           PopupMenuButton<Brightness>(
@@ -279,10 +263,10 @@ class _ThemeControls extends StatelessWidget {
     required this.onGrayChanged,
   });
 
-  final resolver.RadixAccentColor accent;
-  final resolver.RadixGrayColor gray;
-  final ValueChanged<resolver.RadixAccentColor> onAccentChanged;
-  final ValueChanged<resolver.RadixGrayColor> onGrayChanged;
+  final FortalAccentColor accent;
+  final FortalGrayColor gray;
+  final ValueChanged<FortalAccentColor> onAccentChanged;
+  final ValueChanged<FortalGrayColor> onGrayChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -300,8 +284,8 @@ class _ThemeControls extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: DropdownButton<resolver.RadixAccentColor>(
-                    items: resolver.RadixAccentColor.values
+                  child: DropdownButton<FortalAccentColor>(
+                    items: FortalAccentColor.values
                         .map(
                           (color) => DropdownMenuItem(
                             value: color,
@@ -316,8 +300,8 @@ class _ThemeControls extends StatelessWidget {
                 ),
                 const SizedBox(width: 16),
                 Expanded(
-                  child: DropdownButton<resolver.RadixGrayColor>(
-                    items: resolver.RadixGrayColor.values
+                  child: DropdownButton<FortalGrayColor>(
+                    items: FortalGrayColor.values
                         .map(
                           (color) => DropdownMenuItem(
                             value: color,
@@ -352,37 +336,37 @@ class _ButtonsSection extends StatelessWidget {
           label: 'Solid',
           icon: Icons.check_circle,
           onPressed: () => print('Button pressed'),
-          style: RadixButtonStyle.solid(),
+          style: FortalButtonStyle.solid(),
         ),
         RemixButton(
           label: 'Soft',
           icon: Icons.favorite,
           onPressed: () => print('Button pressed'),
-          style: RadixButtonStyle.soft(),
+          style: FortalButtonStyle.soft(),
         ),
         RemixButton(
           label: 'Surface',
           icon: Icons.layers,
           onPressed: () => print('Button pressed'),
-          style: RadixButtonStyle.surface(),
+          style: FortalButtonStyle.surface(),
         ),
         RemixButton(
           label: 'Outline',
           icon: Icons.crop_free,
           onPressed: () => print('Button pressed'),
-          style: RadixButtonStyle.outline(),
+          style: FortalButtonStyle.outline(),
         ),
         RemixButton(
           label: 'Ghost',
           icon: Icons.visibility_off,
           onPressed: () => print('Button pressed'),
-          style: RadixButtonStyle.ghost(),
+          style: FortalButtonStyle.ghost(),
         ),
         RemixButton(
           label: 'Surface',
           icon: Icons.style,
           onPressed: () => print('Button pressed'),
-          style: RadixButtonStyle.surface(),
+          style: FortalButtonStyle.surface(),
         ),
       ],
     );
@@ -401,32 +385,32 @@ class _IconButtonsSection extends StatelessWidget {
         RemixIconButton(
           icon: Icons.check_circle,
           onPressed: () => print('Button pressed'),
-          style: RadixIconButtonStyles.solid(),
+          style: FortalIconButtonStyles.solid(),
         ),
         RemixIconButton(
           icon: Icons.favorite,
           onPressed: () => print('Button pressed'),
-          style: RadixIconButtonStyles.soft(),
+          style: FortalIconButtonStyles.soft(),
         ),
         RemixIconButton(
           icon: Icons.layers,
           onPressed: () => print('Button pressed'),
-          style: RadixIconButtonStyles.surface(),
+          style: FortalIconButtonStyles.surface(),
         ),
         RemixIconButton(
           icon: Icons.crop_free,
           onPressed: () => print('Button pressed'),
-          style: RadixIconButtonStyles.outline(),
+          style: FortalIconButtonStyles.outline(),
         ),
         RemixIconButton(
           icon: Icons.visibility_off,
           onPressed: () => print('Button pressed'),
-          style: RadixIconButtonStyles.ghost(),
+          style: FortalIconButtonStyles.ghost(),
         ),
         RemixIconButton(
           icon: Icons.style,
           onPressed: () => print('Button pressed'),
-          style: RadixIconButtonStyles.classic(),
+          style: FortalIconButtonStyles.classic(),
         ),
       ],
     );
@@ -449,7 +433,7 @@ class _CheckboxSection extends StatelessWidget {
             RemixCheckbox(
               selected: value,
               onChanged: onChanged,
-              style: RadixCheckboxStyles.classic(),
+              style: FortalCheckboxStyles.classic(),
               semanticLabel: 'Classic Checkbox',
             ),
             const SizedBox(width: 8),
@@ -462,7 +446,7 @@ class _CheckboxSection extends StatelessWidget {
             RemixCheckbox(
               selected: value,
               onChanged: onChanged,
-              style: RadixCheckboxStyles.surface(),
+              style: FortalCheckboxStyles.surface(),
               semanticLabel: 'Surface Checkbox',
             ),
             const SizedBox(width: 8),
@@ -475,7 +459,7 @@ class _CheckboxSection extends StatelessWidget {
             RemixCheckbox(
               selected: value,
               onChanged: onChanged,
-              style: RadixCheckboxStyles.soft(),
+              style: FortalCheckboxStyles.soft(),
               semanticLabel: 'Soft Checkbox',
             ),
             const SizedBox(width: 8),
@@ -504,7 +488,7 @@ class _RadioSection extends StatelessWidget {
             children: [
               RemixRadio(
                 value: 'option1',
-                style: RadixRadioStyles.classic(),
+                style: FortalRadioStyles.classic(),
                 semanticLabel: 'Classic Option 1',
               ),
               const SizedBox(width: 8),
@@ -516,7 +500,7 @@ class _RadioSection extends StatelessWidget {
             children: [
               RemixRadio(
                 value: 'option2',
-                style: RadixRadioStyles.surface(),
+                style: FortalRadioStyles.surface(),
                 semanticLabel: 'Surface Option 2',
               ),
               const SizedBox(width: 8),
@@ -528,7 +512,7 @@ class _RadioSection extends StatelessWidget {
             children: [
               RemixRadio(
                 value: 'option3',
-                style: RadixRadioStyles.soft(),
+                style: FortalRadioStyles.soft(),
                 semanticLabel: 'Soft Option 3',
               ),
               const SizedBox(width: 8),
@@ -556,7 +540,7 @@ class _SwitchSection extends StatelessWidget {
             RemixSwitch(
               selected: value,
               onChanged: onChanged,
-              style: RadixSwitchStyles.classic(),
+              style: FortalSwitchStyles.classic(),
             ),
             const SizedBox(width: 8),
             const Text('Classic Switch'),
@@ -568,7 +552,7 @@ class _SwitchSection extends StatelessWidget {
             RemixSwitch(
               selected: value,
               onChanged: onChanged,
-              style: RadixSwitchStyles.surface(),
+              style: FortalSwitchStyles.surface(),
             ),
             const SizedBox(width: 8),
             const Text('Surface Switch'),
@@ -580,7 +564,7 @@ class _SwitchSection extends StatelessWidget {
             RemixSwitch(
               selected: value,
               onChanged: onChanged,
-              style: RadixSwitchStyles.soft(),
+              style: FortalSwitchStyles.soft(),
             ),
             const SizedBox(width: 8),
             const Text('Soft Switch'),
@@ -600,17 +584,17 @@ class _TextFieldSection extends StatelessWidget {
       children: [
         RemixTextField(
           hintText: 'Classic TextField',
-          style: RadixTextFieldStyle.classic(),
+          style: FortalTextFieldStyles.classic(),
         ),
         const SizedBox(height: 12),
         RemixTextField(
           hintText: 'Surface TextField',
-          style: RadixTextFieldStyle.surface(),
+          style: FortalTextFieldStyles.surface(),
         ),
         const SizedBox(height: 12),
         RemixTextField(
           hintText: 'Soft TextField',
-          style: RadixTextFieldStyle.soft(),
+          style: FortalTextFieldStyles.soft(),
         ),
       ],
     );
@@ -626,10 +610,10 @@ class _BadgeSection extends StatelessWidget {
       spacing: 8,
       runSpacing: 8,
       children: [
-        RemixBadge(label: 'Solid', style: RadixBadgeStyles.solid()),
-        RemixBadge(label: 'Soft', style: RadixBadgeStyles.soft()),
-        RemixBadge(label: 'Surface', style: RadixBadgeStyles.surface()),
-        RemixBadge(label: 'Outline', style: RadixBadgeStyles.outline()),
+        RemixBadge(label: 'Solid', style: FortalBadgeStyles.solid()),
+        RemixBadge(label: 'Soft', style: FortalBadgeStyles.soft()),
+        RemixBadge(label: 'Surface', style: FortalBadgeStyles.surface()),
+        RemixBadge(label: 'Outline', style: FortalBadgeStyles.outline()),
       ],
     );
   }
@@ -644,11 +628,11 @@ class _ProgressSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        RemixProgress(value: value, style: RadixProgressStyle.classic()),
+        RemixProgress(value: value, style: FortalProgressStyles.classic()),
         const SizedBox(height: 12),
-        RemixProgress(value: value, style: RadixProgressStyle.surface()),
+        RemixProgress(value: value, style: FortalProgressStyles.surface()),
         const SizedBox(height: 12),
-        RemixProgress(value: value, style: RadixProgressStyle.soft()),
+        RemixProgress(value: value, style: FortalProgressStyles.soft()),
       ],
     );
   }
@@ -664,13 +648,16 @@ class _SpinnerSection extends StatelessWidget {
       runSpacing: 16,
       children: [
         RemixSpinner(
-          style: RadixSpinnerStyle.defaultStyle(size: RadixSpinnerSize.size1),
+          style:
+              FortalSpinnerStyles.defaultStyle(size: FortalSpinnerSize.size1),
         ),
         RemixSpinner(
-          style: RadixSpinnerStyle.defaultStyle(size: RadixSpinnerSize.size2),
+          style:
+              FortalSpinnerStyles.defaultStyle(size: FortalSpinnerSize.size2),
         ),
         RemixSpinner(
-          style: RadixSpinnerStyle.defaultStyle(size: RadixSpinnerSize.size3),
+          style:
+              FortalSpinnerStyles.defaultStyle(size: FortalSpinnerSize.size3),
         ),
       ],
     );
@@ -690,19 +677,19 @@ class _SliderSection extends StatelessWidget {
         RemixSlider(
           onChanged: onChanged,
           value: value,
-          style: RadixSliderStyle.classic(),
+          style: FortalSliderStyles.classic(),
         ),
         const SizedBox(height: 16),
         RemixSlider(
           onChanged: onChanged,
           value: value,
-          style: RadixSliderStyle.surface(),
+          style: FortalSliderStyles.surface(),
         ),
         const SizedBox(height: 16),
         RemixSlider(
           onChanged: onChanged,
           value: value,
-          style: RadixSliderStyle.soft(),
+          style: FortalSliderStyles.soft(),
         ),
       ],
     );
@@ -717,17 +704,17 @@ class _CardSection extends StatelessWidget {
     return Column(
       children: [
         RemixCard(
-          style: RadixCardStyles.surface(),
+          style: FortalCardStyles.surface(),
           child: const Text('Surface Card\n\nThis is a surface card variant.'),
         ),
         const SizedBox(height: 16),
         RemixCard(
-          style: RadixCardStyles.classic(),
+          style: FortalCardStyles.classic(),
           child: const Text('Classic Card\n\nThis is a classic card variant.'),
         ),
         const SizedBox(height: 16),
         RemixCard(
-          style: RadixCardStyles.ghost(),
+          style: FortalCardStyles.ghost(),
           child: const Text('Ghost Card\n\nThis is a ghost card variant.'),
         ),
       ],

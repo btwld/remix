@@ -4,7 +4,7 @@ import 'package:remix/remix.dart';
 import '../../widgets/comparison_view.dart';
 
 Widget buildCalloutExample() {
-  return const SizedBox(
+  return SizedBox(
     width: 520,
     child: ComparisonView(
       remix: [
@@ -12,7 +12,7 @@ Widget buildCalloutExample() {
         RemixCallout(
             text: 'Warning message', icon: Icons.warning_amber_rounded),
       ],
-      material: [
+      material: const [
         MaterialBanner(
           content: Text('Information message'),
           leading: Icon(Icons.info),

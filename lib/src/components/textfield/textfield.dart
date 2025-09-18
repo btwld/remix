@@ -12,9 +12,9 @@ import 'package:naked_ui/naked_ui.dart';
 import '../../style/style.dart';
 import '../../utilities/remix_style.dart';
 import '../_internal/widget_state_controller_mixin.dart';
-
-export 'radix_textfield_styles.dart';
+import '../../fortal/fortal.dart';
 
 part 'textfield_spec.dart';
 part 'textfield_style.dart';
 part 'textfield_widget.dart';
+part 'radix_textfield_styles.dart';

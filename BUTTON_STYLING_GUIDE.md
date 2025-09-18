@@ -275,4 +275,4 @@ RemixButtonStyle()
 
 See `lib/src/components/button/button_style_examples.dart` for comprehensive examples of all patterns and use cases.
 
-For Radix-compliant buttons, see `lib/src/components/button/radix_button_styles.dart` which uses these patterns throughout all 6 button variants.
+For Fortal-compliant buttons, see `lib/src/components/button/radix_button_styles.dart` which uses these patterns throughout all 6 button variants.

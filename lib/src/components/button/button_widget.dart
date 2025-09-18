@@ -106,7 +106,7 @@ class RemixButton extends StatefulWidget with HasEnabled {
   /// The style configuration for the button.
   ///
   /// Controls visual properties like colors, padding, typography etc.
-  final RemixButtonStyle? style;
+  final RemixButtonStyle style;
 
   /// Whether to provide feedback when the button is pressed.
   ///
@@ -166,7 +166,7 @@ class _RemixButtonState extends State<RemixButton>
   @override
   Widget build(BuildContext context) {
     return StyleBuilder(
-      style: widget.style!,
+      style: widget.style,
       controller: controller,
       builder: (context, spec) {
         final FlexContaineWidget = spec.container.createWidget;

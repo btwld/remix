@@ -1,53 +1,47 @@
-// ABOUTME: Factory for creating RemixCheckboxStyle instances using Radix design tokens
-// ABOUTME: Provides 3 Radix checkbox variants with proper token-based styling
+part of 'checkbox.dart';
 
-import 'package:mix/mix.dart';
-
-import '../../radix/radix.dart';
-import 'checkbox.dart';
-
-enum RadixCheckboxSize {
+enum FortalCheckboxSize {
   size1,
   size2,
   size3,
 }
 
-enum RadixCheckboxVariant {
+enum FortalCheckboxVariant {
   surface,
   soft,
 }
 
-/// Factory class for creating Radix-compliant checkbox styles.
+/// Factory class for creating Fortal-compliant checkbox styles.
 ///
 /// Provides static methods to create RemixCheckboxStyle instances for all
-/// Radix UI checkbox variants using the RadixTokens system.
-class RadixCheckboxStyles {
-  const RadixCheckboxStyles._();
+/// Fortal UI checkbox variants using the FortalTokens system.
+class FortalCheckboxStyles {
+  const FortalCheckboxStyles._();
 
-  /// Factory constructor for RadixCheckboxStyle with variant and size parameters.
+  /// Factory constructor for FortalCheckboxStyle with variant and size parameters.
   ///
-  /// Returns a RemixCheckboxStyle configured with Radix design tokens.
+  /// Returns a RemixCheckboxStyle configured with Fortal design tokens.
   /// Defaults to classic variant with size2.
   static RemixCheckboxStyle create({
-    RadixCheckboxVariant variant = RadixCheckboxVariant.surface,
-    RadixCheckboxSize size = RadixCheckboxSize.size2,
+    FortalCheckboxVariant variant = FortalCheckboxVariant.surface,
+    FortalCheckboxSize size = FortalCheckboxSize.size2,
   }) {
     return switch (variant) {
-      RadixCheckboxVariant.surface => surface(size: size),
-      RadixCheckboxVariant.soft => soft(size: size),
+      FortalCheckboxVariant.surface => surface(size: size),
+      FortalCheckboxVariant.soft => soft(size: size),
     };
   }
 
   static RemixCheckboxStyle base({
-    RadixCheckboxSize size = RadixCheckboxSize.size2,
+    FortalCheckboxSize size = FortalCheckboxSize.size2,
   }) {
     return RemixCheckboxStyle()
         // Focus state (generic)
         .onFocused(
           RemixCheckboxStyle().indicatorContainer(
             BoxStyler().borderAll(
-              color: RadixTokens.focusA8(),
-              width: RadixTokens.focusRingWidth(),
+              color: FortalTokens.focusA8(),
+              width: FortalTokens.focusRingWidth(),
             ),
           ),
         )
@@ -60,43 +54,43 @@ class RadixCheckboxStyles {
   /// Classic checkboxes use neutral surface with gray borders that become
   /// accent-colored when checked. Used for standard form controls.
   static RemixCheckboxStyle classic({
-    RadixCheckboxSize size = RadixCheckboxSize.size2,
+    FortalCheckboxSize size = FortalCheckboxSize.size2,
   }) {
     return base(size: size)
         // Indicator container (the checkbox box itself) - no size properties
         .indicatorContainer(
           BoxStyler()
-              .color(RadixTokens.colorSurface())
+              .color(FortalTokens.colorSurface())
               .borderAll(
-                color: RadixTokens.gray7(),
-                width: RadixTokens.borderWidth1(),
+                color: FortalTokens.gray7(),
+                width: FortalTokens.borderWidth1(),
               )
               // Use token-based radius. JSON: radius ≈ 1.25 × radius-1 (~3.75),
               // closest token step is radius-2 (4px).
-              .borderRadiusAll(RadixTokens.radius2()),
+              .borderRadiusAll(FortalTokens.radius2()),
         )
         // Check mark icon color
-        .indicatorColor(RadixTokens.gray12())
+        .indicatorColor(FortalTokens.gray12())
         // State variants
         .onSelected(
           RemixCheckboxStyle()
               .indicatorContainer(
-                BoxStyler().color(RadixTokens.accent9()).borderAll(
-                      color: RadixTokens.accent9(),
-                      width: RadixTokens.borderWidth1(),
+                BoxStyler().color(FortalTokens.accent9()).borderAll(
+                      color: FortalTokens.accent9(),
+                      width: FortalTokens.borderWidth1(),
                     ),
               )
-              .indicatorColor(RadixTokens.accentContrast()),
+              .indicatorColor(FortalTokens.accentContrast()),
         )
         .onDisabled(
           RemixCheckboxStyle()
               .indicatorContainer(
-                BoxStyler().color(RadixTokens.colorSurface()).borderAll(
-                      color: RadixTokens.gray7(),
-                      width: RadixTokens.borderWidth1(),
+                BoxStyler().color(FortalTokens.colorSurface()).borderAll(
+                      color: FortalTokens.gray7(),
+                      width: FortalTokens.borderWidth1(),
                     ),
               )
-              .indicatorColor(RadixTokens.gray12()),
+              .indicatorColor(FortalTokens.gray12()),
         );
   }
 
@@ -105,42 +99,42 @@ class RadixCheckboxStyles {
   /// Surface checkboxes use neutral surface with subtle borders.
   /// Used for forms with softer visual appearance.
   static RemixCheckboxStyle surface({
-    RadixCheckboxSize size = RadixCheckboxSize.size2,
+    FortalCheckboxSize size = FortalCheckboxSize.size2,
   }) {
     return base(size: size)
         // Indicator container (the checkbox box itself) - no size properties
         .indicatorContainer(
           BoxStyler()
-              .color(RadixTokens.colorSurface())
+              .color(FortalTokens.colorSurface())
               .borderAll(
-                color: RadixTokens.gray6(),
-                width: RadixTokens.borderWidth1(),
+                color: FortalTokens.gray6(),
+                width: FortalTokens.borderWidth1(),
               )
               // Use token-based radius matching JSON intent.
-              .borderRadiusAll(RadixTokens.radius2()),
+              .borderRadiusAll(FortalTokens.radius2()),
         )
         // Check mark icon color
-        .indicatorColor(RadixTokens.accent9())
+        .indicatorColor(FortalTokens.accent9())
         // State variants
         .onSelected(
           RemixCheckboxStyle()
               .indicatorContainer(
-                BoxStyler().color(RadixTokens.accent9()).borderAll(
-                      color: RadixTokens.accent9(),
-                      width: RadixTokens.borderWidth1(),
+                BoxStyler().color(FortalTokens.accent9()).borderAll(
+                      color: FortalTokens.accent9(),
+                      width: FortalTokens.borderWidth1(),
                     ),
               )
-              .indicatorColor(RadixTokens.accentContrast()),
+              .indicatorColor(FortalTokens.accentContrast()),
         )
         .onDisabled(
           RemixCheckboxStyle()
               .indicatorContainer(
-                BoxStyler().color(RadixTokens.colorSurface()).borderAll(
-                      color: RadixTokens.gray6(),
-                      width: RadixTokens.borderWidth1(),
+                BoxStyler().color(FortalTokens.colorSurface()).borderAll(
+                      color: FortalTokens.gray6(),
+                      width: FortalTokens.borderWidth1(),
                     ),
               )
-              .indicatorColor(RadixTokens.accent9()),
+              .indicatorColor(FortalTokens.accent9()),
         );
   }
 
@@ -149,42 +143,42 @@ class RadixCheckboxStyles {
   /// Soft checkboxes use accent-tinted background with accent borders.
   /// Used for forms that need accent color integration.
   static RemixCheckboxStyle soft({
-    RadixCheckboxSize size = RadixCheckboxSize.size2,
+    FortalCheckboxSize size = FortalCheckboxSize.size2,
   }) {
     return base(size: size)
         // Indicator container (the checkbox box itself) - no size properties
         .indicatorContainer(
           BoxStyler()
-              .color(RadixTokens.accent3())
+              .color(FortalTokens.accent3())
               .borderAll(
-                color: RadixTokens.accent6(),
-                width: RadixTokens.borderWidth1(),
+                color: FortalTokens.accent6(),
+                width: FortalTokens.borderWidth1(),
               )
               // Use token-based radius matching JSON intent.
-              .borderRadiusAll(RadixTokens.radius2()),
+              .borderRadiusAll(FortalTokens.radius2()),
         )
         // Check mark icon color
-        .indicatorColor(RadixTokens.accent11())
+        .indicatorColor(FortalTokens.accent11())
         // State variants
         .onSelected(
           RemixCheckboxStyle()
               .indicatorContainer(
-                BoxStyler().color(RadixTokens.accent9()).borderAll(
-                      color: RadixTokens.accent9(),
-                      width: RadixTokens.borderWidth1(),
+                BoxStyler().color(FortalTokens.accent9()).borderAll(
+                      color: FortalTokens.accent9(),
+                      width: FortalTokens.borderWidth1(),
                     ),
               )
-              .indicatorColor(RadixTokens.accentContrast()),
+              .indicatorColor(FortalTokens.accentContrast()),
         )
         .onDisabled(
           RemixCheckboxStyle()
               .indicatorContainer(
-                BoxStyler().color(RadixTokens.accent3()).borderAll(
-                      color: RadixTokens.accent6(),
-                      width: RadixTokens.borderWidth1(),
+                BoxStyler().color(FortalTokens.accent3()).borderAll(
+                      color: FortalTokens.accent6(),
+                      width: FortalTokens.borderWidth1(),
                     ),
               )
-              .indicatorColor(RadixTokens.accent11()),
+              .indicatorColor(FortalTokens.accent11()),
         );
   }
 
@@ -192,40 +186,40 @@ class RadixCheckboxStyles {
   // Internal builders
   // ---------------------------------------------------------------------------
 
-  static RemixCheckboxStyle _sizeStyle(RadixCheckboxSize size) {
+  static RemixCheckboxStyle _sizeStyle(FortalCheckboxSize size) {
     return switch (size) {
-      RadixCheckboxSize.size1 => RemixCheckboxStyle(
+      FortalCheckboxSize.size1 => RemixCheckboxStyle(
           indicatorContainer: BoxStyler().constraints(BoxConstraintsMix(
             // checkbox-size (size1) ~ space-4 (16px)
-            minWidth: RadixTokens.space4(),
-            maxWidth: RadixTokens.space4(),
-            minHeight: RadixTokens.space4(),
-            maxHeight: RadixTokens.space4(),
+            minWidth: FortalTokens.space4(),
+            maxWidth: FortalTokens.space4(),
+            minHeight: FortalTokens.space4(),
+            maxHeight: FortalTokens.space4(),
           )),
           // Indicator icon size uses token step
-          indicator: IconStyler().size(RadixTokens.space3()),
+          indicator: IconStyler().size(FortalTokens.space3()),
         ),
-      RadixCheckboxSize.size2 => RemixCheckboxStyle(
+      FortalCheckboxSize.size2 => RemixCheckboxStyle(
           indicatorContainer: BoxStyler().constraints(BoxConstraintsMix(
             // checkbox-size: calc(space-4 * 1.25)
             // Resolve via token at runtime and scale
-            minWidth: RadixTokens.space4() * 1.25,
-            maxWidth: RadixTokens.space4() * 1.25,
-            minHeight: RadixTokens.space4() * 1.25,
-            maxHeight: RadixTokens.space4() * 1.25,
+            minWidth: FortalTokens.space4() * 1.25,
+            maxWidth: FortalTokens.space4() * 1.25,
+            minHeight: FortalTokens.space4() * 1.25,
+            maxHeight: FortalTokens.space4() * 1.25,
           )),
           // JSON indicates 12px base indicator size (scaled). Use space-3 (12px).
-          indicator: IconStyler().size(RadixTokens.space3()),
+          indicator: IconStyler().size(FortalTokens.space3()),
         ),
-      RadixCheckboxSize.size3 => RemixCheckboxStyle(
+      FortalCheckboxSize.size3 => RemixCheckboxStyle(
           indicatorContainer: BoxStyler().constraints(BoxConstraintsMix(
             // large size uses space-5 (24px)
-            minWidth: RadixTokens.space5(),
-            maxWidth: RadixTokens.space5(),
-            minHeight: RadixTokens.space5(),
-            maxHeight: RadixTokens.space5(),
+            minWidth: FortalTokens.space5(),
+            maxWidth: FortalTokens.space5(),
+            minHeight: FortalTokens.space5(),
+            maxHeight: FortalTokens.space5(),
           )),
-          indicator: IconStyler().size(RadixTokens.space4()),
+          indicator: IconStyler().size(FortalTokens.space4()),
         ),
     };
   }
