@@ -11,14 +11,10 @@ class FortalSelectStyles {
         .trigger(
           RemixSelectTriggerStyle()
               // Use standard trigger padding X = space-3 (12px), Y = space-2 (8px)
-              .padding(
-                EdgeInsetsGeometryMix.symmetric(
-                    vertical: 8.0, horizontal: 12.0),
-              )
+              .paddingY(8.0)
+              .paddingX(12.0)
               // Per JSON: select-trigger-height = space-7 (28px)
-              .constraints(
-                BoxConstraintsMix(minHeight: 28.0, maxHeight: 28.0),
-              )
+              .height(28.0)
               .direction(Axis.horizontal)
               .mainAxisAlignment(MainAxisAlignment.spaceBetween)
               .crossAxisAlignment(CrossAxisAlignment.center)
@@ -53,13 +49,9 @@ class FortalSelectStyles {
     return RemixSelectStyle()
         .trigger(
           RemixSelectTriggerStyle()
-              .padding(
-                EdgeInsetsGeometryMix.symmetric(
-                    vertical: 8.0, horizontal: 12.0),
-              )
-              .constraints(
-                BoxConstraintsMix(minHeight: 28.0, maxHeight: 28.0),
-              )
+              .paddingY(8.0)
+              .paddingX(12.0)
+              .height(28.0)
               .direction(Axis.horizontal)
               .mainAxisAlignment(MainAxisAlignment.spaceBetween)
               .crossAxisAlignment(CrossAxisAlignment.center)
@@ -86,13 +78,9 @@ class FortalSelectStyles {
     return RemixSelectStyle()
         .trigger(
           RemixSelectTriggerStyle()
-              .padding(
-                EdgeInsetsGeometryMix.symmetric(
-                    vertical: 8.0, horizontal: 12.0),
-              )
-              .constraints(
-                BoxConstraintsMix(minHeight: 28.0, maxHeight: 28.0),
-              )
+              .paddingY(8.0)
+              .paddingX(12.0)
+              .height(28.0)
               .direction(Axis.horizontal)
               .mainAxisAlignment(MainAxisAlignment.spaceBetween)
               .crossAxisAlignment(CrossAxisAlignment.center)
@@ -119,13 +107,9 @@ class FortalSelectStyles {
     return RemixSelectStyle()
         .trigger(
           RemixSelectTriggerStyle()
-              .padding(
-                EdgeInsetsGeometryMix.symmetric(
-                    vertical: 6.0, horizontal: 12.0),
-              )
-              .constraints(
-                BoxConstraintsMix(minHeight: 28.0, maxHeight: 28.0),
-              )
+              .paddingY(6.0)
+              .paddingX(12.0)
+              .height(28.0)
               .direction(Axis.horizontal)
               .mainAxisAlignment(MainAxisAlignment.spaceBetween)
               .crossAxisAlignment(CrossAxisAlignment.center)
@@ -156,14 +140,12 @@ class FortalSelectStyles {
                 width: FortalTokens.borderWidth1(),
               )
               .borderRadiusAll(FortalTokens.radius3())
-              .padding(EdgeInsetsGeometryMix.all(8.0)),
+              .paddingAll(8.0),
         )
         .item(
           RemixSelectMenuItemStyle()
-              .padding(EdgeInsetsGeometryMix.symmetric(horizontal: 8.0))
-              .constraints(
-                BoxConstraintsMix(minHeight: 24.0, maxHeight: 24.0),
-              )
+              .paddingX(8.0)
+              .height(24.0)
               .text(TextStyler().color(FortalTokens.gray12()))
               .icon(IconStyler(size: 20.0)),
         );
@@ -179,14 +161,12 @@ class FortalSelectStyles {
                 width: FortalTokens.borderWidth1(),
               )
               .borderRadiusAll(FortalTokens.radius3())
-              .padding(EdgeInsetsGeometryMix.all(8.0)),
+              .paddingAll(8.0),
         )
         .item(
           RemixSelectMenuItemStyle()
-              .padding(EdgeInsetsGeometryMix.symmetric(horizontal: 8.0))
-              .constraints(
-                BoxConstraintsMix(minHeight: 24.0, maxHeight: 24.0),
-              )
+              .paddingX(8.0)
+              .height(24.0)
               .text(TextStyler().color(FortalTokens.gray12()))
               .icon(IconStyler(size: 20.0)),
         );

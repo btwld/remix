@@ -26,46 +26,44 @@ class FortalTooltipStyles {
     };
   }
 
-  static RemixTooltipStyle base(
-      {FortalTooltipSize size = FortalTooltipSize.size2}) {
+  static RemixTooltipStyle base({
+    FortalTooltipSize size = FortalTooltipSize.size2,
+  }) {
     return RemixTooltipStyle()
         .borderRadiusAll(FortalTokens.radius2())
         .merge(_sizeStyle(size));
   }
 
   /// Neutral panel tooltip
-  static RemixTooltipStyle surface(
-      {FortalTooltipSize size = FortalTooltipSize.size2}) {
+  static RemixTooltipStyle surface({
+    FortalTooltipSize size = FortalTooltipSize.size2,
+  }) {
     return base(size: size)
         // NOTE: No tooltip-specific color token; use panel surface
         // TODO: Confirm final token mapping for tooltip background once available
         .color(FortalTokens.colorPanelSolid())
-        .merge(RemixTooltipStyle(
-          text: TextStyler(style: FortalTokens.text2.mix())
-              .color(FortalTokens.gray12()),
-        ));
+        .labelTextStyle(FortalTokens.text2.mix())
+        .labelColor(FortalTokens.gray12());
   }
 
   /// Accent-tinted tooltip
-  static RemixTooltipStyle soft(
-      {FortalTooltipSize size = FortalTooltipSize.size2}) {
+  static RemixTooltipStyle soft({
+    FortalTooltipSize size = FortalTooltipSize.size2,
+  }) {
     return base(size: size)
         .color(FortalTokens.accent3())
-        .merge(RemixTooltipStyle(
-          text: TextStyler(style: FortalTokens.text2.mix())
-              .color(FortalTokens.accent11()),
-        ));
+        .labelTextStyle(FortalTokens.text2.mix())
+        .labelColor(FortalTokens.accent11());
   }
 
   /// Strong, high-contrast tooltip (dark background + light text)
-  static RemixTooltipStyle solid(
-      {FortalTooltipSize size = FortalTooltipSize.size2}) {
+  static RemixTooltipStyle solid({
+    FortalTooltipSize size = FortalTooltipSize.size2,
+  }) {
     return base(size: size)
         .color(FortalTokens.gray12())
-        .merge(RemixTooltipStyle(
-          text: TextStyler(style: FortalTokens.text2.mix())
-              .color(FortalTokens.gray1()),
-        ));
+        .labelTextStyle(FortalTokens.text2.mix())
+        .labelColor(FortalTokens.gray1());
   }
 
   // ---------------------------------------------------------------------------
@@ -77,20 +75,17 @@ class FortalTooltipStyles {
     // Tooltips are smaller; we scale down by size.
     return switch (size) {
       FortalTooltipSize.size1 => RemixTooltipStyle()
-          .padding(
-              EdgeInsetsGeometryMix.symmetric(vertical: 4.0, horizontal: 8.0))
-          .merge(RemixTooltipStyle(
-              text: TextStyler(style: FortalTokens.text1.mix()))),
+          .paddingY(4.0)
+          .paddingX(8.0)
+          .labelTextStyle(FortalTokens.text1.mix()),
       FortalTooltipSize.size2 => RemixTooltipStyle()
-          .padding(
-              EdgeInsetsGeometryMix.symmetric(vertical: 6.0, horizontal: 10.0))
-          .merge(RemixTooltipStyle(
-              text: TextStyler(style: FortalTokens.text2.mix()))),
+          .paddingY(6.0)
+          .paddingX(10.0)
+          .labelTextStyle(FortalTokens.text2.mix()),
       FortalTooltipSize.size3 => RemixTooltipStyle()
-          .padding(
-              EdgeInsetsGeometryMix.symmetric(vertical: 8.0, horizontal: 12.0))
-          .merge(RemixTooltipStyle(
-              text: TextStyler(style: FortalTokens.text3.mix()))),
+          .paddingY(8.0)
+          .paddingX(12.0)
+          .labelTextStyle(FortalTokens.text3.mix()),
     };
   }
 }

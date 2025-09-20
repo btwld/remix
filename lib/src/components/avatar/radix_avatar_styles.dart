@@ -31,45 +31,44 @@ class FortalAvatarStyles {
     };
   }
 
-  static RemixAvatarStyle base({FortalAvatarSize size = FortalAvatarSize.size2}) {
+  static RemixAvatarStyle base({
+    FortalAvatarSize size = FortalAvatarSize.size2,
+  }) {
     return RemixAvatarStyle()
         .borderRadiusAll(FortalTokens.radiusFull())
         .merge(_sizeStyle(size));
   }
 
   /// Neutral background + neutral text/icon
-  static RemixAvatarStyle surface({FortalAvatarSize size = FortalAvatarSize.size2}) {
+  static RemixAvatarStyle surface({
+    FortalAvatarSize size = FortalAvatarSize.size2,
+  }) {
     return base(size: size)
         .color(FortalTokens.colorSurface())
-        .merge(
-          RemixAvatarStyle(
-            text: TextStyler(style: FortalTokens.text2.mix()).color(FortalTokens.gray12()),
-          ),
-        )
+        .labelTextStyle(FortalTokens.text2.mix())
+        .labelColor(FortalTokens.gray12())
         .iconColor(FortalTokens.gray12());
   }
 
   /// Accent tinted background + accent11 text/icon
-  static RemixAvatarStyle soft({FortalAvatarSize size = FortalAvatarSize.size2}) {
+  static RemixAvatarStyle soft({
+    FortalAvatarSize size = FortalAvatarSize.size2,
+  }) {
     return base(size: size)
         .color(FortalTokens.accent3())
-        .merge(
-          RemixAvatarStyle(
-            text: TextStyler(style: FortalTokens.text2.mix()).color(FortalTokens.accent11()),
-          ),
-        )
+        .labelTextStyle(FortalTokens.text2.mix())
+        .labelColor(FortalTokens.accent11())
         .iconColor(FortalTokens.accent11());
   }
 
   /// Strong accent background + contrast text/icon
-  static RemixAvatarStyle solid({FortalAvatarSize size = FortalAvatarSize.size2}) {
+  static RemixAvatarStyle solid({
+    FortalAvatarSize size = FortalAvatarSize.size2,
+  }) {
     return base(size: size)
         .color(FortalTokens.accent9())
-        .merge(
-          RemixAvatarStyle(
-            text: TextStyler(style: FortalTokens.text2.mix()).color(FortalTokens.accentContrast()),
-          ),
-        )
+        .labelTextStyle(FortalTokens.text2.mix())
+        .labelColor(FortalTokens.accentContrast())
         .iconColor(FortalTokens.accentContrast());
   }
 
@@ -83,16 +82,16 @@ class FortalAvatarStyles {
     return switch (size) {
       FortalAvatarSize.size1 => RemixAvatarStyle()
           .square(24.0)
-          .merge(RemixAvatarStyle(text: TextStyler(style: FortalTokens.text1.mix()))),
+          .labelTextStyle(FortalTokens.text1.mix()),
       FortalAvatarSize.size2 => RemixAvatarStyle()
           .square(32.0)
-          .merge(RemixAvatarStyle(text: TextStyler(style: FortalTokens.text2.mix()))),
+          .labelTextStyle(FortalTokens.text2.mix()),
       FortalAvatarSize.size3 => RemixAvatarStyle()
           .square(40.0)
-          .merge(RemixAvatarStyle(text: TextStyler(style: FortalTokens.text3.mix()))),
+          .labelTextStyle(FortalTokens.text3.mix()),
       FortalAvatarSize.size4 => RemixAvatarStyle()
           .square(64.0)
-          .merge(RemixAvatarStyle(text: TextStyler(style: FortalTokens.text4.mix()))),
+          .labelTextStyle(FortalTokens.text4.mix()),
     };
   }
 }

@@ -4,14 +4,14 @@ import 'package:remix/remix.dart';
 import '../../widgets/comparison_view.dart';
 
 Widget buildBadgeExample() {
-  return SizedBox(
+  return const SizedBox(
     width: 360,
     child: ComparisonView(
       remix: [
         RemixBadge(label: 'New'),
-        RemixBadge(child: const Text('Beta')),
+        RemixBadge(child: Text('Beta')),
       ],
-      material: const [
+      material: [
         Chip(label: Text('New')),
         Chip(label: Text('Beta')),
       ],

@@ -4,14 +4,14 @@ import 'package:remix/remix.dart';
 import '../../widgets/comparison_view.dart';
 
 Widget buildAvatarExample() {
-  return SizedBox(
+  return const SizedBox(
     width: 360,
     child: ComparisonView(
       remix: [
         RemixAvatar(label: 'AB'),
-        RemixAvatar(child: const Icon(Icons.person)),
+        RemixAvatar(child: Icon(Icons.person)),
       ],
-      material: const [
+      material: [
         CircleAvatar(child: Text('AB')),
         CircleAvatar(child: Icon(Icons.person)),
       ],

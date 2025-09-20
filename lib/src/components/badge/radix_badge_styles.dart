@@ -1,6 +1,5 @@
 part of 'badge.dart';
 
-
 enum FortalBadgeSize {
   size1,
   size2,
@@ -52,7 +51,7 @@ class FortalBadgeStyles {
         // Container styling - no size properties
         .color(FortalTokens.accent9())
         // Text styling
-        .textColor(FortalTokens.accentContrast());
+        .labelColor(FortalTokens.accentContrast());
   }
 
   /// Creates a soft variant badge style.
@@ -68,7 +67,7 @@ class FortalBadgeStyles {
           width: FortalTokens.borderWidth1(),
         )
         // Text styling
-        .textColor(FortalTokens.accent11());
+        .labelColor(FortalTokens.accent11());
   }
 
   /// Creates a surface variant badge style.
@@ -86,7 +85,7 @@ class FortalBadgeStyles {
           width: FortalTokens.borderWidth1(),
         )
         // Text styling
-        .textColor(FortalTokens.accent11());
+        .labelColor(FortalTokens.accent11());
   }
 
   /// Creates an outline variant badge style.
@@ -104,7 +103,7 @@ class FortalBadgeStyles {
           width: FortalTokens.borderWidth1(),
         )
         // Text styling
-        .textColor(FortalTokens.accent11());
+        .labelColor(FortalTokens.accent11());
   }
 
   // ---------------------------------------------------------------------------
@@ -115,7 +114,7 @@ class FortalBadgeStyles {
     return switch (size) {
       FortalBadgeSize.size1 => RemixBadgeStyle(
           container: BoxStyler()
-              .constraints(BoxConstraintsMix(minHeight: 18.0, maxHeight: 18.0))
+              .height(18.0)
               .paddingX(6.0)
               .paddingY(2.0)
               .borderRadiusAll(FortalTokens.radius2()),
@@ -123,7 +122,7 @@ class FortalBadgeStyles {
         ),
       FortalBadgeSize.size2 => RemixBadgeStyle(
           container: BoxStyler()
-              .constraints(BoxConstraintsMix(minHeight: 22.0, maxHeight: 22.0))
+              .height(22.0)
               .paddingX(8.0)
               .paddingY(3.0)
               .borderRadiusAll(FortalTokens.radius3()),
@@ -131,7 +130,7 @@ class FortalBadgeStyles {
         ),
       FortalBadgeSize.size3 => RemixBadgeStyle(
           container: BoxStyler()
-              .constraints(BoxConstraintsMix(minHeight: 26.0, maxHeight: 26.0))
+              .height(26.0)
               .paddingX(10.0)
               .paddingY(4.0)
               .borderRadiusAll(FortalTokens.radius3()),

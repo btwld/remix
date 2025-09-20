@@ -2,19 +2,21 @@ part of 'tooltip.dart';
 
 class TooltipSpec extends Spec<TooltipSpec> with Diagnosticable {
   final StyleSpec<BoxSpec> container;
-  final StyleSpec<TextSpec> text;
+  final StyleSpec<TextSpec> label;
 
-  const TooltipSpec({StyleSpec<BoxSpec>? container, StyleSpec<TextSpec>? text})
-      : container = container ?? const StyleSpec(spec: BoxSpec()),
-        text = text ?? const StyleSpec(spec: TextSpec());
+  const TooltipSpec({
+    StyleSpec<BoxSpec>? container,
+    StyleSpec<TextSpec>? label,
+  })  : container = container ?? const StyleSpec(spec: BoxSpec()),
+        label = label ?? const StyleSpec(spec: TextSpec());
 
   TooltipSpec copyWith({
     StyleSpec<BoxSpec>? container,
-    StyleSpec<TextSpec>? text,
+    StyleSpec<TextSpec>? label,
   }) {
     return TooltipSpec(
       container: container ?? this.container,
-      text: text ?? this.text,
+      label: label ?? this.label,
     );
   }
 
@@ -23,7 +25,7 @@ class TooltipSpec extends Spec<TooltipSpec> with Diagnosticable {
 
     return TooltipSpec(
       container: MixOps.lerp(container, other.container, t)!,
-      text: MixOps.lerp(text, other.text, t)!,
+      label: MixOps.lerp(label, other.label, t)!,
     );
   }
 
@@ -32,9 +34,9 @@ class TooltipSpec extends Spec<TooltipSpec> with Diagnosticable {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', container))
-      ..add(DiagnosticsProperty('text', text));
+      ..add(DiagnosticsProperty('label', label));
   }
 
   @override
-  List<Object?> get props => [container, text];
+  List<Object?> get props => [container, label];
 }

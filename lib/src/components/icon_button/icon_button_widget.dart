@@ -150,36 +150,38 @@ class _RemixIconButtonState extends State<RemixIconButton>
       controller: controller,
       builder: (context, spec) {
         final ContainerWidget = spec.container.createWidget;
-        final IconWidget = spec.icon.createWidget;
 
         // Build the icon content
-        final iconWidget = widget.iconBuilder != null
-            ? StyleSpecBuilder<IconSpec>(
-                styleSpec: spec.icon,
-                builder: (context, iconSpec) =>
-                    widget.iconBuilder!(context, iconSpec, widget.icon),
-              )
-            : IconWidget(icon: widget.icon);
+        final iconWidget = StyleSpecBuilder<IconSpec>(
+          styleSpec: spec.icon,
+          builder: (context, iconSpec) {
+            if (widget.iconBuilder != null) {
+              return widget.iconBuilder!(context, iconSpec, widget.icon);
+            }
+
+            return iconSpec.createWidget(icon: widget.icon);
+          },
+        );
 
         // Build spinner (used when loading)
-        final spinner = widget.loadingBuilder != null
-            ? StyleSpecBuilder<SpinnerSpec>(
-                styleSpec: spec.spinner,
-                builder: (context, spinnerSpec) =>
-                    widget.loadingBuilder!(context, spinnerSpec),
-              )
-            : StyleSpecBuilder<SpinnerSpec>(
-                styleSpec: spec.spinner,
-                builder: (context, spinnerSpec) => RemixSpinner(
-                  style: RemixSpinnerStyle(
-                    size: spinnerSpec.size,
-                    strokeWidth: spinnerSpec.strokeWidth,
-                    color: spinnerSpec.color,
-                    duration: spinnerSpec.duration,
-                    type: spinnerSpec.spinnerType,
-                  ),
-                ),
-              );
+        final spinner = StyleSpecBuilder<SpinnerSpec>(
+          styleSpec: spec.spinner,
+          builder: (context, spinnerSpec) {
+            if (widget.loadingBuilder != null) {
+              return widget.loadingBuilder!(context, spinnerSpec);
+            }
+
+            return RemixSpinner(
+              style: RemixSpinnerStyle(
+                size: spinnerSpec.size,
+                strokeWidth: spinnerSpec.strokeWidth,
+                color: spinnerSpec.color,
+                duration: spinnerSpec.duration,
+                type: spinnerSpec.spinnerType,
+              ),
+            );
+          },
+        );
 
         // Create content with proper layering for loading states
         final content = Stack(
