@@ -1,6 +1,5 @@
 part of 'card.dart';
 
-
 enum FortalCardSize {
   size1,
   size2,
@@ -88,13 +87,10 @@ class FortalCardStyles {
 
   static RemixCardStyle _sizeStyle(FortalCardSize size) {
     return switch (size) {
-      FortalCardSize.size1 => RemixCardStyle()
-          .padding(EdgeInsetsGeometryMix.all(24.0)),
+      FortalCardSize.size1 => RemixCardStyle().paddingAll(24.0),
       // Per JSON: card-padding = space-8 (32px) for default
-      FortalCardSize.size2 => RemixCardStyle()
-          .padding(EdgeInsetsGeometryMix.all(32.0)),
-      FortalCardSize.size3 => RemixCardStyle()
-          .padding(EdgeInsetsGeometryMix.all(36.0)),
+      FortalCardSize.size2 => RemixCardStyle().paddingAll(32.0),
+      FortalCardSize.size3 => RemixCardStyle().paddingAll(36.0),
     };
   }
 }

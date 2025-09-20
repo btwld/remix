@@ -1,8 +1,7 @@
 part of 'avatar.dart';
 
-
-
-class RemixAvatarStyle extends RemixContainerStyle<AvatarSpec, RemixAvatarStyle> {
+class RemixAvatarStyle extends RemixContainerStyle<AvatarSpec, RemixAvatarStyle>
+    with LabelStyleMixin<RemixAvatarStyle>, IconStyleMixin<RemixAvatarStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $text;
   final Prop<StyleSpec<IconSpec>>? $icon;
@@ -74,14 +73,12 @@ class RemixAvatarStyle extends RemixContainerStyle<AvatarSpec, RemixAvatarStyle>
 
   /// Sets text color
   RemixAvatarStyle textColor(Color value) {
-    return merge(RemixAvatarStyle(
-      text: TextStyler(style: TextStyleMix(color: value)),
-    ));
+    return label(TextStyler(style: TextStyleMix(color: value)));
   }
 
   /// Sets icon color
   RemixAvatarStyle iconColor(Color value) {
-    return merge(RemixAvatarStyle(icon: IconStyler(color: value)));
+    return icon(IconStyler(color: value));
   }
 
   // Additional convenience methods that delegate to container
@@ -109,6 +106,16 @@ class RemixAvatarStyle extends RemixContainerStyle<AvatarSpec, RemixAvatarStyle>
   /// Sets animation
   RemixAvatarStyle animate(AnimationConfig animation) {
     return merge(RemixAvatarStyle(animation: animation));
+  }
+
+  @override
+  RemixAvatarStyle label(TextStyler value) {
+    return merge(RemixAvatarStyle(text: value));
+  }
+
+  @override
+  RemixAvatarStyle icon(IconStyler value) {
+    return merge(RemixAvatarStyle(icon: value));
   }
 
   // Instance methods (chainable)
@@ -194,5 +201,3 @@ class RemixAvatarStyle extends RemixContainerStyle<AvatarSpec, RemixAvatarStyle>
         $modifier,
       ];
 }
-
-

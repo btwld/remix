@@ -14,55 +14,35 @@ part of 'avatar.dart';
 ///   label: 'User',
 /// )
 /// ```
-class RemixAvatar extends StatelessWidget {
-  /// Creates a Remix avatar.
-  ///
-  /// The [label] parameter is optional. If provided, it will be displayed as text content.
-  /// Other parameters allow customizing the avatar's appearance including background and foreground images.
-  factory RemixAvatar({
-    Key? key,
-    ImageProvider? backgroundImage,
-    ImageProvider? foregroundImage,
-    ImageErrorListener? onBackgroundImageError,
-    ImageErrorListener? onForegroundImageError,
-    RemixAvatarStyle style = const RemixAvatarStyle.create(),
-    String? label,
-  }) {
-    return RemixAvatar.raw(
-      key: key,
-      backgroundImage: backgroundImage,
-      foregroundImage: foregroundImage,
-      onBackgroundImageError: onBackgroundImageError,
-      onForegroundImageError: onForegroundImageError,
-      style: style,
-      child: label != null ? _AvatarText(label: label) : null,
-    );
-  }
+typedef RemixAvatarLabelBuilder = Widget Function(
+  BuildContext context,
+  TextSpec spec,
+  String label,
+);
 
-  /// Creates a Remix avatar with custom content.
-  ///
-  /// This constructor allows for custom avatar content beyond the default layout.
-  /// The [child] parameter is optional and will be used as the avatar's content.
-  ///
-  /// Example:
-  /// ```dart
-  /// RemixAvatar.raw(
-  ///   backgroundImage: NetworkImage('https://example.com/avatar.png'),
-  ///   foregroundImage: NetworkImage('https://example.com/badge.png'),
-  ///   child: Icon(Icons.person),
-  ///   style: RemixAvatarStyle.create(),
-  /// )
-  /// ```
-  const RemixAvatar.raw({
+typedef RemixAvatarIconBuilder = Widget Function(
+  BuildContext context,
+  IconSpec spec,
+  IconData? icon,
+);
+
+class RemixAvatar extends StatelessWidget {
+  /// Creates a Remix avatar with optional text [label], custom [child], and
+  /// background/foreground imagery. When textual content is supplied, it is
+  /// styled using the avatar text spec so typography stays consistent.
+  const RemixAvatar({
     super.key,
     this.backgroundImage,
     this.foregroundImage,
     this.onBackgroundImageError,
     this.onForegroundImageError,
     this.child,
+    this.label,
+    this.labelBuilder,
+    this.icon,
+    this.iconBuilder,
     this.style = const RemixAvatarStyle.create(),
-  })  : assert(backgroundImage != null || onBackgroundImageError == null),
-        assert(foregroundImage != null || onForegroundImageError == null);
+  });
 
   /// The background image to display in the avatar.
   final ImageProvider? backgroundImage;
@@ -79,17 +59,61 @@ class RemixAvatar extends StatelessWidget {
   /// The style configuration for the avatar.
   final RemixAvatarStyle style;
 
-  /// The child widget to display inside the avatar.
+  /// Custom content to display inside the avatar. When provided the caller is
+  /// responsible for applying typography.
   final Widget? child;
+
+  /// Optional text rendered within the avatar using the text spec.
+  final String? label;
+
+  /// Optional builder that exposes the resolved [TextSpec] for custom label
+  /// rendering while keeping the configured typography.
+  final RemixAvatarLabelBuilder? labelBuilder;
+
+  /// Optional icon rendered when no [child] or [label] is provided.
+  final IconData? icon;
+
+  /// Optional builder that exposes the resolved [IconSpec] for custom icon
+  /// rendering while preserving configured icon styling.
+  final RemixAvatarIconBuilder? iconBuilder;
 
   @override
   Widget build(BuildContext context) {
     return StyleBuilder<AvatarSpec>(
       style: style,
       builder: (context, spec) {
-        final ContainerWidget = spec.container.createWidget;
+        final containerBuilder = spec.container.createWidget;
 
-        return ContainerWidget(
+        Widget? content = child;
+        final resolvedLabel = label ?? '';
+
+        if (content == null) {
+          if (labelBuilder != null || label != null) {
+            content = StyleSpecBuilder<TextSpec>(
+              styleSpec: spec.text,
+              builder: (context, textSpec) {
+                if (labelBuilder != null) {
+                  return labelBuilder!(context, textSpec, resolvedLabel);
+                }
+
+                return textSpec.createWidget(resolvedLabel);
+              },
+            );
+          } else if (iconBuilder != null || icon != null) {
+            content = StyleSpecBuilder<IconSpec>(
+              styleSpec: spec.icon,
+              builder: (context, iconSpec) {
+                if (iconBuilder != null) {
+                  return iconBuilder!(context, iconSpec, icon);
+                }
+
+                return iconSpec.createWidget(icon: icon);
+              },
+            );
+          }
+        }
+
+        return containerBuilder(
           child: Container(
             alignment: Alignment.center,
             decoration: backgroundImage != null
@@ -110,27 +134,9 @@ class RemixAvatar extends StatelessWidget {
                     ),
                   )
                 : null,
-            child: child,
+            child: content,
           ),
         );
-      },
-    );
-  }
-}
-
-class _AvatarText extends StatelessWidget {
-  const _AvatarText({required this.label});
-
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return StyleBuilder(
-      style: const RemixAvatarStyle.create(),
-      builder: (context, spec) {
-        final TextWidget = spec.text.createWidget;
-
-        return TextWidget(label);
       },
     );
   }

@@ -6,11 +6,11 @@ import 'package:flutter/services.dart';
 import 'package:mix/mix.dart';
 import 'package:naked_ui/naked_ui.dart';
 
+import '../../fortal/fortal.dart';
 import '../../style/style.dart';
 import '../../utilities/remix_style.dart';
 import '../_internal/widget_state_controller_mixin.dart';
 import '../spinner/spinner.dart';
-import '../../fortal/fortal.dart';
 
 part 'button_spec.dart';
 part 'button_style.dart';

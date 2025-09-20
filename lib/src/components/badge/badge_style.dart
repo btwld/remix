@@ -1,8 +1,7 @@
 part of 'badge.dart';
 
-
-
-class RemixBadgeStyle extends RemixContainerStyle<BadgeSpec, RemixBadgeStyle> {
+class RemixBadgeStyle extends RemixContainerStyle<BadgeSpec, RemixBadgeStyle>
+    with LabelStyleMixin<RemixBadgeStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $text;
 
@@ -54,11 +53,8 @@ class RemixBadgeStyle extends RemixContainerStyle<BadgeSpec, RemixBadgeStyle> {
 
   /// Sets text color
   RemixBadgeStyle textColor(Color value) {
-    return merge(RemixBadgeStyle(
-      text: TextStyler(style: TextStyleMix(color: value)),
-    ));
+    return label(TextStyler(style: TextStyleMix(color: value)));
   }
-
 
   // Additional convenience methods that delegate to container
 
@@ -70,6 +66,11 @@ class RemixBadgeStyle extends RemixContainerStyle<BadgeSpec, RemixBadgeStyle> {
   /// Sets decoration
   RemixBadgeStyle decoration(DecorationMix value) {
     return merge(RemixBadgeStyle(container: BoxStyler(decoration: value)));
+  }
+
+  @override
+  RemixBadgeStyle label(TextStyler value) {
+    return merge(RemixBadgeStyle(text: value));
   }
 
   /// Sets constraints
@@ -147,6 +148,3 @@ class RemixBadgeStyle extends RemixContainerStyle<BadgeSpec, RemixBadgeStyle> {
         $modifier,
       ];
 }
-
-
-

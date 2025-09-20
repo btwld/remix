@@ -11,21 +11,18 @@ part of 'callout.dart';
 /// )
 /// ```
 class RemixCallout extends StatelessWidget {
-  /// Creates a callout widget with text and optional icon.
-  const RemixCallout({
+  /// Creates a callout widget with optional text, icon, or custom [child]. At
+  /// least one of [text] or [child] must be provided.
+  RemixCallout({
     super.key,
-    required this.text,
+    String? text,
     this.icon,
+    Widget? child,
     this.style = const RemixCalloutStyle.create(),
-  }) : child = null;
-
-  /// This constructor allows for more advanced customization by directly providing a [child] widget.
-  const RemixCallout.raw({
-    super.key,
-    this.style = const RemixCalloutStyle.create(),
-    required this.child,
-  })  : text = null,
-        icon = null;
+  })  : text = text,
+        child = child,
+        assert(text != null || child != null,
+            'Provide either text or child to RemixCallout.');
 
   /// The text to display in the callout.
   final String? text;
@@ -36,7 +33,7 @@ class RemixCallout extends StatelessWidget {
   /// The style configuration for the callout.
   final RemixCalloutStyle style;
 
-  /// The child widget to display in the callout (used by .raw constructor).
+  /// Optional custom child content for the callout body.
   final Widget? child;
 
   @override
@@ -51,7 +48,9 @@ class RemixCallout extends StatelessWidget {
         // For raw constructor, use provided child directly
         if (child != null) {
           return ContainerWidget(
-              direction: Axis.horizontal, children: [child!]);
+            direction: Axis.horizontal,
+            children: [child!],
+          );
         }
 
         // Build the callout content with text and optional icon

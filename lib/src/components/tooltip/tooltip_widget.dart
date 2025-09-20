@@ -31,24 +31,25 @@ class RemixTooltip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StyleBuilder<TooltipSpec>(
+    return StyleProvider<TooltipSpec>(
       style: style,
-      builder: (context, spec) {
-        final Container = spec.container.createWidget;
+      child: StyleBuilder<TooltipSpec>(
+        style: style,
+        builder: (context, spec) {
+          final containerBuilder = spec.container.createWidget;
 
-        // Simplified widget tree - only add semantics if needed
-        final tooltip = NakedTooltip(
-          tooltipBuilder: (context) => Container(child: tooltipChild),
-          showDuration: showDuration,
-          waitDuration: waitDuration,
-          removalDelay: const Duration(milliseconds: 100),
-          child: child,
-        );
+          final tooltip = NakedTooltip(
+            tooltipBuilder: (context) => containerBuilder(child: tooltipChild),
+            showDuration: showDuration,
+            waitDuration: waitDuration,
+            child: child,
+          );
 
-        return tooltipSemantics != null
-            ? Semantics(tooltip: tooltipSemantics, child: tooltip)
-            : tooltip;
-      },
+          return tooltipSemantics != null
+              ? Semantics(tooltip: tooltipSemantics, child: tooltip)
+              : tooltip;
+        },
+      ),
     );
   }
 }

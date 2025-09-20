@@ -1,29 +1,29 @@
 part of 'tooltip.dart';
 
-
-
-class RemixTooltipStyle extends RemixContainerStyle<TooltipSpec, RemixTooltipStyle> {
+class RemixTooltipStyle
+    extends RemixContainerStyle<TooltipSpec, RemixTooltipStyle>
+    with LabelStyleMixin<RemixTooltipStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
-  final Prop<StyleSpec<TextSpec>>? $text;
+  final Prop<StyleSpec<TextSpec>>? $label;
 
   const RemixTooltipStyle.create({
     Prop<StyleSpec<BoxSpec>>? container,
-    Prop<StyleSpec<TextSpec>>? text,
+    Prop<StyleSpec<TextSpec>>? label,
     super.variants,
     super.animation,
     super.modifier,
   })  : $container = container,
-        $text = text;
+        $label = label;
 
   RemixTooltipStyle({
     BoxStyler? container,
-    TextStyler? text,
+    TextStyler? label,
     AnimationConfig? animation,
     List<VariantStyle<TooltipSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
           container: Prop.maybeMix(container),
-          text: Prop.maybeMix(text),
+          label: Prop.maybeMix(label),
           variants: variants,
           animation: animation,
           modifier: modifier,
@@ -61,11 +61,16 @@ class RemixTooltipStyle extends RemixContainerStyle<TooltipSpec, RemixTooltipSty
   }
 
   @override
+  RemixTooltipStyle label(TextStyler value) {
+    return merge(RemixTooltipStyle(label: value));
+  }
+
+  @override
   StyleSpec<TooltipSpec> resolve(BuildContext context) {
     return StyleSpec(
       spec: TooltipSpec(
         container: MixOps.resolve(context, $container),
-        text: MixOps.resolve(context, $text),
+        label: MixOps.resolve(context, $label),
       ),
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
@@ -78,7 +83,7 @@ class RemixTooltipStyle extends RemixContainerStyle<TooltipSpec, RemixTooltipSty
 
     return RemixTooltipStyle.create(
       container: MixOps.merge($container, other.$container),
-      text: MixOps.merge($text, other.$text),
+      label: MixOps.merge($label, other.$label),
       variants: MixOps.mergeVariants($variants, other.$variants),
       animation: MixOps.mergeAnimation($animation, other.$animation),
       modifier: MixOps.mergeModifier($modifier, other.$modifier),
@@ -127,11 +132,9 @@ class RemixTooltipStyle extends RemixContainerStyle<TooltipSpec, RemixTooltipSty
   @override
   List<Object?> get props => [
         $container,
-        $text,
+        $label,
         $variants,
         $animation,
         $modifier,
       ];
 }
-
-

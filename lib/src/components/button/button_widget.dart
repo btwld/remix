@@ -121,7 +121,7 @@ class RemixButton extends StatefulWidget with HasEnabled {
   final String label;
 
   /// The icon to display in the button.
-  /// If [builder] is provided, this is ignored.
+  /// If [iconBuilder] is provided, this is ignored.
   final IconData? icon;
 
   /// Builder for customizing the text rendering.
@@ -165,56 +165,61 @@ class _RemixButtonState extends State<RemixButton>
 
   @override
   Widget build(BuildContext context) {
-    return StyleBuilder(
+    return StyleBuilder<ButtonSpec>(
       style: widget.style,
       controller: controller,
       builder: (context, spec) {
         final FlexContaineWidget = spec.container.createWidget;
-        final TextWidget = spec.label.createWidget;
-        final IconWidget = spec.icon.createWidget;
 
         // Build icon widget (optional leading icon)
-        final iconWidget = widget.icon != null || widget.iconBuilder != null
-            ? (widget.iconBuilder != null
-                ? StyleSpecBuilder(
-                    styleSpec: spec.icon,
-                    builder: (context, iconSpec) =>
-                        widget.iconBuilder!(context, iconSpec, widget.icon),
-                  )
-                : IconWidget(icon: widget.icon))
+        final iconWidget = (widget.icon != null || widget.iconBuilder != null)
+            ? StyleSpecBuilder<IconSpec>(
+                styleSpec: spec.icon,
+                builder: (context, iconSpec) {
+                  if (widget.iconBuilder != null) {
+                    return widget.iconBuilder!(
+                      context,
+                      iconSpec,
+                      widget.icon,
+                    );
+                  }
+
+                  return iconSpec.createWidget(icon: widget.icon);
+                },
+              )
             : null;
 
         // Build text widget (always present since label is required)
-        final textWidget = widget.textBuilder != null
-            ? StyleSpecBuilder(
-                styleSpec: spec.label,
-                builder: (context, textSpec) => widget.textBuilder!(
-                  context,
-                  textSpec,
-                  widget.label,
-                ),
-              )
-            : TextWidget(widget.label);
+        final textWidget = StyleSpecBuilder<TextSpec>(
+          styleSpec: spec.label,
+          builder: (context, textSpec) {
+            if (widget.textBuilder != null) {
+              return widget.textBuilder!(context, textSpec, widget.label);
+            }
+
+            return textSpec.createWidget(widget.label);
+          },
+        );
 
         // Build spinner (used when loading)
-        final spinner = widget.loadingBuilder != null
-            ? StyleSpecBuilder(
-                styleSpec: spec.spinner,
-                builder: (context, spinnerSpec) =>
-                    widget.loadingBuilder!(context, spinnerSpec),
-              )
-            : StyleSpecBuilder(
-                styleSpec: spec.spinner,
-                builder: (context, spinnerSpec) => RemixSpinner(
-                  style: RemixSpinnerStyle(
-                    size: spinnerSpec.size,
-                    strokeWidth: spinnerSpec.strokeWidth,
-                    color: spinnerSpec.color,
-                    duration: spinnerSpec.duration,
-                    type: spinnerSpec.spinnerType,
-                  ),
-                ),
-              );
+        final spinner = StyleSpecBuilder<SpinnerSpec>(
+          styleSpec: spec.spinner,
+          builder: (context, spinnerSpec) {
+            if (widget.loadingBuilder != null) {
+              return widget.loadingBuilder!(context, spinnerSpec);
+            }
+
+            return RemixSpinner(
+              style: RemixSpinnerStyle(
+                size: spinnerSpec.size,
+                strokeWidth: spinnerSpec.strokeWidth,
+                color: spinnerSpec.color,
+                duration: spinnerSpec.duration,
+                type: spinnerSpec.spinnerType,
+              ),
+            );
+          },
+        );
 
         // Create content inside the styled container. The container remains
         // visible in loading state to preserve background, padding and radius.

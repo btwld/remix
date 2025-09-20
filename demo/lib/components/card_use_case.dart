@@ -15,7 +15,7 @@ Widget buildCard(BuildContext context) {
             ..spacing(12)
             ..mainAxisSize(MainAxisSize.min),
           children: [
-            RemixAvatar(label: 'LF'),
+            const RemixAvatar(label: 'LF'),
             Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,

@@ -202,48 +202,18 @@ class FortalRadioStyles {
     return switch (size) {
       FortalRadioSize.size1 => RemixRadioStyle(
           container: BoxStyler(alignment: Alignment.center),
-          indicatorContainer: BoxStyler().constraints(BoxConstraintsMix(
-            minWidth: 16.0,
-            maxWidth: 16.0,
-            minHeight: 16.0,
-            maxHeight: 16.0,
-          )),
-          indicator: BoxStyler().constraints(BoxConstraintsMix(
-            minWidth: 8.0,
-            maxWidth: 8.0,
-            minHeight: 8.0,
-            maxHeight: 8.0,
-          )),
+          indicatorContainer: BoxStyler().width(16.0).height(16.0),
+          indicator: BoxStyler().width(8.0).height(8.0),
         ),
       FortalRadioSize.size2 => RemixRadioStyle(
           container: BoxStyler(alignment: Alignment.center),
-          indicatorContainer: BoxStyler().constraints(BoxConstraintsMix(
-            minWidth: 20.0,
-            maxWidth: 20.0,
-            minHeight: 20.0,
-            maxHeight: 20.0,
-          )),
-          indicator: BoxStyler().constraints(BoxConstraintsMix(
-            minWidth: 10.0,
-            maxWidth: 10.0,
-            minHeight: 10.0,
-            maxHeight: 10.0,
-          )),
+          indicatorContainer: BoxStyler().width(20.0).height(20.0),
+          indicator: BoxStyler().width(10.0).height(10.0),
         ),
       FortalRadioSize.size3 => RemixRadioStyle(
           container: BoxStyler(alignment: Alignment.center),
-          indicatorContainer: BoxStyler().constraints(BoxConstraintsMix(
-            minWidth: 24.0,
-            maxWidth: 24.0,
-            minHeight: 24.0,
-            maxHeight: 24.0,
-          )),
-          indicator: BoxStyler().constraints(BoxConstraintsMix(
-            minWidth: 12.0,
-            maxWidth: 12.0,
-            minHeight: 12.0,
-            maxHeight: 12.0,
-          )),
+          indicatorContainer: BoxStyler().width(24.0).height(24.0),
+          indicator: BoxStyler().width(12.0).height(12.0),
         ),
     };
   }

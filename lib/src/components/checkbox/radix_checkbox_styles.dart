@@ -189,36 +189,28 @@ class FortalCheckboxStyles {
   static RemixCheckboxStyle _sizeStyle(FortalCheckboxSize size) {
     return switch (size) {
       FortalCheckboxSize.size1 => RemixCheckboxStyle(
-          indicatorContainer: BoxStyler().constraints(BoxConstraintsMix(
-            // checkbox-size (size1) ~ space-4 (16px)
-            minWidth: FortalTokens.space4(),
-            maxWidth: FortalTokens.space4(),
-            minHeight: FortalTokens.space4(),
-            maxHeight: FortalTokens.space4(),
-          )),
+          indicatorContainer: BoxStyler()
+              // checkbox-size (size1) ~ space-4 (16px)
+              .width(FortalTokens.space4())
+              .height(FortalTokens.space4()),
           // Indicator icon size uses token step
           indicator: IconStyler().size(FortalTokens.space3()),
         ),
       FortalCheckboxSize.size2 => RemixCheckboxStyle(
-          indicatorContainer: BoxStyler().constraints(BoxConstraintsMix(
-            // checkbox-size: calc(space-4 * 1.25)
-            // Resolve via token at runtime and scale
-            minWidth: FortalTokens.space4() * 1.25,
-            maxWidth: FortalTokens.space4() * 1.25,
-            minHeight: FortalTokens.space4() * 1.25,
-            maxHeight: FortalTokens.space4() * 1.25,
-          )),
+          indicatorContainer: BoxStyler()
+              // checkbox-size: calc(space-4 * 1.25)
+              // Resolve via token at runtime and scale
+              // TODO: We need ot add this value 1.25 as a directive
+              .width(FortalTokens.space4() * 1.25)
+              .height(FortalTokens.space4() * 1.25),
           // JSON indicates 12px base indicator size (scaled). Use space-3 (12px).
           indicator: IconStyler().size(FortalTokens.space3()),
         ),
       FortalCheckboxSize.size3 => RemixCheckboxStyle(
-          indicatorContainer: BoxStyler().constraints(BoxConstraintsMix(
-            // large size uses space-5 (24px)
-            minWidth: FortalTokens.space5(),
-            maxWidth: FortalTokens.space5(),
-            minHeight: FortalTokens.space5(),
-            maxHeight: FortalTokens.space5(),
-          )),
+          indicatorContainer: BoxStyler()
+              // large size uses space-5 (24px)
+              .width(FortalTokens.space5())
+              .height(FortalTokens.space5()),
           indicator: IconStyler().size(FortalTokens.space4()),
         ),
     };
