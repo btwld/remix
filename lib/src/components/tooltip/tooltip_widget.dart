@@ -1,14 +1,15 @@
 part of 'tooltip.dart';
 
-class RemixTooltip extends StatelessWidget {
+class RemixTooltip extends StyleWidget<TooltipSpec> {
   const RemixTooltip({
+    super.style = const RemixTooltipStyle.create(),
+    super.styleSpec,
     super.key,
     required this.tooltipChild,
     required this.child,
     this.showDuration = const Duration(seconds: 1),
     this.waitDuration = Duration.zero,
     this.tooltipSemantics,
-    this.style = const RemixTooltipStyle.create(),
   });
 
   /// The widget to display in the tooltip.
@@ -26,30 +27,17 @@ class RemixTooltip extends StatelessWidget {
   /// The semantic label for the tooltip.
   final String? tooltipSemantics;
 
-  /// The style for the tooltip.
-  final RemixTooltipStyle style;
-
   @override
-  Widget build(BuildContext context) {
-    return StyleProvider<TooltipSpec>(
-      style: style,
-      child: StyleBuilder<TooltipSpec>(
-        style: style,
-        builder: (context, spec) {
-          final containerBuilder = spec.container.createWidget;
-
-          final tooltip = NakedTooltip(
-            tooltipBuilder: (context) => containerBuilder(child: tooltipChild),
-            showDuration: showDuration,
-            waitDuration: waitDuration,
-            child: child,
-          );
-
-          return tooltipSemantics != null
-              ? Semantics(tooltip: tooltipSemantics, child: tooltip)
-              : tooltip;
-        },
-      ),
+  Widget build(BuildContext context, TooltipSpec spec) {
+    final tooltip = NakedTooltip(
+      overlayBuilder: (context) => Box(styleSpec: spec.container, child: tooltipChild),
+      showDuration: showDuration,
+      waitDuration: waitDuration,
+      child: child,
     );
+
+    return tooltipSemantics != null
+        ? Semantics(tooltip: tooltipSemantics, child: tooltip)
+        : tooltip;
   }
 }

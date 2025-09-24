@@ -10,15 +10,16 @@ part of 'callout.dart';
 ///   text: 'This is a callout message!',
 /// )
 /// ```
-class RemixCallout extends StatelessWidget {
+class RemixCallout extends StyleWidget<CalloutSpec> {
   /// Creates a callout widget with optional text, icon, or custom [child]. At
   /// least one of [text] or [child] must be provided.
   RemixCallout({
+    super.style = const RemixCalloutStyle.create(),
+    super.styleSpec,
     super.key,
     String? text,
     this.icon,
     Widget? child,
-    this.style = const RemixCalloutStyle.create(),
   })  : text = text,
         child = child,
         assert(text != null || child != null,
@@ -30,44 +31,29 @@ class RemixCallout extends StatelessWidget {
   /// The icon to display in the callout.
   final IconData? icon;
 
-  /// The style configuration for the callout.
-  final RemixCalloutStyle style;
-
   /// Optional custom child content for the callout body.
   final Widget? child;
 
   @override
-  Widget build(BuildContext context) {
-    return StyleBuilder<CalloutSpec>(
-      style: style,
-      builder: (context, spec) {
-        final ContainerWidget = spec.container.createWidget;
-        final TextWidget = spec.text.createWidget;
-        final IconWidget = spec.icon.createWidget;
+  Widget build(BuildContext context, CalloutSpec spec) {
+    // For raw constructor, use provided child directly
+    if (child != null) {
+      return RowBox(styleSpec: spec.container, children: [child!]);
+    }
 
-        // For raw constructor, use provided child directly
-        if (child != null) {
-          return ContainerWidget(
-            direction: Axis.horizontal,
-            children: [child!],
-          );
-        }
+    // Build the callout content with text and optional icon
+    final List<Widget> children = [];
 
-        // Build the callout content with text and optional icon
-        final List<Widget> children = [];
+    // Add icon if present
+    if (icon != null) {
+      children.add(StyledIcon(icon: icon, styleSpec: spec.icon));
+    }
 
-        // Add icon if present
-        if (icon != null) {
-          children.add(IconWidget(icon: icon));
-        }
+    // Add text if present
+    if (text?.isNotEmpty == true) {
+      children.add(StyledText(text!, styleSpec: spec.text));
+    }
 
-        // Add text if present
-        if (text?.isNotEmpty == true) {
-          children.add(TextWidget(text!));
-        }
-
-        return ContainerWidget(direction: Axis.horizontal, children: children);
-      },
-    );
+    return RowBox(styleSpec: spec.container, children: children);
   }
 }

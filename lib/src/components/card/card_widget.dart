@@ -17,12 +17,13 @@ part of 'card.dart';
 ///   ),
 /// )
 /// ```
-class RemixCard extends StatelessWidget {
+class RemixCard extends StyleWidget<CardSpec> {
   /// Creates a Material Design card.
   const RemixCard({
+    super.style = const RemixCardStyle.create(),
+    super.styleSpec,
     super.key,
     this.child,
-    this.style = const RemixCardStyle.create(),
   });
 
   /// The widget below this widget in the tree.
@@ -30,18 +31,8 @@ class RemixCard extends StatelessWidget {
   /// {@macro flutter.widgets.ProxyWidget.child}
   final Widget? child;
 
-  /// The style configuration for the card.
-  final RemixCardStyle style;
-
   @override
-  Widget build(BuildContext context) {
-    return StyleBuilder<CardSpec>(
-      style: style,
-      builder: (context, spec) {
-        final Container = spec.container.createWidget;
-
-        return Container(child: child);
-      },
-    );
+  Widget build(BuildContext context, CardSpec spec) {
+    return Box(styleSpec: spec.container, child: child);
   }
 }

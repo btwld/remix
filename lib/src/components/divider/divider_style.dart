@@ -56,7 +56,7 @@ class RemixDividerStyle extends RemixContainerStyle<DividerSpec, RemixDividerSty
   }
 
   @override
-  RemixDividerStyle withVariants(List<VariantStyle<DividerSpec>> value) {
+  RemixDividerStyle variants(List<VariantStyle<DividerSpec>> value) {
     return merge(RemixDividerStyle(variants: value));
   }
 

@@ -18,15 +18,16 @@ typedef RemixBadgeLabelBuilder = Widget Function(
   String label,
 );
 
-class RemixBadge extends StatelessWidget {
+class RemixBadge extends StyleWidget<BadgeSpec> {
   /// Creates a badge widget. Provide [label] for a text badge or [child] for
   /// fully custom content. When nothing is provided, an empty label is used.
   const RemixBadge({
+    super.style = const RemixBadgeStyle.create(),
+    super.styleSpec,
     super.key,
     this.label,
     this.child,
     this.labelBuilder,
-    this.style = const RemixBadgeStyle.create(),
   });
 
   /// Optional text label rendered with the badge text style.
@@ -40,34 +41,20 @@ class RemixBadge extends StatelessWidget {
   /// render text with custom widgets while preserving badge typography.
   final RemixBadgeLabelBuilder? labelBuilder;
 
-  /// The style configuration for the badge.
-  final RemixBadgeStyle style;
-
   @override
-  Widget build(BuildContext context) {
-    return StyleBuilder<BadgeSpec>(
-      style: style,
-      builder: (context, spec) {
-        final containerBuilder = spec.container.createWidget;
+  Widget build(BuildContext context, BadgeSpec spec) {
+    Widget? content = child;
+    final resolvedLabel = label ?? '';
 
-        Widget? content = child;
-        final resolvedLabel = label ?? '';
+    if (content == null) {
+      content = labelBuilder == null
+          ? StyledText(resolvedLabel, styleSpec: spec.text)
+          : StyleSpecBuilder<TextSpec>(
+              styleSpec: spec.text,
+              builder: (context, textSpec) => labelBuilder!(context, textSpec, resolvedLabel),
+            );
+    }
 
-        if (content == null) {
-          content = StyleSpecBuilder<TextSpec>(
-            styleSpec: spec.text,
-            builder: (context, textSpec) {
-              if (labelBuilder != null) {
-                return labelBuilder!(context, textSpec, resolvedLabel);
-              }
-
-              return textSpec.createWidget(resolvedLabel);
-            },
-          );
-        }
-
-        return containerBuilder(child: content);
-      },
-    );
+    return Box(styleSpec: spec.container, child: content);
   }
 }

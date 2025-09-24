@@ -136,7 +136,7 @@ class RemixAvatarStyle extends RemixContainerStyle<AvatarSpec, RemixAvatarStyle>
   }
 
   @override
-  RemixAvatarStyle withVariants(List<VariantStyle<AvatarSpec>> value) {
+  RemixAvatarStyle variants(List<VariantStyle<AvatarSpec>> value) {
     return merge(RemixAvatarStyle(variants: value));
   }
 

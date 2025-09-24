@@ -96,7 +96,7 @@ class RemixSliderStyle extends RemixStyle<SliderSpec, RemixSliderStyle> {
   }
 
   @override
-  RemixSliderStyle withVariants(List<VariantStyle<SliderSpec>> value) {
+  RemixSliderStyle variants(List<VariantStyle<SliderSpec>> value) {
     return merge(RemixSliderStyle(variants: value));
   }
 
