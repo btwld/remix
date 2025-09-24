@@ -4,9 +4,11 @@ part of 'radio.dart';
 ///
 /// The [RemixRadioGroup] manages the selected value for a group of radio buttons,
 /// ensuring that only one radio button in the group can be selected at a time.
+/// It also provides style inheritance to all child [RemixRadio] widgets.
 ///
-/// ## Example
+/// ## Examples
 ///
+/// Basic usage:
 /// ```dart
 /// RemixRadioGroup<String>(
 ///   groupValue: _selectedValue,
@@ -33,6 +35,18 @@ part of 'radio.dart';
 ///       ),
 ///     ],
 ///   ),
+/// )
+/// ```
+///
+/// With custom styling:
+/// ```dart
+/// RemixRadioGroup<String>(
+///   groupValue: _selectedValue,
+///   onChanged: (value) => setState(() => _selectedValue = value),
+///   style: RemixRadioStyle().indicatorContainer(
+///     (container) => container.border(color: Colors.blue),
+///   ),
+///   child: // Your radio buttons...
 /// )
 /// ```
 class RemixRadioGroup<T> extends StatelessWidget {
