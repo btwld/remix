@@ -27,8 +27,8 @@ part of 'checkbox.dart';
 ///   ],
 /// )
 /// ```
-class RemixCheckbox extends StatefulWidget with HasEnabled {
-  RemixCheckbox({
+class RemixCheckbox extends StatelessWidget {
+  const RemixCheckbox({
     super.key,
     this.enabled = true,
     required this.selected,
@@ -40,10 +40,9 @@ class RemixCheckbox extends StatefulWidget with HasEnabled {
     this.indeterminateIcon = Icons.horizontal_rule,
     this.enableFeedback = true,
     this.style = const RemixCheckboxStyle.create(),
+    this.styleSpec,
     this.focusNode,
     this.semanticLabel,
-    this.semanticHint,
-    this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
   });
 
@@ -76,6 +75,11 @@ class RemixCheckbox extends StatefulWidget with HasEnabled {
   /// The style configuration for the checkbox.
   final RemixCheckboxStyle style;
 
+  /// The style spec for the checkbox.
+  final CheckboxSpec? styleSpec;
+
+  static late final styleFrom = RemixCheckboxStyle.new;
+
   /// Whether to provide haptic feedback when the checkbox is toggled.
   /// Defaults to true.
   final bool enableFeedback;
@@ -86,75 +90,43 @@ class RemixCheckbox extends StatefulWidget with HasEnabled {
   /// The semantic label for the checkbox.
   final String? semanticLabel;
 
-  /// The semantic hint for the checkbox.
-  final String? semanticHint;
-
-  /// Whether to exclude child semantics.
-  final bool excludeSemantics;
-
   /// Cursor when hovering over the checkbox.
   final MouseCursor mouseCursor;
 
   @override
-  State<RemixCheckbox> createState() => _RemixCheckboxState();
-}
-
-class _RemixCheckboxState extends State<RemixCheckbox>
-    with HasWidgetStateController, HasEnabledState {
-  @override
   Widget build(BuildContext context) {
-    // Update controller selected state
-    controller.selected = widget.selected ?? false;
+    return NakedCheckbox(
+      value: selected,
+      tristate: tristate,
+      onChanged: enabled && onChanged != null
+          ? (value) => onChanged!(tristate ? value : (value ?? false))
+          : null,
+      enabled: enabled,
+      mouseCursor: mouseCursor,
+      enableFeedback: enableFeedback,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      semanticLabel: semanticLabel,
+      builder: (context, state, _) {
+        return StyleBuilder(
+          style: style,
+          controller: NakedState.controllerOf(context),
+          builder: (context, spec) {
+            final iconData = tristate && selected == null
+                ? indeterminateIcon
+                : selected == true
+                    ? checkedIcon
+                    : uncheckedIcon;
 
-    return StyleBuilder<CheckboxSpec>(
-      style: widget.style,
-      controller: controller,
-      builder: (context, spec) {
-        final IndicatorContainer = spec.indicatorContainer.createWidget;
-        final Indicator = spec.indicator.createWidget;
-        final Container = spec.container.createWidget;
+            final checkbox = Box(
+              styleSpec: spec.indicatorContainer,
+              child: iconData != null
+                  ? StyledIcon(icon: iconData, styleSpec: spec.indicator)
+                  : null,
+            );
 
-        final iconData = widget.tristate && widget.selected == null
-            ? widget.indeterminateIcon
-            : widget.selected == true
-                ? widget.checkedIcon
-                : widget.uncheckedIcon;
-
-        final checkbox = IndicatorContainer(
-          child: iconData != null ? Indicator(icon: iconData) : null,
-        );
-
-        final control = Container(child: checkbox);
-
-        // Simplified widget tree with integrated semantics
-        return Semantics(
-          excludeSemantics: widget.excludeSemantics,
-          enabled: widget.enabled,
-          checked: widget.selected,
-          mixed: widget.tristate && widget.selected == null,
-          focusable: widget.enabled,
-          label: widget.semanticLabel,
-          hint: widget.semanticHint,
-          onTap: widget.enabled && widget.onChanged != null
-              ? () => widget.onChanged!(!(widget.selected ?? false))
-              : null,
-          child: NakedCheckbox(
-            value: widget.selected,
-            tristate: widget.tristate,
-            onChanged: widget.enabled && widget.onChanged != null
-                ? (value) => widget
-                    .onChanged!(widget.tristate ? value : (value ?? false))
-                : null,
-            enabled: widget.enabled,
-            mouseCursor: widget.mouseCursor,
-            enableFeedback: widget.enableFeedback,
-            focusNode: widget.focusNode,
-            autofocus: widget.autofocus,
-            onFocusChange: (focused) => controller.focused = focused,
-            onHoverChange: (hovered) => controller.hovered = hovered,
-            onPressChange: (pressed) => controller.pressed = pressed,
-            child: control,
-          ),
+            return Box(styleSpec: spec.container, child: checkbox);
+          },
         );
       },
     );
