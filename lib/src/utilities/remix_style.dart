@@ -18,7 +18,7 @@ abstract class RemixStyle<S extends Spec<S>, T extends RemixStyle<S, T>>
     with
         VariantStyleMixin<T, S>,
         WidgetModifierStyleMixin<T, S>,
-        AnimationStyleMixin<S, T> {
+        AnimationStyleMixin<T, S> {
   const RemixStyle({super.variants, super.animation, super.modifier});
 }
 

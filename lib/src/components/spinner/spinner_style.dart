@@ -1,7 +1,5 @@
 part of 'spinner.dart';
 
-
-
 class RemixSpinnerStyle extends RemixStyle<SpinnerSpec, RemixSpinnerStyle> {
   final Prop<double>? $size;
   final Prop<double>? $strokeWidth;
@@ -77,7 +75,7 @@ class RemixSpinnerStyle extends RemixStyle<SpinnerSpec, RemixSpinnerStyle> {
   // Variant support
 
   @override
-  RemixSpinnerStyle withVariants(List<VariantStyle<SpinnerSpec>> value) {
+  RemixSpinnerStyle variants(List<VariantStyle<SpinnerSpec>> value) {
     return merge(RemixSpinnerStyle(variants: value));
   }
 
@@ -129,5 +127,3 @@ class RemixSpinnerStyle extends RemixStyle<SpinnerSpec, RemixSpinnerStyle> {
         $modifier,
       ];
 }
-
-

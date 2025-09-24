@@ -7,20 +7,20 @@ import 'preview_helper.dart';
 @Preview(name: 'Basic Buttons', size: Size(350, 200))
 Widget previewBasicButtons() {
   return createRemixPreview(
-    Column(
+    const Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         RemixButton(
           label: 'Primary Button',
           onPressed: null, // No-op for preview
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         RemixButton(
           label: 'Button with Icon',
           icon: Icons.star,
           onPressed: null,
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         RemixButton(
           label: 'Trailing Icon',
           icon: Icons.arrow_forward,
@@ -34,26 +34,25 @@ Widget previewBasicButtons() {
 @Preview(name: 'Button States', size: Size(350, 250))
 Widget previewButtonStates() {
   return createRemixPreview(
-    Column(
+    const Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         RemixButton(
           label: 'Enabled Button',
           onPressed: null,
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         RemixButton(
           label: 'Disabled Button',
-          enabled: false,
           onPressed: null,
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         RemixButton(
           label: 'Loading Button',
           loading: true,
           onPressed: null,
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         RemixButton(
           label: 'Icon Loading',
           icon: Icons.download,
@@ -101,7 +100,7 @@ Widget previewButtonVariations() {
     Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Row(
+        const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             RemixButton(
@@ -109,7 +108,7 @@ Widget previewButtonVariations() {
               icon: Icons.save,
               onPressed: null,
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             RemixButton(
               label: 'Cancel',
               onPressed: null,
@@ -117,7 +116,7 @@ Widget previewButtonVariations() {
           ],
         ),
         const SizedBox(height: 16),
-        RemixButton(
+        const RemixButton(
           label: 'Download File',
           icon: Icons.download,
           onPressed: null,
@@ -143,7 +142,7 @@ Widget previewButtonVariations() {
           ],
         ),
         const SizedBox(height: 16),
-        RemixButton(
+        const RemixButton(
           label: 'Processing...',
           icon: Icons.sync,
           loading: true,

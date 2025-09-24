@@ -1,0 +1,126 @@
+---
+title: NakedCheckbox
+description: Headless checkbox primitive with tristate support and typed state snapshots
+keywords: [flutter, checkbox, tristate, headless, accessibility]
+---
+
+Headless checkbox component. Handles toggle behavior, keyboard activation, and accessibility. Use builder pattern for custom styling.
+
+## When to use this
+
+- **Form selections**: Multiple choice options in forms
+- **Settings toggles**: Enable/disable features or preferences  
+- **List selections**: Select multiple items from a list
+- **Agreement confirmations**: Terms of service, privacy policies
+
+<Info>
+  See complete examples in our [GitHub repository](https://github.com/btwld/naked_ui/blob/main/example/lib/api/naked_checkbox.0.dart).
+</Info>
+
+## Basic implementation
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:naked_ui/naked_ui.dart';
+
+class CheckboxExample extends StatefulWidget {
+  const CheckboxExample({super.key});
+
+  @override
+  State<CheckboxExample> createState() => _CheckboxExampleState();
+}
+
+class _CheckboxExampleState extends State<CheckboxExample> {
+  bool _isChecked = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return NakedCheckbox(
+      value: _isChecked,
+      onChanged: (next) => setState(() => _isChecked = next ?? false),
+      builder: (context, state, _) {
+        final bool isChecked = state.isChecked == true;
+
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 20,
+              height: 20,
+              decoration: BoxDecoration(
+                color: isChecked ? Colors.blue : Colors.transparent,
+                border: Border.all(color: Colors.blue, width: 2),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: isChecked
+                  ? const Icon(Icons.check, size: 14, color: Colors.white)
+                  : null,
+            ),
+            const SizedBox(width: 8),
+            const Text('Label'),
+          ],
+        );
+      },
+    );
+  }
+}
+```
+
+<Info>
+  For tristate checkboxes (supporting null/indeterminate state), set `tristate: true` and use `bool?` for the value. The checkbox will cycle through false → true → null → false when tapped.
+</Info>
+
+## Typed Checkbox State
+
+`NakedCheckboxState` delivers everything the builder needs:
+
+- `isChecked` → `bool?` (null when tristate and currently indeterminate)
+- `tristate` → whether tristate mode is enabled
+- `isIntermediate` → convenience flag for the null case
+- `widgetStates` → hover/focus/pressed/disabled information
+
+### Access from Context
+
+- `NakedCheckboxState.of(context)` → read the nearest scope (throws if missing)
+- `NakedCheckboxState.maybeOf(context)` → nullable variant
+- `NakedCheckboxState.controllerOf(context)` → access the underlying `WidgetStatesController`
+- `NakedCheckboxState.maybeControllerOf(context)` → nullable controller lookup
+
+## Constructor
+
+```dart
+const NakedCheckbox({
+  Key? key,
+  this.child,
+  this.value = false,
+  this.tristate = false,
+  this.onChanged,
+  this.enabled = true,
+  this.mouseCursor,
+  this.enableFeedback = true,
+  this.focusNode,
+  this.autofocus = false,
+  this.onFocusChange,    // Legacy - prefer builder
+  this.onHoverChange,    // Legacy - prefer builder
+  this.onPressChange,    // Legacy - prefer builder
+  this.builder,          // Recommended approach
+  this.semanticLabel,
+})
+```
+
+### Key Parameters
+
+- `value` → current checked value (`bool?` when `tristate`)
+- `tristate` → enable false → true → null cycling
+- `onChanged` → receive the next value; omit to render a disabled checkbox
+- `builder` → `ValueWidgetBuilder<NakedCheckboxState>?` for dynamic visuals
+- `child` → static child when you do not need the builder
+- Legacy interaction callbacks: `onFocusChange`, `onHoverChange`, `onPressChange` (prefer `builder` pattern)
+- `semanticLabel` → accessible name announced by screen readers
+
+## Accessibility Notes
+
+- Ensure the control is labelled either via surrounding text or `semanticLabel`
+- Provide pressed/hover/focus affordances for keyboard and pointer users
+- When using `tristate`, explain the meaning of the intermediate state in adjacent text
+- Minimum recommended touch target is 44×44 logical pixels

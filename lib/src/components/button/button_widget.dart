@@ -4,14 +4,12 @@ part of 'button.dart';
 typedef RemixButtonTextBuilder = Widget Function(
   BuildContext context,
   TextSpec spec,
-  String text,
 );
 
 /// Builder function for customizing button icon rendering.
 typedef RemixButtonIconBuilder = Widget Function(
   BuildContext context,
   IconSpec spec,
-  IconData? icon,
 );
 
 /// Builder function for customizing button loading state rendering.
@@ -48,19 +46,18 @@ typedef RemixButtonLoadingBuilder = Widget Function(
 /// )
 /// ```
 ///
-class RemixButton extends StatefulWidget with HasEnabled {
+class RemixButton extends StatelessWidget {
   /// Creates a Remix button.
   ///
   /// The [label] parameter is required and specifies the button text.
   /// Use builders to customize rendering of specific parts.
-  RemixButton({
+  const RemixButton({
     super.key,
-    required this.label,
+    this.label = '',
     this.icon,
     this.textBuilder,
     this.iconBuilder,
     this.loadingBuilder,
-    this.enabled = true,
     this.autofocus = false,
     this.loading = false,
     this.enableFeedback = true,
@@ -76,12 +73,6 @@ class RemixButton extends StatefulWidget with HasEnabled {
   });
 
   static late final styleFrom = RemixButtonStyle.new;
-
-  /// Whether the button is enabled.
-  ///
-  /// When false, the button will not respond to user interaction and
-  /// will be visually styled as disabled.
-  final bool enabled;
 
   /// Whether the button is in a loading state.
   ///
@@ -154,126 +145,81 @@ class RemixButton extends StatefulWidget with HasEnabled {
   /// Defaults to [SystemMouseCursors.click] when enabled.
   final MouseCursor mouseCursor;
 
-  @override
-  State<RemixButton> createState() => _RemixButtonState();
-}
-
-class _RemixButtonState extends State<RemixButton>
-    with HasWidgetStateController, HasEnabledState {
-  bool get _isEnabled =>
-      widget.enabled && !widget.loading && widget.onPressed != null;
+  bool get _isEnabled => !loading && onPressed != null;
 
   @override
   Widget build(BuildContext context) {
-    return StyleBuilder<ButtonSpec>(
-      style: widget.style,
-      controller: controller,
-      builder: (context, spec) {
-        final FlexContaineWidget = spec.container.createWidget;
+    return NakedButton(
+      onPressed: _isEnabled ? onPressed : null,
+      onLongPress: _isEnabled ? onLongPress : null,
+      enabled: _isEnabled,
+      mouseCursor: mouseCursor,
+      enableFeedback: enableFeedback,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      semanticLabel: semanticLabel,
+      builder: (context, states, child) {
+        return StyleBuilder(
+          style: style,
+          controller: NakedButtonState.controllerOf(context),
+          builder: (context, spec) {
+            Widget? iconWidget;
 
-        // Build icon widget (optional leading icon)
-        final iconWidget = (widget.icon != null || widget.iconBuilder != null)
-            ? StyleSpecBuilder<IconSpec>(
-                styleSpec: spec.icon,
-                builder: (context, iconSpec) {
-                  if (widget.iconBuilder != null) {
-                    return widget.iconBuilder!(
-                      context,
-                      iconSpec,
-                      widget.icon,
+            if (icon != null || iconBuilder != null) {
+              iconWidget = iconBuilder == null
+                  ? StyledIcon(icon: icon, styleSpec: spec.icon)
+                  : StyleSpecBuilder(
+                      styleSpec: spec.icon,
+                      builder: iconBuilder!,
                     );
-                  }
-
-                  return iconSpec.createWidget(icon: widget.icon);
-                },
-              )
-            : null;
-
-        // Build text widget (always present since label is required)
-        final textWidget = StyleSpecBuilder<TextSpec>(
-          styleSpec: spec.label,
-          builder: (context, textSpec) {
-            if (widget.textBuilder != null) {
-              return widget.textBuilder!(context, textSpec, widget.label);
             }
 
-            return textSpec.createWidget(widget.label);
-          },
-        );
+            // Build text widget (always present since label is required)
+            final textWidget = textBuilder == null
+                ? StyledText(label, styleSpec: spec.label)
+                : StyleSpecBuilder(
+                    styleSpec: spec.label,
+                    builder: textBuilder!,
+                  );
 
-        // Build spinner (used when loading)
-        final spinner = StyleSpecBuilder<SpinnerSpec>(
-          styleSpec: spec.spinner,
-          builder: (context, spinnerSpec) {
-            if (widget.loadingBuilder != null) {
-              return widget.loadingBuilder!(context, spinnerSpec);
-            }
-
-            return RemixSpinner(
-              style: RemixSpinnerStyle(
-                size: spinnerSpec.size,
-                strokeWidth: spinnerSpec.strokeWidth,
-                color: spinnerSpec.color,
-                duration: spinnerSpec.duration,
-                type: spinnerSpec.spinnerType,
-              ),
+            // Build spinner (used when loading)
+            final spinner = Center(
+              child: loadingBuilder == null
+                  ? RemixSpinner(styleSpec: spec.spinner)
+                  : StyleSpecBuilder(
+                      styleSpec: spec.spinner,
+                      builder: loadingBuilder!,
+                    ),
             );
-          },
-        );
 
-        // Create content inside the styled container. The container remains
-        // visible in loading state to preserve background, padding and radius.
-        final baseContainer = FlexContaineWidget(
-          direction: Axis.horizontal,
-          children: [
-            Visibility(
-              visible: !widget.loading,
+            // Create content row with visibility control for loading state
+            final contentRow = Visibility(
+              visible: !loading,
               maintainState: true,
               maintainAnimation: true,
               maintainSize: true,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
+              child: RowBox(
+                styleSpec: spec.container,
                 children: [if (iconWidget != null) iconWidget, textWidget],
               ),
-            ),
-          ],
-        );
+            );
 
-        // Layer spinner above the container while keeping size stable.
-        final layered = Stack(
-          alignment: Alignment.center,
-          children: [
-            baseContainer,
-            if (widget.loading) Center(child: spinner),
-          ],
-        );
+            // Layer spinner above the content while keeping size stable.
+            final layered = Stack(
+              alignment: Alignment.center,
+              children: [contentRow, if (loading) spinner],
+            );
 
-        // Use NakedPressable directly with integrated semantics - cleaner widget tree
-        return Semantics(
-          excludeSemantics: widget.excludeSemantics,
-          enabled: _isEnabled,
-          button: true,
-          focusable: _isEnabled,
-          liveRegion: widget.loading,
-          label: widget.semanticLabel ?? widget.label,
-          value: widget.loading ? 'Loading' : null,
-          hint: widget.semanticHint,
-          onTap: _isEnabled ? widget.onPressed : null,
-          child: NakedButton(
-            onPressed: _isEnabled ? widget.onPressed : null,
-            onLongPress: _isEnabled ? widget.onLongPress : null,
-            onDoubleTap: _isEnabled ? widget.onDoubleTap : null,
-            enabled: _isEnabled,
-            mouseCursor: widget.mouseCursor,
-            enableFeedback: widget.enableFeedback,
-            focusNode: widget.focusNode,
-            autofocus: widget.autofocus,
-            onFocusChange: (focused) => controller.focused = focused,
-            onHoverChange: (hovered) => controller.hovered = hovered,
-            onPressChange: (pressed) => controller.pressed = pressed,
-            child: layered,
-            builder: (context, states, child) => child!,
-          ),
+            return MergeSemantics(
+              child: Semantics(
+                excludeSemantics: excludeSemantics,
+                liveRegion: loading,
+                label: semanticLabel ?? label,
+                hint: semanticHint,
+                child: layered,
+              ),
+            );
+          },
         );
       },
     );
