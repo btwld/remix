@@ -42,16 +42,16 @@ Widget previewBasicCard() {
 @Preview(name: 'Card with Actions', size: Size(400, 350))
 Widget previewCardWithActions() {
   return createRemixPreview(
-    SizedBox(
+    const SizedBox(
       width: 350,
       child: RemixCard(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Row(
+              Row(
                 children: [
                   Icon(Icons.article, color: MixColors.blue),
                   SizedBox(width: 12),
@@ -64,15 +64,15 @@ Widget previewCardWithActions() {
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
-              const Text(
+              SizedBox(height: 12),
+              Text(
                 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
                 style: TextStyle(
                   fontSize: 14,
                   color: MixColors.grey,
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -80,7 +80,7 @@ Widget previewCardWithActions() {
                     label: 'Cancel',
                     onPressed: null,
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   RemixButton(
                     label: 'Read More',
                     onPressed: null,

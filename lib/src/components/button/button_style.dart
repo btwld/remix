@@ -119,10 +119,13 @@ class RemixButtonStyle
     );
   }
 
+  RemixButtonStyle variants(List<VariantStyle<ButtonSpec>> value) {
+    return merge(RemixButtonStyle(variants: value));
+  }
+
   RemixButton call({
     required String label,
     IconData? icon,
-    bool enabled = true,
     bool loading = false,
     bool enableFeedback = true,
     required VoidCallback? onPressed,
@@ -131,7 +134,6 @@ class RemixButtonStyle
     return RemixButton(
       label: label,
       icon: icon,
-      enabled: enabled,
       loading: loading,
       enableFeedback: enableFeedback,
       onPressed: onPressed,
@@ -178,13 +180,6 @@ class RemixButtonStyle
     return merge(RemixButtonStyle(
       container: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
     ));
-  }
-
-  // Variant support
-
-  @override
-  RemixButtonStyle withVariants(List<VariantStyle<ButtonSpec>> value) {
-    return merge(RemixButtonStyle(variants: value));
   }
 
   // Modifier support

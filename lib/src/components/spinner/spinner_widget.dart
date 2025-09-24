@@ -21,23 +21,16 @@ part of 'spinner.dart';
 ///   ),
 /// )
 /// ```
-class RemixSpinner extends StatelessWidget {
+class RemixSpinner extends StyleWidget<SpinnerSpec> {
   const RemixSpinner({
+    super.style = const RemixSpinnerStyle.create(),
+    super.styleSpec,
     super.key,
-    this.style = const RemixSpinnerStyle.create(),
   });
 
-  /// The style configuration for the spinner.
-  final RemixSpinnerStyle style;
-
   @override
-  Widget build(BuildContext context) {
-    return StyleBuilder<SpinnerSpec>(
-      style: style,
-      builder: (context, spec) {
-        return _SpinnerSpecWidget(spec: spec);
-      },
-    );
+  Widget build(BuildContext context, SpinnerSpec spec) {
+    return _SpinnerSpecWidget(spec: spec);
   }
 }
 
@@ -113,24 +106,4 @@ class _SpinnerSpecWidgetState extends State<_SpinnerSpecWidget>
 
 Widget createSpinnerWidget(SpinnerSpec spec) {
   return _SpinnerSpecWidget(spec: spec);
-}
-
-/// Extension on SpinnerSpec to provide createWidget method for creating widgets
-extension SpinnerSpecWidget on SpinnerSpec {
-  /// Renders the SpinnerSpec into a SpinnerSpecWidget
-  Widget createWidget() {
-    return createSpinnerWidget(this);
-  }
-}
-
-/// Extension on StyleSpec<SpinnerSpec> to provide createWidget method for creating widgets
-extension SpinnerSpecWrappedWidget on StyleSpec<SpinnerSpec> {
-  Widget createWidget() {
-    return StyleSpecBuilder(
-      styleSpec: this,
-      builder: (context, spec) {
-        return createSpinnerWidget(spec);
-      },
-    );
-  }
 }
