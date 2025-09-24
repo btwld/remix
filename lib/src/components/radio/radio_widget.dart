@@ -30,10 +30,10 @@ part of 'radio.dart';
 /// )
 /// ```
 ///
-class RemixRadio<T> extends StyleWidget<RadioSpec> {
+class RemixRadio<T> extends StatelessWidget {
   const RemixRadio({
-    super.style = const RemixRadioStyle.create(),
-    super.styleSpec,
+    this.style = const RemixRadioStyle.create(),
+    this.styleSpec,
     super.key,
     required this.value,
     this.autofocus = false,
@@ -42,10 +42,11 @@ class RemixRadio<T> extends StyleWidget<RadioSpec> {
     this.focusNode,
     this.mouseCursor,
     this.enableFeedback = true,
-    this.semanticLabel,
-    this.semanticHint,
-    this.excludeSemantics = false,
   });
+
+  final RemixRadioStyle style;
+
+  final RadioSpec? styleSpec;
 
   static late final styleFrom = RemixRadioStyle.new;
 
@@ -70,17 +71,8 @@ class RemixRadio<T> extends StyleWidget<RadioSpec> {
   /// Whether to provide feedback when the radio button is pressed.
   final bool enableFeedback;
 
-  /// The semantic label for the radio button.
-  final String? semanticLabel;
-
-  /// The semantic hint for the radio button.
-  final String? semanticHint;
-
-  /// Whether to exclude child semantics.
-  final bool excludeSemantics;
-
   @override
-  Widget build(BuildContext context, RadioSpec spec) {
+  Widget build(BuildContext context) {
     final registry = RadioGroup.maybeOf<T>(context);
 
     // Always require registry - same as NakedRadio
@@ -111,44 +103,29 @@ class RemixRadio<T> extends StyleWidget<RadioSpec> {
     // Check if selected
     final isSelected = registry.groupValue == value;
 
-    // Build widgets using Box instead of deprecated createWidget
-    Widget buildIndicatorContainer({Widget? child}) {
-      return Box(styleSpec: spec.indicatorContainer, child: child);
-    }
-
-    Widget buildIndicator() {
-      return Box(styleSpec: spec.indicator);
-    }
-
-    Widget buildContainer({required Widget child}) {
-      return Box(styleSpec: spec.container, child: child);
-    }
-
-    // Build the radio indicator
-    final radioIndicator = buildIndicatorContainer(
-      child: isSelected ? buildIndicator() : null,
-    );
-
-    final control = buildContainer(child: radioIndicator);
-
-    // Simplified widget tree with integrated semantics
-    return Semantics(
-      excludeSemantics: excludeSemantics,
+    // NakedRadio handles semantics through RawRadio - no need for wrapper
+    return NakedRadio<T>(
+      value: value,
       enabled: enabled,
-      checked: isSelected,
-      focusable: enabled,
-      inMutuallyExclusiveGroup: true,
-      label: semanticLabel,
-      hint: semanticHint,
-      child: NakedRadio<T>(
-        value: value,
-        enabled: enabled,
-        mouseCursor: mouseCursor,
-        focusNode: focusNode,
-        autofocus: autofocus,
-        toggleable: toggleable,
-        child: control,
-      ),
+      mouseCursor: mouseCursor,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      toggleable: toggleable,
+      builder: (context, _, __) {
+        return StyleBuilder(
+          style: style,
+          controller: NakedState.controllerOf(context),
+          builder: (context, spec) {
+            // Build the radio indicator
+            final radioIndicator = Box(
+              styleSpec: spec.indicatorContainer,
+              child: isSelected ? Box(styleSpec: spec.indicator) : null,
+            );
+
+            return Box(styleSpec: spec.container, child: radioIndicator);
+          },
+        );
+      },
     );
   }
 }

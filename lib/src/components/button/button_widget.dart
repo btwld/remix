@@ -48,14 +48,14 @@ typedef RemixButtonLoadingBuilder = Widget Function(
 /// )
 /// ```
 ///
-class RemixButton extends StyleWidget<ButtonSpec> {
+class RemixButton extends StatelessWidget {
   /// Creates a Remix button.
   ///
   /// The [label] parameter is required and specifies the button text.
   /// Use builders to customize rendering of specific parts.
   const RemixButton({
-    super.style = const RemixButtonStyle.create(),
-    super.styleSpec,
+    this.style = const RemixButtonStyle.create(),
+    this.styleSpec,
     super.key,
     this.label = '',
     this.icon,
@@ -74,6 +74,10 @@ class RemixButton extends StyleWidget<ButtonSpec> {
     this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
   });
+
+  final RemixButtonStyle style;
+
+  final ButtonSpec? styleSpec;
 
   static late final styleFrom = RemixButtonStyle.new;
 
@@ -146,7 +150,7 @@ class RemixButton extends StyleWidget<ButtonSpec> {
   bool get _isEnabled => !loading && onPressed != null;
 
   @override
-  Widget build(BuildContext context, ButtonSpec spec) {
+  Widget build(BuildContext context) {
     return NakedButton(
       onPressed: _isEnabled ? onPressed : null,
       onLongPress: _isEnabled ? onLongPress : null,
@@ -156,62 +160,70 @@ class RemixButton extends StyleWidget<ButtonSpec> {
       focusNode: focusNode,
       autofocus: autofocus,
       semanticLabel: semanticLabel,
-      builder: (context, states, child) {
-        Widget? iconWidget;
+      builder: (context, __, _) {
+        return StyleBuilder(
+          style: style,
+          controller: NakedState.controllerOf(context),
+          builder: (context, spec) {
+            Widget? iconWidget;
 
-        if (icon != null || iconBuilder != null) {
-          iconWidget = iconBuilder == null
-              ? StyledIcon(icon: icon, styleSpec: spec.icon)
-              : StyleSpecBuilder(
-                  styleSpec: spec.icon,
-                  builder: (context, iconSpec) => iconBuilder!(context, iconSpec, icon),
-                );
-        }
+            if (icon != null || iconBuilder != null) {
+              iconWidget = iconBuilder == null
+                  ? StyledIcon(icon: icon, styleSpec: spec.icon)
+                  : StyleSpecBuilder(
+                      styleSpec: spec.icon,
+                      builder: (context, iconSpec) =>
+                          iconBuilder!(context, iconSpec, icon),
+                    );
+            }
 
-        // Build text widget (always present since label is required)
-        final textWidget = textBuilder == null
-            ? StyledText(label, styleSpec: spec.label)
-            : StyleSpecBuilder(
-                styleSpec: spec.label,
-                builder: (context, textSpec) => textBuilder!(context, textSpec, label),
-              );
+            // Build text widget (always present since label is required)
+            final textWidget = textBuilder == null
+                ? StyledText(label, styleSpec: spec.label)
+                : StyleSpecBuilder(
+                    styleSpec: spec.label,
+                    builder: (context, textSpec) =>
+                        textBuilder!(context, textSpec, label),
+                  );
 
-        // Build spinner (used when loading)
-        final spinner = Center(
-          child: loadingBuilder == null
-              ? RemixSpinner(styleSpec: spec.spinner)
-              : StyleSpecBuilder(
-                  styleSpec: spec.spinner,
-                  builder: loadingBuilder!,
-                ),
-        );
+            // Build spinner (used when loading)
+            final spinner = Center(
+              child: loadingBuilder == null
+                  ? RemixSpinner(styleSpec: spec.spinner)
+                  : StyleSpecBuilder(
+                      styleSpec: spec.spinner,
+                      builder: loadingBuilder!,
+                    ),
+            );
 
-        // Create content row with visibility control for loading state
-        final contentRow = Visibility(
-          visible: !loading,
-          maintainState: true,
-          maintainAnimation: true,
-          maintainSize: true,
-          child: RowBox(
-            styleSpec: spec.container,
-            children: [if (iconWidget != null) iconWidget, textWidget],
-          ),
-        );
+            // Create content row with visibility control for loading state
+            final contentRow = Visibility(
+              visible: !loading,
+              maintainState: true,
+              maintainAnimation: true,
+              maintainSize: true,
+              child: RowBox(
+                styleSpec: spec.container,
+                children: [if (iconWidget != null) iconWidget, textWidget],
+              ),
+            );
 
-        // Layer spinner above the content while keeping size stable.
-        final layered = Stack(
-          alignment: Alignment.center,
-          children: [contentRow, if (loading) spinner],
-        );
+            // Layer spinner above the content while keeping size stable.
+            final layered = Stack(
+              alignment: Alignment.center,
+              children: [contentRow, if (loading) spinner],
+            );
 
-        return MergeSemantics(
-          child: Semantics(
-            excludeSemantics: excludeSemantics,
-            liveRegion: loading,
-            label: semanticLabel ?? label,
-            hint: semanticHint,
-            child: layered,
-          ),
+            return MergeSemantics(
+              child: Semantics(
+                excludeSemantics: excludeSemantics,
+                liveRegion: loading,
+                label: semanticLabel ?? label,
+                hint: semanticHint,
+                child: layered,
+              ),
+            );
+          },
         );
       },
     );

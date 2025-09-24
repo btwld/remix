@@ -39,14 +39,14 @@ typedef RemixIconButtonLoadingBuilder = Widget Function(
 ///   onPressed: () => print('Save pressed!'),
 /// )
 /// ```
-class RemixIconButton extends StyleWidget<IconButtonSpec> {
+class RemixIconButton extends StatelessWidget {
   /// Creates a Remix icon button.
   ///
   /// The [icon] parameter is required and specifies which icon to display.
   /// Use builders to customize rendering of specific parts.
   const RemixIconButton({
-    super.style = const RemixIconButtonStyle.create(),
-    super.styleSpec,
+    this.style = const RemixIconButtonStyle.create(),
+    this.styleSpec,
     super.key,
     required this.icon,
     this.iconBuilder,
@@ -63,6 +63,10 @@ class RemixIconButton extends StyleWidget<IconButtonSpec> {
     this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
   });
+
+  final RemixIconButtonStyle style;
+
+  final IconButtonSpec? styleSpec;
 
   static late final styleFrom = RemixIconButtonStyle.new;
 
@@ -128,43 +132,7 @@ class RemixIconButton extends StyleWidget<IconButtonSpec> {
   bool get _isEnabled => !loading && onPressed != null;
 
   @override
-  Widget build(BuildContext context, IconButtonSpec spec) {
-    Widget? iconWidget;
-
-    if (iconBuilder != null) {
-      iconWidget = StyleSpecBuilder(
-        styleSpec: spec.icon,
-        builder: (context, iconSpec) => iconBuilder!(context, iconSpec, icon),
-      );
-    } else {
-      iconWidget = StyledIcon(icon: icon, styleSpec: spec.icon);
-    }
-
-    // Build spinner (used when loading)
-    final spinner = Center(
-      child: loadingBuilder == null
-          ? RemixSpinner(styleSpec: spec.spinner)
-          : StyleSpecBuilder(
-              styleSpec: spec.spinner,
-              builder: loadingBuilder!,
-            ),
-    );
-
-    // Create content with visibility control for loading state
-    final content = Visibility(
-      visible: !loading,
-      maintainState: true,
-      maintainAnimation: true,
-      maintainSize: true,
-      child: iconWidget,
-    );
-
-    // Layer spinner above the content while keeping size stable.
-    final layered = Stack(
-      alignment: Alignment.center,
-      children: [content, if (loading) spinner],
-    );
-
+  Widget build(BuildContext context) {
     return NakedButton(
       onPressed: _isEnabled ? onPressed : null,
       onLongPress: _isEnabled ? onLongPress : null,
@@ -175,17 +143,59 @@ class RemixIconButton extends StyleWidget<IconButtonSpec> {
       autofocus: autofocus,
       semanticLabel: semanticLabel,
       builder: (context, states, child) {
-        return MergeSemantics(
-          child: Semantics(
-            excludeSemantics: excludeSemantics,
-            liveRegion: loading,
-            label: semanticLabel ?? 'Icon Button',
-            hint: semanticHint,
-            child: Box(
-              styleSpec: spec.container,
-              child: layered,
-            ),
-          ),
+        return StyleBuilder(
+          style: style,
+          controller: NakedState.controllerOf(context),
+          builder: (context, spec) {
+            Widget? iconWidget;
+
+            if (iconBuilder != null) {
+              iconWidget = StyleSpecBuilder(
+                styleSpec: spec.icon,
+                builder: (context, iconSpec) => iconBuilder!(context, iconSpec, icon),
+              );
+            } else {
+              iconWidget = StyledIcon(icon: icon, styleSpec: spec.icon);
+            }
+
+            // Build spinner (used when loading)
+            final spinner = Center(
+              child: loadingBuilder == null
+                  ? RemixSpinner(styleSpec: spec.spinner)
+                  : StyleSpecBuilder(
+                      styleSpec: spec.spinner,
+                      builder: loadingBuilder!,
+                    ),
+            );
+
+            // Create content with visibility control for loading state
+            final content = Visibility(
+              visible: !loading,
+              maintainState: true,
+              maintainAnimation: true,
+              maintainSize: true,
+              child: iconWidget,
+            );
+
+            // Layer spinner above the content while keeping size stable.
+            final layered = Stack(
+              alignment: Alignment.center,
+              children: [content, if (loading) spinner],
+            );
+
+            return MergeSemantics(
+              child: Semantics(
+                excludeSemantics: excludeSemantics,
+                liveRegion: loading,
+                label: semanticLabel ?? 'Icon Button',
+                hint: semanticHint,
+                child: Box(
+                  styleSpec: spec.container,
+                  child: layered,
+                ),
+              ),
+            );
+          },
         );
       },
     );
