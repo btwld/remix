@@ -39,17 +39,18 @@ typedef RemixIconButtonLoadingBuilder = Widget Function(
 ///   onPressed: () => print('Save pressed!'),
 /// )
 /// ```
-class RemixIconButton extends StatefulWidget with HasEnabled {
+class RemixIconButton extends StyleWidget<IconButtonSpec> {
   /// Creates a Remix icon button.
   ///
   /// The [icon] parameter is required and specifies which icon to display.
   /// Use builders to customize rendering of specific parts.
-  RemixIconButton({
+  const RemixIconButton({
+    super.style = const RemixIconButtonStyle.create(),
+    super.styleSpec,
     super.key,
     required this.icon,
     this.iconBuilder,
     this.loadingBuilder,
-    this.enabled = true,
     this.autofocus = false,
     this.loading = false,
     this.enableFeedback = true,
@@ -57,7 +58,6 @@ class RemixIconButton extends StatefulWidget with HasEnabled {
     this.onLongPress,
     this.onDoubleTap,
     this.focusNode,
-    this.style = const RemixIconButtonStyle.create(),
     this.semanticLabel,
     this.semanticHint,
     this.excludeSemantics = false,
@@ -66,11 +66,6 @@ class RemixIconButton extends StatefulWidget with HasEnabled {
 
   static late final styleFrom = RemixIconButtonStyle.new;
 
-  /// Whether the button is enabled.
-  ///
-  /// When false, the button will not respond to user interaction and
-  /// will be visually styled as disabled.
-  final bool enabled;
 
   /// Whether the button is in a loading state.
   ///
@@ -91,10 +86,6 @@ class RemixIconButton extends StatefulWidget with HasEnabled {
   /// Optional focus node to control the button's focus behavior.
   final FocusNode? focusNode;
 
-  /// The style configuration for the button.
-  ///
-  /// Controls visual properties like colors, padding, size etc.
-  final RemixIconButtonStyle style;
 
   /// Whether to provide feedback when the button is pressed.
   ///
@@ -134,97 +125,66 @@ class RemixIconButton extends StatefulWidget with HasEnabled {
   /// Defaults to [SystemMouseCursors.click] when enabled.
   final MouseCursor mouseCursor;
 
-  @override
-  State<RemixIconButton> createState() => _RemixIconButtonState();
-}
-
-class _RemixIconButtonState extends State<RemixIconButton>
-    with HasWidgetStateController, HasEnabledState {
-  bool get _isEnabled =>
-      widget.enabled && !widget.loading && widget.onPressed != null;
+  bool get _isEnabled => !loading && onPressed != null;
 
   @override
-  Widget build(BuildContext context) {
-    return StyleBuilder<IconButtonSpec>(
-      style: widget.style,
-      controller: controller,
-      builder: (context, spec) {
-        final ContainerWidget = spec.container.createWidget;
+  Widget build(BuildContext context, IconButtonSpec spec) {
+    Widget? iconWidget;
 
-        // Build the icon content
-        final iconWidget = StyleSpecBuilder<IconSpec>(
-          styleSpec: spec.icon,
-          builder: (context, iconSpec) {
-            if (widget.iconBuilder != null) {
-              return widget.iconBuilder!(context, iconSpec, widget.icon);
-            }
+    if (iconBuilder != null) {
+      iconWidget = StyleSpecBuilder(
+        styleSpec: spec.icon,
+        builder: (context, iconSpec) => iconBuilder!(context, iconSpec, icon),
+      );
+    } else {
+      iconWidget = StyledIcon(icon: icon, styleSpec: spec.icon);
+    }
 
-            return iconSpec.createWidget(icon: widget.icon);
-          },
-        );
-
-        // Build spinner (used when loading)
-        final spinner = StyleSpecBuilder<SpinnerSpec>(
-          styleSpec: spec.spinner,
-          builder: (context, spinnerSpec) {
-            if (widget.loadingBuilder != null) {
-              return widget.loadingBuilder!(context, spinnerSpec);
-            }
-
-            return RemixSpinner(
-              style: RemixSpinnerStyle(
-                size: spinnerSpec.size,
-                strokeWidth: spinnerSpec.strokeWidth,
-                color: spinnerSpec.color,
-                duration: spinnerSpec.duration,
-                type: spinnerSpec.spinnerType,
-              ),
-            );
-          },
-        );
-
-        // Create content with proper layering for loading states
-        final content = Stack(
-          alignment: Alignment.center,
-          children: [
-            // Underlying icon: keep in the tree with state, but hide when loading
-            Visibility(
-              visible: !widget.loading,
-              maintainState: true,
-              maintainAnimation: true,
-              maintainSize: true,
-              child: iconWidget,
+    // Build spinner (used when loading)
+    final spinner = Center(
+      child: loadingBuilder == null
+          ? RemixSpinner(styleSpec: spec.spinner)
+          : StyleSpecBuilder(
+              styleSpec: spec.spinner,
+              builder: loadingBuilder!,
             ),
-            // Spinner overlay, visible only when loading
-            if (widget.loading) Center(child: spinner),
-          ],
-        );
+    );
 
-        // Wrap in container and pressable
-        return Semantics(
-          excludeSemantics: widget.excludeSemantics,
-          enabled: _isEnabled,
-          button: true,
-          focusable: _isEnabled,
-          liveRegion: widget.loading,
-          label: widget.semanticLabel ?? 'Icon Button',
-          value: widget.loading ? 'Loading' : null,
-          hint: widget.semanticHint,
-          onTap: _isEnabled ? widget.onPressed : null,
-          child: NakedButton(
-            onPressed: _isEnabled ? widget.onPressed : null,
-            onLongPress: _isEnabled ? widget.onLongPress : null,
-            onDoubleTap: _isEnabled ? widget.onDoubleTap : null,
-            enabled: _isEnabled,
-            mouseCursor: widget.mouseCursor,
-            enableFeedback: widget.enableFeedback,
-            focusNode: widget.focusNode,
-            autofocus: widget.autofocus,
-            onFocusChange: (focused) => controller.focused = focused,
-            onHoverChange: (hovered) => controller.hovered = hovered,
-            onPressChange: (pressed) => controller.pressed = pressed,
-            child: ContainerWidget(child: content),
-            builder: (context, states, child) => child!,
+    // Create content with visibility control for loading state
+    final content = Visibility(
+      visible: !loading,
+      maintainState: true,
+      maintainAnimation: true,
+      maintainSize: true,
+      child: iconWidget,
+    );
+
+    // Layer spinner above the content while keeping size stable.
+    final layered = Stack(
+      alignment: Alignment.center,
+      children: [content, if (loading) spinner],
+    );
+
+    return NakedButton(
+      onPressed: _isEnabled ? onPressed : null,
+      onLongPress: _isEnabled ? onLongPress : null,
+      enabled: _isEnabled,
+      mouseCursor: mouseCursor,
+      enableFeedback: enableFeedback,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      semanticLabel: semanticLabel,
+      builder: (context, states, child) {
+        return MergeSemantics(
+          child: Semantics(
+            excludeSemantics: excludeSemantics,
+            liveRegion: loading,
+            label: semanticLabel ?? 'Icon Button',
+            hint: semanticHint,
+            child: Box(
+              styleSpec: spec.container,
+              child: layered,
+            ),
           ),
         );
       },

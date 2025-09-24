@@ -139,7 +139,22 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
         style: _style,
         builder: (context, spec) {
           return NakedSelect<T>(
-            triggerBuilder: (context, state) {
+            overlayBuilder: (context, info) => _buildOverlayMenu(spec),
+            value: widget.selectedValue,
+            onChanged: widget.onChanged,
+            closeOnSelect: widget.closeOnSelect,
+            enabled: widget.enabled,
+            triggerFocusNode: widget.focusNode,
+            semanticLabel: widget.semanticLabel,
+            onOpen: () {
+              animationController.forward();
+              widget.onOpen?.call();
+            },
+            onClose: () {
+              animationController.reverse();
+              widget.onClose?.call();
+            },
+            builder: (context, state, _) {
               return StyleSpecBuilder<SelectTriggerSpec>(
                 styleSpec: spec.trigger,
                 builder: (context, triggerSpec) {
@@ -161,21 +176,6 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
                   );
                 },
               );
-            },
-            overlayBuilder: (context, info) => _buildOverlayMenu(spec),
-            value: widget.selectedValue,
-            onChanged: widget.onChanged,
-            closeOnSelect: widget.closeOnSelect,
-            enabled: widget.enabled,
-            triggerFocusNode: widget.focusNode,
-            semanticLabel: widget.semanticLabel,
-            onOpen: () {
-              animationController.forward();
-              widget.onOpen?.call();
-            },
-            onClose: () {
-              animationController.reverse();
-              widget.onClose?.call();
             },
           );
         },
@@ -231,16 +231,9 @@ class _AnimatedOverlayMenuState extends State<_AnimatedOverlayMenu> {
           scale: scaleAnimation.value,
           child: Opacity(
             opacity: fadeAnimation.value,
-            child: StyleSpecBuilder(
+            child: Box(
               styleSpec: widget.menuContainer,
-              builder: (context, containerSpec) {
-                return containerSpec.createWidget(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: widget.items,
-                  ),
-                );
-              },
+              child: Column(children: widget.items),
             ),
           ),
         );

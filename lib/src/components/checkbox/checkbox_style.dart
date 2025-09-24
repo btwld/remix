@@ -148,7 +148,7 @@ class RemixCheckboxStyle
   }
 
   @override
-  RemixCheckboxStyle withVariants(List<VariantStyle<CheckboxSpec>> value) {
+  RemixCheckboxStyle variants(List<VariantStyle<CheckboxSpec>> value) {
     return merge(RemixCheckboxStyle(variants: value));
   }
 

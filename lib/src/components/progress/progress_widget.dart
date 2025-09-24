@@ -11,11 +11,12 @@ part of 'progress.dart';
 ///   value: 0.5,
 /// )
 /// ```
-class RemixProgress extends StatelessWidget {
+class RemixProgress extends StyleWidget<ProgressSpec> {
   const RemixProgress({
+    super.style = const RemixProgressStyle.create(),
+    super.styleSpec,
     super.key,
     required this.value,
-    this.style = const RemixProgressStyle.create(),
   })  : assert(
           value >= 0 && value <= 1,
           'Progress value must be between 0 and 1',
@@ -27,41 +28,29 @@ class RemixProgress extends StatelessWidget {
   /// A value of 0 means empty, while 1 means completely filled.
   final double value;
 
-  /// The style configuration for the progress bar.
-  final RemixProgressStyle style;
-
   @override
-  Widget build(BuildContext context) {
-    return StyleBuilder<ProgressSpec>(
-      style: style,
-      builder: (context, spec) {
-        final Container = spec.container.createWidget;
-        final Track = spec.track.createWidget;
-        final Indicator = spec.indicator.createWidget;
-        final TrackContainer = spec.trackContainer.createWidget;
+  Widget build(BuildContext context, ProgressSpec spec) {
+    return Box(
+      styleSpec: spec.container,
+      child: Stack(
+        children: [
+          // Track background
+          Box(styleSpec: spec.track),
+          // Indicator foreground based on value
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final biggestSize = constraints.biggest;
 
-        return Container(
-          child: Stack(
-            children: [
-              // Track background
-              Track(),
-              // Indicator foreground based on value
-              LayoutBuilder(
-                builder: (context, constraints) {
-                  final biggestSize = constraints.biggest;
-
-                  return SizedBox(
-                    width: biggestSize.width * value,
-                    child: Indicator(),
-                  );
-                },
-              ),
-              // Track container (for any additional styling)
-              TrackContainer(),
-            ],
+              return SizedBox(
+                width: biggestSize.width * value,
+                child: Box(styleSpec: spec.indicator),
+              );
+            },
           ),
-        );
-      },
+          // Track container (for any additional styling)
+          Box(styleSpec: spec.trackContainer),
+        ],
+      ),
     );
   }
 }

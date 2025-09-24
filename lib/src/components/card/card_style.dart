@@ -82,7 +82,7 @@ class RemixCardStyle extends RemixContainerStyle<CardSpec, RemixCardStyle> {
   }
 
   @override
-  RemixCardStyle withVariants(List<VariantStyle<CardSpec>> value) {
+  RemixCardStyle variants(List<VariantStyle<CardSpec>> value) {
     return merge(RemixCardStyle(variants: value));
   }
 

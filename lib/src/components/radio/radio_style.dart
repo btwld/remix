@@ -107,7 +107,7 @@ class RemixRadioStyle extends RemixContainerStyle<RadioSpec, RemixRadioStyle> {
   }
 
   @override
-  RemixRadioStyle withVariants(List<VariantStyle<RadioSpec>> value) {
+  RemixRadioStyle variants(List<VariantStyle<RadioSpec>> value) {
     return merge(RemixRadioStyle(variants: value));
   }
 

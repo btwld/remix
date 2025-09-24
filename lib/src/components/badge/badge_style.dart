@@ -86,7 +86,7 @@ class RemixBadgeStyle extends RemixContainerStyle<BadgeSpec, RemixBadgeStyle>
   }
 
   @override
-  RemixBadgeStyle withVariants(List<VariantStyle<BadgeSpec>> value) {
+  RemixBadgeStyle variants(List<VariantStyle<BadgeSpec>> value) {
     return merge(RemixBadgeStyle(variants: value));
   }
 

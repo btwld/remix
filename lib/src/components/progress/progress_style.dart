@@ -93,7 +93,7 @@ class RemixProgressStyle
   }
 
   @override
-  RemixProgressStyle withVariants(List<VariantStyle<ProgressSpec>> value) {
+  RemixProgressStyle variants(List<VariantStyle<ProgressSpec>> value) {
     return merge(RemixProgressStyle(variants: value));
   }
 

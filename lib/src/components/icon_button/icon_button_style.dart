@@ -143,20 +143,18 @@ class RemixIconButtonStyle
 
   RemixIconButton call({
     required IconData icon,
-    bool enabled = true,
+    required VoidCallback? onPressed,
     bool loading = false,
     bool enableFeedback = true,
-    required VoidCallback? onPressed,
     FocusNode? focusNode,
   }) {
     return RemixIconButton(
+      style: this,
       icon: icon,
-      enabled: enabled,
+      onPressed: onPressed,
       loading: loading,
       enableFeedback: enableFeedback,
-      onPressed: onPressed,
       focusNode: focusNode,
-      style: this,
     );
   }
 
@@ -182,7 +180,7 @@ class RemixIconButtonStyle
   // Variant support
 
   @override
-  RemixIconButtonStyle withVariants(List<VariantStyle<IconButtonSpec>> value) {
+  RemixIconButtonStyle variants(List<VariantStyle<IconButtonSpec>> value) {
     return merge(RemixIconButtonStyle(variants: value));
   }
 

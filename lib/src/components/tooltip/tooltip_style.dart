@@ -91,7 +91,7 @@ class RemixTooltipStyle
   }
 
   @override
-  RemixTooltipStyle withVariants(List<VariantStyle<TooltipSpec>> value) {
+  RemixTooltipStyle variants(List<VariantStyle<TooltipSpec>> value) {
     return merge(RemixTooltipStyle(variants: value));
   }
 

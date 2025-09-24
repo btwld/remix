@@ -91,11 +91,11 @@ class _RadioChip extends StatelessWidget {
               Text(
                 label,
                 style: TextStyle(
-                  color: isSelected ? Colors.white : Colors.grey.shade800,
+                  color: state.isSelected ? Colors.white : Colors.grey.shade800,
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              if (isSelected) ...[
+              if (state.isSelected) ...[
                 const SizedBox(width: 6),
                 const Icon(Icons.check, size: 16, color: Colors.white),
               ],
@@ -168,5 +168,5 @@ Key notes:
 
 - Ensure each radio exposes a label (e.g. text within the builder)
 - Default keyboard support: arrow keys move between radios, Space selects
-- Keep your focus/hover styles visible using `state.isFocused` / `isHovered`
+- Keep your focus/hover styles visible using `state.isFocused` / `state.isHovered`
 - For more advanced layouts, wrap radio groups in `FocusTraversalGroup` to control traversal order

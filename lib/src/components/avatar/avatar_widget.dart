@@ -26,11 +26,13 @@ typedef RemixAvatarIconBuilder = Widget Function(
   IconData? icon,
 );
 
-class RemixAvatar extends StatelessWidget {
+class RemixAvatar extends StyleWidget<AvatarSpec> {
   /// Creates a Remix avatar with optional text [label], custom [child], and
   /// background/foreground imagery. When textual content is supplied, it is
   /// styled using the avatar text spec so typography stays consistent.
   const RemixAvatar({
+    super.style = const RemixAvatarStyle.create(),
+    super.styleSpec,
     super.key,
     this.backgroundImage,
     this.foregroundImage,
@@ -41,7 +43,6 @@ class RemixAvatar extends StatelessWidget {
     this.labelBuilder,
     this.icon,
     this.iconBuilder,
-    this.style = const RemixAvatarStyle.create(),
   });
 
   /// The background image to display in the avatar.
@@ -55,9 +56,6 @@ class RemixAvatar extends StatelessWidget {
 
   /// Callback function called when the foreground image fails to load.
   final ImageErrorListener? onForegroundImageError;
-
-  /// The style configuration for the avatar.
-  final RemixAvatarStyle style;
 
   /// Custom content to display inside the avatar. When provided the caller is
   /// responsible for applying typography.
@@ -78,66 +76,52 @@ class RemixAvatar extends StatelessWidget {
   final RemixAvatarIconBuilder? iconBuilder;
 
   @override
-  Widget build(BuildContext context) {
-    return StyleBuilder<AvatarSpec>(
-      style: style,
-      builder: (context, spec) {
-        final containerBuilder = spec.container.createWidget;
+  Widget build(BuildContext context, AvatarSpec spec) {
+    Widget? content = child;
+    final resolvedLabel = label ?? '';
 
-        Widget? content = child;
-        final resolvedLabel = label ?? '';
+    if (content == null) {
+      if (labelBuilder != null || label != null) {
+        content = labelBuilder == null
+            ? StyledText(resolvedLabel, styleSpec: spec.text)
+            : StyleSpecBuilder<TextSpec>(
+                styleSpec: spec.text,
+                builder: (context, textSpec) => labelBuilder!(context, textSpec, resolvedLabel),
+              );
+      } else if (iconBuilder != null || icon != null) {
+        content = iconBuilder == null
+            ? StyledIcon(icon: icon, styleSpec: spec.icon)
+            : StyleSpecBuilder<IconSpec>(
+                styleSpec: spec.icon,
+                builder: (context, iconSpec) => iconBuilder!(context, iconSpec, icon),
+              );
+      }
+    }
 
-        if (content == null) {
-          if (labelBuilder != null || label != null) {
-            content = StyleSpecBuilder<TextSpec>(
-              styleSpec: spec.text,
-              builder: (context, textSpec) {
-                if (labelBuilder != null) {
-                  return labelBuilder!(context, textSpec, resolvedLabel);
-                }
-
-                return textSpec.createWidget(resolvedLabel);
-              },
-            );
-          } else if (iconBuilder != null || icon != null) {
-            content = StyleSpecBuilder<IconSpec>(
-              styleSpec: spec.icon,
-              builder: (context, iconSpec) {
-                if (iconBuilder != null) {
-                  return iconBuilder!(context, iconSpec, icon);
-                }
-
-                return iconSpec.createWidget(icon: icon);
-              },
-            );
-          }
-        }
-
-        return containerBuilder(
-          child: Container(
-            alignment: Alignment.center,
-            decoration: backgroundImage != null
-                ? BoxDecoration(
-                    image: DecorationImage(
-                      image: backgroundImage!,
-                      onError: onBackgroundImageError,
-                      fit: BoxFit.cover,
-                    ),
-                  )
-                : null,
-            foregroundDecoration: foregroundImage != null
-                ? BoxDecoration(
-                    image: DecorationImage(
-                      image: foregroundImage!,
-                      onError: onForegroundImageError,
-                      fit: BoxFit.cover,
-                    ),
-                  )
-                : null,
-            child: content,
-          ),
-        );
-      },
+    return Box(
+      styleSpec: spec.container,
+      child: Container(
+        alignment: Alignment.center,
+        decoration: backgroundImage != null
+            ? BoxDecoration(
+                image: DecorationImage(
+                  image: backgroundImage!,
+                  onError: onBackgroundImageError,
+                  fit: BoxFit.cover,
+                ),
+              )
+            : null,
+        foregroundDecoration: foregroundImage != null
+            ? BoxDecoration(
+                image: DecorationImage(
+                  image: foregroundImage!,
+                  onError: onForegroundImageError,
+                  fit: BoxFit.cover,
+                ),
+              )
+            : null,
+        child: content,
+      ),
     );
   }
 }

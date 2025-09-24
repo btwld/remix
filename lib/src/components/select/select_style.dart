@@ -75,7 +75,7 @@ class RemixSelectStyle extends RemixStyle<SelectSpec, RemixSelectStyle> {
   }
 
   @override
-  RemixSelectStyle withVariants(List<VariantStyle<SelectSpec>> value) {
+  RemixSelectStyle variants(List<VariantStyle<SelectSpec>> value) {
     return merge(RemixSelectStyle(variants: value));
   }
 
@@ -231,7 +231,7 @@ class RemixSelectTriggerStyle extends RemixFlexContainerStyle<SelectTriggerSpec,
   }
 
   @override
-  RemixSelectTriggerStyle withVariants(
+  RemixSelectTriggerStyle variants(
     List<VariantStyle<SelectTriggerSpec>> value,
   ) {
     return merge(RemixSelectTriggerStyle(variants: value));
@@ -388,7 +388,7 @@ class RemixSelectMenuItemStyle extends RemixFlexContainerStyle<
   }
 
   @override
-  RemixSelectMenuItemStyle withVariants(
+  RemixSelectMenuItemStyle variants(
     List<VariantStyle<SelectMenuItemSpec>> value,
   ) {
     return merge(RemixSelectMenuItemStyle(variants: value));
@@ -488,7 +488,7 @@ class RemixCompositedTransformFollowerStyle
         );
 
   @override
-  RemixCompositedTransformFollowerStyle withVariants(
+  RemixCompositedTransformFollowerStyle variants(
     List<VariantStyle<CompositedTransformFollowerSpec>> value,
   ) {
     return merge(RemixCompositedTransformFollowerStyle(variants: value));

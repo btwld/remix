@@ -229,7 +229,7 @@ class RemixTextFieldStyle
   }
 
   @override
-  RemixTextFieldStyle withVariants(List<VariantStyle<TextFieldSpec>> value) {
+  RemixTextFieldStyle variants(List<VariantStyle<TextFieldSpec>> value) {
     return merge(RemixTextFieldStyle(variants: value));
   }
 
