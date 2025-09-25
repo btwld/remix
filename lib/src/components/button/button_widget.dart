@@ -64,6 +64,7 @@ class RemixButton extends StatelessWidget {
     this.loadingBuilder,
     this.autofocus = false,
     this.loading = false,
+    this.enabled = true,
     this.enableFeedback = true,
     required this.onPressed,
     this.onLongPress,
@@ -86,6 +87,12 @@ class RemixButton extends StatelessWidget {
   /// When true, the button will display a spinner and become non-interactive.
   /// The spinner can be customized via [spinnerBuilder].
   final bool loading;
+
+  /// Whether the button is enabled.
+  ///
+  /// When false, the button will be disabled regardless of other conditions.
+  /// Defaults to true.
+  final bool enabled;
 
   /// Callback function called when the button is pressed.
   ///
@@ -147,7 +154,7 @@ class RemixButton extends StatelessWidget {
   /// Defaults to [SystemMouseCursors.click] when enabled.
   final MouseCursor mouseCursor;
 
-  bool get _isEnabled => !loading && onPressed != null;
+  bool get _isEnabled => enabled && !loading && onPressed != null;
 
   @override
   Widget build(BuildContext context) {

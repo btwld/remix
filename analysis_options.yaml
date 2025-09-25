@@ -51,8 +51,7 @@ dart_code_metrics:
         - overridden-public-methods
         - overridden-public-getters
         - build-method
-    prefer-named-boolean-parameters:
-      ignore-single: true
+    
 analyzer:
   errors:
     non_constant_identifier_names: ignore

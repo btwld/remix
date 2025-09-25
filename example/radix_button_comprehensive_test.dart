@@ -229,8 +229,7 @@ class _AllVariantsSection extends StatelessWidget {
       3 => FortalButtonStyle.base(size: FortalButtonSize.size3),
       4 => FortalButtonStyle.base(size: FortalButtonSize.size4),
       _ => FortalButtonStyle.base(
-          size: FortalButtonSize.size2,
-        ), // Default to size 2
+          size: FortalButtonSize.size2), // Default to size 2
     };
   }
 
@@ -369,8 +368,8 @@ class _StateTestingSection extends StatelessWidget {
 
               // Disabled
               _getVariantButton(variantName).call(
-                enabled: false,
                 label: 'Disabled',
+                enabled: false,
                 onPressed: null,
               ),
             ],

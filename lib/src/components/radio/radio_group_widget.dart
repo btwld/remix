@@ -76,9 +76,11 @@ class RemixRadioGroup<T> extends StatelessWidget {
     return RadioGroup<T>(
       groupValue: groupValue,
       onChanged: onChanged,
-      child: StyleProvider<RemixRadioSpec>(style: style, child: child),
+      child: StyleBuilder<RemixRadioSpec>(
+        style: style,
+        inheritable: true,
+        builder: (context, spec) => child,
+      ),
     );
   }
 }
-
-// Intentionally lean: rely on Flutter's RadioGroup for registry, semantics and keyboard.

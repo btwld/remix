@@ -48,7 +48,8 @@ class _SelectDemoState extends State<SelectDemo> {
                   label: items[index],
                 ),
               ),
-              child: RemixSelectTrigger(label: selectedValue),
+              triggerBuilder: (context, spec, selectedValue, isOpen) =>
+                Text(selectedValue?.isNotEmpty == true ? selectedValue! : 'Select item...'),
             ),
           ),
         ],

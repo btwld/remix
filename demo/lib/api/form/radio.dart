@@ -63,7 +63,6 @@ class _LabeledRadio extends StatelessWidget {
       children: [
         RemixRadio<Options>(
           value: option,
-          semanticLabel: label,
         ),
         const SizedBox(width: 8),
         Text(label),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
+
 import '../../widgets/comparison_view.dart';
 
 Widget buildSelectExample() {
@@ -19,16 +20,17 @@ Widget buildSelectExample() {
           items: items
               .map((e) => RemixSelectItem<String>(value: e, label: e))
               .toList(),
-          child: const RemixSelectTrigger(label: 'Two'),
+          triggerBuilder: (context, spec, selectedValue, isOpen) =>
+            const Text('Two'),
         ),
         RemixSelect<String>(
-          enabled: false,
           selectedValue: 'Two',
-          onChanged: (_) {},
+          onChanged: null,
           items: items
               .map((e) => RemixSelectItem<String>(value: e, label: e))
               .toList(),
-          child: const RemixSelectTrigger(label: 'Two'),
+          triggerBuilder: (context, spec, selectedValue, isOpen) =>
+            const Text('Two'),
         ),
       ],
       material: [

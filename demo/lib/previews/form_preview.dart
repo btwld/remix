@@ -135,7 +135,6 @@ class _PreviewRadio extends StatelessWidget {
           RemixRadio<String>(
             value: value,
             enabled: enabled,
-            semanticLabel: label,
           ),
           const SizedBox(width: 8),
           Text(label),
@@ -223,7 +222,8 @@ Widget previewSelect() {
           RemixSelectItem(value: 'option3', label: 'Third Option'),
         ],
         onChanged: (value) {},
-        child: const RemixSelectTrigger(label: 'First Option'),
+        triggerBuilder: (context, spec, selectedValue, isOpen) =>
+          const Text('First Option'),
       ),
     ),
   );

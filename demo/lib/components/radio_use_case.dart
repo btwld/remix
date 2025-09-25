@@ -42,7 +42,6 @@ Widget buildRadioUseCase(BuildContext context) {
                               label: 'Enabled',
                               initialValue: true,
                             ),
-                            semanticLabel: theme.name.capitalize(),
                           ),
                           const SizedBox(width: 8),
                           Text(theme.name.capitalize()),

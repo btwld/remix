@@ -64,10 +64,7 @@ void main() {
           RemixButton(
             key: const ValueKey('disabled_button'),
             label: 'Disabled Button',
-            onPressed: () {
-              wasPressed = true;
-            },
-            enabled: false,
+            onPressed: null,
           ),
         );
 
@@ -121,14 +118,13 @@ void main() {
                   RemixButton(
                     key: const ValueKey('state_button'),
                     label: 'State Button',
-                    enabled: isEnabled,
                     loading: isLoading,
-                    onPressed: () {
+                    onPressed: isEnabled ? () {
                       setState(() {
                         tapCount++;
                         isLoading = !isLoading;
                       });
-                    },
+                    } : null,
                   ),
                   const SizedBox(height: 20),
                   RemixButton(

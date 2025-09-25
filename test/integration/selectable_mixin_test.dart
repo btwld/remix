@@ -204,7 +204,6 @@ void main() {
                       RemixRadio<String>(
                         key: const Key('first'),
                         value: 'first',
-                        semanticLabel: 'First Option',
                       ),
                       const Text('First Option'),
                     ],
@@ -216,7 +215,6 @@ void main() {
                       RemixRadio<String>(
                         key: const Key('second'),
                         value: 'second',
-                        semanticLabel: 'Second Option',
                       ),
                       const Text('Second Option'),
                     ],
@@ -228,7 +226,6 @@ void main() {
                       RemixRadio<String>(
                         key: const Key('third'),
                         value: 'third',
-                        semanticLabel: 'Third Option',
                       ),
                       const Text('Third Option'),
                     ],

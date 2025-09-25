@@ -45,9 +45,8 @@ class _MyAppState extends State<MyApp> {
                     .map((e) =>
                         RemixSelectItem(value: e, label: e.name.capitalize()))
                     .toList(),
-                child: RemixSelectTrigger(
-                  label: _value?.name.capitalize() ?? 'Select an item',
-                ),
+                triggerBuilder: (context, spec, selectedValue, isOpen) =>
+                  Text(_value?.name.capitalize() ?? 'Select an item'),
               ),
             ],
           ),
