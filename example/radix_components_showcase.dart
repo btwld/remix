@@ -487,7 +487,6 @@ class _RadioSection extends StatelessWidget {
           Row(
             children: [
               RemixRadio(
-                semanticLabel: 'Classic Option 1',
                 style: FortalRadioStyles.classic(),
                 value: 'option1',
               ),
@@ -499,7 +498,6 @@ class _RadioSection extends StatelessWidget {
           Row(
             children: [
               RemixRadio(
-                semanticLabel: 'Surface Option 2',
                 style: FortalRadioStyles.surface(),
                 value: 'option2',
               ),
@@ -510,11 +508,7 @@ class _RadioSection extends StatelessWidget {
           const SizedBox(height: 8),
           Row(
             children: [
-              RemixRadio(
-                semanticLabel: 'Soft Option 3',
-                style: FortalRadioStyles.soft(),
-                value: 'option3',
-              ),
+              RemixRadio(style: FortalRadioStyles.soft(), value: 'option3'),
               const SizedBox(width: 8),
               const Text('Soft Option 3'),
             ],

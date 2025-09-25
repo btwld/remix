@@ -24,18 +24,24 @@ import 'package:demo/components/callout_use_case.dart'
     as _demo_components_callout_use_case;
 import 'package:demo/components/card_use_case.dart'
     as _demo_components_card_use_case;
+import 'package:demo/components/checkbox_showcase.dart'
+    as _demo_components_checkbox_showcase;
 import 'package:demo/components/checkbox_use_case.dart'
     as _demo_components_checkbox_use_case;
 import 'package:demo/components/divider_use_case.dart'
     as _demo_components_divider_use_case;
 import 'package:demo/components/progress_use_case.dart'
     as _demo_components_progress_use_case;
+import 'package:demo/components/radio_showcase.dart'
+    as _demo_components_radio_showcase;
 import 'package:demo/components/radio_use_case.dart'
     as _demo_components_radio_use_case;
 import 'package:demo/components/select.dart' as _demo_components_select;
 import 'package:demo/components/slider.dart' as _demo_components_slider;
 import 'package:demo/components/spinner_use_case.dart'
     as _demo_components_spinner_use_case;
+import 'package:demo/components/switch_showcase.dart'
+    as _demo_components_switch_showcase;
 import 'package:demo/components/switch_use_case.dart'
     as _demo_components_switch_use_case;
 import 'package:demo/components/textfield_use_case.dart'
@@ -92,12 +98,18 @@ final directories = <_widgetbook.WidgetbookNode>[
           builder: _demo_components_card_use_case.buildCard,
         ),
       ),
-      _widgetbook.WidgetbookLeafComponent(
+      _widgetbook.WidgetbookComponent(
         name: 'RemixCheckbox',
-        useCase: _widgetbook.WidgetbookUseCase(
-          name: 'Checkbox Component',
-          builder: _demo_components_checkbox_use_case.buildCheckboxUseCase,
-        ),
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Checkbox Component',
+            builder: _demo_components_checkbox_use_case.buildCheckboxUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Checkbox Showcase',
+            builder: _demo_components_checkbox_showcase.buildCheckboxShowcase,
+          ),
+        ],
       ),
       _widgetbook.WidgetbookLeafComponent(
         name: 'RemixDivider',
@@ -113,12 +125,18 @@ final directories = <_widgetbook.WidgetbookNode>[
           builder: _demo_components_progress_use_case.buildProgressUseCase,
         ),
       ),
-      _widgetbook.WidgetbookLeafComponent(
+      _widgetbook.WidgetbookComponent(
         name: 'RemixRadio',
-        useCase: _widgetbook.WidgetbookUseCase(
-          name: 'Radio Component',
-          builder: _demo_components_radio_use_case.buildRadioUseCase,
-        ),
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Radio Component',
+            builder: _demo_components_radio_use_case.buildRadioUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Radio Showcase',
+            builder: _demo_components_radio_showcase.buildRadioShowcase,
+          ),
+        ],
       ),
       _widgetbook.WidgetbookLeafComponent(
         name: 'RemixSelect',
@@ -141,12 +159,18 @@ final directories = <_widgetbook.WidgetbookNode>[
           builder: _demo_components_spinner_use_case.buildSpinnerUseCase,
         ),
       ),
-      _widgetbook.WidgetbookLeafComponent(
+      _widgetbook.WidgetbookComponent(
         name: 'RemixSwitch',
-        useCase: _widgetbook.WidgetbookUseCase(
-          name: 'Switch Component',
-          builder: _demo_components_switch_use_case.buildSwitchUseCase,
-        ),
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Switch Component',
+            builder: _demo_components_switch_use_case.buildSwitchUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Switch Showcase',
+            builder: _demo_components_switch_showcase.buildSwitchShowcase,
+          ),
+        ],
       ),
       _widgetbook.WidgetbookLeafComponent(
         name: 'RemixTextField',

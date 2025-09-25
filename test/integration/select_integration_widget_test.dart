@@ -16,7 +16,8 @@ void main() {
             RemixSelectItem<String>(value: 'Apple', label: 'Apple'),
             RemixSelectItem<String>(value: 'Banana', label: 'Banana'),
           ],
-          child: const RemixSelectTrigger(label: 'Apple'),
+          triggerBuilder: (context, spec, selectedValue, isOpen) =>
+            const Text('Apple'),
         ),
       );
 
@@ -34,12 +35,13 @@ void main() {
             RemixSelectItem<String>(value: 'Banana', label: 'Banana'),
             RemixSelectItem<String>(value: 'Orange', label: 'Orange'),
           ],
-          child: const RemixSelectTrigger(label: 'Apple'),
+          triggerBuilder: (context, spec, selectedValue, isOpen) =>
+            const Text('Apple'),
         ),
       );
 
       // Tap trigger to open dropdown
-      await tester.tap(find.byType(RemixSelectTrigger));
+      await tester.tap(find.byType(RemixSelect));
       await tester.pumpAndSettle();
 
       // All options should be visible
@@ -66,14 +68,15 @@ void main() {
                 RemixSelectItem<String>(value: 'Banana', label: 'Banana'),
                 RemixSelectItem<String>(value: 'Orange', label: 'Orange'),
               ],
-              child: RemixSelectTrigger(label: selectedValue ?? 'Select'),
+              triggerBuilder: (context, spec, selectedValue, isOpen) =>
+                Text(selectedValue ?? 'Select'),
             );
           },
         ),
       );
 
       // Open dropdown
-      await tester.tap(find.byType(RemixSelectTrigger));
+      await tester.tap(find.byType(RemixSelect));
       await tester.pumpAndSettle();
 
       // Select Banana
@@ -92,12 +95,13 @@ void main() {
             RemixSelectItem<String>(value: 'Apple', label: 'Apple'),
             RemixSelectItem<String>(value: 'Banana', label: 'Banana'),
           ],
-          child: const RemixSelectTrigger(label: 'Apple'),
+          triggerBuilder: (context, spec, selectedValue, isOpen) =>
+            const Text('Apple'),
         ),
       );
 
       // Open dropdown
-      await tester.tap(find.byType(RemixSelectTrigger));
+      await tester.tap(find.byType(RemixSelect));
       await tester.pumpAndSettle();
       
       // Verify dropdown is open
@@ -117,7 +121,8 @@ void main() {
           selectedValue: null,
           onChanged: (_) {},
           items: const [],
-          child: const RemixSelectTrigger(label: 'No items'),
+          triggerBuilder: (context, spec, selectedValue, isOpen) =>
+            const Text('No items'),
         ),
       );
 
@@ -134,7 +139,8 @@ void main() {
             RemixSelectItem<String>(value: 'Apple', label: 'Apple'),
             RemixSelectItem<String>(value: 'Banana', label: 'Banana'),
           ],
-          child: const RemixSelectTrigger(label: 'Select an option'),
+          triggerBuilder: (context, spec, selectedValue, isOpen) =>
+            const Text('Select an option'),
         ),
       );
 
@@ -161,7 +167,8 @@ void main() {
                     RemixSelectItem<String>(value: 'Apple', label: 'Apple'),
                     RemixSelectItem<String>(value: 'Banana', label: 'Banana'),
                   ],
-                  child: RemixSelectTrigger(label: selectedValue ?? 'Select'),
+                  triggerBuilder: (context, spec, selectedValue, isOpen) =>
+                Text(selectedValue ?? 'Select'),
                 ),
                 TextButton(
                   onPressed: () {
@@ -178,7 +185,7 @@ void main() {
       );
 
       // Select Banana
-      await tester.tap(find.byType(RemixSelectTrigger));
+      await tester.tap(find.byType(RemixSelect));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Banana').last);
       await tester.pumpAndSettle();
@@ -207,12 +214,13 @@ void main() {
             RemixSelectItem<String>(value: 'Apple', label: 'Apple'),
             RemixSelectItem<String>(value: 'Banana', label: 'Banana'),
           ],
-          child: const RemixSelectTrigger(label: 'Apple'),
+          triggerBuilder: (context, spec, selectedValue, isOpen) =>
+            const Text('Apple'),
         ),
       );
 
       // Try to tap trigger
-      await tester.tap(find.byType(RemixSelectTrigger));
+      await tester.tap(find.byType(RemixSelect));
       await tester.pumpAndSettle();
 
       // Dropdown should not open
@@ -237,7 +245,8 @@ void main() {
                   RemixSelectItem<String>(value: 'Apple', label: 'Apple'),
                   RemixSelectItem<String>(value: 'Banana', label: 'Banana'),
                 ],
-                child: const RemixSelectTrigger(label: 'Apple'),
+                triggerBuilder: (context, spec, selectedValue, isOpen) =>
+            const Text('Apple'),
               ),
             ),
           ],
@@ -245,7 +254,7 @@ void main() {
       );
 
       // Open dropdown
-      await tester.tap(find.byType(RemixSelectTrigger));
+      await tester.tap(find.byType(RemixSelect));
       await tester.pumpAndSettle();
       
       // Verify dropdown is open
@@ -268,7 +277,8 @@ void main() {
             RemixSelectItem<String>(value: 'Apple', label: 'Apple'),
             RemixSelectItem<String>(value: 'Banana', label: 'Banana'),
           ],
-          child: const RemixSelectTrigger(label: 'Apple'),
+          triggerBuilder: (context, spec, selectedValue, isOpen) =>
+            const Text('Apple'),
         ),
       );
 
@@ -277,7 +287,7 @@ void main() {
       await gesture.addPointer(location: Offset.zero);
       addTearDown(gesture.removePointer);
 
-      await gesture.moveTo(tester.getCenter(find.byType(RemixSelectTrigger)));
+      await gesture.moveTo(tester.getCenter(find.byType(RemixSelect)));
       await tester.pumpAndSettle();
 
       // Select should still be functional
@@ -299,12 +309,13 @@ void main() {
               label: '🍌 Banana',
             ),
           ],
-          child: const RemixSelectTrigger(label: 'Select fruit'),
+          triggerBuilder: (context, spec, selectedValue, isOpen) =>
+            const Text('Select fruit'),
         ),
       );
 
       // Open dropdown
-      await tester.tap(find.byType(RemixSelectTrigger));
+      await tester.tap(find.byType(RemixSelect));
       await tester.pumpAndSettle();
 
       // Custom labels should be visible
@@ -321,13 +332,14 @@ void main() {
             RemixSelectItem<String>(value: 'Apple', label: 'Apple'),
             RemixSelectItem<String>(value: 'Banana', label: 'Banana'),
           ],
-          child: const RemixSelectTrigger(label: 'Apple'),
+          triggerBuilder: (context, spec, selectedValue, isOpen) =>
+            const Text('Apple'),
         ),
       );
 
       // Rapid open/close
       for (int i = 0; i < 3; i++) {
-        await tester.tap(find.byType(RemixSelectTrigger));
+        await tester.tap(find.byType(RemixSelect));
         await tester.pump(const Duration(milliseconds: 50));
       }
       await tester.pumpAndSettle();
@@ -345,7 +357,8 @@ void main() {
             RemixSelectItem<String>(value: 'Apple', label: 'Apple'),
             RemixSelectItem<String>(value: 'Banana', label: 'Banana'),
           ],
-          child: const RemixSelectTrigger(label: 'Apple'),
+          triggerBuilder: (context, spec, selectedValue, isOpen) =>
+            const Text('Apple'),
         ),
       );
 
@@ -379,14 +392,15 @@ void main() {
                 RemixSelectItem<_User>(value: user2, label: user2.name),
                 RemixSelectItem<_User>(value: user3, label: user3.name),
               ],
-              child: RemixSelectTrigger(label: selectedUser?.name ?? 'Select user'),
+              triggerBuilder: (context, spec, selectedValue, isOpen) =>
+                Text(selectedUser?.name ?? 'Select user'),
             );
           },
         ),
       );
 
       // Open and select Bob
-      await tester.tap(find.byType(RemixSelectTrigger));
+      await tester.tap(find.byType(RemixSelect));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Bob').last);
       await tester.pumpAndSettle();

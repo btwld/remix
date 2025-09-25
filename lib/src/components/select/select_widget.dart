@@ -139,65 +139,66 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
 
   @override
   Widget build(BuildContext context) {
-    return StyleProvider<RemixSelectSpec>(
-      style: _style,
-      child: StyleBuilder<RemixSelectSpec>(
+    return NakedSelect<T>(
+      overlayBuilder: (context, info) => StyleBuilder<RemixSelectSpec>(
         style: _style,
-        builder: (context, spec) {
-          return NakedSelect<T>(
-            overlayBuilder: (context, info) => _buildOverlayMenu(spec),
-            value: widget.selectedValue,
-            onChanged: widget.onChanged,
-            closeOnSelect: widget.closeOnSelect,
-            enabled: widget.enabled,
-            triggerFocusNode: widget.focusNode,
-            semanticLabel: widget.semanticLabel,
-            onOpen: () {
-              animationController.forward();
-              widget.onOpen?.call();
-            },
-            onClose: () {
-              animationController.reverse();
-              widget.onClose?.call();
-            },
-            builder: (context, state, _) {
-              return StyleSpecBuilder<RemixSelectTriggerSpec>(
-                styleSpec: spec.trigger,
-                builder: (context, triggerSpec) {
-                  if (widget.triggerBuilder != null) {
-                    return widget.triggerBuilder!(
-                      context,
-                      triggerSpec,
-                      widget.selectedValue,
-                      state.isOpen,
-                    );
-                  }
-
-                  // Default trigger when no builder provided
-                  return RowBox(
-                    styleSpec: triggerSpec.container,
-                    children: [
-                      Expanded(
-                        child: StyledText(
-                          widget.selectedValue?.toString() ??
-                              'Select an option',
-                          styleSpec: triggerSpec.label,
-                        ),
-                      ),
-                      StyledIcon(
-                        icon: state.isOpen
-                            ? Icons.keyboard_arrow_up
-                            : Icons.keyboard_arrow_down,
-                        styleSpec: triggerSpec.icon,
-                      ),
-                    ],
-                  );
-                },
-              );
-            },
-          );
-        },
+        builder: (context, spec) => _buildOverlayMenu(spec),
       ),
+      value: widget.selectedValue,
+      onChanged: widget.onChanged,
+      closeOnSelect: widget.closeOnSelect,
+      enabled: widget.enabled,
+      triggerFocusNode: widget.focusNode,
+      semanticLabel: widget.semanticLabel,
+      onOpen: () {
+        animationController.forward();
+        widget.onOpen?.call();
+      },
+      onClose: () {
+        animationController.reverse();
+        widget.onClose?.call();
+      },
+      builder: (context, state, _) {
+        return StyleBuilder<RemixSelectSpec>(
+          style: _style,
+          controller: NakedState.controllerOf(context),
+          inheritable: true,
+          builder: (context, spec) {
+            return StyleSpecBuilder<RemixSelectTriggerSpec>(
+              styleSpec: spec.trigger,
+              builder: (context, triggerSpec) {
+                if (widget.triggerBuilder != null) {
+                  return widget.triggerBuilder!(
+                    context,
+                    triggerSpec,
+                    widget.selectedValue,
+                    state.isOpen,
+                  );
+                }
+
+                // Default trigger when no builder provided
+                return RowBox(
+                  styleSpec: triggerSpec.container,
+                  children: [
+                    Expanded(
+                      child: StyledText(
+                        widget.selectedValue?.toString() ?? 'Select an option',
+                        styleSpec: triggerSpec.label,
+                      ),
+                    ),
+                    StyledIcon(
+                      icon: state.isOpen
+                          ? Icons.keyboard_arrow_up
+                          : Icons.keyboard_arrow_down,
+                      styleSpec: triggerSpec.icon,
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+        );
+      },
     );
   }
 }
@@ -321,6 +322,7 @@ class RemixSelectItem<T> extends StatelessWidget {
         return StyleBuilder<RemixSelectSpec>(
           style: effectiveStyle,
           controller: NakedState.controllerOf(context),
+          inheritable: true,
           builder: (context, spec) {
             final itemSpec = spec.item;
 

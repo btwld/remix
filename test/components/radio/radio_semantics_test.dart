@@ -405,7 +405,6 @@ class _LabeledRemixRadio<T> extends StatelessWidget {
           key: radioKey ?? key,
           value: value,
           enabled: enabled,
-          semanticLabel: label,
         ),
         Text(label),
       ],

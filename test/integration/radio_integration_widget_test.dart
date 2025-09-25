@@ -25,7 +25,6 @@ void main() {
               children: [
                 RemixRadio<String>(
                   value: 'option1',
-                  semanticLabel: 'Option 1',
                 ),
                 const Text('Option 1'),
               ],
@@ -151,7 +150,6 @@ void main() {
                       RemixRadio<TestOption>(
                         key: Key(option.name),
                         value: option,
-                        semanticLabel: option.name,
                       ),
                       Text(option.name),
                     ],
@@ -237,7 +235,6 @@ void main() {
                 children: [
                   RemixRadio<String>(
                     value: 'option1',
-                    semanticLabel: 'Click me',
                   ),
                   GestureDetector(
                     onTap: () {
@@ -384,7 +381,6 @@ void main() {
               children: [
                 RemixRadio<String>(
                   value: 'dark',
-                  semanticLabel: 'Dark mode',
                 ),
                 const Text('Dark mode'),
               ],
@@ -465,7 +461,6 @@ void main() {
                       RemixRadio<DateTime>(
                         key: Key(date.toString()),
                         value: date,
-                        semanticLabel: label,
                       ),
                       Text(label),
                     ],
