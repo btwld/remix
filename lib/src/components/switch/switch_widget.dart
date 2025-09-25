@@ -14,19 +14,18 @@ part of 'switch.dart';
 ///   },
 /// )
 /// ```
-class RemixSwitch extends StatefulWidget with HasEnabled, HasSelected {
-  RemixSwitch({
+class RemixSwitch extends StatelessWidget {
+  const RemixSwitch({
     super.key,
     this.enabled = true,
     required this.selected,
     required this.onChanged,
     this.style = const RemixSwitchStyle.create(),
+    this.styleSpec,
     this.enableFeedback = true,
     this.focusNode,
     this.autofocus = false,
     this.semanticLabel,
-    this.semanticHint,
-    this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
   });
 
@@ -42,6 +41,11 @@ class RemixSwitch extends StatefulWidget with HasEnabled, HasSelected {
   /// The style configuration for the switch.
   final RemixSwitchStyle style;
 
+  /// The style spec for the switch.
+  final SwitchSpec? styleSpec;
+
+  static late final styleFrom = RemixSwitchStyle.new;
+
   /// Whether to enable haptic feedback when toggled.
   final bool enableFeedback;
 
@@ -54,67 +58,43 @@ class RemixSwitch extends StatefulWidget with HasEnabled, HasSelected {
   /// The semantic label for the switch.
   final String? semanticLabel;
 
-  /// The semantic hint for the switch.
-  final String? semanticHint;
-
-  /// Whether to exclude child semantics.
-  final bool excludeSemantics;
-
   /// Cursor when hovering over the switch.
   final MouseCursor mouseCursor;
 
   @override
-  State<RemixSwitch> createState() => _RemixSwitchState();
-}
-
-class _RemixSwitchState extends State<RemixSwitch>
-    with HasWidgetStateController, HasEnabledState, HasSelectedState {
-  @override
   Widget build(BuildContext context) {
-    return StyleBuilder<SwitchSpec>(
-      style: widget.style,
-      controller: controller,
-      builder: (context, spec) {
-        final Container = spec.container.createWidget;
-        final Track = spec.track.createWidget;
-        final Thumb = spec.thumb.createWidget;
-
-        // Simplified widget tree with integrated semantics
-        return Semantics(
-          excludeSemantics: widget.excludeSemantics,
-          enabled: widget.enabled,
-          toggled: widget.selected,
-          focusable: widget.enabled,
-          label: widget.semanticLabel,
-          hint: widget.semanticHint,
-          onTap:
-              widget.enabled ? () => widget.onChanged(!widget.selected) : null,
-          child: NakedCheckbox(
-            value: widget.selected,
-            onChanged: (value) => widget.onChanged(value ?? false),
-            enabled: widget.enabled,
-            mouseCursor: widget.mouseCursor,
-            enableFeedback: widget.enableFeedback,
-            focusNode: widget.focusNode,
-            autofocus: widget.autofocus,
-            onFocusChange: (focused) => controller.focused = focused,
-            onHoverChange: (hovered) => controller.hovered = hovered,
-            onPressChange: (pressed) => controller.pressed = pressed,
-            child: Container(
-              child: Track(
+    return NakedToggle(
+      value: selected,
+      asSwitch: true,
+      onChanged: enabled ? onChanged : null,
+      enabled: enabled,
+      mouseCursor: mouseCursor,
+      enableFeedback: enableFeedback,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      semanticLabel: semanticLabel,
+      builder: (context, state, _) {
+        return StyleBuilder(
+          style: style,
+          controller: NakedState.controllerOf(context),
+          builder: (context, spec) {
+            return Box(
+              styleSpec: spec.container,
+              child: Box(
+                styleSpec: spec.track,
                 child: Align(
-                  alignment: widget.selected
+                  alignment: selected
                       ? Alignment.centerRight
                       : Alignment.centerLeft,
                   child: Padding(
                     // Per JSON: switch-thumb-inset = 1px
                     padding: const EdgeInsets.all(1),
-                    child: Thumb(),
+                    child: Box(styleSpec: spec.thumb),
                   ),
                 ),
               ),
-            ),
-          ),
+            );
+          },
         );
       },
     );
