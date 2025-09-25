@@ -1,19 +1,19 @@
 part of 'card.dart';
 
-class CardSpec extends Spec<CardSpec> with Diagnosticable {
+class RemixCardSpec extends Spec<RemixCardSpec> with Diagnosticable {
   final StyleSpec<BoxSpec> container;
 
-  const CardSpec({StyleSpec<BoxSpec>? container})
+  const RemixCardSpec({StyleSpec<BoxSpec>? container})
       : container = container ?? const StyleSpec(spec: BoxSpec());
 
-  CardSpec copyWith({StyleSpec<BoxSpec>? container}) {
-    return CardSpec(container: container ?? this.container);
+  RemixCardSpec copyWith({StyleSpec<BoxSpec>? container}) {
+    return RemixCardSpec(container: container ?? this.container);
   }
 
-  CardSpec lerp(CardSpec? other, double t) {
+  RemixCardSpec lerp(RemixCardSpec? other, double t) {
     if (other == null) return this;
 
-    return CardSpec(container: MixOps.lerp(container, other.container, t)!);
+    return RemixCardSpec(container: MixOps.lerp(container, other.container, t)!);
   }
 
   @override

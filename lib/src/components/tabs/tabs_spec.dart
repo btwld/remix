@@ -1,34 +1,34 @@
 part of 'tabs.dart';
 
-class TabsSpec extends Spec<TabsSpec> with Diagnosticable {
+class RemixTabsSpec extends Spec<RemixTabsSpec> with Diagnosticable {
   final StyleSpec<FlexBoxSpec> container;
-  final StyleSpec<TabSpec> tab;
+  final StyleSpec<RemixTabSpec> tab;
   final StyleSpec<BoxSpec> tabView;
 
-  const TabsSpec({
+  const RemixTabsSpec({
     StyleSpec<FlexBoxSpec>? container,
-    StyleSpec<TabSpec>? tab,
+    StyleSpec<RemixTabSpec>? tab,
     StyleSpec<BoxSpec>? tabView,
   })  : container = container ?? const StyleSpec(spec: FlexBoxSpec()),
-        tab = tab ?? const StyleSpec(spec: TabSpec()),
+        tab = tab ?? const StyleSpec(spec: RemixTabSpec()),
         tabView = tabView ?? const StyleSpec(spec: BoxSpec());
 
-  TabsSpec copyWith({
+  RemixTabsSpec copyWith({
     StyleSpec<FlexBoxSpec>? container,
-    StyleSpec<TabSpec>? tab,
+    StyleSpec<RemixTabSpec>? tab,
     StyleSpec<BoxSpec>? tabView,
   }) {
-    return TabsSpec(
+    return RemixTabsSpec(
       container: container ?? this.container,
       tab: tab ?? this.tab,
       tabView: tabView ?? this.tabView,
     );
   }
 
-  TabsSpec lerp(TabsSpec? other, double t) {
+  RemixTabsSpec lerp(RemixTabsSpec? other, double t) {
     if (other == null) return this;
 
-    return TabsSpec(
+    return RemixTabsSpec(
       container: MixOps.lerp(container, other.container, t)!,
       tab: MixOps.lerp(tab, other.tab, t)!,
       tabView: MixOps.lerp(tabView, other.tabView, t)!,
@@ -48,12 +48,12 @@ class TabsSpec extends Spec<TabsSpec> with Diagnosticable {
   List<Object?> get props => [container, tab, tabView];
 }
 
-class TabSpec extends Spec<TabSpec> with Diagnosticable {
+class RemixTabSpec extends Spec<RemixTabSpec> with Diagnosticable {
   final StyleSpec<FlexBoxSpec> container;
   final StyleSpec<TextSpec> label;
   final StyleSpec<IconSpec> icon;
 
-  const TabSpec({
+  const RemixTabSpec({
     StyleSpec<FlexBoxSpec>? container,
     StyleSpec<TextSpec>? label,
     StyleSpec<IconSpec>? icon,
@@ -61,22 +61,22 @@ class TabSpec extends Spec<TabSpec> with Diagnosticable {
         label = label ?? const StyleSpec(spec: TextSpec()),
         icon = icon ?? const StyleSpec(spec: IconSpec());
 
-  TabSpec copyWith({
+  RemixTabSpec copyWith({
     StyleSpec<FlexBoxSpec>? container,
     StyleSpec<TextSpec>? label,
     StyleSpec<IconSpec>? icon,
   }) {
-    return TabSpec(
+    return RemixTabSpec(
       container: container ?? this.container,
       label: label ?? this.label,
       icon: icon ?? this.icon,
     );
   }
 
-  TabSpec lerp(TabSpec? other, double t) {
+  RemixTabSpec lerp(RemixTabSpec? other, double t) {
     if (other == null) return this;
 
-    return TabSpec(
+    return RemixTabSpec(
       container: MixOps.lerp(container, other.container, t)!,
       label: MixOps.lerp(label, other.label, t)!,
       icon: MixOps.lerp(icon, other.icon, t)!,

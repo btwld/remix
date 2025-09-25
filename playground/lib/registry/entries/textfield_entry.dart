@@ -4,7 +4,7 @@ import 'package:remix/remix.dart';
 import '../../widgets/comparison_view.dart';
 
 Widget buildTextFieldExample() {
-  return SizedBox(
+  return const SizedBox(
     width: 320,
     child: ComparisonView(
       remix: [
@@ -23,7 +23,7 @@ Widget buildTextFieldExample() {
           error: true,
         ),
       ],
-      material: const [
+      material: [
         TextField(
           decoration: InputDecoration(
             labelText: 'Label',

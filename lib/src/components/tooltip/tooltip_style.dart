@@ -1,7 +1,7 @@
 part of 'tooltip.dart';
 
 class RemixTooltipStyle
-    extends RemixContainerStyle<TooltipSpec, RemixTooltipStyle>
+    extends RemixContainerStyle<RemixTooltipSpec, RemixTooltipStyle>
     with LabelStyleMixin<RemixTooltipStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $label;
@@ -19,7 +19,7 @@ class RemixTooltipStyle
     BoxStyler? container,
     TextStyler? label,
     AnimationConfig? animation,
-    List<VariantStyle<TooltipSpec>>? variants,
+    List<VariantStyle<RemixTooltipSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
           container: Prop.maybeMix(container),
@@ -66,9 +66,9 @@ class RemixTooltipStyle
   }
 
   @override
-  StyleSpec<TooltipSpec> resolve(BuildContext context) {
+  StyleSpec<RemixTooltipSpec> resolve(BuildContext context) {
     return StyleSpec(
-      spec: TooltipSpec(
+      spec: RemixTooltipSpec(
         container: MixOps.resolve(context, $container),
         label: MixOps.resolve(context, $label),
       ),
@@ -91,7 +91,7 @@ class RemixTooltipStyle
   }
 
   @override
-  RemixTooltipStyle variants(List<VariantStyle<TooltipSpec>> value) {
+  RemixTooltipStyle variants(List<VariantStyle<RemixTooltipSpec>> value) {
     return merge(RemixTooltipStyle(variants: value));
   }
 

@@ -76,7 +76,7 @@ class RemixRadioGroup<T> extends StatelessWidget {
     return RadioGroup<T>(
       groupValue: groupValue,
       onChanged: onChanged,
-      child: StyleProvider<RadioSpec>(style: style, child: child),
+      child: StyleProvider<RemixRadioSpec>(style: style, child: child),
     );
   }
 }

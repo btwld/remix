@@ -2,7 +2,7 @@ part of 'card.dart';
 
 // Private per-component constants (sizes only)
 
-class RemixCardStyle extends RemixContainerStyle<CardSpec, RemixCardStyle> {
+class RemixCardStyle extends RemixContainerStyle<RemixCardSpec, RemixCardStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
 
   const RemixCardStyle.create({
@@ -15,7 +15,7 @@ class RemixCardStyle extends RemixContainerStyle<CardSpec, RemixCardStyle> {
   RemixCardStyle({
     BoxStyler? container,
     AnimationConfig? animation,
-    List<VariantStyle<CardSpec>>? variants,
+    List<VariantStyle<RemixCardSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
           container: Prop.maybeMix(container),
@@ -61,9 +61,9 @@ class RemixCardStyle extends RemixContainerStyle<CardSpec, RemixCardStyle> {
   }
 
   @override
-  StyleSpec<CardSpec> resolve(BuildContext context) {
+  StyleSpec<RemixCardSpec> resolve(BuildContext context) {
     return StyleSpec(
-      spec: CardSpec(container: MixOps.resolve(context, $container)),
+      spec: RemixCardSpec(container: MixOps.resolve(context, $container)),
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
     );
@@ -82,7 +82,7 @@ class RemixCardStyle extends RemixContainerStyle<CardSpec, RemixCardStyle> {
   }
 
   @override
-  RemixCardStyle variants(List<VariantStyle<CardSpec>> value) {
+  RemixCardStyle variants(List<VariantStyle<RemixCardSpec>> value) {
     return merge(RemixCardStyle(variants: value));
   }
 

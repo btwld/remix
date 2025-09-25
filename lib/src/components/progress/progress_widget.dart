@@ -11,7 +11,7 @@ part of 'progress.dart';
 ///   value: 0.5,
 /// )
 /// ```
-class RemixProgress extends StyleWidget<ProgressSpec> {
+class RemixProgress extends StyleWidget<RemixProgressSpec> {
   const RemixProgress({
     super.style = const RemixProgressStyle.create(),
     super.styleSpec,
@@ -29,7 +29,7 @@ class RemixProgress extends StyleWidget<ProgressSpec> {
   final double value;
 
   @override
-  Widget build(BuildContext context, ProgressSpec spec) {
+  Widget build(BuildContext context, RemixProgressSpec spec) {
     return Box(
       styleSpec: spec.container,
       child: Stack(

@@ -65,7 +65,7 @@ void main() {
       expect(find.byType(RemixTextField), findsOneWidget);
     });
 
-    testWidgets('styling through TextFieldSpec should work', (tester) async {
+    testWidgets('styling through RemixTextFieldSpec should work', (tester) async {
       await tester.pumpRemixApp(
         RemixTextField(
           hintText: 'Styled field',

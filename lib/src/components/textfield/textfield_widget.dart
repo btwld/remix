@@ -255,7 +255,7 @@ class RemixTextField extends StatelessWidget {
   final RemixTextFieldStyle style;
 
   /// The style spec for the text field.
-  final TextFieldSpec? styleSpec;
+  final RemixTextFieldSpec? styleSpec;
 
   static late final styleFrom = RemixTextFieldStyle.new;
 
@@ -351,7 +351,7 @@ class RemixTextField extends StatelessWidget {
               styleSpec: spec.container,
               children: [
                 if (leading != null) leading!,
-                Flexible(fit: FlexFit.loose, child: editableWithHint),
+                Expanded(child: editableWithHint),
                 if (trailing != null) trailing!,
               ],
             );

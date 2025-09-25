@@ -1,7 +1,7 @@
 part of 'checkbox.dart';
 
 class RemixCheckboxStyle
-    extends RemixContainerStyle<CheckboxSpec, RemixCheckboxStyle>
+    extends RemixContainerStyle<RemixCheckboxSpec, RemixCheckboxStyle>
     with IconStyleMixin<RemixCheckboxStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<BoxSpec>>? $indicatorContainer;
@@ -23,7 +23,7 @@ class RemixCheckboxStyle
     BoxStyler? indicatorContainer,
     IconStyler? indicator,
     AnimationConfig? animation,
-    List<VariantStyle<CheckboxSpec>>? variants,
+    List<VariantStyle<RemixCheckboxSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
           container: Prop.maybeMix(container),
@@ -148,7 +148,7 @@ class RemixCheckboxStyle
   }
 
   @override
-  RemixCheckboxStyle variants(List<VariantStyle<CheckboxSpec>> value) {
+  RemixCheckboxStyle variants(List<VariantStyle<RemixCheckboxSpec>> value) {
     return merge(RemixCheckboxStyle(variants: value));
   }
 
@@ -196,9 +196,9 @@ class RemixCheckboxStyle
   }
 
   @override
-  StyleSpec<CheckboxSpec> resolve(BuildContext context) {
+  StyleSpec<RemixCheckboxSpec> resolve(BuildContext context) {
     return StyleSpec(
-      spec: CheckboxSpec(
+      spec: RemixCheckboxSpec(
         container: MixOps.resolve(context, $container),
         indicatorContainer: MixOps.resolve(context, $indicatorContainer),
         indicator: MixOps.resolve(context, $indicator),

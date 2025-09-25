@@ -18,7 +18,7 @@ typedef RemixBadgeLabelBuilder = Widget Function(
   String label,
 );
 
-class RemixBadge extends StyleWidget<BadgeSpec> {
+class RemixBadge extends StyleWidget<RemixBadgeSpec> {
   /// Creates a badge widget. Provide [label] for a text badge or [child] for
   /// fully custom content. When nothing is provided, an empty label is used.
   const RemixBadge({
@@ -42,7 +42,7 @@ class RemixBadge extends StyleWidget<BadgeSpec> {
   final RemixBadgeLabelBuilder? labelBuilder;
 
   @override
-  Widget build(BuildContext context, BadgeSpec spec) {
+  Widget build(BuildContext context, RemixBadgeSpec spec) {
     Widget? content = child;
     final resolvedLabel = label ?? '';
 

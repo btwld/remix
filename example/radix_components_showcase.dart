@@ -333,40 +333,40 @@ class _ButtonsSection extends StatelessWidget {
       runSpacing: 12,
       children: [
         RemixButton(
+          style: FortalButtonStyle.solid(),
           label: 'Solid',
           icon: Icons.check_circle,
           onPressed: () => print('Button pressed'),
-          style: FortalButtonStyle.solid(),
         ),
         RemixButton(
+          style: FortalButtonStyle.soft(),
           label: 'Soft',
           icon: Icons.favorite,
           onPressed: () => print('Button pressed'),
-          style: FortalButtonStyle.soft(),
         ),
         RemixButton(
+          style: FortalButtonStyle.surface(),
           label: 'Surface',
           icon: Icons.layers,
           onPressed: () => print('Button pressed'),
-          style: FortalButtonStyle.surface(),
         ),
         RemixButton(
+          style: FortalButtonStyle.outline(),
           label: 'Outline',
           icon: Icons.crop_free,
           onPressed: () => print('Button pressed'),
-          style: FortalButtonStyle.outline(),
         ),
         RemixButton(
+          style: FortalButtonStyle.ghost(),
           label: 'Ghost',
           icon: Icons.visibility_off,
           onPressed: () => print('Button pressed'),
-          style: FortalButtonStyle.ghost(),
         ),
         RemixButton(
+          style: FortalButtonStyle.surface(),
           label: 'Surface',
           icon: Icons.style,
           onPressed: () => print('Button pressed'),
-          style: FortalButtonStyle.surface(),
         ),
       ],
     );
@@ -383,34 +383,34 @@ class _IconButtonsSection extends StatelessWidget {
       runSpacing: 12,
       children: [
         RemixIconButton(
+          style: FortalIconButtonStyles.solid(),
           icon: Icons.check_circle,
           onPressed: () => print('Button pressed'),
-          style: FortalIconButtonStyles.solid(),
         ),
         RemixIconButton(
+          style: FortalIconButtonStyles.soft(),
           icon: Icons.favorite,
           onPressed: () => print('Button pressed'),
-          style: FortalIconButtonStyles.soft(),
         ),
         RemixIconButton(
+          style: FortalIconButtonStyles.surface(),
           icon: Icons.layers,
           onPressed: () => print('Button pressed'),
-          style: FortalIconButtonStyles.surface(),
         ),
         RemixIconButton(
+          style: FortalIconButtonStyles.outline(),
           icon: Icons.crop_free,
           onPressed: () => print('Button pressed'),
-          style: FortalIconButtonStyles.outline(),
         ),
         RemixIconButton(
+          style: FortalIconButtonStyles.ghost(),
           icon: Icons.visibility_off,
           onPressed: () => print('Button pressed'),
-          style: FortalIconButtonStyles.ghost(),
         ),
         RemixIconButton(
+          style: FortalIconButtonStyles.classic(),
           icon: Icons.style,
           onPressed: () => print('Button pressed'),
-          style: FortalIconButtonStyles.classic(),
         ),
       ],
     );
@@ -487,9 +487,9 @@ class _RadioSection extends StatelessWidget {
           Row(
             children: [
               RemixRadio(
-                value: 'option1',
-                style: FortalRadioStyles.classic(),
                 semanticLabel: 'Classic Option 1',
+                style: FortalRadioStyles.classic(),
+                value: 'option1',
               ),
               const SizedBox(width: 8),
               const Text('Classic Option 1'),
@@ -499,9 +499,9 @@ class _RadioSection extends StatelessWidget {
           Row(
             children: [
               RemixRadio(
-                value: 'option2',
-                style: FortalRadioStyles.surface(),
                 semanticLabel: 'Surface Option 2',
+                style: FortalRadioStyles.surface(),
+                value: 'option2',
               ),
               const SizedBox(width: 8),
               const Text('Surface Option 2'),
@@ -511,9 +511,9 @@ class _RadioSection extends StatelessWidget {
           Row(
             children: [
               RemixRadio(
-                value: 'option3',
-                style: FortalRadioStyles.soft(),
                 semanticLabel: 'Soft Option 3',
+                style: FortalRadioStyles.soft(),
+                value: 'option3',
               ),
               const SizedBox(width: 8),
               const Text('Soft Option 3'),
@@ -610,10 +610,10 @@ class _BadgeSection extends StatelessWidget {
       spacing: 8,
       runSpacing: 8,
       children: [
-        RemixBadge(label: 'Solid', style: FortalBadgeStyles.solid()),
-        RemixBadge(label: 'Soft', style: FortalBadgeStyles.soft()),
-        RemixBadge(label: 'Surface', style: FortalBadgeStyles.surface()),
-        RemixBadge(label: 'Outline', style: FortalBadgeStyles.outline()),
+        RemixBadge(style: FortalBadgeStyles.solid(), label: 'Solid'),
+        RemixBadge(style: FortalBadgeStyles.soft(), label: 'Soft'),
+        RemixBadge(style: FortalBadgeStyles.surface(), label: 'Surface'),
+        RemixBadge(style: FortalBadgeStyles.outline(), label: 'Outline'),
       ],
     );
   }
@@ -628,11 +628,11 @@ class _ProgressSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        RemixProgress(value: value, style: FortalProgressStyles.classic()),
+        RemixProgress(style: FortalProgressStyles.classic(), value: value),
         const SizedBox(height: 12),
-        RemixProgress(value: value, style: FortalProgressStyles.surface()),
+        RemixProgress(style: FortalProgressStyles.surface(), value: value),
         const SizedBox(height: 12),
-        RemixProgress(value: value, style: FortalProgressStyles.soft()),
+        RemixProgress(style: FortalProgressStyles.soft(), value: value),
       ],
     );
   }

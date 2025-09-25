@@ -10,7 +10,7 @@ typedef RemixIconButtonIconBuilder = Widget Function(
 /// Builder function for customizing icon button loading state rendering.
 typedef RemixIconButtonLoadingBuilder = Widget Function(
   BuildContext context,
-  SpinnerSpec spec,
+  RemixSpinnerSpec spec,
 );
 
 /// A customizable icon button component optimized for icon-only interactions.
@@ -66,10 +66,9 @@ class RemixIconButton extends StatelessWidget {
 
   final RemixIconButtonStyle style;
 
-  final IconButtonSpec? styleSpec;
+  final RemixIconButtonSpec? styleSpec;
 
   static late final styleFrom = RemixIconButtonStyle.new;
-
 
   /// Whether the button is in a loading state.
   ///
@@ -89,7 +88,6 @@ class RemixIconButton extends StatelessWidget {
 
   /// Optional focus node to control the button's focus behavior.
   final FocusNode? focusNode;
-
 
   /// Whether to provide feedback when the button is pressed.
   ///
@@ -152,7 +150,8 @@ class RemixIconButton extends StatelessWidget {
             if (iconBuilder != null) {
               iconWidget = StyleSpecBuilder(
                 styleSpec: spec.icon,
-                builder: (context, iconSpec) => iconBuilder!(context, iconSpec, icon),
+                builder: (context, iconSpec) =>
+                    iconBuilder!(context, iconSpec, icon),
               );
             } else {
               iconWidget = StyledIcon(icon: icon, styleSpec: spec.icon);
@@ -189,10 +188,7 @@ class RemixIconButton extends StatelessWidget {
                 liveRegion: loading,
                 label: semanticLabel ?? 'Icon Button',
                 hint: semanticHint,
-                child: Box(
-                  styleSpec: spec.container,
-                  child: layered,
-                ),
+                child: Box(styleSpec: spec.container, child: layered),
               ),
             );
           },

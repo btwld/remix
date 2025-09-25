@@ -1,18 +1,16 @@
 part of 'icon_button.dart';
 
-
-
 class RemixIconButtonStyle
-    extends RemixContainerStyle<IconButtonSpec, RemixIconButtonStyle>
+    extends RemixContainerStyle<RemixIconButtonSpec, RemixIconButtonStyle>
     with IconStyleMixin<RemixIconButtonStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<IconSpec>>? $icon;
-  final Prop<StyleSpec<SpinnerSpec>>? $spinner;
+  final Prop<StyleSpec<RemixSpinnerSpec>>? $spinner;
 
   const RemixIconButtonStyle.create({
     Prop<StyleSpec<BoxSpec>>? container,
     Prop<StyleSpec<IconSpec>>? icon,
-    Prop<StyleSpec<SpinnerSpec>>? spinner,
+    Prop<StyleSpec<RemixSpinnerSpec>>? spinner,
     super.variants,
     super.animation,
     super.modifier,
@@ -25,7 +23,7 @@ class RemixIconButtonStyle
     IconStyler? icon,
     RemixSpinnerStyle? spinner,
     AnimationConfig? animation,
-    List<VariantStyle<IconButtonSpec>>? variants,
+    List<VariantStyle<RemixIconButtonSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
           container: Prop.maybeMix(container),
@@ -151,9 +149,9 @@ class RemixIconButtonStyle
     return RemixIconButton(
       style: this,
       icon: icon,
-      onPressed: onPressed,
       loading: loading,
       enableFeedback: enableFeedback,
+      onPressed: onPressed,
       focusNode: focusNode,
     );
   }
@@ -180,7 +178,7 @@ class RemixIconButtonStyle
   // Variant support
 
   @override
-  RemixIconButtonStyle variants(List<VariantStyle<IconButtonSpec>> value) {
+  RemixIconButtonStyle variants(List<VariantStyle<RemixIconButtonSpec>> value) {
     return merge(RemixIconButtonStyle(variants: value));
   }
 
@@ -191,9 +189,9 @@ class RemixIconButtonStyle
   }
 
   @override
-  StyleSpec<IconButtonSpec> resolve(BuildContext context) {
+  StyleSpec<RemixIconButtonSpec> resolve(BuildContext context) {
     return StyleSpec(
-      spec: IconButtonSpec(
+      spec: RemixIconButtonSpec(
         container: MixOps.resolve(context, $container),
         icon: MixOps.resolve(context, $icon),
         spinner: MixOps.resolve(context, $spinner),
@@ -227,5 +225,3 @@ class RemixIconButtonStyle
         $modifier,
       ];
 }
-
-

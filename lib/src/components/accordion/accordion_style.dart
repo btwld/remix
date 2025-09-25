@@ -1,12 +1,12 @@
 part of 'accordion.dart';
 
-class RemixAccordionStyle extends RemixStyle<AccordionSpec, RemixAccordionStyle> {
+class RemixAccordionStyle extends RemixFlexContainerStyle<RemixAccordionSpec, RemixAccordionStyle> {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
-  final Prop<StyleSpec<AccordionItemSpec>>? $item;
+  final Prop<StyleSpec<RemixAccordionItemSpec>>? $item;
 
   const RemixAccordionStyle.create({
     Prop<StyleSpec<FlexBoxSpec>>? container,
-    Prop<StyleSpec<AccordionItemSpec>>? item,
+    Prop<StyleSpec<RemixAccordionItemSpec>>? item,
     super.variants,
     super.animation,
     super.modifier,
@@ -17,7 +17,7 @@ class RemixAccordionStyle extends RemixStyle<AccordionSpec, RemixAccordionStyle>
     FlexBoxStyler? container,
     RemixAccordionItemStyle? item,
     AnimationConfig? animation,
-    List<VariantStyle<AccordionSpec>>? variants,
+    List<VariantStyle<RemixAccordionSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
           container: Prop.maybeMix(container),
@@ -35,10 +35,61 @@ class RemixAccordionStyle extends RemixStyle<AccordionSpec, RemixAccordionStyle>
     return merge(RemixAccordionStyle(item: value));
   }
 
+  // RemixFlexContainerStyle mixin implementations
   @override
-  StyleSpec<AccordionSpec> resolve(BuildContext context) {
+  RemixAccordionStyle padding(EdgeInsetsGeometryMix value) {
+    return merge(RemixAccordionStyle(container: FlexBoxStyler(padding: value)));
+  }
+
+  @override
+  RemixAccordionStyle color(Color value) {
+    return merge(RemixAccordionStyle(container: FlexBoxStyler(decoration: BoxDecorationMix(color: value))));
+  }
+
+  @override
+  RemixAccordionStyle size(double width, double height) {
+    return merge(RemixAccordionStyle(container: FlexBoxStyler(constraints: BoxConstraintsMix(minWidth: width, maxWidth: width, minHeight: height, maxHeight: height))));
+  }
+
+  @override
+  RemixAccordionStyle borderRadius(BorderRadiusGeometryMix radius) {
+    return merge(RemixAccordionStyle(container: FlexBoxStyler(decoration: BoxDecorationMix(borderRadius: radius))));
+  }
+
+  @override
+  RemixAccordionStyle constraints(BoxConstraintsMix value) {
+    return merge(RemixAccordionStyle(container: FlexBoxStyler(constraints: value)));
+  }
+
+  @override
+  RemixAccordionStyle decoration(DecorationMix value) {
+    return merge(RemixAccordionStyle(container: FlexBoxStyler(decoration: value)));
+  }
+
+  @override
+  RemixAccordionStyle margin(EdgeInsetsGeometryMix value) {
+    return merge(RemixAccordionStyle(container: FlexBoxStyler(margin: value)));
+  }
+
+  @override
+  RemixAccordionStyle foregroundDecoration(DecorationMix value) {
+    return merge(RemixAccordionStyle(container: FlexBoxStyler(foregroundDecoration: value)));
+  }
+
+  @override
+  RemixAccordionStyle transform(Matrix4 value, {AlignmentGeometry alignment = Alignment.center}) {
+    return merge(RemixAccordionStyle(container: FlexBoxStyler(alignment: alignment, transform: value)));
+  }
+
+  @override
+  RemixAccordionStyle flex(FlexStyler value) {
+    return merge(RemixAccordionStyle(container: FlexBoxStyler()));
+  }
+
+  @override
+  StyleSpec<RemixAccordionSpec> resolve(BuildContext context) {
     return StyleSpec(
-      spec: AccordionSpec(
+      spec: RemixAccordionSpec(
         container: MixOps.resolve(context, $container),
         item: MixOps.resolve(context, $item),
       ),
@@ -61,7 +112,7 @@ class RemixAccordionStyle extends RemixStyle<AccordionSpec, RemixAccordionStyle>
   }
 
   @override
-  RemixAccordionStyle variants(List<VariantStyle<AccordionSpec>> value) {
+  RemixAccordionStyle variants(List<VariantStyle<RemixAccordionSpec>> value) {
     return merge(RemixAccordionStyle(variants: value));
   }
 
@@ -85,7 +136,7 @@ class RemixAccordionStyle extends RemixStyle<AccordionSpec, RemixAccordionStyle>
       ];
 }
 
-class RemixAccordionItemStyle extends RemixStyle<AccordionItemSpec, RemixAccordionItemStyle> {
+class RemixAccordionItemStyle extends RemixFlexContainerStyle<RemixAccordionItemSpec, RemixAccordionItemStyle> {
   final Prop<StyleSpec<FlexBoxSpec>>? $trigger;
   final Prop<StyleSpec<TextSpec>>? $title;
   final Prop<StyleSpec<IconSpec>>? $icon;
@@ -110,7 +161,7 @@ class RemixAccordionItemStyle extends RemixStyle<AccordionItemSpec, RemixAccordi
     IconStyler? icon,
     BoxStyler? content,
     AnimationConfig? animation,
-    List<VariantStyle<AccordionItemSpec>>? variants,
+    List<VariantStyle<RemixAccordionItemSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
           trigger: Prop.maybeMix(trigger),
@@ -138,10 +189,61 @@ class RemixAccordionItemStyle extends RemixStyle<AccordionItemSpec, RemixAccordi
     return merge(RemixAccordionItemStyle(content: value));
   }
 
+  // RemixFlexContainerStyle mixin implementations
   @override
-  StyleSpec<AccordionItemSpec> resolve(BuildContext context) {
+  RemixAccordionItemStyle padding(EdgeInsetsGeometryMix value) {
+    return merge(RemixAccordionItemStyle(trigger: FlexBoxStyler(padding: value)));
+  }
+
+  @override
+  RemixAccordionItemStyle color(Color value) {
+    return merge(RemixAccordionItemStyle(trigger: FlexBoxStyler(decoration: BoxDecorationMix(color: value))));
+  }
+
+  @override
+  RemixAccordionItemStyle size(double width, double height) {
+    return merge(RemixAccordionItemStyle(trigger: FlexBoxStyler(constraints: BoxConstraintsMix(minWidth: width, maxWidth: width, minHeight: height, maxHeight: height))));
+  }
+
+  @override
+  RemixAccordionItemStyle borderRadius(BorderRadiusGeometryMix radius) {
+    return merge(RemixAccordionItemStyle(trigger: FlexBoxStyler(decoration: BoxDecorationMix(borderRadius: radius))));
+  }
+
+  @override
+  RemixAccordionItemStyle constraints(BoxConstraintsMix value) {
+    return merge(RemixAccordionItemStyle(trigger: FlexBoxStyler(constraints: value)));
+  }
+
+  @override
+  RemixAccordionItemStyle decoration(DecorationMix value) {
+    return merge(RemixAccordionItemStyle(trigger: FlexBoxStyler(decoration: value)));
+  }
+
+  @override
+  RemixAccordionItemStyle margin(EdgeInsetsGeometryMix value) {
+    return merge(RemixAccordionItemStyle(trigger: FlexBoxStyler(margin: value)));
+  }
+
+  @override
+  RemixAccordionItemStyle foregroundDecoration(DecorationMix value) {
+    return merge(RemixAccordionItemStyle(trigger: FlexBoxStyler(foregroundDecoration: value)));
+  }
+
+  @override
+  RemixAccordionItemStyle transform(Matrix4 value, {AlignmentGeometry alignment = Alignment.center}) {
+    return merge(RemixAccordionItemStyle(trigger: FlexBoxStyler(alignment: alignment, transform: value)));
+  }
+
+  @override
+  RemixAccordionItemStyle flex(FlexStyler value) {
+    return merge(RemixAccordionItemStyle(trigger: FlexBoxStyler()));
+  }
+
+  @override
+  StyleSpec<RemixAccordionItemSpec> resolve(BuildContext context) {
     return StyleSpec(
-      spec: AccordionItemSpec(
+      spec: RemixAccordionItemSpec(
         trigger: MixOps.resolve(context, $trigger),
         title: MixOps.resolve(context, $title),
         icon: MixOps.resolve(context, $icon),
@@ -168,7 +270,7 @@ class RemixAccordionItemStyle extends RemixStyle<AccordionItemSpec, RemixAccordi
   }
 
   @override
-  RemixAccordionItemStyle variants(List<VariantStyle<AccordionItemSpec>> value) {
+  RemixAccordionItemStyle variants(List<VariantStyle<RemixAccordionItemSpec>> value) {
     return merge(RemixAccordionItemStyle(variants: value));
   }
 

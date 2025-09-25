@@ -14,7 +14,7 @@ class RemixTooltip extends StatelessWidget {
   final RemixTooltipStyle style;
 
   /// The style spec for the tooltip.
-  final TooltipSpec? styleSpec;
+  final RemixTooltipSpec? styleSpec;
 
   /// The widget to display in the tooltip.
   final Widget tooltipChild;

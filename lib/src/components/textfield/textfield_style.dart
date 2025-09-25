@@ -1,7 +1,7 @@
 part of 'textfield.dart';
 
 class RemixTextFieldStyle
-    extends RemixFlexContainerStyle<TextFieldSpec, RemixTextFieldStyle>
+    extends RemixFlexContainerStyle<RemixTextFieldSpec, RemixTextFieldStyle>
     with LabelStyleMixin<RemixTextFieldStyle> {
   final Prop<StyleSpec<TextSpec>>? $text;
   final Prop<StyleSpec<TextSpec>>? $hintText;
@@ -82,7 +82,7 @@ class RemixTextFieldStyle
     TextStyler? helperText,
     TextStyler? label,
     AnimationConfig? animation,
-    List<VariantStyle<TextFieldSpec>>? variants,
+    List<VariantStyle<RemixTextFieldSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
           text: Prop.maybeMix(text),
@@ -229,7 +229,7 @@ class RemixTextFieldStyle
   }
 
   @override
-  RemixTextFieldStyle variants(List<VariantStyle<TextFieldSpec>> value) {
+  RemixTextFieldStyle variants(List<VariantStyle<RemixTextFieldSpec>> value) {
     return merge(RemixTextFieldStyle(variants: value));
   }
 
@@ -258,9 +258,9 @@ class RemixTextFieldStyle
   }
 
   @override
-  StyleSpec<TextFieldSpec> resolve(BuildContext context) {
+  StyleSpec<RemixTextFieldSpec> resolve(BuildContext context) {
     return StyleSpec(
-      spec: TextFieldSpec(
+      spec: RemixTextFieldSpec(
         text: MixOps.resolve(context, $text),
         hintText: MixOps.resolve(context, $hintText),
         textAlign: MixOps.resolve(context, $textAlign),

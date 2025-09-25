@@ -1,11 +1,11 @@
 part of 'switch.dart';
 
-class SwitchSpec extends Spec<SwitchSpec> with Diagnosticable {
+class RemixSwitchSpec extends Spec<RemixSwitchSpec> with Diagnosticable {
   final StyleSpec<BoxSpec> container;
   final StyleSpec<BoxSpec> track;
   final StyleSpec<BoxSpec> thumb;
 
-  const SwitchSpec({
+  const RemixSwitchSpec({
     StyleSpec<BoxSpec>? container,
     StyleSpec<BoxSpec>? track,
     StyleSpec<BoxSpec>? thumb,
@@ -13,22 +13,22 @@ class SwitchSpec extends Spec<SwitchSpec> with Diagnosticable {
         track = track ?? const StyleSpec(spec: BoxSpec()),
         thumb = thumb ?? const StyleSpec(spec: BoxSpec());
 
-  SwitchSpec copyWith({
+  RemixSwitchSpec copyWith({
     StyleSpec<BoxSpec>? container,
     StyleSpec<BoxSpec>? track,
     StyleSpec<BoxSpec>? thumb,
   }) {
-    return SwitchSpec(
+    return RemixSwitchSpec(
       container: container ?? this.container,
       track: track ?? this.track,
       thumb: thumb ?? this.thumb,
     );
   }
 
-  SwitchSpec lerp(SwitchSpec? other, double t) {
+  RemixSwitchSpec lerp(RemixSwitchSpec? other, double t) {
     if (other == null) return this;
 
-    return SwitchSpec(
+    return RemixSwitchSpec(
       container: MixOps.lerp(container, other.container, t)!,
       track: MixOps.lerp(track, other.track, t)!,
       thumb: MixOps.lerp(thumb, other.thumb, t)!,

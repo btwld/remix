@@ -42,9 +42,9 @@ class RemixTabs extends StatelessWidget {
     this.onEscapePressed,
     this.style = const RemixTabsStyle.create(),
   }) : assert(
-         controller != null || selectedTabId != null,
-         'Either controller or selectedTabId must be provided',
-       );
+          controller != null || selectedTabId != null,
+          'Either controller or selectedTabId must be provided',
+        );
 
   /// The tabs content.
   final Widget child;
@@ -84,10 +84,7 @@ class RemixTabs extends StatelessWidget {
       child: StyleBuilder(
         style: style,
         builder: (context, spec) {
-          return FlexBox(
-            styleSpec: spec.container,
-            children: [child],
-          );
+          return FlexBox(styleSpec: spec.container, children: [child]);
         },
       ),
     );
@@ -96,10 +93,7 @@ class RemixTabs extends StatelessWidget {
 
 /// A container widget for tab buttons.
 class RemixTabBar extends StatelessWidget {
-  const RemixTabBar({
-    super.key,
-    required this.child,
-  });
+  const RemixTabBar({super.key, required this.child});
 
   /// The tab buttons.
   final Widget child;
@@ -130,9 +124,9 @@ class RemixTab extends StatelessWidget {
     this.icon,
     this.label,
   }) : assert(
-         child != null || builder != null || label != null,
-         'Either child, builder, or label must be provided',
-       );
+          child != null || builder != null || label != null,
+          'Either child, builder, or label must be provided',
+        );
 
   /// The tab content when not using [builder].
   final Widget? child;
@@ -213,10 +207,8 @@ class RemixTab extends StatelessWidget {
             return FlexBox(
               styleSpec: spec.container,
               children: [
-                if (icon != null)
-                  StyledIcon(icon: icon!, styleSpec: spec.icon),
-                if (label != null)
-                  StyledText(label!, styleSpec: spec.label),
+                if (icon != null) StyledIcon(icon: icon!, styleSpec: spec.icon),
+                if (label != null) StyledText(label!, styleSpec: spec.label),
               ],
             );
           },
@@ -228,11 +220,7 @@ class RemixTab extends StatelessWidget {
 
 /// A tab content panel that is shown when its corresponding tab is selected.
 class RemixTabView extends StatelessWidget {
-  const RemixTabView({
-    super.key,
-    required this.tabId,
-    required this.child,
-  });
+  const RemixTabView({super.key, required this.tabId, required this.child});
 
   /// The unique identifier that matches a tab.
   final String tabId;
@@ -242,9 +230,6 @@ class RemixTabView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return NakedTabView(
-      tabId: tabId,
-      child: child,
-    );
+    return NakedTabView(tabId: tabId, child: child);
   }
 }

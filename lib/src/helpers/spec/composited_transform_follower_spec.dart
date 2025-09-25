@@ -2,15 +2,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 
-class CompositedTransformFollowerSpec
-    extends Spec<CompositedTransformFollowerSpec> with Diagnosticable {
+class RemixCompositedTransformFollowerSpec
+    extends Spec<RemixCompositedTransformFollowerSpec> with Diagnosticable {
   final LayerLink? link;
   final bool? showWhenUnlinked;
   final Offset? offset;
   final AlignmentGeometry? targetAnchor;
   final AlignmentGeometry? followerAnchor;
 
-  const CompositedTransformFollowerSpec({
+  const RemixCompositedTransformFollowerSpec({
     this.link,
     this.showWhenUnlinked,
     this.offset,
@@ -18,17 +18,17 @@ class CompositedTransformFollowerSpec
     this.followerAnchor,
   });
 
-  static CompositedTransformFollowerSpec? of(BuildContext _) => null;
+  static RemixCompositedTransformFollowerSpec? of(BuildContext _) => null;
 
   @override
-  CompositedTransformFollowerSpec copyWith({
+  RemixCompositedTransformFollowerSpec copyWith({
     LayerLink? link,
     bool? showWhenUnlinked,
     Offset? offset,
     AlignmentGeometry? targetAnchor,
     AlignmentGeometry? followerAnchor,
   }) {
-    return CompositedTransformFollowerSpec(
+    return RemixCompositedTransformFollowerSpec(
       link: link ?? this.link,
       showWhenUnlinked: showWhenUnlinked ?? this.showWhenUnlinked,
       offset: offset ?? this.offset,
@@ -38,13 +38,13 @@ class CompositedTransformFollowerSpec
   }
 
   @override
-  CompositedTransformFollowerSpec lerp(
-    CompositedTransformFollowerSpec? other,
+  RemixCompositedTransformFollowerSpec lerp(
+    RemixCompositedTransformFollowerSpec? other,
     double t,
   ) {
     if (other == null) return this;
 
-    return CompositedTransformFollowerSpec(
+    return RemixCompositedTransformFollowerSpec(
       link: t < 0.5 ? link : other.link,
       showWhenUnlinked: t < 0.5 ? showWhenUnlinked : other.showWhenUnlinked,
       offset: Offset.lerp(offset, other.offset, t),

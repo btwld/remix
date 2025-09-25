@@ -2,7 +2,7 @@ part of 'switch.dart';
 
 
 
-class RemixSwitchStyle extends RemixContainerStyle<SwitchSpec, RemixSwitchStyle> {
+class RemixSwitchStyle extends RemixContainerStyle<RemixSwitchSpec, RemixSwitchStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<BoxSpec>>? $track;
   final Prop<StyleSpec<BoxSpec>>? $thumb;
@@ -23,7 +23,7 @@ class RemixSwitchStyle extends RemixContainerStyle<SwitchSpec, RemixSwitchStyle>
     BoxStyler? track,
     BoxStyler? thumb,
     AnimationConfig? animation,
-    List<VariantStyle<SwitchSpec>>? variants,
+    List<VariantStyle<RemixSwitchSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
           container: Prop.maybeMix(container),
@@ -64,9 +64,9 @@ class RemixSwitchStyle extends RemixContainerStyle<SwitchSpec, RemixSwitchStyle>
   }
 
   @override
-  StyleSpec<SwitchSpec> resolve(BuildContext context) {
+  StyleSpec<RemixSwitchSpec> resolve(BuildContext context) {
     return StyleSpec(
-      spec: SwitchSpec(
+      spec: RemixSwitchSpec(
         container: MixOps.resolve(context, $container),
         track: MixOps.resolve(context, $track),
         thumb: MixOps.resolve(context, $thumb),
@@ -91,7 +91,7 @@ class RemixSwitchStyle extends RemixContainerStyle<SwitchSpec, RemixSwitchStyle>
   }
 
   @override
-  RemixSwitchStyle variants(List<VariantStyle<SwitchSpec>> value) {
+  RemixSwitchStyle variants(List<VariantStyle<RemixSwitchSpec>> value) {
     return merge(RemixSwitchStyle(variants: value));
   }
 

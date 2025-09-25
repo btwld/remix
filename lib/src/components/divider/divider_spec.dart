@@ -1,19 +1,19 @@
 part of 'divider.dart';
 
-class DividerSpec extends Spec<DividerSpec> with Diagnosticable {
+class RemixDividerSpec extends Spec<RemixDividerSpec> with Diagnosticable {
   final StyleSpec<BoxSpec> container;
 
-  const DividerSpec({StyleSpec<BoxSpec>? container})
+  const RemixDividerSpec({StyleSpec<BoxSpec>? container})
       : container = container ?? const StyleSpec(spec: BoxSpec());
 
-  DividerSpec copyWith({StyleSpec<BoxSpec>? container}) {
-    return DividerSpec(container: container ?? this.container);
+  RemixDividerSpec copyWith({StyleSpec<BoxSpec>? container}) {
+    return RemixDividerSpec(container: container ?? this.container);
   }
 
-  DividerSpec lerp(DividerSpec? other, double t) {
+  RemixDividerSpec lerp(RemixDividerSpec? other, double t) {
     if (other == null) return this;
 
-    return DividerSpec(
+    return RemixDividerSpec(
       container: MixOps.lerp(container, other.container, t)!,
     );
   }

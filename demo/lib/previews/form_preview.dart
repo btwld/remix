@@ -148,7 +148,7 @@ class _PreviewRadio extends StatelessWidget {
 @Preview(name: 'Text Fields', size: Size(400, 350))
 Widget previewTextFields() {
   return createRemixPreview(
-    SizedBox(
+    const SizedBox(
       width: 350,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -156,18 +156,18 @@ Widget previewTextFields() {
           RemixTextField(
             hintText: 'Enter your name',
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           RemixTextField(
             hintText: 'Enter your email',
-            leading: const Icon(Icons.email),
+            leading: Icon(Icons.email),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           RemixTextField(
             hintText: 'Enter password',
             obscureText: true,
-            trailing: const Icon(Icons.visibility),
+            trailing: Icon(Icons.visibility),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           RemixTextField(
             hintText: 'This field is disabled',
             enabled: false,

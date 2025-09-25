@@ -3,7 +3,7 @@ part of 'select.dart';
 /// Builder function for customizing select trigger rendering.
 typedef RemixSelectTriggerBuilder<T> = Widget Function(
   BuildContext context,
-  SelectTriggerSpec spec,
+  RemixSelectTriggerSpec spec,
   T? selectedValue,
   bool isOpen,
 );
@@ -11,7 +11,7 @@ typedef RemixSelectTriggerBuilder<T> = Widget Function(
 /// Builder function for customizing select item rendering.
 typedef RemixSelectItemBuilder<T> = Widget Function(
   BuildContext context,
-  SelectMenuItemSpec spec,
+  RemixSelectMenuItemSpec spec,
   T value,
   bool isSelected,
 );
@@ -121,7 +121,7 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
     animationController = AnimationController(vsync: this);
   }
 
-  Widget _buildOverlayMenu(SelectSpec spec) => _AnimatedOverlayMenu(
+  Widget _buildOverlayMenu(RemixSelectSpec spec) => _AnimatedOverlayMenu(
         controller: animationController,
         duration: const Duration(milliseconds: 150),
         curve: Curves.easeInOut,
@@ -139,9 +139,9 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
 
   @override
   Widget build(BuildContext context) {
-    return StyleProvider<SelectSpec>(
+    return StyleProvider<RemixSelectSpec>(
       style: _style,
-      child: StyleBuilder<SelectSpec>(
+      child: StyleBuilder<RemixSelectSpec>(
         style: _style,
         builder: (context, spec) {
           return NakedSelect<T>(
@@ -161,7 +161,7 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
               widget.onClose?.call();
             },
             builder: (context, state, _) {
-              return StyleSpecBuilder<SelectTriggerSpec>(
+              return StyleSpecBuilder<RemixSelectTriggerSpec>(
                 styleSpec: spec.trigger,
                 builder: (context, triggerSpec) {
                   if (widget.triggerBuilder != null) {
@@ -179,7 +179,8 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
                     children: [
                       Expanded(
                         child: StyledText(
-                          widget.selectedValue?.toString() ?? 'Select an option',
+                          widget.selectedValue?.toString() ??
+                              'Select an option',
                           styleSpec: triggerSpec.label,
                         ),
                       ),
@@ -307,7 +308,7 @@ class RemixSelectItem<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Get style from provider in build method, allow override with style
-    final styleFromProvider = StyleProvider.maybeOf<SelectSpec>(context);
+    final styleFromProvider = StyleProvider.maybeOf<RemixSelectSpec>(context);
     final effectiveStyle =
         style ?? styleFromProvider ?? const RemixSelectStyle.create();
 
@@ -317,7 +318,7 @@ class RemixSelectItem<T> extends StatelessWidget {
       semanticLabel: semanticLabel ?? label,
       value: value,
       builder: (context, states, _) {
-        return StyleBuilder<SelectSpec>(
+        return StyleBuilder<RemixSelectSpec>(
           style: effectiveStyle,
           controller: NakedState.controllerOf(context),
           builder: (context, spec) {
@@ -328,7 +329,7 @@ class RemixSelectItem<T> extends StatelessWidget {
 
             // Use itemBuilder if provided
             if (itemBuilder != null) {
-              itemContent = StyleSpecBuilder<SelectMenuItemSpec>(
+              itemContent = StyleSpecBuilder<RemixSelectMenuItemSpec>(
                 styleSpec: itemSpec,
                 builder: (context, resolvedItemSpec) {
                   return itemBuilder!(
@@ -344,7 +345,7 @@ class RemixSelectItem<T> extends StatelessWidget {
               itemContent = child!;
             } else if (label != null) {
               // Default content with label using StyleSpecBuilder
-              itemContent = StyleSpecBuilder<SelectMenuItemSpec>(
+              itemContent = StyleSpecBuilder<RemixSelectMenuItemSpec>(
                 styleSpec: itemSpec,
                 builder: (context, resolvedItemSpec) {
                   return RowBox(

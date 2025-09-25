@@ -6,12 +6,12 @@ part of 'radio.dart';
 /// building the control. It provides three [StyleSpec] segments representing the
 /// outer container, the indicator container (outer ring), and the indicator fill
 /// shown when the radio is selected.
-class RadioSpec extends Spec<RadioSpec> with Diagnosticable {
+class RemixRadioSpec extends Spec<RemixRadioSpec> with Diagnosticable {
   final StyleSpec<BoxSpec> container;
   final StyleSpec<BoxSpec> indicatorContainer;
   final StyleSpec<BoxSpec> indicator;
 
-  const RadioSpec({
+  const RemixRadioSpec({
     StyleSpec<BoxSpec>? container,
     StyleSpec<BoxSpec>? indicatorContainer,
     StyleSpec<BoxSpec>? indicator,
@@ -20,22 +20,22 @@ class RadioSpec extends Spec<RadioSpec> with Diagnosticable {
             indicatorContainer ?? const StyleSpec(spec: BoxSpec()),
         indicator = indicator ?? const StyleSpec(spec: BoxSpec());
 
-  RadioSpec copyWith({
+  RemixRadioSpec copyWith({
     StyleSpec<BoxSpec>? container,
     StyleSpec<BoxSpec>? indicatorContainer,
     StyleSpec<BoxSpec>? indicator,
   }) {
-    return RadioSpec(
+    return RemixRadioSpec(
       container: container ?? this.container,
       indicatorContainer: indicatorContainer ?? this.indicatorContainer,
       indicator: indicator ?? this.indicator,
     );
   }
 
-  RadioSpec lerp(RadioSpec? other, double t) {
+  RemixRadioSpec lerp(RemixRadioSpec? other, double t) {
     if (other == null) return this;
 
-    return RadioSpec(
+    return RemixRadioSpec(
       container: MixOps.lerp(container, other.container, t)!,
       indicatorContainer:
           MixOps.lerp(indicatorContainer, other.indicatorContainer, t)!,

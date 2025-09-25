@@ -67,24 +67,24 @@ Widget previewButtonStates() {
 @Preview(name: 'Icon-Only Buttons', size: Size(350, 150))
 Widget previewIconButtons() {
   return createRemixPreview(
-    Row(
+    const Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         RemixIconButton(
           icon: Icons.add,
           onPressed: null,
         ),
-        const SizedBox(width: 12),
+        SizedBox(width: 12),
         RemixIconButton(
           icon: Icons.edit,
           onPressed: null,
         ),
-        const SizedBox(width: 12),
+        SizedBox(width: 12),
         RemixIconButton(
           icon: Icons.delete,
           onPressed: null,
         ),
-        const SizedBox(width: 12),
+        SizedBox(width: 12),
         RemixIconButton(
           icon: Icons.settings,
           onPressed: null,
@@ -97,10 +97,10 @@ Widget previewIconButtons() {
 @Preview(name: 'Button Variations', size: Size(400, 300))
 Widget previewButtonVariations() {
   return createRemixPreview(
-    Column(
+    const Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Row(
+        Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             RemixButton(
@@ -115,13 +115,13 @@ Widget previewButtonVariations() {
             ),
           ],
         ),
-        const SizedBox(height: 16),
-        const RemixButton(
+        SizedBox(height: 16),
+        RemixButton(
           label: 'Download File',
           icon: Icons.download,
           onPressed: null,
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -129,20 +129,20 @@ Widget previewButtonVariations() {
               icon: Icons.thumb_up,
               onPressed: null,
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             RemixIconButton(
               icon: Icons.thumb_down,
               onPressed: null,
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             RemixIconButton(
               icon: Icons.share,
               onPressed: null,
             ),
           ],
         ),
-        const SizedBox(height: 16),
-        const RemixButton(
+        SizedBox(height: 16),
+        RemixButton(
           label: 'Processing...',
           icon: Icons.sync,
           loading: true,

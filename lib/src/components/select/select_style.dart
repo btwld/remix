@@ -1,16 +1,16 @@
 part of 'select.dart';
 
-class RemixSelectStyle extends RemixStyle<SelectSpec, RemixSelectStyle> {
+class RemixSelectStyle extends RemixStyle<RemixSelectSpec, RemixSelectStyle> {
   final Prop<StyleSpec<BoxSpec>>? $menuContainer;
-  final Prop<StyleSpec<SelectTriggerSpec>>? $trigger;
-  final Prop<StyleSpec<SelectMenuItemSpec>>? $item;
-  final Prop<StyleSpec<CompositedTransformFollowerSpec>>? $position;
+  final Prop<StyleSpec<RemixSelectTriggerSpec>>? $trigger;
+  final Prop<StyleSpec<RemixSelectMenuItemSpec>>? $item;
+  final Prop<StyleSpec<RemixCompositedTransformFollowerSpec>>? $position;
 
   const RemixSelectStyle.create({
     Prop<StyleSpec<BoxSpec>>? menuContainer,
-    Prop<StyleSpec<SelectTriggerSpec>>? trigger,
-    Prop<StyleSpec<SelectMenuItemSpec>>? item,
-    Prop<StyleSpec<CompositedTransformFollowerSpec>>? position,
+    Prop<StyleSpec<RemixSelectTriggerSpec>>? trigger,
+    Prop<StyleSpec<RemixSelectMenuItemSpec>>? item,
+    Prop<StyleSpec<RemixCompositedTransformFollowerSpec>>? position,
     super.variants,
     super.animation,
     super.modifier,
@@ -25,7 +25,7 @@ class RemixSelectStyle extends RemixStyle<SelectSpec, RemixSelectStyle> {
     RemixSelectMenuItemStyle? item,
     RemixCompositedTransformFollowerStyle? position,
     AnimationConfig? animation,
-    List<VariantStyle<SelectSpec>>? variants,
+    List<VariantStyle<RemixSelectSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
           menuContainer: Prop.maybeMix(menuContainer),
@@ -75,7 +75,7 @@ class RemixSelectStyle extends RemixStyle<SelectSpec, RemixSelectStyle> {
   }
 
   @override
-  RemixSelectStyle variants(List<VariantStyle<SelectSpec>> value) {
+  RemixSelectStyle variants(List<VariantStyle<RemixSelectSpec>> value) {
     return merge(RemixSelectStyle(variants: value));
   }
 
@@ -90,9 +90,9 @@ class RemixSelectStyle extends RemixStyle<SelectSpec, RemixSelectStyle> {
   }
 
   @override
-  StyleSpec<SelectSpec> resolve(BuildContext context) {
+  StyleSpec<RemixSelectSpec> resolve(BuildContext context) {
     return StyleSpec(
-      spec: SelectSpec(
+      spec: RemixSelectSpec(
         trigger: MixOps.resolve(context, $trigger),
         menuContainer: MixOps.resolve(context, $menuContainer),
         item: MixOps.resolve(context, $item),
@@ -131,8 +131,8 @@ class RemixSelectStyle extends RemixStyle<SelectSpec, RemixSelectStyle> {
 }
 
 // Style classes for sub-specs
-class RemixSelectTriggerStyle
-    extends RemixFlexContainerStyle<SelectTriggerSpec, RemixSelectTriggerStyle>
+class RemixSelectTriggerStyle extends RemixFlexContainerStyle<
+        RemixSelectTriggerSpec, RemixSelectTriggerStyle>
     with
         LabelStyleMixin<RemixSelectTriggerStyle>,
         IconStyleMixin<RemixSelectTriggerStyle> {
@@ -156,7 +156,7 @@ class RemixSelectTriggerStyle
     TextStyler? label,
     IconStyler? icon,
     AnimationConfig? animation,
-    List<VariantStyle<SelectTriggerSpec>>? variants,
+    List<VariantStyle<RemixSelectTriggerSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
           container: Prop.maybeMix(container),
@@ -183,9 +183,9 @@ class RemixSelectTriggerStyle
   }
 
   @override
-  StyleSpec<SelectTriggerSpec> resolve(BuildContext context) {
+  StyleSpec<RemixSelectTriggerSpec> resolve(BuildContext context) {
     return StyleSpec(
-      spec: SelectTriggerSpec(
+      spec: RemixSelectTriggerSpec(
         container: MixOps.resolve(context, $container),
         label: MixOps.resolve(context, $label),
         icon: MixOps.resolve(context, $icon),
@@ -232,7 +232,7 @@ class RemixSelectTriggerStyle
 
   @override
   RemixSelectTriggerStyle variants(
-    List<VariantStyle<SelectTriggerSpec>> value,
+    List<VariantStyle<RemixSelectTriggerSpec>> value,
   ) {
     return merge(RemixSelectTriggerStyle(variants: value));
   }
@@ -291,7 +291,7 @@ class RemixSelectTriggerStyle
 }
 
 class RemixSelectMenuItemStyle extends RemixFlexContainerStyle<
-        SelectMenuItemSpec, RemixSelectMenuItemStyle>
+        RemixSelectMenuItemSpec, RemixSelectMenuItemStyle>
     with
         LabelStyleMixin<RemixSelectMenuItemStyle>,
         IconStyleMixin<RemixSelectMenuItemStyle> {
@@ -315,7 +315,7 @@ class RemixSelectMenuItemStyle extends RemixFlexContainerStyle<
     TextStyler? text,
     IconStyler? icon,
     AnimationConfig? animation,
-    List<VariantStyle<SelectMenuItemSpec>>? variants,
+    List<VariantStyle<RemixSelectMenuItemSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
           container: Prop.maybeMix(container),
@@ -347,9 +347,9 @@ class RemixSelectMenuItemStyle extends RemixFlexContainerStyle<
   }
 
   @override
-  StyleSpec<SelectMenuItemSpec> resolve(BuildContext context) {
+  StyleSpec<RemixSelectMenuItemSpec> resolve(BuildContext context) {
     return StyleSpec(
-      spec: SelectMenuItemSpec(
+      spec: RemixSelectMenuItemSpec(
         container: MixOps.resolve(context, $container),
         text: MixOps.resolve(context, $text),
         icon: MixOps.resolve(context, $icon),
@@ -389,7 +389,7 @@ class RemixSelectMenuItemStyle extends RemixFlexContainerStyle<
 
   @override
   RemixSelectMenuItemStyle variants(
-    List<VariantStyle<SelectMenuItemSpec>> value,
+    List<VariantStyle<RemixSelectMenuItemSpec>> value,
   ) {
     return merge(RemixSelectMenuItemStyle(variants: value));
   }
@@ -455,7 +455,7 @@ class RemixSelectMenuItemStyle extends RemixFlexContainerStyle<
 }
 
 class RemixCompositedTransformFollowerStyle
-    extends Style<CompositedTransformFollowerSpec> {
+    extends Style<RemixCompositedTransformFollowerSpec> {
   final Prop<Alignment>? $targetAnchor;
   final Prop<Alignment>? $followerAnchor;
   final Prop<Offset>? $offset;
@@ -476,7 +476,7 @@ class RemixCompositedTransformFollowerStyle
     Alignment? followerAnchor,
     Offset? offset,
     AnimationConfig? animation,
-    List<VariantStyle<CompositedTransformFollowerSpec>>? variants,
+    List<VariantStyle<RemixCompositedTransformFollowerSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
           targetAnchor: Prop.maybe(targetAnchor),
@@ -487,17 +487,18 @@ class RemixCompositedTransformFollowerStyle
           modifier: modifier,
         );
 
-  @override
   RemixCompositedTransformFollowerStyle variants(
-    List<VariantStyle<CompositedTransformFollowerSpec>> value,
+    List<VariantStyle<RemixCompositedTransformFollowerSpec>> value,
   ) {
     return merge(RemixCompositedTransformFollowerStyle(variants: value));
   }
 
   @override
-  StyleSpec<CompositedTransformFollowerSpec> resolve(BuildContext context) {
+  StyleSpec<RemixCompositedTransformFollowerSpec> resolve(
+    BuildContext context,
+  ) {
     return StyleSpec(
-      spec: CompositedTransformFollowerSpec(
+      spec: RemixCompositedTransformFollowerSpec(
         offset: MixOps.resolve(context, $offset),
         targetAnchor: MixOps.resolve(context, $targetAnchor),
         followerAnchor: MixOps.resolve(context, $followerAnchor),

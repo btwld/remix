@@ -2,7 +2,7 @@ part of 'divider.dart';
 
 // Private per-component constants (none)
 
-class RemixDividerStyle extends RemixContainerStyle<DividerSpec, RemixDividerStyle> {
+class RemixDividerStyle extends RemixContainerStyle<RemixDividerSpec, RemixDividerStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
 
   const RemixDividerStyle.create({
@@ -15,7 +15,7 @@ class RemixDividerStyle extends RemixContainerStyle<DividerSpec, RemixDividerSty
   RemixDividerStyle({
     BoxStyler? container,
     AnimationConfig? animation,
-    List<VariantStyle<DividerSpec>>? variants,
+    List<VariantStyle<RemixDividerSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
           container: Prop.maybeMix(container),
@@ -56,7 +56,7 @@ class RemixDividerStyle extends RemixContainerStyle<DividerSpec, RemixDividerSty
   }
 
   @override
-  RemixDividerStyle variants(List<VariantStyle<DividerSpec>> value) {
+  RemixDividerStyle variants(List<VariantStyle<RemixDividerSpec>> value) {
     return merge(RemixDividerStyle(variants: value));
   }
 
@@ -95,9 +95,9 @@ class RemixDividerStyle extends RemixContainerStyle<DividerSpec, RemixDividerSty
   }
 
   @override
-  StyleSpec<DividerSpec> resolve(BuildContext context) {
+  StyleSpec<RemixDividerSpec> resolve(BuildContext context) {
     return StyleSpec(
-      spec: DividerSpec(container: MixOps.resolve(context, $container)),
+      spec: RemixDividerSpec(container: MixOps.resolve(context, $container)),
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
     );

@@ -248,8 +248,8 @@ class _StateSection extends StatelessWidget {
 
         // Disabled state
         FortalButtonStyle.solid().call(
-          label: 'Disabled',
           enabled: false,
+          label: 'Disabled',
           onPressed: null,
         ),
 

@@ -1,29 +1,29 @@
 part of 'badge.dart';
 
-class BadgeSpec extends Spec<BadgeSpec> with Diagnosticable {
+class RemixBadgeSpec extends Spec<RemixBadgeSpec> with Diagnosticable {
   final StyleSpec<BoxSpec> container;
   final StyleSpec<TextSpec> text;
 
-  const BadgeSpec({
+  const RemixBadgeSpec({
     StyleSpec<BoxSpec>? container,
     StyleSpec<TextSpec>? text,
   })  : container = container ?? const StyleSpec(spec: BoxSpec()),
         text = text ?? const StyleSpec(spec: TextSpec());
 
-  BadgeSpec copyWith({
+  RemixBadgeSpec copyWith({
     StyleSpec<BoxSpec>? container,
     StyleSpec<TextSpec>? text,
   }) {
-    return BadgeSpec(
+    return RemixBadgeSpec(
       container: container ?? this.container,
       text: text ?? this.text,
     );
   }
 
-  BadgeSpec lerp(BadgeSpec? other, double t) {
+  RemixBadgeSpec lerp(RemixBadgeSpec? other, double t) {
     if (other == null) return this;
 
-    return BadgeSpec(
+    return RemixBadgeSpec(
       container: MixOps.lerp(container, other.container, t)!,
       text: MixOps.lerp(text, other.text, t)!,
     );

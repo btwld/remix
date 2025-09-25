@@ -1,27 +1,27 @@
 part of 'avatar.dart';
 
-class AvatarSpec extends Spec<AvatarSpec> with Diagnosticable {
+class RemixAvatarSpec extends Spec<RemixAvatarSpec> with Diagnosticable {
   final StyleSpec<BoxSpec> container;
   final StyleSpec<TextSpec> text;
   final StyleSpec<IconSpec> icon;
 
-  const AvatarSpec({StyleSpec<BoxSpec>? container, StyleSpec<TextSpec>? text, StyleSpec<IconSpec>? icon})
+  const RemixAvatarSpec({StyleSpec<BoxSpec>? container, StyleSpec<TextSpec>? text, StyleSpec<IconSpec>? icon})
       : container = container ?? const StyleSpec(spec: BoxSpec()),
         text = text ?? const StyleSpec(spec: TextSpec()),
         icon = icon ?? const StyleSpec(spec: IconSpec());
 
-  AvatarSpec copyWith({StyleSpec<BoxSpec>? container, StyleSpec<TextSpec>? text, StyleSpec<IconSpec>? icon}) {
-    return AvatarSpec(
+  RemixAvatarSpec copyWith({StyleSpec<BoxSpec>? container, StyleSpec<TextSpec>? text, StyleSpec<IconSpec>? icon}) {
+    return RemixAvatarSpec(
       container: container ?? this.container,
       text: text ?? this.text,
       icon: icon ?? this.icon,
     );
   }
 
-  AvatarSpec lerp(AvatarSpec? other, double t) {
+  RemixAvatarSpec lerp(RemixAvatarSpec? other, double t) {
     if (other == null) return this;
 
-    return AvatarSpec(
+    return RemixAvatarSpec(
       container: MixOps.lerp(container, other.container, t)!,
       text: MixOps.lerp(text, other.text, t)!,
       icon: MixOps.lerp(icon, other.icon, t)!,

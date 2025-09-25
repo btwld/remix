@@ -1,6 +1,6 @@
 part of 'spinner.dart';
 
-class RemixSpinnerStyle extends RemixStyle<SpinnerSpec, RemixSpinnerStyle> {
+class RemixSpinnerStyle extends RemixStyle<RemixSpinnerSpec, RemixSpinnerStyle> {
   final Prop<double>? $size;
   final Prop<double>? $strokeWidth;
   final Prop<Color>? $color;
@@ -29,7 +29,7 @@ class RemixSpinnerStyle extends RemixStyle<SpinnerSpec, RemixSpinnerStyle> {
     Duration? duration,
     SpinnerType? type,
     AnimationConfig? animation,
-    List<VariantStyle<SpinnerSpec>>? variants,
+    List<VariantStyle<RemixSpinnerSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
           size: Prop.maybe(size),
@@ -75,7 +75,7 @@ class RemixSpinnerStyle extends RemixStyle<SpinnerSpec, RemixSpinnerStyle> {
   // Variant support
 
   @override
-  RemixSpinnerStyle variants(List<VariantStyle<SpinnerSpec>> value) {
+  RemixSpinnerStyle variants(List<VariantStyle<RemixSpinnerSpec>> value) {
     return merge(RemixSpinnerStyle(variants: value));
   }
 
@@ -85,9 +85,9 @@ class RemixSpinnerStyle extends RemixStyle<SpinnerSpec, RemixSpinnerStyle> {
   }
 
   @override
-  StyleSpec<SpinnerSpec> resolve(BuildContext context) {
+  StyleSpec<RemixSpinnerSpec> resolve(BuildContext context) {
     return StyleSpec(
-      spec: SpinnerSpec(
+      spec: RemixSpinnerSpec(
         size: MixOps.resolve(context, $size),
         strokeWidth: MixOps.resolve(context, $strokeWidth),
         color: MixOps.resolve(context, $color),
