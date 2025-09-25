@@ -35,9 +35,15 @@ typedef RemixSelectItemBuilder<T> = Widget Function(
 ///       .toList(),
 ///   style: SelectStyle(),
 ///   triggerBuilder: (context, spec, value, isOpen) {
-///     return spec.createWidget(
-///       value ?? 'Select an item',
-///       trailing: isOpen ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+///     return RowBox(
+///       styleSpec: spec.container,
+///       children: [
+///         Expanded(child: StyledText(value ?? 'Select an item', styleSpec: spec.label)),
+///         StyledIcon(
+///           icon: isOpen ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+///           styleSpec: spec.icon,
+///         ),
+///       ],
 ///     );
 ///   },
 /// )
@@ -168,11 +174,22 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
                   }
 
                   // Default trigger when no builder provided
-                  return triggerSpec.createWidget(
-                    widget.selectedValue?.toString() ?? 'Select an option',
-                    trailing: state.isOpen
-                        ? Icons.keyboard_arrow_up
-                        : Icons.keyboard_arrow_down,
+                  return RowBox(
+                    styleSpec: triggerSpec.container,
+                    children: [
+                      Expanded(
+                        child: StyledText(
+                          widget.selectedValue?.toString() ?? 'Select an option',
+                          styleSpec: triggerSpec.label,
+                        ),
+                      ),
+                      StyledIcon(
+                        icon: state.isOpen
+                            ? Icons.keyboard_arrow_up
+                            : Icons.keyboard_arrow_down,
+                        styleSpec: triggerSpec.icon,
+                      ),
+                    ],
                   );
                 },
               );
@@ -242,7 +259,7 @@ class _AnimatedOverlayMenuState extends State<_AnimatedOverlayMenu> {
   }
 }
 
-class RemixSelectItem<T> extends StatefulWidget with HasEnabled {
+class RemixSelectItem<T> extends StatelessWidget {
   const RemixSelectItem({
     super.key,
     required this.value,
@@ -250,10 +267,6 @@ class RemixSelectItem<T> extends StatefulWidget with HasEnabled {
     this.trailing = Icons.check,
     this.enabled = true,
     this.semanticLabel,
-    this.cursor = SystemMouseCursors.click,
-    this.enableFeedback = true,
-    this.focusNode,
-    this.autofocus = false,
     this.child,
     this.itemBuilder,
     this.style,
@@ -280,21 +293,6 @@ class RemixSelectItem<T> extends StatefulWidget with HasEnabled {
   /// Used by screen readers to identify the item.
   final String? semanticLabel;
 
-  /// The cursor to show when hovering over this item.
-  /// Defaults to [SystemMouseCursors.click].
-  final MouseCursor cursor;
-
-  /// Whether to provide haptic feedback when selected.
-  /// Defaults to true.
-  final bool enableFeedback;
-
-  /// Optional focus node to control focus behavior.
-  /// If not provided, a new focus node will be created.
-  final FocusNode? focusNode;
-
-  /// Whether the item should automatically request focus when it is created.
-  final bool autofocus;
-
   /// Custom child widget that overrides the default label and icon layout.
   final Widget? child;
 
@@ -307,77 +305,68 @@ class RemixSelectItem<T> extends StatefulWidget with HasEnabled {
   final RemixSelectStyle? style;
 
   @override
-  State<RemixSelectItem<T>> createState() => _RemixSelectItemState<T>();
-}
-
-class _RemixSelectItemState<T> extends State<RemixSelectItem<T>>
-    with HasWidgetStateController, HasEnabledState {
-  @override
   Widget build(BuildContext context) {
-    // Get style from provider in build method, allow override with widget.style
+    // Get style from provider in build method, allow override with style
     final styleFromProvider = StyleProvider.maybeOf<SelectSpec>(context);
     final effectiveStyle =
-        widget.style ?? styleFromProvider ?? const RemixSelectStyle.create();
+        style ?? styleFromProvider ?? const RemixSelectStyle.create();
 
-    return StyleBuilder<SelectSpec>(
-      style: effectiveStyle,
-      controller: controller,
-      builder: (context, spec) {
-        final itemSpec = spec.item;
+    // NakedSelect.Option handles semantics internally, no outer Semantics needed
+    return NakedSelect.Option<T>(
+      enabled: enabled,
+      semanticLabel: semanticLabel ?? label,
+      value: value,
+      builder: (context, states, _) {
+        return StyleBuilder<SelectSpec>(
+          style: effectiveStyle,
+          controller: NakedState.controllerOf(context),
+          builder: (context, spec) {
+            final itemSpec = spec.item;
 
-        // Build item content progressively
-        Widget itemContent;
+            // Build item content progressively
+            Widget itemContent;
 
-        // Use itemBuilder if provided
-        if (widget.itemBuilder != null) {
-          itemContent = StyleSpecBuilder<SelectMenuItemSpec>(
-            styleSpec: itemSpec,
-            builder: (context, resolvedItemSpec) {
-              return widget.itemBuilder!(
-                context,
-                resolvedItemSpec,
-                widget.value,
-                controller.selected,
+            // Use itemBuilder if provided
+            if (itemBuilder != null) {
+              itemContent = StyleSpecBuilder<SelectMenuItemSpec>(
+                styleSpec: itemSpec,
+                builder: (context, resolvedItemSpec) {
+                  return itemBuilder!(
+                    context,
+                    resolvedItemSpec,
+                    value,
+                    states.isSelected,
+                  );
+                },
               );
-            },
-          );
-        } else if (widget.child != null) {
-          // Use custom child if provided
-          itemContent = widget.child!;
-        } else if (widget.label != null) {
-          // Default content with label
-          itemContent = itemSpec.createWidget(
-            widget.label!,
-            icon: controller.selected ? widget.trailing : null,
-            selected: controller.selected,
-          );
-        } else {
-          // Fallback to empty widget
-          itemContent = const SizedBox.shrink();
-        }
+            } else if (child != null) {
+              // Use custom child if provided
+              itemContent = child!;
+            } else if (label != null) {
+              // Default content with label using StyleSpecBuilder
+              itemContent = StyleSpecBuilder<SelectMenuItemSpec>(
+                styleSpec: itemSpec,
+                builder: (context, resolvedItemSpec) {
+                  return RowBox(
+                    styleSpec: resolvedItemSpec.container,
+                    children: [
+                      StyledText(label!, styleSpec: resolvedItemSpec.text),
+                      if (states.isSelected)
+                        StyledIcon(
+                          icon: trailing,
+                          styleSpec: resolvedItemSpec.icon,
+                        ),
+                    ],
+                  );
+                },
+              );
+            } else {
+              // Fallback to empty widget
+              itemContent = const SizedBox.shrink();
+            }
 
-        // Simplified widget tree with integrated semantics
-        return Semantics(
-          enabled: widget.enabled,
-          selected: controller.selected,
-          button: true,
-          focusable: widget.enabled,
-          label: widget.semanticLabel ?? widget.label,
-          onTap: null, // Semantics handled by child
-          child: NakedSelect.Option<T>(
-            enabled: widget.enabled,
-            value: widget.value,
-            builder: (context, states, _) {
-              // Update controller states based on naked select states
-              controller.focused = states.isFocused;
-              controller.hovered = states.isHovered;
-              controller.pressed = states.isPressed;
-              // Single-select: NakedSelect reports selection via states.
-              controller.selected = states.isSelected;
-
-              return itemContent;
-            },
-          ),
+            return itemContent;
+          },
         );
       },
     );

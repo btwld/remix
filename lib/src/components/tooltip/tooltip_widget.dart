@@ -1,16 +1,20 @@
 part of 'tooltip.dart';
 
-class RemixTooltip extends StyleWidget<TooltipSpec> {
+class RemixTooltip extends StatelessWidget {
   const RemixTooltip({
-    super.style = const RemixTooltipStyle.create(),
-    super.styleSpec,
     super.key,
+    this.style = const RemixTooltipStyle.create(),
+    this.styleSpec,
     required this.tooltipChild,
     required this.child,
-    this.showDuration = const Duration(seconds: 1),
-    this.waitDuration = Duration.zero,
     this.tooltipSemantics,
   });
+
+  /// The style configuration for the tooltip.
+  final RemixTooltipStyle style;
+
+  /// The style spec for the tooltip.
+  final TooltipSpec? styleSpec;
 
   /// The widget to display in the tooltip.
   final Widget tooltipChild;
@@ -18,26 +22,27 @@ class RemixTooltip extends StyleWidget<TooltipSpec> {
   /// The child widget that will trigger the tooltip.
   final Widget child;
 
-  /// The duration for which the tooltip is shown.
-  final Duration showDuration;
-
-  /// The duration to wait before showing the tooltip.
-  final Duration waitDuration;
-
   /// The semantic label for the tooltip.
   final String? tooltipSemantics;
 
-  @override
-  Widget build(BuildContext context, TooltipSpec spec) {
-    final tooltip = NakedTooltip(
-      overlayBuilder: (context) => Box(styleSpec: spec.container, child: tooltipChild),
-      showDuration: showDuration,
-      waitDuration: waitDuration,
-      child: child,
-    );
+  static late final styleFrom = RemixTooltipStyle.new;
 
-    return tooltipSemantics != null
-        ? Semantics(tooltip: tooltipSemantics, child: tooltip)
-        : tooltip;
+  @override
+  Widget build(BuildContext context) {
+    return NakedPopover(
+      popoverBuilder: (context, info) => StyleBuilder(
+        style: style,
+        builder: (context, spec) => Box(styleSpec: spec.container, child: tooltipChild),
+      ),
+      builder: (context, state, _) {
+        return StyleBuilder(
+          style: style,
+          controller: NakedPopoverState.controllerOf(context),
+          builder: (context, spec) {
+            return child;
+          },
+        );
+      },
+    );
   }
 }
