@@ -16,8 +16,8 @@ part of 'slider.dart';
 ///   style: SliderStyle(),
 /// )
 /// ```
-class RemixSlider extends StatefulWidget with HasEnabled {
-  RemixSlider({
+class RemixSlider extends StatelessWidget {
+  const RemixSlider({
     super.key,
     this.min = 0.0,
     this.max = 1.0,
@@ -26,6 +26,7 @@ class RemixSlider extends StatefulWidget with HasEnabled {
     this.onChangeEnd,
     this.onChangeStart,
     this.style = const RemixSliderStyle.create(),
+    this.styleSpec,
     this.enabled = true,
     this.enableHapticFeedback = true,
     this.focusNode,
@@ -57,6 +58,11 @@ class RemixSlider extends StatefulWidget with HasEnabled {
   /// The style configuration for the slider.
   final RemixSliderStyle style;
 
+  /// The style spec for the slider.
+  final SliderSpec? styleSpec;
+
+  static late final styleFrom = RemixSliderStyle.new;
+
   /// Whether the slider is enabled for interaction.
   final bool enabled;
 
@@ -77,108 +83,93 @@ class RemixSlider extends StatefulWidget with HasEnabled {
   final FocusNode? focusNode;
 
   @override
-  State<RemixSlider> createState() => _RemixSliderState();
-}
-
-class _RemixSliderState extends State<RemixSlider>
-    with TickerProviderStateMixin, HasWidgetStateController, HasEnabledState {
-  RemixSliderStyle get _style => widget.style;
-
-  @override
   Widget build(BuildContext context) {
-    return StyleBuilder<SliderSpec>(
-      style: _style,
-      controller: controller,
-      builder: (context, spec) {
-        // Use a fixed thumb size for simplicity
-        final height = 24.0;
-        final horizontalPadding = height;
+    // NakedSlider handles semantics internally, no outer Semantics needed
+    return NakedSlider(
+      value: value,
+      min: min,
+      max: max,
+      onChanged: onChanged,
+      onDragStart: () => onChangeStart?.call(value),
+      onDragEnd: onChangeEnd,
+      enabled: enabled,
+      enableFeedback: enableHapticFeedback,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      direction: Axis.horizontal,
+      divisions: snapDivisions,
+      builder: (context, state, _) {
+        return StyleBuilder(
+          style: style,
+          controller: NakedState.controllerOf(context),
+          builder: (context, spec) {
+            // Use a fixed thumb size for simplicity
+            final height = 24.0;
+            final horizontalPadding = height;
 
-        final sliderChild = SizedBox(
-          height: height,
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              /// **Value Normalization Algorithm**
-              /// Converts the slider's actual value to a 0.0-1.0 range for positioning.
-              /// Formula: (current - min) / (max - min)
-              ///
-              /// This normalization is essential because:
-              /// - UI positioning works in pixel coordinates (0 to width)
-              /// - Slider values can be any range (e.g., -50 to 150, 0 to 1000)
-              /// - We need a consistent way to map between value space and pixel space
-              final normalizedValue =
-                  (widget.value - widget.min) / (widget.max - widget.min);
+            return SizedBox(
+              height: height,
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  /// **Value Normalization Algorithm**
+                  /// Converts the slider's actual value to a 0.0-1.0 range for positioning.
+                  /// Formula: (current - min) / (max - min)
+                  ///
+                  /// This normalization is essential because:
+                  /// - UI positioning works in pixel coordinates (0 to width)
+                  /// - Slider values can be any range (e.g., -50 to 150, 0 to 1000)
+                  /// - We need a consistent way to map between value space and pixel space
+                  final normalizedValue = (value - min) / (max - min);
 
-              /// **Thumb Position Calculation**
-              /// Maps normalized value (0.0-1.0) to actual pixel position.
-              ///
-              /// **Algorithm:**
-              /// Available space = total width - padding for thumb overflow
-              /// Thumb position = available space × normalized value
-              ///
-              /// **Why subtract horizontalPadding:**
-              /// The thumb needs space to move beyond the track edges when at min/max.
-              /// Without this adjustment, the thumb would be clipped at the edges.
-              ///
-              /// **Example:**
-              /// - Constraints width: 300px
-              /// - Horizontal padding: 24px
-              /// - Available space: 276px
-              /// - At 50% value: thumb positioned at 138px from left edge
-              final thumbPosition =
-                  (constraints.maxWidth - horizontalPadding) * normalizedValue;
+                  /// **Thumb Position Calculation**
+                  /// Maps normalized value (0.0-1.0) to actual pixel position.
+                  ///
+                  /// **Algorithm:**
+                  /// Available space = total width - padding for thumb overflow
+                  /// Thumb position = available space × normalized value
+                  ///
+                  /// **Why subtract horizontalPadding:**
+                  /// The thumb needs space to move beyond the track edges when at min/max.
+                  /// Without this adjustment, the thumb would be clipped at the edges.
+                  ///
+                  /// **Example:**
+                  /// - Constraints width: 300px
+                  /// - Horizontal padding: 24px
+                  /// - Available space: 276px
+                  /// - At 50% value: thumb positioned at 138px from left edge
+                  final thumbPosition =
+                      (constraints.maxWidth - horizontalPadding) *
+                          normalizedValue;
 
-              return Stack(
-                alignment: Alignment.centerLeft,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: horizontalPadding / 2,
-                    ),
-                    child: SizedBox(
-                      width: constraints.maxWidth,
-                      height: constraints.maxHeight,
-                      child: _AnimatedTrack(
-                        value: normalizedValue,
-                        active: spec.activeTrack,
-                        baseTrack: spec.baseTrack,
-                        duration: const Duration(milliseconds: 200),
-                        curve: Curves.linear,
+                  return Stack(
+                    alignment: Alignment.centerLeft,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: horizontalPadding / 2,
+                        ),
+                        child: SizedBox(
+                          width: constraints.maxWidth,
+                          height: constraints.maxHeight,
+                          child: _AnimatedTrack(
+                            value: normalizedValue,
+                            active: spec.activeTrack,
+                            baseTrack: spec.baseTrack,
+                            duration: const Duration(milliseconds: 200),
+                            curve: Curves.linear,
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  Transform.translate(
-                    offset: Offset(thumbPosition, 0),
-                    child: spec.thumb.createWidget(),
-                  ),
-                ],
-              );
-            },
-          ),
-        );
-
-        final normalized =
-            (widget.value - widget.min) / (widget.max - widget.min);
-        final percent = (normalized * 100).round();
-
-        return Semantics(
-          enabled: widget.enabled,
-          focusable: widget.enabled,
-          value: '$percent%',
-          child: NakedSlider(
-            value: widget.value,
-            min: widget.min,
-            max: widget.max,
-            onChanged: widget.onChanged,
-            onDragStart: () => widget.onChangeStart?.call(widget.value),
-            onDragEnd: widget.onChangeEnd,
-            enabled: widget.enabled,
-            focusNode: widget.focusNode,
-            autofocus: widget.autofocus,
-            direction: Axis.horizontal,
-            divisions: widget.snapDivisions,
-            child: sliderChild,
-          ),
+                      Transform.translate(
+                        offset: Offset(thumbPosition, 0),
+                        child: Box(styleSpec: spec.thumb),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            );
+          },
         );
       },
     );
