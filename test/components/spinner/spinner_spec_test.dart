@@ -2,9 +2,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
 void main() {
-  group('SpinnerSpec', () {
+  group('RemixSpinnerSpec', () {
     test('creates with default values', () {
-      const spec = SpinnerSpec();
+      const spec = RemixSpinnerSpec();
 
       expect(spec.size, isNull);
       expect(spec.strokeWidth, isNull);
@@ -14,7 +14,7 @@ void main() {
     });
 
     test('creates with specified values', () {
-      final spec = SpinnerSpec(
+      final spec = RemixSpinnerSpec(
         size: 24,
         strokeWidth: 2,
         color: MixColors.red,
@@ -30,7 +30,7 @@ void main() {
     });
 
     test('copyWith updates only provided fields', () {
-      final original = SpinnerSpec(
+      final original = RemixSpinnerSpec(
         size: 24,
         strokeWidth: 2,
         color: MixColors.red,
@@ -51,7 +51,7 @@ void main() {
     });
 
     test('copyWith with no args returns equivalent spec', () {
-      final original = SpinnerSpec(
+      final original = RemixSpinnerSpec(
         size: 16,
         strokeWidth: 1.5,
         color: MixColors.green,
@@ -69,21 +69,21 @@ void main() {
     });
 
     test('lerp with null other returns original', () {
-      final spec = SpinnerSpec(size: 10, strokeWidth: 1);
+      final spec = RemixSpinnerSpec(size: 10, strokeWidth: 1);
       final result = spec.lerp(null, 0.5);
       expect(result.size, 10);
       expect(result.strokeWidth, 1);
     });
 
     test('lerp at t=0 returns this; t=1 returns other', () {
-      final a = SpinnerSpec(
+      final a = RemixSpinnerSpec(
         size: 10,
         strokeWidth: 1,
         color: MixColors.red,
         duration: Duration(milliseconds: 500),
         type: SpinnerType.solid,
       );
-      const b = SpinnerSpec(
+      const b = RemixSpinnerSpec(
         size: 30,
         strokeWidth: 3,
         color: MixColors.blue,
@@ -107,9 +107,9 @@ void main() {
     });
 
     test('props equality works correctly', () {
-      const s1 = SpinnerSpec(size: 24, strokeWidth: 2, color: MixColors.red);
-      const s2 = SpinnerSpec(size: 24, strokeWidth: 2, color: MixColors.red);
-      const s3 = SpinnerSpec(size: 32, strokeWidth: 2, color: MixColors.red);
+      const s1 = RemixSpinnerSpec(size: 24, strokeWidth: 2, color: MixColors.red);
+      const s2 = RemixSpinnerSpec(size: 24, strokeWidth: 2, color: MixColors.red);
+      const s3 = RemixSpinnerSpec(size: 32, strokeWidth: 2, color: MixColors.red);
 
       expect(s1.props, equals(s2.props));
       expect(s1.props, isNot(equals(s3.props)));

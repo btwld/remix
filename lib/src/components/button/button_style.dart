@@ -36,7 +36,7 @@ part of 'button.dart';
 ///
 /// All methods return new instances (immutable pattern) and can be chained together.
 class RemixButtonStyle
-    extends RemixFlexContainerStyle<ButtonSpec, RemixButtonStyle>
+    extends RemixFlexContainerStyle<RemixButtonSpec, RemixButtonStyle>
     with
         LabelStyleMixin<RemixButtonStyle>,
         IconStyleMixin<RemixButtonStyle>,
@@ -44,13 +44,13 @@ class RemixButtonStyle
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<StyleSpec<IconSpec>>? $icon;
-  final Prop<StyleSpec<SpinnerSpec>>? $spinner;
+  final Prop<StyleSpec<RemixSpinnerSpec>>? $spinner;
 
   const RemixButtonStyle.create({
     Prop<StyleSpec<FlexBoxSpec>>? container,
     Prop<StyleSpec<TextSpec>>? label,
     Prop<StyleSpec<IconSpec>>? icon,
-    Prop<StyleSpec<SpinnerSpec>>? spinner,
+    Prop<StyleSpec<RemixSpinnerSpec>>? spinner,
     super.variants,
     super.animation,
     super.modifier,
@@ -65,7 +65,7 @@ class RemixButtonStyle
     IconStyler? icon,
     RemixSpinnerStyle? spinner,
     AnimationConfig? animation,
-    List<VariantStyle<ButtonSpec>>? variants,
+    List<VariantStyle<RemixButtonSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
           container: Prop.maybeMix(container),
@@ -119,7 +119,7 @@ class RemixButtonStyle
     );
   }
 
-  RemixButtonStyle variants(List<VariantStyle<ButtonSpec>> value) {
+  RemixButtonStyle variants(List<VariantStyle<RemixButtonSpec>> value) {
     return merge(RemixButtonStyle(variants: value));
   }
 
@@ -132,13 +132,13 @@ class RemixButtonStyle
     FocusNode? focusNode,
   }) {
     return RemixButton(
+      style: this,
       label: label,
       icon: icon,
       loading: loading,
       enableFeedback: enableFeedback,
       onPressed: onPressed,
       focusNode: focusNode,
-      style: this,
     );
   }
 
@@ -189,9 +189,9 @@ class RemixButtonStyle
   }
 
   @override
-  StyleSpec<ButtonSpec> resolve(BuildContext context) {
+  StyleSpec<RemixButtonSpec> resolve(BuildContext context) {
     return StyleSpec(
-      spec: ButtonSpec(
+      spec: RemixButtonSpec(
         container: MixOps.resolve(context, $container),
         label: MixOps.resolve(context, $label),
         icon: MixOps.resolve(context, $icon),

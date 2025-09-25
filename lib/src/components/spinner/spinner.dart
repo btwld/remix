@@ -15,4 +15,4 @@ part 'spinner_style.dart';
 part 'spinner_widget.dart';
 part 'radix_spinner_styles.dart';
 
-// SpinnerSpec and SpinnerMix are defined in their respective part files
+// RemixSpinnerSpec and SpinnerMix are defined in their respective part files

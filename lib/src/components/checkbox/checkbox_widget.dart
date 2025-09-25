@@ -76,7 +76,7 @@ class RemixCheckbox extends StatelessWidget {
   final RemixCheckboxStyle style;
 
   /// The style spec for the checkbox.
-  final CheckboxSpec? styleSpec;
+  final RemixCheckboxSpec? styleSpec;
 
   static late final styleFrom = RemixCheckboxStyle.new;
 

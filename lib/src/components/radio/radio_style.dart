@@ -1,6 +1,6 @@
 part of 'radio.dart';
 
-class RemixRadioStyle extends RemixContainerStyle<RadioSpec, RemixRadioStyle> {
+class RemixRadioStyle extends RemixContainerStyle<RemixRadioSpec, RemixRadioStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<BoxSpec>>? $indicatorContainer;
   final Prop<StyleSpec<BoxSpec>>? $indicator;
@@ -21,7 +21,7 @@ class RemixRadioStyle extends RemixContainerStyle<RadioSpec, RemixRadioStyle> {
     BoxStyler? indicatorContainer,
     BoxStyler? indicator,
     AnimationConfig? animation,
-    List<VariantStyle<RadioSpec>>? variants,
+    List<VariantStyle<RemixRadioSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
           container: Prop.maybeMix(container),
@@ -107,7 +107,7 @@ class RemixRadioStyle extends RemixContainerStyle<RadioSpec, RemixRadioStyle> {
   }
 
   @override
-  RemixRadioStyle variants(List<VariantStyle<RadioSpec>> value) {
+  RemixRadioStyle variants(List<VariantStyle<RemixRadioSpec>> value) {
     return merge(RemixRadioStyle(variants: value));
   }
 
@@ -146,9 +146,9 @@ class RemixRadioStyle extends RemixContainerStyle<RadioSpec, RemixRadioStyle> {
   }
 
   @override
-  StyleSpec<RadioSpec> resolve(BuildContext context) {
+  StyleSpec<RemixRadioSpec> resolve(BuildContext context) {
     return StyleSpec(
-      spec: RadioSpec(
+      spec: RemixRadioSpec(
         container: MixOps.resolve(context, $container),
         indicatorContainer: MixOps.resolve(context, $indicatorContainer),
         indicator: MixOps.resolve(context, $indicator),

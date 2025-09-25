@@ -1,7 +1,7 @@
 part of 'progress.dart';
 
 class RemixProgressStyle
-    extends RemixContainerStyle<ProgressSpec, RemixProgressStyle> {
+    extends RemixContainerStyle<RemixProgressSpec, RemixProgressStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<BoxSpec>>? $track;
   final Prop<StyleSpec<BoxSpec>>? $indicator;
@@ -26,7 +26,7 @@ class RemixProgressStyle
     BoxStyler? indicator,
     BoxStyler? trackContainer,
     AnimationConfig? animation,
-    List<VariantStyle<ProgressSpec>>? variants,
+    List<VariantStyle<RemixProgressSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
           container: Prop.maybeMix(container),
@@ -93,7 +93,7 @@ class RemixProgressStyle
   }
 
   @override
-  RemixProgressStyle variants(List<VariantStyle<ProgressSpec>> value) {
+  RemixProgressStyle variants(List<VariantStyle<RemixProgressSpec>> value) {
     return merge(RemixProgressStyle(variants: value));
   }
 
@@ -147,9 +147,9 @@ class RemixProgressStyle
   }
 
   @override
-  StyleSpec<ProgressSpec> resolve(BuildContext context) {
+  StyleSpec<RemixProgressSpec> resolve(BuildContext context) {
     return StyleSpec(
-      spec: ProgressSpec(
+      spec: RemixProgressSpec(
         container: MixOps.resolve(context, $container),
         track: MixOps.resolve(context, $track),
         indicator: MixOps.resolve(context, $indicator),

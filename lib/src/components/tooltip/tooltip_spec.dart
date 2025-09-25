@@ -1,29 +1,29 @@
 part of 'tooltip.dart';
 
-class TooltipSpec extends Spec<TooltipSpec> with Diagnosticable {
+class RemixTooltipSpec extends Spec<RemixTooltipSpec> with Diagnosticable {
   final StyleSpec<BoxSpec> container;
   final StyleSpec<TextSpec> label;
 
-  const TooltipSpec({
+  const RemixTooltipSpec({
     StyleSpec<BoxSpec>? container,
     StyleSpec<TextSpec>? label,
   })  : container = container ?? const StyleSpec(spec: BoxSpec()),
         label = label ?? const StyleSpec(spec: TextSpec());
 
-  TooltipSpec copyWith({
+  RemixTooltipSpec copyWith({
     StyleSpec<BoxSpec>? container,
     StyleSpec<TextSpec>? label,
   }) {
-    return TooltipSpec(
+    return RemixTooltipSpec(
       container: container ?? this.container,
       label: label ?? this.label,
     );
   }
 
-  TooltipSpec lerp(TooltipSpec? other, double t) {
+  RemixTooltipSpec lerp(RemixTooltipSpec? other, double t) {
     if (other == null) return this;
 
-    return TooltipSpec(
+    return RemixTooltipSpec(
       container: MixOps.lerp(container, other.container, t)!,
       label: MixOps.lerp(label, other.label, t)!,
     );

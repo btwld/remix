@@ -26,7 +26,7 @@ typedef RemixAvatarIconBuilder = Widget Function(
   IconData? icon,
 );
 
-class RemixAvatar extends StyleWidget<AvatarSpec> {
+class RemixAvatar extends StyleWidget<RemixAvatarSpec> {
   /// Creates a Remix avatar with optional text [label], custom [child], and
   /// background/foreground imagery. When textual content is supplied, it is
   /// styled using the avatar text spec so typography stays consistent.
@@ -76,7 +76,7 @@ class RemixAvatar extends StyleWidget<AvatarSpec> {
   final RemixAvatarIconBuilder? iconBuilder;
 
   @override
-  Widget build(BuildContext context, AvatarSpec spec) {
+  Widget build(BuildContext context, RemixAvatarSpec spec) {
     Widget? content = child;
     final resolvedLabel = label ?? '';
 

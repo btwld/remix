@@ -7,7 +7,7 @@ Widget buildCheckboxExample() {
   return SizedBox(
     width: 360,
     child: ComparisonView(
-      remix: [
+      remix: const [
         RemixCheckbox(selected: true, onChanged: _noopNullable),
         RemixCheckbox(selected: false, onChanged: _noopNullable),
         RemixCheckbox(tristate: true, selected: null, onChanged: _noopNullable),
@@ -19,8 +19,8 @@ Widget buildCheckboxExample() {
               onChanged: _noopNullable,
               semanticLabel: 'With label',
             ),
-            const SizedBox(width: 8),
-            const Text('With label'),
+            SizedBox(width: 8),
+            Text('With label'),
           ],
         ),
         RemixCheckbox(selected: false, enabled: false),

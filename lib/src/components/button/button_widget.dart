@@ -17,7 +17,7 @@ typedef RemixButtonIconBuilder = Widget Function(
 /// Builder function for customizing button loading state rendering.
 typedef RemixButtonLoadingBuilder = Widget Function(
   BuildContext context,
-  SpinnerSpec spec,
+  RemixSpinnerSpec spec,
 );
 
 /// A customizable button component that supports text with optional icons, loading states, and styling.
@@ -77,7 +77,7 @@ class RemixButton extends StatelessWidget {
 
   final RemixButtonStyle style;
 
-  final ButtonSpec? styleSpec;
+  final RemixButtonSpec? styleSpec;
 
   static late final styleFrom = RemixButtonStyle.new;
 

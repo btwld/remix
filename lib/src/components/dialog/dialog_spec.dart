@@ -1,13 +1,13 @@
 part of 'dialog.dart';
 
-class DialogSpec extends Spec<DialogSpec> with Diagnosticable {
+class RemixDialogSpec extends Spec<RemixDialogSpec> with Diagnosticable {
   final StyleSpec<BoxSpec> container;
   final StyleSpec<TextSpec> title;
   final StyleSpec<TextSpec> description;
   final StyleSpec<FlexBoxSpec> actions;
   final StyleSpec<BoxSpec> overlay;
 
-  const DialogSpec({
+  const RemixDialogSpec({
     StyleSpec<BoxSpec>? container,
     StyleSpec<TextSpec>? title,
     StyleSpec<TextSpec>? description,
@@ -19,14 +19,14 @@ class DialogSpec extends Spec<DialogSpec> with Diagnosticable {
         actions = actions ?? const StyleSpec(spec: FlexBoxSpec()),
         overlay = overlay ?? const StyleSpec(spec: BoxSpec());
 
-  DialogSpec copyWith({
+  RemixDialogSpec copyWith({
     StyleSpec<BoxSpec>? container,
     StyleSpec<TextSpec>? title,
     StyleSpec<TextSpec>? description,
     StyleSpec<FlexBoxSpec>? actions,
     StyleSpec<BoxSpec>? overlay,
   }) {
-    return DialogSpec(
+    return RemixDialogSpec(
       container: container ?? this.container,
       title: title ?? this.title,
       description: description ?? this.description,
@@ -35,10 +35,10 @@ class DialogSpec extends Spec<DialogSpec> with Diagnosticable {
     );
   }
 
-  DialogSpec lerp(DialogSpec? other, double t) {
+  RemixDialogSpec lerp(RemixDialogSpec? other, double t) {
     if (other == null) return this;
 
-    return DialogSpec(
+    return RemixDialogSpec(
       container: MixOps.lerp(container, other.container, t)!,
       title: MixOps.lerp(title, other.title, t)!,
       description: MixOps.lerp(description, other.description, t)!,

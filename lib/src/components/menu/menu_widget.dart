@@ -39,9 +39,9 @@ class RemixMenu<T> extends StatelessWidget {
     this.icon,
     this.label,
   }) : assert(
-         child != null || builder != null || label != null,
-         'Either child, builder, or label must be provided',
-       );
+          child != null || builder != null || label != null,
+          'Either child, builder, or label must be provided',
+        );
 
   /// The static trigger widget.
   final Widget? child;
@@ -100,8 +100,8 @@ class RemixMenu<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return NakedMenu<T>(
-      controller: controller,
       overlayBuilder: overlayBuilder,
+      controller: controller,
       onSelected: onSelected,
       onOpen: onOpen,
       onClose: onClose,
@@ -160,9 +160,9 @@ class RemixMenuItem<T> extends StatelessWidget {
     this.leadingIcon,
     this.trailingIcon,
   }) : assert(
-         child != null || builder != null || label != null,
-         'Either child, builder, or label must be provided',
-       );
+          child != null || builder != null || label != null,
+          'Either child, builder, or label must be provided',
+        );
 
   /// The value of this menu item.
   final T value;
@@ -201,8 +201,8 @@ class RemixMenuItem<T> extends StatelessWidget {
     return NakedMenuItem<T>(
       value: value,
       enabled: enabled,
-      closeOnActivate: closeOnActivate,
       semanticLabel: semanticLabel ?? label,
+      closeOnActivate: closeOnActivate,
       builder: (context, state, _) {
         return StyleBuilder(
           style: style,
@@ -224,8 +224,7 @@ class RemixMenuItem<T> extends StatelessWidget {
               children: [
                 if (leadingIcon != null)
                   StyledIcon(icon: leadingIcon!, styleSpec: spec.leadingIcon),
-                if (label != null)
-                  StyledText(label!, styleSpec: spec.label),
+                if (label != null) StyledText(label!, styleSpec: spec.label),
                 if (trailingIcon != null)
                   StyledIcon(icon: trailingIcon!, styleSpec: spec.trailingIcon),
               ],

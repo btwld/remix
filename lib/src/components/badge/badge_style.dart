@@ -1,6 +1,6 @@
 part of 'badge.dart';
 
-class RemixBadgeStyle extends RemixContainerStyle<BadgeSpec, RemixBadgeStyle>
+class RemixBadgeStyle extends RemixContainerStyle<RemixBadgeSpec, RemixBadgeStyle>
     with LabelStyleMixin<RemixBadgeStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $text;
@@ -18,7 +18,7 @@ class RemixBadgeStyle extends RemixContainerStyle<BadgeSpec, RemixBadgeStyle>
     BoxStyler? container,
     TextStyler? text,
     AnimationConfig? animation,
-    List<VariantStyle<BadgeSpec>>? variants,
+    List<VariantStyle<RemixBadgeSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
           container: Prop.maybeMix(container),
@@ -86,7 +86,7 @@ class RemixBadgeStyle extends RemixContainerStyle<BadgeSpec, RemixBadgeStyle>
   }
 
   @override
-  RemixBadgeStyle variants(List<VariantStyle<BadgeSpec>> value) {
+  RemixBadgeStyle variants(List<VariantStyle<RemixBadgeSpec>> value) {
     return merge(RemixBadgeStyle(variants: value));
   }
 
@@ -115,9 +115,9 @@ class RemixBadgeStyle extends RemixContainerStyle<BadgeSpec, RemixBadgeStyle>
   }
 
   @override
-  StyleSpec<BadgeSpec> resolve(BuildContext context) {
+  StyleSpec<RemixBadgeSpec> resolve(BuildContext context) {
     return StyleSpec(
-      spec: BadgeSpec(
+      spec: RemixBadgeSpec(
         container: MixOps.resolve(context, $container),
         text: MixOps.resolve(context, $text),
       ),

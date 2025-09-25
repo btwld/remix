@@ -1,6 +1,6 @@
 part of 'dialog.dart';
 
-class RemixDialogStyle extends RemixStyle<DialogSpec, RemixDialogStyle> {
+class RemixDialogStyle extends RemixContainerStyle<RemixDialogSpec, RemixDialogStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $title;
   final Prop<StyleSpec<TextSpec>>? $description;
@@ -29,7 +29,7 @@ class RemixDialogStyle extends RemixStyle<DialogSpec, RemixDialogStyle> {
     FlexBoxStyler? actions,
     BoxStyler? overlay,
     AnimationConfig? animation,
-    List<VariantStyle<DialogSpec>>? variants,
+    List<VariantStyle<RemixDialogSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
           container: Prop.maybeMix(container),
@@ -62,10 +62,56 @@ class RemixDialogStyle extends RemixStyle<DialogSpec, RemixDialogStyle> {
     return merge(RemixDialogStyle(overlay: value));
   }
 
+  // RemixContainerStyle mixin implementations
   @override
-  StyleSpec<DialogSpec> resolve(BuildContext context) {
+  RemixDialogStyle padding(EdgeInsetsGeometryMix value) {
+    return merge(RemixDialogStyle(container: BoxStyler(padding: value)));
+  }
+
+  @override
+  RemixDialogStyle color(Color value) {
+    return merge(RemixDialogStyle(container: BoxStyler(decoration: BoxDecorationMix(color: value))));
+  }
+
+  @override
+  RemixDialogStyle size(double width, double height) {
+    return merge(RemixDialogStyle(container: BoxStyler(constraints: BoxConstraintsMix(minWidth: width, maxWidth: width, minHeight: height, maxHeight: height))));
+  }
+
+  @override
+  RemixDialogStyle borderRadius(BorderRadiusGeometryMix radius) {
+    return merge(RemixDialogStyle(container: BoxStyler(decoration: BoxDecorationMix(borderRadius: radius))));
+  }
+
+  @override
+  RemixDialogStyle constraints(BoxConstraintsMix value) {
+    return merge(RemixDialogStyle(container: BoxStyler(constraints: value)));
+  }
+
+  @override
+  RemixDialogStyle decoration(DecorationMix value) {
+    return merge(RemixDialogStyle(container: BoxStyler(decoration: value)));
+  }
+
+  @override
+  RemixDialogStyle margin(EdgeInsetsGeometryMix value) {
+    return merge(RemixDialogStyle(container: BoxStyler(margin: value)));
+  }
+
+  @override
+  RemixDialogStyle foregroundDecoration(DecorationMix value) {
+    return merge(RemixDialogStyle(container: BoxStyler(foregroundDecoration: value)));
+  }
+
+  @override
+  RemixDialogStyle transform(Matrix4 value, {AlignmentGeometry alignment = Alignment.center}) {
+    return merge(RemixDialogStyle(container: BoxStyler(alignment: alignment, transform: value)));
+  }
+
+  @override
+  StyleSpec<RemixDialogSpec> resolve(BuildContext context) {
     return StyleSpec(
-      spec: DialogSpec(
+      spec: RemixDialogSpec(
         container: MixOps.resolve(context, $container),
         title: MixOps.resolve(context, $title),
         description: MixOps.resolve(context, $description),
@@ -94,7 +140,7 @@ class RemixDialogStyle extends RemixStyle<DialogSpec, RemixDialogStyle> {
   }
 
   @override
-  RemixDialogStyle variants(List<VariantStyle<DialogSpec>> value) {
+  RemixDialogStyle variants(List<VariantStyle<RemixDialogSpec>> value) {
     return merge(RemixDialogStyle(variants: value));
   }
 

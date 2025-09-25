@@ -2,22 +2,22 @@ part of 'textfield.dart';
 
 /// Defines the structure and styling properties for a text field component.
 ///
-/// TextFieldSpec is the resolved specification that describes how a text field
+/// RemixTextFieldSpec is the resolved specification that describes how a text field
 /// should be styled, structured, and behave. It follows the Spec pattern used
 /// throughout the Remix framework, where:
 ///
 /// 1. **Style classes** (like [RemixTextFieldStyle]) define styling APIs
-/// 2. **Spec classes** (like [TextFieldSpec]) hold resolved styling properties
+/// 2. **Spec classes** (like [RemixTextFieldSpec]) hold resolved styling properties
 /// 3. **Widget classes** (like [RemixTextField]) consume specs to render UI
 ///
-/// The TextFieldSpec contains both styling properties ([StyleSpec] instances)
+/// The RemixTextFieldSpec contains both styling properties ([StyleSpec] instances)
 /// for visual elements and configuration properties for text field behavior
 /// such as cursor appearance, text alignment, and selection handling.
 ///
 /// ## Architecture Overview
 ///
 /// ```
-/// RemixTextFieldStyle -> TextFieldSpec -> RemixTextField Widget
+/// RemixTextFieldStyle -> RemixTextFieldSpec -> RemixTextField Widget
 /// (Define styles)       (Hold props)     (Render UI)
 /// ```
 ///
@@ -49,7 +49,7 @@ part of 'textfield.dart';
 /// - [RemixTextFieldStyle] for the styling API
 /// - [RemixTextField] for the widget implementation
 /// - [Spec] for the base specification pattern
-class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
+class RemixTextFieldSpec extends Spec<RemixTextFieldSpec> with Diagnosticable {
   /// Styling specification for the input text.
   ///
   /// Controls typography, color, and text-specific properties
@@ -152,7 +152,7 @@ class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
   /// the purpose or expected content of the text field.
   final StyleSpec<TextSpec> label;
 
-  /// Creates a TextFieldSpec with optional styling and configuration.
+  /// Creates a RemixTextFieldSpec with optional styling and configuration.
   ///
   /// Provides sensible defaults for all properties to ensure the text field
   /// is functional even when minimal configuration is provided:
@@ -167,14 +167,14 @@ class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
   ///
   /// Example:
   /// ```dart
-  /// const spec = TextFieldSpec(
+  /// const spec = RemixTextFieldSpec(
   ///   textAlign: TextAlign.center,
   ///   cursorWidth: 3.0,
   ///   cursorColor: Colors.blue,
   ///   spacing: 8.0,
   /// );
   /// ```
-  const TextFieldSpec({
+  const RemixTextFieldSpec({
     StyleSpec<TextSpec>? text,
     StyleSpec<TextSpec>? hintText,
     TextAlign? textAlign,
@@ -205,7 +205,7 @@ class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
         container = container ?? const StyleSpec(spec: FlexBoxSpec()),
         spacing = spacing ?? 4;
 
-  /// Creates a copy of this TextFieldSpec with the given fields replaced.
+  /// Creates a copy of this RemixTextFieldSpec with the given fields replaced.
   ///
   /// This method enables immutable updates to the specification,
   /// which is essential for the reactive styling system. Any parameter
@@ -219,7 +219,7 @@ class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
   ///   textAlign: TextAlign.center,
   /// );
   /// ```
-  TextFieldSpec copyWith({
+  RemixTextFieldSpec copyWith({
     StyleSpec<TextSpec>? text,
     StyleSpec<TextSpec>? hintText,
     TextAlign? textAlign,
@@ -238,7 +238,7 @@ class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
     StyleSpec<TextSpec>? helperText,
     StyleSpec<TextSpec>? label,
   }) {
-    return TextFieldSpec(
+    return RemixTextFieldSpec(
       text: text ?? this.text,
       hintText: hintText ?? this.hintText,
       textAlign: textAlign ?? this.textAlign,
@@ -260,7 +260,7 @@ class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
     );
   }
 
-  /// Linearly interpolates between this and another TextFieldSpec.
+  /// Linearly interpolates between this and another RemixTextFieldSpec.
   ///
   /// Used by Flutter's animation system to create smooth transitions
   /// between different text field states or when animating between
@@ -281,10 +281,10 @@ class TextFieldSpec extends Spec<TextFieldSpec> with Diagnosticable {
   /// ```dart
   /// final midpoint = spec1.lerp(spec2, 0.5); // 50% interpolation
   /// ```
-  TextFieldSpec lerp(TextFieldSpec? other, double t) {
+  RemixTextFieldSpec lerp(RemixTextFieldSpec? other, double t) {
     if (other == null) return this;
 
-    return TextFieldSpec(
+    return RemixTextFieldSpec(
       text: MixOps.lerp(text, other.text, t)!,
       hintText: MixOps.lerp(hintText, other.hintText, t)!,
       textAlign: t < 0.5 ? textAlign : other.textAlign,

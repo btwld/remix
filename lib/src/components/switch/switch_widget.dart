@@ -42,7 +42,7 @@ class RemixSwitch extends StatelessWidget {
   final RemixSwitchStyle style;
 
   /// The style spec for the switch.
-  final SwitchSpec? styleSpec;
+  final RemixSwitchSpec? styleSpec;
 
   static late final styleFrom = RemixSwitchStyle.new;
 
@@ -65,7 +65,6 @@ class RemixSwitch extends StatelessWidget {
   Widget build(BuildContext context) {
     return NakedToggle(
       value: selected,
-      asSwitch: true,
       onChanged: enabled ? onChanged : null,
       enabled: enabled,
       mouseCursor: mouseCursor,
@@ -73,6 +72,7 @@ class RemixSwitch extends StatelessWidget {
       focusNode: focusNode,
       autofocus: autofocus,
       semanticLabel: semanticLabel,
+      asSwitch: true,
       builder: (context, state, _) {
         return StyleBuilder(
           style: style,
@@ -83,9 +83,8 @@ class RemixSwitch extends StatelessWidget {
               child: Box(
                 styleSpec: spec.track,
                 child: Align(
-                  alignment: selected
-                      ? Alignment.centerRight
-                      : Alignment.centerLeft,
+                  alignment:
+                      selected ? Alignment.centerRight : Alignment.centerLeft,
                   child: Padding(
                     // Per JSON: switch-thumb-inset = 1px
                     padding: const EdgeInsets.all(1),

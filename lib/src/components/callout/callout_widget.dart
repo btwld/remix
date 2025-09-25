@@ -10,7 +10,7 @@ part of 'callout.dart';
 ///   text: 'This is a callout message!',
 /// )
 /// ```
-class RemixCallout extends StyleWidget<CalloutSpec> {
+class RemixCallout extends StyleWidget<RemixCalloutSpec> {
   /// Creates a callout widget with optional text, icon, or custom [child]. At
   /// least one of [text] or [child] must be provided.
   RemixCallout({
@@ -35,7 +35,7 @@ class RemixCallout extends StyleWidget<CalloutSpec> {
   final Widget? child;
 
   @override
-  Widget build(BuildContext context, CalloutSpec spec) {
+  Widget build(BuildContext context, RemixCalloutSpec spec) {
     // For raw constructor, use provided child directly
     if (child != null) {
       return RowBox(styleSpec: spec.container, children: [child!]);

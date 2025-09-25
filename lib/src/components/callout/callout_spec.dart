@@ -1,11 +1,11 @@
 part of 'callout.dart';
 
-class CalloutSpec extends Spec<CalloutSpec> with Diagnosticable {
+class RemixCalloutSpec extends Spec<RemixCalloutSpec> with Diagnosticable {
   final StyleSpec<FlexBoxSpec> container;
   final StyleSpec<TextSpec> text;
   final StyleSpec<IconSpec> icon;
 
-  const CalloutSpec({
+  const RemixCalloutSpec({
     StyleSpec<FlexBoxSpec>? container,
     StyleSpec<TextSpec>? text,
     StyleSpec<IconSpec>? icon,
@@ -13,22 +13,22 @@ class CalloutSpec extends Spec<CalloutSpec> with Diagnosticable {
         text = text ?? const StyleSpec(spec: TextSpec()),
         icon = icon ?? const StyleSpec(spec: IconSpec());
 
-  CalloutSpec copyWith({
+  RemixCalloutSpec copyWith({
     StyleSpec<FlexBoxSpec>? container,
     StyleSpec<TextSpec>? text,
     StyleSpec<IconSpec>? icon,
   }) {
-    return CalloutSpec(
+    return RemixCalloutSpec(
       container: container ?? this.container,
       text: text ?? this.text,
       icon: icon ?? this.icon,
     );
   }
 
-  CalloutSpec lerp(CalloutSpec? other, double t) {
+  RemixCalloutSpec lerp(RemixCalloutSpec? other, double t) {
     if (other == null) return this;
 
-    return CalloutSpec(
+    return RemixCalloutSpec(
       container: MixOps.lerp(container, other.container, t)!,
       text: MixOps.lerp(text, other.text, t)!,
       icon: MixOps.lerp(icon, other.icon, t)!,

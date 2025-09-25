@@ -17,7 +17,7 @@ part of 'card.dart';
 ///   ),
 /// )
 /// ```
-class RemixCard extends StyleWidget<CardSpec> {
+class RemixCard extends StyleWidget<RemixCardSpec> {
   /// Creates a Material Design card.
   const RemixCard({
     super.style = const RemixCardStyle.create(),
@@ -32,7 +32,7 @@ class RemixCard extends StyleWidget<CardSpec> {
   final Widget? child;
 
   @override
-  Widget build(BuildContext context, CardSpec spec) {
+  Widget build(BuildContext context, RemixCardSpec spec) {
     return Box(styleSpec: spec.container, child: child);
   }
 }

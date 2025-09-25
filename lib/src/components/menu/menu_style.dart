@@ -1,18 +1,18 @@
 part of 'menu.dart';
 
-class RemixMenuStyle extends RemixStyle<MenuSpec, RemixMenuStyle> {
+class RemixMenuStyle extends RemixStyle<RemixMenuSpec, RemixMenuStyle> {
   final Prop<StyleSpec<FlexBoxSpec>>? $trigger;
   final Prop<StyleSpec<TextSpec>>? $triggerLabel;
   final Prop<StyleSpec<IconSpec>>? $triggerIcon;
   final Prop<StyleSpec<BoxSpec>>? $menuContainer;
-  final Prop<StyleSpec<MenuItemSpec>>? $item;
+  final Prop<StyleSpec<RemixMenuItemSpec>>? $item;
 
   const RemixMenuStyle.create({
     Prop<StyleSpec<FlexBoxSpec>>? trigger,
     Prop<StyleSpec<TextSpec>>? triggerLabel,
     Prop<StyleSpec<IconSpec>>? triggerIcon,
     Prop<StyleSpec<BoxSpec>>? menuContainer,
-    Prop<StyleSpec<MenuItemSpec>>? item,
+    Prop<StyleSpec<RemixMenuItemSpec>>? item,
     super.variants,
     super.animation,
     super.modifier,
@@ -29,7 +29,7 @@ class RemixMenuStyle extends RemixStyle<MenuSpec, RemixMenuStyle> {
     BoxStyler? menuContainer,
     RemixMenuItemStyle? item,
     AnimationConfig? animation,
-    List<VariantStyle<MenuSpec>>? variants,
+    List<VariantStyle<RemixMenuSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
           trigger: Prop.maybeMix(trigger),
@@ -63,9 +63,9 @@ class RemixMenuStyle extends RemixStyle<MenuSpec, RemixMenuStyle> {
   }
 
   @override
-  StyleSpec<MenuSpec> resolve(BuildContext context) {
+  StyleSpec<RemixMenuSpec> resolve(BuildContext context) {
     return StyleSpec(
-      spec: MenuSpec(
+      spec: RemixMenuSpec(
         trigger: MixOps.resolve(context, $trigger),
         triggerLabel: MixOps.resolve(context, $triggerLabel),
         triggerIcon: MixOps.resolve(context, $triggerIcon),
@@ -94,7 +94,7 @@ class RemixMenuStyle extends RemixStyle<MenuSpec, RemixMenuStyle> {
   }
 
   @override
-  RemixMenuStyle variants(List<VariantStyle<MenuSpec>> value) {
+  RemixMenuStyle variants(List<VariantStyle<RemixMenuSpec>> value) {
     return merge(RemixMenuStyle(variants: value));
   }
 
@@ -121,7 +121,7 @@ class RemixMenuStyle extends RemixStyle<MenuSpec, RemixMenuStyle> {
       ];
 }
 
-class RemixMenuItemStyle extends RemixStyle<MenuItemSpec, RemixMenuItemStyle> {
+class RemixMenuItemStyle extends RemixFlexContainerStyle<RemixMenuItemSpec, RemixMenuItemStyle> {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<StyleSpec<IconSpec>>? $leadingIcon;
@@ -146,7 +146,7 @@ class RemixMenuItemStyle extends RemixStyle<MenuItemSpec, RemixMenuItemStyle> {
     IconStyler? leadingIcon,
     IconStyler? trailingIcon,
     AnimationConfig? animation,
-    List<VariantStyle<MenuItemSpec>>? variants,
+    List<VariantStyle<RemixMenuItemSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
           container: Prop.maybeMix(container),
@@ -174,10 +174,61 @@ class RemixMenuItemStyle extends RemixStyle<MenuItemSpec, RemixMenuItemStyle> {
     return merge(RemixMenuItemStyle(trailingIcon: value));
   }
 
+  // RemixFlexContainerStyle mixin implementations
   @override
-  StyleSpec<MenuItemSpec> resolve(BuildContext context) {
+  RemixMenuItemStyle padding(EdgeInsetsGeometryMix value) {
+    return merge(RemixMenuItemStyle(container: FlexBoxStyler(padding: value)));
+  }
+
+  @override
+  RemixMenuItemStyle color(Color value) {
+    return merge(RemixMenuItemStyle(container: FlexBoxStyler(decoration: BoxDecorationMix(color: value))));
+  }
+
+  @override
+  RemixMenuItemStyle size(double width, double height) {
+    return merge(RemixMenuItemStyle(container: FlexBoxStyler(constraints: BoxConstraintsMix(minWidth: width, maxWidth: width, minHeight: height, maxHeight: height))));
+  }
+
+  @override
+  RemixMenuItemStyle borderRadius(BorderRadiusGeometryMix radius) {
+    return merge(RemixMenuItemStyle(container: FlexBoxStyler(decoration: BoxDecorationMix(borderRadius: radius))));
+  }
+
+  @override
+  RemixMenuItemStyle constraints(BoxConstraintsMix value) {
+    return merge(RemixMenuItemStyle(container: FlexBoxStyler(constraints: value)));
+  }
+
+  @override
+  RemixMenuItemStyle decoration(DecorationMix value) {
+    return merge(RemixMenuItemStyle(container: FlexBoxStyler(decoration: value)));
+  }
+
+  @override
+  RemixMenuItemStyle margin(EdgeInsetsGeometryMix value) {
+    return merge(RemixMenuItemStyle(container: FlexBoxStyler(margin: value)));
+  }
+
+  @override
+  RemixMenuItemStyle foregroundDecoration(DecorationMix value) {
+    return merge(RemixMenuItemStyle(container: FlexBoxStyler(foregroundDecoration: value)));
+  }
+
+  @override
+  RemixMenuItemStyle transform(Matrix4 value, {AlignmentGeometry alignment = Alignment.center}) {
+    return merge(RemixMenuItemStyle(container: FlexBoxStyler(alignment: alignment, transform: value)));
+  }
+
+  @override
+  RemixMenuItemStyle flex(FlexStyler value) {
+    return merge(RemixMenuItemStyle(container: FlexBoxStyler()));
+  }
+
+  @override
+  StyleSpec<RemixMenuItemSpec> resolve(BuildContext context) {
     return StyleSpec(
-      spec: MenuItemSpec(
+      spec: RemixMenuItemSpec(
         container: MixOps.resolve(context, $container),
         label: MixOps.resolve(context, $label),
         leadingIcon: MixOps.resolve(context, $leadingIcon),
@@ -204,7 +255,7 @@ class RemixMenuItemStyle extends RemixStyle<MenuItemSpec, RemixMenuItemStyle> {
   }
 
   @override
-  RemixMenuItemStyle variants(List<VariantStyle<MenuItemSpec>> value) {
+  RemixMenuItemStyle variants(List<VariantStyle<RemixMenuItemSpec>> value) {
     return merge(RemixMenuItemStyle(variants: value));
   }
 

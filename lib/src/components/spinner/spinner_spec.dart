@@ -5,14 +5,14 @@ enum SpinnerType {
   dotted,
 }
 
-class SpinnerSpec extends Spec<SpinnerSpec> with Diagnosticable {
+class RemixSpinnerSpec extends Spec<RemixSpinnerSpec> with Diagnosticable {
   final double? size;
   final double? strokeWidth;
   final Color? color;
   final Duration? duration;
   final SpinnerType? _type;
 
-  const SpinnerSpec({
+  const RemixSpinnerSpec({
     this.size,
     this.strokeWidth,
     this.color,
@@ -23,14 +23,14 @@ class SpinnerSpec extends Spec<SpinnerSpec> with Diagnosticable {
   /// Gets the spinner type value
   SpinnerType? get spinnerType => _type;
 
-  SpinnerSpec copyWith({
+  RemixSpinnerSpec copyWith({
     double? size,
     double? strokeWidth,
     Color? color,
     Duration? duration,
     SpinnerType? type,
   }) {
-    return SpinnerSpec(
+    return RemixSpinnerSpec(
       size: size ?? this.size,
       strokeWidth: strokeWidth ?? this.strokeWidth,
       color: color ?? this.color,
@@ -39,10 +39,10 @@ class SpinnerSpec extends Spec<SpinnerSpec> with Diagnosticable {
     );
   }
 
-  SpinnerSpec lerp(SpinnerSpec? other, double t) {
+  RemixSpinnerSpec lerp(RemixSpinnerSpec? other, double t) {
     if (other == null) return this;
 
-    return SpinnerSpec(
+    return RemixSpinnerSpec(
       size: MixOps.lerp(size, other.size, t),
       strokeWidth: MixOps.lerp(strokeWidth, other.strokeWidth, t),
       color: MixOps.lerp(color, other.color, t),

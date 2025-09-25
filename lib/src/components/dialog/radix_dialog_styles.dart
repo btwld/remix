@@ -2,23 +2,18 @@ part of 'dialog.dart';
 
 class FortalDialogTheme {
   static RemixDialogStyle dialog = RemixDialogStyle(
-    overlay: BoxStyler(
-      decoration: BoxDecorationMix(
-        color: FortalTokens.blackA7(),
-      ),
-    ),
     container: BoxStyler(
-      constraints: BoxConstraintsMix(maxWidth: 450),
       padding: EdgeInsetsMix.all(FortalTokens.space5()),
+      constraints: BoxConstraintsMix(maxWidth: 450),
       decoration: BoxDecorationMix(
-        borderRadius: BorderRadiusMix.all(FortalTokens.radius3()),
-        color: FortalTokens.gray1(),
         border: BorderMix.all(
           BorderSideMix(
-            width: FortalTokens.borderWidth1(),
             color: FortalTokens.gray6(),
+            width: FortalTokens.borderWidth1(),
           ),
         ),
+        borderRadius: BorderRadiusMix.all(FortalTokens.radius3()),
+        color: FortalTokens.gray1(),
         boxShadow: [
           BoxShadowMix(
             color: FortalTokens.blackA7(),
@@ -39,12 +34,13 @@ class FortalDialogTheme {
         .fontSize(18)
         .fontWeight(FontWeight.w600)
         .color(FortalTokens.gray12()),
-    description: TextStyler()
-        .fontSize(14)
-        .color(FortalTokens.gray11()),
+    description: TextStyler().fontSize(14).color(FortalTokens.gray11()),
     actions: FlexBoxStyler()
         .mainAxisAlignment(MainAxisAlignment.end)
         .crossAxisAlignment(CrossAxisAlignment.center)
         .spacing(FortalTokens.space3()),
+    overlay: BoxStyler(
+      decoration: BoxDecorationMix(color: FortalTokens.blackA7()),
+    ),
   );
 }

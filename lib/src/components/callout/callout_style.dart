@@ -3,7 +3,7 @@ part of 'callout.dart';
 
 
 class RemixCalloutStyle
-    extends RemixFlexContainerStyle<CalloutSpec, RemixCalloutStyle> {
+    extends RemixFlexContainerStyle<RemixCalloutSpec, RemixCalloutStyle> {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $text;
   final Prop<StyleSpec<IconSpec>>? $icon;
@@ -24,7 +24,7 @@ class RemixCalloutStyle
     TextStyler? text,
     IconStyler? icon,
     AnimationConfig? animation,
-    List<VariantStyle<CalloutSpec>>? variants,
+    List<VariantStyle<RemixCalloutSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
           container: Prop.maybeMix(container),
@@ -86,9 +86,9 @@ class RemixCalloutStyle
   }
 
   @override
-  StyleSpec<CalloutSpec> resolve(BuildContext context) {
+  StyleSpec<RemixCalloutSpec> resolve(BuildContext context) {
     return StyleSpec(
-      spec: CalloutSpec(
+      spec: RemixCalloutSpec(
         container: MixOps.resolve(context, $container),
         text: MixOps.resolve(context, $text),
         icon: MixOps.resolve(context, $icon),
@@ -113,7 +113,7 @@ class RemixCalloutStyle
   }
 
   @override
-  RemixCalloutStyle variants(List<VariantStyle<CalloutSpec>> value) {
+  RemixCalloutStyle variants(List<VariantStyle<RemixCalloutSpec>> value) {
     return merge(RemixCalloutStyle(variants: value));
   }
 

@@ -1,29 +1,29 @@
 part of 'accordion.dart';
 
-class AccordionSpec extends Spec<AccordionSpec> with Diagnosticable {
+class RemixAccordionSpec extends Spec<RemixAccordionSpec> with Diagnosticable {
   final StyleSpec<FlexBoxSpec> container;
-  final StyleSpec<AccordionItemSpec> item;
+  final StyleSpec<RemixAccordionItemSpec> item;
 
-  const AccordionSpec({
+  const RemixAccordionSpec({
     StyleSpec<FlexBoxSpec>? container,
-    StyleSpec<AccordionItemSpec>? item,
+    StyleSpec<RemixAccordionItemSpec>? item,
   })  : container = container ?? const StyleSpec(spec: FlexBoxSpec()),
-        item = item ?? const StyleSpec(spec: AccordionItemSpec());
+        item = item ?? const StyleSpec(spec: RemixAccordionItemSpec());
 
-  AccordionSpec copyWith({
+  RemixAccordionSpec copyWith({
     StyleSpec<FlexBoxSpec>? container,
-    StyleSpec<AccordionItemSpec>? item,
+    StyleSpec<RemixAccordionItemSpec>? item,
   }) {
-    return AccordionSpec(
+    return RemixAccordionSpec(
       container: container ?? this.container,
       item: item ?? this.item,
     );
   }
 
-  AccordionSpec lerp(AccordionSpec? other, double t) {
+  RemixAccordionSpec lerp(RemixAccordionSpec? other, double t) {
     if (other == null) return this;
 
-    return AccordionSpec(
+    return RemixAccordionSpec(
       container: MixOps.lerp(container, other.container, t)!,
       item: MixOps.lerp(item, other.item, t)!,
     );
@@ -41,13 +41,13 @@ class AccordionSpec extends Spec<AccordionSpec> with Diagnosticable {
   List<Object?> get props => [container, item];
 }
 
-class AccordionItemSpec extends Spec<AccordionItemSpec> with Diagnosticable {
+class RemixAccordionItemSpec extends Spec<RemixAccordionItemSpec> with Diagnosticable {
   final StyleSpec<FlexBoxSpec> trigger;
   final StyleSpec<TextSpec> title;
   final StyleSpec<IconSpec> icon;
   final StyleSpec<BoxSpec> content;
 
-  const AccordionItemSpec({
+  const RemixAccordionItemSpec({
     StyleSpec<FlexBoxSpec>? trigger,
     StyleSpec<TextSpec>? title,
     StyleSpec<IconSpec>? icon,
@@ -57,13 +57,13 @@ class AccordionItemSpec extends Spec<AccordionItemSpec> with Diagnosticable {
         icon = icon ?? const StyleSpec(spec: IconSpec()),
         content = content ?? const StyleSpec(spec: BoxSpec());
 
-  AccordionItemSpec copyWith({
+  RemixAccordionItemSpec copyWith({
     StyleSpec<FlexBoxSpec>? trigger,
     StyleSpec<TextSpec>? title,
     StyleSpec<IconSpec>? icon,
     StyleSpec<BoxSpec>? content,
   }) {
-    return AccordionItemSpec(
+    return RemixAccordionItemSpec(
       trigger: trigger ?? this.trigger,
       title: title ?? this.title,
       icon: icon ?? this.icon,
@@ -71,10 +71,10 @@ class AccordionItemSpec extends Spec<AccordionItemSpec> with Diagnosticable {
     );
   }
 
-  AccordionItemSpec lerp(AccordionItemSpec? other, double t) {
+  RemixAccordionItemSpec lerp(RemixAccordionItemSpec? other, double t) {
     if (other == null) return this;
 
-    return AccordionItemSpec(
+    return RemixAccordionItemSpec(
       trigger: MixOps.lerp(trigger, other.trigger, t)!,
       title: MixOps.lerp(title, other.title, t)!,
       icon: MixOps.lerp(icon, other.icon, t)!,

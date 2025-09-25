@@ -1,32 +1,32 @@
 part of 'menu.dart';
 
-class MenuSpec extends Spec<MenuSpec> with Diagnosticable {
+class RemixMenuSpec extends Spec<RemixMenuSpec> with Diagnosticable {
   final StyleSpec<FlexBoxSpec> trigger;
   final StyleSpec<TextSpec> triggerLabel;
   final StyleSpec<IconSpec> triggerIcon;
   final StyleSpec<BoxSpec> menuContainer;
-  final StyleSpec<MenuItemSpec> item;
+  final StyleSpec<RemixMenuItemSpec> item;
 
-  const MenuSpec({
+  const RemixMenuSpec({
     StyleSpec<FlexBoxSpec>? trigger,
     StyleSpec<TextSpec>? triggerLabel,
     StyleSpec<IconSpec>? triggerIcon,
     StyleSpec<BoxSpec>? menuContainer,
-    StyleSpec<MenuItemSpec>? item,
+    StyleSpec<RemixMenuItemSpec>? item,
   })  : trigger = trigger ?? const StyleSpec(spec: FlexBoxSpec()),
         triggerLabel = triggerLabel ?? const StyleSpec(spec: TextSpec()),
         triggerIcon = triggerIcon ?? const StyleSpec(spec: IconSpec()),
         menuContainer = menuContainer ?? const StyleSpec(spec: BoxSpec()),
-        item = item ?? const StyleSpec(spec: MenuItemSpec());
+        item = item ?? const StyleSpec(spec: RemixMenuItemSpec());
 
-  MenuSpec copyWith({
+  RemixMenuSpec copyWith({
     StyleSpec<FlexBoxSpec>? trigger,
     StyleSpec<TextSpec>? triggerLabel,
     StyleSpec<IconSpec>? triggerIcon,
     StyleSpec<BoxSpec>? menuContainer,
-    StyleSpec<MenuItemSpec>? item,
+    StyleSpec<RemixMenuItemSpec>? item,
   }) {
-    return MenuSpec(
+    return RemixMenuSpec(
       trigger: trigger ?? this.trigger,
       triggerLabel: triggerLabel ?? this.triggerLabel,
       triggerIcon: triggerIcon ?? this.triggerIcon,
@@ -35,10 +35,10 @@ class MenuSpec extends Spec<MenuSpec> with Diagnosticable {
     );
   }
 
-  MenuSpec lerp(MenuSpec? other, double t) {
+  RemixMenuSpec lerp(RemixMenuSpec? other, double t) {
     if (other == null) return this;
 
-    return MenuSpec(
+    return RemixMenuSpec(
       trigger: MixOps.lerp(trigger, other.trigger, t)!,
       triggerLabel: MixOps.lerp(triggerLabel, other.triggerLabel, t)!,
       triggerIcon: MixOps.lerp(triggerIcon, other.triggerIcon, t)!,
@@ -63,13 +63,13 @@ class MenuSpec extends Spec<MenuSpec> with Diagnosticable {
       [trigger, triggerLabel, triggerIcon, menuContainer, item];
 }
 
-class MenuItemSpec extends Spec<MenuItemSpec> with Diagnosticable {
+class RemixMenuItemSpec extends Spec<RemixMenuItemSpec> with Diagnosticable {
   final StyleSpec<FlexBoxSpec> container;
   final StyleSpec<TextSpec> label;
   final StyleSpec<IconSpec> leadingIcon;
   final StyleSpec<IconSpec> trailingIcon;
 
-  const MenuItemSpec({
+  const RemixMenuItemSpec({
     StyleSpec<FlexBoxSpec>? container,
     StyleSpec<TextSpec>? label,
     StyleSpec<IconSpec>? leadingIcon,
@@ -79,13 +79,13 @@ class MenuItemSpec extends Spec<MenuItemSpec> with Diagnosticable {
         leadingIcon = leadingIcon ?? const StyleSpec(spec: IconSpec()),
         trailingIcon = trailingIcon ?? const StyleSpec(spec: IconSpec());
 
-  MenuItemSpec copyWith({
+  RemixMenuItemSpec copyWith({
     StyleSpec<FlexBoxSpec>? container,
     StyleSpec<TextSpec>? label,
     StyleSpec<IconSpec>? leadingIcon,
     StyleSpec<IconSpec>? trailingIcon,
   }) {
-    return MenuItemSpec(
+    return RemixMenuItemSpec(
       container: container ?? this.container,
       label: label ?? this.label,
       leadingIcon: leadingIcon ?? this.leadingIcon,
@@ -93,10 +93,10 @@ class MenuItemSpec extends Spec<MenuItemSpec> with Diagnosticable {
     );
   }
 
-  MenuItemSpec lerp(MenuItemSpec? other, double t) {
+  RemixMenuItemSpec lerp(RemixMenuItemSpec? other, double t) {
     if (other == null) return this;
 
-    return MenuItemSpec(
+    return RemixMenuItemSpec(
       container: MixOps.lerp(container, other.container, t)!,
       label: MixOps.lerp(label, other.label, t)!,
       leadingIcon: MixOps.lerp(leadingIcon, other.leadingIcon, t)!,

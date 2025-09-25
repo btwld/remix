@@ -46,7 +46,7 @@ class RemixRadio<T> extends StatelessWidget {
 
   final RemixRadioStyle style;
 
-  final RadioSpec? styleSpec;
+  final RemixRadioSpec? styleSpec;
 
   static late final styleFrom = RemixRadioStyle.new;
 

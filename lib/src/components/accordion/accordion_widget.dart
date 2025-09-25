@@ -55,10 +55,7 @@ class RemixAccordionGroup<T> extends StatelessWidget {
         StyleBuilder(
           style: style,
           builder: (context, spec) {
-            return FlexBox(
-              styleSpec: spec.container,
-              children: children,
-            );
+            return FlexBox(styleSpec: spec.container, children: children);
           },
         ),
       ],
@@ -87,9 +84,9 @@ class RemixAccordion<T> extends StatelessWidget {
     this.semanticLabel,
     this.style = const RemixAccordionItemStyle.create(),
   }) : assert(
-         title != null || builder != null,
-         'Either title or builder must be provided',
-       );
+          title != null || builder != null,
+          'Either title or builder must be provided',
+        );
 
   /// Unique identifier tracked by the controller.
   final T value;
@@ -141,10 +138,34 @@ class RemixAccordion<T> extends StatelessWidget {
 
   static late final styleFrom = RemixAccordionItemStyle.new;
 
+  Widget _buildDefaultTrigger(
+      BuildContext context, NakedAccordionItemState<T> state,) {
+    return StyleBuilder(
+      style: style,
+      controller: NakedAccordionItemState.controllerOf(context),
+      builder: (context, spec) {
+        return FlexBox(
+          styleSpec: spec.trigger,
+          children: [
+            if (title != null) StyledText(title!, styleSpec: spec.title),
+            if (icon != null)
+              StyledIcon(
+                icon: state.isExpanded
+                    ? Icons.keyboard_arrow_up
+                    : Icons.keyboard_arrow_down,
+                styleSpec: spec.icon,
+              ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return NakedAccordion<T>(
       value: value,
+      transitionBuilder: transitionBuilder,
       enabled: enabled,
       mouseCursor: mouseCursor,
       enableFeedback: enableFeedback,
@@ -154,40 +175,13 @@ class RemixAccordion<T> extends StatelessWidget {
       onHoverChange: onHoverChange,
       onPressChange: onPressChange,
       semanticLabel: semanticLabel ?? title,
-      transitionBuilder: transitionBuilder,
-      builder: builder ?? _buildDefaultTrigger,
       child: StyleBuilder(
         style: style,
         builder: (context, spec) {
-          return Box(
-            styleSpec: spec.content,
-            child: child,
-          );
+          return Box(styleSpec: spec.content, child: child);
         },
       ),
-    );
-  }
-
-  Widget _buildDefaultTrigger(BuildContext context, NakedAccordionItemState<T> state) {
-    return StyleBuilder(
-      style: style,
-      controller: NakedAccordionItemState.controllerOf(context),
-      builder: (context, spec) {
-        return FlexBox(
-          styleSpec: spec.trigger,
-          children: [
-            if (title != null)
-              StyledText(title!, styleSpec: spec.title),
-            if (icon != null)
-              StyledIcon(
-                icon: state.isExpanded
-                  ? Icons.keyboard_arrow_up
-                  : Icons.keyboard_arrow_down,
-                styleSpec: spec.icon,
-              ),
-          ],
-        );
-      },
+      builder: builder ?? _buildDefaultTrigger,
     );
   }
 }

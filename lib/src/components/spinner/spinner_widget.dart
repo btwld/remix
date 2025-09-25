@@ -21,7 +21,7 @@ part of 'spinner.dart';
 ///   ),
 /// )
 /// ```
-class RemixSpinner extends StyleWidget<SpinnerSpec> {
+class RemixSpinner extends StyleWidget<RemixSpinnerSpec> {
   const RemixSpinner({
     super.style = const RemixSpinnerStyle.create(),
     super.styleSpec,
@@ -29,7 +29,7 @@ class RemixSpinner extends StyleWidget<SpinnerSpec> {
   });
 
   @override
-  Widget build(BuildContext context, SpinnerSpec spec) {
+  Widget build(BuildContext context, RemixSpinnerSpec spec) {
     return _SpinnerSpecWidget(spec: spec);
   }
 }
@@ -37,7 +37,7 @@ class RemixSpinner extends StyleWidget<SpinnerSpec> {
 class _SpinnerSpecWidget extends StatefulWidget {
   const _SpinnerSpecWidget({required this.spec});
 
-  final SpinnerSpec spec;
+  final RemixSpinnerSpec spec;
 
   @override
   State createState() => _SpinnerSpecWidgetState();
@@ -104,6 +104,6 @@ class _SpinnerSpecWidgetState extends State<_SpinnerSpecWidget>
   }
 }
 
-Widget createSpinnerWidget(SpinnerSpec spec) {
+Widget createSpinnerWidget(RemixSpinnerSpec spec) {
   return _SpinnerSpecWidget(spec: spec);
 }

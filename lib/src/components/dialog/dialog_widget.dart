@@ -37,9 +37,8 @@ Future<T?> showRemixDialog<T>({
   bool requestFocus = true,
   TraversalEdgeBehavior? traversalEdgeBehavior,
 }) {
-  return showNakedDialog<T>(
+  return showNakedDialog(
     context: context,
-    builder: builder,
     barrierColor: barrierColor ?? Colors.black54,
     barrierDismissible: barrierDismissible,
     barrierLabel: barrierLabel,
@@ -50,6 +49,7 @@ Future<T?> showRemixDialog<T>({
     transitionBuilder: transitionBuilder,
     requestFocus: requestFocus,
     traversalEdgeBehavior: traversalEdgeBehavior,
+    builder: builder,
   );
 }
 
@@ -84,9 +84,9 @@ class RemixDialog extends StatelessWidget {
     this.semanticLabel,
     this.style = const RemixDialogStyle.create(),
   }) : assert(
-         child != null || title != null || description != null,
-         'Either child, title, or description must be provided',
-       );
+          child != null || title != null || description != null,
+          'Either child, title, or description must be provided',
+        );
 
   /// Custom content widget (overrides title and description).
   final Widget? child;
@@ -121,10 +121,7 @@ class RemixDialog extends StatelessWidget {
         builder: (context, spec) {
           // Use custom child if provided
           if (child != null) {
-            return Box(
-              styleSpec: spec.container,
-              child: child!,
-            );
+            return Box(styleSpec: spec.container, child: child!);
           }
 
           // Build default dialog content
@@ -133,15 +130,11 @@ class RemixDialog extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                if (title != null)
-                  StyledText(title!, styleSpec: spec.title),
+                if (title != null) StyledText(title!, styleSpec: spec.title),
                 if (description != null)
                   StyledText(description!, styleSpec: spec.description),
                 if (actions != null && actions!.isNotEmpty)
-                  FlexBox(
-                    styleSpec: spec.actions,
-                    children: actions!,
-                  ),
+                  FlexBox(styleSpec: spec.actions, children: actions!),
               ],
             ),
           );

@@ -1,12 +1,12 @@
 part of 'progress.dart';
 
-class ProgressSpec extends Spec<ProgressSpec> with Diagnosticable {
+class RemixProgressSpec extends Spec<RemixProgressSpec> with Diagnosticable {
   final StyleSpec<BoxSpec> container;
   final StyleSpec<BoxSpec> track;
   final StyleSpec<BoxSpec> indicator;
   final StyleSpec<BoxSpec> trackContainer;
 
-  const ProgressSpec({
+  const RemixProgressSpec({
     StyleSpec<BoxSpec>? container,
     StyleSpec<BoxSpec>? track,
     StyleSpec<BoxSpec>? indicator,
@@ -16,13 +16,13 @@ class ProgressSpec extends Spec<ProgressSpec> with Diagnosticable {
         indicator = indicator ?? const StyleSpec(spec: BoxSpec()),
         trackContainer = trackContainer ?? const StyleSpec(spec: BoxSpec());
 
-  ProgressSpec copyWith({
+  RemixProgressSpec copyWith({
     StyleSpec<BoxSpec>? container,
     StyleSpec<BoxSpec>? track,
     StyleSpec<BoxSpec>? indicator,
     StyleSpec<BoxSpec>? trackContainer,
   }) {
-    return ProgressSpec(
+    return RemixProgressSpec(
       container: container ?? this.container,
       track: track ?? this.track,
       indicator: indicator ?? this.indicator,
@@ -30,10 +30,10 @@ class ProgressSpec extends Spec<ProgressSpec> with Diagnosticable {
     );
   }
 
-  ProgressSpec lerp(ProgressSpec? other, double t) {
+  RemixProgressSpec lerp(RemixProgressSpec? other, double t) {
     if (other == null) return this;
 
-    return ProgressSpec(
+    return RemixProgressSpec(
       container: MixOps.lerp(container, other.container, t)!,
       track: MixOps.lerp(track, other.track, t)!,
       indicator: MixOps.lerp(indicator, other.indicator, t)!,

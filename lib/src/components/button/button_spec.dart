@@ -2,15 +2,15 @@ part of 'button.dart';
 
 /// Defines the structure and styling properties for a button component.
 ///
-/// ButtonSpec is the resolved specification that describes how a button
+/// RemixButtonSpec is the resolved specification that describes how a button
 /// should be styled and structured. It follows the Spec pattern used
 /// throughout the Remix framework, where:
 ///
 /// 1. **Style classes** (like [RemixButtonStyle]) define styling APIs
-/// 2. **Spec classes** (like [ButtonSpec]) hold resolved styling properties
+/// 2. **Spec classes** (like [RemixButtonSpec]) hold resolved styling properties
 /// 3. **Widget classes** (like [RemixButton]) consume specs to render UI
 ///
-/// The ButtonSpec contains [StyleSpec] properties for each visual element
+/// The RemixButtonSpec contains [StyleSpec] properties for each visual element
 /// of the button: container layout, text label, icon, and loading spinner.
 /// These properties are built by [RemixButtonStyle] and consumed by
 /// [RemixButton] to create the final rendered widget.
@@ -18,7 +18,7 @@ part of 'button.dart';
 /// ## Architecture Overview
 ///
 /// ```
-/// RemixButtonStyle -> ButtonSpec -> RemixButton Widget
+/// RemixButtonStyle -> RemixButtonSpec -> RemixButton Widget
 /// (Define styles)    (Hold props)   (Render UI)
 /// ```
 ///
@@ -49,7 +49,7 @@ part of 'button.dart';
 /// - [RemixButtonStyle] for the styling API
 /// - [RemixButton] for the widget implementation
 /// - [Spec] for the base specification pattern
-class ButtonSpec extends Spec<ButtonSpec> with Diagnosticable {
+class RemixButtonSpec extends Spec<RemixButtonSpec> with Diagnosticable {
   /// Styling specification for the button's container.
   ///
   /// Controls the button's layout, background, borders, padding,
@@ -73,9 +73,9 @@ class ButtonSpec extends Spec<ButtonSpec> with Diagnosticable {
   ///
   /// Defines the appearance of the spinner shown during
   /// asynchronous operations when the button is in loading state.
-  final StyleSpec<SpinnerSpec> spinner;
+  final StyleSpec<RemixSpinnerSpec> spinner;
 
-  /// Creates a ButtonSpec with optional styling specifications.
+  /// Creates a RemixButtonSpec with optional styling specifications.
   ///
   /// If any [StyleSpec] is not provided, a default specification
   /// with empty styling is used. This ensures all properties are
@@ -83,22 +83,22 @@ class ButtonSpec extends Spec<ButtonSpec> with Diagnosticable {
   ///
   /// Example:
   /// ```dart
-  /// const spec = ButtonSpec(
+  /// const spec = RemixButtonSpec(
   ///   container: StyleSpec(spec: FlexBoxSpec()),
   ///   label: StyleSpec(spec: TextSpec()),
   /// );
   /// ```
-  const ButtonSpec({
+  const RemixButtonSpec({
     StyleSpec<FlexBoxSpec>? container,
     StyleSpec<TextSpec>? label,
     StyleSpec<IconSpec>? icon,
-    StyleSpec<SpinnerSpec>? spinner,
+    StyleSpec<RemixSpinnerSpec>? spinner,
   })  : container = container ?? const StyleSpec(spec: FlexBoxSpec()),
         label = label ?? const StyleSpec(spec: TextSpec()),
         icon = icon ?? const StyleSpec(spec: IconSpec()),
-        spinner = spinner ?? const StyleSpec(spec: SpinnerSpec());
+        spinner = spinner ?? const StyleSpec(spec: RemixSpinnerSpec());
 
-  /// Creates a copy of this ButtonSpec with the given fields replaced.
+  /// Creates a copy of this RemixButtonSpec with the given fields replaced.
   ///
   /// This method enables immutable updates to the specification,
   /// which is essential for the reactive styling system.
@@ -110,13 +110,13 @@ class ButtonSpec extends Spec<ButtonSpec> with Diagnosticable {
   ///   icon: StyleSpec(spec: IconSpec()),
   /// );
   /// ```
-  ButtonSpec copyWith({
+  RemixButtonSpec copyWith({
     StyleSpec<FlexBoxSpec>? container,
     StyleSpec<TextSpec>? label,
     StyleSpec<IconSpec>? icon,
-    StyleSpec<SpinnerSpec>? spinner,
+    StyleSpec<RemixSpinnerSpec>? spinner,
   }) {
-    return ButtonSpec(
+    return RemixButtonSpec(
       container: container ?? this.container,
       label: label ?? this.label,
       icon: icon ?? this.icon,
@@ -124,7 +124,7 @@ class ButtonSpec extends Spec<ButtonSpec> with Diagnosticable {
     );
   }
 
-  /// Linearly interpolates between this and another ButtonSpec.
+  /// Linearly interpolates between this and another RemixButtonSpec.
   ///
   /// Used by Flutter's animation system to create smooth transitions
   /// between different button states or when animating between
@@ -141,10 +141,10 @@ class ButtonSpec extends Spec<ButtonSpec> with Diagnosticable {
   /// ```dart
   /// final midpoint = spec1.lerp(spec2, 0.5); // 50% interpolation
   /// ```
-  ButtonSpec lerp(ButtonSpec? other, double t) {
+  RemixButtonSpec lerp(RemixButtonSpec? other, double t) {
     if (other == null) return this;
 
-    return ButtonSpec(
+    return RemixButtonSpec(
       container: MixOps.lerp(container, other.container, t)!,
       label: MixOps.lerp(label, other.label, t)!,
       icon: MixOps.lerp(icon, other.icon, t)!,

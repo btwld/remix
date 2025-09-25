@@ -8,7 +8,6 @@ import 'package:mix/mix.dart';
 import 'package:naked_ui/naked_ui.dart';
 
 import '../../utilities/remix_style.dart';
-import '../_internal/widget_state_controller_mixin.dart';
 import '../../fortal/fortal.dart';
 
 part 'slider_spec.dart';

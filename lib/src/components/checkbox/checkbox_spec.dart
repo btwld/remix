@@ -2,22 +2,22 @@ part of 'checkbox.dart';
 
 /// Defines the structure and styling properties for a checkbox component.
 ///
-/// CheckboxSpec is the resolved specification that describes how a checkbox
+/// RemixCheckboxSpec is the resolved specification that describes how a checkbox
 /// should be styled and structured. It follows the Spec pattern used
 /// throughout the Remix framework, where:
 ///
 /// 1. **Style classes** (like [RemixCheckboxStyle]) define styling APIs
-/// 2. **Spec classes** (like [CheckboxSpec]) hold resolved styling properties
+/// 2. **Spec classes** (like [RemixCheckboxSpec]) hold resolved styling properties
 /// 3. **Widget classes** (like [RemixCheckbox]) consume specs to render UI
 ///
-/// The CheckboxSpec contains [StyleSpec] properties for the visual pieces of
+/// The RemixCheckboxSpec contains [StyleSpec] properties for the visual pieces of
 /// the checkbox: the overall container, the indicator container (checkbox box),
 /// and the indicator icon (checkmark).
 ///
 /// ## Architecture Overview
 ///
 /// ```
-/// RemixCheckboxStyle -> CheckboxSpec -> RemixCheckbox Widget
+/// RemixCheckboxStyle -> RemixCheckboxSpec -> RemixCheckbox Widget
 /// (Define styles)      (Hold props)    (Render UI)
 /// ```
 ///
@@ -56,7 +56,7 @@ part of 'checkbox.dart';
 /// - [RemixCheckboxStyle] for the styling API
 /// - [RemixCheckbox] for the widget implementation
 /// - [Spec] for the base specification pattern
-class CheckboxSpec extends Spec<CheckboxSpec> with Diagnosticable {
+class RemixCheckboxSpec extends Spec<RemixCheckboxSpec> with Diagnosticable {
   /// Styling specification for the checkbox's container.
   ///
   /// Controls the overall layout, spacing, and arrangement for the
@@ -78,7 +78,7 @@ class CheckboxSpec extends Spec<CheckboxSpec> with Diagnosticable {
   /// and other icon-specific properties.
   final StyleSpec<IconSpec> indicator;
 
-  /// Creates a CheckboxSpec with optional styling specifications.
+  /// Creates a RemixCheckboxSpec with optional styling specifications.
   ///
   /// If any [StyleSpec] is not provided, a default specification
   /// with empty styling is used. This ensures all properties are
@@ -90,12 +90,12 @@ class CheckboxSpec extends Spec<CheckboxSpec> with Diagnosticable {
   ///
   /// Example:
   /// ```dart
-  /// const spec = CheckboxSpec(
+  /// const spec = RemixCheckboxSpec(
   ///   indicatorContainer: StyleSpec(spec: BoxSpec()),
   ///   indicator: StyleSpec(spec: IconSpec()),
   /// );
   /// ```
-  const CheckboxSpec({
+  const RemixCheckboxSpec({
     StyleSpec<BoxSpec>? container,
     StyleSpec<BoxSpec>? indicatorContainer,
     StyleSpec<IconSpec>? indicator,
@@ -104,7 +104,7 @@ class CheckboxSpec extends Spec<CheckboxSpec> with Diagnosticable {
             indicatorContainer ?? const StyleSpec(spec: BoxSpec()),
         indicator = indicator ?? const StyleSpec(spec: IconSpec());
 
-  /// Creates a copy of this CheckboxSpec with the given fields replaced.
+  /// Creates a copy of this RemixCheckboxSpec with the given fields replaced.
   ///
   /// This method enables immutable updates to the specification,
   /// which is essential for the reactive styling system. Any parameter
@@ -116,19 +116,19 @@ class CheckboxSpec extends Spec<CheckboxSpec> with Diagnosticable {
   ///   indicator: StyleSpec(spec: IconSpec()),
   /// );
   /// ```
-  CheckboxSpec copyWith({
+  RemixCheckboxSpec copyWith({
     StyleSpec<BoxSpec>? container,
     StyleSpec<BoxSpec>? indicatorContainer,
     StyleSpec<IconSpec>? indicator,
   }) {
-    return CheckboxSpec(
+    return RemixCheckboxSpec(
       container: container ?? this.container,
       indicatorContainer: indicatorContainer ?? this.indicatorContainer,
       indicator: indicator ?? this.indicator,
     );
   }
 
-  /// Linearly interpolates between this and another CheckboxSpec.
+  /// Linearly interpolates between this and another RemixCheckboxSpec.
   ///
   /// Used by Flutter's animation system to create smooth transitions
   /// between different checkbox states or when animating between
@@ -149,10 +149,10 @@ class CheckboxSpec extends Spec<CheckboxSpec> with Diagnosticable {
   /// ```dart
   /// final midpoint = spec1.lerp(spec2, 0.5); // 50% interpolation
   /// ```
-  CheckboxSpec lerp(CheckboxSpec? other, double t) {
+  RemixCheckboxSpec lerp(RemixCheckboxSpec? other, double t) {
     if (other == null) return this;
 
-    return CheckboxSpec(
+    return RemixCheckboxSpec(
       container: MixOps.lerp(container, other.container, t)!,
       indicatorContainer:
           MixOps.lerp(indicatorContainer, other.indicatorContainer, t)!,

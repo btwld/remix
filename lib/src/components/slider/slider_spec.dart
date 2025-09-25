@@ -37,12 +37,12 @@ final _defaultActiveTrackPaint = Paint()
   ..strokeCap = StrokeCap.round
   ..style = PaintingStyle.stroke;
 
-class SliderSpec extends Spec<SliderSpec> with Diagnosticable {
+class RemixSliderSpec extends Spec<RemixSliderSpec> with Diagnosticable {
   final StyleSpec<BoxSpec> thumb;
   final Paint baseTrack;
   final Paint activeTrack;
 
-  SliderSpec({
+  RemixSliderSpec({
     StyleSpec<BoxSpec>? thumb,
     Paint? baseTrack,
     Paint? activeTrack,
@@ -50,22 +50,22 @@ class SliderSpec extends Spec<SliderSpec> with Diagnosticable {
         baseTrack = baseTrack ?? _defaultBaseTrackPaint,
         activeTrack = activeTrack ?? _defaultActiveTrackPaint;
 
-  SliderSpec copyWith({
+  RemixSliderSpec copyWith({
     StyleSpec<BoxSpec>? thumb,
     Paint? baseTrack,
     Paint? activeTrack,
   }) {
-    return SliderSpec(
+    return RemixSliderSpec(
       thumb: thumb ?? this.thumb,
       baseTrack: baseTrack ?? this.baseTrack,
       activeTrack: activeTrack ?? this.activeTrack,
     );
   }
 
-  SliderSpec lerp(SliderSpec? other, double t) {
+  RemixSliderSpec lerp(RemixSliderSpec? other, double t) {
     if (other == null) return this;
 
-    return SliderSpec(
+    return RemixSliderSpec(
       thumb: MixOps.lerp(thumb, other.thumb, t)!,
       baseTrack: lerpPaint(baseTrack, other.baseTrack, t),
       activeTrack: lerpPaint(activeTrack, other.activeTrack, t),

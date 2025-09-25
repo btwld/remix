@@ -59,7 +59,7 @@ class RemixSlider extends StatelessWidget {
   final RemixSliderStyle style;
 
   /// The style spec for the slider.
-  final SliderSpec? styleSpec;
+  final RemixSliderSpec? styleSpec;
 
   static late final styleFrom = RemixSliderStyle.new;
 

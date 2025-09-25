@@ -2,7 +2,7 @@ part of 'slider.dart';
 
 
 
-class RemixSliderStyle extends RemixStyle<SliderSpec, RemixSliderStyle> {
+class RemixSliderStyle extends RemixContainerStyle<RemixSliderSpec, RemixSliderStyle> {
   final Prop<StyleSpec<BoxSpec>>? $thumb;
   final Prop<Paint>? $baseTrack;
   final Prop<Paint>? $activeTrack;
@@ -23,7 +23,7 @@ class RemixSliderStyle extends RemixStyle<SliderSpec, RemixSliderStyle> {
     Paint? baseTrack,
     Paint? activeTrack,
     AnimationConfig? animation,
-    List<VariantStyle<SliderSpec>>? variants,
+    List<VariantStyle<RemixSliderSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
           thumb: Prop.maybeMix(thumb),
@@ -68,10 +68,56 @@ class RemixSliderStyle extends RemixStyle<SliderSpec, RemixSliderStyle> {
     return merge(RemixSliderStyle(thumb: value));
   }
 
+  // RemixContainerStyle mixin implementations
   @override
-  StyleSpec<SliderSpec> resolve(BuildContext context) {
+  RemixSliderStyle padding(EdgeInsetsGeometryMix value) {
+    return merge(RemixSliderStyle(thumb: BoxStyler(padding: value)));
+  }
+
+  @override
+  RemixSliderStyle color(Color value) {
+    return merge(RemixSliderStyle(thumb: BoxStyler(decoration: BoxDecorationMix(color: value))));
+  }
+
+  @override
+  RemixSliderStyle size(double width, double height) {
+    return merge(RemixSliderStyle(thumb: BoxStyler(constraints: BoxConstraintsMix(minWidth: width, maxWidth: width, minHeight: height, maxHeight: height))));
+  }
+
+  @override
+  RemixSliderStyle borderRadius(BorderRadiusGeometryMix radius) {
+    return merge(RemixSliderStyle(thumb: BoxStyler(decoration: BoxDecorationMix(borderRadius: radius))));
+  }
+
+  @override
+  RemixSliderStyle constraints(BoxConstraintsMix value) {
+    return merge(RemixSliderStyle(thumb: BoxStyler(constraints: value)));
+  }
+
+  @override
+  RemixSliderStyle decoration(DecorationMix value) {
+    return merge(RemixSliderStyle(thumb: BoxStyler(decoration: value)));
+  }
+
+  @override
+  RemixSliderStyle margin(EdgeInsetsGeometryMix value) {
+    return merge(RemixSliderStyle(thumb: BoxStyler(margin: value)));
+  }
+
+  @override
+  RemixSliderStyle foregroundDecoration(DecorationMix value) {
+    return merge(RemixSliderStyle(thumb: BoxStyler(foregroundDecoration: value)));
+  }
+
+  @override
+  RemixSliderStyle transform(Matrix4 value, {AlignmentGeometry alignment = Alignment.center}) {
+    return merge(RemixSliderStyle(thumb: BoxStyler(alignment: alignment, transform: value)));
+  }
+
+  @override
+  StyleSpec<RemixSliderSpec> resolve(BuildContext context) {
     return StyleSpec(
-      spec: SliderSpec(
+      spec: RemixSliderSpec(
         thumb: MixOps.resolve(context, $thumb),
         baseTrack: MixOps.resolve(context, $baseTrack),
         activeTrack: MixOps.resolve(context, $activeTrack),
@@ -96,7 +142,7 @@ class RemixSliderStyle extends RemixStyle<SliderSpec, RemixSliderStyle> {
   }
 
   @override
-  RemixSliderStyle variants(List<VariantStyle<SliderSpec>> value) {
+  RemixSliderStyle variants(List<VariantStyle<RemixSliderSpec>> value) {
     return merge(RemixSliderStyle(variants: value));
   }
 

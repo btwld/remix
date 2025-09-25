@@ -1,6 +1,6 @@
 part of 'avatar.dart';
 
-class RemixAvatarStyle extends RemixContainerStyle<AvatarSpec, RemixAvatarStyle>
+class RemixAvatarStyle extends RemixContainerStyle<RemixAvatarSpec, RemixAvatarStyle>
     with LabelStyleMixin<RemixAvatarStyle>, IconStyleMixin<RemixAvatarStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $text;
@@ -22,7 +22,7 @@ class RemixAvatarStyle extends RemixContainerStyle<AvatarSpec, RemixAvatarStyle>
     TextStyler? text,
     IconStyler? icon,
     AnimationConfig? animation,
-    List<VariantStyle<AvatarSpec>>? variants,
+    List<VariantStyle<RemixAvatarSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
           container: Prop.maybeMix(container),
@@ -136,7 +136,7 @@ class RemixAvatarStyle extends RemixContainerStyle<AvatarSpec, RemixAvatarStyle>
   }
 
   @override
-  RemixAvatarStyle variants(List<VariantStyle<AvatarSpec>> value) {
+  RemixAvatarStyle variants(List<VariantStyle<RemixAvatarSpec>> value) {
     return merge(RemixAvatarStyle(variants: value));
   }
 
@@ -146,9 +146,9 @@ class RemixAvatarStyle extends RemixContainerStyle<AvatarSpec, RemixAvatarStyle>
   }
 
   @override
-  StyleSpec<AvatarSpec> resolve(BuildContext context) {
+  StyleSpec<RemixAvatarSpec> resolve(BuildContext context) {
     return StyleSpec(
-      spec: AvatarSpec(
+      spec: RemixAvatarSpec(
         container: MixOps.resolve(context, $container),
         text: MixOps.resolve(context, $text),
         icon: MixOps.resolve(context, $icon),
