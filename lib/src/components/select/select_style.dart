@@ -131,8 +131,8 @@ class RemixSelectStyle extends RemixStyle<SelectSpec, RemixSelectStyle> {
 }
 
 // Style classes for sub-specs
-class RemixSelectTriggerStyle extends RemixFlexContainerStyle<SelectTriggerSpec,
-    RemixSelectTriggerStyle>
+class RemixSelectTriggerStyle
+    extends RemixFlexContainerStyle<SelectTriggerSpec, RemixSelectTriggerStyle>
     with
         LabelStyleMixin<RemixSelectTriggerStyle>,
         IconStyleMixin<RemixSelectTriggerStyle> {
@@ -291,7 +291,7 @@ class RemixSelectTriggerStyle extends RemixFlexContainerStyle<SelectTriggerSpec,
 }
 
 class RemixSelectMenuItemStyle extends RemixFlexContainerStyle<
-    SelectMenuItemSpec, RemixSelectMenuItemStyle>
+        SelectMenuItemSpec, RemixSelectMenuItemStyle>
     with
         LabelStyleMixin<RemixSelectMenuItemStyle>,
         IconStyleMixin<RemixSelectMenuItemStyle> {
