@@ -70,35 +70,41 @@ class _RemixLabeledRadio extends StatelessWidget {
   }
 }
 
-class _MaterialRadioGroupPreview extends StatelessWidget {
+class _MaterialRadioGroupPreview extends StatefulWidget {
   const _MaterialRadioGroupPreview();
 
   @override
+  State<_MaterialRadioGroupPreview> createState() => _MaterialRadioGroupPreviewState();
+}
+
+class _MaterialRadioGroupPreviewState extends State<_MaterialRadioGroupPreview> {
+  String groupValue = 'B';
+
+  @override
   Widget build(BuildContext context) {
-    const groupValue = 'B';
-    return const Column(
+    return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _LabeledRadio(
-                value: 'A', label: 'Option A', groupValue: groupValue),
-          ],
-        ),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _LabeledRadio(
-                value: 'B', label: 'Option B', groupValue: groupValue),
-          ],
+        _LabeledRadio(
+          value: 'A',
+          label: 'Option A',
+          groupValue: groupValue,
+          onChanged: (value) => setState(() => groupValue = value!),
         ),
         _LabeledRadio(
-            value: 'C',
-            label: 'Disabled',
-            groupValue: groupValue,
-            enabled: false),
+          value: 'B',
+          label: 'Option B',
+          groupValue: groupValue,
+          onChanged: (value) => setState(() => groupValue = value!),
+        ),
+        _LabeledRadio(
+          value: 'C',
+          label: 'Disabled',
+          groupValue: groupValue,
+          enabled: false,
+          onChanged: null,
+        ),
       ],
     );
   }
@@ -109,6 +115,7 @@ class _LabeledRadio extends StatelessWidget {
     required this.value,
     required this.label,
     required this.groupValue,
+    required this.onChanged,
     this.enabled = true,
   });
 
@@ -116,20 +123,53 @@ class _LabeledRadio extends StatelessWidget {
   final String label;
   final String groupValue;
   final bool enabled;
+  final ValueChanged<String?>? onChanged;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Radio<String>(
-          value: value,
-          groupValue: groupValue,
-          onChanged: enabled ? (_) {} : null,
-        ),
-        const SizedBox(width: 8),
-        Text(label),
-      ],
+    final isSelected = value == groupValue;
+
+    return GestureDetector(
+      onTap: enabled ? () => onChanged?.call(value) : null,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 20,
+            height: 20,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: enabled
+                    ? (isSelected ? Theme.of(context).primaryColor : Colors.grey)
+                    : Colors.grey.shade400,
+                width: 2,
+              ),
+            ),
+            child: isSelected
+                ? Center(
+                    child: Container(
+                      width: 10,
+                      height: 10,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: enabled
+                            ? Theme.of(context).primaryColor
+                            : Colors.grey.shade400,
+                      ),
+                    ),
+                  )
+                : null,
+          ),
+          const SizedBox(width: 8),
+          Text(
+            label,
+            style: TextStyle(
+              color: enabled ? null : Colors.grey.shade400,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
