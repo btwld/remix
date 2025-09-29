@@ -180,6 +180,7 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
                 return RowBox(
                   styleSpec: triggerSpec.container,
                   children: [
+                    // ignore: avoid-flexible-outside-flex
                     Expanded(
                       child: StyledText(
                         widget.selectedValue?.toString() ?? 'Select an option',

@@ -9,25 +9,56 @@ Widget buildButtonExample() {
       RemixButton(
         label: 'Primary Button',
         onPressed: () {},
+        style: RemixButtonStyle()
+            .paddingX(16)
+            .paddingY(10)
+            .borderRadiusAll(const Radius.circular(8))
+            .color(const Color(0xFF1F2937))
+            .labelColor(Colors.white),
       ),
-      const RemixButton(
+      RemixButton(
         label: 'Disabled',
         onPressed: null,
+        style: RemixButtonStyle()
+            .paddingX(16)
+            .paddingY(10)
+            .borderRadiusAll(const Radius.circular(8))
+            .color(const Color(0xFFE5E7EB))
+            .labelColor(const Color(0xFF9CA3AF)),
       ),
-      const RemixButton(
+      RemixButton(
         label: 'Loading',
         loading: true,
-        onPressed: null,
+        onPressed: () {},
+        style: RemixButtonStyle()
+            .paddingX(16)
+            .paddingY(10)
+            .borderRadiusAll(const Radius.circular(8))
+            .color(const Color(0xFF1F2937).withValues(alpha: 0.6))
+            .labelColor(Colors.white.withValues(alpha: 0.7))
+            .spinnerColor(Colors.white),
       ),
       RemixButton(
         label: 'With Icon',
         icon: Icons.star,
         onPressed: () {},
+        style: RemixButtonStyle()
+            .paddingX(16)
+            .paddingY(10)
+            .borderRadiusAll(const Radius.circular(8))
+            .color(const Color(0xFF1F2937))
+            .labelColor(Colors.white)
+            .iconColor(Colors.white),
       ),
       RemixIconButton(
         icon: Icons.star,
         onPressed: () {},
         semanticLabel: 'Favorite',
+        style: RemixIconButtonStyle()
+            .paddingAll(10)
+            .borderRadiusAll(const Radius.circular(8))
+            .color(const Color(0xFF1F2937))
+            .iconColor(Colors.white),
       ),
     ],
     material: [
