@@ -52,19 +52,23 @@ final directories = <_widgetbook.WidgetbookNode>[
   _widgetbook.WidgetbookFolder(
     name: 'components',
     children: [
-      _widgetbook.WidgetbookLeafComponent(
+      _widgetbook.WidgetbookComponent(
         name: 'RemixAvatar',
-        useCase: _widgetbook.WidgetbookUseCase(
-          name: 'Avatar Component',
-          builder: _demo_components_avatar_use_case.buildAvatarUseCase,
-        ),
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Avatar Component',
+            builder: _demo_components_avatar_use_case.buildAvatarUseCase,
+          ),
+        ],
       ),
-      _widgetbook.WidgetbookLeafComponent(
+      _widgetbook.WidgetbookComponent(
         name: 'RemixBadge',
-        useCase: _widgetbook.WidgetbookUseCase(
-          name: 'Badge Component',
-          builder: _demo_components_badge_use_case.buildAvatarUseCase,
-        ),
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Badge Component',
+            builder: _demo_components_badge_use_case.buildAvatarUseCase,
+          ),
+        ],
       ),
       _widgetbook.WidgetbookComponent(
         name: 'RemixButton',
@@ -84,19 +88,23 @@ final directories = <_widgetbook.WidgetbookNode>[
           ),
         ],
       ),
-      _widgetbook.WidgetbookLeafComponent(
+      _widgetbook.WidgetbookComponent(
         name: 'RemixCallout',
-        useCase: _widgetbook.WidgetbookUseCase(
-          name: 'Callout Component',
-          builder: _demo_components_callout_use_case.buildCalloutUseCase,
-        ),
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Callout Component',
+            builder: _demo_components_callout_use_case.buildCalloutUseCase,
+          ),
+        ],
       ),
-      _widgetbook.WidgetbookLeafComponent(
+      _widgetbook.WidgetbookComponent(
         name: 'RemixCard',
-        useCase: _widgetbook.WidgetbookUseCase(
-          name: 'Card Component',
-          builder: _demo_components_card_use_case.buildCard,
-        ),
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Card Component',
+            builder: _demo_components_card_use_case.buildCard,
+          ),
+        ],
       ),
       _widgetbook.WidgetbookComponent(
         name: 'RemixCheckbox',
@@ -111,19 +119,23 @@ final directories = <_widgetbook.WidgetbookNode>[
           ),
         ],
       ),
-      _widgetbook.WidgetbookLeafComponent(
+      _widgetbook.WidgetbookComponent(
         name: 'RemixDivider',
-        useCase: _widgetbook.WidgetbookUseCase(
-          name: 'Divider Component',
-          builder: _demo_components_divider_use_case.buildDivider,
-        ),
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Divider Component',
+            builder: _demo_components_divider_use_case.buildDivider,
+          ),
+        ],
       ),
-      _widgetbook.WidgetbookLeafComponent(
+      _widgetbook.WidgetbookComponent(
         name: 'RemixProgress',
-        useCase: _widgetbook.WidgetbookUseCase(
-          name: 'Progress Component',
-          builder: _demo_components_progress_use_case.buildProgressUseCase,
-        ),
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Progress Component',
+            builder: _demo_components_progress_use_case.buildProgressUseCase,
+          ),
+        ],
       ),
       _widgetbook.WidgetbookComponent(
         name: 'RemixRadio',
@@ -138,26 +150,32 @@ final directories = <_widgetbook.WidgetbookNode>[
           ),
         ],
       ),
-      _widgetbook.WidgetbookLeafComponent(
+      _widgetbook.WidgetbookComponent(
         name: 'RemixSelect',
-        useCase: _widgetbook.WidgetbookUseCase(
-          name: 'Select Component',
-          builder: _demo_components_select.buildSelect,
-        ),
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Select Component',
+            builder: _demo_components_select.buildSelect,
+          ),
+        ],
       ),
-      _widgetbook.WidgetbookLeafComponent(
+      _widgetbook.WidgetbookComponent(
         name: 'RemixSlider',
-        useCase: _widgetbook.WidgetbookUseCase(
-          name: 'Slider Component',
-          builder: _demo_components_slider.buildButtonUseCase,
-        ),
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Slider Component',
+            builder: _demo_components_slider.buildButtonUseCase,
+          ),
+        ],
       ),
-      _widgetbook.WidgetbookLeafComponent(
+      _widgetbook.WidgetbookComponent(
         name: 'RemixSpinner',
-        useCase: _widgetbook.WidgetbookUseCase(
-          name: 'Spinner Component',
-          builder: _demo_components_spinner_use_case.buildSpinnerUseCase,
-        ),
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Spinner Component',
+            builder: _demo_components_spinner_use_case.buildSpinnerUseCase,
+          ),
+        ],
       ),
       _widgetbook.WidgetbookComponent(
         name: 'RemixSwitch',
@@ -172,12 +190,14 @@ final directories = <_widgetbook.WidgetbookNode>[
           ),
         ],
       ),
-      _widgetbook.WidgetbookLeafComponent(
+      _widgetbook.WidgetbookComponent(
         name: 'RemixTextField',
-        useCase: _widgetbook.WidgetbookUseCase(
-          name: 'TextField Component',
-          builder: _demo_components_textfield_use_case.buildButtonUseCase,
-        ),
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'TextField Component',
+            builder: _demo_components_textfield_use_case.buildButtonUseCase,
+          ),
+        ],
       ),
     ],
   )

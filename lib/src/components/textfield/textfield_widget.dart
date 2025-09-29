@@ -313,7 +313,7 @@ class RemixTextField extends StatelessWidget {
       style: const TextStyle(), // Will be applied in StyleBuilder
       semanticLabel: semanticLabel ?? label,
       semanticHint: semanticHint ?? hintText,
-      builder: (BuildContext context, Widget editableText) {
+      builder: (BuildContext context, NakedState state, Widget editableText) {
         return StyleBuilder(
           style: style,
           controller: NakedTextFieldState.controllerOf(context),
@@ -351,6 +351,7 @@ class RemixTextField extends StatelessWidget {
               styleSpec: spec.container,
               children: [
                 if (leading != null) leading!,
+                // ignore: avoid-flexible-outside-flex
                 Expanded(child: editableWithHint),
                 if (trailing != null) trailing!,
               ],
