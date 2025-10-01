@@ -1,7 +1,5 @@
 part of 'callout.dart';
 
-
-
 class RemixCalloutStyle
     extends RemixFlexContainerStyle<RemixCalloutSpec, RemixCalloutStyle> {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
@@ -38,6 +36,11 @@ class RemixCalloutStyle
   /// Sets container padding
   RemixCalloutStyle padding(EdgeInsetsGeometryMix value) {
     return merge(RemixCalloutStyle(container: FlexBoxStyler(padding: value)));
+  }
+
+  /// Sets container padding
+  RemixCalloutStyle icon(IconStyler value) {
+    return merge(RemixCalloutStyle(icon: value));
   }
 
   /// Sets container margin
@@ -156,7 +159,7 @@ class RemixCalloutStyle
   // FlexStyleMixin implementation
   @override
   RemixCalloutStyle flex(FlexStyler value) {
-    return merge(RemixCalloutStyle(container: FlexBoxStyler()));
+    return merge(RemixCalloutStyle(container: FlexBoxStyler().flex(value)));
   }
 
   @override
@@ -169,5 +172,3 @@ class RemixCalloutStyle
         $modifier,
       ];
 }
-
-

@@ -1,4 +1,4 @@
-name: demo
+name: example
 description: "A new Flutter project."
 
 publish_to: "none"
@@ -18,7 +18,8 @@ dependencies:
   remix: 
     path: ../
     
-  mix: 2.0.0-dev.3
+  mix: 2.0.0-dev.4
+  naked_ui: 0.2.0-beta.3
 
 dev_dependencies:
   flutter_test:

@@ -381,10 +381,11 @@ packages:
   mix:
     dependency: "direct main"
     description:
-      path: "../../Projects/mix/packages/mix"
-      relative: true
-    source: path
-    version: "2.0.0-dev.2"
+      name: mix
+      sha256: "91ac58679c882c3255ca9d412a178b3e63147afb66f692655222d9ce86c39148"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0-dev.4"
   mix_annotations:
     dependency: "direct main"
     description:
@@ -404,9 +405,10 @@ packages:
   naked_ui:
     dependency: "direct main"
     description:
-      path: "../naked_ui"
-      relative: true
-    source: path
+      name: naked_ui
+      sha256: "3b0ee4a19a781df393e8466bc5a6be6f46cbcbef17b6b4b70cb7c5d6286ab5a3"
+      url: "https://pub.dev"
+    source: hosted
     version: "0.2.0-beta.3"
   package_config:
     dependency: transitive
