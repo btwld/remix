@@ -118,7 +118,11 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
   @override
   void initState() {
     super.initState();
-    animationController = AnimationController(vsync: this);
+    animationController = AnimationController(
+      duration: const Duration(milliseconds: 150),
+      reverseDuration: const Duration(milliseconds: 150),
+      vsync: this,
+    );
   }
 
   Widget _buildOverlayMenu(RemixSelectSpec spec) => _AnimatedOverlayMenu(

@@ -70,7 +70,7 @@ class RemixSelectStyle extends RemixStyle<RemixSelectSpec, RemixSelectStyle> {
     AlignmentGeometry alignment = Alignment.center,
   }) {
     return merge(RemixSelectStyle(
-      menuContainer: BoxStyler(alignment: alignment, transform: value),
+      menuContainer: BoxStyler(transform: value, transformAlignment: alignment),
     ));
   }
 
@@ -269,7 +269,7 @@ class RemixSelectTriggerStyle extends RemixFlexContainerStyle<
     AlignmentGeometry alignment = Alignment.center,
   }) {
     return merge(RemixSelectTriggerStyle(
-      container: FlexBoxStyler(alignment: alignment, transform: value),
+      container: FlexBoxStyler(transform: value, transformAlignment: alignment),
     ));
   }
 
@@ -433,7 +433,7 @@ class RemixSelectMenuItemStyle extends RemixFlexContainerStyle<
     AlignmentGeometry alignment = Alignment.center,
   }) {
     return merge(RemixSelectMenuItemStyle(
-      container: FlexBoxStyler(alignment: alignment, transform: value),
+      container: FlexBoxStyler(transform: value, transformAlignment: alignment),
     ));
   }
 

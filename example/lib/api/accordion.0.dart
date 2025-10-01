@@ -45,7 +45,7 @@ class _AccordionExampleState extends State<AccordionExample> {
               title: 'How do I update my account information?',
               icon: Icons.add,
               style: itemStyle,
-              child: Text(
+              child: const Text(
                 'Insert the accordion description here. It would look better as two lines of text.',
               ),
             ),
@@ -54,7 +54,7 @@ class _AccordionExampleState extends State<AccordionExample> {
               title: 'What payment methods are accepted?',
               icon: Icons.add,
               style: itemStyle,
-              child: Text(
+              child: const Text(
                   'Major credit and debit cards like Visa, MasterCard, and American Express, as well as digital payment options like PayPal and Apple Pay.'),
             ),
           ],

@@ -41,7 +41,8 @@ class RemixAccordionSpec extends Spec<RemixAccordionSpec> with Diagnosticable {
   List<Object?> get props => [container, item];
 }
 
-class RemixAccordionItemSpec extends Spec<RemixAccordionItemSpec> with Diagnosticable {
+class RemixAccordionItemSpec extends Spec<RemixAccordionItemSpec>
+    with Diagnosticable {
   final StyleSpec<FlexBoxSpec> trigger;
   final StyleSpec<TextSpec> title;
   final StyleSpec<IconSpec> icon;

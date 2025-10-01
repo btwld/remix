@@ -184,37 +184,44 @@ class RemixMenuItemStyle
   @override
   RemixMenuItemStyle color(Color value) {
     return merge(RemixMenuItemStyle(
-        container: FlexBoxStyler(decoration: BoxDecorationMix(color: value))));
+      container: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
+    ));
   }
 
   @override
   RemixMenuItemStyle size(double width, double height) {
     return merge(RemixMenuItemStyle(
-        container: FlexBoxStyler(
-            constraints: BoxConstraintsMix(
-                minWidth: width,
-                maxWidth: width,
-                minHeight: height,
-                maxHeight: height))));
+      container: FlexBoxStyler(
+        constraints: BoxConstraintsMix(
+          minWidth: width,
+          maxWidth: width,
+          minHeight: height,
+          maxHeight: height,
+        ),
+      ),
+    ));
   }
 
   @override
   RemixMenuItemStyle borderRadius(BorderRadiusGeometryMix radius) {
     return merge(RemixMenuItemStyle(
-        container:
-            FlexBoxStyler(decoration: BoxDecorationMix(borderRadius: radius))));
+      container:
+          FlexBoxStyler(decoration: BoxDecorationMix(borderRadius: radius)),
+    ));
   }
 
   @override
   RemixMenuItemStyle constraints(BoxConstraintsMix value) {
     return merge(
-        RemixMenuItemStyle(container: FlexBoxStyler(constraints: value)));
+      RemixMenuItemStyle(container: FlexBoxStyler(constraints: value)),
+    );
   }
 
   @override
   RemixMenuItemStyle decoration(DecorationMix value) {
     return merge(
-        RemixMenuItemStyle(container: FlexBoxStyler(decoration: value)));
+      RemixMenuItemStyle(container: FlexBoxStyler(decoration: value)),
+    );
   }
 
   @override
@@ -225,14 +232,18 @@ class RemixMenuItemStyle
   @override
   RemixMenuItemStyle foregroundDecoration(DecorationMix value) {
     return merge(RemixMenuItemStyle(
-        container: FlexBoxStyler(foregroundDecoration: value)));
+      container: FlexBoxStyler(foregroundDecoration: value),
+    ));
   }
 
   @override
-  RemixMenuItemStyle transform(Matrix4 value,
-      {AlignmentGeometry alignment = Alignment.center}) {
+  RemixMenuItemStyle transform(
+    Matrix4 value, {
+    AlignmentGeometry alignment = Alignment.center,
+  }) {
     return merge(RemixMenuItemStyle(
-        container: FlexBoxStyler(alignment: alignment, transform: value)));
+      container: FlexBoxStyler(transform: value, transformAlignment: alignment),
+    ));
   }
 
   @override

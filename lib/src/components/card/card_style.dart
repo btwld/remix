@@ -2,7 +2,8 @@ part of 'card.dart';
 
 // Private per-component constants (sizes only)
 
-class RemixCardStyle extends RemixContainerStyle<RemixCardSpec, RemixCardStyle> {
+class RemixCardStyle
+    extends RemixContainerStyle<RemixCardSpec, RemixCardStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
 
   const RemixCardStyle.create({
@@ -116,13 +117,10 @@ class RemixCardStyle extends RemixContainerStyle<RemixCardSpec, RemixCardStyle> 
     AlignmentGeometry alignment = Alignment.center,
   }) {
     return merge(RemixCardStyle(
-      container: BoxStyler(alignment: alignment, transform: value),
+      container: BoxStyler(transform: value, transformAlignment: alignment),
     ));
   }
 
   @override
   List<Object?> get props => [$container, $variants, $animation, $modifier];
 }
-
-
-

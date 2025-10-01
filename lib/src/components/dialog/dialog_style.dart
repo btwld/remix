@@ -1,6 +1,7 @@
 part of 'dialog.dart';
 
-class RemixDialogStyle extends RemixContainerStyle<RemixDialogSpec, RemixDialogStyle> {
+class RemixDialogStyle
+    extends RemixContainerStyle<RemixDialogSpec, RemixDialogStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $title;
   final Prop<StyleSpec<TextSpec>>? $description;
@@ -70,17 +71,30 @@ class RemixDialogStyle extends RemixContainerStyle<RemixDialogSpec, RemixDialogS
 
   @override
   RemixDialogStyle color(Color value) {
-    return merge(RemixDialogStyle(container: BoxStyler(decoration: BoxDecorationMix(color: value))));
+    return merge(RemixDialogStyle(
+      container: BoxStyler(decoration: BoxDecorationMix(color: value)),
+    ));
   }
 
   @override
   RemixDialogStyle size(double width, double height) {
-    return merge(RemixDialogStyle(container: BoxStyler(constraints: BoxConstraintsMix(minWidth: width, maxWidth: width, minHeight: height, maxHeight: height))));
+    return merge(RemixDialogStyle(
+      container: BoxStyler(
+        constraints: BoxConstraintsMix(
+          minWidth: width,
+          maxWidth: width,
+          minHeight: height,
+          maxHeight: height,
+        ),
+      ),
+    ));
   }
 
   @override
   RemixDialogStyle borderRadius(BorderRadiusGeometryMix radius) {
-    return merge(RemixDialogStyle(container: BoxStyler(decoration: BoxDecorationMix(borderRadius: radius))));
+    return merge(RemixDialogStyle(
+      container: BoxStyler(decoration: BoxDecorationMix(borderRadius: radius)),
+    ));
   }
 
   @override
@@ -100,12 +114,19 @@ class RemixDialogStyle extends RemixContainerStyle<RemixDialogSpec, RemixDialogS
 
   @override
   RemixDialogStyle foregroundDecoration(DecorationMix value) {
-    return merge(RemixDialogStyle(container: BoxStyler(foregroundDecoration: value)));
+    return merge(
+      RemixDialogStyle(container: BoxStyler(foregroundDecoration: value)),
+    );
   }
 
   @override
-  RemixDialogStyle transform(Matrix4 value, {AlignmentGeometry alignment = Alignment.center}) {
-    return merge(RemixDialogStyle(container: BoxStyler(alignment: alignment, transform: value)));
+  RemixDialogStyle transform(
+    Matrix4 value, {
+    AlignmentGeometry alignment = Alignment.center,
+  }) {
+    return merge(RemixDialogStyle(
+      container: BoxStyler(transform: value, transformAlignment: alignment),
+    ));
   }
 
   @override

@@ -7,7 +7,9 @@ class FortalMenuTheme {
         .paddingY(FortalTokens.space2())
         .borderRadiusAll(FortalTokens.radius2())
         .borderAll(
-            color: FortalTokens.gray7(), width: FortalTokens.borderWidth1(),)
+          color: FortalTokens.gray7(),
+          width: FortalTokens.borderWidth1(),
+        )
         .color(FortalTokens.gray1()),
     triggerLabel: TextStyler()
         .fontSize(14)

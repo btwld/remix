@@ -158,8 +158,6 @@ class RemixButtonStyle
     return merge(RemixButtonStyle(container: FlexBoxStyler().flex(value)));
   }
 
-  // Abstract method implementations for mixins (only missing ones)
-
   @override
   RemixButtonStyle foregroundDecoration(DecorationMix value) {
     return merge(
@@ -173,7 +171,7 @@ class RemixButtonStyle
     AlignmentGeometry alignment = Alignment.center,
   }) {
     return merge(RemixButtonStyle(
-      container: FlexBoxStyler(alignment: alignment, transform: value),
+      container: FlexBoxStyler(transform: value, transformAlignment: alignment),
     ));
   }
 

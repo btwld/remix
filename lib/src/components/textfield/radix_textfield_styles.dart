@@ -39,9 +39,9 @@ class FortalTextFieldStyles {
     FortalTextFieldSize size = FortalTextFieldSize.size2,
   }) {
     return RemixTextFieldStyle(
-        // Basic text styling (colors are set by variants)
-        cursorWidth: 1.5,
-      )
+      // Basic text styling (colors are set by variants)
+      cursorWidth: 1.5,
+    )
         // Focus state
         .onFocused(
           RemixTextFieldStyle().borderAll(
@@ -164,7 +164,6 @@ class FortalTextFieldStyles {
               ),
         );
   }
-
 
   // ---------------------------------------------------------------------------
   // Internal builders

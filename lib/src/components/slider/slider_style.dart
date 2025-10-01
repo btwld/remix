@@ -1,8 +1,7 @@
 part of 'slider.dart';
 
-
-
-class RemixSliderStyle extends RemixContainerStyle<RemixSliderSpec, RemixSliderStyle> {
+class RemixSliderStyle
+    extends RemixContainerStyle<RemixSliderSpec, RemixSliderStyle> {
   final Prop<StyleSpec<BoxSpec>>? $thumb;
   final Prop<Paint>? $baseTrack;
   final Prop<Paint>? $activeTrack;
@@ -76,17 +75,30 @@ class RemixSliderStyle extends RemixContainerStyle<RemixSliderSpec, RemixSliderS
 
   @override
   RemixSliderStyle color(Color value) {
-    return merge(RemixSliderStyle(thumb: BoxStyler(decoration: BoxDecorationMix(color: value))));
+    return merge(RemixSliderStyle(
+      thumb: BoxStyler(decoration: BoxDecorationMix(color: value)),
+    ));
   }
 
   @override
   RemixSliderStyle size(double width, double height) {
-    return merge(RemixSliderStyle(thumb: BoxStyler(constraints: BoxConstraintsMix(minWidth: width, maxWidth: width, minHeight: height, maxHeight: height))));
+    return merge(RemixSliderStyle(
+      thumb: BoxStyler(
+        constraints: BoxConstraintsMix(
+          minWidth: width,
+          maxWidth: width,
+          minHeight: height,
+          maxHeight: height,
+        ),
+      ),
+    ));
   }
 
   @override
   RemixSliderStyle borderRadius(BorderRadiusGeometryMix radius) {
-    return merge(RemixSliderStyle(thumb: BoxStyler(decoration: BoxDecorationMix(borderRadius: radius))));
+    return merge(RemixSliderStyle(
+      thumb: BoxStyler(decoration: BoxDecorationMix(borderRadius: radius)),
+    ));
   }
 
   @override
@@ -106,12 +118,19 @@ class RemixSliderStyle extends RemixContainerStyle<RemixSliderSpec, RemixSliderS
 
   @override
   RemixSliderStyle foregroundDecoration(DecorationMix value) {
-    return merge(RemixSliderStyle(thumb: BoxStyler(foregroundDecoration: value)));
+    return merge(
+      RemixSliderStyle(thumb: BoxStyler(foregroundDecoration: value)),
+    );
   }
 
   @override
-  RemixSliderStyle transform(Matrix4 value, {AlignmentGeometry alignment = Alignment.center}) {
-    return merge(RemixSliderStyle(thumb: BoxStyler(alignment: alignment, transform: value)));
+  RemixSliderStyle transform(
+    Matrix4 value, {
+    AlignmentGeometry alignment = Alignment.center,
+  }) {
+    return merge(RemixSliderStyle(
+      thumb: BoxStyler(transform: value, transformAlignment: alignment),
+    ));
   }
 
   @override
@@ -166,5 +185,3 @@ class RemixSliderStyle extends RemixContainerStyle<RemixSliderSpec, RemixSliderS
         $modifier,
       ];
 }
-
-

@@ -9,11 +9,15 @@ enum FortalDividerSize {
 class FortalDividerStyles {
   const FortalDividerStyles._();
 
-  static RemixDividerStyle create({FortalDividerSize size = FortalDividerSize.size1}) {
+  static RemixDividerStyle create({
+    FortalDividerSize size = FortalDividerSize.size1,
+  }) {
     return base(size: size);
   }
 
-  static RemixDividerStyle base({FortalDividerSize size = FortalDividerSize.size1}) {
+  static RemixDividerStyle base({
+    FortalDividerSize size = FortalDividerSize.size1,
+  }) {
     // NOTE: JSON exposes "separator-size: 100%" (length), not thickness.
     // We map sizes to typical thickness and a neutral gray color.
     // TODO: Add orientation-aware sizing if/when exposed by spec.

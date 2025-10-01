@@ -105,7 +105,7 @@ class _ComprehensiveTestScreen extends StatelessWidget {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            _AllVariantsSection(size: 2),
+            const _AllVariantsSection(size: 2),
             const SizedBox(height: 32),
 
             // Size Comparison - Solid Variant
@@ -114,7 +114,7 @@ class _ComprehensiveTestScreen extends StatelessWidget {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            _SizeComparisonSection(),
+            const _SizeComparisonSection(),
             const SizedBox(height: 32),
 
             // State Testing - Each Variant
@@ -123,7 +123,7 @@ class _ComprehensiveTestScreen extends StatelessWidget {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            _StateTestingSection(),
+            const _StateTestingSection(),
             const SizedBox(height: 32),
 
             // Accent Color Showcase
@@ -132,7 +132,7 @@ class _ComprehensiveTestScreen extends StatelessWidget {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            _AccentShowcaseSection(),
+            const _AccentShowcaseSection(),
           ],
         ),
       ),
@@ -233,6 +233,7 @@ class _AllVariantsSection extends StatelessWidget {
     };
   }
 
+  @override
   Widget build(BuildContext context) {
     return Wrap(
       spacing: 12,

@@ -41,13 +41,13 @@ class _TabsExampleState extends State<TabsExample> {
                   children: [
                     RemixTab(
                       tabId: 'tab1',
-                      child: Text('Tab 1'),
                       style: tabStyle,
+                      child: const Text('Tab 1'),
                     ),
                     RemixTab(
                       tabId: 'tab2',
-                      child: Text('Tab 2'),
                       style: tabStyle,
+                      child: const Text('Tab 2'),
                     )
                   ],
                 ),
