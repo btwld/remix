@@ -27,6 +27,11 @@ class RemixTabBarStyle
     return merge(RemixTabBarStyle(container: value));
   }
 
+  /// Sets container alignment
+  RemixTabBarStyle alignment(Alignment value) {
+    return merge(RemixTabBarStyle(container: FlexBoxStyler(alignment: value)));
+  }
+
   @override
   RemixTabBarStyle padding(EdgeInsetsGeometryMix value) {
     return merge(RemixTabBarStyle(container: FlexBoxStyler(padding: value)));
@@ -71,11 +76,6 @@ class RemixTabBarStyle
   @override
   RemixTabBarStyle decoration(DecorationMix value) {
     return merge(RemixTabBarStyle(container: FlexBoxStyler(decoration: value)));
-  }
-
-  /// Sets container alignment
-  RemixTabBarStyle alignment(Alignment value) {
-    return merge(RemixTabBarStyle(container: FlexBoxStyler(alignment: value)));
   }
 
   @override
@@ -168,6 +168,11 @@ class RemixTabViewStyle
           modifier: modifier,
         );
 
+  /// Sets container alignment
+  RemixTabViewStyle alignment(Alignment value) {
+    return merge(RemixTabViewStyle(container: BoxStyler(alignment: value)));
+  }
+
   @override
   RemixTabViewStyle padding(EdgeInsetsGeometryMix value) {
     return merge(RemixTabViewStyle(container: BoxStyler(padding: value)));
@@ -200,11 +205,6 @@ class RemixTabViewStyle
   @override
   RemixTabViewStyle margin(EdgeInsetsGeometryMix value) {
     return merge(RemixTabViewStyle(container: BoxStyler(margin: value)));
-  }
-
-  /// Sets container alignment
-  RemixTabViewStyle alignment(Alignment value) {
-    return merge(RemixTabViewStyle(container: BoxStyler(alignment: value)));
   }
 
   @override
@@ -297,6 +297,11 @@ class RemixTabStyle extends RemixFlexContainerStyle<RemixTabSpec, RemixTabStyle>
           modifier: modifier,
         );
 
+  /// Sets container alignment
+  RemixTabStyle alignment(Alignment value) {
+    return merge(RemixTabStyle(container: FlexBoxStyler(alignment: value)));
+  }
+
   @override
   RemixTabStyle label(TextStyler value) {
     return merge(RemixTabStyle(label: value));
@@ -387,11 +392,6 @@ class RemixTabStyle extends RemixFlexContainerStyle<RemixTabSpec, RemixTabStyle>
   @override
   RemixTabStyle decoration(DecorationMix value) {
     return merge(RemixTabStyle(container: FlexBoxStyler(decoration: value)));
-  }
-
-  /// Sets container alignment
-  RemixTabStyle alignment(Alignment value) {
-    return merge(RemixTabStyle(container: FlexBoxStyler(alignment: value)));
   }
 
   @override

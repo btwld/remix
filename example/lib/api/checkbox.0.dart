@@ -45,16 +45,13 @@ class _CheckboxExampleState extends State<CheckboxExample> {
         .onSelected(
           RemixCheckboxStyle().color(Colors.grey.shade900),
         )
-        .container(
-          BoxStyler()
-              .borderRadiusAll(
-                const Radius.circular(3),
-              )
-              .border(
-                BoxBorderMix.all(
-                  BorderSideMix().color(Colors.black87).width(2),
-                ),
-              ),
+        .borderRadiusAll(
+          const Radius.circular(3),
+        )
+        .border(
+          BoxBorderMix.all(
+            BorderSideMix().color(Colors.black87).width(2),
+          ),
         );
   }
 }

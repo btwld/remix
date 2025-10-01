@@ -62,9 +62,7 @@ class RemixCheckboxStyle
   RemixCheckboxStyle border(BoxBorderMix value) {
     return merge(
       RemixCheckboxStyle(
-        container: BoxStyler(
-          decoration: BoxDecorationMix(border: value),
-        ),
+        container: BoxStyler(decoration: BoxDecorationMix(border: value)),
       ),
     );
   }
@@ -72,11 +70,6 @@ class RemixCheckboxStyle
   /// Sets indicator color.
   RemixCheckboxStyle indicatorColor(Color value) {
     return merge(RemixCheckboxStyle(indicator: IconStyler(color: value)));
-  }
-
-  /// Sets the container styling.
-  RemixCheckboxStyle container(BoxStyler value) {
-    return merge(RemixCheckboxStyle(container: value));
   }
 
   /// Sets container alignment.
@@ -100,9 +93,7 @@ class RemixCheckboxStyle
   RemixCheckboxStyle color(Color value) {
     return merge(
       RemixCheckboxStyle(
-        container: BoxStyler(
-          decoration: BoxDecorationMix(color: value),
-        ),
+        container: BoxStyler(decoration: BoxDecorationMix(color: value)),
       ),
     );
   }

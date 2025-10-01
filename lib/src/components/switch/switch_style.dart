@@ -40,11 +40,6 @@ class RemixSwitchStyle
     return merge(RemixSwitchStyle(thumb: value));
   }
 
-  /// Sets container styling
-  RemixSwitchStyle container(BoxStyler value) {
-    return merge(RemixSwitchStyle(container: value));
-  }
-
   /// Sets container alignment
   RemixSwitchStyle alignment(Alignment value) {
     return merge(RemixSwitchStyle(container: BoxStyler(alignment: value)));

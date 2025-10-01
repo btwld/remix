@@ -28,12 +28,15 @@ class RemixAccordionStyle
           modifier: modifier,
         );
 
-  RemixAccordionStyle container(FlexBoxStyler value) {
-    return merge(RemixAccordionStyle(container: value));
-  }
-
   RemixAccordionStyle item(RemixAccordionItemStyle value) {
     return merge(RemixAccordionStyle(item: value));
+  }
+
+  /// Sets container alignment
+  RemixAccordionStyle alignment(Alignment value) {
+    return merge(
+      RemixAccordionStyle(container: FlexBoxStyler(alignment: value)),
+    );
   }
 
   // RemixFlexContainerStyle mixin implementations
@@ -83,11 +86,6 @@ class RemixAccordionStyle
     return merge(
       RemixAccordionStyle(container: FlexBoxStyler(decoration: value)),
     );
-  }
-
-  /// Sets container alignment
-  RemixAccordionStyle alignment(Alignment value) {
-    return merge(RemixAccordionStyle(container: FlexBoxStyler(alignment: value)));
   }
 
   @override
@@ -221,6 +219,13 @@ class RemixAccordionItemStyle extends RemixFlexContainerStyle<
     return merge(RemixAccordionItemStyle(content: value));
   }
 
+  /// Sets container alignment
+  RemixAccordionItemStyle alignment(Alignment value) {
+    return merge(
+      RemixAccordionItemStyle(trigger: FlexBoxStyler(alignment: value)),
+    );
+  }
+
   // RemixFlexContainerStyle mixin implementations
   @override
   RemixAccordionItemStyle padding(EdgeInsetsGeometryMix value) {
@@ -270,11 +275,6 @@ class RemixAccordionItemStyle extends RemixFlexContainerStyle<
     return merge(
       RemixAccordionItemStyle(trigger: FlexBoxStyler(decoration: value)),
     );
-  }
-
-  /// Sets container alignment
-  RemixAccordionItemStyle alignment(Alignment value) {
-    return merge(RemixAccordionItemStyle(trigger: FlexBoxStyler(alignment: value)));
   }
 
   @override

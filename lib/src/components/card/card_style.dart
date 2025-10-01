@@ -61,11 +61,6 @@ class RemixCardStyle
     return merge(RemixCardStyle(container: BoxStyler(decoration: value)));
   }
 
-  /// Sets container styling
-  RemixCardStyle container(BoxStyler value) {
-    return merge(RemixCardStyle(container: value));
-  }
-
   @override
   StyleSpec<RemixCardSpec> resolve(BuildContext context) {
     return StyleSpec(
