@@ -40,11 +40,9 @@ class FortalSwitchStyles {
     return RemixSwitchStyle()
         // Focus state (generic)
         .onFocused(
-          RemixSwitchStyle().container(
-            BoxStyler().borderAll(
-              color: FortalTokens.focusA8(),
-              width: FortalTokens.focusRingWidth(),
-            ),
+          RemixSwitchStyle().borderAll(
+            color: FortalTokens.focusA8(),
+            width: FortalTokens.focusRingWidth(),
           ),
         )
         // Merge with size-specific styles
@@ -60,11 +58,8 @@ class FortalSwitchStyles {
   }) {
     return base(size: size)
         // Container styling (unchecked state) - acts as track background
-        .container(
-          BoxStyler()
-              .color(FortalTokens.accentTrack()) // gray6 equivalent
-              .borderRadius(BorderRadiusMix.circular(999)),
-        )
+        .color(FortalTokens.accentTrack()) // gray6 equivalent
+        .borderRadius(BorderRadiusMix.circular(999))
         // Thumb styling (unchecked state) - no size properties
         .thumb(
           BoxStyler()
@@ -74,13 +69,13 @@ class FortalSwitchStyles {
         // Checked state - use .onSelected for state changes
         .onSelected(
           RemixSwitchStyle()
-              .container(BoxStyler().color(FortalTokens.accent9()))
+              .color(FortalTokens.accent9())
               .thumb(BoxStyler().color(FortalTokens.accentContrast())),
         )
         // Disabled state
         .onDisabled(
           RemixSwitchStyle()
-              .container(BoxStyler().color(FortalTokens.accentTrack()))
+              .color(FortalTokens.accentTrack())
               .thumb(BoxStyler().color(FortalTokens.colorSurface())),
         );
   }
@@ -94,11 +89,8 @@ class FortalSwitchStyles {
   }) {
     return base(size: size)
         // Container styling (unchecked state) - acts as track background
-        .container(
-          BoxStyler()
-              .color(FortalTokens.accentTrack()) // gray6 equivalent
-              .borderRadius(BorderRadiusMix.circular(999)),
-        )
+        .color(FortalTokens.accentTrack()) // gray6 equivalent
+        .borderRadius(BorderRadiusMix.circular(999))
         // Thumb styling (unchecked state) - no size properties
         .thumb(
           BoxStyler()
@@ -108,7 +100,7 @@ class FortalSwitchStyles {
         // Checked state - different from classic (thumb stays colorSurface)
         .onSelected(
           RemixSwitchStyle()
-              .container(BoxStyler().color(FortalTokens.accent9()))
+              .color(FortalTokens.accent9())
               .thumb(
                 BoxStyler()
                     .color(FortalTokens.colorSurface()), // Stays white/surface
@@ -117,7 +109,7 @@ class FortalSwitchStyles {
         // Disabled state
         .onDisabled(
           RemixSwitchStyle()
-              .container(BoxStyler().color(FortalTokens.accentTrack()))
+              .color(FortalTokens.accentTrack())
               .thumb(BoxStyler().color(FortalTokens.colorSurface())),
         );
   }
@@ -131,11 +123,8 @@ class FortalSwitchStyles {
   }) {
     return base(size: size)
         // Container styling (unchecked state) - uses accent3 instead of gray, acts as track background
-        .container(
-          BoxStyler()
-              .color(FortalTokens.accent3())
-              .borderRadius(BorderRadiusMix.circular(999)),
-        )
+        .color(FortalTokens.accent3())
+        .borderRadius(BorderRadiusMix.circular(999))
         // Thumb styling (unchecked state) - uses accent11, no size properties
         .thumb(
           BoxStyler()
@@ -145,13 +134,13 @@ class FortalSwitchStyles {
         // Checked state - container becomes accent5, thumb stays accent11
         .onSelected(
           RemixSwitchStyle()
-              .container(BoxStyler().color(FortalTokens.accent5()))
+              .color(FortalTokens.accent5())
               .thumb(BoxStyler().color(FortalTokens.accent11())),
         )
         // Disabled state
         .onDisabled(
           RemixSwitchStyle()
-              .container(BoxStyler().color(FortalTokens.accent3()))
+              .color(FortalTokens.accent3())
               .thumb(BoxStyler().color(FortalTokens.accent11())),
         );
   }

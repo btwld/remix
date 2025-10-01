@@ -167,11 +167,6 @@ class RemixSelectTriggerStyle extends RemixFlexContainerStyle<
           modifier: modifier,
         );
 
-  /// Sets container styling directly
-  RemixSelectTriggerStyle container(FlexBoxStyler value) {
-    return merge(RemixSelectTriggerStyle(container: value));
-  }
-
   /// Sets label styling
   RemixSelectTriggerStyle label(TextStyler value) {
     return merge(RemixSelectTriggerStyle(label: value));
@@ -180,6 +175,13 @@ class RemixSelectTriggerStyle extends RemixFlexContainerStyle<
   /// Sets icon styling
   RemixSelectTriggerStyle icon(IconStyler value) {
     return merge(RemixSelectTriggerStyle(icon: value));
+  }
+
+  /// Sets container alignment
+  RemixSelectTriggerStyle alignment(Alignment value) {
+    return merge(
+      RemixSelectTriggerStyle(container: FlexBoxStyler(alignment: value)),
+    );
   }
 
   @override
@@ -228,11 +230,6 @@ class RemixSelectTriggerStyle extends RemixFlexContainerStyle<
     return merge(
       RemixSelectTriggerStyle(container: FlexBoxStyler(decoration: value)),
     );
-  }
-
-  /// Sets container alignment
-  RemixSelectTriggerStyle alignment(Alignment value) {
-    return merge(RemixSelectTriggerStyle(container: FlexBoxStyler(alignment: value)));
   }
 
   @override
@@ -331,11 +328,6 @@ class RemixSelectMenuItemStyle extends RemixFlexContainerStyle<
           modifier: modifier,
         );
 
-  /// Sets container styling directly
-  RemixSelectMenuItemStyle container(FlexBoxStyler value) {
-    return merge(RemixSelectMenuItemStyle(container: value));
-  }
-
   /// Sets text styling
   RemixSelectMenuItemStyle text(TextStyler value) {
     return merge(RemixSelectMenuItemStyle(text: value));
@@ -344,6 +336,13 @@ class RemixSelectMenuItemStyle extends RemixFlexContainerStyle<
   /// Sets icon styling
   RemixSelectMenuItemStyle icon(IconStyler value) {
     return merge(RemixSelectMenuItemStyle(icon: value));
+  }
+
+  /// Sets container alignment
+  RemixSelectMenuItemStyle alignment(Alignment value) {
+    return merge(
+      RemixSelectMenuItemStyle(container: FlexBoxStyler(alignment: value)),
+    );
   }
 
   @override
@@ -404,11 +403,6 @@ class RemixSelectMenuItemStyle extends RemixFlexContainerStyle<
     return merge(
       RemixSelectMenuItemStyle(container: FlexBoxStyler(decoration: value)),
     );
-  }
-
-  /// Sets container alignment
-  RemixSelectMenuItemStyle alignment(Alignment value) {
-    return merge(RemixSelectMenuItemStyle(container: FlexBoxStyler(alignment: value)));
   }
 
   @override

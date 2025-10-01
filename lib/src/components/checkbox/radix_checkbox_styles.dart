@@ -38,11 +38,9 @@ class FortalCheckboxStyles {
     return RemixCheckboxStyle()
         // Focus state (generic)
         .onFocused(
-          RemixCheckboxStyle().container(
-            BoxStyler().borderAll(
-              color: FortalTokens.focusA8(),
-              width: FortalTokens.focusRingWidth(),
-            ),
+          RemixCheckboxStyle().borderAll(
+            color: FortalTokens.focusA8(),
+            width: FortalTokens.focusRingWidth(),
           ),
         )
         // Merge with size-specific styles
@@ -58,37 +56,32 @@ class FortalCheckboxStyles {
   }) {
     return base(size: size)
         // Container (the checkbox box itself) - no size properties
-        .container(
-          BoxStyler()
-              .color(FortalTokens.colorSurface())
-              .borderAll(
-                color: FortalTokens.gray7(),
-                width: FortalTokens.borderWidth1(),
-              )
-              // Use token-based radius. JSON: radius ≈ 1.25 × radius-1 (~3.75),
-              // closest token step is radius-2 (4px).
-              .borderRadiusAll(FortalTokens.radius2()),
+        .color(FortalTokens.colorSurface())
+        .borderAll(
+          color: FortalTokens.gray7(),
+          width: FortalTokens.borderWidth1(),
         )
+        // Use token-based radius. JSON: radius ≈ 1.25 × radius-1 (~3.75),
+        // closest token step is radius-2 (4px).
+        .borderRadiusAll(FortalTokens.radius2())
         // Check mark icon color
         .indicatorColor(FortalTokens.gray12())
         // State variants
         .onSelected(
           RemixCheckboxStyle()
-              .container(
-                BoxStyler().color(FortalTokens.accent9()).borderAll(
-                      color: FortalTokens.accent9(),
-                      width: FortalTokens.borderWidth1(),
-                    ),
+              .color(FortalTokens.accent9())
+              .borderAll(
+                color: FortalTokens.accent9(),
+                width: FortalTokens.borderWidth1(),
               )
               .indicatorColor(FortalTokens.accentContrast()),
         )
         .onDisabled(
           RemixCheckboxStyle()
-              .container(
-                BoxStyler().color(FortalTokens.colorSurface()).borderAll(
-                      color: FortalTokens.gray7(),
-                      width: FortalTokens.borderWidth1(),
-                    ),
+              .color(FortalTokens.colorSurface())
+              .borderAll(
+                color: FortalTokens.gray7(),
+                width: FortalTokens.borderWidth1(),
               )
               .indicatorColor(FortalTokens.gray12()),
         );
@@ -103,36 +96,31 @@ class FortalCheckboxStyles {
   }) {
     return base(size: size)
         // Container (the checkbox box itself) - no size properties
-        .container(
-          BoxStyler()
-              .color(FortalTokens.colorSurface())
-              .borderAll(
-                color: FortalTokens.gray6(),
-                width: FortalTokens.borderWidth1(),
-              )
-              // Use token-based radius matching JSON intent.
-              .borderRadiusAll(FortalTokens.radius2()),
+        .color(FortalTokens.colorSurface())
+        .borderAll(
+          color: FortalTokens.gray6(),
+          width: FortalTokens.borderWidth1(),
         )
+        // Use token-based radius matching JSON intent.
+        .borderRadiusAll(FortalTokens.radius2())
         // Check mark icon color
         .indicatorColor(FortalTokens.accent9())
         // State variants
         .onSelected(
           RemixCheckboxStyle()
-              .container(
-                BoxStyler().color(FortalTokens.accent9()).borderAll(
-                      color: FortalTokens.accent9(),
-                      width: FortalTokens.borderWidth1(),
-                    ),
+              .color(FortalTokens.accent9())
+              .borderAll(
+                color: FortalTokens.accent9(),
+                width: FortalTokens.borderWidth1(),
               )
               .indicatorColor(FortalTokens.accentContrast()),
         )
         .onDisabled(
           RemixCheckboxStyle()
-              .container(
-                BoxStyler().color(FortalTokens.colorSurface()).borderAll(
-                      color: FortalTokens.gray6(),
-                      width: FortalTokens.borderWidth1(),
-                    ),
+              .color(FortalTokens.colorSurface())
+              .borderAll(
+                color: FortalTokens.gray6(),
+                width: FortalTokens.borderWidth1(),
               )
               .indicatorColor(FortalTokens.accent9()),
         );
@@ -147,36 +135,31 @@ class FortalCheckboxStyles {
   }) {
     return base(size: size)
         // Container (the checkbox box itself) - no size properties
-        .container(
-          BoxStyler()
-              .color(FortalTokens.accent3())
-              .borderAll(
-                color: FortalTokens.accent6(),
-                width: FortalTokens.borderWidth1(),
-              )
-              // Use token-based radius matching JSON intent.
-              .borderRadiusAll(FortalTokens.radius2()),
+        .color(FortalTokens.accent3())
+        .borderAll(
+          color: FortalTokens.accent6(),
+          width: FortalTokens.borderWidth1(),
         )
+        // Use token-based radius matching JSON intent.
+        .borderRadiusAll(FortalTokens.radius2())
         // Check mark icon color
         .indicatorColor(FortalTokens.accent11())
         // State variants
         .onSelected(
           RemixCheckboxStyle()
-              .container(
-                BoxStyler().color(FortalTokens.accent9()).borderAll(
-                      color: FortalTokens.accent9(),
-                      width: FortalTokens.borderWidth1(),
-                    ),
+              .color(FortalTokens.accent9())
+              .borderAll(
+                color: FortalTokens.accent9(),
+                width: FortalTokens.borderWidth1(),
               )
               .indicatorColor(FortalTokens.accentContrast()),
         )
         .onDisabled(
           RemixCheckboxStyle()
-              .container(
-                BoxStyler().color(FortalTokens.accent3()).borderAll(
-                      color: FortalTokens.accent6(),
-                      width: FortalTokens.borderWidth1(),
-                    ),
+              .color(FortalTokens.accent3())
+              .borderAll(
+                color: FortalTokens.accent6(),
+                width: FortalTokens.borderWidth1(),
               )
               .indicatorColor(FortalTokens.accent11()),
         );

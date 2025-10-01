@@ -43,10 +43,6 @@ class RemixDialogStyle
           modifier: modifier,
         );
 
-  RemixDialogStyle container(BoxStyler value) {
-    return merge(RemixDialogStyle(container: value));
-  }
-
   RemixDialogStyle title(TextStyler value) {
     return merge(RemixDialogStyle(title: value));
   }
@@ -61,6 +57,11 @@ class RemixDialogStyle
 
   RemixDialogStyle overlay(BoxStyler value) {
     return merge(RemixDialogStyle(overlay: value));
+  }
+
+  /// Sets container alignment
+  RemixDialogStyle alignment(Alignment value) {
+    return merge(RemixDialogStyle(container: BoxStyler(alignment: value)));
   }
 
   // RemixContainerStyle mixin implementations
@@ -110,11 +111,6 @@ class RemixDialogStyle
   @override
   RemixDialogStyle margin(EdgeInsetsGeometryMix value) {
     return merge(RemixDialogStyle(container: BoxStyler(margin: value)));
-  }
-
-  /// Sets container alignment
-  RemixDialogStyle alignment(Alignment value) {
-    return merge(RemixDialogStyle(container: BoxStyler(alignment: value)));
   }
 
   @override

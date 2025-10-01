@@ -28,11 +28,6 @@ class RemixRadioStyle
           modifier: modifier,
         );
 
-  /// Sets container styling (outer ring).
-  RemixRadioStyle container(BoxStyler value) {
-    return merge(RemixRadioStyle(container: value));
-  }
-
   /// Sets indicator styling (selected fill).
   RemixRadioStyle indicator(BoxStyler value) {
     return merge(RemixRadioStyle(indicator: value));
@@ -60,9 +55,7 @@ class RemixRadioStyle
   RemixRadioStyle color(Color value) {
     return merge(
       RemixRadioStyle(
-        container: BoxStyler(
-          decoration: BoxDecorationMix(color: value),
-        ),
+        container: BoxStyler(decoration: BoxDecorationMix(color: value)),
       ),
     );
   }

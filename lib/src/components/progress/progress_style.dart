@@ -87,9 +87,9 @@ class RemixProgressStyle
     return merge(RemixProgressStyle(trackContainer: value));
   }
 
-  /// Sets container styling
-  RemixProgressStyle container(BoxStyler value) {
-    return merge(RemixProgressStyle(container: value));
+  /// Sets container alignment
+  RemixProgressStyle alignment(Alignment value) {
+    return merge(RemixProgressStyle(container: BoxStyler(alignment: value)));
   }
 
   @override
@@ -122,11 +122,6 @@ class RemixProgressStyle
   @override
   RemixProgressStyle margin(EdgeInsetsGeometryMix value) {
     return merge(RemixProgressStyle(container: BoxStyler(margin: value)));
-  }
-
-  /// Sets container alignment
-  RemixProgressStyle alignment(Alignment value) {
-    return merge(RemixProgressStyle(container: BoxStyler(alignment: value)));
   }
 
   @override

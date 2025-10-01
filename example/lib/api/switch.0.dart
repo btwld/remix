@@ -46,14 +46,11 @@ class _SwitchExampleState extends State<SwitchExample> {
   RemixSwitchStyle get style {
     return RemixSwitchStyle()
         .thumbColor(Colors.grey.shade600)
-        .container(
-          BoxStyler()
-              .color(Colors.deepPurpleAccent.shade200)
-              .size(65, 30)
-              .borderRadiusAll(const Radius.circular(40))
-              .alignment(
-                _selected.value ? Alignment.centerRight : Alignment.centerLeft,
-              ),
+        .color(Colors.deepPurpleAccent.shade200)
+        .size(65, 30)
+        .borderRadiusAll(const Radius.circular(40))
+        .alignment(
+          _selected.value ? Alignment.centerRight : Alignment.centerLeft,
         )
         .animate(AnimationConfig.easeOut(300.ms))
         .thumb(

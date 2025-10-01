@@ -159,10 +159,6 @@ class RemixMenuItemStyle
           modifier: modifier,
         );
 
-  RemixMenuItemStyle container(FlexBoxStyler value) {
-    return merge(RemixMenuItemStyle(container: value));
-  }
-
   RemixMenuItemStyle label(TextStyler value) {
     return merge(RemixMenuItemStyle(label: value));
   }
@@ -173,6 +169,13 @@ class RemixMenuItemStyle
 
   RemixMenuItemStyle trailingIcon(IconStyler value) {
     return merge(RemixMenuItemStyle(trailingIcon: value));
+  }
+
+  /// Sets container alignment
+  RemixMenuItemStyle alignment(Alignment value) {
+    return merge(
+      RemixMenuItemStyle(container: FlexBoxStyler(alignment: value)),
+    );
   }
 
   // RemixFlexContainerStyle mixin implementations
@@ -222,11 +225,6 @@ class RemixMenuItemStyle
     return merge(
       RemixMenuItemStyle(container: FlexBoxStyler(decoration: value)),
     );
-  }
-
-  /// Sets container alignment
-  RemixMenuItemStyle alignment(Alignment value) {
-    return merge(RemixMenuItemStyle(container: FlexBoxStyler(alignment: value)));
   }
 
   @override
