@@ -36,7 +36,7 @@ import 'fortal_theme.dart';
 // ============================================================================
 
 /// Mixes two colors in OKLab like CSS `color-mix(in oklab, A, B p%)`.
-Color computeColorMixOklab({
+Color _computeColorMixOklab({
   required Color a,
   required Color b,
   required double bPercent,
@@ -88,7 +88,7 @@ Color computeColorOverlay({required bool isDark}) =>
 ///
 /// Matches: color-mix(in oklab, var(--gray-a6), var(--gray-6) 25%)
 Color computeShadowStroke(RadixColorScale gray) =>
-    computeColorMixOklab(a: gray.alphaStep(6), b: gray.step(6), bPercent: 25);
+    _computeColorMixOklab(a: gray.alphaStep(6), b: gray.step(6), bPercent: 25);
 
 // ============================================================================
 // RESOLVER (merged from resolver.dart)

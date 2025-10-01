@@ -313,7 +313,7 @@ class RemixTextField extends StatelessWidget {
       style: const TextStyle(), // Will be applied in StyleBuilder
       semanticLabel: semanticLabel ?? label,
       semanticHint: semanticHint ?? hintText,
-      builder: (BuildContext context, Widget editableText) {
+      builder: (BuildContext context, state, Widget editableText) {
         return StyleBuilder(
           style: style,
           controller: NakedTextFieldState.controllerOf(context),
@@ -331,7 +331,7 @@ class RemixTextField extends StatelessWidget {
                 ? Stack(
                     alignment: AlignmentDirectional.centerStart,
                     children: [
-                      if (controller?.text.isEmpty ?? true)
+                      if (!state.hasText)
                         Positioned.fill(
                           child: Align(
                             alignment: AlignmentDirectional.centerStart,

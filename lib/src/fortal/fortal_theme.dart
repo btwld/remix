@@ -495,7 +495,8 @@ class FortalTokens {
   ///
   /// Standard weight for body text and most interface elements.
   /// Provides good readability without visual strain.
-  static const fontWeightRegular = FontWeightToken('fortal.font.weight.regular');
+  static const fontWeightRegular =
+      FontWeightToken('fortal.font.weight.regular');
 
   /// Medium font weight (500).
   ///
