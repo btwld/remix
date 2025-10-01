@@ -121,7 +121,8 @@ class RemixMenuStyle extends RemixStyle<RemixMenuSpec, RemixMenuStyle> {
       ];
 }
 
-class RemixMenuItemStyle extends RemixFlexContainerStyle<RemixMenuItemSpec, RemixMenuItemStyle> {
+class RemixMenuItemStyle
+    extends RemixFlexContainerStyle<RemixMenuItemSpec, RemixMenuItemStyle> {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<StyleSpec<IconSpec>>? $leadingIcon;
@@ -182,27 +183,38 @@ class RemixMenuItemStyle extends RemixFlexContainerStyle<RemixMenuItemSpec, Remi
 
   @override
   RemixMenuItemStyle color(Color value) {
-    return merge(RemixMenuItemStyle(container: FlexBoxStyler(decoration: BoxDecorationMix(color: value))));
+    return merge(RemixMenuItemStyle(
+        container: FlexBoxStyler(decoration: BoxDecorationMix(color: value))));
   }
 
   @override
   RemixMenuItemStyle size(double width, double height) {
-    return merge(RemixMenuItemStyle(container: FlexBoxStyler(constraints: BoxConstraintsMix(minWidth: width, maxWidth: width, minHeight: height, maxHeight: height))));
+    return merge(RemixMenuItemStyle(
+        container: FlexBoxStyler(
+            constraints: BoxConstraintsMix(
+                minWidth: width,
+                maxWidth: width,
+                minHeight: height,
+                maxHeight: height))));
   }
 
   @override
   RemixMenuItemStyle borderRadius(BorderRadiusGeometryMix radius) {
-    return merge(RemixMenuItemStyle(container: FlexBoxStyler(decoration: BoxDecorationMix(borderRadius: radius))));
+    return merge(RemixMenuItemStyle(
+        container:
+            FlexBoxStyler(decoration: BoxDecorationMix(borderRadius: radius))));
   }
 
   @override
   RemixMenuItemStyle constraints(BoxConstraintsMix value) {
-    return merge(RemixMenuItemStyle(container: FlexBoxStyler(constraints: value)));
+    return merge(
+        RemixMenuItemStyle(container: FlexBoxStyler(constraints: value)));
   }
 
   @override
   RemixMenuItemStyle decoration(DecorationMix value) {
-    return merge(RemixMenuItemStyle(container: FlexBoxStyler(decoration: value)));
+    return merge(
+        RemixMenuItemStyle(container: FlexBoxStyler(decoration: value)));
   }
 
   @override
@@ -212,17 +224,20 @@ class RemixMenuItemStyle extends RemixFlexContainerStyle<RemixMenuItemSpec, Remi
 
   @override
   RemixMenuItemStyle foregroundDecoration(DecorationMix value) {
-    return merge(RemixMenuItemStyle(container: FlexBoxStyler(foregroundDecoration: value)));
+    return merge(RemixMenuItemStyle(
+        container: FlexBoxStyler(foregroundDecoration: value)));
   }
 
   @override
-  RemixMenuItemStyle transform(Matrix4 value, {AlignmentGeometry alignment = Alignment.center}) {
-    return merge(RemixMenuItemStyle(container: FlexBoxStyler(alignment: alignment, transform: value)));
+  RemixMenuItemStyle transform(Matrix4 value,
+      {AlignmentGeometry alignment = Alignment.center}) {
+    return merge(RemixMenuItemStyle(
+        container: FlexBoxStyler(alignment: alignment, transform: value)));
   }
 
   @override
   RemixMenuItemStyle flex(FlexStyler value) {
-    return merge(RemixMenuItemStyle(container: FlexBoxStyler()));
+    return merge(RemixMenuItemStyle(container: FlexBoxStyler().flex(value)));
   }
 
   @override

@@ -57,7 +57,7 @@ class RemixButton extends StatelessWidget {
     this.style = const RemixButtonStyle.create(),
     this.styleSpec,
     super.key,
-    this.label = '',
+    required this.label,
     this.icon,
     this.textBuilder,
     this.iconBuilder,
@@ -156,6 +156,10 @@ class RemixButton extends StatelessWidget {
 
   bool get _isEnabled => enabled && !loading && onPressed != null;
 
+  RemixButtonStyle _buildStyle() {
+    return RemixButtonStyle().mainAxisSize(MainAxisSize.min).merge(style);
+  }
+
   @override
   Widget build(BuildContext context) {
     return NakedButton(
@@ -167,9 +171,9 @@ class RemixButton extends StatelessWidget {
       focusNode: focusNode,
       autofocus: autofocus,
       semanticLabel: semanticLabel,
-      builder: (context, __, _) {
+      builder: (context, states, _) {
         return StyleBuilder(
-          style: style,
+          style: _buildStyle(),
           controller: NakedState.controllerOf(context),
           builder: (context, spec) {
             Widget? iconWidget;
