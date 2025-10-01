@@ -155,7 +155,7 @@ class RemixButtonStyle
   RemixButtonStyle flex(FlexStyler value) {
     // The FlexStyler should be used to create a new FlexBoxStyler
     // For now, delegate to the merge pattern
-    return merge(RemixButtonStyle(container: FlexBoxStyler()));
+    return merge(RemixButtonStyle(container: FlexBoxStyler().flex(value)));
   }
 
   // Abstract method implementations for mixins (only missing ones)
