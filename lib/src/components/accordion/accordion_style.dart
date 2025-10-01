@@ -85,6 +85,11 @@ class RemixAccordionStyle
     );
   }
 
+  /// Sets container alignment
+  RemixAccordionStyle alignment(Alignment value) {
+    return merge(RemixAccordionStyle(container: FlexBoxStyler(alignment: value)));
+  }
+
   @override
   RemixAccordionStyle margin(EdgeInsetsGeometryMix value) {
     return merge(RemixAccordionStyle(container: FlexBoxStyler(margin: value)));
@@ -265,6 +270,11 @@ class RemixAccordionItemStyle extends RemixFlexContainerStyle<
     return merge(
       RemixAccordionItemStyle(trigger: FlexBoxStyler(decoration: value)),
     );
+  }
+
+  /// Sets container alignment
+  RemixAccordionItemStyle alignment(Alignment value) {
+    return merge(RemixAccordionItemStyle(trigger: FlexBoxStyler(alignment: value)));
   }
 
   @override

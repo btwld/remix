@@ -39,6 +39,11 @@ class RemixTooltipStyle
     return merge(RemixTooltipStyle(container: BoxStyler(margin: value)));
   }
 
+  /// Sets container alignment
+  RemixTooltipStyle alignment(Alignment value) {
+    return merge(RemixTooltipStyle(container: BoxStyler(alignment: value)));
+  }
+
   /// Sets container background color
   RemixTooltipStyle color(Color value) {
     return merge(RemixTooltipStyle(

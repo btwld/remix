@@ -71,6 +71,11 @@ class RemixCalloutStyle
     );
   }
 
+  /// Sets container alignment
+  RemixCalloutStyle alignment(Alignment value) {
+    return merge(RemixCalloutStyle(container: FlexBoxStyler(alignment: value)));
+  }
+
   /// Sets flex spacing
   RemixCalloutStyle spacing(double value) {
     return merge(RemixCalloutStyle(container: FlexBoxStyler(spacing: value)));

@@ -124,6 +124,11 @@ class RemixProgressStyle
     return merge(RemixProgressStyle(container: BoxStyler(margin: value)));
   }
 
+  /// Sets container alignment
+  RemixProgressStyle alignment(Alignment value) {
+    return merge(RemixProgressStyle(container: BoxStyler(alignment: value)));
+  }
+
   @override
   RemixProgressStyle padding(EdgeInsetsGeometryMix value) {
     return merge(RemixProgressStyle(container: BoxStyler(padding: value)));

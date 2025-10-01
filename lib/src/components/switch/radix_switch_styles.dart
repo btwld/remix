@@ -40,7 +40,7 @@ class FortalSwitchStyles {
     return RemixSwitchStyle()
         // Focus state (generic)
         .onFocused(
-          RemixSwitchStyle().track(
+          RemixSwitchStyle().container(
             BoxStyler().borderAll(
               color: FortalTokens.focusA8(),
               width: FortalTokens.focusRingWidth(),
@@ -59,8 +59,8 @@ class FortalSwitchStyles {
     FortalSwitchSize size = FortalSwitchSize.size2,
   }) {
     return base(size: size)
-        // Track styling (unchecked state) - no size properties
-        .track(
+        // Container styling (unchecked state) - acts as track background
+        .container(
           BoxStyler()
               .color(FortalTokens.accentTrack()) // gray6 equivalent
               .borderRadius(BorderRadiusMix.circular(999)),
@@ -74,13 +74,13 @@ class FortalSwitchStyles {
         // Checked state - use .onSelected for state changes
         .onSelected(
           RemixSwitchStyle()
-              .track(BoxStyler().color(FortalTokens.accent9()))
+              .container(BoxStyler().color(FortalTokens.accent9()))
               .thumb(BoxStyler().color(FortalTokens.accentContrast())),
         )
         // Disabled state
         .onDisabled(
           RemixSwitchStyle()
-              .track(BoxStyler().color(FortalTokens.accentTrack()))
+              .container(BoxStyler().color(FortalTokens.accentTrack()))
               .thumb(BoxStyler().color(FortalTokens.colorSurface())),
         );
   }
@@ -93,8 +93,8 @@ class FortalSwitchStyles {
     FortalSwitchSize size = FortalSwitchSize.size2,
   }) {
     return base(size: size)
-        // Track styling (unchecked state) - no size properties
-        .track(
+        // Container styling (unchecked state) - acts as track background
+        .container(
           BoxStyler()
               .color(FortalTokens.accentTrack()) // gray6 equivalent
               .borderRadius(BorderRadiusMix.circular(999)),
@@ -108,7 +108,7 @@ class FortalSwitchStyles {
         // Checked state - different from classic (thumb stays colorSurface)
         .onSelected(
           RemixSwitchStyle()
-              .track(BoxStyler().color(FortalTokens.accent9()))
+              .container(BoxStyler().color(FortalTokens.accent9()))
               .thumb(
                 BoxStyler()
                     .color(FortalTokens.colorSurface()), // Stays white/surface
@@ -117,7 +117,7 @@ class FortalSwitchStyles {
         // Disabled state
         .onDisabled(
           RemixSwitchStyle()
-              .track(BoxStyler().color(FortalTokens.accentTrack()))
+              .container(BoxStyler().color(FortalTokens.accentTrack()))
               .thumb(BoxStyler().color(FortalTokens.colorSurface())),
         );
   }
@@ -130,8 +130,8 @@ class FortalSwitchStyles {
     FortalSwitchSize size = FortalSwitchSize.size2,
   }) {
     return base(size: size)
-        // Track styling (unchecked state) - uses accent3 instead of gray, no size properties
-        .track(
+        // Container styling (unchecked state) - uses accent3 instead of gray, acts as track background
+        .container(
           BoxStyler()
               .color(FortalTokens.accent3())
               .borderRadius(BorderRadiusMix.circular(999)),
@@ -142,16 +142,16 @@ class FortalSwitchStyles {
               .color(FortalTokens.accent11())
               .borderRadius(BorderRadiusMix.circular(999)),
         )
-        // Checked state - track becomes accent5, thumb stays accent11
+        // Checked state - container becomes accent5, thumb stays accent11
         .onSelected(
           RemixSwitchStyle()
-              .track(BoxStyler().color(FortalTokens.accent5()))
+              .container(BoxStyler().color(FortalTokens.accent5()))
               .thumb(BoxStyler().color(FortalTokens.accent11())),
         )
         // Disabled state
         .onDisabled(
           RemixSwitchStyle()
-              .track(BoxStyler().color(FortalTokens.accent3()))
+              .container(BoxStyler().color(FortalTokens.accent3()))
               .thumb(BoxStyler().color(FortalTokens.accent11())),
         );
   }
@@ -163,7 +163,7 @@ class FortalSwitchStyles {
   static RemixSwitchStyle _sizeStyle(FortalSwitchSize size) {
     return switch (size) {
       FortalSwitchSize.size1 => RemixSwitchStyle(
-          track: BoxStyler().width(32.0).height(20.0),
+          container: BoxStyler().width(32.0).height(20.0),
           thumb: BoxStyler().width(16.0).height(16.0),
         ),
       // Per JSON:
@@ -172,11 +172,11 @@ class FortalSwitchStyles {
       // switch-thumb-inset = 1px (handled in widget)
       // switch-thumb-size = calc(height - inset*2) = 18px
       FortalSwitchSize.size2 => RemixSwitchStyle(
-          track: BoxStyler().width(35.0).height(20.0),
+          container: BoxStyler().width(35.0).height(20.0),
           thumb: BoxStyler().width(18.0).height(18.0),
         ),
       FortalSwitchSize.size3 => RemixSwitchStyle(
-          track: BoxStyler().width(48.0).height(28.0),
+          container: BoxStyler().width(48.0).height(28.0),
           thumb: BoxStyler().width(24.0).height(24.0),
         ),
     };

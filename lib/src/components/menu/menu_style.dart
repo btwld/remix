@@ -224,6 +224,11 @@ class RemixMenuItemStyle
     );
   }
 
+  /// Sets container alignment
+  RemixMenuItemStyle alignment(Alignment value) {
+    return merge(RemixMenuItemStyle(container: FlexBoxStyler(alignment: value)));
+  }
+
   @override
   RemixMenuItemStyle margin(EdgeInsetsGeometryMix value) {
     return merge(RemixMenuItemStyle(container: FlexBoxStyler(margin: value)));

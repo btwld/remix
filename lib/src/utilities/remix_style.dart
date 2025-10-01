@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:mix/mix.dart' hide AnimationConfig;
 
 /// Base abstract class for all Remix component styles.
@@ -54,6 +55,8 @@ abstract class RemixContainerStyle<S extends Spec<S>,
     super.animation,
     super.modifier,
   });
+
+  T alignment(Alignment value);
 }
 
 /// Abstract class for flex container-based component styles.
@@ -90,4 +93,6 @@ abstract class RemixFlexContainerStyle<S extends Spec<S>,
     super.animation,
     super.modifier,
   });
+
+  T alignment(Alignment value);
 }

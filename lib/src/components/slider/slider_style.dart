@@ -67,6 +67,11 @@ class RemixSliderStyle
     return merge(RemixSliderStyle(thumb: value));
   }
 
+  /// Sets thumb alignment
+  RemixSliderStyle alignment(Alignment value) {
+    return merge(RemixSliderStyle(thumb: BoxStyler(alignment: value)));
+  }
+
   // RemixContainerStyle mixin implementations
   @override
   RemixSliderStyle padding(EdgeInsetsGeometryMix value) {

@@ -107,6 +107,11 @@ class RemixButtonStyle
     return merge(RemixButtonStyle(container: FlexBoxStyler(decoration: value)));
   }
 
+  /// Sets container alignment
+  RemixButtonStyle alignment(Alignment value) {
+    return merge(RemixButtonStyle(container: FlexBoxStyler(alignment: value)));
+  }
+
   /// Sets item spacing between icon and label (Flex spacing)
   RemixButtonStyle spacing(double value) {
     return merge(RemixButtonStyle(container: FlexBoxStyler(spacing: value)));

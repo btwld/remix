@@ -51,6 +51,11 @@ class RemixDividerStyle
     return merge(RemixDividerStyle(container: BoxStyler(margin: value)));
   }
 
+  /// Sets container alignment
+  RemixDividerStyle alignment(Alignment value) {
+    return merge(RemixDividerStyle(container: BoxStyler(alignment: value)));
+  }
+
   /// Sets container decoration
   RemixDividerStyle decoration(DecorationMix value) {
     return merge(RemixDividerStyle(container: BoxStyler(decoration: value)));

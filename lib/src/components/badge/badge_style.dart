@@ -69,6 +69,11 @@ class RemixBadgeStyle
     return merge(RemixBadgeStyle(container: BoxStyler(decoration: value)));
   }
 
+  /// Sets container alignment
+  RemixBadgeStyle alignment(Alignment value) {
+    return merge(RemixBadgeStyle(container: BoxStyler(alignment: value)));
+  }
+
   @override
   RemixBadgeStyle label(TextStyler value) {
     return merge(RemixBadgeStyle(text: value));

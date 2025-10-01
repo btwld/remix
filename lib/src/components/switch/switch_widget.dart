@@ -61,6 +61,15 @@ class RemixSwitch extends StatelessWidget {
   /// Cursor when hovering over the switch.
   final MouseCursor mouseCursor;
 
+  RemixSwitchStyle _buildStyle() {
+    return RemixSwitchStyle()
+        .alignment(Alignment.centerLeft)
+        // Small thumb inset
+        .paddingAll(1)
+        .onSelected(RemixSwitchStyle().alignment(Alignment.centerRight))
+        .merge(style);
+  }
+
   @override
   Widget build(BuildContext context) {
     return NakedToggle(
@@ -75,23 +84,12 @@ class RemixSwitch extends StatelessWidget {
       asSwitch: true,
       builder: (context, state, _) {
         return StyleBuilder(
-          style: style,
+          style: _buildStyle(),
           controller: NakedState.controllerOf(context),
           builder: (context, spec) {
             return Box(
               styleSpec: spec.container,
-              child: Box(
-                styleSpec: spec.track,
-                child: Align(
-                  alignment:
-                      selected ? Alignment.centerRight : Alignment.centerLeft,
-                  child: Padding(
-                    // Per JSON: switch-thumb-inset = 1px
-                    padding: const EdgeInsets.all(1),
-                    child: Box(styleSpec: spec.thumb),
-                  ),
-                ),
-              ),
+              child: Box(styleSpec: spec.thumb),
             );
           },
         );

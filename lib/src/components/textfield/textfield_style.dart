@@ -199,6 +199,13 @@ class RemixTextFieldStyle
     ));
   }
 
+  /// Sets container alignment
+  RemixTextFieldStyle alignment(Alignment value) {
+    return merge(RemixTextFieldStyle(
+      container: FlexBoxStyler(alignment: value),
+    ));
+  }
+
   /// Sets constraints
   RemixTextFieldStyle constraints(BoxConstraintsMix value) {
     return merge(RemixTextFieldStyle(
