@@ -1,6 +1,7 @@
 part of 'spinner.dart';
 
-class RemixSpinnerStyle extends RemixStyle<RemixSpinnerSpec, RemixSpinnerStyle> {
+class RemixSpinnerStyle
+    extends RemixStyle<RemixSpinnerSpec, RemixSpinnerStyle> {
   final Prop<double>? $size;
   final Prop<double>? $strokeWidth;
   final Prop<Color>? $color;

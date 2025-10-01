@@ -190,7 +190,7 @@ class RemixCheckboxStyle
   }) {
     return merge(
       RemixCheckboxStyle(
-        container: BoxStyler(alignment: alignment, transform: value),
+        container: BoxStyler(transform: value, transformAlignment: alignment),
       ),
     );
   }

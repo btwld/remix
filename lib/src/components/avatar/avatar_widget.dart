@@ -86,14 +86,16 @@ class RemixAvatar extends StyleWidget<RemixAvatarSpec> {
             ? StyledText(resolvedLabel, styleSpec: spec.text)
             : StyleSpecBuilder<TextSpec>(
                 styleSpec: spec.text,
-                builder: (context, textSpec) => labelBuilder!(context, textSpec, resolvedLabel),
+                builder: (context, textSpec) =>
+                    labelBuilder!(context, textSpec, resolvedLabel),
               );
       } else if (iconBuilder != null || icon != null) {
         content = iconBuilder == null
             ? StyledIcon(icon: icon, styleSpec: spec.icon)
             : StyleSpecBuilder<IconSpec>(
                 styleSpec: spec.icon,
-                builder: (context, iconSpec) => iconBuilder!(context, iconSpec, icon),
+                builder: (context, iconSpec) =>
+                    iconBuilder!(context, iconSpec, icon),
               );
       }
     }

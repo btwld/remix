@@ -1,8 +1,7 @@
 part of 'switch.dart';
 
-
-
-class RemixSwitchStyle extends RemixContainerStyle<RemixSwitchSpec, RemixSwitchStyle> {
+class RemixSwitchStyle
+    extends RemixContainerStyle<RemixSwitchSpec, RemixSwitchStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<BoxSpec>>? $track;
   final Prop<StyleSpec<BoxSpec>>? $thumb;
@@ -140,7 +139,7 @@ class RemixSwitchStyle extends RemixContainerStyle<RemixSwitchSpec, RemixSwitchS
     AlignmentGeometry alignment = Alignment.center,
   }) {
     return merge(RemixSwitchStyle(
-      container: BoxStyler(alignment: alignment, transform: value),
+      container: BoxStyler(transform: value, transformAlignment: alignment),
     ));
   }
 
@@ -154,6 +153,3 @@ class RemixSwitchStyle extends RemixContainerStyle<RemixSwitchSpec, RemixSwitchS
         $modifier,
       ];
 }
-
-
-

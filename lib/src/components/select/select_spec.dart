@@ -56,7 +56,8 @@ class RemixSelectSpec extends Spec<RemixSelectSpec> with Diagnosticable {
   List<Object?> get props => [trigger, menuContainer, item, position];
 }
 
-class RemixSelectTriggerSpec extends Spec<RemixSelectTriggerSpec> with Diagnosticable {
+class RemixSelectTriggerSpec extends Spec<RemixSelectTriggerSpec>
+    with Diagnosticable {
   final StyleSpec<FlexBoxSpec> container;
   final StyleSpec<TextSpec> label;
   final StyleSpec<IconSpec> icon;
@@ -104,7 +105,8 @@ class RemixSelectTriggerSpec extends Spec<RemixSelectTriggerSpec> with Diagnosti
   List<Object?> get props => [container, label, icon];
 }
 
-class RemixSelectMenuItemSpec extends Spec<RemixSelectMenuItemSpec> with Diagnosticable {
+class RemixSelectMenuItemSpec extends Spec<RemixSelectMenuItemSpec>
+    with Diagnosticable {
   final StyleSpec<FlexBoxSpec> container;
   final StyleSpec<TextSpec> text;
   final StyleSpec<IconSpec> icon;

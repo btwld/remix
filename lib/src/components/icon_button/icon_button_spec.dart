@@ -1,6 +1,7 @@
 part of 'icon_button.dart';
 
-class RemixIconButtonSpec extends Spec<RemixIconButtonSpec> with Diagnosticable {
+class RemixIconButtonSpec extends Spec<RemixIconButtonSpec>
+    with Diagnosticable {
   final StyleSpec<BoxSpec> container;
   final StyleSpec<IconSpec> icon;
   final StyleSpec<RemixSpinnerSpec> spinner;

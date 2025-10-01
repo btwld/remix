@@ -1,6 +1,7 @@
 part of 'radio.dart';
 
-class RemixRadioStyle extends RemixContainerStyle<RemixRadioSpec, RemixRadioStyle> {
+class RemixRadioStyle
+    extends RemixContainerStyle<RemixRadioSpec, RemixRadioStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<BoxSpec>>? $indicatorContainer;
   final Prop<StyleSpec<BoxSpec>>? $indicator;
@@ -140,7 +141,7 @@ class RemixRadioStyle extends RemixContainerStyle<RemixRadioSpec, RemixRadioStyl
   }) {
     return merge(
       RemixRadioStyle(
-        container: BoxStyler(alignment: alignment, transform: value),
+        container: BoxStyler(transform: value, transformAlignment: alignment),
       ),
     );
   }

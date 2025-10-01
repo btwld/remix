@@ -70,7 +70,7 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
   String? _radioValue = 'option1';
   bool _switchValue = false;
   double _sliderValue = 0.5;
-  double _progressValue = 0.7;
+  final double _progressValue = 0.7;
 
   Widget _buildSection(String title, Widget content) {
     return Column(
@@ -128,10 +128,10 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
             const SizedBox(height: 32),
 
             // Buttons Section
-            _buildSection('Buttons', _ButtonsSection()),
+            _buildSection('Buttons', const _ButtonsSection()),
 
             // Icon Buttons Section
-            _buildSection('Icon Buttons', _IconButtonsSection()),
+            _buildSection('Icon Buttons', const _IconButtonsSection()),
 
             // Form Controls Section
             _buildSection(
@@ -183,7 +183,7 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
                     style: TextStyle(fontWeight: FontWeight.w600),
                   ),
                   const SizedBox(height: 8),
-                  _TextFieldSection(),
+                  const _TextFieldSection(),
                 ],
               ),
             ),
@@ -200,7 +200,7 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
                     style: TextStyle(fontWeight: FontWeight.w600),
                   ),
                   const SizedBox(height: 8),
-                  _BadgeSection(),
+                  const _BadgeSection(),
                   const SizedBox(height: 16),
 
                   // Progress
@@ -218,7 +218,7 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
                     style: TextStyle(fontWeight: FontWeight.w600),
                   ),
                   const SizedBox(height: 8),
-                  _SpinnerSection(),
+                  const _SpinnerSection(),
                 ],
               ),
             ),
@@ -244,7 +244,7 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
             ),
 
             // Layout Section
-            _buildSection('Layout', _CardSection()),
+            _buildSection('Layout', const _CardSection()),
           ],
         ),
       ),

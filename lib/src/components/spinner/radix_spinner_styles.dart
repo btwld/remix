@@ -28,11 +28,11 @@ class FortalSpinnerStyles {
     FortalSpinnerSize size = FortalSpinnerSize.size2,
   }) {
     return RemixSpinnerStyle(
-        // Default properties (no focus state for spinners)
-        color: FortalTokens.accent9(), // Uses accent step 9 as per spec
-        duration: const Duration(milliseconds: 800), // per component token
-        type: SpinnerType.solid,
-      )
+      // Default properties (no focus state for spinners)
+      color: FortalTokens.accent9(), // Uses accent step 9 as per spec
+      duration: const Duration(milliseconds: 800), // per component token
+      type: SpinnerType.solid,
+    )
         // Merge with size-specific styles
         .merge(_sizeStyle(size));
   }
@@ -42,7 +42,6 @@ class FortalSpinnerStyles {
   }) {
     return base(size: size);
   }
-
 
   // ---------------------------------------------------------------------------
   // Internal builders

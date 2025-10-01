@@ -32,7 +32,8 @@ class RemixTooltip extends StatelessWidget {
     return NakedPopover(
       popoverBuilder: (context, info) => StyleBuilder(
         style: style,
-        builder: (context, spec) => Box(styleSpec: spec.container, child: tooltipChild),
+        builder: (context, spec) =>
+            Box(styleSpec: spec.container, child: tooltipChild),
       ),
       builder: (context, state, _) {
         return StyleBuilder(

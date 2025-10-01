@@ -2,7 +2,8 @@ part of 'divider.dart';
 
 // Private per-component constants (none)
 
-class RemixDividerStyle extends RemixContainerStyle<RemixDividerSpec, RemixDividerStyle> {
+class RemixDividerStyle
+    extends RemixContainerStyle<RemixDividerSpec, RemixDividerStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
 
   const RemixDividerStyle.create({
@@ -90,7 +91,7 @@ class RemixDividerStyle extends RemixContainerStyle<RemixDividerSpec, RemixDivid
     AlignmentGeometry alignment = Alignment.center,
   }) {
     return merge(RemixDividerStyle(
-      container: BoxStyler(alignment: alignment, transform: value),
+      container: BoxStyler(transform: value, transformAlignment: alignment),
     ));
   }
 
@@ -118,5 +119,3 @@ class RemixDividerStyle extends RemixContainerStyle<RemixDividerSpec, RemixDivid
   @override
   List<Object?> get props => [$container, $variants, $animation, $modifier];
 }
-
-

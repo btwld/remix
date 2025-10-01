@@ -51,7 +51,8 @@ class RemixBadge extends StyleWidget<RemixBadgeSpec> {
           ? StyledText(resolvedLabel, styleSpec: spec.text)
           : StyleSpecBuilder<TextSpec>(
               styleSpec: spec.text,
-              builder: (context, textSpec) => labelBuilder!(context, textSpec, resolvedLabel),
+              builder: (context, textSpec) =>
+                  labelBuilder!(context, textSpec, resolvedLabel),
             );
     }
 

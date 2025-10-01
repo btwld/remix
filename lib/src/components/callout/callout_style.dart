@@ -152,7 +152,7 @@ class RemixCalloutStyle
     AlignmentGeometry alignment = Alignment.center,
   }) {
     return merge(RemixCalloutStyle(
-      container: FlexBoxStyler(alignment: alignment, transform: value),
+      container: FlexBoxStyler(transform: value, transformAlignment: alignment),
     ));
   }
 

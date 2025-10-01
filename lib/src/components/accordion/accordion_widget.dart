@@ -139,7 +139,9 @@ class RemixAccordion<T> extends StatelessWidget {
   static late final styleFrom = RemixAccordionItemStyle.new;
 
   Widget _buildDefaultTrigger(
-      BuildContext context, NakedAccordionItemState<T> state,) {
+    BuildContext context,
+    NakedAccordionItemState<T> state,
+  ) {
     return StyleBuilder(
       style: style,
       controller: NakedAccordionItemState.controllerOf(context),
@@ -148,13 +150,13 @@ class RemixAccordion<T> extends StatelessWidget {
           styleSpec: spec.trigger,
           children: [
             if (title != null) StyledText(title!, styleSpec: spec.title),
-            if (icon != null)
-              StyledIcon(
-                icon: state.isExpanded
-                    ? Icons.keyboard_arrow_up
-                    : Icons.keyboard_arrow_down,
-                styleSpec: spec.icon,
-              ),
+            StyledIcon(
+              icon: icon ??
+                  (state.isExpanded
+                      ? Icons.keyboard_arrow_up
+                      : Icons.keyboard_arrow_down),
+              styleSpec: spec.icon,
+            ),
           ],
         );
       },

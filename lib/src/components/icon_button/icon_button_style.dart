@@ -171,7 +171,7 @@ class RemixIconButtonStyle
     AlignmentGeometry alignment = Alignment.center,
   }) {
     return merge(RemixIconButtonStyle(
-      container: BoxStyler(alignment: alignment, transform: value),
+      container: BoxStyler(transform: value, transformAlignment: alignment),
     ));
   }
 

@@ -125,7 +125,7 @@ class RemixTooltipStyle
     AlignmentGeometry alignment = Alignment.center,
   }) {
     return merge(RemixTooltipStyle(
-      container: BoxStyler(alignment: alignment, transform: value),
+      container: BoxStyler(transform: value, transformAlignment: alignment),
     ));
   }
 

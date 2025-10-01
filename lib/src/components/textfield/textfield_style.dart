@@ -253,7 +253,7 @@ class RemixTextFieldStyle
     AlignmentGeometry alignment = Alignment.center,
   }) {
     return merge(RemixTextFieldStyle(
-      container: FlexBoxStyler(alignment: alignment, transform: value),
+      container: FlexBoxStyler(transform: value, transformAlignment: alignment),
     ));
   }
 

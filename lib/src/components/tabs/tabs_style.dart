@@ -1,6 +1,7 @@
 part of 'tabs.dart';
 
-class RemixTabsStyle extends RemixFlexContainerStyle<RemixTabsSpec, RemixTabsStyle> {
+class RemixTabsStyle
+    extends RemixFlexContainerStyle<RemixTabsSpec, RemixTabsStyle> {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<RemixTabSpec>>? $tab;
   final Prop<StyleSpec<BoxSpec>>? $tabView;
@@ -52,17 +53,31 @@ class RemixTabsStyle extends RemixFlexContainerStyle<RemixTabsSpec, RemixTabsSty
 
   @override
   RemixTabsStyle color(Color value) {
-    return merge(RemixTabsStyle(container: FlexBoxStyler(decoration: BoxDecorationMix(color: value))));
+    return merge(RemixTabsStyle(
+      container: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
+    ));
   }
 
   @override
   RemixTabsStyle size(double width, double height) {
-    return merge(RemixTabsStyle(container: FlexBoxStyler(constraints: BoxConstraintsMix(minWidth: width, maxWidth: width, minHeight: height, maxHeight: height))));
+    return merge(RemixTabsStyle(
+      container: FlexBoxStyler(
+        constraints: BoxConstraintsMix(
+          minWidth: width,
+          maxWidth: width,
+          minHeight: height,
+          maxHeight: height,
+        ),
+      ),
+    ));
   }
 
   @override
   RemixTabsStyle borderRadius(BorderRadiusGeometryMix radius) {
-    return merge(RemixTabsStyle(container: FlexBoxStyler(decoration: BoxDecorationMix(borderRadius: radius))));
+    return merge(RemixTabsStyle(
+      container:
+          FlexBoxStyler(decoration: BoxDecorationMix(borderRadius: radius)),
+    ));
   }
 
   @override
@@ -82,12 +97,19 @@ class RemixTabsStyle extends RemixFlexContainerStyle<RemixTabsSpec, RemixTabsSty
 
   @override
   RemixTabsStyle foregroundDecoration(DecorationMix value) {
-    return merge(RemixTabsStyle(container: FlexBoxStyler(foregroundDecoration: value)));
+    return merge(
+      RemixTabsStyle(container: FlexBoxStyler(foregroundDecoration: value)),
+    );
   }
 
   @override
-  RemixTabsStyle transform(Matrix4 value, {AlignmentGeometry alignment = Alignment.center}) {
-    return merge(RemixTabsStyle(container: FlexBoxStyler(alignment: alignment, transform: value)));
+  RemixTabsStyle transform(
+    Matrix4 value, {
+    AlignmentGeometry alignment = Alignment.center,
+  }) {
+    return merge(RemixTabsStyle(
+      container: FlexBoxStyler(transform: value, transformAlignment: alignment),
+    ));
   }
 
   @override
@@ -256,7 +278,7 @@ class RemixTabStyle extends RemixFlexContainerStyle<RemixTabSpec, RemixTabStyle>
     AlignmentGeometry alignment = Alignment.center,
   }) {
     return merge(RemixTabStyle(
-      container: FlexBoxStyler(alignment: alignment, transform: value),
+      container: FlexBoxStyler(transform: value, transformAlignment: alignment),
     ));
   }
 

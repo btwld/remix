@@ -13,7 +13,9 @@ class RemixCardSpec extends Spec<RemixCardSpec> with Diagnosticable {
   RemixCardSpec lerp(RemixCardSpec? other, double t) {
     if (other == null) return this;
 
-    return RemixCardSpec(container: MixOps.lerp(container, other.container, t)!);
+    return RemixCardSpec(
+      container: MixOps.lerp(container, other.container, t)!,
+    );
   }
 
   @override

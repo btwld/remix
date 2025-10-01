@@ -1,6 +1,7 @@
 part of 'avatar.dart';
 
-class RemixAvatarStyle extends RemixContainerStyle<RemixAvatarSpec, RemixAvatarStyle>
+class RemixAvatarStyle
+    extends RemixContainerStyle<RemixAvatarSpec, RemixAvatarStyle>
     with LabelStyleMixin<RemixAvatarStyle>, IconStyleMixin<RemixAvatarStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $text;
@@ -187,7 +188,7 @@ class RemixAvatarStyle extends RemixContainerStyle<RemixAvatarSpec, RemixAvatarS
     AlignmentGeometry alignment = Alignment.center,
   }) {
     return merge(RemixAvatarStyle(
-      container: BoxStyler(alignment: alignment, transform: value),
+      container: BoxStyler(transform: value, transformAlignment: alignment),
     ));
   }
 

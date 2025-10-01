@@ -50,7 +50,7 @@ class _SliderExampleState extends State<SliderExample> {
                 BoxShadowMix()
                     .color(Colors.black54)
                     .blurRadius(4)
-                    .offset(Offset(0, 2)),
+                    .offset(const Offset(0, 2)),
               ),
         )
         .thumbColor(Colors.white)

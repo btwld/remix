@@ -1,6 +1,7 @@
 part of 'badge.dart';
 
-class RemixBadgeStyle extends RemixContainerStyle<RemixBadgeSpec, RemixBadgeStyle>
+class RemixBadgeStyle
+    extends RemixContainerStyle<RemixBadgeSpec, RemixBadgeStyle>
     with LabelStyleMixin<RemixBadgeStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $text;
@@ -110,7 +111,7 @@ class RemixBadgeStyle extends RemixContainerStyle<RemixBadgeSpec, RemixBadgeStyl
     AlignmentGeometry alignment = Alignment.center,
   }) {
     return merge(RemixBadgeStyle(
-      container: BoxStyler(alignment: alignment, transform: value),
+      container: BoxStyler(transform: value, transformAlignment: alignment),
     ));
   }
 

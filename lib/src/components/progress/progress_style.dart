@@ -142,7 +142,7 @@ class RemixProgressStyle
     AlignmentGeometry alignment = Alignment.center,
   }) {
     return merge(RemixProgressStyle(
-      container: BoxStyler(alignment: alignment, transform: value),
+      container: BoxStyler(transform: value, transformAlignment: alignment),
     ));
   }
 

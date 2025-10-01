@@ -13,7 +13,9 @@ class FortalAccordionTheme {
           .paddingY(FortalTokens.space3())
           .borderRadiusAll(FortalTokens.radius2())
           .borderAll(
-              color: FortalTokens.gray6(), width: FortalTokens.borderWidth1(),)
+            color: FortalTokens.gray6(),
+            width: FortalTokens.borderWidth1(),
+          )
           .color(FortalTokens.gray1()),
       title: TextStyler()
           .fontSize(15)
