@@ -51,6 +51,11 @@ class RemixCardStyle
     return merge(RemixCardStyle(container: BoxStyler(margin: value)));
   }
 
+  /// Sets container alignment
+  RemixCardStyle alignment(Alignment value) {
+    return merge(RemixCardStyle(container: BoxStyler(alignment: value)));
+  }
+
   /// Sets container decoration
   RemixCardStyle decoration(DecorationMix value) {
     return merge(RemixCardStyle(container: BoxStyler(decoration: value)));

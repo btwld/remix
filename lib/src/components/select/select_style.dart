@@ -230,6 +230,11 @@ class RemixSelectTriggerStyle extends RemixFlexContainerStyle<
     );
   }
 
+  /// Sets container alignment
+  RemixSelectTriggerStyle alignment(Alignment value) {
+    return merge(RemixSelectTriggerStyle(container: FlexBoxStyler(alignment: value)));
+  }
+
   @override
   RemixSelectTriggerStyle variants(
     List<VariantStyle<RemixSelectTriggerSpec>> value,
@@ -399,6 +404,11 @@ class RemixSelectMenuItemStyle extends RemixFlexContainerStyle<
     return merge(
       RemixSelectMenuItemStyle(container: FlexBoxStyler(decoration: value)),
     );
+  }
+
+  /// Sets container alignment
+  RemixSelectMenuItemStyle alignment(Alignment value) {
+    return merge(RemixSelectMenuItemStyle(container: FlexBoxStyler(alignment: value)));
   }
 
   @override

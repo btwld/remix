@@ -94,6 +94,11 @@ class RemixIconButtonStyle
     return merge(RemixIconButtonStyle(container: BoxStyler(margin: value)));
   }
 
+  /// Sets container alignment
+  RemixIconButtonStyle alignment(Alignment value) {
+    return merge(RemixIconButtonStyle(container: BoxStyler(alignment: value)));
+  }
+
   /// Sets decoration
   RemixIconButtonStyle decoration(DecorationMix value) {
     return merge(RemixIconButtonStyle(container: BoxStyler(decoration: value)));

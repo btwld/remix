@@ -94,6 +94,11 @@ class RemixAvatarStyle
     return merge(RemixAvatarStyle(container: BoxStyler(margin: value)));
   }
 
+  /// Sets container alignment
+  RemixAvatarStyle alignment(Alignment value) {
+    return merge(RemixAvatarStyle(container: BoxStyler(alignment: value)));
+  }
+
   /// Sets decoration
   RemixAvatarStyle decoration(DecorationMix value) {
     return merge(RemixAvatarStyle(container: BoxStyler(decoration: value)));

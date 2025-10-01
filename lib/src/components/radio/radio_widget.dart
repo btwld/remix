@@ -116,13 +116,10 @@ class RemixRadio<T> extends StatelessWidget {
           style: style,
           controller: NakedState.controllerOf(context),
           builder: (context, spec) {
-            // Build the radio indicator
-            final radioIndicator = Box(
-              styleSpec: spec.indicatorContainer,
+            return Box(
+              styleSpec: spec.container,
               child: isSelected ? Box(styleSpec: spec.indicator) : null,
             );
-
-            return Box(styleSpec: spec.container, child: radioIndicator);
           },
         );
       },

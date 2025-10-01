@@ -112,6 +112,11 @@ class RemixDialogStyle
     return merge(RemixDialogStyle(container: BoxStyler(margin: value)));
   }
 
+  /// Sets container alignment
+  RemixDialogStyle alignment(Alignment value) {
+    return merge(RemixDialogStyle(container: BoxStyler(alignment: value)));
+  }
+
   @override
   RemixDialogStyle foregroundDecoration(DecorationMix value) {
     return merge(

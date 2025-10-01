@@ -1,51 +1,31 @@
 part of 'tabs.dart';
 
-class RemixTabsSpec extends Spec<RemixTabsSpec> with Diagnosticable {
+class RemixTabBarSpec extends Spec<RemixTabBarSpec> with Diagnosticable {
   final StyleSpec<FlexBoxSpec> container;
-  final StyleSpec<RemixTabSpec> tab;
-  final StyleSpec<BoxSpec> tabView;
 
-  const RemixTabsSpec({
-    StyleSpec<FlexBoxSpec>? container,
-    StyleSpec<RemixTabSpec>? tab,
-    StyleSpec<BoxSpec>? tabView,
-  })  : container = container ?? const StyleSpec(spec: FlexBoxSpec()),
-        tab = tab ?? const StyleSpec(spec: RemixTabSpec()),
-        tabView = tabView ?? const StyleSpec(spec: BoxSpec());
+  const RemixTabBarSpec({StyleSpec<FlexBoxSpec>? container})
+      : container = container ?? const StyleSpec(spec: FlexBoxSpec());
 
-  RemixTabsSpec copyWith({
-    StyleSpec<FlexBoxSpec>? container,
-    StyleSpec<RemixTabSpec>? tab,
-    StyleSpec<BoxSpec>? tabView,
-  }) {
-    return RemixTabsSpec(
-      container: container ?? this.container,
-      tab: tab ?? this.tab,
-      tabView: tabView ?? this.tabView,
-    );
+  RemixTabBarSpec copyWith({StyleSpec<FlexBoxSpec>? container}) {
+    return RemixTabBarSpec(container: container ?? this.container);
   }
 
-  RemixTabsSpec lerp(RemixTabsSpec? other, double t) {
+  RemixTabBarSpec lerp(RemixTabBarSpec? other, double t) {
     if (other == null) return this;
 
-    return RemixTabsSpec(
+    return RemixTabBarSpec(
       container: MixOps.lerp(container, other.container, t)!,
-      tab: MixOps.lerp(tab, other.tab, t)!,
-      tabView: MixOps.lerp(tabView, other.tabView, t)!,
     );
   }
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('container', container))
-      ..add(DiagnosticsProperty('tab', tab))
-      ..add(DiagnosticsProperty('tabView', tabView));
+    properties.add(DiagnosticsProperty('container', container));
   }
 
   @override
-  List<Object?> get props => [container, tab, tabView];
+  List<Object?> get props => [container];
 }
 
 class RemixTabSpec extends Spec<RemixTabSpec> with Diagnosticable {
@@ -94,4 +74,32 @@ class RemixTabSpec extends Spec<RemixTabSpec> with Diagnosticable {
 
   @override
   List<Object?> get props => [container, label, icon];
+}
+
+class RemixTabViewSpec extends Spec<RemixTabViewSpec> with Diagnosticable {
+  final StyleSpec<BoxSpec> container;
+
+  const RemixTabViewSpec({StyleSpec<BoxSpec>? container})
+      : container = container ?? const StyleSpec(spec: BoxSpec());
+
+  RemixTabViewSpec copyWith({StyleSpec<BoxSpec>? container}) {
+    return RemixTabViewSpec(container: container ?? this.container);
+  }
+
+  RemixTabViewSpec lerp(RemixTabViewSpec? other, double t) {
+    if (other == null) return this;
+
+    return RemixTabViewSpec(
+      container: MixOps.lerp(container, other.container, t)!,
+    );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty('container', container));
+  }
+
+  @override
+  List<Object?> get props => [container];
 }

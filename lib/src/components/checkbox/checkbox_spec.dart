@@ -11,8 +11,7 @@ part of 'checkbox.dart';
 /// 3. **Widget classes** (like [RemixCheckbox]) consume specs to render UI
 ///
 /// The RemixCheckboxSpec contains [StyleSpec] properties for the visual pieces of
-/// the checkbox: the overall container, the indicator container (checkbox box),
-/// and the indicator icon (checkmark).
+/// the checkbox: the container (checkbox box) and the indicator icon (checkmark).
 ///
 /// ## Architecture Overview
 ///
@@ -25,9 +24,8 @@ part of 'checkbox.dart';
 ///
 /// A checkbox component consists of these styled elements:
 /// ```
-/// [container]
-///   └── [indicatorContainer] (the checkbox box)
-///       └── [indicator] (checkmark icon)
+/// [container] (the checkbox box)
+///   └── [indicator] (checkmark icon)
 /// ```
 ///
 /// ## Usage
@@ -48,8 +46,7 @@ part of 'checkbox.dart';
 /// ## Properties
 ///
 /// Each [StyleSpec] property corresponds to a visual element:
-/// - [container]: Overall wrapper around the control for padding/alignment
-/// - [indicatorContainer]: The checkbox box styling (background, border, size)
+/// - [container]: The checkbox box styling (background, border, size, padding)
 /// - [indicator]: The checkmark icon styling (color, size)
 ///
 /// See also:
@@ -57,19 +54,12 @@ part of 'checkbox.dart';
 /// - [RemixCheckbox] for the widget implementation
 /// - [Spec] for the base specification pattern
 class RemixCheckboxSpec extends Spec<RemixCheckboxSpec> with Diagnosticable {
-  /// Styling specification for the checkbox's container.
-  ///
-  /// Controls the overall layout, spacing, and arrangement for the
-  /// checkbox indicator. Uses [BoxSpec] so callers can style padding,
-  /// alignment, and decoration around the control itself.
-  final StyleSpec<BoxSpec> container;
-
-  /// Styling specification for the checkbox indicator's container.
+  /// Styling specification for the checkbox box container.
   ///
   /// Defines the appearance of the checkbox box itself, including
   /// background color, border, size, and shape. This is the visual
   /// element that users click to toggle the checkbox state.
-  final StyleSpec<BoxSpec> indicatorContainer;
+  final StyleSpec<BoxSpec> container;
 
   /// Styling specification for the checkbox indicator icon.
   ///
@@ -91,17 +81,14 @@ class RemixCheckboxSpec extends Spec<RemixCheckboxSpec> with Diagnosticable {
   /// Example:
   /// ```dart
   /// const spec = RemixCheckboxSpec(
-  ///   indicatorContainer: StyleSpec(spec: BoxSpec()),
+  ///   container: StyleSpec(spec: BoxSpec()),
   ///   indicator: StyleSpec(spec: IconSpec()),
   /// );
   /// ```
   const RemixCheckboxSpec({
     StyleSpec<BoxSpec>? container,
-    StyleSpec<BoxSpec>? indicatorContainer,
     StyleSpec<IconSpec>? indicator,
   })  : container = container ?? const StyleSpec(spec: BoxSpec()),
-        indicatorContainer =
-            indicatorContainer ?? const StyleSpec(spec: BoxSpec()),
         indicator = indicator ?? const StyleSpec(spec: IconSpec());
 
   /// Creates a copy of this RemixCheckboxSpec with the given fields replaced.
@@ -118,12 +105,10 @@ class RemixCheckboxSpec extends Spec<RemixCheckboxSpec> with Diagnosticable {
   /// ```
   RemixCheckboxSpec copyWith({
     StyleSpec<BoxSpec>? container,
-    StyleSpec<BoxSpec>? indicatorContainer,
     StyleSpec<IconSpec>? indicator,
   }) {
     return RemixCheckboxSpec(
       container: container ?? this.container,
-      indicatorContainer: indicatorContainer ?? this.indicatorContainer,
       indicator: indicator ?? this.indicator,
     );
   }
@@ -154,8 +139,6 @@ class RemixCheckboxSpec extends Spec<RemixCheckboxSpec> with Diagnosticable {
 
     return RemixCheckboxSpec(
       container: MixOps.lerp(container, other.container, t)!,
-      indicatorContainer:
-          MixOps.lerp(indicatorContainer, other.indicatorContainer, t)!,
       indicator: MixOps.lerp(indicator, other.indicator, t)!,
     );
   }
@@ -165,10 +148,9 @@ class RemixCheckboxSpec extends Spec<RemixCheckboxSpec> with Diagnosticable {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', container))
-      ..add(DiagnosticsProperty('indicatorContainer', indicatorContainer))
       ..add(DiagnosticsProperty('indicator', indicator));
   }
 
   @override
-  List<Object?> get props => [container, indicatorContainer, indicator];
+  List<Object?> get props => [container, indicator];
 }

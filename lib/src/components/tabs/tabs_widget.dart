@@ -40,7 +40,6 @@ class RemixTabs extends StatelessWidget {
     this.orientation = Axis.horizontal,
     this.enabled = true,
     this.onEscapePressed,
-    this.style = const RemixTabsStyle.create(),
   }) : assert(
           controller != null || selectedTabId != null,
           'Either controller or selectedTabId must be provided',
@@ -67,11 +66,6 @@ class RemixTabs extends StatelessWidget {
   /// Called when Escape is pressed while a tab has focus.
   final VoidCallback? onEscapePressed;
 
-  /// The style configuration for the tabs.
-  final RemixTabsStyle style;
-
-  static late final styleFrom = RemixTabsStyle.new;
-
   @override
   Widget build(BuildContext context) {
     return NakedTabs(
@@ -81,26 +75,35 @@ class RemixTabs extends StatelessWidget {
       orientation: orientation,
       enabled: enabled,
       onEscapePressed: onEscapePressed,
-      child: StyleBuilder(
-        style: style,
-        builder: (context, spec) {
-          return FlexBox(styleSpec: spec.container, children: [child]);
-        },
-      ),
+      child: child,
     );
   }
 }
 
 /// A container widget for tab buttons.
 class RemixTabBar extends StatelessWidget {
-  const RemixTabBar({super.key, required this.child});
+  const RemixTabBar({
+    super.key,
+    required this.child,
+    this.style = const RemixTabBarStyle.create(),
+  });
 
   /// The tab buttons.
   final Widget child;
 
+  /// Style applied to the tab bar container.
+  final RemixTabBarStyle style;
+
+  static late final styleFrom = RemixTabBarStyle.new;
+
   @override
   Widget build(BuildContext context) {
-    return child;
+    return StyleBuilder<RemixTabBarSpec>(
+      style: style,
+      builder: (context, spec) {
+        return FlexBox(styleSpec: spec.container, children: [child]);
+      },
+    );
   }
 }
 
@@ -175,6 +178,27 @@ class RemixTab extends StatelessWidget {
 
   static late final styleFrom = RemixTabStyle.new;
 
+  Widget _buildTabContent(
+    BuildContext context,
+    RemixTabSpec spec,
+    NakedTabState state,
+  ) {
+    final defaultContent = child ??
+        FlexBox(
+          styleSpec: spec.container,
+          children: [
+            if (icon != null) StyledIcon(icon: icon!, styleSpec: spec.icon),
+            if (label != null) StyledText(label!, styleSpec: spec.label),
+          ],
+        );
+
+    if (builder != null) {
+      return builder!(context, state, defaultContent);
+    }
+
+    return defaultContent;
+  }
+
   @override
   Widget build(BuildContext context) {
     return NakedTab(
@@ -189,29 +213,10 @@ class RemixTab extends StatelessWidget {
       onPressChange: onPressChange,
       semanticLabel: semanticLabel ?? label,
       builder: (context, state, _) {
-        return StyleBuilder(
+        return StyleBuilder<RemixTabSpec>(
           style: style,
           controller: NakedTabState.controllerOf(context),
-          builder: (context, spec) {
-            // Use custom builder if provided
-            if (builder != null) {
-              return builder!(context, state, child);
-            }
-
-            // Use custom child if provided
-            if (child != null) {
-              return child!;
-            }
-
-            // Default content with label and icon
-            return FlexBox(
-              styleSpec: spec.container,
-              children: [
-                if (icon != null) StyledIcon(icon: icon!, styleSpec: spec.icon),
-                if (label != null) StyledText(label!, styleSpec: spec.label),
-              ],
-            );
-          },
+          builder: (context, spec) => _buildTabContent(context, spec, state),
         );
       },
     );
@@ -220,7 +225,12 @@ class RemixTab extends StatelessWidget {
 
 /// A tab content panel that is shown when its corresponding tab is selected.
 class RemixTabView extends StatelessWidget {
-  const RemixTabView({super.key, required this.tabId, required this.child});
+  const RemixTabView({
+    super.key,
+    required this.tabId,
+    required this.child,
+    this.style = const RemixTabViewStyle.create(),
+  });
 
   /// The unique identifier that matches a tab.
   final String tabId;
@@ -228,8 +238,21 @@ class RemixTabView extends StatelessWidget {
   /// The content to show when this tab is selected.
   final Widget child;
 
+  /// Style applied to the tab view container.
+  final RemixTabViewStyle style;
+
+  static late final styleFrom = RemixTabViewStyle.new;
+
   @override
   Widget build(BuildContext context) {
-    return NakedTabView(tabId: tabId, child: child);
+    return NakedTabView(
+      tabId: tabId,
+      child: StyleBuilder<RemixTabViewSpec>(
+        style: style,
+        builder: (context, spec) {
+          return Box(styleSpec: spec.container, child: child);
+        },
+      ),
+    );
   }
 }
