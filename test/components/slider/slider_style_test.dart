@@ -5,9 +5,9 @@ import 'package:remix/remix.dart';
 void main() {
   testWidgets('track thickness persists after color updates', (tester) async {
     final style = RemixSliderStyle()
-        .trackThickness(6.0)
-        .baseTrackColor(Colors.red)
-        .activeTrackColor(Colors.blue);
+        .thickness(6.0)
+        .trackColor(Colors.red)
+        .rangeColor(Colors.blue);
 
     late RemixSliderSpec resolved;
 
@@ -22,8 +22,8 @@ void main() {
       ),
     );
 
-    expect(resolved.baseTrack.strokeWidth, closeTo(6.0, 0.001));
-    expect(resolved.activeTrack.strokeWidth, closeTo(6.0, 0.001));
+    expect(resolved.track.strokeWidth, closeTo(6.0, 0.001));
+    expect(resolved.range.strokeWidth, closeTo(6.0, 0.001));
   });
 
   testWidgets('thumbSize helper applies tight constraints', (tester) async {

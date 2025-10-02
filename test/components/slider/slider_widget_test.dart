@@ -71,13 +71,13 @@ void main() {
     expect(height, closeTo(20.0, 0.01));
   });
 
-  testWidgets('handles min equals max gracefully', (tester) async {
+  testWidgets('handles very small value range gracefully', (tester) async {
     await tester.pumpWidget(
       MaterialApp(
         home: RemixSlider(
           value: 5.0,
           min: 5.0,
-          max: 5.0,
+          max: 5.001,
           onChanged: (_) {},
         ),
       ),

@@ -3,31 +3,31 @@ part of 'slider.dart';
 class RemixSliderStyle
     extends RemixContainerStyle<RemixSliderSpec, RemixSliderStyle> {
   final Prop<StyleSpec<BoxSpec>>? $thumb;
-  final Prop<Paint>? $baseTrack;
-  final Prop<Paint>? $activeTrack;
+  final Prop<Paint>? $track;
+  final Prop<Paint>? $range;
 
   const RemixSliderStyle.create({
     Prop<StyleSpec<BoxSpec>>? thumb,
-    Prop<Paint>? baseTrack,
-    Prop<Paint>? activeTrack,
+    Prop<Paint>? track,
+    Prop<Paint>? range,
     super.variants,
     super.animation,
     super.modifier,
   })  : $thumb = thumb,
-        $baseTrack = baseTrack,
-        $activeTrack = activeTrack;
+        $track = track,
+        $range = range;
 
   RemixSliderStyle({
     BoxStyler? thumb,
-    Paint? baseTrack,
-    Paint? activeTrack,
+    Paint? track,
+    Paint? range,
     AnimationConfig? animation,
     List<VariantStyle<RemixSliderSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
           thumb: Prop.maybeMix(thumb),
-          baseTrack: baseTrack != null ? Prop.value(baseTrack) : null,
-          activeTrack: activeTrack != null ? Prop.value(activeTrack) : null,
+          track: track != null ? Prop.value(track) : null,
+          range: range != null ? Prop.value(range) : null,
           variants: variants,
           animation: animation,
           modifier: modifier,
@@ -40,26 +40,26 @@ class RemixSliderStyle
     ));
   }
 
-  /// Sets base track color
-  RemixSliderStyle baseTrackColor(Color value) {
+  /// Sets track color (background rail)
+  RemixSliderStyle trackColor(Color value) {
     return merge(
       RemixSliderStyle(
-        baseTrack: _buildTrackPaint(
-          $baseTrack,
-          fallback: _defaultBaseTrackPaint,
+        track: _buildTrackPaint(
+          $track,
+          fallback: _defaultTrackPaint,
           color: value,
         ),
       ),
     );
   }
 
-  /// Sets active track color
-  RemixSliderStyle activeTrackColor(Color value) {
+  /// Sets range color (filled progress portion)
+  RemixSliderStyle rangeColor(Color value) {
     return merge(
       RemixSliderStyle(
-        activeTrack: _buildTrackPaint(
-          $activeTrack,
-          fallback: _defaultActiveTrackPaint,
+        range: _buildTrackPaint(
+          $range,
+          fallback: _defaultRangePaint,
           color: value,
         ),
       ),
@@ -85,44 +85,44 @@ class RemixSliderStyle
     return merge(RemixSliderStyle(thumb: BoxStyler(alignment: value)));
   }
 
-  /// Sets stroke width for both base and active tracks.
+  /// Sets stroke width for both track and range.
+  RemixSliderStyle thickness(double value) {
+    return merge(
+      RemixSliderStyle(
+        track: _buildTrackPaint(
+          $track,
+          fallback: _defaultTrackPaint,
+          strokeWidth: value,
+        ),
+        range: _buildTrackPaint(
+          $range,
+          fallback: _defaultRangePaint,
+          strokeWidth: value,
+        ),
+      ),
+    );
+  }
+
+  /// Sets stroke width for the track only (background rail).
   RemixSliderStyle trackThickness(double value) {
     return merge(
       RemixSliderStyle(
-        baseTrack: _buildTrackPaint(
-          $baseTrack,
-          fallback: _defaultBaseTrackPaint,
-          strokeWidth: value,
-        ),
-        activeTrack: _buildTrackPaint(
-          $activeTrack,
-          fallback: _defaultActiveTrackPaint,
+        track: _buildTrackPaint(
+          $track,
+          fallback: _defaultTrackPaint,
           strokeWidth: value,
         ),
       ),
     );
   }
 
-  /// Sets stroke width for the base track only.
-  RemixSliderStyle baseTrackThickness(double value) {
+  /// Sets stroke width for the range only (filled portion).
+  RemixSliderStyle rangeThickness(double value) {
     return merge(
       RemixSliderStyle(
-        baseTrack: _buildTrackPaint(
-          $baseTrack,
-          fallback: _defaultBaseTrackPaint,
-          strokeWidth: value,
-        ),
-      ),
-    );
-  }
-
-  /// Sets stroke width for the active track only.
-  RemixSliderStyle activeTrackThickness(double value) {
-    return merge(
-      RemixSliderStyle(
-        activeTrack: _buildTrackPaint(
-          $activeTrack,
-          fallback: _defaultActiveTrackPaint,
+        range: _buildTrackPaint(
+          $range,
+          fallback: _defaultRangePaint,
           strokeWidth: value,
         ),
       ),
@@ -200,8 +200,8 @@ class RemixSliderStyle
     return StyleSpec(
       spec: RemixSliderSpec(
         thumb: MixOps.resolve(context, $thumb),
-        baseTrack: MixOps.resolve(context, $baseTrack),
-        activeTrack: MixOps.resolve(context, $activeTrack),
+        track: MixOps.resolve(context, $track),
+        range: MixOps.resolve(context, $range),
       ),
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
@@ -214,8 +214,8 @@ class RemixSliderStyle
 
     return RemixSliderStyle.create(
       thumb: MixOps.merge($thumb, other.$thumb),
-      baseTrack: MixOps.merge($baseTrack, other.$baseTrack),
-      activeTrack: MixOps.merge($activeTrack, other.$activeTrack),
+      track: MixOps.merge($track, other.$track),
+      range: MixOps.merge($range, other.$range),
       variants: MixOps.mergeVariants($variants, other.$variants),
       animation: MixOps.mergeAnimation($animation, other.$animation),
       modifier: MixOps.mergeModifier($modifier, other.$modifier),
@@ -240,8 +240,8 @@ class RemixSliderStyle
   @override
   List<Object?> get props => [
         $thumb,
-        $baseTrack,
-        $activeTrack,
+        $track,
+        $range,
         $variants,
         $animation,
         $modifier,

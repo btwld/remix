@@ -55,13 +55,13 @@ class _SliderExampleState extends State<SliderExample> {
               ),
         )
         .thumbColor(Colors.white)
-        .trackThickness(12)
-        .baseTrackColor(Colors.grey.shade300)
-        .activeTrackColor(Colors.blue)
+        .thickness(12)
+        .trackColor(Colors.grey.shade300)
+        .rangeColor(Colors.blue)
         .onDisabled(
           RemixSliderStyle()
-              .baseTrackColor(Colors.grey.shade300)
-              .activeTrackColor(Colors.blueGrey)
+              .trackColor(Colors.grey.shade300)
+              .rangeColor(Colors.blueGrey)
               .thumbColor(Colors.white.withValues(alpha: 0.6)),
         );
   }

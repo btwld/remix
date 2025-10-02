@@ -56,10 +56,10 @@ class FortalSliderStyles {
     FortalSliderSize size = FortalSliderSize.size2,
   }) {
     return base(size: size)
-        // Base track styling (inactive portion)
-        .baseTrackColor(FortalTokens.accentTrack()) // gray6 equivalent
-        // Active track styling (active portion)
-        .activeTrackColor(FortalTokens.accentIndicator()) // accent9 equivalent
+        // Track styling (background rail)
+        .trackColor(FortalTokens.accentTrack()) // gray6 equivalent
+        // Range styling (filled portion)
+        .rangeColor(FortalTokens.accentIndicator()) // accent9 equivalent
         // Thumb styling with border
         .thumb(
           BoxStyler()
@@ -73,8 +73,8 @@ class FortalSliderStyles {
         // Disabled state
         .onDisabled(
           RemixSliderStyle()
-              .baseTrackColor(FortalTokens.accentTrack())
-              .activeTrackColor(FortalTokens.accentIndicator())
+              .trackColor(FortalTokens.accentTrack())
+              .rangeColor(FortalTokens.accentIndicator())
               .thumb(
                 BoxStyler().color(FortalTokens.colorSurface()).borderAll(
                       color: FortalTokens.gray7(),
@@ -88,10 +88,10 @@ class FortalSliderStyles {
     FortalSliderSize size = FortalSliderSize.size2,
   }) {
     return base(size: size)
-        // Base track styling (inactive portion)
-        .baseTrackColor(FortalTokens.accentTrack()) // gray6 equivalent
-        // Active track styling (active portion)
-        .activeTrackColor(FortalTokens.accentIndicator()) // accent9 equivalent
+        // Track styling (background rail)
+        .trackColor(FortalTokens.accentTrack()) // gray6 equivalent
+        // Range styling (filled portion)
+        .rangeColor(FortalTokens.accentIndicator()) // accent9 equivalent
         // Thumb styling without border
         .thumb(
           BoxStyler()
@@ -101,8 +101,8 @@ class FortalSliderStyles {
         // Disabled state
         .onDisabled(
           RemixSliderStyle()
-              .baseTrackColor(FortalTokens.accentTrack())
-              .activeTrackColor(FortalTokens.accentIndicator())
+              .trackColor(FortalTokens.accentTrack())
+              .rangeColor(FortalTokens.accentIndicator())
               .thumbColor(FortalTokens.colorSurface()),
         );
   }
@@ -111,10 +111,10 @@ class FortalSliderStyles {
     FortalSliderSize size = FortalSliderSize.size2,
   }) {
     return base(size: size)
-        // Base track styling (inactive portion) - uses accent4 instead of gray
-        .baseTrackColor(FortalTokens.accent4())
-        // Active track styling (active portion) - uses accent9
-        .activeTrackColor(FortalTokens.accent9())
+        // Track styling (background rail) - uses accent4 instead of gray
+        .trackColor(FortalTokens.accent4())
+        // Range styling (filled portion) - uses accent9
+        .rangeColor(FortalTokens.accent9())
         // Thumb styling - uses accent9 color
         .thumb(
           BoxStyler()
@@ -124,8 +124,8 @@ class FortalSliderStyles {
         // Disabled state
         .onDisabled(
           RemixSliderStyle()
-              .baseTrackColor(FortalTokens.accent4())
-              .activeTrackColor(FortalTokens.accent9())
+              .trackColor(FortalTokens.accent4())
+              .rangeColor(FortalTokens.accent9())
               .thumbColor(FortalTokens.accent9()),
         );
   }
@@ -138,11 +138,11 @@ class FortalSliderStyles {
     return switch (size) {
       FortalSliderSize.size1 => RemixSliderStyle(
           thumb: BoxStyler().width(16.0).height(16.0),
-          baseTrack: Paint()
+          track: Paint()
             ..strokeWidth = 4.0
             ..strokeCap = StrokeCap.round
             ..style = PaintingStyle.stroke,
-          activeTrack: Paint()
+          range: Paint()
             ..strokeWidth = 4.0
             ..strokeCap = StrokeCap.round
             ..style = PaintingStyle.stroke,
@@ -152,22 +152,22 @@ class FortalSliderStyles {
       // slider-thumb-size = calc(track-size + space-1) = 14px
       FortalSliderSize.size2 => RemixSliderStyle(
           thumb: BoxStyler().width(14.0).height(14.0),
-          baseTrack: Paint()
+          track: Paint()
             ..strokeWidth = 10.0
             ..strokeCap = StrokeCap.round
             ..style = PaintingStyle.stroke,
-          activeTrack: Paint()
+          range: Paint()
             ..strokeWidth = 10.0
             ..strokeCap = StrokeCap.round
             ..style = PaintingStyle.stroke,
         ),
       FortalSliderSize.size3 => RemixSliderStyle(
           thumb: BoxStyler().width(24.0).height(24.0),
-          baseTrack: Paint()
+          track: Paint()
             ..strokeWidth = 8.0
             ..strokeCap = StrokeCap.round
             ..style = PaintingStyle.stroke,
-          activeTrack: Paint()
+          range: Paint()
             ..strokeWidth = 8.0
             ..strokeCap = StrokeCap.round
             ..style = PaintingStyle.stroke,
