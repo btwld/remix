@@ -23,11 +23,14 @@ Widget createRemixScope({
   List<Type>? orderOfModifiers,
   fortal.FortalAccentColor accent = fortal.FortalAccentColor.indigo,
   fortal.FortalGrayColor gray = fortal.FortalGrayColor.slate,
+  Brightness? brightnessOverride,
 }) {
   return Builder(builder: (context) {
-    // Determine theme brightness
-    final theme = Theme.of(context);
-    final brightness = theme.brightness;
+    // Determine brightness, prioritizing explicit override and platform
+    final brightness = resolveRemixBrightness(
+      context,
+      brightnessOverride: brightnessOverride,
+    );
 
     // Use createFortalScope which provides all the token values
     // RemixTokens now just references FortalTokens, so this provides everything
@@ -39,6 +42,42 @@ Widget createRemixScope({
       child: child,
     );
   });
+}
+
+@visibleForTesting
+Brightness resolveRemixBrightness(
+  BuildContext context, {
+  Brightness? brightnessOverride,
+}) {
+  final theme = Theme.of(context);
+  final maybeMediaQuery = MediaQuery.maybeOf(context);
+
+  return resolveRemixBrightnessValues(
+    brightnessOverride: brightnessOverride,
+    mediaQuery: maybeMediaQuery,
+    themeBrightness: theme.brightness,
+  );
+}
+
+@visibleForTesting
+Brightness resolveRemixBrightnessValues({
+  Brightness? brightnessOverride,
+  MediaQueryData? mediaQuery,
+  Brightness? themeBrightness,
+}) {
+  if (brightnessOverride != null) {
+    return brightnessOverride;
+  }
+
+  if (mediaQuery != null) {
+    return mediaQuery.platformBrightness;
+  }
+
+  if (themeBrightness != null) {
+    return themeBrightness;
+  }
+
+  return Brightness.light;
 }
 
 /// Configuration data for a legacy Remix theme.
@@ -56,11 +95,16 @@ class RemixThemeConfig {
   });
 
   /// Creates a MixScope with this theme configuration
-  Widget createScope({List<Type>? orderOfModifiers, required Widget child}) {
+  Widget createScope({
+    List<Type>? orderOfModifiers,
+    Brightness? brightnessOverride,
+    required Widget child,
+  }) {
     return createRemixScope(
       orderOfModifiers: orderOfModifiers,
       accent: accent,
       gray: gray,
+      brightnessOverride: brightnessOverride,
       child: child,
     );
   }

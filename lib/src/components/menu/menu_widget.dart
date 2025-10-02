@@ -1,29 +1,117 @@
 part of 'menu.dart';
 
-/// A customizable menu component that provides dropdown functionality.
+// ============================================================================
+// DATA CLASSES - Trigger and Menu Item Hierarchy
+// ============================================================================
+
+/// Data class representing a menu trigger.
+///
+/// Used with [RemixMenu] to define the trigger button that opens the menu.
+/// The trigger displays an optional icon (leading position) and label text.
+class RemixMenuTrigger {
+  /// The text label to display in the trigger.
+  final String label;
+
+  /// Optional icon to display before the label.
+  /// When provided, icon appears in leading position (before text).
+  final IconData? icon;
+
+  const RemixMenuTrigger({required this.label, this.icon});
+}
+
+/// Base sealed class for all menu item types.
+///
+/// This ensures type safety and exhaustive pattern matching when
+/// handling menu items. Use [RemixMenuItem] for selectable items
+/// and [RemixMenuDivider] for visual separators.
+sealed class RemixMenuItemData<T> {
+  const RemixMenuItemData();
+}
+
+/// Data class representing a selectable menu item.
+///
+/// Used with [RemixMenu]'s items list to define selectable menu items.
+final class RemixMenuItem<T> extends RemixMenuItemData<T> {
+  /// The value associated with this menu item.
+  /// Passed to onSelected callback when item is activated.
+  final T value;
+
+  /// The text label to display.
+  final String? label;
+
+  /// Icon to display before the label.
+  final IconData? leadingIcon;
+
+  /// Icon to display after the label.
+  final IconData? trailingIcon;
+
+  /// Whether this item can be selected.
+  final bool enabled;
+
+  /// Whether the menu closes when this item is activated.
+  final bool closeOnActivate;
+
+  /// Semantic label for accessibility.
+  final String? semanticLabel;
+
+  const RemixMenuItem({
+    required this.value,
+    this.label,
+    this.leadingIcon,
+    this.trailingIcon,
+    this.enabled = true,
+    this.closeOnActivate = true,
+    this.semanticLabel,
+  }) : assert(label != null, 'Must provide label for menu item');
+}
+
+/// Data class representing a menu divider.
+///
+/// Used with [RemixMenu]'s items list to visually separate groups of items.
+final class RemixMenuDivider<T> extends RemixMenuItemData<T> {
+  const RemixMenuDivider();
+}
+
+// ============================================================================
+// REMIX MENU - Main menu widget
+// ============================================================================
+
+/// A customizable menu component with data-driven API.
+///
+/// Uses a simple, declarative API with data classes for trigger and items.
+/// All styling is centralized in [RemixMenuStyle] and passed directly to children.
 ///
 /// ## Example
 ///
 /// ```dart
+/// // Simple usage - controller created automatically
 /// RemixMenu<String>(
+///   trigger: RemixMenuTrigger(label: 'Options', icon: Icons.more_vert),
+///   items: <RemixMenuItemData<String>>[
+///     RemixMenuItem(value: 'copy', label: 'Copy', leadingIcon: Icons.copy),
+///     RemixMenuItem(value: 'paste', label: 'Paste', leadingIcon: Icons.paste),
+///     RemixMenuDivider(),
+///     RemixMenuItem(value: 'delete', label: 'Delete', leadingIcon: Icons.delete),
+///   ],
 ///   onSelected: (value) => print('Selected: $value'),
-///   child: Text('Menu'),
-///   overlayBuilder: (context, info) => Column(
-///     children: [
-///       RemixMenuItem(value: 'copy', label: 'Copy'),
-///       RemixMenuItem(value: 'paste', label: 'Paste'),
-///       RemixMenuItem(value: 'delete', label: 'Delete'),
-///     ],
-///   ),
+///   style: FortalMenuTheme.menu,
+/// )
+///
+/// // Advanced usage - provide controller for programmatic control
+/// final menuController = MenuController();
+/// RemixMenu<String>(
+///   controller: menuController,
+///   trigger: RemixMenuTrigger(label: 'Options'),
+///   items: [...],
+///   onSelected: (value) => print(value),
 /// )
 /// ```
 class RemixMenu<T> extends StatelessWidget {
   const RemixMenu({
     super.key,
-    this.child,
-    this.builder,
-    required this.overlayBuilder,
-    required this.controller,
+    required this.trigger,
+    required this.items,
+    this.controller,
     this.onSelected,
     this.onOpen,
     this.onClose,
@@ -36,24 +124,18 @@ class RemixMenu<T> extends StatelessWidget {
     this.triggerFocusNode,
     this.positioning = const OverlayPositionConfig(),
     this.style = const RemixMenuStyle.create(),
-    this.icon,
-    this.label,
-  }) : assert(
-          child != null || builder != null || label != null,
-          'Either child, builder, or label must be provided',
-        );
+  });
 
-  /// The static trigger widget.
-  final Widget? child;
+  /// The trigger data that defines the menu's button.
+  final RemixMenuTrigger trigger;
 
-  /// Builds the trigger surface.
-  final ValueWidgetBuilder<NakedMenuState>? builder;
+  /// The list of menu items and dividers.
+  /// Use [RemixMenuItem] for selectable items and [RemixMenuDivider] for separators.
+  final List<RemixMenuItemData<T>> items;
 
-  /// Builds the overlay panel.
-  final RawMenuAnchorOverlayBuilder overlayBuilder;
-
-  /// Controls show/hide of the menu.
-  final NakedMenuController controller;
+  /// Optional controller for programmatic control of the menu state.
+  /// If not provided, an internal controller will be created automatically.
+  final MenuController? controller;
 
   /// Called when an item is selected.
   final ValueChanged<T>? onSelected;
@@ -89,19 +171,46 @@ class RemixMenu<T> extends StatelessWidget {
   /// The style configuration for the menu.
   final RemixMenuStyle style;
 
-  /// Optional icon to display in the trigger.
-  final IconData? icon;
-
-  /// Optional label text for the trigger.
-  final String? label;
-
   static late final styleFrom = RemixMenuStyle.new;
+
+  RemixMenuStyle _buildStyle() {
+    return RemixMenuStyle()
+        .trigger(RemixMenuTriggerStyle().mainAxisSize(MainAxisSize.min))
+        .overlay(
+          FlexBoxStyler().mainAxisSize(MainAxisSize.min).wrapIntrinsicWidth(),
+        )
+        .merge(style);
+  }
 
   @override
   Widget build(BuildContext context) {
+    // Use provided controller or create a default one
+    final effectiveController = controller ?? MenuController();
+
     return NakedMenu<T>(
-      overlayBuilder: overlayBuilder,
-      controller: controller,
+      // Render items list with direct spec passing
+      overlayBuilder: (context, info) {
+        return StyleBuilder(
+          style: _buildStyle(),
+          builder: (context, spec) {
+            return ColumnBox(
+              styleSpec: spec.overlay,
+              children: items.map((item) {
+                // Pattern matching ensures exhaustiveness
+                return switch (item) {
+                  RemixMenuItem<T>() => _RemixMenuItemWidget<T>(
+                      data: item,
+                      styleSpec: spec.item,
+                    ),
+                  RemixMenuDivider<T>() =>
+                    RemixDivider(styleSpec: spec.divider),
+                };
+              }).toList(),
+            );
+          },
+        );
+      },
+      controller: effectiveController,
       onSelected: onSelected,
       onOpen: onOpen,
       onClose: onClose,
@@ -113,29 +222,21 @@ class RemixMenu<T> extends StatelessWidget {
       closeOnClickOutside: closeOnClickOutside,
       triggerFocusNode: triggerFocusNode,
       positioning: positioning,
+      // Render trigger from RemixMenuTrigger data
       builder: (context, state, _) {
         return StyleBuilder(
-          style: style,
+          style: _buildStyle(),
           controller: NakedMenuState.controllerOf(context),
           builder: (context, spec) {
-            // Use custom builder if provided
-            if (builder != null) {
-              return builder!(context, state, child);
-            }
+            // Render trigger from data (label with optional leading icon)
+            final triggerSpec = spec.trigger.spec;
 
-            // Use custom child if provided
-            if (child != null) {
-              return child!;
-            }
-
-            // Default content with label and icon
-            return FlexBox(
-              styleSpec: spec.trigger,
+            return RowBox(
+              styleSpec: triggerSpec.container,
               children: [
-                if (icon != null)
-                  StyledIcon(icon: icon!, styleSpec: spec.triggerIcon),
-                if (label != null)
-                  StyledText(label!, styleSpec: spec.triggerLabel),
+                if (trigger.icon != null)
+                  StyledIcon(icon: trigger.icon!, styleSpec: triggerSpec.icon),
+                StyledText(trigger.label, styleSpec: triggerSpec.label),
               ],
             );
           },
@@ -145,91 +246,46 @@ class RemixMenu<T> extends StatelessWidget {
   }
 }
 
-/// An individual menu item.
-class RemixMenuItem<T> extends StatelessWidget {
-  const RemixMenuItem({
-    super.key,
-    required this.value,
-    this.child,
-    this.builder,
-    this.enabled = true,
-    this.closeOnActivate = true,
-    this.semanticLabel,
-    this.style = const RemixMenuItemStyle.create(),
-    this.label,
-    this.leadingIcon,
-    this.trailingIcon,
-  }) : assert(
-          child != null || builder != null || label != null,
-          'Either child, builder, or label must be provided',
-        );
+// ============================================================================
+// INTERNAL WIDGETS - Render data classes to actual widgets
+// ============================================================================
 
-  /// The value of this menu item.
-  final T value;
+/// Internal widget that renders [RemixMenuItem] data with provided styling.
+///
+/// Receives styling directly from parent [RemixMenu] via styleSpec parameter.
+class _RemixMenuItemWidget<T> extends StatelessWidget {
+  const _RemixMenuItemWidget({required this.data, required this.styleSpec});
 
-  /// The static content widget.
-  final Widget? child;
-
-  /// Custom builder for the menu item content.
-  final ValueWidgetBuilder<NakedMenuItemState<T>>? builder;
-
-  /// Whether this item is enabled.
-  final bool enabled;
-
-  /// Whether the menu closes when this item is activated.
-  final bool closeOnActivate;
-
-  /// Semantic label for accessibility.
-  final String? semanticLabel;
-
-  /// The style configuration for this menu item.
-  final RemixMenuItemStyle style;
-
-  /// Optional label text for the item.
-  final String? label;
-
-  /// Optional leading icon for the item.
-  final IconData? leadingIcon;
-
-  /// Optional trailing icon for the item.
-  final IconData? trailingIcon;
-
-  static late final styleFrom = RemixMenuItemStyle.new;
+  final RemixMenuItem<T> data;
+  final StyleSpec<RemixMenuItemSpec> styleSpec;
 
   @override
   Widget build(BuildContext context) {
+    final itemSpec = styleSpec.spec;
+
     return NakedMenuItem<T>(
-      value: value,
-      enabled: enabled,
-      semanticLabel: semanticLabel ?? label,
-      closeOnActivate: closeOnActivate,
+      value: data.value,
+      enabled: data.enabled,
+      semanticLabel: data.semanticLabel ?? data.label,
+      closeOnActivate: data.closeOnActivate,
       builder: (context, state, _) {
-        return StyleBuilder(
-          style: style,
-          controller: NakedMenuItemState.controllerOf(context),
-          builder: (context, spec) {
-            // Use custom builder if provided
-            if (builder != null) {
-              return builder!(context, state, child);
-            }
-
-            // Use custom child if provided
-            if (child != null) {
-              return child!;
-            }
-
-            // Default content with label and icons
-            return FlexBox(
-              styleSpec: spec.container,
-              children: [
-                if (leadingIcon != null)
-                  StyledIcon(icon: leadingIcon!, styleSpec: spec.leadingIcon),
-                if (label != null) StyledText(label!, styleSpec: spec.label),
-                if (trailingIcon != null)
-                  StyledIcon(icon: trailingIcon!, styleSpec: spec.trailingIcon),
-              ],
-            );
-          },
+        // Render item with label and icons
+        return FlexBox(
+          styleSpec: itemSpec.container,
+          children: [
+            if (data.leadingIcon != null)
+              StyledIcon(
+                icon: data.leadingIcon!,
+                styleSpec: itemSpec.leadingIcon,
+              ),
+            if (data.label != null)
+              StyledText(data.label!, styleSpec: itemSpec.label),
+            if (data.trailingIcon != null)
+              StyledIcon(
+                icon: data.trailingIcon!,
+                styleSpec: itemSpec.trailingIcon,
+              ),
+          ],
         );
       },
     );

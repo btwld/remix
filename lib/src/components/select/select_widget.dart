@@ -1,111 +1,122 @@
 part of 'select.dart';
 
-/// Builder function for customizing select trigger rendering.
-typedef RemixSelectTriggerBuilder<T> = Widget Function(
-  BuildContext context,
-  RemixSelectTriggerSpec spec,
-  T? selectedValue,
-  bool isOpen,
-);
+// ============================================================================
+// DATA CLASSES - Trigger and Select Item
+// ============================================================================
 
-/// Builder function for customizing select item rendering.
-typedef RemixSelectItemBuilder<T> = Widget Function(
-  BuildContext context,
-  RemixSelectMenuItemSpec spec,
-  T value,
-  bool isSelected,
-);
+/// Data class representing a select trigger.
+///
+/// Used with [RemixSelect] to define the trigger button that opens the dropdown.
+/// Displays placeholder text when no value is selected, or the selected value's label.
+class RemixSelectTrigger {
+  /// Placeholder text to display when no value is selected.
+  final String placeholder;
 
-/// A customizable select component that supports single selection modes,
-/// various styles, and behaviors. The select component integrates with the Mix styling
-/// system and follows Remix design patterns.
+  /// Optional icon to display before the label/placeholder.
+  /// When provided, icon appears in leading position (before text).
+  final IconData? icon;
+
+  const RemixSelectTrigger({required this.placeholder, this.icon});
+}
+
+/// Data class representing a selectable option.
+///
+/// Used with [RemixSelect]'s items list to define selectable options.
+class RemixSelectItem<T> {
+  /// The value associated with this option.
+  /// Passed to onChanged callback when selected.
+  final T value;
+
+  /// The text label to display.
+  final String label;
+
+  /// Whether this option can be selected.
+  final bool enabled;
+
+  /// Semantic label for accessibility.
+  final String? semanticLabel;
+
+  const RemixSelectItem({
+    required this.value,
+    required this.label,
+    this.enabled = true,
+    this.semanticLabel,
+  });
+}
+
+// ============================================================================
+// REMIX SELECT - Main select widget
+// ============================================================================
+
+/// A customizable select component with data-driven API.
+///
+/// Uses a simple, declarative API with data classes for trigger and items.
+/// Form input component for selecting a single value from a dropdown list.
 ///
 /// ## Example
 ///
 /// ```dart
 /// RemixSelect<String>(
-///   selectedValue: _value,
-///   onChanged: (value) {
-///     setState(() {
-///       _value = value;
-///     });
-///   },
-///   items: ['Option 1', 'Option 2', 'Option 3']
-///       .map((e) => RemixSelectItem(value: e, label: e))
-///       .toList(),
-///   style: SelectStyle(),
-///   triggerBuilder: (context, spec, value, isOpen) {
-///     return RowBox(
-///       styleSpec: spec.container,
-///       children: [
-///         Expanded(child: StyledText(value ?? 'Select an item', styleSpec: spec.label)),
-///         StyledIcon(
-///           icon: isOpen ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-///           styleSpec: spec.icon,
-///         ),
-///       ],
-///     );
-///   },
+///   trigger: RemixSelectTrigger(placeholder: 'Select a fruit'),
+///   items: [
+///     RemixSelectItem(value: 'apple', label: 'Apple'),
+///     RemixSelectItem(value: 'banana', label: 'Banana'),
+///     RemixSelectItem(value: 'orange', label: 'Orange'),
+///   ],
+///   selectedValue: selectedValue,
+///   onChanged: (value) => setState(() => selectedValue = value),
 /// )
 /// ```
 class RemixSelect<T> extends StatefulWidget {
   const RemixSelect({
     super.key,
-    this.triggerBuilder,
+    required this.trigger,
     required this.items,
-    this.onClose,
-    this.onOpen,
     this.selectedValue,
     this.onChanged,
+    this.onOpen,
+    this.onClose,
     this.enabled = true,
     this.semanticLabel,
     this.closeOnSelect = true,
-    this.autofocus = false,
     this.focusNode,
     this.style = const RemixSelectStyle.create(),
   });
 
-  /// Optional builder function for customizing the trigger widget.
-  /// If null, a default trigger will be created.
-  final RemixSelectTriggerBuilder<T>? triggerBuilder;
+  /// The trigger data that defines the select's button.
+  final RemixSelectTrigger trigger;
 
-  /// The menu items to display when the dropdown is open.
-  /// This should be a list of [RemixSelectItem] widgets.
-  final List<Widget> items;
+  /// The list of selectable items.
+  final List<RemixSelectItem<T>> items;
 
-  /// Called when the menu closes, either through selection or external interaction.
-  final VoidCallback? onClose;
-
-  /// The currently selected value in single selection mode.
+  /// The currently selected value.
   final T? selectedValue;
 
-  /// Called when the selected value changes in single selection mode.
+  /// Called when the selected value changes.
   final ValueChanged<T?>? onChanged;
 
+  /// Called when the dropdown opens.
+  final VoidCallback? onOpen;
+
+  /// Called when the dropdown closes.
+  final VoidCallback? onClose;
+
   /// Whether the select is enabled and can be interacted with.
-  /// When false, all interaction is disabled and the trigger shows a forbidden cursor.
   final bool enabled;
 
   /// Semantic label for accessibility.
-  /// Used by screen readers to identify the select component.
   final String? semanticLabel;
 
   /// Whether to automatically close the dropdown when an item is selected.
-  /// Set to false to keep the menu open after selection.
   final bool closeOnSelect;
-
-  /// Whether to automatically focus the menu when opened.
-  /// When true, enables immediate keyboard navigation.
-  final bool autofocus;
-
-  /// Called when the menu is opened.
-  final VoidCallback? onOpen;
 
   /// Optional focus node to control focus behavior.
   final FocusNode? focusNode;
 
   /// The style configuration for the select.
   final RemixSelectStyle style;
+
+  static late final styleFrom = RemixSelectStyle.new;
 
   @override
   State<RemixSelect<T>> createState() => _RemixSelectState<T>();
@@ -125,13 +136,42 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
     );
   }
 
-  Widget _buildOverlayMenu(RemixSelectSpec spec) => _AnimatedOverlayMenu(
-        controller: animationController,
-        duration: const Duration(milliseconds: 150),
-        curve: Curves.easeInOut,
-        menuContainer: spec.menuContainer,
-        items: widget.items,
-      );
+  RemixSelectStyle _buildStyle() {
+    return RemixSelectStyle()
+        .menuContainer(
+          FlexBoxStyler().mainAxisSize(MainAxisSize.min).wrapIntrinsicWidth(),
+        )
+        .merge(widget.style);
+  }
+
+  Widget _buildOverlayMenu(RemixSelectSpec spec) {
+    return _AnimatedOverlayMenu(
+      controller: animationController,
+      duration: const Duration(milliseconds: 150),
+      curve: Curves.easeInOut,
+      menuContainer: spec.menuContainer,
+      children: widget.items
+          .map((item) => _RemixSelectItemWidget<T>(
+                data: item,
+                styleSpec: spec.item,
+              ))
+          .toList(),
+    );
+  }
+
+  String _getDisplayLabel() {
+    if (widget.selectedValue == null) return widget.trigger.placeholder;
+
+    // Find the selected item and get its label
+    for (final item in widget.items) {
+      if (item.value == widget.selectedValue) {
+        return item.label;
+      }
+    }
+
+    // Gracefully degrade in release mode - show placeholder
+    return widget.trigger.placeholder;
+  }
 
   @override
   void dispose() {
@@ -139,15 +179,15 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
     super.dispose();
   }
 
-  RemixSelectStyle get _style => widget.style;
-
   @override
   Widget build(BuildContext context) {
     return NakedSelect<T>(
-      overlayBuilder: (context, info) => StyleBuilder<RemixSelectSpec>(
-        style: _style,
-        builder: (context, spec) => _buildOverlayMenu(spec),
-      ),
+      overlayBuilder: (context, info) {
+        return StyleBuilder<RemixSelectSpec>(
+          style: _buildStyle(),
+          builder: (context, spec) => _buildOverlayMenu(spec),
+        );
+      },
       value: widget.selectedValue,
       onChanged: widget.onChanged,
       closeOnSelect: widget.closeOnSelect,
@@ -164,42 +204,14 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
       },
       builder: (context, state, _) {
         return StyleBuilder<RemixSelectSpec>(
-          style: _style,
+          style: _buildStyle(),
           controller: NakedState.controllerOf(context),
-          inheritable: true,
           builder: (context, spec) {
-            return StyleSpecBuilder<RemixSelectTriggerSpec>(
+            return _RemixSelectTriggerWidget(
+              trigger: widget.trigger,
+              displayLabel: _getDisplayLabel(),
+              isOpen: state.isOpen,
               styleSpec: spec.trigger,
-              builder: (context, triggerSpec) {
-                if (widget.triggerBuilder != null) {
-                  return widget.triggerBuilder!(
-                    context,
-                    triggerSpec,
-                    widget.selectedValue,
-                    state.isOpen,
-                  );
-                }
-
-                // Default trigger when no builder provided
-                return RowBox(
-                  styleSpec: triggerSpec.container,
-                  children: [
-                    // ignore: avoid-flexible-outside-flex
-                    Expanded(
-                      child: StyledText(
-                        widget.selectedValue?.toString() ?? 'Select an option',
-                        styleSpec: triggerSpec.label,
-                      ),
-                    ),
-                    StyledIcon(
-                      icon: state.isOpen
-                          ? Icons.keyboard_arrow_up
-                          : Icons.keyboard_arrow_down,
-                      styleSpec: triggerSpec.icon,
-                    ),
-                  ],
-                );
-              },
             );
           },
         );
@@ -214,14 +226,14 @@ class _AnimatedOverlayMenu extends StatefulWidget {
     required this.duration,
     required this.curve,
     required this.menuContainer,
-    required this.items,
+    required this.children,
   });
 
   final AnimationController controller;
   final Duration duration;
   final Curve curve;
-  final StyleSpec<BoxSpec> menuContainer;
-  final List<Widget> items;
+  final StyleSpec<FlexBoxSpec> menuContainer;
+  final List<Widget> children;
 
   @override
   State<_AnimatedOverlayMenu> createState() => _AnimatedOverlayMenuState();
@@ -255,9 +267,9 @@ class _AnimatedOverlayMenuState extends State<_AnimatedOverlayMenu> {
           scale: scaleAnimation.value,
           child: Opacity(
             opacity: fadeAnimation.value,
-            child: Box(
+            child: ColumnBox(
               styleSpec: widget.menuContainer,
-              child: Column(children: widget.items),
+              children: widget.children,
             ),
           ),
         );
@@ -266,114 +278,77 @@ class _AnimatedOverlayMenuState extends State<_AnimatedOverlayMenu> {
   }
 }
 
-class RemixSelectItem<T> extends StatelessWidget {
-  const RemixSelectItem({
-    super.key,
-    required this.value,
-    this.label,
-    this.trailing = Icons.check,
-    this.enabled = true,
-    this.semanticLabel,
-    this.child,
-    this.itemBuilder,
-    this.style,
-  }) : assert(
-          label != null || child != null || itemBuilder != null,
-          'Must provide either label, child, or itemBuilder',
-        );
+// ============================================================================
+// INTERNAL WIDGETS - Trigger, Item, and Label
+// ============================================================================
 
-  /// The value associated with this item.
-  /// This value will be passed to the select's onChange callback when selected.
-  final T value;
+/// Internal widget for rendering the select trigger.
+class _RemixSelectTriggerWidget extends StatelessWidget {
+  const _RemixSelectTriggerWidget({
+    required this.trigger,
+    required this.displayLabel,
+    required this.isOpen,
+    required this.styleSpec,
+  });
 
-  /// The label to display on the item.
-  final String? label;
-
-  /// The icon to display on the item.
-  final IconData trailing;
-
-  /// Whether this item is enabled and can be selected.
-  /// When false, all interaction is disabled.
-  final bool enabled;
-
-  /// Semantic label for accessibility.
-  /// Used by screen readers to identify the item.
-  final String? semanticLabel;
-
-  /// Custom child widget that overrides the default label and icon layout.
-  final Widget? child;
-
-  /// Optional builder function for customizing the item widget.
-  /// If provided, overrides label, trailing, and child.
-  final RemixSelectItemBuilder<T>? itemBuilder;
-
-  /// Optional style for this specific item.
-  /// If provided, overrides the inherited style.
-  final RemixSelectStyle? style;
+  final RemixSelectTrigger trigger;
+  final String displayLabel;
+  final bool isOpen;
+  final StyleSpec<RemixSelectTriggerSpec> styleSpec;
 
   @override
   Widget build(BuildContext context) {
-    // Get style from provider in build method, allow override with style
-    final styleFromProvider = StyleProvider.maybeOf<RemixSelectSpec>(context);
-    final effectiveStyle =
-        style ?? styleFromProvider ?? const RemixSelectStyle.create();
+    return StyleSpecBuilder<RemixSelectTriggerSpec>(
+      styleSpec: styleSpec,
+      builder: (context, spec) {
+        return RowBox(
+          styleSpec: spec.container,
+          children: [
+            if (trigger.icon != null)
+              StyledIcon(icon: trigger.icon!, styleSpec: spec.icon),
+            Expanded(child: StyledText(displayLabel, styleSpec: spec.label)),
+            StyledIcon(
+              icon:
+                  isOpen ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+              styleSpec: spec.icon,
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
 
-    // NakedSelect.Option handles semantics internally, no outer Semantics needed
+/// Internal widget for rendering a selectable item.
+class _RemixSelectItemWidget<T> extends StatelessWidget {
+  const _RemixSelectItemWidget({
+    required this.data,
+    required this.styleSpec,
+  });
+
+  final RemixSelectItem<T> data;
+  final StyleSpec<RemixSelectMenuItemSpec> styleSpec;
+
+  @override
+  Widget build(BuildContext context) {
     return NakedSelect.Option<T>(
-      enabled: enabled,
-      semanticLabel: semanticLabel ?? label,
-      value: value,
+      enabled: data.enabled,
+      semanticLabel: data.semanticLabel ?? data.label,
+      value: data.value,
       builder: (context, states, _) {
-        return StyleBuilder<RemixSelectSpec>(
-          style: effectiveStyle,
-          controller: NakedState.controllerOf(context),
-          inheritable: true,
+        return StyleSpecBuilder<RemixSelectMenuItemSpec>(
+          styleSpec: styleSpec,
           builder: (context, spec) {
-            final itemSpec = spec.item;
-
-            // Build item content progressively
-            Widget itemContent;
-
-            // Use itemBuilder if provided
-            if (itemBuilder != null) {
-              itemContent = StyleSpecBuilder<RemixSelectMenuItemSpec>(
-                styleSpec: itemSpec,
-                builder: (context, resolvedItemSpec) {
-                  return itemBuilder!(
-                    context,
-                    resolvedItemSpec,
-                    value,
-                    states.isSelected,
-                  );
-                },
-              );
-            } else if (child != null) {
-              // Use custom child if provided
-              itemContent = child!;
-            } else if (label != null) {
-              // Default content with label using StyleSpecBuilder
-              itemContent = StyleSpecBuilder<RemixSelectMenuItemSpec>(
-                styleSpec: itemSpec,
-                builder: (context, resolvedItemSpec) {
-                  return RowBox(
-                    styleSpec: resolvedItemSpec.container,
-                    children: [
-                      StyledText(label!, styleSpec: resolvedItemSpec.text),
-                      if (states.isSelected)
-                        StyledIcon(
-                          icon: trailing,
-                          styleSpec: resolvedItemSpec.icon,
-                        ),
-                    ],
-                  );
-                },
-              );
-            } else {
-              // Fallback to empty widget
-              itemContent = const SizedBox.shrink();
-            }
-
-            return itemContent;
+            return RowBox(
+              styleSpec: spec.container,
+              children: [
+                Expanded(
+                  child: StyledText(data.label, styleSpec: spec.text),
+                ),
+                if (states.isSelected)
+                  StyledIcon(icon: Icons.check, styleSpec: spec.icon),
+              ],
+            );
           },
         );
       },

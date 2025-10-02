@@ -38,6 +38,9 @@ class _SelectDemoState extends State<SelectDemo> {
           SizedBox(
             width: 200,
             child: RemixSelect<String>(
+              trigger: const RemixSelectTrigger(
+                placeholder: 'Select item...',
+              ),
               selectedValue: selectedValue,
               onChanged: (value) =>
                   setState(() => selectedValue = value ?? ''),
@@ -48,8 +51,6 @@ class _SelectDemoState extends State<SelectDemo> {
                   label: items[index],
                 ),
               ),
-              triggerBuilder: (context, spec, selectedValue, isOpen) =>
-                Text(selectedValue?.isNotEmpty == true ? selectedValue! : 'Select item...'),
             ),
           ),
         ],

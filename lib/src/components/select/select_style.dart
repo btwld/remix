@@ -1,13 +1,13 @@
 part of 'select.dart';
 
 class RemixSelectStyle extends RemixStyle<RemixSelectSpec, RemixSelectStyle> {
-  final Prop<StyleSpec<BoxSpec>>? $menuContainer;
+  final Prop<StyleSpec<FlexBoxSpec>>? $menuContainer;
   final Prop<StyleSpec<RemixSelectTriggerSpec>>? $trigger;
   final Prop<StyleSpec<RemixSelectMenuItemSpec>>? $item;
   final Prop<StyleSpec<RemixCompositedTransformFollowerSpec>>? $position;
 
   const RemixSelectStyle.create({
-    Prop<StyleSpec<BoxSpec>>? menuContainer,
+    Prop<StyleSpec<FlexBoxSpec>>? menuContainer,
     Prop<StyleSpec<RemixSelectTriggerSpec>>? trigger,
     Prop<StyleSpec<RemixSelectMenuItemSpec>>? item,
     Prop<StyleSpec<RemixCompositedTransformFollowerSpec>>? position,
@@ -20,7 +20,7 @@ class RemixSelectStyle extends RemixStyle<RemixSelectSpec, RemixSelectStyle> {
         $position = position;
 
   RemixSelectStyle({
-    BoxStyler? menuContainer,
+    FlexBoxStyler? menuContainer,
     RemixSelectTriggerStyle? trigger,
     RemixSelectMenuItemStyle? item,
     RemixCompositedTransformFollowerStyle? position,
@@ -38,7 +38,7 @@ class RemixSelectStyle extends RemixStyle<RemixSelectSpec, RemixSelectStyle> {
         );
 
   /// Sets menu container styling
-  RemixSelectStyle menuContainer(BoxStyler value) {
+  RemixSelectStyle menuContainer(FlexBoxStyler value) {
     return merge(RemixSelectStyle(menuContainer: value));
   }
 
@@ -57,11 +57,53 @@ class RemixSelectStyle extends RemixStyle<RemixSelectSpec, RemixSelectStyle> {
     return merge(RemixSelectStyle(position: value));
   }
 
+  /// Creates a [RemixSelect] widget with this style applied.
+  ///
+  /// Example:
+  /// ```dart
+  /// RemixSelectStyle()
+  ///   .trigger(...)
+  ///   .menuContainer(...)
+  ///   .call<String>(
+  ///     trigger: RemixSelectTrigger(placeholder: 'Select an option'),
+  ///     items: [
+  ///       RemixSelectItem(value: 'apple', label: 'Apple'),
+  ///       RemixSelectItem(value: 'banana', label: 'Banana'),
+  ///     ],
+  ///   )
+  /// ```
+  RemixSelect<T> call<T>({
+    required RemixSelectTrigger trigger,
+    required List<RemixSelectItem<T>> items,
+    T? selectedValue,
+    ValueChanged<T?>? onChanged,
+    VoidCallback? onOpen,
+    VoidCallback? onClose,
+    bool enabled = true,
+    bool closeOnSelect = true,
+    String? semanticLabel,
+    FocusNode? focusNode,
+  }) {
+    return RemixSelect(
+      trigger: trigger,
+      items: items,
+      selectedValue: selectedValue,
+      onChanged: onChanged,
+      onOpen: onOpen,
+      onClose: onClose,
+      enabled: enabled,
+      semanticLabel: semanticLabel,
+      closeOnSelect: closeOnSelect,
+      focusNode: focusNode,
+      style: this,
+    );
+  }
+
   // Abstract method implementations for mixins (delegating to menuContainer)
 
   RemixSelectStyle foregroundDecoration(DecorationMix value) {
     return merge(RemixSelectStyle(
-      menuContainer: BoxStyler(foregroundDecoration: value),
+      menuContainer: FlexBoxStyler(foregroundDecoration: value),
     ));
   }
 
@@ -70,7 +112,7 @@ class RemixSelectStyle extends RemixStyle<RemixSelectSpec, RemixSelectStyle> {
     AlignmentGeometry alignment = Alignment.center,
   }) {
     return merge(RemixSelectStyle(
-      menuContainer: BoxStyler(transform: value, transformAlignment: alignment),
+      menuContainer: FlexBoxStyler(transform: value, transformAlignment: alignment),
     ));
   }
 
@@ -204,7 +246,7 @@ class RemixSelectTriggerStyle extends RemixFlexContainerStyle<
     return RemixSelectTriggerStyle.create(
       container: MixOps.merge($container, other.$container),
       label: MixOps.merge($label, other.$label),
-      icon: other.$icon ?? $icon,
+      icon: MixOps.merge($icon, other.$icon),
       variants: MixOps.mergeVariants($variants, other.$variants),
       animation: MixOps.mergeAnimation($animation, other.$animation),
       modifier: MixOps.mergeModifier($modifier, other.$modifier),
@@ -278,7 +320,9 @@ class RemixSelectTriggerStyle extends RemixFlexContainerStyle<
   // FlexStyleMixin implementation
   @override
   RemixSelectTriggerStyle flex(FlexStyler value) {
-    return merge(RemixSelectTriggerStyle(container: FlexBoxStyler()));
+    return merge(
+      RemixSelectTriggerStyle(container: FlexBoxStyler().flex(value)),
+    );
   }
 
   @override
@@ -345,6 +389,7 @@ class RemixSelectMenuItemStyle extends RemixFlexContainerStyle<
     );
   }
 
+  /// Sets label styling (delegates to text for consistency with mixin)
   @override
   RemixSelectMenuItemStyle label(TextStyler value) {
     return text(value);
@@ -369,8 +414,8 @@ class RemixSelectMenuItemStyle extends RemixFlexContainerStyle<
 
     return RemixSelectMenuItemStyle.create(
       container: MixOps.merge($container, other.$container),
-      text: other.$text ?? $text,
-      icon: other.$icon ?? $icon,
+      text: MixOps.merge($text, other.$text),
+      icon: MixOps.merge($icon, other.$icon),
       variants: MixOps.mergeVariants($variants, other.$variants),
       animation: MixOps.mergeAnimation($animation, other.$animation),
       modifier: MixOps.mergeModifier($modifier, other.$modifier),
@@ -444,7 +489,9 @@ class RemixSelectMenuItemStyle extends RemixFlexContainerStyle<
   // FlexStyleMixin implementation
   @override
   RemixSelectMenuItemStyle flex(FlexStyler value) {
-    return merge(RemixSelectMenuItemStyle(container: FlexBoxStyler()));
+    return merge(
+      RemixSelectMenuItemStyle(container: FlexBoxStyler().flex(value)),
+    );
   }
 
   @override
@@ -519,9 +566,9 @@ class RemixCompositedTransformFollowerStyle
     if (other == null) return this;
 
     return RemixCompositedTransformFollowerStyle.create(
-      targetAnchor: other.$targetAnchor ?? $targetAnchor,
-      followerAnchor: other.$followerAnchor ?? $followerAnchor,
-      offset: other.$offset ?? $offset,
+      targetAnchor: MixOps.merge($targetAnchor, other.$targetAnchor),
+      followerAnchor: MixOps.merge($followerAnchor, other.$followerAnchor),
+      offset: MixOps.merge($offset, other.$offset),
       variants: MixOps.mergeVariants($variants, other.$variants),
       animation: MixOps.mergeAnimation($animation, other.$animation),
       modifier: MixOps.mergeModifier($modifier, other.$modifier),

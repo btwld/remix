@@ -2,24 +2,24 @@ part of 'select.dart';
 
 class RemixSelectSpec extends Spec<RemixSelectSpec> with Diagnosticable {
   final StyleSpec<RemixSelectTriggerSpec> trigger;
-  final StyleSpec<BoxSpec> menuContainer;
+  final StyleSpec<FlexBoxSpec> menuContainer;
   final StyleSpec<RemixSelectMenuItemSpec> item;
   final StyleSpec<RemixCompositedTransformFollowerSpec> position;
 
   const RemixSelectSpec({
     StyleSpec<RemixSelectTriggerSpec>? trigger,
-    StyleSpec<BoxSpec>? menuContainer,
+    StyleSpec<FlexBoxSpec>? menuContainer,
     StyleSpec<RemixSelectMenuItemSpec>? item,
     StyleSpec<RemixCompositedTransformFollowerSpec>? position,
   })  : trigger = trigger ?? const StyleSpec(spec: RemixSelectTriggerSpec()),
         item = item ?? const StyleSpec(spec: RemixSelectMenuItemSpec()),
-        menuContainer = menuContainer ?? const StyleSpec(spec: BoxSpec()),
+        menuContainer = menuContainer ?? const StyleSpec(spec: FlexBoxSpec()),
         position = position ??
             const StyleSpec(spec: RemixCompositedTransformFollowerSpec());
 
   RemixSelectSpec copyWith({
     StyleSpec<RemixSelectTriggerSpec>? trigger,
-    StyleSpec<BoxSpec>? menuContainer,
+    StyleSpec<FlexBoxSpec>? menuContainer,
     StyleSpec<RemixSelectMenuItemSpec>? item,
     StyleSpec<RemixCompositedTransformFollowerSpec>? position,
   }) {
