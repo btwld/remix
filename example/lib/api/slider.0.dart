@@ -45,16 +45,24 @@ class _SliderExampleState extends State<SliderExample> {
 
   RemixSliderStyle get style {
     return RemixSliderStyle()
+        .thumbSize(const Size(24, 24))
         .thumb(
-          BoxStyler().width(24).shapeCircle().shadow(
+          BoxStyler().shapeCircle().shadow(
                 BoxShadowMix()
-                    .color(Colors.black54)
+                    .color(Colors.black45)
                     .blurRadius(4)
                     .offset(const Offset(0, 2)),
               ),
         )
         .thumbColor(Colors.white)
+        .trackThickness(12)
         .baseTrackColor(Colors.grey.shade300)
-        .activeTrackColor(Colors.blue);
+        .activeTrackColor(Colors.blue)
+        .onDisabled(
+          RemixSliderStyle()
+              .baseTrackColor(Colors.grey.shade300)
+              .activeTrackColor(Colors.blueGrey)
+              .thumbColor(Colors.white.withValues(alpha: 0.6)),
+        );
   }
 }

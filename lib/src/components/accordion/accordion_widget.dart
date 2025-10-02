@@ -2,23 +2,34 @@ part of 'accordion.dart';
 
 typedef RemixAccordionController<T> = NakedAccordionController<T>;
 
-/// A customizable accordion group component.
+/// A purely behavioral accordion group component that manages expansion state.
+///
+/// The [RemixAccordionGroup] manages which accordion items are expanded/collapsed
+/// and enforces min/max expansion constraints through its controller.
+/// It provides no styling - wrap it in your own container if you need layout styling.
+/// Each [RemixAccordion] item must be styled individually.
 ///
 /// ## Example
 ///
 /// ```dart
-/// RemixAccordionGroup<String>(
-///   controller: RemixAccordionController<String>(min: 0, max: 1),
+/// Column(
 ///   children: [
-///     RemixAccordion<String>(
-///       value: 'item1',
-///       title: 'First Item',
-///       child: Text('First content'),
-///     ),
-///     RemixAccordion<String>(
-///       value: 'item2',
-///       title: 'Second Item',
-///       child: Text('Second content'),
+///     RemixAccordionGroup<String>(
+///       controller: RemixAccordionController<String>(min: 0, max: 1),
+///       children: [
+///         RemixAccordion<String>(
+///           value: 'item1',
+///           title: 'First Item',
+///           style: itemStyle,
+///           child: Text('First content'),
+///         ),
+///         RemixAccordion<String>(
+///           value: 'item2',
+///           title: 'Second Item',
+///           style: itemStyle,
+///           child: Text('Second content'),
+///         ),
+///       ],
 ///     ),
 ///   ],
 /// )
@@ -29,7 +40,6 @@ class RemixAccordionGroup<T> extends StatelessWidget {
     required this.children,
     required this.controller,
     this.initialExpandedValues = const [],
-    this.style = const RemixAccordionStyle.create(),
   });
 
   /// Accordion items to render.
@@ -41,24 +51,12 @@ class RemixAccordionGroup<T> extends StatelessWidget {
   /// Values expanded on the first build when the controller is empty.
   final List<T> initialExpandedValues;
 
-  /// The style configuration for the accordion group.
-  final RemixAccordionStyle style;
-
-  static late final styleFrom = RemixAccordionStyle.new;
-
   @override
   Widget build(BuildContext context) {
     return NakedAccordionGroup<T>(
       controller: controller,
       initialExpandedValues: initialExpandedValues,
-      children: [
-        StyleBuilder(
-          style: style,
-          builder: (context, spec) {
-            return FlexBox(styleSpec: spec.container, children: children);
-          },
-        ),
-      ],
+      children: children,
     );
   }
 }
@@ -70,9 +68,9 @@ class RemixAccordion<T> extends StatelessWidget {
     required this.value,
     required this.child,
     this.title,
-    this.icon,
+    this.leadingIcon,
+    this.trailingIcon,
     this.builder,
-    this.transitionBuilder,
     this.enabled = true,
     this.mouseCursor = SystemMouseCursors.click,
     this.enableFeedback = true,
@@ -82,7 +80,7 @@ class RemixAccordion<T> extends StatelessWidget {
     this.onHoverChange,
     this.onPressChange,
     this.semanticLabel,
-    this.style = const RemixAccordionItemStyle.create(),
+    this.style = const RemixAccordionStyle.create(),
   }) : assert(
           title != null || builder != null,
           'Either title or builder must be provided',
@@ -97,14 +95,14 @@ class RemixAccordion<T> extends StatelessWidget {
   /// Title text for the trigger.
   final String? title;
 
-  /// Optional icon for the trigger.
-  final IconData? icon;
+  /// Optional leading icon for the trigger.
+  final IconData? leadingIcon;
+
+  /// Optional trailing icon for the trigger.
+  final IconData? trailingIcon;
 
   /// Custom builder for the trigger.
   final NakedAccordionTriggerBuilder<T>? builder;
-
-  /// Optional transition builder applied to the expanding panel.
-  final Widget Function(Widget panel)? transitionBuilder;
 
   /// Whether the accordion item is interactive.
   final bool enabled;
@@ -134,9 +132,9 @@ class RemixAccordion<T> extends StatelessWidget {
   final String? semanticLabel;
 
   /// The style configuration for the accordion item.
-  final RemixAccordionItemStyle style;
+  final RemixAccordionStyle style;
 
-  static late final styleFrom = RemixAccordionItemStyle.new;
+  static late final styleFrom = RemixAccordionStyle.new;
 
   Widget _buildDefaultTrigger(
     BuildContext context,
@@ -149,15 +147,51 @@ class RemixAccordion<T> extends StatelessWidget {
         return FlexBox(
           styleSpec: spec.trigger,
           children: [
-            if (title != null) StyledText(title!, styleSpec: spec.title),
+            if (leadingIcon != null)
+              StyledIcon(icon: leadingIcon!, styleSpec: spec.leadingIcon),
+            if (title != null)
+              Expanded(child: StyledText(title!, styleSpec: spec.title)),
             StyledIcon(
-              icon: icon ??
-                  (state.isExpanded
-                      ? Icons.keyboard_arrow_up
-                      : Icons.keyboard_arrow_down),
-              styleSpec: spec.icon,
+              icon:
+                  trailingIcon ?? (state.isExpanded ? Icons.remove : Icons.add),
+              styleSpec: spec.trailingIcon,
             ),
           ],
+        );
+      },
+    );
+  }
+
+  Widget _buildTransitionWrapper(Widget panel) {
+    return Builder(
+      builder: (context) {
+        // Access accordion controller from scope to check expanded state
+        final scope = NakedAccordionScope.of<T>(context);
+        final isExpanded = scope.controller.contains(value);
+
+        // Build the animation style based on expanded state
+        final animationStyle = isExpanded
+            ? RemixAccordionStyle().content(
+                BoxStyler()
+                    .maxHeight(1000)
+                    .animate(AnimationConfig.easeOut(200.ms)),
+              )
+            : RemixAccordionStyle().content(
+                BoxStyler()
+                    .maxHeight(0)
+                    .paddingY(0)
+                    .clipBehavior(Clip.hardEdge)
+                    .animate(AnimationConfig.easeOut(200.ms)),
+              );
+
+        // Merge with user's content style
+        final mergedStyle = style.merge(animationStyle);
+
+        return StyleBuilder(
+          style: mergedStyle,
+          builder: (context, spec) {
+            return Box(styleSpec: spec.content, child: panel);
+          },
         );
       },
     );
@@ -167,7 +201,7 @@ class RemixAccordion<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return NakedAccordion<T>(
       value: value,
-      transitionBuilder: transitionBuilder,
+      transitionBuilder: _buildTransitionWrapper,
       enabled: enabled,
       mouseCursor: mouseCursor,
       enableFeedback: enableFeedback,
@@ -177,12 +211,7 @@ class RemixAccordion<T> extends StatelessWidget {
       onHoverChange: onHoverChange,
       onPressChange: onPressChange,
       semanticLabel: semanticLabel ?? title,
-      child: StyleBuilder(
-        style: style,
-        builder: (context, spec) {
-          return Box(styleSpec: spec.content, child: child);
-        },
-      ),
+      child: child,
       builder: builder ?? _buildDefaultTrigger,
     );
   }

@@ -1,22 +1,38 @@
 part of 'accordion.dart';
 
-class RemixAccordionSpec extends Spec<RemixAccordionSpec> with Diagnosticable {
-  final StyleSpec<FlexBoxSpec> container;
-  final StyleSpec<RemixAccordionItemSpec> item;
+class RemixAccordionSpec extends Spec<RemixAccordionSpec>
+    with Diagnosticable {
+  final StyleSpec<FlexBoxSpec> trigger;
+  final StyleSpec<IconSpec> leadingIcon;
+  final StyleSpec<TextSpec> title;
+  final StyleSpec<IconSpec> trailingIcon;
+  final StyleSpec<BoxSpec> content;
 
   const RemixAccordionSpec({
-    StyleSpec<FlexBoxSpec>? container,
-    StyleSpec<RemixAccordionItemSpec>? item,
-  })  : container = container ?? const StyleSpec(spec: FlexBoxSpec()),
-        item = item ?? const StyleSpec(spec: RemixAccordionItemSpec());
+    StyleSpec<FlexBoxSpec>? trigger,
+    StyleSpec<IconSpec>? leadingIcon,
+    StyleSpec<TextSpec>? title,
+    StyleSpec<IconSpec>? trailingIcon,
+    StyleSpec<BoxSpec>? content,
+  })  : trigger = trigger ?? const StyleSpec(spec: FlexBoxSpec()),
+        leadingIcon = leadingIcon ?? const StyleSpec(spec: IconSpec()),
+        title = title ?? const StyleSpec(spec: TextSpec()),
+        trailingIcon = trailingIcon ?? const StyleSpec(spec: IconSpec()),
+        content = content ?? const StyleSpec(spec: BoxSpec());
 
   RemixAccordionSpec copyWith({
-    StyleSpec<FlexBoxSpec>? container,
-    StyleSpec<RemixAccordionItemSpec>? item,
+    StyleSpec<FlexBoxSpec>? trigger,
+    StyleSpec<IconSpec>? leadingIcon,
+    StyleSpec<TextSpec>? title,
+    StyleSpec<IconSpec>? trailingIcon,
+    StyleSpec<BoxSpec>? content,
   }) {
     return RemixAccordionSpec(
-      container: container ?? this.container,
-      item: item ?? this.item,
+      trigger: trigger ?? this.trigger,
+      leadingIcon: leadingIcon ?? this.leadingIcon,
+      title: title ?? this.title,
+      trailingIcon: trailingIcon ?? this.trailingIcon,
+      content: content ?? this.content,
     );
   }
 
@@ -24,61 +40,10 @@ class RemixAccordionSpec extends Spec<RemixAccordionSpec> with Diagnosticable {
     if (other == null) return this;
 
     return RemixAccordionSpec(
-      container: MixOps.lerp(container, other.container, t)!,
-      item: MixOps.lerp(item, other.item, t)!,
-    );
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('container', container))
-      ..add(DiagnosticsProperty('item', item));
-  }
-
-  @override
-  List<Object?> get props => [container, item];
-}
-
-class RemixAccordionItemSpec extends Spec<RemixAccordionItemSpec>
-    with Diagnosticable {
-  final StyleSpec<FlexBoxSpec> trigger;
-  final StyleSpec<TextSpec> title;
-  final StyleSpec<IconSpec> icon;
-  final StyleSpec<BoxSpec> content;
-
-  const RemixAccordionItemSpec({
-    StyleSpec<FlexBoxSpec>? trigger,
-    StyleSpec<TextSpec>? title,
-    StyleSpec<IconSpec>? icon,
-    StyleSpec<BoxSpec>? content,
-  })  : trigger = trigger ?? const StyleSpec(spec: FlexBoxSpec()),
-        title = title ?? const StyleSpec(spec: TextSpec()),
-        icon = icon ?? const StyleSpec(spec: IconSpec()),
-        content = content ?? const StyleSpec(spec: BoxSpec());
-
-  RemixAccordionItemSpec copyWith({
-    StyleSpec<FlexBoxSpec>? trigger,
-    StyleSpec<TextSpec>? title,
-    StyleSpec<IconSpec>? icon,
-    StyleSpec<BoxSpec>? content,
-  }) {
-    return RemixAccordionItemSpec(
-      trigger: trigger ?? this.trigger,
-      title: title ?? this.title,
-      icon: icon ?? this.icon,
-      content: content ?? this.content,
-    );
-  }
-
-  RemixAccordionItemSpec lerp(RemixAccordionItemSpec? other, double t) {
-    if (other == null) return this;
-
-    return RemixAccordionItemSpec(
       trigger: MixOps.lerp(trigger, other.trigger, t)!,
+      leadingIcon: MixOps.lerp(leadingIcon, other.leadingIcon, t)!,
       title: MixOps.lerp(title, other.title, t)!,
-      icon: MixOps.lerp(icon, other.icon, t)!,
+      trailingIcon: MixOps.lerp(trailingIcon, other.trailingIcon, t)!,
       content: MixOps.lerp(content, other.content, t)!,
     );
   }
@@ -88,11 +53,12 @@ class RemixAccordionItemSpec extends Spec<RemixAccordionItemSpec>
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('trigger', trigger))
+      ..add(DiagnosticsProperty('leadingIcon', leadingIcon))
       ..add(DiagnosticsProperty('title', title))
-      ..add(DiagnosticsProperty('icon', icon))
+      ..add(DiagnosticsProperty('trailingIcon', trailingIcon))
       ..add(DiagnosticsProperty('content', content));
   }
 
   @override
-  List<Object?> get props => [trigger, title, icon, content];
+  List<Object?> get props => [trigger, leadingIcon, title, trailingIcon, content];
 }
