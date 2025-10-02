@@ -42,24 +42,28 @@ class RemixSliderStyle
 
   /// Sets base track color
   RemixSliderStyle baseTrackColor(Color value) {
-    return merge(RemixSliderStyle(
-      baseTrack: Paint()
-        ..strokeWidth = 8
-        ..color = value
-        ..strokeCap = StrokeCap.round
-        ..style = PaintingStyle.stroke,
-    ));
+    return merge(
+      RemixSliderStyle(
+        baseTrack: _buildTrackPaint(
+          $baseTrack,
+          fallback: _defaultBaseTrackPaint,
+          color: value,
+        ),
+      ),
+    );
   }
 
   /// Sets active track color
   RemixSliderStyle activeTrackColor(Color value) {
-    return merge(RemixSliderStyle(
-      activeTrack: Paint()
-        ..strokeWidth = 8
-        ..color = value
-        ..strokeCap = StrokeCap.round
-        ..style = PaintingStyle.stroke,
-    ));
+    return merge(
+      RemixSliderStyle(
+        activeTrack: _buildTrackPaint(
+          $activeTrack,
+          fallback: _defaultActiveTrackPaint,
+          color: value,
+        ),
+      ),
+    );
   }
 
   /// Sets thumb styling
@@ -67,9 +71,62 @@ class RemixSliderStyle
     return merge(RemixSliderStyle(thumb: value));
   }
 
+  /// Sets thumb to a fixed [size].
+  RemixSliderStyle thumbSize(Size size) {
+    return merge(
+      RemixSliderStyle(
+        thumb: BoxStyler(constraints: BoxConstraintsMix.size(size)),
+      ),
+    );
+  }
+
   /// Sets thumb alignment
   RemixSliderStyle alignment(Alignment value) {
     return merge(RemixSliderStyle(thumb: BoxStyler(alignment: value)));
+  }
+
+  /// Sets stroke width for both base and active tracks.
+  RemixSliderStyle trackThickness(double value) {
+    return merge(
+      RemixSliderStyle(
+        baseTrack: _buildTrackPaint(
+          $baseTrack,
+          fallback: _defaultBaseTrackPaint,
+          strokeWidth: value,
+        ),
+        activeTrack: _buildTrackPaint(
+          $activeTrack,
+          fallback: _defaultActiveTrackPaint,
+          strokeWidth: value,
+        ),
+      ),
+    );
+  }
+
+  /// Sets stroke width for the base track only.
+  RemixSliderStyle baseTrackThickness(double value) {
+    return merge(
+      RemixSliderStyle(
+        baseTrack: _buildTrackPaint(
+          $baseTrack,
+          fallback: _defaultBaseTrackPaint,
+          strokeWidth: value,
+        ),
+      ),
+    );
+  }
+
+  /// Sets stroke width for the active track only.
+  RemixSliderStyle activeTrackThickness(double value) {
+    return merge(
+      RemixSliderStyle(
+        activeTrack: _buildTrackPaint(
+          $activeTrack,
+          fallback: _defaultActiveTrackPaint,
+          strokeWidth: value,
+        ),
+      ),
+    );
   }
 
   // RemixContainerStyle mixin implementations
@@ -189,4 +246,53 @@ class RemixSliderStyle
         $animation,
         $modifier,
       ];
+}
+
+Paint _buildTrackPaint(
+  Prop<Paint>? source, {
+  required Paint fallback,
+  Color? color,
+  double? strokeWidth,
+}) {
+  final existing = _extractPaint(source);
+  final template = existing != null ? _clonePaint(existing) : fallback;
+  final paint = _clonePaint(template);
+
+  if (color != null) paint.color = color;
+  if (strokeWidth != null) paint.strokeWidth = strokeWidth;
+
+  // Ensure expected defaults
+  paint
+    ..style = PaintingStyle.stroke
+    ..isAntiAlias = template.isAntiAlias;
+
+  return paint;
+}
+
+Paint _clonePaint(Paint paint) {
+  return Paint()
+    ..color = paint.color
+    ..strokeWidth = paint.strokeWidth
+    ..strokeCap = paint.strokeCap
+    ..strokeJoin = paint.strokeJoin
+    ..strokeMiterLimit = paint.strokeMiterLimit
+    ..style = paint.style
+    ..isAntiAlias = paint.isAntiAlias
+    ..blendMode = paint.blendMode
+    ..shader = paint.shader
+    ..filterQuality = paint.filterQuality
+    ..maskFilter = paint.maskFilter
+    ..colorFilter = paint.colorFilter
+    ..imageFilter = paint.imageFilter;
+}
+
+Paint? _extractPaint(Prop<Paint>? prop) {
+  if (prop == null) return null;
+  for (final source in prop.sources.reversed) {
+    if (source is ValueSource<Paint>) {
+      return source.value;
+    }
+  }
+
+  return null;
 }

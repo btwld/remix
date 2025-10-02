@@ -2,60 +2,141 @@ part of 'accordion.dart';
 
 class RemixAccordionStyle
     extends RemixFlexContainerStyle<RemixAccordionSpec, RemixAccordionStyle> {
-  final Prop<StyleSpec<FlexBoxSpec>>? $container;
-  final Prop<StyleSpec<RemixAccordionItemSpec>>? $item;
+  final Prop<StyleSpec<FlexBoxSpec>>? $trigger;
+  final Prop<StyleSpec<IconSpec>>? $leadingIcon;
+  final Prop<StyleSpec<TextSpec>>? $title;
+  final Prop<StyleSpec<IconSpec>>? $trailingIcon;
+  final Prop<StyleSpec<BoxSpec>>? $content;
 
   const RemixAccordionStyle.create({
-    Prop<StyleSpec<FlexBoxSpec>>? container,
-    Prop<StyleSpec<RemixAccordionItemSpec>>? item,
+    Prop<StyleSpec<FlexBoxSpec>>? trigger,
+    Prop<StyleSpec<IconSpec>>? leadingIcon,
+    Prop<StyleSpec<TextSpec>>? title,
+    Prop<StyleSpec<IconSpec>>? trailingIcon,
+    Prop<StyleSpec<BoxSpec>>? content,
     super.variants,
     super.animation,
     super.modifier,
-  })  : $container = container,
-        $item = item;
+  })  : $trigger = trigger,
+        $leadingIcon = leadingIcon,
+        $title = title,
+        $trailingIcon = trailingIcon,
+        $content = content;
 
   RemixAccordionStyle({
-    FlexBoxStyler? container,
-    RemixAccordionItemStyle? item,
+    FlexBoxStyler? trigger,
+    IconStyler? leadingIcon,
+    TextStyler? title,
+    IconStyler? trailingIcon,
+    BoxStyler? content,
     AnimationConfig? animation,
     List<VariantStyle<RemixAccordionSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
-          container: Prop.maybeMix(container),
-          item: Prop.maybeMix(item),
+          trigger: Prop.maybeMix(trigger),
+          leadingIcon: Prop.maybeMix(leadingIcon),
+          title: Prop.maybeMix(title),
+          trailingIcon: Prop.maybeMix(trailingIcon),
+          content: Prop.maybeMix(content),
           variants: variants,
           animation: animation,
           modifier: modifier,
         );
 
-  RemixAccordionStyle item(RemixAccordionItemStyle value) {
-    return merge(RemixAccordionStyle(item: value));
+  RemixAccordionStyle trigger(FlexBoxStyler value) {
+    return merge(RemixAccordionStyle(trigger: value));
+  }
+
+  RemixAccordionStyle leadingIcon(IconStyler value) {
+    return merge(RemixAccordionStyle(leadingIcon: value));
+  }
+
+  RemixAccordionStyle title(TextStyler value) {
+    return merge(RemixAccordionStyle(title: value));
+  }
+
+  RemixAccordionStyle trailingIcon(IconStyler value) {
+    return merge(RemixAccordionStyle(trailingIcon: value));
+  }
+
+  RemixAccordionStyle content(BoxStyler value) {
+    return merge(RemixAccordionStyle(content: value));
   }
 
   /// Sets container alignment
   RemixAccordionStyle alignment(Alignment value) {
     return merge(
-      RemixAccordionStyle(container: FlexBoxStyler(alignment: value)),
+      RemixAccordionStyle(trigger: FlexBoxStyler(alignment: value)),
     );
+  }
+
+  /// Style when accordion is expanded
+  RemixAccordionStyle onExpanded(RemixAccordionStyle value) {
+    return variants([
+      VariantStyle(
+        ContextVariant('isExpanded', (context) {
+          return NakedAccordionItemState.of(context).isExpanded;
+        }),
+        value,
+      ),
+    ]);
+  }
+
+  /// Style when accordion is collapsed
+  RemixAccordionStyle onCollapsed(RemixAccordionStyle value) {
+    return variants([
+      VariantStyle(
+        ContextVariant('isExpanded', (context) {
+          return !NakedAccordionItemState.of(context).isExpanded;
+        }),
+        value,
+      ),
+    ]);
+  }
+
+  /// onCanCollapse
+  RemixAccordionStyle onCanCollapse(RemixAccordionStyle value) {
+    return variants([
+      VariantStyle(
+        ContextVariant('canCollapse', (context) {
+          return NakedAccordionItemState.of(context).canCollapse;
+        }),
+        value,
+      ),
+    ]);
+  }
+
+  /// onCanExpand
+  RemixAccordionStyle onCanExpand(RemixAccordionStyle value) {
+    return variants([
+      VariantStyle(
+        ContextVariant('canExpand', (context) {
+          return NakedAccordionItemState.of(context).canExpand;
+        }),
+        value,
+      ),
+    ]);
   }
 
   // RemixFlexContainerStyle mixin implementations
   @override
   RemixAccordionStyle padding(EdgeInsetsGeometryMix value) {
-    return merge(RemixAccordionStyle(container: FlexBoxStyler(padding: value)));
+    return merge(
+      RemixAccordionStyle(trigger: FlexBoxStyler(padding: value)),
+    );
   }
 
   @override
   RemixAccordionStyle color(Color value) {
     return merge(RemixAccordionStyle(
-      container: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
+      trigger: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
     ));
   }
 
   @override
   RemixAccordionStyle size(double width, double height) {
     return merge(RemixAccordionStyle(
-      container: FlexBoxStyler(
+      trigger: FlexBoxStyler(
         constraints: BoxConstraintsMix(
           minWidth: width,
           maxWidth: width,
@@ -69,7 +150,7 @@ class RemixAccordionStyle
   @override
   RemixAccordionStyle borderRadius(BorderRadiusGeometryMix radius) {
     return merge(RemixAccordionStyle(
-      container:
+      trigger:
           FlexBoxStyler(decoration: BoxDecorationMix(borderRadius: radius)),
     ));
   }
@@ -77,26 +158,26 @@ class RemixAccordionStyle
   @override
   RemixAccordionStyle constraints(BoxConstraintsMix value) {
     return merge(
-      RemixAccordionStyle(container: FlexBoxStyler(constraints: value)),
+      RemixAccordionStyle(trigger: FlexBoxStyler(constraints: value)),
     );
   }
 
   @override
   RemixAccordionStyle decoration(DecorationMix value) {
     return merge(
-      RemixAccordionStyle(container: FlexBoxStyler(decoration: value)),
+      RemixAccordionStyle(trigger: FlexBoxStyler(decoration: value)),
     );
   }
 
   @override
   RemixAccordionStyle margin(EdgeInsetsGeometryMix value) {
-    return merge(RemixAccordionStyle(container: FlexBoxStyler(margin: value)));
+    return merge(RemixAccordionStyle(trigger: FlexBoxStyler(margin: value)));
   }
 
   @override
   RemixAccordionStyle foregroundDecoration(DecorationMix value) {
     return merge(RemixAccordionStyle(
-      container: FlexBoxStyler(foregroundDecoration: value),
+      trigger: FlexBoxStyler(foregroundDecoration: value),
     ));
   }
 
@@ -106,21 +187,24 @@ class RemixAccordionStyle
     AlignmentGeometry alignment = Alignment.center,
   }) {
     return merge(RemixAccordionStyle(
-      container: FlexBoxStyler(transform: value, transformAlignment: alignment),
+      trigger: FlexBoxStyler(transform: value, transformAlignment: alignment),
     ));
   }
 
   @override
   RemixAccordionStyle flex(FlexStyler value) {
-    return merge(RemixAccordionStyle(container: FlexBoxStyler().flex(value)));
+    return merge(RemixAccordionStyle(trigger: FlexBoxStyler()));
   }
 
   @override
   StyleSpec<RemixAccordionSpec> resolve(BuildContext context) {
     return StyleSpec(
       spec: RemixAccordionSpec(
-        container: MixOps.resolve(context, $container),
-        item: MixOps.resolve(context, $item),
+        trigger: MixOps.resolve(context, $trigger),
+        leadingIcon: MixOps.resolve(context, $leadingIcon),
+        title: MixOps.resolve(context, $title),
+        trailingIcon: MixOps.resolve(context, $trailingIcon),
+        content: MixOps.resolve(context, $content),
       ),
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
@@ -132,8 +216,11 @@ class RemixAccordionStyle
     if (other == null) return this;
 
     return RemixAccordionStyle.create(
-      container: MixOps.merge($container, other.$container),
-      item: MixOps.merge($item, other.$item),
+      trigger: MixOps.merge($trigger, other.$trigger),
+      leadingIcon: MixOps.merge($leadingIcon, other.$leadingIcon),
+      title: MixOps.merge($title, other.$title),
+      trailingIcon: MixOps.merge($trailingIcon, other.$trailingIcon),
+      content: MixOps.merge($content, other.$content),
       variants: MixOps.mergeVariants($variants, other.$variants),
       animation: MixOps.mergeAnimation($animation, other.$animation),
       modifier: MixOps.mergeModifier($modifier, other.$modifier),
@@ -157,206 +244,10 @@ class RemixAccordionStyle
 
   @override
   List<Object?> get props => [
-        $container,
-        $item,
-        $variants,
-        $animation,
-        $modifier,
-      ];
-}
-
-class RemixAccordionItemStyle extends RemixFlexContainerStyle<
-    RemixAccordionItemSpec, RemixAccordionItemStyle> {
-  final Prop<StyleSpec<FlexBoxSpec>>? $trigger;
-  final Prop<StyleSpec<TextSpec>>? $title;
-  final Prop<StyleSpec<IconSpec>>? $icon;
-  final Prop<StyleSpec<BoxSpec>>? $content;
-
-  const RemixAccordionItemStyle.create({
-    Prop<StyleSpec<FlexBoxSpec>>? trigger,
-    Prop<StyleSpec<TextSpec>>? title,
-    Prop<StyleSpec<IconSpec>>? icon,
-    Prop<StyleSpec<BoxSpec>>? content,
-    super.variants,
-    super.animation,
-    super.modifier,
-  })  : $trigger = trigger,
-        $title = title,
-        $icon = icon,
-        $content = content;
-
-  RemixAccordionItemStyle({
-    FlexBoxStyler? trigger,
-    TextStyler? title,
-    IconStyler? icon,
-    BoxStyler? content,
-    AnimationConfig? animation,
-    List<VariantStyle<RemixAccordionItemSpec>>? variants,
-    WidgetModifierConfig? modifier,
-  }) : this.create(
-          trigger: Prop.maybeMix(trigger),
-          title: Prop.maybeMix(title),
-          icon: Prop.maybeMix(icon),
-          content: Prop.maybeMix(content),
-          variants: variants,
-          animation: animation,
-          modifier: modifier,
-        );
-
-  RemixAccordionItemStyle trigger(FlexBoxStyler value) {
-    return merge(RemixAccordionItemStyle(trigger: value));
-  }
-
-  RemixAccordionItemStyle title(TextStyler value) {
-    return merge(RemixAccordionItemStyle(title: value));
-  }
-
-  RemixAccordionItemStyle icon(IconStyler value) {
-    return merge(RemixAccordionItemStyle(icon: value));
-  }
-
-  RemixAccordionItemStyle content(BoxStyler value) {
-    return merge(RemixAccordionItemStyle(content: value));
-  }
-
-  /// Sets container alignment
-  RemixAccordionItemStyle alignment(Alignment value) {
-    return merge(
-      RemixAccordionItemStyle(trigger: FlexBoxStyler(alignment: value)),
-    );
-  }
-
-  // RemixFlexContainerStyle mixin implementations
-  @override
-  RemixAccordionItemStyle padding(EdgeInsetsGeometryMix value) {
-    return merge(
-      RemixAccordionItemStyle(trigger: FlexBoxStyler(padding: value)),
-    );
-  }
-
-  @override
-  RemixAccordionItemStyle color(Color value) {
-    return merge(RemixAccordionItemStyle(
-      trigger: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
-    ));
-  }
-
-  @override
-  RemixAccordionItemStyle size(double width, double height) {
-    return merge(RemixAccordionItemStyle(
-      trigger: FlexBoxStyler(
-        constraints: BoxConstraintsMix(
-          minWidth: width,
-          maxWidth: width,
-          minHeight: height,
-          maxHeight: height,
-        ),
-      ),
-    ));
-  }
-
-  @override
-  RemixAccordionItemStyle borderRadius(BorderRadiusGeometryMix radius) {
-    return merge(RemixAccordionItemStyle(
-      trigger:
-          FlexBoxStyler(decoration: BoxDecorationMix(borderRadius: radius)),
-    ));
-  }
-
-  @override
-  RemixAccordionItemStyle constraints(BoxConstraintsMix value) {
-    return merge(
-      RemixAccordionItemStyle(trigger: FlexBoxStyler(constraints: value)),
-    );
-  }
-
-  @override
-  RemixAccordionItemStyle decoration(DecorationMix value) {
-    return merge(
-      RemixAccordionItemStyle(trigger: FlexBoxStyler(decoration: value)),
-    );
-  }
-
-  @override
-  RemixAccordionItemStyle margin(EdgeInsetsGeometryMix value) {
-    return merge(
-      RemixAccordionItemStyle(trigger: FlexBoxStyler(margin: value)),
-    );
-  }
-
-  @override
-  RemixAccordionItemStyle foregroundDecoration(DecorationMix value) {
-    return merge(RemixAccordionItemStyle(
-      trigger: FlexBoxStyler(foregroundDecoration: value),
-    ));
-  }
-
-  @override
-  RemixAccordionItemStyle transform(
-    Matrix4 value, {
-    AlignmentGeometry alignment = Alignment.center,
-  }) {
-    return merge(RemixAccordionItemStyle(
-      trigger: FlexBoxStyler(transform: value, transformAlignment: alignment),
-    ));
-  }
-
-  @override
-  RemixAccordionItemStyle flex(FlexStyler value) {
-    return merge(RemixAccordionItemStyle(trigger: FlexBoxStyler()));
-  }
-
-  @override
-  StyleSpec<RemixAccordionItemSpec> resolve(BuildContext context) {
-    return StyleSpec(
-      spec: RemixAccordionItemSpec(
-        trigger: MixOps.resolve(context, $trigger),
-        title: MixOps.resolve(context, $title),
-        icon: MixOps.resolve(context, $icon),
-        content: MixOps.resolve(context, $content),
-      ),
-      animation: $animation,
-      widgetModifiers: $modifier?.resolve(context),
-    );
-  }
-
-  @override
-  RemixAccordionItemStyle merge(RemixAccordionItemStyle? other) {
-    if (other == null) return this;
-
-    return RemixAccordionItemStyle.create(
-      trigger: MixOps.merge($trigger, other.$trigger),
-      title: MixOps.merge($title, other.$title),
-      icon: MixOps.merge($icon, other.$icon),
-      content: MixOps.merge($content, other.$content),
-      variants: MixOps.mergeVariants($variants, other.$variants),
-      animation: MixOps.mergeAnimation($animation, other.$animation),
-      modifier: MixOps.mergeModifier($modifier, other.$modifier),
-    );
-  }
-
-  @override
-  RemixAccordionItemStyle variants(
-    List<VariantStyle<RemixAccordionItemSpec>> value,
-  ) {
-    return merge(RemixAccordionItemStyle(variants: value));
-  }
-
-  @override
-  RemixAccordionItemStyle animate(AnimationConfig animation) {
-    return merge(RemixAccordionItemStyle(animation: animation));
-  }
-
-  @override
-  RemixAccordionItemStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixAccordionItemStyle(modifier: value));
-  }
-
-  @override
-  List<Object?> get props => [
         $trigger,
+        $leadingIcon,
         $title,
-        $icon,
+        $trailingIcon,
         $content,
         $variants,
         $animation,

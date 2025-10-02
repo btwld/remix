@@ -1,43 +1,44 @@
 part of 'slider.dart';
 
+const Size _remixSliderDefaultThumbSize = Size(16.0, 16.0);
+const double _remixSliderDefaultTrackStrokeWidth = 8.0;
+
 /// Linearly interpolates between two Paint objects
 ///
 /// The [t] argument represents position on timeline (0.0 to 1.0)
 /// Returns [a] when t=0.0, [b] when t=1.0, interpolated values between
 Paint lerpPaint(Paint? a, Paint? b, double t) {
-  if (a == null && b == null) return _defaultPaint;
+  if (a == null && b == null) return Paint.from(_defaultBaseTrackPaint);
   if (a == null) return Paint.from(b!);
   if (b == null) return Paint.from(a);
 
   return Paint()
-    ..color = Color.lerp(a.color, b.color, t) ?? MixColors.grey
-    ..strokeWidth = lerpDouble(a.strokeWidth, b.strokeWidth, t) ?? 8.0
+    ..color = Color.lerp(a.color, b.color, t) ?? _defaultBaseTrackPaint.color
+    ..strokeWidth = lerpDouble(a.strokeWidth, b.strokeWidth, t) ??
+        _defaultBaseTrackPaint.strokeWidth
     ..strokeCap = t < 0.5 ? a.strokeCap : b.strokeCap
     ..style = PaintingStyle.stroke // Always stroke for slider tracks
     ..isAntiAlias = t < 0.5 ? a.isAntiAlias : b.isAntiAlias;
 }
 
-// Default paint for fallback
-final _defaultPaint = Paint()
-  ..color = MixColors.grey
-  ..strokeWidth = 8.0
-  ..strokeCap = StrokeCap.round
-  ..style = PaintingStyle.stroke;
-
-// Default Paint configurations (replacing PaintData defaults)
+// Default Paint configurations
 final _defaultBaseTrackPaint = Paint()
   ..color = MixColors.grey
-  ..strokeWidth = 8.0
+  ..strokeWidth = _remixSliderDefaultTrackStrokeWidth
   ..strokeCap = StrokeCap.round
   ..style = PaintingStyle.stroke;
 
 final _defaultActiveTrackPaint = Paint()
   ..color = MixColors.black
-  ..strokeWidth = 8.0
+  ..strokeWidth = _remixSliderDefaultTrackStrokeWidth
   ..strokeCap = StrokeCap.round
   ..style = PaintingStyle.stroke;
 
 class RemixSliderSpec extends Spec<RemixSliderSpec> with Diagnosticable {
+  static const Size defaultThumbSize = _remixSliderDefaultThumbSize;
+  static const double defaultTrackStrokeWidth =
+      _remixSliderDefaultTrackStrokeWidth;
+
   final StyleSpec<BoxSpec> thumb;
   final Paint baseTrack;
   final Paint activeTrack;
@@ -71,6 +72,9 @@ class RemixSliderSpec extends Spec<RemixSliderSpec> with Diagnosticable {
       activeTrack: lerpPaint(activeTrack, other.activeTrack, t),
     );
   }
+
+  double get trackThickness =>
+      math.max(baseTrack.strokeWidth, activeTrack.strokeWidth);
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {

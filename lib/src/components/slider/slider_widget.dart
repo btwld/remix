@@ -103,12 +103,24 @@ class RemixSlider extends StatelessWidget {
           style: style,
           controller: NakedState.controllerOf(context),
           builder: (context, spec) {
-            // Use a fixed thumb size for simplicity
-            final height = 24.0;
-            final horizontalPadding = height;
+            final thumbSize = _resolveThumbSize(context, spec.thumb);
+            final trackThickness = spec.trackThickness > 0
+                ? spec.trackThickness
+                : RemixSliderSpec.defaultTrackStrokeWidth;
+
+            // Slider height accommodates both thumb and track:
+            // - thumb.height + trackThickness: ensures thumb has clearance above/below
+            // - trackThickness alone: minimum viable height
+            final sliderHeight =
+                math.max(thumbSize.height + trackThickness, trackThickness);
+            final horizontalOverflow = math.max(
+              thumbSize.width / 2,
+              trackThickness / 2,
+            );
+            final horizontalPadding = horizontalOverflow * 2;
 
             return SizedBox(
-              height: height,
+              height: sliderHeight,
               child: LayoutBuilder(
                 builder: (context, constraints) {
                   /// **Value Normalization Algorithm**
@@ -119,7 +131,10 @@ class RemixSlider extends StatelessWidget {
                   /// - UI positioning works in pixel coordinates (0 to width)
                   /// - Slider values can be any range (e.g., -50 to 150, 0 to 1000)
                   /// - We need a consistent way to map between value space and pixel space
-                  final normalizedValue = (value - min) / (max - min);
+                  final valueRange =
+                      (max - min).abs() < 1e-6 ? 1.0 : (max - min);
+                  final normalizedValue =
+                      ((value - min) / valueRange).clamp(0.0, 1.0);
 
                   /// **Thumb Position Calculation**
                   /// Maps normalized value (0.0-1.0) to actual pixel position.
@@ -134,12 +149,14 @@ class RemixSlider extends StatelessWidget {
                   ///
                   /// **Example:**
                   /// - Constraints width: 300px
-                  /// - Horizontal padding: 24px
-                  /// - Available space: 276px
-                  /// - At 50% value: thumb positioned at 138px from left edge
-                  final thumbPosition =
-                      (constraints.maxWidth - horizontalPadding) *
-                          normalizedValue;
+                  /// - Horizontal padding: derived from thumb size/track thickness
+                  /// - Available space: width - horizontal padding
+                  /// - At 50% value: thumb positioned at availableSpace / 2
+                  final availableWidth = math.max(
+                    0.0,
+                    constraints.maxWidth - horizontalPadding,
+                  );
+                  final thumbPosition = availableWidth * normalizedValue;
 
                   return Stack(
                     alignment: Alignment.centerLeft,
@@ -174,6 +191,51 @@ class RemixSlider extends StatelessWidget {
       },
     );
   }
+}
+
+Size _resolveThumbSize(BuildContext context, StyleSpec<BoxSpec> thumb) {
+  final box = thumb.spec;
+  final constraints = box.constraints;
+
+  final width = _resolveTightDimension(
+    tight: constraints?.hasTightWidth ?? false,
+    min: constraints?.minWidth,
+    max: constraints?.maxWidth,
+    fallback: RemixSliderSpec.defaultThumbSize.width,
+  );
+
+  final height = _resolveTightDimension(
+    tight: constraints?.hasTightHeight ?? false,
+    min: constraints?.minHeight,
+    max: constraints?.maxHeight,
+    fallback: RemixSliderSpec.defaultThumbSize.height,
+  );
+
+  final padding = box.padding?.resolve(Directionality.of(context));
+
+  return Size(
+    width + (padding?.horizontal ?? 0),
+    height + (padding?.vertical ?? 0),
+  );
+}
+
+double _resolveTightDimension({
+  required bool tight,
+  double? min,
+  double? max,
+  required double fallback,
+}) {
+  if (tight && max != null && max.isFinite) {
+    return max;
+  }
+
+  final finiteMax = (max != null && max.isFinite && max > 0) ? max : null;
+  if (finiteMax != null) return finiteMax;
+
+  final finiteMin = (min != null && min.isFinite && min > 0) ? min : null;
+  if (finiteMin != null) return finiteMin;
+
+  return fallback;
 }
 
 /// Custom painter for drawing slider track (no divisions).
