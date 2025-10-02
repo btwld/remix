@@ -26,6 +26,7 @@ class _SelectExampleState extends State<SelectExample> {
   Widget build(BuildContext context) {
     return Center(
       child: RemixSelect(
+        trigger: const RemixSelectTrigger(placeholder: 'Select an option'),
         items: const [
           RemixSelectItem(value: 'option1', label: 'Option 1'),
           RemixSelectItem(value: 'option2', label: 'Option 2'),

@@ -357,6 +357,7 @@ class _StateTestingSection extends StatelessWidget {
               // Normal
               _getVariantButton(variantName).call(
                 label: 'Normal',
+                // ignore: avoid_print
                 onPressed: () => print('Button pressed'),
               ),
 
@@ -364,6 +365,7 @@ class _StateTestingSection extends StatelessWidget {
               _getVariantButton(variantName).call(
                 label: 'Loading',
                 loading: true,
+                // ignore: avoid_print
                 onPressed: () => print('Button pressed'),
               ),
 
@@ -407,6 +409,7 @@ class _AccentShowcaseSection extends StatelessWidget {
           brightness: Theme.of(context).brightness,
           child: FortalButtonStyle.solid().call(
             label: accentColor.name,
+            // ignore: avoid_print
             onPressed: () => print('Button pressed'),
           ),
         );

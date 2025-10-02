@@ -336,37 +336,43 @@ class _ButtonsSection extends StatelessWidget {
           style: FortalButtonStyle.solid(),
           label: 'Solid',
           icon: Icons.check_circle,
-          onPressed: () => print('Button pressed'),
+          // ignore: avoid_print
+              onPressed: () => print('Button pressed'),
         ),
         RemixButton(
           style: FortalButtonStyle.soft(),
           label: 'Soft',
           icon: Icons.favorite,
-          onPressed: () => print('Button pressed'),
+          // ignore: avoid_print
+              onPressed: () => print('Button pressed'),
         ),
         RemixButton(
           style: FortalButtonStyle.surface(),
           label: 'Surface',
           icon: Icons.layers,
-          onPressed: () => print('Button pressed'),
+          // ignore: avoid_print
+              onPressed: () => print('Button pressed'),
         ),
         RemixButton(
           style: FortalButtonStyle.outline(),
           label: 'Outline',
           icon: Icons.crop_free,
-          onPressed: () => print('Button pressed'),
+          // ignore: avoid_print
+              onPressed: () => print('Button pressed'),
         ),
         RemixButton(
           style: FortalButtonStyle.ghost(),
           label: 'Ghost',
           icon: Icons.visibility_off,
-          onPressed: () => print('Button pressed'),
+          // ignore: avoid_print
+              onPressed: () => print('Button pressed'),
         ),
         RemixButton(
           style: FortalButtonStyle.surface(),
           label: 'Surface',
           icon: Icons.style,
-          onPressed: () => print('Button pressed'),
+          // ignore: avoid_print
+              onPressed: () => print('Button pressed'),
         ),
       ],
     );
@@ -385,32 +391,38 @@ class _IconButtonsSection extends StatelessWidget {
         RemixIconButton(
           style: FortalIconButtonStyles.solid(),
           icon: Icons.check_circle,
-          onPressed: () => print('Button pressed'),
+          // ignore: avoid_print
+              onPressed: () => print('Button pressed'),
         ),
         RemixIconButton(
           style: FortalIconButtonStyles.soft(),
           icon: Icons.favorite,
-          onPressed: () => print('Button pressed'),
+          // ignore: avoid_print
+              onPressed: () => print('Button pressed'),
         ),
         RemixIconButton(
           style: FortalIconButtonStyles.surface(),
           icon: Icons.layers,
-          onPressed: () => print('Button pressed'),
+          // ignore: avoid_print
+              onPressed: () => print('Button pressed'),
         ),
         RemixIconButton(
           style: FortalIconButtonStyles.outline(),
           icon: Icons.crop_free,
-          onPressed: () => print('Button pressed'),
+          // ignore: avoid_print
+              onPressed: () => print('Button pressed'),
         ),
         RemixIconButton(
           style: FortalIconButtonStyles.ghost(),
           icon: Icons.visibility_off,
-          onPressed: () => print('Button pressed'),
+          // ignore: avoid_print
+              onPressed: () => print('Button pressed'),
         ),
         RemixIconButton(
           style: FortalIconButtonStyles.classic(),
           icon: Icons.style,
-          onPressed: () => print('Button pressed'),
+          // ignore: avoid_print
+              onPressed: () => print('Button pressed'),
         ),
       ],
     );

@@ -1,65 +1,289 @@
 part of 'menu.dart';
 
-class RemixMenuStyle extends RemixStyle<RemixMenuSpec, RemixMenuStyle> {
-  final Prop<StyleSpec<FlexBoxSpec>>? $trigger;
-  final Prop<StyleSpec<TextSpec>>? $triggerLabel;
-  final Prop<StyleSpec<IconSpec>>? $triggerIcon;
-  final Prop<StyleSpec<BoxSpec>>? $menuContainer;
-  final Prop<StyleSpec<RemixMenuItemSpec>>? $item;
+// ============================================================================
+// TRIGGER STYLE - Menu trigger content styling (not a button!)
+// Note: NakedMenu wraps trigger in NakedButton, so this styles the content only
+// ============================================================================
 
-  const RemixMenuStyle.create({
-    Prop<StyleSpec<FlexBoxSpec>>? trigger,
-    Prop<StyleSpec<TextSpec>>? triggerLabel,
-    Prop<StyleSpec<IconSpec>>? triggerIcon,
-    Prop<StyleSpec<BoxSpec>>? menuContainer,
-    Prop<StyleSpec<RemixMenuItemSpec>>? item,
+class RemixMenuTriggerStyle extends RemixFlexContainerStyle<
+    RemixMenuTriggerSpec, RemixMenuTriggerStyle> {
+  final Prop<StyleSpec<FlexBoxSpec>>? $container;
+  final Prop<StyleSpec<TextSpec>>? $label;
+  final Prop<StyleSpec<IconSpec>>? $icon;
+
+  const RemixMenuTriggerStyle.create({
+    Prop<StyleSpec<FlexBoxSpec>>? container,
+    Prop<StyleSpec<TextSpec>>? label,
+    Prop<StyleSpec<IconSpec>>? icon,
     super.variants,
     super.animation,
     super.modifier,
-  })  : $trigger = trigger,
-        $triggerLabel = triggerLabel,
-        $triggerIcon = triggerIcon,
-        $menuContainer = menuContainer,
-        $item = item;
+  })  : $container = container,
+        $label = label,
+        $icon = icon;
 
-  RemixMenuStyle({
-    FlexBoxStyler? trigger,
-    TextStyler? triggerLabel,
-    IconStyler? triggerIcon,
-    BoxStyler? menuContainer,
-    RemixMenuItemStyle? item,
+  RemixMenuTriggerStyle({
+    FlexBoxStyler? container,
+    TextStyler? label,
+    IconStyler? icon,
     AnimationConfig? animation,
-    List<VariantStyle<RemixMenuSpec>>? variants,
+    List<VariantStyle<RemixMenuTriggerSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
-          trigger: Prop.maybeMix(trigger),
-          triggerLabel: Prop.maybeMix(triggerLabel),
-          triggerIcon: Prop.maybeMix(triggerIcon),
-          menuContainer: Prop.maybeMix(menuContainer),
-          item: Prop.maybeMix(item),
+          container: Prop.maybeMix(container),
+          label: Prop.maybeMix(label),
+          icon: Prop.maybeMix(icon),
           variants: variants,
           animation: animation,
           modifier: modifier,
         );
 
-  RemixMenuStyle trigger(FlexBoxStyler value) {
+  RemixMenuTriggerStyle label(TextStyler value) {
+    return merge(RemixMenuTriggerStyle(label: value));
+  }
+
+  RemixMenuTriggerStyle icon(IconStyler value) {
+    return merge(RemixMenuTriggerStyle(icon: value));
+  }
+
+  RemixMenuTriggerStyle alignment(Alignment value) {
+    return merge(
+      RemixMenuTriggerStyle(container: FlexBoxStyler(alignment: value)),
+    );
+  }
+
+  @override
+  RemixMenuTriggerStyle padding(EdgeInsetsGeometryMix value) {
+    return merge(
+      RemixMenuTriggerStyle(container: FlexBoxStyler(padding: value)),
+    );
+  }
+
+  @override
+  RemixMenuTriggerStyle color(Color value) {
+    return merge(RemixMenuTriggerStyle(
+      container: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
+    ));
+  }
+
+  @override
+  RemixMenuTriggerStyle size(double width, double height) {
+    return merge(RemixMenuTriggerStyle(
+      container: FlexBoxStyler(
+        constraints: BoxConstraintsMix(
+          minWidth: width,
+          maxWidth: width,
+          minHeight: height,
+          maxHeight: height,
+        ),
+      ),
+    ));
+  }
+
+  @override
+  RemixMenuTriggerStyle borderRadius(BorderRadiusGeometryMix radius) {
+    return merge(RemixMenuTriggerStyle(
+      container:
+          FlexBoxStyler(decoration: BoxDecorationMix(borderRadius: radius)),
+    ));
+  }
+
+  @override
+  RemixMenuTriggerStyle constraints(BoxConstraintsMix value) {
+    return merge(
+      RemixMenuTriggerStyle(container: FlexBoxStyler(constraints: value)),
+    );
+  }
+
+  @override
+  RemixMenuTriggerStyle decoration(DecorationMix value) {
+    return merge(
+      RemixMenuTriggerStyle(container: FlexBoxStyler(decoration: value)),
+    );
+  }
+
+  @override
+  RemixMenuTriggerStyle margin(EdgeInsetsGeometryMix value) {
+    return merge(
+      RemixMenuTriggerStyle(container: FlexBoxStyler(margin: value)),
+    );
+  }
+
+  @override
+  RemixMenuTriggerStyle foregroundDecoration(DecorationMix value) {
+    return merge(RemixMenuTriggerStyle(
+      container: FlexBoxStyler(foregroundDecoration: value),
+    ));
+  }
+
+  @override
+  RemixMenuTriggerStyle transform(
+    Matrix4 value, {
+    AlignmentGeometry alignment = Alignment.center,
+  }) {
+    return merge(RemixMenuTriggerStyle(
+      container: FlexBoxStyler(transform: value, transformAlignment: alignment),
+    ));
+  }
+
+  @override
+  RemixMenuTriggerStyle flex(FlexStyler value) {
+    return merge(RemixMenuTriggerStyle(container: FlexBoxStyler().flex(value)));
+  }
+
+  @override
+  StyleSpec<RemixMenuTriggerSpec> resolve(BuildContext context) {
+    return StyleSpec(
+      spec: RemixMenuTriggerSpec(
+        container: MixOps.resolve(context, $container),
+        label: MixOps.resolve(context, $label),
+        icon: MixOps.resolve(context, $icon),
+      ),
+      animation: $animation,
+      widgetModifiers: $modifier?.resolve(context),
+    );
+  }
+
+  @override
+  RemixMenuTriggerStyle merge(RemixMenuTriggerStyle? other) {
+    if (other == null) return this;
+
+    return RemixMenuTriggerStyle.create(
+      container: MixOps.merge($container, other.$container),
+      label: MixOps.merge($label, other.$label),
+      icon: MixOps.merge($icon, other.$icon),
+      variants: MixOps.mergeVariants($variants, other.$variants),
+      animation: MixOps.mergeAnimation($animation, other.$animation),
+      modifier: MixOps.mergeModifier($modifier, other.$modifier),
+    );
+  }
+
+  @override
+  RemixMenuTriggerStyle variants(
+    List<VariantStyle<RemixMenuTriggerSpec>> value,
+  ) {
+    return merge(RemixMenuTriggerStyle(variants: value));
+  }
+
+  @override
+  RemixMenuTriggerStyle animate(AnimationConfig animation) {
+    return merge(RemixMenuTriggerStyle(animation: animation));
+  }
+
+  @override
+  RemixMenuTriggerStyle wrap(WidgetModifierConfig value) {
+    return merge(RemixMenuTriggerStyle(modifier: value));
+  }
+
+  @override
+  List<Object?> get props => [
+        $container,
+        $label,
+        $icon,
+        $variants,
+        $animation,
+        $modifier,
+      ];
+}
+
+// ============================================================================
+// MENU STYLE - Main menu style
+// Provides trigger/overlay specs + default styles for items/dividers via StyleProvider
+// ============================================================================
+
+class RemixMenuStyle extends RemixStyle<RemixMenuSpec, RemixMenuStyle> {
+  /// Trigger styling (resolved into spec)
+  final Prop<StyleSpec<RemixMenuTriggerSpec>>? $trigger;
+
+  /// Overlay styling (resolved into spec)
+  final Prop<StyleSpec<FlexBoxSpec>>? $overlay;
+
+  /// Default item style (provided to children via StyleProvider, NOT in spec)
+  final Prop<StyleSpec<RemixMenuItemSpec>>? $item;
+
+  /// Default divider style (provided to children via StyleProvider, NOT in spec)
+  final Prop<StyleSpec<RemixDividerSpec>>? $divider;
+
+  const RemixMenuStyle.create({
+    Prop<StyleSpec<RemixMenuTriggerSpec>>? trigger,
+    Prop<StyleSpec<FlexBoxSpec>>? overlay,
+    Prop<StyleSpec<RemixMenuItemSpec>>? item,
+    Prop<StyleSpec<RemixDividerSpec>>? divider,
+    super.variants,
+    super.animation,
+    super.modifier,
+  })  : $trigger = trigger,
+        $overlay = overlay,
+        $item = item,
+        $divider = divider;
+
+  RemixMenuStyle({
+    RemixMenuTriggerStyle? trigger,
+    FlexBoxStyler? overlay,
+    RemixMenuItemStyle? item,
+    RemixDividerStyle? divider,
+    AnimationConfig? animation,
+    List<VariantStyle<RemixMenuSpec>>? variants,
+    WidgetModifierConfig? modifier,
+  }) : this.create(
+          trigger: Prop.maybeMix(trigger),
+          overlay: Prop.maybeMix(overlay),
+          item: Prop.maybeMix(item),
+          divider: Prop.maybeMix(divider),
+          variants: variants,
+          animation: animation,
+          modifier: modifier,
+        );
+
+  RemixMenuStyle trigger(RemixMenuTriggerStyle value) {
     return merge(RemixMenuStyle(trigger: value));
   }
 
-  RemixMenuStyle triggerLabel(TextStyler value) {
-    return merge(RemixMenuStyle(triggerLabel: value));
-  }
-
-  RemixMenuStyle triggerIcon(IconStyler value) {
-    return merge(RemixMenuStyle(triggerIcon: value));
-  }
-
-  RemixMenuStyle menuContainer(BoxStyler value) {
-    return merge(RemixMenuStyle(menuContainer: value));
+  RemixMenuStyle overlay(FlexBoxStyler value) {
+    return merge(RemixMenuStyle(overlay: value));
   }
 
   RemixMenuStyle item(RemixMenuItemStyle value) {
     return merge(RemixMenuStyle(item: value));
+  }
+
+  RemixMenuStyle divider(RemixDividerStyle value) {
+    return merge(RemixMenuStyle(divider: value));
+  }
+
+  /// Creates a [RemixMenu] widget with this style applied.
+  ///
+  /// Example:
+  /// ```dart
+  /// RemixMenuStyle()
+  ///   .trigger(...)
+  ///   .overlay(...)
+  ///   .call<String>(
+  ///     trigger: RemixMenuTrigger(label: 'Options'),
+  ///     items: [...],
+  ///   )
+  /// ```
+  RemixMenu<T> call<T>({
+    required RemixMenuTrigger trigger,
+    required List<RemixMenuItemData<T>> items,
+    MenuController? controller,
+    ValueChanged<T>? onSelected,
+    VoidCallback? onOpen,
+    VoidCallback? onClose,
+    VoidCallback? onCanceled,
+    FocusNode? triggerFocusNode,
+  }) {
+    return RemixMenu(
+      trigger: trigger,
+      items: items,
+      controller: controller,
+      onSelected: onSelected,
+      onOpen: onOpen,
+      onClose: onClose,
+      onCanceled: onCanceled,
+      triggerFocusNode: triggerFocusNode,
+      style: this,
+    );
   }
 
   @override
@@ -67,10 +291,9 @@ class RemixMenuStyle extends RemixStyle<RemixMenuSpec, RemixMenuStyle> {
     return StyleSpec(
       spec: RemixMenuSpec(
         trigger: MixOps.resolve(context, $trigger),
-        triggerLabel: MixOps.resolve(context, $triggerLabel),
-        triggerIcon: MixOps.resolve(context, $triggerIcon),
-        menuContainer: MixOps.resolve(context, $menuContainer),
+        overlay: MixOps.resolve(context, $overlay),
         item: MixOps.resolve(context, $item),
+        divider: MixOps.resolve(context, $divider),
       ),
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
@@ -83,10 +306,9 @@ class RemixMenuStyle extends RemixStyle<RemixMenuSpec, RemixMenuStyle> {
 
     return RemixMenuStyle.create(
       trigger: MixOps.merge($trigger, other.$trigger),
-      triggerLabel: MixOps.merge($triggerLabel, other.$triggerLabel),
-      triggerIcon: MixOps.merge($triggerIcon, other.$triggerIcon),
-      menuContainer: MixOps.merge($menuContainer, other.$menuContainer),
+      overlay: MixOps.merge($overlay, other.$overlay),
       item: MixOps.merge($item, other.$item),
+      divider: MixOps.merge($divider, other.$divider),
       variants: MixOps.mergeVariants($variants, other.$variants),
       animation: MixOps.mergeAnimation($animation, other.$animation),
       modifier: MixOps.mergeModifier($modifier, other.$modifier),
@@ -111,10 +333,9 @@ class RemixMenuStyle extends RemixStyle<RemixMenuSpec, RemixMenuStyle> {
   @override
   List<Object?> get props => [
         $trigger,
-        $triggerLabel,
-        $triggerIcon,
-        $menuContainer,
+        $overlay,
         $item,
+        $divider,
         $variants,
         $animation,
         $modifier,

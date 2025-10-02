@@ -15,22 +15,24 @@ Widget buildSelectExample() {
     child: ComparisonView(
       remix: [
         RemixSelect<String>(
+          trigger: const RemixSelectTrigger(
+            placeholder: 'Select an option',
+          ),
           selectedValue: 'Two',
           onChanged: (_) {},
           items: items
               .map((e) => RemixSelectItem<String>(value: e, label: e))
               .toList(),
-          triggerBuilder: (context, spec, selectedValue, isOpen) =>
-            const Text('Two'),
         ),
         RemixSelect<String>(
+          trigger: const RemixSelectTrigger(
+            placeholder: 'Select an option',
+          ),
           selectedValue: 'Two',
           onChanged: null,
           items: items
               .map((e) => RemixSelectItem<String>(value: e, label: e))
               .toList(),
-          triggerBuilder: (context, spec, selectedValue, isOpen) =>
-            const Text('Two'),
         ),
       ],
       material: [

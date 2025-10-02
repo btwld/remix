@@ -35,6 +35,9 @@ class _MyAppState extends State<MyApp> {
               const SizedBox(height: 20),
               // Simple select implementation for demo purposes
               RemixSelect<Options>(
+                trigger: const RemixSelectTrigger(
+                  placeholder: 'Select an item',
+                ),
                 selectedValue: _value,
                 onChanged: (value) {
                   setState(() {
@@ -45,8 +48,6 @@ class _MyAppState extends State<MyApp> {
                     .map((e) =>
                         RemixSelectItem(value: e, label: e.name.capitalize()))
                     .toList(),
-                triggerBuilder: (context, spec, selectedValue, isOpen) =>
-                  Text(_value?.name.capitalize() ?? 'Select an item'),
               ),
             ],
           ),

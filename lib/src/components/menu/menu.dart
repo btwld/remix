@@ -8,6 +8,7 @@ import 'package:naked_ui/naked_ui.dart';
 
 import '../../fortal/fortal.dart';
 import '../../utilities/remix_style.dart';
+import '../divider/divider.dart';
 
 part 'menu_spec.dart';
 part 'menu_style.dart';

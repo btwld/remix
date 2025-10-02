@@ -215,6 +215,9 @@ Widget previewSelect() {
     SizedBox(
       width: 300,
       child: RemixSelect<String>(
+        trigger: const RemixSelectTrigger(
+          placeholder: 'Select an option',
+        ),
         selectedValue: 'option1',
         items: const [
           RemixSelectItem(value: 'option1', label: 'First Option'),
@@ -222,8 +225,6 @@ Widget previewSelect() {
           RemixSelectItem(value: 'option3', label: 'Third Option'),
         ],
         onChanged: (value) {},
-        triggerBuilder: (context, spec, selectedValue, isOpen) =>
-          const Text('First Option'),
       ),
     ),
   );
