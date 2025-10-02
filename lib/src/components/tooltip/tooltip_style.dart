@@ -5,25 +5,35 @@ class RemixTooltipStyle
     with LabelStyleMixin<RemixTooltipStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $label;
+  final Prop<Duration>? $waitDuration;
+  final Prop<Duration>? $showDuration;
 
   const RemixTooltipStyle.create({
     Prop<StyleSpec<BoxSpec>>? container,
     Prop<StyleSpec<TextSpec>>? label,
+    Prop<Duration>? waitDuration,
+    Prop<Duration>? showDuration,
     super.variants,
     super.animation,
     super.modifier,
   })  : $container = container,
-        $label = label;
+        $label = label,
+        $waitDuration = waitDuration,
+        $showDuration = showDuration;
 
   RemixTooltipStyle({
     BoxStyler? container,
     TextStyler? label,
+    Duration? waitDuration,
+    Duration? showDuration,
     AnimationConfig? animation,
     List<VariantStyle<RemixTooltipSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
           container: Prop.maybeMix(container),
           label: Prop.maybeMix(label),
+          waitDuration: waitDuration != null ? Prop.value(waitDuration) : null,
+          showDuration: showDuration != null ? Prop.value(showDuration) : null,
           variants: variants,
           animation: animation,
           modifier: modifier,
@@ -65,6 +75,16 @@ class RemixTooltipStyle
     return merge(RemixTooltipStyle(container: BoxStyler(decoration: value)));
   }
 
+  /// Sets the wait duration before showing tooltip
+  RemixTooltipStyle waitDuration(Duration value) {
+    return merge(RemixTooltipStyle(waitDuration: value));
+  }
+
+  /// Sets the show duration before hiding tooltip
+  RemixTooltipStyle showDuration(Duration value) {
+    return merge(RemixTooltipStyle(showDuration: value));
+  }
+
   @override
   RemixTooltipStyle label(TextStyler value) {
     return merge(RemixTooltipStyle(label: value));
@@ -76,6 +96,8 @@ class RemixTooltipStyle
       spec: RemixTooltipSpec(
         container: MixOps.resolve(context, $container),
         label: MixOps.resolve(context, $label),
+        waitDuration: MixOps.resolve(context, $waitDuration) ?? const Duration(milliseconds: 300),
+        showDuration: MixOps.resolve(context, $showDuration) ?? const Duration(milliseconds: 1500),
       ),
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
@@ -89,6 +111,8 @@ class RemixTooltipStyle
     return RemixTooltipStyle.create(
       container: MixOps.merge($container, other.$container),
       label: MixOps.merge($label, other.$label),
+      waitDuration: other.$waitDuration ?? $waitDuration,
+      showDuration: other.$showDuration ?? $showDuration,
       variants: MixOps.mergeVariants($variants, other.$variants),
       animation: MixOps.mergeAnimation($animation, other.$animation),
       modifier: MixOps.mergeModifier($modifier, other.$modifier),
@@ -138,6 +162,8 @@ class RemixTooltipStyle
   List<Object?> get props => [
         $container,
         $label,
+        $waitDuration,
+        $showDuration,
         $variants,
         $animation,
         $modifier,

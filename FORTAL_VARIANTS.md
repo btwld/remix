@@ -70,7 +70,7 @@ Different components require completely different style properties:
 
 - **Buttons**: background, text, border, focusRing
 - **Progress**: track, indicator (both require BoxStyler wrappers)
-- **Slider**: baseTrack, activeTrack (Paint objects), thumb (BoxStyler)
+- **Slider**: track, range (Paint objects), thumb (BoxStyler)
 - **Checkbox**: indicatorContainer, indicator, label, container
 - **Switch**: track, thumb, container (state variants handled via .onVariant())
 - **Select**: Separate Trigger and Content variants
