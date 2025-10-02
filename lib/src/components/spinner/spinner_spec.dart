@@ -1,41 +1,37 @@
 part of 'spinner.dart';
 
-enum SpinnerType {
-  solid,
-  dotted,
-}
-
 class RemixSpinnerSpec extends Spec<RemixSpinnerSpec> with Diagnosticable {
   final double? size;
   final double? strokeWidth;
-  final Color? color;
+  final Color? indicatorColor;
+  final Color? trackColor;
+  final double? trackStrokeWidth;
   final Duration? duration;
-  final SpinnerType? _type;
 
   const RemixSpinnerSpec({
     this.size,
     this.strokeWidth,
-    this.color,
+    this.indicatorColor,
+    this.trackColor,
+    this.trackStrokeWidth,
     this.duration,
-    SpinnerType? type,
-  }) : _type = type;
-
-  /// Gets the spinner type value
-  SpinnerType? get spinnerType => _type;
+  });
 
   RemixSpinnerSpec copyWith({
     double? size,
     double? strokeWidth,
-    Color? color,
+    Color? indicatorColor,
+    Color? trackColor,
+    double? trackStrokeWidth,
     Duration? duration,
-    SpinnerType? type,
   }) {
     return RemixSpinnerSpec(
       size: size ?? this.size,
       strokeWidth: strokeWidth ?? this.strokeWidth,
-      color: color ?? this.color,
+      indicatorColor: indicatorColor ?? this.indicatorColor,
+      trackColor: trackColor ?? this.trackColor,
+      trackStrokeWidth: trackStrokeWidth ?? this.trackStrokeWidth,
       duration: duration ?? this.duration,
-      type: type ?? this._type,
     );
   }
 
@@ -45,9 +41,10 @@ class RemixSpinnerSpec extends Spec<RemixSpinnerSpec> with Diagnosticable {
     return RemixSpinnerSpec(
       size: MixOps.lerp(size, other.size, t),
       strokeWidth: MixOps.lerp(strokeWidth, other.strokeWidth, t),
-      color: MixOps.lerp(color, other.color, t),
+      indicatorColor: MixOps.lerp(indicatorColor, other.indicatorColor, t),
+      trackColor: MixOps.lerp(trackColor, other.trackColor, t),
+      trackStrokeWidth: MixOps.lerp(trackStrokeWidth, other.trackStrokeWidth, t),
       duration: MixOps.lerpSnap(duration, other.duration, t),
-      type: MixOps.lerpSnap(_type, other._type, t),
     );
   }
 
@@ -57,11 +54,19 @@ class RemixSpinnerSpec extends Spec<RemixSpinnerSpec> with Diagnosticable {
     properties
       ..add(DiagnosticsProperty('size', size))
       ..add(DiagnosticsProperty('strokeWidth', strokeWidth))
-      ..add(DiagnosticsProperty('color', color))
-      ..add(DiagnosticsProperty('duration', duration))
-      ..add(DiagnosticsProperty('type', _type));
+      ..add(DiagnosticsProperty('indicatorColor', indicatorColor))
+      ..add(DiagnosticsProperty('trackColor', trackColor))
+      ..add(DiagnosticsProperty('trackStrokeWidth', trackStrokeWidth))
+      ..add(DiagnosticsProperty('duration', duration));
   }
 
   @override
-  List<Object?> get props => [size, strokeWidth, color, duration, _type];
+  List<Object?> get props => [
+        size,
+        strokeWidth,
+        indicatorColor,
+        trackColor,
+        trackStrokeWidth,
+        duration,
+      ];
 }

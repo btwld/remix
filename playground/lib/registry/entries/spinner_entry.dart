@@ -17,7 +17,6 @@ Widget buildSpinnerExample() {
           style: RemixSpinnerStyle(
             size: 32,
             strokeWidth: 2,
-            type: SpinnerType.solid,
           ),
         ),
       ],

@@ -9,15 +9,12 @@ part of 'spinner.dart';
 /// // Basic spinner
 /// RemixSpinner()
 ///
-/// // Primary spinner
-/// RemixSpinner(style: RemixSpinnerStyles.primary)
-///
-/// // Custom spinner
+/// // Custom spinner with track
 /// RemixSpinner(
 ///   style: RemixSpinnerStyle(
 ///     size: 32,
-///     color: RemixTokens.primary(),
-///     type: SpinnerType.dotted,
+///     indicatorColor: Colors.blue,
+///     trackColor: Colors.blue.withValues(alpha: 0.2),
 ///   ),
 /// )
 /// ```
@@ -78,22 +75,19 @@ class _SpinnerSpecWidgetState extends State<_SpinnerSpecWidget>
   @override
   Widget build(BuildContext context) {
     final spec = widget.spec;
-    final color = spec.color ?? Theme.of(context).colorScheme.primary;
+    final indicatorColor =
+        spec.indicatorColor ?? Theme.of(context).colorScheme.primary;
+    final trackColor = spec.trackColor;
     final strokeWidth = spec.strokeWidth ?? 1.5;
     final size = spec.size ?? 24;
-    final type = spec._type ?? SpinnerType.solid;
 
-    final painter = type == SpinnerType.dotted
-        ? DottedSpinnerPainter(
-            animation: controller,
-            strokeWidth: strokeWidth,
-            color: color,
-          )
-        : SolidSpinnerPainter(
-            animation: controller,
-            strokeWidth: strokeWidth,
-            color: color,
-          );
+    final painter = RemixSpinnerPainter(
+      animation: controller,
+      strokeWidth: strokeWidth,
+      indicatorColor: indicatorColor,
+      trackColor: trackColor,
+      trackStrokeWidth: spec.trackStrokeWidth,
+    );
 
     return AnimatedBuilder(
       animation: controller,

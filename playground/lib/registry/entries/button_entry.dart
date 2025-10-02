@@ -36,7 +36,7 @@ Widget buildButtonExample() {
             .borderRadiusAll(const Radius.circular(8))
             .color(const Color(0xFF1F2937).withValues(alpha: 0.6))
             .labelColor(Colors.white.withValues(alpha: 0.7))
-            .spinnerColor(Colors.white),
+            .spinnerIndicatorColor(Colors.white),
       ),
       RemixButton(
         label: 'With Icon',

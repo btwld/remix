@@ -51,7 +51,6 @@ class FortalButtonStyle {
           RemixSpinnerStyle(
             strokeWidth: FortalTokens.borderWidth2(),
             duration: const Duration(milliseconds: 800),
-            type: SpinnerType.solid,
           ),
         )
         // Focus ring (generic)
@@ -72,7 +71,7 @@ class FortalButtonStyle {
         .color(FortalTokens.accent9())
         .labelColor(FortalTokens.accentContrast())
         .iconColor(FortalTokens.accentContrast())
-        .spinner(RemixSpinnerStyle().color(FortalTokens.accentContrast()))
+        .spinner(RemixSpinnerStyle().indicatorColor(FortalTokens.accentContrast()))
         .onHovered(RemixButtonStyle().color(FortalTokens.accent10()))
         .onPressed(
           RemixButtonStyle().color(FortalTokens
@@ -85,7 +84,7 @@ class FortalButtonStyle {
               .labelColor(FortalTokens.accentContrast())
               .iconColor(FortalTokens.accentContrast())
               .spinner(
-                RemixSpinnerStyle().color(FortalTokens.accentContrast()),
+                RemixSpinnerStyle().indicatorColor(FortalTokens.accentContrast()),
               ),
         );
     // TODO: Add high-contrast mode support in the future
@@ -104,7 +103,7 @@ class FortalButtonStyle {
         )
         .labelColor(FortalTokens.accent11())
         .iconColor(FortalTokens.accent11())
-        .spinner(RemixSpinnerStyle().color(FortalTokens.accent11()))
+        .spinner(RemixSpinnerStyle().indicatorColor(FortalTokens.accent11()))
         .onHovered(
           RemixButtonStyle().color(FortalTokens.accent4()).borderAll(
                 color: FortalTokens.accent7(),
@@ -121,7 +120,7 @@ class FortalButtonStyle {
               )
               .labelColor(FortalTokens.accent11())
               .iconColor(FortalTokens.accent11())
-              .spinner(RemixSpinnerStyle().color(FortalTokens.accent11())),
+              .spinner(RemixSpinnerStyle().indicatorColor(FortalTokens.accent11())),
         );
   }
 
@@ -136,7 +135,7 @@ class FortalButtonStyle {
         )
         .labelColor(FortalTokens.accent11())
         .iconColor(FortalTokens.accent11())
-        .spinner(RemixSpinnerStyle().color(FortalTokens.accent11()))
+        .spinner(RemixSpinnerStyle().indicatorColor(FortalTokens.accent11()))
         .onHovered(
           RemixButtonStyle().color(FortalTokens.accentA4()).borderAll(
                 color: FortalTokens.accent7(),
@@ -152,7 +151,7 @@ class FortalButtonStyle {
               )
               .labelColor(FortalTokens.accent11())
               .iconColor(FortalTokens.accent11())
-              .spinner(RemixSpinnerStyle().color(FortalTokens.accent11())),
+              .spinner(RemixSpinnerStyle().indicatorColor(FortalTokens.accent11())),
         );
   }
 
@@ -167,7 +166,7 @@ class FortalButtonStyle {
         )
         .labelColor(FortalTokens.accent11())
         .iconColor(FortalTokens.accent11())
-        .spinner(RemixSpinnerStyle().color(FortalTokens.accent11()))
+        .spinner(RemixSpinnerStyle().indicatorColor(FortalTokens.accent11()))
         .onHovered(
           RemixButtonStyle().color(FortalTokens.accentA3()).borderAll(
                 color: FortalTokens.accent8(),
@@ -182,7 +181,7 @@ class FortalButtonStyle {
               )
               .labelColor(FortalTokens.accent11())
               .iconColor(FortalTokens.accent11())
-              .spinner(RemixSpinnerStyle().color(FortalTokens.accent11())),
+              .spinner(RemixSpinnerStyle().indicatorColor(FortalTokens.accent11())),
         );
   }
 
@@ -193,14 +192,14 @@ class FortalButtonStyle {
         .color(Colors.transparent)
         .labelColor(FortalTokens.accent11())
         .iconColor(FortalTokens.accent11())
-        .spinner(RemixSpinnerStyle().color(FortalTokens.accent11()))
+        .spinner(RemixSpinnerStyle().indicatorColor(FortalTokens.accent11()))
         .onHovered(RemixButtonStyle().color(FortalTokens.accentA3()))
         .onPressed(RemixButtonStyle().color(FortalTokens.accentA4()))
         .onDisabled(
           RemixButtonStyle()
               .labelColor(FortalTokens.accent11())
               .iconColor(FortalTokens.accent11())
-              .spinner(RemixSpinnerStyle().color(FortalTokens.accent11())),
+              .spinner(RemixSpinnerStyle().indicatorColor(FortalTokens.accent11())),
         );
 
     // Ghost variant uses special padding for size2 from JSON:

@@ -35,8 +35,7 @@ class _RadioExampleState extends State<RadioExample> {
             _selectedValue = value;
           });
         },
-        style: style,
-        child: const Column(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           spacing: 16,
           mainAxisSize: MainAxisSize.min,
@@ -45,16 +44,16 @@ class _RadioExampleState extends State<RadioExample> {
               spacing: 8,
               mainAxisSize: MainAxisSize.min,
               children: [
-                RemixRadio<String>(value: 'option1'),
-                Text('Option 1'),
+                RemixRadio<String>(value: 'option1', style: style),
+                const Text('Option 1'),
               ],
             ),
             Row(
               spacing: 8,
               mainAxisSize: MainAxisSize.min,
               children: [
-                RemixRadio<String>(value: 'option2'),
-                Text('Option 2'),
+                RemixRadio<String>(value: 'option2', style: style),
+                const Text('Option 2'),
               ],
             ),
           ],

@@ -133,14 +133,14 @@ class FortalSelectStyles {
   static RemixSelectStyle contentSolid() {
     return RemixSelectStyle()
         .menuContainer(
-          BoxStyler()
+          FlexBoxStyler()
               .color(FortalTokens.colorPanelSolid())
               .borderAll(
                 color: FortalTokens.gray6(),
                 width: FortalTokens.borderWidth1(),
               )
               .borderRadiusAll(FortalTokens.radius3())
-              .paddingAll(8.0),
+              .padding(EdgeInsetsMix.all(8.0)),
         )
         .item(
           RemixSelectMenuItemStyle()
@@ -154,14 +154,14 @@ class FortalSelectStyles {
   static RemixSelectStyle contentSoft() {
     return RemixSelectStyle()
         .menuContainer(
-          BoxStyler()
+          FlexBoxStyler()
               .color(FortalTokens.colorPanelTranslucent())
               .borderAll(
                 color: FortalTokens.gray6(),
                 width: FortalTokens.borderWidth1(),
               )
               .borderRadiusAll(FortalTokens.radius3())
-              .paddingAll(8.0),
+              .padding(EdgeInsetsMix.all(8.0)),
         )
         .item(
           RemixSelectMenuItemStyle()

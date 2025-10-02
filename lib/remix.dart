@@ -24,6 +24,7 @@ export 'src/components/tooltip/tooltip.dart';
 
 /// EXTERNAL DEPENDENCIES
 export 'package:mix/mix.dart';
+export 'package:naked_ui/naked_ui.dart' show OverlayPositionConfig;
 
 /// THEME
 export 'src/theme/remix_theme.dart';
