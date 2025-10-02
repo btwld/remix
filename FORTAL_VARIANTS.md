@@ -213,19 +213,19 @@ class FortalSwitchStyles {
 class FortalSliderStyles {
   static RemixSliderStyle classic({int size = 2}) {
     return RemixSliderStyle()
-      .baseTrackColor(FortalTokens.accentTrack()) // gray6
-      .activeTrackColor(FortalTokens.accentIndicator()) // accent9  
+      .trackColor(FortalTokens.accentTrack()) // gray6
+      .rangeColor(FortalTokens.accentIndicator()) // accent9
       .thumbColor(FortalTokens.colorSurface());
   }
-  
+
   static RemixSliderStyle soft({int size = 2}) {
     return RemixSliderStyle()
-      .baseTrackColor(FortalTokens.accent4())
-      .activeTrackColor(FortalTokens.accent9())
+      .trackColor(FortalTokens.accent4())
+      .rangeColor(FortalTokens.accent9())
       .thumbColor(FortalTokens.colorSurface());
   }
-  // Note: baseTrack and activeTrack use Paint objects, not BoxStyler
-  // Use .baseTrackColor() and .activeTrackColor() convenience methods
+  // Note: track and range use Paint objects, not BoxStyler
+  // Use .trackColor() and .rangeColor() convenience methods
 }
 ```
 
@@ -327,14 +327,14 @@ FortalTokens.radius2()      // Returns RadiusRef (implements Radius, usable for 
    - Background colors: `BoxStyler(decoration: BoxDecorationMix(color: token))`
    - Text colors: `TextStyler(color: token)`
    - Icon colors: `IconStyler(color: token)`
-   - Paint objects (Slider tracks): Use convenience methods like `.baseTrackColor()`
+   - Paint objects (Slider): Use convenience methods like `.trackColor()`, `.rangeColor()`
 
 2. **Component Property Names (Actual vs. Conceptual):**
    - ✅ **Progress**: `.track()`, `.indicator()` (both need BoxStyler)
    - ✅ **Checkbox**: `.indicatorContainer()` (box), `.indicator()` (check)
    - ✅ **Radio**: `.indicatorContainer()` (outer ring), `.indicator()` (inner fill)
    - ✅ **Switch**: `.track()`, `.thumb()` only - use `.onVariant('checked', ...)` for state
-   - ✅ **Slider**: `.baseTrackColor()`, `.activeTrackColor()`, `.thumbColor()`
+   - ✅ **Slider**: `.trackColor()` (background rail), `.rangeColor()` (filled portion), `.thumbColor()`
 
 3. **State Handling:**
    - Hover/focus states: Use `.onHovered()`, `.onFocused()` methods

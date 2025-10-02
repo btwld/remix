@@ -170,8 +170,8 @@ class RemixSlider extends StatelessWidget {
                           height: constraints.maxHeight,
                           child: _AnimatedTrack(
                             value: normalizedValue,
-                            active: spec.activeTrack,
-                            baseTrack: spec.baseTrack,
+                            range: spec.range,
+                            track: spec.track,
                             duration: const Duration(milliseconds: 200),
                             curve: Curves.linear,
                           ),
@@ -241,8 +241,8 @@ double _resolveTightDimension({
 /// Custom painter for drawing slider track (no divisions).
 ///
 /// This painter renders two visual elements:
-/// 1. **Base track**: The full-width background rail
-/// 2. **Active track**: The filled portion showing current progress
+/// 1. **Track**: The full-width background rail
+/// 2. **Range**: The filled portion showing current progress
 ///
 /// **Coordinate System:**
 /// Uses standard Canvas coordinates where (0,0) is top-left.
@@ -254,18 +254,18 @@ class _TrackPainter extends CustomPainter {
   /// Normalized value between 0.0 and 1.0 representing current position.
   final double value;
 
-  /// Paint configuration for the active (filled) portion of the track.
-  final Paint active;
+  /// Paint configuration for the range (filled) portion.
+  final Paint range;
 
-  /// Paint configuration for the base (unfilled) track background.
-  final Paint baseTrack;
+  /// Paint configuration for the track (unfilled) background.
+  final Paint track;
 
   // Divisions removed.
 
   const _TrackPainter({
     required this.value,
-    required this.active,
-    required this.baseTrack,
+    required this.range,
+    required this.track,
   });
 
   // Ticks removed: no division rendering
@@ -273,8 +273,8 @@ class _TrackPainter extends CustomPainter {
   /// Draws a horizontal line segment representing part of the slider track.
   ///
   /// **Purpose:**
-  /// This helper method is used to draw both the base track (full width)
-  /// and the active track (partial width based on current value).
+  /// This helper method is used to draw both the track (full width)
+  /// and the range (partial width based on current value).
   ///
   /// **Parameters:**
   /// - `initialOffset`: Starting point of the line segment
@@ -282,8 +282,8 @@ class _TrackPainter extends CustomPainter {
   /// - `paint`: Visual styling for the line (color, thickness, etc.)
   ///
   /// **Usage:**
-  /// Called twice in paint(): once for base track, once for active track.
-  void drawTrack(
+  /// Called twice in paint(): once for track, once for range.
+  void drawLine(
     Canvas canvas,
     Offset initialOffset,
     Offset endOffset,
@@ -295,45 +295,45 @@ class _TrackPainter extends CustomPainter {
   /// Main painting method that renders the complete slider track.
   ///
   /// **Rendering Order (important for layering):**
-  /// 1. Base track (full-width background)
-  /// 2. Active track (progress fill)
+  /// 1. Track (full-width background)
+  /// 2. Range (progress fill)
   ///
   /// **Why This Order:**
-  /// - Base track provides the foundation
-  /// - Active track is drawn last over it
+  /// - Track provides the foundation
+  /// - Range is drawn last over it
   ///
   /// **Coordinate Calculations:**
   /// - All elements use `size.midY` for vertical centering
-  /// - Base track spans full width: (0, midY) to (width, midY)
-  /// - Active track spans partial width: (0, midY) to (width × value, midY)
+  /// - Track spans full width: (0, midY) to (width, midY)
+  /// - Range spans partial width: (0, midY) to (width × value, midY)
   ///
   /// **Value Mapping:**
   /// The normalized value (0.0-1.0) is multiplied by width to get
-  /// the pixel position where the active track should end.
+  /// the pixel position where the range should end.
   @override
   void paint(Canvas canvas, Size size) {
     final initialOffset = Offset(0, size.midY);
     final endOffset = Offset(size.width, size.midY);
 
-    // Draw the base track (full width background)
-    drawTrack(canvas, initialOffset, endOffset, baseTrack);
+    // Draw the track (full width background)
+    drawLine(canvas, initialOffset, endOffset, track);
 
     // Ticks removed: do not draw divisions
 
-    // Draw the active track (progress fill from start to current value)
-    drawTrack(
+    // Draw the range (progress fill from start to current value)
+    drawLine(
       canvas,
       initialOffset,
       Offset(size.width * value, size.midY),
-      active,
+      range,
     );
   }
 
   @override
   bool shouldRepaint(_TrackPainter oldDelegate) {
     return value != oldDelegate.value ||
-        active != oldDelegate.active ||
-        baseTrack != oldDelegate.baseTrack;
+        range != oldDelegate.range ||
+        track != oldDelegate.track;
   }
 }
 
@@ -357,15 +357,15 @@ extension on Size {
 class _AnimatedTrack extends StatefulWidget {
   const _AnimatedTrack({
     required this.value,
-    required this.active,
-    required this.baseTrack,
+    required this.range,
+    required this.track,
     required this.duration,
     required this.curve,
   });
 
   final double value;
-  final Paint active;
-  final Paint baseTrack;
+  final Paint range;
+  final Paint track;
   final Duration duration;
   final Curve curve;
 
@@ -379,15 +379,15 @@ class _AnimatedTrackState extends State<_AnimatedTrack> {
   @override
   void initState() {
     super.initState();
-    _oldTracks = _Tracks(active: widget.active, baseTrack: widget.baseTrack);
+    _oldTracks = _Tracks(range: widget.range, track: widget.track);
   }
 
   @override
   void didUpdateWidget(covariant _AnimatedTrack oldWidget) {
     super.didUpdateWidget(oldWidget);
     _oldTracks = _Tracks(
-      active: oldWidget.active,
-      baseTrack: oldWidget.baseTrack,
+      range: oldWidget.range,
+      track: oldWidget.track,
     );
   }
 
@@ -396,7 +396,7 @@ class _AnimatedTrackState extends State<_AnimatedTrack> {
     return TweenAnimationBuilder(
       tween: _TracksTween(
         begin: _oldTracks,
-        end: _Tracks(active: widget.active, baseTrack: widget.baseTrack),
+        end: _Tracks(range: widget.range, track: widget.track),
       ),
       duration: widget.duration,
       curve: widget.curve,
@@ -404,8 +404,8 @@ class _AnimatedTrackState extends State<_AnimatedTrack> {
         return CustomPaint(
           painter: _TrackPainter(
             value: widget.value,
-            active: value.active,
-            baseTrack: value.baseTrack,
+            range: value.range,
+            track: value.track,
           ),
         );
       },
@@ -415,20 +415,20 @@ class _AnimatedTrackState extends State<_AnimatedTrack> {
 
 // Helper class for animating track properties
 class _Tracks {
-  final Paint active;
-  final Paint baseTrack;
+  final Paint range;
+  final Paint track;
 
-  const _Tracks({required this.active, required this.baseTrack});
+  const _Tracks({required this.range, required this.track});
 
   @override
   bool operator ==(Object other) {
     return other is _Tracks &&
-        active == other.active &&
-        baseTrack == other.baseTrack;
+        range == other.range &&
+        track == other.track;
   }
 
   @override
-  int get hashCode => active.hashCode ^ baseTrack.hashCode;
+  int get hashCode => range.hashCode ^ track.hashCode;
 }
 
 // Tween for animating between track states
@@ -438,8 +438,8 @@ class _TracksTween extends Tween<_Tracks> {
   @override
   _Tracks lerp(double t) {
     return _Tracks(
-      active: lerpPaint(begin!.active, end!.active, t),
-      baseTrack: lerpPaint(begin!.baseTrack, end!.baseTrack, t),
+      range: lerpPaint(begin!.range, end!.range, t),
+      track: lerpPaint(begin!.track, end!.track, t),
     );
   }
 }

@@ -8,27 +8,27 @@ const double _remixSliderDefaultTrackStrokeWidth = 8.0;
 /// The [t] argument represents position on timeline (0.0 to 1.0)
 /// Returns [a] when t=0.0, [b] when t=1.0, interpolated values between
 Paint lerpPaint(Paint? a, Paint? b, double t) {
-  if (a == null && b == null) return Paint.from(_defaultBaseTrackPaint);
+  if (a == null && b == null) return Paint.from(_defaultTrackPaint);
   if (a == null) return Paint.from(b!);
   if (b == null) return Paint.from(a);
 
   return Paint()
-    ..color = Color.lerp(a.color, b.color, t) ?? _defaultBaseTrackPaint.color
+    ..color = Color.lerp(a.color, b.color, t) ?? _defaultTrackPaint.color
     ..strokeWidth = lerpDouble(a.strokeWidth, b.strokeWidth, t) ??
-        _defaultBaseTrackPaint.strokeWidth
+        _defaultTrackPaint.strokeWidth
     ..strokeCap = t < 0.5 ? a.strokeCap : b.strokeCap
     ..style = PaintingStyle.stroke // Always stroke for slider tracks
     ..isAntiAlias = t < 0.5 ? a.isAntiAlias : b.isAntiAlias;
 }
 
 // Default Paint configurations
-final _defaultBaseTrackPaint = Paint()
+final _defaultTrackPaint = Paint()
   ..color = MixColors.grey
   ..strokeWidth = _remixSliderDefaultTrackStrokeWidth
   ..strokeCap = StrokeCap.round
   ..style = PaintingStyle.stroke;
 
-final _defaultActiveTrackPaint = Paint()
+final _defaultRangePaint = Paint()
   ..color = MixColors.black
   ..strokeWidth = _remixSliderDefaultTrackStrokeWidth
   ..strokeCap = StrokeCap.round
@@ -40,26 +40,26 @@ class RemixSliderSpec extends Spec<RemixSliderSpec> with Diagnosticable {
       _remixSliderDefaultTrackStrokeWidth;
 
   final StyleSpec<BoxSpec> thumb;
-  final Paint baseTrack;
-  final Paint activeTrack;
+  final Paint track;
+  final Paint range;
 
   RemixSliderSpec({
     StyleSpec<BoxSpec>? thumb,
-    Paint? baseTrack,
-    Paint? activeTrack,
+    Paint? track,
+    Paint? range,
   })  : thumb = thumb ?? const StyleSpec(spec: BoxSpec()),
-        baseTrack = baseTrack ?? _defaultBaseTrackPaint,
-        activeTrack = activeTrack ?? _defaultActiveTrackPaint;
+        track = track ?? _defaultTrackPaint,
+        range = range ?? _defaultRangePaint;
 
   RemixSliderSpec copyWith({
     StyleSpec<BoxSpec>? thumb,
-    Paint? baseTrack,
-    Paint? activeTrack,
+    Paint? track,
+    Paint? range,
   }) {
     return RemixSliderSpec(
       thumb: thumb ?? this.thumb,
-      baseTrack: baseTrack ?? this.baseTrack,
-      activeTrack: activeTrack ?? this.activeTrack,
+      track: track ?? this.track,
+      range: range ?? this.range,
     );
   }
 
@@ -68,23 +68,23 @@ class RemixSliderSpec extends Spec<RemixSliderSpec> with Diagnosticable {
 
     return RemixSliderSpec(
       thumb: MixOps.lerp(thumb, other.thumb, t)!,
-      baseTrack: lerpPaint(baseTrack, other.baseTrack, t),
-      activeTrack: lerpPaint(activeTrack, other.activeTrack, t),
+      track: lerpPaint(track, other.track, t),
+      range: lerpPaint(range, other.range, t),
     );
   }
 
   double get trackThickness =>
-      math.max(baseTrack.strokeWidth, activeTrack.strokeWidth);
+      math.max(track.strokeWidth, range.strokeWidth);
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('thumb', thumb))
-      ..add(DiagnosticsProperty('baseTrack', baseTrack))
-      ..add(DiagnosticsProperty('activeTrack', activeTrack));
+      ..add(DiagnosticsProperty('track', track))
+      ..add(DiagnosticsProperty('range', range));
   }
 
   @override
-  List<Object?> get props => [thumb, baseTrack, activeTrack];
+  List<Object?> get props => [thumb, track, range];
 }
