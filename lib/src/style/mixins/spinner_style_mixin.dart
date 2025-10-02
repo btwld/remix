@@ -3,7 +3,7 @@ import 'package:mix/mix.dart';
 import '../../components/spinner/spinner.dart';
 
 /// Mixin that provides convenient spinner styling methods for component styles.
-/// 
+///
 /// This mixin requires the implementing class to provide a method that accepts
 /// a RemixSpinnerStyle and returns the modified component style.
 mixin SpinnerStyleMixin<T extends Mix<Object?>> {
@@ -11,9 +11,14 @@ mixin SpinnerStyleMixin<T extends Mix<Object?>> {
   /// Should merge the provided RemixSpinnerStyle with the component's spinner style
   T spinner(RemixSpinnerStyle value);
 
-  /// Sets spinner color
-  T spinnerColor(Color value) {
-    return spinner(RemixSpinnerStyle(color: value));
+  /// Sets spinner indicator color
+  T spinnerIndicatorColor(Color value) {
+    return spinner(RemixSpinnerStyle(indicatorColor: value));
+  }
+
+  /// Sets spinner track color
+  T spinnerTrackColor(Color value) {
+    return spinner(RemixSpinnerStyle(trackColor: value));
   }
 
   /// Sets spinner size
@@ -26,24 +31,14 @@ mixin SpinnerStyleMixin<T extends Mix<Object?>> {
     return spinner(RemixSpinnerStyle(strokeWidth: value));
   }
 
+  /// Sets spinner track stroke width
+  T spinnerTrackStrokeWidth(double value) {
+    return spinner(RemixSpinnerStyle(trackStrokeWidth: value));
+  }
+
   /// Sets spinner animation duration
   T spinnerDuration(Duration value) {
     return spinner(RemixSpinnerStyle(duration: value));
-  }
-
-  /// Sets spinner type
-  T spinnerType(SpinnerType value) {
-    return spinner(RemixSpinnerStyle(type: value));
-  }
-
-  /// Sets spinner to solid type (convenience method)
-  T spinnerSolid() {
-    return spinner(RemixSpinnerStyle(type: SpinnerType.solid));
-  }
-
-  /// Sets spinner to dotted type (convenience method)
-  T spinnerDotted() {
-    return spinner(RemixSpinnerStyle(type: SpinnerType.dotted));
   }
 
   /// Sets spinner animation to fast (500ms)

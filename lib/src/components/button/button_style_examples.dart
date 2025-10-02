@@ -20,7 +20,7 @@ class RemixButtonStyleExamples {
     final simpleButton = RemixButtonStyle()
         .labelColor(Colors.blue)
         .iconSize(20.0)
-        .spinnerColor(Colors.blue);
+        .spinnerIndicatorColor(Colors.blue);
 
     // TIER 2: Use when setting multiple text properties
     // ignore: unused_local_variable
@@ -214,19 +214,19 @@ class RemixButtonStyleExamples {
       .labelColor(Colors.white.withValues(alpha: 0.7))
       .iconColor(Colors.white.withValues(alpha: 0.7))
       // Using new spinner helper methods
-      .spinnerColor(Colors.white)
+      .spinnerIndicatorColor(Colors.white)
       .spinnerSize(16.0)
       .spinnerStrokeWidth(2.0)
       .spinnerFast(); // 500ms duration
 
-  /// Alternative loading button with different spinner style
-  static RemixButtonStyle get loadingDotted => RemixButtonStyle()
+  /// Alternative loading button with track color
+  static RemixButtonStyle get loadingWithTrack => RemixButtonStyle()
       .color(Colors.purple)
       .labelColor(Colors.white.withValues(alpha: 0.7))
       .iconColor(Colors.white.withValues(alpha: 0.7))
-      .spinnerColor(Colors.white)
+      .spinnerIndicatorColor(Colors.white)
+      .spinnerTrackColor(Colors.white.withValues(alpha: 0.2))
       .spinnerSize(18.0)
-      .spinnerDotted() // Dotted spinner style
       .spinnerSlow(); // 1500ms duration
 
   // ==========================================================================

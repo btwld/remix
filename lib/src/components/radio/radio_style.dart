@@ -38,6 +38,28 @@ class RemixRadioStyle
     return merge(RemixRadioStyle(container: BoxStyler(alignment: value)));
   }
 
+  /// Creates a RemixRadio widget with this style applied.
+  RemixRadio<T> call<T>({
+    required T value,
+    bool enabled = true,
+    bool autofocus = false,
+    bool toggleable = false,
+    FocusNode? focusNode,
+    MouseCursor? mouseCursor,
+    bool enableFeedback = true,
+  }) {
+    return RemixRadio(
+      style: this,
+      value: value,
+      autofocus: autofocus,
+      enabled: enabled,
+      toggleable: toggleable,
+      focusNode: focusNode,
+      mouseCursor: mouseCursor,
+      enableFeedback: enableFeedback,
+    );
+  }
+
   /// Convenience for applying padding around the control.
   @override
   RemixRadioStyle padding(EdgeInsetsGeometryMix value) {

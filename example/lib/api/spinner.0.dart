@@ -29,24 +29,29 @@ class _SpinnerExampleState extends State<SpinnerExample> {
           mainAxisAlignment: MainAxisAlignment.center,
           spacing: 16,
           children: [
-            RemixSpinner(style: styleSolid),
-            RemixSpinner(style: styleDotted),
+            RemixSpinner(style: styleDefault),
+            RemixSpinner(style: styleWithTrack),
+            RemixSpinner(style: styleCustomColors),
           ],
         ),
       ),
     );
   }
 
-  RemixSpinnerStyle get styleSolid {
-    return RemixSpinnerStyle()
-        .spinnerType(SpinnerType.solid)
-        .color(Colors.blue);
+  RemixSpinnerStyle get styleDefault {
+    return RemixSpinnerStyle().indicatorColor(Colors.blue);
   }
 
-  RemixSpinnerStyle get styleDotted {
+  RemixSpinnerStyle get styleWithTrack {
     return RemixSpinnerStyle()
-        .spinnerType(SpinnerType.dotted)
-        .duration(2.s)
-        .color(Colors.redAccent);
+        .indicatorColor(Colors.green)
+        .trackColor(Colors.green.withValues(alpha: 0.2));
+  }
+
+  RemixSpinnerStyle get styleCustomColors {
+    return RemixSpinnerStyle()
+        .indicatorColor(Colors.redAccent)
+        .trackColor(Colors.red.withValues(alpha: 0.15))
+        .duration(2.s);
   }
 }

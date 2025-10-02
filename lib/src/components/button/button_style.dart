@@ -11,7 +11,7 @@ part of 'button.dart';
 ///   .labelFontSize(16.0)
 ///   .iconColor(Colors.blue)
 ///   .iconSize(20.0)
-///   .spinnerColor(Colors.white)
+///   .spinnerIndicatorColor(Colors.white)
 ///   .spinnerSize(16.0)
 /// ```
 ///

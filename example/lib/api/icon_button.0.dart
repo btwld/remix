@@ -54,7 +54,7 @@ class IconButtonExample extends StatelessWidget {
           RemixSpinnerStyle()
               .size(22)
               .strokeWidth(1.3)
-              .color(Colors.blueGrey.shade600),
+              .indicatorColor(Colors.blueGrey.shade600),
         )
         .onHovered(
           RemixIconButtonStyle()

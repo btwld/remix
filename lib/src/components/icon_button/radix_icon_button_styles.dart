@@ -65,9 +65,8 @@ class FortalIconButtonStyles {
         .spinner(
           RemixSpinnerStyle(
             strokeWidth: FortalTokens.borderWidth2(),
-            color: FortalTokens.accentContrast(),
+            indicatorColor: FortalTokens.accentContrast(),
             duration: const Duration(milliseconds: 800),
-            type: SpinnerType.solid,
           ),
         )
         // State variants
@@ -78,7 +77,7 @@ class FortalIconButtonStyles {
               .color(FortalTokens.accent9())
               .iconColor(FortalTokens.accentContrast())
               .spinner(
-                RemixSpinnerStyle(color: FortalTokens.accentContrast()),
+                RemixSpinnerStyle(indicatorColor: FortalTokens.accentContrast()),
               ),
         );
   }
@@ -102,9 +101,8 @@ class FortalIconButtonStyles {
         .spinner(
           RemixSpinnerStyle(
             strokeWidth: FortalTokens.borderWidth2(),
-            color: FortalTokens.accent11(),
+            indicatorColor: FortalTokens.accent11(),
             duration: const Duration(milliseconds: 800),
-            type: SpinnerType.solid,
           ),
         )
         // State variants
@@ -123,7 +121,7 @@ class FortalIconButtonStyles {
                 width: FortalTokens.borderWidth1(),
               )
               .iconColor(FortalTokens.accent11())
-              .spinner(RemixSpinnerStyle(color: FortalTokens.accent11())),
+              .spinner(RemixSpinnerStyle(indicatorColor: FortalTokens.accent11())),
         );
   }
 
@@ -146,9 +144,8 @@ class FortalIconButtonStyles {
         .spinner(
           RemixSpinnerStyle(
             strokeWidth: FortalTokens.borderWidth2(),
-            color: FortalTokens.accent11(),
+            indicatorColor: FortalTokens.accent11(),
             duration: const Duration(milliseconds: 800),
-            type: SpinnerType.solid,
           ),
         )
         // State variants with surface-specific hover (uses overlay calculation)
@@ -168,7 +165,7 @@ class FortalIconButtonStyles {
                 width: FortalTokens.borderWidth1(),
               )
               .iconColor(FortalTokens.accent11())
-              .spinner(RemixSpinnerStyle(color: FortalTokens.accent11())),
+              .spinner(RemixSpinnerStyle(indicatorColor: FortalTokens.accent11())),
         );
   }
 
@@ -191,9 +188,8 @@ class FortalIconButtonStyles {
         .spinner(
           RemixSpinnerStyle(
             strokeWidth: FortalTokens.borderWidth2(),
-            color: FortalTokens.accent11(),
+            indicatorColor: FortalTokens.accent11(),
             duration: const Duration(milliseconds: 800),
-            type: SpinnerType.solid,
           ),
         )
         // State variants
@@ -210,7 +206,7 @@ class FortalIconButtonStyles {
                 width: FortalTokens.borderWidth1(),
               )
               .iconColor(FortalTokens.accent11())
-              .spinner(RemixSpinnerStyle(color: FortalTokens.accent11())),
+              .spinner(RemixSpinnerStyle(indicatorColor: FortalTokens.accent11())),
         );
   }
 
@@ -229,9 +225,8 @@ class FortalIconButtonStyles {
         .spinner(
           RemixSpinnerStyle(
             strokeWidth: FortalTokens.borderWidth2(),
-            color: FortalTokens.accent11(),
+            indicatorColor: FortalTokens.accent11(),
             duration: const Duration(milliseconds: 800),
-            type: SpinnerType.solid,
           ),
         )
         // State variants
@@ -240,7 +235,7 @@ class FortalIconButtonStyles {
         .onDisabled(
           RemixIconButtonStyle()
               .iconColor(FortalTokens.accent11())
-              .spinner(RemixSpinnerStyle(color: FortalTokens.accent11())),
+              .spinner(RemixSpinnerStyle(indicatorColor: FortalTokens.accent11())),
         );
   }
 
@@ -265,9 +260,8 @@ class FortalIconButtonStyles {
         .spinner(
           RemixSpinnerStyle(
             strokeWidth: FortalTokens.borderWidth2(),
-            color: FortalTokens.gray12(),
+            indicatorColor: FortalTokens.gray12(),
             duration: const Duration(milliseconds: 800),
-            type: SpinnerType.solid,
           ),
         )
         // State variants
@@ -290,7 +284,7 @@ class FortalIconButtonStyles {
                 width: FortalTokens.borderWidth1(),
               )
               .iconColor(FortalTokens.gray12())
-              .spinner(RemixSpinnerStyle(color: FortalTokens.gray12()))
+              .spinner(RemixSpinnerStyle(indicatorColor: FortalTokens.gray12()))
               .shadows(
                 FortalTokens.shadow1().map(BoxShadowMix.value).toList(),
               ),

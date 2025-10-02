@@ -24,7 +24,7 @@ RemixButtonStyle()
   .iconOpacity(0.9)
   
   // Spinner styling
-  .spinnerColor(Colors.white)
+  .spinnerIndicatorColor(Colors.white)
   .spinnerSize(16.0)
   .spinnerStrokeWidth(2.0)
   .spinnerFast()
@@ -59,13 +59,12 @@ RemixButtonStyle()
 - `iconShadows(List<ShadowMix>)` - Sets shadows
 
 **Available Spinner Helpers:**
-- `spinnerColor(Color)` - Sets spinner color
+- `spinnerIndicatorColor(Color)` - Sets spinner indicator color
+- `spinnerTrackColor(Color)` - Sets spinner track color
 - `spinnerSize(double)` - Sets spinner size
-- `spinnerStrokeWidth(double)` - Sets stroke width
+- `spinnerStrokeWidth(double)` - Sets indicator stroke width
+- `spinnerTrackStrokeWidth(double)` - Sets track stroke width
 - `spinnerDuration(Duration)` - Sets animation duration
-- `spinnerType(SpinnerType)` - Sets spinner type
-- `spinnerSolid()` - Sets to solid type (convenience)
-- `spinnerDotted()` - Sets to dotted type (convenience)
 - `spinnerFast()` - Sets to 500ms duration (convenience)
 - `spinnerNormal()` - Sets to 1000ms duration (convenience)
 - `spinnerSlow()` - Sets to 1500ms duration (convenience)
@@ -213,7 +212,7 @@ static RemixButtonStyle get loading => RemixButtonStyle()
   .color(Colors.blue)
   .labelColor(Colors.white.withOpacity(0.7))
   .iconColor(Colors.white.withOpacity(0.7))
-  .spinnerColor(Colors.white)
+  .spinnerIndicatorColor(Colors.white)
   .spinnerSize(16.0)
   .spinnerStrokeWidth(2.0)
   .spinnerFast(); // 500ms animation
