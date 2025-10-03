@@ -72,16 +72,11 @@ class RemixAccordionStyle
 
   /// Style when accordion is expanded
   RemixAccordionStyle onExpanded(RemixAccordionStyle Function(bool) builder) {
-    return variants([
-      VariantStyle(
-        NamedVariant('remix_accordion_on_expanded'),
-        builder(true),
-      ),
-      VariantStyle(
-        NamedVariant('remix_accordion_on_collapsed'),
-        builder(false),
-      ),
-    ]);
+    return onBuilder((context) {
+      final isExpanded = NakedAccordionItemState.of(context).isExpanded;
+
+      return builder(isExpanded);
+    });
   }
 
   // /// Style when accordion is collapsed
