@@ -57,7 +57,7 @@ class _SliderExampleState extends State<SliderExample> {
         .thumbColor(Colors.white)
         .thickness(12)
         .trackColor(Colors.grey.shade300)
-        .rangeColor(Colors.blue)
+        .rangeColor(Colors.black)
         .onDisabled(
           RemixSliderStyle()
               .trackColor(Colors.grey.shade300)

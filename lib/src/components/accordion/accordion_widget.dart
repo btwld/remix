@@ -140,68 +140,84 @@ class RemixAccordion<T> extends StatelessWidget {
     BuildContext context,
     NakedAccordionItemState<T> state,
   ) {
-    return StyleBuilder(
-      style: style,
-      controller: NakedAccordionItemState.controllerOf(context),
-      builder: (context, spec) {
-        return FlexBox(
-          styleSpec: spec.trigger,
-          children: [
-            if (leadingIcon != null)
-              StyledIcon(icon: leadingIcon!, styleSpec: spec.leadingIcon),
-            if (title != null)
-              Expanded(child: StyledText(title!, styleSpec: spec.title)),
-            StyledIcon(
-              icon:
-                  trailingIcon ?? (state.isExpanded ? Icons.remove : Icons.add),
-              styleSpec: spec.trailingIcon,
+    return WidgetStateProvider(
+      states: state.states,
+      child: Builder(builder: (context) {
+        final isExpanded = state.isExpanded;
+        final resolvedStyle = style.build(
+          context,
+          namedVariants: {
+            NamedVariant(
+              isExpanded
+                  ? 'remix_accordion_on_expanded'
+                  : 'remix_accordion_on_collapsed',
             ),
-          ],
-        );
-      },
-    );
-  }
-
-  Widget _buildTransitionWrapper(Widget panel) {
-    return Builder(
-      builder: (context) {
-        // Access accordion controller from scope to check expanded state
-        final scope = NakedAccordionScope.of<T>(context);
-        final isExpanded = scope.controller.contains(value);
-
-        // Build the animation style based on expanded state
-        final animationStyle = isExpanded
-            ? RemixAccordionStyle().content(
-                BoxStyler()
-                    .maxHeight(1000)
-                    .animate(AnimationConfig.easeOut(200.ms)),
-              )
-            : RemixAccordionStyle().content(
-                BoxStyler()
-                    .maxHeight(0)
-                    .paddingY(0)
-                    .clipBehavior(Clip.hardEdge)
-                    .animate(AnimationConfig.easeOut(200.ms)),
-              );
-
-        // Merge with user's content style
-        final mergedStyle = style.merge(animationStyle);
-
-        return StyleBuilder(
-          style: mergedStyle,
-          builder: (context, spec) {
-            return Box(styleSpec: spec.content, child: panel);
           },
         );
-      },
+
+        return StyleSpecBuilder<RemixAccordionSpec>(
+          styleSpec: resolvedStyle,
+          builder: (context, spec) {
+            return FlexBox(
+              styleSpec: spec.trigger,
+              children: [
+                if (leadingIcon != null)
+                  StyledIcon(icon: leadingIcon!, styleSpec: spec.leadingIcon),
+                if (title != null)
+                  Expanded(child: StyledText(title!, styleSpec: spec.title)),
+                StyledIcon(
+                  icon: trailingIcon ??
+                      (state.isExpanded ? Icons.remove : Icons.add),
+                  styleSpec: spec.trailingIcon,
+                ),
+              ],
+            );
+          },
+        );
+      }),
     );
   }
+
+  // Widget _buildTransitionWrapper(Widget panel) {
+  //   return Builder(
+  //     builder: (context) {
+  //       // Access accordion controller from scope to check expanded state
+  //       final scope = NakedAccordionScope.of<T>(context);
+  //       final isExpanded = scope.controller.contains(value);
+
+  //       // Build the animation style based on expanded state
+  //       final animationStyle = isExpanded
+  //           ? RemixAccordionStyle().content(
+  //               BoxStyler()
+  //                   .maxHeight(1000)
+  //                   .animate(AnimationConfig.easeOut(200.ms)),
+  //             )
+  //           : RemixAccordionStyle().content(
+  //               BoxStyler()
+  //                   .maxHeight(0)
+  //                   .paddingY(0)
+  //                   .clipBehavior(Clip.hardEdge)
+  //                   .animate(AnimationConfig.easeOut(200.ms)),
+  //             );
+
+  //       // Merge with user's content style
+  //       final mergedStyle = style.merge(animationStyle);
+
+  //       return StyleBuilder(
+  //         style: mergedStyle,
+  //         builder: (context, spec) {
+  //           return Box(styleSpec: spec.content, child: panel);
+  //         },
+  //       );
+  //     },
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
     return NakedAccordion<T>(
       value: value,
-      transitionBuilder: _buildTransitionWrapper,
+      // transitionBuilder: _buildTransitionWrapper,
       enabled: enabled,
       mouseCursor: mouseCursor,
       enableFeedback: enableFeedback,

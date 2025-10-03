@@ -88,17 +88,24 @@ class _AccordionExampleState extends State<AccordionExample> {
               .paddingBottom(16)
               .paddingTop(8),
         )
+        .onExpanded((bool isExpanded) {
+          return RemixAccordionStyle().content(
+            BoxStyler()
+                .maxHeight(isExpanded ? 1000 : 0)
+                .paddingY(isExpanded ? 16 : 0)
+                .color(Colors.purple)
+                .animate(AnimationConfig.easeOut(200.ms)),
+          );
+        })
         .wrapClipRRect(borderRadius: BorderRadius.circular(8))
         .color(Colors.white)
         .paddingAll(16)
-        .borderRadiusAll(const Radius.circular(8))
+        .borderRounded(8)
         .decoration(
           BoxDecorationMix(
             color: Colors.white,
             border: BoxBorderMix.all(
-              BorderSideMix()
-                  .color(Colors.grey.shade300)
-                  .width(1),
+              BorderSideMix().color(Colors.grey.shade300).width(1),
             ),
             borderRadius: BorderRadiusMix.circular(8),
           ),
@@ -110,9 +117,7 @@ class _AccordionExampleState extends State<AccordionExample> {
               .spacing(12),
         )
         .leadingIcon(
-          IconStyler()
-              .color(Colors.grey.shade700)
-              .size(20),
+          IconStyler().color(Colors.grey.shade700).size(20),
         )
         .title(
           TextStyler()
@@ -121,9 +126,7 @@ class _AccordionExampleState extends State<AccordionExample> {
               .fontSize(14),
         )
         .trailingIcon(
-          IconStyler()
-              .color(Colors.grey.shade700)
-              .size(20),
+          IconStyler().color(Colors.grey.shade700).size(20),
         );
   }
 }

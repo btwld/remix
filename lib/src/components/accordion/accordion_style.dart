@@ -71,34 +71,36 @@ class RemixAccordionStyle
   }
 
   /// Style when accordion is expanded
-  RemixAccordionStyle onExpanded(RemixAccordionStyle value) {
+  RemixAccordionStyle onExpanded(RemixAccordionStyle Function(bool) builder) {
     return variants([
       VariantStyle(
-        ContextVariant('isExpanded', (context) {
-          return NakedAccordionItemState.of(context).isExpanded;
-        }),
-        value,
+        NamedVariant('remix_accordion_on_expanded'),
+        builder(true),
+      ),
+      VariantStyle(
+        NamedVariant('remix_accordion_on_collapsed'),
+        builder(false),
       ),
     ]);
   }
 
-  /// Style when accordion is collapsed
-  RemixAccordionStyle onCollapsed(RemixAccordionStyle value) {
-    return variants([
-      VariantStyle(
-        ContextVariant('isExpanded', (context) {
-          return !NakedAccordionItemState.of(context).isExpanded;
-        }),
-        value,
-      ),
-    ]);
-  }
+  // /// Style when accordion is collapsed
+  // RemixAccordionStyle onCollapsed(RemixAccordionStyle value) {
+  //   return variants([
+  //     VariantStyle(
+  //       ContextVariant('onCollapsed', (context) {
+  //         return !NakedAccordionItemState.of(context).isExpanded;
+  //       }),
+  //       value,
+  //     ),
+  //   ]);
+  // }
 
   /// onCanCollapse
   RemixAccordionStyle onCanCollapse(RemixAccordionStyle value) {
     return variants([
       VariantStyle(
-        ContextVariant('canCollapse', (context) {
+        ContextVariant('onCanCollapse', (context) {
           return NakedAccordionItemState.of(context).canCollapse;
         }),
         value,
@@ -110,7 +112,7 @@ class RemixAccordionStyle
   RemixAccordionStyle onCanExpand(RemixAccordionStyle value) {
     return variants([
       VariantStyle(
-        ContextVariant('canExpand', (context) {
+        ContextVariant('onCanExpand', (context) {
           return NakedAccordionItemState.of(context).canExpand;
         }),
         value,
