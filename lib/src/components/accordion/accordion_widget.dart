@@ -37,13 +37,13 @@ typedef RemixAccordionController<T> = NakedAccordionController<T>;
 class RemixAccordionGroup<T> extends StatelessWidget {
   const RemixAccordionGroup({
     super.key,
-    required this.children,
+    required this.child,
     required this.controller,
     this.initialExpandedValues = const [],
   });
 
   /// Accordion items to render.
-  final List<Widget> children;
+  final Widget child;
 
   /// Controller that manages expanded values.
   final RemixAccordionController<T> controller;
@@ -56,7 +56,7 @@ class RemixAccordionGroup<T> extends StatelessWidget {
     return NakedAccordionGroup<T>(
       controller: controller,
       initialExpandedValues: initialExpandedValues,
-      children: children,
+      child: child,
     );
   }
 }
@@ -81,10 +81,25 @@ class RemixAccordion<T> extends StatelessWidget {
     this.onPressChange,
     this.semanticLabel,
     this.style = const RemixAccordionStyle.create(),
+    this.transitionBuilder = defaultAccordionTransitionBuilder,
   }) : assert(
           title != null || builder != null,
           'Either title or builder must be provided',
         );
+
+  static Widget defaultAccordionTransitionBuilder(
+    Widget panel,
+    Animation<double> animation,
+  ) {
+    return FadeTransition(
+      opacity: animation,
+      child: SizeTransition(
+        sizeFactor: animation,
+        axisAlignment: 1,
+        child: panel,
+      ),
+    );
+  }
 
   /// Unique identifier tracked by the controller.
   final T value;
@@ -132,7 +147,10 @@ class RemixAccordion<T> extends StatelessWidget {
   final String? semanticLabel;
 
   /// The style configuration for the accordion item.
-  final RemixAccordionStyle style;
+  final RemixAccordionStyle<T> style;
+
+  /// The transition builder for the accordion item.
+  final Widget Function(Widget, Animation<double>) transitionBuilder;
 
   static late final styleFrom = RemixAccordionStyle.new;
 
@@ -168,30 +186,19 @@ class RemixAccordion<T> extends StatelessWidget {
         // Access accordion controller from scope to check expanded state
         final scope = NakedAccordionScope.of<T>(context);
         final isExpanded = scope.controller.contains(value);
-
-        // Build the animation style based on expanded state
-        final animationStyle = isExpanded
-            ? RemixAccordionStyle().content(
-                BoxStyler()
-                    .maxHeight(1000)
-                    .animate(AnimationConfig.easeOut(200.ms)),
+        final child = isExpanded
+            ? StyleBuilder(
+                style: style,
+                builder: (context, spec) {
+                  return Box(styleSpec: spec.content, child: panel);
+                },
               )
-            : RemixAccordionStyle().content(
-                BoxStyler()
-                    .maxHeight(0)
-                    .paddingY(0)
-                    .clipBehavior(Clip.hardEdge)
-                    .animate(AnimationConfig.easeOut(200.ms)),
-              );
+            : const SizedBox.shrink();
 
-        // Merge with user's content style
-        final mergedStyle = style.merge(animationStyle);
-
-        return StyleBuilder(
-          style: mergedStyle,
-          builder: (context, spec) {
-            return Box(styleSpec: spec.content, child: panel);
-          },
+        return AnimatedSwitcher(
+          duration: const Duration(milliseconds: 200),
+          transitionBuilder: transitionBuilder,
+          child: child,
         );
       },
     );
