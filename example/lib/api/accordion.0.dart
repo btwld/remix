@@ -41,37 +41,43 @@ class _AccordionExampleState extends State<AccordionExample> {
       child: SizedBox(
         width: 400,
         child: FlexBox(
-          style: FlexBoxStyler().direction(Axis.vertical).spacing(24),
+          style: FlexBoxStyler()
+              .direction(Axis.vertical)
+              .spacing(24)
+              .mainAxisSize(MainAxisSize.min),
           children: [
             RemixAccordionGroup(
               controller: controller,
-              children: [
-                RemixAccordion(
-                  value: 'accordion1',
-                  title: 'How do I update my account information?',
-                  leadingIcon: Icons.help_outline,
-                  style: itemStyle,
-                  child: const Text(
-                    'Insert the accordion description here. It would look better as two lines of text.',
+              child: ColumnBox(
+                style: FlexBoxStyler().spacing(16),
+                children: [
+                  RemixAccordion(
+                    value: 'accordion1',
+                    title: 'How do I update my account information?',
+                    leadingIcon: Icons.help_outline,
+                    style: itemStyle,
+                    child: const Text(
+                      'Insert the accordion description here. It would look better as two lines of text.',
+                    ),
                   ),
-                ),
-                RemixAccordion(
-                  value: 'accordion2',
-                  title: 'What payment methods are accepted?',
-                  leadingIcon: Icons.help_outline,
-                  style: itemStyle,
-                  child: const Text(
-                      'Major credit and debit cards like Visa, MasterCard, and American Express, as well as digital payment options like PayPal and Apple Pay.'),
-                ),
-                RemixAccordion(
-                  value: 'accordion3',
-                  title: 'How can I track my order?',
-                  leadingIcon: Icons.help_outline,
-                  style: itemStyle,
-                  child: const Text(
-                      'You can track your order status in the "My Orders" section of your account.'),
-                ),
-              ],
+                  RemixAccordion(
+                    value: 'accordion2',
+                    title: 'What payment methods are accepted?',
+                    leadingIcon: Icons.help_outline,
+                    style: itemStyle,
+                    child: const Text(
+                        'Major credit and debit cards like Visa, MasterCard, and American Express, as well as digital payment options like PayPal and Apple Pay.'),
+                  ),
+                  RemixAccordion(
+                    value: 'accordion3',
+                    title: 'How can I track my order?',
+                    leadingIcon: Icons.help_outline,
+                    style: itemStyle,
+                    child: const Text(
+                        'You can track your order status in the "My Orders" section of your account.'),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -79,28 +85,25 @@ class _AccordionExampleState extends State<AccordionExample> {
     );
   }
 
-  RemixAccordionStyle get itemStyle {
-    return RemixAccordionStyle()
+  RemixAccordionStyle<String> get itemStyle {
+    return RemixAccordionStyle<String>()
         .content(
-          BoxStyler()
-              .color(Colors.white)
-              .paddingX(16)
-              .paddingBottom(16)
-              .paddingTop(8),
+          BoxStyler().paddingX(16).paddingTop(8),
         )
         .onExpanded((bool isExpanded) {
-          return RemixAccordionStyle().content(
+          return RemixAccordionStyle<String>().content(
             BoxStyler()
-                .maxHeight(isExpanded ? 1000 : 0)
-                .paddingY(isExpanded ? 16 : 0)
-                .color(Colors.purple)
+                .paddingBottom(isExpanded ? 16 : 0)
                 .animate(AnimationConfig.easeOut(200.ms)),
           );
         })
         .wrapClipRRect(borderRadius: BorderRadius.circular(8))
-        .color(Colors.white)
-        .paddingAll(16)
+        .paddingX(16)
+        .paddingY(14)
         .borderRounded(8)
+        .onHovered(
+          RemixAccordionStyle<String>().color(Colors.grey.shade100),
+        )
         .decoration(
           BoxDecorationMix(
             color: Colors.white,
