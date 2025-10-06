@@ -168,6 +168,7 @@ class RemixAccordion<T> extends StatelessWidget {
             if (leadingIcon != null)
               StyledIcon(icon: leadingIcon!, styleSpec: spec.leadingIcon),
             if (title != null)
+              // ignore: avoid-flexible-outside-flex
               Expanded(child: StyledText(title!, styleSpec: spec.title)),
             StyledIcon(
               icon:
