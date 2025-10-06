@@ -54,6 +54,9 @@ final class RemixMenuItem<T> extends RemixMenuItemData<T> {
   /// Semantic label for accessibility.
   final String? semanticLabel;
 
+  /// The style for the menu item.
+  final RemixMenuItemStyle style;
+
   const RemixMenuItem({
     required this.value,
     this.label,
@@ -62,6 +65,7 @@ final class RemixMenuItem<T> extends RemixMenuItemData<T> {
     this.enabled = true,
     this.closeOnActivate = true,
     this.semanticLabel,
+    this.style = const RemixMenuItemStyle.create(),
   }) : assert(label != null, 'Must provide label for menu item');
 }
 
@@ -198,10 +202,7 @@ class RemixMenu<T> extends StatelessWidget {
               children: items.map((item) {
                 // Pattern matching ensures exhaustiveness
                 return switch (item) {
-                  RemixMenuItem<T>() => _RemixMenuItemWidget<T>(
-                      data: item,
-                      styleSpec: spec.item,
-                    ),
+                  RemixMenuItem<T>() => _RemixMenuItemWidget<T>(data: item),
                   RemixMenuDivider<T>() =>
                     RemixDivider(styleSpec: spec.divider),
                 };
@@ -254,15 +255,12 @@ class RemixMenu<T> extends StatelessWidget {
 ///
 /// Receives styling directly from parent [RemixMenu] via styleSpec parameter.
 class _RemixMenuItemWidget<T> extends StatelessWidget {
-  const _RemixMenuItemWidget({required this.data, required this.styleSpec});
+  const _RemixMenuItemWidget({required this.data});
 
   final RemixMenuItem<T> data;
-  final StyleSpec<RemixMenuItemSpec> styleSpec;
 
   @override
   Widget build(BuildContext context) {
-    final itemSpec = styleSpec.spec;
-
     return NakedMenuItem<T>(
       value: data.value,
       enabled: data.enabled,
@@ -270,22 +268,28 @@ class _RemixMenuItemWidget<T> extends StatelessWidget {
       closeOnActivate: data.closeOnActivate,
       builder: (context, state, _) {
         // Render item with label and icons
-        return FlexBox(
-          styleSpec: itemSpec.container,
-          children: [
-            if (data.leadingIcon != null)
-              StyledIcon(
-                icon: data.leadingIcon!,
-                styleSpec: itemSpec.leadingIcon,
-              ),
-            if (data.label != null)
-              StyledText(data.label!, styleSpec: itemSpec.label),
-            if (data.trailingIcon != null)
-              StyledIcon(
-                icon: data.trailingIcon!,
-                styleSpec: itemSpec.trailingIcon,
-              ),
-          ],
+        return StyleBuilder(
+          style: data.style,
+          controller: NakedState.controllerOf(context),
+          builder: (context, spec) {
+            return FlexBox(
+              styleSpec: spec.container,
+              children: [
+                if (data.leadingIcon != null)
+                  StyledIcon(
+                    icon: data.leadingIcon!,
+                    styleSpec: spec.leadingIcon,
+                  ),
+                if (data.label != null)
+                  StyledText(data.label!, styleSpec: spec.label),
+                if (data.trailingIcon != null)
+                  StyledIcon(
+                    icon: data.trailingIcon!,
+                    styleSpec: spec.trailingIcon,
+                  ),
+              ],
+            );
+          },
         );
       },
     );

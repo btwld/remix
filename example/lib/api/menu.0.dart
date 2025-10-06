@@ -39,22 +39,32 @@ class _MenuExampleState extends State<MenuExample> {
           // RemixMenu
           RemixMenu<String>(
             trigger: const RemixMenuTrigger(label: 'Open Remix Menu'),
-            items: const [
+            items: [
               RemixMenuItem(
                 value: 'History',
                 leadingIcon: Icons.history,
                 label: 'History',
+                style: menuItemStyle,
               ),
               RemixMenuItem(
                 value: 'Settings',
                 leadingIcon: Icons.settings,
                 label: 'Settings',
+                style: menuItemStyle,
               ),
-              RemixMenuDivider(),
+              const RemixMenuDivider(),
               RemixMenuItem(
                 value: 'Logout',
                 leadingIcon: Icons.logout,
                 label: 'Logout',
+                style: menuItemStyle.onHovered(
+                  RemixMenuItemStyle()
+                      .color(Colors.redAccent.withValues(alpha: 0.05))
+                      .label(
+                        TextStyler().color(Colors.redAccent),
+                      )
+                      .leadingIcon(IconStyler().color(Colors.redAccent)),
+                ),
               ),
             ],
             positioning: const OverlayPositionConfig(
@@ -138,7 +148,6 @@ class _MenuExampleState extends State<MenuExample> {
             ),
           ),
         )
-        .item(menuItemStyle)
         .divider(
           RemixDividerStyle()
               .color(Colors.blueGrey.shade100)
