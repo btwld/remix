@@ -54,8 +54,8 @@ class _SliderExampleState extends State<SliderExample> {
                     .offset(const Offset(0, 2)),
               ),
         )
-        .thumbColor(Colors.white)
-        .thickness(12)
+        .thumbColor(Colors.black)
+        .thickness(2)
         .trackColor(Colors.grey.shade300)
         .rangeColor(Colors.black)
         .onDisabled(

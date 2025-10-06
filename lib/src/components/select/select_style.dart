@@ -3,26 +3,22 @@ part of 'select.dart';
 class RemixSelectStyle extends RemixStyle<RemixSelectSpec, RemixSelectStyle> {
   final Prop<StyleSpec<FlexBoxSpec>>? $menuContainer;
   final Prop<StyleSpec<RemixSelectTriggerSpec>>? $trigger;
-  final Prop<StyleSpec<RemixSelectMenuItemSpec>>? $item;
   final Prop<StyleSpec<RemixCompositedTransformFollowerSpec>>? $position;
 
   const RemixSelectStyle.create({
     Prop<StyleSpec<FlexBoxSpec>>? menuContainer,
     Prop<StyleSpec<RemixSelectTriggerSpec>>? trigger,
-    Prop<StyleSpec<RemixSelectMenuItemSpec>>? item,
     Prop<StyleSpec<RemixCompositedTransformFollowerSpec>>? position,
     super.variants,
     super.animation,
     super.modifier,
   })  : $menuContainer = menuContainer,
         $trigger = trigger,
-        $item = item,
         $position = position;
 
   RemixSelectStyle({
     FlexBoxStyler? menuContainer,
     RemixSelectTriggerStyle? trigger,
-    RemixSelectMenuItemStyle? item,
     RemixCompositedTransformFollowerStyle? position,
     AnimationConfig? animation,
     List<VariantStyle<RemixSelectSpec>>? variants,
@@ -30,7 +26,6 @@ class RemixSelectStyle extends RemixStyle<RemixSelectSpec, RemixSelectStyle> {
   }) : this.create(
           menuContainer: Prop.maybeMix(menuContainer),
           trigger: Prop.maybeMix(trigger),
-          item: Prop.maybeMix(item),
           position: Prop.maybeMix(position),
           variants: variants,
           animation: animation,
@@ -45,11 +40,6 @@ class RemixSelectStyle extends RemixStyle<RemixSelectSpec, RemixSelectStyle> {
   /// Sets trigger styling
   RemixSelectStyle trigger(RemixSelectTriggerStyle value) {
     return merge(RemixSelectStyle(trigger: value));
-  }
-
-  /// Sets menu item styling
-  RemixSelectStyle item(RemixSelectMenuItemStyle value) {
-    return merge(RemixSelectStyle(item: value));
   }
 
   /// Sets follower position styling
@@ -112,7 +102,8 @@ class RemixSelectStyle extends RemixStyle<RemixSelectSpec, RemixSelectStyle> {
     AlignmentGeometry alignment = Alignment.center,
   }) {
     return merge(RemixSelectStyle(
-      menuContainer: FlexBoxStyler(transform: value, transformAlignment: alignment),
+      menuContainer:
+          FlexBoxStyler(transform: value, transformAlignment: alignment),
     ));
   }
 
@@ -137,7 +128,6 @@ class RemixSelectStyle extends RemixStyle<RemixSelectSpec, RemixSelectStyle> {
       spec: RemixSelectSpec(
         trigger: MixOps.resolve(context, $trigger),
         menuContainer: MixOps.resolve(context, $menuContainer),
-        item: MixOps.resolve(context, $item),
         position: MixOps.resolve(context, $position),
       ),
       animation: $animation,
@@ -152,7 +142,6 @@ class RemixSelectStyle extends RemixStyle<RemixSelectSpec, RemixSelectStyle> {
     return RemixSelectStyle.create(
       menuContainer: MixOps.merge($menuContainer, other.$menuContainer),
       trigger: MixOps.merge($trigger, other.$trigger),
-      item: MixOps.merge($item, other.$item),
       position: MixOps.merge($position, other.$position),
       variants: MixOps.mergeVariants($variants, other.$variants),
       animation: MixOps.mergeAnimation($animation, other.$animation),
@@ -164,7 +153,6 @@ class RemixSelectStyle extends RemixStyle<RemixSelectSpec, RemixSelectStyle> {
   List<Object?> get props => [
         $menuContainer,
         $trigger,
-        $item,
         $position,
         $variants,
         $animation,

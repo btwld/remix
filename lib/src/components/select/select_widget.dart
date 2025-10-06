@@ -33,6 +33,9 @@ class RemixSelectItem<T> {
   /// Whether this option can be selected.
   final bool enabled;
 
+  /// The style for the item.
+  final RemixSelectMenuItemStyle style;
+
   /// Semantic label for accessibility.
   final String? semanticLabel;
 
@@ -40,6 +43,7 @@ class RemixSelectItem<T> {
     required this.value,
     required this.label,
     this.enabled = true,
+    this.style = const RemixSelectMenuItemStyle.create(),
     this.semanticLabel,
   });
 }
@@ -151,10 +155,7 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
       curve: Curves.easeInOut,
       menuContainer: spec.menuContainer,
       children: widget.items
-          .map((item) => _RemixSelectItemWidget<T>(
-                data: item,
-                styleSpec: spec.item,
-              ))
+          .map((item) => _RemixSelectItemWidget<T>(data: item))
           .toList(),
     );
   }
@@ -321,13 +322,9 @@ class _RemixSelectTriggerWidget extends StatelessWidget {
 
 /// Internal widget for rendering a selectable item.
 class _RemixSelectItemWidget<T> extends StatelessWidget {
-  const _RemixSelectItemWidget({
-    required this.data,
-    required this.styleSpec,
-  });
+  const _RemixSelectItemWidget({required this.data});
 
   final RemixSelectItem<T> data;
-  final StyleSpec<RemixSelectMenuItemSpec> styleSpec;
 
   @override
   Widget build(BuildContext context) {
@@ -336,18 +333,24 @@ class _RemixSelectItemWidget<T> extends StatelessWidget {
       semanticLabel: data.semanticLabel ?? data.label,
       value: data.value,
       builder: (context, states, _) {
-        return StyleSpecBuilder<RemixSelectMenuItemSpec>(
-          styleSpec: styleSpec,
+        return StyleBuilder(
+          style: data.style,
+          controller: NakedState.controllerOf(context),
           builder: (context, spec) {
-            return RowBox(
-              styleSpec: spec.container,
-              children: [
-                Expanded(
-                  child: StyledText(data.label, styleSpec: spec.text),
-                ),
-                if (states.isSelected)
-                  StyledIcon(icon: Icons.check, styleSpec: spec.icon),
-              ],
+            return StyleSpecBuilder<RemixSelectMenuItemSpec>(
+              styleSpec: StyleSpec(spec: spec),
+              builder: (context, spec) {
+                return RowBox(
+                  styleSpec: spec.container,
+                  children: [
+                    Expanded(
+                      child: StyledText(data.label, styleSpec: spec.text),
+                    ),
+                    if (states.isSelected)
+                      StyledIcon(icon: Icons.check, styleSpec: spec.icon),
+                  ],
+                );
+              },
             );
           },
         );

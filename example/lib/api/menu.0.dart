@@ -39,22 +39,32 @@ class _MenuExampleState extends State<MenuExample> {
           // RemixMenu
           RemixMenu<String>(
             trigger: const RemixMenuTrigger(label: 'Open Remix Menu'),
-            items: const [
+            items: [
               RemixMenuItem(
                 value: 'History',
                 leadingIcon: Icons.history,
                 label: 'History',
+                style: menuItemStyle,
               ),
               RemixMenuItem(
                 value: 'Settings',
                 leadingIcon: Icons.settings,
                 label: 'Settings',
+                style: menuItemStyle,
               ),
-              RemixMenuDivider(),
+              const RemixMenuDivider(),
               RemixMenuItem(
                 value: 'Logout',
                 leadingIcon: Icons.logout,
                 label: 'Logout',
+                style: menuItemStyle.onHovered(
+                  RemixMenuItemStyle()
+                      .color(Colors.redAccent.withValues(alpha: 0.05))
+                      .label(
+                        TextStyler().color(Colors.redAccent),
+                      )
+                      .leadingIcon(IconStyler().color(Colors.redAccent)),
+                ),
               ),
             ],
             positioning: const OverlayPositionConfig(
@@ -92,29 +102,32 @@ class _MenuExampleState extends State<MenuExample> {
   RemixMenuStyle get menuStyle {
     return RemixMenuStyle()
         .trigger(
-          RemixMenuTriggerStyle(
-            container: FlexBoxStyler(
-              padding: EdgeInsetsMix.symmetric(horizontal: 14),
-              decoration: BoxDecorationMix(
-                color: Colors.white,
-                borderRadius: BorderRadiusMix.all(const Radius.circular(12)),
-                border: BorderMix.all(
-                  BorderSideMix(color: Colors.blueGrey.shade100),
-                ),
-                boxShadow: [
+          RemixMenuTriggerStyle()
+              .padding(EdgeInsetsMix.symmetric(horizontal: 14))
+              .decoration(
+                BoxDecorationMix()
+                    .color(Colors.white)
+                    .borderRadius(
+                        BorderRadiusMix.all(const Radius.circular(12)))
+                    .border(BorderMix.all(
+                        BorderSideMix(color: Colors.blueGrey.shade100)))
+                    .boxShadow([
                   BoxShadowMix(
                     color: Colors.blueGrey.withValues(alpha: 0.1),
                     blurRadius: 3,
                     offset: const Offset(0, 3),
                   ),
-                ],
+                ]),
+              )
+              .constraints(BoxConstraintsMix(minHeight: 40))
+              .label(
+                TextStyler()
+                    .color(Colors.blueGrey.shade700)
+                    .fontWeight(FontWeight.w400),
+              )
+              .onHovered(
+                RemixMenuTriggerStyle().color(Colors.red),
               ),
-              constraints: BoxConstraintsMix(minHeight: 40),
-            ),
-            label: TextStyler()
-                .color(Colors.blueGrey.shade700)
-                .fontWeight(FontWeight.w400),
-          ),
         )
         .overlay(
           FlexBoxStyler(
@@ -135,7 +148,6 @@ class _MenuExampleState extends State<MenuExample> {
             ),
           ),
         )
-        .item(menuItemStyle)
         .divider(
           RemixDividerStyle()
               .color(Colors.blueGrey.shade100)
