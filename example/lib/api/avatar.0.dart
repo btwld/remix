@@ -4,11 +4,11 @@ import 'package:remix/remix.dart';
 // Inspired by gov.br design system
 // https://www.gov.br/ds/components/avatar?tab=desenvolvedor
 
-
 void main() {
   runApp(
     const MaterialApp(
       home: Scaffold(
+        backgroundColor: Colors.white,
         body: AvatarExample(),
       ),
     ),

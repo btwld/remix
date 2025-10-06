@@ -131,44 +131,44 @@ class FortalSelectStyles {
   // Content (menu) variants
 
   static RemixSelectStyle contentSolid() {
-    return RemixSelectStyle()
-        .menuContainer(
-          FlexBoxStyler()
-              .color(FortalTokens.colorPanelSolid())
-              .borderAll(
-                color: FortalTokens.gray6(),
-                width: FortalTokens.borderWidth1(),
-              )
-              .borderRadiusAll(FortalTokens.radius3())
-              .padding(EdgeInsetsMix.all(8.0)),
-        )
-        .item(
-          RemixSelectMenuItemStyle()
-              .paddingX(8.0)
-              .height(24.0)
-              .text(TextStyler().color(FortalTokens.gray12()))
-              .icon(IconStyler(size: 20.0)),
-        );
+    return RemixSelectStyle().menuContainer(
+      FlexBoxStyler()
+          .color(FortalTokens.colorPanelSolid())
+          .borderAll(
+            color: FortalTokens.gray6(),
+            width: FortalTokens.borderWidth1(),
+          )
+          .borderRadiusAll(FortalTokens.radius3())
+          .padding(EdgeInsetsMix.all(8.0)),
+    );
+  }
+
+  static RemixSelectMenuItemStyle itemSolid() {
+    return RemixSelectMenuItemStyle()
+        .paddingX(8.0)
+        .height(24.0)
+        .text(TextStyler().color(FortalTokens.gray12()))
+        .icon(IconStyler(size: 20.0));
   }
 
   static RemixSelectStyle contentSoft() {
-    return RemixSelectStyle()
-        .menuContainer(
-          FlexBoxStyler()
-              .color(FortalTokens.colorPanelTranslucent())
-              .borderAll(
-                color: FortalTokens.gray6(),
-                width: FortalTokens.borderWidth1(),
-              )
-              .borderRadiusAll(FortalTokens.radius3())
-              .padding(EdgeInsetsMix.all(8.0)),
-        )
-        .item(
-          RemixSelectMenuItemStyle()
-              .paddingX(8.0)
-              .height(24.0)
-              .text(TextStyler().color(FortalTokens.gray12()))
-              .icon(IconStyler(size: 20.0)),
-        );
+    return RemixSelectStyle().menuContainer(
+      FlexBoxStyler()
+          .color(FortalTokens.colorPanelTranslucent())
+          .borderAll(
+            color: FortalTokens.gray6(),
+            width: FortalTokens.borderWidth1(),
+          )
+          .borderRadiusAll(FortalTokens.radius3())
+          .padding(EdgeInsetsMix.all(8.0)),
+    );
+  }
+
+  static RemixSelectMenuItemStyle itemSoft() {
+    return RemixSelectMenuItemStyle()
+        .paddingX(8.0)
+        .height(24.0)
+        .text(TextStyler().color(FortalTokens.gray12()))
+        .icon(IconStyler(size: 20.0));
   }
 }
