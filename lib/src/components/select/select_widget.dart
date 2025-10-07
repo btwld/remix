@@ -307,6 +307,7 @@ class _RemixSelectTriggerWidget extends StatelessWidget {
           children: [
             if (trigger.icon != null)
               StyledIcon(icon: trigger.icon!, styleSpec: spec.icon),
+            // ignore: avoid-flexible-outside-flex
             Expanded(child: StyledText(displayLabel, styleSpec: spec.label)),
             StyledIcon(
               icon:
@@ -343,6 +344,7 @@ class _RemixSelectItemWidget<T> extends StatelessWidget {
                 return RowBox(
                   styleSpec: spec.container,
                   children: [
+                    // ignore: avoid-flexible-outside-flex
                     Expanded(
                       child: StyledText(data.label, styleSpec: spec.text),
                     ),
