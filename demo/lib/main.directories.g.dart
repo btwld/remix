@@ -58,7 +58,7 @@ final directories = <_widgetbook.WidgetbookNode>[
           _widgetbook.WidgetbookUseCase(
             name: 'Avatar Component',
             builder: _demo_components_avatar_use_case.buildAvatarUseCase,
-          ),
+          )
         ],
       ),
       _widgetbook.WidgetbookComponent(
@@ -67,7 +67,7 @@ final directories = <_widgetbook.WidgetbookNode>[
           _widgetbook.WidgetbookUseCase(
             name: 'Badge Component',
             builder: _demo_components_badge_use_case.buildAvatarUseCase,
-          ),
+          )
         ],
       ),
       _widgetbook.WidgetbookComponent(
@@ -94,7 +94,7 @@ final directories = <_widgetbook.WidgetbookNode>[
           _widgetbook.WidgetbookUseCase(
             name: 'Callout Component',
             builder: _demo_components_callout_use_case.buildCalloutUseCase,
-          ),
+          )
         ],
       ),
       _widgetbook.WidgetbookComponent(
@@ -103,7 +103,7 @@ final directories = <_widgetbook.WidgetbookNode>[
           _widgetbook.WidgetbookUseCase(
             name: 'Card Component',
             builder: _demo_components_card_use_case.buildCard,
-          ),
+          )
         ],
       ),
       _widgetbook.WidgetbookComponent(
@@ -125,7 +125,7 @@ final directories = <_widgetbook.WidgetbookNode>[
           _widgetbook.WidgetbookUseCase(
             name: 'Divider Component',
             builder: _demo_components_divider_use_case.buildDivider,
-          ),
+          )
         ],
       ),
       _widgetbook.WidgetbookComponent(
@@ -134,7 +134,7 @@ final directories = <_widgetbook.WidgetbookNode>[
           _widgetbook.WidgetbookUseCase(
             name: 'Progress Component',
             builder: _demo_components_progress_use_case.buildProgressUseCase,
-          ),
+          )
         ],
       ),
       _widgetbook.WidgetbookComponent(
@@ -156,7 +156,7 @@ final directories = <_widgetbook.WidgetbookNode>[
           _widgetbook.WidgetbookUseCase(
             name: 'Select Component',
             builder: _demo_components_select.buildSelect,
-          ),
+          )
         ],
       ),
       _widgetbook.WidgetbookComponent(
@@ -165,7 +165,7 @@ final directories = <_widgetbook.WidgetbookNode>[
           _widgetbook.WidgetbookUseCase(
             name: 'Slider Component',
             builder: _demo_components_slider.buildButtonUseCase,
-          ),
+          )
         ],
       ),
       _widgetbook.WidgetbookComponent(
@@ -174,7 +174,7 @@ final directories = <_widgetbook.WidgetbookNode>[
           _widgetbook.WidgetbookUseCase(
             name: 'Spinner Component',
             builder: _demo_components_spinner_use_case.buildSpinnerUseCase,
-          ),
+          )
         ],
       ),
       _widgetbook.WidgetbookComponent(
@@ -196,7 +196,7 @@ final directories = <_widgetbook.WidgetbookNode>[
           _widgetbook.WidgetbookUseCase(
             name: 'TextField Component',
             builder: _demo_components_textfield_use_case.buildButtonUseCase,
-          ),
+          )
         ],
       ),
     ],
