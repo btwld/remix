@@ -9,6 +9,7 @@ dart_code_metrics:
   rules:
     # avoid-collection-mutating-methods: true
     newline-before-return: true
+    prefer-named-boolean-parameters: false
     avoid-importing-entrypoint-exports:
       only-in-src: true
     prefer-match-file-name: false
@@ -24,6 +25,7 @@ dart_code_metrics:
     prefer-prefixed-global-constants: false
     avoid-returning-widgets: false
     avoid-unnecessary-overrides: false
+    move-variable-closer-to-its-usage: false
     arguments-ordering:
       first:
         - key
@@ -31,6 +33,7 @@ dart_code_metrics:
       last:
         - child
         - children
+        - builder
     avoid-nested-conditional-expressions:
       acceptable-level: 3
     member-ordering:
@@ -48,8 +51,7 @@ dart_code_metrics:
         - overridden-public-methods
         - overridden-public-getters
         - build-method
-    prefer-named-boolean-parameters:
-      ignore-single: true
+    
 analyzer:
   errors:
     non_constant_identifier_names: ignore

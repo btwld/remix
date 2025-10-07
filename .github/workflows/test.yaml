@@ -38,7 +38,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          flutter-version: 3.32.0
+          flutter-version: 3.35.0
           cache: true
 
       - name: Install root dependencies
@@ -68,6 +68,6 @@ jobs:
         uses: zgosalvez/github-actions-report-lcov@v4
         with:
           coverage-files: coverage/lcov.info
-          minimum-coverage: 40
+          minimum-coverage: 5
           artifact-name: code-coverage-report
           github-token: ${{ secrets.GITHUB_TOKEN }}

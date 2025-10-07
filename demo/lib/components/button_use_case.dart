@@ -1,60 +1,64 @@
-// import 'package:demo/addons/icon_data_knob.dart';
-// import 'package:flutter/widgets.dart';
-// import 'package:remix/remix.dart';
-// import 'package:widgetbook/widgetbook.dart';
-// import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
+import 'package:demo/addons/icon_data_knob.dart';
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+import 'package:widgetbook/widgetbook.dart';
+import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
-// final _key = GlobalKey();
+final _key = GlobalKey();
 
-// @widgetbook.UseCase(
-//   name: 'Button Component',
-//   type: RxButton,
-// )
-// Widget buildButtonUseCase(BuildContext context) {
-//   return KeyedSubtree(
-//     key: _key,
-//     child: Scaffold(
-//       body: Center(
-//         child: Builder(builder: (context) {
-//           return RxButton(
-//             onPressed: () {
-//               showToast(
-//                 context: context,
-//                 entry: ToastEntry(
-//                   showDuration: const Duration(milliseconds: 800),
-//                   builder: (context, actions) => const Toast(
-//                     title: 'Button pressed',
-//                   ),
-//                 ),
-//               );
-//             },
-//             enabled: context.knobs.boolean(
-//               label: 'Enabled',
-//               initialValue: true,
-//             ),
-//             loading: context.knobs.boolean(
-//               label: 'Loading',
-//               initialValue: false,
-//             ),
-//             // iconLeft: context.knobs.iconData(
-//             //   label: 'Icon left',
-//             //   initialValue: null,
-//             // ),
-//             // iconRight: context.knobs.iconData(
-//             //   label: 'Icon right',
-//             //   initialValue: null,
-//             // ),
-//             label: context.knobs.string(
-//               label: 'label',
-//               initialValue: 'Button',
-//             ),
-//             leadingIcon: context.knobs.iconData(
-//               label: 'Icon',
-//               initialValue: null,
-//             ),
-//           );
-//         }),
-//       ),
-//     ),
-//   );
-// }
+@widgetbook.UseCase(
+  name: 'Button Component',
+  type: RemixButton,
+)
+Widget buildButtonUseCase(BuildContext context) {
+  return KeyedSubtree(
+    key: _key,
+    child: Scaffold(
+      body: Center(
+        child: Builder(builder: (context) {
+          // Use default Fortal solid variant layered over base metrics
+          RemixButtonStyle buttonStyle = FortalButtonStyle.solid();
+
+          return RemixButton(
+            onPressed: () {
+              debugPrint('✅ RemixButton pressed');
+            },
+            onLongPress: context.knobs.boolean(
+              label: 'Enable Long Press',
+              initialValue: true,
+            )
+                ? () {
+                    debugPrint('⏳ RemixButton long pressed');
+                  }
+                : null,
+            onDoubleTap: context.knobs.boolean(
+              label: 'Enable Double Tap',
+              initialValue: true,
+            )
+                ? () {
+                    debugPrint('⚡ RemixButton double tapped');
+                  }
+                : null,
+            enabled: context.knobs.boolean(
+              label: 'Enabled',
+              initialValue: true,
+            ),
+            loading: context.knobs.boolean(
+              label: 'Loading',
+              initialValue: false,
+            ),
+            label: context.knobs.string(
+              label: 'label',
+              initialValue: 'Interactive Button',
+            ),
+            icon: context.knobs.iconData(
+              label: 'Icon',
+              initialValue: Icons.touch_app,
+            ),
+            style: buttonStyle,
+          );
+        }),
+      ),
+    ),
+  );
+}

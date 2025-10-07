@@ -165,10 +165,10 @@ packages:
     dependency: "direct dev"
     description:
       name: dart_code_metrics_presets
-      sha256: f1bab78d6e02e08948bef84d637e0d19ee7122ceb4b52b9ea77fe87ec5e9e588
+      sha256: "54abaa9a3f1b39a008e15346190838b74059f78bba6823a7d7958e215c9cada4"
       url: "https://pub.dev"
     source: hosted
-    version: "2.24.0"
+    version: "2.25.1"
   dart_style:
     dependency: transitive
     description:
@@ -206,6 +206,11 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_driver:
+    dependency: transitive
+    description: flutter
+    source: sdk
+    version: "0.0.0"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -227,6 +232,11 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.0"
+  fuchsia_remote_debug_protocol:
+    dependency: transitive
+    description: flutter
+    source: sdk
+    version: "0.0.0"
   glob:
     dependency: transitive
     description:
@@ -267,6 +277,11 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.2"
+  integration_test:
+    dependency: "direct dev"
+    description: flutter
+    source: sdk
+    version: "0.0.0"
   io:
     dependency: transitive
     description:
@@ -295,26 +310,26 @@ packages:
     dependency: transitive
     description:
       name: leak_tracker
-      sha256: "6bb818ecbdffe216e81182c2f0714a2e62b593f4a4f13098713ff1685dfb6ab0"
+      sha256: "8dcda04c3fc16c14f48a7bb586d4be1f0d1572731b6d81d51772ef47c02081e0"
       url: "https://pub.dev"
     source: hosted
-    version: "10.0.9"
+    version: "11.0.1"
   leak_tracker_flutter_testing:
     dependency: transitive
     description:
       name: leak_tracker_flutter_testing
-      sha256: f8b613e7e6a13ec79cfdc0e97638fddb3ab848452eff057653abd3edba760573
+      sha256: "1dbc140bb5a23c75ea9c4811222756104fbcd1a27173f0c34ca01e16bea473c1"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.9"
+    version: "3.0.10"
   leak_tracker_testing:
     dependency: transitive
     description:
       name: leak_tracker_testing
-      sha256: "6ba465d5d76e67ddf503e1161d1f4a6bc42306f9d66ca1e8f079a47290fb06d3"
+      sha256: "8d5a2d49f4a66b49744b23b018848400d23e54caf9463f4eb20df3eb8acb2eb1"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.1"
+    version: "3.0.2"
   lints:
     dependency: transitive
     description:
@@ -367,10 +382,10 @@ packages:
     dependency: "direct main"
     description:
       name: mix
-      sha256: ea2c73c391e9da9d60cad4c5d4ba822df016a38bfd57cf58a08aafa9ac1bc150
+      sha256: "91ac58679c882c3255ca9d412a178b3e63147afb66f692655222d9ce86c39148"
       url: "https://pub.dev"
     source: hosted
-    version: "1.7.0"
+    version: "2.0.0-dev.4"
   mix_annotations:
     dependency: "direct main"
     description:
@@ -390,12 +405,11 @@ packages:
   naked_ui:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "21faebeba82d6473873b7735db2b906d45861037"
-      url: "https://github.com/btwld/naked_ui"
-    source: git
-    version: "0.0.1-dev.2"
+      name: naked_ui
+      sha256: "3b0ee4a19a781df393e8466bc5a6be6f46cbcbef17b6b4b70cb7c5d6286ab5a3"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.0-beta.3"
   package_config:
     dependency: transitive
     description:
@@ -412,6 +426,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.1"
+  platform:
+    dependency: transitive
+    description:
+      name: platform
+      sha256: "5d6b1b0036a5f331ebc77c850ebc8506cbc1e9416c27e59b439f917a902a4984"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.6"
   pool:
     dependency: transitive
     description:
@@ -420,6 +442,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.5.1"
+  prism:
+    dependency: "direct main"
+    description:
+      name: prism
+      sha256: "68f43ae144adcbed34902a513621e65c19ed071b0a88ea1edba89a323529e188"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
+  prism_flutter:
+    dependency: "direct main"
+    description:
+      name: prism_flutter
+      sha256: bdea99f07ec8d9b2a8fb1dc15be5d237f08dd85e6a180ade4832b5e63193f295
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
+  process:
+    dependency: transitive
+    description:
+      name: process
+      sha256: c6248e4526673988586e8c00bb22a49210c258dc91df5227d5da9748ecf79744
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.0.5"
   pub_semver:
     dependency: transitive
     description:
@@ -505,6 +551,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.1"
+  sync_http:
+    dependency: transitive
+    description:
+      name: sync_http
+      sha256: "7f0cd72eca000d2e026bcd6f990b81d0ca06022ef4e32fb257b30d3d1014a961"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.1"
   term_glyph:
     dependency: transitive
     description:
@@ -517,10 +571,10 @@ packages:
     dependency: transitive
     description:
       name: test_api
-      sha256: fb31f383e2ee25fbbfe06b40fe21e1e458d14080e3c67e7ba0acfde4df4e0bbd
+      sha256: "522f00f556e73044315fa4585ec3270f1808a4b186c936e612cab0b565ff1e00"
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.4"
+    version: "0.7.6"
   timing:
     dependency: transitive
     description:
@@ -541,10 +595,10 @@ packages:
     dependency: transitive
     description:
       name: vector_math
-      sha256: "80b3257d1492ce4d091729e3a67a60407d227c27241d6927be0130c98e741803"
+      sha256: d530bd74fea330e6e364cda7a85019c434070188383e1cd8d9777ee586914c5b
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.4"
+    version: "2.2.0"
   vm_service:
     dependency: transitive
     description:
@@ -585,6 +639,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.3"
+  webdriver:
+    dependency: transitive
+    description:
+      name: webdriver
+      sha256: "2f3a14ca026957870cfd9c635b83507e0e51d8091568e90129fbf805aba7cade"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.0"
   yaml:
     dependency: transitive
     description:
@@ -594,5 +656,5 @@ packages:
     source: hosted
     version: "3.1.3"
 sdks:
-  dart: ">=3.8.0 <4.0.0"
-  flutter: ">=3.27.0"
+  dart: ">=3.9.0 <4.0.0"
+  flutter: ">=3.35.0"

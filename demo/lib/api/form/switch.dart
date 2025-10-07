@@ -19,7 +19,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         body: Center(
-          child: RxSwitch(
+          child: RemixSwitch(
             selected: _value,
             onChanged: (value) {
               setState(() {

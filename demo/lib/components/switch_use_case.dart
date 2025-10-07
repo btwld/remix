@@ -8,7 +8,7 @@ final _key = GlobalKey();
 
 @widgetbook.UseCase(
   name: 'Switch Component',
-  type: RxSwitch,
+  type: RemixSwitch,
 )
 Widget buildSwitchUseCase(BuildContext context) {
   final knobState = WidgetbookState.of(context);
@@ -17,7 +17,7 @@ Widget buildSwitchUseCase(BuildContext context) {
     key: _key,
     child: Scaffold(
       body: Center(
-        child: RxSwitch(
+        child: RemixSwitch(
           selected: context.knobs.boolean(label: 'Toggle', initialValue: true),
           enabled: context.knobs.boolean(label: 'Enabled', initialValue: true),
           onChanged: (value) => knobState.updateKnob('Toggle', value),

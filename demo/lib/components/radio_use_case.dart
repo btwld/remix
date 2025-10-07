@@ -12,7 +12,7 @@ enum Theme {
 
 @widgetbook.UseCase(
   name: 'Radio Component',
-  type: RxRadio,
+  type: RemixRadio,
 )
 Widget buildRadioUseCase(BuildContext context) {
   return Scaffold(
@@ -20,8 +20,8 @@ Widget buildRadioUseCase(BuildContext context) {
       child: ListenableBuilder(
         listenable: _state,
         builder: (context, child) {
-          return RxRadioGroup(
-            value: _state.value,
+          return RemixRadioGroup<Theme>(
+            groupValue: _state.value,
             onChanged: (value) {
               _state.update(value!);
             },
@@ -33,13 +33,19 @@ Widget buildRadioUseCase(BuildContext context) {
                   .map(
                     (theme) => Padding(
                       padding: const EdgeInsets.all(4.0),
-                      child: RxRadio<Theme>(
-                        value: theme,
-                        enabled: context.knobs.boolean(
-                          label: 'Enabled',
-                          initialValue: true,
-                        ),
-                        label: theme.name.capitalize(),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          RemixRadio<Theme>(
+                            value: theme,
+                            enabled: context.knobs.boolean(
+                              label: 'Enabled',
+                              initialValue: true,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Text(theme.name.capitalize()),
+                        ],
                       ),
                     ),
                   )

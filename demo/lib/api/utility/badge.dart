@@ -10,20 +10,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: MixColors.white,
         body: Center(
           child: Column(
             spacing: 16,
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              RxBadge(
+            children: <Widget>[
+              RemixBadge(
                 label: 'New',
               ),
-              RxBadge(
+              RemixBadge(
                 label: 'person',
-                icon: Icons.person,
               ),
             ],
           ),

@@ -7,7 +7,7 @@ final _key = GlobalKey();
 
 @widgetbook.UseCase(
   name: 'Avatar Component',
-  type: RxAvatar,
+  type: RemixAvatar,
 )
 Widget buildAvatarUseCase(BuildContext context) {
   final imageUrl = context.knobs.string(
@@ -22,7 +22,7 @@ Widget buildAvatarUseCase(BuildContext context) {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            RxAvatar(
+            RemixAvatar(
               foregroundImage:
                   imageUrl.isNotEmpty ? NetworkImage(imageUrl) : null,
               label: 'CA',

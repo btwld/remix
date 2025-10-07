@@ -30,14 +30,13 @@ class _NewWidgetState extends State<NewWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: MixColors.white,
       body: Center(
-        child: RxTextField(
-          label: 'Username',
-          hintText: 'Remix',
+        child: RemixTextField(
+          hintText: 'Enter username here',
           helperText: 'This is your public display name.',
           controller: controller,
-          style: RxTextFieldStyle()..container.width(300),
+          style: RemixTextFieldStyle().width(300),
         ),
       ),
     );

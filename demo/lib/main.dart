@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart' hide Scaffold, ThemeMode;
+import 'package:remix/remix.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
@@ -35,7 +36,7 @@ class HotReload extends StatelessWidget {
         BrightnessAddon(),
         InspectorAddon(),
       ],
-      appBuilder: (context, child) => child,
+      appBuilder: (context, child) => createRemixScope(child: child),
       directories: directories,
     );
   }

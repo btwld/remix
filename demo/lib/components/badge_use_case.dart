@@ -5,12 +5,12 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 @widgetbook.UseCase(
   name: 'Badge Component',
-  type: RxBadge,
+  type: RemixBadge,
 )
 Widget buildAvatarUseCase(BuildContext context) {
   return Scaffold(
     body: Center(
-      child: RxBadge(
+      child: RemixBadge(
         label: context.knobs.string(
           label: 'Label',
           initialValue: 'New',

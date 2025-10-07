@@ -21,9 +21,9 @@ class _MyAppState extends State<MyApp> {
         body: Center(
           child: SizedBox(
             width: 200,
-            child: RxSlider(
+            child: RemixSlider(
               value: _value,
-              style: RxSliderStyle(),
+              style: RemixSliderStyle(),
               onChanged: (value) {
                 setState(() {
                   _value = value;

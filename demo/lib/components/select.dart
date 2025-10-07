@@ -5,7 +5,7 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 @widgetbook.UseCase(
   name: 'Select Component',
-  type: RxSelect,
+  type: RemixSelect,
 )
 Widget buildSelect(BuildContext context) {
   return const Scaffold(
@@ -37,18 +37,20 @@ class _SelectDemoState extends State<SelectDemo> {
         children: [
           SizedBox(
             width: 200,
-            child: RxSelect<String>(
+            child: RemixSelect<String>(
+              trigger: const RemixSelectTrigger(
+                placeholder: 'Select item...',
+              ),
               selectedValue: selectedValue,
-              onSelectedValueChanged: (value) =>
+              onChanged: (value) =>
                   setState(() => selectedValue = value ?? ''),
               items: List.generate(
                 items.length,
-                (index) => RxSelectItem<String>(
+                (index) => RemixSelectItem<String>(
                   value: items[index],
                   label: items[index],
                 ),
               ),
-              child: RxSelectTrigger(label: selectedValue),
             ),
           ),
         ],

@@ -26,8 +26,8 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         body: Center(
-          child: RxRadioGroup(
-            value: _value,
+          child: RemixRadioGroup<Options>(
+            groupValue: _value,
             onChanged: (value) {
               setState(() {
                 _value = value;
@@ -38,23 +38,35 @@ class _MyAppState extends State<MyApp> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                RxRadio(
-                  label: 'Banana',
-                  value: Options.banana,
-                ),
-                RxRadio(
-                  label: 'Apple',
-                  value: Options.apple,
-                ),
-                RxRadio(
-                  label: 'Orange',
-                  value: Options.orange,
-                ),
+                _LabeledRadio(option: Options.banana, label: 'Banana'),
+                _LabeledRadio(option: Options.apple, label: 'Apple'),
+                _LabeledRadio(option: Options.orange, label: 'Orange'),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+}
+
+class _LabeledRadio extends StatelessWidget {
+  const _LabeledRadio({required this.option, required this.label});
+
+  final Options option;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        RemixRadio<Options>(
+          value: option,
+        ),
+        const SizedBox(width: 8),
+        Text(label),
+      ],
     );
   }
 }

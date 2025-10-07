@@ -17,25 +17,26 @@ class MyApp extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             spacing: 8,
             children: [
-              RxAvatar(
+              const RemixAvatar(
                 label: 'CA',
                 backgroundImage:
-                    const NetworkImage('https://i.pravatar.cc/150?img=48'),
+                    NetworkImage('https://i.pravatar.cc/150?img=48'),
               ),
-              RxAvatar(
+              const RemixAvatar(
                 label: 'CA',
                 foregroundImage:
-                    const NetworkImage('https://i.pravatar.cc/150?img=48'),
+                    NetworkImage('https://i.pravatar.cc/150?img=48'),
               ),
-              const RxAvatar.raw(
+              const RemixAvatar(
                 foregroundImage:
                     NetworkImage('https://i.pravatar.cc/150?img=48'),
                 child: Icon(Icons.person),
               ),
-              const RxAvatar.raw(
+              RemixAvatar(
                 backgroundImage:
-                    NetworkImage('https://i.pravatar.cc/150?img=48'),
-                child: Icon(Icons.person, color: Colors.white),
+                    const NetworkImage('https://i.pravatar.cc/150?img=48'),
+                style: RemixAvatarStyle().iconColor(MixColors.white),
+                child: const Icon(Icons.person),
               ),
             ],
           ),

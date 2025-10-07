@@ -1,7 +1,6 @@
 import 'dart:developer';
 
-import 'package:flutter/material.dart';
-import 'package:mix/mix.dart';
+import 'package:flutter/material.dart' hide ButtonStyle;
 import 'package:remix/remix.dart';
 
 void main() {
@@ -20,22 +19,19 @@ class MyApp extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             spacing: 8,
             children: [
-              RxButton(
+              RemixButton(
                 label: 'Click Me',
                 onPressed: () {
                   log('Button pressed!');
                 },
-                style: RxButtonStyle()
-                  ..container.color.black()
-                  ..container.animated.linear(100.ms)
-                  ..on.hover(
-                    RxButtonStyle()
-                      ..container.color.grey.shade800()
-                      ..textStyle.color.white(),
-                  ),
+                style: RemixButtonStyle()
+                    .color(MixColors.black)
+                    .animate(AnimationConfig.linear(100.ms))
+                    .onHovered(RemixButtonStyle()
+                        .color(MixColors.greySwatch[800]!)),
               ),
-              RxButton.icon(
-                Icons.add,
+              RemixIconButton(
+                icon: Icons.add,
                 onPressed: () {
                   log('Button pressed!');
                 },

@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         body: Center(
-          child: RxCallout(
+          child: RemixCallout(
             text: 'Hello, world!',
             icon: Icons.info,
           ),

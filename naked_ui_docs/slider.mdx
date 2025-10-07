@@ -1,0 +1,269 @@
+---
+title: NakedSlider
+description: Headless slider component with drag interactions and accessibility
+keywords: [flutter, slider, range, headless, accessibility, custom]
+---
+
+Headless slider component. Handles drag interactions, keyboard navigation (arrow keys), and accessibility. Use builder pattern for custom styling.
+
+## When to use this
+
+- **Value selection**: Let users pick numbers within a range (volume, brightness, price filters)
+- **Settings controls**: Adjust app preferences with visual feedback
+- **Form inputs**: Numeric input with immediate visual feedback
+- **Custom designs**: When you need sliders that match your design system perfectly
+
+<Info>
+  See complete examples in our [GitHub repository](https://github.com/btwld/naked_ui/blob/main/example/lib/api/naked_slider.0.dart).
+</Info>
+## Basic implementation
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:naked_ui/naked_ui.dart';
+
+class SimpleSlider extends StatefulWidget {
+  @override
+  State<SimpleSlider> createState() => _SimpleSliderState();
+}
+
+class _SimpleSliderState extends State<SimpleSlider> {
+  double _value = 0.5;
+
+  @override
+  Widget build(BuildContext context) {
+    return NakedSlider(
+      value: _value,
+      onChanged: (newValue) => setState(() => _value = newValue),
+      builder: (context, state, child) {
+        return Container(
+          width: 200,
+          height: 20,
+          child: Stack(
+            children: [
+              // Track
+              Container(
+                width: 200,
+                height: 4,
+                margin: const EdgeInsets.only(top: 8),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              // Progress
+              Container(
+                width: 200 * _value,
+                height: 4,
+                margin: const EdgeInsets.only(top: 8),
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              // Thumb
+              Positioned(
+                left: (200 - 20) * _value,
+                child: Container(
+                  width: 20,
+                  height: 20,
+                  decoration: BoxDecoration(
+                    color: state.isDragging ? Colors.blue.shade700 : Colors.blue,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+```
+
+## Multiple state styling
+
+Handle hover, focus, and drag states:
+
+```dart
+builder: (context, state, child) {
+  // Different colors for different states
+  Color thumbColor = Colors.blue;
+  if (state.isDragging) thumbColor = Colors.blue.shade800;
+  else if (state.isHovered) thumbColor = Colors.blue.shade600;
+  
+  // Focus indicator
+  final borderColor = state.isFocused ? Colors.orange : Colors.transparent;
+  
+  return Stack(
+    children: [
+      // Your track containers here...
+      
+      // Enhanced thumb with focus ring
+      Positioned(
+        left: (200 - 24) * _value,
+        child: Container(
+          width: 24,
+          height: 24,
+          decoration: BoxDecoration(
+            color: thumbColor,
+            shape: BoxShape.circle,
+            border: Border.all(color: borderColor, width: 2),
+            // Add shadow when dragging
+            boxShadow: state.isDragging ? [
+              BoxShadow(
+                color: Colors.blue.withOpacity(0.3),
+                blurRadius: 8,
+                spreadRadius: 2,
+              ),
+            ] : null,
+          ),
+        ),
+      ),
+    ],
+  );
+}
+```
+
+## Implementation patterns
+
+### Volume control with icons
+
+```dart
+Row(
+  children: [
+    Icon(Icons.volume_down),
+    const SizedBox(width: 12),
+    Expanded(
+      child: NakedSlider(
+        value: _volume,
+        onChanged: (value) => setState(() => _volume = value),
+        builder: (context, state, child) {
+          // Your slider design with volume-specific styling
+          return YourSliderDesign();
+        },
+      ),
+    ),
+    const SizedBox(width: 12),
+    Icon(Icons.volume_up),
+  ],
+)
+```
+
+### Discrete value slider
+
+```dart
+NakedSlider(
+  value: _rating,
+  min: 1,
+  max: 5,
+  divisions: 4, // Creates 5 discrete steps (1, 2, 3, 4, 5)
+  onChanged: (value) => setState(() => _rating = value.round().toDouble()),
+  builder: (context, state, child) {
+    // Show star rating or discrete indicators
+    return YourStarRating();
+  },
+)
+```
+
+### Custom painters (advanced)
+
+For complex designs, you can use CustomPaint for pixel-perfect control. Check out our [complete CustomPaint examples](https://github.com/btwld/naked_ui/blob/main/example/lib/api/naked_slider.0.dart) in the repository.
+
+
+## Constructor
+
+```dart
+const NakedSlider({
+  Key? key,
+  this.child,
+  this.builder,              // Recommended approach
+  required this.value,
+  this.min = 0.0,
+  this.max = 1.0,
+  this.onChanged,
+  this.onDragStart,
+  this.onDragEnd,
+  this.onHoverChange,        // Legacy - prefer builder
+  this.onDragChange,
+  this.onFocusChange,        // Legacy - prefer builder
+  this.enabled = true,
+  this.mouseCursor = SystemMouseCursors.click,
+  this.enableFeedback = true,
+  this.focusNode,
+  this.autofocus = false,
+  this.direction = Axis.horizontal,
+  this.divisions,
+  this.keyboardStep = 0.01,
+  this.largeKeyboardStep = 0.1,
+  this.semanticLabel,
+})
+```
+
+## Properties
+
+#### child  → `Widget?`
+Optional static child to display. Provide either `child` or `builder`.
+
+#### builder → `ValueWidgetBuilder<NakedSliderState>?`
+Optional builder that receives the current `NakedSliderState` along with the `child`. Use this for reactive styling without a StatefulWidget.
+
+#### value → `double`
+The current value of the slider.
+
+#### min → `double`
+Minimum value of the slider. Defaults to 0.0.
+
+#### max → `double`
+Maximum value of the slider. Defaults to 1.0.
+
+#### onChanged → `ValueChanged<double>?`
+Called when the slider value changes.
+
+#### onDragStart → `VoidCallback?`
+Called when the user starts dragging the slider.
+
+#### onDragEnd → `ValueChanged<double>?`
+Called when the user ends dragging the slider.
+
+#### onHoverChange → `ValueChanged<bool>?` (Legacy)
+Called when hover state changes. Provides the current hover state (true when hovered, false otherwise). **Note**: This is legacy - prefer using the `builder` pattern to access `state.isHovered`.
+
+#### onDragChange → `ValueChanged<bool>?`
+Called when dragging state changes. Provides the current dragging state (true when dragging, false otherwise).
+
+#### onFocusChange → `ValueChanged<bool>?` (Legacy)
+Called when focus state changes. Provides the current focus state (true when focused, false otherwise). **Note**: This is legacy - prefer using the `builder` pattern to access `state.isFocused`.
+
+#### enabled → `bool`
+Whether the slider is enabled. When true, the slider will respond to user interaction. Defaults to true.
+
+
+
+#### focusNode → `FocusNode?`
+Optional focus node to control focus behavior.
+
+#### autofocus → `bool`
+Whether to automatically request focus when first built. Defaults to false.
+
+#### direction → `Axis`
+Direction of the slider. Can be horizontal (left to right) or vertical (bottom to top). Defaults to Axis.horizontal.
+
+#### divisions → `int?`
+Number of discrete divisions. If null, the slider will be continuous.
+
+#### keyboardStep → `double`
+Step size for keyboard navigation. This value is used when arrow keys are pressed to increment or decrement the slider value. Defaults to 0.01 (1% of the slider range).
+
+#### largeKeyboardStep → `double`
+Step size for large keyboard navigation. This value is used when arrow keys are pressed while holding Shift. Defaults to 0.1 (10% of the slider range).
+
+#### mouseCursor → `MouseCursor`
+Cursor to show when hovering. Defaults to click.
+
+#### enableFeedback → `bool`
+Whether to provide haptic feedback on drag start. Defaults to true.
+
+#### semanticLabel → `String?`
+Semantic label for screen readers.

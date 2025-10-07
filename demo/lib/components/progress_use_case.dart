@@ -5,14 +5,14 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 @widgetbook.UseCase(
   name: 'Progress Component',
-  type: RxProgress,
+  type: RemixProgress,
 )
 Widget buildProgressUseCase(BuildContext context) {
   return Scaffold(
     body: Center(
       child: SizedBox(
         width: 200,
-        child: RxProgress(
+        child: RemixProgress(
           value: context.knobs.double.slider(
             label: 'value',
             min: 0,

@@ -15,10 +15,10 @@ class MyApp extends StatelessWidget {
         body: Center(
           child: Row(
             children: [
-              RxTooltip(
+              RemixTooltip(
                 tooltipChild: Text(
                   'This is a tooltip',
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: MixColors.white),
                 ),
                 child: Text('Hello'),
               ),

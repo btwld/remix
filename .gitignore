@@ -263,3 +263,19 @@ app.*.symbols
 .gclient_previous_custom_vars
 .gclient_previous_sync_commits
 .vscode/*
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.orig
+*.swp
+*~
+
+# Editor temporary files
+.#*
+*#
+*~
+.vscode/launch.json
+
+# Analysis and development artifacts
+component_patterns_analysis.md

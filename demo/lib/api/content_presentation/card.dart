@@ -12,11 +12,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       home: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: MixColors.white,
         body: Center(
           child: SizedBox(
             width: 300,
-            child: RxCard(
+            child: RemixCard(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    'This is an example of a card component using RxCard.',
+                    'This is an example of a card component using RemixCard.',
                     style: TextStyle(fontSize: 14),
                   ),
                 ],

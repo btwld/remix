@@ -10,139 +10,194 @@
 // **************************************************************************
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:demo/components/accordion_use_case.dart' as _i2;
-import 'package:demo/components/avatar_use_case.dart' as _i3;
-import 'package:demo/components/badge_use_case.dart' as _i4;
-import 'package:demo/components/callout_use_case.dart' as _i5;
-import 'package:demo/components/card_use_case.dart' as _i6;
-import 'package:demo/components/checkbox_use_case.dart' as _i7;
-import 'package:demo/components/chip.dart' as _i8;
-import 'package:demo/components/divider_use_case.dart' as _i9;
-import 'package:demo/components/list_item_use_case.dart' as _i10;
-import 'package:demo/components/progress_use_case.dart' as _i11;
-import 'package:demo/components/radio_use_case.dart' as _i12;
-import 'package:demo/components/select.dart' as _i13;
-import 'package:demo/components/slider.dart' as _i14;
-import 'package:demo/components/spinner_use_case.dart' as _i15;
-import 'package:demo/components/switch_use_case.dart' as _i16;
-import 'package:demo/components/textfield_use_case.dart' as _i17;
-import 'package:widgetbook/widgetbook.dart' as _i1;
+import 'package:demo/components/avatar_use_case.dart'
+    as _demo_components_avatar_use_case;
+import 'package:demo/components/badge_use_case.dart'
+    as _demo_components_badge_use_case;
+import 'package:demo/components/button_real_world_examples.dart'
+    as _demo_components_button_real_world_examples;
+import 'package:demo/components/button_showcase.dart'
+    as _demo_components_button_showcase;
+import 'package:demo/components/button_use_case.dart'
+    as _demo_components_button_use_case;
+import 'package:demo/components/callout_use_case.dart'
+    as _demo_components_callout_use_case;
+import 'package:demo/components/card_use_case.dart'
+    as _demo_components_card_use_case;
+import 'package:demo/components/checkbox_showcase.dart'
+    as _demo_components_checkbox_showcase;
+import 'package:demo/components/checkbox_use_case.dart'
+    as _demo_components_checkbox_use_case;
+import 'package:demo/components/divider_use_case.dart'
+    as _demo_components_divider_use_case;
+import 'package:demo/components/progress_use_case.dart'
+    as _demo_components_progress_use_case;
+import 'package:demo/components/radio_showcase.dart'
+    as _demo_components_radio_showcase;
+import 'package:demo/components/radio_use_case.dart'
+    as _demo_components_radio_use_case;
+import 'package:demo/components/select.dart' as _demo_components_select;
+import 'package:demo/components/slider.dart' as _demo_components_slider;
+import 'package:demo/components/spinner_use_case.dart'
+    as _demo_components_spinner_use_case;
+import 'package:demo/components/switch_showcase.dart'
+    as _demo_components_switch_showcase;
+import 'package:demo/components/switch_use_case.dart'
+    as _demo_components_switch_use_case;
+import 'package:demo/components/textfield_use_case.dart'
+    as _demo_components_textfield_use_case;
+import 'package:widgetbook/widgetbook.dart' as _widgetbook;
 
-final directories = <_i1.WidgetbookNode>[
-  _i1.WidgetbookFolder(
+final directories = <_widgetbook.WidgetbookNode>[
+  _widgetbook.WidgetbookFolder(
     name: 'components',
     children: [
-      _i1.WidgetbookLeafComponent(
-        name: 'RxAccordion',
-        useCase: _i1.WidgetbookUseCase(
-          name: 'Accordion Component',
-          builder: _i2.buildAccordionUseCase,
-        ),
+      _widgetbook.WidgetbookComponent(
+        name: 'RemixAvatar',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Avatar Component',
+            builder: _demo_components_avatar_use_case.buildAvatarUseCase,
+          ),
+        ],
       ),
-      _i1.WidgetbookLeafComponent(
-        name: 'RxAvatar',
-        useCase: _i1.WidgetbookUseCase(
-          name: 'Avatar Component',
-          builder: _i3.buildAvatarUseCase,
-        ),
+      _widgetbook.WidgetbookComponent(
+        name: 'RemixBadge',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Badge Component',
+            builder: _demo_components_badge_use_case.buildAvatarUseCase,
+          ),
+        ],
       ),
-      _i1.WidgetbookLeafComponent(
-        name: 'RxBadge',
-        useCase: _i1.WidgetbookUseCase(
-          name: 'Badge Component',
-          builder: _i4.buildAvatarUseCase,
-        ),
+      _widgetbook.WidgetbookComponent(
+        name: 'RemixButton',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Button Component',
+            builder: _demo_components_button_use_case.buildButtonUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Button Showcase',
+            builder: _demo_components_button_showcase.buildButtonShowcase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Real World Examples',
+            builder: _demo_components_button_real_world_examples
+                .buildButtonRealWorldExamples,
+          ),
+        ],
       ),
-      _i1.WidgetbookLeafComponent(
-        name: 'RxCallout',
-        useCase: _i1.WidgetbookUseCase(
-          name: 'Callout Component',
-          builder: _i5.buildCalloutUseCase,
-        ),
+      _widgetbook.WidgetbookComponent(
+        name: 'RemixCallout',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Callout Component',
+            builder: _demo_components_callout_use_case.buildCalloutUseCase,
+          ),
+        ],
       ),
-      _i1.WidgetbookLeafComponent(
-        name: 'RxCard',
-        useCase: _i1.WidgetbookUseCase(
-          name: 'Card Component',
-          builder: _i6.buildCard,
-        ),
+      _widgetbook.WidgetbookComponent(
+        name: 'RemixCard',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Card Component',
+            builder: _demo_components_card_use_case.buildCard,
+          ),
+        ],
       ),
-      _i1.WidgetbookLeafComponent(
-        name: 'RxCheckbox',
-        useCase: _i1.WidgetbookUseCase(
-          name: 'Checkbox Component',
-          builder: _i7.buildCheckboxUseCase,
-        ),
+      _widgetbook.WidgetbookComponent(
+        name: 'RemixCheckbox',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Checkbox Component',
+            builder: _demo_components_checkbox_use_case.buildCheckboxUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Checkbox Showcase',
+            builder: _demo_components_checkbox_showcase.buildCheckboxShowcase,
+          ),
+        ],
       ),
-      _i1.WidgetbookLeafComponent(
-        name: 'RxChip',
-        useCase: _i1.WidgetbookUseCase(
-          name: 'Chip Component',
-          builder: _i8.buildChipUseCase,
-        ),
+      _widgetbook.WidgetbookComponent(
+        name: 'RemixDivider',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Divider Component',
+            builder: _demo_components_divider_use_case.buildDivider,
+          ),
+        ],
       ),
-      _i1.WidgetbookLeafComponent(
-        name: 'RxDivider',
-        useCase: _i1.WidgetbookUseCase(
-          name: 'Divider Component',
-          builder: _i9.buildDivider,
-        ),
+      _widgetbook.WidgetbookComponent(
+        name: 'RemixProgress',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Progress Component',
+            builder: _demo_components_progress_use_case.buildProgressUseCase,
+          ),
+        ],
       ),
-      _i1.WidgetbookLeafComponent(
-        name: 'RxListItem',
-        useCase: _i1.WidgetbookUseCase(
-          name: 'Menu Item Component',
-          builder: _i10.buildButtonUseCase,
-        ),
+      _widgetbook.WidgetbookComponent(
+        name: 'RemixRadio',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Radio Component',
+            builder: _demo_components_radio_use_case.buildRadioUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Radio Showcase',
+            builder: _demo_components_radio_showcase.buildRadioShowcase,
+          ),
+        ],
       ),
-      _i1.WidgetbookLeafComponent(
-        name: 'RxProgress',
-        useCase: _i1.WidgetbookUseCase(
-          name: 'Progress Component',
-          builder: _i11.buildProgressUseCase,
-        ),
+      _widgetbook.WidgetbookComponent(
+        name: 'RemixSelect',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Select Component',
+            builder: _demo_components_select.buildSelect,
+          ),
+        ],
       ),
-      _i1.WidgetbookLeafComponent(
-        name: 'RxRadio',
-        useCase: _i1.WidgetbookUseCase(
-          name: 'Radio Component',
-          builder: _i12.buildRadioUseCase,
-        ),
+      _widgetbook.WidgetbookComponent(
+        name: 'RemixSlider',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Slider Component',
+            builder: _demo_components_slider.buildButtonUseCase,
+          ),
+        ],
       ),
-      _i1.WidgetbookLeafComponent(
-        name: 'RxSelect',
-        useCase: _i1.WidgetbookUseCase(
-          name: 'Select Component',
-          builder: _i13.buildSelect,
-        ),
+      _widgetbook.WidgetbookComponent(
+        name: 'RemixSpinner',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Spinner Component',
+            builder: _demo_components_spinner_use_case.buildSpinnerUseCase,
+          ),
+        ],
       ),
-      _i1.WidgetbookLeafComponent(
-        name: 'RxSlider',
-        useCase: _i1.WidgetbookUseCase(
-          name: 'Slider Component',
-          builder: _i14.buildButtonUseCase,
-        ),
+      _widgetbook.WidgetbookComponent(
+        name: 'RemixSwitch',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Switch Component',
+            builder: _demo_components_switch_use_case.buildSwitchUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Switch Showcase',
+            builder: _demo_components_switch_showcase.buildSwitchShowcase,
+          ),
+        ],
       ),
-      _i1.WidgetbookLeafComponent(
-        name: 'RxSpinner',
-        useCase: _i1.WidgetbookUseCase(
-          name: 'Spinner Component',
-          builder: _i15.buildSpinnerUseCase,
-        ),
-      ),
-      _i1.WidgetbookLeafComponent(
-        name: 'RxSwitch',
-        useCase: _i1.WidgetbookUseCase(
-          name: 'Switch Component',
-          builder: _i16.buildSwitchUseCase,
-        ),
-      ),
-      _i1.WidgetbookLeafComponent(
-        name: 'RxTextField',
-        useCase: _i1.WidgetbookUseCase(
-          name: 'TextField Component',
-          builder: _i17.buildButtonUseCase,
-        ),
+      _widgetbook.WidgetbookComponent(
+        name: 'RemixTextField',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'TextField Component',
+            builder: _demo_components_textfield_use_case.buildButtonUseCase,
+          ),
+        ],
       ),
     ],
   )

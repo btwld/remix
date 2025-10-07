@@ -26,43 +26,28 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: MixColors.white,
         body: Center(
-          child: Row(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              const RxSelect<Options>(
-                items: [
-                  RxSelectItem<Options>.raw(
-                    value: Options.apple,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.favorite, color: Colors.red),
-                        SizedBox(width: 8),
-                        Text('Custom Apple'),
-                      ],
-                    ),
-                  ),
-                ],
-                child: RxSelectTrigger(label: 'Select an item'),
-              ),
-              RxSelect(
+              const Text('Select Demo - Simplified for Migration'),
+              const SizedBox(height: 20),
+              // Simple select implementation for demo purposes
+              RemixSelect<Options>(
+                trigger: const RemixSelectTrigger(
+                  placeholder: 'Select an item',
+                ),
                 selectedValue: _value,
-                onSelectedValueChanged: (value) {
+                onChanged: (value) {
                   setState(() {
                     _value = value;
                   });
                 },
                 items: Options.values
                     .map((e) =>
-                        RxSelectItem(value: e, label: e.name.capitalize()))
+                        RemixSelectItem(value: e, label: e.name.capitalize()))
                     .toList(),
-                style: RxSelectStyle()
-                  ..trigger.container.width(200)
-                  ..trigger.container.flex.mainAxisAlignment.spaceBetween(),
-                child: RxSelectTrigger(
-                  label: _value?.name.capitalize() ?? 'Select an item',
-                ),
               ),
             ],
           ),
