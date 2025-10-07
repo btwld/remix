@@ -4,6 +4,8 @@ on:
   push:
     tags:
       - 'v[0-9]+.[0-9]+.[0-9]+*'
+  workflow_dispatch:
+  
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -11,12 +13,17 @@ concurrency:
 jobs:
   publish:
     name: Publish to pub.dev
-    environment: Production    
+    environment: Production
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Set up Dart (provision OIDC)
+        uses: dart-lang/setup-dart@v1
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -25,7 +32,7 @@ jobs:
           cache: true
 
       - name: Install dependencies
-        run: flutter pub get && cd demo && flutter pub get
+        run: flutter pub get
 
       - name: Analyze project
         run: flutter analyze
@@ -33,7 +40,8 @@ jobs:
       - name: Run tests
         run: flutter test
 
-    publish:
-      permissions:
-        id-token: write # Required for authentication using OIDC
-      uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
+      - name: Publish - dry run
+        run: dart pub publish --dry-run
+
+      - name: Publish to pub.dev (OIDC)
+        run: dart pub publish --force
