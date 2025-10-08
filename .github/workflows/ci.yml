@@ -1,0 +1,27 @@
+name: Flutter CI
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - docs/**
+      - docs.json
+
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - docs/**
+      - docs.json
+
+# Cancel any in-progress runs of the same workflow for the same PR/branch.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    uses: btwld/dart-actions/.github/workflows/ci.yml@main
+    with:
+      min_coverage: 80
