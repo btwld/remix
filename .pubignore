@@ -1,2 +1,4 @@
 pubspec_overrides.yaml
 demo/*
+.vscode/*
+demo/macos/Podfile.lock
