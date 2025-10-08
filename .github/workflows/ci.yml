@@ -25,3 +25,4 @@ jobs:
     uses: btwld/dart-actions/.github/workflows/ci.yml@main
     with:
       min_coverage: 80
+      project_paths: ".,demo/"
