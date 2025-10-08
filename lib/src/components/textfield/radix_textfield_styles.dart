@@ -1,16 +1,8 @@
 part of 'textfield.dart';
 
-enum FortalTextFieldSize {
-  size1,
-  size2,
-  size3,
-}
+enum FortalTextFieldSize { size1, size2, size3 }
 
-enum FortalTextFieldVariant {
-  classic,
-  surface,
-  soft,
-}
+enum FortalTextFieldVariant { classic, surface, soft }
 
 /// FortalTextFieldStyles utility class for creating Fortal-themed textfield styles.
 ///
@@ -39,9 +31,14 @@ class FortalTextFieldStyles {
     FortalTextFieldSize size = FortalTextFieldSize.size2,
   }) {
     return RemixTextFieldStyle(
-      // Basic text styling (colors are set by variants)
-      cursorWidth: 1.5,
-    )
+          // Basic text styling (colors are set by variants)
+          cursorWidth: 1.5,
+          hintText: TextStyler().textHeightBehavior(
+            TextHeightBehaviorMix()
+                .applyHeightToFirstAscent(false)
+                .applyHeightToLastDescent(true),
+          ),
+        )
         // Focus state
         .onFocused(
           RemixTextFieldStyle().borderAll(
@@ -57,21 +54,23 @@ class FortalTextFieldStyles {
     FortalTextFieldSize size = FortalTextFieldSize.size2,
   }) {
     return base(size: size)
-        .merge(RemixTextFieldStyle(
-          text: TextStyler()
-              .color(FortalTokens.gray12())
-              .fontWeight(FortalTokens.fontWeightRegular()),
-          hintText: TextStyler()
-              .color(FortalTokens.gray10())
-              .fontWeight(FortalTokens.fontWeightRegular()),
-          cursorColor: FortalTokens.gray12(),
-          helperText: TextStyler()
-              .color(FortalTokens.gray11())
-              .fontWeight(FortalTokens.fontWeightRegular()),
-          label: TextStyler()
-              .color(FortalTokens.gray12())
-              .fontWeight(FortalTokens.fontWeightMedium()),
-        ))
+        .merge(
+          RemixTextFieldStyle(
+            text: TextStyler()
+                .color(FortalTokens.gray12())
+                .fontWeight(FortalTokens.fontWeightRegular()),
+            hintText: TextStyler()
+                .color(FortalTokens.gray10())
+                .fontWeight(FortalTokens.fontWeightRegular()),
+            cursorColor: FortalTokens.gray12(),
+            helperText: TextStyler()
+                .color(FortalTokens.gray11())
+                .fontWeight(FortalTokens.fontWeightRegular()),
+            label: TextStyler()
+                .color(FortalTokens.gray12())
+                .fontWeight(FortalTokens.fontWeightMedium()),
+          ),
+        )
         .color(FortalTokens.colorSurface())
         .borderAll(
           color: FortalTokens.gray7(),
@@ -79,9 +78,11 @@ class FortalTextFieldStyles {
         )
         .onDisabled(
           RemixTextFieldStyle(
-            text: TextStyler().color(FortalTokens.gray10()),
-            hintText: TextStyler().color(FortalTokens.gray8()),
-          ).color(FortalTokens.colorSurface()).borderAll(
+                text: TextStyler().color(FortalTokens.gray10()),
+                hintText: TextStyler().color(FortalTokens.gray8()),
+              )
+              .color(FortalTokens.colorSurface())
+              .borderAll(
                 color: FortalTokens.gray7(),
                 width: FortalTokens.borderWidth1(),
               ),
@@ -92,21 +93,23 @@ class FortalTextFieldStyles {
     FortalTextFieldSize size = FortalTextFieldSize.size2,
   }) {
     return base(size: size)
-        .merge(RemixTextFieldStyle(
-          text: TextStyler()
-              .color(FortalTokens.gray12())
-              .fontWeight(FortalTokens.fontWeightRegular()),
-          hintText: TextStyler()
-              .color(FortalTokens.gray10())
-              .fontWeight(FortalTokens.fontWeightRegular()),
-          cursorColor: FortalTokens.gray12(),
-          helperText: TextStyler()
-              .color(FortalTokens.gray11())
-              .fontWeight(FortalTokens.fontWeightRegular()),
-          label: TextStyler()
-              .color(FortalTokens.gray12())
-              .fontWeight(FortalTokens.fontWeightMedium()),
-        ))
+        .merge(
+          RemixTextFieldStyle(
+            text: TextStyler()
+                .color(FortalTokens.gray12())
+                .fontWeight(FortalTokens.fontWeightRegular()),
+            hintText: TextStyler()
+                .color(FortalTokens.gray10())
+                .fontWeight(FortalTokens.fontWeightRegular()),
+            cursorColor: FortalTokens.gray12(),
+            helperText: TextStyler()
+                .color(FortalTokens.gray11())
+                .fontWeight(FortalTokens.fontWeightRegular()),
+            label: TextStyler()
+                .color(FortalTokens.gray12())
+                .fontWeight(FortalTokens.fontWeightMedium()),
+          ),
+        )
         .color(FortalTokens.colorSurface())
         .borderAll(
           color: FortalTokens.gray6(),
@@ -121,9 +124,11 @@ class FortalTextFieldStyles {
         )
         .onDisabled(
           RemixTextFieldStyle(
-            text: TextStyler().color(FortalTokens.gray10()),
-            hintText: TextStyler().color(FortalTokens.gray8()),
-          ).color(FortalTokens.colorSurface()).borderAll(
+                text: TextStyler().color(FortalTokens.gray10()),
+                hintText: TextStyler().color(FortalTokens.gray8()),
+              )
+              .color(FortalTokens.colorSurface())
+              .borderAll(
                 color: FortalTokens.gray6(),
                 width: FortalTokens.borderWidth1(),
               ),
@@ -134,21 +139,23 @@ class FortalTextFieldStyles {
     FortalTextFieldSize size = FortalTextFieldSize.size2,
   }) {
     return base(size: size)
-        .merge(RemixTextFieldStyle(
-          text: TextStyler()
-              .color(FortalTokens.accent12())
-              .fontWeight(FortalTokens.fontWeightRegular()),
-          hintText: TextStyler()
-              .color(FortalTokens.accent10())
-              .fontWeight(FortalTokens.fontWeightRegular()),
-          cursorColor: FortalTokens.accent12(),
-          helperText: TextStyler()
-              .color(FortalTokens.gray11())
-              .fontWeight(FortalTokens.fontWeightRegular()),
-          label: TextStyler()
-              .color(FortalTokens.gray12())
-              .fontWeight(FortalTokens.fontWeightMedium()),
-        ))
+        .merge(
+          RemixTextFieldStyle(
+            text: TextStyler()
+                .color(FortalTokens.accent12())
+                .fontWeight(FortalTokens.fontWeightRegular()),
+            hintText: TextStyler()
+                .color(FortalTokens.accent10())
+                .fontWeight(FortalTokens.fontWeightRegular()),
+            cursorColor: FortalTokens.accent12(),
+            helperText: TextStyler()
+                .color(FortalTokens.gray11())
+                .fontWeight(FortalTokens.fontWeightRegular()),
+            label: TextStyler()
+                .color(FortalTokens.gray12())
+                .fontWeight(FortalTokens.fontWeightMedium()),
+          ),
+        )
         .color(FortalTokens.accent3())
         .borderAll(
           color: FortalTokens.accent6(),
@@ -156,9 +163,11 @@ class FortalTextFieldStyles {
         )
         .onDisabled(
           RemixTextFieldStyle(
-            text: TextStyler().color(FortalTokens.accent11()),
-            hintText: TextStyler().color(FortalTokens.accent9()),
-          ).color(FortalTokens.accent3()).borderAll(
+                text: TextStyler().color(FortalTokens.accent11()),
+                hintText: TextStyler().color(FortalTokens.accent9()),
+              )
+              .color(FortalTokens.accent3())
+              .borderAll(
                 color: FortalTokens.accent6(),
                 width: FortalTokens.borderWidth1(),
               ),
@@ -172,23 +181,23 @@ class FortalTextFieldStyles {
   static RemixTextFieldStyle _sizeStyle(FortalTextFieldSize size) {
     return switch (size) {
       FortalTextFieldSize.size1 => RemixTextFieldStyle(
-          text: TextStyler().fontSize(12.0),
-          hintText: TextStyler().fontSize(12.0),
-          helperText: TextStyler().fontSize(11.0),
-          label: TextStyler().fontSize(11.0),
-        ).borderRadiusAll(FortalTokens.radius2()).paddingAll(8.0).height(32.0),
+        text: TextStyler().fontSize(12.0),
+        hintText: TextStyler().fontSize(12.0),
+        helperText: TextStyler().fontSize(11.0),
+        label: TextStyler().fontSize(11.0),
+      ).borderRadiusAll(FortalTokens.radius2()).paddingAll(8.0),
       FortalTextFieldSize.size2 => RemixTextFieldStyle(
-          text: TextStyler().fontSize(14.0),
-          hintText: TextStyler().fontSize(14.0),
-          helperText: TextStyler().fontSize(12.0),
-          label: TextStyler().fontSize(13.0),
-        ).borderRadiusAll(FortalTokens.radius3()).paddingAll(12.0).height(40.0),
+        text: TextStyler().fontSize(14.0),
+        hintText: TextStyler().fontSize(14.0),
+        helperText: TextStyler().fontSize(12.0),
+        label: TextStyler().fontSize(13.0),
+      ).borderRadiusAll(FortalTokens.radius3()).paddingAll(12.0),
       FortalTextFieldSize.size3 => RemixTextFieldStyle(
-          text: TextStyler().fontSize(16.0),
-          hintText: TextStyler().fontSize(16.0),
-          helperText: TextStyler().fontSize(14.0),
-          label: TextStyler().fontSize(15.0),
-        ).borderRadiusAll(FortalTokens.radius4()).paddingAll(16.0).height(48.0),
+        text: TextStyler().fontSize(15.0),
+        hintText: TextStyler().fontSize(15.0),
+        helperText: TextStyler().fontSize(14.0),
+        label: TextStyler().fontSize(15.0),
+      ).borderRadiusAll(FortalTokens.radius4()).paddingAll(16.0),
     };
   }
 }

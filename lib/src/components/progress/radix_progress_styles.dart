@@ -1,16 +1,8 @@
 part of 'progress.dart';
 
-enum FortalProgressSize {
-  size1,
-  size2,
-  size3,
-}
+enum FortalProgressSize { size1, size2, size3 }
 
-enum FortalProgressVariant {
-  classic,
-  surface,
-  soft,
-}
+enum FortalProgressVariant { classic, surface, soft }
 
 /// FortalProgressStyles utility class for creating Fortal-themed progress styles.
 ///
@@ -52,7 +44,7 @@ class FortalProgressStyles {
         // Track styling (background bar)
         .track(
           BoxStyler()
-              .color(FortalTokens.accentTrack()) // gray6 equivalent
+              .color(FortalTokens.gray6()) // gray6 equivalent
               .borderRadiusAll(FortalTokens.radiusFull())
               .width(double.infinity),
         )
@@ -71,7 +63,7 @@ class FortalProgressStyles {
         // Track styling (background bar) - same as classic
         .track(
           BoxStyler()
-              .color(FortalTokens.accentTrack()) // gray6 equivalent
+              .color(FortalTokens.gray6()) // gray6 equivalent
               .borderRadiusAll(FortalTokens.radiusFull())
               .width(double.infinity),
         )
@@ -108,30 +100,33 @@ class FortalProgressStyles {
 
   static RemixProgressStyle _sizeStyle(FortalProgressSize size) {
     return switch (size) {
-      FortalProgressSize.size1 => RemixProgressStyle()
-          .height(4.0)
-          .track(
-            BoxStyler().height(4.0).borderRadiusAll(FortalTokens.radius1()),
-          )
-          .indicator(
-            BoxStyler().height(4.0).borderRadiusAll(FortalTokens.radius1()),
-          ),
-      FortalProgressSize.size2 => RemixProgressStyle()
-          .height(8.0)
-          .track(
-            BoxStyler().height(8.0).borderRadiusAll(FortalTokens.radius2()),
-          )
-          .indicator(
-            BoxStyler().height(8.0).borderRadiusAll(FortalTokens.radius2()),
-          ),
-      FortalProgressSize.size3 => RemixProgressStyle()
-          .height(12.0)
-          .track(
-            BoxStyler().height(12.0).borderRadiusAll(FortalTokens.radius3()),
-          )
-          .indicator(
-            BoxStyler().height(12.0).borderRadiusAll(FortalTokens.radius3()),
-          ),
+      FortalProgressSize.size1 =>
+        RemixProgressStyle()
+            .height(4.0)
+            .track(
+              BoxStyler().height(4.0).borderRadiusAll(FortalTokens.radius1()),
+            )
+            .indicator(
+              BoxStyler().height(4.0).borderRadiusAll(FortalTokens.radius1()),
+            ),
+      FortalProgressSize.size2 =>
+        RemixProgressStyle()
+            .height(8.0)
+            .track(
+              BoxStyler().height(8.0).borderRadiusAll(FortalTokens.radius2()),
+            )
+            .indicator(
+              BoxStyler().height(8.0).borderRadiusAll(FortalTokens.radius2()),
+            ),
+      FortalProgressSize.size3 =>
+        RemixProgressStyle()
+            .height(12.0)
+            .track(
+              BoxStyler().height(12.0).borderRadiusAll(FortalTokens.radius3()),
+            )
+            .indicator(
+              BoxStyler().height(12.0).borderRadiusAll(FortalTokens.radius3()),
+            ),
     };
   }
 }

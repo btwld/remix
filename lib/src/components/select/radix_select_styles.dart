@@ -1,19 +1,45 @@
+// ignore_for_file: unused_element
+
 part of 'select.dart';
 
-/// Fortal select styles for trigger and menu content.
-class FortalSelectStyles {
-  const FortalSelectStyles._();
+/// Enum for select style variants.
+enum FortalSelectVariant { classic, surface, soft, ghost }
 
-  // Trigger variants
+/// Style class holding trigger, content, and items styles.
+class FortalSelectStyle {
+  final RemixSelectStyle select;
+  final RemixSelectMenuItemStyle items;
 
-  static RemixSelectStyle triggerClassic() {
+  const FortalSelectStyle._({required this.select, required this.items});
+
+  /// Factory to create style based on variant.
+  factory FortalSelectStyle(FortalSelectVariant variant) {
+    switch (variant) {
+      case FortalSelectVariant.classic:
+        return FortalSelectStyle._(
+          select: _selectClassic(),
+          items: _itemSolid(),
+        );
+      case FortalSelectVariant.surface:
+        return FortalSelectStyle._(
+          select: _selectSurface(),
+          items: _itemSolid(),
+        );
+      case FortalSelectVariant.soft:
+        return FortalSelectStyle._(select: _selectSoft(), items: _itemSoft());
+      case FortalSelectVariant.ghost:
+        return FortalSelectStyle._(select: _selectGhost(), items: _itemSolid());
+    }
+  }
+
+  // Private static style builders for each variant
+
+  static RemixSelectStyle _selectClassic() {
     return RemixSelectStyle()
         .trigger(
           RemixSelectTriggerStyle()
-              // Use standard trigger padding X = space-3 (12px), Y = space-2 (8px)
               .paddingY(8.0)
               .paddingX(12.0)
-              // Per JSON: select-trigger-height = space-7 (28px)
               .height(28.0)
               .direction(Axis.horizontal)
               .mainAxisAlignment(MainAxisAlignment.spaceBetween)
@@ -45,7 +71,7 @@ class FortalSelectStyles {
         );
   }
 
-  static RemixSelectStyle triggerSurface() {
+  static RemixSelectStyle _selectSurface() {
     return RemixSelectStyle()
         .trigger(
           RemixSelectTriggerStyle()
@@ -74,7 +100,7 @@ class FortalSelectStyles {
         );
   }
 
-  static RemixSelectStyle triggerSoft() {
+  static RemixSelectStyle _selectSoft() {
     return RemixSelectStyle()
         .trigger(
           RemixSelectTriggerStyle()
@@ -103,7 +129,7 @@ class FortalSelectStyles {
         );
   }
 
-  static RemixSelectStyle triggerGhost() {
+  static RemixSelectStyle _selectGhost() {
     return RemixSelectStyle()
         .trigger(
           RemixSelectTriggerStyle()
@@ -128,9 +154,7 @@ class FortalSelectStyles {
         );
   }
 
-  // Content (menu) variants
-
-  static RemixSelectStyle contentSolid() {
+  static RemixSelectStyle _contentSolid() {
     return RemixSelectStyle().menuContainer(
       FlexBoxStyler()
           .color(FortalTokens.colorPanelSolid())
@@ -143,7 +167,7 @@ class FortalSelectStyles {
     );
   }
 
-  static RemixSelectMenuItemStyle itemSolid() {
+  static RemixSelectMenuItemStyle _itemSolid() {
     return RemixSelectMenuItemStyle()
         .paddingX(8.0)
         .height(24.0)
@@ -151,7 +175,7 @@ class FortalSelectStyles {
         .icon(IconStyler(size: 20.0));
   }
 
-  static RemixSelectStyle contentSoft() {
+  static RemixSelectStyle _contentSoft() {
     return RemixSelectStyle().menuContainer(
       FlexBoxStyler()
           .color(FortalTokens.colorPanelTranslucent())
@@ -164,7 +188,7 @@ class FortalSelectStyles {
     );
   }
 
-  static RemixSelectMenuItemStyle itemSoft() {
+  static RemixSelectMenuItemStyle _itemSoft() {
     return RemixSelectMenuItemStyle()
         .paddingX(8.0)
         .height(24.0)

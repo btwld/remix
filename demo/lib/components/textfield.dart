@@ -9,8 +9,7 @@ final _key = GlobalKey();
   name: 'TextField Component',
   type: RemixTextField,
 )
-Widget buildButtonUseCase(BuildContext context) {
-  // final iconKnob = context.knobs.iconData(label: 'icons', initialValue: null);
+Widget buildTextFieldUseCase(BuildContext context) {
   return KeyedSubtree(
     key: _key,
     child: Scaffold(
@@ -38,6 +37,19 @@ Widget buildButtonUseCase(BuildContext context) {
             helperText: context.knobs.string(
               label: 'Helper Text',
               initialValue: 'Helper Text',
+            ),
+            style: FortalTextFieldStyles.create(
+              variant: context.knobs.object.dropdown(
+                label: 'variant',
+                options: FortalTextFieldVariant.values,
+                labelBuilder: (variant) => variant.name,
+              ),
+              size: context.knobs.object.dropdown(
+                label: 'size',
+                options: FortalTextFieldSize.values,
+                labelBuilder: (size) => size.name,
+                initialOption: FortalTextFieldSize.size2,
+              ),
             ),
           ),
         ),

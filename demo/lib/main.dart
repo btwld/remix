@@ -36,7 +36,7 @@ class HotReload extends StatelessWidget {
         BrightnessAddon(),
         InspectorAddon(),
       ],
-      appBuilder: (context, child) => createRemixScope(child: child),
+      appBuilder: (context, child) => createFortalScope(child: child),
       directories: directories,
     );
   }

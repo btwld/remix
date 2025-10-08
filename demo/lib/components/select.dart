@@ -1,60 +1,65 @@
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-
+import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
+
+final _key = GlobalKey();
 
 @widgetbook.UseCase(
   name: 'Select Component',
   type: RemixSelect,
 )
-Widget buildSelect(BuildContext context) {
-  return const Scaffold(
-    body: Center(
-      child: SelectDemo(),
-    ),
+Widget buildSelectUseCase(BuildContext context) {
+  final variant = context.knobs.object.dropdown(
+    label: 'variant',
+    options: FortalSelectVariant.values,
+    labelBuilder: (variant) => variant.name,
   );
-}
 
-class SelectDemo extends StatefulWidget {
-  const SelectDemo({
-    super.key,
-  });
+  final styleItems = FortalSelectStyle(variant).items;
+  final styleSelect = FortalSelectStyle(variant).select;
 
-  @override
-  State<SelectDemo> createState() => _SelectDemoState();
-}
-
-class _SelectDemoState extends State<SelectDemo> {
-  String selectedValue = 'Apple';
-
-  final List<String> items = ['Apple Fiji', 'Banana', 'Orange'];
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(
-            width: 200,
-            child: RemixSelect<String>(
-              trigger: const RemixSelectTrigger(
-                placeholder: 'Select item...',
-              ),
-              selectedValue: selectedValue,
-              onChanged: (value) =>
-                  setState(() => selectedValue = value ?? ''),
-              items: List.generate(
-                items.length,
-                (index) => RemixSelectItem<String>(
-                  value: items[index],
-                  label: items[index],
-                ),
+  return KeyedSubtree(
+    key: _key,
+    child: Scaffold(
+      body: Center(
+        child: SizedBox(
+          width: 200,
+          child: RemixSelect<String>(
+            style: styleSelect,
+            trigger: RemixSelectTrigger(
+              placeholder: context.knobs.string(
+                label: 'Placeholder',
+                initialValue: 'Select item...',
               ),
             ),
+            selectedValue: context.knobs.string(
+              label: 'Selected Value',
+              initialValue: 'Apple',
+            ),
+            onChanged: (value) {
+              // Handle selection change
+            },
+            items: [
+              RemixSelectItem<String>(
+                value: 'Apple',
+                label: 'Apple',
+                style: styleItems,
+              ),
+              RemixSelectItem<String>(
+                value: 'Banana',
+                label: 'Banana',
+                style: styleItems,
+              ),
+              RemixSelectItem<String>(
+                value: 'Orange',
+                label: 'Orange',
+                style: styleItems,
+              ),
+            ],
           ),
-        ],
+        ),
       ),
-    );
-  }
+    ),
+  );
 }

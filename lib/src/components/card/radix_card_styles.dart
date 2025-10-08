@@ -1,16 +1,8 @@
 part of 'card.dart';
 
-enum FortalCardSize {
-  size1,
-  size2,
-  size3,
-}
+enum FortalCardSize { size1, size2, size3 }
 
-enum FortalCardVariant {
-  surface,
-  classic,
-  ghost,
-}
+enum FortalCardVariant { surface, classic, ghost }
 
 /// Factory class for creating Fortal-compliant card styles.
 ///
@@ -36,8 +28,8 @@ class FortalCardStyles {
 
   static RemixCardStyle base({FortalCardSize size = FortalCardSize.size2}) {
     return RemixCardStyle()
-        // Merge with size-specific styles
-        .merge(_sizeStyle(size));
+    // Merge with size-specific styles
+    .merge(_sizeStyle(size));
   }
 
   /// Creates a surface variant card style.
@@ -68,7 +60,7 @@ class FortalCardStyles {
         .color(FortalTokens.colorPanelSolid())
         .borderRadiusAll(FortalTokens.radius6())
         // Add subtle layered shadow for elevation
-        .shadows(FortalTokens.shadow2().map(BoxShadowMix.value).toList());
+        .merge(RemixCardStyle(container: BoxStyler.create()));
   }
 
   /// Creates a ghost variant card style.
@@ -77,8 +69,8 @@ class FortalCardStyles {
   /// Used for subtle content grouping without visual container.
   static RemixCardStyle ghost({FortalCardSize size = FortalCardSize.size2}) {
     return base(size: size)
-        // Visual styling only - no size properties
-        .color(Colors.transparent);
+    // Visual styling only - no size properties
+    .color(Colors.transparent);
   }
 
   // ---------------------------------------------------------------------------

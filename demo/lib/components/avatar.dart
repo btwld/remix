@@ -23,9 +23,22 @@ Widget buildAvatarUseCase(BuildContext context) {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             RemixAvatar(
+              label: 'LF',
               foregroundImage:
                   imageUrl.isNotEmpty ? NetworkImage(imageUrl) : null,
-              label: 'CA',
+              style: FortalAvatarStyles.create(
+                variant: context.knobs.object.dropdown(
+                  label: 'label',
+                  options: FortalAvatarVariant.values,
+                  labelBuilder: (variant) => variant.name,
+                ),
+                size: context.knobs.object.dropdown(
+                  label: 'size',
+                  options: FortalAvatarSize.values,
+                  labelBuilder: (size) => size.name,
+                  initialOption: FortalAvatarSize.size4,
+                ),
+              ),
             ),
           ],
         ),

@@ -1,11 +1,6 @@
 part of 'avatar.dart';
 
-enum FortalAvatarSize {
-  size1,
-  size2,
-  size3,
-  size4,
-}
+enum FortalAvatarSize { size1, size2, size3, size4 }
 
 enum FortalAvatarVariant {
   surface, // neutral surface background
@@ -36,6 +31,7 @@ class FortalAvatarStyles {
   }) {
     return RemixAvatarStyle()
         .borderRadiusAll(FortalTokens.radiusFull())
+        .clipBehavior(Clip.hardEdge)
         .merge(_sizeStyle(size));
   }
 
@@ -80,18 +76,22 @@ class FortalAvatarStyles {
     // sizes for typical use, and keep radius as full circle.
     // TODO: Expose tokenized avatar-size tiers when available.
     return switch (size) {
-      FortalAvatarSize.size1 => RemixAvatarStyle()
-          .square(24.0)
-          .labelTextStyle(FortalTokens.text1.mix()),
-      FortalAvatarSize.size2 => RemixAvatarStyle()
-          .square(32.0)
-          .labelTextStyle(FortalTokens.text2.mix()),
-      FortalAvatarSize.size3 => RemixAvatarStyle()
-          .square(40.0)
-          .labelTextStyle(FortalTokens.text3.mix()),
-      FortalAvatarSize.size4 => RemixAvatarStyle()
-          .square(64.0)
-          .labelTextStyle(FortalTokens.text4.mix()),
+      FortalAvatarSize.size1 =>
+        RemixAvatarStyle()
+            .square(24.0)
+            .labelTextStyle(FortalTokens.text1.mix()),
+      FortalAvatarSize.size2 =>
+        RemixAvatarStyle()
+            .square(32.0)
+            .labelTextStyle(FortalTokens.text2.mix()),
+      FortalAvatarSize.size3 =>
+        RemixAvatarStyle()
+            .square(40.0)
+            .labelTextStyle(FortalTokens.text3.mix()),
+      FortalAvatarSize.size4 =>
+        RemixAvatarStyle()
+            .square(64.0)
+            .labelTextStyle(FortalTokens.text4.mix()),
     };
   }
 }
