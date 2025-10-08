@@ -21,6 +21,19 @@ Widget buildSwitchUseCase(BuildContext context) {
           selected: context.knobs.boolean(label: 'Toggle', initialValue: true),
           enabled: context.knobs.boolean(label: 'Enabled', initialValue: true),
           onChanged: (value) => knobState.updateKnob('Toggle', value),
+          style: FortalSwitchStyles.create(
+            variant: context.knobs.object.dropdown(
+              label: 'variant',
+              options: FortalSwitchVariant.values,
+              labelBuilder: (variant) => variant.name,
+            ),
+            size: context.knobs.object.dropdown(
+              label: 'size',
+              options: FortalSwitchSize.values,
+              labelBuilder: (size) => size.name,
+              initialOption: FortalSwitchSize.size2,
+            ),
+          ),
         ),
       ),
     ),

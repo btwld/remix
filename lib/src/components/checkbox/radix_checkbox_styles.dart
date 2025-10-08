@@ -1,15 +1,8 @@
 part of 'checkbox.dart';
 
-enum FortalCheckboxSize {
-  size1,
-  size2,
-  size3,
-}
+enum FortalCheckboxSize { size1, size2, size3 }
 
-enum FortalCheckboxVariant {
-  surface,
-  soft,
-}
+enum FortalCheckboxVariant { surface, soft }
 
 /// Factory class for creating Fortal-compliant checkbox styles.
 ///
@@ -96,7 +89,7 @@ class FortalCheckboxStyles {
   }) {
     return base(size: size)
         // Container (the checkbox box itself) - no size properties
-        .color(FortalTokens.colorSurface())
+        .color(FortalTokens.accentSurface())
         .borderAll(
           color: FortalTokens.gray6(),
           width: FortalTokens.borderWidth1(),
@@ -172,30 +165,30 @@ class FortalCheckboxStyles {
   static RemixCheckboxStyle _sizeStyle(FortalCheckboxSize size) {
     return switch (size) {
       FortalCheckboxSize.size1 => RemixCheckboxStyle(
-          container: BoxStyler()
-              // checkbox-size (size1) ~ space-4 (16px)
-              .width(FortalTokens.space4())
-              .height(FortalTokens.space4()),
-          // Indicator icon size uses token step
-          indicator: IconStyler().size(FortalTokens.space3()),
-        ),
+        container: BoxStyler()
+            // checkbox-size (size1) ~ space-4 (16px)
+            .width(FortalTokens.space4())
+            .height(FortalTokens.space4()),
+        // Indicator icon size uses token step
+        indicator: IconStyler().size(FortalTokens.space3()),
+      ),
       FortalCheckboxSize.size2 => RemixCheckboxStyle(
-          container: BoxStyler()
-              // checkbox-size: calc(space-4 * 1.25)
-              // Resolve via token at runtime and scale
-              // TODO: We need ot add this value 1.25 as a directive
-              .width(FortalTokens.space4() * 1.25)
-              .height(FortalTokens.space4() * 1.25),
-          // JSON indicates 12px base indicator size (scaled). Use space-3 (12px).
-          indicator: IconStyler().size(FortalTokens.space3()),
-        ),
+        container: BoxStyler()
+            // checkbox-size: calc(space-4 * 1.25)
+            // Resolve via token at runtime and scale
+            // TODO: We need ot add this value 1.25 as a directive
+            .width(FortalTokens.space5())
+            .height(FortalTokens.space5()),
+        // JSON indicates 12px base indicator size (scaled). Use space-3 (12px).
+        indicator: IconStyler().size(FortalTokens.space3()),
+      ),
       FortalCheckboxSize.size3 => RemixCheckboxStyle(
-          container: BoxStyler()
-              // large size uses space-5 (24px)
-              .width(FortalTokens.space5())
-              .height(FortalTokens.space5()),
-          indicator: IconStyler().size(FortalTokens.space4()),
-        ),
+        container: BoxStyler()
+            // large size uses space-5 (24px)
+            .width(FortalTokens.space6())
+            .height(FortalTokens.space6()),
+        indicator: IconStyler().size(FortalTokens.space4()),
+      ),
     };
   }
 }

@@ -14,9 +14,9 @@ class RemixAvatarStyle
     super.variants,
     super.animation,
     super.modifier,
-  })  : $container = container,
-        $text = text,
-        $icon = icon;
+  }) : $container = container,
+       $text = text,
+       $icon = icon;
 
   RemixAvatarStyle({
     BoxStyler? container,
@@ -26,13 +26,13 @@ class RemixAvatarStyle
     List<VariantStyle<RemixAvatarSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
-          container: Prop.maybeMix(container),
-          text: Prop.maybeMix(text),
-          icon: Prop.maybeMix(icon),
-          variants: variants,
-          animation: animation,
-          modifier: modifier,
-        );
+         container: Prop.maybeMix(container),
+         text: Prop.maybeMix(text),
+         icon: Prop.maybeMix(icon),
+         variants: variants,
+         animation: animation,
+         modifier: modifier,
+       );
 
   /// Sets avatar size to a square
   RemixAvatarStyle square(double size) {
@@ -41,35 +41,41 @@ class RemixAvatarStyle
 
   /// Sets avatar size with width and height (alias)
   RemixAvatarStyle sizeWH(double width, double height) {
-    return merge(RemixAvatarStyle(
-      container: BoxStyler(
-        constraints: BoxConstraintsMix(
-          minWidth: width,
-          maxWidth: width,
-          minHeight: height,
-          maxHeight: height,
+    return merge(
+      RemixAvatarStyle(
+        container: BoxStyler(
+          constraints: BoxConstraintsMix(
+            minWidth: width,
+            maxWidth: width,
+            minHeight: height,
+            maxHeight: height,
+          ),
         ),
       ),
-    ));
+    );
   }
 
   /// Sets background color
   RemixAvatarStyle color(Color value) {
-    return merge(RemixAvatarStyle(
-      container: BoxStyler(decoration: BoxDecorationMix(color: value)),
-    ));
+    return merge(
+      RemixAvatarStyle(
+        container: BoxStyler(decoration: BoxDecorationMix(color: value)),
+      ),
+    );
   }
 
   /// Sets border radius
   RemixAvatarStyle borderRadius(BorderRadiusGeometryMix radius) {
-    return merge(RemixAvatarStyle(
-      container: BoxStyler(
-        decoration: BoxDecorationMix(
-          borderRadius: radius,
-          shape: BoxShape.rectangle,
+    return merge(
+      RemixAvatarStyle(
+        container: BoxStyler(
+          decoration: BoxDecorationMix(
+            borderRadius: radius,
+            shape: BoxShape.rectangle,
+          ),
         ),
       ),
-    ));
+    );
   }
 
   /// Sets text color
@@ -114,6 +120,11 @@ class RemixAvatarStyle
     return merge(RemixAvatarStyle(animation: animation));
   }
 
+  /// Sets the clip behavior for the avatar container.
+  RemixAvatarStyle clipBehavior(Clip clip) {
+    return merge(RemixAvatarStyle(container: BoxStyler(clipBehavior: clip)));
+  }
+
   @override
   RemixAvatarStyle label(TextStyler value) {
     return merge(RemixAvatarStyle(text: value));
@@ -129,16 +140,18 @@ class RemixAvatarStyle
   /// Sets avatar size with width and height
   @override
   RemixAvatarStyle size(double width, double height) {
-    return merge(RemixAvatarStyle(
-      container: BoxStyler(
-        constraints: BoxConstraintsMix(
-          minWidth: width,
-          maxWidth: width,
-          minHeight: height,
-          maxHeight: height,
+    return merge(
+      RemixAvatarStyle(
+        container: BoxStyler(
+          constraints: BoxConstraintsMix(
+            minWidth: width,
+            maxWidth: width,
+            minHeight: height,
+            maxHeight: height,
+          ),
         ),
       ),
-    ));
+    );
   }
 
   @override
@@ -192,18 +205,20 @@ class RemixAvatarStyle
     Matrix4 value, {
     AlignmentGeometry alignment = Alignment.center,
   }) {
-    return merge(RemixAvatarStyle(
-      container: BoxStyler(transform: value, transformAlignment: alignment),
-    ));
+    return merge(
+      RemixAvatarStyle(
+        container: BoxStyler(transform: value, transformAlignment: alignment),
+      ),
+    );
   }
 
   @override
   List<Object?> get props => [
-        $container,
-        $text,
-        $icon,
-        $variants,
-        $animation,
-        $modifier,
-      ];
+    $container,
+    $text,
+    $icon,
+    $variants,
+    $animation,
+    $modifier,
+  ];
 }

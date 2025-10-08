@@ -1,17 +1,8 @@
 part of 'badge.dart';
 
-enum FortalBadgeSize {
-  size1,
-  size2,
-  size3,
-}
+enum FortalBadgeSize { size1, size2, size3 }
 
-enum FortalBadgeVariant {
-  solid,
-  soft,
-  surface,
-  outline,
-}
+enum FortalBadgeVariant { solid, soft, surface, outline }
 
 /// Factory class for creating Fortal-compliant badge styles.
 ///
@@ -38,8 +29,8 @@ class FortalBadgeStyles {
 
   static RemixBadgeStyle base({FortalBadgeSize size = FortalBadgeSize.size2}) {
     return RemixBadgeStyle()
-        // Merge with size-specific styles
-        .merge(_sizeStyle(size));
+    // Merge with size-specific styles
+    .merge(_sizeStyle(size));
   }
 
   /// Creates a solid variant badge style.
@@ -113,29 +104,26 @@ class FortalBadgeStyles {
   static RemixBadgeStyle _sizeStyle(FortalBadgeSize size) {
     return switch (size) {
       FortalBadgeSize.size1 => RemixBadgeStyle(
-          container: BoxStyler()
-              .height(18.0)
-              .paddingX(6.0)
-              .paddingY(2.0)
-              .borderRadiusAll(FortalTokens.radius2()),
-          text: TextStyler().fontSize(11.0).height(16.0 / 11.0),
-        ),
+        container: BoxStyler()
+            .paddingX(6.0)
+            .paddingY(2.0)
+            .borderRadiusAll(FortalTokens.radius2()),
+        text: TextStyler().fontSize(11.0).height(16.0 / 11.0),
+      ),
       FortalBadgeSize.size2 => RemixBadgeStyle(
-          container: BoxStyler()
-              .height(22.0)
-              .paddingX(8.0)
-              .paddingY(3.0)
-              .borderRadiusAll(FortalTokens.radius3()),
-          text: TextStyler().fontSize(12.0).height(18.0 / 12.0),
-        ),
+        container: BoxStyler()
+            .paddingX(8.0)
+            .paddingY(3.0)
+            .borderRadiusAll(FortalTokens.radius3()),
+        text: TextStyler().fontSize(12.0).height(18.0 / 12.0),
+      ),
       FortalBadgeSize.size3 => RemixBadgeStyle(
-          container: BoxStyler()
-              .height(26.0)
-              .paddingX(10.0)
-              .paddingY(4.0)
-              .borderRadiusAll(FortalTokens.radius3()),
-          text: TextStyler().fontSize(13.0).height(20.0 / 13.0),
-        ),
+        container: BoxStyler()
+            .paddingX(10.0)
+            .paddingY(4.0)
+            .borderRadiusAll(FortalTokens.radius3()),
+        text: TextStyler().fontSize(13.0).height(20.0 / 13.0),
+      ),
     };
   }
 }
