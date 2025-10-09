@@ -13,9 +13,9 @@ class RemixCalloutStyle
     super.variants,
     super.animation,
     super.modifier,
-  })  : $container = container,
-        $text = text,
-        $icon = icon;
+  }) : $container = container,
+       $text = text,
+       $icon = icon;
 
   RemixCalloutStyle({
     FlexBoxStyler? container,
@@ -25,13 +25,13 @@ class RemixCalloutStyle
     List<VariantStyle<RemixCalloutSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
-          container: Prop.maybeMix(container),
-          text: Prop.maybeMix(text),
-          icon: Prop.maybeMix(icon),
-          variants: variants,
-          animation: animation,
-          modifier: modifier,
-        );
+         container: Prop.maybeMix(container),
+         text: Prop.maybeMix(text),
+         icon: Prop.maybeMix(icon),
+         variants: variants,
+         animation: animation,
+         modifier: modifier,
+       );
 
   /// Sets container padding
   RemixCalloutStyle padding(EdgeInsetsGeometryMix value) {
@@ -50,18 +50,22 @@ class RemixCalloutStyle
 
   /// Sets container background color
   RemixCalloutStyle color(Color value) {
-    return merge(RemixCalloutStyle(
-      container: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
-    ));
+    return merge(
+      RemixCalloutStyle(
+        container: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
+      ),
+    );
   }
 
   /// Sets container border radius
   RemixCalloutStyle borderRadius(BorderRadiusGeometryMix radius) {
-    return merge(RemixCalloutStyle(
-      container: FlexBoxStyler(
-        decoration: BoxDecorationMix(borderRadius: radius),
+    return merge(
+      RemixCalloutStyle(
+        container: FlexBoxStyler(
+          decoration: BoxDecorationMix(borderRadius: radius),
+        ),
       ),
-    ));
+    );
   }
 
   /// Sets container decoration
@@ -156,9 +160,14 @@ class RemixCalloutStyle
     Matrix4 value, {
     AlignmentGeometry alignment = Alignment.center,
   }) {
-    return merge(RemixCalloutStyle(
-      container: FlexBoxStyler(transform: value, transformAlignment: alignment),
-    ));
+    return merge(
+      RemixCalloutStyle(
+        container: FlexBoxStyler(
+          transform: value,
+          transformAlignment: alignment,
+        ),
+      ),
+    );
   }
 
   // FlexStyleMixin implementation
@@ -169,11 +178,11 @@ class RemixCalloutStyle
 
   @override
   List<Object?> get props => [
-        $container,
-        $text,
-        $icon,
-        $variants,
-        $animation,
-        $modifier,
-      ];
+    $container,
+    $text,
+    $icon,
+    $variants,
+    $animation,
+    $modifier,
+  ];
 }
