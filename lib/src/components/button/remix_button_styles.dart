@@ -57,17 +57,17 @@ class FortalButtonStyle {
     FortalButtonSize size = FortalButtonSize.size2,
   }) {
     return base(size: size)
-        .textColor(FortalTokens.accent9())
+        .color(FortalTokens.accent9())
         .labelColor(FortalTokens.accentContrast())
         .iconColor(FortalTokens.accentContrast())
         .spinner(
           RemixSpinnerStyle().indicatorColor(FortalTokens.accentContrast()),
         )
-        .onHovered(RemixButtonStyle().textColor(FortalTokens.accent10()))
-        .onPressed(RemixButtonStyle().textColor(FortalTokens.accent10()))
+        .onHovered(RemixButtonStyle().color(FortalTokens.accent10()))
+        .onPressed(RemixButtonStyle().color(FortalTokens.accent10()))
         .onDisabled(
           RemixButtonStyle()
-              .textColor(FortalTokens.grayA3())
+              .color(FortalTokens.grayA3())
               .labelColor(FortalTokens.gray8())
               .iconColor(FortalTokens.gray8())
               .spinner(
@@ -82,15 +82,15 @@ class FortalButtonStyle {
     FortalButtonSize size = FortalButtonSize.size2,
   }) {
     return base(size: size)
-        .textColor(FortalTokens.accent3())
+        .color(FortalTokens.accent3())
         .labelColor(FortalTokens.accent11())
         .iconColor(FortalTokens.accent11())
         .spinner(RemixSpinnerStyle().indicatorColor(FortalTokens.accent11()))
-        .onHovered(RemixButtonStyle().textColor(FortalTokens.accent4()))
-        .onPressed(RemixButtonStyle().textColor(FortalTokens.accent5()))
+        .onHovered(RemixButtonStyle().color(FortalTokens.accent4()))
+        .onPressed(RemixButtonStyle().color(FortalTokens.accent5()))
         .onDisabled(
           RemixButtonStyle()
-              .textColor(FortalTokens.grayA3())
+              .color(FortalTokens.grayA3())
               .labelColor(FortalTokens.gray8())
               .iconColor(FortalTokens.gray8())
               .spinner(
@@ -105,7 +105,7 @@ class FortalButtonStyle {
     FortalButtonSize size = FortalButtonSize.size2,
   }) {
     return base(size: size)
-        .textColor(FortalTokens.accentA2())
+        .color(FortalTokens.accentA2())
         .borderAll(
           color: FortalTokens.accent6(),
           width: FortalTokens.borderWidth1(),
@@ -121,7 +121,7 @@ class FortalButtonStyle {
         )
         .onDisabled(
           RemixButtonStyle()
-              .textColor(FortalTokens.grayA2())
+              .color(FortalTokens.grayA2())
               .labelColor(FortalTokens.gray8())
               .iconColor(FortalTokens.gray8())
               .borderAll(
@@ -140,7 +140,7 @@ class FortalButtonStyle {
     FortalButtonSize size = FortalButtonSize.size2,
   }) {
     return base(size: size)
-        .textColor(Colors.transparent)
+        .color(Colors.transparent)
         .borderAll(
           color: FortalTokens.accent7(),
           width: FortalTokens.borderWidth1(),
@@ -150,7 +150,7 @@ class FortalButtonStyle {
         .spinner(RemixSpinnerStyle().indicatorColor(FortalTokens.accent11()))
         .onHovered(
           RemixButtonStyle()
-              .textColor(FortalTokens.accentA2())
+              .color(FortalTokens.accentA2())
               .borderAll(
                 color: FortalTokens.accent8(),
                 width: FortalTokens.borderWidth1(),
@@ -173,12 +173,12 @@ class FortalButtonStyle {
     FortalButtonSize size = FortalButtonSize.size2,
   }) {
     var style = base(size: size)
-        .textColor(Colors.transparent)
+        .color(Colors.transparent)
         .labelColor(FortalTokens.accent11())
         .iconColor(FortalTokens.accent11())
         .spinner(RemixSpinnerStyle().indicatorColor(FortalTokens.accent11()))
-        .onHovered(RemixButtonStyle().textColor(FortalTokens.accentA3()))
-        .onPressed(RemixButtonStyle().textColor(FortalTokens.accentA4()))
+        .onHovered(RemixButtonStyle().color(FortalTokens.accentA3()))
+        .onPressed(RemixButtonStyle().color(FortalTokens.accentA4()))
         .onDisabled(
           RemixButtonStyle()
               .labelColor(FortalTokens.gray8())

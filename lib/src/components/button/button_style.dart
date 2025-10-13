@@ -186,7 +186,7 @@ class RemixButtonStyle
   }
 
   @override
-  RemixButtonStyle textColor(Color value) {
+  RemixButtonStyle color(Color value) {
     return merge(
       RemixButtonStyle(
         container: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),

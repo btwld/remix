@@ -71,7 +71,7 @@ class RemixDialogStyle
   }
 
   @override
-  RemixDialogStyle textColor(Color value) {
+  RemixDialogStyle color(Color value) {
     return merge(
       RemixDialogStyle(
         container: BoxStyler(decoration: BoxDecorationMix(color: value)),

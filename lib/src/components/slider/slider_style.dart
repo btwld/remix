@@ -138,7 +138,7 @@ class RemixSliderStyle
   }
 
   @override
-  RemixSliderStyle textColor(Color value) {
+  RemixSliderStyle color(Color value) {
     return merge(
       RemixSliderStyle(
         thumb: BoxStyler(decoration: BoxDecorationMix(color: value)),

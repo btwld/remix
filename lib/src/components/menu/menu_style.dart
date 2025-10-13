@@ -61,7 +61,7 @@ class RemixMenuTriggerStyle
   }
 
   @override
-  RemixMenuTriggerStyle textColor(Color value) {
+  RemixMenuTriggerStyle color(Color value) {
     return merge(
       RemixMenuTriggerStyle(
         container: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
@@ -421,7 +421,7 @@ class RemixMenuItemStyle
   }
 
   @override
-  RemixMenuItemStyle textColor(Color value) {
+  RemixMenuItemStyle color(Color value) {
     return merge(
       RemixMenuItemStyle(
         container: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),

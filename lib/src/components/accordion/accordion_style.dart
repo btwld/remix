@@ -127,7 +127,7 @@ class RemixAccordionStyle<T>
   }
 
   @override
-  RemixAccordionStyle<T> textColor(Color value) {
+  RemixAccordionStyle<T> color(Color value) {
     return merge(
       RemixAccordionStyle<T>(
         trigger: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
