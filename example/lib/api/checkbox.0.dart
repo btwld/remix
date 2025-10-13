@@ -44,7 +44,7 @@ class _CheckboxExampleState extends State<CheckboxExample> {
         .size(24, 24)
         .icon(IconStyler().size(20).color(Colors.white))
         .onSelected(
-          RemixCheckboxStyle().color(Colors.grey.shade900),
+          RemixCheckboxStyle().textColor(Colors.grey.shade900),
         )
         .borderRadiusAll(
           const Radius.circular(3),

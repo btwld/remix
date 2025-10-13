@@ -38,13 +38,11 @@ class FortalCardStyles {
   /// Used for standard content containers.
   static RemixCardStyle surface({FortalCardSize size = FortalCardSize.size2}) {
     return base(size: size)
-        // Visual styling per radix_components.generated.json
-        // card-background-color: var(--color-panel)
-        // card-border-width: 0px
-        // card-border-radius: var(--radius-6)
-        // card-padding: var(--space-8)
-        .color(FortalTokens.colorPanelSolid())
-        .borderRadiusAll(FortalTokens.radius6());
+        .borderAll(
+          color: FortalTokens.gray6(),
+          width: FortalTokens.borderWidth1(),
+        )
+        .borderRadiusAll(FortalTokens.radius5());
   }
 
   /// Creates a classic variant card style.
@@ -53,12 +51,19 @@ class FortalCardStyles {
   /// Used for elevated content containers with traditional appearance.
   static RemixCardStyle classic({FortalCardSize size = FortalCardSize.size2}) {
     return base(size: size)
-        // Visual styling per radix_components.generated.json
-        // card-background-color: var(--color-panel)
-        // card-border-width: 0px (classic keeps elevation via shadow)
-        // card-border-radius: var(--radius-6)
-        .color(FortalTokens.colorPanelSolid())
-        .borderRadiusAll(FortalTokens.radius6())
+        .color(FortalTokens.graySurface())
+        .borderAll(
+          color: FortalTokens.gray6(),
+          width: FortalTokens.borderWidth1(),
+        )
+        .shadow(
+          BoxShadowMix()
+              .color(FortalTokens.grayA3())
+              .offset(const Offset(0, 2))
+              .blurRadius(3)
+              .spreadRadius(0),
+        )
+        .borderRadiusAll(FortalTokens.radius5())
         // Add subtle layered shadow for elevation
         .merge(RemixCardStyle(container: BoxStyler.create()));
   }
@@ -79,10 +84,16 @@ class FortalCardStyles {
 
   static RemixCardStyle _sizeStyle(FortalCardSize size) {
     return switch (size) {
-      FortalCardSize.size1 => RemixCardStyle().paddingAll(24.0),
+      FortalCardSize.size1 => RemixCardStyle().paddingAll(
+        FortalTokens.space4(),
+      ),
       // Per JSON: card-padding = space-8 (32px) for default
-      FortalCardSize.size2 => RemixCardStyle().paddingAll(32.0),
-      FortalCardSize.size3 => RemixCardStyle().paddingAll(36.0),
+      FortalCardSize.size2 => RemixCardStyle().paddingAll(
+        FortalTokens.space5(),
+      ),
+      FortalCardSize.size3 => RemixCardStyle().paddingAll(
+        FortalTokens.space6(),
+      ),
     };
   }
 }

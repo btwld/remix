@@ -16,10 +16,10 @@ class RemixTooltipStyle
     super.variants,
     super.animation,
     super.modifier,
-  })  : $container = container,
-        $label = label,
-        $waitDuration = waitDuration,
-        $showDuration = showDuration;
+  }) : $container = container,
+       $label = label,
+       $waitDuration = waitDuration,
+       $showDuration = showDuration;
 
   RemixTooltipStyle({
     BoxStyler? container,
@@ -30,14 +30,14 @@ class RemixTooltipStyle
     List<VariantStyle<RemixTooltipSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
-          container: Prop.maybeMix(container),
-          label: Prop.maybeMix(label),
-          waitDuration: waitDuration != null ? Prop.value(waitDuration) : null,
-          showDuration: showDuration != null ? Prop.value(showDuration) : null,
-          variants: variants,
-          animation: animation,
-          modifier: modifier,
-        );
+         container: Prop.maybeMix(container),
+         label: Prop.maybeMix(label),
+         waitDuration: waitDuration != null ? Prop.value(waitDuration) : null,
+         showDuration: showDuration != null ? Prop.value(showDuration) : null,
+         variants: variants,
+         animation: animation,
+         modifier: modifier,
+       );
 
   /// Sets container padding
   RemixTooltipStyle padding(EdgeInsetsGeometryMix value) {
@@ -55,19 +55,23 @@ class RemixTooltipStyle
   }
 
   /// Sets container background color
-  RemixTooltipStyle color(Color value) {
-    return merge(RemixTooltipStyle(
-      container: BoxStyler(decoration: BoxDecorationMix(color: value)),
-    ));
+  RemixTooltipStyle textColor(Color value) {
+    return merge(
+      RemixTooltipStyle(
+        container: BoxStyler(decoration: BoxDecorationMix(color: value)),
+      ),
+    );
   }
 
   /// Sets container border radius
   RemixTooltipStyle borderRadius(BorderRadiusGeometryMix radius) {
-    return merge(RemixTooltipStyle(
-      container: BoxStyler(
-        decoration: BoxDecorationMix(borderRadius: radius),
+    return merge(
+      RemixTooltipStyle(
+        container: BoxStyler(
+          decoration: BoxDecorationMix(borderRadius: radius),
+        ),
       ),
-    ));
+    );
   }
 
   /// Sets container decoration
@@ -96,8 +100,12 @@ class RemixTooltipStyle
       spec: RemixTooltipSpec(
         container: MixOps.resolve(context, $container),
         label: MixOps.resolve(context, $label),
-        waitDuration: MixOps.resolve(context, $waitDuration) ?? const Duration(milliseconds: 300),
-        showDuration: MixOps.resolve(context, $showDuration) ?? const Duration(milliseconds: 1500),
+        waitDuration:
+            MixOps.resolve(context, $waitDuration) ??
+            const Duration(milliseconds: 300),
+        showDuration:
+            MixOps.resolve(context, $showDuration) ??
+            const Duration(milliseconds: 1500),
       ),
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
@@ -153,19 +161,21 @@ class RemixTooltipStyle
     Matrix4 value, {
     AlignmentGeometry alignment = Alignment.center,
   }) {
-    return merge(RemixTooltipStyle(
-      container: BoxStyler(transform: value, transformAlignment: alignment),
-    ));
+    return merge(
+      RemixTooltipStyle(
+        container: BoxStyler(transform: value, transformAlignment: alignment),
+      ),
+    );
   }
 
   @override
   List<Object?> get props => [
-        $container,
-        $label,
-        $waitDuration,
-        $showDuration,
-        $variants,
-        $animation,
-        $modifier,
-      ];
+    $container,
+    $label,
+    $waitDuration,
+    $showDuration,
+    $variants,
+    $animation,
+    $modifier,
+  ];
 }

@@ -40,46 +40,6 @@ class FortalCheckboxStyles {
         .merge(_sizeStyle(size));
   }
 
-  /// Creates a classic variant checkbox style.
-  ///
-  /// Classic checkboxes use neutral surface with gray borders that become
-  /// accent-colored when checked. Used for standard form controls.
-  static RemixCheckboxStyle classic({
-    FortalCheckboxSize size = FortalCheckboxSize.size2,
-  }) {
-    return base(size: size)
-        // Container (the checkbox box itself) - no size properties
-        .color(FortalTokens.colorSurface())
-        .borderAll(
-          color: FortalTokens.gray7(),
-          width: FortalTokens.borderWidth1(),
-        )
-        // Use token-based radius. JSON: radius ≈ 1.25 × radius-1 (~3.75),
-        // closest token step is radius-2 (4px).
-        .borderRadiusAll(FortalTokens.radius2())
-        // Check mark icon color
-        .indicatorColor(FortalTokens.gray12())
-        // State variants
-        .onSelected(
-          RemixCheckboxStyle()
-              .color(FortalTokens.accent9())
-              .borderAll(
-                color: FortalTokens.accent9(),
-                width: FortalTokens.borderWidth1(),
-              )
-              .indicatorColor(FortalTokens.accentContrast()),
-        )
-        .onDisabled(
-          RemixCheckboxStyle()
-              .color(FortalTokens.colorSurface())
-              .borderAll(
-                color: FortalTokens.gray7(),
-                width: FortalTokens.borderWidth1(),
-              )
-              .indicatorColor(FortalTokens.gray12()),
-        );
-  }
-
   /// Creates a surface variant checkbox style.
   ///
   /// Surface checkboxes use neutral surface with subtle borders.
@@ -89,7 +49,6 @@ class FortalCheckboxStyles {
   }) {
     return base(size: size)
         // Container (the checkbox box itself) - no size properties
-        .color(FortalTokens.accentSurface())
         .borderAll(
           color: FortalTokens.gray6(),
           width: FortalTokens.borderWidth1(),
@@ -110,12 +69,12 @@ class FortalCheckboxStyles {
         )
         .onDisabled(
           RemixCheckboxStyle()
-              .color(FortalTokens.colorSurface())
+              .color(FortalTokens.grayA3())
               .borderAll(
-                color: FortalTokens.gray6(),
+                color: FortalTokens.gray7(),
                 width: FortalTokens.borderWidth1(),
               )
-              .indicatorColor(FortalTokens.accent9()),
+              .indicatorColor(FortalTokens.gray8()),
         );
   }
 
@@ -128,33 +87,17 @@ class FortalCheckboxStyles {
   }) {
     return base(size: size)
         // Container (the checkbox box itself) - no size properties
-        .color(FortalTokens.accent3())
-        .borderAll(
-          color: FortalTokens.accent6(),
-          width: FortalTokens.borderWidth1(),
-        )
+        .color(FortalTokens.accentA4())
         // Use token-based radius matching JSON intent.
         .borderRadiusAll(FortalTokens.radius2())
         // Check mark icon color
         .indicatorColor(FortalTokens.accent11())
         // State variants
-        .onSelected(
-          RemixCheckboxStyle()
-              .color(FortalTokens.accent9())
-              .borderAll(
-                color: FortalTokens.accent9(),
-                width: FortalTokens.borderWidth1(),
-              )
-              .indicatorColor(FortalTokens.accentContrast()),
-        )
+        .onSelected(RemixCheckboxStyle().indicatorColor(FortalTokens.accent9()))
         .onDisabled(
           RemixCheckboxStyle()
-              .color(FortalTokens.accent3())
-              .borderAll(
-                color: FortalTokens.accent6(),
-                width: FortalTokens.borderWidth1(),
-              )
-              .indicatorColor(FortalTokens.accent11()),
+              .color(FortalTokens.grayA3())
+              .indicatorColor(FortalTokens.gray8()),
         );
   }
 
@@ -174,20 +117,15 @@ class FortalCheckboxStyles {
       ),
       FortalCheckboxSize.size2 => RemixCheckboxStyle(
         container: BoxStyler()
-            // checkbox-size: calc(space-4 * 1.25)
-            // Resolve via token at runtime and scale
-            // TODO: We need ot add this value 1.25 as a directive
             .width(FortalTokens.space5())
             .height(FortalTokens.space5()),
-        // JSON indicates 12px base indicator size (scaled). Use space-3 (12px).
-        indicator: IconStyler().size(FortalTokens.space3()),
+        indicator: IconStyler().size(FortalTokens.space4()),
       ),
       FortalCheckboxSize.size3 => RemixCheckboxStyle(
         container: BoxStyler()
-            // large size uses space-5 (24px)
             .width(FortalTokens.space6())
             .height(FortalTokens.space6()),
-        indicator: IconStyler().size(FortalTokens.space4()),
+        indicator: IconStyler().size(FortalTokens.space5()),
       ),
     };
   }

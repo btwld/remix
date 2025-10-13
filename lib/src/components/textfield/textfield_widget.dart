@@ -337,8 +337,10 @@ class RemixTextField extends StatelessWidget {
                         Positioned.fill(
                           child: Align(
                             alignment: AlignmentDirectional.centerStart,
-                            child:
-                                StyledText(hintText!, styleSpec: spec.hintText),
+                            child: StyledText(
+                              hintText!,
+                              styleSpec: spec.hintText,
+                            ),
                           ),
                         ),
                       styledEditableText,

@@ -1,16 +1,8 @@
 part of 'tooltip.dart';
 
-enum FortalTooltipSize {
-  size1,
-  size2,
-  size3,
-}
+enum FortalTooltipSize { size1, size2, size3 }
 
-enum FortalTooltipVariant {
-  surface,
-  soft,
-  solid,
-}
+enum FortalTooltipVariant { surface, soft, solid }
 
 class FortalTooltipStyles {
   const FortalTooltipStyles._();
@@ -41,7 +33,7 @@ class FortalTooltipStyles {
     return base(size: size)
         // NOTE: No tooltip-specific color token; use panel surface
         // TODO: Confirm final token mapping for tooltip background once available
-        .color(FortalTokens.colorPanelSolid())
+        .textColor(FortalTokens.colorPanelSolid())
         .labelTextStyle(FortalTokens.text2.mix())
         .labelColor(FortalTokens.gray12());
   }
@@ -51,7 +43,7 @@ class FortalTooltipStyles {
     FortalTooltipSize size = FortalTooltipSize.size2,
   }) {
     return base(size: size)
-        .color(FortalTokens.accent3())
+        .textColor(FortalTokens.accent3())
         .labelTextStyle(FortalTokens.text2.mix())
         .labelColor(FortalTokens.accent11());
   }
@@ -61,7 +53,7 @@ class FortalTooltipStyles {
     FortalTooltipSize size = FortalTooltipSize.size2,
   }) {
     return base(size: size)
-        .color(FortalTokens.gray12())
+        .textColor(FortalTokens.gray12())
         .labelTextStyle(FortalTokens.text2.mix())
         .labelColor(FortalTokens.gray1());
   }
@@ -74,18 +66,21 @@ class FortalTooltipStyles {
     // radix_components.generated.json: popover-content-padding = space-6 (24px)
     // Tooltips are smaller; we scale down by size.
     return switch (size) {
-      FortalTooltipSize.size1 => RemixTooltipStyle()
-          .paddingY(4.0)
-          .paddingX(8.0)
-          .labelTextStyle(FortalTokens.text1.mix()),
-      FortalTooltipSize.size2 => RemixTooltipStyle()
-          .paddingY(6.0)
-          .paddingX(10.0)
-          .labelTextStyle(FortalTokens.text2.mix()),
-      FortalTooltipSize.size3 => RemixTooltipStyle()
-          .paddingY(8.0)
-          .paddingX(12.0)
-          .labelTextStyle(FortalTokens.text3.mix()),
+      FortalTooltipSize.size1 =>
+        RemixTooltipStyle()
+            .paddingY(4.0)
+            .paddingX(8.0)
+            .labelTextStyle(FortalTokens.text1.mix()),
+      FortalTooltipSize.size2 =>
+        RemixTooltipStyle()
+            .paddingY(6.0)
+            .paddingX(10.0)
+            .labelTextStyle(FortalTokens.text2.mix()),
+      FortalTooltipSize.size3 =>
+        RemixTooltipStyle()
+            .paddingY(8.0)
+            .paddingX(12.0)
+            .labelTextStyle(FortalTokens.text3.mix()),
     };
   }
 }

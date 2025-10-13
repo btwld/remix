@@ -89,7 +89,7 @@ void main() {
           .labelColor(Colors.white)
           .iconColor(Colors.white)
           .spinnerIndicatorColor(Colors.white)
-          .color(Colors.blue);
+          .textColor(Colors.blue);
 
       expect(combinedStyle, isNotNull);
     });
@@ -98,11 +98,17 @@ void main() {
       final style = RemixButtonStyle();
 
       expect(() => style.spinnerIndicatorColor(Colors.red), returnsNormally);
-      expect(() => style.spinnerTrackColor(Colors.red.withValues(alpha: 0.2)), returnsNormally);
+      expect(
+        () => style.spinnerTrackColor(Colors.red.withValues(alpha: 0.2)),
+        returnsNormally,
+      );
       expect(() => style.spinnerSize(24.0), returnsNormally);
       expect(() => style.spinnerStrokeWidth(2.0), returnsNormally);
       expect(() => style.spinnerTrackStrokeWidth(1.5), returnsNormally);
-      expect(() => style.spinnerDuration(const Duration(seconds: 1)), returnsNormally);
+      expect(
+        () => style.spinnerDuration(const Duration(seconds: 1)),
+        returnsNormally,
+      );
       expect(() => style.spinnerFast(), returnsNormally);
       expect(() => style.spinnerNormal(), returnsNormally);
       expect(() => style.spinnerSlow(), returnsNormally);

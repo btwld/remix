@@ -15,49 +15,57 @@ Widget buildSelectUseCase(BuildContext context) {
     options: FortalSelectVariant.values,
     labelBuilder: (variant) => variant.name,
   );
+  final size = context.knobs.object.dropdown(
+    label: 'size',
+    options: FortalSelectSize.values,
+    labelBuilder: (size) => size.name,
+    initialOption: FortalSelectSize.size3,
+  );
 
-  final styleItems = FortalSelectStyle(variant).items;
-  final styleSelect = FortalSelectStyle(variant).select;
-
+  final styleSelect = FortalSelectStyles.create(variant: variant, size: size);
+  final styleItems =
+      FortalSelectItemStyles.create(variant: variant, size: size);
+  String selectedValue = 'Apple';
   return KeyedSubtree(
     key: _key,
     child: Scaffold(
       body: Center(
         child: SizedBox(
           width: 200,
-          child: RemixSelect<String>(
-            style: styleSelect,
-            trigger: RemixSelectTrigger(
-              placeholder: context.knobs.string(
-                label: 'Placeholder',
-                initialValue: 'Select item...',
+          child: StatefulBuilder(builder: (context, setState) {
+            return RemixSelect<String>(
+              style: styleSelect,
+              trigger: RemixSelectTrigger(
+                placeholder: context.knobs.string(
+                  label: 'Placeholder',
+                  initialValue: 'Select item...',
+                ),
               ),
-            ),
-            selectedValue: context.knobs.string(
-              label: 'Selected Value',
-              initialValue: 'Apple',
-            ),
-            onChanged: (value) {
-              // Handle selection change
-            },
-            items: [
-              RemixSelectItem<String>(
-                value: 'Apple',
-                label: 'Apple',
-                style: styleItems,
-              ),
-              RemixSelectItem<String>(
-                value: 'Banana',
-                label: 'Banana',
-                style: styleItems,
-              ),
-              RemixSelectItem<String>(
-                value: 'Orange',
-                label: 'Orange',
-                style: styleItems,
-              ),
-            ],
-          ),
+              selectedValue: selectedValue,
+              onChanged: (value) {
+                setState(() {
+                  selectedValue = value ?? 'Apple';
+                });
+              },
+              items: [
+                RemixSelectItem<String>(
+                  value: 'Apple',
+                  label: 'Apple',
+                  style: styleItems,
+                ),
+                RemixSelectItem<String>(
+                  value: 'Banana',
+                  label: 'Banana',
+                  style: styleItems,
+                ),
+                RemixSelectItem<String>(
+                  value: 'Orange',
+                  label: 'Orange',
+                  style: styleItems,
+                ),
+              ],
+            );
+          }),
         ),
       ),
     ),

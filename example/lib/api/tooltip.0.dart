@@ -48,7 +48,7 @@ class TooltipExample extends StatelessWidget {
   RemixTooltipStyle get styleDefault {
     return RemixTooltipStyle()
         .padding(EdgeInsetsGeometryMix.symmetric(horizontal: 12, vertical: 8))
-        .color(Colors.black87)
+        .textColor(Colors.black87)
         .borderRadius(BorderRadiusGeometryMix.all(const Radius.circular(6)))
         .label(TextStyler().color(Colors.white).fontSize(14));
   }

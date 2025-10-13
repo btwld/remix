@@ -13,9 +13,9 @@ class RemixSliderStyle
     super.variants,
     super.animation,
     super.modifier,
-  })  : $thumb = thumb,
-        $track = track,
-        $range = range;
+  }) : $thumb = thumb,
+       $track = track,
+       $range = range;
 
   RemixSliderStyle({
     BoxStyler? thumb,
@@ -25,19 +25,21 @@ class RemixSliderStyle
     List<VariantStyle<RemixSliderSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
-          thumb: Prop.maybeMix(thumb),
-          track: track != null ? Prop.value(track) : null,
-          range: range != null ? Prop.value(range) : null,
-          variants: variants,
-          animation: animation,
-          modifier: modifier,
-        );
+         thumb: Prop.maybeMix(thumb),
+         track: track != null ? Prop.value(track) : null,
+         range: range != null ? Prop.value(range) : null,
+         variants: variants,
+         animation: animation,
+         modifier: modifier,
+       );
 
   /// Sets thumb color
   RemixSliderStyle thumbColor(Color value) {
-    return merge(RemixSliderStyle(
-      thumb: BoxStyler(decoration: BoxDecorationMix(color: value)),
-    ));
+    return merge(
+      RemixSliderStyle(
+        thumb: BoxStyler(decoration: BoxDecorationMix(color: value)),
+      ),
+    );
   }
 
   /// Sets track color (background rail)
@@ -136,31 +138,37 @@ class RemixSliderStyle
   }
 
   @override
-  RemixSliderStyle color(Color value) {
-    return merge(RemixSliderStyle(
-      thumb: BoxStyler(decoration: BoxDecorationMix(color: value)),
-    ));
+  RemixSliderStyle textColor(Color value) {
+    return merge(
+      RemixSliderStyle(
+        thumb: BoxStyler(decoration: BoxDecorationMix(color: value)),
+      ),
+    );
   }
 
   @override
   RemixSliderStyle size(double width, double height) {
-    return merge(RemixSliderStyle(
-      thumb: BoxStyler(
-        constraints: BoxConstraintsMix(
-          minWidth: width,
-          maxWidth: width,
-          minHeight: height,
-          maxHeight: height,
+    return merge(
+      RemixSliderStyle(
+        thumb: BoxStyler(
+          constraints: BoxConstraintsMix(
+            minWidth: width,
+            maxWidth: width,
+            minHeight: height,
+            maxHeight: height,
+          ),
         ),
       ),
-    ));
+    );
   }
 
   @override
   RemixSliderStyle borderRadius(BorderRadiusGeometryMix radius) {
-    return merge(RemixSliderStyle(
-      thumb: BoxStyler(decoration: BoxDecorationMix(borderRadius: radius)),
-    ));
+    return merge(
+      RemixSliderStyle(
+        thumb: BoxStyler(decoration: BoxDecorationMix(borderRadius: radius)),
+      ),
+    );
   }
 
   @override
@@ -190,9 +198,11 @@ class RemixSliderStyle
     Matrix4 value, {
     AlignmentGeometry alignment = Alignment.center,
   }) {
-    return merge(RemixSliderStyle(
-      thumb: BoxStyler(transform: value, transformAlignment: alignment),
-    ));
+    return merge(
+      RemixSliderStyle(
+        thumb: BoxStyler(transform: value, transformAlignment: alignment),
+      ),
+    );
   }
 
   @override
@@ -239,13 +249,13 @@ class RemixSliderStyle
 
   @override
   List<Object?> get props => [
-        $thumb,
-        $track,
-        $range,
-        $variants,
-        $animation,
-        $modifier,
-      ];
+    $thumb,
+    $track,
+    $range,
+    $variants,
+    $animation,
+    $modifier,
+  ];
 }
 
 Paint _buildTrackPaint(

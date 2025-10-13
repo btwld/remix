@@ -2,7 +2,7 @@ part of 'progress.dart';
 
 enum FortalProgressSize { size1, size2, size3 }
 
-enum FortalProgressVariant { classic, surface, soft }
+enum FortalProgressVariant { surface, soft }
 
 /// FortalProgressStyles utility class for creating Fortal-themed progress styles.
 ///
@@ -17,11 +17,10 @@ class FortalProgressStyles {
   /// Returns a RemixProgressStyle configured with Fortal design tokens.
   /// Defaults to classic variant with size2.
   static RemixProgressStyle create({
-    FortalProgressVariant variant = FortalProgressVariant.classic,
+    FortalProgressVariant variant = FortalProgressVariant.surface,
     FortalProgressSize size = FortalProgressSize.size2,
   }) {
     return switch (variant) {
-      FortalProgressVariant.classic => classic(size: size),
       FortalProgressVariant.surface => surface(size: size),
       FortalProgressVariant.soft => soft(size: size),
     };
@@ -37,42 +36,27 @@ class FortalProgressStyles {
         .merge(_sizeStyle(size));
   }
 
-  static RemixProgressStyle classic({
-    FortalProgressSize size = FortalProgressSize.size2,
-  }) {
-    return base(size: size)
-        // Track styling (background bar)
-        .track(
-          BoxStyler()
-              .color(FortalTokens.gray6()) // gray6 equivalent
-              .borderRadiusAll(FortalTokens.radiusFull())
-              .width(double.infinity),
-        )
-        // Indicator styling (progress fill)
-        .indicator(
-          BoxStyler()
-              .color(FortalTokens.accentIndicator()) // accent9 equivalent
-              .borderRadiusAll(FortalTokens.radiusFull()),
-        );
-  }
-
   static RemixProgressStyle surface({
     FortalProgressSize size = FortalProgressSize.size2,
   }) {
     return base(size: size)
+        .foregroundDecoration(
+          BoxDecorationMix()
+              .border(
+                BoxBorderMix.all(BorderSideMix().color(FortalTokens.grayA5())),
+              )
+              .borderRadius(
+                BorderRadiusGeometryMix.all(FortalTokens.radiusFull()),
+              ),
+        )
         // Track styling (background bar) - same as classic
         .track(
           BoxStyler()
-              .color(FortalTokens.gray6()) // gray6 equivalent
-              .borderRadiusAll(FortalTokens.radiusFull())
+              .color(FortalTokens.gray3()) // gray6 equivalent
               .width(double.infinity),
         )
         // Indicator styling (progress fill) - same as classic
-        .indicator(
-          BoxStyler()
-              .color(FortalTokens.accentIndicator()) // accent9 equivalent
-              .borderRadiusAll(FortalTokens.radiusFull()),
-        );
+        .indicator(BoxStyler().color(FortalTokens.accentIndicator()));
   }
 
   static RemixProgressStyle soft({
@@ -82,7 +66,7 @@ class FortalProgressStyles {
         // Track styling (background bar) - uses accent4 instead of gray
         .track(
           BoxStyler()
-              .color(FortalTokens.accent4())
+              .color(FortalTokens.gray4())
               .borderRadiusAll(FortalTokens.radiusFull())
               .width(double.infinity),
         )

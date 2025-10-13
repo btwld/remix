@@ -1,16 +1,8 @@
 part of 'slider.dart';
 
-enum FortalSliderSize {
-  size1,
-  size2,
-  size3,
-}
+enum FortalSliderSize { size1, size2, size3 }
 
-enum FortalSliderVariant {
-  classic,
-  surface,
-  soft,
-}
+enum FortalSliderVariant { classic, surface, soft }
 
 /// FortalSliderStyles utility class for creating Fortal-themed slider styles.
 ///
@@ -76,7 +68,9 @@ class FortalSliderStyles {
               .trackColor(FortalTokens.accentTrack())
               .rangeColor(FortalTokens.accentIndicator())
               .thumb(
-                BoxStyler().color(FortalTokens.colorSurface()).borderAll(
+                BoxStyler()
+                    .color(FortalTokens.colorSurface())
+                    .borderAll(
                       color: FortalTokens.gray7(),
                       width: FortalTokens.borderWidth1(),
                     ),
@@ -137,41 +131,41 @@ class FortalSliderStyles {
   static RemixSliderStyle _sizeStyle(FortalSliderSize size) {
     return switch (size) {
       FortalSliderSize.size1 => RemixSliderStyle(
-          thumb: BoxStyler().width(16.0).height(16.0),
-          track: Paint()
-            ..strokeWidth = 4.0
-            ..strokeCap = StrokeCap.round
-            ..style = PaintingStyle.stroke,
-          range: Paint()
-            ..strokeWidth = 4.0
-            ..strokeCap = StrokeCap.round
-            ..style = PaintingStyle.stroke,
-        ),
+        thumb: BoxStyler().width(16.0).height(16.0),
+        track: Paint()
+          ..strokeWidth = 4.0
+          ..strokeCap = StrokeCap.round
+          ..style = PaintingStyle.stroke,
+        range: Paint()
+          ..strokeWidth = 4.0
+          ..strokeCap = StrokeCap.round
+          ..style = PaintingStyle.stroke,
+      ),
       // Per JSON:
       // slider-track-size = calc(space-2 * 1.25) = 10px
       // slider-thumb-size = calc(track-size + space-1) = 14px
       FortalSliderSize.size2 => RemixSliderStyle(
-          thumb: BoxStyler().width(14.0).height(14.0),
-          track: Paint()
-            ..strokeWidth = 10.0
-            ..strokeCap = StrokeCap.round
-            ..style = PaintingStyle.stroke,
-          range: Paint()
-            ..strokeWidth = 10.0
-            ..strokeCap = StrokeCap.round
-            ..style = PaintingStyle.stroke,
-        ),
+        thumb: BoxStyler().width(14.0).height(14.0),
+        track: Paint()
+          ..strokeWidth = 10.0
+          ..strokeCap = StrokeCap.round
+          ..style = PaintingStyle.stroke,
+        range: Paint()
+          ..strokeWidth = 10.0
+          ..strokeCap = StrokeCap.round
+          ..style = PaintingStyle.stroke,
+      ),
       FortalSliderSize.size3 => RemixSliderStyle(
-          thumb: BoxStyler().width(24.0).height(24.0),
-          track: Paint()
-            ..strokeWidth = 8.0
-            ..strokeCap = StrokeCap.round
-            ..style = PaintingStyle.stroke,
-          range: Paint()
-            ..strokeWidth = 8.0
-            ..strokeCap = StrokeCap.round
-            ..style = PaintingStyle.stroke,
-        ),
+        thumb: BoxStyler().width(24.0).height(24.0),
+        track: Paint()
+          ..strokeWidth = 8.0
+          ..strokeCap = StrokeCap.round
+          ..style = PaintingStyle.stroke,
+        range: Paint()
+          ..strokeWidth = 8.0
+          ..strokeCap = StrokeCap.round
+          ..style = PaintingStyle.stroke,
+      ),
     };
   }
 }

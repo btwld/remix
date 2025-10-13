@@ -1,16 +1,8 @@
 part of 'callout.dart';
 
-enum FortalCalloutSize {
-  size1,
-  size2,
-  size3,
-}
+enum FortalCalloutSize { size1, size2, size3 }
 
-enum FortalCalloutVariant {
-  classic,
-  surface,
-  soft,
-}
+enum FortalCalloutVariant { outline, surface, soft }
 
 /// Factory class for creating Fortal-compliant callout styles.
 ///
@@ -25,9 +17,9 @@ class FortalCalloutStyles {
     FortalCalloutSize size = FortalCalloutSize.size2,
   }) {
     return switch (variant) {
-      FortalCalloutVariant.classic => classic(size: size),
-      FortalCalloutVariant.surface => surface(size: size),
       FortalCalloutVariant.soft => soft(size: size),
+      FortalCalloutVariant.outline => outline(size: size),
+      FortalCalloutVariant.surface => surface(size: size),
     };
   }
 
@@ -49,18 +41,18 @@ class FortalCalloutStyles {
   }
 
   /// Neutral/gray variant (surface background with gray border + gray text)
-  static RemixCalloutStyle classic({
+  static RemixCalloutStyle outline({
     FortalCalloutSize size = FortalCalloutSize.size2,
   }) {
     return base(size: size)
         .color(FortalTokens.colorSurface())
         .borderAll(
-          color: FortalTokens.gray7(),
+          color: FortalTokens.accent7(),
           width: FortalTokens.borderWidth1(),
         )
         .borderRadiusAll(FortalTokens.radius3())
-        .textColor(FortalTokens.gray12())
-        .iconColor(FortalTokens.gray12());
+        .textColor(FortalTokens.accent9())
+        .iconColor(FortalTokens.accent9());
   }
 
   /// Accent-tinted surface variant (accentSurface background + accent border/text)
@@ -74,8 +66,8 @@ class FortalCalloutStyles {
           width: FortalTokens.borderWidth1(),
         )
         .borderRadiusAll(FortalTokens.radius3())
-        .textColor(FortalTokens.accent11())
-        .iconColor(FortalTokens.accent11());
+        .textColor(FortalTokens.accent9())
+        .iconColor(FortalTokens.accent9());
   }
 
   /// Soft tinted variant (accent3 background + accent6 border + accent11 text)
@@ -84,13 +76,9 @@ class FortalCalloutStyles {
   }) {
     return base(size: size)
         .color(FortalTokens.accent3())
-        .borderAll(
-          color: FortalTokens.accent6(),
-          width: FortalTokens.borderWidth1(),
-        )
         .borderRadiusAll(FortalTokens.radius3())
-        .textColor(FortalTokens.accent11())
-        .iconColor(FortalTokens.accent11());
+        .textColor(FortalTokens.accent9())
+        .iconColor(FortalTokens.accent9());
   }
 
   // ---------------------------------------------------------------------------
@@ -102,32 +90,32 @@ class FortalCalloutStyles {
     // icon sized to match text line-height. We approximate sizes below.
     return switch (size) {
       FortalCalloutSize.size1 => RemixCalloutStyle(
-          container: FlexBoxStyler()
-              .paddingY(8.0)
-              .paddingX(12.0)
-              .spacing(FortalTokens.space2()), // 8px between icon and text
-          text: TextStyler(style: FortalTokens.text1.mix()),
-          icon: IconStyler(
-            // TODO: align to exact line-height token if exposed
-            size: 16.0,
-          ),
+        container: FlexBoxStyler()
+            .paddingY(8.0)
+            .paddingX(12.0)
+            .spacing(FortalTokens.space2()), // 8px between icon and text
+        text: TextStyler(style: FortalTokens.text1.mix()),
+        icon: IconStyler(
+          // TODO: align to exact line-height token if exposed
+          size: 16.0,
         ),
+      ),
       FortalCalloutSize.size2 => RemixCalloutStyle(
-          container: FlexBoxStyler()
-              .paddingY(12.0)
-              .paddingX(16.0)
-              .spacing(FortalTokens.space2()),
-          text: TextStyler(style: FortalTokens.text2.mix()),
-          icon: IconStyler(size: 20.0), // --line-height-3 approximated as 20px
-        ),
+        container: FlexBoxStyler()
+            .paddingY(12.0)
+            .paddingX(16.0)
+            .spacing(FortalTokens.space2()),
+        text: TextStyler(style: FortalTokens.text2.mix()),
+        icon: IconStyler(size: 20.0), // --line-height-3 approximated as 20px
+      ),
       FortalCalloutSize.size3 => RemixCalloutStyle(
-          container: FlexBoxStyler()
-              .paddingY(16.0)
-              .paddingX(20.0)
-              .spacing(FortalTokens.space3()),
-          text: TextStyler(style: FortalTokens.text3.mix()),
-          icon: IconStyler(size: 24.0), // TODO: confirm with token mapping
-        ),
+        container: FlexBoxStyler()
+            .paddingY(16.0)
+            .paddingX(20.0)
+            .spacing(FortalTokens.space3()),
+        text: TextStyler(style: FortalTokens.text3.mix()),
+        icon: IconStyler(size: 24.0), // TODO: confirm with token mapping
+      ),
     };
   }
 }

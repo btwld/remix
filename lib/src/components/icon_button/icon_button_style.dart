@@ -14,9 +14,9 @@ class RemixIconButtonStyle
     super.variants,
     super.animation,
     super.modifier,
-  })  : $container = container,
-        $icon = icon,
-        $spinner = spinner;
+  }) : $container = container,
+       $icon = icon,
+       $spinner = spinner;
 
   RemixIconButtonStyle({
     BoxStyler? container,
@@ -26,13 +26,13 @@ class RemixIconButtonStyle
     List<VariantStyle<RemixIconButtonSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
-          container: Prop.maybeMix(container),
-          icon: Prop.maybeMix(icon),
-          spinner: Prop.maybeMix(spinner),
-          variants: variants,
-          animation: animation,
-          modifier: modifier,
-        );
+         container: Prop.maybeMix(container),
+         icon: Prop.maybeMix(icon),
+         spinner: Prop.maybeMix(spinner),
+         variants: variants,
+         animation: animation,
+         modifier: modifier,
+       );
 
   // Instance methods for fluent API
   RemixIconButtonStyle icon(IconStyler value) {
@@ -46,10 +46,12 @@ class RemixIconButtonStyle
   // Instance methods (chainable)
 
   /// Sets background color
-  RemixIconButtonStyle color(Color value) {
-    return merge(RemixIconButtonStyle(
-      container: BoxStyler(decoration: BoxDecorationMix(color: value)),
-    ));
+  RemixIconButtonStyle textColor(Color value) {
+    return merge(
+      RemixIconButtonStyle(
+        container: BoxStyler(decoration: BoxDecorationMix(color: value)),
+      ),
+    );
   }
 
   /// Sets padding
@@ -59,32 +61,38 @@ class RemixIconButtonStyle
 
   /// Sets border radius
   RemixIconButtonStyle borderRadius(BorderRadiusGeometryMix radius) {
-    return merge(RemixIconButtonStyle(
-      container: BoxStyler(
-        decoration: BoxDecorationMix(borderRadius: radius),
+    return merge(
+      RemixIconButtonStyle(
+        container: BoxStyler(
+          decoration: BoxDecorationMix(borderRadius: radius),
+        ),
       ),
-    ));
+    );
   }
 
   /// Sets size (width and height - icon buttons are square)
   RemixIconButtonStyle iconButtonSize(double size) {
-    return merge(RemixIconButtonStyle(
-      container: BoxStyler(
-        constraints: BoxConstraintsMix(
-          minWidth: size,
-          maxWidth: size,
-          minHeight: size,
-          maxHeight: size,
+    return merge(
+      RemixIconButtonStyle(
+        container: BoxStyler(
+          constraints: BoxConstraintsMix(
+            minWidth: size,
+            maxWidth: size,
+            minHeight: size,
+            maxHeight: size,
+          ),
         ),
       ),
-    ));
+    );
   }
 
   /// Sets border
   RemixIconButtonStyle border(BoxBorderMix value) {
-    return merge(RemixIconButtonStyle(
-      container: BoxStyler(decoration: BoxDecorationMix(border: value)),
-    ));
+    return merge(
+      RemixIconButtonStyle(
+        container: BoxStyler(decoration: BoxDecorationMix(border: value)),
+      ),
+    );
   }
 
   // Additional convenience methods
@@ -123,20 +131,24 @@ class RemixIconButtonStyle
 
   /// Sets width
   RemixIconButtonStyle width(double value) {
-    return merge(RemixIconButtonStyle(
-      container: BoxStyler(
-        constraints: BoxConstraintsMix(minWidth: value, maxWidth: value),
+    return merge(
+      RemixIconButtonStyle(
+        container: BoxStyler(
+          constraints: BoxConstraintsMix(minWidth: value, maxWidth: value),
+        ),
       ),
-    ));
+    );
   }
 
   /// Sets height
   RemixIconButtonStyle height(double value) {
-    return merge(RemixIconButtonStyle(
-      container: BoxStyler(
-        constraints: BoxConstraintsMix(minHeight: value, maxHeight: value),
+    return merge(
+      RemixIconButtonStyle(
+        container: BoxStyler(
+          constraints: BoxConstraintsMix(minHeight: value, maxHeight: value),
+        ),
       ),
-    ));
+    );
   }
 
   // Animation support
@@ -175,9 +187,11 @@ class RemixIconButtonStyle
     Matrix4 value, {
     AlignmentGeometry alignment = Alignment.center,
   }) {
-    return merge(RemixIconButtonStyle(
-      container: BoxStyler(transform: value, transformAlignment: alignment),
-    ));
+    return merge(
+      RemixIconButtonStyle(
+        container: BoxStyler(transform: value, transformAlignment: alignment),
+      ),
+    );
   }
 
   // Variant support
@@ -222,11 +236,11 @@ class RemixIconButtonStyle
 
   @override
   List<Object?> get props => [
-        $container,
-        $icon,
-        $spinner,
-        $variants,
-        $animation,
-        $modifier,
-      ];
+    $container,
+    $icon,
+    $spinner,
+    $variants,
+    $animation,
+    $modifier,
+  ];
 }

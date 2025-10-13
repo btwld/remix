@@ -52,13 +52,9 @@ class FortalBadgeStyles {
   static RemixBadgeStyle soft({FortalBadgeSize size = FortalBadgeSize.size2}) {
     return base(size: size)
         // Container styling - no size properties
-        .color(FortalTokens.accent3())
-        .borderAll(
-          color: FortalTokens.accent6(),
-          width: FortalTokens.borderWidth1(),
-        )
+        .color(FortalTokens.accentA3())
         // Text styling
-        .labelColor(FortalTokens.accent11());
+        .labelColor(FortalTokens.accent9());
   }
 
   /// Creates a surface variant badge style.
@@ -70,13 +66,13 @@ class FortalBadgeStyles {
   }) {
     return base(size: size)
         // Container styling - no size properties
-        .color(FortalTokens.accentSurface())
+        .color(FortalTokens.accentA2())
         .borderAll(
-          color: FortalTokens.accent6(),
+          color: FortalTokens.accent7(),
           width: FortalTokens.borderWidth1(),
         )
         // Text styling
-        .labelColor(FortalTokens.accent11());
+        .labelColor(FortalTokens.accent9());
   }
 
   /// Creates an outline variant badge style.
@@ -94,7 +90,7 @@ class FortalBadgeStyles {
           width: FortalTokens.borderWidth1(),
         )
         // Text styling
-        .labelColor(FortalTokens.accent11());
+        .labelColor(FortalTokens.accent9());
   }
 
   // ---------------------------------------------------------------------------

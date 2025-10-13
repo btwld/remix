@@ -5,8 +5,9 @@ part of 'menu.dart';
 // Note: NakedMenu wraps trigger in NakedButton, so this styles the content only
 // ============================================================================
 
-class RemixMenuTriggerStyle extends RemixFlexContainerStyle<
-    RemixMenuTriggerSpec, RemixMenuTriggerStyle> {
+class RemixMenuTriggerStyle
+    extends
+        RemixFlexContainerStyle<RemixMenuTriggerSpec, RemixMenuTriggerStyle> {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<StyleSpec<IconSpec>>? $icon;
@@ -18,9 +19,9 @@ class RemixMenuTriggerStyle extends RemixFlexContainerStyle<
     super.variants,
     super.animation,
     super.modifier,
-  })  : $container = container,
-        $label = label,
-        $icon = icon;
+  }) : $container = container,
+       $label = label,
+       $icon = icon;
 
   RemixMenuTriggerStyle({
     FlexBoxStyler? container,
@@ -30,13 +31,13 @@ class RemixMenuTriggerStyle extends RemixFlexContainerStyle<
     List<VariantStyle<RemixMenuTriggerSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
-          container: Prop.maybeMix(container),
-          label: Prop.maybeMix(label),
-          icon: Prop.maybeMix(icon),
-          variants: variants,
-          animation: animation,
-          modifier: modifier,
-        );
+         container: Prop.maybeMix(container),
+         label: Prop.maybeMix(label),
+         icon: Prop.maybeMix(icon),
+         variants: variants,
+         animation: animation,
+         modifier: modifier,
+       );
 
   RemixMenuTriggerStyle label(TextStyler value) {
     return merge(RemixMenuTriggerStyle(label: value));
@@ -60,32 +61,39 @@ class RemixMenuTriggerStyle extends RemixFlexContainerStyle<
   }
 
   @override
-  RemixMenuTriggerStyle color(Color value) {
-    return merge(RemixMenuTriggerStyle(
-      container: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
-    ));
+  RemixMenuTriggerStyle textColor(Color value) {
+    return merge(
+      RemixMenuTriggerStyle(
+        container: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
+      ),
+    );
   }
 
   @override
   RemixMenuTriggerStyle size(double width, double height) {
-    return merge(RemixMenuTriggerStyle(
-      container: FlexBoxStyler(
-        constraints: BoxConstraintsMix(
-          minWidth: width,
-          maxWidth: width,
-          minHeight: height,
-          maxHeight: height,
+    return merge(
+      RemixMenuTriggerStyle(
+        container: FlexBoxStyler(
+          constraints: BoxConstraintsMix(
+            minWidth: width,
+            maxWidth: width,
+            minHeight: height,
+            maxHeight: height,
+          ),
         ),
       ),
-    ));
+    );
   }
 
   @override
   RemixMenuTriggerStyle borderRadius(BorderRadiusGeometryMix radius) {
-    return merge(RemixMenuTriggerStyle(
-      container:
-          FlexBoxStyler(decoration: BoxDecorationMix(borderRadius: radius)),
-    ));
+    return merge(
+      RemixMenuTriggerStyle(
+        container: FlexBoxStyler(
+          decoration: BoxDecorationMix(borderRadius: radius),
+        ),
+      ),
+    );
   }
 
   @override
@@ -111,9 +119,11 @@ class RemixMenuTriggerStyle extends RemixFlexContainerStyle<
 
   @override
   RemixMenuTriggerStyle foregroundDecoration(DecorationMix value) {
-    return merge(RemixMenuTriggerStyle(
-      container: FlexBoxStyler(foregroundDecoration: value),
-    ));
+    return merge(
+      RemixMenuTriggerStyle(
+        container: FlexBoxStyler(foregroundDecoration: value),
+      ),
+    );
   }
 
   @override
@@ -121,9 +131,14 @@ class RemixMenuTriggerStyle extends RemixFlexContainerStyle<
     Matrix4 value, {
     AlignmentGeometry alignment = Alignment.center,
   }) {
-    return merge(RemixMenuTriggerStyle(
-      container: FlexBoxStyler(transform: value, transformAlignment: alignment),
-    ));
+    return merge(
+      RemixMenuTriggerStyle(
+        container: FlexBoxStyler(
+          transform: value,
+          transformAlignment: alignment,
+        ),
+      ),
+    );
   }
 
   @override
@@ -177,13 +192,13 @@ class RemixMenuTriggerStyle extends RemixFlexContainerStyle<
 
   @override
   List<Object?> get props => [
-        $container,
-        $label,
-        $icon,
-        $variants,
-        $animation,
-        $modifier,
-      ];
+    $container,
+    $label,
+    $icon,
+    $variants,
+    $animation,
+    $modifier,
+  ];
 }
 
 // ============================================================================
@@ -212,10 +227,10 @@ class RemixMenuStyle extends RemixStyle<RemixMenuSpec, RemixMenuStyle> {
     super.variants,
     super.animation,
     super.modifier,
-  })  : $trigger = trigger,
-        $overlay = overlay,
-        $item = item,
-        $divider = divider;
+  }) : $trigger = trigger,
+       $overlay = overlay,
+       $item = item,
+       $divider = divider;
 
   RemixMenuStyle({
     RemixMenuTriggerStyle? trigger,
@@ -226,14 +241,14 @@ class RemixMenuStyle extends RemixStyle<RemixMenuSpec, RemixMenuStyle> {
     List<VariantStyle<RemixMenuSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
-          trigger: Prop.maybeMix(trigger),
-          overlay: Prop.maybeMix(overlay),
-          item: Prop.maybeMix(item),
-          divider: Prop.maybeMix(divider),
-          variants: variants,
-          animation: animation,
-          modifier: modifier,
-        );
+         trigger: Prop.maybeMix(trigger),
+         overlay: Prop.maybeMix(overlay),
+         item: Prop.maybeMix(item),
+         divider: Prop.maybeMix(divider),
+         variants: variants,
+         animation: animation,
+         modifier: modifier,
+       );
 
   RemixMenuStyle trigger(RemixMenuTriggerStyle value) {
     return merge(RemixMenuStyle(trigger: value));
@@ -332,14 +347,14 @@ class RemixMenuStyle extends RemixStyle<RemixMenuSpec, RemixMenuStyle> {
 
   @override
   List<Object?> get props => [
-        $trigger,
-        $overlay,
-        $item,
-        $divider,
-        $variants,
-        $animation,
-        $modifier,
-      ];
+    $trigger,
+    $overlay,
+    $item,
+    $divider,
+    $variants,
+    $animation,
+    $modifier,
+  ];
 }
 
 class RemixMenuItemStyle
@@ -357,10 +372,10 @@ class RemixMenuItemStyle
     super.variants,
     super.animation,
     super.modifier,
-  })  : $container = container,
-        $label = label,
-        $leadingIcon = leadingIcon,
-        $trailingIcon = trailingIcon;
+  }) : $container = container,
+       $label = label,
+       $leadingIcon = leadingIcon,
+       $trailingIcon = trailingIcon;
 
   RemixMenuItemStyle({
     FlexBoxStyler? container,
@@ -371,14 +386,14 @@ class RemixMenuItemStyle
     List<VariantStyle<RemixMenuItemSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
-          container: Prop.maybeMix(container),
-          label: Prop.maybeMix(label),
-          leadingIcon: Prop.maybeMix(leadingIcon),
-          trailingIcon: Prop.maybeMix(trailingIcon),
-          variants: variants,
-          animation: animation,
-          modifier: modifier,
-        );
+         container: Prop.maybeMix(container),
+         label: Prop.maybeMix(label),
+         leadingIcon: Prop.maybeMix(leadingIcon),
+         trailingIcon: Prop.maybeMix(trailingIcon),
+         variants: variants,
+         animation: animation,
+         modifier: modifier,
+       );
 
   RemixMenuItemStyle label(TextStyler value) {
     return merge(RemixMenuItemStyle(label: value));
@@ -406,32 +421,39 @@ class RemixMenuItemStyle
   }
 
   @override
-  RemixMenuItemStyle color(Color value) {
-    return merge(RemixMenuItemStyle(
-      container: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
-    ));
+  RemixMenuItemStyle textColor(Color value) {
+    return merge(
+      RemixMenuItemStyle(
+        container: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
+      ),
+    );
   }
 
   @override
   RemixMenuItemStyle size(double width, double height) {
-    return merge(RemixMenuItemStyle(
-      container: FlexBoxStyler(
-        constraints: BoxConstraintsMix(
-          minWidth: width,
-          maxWidth: width,
-          minHeight: height,
-          maxHeight: height,
+    return merge(
+      RemixMenuItemStyle(
+        container: FlexBoxStyler(
+          constraints: BoxConstraintsMix(
+            minWidth: width,
+            maxWidth: width,
+            minHeight: height,
+            maxHeight: height,
+          ),
         ),
       ),
-    ));
+    );
   }
 
   @override
   RemixMenuItemStyle borderRadius(BorderRadiusGeometryMix radius) {
-    return merge(RemixMenuItemStyle(
-      container:
-          FlexBoxStyler(decoration: BoxDecorationMix(borderRadius: radius)),
-    ));
+    return merge(
+      RemixMenuItemStyle(
+        container: FlexBoxStyler(
+          decoration: BoxDecorationMix(borderRadius: radius),
+        ),
+      ),
+    );
   }
 
   @override
@@ -455,9 +477,9 @@ class RemixMenuItemStyle
 
   @override
   RemixMenuItemStyle foregroundDecoration(DecorationMix value) {
-    return merge(RemixMenuItemStyle(
-      container: FlexBoxStyler(foregroundDecoration: value),
-    ));
+    return merge(
+      RemixMenuItemStyle(container: FlexBoxStyler(foregroundDecoration: value)),
+    );
   }
 
   @override
@@ -465,9 +487,14 @@ class RemixMenuItemStyle
     Matrix4 value, {
     AlignmentGeometry alignment = Alignment.center,
   }) {
-    return merge(RemixMenuItemStyle(
-      container: FlexBoxStyler(transform: value, transformAlignment: alignment),
-    ));
+    return merge(
+      RemixMenuItemStyle(
+        container: FlexBoxStyler(
+          transform: value,
+          transformAlignment: alignment,
+        ),
+      ),
+    );
   }
 
   @override
@@ -521,12 +548,12 @@ class RemixMenuItemStyle
 
   @override
   List<Object?> get props => [
-        $container,
-        $label,
-        $leadingIcon,
-        $trailingIcon,
-        $variants,
-        $animation,
-        $modifier,
-      ];
+    $container,
+    $label,
+    $leadingIcon,
+    $trailingIcon,
+    $variants,
+    $animation,
+    $modifier,
+  ];
 }

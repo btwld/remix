@@ -10,4 +10,4 @@ import '../../fortal/fortal.dart';
 part 'card_spec.dart';
 part 'card_style.dart';
 part 'card_widget.dart';
-part 'radix_card_styles.dart';
+part 'remix_card_styles.dart';

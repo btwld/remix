@@ -16,4 +16,4 @@ import '../../fortal/fortal.dart';
 part 'textfield_spec.dart';
 part 'textfield_style.dart';
 part 'textfield_widget.dart';
-part 'radix_textfield_styles.dart';
+part 'remix_textfield_styles.dart';

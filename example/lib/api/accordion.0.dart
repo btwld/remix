@@ -102,7 +102,7 @@ class _AccordionExampleState extends State<AccordionExample> {
         .paddingY(14)
         .borderRounded(8)
         .onHovered(
-          RemixAccordionStyle<String>().color(Colors.grey.shade100),
+          RemixAccordionStyle<String>().textColor(Colors.grey.shade100),
         )
         .decoration(
           BoxDecorationMix(

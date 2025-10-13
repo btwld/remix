@@ -2,7 +2,7 @@ part of 'textfield.dart';
 
 enum FortalTextFieldSize { size1, size2, size3 }
 
-enum FortalTextFieldVariant { classic, surface, soft }
+enum FortalTextFieldVariant { surface, soft }
 
 /// FortalTextFieldStyles utility class for creating Fortal-themed textfield styles.
 ///
@@ -15,13 +15,12 @@ class FortalTextFieldStyles {
   /// Factory constructor for FortalTextFieldStyles with variant and size parameters.
   ///
   /// Returns a RemixTextFieldStyle configured with Fortal design tokens.
-  /// Defaults to classic variant with size2.
+  /// Defaults to surface variant with size2.
   static RemixTextFieldStyle create({
-    FortalTextFieldVariant variant = FortalTextFieldVariant.classic,
+    FortalTextFieldVariant variant = FortalTextFieldVariant.surface,
     FortalTextFieldSize size = FortalTextFieldSize.size2,
   }) {
     return switch (variant) {
-      FortalTextFieldVariant.classic => classic(size: size),
       FortalTextFieldVariant.surface => surface(size: size),
       FortalTextFieldVariant.soft => soft(size: size),
     };
@@ -31,62 +30,26 @@ class FortalTextFieldStyles {
     FortalTextFieldSize size = FortalTextFieldSize.size2,
   }) {
     return RemixTextFieldStyle(
-          // Basic text styling (colors are set by variants)
-          cursorWidth: 1.5,
           hintText: TextStyler().textHeightBehavior(
             TextHeightBehaviorMix()
                 .applyHeightToFirstAscent(false)
                 .applyHeightToLastDescent(true),
           ),
+          // Basic text styling (colors are set by variants)
+          cursorWidth: 1.5,
         )
+        .spacing(8)
+        .wrapIconTheme(IconThemeData(size: 16.0, color: FortalTokens.gray10()))
         // Focus state
         .onFocused(
           RemixTextFieldStyle().borderAll(
             color: FortalTokens.accent8(),
             width: FortalTokens.borderWidth1(),
+            strokeAlign: BorderSide.strokeAlignOutside,
           ),
         )
         // Merge with size-specific styles
         .merge(_sizeStyle(size));
-  }
-
-  static RemixTextFieldStyle classic({
-    FortalTextFieldSize size = FortalTextFieldSize.size2,
-  }) {
-    return base(size: size)
-        .merge(
-          RemixTextFieldStyle(
-            text: TextStyler()
-                .color(FortalTokens.gray12())
-                .fontWeight(FortalTokens.fontWeightRegular()),
-            hintText: TextStyler()
-                .color(FortalTokens.gray10())
-                .fontWeight(FortalTokens.fontWeightRegular()),
-            cursorColor: FortalTokens.gray12(),
-            helperText: TextStyler()
-                .color(FortalTokens.gray11())
-                .fontWeight(FortalTokens.fontWeightRegular()),
-            label: TextStyler()
-                .color(FortalTokens.gray12())
-                .fontWeight(FortalTokens.fontWeightMedium()),
-          ),
-        )
-        .color(FortalTokens.colorSurface())
-        .borderAll(
-          color: FortalTokens.gray7(),
-          width: FortalTokens.borderWidth1(),
-        )
-        .onDisabled(
-          RemixTextFieldStyle(
-                text: TextStyler().color(FortalTokens.gray10()),
-                hintText: TextStyler().color(FortalTokens.gray8()),
-              )
-              .color(FortalTokens.colorSurface())
-              .borderAll(
-                color: FortalTokens.gray7(),
-                width: FortalTokens.borderWidth1(),
-              ),
-        );
   }
 
   static RemixTextFieldStyle surface({
@@ -112,8 +75,9 @@ class FortalTextFieldStyles {
         )
         .color(FortalTokens.colorSurface())
         .borderAll(
-          color: FortalTokens.gray6(),
+          color: FortalTokens.gray7(),
           width: FortalTokens.borderWidth1(),
+          strokeAlign: BorderSide.strokeAlignOutside,
         )
         // Override focus for surface variant (different border color)
         .onFocused(
@@ -156,22 +120,14 @@ class FortalTextFieldStyles {
                 .fontWeight(FortalTokens.fontWeightMedium()),
           ),
         )
-        .color(FortalTokens.accent3())
+        .wrapIconTheme(IconThemeData(color: FortalTokens.accent10()))
+        .backgroundColor(FortalTokens.accent3())
         .borderAll(
-          color: FortalTokens.accent6(),
+          color: FortalTokens.accent3(),
           width: FortalTokens.borderWidth1(),
+          strokeAlign: BorderSide.strokeAlignOutside,
         )
-        .onDisabled(
-          RemixTextFieldStyle(
-                text: TextStyler().color(FortalTokens.accent11()),
-                hintText: TextStyler().color(FortalTokens.accent9()),
-              )
-              .color(FortalTokens.accent3())
-              .borderAll(
-                color: FortalTokens.accent6(),
-                width: FortalTokens.borderWidth1(),
-              ),
-        );
+        .onDisabled(RemixTextFieldStyle(text: TextStyler().color(Colors.red)));
   }
 
   // ---------------------------------------------------------------------------

@@ -59,7 +59,7 @@ class _MenuExampleState extends State<MenuExample> {
                 label: 'Logout',
                 style: menuItemStyle.onHovered(
                   RemixMenuItemStyle()
-                      .color(Colors.redAccent.withValues(alpha: 0.05))
+                      .textColor(Colors.redAccent.withValues(alpha: 0.05))
                       .label(
                         TextStyler().color(Colors.redAccent),
                       )
@@ -126,7 +126,7 @@ class _MenuExampleState extends State<MenuExample> {
                     .fontWeight(FontWeight.w400),
               )
               .onHovered(
-                RemixMenuTriggerStyle().color(Colors.red),
+                RemixMenuTriggerStyle().textColor(Colors.red),
               ),
         )
         .overlay(
@@ -150,7 +150,7 @@ class _MenuExampleState extends State<MenuExample> {
         )
         .divider(
           RemixDividerStyle()
-              .color(Colors.blueGrey.shade100)
+              .textColor(Colors.blueGrey.shade100)
               .height(1)
               .marginY(6),
         );
@@ -164,7 +164,7 @@ class _MenuExampleState extends State<MenuExample> {
         .borderRadiusAll(const Radius.circular(8))
         .label(TextStyler().color(Colors.blueGrey.shade800))
         .onHovered(
-          RemixMenuItemStyle().color(Colors.blueGrey.shade50),
+          RemixMenuItemStyle().textColor(Colors.blueGrey.shade50),
         );
   }
 }

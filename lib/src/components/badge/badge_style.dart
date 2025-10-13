@@ -12,8 +12,8 @@ class RemixBadgeStyle
     super.variants,
     super.animation,
     super.modifier,
-  })  : $container = container,
-        $text = text;
+  }) : $container = container,
+       $text = text;
 
   RemixBadgeStyle({
     BoxStyler? container,
@@ -22,29 +22,33 @@ class RemixBadgeStyle
     List<VariantStyle<RemixBadgeSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
-          container: Prop.maybeMix(container),
-          text: Prop.maybeMix(text),
-          variants: variants,
-          animation: animation,
-          modifier: modifier,
-        );
+         container: Prop.maybeMix(container),
+         text: Prop.maybeMix(text),
+         variants: variants,
+         animation: animation,
+         modifier: modifier,
+       );
 
   // Instance methods (chainable)
 
   /// Sets background color
   RemixBadgeStyle color(Color value) {
-    return merge(RemixBadgeStyle(
-      container: BoxStyler(decoration: BoxDecorationMix(color: value)),
-    ));
+    return merge(
+      RemixBadgeStyle(
+        container: BoxStyler(decoration: BoxDecorationMix(color: value)),
+      ),
+    );
   }
 
   /// Sets border radius
   RemixBadgeStyle borderRadius(BorderRadiusGeometryMix radius) {
-    return merge(RemixBadgeStyle(
-      container: BoxStyler(
-        decoration: BoxDecorationMix(borderRadius: radius),
+    return merge(
+      RemixBadgeStyle(
+        container: BoxStyler(
+          decoration: BoxDecorationMix(borderRadius: radius),
+        ),
       ),
-    ));
+    );
   }
 
   /// Sets padding
@@ -115,9 +119,11 @@ class RemixBadgeStyle
     Matrix4 value, {
     AlignmentGeometry alignment = Alignment.center,
   }) {
-    return merge(RemixBadgeStyle(
-      container: BoxStyler(transform: value, transformAlignment: alignment),
-    ));
+    return merge(
+      RemixBadgeStyle(
+        container: BoxStyler(transform: value, transformAlignment: alignment),
+      ),
+    );
   }
 
   @override
@@ -147,10 +153,10 @@ class RemixBadgeStyle
 
   @override
   List<Object?> get props => [
-        $container,
-        $text,
-        $variants,
-        $animation,
-        $modifier,
-      ];
+    $container,
+    $text,
+    $variants,
+    $animation,
+    $modifier,
+  ];
 }

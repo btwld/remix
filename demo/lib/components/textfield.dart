@@ -17,13 +17,15 @@ Widget buildTextFieldUseCase(BuildContext context) {
         child: SizedBox(
           width: 300,
           child: RemixTextField(
-            trailing: context.knobs.boolean(label: 'Show Trailing', initialValue: false)
+            trailing: context.knobs
+                    .boolean(label: 'Show Trailing', initialValue: false)
                 ? RemixIconButton(
                     icon: Icons.close_rounded,
                     onPressed: () {},
                   )
                 : null,
-            leading: context.knobs.boolean(label: 'Show Leading', initialValue: false)
+            leading: context.knobs
+                    .boolean(label: 'Show Leading', initialValue: false)
                 ? const Icon(Icons.search)
                 : null,
             maxLines: context.knobs.int.input(
@@ -38,6 +40,8 @@ Widget buildTextFieldUseCase(BuildContext context) {
               label: 'Helper Text',
               initialValue: 'Helper Text',
             ),
+            enabled:
+                context.knobs.boolean(label: 'Enabled', initialValue: true),
             style: FortalTextFieldStyles.create(
               variant: context.knobs.object.dropdown(
                 label: 'variant',

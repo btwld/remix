@@ -10,4 +10,4 @@ import '../../fortal/fortal.dart';
 part 'callout_spec.dart';
 part 'callout_style.dart';
 part 'callout_widget.dart';
-part 'radix_callout_styles.dart';
+part 'remix_callout_styles.dart';
