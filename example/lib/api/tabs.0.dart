@@ -42,20 +42,16 @@ class _TabsExampleState extends State<TabsExample> {
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    Expanded(
-                      child: RemixTab(
-                        tabId: 'tab1',
-                        style: tabStyle,
-                        label: 'Tab 1',
-                      ),
+                    RemixTab(
+                      tabId: 'tab1',
+                      style: tabStyle,
+                      label: 'Tab 1',
                     ),
                     const SizedBox(width: 8),
-                    Expanded(
-                      child: RemixTab(
-                        tabId: 'tab2',
-                        style: tabStyle,
-                        label: 'Tab 2',
-                      ),
+                    RemixTab(
+                      tabId: 'tab2',
+                      style: tabStyle,
+                      label: 'Tab 2',
                     ),
                   ],
                 ),
@@ -96,7 +92,7 @@ class _TabsExampleState extends State<TabsExample> {
     return RemixTabBarStyle()
         .paddingAll(4)
         .borderRounded(12)
-        .textColor(const Color(0xFFF4F6FF))
+        .color(const Color(0xFFF4F6FF))
         .borderAll(color: Colors.indigo.shade100)
         .shadowOnly(
           color: Colors.indigo.withValues(alpha: 0.08),
@@ -110,20 +106,20 @@ class _TabsExampleState extends State<TabsExample> {
         .paddingX(18)
         .paddingY(10)
         .borderRounded(10)
-        .textColor(Colors.transparent)
+        .color(Colors.transparent)
         .labelFontSize(14)
         .labelFontWeight(FontWeight.w600)
         .labelColor(Colors.indigo.shade600)
         .iconColor(Colors.indigo.shade500)
         .onHovered(
           RemixTabStyle()
-              .textColor(Colors.indigo.shade50)
+              .color(Colors.indigo.shade50)
               .labelColor(Colors.indigo.shade700),
         )
-        .onPressed(RemixTabStyle().textColor(Colors.indigo.shade100))
+        .onPressed(RemixTabStyle().color(Colors.indigo.shade100))
         .onSelected(
           RemixTabStyle()
-              .textColor(Colors.white)
+              .color(Colors.white)
               .borderAll(color: Colors.indigo.shade400, width: 2)
               .shadowOnly(
                 color: Colors.indigo.withValues(alpha: 0.16),
@@ -139,7 +135,7 @@ class _TabsExampleState extends State<TabsExample> {
     return RemixTabViewStyle()
         .paddingAll(20)
         .borderRounded(14)
-        .textColor(Colors.white)
+        .color(Colors.white)
         .borderAll(color: Colors.indigo.shade100)
         .shadowOnly(
           color: Colors.indigo.withValues(alpha: 0.1),

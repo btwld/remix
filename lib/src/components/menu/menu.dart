@@ -13,4 +13,4 @@ import '../divider/divider.dart';
 part 'menu_spec.dart';
 part 'menu_style.dart';
 part 'menu_widget.dart';
-part 'radix_menu_styles.dart';
+part 'remix_menu_styles.dart';

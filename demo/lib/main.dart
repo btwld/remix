@@ -3,25 +3,9 @@ import 'package:remix/remix.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
-import 'addons/brightness_addon.dart';
 import 'main.directories.g.dart';
 
-@widgetbook.App(
-  cloudAddonsConfigs: {
-    'dark fortaleza': [
-      BrightnessAddonConfig(WidgetBookBrightness.dark),
-    ],
-    'light fortaleza': [
-      BrightnessAddonConfig(WidgetBookBrightness.light),
-    ],
-    'dark base': [
-      BrightnessAddonConfig(WidgetBookBrightness.dark),
-    ],
-    'light base': [
-      BrightnessAddonConfig(WidgetBookBrightness.light),
-    ],
-  },
-)
+@widgetbook.App()
 void main() {
   runApp(const HotReload());
 }
@@ -33,8 +17,8 @@ class HotReload extends StatelessWidget {
   Widget build(BuildContext context) {
     return Widgetbook(
       addons: [
-        BrightnessAddon(),
-        InspectorAddon(),
+        // BrightnessAddon(),
+        // InspectorAddon(),
       ],
       appBuilder: (context, child) => createFortalScope(child: child),
       directories: directories,

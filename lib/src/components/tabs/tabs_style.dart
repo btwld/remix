@@ -38,7 +38,7 @@ class RemixTabBarStyle
   }
 
   @override
-  RemixTabBarStyle textColor(Color value) {
+  RemixTabBarStyle color(Color value) {
     return merge(
       RemixTabBarStyle(
         container: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
@@ -191,7 +191,7 @@ class RemixTabViewStyle
   }
 
   @override
-  RemixTabViewStyle textColor(Color value) {
+  RemixTabViewStyle color(Color value) {
     return merge(
       RemixTabViewStyle(
         container: BoxStyler(decoration: BoxDecorationMix(color: value)),
@@ -322,6 +322,10 @@ class RemixTabStyle extends RemixFlexContainerStyle<RemixTabSpec, RemixTabStyle>
     return merge(RemixTabStyle(container: FlexBoxStyler(alignment: value)));
   }
 
+  RemixTabStyle container(FlexBoxStyler value) {
+    return merge(RemixTabStyle(container: value));
+  }
+
   @override
   RemixTabStyle label(TextStyler value) {
     return merge(RemixTabStyle(label: value));
@@ -403,7 +407,7 @@ class RemixTabStyle extends RemixFlexContainerStyle<RemixTabSpec, RemixTabStyle>
   }
 
   @override
-  RemixTabStyle textColor(Color value) {
+  RemixTabStyle color(Color value) {
     return merge(
       RemixTabStyle(
         container: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),

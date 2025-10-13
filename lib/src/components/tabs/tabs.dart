@@ -8,8 +8,9 @@ import 'package:naked_ui/naked_ui.dart';
 
 import '../../style/style.dart';
 import '../../utilities/remix_style.dart';
+import '../../fortal/fortal.dart';
 
-part 'radix_tabs_styles.dart';
+part 'remix_tabs_styles.dart';
 part 'tabs_spec.dart';
 part 'tabs_style.dart';
 part 'tabs_widget.dart';

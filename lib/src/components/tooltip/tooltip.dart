@@ -9,7 +9,7 @@ import '../../fortal/fortal.dart';
 import '../../style/mixins/label_style_mixin.dart';
 import '../../utilities/remix_style.dart';
 
-part 'radix_tooltip_styles.dart';
+part 'remix_tooltip_styles.dart';
 part 'tooltip_spec.dart';
 part 'tooltip_style.dart';
 part 'tooltip_widget.dart';
