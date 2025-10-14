@@ -13,28 +13,39 @@ Widget buildDividerUseCase(BuildContext context) {
     key: _key,
     child: Scaffold(
       body: Center(
-        child: SizedBox(
-          height: 300,
-          width: 300,
-          child: Center(
-            child: RemixButton(
-              label: 'Open Dialog',
-              onPressed: () {
-                showAboutDialog(context: context);
-                showRemixDialog(
-                  context: context,
-                  builder: (context) => RemixDialog(
-                    title: 'Dialog',
-                    description: 'Dialog description',
+        child: Center(
+          child: RemixButton(
+            label: 'Open Dialog',
+            onPressed: () {
+              showRemixDialog(
+                context: context,
+                builder: (context) => Center(
+                  child: RemixDialog(
+                    title: 'Revoke access',
+                    description:
+                        'Are you sure? This application will no longer be accessible and any existing sessions will be expired.',
                     style: FortalDialogStyle.create(),
                     actions: [
-                      RemixButton(label: 'Close', onPressed: () {}),
+                      RemixButton(
+                        label: 'Cancel',
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        style: FortalButtonStyle.create(
+                          variant: FortalButtonVariant.ghost,
+                        ),
+                      ),
+                      RemixButton(
+                        label: 'Revoke access',
+                        onPressed: () {},
+                        style: FortalButtonStyle.create(),
+                      ),
                     ],
                   ),
-                );
-              },
-              style: FortalButtonStyle.create(),
-            ),
+                ),
+              );
+            },
+            style: FortalButtonStyle.create(),
           ),
         ),
       ),
