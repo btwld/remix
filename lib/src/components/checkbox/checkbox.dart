@@ -13,4 +13,4 @@ import '../../utilities/remix_style.dart';
 part 'checkbox_spec.dart';
 part 'checkbox_style.dart';
 part 'checkbox_widget.dart';
-part 'radix_checkbox_styles.dart';
+part 'fortal_checkbox_styles.dart';

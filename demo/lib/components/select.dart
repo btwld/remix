@@ -1,60 +1,73 @@
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-
+import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
+
+final _key = GlobalKey();
 
 @widgetbook.UseCase(
   name: 'Select Component',
   type: RemixSelect,
 )
-Widget buildSelect(BuildContext context) {
-  return const Scaffold(
-    body: Center(
-      child: SelectDemo(),
-    ),
+Widget buildSelectUseCase(BuildContext context) {
+  final variant = context.knobs.object.dropdown(
+    label: 'variant',
+    options: FortalSelectVariant.values,
+    labelBuilder: (variant) => variant.name,
   );
-}
+  final size = context.knobs.object.dropdown(
+    label: 'size',
+    options: FortalSelectSize.values,
+    labelBuilder: (size) => size.name,
+    initialOption: FortalSelectSize.size3,
+  );
 
-class SelectDemo extends StatefulWidget {
-  const SelectDemo({
-    super.key,
-  });
-
-  @override
-  State<SelectDemo> createState() => _SelectDemoState();
-}
-
-class _SelectDemoState extends State<SelectDemo> {
+  final styleSelect = FortalSelectStyles.create(variant: variant, size: size);
+  final styleItems =
+      FortalSelectItemStyles.create(variant: variant, size: size);
   String selectedValue = 'Apple';
-
-  final List<String> items = ['Apple Fiji', 'Banana', 'Orange'];
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(
-            width: 200,
-            child: RemixSelect<String>(
-              trigger: const RemixSelectTrigger(
-                placeholder: 'Select item...',
-              ),
-              selectedValue: selectedValue,
-              onChanged: (value) =>
-                  setState(() => selectedValue = value ?? ''),
-              items: List.generate(
-                items.length,
-                (index) => RemixSelectItem<String>(
-                  value: items[index],
-                  label: items[index],
+  return KeyedSubtree(
+    key: _key,
+    child: Scaffold(
+      body: Center(
+        child: SizedBox(
+          width: 200,
+          child: StatefulBuilder(builder: (context, setState) {
+            return RemixSelect<String>(
+              style: styleSelect,
+              trigger: RemixSelectTrigger(
+                placeholder: context.knobs.string(
+                  label: 'Placeholder',
+                  initialValue: 'Select item...',
                 ),
               ),
-            ),
-          ),
-        ],
+              selectedValue: selectedValue,
+              onChanged: (value) {
+                setState(() {
+                  selectedValue = value ?? 'Apple';
+                });
+              },
+              items: [
+                RemixSelectItem<String>(
+                  value: 'Apple',
+                  label: 'Apple',
+                  style: styleItems,
+                ),
+                RemixSelectItem<String>(
+                  value: 'Banana',
+                  label: 'Banana',
+                  style: styleItems,
+                ),
+                RemixSelectItem<String>(
+                  value: 'Orange',
+                  label: 'Orange',
+                  style: styleItems,
+                ),
+              ],
+            );
+          }),
+        ),
       ),
-    );
-  }
+    ),
+  );
 }

@@ -12,8 +12,8 @@ class RemixCheckboxStyle
     super.variants,
     super.animation,
     super.modifier,
-  })  : $container = container,
-        $indicator = indicator;
+  }) : $container = container,
+       $indicator = indicator;
 
   RemixCheckboxStyle({
     BoxStyler? container,
@@ -22,12 +22,12 @@ class RemixCheckboxStyle
     List<VariantStyle<RemixCheckboxSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
-          container: Prop.maybeMix(container),
-          indicator: Prop.maybeMix(indicator),
-          variants: variants,
-          animation: animation,
-          modifier: modifier,
-        );
+         container: Prop.maybeMix(container),
+         indicator: Prop.maybeMix(indicator),
+         variants: variants,
+         animation: animation,
+         modifier: modifier,
+       );
 
   /// Sets checkbox size by constraining the container.
   RemixCheckboxStyle checkboxSize(double value) {
@@ -145,16 +145,12 @@ class RemixCheckboxStyle
 
   @override
   RemixCheckboxStyle constraints(BoxConstraintsMix value) {
-    return merge(
-      RemixCheckboxStyle(container: BoxStyler(constraints: value)),
-    );
+    return merge(RemixCheckboxStyle(container: BoxStyler(constraints: value)));
   }
 
   @override
   RemixCheckboxStyle decoration(DecorationMix value) {
-    return merge(
-      RemixCheckboxStyle(container: BoxStyler(decoration: value)),
-    );
+    return merge(RemixCheckboxStyle(container: BoxStyler(decoration: value)));
   }
 
   @override
@@ -208,10 +204,10 @@ class RemixCheckboxStyle
 
   @override
   List<Object?> get props => [
-        $container,
-        $indicator,
-        $variants,
-        $animation,
-        $modifier,
-      ];
+    $container,
+    $indicator,
+    $variants,
+    $animation,
+    $modifier,
+  ];
 }

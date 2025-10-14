@@ -182,8 +182,9 @@ FortalThemeColors resolveFortalTokens(FortalThemeConfig theme) {
   final String grayName = theme.gray.name;
   final RadixColorTheme accentTheme = _accentThemesByName[accentName]!;
   final RadixColorTheme grayTheme = _grayThemesByName[grayName]!;
-  final RadixColor accentRC =
-      theme.isDark ? accentTheme.dark : accentTheme.light;
+  final RadixColor accentRC = theme.isDark
+      ? accentTheme.dark
+      : accentTheme.light;
   final RadixColor grayRC = theme.isDark ? grayTheme.dark : grayTheme.light;
 
   // Extract scales

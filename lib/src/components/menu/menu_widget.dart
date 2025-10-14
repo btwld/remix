@@ -203,8 +203,9 @@ class RemixMenu<T> extends StatelessWidget {
                 // Pattern matching ensures exhaustiveness
                 return switch (item) {
                   RemixMenuItem<T>() => _RemixMenuItemWidget<T>(data: item),
-                  RemixMenuDivider<T>() =>
-                    RemixDivider(styleSpec: spec.divider),
+                  RemixMenuDivider<T>() => RemixDivider(
+                    styleSpec: spec.divider,
+                  ),
                 };
               }).toList(),
             );
@@ -235,9 +236,9 @@ class RemixMenu<T> extends StatelessWidget {
             return RowBox(
               styleSpec: triggerSpec.container,
               children: [
+                StyledText(trigger.label, styleSpec: triggerSpec.label),
                 if (trigger.icon != null)
                   StyledIcon(icon: trigger.icon!, styleSpec: triggerSpec.icon),
-                StyledText(trigger.label, styleSpec: triggerSpec.label),
               ],
             );
           },

@@ -310,7 +310,7 @@ class RemixTextField extends StatelessWidget {
       canRequestFocus: canRequestFocus,
       spellCheckConfiguration: spellCheckConfiguration,
       magnifierConfiguration: magnifierConfiguration,
-      style: const TextStyle(), // Will be applied in StyleBuilder
+      // style: const TextStyle(), // Will be applied in StyleBuilder
       semanticLabel: semanticLabel ?? label,
       semanticHint: semanticHint ?? hintText,
       builder: (BuildContext context, state, Widget editableText) {
@@ -322,6 +322,7 @@ class RemixTextField extends StatelessWidget {
           builder: (context, spec) {
             // Apply text style from spec
             final textStyle = spec.text.spec.style ?? const TextStyle();
+            print(spec.text.spec.style);
             final styledEditableText = DefaultTextStyle(
               style: textStyle,
               textAlign: spec.textAlign,
@@ -337,8 +338,10 @@ class RemixTextField extends StatelessWidget {
                         Positioned.fill(
                           child: Align(
                             alignment: AlignmentDirectional.centerStart,
-                            child:
-                                StyledText(hintText!, styleSpec: spec.hintText),
+                            child: StyledText(
+                              hintText!,
+                              styleSpec: spec.hintText,
+                            ),
                           ),
                         ),
                       styledEditableText,

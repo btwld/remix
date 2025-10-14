@@ -54,10 +54,10 @@ class RemixButtonStyle
     super.variants,
     super.animation,
     super.modifier,
-  })  : $container = container,
-        $label = label,
-        $icon = icon,
-        $spinner = spinner;
+  }) : $container = container,
+       $label = label,
+       $icon = icon,
+       $spinner = spinner;
 
   RemixButtonStyle({
     FlexBoxStyler? container,
@@ -68,14 +68,14 @@ class RemixButtonStyle
     List<VariantStyle<RemixButtonSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
-          container: Prop.maybeMix(container),
-          label: Prop.maybeMix(label),
-          icon: Prop.maybeMix(icon),
-          spinner: Prop.maybeMix(spinner),
-          variants: variants,
-          animation: animation,
-          modifier: modifier,
-        );
+         container: Prop.maybeMix(container),
+         label: Prop.maybeMix(label),
+         icon: Prop.maybeMix(icon),
+         spinner: Prop.maybeMix(spinner),
+         variants: variants,
+         animation: animation,
+         modifier: modifier,
+       );
 
   // Instance methods for fluent API (return new instances)
   RemixButtonStyle label(TextStyler value) {
@@ -175,16 +175,23 @@ class RemixButtonStyle
     Matrix4 value, {
     AlignmentGeometry alignment = Alignment.center,
   }) {
-    return merge(RemixButtonStyle(
-      container: FlexBoxStyler(transform: value, transformAlignment: alignment),
-    ));
+    return merge(
+      RemixButtonStyle(
+        container: FlexBoxStyler(
+          transform: value,
+          transformAlignment: alignment,
+        ),
+      ),
+    );
   }
 
   @override
   RemixButtonStyle color(Color value) {
-    return merge(RemixButtonStyle(
-      container: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
-    ));
+    return merge(
+      RemixButtonStyle(
+        container: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
+      ),
+    );
   }
 
   // Modifier support
@@ -224,12 +231,12 @@ class RemixButtonStyle
 
   @override
   List<Object?> get props => [
-        $container,
-        $label,
-        $icon,
-        $spinner,
-        $variants,
-        $animation,
-        $modifier,
-      ];
+    $container,
+    $label,
+    $icon,
+    $spinner,
+    $variants,
+    $animation,
+    $modifier,
+  ];
 }

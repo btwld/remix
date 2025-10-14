@@ -1,24 +1,16 @@
 part of 'button.dart';
 
 /// Builder function for customizing button text rendering.
-typedef RemixButtonTextBuilder = Widget Function(
-  BuildContext context,
-  TextSpec spec,
-  String text,
-);
+typedef RemixButtonTextBuilder =
+    Widget Function(BuildContext context, TextSpec spec, String text);
 
 /// Builder function for customizing button icon rendering.
-typedef RemixButtonIconBuilder = Widget Function(
-  BuildContext context,
-  IconSpec spec,
-  IconData? icon,
-);
+typedef RemixButtonIconBuilder =
+    Widget Function(BuildContext context, IconSpec spec, IconData? icon);
 
 /// Builder function for customizing button loading state rendering.
-typedef RemixButtonLoadingBuilder = Widget Function(
-  BuildContext context,
-  RemixSpinnerSpec spec,
-);
+typedef RemixButtonLoadingBuilder =
+    Widget Function(BuildContext context, RemixSpinnerSpec spec);
 
 /// A customizable button component that supports text with optional icons, loading states, and styling.
 /// The button integrates with the Mix styling system and follows Remix design patterns.

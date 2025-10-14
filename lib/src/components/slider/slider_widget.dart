@@ -33,9 +33,9 @@ class RemixSlider extends StatelessWidget {
     this.autofocus = false,
     this.snapDivisions,
   }) : assert(
-          value >= min && value <= max,
-          'Slider value must be between min and max values',
-        );
+         value >= min && value <= max,
+         'Slider value must be between min and max values',
+       );
 
   /// The minimum value the slider can have.
   final double min;
@@ -111,8 +111,10 @@ class RemixSlider extends StatelessWidget {
             // Slider height accommodates both thumb and track:
             // - thumb.height + trackThickness: ensures thumb has clearance above/below
             // - trackThickness alone: minimum viable height
-            final sliderHeight =
-                math.max(thumbSize.height + trackThickness, trackThickness);
+            final sliderHeight = math.max(
+              thumbSize.height + trackThickness,
+              trackThickness,
+            );
             final horizontalOverflow = math.max(
               thumbSize.width / 2,
               trackThickness / 2,
@@ -131,10 +133,13 @@ class RemixSlider extends StatelessWidget {
                   /// - UI positioning works in pixel coordinates (0 to width)
                   /// - Slider values can be any range (e.g., -50 to 150, 0 to 1000)
                   /// - We need a consistent way to map between value space and pixel space
-                  final valueRange =
-                      (max - min).abs() < 1e-6 ? 1.0 : (max - min);
-                  final normalizedValue =
-                      ((value - min) / valueRange).clamp(0.0, 1.0);
+                  final valueRange = (max - min).abs() < 1e-6
+                      ? 1.0
+                      : (max - min);
+                  final normalizedValue = ((value - min) / valueRange).clamp(
+                    0.0,
+                    1.0,
+                  );
 
                   /// **Thumb Position Calculation**
                   /// Maps normalized value (0.0-1.0) to actual pixel position.
@@ -170,8 +175,10 @@ class RemixSlider extends StatelessWidget {
                           height: constraints.maxHeight,
                           child: _AnimatedTrack(
                             value: normalizedValue,
-                            range: spec.range,
-                            track: spec.track,
+                            rangeColor: spec.rangeColor,
+                            rangeWidth: spec.rangeWidth,
+                            trackColor: spec.trackColor,
+                            trackWidth: spec.trackWidth,
                             duration: const Duration(milliseconds: 200),
                             curve: Curves.linear,
                           ),
@@ -353,19 +360,33 @@ extension on Size {
   double get midY => height / 2;
 }
 
+/// Helper function to create a Paint object from color and width
+Paint _createPaint(Color color, double width) {
+  return Paint()
+    ..color = color
+    ..strokeWidth = width
+    ..strokeCap = StrokeCap.round
+    ..style = PaintingStyle.stroke
+    ..isAntiAlias = true;
+}
+
 // Animated track widget for smooth color transitions
 class _AnimatedTrack extends StatefulWidget {
   const _AnimatedTrack({
     required this.value,
-    required this.range,
-    required this.track,
+    required this.rangeColor,
+    required this.rangeWidth,
+    required this.trackColor,
+    required this.trackWidth,
     required this.duration,
     required this.curve,
   });
 
   final double value;
-  final Paint range;
-  final Paint track;
+  final Color rangeColor;
+  final double rangeWidth;
+  final Color trackColor;
+  final double trackWidth;
   final Duration duration;
   final Curve curve;
 
@@ -374,29 +395,41 @@ class _AnimatedTrack extends StatefulWidget {
 }
 
 class _AnimatedTrackState extends State<_AnimatedTrack> {
-  _Tracks? _oldTracks;
+  _TrackProperties? _oldProperties;
 
   @override
   void initState() {
     super.initState();
-    _oldTracks = _Tracks(range: widget.range, track: widget.track);
+    _oldProperties = _TrackProperties(
+      rangeColor: widget.rangeColor,
+      rangeWidth: widget.rangeWidth,
+      trackColor: widget.trackColor,
+      trackWidth: widget.trackWidth,
+    );
   }
 
   @override
   void didUpdateWidget(covariant _AnimatedTrack oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _oldTracks = _Tracks(
-      range: oldWidget.range,
-      track: oldWidget.track,
+    _oldProperties = _TrackProperties(
+      rangeColor: oldWidget.rangeColor,
+      rangeWidth: oldWidget.rangeWidth,
+      trackColor: oldWidget.trackColor,
+      trackWidth: oldWidget.trackWidth,
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return TweenAnimationBuilder(
-      tween: _TracksTween(
-        begin: _oldTracks,
-        end: _Tracks(range: widget.range, track: widget.track),
+      tween: _TrackPropertiesTween(
+        begin: _oldProperties,
+        end: _TrackProperties(
+          rangeColor: widget.rangeColor,
+          rangeWidth: widget.rangeWidth,
+          trackColor: widget.trackColor,
+          trackWidth: widget.trackWidth,
+        ),
       ),
       duration: widget.duration,
       curve: widget.curve,
@@ -404,8 +437,8 @@ class _AnimatedTrackState extends State<_AnimatedTrack> {
         return CustomPaint(
           painter: _TrackPainter(
             value: widget.value,
-            range: value.range,
-            track: value.track,
+            range: _createPaint(value.rangeColor, value.rangeWidth),
+            track: _createPaint(value.trackColor, value.trackWidth),
           ),
         );
       },
@@ -414,32 +447,47 @@ class _AnimatedTrackState extends State<_AnimatedTrack> {
 }
 
 // Helper class for animating track properties
-class _Tracks {
-  final Paint range;
-  final Paint track;
+class _TrackProperties {
+  final Color rangeColor;
+  final double rangeWidth;
+  final Color trackColor;
+  final double trackWidth;
 
-  const _Tracks({required this.range, required this.track});
+  const _TrackProperties({
+    required this.rangeColor,
+    required this.rangeWidth,
+    required this.trackColor,
+    required this.trackWidth,
+  });
 
   @override
   bool operator ==(Object other) {
-    return other is _Tracks &&
-        range == other.range &&
-        track == other.track;
+    return other is _TrackProperties &&
+        rangeColor == other.rangeColor &&
+        rangeWidth == other.rangeWidth &&
+        trackColor == other.trackColor &&
+        trackWidth == other.trackWidth;
   }
 
   @override
-  int get hashCode => range.hashCode ^ track.hashCode;
+  int get hashCode =>
+      rangeColor.hashCode ^
+      rangeWidth.hashCode ^
+      trackColor.hashCode ^
+      trackWidth.hashCode;
 }
 
 // Tween for animating between track states
-class _TracksTween extends Tween<_Tracks> {
-  _TracksTween({required super.begin, required super.end});
+class _TrackPropertiesTween extends Tween<_TrackProperties> {
+  _TrackPropertiesTween({required super.begin, required super.end});
 
   @override
-  _Tracks lerp(double t) {
-    return _Tracks(
-      range: lerpPaint(begin!.range, end!.range, t),
-      track: lerpPaint(begin!.track, end!.track, t),
+  _TrackProperties lerp(double t) {
+    return _TrackProperties(
+      rangeColor: Color.lerp(begin!.rangeColor, end!.rangeColor, t)!,
+      rangeWidth: lerpDouble(begin!.rangeWidth, end!.rangeWidth, t)!,
+      trackColor: Color.lerp(begin!.trackColor, end!.trackColor, t)!,
+      trackWidth: lerpDouble(begin!.trackWidth, end!.trackWidth, t)!,
     );
   }
 }

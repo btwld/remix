@@ -19,11 +19,11 @@ class RemixCardStyle
     List<VariantStyle<RemixCardSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
-          container: Prop.maybeMix(container),
-          variants: variants,
-          animation: animation,
-          modifier: modifier,
-        );
+         container: Prop.maybeMix(container),
+         variants: variants,
+         animation: animation,
+         modifier: modifier,
+       );
 
   /// Sets container padding
   RemixCardStyle padding(EdgeInsetsGeometryMix value) {
@@ -31,19 +31,23 @@ class RemixCardStyle
   }
 
   /// Sets container background color
-  RemixCardStyle color(Color value) {
-    return merge(RemixCardStyle(
-      container: BoxStyler(decoration: BoxDecorationMix(color: value)),
-    ));
+  RemixCardStyle textColor(Color value) {
+    return merge(
+      RemixCardStyle(
+        container: BoxStyler(decoration: BoxDecorationMix(color: value)),
+      ),
+    );
   }
 
   /// Sets container border radius
   RemixCardStyle borderRadius(BorderRadiusGeometryMix radius) {
-    return merge(RemixCardStyle(
-      container: BoxStyler(
-        decoration: BoxDecorationMix(borderRadius: radius),
+    return merge(
+      RemixCardStyle(
+        container: BoxStyler(
+          decoration: BoxDecorationMix(borderRadius: radius),
+        ),
       ),
-    ));
+    );
   }
 
   /// Sets container margin
@@ -116,9 +120,11 @@ class RemixCardStyle
     Matrix4 value, {
     AlignmentGeometry alignment = Alignment.center,
   }) {
-    return merge(RemixCardStyle(
-      container: BoxStyler(transform: value, transformAlignment: alignment),
-    ));
+    return merge(
+      RemixCardStyle(
+        container: BoxStyler(transform: value, transformAlignment: alignment),
+      ),
+    );
   }
 
   @override

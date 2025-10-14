@@ -10,42 +10,27 @@
 // **************************************************************************
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:demo/components/avatar_use_case.dart'
-    as _demo_components_avatar_use_case;
-import 'package:demo/components/badge_use_case.dart'
-    as _demo_components_badge_use_case;
-import 'package:demo/components/button_real_world_examples.dart'
-    as _demo_components_button_real_world_examples;
-import 'package:demo/components/button_showcase.dart'
-    as _demo_components_button_showcase;
-import 'package:demo/components/button_use_case.dart'
-    as _demo_components_button_use_case;
-import 'package:demo/components/callout_use_case.dart'
-    as _demo_components_callout_use_case;
-import 'package:demo/components/card_use_case.dart'
-    as _demo_components_card_use_case;
-import 'package:demo/components/checkbox_showcase.dart'
-    as _demo_components_checkbox_showcase;
-import 'package:demo/components/checkbox_use_case.dart'
-    as _demo_components_checkbox_use_case;
-import 'package:demo/components/divider_use_case.dart'
-    as _demo_components_divider_use_case;
-import 'package:demo/components/progress_use_case.dart'
-    as _demo_components_progress_use_case;
-import 'package:demo/components/radio_showcase.dart'
-    as _demo_components_radio_showcase;
-import 'package:demo/components/radio_use_case.dart'
-    as _demo_components_radio_use_case;
+import 'package:demo/components/accordion.dart' as _demo_components_accordion;
+import 'package:demo/components/avatar.dart' as _demo_components_avatar;
+import 'package:demo/components/badge.dart' as _demo_components_badge;
+import 'package:demo/components/button.dart' as _demo_components_button;
+import 'package:demo/components/callout.dart' as _demo_components_callout;
+import 'package:demo/components/card.dart' as _demo_components_card;
+import 'package:demo/components/checkbox.dart' as _demo_components_checkbox;
+import 'package:demo/components/dialog.dart' as _demo_components_dialog;
+import 'package:demo/components/divider.dart' as _demo_components_divider;
+import 'package:demo/components/icon_button.dart'
+    as _demo_components_icon_button;
+import 'package:demo/components/menu.dart' as _demo_components_menu;
+import 'package:demo/components/progress.dart' as _demo_components_progress;
+import 'package:demo/components/radio.dart' as _demo_components_radio;
 import 'package:demo/components/select.dart' as _demo_components_select;
 import 'package:demo/components/slider.dart' as _demo_components_slider;
-import 'package:demo/components/spinner_use_case.dart'
-    as _demo_components_spinner_use_case;
-import 'package:demo/components/switch_showcase.dart'
-    as _demo_components_switch_showcase;
-import 'package:demo/components/switch_use_case.dart'
-    as _demo_components_switch_use_case;
-import 'package:demo/components/textfield_use_case.dart'
-    as _demo_components_textfield_use_case;
+import 'package:demo/components/spinner.dart' as _demo_components_spinner;
+import 'package:demo/components/switch.dart' as _demo_components_switch;
+import 'package:demo/components/tabs.dart' as _demo_components_tabs;
+import 'package:demo/components/textfield.dart' as _demo_components_textfield;
+import 'package:demo/components/tooltip.dart' as _demo_components_tooltip;
 import 'package:widgetbook/widgetbook.dart' as _widgetbook;
 
 final directories = <_widgetbook.WidgetbookNode>[
@@ -53,11 +38,20 @@ final directories = <_widgetbook.WidgetbookNode>[
     name: 'components',
     children: [
       _widgetbook.WidgetbookComponent(
+        name: 'RemixAccordion',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Accordion Component',
+            builder: _demo_components_accordion.buildAvatarUseCase,
+          )
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
         name: 'RemixAvatar',
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Avatar Component',
-            builder: _demo_components_avatar_use_case.buildAvatarUseCase,
+            builder: _demo_components_avatar.buildAvatarUseCase,
           )
         ],
       ),
@@ -66,7 +60,7 @@ final directories = <_widgetbook.WidgetbookNode>[
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Badge Component',
-            builder: _demo_components_badge_use_case.buildAvatarUseCase,
+            builder: _demo_components_badge.buildBadgeUseCase,
           )
         ],
       ),
@@ -75,17 +69,8 @@ final directories = <_widgetbook.WidgetbookNode>[
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Button Component',
-            builder: _demo_components_button_use_case.buildButtonUseCase,
-          ),
-          _widgetbook.WidgetbookUseCase(
-            name: 'Button Showcase',
-            builder: _demo_components_button_showcase.buildButtonShowcase,
-          ),
-          _widgetbook.WidgetbookUseCase(
-            name: 'Real World Examples',
-            builder: _demo_components_button_real_world_examples
-                .buildButtonRealWorldExamples,
-          ),
+            builder: _demo_components_button.buildButtonUseCase,
+          )
         ],
       ),
       _widgetbook.WidgetbookComponent(
@@ -93,7 +78,7 @@ final directories = <_widgetbook.WidgetbookNode>[
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Callout Component',
-            builder: _demo_components_callout_use_case.buildCalloutUseCase,
+            builder: _demo_components_callout.buildCalloutUseCase,
           )
         ],
       ),
@@ -102,7 +87,7 @@ final directories = <_widgetbook.WidgetbookNode>[
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Card Component',
-            builder: _demo_components_card_use_case.buildCard,
+            builder: _demo_components_card.buildCardUseCase,
           )
         ],
       ),
@@ -111,12 +96,17 @@ final directories = <_widgetbook.WidgetbookNode>[
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Checkbox Component',
-            builder: _demo_components_checkbox_use_case.buildCheckboxUseCase,
-          ),
+            builder: _demo_components_checkbox.buildCheckboxUseCase,
+          )
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'RemixDialog',
+        useCases: [
           _widgetbook.WidgetbookUseCase(
-            name: 'Checkbox Showcase',
-            builder: _demo_components_checkbox_showcase.buildCheckboxShowcase,
-          ),
+            name: 'Dialog Component',
+            builder: _demo_components_dialog.buildDividerUseCase,
+          )
         ],
       ),
       _widgetbook.WidgetbookComponent(
@@ -124,7 +114,25 @@ final directories = <_widgetbook.WidgetbookNode>[
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Divider Component',
-            builder: _demo_components_divider_use_case.buildDivider,
+            builder: _demo_components_divider.buildDividerUseCase,
+          )
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'RemixIconButton',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Icon Button Component',
+            builder: _demo_components_icon_button.buildIconButtonUseCase,
+          )
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'RemixMenu',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Menu Component',
+            builder: _demo_components_menu.buildMenuUseCase,
           )
         ],
       ),
@@ -133,7 +141,7 @@ final directories = <_widgetbook.WidgetbookNode>[
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Progress Component',
-            builder: _demo_components_progress_use_case.buildProgressUseCase,
+            builder: _demo_components_progress.buildProgressUseCase,
           )
         ],
       ),
@@ -142,12 +150,8 @@ final directories = <_widgetbook.WidgetbookNode>[
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Radio Component',
-            builder: _demo_components_radio_use_case.buildRadioUseCase,
-          ),
-          _widgetbook.WidgetbookUseCase(
-            name: 'Radio Showcase',
-            builder: _demo_components_radio_showcase.buildRadioShowcase,
-          ),
+            builder: _demo_components_radio.buildRadioUseCase,
+          )
         ],
       ),
       _widgetbook.WidgetbookComponent(
@@ -155,7 +159,7 @@ final directories = <_widgetbook.WidgetbookNode>[
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Select Component',
-            builder: _demo_components_select.buildSelect,
+            builder: _demo_components_select.buildSelectUseCase,
           )
         ],
       ),
@@ -164,7 +168,7 @@ final directories = <_widgetbook.WidgetbookNode>[
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Slider Component',
-            builder: _demo_components_slider.buildButtonUseCase,
+            builder: _demo_components_slider.buildSliderUseCase,
           )
         ],
       ),
@@ -173,7 +177,7 @@ final directories = <_widgetbook.WidgetbookNode>[
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Spinner Component',
-            builder: _demo_components_spinner_use_case.buildSpinnerUseCase,
+            builder: _demo_components_spinner.buildSpinnerUseCase,
           )
         ],
       ),
@@ -182,12 +186,17 @@ final directories = <_widgetbook.WidgetbookNode>[
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Switch Component',
-            builder: _demo_components_switch_use_case.buildSwitchUseCase,
-          ),
+            builder: _demo_components_switch.buildSwitchUseCase,
+          )
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'RemixTabs',
+        useCases: [
           _widgetbook.WidgetbookUseCase(
-            name: 'Switch Showcase',
-            builder: _demo_components_switch_showcase.buildSwitchShowcase,
-          ),
+            name: 'Tabs Component',
+            builder: _demo_components_tabs.buildTabsUseCase,
+          )
         ],
       ),
       _widgetbook.WidgetbookComponent(
@@ -195,7 +204,16 @@ final directories = <_widgetbook.WidgetbookNode>[
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'TextField Component',
-            builder: _demo_components_textfield_use_case.buildButtonUseCase,
+            builder: _demo_components_textfield.buildTextFieldUseCase,
+          )
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'RemixTooltip',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Tooltip Component',
+            builder: _demo_components_tooltip.buildTooltipUseCase,
           )
         ],
       ),

@@ -10,7 +10,7 @@ final _key = GlobalKey();
   name: 'Slider Component',
   type: RemixSlider,
 )
-Widget buildButtonUseCase(BuildContext context) {
+Widget buildSliderUseCase(BuildContext context) {
   final knobState = WidgetbookState.of(context);
   return KeyedSubtree(
     key: _key,
@@ -26,13 +26,26 @@ Widget buildButtonUseCase(BuildContext context) {
             ),
             snapDivisions: context.knobs.int.input(
               label: 'snapDivisions',
-              initialValue: 0,
+              initialValue: 2,
             ),
             value: context.knobs.double.slider(
               label: 'value',
               min: 0,
               max: 1,
               initialValue: 0.25,
+            ),
+            style: FortalSliderStyles.create(
+              variant: context.knobs.object.dropdown(
+                label: 'variant',
+                options: FortalSliderVariant.values,
+                labelBuilder: (variant) => variant.name,
+              ),
+              size: context.knobs.object.dropdown(
+                label: 'size',
+                options: FortalSliderSize.values,
+                labelBuilder: (size) => size.name,
+                initialOption: FortalSliderSize.size2,
+              ),
             ),
           ),
         ),

@@ -17,11 +17,11 @@ class RemixDialogStyle
     super.variants,
     super.animation,
     super.modifier,
-  })  : $container = container,
-        $title = title,
-        $description = description,
-        $actions = actions,
-        $overlay = overlay;
+  }) : $container = container,
+       $title = title,
+       $description = description,
+       $actions = actions,
+       $overlay = overlay;
 
   RemixDialogStyle({
     BoxStyler? container,
@@ -33,15 +33,15 @@ class RemixDialogStyle
     List<VariantStyle<RemixDialogSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
-          container: Prop.maybeMix(container),
-          title: Prop.maybeMix(title),
-          description: Prop.maybeMix(description),
-          actions: Prop.maybeMix(actions),
-          overlay: Prop.maybeMix(overlay),
-          variants: variants,
-          animation: animation,
-          modifier: modifier,
-        );
+         container: Prop.maybeMix(container),
+         title: Prop.maybeMix(title),
+         description: Prop.maybeMix(description),
+         actions: Prop.maybeMix(actions),
+         overlay: Prop.maybeMix(overlay),
+         variants: variants,
+         animation: animation,
+         modifier: modifier,
+       );
 
   RemixDialogStyle title(TextStyler value) {
     return merge(RemixDialogStyle(title: value));
@@ -72,30 +72,38 @@ class RemixDialogStyle
 
   @override
   RemixDialogStyle color(Color value) {
-    return merge(RemixDialogStyle(
-      container: BoxStyler(decoration: BoxDecorationMix(color: value)),
-    ));
+    return merge(
+      RemixDialogStyle(
+        container: BoxStyler(decoration: BoxDecorationMix(color: value)),
+      ),
+    );
   }
 
   @override
   RemixDialogStyle size(double width, double height) {
-    return merge(RemixDialogStyle(
-      container: BoxStyler(
-        constraints: BoxConstraintsMix(
-          minWidth: width,
-          maxWidth: width,
-          minHeight: height,
-          maxHeight: height,
+    return merge(
+      RemixDialogStyle(
+        container: BoxStyler(
+          constraints: BoxConstraintsMix(
+            minWidth: width,
+            maxWidth: width,
+            minHeight: height,
+            maxHeight: height,
+          ),
         ),
       ),
-    ));
+    );
   }
 
   @override
   RemixDialogStyle borderRadius(BorderRadiusGeometryMix radius) {
-    return merge(RemixDialogStyle(
-      container: BoxStyler(decoration: BoxDecorationMix(borderRadius: radius)),
-    ));
+    return merge(
+      RemixDialogStyle(
+        container: BoxStyler(
+          decoration: BoxDecorationMix(borderRadius: radius),
+        ),
+      ),
+    );
   }
 
   @override
@@ -125,9 +133,11 @@ class RemixDialogStyle
     Matrix4 value, {
     AlignmentGeometry alignment = Alignment.center,
   }) {
-    return merge(RemixDialogStyle(
-      container: BoxStyler(transform: value, transformAlignment: alignment),
-    ));
+    return merge(
+      RemixDialogStyle(
+        container: BoxStyler(transform: value, transformAlignment: alignment),
+      ),
+    );
   }
 
   @override
@@ -178,13 +188,13 @@ class RemixDialogStyle
 
   @override
   List<Object?> get props => [
-        $container,
-        $title,
-        $description,
-        $actions,
-        $overlay,
-        $variants,
-        $animation,
-        $modifier,
-      ];
+    $container,
+    $title,
+    $description,
+    $actions,
+    $overlay,
+    $variants,
+    $animation,
+    $modifier,
+  ];
 }

@@ -3,36 +3,9 @@ part of 'slider.dart';
 const Size _remixSliderDefaultThumbSize = Size(16.0, 16.0);
 const double _remixSliderDefaultTrackStrokeWidth = 8.0;
 
-/// Linearly interpolates between two Paint objects
-///
-/// The [t] argument represents position on timeline (0.0 to 1.0)
-/// Returns [a] when t=0.0, [b] when t=1.0, interpolated values between
-Paint lerpPaint(Paint? a, Paint? b, double t) {
-  if (a == null && b == null) return Paint.from(_defaultTrackPaint);
-  if (a == null) return Paint.from(b!);
-  if (b == null) return Paint.from(a);
-
-  return Paint()
-    ..color = Color.lerp(a.color, b.color, t) ?? _defaultTrackPaint.color
-    ..strokeWidth = lerpDouble(a.strokeWidth, b.strokeWidth, t) ??
-        _defaultTrackPaint.strokeWidth
-    ..strokeCap = t < 0.5 ? a.strokeCap : b.strokeCap
-    ..style = PaintingStyle.stroke // Always stroke for slider tracks
-    ..isAntiAlias = t < 0.5 ? a.isAntiAlias : b.isAntiAlias;
-}
-
-// Default Paint configurations
-final _defaultTrackPaint = Paint()
-  ..color = MixColors.grey
-  ..strokeWidth = _remixSliderDefaultTrackStrokeWidth
-  ..strokeCap = StrokeCap.round
-  ..style = PaintingStyle.stroke;
-
-final _defaultRangePaint = Paint()
-  ..color = MixColors.black
-  ..strokeWidth = _remixSliderDefaultTrackStrokeWidth
-  ..strokeCap = StrokeCap.round
-  ..style = PaintingStyle.stroke;
+// Default track and range configurations
+const Color _defaultTrackColor = MixColors.grey;
+const Color _defaultRangeColor = MixColors.black;
 
 class RemixSliderSpec extends Spec<RemixSliderSpec> with Diagnosticable {
   static const Size defaultThumbSize = _remixSliderDefaultThumbSize;
@@ -40,26 +13,36 @@ class RemixSliderSpec extends Spec<RemixSliderSpec> with Diagnosticable {
       _remixSliderDefaultTrackStrokeWidth;
 
   final StyleSpec<BoxSpec> thumb;
-  final Paint track;
-  final Paint range;
+  final Color trackColor;
+  final double trackWidth;
+  final Color rangeColor;
+  final double rangeWidth;
 
   RemixSliderSpec({
     StyleSpec<BoxSpec>? thumb,
-    Paint? track,
-    Paint? range,
-  })  : thumb = thumb ?? const StyleSpec(spec: BoxSpec()),
-        track = track ?? _defaultTrackPaint,
-        range = range ?? _defaultRangePaint;
+    Color? trackColor,
+    double? trackWidth,
+    Color? rangeColor,
+    double? rangeWidth,
+  }) : thumb = thumb ?? const StyleSpec(spec: BoxSpec()),
+       trackColor = trackColor ?? _defaultTrackColor,
+       trackWidth = trackWidth ?? _remixSliderDefaultTrackStrokeWidth,
+       rangeColor = rangeColor ?? _defaultRangeColor,
+       rangeWidth = rangeWidth ?? _remixSliderDefaultTrackStrokeWidth;
 
   RemixSliderSpec copyWith({
     StyleSpec<BoxSpec>? thumb,
-    Paint? track,
-    Paint? range,
+    Color? trackColor,
+    double? trackWidth,
+    Color? rangeColor,
+    double? rangeWidth,
   }) {
     return RemixSliderSpec(
       thumb: thumb ?? this.thumb,
-      track: track ?? this.track,
-      range: range ?? this.range,
+      trackColor: trackColor ?? this.trackColor,
+      trackWidth: trackWidth ?? this.trackWidth,
+      rangeColor: rangeColor ?? this.rangeColor,
+      rangeWidth: rangeWidth ?? this.rangeWidth,
     );
   }
 
@@ -68,23 +51,32 @@ class RemixSliderSpec extends Spec<RemixSliderSpec> with Diagnosticable {
 
     return RemixSliderSpec(
       thumb: MixOps.lerp(thumb, other.thumb, t)!,
-      track: lerpPaint(track, other.track, t),
-      range: lerpPaint(range, other.range, t),
+      trackColor: Color.lerp(trackColor, other.trackColor, t)!,
+      trackWidth: lerpDouble(trackWidth, other.trackWidth, t)!,
+      rangeColor: Color.lerp(rangeColor, other.rangeColor, t)!,
+      rangeWidth: lerpDouble(rangeWidth, other.rangeWidth, t)!,
     );
   }
 
-  double get trackThickness =>
-      math.max(track.strokeWidth, range.strokeWidth);
+  double get trackThickness => math.max(trackWidth, rangeWidth);
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('thumb', thumb))
-      ..add(DiagnosticsProperty('track', track))
-      ..add(DiagnosticsProperty('range', range));
+      ..add(ColorProperty('trackColor', trackColor))
+      ..add(DoubleProperty('trackWidth', trackWidth))
+      ..add(ColorProperty('rangeColor', rangeColor))
+      ..add(DoubleProperty('rangeWidth', rangeWidth));
   }
 
   @override
-  List<Object?> get props => [thumb, track, range];
+  List<Object?> get props => [
+    thumb,
+    trackColor,
+    trackWidth,
+    rangeColor,
+    rangeWidth,
+  ];
 }

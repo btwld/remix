@@ -1,19 +1,8 @@
 part of 'button.dart';
 
-enum FortalButtonSize {
-  size1,
-  size2,
-  size3,
-  size4,
-}
+enum FortalButtonSize { size1, size2, size3, size4 }
 
-enum FortalButtonVariant {
-  solid,
-  soft,
-  surface,
-  outline,
-  ghost,
-}
+enum FortalButtonVariant { solid, soft, surface, outline, ghost }
 
 /// FortalButtonStyle utility class for creating Fortal-themed button styles.
 ///
@@ -71,25 +60,22 @@ class FortalButtonStyle {
         .color(FortalTokens.accent9())
         .labelColor(FortalTokens.accentContrast())
         .iconColor(FortalTokens.accentContrast())
-        .spinner(RemixSpinnerStyle().indicatorColor(FortalTokens.accentContrast()))
-        .onHovered(RemixButtonStyle().color(FortalTokens.accent10()))
-        .onPressed(
-          RemixButtonStyle().color(FortalTokens
-              .accent10()), // NOTE: base-button-solid-active-filter: brightness(1.08) from JSON
-          // Flutter doesn't support CSS filters directly, would need ColorFiltered widget,
+        .spinner(
+          RemixSpinnerStyle().indicatorColor(FortalTokens.accentContrast()),
         )
+        .onHovered(RemixButtonStyle().color(FortalTokens.accent10()))
+        .onPressed(RemixButtonStyle().color(FortalTokens.accent10()))
         .onDisabled(
           RemixButtonStyle()
-              .color(FortalTokens.accent9())
-              .labelColor(FortalTokens.accentContrast())
-              .iconColor(FortalTokens.accentContrast())
+              .color(FortalTokens.grayA3())
+              .labelColor(FortalTokens.gray8())
+              .iconColor(FortalTokens.gray8())
               .spinner(
-                RemixSpinnerStyle().indicatorColor(FortalTokens.accentContrast()),
+                RemixSpinnerStyle()
+                    .indicatorColor(FortalTokens.gray8())
+                    .strokeWidth(FortalTokens.borderWidth1()),
               ),
         );
-    // TODO: Add high-contrast mode support in the future
-    // base-button-solid-high-contrast-hover-filter: contrast(0.88) saturate(1.3) brightness(1.18)
-    // base-button-solid-high-contrast-active-filter: brightness(0.95) saturate(1.2)
   }
 
   static RemixButtonStyle soft({
@@ -97,30 +83,21 @@ class FortalButtonStyle {
   }) {
     return base(size: size)
         .color(FortalTokens.accent3())
-        .borderAll(
-          color: FortalTokens.accent6(),
-          width: FortalTokens.borderWidth1(),
-        )
         .labelColor(FortalTokens.accent11())
         .iconColor(FortalTokens.accent11())
         .spinner(RemixSpinnerStyle().indicatorColor(FortalTokens.accent11()))
-        .onHovered(
-          RemixButtonStyle().color(FortalTokens.accent4()).borderAll(
-                color: FortalTokens.accent7(),
-                width: FortalTokens.borderWidth1(),
-              ),
-        )
+        .onHovered(RemixButtonStyle().color(FortalTokens.accent4()))
         .onPressed(RemixButtonStyle().color(FortalTokens.accent5()))
         .onDisabled(
           RemixButtonStyle()
-              .color(FortalTokens.accent3())
-              .borderAll(
-                color: FortalTokens.accent6(),
-                width: FortalTokens.borderWidth1(),
-              )
-              .labelColor(FortalTokens.accent11())
-              .iconColor(FortalTokens.accent11())
-              .spinner(RemixSpinnerStyle().indicatorColor(FortalTokens.accent11())),
+              .color(FortalTokens.grayA3())
+              .labelColor(FortalTokens.gray8())
+              .iconColor(FortalTokens.gray8())
+              .spinner(
+                RemixSpinnerStyle()
+                    .indicatorColor(FortalTokens.gray8())
+                    .strokeWidth(FortalTokens.borderWidth1()),
+              ),
         );
   }
 
@@ -128,7 +105,7 @@ class FortalButtonStyle {
     FortalButtonSize size = FortalButtonSize.size2,
   }) {
     return base(size: size)
-        .color(FortalTokens.accentSurface())
+        .color(FortalTokens.accentA2())
         .borderAll(
           color: FortalTokens.accent6(),
           width: FortalTokens.borderWidth1(),
@@ -137,21 +114,25 @@ class FortalButtonStyle {
         .iconColor(FortalTokens.accent11())
         .spinner(RemixSpinnerStyle().indicatorColor(FortalTokens.accent11()))
         .onHovered(
-          RemixButtonStyle().color(FortalTokens.accentA4()).borderAll(
-                color: FortalTokens.accent7(),
-                width: FortalTokens.borderWidth1(),
-              ),
+          RemixButtonStyle().borderAll(
+            color: FortalTokens.accent8(),
+            width: FortalTokens.borderWidth1(),
+          ),
         )
         .onDisabled(
           RemixButtonStyle()
-              .color(FortalTokens.accentSurface())
+              .color(FortalTokens.grayA2())
+              .labelColor(FortalTokens.gray8())
+              .iconColor(FortalTokens.gray8())
               .borderAll(
-                color: FortalTokens.accent6(),
+                color: FortalTokens.gray5(),
                 width: FortalTokens.borderWidth1(),
               )
-              .labelColor(FortalTokens.accent11())
-              .iconColor(FortalTokens.accent11())
-              .spinner(RemixSpinnerStyle().indicatorColor(FortalTokens.accent11())),
+              .spinner(
+                RemixSpinnerStyle()
+                    .indicatorColor(FortalTokens.gray8())
+                    .strokeWidth(FortalTokens.borderWidth1()),
+              ),
         );
   }
 
@@ -168,20 +149,23 @@ class FortalButtonStyle {
         .iconColor(FortalTokens.accent11())
         .spinner(RemixSpinnerStyle().indicatorColor(FortalTokens.accent11()))
         .onHovered(
-          RemixButtonStyle().color(FortalTokens.accentA3()).borderAll(
+          RemixButtonStyle()
+              .color(FortalTokens.accentA2())
+              .borderAll(
                 color: FortalTokens.accent8(),
                 width: FortalTokens.borderWidth1(),
               ),
         )
         .onDisabled(
           RemixButtonStyle()
-              .borderAll(
-                color: FortalTokens.accent7(),
-                width: FortalTokens.borderWidth1(),
-              )
-              .labelColor(FortalTokens.accent11())
-              .iconColor(FortalTokens.accent11())
-              .spinner(RemixSpinnerStyle().indicatorColor(FortalTokens.accent11())),
+              .labelColor(FortalTokens.gray8())
+              .iconColor(FortalTokens.gray8())
+              .borderAll(color: FortalTokens.gray5())
+              .spinner(
+                RemixSpinnerStyle()
+                    .indicatorColor(FortalTokens.gray8())
+                    .strokeWidth(FortalTokens.borderWidth1()),
+              ),
         );
   }
 
@@ -197,17 +181,20 @@ class FortalButtonStyle {
         .onPressed(RemixButtonStyle().color(FortalTokens.accentA4()))
         .onDisabled(
           RemixButtonStyle()
-              .labelColor(FortalTokens.accent11())
-              .iconColor(FortalTokens.accent11())
-              .spinner(RemixSpinnerStyle().indicatorColor(FortalTokens.accent11())),
+              .labelColor(FortalTokens.gray8())
+              .iconColor(FortalTokens.gray8())
+              .spinner(
+                RemixSpinnerStyle().indicatorColor(FortalTokens.accent11()),
+              ),
         );
 
     // Ghost variant uses special padding for size2 from JSON:
     // button-ghost-padding-x: var(--space-4)
     // button-ghost-padding-y: var(--space-2)
     if (size == FortalButtonSize.size2) {
-      style =
-          style.paddingX(FortalTokens.space4()).paddingY(FortalTokens.space2());
+      style = style
+          .paddingX(FortalTokens.space4())
+          .paddingY(FortalTokens.space2());
     }
 
     return style;
@@ -221,63 +208,63 @@ class FortalButtonStyle {
     final style = RemixButtonStyle();
 
     return switch (size) {
-      FortalButtonSize.size1 => style
-          .height(24.0)
-          .paddingX(FortalTokens.space2())
-          .paddingY(FortalTokens.space1())
-          .spacing(FortalTokens.space1())
-          .borderRadiusAll(FortalTokens.radius2())
-          .label(
-            TextStyler()
-                .fontSize(12.0)
-                .height(16.0 / 12.0) // lineHeight as ratio
-                .letterSpacing(0.0025),
-          )
-          .iconSize(12.0)
-          .spinner(RemixSpinnerStyle(size: 12.0)),
-      FortalButtonSize.size2 => style
-          .height(32.0)
-          // Generic size padding (ghost overrides provided via variant config)
-          .paddingX(FortalTokens.space3())
-          .paddingY(FortalTokens.space2())
-          .spacing(FortalTokens.space2())
-          .borderRadiusAll(FortalTokens.radius3())
-          .label(
-            TextStyler()
-                .fontSize(14.0)
-                .height(20.0 / 14.0) // lineHeight as ratio
-                .letterSpacing(0.0),
-          )
-          .iconSize(16.0)
-          .spinner(RemixSpinnerStyle(size: 16.0)),
-      FortalButtonSize.size3 => style
-          .height(40.0)
-          .paddingX(FortalTokens.space4())
-          .paddingY(FortalTokens.space3())
-          .spacing(FortalTokens.space3())
-          .borderRadiusAll(FortalTokens.radius4())
-          .label(
-            TextStyler()
-                .fontSize(16.0)
-                .height(24.0 / 16.0) // lineHeight as ratio
-                .letterSpacing(0.0),
-          )
-          .iconSize(20.0)
-          .spinner(RemixSpinnerStyle(size: 20.0)),
-      FortalButtonSize.size4 => style
-          .height(48.0)
-          .paddingX(FortalTokens.space5())
-          .paddingY(FortalTokens.space4())
-          .spacing(FortalTokens.space4())
-          .borderRadiusAll(FortalTokens.radius5())
-          .label(
-            TextStyler()
-                .fontSize(18.0)
-                .height(26.0 / 18.0) // lineHeight as ratio
-                .letterSpacing(-0.0025),
-          )
-          .iconSize(24.0)
-          .spinner(RemixSpinnerStyle(size: 24.0)),
+      FortalButtonSize.size1 =>
+        style
+            .paddingX(FortalTokens.space2())
+            .paddingY(FortalTokens.space1())
+            .spacing(FortalTokens.space1())
+            .borderRadiusAll(FortalTokens.radius2())
+            .label(
+              TextStyler()
+                  .fontSize(12.0)
+                  .height(16.0 / 12.0) // lineHeight as ratio
+                  .letterSpacing(0.0025),
+            )
+            .iconSize(12.0)
+            .spinner(RemixSpinnerStyle(size: 12.0)),
+      FortalButtonSize.size2 =>
+        style
+            // Generic size padding (ghost overrides provided via variant config)
+            .paddingX(FortalTokens.space3())
+            .paddingY(FortalTokens.space2())
+            .spacing(FortalTokens.space2())
+            .borderRadiusAll(FortalTokens.radius3())
+            .label(
+              TextStyler()
+                  .fontSize(14.0)
+                  .height(20.0 / 14.0) // lineHeight as ratio
+                  .letterSpacing(0.0),
+            )
+            .iconSize(16.0)
+            .spinner(RemixSpinnerStyle(size: 16.0)),
+      FortalButtonSize.size3 =>
+        style
+            .paddingX(FortalTokens.space4())
+            .paddingY(FortalTokens.space3())
+            .spacing(FortalTokens.space3())
+            .borderRadiusAll(FortalTokens.radius4())
+            .label(
+              TextStyler()
+                  .fontSize(16.0)
+                  .height(24.0 / 16.0) // lineHeight as ratio
+                  .letterSpacing(0.0),
+            )
+            .iconSize(20.0)
+            .spinner(RemixSpinnerStyle(size: 20.0)),
+      FortalButtonSize.size4 =>
+        style
+            .paddingX(FortalTokens.space5())
+            .paddingY(FortalTokens.space4())
+            .spacing(FortalTokens.space4())
+            .borderRadiusAll(FortalTokens.radius5())
+            .label(
+              TextStyler()
+                  .fontSize(18.0)
+                  .height(26.0 / 18.0) // lineHeight as ratio
+                  .letterSpacing(-0.0025),
+            )
+            .iconSize(24.0)
+            .spinner(RemixSpinnerStyle(size: 24.0)),
     };
   }
 }

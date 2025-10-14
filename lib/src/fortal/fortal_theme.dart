@@ -37,8 +37,9 @@ class FortalTokens {
   static const colorPanelSolid = ColorToken('fortal.color.panel.solid');
 
   /// Translucent panel background with alpha transparency.
-  static const colorPanelTranslucent =
-      ColorToken('fortal.color.panel.translucent');
+  static const colorPanelTranslucent = ColorToken(
+    'fortal.color.panel.translucent',
+  );
 
   /// Dark overlay for modals and dialogs.
   static const colorOverlay = ColorToken('fortal.color.overlay');
@@ -495,8 +496,9 @@ class FortalTokens {
   ///
   /// Standard weight for body text and most interface elements.
   /// Provides good readability without visual strain.
-  static const fontWeightRegular =
-      FontWeightToken('fortal.font.weight.regular');
+  static const fontWeightRegular = FontWeightToken(
+    'fortal.font.weight.regular',
+  );
 
   /// Medium font weight (500).
   ///
@@ -849,47 +851,47 @@ Widget createFortalScope({
     FortalTokens.borderWidth2: 2.0,
     FortalTokens.focusRingWidth: 2.0,
     FortalTokens.focusRingOffset: 2.0,
-    FortalTokens.text1: TextStyleMix(
+    FortalTokens.text1: TextStyle(
       fontSize: 12.0,
       letterSpacing: 0.0025 * 12.0,
       height: 16.0 / 12.0,
     ),
-    FortalTokens.text2: TextStyleMix(
+    FortalTokens.text2: TextStyle(
       fontSize: 14.0,
       letterSpacing: 0.0,
       height: 20.0 / 14.0,
     ),
-    FortalTokens.text3: TextStyleMix(
+    FortalTokens.text3: TextStyle(
       fontSize: 16.0,
       letterSpacing: 0.0,
       height: 24.0 / 16.0,
     ),
-    FortalTokens.text4: TextStyleMix(
+    FortalTokens.text4: TextStyle(
       fontSize: 18.0,
       letterSpacing: -0.0025 * 18.0,
       height: 26.0 / 18.0,
     ),
-    FortalTokens.text5: TextStyleMix(
+    FortalTokens.text5: TextStyle(
       fontSize: 20.0,
       letterSpacing: -0.005 * 20.0,
       height: 28.0 / 20.0,
     ),
-    FortalTokens.text6: TextStyleMix(
+    FortalTokens.text6: TextStyle(
       fontSize: 24.0,
       letterSpacing: -0.00625 * 24.0,
       height: 30.0 / 24.0,
     ),
-    FortalTokens.text7: TextStyleMix(
+    FortalTokens.text7: TextStyle(
       fontSize: 28.0,
       letterSpacing: -0.0075 * 28.0,
       height: 36.0 / 28.0,
     ),
-    FortalTokens.text8: TextStyleMix(
+    FortalTokens.text8: TextStyle(
       fontSize: 35.0,
       letterSpacing: -0.01 * 35.0,
       height: 40.0 / 35.0,
     ),
-    FortalTokens.text9: TextStyleMix(
+    FortalTokens.text9: TextStyle(
       fontSize: 60.0,
       letterSpacing: -0.025 * 60.0,
       height: 1.0,
@@ -955,14 +957,7 @@ enum FortalAccentColor {
 }
 
 /// Available neutral gray families matching Radix Themes names.
-enum FortalGrayColor {
-  gray,
-  mauve,
-  slate,
-  sage,
-  olive,
-  sand,
-}
+enum FortalGrayColor { gray, mauve, slate, sage, olive, sand }
 
 /// Immutable configuration object for Fortal theme settings.
 ///
@@ -1003,12 +998,11 @@ class FortalThemeConfig {
     FortalAccentColor? accent,
     FortalGrayColor? gray,
     Brightness? brightness,
-  }) =>
-      FortalThemeConfig(
-        accent: accent ?? this.accent,
-        gray: gray ?? this.gray,
-        brightness: brightness ?? this.brightness,
-      );
+  }) => FortalThemeConfig(
+    accent: accent ?? this.accent,
+    gray: gray ?? this.gray,
+    brightness: brightness ?? this.brightness,
+  );
 
   Widget createScope({List<Type>? orderOfModifiers, required Widget child}) =>
       createFortalScope(

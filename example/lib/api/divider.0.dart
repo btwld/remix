@@ -28,6 +28,9 @@ class DividerExample extends StatelessWidget {
   }
 
   RemixDividerStyle get style {
-    return RemixDividerStyle().height(1).color(Colors.grey.shade400).width(300);
+    return RemixDividerStyle()
+        .height(1)
+        .textColor(Colors.grey.shade400)
+        .width(300);
   }
 }
