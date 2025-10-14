@@ -115,21 +115,24 @@ class FortalRadioStyles {
   static RemixRadioStyle _sizeStyle(FortalRadioSize size) {
     return switch (size) {
       FortalRadioSize.size1 => RemixRadioStyle(
-        container: BoxStyler(
-          alignment: Alignment.center,
-        ).width(16.0).height(16.0),
+        container: BoxStyler()
+            .width(16.0)
+            .height(16.0)
+            .alignment(Alignment.center),
         indicator: BoxStyler().width(6.0).height(6.0),
       ),
       FortalRadioSize.size2 => RemixRadioStyle(
-        container: BoxStyler(
-          alignment: Alignment.center,
-        ).width(20.0).height(20.0),
+        container: BoxStyler()
+            .width(20.0)
+            .height(20.0)
+            .alignment(Alignment.center),
         indicator: BoxStyler().width(8.0).height(8.0),
       ),
       FortalRadioSize.size3 => RemixRadioStyle(
-        container: BoxStyler(
-          alignment: Alignment.center,
-        ).width(24.0).height(24.0),
+        container: BoxStyler()
+            .width(24.0)
+            .height(24.0)
+            .alignment(Alignment.center),
         indicator: BoxStyler().width(10.0).height(10.0),
       ),
     };
