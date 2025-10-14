@@ -17,24 +17,7 @@ class HotReload extends StatelessWidget {
   Widget build(BuildContext context) {
     return Widgetbook.material(
       addons: [
-        // BrightnessAddon(),
         FortalThemeAddon(),
-        // ThemeAddon(
-        //   themes: [
-        //     WidgetbookTheme(
-        //         name: 'light', data: ThemeData(brightness: Brightness.light)),
-        //     WidgetbookTheme(
-        //         name: 'dark', data: ThemeData(brightness: Brightness.dark))
-        //   ],
-        //   themeBuilder: (context, theme, child) {
-        //     print('theme: ${theme.brightness}');
-        //     return createFortalScope(
-        //       child: child,
-        //       brightness: theme.brightness,
-        //     );
-        //   },
-        // )
-        // InspectorAddon(),
       ],
       appBuilder: (context, child) {
         return createFortalScope(
