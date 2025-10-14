@@ -11,4 +11,4 @@ import '../../fortal/fortal.dart';
 part 'avatar_spec.dart';
 part 'avatar_style.dart';
 part 'avatar_widget.dart';
-part 'remix_avatar_styles.dart';
+part 'fortal_avatar_styles.dart';

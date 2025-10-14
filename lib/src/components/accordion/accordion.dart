@@ -12,4 +12,4 @@ import '../../utilities/remix_style.dart';
 part 'accordion_spec.dart';
 part 'accordion_style.dart';
 part 'accordion_widget.dart';
-part 'remix_accordion_styles.dart';
+part 'fortal_accordion_styles.dart';

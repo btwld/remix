@@ -11,4 +11,4 @@ import '../../fortal/fortal.dart';
 part 'badge_spec.dart';
 part 'badge_style.dart';
 part 'badge_widget.dart';
-part 'remix_badge_styles.dart';
+part 'fortal_badge_styles.dart';

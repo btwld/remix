@@ -12,4 +12,4 @@ import '../../fortal/fortal.dart';
 part 'switch_spec.dart';
 part 'switch_style.dart';
 part 'switch_widget.dart';
-part 'remix_switch_styles.dart';
+part 'fortal_switch_styles.dart';

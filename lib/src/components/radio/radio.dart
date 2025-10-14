@@ -13,4 +13,4 @@ part 'radio_group_widget.dart';
 part 'radio_spec.dart';
 part 'radio_style.dart';
 part 'radio_widget.dart';
-part 'remix_radio_styles.dart';
+part 'fortal_radio_styles.dart';

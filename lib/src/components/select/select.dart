@@ -13,4 +13,4 @@ import '../../fortal/fortal.dart';
 part 'select_spec.dart';
 part 'select_style.dart';
 part 'select_widget.dart';
-part 'remix_select_styles.dart';
+part 'fortal_select_styles.dart';

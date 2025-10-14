@@ -10,7 +10,7 @@ import '../../style/style.dart';
 import '../../utilities/remix_style.dart';
 import '../../fortal/fortal.dart';
 
-part 'remix_tabs_styles.dart';
+part 'fortal_tabs_styles.dart';
 part 'tabs_spec.dart';
 part 'tabs_style.dart';
 part 'tabs_widget.dart';

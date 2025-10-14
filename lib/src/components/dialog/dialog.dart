@@ -12,4 +12,4 @@ import '../../utilities/remix_style.dart';
 part 'dialog_spec.dart';
 part 'dialog_style.dart';
 part 'dialog_widget.dart';
-part 'remix_dialog_styles.dart';
+part 'fortal_dialog_styles.dart';
