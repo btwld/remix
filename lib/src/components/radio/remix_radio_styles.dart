@@ -67,7 +67,7 @@ class FortalRadioStyles {
                 color: FortalTokens.accent9(),
                 width: FortalTokens.borderWidth1(),
               )
-              .indicator(BoxStyler().color(FortalTokens.gray1())),
+              .indicator(BoxStyler().color(Colors.white)),
         )
         .onDisabled(
           RemixRadioStyle()

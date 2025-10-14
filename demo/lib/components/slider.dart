@@ -26,7 +26,7 @@ Widget buildSliderUseCase(BuildContext context) {
             ),
             snapDivisions: context.knobs.int.input(
               label: 'snapDivisions',
-              initialValue: 0,
+              initialValue: 2,
             ),
             value: context.knobs.double.slider(
               label: 'value',

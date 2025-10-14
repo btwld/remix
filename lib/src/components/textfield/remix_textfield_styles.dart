@@ -106,10 +106,10 @@ class FortalTextFieldStyles {
         .merge(
           RemixTextFieldStyle(
             text: TextStyler()
-                .color(FortalTokens.accent12())
+                .color(Colors.red)
                 .fontWeight(FortalTokens.fontWeightRegular()),
             hintText: TextStyler()
-                .color(FortalTokens.accent10())
+                .color(FortalTokens.accentA11())
                 .fontWeight(FortalTokens.fontWeightRegular()),
             cursorColor: FortalTokens.accent12(),
             helperText: TextStyler()

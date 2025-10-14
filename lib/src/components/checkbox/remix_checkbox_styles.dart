@@ -86,14 +86,11 @@ class FortalCheckboxStyles {
     FortalCheckboxSize size = FortalCheckboxSize.size2,
   }) {
     return base(size: size)
-        // Container (the checkbox box itself) - no size properties
         .color(FortalTokens.accentA4())
-        // Use token-based radius matching JSON intent.
         .borderRadiusAll(FortalTokens.radius2())
-        // Check mark icon color
-        .indicatorColor(FortalTokens.accent11())
-        // State variants
-        .onSelected(RemixCheckboxStyle().indicatorColor(FortalTokens.accent9()))
+        .onSelected(
+          RemixCheckboxStyle().indicatorColor(FortalTokens.accentA11()),
+        )
         .onDisabled(
           RemixCheckboxStyle()
               .color(FortalTokens.grayA3())

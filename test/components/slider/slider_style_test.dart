@@ -22,8 +22,8 @@ void main() {
       ),
     );
 
-    expect(resolved.track.strokeWidth, closeTo(6.0, 0.001));
-    expect(resolved.range.strokeWidth, closeTo(6.0, 0.001));
+    expect(resolved.trackWidth, closeTo(6.0, 0.001));
+    expect(resolved.rangeWidth, closeTo(6.0, 0.001));
   });
 
   testWidgets('thumbSize helper applies tight constraints', (tester) async {

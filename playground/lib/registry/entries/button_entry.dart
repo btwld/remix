@@ -13,7 +13,7 @@ Widget buildButtonExample() {
             .paddingX(16)
             .paddingY(10)
             .borderRadiusAll(const Radius.circular(8))
-            .textColor(const Color(0xFF1F2937))
+            .color(const Color(0xFF1F2937))
             .labelColor(Colors.white),
       ),
       RemixButton(
@@ -23,7 +23,7 @@ Widget buildButtonExample() {
             .paddingX(16)
             .paddingY(10)
             .borderRadiusAll(const Radius.circular(8))
-            .textColor(const Color(0xFFE5E7EB))
+            .color(const Color(0xFFE5E7EB))
             .labelColor(const Color(0xFF9CA3AF)),
       ),
       RemixButton(
@@ -34,7 +34,7 @@ Widget buildButtonExample() {
             .paddingX(16)
             .paddingY(10)
             .borderRadiusAll(const Radius.circular(8))
-            .textColor(const Color(0xFF1F2937).withValues(alpha: 0.6))
+            .color(const Color(0xFF1F2937).withValues(alpha: 0.6))
             .labelColor(Colors.white.withValues(alpha: 0.7))
             .spinnerIndicatorColor(Colors.white),
       ),
@@ -46,7 +46,7 @@ Widget buildButtonExample() {
             .paddingX(16)
             .paddingY(10)
             .borderRadiusAll(const Radius.circular(8))
-            .textColor(const Color(0xFF1F2937))
+            .color(const Color(0xFF1F2937))
             .labelColor(Colors.white)
             .iconColor(Colors.white),
       ),
@@ -57,7 +57,7 @@ Widget buildButtonExample() {
         style: RemixIconButtonStyle()
             .paddingAll(10)
             .borderRadiusAll(const Radius.circular(8))
-            .textColor(const Color(0xFF1F2937))
+            .color(const Color(0xFF1F2937))
             .iconColor(Colors.white),
       ),
     ],

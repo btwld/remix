@@ -29,7 +29,7 @@ class FortalSwitchStyles {
     FortalSwitchSize size = FortalSwitchSize.size2,
   }) {
     return RemixSwitchStyle()
-        .thumbColor(FortalTokens.gray1())
+        .thumbColor(Colors.white)
         .thumb(
           BoxStyler().shapeCircle().shadow(
             BoxShadowMix()
@@ -57,21 +57,18 @@ class FortalSwitchStyles {
     FortalSwitchSize size = FortalSwitchSize.size2,
   }) {
     return base(size: size)
-        // Container styling (unchecked state) - acts as track background
-        .color(FortalTokens.gray5()) // gray6 equivalent
+        .color(FortalTokens.gray5())
         .borderRadius(BorderRadiusMix.circular(999))
         .borderAll(
           color: FortalTokens.gray8(),
           width: FortalTokens.borderWidth1(),
           strokeAlign: BorderSide.strokeAlignCenter,
         )
-        // Checked state - different from classic (thumb stays colorSurface)
         .onSelected(
           RemixSwitchStyle()
               .color(FortalTokens.accentTrack())
               .borderAll(color: FortalTokens.accent9()),
         )
-        // Disabled state
         .onDisabled(
           RemixSwitchStyle()
               .color(FortalTokens.grayA3())
@@ -88,22 +85,18 @@ class FortalSwitchStyles {
     FortalSwitchSize size = FortalSwitchSize.size2,
   }) {
     return base(size: size)
-        // Container styling (unchecked state) - uses accent3 instead of gray, acts as track background
         .color(FortalTokens.gray5())
         .borderRadius(BorderRadiusMix.circular(999))
-        // Thumb styling (unchecked state) - uses accent11, no size properties
         .borderAll(
           color: FortalTokens.gray5(),
           width: FortalTokens.borderWidth1(),
           strokeAlign: BorderSide.strokeAlignCenter,
         )
-        // Checked state - container becomes accent5, thumb stays accent11
         .onSelected(
           RemixSwitchStyle()
-              .color(FortalTokens.accent7())
+              .color(FortalTokens.accentA7())
               .borderAll(color: FortalTokens.accent7()),
         )
-        // Disabled state
         .onDisabled(
           RemixSwitchStyle()
               .color(FortalTokens.gray5())

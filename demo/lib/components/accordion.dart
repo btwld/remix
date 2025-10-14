@@ -20,7 +20,7 @@ Widget buildAvatarUseCase(BuildContext context) {
               child: Box(
                 style: BoxStyler()
                     .borderAll(
-                        color: Colors.grey.shade300,
+                        color: FortalTokens.gray7(),
                         strokeAlign: BorderSide.strokeAlignOutside)
                     .borderRadiusAll(FortalTokens.radius4())
                     .clipBehavior(Clip.hardEdge),

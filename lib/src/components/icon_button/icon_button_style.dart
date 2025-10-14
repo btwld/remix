@@ -46,7 +46,7 @@ class RemixIconButtonStyle
   // Instance methods (chainable)
 
   /// Sets background color
-  RemixIconButtonStyle textColor(Color value) {
+  RemixIconButtonStyle color(Color value) {
     return merge(
       RemixIconButtonStyle(
         container: BoxStyler(decoration: BoxDecorationMix(color: value)),

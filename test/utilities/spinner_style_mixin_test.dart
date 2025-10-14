@@ -89,7 +89,7 @@ void main() {
           .labelColor(Colors.white)
           .iconColor(Colors.white)
           .spinnerIndicatorColor(Colors.white)
-          .textColor(Colors.blue);
+          .color(Colors.blue);
 
       expect(combinedStyle, isNotNull);
     });

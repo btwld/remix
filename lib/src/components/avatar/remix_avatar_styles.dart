@@ -22,6 +22,7 @@ class FortalAvatarStyles {
   }) {
     return RemixAvatarStyle()
         .clipBehavior(Clip.hardEdge)
+        .labelFontWeight(FontWeight.w500)
         .merge(_sizeStyle(size));
   }
 
@@ -30,8 +31,8 @@ class FortalAvatarStyles {
   }) {
     return base(size: size)
         .color(FortalTokens.accentA3())
-        .labelColor(FortalTokens.accent9())
-        .iconColor(FortalTokens.accent9());
+        .labelColor(FortalTokens.accentA10())
+        .iconColor(FortalTokens.accentA10());
   }
 
   static RemixAvatarStyle solid({

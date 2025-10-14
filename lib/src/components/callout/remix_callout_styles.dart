@@ -45,14 +45,14 @@ class FortalCalloutStyles {
     FortalCalloutSize size = FortalCalloutSize.size2,
   }) {
     return base(size: size)
-        .color(FortalTokens.colorSurface())
+        .color(Colors.transparent)
         .borderAll(
           color: FortalTokens.accent7(),
           width: FortalTokens.borderWidth1(),
         )
         .borderRadiusAll(FortalTokens.radius3())
-        .textColor(FortalTokens.accent9())
-        .iconColor(FortalTokens.accent9());
+        .textColor(FortalTokens.accent11())
+        .iconColor(FortalTokens.accent11());
   }
 
   /// Accent-tinted surface variant (accentSurface background + accent border/text)
@@ -66,8 +66,8 @@ class FortalCalloutStyles {
           width: FortalTokens.borderWidth1(),
         )
         .borderRadiusAll(FortalTokens.radius3())
-        .textColor(FortalTokens.accent9())
-        .iconColor(FortalTokens.accent9());
+        .textColor(FortalTokens.accent11())
+        .iconColor(FortalTokens.accent11());
   }
 
   /// Soft tinted variant (accent3 background + accent6 border + accent11 text)
@@ -77,8 +77,8 @@ class FortalCalloutStyles {
     return base(size: size)
         .color(FortalTokens.accent3())
         .borderRadiusAll(FortalTokens.radius3())
-        .textColor(FortalTokens.accent9())
-        .iconColor(FortalTokens.accent9());
+        .textColor(FortalTokens.accent11())
+        .iconColor(FortalTokens.accent11());
   }
 
   // ---------------------------------------------------------------------------

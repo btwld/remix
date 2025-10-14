@@ -41,7 +41,7 @@ class ButtonExample extends StatelessWidget {
     return RemixButtonStyle()
         .paddingX(16)
         .paddingY(10)
-        .textColor(const Color(0xFF4D1919))
+        .color(const Color(0xFF4D1919))
         .shadow(
           BoxShadowMix().color(Colors.redAccent).blurRadius(10).spreadRadius(0),
         )
@@ -60,17 +60,17 @@ class ButtonExample extends StatelessWidget {
         )
         .onHovered(
           RemixButtonStyle()
-              .textColor(const Color(0xFF732D2D))
+              .color(const Color(0xFF732D2D))
               .animate(AnimationConfig.spring(300.ms)),
         )
         .onFocused(
-          RemixButtonStyle().textColor(const Color(0xFF732D2D)),
+          RemixButtonStyle().color(const Color(0xFF732D2D)),
         );
   }
 
   RemixButtonStyle get successStyle {
     return destructiveStyle
-        .textColor(const Color.fromARGB(255, 15, 61, 15))
+        .color(const Color.fromARGB(255, 15, 61, 15))
         .label(TextStyler().uppercase().color(Colors.greenAccent))
         .shapeBeveledRectangle(
           side: BorderSideMix().color(Colors.greenAccent),
@@ -82,10 +82,10 @@ class ButtonExample extends StatelessWidget {
               .spreadRadius(0),
         )
         .onHovered(
-          RemixButtonStyle().textColor(const Color(0xFF357857)),
+          RemixButtonStyle().color(const Color(0xFF357857)),
         )
         .onFocused(
-          RemixButtonStyle().textColor(const Color(0xFF357857)),
+          RemixButtonStyle().color(const Color(0xFF357857)),
         );
   }
 }

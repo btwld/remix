@@ -6,7 +6,7 @@ void main() {
   testWidgets('waitDuration persists through style updates', (tester) async {
     final style = RemixTooltipStyle()
         .waitDuration(const Duration(milliseconds: 300))
-        .textColor(Colors.black);
+        .color(Colors.black);
 
     late RemixTooltipSpec resolved;
 

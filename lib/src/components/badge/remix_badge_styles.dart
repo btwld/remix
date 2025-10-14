@@ -54,7 +54,7 @@ class FortalBadgeStyles {
         // Container styling - no size properties
         .color(FortalTokens.accentA3())
         // Text styling
-        .labelColor(FortalTokens.accent9());
+        .labelColor(FortalTokens.accentA10());
   }
 
   /// Creates a surface variant badge style.
@@ -68,11 +68,11 @@ class FortalBadgeStyles {
         // Container styling - no size properties
         .color(FortalTokens.accentA2())
         .borderAll(
-          color: FortalTokens.accent7(),
+          color: FortalTokens.accent6(),
           width: FortalTokens.borderWidth1(),
         )
         // Text styling
-        .labelColor(FortalTokens.accent9());
+        .labelColor(FortalTokens.accentA10());
   }
 
   /// Creates an outline variant badge style.
@@ -90,7 +90,7 @@ class FortalBadgeStyles {
           width: FortalTokens.borderWidth1(),
         )
         // Text styling
-        .labelColor(FortalTokens.accent9());
+        .labelColor(FortalTokens.accentA10());
   }
 
   // ---------------------------------------------------------------------------
