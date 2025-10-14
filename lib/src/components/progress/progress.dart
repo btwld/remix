@@ -10,4 +10,4 @@ import '../../fortal/fortal.dart';
 part 'progress_spec.dart';
 part 'progress_style.dart';
 part 'progress_widget.dart';
-part 'radix_progress_styles.dart';
+part 'fortal_progress_styles.dart';

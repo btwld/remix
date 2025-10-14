@@ -10,4 +10,4 @@ import '../../fortal/fortal.dart';
 part 'divider_spec.dart';
 part 'divider_style.dart';
 part 'divider_widget.dart';
-part 'radix_divider_styles.dart';
+part 'fortal_divider_styles.dart';

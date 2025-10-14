@@ -65,7 +65,6 @@ class RemixSwitch extends StatelessWidget {
     return RemixSwitchStyle()
         .alignment(Alignment.centerLeft)
         // Small thumb inset
-        .paddingAll(1)
         .onSelected(RemixSwitchStyle().alignment(Alignment.centerRight))
         .merge(style);
   }

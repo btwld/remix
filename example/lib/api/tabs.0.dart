@@ -42,20 +42,16 @@ class _TabsExampleState extends State<TabsExample> {
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    Expanded(
-                      child: RemixTab(
-                        tabId: 'tab1',
-                        style: tabStyle,
-                        label: 'Tab 1',
-                      ),
+                    RemixTab(
+                      tabId: 'tab1',
+                      style: tabStyle,
+                      label: 'Tab 1',
                     ),
                     const SizedBox(width: 8),
-                    Expanded(
-                      child: RemixTab(
-                        tabId: 'tab2',
-                        style: tabStyle,
-                        label: 'Tab 2',
-                      ),
+                    RemixTab(
+                      tabId: 'tab2',
+                      style: tabStyle,
+                      label: 'Tab 2',
                     ),
                   ],
                 ),

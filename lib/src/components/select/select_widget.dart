@@ -16,7 +16,13 @@ class RemixSelectTrigger {
   /// When provided, icon appears in leading position (before text).
   final IconData? icon;
 
-  const RemixSelectTrigger({required this.placeholder, this.icon});
+  final RemixSelectTriggerStyle style;
+
+  const RemixSelectTrigger({
+    required this.placeholder,
+    this.icon,
+    this.style = const RemixSelectTriggerStyle.create(),
+  });
 }
 
 /// Data class representing a selectable option.
@@ -310,8 +316,9 @@ class _RemixSelectTriggerWidget extends StatelessWidget {
             // ignore: avoid-flexible-outside-flex
             Expanded(child: StyledText(displayLabel, styleSpec: spec.label)),
             StyledIcon(
-              icon:
-                  isOpen ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+              icon: isOpen
+                  ? Icons.keyboard_arrow_up
+                  : Icons.keyboard_arrow_down,
               styleSpec: spec.icon,
             ),
           ],

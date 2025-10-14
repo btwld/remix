@@ -37,6 +37,8 @@ Future<T?> showRemixDialog<T>({
   bool requestFocus = true,
   TraversalEdgeBehavior? traversalEdgeBehavior,
 }) {
+  final scope = MixScope.of(context);
+
   return showNakedDialog(
     context: context,
     barrierColor: barrierColor ?? Colors.black54,
@@ -49,7 +51,11 @@ Future<T?> showRemixDialog<T>({
     transitionBuilder: transitionBuilder,
     requestFocus: requestFocus,
     traversalEdgeBehavior: traversalEdgeBehavior,
-    builder: builder,
+    builder: (context) => MixScope(
+      tokens: scope.tokens,
+      orderOfModifiers: scope.orderOfModifiers,
+      child: builder(context),
+    ),
   );
 }
 
@@ -84,9 +90,9 @@ class RemixDialog extends StatelessWidget {
     this.semanticLabel,
     this.style = const RemixDialogStyle.create(),
   }) : assert(
-          child != null || title != null || description != null,
-          'Either child, title, or description must be provided',
-        );
+         child != null || title != null || description != null,
+         'Either child, title, or description must be provided',
+       );
 
   /// Custom content widget (overrides title and description).
   final Widget? child;
@@ -128,7 +134,9 @@ class RemixDialog extends StatelessWidget {
           return Box(
             styleSpec: spec.container,
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (title != null) StyledText(title!, styleSpec: spec.title),
                 if (description != null)

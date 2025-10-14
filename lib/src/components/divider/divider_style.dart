@@ -19,26 +19,30 @@ class RemixDividerStyle
     List<VariantStyle<RemixDividerSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
-          container: Prop.maybeMix(container),
-          variants: variants,
-          animation: animation,
-          modifier: modifier,
-        );
+         container: Prop.maybeMix(container),
+         variants: variants,
+         animation: animation,
+         modifier: modifier,
+       );
 
   /// Sets divider color
-  RemixDividerStyle color(Color value) {
-    return merge(RemixDividerStyle(
-      container: BoxStyler(decoration: BoxDecorationMix(color: value)),
-    ));
+  RemixDividerStyle textColor(Color value) {
+    return merge(
+      RemixDividerStyle(
+        container: BoxStyler(decoration: BoxDecorationMix(color: value)),
+      ),
+    );
   }
 
   /// Sets divider thickness (height for horizontal, width for vertical)
   RemixDividerStyle thickness(double value) {
-    return merge(RemixDividerStyle(
-      container: BoxStyler(
-        constraints: BoxConstraintsMix(minHeight: value, maxHeight: value),
+    return merge(
+      RemixDividerStyle(
+        container: BoxStyler(
+          constraints: BoxConstraintsMix(minHeight: value, maxHeight: value),
+        ),
       ),
-    ));
+    );
   }
 
   /// Sets container padding
@@ -95,9 +99,11 @@ class RemixDividerStyle
     Matrix4 value, {
     AlignmentGeometry alignment = Alignment.center,
   }) {
-    return merge(RemixDividerStyle(
-      container: BoxStyler(transform: value, transformAlignment: alignment),
-    ));
+    return merge(
+      RemixDividerStyle(
+        container: BoxStyler(transform: value, transformAlignment: alignment),
+      ),
+    );
   }
 
   @override

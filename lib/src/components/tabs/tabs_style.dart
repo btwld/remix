@@ -17,11 +17,11 @@ class RemixTabBarStyle
     List<VariantStyle<RemixTabBarSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
-          container: Prop.maybeMix(container),
-          variants: variants,
-          animation: animation,
-          modifier: modifier,
-        );
+         container: Prop.maybeMix(container),
+         variants: variants,
+         animation: animation,
+         modifier: modifier,
+       );
 
   RemixTabBarStyle container(FlexBoxStyler value) {
     return merge(RemixTabBarStyle(container: value));
@@ -39,31 +39,38 @@ class RemixTabBarStyle
 
   @override
   RemixTabBarStyle color(Color value) {
-    return merge(RemixTabBarStyle(
-      container: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
-    ));
+    return merge(
+      RemixTabBarStyle(
+        container: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
+      ),
+    );
   }
 
   @override
   RemixTabBarStyle size(double width, double height) {
-    return merge(RemixTabBarStyle(
-      container: FlexBoxStyler(
-        constraints: BoxConstraintsMix(
-          minWidth: width,
-          maxWidth: width,
-          minHeight: height,
-          maxHeight: height,
+    return merge(
+      RemixTabBarStyle(
+        container: FlexBoxStyler(
+          constraints: BoxConstraintsMix(
+            minWidth: width,
+            maxWidth: width,
+            minHeight: height,
+            maxHeight: height,
+          ),
         ),
       ),
-    ));
+    );
   }
 
   @override
   RemixTabBarStyle borderRadius(BorderRadiusGeometryMix radius) {
-    return merge(RemixTabBarStyle(
-      container:
-          FlexBoxStyler(decoration: BoxDecorationMix(borderRadius: radius)),
-    ));
+    return merge(
+      RemixTabBarStyle(
+        container: FlexBoxStyler(
+          decoration: BoxDecorationMix(borderRadius: radius),
+        ),
+      ),
+    );
   }
 
   @override
@@ -95,9 +102,14 @@ class RemixTabBarStyle
     Matrix4 value, {
     AlignmentGeometry alignment = Alignment.center,
   }) {
-    return merge(RemixTabBarStyle(
-      container: FlexBoxStyler(transform: value, transformAlignment: alignment),
-    ));
+    return merge(
+      RemixTabBarStyle(
+        container: FlexBoxStyler(
+          transform: value,
+          transformAlignment: alignment,
+        ),
+      ),
+    );
   }
 
   @override
@@ -162,11 +174,11 @@ class RemixTabViewStyle
     List<VariantStyle<RemixTabViewSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
-          container: Prop.maybeMix(container),
-          variants: variants,
-          animation: animation,
-          modifier: modifier,
-        );
+         container: Prop.maybeMix(container),
+         variants: variants,
+         animation: animation,
+         modifier: modifier,
+       );
 
   /// Sets container alignment
   RemixTabViewStyle alignment(Alignment value) {
@@ -180,16 +192,22 @@ class RemixTabViewStyle
 
   @override
   RemixTabViewStyle color(Color value) {
-    return merge(RemixTabViewStyle(
-      container: BoxStyler(decoration: BoxDecorationMix(color: value)),
-    ));
+    return merge(
+      RemixTabViewStyle(
+        container: BoxStyler(decoration: BoxDecorationMix(color: value)),
+      ),
+    );
   }
 
   @override
   RemixTabViewStyle borderRadius(BorderRadiusGeometryMix radius) {
-    return merge(RemixTabViewStyle(
-      container: BoxStyler(decoration: BoxDecorationMix(borderRadius: radius)),
-    ));
+    return merge(
+      RemixTabViewStyle(
+        container: BoxStyler(
+          decoration: BoxDecorationMix(borderRadius: radius),
+        ),
+      ),
+    );
   }
 
   @override
@@ -219,9 +237,11 @@ class RemixTabViewStyle
     Matrix4 value, {
     AlignmentGeometry alignment = Alignment.center,
   }) {
-    return merge(RemixTabViewStyle(
-      container: BoxStyler(transform: value, transformAlignment: alignment),
-    ));
+    return merge(
+      RemixTabViewStyle(
+        container: BoxStyler(transform: value, transformAlignment: alignment),
+      ),
+    );
   }
 
   @override
@@ -277,9 +297,9 @@ class RemixTabStyle extends RemixFlexContainerStyle<RemixTabSpec, RemixTabStyle>
     super.variants,
     super.animation,
     super.modifier,
-  })  : $container = container,
-        $label = label,
-        $icon = icon;
+  }) : $container = container,
+       $label = label,
+       $icon = icon;
 
   RemixTabStyle({
     FlexBoxStyler? container,
@@ -289,17 +309,21 @@ class RemixTabStyle extends RemixFlexContainerStyle<RemixTabSpec, RemixTabStyle>
     List<VariantStyle<RemixTabSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
-          container: Prop.maybeMix(container),
-          label: Prop.maybeMix(label),
-          icon: Prop.maybeMix(icon),
-          variants: variants,
-          animation: animation,
-          modifier: modifier,
-        );
+         container: Prop.maybeMix(container),
+         label: Prop.maybeMix(label),
+         icon: Prop.maybeMix(icon),
+         variants: variants,
+         animation: animation,
+         modifier: modifier,
+       );
 
   /// Sets container alignment
   RemixTabStyle alignment(Alignment value) {
     return merge(RemixTabStyle(container: FlexBoxStyler(alignment: value)));
+  }
+
+  RemixTabStyle container(FlexBoxStyler value) {
+    return merge(RemixTabStyle(container: value));
   }
 
   @override
@@ -362,9 +386,9 @@ class RemixTabStyle extends RemixFlexContainerStyle<RemixTabSpec, RemixTabStyle>
 
   @override
   RemixTabStyle foregroundDecoration(DecorationMix value) {
-    return merge(RemixTabStyle(
-      container: FlexBoxStyler(foregroundDecoration: value),
-    ));
+    return merge(
+      RemixTabStyle(container: FlexBoxStyler(foregroundDecoration: value)),
+    );
   }
 
   @override
@@ -372,16 +396,23 @@ class RemixTabStyle extends RemixFlexContainerStyle<RemixTabSpec, RemixTabStyle>
     Matrix4 value, {
     AlignmentGeometry alignment = Alignment.center,
   }) {
-    return merge(RemixTabStyle(
-      container: FlexBoxStyler(transform: value, transformAlignment: alignment),
-    ));
+    return merge(
+      RemixTabStyle(
+        container: FlexBoxStyler(
+          transform: value,
+          transformAlignment: alignment,
+        ),
+      ),
+    );
   }
 
   @override
   RemixTabStyle color(Color value) {
-    return merge(RemixTabStyle(
-      container: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
-    ));
+    return merge(
+      RemixTabStyle(
+        container: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
+      ),
+    );
   }
 
   @override
@@ -406,11 +437,11 @@ class RemixTabStyle extends RemixFlexContainerStyle<RemixTabSpec, RemixTabStyle>
 
   @override
   List<Object?> get props => [
-        $container,
-        $label,
-        $icon,
-        $variants,
-        $animation,
-        $modifier,
-      ];
+    $container,
+    $label,
+    $icon,
+    $variants,
+    $animation,
+    $modifier,
+  ];
 }

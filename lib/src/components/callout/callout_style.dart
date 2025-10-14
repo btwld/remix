@@ -92,9 +92,11 @@ class RemixCalloutStyle
 
   /// Sets text color
   RemixCalloutStyle textColor(Color value) {
-    return merge(RemixCalloutStyle(
-      text: TextStyler(style: TextStyleMix(color: value)),
-    ));
+    return merge(
+      RemixCalloutStyle(
+        text: TextStyler(style: TextStyleMix(color: value)),
+      ),
+    );
   }
 
   @override

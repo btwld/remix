@@ -13,4 +13,4 @@ import '../../fortal/fortal.dart';
 part 'icon_button_spec.dart';
 part 'icon_button_style.dart';
 part 'icon_button_widget.dart';
-part 'radix_icon_button_styles.dart';
+part 'fortal_icon_button_styles.dart';

@@ -11,8 +11,8 @@ class RemixRadioStyle
     super.variants,
     super.animation,
     super.modifier,
-  })  : $container = container,
-        $indicator = indicator;
+  }) : $container = container,
+       $indicator = indicator;
 
   RemixRadioStyle({
     BoxStyler? container,
@@ -21,12 +21,12 @@ class RemixRadioStyle
     List<VariantStyle<RemixRadioSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
-          container: Prop.maybeMix(container),
-          indicator: Prop.maybeMix(indicator),
-          variants: variants,
-          animation: animation,
-          modifier: modifier,
-        );
+         container: Prop.maybeMix(container),
+         indicator: Prop.maybeMix(indicator),
+         variants: variants,
+         animation: animation,
+         modifier: modifier,
+       );
 
   /// Sets indicator styling (selected fill).
   RemixRadioStyle indicator(BoxStyler value) {
@@ -183,10 +183,10 @@ class RemixRadioStyle
 
   @override
   List<Object?> get props => [
-        $container,
-        $indicator,
-        $variants,
-        $animation,
-        $modifier,
-      ];
+    $container,
+    $indicator,
+    $variants,
+    $animation,
+    $modifier,
+  ];
 }

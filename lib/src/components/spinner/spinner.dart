@@ -13,6 +13,6 @@ part 'spinner_painter.dart';
 part 'spinner_spec.dart';
 part 'spinner_style.dart';
 part 'spinner_widget.dart';
-part 'radix_spinner_styles.dart';
+part 'fortal_spinner_styles.dart';
 
 // RemixSpinnerSpec and SpinnerMix are defined in their respective part files

@@ -61,5 +61,6 @@ extension IconDataKnobBuilder on KnobsBuilder {
           label: label,
           initialValue: initialValue,
         ),
-      );
+      ) ??
+      initialValue;
 }
