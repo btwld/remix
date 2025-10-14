@@ -46,6 +46,6 @@ class FortalTabsStyles {
               .label(TextStyler().fontWeight(FortalTokens.fontWeightMedium()))
               .wrapBox(BoxStyler().borderBottom(color: FortalTokens.accent9())),
         )
-        .padding(EdgeInsetsMix.symmetric(horizontal: 12.0, vertical: 6.0));
+        .padding(EdgeInsetsMix.symmetric(vertical: 6.0, horizontal: 12.0));
   }
 }

@@ -30,6 +30,8 @@ class RemixSliderSpec extends Spec<RemixSliderSpec> with Diagnosticable {
        rangeColor = rangeColor ?? _defaultRangeColor,
        rangeWidth = rangeWidth ?? _remixSliderDefaultTrackStrokeWidth;
 
+  double get trackThickness => math.max(trackWidth, rangeWidth);
+
   RemixSliderSpec copyWith({
     StyleSpec<BoxSpec>? thumb,
     Color? trackColor,
@@ -57,8 +59,6 @@ class RemixSliderSpec extends Spec<RemixSliderSpec> with Diagnosticable {
       rangeWidth: lerpDouble(rangeWidth, other.rangeWidth, t)!,
     );
   }
-
-  double get trackThickness => math.max(trackWidth, rangeWidth);
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
