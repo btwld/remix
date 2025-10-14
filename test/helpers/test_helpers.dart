@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
@@ -9,9 +10,7 @@ extension WidgetTesterHelpers on WidgetTester {
     await pumpWidget(
       createRemixScope(
         child: MaterialApp(
-          home: Scaffold(
-            body: Center(child: widget),
-          ),
+          home: Scaffold(body: Center(child: widget)),
         ),
       ),
     );
@@ -147,9 +146,7 @@ class PerformanceTestHelper {
     await tester.pumpWidget(
       createRemixScope(
         child: MaterialApp(
-          home: Scaffold(
-            body: Center(child: widget),
-          ),
+          home: Scaffold(body: Center(child: widget)),
         ),
       ),
     );
@@ -167,5 +164,333 @@ class PerformanceTestHelper {
     await interaction();
     stopwatch.stop();
     print('$interactionName response time: ${stopwatch.elapsedMilliseconds}ms');
+  }
+}
+
+class MockBuildContext extends BuildContext {
+  final Map<MixToken, Object>? _tokens;
+  final List<Type>? _orderOfModifiers;
+  final ThemeData? _themeData;
+  MixScope? _mixScope;
+
+  MockBuildContext({
+    Map<MixToken, Object>? tokens,
+    List<Type>? orderOfModifiers,
+    ThemeData? themeData,
+  }) : _tokens = tokens,
+       _orderOfModifiers = orderOfModifiers,
+       _themeData = themeData {
+    // Create MixScope instance once
+    _mixScope = MixScope(
+      tokens: _tokens,
+      orderOfModifiers: _orderOfModifiers,
+      child: const SizedBox(),
+    );
+  }
+
+  @override
+  bool get debugDoingBuild => false;
+
+  @override
+  bool get mounted => true;
+
+  /// Inherited widget - supports both InheritedWidget and InheritedModel
+  @override
+  T? dependOnInheritedWidgetOfExactType<T extends InheritedWidget>({
+    Object? aspect,
+  }) {
+    if (T == MixScope) {
+      return _mixScope as T?;
+    }
+    if (T == Theme && _themeData != null) {
+      return Theme(data: _themeData, child: const SizedBox()) as T?;
+    }
+    return null;
+  }
+
+  @override
+  InheritedElement?
+  getElementForInheritedWidgetOfExactType<T extends InheritedWidget>() {
+    // For InheritedModel.inheritFrom to work, we need to return a mock element
+    if (T == MixScope && _mixScope != null) {
+      return _MockInheritedElement(_mixScope!);
+    }
+    return null;
+  }
+
+  @override
+  T? getInheritedWidgetOfExactType<T extends InheritedWidget>() {
+    if (T == MixScope) {
+      return _mixScope as T?;
+    }
+    if (T == Theme && _themeData != null) {
+      return Theme(data: _themeData, child: const SizedBox()) as T?;
+    }
+    return null;
+  }
+
+  @override
+  Widget get widget => const SizedBox();
+
+  @override
+  BuildOwner? get owner => null;
+
+  @override
+  Size? get size => const Size(800, 600);
+
+  @override
+  RenderObject? findRenderObject() => null;
+
+  @override
+  InheritedWidget dependOnInheritedElement(
+    InheritedElement ancestor, {
+    Object? aspect,
+  }) {
+    return ancestor.widget as InheritedWidget;
+  }
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => null;
+}
+
+/// Mock InheritedElement for testing InheritedModel functionality
+class _MockInheritedElement extends InheritedElement {
+  _MockInheritedElement(super.widget);
+
+  @override
+  MixScope get widget => super.widget as MixScope;
+
+  @override
+  void updateDependencies(Element dependent, Object? aspect) {
+    // Mock implementation - just track the dependency
+  }
+
+  @override
+  void notifyDependent(InheritedWidget oldWidget, Element dependent) {
+    // Mock implementation
+  }
+}
+
+// =============================================================================
+// ADDITIONAL TEST UTILITIES
+// =============================================================================
+
+/// Mock attribute for testing utilities - handles `Prop<T>` values
+///
+/// This is a universal SpecMix that can wrap any prop type for testing purposes.
+/// Used with utilities that expect a SpecMix builder function.
+///
+/// Usage:
+/// ```dart
+/// // For PropUtility (takes Prop<T>)
+/// final colorUtility = ColorUtility(UtilityTestAttribute.new);
+/// final attr = colorUtility(Colors.red);
+///
+/// // For complex utilities (takes Mix<V>)
+/// final gradientUtility = GradientUtility(UtilityTestAttribute.new);
+/// final attr = gradientUtility.linear(...);
+/// ```
+class MockStyle<T> extends Style<MockSpec<T>> {
+  final T value;
+
+  const MockStyle(
+    this.value, {
+    super.variants,
+    super.modifier,
+    super.animation,
+  });
+
+  @override
+  MockStyle<T> merge(covariant MockStyle<T>? other) {
+    if (other == null) return this;
+    // For Prop types, use their merge method
+    if (value is Prop && other.value is Prop) {
+      final merged = (value as Prop).mergeProp(other.value as Prop);
+      return MockStyle(merged as T);
+    }
+    // For other Mixable types
+    if (value is Mixable && other.value is Mixable) {
+      final merged = (value as Mixable).merge(other.value as Mixable);
+      return MockStyle(merged as T);
+    }
+    // Default: just return the other value
+    return MockStyle(other.value);
+  }
+
+  @override
+  StyleSpec<MockSpec<T>> resolve(BuildContext context) {
+    final mockSpec = MockSpec<T>(resolvedValue: value);
+
+    return StyleSpec(
+      spec: mockSpec,
+      animation: $animation,
+      widgetModifiers: $modifier?.resolve(context),
+    );
+  }
+
+  @override
+  List<Object?> get props => [value];
+}
+
+/// Mock spec for testing purposes
+///
+/// A simple Spec implementation that holds a resolved value.
+/// Used as the target spec for mock attributes.
+final class MockSpec<T> extends Spec<MockSpec<T>> with Diagnosticable {
+  final T? resolvedValue;
+
+  const MockSpec({this.resolvedValue});
+
+  @override
+  MockSpec<T> lerp(MockSpec<T>? other, double t) {
+    if (other == null) return this;
+    // Simple lerp - just return other for testing
+    return MockSpec<T>(resolvedValue: other.resolvedValue);
+  }
+
+  @override
+  MockSpec<T> copyWith({T? resolvedValue}) {
+    return MockSpec<T>(resolvedValue: resolvedValue ?? this.resolvedValue);
+  }
+
+  @override
+  List<Object?> get props => [resolvedValue];
+
+  StyleSpec<MockSpec<T>> toStyleSpec() {
+    return StyleSpec(spec: this);
+  }
+}
+
+// Test-only extension to simplify access to MockSpec.resolvedValue when wrapped
+extension WrappedMockResolvedValue<T> on StyleSpec<MockSpec<T>> {
+  T? get resolvedValue => spec.resolvedValue;
+}
+
+// =============================================================================
+// MOCK TESTING UTILITIES
+// =============================================================================
+
+/// Mock Mix type for testing
+///
+/// A generic Mix implementation that can hold any type of value.
+/// Supports merge operations by delegating to a custom merge function.
+///
+/// Usage:
+/// ```dart
+/// final mixInt = MockMix<int>(42);
+/// final mixString = MockMix<String>('hello');
+///
+/// // With custom merge logic
+/// final mixList = MockMix<List<int>>(
+///   [1, 2, 3],
+///   merger: (a, b) => [...a, ...b],
+/// );
+/// ```
+class MockMix<T> extends Mix<T> {
+  final T value;
+  final T Function(T a, T b)? merger;
+
+  const MockMix(this.value, {this.merger});
+
+  @override
+  MockMix<T> merge(covariant MockMix<T>? other) {
+    if (other == null) return this;
+
+    final mergedValue = merger != null
+        ? merger!(value, other.value)
+        : other.value; // Default: other wins
+
+    return MockMix<T>(mergedValue, merger: merger);
+  }
+
+  @override
+  T resolve(BuildContext context) => value;
+
+  @override
+  List<Object?> get props => [value];
+
+  @override
+  String toString() => 'MockMix<$T>($value)';
+}
+
+/// Mock directive for testing
+///
+/// A simple directive implementation for testing purposes.
+/// By default, applies identity transformation (returns value unchanged).
+/// Can optionally provide a custom transformer function.
+///
+/// Usage:
+/// ```dart
+/// // Simple directive for testing presence (identity transform)
+/// final directive1 = MockDirective<int>('test');
+///
+/// // With custom transformer
+/// final doubleDirective = MockDirective<int>(
+///   'double',
+///   (value) => value * 2,
+/// );
+/// ```
+class MockDirective<T> extends Directive<T> {
+  final String name;
+  final T Function(T)? transformer;
+
+  const MockDirective(this.name, [this.transformer]);
+
+  @override
+  T apply(T value) => transformer?.call(value) ?? value;
+
+  @override
+  String get key => name;
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is MockDirective<T> &&
+        other.name == name &&
+        other.transformer == transformer;
+  }
+
+  @override
+  int get hashCode => Object.hash(name, transformer);
+
+  @override
+  String toString() => 'MockDirective<$T>($name)';
+}
+
+// =============================================================================
+// WIDGET TESTER EXTENSIONS
+// =============================================================================
+
+/// Extension to add Mix testing utilities to WidgetTester
+extension WidgetTesterExtension on WidgetTester {
+  /// Pump widget with Mix scope
+  Future<void> pumpWithMixScope(
+    Widget widget, {
+    Map<MixToken, Object>? tokens,
+    List<Type>? orderOfModifiers,
+    bool withMaterial = false,
+  }) async {
+    await pumpWidget(
+      MaterialApp(
+        home: withMaterial
+            ? MixScope.withMaterial(
+                tokens: tokens,
+                orderOfModifiers: orderOfModifiers,
+                child: widget,
+              )
+            : tokens != null || orderOfModifiers != null
+            ? MixScope(
+                tokens: tokens,
+                orderOfModifiers: orderOfModifiers,
+                child: widget,
+              )
+            : MixScope.empty(child: widget),
+      ),
+    );
+  }
+
+  /// Pump widget wrapped in MaterialApp
+  Future<void> pumpMaterialApp(Widget widget) async {
+    await pumpWidget(MaterialApp(home: Scaffold(body: widget)));
   }
 }

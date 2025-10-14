@@ -226,7 +226,7 @@ class RemixAccordionStyle<T>
   RemixAccordionStyle<T> merge(RemixAccordionStyle? other) {
     if (other == null) return this;
 
-    return RemixAccordionStyle<T>.create(
+    return RemixAccordionStyle.create(
       trigger: MixOps.merge($trigger, other.$trigger),
       leadingIcon: MixOps.merge($leadingIcon, other.$leadingIcon),
       title: MixOps.merge($title, other.$title),

@@ -1,0 +1,690 @@
+---
+globs: test/
+alwaysApply: false
+---
+# Component Testing Patterns Guide
+
+## Overview
+
+This document provides standardized testing patterns derived from the RemixButton component tests. Use these patterns as templates when creating tests for new Remix components to ensure consistency, completeness, and maintainability across the test suite.
+
+## Document Structure
+
+### 1. Test File Organization
+
+**Three separate test files per component**:
+- `{component}_style_test.dart` - Tests for the Style class
+- `{component}_widget_test.dart` - Tests for the Widget class  
+- `{component}_spec_test.dart` - Tests for the Spec class
+
+This separation ensures focused testing and makes it easier to maintain and understand test coverage.
+
+### 2. Style Test Patterns (`button_style_test.dart`)
+
+#### Required Test Groups:
+
+**Constructor Tests**:
+```dart
+group('Constructors', () {
+  test('default constructor creates valid instance', () {
+    final style = RemixComponentStyle();
+    expect(style, isNotNull);
+    expect(style, isA<RemixComponentStyle>());
+  });
+
+  test('create constructor with all parameters', () {
+    final style = RemixComponentStyle.create(
+      // all parameters
+    );
+    expect(style, isNotNull);
+    // verify all properties
+  });
+
+  test('constructor with styler parameters', () {
+    final style = RemixComponentStyle(
+      // styler parameters
+    );
+    expect(style, isNotNull);
+    // verify properties are set
+  });
+});
+```
+
+**Style Method Tests**:
+```dart
+group('Style Methods', () {
+  styleMethodTest(
+    'methodName',
+    initial: RemixComponentStyle(),
+    modify: (style) => style.methodName(value),
+    expect: (style) {
+      expect(style.$property, equals(expectedValue));
+    },
+  );
+});
+```
+
+**Call Method Tests**:
+```dart
+group('Call Method', () {
+  test('call method creates RemixComponent with required parameters', () {
+    final style = RemixComponentStyle();
+    final component = style.call(/* required params */);
+    
+    expect(component, isA<RemixComponent>());
+    // verify properties
+  });
+});
+```
+
+**Core Method Tests**:
+```dart
+group('Core Methods', () {
+  testWidgets('resolve method returns StyleSpec', (tester) async {
+    final style = RemixComponentStyle();
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Builder(
+          builder: (context) {
+            final spec = style.resolve(context);
+            expect(spec, isA<StyleSpec<RemixComponentSpec>>());
+            return Container();
+          },
+        ),
+      ),
+    );
+  });
+
+  test('merge with null returns original instance', () {
+    final originalStyle = RemixComponentStyle();
+    final mergedStyle = originalStyle.merge(null);
+    expect(mergedStyle, same(originalStyle));
+  });
+});
+```
+
+**Equality Tests**:
+```dart
+group('Equality', () {
+  test('identical styles are equal', () {
+    final style1 = RemixComponentStyle();
+    final style2 = RemixComponentStyle();
+    expect(style1, equals(style2));
+    expect(style1.hashCode, equals(style2.hashCode));
+  });
+
+  test('styles with different properties are not equal', () {
+    final style1 = RemixComponentStyle().method(value1);
+    final style2 = RemixComponentStyle().method(value2);
+    expect(style1, isNot(equals(style2)));
+  });
+});
+```
+
+### 3. Widget Test Patterns (`button_widget_test.dart`)
+
+#### Required Test Groups:
+
+**Basic Rendering Tests**:
+```dart
+group('Basic Rendering', () {
+  testWidgets('renders component with minimal props', (tester) async {
+    await tester.pumpRemixApp(
+      RemixComponent(/* minimal required props */),
+    );
+    await tester.pumpAndSettle();
+    
+    expect(find.byType(RemixComponent), findsOneWidget);
+    // verify internal components
+  });
+
+  testWidgets('renders component with all props', (tester) async {
+    await tester.pumpRemixApp(
+      RemixComponent(/* all props */),
+    );
+    await tester.pumpAndSettle();
+    
+    // verify all elements are rendered
+  });
+});
+```
+
+**WidgetStateController Tests**:
+```dart
+group('WidgetStateController', () {
+  widgetControllerTest<RemixComponentSpec>(
+    'contains disabled state when enabled is false',
+    build: () => RemixComponent(enabled: false),
+    expectedStates: {WidgetState.disabled},
+  );
+
+  widgetControllerTest<RemixComponentSpec>(
+    'contains hovered state when hovered',
+    build: () => RemixComponent(),
+    act: hoverAction<RemixComponent>,
+    expectedStates: {WidgetState.hovered},
+  );
+
+  widgetControllerTest<RemixComponentSpec>(
+    'contains focused state when focused',
+    build: () => RemixComponent(),
+    act: focusAction<RemixComponent>,
+    expectedStates: {WidgetState.focused},
+  );
+
+  widgetControllerTest<RemixComponentSpec>(
+    'contains pressed state when pressed',
+    build: () => RemixComponent(),
+    act: pressAction<RemixComponent>,
+    expectedStates: {WidgetState.pressed},
+  );
+});
+```
+
+**Custom Builders Tests** (if applicable):
+```dart
+group('Custom Builders', () {
+  testWidgets('customBuilder renders custom widget', (tester) async {
+    await tester.pumpRemixApp(
+      RemixComponent(
+        customBuilder: (context, spec, data) {
+          return Container(
+            key: const ValueKey('custom_widget'),
+            child: Text('Custom: $data'),
+          );
+        },
+      ),
+    );
+    await tester.pumpAndSettle();
+    
+    expect(find.byKey(const ValueKey('custom_widget')), findsOneWidget);
+  });
+});
+```
+
+**Interaction Tests**:
+```dart
+group('Interaction Tests', () {
+  testWidgets('loading state shows loading indicator', (tester) async {
+    await tester.pumpRemixApp(
+      RemixComponent(loading: true),
+    );
+    await tester.pump(); // Use pump() for loading states
+    
+    expect(find.byType(LoadingIndicator), findsOneWidget);
+  });
+
+  testWidgets('callbacks fire when component is interacted with', (tester) async {
+    int callbackCount = 0;
+    
+    await tester.pumpRemixApp(
+      RemixComponent(
+        onAction: () => callbackCount++,
+      ),
+    );
+    await tester.pumpAndSettle();
+    
+    await tester.tap(find.byType(RemixComponent));
+    await tester.pumpAndSettle();
+    
+    expect(callbackCount, equals(1));
+  });
+
+  testWidgets('callbacks do not fire when disabled', (tester) async {
+    int callbackCount = 0;
+    
+    await tester.pumpRemixApp(
+      RemixComponent(
+        enabled: false,
+        onAction: () => callbackCount++,
+      ),
+    );
+    await tester.pumpAndSettle();
+    
+    await tester.tap(find.byType(RemixComponent));
+    await tester.pumpAndSettle();
+    
+    expect(callbackCount, equals(0));
+  });
+});
+```
+
+**Focus and Keyboard Tests**:
+```dart
+group('Focus and Keyboard', () {
+  testWidgets('autofocus requests focus on mount', (tester) async {
+    final focusNode = FocusNode();
+    addTearDown(() => focusNode.dispose());
+    
+    await tester.pumpRemixApp(
+      RemixComponent(
+        autofocus: true,
+        focusNode: focusNode,
+      ),
+    );
+    await tester.pumpAndSettle();
+    
+    final focused = tester.binding.focusManager.primaryFocus;
+    expect(focused, equals(focusNode));
+  });
+});
+```
+
+**Semantics and Accessibility Tests**:
+```dart
+group('Semantics and Accessibility', () {
+  testWidgets('semanticLabel overrides default label', (tester) async {
+    await tester.pumpRemixApp(
+      RemixComponent(
+        semanticLabel: 'Custom Semantic Label',
+      ),
+    );
+    await tester.pumpAndSettle();
+    
+    final semantics = tester.getSemantics(find.byType(RemixComponent));
+    expect(semantics.label, equals('Custom Semantic Label'));
+  });
+
+  testWidgets('excludeSemantics excludes child semantics', (tester) async {
+    await tester.pumpRemixApp(
+      RemixComponent(excludeSemantics: true),
+    );
+    await tester.pumpAndSettle();
+    
+    final semanticsWidgets = tester.widgetList<Semantics>(find.byType(Semantics));
+    final excludeSemanticsWidget = semanticsWidgets.firstWhere(
+      (semantics) => semantics.excludeSemantics == true,
+    );
+    expect(excludeSemanticsWidget.excludeSemantics, isTrue);
+  });
+});
+```
+
+**Layout and Sizing Tests**:
+```dart
+group('Layout and Sizing', () {
+  testWidgets('default layout properties are applied', (tester) async {
+    await tester.pumpRemixApp(RemixComponent());
+    await tester.pumpAndSettle();
+    
+    // verify layout properties
+    final flexWidget = tester.widget<Flex>(find.byType(Flex));
+    expect(flexWidget.mainAxisSize, equals(MainAxisSize.min));
+  });
+});
+```
+
+### 4. Spec Test Patterns (`button_spec_test.dart`)
+
+#### Required Test Groups:
+
+**Constructor Tests**:
+```dart
+group('Constructor', () {
+  test('creates spec with default values when no parameters provided', () {
+    const spec = RemixComponentSpec();
+    
+    expect(spec.property1, isA<StyleSpec<Property1Spec>>());
+    expect(spec.property2, isA<StyleSpec<Property2Spec>>());
+  });
+});
+```
+
+**copyWith Tests**:
+```dart
+group('copyWith', () {
+  test('returns new instance with updated properties', () {
+    const originalSpec = RemixComponentSpec();
+    final newProperty = StyleSpec(spec: PropertySpec());
+    
+    final updatedSpec = originalSpec.copyWith(property: newProperty);
+    
+    expect(updatedSpec, isNot(same(originalSpec)));
+    expect(updatedSpec.property, equals(newProperty));
+  });
+
+  test('preserves immutability - original spec unchanged', () {
+    const originalSpec = RemixComponentSpec();
+    final originalProperty = originalSpec.property;
+    final newProperty = StyleSpec(spec: PropertySpec());
+    
+    final updatedSpec = originalSpec.copyWith(property: newProperty);
+    
+    expect(originalSpec.property, equals(originalProperty));
+    expect(updatedSpec.property, equals(newProperty));
+    expect(updatedSpec.property, isNot(same(originalProperty)));
+  });
+});
+```
+
+**lerp Tests**:
+```dart
+group('lerp', () {
+  test('returns this spec when other is null', () {
+    const spec = RemixComponentSpec();
+    const other = null;
+    
+    final result = spec.lerp(other, 0.5);
+    expect(result, same(spec));
+  });
+
+  test('interpolates between two specs at t=0.0', () {
+    final spec1 = RemixComponentSpec(property: StyleSpec(spec: PropertySpec()));
+    final spec2 = RemixComponentSpec(property: StyleSpec(spec: PropertySpec()));
+    
+    final result = spec1.lerp(spec2, 0.0);
+    
+    expect(result, isNot(same(spec1)));
+    expect(result.property, equals(spec1.property));
+  });
+
+  test('interpolates between two specs at t=1.0', () {
+    final spec1 = RemixComponentSpec(property: StyleSpec(spec: PropertySpec()));
+    final spec2 = RemixComponentSpec(property: StyleSpec(spec: PropertySpec()));
+    
+    final result = spec1.lerp(spec2, 1.0);
+    
+    expect(result, isNot(same(spec2)));
+    expect(result.property, equals(spec2.property));
+  });
+});
+```
+
+**Equality and Props Tests**:
+```dart
+group('Equality and Props', () {
+  test('two specs with same properties are equal', () {
+    const spec1 = RemixComponentSpec();
+    const spec2 = RemixComponentSpec();
+    
+    expect(spec1, equals(spec2));
+    expect(spec1.hashCode, equals(spec2.hashCode));
+  });
+
+  test('props list contains all properties', () {
+    const spec = RemixComponentSpec();
+    
+    expect(spec.props, hasLength(expectedLength));
+    expect(spec.props, contains(spec.property1));
+    expect(spec.props, contains(spec.property2));
+  });
+});
+```
+
+**Diagnostic Support Tests**:
+```dart
+group('Diagnostic Support', () {
+  test('debugFillProperties works without throwing', () {
+    const spec = RemixComponentSpec();
+    
+    expect(
+      () => spec.debugFillProperties(DiagnosticPropertiesBuilder()),
+      returnsNormally,
+    );
+  });
+
+  test('can be converted to string for debugging', () {
+    const spec = RemixComponentSpec();
+    
+    expect(spec.toString(), isA<String>());
+    expect(spec.toString(), isNotEmpty);
+  });
+});
+```
+
+**Edge Cases Tests**:
+```dart
+group('Edge Cases and Error Handling', () {
+  test('copyWith handles null parameters correctly', () {
+    const spec = RemixComponentSpec();
+    final originalProperty = spec.property;
+    
+    final updatedSpec = spec.copyWith(property: null);
+    
+    expect(updatedSpec.property, equals(originalProperty));
+  });
+});
+```
+
+### 5. Helper Utilities
+
+#### test_helpers.dart
+```dart
+extension WidgetTesterHelpers on WidgetTester {
+  /// Pumps a Remix widget wrapped in a MaterialApp with Scaffold
+  Future<void> pumpRemixApp(Widget widget) async {
+    await pumpWidget(
+      createRemixScope(
+        child: MaterialApp(
+          home: Scaffold(
+            body: Center(child: widget),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Finds a widget by its key string
+  Finder findByKey(String key) {
+    return find.byKey(ValueKey(key));
+  }
+
+  // Additional helper methods...
+}
+```
+
+#### test_methods.dart
+```dart
+@isTest
+void styleMethodTest<S>(
+  String description, {
+  required S initial,
+  required S Function(S) modify,
+  required void Function(S) expect,
+}) {
+  test(description, () {
+    final newStyle = modify(initial);
+    
+    expect(newStyle, isNot(same(initial)));
+    expect(newStyle, isA<S>());
+    expect(newStyle);
+  });
+}
+
+@isTest
+void widgetControllerTest<S extends Spec<S>>(
+  String description, {
+  required Widget Function() build,
+  Future<void> Function(WidgetTester tester)? act,
+  required Set<WidgetState> expectedStates,
+}) {
+  testWidgets(description, (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Center(
+            child: Padding(padding: const EdgeInsets.all(8.0), child: build()),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    
+    await act?.call(tester);
+    
+    final finder = find.byType(StyleBuilder<S>);
+    expect(finder, findsOneWidget);
+    
+    // Get controller and verify states
+    final styleBuilderElements = finder.evaluate().whereType<StatefulElement>().toList();
+    final styleBuilderWidget = styleBuilderElements.first.widget as StyleBuilder<S>;
+    final controller = styleBuilderWidget.controller;
+    
+    expect(controller, isNotNull);
+    expect(controller!.value, equals(expectedStates));
+  });
+}
+```
+
+## Key Patterns to Follow
+
+### Pattern 1: Style Method Testing
+Always use the `styleMethodTest` helper for testing style methods:
+```dart
+styleMethodTest(
+  'methodName',
+  initial: RemixComponentStyle(),
+  modify: (style) => style.methodName(value),
+  expect: (style) {
+    expect(style.$property, equals(expectedValue));
+  },
+);
+```
+
+### Pattern 2: Widget State Controller Testing
+Use `widgetControllerTest` for testing widget states:
+```dart
+widgetControllerTest<RemixComponentSpec>(
+  'description',
+  build: () => RemixComponent(props),
+  act: actionFunction<RemixComponent>,
+  expectedStates: {WidgetState.stateName},
+);
+```
+
+### Pattern 3: Widget Rendering with pumpRemixApp
+Always use `pumpRemixApp` for widget tests:
+```dart
+testWidgets('description', (tester) async {
+  await tester.pumpRemixApp(RemixComponent(props));
+  await tester.pumpAndSettle();
+  
+  expect(find.byType(ComponentType), findsOneWidget);
+});
+```
+
+### Pattern 4: Loading State Testing
+Use `pump()` instead of `pumpAndSettle()` for loading states to avoid timeouts with infinite animations:
+```dart
+testWidgets('loading state', (tester) async {
+  await tester.pumpRemixApp(RemixComponent(loading: true));
+  await tester.pump(); // Use pump() for loading states
+  
+  expect(find.byType(LoadingIndicator), findsOneWidget);
+});
+```
+
+### Pattern 5: Spec Testing Structure
+Follow this order: constructor → copyWith → lerp → equality → diagnostics → edge cases.
+
+## Best Practices
+
+### 1. Test Organization
+- Group related tests using `group()` statements
+- Use descriptive test names that explain what is being tested
+- Follow the AAA pattern (Arrange, Act, Assert)
+
+### 2. Test Data
+- Use the `TestDataBuilder` class for consistent test data
+- Create meaningful test values that represent real-world usage
+- Use constants for repeated test data
+
+### 3. Assertions
+- Use specific matchers (`equals`, `isA`, `isNotNull`) instead of generic ones
+- Test both positive and negative cases
+- Verify not just that something works, but that it works correctly
+
+### 4. Performance
+- Use `PerformanceTestHelper` for performance-critical components
+- Measure build times and interaction response times
+- Set reasonable timeouts for async operations
+
+### 5. Accessibility
+- Always test semantic properties
+- Verify that accessibility features work correctly
+- Test with screen readers in mind
+
+## Common Pitfalls to Avoid
+
+### 1. Testing Implementation Details
+- Don't test private methods or internal state
+- Focus on public API and behavior
+- Test what the user sees and experiences
+
+### 2. Over-testing
+- Don't test every possible combination of parameters
+- Focus on edge cases and important scenarios
+- Test the most common usage patterns
+
+### 3. Flaky Tests
+- Avoid tests that depend on timing
+- Use proper waiting mechanisms (`pumpAndSettle`, `pump`)
+- Clean up resources properly with `addTearDown`
+
+### 4. Missing Edge Cases
+- Always test null parameters
+- Test disabled/enabled states
+- Test loading states
+- Test error conditions
+
+## Implementation Checklist
+
+When creating tests for a new component:
+
+- [ ] Create three test files: style, widget, and spec
+- [ ] Import test helpers and methods
+- [ ] Follow the group organization pattern from button tests
+- [ ] Use helper functions (styleMethodTest, widgetControllerTest) where applicable
+- [ ] Test all constructor variants
+- [ ] Test all style methods
+- [ ] Test widget states (disabled, hovered, focused, pressed)
+- [ ] Test custom builders if component has them
+- [ ] Test interaction callbacks
+- [ ] Test accessibility features
+- [ ] Test spec methods (constructor, copyWith, lerp, equality)
+- [ ] Test diagnostic support
+- [ ] Handle edge cases and null parameters
+- [ ] Use descriptive test names
+- [ ] Follow AAA pattern (Arrange, Act, Assert)
+- [ ] Clean up resources with addTearDown
+- [ ] Test both positive and negative cases
+- [ ] Verify performance characteristics if applicable
+
+## Example: Complete Test Structure
+
+Here's how a complete test file should be structured:
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:remix/remix.dart';
+
+import '../../helpers/test_helpers.dart';
+import '../../helpers/test_methods.dart';
+
+void main() {
+  group('RemixComponentStyle', () {
+    group('Constructors', () {
+      // Constructor tests
+    });
+
+    group('Style Methods', () {
+      // Style method tests using styleMethodTest
+    });
+
+    group('Call Method', () {
+      // Call method tests
+    });
+
+    group('Core Methods', () {
+      // Core method tests
+    });
+
+    group('Equality', () {
+      // Equality tests
+    });
+  });
+}
+```
+
+This structure ensures comprehensive test coverage while maintaining consistency across all component tests in the Remix UI library.
