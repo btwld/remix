@@ -77,6 +77,16 @@ class RemixCheckboxStyle
     return merge(RemixCheckboxStyle(container: BoxStyler(alignment: value)));
   }
 
+  RemixCheckboxStyle onIndeterminate(RemixCheckboxStyle value) {
+    return variant(
+      ContextVariant(
+        'on_indeterminate',
+        (context) => NakedCheckboxState.maybeOf(context)?.isChecked == null,
+      ),
+      value,
+    );
+  }
+
   @override
   RemixCheckboxStyle icon(IconStyler value) {
     return merge(RemixCheckboxStyle(indicator: value));

@@ -12,9 +12,9 @@ class RemixSelectStyle extends RemixStyle<RemixSelectSpec, RemixSelectStyle> {
     super.variants,
     super.animation,
     super.modifier,
-  })  : $menuContainer = menuContainer,
-        $trigger = trigger,
-        $position = position;
+  }) : $menuContainer = menuContainer,
+       $trigger = trigger,
+       $position = position;
 
   RemixSelectStyle({
     FlexBoxStyler? menuContainer,
@@ -24,13 +24,13 @@ class RemixSelectStyle extends RemixStyle<RemixSelectSpec, RemixSelectStyle> {
     List<VariantStyle<RemixSelectSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
-          menuContainer: Prop.maybeMix(menuContainer),
-          trigger: Prop.maybeMix(trigger),
-          position: Prop.maybeMix(position),
-          variants: variants,
-          animation: animation,
-          modifier: modifier,
-        );
+         menuContainer: Prop.maybeMix(menuContainer),
+         trigger: Prop.maybeMix(trigger),
+         position: Prop.maybeMix(position),
+         variants: variants,
+         animation: animation,
+         modifier: modifier,
+       );
 
   /// Sets menu container styling
   RemixSelectStyle menuContainer(FlexBoxStyler value) {
@@ -92,19 +92,25 @@ class RemixSelectStyle extends RemixStyle<RemixSelectSpec, RemixSelectStyle> {
   // Abstract method implementations for mixins (delegating to menuContainer)
 
   RemixSelectStyle foregroundDecoration(DecorationMix value) {
-    return merge(RemixSelectStyle(
-      menuContainer: FlexBoxStyler(foregroundDecoration: value),
-    ));
+    return merge(
+      RemixSelectStyle(
+        menuContainer: FlexBoxStyler(foregroundDecoration: value),
+      ),
+    );
   }
 
   RemixSelectStyle transform(
     Matrix4 value, {
     AlignmentGeometry alignment = Alignment.center,
   }) {
-    return merge(RemixSelectStyle(
-      menuContainer:
-          FlexBoxStyler(transform: value, transformAlignment: alignment),
-    ));
+    return merge(
+      RemixSelectStyle(
+        menuContainer: FlexBoxStyler(
+          transform: value,
+          transformAlignment: alignment,
+        ),
+      ),
+    );
   }
 
   @override
@@ -151,18 +157,19 @@ class RemixSelectStyle extends RemixStyle<RemixSelectSpec, RemixSelectStyle> {
 
   @override
   List<Object?> get props => [
-        $menuContainer,
-        $trigger,
-        $position,
-        $variants,
-        $animation,
-        $modifier,
-      ];
+    $menuContainer,
+    $trigger,
+    $position,
+    $variants,
+    $animation,
+    $modifier,
+  ];
 }
 
 // Style classes for sub-specs
-class RemixSelectTriggerStyle extends RemixFlexContainerStyle<
-        RemixSelectTriggerSpec, RemixSelectTriggerStyle>
+class RemixSelectTriggerStyle
+    extends
+        RemixFlexContainerStyle<RemixSelectTriggerSpec, RemixSelectTriggerStyle>
     with
         LabelStyleMixin<RemixSelectTriggerStyle>,
         IconStyleMixin<RemixSelectTriggerStyle> {
@@ -177,9 +184,9 @@ class RemixSelectTriggerStyle extends RemixFlexContainerStyle<
     super.variants,
     super.animation,
     super.modifier,
-  })  : $container = container,
-        $label = label,
-        $icon = icon;
+  }) : $container = container,
+       $label = label,
+       $icon = icon;
 
   RemixSelectTriggerStyle({
     FlexBoxStyler? container,
@@ -189,13 +196,13 @@ class RemixSelectTriggerStyle extends RemixFlexContainerStyle<
     List<VariantStyle<RemixSelectTriggerSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
-          container: Prop.maybeMix(container),
-          label: Prop.maybeMix(label),
-          icon: Prop.maybeMix(icon),
-          variants: variants,
-          animation: animation,
-          modifier: modifier,
-        );
+         container: Prop.maybeMix(container),
+         label: Prop.maybeMix(label),
+         icon: Prop.maybeMix(icon),
+         variants: variants,
+         animation: animation,
+         modifier: modifier,
+       );
 
   /// Sets label styling
   RemixSelectTriggerStyle label(TextStyler value) {
@@ -290,9 +297,11 @@ class RemixSelectTriggerStyle extends RemixFlexContainerStyle<
 
   @override
   RemixSelectTriggerStyle foregroundDecoration(DecorationMix value) {
-    return merge(RemixSelectTriggerStyle(
-      container: FlexBoxStyler(foregroundDecoration: value),
-    ));
+    return merge(
+      RemixSelectTriggerStyle(
+        container: FlexBoxStyler(foregroundDecoration: value),
+      ),
+    );
   }
 
   @override
@@ -300,9 +309,14 @@ class RemixSelectTriggerStyle extends RemixFlexContainerStyle<
     Matrix4 value, {
     AlignmentGeometry alignment = Alignment.center,
   }) {
-    return merge(RemixSelectTriggerStyle(
-      container: FlexBoxStyler(transform: value, transformAlignment: alignment),
-    ));
+    return merge(
+      RemixSelectTriggerStyle(
+        container: FlexBoxStyler(
+          transform: value,
+          transformAlignment: alignment,
+        ),
+      ),
+    );
   }
 
   // FlexStyleMixin implementation
@@ -315,17 +329,21 @@ class RemixSelectTriggerStyle extends RemixFlexContainerStyle<
 
   @override
   List<Object?> get props => [
-        $container,
-        $label,
-        $icon,
-        $variants,
-        $animation,
-        $modifier,
-      ];
+    $container,
+    $label,
+    $icon,
+    $variants,
+    $animation,
+    $modifier,
+  ];
 }
 
-class RemixSelectMenuItemStyle extends RemixFlexContainerStyle<
-        RemixSelectMenuItemSpec, RemixSelectMenuItemStyle>
+class RemixSelectMenuItemStyle
+    extends
+        RemixFlexContainerStyle<
+          RemixSelectMenuItemSpec,
+          RemixSelectMenuItemStyle
+        >
     with
         LabelStyleMixin<RemixSelectMenuItemStyle>,
         IconStyleMixin<RemixSelectMenuItemStyle> {
@@ -340,9 +358,9 @@ class RemixSelectMenuItemStyle extends RemixFlexContainerStyle<
     super.variants,
     super.animation,
     super.modifier,
-  })  : $container = container,
-        $text = text,
-        $icon = icon;
+  }) : $container = container,
+       $text = text,
+       $icon = icon;
 
   RemixSelectMenuItemStyle({
     FlexBoxStyler? container,
@@ -352,13 +370,13 @@ class RemixSelectMenuItemStyle extends RemixFlexContainerStyle<
     List<VariantStyle<RemixSelectMenuItemSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
-          container: Prop.maybeMix(container),
-          text: Prop.maybeMix(text),
-          icon: Prop.maybeMix(icon),
-          variants: variants,
-          animation: animation,
-          modifier: modifier,
-        );
+         container: Prop.maybeMix(container),
+         text: Prop.maybeMix(text),
+         icon: Prop.maybeMix(icon),
+         variants: variants,
+         animation: animation,
+         modifier: modifier,
+       );
 
   /// Sets text styling
   RemixSelectMenuItemStyle text(TextStyler value) {
@@ -459,9 +477,11 @@ class RemixSelectMenuItemStyle extends RemixFlexContainerStyle<
 
   @override
   RemixSelectMenuItemStyle foregroundDecoration(DecorationMix value) {
-    return merge(RemixSelectMenuItemStyle(
-      container: FlexBoxStyler(foregroundDecoration: value),
-    ));
+    return merge(
+      RemixSelectMenuItemStyle(
+        container: FlexBoxStyler(foregroundDecoration: value),
+      ),
+    );
   }
 
   @override
@@ -469,9 +489,14 @@ class RemixSelectMenuItemStyle extends RemixFlexContainerStyle<
     Matrix4 value, {
     AlignmentGeometry alignment = Alignment.center,
   }) {
-    return merge(RemixSelectMenuItemStyle(
-      container: FlexBoxStyler(transform: value, transformAlignment: alignment),
-    ));
+    return merge(
+      RemixSelectMenuItemStyle(
+        container: FlexBoxStyler(
+          transform: value,
+          transformAlignment: alignment,
+        ),
+      ),
+    );
   }
 
   // FlexStyleMixin implementation
@@ -484,13 +509,13 @@ class RemixSelectMenuItemStyle extends RemixFlexContainerStyle<
 
   @override
   List<Object?> get props => [
-        $container,
-        $text,
-        $icon,
-        $variants,
-        $animation,
-        $modifier,
-      ];
+    $container,
+    $text,
+    $icon,
+    $variants,
+    $animation,
+    $modifier,
+  ];
 }
 
 class RemixCompositedTransformFollowerStyle
@@ -506,9 +531,9 @@ class RemixCompositedTransformFollowerStyle
     super.variants,
     super.animation,
     super.modifier,
-  })  : $targetAnchor = targetAnchor,
-        $followerAnchor = followerAnchor,
-        $offset = offset;
+  }) : $targetAnchor = targetAnchor,
+       $followerAnchor = followerAnchor,
+       $offset = offset;
 
   RemixCompositedTransformFollowerStyle({
     Alignment? targetAnchor,
@@ -518,13 +543,13 @@ class RemixCompositedTransformFollowerStyle
     List<VariantStyle<RemixCompositedTransformFollowerSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
-          targetAnchor: Prop.maybe(targetAnchor),
-          followerAnchor: Prop.maybe(followerAnchor),
-          offset: Prop.maybe(offset),
-          variants: variants,
-          animation: animation,
-          modifier: modifier,
-        );
+         targetAnchor: Prop.maybe(targetAnchor),
+         followerAnchor: Prop.maybe(followerAnchor),
+         offset: Prop.maybe(offset),
+         variants: variants,
+         animation: animation,
+         modifier: modifier,
+       );
 
   RemixCompositedTransformFollowerStyle variants(
     List<VariantStyle<RemixCompositedTransformFollowerSpec>> value,
@@ -565,11 +590,11 @@ class RemixCompositedTransformFollowerStyle
 
   @override
   List<Object?> get props => [
-        $targetAnchor,
-        $followerAnchor,
-        $offset,
-        $variants,
-        $animation,
-        $modifier,
-      ];
+    $targetAnchor,
+    $followerAnchor,
+    $offset,
+    $variants,
+    $animation,
+    $modifier,
+  ];
 }

@@ -316,13 +316,18 @@ class RemixTextField extends StatelessWidget {
       builder: (BuildContext context, state, Widget editableText) {
         final textFieldState = NakedTextFieldState.of(context);
 
+        WidgetStatesController controller = WidgetStatesController({
+          ...NakedTextFieldState.controllerOf(context).value,
+          if (error) WidgetState.error,
+        });
+
         return StyleBuilder(
           style: style,
-          controller: NakedTextFieldState.controllerOf(context),
+          controller: controller,
           builder: (context, spec) {
             // Apply text style from spec
             final textStyle = spec.text.spec.style ?? const TextStyle();
-            print(spec.text.spec.style);
+
             final styledEditableText = DefaultTextStyle(
               style: textStyle,
               textAlign: spec.textAlign,
