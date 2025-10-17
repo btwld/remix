@@ -8,9 +8,9 @@ Widget buildDividerExample() {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Item 1'),
-          remix ? const RemixDivider() : const Divider(),
+          remix ? const RemixCallout(text: 'Callout') : const Divider(),
           const Text('Item 2'),
-          remix ? const RemixDivider() : const Divider(),
+          remix ? const RemixCallout(text: 'Callout') : const Divider(),
           const Text('Item 3'),
         ],
       );

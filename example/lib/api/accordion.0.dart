@@ -90,13 +90,6 @@ class _AccordionExampleState extends State<AccordionExample> {
         .content(
           BoxStyler().paddingX(16).paddingTop(8),
         )
-        .onExpanded((bool isExpanded) {
-          return RemixAccordionStyle<String>().content(
-            BoxStyler()
-                .paddingBottom(isExpanded ? 16 : 0)
-                .animate(AnimationConfig.easeOut(200.ms)),
-          );
-        })
         .wrapClipRRect(borderRadius: BorderRadius.circular(8))
         .paddingX(16)
         .paddingY(14)

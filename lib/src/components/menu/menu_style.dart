@@ -6,8 +6,10 @@ part of 'menu.dart';
 // ============================================================================
 
 class RemixMenuTriggerStyle
-    extends
-        RemixFlexContainerStyle<RemixMenuTriggerSpec, RemixMenuTriggerStyle> {
+    extends RemixFlexContainerStyle<RemixMenuTriggerSpec, RemixMenuTriggerStyle>
+    with
+        LabelStyleMixin<RemixMenuTriggerStyle>,
+        IconStyleMixin<RemixMenuTriggerStyle> {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<StyleSpec<IconSpec>>? $icon;
@@ -39,18 +41,20 @@ class RemixMenuTriggerStyle
          modifier: modifier,
        );
 
-  RemixMenuTriggerStyle label(TextStyler value) {
-    return merge(RemixMenuTriggerStyle(label: value));
-  }
-
-  RemixMenuTriggerStyle icon(IconStyler value) {
-    return merge(RemixMenuTriggerStyle(icon: value));
-  }
-
   RemixMenuTriggerStyle alignment(Alignment value) {
     return merge(
       RemixMenuTriggerStyle(container: FlexBoxStyler(alignment: value)),
     );
+  }
+
+  @override
+  RemixMenuTriggerStyle icon(IconStyler value) {
+    return merge(RemixMenuTriggerStyle(icon: value));
+  }
+
+  @override
+  RemixMenuTriggerStyle label(TextStyler value) {
+    return merge(RemixMenuTriggerStyle(label: value));
   }
 
   @override

@@ -71,15 +71,16 @@ class RemixAccordionStyle<T>
     );
   }
 
-  /// Style when accordion is expanded
-  RemixAccordionStyle<T> onExpanded(
-    RemixAccordionStyle<T> Function(bool) builder,
-  ) {
-    return onBuilder((context) {
-      final isExpanded = NakedAccordionItemState.of<T>(context).isExpanded;
-
-      return builder(isExpanded);
-    });
+  /// Style when accordion is collapsed
+  RemixAccordionStyle<T> onExpanded(RemixAccordionStyle<T> value) {
+    return variants([
+      VariantStyle(
+        ContextVariant('onExpanded', (context) {
+          return NakedAccordionItemState.of<T>(context).isExpanded;
+        }),
+        value,
+      ),
+    ]);
   }
 
   /// Style when accordion is collapsed
@@ -204,7 +205,7 @@ class RemixAccordionStyle<T>
 
   @override
   RemixAccordionStyle<T> flex(FlexStyler value) {
-    return merge(RemixAccordionStyle<T>(trigger: FlexBoxStyler()));
+    return merge(RemixAccordionStyle<T>(trigger: FlexBoxStyler().flex(value)));
   }
 
   @override

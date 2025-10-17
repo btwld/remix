@@ -150,7 +150,7 @@ class _MenuExampleState extends State<MenuExample> {
         )
         .divider(
           RemixDividerStyle()
-              .textColor(Colors.blueGrey.shade100)
+              .color(Colors.blueGrey.shade100)
               .height(1)
               .marginY(6),
         );

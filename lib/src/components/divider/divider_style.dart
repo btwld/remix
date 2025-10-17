@@ -26,7 +26,7 @@ class RemixDividerStyle
        );
 
   /// Sets divider color
-  RemixDividerStyle textColor(Color value) {
+  RemixDividerStyle color(Color value) {
     return merge(
       RemixDividerStyle(
         container: BoxStyler(decoration: BoxDecorationMix(color: value)),

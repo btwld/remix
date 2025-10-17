@@ -15,10 +15,10 @@ class RemixProgressStyle
     super.variants,
     super.animation,
     super.modifier,
-  })  : $container = container,
-        $track = track,
-        $indicator = indicator,
-        $trackContainer = trackContainer;
+  }) : $container = container,
+       $track = track,
+       $indicator = indicator,
+       $trackContainer = trackContainer;
 
   RemixProgressStyle({
     BoxStyler? container,
@@ -29,29 +29,33 @@ class RemixProgressStyle
     List<VariantStyle<RemixProgressSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
-          container: Prop.maybeMix(container),
-          track: Prop.maybeMix(track),
-          indicator: Prop.maybeMix(indicator),
-          trackContainer: Prop.maybeMix(trackContainer),
-          variants: variants,
-          animation: animation,
-          modifier: modifier,
-        );
+         container: Prop.maybeMix(container),
+         track: Prop.maybeMix(track),
+         indicator: Prop.maybeMix(indicator),
+         trackContainer: Prop.maybeMix(trackContainer),
+         variants: variants,
+         animation: animation,
+         modifier: modifier,
+       );
 
   /// Sets progress height
   RemixProgressStyle height(double value) {
-    return merge(RemixProgressStyle(
-      container: BoxStyler(
-        constraints: BoxConstraintsMix(minHeight: value, maxHeight: value),
+    return merge(
+      RemixProgressStyle(
+        container: BoxStyler(
+          constraints: BoxConstraintsMix(minHeight: value, maxHeight: value),
+        ),
       ),
-    ));
+    );
   }
 
   /// Sets track color
   RemixProgressStyle trackColor(Color value) {
-    return merge(RemixProgressStyle(
-      track: BoxStyler(decoration: BoxDecorationMix(color: value)),
-    ));
+    return merge(
+      RemixProgressStyle(
+        track: BoxStyler(decoration: BoxDecorationMix(color: value)),
+      ),
+    );
   }
 
   /// Sets progress width
@@ -67,9 +71,11 @@ class RemixProgressStyle
 
   /// Sets fill color
   RemixProgressStyle indicatorColor(Color value) {
-    return merge(RemixProgressStyle(
-      indicator: BoxStyler(decoration: BoxDecorationMix(color: value)),
-    ));
+    return merge(
+      RemixProgressStyle(
+        indicator: BoxStyler(decoration: BoxDecorationMix(color: value)),
+      ),
+    );
   }
 
   /// Sets track styling
@@ -141,9 +147,11 @@ class RemixProgressStyle
     Matrix4 value, {
     AlignmentGeometry alignment = Alignment.center,
   }) {
-    return merge(RemixProgressStyle(
-      container: BoxStyler(transform: value, transformAlignment: alignment),
-    ));
+    return merge(
+      RemixProgressStyle(
+        container: BoxStyler(transform: value, transformAlignment: alignment),
+      ),
+    );
   }
 
   @override
@@ -177,12 +185,12 @@ class RemixProgressStyle
 
   @override
   List<Object?> get props => [
-        $container,
-        $track,
-        $indicator,
-        $trackContainer,
-        $variants,
-        $animation,
-        $modifier,
-      ];
+    $container,
+    $track,
+    $indicator,
+    $trackContainer,
+    $variants,
+    $animation,
+    $modifier,
+  ];
 }
