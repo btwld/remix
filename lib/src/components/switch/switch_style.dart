@@ -1,7 +1,8 @@
 part of 'switch.dart';
 
 class RemixSwitchStyle
-    extends RemixContainerStyle<RemixSwitchSpec, RemixSwitchStyle> {
+    extends RemixContainerStyle<RemixSwitchSpec, RemixSwitchStyle>
+    with SelectedWidgetStateVariantMixin<RemixSwitchSpec, RemixSwitchStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<BoxSpec>>? $thumb;
 
@@ -11,8 +12,8 @@ class RemixSwitchStyle
     super.variants,
     super.animation,
     super.modifier,
-  })  : $container = container,
-        $thumb = thumb;
+  }) : $container = container,
+       $thumb = thumb;
 
   RemixSwitchStyle({
     BoxStyler? container,
@@ -21,18 +22,20 @@ class RemixSwitchStyle
     List<VariantStyle<RemixSwitchSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
-          container: Prop.maybeMix(container),
-          thumb: Prop.maybeMix(thumb),
-          variants: variants,
-          animation: animation,
-          modifier: modifier,
-        );
+         container: Prop.maybeMix(container),
+         thumb: Prop.maybeMix(thumb),
+         variants: variants,
+         animation: animation,
+         modifier: modifier,
+       );
 
   /// Sets thumb color
   RemixSwitchStyle thumbColor(Color value) {
-    return merge(RemixSwitchStyle(
-      thumb: BoxStyler(decoration: BoxDecorationMix(color: value)),
-    ));
+    return merge(
+      RemixSwitchStyle(
+        thumb: BoxStyler(decoration: BoxDecorationMix(color: value)),
+      ),
+    );
   }
 
   /// Sets thumb styling
@@ -119,17 +122,19 @@ class RemixSwitchStyle
     Matrix4 value, {
     AlignmentGeometry alignment = Alignment.center,
   }) {
-    return merge(RemixSwitchStyle(
-      container: BoxStyler(transform: value, transformAlignment: alignment),
-    ));
+    return merge(
+      RemixSwitchStyle(
+        container: BoxStyler(transform: value, transformAlignment: alignment),
+      ),
+    );
   }
 
   @override
   List<Object?> get props => [
-        $container,
-        $thumb,
-        $variants,
-        $animation,
-        $modifier,
-      ];
+    $container,
+    $thumb,
+    $variants,
+    $animation,
+    $modifier,
+  ];
 }

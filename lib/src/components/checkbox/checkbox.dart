@@ -9,6 +9,7 @@ import 'package:naked_ui/naked_ui.dart';
 import '../../fortal/fortal.dart';
 import '../../style/style.dart';
 import '../../utilities/remix_style.dart';
+import '../../utilities/selected_mixin.dart';
 
 part 'checkbox_spec.dart';
 part 'checkbox_style.dart';

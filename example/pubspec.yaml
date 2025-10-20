@@ -18,8 +18,8 @@ dependencies:
   remix: 
     path: ../
     
-  mix: 2.0.0-dev.4
-  naked_ui: 0.2.0-beta.5
+  mix: 2.0.0-dev.5
+  naked_ui: 0.2.0-beta.6
 
 dev_dependencies:
   flutter_test:

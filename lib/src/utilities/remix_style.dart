@@ -18,6 +18,7 @@ abstract class RemixStyle<S extends Spec<S>, T extends RemixStyle<S, T>>
     extends Style<S>
     with
         VariantStyleMixin<T, S>,
+        WidgetStateVariantMixin<T, S>,
         WidgetModifierStyleMixin<T, S>,
         AnimationStyleMixin<T, S> {
   const RemixStyle({super.variants, super.animation, super.modifier});
@@ -40,8 +41,11 @@ abstract class RemixStyle<S extends Spec<S>, T extends RemixStyle<S, T>>
 ///   // your implementation
 /// }
 /// ```
-abstract class RemixContainerStyle<S extends Spec<S>,
-        T extends RemixContainerStyle<S, T>> extends RemixStyle<S, T>
+abstract class RemixContainerStyle<
+  S extends Spec<S>,
+  T extends RemixContainerStyle<S, T>
+>
+    extends RemixStyle<S, T>
     with
         BorderStyleMixin<T>,
         BorderRadiusStyleMixin<T>,
@@ -50,11 +54,7 @@ abstract class RemixContainerStyle<S extends Spec<S>,
         SpacingStyleMixin<T>,
         TransformStyleMixin<T>,
         ConstraintStyleMixin<T> {
-  const RemixContainerStyle({
-    super.variants,
-    super.animation,
-    super.modifier,
-  });
+  const RemixContainerStyle({super.variants, super.animation, super.modifier});
 
   T alignment(Alignment value);
 }
@@ -77,8 +77,11 @@ abstract class RemixContainerStyle<S extends Spec<S>,
 ///   // your implementation
 /// }
 /// ```
-abstract class RemixFlexContainerStyle<S extends Spec<S>,
-        T extends RemixFlexContainerStyle<S, T>> extends RemixStyle<S, T>
+abstract class RemixFlexContainerStyle<
+  S extends Spec<S>,
+  T extends RemixFlexContainerStyle<S, T>
+>
+    extends RemixStyle<S, T>
     with
         BorderStyleMixin<T>,
         BorderRadiusStyleMixin<T>,
