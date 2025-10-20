@@ -42,7 +42,7 @@ class _TextfieldExampleState extends State<TextfieldExample> {
 
   RemixTextFieldStyle get style {
     return RemixTextFieldStyle()
-        .color(Colors.blue)
+        .color(Colors.grey.shade800)
         .backgroundColor(Colors.white)
         .borderRadiusAll(const Radius.circular(8.0))
         .height(44)
@@ -61,9 +61,9 @@ class _TextfieldExampleState extends State<TextfieldExample> {
         .hintColor(Colors.blueGrey.shade500)
         .shadow(
           BoxShadowMix()
-              .blurRadius(4)
+              .blurRadius(1)
               .color(Colors.black12)
-              .offset(const Offset(0, 2)),
+              .offset(const Offset(0, 1)),
         )
         .border(
           BoxBorderMix.all(BorderSideMix(color: Colors.grey.shade300)),
