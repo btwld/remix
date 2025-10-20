@@ -16,13 +16,7 @@ class RemixSelectTrigger {
   /// When provided, icon appears in leading position (before text).
   final IconData? icon;
 
-  final RemixSelectTriggerStyle style;
-
-  const RemixSelectTrigger({
-    required this.placeholder,
-    this.icon,
-    this.style = const RemixSelectTriggerStyle.create(),
-  });
+  const RemixSelectTrigger({required this.placeholder, this.icon});
 }
 
 /// Data class representing a selectable option.

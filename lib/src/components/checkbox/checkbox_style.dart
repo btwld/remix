@@ -2,7 +2,9 @@ part of 'checkbox.dart';
 
 class RemixCheckboxStyle
     extends RemixContainerStyle<RemixCheckboxSpec, RemixCheckboxStyle>
-    with IconStyleMixin<RemixCheckboxStyle> {
+    with
+        IconStyleMixin<RemixCheckboxStyle>,
+        SelectedWidgetStateVariantMixin<RemixCheckboxSpec, RemixCheckboxStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<IconSpec>>? $indicator;
 
@@ -75,6 +77,16 @@ class RemixCheckboxStyle
   /// Sets container alignment.
   RemixCheckboxStyle alignment(Alignment value) {
     return merge(RemixCheckboxStyle(container: BoxStyler(alignment: value)));
+  }
+
+  RemixCheckboxStyle onIndeterminate(RemixCheckboxStyle value) {
+    return variant(
+      ContextVariant(
+        'on_indeterminate',
+        (context) => NakedCheckboxState.maybeOf(context)?.isChecked == null,
+      ),
+      value,
+    );
   }
 
   @override

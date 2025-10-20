@@ -13,17 +13,19 @@ part of 'callout.dart';
 class RemixCallout extends StyleWidget<RemixCalloutSpec> {
   /// Creates a callout widget with optional text, icon, or custom [child]. At
   /// least one of [text] or [child] must be provided.
-  RemixCallout({
+  const RemixCallout({
     super.style = const RemixCalloutStyle.create(),
     super.styleSpec,
     super.key,
     String? text,
     this.icon,
     Widget? child,
-  })  : text = text,
-        child = child,
-        assert(text != null || child != null,
-            'Provide either text or child to RemixCallout.');
+  }) : text = text,
+       child = child,
+       assert(
+         text != null || child != null,
+         'Provide either text or child to RemixCallout.',
+       );
 
   /// The text to display in the callout.
   final String? text;
@@ -45,7 +47,7 @@ class RemixCallout extends StyleWidget<RemixCalloutSpec> {
     final List<Widget> children = [];
 
     // Add icon if present
-    if (icon != null) {
+    if (icon != null || spec.icon.spec.icon != null) {
       children.add(StyledIcon(icon: icon, styleSpec: spec.icon));
     }
 

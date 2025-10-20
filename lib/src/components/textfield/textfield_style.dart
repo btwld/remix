@@ -127,6 +127,11 @@ class RemixTextFieldStyle
     );
   }
 
+  /// Sets container that wraps editable text area
+  RemixTextFieldStyle container(FlexBoxStyler value) {
+    return merge(RemixTextFieldStyle(container: value));
+  }
+
   /// Sets border radius
   RemixTextFieldStyle borderRadius(BorderRadiusGeometryMix radius) {
     return merge(
@@ -186,6 +191,11 @@ class RemixTextFieldStyle
         hintText: TextStyler(style: TextStyleMix(color: value)),
       ),
     );
+  }
+
+  /// Sets hint text color
+  RemixTextFieldStyle hintText(TextStyler value) {
+    return merge(RemixTextFieldStyle(hintText: value));
   }
 
   // Additional convenience methods that delegate to container

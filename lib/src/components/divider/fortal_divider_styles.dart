@@ -22,7 +22,7 @@ class FortalDividerStyles {
     // We map sizes to typical thickness and a neutral gray color.
     // TODO: Add orientation-aware sizing if/when exposed by spec.
     return RemixDividerStyle()
-        .textColor(FortalTokens.gray6())
+        .color(FortalTokens.gray6())
         .merge(_sizeStyle(size));
   }
 

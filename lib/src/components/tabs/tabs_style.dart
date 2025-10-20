@@ -158,7 +158,8 @@ class RemixTabBarStyle
 }
 
 class RemixTabViewStyle
-    extends RemixContainerStyle<RemixTabViewSpec, RemixTabViewStyle> {
+    extends RemixContainerStyle<RemixTabViewSpec, RemixTabViewStyle>
+    with SelectedWidgetStateVariantMixin<RemixTabViewSpec, RemixTabViewStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
 
   const RemixTabViewStyle.create({
@@ -285,7 +286,10 @@ class RemixTabViewStyle
 }
 
 class RemixTabStyle extends RemixFlexContainerStyle<RemixTabSpec, RemixTabStyle>
-    with LabelStyleMixin<RemixTabStyle>, IconStyleMixin<RemixTabStyle> {
+    with
+        LabelStyleMixin<RemixTabStyle>,
+        IconStyleMixin<RemixTabStyle>,
+        SelectedWidgetStateVariantMixin<RemixTabSpec, RemixTabStyle> {
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<StyleSpec<IconSpec>>? $icon;

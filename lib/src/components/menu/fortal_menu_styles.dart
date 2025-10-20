@@ -63,7 +63,7 @@ class FortalMenuStyles {
           RemixDividerStyle()
               .margin(EdgeInsetsMix.symmetric(vertical: FortalTokens.space1()))
               .height(FortalTokens.borderWidth1())
-              .textColor(FortalTokens.gray6()),
+              .color(FortalTokens.gray6()),
         )
         // Merge with size-specific styles
         .merge(_sizeStyle(size));

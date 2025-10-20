@@ -1,7 +1,8 @@
 part of 'radio.dart';
 
 class RemixRadioStyle
-    extends RemixContainerStyle<RemixRadioSpec, RemixRadioStyle> {
+    extends RemixContainerStyle<RemixRadioSpec, RemixRadioStyle>
+    with SelectedWidgetStateVariantMixin<RemixRadioSpec, RemixRadioStyle> {
   final Prop<StyleSpec<BoxSpec>>? $container;
   final Prop<StyleSpec<BoxSpec>>? $indicator;
 
