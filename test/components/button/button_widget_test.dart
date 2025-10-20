@@ -199,11 +199,16 @@ void main() {
         expect(find.byType(RemixSpinner), findsOneWidget);
 
         // Verify content is hidden but maintains size
-        final visibility = tester.widget<Visibility>(find.byType(Visibility));
-        expect(visibility.visible, isFalse);
-        expect(visibility.maintainSize, isTrue);
-        expect(visibility.maintainState, isTrue);
-        expect(visibility.maintainAnimation, isTrue);
+        final VisibilityWidgets = tester.widgetList<Visibility>(
+          find.byType(Visibility),
+        );
+
+        for (final visibility in VisibilityWidgets) {
+          expect(visibility.visible, isFalse);
+          expect(visibility.maintainSize, isTrue);
+          expect(visibility.maintainState, isTrue);
+          expect(visibility.maintainAnimation, isTrue);
+        }
       });
 
       testWidgets('loading state makes button non-interactive', (tester) async {
