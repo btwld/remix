@@ -199,16 +199,22 @@ class RemixButton extends StatelessWidget {
                     ),
             );
 
+            final rowChildren = [if (iconWidget != null) iconWidget, textWidget]
+                .map(
+                  (e) => Visibility(
+                    visible: !loading,
+                    maintainState: true,
+                    maintainAnimation: true,
+                    maintainSize: true,
+                    child: e,
+                  ),
+                )
+                .toList();
+
             // Create content row with visibility control for loading state
-            final contentRow = Visibility(
-              visible: !loading,
-              maintainState: true,
-              maintainAnimation: true,
-              maintainSize: true,
-              child: RowBox(
-                styleSpec: spec.container,
-                children: [if (iconWidget != null) iconWidget, textWidget],
-              ),
+            final contentRow = RowBox(
+              styleSpec: spec.container,
+              children: rowChildren,
             );
 
             // Layer spinner above the content while keeping size stable.
