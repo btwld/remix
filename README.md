@@ -1,4 +1,7 @@
-# Remix
+
+<p align="center">
+  <img alt="Remix banner" src="banner.png" width="100%" />
+</p>
 
 A comprehensive Flutter component library that combines headless UI behavior with Mix's powerful styling system, giving you complete freedom to build and customize components that match your design system perfectly.
 

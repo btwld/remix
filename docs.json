@@ -2,9 +2,9 @@
   "name": "Remix",
   "description": "A comprehensive Flutter component library combining headless UI behavior with Mix's powerful styling system.",
   "theme": {
-    "primaryColor": "#2563EB",
-    "accentColor": "#3B82F6",
-    "backgroundColor": "#FFFFFF"
+    "primaryColor": "#00EB03",
+    "accentColor": "#03A705",
+    "backgroundColor": "#0A080A"
   },
   "navigation": {
     "github": "https://github.com/btwld/remix"
