@@ -87,43 +87,60 @@ const RemixCard({
 ```
 </CodeGroup>
 
-## Properties
 
+## Properties
 ### Widget Properties
+
+#### `style` → `Key?`
+
+Optional. 
+
+#### `styleSpec` → `Key?`
+
+Optional. 
+
+#### `key` → `Key?`
+
+Optional. Controls how one widget replaces another widget in the tree.
 
 #### `child` → `Widget?`
 
-Optional content to display inside the card.
+Optional. The widget below this widget in the tree.  This widget can only have one child. To lay out multiple children, let this widget's child be a widget such as [RowBox], [ColumnBox], or [StackBox], which have a children property, and then provide the children to that widget.
 
-#### `style` → `RemixCardStyle`
 
-Style configuration. Defaults to `RemixCardStyle.create()`.
+### Style Methods
 
-#### `styleSpec` → `RemixCardSpec?`
+#### `padding(EdgeInsetsGeometryMix value)`
 
-Optional pre-resolved style specification for performance optimization.
+Sets container padding
 
-### Style Properties
+#### `textColor(Color value)`
 
-The `RemixCardStyle` class provides a fluent API for styling:
+Sets container background color
 
-#### Container Styling
+#### `borderRadius(BorderRadiusGeometryMix radius)`
 
-**`padding(EdgeInsetsGeometryMix value)`** - Sets padding inside the card.
+Sets container border radius
 
-**`margin(EdgeInsetsGeometryMix value)`** - Sets margin around the card.
+#### `margin(EdgeInsetsGeometryMix value)`
 
-**`size(double width, double height)`** - Sets card dimensions.
+Sets container margin
 
-**`color(Color value)`** - Sets the background color.
+#### `alignment(Alignment value)`
 
-**`textColor(Color value)`** - Sets the container background color (alias for color).
+Sets container alignment
 
-**`decoration(DecorationMix value)`** - Sets background decoration.
+#### `decoration(DecorationMix value)`
 
-**`borderRadiusAll(Radius value)`** - Sets uniform border radius.
+Sets container decoration
 
-**`borderAll({Color? color, double? width})`** - Sets border on all sides.
+#### `wrap(WidgetModifierConfig value)`
 
-**`shadow(BoxShadowMix value)`** - Adds shadow effects for elevation.
+#### `animate(AnimationConfig config)`
+
+#### `constraints(BoxConstraintsMix value)`
+
+#### `foregroundDecoration(DecorationMix value)`
+
+#### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
 

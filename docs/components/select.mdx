@@ -158,61 +158,154 @@ const RemixSelect({
 ```
 </CodeGroup>
 
-## Properties
 
+## Properties
 ### Widget Properties
+
+#### `key` → `Key?`
+
+Optional. Controls how one widget replaces another widget in the tree.
 
 #### `trigger` → `RemixSelectTrigger`
 
-**Required**. The widget that triggers the dropdown when pressed.
+**Required**. The trigger data that defines the select's button.
 
-#### `items` → `List<RemixSelectItem>`
+#### `items` → `List<RemixSelectItem<T>>`
 
-**Required**. The list of selectable items to display in the dropdown.
+**Required**. The list of selectable items.
 
 #### `selectedValue` → `T?`
 
-**Required**. The currently selected value.
+Optional. The currently selected value.
 
 #### `onChanged` → `ValueChanged<T?>?`
 
-**Required**. Called when a selection is made. Receives the selected value.
+Optional. Called when the selected value changes.
+
+#### `onOpen` → `VoidCallback?`
+
+Optional. Called when the dropdown opens.
+
+#### `onClose` → `VoidCallback?`
+
+Optional. Called when the dropdown closes.
+
+#### `enabled` → `bool`
+
+Optional. Whether the select is enabled and can be interacted with.
+
+#### `semanticLabel` → `String?`
+
+Optional. Semantic label for accessibility.
+
+#### `closeOnSelect` → `bool`
+
+Optional. Whether to automatically close the dropdown when an item is selected.
+
+#### `focusNode` → `FocusNode?`
+
+Optional. Optional focus node to control focus behavior.
 
 #### `style` → `RemixSelectStyle`
 
-Style configuration. Defaults to `RemixSelectStyle.create()`.
+Optional. The style configuration for the select.
 
-#### `styleSpec` → `RemixSelectSpec?`
 
-Optional pre-resolved style specification for performance optimization.
+### Style Methods
 
-### Style Properties
+#### `label(TextStyler value)`
 
-The `RemixSelectStyle` class provides a fluent API for styling:
+Must be implemented by the class using this mixin Should merge the provided TextStyler with the component's label/text style
 
-#### Trigger Styling
+#### `labelTextStyle(TextStyleMix value)`
 
-**`trigger(RemixSelectTriggerStyle value)`** - Full control over trigger button styling.
+Sets label/text style using TextStyleMix directly
 
-#### Menu Container Styling
+#### `labelColor(Color value)`
 
-**`menuContainer(FlexBoxStyler value)`** - Full control over dropdown menu container styling.
+Sets label/text color
 
-### Menu Item Style Properties
+#### `labelFontSize(double value)`
 
-The `RemixSelectMenuItemStyle` class provides styling for individual items:
+Sets label/text font size
 
-**`padding(EdgeInsetsGeometryMix value)`** - Sets padding around menu item content.
+#### `labelFontWeight(FontWeight value)`
 
-**`iconSize(double value)`** - Sets checkmark icon size.
+Sets label/text font weight
 
-**`borderRadiusAll(Radius value)`** - Sets uniform border radius.
+#### `labelFontStyle(FontStyle value)`
 
-**`color(Color value)`** - Sets background color.
+Sets label/text font style (italic/normal)
 
-**`labelColor(Color value)`** - Sets label text color.
+#### `labelLetterSpacing(double value)`
 
-**`onHovered(RemixSelectMenuItemStyle style)`** - Applies styles when hovered.
+Sets label/text letter spacing
 
-**`onDisabled(RemixSelectMenuItemStyle style)`** - Applies styles when disabled.
+#### `labelDecoration(TextDecoration value)`
+
+Sets label/text decoration (underline, strikethrough, etc.)
+
+#### `labelFontFamily(String value)`
+
+Sets label/text font family
+
+#### `labelHeight(double value)`
+
+Sets label/text line height
+
+#### `labelWordSpacing(double value)`
+
+Sets label/text word spacing
+
+#### `labelDecorationColor(Color value)`
+
+Sets label/text decoration color
+
+#### `icon(IconStyler value)`
+
+Must be implemented by the class using this mixin Should merge the provided IconStyler with the component's icon style
+
+#### `iconColor(Color value)`
+
+Sets icon color
+
+#### `iconSize(double value)`
+
+Sets icon size
+
+#### `iconOpacity(double value)`
+
+Sets icon opacity
+
+#### `iconWeight(double value)`
+
+Sets icon weight (useful for variable icons like Material Symbols)
+
+#### `iconGrade(double value)`
+
+Sets icon grade (useful for Material Icons)
+
+#### `iconFill(double value)`
+
+Sets icon fill (useful for Material Icons filled variants)
+
+#### `iconOpticalSize(double value)`
+
+Sets icon optical size (useful for Material Icons)
+
+#### `iconBlendMode(BlendMode value)`
+
+Sets icon blend mode
+
+#### `iconTextDirection(TextDirection value)`
+
+Sets icon text direction
+
+#### `iconShadows(List<ShadowMix> value)`
+
+Sets icon shadows
+
+#### `iconShadow(ShadowMix value)`
+
+Sets single icon shadow
 

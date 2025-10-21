@@ -102,55 +102,38 @@ const RemixSpinner({
 ```
 </CodeGroup>
 
-## Properties
 
+## Properties
 ### Widget Properties
 
-#### `size` → `double?`
+#### `style` → `Key?`
 
-The diameter of the spinner. If null, uses the style's size.
+Optional. 
 
-#### `strokeWidth` → `double?`
+#### `styleSpec` → `Key?`
 
-The width of the spinner stroke. If null, uses the style's stroke width.
+Optional. 
 
-#### `indicatorColor` → `Color?`
+#### `key` → `Key?`
 
-The color of the animated spinner indicator. If null, uses the style's indicator color.
+Optional. Controls how one widget replaces another widget in the tree.
 
-#### `trackColor` → `Color?`
 
-The color of the background track. If null, uses the style's track color.
+### Style Methods
 
-#### `duration` → `Duration?`
+#### `size(double value)`
 
-The duration of one complete rotation. If null, uses the style's duration.
+#### `indicatorColor(Color value)`
 
-#### `style` → `RemixSpinnerStyle`
+#### `trackColor(Color value)`
 
-Style configuration. Defaults to `RemixSpinnerStyle.create()`.
+#### `strokeWidth(double value)`
 
-#### `styleSpec` → `RemixSpinnerSpec?`
+#### `trackStrokeWidth(double value)`
 
-Optional pre-resolved style specification for performance optimization.
+#### `duration(Duration value)`
 
-### Style Properties
+#### `animate(AnimationConfig animation)`
 
-The `RemixSpinnerStyle` class provides a fluent API for styling:
-
-#### Container Styling
-
-**`size(double value)`** - Sets the spinner diameter.
-
-**`strokeWidth(double value)`** - Sets the stroke width.
-
-#### Color Styling
-
-**`indicatorColor(Color value)`** - Sets the animated indicator color.
-
-**`trackColor(Color value)`** - Sets the background track color.
-
-#### Animation
-
-**`duration(Duration value)`** - Sets the rotation duration.
+#### `wrap(WidgetModifierConfig value)`
 

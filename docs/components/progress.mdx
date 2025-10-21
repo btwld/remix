@@ -91,41 +91,74 @@ const RemixProgress({
 ```
 </CodeGroup>
 
-## Properties
 
+## Properties
 ### Widget Properties
 
-#### `value` → `double?`
+#### `style` → `Key?`
 
-**Required**. The current progress value between 0.0 and 1.0. If `null`, displays an indeterminate progress indicator.
+Optional. 
 
-#### `style` → `RemixProgressStyle`
+#### `styleSpec` → `Key?`
 
-Style configuration. Defaults to `RemixProgressStyle.create()`.
+Optional. 
 
-#### `styleSpec` → `RemixProgressSpec?`
+#### `key` → `Key?`
 
-Optional pre-resolved style specification for performance optimization.
+Optional. Controls how one widget replaces another widget in the tree.
 
-### Style Properties
+#### `value` → `double`
 
-The `RemixProgressStyle` class provides a fluent API for styling:
+**Required**. The progress value between 0 and 1.  This value determines how much of the progress bar is filled. A value of 0 means empty, while 1 means completely filled.
 
-#### Container Styling
 
-**`width(double value)`** - Sets the progress bar width.
+### Style Methods
 
-**`height(double value)`** - Sets the progress bar height.
+#### `height(double value)`
 
-**`wrapClipRRect({BorderRadius? borderRadius})`** - Clips the progress bar with rounded corners.
+Sets progress height
 
-#### Track Styling
+#### `trackColor(Color value)`
 
-**`trackColor(Color value)`** - Sets the background track color.
+Sets track color
 
-#### Indicator Styling
+#### `width(double value)`
 
-**`indicatorColor(Color value)`** - Sets the progress indicator color.
+Sets progress width
 
-**`indicator(BoxStyler value)`** - Full control over indicator styling.
+#### `indicatorColor(Color value)`
+
+Sets fill color
+
+#### `track(BoxStyler value)`
+
+Sets track styling
+
+#### `indicator(BoxStyler value)`
+
+Sets fill styling
+
+#### `trackContainer(BoxStyler value)`
+
+Sets outer container styling
+
+#### `alignment(Alignment value)`
+
+Sets container alignment
+
+#### `wrap(WidgetModifierConfig value)`
+
+#### `animate(AnimationConfig config)`
+
+#### `constraints(BoxConstraintsMix value)`
+
+#### `decoration(DecorationMix value)`
+
+#### `margin(EdgeInsetsGeometryMix value)`
+
+#### `padding(EdgeInsetsGeometryMix value)`
+
+#### `foregroundDecoration(DecorationMix value)`
+
+#### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
 

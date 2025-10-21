@@ -186,160 +186,256 @@ const RemixButton({
 ```
 </CodeGroup>
 
+
 ## Properties
-
 ### Widget Properties
-
-#### `label` → `String`
-
-**Required**. The label text to display in the button.
-
-#### `icon` → `IconData?`
-
-Optional icon to display before the label. Can be customized using `iconBuilder`.
-
-#### `textBuilder` → `RemixButtonTextBuilder?`
-
-Builder for customizing text rendering. Receives `(BuildContext context, TextSpec spec, String text)`.
-
-#### `iconBuilder` → `RemixButtonIconBuilder?`
-
-Builder for customizing icon rendering. Receives `(BuildContext context, IconSpec spec, IconData? icon)`.
-
-#### `loadingBuilder` → `RemixButtonLoadingBuilder?`
-
-Builder for customizing loading spinner. Receives `(BuildContext context, RemixSpinnerSpec spec)`.
-
-#### `loading` → `bool`
-
-Whether the button is in a loading state. When `true`, displays a spinner and becomes non-interactive. Defaults to `false`.
-
-#### `enabled` → `bool`
-
-Whether the button is enabled. When `false`, the button is disabled. Defaults to `true`.
-
-#### `onPressed` → `VoidCallback?`
-
-**Required**. Called when the button is tapped or activated via keyboard. If `null`, the button is disabled.
-
-#### `onLongPress` → `VoidCallback?`
-
-Called when the button is long pressed.
-
-#### `onDoubleTap` → `VoidCallback?`
-
-Called when the button is double tapped.
-
-#### `focusNode` → `FocusNode?`
-
-Optional focus node to control focus behavior.
-
-#### `autofocus` → `bool`
-
-Whether to automatically focus when first built. Defaults to `false`.
-
-#### `enableFeedback` → `bool`
-
-Whether to provide platform-specific feedback on press. Defaults to `true`.
-
-#### `semanticLabel` → `String?`
-
-Optional semantic label for screen readers. If not provided, uses `label`.
-
-#### `semanticHint` → `String?`
-
-Optional semantic hint providing context about what happens when activated.
-
-#### `excludeSemantics` → `bool`
-
-Whether to exclude child semantics. Defaults to `false`.
-
-#### `mouseCursor` → `MouseCursor`
-
-Cursor when hovering over the button. Defaults to `SystemMouseCursors.click`.
 
 #### `style` → `RemixButtonStyle`
 
-Style configuration. Defaults to `RemixButtonStyle.create()`.
+Optional. 
 
 #### `styleSpec` → `RemixButtonSpec?`
 
-Optional pre-resolved style specification for performance optimization.
+Optional. 
 
-### Style Properties
+#### `key` → `Key?`
 
-The `RemixButtonStyle` class provides a fluent API for styling:
+Optional. Controls how one widget replaces another widget in the tree.
 
-#### Container Styling
+#### `label` → `String`
 
-**`padding(EdgeInsetsGeometryMix value)`** - Sets padding around button content.
+**Required**. The label text to display in the button. If [textBuilder] is provided, this is ignored.
 
-**`paddingX(double value)`** - Sets horizontal padding (left and right).
+#### `icon` → `IconData?`
 
-**`paddingY(double value)`** - Sets vertical padding (top and bottom).
+Optional. The icon to display in the button. If [iconBuilder] is provided, this is ignored.
 
-**`margin(EdgeInsetsGeometryMix value)`** - Sets margin around the button.
+#### `textBuilder` → `RemixButtonTextBuilder?`
 
-**`color(Color value)`** - Sets the background color.
+Optional. Builder for customizing the text rendering.
 
-**`decoration(DecorationMix value)`** - Sets background decoration (color, gradient, etc).
+#### `iconBuilder` → `RemixButtonIconBuilder?`
 
-**`spacing(double value)`** - Sets spacing between icon and label.
+Optional. Builder for customizing the icon rendering.
 
-**`alignment(Alignment value)`** - Sets content alignment within the button.
+#### `loadingBuilder` → `RemixButtonLoadingBuilder?`
 
-**`constraints(BoxConstraintsMix value)`** - Sets size constraints (min/max width/height).
+Optional. Builder for customizing the loading state rendering.
 
-**`shadow(BoxShadowMix value)`** - Adds shadow effects.
+#### `autofocus` → `bool`
 
-#### Border & Shape
+Optional. Whether the button should automatically request focus when it is created.
 
-**`borderRadiusAll(double value)`** - Sets uniform border radius.
+#### `loading` → `bool`
 
-**`borderAll({Color? color, double? width})`** - Sets border on all sides.
+Optional. Whether the button is in a loading state.  When true, the button will display a spinner and become non-interactive. The spinner can be customized via [spinnerBuilder].
 
-**`shapeRectangle({BorderRadiusMix? borderRadius, BoxBorder? border})`** - Creates rectangular shape.
+#### `enabled` → `bool`
 
-**`shapeCircle({BoxBorder? border})`** - Creates circular shape.
+Optional. Whether the button is enabled.  When false, the button will be disabled regardless of other conditions. Defaults to true.
 
-**`shapeBeveledRectangle({BorderRadiusMix? borderRadius, BorderSideMix? side})`** - Creates beveled rectangle.
+#### `enableFeedback` → `bool`
 
-**`shapeStadium({BorderSide? side})`** - Creates stadium (pill) shape.
+Optional. Whether to provide feedback when the button is pressed.  Defaults to true.
 
-#### Label Styling
+#### `onPressed` → `VoidCallback?`
 
-**`label(TextStyler value)`** - Full control over label text styling.
+**Required**. Callback function called when the button is pressed.  If null, the button will be considered disabled.
 
-**`labelColor(Color value)`** - Sets label text color.
+#### `onLongPress` → `VoidCallback?`
 
-**`labelFontSize(double value)`** - Sets label font size.
+Optional. Callback function called when the button is long pressed.
 
-**`labelFontWeight(FontWeight value)`** - Sets label font weight.
+#### `onDoubleTap` → `VoidCallback?`
 
-**`labelTextStyle(TextStyleMix value)`** - Sets multiple label properties at once.
+Optional. Callback function called when the button is double tapped.
 
-#### Icon Styling
+#### `focusNode` → `FocusNode?`
 
-**`icon(IconStyler value)`** - Full control over icon styling.
+Optional. Optional focus node to control the button's focus behavior.
 
-**`iconColor(Color value)`** - Sets icon color.
+#### `semanticLabel` → `String?`
 
-**`iconSize(double value)`** - Sets icon size.
+Optional. The semantic label for the button.  Used by screen readers to describe the button.
 
-#### Spinner Styling
+#### `semanticHint` → `String?`
 
-**`spinner(RemixSpinnerStyle value)`** - Full control over loading spinner.
+Optional. The semantic hint for the button.  Provides additional context about what will happen when the button is activated.
 
-**`spinnerIndicatorColor(Color value)`** - Sets spinner color.
+#### `excludeSemantics` → `bool`
 
-**`spinnerSize(double value)`** - Sets spinner size.
+Optional. Whether to exclude child semantics.  When true, the semantics of child widgets will be excluded. Defaults to false.
 
-#### Interactive States
+#### `mouseCursor` → `MouseCursor`
 
-**`onHovered(RemixButtonStyle style)`** - Applies styles when hovered.
+Optional. Cursor when hovering over the button.  Defaults to [SystemMouseCursors.click] when enabled.
 
-**`onPressed(RemixButtonStyle style)`** - Applies styles when pressed.
 
-**`onFocused(RemixButtonStyle style)`** - Applies styles when focused.
+### Style Methods
 
-**`onDisabled(RemixButtonStyle style)`** - Applies styles when disabled.
+#### `label(TextStyler value)`
+
+#### `icon(IconStyler value)`
+
+#### `spinner(RemixSpinnerStyle value)`
+
+#### `padding(EdgeInsetsGeometryMix value)`
+
+Sets padding
+
+#### `margin(EdgeInsetsGeometryMix value)`
+
+Sets margin
+
+#### `decoration(DecorationMix value)`
+
+Sets decoration
+
+#### `alignment(Alignment value)`
+
+Sets container alignment
+
+#### `spacing(double value)`
+
+Sets item spacing between icon and label (Flex spacing)
+
+#### `constraints(BoxConstraintsMix value)`
+
+Sets constraints
+
+#### `animate(AnimationConfig animation)`
+
+#### `flex(FlexStyler value)`
+
+#### `foregroundDecoration(DecorationMix value)`
+
+#### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
+
+#### `color(Color value)`
+
+#### `wrap(WidgetModifierConfig value)`
+
+#### `labelTextStyle(TextStyleMix value)`
+
+Sets label/text style using TextStyleMix directly
+
+#### `labelColor(Color value)`
+
+Sets label/text color
+
+#### `labelFontSize(double value)`
+
+Sets label/text font size
+
+#### `labelFontWeight(FontWeight value)`
+
+Sets label/text font weight
+
+#### `labelFontStyle(FontStyle value)`
+
+Sets label/text font style (italic/normal)
+
+#### `labelLetterSpacing(double value)`
+
+Sets label/text letter spacing
+
+#### `labelDecoration(TextDecoration value)`
+
+Sets label/text decoration (underline, strikethrough, etc.)
+
+#### `labelFontFamily(String value)`
+
+Sets label/text font family
+
+#### `labelHeight(double value)`
+
+Sets label/text line height
+
+#### `labelWordSpacing(double value)`
+
+Sets label/text word spacing
+
+#### `labelDecorationColor(Color value)`
+
+Sets label/text decoration color
+
+#### `iconColor(Color value)`
+
+Sets icon color
+
+#### `iconSize(double value)`
+
+Sets icon size
+
+#### `iconOpacity(double value)`
+
+Sets icon opacity
+
+#### `iconWeight(double value)`
+
+Sets icon weight (useful for variable icons like Material Symbols)
+
+#### `iconGrade(double value)`
+
+Sets icon grade (useful for Material Icons)
+
+#### `iconFill(double value)`
+
+Sets icon fill (useful for Material Icons filled variants)
+
+#### `iconOpticalSize(double value)`
+
+Sets icon optical size (useful for Material Icons)
+
+#### `iconBlendMode(BlendMode value)`
+
+Sets icon blend mode
+
+#### `iconTextDirection(TextDirection value)`
+
+Sets icon text direction
+
+#### `iconShadows(List<ShadowMix> value)`
+
+Sets icon shadows
+
+#### `iconShadow(ShadowMix value)`
+
+Sets single icon shadow
+
+#### `spinnerIndicatorColor(Color value)`
+
+Sets spinner indicator color
+
+#### `spinnerTrackColor(Color value)`
+
+Sets spinner track color
+
+#### `spinnerSize(double value)`
+
+Sets spinner size
+
+#### `spinnerStrokeWidth(double value)`
+
+Sets spinner stroke width
+
+#### `spinnerTrackStrokeWidth(double value)`
+
+Sets spinner track stroke width
+
+#### `spinnerDuration(Duration value)`
+
+Sets spinner animation duration
+
+#### `spinnerFast()`
+
+Sets spinner animation to fast (500ms)
+
+#### `spinnerNormal()`
+
+Sets spinner animation to normal (1000ms)
+
+#### `spinnerSlow()`
+
+Sets spinner animation to slow (1500ms)
+

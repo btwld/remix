@@ -138,83 +138,124 @@ const RemixSlider({
 ```
 </CodeGroup>
 
-## Properties
 
+## Properties
 ### Widget Properties
 
-#### `value` → `double`
+#### `key` → `Key?`
 
-**Required**. The current value of the slider.
-
-#### `onChanged` → `ValueChanged<double>?`
-
-**Required**. Called when the slider value changes. If null, the slider is disabled.
-
-#### `onChangeStart` → `ValueChanged<double>?`
-
-Called when the user starts dragging the slider.
-
-#### `onChangeEnd` → `ValueChanged<double>?`
-
-Called when the user stops dragging the slider.
+Optional. Controls how one widget replaces another widget in the tree.
 
 #### `min` → `double`
 
-The minimum value of the slider range. Defaults to `0.0`.
+Optional. The minimum value the slider can have.
 
 #### `max` → `double`
 
-The maximum value of the slider range. Defaults to `1.0`.
+Optional. The maximum value the slider can have.
 
-#### `enabled` → `bool`
+#### `onChanged` → `ValueChanged<double>?`
 
-Whether the slider is enabled. Defaults to `true`.
+**Required**. Called during drag with the new value.
 
-#### `focusNode` → `FocusNode?`
+#### `value` → `double`
 
-Optional focus node to control focus behavior.
+**Required**. The current value of the slider. Must be between [min] and [max].
 
-#### `autofocus` → `bool`
+#### `onChangeEnd` → `ValueChanged<double>?`
 
-Whether to automatically focus when first built. Defaults to `false`.
+Optional. Called when the user is done selecting a new value.
 
-#### `semanticLabel` → `String?`
+#### `onChangeStart` → `ValueChanged<double>?`
 
-Optional semantic label for screen readers.
+Optional. Called when the user starts dragging the slider.
 
 #### `style` → `RemixSliderStyle`
 
-Style configuration. Defaults to `RemixSliderStyle.create()`.
+Optional. The style configuration for the slider.
 
 #### `styleSpec` → `RemixSliderSpec?`
 
-Optional pre-resolved style specification for performance optimization.
+Optional. The style spec for the slider.
 
-### Style Properties
+#### `enabled` → `bool`
 
-The `RemixSliderStyle` class provides a fluent API for styling:
+Optional. Whether the slider is enabled for interaction.
 
-#### Track Styling
+#### `enableHapticFeedback` → `bool`
 
-**`trackColor(Color value)`** - Sets the inactive track color.
+Optional. Whether to provide haptic feedback during value changes. Defaults to true.
 
-**`rangeColor(Color value)`** - Sets the active range color.
+#### `focusNode` → `FocusNode?`
 
-**`thickness(double value)`** - Sets the track thickness.
+Optional. The focus node for the slider.
 
-#### Thumb Styling
+#### `autofocus` → `bool`
 
-**`thumbSize(Size value)`** - Sets the thumb dimensions.
+Optional. Whether the slider should automatically request focus when it is created.
 
-**`thumbColor(Color value)`** - Sets the thumb color.
+#### `snapDivisions` → `int?`
 
-**`thumb(BoxStyler value)`** - Full control over thumb styling.
+Optional. Optional snapping divisions for interaction only (no visual ticks). When provided, the slider snaps to these discrete steps but does not render any division marks on the track.
 
-#### Interactive States
 
-**`onDisabled(RemixSliderStyle style)`** - Applies styles when disabled.
+### Style Methods
 
-**`onHovered(RemixSliderStyle style)`** - Applies styles when hovered.
+#### `thumbColor(Color value)`
 
-**`onFocused(RemixSliderStyle style)`** - Applies styles when focused.
+Sets thumb color
+
+#### `trackColor(Color value)`
+
+Sets track color (background rail)
+
+#### `rangeColor(Color value)`
+
+Sets range color (filled progress portion)
+
+#### `thumb(BoxStyler value)`
+
+Sets thumb styling
+
+#### `thumbSize(Size size)`
+
+Sets thumb to a fixed [size].
+
+#### `alignment(Alignment value)`
+
+Sets thumb alignment
+
+#### `thickness(double value)`
+
+Sets stroke width for both track and range.
+
+#### `trackThickness(double value)`
+
+Sets stroke width for the track only (background rail).
+
+#### `rangeThickness(double value)`
+
+Sets stroke width for the range only (filled portion).
+
+#### `padding(EdgeInsetsGeometryMix value)`
+
+#### `color(Color value)`
+
+#### `size(double width, double height)`
+
+#### `borderRadius(BorderRadiusGeometryMix radius)`
+
+#### `constraints(BoxConstraintsMix value)`
+
+#### `decoration(DecorationMix value)`
+
+#### `margin(EdgeInsetsGeometryMix value)`
+
+#### `foregroundDecoration(DecorationMix value)`
+
+#### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
+
+#### `wrap(WidgetModifierConfig value)`
+
+#### `animate(AnimationConfig animation)`
 

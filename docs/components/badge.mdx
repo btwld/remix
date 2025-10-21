@@ -124,57 +124,122 @@ const RemixBadge({
 ```
 </CodeGroup>
 
-## Properties
 
+## Properties
 ### Widget Properties
 
-#### `child` → `Widget?`
+#### `style` → `Key?`
 
-Custom content to display inside the badge. When provided, the caller is responsible for applying typography.
+Optional. 
+
+#### `styleSpec` → `Key?`
+
+Optional. 
+
+#### `key` → `Key?`
+
+Optional. Controls how one widget replaces another widget in the tree.
 
 #### `label` → `String?`
 
-Optional text rendered within the badge using the text spec.
+Optional. Optional text label rendered with the badge text style.
+
+#### `child` → `Widget?`
+
+Optional. Optional fully custom badge content. When provided the badge style is applied only to the container.
 
 #### `labelBuilder` → `RemixBadgeLabelBuilder?`
 
-Optional builder that exposes the resolved TextSpec for custom label rendering while keeping configured typography.
+Optional. Optional builder that receives the resolved [TextSpec] so callers can render text with custom widgets while preserving badge typography.
 
-#### `style` → `RemixBadgeStyle`
 
-Style configuration. Defaults to `RemixBadgeStyle.create()`.
+### Style Methods
 
-#### `styleSpec` → `RemixBadgeSpec?`
+#### `color(Color value)`
 
-Optional pre-resolved style specification for performance optimization.
+Sets background color
 
-### Style Properties
+#### `borderRadius(BorderRadiusGeometryMix radius)`
 
-The `RemixBadgeStyle` class provides a fluent API for styling:
+Sets border radius
 
-#### Container Styling
+#### `padding(EdgeInsetsGeometryMix value)`
 
-**`size(double width, double height)`** - Sets badge dimensions.
+Sets padding
 
-**`color(Color value)`** - Sets the background color.
+#### `textColor(Color value)`
 
-**`textColor(Color value)`** - Sets the container background color (alias for color).
+Sets text color
 
-**`decoration(DecorationMix value)`** - Sets background decoration.
+#### `margin(EdgeInsetsGeometryMix value)`
 
-**`borderRadiusAll(double value)`** - Sets uniform border radius.
+Sets margin
 
-**`wrapClipOval()`** - Clips badge content to oval shape.
+#### `decoration(DecorationMix value)`
 
-#### Label Styling
+Sets decoration
 
-**`label(TextStyler value)`** - Full control over label text styling.
+#### `alignment(Alignment value)`
 
-**`labelColor(Color value)`** - Sets label text color.
+Sets container alignment
 
-**`labelFontSize(double value)`** - Sets label font size.
+#### `label(TextStyler value)`
 
-**`labelFontWeight(FontWeight value)`** - Sets label font weight.
+#### `constraints(BoxConstraintsMix value)`
 
-**`labelTextStyle(TextStyleMix value)`** - Sets multiple label properties at once.
+Sets constraints
+
+#### `animate(AnimationConfig animation)`
+
+Sets animation
+
+#### `wrap(WidgetModifierConfig value)`
+
+#### `foregroundDecoration(DecorationMix value)`
+
+#### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
+
+#### `labelTextStyle(TextStyleMix value)`
+
+Sets label/text style using TextStyleMix directly
+
+#### `labelColor(Color value)`
+
+Sets label/text color
+
+#### `labelFontSize(double value)`
+
+Sets label/text font size
+
+#### `labelFontWeight(FontWeight value)`
+
+Sets label/text font weight
+
+#### `labelFontStyle(FontStyle value)`
+
+Sets label/text font style (italic/normal)
+
+#### `labelLetterSpacing(double value)`
+
+Sets label/text letter spacing
+
+#### `labelDecoration(TextDecoration value)`
+
+Sets label/text decoration (underline, strikethrough, etc.)
+
+#### `labelFontFamily(String value)`
+
+Sets label/text font family
+
+#### `labelHeight(double value)`
+
+Sets label/text line height
+
+#### `labelWordSpacing(double value)`
+
+Sets label/text word spacing
+
+#### `labelDecorationColor(Color value)`
+
+Sets label/text decoration color
 

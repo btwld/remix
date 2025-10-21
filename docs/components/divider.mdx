@@ -81,33 +81,56 @@ const RemixDivider({
 ```
 </CodeGroup>
 
-## Properties
 
+## Properties
 ### Widget Properties
 
-#### `style` → `RemixDividerStyle`
+#### `style` → `Key?`
 
-Style configuration. Defaults to `RemixDividerStyle.create()`.
+Optional. 
 
-#### `styleSpec` → `RemixDividerSpec?`
+#### `styleSpec` → `Key?`
 
-Optional pre-resolved style specification for performance optimization.
+Optional. 
 
-### Style Properties
+#### `key` → `Key?`
 
-The `RemixDividerStyle` class provides a fluent API for styling:
+Optional. Controls how one widget replaces another widget in the tree.
 
-#### Container Styling
 
-**`width(double value)`** - Sets the divider width.
+### Style Methods
 
-**`height(double value)`** - Sets the divider height (thickness).
+#### `color(Color value)`
 
-**`color(Color value)`** - Sets the divider color.
+Sets divider color
 
-**`margin(EdgeInsetsGeometryMix value)`** - Sets margin around the divider.
+#### `thickness(double value)`
 
-**`marginX(double value)`** - Sets horizontal margin.
+Sets divider thickness (height for horizontal, width for vertical)
 
-**`marginY(double value)`** - Sets vertical margin.
+#### `padding(EdgeInsetsGeometryMix value)`
+
+Sets container padding
+
+#### `margin(EdgeInsetsGeometryMix value)`
+
+Sets container margin
+
+#### `alignment(Alignment value)`
+
+Sets container alignment
+
+#### `decoration(DecorationMix value)`
+
+Sets container decoration
+
+#### `wrap(WidgetModifierConfig value)`
+
+#### `animate(AnimationConfig config)`
+
+#### `constraints(BoxConstraintsMix value)`
+
+#### `foregroundDecoration(DecorationMix value)`
+
+#### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
 

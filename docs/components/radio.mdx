@@ -177,85 +177,92 @@ const RemixRadio({
 ```
 </CodeGroup>
 
+
 ## Properties
-
-### RemixRadioGroup Properties
-
-#### `groupValue` → `T?`
-
-**Required**. The currently selected value in the radio group.
-
-#### `onChanged` → `ValueChanged<T?>?`
-
-**Required**. Called when a radio button is selected. If null, all radio buttons in the group are disabled.
-
-#### `child` → `Widget`
-
-**Required**. The child widget containing radio buttons.
-
-### RemixRadio Properties
-
-#### `value` → `T`
-
-**Required**. The value this radio button represents.
-
-#### `enabled` → `bool`
-
-Whether the radio button is enabled. Defaults to `true`.
-
-#### `mouseCursor` → `MouseCursor`
-
-The cursor to show when hovering. Defaults to `SystemMouseCursors.click`.
-
-#### `enableFeedback` → `bool`
-
-Whether to provide platform-specific feedback on press. Defaults to `true`.
-
-#### `focusNode` → `FocusNode?`
-
-Optional focus node to control focus behavior.
-
-#### `autofocus` → `bool`
-
-Whether to automatically focus when first built. Defaults to `false`.
-
-#### `semanticLabel` → `String?`
-
-Optional semantic label for screen readers.
+### Widget Properties
 
 #### `style` → `RemixRadioStyle`
 
-Style configuration. Defaults to `RemixRadioStyle.create()`.
+Optional. 
 
 #### `styleSpec` → `RemixRadioSpec?`
 
-Optional pre-resolved style specification for performance optimization.
+Optional. 
 
-### Style Properties
+#### `key` → `Key?`
 
-The `RemixRadioStyle` class provides a fluent API for styling:
+Optional. Controls how one widget replaces another widget in the tree.
 
-#### Container Styling
+#### `value` → `T`
 
-**`size(double width, double height)`** - Sets radio button dimensions.
+**Required**. The value represented by this radio button.
 
-**`color(Color value)`** - Sets the background color.
+#### `autofocus` → `bool`
 
-**`borderRadiusAll(Radius value)`** - Sets uniform border radius.
+Optional. Whether the radio button should automatically request focus when it is created.
 
-**`border(BoxBorderMix value)`** - Sets border styling.
+#### `enabled` → `bool`
 
-**`shadow(BoxShadowMix value)`** - Adds shadow effects.
+Optional. Whether this radio button is enabled.
 
-#### Interactive States
+#### `toggleable` → `bool`
 
-**`onSelected(RemixRadioStyle style)`** - Applies styles when radio is selected.
+Optional. Whether the radio button is toggleable (can be unselected).
 
-**`onHovered(RemixRadioStyle style)`** - Applies styles when hovered.
+#### `focusNode` → `FocusNode?`
 
-**`onPressed(RemixRadioStyle style)`** - Applies styles when pressed.
+Optional. The focus node for the radio button.
 
-**`onFocused(RemixRadioStyle style)`** - Applies styles when focused.
+#### `mouseCursor` → `MouseCursor?`
 
-**`onDisabled(RemixRadioStyle style)`** - Applies styles when disabled.
+Optional. The mouse cursor to use when hovering over the radio button.
+
+#### `enableFeedback` → `bool`
+
+Optional. Whether to provide feedback when the radio button is pressed.
+
+
+### Style Methods
+
+#### `indicator(BoxStyler value)`
+
+Sets indicator styling (selected fill).
+
+#### `alignment(Alignment value)`
+
+Sets container alignment.
+
+#### `padding(EdgeInsetsGeometryMix value)`
+
+Convenience for applying padding around the control.
+
+#### `margin(EdgeInsetsGeometryMix value)`
+
+Convenience for applying margin around the control.
+
+#### `color(Color value)`
+
+Sets background color on the container.
+
+#### `size(double width, double height)`
+
+Sets container size using explicit constraints.
+
+#### `borderRadius(BorderRadiusGeometryMix radius)`
+
+Sets border radius on the outer container.
+
+#### `animate(AnimationConfig animation)`
+
+Sets animation configuration.
+
+#### `wrap(WidgetModifierConfig value)`
+
+#### `constraints(BoxConstraintsMix value)`
+
+#### `decoration(DecorationMix value)`
+
+#### `foregroundDecoration(DecorationMix value)`
+
+#### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
 

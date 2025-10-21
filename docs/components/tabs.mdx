@@ -206,73 +206,160 @@ const RemixTabView({
 ```
 </CodeGroup>
 
+
 ## Properties
+### Widget Properties
 
-### RemixTabs Properties
+#### `key` → `Key?`
 
-#### `selectedTabId` → `String`
-
-**Required**. The ID of the currently selected tab.
-
-#### `onChanged` → `ValueChanged<String>`
-
-**Required**. Called when a tab is selected. Receives the tab ID.
+Optional. Controls how one widget replaces another widget in the tree.
 
 #### `child` → `Widget`
 
-**Required**. The child widget containing tab bar and tab views.
+**Required**. The tabs content.
 
-### RemixTab Properties
+#### `controller` → `NakedTabController?`
 
-#### `tabId` → `String`
+Optional. Optional controller for managing tab state.
 
-**Required**. The unique identifier for this tab.
+#### `selectedTabId` → `String?`
 
-#### `label` → `String?`
+Optional. The identifier of the currently selected tab.
 
-The label text to display in the tab.
+#### `onChanged` → `ValueChanged<String>?`
 
-#### `icon` → `IconData?`
+Optional. Called when the selected tab changes.
 
-Optional icon to display in the tab.
+#### `orientation` → `Axis`
 
-#### `style` → `RemixTabStyle`
+Optional. The tab list orientation.
 
-Style configuration. Defaults to `RemixTabStyle.create()`.
+#### `enabled` → `bool`
 
-### Style Properties
+Optional. Whether the tabs are enabled.
 
-The `RemixTabStyle` class provides a fluent API for styling:
+#### `onEscapePressed` → `VoidCallback?`
 
-#### Container Styling
+Optional. Called when Escape is pressed while a tab has focus.
 
-**`padding(EdgeInsetsGeometryMix value)`** - Sets padding around tab content.
 
-**`color(Color value)`** - Sets the background color.
+### Style Methods
 
-**`borderRounded(double value)`** - Sets uniform border radius.
+#### `alignment(Alignment value)`
 
-**`borderAll({Color? color, double? width})`** - Sets border on all sides.
+Sets container alignment
 
-#### Label Styling
+#### `container(FlexBoxStyler value)`
 
-**`labelFontSize(double value)`** - Sets label font size.
+#### `label(TextStyler value)`
 
-**`labelFontWeight(FontWeight value)`** - Sets label font weight.
+#### `icon(IconStyler value)`
 
-**`labelColor(Color value)`** - Sets label text color.
+#### `animate(AnimationConfig animation)`
 
-#### Icon Styling
+#### `wrap(WidgetModifierConfig value)`
 
-**`iconColor(Color value)`** - Sets icon color.
+#### `flex(FlexStyler value)`
 
-**`iconSize(double value)`** - Sets icon size.
+#### `foregroundDecoration(DecorationMix value)`
 
-#### Interactive States
+#### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
 
-**`onSelected(RemixTabStyle style)`** - Applies styles when tab is selected.
+#### `color(Color value)`
 
-**`onHovered(RemixTabStyle style)`** - Applies styles when hovered.
+#### `constraints(BoxConstraintsMix value)`
 
-**`onPressed(RemixTabStyle style)`** - Applies styles when pressed.
+#### `decoration(DecorationMix value)`
+
+#### `margin(EdgeInsetsGeometryMix value)`
+
+#### `padding(EdgeInsetsGeometryMix value)`
+
+#### `labelTextStyle(TextStyleMix value)`
+
+Sets label/text style using TextStyleMix directly
+
+#### `labelColor(Color value)`
+
+Sets label/text color
+
+#### `labelFontSize(double value)`
+
+Sets label/text font size
+
+#### `labelFontWeight(FontWeight value)`
+
+Sets label/text font weight
+
+#### `labelFontStyle(FontStyle value)`
+
+Sets label/text font style (italic/normal)
+
+#### `labelLetterSpacing(double value)`
+
+Sets label/text letter spacing
+
+#### `labelDecoration(TextDecoration value)`
+
+Sets label/text decoration (underline, strikethrough, etc.)
+
+#### `labelFontFamily(String value)`
+
+Sets label/text font family
+
+#### `labelHeight(double value)`
+
+Sets label/text line height
+
+#### `labelWordSpacing(double value)`
+
+Sets label/text word spacing
+
+#### `labelDecorationColor(Color value)`
+
+Sets label/text decoration color
+
+#### `iconColor(Color value)`
+
+Sets icon color
+
+#### `iconSize(double value)`
+
+Sets icon size
+
+#### `iconOpacity(double value)`
+
+Sets icon opacity
+
+#### `iconWeight(double value)`
+
+Sets icon weight (useful for variable icons like Material Symbols)
+
+#### `iconGrade(double value)`
+
+Sets icon grade (useful for Material Icons)
+
+#### `iconFill(double value)`
+
+Sets icon fill (useful for Material Icons filled variants)
+
+#### `iconOpticalSize(double value)`
+
+Sets icon optical size (useful for Material Icons)
+
+#### `iconBlendMode(BlendMode value)`
+
+Sets icon blend mode
+
+#### `iconTextDirection(TextDirection value)`
+
+Sets icon text direction
+
+#### `iconShadows(List<ShadowMix> value)`
+
+Sets icon shadows
+
+#### `iconShadow(ShadowMix value)`
+
+Sets single icon shadow
 

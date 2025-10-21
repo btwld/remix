@@ -28,7 +28,7 @@ class RemixCard extends StyleWidget<RemixCardSpec> {
 
   /// The widget below this widget in the tree.
   ///
-  /// {@macro flutter.widgets.ProxyWidget.child}
+  /// This widget can only have one child. To lay out multiple children, let this widget's child be a widget such as [RowBox], [ColumnBox], or [StackBox], which have a children property, and then provide the children to that widget.
   final Widget? child;
 
   @override

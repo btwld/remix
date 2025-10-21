@@ -141,81 +141,82 @@ const RemixSwitch({
 ```
 </CodeGroup>
 
-## Properties
 
+## Properties
 ### Widget Properties
 
-#### `selected` → `bool`
+#### `key` → `Key?`
 
-**Required**. Whether the switch is on (true) or off (false).
-
-#### `onChanged` → `ValueChanged<bool>?`
-
-**Required**. Called when the switch is toggled. If null, the switch is disabled.
+Optional. Controls how one widget replaces another widget in the tree.
 
 #### `enabled` → `bool`
 
-Whether the switch is enabled. Defaults to `true`.
+Optional. Whether this switch is enabled.
 
-#### `mouseCursor` → `MouseCursor`
+#### `selected` → `bool`
 
-The cursor to show when hovering. Defaults to `SystemMouseCursors.click`.
+**Required**. Whether the switch is currently selected.
 
-#### `enableFeedback` → `bool`
+#### `onChanged` → `ValueChanged<bool>`
 
-Whether to provide platform-specific feedback on toggle. Defaults to `true`.
-
-#### `focusNode` → `FocusNode?`
-
-Optional focus node to control focus behavior.
-
-#### `autofocus` → `bool`
-
-Whether to automatically focus when first built. Defaults to `false`.
-
-#### `semanticLabel` → `String?`
-
-Optional semantic label for screen readers.
+**Required**. Called when the user toggles the switch.
 
 #### `style` → `RemixSwitchStyle`
 
-Style configuration. Defaults to `RemixSwitchStyle.create()`.
+Optional. The style configuration for the switch.
 
 #### `styleSpec` → `RemixSwitchSpec?`
 
-Optional pre-resolved style specification for performance optimization.
+Optional. The style spec for the switch.
 
-### Style Properties
+#### `enableFeedback` → `bool`
 
-The `RemixSwitchStyle` class provides a fluent API for styling:
+Optional. Whether to enable haptic feedback when toggled.
 
-#### Container Styling
+#### `focusNode` → `FocusNode?`
 
-**`size(double width, double height)`** - Sets switch track dimensions.
+Optional. The focus node for the switch.
 
-**`color(Color value)`** - Sets the track background color.
+#### `autofocus` → `bool`
 
-**`borderRadiusAll(Radius value)`** - Sets uniform border radius.
+Optional. Whether the switch should automatically request focus when it is created.
 
-**`alignment(Alignment value)`** - Sets thumb position alignment.
+#### `semanticLabel` → `String?`
 
-#### Thumb Styling
+Optional. The semantic label for the switch.
 
-**`thumb(BoxStyler value)`** - Full control over thumb styling.
+#### `mouseCursor` → `MouseCursor`
 
-**`thumbColor(Color value)`** - Sets the thumb color.
+Optional. Cursor when hovering over the switch.
 
-#### Animation
 
-**`animate(AnimationConfig config)`** - Configures transition animations.
+### Style Methods
 
-#### Interactive States
+#### `thumbColor(Color value)`
 
-**`onSelected(RemixSwitchStyle style)`** - Applies styles when switch is on.
+Sets thumb color
 
-**`onHovered(RemixSwitchStyle style)`** - Applies styles when hovered.
+#### `thumb(BoxStyler value)`
 
-**`onFocused(RemixSwitchStyle style)`** - Applies styles when focused.
+Sets thumb styling
 
-**`onDisabled(RemixSwitchStyle style)`** - Applies styles when disabled.
+#### `alignment(Alignment value)`
+
+Sets container alignment
+
+#### `wrap(WidgetModifierConfig value)`
+
+#### `animate(AnimationConfig config)`
+
+#### `constraints(BoxConstraintsMix value)`
+
+#### `decoration(DecorationMix value)`
+
+#### `margin(EdgeInsetsGeometryMix value)`
+
+#### `padding(EdgeInsetsGeometryMix value)`
+
+#### `foregroundDecoration(DecorationMix value)`
+
+#### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
 

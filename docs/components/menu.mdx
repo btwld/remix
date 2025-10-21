@@ -188,69 +188,200 @@ const RemixMenu({
 ```
 </CodeGroup>
 
-## Properties
 
+## Properties
 ### Widget Properties
+
+#### `key` → `Key?`
+
+Optional. Controls how one widget replaces another widget in the tree.
 
 #### `trigger` → `RemixMenuTrigger`
 
-**Required**. The widget that triggers the menu when pressed.
+**Required**. The trigger data that defines the menu's button.
 
-#### `items` → `List<Widget>`
+#### `items` → `List<RemixMenuItemData<T>>`
 
-**Required**. The menu items to display (typically `RemixMenuItem` and `RemixMenuDivider` widgets).
-
-#### `onSelected` → `ValueChanged<T>?`
-
-**Required**. Called when a menu item is selected. Receives the item's value.
+**Required**. The list of menu items and dividers. Use [RemixMenuItem] for selectable items and [RemixMenuDivider] for separators.
 
 #### `controller` → `MenuController?`
 
-Optional controller for programmatic menu control.
+Optional. Optional controller for programmatic control of the menu state. If not provided, an internal controller will be created automatically.
+
+#### `onSelected` → `ValueChanged<T>?`
+
+Optional. Called when an item is selected.
+
+#### `onOpen` → `VoidCallback?`
+
+Optional. Called when the menu opens.
+
+#### `onClose` → `VoidCallback?`
+
+Optional. Called when the menu closes.
+
+#### `onCanceled` → `VoidCallback?`
+
+Optional. Called when the menu closes without a selection.
+
+#### `onOpenRequested` → `RawMenuAnchorOpenRequestedCallback?`
+
+Optional. Open/close interceptors (for example, to drive animations).
+
+#### `onCloseRequested` → `RawMenuAnchorCloseRequestedCallback?`
+
+Optional. 
+
+#### `consumeOutsideTaps` → `bool`
+
+Optional. Whether outside taps on the trigger are consumed.
+
+#### `useRootOverlay` → `bool`
+
+Optional. Whether to target the root overlay instead of the nearest ancestor.
+
+#### `closeOnClickOutside` → `bool`
+
+Optional. Whether taps outside the overlay close the menu.
+
+#### `triggerFocusNode` → `FocusNode?`
+
+Optional. Optional focus node for the trigger.
 
 #### `positioning` → `OverlayPositionConfig`
 
-Configuration for menu overlay positioning. Defaults to `OverlayPositionConfig()`.
+Optional. Overlay positioning configuration.
 
 #### `style` → `RemixMenuStyle`
 
-Style configuration. Defaults to `RemixMenuStyle.create()`.
+Optional. The style configuration for the menu.
 
-#### `styleSpec` → `RemixMenuSpec?`
 
-Optional pre-resolved style specification for performance optimization.
+### Style Methods
 
-### Style Properties
+#### `label(TextStyler value)`
 
-The `RemixMenuStyle` class provides a fluent API for styling:
+#### `leadingIcon(IconStyler value)`
 
-#### Trigger Styling
+#### `trailingIcon(IconStyler value)`
 
-**`trigger(RemixMenuTriggerStyle value)`** - Full control over trigger button styling.
+#### `alignment(Alignment value)`
 
-#### Overlay Styling
+Sets container alignment
 
-**`overlay(FlexBoxStyler value)`** - Full control over menu overlay container styling.
+#### `padding(EdgeInsetsGeometryMix value)`
 
-#### Divider Styling
+#### `color(Color value)`
 
-**`divider(RemixDividerStyle value)`** - Full control over menu divider styling.
+#### `size(double width, double height)`
 
-### Menu Item Style Properties
+#### `borderRadius(BorderRadiusGeometryMix radius)`
 
-The `RemixMenuItemStyle` class provides styling for individual menu items:
+#### `constraints(BoxConstraintsMix value)`
 
-**`padding(EdgeInsetsGeometryMix value)`** - Sets padding around menu item content.
+#### `decoration(DecorationMix value)`
 
-**`spacing(double value)`** - Sets spacing between icon and label.
+#### `margin(EdgeInsetsGeometryMix value)`
 
-**`color(Color value)`** - Sets background color.
+#### `foregroundDecoration(DecorationMix value)`
 
-**`borderRadiusAll(Radius value)`** - Sets uniform border radius.
+#### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
 
-**`label(TextStyler value)`** - Full control over label text styling.
+#### `flex(FlexStyler value)`
 
-**`leadingIcon(IconStyler value)`** - Full control over leading icon styling.
+#### `animate(AnimationConfig animation)`
 
-**`onHovered(RemixMenuItemStyle style)`** - Applies styles when hovered.
+#### `wrap(WidgetModifierConfig value)`
+
+#### `labelTextStyle(TextStyleMix value)`
+
+Sets label/text style using TextStyleMix directly
+
+#### `labelColor(Color value)`
+
+Sets label/text color
+
+#### `labelFontSize(double value)`
+
+Sets label/text font size
+
+#### `labelFontWeight(FontWeight value)`
+
+Sets label/text font weight
+
+#### `labelFontStyle(FontStyle value)`
+
+Sets label/text font style (italic/normal)
+
+#### `labelLetterSpacing(double value)`
+
+Sets label/text letter spacing
+
+#### `labelDecoration(TextDecoration value)`
+
+Sets label/text decoration (underline, strikethrough, etc.)
+
+#### `labelFontFamily(String value)`
+
+Sets label/text font family
+
+#### `labelHeight(double value)`
+
+Sets label/text line height
+
+#### `labelWordSpacing(double value)`
+
+Sets label/text word spacing
+
+#### `labelDecorationColor(Color value)`
+
+Sets label/text decoration color
+
+#### `icon(IconStyler value)`
+
+Must be implemented by the class using this mixin Should merge the provided IconStyler with the component's icon style
+
+#### `iconColor(Color value)`
+
+Sets icon color
+
+#### `iconSize(double value)`
+
+Sets icon size
+
+#### `iconOpacity(double value)`
+
+Sets icon opacity
+
+#### `iconWeight(double value)`
+
+Sets icon weight (useful for variable icons like Material Symbols)
+
+#### `iconGrade(double value)`
+
+Sets icon grade (useful for Material Icons)
+
+#### `iconFill(double value)`
+
+Sets icon fill (useful for Material Icons filled variants)
+
+#### `iconOpticalSize(double value)`
+
+Sets icon optical size (useful for Material Icons)
+
+#### `iconBlendMode(BlendMode value)`
+
+Sets icon blend mode
+
+#### `iconTextDirection(TextDirection value)`
+
+Sets icon text direction
+
+#### `iconShadows(List<ShadowMix> value)`
+
+Sets icon shadows
+
+#### `iconShadow(ShadowMix value)`
+
+Sets single icon shadow
 

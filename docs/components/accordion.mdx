@@ -200,22 +200,11 @@ const RemixAccordion({
 </CodeGroup>
 
 ## Properties
+### Widget Properties
 
-### RemixAccordionGroup Properties
+#### `key` → `Key?`
 
-#### `child` → `Widget`
-
-**Required**. The accordion items to render.
-
-#### `controller` → `RemixAccordionController<T>`
-
-**Required**. Controller that manages which accordion items are expanded/collapsed and enforces min/max expansion constraints.
-
-#### `initialExpandedValues` → `List<T>`
-
-Values expanded on the first build when the controller is empty. Defaults to empty list.
-
-### RemixAccordion Properties
+Optional. Controls how one widget replaces another widget in the tree.
 
 #### `value` → `T`
 
@@ -227,103 +216,62 @@ Values expanded on the first build when the controller is empty. Defaults to emp
 
 #### `title` → `String?`
 
-Title text for the trigger. Either `title` or `builder` must be provided.
+Optional. Title text for the trigger.
 
 #### `leadingIcon` → `IconData?`
 
-Optional leading icon for the trigger.
+Optional. Optional leading icon for the trigger.
 
 #### `trailingIcon` → `IconData?`
 
-Optional trailing icon for the trigger. Defaults to add/remove icons based on expansion state.
+Optional. Optional trailing icon for the trigger.
 
 #### `builder` → `NakedAccordionTriggerBuilder<T>?`
 
-Custom builder for the trigger. When provided, `title`, `leadingIcon`, and `trailingIcon` are ignored.
+Optional. Custom builder for the trigger.
 
 #### `enabled` → `bool`
 
-Whether the accordion item is interactive. Defaults to `true`.
+Optional. Whether the accordion item is interactive.
 
 #### `mouseCursor` → `MouseCursor`
 
-Mouse cursor to use when interactive. Defaults to `SystemMouseCursors.click`.
+Optional. Mouse cursor to use when interactive.
 
 #### `enableFeedback` → `bool`
 
-Whether to provide platform feedback on interactions. Defaults to `true`.
+Optional. Whether to provide platform feedback on interactions.
 
 #### `autofocus` → `bool`
 
-Whether the header should autofocus. Defaults to `false`.
+Optional. Whether the header should autofocus.
 
 #### `focusNode` → `FocusNode?`
 
-Focus node associated with the header.
+Optional. Focus node associated with the header.
 
 #### `onFocusChange` → `ValueChanged<bool>?`
 
-Called when the header's focus state changes.
+Optional. Called when the header's focus state changes.
 
 #### `onHoverChange` → `ValueChanged<bool>?`
 
-Called when the header's hover state changes.
+Optional. Called when the header's hover state changes.
 
 #### `onPressChange` → `ValueChanged<bool>?`
 
-Called when the header's pressed state changes.
+Optional. Called when the header's pressed state changes.
 
 #### `semanticLabel` → `String?`
 
-Semantic label announced for the header. Defaults to `title` if not provided.
+Optional. Semantic label announced for the header.
 
-#### `style` → `RemixAccordionStyle`
+#### `style` → `RemixAccordionStyle<T>`
 
-Style configuration. Defaults to `RemixAccordionStyle.create()`.
+Optional. The style configuration for the accordion item.
 
 #### `transitionBuilder` → `Widget Function(Widget, Animation<double>)`
 
-The transition builder for the accordion item. Defaults to `defaultAccordionTransitionBuilder`.
+Optional. The transition builder for the accordion item.
 
-### Style Properties
-
-The `RemixAccordionStyle` class provides a fluent API for styling:
-
-#### Container Styling
-
-**`padding(EdgeInsetsGeometryMix value)`** - Sets padding around accordion content.
-
-**`paddingX(double value)`** - Sets horizontal padding.
-
-**`paddingY(double value)`** - Sets vertical padding.
-
-**`color(Color value)`** - Sets the background color.
-
-**`decoration(DecorationMix value)`** - Sets background decoration.
-
-**`borderRounded(double value)`** - Sets uniform border radius.
-
-#### Trigger Styling
-
-**`trigger(FlexBoxStyler value)`** - Full control over trigger layout and styling.
-
-**`title(TextStyler value)`** - Full control over title text styling.
-
-**`leadingIcon(IconStyler value)`** - Full control over leading icon styling.
-
-**`trailingIcon(IconStyler value)`** - Full control over trailing icon styling.
-
-#### Content Styling
-
-**`content(BoxStyler value)`** - Full control over expanded content container styling.
-
-#### Interactive States
-
-**`onHovered(RemixAccordionStyle style)`** - Applies styles when hovered.
-
-**`onPressed(RemixAccordionStyle style)`** - Applies styles when pressed.
-
-**`onFocused(RemixAccordionStyle style)`** - Applies styles when focused.
-
-**`onDisabled(RemixAccordionStyle style)`** - Applies styles when disabled.
 

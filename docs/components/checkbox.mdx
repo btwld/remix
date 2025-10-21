@@ -125,89 +125,170 @@ const RemixCheckbox({
 ```
 </CodeGroup>
 
-## Properties
 
+## Properties
 ### Widget Properties
 
-#### `selected` → `bool`
+#### `key` → `Key?`
 
-**Required**. Whether the checkbox is checked.
-
-#### `onChanged` → `ValueChanged<bool?>?`
-
-**Required**. Called when the checkbox value changes. If null, the checkbox is disabled.
+Optional. Controls how one widget replaces another widget in the tree.
 
 #### `enabled` → `bool`
 
-Whether the checkbox is enabled. Defaults to `true`.
+Optional. Whether the checkbox is enabled for interaction.
 
-#### `indeterminate` → `bool?`
+#### `selected` → `bool?`
 
-Whether the checkbox is in an indeterminate state (partially checked). Defaults to `false`.
+**Required**. Whether the checkbox is currently selected. When [tristate] is true, can be null for indeterminate state.
 
-#### `mouseCursor` → `MouseCursor`
+#### `tristate` → `bool`
 
-The cursor to show when hovering over the checkbox. Defaults to `SystemMouseCursors.click`.
+Optional. Whether the checkbox can be true, false, or null (indeterminate).
 
-#### `enableFeedback` → `bool`
+#### `onChanged` → `ValueChanged<bool?>?`
 
-Whether to provide platform-specific feedback on press. Defaults to `true`.
-
-#### `focusNode` → `FocusNode?`
-
-Optional focus node to control focus behavior.
+Optional. The callback function that is called when the checkbox is tapped. When [tristate] is true, the value can be null.
 
 #### `autofocus` → `bool`
 
-Whether to automatically focus when first built. Defaults to `false`.
+Optional. Whether the checkbox should automatically request focus when it is created.
 
-#### `semanticLabel` → `String?`
+#### `checkedIcon` → `IconData`
 
-Optional semantic label for screen readers.
+Optional. The icon to display when the checkbox is checked.
 
-#### `iconBuilder` → `RemixCheckboxIconBuilder?`
+#### `uncheckedIcon` → `IconData?`
 
-Builder for customizing icon rendering. Receives `(BuildContext context, IconSpec spec)`.
+Optional. The icon to display when the checkbox is unchecked.
+
+#### `indeterminateIcon` → `IconData`
+
+Optional. The icon to display when the checkbox is in indeterminate state (null value).
+
+#### `enableFeedback` → `bool`
+
+Optional. Whether to provide haptic feedback when the checkbox is toggled. Defaults to true.
 
 #### `style` → `RemixCheckboxStyle`
 
-Style configuration. Defaults to `RemixCheckboxStyle.create()`.
+Optional. The style configuration for the checkbox.
 
 #### `styleSpec` → `RemixCheckboxSpec?`
 
-Optional pre-resolved style specification for performance optimization.
+Optional. The style spec for the checkbox.
 
-### Style Properties
+#### `focusNode` → `FocusNode?`
 
-The `RemixCheckboxStyle` class provides a fluent API for styling:
+Optional. The focus node for the checkbox.
 
-#### Container Styling
+#### `semanticLabel` → `String?`
 
-**`size(double width, double height)`** - Sets checkbox dimensions.
+Optional. The semantic label for the checkbox.
 
-**`color(Color value)`** - Sets the background color.
+#### `mouseCursor` → `MouseCursor`
 
-**`decoration(DecorationMix value)`** - Sets background decoration.
+Optional. Cursor when hovering over the checkbox.
 
-**`borderRadiusAll(Radius value)`** - Sets uniform border radius.
 
-**`border(BoxBorderMix value)`** - Sets border styling.
+### Style Methods
 
-#### Icon Styling
+#### `checkboxSize(double value)`
 
-**`icon(IconStyler value)`** - Full control over checkmark icon styling.
+Sets checkbox size by constraining the container.
 
-**`iconColor(Color value)`** - Sets checkmark icon color.
+#### `checkboxBorderRadius(double radius)`
 
-**`iconSize(double value)`** - Sets checkmark icon size.
+Sets checkbox border radius on the container.
 
-#### Interactive States
+#### `border(BoxBorderMix value)`
 
-**`onSelected(RemixCheckboxStyle style)`** - Applies styles when checkbox is checked.
+Sets checkbox border on the container.
 
-**`onHovered(RemixCheckboxStyle style)`** - Applies styles when hovered.
+#### `indicatorColor(Color value)`
 
-**`onFocused(RemixCheckboxStyle style)`** - Applies styles when focused.
+Sets indicator color.
 
-**`onDisabled(RemixCheckboxStyle style)`** - Applies styles when disabled.
+#### `alignment(Alignment value)`
+
+Sets container alignment.
+
+#### `onIndeterminate(RemixCheckboxStyle value)`
+
+#### `icon(IconStyler value)`
+
+#### `padding(EdgeInsetsGeometryMix value)`
+
+Sets container padding.
+
+#### `color(Color value)`
+
+Sets checkbox background color on the container.
+
+#### `size(double width, double height)`
+
+Sets checkbox size with separate width and height.
+
+#### `borderRadius(BorderRadiusGeometryMix radius)`
+
+Sets border radius on the outer container.
+
+#### `animate(AnimationConfig animation)`
+
+Sets animation configuration.
+
+#### `wrap(WidgetModifierConfig value)`
+
+#### `constraints(BoxConstraintsMix value)`
+
+#### `decoration(DecorationMix value)`
+
+#### `margin(EdgeInsetsGeometryMix value)`
+
+#### `foregroundDecoration(DecorationMix value)`
+
+#### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
+
+#### `iconColor(Color value)`
+
+Sets icon color
+
+#### `iconSize(double value)`
+
+Sets icon size
+
+#### `iconOpacity(double value)`
+
+Sets icon opacity
+
+#### `iconWeight(double value)`
+
+Sets icon weight (useful for variable icons like Material Symbols)
+
+#### `iconGrade(double value)`
+
+Sets icon grade (useful for Material Icons)
+
+#### `iconFill(double value)`
+
+Sets icon fill (useful for Material Icons filled variants)
+
+#### `iconOpticalSize(double value)`
+
+Sets icon optical size (useful for Material Icons)
+
+#### `iconBlendMode(BlendMode value)`
+
+Sets icon blend mode
+
+#### `iconTextDirection(TextDirection value)`
+
+Sets icon text direction
+
+#### `iconShadows(List<ShadowMix> value)`
+
+Sets icon shadows
+
+#### `iconShadow(ShadowMix value)`
+
+Sets single icon shadow
 

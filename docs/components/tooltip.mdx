@@ -142,57 +142,76 @@ const RemixTooltip({
 ```
 </CodeGroup>
 
-## Properties
 
+## Properties
 ### Widget Properties
 
-#### `child` → `Widget`
+#### `key` → `Key?`
 
-**Required**. The widget that triggers the tooltip when hovered.
-
-#### `tooltipChild` → `Widget`
-
-**Required**. The content to display in the tooltip overlay.
-
-#### `waitDuration` → `Duration?`
-
-The duration to wait before showing the tooltip after hover begins. If null, uses the style's wait duration.
-
-#### `showDuration` → `Duration?`
-
-The duration to keep the tooltip visible. If null, uses the style's show duration.
+Optional. Controls how one widget replaces another widget in the tree.
 
 #### `style` → `RemixTooltipStyle`
 
-Style configuration. Defaults to `RemixTooltipStyle.create()`.
+Optional. The style configuration for the tooltip.
 
 #### `styleSpec` → `RemixTooltipSpec?`
 
-Optional pre-resolved style specification for performance optimization.
+Optional. The style spec for the tooltip.
 
-### Style Properties
+#### `tooltipChild` → `Widget`
 
-The `RemixTooltipStyle` class provides a fluent API for styling:
+**Required**. The widget to display in the tooltip.
 
-#### Container Styling
+#### `child` → `Widget`
 
-**`padding(EdgeInsetsGeometryMix value)`** - Sets padding around tooltip content.
+**Required**. The child widget that will trigger the tooltip.
 
-**`color(Color value)`** - Sets the tooltip background color.
+#### `tooltipSemantics` → `String?`
 
-**`borderRadius(BorderRadiusGeometryMix value)`** - Sets border radius.
+Optional. The semantic label for the tooltip.
 
-**`decoration(DecorationMix value)`** - Sets background decoration.
 
-**`shadow(BoxShadowMix value)`** - Adds shadow effects.
+### Style Methods
 
-#### Text Styling
+#### `padding(EdgeInsetsGeometryMix value)`
 
-**`wrapDefaultTextStyle(TextStyleMix value)`** - Sets default text style for tooltip content.
+Sets container padding
 
-#### Timing
+#### `margin(EdgeInsetsGeometryMix value)`
 
-**`waitDuration(Duration value)`** - Sets the duration to wait before showing.
+Sets container margin
 
-**`showDuration(Duration value)`** - Sets the duration to keep visible.
+#### `alignment(Alignment value)`
+
+Sets container alignment
+
+#### `color(Color value)`
+
+Sets container background color
+
+#### `borderRadius(BorderRadiusGeometryMix radius)`
+
+Sets container border radius
+
+#### `decoration(DecorationMix value)`
+
+Sets container decoration
+
+#### `waitDuration(Duration value)`
+
+Sets the wait duration before showing tooltip
+
+#### `showDuration(Duration value)`
+
+Sets the show duration before hiding tooltip
+
+#### `wrap(WidgetModifierConfig value)`
+
+#### `animate(AnimationConfig config)`
+
+#### `constraints(BoxConstraintsMix value)`
+
+#### `foregroundDecoration(DecorationMix value)`
+
+#### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
 
