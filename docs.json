@@ -1,9 +1,10 @@
 {
-  "name": "remix",
+  "name": "",
   "description": "A comprehensive Flutter component library combining headless UI behavior with Mix's powerful styling system.",
   "favicon": "/assets/favicon.png",
   "logo": {
-    "dark": "/assets/favicon.png"
+    "dark": "/assets/logo_dark.png",
+    "light": "/assets/logo_light.png"
   },
   "theme": {
     "defaultTheme": "dark",
