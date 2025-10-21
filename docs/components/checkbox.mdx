@@ -127,6 +127,69 @@ const RemixCheckbox({
 
 
 ## Properties
+### Widget Properties
+
+#### `key` → `Key?`
+
+Optional. Controls how one widget replaces another widget in the tree.
+
+#### `enabled` → `bool`
+
+Optional. Whether the checkbox is enabled for interaction.
+
+#### `selected` → `bool?`
+
+**Required**. Whether the checkbox is currently selected. When [tristate] is true, can be null for indeterminate state.
+
+#### `tristate` → `bool`
+
+Optional. Whether the checkbox can be true, false, or null (indeterminate).
+
+#### `onChanged` → `ValueChanged<bool?>?`
+
+Optional. The callback function that is called when the checkbox is tapped. When [tristate] is true, the value can be null.
+
+#### `autofocus` → `bool`
+
+Optional. Whether the checkbox should automatically request focus when it is created.
+
+#### `checkedIcon` → `IconData`
+
+Optional. The icon to display when the checkbox is checked.
+
+#### `uncheckedIcon` → `IconData?`
+
+Optional. The icon to display when the checkbox is unchecked.
+
+#### `indeterminateIcon` → `IconData`
+
+Optional. The icon to display when the checkbox is in indeterminate state (null value).
+
+#### `enableFeedback` → `bool`
+
+Optional. Whether to provide haptic feedback when the checkbox is toggled. Defaults to true.
+
+#### `style` → `RemixCheckboxStyle`
+
+Optional. The style configuration for the checkbox.
+
+#### `styleSpec` → `RemixCheckboxSpec?`
+
+Optional. The style spec for the checkbox.
+
+#### `focusNode` → `FocusNode?`
+
+Optional. The focus node for the checkbox.
+
+#### `semanticLabel` → `String?`
+
+Optional. The semantic label for the checkbox.
+
+#### `mouseCursor` → `MouseCursor`
+
+Optional. Cursor when hovering over the checkbox.
+
+
 ### Style Methods
 
 #### `checkboxSize(double value)`

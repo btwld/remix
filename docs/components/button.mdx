@@ -188,6 +188,89 @@ const RemixButton({
 
 
 ## Properties
+### Widget Properties
+
+#### `style` → `RemixButtonStyle`
+
+Optional. 
+
+#### `styleSpec` → `RemixButtonSpec?`
+
+Optional. 
+
+#### `key` → `Key?`
+
+Optional. Controls how one widget replaces another widget in the tree.
+
+#### `label` → `String`
+
+**Required**. The label text to display in the button. If [textBuilder] is provided, this is ignored.
+
+#### `icon` → `IconData?`
+
+Optional. The icon to display in the button. If [iconBuilder] is provided, this is ignored.
+
+#### `textBuilder` → `RemixButtonTextBuilder?`
+
+Optional. Builder for customizing the text rendering.
+
+#### `iconBuilder` → `RemixButtonIconBuilder?`
+
+Optional. Builder for customizing the icon rendering.
+
+#### `loadingBuilder` → `RemixButtonLoadingBuilder?`
+
+Optional. Builder for customizing the loading state rendering.
+
+#### `autofocus` → `bool`
+
+Optional. Whether the button should automatically request focus when it is created.
+
+#### `loading` → `bool`
+
+Optional. Whether the button is in a loading state.  When true, the button will display a spinner and become non-interactive. The spinner can be customized via [spinnerBuilder].
+
+#### `enabled` → `bool`
+
+Optional. Whether the button is enabled.  When false, the button will be disabled regardless of other conditions. Defaults to true.
+
+#### `enableFeedback` → `bool`
+
+Optional. Whether to provide feedback when the button is pressed.  Defaults to true.
+
+#### `onPressed` → `VoidCallback?`
+
+**Required**. Callback function called when the button is pressed.  If null, the button will be considered disabled.
+
+#### `onLongPress` → `VoidCallback?`
+
+Optional. Callback function called when the button is long pressed.
+
+#### `onDoubleTap` → `VoidCallback?`
+
+Optional. Callback function called when the button is double tapped.
+
+#### `focusNode` → `FocusNode?`
+
+Optional. Optional focus node to control the button's focus behavior.
+
+#### `semanticLabel` → `String?`
+
+Optional. The semantic label for the button.  Used by screen readers to describe the button.
+
+#### `semanticHint` → `String?`
+
+Optional. The semantic hint for the button.  Provides additional context about what will happen when the button is activated.
+
+#### `excludeSemantics` → `bool`
+
+Optional. Whether to exclude child semantics.  When true, the semantics of child widgets will be excluded. Defaults to false.
+
+#### `mouseCursor` → `MouseCursor`
+
+Optional. Cursor when hovering over the button.  Defaults to [SystemMouseCursors.click] when enabled.
+
+
 ### Style Methods
 
 #### `label(TextStyler value)`

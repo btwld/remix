@@ -165,6 +165,249 @@ const RemixTextField({
 
 
 ## Properties
+### Widget Properties
+
+#### `key` → `Key?`
+
+Optional. Controls how one widget replaces another widget in the tree.
+
+#### `controller` → `TextEditingController?`
+
+Optional. Controls the text being edited.
+
+#### `focusNode` → `FocusNode?`
+
+Optional. Defines the keyboard focus for this widget.
+
+#### `keyboardType` → `TextInputType?`
+
+Optional. The type of keyboard to use for editing the text.
+
+#### `textInputAction` → `TextInputAction?`
+
+Optional. The type of action button to use for the keyboard.
+
+#### `textCapitalization` → `TextCapitalization`
+
+Optional. Configures how the platform keyboard will select an uppercase or lowercase keyboard.
+
+#### `textDirection` → `TextDirection?`
+
+Optional. The directionality of the text.
+
+#### `readOnly` → `bool`
+
+Optional. Whether the text can be changed.
+
+#### `showCursor` → `bool?`
+
+Optional. Whether to show cursor.
+
+#### `autofocus` → `bool`
+
+Optional. Whether this text field should focus itself if nothing else is already focused.
+
+#### `obscuringCharacter` → `String`
+
+Optional. Character used for obscuring text if obscureText is true.
+
+#### `obscureText` → `bool`
+
+Optional. Whether to hide the text being edited.
+
+#### `autocorrect` → `bool`
+
+Optional. Whether to enable autocorrect.
+
+#### `enableSuggestions` → `bool`
+
+Optional. Whether to show input suggestions as the user types.
+
+#### `smartDashesType` → `SmartDashesType?`
+
+Optional. Configuration for smart dashes.
+
+#### `smartQuotesType` → `SmartQuotesType?`
+
+Optional. Configuration for smart quotes.
+
+#### `maxLines` → `int?`
+
+Optional. The maximum number of lines for the text to span.
+
+#### `minLines` → `int?`
+
+Optional. The minimum number of lines to occupy when the content spans fewer lines.
+
+#### `expands` → `bool`
+
+Optional. Whether this widget's height will be sized to fill its parent.
+
+#### `maxLength` → `int?`
+
+Optional. The maximum number of characters to allow in the text field.
+
+#### `maxLengthEnforcement` → `MaxLengthEnforcement?`
+
+Optional. How the maxLength limit should be enforced.
+
+#### `onChanged` → `ValueChanged<String>?`
+
+Optional. Called when the user initiates a change to the TextField's value.
+
+#### `onEditingComplete` → `VoidCallback?`
+
+Optional. Called when the user submits editable content.
+
+#### `onSubmitted` → `ValueChanged<String>?`
+
+Optional. Called when the user indicates that they are done editing the text in the field.
+
+#### `onAppPrivateCommand` → `AppPrivateCommandCallback?`
+
+Optional. This is used to receive a private command from the input method.
+
+#### `inputFormatters` → `List<TextInputFormatter>?`
+
+Optional. Optional input formatters.
+
+#### `enabled` → `bool`
+
+Optional. Whether the text field is enabled.
+
+#### `dragStartBehavior` → `DragStartBehavior`
+
+Optional. Defines how to handle drag start behavior.
+
+#### `enableInteractiveSelection` → `bool`
+
+Optional. Whether to enable user interface affordances for changing the text selection.
+
+#### `selectionControls` → `TextSelectionControls?`
+
+Optional. Optional delegate for building the text selection handles and toolbar.
+
+#### `onTapOutside` → `TapRegionCallback?`
+
+Optional. Called when the user taps outside of this text field.
+
+#### `onPressUpOutside` → `TapRegionUpCallback?`
+
+Optional. Called when tap up is detected outside of this text field.
+
+#### `onTapAlwaysCalled` → `bool`
+
+Optional. Whether onTap should be called for every tap.
+
+#### `scrollController` → `ScrollController?`
+
+Optional. The ScrollController to use when vertically scrolling the input.
+
+#### `scrollPhysics` → `ScrollPhysics?`
+
+Optional. The ScrollPhysics to use when vertically scrolling the input.
+
+#### `autofillHints` → `Iterable<String>?`
+
+Optional. A list of strings that helps the autofill service identify the type of this text input.
+
+#### `contentInsertionConfiguration` → `ContentInsertionConfiguration?`
+
+Optional. Configuration for content insertion.
+
+#### `clipBehavior` → `Clip`
+
+Optional. The content will be clipped (or not) according to this option.
+
+#### `restorationId` → `String?`
+
+Optional. Restoration ID to save and restore the state of the text field.
+
+#### `stylusHandwritingEnabled` → `bool`
+
+Optional. Whether stylus handwriting is enabled.
+
+#### `enableIMEPersonalizedLearning` → `bool`
+
+Optional. Whether to enable that the IME update personalized data.
+
+#### `contextMenuBuilder` → `EditableTextContextMenuBuilder?`
+
+Optional. A context menu builder for the text field.
+
+#### `spellCheckConfiguration` → `SpellCheckConfiguration?`
+
+Optional. Configuration for spell checking.
+
+#### `magnifierConfiguration` → `TextMagnifierConfiguration?`
+
+Optional. Configuration for text magnification.
+
+#### `canRequestFocus` → `bool`
+
+Optional. Whether this text field can request focus.
+
+#### `ignorePointers` → `bool?`
+
+Optional. Whether to ignore pointer events.
+
+#### `undoController` → `UndoHistoryController?`
+
+Optional. Undo controller for managing undo/redo operations.
+
+#### `groupId` → `Object`
+
+Optional. The group ID for the text field.
+
+#### `hintText` → `String?`
+
+Optional. Hint text to display when the text field is empty.
+
+#### `helperText` → `String?`
+
+Optional. Helper text to display below the text field.
+
+#### `label` → `String?`
+
+Optional. Label text to display above the text field.
+
+#### `error` → `bool`
+
+Optional. Whether the text field is in error state.
+
+#### `styleSpec` → `RemixTextFieldSpec?`
+
+Optional. The style spec for the text field.
+
+#### `leading` → `Widget?`
+
+Optional. A widget to display at the leading edge of the text field.
+
+#### `trailing` → `Widget?`
+
+Optional. A widget to display at the trailing edge of the text field.
+
+#### `onPressed` → `VoidCallback?`
+
+Optional. Called when the text field is pressed (for tap interactions).
+
+#### `semanticLabel` → `String?`
+
+Optional. The semantic label for the text field.
+
+#### `semanticHint` → `String?`
+
+Optional. The semantic hint for the text field.
+
+#### `excludeSemantics` → `bool`
+
+Optional. Whether to exclude child semantics.
+
+#### `style` → `RemixTextFieldStyle`
+
+Optional. The style configuration for the text field.
+
+
 ### Style Methods
 
 #### `color(Color value)`

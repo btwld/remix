@@ -140,6 +140,65 @@ const RemixSlider({
 
 
 ## Properties
+### Widget Properties
+
+#### `key` → `Key?`
+
+Optional. Controls how one widget replaces another widget in the tree.
+
+#### `min` → `double`
+
+Optional. The minimum value the slider can have.
+
+#### `max` → `double`
+
+Optional. The maximum value the slider can have.
+
+#### `onChanged` → `ValueChanged<double>?`
+
+**Required**. Called during drag with the new value.
+
+#### `value` → `double`
+
+**Required**. The current value of the slider. Must be between [min] and [max].
+
+#### `onChangeEnd` → `ValueChanged<double>?`
+
+Optional. Called when the user is done selecting a new value.
+
+#### `onChangeStart` → `ValueChanged<double>?`
+
+Optional. Called when the user starts dragging the slider.
+
+#### `style` → `RemixSliderStyle`
+
+Optional. The style configuration for the slider.
+
+#### `styleSpec` → `RemixSliderSpec?`
+
+Optional. The style spec for the slider.
+
+#### `enabled` → `bool`
+
+Optional. Whether the slider is enabled for interaction.
+
+#### `enableHapticFeedback` → `bool`
+
+Optional. Whether to provide haptic feedback during value changes. Defaults to true.
+
+#### `focusNode` → `FocusNode?`
+
+Optional. The focus node for the slider.
+
+#### `autofocus` → `bool`
+
+Optional. Whether the slider should automatically request focus when it is created.
+
+#### `snapDivisions` → `int?`
+
+Optional. Optional snapping divisions for interaction only (no visual ticks). When provided, the slider snaps to these discrete steps but does not render any division marks on the track.
+
+
 ### Style Methods
 
 #### `thumbColor(Color value)`

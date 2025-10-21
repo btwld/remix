@@ -11,15 +11,19 @@ Automatically generates documentation for style methods from `*_style.dart` file
 This script:
 1. Scans all `*_style.dart` files in `lib/src/components/`
 2. **Uses the Dart analyzer to parse files into AST (Abstract Syntax Tree)**
-3. Extracts public methods from:
+3. Extracts **style methods** from:
    - The style class itself
    - **Base classes it extends** (e.g., `RemixContainerStyle`, `RemixFlexContainerStyle`)
    - **Mixins applied with `with` clause** (e.g., `LabelStyleMixin`, `IconStyleMixin`)
-4. Parses method signatures, parameters, and doc comments accurately
-5. Deduplicates methods (class implementations override mixin implementations)
-6. Generates markdown documentation for all methods
-7. Updates corresponding `.mdx` files in `docs/components/`
-8. Replaces everything after `## Properties` with generated content
+4. Extracts **widget properties** from:
+   - The component's widget class constructor parameters
+   - Field declarations with their types and doc comments
+   - Determines if properties are required or optional
+5. Parses method signatures, parameters, and doc comments accurately
+6. Deduplicates methods (class implementations override mixin implementations)
+7. Generates markdown documentation for both style methods and widget properties
+8. Updates corresponding `.mdx` files in `docs/components/`
+9. Replaces everything after `## Properties` with generated content
 
 ### Usage
 
@@ -60,6 +64,22 @@ The script replaces **everything after** the `## Properties` section with the ge
 ...
 
 ## Properties
+
+### Widget Properties
+
+#### `label` → `String`
+
+**Required**. The label text to display.
+
+#### `icon` → `IconData?`
+
+Optional. The icon to display.
+
+#### `onPressed` → `VoidCallback?`
+
+**Required**. Callback when pressed.
+
+...
 
 ### Style Methods
 
@@ -107,12 +127,20 @@ Sets badge dimensions.
    - Skips internal methods: `resolve()`, `merge()`, `copyWith()`, `call()`
    - Deduplicates by name (class methods take precedence over mixin methods)
 
-5. **Markdown Generation**: Creates formatted markdown with:
-   - `### Style Methods` header
-   - Each method as `#### \`methodName(parameters)\``
+5. **Widget Property Extraction**: From widget files (`*_widget.dart`):
+   - Finds the widget class (e.g., `RemixButton`)
+   - Extracts constructor parameters
+   - Gets types from field declarations
+   - Collects doc comments from fields
+   - Determines if properties are required or optional
+
+6. **Markdown Generation**: Creates formatted markdown with:
+   - `### Widget Properties` section (first) with properties as `#### \`name\` → \`Type\``
+   - **Required** or Optional indicator for each property
+   - `### Style Methods` section (second) with methods as `#### \`methodName(parameters)\``
    - Doc comments as descriptions
 
-6. **Documentation Update**: 
+7. **Documentation Update**: 
    - Finds `## Properties` section in `.mdx` files
    - **Replaces everything after `## Properties` with the generated style methods**
    - Clean, simple approach - no manual content preservation needed

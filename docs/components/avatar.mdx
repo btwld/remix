@@ -136,6 +136,57 @@ const RemixAvatar({
 
 
 ## Properties
+### Widget Properties
+
+#### `style` → `Key?`
+
+Optional. 
+
+#### `styleSpec` → `Key?`
+
+Optional. 
+
+#### `key` → `Key?`
+
+Optional. Controls how one widget replaces another widget in the tree.
+
+#### `backgroundImage` → `ImageProvider?`
+
+Optional. The background image to display in the avatar.
+
+#### `foregroundImage` → `ImageProvider?`
+
+Optional. The foreground image to display in the avatar.
+
+#### `onBackgroundImageError` → `ImageErrorListener?`
+
+Optional. Callback function called when the background image fails to load.
+
+#### `onForegroundImageError` → `ImageErrorListener?`
+
+Optional. Callback function called when the foreground image fails to load.
+
+#### `child` → `Widget?`
+
+Optional. Custom content to display inside the avatar. When provided the caller is responsible for applying typography.
+
+#### `label` → `String?`
+
+Optional. Optional text rendered within the avatar using the text spec.
+
+#### `labelBuilder` → `RemixAvatarLabelBuilder?`
+
+Optional. Optional builder that exposes the resolved [TextSpec] for custom label rendering while keeping the configured typography.
+
+#### `icon` → `IconData?`
+
+Optional. Optional icon rendered when no [child] or [label] is provided.
+
+#### `iconBuilder` → `RemixAvatarIconBuilder?`
+
+Optional. Optional builder that exposes the resolved [IconSpec] for custom icon rendering while preserving configured icon styling.
+
+
 ### Style Methods
 
 #### `square(double size)`

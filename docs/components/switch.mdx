@@ -143,6 +143,53 @@ const RemixSwitch({
 
 
 ## Properties
+### Widget Properties
+
+#### `key` → `Key?`
+
+Optional. Controls how one widget replaces another widget in the tree.
+
+#### `enabled` → `bool`
+
+Optional. Whether this switch is enabled.
+
+#### `selected` → `bool`
+
+**Required**. Whether the switch is currently selected.
+
+#### `onChanged` → `ValueChanged<bool>`
+
+**Required**. Called when the user toggles the switch.
+
+#### `style` → `RemixSwitchStyle`
+
+Optional. The style configuration for the switch.
+
+#### `styleSpec` → `RemixSwitchSpec?`
+
+Optional. The style spec for the switch.
+
+#### `enableFeedback` → `bool`
+
+Optional. Whether to enable haptic feedback when toggled.
+
+#### `focusNode` → `FocusNode?`
+
+Optional. The focus node for the switch.
+
+#### `autofocus` → `bool`
+
+Optional. Whether the switch should automatically request focus when it is created.
+
+#### `semanticLabel` → `String?`
+
+Optional. The semantic label for the switch.
+
+#### `mouseCursor` → `MouseCursor`
+
+Optional. Cursor when hovering over the switch.
+
+
 ### Style Methods
 
 #### `thumbColor(Color value)`

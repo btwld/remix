@@ -126,6 +126,33 @@ const RemixBadge({
 
 
 ## Properties
+### Widget Properties
+
+#### `style` → `Key?`
+
+Optional. 
+
+#### `styleSpec` → `Key?`
+
+Optional. 
+
+#### `key` → `Key?`
+
+Optional. Controls how one widget replaces another widget in the tree.
+
+#### `label` → `String?`
+
+Optional. Optional text label rendered with the badge text style.
+
+#### `child` → `Widget?`
+
+Optional. Optional fully custom badge content. When provided the badge style is applied only to the container.
+
+#### `labelBuilder` → `RemixBadgeLabelBuilder?`
+
+Optional. Optional builder that receives the resolved [TextSpec] so callers can render text with custom widgets while preserving badge typography.
+
+
 ### Style Methods
 
 #### `color(Color value)`

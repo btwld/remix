@@ -24,11 +24,24 @@ void main() async {
     final content = await file.readAsString();
     final methods = _extractMethods(content);
 
-    if (methods.isNotEmpty) {
-      print('  Found ${methods.length} public methods');
+    // Also try to extract widget properties
+    final widgetFile = File(
+      file.path.replaceAll('_style.dart', '_widget.dart'),
+    );
+    List<PropertyInfo> widgetProperties = [];
+    if (await widgetFile.exists()) {
+      final widgetContent = await widgetFile.readAsString();
+      widgetProperties = _extractWidgetProperties(widgetContent, componentName);
+      print('  Found ${widgetProperties.length} widget properties');
+    }
+
+    if (methods.isNotEmpty || widgetProperties.isNotEmpty) {
+      if (methods.isNotEmpty) {
+        print('  Found ${methods.length} style methods');
+      }
 
       // Generate markdown documentation
-      final markdown = _generateMarkdown(methods);
+      final markdown = _generateMarkdown(methods, widgetProperties);
 
       // Check if corresponding .mdx file exists
       final docFile = File('docs/components/$componentName.mdx');
@@ -82,6 +95,20 @@ class Parameter {
     this.isRequired = false,
     this.isNamed = false,
     this.defaultValue,
+  });
+}
+
+class PropertyInfo {
+  final String name;
+  final String type;
+  final bool isRequired;
+  final String? docComment;
+
+  const PropertyInfo({
+    required this.name,
+    required this.type,
+    required this.isRequired,
+    this.docComment,
   });
 }
 
@@ -235,6 +262,202 @@ class StyleClassFinder extends RecursiveAstVisitor<void> {
   }
 }
 
+class WidgetPropertyVisitor extends RecursiveAstVisitor<void> {
+  final String componentName;
+  final List<PropertyInfo> properties = [];
+  final Map<String, String> fieldDocs = {};
+  final Map<String, String> fieldTypes = {};
+
+  WidgetPropertyVisitor(this.componentName);
+
+  void _extractConstructorParameters(FormalParameterList params) {
+    // Process all parameters from the constructor
+    for (final param in params.parameters) {
+      String? name;
+      String type = 'dynamic';
+      bool isRequired = false;
+      print('param: $param');
+
+      // Handle all parameter types
+      if (param is DefaultFormalParameter) {
+        // This is an optional parameter with a default value
+        final innerParam = param.parameter;
+        name = innerParam.name?.toString();
+        isRequired = param.isRequired;
+
+        // Get type from field declaration if it's a field formal parameter
+        if (innerParam is FieldFormalParameter) {
+          final fieldName = name ?? '';
+          if (fieldTypes.containsKey(fieldName)) {
+            type = fieldTypes[fieldName]!;
+          } else {
+            type = innerParam.type?.toString() ?? 'dynamic';
+          }
+        } else if (innerParam is SuperFormalParameter) {
+          // super.fieldName parameter
+          if (innerParam.type != null) {
+            type = innerParam.type.toString();
+          } else {
+            type = 'Key?'; // Default for super.key
+          }
+        } else {
+          type = _getParameterType(innerParam);
+        }
+      } else if (param is SimpleFormalParameter) {
+        // Simple parameter with type annotation
+        name = param.name?.toString();
+        type = param.type?.toString() ?? 'dynamic';
+        isRequired = param.isRequired;
+      } else if (param is FieldFormalParameter) {
+        // this.fieldName parameter (required)
+        name = param.name.toString();
+        isRequired = param.isRequired;
+
+        // Try to get type from field declaration first
+        if (fieldTypes.containsKey(name)) {
+          type = fieldTypes[name]!;
+        } else if (param.type != null) {
+          type = param.type.toString();
+        }
+      } else if (param is SuperFormalParameter) {
+        // super.fieldName parameter
+        name = param.name.toString();
+        isRequired = param.isRequired;
+
+        if (param.type != null) {
+          type = param.type.toString();
+        } else {
+          type = 'Key?'; // Default for super.key
+        }
+      } else if (param is FunctionTypedFormalParameter) {
+        // Function parameter
+        name = param.name.toString();
+        isRequired = param.isRequired;
+        type = param.returnType?.toString() ?? 'Function';
+      } else {
+        // Unknown parameter type, skip
+        print('  ⚠ Unknown parameter type: ${param.runtimeType}');
+        continue;
+      }
+
+      // Skip if we couldn't extract a name
+      if (name == null || name.isEmpty) {
+        continue;
+      }
+
+      // Get doc comment, or use default for common parameters
+      String? docComment = fieldDocs[name];
+      if (docComment == null && name == 'key') {
+        docComment =
+            'Controls how one widget replaces another widget in the tree.';
+      }
+
+      properties.add(
+        PropertyInfo(
+          name: name,
+          type: type,
+          isRequired: isRequired,
+          docComment: docComment,
+        ),
+      );
+    }
+  }
+
+  String _getParameterType(NormalFormalParameter param) {
+    if (param is SimpleFormalParameter) {
+      return param.type?.toString() ?? 'dynamic';
+    } else if (param is FieldFormalParameter) {
+      return param.type?.toString() ?? 'dynamic';
+    } else if (param is SuperFormalParameter) {
+      return param.type?.toString() ?? 'Key?';
+    } else if (param is FunctionTypedFormalParameter) {
+      return param.returnType?.toString() ?? 'Function';
+    }
+
+    return 'dynamic';
+  }
+
+  String? _extractDocComment(Comment? comment) {
+    if (comment == null) return null;
+    final docLines = <String>[];
+    for (final token in comment.tokens) {
+      final line = token.toString().trim();
+      if (line.startsWith('///')) {
+        docLines.add(line.substring(3).trim());
+      }
+    }
+    return docLines.isNotEmpty ? docLines.join(' ') : null;
+  }
+
+  @override
+  void visitClassDeclaration(ClassDeclaration node) {
+    final className = node.name.toString();
+    // Look for the widget class (e.g., RemixButton)
+    final expectedClassName = 'Remix${_capitalize(componentName)}';
+    print(expectedClassName);
+    if (className.toLowerCase() == expectedClassName.toLowerCase()) {
+      // First pass: collect field documentation and types
+      for (final member in node.members) {
+        if (member is FieldDeclaration) {
+          final docComment = _extractDocComment(member.documentationComment);
+          final type = member.fields.type?.toString();
+          for (final variable in member.fields.variables) {
+            final fieldName = variable.name.toString();
+            if (docComment != null) {
+              fieldDocs[fieldName] = docComment;
+            }
+            if (type != null) {
+              fieldTypes[fieldName] = type;
+            }
+          }
+        }
+      }
+
+      // Second pass: extract constructor parameters
+      for (final member in node.members) {
+        if (member is ConstructorDeclaration && member.name == null) {
+          // This is the default constructor
+          _extractConstructorParameters(member.parameters);
+        }
+      }
+    }
+    super.visitClassDeclaration(node);
+  }
+}
+
+String _capitalize(String s) {
+  if (s.isEmpty) return s;
+
+  // Convert snake_case to PascalCase
+  return s
+      .split('_')
+      .map((word) {
+        if (word.isEmpty) return word;
+        return word[0].toUpperCase() + word.substring(1);
+      })
+      .join('');
+}
+
+List<PropertyInfo> _extractWidgetProperties(
+  String content,
+  String componentName,
+) {
+  try {
+    final parseResult = parseString(content: content);
+
+    if (parseResult.errors.isNotEmpty) {
+      return [];
+    }
+
+    final visitor = WidgetPropertyVisitor(componentName);
+    parseResult.unit.visitChildren(visitor);
+
+    return visitor.properties;
+  } catch (e) {
+    return [];
+  }
+}
+
 List<MethodInfo> _extractMethods(String content) {
   try {
     // Parse the Dart file
@@ -349,24 +572,58 @@ List<MethodInfo> _extractMethodsFromMixin(String mixinName, String returnType) {
   }
 }
 
-String _generateMarkdown(List<MethodInfo> methods) {
+String _generateMarkdown(
+  List<MethodInfo> methods,
+  List<PropertyInfo> properties,
+) {
   final buffer = StringBuffer();
-  buffer.writeln('### Style Methods\n');
 
-  for (final method in methods) {
-    // Format: #### `methodName(parameters)`
-    final params = method.parameters
-        .map((p) {
-          final param = '${p.type} ${p.name}';
+  // Generate Widget Properties section first
+  if (properties.isNotEmpty) {
+    buffer.writeln('### Widget Properties\n');
 
-          return p.defaultValue != null ? '$param = ${p.defaultValue}' : param;
-        })
-        .join(', ');
+    for (final property in properties) {
+      // Format: #### `propertyName` → `Type`
+      buffer.writeln('#### `${property.name}` → `${property.type}`\n');
 
-    buffer.writeln('#### `${method.name}($params)`\n');
+      // Add required/optional indicator
+      if (property.isRequired) {
+        buffer.write('**Required**. ');
+      } else {
+        buffer.write('Optional. ');
+      }
 
-    if (method.docComment != null && method.docComment!.isNotEmpty) {
-      buffer.writeln('${method.docComment}\n');
+      // Add doc comment
+      if (property.docComment != null && property.docComment!.isNotEmpty) {
+        buffer.writeln('${property.docComment}\n');
+      } else {
+        buffer.writeln('\n');
+      }
+    }
+
+    buffer.writeln();
+  }
+
+  // Generate Style Methods section
+  if (methods.isNotEmpty) {
+    buffer.writeln('### Style Methods\n');
+
+    for (final method in methods) {
+      // Format: #### `methodName(parameters)`
+      final params = method.parameters
+          .map((p) {
+            final param = '${p.type} ${p.name}';
+            return p.defaultValue != null
+                ? '$param = ${p.defaultValue}'
+                : param;
+          })
+          .join(', ');
+
+      buffer.writeln('#### `${method.name}($params)`\n');
+
+      if (method.docComment != null && method.docComment!.isNotEmpty) {
+        buffer.writeln('${method.docComment}\n');
+      }
     }
   }
 

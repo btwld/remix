@@ -190,6 +190,73 @@ const RemixMenu({
 
 
 ## Properties
+### Widget Properties
+
+#### `key` → `Key?`
+
+Optional. Controls how one widget replaces another widget in the tree.
+
+#### `trigger` → `RemixMenuTrigger`
+
+**Required**. The trigger data that defines the menu's button.
+
+#### `items` → `List<RemixMenuItemData<T>>`
+
+**Required**. The list of menu items and dividers. Use [RemixMenuItem] for selectable items and [RemixMenuDivider] for separators.
+
+#### `controller` → `MenuController?`
+
+Optional. Optional controller for programmatic control of the menu state. If not provided, an internal controller will be created automatically.
+
+#### `onSelected` → `ValueChanged<T>?`
+
+Optional. Called when an item is selected.
+
+#### `onOpen` → `VoidCallback?`
+
+Optional. Called when the menu opens.
+
+#### `onClose` → `VoidCallback?`
+
+Optional. Called when the menu closes.
+
+#### `onCanceled` → `VoidCallback?`
+
+Optional. Called when the menu closes without a selection.
+
+#### `onOpenRequested` → `RawMenuAnchorOpenRequestedCallback?`
+
+Optional. Open/close interceptors (for example, to drive animations).
+
+#### `onCloseRequested` → `RawMenuAnchorCloseRequestedCallback?`
+
+Optional. 
+
+#### `consumeOutsideTaps` → `bool`
+
+Optional. Whether outside taps on the trigger are consumed.
+
+#### `useRootOverlay` → `bool`
+
+Optional. Whether to target the root overlay instead of the nearest ancestor.
+
+#### `closeOnClickOutside` → `bool`
+
+Optional. Whether taps outside the overlay close the menu.
+
+#### `triggerFocusNode` → `FocusNode?`
+
+Optional. Optional focus node for the trigger.
+
+#### `positioning` → `OverlayPositionConfig`
+
+Optional. Overlay positioning configuration.
+
+#### `style` → `RemixMenuStyle`
+
+Optional. The style configuration for the menu.
+
+
 ### Style Methods
 
 #### `label(TextStyler value)`

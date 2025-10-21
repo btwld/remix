@@ -208,6 +208,41 @@ const RemixTabView({
 
 
 ## Properties
+### Widget Properties
+
+#### `key` → `Key?`
+
+Optional. Controls how one widget replaces another widget in the tree.
+
+#### `child` → `Widget`
+
+**Required**. The tabs content.
+
+#### `controller` → `NakedTabController?`
+
+Optional. Optional controller for managing tab state.
+
+#### `selectedTabId` → `String?`
+
+Optional. The identifier of the currently selected tab.
+
+#### `onChanged` → `ValueChanged<String>?`
+
+Optional. Called when the selected tab changes.
+
+#### `orientation` → `Axis`
+
+Optional. The tab list orientation.
+
+#### `enabled` → `bool`
+
+Optional. Whether the tabs are enabled.
+
+#### `onEscapePressed` → `VoidCallback?`
+
+Optional. Called when Escape is pressed while a tab has focus.
+
+
 ### Style Methods
 
 #### `alignment(Alignment value)`
