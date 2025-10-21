@@ -188,69 +188,133 @@ const RemixMenu({
 ```
 </CodeGroup>
 
+
 ## Properties
+### Style Methods
 
-### Widget Properties
+#### `label(TextStyler value)`
 
-#### `trigger` → `RemixMenuTrigger`
+#### `leadingIcon(IconStyler value)`
 
-**Required**. The widget that triggers the menu when pressed.
+#### `trailingIcon(IconStyler value)`
 
-#### `items` → `List<Widget>`
+#### `alignment(Alignment value)`
 
-**Required**. The menu items to display (typically `RemixMenuItem` and `RemixMenuDivider` widgets).
+Sets container alignment
 
-#### `onSelected` → `ValueChanged<T>?`
+#### `padding(EdgeInsetsGeometryMix value)`
 
-**Required**. Called when a menu item is selected. Receives the item's value.
+#### `color(Color value)`
 
-#### `controller` → `MenuController?`
+#### `size(double width, double height)`
 
-Optional controller for programmatic menu control.
+#### `borderRadius(BorderRadiusGeometryMix radius)`
 
-#### `positioning` → `OverlayPositionConfig`
+#### `constraints(BoxConstraintsMix value)`
 
-Configuration for menu overlay positioning. Defaults to `OverlayPositionConfig()`.
+#### `decoration(DecorationMix value)`
 
-#### `style` → `RemixMenuStyle`
+#### `margin(EdgeInsetsGeometryMix value)`
 
-Style configuration. Defaults to `RemixMenuStyle.create()`.
+#### `foregroundDecoration(DecorationMix value)`
 
-#### `styleSpec` → `RemixMenuSpec?`
+#### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
 
-Optional pre-resolved style specification for performance optimization.
+#### `flex(FlexStyler value)`
 
-### Style Properties
+#### `animate(AnimationConfig animation)`
 
-The `RemixMenuStyle` class provides a fluent API for styling:
+#### `wrap(WidgetModifierConfig value)`
 
-#### Trigger Styling
+#### `labelTextStyle(TextStyleMix value)`
 
-**`trigger(RemixMenuTriggerStyle value)`** - Full control over trigger button styling.
+Sets label/text style using TextStyleMix directly
 
-#### Overlay Styling
+#### `labelColor(Color value)`
 
-**`overlay(FlexBoxStyler value)`** - Full control over menu overlay container styling.
+Sets label/text color
 
-#### Divider Styling
+#### `labelFontSize(double value)`
 
-**`divider(RemixDividerStyle value)`** - Full control over menu divider styling.
+Sets label/text font size
 
-### Menu Item Style Properties
+#### `labelFontWeight(FontWeight value)`
 
-The `RemixMenuItemStyle` class provides styling for individual menu items:
+Sets label/text font weight
 
-**`padding(EdgeInsetsGeometryMix value)`** - Sets padding around menu item content.
+#### `labelFontStyle(FontStyle value)`
 
-**`spacing(double value)`** - Sets spacing between icon and label.
+Sets label/text font style (italic/normal)
 
-**`color(Color value)`** - Sets background color.
+#### `labelLetterSpacing(double value)`
 
-**`borderRadiusAll(Radius value)`** - Sets uniform border radius.
+Sets label/text letter spacing
 
-**`label(TextStyler value)`** - Full control over label text styling.
+#### `labelDecoration(TextDecoration value)`
 
-**`leadingIcon(IconStyler value)`** - Full control over leading icon styling.
+Sets label/text decoration (underline, strikethrough, etc.)
 
-**`onHovered(RemixMenuItemStyle style)`** - Applies styles when hovered.
+#### `labelFontFamily(String value)`
+
+Sets label/text font family
+
+#### `labelHeight(double value)`
+
+Sets label/text line height
+
+#### `labelWordSpacing(double value)`
+
+Sets label/text word spacing
+
+#### `labelDecorationColor(Color value)`
+
+Sets label/text decoration color
+
+#### `icon(IconStyler value)`
+
+Must be implemented by the class using this mixin Should merge the provided IconStyler with the component's icon style
+
+#### `iconColor(Color value)`
+
+Sets icon color
+
+#### `iconSize(double value)`
+
+Sets icon size
+
+#### `iconOpacity(double value)`
+
+Sets icon opacity
+
+#### `iconWeight(double value)`
+
+Sets icon weight (useful for variable icons like Material Symbols)
+
+#### `iconGrade(double value)`
+
+Sets icon grade (useful for Material Icons)
+
+#### `iconFill(double value)`
+
+Sets icon fill (useful for Material Icons filled variants)
+
+#### `iconOpticalSize(double value)`
+
+Sets icon optical size (useful for Material Icons)
+
+#### `iconBlendMode(BlendMode value)`
+
+Sets icon blend mode
+
+#### `iconTextDirection(TextDirection value)`
+
+Sets icon text direction
+
+#### `iconShadows(List<ShadowMix> value)`
+
+Sets icon shadows
+
+#### `iconShadow(ShadowMix value)`
+
+Sets single icon shadow
 

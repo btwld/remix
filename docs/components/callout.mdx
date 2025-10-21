@@ -109,69 +109,99 @@ const RemixCallout({
 ```
 </CodeGroup>
 
+
 ## Properties
+### Style Methods
 
-### Widget Properties
+#### `padding(EdgeInsetsGeometryMix value)`
 
-#### `child` → `Widget?`
+Sets container padding
 
-Custom content to display inside the callout. When provided, `text` is ignored.
+#### `margin(EdgeInsetsGeometryMix value)`
 
-#### `text` → `String?`
+Sets container margin
 
-Text content to display in the callout.
+#### `color(Color value)`
 
-#### `icon` → `IconData?`
+Sets container background color
 
-Optional icon to display alongside the content.
+#### `borderRadius(BorderRadiusGeometryMix radius)`
 
-#### `textBuilder` → `RemixCalloutTextBuilder?`
+Sets container border radius
 
-Builder for customizing text rendering. Receives `(BuildContext context, TextSpec spec, String text)`.
+#### `decoration(DecorationMix value)`
 
-#### `iconBuilder` → `RemixCalloutIconBuilder?`
+Sets container decoration
 
-Builder for customizing icon rendering. Receives `(BuildContext context, IconSpec spec, IconData? icon)`.
+#### `alignment(Alignment value)`
 
-#### `style` → `RemixCalloutStyle`
+Sets container alignment
 
-Style configuration. Defaults to `RemixCalloutStyle.create()`.
+#### `spacing(double value)`
 
-#### `styleSpec` → `RemixCalloutSpec?`
+Sets flex spacing
 
-Optional pre-resolved style specification for performance optimization.
+#### `iconColor(Color value)`
 
-### Style Properties
+Sets icon color
 
-The `RemixCalloutStyle` class provides a fluent API for styling:
+#### `textColor(Color value)`
 
-#### Container Styling
+Sets text color
 
-**`padding(EdgeInsetsGeometryMix value)`** - Sets padding around callout content.
+#### `wrap(WidgetModifierConfig value)`
 
-**`color(Color value)`** - Sets the background color.
+#### `animate(AnimationConfig config)`
 
-**`decoration(DecorationMix value)`** - Sets background decoration.
+#### `constraints(BoxConstraintsMix value)`
 
-**`spacing(double value)`** - Sets spacing between icon and text.
+#### `foregroundDecoration(DecorationMix value)`
 
-**`height(double value)`** - Sets the callout height.
+#### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
 
-**`mainAxisSize(MainAxisSize value)`** - Sets the main axis size.
+#### `flex(FlexStyler value)`
 
-#### Text Styling
+#### `icon(IconStyler value)`
 
-**`text(TextStyler value)`** - Full control over text styling.
+#### `text(TextStyler value)`
 
-**`textColor(Color value)`** - Sets text color.
+#### `iconSize(double value)`
 
-**`textFontSize(double value)`** - Sets text font size.
+Sets icon size
 
-#### Icon Styling
+#### `iconOpacity(double value)`
 
-**`icon(IconStyler value)`** - Full control over icon styling.
+Sets icon opacity
 
-**`iconColor(Color value)`** - Sets icon color.
+#### `iconWeight(double value)`
 
-**`iconSize(double value)`** - Sets icon size.
+Sets icon weight (useful for variable icons like Material Symbols)
+
+#### `iconGrade(double value)`
+
+Sets icon grade (useful for Material Icons)
+
+#### `iconFill(double value)`
+
+Sets icon fill (useful for Material Icons filled variants)
+
+#### `iconOpticalSize(double value)`
+
+Sets icon optical size (useful for Material Icons)
+
+#### `iconBlendMode(BlendMode value)`
+
+Sets icon blend mode
+
+#### `iconTextDirection(TextDirection value)`
+
+Sets icon text direction
+
+#### `iconShadows(List<ShadowMix> value)`
+
+Sets icon shadows
+
+#### `iconShadow(ShadowMix value)`
+
+Sets single icon shadow
 

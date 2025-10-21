@@ -142,57 +142,49 @@ const RemixTooltip({
 ```
 </CodeGroup>
 
+
 ## Properties
+### Style Methods
 
-### Widget Properties
+#### `padding(EdgeInsetsGeometryMix value)`
 
-#### `child` → `Widget`
+Sets container padding
 
-**Required**. The widget that triggers the tooltip when hovered.
+#### `margin(EdgeInsetsGeometryMix value)`
 
-#### `tooltipChild` → `Widget`
+Sets container margin
 
-**Required**. The content to display in the tooltip overlay.
+#### `alignment(Alignment value)`
 
-#### `waitDuration` → `Duration?`
+Sets container alignment
 
-The duration to wait before showing the tooltip after hover begins. If null, uses the style's wait duration.
+#### `color(Color value)`
 
-#### `showDuration` → `Duration?`
+Sets container background color
 
-The duration to keep the tooltip visible. If null, uses the style's show duration.
+#### `borderRadius(BorderRadiusGeometryMix radius)`
 
-#### `style` → `RemixTooltipStyle`
+Sets container border radius
 
-Style configuration. Defaults to `RemixTooltipStyle.create()`.
+#### `decoration(DecorationMix value)`
 
-#### `styleSpec` → `RemixTooltipSpec?`
+Sets container decoration
 
-Optional pre-resolved style specification for performance optimization.
+#### `waitDuration(Duration value)`
 
-### Style Properties
+Sets the wait duration before showing tooltip
 
-The `RemixTooltipStyle` class provides a fluent API for styling:
+#### `showDuration(Duration value)`
 
-#### Container Styling
+Sets the show duration before hiding tooltip
 
-**`padding(EdgeInsetsGeometryMix value)`** - Sets padding around tooltip content.
+#### `wrap(WidgetModifierConfig value)`
 
-**`color(Color value)`** - Sets the tooltip background color.
+#### `animate(AnimationConfig config)`
 
-**`borderRadius(BorderRadiusGeometryMix value)`** - Sets border radius.
+#### `constraints(BoxConstraintsMix value)`
 
-**`decoration(DecorationMix value)`** - Sets background decoration.
+#### `foregroundDecoration(DecorationMix value)`
 
-**`shadow(BoxShadowMix value)`** - Adds shadow effects.
-
-#### Text Styling
-
-**`wrapDefaultTextStyle(TextStyleMix value)`** - Sets default text style for tooltip content.
-
-#### Timing
-
-**`waitDuration(Duration value)`** - Sets the duration to wait before showing.
-
-**`showDuration(Duration value)`** - Sets the duration to keep visible.
+#### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
 

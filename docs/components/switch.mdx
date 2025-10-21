@@ -141,81 +141,35 @@ const RemixSwitch({
 ```
 </CodeGroup>
 
+
 ## Properties
+### Style Methods
 
-### Widget Properties
+#### `thumbColor(Color value)`
 
-#### `selected` → `bool`
+Sets thumb color
 
-**Required**. Whether the switch is on (true) or off (false).
+#### `thumb(BoxStyler value)`
 
-#### `onChanged` → `ValueChanged<bool>?`
+Sets thumb styling
 
-**Required**. Called when the switch is toggled. If null, the switch is disabled.
+#### `alignment(Alignment value)`
 
-#### `enabled` → `bool`
+Sets container alignment
 
-Whether the switch is enabled. Defaults to `true`.
+#### `wrap(WidgetModifierConfig value)`
 
-#### `mouseCursor` → `MouseCursor`
+#### `animate(AnimationConfig config)`
 
-The cursor to show when hovering. Defaults to `SystemMouseCursors.click`.
+#### `constraints(BoxConstraintsMix value)`
 
-#### `enableFeedback` → `bool`
+#### `decoration(DecorationMix value)`
 
-Whether to provide platform-specific feedback on toggle. Defaults to `true`.
+#### `margin(EdgeInsetsGeometryMix value)`
 
-#### `focusNode` → `FocusNode?`
+#### `padding(EdgeInsetsGeometryMix value)`
 
-Optional focus node to control focus behavior.
+#### `foregroundDecoration(DecorationMix value)`
 
-#### `autofocus` → `bool`
-
-Whether to automatically focus when first built. Defaults to `false`.
-
-#### `semanticLabel` → `String?`
-
-Optional semantic label for screen readers.
-
-#### `style` → `RemixSwitchStyle`
-
-Style configuration. Defaults to `RemixSwitchStyle.create()`.
-
-#### `styleSpec` → `RemixSwitchSpec?`
-
-Optional pre-resolved style specification for performance optimization.
-
-### Style Properties
-
-The `RemixSwitchStyle` class provides a fluent API for styling:
-
-#### Container Styling
-
-**`size(double width, double height)`** - Sets switch track dimensions.
-
-**`color(Color value)`** - Sets the track background color.
-
-**`borderRadiusAll(Radius value)`** - Sets uniform border radius.
-
-**`alignment(Alignment value)`** - Sets thumb position alignment.
-
-#### Thumb Styling
-
-**`thumb(BoxStyler value)`** - Full control over thumb styling.
-
-**`thumbColor(Color value)`** - Sets the thumb color.
-
-#### Animation
-
-**`animate(AnimationConfig config)`** - Configures transition animations.
-
-#### Interactive States
-
-**`onSelected(RemixSwitchStyle style)`** - Applies styles when switch is on.
-
-**`onHovered(RemixSwitchStyle style)`** - Applies styles when hovered.
-
-**`onFocused(RemixSwitchStyle style)`** - Applies styles when focused.
-
-**`onDisabled(RemixSwitchStyle style)`** - Applies styles when disabled.
+#### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
 

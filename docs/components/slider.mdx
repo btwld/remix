@@ -138,83 +138,65 @@ const RemixSlider({
 ```
 </CodeGroup>
 
+
 ## Properties
+### Style Methods
 
-### Widget Properties
+#### `thumbColor(Color value)`
 
-#### `value` → `double`
+Sets thumb color
 
-**Required**. The current value of the slider.
+#### `trackColor(Color value)`
 
-#### `onChanged` → `ValueChanged<double>?`
+Sets track color (background rail)
 
-**Required**. Called when the slider value changes. If null, the slider is disabled.
+#### `rangeColor(Color value)`
 
-#### `onChangeStart` → `ValueChanged<double>?`
+Sets range color (filled progress portion)
 
-Called when the user starts dragging the slider.
+#### `thumb(BoxStyler value)`
 
-#### `onChangeEnd` → `ValueChanged<double>?`
+Sets thumb styling
 
-Called when the user stops dragging the slider.
+#### `thumbSize(Size size)`
 
-#### `min` → `double`
+Sets thumb to a fixed [size].
 
-The minimum value of the slider range. Defaults to `0.0`.
+#### `alignment(Alignment value)`
 
-#### `max` → `double`
+Sets thumb alignment
 
-The maximum value of the slider range. Defaults to `1.0`.
+#### `thickness(double value)`
 
-#### `enabled` → `bool`
+Sets stroke width for both track and range.
 
-Whether the slider is enabled. Defaults to `true`.
+#### `trackThickness(double value)`
 
-#### `focusNode` → `FocusNode?`
+Sets stroke width for the track only (background rail).
 
-Optional focus node to control focus behavior.
+#### `rangeThickness(double value)`
 
-#### `autofocus` → `bool`
+Sets stroke width for the range only (filled portion).
 
-Whether to automatically focus when first built. Defaults to `false`.
+#### `padding(EdgeInsetsGeometryMix value)`
 
-#### `semanticLabel` → `String?`
+#### `color(Color value)`
 
-Optional semantic label for screen readers.
+#### `size(double width, double height)`
 
-#### `style` → `RemixSliderStyle`
+#### `borderRadius(BorderRadiusGeometryMix radius)`
 
-Style configuration. Defaults to `RemixSliderStyle.create()`.
+#### `constraints(BoxConstraintsMix value)`
 
-#### `styleSpec` → `RemixSliderSpec?`
+#### `decoration(DecorationMix value)`
 
-Optional pre-resolved style specification for performance optimization.
+#### `margin(EdgeInsetsGeometryMix value)`
 
-### Style Properties
+#### `foregroundDecoration(DecorationMix value)`
 
-The `RemixSliderStyle` class provides a fluent API for styling:
+#### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
 
-#### Track Styling
+#### `wrap(WidgetModifierConfig value)`
 
-**`trackColor(Color value)`** - Sets the inactive track color.
-
-**`rangeColor(Color value)`** - Sets the active range color.
-
-**`thickness(double value)`** - Sets the track thickness.
-
-#### Thumb Styling
-
-**`thumbSize(Size value)`** - Sets the thumb dimensions.
-
-**`thumbColor(Color value)`** - Sets the thumb color.
-
-**`thumb(BoxStyler value)`** - Full control over thumb styling.
-
-#### Interactive States
-
-**`onDisabled(RemixSliderStyle style)`** - Applies styles when disabled.
-
-**`onHovered(RemixSliderStyle style)`** - Applies styles when hovered.
-
-**`onFocused(RemixSliderStyle style)`** - Applies styles when focused.
+#### `animate(AnimationConfig animation)`
 

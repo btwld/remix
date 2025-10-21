@@ -134,99 +134,157 @@ const RemixAvatar({
 ```
 </CodeGroup>
 
+
 ## Properties
+### Style Methods
 
-### Widget Properties
+#### `square(double size)`
 
-#### `backgroundImage` → `ImageProvider?`
+Sets avatar size to a square
 
-The background image to display in the avatar.
+#### `sizeWH(double width, double height)`
 
-#### `foregroundImage` → `ImageProvider?`
+Sets avatar size with width and height (alias)
 
-The foreground image to display in the avatar (e.g., for badges or overlays).
+#### `color(Color value)`
 
-#### `onBackgroundImageError` → `ImageErrorListener?`
+Sets background color
 
-Callback function called when the background image fails to load.
+#### `borderRadius(BorderRadiusGeometryMix radius)`
 
-#### `onForegroundImageError` → `ImageErrorListener?`
+Sets border radius
 
-Callback function called when the foreground image fails to load.
+#### `textColor(Color value)`
 
-#### `child` → `Widget?`
+Sets text color
 
-Custom content to display inside the avatar. When provided, the caller is responsible for applying typography.
+#### `iconColor(Color value)`
 
-#### `label` → `String?`
+Sets icon color
 
-Optional text rendered within the avatar using the text spec (typically initials).
+#### `padding(EdgeInsetsGeometryMix value)`
 
-#### `labelBuilder` → `RemixAvatarLabelBuilder?`
+Sets padding
 
-Optional builder that exposes the resolved TextSpec for custom label rendering while keeping configured typography.
+#### `margin(EdgeInsetsGeometryMix value)`
 
-#### `icon` → `IconData?`
+Sets margin
 
-Optional icon rendered when no `child` or `label` is provided.
+#### `alignment(Alignment value)`
 
-#### `iconBuilder` → `RemixAvatarIconBuilder?`
+Sets container alignment
 
-Optional builder that exposes the resolved IconSpec for custom icon rendering while preserving configured styling.
+#### `decoration(DecorationMix value)`
 
-#### `style` → `RemixAvatarStyle`
+Sets decoration
 
-Style configuration. Defaults to `RemixAvatarStyle.create()`.
+#### `constraints(BoxConstraintsMix value)`
 
-#### `styleSpec` → `RemixAvatarSpec?`
+Sets constraints
 
-Optional pre-resolved style specification for performance optimization.
+#### `animate(AnimationConfig animation)`
 
-### Style Properties
+Sets animation
 
-The `RemixAvatarStyle` class provides a fluent API for styling:
+#### `clipBehavior(Clip clip)`
 
-#### Container Styling
+Sets the clip behavior for the avatar container.
 
-**`size(double width, double height)`** - Sets avatar dimensions.
+#### `label(TextStyler value)`
 
-**`square(double size)`** - Sets equal width and height.
+#### `icon(IconStyler value)`
 
-**`color(Color value)`** - Sets the background color.
+#### `size(double width, double height)`
 
-**`textColor(Color value)`** - Sets the container background color (alias for color).
+Sets avatar size with width and height
 
-**`decoration(DecorationMix value)`** - Sets background decoration.
+#### `wrap(WidgetModifierConfig value)`
 
-**`borderRadiusAll(double value)`** - Sets uniform border radius.
+#### `foregroundDecoration(DecorationMix value)`
 
-**`shapeCircle()`** - Creates circular avatar shape.
+#### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
 
-**`clipBehavior(Clip value)`** - Sets clip behavior for content overflow.
+#### `labelTextStyle(TextStyleMix value)`
 
-#### Label Styling
+Sets label/text style using TextStyleMix directly
 
-**`label(TextStyler value)`** - Full control over label text styling.
+#### `labelColor(Color value)`
 
-**`labelColor(Color value)`** - Sets label text color.
+Sets label/text color
 
-**`labelFontSize(double value)`** - Sets label font size.
+#### `labelFontSize(double value)`
 
-**`labelFontWeight(FontWeight value)`** - Sets label font weight.
+Sets label/text font size
 
-**`labelTextStyle(TextStyleMix value)`** - Sets multiple label properties at once.
+#### `labelFontWeight(FontWeight value)`
 
-#### Icon Styling
+Sets label/text font weight
 
-**`icon(IconStyler value)`** - Full control over icon styling.
+#### `labelFontStyle(FontStyle value)`
 
-**`iconColor(Color value)`** - Sets icon color.
+Sets label/text font style (italic/normal)
 
-**`iconSize(double value)`** - Sets icon size.
+#### `labelLetterSpacing(double value)`
 
-#### Image Styling
+Sets label/text letter spacing
 
-**`backgroundImageUrl(String url)`** - Sets background image from URL.
+#### `labelDecoration(TextDecoration value)`
 
-**`backgroundImageProvider(ImageProvider provider)`** - Sets background image from provider.
+Sets label/text decoration (underline, strikethrough, etc.)
+
+#### `labelFontFamily(String value)`
+
+Sets label/text font family
+
+#### `labelHeight(double value)`
+
+Sets label/text line height
+
+#### `labelWordSpacing(double value)`
+
+Sets label/text word spacing
+
+#### `labelDecorationColor(Color value)`
+
+Sets label/text decoration color
+
+#### `iconSize(double value)`
+
+Sets icon size
+
+#### `iconOpacity(double value)`
+
+Sets icon opacity
+
+#### `iconWeight(double value)`
+
+Sets icon weight (useful for variable icons like Material Symbols)
+
+#### `iconGrade(double value)`
+
+Sets icon grade (useful for Material Icons)
+
+#### `iconFill(double value)`
+
+Sets icon fill (useful for Material Icons filled variants)
+
+#### `iconOpticalSize(double value)`
+
+Sets icon optical size (useful for Material Icons)
+
+#### `iconBlendMode(BlendMode value)`
+
+Sets icon blend mode
+
+#### `iconTextDirection(TextDirection value)`
+
+Sets icon text direction
+
+#### `iconShadows(List<ShadowMix> value)`
+
+Sets icon shadows
+
+#### `iconShadow(ShadowMix value)`
+
+Sets single icon shadow
 

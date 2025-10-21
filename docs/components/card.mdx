@@ -87,43 +87,41 @@ const RemixCard({
 ```
 </CodeGroup>
 
+
 ## Properties
+### Style Methods
 
-### Widget Properties
+#### `padding(EdgeInsetsGeometryMix value)`
 
-#### `child` → `Widget?`
+Sets container padding
 
-Optional content to display inside the card.
+#### `textColor(Color value)`
 
-#### `style` → `RemixCardStyle`
+Sets container background color
 
-Style configuration. Defaults to `RemixCardStyle.create()`.
+#### `borderRadius(BorderRadiusGeometryMix radius)`
 
-#### `styleSpec` → `RemixCardSpec?`
+Sets container border radius
 
-Optional pre-resolved style specification for performance optimization.
+#### `margin(EdgeInsetsGeometryMix value)`
 
-### Style Properties
+Sets container margin
 
-The `RemixCardStyle` class provides a fluent API for styling:
+#### `alignment(Alignment value)`
 
-#### Container Styling
+Sets container alignment
 
-**`padding(EdgeInsetsGeometryMix value)`** - Sets padding inside the card.
+#### `decoration(DecorationMix value)`
 
-**`margin(EdgeInsetsGeometryMix value)`** - Sets margin around the card.
+Sets container decoration
 
-**`size(double width, double height)`** - Sets card dimensions.
+#### `wrap(WidgetModifierConfig value)`
 
-**`color(Color value)`** - Sets the background color.
+#### `animate(AnimationConfig config)`
 
-**`textColor(Color value)`** - Sets the container background color (alias for color).
+#### `constraints(BoxConstraintsMix value)`
 
-**`decoration(DecorationMix value)`** - Sets background decoration.
+#### `foregroundDecoration(DecorationMix value)`
 
-**`borderRadiusAll(Radius value)`** - Sets uniform border radius.
-
-**`borderAll({Color? color, double? width})`** - Sets border on all sides.
-
-**`shadow(BoxShadowMix value)`** - Adds shadow effects for elevation.
+#### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
 

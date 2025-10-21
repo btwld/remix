@@ -163,129 +163,139 @@ const RemixTextField({
 ```
 </CodeGroup>
 
+
 ## Properties
+### Style Methods
 
-### Widget Properties
+#### `color(Color value)`
 
-#### `controller` → `TextEditingController?`
+Sets text color
 
-Controls the text being edited.
+#### `backgroundColor(Color value)`
 
-#### `focusNode` → `FocusNode?`
+Sets background color
 
-Optional focus node to control focus behavior.
+#### `container(FlexBoxStyler value)`
 
-#### `label` → `String?`
+Sets container that wraps editable text area
 
-Optional label text displayed above the text field.
+#### `borderRadius(BorderRadiusGeometryMix radius)`
 
-#### `hintText` → `String?`
+Sets border radius
 
-Optional hint text displayed when the field is empty.
+#### `padding(EdgeInsetsGeometryMix value)`
 
-#### `helperText` → `String?`
+Sets padding
 
-Optional helper text displayed below the text field.
+#### `border(BoxBorderMix value)`
 
-#### `errorText` → `String?`
+Sets border
 
-Optional error text displayed below the text field.
+#### `width(double value)`
 
-#### `keyboardType` → `TextInputType?`
+Sets width
 
-The type of keyboard to display.
+#### `height(double value)`
 
-#### `textInputAction` → `TextInputAction?`
+Sets height
 
-The action button on the keyboard.
+#### `cursorColor(Color value)`
 
-#### `obscureText` → `bool`
+Sets cursor color
 
-Whether to obscure the text (for passwords). Defaults to `false`.
+#### `hintColor(Color value)`
 
-#### `enabled` → `bool`
+Sets hint text color
 
-Whether the text field is enabled. Defaults to `true`.
+#### `hintText(TextStyler value)`
 
-#### `readOnly` → `bool`
+Sets hint text color
 
-Whether the text field is read-only. Defaults to `false`.
+#### `margin(EdgeInsetsGeometryMix value)`
 
-#### `autofocus` → `bool`
+Sets margin
 
-Whether to automatically focus when first built. Defaults to `false`.
+#### `spacing(double value)`
 
-#### `maxLines` → `int?`
+Sets flex spacing
 
-Maximum number of lines. Defaults to `1`.
+#### `decoration(DecorationMix value)`
 
-#### `maxLength` → `int?`
+Sets decoration
 
-Maximum number of characters.
+#### `alignment(Alignment value)`
 
-#### `onChanged` → `ValueChanged<String>?`
+Sets container alignment
 
-Called when the text changes.
+#### `constraints(BoxConstraintsMix value)`
 
-#### `onEditingComplete` → `VoidCallback?`
+Sets constraints
 
-Called when editing is complete.
+#### `textAlign(TextAlign value)`
 
-#### `onSubmitted` → `ValueChanged<String>?`
+Sets text alignment
 
-Called when the user submits the text.
+#### `helperText(TextStyler value)`
 
-#### `style` → `RemixTextFieldStyle`
+Sets helper text
 
-Style configuration. Defaults to `RemixTextFieldStyle.create()`.
+#### `label(TextStyler value)`
 
-#### `styleSpec` → `RemixTextFieldSpec?`
+Sets label text
 
-Optional pre-resolved style specification for performance optimization.
+#### `animate(AnimationConfig animation)`
 
-### Style Properties
+Sets animation
 
-The `RemixTextFieldStyle` class provides a fluent API for styling:
+#### `wrap(WidgetModifierConfig value)`
 
-#### Container Styling
+#### `foregroundDecoration(DecorationMix value)`
 
-**`padding(EdgeInsetsGeometryMix value)`** - Sets padding around text field content.
+#### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
 
-**`paddingX(double value)`** - Sets horizontal padding.
+#### `flex(FlexStyler value)`
 
-**`color(Color value)`** - Sets the text color.
+#### `labelTextStyle(TextStyleMix value)`
 
-**`backgroundColor(Color value)`** - Sets the background color.
+Sets label/text style using TextStyleMix directly
 
-**`borderRadiusAll(Radius value)`** - Sets uniform border radius.
+#### `labelColor(Color value)`
 
-**`border(BoxBorderMix value)`** - Sets border styling.
+Sets label/text color
 
-**`height(double value)`** - Sets the text field height.
+#### `labelFontSize(double value)`
 
-**`spacing(double value)`** - Sets spacing between elements.
+Sets label/text font size
 
-**`shadow(BoxShadowMix value)`** - Adds shadow effects.
+#### `labelFontWeight(FontWeight value)`
 
-#### Text Styling
+Sets label/text font weight
 
-**`hintColor(Color value)`** - Sets hint text color.
+#### `labelFontStyle(FontStyle value)`
 
-**`labelColor(Color value)`** - Sets label text color.
+Sets label/text font style (italic/normal)
 
-#### Label & Helper Styling
+#### `labelLetterSpacing(double value)`
 
-**`label(TextStyler value)`** - Full control over label text styling.
+Sets label/text letter spacing
 
-**`helperText(TextStyler value)`** - Full control over helper text styling.
+#### `labelDecoration(TextDecoration value)`
 
-**`errorText(TextStyler value)`** - Full control over error text styling.
+Sets label/text decoration (underline, strikethrough, etc.)
 
-#### Interactive States
+#### `labelFontFamily(String value)`
 
-**`onFocused(RemixTextFieldStyle style)`** - Applies styles when focused.
+Sets label/text font family
 
-**`onDisabled(RemixTextFieldStyle style)`** - Applies styles when disabled.
+#### `labelHeight(double value)`
 
-**`onError(RemixTextFieldStyle style)`** - Applies styles when there's an error.
+Sets label/text line height
+
+#### `labelWordSpacing(double value)`
+
+Sets label/text word spacing
+
+#### `labelDecorationColor(Color value)`
+
+Sets label/text decoration color
 

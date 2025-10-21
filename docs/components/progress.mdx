@@ -91,41 +91,55 @@ const RemixProgress({
 ```
 </CodeGroup>
 
+
 ## Properties
+### Style Methods
 
-### Widget Properties
+#### `height(double value)`
 
-#### `value` → `double?`
+Sets progress height
 
-**Required**. The current progress value between 0.0 and 1.0. If `null`, displays an indeterminate progress indicator.
+#### `trackColor(Color value)`
 
-#### `style` → `RemixProgressStyle`
+Sets track color
 
-Style configuration. Defaults to `RemixProgressStyle.create()`.
+#### `width(double value)`
 
-#### `styleSpec` → `RemixProgressSpec?`
+Sets progress width
 
-Optional pre-resolved style specification for performance optimization.
+#### `indicatorColor(Color value)`
 
-### Style Properties
+Sets fill color
 
-The `RemixProgressStyle` class provides a fluent API for styling:
+#### `track(BoxStyler value)`
 
-#### Container Styling
+Sets track styling
 
-**`width(double value)`** - Sets the progress bar width.
+#### `indicator(BoxStyler value)`
 
-**`height(double value)`** - Sets the progress bar height.
+Sets fill styling
 
-**`wrapClipRRect({BorderRadius? borderRadius})`** - Clips the progress bar with rounded corners.
+#### `trackContainer(BoxStyler value)`
 
-#### Track Styling
+Sets outer container styling
 
-**`trackColor(Color value)`** - Sets the background track color.
+#### `alignment(Alignment value)`
 
-#### Indicator Styling
+Sets container alignment
 
-**`indicatorColor(Color value)`** - Sets the progress indicator color.
+#### `wrap(WidgetModifierConfig value)`
 
-**`indicator(BoxStyler value)`** - Full control over indicator styling.
+#### `animate(AnimationConfig config)`
+
+#### `constraints(BoxConstraintsMix value)`
+
+#### `decoration(DecorationMix value)`
+
+#### `margin(EdgeInsetsGeometryMix value)`
+
+#### `padding(EdgeInsetsGeometryMix value)`
+
+#### `foregroundDecoration(DecorationMix value)`
+
+#### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
 

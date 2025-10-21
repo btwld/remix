@@ -186,160 +186,173 @@ const RemixButton({
 ```
 </CodeGroup>
 
+
 ## Properties
+### Style Methods
 
-### Widget Properties
+#### `label(TextStyler value)`
 
-#### `label` → `String`
+#### `icon(IconStyler value)`
 
-**Required**. The label text to display in the button.
+#### `spinner(RemixSpinnerStyle value)`
 
-#### `icon` → `IconData?`
+#### `padding(EdgeInsetsGeometryMix value)`
 
-Optional icon to display before the label. Can be customized using `iconBuilder`.
+Sets padding
 
-#### `textBuilder` → `RemixButtonTextBuilder?`
+#### `margin(EdgeInsetsGeometryMix value)`
 
-Builder for customizing text rendering. Receives `(BuildContext context, TextSpec spec, String text)`.
+Sets margin
 
-#### `iconBuilder` → `RemixButtonIconBuilder?`
+#### `decoration(DecorationMix value)`
 
-Builder for customizing icon rendering. Receives `(BuildContext context, IconSpec spec, IconData? icon)`.
+Sets decoration
 
-#### `loadingBuilder` → `RemixButtonLoadingBuilder?`
+#### `alignment(Alignment value)`
 
-Builder for customizing loading spinner. Receives `(BuildContext context, RemixSpinnerSpec spec)`.
+Sets container alignment
 
-#### `loading` → `bool`
+#### `spacing(double value)`
 
-Whether the button is in a loading state. When `true`, displays a spinner and becomes non-interactive. Defaults to `false`.
+Sets item spacing between icon and label (Flex spacing)
 
-#### `enabled` → `bool`
+#### `constraints(BoxConstraintsMix value)`
 
-Whether the button is enabled. When `false`, the button is disabled. Defaults to `true`.
+Sets constraints
 
-#### `onPressed` → `VoidCallback?`
+#### `animate(AnimationConfig animation)`
 
-**Required**. Called when the button is tapped or activated via keyboard. If `null`, the button is disabled.
+#### `flex(FlexStyler value)`
 
-#### `onLongPress` → `VoidCallback?`
+#### `foregroundDecoration(DecorationMix value)`
 
-Called when the button is long pressed.
+#### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
 
-#### `onDoubleTap` → `VoidCallback?`
+#### `color(Color value)`
 
-Called when the button is double tapped.
+#### `wrap(WidgetModifierConfig value)`
 
-#### `focusNode` → `FocusNode?`
+#### `labelTextStyle(TextStyleMix value)`
 
-Optional focus node to control focus behavior.
+Sets label/text style using TextStyleMix directly
 
-#### `autofocus` → `bool`
+#### `labelColor(Color value)`
 
-Whether to automatically focus when first built. Defaults to `false`.
+Sets label/text color
 
-#### `enableFeedback` → `bool`
+#### `labelFontSize(double value)`
 
-Whether to provide platform-specific feedback on press. Defaults to `true`.
+Sets label/text font size
 
-#### `semanticLabel` → `String?`
+#### `labelFontWeight(FontWeight value)`
 
-Optional semantic label for screen readers. If not provided, uses `label`.
+Sets label/text font weight
 
-#### `semanticHint` → `String?`
+#### `labelFontStyle(FontStyle value)`
 
-Optional semantic hint providing context about what happens when activated.
+Sets label/text font style (italic/normal)
 
-#### `excludeSemantics` → `bool`
+#### `labelLetterSpacing(double value)`
 
-Whether to exclude child semantics. Defaults to `false`.
+Sets label/text letter spacing
 
-#### `mouseCursor` → `MouseCursor`
+#### `labelDecoration(TextDecoration value)`
 
-Cursor when hovering over the button. Defaults to `SystemMouseCursors.click`.
+Sets label/text decoration (underline, strikethrough, etc.)
 
-#### `style` → `RemixButtonStyle`
+#### `labelFontFamily(String value)`
 
-Style configuration. Defaults to `RemixButtonStyle.create()`.
+Sets label/text font family
 
-#### `styleSpec` → `RemixButtonSpec?`
+#### `labelHeight(double value)`
 
-Optional pre-resolved style specification for performance optimization.
+Sets label/text line height
 
-### Style Properties
+#### `labelWordSpacing(double value)`
 
-The `RemixButtonStyle` class provides a fluent API for styling:
+Sets label/text word spacing
 
-#### Container Styling
+#### `labelDecorationColor(Color value)`
 
-**`padding(EdgeInsetsGeometryMix value)`** - Sets padding around button content.
+Sets label/text decoration color
 
-**`paddingX(double value)`** - Sets horizontal padding (left and right).
+#### `iconColor(Color value)`
 
-**`paddingY(double value)`** - Sets vertical padding (top and bottom).
+Sets icon color
 
-**`margin(EdgeInsetsGeometryMix value)`** - Sets margin around the button.
+#### `iconSize(double value)`
 
-**`color(Color value)`** - Sets the background color.
+Sets icon size
 
-**`decoration(DecorationMix value)`** - Sets background decoration (color, gradient, etc).
+#### `iconOpacity(double value)`
 
-**`spacing(double value)`** - Sets spacing between icon and label.
+Sets icon opacity
 
-**`alignment(Alignment value)`** - Sets content alignment within the button.
+#### `iconWeight(double value)`
 
-**`constraints(BoxConstraintsMix value)`** - Sets size constraints (min/max width/height).
+Sets icon weight (useful for variable icons like Material Symbols)
 
-**`shadow(BoxShadowMix value)`** - Adds shadow effects.
+#### `iconGrade(double value)`
 
-#### Border & Shape
+Sets icon grade (useful for Material Icons)
 
-**`borderRadiusAll(double value)`** - Sets uniform border radius.
+#### `iconFill(double value)`
 
-**`borderAll({Color? color, double? width})`** - Sets border on all sides.
+Sets icon fill (useful for Material Icons filled variants)
 
-**`shapeRectangle({BorderRadiusMix? borderRadius, BoxBorder? border})`** - Creates rectangular shape.
+#### `iconOpticalSize(double value)`
 
-**`shapeCircle({BoxBorder? border})`** - Creates circular shape.
+Sets icon optical size (useful for Material Icons)
 
-**`shapeBeveledRectangle({BorderRadiusMix? borderRadius, BorderSideMix? side})`** - Creates beveled rectangle.
+#### `iconBlendMode(BlendMode value)`
 
-**`shapeStadium({BorderSide? side})`** - Creates stadium (pill) shape.
+Sets icon blend mode
 
-#### Label Styling
+#### `iconTextDirection(TextDirection value)`
 
-**`label(TextStyler value)`** - Full control over label text styling.
+Sets icon text direction
 
-**`labelColor(Color value)`** - Sets label text color.
+#### `iconShadows(List<ShadowMix> value)`
 
-**`labelFontSize(double value)`** - Sets label font size.
+Sets icon shadows
 
-**`labelFontWeight(FontWeight value)`** - Sets label font weight.
+#### `iconShadow(ShadowMix value)`
 
-**`labelTextStyle(TextStyleMix value)`** - Sets multiple label properties at once.
+Sets single icon shadow
 
-#### Icon Styling
+#### `spinnerIndicatorColor(Color value)`
 
-**`icon(IconStyler value)`** - Full control over icon styling.
+Sets spinner indicator color
 
-**`iconColor(Color value)`** - Sets icon color.
+#### `spinnerTrackColor(Color value)`
 
-**`iconSize(double value)`** - Sets icon size.
+Sets spinner track color
 
-#### Spinner Styling
+#### `spinnerSize(double value)`
 
-**`spinner(RemixSpinnerStyle value)`** - Full control over loading spinner.
+Sets spinner size
 
-**`spinnerIndicatorColor(Color value)`** - Sets spinner color.
+#### `spinnerStrokeWidth(double value)`
 
-**`spinnerSize(double value)`** - Sets spinner size.
+Sets spinner stroke width
 
-#### Interactive States
+#### `spinnerTrackStrokeWidth(double value)`
 
-**`onHovered(RemixButtonStyle style)`** - Applies styles when hovered.
+Sets spinner track stroke width
 
-**`onPressed(RemixButtonStyle style)`** - Applies styles when pressed.
+#### `spinnerDuration(Duration value)`
 
-**`onFocused(RemixButtonStyle style)`** - Applies styles when focused.
+Sets spinner animation duration
 
-**`onDisabled(RemixButtonStyle style)`** - Applies styles when disabled.
+#### `spinnerFast()`
+
+Sets spinner animation to fast (500ms)
+
+#### `spinnerNormal()`
+
+Sets spinner animation to normal (1000ms)
+
+#### `spinnerSlow()`
+
+Sets spinner animation to slow (1500ms)
+

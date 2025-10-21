@@ -124,57 +124,95 @@ const RemixBadge({
 ```
 </CodeGroup>
 
+
 ## Properties
+### Style Methods
 
-### Widget Properties
+#### `color(Color value)`
 
-#### `child` → `Widget?`
+Sets background color
 
-Custom content to display inside the badge. When provided, the caller is responsible for applying typography.
+#### `borderRadius(BorderRadiusGeometryMix radius)`
 
-#### `label` → `String?`
+Sets border radius
 
-Optional text rendered within the badge using the text spec.
+#### `padding(EdgeInsetsGeometryMix value)`
 
-#### `labelBuilder` → `RemixBadgeLabelBuilder?`
+Sets padding
 
-Optional builder that exposes the resolved TextSpec for custom label rendering while keeping configured typography.
+#### `textColor(Color value)`
 
-#### `style` → `RemixBadgeStyle`
+Sets text color
 
-Style configuration. Defaults to `RemixBadgeStyle.create()`.
+#### `margin(EdgeInsetsGeometryMix value)`
 
-#### `styleSpec` → `RemixBadgeSpec?`
+Sets margin
 
-Optional pre-resolved style specification for performance optimization.
+#### `decoration(DecorationMix value)`
 
-### Style Properties
+Sets decoration
 
-The `RemixBadgeStyle` class provides a fluent API for styling:
+#### `alignment(Alignment value)`
 
-#### Container Styling
+Sets container alignment
 
-**`size(double width, double height)`** - Sets badge dimensions.
+#### `label(TextStyler value)`
 
-**`color(Color value)`** - Sets the background color.
+#### `constraints(BoxConstraintsMix value)`
 
-**`textColor(Color value)`** - Sets the container background color (alias for color).
+Sets constraints
 
-**`decoration(DecorationMix value)`** - Sets background decoration.
+#### `animate(AnimationConfig animation)`
 
-**`borderRadiusAll(double value)`** - Sets uniform border radius.
+Sets animation
 
-**`wrapClipOval()`** - Clips badge content to oval shape.
+#### `wrap(WidgetModifierConfig value)`
 
-#### Label Styling
+#### `foregroundDecoration(DecorationMix value)`
 
-**`label(TextStyler value)`** - Full control over label text styling.
+#### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
 
-**`labelColor(Color value)`** - Sets label text color.
+#### `labelTextStyle(TextStyleMix value)`
 
-**`labelFontSize(double value)`** - Sets label font size.
+Sets label/text style using TextStyleMix directly
 
-**`labelFontWeight(FontWeight value)`** - Sets label font weight.
+#### `labelColor(Color value)`
 
-**`labelTextStyle(TextStyleMix value)`** - Sets multiple label properties at once.
+Sets label/text color
+
+#### `labelFontSize(double value)`
+
+Sets label/text font size
+
+#### `labelFontWeight(FontWeight value)`
+
+Sets label/text font weight
+
+#### `labelFontStyle(FontStyle value)`
+
+Sets label/text font style (italic/normal)
+
+#### `labelLetterSpacing(double value)`
+
+Sets label/text letter spacing
+
+#### `labelDecoration(TextDecoration value)`
+
+Sets label/text decoration (underline, strikethrough, etc.)
+
+#### `labelFontFamily(String value)`
+
+Sets label/text font family
+
+#### `labelHeight(double value)`
+
+Sets label/text line height
+
+#### `labelWordSpacing(double value)`
+
+Sets label/text word spacing
+
+#### `labelDecorationColor(Color value)`
+
+Sets label/text decoration color
 

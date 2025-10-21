@@ -206,73 +206,125 @@ const RemixTabView({
 ```
 </CodeGroup>
 
+
 ## Properties
+### Style Methods
 
-### RemixTabs Properties
+#### `alignment(Alignment value)`
 
-#### `selectedTabId` → `String`
+Sets container alignment
 
-**Required**. The ID of the currently selected tab.
+#### `container(FlexBoxStyler value)`
 
-#### `onChanged` → `ValueChanged<String>`
+#### `label(TextStyler value)`
 
-**Required**. Called when a tab is selected. Receives the tab ID.
+#### `icon(IconStyler value)`
 
-#### `child` → `Widget`
+#### `animate(AnimationConfig animation)`
 
-**Required**. The child widget containing tab bar and tab views.
+#### `wrap(WidgetModifierConfig value)`
 
-### RemixTab Properties
+#### `flex(FlexStyler value)`
 
-#### `tabId` → `String`
+#### `foregroundDecoration(DecorationMix value)`
 
-**Required**. The unique identifier for this tab.
+#### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
 
-#### `label` → `String?`
+#### `color(Color value)`
 
-The label text to display in the tab.
+#### `constraints(BoxConstraintsMix value)`
 
-#### `icon` → `IconData?`
+#### `decoration(DecorationMix value)`
 
-Optional icon to display in the tab.
+#### `margin(EdgeInsetsGeometryMix value)`
 
-#### `style` → `RemixTabStyle`
+#### `padding(EdgeInsetsGeometryMix value)`
 
-Style configuration. Defaults to `RemixTabStyle.create()`.
+#### `labelTextStyle(TextStyleMix value)`
 
-### Style Properties
+Sets label/text style using TextStyleMix directly
 
-The `RemixTabStyle` class provides a fluent API for styling:
+#### `labelColor(Color value)`
 
-#### Container Styling
+Sets label/text color
 
-**`padding(EdgeInsetsGeometryMix value)`** - Sets padding around tab content.
+#### `labelFontSize(double value)`
 
-**`color(Color value)`** - Sets the background color.
+Sets label/text font size
 
-**`borderRounded(double value)`** - Sets uniform border radius.
+#### `labelFontWeight(FontWeight value)`
 
-**`borderAll({Color? color, double? width})`** - Sets border on all sides.
+Sets label/text font weight
 
-#### Label Styling
+#### `labelFontStyle(FontStyle value)`
 
-**`labelFontSize(double value)`** - Sets label font size.
+Sets label/text font style (italic/normal)
 
-**`labelFontWeight(FontWeight value)`** - Sets label font weight.
+#### `labelLetterSpacing(double value)`
 
-**`labelColor(Color value)`** - Sets label text color.
+Sets label/text letter spacing
 
-#### Icon Styling
+#### `labelDecoration(TextDecoration value)`
 
-**`iconColor(Color value)`** - Sets icon color.
+Sets label/text decoration (underline, strikethrough, etc.)
 
-**`iconSize(double value)`** - Sets icon size.
+#### `labelFontFamily(String value)`
 
-#### Interactive States
+Sets label/text font family
 
-**`onSelected(RemixTabStyle style)`** - Applies styles when tab is selected.
+#### `labelHeight(double value)`
 
-**`onHovered(RemixTabStyle style)`** - Applies styles when hovered.
+Sets label/text line height
 
-**`onPressed(RemixTabStyle style)`** - Applies styles when pressed.
+#### `labelWordSpacing(double value)`
+
+Sets label/text word spacing
+
+#### `labelDecorationColor(Color value)`
+
+Sets label/text decoration color
+
+#### `iconColor(Color value)`
+
+Sets icon color
+
+#### `iconSize(double value)`
+
+Sets icon size
+
+#### `iconOpacity(double value)`
+
+Sets icon opacity
+
+#### `iconWeight(double value)`
+
+Sets icon weight (useful for variable icons like Material Symbols)
+
+#### `iconGrade(double value)`
+
+Sets icon grade (useful for Material Icons)
+
+#### `iconFill(double value)`
+
+Sets icon fill (useful for Material Icons filled variants)
+
+#### `iconOpticalSize(double value)`
+
+Sets icon optical size (useful for Material Icons)
+
+#### `iconBlendMode(BlendMode value)`
+
+Sets icon blend mode
+
+#### `iconTextDirection(TextDirection value)`
+
+Sets icon text direction
+
+#### `iconShadows(List<ShadowMix> value)`
+
+Sets icon shadows
+
+#### `iconShadow(ShadowMix value)`
+
+Sets single icon shadow
 

@@ -141,121 +141,107 @@ const RemixIconButton({
 ```
 </CodeGroup>
 
+
 ## Properties
+### Style Methods
 
-### Widget Properties
+#### `icon(IconStyler value)`
 
-#### `icon` → `IconData`
+#### `spinner(RemixSpinnerStyle value)`
 
-**Required**. The icon to display in the button.
+#### `color(Color value)`
 
-#### `iconBuilder` → `RemixIconButtonIconBuilder?`
+Sets background color
 
-Builder for customizing icon rendering. Receives `(BuildContext context, IconSpec spec, IconData icon)`.
+#### `padding(EdgeInsetsGeometryMix value)`
 
-#### `loadingBuilder` → `RemixIconButtonLoadingBuilder?`
+Sets padding
 
-Builder for customizing loading spinner. Receives `(BuildContext context, RemixSpinnerSpec spec)`.
+#### `borderRadius(BorderRadiusGeometryMix radius)`
 
-#### `loading` → `bool`
+Sets border radius
 
-Whether the button is in a loading state. When `true`, displays a spinner and becomes non-interactive. Defaults to `false`.
+#### `iconButtonSize(double size)`
 
-#### `enabled` → `bool`
+Sets size (width and height - icon buttons are square)
 
-Whether the button is enabled. Defaults to `true`.
+#### `border(BoxBorderMix value)`
 
-#### `onPressed` → `VoidCallback?`
+Sets border
 
-**Required**. Called when the button is tapped or activated via keyboard. If `null`, the button is disabled.
+#### `margin(EdgeInsetsGeometryMix value)`
 
-#### `onLongPress` → `VoidCallback?`
+Sets margin
 
-Called when the button is long pressed.
+#### `alignment(Alignment value)`
 
-#### `onDoubleTap` → `VoidCallback?`
+Sets container alignment
 
-Called when the button is double tapped.
+#### `decoration(DecorationMix value)`
 
-#### `focusNode` → `FocusNode?`
+Sets decoration
 
-Optional focus node to control focus behavior.
+#### `constraints(BoxConstraintsMix value)`
 
-#### `autofocus` → `bool`
+Sets constraints
 
-Whether to automatically focus when first built. Defaults to `false`.
+#### `iconColor(Color value)`
 
-#### `enableFeedback` → `bool`
+Sets icon color
 
-Whether to provide platform-specific feedback on press. Defaults to `true`.
+#### `iconSize(double value)`
 
-#### `semanticLabel` → `String?`
+Sets icon size
 
-Optional semantic label for screen readers.
+#### `width(double value)`
 
-#### `semanticHint` → `String?`
+Sets width
 
-Optional semantic hint providing context about what happens when activated.
+#### `height(double value)`
 
-#### `excludeSemantics` → `bool`
+Sets height
 
-Whether to exclude child semantics. Defaults to `false`.
+#### `animate(AnimationConfig animation)`
 
-#### `mouseCursor` → `MouseCursor`
+#### `foregroundDecoration(DecorationMix value)`
 
-Cursor when hovering over the button. Defaults to `SystemMouseCursors.click`.
+#### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
 
-#### `style` → `RemixIconButtonStyle`
+#### `wrap(WidgetModifierConfig value)`
 
-Style configuration. Defaults to `RemixIconButtonStyle.create()`.
+#### `iconOpacity(double value)`
 
-#### `styleSpec` → `RemixIconButtonSpec?`
+Sets icon opacity
 
-Optional pre-resolved style specification for performance optimization.
+#### `iconWeight(double value)`
 
-### Style Properties
+Sets icon weight (useful for variable icons like Material Symbols)
 
-The `RemixIconButtonStyle` class provides a fluent API for styling:
+#### `iconGrade(double value)`
 
-#### Container Styling
+Sets icon grade (useful for Material Icons)
 
-**`size(double width, double height)`** - Sets button dimensions.
+#### `iconFill(double value)`
 
-**`padding(EdgeInsetsGeometryMix value)`** - Sets padding around button content.
+Sets icon fill (useful for Material Icons filled variants)
 
-**`color(Color value)`** - Sets the background color.
+#### `iconOpticalSize(double value)`
 
-**`decoration(DecorationMix value)`** - Sets background decoration.
+Sets icon optical size (useful for Material Icons)
 
-**`borderRadiusAll(Radius value)`** - Sets uniform border radius.
+#### `iconBlendMode(BlendMode value)`
 
-**`borderAll({Color? color, double? width})`** - Sets border on all sides.
+Sets icon blend mode
 
-**`shadow(BoxShadowMix value)`** - Adds shadow effects.
+#### `iconTextDirection(TextDirection value)`
 
-#### Icon Styling
+Sets icon text direction
 
-**`icon(IconStyler value)`** - Full control over icon styling.
+#### `iconShadows(List<ShadowMix> value)`
 
-**`iconColor(Color value)`** - Sets icon color.
+Sets icon shadows
 
-**`iconSize(double value)`** - Sets icon size.
+#### `iconShadow(ShadowMix value)`
 
-#### Spinner Styling
-
-**`spinner(RemixSpinnerStyle value)`** - Full control over loading spinner.
-
-**`spinnerIndicatorColor(Color value)`** - Sets spinner color.
-
-**`spinnerSize(double value)`** - Sets spinner size.
-
-#### Interactive States
-
-**`onHovered(RemixIconButtonStyle style)`** - Applies styles when hovered.
-
-**`onPressed(RemixIconButtonStyle style)`** - Applies styles when pressed.
-
-**`onFocused(RemixIconButtonStyle style)`** - Applies styles when focused.
-
-**`onDisabled(RemixIconButtonStyle style)`** - Applies styles when disabled.
+Sets single icon shadow
 
