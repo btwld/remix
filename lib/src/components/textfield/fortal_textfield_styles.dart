@@ -73,12 +73,12 @@ class FortalTextFieldStyles {
                 .fontWeight(FortalTokens.fontWeightMedium()),
           ),
         )
-        .color(FortalTokens.colorSurface())
         .borderAll(
           color: FortalTokens.gray7(),
           width: FortalTokens.borderWidth1(),
           strokeAlign: BorderSide.strokeAlignOutside,
         )
+        .color(FortalTokens.gray12())
         // Override focus for surface variant (different border color)
         .onFocused(
           RemixTextFieldStyle().borderAll(
@@ -106,7 +106,7 @@ class FortalTextFieldStyles {
         .merge(
           RemixTextFieldStyle(
             text: TextStyler()
-                .color(Colors.red)
+                // .color(Colors.red)
                 .fontWeight(FortalTokens.fontWeightRegular()),
             hintText: TextStyler()
                 .color(FortalTokens.accentA11())
@@ -120,6 +120,7 @@ class FortalTextFieldStyles {
                 .fontWeight(FortalTokens.fontWeightMedium()),
           ),
         )
+        .color(FortalTokens.accent12())
         .wrapIconTheme(IconThemeData(color: FortalTokens.accent10()))
         .backgroundColor(FortalTokens.accent3())
         .borderAll(

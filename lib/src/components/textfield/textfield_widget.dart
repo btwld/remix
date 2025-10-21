@@ -310,7 +310,6 @@ class RemixTextField extends StatelessWidget {
       canRequestFocus: canRequestFocus,
       spellCheckConfiguration: spellCheckConfiguration,
       magnifierConfiguration: magnifierConfiguration,
-      // style: const TextStyle(), // Will be applied in StyleBuilder
       semanticLabel: semanticLabel ?? label,
       semanticHint: semanticHint ?? hintText,
       builder: (BuildContext context, state, Widget editableText) {
