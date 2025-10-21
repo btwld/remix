@@ -1,0 +1,180 @@
+---
+title: Badge
+description: A compact indicator component for displaying counts, status, or labels
+keywords: [flutter, remix, badge, indicator, count, notification, status, label]
+---
+
+A compact component for displaying counts, status indicators, or labels.
+
+## When to use this
+
+- **Notification counts**: Show unread message or notification counts
+- **Status indicators**: Display online/offline status or alert levels
+- **Labels**: Attach categorical labels to other UI elements
+- **Counters**: Show numerical values in a compact format
+
+## Basic implementation
+
+<CodeGroup title="Basic implementation" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class BadgeExample extends StatelessWidget {
+  const BadgeExample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      spacing: 16,
+      children: [
+        RemixBadge(
+          label: '8',
+          style: styleLabel,
+        ),
+        RemixBadge(
+          style: styleIcon,
+          child: const Icon(Icons.camera_alt),
+        ),
+      ],
+    );
+  }
+
+  RemixBadgeStyle get styleLabel {
+    return RemixBadgeStyle()
+        .size(24, 24)
+        .wrapClipOval()
+        .label(
+          TextStyler()
+              .fontSize(15)
+              .wrapAlign(Alignment.center)
+              .fontFeatures([const FontFeature.tabularFigures()]),
+        )
+        .textColor(Colors.greenAccent.shade700)
+        .labelColor(Colors.white)
+        .labelFontWeight(FontWeight.bold)
+        .labelFontSize(15);
+  }
+
+  RemixBadgeStyle get styleIcon {
+    return RemixBadgeStyle()
+        .size(24, 24)
+        .wrapClipOval()
+        .label(
+          TextStyler()
+              .fontSize(15)
+              .wrapAlign(Alignment.center)
+              .fontFeatures([const FontFeature.tabularFigures()]),
+        )
+        .textColor(Colors.redAccent)
+        .wrapIconTheme(const IconThemeData(color: Colors.white, size: 15));
+  }
+}
+```
+</CodeGroup>
+
+## Fortal styles
+
+Remix includes Fortal-themed style helpers for this component:
+
+<CodeGroup title="Fortal variants" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class FortalBadgeExample extends StatelessWidget {
+  const FortalBadgeExample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      spacing: 16,
+      children: [
+        RemixBadge(
+          label: '5',
+          style: FortalBadgeStyle.solid(),
+        ),
+        RemixBadge(
+          label: 'New',
+          style: FortalBadgeStyle.soft(),
+        ),
+      ],
+    );
+  }
+}
+```
+</CodeGroup>
+
+<Info>
+  See the [FortalBadgeStyle source code](https://github.com/btwld/remix/blob/main/lib/src/components/badge/fortal_badge_styles.dart) for all available options.
+</Info>
+
+## Constructor
+<CodeGroup title="Constructor" defaultLanguage="dart">
+```dart
+const RemixBadge({
+  Key? key,
+  Widget? child,
+  String? label,
+  RemixBadgeLabelBuilder? labelBuilder,
+  RemixBadgeStyle style = const RemixBadgeStyle.create(),
+  RemixBadgeSpec? styleSpec,
+})
+```
+</CodeGroup>
+
+## Properties
+
+### Widget Properties
+
+#### `child` → `Widget?`
+
+Custom content to display inside the badge. When provided, the caller is responsible for applying typography.
+
+#### `label` → `String?`
+
+Optional text rendered within the badge using the text spec.
+
+#### `labelBuilder` → `RemixBadgeLabelBuilder?`
+
+Optional builder that exposes the resolved TextSpec for custom label rendering while keeping configured typography.
+
+#### `style` → `RemixBadgeStyle`
+
+Style configuration. Defaults to `RemixBadgeStyle.create()`.
+
+#### `styleSpec` → `RemixBadgeSpec?`
+
+Optional pre-resolved style specification for performance optimization.
+
+### Style Properties
+
+The `RemixBadgeStyle` class provides a fluent API for styling:
+
+#### Container Styling
+
+**`size(double width, double height)`** - Sets badge dimensions.
+
+**`color(Color value)`** - Sets the background color.
+
+**`textColor(Color value)`** - Sets the container background color (alias for color).
+
+**`decoration(DecorationMix value)`** - Sets background decoration.
+
+**`borderRadiusAll(double value)`** - Sets uniform border radius.
+
+**`wrapClipOval()`** - Clips badge content to oval shape.
+
+#### Label Styling
+
+**`label(TextStyler value)`** - Full control over label text styling.
+
+**`labelColor(Color value)`** - Sets label text color.
+
+**`labelFontSize(double value)`** - Sets label font size.
+
+**`labelFontWeight(FontWeight value)`** - Sets label font weight.
+
+**`labelTextStyle(TextStyleMix value)`** - Sets multiple label properties at once.
+

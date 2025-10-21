@@ -1,0 +1,149 @@
+{
+  "name": "Remix",
+  "description": "A comprehensive Flutter component library combining headless UI behavior with Mix's powerful styling system.",
+  "theme": {
+    "primaryColor": "#00EB03",
+    "accentColor": "#03A705",
+    "backgroundColor": "#0A080A"
+  },
+  "navigation": {
+    "github": "https://github.com/btwld/remix"
+  },
+  "search": {
+    "enabled": true
+  },
+  "social": {
+    "github": "btwld/remix"
+  },
+  "meta": {
+    "author": "Bitwild",
+    "keywords": [
+      "flutter",
+      "components",
+      "ui",
+      "widgets",
+      "styling",
+      "mix",
+      "design-system",
+      "accessibility",
+      "customizable"
+    ]
+  },
+  "footer": {
+    "links": [
+      {
+        "title": "Documentation",
+        "url": "/"
+      },
+      {
+        "title": "GitHub",
+        "url": "https://github.com/btwld/remix"
+      },
+      {
+        "title": "pub.dev",
+        "url": "https://pub.dev/packages/remix"
+      },
+      {
+        "title": "Mix",
+        "url": "https://github.com/btwld/mix"
+      },
+      {
+        "title": "Naked UI",
+        "url": "https://github.com/btwld/naked_ui"
+      }
+    ],
+    "copyright": "© 2024 Bitwild. BSD-3-Clause License."
+  },
+  "sidebar": [
+    {
+      "group": "Introduction",
+      "pages": [
+        {
+          "title": "Getting Started",
+          "href": "/"
+        }
+      ]
+    },
+    {
+      "group": "Components",
+      "pages": [
+        {
+          "title": "Accordion",
+          "href": "/components/accordion"
+        },
+        {
+          "title": "Avatar",
+          "href": "/components/avatar"
+        },
+        {
+          "title": "Badge",
+          "href": "/components/badge"
+        },
+        {
+          "title": "Button",
+          "href": "/components/button"
+        },
+        {
+          "title": "Callout",
+          "href": "/components/callout"
+        },
+        {
+          "title": "Card",
+          "href": "/components/card"
+        },
+        {
+          "title": "Checkbox",
+          "href": "/components/checkbox"
+        },
+        {
+          "title": "Divider",
+          "href": "/components/divider"
+        },
+        {
+          "title": "IconButton",
+          "href": "/components/icon_button"
+        },
+        {
+          "title": "Menu",
+          "href": "/components/menu"
+        },
+        {
+          "title": "Progress",
+          "href": "/components/progress"
+        },
+        {
+          "title": "Radio",
+          "href": "/components/radio"
+        },
+        {
+          "title": "Select",
+          "href": "/components/select"
+        },
+        {
+          "title": "Slider",
+          "href": "/components/slider"
+        },
+        {
+          "title": "Spinner",
+          "href": "/components/spinner"
+        },
+        {
+          "title": "Switch",
+          "href": "/components/switch"
+        },
+        {
+          "title": "Tabs",
+          "href": "/components/tabs"
+        },
+        {
+          "title": "TextField",
+          "href": "/components/textfield"
+        },
+        {
+          "title": "Tooltip",
+          "href": "/components/tooltip"
+        }
+      ]
+    }
+  ]
+}

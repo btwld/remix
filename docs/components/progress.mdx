@@ -1,0 +1,131 @@
+---
+title: Progress
+description: A progress indicator component for showing completion status of tasks or operations
+keywords: [flutter, remix, progress, progress-bar, indicator, loading, completion]
+---
+
+A progress indicator component for showing task completion status.
+
+## When to use this
+
+- **Loading states**: Show progress of data loading or file uploads
+- **Task completion**: Display progress of multi-step processes
+- **Form completion**: Indicate how much of a form has been filled out
+- **Goal tracking**: Visualize progress toward goals or milestones
+
+## Basic implementation
+
+<CodeGroup title="Basic implementation" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class ProgressExample extends StatelessWidget {
+  const ProgressExample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixProgress(
+      value: 0.3,
+      style: style,
+    );
+  }
+
+  RemixProgressStyle get style {
+    return RemixProgressStyle()
+        .wrapClipRRect(borderRadius: BorderRadius.circular(10))
+        .trackColor(Colors.grey.shade300)
+        .indicatorColor(Colors.grey.shade900)
+        .width(300)
+        .height(10);
+  }
+}
+```
+</CodeGroup>
+
+## Fortal styles
+
+Remix includes Fortal-themed style helpers for this component:
+
+<CodeGroup title="Fortal variants" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class FortalProgressExample extends StatelessWidget {
+  const FortalProgressExample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      spacing: 16,
+      children: [
+        RemixProgress(
+          value: 0.6,
+          style: FortalProgressStyle.solid(),
+        ),
+        RemixProgress(
+          value: 0.4,
+          style: FortalProgressStyle.soft(),
+        ),
+      ],
+    );
+  }
+}
+```
+</CodeGroup>
+
+<Info>
+  See the [FortalProgressStyle source code](https://github.com/btwld/remix/blob/main/lib/src/components/progress/fortal_progress_styles.dart) for all available options.
+</Info>
+
+## Constructor
+<CodeGroup title="Constructor" defaultLanguage="dart">
+```dart
+const RemixProgress({
+  Key? key,
+  required double? value,
+  RemixProgressStyle style = const RemixProgressStyle.create(),
+  RemixProgressSpec? styleSpec,
+})
+```
+</CodeGroup>
+
+## Properties
+
+### Widget Properties
+
+#### `value` → `double?`
+
+**Required**. The current progress value between 0.0 and 1.0. If `null`, displays an indeterminate progress indicator.
+
+#### `style` → `RemixProgressStyle`
+
+Style configuration. Defaults to `RemixProgressStyle.create()`.
+
+#### `styleSpec` → `RemixProgressSpec?`
+
+Optional pre-resolved style specification for performance optimization.
+
+### Style Properties
+
+The `RemixProgressStyle` class provides a fluent API for styling:
+
+#### Container Styling
+
+**`width(double value)`** - Sets the progress bar width.
+
+**`height(double value)`** - Sets the progress bar height.
+
+**`wrapClipRRect({BorderRadius? borderRadius})`** - Clips the progress bar with rounded corners.
+
+#### Track Styling
+
+**`trackColor(Color value)`** - Sets the background track color.
+
+#### Indicator Styling
+
+**`indicatorColor(Color value)`** - Sets the progress indicator color.
+
+**`indicator(BoxStyler value)`** - Full control over indicator styling.
+

@@ -1,0 +1,345 @@
+---
+title: Button
+description: A customizable button component with text, optional icons, loading states, and comprehensive styling support
+keywords: [flutter, remix, button, interactive, action, form, submit, press, click]
+---
+
+A customizable button component that supports text with optional icons, loading states, and styling.
+
+## When to use this
+
+- **Primary actions**: Submit forms, confirm dialogs, save data, trigger main actions
+- **Navigation**: Navigate between screens, open new views, switch contexts
+- **Trigger functions**: Show modals, start processes, toggle features, execute commands
+- **Call to action**: Encourage users to take important actions within your app
+
+## Basic implementation
+
+<CodeGroup title="Basic implementation" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class ButtonExample extends StatelessWidget {
+  const ButtonExample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        spacing: 16,
+        children: [
+          RemixButton(
+            onPressed: () {},
+            label: 'Turn Off',
+            style: destructiveStyle,
+          ),
+          RemixButton(
+            onPressed: () {},
+            label: 'Turn on',
+            style: successStyle,
+          ),
+        ],
+      ),
+    );
+  }
+
+  RemixButtonStyle get destructiveStyle {
+    return RemixButtonStyle()
+        .paddingX(16)
+        .paddingY(10)
+        .color(const Color(0xFF4D1919))
+        .shadow(
+          BoxShadowMix().color(Colors.redAccent).blurRadius(10).spreadRadius(0),
+        )
+        .label(
+          TextStyler().uppercase().color(Colors.redAccent),
+        )
+        .shapeBeveledRectangle(
+          borderRadius: BorderRadiusMix()
+              .bottomLeft(const Radius.circular(12))
+              .topRight(const Radius.circular(12)),
+          side: BorderSideMix.width(1).color(Colors.redAccent),
+        )
+        .wrapScale(x: 1, y: 1)
+        .onPressed(
+          RemixButtonStyle().wrapScale(x: 0.90, y: 0.90),
+        )
+        .onHovered(
+          RemixButtonStyle()
+              .color(const Color(0xFF732D2D))
+              .animate(AnimationConfig.spring(300.ms)),
+        )
+        .onFocused(
+          RemixButtonStyle().color(const Color(0xFF732D2D)),
+        );
+  }
+
+  RemixButtonStyle get successStyle {
+    return destructiveStyle
+        .color(const Color.fromARGB(255, 15, 61, 15))
+        .label(TextStyler().uppercase().color(Colors.greenAccent))
+        .shapeBeveledRectangle(
+          side: BorderSideMix().color(Colors.greenAccent),
+        )
+        .shadow(
+          BoxShadowMix()
+              .color(Colors.greenAccent)
+              .blurRadius(10)
+              .spreadRadius(0),
+        )
+        .onHovered(
+          RemixButtonStyle().color(const Color(0xFF357857)),
+        )
+        .onFocused(
+          RemixButtonStyle().color(const Color(0xFF357857)),
+        );
+  }
+}
+```
+</CodeGroup>
+
+## Fortal styles
+
+Remix includes Fortal-themed style helpers for this component:
+
+<CodeGroup title="Fortal variants" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class FortalButtonExample extends StatelessWidget {
+  const FortalButtonExample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      spacing: 16,
+      children: [
+        // Solid variant - High emphasis, primary actions
+        RemixButton(
+          label: 'Solid Button',
+          onPressed: () {},
+          style: FortalButtonStyle.solid(),
+        ),
+        // Soft variant - Medium emphasis, secondary actions
+        RemixButton(
+          label: 'Soft Button',
+          onPressed: () {},
+          style: FortalButtonStyle.soft(),
+        ),
+        // Surface variant - Subtle emphasis with border
+        RemixButton(
+          label: 'Surface Button',
+          onPressed: () {},
+          style: FortalButtonStyle.surface(),
+        ),
+        // Outline variant - Low emphasis, tertiary actions
+        RemixButton(
+          label: 'Outline Button',
+          onPressed: () {},
+          style: FortalButtonStyle.outline(),
+        ),
+        // Ghost variant - Minimal styling, inline actions
+        RemixButton(
+          label: 'Ghost Button',
+          onPressed: () {},
+          style: FortalButtonStyle.ghost(),
+        ),
+      ],
+    );
+  }
+}
+```
+</CodeGroup>
+
+<Info>
+  See the [FortalButtonStyle source code](https://github.com/btwld/remix/blob/main/lib/src/components/button/fortal_button_styles.dart) for all available options.
+</Info>
+
+## Constructor
+<CodeGroup title="Constructor" defaultLanguage="dart">
+```dart
+const RemixButton({
+  Key? key,
+  required String label,
+  IconData? icon,
+  RemixButtonTextBuilder? textBuilder,
+  RemixButtonIconBuilder? iconBuilder,
+  RemixButtonLoadingBuilder? loadingBuilder,
+  bool loading = false,
+  bool enabled = true,
+  required VoidCallback? onPressed,
+  VoidCallback? onLongPress,
+  VoidCallback? onDoubleTap,
+  FocusNode? focusNode,
+  bool autofocus = false,
+  bool enableFeedback = true,
+  String? semanticLabel,
+  String? semanticHint,
+  bool excludeSemantics = false,
+  MouseCursor mouseCursor = SystemMouseCursors.click,
+  RemixButtonStyle style = const RemixButtonStyle.create(),
+  RemixButtonSpec? styleSpec,
+})
+```
+</CodeGroup>
+
+## Properties
+
+### Widget Properties
+
+#### `label` → `String`
+
+**Required**. The label text to display in the button.
+
+#### `icon` → `IconData?`
+
+Optional icon to display before the label. Can be customized using `iconBuilder`.
+
+#### `textBuilder` → `RemixButtonTextBuilder?`
+
+Builder for customizing text rendering. Receives `(BuildContext context, TextSpec spec, String text)`.
+
+#### `iconBuilder` → `RemixButtonIconBuilder?`
+
+Builder for customizing icon rendering. Receives `(BuildContext context, IconSpec spec, IconData? icon)`.
+
+#### `loadingBuilder` → `RemixButtonLoadingBuilder?`
+
+Builder for customizing loading spinner. Receives `(BuildContext context, RemixSpinnerSpec spec)`.
+
+#### `loading` → `bool`
+
+Whether the button is in a loading state. When `true`, displays a spinner and becomes non-interactive. Defaults to `false`.
+
+#### `enabled` → `bool`
+
+Whether the button is enabled. When `false`, the button is disabled. Defaults to `true`.
+
+#### `onPressed` → `VoidCallback?`
+
+**Required**. Called when the button is tapped or activated via keyboard. If `null`, the button is disabled.
+
+#### `onLongPress` → `VoidCallback?`
+
+Called when the button is long pressed.
+
+#### `onDoubleTap` → `VoidCallback?`
+
+Called when the button is double tapped.
+
+#### `focusNode` → `FocusNode?`
+
+Optional focus node to control focus behavior.
+
+#### `autofocus` → `bool`
+
+Whether to automatically focus when first built. Defaults to `false`.
+
+#### `enableFeedback` → `bool`
+
+Whether to provide platform-specific feedback on press. Defaults to `true`.
+
+#### `semanticLabel` → `String?`
+
+Optional semantic label for screen readers. If not provided, uses `label`.
+
+#### `semanticHint` → `String?`
+
+Optional semantic hint providing context about what happens when activated.
+
+#### `excludeSemantics` → `bool`
+
+Whether to exclude child semantics. Defaults to `false`.
+
+#### `mouseCursor` → `MouseCursor`
+
+Cursor when hovering over the button. Defaults to `SystemMouseCursors.click`.
+
+#### `style` → `RemixButtonStyle`
+
+Style configuration. Defaults to `RemixButtonStyle.create()`.
+
+#### `styleSpec` → `RemixButtonSpec?`
+
+Optional pre-resolved style specification for performance optimization.
+
+### Style Properties
+
+The `RemixButtonStyle` class provides a fluent API for styling:
+
+#### Container Styling
+
+**`padding(EdgeInsetsGeometryMix value)`** - Sets padding around button content.
+
+**`paddingX(double value)`** - Sets horizontal padding (left and right).
+
+**`paddingY(double value)`** - Sets vertical padding (top and bottom).
+
+**`margin(EdgeInsetsGeometryMix value)`** - Sets margin around the button.
+
+**`color(Color value)`** - Sets the background color.
+
+**`decoration(DecorationMix value)`** - Sets background decoration (color, gradient, etc).
+
+**`spacing(double value)`** - Sets spacing between icon and label.
+
+**`alignment(Alignment value)`** - Sets content alignment within the button.
+
+**`constraints(BoxConstraintsMix value)`** - Sets size constraints (min/max width/height).
+
+**`shadow(BoxShadowMix value)`** - Adds shadow effects.
+
+#### Border & Shape
+
+**`borderRadiusAll(double value)`** - Sets uniform border radius.
+
+**`borderAll({Color? color, double? width})`** - Sets border on all sides.
+
+**`shapeRectangle({BorderRadiusMix? borderRadius, BoxBorder? border})`** - Creates rectangular shape.
+
+**`shapeCircle({BoxBorder? border})`** - Creates circular shape.
+
+**`shapeBeveledRectangle({BorderRadiusMix? borderRadius, BorderSideMix? side})`** - Creates beveled rectangle.
+
+**`shapeStadium({BorderSide? side})`** - Creates stadium (pill) shape.
+
+#### Label Styling
+
+**`label(TextStyler value)`** - Full control over label text styling.
+
+**`labelColor(Color value)`** - Sets label text color.
+
+**`labelFontSize(double value)`** - Sets label font size.
+
+**`labelFontWeight(FontWeight value)`** - Sets label font weight.
+
+**`labelTextStyle(TextStyleMix value)`** - Sets multiple label properties at once.
+
+#### Icon Styling
+
+**`icon(IconStyler value)`** - Full control over icon styling.
+
+**`iconColor(Color value)`** - Sets icon color.
+
+**`iconSize(double value)`** - Sets icon size.
+
+#### Spinner Styling
+
+**`spinner(RemixSpinnerStyle value)`** - Full control over loading spinner.
+
+**`spinnerIndicatorColor(Color value)`** - Sets spinner color.
+
+**`spinnerSize(double value)`** - Sets spinner size.
+
+#### Interactive States
+
+**`onHovered(RemixButtonStyle style)`** - Applies styles when hovered.
+
+**`onPressed(RemixButtonStyle style)`** - Applies styles when pressed.
+
+**`onFocused(RemixButtonStyle style)`** - Applies styles when focused.
+
+**`onDisabled(RemixButtonStyle style)`** - Applies styles when disabled.

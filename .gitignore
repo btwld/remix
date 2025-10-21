@@ -280,3 +280,4 @@ app.*.symbols
 
 # Analysis and development artifacts
 component_patterns_analysis.md
+/.cursor

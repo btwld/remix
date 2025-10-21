@@ -1,0 +1,156 @@
+---
+title: Spinner
+description: An animated loading spinner component for indicating ongoing processes
+keywords: [flutter, remix, spinner, loading, progress, indicator, circular]
+---
+
+An animated loading spinner component for indicating ongoing processes.
+
+## When to use this
+
+- **Loading states**: Show that content or data is being loaded
+- **Processing**: Indicate that a background process is running
+- **Async operations**: Display during API calls or file uploads
+- **Indeterminate progress**: When the completion time is unknown
+
+## Basic implementation
+
+<CodeGroup title="Basic implementation" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class SpinnerExample extends StatelessWidget {
+  const SpinnerExample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      spacing: 16,
+      children: [
+        RemixSpinner(style: styleDefault),
+        RemixSpinner(style: styleWithTrack),
+        RemixSpinner(style: styleCustomColors),
+      ],
+    );
+  }
+
+  RemixSpinnerStyle get styleDefault {
+    return RemixSpinnerStyle().indicatorColor(Colors.blue);
+  }
+
+  RemixSpinnerStyle get styleWithTrack {
+    return RemixSpinnerStyle()
+        .indicatorColor(Colors.green)
+        .trackColor(Colors.green.withValues(alpha: 0.2));
+  }
+
+  RemixSpinnerStyle get styleCustomColors {
+    return RemixSpinnerStyle()
+        .indicatorColor(Colors.redAccent)
+        .trackColor(Colors.red.withValues(alpha: 0.15))
+        .duration(2.s);
+  }
+}
+```
+</CodeGroup>
+
+## Fortal styles
+
+Remix includes Fortal-themed style helpers for this component:
+
+<CodeGroup title="Fortal base style" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class FortalSpinnerExample extends StatelessWidget {
+  const FortalSpinnerExample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      spacing: 16,
+      children: [
+        RemixSpinner(style: FortalSpinnerStyle.solid()),
+        RemixSpinner(style: FortalSpinnerStyle.soft()),
+      ],
+    );
+  }
+}
+```
+</CodeGroup>
+
+<Info>
+  See the [FortalSpinnerStyle source code](https://github.com/btwld/remix/blob/main/lib/src/components/spinner/fortal_spinner_styles.dart) for all available options.
+</Info>
+
+## Constructor
+<CodeGroup title="Constructor" defaultLanguage="dart">
+```dart
+const RemixSpinner({
+  Key? key,
+  double? size,
+  double? strokeWidth,
+  Color? indicatorColor,
+  Color? trackColor,
+  Duration? duration,
+  RemixSpinnerStyle style = const RemixSpinnerStyle.create(),
+  RemixSpinnerSpec? styleSpec,
+})
+```
+</CodeGroup>
+
+## Properties
+
+### Widget Properties
+
+#### `size` → `double?`
+
+The diameter of the spinner. If null, uses the style's size.
+
+#### `strokeWidth` → `double?`
+
+The width of the spinner stroke. If null, uses the style's stroke width.
+
+#### `indicatorColor` → `Color?`
+
+The color of the animated spinner indicator. If null, uses the style's indicator color.
+
+#### `trackColor` → `Color?`
+
+The color of the background track. If null, uses the style's track color.
+
+#### `duration` → `Duration?`
+
+The duration of one complete rotation. If null, uses the style's duration.
+
+#### `style` → `RemixSpinnerStyle`
+
+Style configuration. Defaults to `RemixSpinnerStyle.create()`.
+
+#### `styleSpec` → `RemixSpinnerSpec?`
+
+Optional pre-resolved style specification for performance optimization.
+
+### Style Properties
+
+The `RemixSpinnerStyle` class provides a fluent API for styling:
+
+#### Container Styling
+
+**`size(double value)`** - Sets the spinner diameter.
+
+**`strokeWidth(double value)`** - Sets the stroke width.
+
+#### Color Styling
+
+**`indicatorColor(Color value)`** - Sets the animated indicator color.
+
+**`trackColor(Color value)`** - Sets the background track color.
+
+#### Animation
+
+**`duration(Duration value)`** - Sets the rotation duration.
+

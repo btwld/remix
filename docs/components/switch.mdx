@@ -1,0 +1,221 @@
+---
+title: Switch
+description: A toggle switch component for binary on/off states with smooth animations
+keywords: [flutter, remix, switch, toggle, binary, on-off, control]
+---
+
+A toggle switch component for binary on/off states with smooth animations.
+
+## When to use this
+
+- **Feature toggles**: Enable or disable features or settings
+- **Binary choices**: Represent yes/no or on/off decisions
+- **Settings panels**: Control boolean preferences in settings
+- **Quick actions**: Provide instant state changes without confirmation
+
+## Basic implementation
+
+<CodeGroup title="Basic implementation" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class SwitchExample extends StatefulWidget {
+  const SwitchExample({super.key});
+
+  @override
+  State<SwitchExample> createState() => _SwitchExampleState();
+}
+
+class _SwitchExampleState extends State<SwitchExample> {
+  final ValueNotifier<bool> _selected = ValueNotifier(false);
+
+  @override
+  void dispose() {
+    _selected.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixSwitch(
+      style: style,
+      selected: _selected.value,
+      onChanged: (value) {
+        setState(() {
+          _selected.value = value;
+        });
+      },
+    );
+  }
+
+  RemixSwitchStyle get style {
+    return RemixSwitchStyle()
+        .thumbColor(Colors.grey.shade600)
+        .color(Colors.deepPurpleAccent.shade200)
+        .size(65, 30)
+        .borderRadiusAll(const Radius.circular(40))
+        .alignment(
+          _selected.value ? Alignment.centerRight : Alignment.centerLeft,
+        )
+        .animate(AnimationConfig.easeOut(300.ms))
+        .thumb(
+          BoxStyler()
+              .color(Colors.white)
+              .size(40, 30)
+              .borderRounded(40)
+              .scale(0.85)
+              .shadowOnly(
+                color: Colors.black.withValues(alpha: 0.1),
+                offset: const Offset(2, 4),
+                blurRadius: 4,
+                spreadRadius: 3,
+              ),
+        );
+  }
+}
+```
+</CodeGroup>
+
+## Fortal styles
+
+Remix includes Fortal-themed style helpers for this component:
+
+<CodeGroup title="Fortal variants" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class FortalSwitchExample extends StatefulWidget {
+  const FortalSwitchExample({super.key});
+
+  @override
+  State<FortalSwitchExample> createState() => _FortalSwitchExampleState();
+}
+
+class _FortalSwitchExampleState extends State<FortalSwitchExample> {
+  bool _value = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      spacing: 16,
+      children: [
+        RemixSwitch(
+          selected: _value,
+          onChanged: (v) => setState(() => _value = v),
+          style: FortalSwitchStyle.solid(),
+        ),
+        RemixSwitch(
+          selected: _value,
+          onChanged: (v) => setState(() => _value = v),
+          style: FortalSwitchStyle.soft(),
+        ),
+      ],
+    );
+  }
+}
+```
+</CodeGroup>
+
+<Info>
+  See the [FortalSwitchStyle source code](https://github.com/btwld/remix/blob/main/lib/src/components/switch/fortal_switch_styles.dart) for all available options.
+</Info>
+
+## Constructor
+<CodeGroup title="Constructor" defaultLanguage="dart">
+```dart
+const RemixSwitch({
+  Key? key,
+  required bool selected,
+  required ValueChanged<bool>? onChanged,
+  bool enabled = true,
+  MouseCursor mouseCursor = SystemMouseCursors.click,
+  bool enableFeedback = true,
+  FocusNode? focusNode,
+  bool autofocus = false,
+  String? semanticLabel,
+  RemixSwitchStyle style = const RemixSwitchStyle.create(),
+  RemixSwitchSpec? styleSpec,
+})
+```
+</CodeGroup>
+
+## Properties
+
+### Widget Properties
+
+#### `selected` → `bool`
+
+**Required**. Whether the switch is on (true) or off (false).
+
+#### `onChanged` → `ValueChanged<bool>?`
+
+**Required**. Called when the switch is toggled. If null, the switch is disabled.
+
+#### `enabled` → `bool`
+
+Whether the switch is enabled. Defaults to `true`.
+
+#### `mouseCursor` → `MouseCursor`
+
+The cursor to show when hovering. Defaults to `SystemMouseCursors.click`.
+
+#### `enableFeedback` → `bool`
+
+Whether to provide platform-specific feedback on toggle. Defaults to `true`.
+
+#### `focusNode` → `FocusNode?`
+
+Optional focus node to control focus behavior.
+
+#### `autofocus` → `bool`
+
+Whether to automatically focus when first built. Defaults to `false`.
+
+#### `semanticLabel` → `String?`
+
+Optional semantic label for screen readers.
+
+#### `style` → `RemixSwitchStyle`
+
+Style configuration. Defaults to `RemixSwitchStyle.create()`.
+
+#### `styleSpec` → `RemixSwitchSpec?`
+
+Optional pre-resolved style specification for performance optimization.
+
+### Style Properties
+
+The `RemixSwitchStyle` class provides a fluent API for styling:
+
+#### Container Styling
+
+**`size(double width, double height)`** - Sets switch track dimensions.
+
+**`color(Color value)`** - Sets the track background color.
+
+**`borderRadiusAll(Radius value)`** - Sets uniform border radius.
+
+**`alignment(Alignment value)`** - Sets thumb position alignment.
+
+#### Thumb Styling
+
+**`thumb(BoxStyler value)`** - Full control over thumb styling.
+
+**`thumbColor(Color value)`** - Sets the thumb color.
+
+#### Animation
+
+**`animate(AnimationConfig config)`** - Configures transition animations.
+
+#### Interactive States
+
+**`onSelected(RemixSwitchStyle style)`** - Applies styles when switch is on.
+
+**`onHovered(RemixSwitchStyle style)`** - Applies styles when hovered.
+
+**`onFocused(RemixSwitchStyle style)`** - Applies styles when focused.
+
+**`onDisabled(RemixSwitchStyle style)`** - Applies styles when disabled.
+

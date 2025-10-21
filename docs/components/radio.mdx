@@ -1,0 +1,261 @@
+---
+title: Radio
+description: A radio button component for single-select options within a group
+keywords: [flutter, remix, radio, radio-button, selection, form, input, single-select]
+---
+
+A radio button component for selecting a single option from a group.
+
+## When to use this
+
+- **Single selection**: Allow users to choose one option from multiple choices
+- **Form inputs**: Collect single-choice preferences in forms
+- **Settings**: Enable users to select one configuration option
+- **Surveys**: Gather responses with mutually exclusive options
+
+## Basic implementation
+
+<CodeGroup title="Basic implementation" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class RadioExample extends StatefulWidget {
+  const RadioExample({super.key});
+
+  @override
+  State<RadioExample> createState() => _RadioExampleState();
+}
+
+class _RadioExampleState extends State<RadioExample> {
+  String? _selectedValue;
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixRadioGroup<String>(
+      groupValue: _selectedValue,
+      onChanged: (value) {
+        setState(() {
+          _selectedValue = value;
+        });
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        spacing: 16,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            spacing: 8,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              RemixRadio<String>(value: 'option1', style: style),
+              const Text('Option 1'),
+            ],
+          ),
+          Row(
+            spacing: 8,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              RemixRadio<String>(value: 'option2', style: style),
+              const Text('Option 2'),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  RemixRadioStyle get style {
+    return RemixRadioStyle()
+        .borderRadiusAll(const Radius.circular(30))
+        .size(22, 22)
+        .border(
+          BoxBorderMix.all(
+            BorderSideMix()
+                .color(Colors.blueGrey.shade100)
+                .width(2.4)
+                .strokeAlign(BorderSide.strokeAlignInside),
+          ),
+        )
+        .onHovered(
+          RemixRadioStyle().shadow(
+            BoxShadowMix()
+                .color(Colors.blueGrey.shade50.withValues(alpha: 0.7))
+                .blurRadius(0)
+                .spreadRadius(9),
+          ),
+        )
+        .onPressed(
+          RemixRadioStyle().border(
+            BoxBorderMix.all(
+              BorderSideMix()
+                  .color(Colors.blueGrey.shade100)
+                  .width(6)
+                  .strokeAlign(BorderSide.strokeAlignInside),
+            ),
+          ),
+        )
+        .onSelected(
+          RemixRadioStyle().border(
+            BoxBorderMix.all(
+              BorderSideMix()
+                  .color(Colors.blueAccent.shade700)
+                  .width(6)
+                  .strokeAlign(BorderSide.strokeAlignInside),
+            ),
+          ),
+        );
+  }
+}
+```
+</CodeGroup>
+
+## Fortal styles
+
+Remix includes Fortal-themed style helpers for this component:
+
+<CodeGroup title="Fortal variants" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class FortalRadioExample extends StatefulWidget {
+  const FortalRadioExample({super.key});
+
+  @override
+  State<FortalRadioExample> createState() => _FortalRadioExampleState();
+}
+
+class _FortalRadioExampleState extends State<FortalRadioExample> {
+  String? _selected;
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixRadioGroup<String>(
+      groupValue: _selected,
+      onChanged: (value) => setState(() => _selected = value),
+      child: Column(
+        children: [
+          RemixRadio(value: 'soft', style: FortalRadioStyle.soft()),
+          RemixRadio(value: 'solid', style: FortalRadioStyle.solid()),
+        ],
+      ),
+    );
+  }
+}
+```
+</CodeGroup>
+
+<Info>
+  See the [FortalRadioStyle source code](https://github.com/btwld/remix/blob/main/lib/src/components/radio/fortal_radio_styles.dart) for all available options.
+</Info>
+
+## Constructor
+<CodeGroup title="Constructor" defaultLanguage="dart">
+```dart
+// Radio Group
+const RemixRadioGroup({
+  Key? key,
+  required T? groupValue,
+  required ValueChanged<T?>? onChanged,
+  required Widget child,
+})
+
+// Radio Button
+const RemixRadio({
+  Key? key,
+  required T value,
+  bool enabled = true,
+  MouseCursor mouseCursor = SystemMouseCursors.click,
+  bool enableFeedback = true,
+  FocusNode? focusNode,
+  bool autofocus = false,
+  String? semanticLabel,
+  RemixRadioStyle style = const RemixRadioStyle.create(),
+  RemixRadioSpec? styleSpec,
+})
+```
+</CodeGroup>
+
+## Properties
+
+### RemixRadioGroup Properties
+
+#### `groupValue` → `T?`
+
+**Required**. The currently selected value in the radio group.
+
+#### `onChanged` → `ValueChanged<T?>?`
+
+**Required**. Called when a radio button is selected. If null, all radio buttons in the group are disabled.
+
+#### `child` → `Widget`
+
+**Required**. The child widget containing radio buttons.
+
+### RemixRadio Properties
+
+#### `value` → `T`
+
+**Required**. The value this radio button represents.
+
+#### `enabled` → `bool`
+
+Whether the radio button is enabled. Defaults to `true`.
+
+#### `mouseCursor` → `MouseCursor`
+
+The cursor to show when hovering. Defaults to `SystemMouseCursors.click`.
+
+#### `enableFeedback` → `bool`
+
+Whether to provide platform-specific feedback on press. Defaults to `true`.
+
+#### `focusNode` → `FocusNode?`
+
+Optional focus node to control focus behavior.
+
+#### `autofocus` → `bool`
+
+Whether to automatically focus when first built. Defaults to `false`.
+
+#### `semanticLabel` → `String?`
+
+Optional semantic label for screen readers.
+
+#### `style` → `RemixRadioStyle`
+
+Style configuration. Defaults to `RemixRadioStyle.create()`.
+
+#### `styleSpec` → `RemixRadioSpec?`
+
+Optional pre-resolved style specification for performance optimization.
+
+### Style Properties
+
+The `RemixRadioStyle` class provides a fluent API for styling:
+
+#### Container Styling
+
+**`size(double width, double height)`** - Sets radio button dimensions.
+
+**`color(Color value)`** - Sets the background color.
+
+**`borderRadiusAll(Radius value)`** - Sets uniform border radius.
+
+**`border(BoxBorderMix value)`** - Sets border styling.
+
+**`shadow(BoxShadowMix value)`** - Adds shadow effects.
+
+#### Interactive States
+
+**`onSelected(RemixRadioStyle style)`** - Applies styles when radio is selected.
+
+**`onHovered(RemixRadioStyle style)`** - Applies styles when hovered.
+
+**`onPressed(RemixRadioStyle style)`** - Applies styles when pressed.
+
+**`onFocused(RemixRadioStyle style)`** - Applies styles when focused.
+
+**`onDisabled(RemixRadioStyle style)`** - Applies styles when disabled.
+

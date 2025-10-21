@@ -1,0 +1,329 @@
+---
+title: Accordion
+description: An expandable/collapsible component for showing and hiding content panels with support for multiple expansion modes
+keywords: [flutter, remix, accordion, collapsible, expandable, disclosure, faq]
+---
+
+An accordion component that manages expansion state of content panels with min/max constraints.
+
+## When to use this
+
+- **FAQ sections**: Display frequently asked questions with expandable answers
+- **Content organization**: Organize large amounts of content in a compact, scannable format
+- **Settings panels**: Group related settings that can be shown/hidden
+- **Navigation menus**: Create collapsible menu structures with nested content
+
+## Basic implementation
+
+<CodeGroup title="Basic implementation" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class AccordionExample extends StatefulWidget {
+  const AccordionExample({super.key});
+
+  @override
+  State<AccordionExample> createState() => _AccordionExampleState();
+}
+
+class _AccordionExampleState extends State<AccordionExample> {
+  final controller = RemixAccordionController<String>(min: 0, max: 1);
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixAccordionGroup(
+      controller: controller,
+      child: ColumnBox(
+        style: FlexBoxStyler().spacing(16),
+        children: [
+          RemixAccordion(
+            value: 'accordion1',
+            title: 'How do I update my account information?',
+            leadingIcon: Icons.help_outline,
+            style: itemStyle,
+            child: const Text(
+              'Insert the accordion description here. It would look better as two lines of text.',
+            ),
+          ),
+          RemixAccordion(
+            value: 'accordion2',
+            title: 'What payment methods are accepted?',
+            leadingIcon: Icons.help_outline,
+            style: itemStyle,
+            child: const Text(
+                'Major credit and debit cards like Visa, MasterCard, and American Express, as well as digital payment options like PayPal and Apple Pay.'),
+          ),
+          RemixAccordion(
+            value: 'accordion3',
+            title: 'How can I track my order?',
+            leadingIcon: Icons.help_outline,
+            style: itemStyle,
+            child: const Text(
+                'You can track your order status in the "My Orders" section of your account.'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  RemixAccordionStyle<String> get itemStyle {
+    return RemixAccordionStyle<String>()
+        .content(BoxStyler().paddingX(16).paddingTop(8))
+        .wrapClipRRect(borderRadius: BorderRadius.circular(8))
+        .paddingX(16)
+        .paddingY(14)
+        .borderRounded(8)
+        .onHovered(RemixAccordionStyle<String>().color(Colors.grey.shade100))
+        .decoration(
+          BoxDecorationMix(
+            color: Colors.white,
+            border: BoxBorderMix.all(
+              BorderSideMix().color(Colors.grey.shade300).width(1),
+            ),
+            borderRadius: BorderRadiusMix.circular(8),
+          ),
+        )
+        .trigger(
+          FlexBoxStyler()
+              .direction(Axis.horizontal)
+              .mainAxisAlignment(MainAxisAlignment.spaceBetween)
+              .spacing(12),
+        )
+        .leadingIcon(IconStyler().color(Colors.grey.shade700).size(20))
+        .title(
+          TextStyler()
+              .color(Colors.grey.shade900)
+              .fontWeight(FontWeight.w500)
+              .fontSize(14),
+        )
+        .trailingIcon(IconStyler().color(Colors.grey.shade700).size(20));
+  }
+}
+```
+</CodeGroup>
+
+## Fortal styles
+
+Remix includes Fortal-themed style helpers for this component:
+
+<CodeGroup title="Fortal base style" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class FortalAccordionExample extends StatefulWidget {
+  const FortalAccordionExample({super.key});
+
+  @override
+  State<FortalAccordionExample> createState() => _FortalAccordionExampleState();
+}
+
+class _FortalAccordionExampleState extends State<FortalAccordionExample> {
+  final controller = RemixAccordionController<String>();
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixAccordionGroup(
+      controller: controller,
+      child: Column(
+        children: [
+          RemixAccordion(
+            value: 'item1',
+            title: 'First Item',
+            style: FortalAccordionStyle.base(),
+            child: Text('First content'),
+          ),
+          RemixAccordion(
+            value: 'item2',
+            title: 'Second Item',
+            style: FortalAccordionStyle.base(),
+            child: Text('Second content'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+```
+</CodeGroup>
+
+<Info>
+  See the [FortalAccordionStyle source code](https://github.com/btwld/remix/blob/main/lib/src/components/accordion/fortal_accordion_styles.dart) for all available options.
+</Info>
+
+## Constructor
+<CodeGroup title="Constructor" defaultLanguage="dart">
+```dart
+// Accordion Group
+const RemixAccordionGroup({
+  Key? key,
+  required Widget child,
+  required RemixAccordionController<T> controller,
+  List<T> initialExpandedValues = const [],
+})
+
+// Accordion Item
+const RemixAccordion({
+  Key? key,
+  required T value,
+  required Widget child,
+  String? title,
+  IconData? leadingIcon,
+  IconData? trailingIcon,
+  NakedAccordionTriggerBuilder<T>? builder,
+  bool enabled = true,
+  MouseCursor mouseCursor = SystemMouseCursors.click,
+  bool enableFeedback = true,
+  bool autofocus = false,
+  FocusNode? focusNode,
+  ValueChanged<bool>? onFocusChange,
+  ValueChanged<bool>? onHoverChange,
+  ValueChanged<bool>? onPressChange,
+  String? semanticLabel,
+  RemixAccordionStyle style = const RemixAccordionStyle.create(),
+  Widget Function(Widget, Animation<double>) transitionBuilder = defaultAccordionTransitionBuilder,
+})
+```
+</CodeGroup>
+
+## Properties
+
+### RemixAccordionGroup Properties
+
+#### `child` → `Widget`
+
+**Required**. The accordion items to render.
+
+#### `controller` → `RemixAccordionController<T>`
+
+**Required**. Controller that manages which accordion items are expanded/collapsed and enforces min/max expansion constraints.
+
+#### `initialExpandedValues` → `List<T>`
+
+Values expanded on the first build when the controller is empty. Defaults to empty list.
+
+### RemixAccordion Properties
+
+#### `value` → `T`
+
+**Required**. Unique identifier tracked by the controller.
+
+#### `child` → `Widget`
+
+**Required**. Content rendered while expanded.
+
+#### `title` → `String?`
+
+Title text for the trigger. Either `title` or `builder` must be provided.
+
+#### `leadingIcon` → `IconData?`
+
+Optional leading icon for the trigger.
+
+#### `trailingIcon` → `IconData?`
+
+Optional trailing icon for the trigger. Defaults to add/remove icons based on expansion state.
+
+#### `builder` → `NakedAccordionTriggerBuilder<T>?`
+
+Custom builder for the trigger. When provided, `title`, `leadingIcon`, and `trailingIcon` are ignored.
+
+#### `enabled` → `bool`
+
+Whether the accordion item is interactive. Defaults to `true`.
+
+#### `mouseCursor` → `MouseCursor`
+
+Mouse cursor to use when interactive. Defaults to `SystemMouseCursors.click`.
+
+#### `enableFeedback` → `bool`
+
+Whether to provide platform feedback on interactions. Defaults to `true`.
+
+#### `autofocus` → `bool`
+
+Whether the header should autofocus. Defaults to `false`.
+
+#### `focusNode` → `FocusNode?`
+
+Focus node associated with the header.
+
+#### `onFocusChange` → `ValueChanged<bool>?`
+
+Called when the header's focus state changes.
+
+#### `onHoverChange` → `ValueChanged<bool>?`
+
+Called when the header's hover state changes.
+
+#### `onPressChange` → `ValueChanged<bool>?`
+
+Called when the header's pressed state changes.
+
+#### `semanticLabel` → `String?`
+
+Semantic label announced for the header. Defaults to `title` if not provided.
+
+#### `style` → `RemixAccordionStyle`
+
+Style configuration. Defaults to `RemixAccordionStyle.create()`.
+
+#### `transitionBuilder` → `Widget Function(Widget, Animation<double>)`
+
+The transition builder for the accordion item. Defaults to `defaultAccordionTransitionBuilder`.
+
+### Style Properties
+
+The `RemixAccordionStyle` class provides a fluent API for styling:
+
+#### Container Styling
+
+**`padding(EdgeInsetsGeometryMix value)`** - Sets padding around accordion content.
+
+**`paddingX(double value)`** - Sets horizontal padding.
+
+**`paddingY(double value)`** - Sets vertical padding.
+
+**`color(Color value)`** - Sets the background color.
+
+**`decoration(DecorationMix value)`** - Sets background decoration.
+
+**`borderRounded(double value)`** - Sets uniform border radius.
+
+#### Trigger Styling
+
+**`trigger(FlexBoxStyler value)`** - Full control over trigger layout and styling.
+
+**`title(TextStyler value)`** - Full control over title text styling.
+
+**`leadingIcon(IconStyler value)`** - Full control over leading icon styling.
+
+**`trailingIcon(IconStyler value)`** - Full control over trailing icon styling.
+
+#### Content Styling
+
+**`content(BoxStyler value)`** - Full control over expanded content container styling.
+
+#### Interactive States
+
+**`onHovered(RemixAccordionStyle style)`** - Applies styles when hovered.
+
+**`onPressed(RemixAccordionStyle style)`** - Applies styles when pressed.
+
+**`onFocused(RemixAccordionStyle style)`** - Applies styles when focused.
+
+**`onDisabled(RemixAccordionStyle style)`** - Applies styles when disabled.
+

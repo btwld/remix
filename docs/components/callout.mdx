@@ -1,0 +1,177 @@
+---
+title: Callout
+description: A prominent component for displaying important information, warnings, or messages with optional icons
+keywords: [flutter, remix, callout, alert, message, notification, info, warning]
+---
+
+A component for displaying important information or messages with optional icons.
+
+## When to use this
+
+- **Important information**: Highlight critical information that users need to see
+- **Warnings**: Display warning messages or cautionary notes
+- **Tips and hints**: Show helpful tips or contextual guidance
+- **Status messages**: Communicate system status or updates
+
+## Basic implementation
+
+<CodeGroup title="Basic implementation" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class CalloutExample extends StatelessWidget {
+  const CalloutExample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixCallout(
+      text: 'Callout important information for the user.',
+      icon: Icons.info_outline,
+      style: style,
+    );
+  }
+
+  RemixCalloutStyle get style {
+    return RemixCalloutStyle()
+        .color(Colors.grey.shade200)
+        .spacing(12)
+        .height(60)
+        .paddingRight(12)
+        .icon(
+          IconStyler().size(24).color(Colors.white).wrapBox(BoxStyler()
+              .color(Colors.blue.shade900)
+              .paddingX(12)
+              .height(double.infinity)),
+        )
+        .mainAxisSize(MainAxisSize.min);
+  }
+}
+```
+</CodeGroup>
+
+## Fortal styles
+
+Remix includes Fortal-themed style helpers for this component:
+
+<CodeGroup title="Fortal variants" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class FortalCalloutExample extends StatelessWidget {
+  const FortalCalloutExample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      spacing: 16,
+      children: [
+        RemixCallout(
+          text: 'Information callout',
+          icon: Icons.info,
+          style: FortalCalloutStyle.info(),
+        ),
+        RemixCallout(
+          text: 'Success callout',
+          icon: Icons.check_circle,
+          style: FortalCalloutStyle.success(),
+        ),
+        RemixCallout(
+          text: 'Warning callout',
+          icon: Icons.warning,
+          style: FortalCalloutStyle.warning(),
+        ),
+      ],
+    );
+  }
+}
+```
+</CodeGroup>
+
+<Info>
+  See the [FortalCalloutStyle source code](https://github.com/btwld/remix/blob/main/lib/src/components/callout/fortal_callout_styles.dart) for all available options.
+</Info>
+
+## Constructor
+<CodeGroup title="Constructor" defaultLanguage="dart">
+```dart
+const RemixCallout({
+  Key? key,
+  Widget? child,
+  String? text,
+  IconData? icon,
+  RemixCalloutTextBuilder? textBuilder,
+  RemixCalloutIconBuilder? iconBuilder,
+  RemixCalloutStyle style = const RemixCalloutStyle.create(),
+  RemixCalloutSpec? styleSpec,
+})
+```
+</CodeGroup>
+
+## Properties
+
+### Widget Properties
+
+#### `child` → `Widget?`
+
+Custom content to display inside the callout. When provided, `text` is ignored.
+
+#### `text` → `String?`
+
+Text content to display in the callout.
+
+#### `icon` → `IconData?`
+
+Optional icon to display alongside the content.
+
+#### `textBuilder` → `RemixCalloutTextBuilder?`
+
+Builder for customizing text rendering. Receives `(BuildContext context, TextSpec spec, String text)`.
+
+#### `iconBuilder` → `RemixCalloutIconBuilder?`
+
+Builder for customizing icon rendering. Receives `(BuildContext context, IconSpec spec, IconData? icon)`.
+
+#### `style` → `RemixCalloutStyle`
+
+Style configuration. Defaults to `RemixCalloutStyle.create()`.
+
+#### `styleSpec` → `RemixCalloutSpec?`
+
+Optional pre-resolved style specification for performance optimization.
+
+### Style Properties
+
+The `RemixCalloutStyle` class provides a fluent API for styling:
+
+#### Container Styling
+
+**`padding(EdgeInsetsGeometryMix value)`** - Sets padding around callout content.
+
+**`color(Color value)`** - Sets the background color.
+
+**`decoration(DecorationMix value)`** - Sets background decoration.
+
+**`spacing(double value)`** - Sets spacing between icon and text.
+
+**`height(double value)`** - Sets the callout height.
+
+**`mainAxisSize(MainAxisSize value)`** - Sets the main axis size.
+
+#### Text Styling
+
+**`text(TextStyler value)`** - Full control over text styling.
+
+**`textColor(Color value)`** - Sets text color.
+
+**`textFontSize(double value)`** - Sets text font size.
+
+#### Icon Styling
+
+**`icon(IconStyler value)`** - Full control over icon styling.
+
+**`iconColor(Color value)`** - Sets icon color.
+
+**`iconSize(double value)`** - Sets icon size.
+

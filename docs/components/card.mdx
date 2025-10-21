@@ -1,0 +1,129 @@
+---
+title: Card
+description: A versatile container component for grouping related content with customizable styling
+keywords: [flutter, remix, card, container, panel, surface, content]
+---
+
+A versatile container component for grouping related content.
+
+## When to use this
+
+- **Content grouping**: Organize related information in a contained unit
+- **Product cards**: Display product information in e-commerce interfaces
+- **Profile cards**: Show user profiles or contact information
+- **Dashboard panels**: Create panels for dashboard widgets
+
+## Basic implementation
+
+<CodeGroup title="Basic implementation" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class CardExample extends StatelessWidget {
+  const CardExample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixCard(
+      style: style,
+    );
+  }
+
+  RemixCardStyle get style {
+    return RemixCardStyle()
+        .size(300, 200)
+        .textColor(Colors.white)
+        .borderRadiusAll(const Radius.circular(4))
+        .borderAll(color: Colors.grey.shade300);
+  }
+}
+```
+</CodeGroup>
+
+## Fortal styles
+
+Remix includes Fortal-themed style helpers for this component:
+
+<CodeGroup title="Fortal variants" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class FortalCardExample extends StatelessWidget {
+  const FortalCardExample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      spacing: 16,
+      children: [
+        RemixCard(
+          style: FortalCardStyle.elevated(),
+        ),
+        RemixCard(
+          style: FortalCardStyle.outlined(),
+        ),
+      ],
+    );
+  }
+}
+```
+</CodeGroup>
+
+<Info>
+  See the [FortalCardStyle source code](https://github.com/btwld/remix/blob/main/lib/src/components/card/fortal_card_styles.dart) for all available options.
+</Info>
+
+## Constructor
+<CodeGroup title="Constructor" defaultLanguage="dart">
+```dart
+const RemixCard({
+  Key? key,
+  Widget? child,
+  RemixCardStyle style = const RemixCardStyle.create(),
+  RemixCardSpec? styleSpec,
+})
+```
+</CodeGroup>
+
+## Properties
+
+### Widget Properties
+
+#### `child` → `Widget?`
+
+Optional content to display inside the card.
+
+#### `style` → `RemixCardStyle`
+
+Style configuration. Defaults to `RemixCardStyle.create()`.
+
+#### `styleSpec` → `RemixCardSpec?`
+
+Optional pre-resolved style specification for performance optimization.
+
+### Style Properties
+
+The `RemixCardStyle` class provides a fluent API for styling:
+
+#### Container Styling
+
+**`padding(EdgeInsetsGeometryMix value)`** - Sets padding inside the card.
+
+**`margin(EdgeInsetsGeometryMix value)`** - Sets margin around the card.
+
+**`size(double width, double height)`** - Sets card dimensions.
+
+**`color(Color value)`** - Sets the background color.
+
+**`textColor(Color value)`** - Sets the container background color (alias for color).
+
+**`decoration(DecorationMix value)`** - Sets background decoration.
+
+**`borderRadiusAll(Radius value)`** - Sets uniform border radius.
+
+**`borderAll({Color? color, double? width})`** - Sets border on all sides.
+
+**`shadow(BoxShadowMix value)`** - Adds shadow effects for elevation.
+
