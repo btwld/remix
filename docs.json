@@ -10,6 +10,7 @@
     "primary": "#00EB03",
     "backgroundDark": "#0A080A"
   },
+  "socialPreview": "/assets/banner.png",
   "navigation": {
     "github": "https://github.com/btwld/remix"
   },
