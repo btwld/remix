@@ -75,7 +75,7 @@ import 'package:remix/remix.dart';
 
 class MyApp extends StatelessWidget {
 
-  final style = RemixButtonStyle()
+  final button = RemixButtonStyle()
     .paddingX(16)
     .paddingY(10)
     .color(Colors.blue)
@@ -87,10 +87,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         body: Center(
-          child: RemixButton(
-            onPressed: () => print('Button pressed!'),
+          child: button(
             label: 'Click Me',
-            style: style,
+            onPressed: () => print('Button pressed!'),
           ),
         ),
       ),
@@ -104,12 +103,6 @@ class MyApp extends StatelessWidget {
 Easily define how components should look in different interaction states.
 
 ```dart
-RemixButton(
-  onPressed: () {},
-  label: 'Interactive Button',
-  style: style,
-);
-
 final style = RemixButtonStyle()
   .paddingX(16)
   .paddingY(10)
@@ -129,12 +122,6 @@ final style = RemixButtonStyle()
 Make your button style smoothly animate when its state changes by chaining `.animate()` with your state-specific styles. You can use `AnimationConfig.spring` to get natural, spring-based motion.
 
 ```dart
-RemixButton(
-  onPressed: () {},
-  label: 'Animated Button',
-  style: style, // Top-level style animation
-);
-
 final style = RemixButtonStyle()
   .paddingX(16)
   .paddingY(10)
@@ -211,13 +198,6 @@ class MyApp extends StatelessWidget {
 Fortal styles are built using the Remix styling API, so you can easily extend and customize them:
 
 ```dart
-// Start with a Fortal style and customize it
-RemixButton(
-  onPressed: () {},
-  label: 'Custom Fortal Button',
-  style: style,
-);
-
 final style = FortalButtonStyle.solid()
   .borderRadiusAll(const Radius.circular(8))
   .paddingX(32)
@@ -240,17 +220,11 @@ Fortal styles are built on a robust token system that includes:
 You can use these tokens directly in your custom styles:
 
 ```dart
-RemixButton(
-  onPressed: () {},
-  label: 'Custom with Tokens',
-  style: style,
-);
-
 final style = RemixButtonStyle()
-    .color(FortalTokens.accent9())
-    .paddingAll(FortalTokens.space4())
-    .borderRadiusAll(FortalTokens.radius3())
-    .label(TextStyler().color(FortalTokens.accentContrast()));
+  .color(FortalTokens.accent9())
+  .paddingAll(FortalTokens.space4())
+  .borderRadiusAll(FortalTokens.radius3())
+  .label(TextStyler().color(FortalTokens.accentContrast()));
 ```
 
 ## Components
