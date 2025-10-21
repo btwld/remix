@@ -1,0 +1,232 @@
+---
+title: Avatar
+description: A customizable avatar component that displays user profile images, initials, or icons
+keywords: [flutter, remix, avatar, profile, user, image, initials, icon]
+---
+
+A customizable avatar component that can display an image, text label, or icon.
+
+## When to use this
+
+- **User profiles**: Display user profile pictures or initials
+- **Comment sections**: Show avatars next to user comments or posts
+- **Team members**: Display team member photos in lists or grids
+- **Contact lists**: Show profile images in contact or messaging interfaces
+
+## Basic implementation
+
+<CodeGroup title="Basic implementation" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class AvatarExample extends StatelessWidget {
+  const AvatarExample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      spacing: 16,
+      children: [
+        RemixAvatar(
+          label: 'LF',
+          style: labelStyle,
+        ),
+        RemixAvatar(
+          icon: Icons.person,
+          style: iconStyle,
+        ),
+        RemixAvatar(
+          style: image,
+        ),
+      ],
+    );
+  }
+
+  RemixAvatarStyle get labelStyle {
+    return RemixAvatarStyle()
+        .textColor(Colors.deepPurpleAccent)
+        .size(50, 50)
+        .shapeCircle()
+        .wrapClipOval()
+        .labelColor(Colors.white)
+        .labelFontWeight(FontWeight.bold)
+        .labelFontSize(15);
+  }
+
+  RemixAvatarStyle get iconStyle {
+    return RemixAvatarStyle()
+        .textColor(Colors.deepOrangeAccent)
+        .size(70, 70)
+        .iconColor(Colors.white)
+        .iconSize(70)
+        .icon(IconStyler().wrapTranslate(x: 0, y: 12))
+        .shapeCircle()
+        .wrapClipOval();
+  }
+
+  RemixAvatarStyle get image {
+    return RemixAvatarStyle()
+        .size(90, 90)
+        .backgroundImageUrl('https://i.pravatar.cc/150?img=48')
+        .shapeCircle();
+  }
+}
+```
+</CodeGroup>
+
+## Fortal styles
+
+Remix includes Fortal-themed style helpers for this component:
+
+<CodeGroup title="Fortal variants" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class FortalAvatarExample extends StatelessWidget {
+  const FortalAvatarExample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      spacing: 16,
+      children: [
+        // Soft variant - Subtle background
+        RemixAvatar(
+          label: 'AB',
+          style: FortalAvatarStyles.soft(),
+        ),
+        // Solid variant - Bold background
+        RemixAvatar(
+          label: 'CD',
+          style: FortalAvatarStyles.solid(),
+        ),
+      ],
+    );
+  }
+}
+```
+</CodeGroup>
+
+<Info>
+  See the [FortalAvatarStyles source code](https://github.com/btwld/remix/blob/main/lib/src/components/avatar/fortal_avatar_styles.dart) for all available options.
+</Info>
+
+## Constructor
+<CodeGroup title="Constructor" defaultLanguage="dart">
+```dart
+const RemixAvatar({
+  Key? key,
+  ImageProvider? backgroundImage,
+  ImageProvider? foregroundImage,
+  ImageErrorListener? onBackgroundImageError,
+  ImageErrorListener? onForegroundImageError,
+  Widget? child,
+  String? label,
+  RemixAvatarLabelBuilder? labelBuilder,
+  IconData? icon,
+  RemixAvatarIconBuilder? iconBuilder,
+  RemixAvatarStyle style = const RemixAvatarStyle.create(),
+  RemixAvatarSpec? styleSpec,
+})
+```
+</CodeGroup>
+
+## Properties
+
+### Widget Properties
+
+#### `backgroundImage` → `ImageProvider?`
+
+The background image to display in the avatar.
+
+#### `foregroundImage` → `ImageProvider?`
+
+The foreground image to display in the avatar (e.g., for badges or overlays).
+
+#### `onBackgroundImageError` → `ImageErrorListener?`
+
+Callback function called when the background image fails to load.
+
+#### `onForegroundImageError` → `ImageErrorListener?`
+
+Callback function called when the foreground image fails to load.
+
+#### `child` → `Widget?`
+
+Custom content to display inside the avatar. When provided, the caller is responsible for applying typography.
+
+#### `label` → `String?`
+
+Optional text rendered within the avatar using the text spec (typically initials).
+
+#### `labelBuilder` → `RemixAvatarLabelBuilder?`
+
+Optional builder that exposes the resolved TextSpec for custom label rendering while keeping configured typography.
+
+#### `icon` → `IconData?`
+
+Optional icon rendered when no `child` or `label` is provided.
+
+#### `iconBuilder` → `RemixAvatarIconBuilder?`
+
+Optional builder that exposes the resolved IconSpec for custom icon rendering while preserving configured styling.
+
+#### `style` → `RemixAvatarStyle`
+
+Style configuration. Defaults to `RemixAvatarStyle.create()`.
+
+#### `styleSpec` → `RemixAvatarSpec?`
+
+Optional pre-resolved style specification for performance optimization.
+
+### Style Properties
+
+The `RemixAvatarStyle` class provides a fluent API for styling:
+
+#### Container Styling
+
+**`size(double width, double height)`** - Sets avatar dimensions.
+
+**`square(double size)`** - Sets equal width and height.
+
+**`color(Color value)`** - Sets the background color.
+
+**`textColor(Color value)`** - Sets the container background color (alias for color).
+
+**`decoration(DecorationMix value)`** - Sets background decoration.
+
+**`borderRadiusAll(double value)`** - Sets uniform border radius.
+
+**`shapeCircle()`** - Creates circular avatar shape.
+
+**`clipBehavior(Clip value)`** - Sets clip behavior for content overflow.
+
+#### Label Styling
+
+**`label(TextStyler value)`** - Full control over label text styling.
+
+**`labelColor(Color value)`** - Sets label text color.
+
+**`labelFontSize(double value)`** - Sets label font size.
+
+**`labelFontWeight(FontWeight value)`** - Sets label font weight.
+
+**`labelTextStyle(TextStyleMix value)`** - Sets multiple label properties at once.
+
+#### Icon Styling
+
+**`icon(IconStyler value)`** - Full control over icon styling.
+
+**`iconColor(Color value)`** - Sets icon color.
+
+**`iconSize(double value)`** - Sets icon size.
+
+#### Image Styling
+
+**`backgroundImageUrl(String url)`** - Sets background image from URL.
+
+**`backgroundImageProvider(ImageProvider provider)`** - Sets background image from provider.
+

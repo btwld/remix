@@ -1,0 +1,213 @@
+---
+title: Checkbox
+description: A selectable checkbox component for enabling/disabling options with support for checked, unchecked, and indeterminate states
+keywords: [flutter, remix, checkbox, selection, toggle, form, input]
+---
+
+A selectable checkbox component for toggling options on and off.
+
+## When to use this
+
+- **Multi-select lists**: Allow users to select multiple items from a list
+- **Form inputs**: Collect boolean preferences or agreement confirmations
+- **Settings panels**: Enable/disable features or options
+- **Bulk actions**: Select multiple items for batch operations
+
+## Basic implementation
+
+<CodeGroup title="Basic implementation" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class CheckboxExample extends StatefulWidget {
+  const CheckboxExample({super.key});
+
+  @override
+  State<CheckboxExample> createState() => _CheckboxExampleState();
+}
+
+class _CheckboxExampleState extends State<CheckboxExample> {
+  bool _isChecked = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixCheckbox(
+      selected: _isChecked,
+      onChanged: (value) {
+        setState(() {
+          _isChecked = value ?? false;
+        });
+      },
+      style: style,
+    );
+  }
+
+  RemixCheckboxStyle get style {
+    return RemixCheckboxStyle()
+        .size(24, 24)
+        .icon(IconStyler().size(20).color(Colors.white))
+        .onSelected(RemixCheckboxStyle().color(Colors.grey.shade900))
+        .borderRadiusAll(const Radius.circular(3))
+        .border(
+          BoxBorderMix.all(
+            BorderSideMix().color(Colors.black87).width(2),
+          ),
+        );
+  }
+}
+```
+</CodeGroup>
+
+## Fortal styles
+
+Remix includes Fortal-themed style helpers for this component:
+
+<CodeGroup title="Fortal variants" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class FortalCheckboxExample extends StatefulWidget {
+  const FortalCheckboxExample({super.key});
+
+  @override
+  State<FortalCheckboxExample> createState() => _FortalCheckboxExampleState();
+}
+
+class _FortalCheckboxExampleState extends State<FortalCheckboxExample> {
+  bool _isChecked = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      spacing: 16,
+      children: [
+        RemixCheckbox(
+          selected: _isChecked,
+          onChanged: (value) => setState(() => _isChecked = value ?? false),
+          style: FortalCheckboxStyle.solid(),
+        ),
+        RemixCheckbox(
+          selected: _isChecked,
+          onChanged: (value) => setState(() => _isChecked = value ?? false),
+          style: FortalCheckboxStyle.soft(),
+        ),
+      ],
+    );
+  }
+}
+```
+</CodeGroup>
+
+<Info>
+  See the [FortalCheckboxStyle source code](https://github.com/btwld/remix/blob/main/lib/src/components/checkbox/fortal_checkbox_styles.dart) for all available options.
+</Info>
+
+## Constructor
+<CodeGroup title="Constructor" defaultLanguage="dart">
+```dart
+const RemixCheckbox({
+  Key? key,
+  required bool selected,
+  required ValueChanged<bool?>? onChanged,
+  bool enabled = true,
+  bool? indeterminate,
+  MouseCursor mouseCursor = SystemMouseCursors.click,
+  bool enableFeedback = true,
+  FocusNode? focusNode,
+  bool autofocus = false,
+  String? semanticLabel,
+  RemixCheckboxIconBuilder? iconBuilder,
+  RemixCheckboxStyle style = const RemixCheckboxStyle.create(),
+  RemixCheckboxSpec? styleSpec,
+})
+```
+</CodeGroup>
+
+## Properties
+
+### Widget Properties
+
+#### `selected` → `bool`
+
+**Required**. Whether the checkbox is checked.
+
+#### `onChanged` → `ValueChanged<bool?>?`
+
+**Required**. Called when the checkbox value changes. If null, the checkbox is disabled.
+
+#### `enabled` → `bool`
+
+Whether the checkbox is enabled. Defaults to `true`.
+
+#### `indeterminate` → `bool?`
+
+Whether the checkbox is in an indeterminate state (partially checked). Defaults to `false`.
+
+#### `mouseCursor` → `MouseCursor`
+
+The cursor to show when hovering over the checkbox. Defaults to `SystemMouseCursors.click`.
+
+#### `enableFeedback` → `bool`
+
+Whether to provide platform-specific feedback on press. Defaults to `true`.
+
+#### `focusNode` → `FocusNode?`
+
+Optional focus node to control focus behavior.
+
+#### `autofocus` → `bool`
+
+Whether to automatically focus when first built. Defaults to `false`.
+
+#### `semanticLabel` → `String?`
+
+Optional semantic label for screen readers.
+
+#### `iconBuilder` → `RemixCheckboxIconBuilder?`
+
+Builder for customizing icon rendering. Receives `(BuildContext context, IconSpec spec)`.
+
+#### `style` → `RemixCheckboxStyle`
+
+Style configuration. Defaults to `RemixCheckboxStyle.create()`.
+
+#### `styleSpec` → `RemixCheckboxSpec?`
+
+Optional pre-resolved style specification for performance optimization.
+
+### Style Properties
+
+The `RemixCheckboxStyle` class provides a fluent API for styling:
+
+#### Container Styling
+
+**`size(double width, double height)`** - Sets checkbox dimensions.
+
+**`color(Color value)`** - Sets the background color.
+
+**`decoration(DecorationMix value)`** - Sets background decoration.
+
+**`borderRadiusAll(Radius value)`** - Sets uniform border radius.
+
+**`border(BoxBorderMix value)`** - Sets border styling.
+
+#### Icon Styling
+
+**`icon(IconStyler value)`** - Full control over checkmark icon styling.
+
+**`iconColor(Color value)`** - Sets checkmark icon color.
+
+**`iconSize(double value)`** - Sets checkmark icon size.
+
+#### Interactive States
+
+**`onSelected(RemixCheckboxStyle style)`** - Applies styles when checkbox is checked.
+
+**`onHovered(RemixCheckboxStyle style)`** - Applies styles when hovered.
+
+**`onFocused(RemixCheckboxStyle style)`** - Applies styles when focused.
+
+**`onDisabled(RemixCheckboxStyle style)`** - Applies styles when disabled.
+

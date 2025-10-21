@@ -1,0 +1,198 @@
+---
+title: Tooltip
+description: A contextual overlay component for displaying helpful information on hover
+keywords: [flutter, remix, tooltip, hint, overlay, info, help]
+---
+
+A contextual overlay component for displaying helpful information when hovering.
+
+## When to use this
+
+- **Additional information**: Provide extra context or details on hover
+- **Icon explanations**: Explain the purpose of icons or buttons
+- **Truncated text**: Show full text when space is limited
+- **Help text**: Offer guidance or tips to users
+
+## Basic implementation
+
+<CodeGroup title="Basic implementation" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class TooltipExample extends StatelessWidget {
+  const TooltipExample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      spacing: 24,
+      children: [
+        RemixTooltip(
+          tooltipChild: const Text('Default tooltip'),
+          style: styleDefault,
+          child: const _TriggerButton(label: 'Default'),
+        ),
+        RemixTooltip(
+          tooltipChild: const Text('Quick tooltip!'),
+          style: styleFast,
+          child: const _TriggerButton(label: 'Fast'),
+        ),
+        RemixTooltip(
+          tooltipChild: const Text('Slow tooltip'),
+          style: styleSlow,
+          child: const _TriggerButton(label: 'Slow'),
+        ),
+      ],
+    );
+  }
+
+  RemixTooltipStyle get styleDefault {
+    return RemixTooltipStyle()
+        .padding(EdgeInsetsGeometryMix.symmetric(horizontal: 12, vertical: 8))
+        .color(Colors.black87)
+        .borderRadius(BorderRadiusGeometryMix.all(const Radius.circular(6)))
+        .wrapDefaultTextStyle(TextStyleMix().color(Colors.white).fontSize(14));
+  }
+
+  RemixTooltipStyle get styleFast {
+    return styleDefault
+        .waitDuration(const Duration(milliseconds: 100))
+        .showDuration(const Duration(milliseconds: 800));
+  }
+
+  RemixTooltipStyle get styleSlow {
+    return styleDefault
+        .waitDuration(const Duration(seconds: 1))
+        .showDuration(const Duration(seconds: 3));
+  }
+}
+
+class _TriggerButton extends StatelessWidget {
+  const _TriggerButton({required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.blue,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Text(label, style: const TextStyle(color: Colors.white)),
+    );
+  }
+}
+```
+</CodeGroup>
+
+## Fortal styles
+
+Remix includes Fortal-themed style helpers for this component:
+
+<CodeGroup title="Fortal base style" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class FortalTooltipExample extends StatelessWidget {
+  const FortalTooltipExample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      spacing: 16,
+      children: [
+        RemixTooltip(
+          tooltipChild: const Text('Information tooltip'),
+          style: FortalTooltipStyle.base(),
+          child: const Icon(Icons.info),
+        ),
+        RemixTooltip(
+          tooltipChild: const Text('Help tooltip'),
+          style: FortalTooltipStyle.base(),
+          child: const Icon(Icons.help),
+        ),
+      ],
+    );
+  }
+}
+```
+</CodeGroup>
+
+<Info>
+  See the [FortalTooltipStyle source code](https://github.com/btwld/remix/blob/main/lib/src/components/tooltip/fortal_tooltip_styles.dart) for all available options.
+</Info>
+
+## Constructor
+<CodeGroup title="Constructor" defaultLanguage="dart">
+```dart
+const RemixTooltip({
+  Key? key,
+  required Widget child,
+  required Widget tooltipChild,
+  Duration? waitDuration,
+  Duration? showDuration,
+  RemixTooltipStyle style = const RemixTooltipStyle.create(),
+  RemixTooltipSpec? styleSpec,
+})
+```
+</CodeGroup>
+
+## Properties
+
+### Widget Properties
+
+#### `child` → `Widget`
+
+**Required**. The widget that triggers the tooltip when hovered.
+
+#### `tooltipChild` → `Widget`
+
+**Required**. The content to display in the tooltip overlay.
+
+#### `waitDuration` → `Duration?`
+
+The duration to wait before showing the tooltip after hover begins. If null, uses the style's wait duration.
+
+#### `showDuration` → `Duration?`
+
+The duration to keep the tooltip visible. If null, uses the style's show duration.
+
+#### `style` → `RemixTooltipStyle`
+
+Style configuration. Defaults to `RemixTooltipStyle.create()`.
+
+#### `styleSpec` → `RemixTooltipSpec?`
+
+Optional pre-resolved style specification for performance optimization.
+
+### Style Properties
+
+The `RemixTooltipStyle` class provides a fluent API for styling:
+
+#### Container Styling
+
+**`padding(EdgeInsetsGeometryMix value)`** - Sets padding around tooltip content.
+
+**`color(Color value)`** - Sets the tooltip background color.
+
+**`borderRadius(BorderRadiusGeometryMix value)`** - Sets border radius.
+
+**`decoration(DecorationMix value)`** - Sets background decoration.
+
+**`shadow(BoxShadowMix value)`** - Adds shadow effects.
+
+#### Text Styling
+
+**`wrapDefaultTextStyle(TextStyleMix value)`** - Sets default text style for tooltip content.
+
+#### Timing
+
+**`waitDuration(Duration value)`** - Sets the duration to wait before showing.
+
+**`showDuration(Duration value)`** - Sets the duration to keep visible.
+

@@ -1,0 +1,218 @@
+---
+title: Select
+description: A dropdown select component for choosing options from a list
+keywords: [flutter, remix, select, dropdown, picker, combo-box, form]
+---
+
+A dropdown select component for choosing from a list of options.
+
+## When to use this
+
+- **Form inputs**: Collect user selections from predefined options
+- **Filters**: Allow users to filter content by categories or criteria
+- **Settings**: Enable users to choose configuration values
+- **Data entry**: Provide structured input options in forms
+
+## Basic implementation
+
+<CodeGroup title="Basic implementation" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class SelectExample extends StatefulWidget {
+  const SelectExample({super.key});
+
+  @override
+  State<SelectExample> createState() => _SelectExampleState();
+}
+
+class _SelectExampleState extends State<SelectExample> {
+  String? _selectedValue;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 200,
+      child: RemixSelect(
+        trigger: const RemixSelectTrigger(placeholder: 'Text Value'),
+        items: [
+          RemixSelectItem(
+            value: 'option1',
+            label: 'Option 1',
+            enabled: true,
+            style: itemStyle,
+          ),
+          RemixSelectItem(
+            value: 'option2',
+            label: 'Option 2',
+            enabled: false,
+            style: itemStyle,
+          ),
+        ],
+        selectedValue: _selectedValue,
+        style: style,
+        onChanged: (value) {
+          setState(() {
+            _selectedValue = value;
+          });
+        },
+      ),
+    );
+  }
+
+  RemixSelectMenuItemStyle get itemStyle {
+    return RemixSelectMenuItemStyle()
+        .iconSize(16)
+        .paddingAll(8)
+        .borderRadiusAll(const Radius.circular(8))
+        .onHovered(RemixSelectMenuItemStyle().color(Colors.blueGrey.shade50))
+        .onDisabled(
+          RemixSelectMenuItemStyle().labelColor(Colors.grey.shade300),
+        );
+  }
+
+  RemixSelectStyle get style {
+    return RemixSelectStyle()
+        .trigger(
+          RemixSelectTriggerStyle()
+              .color(Colors.transparent)
+              .borderAll(color: const Color(0xFF898988))
+              .paddingY(10)
+              .paddingX(12)
+              .borderRadiusAll(const Radius.circular(12)),
+        )
+        .menuContainer(
+          FlexBoxStyler()
+              .width(200)
+              .marginY(5)
+              .paddingAll(6)
+              .color(Colors.white)
+              .borderRadiusAll(const Radius.circular(12)),
+        );
+  }
+}
+```
+</CodeGroup>
+
+## Fortal styles
+
+Remix includes Fortal-themed style helpers for this component:
+
+<CodeGroup title="Fortal base style" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class FortalSelectExample extends StatefulWidget {
+  const FortalSelectExample({super.key});
+
+  @override
+  State<FortalSelectExample> createState() => _FortalSelectExampleState();
+}
+
+class _FortalSelectExampleState extends State<FortalSelectExample> {
+  String? _selected;
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixSelect(
+      trigger: const RemixSelectTrigger(placeholder: 'Select option'),
+      items: [
+        RemixSelectItem(
+          value: 'opt1',
+          label: 'Option 1',
+          style: FortalSelectMenuItemStyle.base(),
+        ),
+        RemixSelectItem(
+          value: 'opt2',
+          label: 'Option 2',
+          style: FortalSelectMenuItemStyle.base(),
+        ),
+      ],
+      selectedValue: _selected,
+      onChanged: (value) => setState(() => _selected = value),
+      style: FortalSelectStyle.base(),
+    );
+  }
+}
+```
+</CodeGroup>
+
+<Info>
+  See the [FortalSelectStyle source code](https://github.com/btwld/remix/blob/main/lib/src/components/select/fortal_select_styles.dart) for all available options.
+</Info>
+
+## Constructor
+<CodeGroup title="Constructor" defaultLanguage="dart">
+```dart
+const RemixSelect({
+  Key? key,
+  required RemixSelectTrigger trigger,
+  required List<RemixSelectItem> items,
+  required T? selectedValue,
+  required ValueChanged<T?>? onChanged,
+  RemixSelectStyle style = const RemixSelectStyle.create(),
+  RemixSelectSpec? styleSpec,
+})
+```
+</CodeGroup>
+
+## Properties
+
+### Widget Properties
+
+#### `trigger` → `RemixSelectTrigger`
+
+**Required**. The widget that triggers the dropdown when pressed.
+
+#### `items` → `List<RemixSelectItem>`
+
+**Required**. The list of selectable items to display in the dropdown.
+
+#### `selectedValue` → `T?`
+
+**Required**. The currently selected value.
+
+#### `onChanged` → `ValueChanged<T?>?`
+
+**Required**. Called when a selection is made. Receives the selected value.
+
+#### `style` → `RemixSelectStyle`
+
+Style configuration. Defaults to `RemixSelectStyle.create()`.
+
+#### `styleSpec` → `RemixSelectSpec?`
+
+Optional pre-resolved style specification for performance optimization.
+
+### Style Properties
+
+The `RemixSelectStyle` class provides a fluent API for styling:
+
+#### Trigger Styling
+
+**`trigger(RemixSelectTriggerStyle value)`** - Full control over trigger button styling.
+
+#### Menu Container Styling
+
+**`menuContainer(FlexBoxStyler value)`** - Full control over dropdown menu container styling.
+
+### Menu Item Style Properties
+
+The `RemixSelectMenuItemStyle` class provides styling for individual items:
+
+**`padding(EdgeInsetsGeometryMix value)`** - Sets padding around menu item content.
+
+**`iconSize(double value)`** - Sets checkmark icon size.
+
+**`borderRadiusAll(Radius value)`** - Sets uniform border radius.
+
+**`color(Color value)`** - Sets background color.
+
+**`labelColor(Color value)`** - Sets label text color.
+
+**`onHovered(RemixSelectMenuItemStyle style)`** - Applies styles when hovered.
+
+**`onDisabled(RemixSelectMenuItemStyle style)`** - Applies styles when disabled.
+

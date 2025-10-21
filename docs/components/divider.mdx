@@ -1,0 +1,113 @@
+---
+title: Divider
+description: A simple visual separator component for dividing content into distinct sections
+keywords: [flutter, remix, divider, separator, line, hr, horizontal-rule]
+---
+
+A visual separator component for dividing content into distinct sections.
+
+## When to use this
+
+- **Content separation**: Divide sections of content visually
+- **List items**: Separate items in lists or menus
+- **Form sections**: Group form fields into logical sections
+- **Visual hierarchy**: Create clear visual breaks in layouts
+
+## Basic implementation
+
+<CodeGroup title="Basic implementation" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class DividerExample extends StatelessWidget {
+  const DividerExample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixDivider(
+      style: style,
+    );
+  }
+
+  RemixDividerStyle get style {
+    return RemixDividerStyle()
+        .height(1)
+        .color(Colors.grey.shade400)
+        .width(300);
+  }
+}
+```
+</CodeGroup>
+
+## Fortal styles
+
+Remix includes Fortal-themed style helpers for this component:
+
+<CodeGroup title="Fortal base style" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class FortalDividerExample extends StatelessWidget {
+  const FortalDividerExample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      spacing: 16,
+      children: [
+        RemixDivider(style: FortalDividerStyle.horizontal()),
+        RemixDivider(style: FortalDividerStyle.vertical()),
+      ],
+    );
+  }
+}
+```
+</CodeGroup>
+
+<Info>
+  See the [FortalDividerStyle source code](https://github.com/btwld/remix/blob/main/lib/src/components/divider/fortal_divider_styles.dart) for all available options.
+</Info>
+
+## Constructor
+<CodeGroup title="Constructor" defaultLanguage="dart">
+```dart
+const RemixDivider({
+  Key? key,
+  RemixDividerStyle style = const RemixDividerStyle.create(),
+  RemixDividerSpec? styleSpec,
+})
+```
+</CodeGroup>
+
+## Properties
+
+### Widget Properties
+
+#### `style` → `RemixDividerStyle`
+
+Style configuration. Defaults to `RemixDividerStyle.create()`.
+
+#### `styleSpec` → `RemixDividerSpec?`
+
+Optional pre-resolved style specification for performance optimization.
+
+### Style Properties
+
+The `RemixDividerStyle` class provides a fluent API for styling:
+
+#### Container Styling
+
+**`width(double value)`** - Sets the divider width.
+
+**`height(double value)`** - Sets the divider height (thickness).
+
+**`color(Color value)`** - Sets the divider color.
+
+**`margin(EdgeInsetsGeometryMix value)`** - Sets margin around the divider.
+
+**`marginX(double value)`** - Sets horizontal margin.
+
+**`marginY(double value)`** - Sets vertical margin.
+

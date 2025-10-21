@@ -1,0 +1,261 @@
+---
+title: IconButton
+description: A button component that displays only an icon, perfect for toolbars and compact interfaces
+keywords: [flutter, remix, icon-button, button, icon, toolbar, action]
+---
+
+A button component that displays only an icon with loading state support.
+
+## When to use this
+
+- **Toolbars**: Create compact action buttons in toolbars and app bars
+- **Icon actions**: Provide quick actions with recognizable icons
+- **Space-constrained interfaces**: Use where space is limited
+- **Floating actions**: Create floating action buttons with custom styling
+
+## Basic implementation
+
+<CodeGroup title="Basic implementation" defaultLanguage="dart">
+```dart
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class IconButtonExample extends StatelessWidget {
+  const IconButtonExample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      spacing: 16,
+      children: [
+        RemixIconButton(
+          icon: CupertinoIcons.heart,
+          onPressed: () {},
+          style: style,
+        ),
+        RemixIconButton(
+          icon: CupertinoIcons.heart,
+          onPressed: () {},
+          style: style,
+          loading: true,
+        ),
+      ],
+    );
+  }
+
+  RemixIconButtonStyle get style {
+    return RemixIconButtonStyle()
+        .iconColor(Colors.blueGrey.shade700)
+        .iconSize(22)
+        .size(40, 40)
+        .color(Colors.blueGrey.shade50.withValues(alpha: 0.6))
+        .borderAll(color: Colors.blueGrey.shade100, width: 1.5)
+        .borderRadiusAll(const Radius.circular(8))
+        .spinner(
+          RemixSpinnerStyle()
+              .size(22)
+              .strokeWidth(1.3)
+              .indicatorColor(Colors.blueGrey.shade600),
+        )
+        .onHovered(
+          RemixIconButtonStyle()
+              .color(Colors.blueGrey.shade100.withValues(alpha: 0.4)),
+        )
+        .onPressed(
+          RemixIconButtonStyle()
+              .color(Colors.blueGrey.shade100.withValues(alpha: 0.8)),
+        );
+  }
+}
+```
+</CodeGroup>
+
+## Fortal styles
+
+Remix includes Fortal-themed style helpers for this component:
+
+<CodeGroup title="Fortal variants" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class FortalIconButtonExample extends StatelessWidget {
+  const FortalIconButtonExample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      spacing: 16,
+      children: [
+        RemixIconButton(
+          icon: Icons.add,
+          onPressed: () {},
+          style: FortalIconButtonStyle.solid(),
+        ),
+        RemixIconButton(
+          icon: Icons.edit,
+          onPressed: () {},
+          style: FortalIconButtonStyle.soft(),
+        ),
+        RemixIconButton(
+          icon: Icons.delete,
+          onPressed: () {},
+          style: FortalIconButtonStyle.ghost(),
+        ),
+      ],
+    );
+  }
+}
+```
+</CodeGroup>
+
+<Info>
+  See the [FortalIconButtonStyle source code](https://github.com/btwld/remix/blob/main/lib/src/components/icon_button/fortal_icon_button_styles.dart) for all available options.
+</Info>
+
+## Constructor
+<CodeGroup title="Constructor" defaultLanguage="dart">
+```dart
+const RemixIconButton({
+  Key? key,
+  required IconData icon,
+  RemixIconButtonIconBuilder? iconBuilder,
+  RemixIconButtonLoadingBuilder? loadingBuilder,
+  bool loading = false,
+  bool enabled = true,
+  required VoidCallback? onPressed,
+  VoidCallback? onLongPress,
+  VoidCallback? onDoubleTap,
+  FocusNode? focusNode,
+  bool autofocus = false,
+  bool enableFeedback = true,
+  String? semanticLabel,
+  String? semanticHint,
+  bool excludeSemantics = false,
+  MouseCursor mouseCursor = SystemMouseCursors.click,
+  RemixIconButtonStyle style = const RemixIconButtonStyle.create(),
+  RemixIconButtonSpec? styleSpec,
+})
+```
+</CodeGroup>
+
+## Properties
+
+### Widget Properties
+
+#### `icon` → `IconData`
+
+**Required**. The icon to display in the button.
+
+#### `iconBuilder` → `RemixIconButtonIconBuilder?`
+
+Builder for customizing icon rendering. Receives `(BuildContext context, IconSpec spec, IconData icon)`.
+
+#### `loadingBuilder` → `RemixIconButtonLoadingBuilder?`
+
+Builder for customizing loading spinner. Receives `(BuildContext context, RemixSpinnerSpec spec)`.
+
+#### `loading` → `bool`
+
+Whether the button is in a loading state. When `true`, displays a spinner and becomes non-interactive. Defaults to `false`.
+
+#### `enabled` → `bool`
+
+Whether the button is enabled. Defaults to `true`.
+
+#### `onPressed` → `VoidCallback?`
+
+**Required**. Called when the button is tapped or activated via keyboard. If `null`, the button is disabled.
+
+#### `onLongPress` → `VoidCallback?`
+
+Called when the button is long pressed.
+
+#### `onDoubleTap` → `VoidCallback?`
+
+Called when the button is double tapped.
+
+#### `focusNode` → `FocusNode?`
+
+Optional focus node to control focus behavior.
+
+#### `autofocus` → `bool`
+
+Whether to automatically focus when first built. Defaults to `false`.
+
+#### `enableFeedback` → `bool`
+
+Whether to provide platform-specific feedback on press. Defaults to `true`.
+
+#### `semanticLabel` → `String?`
+
+Optional semantic label for screen readers.
+
+#### `semanticHint` → `String?`
+
+Optional semantic hint providing context about what happens when activated.
+
+#### `excludeSemantics` → `bool`
+
+Whether to exclude child semantics. Defaults to `false`.
+
+#### `mouseCursor` → `MouseCursor`
+
+Cursor when hovering over the button. Defaults to `SystemMouseCursors.click`.
+
+#### `style` → `RemixIconButtonStyle`
+
+Style configuration. Defaults to `RemixIconButtonStyle.create()`.
+
+#### `styleSpec` → `RemixIconButtonSpec?`
+
+Optional pre-resolved style specification for performance optimization.
+
+### Style Properties
+
+The `RemixIconButtonStyle` class provides a fluent API for styling:
+
+#### Container Styling
+
+**`size(double width, double height)`** - Sets button dimensions.
+
+**`padding(EdgeInsetsGeometryMix value)`** - Sets padding around button content.
+
+**`color(Color value)`** - Sets the background color.
+
+**`decoration(DecorationMix value)`** - Sets background decoration.
+
+**`borderRadiusAll(Radius value)`** - Sets uniform border radius.
+
+**`borderAll({Color? color, double? width})`** - Sets border on all sides.
+
+**`shadow(BoxShadowMix value)`** - Adds shadow effects.
+
+#### Icon Styling
+
+**`icon(IconStyler value)`** - Full control over icon styling.
+
+**`iconColor(Color value)`** - Sets icon color.
+
+**`iconSize(double value)`** - Sets icon size.
+
+#### Spinner Styling
+
+**`spinner(RemixSpinnerStyle value)`** - Full control over loading spinner.
+
+**`spinnerIndicatorColor(Color value)`** - Sets spinner color.
+
+**`spinnerSize(double value)`** - Sets spinner size.
+
+#### Interactive States
+
+**`onHovered(RemixIconButtonStyle style)`** - Applies styles when hovered.
+
+**`onPressed(RemixIconButtonStyle style)`** - Applies styles when pressed.
+
+**`onFocused(RemixIconButtonStyle style)`** - Applies styles when focused.
+
+**`onDisabled(RemixIconButtonStyle style)`** - Applies styles when disabled.
+

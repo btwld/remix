@@ -1,0 +1,220 @@
+---
+title: Slider
+description: A draggable slider component for selecting values within a range
+keywords: [flutter, remix, slider, range, input, value-picker, control]
+---
+
+A draggable slider component for selecting values within a continuous range.
+
+## When to use this
+
+- **Volume controls**: Adjust audio or video volume levels
+- **Brightness settings**: Control screen brightness or lighting
+- **Price filters**: Select price ranges in e-commerce applications
+- **Value adjustments**: Set any numeric value within a defined range
+
+## Basic implementation
+
+<CodeGroup title="Basic implementation" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class SliderExample extends StatefulWidget {
+  const SliderExample({super.key});
+
+  @override
+  State<SliderExample> createState() => _SliderExampleState();
+}
+
+class _SliderExampleState extends State<SliderExample> {
+  double _selectedValue = 0.3;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 300,
+      child: RemixSlider(
+        value: _selectedValue,
+        style: style,
+        onChanged: (value) {
+          setState(() {
+            _selectedValue = value;
+          });
+        },
+      ),
+    );
+  }
+
+  RemixSliderStyle get style {
+    return RemixSliderStyle()
+        .thumbSize(const Size(24, 24))
+        .thumb(
+          BoxStyler().shapeCircle().shadow(
+                BoxShadowMix()
+                    .color(Colors.black45)
+                    .blurRadius(4)
+                    .offset(const Offset(0, 2)),
+              ),
+        )
+        .thumbColor(Colors.black)
+        .thickness(2)
+        .trackColor(Colors.grey.shade300)
+        .rangeColor(Colors.black)
+        .onDisabled(
+          RemixSliderStyle()
+              .trackColor(Colors.grey.shade300)
+              .rangeColor(Colors.blueGrey)
+              .thumbColor(Colors.white.withValues(alpha: 0.6)),
+        );
+  }
+}
+```
+</CodeGroup>
+
+## Fortal styles
+
+Remix includes Fortal-themed style helpers for this component:
+
+<CodeGroup title="Fortal variants" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class FortalSliderExample extends StatefulWidget {
+  const FortalSliderExample({super.key});
+
+  @override
+  State<FortalSliderExample> createState() => _FortalSliderExampleState();
+}
+
+class _FortalSliderExampleState extends State<FortalSliderExample> {
+  double _value = 0.5;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      spacing: 16,
+      children: [
+        RemixSlider(
+          value: _value,
+          onChanged: (v) => setState(() => _value = v),
+          style: FortalSliderStyle.solid(),
+        ),
+        RemixSlider(
+          value: _value,
+          onChanged: (v) => setState(() => _value = v),
+          style: FortalSliderStyle.soft(),
+        ),
+      ],
+    );
+  }
+}
+```
+</CodeGroup>
+
+<Info>
+  See the [FortalSliderStyle source code](https://github.com/btwld/remix/blob/main/lib/src/components/slider/fortal_slider_styles.dart) for all available options.
+</Info>
+
+## Constructor
+<CodeGroup title="Constructor" defaultLanguage="dart">
+```dart
+const RemixSlider({
+  Key? key,
+  required double value,
+  required ValueChanged<double>? onChanged,
+  ValueChanged<double>? onChangeStart,
+  ValueChanged<double>? onChangeEnd,
+  double min = 0.0,
+  double max = 1.0,
+  bool enabled = true,
+  FocusNode? focusNode,
+  bool autofocus = false,
+  String? semanticLabel,
+  RemixSliderStyle style = const RemixSliderStyle.create(),
+  RemixSliderSpec? styleSpec,
+})
+```
+</CodeGroup>
+
+## Properties
+
+### Widget Properties
+
+#### `value` → `double`
+
+**Required**. The current value of the slider.
+
+#### `onChanged` → `ValueChanged<double>?`
+
+**Required**. Called when the slider value changes. If null, the slider is disabled.
+
+#### `onChangeStart` → `ValueChanged<double>?`
+
+Called when the user starts dragging the slider.
+
+#### `onChangeEnd` → `ValueChanged<double>?`
+
+Called when the user stops dragging the slider.
+
+#### `min` → `double`
+
+The minimum value of the slider range. Defaults to `0.0`.
+
+#### `max` → `double`
+
+The maximum value of the slider range. Defaults to `1.0`.
+
+#### `enabled` → `bool`
+
+Whether the slider is enabled. Defaults to `true`.
+
+#### `focusNode` → `FocusNode?`
+
+Optional focus node to control focus behavior.
+
+#### `autofocus` → `bool`
+
+Whether to automatically focus when first built. Defaults to `false`.
+
+#### `semanticLabel` → `String?`
+
+Optional semantic label for screen readers.
+
+#### `style` → `RemixSliderStyle`
+
+Style configuration. Defaults to `RemixSliderStyle.create()`.
+
+#### `styleSpec` → `RemixSliderSpec?`
+
+Optional pre-resolved style specification for performance optimization.
+
+### Style Properties
+
+The `RemixSliderStyle` class provides a fluent API for styling:
+
+#### Track Styling
+
+**`trackColor(Color value)`** - Sets the inactive track color.
+
+**`rangeColor(Color value)`** - Sets the active range color.
+
+**`thickness(double value)`** - Sets the track thickness.
+
+#### Thumb Styling
+
+**`thumbSize(Size value)`** - Sets the thumb dimensions.
+
+**`thumbColor(Color value)`** - Sets the thumb color.
+
+**`thumb(BoxStyler value)`** - Full control over thumb styling.
+
+#### Interactive States
+
+**`onDisabled(RemixSliderStyle style)`** - Applies styles when disabled.
+
+**`onHovered(RemixSliderStyle style)`** - Applies styles when hovered.
+
+**`onFocused(RemixSliderStyle style)`** - Applies styles when focused.
+

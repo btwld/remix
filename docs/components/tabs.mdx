@@ -1,0 +1,278 @@
+---
+title: Tabs
+description: A tabbed interface component for organizing content into separate panels
+keywords: [flutter, remix, tabs, tabbed, navigation, panels, views]
+---
+
+A tabbed interface component for organizing content into separate switchable panels.
+
+## When to use this
+
+- **Content organization**: Group related content into separate sections
+- **Navigation**: Switch between different views or categories
+- **Settings panels**: Organize settings into categorized tabs
+- **Multi-step forms**: Break complex forms into manageable sections
+
+## Basic implementation
+
+<CodeGroup title="Basic implementation" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class TabsExample extends StatefulWidget {
+  const TabsExample({super.key});
+
+  @override
+  State<TabsExample> createState() => _TabsExampleState();
+}
+
+class _TabsExampleState extends State<TabsExample> {
+  String _tab = 'tab1';
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 320,
+      height: 280,
+      child: RemixTabs(
+        selectedTabId: _tab,
+        onChanged: (id) => setState(() => _tab = id),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            RemixTabBar(
+              style: tabBarStyle,
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  RemixTab(tabId: 'tab1', style: tabStyle, label: 'Tab 1'),
+                  const SizedBox(width: 8),
+                  RemixTab(tabId: 'tab2', style: tabStyle, label: 'Tab 2'),
+                ],
+              ),
+            ),
+            const SizedBox(height: 8),
+            Expanded(
+              child: RemixTabView(
+                tabId: 'tab1',
+                style: tabViewStyle,
+                child: const Text('Content for Tab 1'),
+              ),
+            ),
+            Expanded(
+              child: RemixTabView(
+                tabId: 'tab2',
+                style: tabViewStyle,
+                child: const Text('Content for Tab 2'),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  RemixTabBarStyle get tabBarStyle {
+    return RemixTabBarStyle()
+        .paddingAll(4)
+        .borderRounded(12)
+        .color(const Color(0xFFF4F6FF))
+        .borderAll(color: Colors.indigo.shade100);
+  }
+
+  RemixTabStyle get tabStyle {
+    return RemixTabStyle()
+        .paddingX(18)
+        .paddingY(10)
+        .borderRounded(10)
+        .color(Colors.transparent)
+        .labelFontSize(14)
+        .labelFontWeight(FontWeight.w600)
+        .labelColor(Colors.indigo.shade600)
+        .iconColor(Colors.indigo.shade500)
+        .onHovered(
+          RemixTabStyle()
+              .color(Colors.indigo.shade50)
+              .labelColor(Colors.indigo.shade700),
+        )
+        .onSelected(
+          RemixTabStyle()
+              .color(Colors.white)
+              .borderAll(color: Colors.indigo.shade400, width: 2)
+              .labelColor(Colors.indigo.shade700)
+              .iconColor(Colors.indigo.shade600),
+        );
+  }
+
+  RemixTabViewStyle get tabViewStyle {
+    return RemixTabViewStyle()
+        .paddingAll(20)
+        .borderRounded(14)
+        .color(Colors.white)
+        .borderAll(color: Colors.indigo.shade100);
+  }
+}
+```
+</CodeGroup>
+
+## Fortal styles
+
+Remix includes Fortal-themed style helpers for this component:
+
+<CodeGroup title="Fortal base style" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class FortalTabsExample extends StatefulWidget {
+  const FortalTabsExample({super.key});
+
+  @override
+  State<FortalTabsExample> createState() => _FortalTabsExampleState();
+}
+
+class _FortalTabsExampleState extends State<FortalTabsExample> {
+  String _tab = 'tab1';
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixTabs(
+      selectedTabId: _tab,
+      onChanged: (id) => setState(() => _tab = id),
+      child: Column(
+        children: [
+          RemixTabBar(
+            style: FortalTabBarStyle.base(),
+            child: Row(
+              children: [
+                RemixTab(tabId: 'tab1', label: 'Tab 1', style: FortalTabStyle.base()),
+                RemixTab(tabId: 'tab2', label: 'Tab 2', style: FortalTabStyle.base()),
+              ],
+            ),
+          ),
+          RemixTabView(tabId: 'tab1', style: FortalTabViewStyle.base(), child: Text('Content 1')),
+          RemixTabView(tabId: 'tab2', style: FortalTabViewStyle.base(), child: Text('Content 2')),
+        ],
+      ),
+    );
+  }
+}
+```
+</CodeGroup>
+
+<Info>
+  See the [FortalTabsStyle source code](https://github.com/btwld/remix/blob/main/lib/src/components/tabs/fortal_tabs_styles.dart) for all available options.
+</Info>
+
+## Constructor
+<CodeGroup title="Constructor" defaultLanguage="dart">
+```dart
+// Tabs Container
+const RemixTabs({
+  Key? key,
+  required String selectedTabId,
+  required ValueChanged<String> onChanged,
+  required Widget child,
+})
+
+// Tab Bar
+const RemixTabBar({
+  Key? key,
+  required Widget child,
+  RemixTabBarStyle style = const RemixTabBarStyle.create(),
+  RemixTabBarSpec? styleSpec,
+})
+
+// Individual Tab
+const RemixTab({
+  Key? key,
+  required String tabId,
+  String? label,
+  IconData? icon,
+  RemixTabStyle style = const RemixTabStyle.create(),
+  RemixTabSpec? styleSpec,
+})
+
+// Tab View
+const RemixTabView({
+  Key? key,
+  required String tabId,
+  required Widget child,
+  RemixTabViewStyle style = const RemixTabViewStyle.create(),
+  RemixTabViewSpec? styleSpec,
+})
+```
+</CodeGroup>
+
+## Properties
+
+### RemixTabs Properties
+
+#### `selectedTabId` → `String`
+
+**Required**. The ID of the currently selected tab.
+
+#### `onChanged` → `ValueChanged<String>`
+
+**Required**. Called when a tab is selected. Receives the tab ID.
+
+#### `child` → `Widget`
+
+**Required**. The child widget containing tab bar and tab views.
+
+### RemixTab Properties
+
+#### `tabId` → `String`
+
+**Required**. The unique identifier for this tab.
+
+#### `label` → `String?`
+
+The label text to display in the tab.
+
+#### `icon` → `IconData?`
+
+Optional icon to display in the tab.
+
+#### `style` → `RemixTabStyle`
+
+Style configuration. Defaults to `RemixTabStyle.create()`.
+
+### Style Properties
+
+The `RemixTabStyle` class provides a fluent API for styling:
+
+#### Container Styling
+
+**`padding(EdgeInsetsGeometryMix value)`** - Sets padding around tab content.
+
+**`color(Color value)`** - Sets the background color.
+
+**`borderRounded(double value)`** - Sets uniform border radius.
+
+**`borderAll({Color? color, double? width})`** - Sets border on all sides.
+
+#### Label Styling
+
+**`labelFontSize(double value)`** - Sets label font size.
+
+**`labelFontWeight(FontWeight value)`** - Sets label font weight.
+
+**`labelColor(Color value)`** - Sets label text color.
+
+#### Icon Styling
+
+**`iconColor(Color value)`** - Sets icon color.
+
+**`iconSize(double value)`** - Sets icon size.
+
+#### Interactive States
+
+**`onSelected(RemixTabStyle style)`** - Applies styles when tab is selected.
+
+**`onHovered(RemixTabStyle style)`** - Applies styles when hovered.
+
+**`onPressed(RemixTabStyle style)`** - Applies styles when pressed.
+
