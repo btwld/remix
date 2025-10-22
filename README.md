@@ -7,15 +7,6 @@ A comprehensive Flutter component library that combines headless UI behavior wit
 
 Remix brings together the best of both worlds: the robust interaction behavior and accessibility of Naked UI with the flexible, composable styling capabilities of Mix. This combination enables you to create components that are fully customizable, reusable, and maintainable.
 
-## Features
-
-- ✨ **Fully styleable components** using Mix's intuitive API
-- 🎨 **Complete control** over variants, states, and animations
-- 🎯 **Build any design system** - no predefined styles
-- 🔄 **Compose and reuse** styles across your entire application
-- ♿ **Built-in accessibility** - screen reader support and keyboard navigation
-- 🚀 **Production-ready components** with all behavior included
-
 ## Why Remix?
 
 ### The Problem
@@ -30,23 +21,41 @@ Flutter developers commonly face these challenges when building custom UIs:
 ### The Solution
 
 ```dart
-import 'package:flutter/material.dart';
-import 'package:remix/remix.dart';
+final style = RemixButtonStyle()
+  .paddingX(16)
+  .paddingY(10)
+  .color(Colors.blue)
+  .borderRadiusAll(const Radius.circular(8))
+  .animate(AnimationConfig.spring(300.ms))
+  .onHovered(
+    RemixButtonStyle()
+        .color(Colors.blue.shade700)
+  );
 
 RemixButton(
   onPressed: () {},
   label: 'Click me',
-  style: RemixButtonStyle()
-      .paddingX(16)
-      .paddingY(10)
-      .color(Colors.blue)
-      .borderRadius(8)
-      .onHovered(
-        RemixButtonStyle()
-            .color(Colors.blue.shade700)
-      )
-      .animate(AnimationConfig.spring(300.ms)),
-)
+  style: style,
+);
+```
+
+Or using callable styles:
+```dart
+final button = RemixButtonStyle()
+  .paddingX(16)
+  .paddingY(10)
+  .color(Colors.blue)
+  .borderRadiusAll(const Radius.circular(8))
+  .onHovered(
+    RemixButtonStyle()
+        .color(Colors.blue.shade700)
+  )
+  .animate(AnimationConfig.spring(300.ms));
+
+button(
+  label: 'Click me',
+  onPressed: () {},
+); // return RemixButton Widget.
 ```
 
 With Remix, you get:
@@ -66,20 +75,22 @@ import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
 
 class MyApp extends StatelessWidget {
+
+  final button = RemixButtonStyle()
+    .paddingX(16)
+    .paddingY(10)
+    .color(Colors.blue)
+    .borderRadiusAll(const Radius.circular(8))
+    .label(TextStyler().color(Colors.white));
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         body: Center(
-          child: RemixButton(
-            onPressed: () => print('Button pressed!'),
+          child: button(
             label: 'Click Me',
-            style: RemixButtonStyle()
-                .paddingX(16)
-                .paddingY(10)
-                .color(Colors.blue)
-                .borderRadius(8)
-                .label(TextStyler().color(Colors.white)),
+            onPressed: () => print('Button pressed!'),
           ),
         ),
       ),
@@ -93,22 +104,19 @@ class MyApp extends StatelessWidget {
 Easily define how components should look in different interaction states.
 
 ```dart
-RemixButton(
-  onPressed: () {},
-  label: 'Interactive Button',
-  style: RemixButtonStyle()
-      .paddingX(16)
-      .paddingY(10)
-      .color(Colors.blue)
-      .borderRadius(8)
-      .onHovered(
-        RemixButtonStyle()
-            .color(Colors.blue.shade700),
-      )
-      .onPressed(
-        RemixButtonStyle().wrapScale(x: 0.95, y: 0.95),
-      ),
-)
+final button = RemixButtonStyle()
+  .paddingX(16)
+  .paddingY(10)
+  .color(Colors.blue)
+  .borderRadiusAll(const Radius.circular(8))
+  .label(TextStyler().color(Colors.white))
+  .onHovered(
+    RemixButtonStyle()
+        .color(Colors.blue.shade700),
+  )
+  .onPressed(
+    RemixButtonStyle().wrapScale(x: 0.95, y: 0.95),
+  );
 ```
 
 ### Adding Animation
@@ -116,24 +124,20 @@ RemixButton(
 Make your button style smoothly animate when its state changes by chaining `.animate()` with your state-specific styles. You can use `AnimationConfig.spring` to get natural, spring-based motion.
 
 ```dart
-RemixButton(
-  onPressed: () {},
-  label: 'Animated Button',
-  style: RemixButtonStyle()
-      .paddingX(16)
-      .paddingY(10)
-      .color(Colors.blue)
-      .borderRadius(8)
-      .onHovered(
-        RemixButtonStyle()
-            .color(Colors.blue.shade700),
-      )
-      .onPressed(
-        RemixButtonStyle()
-            .wrapScale(x: 0.95, y: 0.95),
-      )
-      .animate(AnimationConfig.spring(300.ms)), // Top-level style animation
-)
+final style = RemixButtonStyle()
+  .paddingX(16)
+  .paddingY(10)
+  .color(Colors.blue)
+  .borderRadiusAll(const Radius.circular(8))
+  .animate(AnimationConfig.spring(300.ms))
+  .onHovered(
+    RemixButtonStyle()
+        .color(Colors.blue.shade700),
+  )
+  .onPressed(
+    RemixButtonStyle()
+        .wrapScale(x: 0.95, y: 0.95),
+  );
 ```
 
 This example animates both the color on hover and the scale on press, creating a smooth interactive experience for your users. 
@@ -148,7 +152,7 @@ Create base styles and extend them to build variants:
 final baseButtonStyle = RemixButtonStyle()
     .paddingX(16)
     .paddingY(10)
-    .borderRadius(8);
+    .borderRadiusAll(const Radius.circular(8));
 
 final primaryButton = baseButtonStyle
     .color(Colors.blue)
@@ -196,17 +200,12 @@ class MyApp extends StatelessWidget {
 Fortal styles are built using the Remix styling API, so you can easily extend and customize them:
 
 ```dart
-// Start with a Fortal style and customize it
-RemixButton(
-  onPressed: () {},
-  label: 'Custom Fortal Button',
-  style: FortalButtonStyle.solid()
-      .borderRadiusAll(20) // Override border radius
-      .paddingX(32)        // Add more horizontal padding
-      .onHovered(
-        RemixButtonStyle().wrapScale(x: 1.05, y: 1.05),
-      ),
-)
+final style = FortalButtonStyle.solid()
+  .borderRadiusAll(const Radius.circular(8))
+  .paddingX(32)
+  .onHovered(
+    RemixButtonStyle().wrapScale(x: 1.05, y: 1.05),
+  );
 ```
 
 ### Fortal Design Tokens
@@ -223,15 +222,11 @@ Fortal styles are built on a robust token system that includes:
 You can use these tokens directly in your custom styles:
 
 ```dart
-RemixButton(
-  onPressed: () {},
-  label: 'Custom with Tokens',
-  style: RemixButtonStyle()
-      .color(FortalTokens.accent9())
-      .paddingAll(FortalTokens.space4())
-      .borderRadiusAll(FortalTokens.radius3())
-      .label(TextStyler().color(FortalTokens.accentContrast())),
-)
+final style = RemixButtonStyle()
+  .color(FortalTokens.accent9())
+  .paddingAll(FortalTokens.space4())
+  .borderRadiusAll(FortalTokens.radius3())
+  .label(TextStyler().color(FortalTokens.accentContrast()));
 ```
 
 ## Components
@@ -282,14 +277,6 @@ Check out the `demo` and `example` directories for complete working examples dem
 - Style composition techniques
 - Design system implementation
 - Advanced customization
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## License
-
-See the [LICENSE](LICENSE) file for details.
 
 ---
 

@@ -23,22 +23,22 @@ Flutter developers commonly face these challenges when building custom UIs:
 ### The Solution
 
 ```dart
-RemixButton(
-  onPressed: () {},
-  label: 'Click me',
-  style: style,
-);
-
 final style = RemixButtonStyle()
   .paddingX(16)
   .paddingY(10)
   .color(Colors.blue)
   .borderRadiusAll(const Radius.circular(8))
+  .animate(AnimationConfig.spring(300.ms))
   .onHovered(
     RemixButtonStyle()
         .color(Colors.blue.shade700)
-  )
-  .animate(AnimationConfig.spring(300.ms));
+  );
+
+RemixButton(
+  onPressed: () {},
+  label: 'Click me',
+  style: style,
+);
 ```
 
 Or using callable styles:
@@ -54,7 +54,10 @@ final button = RemixButtonStyle()
   )
   .animate(AnimationConfig.spring(300.ms));
 
-button(label: 'Click me');
+button(
+  label: 'Click me',
+  onPressed: () {},
+); // return RemixButton Widget.
 ```
 
 With Remix, you get:
@@ -108,13 +111,13 @@ final style = RemixButtonStyle()
   .paddingY(10)
   .color(Colors.blue)
   .borderRadiusAll(const Radius.circular(8))
-  .onHovered(
-    RemixButtonStyle()
-        .color(Colors.blue.shade700),
-  )
-  .onPressed(
-    RemixButtonStyle().wrapScale(x: 0.95, y: 0.95),
-  );
+  .onHovered( // [!code ++]
+    RemixButtonStyle() // [!code ++]
+        .color(Colors.blue.shade700), // [!code ++]
+  ) // [!code ++]
+  .onPressed( // [!code ++]
+    RemixButtonStyle().wrapScale(x: 0.95, y: 0.95), // [!code ++]
+  ); // [!code ++]
 ```
 
 ### Adding Animation
@@ -127,6 +130,7 @@ final style = RemixButtonStyle()
   .paddingY(10)
   .color(Colors.blue)
   .borderRadiusAll(const Radius.circular(8))
+  .animate(AnimationConfig.spring(300.ms)) // [!code ++]
   .onHovered(
     RemixButtonStyle()
         .color(Colors.blue.shade700),
@@ -134,8 +138,7 @@ final style = RemixButtonStyle()
   .onPressed(
     RemixButtonStyle()
         .wrapScale(x: 0.95, y: 0.95),
-  )
-  .animate(AnimationConfig.spring(300.ms));
+  );
 ```
 
 This example animates both the color on hover and the scale on press, creating a smooth interactive experience for your users. 
