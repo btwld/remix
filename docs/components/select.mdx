@@ -213,9 +213,39 @@ Optional. The style configuration for the select.
 
 ### Style Methods
 
+#### `text(TextStyler value)`
+
+Sets text styling
+
+#### `icon(IconStyler value)`
+
+Sets icon styling
+
+#### `alignment(Alignment value)`
+
+Sets container alignment
+
 #### `label(TextStyler value)`
 
-Must be implemented by the class using this mixin Should merge the provided TextStyler with the component's label/text style
+Sets label styling (delegates to text for consistency with mixin)
+
+#### `animate(AnimationConfig config)`
+
+#### `constraints(BoxConstraintsMix value)`
+
+#### `decoration(DecorationMix value)`
+
+#### `margin(EdgeInsetsGeometryMix value)`
+
+#### `padding(EdgeInsetsGeometryMix value)`
+
+#### `wrap(WidgetModifierConfig value)`
+
+#### `foregroundDecoration(DecorationMix value)`
+
+#### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
+
+#### `flex(FlexStyler value)`
 
 #### `labelTextStyle(TextStyleMix value)`
 
@@ -260,10 +290,6 @@ Sets label/text word spacing
 #### `labelDecorationColor(Color value)`
 
 Sets label/text decoration color
-
-#### `icon(IconStyler value)`
-
-Must be implemented by the class using this mixin Should merge the provided IconStyler with the component's icon style
 
 #### `iconColor(Color value)`
 
