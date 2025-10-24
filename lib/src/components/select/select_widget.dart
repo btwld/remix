@@ -77,6 +77,8 @@ class RemixSelect<T> extends StatefulWidget {
     required this.trigger,
     required this.items,
     this.selectedValue,
+    this.targetAnchor,
+    this.followerAnchor,
     this.onChanged,
     this.onOpen,
     this.onClose,
@@ -95,6 +97,12 @@ class RemixSelect<T> extends StatefulWidget {
 
   /// The currently selected value.
   final T? selectedValue;
+
+  /// The target anchor for the dropdown.
+  final Alignment? targetAnchor;
+
+  /// The follower anchor for the dropdown.
+  final Alignment? followerAnchor;
 
   /// Called when the selected value changes.
   final ValueChanged<T?>? onChanged;
@@ -195,6 +203,10 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
       enabled: widget.enabled,
       triggerFocusNode: widget.focusNode,
       semanticLabel: widget.semanticLabel,
+      positioning: OverlayPositionConfig(
+        targetAnchor: widget.targetAnchor ?? Alignment.bottomCenter,
+        followerAnchor: widget.followerAnchor ?? Alignment.topCenter,
+      ),
       onOpen: () {
         animationController.forward();
         widget.onOpen?.call();
