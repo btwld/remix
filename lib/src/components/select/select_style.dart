@@ -3,30 +3,25 @@ part of 'select.dart';
 class RemixSelectStyle extends RemixStyle<RemixSelectSpec, RemixSelectStyle> {
   final Prop<StyleSpec<FlexBoxSpec>>? $menuContainer;
   final Prop<StyleSpec<RemixSelectTriggerSpec>>? $trigger;
-  final Prop<StyleSpec<RemixCompositedTransformFollowerSpec>>? $position;
 
   const RemixSelectStyle.create({
     Prop<StyleSpec<FlexBoxSpec>>? menuContainer,
     Prop<StyleSpec<RemixSelectTriggerSpec>>? trigger,
-    Prop<StyleSpec<RemixCompositedTransformFollowerSpec>>? position,
     super.variants,
     super.animation,
     super.modifier,
   }) : $menuContainer = menuContainer,
-       $trigger = trigger,
-       $position = position;
+       $trigger = trigger;
 
   RemixSelectStyle({
     FlexBoxStyler? menuContainer,
     RemixSelectTriggerStyle? trigger,
-    RemixCompositedTransformFollowerStyle? position,
     AnimationConfig? animation,
     List<VariantStyle<RemixSelectSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
          menuContainer: Prop.maybeMix(menuContainer),
          trigger: Prop.maybeMix(trigger),
-         position: Prop.maybeMix(position),
          variants: variants,
          animation: animation,
          modifier: modifier,
@@ -40,11 +35,6 @@ class RemixSelectStyle extends RemixStyle<RemixSelectSpec, RemixSelectStyle> {
   /// Sets trigger styling
   RemixSelectStyle trigger(RemixSelectTriggerStyle value) {
     return merge(RemixSelectStyle(trigger: value));
-  }
-
-  /// Sets follower position styling
-  RemixSelectStyle position(RemixCompositedTransformFollowerStyle value) {
-    return merge(RemixSelectStyle(position: value));
   }
 
   /// Creates a [RemixSelect] widget with this style applied.
@@ -134,7 +124,6 @@ class RemixSelectStyle extends RemixStyle<RemixSelectSpec, RemixSelectStyle> {
       spec: RemixSelectSpec(
         trigger: MixOps.resolve(context, $trigger),
         menuContainer: MixOps.resolve(context, $menuContainer),
-        position: MixOps.resolve(context, $position),
       ),
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
@@ -148,7 +137,6 @@ class RemixSelectStyle extends RemixStyle<RemixSelectSpec, RemixSelectStyle> {
     return RemixSelectStyle.create(
       menuContainer: MixOps.merge($menuContainer, other.$menuContainer),
       trigger: MixOps.merge($trigger, other.$trigger),
-      position: MixOps.merge($position, other.$position),
       variants: MixOps.mergeVariants($variants, other.$variants),
       animation: MixOps.mergeAnimation($animation, other.$animation),
       modifier: MixOps.mergeModifier($modifier, other.$modifier),
@@ -159,7 +147,6 @@ class RemixSelectStyle extends RemixStyle<RemixSelectSpec, RemixSelectStyle> {
   List<Object?> get props => [
     $menuContainer,
     $trigger,
-    $position,
     $variants,
     $animation,
     $modifier,
@@ -512,87 +499,6 @@ class RemixSelectMenuItemStyle
     $container,
     $text,
     $icon,
-    $variants,
-    $animation,
-    $modifier,
-  ];
-}
-
-class RemixCompositedTransformFollowerStyle
-    extends Style<RemixCompositedTransformFollowerSpec> {
-  final Prop<Alignment>? $targetAnchor;
-  final Prop<Alignment>? $followerAnchor;
-  final Prop<Offset>? $offset;
-
-  const RemixCompositedTransformFollowerStyle.create({
-    Prop<Alignment>? targetAnchor,
-    Prop<Alignment>? followerAnchor,
-    Prop<Offset>? offset,
-    super.variants,
-    super.animation,
-    super.modifier,
-  }) : $targetAnchor = targetAnchor,
-       $followerAnchor = followerAnchor,
-       $offset = offset;
-
-  RemixCompositedTransformFollowerStyle({
-    Alignment? targetAnchor,
-    Alignment? followerAnchor,
-    Offset? offset,
-    AnimationConfig? animation,
-    List<VariantStyle<RemixCompositedTransformFollowerSpec>>? variants,
-    WidgetModifierConfig? modifier,
-  }) : this.create(
-         targetAnchor: Prop.maybe(targetAnchor),
-         followerAnchor: Prop.maybe(followerAnchor),
-         offset: Prop.maybe(offset),
-         variants: variants,
-         animation: animation,
-         modifier: modifier,
-       );
-
-  RemixCompositedTransformFollowerStyle variants(
-    List<VariantStyle<RemixCompositedTransformFollowerSpec>> value,
-  ) {
-    return merge(RemixCompositedTransformFollowerStyle(variants: value));
-  }
-
-  @override
-  StyleSpec<RemixCompositedTransformFollowerSpec> resolve(
-    BuildContext context,
-  ) {
-    return StyleSpec(
-      spec: RemixCompositedTransformFollowerSpec(
-        offset: MixOps.resolve(context, $offset),
-        targetAnchor: MixOps.resolve(context, $targetAnchor),
-        followerAnchor: MixOps.resolve(context, $followerAnchor),
-      ),
-      animation: $animation,
-      widgetModifiers: $modifier?.resolve(context),
-    );
-  }
-
-  @override
-  RemixCompositedTransformFollowerStyle merge(
-    RemixCompositedTransformFollowerStyle? other,
-  ) {
-    if (other == null) return this;
-
-    return RemixCompositedTransformFollowerStyle.create(
-      targetAnchor: MixOps.merge($targetAnchor, other.$targetAnchor),
-      followerAnchor: MixOps.merge($followerAnchor, other.$followerAnchor),
-      offset: MixOps.merge($offset, other.$offset),
-      variants: MixOps.mergeVariants($variants, other.$variants),
-      animation: MixOps.mergeAnimation($animation, other.$animation),
-      modifier: MixOps.mergeModifier($modifier, other.$modifier),
-    );
-  }
-
-  @override
-  List<Object?> get props => [
-    $targetAnchor,
-    $followerAnchor,
-    $offset,
     $variants,
     $animation,
     $modifier,

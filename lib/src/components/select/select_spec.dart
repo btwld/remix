@@ -4,30 +4,24 @@ class RemixSelectSpec extends Spec<RemixSelectSpec> with Diagnosticable {
   final StyleSpec<RemixSelectTriggerSpec> trigger;
   final StyleSpec<FlexBoxSpec> menuContainer;
   final StyleSpec<RemixSelectMenuItemSpec> item;
-  final StyleSpec<RemixCompositedTransformFollowerSpec> position;
 
   const RemixSelectSpec({
     StyleSpec<RemixSelectTriggerSpec>? trigger,
     StyleSpec<FlexBoxSpec>? menuContainer,
     StyleSpec<RemixSelectMenuItemSpec>? item,
-    StyleSpec<RemixCompositedTransformFollowerSpec>? position,
-  })  : trigger = trigger ?? const StyleSpec(spec: RemixSelectTriggerSpec()),
-        item = item ?? const StyleSpec(spec: RemixSelectMenuItemSpec()),
-        menuContainer = menuContainer ?? const StyleSpec(spec: FlexBoxSpec()),
-        position = position ??
-            const StyleSpec(spec: RemixCompositedTransformFollowerSpec());
+  }) : trigger = trigger ?? const StyleSpec(spec: RemixSelectTriggerSpec()),
+       item = item ?? const StyleSpec(spec: RemixSelectMenuItemSpec()),
+       menuContainer = menuContainer ?? const StyleSpec(spec: FlexBoxSpec());
 
   RemixSelectSpec copyWith({
     StyleSpec<RemixSelectTriggerSpec>? trigger,
     StyleSpec<FlexBoxSpec>? menuContainer,
     StyleSpec<RemixSelectMenuItemSpec>? item,
-    StyleSpec<RemixCompositedTransformFollowerSpec>? position,
   }) {
     return RemixSelectSpec(
       trigger: trigger ?? this.trigger,
       menuContainer: menuContainer ?? this.menuContainer,
       item: item ?? this.item,
-      position: position ?? this.position,
     );
   }
 
@@ -38,7 +32,6 @@ class RemixSelectSpec extends Spec<RemixSelectSpec> with Diagnosticable {
       trigger: MixOps.lerp(trigger, other.trigger, t)!,
       menuContainer: MixOps.lerp(menuContainer, other.menuContainer, t)!,
       item: MixOps.lerp(item, other.item, t)!,
-      position: MixOps.lerp(position, other.position, t)!,
     );
   }
 
@@ -48,12 +41,11 @@ class RemixSelectSpec extends Spec<RemixSelectSpec> with Diagnosticable {
     properties
       ..add(DiagnosticsProperty('trigger', trigger))
       ..add(DiagnosticsProperty('menuContainer', menuContainer))
-      ..add(DiagnosticsProperty('item', item))
-      ..add(DiagnosticsProperty('position', position));
+      ..add(DiagnosticsProperty('item', item));
   }
 
   @override
-  List<Object?> get props => [trigger, menuContainer, item, position];
+  List<Object?> get props => [trigger, menuContainer, item];
 }
 
 class RemixSelectTriggerSpec extends Spec<RemixSelectTriggerSpec>
@@ -66,9 +58,9 @@ class RemixSelectTriggerSpec extends Spec<RemixSelectTriggerSpec>
     StyleSpec<FlexBoxSpec>? container,
     StyleSpec<TextSpec>? label,
     StyleSpec<IconSpec>? icon,
-  })  : container = container ?? const StyleSpec(spec: FlexBoxSpec()),
-        label = label ?? const StyleSpec(spec: TextSpec()),
-        icon = icon ?? const StyleSpec(spec: IconSpec());
+  }) : container = container ?? const StyleSpec(spec: FlexBoxSpec()),
+       label = label ?? const StyleSpec(spec: TextSpec()),
+       icon = icon ?? const StyleSpec(spec: IconSpec());
 
   RemixSelectTriggerSpec copyWith({
     StyleSpec<FlexBoxSpec>? container,
@@ -115,9 +107,9 @@ class RemixSelectMenuItemSpec extends Spec<RemixSelectMenuItemSpec>
     StyleSpec<FlexBoxSpec>? container,
     StyleSpec<TextSpec>? text,
     StyleSpec<IconSpec>? icon,
-  })  : container = container ?? const StyleSpec(spec: FlexBoxSpec()),
-        text = text ?? const StyleSpec(spec: TextSpec()),
-        icon = icon ?? const StyleSpec(spec: IconSpec());
+  }) : container = container ?? const StyleSpec(spec: FlexBoxSpec()),
+       text = text ?? const StyleSpec(spec: TextSpec()),
+       icon = icon ?? const StyleSpec(spec: IconSpec());
 
   RemixSelectMenuItemSpec copyWith({
     StyleSpec<FlexBoxSpec>? container,

@@ -29,7 +29,3 @@ export 'package:naked_ui/naked_ui.dart' show OverlayPositionConfig;
 /// THEME
 export 'src/theme/remix_theme.dart';
 export 'src/fortal/fortal.dart';
-
-
-/// HELPERS
-export 'src/helpers/spec/composited_transform_follower_spec.dart';
