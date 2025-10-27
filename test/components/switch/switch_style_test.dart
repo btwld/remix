@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
@@ -7,65 +5,51 @@ import 'package:remix/remix.dart';
 import '../../helpers/test_methods.dart';
 
 void main() {
-  group('RemixSliderStyle', () {
+  group('RemixSwitchStyle', () {
     group('Constructors', () {
       test('default constructor creates valid instance', () {
-        final style = RemixSliderStyle();
+        final style = RemixSwitchStyle();
 
         expect(style, isNotNull);
-        expect(style, isA<RemixSliderStyle>());
+        expect(style, isA<RemixSwitchStyle>());
       });
 
       test('create constructor with all parameters', () {
+        final container = Prop.maybeMix(BoxStyler());
         final thumb = Prop.maybeMix(BoxStyler());
-        final trackColor = Prop.value(Colors.blue);
-        final trackWidth = Prop.value(8.0);
-        final rangeColor = Prop.value(Colors.red);
-        final rangeWidth = Prop.value(4.0);
-        final variants = <VariantStyle<RemixSliderSpec>>[];
+        final variants = <VariantStyle<RemixSwitchSpec>>[];
 
-        final style = RemixSliderStyle.create(
+        final style = RemixSwitchStyle.create(
+          container: container,
           thumb: thumb,
-          trackColor: trackColor,
-          trackWidth: trackWidth,
-          rangeColor: rangeColor,
-          rangeWidth: rangeWidth,
           variants: variants,
         );
 
         expect(style, isNotNull);
+        expect(style.$container, equals(container));
         expect(style.$thumb, equals(thumb));
-        expect(style.$trackColor, equals(trackColor));
-        expect(style.$trackWidth, equals(trackWidth));
-        expect(style.$rangeColor, equals(rangeColor));
-        expect(style.$rangeWidth, equals(rangeWidth));
         expect(style.$variants, equals(variants));
       });
 
       test('constructor with styler parameters', () {
+        final containerStyler = BoxStyler();
         final thumbStyler = BoxStyler();
 
-        final style = RemixSliderStyle(
+        final style = RemixSwitchStyle(
+          container: containerStyler,
           thumb: thumbStyler,
-          trackColor: Colors.blue,
-          trackWidth: 10.0,
-          rangeColor: Colors.red,
-          rangeWidth: 5.0,
         );
 
         expect(style, isNotNull);
+        expect(style.$container, isNotNull);
         expect(style.$thumb, isNotNull);
-        expect(style.$trackColor, isNotNull);
-        expect(style.$trackWidth, isNotNull);
-        expect(style.$rangeColor, isNotNull);
-        expect(style.$rangeWidth, isNotNull);
       });
     });
 
     group('Style Methods', () {
       styleMethodTest(
         'thumbColor',
-        initial: RemixSliderStyle(),
+        initial: RemixSwitchStyle(),
         modify: (style) => style.thumbColor(Colors.blue),
         expect: (style) {
           expect(
@@ -80,32 +64,8 @@ void main() {
       );
 
       styleMethodTest(
-        'trackColor',
-        initial: RemixSliderStyle(),
-        modify: (style) => style.trackColor(const Color(0xFF0000FF)),
-        expect: (style) {
-          expect(
-            style.$trackColor,
-            equals(Prop.value(const Color(0xFF0000FF))),
-          );
-        },
-      );
-
-      styleMethodTest(
-        'rangeColor',
-        initial: RemixSliderStyle(),
-        modify: (style) => style.rangeColor(const Color(0xFFFF0000)),
-        expect: (style) {
-          expect(
-            style.$rangeColor,
-            equals(Prop.value(const Color(0xFFFF0000))),
-          );
-        },
-      );
-
-      styleMethodTest(
         'thumb',
-        initial: RemixSliderStyle(),
+        initial: RemixSwitchStyle(),
         modify: (style) => style.thumb(
           BoxStyler(decoration: BoxDecorationMix(color: Colors.green)),
         ),
@@ -122,70 +82,24 @@ void main() {
       );
 
       styleMethodTest(
-        'thumbSize',
-        initial: RemixSliderStyle(),
-        modify: (style) => style.thumbSize(const Size(20.0, 20.0)),
-        expect: (style) {
-          expect(
-            style.$thumb,
-            equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  constraints: BoxConstraintsMix.size(const Size(20.0, 20.0)),
-                ),
-              ),
-            ),
-          );
-        },
-      );
-
-      styleMethodTest(
         'alignment',
-        initial: RemixSliderStyle(),
+        initial: RemixSwitchStyle(),
         modify: (style) => style.alignment(Alignment.center),
         expect: (style) {
           expect(
-            style.$thumb,
+            style.$container,
             equals(Prop.maybeMix(BoxStyler(alignment: Alignment.center))),
           );
         },
       );
 
       styleMethodTest(
-        'thickness',
-        initial: RemixSliderStyle(),
-        modify: (style) => style.thickness(12.0),
-        expect: (style) {
-          expect(style.$trackWidth, equals(Prop.value(12.0)));
-          expect(style.$rangeWidth, equals(Prop.value(12.0)));
-        },
-      );
-
-      styleMethodTest(
-        'trackThickness',
-        initial: RemixSliderStyle(),
-        modify: (style) => style.trackThickness(10.0),
-        expect: (style) {
-          expect(style.$trackWidth, equals(Prop.value(10.0)));
-        },
-      );
-
-      styleMethodTest(
-        'rangeThickness',
-        initial: RemixSliderStyle(),
-        modify: (style) => style.rangeThickness(8.0),
-        expect: (style) {
-          expect(style.$rangeWidth, equals(Prop.value(8.0)));
-        },
-      );
-
-      styleMethodTest(
         'padding',
-        initial: RemixSliderStyle(),
+        initial: RemixSwitchStyle(),
         modify: (style) => style.padding(EdgeInsetsGeometryMix.all(16.0)),
         expect: (style) {
           expect(
-            style.$thumb,
+            style.$container,
             equals(
               Prop.maybeMix(
                 BoxStyler(padding: EdgeInsetsGeometryMix.all(16.0)),
@@ -196,59 +110,14 @@ void main() {
       );
 
       styleMethodTest(
-        'color',
-        initial: RemixSliderStyle(),
-        modify: (style) => style.color(Colors.purple),
+        'margin',
+        initial: RemixSwitchStyle(),
+        modify: (style) => style.margin(EdgeInsetsGeometryMix.all(8.0)),
         expect: (style) {
           expect(
-            style.$thumb,
+            style.$container,
             equals(
-              Prop.maybeMix(
-                BoxStyler(decoration: BoxDecorationMix(color: Colors.purple)),
-              ),
-            ),
-          );
-        },
-      );
-
-      styleMethodTest(
-        'size',
-        initial: RemixSliderStyle(),
-        modify: (style) => style.size(24.0, 24.0),
-        expect: (style) {
-          expect(
-            style.$thumb,
-            equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  constraints: BoxConstraintsMix(
-                    minWidth: 24.0,
-                    maxWidth: 24.0,
-                    minHeight: 24.0,
-                    maxHeight: 24.0,
-                  ),
-                ),
-              ),
-            ),
-          );
-        },
-      );
-
-      styleMethodTest(
-        'borderRadius',
-        initial: RemixSliderStyle(),
-        modify: (style) => style.borderRadius(BorderRadiusMix.circular(12.0)),
-        expect: (style) {
-          expect(
-            style.$thumb,
-            equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  decoration: BoxDecorationMix(
-                    borderRadius: BorderRadiusMix.circular(12.0),
-                  ),
-                ),
-              ),
+              Prop.maybeMix(BoxStyler(margin: EdgeInsetsGeometryMix.all(8.0))),
             ),
           );
         },
@@ -256,13 +125,13 @@ void main() {
 
       styleMethodTest(
         'constraints',
-        initial: RemixSliderStyle(),
+        initial: RemixSwitchStyle(),
         modify: (style) => style.constraints(
           BoxConstraintsMix(minWidth: 20.0, minHeight: 20.0),
         ),
         expect: (style) {
           expect(
-            style.$thumb,
+            style.$container,
             equals(
               Prop.maybeMix(
                 BoxStyler(
@@ -279,7 +148,7 @@ void main() {
 
       styleMethodTest(
         'decoration',
-        initial: RemixSliderStyle(),
+        initial: RemixSwitchStyle(),
         modify: (style) => style.decoration(
           BoxDecorationMix(
             color: Colors.blue,
@@ -288,7 +157,7 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$thumb,
+            style.$container,
             equals(
               Prop.maybeMix(
                 BoxStyler(
@@ -304,22 +173,8 @@ void main() {
       );
 
       styleMethodTest(
-        'margin',
-        initial: RemixSliderStyle(),
-        modify: (style) => style.margin(EdgeInsetsGeometryMix.all(8.0)),
-        expect: (style) {
-          expect(
-            style.$thumb,
-            equals(
-              Prop.maybeMix(BoxStyler(margin: EdgeInsetsGeometryMix.all(8.0))),
-            ),
-          );
-        },
-      );
-
-      styleMethodTest(
         'foregroundDecoration',
-        initial: RemixSliderStyle(),
+        initial: RemixSwitchStyle(),
         modify: (style) => style.foregroundDecoration(
           BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(color: Colors.red)),
@@ -327,7 +182,7 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$thumb,
+            style.$container,
             equals(
               Prop.maybeMix(
                 BoxStyler(
@@ -343,12 +198,12 @@ void main() {
 
       styleMethodTest(
         'transform',
-        initial: RemixSliderStyle(),
+        initial: RemixSwitchStyle(),
         modify: (style) =>
             style.transform(Matrix4.identity(), alignment: Alignment.topLeft),
         expect: (style) {
           expect(
-            style.$thumb,
+            style.$container,
             equals(
               Prop.maybeMix(
                 BoxStyler(
@@ -363,16 +218,16 @@ void main() {
 
       styleMethodTest(
         'variants',
-        initial: RemixSliderStyle(),
-        modify: (style) => style.variants(<VariantStyle<RemixSliderSpec>>[]),
+        initial: RemixSwitchStyle(),
+        modify: (style) => style.variants(<VariantStyle<RemixSwitchSpec>>[]),
         expect: (style) {
-          expect(style.$variants, equals(<VariantStyle<RemixSliderSpec>>[]));
+          expect(style.$variants, equals(<VariantStyle<RemixSwitchSpec>>[]));
         },
       );
 
       styleMethodTest(
         'wrap',
-        initial: RemixSliderStyle(),
+        initial: RemixSwitchStyle(),
         modify: (style) => style.wrap(WidgetModifierConfig.clipOval()),
         expect: (style) {
           expect(style.$modifier, equals(WidgetModifierConfig.clipOval()));
@@ -381,7 +236,7 @@ void main() {
 
       styleMethodTest(
         'animate',
-        initial: RemixSliderStyle(),
+        initial: RemixSwitchStyle(),
         modify: (style) =>
             style.animate(AnimationConfig.linear(const Duration(seconds: 1))),
         expect: (style) {
@@ -397,7 +252,7 @@ void main() {
       testWidgets('resolve method returns StyleSpec', (
         WidgetTester tester,
       ) async {
-        final style = RemixSliderStyle();
+        final style = RemixSwitchStyle();
 
         await tester.pumpWidget(
           MaterialApp(
@@ -405,13 +260,10 @@ void main() {
               builder: (context) {
                 final spec = style.resolve(context);
 
-                expect(spec, isA<StyleSpec<RemixSliderSpec>>());
-                expect(spec.spec, isA<RemixSliderSpec>());
+                expect(spec, isA<StyleSpec<RemixSwitchSpec>>());
+                expect(spec.spec, isA<RemixSwitchSpec>());
+                expect(spec.spec.container, isA<StyleSpec<BoxSpec>>());
                 expect(spec.spec.thumb, isA<StyleSpec<BoxSpec>>());
-                expect(spec.spec.trackColor, isA<Color>());
-                expect(spec.spec.trackWidth, isA<double>());
-                expect(spec.spec.rangeColor, isA<Color>());
-                expect(spec.spec.rangeWidth, isA<double>());
 
                 return Container();
               },
@@ -421,28 +273,63 @@ void main() {
       });
 
       test('merge with null returns original instance', () {
-        final originalStyle = RemixSliderStyle();
+        final originalStyle = RemixSwitchStyle();
 
         final mergedStyle = originalStyle.merge(null);
 
         expect(mergedStyle, same(originalStyle));
       });
+
+      test('merge combines properties correctly', () {
+        final style1 = RemixSwitchStyle(
+          container: BoxStyler(alignment: Alignment.centerLeft),
+        );
+        final style2 = RemixSwitchStyle(
+          thumb: BoxStyler(decoration: BoxDecorationMix(color: Colors.blue)),
+        );
+
+        final merged = style1.merge(style2);
+
+        expect(
+          merged.$container,
+          equals(Prop.maybeMix(BoxStyler(alignment: Alignment.centerLeft))),
+        );
+        expect(
+          merged.$thumb,
+          equals(
+            Prop.maybeMix(
+              BoxStyler(decoration: BoxDecorationMix(color: Colors.blue)),
+            ),
+          ),
+        );
+      });
     });
 
     group('Equality', () {
       test('identical styles are equal', () {
-        final style1 = RemixSliderStyle();
-        final style2 = RemixSliderStyle();
+        final style1 = RemixSwitchStyle();
+        final style2 = RemixSwitchStyle();
 
         expect(style1, equals(style2));
         expect(style1.hashCode, equals(style2.hashCode));
       });
 
       test('styles with different properties are not equal', () {
-        final style1 = RemixSliderStyle().trackColor(Colors.blue);
-        final style2 = RemixSliderStyle().trackColor(Colors.red);
+        final style1 = RemixSwitchStyle().thumbColor(Colors.blue);
+        final style2 = RemixSwitchStyle().thumbColor(Colors.red);
 
         expect(style1, isNot(equals(style2)));
+      });
+
+      test('props list contains all properties', () {
+        final style = RemixSwitchStyle();
+
+        expect(style.props, hasLength(5));
+        expect(style.props, contains(style.$container));
+        expect(style.props, contains(style.$thumb));
+        expect(style.props, contains(style.$variants));
+        expect(style.props, contains(style.$animation));
+        expect(style.props, contains(style.$modifier));
       });
     });
   });
