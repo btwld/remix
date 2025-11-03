@@ -301,7 +301,7 @@ void main() {
 
         final button = style.call(
           label: 'Test Button',
-          icon: Icons.star,
+          leadingIcon: Icons.star,
           loading: true,
           enabled: false,
           enableFeedback: false,
@@ -311,7 +311,7 @@ void main() {
 
         expect(button, isA<RemixButton>());
         expect(button.label, equals('Test Button'));
-        expect(button.icon, equals(Icons.star));
+        expect(button.leadingIcon, equals(Icons.star));
         expect(button.loading, isTrue);
         expect(button.enabled, isFalse);
         expect(button.enableFeedback, isFalse);
