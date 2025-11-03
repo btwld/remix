@@ -40,7 +40,7 @@ Widget buildButtonExample() {
       ),
       RemixButton(
         label: 'With Icon',
-        icon: Icons.star,
+        leadingIcon: Icons.star,
         onPressed: () {},
         style: RemixButtonStyle()
             .paddingX(16)
