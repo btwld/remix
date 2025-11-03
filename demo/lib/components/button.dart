@@ -56,9 +56,13 @@ Widget buildButtonUseCase(BuildContext context) {
             label: 'label',
             initialValue: 'Press Me',
           ),
-          icon: context.knobs.iconData(
-            label: 'Icon',
-            initialValue: Icons.touch_app,
+          leadingIcon: context.knobs.iconData(
+            label: 'Leading Icon',
+            initialValue: null,
+          ),
+          trailingIcon: context.knobs.iconData(
+            label: 'Trailing Icon',
+            initialValue: null,
           ),
           style: FortalButtonStyle.create(
             variant: context.knobs.object.dropdown(
