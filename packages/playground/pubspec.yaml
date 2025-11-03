@@ -1,0 +1,22 @@
+name: playground
+description: Standalone playground app for previewing Remix components with Mix 2.0 styling.
+publish_to: "none"
+version: 0.1.0+1
+resolution: workspace
+
+environment:
+  sdk: ">=3.6.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  remix:
+    path: ../remix
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+
