@@ -1,73 +1,28 @@
-name: Flutter CI
+name: Test Workflow
 
 on:
-  pull_request:
-    branches:
-      - main
-    paths-ignore:
-      - docs/**
-      - docs.json
-
   push:
-    branches:
-      - main
+    branches: [main, next]
     paths-ignore:
-      - docs/**
-      - docs.json
+      - 'docs/**'
+      - 'assets/**'
 
-# Cancel any in-progress runs of the same workflow for the same PR/branch.
+  pull_request:
+    branches: [main, next]
+    paths-ignore:
+      - 'docs/**'
+      - 'assets/**'
+
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
   test:
-    name: Run Tests
-    runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
-    strategy:
-      # Keep running other jobs in the matrix even if one fails.
-      fail-fast: false
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
-          flutter-version: 3.35.0
-          cache: true
-
-      - name: Install root dependencies
-        run: flutter pub get && cd demo && flutter pub get
-
-      - name: Analyze root project
-        run: flutter analyze
-
-      - name: Install DCM
-        uses: CQLabs/setup-dcm@v2
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Run DCM
-        run: dcm analyze .
-        shell: bash
-
-      - name: Run root tests
-        run: flutter test --coverage 
-
-      - name: Setup LCOV
-        uses: hrishikesh-kadam/setup-lcov@v1
-        with:
-          ref: v2.3
-
-      - name: Report Code Coverage
-        uses: zgosalvez/github-actions-report-lcov@v4
-        with:
-          coverage-files: coverage/lcov.info
-          minimum-coverage: 5
-          artifact-name: code-coverage-report
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+    name: Test
+    uses: btwld/dart-actions/.github/workflows/ci.yml@main
+    secrets:
+      token: ${{ secrets.GITHUB_TOKEN }}
+    with:
+      flutter-version: 'stable'
+      run-dcm: true
