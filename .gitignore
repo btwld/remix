@@ -281,3 +281,8 @@ app.*.symbols
 # Analysis and development artifacts
 component_patterns_analysis.md
 /.cursor
+
+# Claude Code
+CLAUDE.md
+CLAUDE.local.md
+.claude/settings.local.json
