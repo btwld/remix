@@ -195,7 +195,9 @@ void main() {
       test('specs with different values are not equal', () {
         const spec1 = RemixAccordionSpec();
         final spec2 = RemixAccordionSpec(
-          trigger: StyleSpec(spec: FlexBoxSpec()),
+          title: StyleSpec(
+            spec: TextSpec(maxLines: 2),
+          ),
         );
 
         expect(spec1, isNot(equals(spec2)));

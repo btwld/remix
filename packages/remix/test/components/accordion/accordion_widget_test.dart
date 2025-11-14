@@ -742,17 +742,23 @@ void main() {
       });
 
       testWidgets('handles long content', (tester) async {
-        await tester.pumpRemixApp(
-          RemixAccordionGroup<String>(
-            controller: RemixAccordionController<String>(),
-            child: RemixAccordion<String>(
-              value: 'item1',
-              title: 'Test Title',
-              child: SizedBox(
-                height: 1000,
-                child: ListView.builder(
-                  itemCount: 50,
-                  itemBuilder: (context, index) => Text('Item $index'),
+        await tester.pumpRemixAppWithScaffold(
+          Scaffold(
+            body: SingleChildScrollView(
+              child: Center(
+                child: RemixAccordionGroup<String>(
+                  controller: RemixAccordionController<String>(),
+                  child: RemixAccordion<String>(
+                    value: 'item1',
+                    title: 'Test Title',
+                    child: SizedBox(
+                      height: 1000,
+                      child: ListView.builder(
+                        itemCount: 50,
+                        itemBuilder: (context, index) => Text('Item $index'),
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
