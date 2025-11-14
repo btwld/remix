@@ -1,7 +1,5 @@
 part of 'button.dart';
 
-import '../../theme/animation_constants.dart';
-
 enum FortalButtonSize { size1, size2, size3, size4 }
 
 enum FortalButtonVariant { solid, soft, surface, outline, ghost }

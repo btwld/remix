@@ -1,7 +1,5 @@
 part of 'spinner.dart';
 
-import '../../theme/animation_constants.dart';
-
 enum FortalSpinnerSize {
   size1,
   size2,

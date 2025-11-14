@@ -131,7 +131,7 @@ void main() {
 
         expect(result, isNotNull);
         expect(result.$variants, isNotEmpty);
-        expect(result.$variants!.first.variant.name, equals('onExpanded'));
+        expect(result.$variants!.first.variant.key, equals('onExpanded'));
       });
 
       test('onCollapsed creates variant style', () {
@@ -144,7 +144,7 @@ void main() {
 
         expect(result, isNotNull);
         expect(result.$variants, isNotEmpty);
-        expect(result.$variants!.first.variant.name, equals('onCollapsed'));
+        expect(result.$variants!.first.variant.key, equals('onCollapsed'));
       });
 
       test('onCanCollapse creates variant style', () {
@@ -157,7 +157,7 @@ void main() {
 
         expect(result, isNotNull);
         expect(result.$variants, isNotEmpty);
-        expect(result.$variants!.first.variant.name, equals('onCanCollapse'));
+        expect(result.$variants!.first.variant.key, equals('onCanCollapse'));
       });
 
       test('onCanExpand creates variant style', () {
@@ -170,7 +170,7 @@ void main() {
 
         expect(result, isNotNull);
         expect(result.$variants, isNotEmpty);
-        expect(result.$variants!.first.variant.name, equals('onCanExpand'));
+        expect(result.$variants!.first.variant.key, equals('onCanExpand'));
       });
 
       test('multiple variants can be combined', () {
@@ -395,8 +395,8 @@ void main() {
 
       test('style with animation config', () {
         final style = RemixAccordionStyle.create(
-          animation: const AnimationConfig(
-            duration: Duration(milliseconds: 200),
+          animation: AnimationConfig.ease(
+            const Duration(milliseconds: 200),
           ),
         );
 

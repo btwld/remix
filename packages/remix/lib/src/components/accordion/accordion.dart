@@ -7,8 +7,8 @@ import 'package:mix/mix.dart';
 import 'package:naked_ui/naked_ui.dart';
 
 import '../../fortal/fortal.dart';
-import '../../utilities/remix_style.dart';
 import '../../theme/animation_constants.dart';
+import '../../utilities/remix_style.dart';
 
 part 'accordion_spec.dart';
 part 'accordion_style.dart';

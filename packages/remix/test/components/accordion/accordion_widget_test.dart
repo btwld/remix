@@ -1,6 +1,6 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:naked_ui/naked_ui.dart';
 import '../../../lib/remix.dart';
 
 import '../../helpers/test_helpers.dart';
@@ -26,7 +26,7 @@ void main() {
       });
 
       testWidgets('renders accordion with custom style', (tester) async {
-        const customStyle = RemixAccordionStyle.create();
+        const customStyle = RemixAccordionStyle<String>.create();
 
         await tester.pumpRemixApp(
           RemixAccordionGroup<String>(
@@ -51,7 +51,7 @@ void main() {
             child: RemixAccordion<String>(
               value: 'item1',
               title: 'Test Title',
-              leadingIcon: const Icon(Icons.star),
+              leadingIcon: Icons.star,
               child: const Text('Test Content'),
             ),
           ),
@@ -69,7 +69,7 @@ void main() {
             child: RemixAccordion<String>(
               value: 'item1',
               title: 'Test Title',
-              trailingIcon: const Icon(Icons.arrow_drop_down),
+              trailingIcon: Icons.arrow_drop_down,
               child: const Text('Test Content'),
             ),
           ),
@@ -86,8 +86,8 @@ void main() {
             controller: RemixAccordionController<String>(),
             child: RemixAccordion<String>(
               value: 'item1',
-              builder: (context, isExpanded, canCollapse, canExpand) {
-                return Text('Custom: ${isExpanded ? "Open" : "Closed"}');
+              builder: (context, state) {
+                return Text('Custom: ${state.isExpanded ? "Open" : "Closed"}');
               },
               child: const Text('Test Content'),
             ),
@@ -341,7 +341,7 @@ void main() {
         expect(find.text('Test Content'), findsNothing);
 
         // Programmatically expand
-        controller.expand('item1');
+        controller.open('item1');
         await tester.pumpAndSettle();
 
         // Content should now be visible
@@ -369,7 +369,7 @@ void main() {
         expect(find.text('Test Content'), findsOneWidget);
 
         // Programmatically collapse
-        controller.collapse('item1');
+        controller.close('item1');
         await tester.pumpAndSettle();
 
         // Content should no longer be visible
