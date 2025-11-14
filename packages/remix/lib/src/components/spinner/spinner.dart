@@ -8,6 +8,7 @@ import 'package:mix/mix.dart';
 
 import '../../utilities/remix_style.dart';
 import '../../fortal/fortal.dart';
+import '../../theme/animation_constants.dart';
 
 part 'spinner_painter.dart';
 part 'spinner_spec.dart';

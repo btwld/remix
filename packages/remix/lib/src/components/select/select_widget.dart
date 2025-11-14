@@ -142,8 +142,8 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
   void initState() {
     super.initState();
     animationController = AnimationController(
-      duration: const Duration(milliseconds: 150),
-      reverseDuration: const Duration(milliseconds: 150),
+      duration: RemixAnimationDurations.fast,
+      reverseDuration: RemixAnimationDurations.fast,
       vsync: this,
     );
   }
@@ -159,7 +159,7 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
   Widget _buildOverlayMenu(RemixSelectSpec spec) {
     return _AnimatedOverlayMenu(
       controller: animationController,
-      duration: const Duration(milliseconds: 150),
+      duration: RemixAnimationDurations.fast,
       curve: Curves.easeInOut,
       menuContainer: spec.menuContainer,
       children: widget.items

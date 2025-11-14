@@ -179,7 +179,7 @@ class RemixSlider extends StatelessWidget {
                             rangeWidth: spec.rangeWidth,
                             trackColor: spec.trackColor,
                             trackWidth: spec.trackWidth,
-                            duration: const Duration(milliseconds: 200),
+                            duration: RemixAnimationDurations.normal,
                             curve: Curves.linear,
                           ),
                         ),

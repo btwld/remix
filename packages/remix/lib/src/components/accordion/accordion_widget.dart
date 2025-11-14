@@ -197,7 +197,7 @@ class RemixAccordion<T> extends StatelessWidget {
             : const SizedBox.shrink();
 
         return AnimatedSwitcher(
-          duration: const Duration(milliseconds: 200),
+          duration: RemixAnimationDurations.normal,
           transitionBuilder: transitionBuilder,
           child: child,
         );

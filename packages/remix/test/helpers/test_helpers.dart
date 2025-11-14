@@ -117,56 +117,6 @@ extension WidgetTesterHelpers on WidgetTester {
   }
 }
 
-/// Test data builder for consistent test data
-class TestDataBuilder {
-  static const String defaultButtonKey = 'test_button';
-  static const String defaultTextFieldKey = 'test_textfield';
-  static const String defaultCheckboxKey = 'test_checkbox';
-  static const String defaultSwitchKey = 'test_switch';
-  static const String defaultRadioKey = 'test_radio';
-  static const String defaultSliderKey = 'test_slider';
-  static const String defaultSelectKey = 'test_select';
-
-  static const String sampleLabel = 'Test Label';
-  static const String sampleText = 'Sample Text';
-  static const String sampleError = 'Error Message';
-  static const String sampleHint = 'Hint Text';
-  static const String sampleHelper = 'Helper Text';
-}
-
-/// Performance test helper
-class PerformanceTestHelper {
-  /// Measures widget build time
-  static Future<void> measureWidgetBuildTime(
-    WidgetTester tester,
-    Widget widget,
-    String widgetName,
-  ) async {
-    final stopwatch = Stopwatch()..start();
-    await tester.pumpWidget(
-      createRemixScope(
-        child: MaterialApp(
-          home: Scaffold(body: Center(child: widget)),
-        ),
-      ),
-    );
-    stopwatch.stop();
-    print('$widgetName build time: ${stopwatch.elapsedMilliseconds}ms');
-  }
-
-  /// Measures interaction response time
-  static Future<void> measureInteractionResponseTime(
-    WidgetTester tester,
-    Future<void> Function() interaction,
-    String interactionName,
-  ) async {
-    final stopwatch = Stopwatch()..start();
-    await interaction();
-    stopwatch.stop();
-    print('$interactionName response time: ${stopwatch.elapsedMilliseconds}ms');
-  }
-}
-
 class MockBuildContext extends BuildContext {
   final Map<MixToken, Object>? _tokens;
   final List<Type>? _orderOfModifiers;

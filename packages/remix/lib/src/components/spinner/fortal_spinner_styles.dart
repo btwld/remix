@@ -1,5 +1,7 @@
 part of 'spinner.dart';
 
+import '../../theme/animation_constants.dart';
+
 enum FortalSpinnerSize {
   size1,
   size2,
@@ -30,7 +32,7 @@ class FortalSpinnerStyles {
     return RemixSpinnerStyle(
       // Default properties (no focus state for spinners)
       indicatorColor: FortalTokens.accent9(), // Uses accent step 9 as per spec
-      duration: const Duration(milliseconds: 800), // per component token
+      duration: RemixAnimationDurations.slow, // per component token
     )
         // Merge with size-specific styles
         .merge(_sizeStyle(size));

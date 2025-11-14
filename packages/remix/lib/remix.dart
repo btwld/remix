@@ -28,4 +28,5 @@ export 'package:naked_ui/naked_ui.dart' show OverlayPositionConfig;
 
 /// THEME
 export 'src/theme/remix_theme.dart';
+export 'src/theme/animation_constants.dart';
 export 'src/fortal/fortal.dart';

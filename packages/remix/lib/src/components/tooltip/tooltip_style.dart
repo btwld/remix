@@ -91,10 +91,10 @@ class RemixTooltipStyle
         container: MixOps.resolve(context, $container),
         waitDuration:
             MixOps.resolve(context, $waitDuration) ??
-            const Duration(milliseconds: 300),
+            RemixAnimationDurations.tooltipWait,
         showDuration:
             MixOps.resolve(context, $showDuration) ??
-            const Duration(milliseconds: 1500),
+            RemixAnimationDurations.tooltipShow,
       ),
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),

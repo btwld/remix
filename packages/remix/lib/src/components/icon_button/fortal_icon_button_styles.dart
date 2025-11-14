@@ -1,5 +1,7 @@
 part of 'icon_button.dart';
 
+import '../../theme/animation_constants.dart';
+
 enum FortalIconButtonSize { size1, size2, size3, size4 }
 
 enum FortalIconButtonVariant { solid, soft, surface, outline, ghost }
@@ -37,7 +39,7 @@ class FortalIconButtonStyle {
         .spinner(
           RemixSpinnerStyle(
             strokeWidth: FortalTokens.borderWidth2(),
-            duration: const Duration(milliseconds: 800),
+            duration: RemixAnimationDurations.slow,
           ),
         )
         // Focus ring (generic)

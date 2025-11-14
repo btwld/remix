@@ -8,6 +8,7 @@ import 'package:naked_ui/naked_ui.dart';
 
 import '../../fortal/fortal.dart';
 import '../../utilities/remix_style.dart';
+import '../../theme/animation_constants.dart';
 
 part 'dialog_spec.dart';
 part 'dialog_style.dart';
