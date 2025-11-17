@@ -16,6 +16,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  mix: ^2.0.0-dev.5
+  naked_ui: ^0.2.0-beta.7
   prism: ^2.0.0
   prism_flutter: ^2.0.0
 

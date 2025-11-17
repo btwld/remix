@@ -190,6 +190,7 @@ class RemixAccordion<T> extends StatelessWidget {
         final child = isExpanded
             ? StyleBuilder(
                 style: style,
+                controller: NakedAccordionItemState.controllerOf(context),
                 builder: (context, spec) {
                   return Box(styleSpec: spec.content, child: panel);
                 },
