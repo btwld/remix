@@ -192,6 +192,18 @@ class RemixMenu<T> extends StatelessWidget {
     final effectiveController = controller ?? MenuController();
 
     return NakedMenu<T>(
+      controller: effectiveController,
+      onSelected: onSelected,
+      onOpen: onOpen,
+      onClose: onClose,
+      onCanceled: onCanceled,
+      onOpenRequested: onOpenRequested,
+      onCloseRequested: onCloseRequested,
+      consumeOutsideTaps: consumeOutsideTaps,
+      useRootOverlay: useRootOverlay,
+      closeOnClickOutside: closeOnClickOutside,
+      triggerFocusNode: triggerFocusNode,
+      positioning: positioning,
       // Render items list with direct spec passing
       overlayBuilder: (context, info) {
         return StyleBuilder(
@@ -212,18 +224,6 @@ class RemixMenu<T> extends StatelessWidget {
           },
         );
       },
-      controller: effectiveController,
-      onSelected: onSelected,
-      onOpen: onOpen,
-      onClose: onClose,
-      onCanceled: onCanceled,
-      onOpenRequested: onOpenRequested,
-      onCloseRequested: onCloseRequested,
-      consumeOutsideTaps: consumeOutsideTaps,
-      useRootOverlay: useRootOverlay,
-      closeOnClickOutside: closeOnClickOutside,
-      triggerFocusNode: triggerFocusNode,
-      positioning: positioning,
       // Render trigger from RemixMenuTrigger data
       builder: (context, state, _) {
         return StyleBuilder(
@@ -236,9 +236,12 @@ class RemixMenu<T> extends StatelessWidget {
             return RowBox(
               styleSpec: triggerSpec.container,
               children: [
-                StyledText(trigger.label, styleSpec: triggerSpec.label),
                 if (trigger.icon != null)
-                  StyledIcon(icon: trigger.icon!, styleSpec: triggerSpec.icon),
+                  StyledIcon(
+                    icon: trigger.icon!,
+                    styleSpec: triggerSpec.icon,
+                  ),
+                StyledText(trigger.label, styleSpec: triggerSpec.label),
               ],
             );
           },

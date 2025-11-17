@@ -32,7 +32,7 @@ Future<T?> showRemixDialog<T>({
   bool useRootNavigator = true,
   RouteSettings? routeSettings,
   Offset? anchorPoint,
-  Duration transitionDuration = const Duration(milliseconds: 400),
+  Duration transitionDuration = RemixAnimationDurations.moderate,
   RouteTransitionsBuilder? transitionBuilder,
   bool requestFocus = true,
   TraversalEdgeBehavior? traversalEdgeBehavior,

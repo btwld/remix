@@ -6,8 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:mix/mix.dart';
 import 'package:naked_ui/naked_ui.dart';
 
-import '../../utilities/remix_style.dart';
 import '../../fortal/fortal.dart';
+import '../../utilities/remix_style.dart';
 import '../../utilities/selected_mixin.dart';
 
 part 'switch_spec.dart';

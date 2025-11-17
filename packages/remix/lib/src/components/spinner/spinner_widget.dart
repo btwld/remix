@@ -48,7 +48,7 @@ class _SpinnerSpecWidgetState extends State<_SpinnerSpecWidget>
   void initState() {
     super.initState();
     controller = AnimationController(
-      duration: widget.spec.duration ?? const Duration(milliseconds: 1000),
+      duration: widget.spec.duration ?? RemixAnimationDurations.spinner,
       vsync: this,
     )..repeat();
   }
@@ -57,9 +57,9 @@ class _SpinnerSpecWidgetState extends State<_SpinnerSpecWidget>
   void didUpdateWidget(covariant _SpinnerSpecWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
     final newDuration =
-        widget.spec.duration ?? const Duration(milliseconds: 1000);
+        widget.spec.duration ?? RemixAnimationDurations.spinner;
     final oldDuration =
-        oldWidget.spec.duration ?? const Duration(milliseconds: 1000);
+        oldWidget.spec.duration ?? RemixAnimationDurations.spinner;
     if (oldDuration != newDuration) {
       controller.duration = newDuration;
       controller.repeat();

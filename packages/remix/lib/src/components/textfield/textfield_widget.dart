@@ -297,6 +297,7 @@ class RemixTextField extends StatelessWidget {
       enableInteractiveSelection: enableInteractiveSelection,
       selectionControls: selectionControls,
       onTapAlwaysCalled: onTapAlwaysCalled,
+      onTap: onPressed,
       onTapOutside: onTapOutside,
       scrollController: scrollController,
       scrollPhysics: scrollPhysics,

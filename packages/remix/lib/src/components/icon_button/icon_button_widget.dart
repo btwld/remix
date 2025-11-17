@@ -145,17 +145,14 @@ class RemixIconButton extends StatelessWidget {
           style: style,
           controller: NakedState.controllerOf(context),
           builder: (context, spec) {
-            Widget? iconWidget;
-
-            if (iconBuilder != null) {
-              iconWidget = StyleSpecBuilder(
-                styleSpec: spec.icon,
-                builder: (context, iconSpec) =>
-                    iconBuilder!(context, iconSpec, icon),
-              );
-            } else {
-              iconWidget = StyledIcon(icon: icon, styleSpec: spec.icon);
-            }
+            // Build icon widget
+            final iconWidget = iconBuilder != null
+                ? StyleSpecBuilder(
+                    styleSpec: spec.icon,
+                    builder: (context, iconSpec) =>
+                        iconBuilder!(context, iconSpec, icon),
+                  )
+                : StyledIcon(icon: icon, styleSpec: spec.icon);
 
             // Build spinner (used when loading)
             final spinner = Center(
@@ -176,7 +173,7 @@ class RemixIconButton extends StatelessWidget {
               child: iconWidget,
             );
 
-            // Layer spinner above the content while keeping size stable.
+            // Layer spinner above the icon while keeping size stable
             final layered = Stack(
               alignment: Alignment.center,
               children: [content, if (loading) spinner],
@@ -188,7 +185,16 @@ class RemixIconButton extends StatelessWidget {
                 liveRegion: loading,
                 label: semanticLabel ?? 'Icon Button',
                 hint: semanticHint,
-                child: Box(styleSpec: spec.container, child: layered),
+                child: Box(
+                  styleSpec: spec.container,
+                  child: onDoubleTap != null
+                      ? GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onDoubleTap: _isEnabled ? onDoubleTap : null,
+                          child: layered,
+                        )
+                      : layered,
+                ),
               ),
             );
           },

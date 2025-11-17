@@ -4,9 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 
+import '../../fortal/fortal.dart';
 import '../../style/style.dart';
 import '../../utilities/remix_style.dart';
-import '../../fortal/fortal.dart';
 
 part 'avatar_spec.dart';
 part 'avatar_style.dart';

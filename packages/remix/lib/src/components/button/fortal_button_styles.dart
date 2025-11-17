@@ -39,7 +39,7 @@ class FortalButtonStyle {
         .spinner(
           RemixSpinnerStyle(
             strokeWidth: FortalTokens.borderWidth2(),
-            duration: const Duration(milliseconds: 800),
+            duration: RemixAnimationDurations.slow,
           ),
         )
         // Focus ring (generic)

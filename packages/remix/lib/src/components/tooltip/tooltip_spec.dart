@@ -9,8 +9,8 @@ class RemixTooltipSpec extends Spec<RemixTooltipSpec> with Diagnosticable {
   const RemixTooltipSpec({
     StyleSpec<BoxSpec>? container,
     StyleSpec<TextSpec>? label,
-    this.waitDuration = const Duration(milliseconds: 300),
-    this.showDuration = const Duration(milliseconds: 1500),
+    this.waitDuration = RemixAnimationDurations.tooltipWait,
+    this.showDuration = RemixAnimationDurations.tooltipShow,
   })  : container = container ?? const StyleSpec(spec: BoxSpec()),
         label = label ?? const StyleSpec(spec: TextSpec());
 

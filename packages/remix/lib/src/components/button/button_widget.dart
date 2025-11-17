@@ -217,7 +217,7 @@ class RemixButton extends StatelessWidget {
               children: rowChildren,
             );
 
-            // Layer spinner above the content while keeping size stable.
+            // Layer spinner above the content while keeping size stable
             final layered = Stack(
               alignment: Alignment.center,
               children: [contentRow, if (loading) spinner],
@@ -229,7 +229,13 @@ class RemixButton extends StatelessWidget {
                 liveRegion: loading,
                 label: semanticLabel ?? label,
                 hint: semanticHint,
-                child: layered,
+                child: onDoubleTap != null
+                    ? GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onDoubleTap: _isEnabled ? onDoubleTap : null,
+                        child: layered,
+                      )
+                    : layered,
               ),
             );
           },
