@@ -1,0 +1,210 @@
+=== COMPLETE SPEC FILES REFERENCE ===
+
+All 25 Spec Classes Located At:
+
+1. ACCORDION
+   File: /home/user/remix/packages/remix/lib/src/components/accordion/accordion_spec.dart
+   Class: RemixAccordionSpec
+   Lines: 64
+   Properties: trigger (FlexBoxSpec), leadingIcon (IconSpec), title (TextSpec), trailingIcon (IconSpec), content (BoxSpec)
+
+2. AVATAR
+   File: /home/user/remix/packages/remix/lib/src/components/avatar/avatar_spec.dart
+   Class: RemixAvatarSpec
+   Lines: 49
+   Properties: container (BoxSpec), text (TextSpec), icon (IconSpec)
+
+3. BADGE
+   File: /home/user/remix/packages/remix/lib/src/components/badge/badge_spec.dart
+   Class: RemixBadgeSpec
+   Lines: 42
+   Properties: container (BoxSpec), text (TextSpec)
+
+4. BUTTON
+   File: /home/user/remix/packages/remix/lib/src/components/button/button_spec.dart
+   Class: RemixButtonSpec
+   Lines: 167
+   Properties: container (FlexBoxSpec), label (TextSpec), icon (IconSpec), spinner (RemixSpinnerSpec)
+
+5. CALLOUT
+   File: /home/user/remix/packages/remix/lib/src/components/callout/callout_spec.dart
+   Class: RemixCalloutSpec
+   Lines: 49
+   Properties: container (FlexBoxSpec), text (TextSpec), icon (IconSpec)
+
+6. CARD
+   File: /home/user/remix/packages/remix/lib/src/components/card/card_spec.dart
+   Class: RemixCardSpec
+   Lines: 29
+   Properties: container (BoxSpec)
+
+7. CHECKBOX
+   File: /home/user/remix/packages/remix/lib/src/components/checkbox/checkbox_spec.dart
+   Class: RemixCheckboxSpec
+   Lines: 156
+   Properties: container (BoxSpec), indicator (IconSpec)
+
+8. DIALOG
+   File: /home/user/remix/packages/remix/lib/src/components/dialog/dialog_spec.dart
+   Class: RemixDialogSpec
+   Lines: 63
+   Properties: container (BoxSpec), title (TextSpec), description (TextSpec), actions (FlexBoxSpec), overlay (BoxSpec)
+
+9. DIVIDER
+   File: /home/user/remix/packages/remix/lib/src/components/divider/divider_spec.dart
+   Class: RemixDividerSpec
+   Lines: 29
+   Properties: container (BoxSpec)
+
+10. ICON BUTTON
+    File: /home/user/remix/packages/remix/lib/src/components/icon_button/icon_button_spec.dart
+    Class: RemixIconButtonSpec
+    Lines: 50
+    Properties: container (BoxSpec), icon (IconSpec), spinner (RemixSpinnerSpec)
+
+11. MENU (3 Classes)
+    File: /home/user/remix/packages/remix/lib/src/components/menu/menu_spec.dart
+    Lines: 172
+    
+    Classes:
+    a) RemixMenuTriggerSpec
+       Properties: container (FlexBoxSpec), label (TextSpec), icon (IconSpec)
+    
+    b) RemixMenuSpec
+       Properties: trigger (RemixMenuTriggerSpec), overlay (FlexBoxSpec), item (RemixMenuItemSpec), divider (RemixDividerSpec)
+    
+    c) RemixMenuItemSpec
+       Properties: container (FlexBoxSpec), label (TextSpec), leadingIcon (IconSpec), trailingIcon (IconSpec)
+
+12. PROGRESS
+    File: /home/user/remix/packages/remix/lib/src/components/progress/progress_spec.dart
+    Class: RemixProgressSpec
+    Lines: 56
+    Properties: container (BoxSpec), track (BoxSpec), indicator (BoxSpec), trackContainer (BoxSpec)
+
+13. RADIO
+    File: /home/user/remix/packages/remix/lib/src/components/radio/radio_spec.dart
+    Class: RemixRadioSpec
+    Lines: 47
+    Properties: container (BoxSpec), indicator (BoxSpec)
+
+14. SELECT (3 Classes)
+    File: /home/user/remix/packages/remix/lib/src/components/select/select_spec.dart
+    Lines: 147
+    
+    Classes:
+    a) RemixSelectSpec
+       Properties: trigger (RemixSelectTriggerSpec), menuContainer (FlexBoxSpec), item (RemixSelectMenuItemSpec)
+    
+    b) RemixSelectTriggerSpec
+       Properties: container (FlexBoxSpec), label (TextSpec), icon (IconSpec)
+    
+    c) RemixSelectMenuItemSpec
+       Properties: container (FlexBoxSpec), text (TextSpec), icon (IconSpec)
+
+15. SLIDER
+    File: /home/user/remix/packages/remix/lib/src/components/slider/slider_spec.dart
+    Class: RemixSliderSpec
+    Lines: 82
+    Properties: thumb (BoxSpec), trackColor (Color), trackWidth (double), rangeColor (Color), rangeWidth (double)
+
+16. SPINNER
+    File: /home/user/remix/packages/remix/lib/src/components/spinner/spinner_spec.dart
+    Class: RemixSpinnerSpec
+    Lines: 72
+    Properties: size (double?), strokeWidth (double?), indicatorColor (Color?), trackColor (Color?), trackStrokeWidth (double?), duration (Duration?)
+
+17. SWITCH
+    File: /home/user/remix/packages/remix/lib/src/components/switch/switch_spec.dart
+    Class: RemixSwitchSpec
+    Lines: 42
+    Properties: container (BoxSpec), thumb (BoxSpec)
+
+18. TABS (3 Classes)
+    File: /home/user/remix/packages/remix/lib/src/components/tabs/tabs_spec.dart
+    Lines: 105
+    
+    Classes:
+    a) RemixTabBarSpec
+       Properties: container (FlexBoxSpec)
+    
+    b) RemixTabSpec
+       Properties: container (FlexBoxSpec), label (TextSpec), icon (IconSpec)
+    
+    c) RemixTabViewSpec
+       Properties: container (BoxSpec)
+
+19. TEXTFIELD
+    File: /home/user/remix/packages/remix/lib/src/components/textfield/textfield_spec.dart
+    Class: RemixTextFieldSpec
+    Lines: 361
+    Properties: text (TextSpec), hintText (TextSpec), textAlign (TextAlign), cursorWidth (double), cursorHeight (double?), cursorRadius (Radius?), cursorColor (Color?), cursorOffset (Offset), cursorOpacityAnimates (bool?), selectionHeightStyle (BoxHeightStyle), selectionWidthStyle (BoxWidthStyle), scrollPadding (EdgeInsets), keyboardAppearance (Brightness?), spacing (double), container (FlexBoxSpec), helperText (TextSpec), label (TextSpec)
+
+20. TOOLTIP
+    File: /home/user/remix/packages/remix/lib/src/components/tooltip/tooltip_spec.dart
+    Class: RemixTooltipSpec
+    Lines: 54
+    Properties: container (BoxSpec), label (TextSpec), waitDuration (Duration), showDuration (Duration)
+
+=== SPEC INHERITANCE TREE ===
+
+All Specs follow this inheritance pattern:
+
+Spec<T> (from package:mix)
+  ↓ extends
+  ├─ Equatable (for equality)
+  └─ Every RemixXSpec
+
+Every RemixXSpec also uses:
+  └─ with Diagnosticable (Flutter diagnostics support)
+
+=== SPEC COMPLEXITY RANKING ===
+
+By Number of Properties:
+
+1. RemixTextFieldSpec: 17 properties (361 lines)
+2. RemixDialogSpec: 5 properties (63 lines)
+3. RemixAccordionSpec: 5 properties (64 lines)
+4. RemixButtonSpec: 4 properties (167 lines)
+5. RemixCheckboxSpec: 2 properties (156 lines)
+6. RemixMenuSpec: 4 properties (172 lines)
+7. RemixSelectSpec: 3 properties (147 lines)
+8. RemixSliderSpec: 5 properties (82 lines)
+9. RemixSpinnerSpec: 6 properties (72 lines)
+10. RemixProgressSpec: 4 properties (56 lines)
+11. RemixTooltipSpec: 4 properties (54 lines)
+
+=== METHODS SUMMARY ===
+
+Every Spec has exactly these methods/properties:
+
+Method                          Lines    Purpose
+─────────────────────────────────────────────────────────
+const constructor               5-15     Initialize with defaults
+copyWith()                      8-20     Immutable field replacement
+lerp()                         10-25     Animation interpolation
+debugFillProperties()           5-15     Flutter diagnostics
+props getter                    1-2      Equatable equality
+Total methods per spec:         5        (constant across all specs)
+
+=== PROPERTY TYPE DISTRIBUTION ===
+
+Across all 25 Specs:
+
+StyleSpec<T> properties:
+  - StyleSpec<BoxSpec>: ~35 instances
+  - StyleSpec<FlexBoxSpec>: ~20 instances
+  - StyleSpec<TextSpec>: ~25 instances
+  - StyleSpec<IconSpec>: ~20 instances
+  - Other nested Specs: ~15 instances
+
+Primitive properties:
+  - Color: ~5 instances
+  - double: ~10 instances
+  - Duration: ~3 instances
+  - Enum types (TextAlign, BoxHeightStyle, etc.): ~10 instances
+  - Offset, EdgeInsets, Radius: ~5 instances
+  - boolean: ~2 instances
+
+Total property count across all specs: ~145 properties
+
