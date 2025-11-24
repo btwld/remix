@@ -7,10 +7,7 @@ import 'package:remix/remix.dart';
 void main() {
   runApp(
     const MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.white,
-        body: ProgressExample(),
-      ),
+      home: Scaffold(backgroundColor: Colors.white, body: ProgressExample()),
     ),
   );
 }
@@ -20,17 +17,12 @@ class ProgressExample extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: RemixProgress(
-        value: 0.3,
-        style: style,
-      ),
-    );
+    return Center(child: RemixProgress(value: 0.3, style: style));
   }
 
   RemixProgressStyle get style {
     return RemixProgressStyle()
-        .wrapClipRRect(borderRadius: BorderRadius.circular(10))
+        .wrap(WidgetModifierConfig.clipRRect(borderRadius: .circular(10)))
         .trackColor(Colors.grey.shade300)
         .indicatorColor(Colors.grey.shade900)
         .width(300)

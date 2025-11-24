@@ -11,10 +11,7 @@ void main() {
   WidgetsBinding.instance.ensureSemantics();
   runApp(
     const MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.white,
-        body: AccordionExample(),
-      ),
+      home: Scaffold(backgroundColor: Colors.white, body: AccordionExample()),
     ),
   );
 }
@@ -66,7 +63,8 @@ class _AccordionExampleState extends State<AccordionExample> {
                     leadingIcon: Icons.help_outline,
                     style: itemStyle,
                     child: const Text(
-                        'Major credit and debit cards like Visa, MasterCard, and American Express, as well as digital payment options like PayPal and Apple Pay.'),
+                      'Major credit and debit cards like Visa, MasterCard, and American Express, as well as digital payment options like PayPal and Apple Pay.',
+                    ),
                   ),
                   RemixAccordion(
                     value: 'accordion3',
@@ -74,7 +72,8 @@ class _AccordionExampleState extends State<AccordionExample> {
                     leadingIcon: Icons.help_outline,
                     style: itemStyle,
                     child: const Text(
-                        'You can track your order status in the "My Orders" section of your account.'),
+                      'You can track your order status in the "My Orders" section of your account.',
+                    ),
                   ),
                 ],
               ),
@@ -87,16 +86,12 @@ class _AccordionExampleState extends State<AccordionExample> {
 
   RemixAccordionStyle<String> get itemStyle {
     return RemixAccordionStyle<String>()
-        .content(
-          BoxStyler().paddingX(16).paddingTop(8),
-        )
-        .wrapClipRRect(borderRadius: BorderRadius.circular(8))
+        .content(BoxStyler().paddingX(16).paddingTop(8))
+        .wrap(WidgetModifierConfig.clipRRect(borderRadius: .circular(8)))
         .paddingX(16)
         .paddingY(14)
         .borderRounded(8)
-        .onHovered(
-          RemixAccordionStyle<String>().color(Colors.grey.shade100),
-        )
+        .onHovered(RemixAccordionStyle<String>().color(Colors.grey.shade100))
         .decoration(
           BoxDecorationMix(
             color: Colors.white,
@@ -112,17 +107,13 @@ class _AccordionExampleState extends State<AccordionExample> {
               .mainAxisAlignment(MainAxisAlignment.spaceBetween)
               .spacing(12),
         )
-        .leadingIcon(
-          IconStyler().color(Colors.grey.shade700).size(20),
-        )
+        .leadingIcon(IconStyler().color(Colors.grey.shade700).size(20))
         .title(
           TextStyler()
               .color(Colors.grey.shade900)
               .fontWeight(FontWeight.w500)
               .fontSize(14),
         )
-        .trailingIcon(
-          IconStyler().color(Colors.grey.shade700).size(20),
-        );
+        .trailingIcon(IconStyler().color(Colors.grey.shade700).size(20));
   }
 }

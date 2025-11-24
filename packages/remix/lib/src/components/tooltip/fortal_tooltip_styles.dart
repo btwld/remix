@@ -9,7 +9,11 @@ class FortalTooltipStyles {
         .paddingY(FortalTokens.space2())
         .paddingX(FortalTokens.space2())
         .marginY(FortalTokens.space1())
-        .wrapDefaultTextStyle(TextStyleMix().color(FortalTokens.gray1()))
+        .wrap(
+          WidgetModifierConfig.defaultTextStyle(
+            style: TextStyleMix().color(FortalTokens.gray1()),
+          ),
+        )
         .color(FortalTokens.gray11());
   }
 }

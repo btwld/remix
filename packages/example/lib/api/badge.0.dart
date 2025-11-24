@@ -7,10 +7,7 @@ import 'package:remix/remix.dart';
 void main() {
   runApp(
     const MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.white,
-        body: BadgeExample(),
-      ),
+      home: Scaffold(backgroundColor: Colors.white, body: BadgeExample()),
     ),
   );
 }
@@ -25,16 +22,8 @@ class BadgeExample extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         spacing: 16,
         children: [
-          RemixBadge(
-            label: '8',
-            style: styleLabel,
-          ),
-          RemixBadge(
-            style: styleIcon,
-            child: const Icon(
-              Icons.camera_alt,
-            ),
-          ),
+          RemixBadge(label: '8', style: styleLabel),
+          RemixBadge(style: styleIcon, child: const Icon(Icons.camera_alt)),
         ],
       ),
     );
@@ -43,11 +32,11 @@ class BadgeExample extends StatelessWidget {
   RemixBadgeStyle get styleLabel {
     return RemixBadgeStyle()
         .size(24, 24)
-        .wrapClipOval()
+        .wrap(WidgetModifierConfig.clipOval())
         .label(
           TextStyler()
               .fontSize(15)
-              .wrapAlign(Alignment.center)
+              .wrap(WidgetModifierConfig.align(alignment: .center))
               .fontFeatures([const FontFeature.tabularFigures()]),
         )
         .textColor(Colors.greenAccent.shade700)
@@ -59,14 +48,14 @@ class BadgeExample extends StatelessWidget {
   RemixBadgeStyle get styleIcon {
     return RemixBadgeStyle()
         .size(24, 24)
-        .wrapClipOval()
+        .wrap(WidgetModifierConfig.clipOval())
         .label(
           TextStyler()
               .fontSize(15)
-              .wrapAlign(Alignment.center)
+              .wrap(WidgetModifierConfig.align(alignment: .center))
               .fontFeatures([const FontFeature.tabularFigures()]),
         )
         .textColor(Colors.redAccent)
-        .wrapIconTheme(const IconThemeData(color: Colors.white, size: 15));
+        .wrap(.iconTheme(color: Colors.white, size: 15));
   }
 }

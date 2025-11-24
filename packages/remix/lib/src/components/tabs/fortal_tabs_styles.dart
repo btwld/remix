@@ -22,15 +22,17 @@ class FortalTabsStyles {
     return RemixTabStyle()
         .label(TextStyler().color(FortalTokens.gray12()))
         .icon(IconStyler(color: FortalTokens.gray12(), size: 16.0))
-        .wrapBox(
-          BoxStyler()
-              .height(40)
-              .paddingX(4)
-              .alignment(Alignment.center)
-              .borderBottom(
-                color: Colors.transparent,
-                width: FortalTokens.borderWidth2(),
-              ),
+        .wrap(
+          WidgetModifierConfig.box(
+            BoxStyler()
+                .height(40)
+                .paddingX(4)
+                .alignment(Alignment.center)
+                .borderBottom(
+                  color: Colors.transparent,
+                  width: FortalTokens.borderWidth2(),
+                ),
+          ),
         )
         .container(
           FlexBoxStyler()
@@ -44,7 +46,11 @@ class FortalTabsStyles {
         .onSelected(
           RemixTabStyle()
               .label(TextStyler().fontWeight(FortalTokens.fontWeightMedium()))
-              .wrapBox(BoxStyler().borderBottom(color: FortalTokens.accent9())),
+              .wrap(
+                WidgetModifierConfig.box(
+                  BoxStyler().borderBottom(color: FortalTokens.accent9()),
+                ),
+              ),
         )
         .padding(EdgeInsetsMix.symmetric(vertical: 6.0, horizontal: 12.0));
   }

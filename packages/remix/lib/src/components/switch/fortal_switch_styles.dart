@@ -34,7 +34,7 @@ class FortalSwitchStyles {
           BoxStyler().shapeCircle().shadow(
             BoxShadowMix()
                 .color(FortalTokens.grayA7())
-                .offset(const Offset(0, 2))
+                .offset(x: 0, y: 2)
                 .blurRadius(3),
           ),
         )

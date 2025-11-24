@@ -7,10 +7,7 @@ import 'package:remix/remix.dart';
 void main() {
   runApp(
     const MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.white,
-        body: TooltipExample(),
-      ),
+      home: Scaffold(backgroundColor: Colors.white, body: TooltipExample()),
     ),
   );
 }
@@ -49,8 +46,12 @@ class TooltipExample extends StatelessWidget {
     return RemixTooltipStyle()
         .padding(EdgeInsetsGeometryMix.symmetric(horizontal: 12, vertical: 8))
         .color(Colors.black87)
-        .borderRadius(BorderRadiusGeometryMix.all(const Radius.circular(6)))
-        .wrapDefaultTextStyle(TextStyleMix().color(Colors.white).fontSize(14));
+        .borderRadius(BorderRadiusGeometryMix.all(const .circular(6)))
+        .wrap(
+          WidgetModifierConfig.defaultTextStyle(
+            style: TextStyleMix().color(Colors.white).fontSize(14),
+          ),
+        );
   }
 
   RemixTooltipStyle get styleFast {
@@ -79,10 +80,7 @@ class _TriggerButton extends StatelessWidget {
         color: Colors.blue,
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Text(
-        label,
-        style: const TextStyle(color: Colors.white),
-      ),
+      child: Text(label, style: const TextStyle(color: Colors.white)),
     );
   }
 }

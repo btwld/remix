@@ -181,7 +181,9 @@ class RemixMenu<T> extends StatelessWidget {
     return RemixMenuStyle()
         .trigger(RemixMenuTriggerStyle().mainAxisSize(MainAxisSize.min))
         .overlay(
-          FlexBoxStyler().mainAxisSize(MainAxisSize.min).wrapIntrinsicWidth(),
+          FlexBoxStyler()
+              .mainAxisSize(.min)
+              .wrap(WidgetModifierConfig.intrinsicWidth()),
         )
         .merge(style);
   }

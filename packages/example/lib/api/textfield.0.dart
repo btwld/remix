@@ -7,10 +7,7 @@ import 'package:remix/remix.dart';
 void main() {
   runApp(
     const MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.white,
-        body: TextfieldExample(),
-      ),
+      home: Scaffold(backgroundColor: Colors.white, body: TextfieldExample()),
     ),
   );
 }
@@ -60,14 +57,9 @@ class _TextfieldExampleState extends State<TextfieldExample> {
         )
         .hintColor(Colors.blueGrey.shade500)
         .shadow(
-          BoxShadowMix()
-              .blurRadius(1)
-              .color(Colors.black12)
-              .offset(const Offset(0, 1)),
+          BoxShadowMix().blurRadius(1).color(Colors.black12).offset(x: 0, y: 1),
         )
-        .border(
-          BoxBorderMix.all(BorderSideMix(color: Colors.grey.shade300)),
-        )
+        .border(BoxBorderMix.all(BorderSideMix(color: Colors.grey.shade300)))
         .onFocused(
           RemixTextFieldStyle().border(
             BoxBorderMix.all(

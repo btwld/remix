@@ -4,14 +4,10 @@ import 'package:remix/remix.dart';
 // Inspired by design.alberta.ca design system
 // https://design.alberta.ca/components/callout#tab-0
 
-
 void main() {
   runApp(
     const MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.white,
-        body: CalloutExample(),
-      ),
+      home: Scaffold(backgroundColor: Colors.white, body: CalloutExample()),
     ),
   );
 }
@@ -37,11 +33,18 @@ class CalloutExample extends StatelessWidget {
         .height(60)
         .paddingRight(12)
         .icon(
-          IconStyler().size(24).color(Colors.white).wrapBox(BoxStyler()
-              .color(Colors.blue.shade900)
-              .paddingX(12)
-              .height(double.infinity)),
+          IconStyler()
+              .size(24)
+              .color(Colors.white)
+              .wrap(
+                .box(
+                  BoxStyler()
+                      .color(Colors.blue.shade900)
+                      .paddingX(12)
+                      .height(.infinity),
+                ),
+              ),
         )
-        .mainAxisSize(MainAxisSize.min);
+        .mainAxisSize(.min);
   }
 }

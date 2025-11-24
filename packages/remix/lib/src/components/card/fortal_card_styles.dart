@@ -49,7 +49,7 @@ class FortalCardStyles {
   ///
   /// Classic cards use panel solid background with stronger borders and shadow.
   /// Used for elevated content containers with traditional appearance.
-  static RemixCardStyle classic({FortalCardSize size = FortalCardSize.size2}) {
+  static RemixCardStyle classic({FortalCardSize size = .size2}) {
     return base(size: size)
         .color(FortalTokens.graySurface())
         .borderAll(
@@ -59,7 +59,7 @@ class FortalCardStyles {
         .shadow(
           BoxShadowMix()
               .color(FortalTokens.grayA3())
-              .offset(const Offset(0, 2))
+              .offset(x: 0, y: 2)
               .blurRadius(3)
               .spreadRadius(0),
         )

@@ -1,8 +1,8 @@
 name: remix_workspace
 environment:
-  sdk: ">=3.9.0 <4.0.0"
+  sdk: ">=3.10.0 <4.0.0"
 dependencies:
-  mix: ^2.0.0-dev.5
+  mix: ^2.0.0-rc.0
   naked_ui: ^0.2.0-beta.7
   meta: ^1.16.0
 dev_dependencies:
@@ -18,7 +18,13 @@ workspace:
   - packages/playground
   - packages/remix
 
-melos: 
+melos:
+  command:
+    bootstrap:
+      environment:
+        sdk: ">=3.10.0 <4.0.0"
+        flutter: ">=3.38.1"
+
   scripts: 
     test:flutter:
       run: melos exec -- flutter test 
