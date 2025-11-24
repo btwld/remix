@@ -1,4 +1,4 @@
-## 0.1.1-beta.0
+## 0.1.0-beta.2
 
  - Update dart min version to 3.10.0
 
