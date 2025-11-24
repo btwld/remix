@@ -47,7 +47,11 @@ class TooltipExample extends StatelessWidget {
         .padding(EdgeInsetsGeometryMix.symmetric(horizontal: 12, vertical: 8))
         .color(Colors.black87)
         .borderRadius(BorderRadiusGeometryMix.all(const .circular(6)))
-        .wrap(.defaultTextStyle(style: .color(Colors.white).fontSize(14)));
+        .wrap(
+          WidgetModifierConfig.defaultTextStyle(
+            style: TextStyleMix().color(Colors.white).fontSize(14),
+          ),
+        );
   }
 
   RemixTooltipStyle get styleFast {

@@ -45,8 +45,10 @@ class ButtonExample extends StatelessWidget {
               .topRight(const Radius.circular(12)),
           side: BorderSideMix.width(1).color(Colors.redAccent),
         )
-        .wrap(.scale(1, 1))
-        .onPressed(RemixButtonStyle().wrap(.scale(0.90, 0.90)))
+        .wrap(WidgetModifierConfig.scale(x: 1, y: 1))
+        .onPressed(
+          RemixButtonStyle().wrap(WidgetModifierConfig.scale(x: 0.90, y: 0.90)),
+        )
         .onHovered(
           RemixButtonStyle()
               .color(const Color(0xFF732D2D))

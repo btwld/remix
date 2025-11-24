@@ -32,11 +32,11 @@ class BadgeExample extends StatelessWidget {
   RemixBadgeStyle get styleLabel {
     return RemixBadgeStyle()
         .size(24, 24)
-        .wrap(.clipOval())
+        .wrap(WidgetModifierConfig.clipOval())
         .label(
           TextStyler()
               .fontSize(15)
-              .wrap(.align(alignment: .center))
+              .wrap(WidgetModifierConfig.align(alignment: .center))
               .fontFeatures([const FontFeature.tabularFigures()]),
         )
         .textColor(Colors.greenAccent.shade700)
@@ -48,11 +48,11 @@ class BadgeExample extends StatelessWidget {
   RemixBadgeStyle get styleIcon {
     return RemixBadgeStyle()
         .size(24, 24)
-        .wrap(.clipOval())
+        .wrap(WidgetModifierConfig.clipOval())
         .label(
           TextStyler()
               .fontSize(15)
-              .wrap(.align(alignment: .center))
+              .wrap(WidgetModifierConfig.align(alignment: .center))
               .fontFeatures([const FontFeature.tabularFigures()]),
         )
         .textColor(Colors.redAccent)

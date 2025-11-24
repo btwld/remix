@@ -35,7 +35,7 @@ class AvatarExample extends StatelessWidget {
         .textColor(Colors.deepPurpleAccent)
         .size(50, 50)
         .shapeCircle()
-        .wrap(.clipOval())
+        .wrap(WidgetModifierConfig.clipOval())
         .labelColor(Colors.white)
         .labelFontWeight(FontWeight.bold)
         .labelFontSize(15);
@@ -49,7 +49,7 @@ class AvatarExample extends StatelessWidget {
         .iconSize(70)
         .icon(IconStyler().wrap(.translate(x: 0, y: 12)))
         .shapeCircle()
-        .wrap(.clipOval());
+        .wrap(WidgetModifierConfig.clipOval());
   }
 
   RemixAvatarStyle get image {
