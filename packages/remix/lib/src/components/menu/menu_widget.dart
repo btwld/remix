@@ -180,9 +180,7 @@ class RemixMenu<T> extends StatelessWidget {
   RemixMenuStyle _buildStyle() {
     return RemixMenuStyle()
         .trigger(RemixMenuTriggerStyle().mainAxisSize(MainAxisSize.min))
-        .overlay(
-          FlexBoxStyler().mainAxisSize(MainAxisSize.min).wrapIntrinsicWidth(),
-        )
+        .overlay(FlexBoxStyler().mainAxisSize(.min).wrap(.intrinsicWidth()))
         .merge(style);
   }
 

@@ -21,15 +21,17 @@ class FortalDialogStyle {
               .fontSize(18)
               .fontWeight(FontWeight.w600)
               .color(FortalTokens.gray12())
-              .wrapPadding(
-                EdgeInsetsMix.fromLTRB(0, 0, 0, FortalTokens.space4()),
+              .wrap(
+                WidgetModifierConfig.padding(
+                  EdgeInsetsMix.fromLTRB(0, 0, 0, FortalTokens.space4()),
+                ),
               ),
         )
         .description(TextStyler().fontSize(14).color(FortalTokens.gray11()))
         .actions(
           FlexBoxStyler()
-              .mainAxisAlignment(MainAxisAlignment.end)
-              .crossAxisAlignment(CrossAxisAlignment.center)
+              .mainAxisAlignment(.end)
+              .crossAxisAlignment(.center)
               .spacing(FortalTokens.space3())
               .marginTop(FortalTokens.space5()),
         )
@@ -38,21 +40,21 @@ class FortalDialogStyle {
             BoxDecorationMix().color(FortalTokens.blackA7()),
           ),
         )
-        .padding(EdgeInsetsMix.all(FortalTokens.space5()))
+        .padding(.all(FortalTokens.space5()))
         .constraints(BoxConstraintsMix(maxWidth: 450))
         .border(
-          BorderMix.all(
+          .all(
             BorderSideMix()
                 .color(FortalTokens.gray6())
                 .width(FortalTokens.borderWidth1()),
           ),
         )
-        .borderRadius(BorderRadiusMix.all(FortalTokens.radius3()))
+        .borderRadius(.all(FortalTokens.radius3()))
         .color(FortalTokens.gray1())
         .shadow(
           BoxShadowMix()
               .color(FortalTokens.blackA3())
-              .offset(const Offset(0, 8))
+              .offset(x: 0, y: 8)
               .blurRadius(16)
               .spreadRadius(0),
         );

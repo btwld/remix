@@ -4,10 +4,7 @@ import 'package:remix/remix.dart';
 void main() {
   runApp(
     const MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.black,
-        body: ButtonExample(),
-      ),
+      home: Scaffold(backgroundColor: Colors.black, body: ButtonExample()),
     ),
   );
 }
@@ -27,11 +24,7 @@ class ButtonExample extends StatelessWidget {
             label: 'Turn Off',
             style: destructiveStyle,
           ),
-          RemixButton(
-            onPressed: () {},
-            label: 'Turn on',
-            style: successStyle,
-          ),
+          RemixButton(onPressed: () {}, label: 'Turn on', style: successStyle),
         ],
       ),
     );
@@ -45,47 +38,35 @@ class ButtonExample extends StatelessWidget {
         .shadow(
           BoxShadowMix().color(Colors.redAccent).blurRadius(10).spreadRadius(0),
         )
-        .label(
-          TextStyler().uppercase().color(Colors.redAccent),
-        )
+        .label(TextStyler().uppercase().color(Colors.redAccent))
         .shapeBeveledRectangle(
           borderRadius: BorderRadiusMix()
               .bottomLeft(const Radius.circular(12))
               .topRight(const Radius.circular(12)),
           side: BorderSideMix.width(1).color(Colors.redAccent),
         )
-        .wrapScale(x: 1, y: 1)
-        .onPressed(
-          RemixButtonStyle().wrapScale(x: 0.90, y: 0.90),
-        )
+        .wrap(.scale(1, 1))
+        .onPressed(RemixButtonStyle().wrap(.scale(0.90, 0.90)))
         .onHovered(
           RemixButtonStyle()
               .color(const Color(0xFF732D2D))
-              .animate(AnimationConfig.spring(300.ms)),
+              .animate(.spring(300.ms)),
         )
-        .onFocused(
-          RemixButtonStyle().color(const Color(0xFF732D2D)),
-        );
+        .onFocused(RemixButtonStyle().color(const Color(0xFF732D2D)));
   }
 
   RemixButtonStyle get successStyle {
     return destructiveStyle
         .color(const Color.fromARGB(255, 15, 61, 15))
         .label(TextStyler().uppercase().color(Colors.greenAccent))
-        .shapeBeveledRectangle(
-          side: BorderSideMix().color(Colors.greenAccent),
-        )
+        .shapeBeveledRectangle(side: BorderSideMix().color(Colors.greenAccent))
         .shadow(
           BoxShadowMix()
               .color(Colors.greenAccent)
               .blurRadius(10)
               .spreadRadius(0),
         )
-        .onHovered(
-          RemixButtonStyle().color(const Color(0xFF357857)),
-        )
-        .onFocused(
-          RemixButtonStyle().color(const Color(0xFF357857)),
-        );
+        .onHovered(RemixButtonStyle().color(const Color(0xFF357857)))
+        .onFocused(RemixButtonStyle().color(const Color(0xFF357857)));
   }
 }

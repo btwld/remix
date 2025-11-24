@@ -151,7 +151,7 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
   RemixSelectStyle _buildStyle() {
     return RemixSelectStyle()
         .menuContainer(
-          FlexBoxStyler().mainAxisSize(MainAxisSize.min).wrapIntrinsicWidth(),
+          FlexBoxStyler().mainAxisSize(.min).wrap(.intrinsicWidth()),
         )
         .merge(widget.style);
   }

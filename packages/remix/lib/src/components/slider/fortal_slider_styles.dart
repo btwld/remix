@@ -42,7 +42,7 @@ class FortalSliderStyles {
               .shadow(
                 BoxShadowMix()
                     .blurRadius(2)
-                    .offset(const Offset(0, 1))
+                    .offset(x: 0, y: 1)
                     .color(FortalTokens.gray7()),
               ),
         )

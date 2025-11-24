@@ -7,10 +7,7 @@ import 'package:remix/remix.dart';
 void main() {
   runApp(
     const MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.white,
-        body: AvatarExample(),
-      ),
+      home: Scaffold(backgroundColor: Colors.white, body: AvatarExample()),
     ),
   );
 }
@@ -25,17 +22,9 @@ class AvatarExample extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         spacing: 16,
         children: [
-          RemixAvatar(
-            label: 'LF',
-            style: labelStyle,
-          ),
-          RemixAvatar(
-            icon: Icons.person,
-            style: iconStyle,
-          ),
-          RemixAvatar(
-            style: image,
-          ),
+          RemixAvatar(label: 'LF', style: labelStyle),
+          RemixAvatar(icon: Icons.person, style: iconStyle),
+          RemixAvatar(style: image),
         ],
       ),
     );
@@ -46,7 +35,7 @@ class AvatarExample extends StatelessWidget {
         .textColor(Colors.deepPurpleAccent)
         .size(50, 50)
         .shapeCircle()
-        .wrapClipOval()
+        .wrap(.clipOval())
         .labelColor(Colors.white)
         .labelFontWeight(FontWeight.bold)
         .labelFontSize(15);
@@ -58,9 +47,9 @@ class AvatarExample extends StatelessWidget {
         .size(70, 70)
         .iconColor(Colors.white)
         .iconSize(70)
-        .icon(IconStyler().wrapTranslate(x: 0, y: 12))
+        .icon(IconStyler().wrap(.translate(x: 0, y: 12)))
         .shapeCircle()
-        .wrapClipOval();
+        .wrap(.clipOval());
   }
 
   RemixAvatarStyle get image {

@@ -17,7 +17,7 @@ class FortalTextFieldStyles {
   /// Returns a RemixTextFieldStyle configured with Fortal design tokens.
   /// Defaults to surface variant with size2.
   static RemixTextFieldStyle create({
-    FortalTextFieldVariant variant = FortalTextFieldVariant.surface,
+    FortalTextFieldVariant variant = .surface,
     FortalTextFieldSize size = FortalTextFieldSize.size2,
   }) {
     return switch (variant) {
@@ -39,7 +39,7 @@ class FortalTextFieldStyles {
           cursorWidth: 1.5,
         )
         .spacing(8)
-        .wrapIconTheme(IconThemeData(size: 16.0, color: FortalTokens.gray10()))
+        .wrap(.iconTheme(size: 16.0, color: FortalTokens.gray10()))
         // Focus state
         .onFocused(
           RemixTextFieldStyle().borderAll(
@@ -121,7 +121,7 @@ class FortalTextFieldStyles {
           ),
         )
         .color(FortalTokens.accent12())
-        .wrapIconTheme(IconThemeData(color: FortalTokens.accent10()))
+        .wrap(.iconTheme(color: FortalTokens.accent10()))
         .backgroundColor(FortalTokens.accent3())
         .borderAll(
           color: FortalTokens.accent3(),
