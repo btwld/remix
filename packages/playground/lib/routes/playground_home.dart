@@ -12,7 +12,7 @@ class PlaygroundHome extends StatelessWidget {
       body: ListView.separated(
         padding: const EdgeInsets.all(16),
         itemCount: items.length,
-        separatorBuilder: (_, __) => const Divider(height: 1),
+        separatorBuilder: (_, _) => const Divider(height: 1),
         itemBuilder: (context, index) {
           final key = items[index];
           return ListTile(
@@ -20,13 +20,15 @@ class PlaygroundHome extends StatelessWidget {
             trailing: const Icon(Icons.chevron_right),
             onTap: () {
               Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) {
-                  final builder = components[key]!;
-                  return Scaffold(
-                    appBar: AppBar(title: Text(key)),
-                    body: Builder(builder: builder),
-                  );
-                }),
+                MaterialPageRoute(
+                  builder: (_) {
+                    final builder = components[key]!;
+                    return Scaffold(
+                      appBar: AppBar(title: Text(key)),
+                      body: Builder(builder: builder),
+                    );
+                  },
+                ),
               );
             },
           );
@@ -35,4 +37,3 @@ class PlaygroundHome extends StatelessWidget {
     );
   }
 }
-
