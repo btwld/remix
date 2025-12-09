@@ -10,13 +10,13 @@ packages:
     source: hosted
     version: "91.0.0"
   accessibility_tools:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: accessibility_tools
-      sha256: "088cfe6d3520dbe86bb5259059c0d5f478fe113e09311023b0485e68879b34b2"
+      sha256: c29732e423175a51e0a6ace7df1255f5d77812c7c7b7101d8ba0186a43d533aa
       url: "https://pub.dev"
     source: hosted
-    version: "2.7.1"
+    version: "2.8.0"
   analyzer:
     dependency: "direct dev"
     description:
@@ -800,26 +800,26 @@ packages:
     dependency: transitive
     description:
       name: widgetbook
-      sha256: "877a843650117d214d8874b662b3a04bd6988aad33208d26dbe31edbc7d68e78"
+      sha256: "0ffadb039b1811870b2f643e1730d419d38435b0e1931cc83f32ecd7e50200e4"
       url: "https://pub.dev"
     source: hosted
-    version: "3.19.0"
+    version: "3.20.2"
   widgetbook_annotation:
     dependency: transitive
     description:
       name: widgetbook_annotation
-      sha256: "67b922ebc5d7d9578d4a2d9b7ec6f955fc2ac06aac9d335995e6da255a3825b5"
+      sha256: "55504431b15eedef3c1fc4af2d108ac98b32610b59d4a4e2eea87a8515d17eef"
       url: "https://pub.dev"
     source: hosted
-    version: "3.8.0"
+    version: "3.9.0"
   widgetbook_generator:
     dependency: transitive
     description:
       name: widgetbook_generator
-      sha256: e8966eaa07a2f8860b64b5a2039f719da2678ebffdae067a758c59d1e8bf3969
+      sha256: d4fd5989abeac63825746e52e4497b3bac7c59dff3565c261040b07581d22f8e
       url: "https://pub.dev"
     source: hosted
-    version: "3.19.0"
+    version: "3.20.1"
   xml:
     dependency: transitive
     description:
