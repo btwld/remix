@@ -30,7 +30,7 @@ Widget buildAccordionUseCase(BuildContext context) {
                     RemixAccordion(
                       value: 'accordion1',
                       title: 'Is it accessible?',
-                      style: FortalAccordionStyle.base<String>(),
+                      style: FortalAccordionStyles.base<String>(),
                       child: const Text('Yes, it is accessible.'),
                     ),
                     RemixDivider(
@@ -39,7 +39,7 @@ Widget buildAccordionUseCase(BuildContext context) {
                     RemixAccordion(
                       value: 'accordion2',
                       title: 'What payment methods are accepted?',
-                      style: FortalAccordionStyle.base<String>(),
+                      style: FortalAccordionStyles.base<String>(),
                       child: const Text(
                           'Major credit and debit cards like Visa, MasterCard, and American Express, as well as digital payment options like PayPal and Apple Pay.'),
                     ),

@@ -275,9 +275,8 @@ void main() {
       await tester.tap(find.text('Copy'));
       await tester.pumpAndSettle();
 
-      // Menu should be closed - finding the item in overlay should fail
-      // Note: The trigger still shows "Options", but menu items should be gone
-      expect(find.text('Options'), findsOneWidget); // Trigger is still there
+      // Trigger remains visible after selection
+      expect(find.text('Options'), findsOneWidget);
     });
 
     testWidgets('disabled menu item does not trigger onSelected', (

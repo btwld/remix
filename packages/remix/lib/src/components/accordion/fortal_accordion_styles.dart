@@ -1,11 +1,11 @@
 part of 'accordion.dart';
 
-/// FortalAccordionStyle utility class for creating Fortal-themed accordion styles.
+/// FortalAccordionStyles utility class for creating Fortal-themed accordion styles.
 ///
 /// Provides static methods for direct access to accordion styling.
 /// Composes the correct metrics and visuals sourced from the Fortal token system.
-class FortalAccordionStyle {
-  const FortalAccordionStyle._();
+class FortalAccordionStyles {
+  const FortalAccordionStyles._();
 
   /// Creates the base accordion style with Fortal design tokens.
   ///

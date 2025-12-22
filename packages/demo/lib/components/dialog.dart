@@ -24,28 +24,28 @@ Widget buildDialogUseCase(BuildContext context) {
                     title: 'Revoke access',
                     description:
                         'Are you sure? This application will no longer be accessible and any existing sessions will be expired.',
-                    style: FortalDialogStyle.create(),
+                    style: FortalDialogStyles.create(),
                     actions: [
                       RemixButton(
                         label: 'Cancel',
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        style: FortalButtonStyle.create(
+                        style: FortalButtonStyles.create(
                           variant: FortalButtonVariant.ghost,
                         ),
                       ),
                       RemixButton(
                         label: 'Revoke access',
                         onPressed: () {},
-                        style: FortalButtonStyle.create(),
+                        style: FortalButtonStyles.create(),
                       ),
                     ],
                   ),
                 ),
               );
             },
-            style: FortalButtonStyle.create(),
+            style: FortalButtonStyles.create(),
           ),
         ),
       ),

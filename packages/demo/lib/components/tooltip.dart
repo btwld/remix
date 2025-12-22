@@ -24,7 +24,7 @@ Widget buildTooltipUseCase(BuildContext context) {
               child: RemixButton(
                 label: 'Hover me',
                 onPressed: () {},
-                style: FortalButtonStyle.create(),
+                style: FortalButtonStyles.create(),
               ),
             ),
           ),

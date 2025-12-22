@@ -4,15 +4,15 @@ enum FortalIconButtonSize { size1, size2, size3, size4 }
 
 enum FortalIconButtonVariant { solid, soft, surface, outline, ghost }
 
-/// FortalIconButtonStyle utility class for creating Fortal-themed icon button styles.
+/// FortalIconButtonStyles utility class for creating Fortal-themed icon button styles.
 ///
 /// Provides factory constructor with variant and size parameters plus named
 /// static methods for direct access. Composes the correct base metrics,
 /// variant visuals, and size-specific styles sourced from the Fortal token JSON.
-class FortalIconButtonStyle {
-  const FortalIconButtonStyle._();
+class FortalIconButtonStyles {
+  const FortalIconButtonStyles._();
 
-  /// Factory constructor for FortalIconButtonStyle with variant and size parameters.
+  /// Factory constructor for FortalIconButtonStyles with variant and size parameters.
   ///
   /// Returns a RemixIconButtonStyle configured with Fortal design tokens.
   /// Defaults to solid variant with size2.

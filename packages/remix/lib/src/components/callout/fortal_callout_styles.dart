@@ -95,10 +95,8 @@ class FortalCalloutStyles {
             .paddingX(12.0)
             .spacing(FortalTokens.space2()), // 8px between icon and text
         text: TextStyler(style: FortalTokens.text1.mix()),
-        icon: IconStyler(
-          // TODO: align to exact line-height token if exposed
-          size: 16.0,
-        ),
+        // Icon sized to match text line-height (follows 16/20/24 scale)
+        icon: IconStyler(size: 16.0),
       ),
       FortalCalloutSize.size2 => RemixCalloutStyle(
         container: FlexBoxStyler()
@@ -106,7 +104,8 @@ class FortalCalloutStyles {
             .paddingX(16.0)
             .spacing(FortalTokens.space2()),
         text: TextStyler(style: FortalTokens.text2.mix()),
-        icon: IconStyler(size: 20.0), // --line-height-3 approximated as 20px
+        // Icon sized to match text line-height (follows 16/20/24 scale)
+        icon: IconStyler(size: 20.0),
       ),
       FortalCalloutSize.size3 => RemixCalloutStyle(
         container: FlexBoxStyler()
@@ -114,7 +113,8 @@ class FortalCalloutStyles {
             .paddingX(20.0)
             .spacing(FortalTokens.space3()),
         text: TextStyler(style: FortalTokens.text3.mix()),
-        icon: IconStyler(size: 24.0), // TODO: confirm with token mapping
+        // Icon sized to match text line-height (follows 16/20/24 scale)
+        icon: IconStyler(size: 24.0),
       ),
     };
   }

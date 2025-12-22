@@ -84,37 +84,37 @@ class _VariantSection extends StatelessWidget {
       runSpacing: 16,
       children: [
         // Solid variant
-        FortalButtonStyle.solid().call(
+        FortalButtonStyles.solid().call(
           label: 'Solid',
           onPressed: () => _showSnackBar(context, 'Solid button pressed'),
         ),
 
         // Soft variant
-        FortalButtonStyle.soft().call(
+        FortalButtonStyles.soft().call(
           label: 'Soft',
           onPressed: () => _showSnackBar(context, 'Soft button pressed'),
         ),
 
         // Surface variant
-        FortalButtonStyle.surface().call(
+        FortalButtonStyles.surface().call(
           label: 'Surface',
           onPressed: () => _showSnackBar(context, 'Surface button pressed'),
         ),
 
         // Outline variant
-        FortalButtonStyle.outline().call(
+        FortalButtonStyles.outline().call(
           label: 'Outline',
           onPressed: () => _showSnackBar(context, 'Outline button pressed'),
         ),
 
         // Ghost variant
-        FortalButtonStyle.ghost().call(
+        FortalButtonStyles.ghost().call(
           label: 'Ghost',
           onPressed: () => _showSnackBar(context, 'Ghost button pressed'),
         ),
 
         // Surface variant
-        FortalButtonStyle.surface().call(
+        FortalButtonStyles.surface().call(
           label: 'Surface',
           onPressed: () => _showSnackBar(context, 'Surface button pressed'),
         ),
@@ -136,19 +136,19 @@ class _SizeSection extends StatelessWidget {
         Wrap(
           spacing: 8,
           children: [
-            FortalButtonStyle.solid(size: FortalButtonSize.size1).call(
+            FortalButtonStyles.solid(size: FortalButtonSize.size1).call(
               label: 'Solid',
               icon: Icons.check,
               // ignore: avoid_print
                 onPressed: () => print('Button pressed'),
             ),
-            FortalButtonStyle.soft(size: FortalButtonSize.size1).call(
+            FortalButtonStyles.soft(size: FortalButtonSize.size1).call(
               label: 'Soft',
               icon: Icons.star,
               // ignore: avoid_print
                 onPressed: () => print('Button pressed'),
             ),
-            FortalButtonStyle.outline(size: FortalButtonSize.size1).call(
+            FortalButtonStyles.outline(size: FortalButtonSize.size1).call(
               label: 'Outline',
               icon: Icons.favorite,
               // ignore: avoid_print
@@ -162,19 +162,19 @@ class _SizeSection extends StatelessWidget {
         Wrap(
           spacing: 8,
           children: [
-            FortalButtonStyle.solid(size: FortalButtonSize.size2).call(
+            FortalButtonStyles.solid(size: FortalButtonSize.size2).call(
               label: 'Solid',
               icon: Icons.check,
               // ignore: avoid_print
                 onPressed: () => print('Button pressed'),
             ),
-            FortalButtonStyle.soft(size: FortalButtonSize.size2).call(
+            FortalButtonStyles.soft(size: FortalButtonSize.size2).call(
               label: 'Soft',
               icon: Icons.star,
               // ignore: avoid_print
                 onPressed: () => print('Button pressed'),
             ),
-            FortalButtonStyle.outline(size: FortalButtonSize.size2).call(
+            FortalButtonStyles.outline(size: FortalButtonSize.size2).call(
               label: 'Outline',
               icon: Icons.favorite,
               // ignore: avoid_print
@@ -188,19 +188,19 @@ class _SizeSection extends StatelessWidget {
         Wrap(
           spacing: 8,
           children: [
-            FortalButtonStyle.solid(size: FortalButtonSize.size3).call(
+            FortalButtonStyles.solid(size: FortalButtonSize.size3).call(
               label: 'Solid',
               icon: Icons.check,
               // ignore: avoid_print
                 onPressed: () => print('Button pressed'),
             ),
-            FortalButtonStyle.soft(size: FortalButtonSize.size3).call(
+            FortalButtonStyles.soft(size: FortalButtonSize.size3).call(
               label: 'Soft',
               icon: Icons.star,
               // ignore: avoid_print
                 onPressed: () => print('Button pressed'),
             ),
-            FortalButtonStyle.outline(size: FortalButtonSize.size3).call(
+            FortalButtonStyles.outline(size: FortalButtonSize.size3).call(
               label: 'Outline',
               icon: Icons.favorite,
               // ignore: avoid_print
@@ -214,19 +214,19 @@ class _SizeSection extends StatelessWidget {
         Wrap(
           spacing: 8,
           children: [
-            FortalButtonStyle.solid(size: FortalButtonSize.size4).call(
+            FortalButtonStyles.solid(size: FortalButtonSize.size4).call(
               label: 'Solid',
               icon: Icons.check,
               // ignore: avoid_print
                 onPressed: () => print('Button pressed'),
             ),
-            FortalButtonStyle.soft(size: FortalButtonSize.size4).call(
+            FortalButtonStyles.soft(size: FortalButtonSize.size4).call(
               label: 'Soft',
               icon: Icons.star,
               // ignore: avoid_print
                 onPressed: () => print('Button pressed'),
             ),
-            FortalButtonStyle.outline(size: FortalButtonSize.size4).call(
+            FortalButtonStyles.outline(size: FortalButtonSize.size4).call(
               label: 'Outline',
               icon: Icons.favorite,
               // ignore: avoid_print
@@ -249,10 +249,10 @@ class _StateSection extends StatelessWidget {
       runSpacing: 16,
       children: [
         // Normal state
-        FortalButtonStyle.solid().call(label: 'Normal', onPressed: () {}),
+        FortalButtonStyles.solid().call(label: 'Normal', onPressed: () {}),
 
         // Loading state
-        FortalButtonStyle.solid().call(
+        FortalButtonStyles.solid().call(
           label: 'Loading',
           loading: true,
           // ignore: avoid_print
@@ -260,14 +260,14 @@ class _StateSection extends StatelessWidget {
         ),
 
         // Disabled state
-        FortalButtonStyle.solid().call(
+        FortalButtonStyles.solid().call(
           label: 'Disabled',
           enabled: false,
           onPressed: null,
         ),
 
         // With icon
-        FortalButtonStyle.solid().call(
+        FortalButtonStyles.solid().call(
           label: 'With Icon',
           icon: Icons.download,
           // ignore: avoid_print

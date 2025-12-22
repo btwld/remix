@@ -185,7 +185,7 @@ class MyApp extends StatelessWidget {
             child: RemixButton(
               onPressed: () {},
               label: 'Fortal Button',
-              style: FortalButtonStyle.solid(), // Prebuilt style
+              style: FortalButtonStyles.solid(), // Prebuilt style
             ),
           ),
         ),
@@ -200,7 +200,7 @@ class MyApp extends StatelessWidget {
 Fortal styles are built using the Remix styling API, so you can easily extend and customize them:
 
 ```dart
-final style = FortalButtonStyle.solid()
+final style = FortalButtonStyles.solid()
   .borderRadiusAll(const Radius.circular(8))
   .paddingX(32)
   .onHovered(

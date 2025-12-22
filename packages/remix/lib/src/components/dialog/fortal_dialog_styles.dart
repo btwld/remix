@@ -1,13 +1,13 @@
 part of 'dialog.dart';
 
-/// FortalDialogStyle utility class for creating Fortal-themed dialog styles.
+/// FortalDialogStyles utility class for creating Fortal-themed dialog styles.
 ///
 /// Provides static methods for accessing dialog styles configured with
 /// Fortal design tokens.
-class FortalDialogStyle {
-  const FortalDialogStyle._();
+class FortalDialogStyles {
+  const FortalDialogStyles._();
 
-  /// Factory constructor for FortalDialogStyle.
+  /// Factory constructor for FortalDialogStyles.
   ///
   /// Returns a RemixDialogStyle configured with Fortal design tokens.
   static RemixDialogStyle create() {

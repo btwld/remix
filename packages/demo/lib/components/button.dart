@@ -60,7 +60,7 @@ Widget buildButtonUseCase(BuildContext context) {
             label: 'Icon',
             initialValue: Icons.touch_app,
           ),
-          style: FortalButtonStyle.create(
+          style: FortalButtonStyles.create(
             variant: context.knobs.object.dropdown(
               label: 'variant',
               options: FortalButtonVariant.values,
