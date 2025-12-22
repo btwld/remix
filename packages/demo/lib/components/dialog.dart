@@ -8,7 +8,7 @@ final _key = GlobalKey();
   name: 'Dialog Component',
   type: RemixDialog,
 )
-Widget buildDividerUseCase(BuildContext context) {
+Widget buildDialogUseCase(BuildContext context) {
   return KeyedSubtree(
     key: _key,
     child: Scaffold(

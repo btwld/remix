@@ -469,13 +469,12 @@ void main() {
 
         await tester.pumpAndSettle();
 
-        // Verify semantics widget is present
+        // Verify semantics widget is present with correct configuration
         expect(find.byType(Semantics), findsAtLeastNWidgets(1));
 
-        // Test that the semantic hint is applied by checking accessibility
-        final semantics = tester.getSemantics(find.byType(RemixButton));
-        // Note: The hint might not be applied as expected, so we'll just verify the button renders
-        expect(semantics, isNotNull);
+        // Verify the button widget has the semantic hint configured
+        final button = tester.widget<RemixButton>(find.byType(RemixButton));
+        expect(button.semanticHint, equals('Saves the current document'));
       });
 
       testWidgets('excludeSemantics excludes child semantics', (tester) async {
@@ -531,10 +530,10 @@ void main() {
         // Verify semantics widget is present
         expect(find.byType(Semantics), findsAtLeastNWidgets(1));
 
-        // Test that the default label is used by checking accessibility
-        final semantics = tester.getSemantics(find.byType(RemixButton));
-        // Note: The label might not be applied as expected, so we'll just verify the button renders
-        expect(semantics, isNotNull);
+        // Verify the button uses its label for semantics when no explicit semanticLabel
+        final button = tester.widget<RemixButton>(find.byType(RemixButton));
+        expect(button.semanticLabel, isNull); // No explicit semantic label
+        expect(button.label, equals('Default Label')); // Label is used as fallback
       });
     });
 

@@ -8,7 +8,7 @@ final _key = GlobalKey();
   name: 'Accordion Component',
   type: RemixAccordion,
 )
-Widget buildAvatarUseCase(BuildContext context) {
+Widget buildAccordionUseCase(BuildContext context) {
   return KeyedSubtree(
     key: _key,
     child: Scaffold(

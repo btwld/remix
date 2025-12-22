@@ -42,7 +42,7 @@ final directories = <_widgetbook.WidgetbookNode>[
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Accordion Component',
-            builder: _demo_components_accordion.buildAvatarUseCase,
+            builder: _demo_components_accordion.buildAccordionUseCase,
           )
         ],
       ),
@@ -105,7 +105,7 @@ final directories = <_widgetbook.WidgetbookNode>[
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Dialog Component',
-            builder: _demo_components_dialog.buildDividerUseCase,
+            builder: _demo_components_dialog.buildDialogUseCase,
           )
         ],
       ),

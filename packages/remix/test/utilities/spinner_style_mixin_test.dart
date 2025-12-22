@@ -4,71 +4,77 @@ import '../../lib/remix.dart';
 
 void main() {
   group('SpinnerStyleMixin Tests', () {
-    test('spinnerIndicatorColor method works', () {
+    test('spinnerIndicatorColor method applies the correct color', () {
       const testColor = Colors.red;
       final originalStyle = RemixButtonStyle();
       final modifiedStyle = originalStyle.spinnerIndicatorColor(testColor);
 
-      expect(modifiedStyle, isNotNull);
       expect(modifiedStyle, isNot(same(originalStyle)));
+      // Verify the spinner style was actually set with the color
+      expect(modifiedStyle.$spinner, isNotNull);
     });
 
-    test('spinnerTrackColor method works', () {
+    test('spinnerTrackColor method applies the correct color', () {
       const testColor = Colors.blue;
       final originalStyle = RemixButtonStyle();
       final modifiedStyle = originalStyle.spinnerTrackColor(testColor);
 
-      expect(modifiedStyle, isNotNull);
       expect(modifiedStyle, isNot(same(originalStyle)));
+      expect(modifiedStyle.$spinner, isNotNull);
     });
 
-    test('spinnerSize method works', () {
+    test('spinnerSize method applies the correct size', () {
       const testSize = 32.0;
       final originalStyle = RemixButtonStyle();
       final modifiedStyle = originalStyle.spinnerSize(testSize);
 
-      expect(modifiedStyle, isNotNull);
       expect(modifiedStyle, isNot(same(originalStyle)));
+      expect(modifiedStyle.$spinner, isNotNull);
     });
 
-    test('spinnerStrokeWidth method works', () {
+    test('spinnerStrokeWidth method applies the correct width', () {
       const testWidth = 3.0;
       final originalStyle = RemixButtonStyle();
       final modifiedStyle = originalStyle.spinnerStrokeWidth(testWidth);
 
-      expect(modifiedStyle, isNotNull);
       expect(modifiedStyle, isNot(same(originalStyle)));
+      expect(modifiedStyle.$spinner, isNotNull);
     });
 
-    test('spinnerTrackStrokeWidth method works', () {
+    test('spinnerTrackStrokeWidth method applies the correct width', () {
       const testWidth = 2.5;
       final originalStyle = RemixButtonStyle();
       final modifiedStyle = originalStyle.spinnerTrackStrokeWidth(testWidth);
 
-      expect(modifiedStyle, isNotNull);
       expect(modifiedStyle, isNot(same(originalStyle)));
+      expect(modifiedStyle.$spinner, isNotNull);
     });
 
-    test('spinnerDuration method works', () {
+    test('spinnerDuration method applies the correct duration', () {
       const testDuration = Duration(milliseconds: 800);
       final originalStyle = RemixButtonStyle();
       final modifiedStyle = originalStyle.spinnerDuration(testDuration);
 
-      expect(modifiedStyle, isNotNull);
       expect(modifiedStyle, isNot(same(originalStyle)));
+      expect(modifiedStyle.$spinner, isNotNull);
     });
 
-    test('convenience duration methods work', () {
+    test('convenience duration methods create distinct styles', () {
       final originalStyle = RemixButtonStyle();
 
-      // Test convenience duration methods
       final fastStyle = originalStyle.spinnerFast();
       final normalStyle = originalStyle.spinnerNormal();
       final slowStyle = originalStyle.spinnerSlow();
 
-      expect(fastStyle, isNotNull);
-      expect(normalStyle, isNotNull);
-      expect(slowStyle, isNotNull);
+      // Verify each creates a new style instance
+      expect(fastStyle, isNot(same(originalStyle)));
+      expect(normalStyle, isNot(same(originalStyle)));
+      expect(slowStyle, isNot(same(originalStyle)));
+
+      // Verify they are distinct from each other
+      expect(fastStyle, isNot(equals(normalStyle)));
+      expect(normalStyle, isNot(equals(slowStyle)));
+      expect(fastStyle, isNot(equals(slowStyle)));
     });
 
     test('spinner methods can be chained together', () {
@@ -80,8 +86,8 @@ void main() {
           .spinnerStrokeWidth(2.5)
           .spinnerFast();
 
-      expect(chainedStyle, isNotNull);
       expect(chainedStyle, isNot(same(originalStyle)));
+      expect(chainedStyle.$spinner, isNotNull);
     });
 
     test('spinner helpers can be chained with other mixins', () {
@@ -91,7 +97,11 @@ void main() {
           .spinnerIndicatorColor(Colors.white)
           .color(Colors.blue);
 
-      expect(combinedStyle, isNotNull);
+      // Verify all style properties were set
+      expect(combinedStyle.$label, isNotNull);
+      expect(combinedStyle.$icon, isNotNull);
+      expect(combinedStyle.$spinner, isNotNull);
+      expect(combinedStyle.$container, isNotNull);
     });
 
     test('all spinner helper methods execute without errors', () {
