@@ -24,10 +24,14 @@ melos:
       environment:
         sdk: ">=3.10.0 <4.0.0"
         flutter: ">=3.38.1"
+      runPubGetInParallel: false
+      usePubspecOverrides: true
+      hooks:
+        pre: flutter pub get
 
-  scripts: 
+  scripts:
     test:flutter:
-      run: melos exec -- flutter test 
+      run: melos exec -- flutter test
       description: Run flutter test
       packageFilters:
         dirExists: test
