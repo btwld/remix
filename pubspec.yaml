@@ -17,3 +17,26 @@ workspace:
   - packages/example
   - packages/playground
   - packages/remix
+
+melos:
+  packages:
+    - packages/*
+
+  command:
+    bootstrap:
+      environment:
+        sdk: ">=3.10.0 <4.0.0"
+        flutter: ">=3.38.1"
+
+  scripts:
+    test:flutter:
+      run: melos exec -- flutter test
+      description: Run flutter test
+      packageFilters:
+        dirExists: test
+
+    ci:
+      run: melos run test:flutter
+      description: Run flutter and dart tests
+      packageFilters:
+        dirExists: test
