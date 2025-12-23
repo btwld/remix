@@ -114,7 +114,7 @@ class RemixTabBarStyle
 
   @override
   RemixTabBarStyle flex(FlexStyler value) {
-    return merge(RemixTabBarStyle(container: FlexBoxStyler()));
+    return merge(RemixTabBarStyle(container: FlexBoxStyler().flex(value)));
   }
 
   @override
@@ -385,7 +385,7 @@ class RemixTabStyle extends RemixFlexContainerStyle<RemixTabSpec, RemixTabStyle>
   // Mixin implementations - delegate to container
   @override
   RemixTabStyle flex(FlexStyler value) {
-    return merge(RemixTabStyle(container: FlexBoxStyler()));
+    return merge(RemixTabStyle(container: FlexBoxStyler().flex(value)));
   }
 
   @override
