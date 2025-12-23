@@ -19,8 +19,8 @@ class FortalDividerStyles {
     FortalDividerSize size = FortalDividerSize.size1,
   }) {
     // NOTE: JSON exposes "separator-size: 100%" (length), not thickness.
-    // We map sizes to typical thickness and a neutral gray color.
-    // TODO: Add orientation-aware sizing if/when exposed by spec.
+    // We map sizes to typical thickness and a neutral gray color. Orientation
+    // is handled by RemixDividerStyle rather than this factory.
     return RemixDividerStyle()
         .color(FortalTokens.gray6())
         .merge(_sizeStyle(size));
