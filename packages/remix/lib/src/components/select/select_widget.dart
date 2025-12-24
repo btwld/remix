@@ -128,7 +128,7 @@ class RemixSelect<T> extends StatefulWidget {
   /// The style configuration for the select.
   final RemixSelectStyle style;
 
-  static late final styleFrom = RemixSelectStyle.new;
+  static final styleFrom = RemixSelectStyle.new;
 
   @override
   State<RemixSelect<T>> createState() => _RemixSelectState<T>();

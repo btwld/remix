@@ -115,7 +115,7 @@ class RemixDialog extends StatelessWidget {
   /// The style configuration for the dialog.
   final RemixDialogStyle style;
 
-  static late final styleFrom = RemixDialogStyle.new;
+  static final styleFrom = RemixDialogStyle.new;
 
   @override
   Widget build(BuildContext context) {

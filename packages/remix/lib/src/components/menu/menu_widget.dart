@@ -37,7 +37,7 @@ final class RemixMenuItem<T> extends RemixMenuItemData<T> {
   final T value;
 
   /// The text label to display.
-  final String? label;
+  final String label;
 
   /// Icon to display before the label.
   final IconData? leadingIcon;
@@ -59,14 +59,14 @@ final class RemixMenuItem<T> extends RemixMenuItemData<T> {
 
   const RemixMenuItem({
     required this.value,
-    this.label,
+    required this.label,
     this.leadingIcon,
     this.trailingIcon,
     this.enabled = true,
     this.closeOnActivate = true,
     this.semanticLabel,
     this.style = const RemixMenuItemStyle.create(),
-  }) : assert(label != null, 'Must provide label for menu item');
+  });
 }
 
 /// Data class representing a menu divider.
@@ -110,7 +110,7 @@ final class RemixMenuDivider<T> extends RemixMenuItemData<T> {
 ///   onSelected: (value) => print(value),
 /// )
 /// ```
-class RemixMenu<T> extends StatelessWidget {
+class RemixMenu<T> extends StatefulWidget {
   const RemixMenu({
     super.key,
     required this.trigger,
@@ -175,7 +175,23 @@ class RemixMenu<T> extends StatelessWidget {
   /// The style configuration for the menu.
   final RemixMenuStyle style;
 
-  static late final styleFrom = RemixMenuStyle.new;
+  static final styleFrom = RemixMenuStyle.new;
+
+  @override
+  State<RemixMenu<T>> createState() => _RemixMenuState<T>();
+}
+
+class _RemixMenuState<T> extends State<RemixMenu<T>> {
+  late final MenuController _internalController;
+
+  @override
+  void initState() {
+    super.initState();
+    _internalController = widget.controller ?? MenuController();
+  }
+
+  MenuController get _effectiveController =>
+      widget.controller ?? _internalController;
 
   RemixMenuStyle _buildStyle() {
     return RemixMenuStyle()
@@ -185,14 +201,11 @@ class RemixMenu<T> extends StatelessWidget {
               .mainAxisSize(.min)
               .wrap(WidgetModifierConfig.intrinsicWidth()),
         )
-        .merge(style);
+        .merge(widget.style);
   }
 
   @override
   Widget build(BuildContext context) {
-    // Use provided controller or create a default one
-    final effectiveController = controller ?? MenuController();
-
     return NakedMenu<T>(
       // Render items list with direct spec passing
       overlayBuilder: (context, info) {
@@ -201,7 +214,7 @@ class RemixMenu<T> extends StatelessWidget {
           builder: (context, spec) {
             return ColumnBox(
               styleSpec: spec.overlay,
-              children: items.map((item) {
+              children: widget.items.map((item) {
                 // Pattern matching ensures exhaustiveness
                 return switch (item) {
                   RemixMenuItem<T>() => _RemixMenuItemWidget<T>(data: item),
@@ -214,18 +227,18 @@ class RemixMenu<T> extends StatelessWidget {
           },
         );
       },
-      controller: effectiveController,
-      onSelected: onSelected,
-      onOpen: onOpen,
-      onClose: onClose,
-      onCanceled: onCanceled,
-      onOpenRequested: onOpenRequested,
-      onCloseRequested: onCloseRequested,
-      consumeOutsideTaps: consumeOutsideTaps,
-      useRootOverlay: useRootOverlay,
-      closeOnClickOutside: closeOnClickOutside,
-      triggerFocusNode: triggerFocusNode,
-      positioning: positioning,
+      controller: _effectiveController,
+      onSelected: widget.onSelected,
+      onOpen: widget.onOpen,
+      onClose: widget.onClose,
+      onCanceled: widget.onCanceled,
+      onOpenRequested: widget.onOpenRequested,
+      onCloseRequested: widget.onCloseRequested,
+      consumeOutsideTaps: widget.consumeOutsideTaps,
+      useRootOverlay: widget.useRootOverlay,
+      closeOnClickOutside: widget.closeOnClickOutside,
+      triggerFocusNode: widget.triggerFocusNode,
+      positioning: widget.positioning,
       // Render trigger from RemixMenuTrigger data
       builder: (context, state, _) {
         return StyleBuilder(
@@ -238,9 +251,10 @@ class RemixMenu<T> extends StatelessWidget {
             return RowBox(
               styleSpec: triggerSpec.container,
               children: [
-                StyledText(trigger.label, styleSpec: triggerSpec.label),
-                if (trigger.icon != null)
-                  StyledIcon(icon: trigger.icon!, styleSpec: triggerSpec.icon),
+                StyledText(widget.trigger.label, styleSpec: triggerSpec.label),
+                if (widget.trigger.icon != null)
+                  StyledIcon(
+                      icon: widget.trigger.icon!, styleSpec: triggerSpec.icon),
               ],
             );
           },
@@ -283,8 +297,7 @@ class _RemixMenuItemWidget<T> extends StatelessWidget {
                     icon: data.leadingIcon!,
                     styleSpec: spec.leadingIcon,
                   ),
-                if (data.label != null)
-                  StyledText(data.label!, styleSpec: spec.label),
+                StyledText(data.label, styleSpec: spec.label),
                 if (data.trailingIcon != null)
                   StyledIcon(
                     icon: data.trailingIcon!,

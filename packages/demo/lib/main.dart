@@ -19,12 +19,7 @@ class HotReload extends StatelessWidget {
       addons: [
         FortalThemeAddon(),
       ],
-      appBuilder: (context, child) {
-        return createFortalScope(
-          child: child,
-          brightness: Theme.of(context).brightness,
-        );
-      },
+      appBuilder: (context, child) => child,
       directories: directories,
     );
   }

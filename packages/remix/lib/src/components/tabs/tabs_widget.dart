@@ -94,7 +94,7 @@ class RemixTabBar extends StatelessWidget {
   /// Style applied to the tab bar container.
   final RemixTabBarStyle style;
 
-  static late final styleFrom = RemixTabBarStyle.new;
+  static final styleFrom = RemixTabBarStyle.new;
 
   @override
   Widget build(BuildContext context) {
@@ -176,7 +176,7 @@ class RemixTab extends StatelessWidget {
   /// Optional label text for the tab.
   final String? label;
 
-  static late final styleFrom = RemixTabStyle.new;
+  static final styleFrom = RemixTabStyle.new;
 
   Widget _buildTabContent(
     BuildContext context,
@@ -241,7 +241,7 @@ class RemixTabView extends StatelessWidget {
   /// Style applied to the tab view container.
   final RemixTabViewStyle style;
 
-  static late final styleFrom = RemixTabViewStyle.new;
+  static final styleFrom = RemixTabViewStyle.new;
 
   @override
   Widget build(BuildContext context) {

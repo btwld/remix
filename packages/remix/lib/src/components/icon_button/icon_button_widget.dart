@@ -56,7 +56,6 @@ class RemixIconButton extends StatelessWidget {
     this.enableFeedback = true,
     required this.onPressed,
     this.onLongPress,
-    this.onDoubleTap,
     this.focusNode,
     this.semanticLabel,
     this.semanticHint,
@@ -68,7 +67,7 @@ class RemixIconButton extends StatelessWidget {
 
   final RemixIconButtonSpec? styleSpec;
 
-  static late final styleFrom = RemixIconButtonStyle.new;
+  static final styleFrom = RemixIconButtonStyle.new;
 
   /// Whether the button is in a loading state.
   ///
@@ -82,9 +81,6 @@ class RemixIconButton extends StatelessWidget {
 
   /// Callback function called when the button is long pressed.
   final VoidCallback? onLongPress;
-
-  /// Callback function called when the button is double tapped.
-  final VoidCallback? onDoubleTap;
 
   /// Optional focus node to control the button's focus behavior.
   final FocusNode? focusNode;

@@ -78,7 +78,7 @@ class RemixCheckbox extends StatelessWidget {
   /// The style spec for the checkbox.
   final RemixCheckboxSpec? styleSpec;
 
-  static late final styleFrom = RemixCheckboxStyle.new;
+  static final styleFrom = RemixCheckboxStyle.new;
 
   /// Whether to provide haptic feedback when the checkbox is toggled.
   /// Defaults to true.

@@ -73,7 +73,6 @@ class RemixTextField extends StatelessWidget {
     this.styleSpec,
     this.leading,
     this.trailing,
-    this.onPressed,
     this.semanticLabel,
     this.semanticHint,
     this.excludeSemantics = false,
@@ -239,9 +238,6 @@ class RemixTextField extends StatelessWidget {
   /// A widget to display at the trailing edge of the text field.
   final Widget? trailing;
 
-  /// Called when the text field is pressed (for tap interactions).
-  final VoidCallback? onPressed;
-
   /// The semantic label for the text field.
   final String? semanticLabel;
 
@@ -257,7 +253,7 @@ class RemixTextField extends StatelessWidget {
   /// The style spec for the text field.
   final RemixTextFieldSpec? styleSpec;
 
-  static late final styleFrom = RemixTextFieldStyle.new;
+  static final styleFrom = RemixTextFieldStyle.new;
 
   @override
   Widget build(BuildContext context) {

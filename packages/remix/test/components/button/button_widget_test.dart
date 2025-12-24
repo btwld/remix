@@ -316,27 +316,9 @@ void main() {
         expect(longPressCount, equals(1));
       });
 
-      testWidgets('onDoubleTap is stored on the widget', (tester) async {
-        void handleDoubleTap() {}
-
-        await tester.pumpRemixApp(
-          RemixButton(
-            label: 'Double Tap Me',
-            onPressed: () {},
-            onDoubleTap: handleDoubleTap,
-          ),
-        );
-
-        await tester.pumpAndSettle();
-
-        final button = tester.widget<RemixButton>(find.byType(RemixButton));
-        expect(button.onDoubleTap, equals(handleDoubleTap));
-      });
-
       testWidgets('callbacks do not fire when disabled', (tester) async {
         int pressCount = 0;
         int longPressCount = 0;
-        int doubleTapCount = 0;
 
         await tester.pumpRemixApp(
           RemixButton(
@@ -344,7 +326,6 @@ void main() {
             enabled: false,
             onPressed: () => pressCount++,
             onLongPress: () => longPressCount++,
-            onDoubleTap: () => doubleTapCount++,
           ),
         );
 
@@ -353,14 +334,10 @@ void main() {
         // Try all interactions
         await tester.tap(find.byType(RemixButton));
         await tester.longPress(find.byType(RemixButton));
-        await tester.tap(find.byType(RemixButton));
-        await tester.pump(const Duration(milliseconds: 100));
-        await tester.tap(find.byType(RemixButton));
         await tester.pumpAndSettle();
 
         expect(pressCount, equals(0));
         expect(longPressCount, equals(0));
-        expect(doubleTapCount, equals(0));
       });
 
       testWidgets('callbacks do not fire when loading', (tester) async {

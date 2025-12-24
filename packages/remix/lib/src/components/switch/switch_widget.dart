@@ -44,7 +44,7 @@ class RemixSwitch extends StatelessWidget {
   /// The style spec for the switch.
   final RemixSwitchSpec? styleSpec;
 
-  static late final styleFrom = RemixSwitchStyle.new;
+  static final styleFrom = RemixSwitchStyle.new;
 
   /// Whether to enable haptic feedback when toggled.
   final bool enableFeedback;

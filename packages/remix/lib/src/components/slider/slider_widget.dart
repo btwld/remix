@@ -61,7 +61,7 @@ class RemixSlider extends StatelessWidget {
   /// The style spec for the slider.
   final RemixSliderSpec? styleSpec;
 
-  static late final styleFrom = RemixSliderStyle.new;
+  static final styleFrom = RemixSliderStyle.new;
 
   /// Whether the slider is enabled for interaction.
   final bool enabled;
