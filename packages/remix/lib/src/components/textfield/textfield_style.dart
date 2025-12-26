@@ -359,7 +359,7 @@ class RemixTextFieldStyle
   // FlexStyleMixin implementation
   @override
   RemixTextFieldStyle flex(FlexStyler value) {
-    return merge(RemixTextFieldStyle(container: FlexBoxStyler()));
+    return merge(RemixTextFieldStyle(container: FlexBoxStyler().flex(value)));
   }
 
   @override
@@ -379,6 +379,7 @@ class RemixTextFieldStyle
     $keyboardAppearance,
     $spacing,
     $container,
+    $label,
     $helperText,
     $variants,
     $animation,

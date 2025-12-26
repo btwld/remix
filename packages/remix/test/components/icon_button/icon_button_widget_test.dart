@@ -25,7 +25,6 @@ void main() {
             icon: Icons.delete,
             onPressed: () {},
             onLongPress: () {},
-            onDoubleTap: () {},
             autofocus: false,
             loading: false,
             enableFeedback: true,
@@ -169,21 +168,6 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(callbackCount, equals(1));
-      });
-
-      testWidgets('handles onDoubleTap callback', (tester) async {
-        await tester.pumpRemixApp(
-          RemixIconButton(
-            icon: Icons.add,
-            onPressed: () {},
-            onDoubleTap: () {},
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixIconButton), findsOneWidget);
-        expect(find.byType(Box), findsOneWidget);
-        expect(find.byType(StyledIcon), findsOneWidget);
       });
 
       testWidgets('does not call callbacks when disabled', (tester) async {

@@ -128,7 +128,7 @@ class RemixSelect<T> extends StatefulWidget {
   /// The style configuration for the select.
   final RemixSelectStyle style;
 
-  static late final styleFrom = RemixSelectStyle.new;
+  static final styleFrom = RemixSelectStyle.new;
 
   @override
   State<RemixSelect<T>> createState() => _RemixSelectState<T>();
@@ -179,6 +179,13 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
         return item.label;
       }
     }
+
+    // Assert in debug mode to catch developer errors
+    assert(
+      false,
+      'RemixSelect: selectedValue "${widget.selectedValue}" not found in items. '
+      'Ensure selectedValue matches one of the item values.',
+    );
 
     // Gracefully degrade in release mode - show placeholder
     return widget.trigger.placeholder;
@@ -255,22 +262,33 @@ class _AnimatedOverlayMenu extends StatefulWidget {
 }
 
 class _AnimatedOverlayMenuState extends State<_AnimatedOverlayMenu> {
-  late final Animation<double> fadeAnimation;
+  late final CurvedAnimation _fadeCurve;
+  late final CurvedAnimation _scaleCurve;
   late final Animation<double> scaleAnimation;
+
+  Animation<double> get fadeAnimation => _fadeCurve;
 
   @override
   void initState() {
     super.initState();
 
     widget.controller.duration = widget.duration;
-    fadeAnimation = CurvedAnimation(
+    _fadeCurve = CurvedAnimation(
       parent: widget.controller,
       curve: widget.curve,
     );
-    scaleAnimation = CurvedAnimation(
+    _scaleCurve = CurvedAnimation(
       parent: widget.controller,
       curve: widget.curve,
-    ).drive(Tween<double>(begin: 0.95, end: 1.0));
+    );
+    scaleAnimation = _scaleCurve.drive(Tween<double>(begin: 0.95, end: 1.0));
+  }
+
+  @override
+  void dispose() {
+    _fadeCurve.dispose();
+    _scaleCurve.dispose();
+    super.dispose();
   }
 
   @override

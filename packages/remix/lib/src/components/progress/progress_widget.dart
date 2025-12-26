@@ -42,7 +42,7 @@ class RemixProgress extends StyleWidget<RemixProgressSpec> {
               final biggestSize = constraints.biggest;
 
               return SizedBox(
-                width: biggestSize.width * value,
+                width: biggestSize.width * value.clamp(0.0, 1.0),
                 child: Box(styleSpec: spec.indicator),
               );
             },

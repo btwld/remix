@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import '../../../lib/remix.dart';
@@ -46,6 +48,31 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.text('Trigger'), findsOneWidget);
+      });
+    });
+
+    group('Interaction', () {
+      testWidgets('shows tooltip on hover', (tester) async {
+        await tester.pumpRemixApp(
+          RemixTooltip(
+            style: RemixTooltipStyle().waitDuration(Duration.zero),
+            tooltipChild: const Text('Tooltip Content'),
+            child: const Icon(Icons.info),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final gesture = await tester.createGesture(
+          kind: PointerDeviceKind.mouse,
+        );
+        await gesture.addPointer(location: Offset.zero);
+        await tester.pump();
+
+        await gesture.moveTo(tester.getCenter(find.byIcon(Icons.info)));
+        await tester.pump();
+        await tester.pumpAndSettle();
+
+        expect(find.text('Tooltip Content'), findsOneWidget);
       });
     });
 
@@ -188,7 +215,8 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        expect(find.byType(RemixTooltip), findsOneWidget);
+        final tooltip = tester.widget<RemixTooltip>(find.byType(RemixTooltip));
+        expect(tooltip.tooltipSemantics, equals('Info tooltip'));
       });
 
       testWidgets('works without semantic label', (tester) async {
@@ -200,7 +228,8 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        expect(find.byType(RemixTooltip), findsOneWidget);
+        final tooltip = tester.widget<RemixTooltip>(find.byType(RemixTooltip));
+        expect(tooltip.tooltipSemantics, isNull);
       });
     });
 

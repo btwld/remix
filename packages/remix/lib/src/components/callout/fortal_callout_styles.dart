@@ -87,7 +87,8 @@ class FortalCalloutStyles {
 
   static RemixCalloutStyle _sizeStyle(FortalCalloutSize size) {
     // NOTE: JSON token "callout-icon-height: var(--line-height-3)" implies
-    // icon sized to match text line-height. We approximate sizes below.
+    // icon sized to match text line-height. Use the 16/20/24 scale to align
+    // icons with the text styles below.
     return switch (size) {
       FortalCalloutSize.size1 => RemixCalloutStyle(
         container: FlexBoxStyler()
@@ -95,10 +96,7 @@ class FortalCalloutStyles {
             .paddingX(12.0)
             .spacing(FortalTokens.space2()), // 8px between icon and text
         text: TextStyler(style: FortalTokens.text1.mix()),
-        icon: IconStyler(
-          // TODO: align to exact line-height token if exposed
-          size: 16.0,
-        ),
+        icon: IconStyler(size: 16.0),
       ),
       FortalCalloutSize.size2 => RemixCalloutStyle(
         container: FlexBoxStyler()
@@ -106,7 +104,7 @@ class FortalCalloutStyles {
             .paddingX(16.0)
             .spacing(FortalTokens.space2()),
         text: TextStyler(style: FortalTokens.text2.mix()),
-        icon: IconStyler(size: 20.0), // --line-height-3 approximated as 20px
+        icon: IconStyler(size: 20.0),
       ),
       FortalCalloutSize.size3 => RemixCalloutStyle(
         container: FlexBoxStyler()
@@ -114,7 +112,7 @@ class FortalCalloutStyles {
             .paddingX(20.0)
             .spacing(FortalTokens.space3()),
         text: TextStyler(style: FortalTokens.text3.mix()),
-        icon: IconStyler(size: 24.0), // TODO: confirm with token mapping
+        icon: IconStyler(size: 24.0),
       ),
     };
   }

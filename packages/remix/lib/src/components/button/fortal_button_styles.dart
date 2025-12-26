@@ -184,7 +184,9 @@ class FortalButtonStyle {
               .labelColor(FortalTokens.gray8())
               .iconColor(FortalTokens.gray8())
               .spinner(
-                RemixSpinnerStyle().indicatorColor(FortalTokens.accent11()),
+                RemixSpinnerStyle()
+                    .indicatorColor(FortalTokens.gray8())
+                    .strokeWidth(FortalTokens.borderWidth1()),
               ),
         );
 

@@ -19,15 +19,18 @@ workspace:
   - packages/remix
 
 melos:
+  packages:
+    - packages/*
+
   command:
     bootstrap:
       environment:
         sdk: ">=3.10.0 <4.0.0"
         flutter: ">=3.38.1"
 
-  scripts: 
+  scripts:
     test:flutter:
-      run: melos exec -- flutter test 
+      run: melos exec -- flutter test
       description: Run flutter test
       packageFilters:
         dirExists: test

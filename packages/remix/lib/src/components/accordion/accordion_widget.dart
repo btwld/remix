@@ -152,7 +152,7 @@ class RemixAccordion<T> extends StatelessWidget {
   /// The transition builder for the accordion item.
   final Widget Function(Widget, Animation<double>) transitionBuilder;
 
-  static late final styleFrom = RemixAccordionStyle.new;
+  static final styleFrom = RemixAccordionStyle.new;
 
   Widget _buildDefaultTrigger(
     BuildContext context,

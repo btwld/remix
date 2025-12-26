@@ -25,7 +25,7 @@ class RemixTooltip extends StatelessWidget {
   /// The semantic label for the tooltip.
   final String? tooltipSemantics;
 
-  static late final styleFrom = RemixTooltipStyle.new;
+  static final styleFrom = RemixTooltipStyle.new;
 
   @override
   Widget build(BuildContext context) {

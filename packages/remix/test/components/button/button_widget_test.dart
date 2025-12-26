@@ -316,34 +316,9 @@ void main() {
         expect(longPressCount, equals(1));
       });
 
-      testWidgets('onDoubleTap fires on double tap', (tester) async {
-        int doubleTapCount = 0;
-
-        await tester.pumpRemixApp(
-          RemixButton(
-            label: 'Double Tap Me',
-            onPressed: () {},
-            onDoubleTap: () => doubleTapCount++,
-          ),
-        );
-
-        await tester.pumpAndSettle();
-
-        // Double tap the button with proper timing
-        await tester.tap(find.byType(RemixButton));
-        await tester.pump(const Duration(milliseconds: 50));
-        await tester.tap(find.byType(RemixButton));
-        await tester.pumpAndSettle();
-
-        // Note: Double tap might not work as expected with NakedButton
-        // This test verifies the callback is set up correctly
-        expect(doubleTapCount, greaterThanOrEqualTo(0));
-      });
-
       testWidgets('callbacks do not fire when disabled', (tester) async {
         int pressCount = 0;
         int longPressCount = 0;
-        int doubleTapCount = 0;
 
         await tester.pumpRemixApp(
           RemixButton(
@@ -351,7 +326,6 @@ void main() {
             enabled: false,
             onPressed: () => pressCount++,
             onLongPress: () => longPressCount++,
-            onDoubleTap: () => doubleTapCount++,
           ),
         );
 
@@ -360,14 +334,10 @@ void main() {
         // Try all interactions
         await tester.tap(find.byType(RemixButton));
         await tester.longPress(find.byType(RemixButton));
-        await tester.tap(find.byType(RemixButton));
-        await tester.pump(const Duration(milliseconds: 100));
-        await tester.tap(find.byType(RemixButton));
         await tester.pumpAndSettle();
 
         expect(pressCount, equals(0));
         expect(longPressCount, equals(0));
-        expect(doubleTapCount, equals(0));
       });
 
       testWidgets('callbacks do not fire when loading', (tester) async {
