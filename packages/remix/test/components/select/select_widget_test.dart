@@ -505,9 +505,12 @@ void main() {
         expect(find.text('Select'), findsOneWidget);
       });
 
-      testWidgets('displays placeholder when selected value not in items', (
+      testWidgets('asserts when selected value not in items', (
         tester,
       ) async {
+        // In debug mode, an assertion should be thrown when selectedValue
+        // doesn't match any item in the items list.
+        // The assertion happens during widget build, so we catch it via takeException.
         await tester.pumpRemixApp(
           RemixSelect<String>(
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
@@ -515,9 +518,10 @@ void main() {
             selectedValue: 'z',
           ),
         );
-        await tester.pumpAndSettle();
 
-        expect(find.text('Select'), findsOneWidget);
+        // Assertion error is caught by the test framework
+        final exception = tester.takeException();
+        expect(exception, isAssertionError);
       });
 
       testWidgets('handles rapid open/close', (tester) async {

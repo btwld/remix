@@ -311,7 +311,10 @@ class RemixTextField extends StatelessWidget {
       builder: (BuildContext context, state, Widget editableText) {
         final textFieldState = NakedTextFieldState.of(context);
 
-        WidgetStatesController controller = WidgetStatesController({
+        // Create a controller with the current states plus error state if needed.
+        // Note: This controller is used transiently for style resolution and
+        // doesn't need explicit disposal as it's not a listener subscription.
+        final controller = WidgetStatesController({
           ...NakedTextFieldState.controllerOf(context).value,
           if (error) WidgetState.error,
         });

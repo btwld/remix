@@ -483,11 +483,20 @@ class _TrackPropertiesTween extends Tween<_TrackProperties> {
 
   @override
   _TrackProperties lerp(double t) {
+    // Use null-safe fallbacks since lerp methods can return null
     return _TrackProperties(
-      rangeColor: Color.lerp(begin!.rangeColor, end!.rangeColor, t)!,
-      rangeWidth: lerpDouble(begin!.rangeWidth, end!.rangeWidth, t)!,
-      trackColor: Color.lerp(begin!.trackColor, end!.trackColor, t)!,
-      trackWidth: lerpDouble(begin!.trackWidth, end!.trackWidth, t)!,
+      rangeColor: Color.lerp(begin?.rangeColor, end?.rangeColor, t) ??
+          begin?.rangeColor ??
+          end!.rangeColor,
+      rangeWidth: lerpDouble(begin?.rangeWidth, end?.rangeWidth, t) ??
+          begin?.rangeWidth ??
+          end!.rangeWidth,
+      trackColor: Color.lerp(begin?.trackColor, end?.trackColor, t) ??
+          begin?.trackColor ??
+          end!.trackColor,
+      trackWidth: lerpDouble(begin?.trackWidth, end?.trackWidth, t) ??
+          begin?.trackWidth ??
+          end!.trackWidth,
     );
   }
 }

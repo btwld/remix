@@ -193,6 +193,8 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
   MenuController get _effectiveController =>
       widget.controller ?? _internalController;
 
+  // Note: MenuController doesn't require disposal - it's not a ChangeNotifier
+
   RemixMenuStyle _buildStyle() {
     return RemixMenuStyle()
         .trigger(RemixMenuTriggerStyle().mainAxisSize(MainAxisSize.min))
