@@ -235,18 +235,13 @@ void main() {
         'animate',
         initial: RemixDividerStyle(),
         modify: (style) => style.animate(
-          AnimationConfig(
-            duration: Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-          ),
+          AnimationConfig.linear(const Duration(milliseconds: 300)),
         ),
         expect: (style) {
-          expect(style.$animation, isNotNull);
           expect(
-            style.$animation?.duration,
-            equals(Duration(milliseconds: 300)),
+            style.$animation,
+            equals(AnimationConfig.linear(const Duration(milliseconds: 300))),
           );
-          expect(style.$animation?.curve, equals(Curves.easeInOut));
         },
       );
     });
