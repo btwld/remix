@@ -19,28 +19,10 @@ concurrency:
 
 jobs:
   test:
-    name: Run tests for all packages
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
-
-      - name: Flutter version
-        run: flutter --version
-
-      - name: Install melos
-        run: dart pub global activate melos
-
-      - name: Run flutter pub get at root
-        run: flutter pub get
-
-      - name: Bootstrap with melos
-        run: melos bootstrap
-
-      - name: Run tests
-        run: melos run test:flutter
+    name: Test
+    uses: btwld/dart-actions/.github/workflows/ci.yml@main
+    secrets:
+      token: ${{ secrets.GITHUB_TOKEN }}
+    with:
+      flutter-version: 'stable'
+      run-dcm: true
