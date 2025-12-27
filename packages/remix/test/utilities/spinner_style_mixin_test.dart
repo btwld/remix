@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mix/mix.dart';
-import '../../lib/remix.dart';
+import 'package:remix/remix.dart';
 
 void main() {
   group('SpinnerStyleMixin Tests', () {

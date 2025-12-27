@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart' as ftest;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:meta/meta.dart';
 import 'package:mix/mix.dart';
-import '../../lib/remix.dart';
+import 'package:remix/remix.dart';
 
 @isTest
 void styleMethodTest<S>(
