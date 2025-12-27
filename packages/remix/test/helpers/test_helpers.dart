@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import '../../lib/remix.dart';
+import 'package:remix/remix.dart';
 
 /// Extension methods for WidgetTester to simplify test setup and interactions
 extension WidgetTesterHelpers on WidgetTester {
