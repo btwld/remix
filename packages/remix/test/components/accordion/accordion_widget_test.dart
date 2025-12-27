@@ -471,14 +471,9 @@ void main() {
         expectedStates: {WidgetState.focused},
       );
 
-      // Note: pressAction cannot be used here because the interactive part of
-      // RemixAccordion (its tappable header) is implemented inside nested
-      // internal widgets rather than on the RemixAccordion widget itself.
-      // Our generic pressAction helper assumes that the widget type under
-      // test exposes a directly-tappable element, so it never finds a valid
-      // target for RemixAccordion's nested structure. As a result, press
-      // behavior for accordions is covered in the dedicated expansion behavior
-      // tests instead of via pressAction in this WidgetStateController group.
+      // Note: pressAction won't work here - the tappable header is in nested
+      // widgets, not on RemixAccordion itself. Press behavior is covered in
+      // the expansion behavior tests above.
     });
   });
 }
