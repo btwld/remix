@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mix/mix.dart';
 import 'package:remix/remix.dart';
 
 void main() {
@@ -139,10 +138,7 @@ void main() {
               );
               expect(spec.size, equals(28.0));
               expect(spec.strokeWidth, equals(2.5));
-              expect(
-                spec.duration,
-                equals(const Duration(milliseconds: 500)),
-              );
+              expect(spec.duration, equals(const Duration(milliseconds: 500)));
 
               return const SizedBox.shrink();
             },
@@ -160,9 +156,7 @@ void main() {
 
       expect(
         combinedStyle.$spinner,
-        equals(
-          Prop.maybeMix(RemixSpinnerStyle(indicatorColor: Colors.white)),
-        ),
+        equals(Prop.maybeMix(RemixSpinnerStyle(indicatorColor: Colors.white))),
       );
     });
 
