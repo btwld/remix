@@ -15,10 +15,7 @@ void _showToast(BuildContext context, String message) {
   );
 }
 
-@widgetbook.UseCase(
-  name: 'Button Component',
-  type: RemixButton,
-)
+@widgetbook.UseCase(name: 'Button Component', type: RemixButton)
 Widget buildButtonUseCase(BuildContext context) {
   return KeyedSubtree(
     key: _key,
@@ -28,34 +25,18 @@ Widget buildButtonUseCase(BuildContext context) {
           onPressed: () {
             _showToast(context, 'RemixButton pressed');
           },
-          onLongPress: context.knobs.boolean(
-            label: 'Enable Long Press',
-            initialValue: true,
-          )
+          onLongPress:
+              context.knobs.boolean(
+                label: 'Enable Long Press',
+                initialValue: true,
+              )
               ? () {
                   _showToast(context, 'RemixButton long pressed');
                 }
               : null,
-          onDoubleTap: context.knobs.boolean(
-            label: 'Enable Double Tap',
-            initialValue: true,
-          )
-              ? () {
-                  _showToast(context, 'RemixButton double tapped');
-                }
-              : null,
-          enabled: context.knobs.boolean(
-            label: 'Enabled',
-            initialValue: true,
-          ),
-          loading: context.knobs.boolean(
-            label: 'Loading',
-            initialValue: false,
-          ),
-          label: context.knobs.string(
-            label: 'label',
-            initialValue: 'Press Me',
-          ),
+          enabled: context.knobs.boolean(label: 'Enabled', initialValue: true),
+          loading: context.knobs.boolean(label: 'Loading', initialValue: false),
+          label: context.knobs.string(label: 'label', initialValue: 'Press Me'),
           icon: context.knobs.iconData(
             label: 'Icon',
             initialValue: Icons.touch_app,
