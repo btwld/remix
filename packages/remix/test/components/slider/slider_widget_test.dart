@@ -122,6 +122,18 @@ void main() {
           throwsA(isA<AssertionError>()),
         );
       });
+
+      test('throws assertion error when min is greater than max', () {
+        expect(
+          () => RemixSlider(
+            value: 0.5,
+            min: 1.0,
+            max: 0.0,
+            onChanged: (value) {},
+          ),
+          throwsA(isA<AssertionError>()),
+        );
+      });
     });
 
     group('Styling', () {
