@@ -97,8 +97,8 @@ class RemixButtonStyle
 
   /// Sets the icon alignment relative to the label.
   ///
-  /// Use [IconAlignment.left] to position the icon before the label,
-  /// or [IconAlignment.right] to position it after.
+  /// Use [IconAlignment.start] to position the icon before the label,
+  /// or [IconAlignment.end] to position it after.
   RemixButtonStyle iconAlignment(IconAlignment value) {
     return merge(RemixButtonStyle.create(iconAlignment: value));
   }
