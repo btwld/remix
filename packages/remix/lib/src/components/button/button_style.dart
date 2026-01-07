@@ -45,25 +45,29 @@ class RemixButtonStyle
   final Prop<StyleSpec<TextSpec>>? $label;
   final Prop<StyleSpec<IconSpec>>? $icon;
   final Prop<StyleSpec<RemixSpinnerSpec>>? $spinner;
+  final IconAlignment? $iconAlignment;
 
   const RemixButtonStyle.create({
     Prop<StyleSpec<FlexBoxSpec>>? container,
     Prop<StyleSpec<TextSpec>>? label,
     Prop<StyleSpec<IconSpec>>? icon,
     Prop<StyleSpec<RemixSpinnerSpec>>? spinner,
+    IconAlignment? iconAlignment,
     super.variants,
     super.animation,
     super.modifier,
   }) : $container = container,
        $label = label,
        $icon = icon,
-       $spinner = spinner;
+       $spinner = spinner,
+       $iconAlignment = iconAlignment;
 
   RemixButtonStyle({
     FlexBoxStyler? container,
     TextStyler? label,
     IconStyler? icon,
     RemixSpinnerStyle? spinner,
+    IconAlignment? iconAlignment,
     AnimationConfig? animation,
     List<VariantStyle<RemixButtonSpec>>? variants,
     WidgetModifierConfig? modifier,
@@ -72,6 +76,7 @@ class RemixButtonStyle
          label: Prop.maybeMix(label),
          icon: Prop.maybeMix(icon),
          spinner: Prop.maybeMix(spinner),
+         iconAlignment: iconAlignment,
          variants: variants,
          animation: animation,
          modifier: modifier,
@@ -88,6 +93,14 @@ class RemixButtonStyle
 
   RemixButtonStyle spinner(RemixSpinnerStyle value) {
     return merge(RemixButtonStyle(spinner: value));
+  }
+
+  /// Sets the icon alignment relative to the label.
+  ///
+  /// Use [IconAlignment.start] to position the icon before the label,
+  /// or [IconAlignment.end] to position it after.
+  RemixButtonStyle iconAlignment(IconAlignment value) {
+    return merge(RemixButtonStyle.create(iconAlignment: value));
   }
 
   /// Sets padding
@@ -208,6 +221,7 @@ class RemixButtonStyle
         label: MixOps.resolve(context, $label),
         icon: MixOps.resolve(context, $icon),
         spinner: MixOps.resolve(context, $spinner),
+        iconAlignment: $iconAlignment ?? IconAlignment.start,
       ),
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),
@@ -223,6 +237,7 @@ class RemixButtonStyle
       label: MixOps.merge($label, other.$label),
       icon: MixOps.merge($icon, other.$icon),
       spinner: MixOps.merge($spinner, other.$spinner),
+      iconAlignment: other.$iconAlignment ?? $iconAlignment,
       variants: MixOps.mergeVariants($variants, other.$variants),
       animation: MixOps.mergeAnimation($animation, other.$animation),
       modifier: MixOps.mergeModifier($modifier, other.$modifier),
@@ -235,6 +250,7 @@ class RemixButtonStyle
     $label,
     $icon,
     $spinner,
+    $iconAlignment,
     $variants,
     $animation,
     $modifier,

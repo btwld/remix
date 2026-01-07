@@ -186,16 +186,18 @@ class RemixButton extends StatelessWidget {
                   );
 
             // Build spinner (used when loading)
-            final spinner = Center(
-              child: loadingBuilder == null
-                  ? RemixSpinner(styleSpec: spec.spinner)
-                  : StyleSpecBuilder(
-                      styleSpec: spec.spinner,
-                      builder: loadingBuilder!,
-                    ),
-            );
+            final spinner = loadingBuilder == null
+                ? RemixSpinner(styleSpec: spec.spinner)
+                : StyleSpecBuilder(
+                    styleSpec: spec.spinner,
+                    builder: loadingBuilder!,
+                  );
 
-            final rowChildren = [if (iconWidget != null) iconWidget, textWidget]
+            final children = switch (spec.iconAlignment) {
+              .start => [if (iconWidget != null) iconWidget, textWidget],
+              .end => [textWidget, if (iconWidget != null) iconWidget],
+            };
+            final rowChildren = children
                 .map(
                   (e) => Visibility(
                     visible: !loading,
