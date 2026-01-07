@@ -75,6 +75,13 @@ class RemixButtonSpec extends Spec<RemixButtonSpec> with Diagnosticable {
   /// asynchronous operations when the button is in loading state.
   final StyleSpec<RemixSpinnerSpec> spinner;
 
+  /// The alignment of the icon relative to the label.
+  ///
+  /// When set to [IconAlignment.left], the icon appears before the label.
+  /// When set to [IconAlignment.right], the icon appears after the label.
+  /// Defaults to [IconAlignment.left].
+  final IconAlignment iconAlignment;
+
   /// Creates a RemixButtonSpec with optional styling specifications.
   ///
   /// If any [StyleSpec] is not provided, a default specification
@@ -93,10 +100,12 @@ class RemixButtonSpec extends Spec<RemixButtonSpec> with Diagnosticable {
     StyleSpec<TextSpec>? label,
     StyleSpec<IconSpec>? icon,
     StyleSpec<RemixSpinnerSpec>? spinner,
-  })  : container = container ?? const StyleSpec(spec: FlexBoxSpec()),
-        label = label ?? const StyleSpec(spec: TextSpec()),
-        icon = icon ?? const StyleSpec(spec: IconSpec()),
-        spinner = spinner ?? const StyleSpec(spec: RemixSpinnerSpec());
+    IconAlignment? iconAlignment,
+  }) : container = container ?? const StyleSpec(spec: FlexBoxSpec()),
+       label = label ?? const StyleSpec(spec: TextSpec()),
+       icon = icon ?? const StyleSpec(spec: IconSpec()),
+       spinner = spinner ?? const StyleSpec(spec: RemixSpinnerSpec()),
+       iconAlignment = iconAlignment ?? IconAlignment.start;
 
   /// Creates a copy of this RemixButtonSpec with the given fields replaced.
   ///
@@ -115,12 +124,14 @@ class RemixButtonSpec extends Spec<RemixButtonSpec> with Diagnosticable {
     StyleSpec<TextSpec>? label,
     StyleSpec<IconSpec>? icon,
     StyleSpec<RemixSpinnerSpec>? spinner,
+    IconAlignment? iconAlignment,
   }) {
     return RemixButtonSpec(
       container: container ?? this.container,
       label: label ?? this.label,
       icon: icon ?? this.icon,
       spinner: spinner ?? this.spinner,
+      iconAlignment: iconAlignment ?? this.iconAlignment,
     );
   }
 
@@ -149,6 +160,7 @@ class RemixButtonSpec extends Spec<RemixButtonSpec> with Diagnosticable {
       label: MixOps.lerp(label, other.label, t)!,
       icon: MixOps.lerp(icon, other.icon, t)!,
       spinner: MixOps.lerp(spinner, other.spinner, t)!,
+      iconAlignment: t < 0.5 ? iconAlignment : other.iconAlignment,
     );
   }
 
@@ -159,9 +171,10 @@ class RemixButtonSpec extends Spec<RemixButtonSpec> with Diagnosticable {
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('label', label))
       ..add(DiagnosticsProperty('icon', icon))
-      ..add(DiagnosticsProperty('spinner', spinner));
+      ..add(DiagnosticsProperty('spinner', spinner))
+      ..add(EnumProperty('iconAlignment', iconAlignment));
   }
 
   @override
-  List<Object?> get props => [container, label, icon, spinner];
+  List<Object?> get props => [container, label, icon, spinner, iconAlignment];
 }
