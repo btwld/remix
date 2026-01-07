@@ -1,3 +1,9 @@
+## 0.1.0-beta.3
+
+- **FEAT**: Add iconAlignment property to Button component (#29).
+- **CHORE**: Remove Mix 2.0 incompatible helpers and improve tests (#25).
+- **TEST**: Add comprehensive tests for accordion and divider components (#27).
+
 ## 0.1.0-beta.2
 
  - Update dart min version to 3.10.0
