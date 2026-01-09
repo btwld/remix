@@ -212,20 +212,17 @@ Widget previewSliders() {
 @Preview(name: 'Select Dropdown', size: Size(350, 200))
 Widget previewSelect() {
   return createRemixPreview(
-    SizedBox(
-      width: 300,
-      child: RemixSelect<String>(
-        trigger: const RemixSelectTrigger(
-          placeholder: 'Select an option',
-        ),
-        selectedValue: 'option1',
-        items: const [
-          RemixSelectItem(value: 'option1', label: 'First Option'),
-          RemixSelectItem(value: 'option2', label: 'Second Option'),
-          RemixSelectItem(value: 'option3', label: 'Third Option'),
-        ],
-        onChanged: (value) {},
+    RemixSelect<String>(
+      trigger: const RemixSelectTrigger(
+        placeholder: 'Select an option',
       ),
+      selectedValue: 'option1',
+      items: const [
+        RemixSelectItem(value: 'option1', label: 'First Option'),
+        RemixSelectItem(value: 'option2', label: 'Second Option'),
+        RemixSelectItem(value: 'option3', label: 'Third Option'),
+      ],
+      onChanged: (value) {},
     ),
   );
 }
