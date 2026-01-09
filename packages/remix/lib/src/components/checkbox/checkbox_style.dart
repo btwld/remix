@@ -214,6 +214,51 @@ class RemixCheckboxStyle
     );
   }
 
+  /// Creates a [RemixCheckbox] widget with this style applied.
+  ///
+  /// Example:
+  /// ```dart
+  /// final checkbox = RemixCheckboxStyle()
+  ///   .color(Colors.blue)
+  ///   .checkboxSize(24);
+  ///
+  /// // Use it like a function
+  /// checkbox(
+  ///   selected: isChecked,
+  ///   onChanged: (value) => setState(() => isChecked = value),
+  /// )
+  /// ```
+  RemixCheckbox call({
+    required bool? selected,
+    ValueChanged<bool?>? onChanged,
+    bool enabled = true,
+    bool tristate = false,
+    bool autofocus = false,
+    IconData checkedIcon = Icons.check_rounded,
+    IconData? uncheckedIcon,
+    IconData indeterminateIcon = Icons.horizontal_rule,
+    bool enableFeedback = true,
+    FocusNode? focusNode,
+    String? semanticLabel,
+    MouseCursor mouseCursor = SystemMouseCursors.click,
+  }) {
+    return RemixCheckbox(
+      selected: selected,
+      onChanged: onChanged,
+      enabled: enabled,
+      tristate: tristate,
+      autofocus: autofocus,
+      checkedIcon: checkedIcon,
+      uncheckedIcon: uncheckedIcon,
+      indeterminateIcon: indeterminateIcon,
+      enableFeedback: enableFeedback,
+      focusNode: focusNode,
+      semanticLabel: semanticLabel,
+      mouseCursor: mouseCursor,
+      style: this,
+    );
+  }
+
   @override
   List<Object?> get props => [
     $container,

@@ -556,6 +556,78 @@ void main() {
       });
     });
 
+    group('Call Method', () {
+      testWidgets('call method creates RemixTextField with common parameters',
+          (tester) async {
+        final style =
+            RemixTextFieldStyle().backgroundColor(Colors.grey.shade100);
+        final controller = TextEditingController();
+        final focusNode = FocusNode();
+
+        final textField = style.call(
+          controller: controller,
+          focusNode: focusNode,
+          hintText: 'Enter text',
+          label: 'Name',
+          helperText: 'Your full name',
+          enabled: false,
+          autofocus: true,
+          obscureText: true,
+          maxLines: 1,
+          onChanged: (value) {},
+          error: true,
+        );
+
+        expect(textField, isA<RemixTextField>());
+        expect(textField.controller, same(controller));
+        expect(textField.focusNode, same(focusNode));
+        expect(textField.hintText, equals('Enter text'));
+        expect(textField.label, equals('Name'));
+        expect(textField.helperText, equals('Your full name'));
+        expect(textField.enabled, equals(false));
+        expect(textField.autofocus, equals(true));
+        expect(textField.obscureText, equals(true));
+        expect(textField.maxLines, equals(1));
+        expect(textField.error, equals(true));
+        expect(textField.style, same(style));
+
+        controller.dispose();
+        focusNode.dispose();
+      });
+
+      testWidgets('call method creates RemixTextField with minimal parameters',
+          (tester) async {
+        final style = RemixTextFieldStyle();
+
+        final textField = style.call();
+
+        expect(textField, isA<RemixTextField>());
+        expect(textField.enabled, equals(true));
+        expect(textField.autofocus, equals(false));
+        expect(textField.obscureText, equals(false));
+        expect(textField.maxLines, equals(1));
+        expect(textField.error, equals(false));
+        expect(textField.style, same(style));
+      });
+
+      testWidgets(
+          'call method creates RemixTextField with leading and trailing',
+          (tester) async {
+        final style = RemixTextFieldStyle();
+        const leading = Icon(Icons.person);
+        const trailing = Icon(Icons.clear);
+
+        final textField = style.call(
+          leading: leading,
+          trailing: trailing,
+        );
+
+        expect(textField, isA<RemixTextField>());
+        expect(textField.leading, same(leading));
+        expect(textField.trailing, same(trailing));
+      });
+    });
+
     group('Equality', () {
       test('two identical styles are equal', () {
         const style1 = RemixTextFieldStyle.create();

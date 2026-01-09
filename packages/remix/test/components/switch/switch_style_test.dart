@@ -305,6 +305,50 @@ void main() {
       });
     });
 
+    group('Call Method', () {
+      testWidgets('call method creates RemixSwitch with all parameters',
+          (tester) async {
+        final style = RemixSwitchStyle().thumbColor(Colors.white);
+        final focusNode = FocusNode();
+
+        final switchWidget = style.call(
+          selected: true,
+          onChanged: (value) {},
+          enabled: false,
+          enableFeedback: false,
+          focusNode: focusNode,
+          autofocus: true,
+          semanticLabel: 'Test Switch',
+          mouseCursor: SystemMouseCursors.forbidden,
+        );
+
+        expect(switchWidget, isA<RemixSwitch>());
+        expect(switchWidget.selected, equals(true));
+        expect(switchWidget.enabled, equals(false));
+        expect(switchWidget.enableFeedback, equals(false));
+        expect(switchWidget.focusNode, same(focusNode));
+        expect(switchWidget.autofocus, equals(true));
+        expect(switchWidget.semanticLabel, equals('Test Switch'));
+        expect(switchWidget.mouseCursor, equals(SystemMouseCursors.forbidden));
+        expect(switchWidget.style, same(style));
+
+        focusNode.dispose();
+      });
+
+      testWidgets('call method creates RemixSwitch with minimal parameters',
+          (tester) async {
+        final style = RemixSwitchStyle();
+
+        final switchWidget = style.call(selected: false, onChanged: (v) {});
+
+        expect(switchWidget, isA<RemixSwitch>());
+        expect(switchWidget.selected, equals(false));
+        expect(switchWidget.enabled, equals(true));
+        expect(switchWidget.enableFeedback, equals(true));
+        expect(switchWidget.style, same(style));
+      });
+    });
+
     group('Equality', () {
       test('identical styles are equal', () {
         final style1 = RemixSwitchStyle();
