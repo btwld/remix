@@ -427,6 +427,55 @@ void main() {
       });
     });
 
+    group('Call Method', () {
+      testWidgets('call method creates RemixSlider with all parameters',
+          (tester) async {
+        final style = RemixSliderStyle().thumbColor(Colors.blue);
+        final focusNode = FocusNode();
+
+        final slider = style.call(
+          value: 0.5,
+          onChanged: (value) {},
+          min: 0.0,
+          max: 100.0,
+          onChangeStart: (value) {},
+          onChangeEnd: (value) {},
+          enabled: false,
+          enableHapticFeedback: false,
+          focusNode: focusNode,
+          autofocus: true,
+          snapDivisions: 10,
+        );
+
+        expect(slider, isA<RemixSlider>());
+        expect(slider.value, equals(0.5));
+        expect(slider.min, equals(0.0));
+        expect(slider.max, equals(100.0));
+        expect(slider.enabled, equals(false));
+        expect(slider.enableHapticFeedback, equals(false));
+        expect(slider.focusNode, same(focusNode));
+        expect(slider.autofocus, equals(true));
+        expect(slider.snapDivisions, equals(10));
+        expect(slider.style, same(style));
+
+        focusNode.dispose();
+      });
+
+      testWidgets('call method creates RemixSlider with minimal parameters',
+          (tester) async {
+        final style = RemixSliderStyle();
+
+        final slider = style.call(value: 0.3, onChanged: (v) {});
+
+        expect(slider, isA<RemixSlider>());
+        expect(slider.value, equals(0.3));
+        expect(slider.min, equals(0.0));
+        expect(slider.max, equals(1.0));
+        expect(slider.enabled, equals(true));
+        expect(slider.style, same(style));
+      });
+    });
+
     group('Equality', () {
       test('identical styles are equal', () {
         final style1 = RemixSliderStyle();

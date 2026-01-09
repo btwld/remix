@@ -129,6 +129,43 @@ class RemixSwitchStyle
     );
   }
 
+  /// Creates a [RemixSwitch] widget with this style applied.
+  ///
+  /// Example:
+  /// ```dart
+  /// final toggle = RemixSwitchStyle()
+  ///   .thumbColor(Colors.white)
+  ///   .color(Colors.blue);
+  ///
+  /// // Use it like a function
+  /// toggle(
+  ///   selected: _isEnabled,
+  ///   onChanged: (value) => setState(() => _isEnabled = value),
+  /// )
+  /// ```
+  RemixSwitch call({
+    required bool selected,
+    required ValueChanged<bool> onChanged,
+    bool enabled = true,
+    bool enableFeedback = true,
+    FocusNode? focusNode,
+    bool autofocus = false,
+    String? semanticLabel,
+    MouseCursor mouseCursor = SystemMouseCursors.click,
+  }) {
+    return RemixSwitch(
+      selected: selected,
+      onChanged: onChanged,
+      enabled: enabled,
+      enableFeedback: enableFeedback,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      semanticLabel: semanticLabel,
+      mouseCursor: mouseCursor,
+      style: this,
+    );
+  }
+
   @override
   List<Object?> get props => [
     $container,
