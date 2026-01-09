@@ -216,6 +216,47 @@ class RemixSliderStyle
     return merge(RemixSliderStyle(animation: animation));
   }
 
+  /// Creates a [RemixSlider] widget with this style applied.
+  ///
+  /// Example:
+  /// ```dart
+  /// RemixSliderStyle()
+  ///   .thumbColor(Colors.blue)
+  ///   .rangeColor(Colors.blue.shade200)
+  ///   .call(
+  ///     value: _sliderValue,
+  ///     onChanged: (value) => setState(() => _sliderValue = value),
+  ///   )
+  /// ```
+  RemixSlider call({
+    required double value,
+    required ValueChanged<double>? onChanged,
+    double min = 0.0,
+    double max = 1.0,
+    ValueChanged<double>? onChangeStart,
+    ValueChanged<double>? onChangeEnd,
+    bool enabled = true,
+    bool enableHapticFeedback = true,
+    FocusNode? focusNode,
+    bool autofocus = false,
+    int? snapDivisions,
+  }) {
+    return RemixSlider(
+      value: value,
+      onChanged: onChanged,
+      min: min,
+      max: max,
+      onChangeStart: onChangeStart,
+      onChangeEnd: onChangeEnd,
+      enabled: enabled,
+      enableHapticFeedback: enableHapticFeedback,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      snapDivisions: snapDivisions,
+      style: this,
+    );
+  }
+
   @override
   List<Object?> get props => [
     $thumb,

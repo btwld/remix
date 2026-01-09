@@ -392,6 +392,58 @@ void main() {
       });
     });
 
+    group('Call Method', () {
+      testWidgets('call method creates RemixCheckbox with all parameters',
+          (tester) async {
+        final style = RemixCheckboxStyle().color(Colors.blue);
+        final focusNode = FocusNode();
+
+        final checkbox = style.call(
+          selected: true,
+          onChanged: (value) {},
+          enabled: false,
+          tristate: true,
+          autofocus: true,
+          checkedIcon: Icons.check_circle,
+          uncheckedIcon: Icons.circle_outlined,
+          indeterminateIcon: Icons.remove,
+          enableFeedback: false,
+          focusNode: focusNode,
+          semanticLabel: 'Test Checkbox',
+          mouseCursor: SystemMouseCursors.forbidden,
+        );
+
+        expect(checkbox, isA<RemixCheckbox>());
+        expect(checkbox.selected, equals(true));
+        expect(checkbox.enabled, equals(false));
+        expect(checkbox.tristate, equals(true));
+        expect(checkbox.autofocus, equals(true));
+        expect(checkbox.checkedIcon, equals(Icons.check_circle));
+        expect(checkbox.uncheckedIcon, equals(Icons.circle_outlined));
+        expect(checkbox.indeterminateIcon, equals(Icons.remove));
+        expect(checkbox.enableFeedback, equals(false));
+        expect(checkbox.focusNode, same(focusNode));
+        expect(checkbox.semanticLabel, equals('Test Checkbox'));
+        expect(checkbox.mouseCursor, equals(SystemMouseCursors.forbidden));
+        expect(checkbox.style, same(style));
+
+        focusNode.dispose();
+      });
+
+      testWidgets('call method creates RemixCheckbox with minimal parameters',
+          (tester) async {
+        final style = RemixCheckboxStyle();
+
+        final checkbox = style.call(selected: false);
+
+        expect(checkbox, isA<RemixCheckbox>());
+        expect(checkbox.selected, equals(false));
+        expect(checkbox.enabled, equals(true));
+        expect(checkbox.tristate, equals(false));
+        expect(checkbox.style, same(style));
+      });
+    });
+
     group('Equality', () {
       test('identical styles are equal', () {
         const style1 = RemixCheckboxStyle.create();
