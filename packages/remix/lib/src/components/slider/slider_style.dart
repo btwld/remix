@@ -220,13 +220,15 @@ class RemixSliderStyle
   ///
   /// Example:
   /// ```dart
-  /// RemixSliderStyle()
+  /// final slider = RemixSliderStyle()
   ///   .thumbColor(Colors.blue)
-  ///   .rangeColor(Colors.blue.shade200)
-  ///   .call(
-  ///     value: _sliderValue,
-  ///     onChanged: (value) => setState(() => _sliderValue = value),
-  ///   )
+  ///   .rangeColor(Colors.blue.shade200);
+  ///
+  /// // Use it like a function
+  /// slider(
+  ///   value: _sliderValue,
+  ///   onChanged: (value) => setState(() => _sliderValue = value),
+  /// )
   /// ```
   RemixSlider call({
     required double value,

@@ -133,13 +133,15 @@ class RemixSwitchStyle
   ///
   /// Example:
   /// ```dart
-  /// RemixSwitchStyle()
+  /// final toggle = RemixSwitchStyle()
   ///   .thumbColor(Colors.white)
-  ///   .color(Colors.blue)
-  ///   .call(
-  ///     selected: _isEnabled,
-  ///     onChanged: (value) => setState(() => _isEnabled = value),
-  ///   )
+  ///   .color(Colors.blue);
+  ///
+  /// // Use it like a function
+  /// toggle(
+  ///   selected: _isEnabled,
+  ///   onChanged: (value) => setState(() => _isEnabled = value),
+  /// )
   /// ```
   RemixSwitch call({
     required bool selected,

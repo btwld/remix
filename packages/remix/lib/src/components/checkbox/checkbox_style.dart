@@ -218,13 +218,15 @@ class RemixCheckboxStyle
   ///
   /// Example:
   /// ```dart
-  /// RemixCheckboxStyle()
+  /// final checkbox = RemixCheckboxStyle()
   ///   .color(Colors.blue)
-  ///   .checkboxSize(24)
-  ///   .call(
-  ///     selected: isChecked,
-  ///     onChanged: (value) => setState(() => isChecked = value),
-  ///   )
+  ///   .checkboxSize(24);
+  ///
+  /// // Use it like a function
+  /// checkbox(
+  ///   selected: isChecked,
+  ///   onChanged: (value) => setState(() => isChecked = value),
+  /// )
   /// ```
   RemixCheckbox call({
     required bool? selected,

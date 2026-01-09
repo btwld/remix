@@ -366,13 +366,15 @@ class RemixTextFieldStyle
   ///
   /// Example:
   /// ```dart
-  /// RemixTextFieldStyle()
+  /// final textField = RemixTextFieldStyle()
   ///   .backgroundColor(Colors.grey.shade100)
-  ///   .borderRadius(BorderRadiusMix.circular(8))
-  ///   .call(
-  ///     hintText: 'Enter your name',
-  ///     onChanged: (value) => print(value),
-  ///   )
+  ///   .borderRadius(BorderRadiusMix.circular(8));
+  ///
+  /// // Use it like a function
+  /// textField(
+  ///   hintText: 'Enter your name',
+  ///   onChanged: (value) => print(value),
+  /// )
   /// ```
   RemixTextField call({
     TextEditingController? controller,
