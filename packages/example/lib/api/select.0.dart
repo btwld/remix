@@ -25,32 +25,29 @@ class _SelectExampleState extends State<SelectExample> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: SizedBox(
-        width: 200,
-        child: RemixSelect(
-          trigger: const RemixSelectTrigger(placeholder: 'Text Value'),
-          items: [
-            RemixSelectItem(
-              value: 'option1',
-              label: 'Option 1',
-              enabled: true,
-              style: itemStyle,
-            ),
-            RemixSelectItem(
-              value: 'option2',
-              label: 'Option 2',
-              enabled: false,
-              style: itemStyle,
-            ),
-          ],
-          selectedValue: _selectedValue,
-          style: style,
-          onChanged: (value) {
-            setState(() {
-              _selectedValue = value;
-            });
-          },
-        ),
+      child: RemixSelect(
+        trigger: const RemixSelectTrigger(placeholder: 'Text Value'),
+        items: [
+          RemixSelectItem(
+            value: 'option1',
+            label: 'Option 1',
+            enabled: true,
+            style: itemStyle,
+          ),
+          RemixSelectItem(
+            value: 'option2',
+            label: 'Option 2',
+            enabled: false,
+            style: itemStyle,
+          ),
+        ],
+        selectedValue: _selectedValue,
+        style: style,
+        onChanged: (value) {
+          setState(() {
+            _selectedValue = value;
+          });
+        },
       ),
     );
   }

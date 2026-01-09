@@ -479,6 +479,55 @@ void main() {
       });
     });
 
+    group('Layout Constraints', () {
+      testWidgets('handles unbounded width constraints in Row', (tester) async {
+        // This test verifies that RemixSelect works inside a Row
+        // without explicit width constraints (unbounded width scenario)
+        await tester.pumpRemixApp(
+          Row(
+            children: [
+              RemixSelect<String>(
+                trigger: const RemixSelectTrigger(placeholder: 'Select'),
+                items: const [
+                  RemixSelectItem(value: 'a', label: 'Option A'),
+                  RemixSelectItem(value: 'b', label: 'Option B'),
+                ],
+              ),
+            ],
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(find.byType(RemixSelect<String>), findsOneWidget);
+        expect(find.text('Select'), findsOneWidget);
+      });
+
+      testWidgets('opens dropdown when in Row with unbounded width', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          Row(
+            children: [
+              RemixSelect<String>(
+                trigger: const RemixSelectTrigger(placeholder: 'Select'),
+                items: const [
+                  RemixSelectItem(value: 'a', label: 'Option A'),
+                  RemixSelectItem(value: 'b', label: 'Option B'),
+                ],
+              ),
+            ],
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byType(RemixSelect<String>));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Option A'), findsOneWidget);
+        expect(find.text('Option B'), findsOneWidget);
+      });
+    });
+
     group('Edge Cases', () {
       testWidgets('handles empty items list', (tester) async {
         await tester.pumpRemixApp(

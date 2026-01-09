@@ -150,6 +150,11 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
 
   RemixSelectStyle _buildStyle() {
     return RemixSelectStyle()
+        .trigger(
+          RemixSelectTriggerStyle()
+              .mainAxisSize(MainAxisSize.min)
+              .wrap(WidgetModifierConfig.intrinsicWidth()),
+        )
         .menuContainer(
           FlexBoxStyler()
               .mainAxisSize(.min)

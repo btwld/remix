@@ -30,43 +30,40 @@ Widget buildSelectUseCase(BuildContext context) {
     key: _key,
     child: Scaffold(
       body: Center(
-        child: SizedBox(
-          width: 200,
-          child: StatefulBuilder(builder: (context, setState) {
-            return RemixSelect<String>(
-              style: styleSelect,
-              trigger: RemixSelectTrigger(
-                placeholder: context.knobs.string(
-                  label: 'Placeholder',
-                  initialValue: 'Select item...',
-                ),
+        child: StatefulBuilder(builder: (context, setState) {
+          return RemixSelect<String>(
+            style: styleSelect,
+            trigger: RemixSelectTrigger(
+              placeholder: context.knobs.string(
+                label: 'Placeholder',
+                initialValue: 'Select item...',
               ),
-              selectedValue: selectedValue,
-              onChanged: (value) {
-                setState(() {
-                  selectedValue = value ?? 'Apple';
-                });
-              },
-              items: [
-                RemixSelectItem<String>(
-                  value: 'Apple',
-                  label: 'Apple',
-                  style: styleItems,
-                ),
-                RemixSelectItem<String>(
-                  value: 'Banana',
-                  label: 'Banana',
-                  style: styleItems,
-                ),
-                RemixSelectItem<String>(
-                  value: 'Orange',
-                  label: 'Orange',
-                  style: styleItems,
-                ),
-              ],
-            );
-          }),
-        ),
+            ),
+            selectedValue: selectedValue,
+            onChanged: (value) {
+              setState(() {
+                selectedValue = value ?? 'Apple';
+              });
+            },
+            items: [
+              RemixSelectItem<String>(
+                value: 'Apple',
+                label: 'Apple',
+                style: styleItems,
+              ),
+              RemixSelectItem<String>(
+                value: 'Banana',
+                label: 'Banana',
+                style: styleItems,
+              ),
+              RemixSelectItem<String>(
+                value: 'Orange',
+                label: 'Orange',
+                style: styleItems,
+              ),
+            ],
+          );
+        }),
       ),
     ),
   );
