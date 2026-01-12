@@ -33,7 +33,6 @@ Widget createRemixScope({
     );
 
     // Use createFortalScope which provides all the token values
-    // RemixTokens now just references FortalTokens, so this provides everything
     return createFortalScope(
       accent: accent,
       gray: gray,
