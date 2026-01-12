@@ -32,10 +32,11 @@ class RemixSlider extends StatelessWidget {
     this.focusNode,
     this.autofocus = false,
     this.snapDivisions,
-  }) : assert(
-         value >= min && value <= max,
-         'Slider value must be between min and max values',
-       );
+  })  : assert(min <= max, 'Slider min must be less than or equal to max'),
+        assert(
+          value >= min && value <= max,
+          'Slider value must be between min and max values',
+        );
 
   /// The minimum value the slider can have.
   final double min;
