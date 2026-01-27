@@ -23,7 +23,7 @@ class RemixTextField extends StatelessWidget {
     this.focusNode,
     this.keyboardType,
     this.textInputAction,
-    this.textCapitalization = TextCapitalization.none,
+    this.textCapitalization = .none,
     this.textDirection,
     this.readOnly = false,
     this.showCursor,
@@ -45,7 +45,7 @@ class RemixTextField extends StatelessWidget {
     this.onAppPrivateCommand,
     this.inputFormatters,
     this.enabled = true,
-    this.dragStartBehavior = DragStartBehavior.start,
+    this.dragStartBehavior = .start,
     this.enableInteractiveSelection = true,
     this.selectionControls,
     this.onTapOutside,
@@ -55,7 +55,7 @@ class RemixTextField extends StatelessWidget {
     this.scrollPhysics,
     this.autofillHints,
     this.contentInsertionConfiguration,
-    this.clipBehavior = Clip.hardEdge,
+    this.clipBehavior = .hardEdge,
     this.restorationId,
     this.stylusHandwritingEnabled = true,
     this.enableIMEPersonalizedLearning = true,
@@ -266,7 +266,7 @@ class RemixTextField extends StatelessWidget {
       keyboardType: keyboardType,
       textInputAction: textInputAction,
       textCapitalization: textCapitalization,
-      textAlign: TextAlign.start,
+      textAlign: .start,
       textDirection: textDirection,
       readOnly: readOnly,
       showCursor: showCursor,
@@ -316,7 +316,7 @@ class RemixTextField extends StatelessWidget {
         // doesn't need explicit disposal as it's not a listener subscription.
         final controller = WidgetStatesController({
           ...NakedTextFieldState.controllerOf(context).value,
-          if (error) WidgetState.error,
+          if (error) .error,
         });
 
         return StyleBuilder(
@@ -370,8 +370,8 @@ class RemixTextField extends StatelessWidget {
 
             return needsWrapper
                 ? Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: .min,
+                    crossAxisAlignment: .start,
                     children: [
                       if (label != null)
                         StyledText(label!, styleSpec: spec.label),

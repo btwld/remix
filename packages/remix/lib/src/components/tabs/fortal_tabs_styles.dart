@@ -27,7 +27,7 @@ class FortalTabsStyles {
             BoxStyler()
                 .height(40)
                 .paddingX(4)
-                .alignment(Alignment.center)
+                .alignment(.center)
                 .borderBottom(
                   color: Colors.transparent,
                   width: FortalTokens.borderWidth2(),
@@ -36,10 +36,10 @@ class FortalTabsStyles {
         )
         .container(
           FlexBoxStyler()
-              .direction(Axis.horizontal)
+              .direction(.horizontal)
               .borderRadiusAll(FortalTokens.radius2())
-              .mainAxisAlignment(MainAxisAlignment.center)
-              .crossAxisAlignment(CrossAxisAlignment.center)
+              .mainAxisAlignment(.center)
+              .crossAxisAlignment(.center)
               .spacing(8.0),
         )
         .onHovered(RemixTabStyle().color(FortalTokens.gray3()))

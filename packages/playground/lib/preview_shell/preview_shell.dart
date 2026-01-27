@@ -11,7 +11,7 @@ class PreviewShell extends StatefulWidget {
     super.key,
     required this.child,
     this.initialSize = const Size(375, 812),
-    this.initialBrightness = Brightness.light,
+    this.initialBrightness = .light,
   });
 
   @override
@@ -68,14 +68,14 @@ class _ViewportFrame extends StatelessWidget {
       height: size.height,
       decoration: BoxDecoration(
         color:
-            brightness == Brightness.light ? MixColors.white : MixColors.black,
+            brightness == .light ? MixColors.white : MixColors.black,
         border: Border.all(color: MixColors.greySwatch[300]!),
         borderRadius: BorderRadius.circular(8),
         boxShadow: const [
           BoxShadow(blurRadius: 24, color: MixColors.black12),
         ],
       ),
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: .antiAlias,
     );
 
     final media = MediaQuery(

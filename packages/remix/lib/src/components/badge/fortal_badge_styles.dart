@@ -16,18 +16,18 @@ class FortalBadgeStyles {
   /// Returns a RemixBadgeStyle configured with Fortal design tokens.
   /// Defaults to solid variant with size2.
   static RemixBadgeStyle create({
-    FortalBadgeVariant variant = FortalBadgeVariant.solid,
-    FortalBadgeSize size = FortalBadgeSize.size2,
+    FortalBadgeVariant variant = .solid,
+    FortalBadgeSize size = .size2,
   }) {
     return switch (variant) {
-      FortalBadgeVariant.solid => solid(size: size),
-      FortalBadgeVariant.soft => soft(size: size),
-      FortalBadgeVariant.surface => surface(size: size),
-      FortalBadgeVariant.outline => outline(size: size),
+      .solid => solid(size: size),
+      .soft => soft(size: size),
+      .surface => surface(size: size),
+      .outline => outline(size: size),
     };
   }
 
-  static RemixBadgeStyle base({FortalBadgeSize size = FortalBadgeSize.size2}) {
+  static RemixBadgeStyle base({FortalBadgeSize size = .size2}) {
     return RemixBadgeStyle()
     // Merge with size-specific styles
     .merge(_sizeStyle(size));
@@ -37,7 +37,7 @@ class FortalBadgeStyles {
   ///
   /// Solid badges have high emphasis with solid accent background color.
   /// Used for important status indicators.
-  static RemixBadgeStyle solid({FortalBadgeSize size = FortalBadgeSize.size2}) {
+  static RemixBadgeStyle solid({FortalBadgeSize size = .size2}) {
     return base(size: size)
         // Container styling - no size properties
         .color(FortalTokens.accent9())
@@ -49,7 +49,7 @@ class FortalBadgeStyles {
   ///
   /// Soft badges have medium emphasis with subtle accent tinted background.
   /// Used for secondary status indicators.
-  static RemixBadgeStyle soft({FortalBadgeSize size = FortalBadgeSize.size2}) {
+  static RemixBadgeStyle soft({FortalBadgeSize size = .size2}) {
     return base(size: size)
         // Container styling - no size properties
         .color(FortalTokens.accentA3())
@@ -62,7 +62,7 @@ class FortalBadgeStyles {
   /// Surface badges have subtle emphasis with accent-tinted surface.
   /// Used for neutral status indicators.
   static RemixBadgeStyle surface({
-    FortalBadgeSize size = FortalBadgeSize.size2,
+    FortalBadgeSize size = .size2,
   }) {
     return base(size: size)
         // Container styling - no size properties
@@ -80,7 +80,7 @@ class FortalBadgeStyles {
   /// Outline badges have border-focused emphasis with transparent background.
   /// Used for subtle status indicators.
   static RemixBadgeStyle outline({
-    FortalBadgeSize size = FortalBadgeSize.size2,
+    FortalBadgeSize size = .size2,
   }) {
     return base(size: size)
         // Container styling - no size properties
@@ -99,21 +99,21 @@ class FortalBadgeStyles {
 
   static RemixBadgeStyle _sizeStyle(FortalBadgeSize size) {
     return switch (size) {
-      FortalBadgeSize.size1 => RemixBadgeStyle(
+      .size1 => RemixBadgeStyle(
         container: BoxStyler()
             .paddingX(6.0)
             .paddingY(2.0)
             .borderRadiusAll(FortalTokens.radius2()),
         text: TextStyler().fontSize(11.0).height(16.0 / 11.0),
       ),
-      FortalBadgeSize.size2 => RemixBadgeStyle(
+      .size2 => RemixBadgeStyle(
         container: BoxStyler()
             .paddingX(8.0)
             .paddingY(3.0)
             .borderRadiusAll(FortalTokens.radius3()),
         text: TextStyler().fontSize(12.0).height(18.0 / 12.0),
       ),
-      FortalBadgeSize.size3 => RemixBadgeStyle(
+      .size3 => RemixBadgeStyle(
         container: BoxStyler()
             .paddingX(10.0)
             .paddingY(4.0)

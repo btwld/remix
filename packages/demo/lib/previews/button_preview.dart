@@ -8,7 +8,7 @@ import 'preview_helper.dart';
 Widget previewBasicButtons() {
   return createRemixPreview(
     const Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: .center,
       children: [
         RemixButton(
           label: 'Primary Button',
@@ -35,7 +35,7 @@ Widget previewBasicButtons() {
 Widget previewButtonStates() {
   return createRemixPreview(
     const Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: .center,
       children: [
         RemixButton(
           label: 'Enabled Button',
@@ -68,7 +68,7 @@ Widget previewButtonStates() {
 Widget previewIconButtons() {
   return createRemixPreview(
     const Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: .center,
       children: [
         RemixIconButton(
           icon: Icons.add,
@@ -98,10 +98,10 @@ Widget previewIconButtons() {
 Widget previewButtonVariations() {
   return createRemixPreview(
     const Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: .center,
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: .center,
           children: [
             RemixButton(
               label: 'Save',
@@ -123,7 +123,7 @@ Widget previewButtonVariations() {
         ),
         SizedBox(height: 16),
         Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: .center,
           children: [
             RemixIconButton(
               icon: Icons.thumb_up,

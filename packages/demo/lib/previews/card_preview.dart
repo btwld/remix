@@ -13,8 +13,8 @@ Widget previewBasicCard() {
         child: Padding(
           padding: EdgeInsets.all(16.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: .start,
+            mainAxisSize: .min,
             children: [
               Text(
                 'Card Title',
@@ -48,8 +48,8 @@ Widget previewCardWithActions() {
         child: Padding(
           padding: EdgeInsets.all(16.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: .start,
+            mainAxisSize: .min,
             children: [
               Row(
                 children: [
@@ -74,7 +74,7 @@ Widget previewCardWithActions() {
               ),
               SizedBox(height: 16),
               Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: .end,
                 children: [
                   RemixButton(
                     label: 'Cancel',
@@ -104,7 +104,7 @@ Widget previewProfileCard() {
         child: Padding(
           padding: EdgeInsets.all(20.0),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: .min,
             children: [
               CircleAvatar(
                 radius: 40,
@@ -134,7 +134,7 @@ Widget previewProfileCard() {
               SizedBox(height: 16),
               Text(
                 'Passionate about creating amazing user experiences and building scalable applications.',
-                textAlign: TextAlign.center,
+                textAlign: .center,
                 style: TextStyle(
                   fontSize: 14,
                   color: MixColors.grey,
@@ -142,7 +142,7 @@ Widget previewProfileCard() {
               ),
               SizedBox(height: 20),
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: .center,
                 children: [
                   RemixIconButton(
                     icon: Icons.email,
@@ -177,7 +177,7 @@ Widget previewStatsCard() {
         child: Padding(
           padding: EdgeInsets.all(20.0),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: .min,
             children: [
               Text(
                 'Dashboard Statistics',

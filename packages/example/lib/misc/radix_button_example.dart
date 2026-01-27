@@ -14,7 +14,7 @@ class FortalButtonExampleApp extends StatelessWidget {
       home: createFortalScope(
         accent: FortalAccentColor.indigo,
         gray: FortalGrayColor.slate,
-        brightness: Brightness.light,
+        brightness: .light,
         child: const FortalButtonExampleScreen(),
       ),
       title: 'Fortal Button Example',
@@ -39,7 +39,7 @@ class FortalButtonExampleScreen extends StatelessWidget {
       body: const SingleChildScrollView(
         padding: EdgeInsets.all(24.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             Text(
               'Button Variants',
@@ -129,7 +129,7 @@ class _SizeSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         const Text('Size 1 (Small)'),
         const SizedBox(height: 8),

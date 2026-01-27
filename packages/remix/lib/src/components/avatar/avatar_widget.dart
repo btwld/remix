@@ -103,7 +103,7 @@ class RemixAvatar extends StyleWidget<RemixAvatarSpec> {
     return Box(
       styleSpec: spec.container,
       child: Container(
-        alignment: Alignment.center,
+        alignment: .center,
         decoration: backgroundImage != null
             ? BoxDecoration(
                 image: DecorationImage(

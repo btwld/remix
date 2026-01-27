@@ -18,16 +18,16 @@ class FortalTextFieldStyles {
   /// Defaults to surface variant with size2.
   static RemixTextFieldStyle create({
     FortalTextFieldVariant variant = .surface,
-    FortalTextFieldSize size = FortalTextFieldSize.size2,
+    FortalTextFieldSize size = .size2,
   }) {
     return switch (variant) {
-      FortalTextFieldVariant.surface => surface(size: size),
-      FortalTextFieldVariant.soft => soft(size: size),
+      .surface => surface(size: size),
+      .soft => soft(size: size),
     };
   }
 
   static RemixTextFieldStyle base({
-    FortalTextFieldSize size = FortalTextFieldSize.size2,
+    FortalTextFieldSize size = .size2,
   }) {
     return RemixTextFieldStyle(
           hintText: TextStyler().textHeightBehavior(
@@ -53,7 +53,7 @@ class FortalTextFieldStyles {
   }
 
   static RemixTextFieldStyle surface({
-    FortalTextFieldSize size = FortalTextFieldSize.size2,
+    FortalTextFieldSize size = .size2,
   }) {
     return base(size: size)
         .merge(
@@ -100,7 +100,7 @@ class FortalTextFieldStyles {
   }
 
   static RemixTextFieldStyle soft({
-    FortalTextFieldSize size = FortalTextFieldSize.size2,
+    FortalTextFieldSize size = .size2,
   }) {
     return base(size: size)
         .merge(
@@ -137,19 +137,19 @@ class FortalTextFieldStyles {
 
   static RemixTextFieldStyle _sizeStyle(FortalTextFieldSize size) {
     return switch (size) {
-      FortalTextFieldSize.size1 => RemixTextFieldStyle(
+      .size1 => RemixTextFieldStyle(
         text: TextStyler().fontSize(12.0),
         hintText: TextStyler().fontSize(12.0),
         helperText: TextStyler().fontSize(11.0),
         label: TextStyler().fontSize(11.0),
       ).borderRadiusAll(FortalTokens.radius2()).paddingAll(8.0),
-      FortalTextFieldSize.size2 => RemixTextFieldStyle(
+      .size2 => RemixTextFieldStyle(
         text: TextStyler().fontSize(14.0),
         hintText: TextStyler().fontSize(14.0),
         helperText: TextStyler().fontSize(12.0),
         label: TextStyler().fontSize(13.0),
       ).borderRadiusAll(FortalTokens.radius3()).paddingAll(12.0),
-      FortalTextFieldSize.size3 => RemixTextFieldStyle(
+      .size3 => RemixTextFieldStyle(
         text: TextStyler().fontSize(15.0),
         hintText: TextStyler().fontSize(15.0),
         helperText: TextStyler().fontSize(14.0),

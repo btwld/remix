@@ -15,7 +15,7 @@ class FortalAccordionStyle {
     return RemixAccordionStyle<T>()
         .trigger(
           FlexBoxStyler()
-              .direction(Axis.horizontal)
+              .direction(.horizontal)
               .paddingX(FortalTokens.space3())
               .paddingY(FortalTokens.space3())
               .color(FortalTokens.gray1()),

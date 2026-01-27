@@ -16,16 +16,16 @@ class FortalRadioStyles {
   /// Returns a RemixRadioStyle configured with Fortal design tokens.
   /// Defaults to surface variant with size2.
   static RemixRadioStyle create({
-    FortalRadioVariant variant = FortalRadioVariant.surface,
-    FortalRadioSize size = FortalRadioSize.size2,
+    FortalRadioVariant variant = .surface,
+    FortalRadioSize size = .size2,
   }) {
     return switch (variant) {
-      FortalRadioVariant.surface => surface(size: size),
-      FortalRadioVariant.soft => soft(size: size),
+      .surface => surface(size: size),
+      .soft => soft(size: size),
     };
   }
 
-  static RemixRadioStyle base({FortalRadioSize size = FortalRadioSize.size2}) {
+  static RemixRadioStyle base({FortalRadioSize size = .size2}) {
     return RemixRadioStyle()
         // Focus state (generic)
         .onFocused(
@@ -43,7 +43,7 @@ class FortalRadioStyles {
   /// Surface radios use neutral surface with subtle borders.
   /// Used for forms with softer visual appearance.
   static RemixRadioStyle surface({
-    FortalRadioSize size = FortalRadioSize.size2,
+    FortalRadioSize size = .size2,
   }) {
     return base(size: size)
         // Container (the radio circle itself) - no size properties
@@ -84,7 +84,7 @@ class FortalRadioStyles {
   ///
   /// Soft radios use accent-tinted background with accent borders.
   /// Used for forms that need accent color integration.
-  static RemixRadioStyle soft({FortalRadioSize size = FortalRadioSize.size2}) {
+  static RemixRadioStyle soft({FortalRadioSize size = .size2}) {
     return base(size: size)
         // Container (the radio circle itself) - no size properties
         .color(FortalTokens.accentA4())
@@ -114,25 +114,25 @@ class FortalRadioStyles {
 
   static RemixRadioStyle _sizeStyle(FortalRadioSize size) {
     return switch (size) {
-      FortalRadioSize.size1 => RemixRadioStyle(
+      .size1 => RemixRadioStyle(
         container: BoxStyler()
             .width(16.0)
             .height(16.0)
-            .alignment(Alignment.center),
+            .alignment(.center),
         indicator: BoxStyler().width(6.0).height(6.0),
       ),
-      FortalRadioSize.size2 => RemixRadioStyle(
+      .size2 => RemixRadioStyle(
         container: BoxStyler()
             .width(20.0)
             .height(20.0)
-            .alignment(Alignment.center),
+            .alignment(.center),
         indicator: BoxStyler().width(8.0).height(8.0),
       ),
-      FortalRadioSize.size3 => RemixRadioStyle(
+      .size3 => RemixRadioStyle(
         container: BoxStyler()
             .width(24.0)
             .height(24.0)
-            .alignment(Alignment.center),
+            .alignment(.center),
         indicator: BoxStyler().width(10.0).height(10.0),
       ),
     };

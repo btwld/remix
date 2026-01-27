@@ -29,10 +29,10 @@ Widget createRemixPreviewDark(Widget child) {
     child: MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        brightness: Brightness.dark,
+        brightness: .dark,
         colorScheme: ColorScheme.fromSeed(
           seedColor: MixColors.blueGrey,
-          brightness: Brightness.dark,
+          brightness: .dark,
         ),
       ),
       home: Scaffold(

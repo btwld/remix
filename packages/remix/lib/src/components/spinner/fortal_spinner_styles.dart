@@ -19,13 +19,13 @@ class FortalSpinnerStyles {
   /// Returns a RemixSpinnerStyle configured with Fortal design tokens.
   /// Defaults to size2. Spinners have no variants, only defaultStyle().
   static RemixSpinnerStyle create({
-    FortalSpinnerSize size = FortalSpinnerSize.size2,
+    FortalSpinnerSize size = .size2,
   }) {
     return defaultStyle(size: size);
   }
 
   static RemixSpinnerStyle base({
-    FortalSpinnerSize size = FortalSpinnerSize.size2,
+    FortalSpinnerSize size = .size2,
   }) {
     return RemixSpinnerStyle(
       // Default properties (no focus state for spinners)
@@ -37,7 +37,7 @@ class FortalSpinnerStyles {
   }
 
   static RemixSpinnerStyle defaultStyle({
-    FortalSpinnerSize size = FortalSpinnerSize.size2,
+    FortalSpinnerSize size = .size2,
   }) {
     return base(size: size);
   }
@@ -48,15 +48,15 @@ class FortalSpinnerStyles {
 
   static RemixSpinnerStyle _sizeStyle(FortalSpinnerSize size) {
     return switch (size) {
-      FortalSpinnerSize.size1 => RemixSpinnerStyle(
+      .size1 => RemixSpinnerStyle(
           size: 16.0,
           strokeWidth: 1.5,
         ),
-      FortalSpinnerSize.size2 => RemixSpinnerStyle(
+      .size2 => RemixSpinnerStyle(
           size: 20.0,
           strokeWidth: 2.0,
         ),
-      FortalSpinnerSize.size3 => RemixSpinnerStyle(
+      .size3 => RemixSpinnerStyle(
           size: 24.0,
           strokeWidth: 2.5,
         ),

@@ -76,7 +76,7 @@ Brightness resolveRemixBrightnessValues({
     return themeBrightness;
   }
 
-  return Brightness.light;
+  return .light;
 }
 
 /// Configuration data for a legacy Remix theme.

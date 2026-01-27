@@ -30,15 +30,15 @@ Widget buildRadioUseCase(BuildContext context) {
                 _state.update(value!);
               },
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: .start,
+                crossAxisAlignment: .start,
+                mainAxisSize: .min,
                 children: Theme.values
                     .map(
                       (theme) => Padding(
                         padding: const EdgeInsets.all(4.0),
                         child: Row(
-                          mainAxisSize: MainAxisSize.min,
+                          mainAxisSize: .min,
                           children: [
                             RemixRadio<Theme>(
                               style: FortalRadioStyles.create(

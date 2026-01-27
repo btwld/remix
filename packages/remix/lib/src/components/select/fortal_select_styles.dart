@@ -19,25 +19,25 @@ class FortalSelectStyles {
   /// Returns a RemixSelectStyle configured with Fortal design tokens.
   /// Defaults to surface variant with size2.
   static RemixSelectStyle create({
-    FortalSelectVariant variant = FortalSelectVariant.surface,
-    FortalSelectSize size = FortalSelectSize.size2,
+    FortalSelectVariant variant = .surface,
+    FortalSelectSize size = .size2,
   }) {
     return switch (variant) {
-      FortalSelectVariant.surface => surface(size: size),
-      FortalSelectVariant.soft => soft(size: size),
-      FortalSelectVariant.ghost => ghost(size: size),
+      .surface => surface(size: size),
+      .soft => soft(size: size),
+      .ghost => ghost(size: size),
     };
   }
 
   static RemixSelectStyle base({
-    FortalSelectSize size = FortalSelectSize.size2,
+    FortalSelectSize size = .size2,
   }) {
     return RemixSelectStyle()
         .trigger(
           RemixSelectTriggerStyle()
-              .direction(Axis.horizontal)
-              .mainAxisAlignment(MainAxisAlignment.spaceBetween)
-              .crossAxisAlignment(CrossAxisAlignment.center)
+              .direction(.horizontal)
+              .mainAxisAlignment(.spaceBetween)
+              .crossAxisAlignment(.center)
               .borderRadiusAll(FortalTokens.radius3())
               .label(TextStyler().color(FortalTokens.gray12()))
               .icon(IconStyler(color: FortalTokens.gray12(), size: 16.0)),
@@ -67,7 +67,7 @@ class FortalSelectStyles {
   }
 
   static RemixSelectStyle surface({
-    FortalSelectSize size = FortalSelectSize.size2,
+    FortalSelectSize size = .size2,
   }) {
     return base(size: size).trigger(
       RemixSelectTriggerStyle()
@@ -80,7 +80,7 @@ class FortalSelectStyles {
   }
 
   static RemixSelectStyle soft({
-    FortalSelectSize size = FortalSelectSize.size2,
+    FortalSelectSize size = .size2,
   }) {
     return base(size: size).trigger(
       RemixSelectTriggerStyle()
@@ -91,7 +91,7 @@ class FortalSelectStyles {
   }
 
   static RemixSelectStyle ghost({
-    FortalSelectSize size = FortalSelectSize.size2,
+    FortalSelectSize size = .size2,
   }) {
     return base(size: size).trigger(
       RemixSelectTriggerStyle()
@@ -106,13 +106,13 @@ class FortalSelectStyles {
 
   static RemixSelectStyle _sizeStyle(FortalSelectSize size) {
     return switch (size) {
-      FortalSelectSize.size1 => RemixSelectStyle().trigger(
+      .size1 => RemixSelectStyle().trigger(
         RemixSelectTriggerStyle().paddingX(8.0).height(24.0),
       ),
-      FortalSelectSize.size2 => RemixSelectStyle().trigger(
+      .size2 => RemixSelectStyle().trigger(
         RemixSelectTriggerStyle().paddingX(12.0).height(32.0),
       ),
-      FortalSelectSize.size3 => RemixSelectStyle().trigger(
+      .size3 => RemixSelectStyle().trigger(
         RemixSelectTriggerStyle().paddingX(16.0).height(40.0),
       ),
     };
@@ -130,18 +130,18 @@ class FortalSelectItemStyles {
   /// Returns a RemixSelectMenuItemStyle configured with Fortal design tokens.
   /// Defaults to surface variant with size2.
   static RemixSelectMenuItemStyle create({
-    FortalSelectVariant variant = FortalSelectVariant.surface,
-    FortalSelectSize size = FortalSelectSize.size2,
+    FortalSelectVariant variant = .surface,
+    FortalSelectSize size = .size2,
   }) {
     return switch (variant) {
-      FortalSelectVariant.surface => surface(size: size),
-      FortalSelectVariant.soft => soft(size: size),
-      FortalSelectVariant.ghost => ghost(size: size),
+      .surface => surface(size: size),
+      .soft => soft(size: size),
+      .ghost => ghost(size: size),
     };
   }
 
   static RemixSelectMenuItemStyle base({
-    FortalSelectSize size = FortalSelectSize.size2,
+    FortalSelectSize size = .size2,
   }) {
     return RemixSelectMenuItemStyle()
         .icon(IconStyler(size: 16.0))
@@ -150,7 +150,7 @@ class FortalSelectItemStyles {
   }
 
   static RemixSelectMenuItemStyle surface({
-    FortalSelectSize size = FortalSelectSize.size2,
+    FortalSelectSize size = .size2,
   }) {
     return base(size: size)
         .color(Colors.transparent)
@@ -163,7 +163,7 @@ class FortalSelectItemStyles {
   }
 
   static RemixSelectMenuItemStyle soft({
-    FortalSelectSize size = FortalSelectSize.size2,
+    FortalSelectSize size = .size2,
   }) {
     return base(size: size)
         .color(Colors.transparent)
@@ -177,7 +177,7 @@ class FortalSelectItemStyles {
   }
 
   static RemixSelectMenuItemStyle ghost({
-    FortalSelectSize size = FortalSelectSize.size2,
+    FortalSelectSize size = .size2,
   }) {
     return base(size: size)
         .color(Colors.transparent)
@@ -195,11 +195,11 @@ class FortalSelectItemStyles {
 
   static RemixSelectMenuItemStyle _sizeStyle(FortalSelectSize size) {
     return switch (size) {
-      FortalSelectSize.size1 =>
+      .size1 =>
         RemixSelectMenuItemStyle().paddingX(6.0).height(20.0),
-      FortalSelectSize.size2 =>
+      .size2 =>
         RemixSelectMenuItemStyle().paddingX(8.0).height(24.0),
-      FortalSelectSize.size3 =>
+      .size3 =>
         RemixSelectMenuItemStyle().paddingX(10.0).height(28.0),
     };
   }

@@ -152,7 +152,7 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
     return RemixSelectStyle()
         .trigger(
           RemixSelectTriggerStyle()
-              .mainAxisSize(MainAxisSize.min)
+              .mainAxisSize(.min)
               .wrap(WidgetModifierConfig.intrinsicWidth()),
         )
         .menuContainer(
@@ -218,8 +218,8 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
       triggerFocusNode: widget.focusNode,
       semanticLabel: widget.semanticLabel,
       positioning: OverlayPositionConfig(
-        targetAnchor: widget.targetAnchor ?? Alignment.bottomCenter,
-        followerAnchor: widget.followerAnchor ?? Alignment.topCenter,
+        targetAnchor: widget.targetAnchor ?? .bottomCenter,
+        followerAnchor: widget.followerAnchor ?? .topCenter,
       ),
       onOpen: () {
         animationController.forward();

@@ -19,16 +19,16 @@ class FortalMenuStyles {
   /// Returns a RemixMenuStyle configured with Fortal design tokens.
   /// Defaults to solid variant with size2.
   static RemixMenuStyle create({
-    FortalMenuVariant variant = FortalMenuVariant.solid,
-    FortalMenuSize size = FortalMenuSize.size2,
+    FortalMenuVariant variant = .solid,
+    FortalMenuSize size = .size2,
   }) {
     return switch (variant) {
-      FortalMenuVariant.solid => solid(size: size),
-      FortalMenuVariant.soft => soft(size: size),
+      .solid => solid(size: size),
+      .soft => soft(size: size),
     };
   }
 
-  static RemixMenuStyle base({FortalMenuSize size = FortalMenuSize.size2}) {
+  static RemixMenuStyle base({FortalMenuSize size = .size2}) {
     return RemixMenuStyle()
         .trigger(
           RemixMenuTriggerStyle()
@@ -69,7 +69,7 @@ class FortalMenuStyles {
         .merge(_sizeStyle(size));
   }
 
-  static RemixMenuStyle solid({FortalMenuSize size = FortalMenuSize.size2}) {
+  static RemixMenuStyle solid({FortalMenuSize size = .size2}) {
     return base(size: size).trigger(
       RemixMenuTriggerStyle()
           .icon(IconStyler(color: FortalTokens.accentContrast(), size: 16))
@@ -79,7 +79,7 @@ class FortalMenuStyles {
     );
   }
 
-  static RemixMenuStyle soft({FortalMenuSize size = FortalMenuSize.size2}) {
+  static RemixMenuStyle soft({FortalMenuSize size = .size2}) {
     return base(size: size).trigger(
       RemixMenuTriggerStyle()
           .decoration(BoxDecorationMix(color: FortalTokens.accent3()))
@@ -102,7 +102,7 @@ class FortalMenuStyles {
 
   static RemixMenuStyle _sizeStyle(FortalMenuSize size) {
     return switch (size) {
-      FortalMenuSize.size1 => RemixMenuStyle().trigger(
+      .size1 => RemixMenuStyle().trigger(
         RemixMenuTriggerStyle().padding(
           EdgeInsetsMix.symmetric(
             vertical: FortalTokens.space1(),
@@ -110,7 +110,7 @@ class FortalMenuStyles {
           ),
         ),
       ),
-      FortalMenuSize.size2 => RemixMenuStyle().trigger(
+      .size2 => RemixMenuStyle().trigger(
         RemixMenuTriggerStyle().padding(
           EdgeInsetsMix.symmetric(
             vertical: FortalTokens.space2(),
@@ -133,16 +133,16 @@ class FortalMenuItemStyles {
   /// Returns a RemixMenuItemStyle configured with Fortal design tokens.
   /// Defaults to solid variant with size2.
   static RemixMenuItemStyle create({
-    FortalMenuVariant variant = FortalMenuVariant.solid,
-    FortalMenuSize size = FortalMenuSize.size2,
+    FortalMenuVariant variant = .solid,
+    FortalMenuSize size = .size2,
   }) {
     return switch (variant) {
-      FortalMenuVariant.solid => solid(size: size),
-      FortalMenuVariant.soft => soft(size: size),
+      .solid => solid(size: size),
+      .soft => soft(size: size),
     };
   }
 
-  static RemixMenuItemStyle base({FortalMenuSize size = FortalMenuSize.size2}) {
+  static RemixMenuItemStyle base({FortalMenuSize size = .size2}) {
     return RemixMenuItemStyle()
         .borderRadius(BorderRadiusMix.all(FortalTokens.radius2()))
         .label(
@@ -156,7 +156,7 @@ class FortalMenuItemStyles {
   }
 
   static RemixMenuItemStyle solid({
-    FortalMenuSize size = FortalMenuSize.size2,
+    FortalMenuSize size = .size2,
   }) {
     return base(size: size)
         .color(FortalTokens.graySurface())
@@ -167,7 +167,7 @@ class FortalMenuItemStyles {
         );
   }
 
-  static RemixMenuItemStyle soft({FortalMenuSize size = FortalMenuSize.size2}) {
+  static RemixMenuItemStyle soft({FortalMenuSize size = .size2}) {
     return base(size: size)
         .decoration(BoxDecorationMix(color: Colors.transparent))
         .onHovered(
@@ -194,13 +194,13 @@ class FortalMenuItemStyles {
 
   static RemixMenuItemStyle _sizeStyle(FortalMenuSize size) {
     return switch (size) {
-      FortalMenuSize.size1 => RemixMenuItemStyle().padding(
+      .size1 => RemixMenuItemStyle().padding(
         EdgeInsetsMix.symmetric(
           vertical: FortalTokens.space1(),
           horizontal: FortalTokens.space1(),
         ),
       ),
-      FortalMenuSize.size2 => RemixMenuItemStyle().padding(
+      .size2 => RemixMenuItemStyle().padding(
         EdgeInsetsMix.symmetric(
           vertical: FortalTokens.space2(),
           horizontal: FortalTokens.space2(),

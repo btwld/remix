@@ -22,7 +22,7 @@ class CardExample extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: .center,
         spacing: 16,
         children: [
           RemixCard(

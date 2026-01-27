@@ -97,7 +97,7 @@ class RemixSlider extends StatelessWidget {
       enableFeedback: enableHapticFeedback,
       focusNode: focusNode,
       autofocus: autofocus,
-      direction: Axis.horizontal,
+      direction: .horizontal,
       divisions: snapDivisions,
       builder: (context, state, _) {
         return StyleBuilder(
@@ -165,7 +165,7 @@ class RemixSlider extends StatelessWidget {
                   final thumbPosition = availableWidth * normalizedValue;
 
                   return Stack(
-                    alignment: Alignment.centerLeft,
+                    alignment: .centerLeft,
                     children: [
                       Padding(
                         padding: EdgeInsets.symmetric(
@@ -366,8 +366,8 @@ Paint _createPaint(Color color, double width) {
   return Paint()
     ..color = color
     ..strokeWidth = width
-    ..strokeCap = StrokeCap.round
-    ..style = PaintingStyle.stroke
+    ..strokeCap = .round
+    ..style = .stroke
     ..isAntiAlias = true;
 }
 

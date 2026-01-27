@@ -11,9 +11,9 @@ class SpacedColumn extends StatelessWidget {
     super.key,
     required this.children,
     this.spacing = 8.0,
-    this.mainAxisAlignment = MainAxisAlignment.start,
-    this.crossAxisAlignment = CrossAxisAlignment.center,
-    this.mainAxisSize = MainAxisSize.max,
+    this.mainAxisAlignment = .start,
+    this.crossAxisAlignment = .center,
+    this.mainAxisSize = .max,
   });
 
   @override

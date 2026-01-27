@@ -27,8 +27,8 @@ class _RemixRadioGroupPreview extends StatelessWidget {
       groupValue: groupValue,
       onChanged: (_) {},
       child: const Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: .min,
+        crossAxisAlignment: .start,
         children: [
           _RemixLabeledRadio(value: 'A', label: 'Option A'),
           _RemixLabeledRadio(value: 'B', label: 'Option B'),
@@ -57,7 +57,7 @@ class _RemixLabeledRadio extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: .min,
       children: [
         RemixRadio<String>(
           value: value,
@@ -83,8 +83,8 @@ class _MaterialRadioGroupPreviewState extends State<_MaterialRadioGroupPreview> 
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: .min,
+      crossAxisAlignment: .start,
       children: [
         _LabeledRadio(
           value: 'A',
@@ -132,7 +132,7 @@ class _LabeledRadio extends StatelessWidget {
     return GestureDetector(
       onTap: enabled ? () => onChanged?.call(value) : null,
       child: Row(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: .min,
         children: [
           Container(
             width: 20,

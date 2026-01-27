@@ -174,7 +174,7 @@ class RemixIconButton extends StatelessWidget {
 
             // Layer spinner above the content while keeping size stable.
             final layered = Stack(
-              alignment: Alignment.center,
+              alignment: .center,
               children: [content, if (loading) spinner],
             );
 

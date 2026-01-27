@@ -29,7 +29,7 @@ Widget buildCardUseCase(BuildContext context) {
             ),
           ),
           child: Row(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: .min,
             spacing: 16,
             children: [
               RemixAvatar(
@@ -40,8 +40,8 @@ Widget buildCardUseCase(BuildContext context) {
                 ),
               ),
               Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: .min,
+                crossAxisAlignment: .start,
                 children: [
                   StyledText(
                     context.knobs.string(

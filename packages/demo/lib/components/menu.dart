@@ -34,8 +34,8 @@ Widget buildMenuUseCase(BuildContext context) {
           child: Center(
             child: RemixMenu(
               positioning: const OverlayPositionConfig(
-                followerAnchor: Alignment.topCenter,
-                targetAnchor: Alignment.bottomCenter,
+                followerAnchor: .topCenter,
+                targetAnchor: .bottomCenter,
               ),
               trigger: const RemixMenuTrigger(
                 label: 'Menu',
