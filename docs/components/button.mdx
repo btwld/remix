@@ -62,9 +62,9 @@ class ButtonExample extends StatelessWidget {
               .topRight(const Radius.circular(12)),
           side: BorderSideMix.width(1).color(Colors.redAccent),
         )
-        .wrapScale(x: 1, y: 1)
+        .wrap(WidgetModifierConfig.scale(x: 1, y: 1))
         .onPressed(
-          RemixButtonStyle().wrapScale(x: 0.90, y: 0.90),
+          RemixButtonStyle().wrap(WidgetModifierConfig.scale(x: 0.90, y: 0.90)),
         )
         .onHovered(
           RemixButtonStyle()
@@ -172,7 +172,6 @@ const RemixButton({
   bool enabled = true,
   required VoidCallback? onPressed,
   VoidCallback? onLongPress,
-  VoidCallback? onDoubleTap,
   FocusNode? focusNode,
   bool autofocus = false,
   bool enableFeedback = true,
@@ -245,10 +244,6 @@ Optional. Whether to provide feedback when the button is pressed.  Defaults to t
 #### `onLongPress` → `VoidCallback?`
 
 Optional. Callback function called when the button is long pressed.
-
-#### `onDoubleTap` → `VoidCallback?`
-
-Optional. Callback function called when the button is double tapped.
 
 #### `focusNode` → `FocusNode?`
 

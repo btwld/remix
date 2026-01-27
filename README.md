@@ -115,7 +115,7 @@ final button = RemixButtonStyle()
         .color(Colors.blue.shade700),
   )
   .onPressed(
-    RemixButtonStyle().wrapScale(x: 0.95, y: 0.95),
+    RemixButtonStyle().wrap(WidgetModifierConfig.scale(x: 0.95, y: 0.95)),
   );
 ```
 
@@ -136,7 +136,7 @@ final style = RemixButtonStyle()
   )
   .onPressed(
     RemixButtonStyle()
-        .wrapScale(x: 0.95, y: 0.95),
+        .wrap(WidgetModifierConfig.scale(x: 0.95, y: 0.95)),
   );
 ```
 
@@ -204,7 +204,7 @@ final style = FortalButtonStyle.solid()
   .borderRadiusAll(const Radius.circular(8))
   .paddingX(32)
   .onHovered(
-    RemixButtonStyle().wrapScale(x: 1.05, y: 1.05),
+    RemixButtonStyle().wrap(WidgetModifierConfig.scale(x: 1.05, y: 1.05)),
   );
 ```
 
