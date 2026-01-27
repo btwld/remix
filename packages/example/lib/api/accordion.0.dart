@@ -104,7 +104,7 @@ class _AccordionExampleState extends State<AccordionExample> {
         .trigger(
           FlexBoxStyler()
               .direction(.horizontal)
-              .mainAxisAlignment(MainAxisAlignment.spaceBetween)
+              .mainAxisAlignment(.spaceBetween)
               .spacing(12),
         )
         .leadingIcon(IconStyler().color(Colors.grey.shade700).size(20))

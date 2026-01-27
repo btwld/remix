@@ -35,7 +35,7 @@ class _TabsExampleState extends State<TabsExample> {
           onChanged: (id) => setState(() => _tab = id),
           child: Column(
             mainAxisSize: .max,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: .stretch,
             children: [
               RemixTabBar(
                 style: tabBarStyle,
