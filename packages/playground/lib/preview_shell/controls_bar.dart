@@ -27,8 +27,8 @@ class ControlsBar extends StatelessWidget {
           children: [
             SegmentedButton<Brightness>(
               segments: const [
-                ButtonSegment(value: Brightness.light, label: Text('Light')),
-                ButtonSegment(value: Brightness.dark, label: Text('Dark')),
+                ButtonSegment(value: .light, label: Text('Light')),
+                ButtonSegment(value: .dark, label: Text('Dark')),
               ],
               selected: {brightness},
               onSelectionChanged: (selection) {

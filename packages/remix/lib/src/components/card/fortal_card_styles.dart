@@ -16,17 +16,17 @@ class FortalCardStyles {
   /// Returns a RemixCardStyle configured with Fortal design tokens.
   /// Defaults to surface variant with size2.
   static RemixCardStyle create({
-    FortalCardVariant variant = FortalCardVariant.surface,
-    FortalCardSize size = FortalCardSize.size2,
+    FortalCardVariant variant = .surface,
+    FortalCardSize size = .size2,
   }) {
     return switch (variant) {
-      FortalCardVariant.surface => surface(size: size),
-      FortalCardVariant.classic => classic(size: size),
-      FortalCardVariant.ghost => ghost(size: size),
+      .surface => surface(size: size),
+      .classic => classic(size: size),
+      .ghost => ghost(size: size),
     };
   }
 
-  static RemixCardStyle base({FortalCardSize size = FortalCardSize.size2}) {
+  static RemixCardStyle base({FortalCardSize size = .size2}) {
     return RemixCardStyle()
     // Merge with size-specific styles
     .merge(_sizeStyle(size));
@@ -36,7 +36,7 @@ class FortalCardStyles {
   ///
   /// Surface cards use panel solid background with subtle borders.
   /// Used for standard content containers.
-  static RemixCardStyle surface({FortalCardSize size = FortalCardSize.size2}) {
+  static RemixCardStyle surface({FortalCardSize size = .size2}) {
     return base(size: size)
         .borderAll(
           color: FortalTokens.gray6(),
@@ -72,7 +72,7 @@ class FortalCardStyles {
   ///
   /// Ghost cards have no background or border.
   /// Used for subtle content grouping without visual container.
-  static RemixCardStyle ghost({FortalCardSize size = FortalCardSize.size2}) {
+  static RemixCardStyle ghost({FortalCardSize size = .size2}) {
     return base(size: size)
     // Visual styling only - no size properties
     .color(Colors.transparent);
@@ -84,14 +84,14 @@ class FortalCardStyles {
 
   static RemixCardStyle _sizeStyle(FortalCardSize size) {
     return switch (size) {
-      FortalCardSize.size1 => RemixCardStyle().paddingAll(
+      .size1 => RemixCardStyle().paddingAll(
         FortalTokens.space4(),
       ),
       // Per JSON: card-padding = space-8 (32px) for default
-      FortalCardSize.size2 => RemixCardStyle().paddingAll(
+      .size2 => RemixCardStyle().paddingAll(
         FortalTokens.space5(),
       ),
-      FortalCardSize.size3 => RemixCardStyle().paddingAll(
+      .size3 => RemixCardStyle().paddingAll(
         FortalTokens.space6(),
       ),
     };

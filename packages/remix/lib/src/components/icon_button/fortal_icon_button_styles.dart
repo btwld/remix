@@ -17,20 +17,20 @@ class FortalIconButtonStyle {
   /// Returns a RemixIconButtonStyle configured with Fortal design tokens.
   /// Defaults to solid variant with size2.
   static RemixIconButtonStyle create({
-    FortalIconButtonVariant variant = FortalIconButtonVariant.solid,
-    FortalIconButtonSize size = FortalIconButtonSize.size2,
+    FortalIconButtonVariant variant = .solid,
+    FortalIconButtonSize size = .size2,
   }) {
     return switch (variant) {
-      FortalIconButtonVariant.solid => solid(size: size),
-      FortalIconButtonVariant.soft => soft(size: size),
-      FortalIconButtonVariant.surface => surface(size: size),
-      FortalIconButtonVariant.outline => outline(size: size),
-      FortalIconButtonVariant.ghost => ghost(size: size),
+      .solid => solid(size: size),
+      .soft => soft(size: size),
+      .surface => surface(size: size),
+      .outline => outline(size: size),
+      .ghost => ghost(size: size),
     };
   }
 
   static RemixIconButtonStyle base({
-    FortalIconButtonSize size = FortalIconButtonSize.size2,
+    FortalIconButtonSize size = .size2,
   }) {
     return RemixIconButtonStyle()
         // Generic spinner properties (size set by _sizeStyle)
@@ -52,7 +52,7 @@ class FortalIconButtonStyle {
   }
 
   static RemixIconButtonStyle solid({
-    FortalIconButtonSize size = FortalIconButtonSize.size2,
+    FortalIconButtonSize size = .size2,
   }) {
     return base(size: size)
         .color(FortalTokens.accent9())
@@ -75,7 +75,7 @@ class FortalIconButtonStyle {
   }
 
   static RemixIconButtonStyle soft({
-    FortalIconButtonSize size = FortalIconButtonSize.size2,
+    FortalIconButtonSize size = .size2,
   }) {
     return base(size: size)
         .color(FortalTokens.accent3())
@@ -96,7 +96,7 @@ class FortalIconButtonStyle {
   }
 
   static RemixIconButtonStyle surface({
-    FortalIconButtonSize size = FortalIconButtonSize.size2,
+    FortalIconButtonSize size = .size2,
   }) {
     return base(size: size)
         .color(FortalTokens.accentA2())
@@ -129,7 +129,7 @@ class FortalIconButtonStyle {
   }
 
   static RemixIconButtonStyle outline({
-    FortalIconButtonSize size = FortalIconButtonSize.size2,
+    FortalIconButtonSize size = .size2,
   }) {
     return base(size: size)
         .color(Colors.transparent)
@@ -160,7 +160,7 @@ class FortalIconButtonStyle {
   }
 
   static RemixIconButtonStyle ghost({
-    FortalIconButtonSize size = FortalIconButtonSize.size2,
+    FortalIconButtonSize size = .size2,
   }) {
     return base(size: size)
         .color(Colors.transparent)
@@ -185,28 +185,28 @@ class FortalIconButtonStyle {
     final style = RemixIconButtonStyle();
 
     return switch (size) {
-      FortalIconButtonSize.size1 =>
+      .size1 =>
         style
             .width(24.0)
             .height(24.0)
             .borderRadiusAll(FortalTokens.radius2())
             .iconSize(12.0)
             .spinner(RemixSpinnerStyle(size: 12.0)),
-      FortalIconButtonSize.size2 =>
+      .size2 =>
         style
             .width(32.0)
             .height(32.0)
             .borderRadiusAll(FortalTokens.radius3())
             .iconSize(16.0)
             .spinner(RemixSpinnerStyle(size: 16.0)),
-      FortalIconButtonSize.size3 =>
+      .size3 =>
         style
             .width(40.0)
             .height(40.0)
             .borderRadiusAll(FortalTokens.radius4())
             .iconSize(20.0)
             .spinner(RemixSpinnerStyle(size: 20.0)),
-      FortalIconButtonSize.size4 =>
+      .size4 =>
         style
             .width(48.0)
             .height(48.0)

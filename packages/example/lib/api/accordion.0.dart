@@ -39,9 +39,9 @@ class _AccordionExampleState extends State<AccordionExample> {
         width: 400,
         child: FlexBox(
           style: FlexBoxStyler()
-              .direction(Axis.vertical)
+              .direction(.vertical)
               .spacing(24)
-              .mainAxisSize(MainAxisSize.min),
+              .mainAxisSize(.min),
           children: [
             RemixAccordionGroup(
               controller: controller,
@@ -103,8 +103,8 @@ class _AccordionExampleState extends State<AccordionExample> {
         )
         .trigger(
           FlexBoxStyler()
-              .direction(Axis.horizontal)
-              .mainAxisAlignment(MainAxisAlignment.spaceBetween)
+              .direction(.horizontal)
+              .mainAxisAlignment(.spaceBetween)
               .spacing(12),
         )
         .leadingIcon(IconStyler().color(Colors.grey.shade700).size(20))

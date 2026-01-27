@@ -34,13 +34,13 @@ class _TabsExampleState extends State<TabsExample> {
           selectedTabId: _tab,
           onChanged: (id) => setState(() => _tab = id),
           child: Column(
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: .max,
+            crossAxisAlignment: .stretch,
             children: [
               RemixTabBar(
                 style: tabBarStyle,
                 child: Row(
-                  mainAxisSize: MainAxisSize.max,
+                  mainAxisSize: .max,
                   children: [
                     RemixTab(
                       tabId: 'tab1',
@@ -63,7 +63,7 @@ class _TabsExampleState extends State<TabsExample> {
                   style: tabViewStyle,
                   child: const SizedBox.expand(
                     child: Align(
-                      alignment: Alignment.topLeft,
+                      alignment: .topLeft,
                       child: Text('Content for Tab 1'),
                     ),
                   ),
@@ -75,7 +75,7 @@ class _TabsExampleState extends State<TabsExample> {
                   style: tabViewStyle,
                   child: const SizedBox.expand(
                     child: Align(
-                      alignment: Alignment.topLeft,
+                      alignment: .topLeft,
                       child: Text('Content for Tab 2'),
                     ),
                   ),

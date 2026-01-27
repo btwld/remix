@@ -4,8 +4,8 @@ import '../../widgets/comparison_view.dart';
 
 Widget buildDividerExample() {
   Widget listWithDividers({required bool remix}) => Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: .min,
+        crossAxisAlignment: .start,
         children: [
           const Text('Item 1'),
           remix ? const RemixCallout(text: 'Callout') : const Divider(),

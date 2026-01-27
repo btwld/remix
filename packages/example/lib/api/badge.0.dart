@@ -19,7 +19,7 @@ class BadgeExample extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: .center,
         spacing: 16,
         children: [
           RemixBadge(label: '8', style: styleLabel),

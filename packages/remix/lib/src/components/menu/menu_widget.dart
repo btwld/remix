@@ -197,7 +197,7 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
 
   RemixMenuStyle _buildStyle() {
     return RemixMenuStyle()
-        .trigger(RemixMenuTriggerStyle().mainAxisSize(MainAxisSize.min))
+        .trigger(RemixMenuTriggerStyle().mainAxisSize(.min))
         .overlay(
           FlexBoxStyler()
               .mainAxisSize(.min)

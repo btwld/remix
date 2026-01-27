@@ -8,26 +8,26 @@ class FortalAvatarStyles {
   const FortalAvatarStyles._();
 
   static RemixAvatarStyle create({
-    FortalAvatarVariant variant = FortalAvatarVariant.soft,
-    FortalAvatarSize size = FortalAvatarSize.size2,
+    FortalAvatarVariant variant = .soft,
+    FortalAvatarSize size = .size2,
   }) {
     return switch (variant) {
-      FortalAvatarVariant.soft => soft(size: size),
-      FortalAvatarVariant.solid => solid(size: size),
+      .soft => soft(size: size),
+      .solid => solid(size: size),
     };
   }
 
   static RemixAvatarStyle base({
-    FortalAvatarSize size = FortalAvatarSize.size2,
+    FortalAvatarSize size = .size2,
   }) {
     return RemixAvatarStyle()
-        .clipBehavior(Clip.hardEdge)
+        .clipBehavior(.hardEdge)
         .labelFontWeight(FontWeight.w500)
         .merge(_sizeStyle(size));
   }
 
   static RemixAvatarStyle soft({
-    FortalAvatarSize size = FortalAvatarSize.size2,
+    FortalAvatarSize size = .size2,
   }) {
     return base(size: size)
         .color(FortalTokens.accentA3())
@@ -36,7 +36,7 @@ class FortalAvatarStyles {
   }
 
   static RemixAvatarStyle solid({
-    FortalAvatarSize size = FortalAvatarSize.size2,
+    FortalAvatarSize size = .size2,
   }) {
     return base(size: size)
         .color(FortalTokens.accent9())
@@ -46,22 +46,22 @@ class FortalAvatarStyles {
 
   static RemixAvatarStyle _sizeStyle(FortalAvatarSize size) {
     return switch (size) {
-      FortalAvatarSize.size1 =>
+      .size1 =>
         RemixAvatarStyle()
             .square(24.0)
             .borderRadiusAll(FortalTokens.radius2())
             .labelTextStyle(FortalTokens.text1.mix()),
-      FortalAvatarSize.size2 =>
+      .size2 =>
         RemixAvatarStyle()
             .square(32.0)
             .borderRadiusAll(FortalTokens.radius3())
             .labelTextStyle(FortalTokens.text2.mix()),
-      FortalAvatarSize.size3 =>
+      .size3 =>
         RemixAvatarStyle()
             .square(40.0)
             .borderRadiusAll(FortalTokens.radius4())
             .labelTextStyle(FortalTokens.text3.mix()),
-      FortalAvatarSize.size4 =>
+      .size4 =>
         RemixAvatarStyle()
             .square(64.0)
             .borderRadiusAll(FortalTokens.radius5())

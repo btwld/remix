@@ -36,13 +36,13 @@ class _RadioExampleState extends State<RadioExample> {
           });
         },
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: .center,
           spacing: 16,
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: .min,
           children: [
             Row(
               spacing: 8,
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: .min,
               children: [
                 RemixRadio<String>(value: 'option1', style: style),
                 const Text('Option 1'),
@@ -50,7 +50,7 @@ class _RadioExampleState extends State<RadioExample> {
             ),
             Row(
               spacing: 8,
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: .min,
               children: [
                 RemixRadio<String>(value: 'option2', style: style),
                 const Text('Option 2'),

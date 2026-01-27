@@ -23,9 +23,9 @@ Widget buildAvatarUseCase(BuildContext context) {
                         color: FortalTokens.gray7(),
                         strokeAlign: BorderSide.strokeAlignOutside)
                     .borderRadiusAll(FortalTokens.radius4())
-                    .clipBehavior(Clip.hardEdge),
+                    .clipBehavior(.hardEdge),
                 child: ColumnBox(
-                  style: FlexBoxStyler().mainAxisSize(MainAxisSize.min),
+                  style: FlexBoxStyler().mainAxisSize(.min),
                   children: [
                     RemixAccordion(
                       value: 'accordion1',

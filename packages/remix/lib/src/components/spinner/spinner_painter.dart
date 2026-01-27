@@ -56,7 +56,7 @@ class RemixSpinnerPainter extends CustomPainter {
     // Draw track (background circle) if trackColor is provided
     if (trackColor != null) {
       final trackPaint = Paint()
-        ..style = PaintingStyle.stroke
+        ..style = .stroke
         ..strokeWidth = 2 * (trackStrokeWidth ?? strokeWidth)
         ..color = trackColor!;
 
@@ -65,7 +65,7 @@ class RemixSpinnerPainter extends CustomPainter {
 
     // Draw indicator arc
     final indicatorPaint = Paint()
-      ..style = PaintingStyle.stroke
+      ..style = .stroke
       ..strokeWidth = 2 * strokeWidth
       ..color = indicatorColor;
 

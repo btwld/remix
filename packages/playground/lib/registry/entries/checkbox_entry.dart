@@ -12,7 +12,7 @@ Widget buildCheckboxExample() {
         RemixCheckbox(selected: false, onChanged: _noopNullable),
         RemixCheckbox(tristate: true, selected: null, onChanged: _noopNullable),
         Row(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: .min,
           children: [
             RemixCheckbox(
               selected: true,
@@ -30,7 +30,7 @@ Widget buildCheckboxExample() {
         Checkbox(value: false, onChanged: (_) {}),
         Checkbox(tristate: true, value: null, onChanged: (_) {}),
         Row(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: .min,
           children: [
             Checkbox(value: true, onChanged: (_) {}),
             const SizedBox(width: 8),

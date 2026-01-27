@@ -17,17 +17,17 @@ class FortalProgressStyles {
   /// Returns a RemixProgressStyle configured with Fortal design tokens.
   /// Defaults to classic variant with size2.
   static RemixProgressStyle create({
-    FortalProgressVariant variant = FortalProgressVariant.surface,
-    FortalProgressSize size = FortalProgressSize.size2,
+    FortalProgressVariant variant = .surface,
+    FortalProgressSize size = .size2,
   }) {
     return switch (variant) {
-      FortalProgressVariant.surface => surface(size: size),
-      FortalProgressVariant.soft => soft(size: size),
+      .surface => surface(size: size),
+      .soft => soft(size: size),
     };
   }
 
   static RemixProgressStyle base({
-    FortalProgressSize size = FortalProgressSize.size2,
+    FortalProgressSize size = .size2,
   }) {
     return RemixProgressStyle()
         // Container styling - no focus for progress
@@ -37,7 +37,7 @@ class FortalProgressStyles {
   }
 
   static RemixProgressStyle surface({
-    FortalProgressSize size = FortalProgressSize.size2,
+    FortalProgressSize size = .size2,
   }) {
     return base(size: size)
         .foregroundDecoration(
@@ -60,7 +60,7 @@ class FortalProgressStyles {
   }
 
   static RemixProgressStyle soft({
-    FortalProgressSize size = FortalProgressSize.size2,
+    FortalProgressSize size = .size2,
   }) {
     return base(size: size)
         // Track styling (background bar) - uses accent4 instead of gray
@@ -84,7 +84,7 @@ class FortalProgressStyles {
 
   static RemixProgressStyle _sizeStyle(FortalProgressSize size) {
     return switch (size) {
-      FortalProgressSize.size1 =>
+      .size1 =>
         RemixProgressStyle()
             .height(4.0)
             .track(
@@ -93,7 +93,7 @@ class FortalProgressStyles {
             .indicator(
               BoxStyler().height(4.0).borderRadiusAll(FortalTokens.radius1()),
             ),
-      FortalProgressSize.size2 =>
+      .size2 =>
         RemixProgressStyle()
             .height(8.0)
             .track(
@@ -102,7 +102,7 @@ class FortalProgressStyles {
             .indicator(
               BoxStyler().height(8.0).borderRadiusAll(FortalTokens.radius2()),
             ),
-      FortalProgressSize.size3 =>
+      .size3 =>
         RemixProgressStyle()
             .height(12.0)
             .track(

@@ -17,17 +17,17 @@ class FortalSliderStyles {
   /// Returns a RemixSliderStyle configured with Fortal design tokens.
   /// Defaults to surface variant with size2.
   static RemixSliderStyle create({
-    FortalSliderVariant variant = FortalSliderVariant.surface,
-    FortalSliderSize size = FortalSliderSize.size2,
+    FortalSliderVariant variant = .surface,
+    FortalSliderSize size = .size2,
   }) {
     return switch (variant) {
-      FortalSliderVariant.surface => surface(size: size),
-      FortalSliderVariant.soft => soft(size: size),
+      .surface => surface(size: size),
+      .soft => soft(size: size),
     };
   }
 
   static RemixSliderStyle base({
-    FortalSliderSize size = FortalSliderSize.size2,
+    FortalSliderSize size = .size2,
   }) {
     return RemixSliderStyle()
         // Focus state
@@ -51,7 +51,7 @@ class FortalSliderStyles {
   }
 
   static RemixSliderStyle surface({
-    FortalSliderSize size = FortalSliderSize.size2,
+    FortalSliderSize size = .size2,
   }) {
     return base(size: size)
         .trackColor(FortalTokens.gray3())
@@ -65,7 +65,7 @@ class FortalSliderStyles {
   }
 
   static RemixSliderStyle soft({
-    FortalSliderSize size = FortalSliderSize.size2,
+    FortalSliderSize size = .size2,
   }) {
     return base(size: size)
         .trackColor(FortalTokens.gray4())
@@ -84,17 +84,17 @@ class FortalSliderStyles {
 
   static RemixSliderStyle _sizeStyle(FortalSliderSize size) {
     return switch (size) {
-      FortalSliderSize.size1 => RemixSliderStyle(
+      .size1 => RemixSliderStyle(
         thumb: BoxStyler().size(13.0, 13.0),
         trackWidth: 6.0,
         rangeWidth: 6.0,
       ),
-      FortalSliderSize.size2 => RemixSliderStyle(
+      .size2 => RemixSliderStyle(
         thumb: BoxStyler().size(16.0, 16.0),
         trackWidth: 8.0,
         rangeWidth: 8.0,
       ),
-      FortalSliderSize.size3 => RemixSliderStyle(
+      .size3 => RemixSliderStyle(
         thumb: BoxStyler().size(19.0, 19.0),
         trackWidth: 10.0,
         rangeWidth: 10.0,

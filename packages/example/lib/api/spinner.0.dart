@@ -26,7 +26,7 @@ class _SpinnerExampleState extends State<SpinnerExample> {
       child: SizedBox(
         width: 300,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: .center,
           spacing: 16,
           children: [
             RemixSpinner(style: styleDefault),

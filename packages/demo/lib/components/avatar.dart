@@ -20,7 +20,7 @@ Widget buildAvatarUseCase(BuildContext context) {
     child: Scaffold(
       body: Center(
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: .center,
           children: [
             RemixAvatar(
               label: 'LF',

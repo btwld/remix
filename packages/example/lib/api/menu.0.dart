@@ -34,7 +34,7 @@ class _MenuExampleState extends State<MenuExample> {
   Widget build(BuildContext context) {
     return Center(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: .center,
         children: [
           // RemixMenu
           RemixMenu<String>(
@@ -69,8 +69,8 @@ class _MenuExampleState extends State<MenuExample> {
             ],
             positioning: const OverlayPositionConfig(
               offset: Offset(0, 8),
-              followerAnchor: Alignment.topCenter,
-              targetAnchor: Alignment.bottomCenter,
+              followerAnchor: .topCenter,
+              targetAnchor: .bottomCenter,
             ),
             style: menuStyle,
             onSelected: (value) {

@@ -221,7 +221,7 @@ class RemixButtonStyle
         label: MixOps.resolve(context, $label),
         icon: MixOps.resolve(context, $icon),
         spinner: MixOps.resolve(context, $spinner),
-        iconAlignment: $iconAlignment ?? IconAlignment.start,
+        iconAlignment: $iconAlignment ?? .start,
       ),
       animation: $animation,
       widgetModifiers: $modifier?.resolve(context),

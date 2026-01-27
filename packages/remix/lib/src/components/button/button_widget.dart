@@ -145,7 +145,7 @@ class RemixButton extends StatelessWidget {
   bool get _isEnabled => enabled && !loading && onPressed != null;
 
   RemixButtonStyle _buildStyle() {
-    return RemixButtonStyle().mainAxisSize(MainAxisSize.min).merge(style);
+    return RemixButtonStyle().mainAxisSize(.min).merge(style);
   }
 
   @override
@@ -217,7 +217,7 @@ class RemixButton extends StatelessWidget {
 
             // Layer spinner above the content while keeping size stable.
             final layered = Stack(
-              alignment: Alignment.center,
+              alignment: .center,
               children: [contentRow, if (loading) spinner],
             );
 

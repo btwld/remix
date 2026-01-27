@@ -105,7 +105,7 @@ class RemixButtonSpec extends Spec<RemixButtonSpec> with Diagnosticable {
        label = label ?? const StyleSpec(spec: TextSpec()),
        icon = icon ?? const StyleSpec(spec: IconSpec()),
        spinner = spinner ?? const StyleSpec(spec: RemixSpinnerSpec()),
-       iconAlignment = iconAlignment ?? IconAlignment.start;
+       iconAlignment = iconAlignment ?? .start;
 
   /// Creates a copy of this RemixButtonSpec with the given fields replaced.
   ///

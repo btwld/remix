@@ -8,7 +8,7 @@ import 'preview_helper.dart';
 Widget previewCheckboxStates() {
   return createRemixPreview(
     const Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: .center,
       children: [
         _PreviewCheckbox(
           selected: false,
@@ -34,7 +34,7 @@ Widget previewCheckboxStates() {
 Widget previewSwitchStates() {
   return createRemixPreview(
     Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: .center,
       children: [
         RemixSwitch(
           selected: true,
@@ -69,7 +69,7 @@ Widget previewRadioGroup() {
       groupValue: 'option1',
       onChanged: (value) {},
       child: const Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: .center,
         children: [
           _PreviewRadio(value: 'option1', label: 'Selected Option'),
           _PreviewRadio(value: 'option2', label: 'Unselected Option'),
@@ -99,7 +99,7 @@ class _PreviewCheckbox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: .min,
       children: [
         RemixCheckbox(
           selected: selected,
@@ -130,7 +130,7 @@ class _PreviewRadio extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: Row(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: .min,
         children: [
           RemixRadio<String>(
             value: value,
@@ -150,7 +150,7 @@ Widget previewTextFields() {
     const SizedBox(
       width: 350,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: .center,
         children: [
           RemixTextField(
             hintText: 'Enter your name',
@@ -183,7 +183,7 @@ Widget previewSliders() {
     SizedBox(
       width: 300,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: .center,
         children: [
           const Text('Volume: 50%'),
           RemixSlider(

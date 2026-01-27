@@ -74,7 +74,7 @@ Widget buildButtonExample() {
       const FilledButton(
         onPressed: null,
         child: Row(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: .min,
           children: [
             SizedBox(
               width: 16,

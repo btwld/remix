@@ -37,7 +37,7 @@ class RemixTabs extends StatelessWidget {
     this.controller,
     this.selectedTabId,
     this.onChanged,
-    this.orientation = Axis.horizontal,
+    this.orientation = .horizontal,
     this.enabled = true,
     this.onEscapePressed,
   }) : assert(

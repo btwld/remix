@@ -1,4 +1,3 @@
-import 'package:flutter/widgets.dart';
 import 'package:mix/mix.dart';
 
 import 'remix_style.dart';
@@ -9,6 +8,6 @@ mixin SelectedWidgetStateVariantMixin<
 >
     on RemixStyle<S, T> {
   T onSelected(T style) {
-    return variant(ContextVariant.widgetState(WidgetState.selected), style);
+    return variant(ContextVariant.widgetState(.selected), style);
   }
 }

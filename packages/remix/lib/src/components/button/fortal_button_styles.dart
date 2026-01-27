@@ -17,20 +17,20 @@ class FortalButtonStyle {
   /// Returns a RemixButtonStyle configured with Fortal design tokens.
   /// Defaults to solid variant with size2.
   static RemixButtonStyle create({
-    FortalButtonVariant variant = FortalButtonVariant.solid,
-    FortalButtonSize size = FortalButtonSize.size2,
+    FortalButtonVariant variant = .solid,
+    FortalButtonSize size = .size2,
   }) {
     return switch (variant) {
-      FortalButtonVariant.solid => solid(size: size),
-      FortalButtonVariant.soft => soft(size: size),
-      FortalButtonVariant.surface => surface(size: size),
-      FortalButtonVariant.outline => outline(size: size),
-      FortalButtonVariant.ghost => ghost(size: size),
+      .solid => solid(size: size),
+      .soft => soft(size: size),
+      .surface => surface(size: size),
+      .outline => outline(size: size),
+      .ghost => ghost(size: size),
     };
   }
 
   static RemixButtonStyle base({
-    FortalButtonSize size = FortalButtonSize.size2,
+    FortalButtonSize size = .size2,
   }) {
     return RemixButtonStyle()
         // Generic font weight (not size-specific)
@@ -54,7 +54,7 @@ class FortalButtonStyle {
   }
 
   static RemixButtonStyle solid({
-    FortalButtonSize size = FortalButtonSize.size2,
+    FortalButtonSize size = .size2,
   }) {
     return base(size: size)
         .color(FortalTokens.accent9())
@@ -79,7 +79,7 @@ class FortalButtonStyle {
   }
 
   static RemixButtonStyle soft({
-    FortalButtonSize size = FortalButtonSize.size2,
+    FortalButtonSize size = .size2,
   }) {
     return base(size: size)
         .color(FortalTokens.accent3())
@@ -102,7 +102,7 @@ class FortalButtonStyle {
   }
 
   static RemixButtonStyle surface({
-    FortalButtonSize size = FortalButtonSize.size2,
+    FortalButtonSize size = .size2,
   }) {
     return base(size: size)
         .color(FortalTokens.accentA2())
@@ -137,7 +137,7 @@ class FortalButtonStyle {
   }
 
   static RemixButtonStyle outline({
-    FortalButtonSize size = FortalButtonSize.size2,
+    FortalButtonSize size = .size2,
   }) {
     return base(size: size)
         .color(Colors.transparent)
@@ -170,7 +170,7 @@ class FortalButtonStyle {
   }
 
   static RemixButtonStyle ghost({
-    FortalButtonSize size = FortalButtonSize.size2,
+    FortalButtonSize size = .size2,
   }) {
     var style = base(size: size)
         .color(Colors.transparent)
@@ -193,7 +193,7 @@ class FortalButtonStyle {
     // Ghost variant uses special padding for size2 from JSON:
     // button-ghost-padding-x: var(--space-4)
     // button-ghost-padding-y: var(--space-2)
-    if (size == FortalButtonSize.size2) {
+    if (size == .size2) {
       style = style
           .paddingX(FortalTokens.space4())
           .paddingY(FortalTokens.space2());
@@ -210,7 +210,7 @@ class FortalButtonStyle {
     final style = RemixButtonStyle();
 
     return switch (size) {
-      FortalButtonSize.size1 =>
+      .size1 =>
         style
             .paddingX(FortalTokens.space2())
             .paddingY(FortalTokens.space1())
@@ -224,7 +224,7 @@ class FortalButtonStyle {
             )
             .iconSize(12.0)
             .spinner(RemixSpinnerStyle(size: 12.0)),
-      FortalButtonSize.size2 =>
+      .size2 =>
         style
             // Generic size padding (ghost overrides provided via variant config)
             .paddingX(FortalTokens.space3())
@@ -239,7 +239,7 @@ class FortalButtonStyle {
             )
             .iconSize(16.0)
             .spinner(RemixSpinnerStyle(size: 16.0)),
-      FortalButtonSize.size3 =>
+      .size3 =>
         style
             .paddingX(FortalTokens.space4())
             .paddingY(FortalTokens.space3())
@@ -253,7 +253,7 @@ class FortalButtonStyle {
             )
             .iconSize(20.0)
             .spinner(RemixSpinnerStyle(size: 20.0)),
-      FortalButtonSize.size4 =>
+      .size4 =>
         style
             .paddingX(FortalTokens.space5())
             .paddingY(FortalTokens.space4())

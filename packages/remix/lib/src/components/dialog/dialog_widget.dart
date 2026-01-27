@@ -134,9 +134,9 @@ class RemixDialog extends StatelessWidget {
           return Box(
             styleSpec: spec.container,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: .start,
+              mainAxisSize: .min,
+              crossAxisAlignment: .start,
               children: [
                 if (title != null) StyledText(title!, styleSpec: spec.title),
                 if (description != null)

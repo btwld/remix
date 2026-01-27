@@ -33,14 +33,14 @@ class FortalThemeAddon extends ThemeAddon<ThemeData> {
             WidgetbookTheme(
               name: 'light',
               data: ThemeData(
-                brightness: Brightness.light,
+                brightness: .light,
                 scaffoldBackgroundColor: Colors.white,
               ),
             ),
             WidgetbookTheme(
               name: 'dark',
               data: ThemeData(
-                brightness: Brightness.dark,
+                brightness: .dark,
                 scaffoldBackgroundColor: const Color(0xFF111111),
               ),
             ),

@@ -13,26 +13,26 @@ class FortalCalloutStyles {
 
   /// Factory constructor with variant and size parameters.
   static RemixCalloutStyle create({
-    FortalCalloutVariant variant = FortalCalloutVariant.surface,
-    FortalCalloutSize size = FortalCalloutSize.size2,
+    FortalCalloutVariant variant = .surface,
+    FortalCalloutSize size = .size2,
   }) {
     return switch (variant) {
-      FortalCalloutVariant.soft => soft(size: size),
-      FortalCalloutVariant.outline => outline(size: size),
-      FortalCalloutVariant.surface => surface(size: size),
+      .soft => soft(size: size),
+      .outline => outline(size: size),
+      .surface => surface(size: size),
     };
   }
 
   static RemixCalloutStyle base({
-    FortalCalloutSize size = FortalCalloutSize.size2,
+    FortalCalloutSize size = .size2,
   }) {
     return RemixCalloutStyle()
         // Horizontal layout with spacing between icon and text
         .merge(
           RemixCalloutStyle(
             container: FlexBoxStyler(
-              direction: Axis.horizontal,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              direction: .horizontal,
+              crossAxisAlignment: .center,
             ),
           ),
         )
@@ -42,7 +42,7 @@ class FortalCalloutStyles {
 
   /// Neutral/gray variant (surface background with gray border + gray text)
   static RemixCalloutStyle outline({
-    FortalCalloutSize size = FortalCalloutSize.size2,
+    FortalCalloutSize size = .size2,
   }) {
     return base(size: size)
         .color(Colors.transparent)
@@ -57,7 +57,7 @@ class FortalCalloutStyles {
 
   /// Accent-tinted surface variant (accentSurface background + accent border/text)
   static RemixCalloutStyle surface({
-    FortalCalloutSize size = FortalCalloutSize.size2,
+    FortalCalloutSize size = .size2,
   }) {
     return base(size: size)
         .color(FortalTokens.accentSurface())
@@ -72,7 +72,7 @@ class FortalCalloutStyles {
 
   /// Soft tinted variant (accent3 background + accent6 border + accent11 text)
   static RemixCalloutStyle soft({
-    FortalCalloutSize size = FortalCalloutSize.size2,
+    FortalCalloutSize size = .size2,
   }) {
     return base(size: size)
         .color(FortalTokens.accent3())
@@ -90,7 +90,7 @@ class FortalCalloutStyles {
     // icon sized to match text line-height. Use the 16/20/24 scale to align
     // icons with the text styles below.
     return switch (size) {
-      FortalCalloutSize.size1 => RemixCalloutStyle(
+      .size1 => RemixCalloutStyle(
         container: FlexBoxStyler()
             .paddingY(8.0)
             .paddingX(12.0)
@@ -98,7 +98,7 @@ class FortalCalloutStyles {
         text: TextStyler(style: FortalTokens.text1.mix()),
         icon: IconStyler(size: 16.0),
       ),
-      FortalCalloutSize.size2 => RemixCalloutStyle(
+      .size2 => RemixCalloutStyle(
         container: FlexBoxStyler()
             .paddingY(12.0)
             .paddingX(16.0)
@@ -106,7 +106,7 @@ class FortalCalloutStyles {
         text: TextStyler(style: FortalTokens.text2.mix()),
         icon: IconStyler(size: 20.0),
       ),
-      FortalCalloutSize.size3 => RemixCalloutStyle(
+      .size3 => RemixCalloutStyle(
         container: FlexBoxStyler()
             .paddingY(16.0)
             .paddingX(20.0)

@@ -569,9 +569,9 @@ class FortalTokens {
 /// )
 /// ```
 Widget createFortalScope({
-  FortalAccentColor accent = FortalAccentColor.indigo,
-  FortalGrayColor gray = FortalGrayColor.slate,
-  Brightness brightness = Brightness.light,
+  FortalAccentColor accent = .indigo,
+  FortalGrayColor gray = .slate,
+  Brightness brightness = .light,
   List<Type>? orderOfModifiers,
   required Widget child,
 }) {
@@ -987,12 +987,12 @@ class FortalThemeConfig {
   final Brightness brightness;
 
   const FortalThemeConfig({
-    this.accent = FortalAccentColor.indigo,
-    this.gray = FortalGrayColor.slate,
-    this.brightness = Brightness.light,
+    this.accent = .indigo,
+    this.gray = .slate,
+    this.brightness = .light,
   });
 
-  bool get isDark => brightness == Brightness.dark;
+  bool get isDark => brightness == .dark;
 
   FortalThemeConfig copyWith({
     FortalAccentColor? accent,

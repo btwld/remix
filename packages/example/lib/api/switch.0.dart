@@ -50,7 +50,7 @@ class _SwitchExampleState extends State<SwitchExample> {
         .size(65, 30)
         .borderRadiusAll(const Radius.circular(40))
         .alignment(
-          _selected.value ? Alignment.centerRight : Alignment.centerLeft,
+          _selected.value ? .centerRight : .centerLeft,
         )
         .animate(AnimationConfig.easeOut(300.ms))
         .thumb(

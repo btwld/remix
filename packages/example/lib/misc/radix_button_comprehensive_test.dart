@@ -17,7 +17,7 @@ class _FortalButtonComprehensiveTestState
     extends State<FortalButtonComprehensiveTest> {
   FortalAccentColor _accent = FortalAccentColor.indigo;
   FortalGrayColor _gray = FortalGrayColor.slate;
-  Brightness _brightness = Brightness.light;
+  Brightness _brightness = .light;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class _FortalButtonComprehensiveTestState
         ),
       ),
       title: 'Fortal Button Comprehensive Test',
-      theme: _brightness == Brightness.light
+      theme: _brightness == .light
           ? ThemeData.light(useMaterial3: true)
           : ThemeData.dark(useMaterial3: true),
     );
@@ -72,13 +72,13 @@ class _ComprehensiveTestScreen extends StatelessWidget {
           PopupMenuButton<Brightness>(
             itemBuilder: (context) => [
               const PopupMenuItem(
-                value: Brightness.light,
+                value: .light,
                 child: Text('Light'),
               ),
-              const PopupMenuItem(value: Brightness.dark, child: Text('Dark')),
+              const PopupMenuItem(value: .dark, child: Text('Dark')),
             ],
             onSelected: onBrightnessChanged,
-            icon: Icon(currentBrightness == Brightness.light
+            icon: Icon(currentBrightness == .light
                 ? Icons.light_mode
                 : Icons.dark_mode),
           ),
@@ -88,7 +88,7 @@ class _ComprehensiveTestScreen extends StatelessWidget {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             // Theme Controls
             _ThemeControls(
@@ -136,7 +136,7 @@ class _ComprehensiveTestScreen extends StatelessWidget {
           ],
         ),
       ),
-      backgroundColor: currentBrightness == Brightness.dark
+      backgroundColor: currentBrightness == .dark
           ? Colors.grey.shade900
           : Colors.white,
     );
@@ -163,7 +163,7 @@ class _ThemeControls extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             const Text(
               'Theme Configuration',
@@ -291,7 +291,7 @@ class _SizeComparisonSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         const Text('Size 1 (Small)'),
         const SizedBox(height: 8),
@@ -336,7 +336,7 @@ class _StateTestingSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         // Normal, Loading, Disabled states for each variant
         for (final variantName in [
