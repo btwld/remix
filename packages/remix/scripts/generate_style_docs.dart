@@ -453,7 +453,9 @@ List<PropertyInfo> _extractWidgetProperties(
     parseResult.unit.visitChildren(visitor);
 
     return visitor.properties;
-  } catch (e) {
+  } catch (e, stackTrace) {
+    print('  ⚠ Error extracting properties from $componentName: $e');
+    print('     Stack trace: $stackTrace');
     return [];
   }
 }
@@ -567,7 +569,9 @@ List<MethodInfo> _extractMethodsFromMixin(String mixinName, String returnType) {
         docComment: method.docComment,
       );
     }).toList();
-  } catch (e) {
+  } catch (e, stackTrace) {
+    print('  ⚠ Error extracting methods from mixin $mixinName: $e');
+    print('     Stack trace: $stackTrace');
     return [];
   }
 }

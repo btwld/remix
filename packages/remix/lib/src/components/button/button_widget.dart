@@ -76,7 +76,7 @@ class RemixButton extends StatelessWidget {
   /// Whether the button is in a loading state.
   ///
   /// When true, the button will display a spinner and become non-interactive.
-  /// The spinner can be customized via [spinnerBuilder].
+  /// The spinner can be customized via [loadingBuilder].
   final bool loading;
 
   /// Whether the button is enabled.
