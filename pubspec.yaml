@@ -4,14 +4,13 @@ environment:
   flutter: ">=3.38.1"
 
 dependencies:
-  mix: ^2.0.0-rc.0
+  # mix: ^2.0.0-rc.0
   naked_ui: ^0.2.0-beta.7
   meta: ^1.16.0
   
 dev_dependencies:
   melos: ^7.1.1
   dart_code_metrics_presets: ^2.26.1
-  analyzer: ^8.0.0
   flutter_lints: ^6.0.0
   build_runner: ^2.10.1
 

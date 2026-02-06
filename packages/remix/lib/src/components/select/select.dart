@@ -3,6 +3,7 @@ library remix_select;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
+import 'package:mix_annotations/mix_annotations.dart';
 import 'package:naked_ui/naked_ui.dart';
 
 import '../../style/style.dart';
@@ -13,3 +14,4 @@ part 'select_spec.dart';
 part 'select_style.dart';
 part 'select_widget.dart';
 part 'fortal_select_styles.dart';
+part 'select.g.dart';

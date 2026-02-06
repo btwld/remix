@@ -1,12 +1,18 @@
 part of 'accordion.dart';
 
-class RemixAccordionStyle<T>
-    extends
-        RemixFlexContainerStyle<RemixAccordionSpec, RemixAccordionStyle<T>> {
+@MixableStyler()
+class RemixAccordionStyle
+    extends RemixFlexContainerStyle<RemixAccordionSpec, RemixAccordionStyle>
+    with Diagnosticable, _$RemixAccordionStyleMixin {
+  @MixableField(setterType: FlexBoxStyler)
   final Prop<StyleSpec<FlexBoxSpec>>? $trigger;
+  @MixableField(setterType: IconStyler)
   final Prop<StyleSpec<IconSpec>>? $leadingIcon;
+  @MixableField(setterType: TextStyler)
   final Prop<StyleSpec<TextSpec>>? $title;
+  @MixableField(setterType: IconStyler)
   final Prop<StyleSpec<IconSpec>>? $trailingIcon;
+  @MixableField(setterType: BoxStyler)
   final Prop<StyleSpec<BoxSpec>>? $content;
 
   const RemixAccordionStyle.create({
@@ -44,35 +50,13 @@ class RemixAccordionStyle<T>
          modifier: modifier,
        );
 
-  RemixAccordionStyle<T> trigger(FlexBoxStyler value) {
-    return merge(RemixAccordionStyle<T>(trigger: value));
-  }
-
-  RemixAccordionStyle<T> leadingIcon(IconStyler value) {
-    return merge(RemixAccordionStyle<T>(leadingIcon: value));
-  }
-
-  RemixAccordionStyle<T> title(TextStyler value) {
-    return merge(RemixAccordionStyle<T>(title: value));
-  }
-
-  RemixAccordionStyle<T> trailingIcon(IconStyler value) {
-    return merge(RemixAccordionStyle<T>(trailingIcon: value));
-  }
-
-  RemixAccordionStyle<T> content(BoxStyler value) {
-    return merge(RemixAccordionStyle<T>(content: value));
-  }
-
   /// Sets container alignment
-  RemixAccordionStyle<T> alignment(Alignment value) {
-    return merge(
-      RemixAccordionStyle<T>(trigger: FlexBoxStyler(alignment: value)),
-    );
+  RemixAccordionStyle alignment(Alignment value) {
+    return merge(RemixAccordionStyle(trigger: FlexBoxStyler(alignment: value)));
   }
 
   /// Style when accordion is collapsed
-  RemixAccordionStyle<T> onExpanded(RemixAccordionStyle<T> value) {
+  RemixAccordionStyle onExpanded<T>(RemixAccordionStyle value) {
     return variants([
       VariantStyle(
         ContextVariant('onExpanded', (context) {
@@ -84,7 +68,7 @@ class RemixAccordionStyle<T>
   }
 
   /// Style when accordion is collapsed
-  RemixAccordionStyle<T> onCollapsed(RemixAccordionStyle<T> value) {
+  RemixAccordionStyle onCollapsed<T>(RemixAccordionStyle value) {
     return variants([
       VariantStyle(
         ContextVariant('onCollapsed', (context) {
@@ -96,7 +80,7 @@ class RemixAccordionStyle<T>
   }
 
   /// onCanCollapse
-  RemixAccordionStyle<T> onCanCollapse(RemixAccordionStyle<T> value) {
+  RemixAccordionStyle onCanCollapse(RemixAccordionStyle value) {
     return variants([
       VariantStyle(
         ContextVariant('onCanCollapse', (context) {
@@ -108,11 +92,11 @@ class RemixAccordionStyle<T>
   }
 
   /// onCanExpand
-  RemixAccordionStyle<T> onCanExpand(RemixAccordionStyle<T> value) {
+  RemixAccordionStyle onCanExpand<T>(RemixAccordionStyle value) {
     return variants([
       VariantStyle(
         ContextVariant('onCanExpand', (context) {
-          return NakedAccordionItemState.of(context).canExpand;
+          return NakedAccordionItemState.of<T>(context).canExpand;
         }),
         value,
       ),
@@ -121,25 +105,23 @@ class RemixAccordionStyle<T>
 
   // RemixFlexContainerStyle mixin implementations
   @override
-  RemixAccordionStyle<T> padding(EdgeInsetsGeometryMix value) {
-    return merge(
-      RemixAccordionStyle<T>(trigger: FlexBoxStyler(padding: value)),
-    );
+  RemixAccordionStyle padding(EdgeInsetsGeometryMix value) {
+    return merge(RemixAccordionStyle(trigger: FlexBoxStyler(padding: value)));
   }
 
   @override
-  RemixAccordionStyle<T> color(Color value) {
+  RemixAccordionStyle color(Color value) {
     return merge(
-      RemixAccordionStyle<T>(
+      RemixAccordionStyle(
         trigger: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
       ),
     );
   }
 
   @override
-  RemixAccordionStyle<T> size(double width, double height) {
+  RemixAccordionStyle size(double width, double height) {
     return merge(
-      RemixAccordionStyle<T>(
+      RemixAccordionStyle(
         trigger: FlexBoxStyler(
           constraints: BoxConstraintsMix(
             minWidth: width,
@@ -153,9 +135,9 @@ class RemixAccordionStyle<T>
   }
 
   @override
-  RemixAccordionStyle<T> borderRadius(BorderRadiusGeometryMix radius) {
+  RemixAccordionStyle borderRadius(BorderRadiusGeometryMix radius) {
     return merge(
-      RemixAccordionStyle<T>(
+      RemixAccordionStyle(
         trigger: FlexBoxStyler(
           decoration: BoxDecorationMix(borderRadius: radius),
         ),
@@ -164,107 +146,45 @@ class RemixAccordionStyle<T>
   }
 
   @override
-  RemixAccordionStyle<T> constraints(BoxConstraintsMix value) {
+  RemixAccordionStyle constraints(BoxConstraintsMix value) {
     return merge(
-      RemixAccordionStyle<T>(trigger: FlexBoxStyler(constraints: value)),
+      RemixAccordionStyle(trigger: FlexBoxStyler(constraints: value)),
     );
   }
 
   @override
-  RemixAccordionStyle<T> decoration(DecorationMix value) {
+  RemixAccordionStyle decoration(DecorationMix value) {
     return merge(
-      RemixAccordionStyle<T>(trigger: FlexBoxStyler(decoration: value)),
+      RemixAccordionStyle(trigger: FlexBoxStyler(decoration: value)),
     );
   }
 
   @override
-  RemixAccordionStyle<T> margin(EdgeInsetsGeometryMix value) {
-    return merge(RemixAccordionStyle<T>(trigger: FlexBoxStyler(margin: value)));
+  RemixAccordionStyle margin(EdgeInsetsGeometryMix value) {
+    return merge(RemixAccordionStyle(trigger: FlexBoxStyler(margin: value)));
   }
 
   @override
-  RemixAccordionStyle<T> foregroundDecoration(DecorationMix value) {
+  RemixAccordionStyle foregroundDecoration(DecorationMix value) {
     return merge(
-      RemixAccordionStyle<T>(
-        trigger: FlexBoxStyler(foregroundDecoration: value),
-      ),
+      RemixAccordionStyle(trigger: FlexBoxStyler(foregroundDecoration: value)),
     );
   }
 
   @override
-  RemixAccordionStyle<T> transform(
+  RemixAccordionStyle transform(
     Matrix4 value, {
     AlignmentGeometry alignment = Alignment.center,
   }) {
     return merge(
-      RemixAccordionStyle<T>(
+      RemixAccordionStyle(
         trigger: FlexBoxStyler(transform: value, transformAlignment: alignment),
       ),
     );
   }
 
   @override
-  RemixAccordionStyle<T> flex(FlexStyler value) {
-    return merge(RemixAccordionStyle<T>(trigger: FlexBoxStyler().flex(value)));
+  RemixAccordionStyle flex(FlexStyler value) {
+    return merge(RemixAccordionStyle(trigger: FlexBoxStyler().flex(value)));
   }
-
-  @override
-  StyleSpec<RemixAccordionSpec> resolve(BuildContext context) {
-    return StyleSpec(
-      spec: RemixAccordionSpec(
-        trigger: MixOps.resolve(context, $trigger),
-        leadingIcon: MixOps.resolve(context, $leadingIcon),
-        title: MixOps.resolve(context, $title),
-        trailingIcon: MixOps.resolve(context, $trailingIcon),
-        content: MixOps.resolve(context, $content),
-      ),
-      animation: $animation,
-      widgetModifiers: $modifier?.resolve(context),
-    );
-  }
-
-  @override
-  RemixAccordionStyle<T> merge(RemixAccordionStyle? other) {
-    if (other == null) return this;
-
-    return RemixAccordionStyle.create(
-      trigger: MixOps.merge($trigger, other.$trigger),
-      leadingIcon: MixOps.merge($leadingIcon, other.$leadingIcon),
-      title: MixOps.merge($title, other.$title),
-      trailingIcon: MixOps.merge($trailingIcon, other.$trailingIcon),
-      content: MixOps.merge($content, other.$content),
-      variants: MixOps.mergeVariants($variants, other.$variants),
-      animation: MixOps.mergeAnimation($animation, other.$animation),
-      modifier: MixOps.mergeModifier($modifier, other.$modifier),
-    );
-  }
-
-  @override
-  RemixAccordionStyle<T> variants(
-    List<VariantStyle<RemixAccordionSpec>> value,
-  ) {
-    return merge(RemixAccordionStyle<T>(variants: value));
-  }
-
-  @override
-  RemixAccordionStyle<T> animate(AnimationConfig animation) {
-    return merge(RemixAccordionStyle<T>(animation: animation));
-  }
-
-  @override
-  RemixAccordionStyle<T> wrap(WidgetModifierConfig value) {
-    return merge(RemixAccordionStyle<T>(modifier: value));
-  }
-
-  @override
-  List<Object?> get props => [
-    $trigger,
-    $leadingIcon,
-    $title,
-    $trailingIcon,
-    $content,
-    $variants,
-    $animation,
-    $modifier,
-  ];
 }

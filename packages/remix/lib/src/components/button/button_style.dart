@@ -35,24 +35,35 @@ part of 'button.dart';
 /// ```
 ///
 /// All methods return new instances (immutable pattern) and can be chained together.
+@MixableStyler()
 class RemixButtonStyle
     extends RemixFlexContainerStyle<RemixButtonSpec, RemixButtonStyle>
     with
         LabelStyleMixin<RemixButtonStyle>,
         IconStyleMixin<RemixButtonStyle>,
-        SpinnerStyleMixin<RemixButtonStyle> {
+        SpinnerStyleMixin<RemixButtonStyle>,
+        Diagnosticable,
+        _$RemixButtonStyleMixin {
+  @MixableField(setterType: FlexBoxStyler)
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
+
+  @MixableField(setterType: TextStyler)
   final Prop<StyleSpec<TextSpec>>? $label;
+
+  @MixableField(setterType: IconStyler)
   final Prop<StyleSpec<IconSpec>>? $icon;
+
+  @MixableField(setterType: RemixSpinnerStyle)
   final Prop<StyleSpec<RemixSpinnerSpec>>? $spinner;
-  final IconAlignment? $iconAlignment;
+
+  final Prop<IconAlignment>? $iconAlignment;
 
   const RemixButtonStyle.create({
     Prop<StyleSpec<FlexBoxSpec>>? container,
     Prop<StyleSpec<TextSpec>>? label,
     Prop<StyleSpec<IconSpec>>? icon,
     Prop<StyleSpec<RemixSpinnerSpec>>? spinner,
-    IconAlignment? iconAlignment,
+    Prop<IconAlignment>? iconAlignment,
     super.variants,
     super.animation,
     super.modifier,
@@ -76,32 +87,11 @@ class RemixButtonStyle
          label: Prop.maybeMix(label),
          icon: Prop.maybeMix(icon),
          spinner: Prop.maybeMix(spinner),
-         iconAlignment: iconAlignment,
+         iconAlignment: Prop.maybe(iconAlignment),
          variants: variants,
          animation: animation,
          modifier: modifier,
        );
-
-  // Instance methods for fluent API (return new instances)
-  RemixButtonStyle label(TextStyler value) {
-    return merge(RemixButtonStyle(label: value));
-  }
-
-  RemixButtonStyle icon(IconStyler value) {
-    return merge(RemixButtonStyle(icon: value));
-  }
-
-  RemixButtonStyle spinner(RemixSpinnerStyle value) {
-    return merge(RemixButtonStyle(spinner: value));
-  }
-
-  /// Sets the icon alignment relative to the label.
-  ///
-  /// Use [IconAlignment.start] to position the icon before the label,
-  /// or [IconAlignment.end] to position it after.
-  RemixButtonStyle iconAlignment(IconAlignment value) {
-    return merge(RemixButtonStyle.create(iconAlignment: value));
-  }
 
   /// Sets padding
   RemixButtonStyle padding(EdgeInsetsGeometryMix value) {
@@ -137,10 +127,6 @@ class RemixButtonStyle
     );
   }
 
-  RemixButtonStyle variants(List<VariantStyle<RemixButtonSpec>> value) {
-    return merge(RemixButtonStyle(variants: value));
-  }
-
   RemixButton call({
     required String label,
     IconData? icon,
@@ -160,12 +146,6 @@ class RemixButtonStyle
       onPressed: onPressed,
       focusNode: focusNode,
     );
-  }
-
-  // Animate support
-  @override
-  RemixButtonStyle animate(AnimationConfig animation) {
-    return merge(RemixButtonStyle(animation: animation));
   }
 
   // FlexStyleMixin implementation
@@ -206,53 +186,4 @@ class RemixButtonStyle
       ),
     );
   }
-
-  // Modifier support
-  @override
-  RemixButtonStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixButtonStyle(modifier: value));
-  }
-
-  @override
-  StyleSpec<RemixButtonSpec> resolve(BuildContext context) {
-    return StyleSpec(
-      spec: RemixButtonSpec(
-        container: MixOps.resolve(context, $container),
-        label: MixOps.resolve(context, $label),
-        icon: MixOps.resolve(context, $icon),
-        spinner: MixOps.resolve(context, $spinner),
-        iconAlignment: $iconAlignment ?? .start,
-      ),
-      animation: $animation,
-      widgetModifiers: $modifier?.resolve(context),
-    );
-  }
-
-  @override
-  RemixButtonStyle merge(RemixButtonStyle? other) {
-    if (other == null) return this;
-
-    return RemixButtonStyle.create(
-      container: MixOps.merge($container, other.$container),
-      label: MixOps.merge($label, other.$label),
-      icon: MixOps.merge($icon, other.$icon),
-      spinner: MixOps.merge($spinner, other.$spinner),
-      iconAlignment: other.$iconAlignment ?? $iconAlignment,
-      variants: MixOps.mergeVariants($variants, other.$variants),
-      animation: MixOps.mergeAnimation($animation, other.$animation),
-      modifier: MixOps.mergeModifier($modifier, other.$modifier),
-    );
-  }
-
-  @override
-  List<Object?> get props => [
-    $container,
-    $label,
-    $icon,
-    $spinner,
-    $iconAlignment,
-    $variants,
-    $animation,
-    $modifier,
-  ];
 }

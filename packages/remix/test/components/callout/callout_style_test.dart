@@ -346,7 +346,7 @@ void main() {
       test('merge with null returns original instance', () {
         const originalStyle = RemixCalloutStyle.create();
         final mergedStyle = originalStyle.merge(null);
-        expect(mergedStyle, same(originalStyle));
+        expect(mergedStyle, equals(originalStyle));
       });
 
       test('merge with other style combines properties', () {

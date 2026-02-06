@@ -1,27 +1,45 @@
 part of 'textfield.dart';
 
+@MixableStyler()
 class RemixTextFieldStyle
     extends RemixFlexContainerStyle<RemixTextFieldSpec, RemixTextFieldStyle>
-    with LabelStyleMixin<RemixTextFieldStyle> {
+    with
+        LabelStyleMixin<RemixTextFieldStyle>,
+        Diagnosticable,
+        _$RemixTextFieldStyleMixin {
+  @MixableField(setterType: TextStyler)
   final Prop<StyleSpec<TextSpec>>? $text;
+  @MixableField(setterType: TextStyler)
   final Prop<StyleSpec<TextSpec>>? $hintText;
+  @MixableField()
   final Prop<TextAlign>? $textAlign;
-
+  @MixableField()
   final Prop<double>? $cursorWidth;
+  @MixableField()
   final Prop<double>? $cursorHeight;
+  @MixableField()
   final Prop<Radius>? $cursorRadius;
+  @MixableField()
   final Prop<Color>? $cursorColor;
+  @MixableField()
   final Prop<Offset>? $cursorOffset;
+  @MixableField()
   final Prop<bool>? $cursorOpacityAnimates;
-
+  @MixableField()
   final Prop<BoxHeightStyle>? $selectionHeightStyle;
+  @MixableField()
   final Prop<BoxWidthStyle>? $selectionWidthStyle;
-
+  @MixableField()
   final Prop<EdgeInsets>? $scrollPadding;
+  @MixableField()
   final Prop<Brightness>? $keyboardAppearance;
+  @MixableField()
   final Prop<double>? $spacing;
+  @MixableField(setterType: FlexBoxStyler)
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
+  @MixableField(setterType: TextStyler)
   final Prop<StyleSpec<TextSpec>>? $helperText;
+  @MixableField(setterType: TextStyler)
   final Prop<StyleSpec<TextSpec>>? $label;
 
   const RemixTextFieldStyle.create({
@@ -247,22 +265,6 @@ class RemixTextFieldStyle
     return merge(RemixTextFieldStyle(label: value));
   }
 
-  /// Sets animation
-  @override
-  RemixTextFieldStyle animate(AnimationConfig animation) {
-    return merge(RemixTextFieldStyle(animation: animation));
-  }
-
-  @override
-  RemixTextFieldStyle variants(List<VariantStyle<RemixTextFieldSpec>> value) {
-    return merge(RemixTextFieldStyle(variants: value));
-  }
-
-  @override
-  RemixTextFieldStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixTextFieldStyle(modifier: value));
-  }
-
   // Abstract method implementations for mixins
 
   @override
@@ -286,73 +288,6 @@ class RemixTextFieldStyle
           transformAlignment: alignment,
         ),
       ),
-    );
-  }
-
-  @override
-  StyleSpec<RemixTextFieldSpec> resolve(BuildContext context) {
-    return StyleSpec(
-      spec: RemixTextFieldSpec(
-        text: MixOps.resolve(context, $text),
-        hintText: MixOps.resolve(context, $hintText),
-        textAlign: MixOps.resolve(context, $textAlign),
-        cursorWidth: MixOps.resolve(context, $cursorWidth),
-        cursorHeight: MixOps.resolve(context, $cursorHeight),
-        cursorRadius: MixOps.resolve(context, $cursorRadius),
-        cursorColor: MixOps.resolve(context, $cursorColor),
-        cursorOffset: MixOps.resolve(context, $cursorOffset),
-        selectionHeightStyle: MixOps.resolve(context, $selectionHeightStyle),
-        selectionWidthStyle: MixOps.resolve(context, $selectionWidthStyle),
-        scrollPadding: MixOps.resolve(context, $scrollPadding),
-        keyboardAppearance: MixOps.resolve(context, $keyboardAppearance),
-        cursorOpacityAnimates: MixOps.resolve(context, $cursorOpacityAnimates),
-        spacing: MixOps.resolve(context, $spacing),
-        container: MixOps.resolve(context, $container),
-        helperText: MixOps.resolve(context, $helperText),
-        label: MixOps.resolve(context, $label),
-      ),
-      animation: $animation,
-      widgetModifiers: $modifier?.resolve(context),
-    );
-  }
-
-  @override
-  RemixTextFieldStyle merge(RemixTextFieldStyle? other) {
-    if (other == null) return this;
-
-    return RemixTextFieldStyle.create(
-      text: MixOps.merge($text, other.$text),
-      hintText: MixOps.merge($hintText, other.$hintText),
-      textAlign: MixOps.merge($textAlign, other.$textAlign),
-      cursorWidth: MixOps.merge($cursorWidth, other.$cursorWidth),
-      cursorHeight: MixOps.merge($cursorHeight, other.$cursorHeight),
-      cursorRadius: MixOps.merge($cursorRadius, other.$cursorRadius),
-      cursorColor: MixOps.merge($cursorColor, other.$cursorColor),
-      cursorOffset: MixOps.merge($cursorOffset, other.$cursorOffset),
-      cursorOpacityAnimates: MixOps.merge(
-        $cursorOpacityAnimates,
-        other.$cursorOpacityAnimates,
-      ),
-      selectionHeightStyle: MixOps.merge(
-        $selectionHeightStyle,
-        other.$selectionHeightStyle,
-      ),
-      selectionWidthStyle: MixOps.merge(
-        $selectionWidthStyle,
-        other.$selectionWidthStyle,
-      ),
-      scrollPadding: MixOps.merge($scrollPadding, other.$scrollPadding),
-      keyboardAppearance: MixOps.merge(
-        $keyboardAppearance,
-        other.$keyboardAppearance,
-      ),
-      spacing: MixOps.merge($spacing, other.$spacing),
-      container: MixOps.merge($container, other.$container),
-      helperText: MixOps.merge($helperText, other.$helperText),
-      label: MixOps.merge($label, other.$label),
-      variants: MixOps.mergeVariants($variants, other.$variants),
-      animation: MixOps.mergeAnimation($animation, other.$animation),
-      modifier: MixOps.mergeModifier($modifier, other.$modifier),
     );
   }
 
@@ -494,28 +429,4 @@ class RemixTextFieldStyle
       style: this,
     );
   }
-
-  @override
-  List<Object?> get props => [
-    $text,
-    $hintText,
-    $textAlign,
-    $cursorWidth,
-    $cursorHeight,
-    $cursorRadius,
-    $cursorColor,
-    $cursorOffset,
-    $cursorOpacityAnimates,
-    $selectionHeightStyle,
-    $selectionWidthStyle,
-    $scrollPadding,
-    $keyboardAppearance,
-    $spacing,
-    $container,
-    $label,
-    $helperText,
-    $variants,
-    $animation,
-    $modifier,
-  ];
 }

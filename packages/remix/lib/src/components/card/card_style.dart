@@ -2,8 +2,10 @@ part of 'card.dart';
 
 // Private per-component constants (sizes only)
 
-class RemixCardStyle
-    extends RemixContainerStyle<RemixCardSpec, RemixCardStyle> {
+@MixableStyler()
+class RemixCardStyle extends RemixContainerStyle<RemixCardSpec, RemixCardStyle>
+    with Diagnosticable, _$RemixCardStyleMixin {
+  @MixableField(setterType: BoxStyler)
   final Prop<StyleSpec<BoxSpec>>? $container;
 
   const RemixCardStyle.create({
@@ -61,47 +63,12 @@ class RemixCardStyle
   }
 
   /// Sets container decoration
+  @override
   RemixCardStyle decoration(DecorationMix value) {
     return merge(RemixCardStyle(container: BoxStyler(decoration: value)));
   }
 
-  @override
-  StyleSpec<RemixCardSpec> resolve(BuildContext context) {
-    return StyleSpec(
-      spec: RemixCardSpec(container: MixOps.resolve(context, $container)),
-      animation: $animation,
-      widgetModifiers: $modifier?.resolve(context),
-    );
-  }
-
-  @override
-  RemixCardStyle merge(RemixCardStyle? other) {
-    if (other == null) return this;
-
-    return RemixCardStyle.create(
-      container: MixOps.merge($container, other.$container),
-      variants: MixOps.mergeVariants($variants, other.$variants),
-      animation: MixOps.mergeAnimation($animation, other.$animation),
-      modifier: MixOps.mergeModifier($modifier, other.$modifier),
-    );
-  }
-
-  @override
-  RemixCardStyle variants(List<VariantStyle<RemixCardSpec>> value) {
-    return merge(RemixCardStyle(variants: value));
-  }
-
-  @override
-  RemixCardStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixCardStyle(modifier: value));
-  }
-
   // Abstract method implementations for mixins
-
-  @override
-  RemixCardStyle animate(AnimationConfig config) {
-    return merge(RemixCardStyle(animation: config));
-  }
 
   @override
   RemixCardStyle constraints(BoxConstraintsMix value) {
@@ -126,7 +93,4 @@ class RemixCardStyle
       ),
     );
   }
-
-  @override
-  List<Object?> get props => [$container, $variants, $animation, $modifier];
 }

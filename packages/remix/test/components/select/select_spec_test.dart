@@ -78,7 +78,7 @@ void main() {
 
         final result = spec.lerp(other, 0.5);
 
-        expect(result, same(spec));
+        expect(result, equals(spec));
       });
 
       test('interpolates between two specs at t=0.0', () {
@@ -231,7 +231,7 @@ void main() {
 
         final result = spec.lerp(other, 0.5);
 
-        expect(result, same(spec));
+        expect(result, equals(spec));
       });
 
       test('interpolates between two specs at t=0.0', () {
@@ -373,7 +373,7 @@ void main() {
 
         final result = spec.lerp(other, 0.5);
 
-        expect(result, same(spec));
+        expect(result, equals(spec));
       });
 
       test('interpolates between two specs at t=0.0', () {

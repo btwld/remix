@@ -1,10 +1,16 @@
 part of 'progress.dart';
 
+@MixableStyler()
 class RemixProgressStyle
-    extends RemixContainerStyle<RemixProgressSpec, RemixProgressStyle> {
+    extends RemixContainerStyle<RemixProgressSpec, RemixProgressStyle>
+    with Diagnosticable, _$RemixProgressStyleMixin {
+  @MixableField(setterType: BoxStyler)
   final Prop<StyleSpec<BoxSpec>>? $container;
+  @MixableField(setterType: BoxStyler)
   final Prop<StyleSpec<BoxSpec>>? $track;
+  @MixableField(setterType: BoxStyler)
   final Prop<StyleSpec<BoxSpec>>? $indicator;
+  @MixableField(setterType: BoxStyler)
   final Prop<StyleSpec<BoxSpec>>? $trackContainer;
 
   const RemixProgressStyle.create({

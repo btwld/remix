@@ -368,7 +368,7 @@ void main() {
       test('merge with null returns original instance', () {
         const originalStyle = RemixCheckboxStyle.create();
         final mergedStyle = originalStyle.merge(null);
-        expect(mergedStyle, same(originalStyle));
+        expect(mergedStyle, equals(originalStyle));
       });
 
       test('merge with other style combines properties', () {
@@ -393,8 +393,9 @@ void main() {
     });
 
     group('Call Method', () {
-      testWidgets('call method creates RemixCheckbox with all parameters',
-          (tester) async {
+      testWidgets('call method creates RemixCheckbox with all parameters', (
+        tester,
+      ) async {
         final style = RemixCheckboxStyle().color(Colors.blue);
         final focusNode = FocusNode();
 
@@ -430,8 +431,9 @@ void main() {
         focusNode.dispose();
       });
 
-      testWidgets('call method creates RemixCheckbox with minimal parameters',
-          (tester) async {
+      testWidgets('call method creates RemixCheckbox with minimal parameters', (
+        tester,
+      ) async {
         final style = RemixCheckboxStyle();
 
         final checkbox = style.call(selected: false);

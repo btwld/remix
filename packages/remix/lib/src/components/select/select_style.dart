@@ -1,7 +1,11 @@
 part of 'select.dart';
 
-class RemixSelectStyle extends RemixStyle<RemixSelectSpec, RemixSelectStyle> {
+@MixableStyler()
+class RemixSelectStyle extends RemixStyle<RemixSelectSpec, RemixSelectStyle>
+    with Diagnosticable, _$RemixSelectStyleMixin {
+  @MixableField(setterType: FlexBoxStyler)
   final Prop<StyleSpec<FlexBoxSpec>>? $menuContainer;
+  @MixableField(setterType: RemixSelectTriggerStyle)
   final Prop<StyleSpec<RemixSelectTriggerSpec>>? $trigger;
 
   const RemixSelectStyle.create({
@@ -154,14 +158,20 @@ class RemixSelectStyle extends RemixStyle<RemixSelectSpec, RemixSelectStyle> {
 }
 
 // Style classes for sub-specs
+@MixableStyler()
 class RemixSelectTriggerStyle
     extends
         RemixFlexContainerStyle<RemixSelectTriggerSpec, RemixSelectTriggerStyle>
     with
         LabelStyleMixin<RemixSelectTriggerStyle>,
-        IconStyleMixin<RemixSelectTriggerStyle> {
+        IconStyleMixin<RemixSelectTriggerStyle>,
+        Diagnosticable,
+        _$RemixSelectTriggerStyleMixin {
+  @MixableField(setterType: FlexBoxStyler)
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
+  @MixableField(setterType: TextStyler)
   final Prop<StyleSpec<TextSpec>>? $label;
+  @MixableField(setterType: IconStyler)
   final Prop<StyleSpec<IconSpec>>? $icon;
 
   const RemixSelectTriggerStyle.create({
@@ -325,6 +335,7 @@ class RemixSelectTriggerStyle
   ];
 }
 
+@MixableStyler()
 class RemixSelectMenuItemStyle
     extends
         RemixFlexContainerStyle<
@@ -333,9 +344,14 @@ class RemixSelectMenuItemStyle
         >
     with
         LabelStyleMixin<RemixSelectMenuItemStyle>,
-        IconStyleMixin<RemixSelectMenuItemStyle> {
+        IconStyleMixin<RemixSelectMenuItemStyle>,
+        Diagnosticable,
+        _$RemixSelectMenuItemStyleMixin {
+  @MixableField(setterType: FlexBoxStyler)
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
+  @MixableField(setterType: TextStyler)
   final Prop<StyleSpec<TextSpec>>? $text;
+  @MixableField(setterType: IconStyler)
   final Prop<StyleSpec<IconSpec>>? $icon;
 
   const RemixSelectMenuItemStyle.create({

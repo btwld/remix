@@ -341,7 +341,7 @@ void main() {
 
         final mergedStyle = originalStyle.merge(null);
 
-        expect(mergedStyle, same(originalStyle));
+        expect(mergedStyle, equals(originalStyle));
       });
     });
 
@@ -564,7 +564,7 @@ void main() {
 
         final mergedStyle = originalStyle.merge(null);
 
-        expect(mergedStyle, same(originalStyle));
+        expect(mergedStyle, equals(originalStyle));
       });
     });
 
@@ -931,7 +931,7 @@ void main() {
 
         final mergedStyle = originalStyle.merge(null);
 
-        expect(mergedStyle, same(originalStyle));
+        expect(mergedStyle, equals(originalStyle));
       });
     });
 

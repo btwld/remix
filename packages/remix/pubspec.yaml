@@ -5,6 +5,7 @@ documentation: https://docs.page/btwld/remix
 issue_tracker: https://github.com/btwld/remix/issues
 license: BSD-3-Clause
 resolution: workspace
+publish_to: none
 
 version: 0.1.0-beta.3
 
@@ -15,7 +16,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  mix: ^2.0.0-rc.0
+  mix: ^2.0.0-rc.1
+  mix_annotations: ^2.0.0-rc.1
   naked_ui: ^0.2.0-beta.7
   meta: ^1.16.0
   prism: ^2.0.0
@@ -26,7 +28,8 @@ dev_dependencies:
     sdk: flutter
   integration_test:
     sdk: flutter
-  
+  build_runner: ^2.10.1
+  mix_generator: ^2.0.0-rc.1
 
 flutter:
   uses-material-design: true

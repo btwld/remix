@@ -12,11 +12,8 @@ part of 'badge.dart';
 ///   label: 'New',
 /// )
 /// ```
-typedef RemixBadgeLabelBuilder = Widget Function(
-  BuildContext context,
-  TextSpec spec,
-  String label,
-);
+typedef RemixBadgeLabelBuilder =
+    Widget Function(BuildContext context, TextSpec spec, String label);
 
 class RemixBadge extends StyleWidget<RemixBadgeSpec> {
   /// Creates a badge widget. Provide [label] for a text badge or [child] for

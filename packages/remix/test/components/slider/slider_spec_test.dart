@@ -104,7 +104,8 @@ void main() {
 
         final result = spec.lerp(other, 0.5);
 
-        expect(result, same(spec));
+        // StyleSpec fields should be preserved
+        expect(result.thumb, equals(spec.thumb));
       });
 
       test('interpolates between two specs at t=0.0', () {

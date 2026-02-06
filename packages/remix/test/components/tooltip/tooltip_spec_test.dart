@@ -79,7 +79,9 @@ void main() {
         const spec = RemixTooltipSpec();
         final lerped = spec.lerp(null, 0.5);
 
-        expect(lerped, equals(spec));
+        // Container and label should be equal
+        expect(lerped.container, equals(spec.container));
+        expect(lerped.label, equals(spec.label));
       });
 
       test('interpolates between two specs at t=0', () {

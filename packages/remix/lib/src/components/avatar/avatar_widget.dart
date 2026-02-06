@@ -14,17 +14,11 @@ part of 'avatar.dart';
 ///   label: 'User',
 /// )
 /// ```
-typedef RemixAvatarLabelBuilder = Widget Function(
-  BuildContext context,
-  TextSpec spec,
-  String label,
-);
+typedef RemixAvatarLabelBuilder =
+    Widget Function(BuildContext context, TextSpec spec, String label);
 
-typedef RemixAvatarIconBuilder = Widget Function(
-  BuildContext context,
-  IconSpec spec,
-  IconData? icon,
-);
+typedef RemixAvatarIconBuilder =
+    Widget Function(BuildContext context, IconSpec spec, IconData? icon);
 
 class RemixAvatar extends StyleWidget<RemixAvatarSpec> {
   /// Creates a Remix avatar with optional text [label], custom [child], and

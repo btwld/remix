@@ -1,17 +1,12 @@
 part of 'icon_button.dart';
 
 /// Builder function for customizing icon button icon rendering.
-typedef RemixIconButtonIconBuilder = Widget Function(
-  BuildContext context,
-  IconSpec spec,
-  IconData? icon,
-);
+typedef RemixIconButtonIconBuilder =
+    Widget Function(BuildContext context, IconSpec spec, IconData? icon);
 
 /// Builder function for customizing icon button loading state rendering.
-typedef RemixIconButtonLoadingBuilder = Widget Function(
-  BuildContext context,
-  RemixSpinnerSpec spec,
-);
+typedef RemixIconButtonLoadingBuilder =
+    Widget Function(BuildContext context, RemixSpinnerSpec spec);
 
 /// A customizable icon button component optimized for icon-only interactions.
 /// The button is square by default and centers the icon properly.
@@ -143,22 +138,26 @@ class RemixIconButton extends StatelessWidget {
           builder: (context, spec) {
             Widget? iconWidget;
 
+            final iconSpec = spec.icon ?? const StyleSpec(spec: IconSpec());
+            final spinnerSpec =
+                spec.spinner ?? const StyleSpec(spec: RemixSpinnerSpec());
+
             if (iconBuilder != null) {
               iconWidget = StyleSpecBuilder(
-                styleSpec: spec.icon,
+                styleSpec: iconSpec,
                 builder: (context, iconSpec) =>
                     iconBuilder!(context, iconSpec, icon),
               );
             } else {
-              iconWidget = StyledIcon(icon: icon, styleSpec: spec.icon);
+              iconWidget = StyledIcon(icon: icon, styleSpec: iconSpec);
             }
 
             // Build spinner (used when loading)
             final spinner = Center(
               child: loadingBuilder == null
-                  ? RemixSpinner(styleSpec: spec.spinner)
+                  ? RemixSpinner(styleSpec: spinnerSpec)
                   : StyleSpecBuilder(
-                      styleSpec: spec.spinner,
+                      styleSpec: spinnerSpec,
                       builder: loadingBuilder!,
                     ),
             );

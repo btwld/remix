@@ -24,7 +24,7 @@ class AccordionExample extends StatefulWidget {
 }
 
 class _AccordionExampleState extends State<AccordionExample> {
-  final controller = RemixAccordionController<String>(min: 0, max: 1);
+  final controller = RemixAccordionController(min: 0, max: 1);
 
   @override
   void dispose() {
@@ -84,14 +84,14 @@ class _AccordionExampleState extends State<AccordionExample> {
     );
   }
 
-  RemixAccordionStyle<String> get itemStyle {
-    return RemixAccordionStyle<String>()
+  RemixAccordionStyle get itemStyle {
+    return RemixAccordionStyle()
         .content(BoxStyler().paddingX(16).paddingTop(8))
         .wrap(WidgetModifierConfig.clipRRect(borderRadius: .circular(8)))
         .paddingX(16)
         .paddingY(14)
         .borderRounded(8)
-        .onHovered(RemixAccordionStyle<String>().color(Colors.grey.shade100))
+        .onHovered(RemixAccordionStyle().color(Colors.grey.shade100))
         .decoration(
           BoxDecorationMix(
             color: Colors.white,

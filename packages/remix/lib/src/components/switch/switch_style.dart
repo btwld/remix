@@ -1,9 +1,15 @@
 part of 'switch.dart';
 
+@MixableStyler()
 class RemixSwitchStyle
     extends RemixContainerStyle<RemixSwitchSpec, RemixSwitchStyle>
-    with SelectedWidgetStateVariantMixin<RemixSwitchSpec, RemixSwitchStyle> {
+    with
+        SelectedWidgetStateVariantMixin<RemixSwitchSpec, RemixSwitchStyle>,
+        Diagnosticable,
+        _$RemixSwitchStyleMixin {
+  @MixableField(setterType: BoxStyler)
   final Prop<StyleSpec<BoxSpec>>? $container;
+  @MixableField(setterType: BoxStyler)
   final Prop<StyleSpec<BoxSpec>>? $thumb;
 
   const RemixSwitchStyle.create({

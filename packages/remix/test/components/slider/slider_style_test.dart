@@ -405,11 +405,11 @@ void main() {
 
                 expect(spec, isA<StyleSpec<RemixSliderSpec>>());
                 expect(spec.spec, isA<RemixSliderSpec>());
-                expect(spec.spec.thumb, isA<StyleSpec<BoxSpec>>());
-                expect(spec.spec.trackColor, isA<Color>());
-                expect(spec.spec.trackWidth, isA<double>());
-                expect(spec.spec.rangeColor, isA<Color>());
-                expect(spec.spec.rangeWidth, isA<double>());
+                expect(spec.spec.thumb, isA<StyleSpec<BoxSpec>?>());
+                expect(spec.spec.trackColor, isA<Color?>());
+                expect(spec.spec.trackWidth, isA<double?>());
+                expect(spec.spec.rangeColor, isA<Color?>());
+                expect(spec.spec.rangeWidth, isA<double?>());
 
                 return Container();
               },
@@ -423,13 +423,14 @@ void main() {
 
         final mergedStyle = originalStyle.merge(null);
 
-        expect(mergedStyle, same(originalStyle));
+        expect(mergedStyle, equals(originalStyle));
       });
     });
 
     group('Call Method', () {
-      testWidgets('call method creates RemixSlider with all parameters',
-          (tester) async {
+      testWidgets('call method creates RemixSlider with all parameters', (
+        tester,
+      ) async {
         final style = RemixSliderStyle().thumbColor(Colors.blue);
         final focusNode = FocusNode();
 
@@ -461,8 +462,9 @@ void main() {
         focusNode.dispose();
       });
 
-      testWidgets('call method creates RemixSlider with minimal parameters',
-          (tester) async {
+      testWidgets('call method creates RemixSlider with minimal parameters', (
+        tester,
+      ) async {
         final style = RemixSliderStyle();
 
         final slider = style.call(value: 0.3, onChanged: (v) {});

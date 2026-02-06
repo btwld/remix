@@ -5,10 +5,10 @@ packages:
     dependency: transitive
     description:
       name: _fe_analyzer_shared
-      sha256: c209688d9f5a5f26b2fb47a188131a6fb9e876ae9e47af3737c0b4f58a93470d
+      sha256: "5b7468c326d2f8a4f630056404ca0d291ade42918f4a3c6233618e724f39da8e"
       url: "https://pub.dev"
     source: hosted
-    version: "91.0.0"
+    version: "92.0.0"
   accessibility_tools:
     dependency: "direct overridden"
     description:
@@ -18,13 +18,13 @@ packages:
     source: hosted
     version: "2.8.0"
   analyzer:
-    dependency: "direct dev"
+    dependency: transitive
     description:
       name: analyzer
-      sha256: f51c8499b35f9b26820cfe914828a6a98a94efd5cc78b37bb7d03debae3a1d08
+      sha256: "70e4b1ef8003c64793a9e268a551a82869a8a96f39deb73dea28084b0e8bf75e"
       url: "https://pub.dev"
     source: hosted
-    version: "8.4.1"
+    version: "9.0.0"
   ansi_styles:
     dependency: transitive
     description:
@@ -432,13 +432,29 @@ packages:
     source: hosted
     version: "2.0.0"
   mix:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: mix
-      sha256: "8e592af7848570d46eaa3200f692d76177fa94e72b6adac904441ab1d19f11ee"
+      sha256: "3b782f1d706d3276f7aa54ef6df39d3363d5e8c603a5cc109221aa690f0fe86f"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.0-rc.0"
+    version: "2.0.0-rc.1"
+  mix_annotations:
+    dependency: transitive
+    description:
+      name: mix_annotations
+      sha256: a8387e680134f3f0dbe260e77dd6d4093906a3d626007a02a2efd60656f78a88
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0-rc.1"
+  mix_generator:
+    dependency: transitive
+    description:
+      name: mix_generator
+      sha256: ede2795dd5f4431fdbc694f844f4f1e14fc6a9edd4662b30df37db49eb27b836
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0-rc.1"
   mustache_template:
     dependency: transitive
     description:

@@ -49,30 +49,36 @@ part of 'button.dart';
 /// - [RemixButtonStyle] for the styling API
 /// - [RemixButton] for the widget implementation
 /// - [Spec] for the base specification pattern
-class RemixButtonSpec extends Spec<RemixButtonSpec> with Diagnosticable {
+@MixableSpec()
+class RemixButtonSpec extends Spec<RemixButtonSpec>
+    with Diagnosticable, _$RemixButtonSpecMethods {
   /// Styling specification for the button's container.
   ///
   /// Controls the button's layout, background, borders, padding,
   /// and other visual container properties. Uses [FlexBoxSpec]
   /// to support flexible layout arrangements.
+  @override
   final StyleSpec<FlexBoxSpec> container;
 
   /// Styling specification for the button's text label.
   ///
   /// Defines typography, color, and text-specific properties
   /// when the button displays text content.
+  @override
   final StyleSpec<TextSpec> label;
 
   /// Styling specification for the button's icon.
   ///
   /// Controls icon size, color, and positioning when an icon
   /// is displayed alongside or instead of text.
+  @override
   final StyleSpec<IconSpec> icon;
 
   /// Styling specification for the button's loading spinner.
   ///
   /// Defines the appearance of the spinner shown during
   /// asynchronous operations when the button is in loading state.
+  @override
   final StyleSpec<RemixSpinnerSpec> spinner;
 
   /// The alignment of the icon relative to the label.
@@ -80,6 +86,7 @@ class RemixButtonSpec extends Spec<RemixButtonSpec> with Diagnosticable {
   /// When set to [IconAlignment.left], the icon appears before the label.
   /// When set to [IconAlignment.right], the icon appears after the label.
   /// Defaults to [IconAlignment.left].
+  @override
   final IconAlignment iconAlignment;
 
   /// Creates a RemixButtonSpec with optional styling specifications.
@@ -105,76 +112,5 @@ class RemixButtonSpec extends Spec<RemixButtonSpec> with Diagnosticable {
        label = label ?? const StyleSpec(spec: TextSpec()),
        icon = icon ?? const StyleSpec(spec: IconSpec()),
        spinner = spinner ?? const StyleSpec(spec: RemixSpinnerSpec()),
-       iconAlignment = iconAlignment ?? .start;
-
-  /// Creates a copy of this RemixButtonSpec with the given fields replaced.
-  ///
-  /// This method enables immutable updates to the specification,
-  /// which is essential for the reactive styling system.
-  ///
-  /// Example:
-  /// ```dart
-  /// final updatedSpec = originalSpec.copyWith(
-  ///   label: StyleSpec(spec: TextSpec()),
-  ///   icon: StyleSpec(spec: IconSpec()),
-  /// );
-  /// ```
-  RemixButtonSpec copyWith({
-    StyleSpec<FlexBoxSpec>? container,
-    StyleSpec<TextSpec>? label,
-    StyleSpec<IconSpec>? icon,
-    StyleSpec<RemixSpinnerSpec>? spinner,
-    IconAlignment? iconAlignment,
-  }) {
-    return RemixButtonSpec(
-      container: container ?? this.container,
-      label: label ?? this.label,
-      icon: icon ?? this.icon,
-      spinner: spinner ?? this.spinner,
-      iconAlignment: iconAlignment ?? this.iconAlignment,
-    );
-  }
-
-  /// Linearly interpolates between this and another RemixButtonSpec.
-  ///
-  /// Used by Flutter's animation system to create smooth transitions
-  /// between different button states or when animating between
-  /// different button styles.
-  ///
-  /// The [t] parameter represents the interpolation factor:
-  /// - `0.0` returns this specification
-  /// - `1.0` returns [other] specification
-  /// - Values in between return interpolated specifications
-  ///
-  /// Returns this specification unchanged if [other] is null.
-  ///
-  /// Example:
-  /// ```dart
-  /// final midpoint = spec1.lerp(spec2, 0.5); // 50% interpolation
-  /// ```
-  RemixButtonSpec lerp(RemixButtonSpec? other, double t) {
-    if (other == null) return this;
-
-    return RemixButtonSpec(
-      container: MixOps.lerp(container, other.container, t)!,
-      label: MixOps.lerp(label, other.label, t)!,
-      icon: MixOps.lerp(icon, other.icon, t)!,
-      spinner: MixOps.lerp(spinner, other.spinner, t)!,
-      iconAlignment: t < 0.5 ? iconAlignment : other.iconAlignment,
-    );
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('container', container))
-      ..add(DiagnosticsProperty('label', label))
-      ..add(DiagnosticsProperty('icon', icon))
-      ..add(DiagnosticsProperty('spinner', spinner))
-      ..add(EnumProperty('iconAlignment', iconAlignment));
-  }
-
-  @override
-  List<Object?> get props => [container, label, icon, spinner, iconAlignment];
+       iconAlignment = iconAlignment ?? IconAlignment.start;
 }

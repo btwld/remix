@@ -1,11 +1,18 @@
 part of 'dialog.dart';
 
+@MixableStyler()
 class RemixDialogStyle
-    extends RemixContainerStyle<RemixDialogSpec, RemixDialogStyle> {
+    extends RemixContainerStyle<RemixDialogSpec, RemixDialogStyle>
+    with Diagnosticable, _$RemixDialogStyleMixin {
+  @MixableField(setterType: BoxStyler)
   final Prop<StyleSpec<BoxSpec>>? $container;
+  @MixableField(setterType: TextStyler)
   final Prop<StyleSpec<TextSpec>>? $title;
+  @MixableField(setterType: TextStyler)
   final Prop<StyleSpec<TextSpec>>? $description;
+  @MixableField(setterType: FlexBoxStyler)
   final Prop<StyleSpec<FlexBoxSpec>>? $actions;
+  @MixableField(setterType: BoxStyler)
   final Prop<StyleSpec<BoxSpec>>? $overlay;
 
   const RemixDialogStyle.create({
@@ -42,22 +49,6 @@ class RemixDialogStyle
          animation: animation,
          modifier: modifier,
        );
-
-  RemixDialogStyle title(TextStyler value) {
-    return merge(RemixDialogStyle(title: value));
-  }
-
-  RemixDialogStyle description(TextStyler value) {
-    return merge(RemixDialogStyle(description: value));
-  }
-
-  RemixDialogStyle actions(FlexBoxStyler value) {
-    return merge(RemixDialogStyle(actions: value));
-  }
-
-  RemixDialogStyle overlay(BoxStyler value) {
-    return merge(RemixDialogStyle(overlay: value));
-  }
 
   /// Sets container alignment
   RemixDialogStyle alignment(Alignment value) {
@@ -139,62 +130,4 @@ class RemixDialogStyle
       ),
     );
   }
-
-  @override
-  StyleSpec<RemixDialogSpec> resolve(BuildContext context) {
-    return StyleSpec(
-      spec: RemixDialogSpec(
-        container: MixOps.resolve(context, $container),
-        title: MixOps.resolve(context, $title),
-        description: MixOps.resolve(context, $description),
-        actions: MixOps.resolve(context, $actions),
-        overlay: MixOps.resolve(context, $overlay),
-      ),
-      animation: $animation,
-      widgetModifiers: $modifier?.resolve(context),
-    );
-  }
-
-  @override
-  RemixDialogStyle merge(RemixDialogStyle? other) {
-    if (other == null) return this;
-
-    return RemixDialogStyle.create(
-      container: MixOps.merge($container, other.$container),
-      title: MixOps.merge($title, other.$title),
-      description: MixOps.merge($description, other.$description),
-      actions: MixOps.merge($actions, other.$actions),
-      overlay: MixOps.merge($overlay, other.$overlay),
-      variants: MixOps.mergeVariants($variants, other.$variants),
-      animation: MixOps.mergeAnimation($animation, other.$animation),
-      modifier: MixOps.mergeModifier($modifier, other.$modifier),
-    );
-  }
-
-  @override
-  RemixDialogStyle variants(List<VariantStyle<RemixDialogSpec>> value) {
-    return merge(RemixDialogStyle(variants: value));
-  }
-
-  @override
-  RemixDialogStyle animate(AnimationConfig animation) {
-    return merge(RemixDialogStyle(animation: animation));
-  }
-
-  @override
-  RemixDialogStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixDialogStyle(modifier: value));
-  }
-
-  @override
-  List<Object?> get props => [
-    $container,
-    $title,
-    $description,
-    $actions,
-    $overlay,
-    $variants,
-    $animation,
-    $modifier,
-  ];
 }

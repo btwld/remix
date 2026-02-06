@@ -13,11 +13,11 @@ void main() {
         expect(spec.description, isA<StyleSpec<TextSpec>>());
         expect(spec.actions, isA<StyleSpec<FlexBoxSpec>>());
         expect(spec.overlay, isA<StyleSpec<BoxSpec>>());
-        expect(spec.container.spec, isA<BoxSpec>());
-        expect(spec.title.spec, isA<TextSpec>());
-        expect(spec.description.spec, isA<TextSpec>());
-        expect(spec.actions.spec, isA<FlexBoxSpec>());
-        expect(spec.overlay.spec, isA<BoxSpec>());
+        expect(spec.container?.spec, isA<BoxSpec>());
+        expect(spec.title?.spec, isA<TextSpec>());
+        expect(spec.description?.spec, isA<TextSpec>());
+        expect(spec.actions?.spec, isA<FlexBoxSpec>());
+        expect(spec.overlay?.spec, isA<BoxSpec>());
       });
 
       test('creates spec with provided parameters', () {
@@ -173,7 +173,7 @@ void main() {
         const other = null;
 
         final result = spec.lerp(other, 0.5);
-        expect(result, same(spec));
+        expect(result, equals(spec));
       });
 
       test('interpolates between two specs at t=0.0', () {
