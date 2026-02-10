@@ -36,7 +36,7 @@ class RemixTooltip extends StatelessWidget {
           overlayBuilder: (context, info) =>
               Box(styleSpec: spec.container, child: tooltipChild),
           showDuration: spec.showDuration ?? const Duration(milliseconds: 1500),
-          waitDuration: spec.waitDuration ?? const Duration(milliseconds: 500),
+          waitDuration: spec.waitDuration ?? const Duration(milliseconds: 300),
           semanticsLabel: tooltipSemantics,
           child: child,
         );
