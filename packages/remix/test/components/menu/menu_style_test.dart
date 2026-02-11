@@ -336,7 +336,7 @@ void main() {
         );
       });
 
-      test('merge with null returns original instance', () {
+      test('merge with null returns style equal to original', () {
         final originalStyle = RemixMenuTriggerStyle();
 
         final mergedStyle = originalStyle.merge(null);
@@ -559,7 +559,7 @@ void main() {
         );
       });
 
-      test('merge with null returns original instance', () {
+      test('merge with null returns style equal to original', () {
         final originalStyle = RemixMenuStyle();
 
         final mergedStyle = originalStyle.merge(null);
@@ -926,7 +926,7 @@ void main() {
         );
       });
 
-      test('merge with null returns original instance', () {
+      test('merge with null returns style equal to original', () {
         final originalStyle = RemixMenuItemStyle();
 
         final mergedStyle = originalStyle.merge(null);

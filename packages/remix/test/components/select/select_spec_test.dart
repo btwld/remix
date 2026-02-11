@@ -72,7 +72,7 @@ void main() {
     });
 
     group('lerp', () {
-      test('returns this spec when other is null', () {
+      test('returns spec equal to this when other is null', () {
         const spec = RemixSelectSpec();
         const RemixSelectSpec? other = null;
 
@@ -225,7 +225,7 @@ void main() {
     });
 
     group('lerp', () {
-      test('returns this spec when other is null', () {
+      test('returns spec equal to this when other is null', () {
         const spec = RemixSelectTriggerSpec();
         const RemixSelectTriggerSpec? other = null;
 
@@ -367,7 +367,7 @@ void main() {
     });
 
     group('lerp', () {
-      test('returns this spec when other is null', () {
+      test('returns spec equal to this when other is null', () {
         const spec = RemixSelectMenuItemSpec();
         const RemixSelectMenuItemSpec? other = null;
 

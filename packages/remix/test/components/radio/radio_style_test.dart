@@ -341,7 +341,7 @@ void main() {
         );
       });
 
-      test('merge with null returns original instance', () {
+      test('merge with null returns style equal to original', () {
         final originalStyle = RemixRadioStyle();
 
         final mergedStyle = originalStyle.merge(null);

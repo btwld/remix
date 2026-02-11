@@ -284,7 +284,7 @@ void main() {
         );
       });
 
-      test('merge with null returns original instance', () {
+      test('merge with null returns style equal to original', () {
         const originalStyle = RemixBadgeStyle.create();
         final mergedStyle = originalStyle.merge(null);
         expect(mergedStyle, equals(originalStyle));

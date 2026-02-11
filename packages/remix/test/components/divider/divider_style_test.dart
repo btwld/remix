@@ -269,7 +269,7 @@ void main() {
         );
       });
 
-      test('merge with null returns original instance', () {
+      test('merge with null returns style equal to original', () {
         final originalStyle = RemixDividerStyle();
 
         final mergedStyle = originalStyle.merge(null);

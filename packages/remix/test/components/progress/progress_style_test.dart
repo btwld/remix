@@ -365,7 +365,7 @@ void main() {
         );
       });
 
-      test('merge with null returns original instance', () {
+      test('merge with null returns style equal to original', () {
         final originalStyle = RemixProgressStyle();
 
         final mergedStyle = originalStyle.merge(null);

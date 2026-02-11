@@ -75,7 +75,7 @@ void main() {
     });
 
     group('lerp', () {
-      test('returns this when other is null', () {
+      test('returns value equal to this when other is null', () {
         const spec = RemixTooltipSpec();
         final lerped = spec.lerp(null, 0.5);
 

@@ -89,7 +89,7 @@ void main() {
     });
 
     group('lerp', () {
-      test('returns this spec when other is null', () {
+      test('returns spec equal to this when other is null', () {
         const spec = RemixAvatarSpec();
         const other = null;
 
