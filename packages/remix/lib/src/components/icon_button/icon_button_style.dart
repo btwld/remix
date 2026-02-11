@@ -1,10 +1,17 @@
 part of 'icon_button.dart';
 
+@MixableStyler()
 class RemixIconButtonStyle
     extends RemixContainerStyle<RemixIconButtonSpec, RemixIconButtonStyle>
-    with IconStyleMixin<RemixIconButtonStyle> {
+    with
+        IconStyleMixin<RemixIconButtonStyle>,
+        Diagnosticable,
+        _$RemixIconButtonStyleMixin {
+  @MixableField(setterType: BoxStyler)
   final Prop<StyleSpec<BoxSpec>>? $container;
+  @MixableField(setterType: IconStyler)
   final Prop<StyleSpec<IconSpec>>? $icon;
+  @MixableField(setterType: RemixSpinnerStyle)
   final Prop<StyleSpec<RemixSpinnerSpec>>? $spinner;
 
   const RemixIconButtonStyle.create({
@@ -33,15 +40,6 @@ class RemixIconButtonStyle
          animation: animation,
          modifier: modifier,
        );
-
-  // Instance methods for fluent API
-  RemixIconButtonStyle icon(IconStyler value) {
-    return merge(RemixIconButtonStyle(icon: value));
-  }
-
-  RemixIconButtonStyle spinner(RemixSpinnerStyle value) {
-    return merge(RemixIconButtonStyle(spinner: value));
-  }
 
   // Instance methods (chainable)
 
@@ -113,6 +111,7 @@ class RemixIconButtonStyle
   }
 
   /// Sets constraints
+  @override
   RemixIconButtonStyle constraints(BoxConstraintsMix value) {
     return merge(
       RemixIconButtonStyle(container: BoxStyler(constraints: value)),
@@ -121,7 +120,7 @@ class RemixIconButtonStyle
 
   /// Sets icon color
   RemixIconButtonStyle iconColor(Color value) {
-    return merge(RemixIconButtonStyle(icon: IconStyler(color: value)));
+    return icon(IconStyler(color: value));
   }
 
   /// Sets icon size
@@ -149,11 +148,6 @@ class RemixIconButtonStyle
         ),
       ),
     );
-  }
-
-  // Animation support
-  RemixIconButtonStyle animate(AnimationConfig animation) {
-    return merge(RemixIconButtonStyle(animation: animation));
   }
 
   RemixIconButton call({
@@ -193,54 +187,4 @@ class RemixIconButtonStyle
       ),
     );
   }
-
-  // Variant support
-
-  @override
-  RemixIconButtonStyle variants(List<VariantStyle<RemixIconButtonSpec>> value) {
-    return merge(RemixIconButtonStyle(variants: value));
-  }
-
-  // Modifier support
-  @override
-  RemixIconButtonStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixIconButtonStyle(modifier: value));
-  }
-
-  @override
-  StyleSpec<RemixIconButtonSpec> resolve(BuildContext context) {
-    return StyleSpec(
-      spec: RemixIconButtonSpec(
-        container: MixOps.resolve(context, $container),
-        icon: MixOps.resolve(context, $icon),
-        spinner: MixOps.resolve(context, $spinner),
-      ),
-      animation: $animation,
-      widgetModifiers: $modifier?.resolve(context),
-    );
-  }
-
-  @override
-  RemixIconButtonStyle merge(RemixIconButtonStyle? other) {
-    if (other == null) return this;
-
-    return RemixIconButtonStyle.create(
-      container: MixOps.merge($container, other.$container),
-      icon: MixOps.merge($icon, other.$icon),
-      spinner: MixOps.merge($spinner, other.$spinner),
-      variants: MixOps.mergeVariants($variants, other.$variants),
-      animation: MixOps.mergeAnimation($animation, other.$animation),
-      modifier: MixOps.mergeModifier($modifier, other.$modifier),
-    );
-  }
-
-  @override
-  List<Object?> get props => [
-    $container,
-    $icon,
-    $spinner,
-    $variants,
-    $animation,
-    $modifier,
-  ];
 }

@@ -1,9 +1,15 @@
 part of 'radio.dart';
 
+@MixableStyler()
 class RemixRadioStyle
     extends RemixContainerStyle<RemixRadioSpec, RemixRadioStyle>
-    with SelectedWidgetStateVariantMixin<RemixRadioSpec, RemixRadioStyle> {
+    with
+        SelectedWidgetStateVariantMixin<RemixRadioSpec, RemixRadioStyle>,
+        Diagnosticable,
+        _$RemixRadioStyleMixin {
+  @MixableField(setterType: BoxStyler)
   final Prop<StyleSpec<BoxSpec>>? $container;
+  @MixableField(setterType: BoxStyler)
   final Prop<StyleSpec<BoxSpec>>? $indicator;
 
   const RemixRadioStyle.create({

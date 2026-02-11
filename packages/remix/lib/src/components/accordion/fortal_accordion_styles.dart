@@ -11,8 +11,8 @@ class FortalAccordionStyle {
   ///
   /// Returns a RemixAccordionStyle configured with default Fortal styling
   /// for trigger, title, trailing icon, and content.
-  static RemixAccordionStyle<T> base<T>() {
-    return RemixAccordionStyle<T>()
+  static RemixAccordionStyle base() {
+    return RemixAccordionStyle()
         .trigger(
           FlexBoxStyler()
               .direction(.horizontal)

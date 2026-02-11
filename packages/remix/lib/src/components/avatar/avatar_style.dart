@@ -1,10 +1,18 @@
 part of 'avatar.dart';
 
+@MixableStyler()
 class RemixAvatarStyle
     extends RemixContainerStyle<RemixAvatarSpec, RemixAvatarStyle>
-    with LabelStyleMixin<RemixAvatarStyle>, IconStyleMixin<RemixAvatarStyle> {
+    with
+        LabelStyleMixin<RemixAvatarStyle>,
+        IconStyleMixin<RemixAvatarStyle>,
+        Diagnosticable,
+        _$RemixAvatarStyleMixin {
+  @MixableField(setterType: BoxStyler)
   final Prop<StyleSpec<BoxSpec>>? $container;
+  @MixableField(setterType: TextStyler)
   final Prop<StyleSpec<TextSpec>>? $text;
+  @MixableField(setterType: IconStyler)
   final Prop<StyleSpec<IconSpec>>? $icon;
 
   const RemixAvatarStyle.create({
@@ -115,11 +123,6 @@ class RemixAvatarStyle
     return merge(RemixAvatarStyle(container: BoxStyler(constraints: value)));
   }
 
-  /// Sets animation
-  RemixAvatarStyle animate(AnimationConfig animation) {
-    return merge(RemixAvatarStyle(animation: animation));
-  }
-
   /// Sets the clip behavior for the avatar container.
   RemixAvatarStyle clipBehavior(Clip clip) {
     return merge(RemixAvatarStyle(container: BoxStyler(clipBehavior: clip)));
@@ -128,11 +131,6 @@ class RemixAvatarStyle
   @override
   RemixAvatarStyle label(TextStyler value) {
     return merge(RemixAvatarStyle(text: value));
-  }
-
-  @override
-  RemixAvatarStyle icon(IconStyler value) {
-    return merge(RemixAvatarStyle(icon: value));
   }
 
   // Instance methods (chainable)
@@ -151,43 +149,6 @@ class RemixAvatarStyle
           ),
         ),
       ),
-    );
-  }
-
-  @override
-  RemixAvatarStyle variants(List<VariantStyle<RemixAvatarSpec>> value) {
-    return merge(RemixAvatarStyle(variants: value));
-  }
-
-  @override
-  RemixAvatarStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixAvatarStyle(modifier: value));
-  }
-
-  @override
-  StyleSpec<RemixAvatarSpec> resolve(BuildContext context) {
-    return StyleSpec(
-      spec: RemixAvatarSpec(
-        container: MixOps.resolve(context, $container),
-        text: MixOps.resolve(context, $text),
-        icon: MixOps.resolve(context, $icon),
-      ),
-      animation: $animation,
-      widgetModifiers: $modifier?.resolve(context),
-    );
-  }
-
-  @override
-  RemixAvatarStyle merge(RemixAvatarStyle? other) {
-    if (other == null) return this;
-
-    return RemixAvatarStyle.create(
-      container: MixOps.merge($container, other.$container),
-      text: MixOps.merge($text, other.$text),
-      icon: MixOps.merge($icon, other.$icon),
-      variants: MixOps.mergeVariants($variants, other.$variants),
-      animation: MixOps.mergeAnimation($animation, other.$animation),
-      modifier: MixOps.mergeModifier($modifier, other.$modifier),
     );
   }
 
@@ -211,14 +172,4 @@ class RemixAvatarStyle
       ),
     );
   }
-
-  @override
-  List<Object?> get props => [
-    $container,
-    $text,
-    $icon,
-    $variants,
-    $animation,
-    $modifier,
-  ];
 }

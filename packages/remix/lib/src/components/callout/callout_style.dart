@@ -1,12 +1,18 @@
 part of 'callout.dart';
 
+@MixableStyler()
 class RemixCalloutStyle
     extends RemixFlexContainerStyle<RemixCalloutSpec, RemixCalloutStyle>
     with
         IconStyleMixin<RemixCalloutStyle>,
-        StyledTextStyleMixin<RemixCalloutStyle> {
+        StyledTextStyleMixin<RemixCalloutStyle>,
+        Diagnosticable,
+        _$RemixCalloutStyleMixin {
+  @MixableField(setterType: FlexBoxStyler)
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
+  @MixableField(setterType: TextStyler)
   final Prop<StyleSpec<TextSpec>>? $text;
+  @MixableField(setterType: IconStyler)
   final Prop<StyleSpec<IconSpec>>? $icon;
 
   const RemixCalloutStyle.create({
@@ -96,50 +102,6 @@ class RemixCalloutStyle
   }
 
   @override
-  StyleSpec<RemixCalloutSpec> resolve(BuildContext context) {
-    return StyleSpec(
-      spec: RemixCalloutSpec(
-        container: MixOps.resolve(context, $container),
-        text: MixOps.resolve(context, $text),
-        icon: MixOps.resolve(context, $icon),
-      ),
-      animation: $animation,
-      widgetModifiers: $modifier?.resolve(context),
-    );
-  }
-
-  @override
-  RemixCalloutStyle merge(RemixCalloutStyle? other) {
-    if (other == null) return this;
-
-    return RemixCalloutStyle.create(
-      container: MixOps.merge($container, other.$container),
-      text: MixOps.merge($text, other.$text),
-      icon: MixOps.merge($icon, other.$icon),
-      variants: MixOps.mergeVariants($variants, other.$variants),
-      animation: MixOps.mergeAnimation($animation, other.$animation),
-      modifier: MixOps.mergeModifier($modifier, other.$modifier),
-    );
-  }
-
-  @override
-  RemixCalloutStyle variants(List<VariantStyle<RemixCalloutSpec>> value) {
-    return merge(RemixCalloutStyle(variants: value));
-  }
-
-  @override
-  RemixCalloutStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixCalloutStyle(modifier: value));
-  }
-
-  // Abstract method implementations for mixins
-
-  @override
-  RemixCalloutStyle animate(AnimationConfig config) {
-    return merge(RemixCalloutStyle(animation: config));
-  }
-
-  @override
   RemixCalloutStyle constraints(BoxConstraintsMix value) {
     return merge(
       RemixCalloutStyle(container: FlexBoxStyler(constraints: value)),
@@ -173,24 +135,4 @@ class RemixCalloutStyle
   RemixCalloutStyle flex(FlexStyler value) {
     return merge(RemixCalloutStyle(container: FlexBoxStyler().flex(value)));
   }
-
-  @override
-  RemixCalloutStyle icon(IconStyler value) {
-    return merge(RemixCalloutStyle(icon: value));
-  }
-
-  @override
-  RemixCalloutStyle text(TextStyler value) {
-    return merge(RemixCalloutStyle(text: value));
-  }
-
-  @override
-  List<Object?> get props => [
-    $container,
-    $text,
-    $icon,
-    $variants,
-    $animation,
-    $modifier,
-  ];
 }

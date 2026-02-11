@@ -53,12 +53,15 @@ part of 'checkbox.dart';
 /// - [RemixCheckboxStyle] for the styling API
 /// - [RemixCheckbox] for the widget implementation
 /// - [Spec] for the base specification pattern
-class RemixCheckboxSpec extends Spec<RemixCheckboxSpec> with Diagnosticable {
+@MixableSpec()
+class RemixCheckboxSpec extends Spec<RemixCheckboxSpec>
+    with Diagnosticable, _$RemixCheckboxSpecMethods {
   /// Styling specification for the checkbox box container.
   ///
   /// Defines the appearance of the checkbox box itself, including
   /// background color, border, size, and shape. This is the visual
   /// element that users click to toggle the checkbox state.
+  @override
   final StyleSpec<BoxSpec> container;
 
   /// Styling specification for the checkbox indicator icon.
@@ -66,6 +69,7 @@ class RemixCheckboxSpec extends Spec<RemixCheckboxSpec> with Diagnosticable {
   /// Controls the checkmark or other indicator symbol shown when
   /// the checkbox is in the checked state. Defines color, size,
   /// and other icon-specific properties.
+  @override
   final StyleSpec<IconSpec> indicator;
 
   /// Creates a RemixCheckboxSpec with optional styling specifications.
@@ -88,69 +92,6 @@ class RemixCheckboxSpec extends Spec<RemixCheckboxSpec> with Diagnosticable {
   const RemixCheckboxSpec({
     StyleSpec<BoxSpec>? container,
     StyleSpec<IconSpec>? indicator,
-  })  : container = container ?? const StyleSpec(spec: BoxSpec()),
-        indicator = indicator ?? const StyleSpec(spec: IconSpec());
-
-  /// Creates a copy of this RemixCheckboxSpec with the given fields replaced.
-  ///
-  /// This method enables immutable updates to the specification,
-  /// which is essential for the reactive styling system. Any parameter
-  /// not provided will retain its current value from this instance.
-  ///
-  /// Example:
-  /// ```dart
-  /// final updatedSpec = originalSpec.copyWith(
-  ///   indicator: StyleSpec(spec: IconSpec()),
-  /// );
-  /// ```
-  RemixCheckboxSpec copyWith({
-    StyleSpec<BoxSpec>? container,
-    StyleSpec<IconSpec>? indicator,
-  }) {
-    return RemixCheckboxSpec(
-      container: container ?? this.container,
-      indicator: indicator ?? this.indicator,
-    );
-  }
-
-  /// Linearly interpolates between this and another RemixCheckboxSpec.
-  ///
-  /// Used by Flutter's animation system to create smooth transitions
-  /// between different checkbox states or when animating between
-  /// different checkbox styles. This is particularly useful for
-  /// hover effects, focus states, and theme transitions.
-  ///
-  /// The [t] parameter represents the interpolation factor:
-  /// - `0.0` returns this specification
-  /// - `1.0` returns [other] specification
-  /// - Values in between return interpolated specifications
-  ///
-  /// All [StyleSpec] properties are interpolated using [MixOps.lerp],
-  /// which handles the complex interpolation of nested styling properties.
-  ///
-  /// Returns this specification unchanged if [other] is null.
-  ///
-  /// Example:
-  /// ```dart
-  /// final midpoint = spec1.lerp(spec2, 0.5); // 50% interpolation
-  /// ```
-  RemixCheckboxSpec lerp(RemixCheckboxSpec? other, double t) {
-    if (other == null) return this;
-
-    return RemixCheckboxSpec(
-      container: MixOps.lerp(container, other.container, t)!,
-      indicator: MixOps.lerp(indicator, other.indicator, t)!,
-    );
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('container', container))
-      ..add(DiagnosticsProperty('indicator', indicator));
-  }
-
-  @override
-  List<Object?> get props => [container, indicator];
+  }) : container = container ?? const StyleSpec(spec: BoxSpec()),
+       indicator = indicator ?? const StyleSpec(spec: IconSpec());
 }

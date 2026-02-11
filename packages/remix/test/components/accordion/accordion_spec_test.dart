@@ -79,13 +79,13 @@ void main() {
     });
 
     group('lerp', () {
-      test('returns this spec when other is null', () {
+      test('returns spec equal to this when other is null', () {
         const spec = RemixAccordionSpec();
         const other = null;
 
         final result = spec.lerp(other, 0.5);
-
-        expect(result, same(spec));
+        expect(result == spec, isTrue);
+        expect(result, equals(spec));
       });
 
       test('interpolates between two specs at t=0.0', () {
@@ -155,9 +155,7 @@ void main() {
           trigger: StyleSpec(
             spec: FlexBoxSpec(
               box: StyleSpec(
-                spec: BoxSpec(
-                  decoration: BoxDecoration(color: Colors.red),
-                ),
+                spec: BoxSpec(decoration: BoxDecoration(color: Colors.red)),
               ),
             ),
           ),

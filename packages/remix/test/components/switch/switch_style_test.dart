@@ -272,12 +272,12 @@ void main() {
         );
       });
 
-      test('merge with null returns original instance', () {
+      test('merge with null returns style equal to original', () {
         final originalStyle = RemixSwitchStyle();
 
         final mergedStyle = originalStyle.merge(null);
 
-        expect(mergedStyle, same(originalStyle));
+        expect(mergedStyle, equals(originalStyle));
       });
 
       test('merge combines properties correctly', () {
@@ -306,8 +306,9 @@ void main() {
     });
 
     group('Call Method', () {
-      testWidgets('call method creates RemixSwitch with all parameters',
-          (tester) async {
+      testWidgets('call method creates RemixSwitch with all parameters', (
+        tester,
+      ) async {
         final style = RemixSwitchStyle().thumbColor(Colors.white);
         final focusNode = FocusNode();
 
@@ -335,8 +336,9 @@ void main() {
         focusNode.dispose();
       });
 
-      testWidgets('call method creates RemixSwitch with minimal parameters',
-          (tester) async {
+      testWidgets('call method creates RemixSwitch with minimal parameters', (
+        tester,
+      ) async {
         final style = RemixSwitchStyle();
 
         final switchWidget = style.call(selected: false, onChanged: (v) {});

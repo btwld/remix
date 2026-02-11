@@ -381,10 +381,10 @@ void main() {
         );
       });
 
-      test('merge with null returns original instance', () {
+      test('merge with null returns style equal to original', () {
         final originalStyle = RemixAvatarStyle();
         final mergedStyle = originalStyle.merge(null);
-        expect(mergedStyle, same(originalStyle));
+        expect(mergedStyle, equals(originalStyle));
       });
 
       test('merge with other style returns new instance', () {

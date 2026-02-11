@@ -47,7 +47,7 @@ class AvatarExample extends StatelessWidget {
         .size(70, 70)
         .iconColor(Colors.white)
         .iconSize(70)
-        .icon(IconStyler().wrap(.translate(x: 0, y: 12)))
+        .icon(IconStyler().wrap(WidgetModifierConfig.translate(x: 0, y: 12)))
         .shapeCircle()
         .wrap(WidgetModifierConfig.clipOval());
   }

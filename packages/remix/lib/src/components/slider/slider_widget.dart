@@ -32,11 +32,11 @@ class RemixSlider extends StatelessWidget {
     this.focusNode,
     this.autofocus = false,
     this.snapDivisions,
-  })  : assert(min <= max, 'Slider min must be less than or equal to max'),
-        assert(
-          value >= min && value <= max,
-          'Slider value must be between min and max values',
-        );
+  }) : assert(min <= max, 'Slider min must be less than or equal to max'),
+       assert(
+         value >= min && value <= max,
+         'Slider value must be between min and max values',
+       );
 
   /// The minimum value the slider can have.
   final double min;
@@ -104,7 +104,8 @@ class RemixSlider extends StatelessWidget {
           style: style,
           controller: NakedState.controllerOf(context),
           builder: (context, spec) {
-            final thumbSize = _resolveThumbSize(context, spec.thumb);
+            final thumbSpec = spec.thumb;
+            final thumbSize = _resolveThumbSize(context, thumbSpec);
             final trackThickness = spec.trackThickness > 0
                 ? spec.trackThickness
                 : RemixSliderSpec.defaultTrackStrokeWidth;
@@ -486,16 +487,20 @@ class _TrackPropertiesTween extends Tween<_TrackProperties> {
   _TrackProperties lerp(double t) {
     // Use null-safe fallbacks since lerp methods can return null
     return _TrackProperties(
-      rangeColor: Color.lerp(begin?.rangeColor, end?.rangeColor, t) ??
+      rangeColor:
+          Color.lerp(begin?.rangeColor, end?.rangeColor, t) ??
           begin?.rangeColor ??
           end!.rangeColor,
-      rangeWidth: lerpDouble(begin?.rangeWidth, end?.rangeWidth, t) ??
+      rangeWidth:
+          lerpDouble(begin?.rangeWidth, end?.rangeWidth, t) ??
           begin?.rangeWidth ??
           end!.rangeWidth,
-      trackColor: Color.lerp(begin?.trackColor, end?.trackColor, t) ??
+      trackColor:
+          Color.lerp(begin?.trackColor, end?.trackColor, t) ??
           begin?.trackColor ??
           end!.trackColor,
-      trackWidth: lerpDouble(begin?.trackWidth, end?.trackWidth, t) ??
+      trackWidth:
+          lerpDouble(begin?.trackWidth, end?.trackWidth, t) ??
           begin?.trackWidth ??
           end!.trackWidth,
     );

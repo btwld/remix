@@ -2,8 +2,11 @@ part of 'divider.dart';
 
 // Private per-component constants (none)
 
+@MixableStyler()
 class RemixDividerStyle
-    extends RemixContainerStyle<RemixDividerSpec, RemixDividerStyle> {
+    extends RemixContainerStyle<RemixDividerSpec, RemixDividerStyle>
+    with Diagnosticable, _$RemixDividerStyleMixin {
+  @MixableField(setterType: BoxStyler)
   final Prop<StyleSpec<BoxSpec>>? $container;
 
   const RemixDividerStyle.create({
@@ -61,26 +64,12 @@ class RemixDividerStyle
   }
 
   /// Sets container decoration
+  @override
   RemixDividerStyle decoration(DecorationMix value) {
     return merge(RemixDividerStyle(container: BoxStyler(decoration: value)));
   }
 
-  @override
-  RemixDividerStyle variants(List<VariantStyle<RemixDividerSpec>> value) {
-    return merge(RemixDividerStyle(variants: value));
-  }
-
-  @override
-  RemixDividerStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixDividerStyle(modifier: value));
-  }
-
   // Abstract method implementations for mixins
-
-  @override
-  RemixDividerStyle animate(AnimationConfig config) {
-    return merge(RemixDividerStyle(animation: config));
-  }
 
   @override
   RemixDividerStyle constraints(BoxConstraintsMix value) {
@@ -105,28 +94,4 @@ class RemixDividerStyle
       ),
     );
   }
-
-  @override
-  StyleSpec<RemixDividerSpec> resolve(BuildContext context) {
-    return StyleSpec(
-      spec: RemixDividerSpec(container: MixOps.resolve(context, $container)),
-      animation: $animation,
-      widgetModifiers: $modifier?.resolve(context),
-    );
-  }
-
-  @override
-  RemixDividerStyle merge(RemixDividerStyle? other) {
-    if (other == null) return this;
-
-    return RemixDividerStyle.create(
-      container: MixOps.merge($container, other.$container),
-      variants: MixOps.mergeVariants($variants, other.$variants),
-      animation: MixOps.mergeAnimation($animation, other.$animation),
-      modifier: MixOps.mergeModifier($modifier, other.$modifier),
-    );
-  }
-
-  @override
-  List<Object?> get props => [$container, $variants, $animation, $modifier];
 }

@@ -1,7 +1,10 @@
 part of 'tabs.dart';
 
+@MixableStyler()
 class RemixTabBarStyle
-    extends RemixFlexContainerStyle<RemixTabBarSpec, RemixTabBarStyle> {
+    extends RemixFlexContainerStyle<RemixTabBarSpec, RemixTabBarStyle>
+    with Diagnosticable, _$RemixTabBarStyleMixin {
+  @MixableField(setterType: FlexBoxStyler)
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
 
   const RemixTabBarStyle.create({
@@ -157,9 +160,14 @@ class RemixTabBarStyle
   List<Object?> get props => [$container, $variants, $animation, $modifier];
 }
 
+@MixableStyler()
 class RemixTabViewStyle
     extends RemixContainerStyle<RemixTabViewSpec, RemixTabViewStyle>
-    with SelectedWidgetStateVariantMixin<RemixTabViewSpec, RemixTabViewStyle> {
+    with
+        SelectedWidgetStateVariantMixin<RemixTabViewSpec, RemixTabViewStyle>,
+        Diagnosticable,
+        _$RemixTabViewStyleMixin {
+  @MixableField(setterType: BoxStyler)
   final Prop<StyleSpec<BoxSpec>>? $container;
 
   const RemixTabViewStyle.create({
@@ -285,13 +293,19 @@ class RemixTabViewStyle
   List<Object?> get props => [$container, $variants, $animation, $modifier];
 }
 
+@MixableStyler()
 class RemixTabStyle extends RemixFlexContainerStyle<RemixTabSpec, RemixTabStyle>
     with
         LabelStyleMixin<RemixTabStyle>,
         IconStyleMixin<RemixTabStyle>,
-        SelectedWidgetStateVariantMixin<RemixTabSpec, RemixTabStyle> {
+        SelectedWidgetStateVariantMixin<RemixTabSpec, RemixTabStyle>,
+        Diagnosticable,
+        _$RemixTabStyleMixin {
+  @MixableField(setterType: FlexBoxStyler)
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
+  @MixableField(setterType: TextStyler)
   final Prop<StyleSpec<TextSpec>>? $label;
+  @MixableField(setterType: IconStyler)
   final Prop<StyleSpec<IconSpec>>? $icon;
 
   const RemixTabStyle.create({

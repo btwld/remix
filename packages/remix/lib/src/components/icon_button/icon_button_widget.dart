@@ -1,17 +1,12 @@
 part of 'icon_button.dart';
 
 /// Builder function for customizing icon button icon rendering.
-typedef RemixIconButtonIconBuilder = Widget Function(
-  BuildContext context,
-  IconSpec spec,
-  IconData? icon,
-);
+typedef RemixIconButtonIconBuilder =
+    Widget Function(BuildContext context, IconSpec spec, IconData? icon);
 
 /// Builder function for customizing icon button loading state rendering.
-typedef RemixIconButtonLoadingBuilder = Widget Function(
-  BuildContext context,
-  RemixSpinnerSpec spec,
-);
+typedef RemixIconButtonLoadingBuilder =
+    Widget Function(BuildContext context, RemixSpinnerSpec spec);
 
 /// A customizable icon button component optimized for icon-only interactions.
 /// The button is square by default and centers the icon properly.

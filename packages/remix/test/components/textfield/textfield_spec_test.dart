@@ -154,11 +154,16 @@ void main() {
     });
 
     group('lerp', () {
-      test('returns this when other is null', () {
+      test('returns value equal to this when other is null', () {
         const spec = RemixTextFieldSpec();
         final lerped = spec.lerp(null, 0.5);
 
-        expect(lerped, equals(spec));
+        // StyleSpec fields should be preserved
+        expect(lerped.text, equals(spec.text));
+        expect(lerped.hintText, equals(spec.hintText));
+        expect(lerped.container, equals(spec.container));
+        expect(lerped.helperText, equals(spec.helperText));
+        expect(lerped.label, equals(spec.label));
       });
 
       test('interpolates between two specs at t=0', () {

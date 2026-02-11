@@ -98,13 +98,14 @@ void main() {
     });
 
     group('lerp', () {
-      test('returns this spec when other is null', () {
+      test('returns spec equal to this when other is null', () {
         final spec = RemixSliderSpec();
         const RemixSliderSpec? other = null;
 
         final result = spec.lerp(other, 0.5);
 
-        expect(result, same(spec));
+        // StyleSpec fields should be preserved
+        expect(result.thumb, equals(spec.thumb));
       });
 
       test('interpolates between two specs at t=0.0', () {

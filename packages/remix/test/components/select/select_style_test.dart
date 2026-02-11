@@ -232,12 +232,12 @@ void main() {
         );
       });
 
-      test('merge with null returns original instance', () {
+      test('merge with null returns style equal to original', () {
         final originalStyle = RemixSelectStyle();
 
         final mergedStyle = originalStyle.merge(null);
 
-        expect(mergedStyle, same(originalStyle));
+        expect(mergedStyle, equals(originalStyle));
       });
     });
 
@@ -442,12 +442,12 @@ void main() {
         );
       });
 
-      test('merge with null returns original instance', () {
+      test('merge with null returns style equal to original', () {
         final originalStyle = RemixSelectTriggerStyle();
 
         final mergedStyle = originalStyle.merge(null);
 
-        expect(mergedStyle, same(originalStyle));
+        expect(mergedStyle, equals(originalStyle));
       });
     });
 
@@ -621,12 +621,12 @@ void main() {
         );
       });
 
-      test('merge with null returns original instance', () {
+      test('merge with null returns style equal to original', () {
         final originalStyle = RemixSelectMenuItemStyle();
 
         final mergedStyle = originalStyle.merge(null);
 
-        expect(mergedStyle, same(originalStyle));
+        expect(mergedStyle, equals(originalStyle));
       });
     });
 

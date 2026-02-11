@@ -14,9 +14,7 @@ void main() {
 
       test('creates spec with custom container', () {
         final customContainer = StyleSpec(
-          spec: BoxSpec(
-            decoration: BoxDecoration(color: Colors.red),
-          ),
+          spec: BoxSpec(decoration: BoxDecoration(color: Colors.red)),
         );
 
         final spec = RemixDividerSpec(container: customContainer);
@@ -29,9 +27,7 @@ void main() {
       test('returns new instance with updated container', () {
         const originalSpec = RemixDividerSpec();
         final newContainer = StyleSpec(
-          spec: BoxSpec(
-            decoration: BoxDecoration(color: Colors.blue),
-          ),
+          spec: BoxSpec(decoration: BoxDecoration(color: Colors.blue)),
         );
 
         final updatedSpec = originalSpec.copyWith(container: newContainer);
@@ -56,9 +52,7 @@ void main() {
         const originalSpec = RemixDividerSpec();
         final originalContainer = originalSpec.container;
         final newContainer = StyleSpec(
-          spec: BoxSpec(
-            decoration: BoxDecoration(color: Colors.green),
-          ),
+          spec: BoxSpec(decoration: BoxDecoration(color: Colors.green)),
         );
 
         final updatedSpec = originalSpec.copyWith(container: newContainer);
@@ -70,22 +64,18 @@ void main() {
     });
 
     group('lerp', () {
-      test('returns this spec when other is null', () {
+      test('returns spec equal to this when other is null', () {
         const spec = RemixDividerSpec();
         const other = null;
 
         final result = spec.lerp(other, 0.5);
 
-        expect(result, same(spec));
+        expect(result, equals(spec));
       });
 
       test('interpolates between two specs at t=0.0', () {
-        final spec1 = RemixDividerSpec(
-          container: StyleSpec(spec: BoxSpec()),
-        );
-        final spec2 = RemixDividerSpec(
-          container: StyleSpec(spec: BoxSpec()),
-        );
+        final spec1 = RemixDividerSpec(container: StyleSpec(spec: BoxSpec()));
+        final spec2 = RemixDividerSpec(container: StyleSpec(spec: BoxSpec()));
 
         final result = spec1.lerp(spec2, 0.0);
 
@@ -95,12 +85,8 @@ void main() {
       });
 
       test('interpolates between two specs at t=1.0', () {
-        final spec1 = RemixDividerSpec(
-          container: StyleSpec(spec: BoxSpec()),
-        );
-        final spec2 = RemixDividerSpec(
-          container: StyleSpec(spec: BoxSpec()),
-        );
+        final spec1 = RemixDividerSpec(container: StyleSpec(spec: BoxSpec()));
+        final spec2 = RemixDividerSpec(container: StyleSpec(spec: BoxSpec()));
 
         final result = spec1.lerp(spec2, 1.0);
 
@@ -110,12 +96,8 @@ void main() {
       });
 
       test('interpolates between two specs at t=0.5', () {
-        final spec1 = RemixDividerSpec(
-          container: StyleSpec(spec: BoxSpec()),
-        );
-        final spec2 = RemixDividerSpec(
-          container: StyleSpec(spec: BoxSpec()),
-        );
+        final spec1 = RemixDividerSpec(container: StyleSpec(spec: BoxSpec()));
+        final spec2 = RemixDividerSpec(container: StyleSpec(spec: BoxSpec()));
 
         final result = spec1.lerp(spec2, 0.5);
 
@@ -138,9 +120,7 @@ void main() {
         const spec1 = RemixDividerSpec();
         final spec2 = RemixDividerSpec(
           container: StyleSpec(
-            spec: BoxSpec(
-              decoration: BoxDecoration(color: Colors.red),
-            ),
+            spec: BoxSpec(decoration: BoxDecoration(color: Colors.red)),
           ),
         );
 

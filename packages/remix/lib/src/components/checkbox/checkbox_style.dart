@@ -1,11 +1,16 @@
 part of 'checkbox.dart';
 
+@MixableStyler()
 class RemixCheckboxStyle
     extends RemixContainerStyle<RemixCheckboxSpec, RemixCheckboxStyle>
     with
         IconStyleMixin<RemixCheckboxStyle>,
-        SelectedWidgetStateVariantMixin<RemixCheckboxSpec, RemixCheckboxStyle> {
+        SelectedWidgetStateVariantMixin<RemixCheckboxSpec, RemixCheckboxStyle>,
+        Diagnosticable,
+        _$RemixCheckboxStyleMixin {
+  @MixableField(setterType: BoxStyler)
   final Prop<StyleSpec<BoxSpec>>? $container;
+  @MixableField(setterType: IconStyler)
   final Prop<StyleSpec<IconSpec>>? $indicator;
 
   const RemixCheckboxStyle.create({
@@ -139,22 +144,6 @@ class RemixCheckboxStyle
     );
   }
 
-  /// Sets animation configuration.
-  @override
-  RemixCheckboxStyle animate(AnimationConfig animation) {
-    return merge(RemixCheckboxStyle(animation: animation));
-  }
-
-  @override
-  RemixCheckboxStyle variants(List<VariantStyle<RemixCheckboxSpec>> value) {
-    return merge(RemixCheckboxStyle(variants: value));
-  }
-
-  @override
-  RemixCheckboxStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixCheckboxStyle(modifier: value));
-  }
-
   @override
   RemixCheckboxStyle constraints(BoxConstraintsMix value) {
     return merge(RemixCheckboxStyle(container: BoxStyler(constraints: value)));
@@ -186,31 +175,6 @@ class RemixCheckboxStyle
       RemixCheckboxStyle(
         container: BoxStyler(transform: value, transformAlignment: alignment),
       ),
-    );
-  }
-
-  @override
-  StyleSpec<RemixCheckboxSpec> resolve(BuildContext context) {
-    return StyleSpec(
-      spec: RemixCheckboxSpec(
-        container: MixOps.resolve(context, $container),
-        indicator: MixOps.resolve(context, $indicator),
-      ),
-      animation: $animation,
-      widgetModifiers: $modifier?.resolve(context),
-    );
-  }
-
-  @override
-  RemixCheckboxStyle merge(RemixCheckboxStyle? other) {
-    if (other == null) return this;
-
-    return RemixCheckboxStyle.create(
-      container: MixOps.merge($container, other.$container),
-      indicator: MixOps.merge($indicator, other.$indicator),
-      variants: MixOps.mergeVariants($variants, other.$variants),
-      animation: MixOps.mergeAnimation($animation, other.$animation),
-      modifier: MixOps.mergeModifier($modifier, other.$modifier),
     );
   }
 
@@ -258,13 +222,4 @@ class RemixCheckboxStyle
       style: this,
     );
   }
-
-  @override
-  List<Object?> get props => [
-    $container,
-    $indicator,
-    $variants,
-    $animation,
-    $modifier,
-  ];
 }

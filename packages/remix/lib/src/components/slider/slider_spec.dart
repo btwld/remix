@@ -7,15 +7,22 @@ const double _remixSliderDefaultTrackStrokeWidth = 8.0;
 const Color _defaultTrackColor = MixColors.grey;
 const Color _defaultRangeColor = MixColors.black;
 
-class RemixSliderSpec extends Spec<RemixSliderSpec> with Diagnosticable {
+@MixableSpec()
+class RemixSliderSpec extends Spec<RemixSliderSpec>
+    with Diagnosticable, _$RemixSliderSpecMethods {
   static const Size defaultThumbSize = _remixSliderDefaultThumbSize;
   static const double defaultTrackStrokeWidth =
       _remixSliderDefaultTrackStrokeWidth;
 
+  @override
   final StyleSpec<BoxSpec> thumb;
+  @override
   final Color trackColor;
+  @override
   final double trackWidth;
+  @override
   final Color rangeColor;
+  @override
   final double rangeWidth;
 
   RemixSliderSpec({
@@ -25,58 +32,10 @@ class RemixSliderSpec extends Spec<RemixSliderSpec> with Diagnosticable {
     Color? rangeColor,
     double? rangeWidth,
   }) : thumb = thumb ?? const StyleSpec(spec: BoxSpec()),
-       trackColor = trackColor ?? _defaultTrackColor,
-       trackWidth = trackWidth ?? _remixSliderDefaultTrackStrokeWidth,
        rangeColor = rangeColor ?? _defaultRangeColor,
-       rangeWidth = rangeWidth ?? _remixSliderDefaultTrackStrokeWidth;
+       trackWidth = trackWidth ?? _remixSliderDefaultTrackStrokeWidth,
+       rangeWidth = rangeWidth ?? _remixSliderDefaultTrackStrokeWidth,
+       trackColor = trackColor ?? _defaultTrackColor;
 
   double get trackThickness => math.max(trackWidth, rangeWidth);
-
-  RemixSliderSpec copyWith({
-    StyleSpec<BoxSpec>? thumb,
-    Color? trackColor,
-    double? trackWidth,
-    Color? rangeColor,
-    double? rangeWidth,
-  }) {
-    return RemixSliderSpec(
-      thumb: thumb ?? this.thumb,
-      trackColor: trackColor ?? this.trackColor,
-      trackWidth: trackWidth ?? this.trackWidth,
-      rangeColor: rangeColor ?? this.rangeColor,
-      rangeWidth: rangeWidth ?? this.rangeWidth,
-    );
-  }
-
-  RemixSliderSpec lerp(RemixSliderSpec? other, double t) {
-    if (other == null) return this;
-
-    return RemixSliderSpec(
-      thumb: MixOps.lerp(thumb, other.thumb, t)!,
-      trackColor: Color.lerp(trackColor, other.trackColor, t)!,
-      trackWidth: lerpDouble(trackWidth, other.trackWidth, t)!,
-      rangeColor: Color.lerp(rangeColor, other.rangeColor, t)!,
-      rangeWidth: lerpDouble(rangeWidth, other.rangeWidth, t)!,
-    );
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('thumb', thumb))
-      ..add(ColorProperty('trackColor', trackColor))
-      ..add(DoubleProperty('trackWidth', trackWidth))
-      ..add(ColorProperty('rangeColor', rangeColor))
-      ..add(DoubleProperty('rangeWidth', rangeWidth));
-  }
-
-  @override
-  List<Object?> get props => [
-    thumb,
-    trackColor,
-    trackWidth,
-    rangeColor,
-    rangeWidth,
-  ];
 }

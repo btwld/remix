@@ -83,9 +83,9 @@ class RemixAccordion<T> extends StatelessWidget {
     this.style = const RemixAccordionStyle.create(),
     this.transitionBuilder = defaultAccordionTransitionBuilder,
   }) : assert(
-          title != null || builder != null,
-          'Either title or builder must be provided',
-        );
+         title != null || builder != null,
+         'Either title or builder must be provided',
+       );
 
   static Widget defaultAccordionTransitionBuilder(
     Widget panel,
@@ -147,7 +147,7 @@ class RemixAccordion<T> extends StatelessWidget {
   final String? semanticLabel;
 
   /// The style configuration for the accordion item.
-  final RemixAccordionStyle<T> style;
+  final RemixAccordionStyle style;
 
   /// The transition builder for the accordion item.
   final Widget Function(Widget, Animation<double>) transitionBuilder;

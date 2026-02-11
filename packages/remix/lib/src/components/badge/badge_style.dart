@@ -1,9 +1,15 @@
 part of 'badge.dart';
 
+@MixableStyler()
 class RemixBadgeStyle
     extends RemixContainerStyle<RemixBadgeSpec, RemixBadgeStyle>
-    with LabelStyleMixin<RemixBadgeStyle> {
+    with
+        LabelStyleMixin<RemixBadgeStyle>,
+        Diagnosticable,
+        _$RemixBadgeStyleMixin {
+  @MixableField(setterType: BoxStyler)
   final Prop<StyleSpec<BoxSpec>>? $container;
+  @MixableField(setterType: TextStyler)
   final Prop<StyleSpec<TextSpec>>? $text;
 
   const RemixBadgeStyle.create({
@@ -89,22 +95,6 @@ class RemixBadgeStyle
     return merge(RemixBadgeStyle(container: BoxStyler(constraints: value)));
   }
 
-  /// Sets animation
-  @override
-  RemixBadgeStyle animate(AnimationConfig animation) {
-    return merge(RemixBadgeStyle(animation: animation));
-  }
-
-  @override
-  RemixBadgeStyle variants(List<VariantStyle<RemixBadgeSpec>> value) {
-    return merge(RemixBadgeStyle(variants: value));
-  }
-
-  @override
-  RemixBadgeStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixBadgeStyle(modifier: value));
-  }
-
   // Abstract method implementations for mixins
 
   @override
@@ -125,38 +115,4 @@ class RemixBadgeStyle
       ),
     );
   }
-
-  @override
-  StyleSpec<RemixBadgeSpec> resolve(BuildContext context) {
-    return StyleSpec(
-      spec: RemixBadgeSpec(
-        container: MixOps.resolve(context, $container),
-        text: MixOps.resolve(context, $text),
-      ),
-      animation: $animation,
-      widgetModifiers: $modifier?.resolve(context),
-    );
-  }
-
-  @override
-  RemixBadgeStyle merge(RemixBadgeStyle? other) {
-    if (other == null) return this;
-
-    return RemixBadgeStyle.create(
-      container: MixOps.merge($container, other.$container),
-      text: MixOps.merge($text, other.$text),
-      variants: MixOps.mergeVariants($variants, other.$variants),
-      animation: MixOps.mergeAnimation($animation, other.$animation),
-      modifier: MixOps.mergeModifier($modifier, other.$modifier),
-    );
-  }
-
-  @override
-  List<Object?> get props => [
-    $container,
-    $text,
-    $variants,
-    $animation,
-    $modifier,
-  ];
 }
