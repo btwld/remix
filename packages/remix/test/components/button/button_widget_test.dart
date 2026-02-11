@@ -25,7 +25,7 @@ void main() {
 
       testWidgets('renders button with label and icon', (tester) async {
         await tester.pumpRemixApp(
-          RemixButton(label: 'Save', icon: Icons.save, onPressed: () {}),
+          RemixButton(label: 'Save', leadingIcon: Icons.save, onPressed: () {}),
         );
 
         await tester.pumpAndSettle();
@@ -95,8 +95,8 @@ void main() {
         await tester.pumpRemixApp(
           RemixButton(
             label: 'Test',
-            icon: Icons.star,
-            iconBuilder: (context, spec, icon) {
+            leadingIcon: Icons.star,
+            leadingIconBuilder: (context, spec, icon) {
               return Container(
                 key: const ValueKey('custom_icon'),
                 child: Icon(icon, color: Colors.red),
@@ -152,13 +152,13 @@ void main() {
         await tester.pumpRemixApp(
           RemixButton(
             label: 'Test Label',
-            icon: Icons.home,
+            leadingIcon: Icons.home,
             loading: true,
             textBuilder: (context, spec, text) {
               receivedTextSpec = spec;
               return Text(text);
             },
-            iconBuilder: (context, spec, icon) {
+            leadingIconBuilder: (context, spec, icon) {
               receivedIconSpec = spec;
               return Icon(icon);
             },
@@ -186,7 +186,7 @@ void main() {
         await tester.pumpRemixApp(
           RemixButton(
             label: 'Loading',
-            icon: Icons.download,
+            leadingIcon: Icons.download,
             loading: true,
             onPressed: () {},
           ),

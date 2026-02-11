@@ -242,42 +242,42 @@ class _AllVariantsSection extends StatelessWidget {
         // Solid
         _getSizedStyle(() => FortalButtonStyle.solid()).call(
           label: 'Solid',
-          icon: Icons.check_circle,
+          leadingIcon: Icons.check_circle,
           onPressed: () => _showSnackBar(context, 'Solid pressed'),
         ),
 
         // Soft
         _getSizedStyle(() => FortalButtonStyle.soft()).call(
           label: 'Soft',
-          icon: Icons.favorite,
+          leadingIcon: Icons.favorite,
           onPressed: () => _showSnackBar(context, 'Soft pressed'),
         ),
 
         // Surface
         _getSizedStyle(() => FortalButtonStyle.surface()).call(
           label: 'Surface',
-          icon: Icons.layers,
+          leadingIcon: Icons.layers,
           onPressed: () => _showSnackBar(context, 'Surface pressed'),
         ),
 
         // Outline
         _getSizedStyle(() => FortalButtonStyle.outline()).call(
           label: 'Outline',
-          icon: Icons.crop_free,
+          leadingIcon: Icons.crop_free,
           onPressed: () => _showSnackBar(context, 'Outline pressed'),
         ),
 
         // Ghost
         _getSizedStyle(() => FortalButtonStyle.ghost()).call(
           label: 'Ghost',
-          icon: Icons.visibility_off,
+          leadingIcon: Icons.visibility_off,
           onPressed: () => _showSnackBar(context, 'Ghost pressed'),
         ),
 
         // Surface (was Classic)
         _getSizedStyle(() => FortalButtonStyle.surface()).call(
           label: 'Surface',
-          icon: Icons.style,
+          leadingIcon: Icons.style,
           onPressed: () => _showSnackBar(context, 'Surface pressed'),
         ),
       ],

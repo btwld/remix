@@ -129,7 +129,8 @@ class RemixButtonStyle
 
   RemixButton call({
     required String label,
-    IconData? icon,
+    IconData? leadingIcon,
+    IconData? trailingIcon,
     bool loading = false,
     bool enabled = true,
     bool enableFeedback = true,
@@ -139,7 +140,8 @@ class RemixButtonStyle
     return RemixButton(
       style: this,
       label: label,
-      icon: icon,
+      leadingIcon: leadingIcon,
+      trailingIcon: trailingIcon,
       loading: loading,
       enabled: enabled,
       enableFeedback: enableFeedback,

@@ -4,7 +4,7 @@ part of 'button.dart';
 typedef RemixButtonTextBuilder =
     Widget Function(BuildContext context, TextSpec spec, String text);
 
-/// Builder function for customizing button icon rendering.
+/// Builder function for customizing button icon rendering (leading or trailing).
 typedef RemixButtonIconBuilder =
     Widget Function(BuildContext context, IconSpec spec, IconData? icon);
 
@@ -12,9 +12,9 @@ typedef RemixButtonIconBuilder =
 typedef RemixButtonLoadingBuilder =
     Widget Function(BuildContext context, RemixSpinnerSpec spec);
 
-/// A customizable button component that supports text with optional icons, loading states, and styling.
-/// The button integrates with the Mix styling system and follows Remix design patterns.
-/// For icon-only buttons, use RemixIconButton instead.
+/// A customizable button component that supports text with optional leading and trailing icons,
+/// loading states, and styling. The button integrates with the Mix styling system
+/// and follows Remix design patterns. For icon-only buttons, use RemixIconButton instead.
 ///
 /// ## Examples
 ///
@@ -25,11 +25,26 @@ typedef RemixButtonLoadingBuilder =
 ///   onPressed: () => print('Button pressed!'),
 /// )
 ///
-/// // Button with icon
+/// // Button with leading icon
 /// RemixButton(
 ///   label: 'Save Changes',
-///   icon: Icons.save,
+///   leadingIcon: Icons.save,
 ///   onPressed: () => print('Save pressed!'),
+/// )
+///
+/// // Button with trailing icon
+/// RemixButton(
+///   label: 'Next',
+///   trailingIcon: Icons.arrow_forward,
+///   onPressed: () => print('Next pressed!'),
+/// )
+///
+/// // Button with both icons
+/// RemixButton(
+///   label: 'Send',
+///   leadingIcon: Icons.send,
+///   trailingIcon: Icons.check,
+///   onPressed: () => print('Send pressed!'),
 /// )
 ///
 /// // Loading button
@@ -50,9 +65,11 @@ class RemixButton extends StatelessWidget {
     this.styleSpec,
     super.key,
     required this.label,
-    this.icon,
+    this.leadingIcon,
+    this.trailingIcon,
     this.textBuilder,
-    this.iconBuilder,
+    this.leadingIconBuilder,
+    this.trailingIconBuilder,
     this.loadingBuilder,
     this.autofocus = false,
     this.loading = false,
@@ -108,15 +125,22 @@ class RemixButton extends StatelessWidget {
   /// If [textBuilder] is provided, this is ignored.
   final String label;
 
-  /// The icon to display in the button.
-  /// If [iconBuilder] is provided, this is ignored.
-  final IconData? icon;
+  /// The leading icon to display in the button (before the text).
+  /// If [leadingIconBuilder] is provided, this is ignored.
+  final IconData? leadingIcon;
+
+  /// The trailing icon to display in the button (after the text).
+  /// If [trailingIconBuilder] is provided, this is ignored.
+  final IconData? trailingIcon;
 
   /// Builder for customizing the text rendering.
   final RemixButtonTextBuilder? textBuilder;
 
-  /// Builder for customizing the icon rendering.
-  final RemixButtonIconBuilder? iconBuilder;
+  /// Builder for customizing the leading icon rendering.
+  final RemixButtonIconBuilder? leadingIconBuilder;
+
+  /// Builder for customizing the trailing icon rendering.
+  final RemixButtonIconBuilder? trailingIconBuilder;
 
   /// Builder for customizing the loading state rendering.
   final RemixButtonLoadingBuilder? loadingBuilder;
@@ -164,15 +188,26 @@ class RemixButton extends StatelessWidget {
           style: _buildStyle(),
           controller: NakedState.controllerOf(context),
           builder: (context, spec) {
-            Widget? iconWidget;
+            Widget? leadingIconWidget;
+            Widget? trailingIconWidget;
 
-            if (icon != null || iconBuilder != null) {
-              iconWidget = iconBuilder == null
-                  ? StyledIcon(icon: icon, styleSpec: spec.icon)
+            if (leadingIcon != null || leadingIconBuilder != null) {
+              leadingIconWidget = leadingIconBuilder == null
+                  ? StyledIcon(icon: leadingIcon, styleSpec: spec.icon)
                   : StyleSpecBuilder(
                       styleSpec: spec.icon,
                       builder: (context, iconSpec) =>
-                          iconBuilder!(context, iconSpec, icon),
+                          leadingIconBuilder!(context, iconSpec, leadingIcon),
+                    );
+            }
+
+            if (trailingIcon != null || trailingIconBuilder != null) {
+              trailingIconWidget = trailingIconBuilder == null
+                  ? StyledIcon(icon: trailingIcon, styleSpec: spec.icon)
+                  : StyleSpecBuilder(
+                      styleSpec: spec.icon,
+                      builder: (context, iconSpec) =>
+                          trailingIconBuilder!(context, iconSpec, trailingIcon),
                     );
             }
 
@@ -193,21 +228,22 @@ class RemixButton extends StatelessWidget {
                     builder: loadingBuilder!,
                   );
 
-            final children = switch (spec.iconAlignment) {
-              .start => [if (iconWidget != null) iconWidget, textWidget],
-              .end => [textWidget, if (iconWidget != null) iconWidget],
-            };
-            final rowChildren = children
-                .map(
-                  (e) => Visibility(
-                    visible: !loading,
-                    maintainState: true,
-                    maintainAnimation: true,
-                    maintainSize: true,
-                    child: e,
-                  ),
-                )
-                .toList();
+            final rowChildren =
+                <Widget>[
+                      if (leadingIconWidget != null) leadingIconWidget,
+                      textWidget,
+                      if (trailingIconWidget != null) trailingIconWidget,
+                    ]
+                    .map(
+                      (e) => Visibility(
+                        visible: !loading,
+                        maintainState: true,
+                        maintainAnimation: true,
+                        maintainSize: true,
+                        child: e,
+                      ),
+                    )
+                    .toList();
 
             // Create content row with visibility control for loading state
             final contentRow = RowBox(
