@@ -7,10 +7,10 @@ part of 'progress.dart';
 // **************************************************************************
 
 mixin _$RemixProgressSpecMethods on Spec<RemixProgressSpec>, Diagnosticable {
-  StyleSpec<BoxSpec>? get container;
-  StyleSpec<BoxSpec>? get track;
-  StyleSpec<BoxSpec>? get indicator;
-  StyleSpec<BoxSpec>? get trackContainer;
+  StyleSpec<BoxSpec> get container;
+  StyleSpec<BoxSpec> get track;
+  StyleSpec<BoxSpec> get indicator;
+  StyleSpec<BoxSpec> get trackContainer;
 
   @override
   RemixProgressSpec copyWith({
@@ -30,10 +30,10 @@ mixin _$RemixProgressSpecMethods on Spec<RemixProgressSpec>, Diagnosticable {
   @override
   RemixProgressSpec lerp(RemixProgressSpec? other, double t) {
     return RemixProgressSpec(
-      container: container?.lerp(other?.container, t),
-      track: track?.lerp(other?.track, t),
-      indicator: indicator?.lerp(other?.indicator, t),
-      trackContainer: trackContainer?.lerp(other?.trackContainer, t),
+      container: container.lerp(other?.container, t),
+      track: track.lerp(other?.track, t),
+      indicator: indicator.lerp(other?.indicator, t),
+      trackContainer: trackContainer.lerp(other?.trackContainer, t),
     );
   }
 

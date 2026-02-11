@@ -4,9 +4,9 @@ part of 'switch.dart';
 class RemixSwitchSpec extends Spec<RemixSwitchSpec>
     with Diagnosticable, _$RemixSwitchSpecMethods {
   @override
-  final StyleSpec<BoxSpec>? container;
+  final StyleSpec<BoxSpec> container;
   @override
-  final StyleSpec<BoxSpec>? thumb;
+  final StyleSpec<BoxSpec> thumb;
 
   const RemixSwitchSpec({
     StyleSpec<BoxSpec>? container,

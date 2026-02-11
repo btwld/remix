@@ -7,11 +7,11 @@ part of 'accordion.dart';
 // **************************************************************************
 
 mixin _$RemixAccordionSpecMethods on Spec<RemixAccordionSpec>, Diagnosticable {
-  StyleSpec<FlexBoxSpec>? get trigger;
-  StyleSpec<IconSpec>? get leadingIcon;
-  StyleSpec<TextSpec>? get title;
-  StyleSpec<IconSpec>? get trailingIcon;
-  StyleSpec<BoxSpec>? get content;
+  StyleSpec<FlexBoxSpec> get trigger;
+  StyleSpec<IconSpec> get leadingIcon;
+  StyleSpec<TextSpec> get title;
+  StyleSpec<IconSpec> get trailingIcon;
+  StyleSpec<BoxSpec> get content;
 
   @override
   RemixAccordionSpec copyWith({
@@ -33,11 +33,11 @@ mixin _$RemixAccordionSpecMethods on Spec<RemixAccordionSpec>, Diagnosticable {
   @override
   RemixAccordionSpec lerp(RemixAccordionSpec? other, double t) {
     return RemixAccordionSpec(
-      trigger: trigger?.lerp(other?.trigger, t),
-      leadingIcon: leadingIcon?.lerp(other?.leadingIcon, t),
-      title: title?.lerp(other?.title, t),
-      trailingIcon: trailingIcon?.lerp(other?.trailingIcon, t),
-      content: content?.lerp(other?.content, t),
+      trigger: trigger.lerp(other?.trigger, t),
+      leadingIcon: leadingIcon.lerp(other?.leadingIcon, t),
+      title: title.lerp(other?.title, t),
+      trailingIcon: trailingIcon.lerp(other?.trailingIcon, t),
+      content: content.lerp(other?.content, t),
     );
   }
 

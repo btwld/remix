@@ -138,26 +138,22 @@ class RemixIconButton extends StatelessWidget {
           builder: (context, spec) {
             Widget? iconWidget;
 
-            final iconSpec = spec.icon ?? const StyleSpec(spec: IconSpec());
-            final spinnerSpec =
-                spec.spinner ?? const StyleSpec(spec: RemixSpinnerSpec());
-
             if (iconBuilder != null) {
               iconWidget = StyleSpecBuilder(
-                styleSpec: iconSpec,
+                styleSpec: spec.icon,
                 builder: (context, iconSpec) =>
                     iconBuilder!(context, iconSpec, icon),
               );
             } else {
-              iconWidget = StyledIcon(icon: icon, styleSpec: iconSpec);
+              iconWidget = StyledIcon(icon: icon, styleSpec: spec.icon);
             }
 
             // Build spinner (used when loading)
             final spinner = Center(
               child: loadingBuilder == null
-                  ? RemixSpinner(styleSpec: spinnerSpec)
+                  ? RemixSpinner(styleSpec: spec.spinner)
                   : StyleSpecBuilder(
-                      styleSpec: spinnerSpec,
+                      styleSpec: spec.spinner,
                       builder: loadingBuilder!,
                     ),
             );

@@ -7,8 +7,8 @@ part of 'switch.dart';
 // **************************************************************************
 
 mixin _$RemixSwitchSpecMethods on Spec<RemixSwitchSpec>, Diagnosticable {
-  StyleSpec<BoxSpec>? get container;
-  StyleSpec<BoxSpec>? get thumb;
+  StyleSpec<BoxSpec> get container;
+  StyleSpec<BoxSpec> get thumb;
 
   @override
   RemixSwitchSpec copyWith({
@@ -24,8 +24,8 @@ mixin _$RemixSwitchSpecMethods on Spec<RemixSwitchSpec>, Diagnosticable {
   @override
   RemixSwitchSpec lerp(RemixSwitchSpec? other, double t) {
     return RemixSwitchSpec(
-      container: container?.lerp(other?.container, t),
-      thumb: thumb?.lerp(other?.thumb, t),
+      container: container.lerp(other?.container, t),
+      thumb: thumb.lerp(other?.thumb, t),
     );
   }
 

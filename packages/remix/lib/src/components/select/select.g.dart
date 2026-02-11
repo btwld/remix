@@ -7,9 +7,9 @@ part of 'select.dart';
 // **************************************************************************
 
 mixin _$RemixSelectSpecMethods on Spec<RemixSelectSpec>, Diagnosticable {
-  StyleSpec<RemixSelectTriggerSpec>? get trigger;
-  StyleSpec<FlexBoxSpec>? get menuContainer;
-  StyleSpec<RemixSelectMenuItemSpec>? get item;
+  StyleSpec<RemixSelectTriggerSpec> get trigger;
+  StyleSpec<FlexBoxSpec> get menuContainer;
+  StyleSpec<RemixSelectMenuItemSpec> get item;
 
   @override
   RemixSelectSpec copyWith({
@@ -27,9 +27,9 @@ mixin _$RemixSelectSpecMethods on Spec<RemixSelectSpec>, Diagnosticable {
   @override
   RemixSelectSpec lerp(RemixSelectSpec? other, double t) {
     return RemixSelectSpec(
-      trigger: trigger?.lerp(other?.trigger, t),
-      menuContainer: menuContainer?.lerp(other?.menuContainer, t),
-      item: item?.lerp(other?.item, t),
+      trigger: trigger.lerp(other?.trigger, t),
+      menuContainer: menuContainer.lerp(other?.menuContainer, t),
+      item: item.lerp(other?.item, t),
     );
   }
 
@@ -48,9 +48,9 @@ mixin _$RemixSelectSpecMethods on Spec<RemixSelectSpec>, Diagnosticable {
 
 mixin _$RemixSelectTriggerSpecMethods
     on Spec<RemixSelectTriggerSpec>, Diagnosticable {
-  StyleSpec<FlexBoxSpec>? get container;
-  StyleSpec<TextSpec>? get label;
-  StyleSpec<IconSpec>? get icon;
+  StyleSpec<FlexBoxSpec> get container;
+  StyleSpec<TextSpec> get label;
+  StyleSpec<IconSpec> get icon;
 
   @override
   RemixSelectTriggerSpec copyWith({
@@ -68,9 +68,9 @@ mixin _$RemixSelectTriggerSpecMethods
   @override
   RemixSelectTriggerSpec lerp(RemixSelectTriggerSpec? other, double t) {
     return RemixSelectTriggerSpec(
-      container: container?.lerp(other?.container, t),
-      label: label?.lerp(other?.label, t),
-      icon: icon?.lerp(other?.icon, t),
+      container: container.lerp(other?.container, t),
+      label: label.lerp(other?.label, t),
+      icon: icon.lerp(other?.icon, t),
     );
   }
 
@@ -89,9 +89,9 @@ mixin _$RemixSelectTriggerSpecMethods
 
 mixin _$RemixSelectMenuItemSpecMethods
     on Spec<RemixSelectMenuItemSpec>, Diagnosticable {
-  StyleSpec<FlexBoxSpec>? get container;
-  StyleSpec<TextSpec>? get text;
-  StyleSpec<IconSpec>? get icon;
+  StyleSpec<FlexBoxSpec> get container;
+  StyleSpec<TextSpec> get text;
+  StyleSpec<IconSpec> get icon;
 
   @override
   RemixSelectMenuItemSpec copyWith({
@@ -109,9 +109,9 @@ mixin _$RemixSelectMenuItemSpecMethods
   @override
   RemixSelectMenuItemSpec lerp(RemixSelectMenuItemSpec? other, double t) {
     return RemixSelectMenuItemSpec(
-      container: container?.lerp(other?.container, t),
-      text: text?.lerp(other?.text, t),
-      icon: icon?.lerp(other?.icon, t),
+      container: container.lerp(other?.container, t),
+      text: text.lerp(other?.text, t),
+      icon: icon.lerp(other?.icon, t),
     );
   }
 

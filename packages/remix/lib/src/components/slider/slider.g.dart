@@ -7,11 +7,11 @@ part of 'slider.dart';
 // **************************************************************************
 
 mixin _$RemixSliderSpecMethods on Spec<RemixSliderSpec>, Diagnosticable {
-  StyleSpec<BoxSpec>? get thumb;
-  Color? get trackColor;
-  double? get trackWidth;
-  Color? get rangeColor;
-  double? get rangeWidth;
+  StyleSpec<BoxSpec> get thumb;
+  Color get trackColor;
+  double get trackWidth;
+  Color get rangeColor;
+  double get rangeWidth;
 
   @override
   RemixSliderSpec copyWith({
@@ -33,7 +33,7 @@ mixin _$RemixSliderSpecMethods on Spec<RemixSliderSpec>, Diagnosticable {
   @override
   RemixSliderSpec lerp(RemixSliderSpec? other, double t) {
     return RemixSliderSpec(
-      thumb: thumb?.lerp(other?.thumb, t),
+      thumb: thumb.lerp(other?.thumb, t),
       trackColor: MixOps.lerp(trackColor, other?.trackColor, t),
       trackWidth: MixOps.lerp(trackWidth, other?.trackWidth, t),
       rangeColor: MixOps.lerp(rangeColor, other?.rangeColor, t),

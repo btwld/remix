@@ -248,8 +248,7 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
           controller: NakedMenuState.controllerOf(context),
           builder: (context, spec) {
             // Render trigger from data (label with optional leading icon)
-            final triggerStyleSpec =
-                spec.trigger ?? const StyleSpec(spec: RemixMenuTriggerSpec());
+            final triggerStyleSpec = spec.trigger;
             final triggerSpec = triggerStyleSpec.spec;
 
             return RowBox(

@@ -164,8 +164,7 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
   }
 
   Widget _buildOverlayMenu(RemixSelectSpec spec) {
-    final menuContainerSpec =
-        spec.menuContainer ?? const StyleSpec(spec: FlexBoxSpec());
+    final menuContainerSpec = spec.menuContainer;
     return _AnimatedOverlayMenu(
       controller: animationController,
       duration: const Duration(milliseconds: 150),
@@ -236,8 +235,7 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
           style: _buildStyle(),
           controller: NakedState.controllerOf(context),
           builder: (context, spec) {
-            final triggerSpec =
-                spec.trigger ?? const StyleSpec(spec: RemixSelectTriggerSpec());
+            final triggerSpec = spec.trigger;
             return _RemixSelectTriggerWidget(
               trigger: widget.trigger,
               displayLabel: _getDisplayLabel(),

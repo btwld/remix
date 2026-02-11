@@ -8,9 +8,9 @@ part of 'menu.dart';
 
 mixin _$RemixMenuTriggerSpecMethods
     on Spec<RemixMenuTriggerSpec>, Diagnosticable {
-  StyleSpec<FlexBoxSpec>? get container;
-  StyleSpec<TextSpec>? get label;
-  StyleSpec<IconSpec>? get icon;
+  StyleSpec<FlexBoxSpec> get container;
+  StyleSpec<TextSpec> get label;
+  StyleSpec<IconSpec> get icon;
 
   @override
   RemixMenuTriggerSpec copyWith({
@@ -28,9 +28,9 @@ mixin _$RemixMenuTriggerSpecMethods
   @override
   RemixMenuTriggerSpec lerp(RemixMenuTriggerSpec? other, double t) {
     return RemixMenuTriggerSpec(
-      container: container?.lerp(other?.container, t),
-      label: label?.lerp(other?.label, t),
-      icon: icon?.lerp(other?.icon, t),
+      container: container.lerp(other?.container, t),
+      label: label.lerp(other?.label, t),
+      icon: icon.lerp(other?.icon, t),
     );
   }
 
@@ -48,10 +48,10 @@ mixin _$RemixMenuTriggerSpecMethods
 }
 
 mixin _$RemixMenuSpecMethods on Spec<RemixMenuSpec>, Diagnosticable {
-  StyleSpec<RemixMenuTriggerSpec>? get trigger;
-  StyleSpec<FlexBoxSpec>? get overlay;
-  StyleSpec<RemixMenuItemSpec>? get item;
-  StyleSpec<RemixDividerSpec>? get divider;
+  StyleSpec<RemixMenuTriggerSpec> get trigger;
+  StyleSpec<FlexBoxSpec> get overlay;
+  StyleSpec<RemixMenuItemSpec> get item;
+  StyleSpec<RemixDividerSpec> get divider;
 
   @override
   RemixMenuSpec copyWith({
@@ -71,10 +71,10 @@ mixin _$RemixMenuSpecMethods on Spec<RemixMenuSpec>, Diagnosticable {
   @override
   RemixMenuSpec lerp(RemixMenuSpec? other, double t) {
     return RemixMenuSpec(
-      trigger: trigger?.lerp(other?.trigger, t),
-      overlay: overlay?.lerp(other?.overlay, t),
-      item: item?.lerp(other?.item, t),
-      divider: divider?.lerp(other?.divider, t),
+      trigger: trigger.lerp(other?.trigger, t),
+      overlay: overlay.lerp(other?.overlay, t),
+      item: item.lerp(other?.item, t),
+      divider: divider.lerp(other?.divider, t),
     );
   }
 
@@ -93,10 +93,10 @@ mixin _$RemixMenuSpecMethods on Spec<RemixMenuSpec>, Diagnosticable {
 }
 
 mixin _$RemixMenuItemSpecMethods on Spec<RemixMenuItemSpec>, Diagnosticable {
-  StyleSpec<FlexBoxSpec>? get container;
-  StyleSpec<TextSpec>? get label;
-  StyleSpec<IconSpec>? get leadingIcon;
-  StyleSpec<IconSpec>? get trailingIcon;
+  StyleSpec<FlexBoxSpec> get container;
+  StyleSpec<TextSpec> get label;
+  StyleSpec<IconSpec> get leadingIcon;
+  StyleSpec<IconSpec> get trailingIcon;
 
   @override
   RemixMenuItemSpec copyWith({
@@ -116,10 +116,10 @@ mixin _$RemixMenuItemSpecMethods on Spec<RemixMenuItemSpec>, Diagnosticable {
   @override
   RemixMenuItemSpec lerp(RemixMenuItemSpec? other, double t) {
     return RemixMenuItemSpec(
-      container: container?.lerp(other?.container, t),
-      label: label?.lerp(other?.label, t),
-      leadingIcon: leadingIcon?.lerp(other?.leadingIcon, t),
-      trailingIcon: trailingIcon?.lerp(other?.trailingIcon, t),
+      container: container.lerp(other?.container, t),
+      label: label.lerp(other?.label, t),
+      leadingIcon: leadingIcon.lerp(other?.leadingIcon, t),
+      trailingIcon: trailingIcon.lerp(other?.trailingIcon, t),
     );
   }
 

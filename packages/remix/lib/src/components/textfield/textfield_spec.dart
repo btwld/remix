@@ -57,14 +57,14 @@ class RemixTextFieldSpec extends Spec<RemixTextFieldSpec>
   /// Controls typography, color, and text-specific properties
   /// for the actual text content entered by the user.
   @override
-  final StyleSpec<TextSpec>? text;
+  final StyleSpec<TextSpec> text;
 
   /// Styling specification for the hint/placeholder text.
   ///
   /// Defines the appearance of placeholder text shown when
   /// the text field is empty. Typically styled with muted colors.
   @override
-  final StyleSpec<TextSpec>? hintText;
+  final StyleSpec<TextSpec> hintText;
 
   /// Horizontal alignment of the text within the input field.
   ///
@@ -155,21 +155,21 @@ class RemixTextFieldSpec extends Spec<RemixTextFieldSpec>
   /// and other visual container properties. Uses [FlexBoxSpec]
   /// to support flexible layout arrangements.
   @override
-  final StyleSpec<FlexBoxSpec>? container;
+  final StyleSpec<FlexBoxSpec> container;
 
   /// Styling specification for helper text.
   ///
   /// Defines typography and color for supplementary text shown
   /// below the input field to provide additional context or validation feedback.
   @override
-  final StyleSpec<TextSpec>? helperText;
+  final StyleSpec<TextSpec> helperText;
 
   /// Styling specification for the text field's label.
   ///
   /// Controls the appearance of the label text that describes
   /// the purpose or expected content of the text field.
   @override
-  final StyleSpec<TextSpec>? label;
+  final StyleSpec<TextSpec> label;
 
   /// Creates a RemixTextFieldSpec with optional styling and configuration.
   ///

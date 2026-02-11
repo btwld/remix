@@ -10,8 +10,8 @@ void main() {
 
         expect(spec.container, isA<StyleSpec<BoxSpec>>());
         expect(spec.indicator, isA<StyleSpec<IconSpec>>());
-        expect(spec.container?.spec, isA<BoxSpec>());
-        expect(spec.indicator?.spec, isA<IconSpec>());
+        expect(spec.container.spec, isA<BoxSpec>());
+        expect(spec.indicator.spec, isA<IconSpec>());
       });
 
       test('creates spec with provided parameters', () {

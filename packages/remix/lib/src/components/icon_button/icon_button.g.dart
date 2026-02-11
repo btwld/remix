@@ -8,9 +8,9 @@ part of 'icon_button.dart';
 
 mixin _$RemixIconButtonSpecMethods
     on Spec<RemixIconButtonSpec>, Diagnosticable {
-  StyleSpec<BoxSpec>? get container;
-  StyleSpec<IconSpec>? get icon;
-  StyleSpec<RemixSpinnerSpec>? get spinner;
+  StyleSpec<BoxSpec> get container;
+  StyleSpec<IconSpec> get icon;
+  StyleSpec<RemixSpinnerSpec> get spinner;
 
   @override
   RemixIconButtonSpec copyWith({
@@ -28,9 +28,9 @@ mixin _$RemixIconButtonSpecMethods
   @override
   RemixIconButtonSpec lerp(RemixIconButtonSpec? other, double t) {
     return RemixIconButtonSpec(
-      container: container?.lerp(other?.container, t),
-      icon: icon?.lerp(other?.icon, t),
-      spinner: spinner?.lerp(other?.spinner, t),
+      container: container.lerp(other?.container, t),
+      icon: icon.lerp(other?.icon, t),
+      spinner: spinner.lerp(other?.spinner, t),
     );
   }
 

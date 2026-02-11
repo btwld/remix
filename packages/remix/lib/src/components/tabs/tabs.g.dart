@@ -7,7 +7,7 @@ part of 'tabs.dart';
 // **************************************************************************
 
 mixin _$RemixTabBarSpecMethods on Spec<RemixTabBarSpec>, Diagnosticable {
-  StyleSpec<FlexBoxSpec>? get container;
+  StyleSpec<FlexBoxSpec> get container;
 
   @override
   RemixTabBarSpec copyWith({StyleSpec<FlexBoxSpec>? container}) {
@@ -16,7 +16,7 @@ mixin _$RemixTabBarSpecMethods on Spec<RemixTabBarSpec>, Diagnosticable {
 
   @override
   RemixTabBarSpec lerp(RemixTabBarSpec? other, double t) {
-    return RemixTabBarSpec(container: container?.lerp(other?.container, t));
+    return RemixTabBarSpec(container: container.lerp(other?.container, t));
   }
 
   @override
@@ -30,9 +30,9 @@ mixin _$RemixTabBarSpecMethods on Spec<RemixTabBarSpec>, Diagnosticable {
 }
 
 mixin _$RemixTabSpecMethods on Spec<RemixTabSpec>, Diagnosticable {
-  StyleSpec<FlexBoxSpec>? get container;
-  StyleSpec<TextSpec>? get label;
-  StyleSpec<IconSpec>? get icon;
+  StyleSpec<FlexBoxSpec> get container;
+  StyleSpec<TextSpec> get label;
+  StyleSpec<IconSpec> get icon;
 
   @override
   RemixTabSpec copyWith({
@@ -50,9 +50,9 @@ mixin _$RemixTabSpecMethods on Spec<RemixTabSpec>, Diagnosticable {
   @override
   RemixTabSpec lerp(RemixTabSpec? other, double t) {
     return RemixTabSpec(
-      container: container?.lerp(other?.container, t),
-      label: label?.lerp(other?.label, t),
-      icon: icon?.lerp(other?.icon, t),
+      container: container.lerp(other?.container, t),
+      label: label.lerp(other?.label, t),
+      icon: icon.lerp(other?.icon, t),
     );
   }
 
@@ -70,7 +70,7 @@ mixin _$RemixTabSpecMethods on Spec<RemixTabSpec>, Diagnosticable {
 }
 
 mixin _$RemixTabViewSpecMethods on Spec<RemixTabViewSpec>, Diagnosticable {
-  StyleSpec<BoxSpec>? get container;
+  StyleSpec<BoxSpec> get container;
 
   @override
   RemixTabViewSpec copyWith({StyleSpec<BoxSpec>? container}) {
@@ -79,7 +79,7 @@ mixin _$RemixTabViewSpecMethods on Spec<RemixTabViewSpec>, Diagnosticable {
 
   @override
   RemixTabViewSpec lerp(RemixTabViewSpec? other, double t) {
-    return RemixTabViewSpec(container: container?.lerp(other?.container, t));
+    return RemixTabViewSpec(container: container.lerp(other?.container, t));
   }
 
   @override

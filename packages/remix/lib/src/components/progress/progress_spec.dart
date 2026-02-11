@@ -4,13 +4,13 @@ part of 'progress.dart';
 class RemixProgressSpec extends Spec<RemixProgressSpec>
     with Diagnosticable, _$RemixProgressSpecMethods {
   @override
-  final StyleSpec<BoxSpec>? container;
+  final StyleSpec<BoxSpec> container;
   @override
-  final StyleSpec<BoxSpec>? track;
+  final StyleSpec<BoxSpec> track;
   @override
-  final StyleSpec<BoxSpec>? indicator;
+  final StyleSpec<BoxSpec> indicator;
   @override
-  final StyleSpec<BoxSpec>? trackContainer;
+  final StyleSpec<BoxSpec> trackContainer;
 
   const RemixProgressSpec({
     StyleSpec<BoxSpec>? container,

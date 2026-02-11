@@ -4,7 +4,7 @@ part of 'card.dart';
 class RemixCardSpec extends Spec<RemixCardSpec>
     with Diagnosticable, _$RemixCardSpecMethods {
   @override
-  final StyleSpec<BoxSpec>? container;
+  final StyleSpec<BoxSpec> container;
 
   const RemixCardSpec({StyleSpec<BoxSpec>? container})
     : container = container ?? const StyleSpec(spec: BoxSpec());

@@ -4,11 +4,11 @@ part of 'select.dart';
 class RemixSelectSpec extends Spec<RemixSelectSpec>
     with Diagnosticable, _$RemixSelectSpecMethods {
   @override
-  final StyleSpec<RemixSelectTriggerSpec>? trigger;
+  final StyleSpec<RemixSelectTriggerSpec> trigger;
   @override
-  final StyleSpec<FlexBoxSpec>? menuContainer;
+  final StyleSpec<FlexBoxSpec> menuContainer;
   @override
-  final StyleSpec<RemixSelectMenuItemSpec>? item;
+  final StyleSpec<RemixSelectMenuItemSpec> item;
 
   const RemixSelectSpec({
     StyleSpec<RemixSelectTriggerSpec>? trigger,
@@ -23,11 +23,11 @@ class RemixSelectSpec extends Spec<RemixSelectSpec>
 class RemixSelectTriggerSpec extends Spec<RemixSelectTriggerSpec>
     with Diagnosticable, _$RemixSelectTriggerSpecMethods {
   @override
-  final StyleSpec<FlexBoxSpec>? container;
+  final StyleSpec<FlexBoxSpec> container;
   @override
-  final StyleSpec<TextSpec>? label;
+  final StyleSpec<TextSpec> label;
   @override
-  final StyleSpec<IconSpec>? icon;
+  final StyleSpec<IconSpec> icon;
 
   const RemixSelectTriggerSpec({
     StyleSpec<FlexBoxSpec>? container,
@@ -42,11 +42,11 @@ class RemixSelectTriggerSpec extends Spec<RemixSelectTriggerSpec>
 class RemixSelectMenuItemSpec extends Spec<RemixSelectMenuItemSpec>
     with Diagnosticable, _$RemixSelectMenuItemSpecMethods {
   @override
-  final StyleSpec<FlexBoxSpec>? container;
+  final StyleSpec<FlexBoxSpec> container;
   @override
-  final StyleSpec<TextSpec>? text;
+  final StyleSpec<TextSpec> text;
   @override
-  final StyleSpec<IconSpec>? icon;
+  final StyleSpec<IconSpec> icon;
 
   const RemixSelectMenuItemSpec({
     StyleSpec<FlexBoxSpec>? container,

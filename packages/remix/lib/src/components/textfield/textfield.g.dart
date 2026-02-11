@@ -7,8 +7,8 @@ part of 'textfield.dart';
 // **************************************************************************
 
 mixin _$RemixTextFieldSpecMethods on Spec<RemixTextFieldSpec>, Diagnosticable {
-  StyleSpec<TextSpec>? get text;
-  StyleSpec<TextSpec>? get hintText;
+  StyleSpec<TextSpec> get text;
+  StyleSpec<TextSpec> get hintText;
   TextAlign? get textAlign;
   double? get cursorWidth;
   double? get cursorHeight;
@@ -21,9 +21,9 @@ mixin _$RemixTextFieldSpecMethods on Spec<RemixTextFieldSpec>, Diagnosticable {
   Brightness? get keyboardAppearance;
   bool? get cursorOpacityAnimates;
   double? get spacing;
-  StyleSpec<FlexBoxSpec>? get container;
-  StyleSpec<TextSpec>? get helperText;
-  StyleSpec<TextSpec>? get label;
+  StyleSpec<FlexBoxSpec> get container;
+  StyleSpec<TextSpec> get helperText;
+  StyleSpec<TextSpec> get label;
 
   @override
   RemixTextFieldSpec copyWith({
@@ -70,8 +70,8 @@ mixin _$RemixTextFieldSpecMethods on Spec<RemixTextFieldSpec>, Diagnosticable {
   @override
   RemixTextFieldSpec lerp(RemixTextFieldSpec? other, double t) {
     return RemixTextFieldSpec(
-      text: text?.lerp(other?.text, t),
-      hintText: hintText?.lerp(other?.hintText, t),
+      text: text.lerp(other?.text, t),
+      hintText: hintText.lerp(other?.hintText, t),
       textAlign: MixOps.lerpSnap(textAlign, other?.textAlign, t),
       cursorWidth: MixOps.lerp(cursorWidth, other?.cursorWidth, t),
       cursorHeight: MixOps.lerp(cursorHeight, other?.cursorHeight, t),
@@ -100,9 +100,9 @@ mixin _$RemixTextFieldSpecMethods on Spec<RemixTextFieldSpec>, Diagnosticable {
         t,
       ),
       spacing: MixOps.lerp(spacing, other?.spacing, t),
-      container: container?.lerp(other?.container, t),
-      helperText: helperText?.lerp(other?.helperText, t),
-      label: label?.lerp(other?.label, t),
+      container: container.lerp(other?.container, t),
+      helperText: helperText.lerp(other?.helperText, t),
+      label: label.lerp(other?.label, t),
     );
   }
 

@@ -104,7 +104,7 @@ class RemixSlider extends StatelessWidget {
           style: style,
           controller: NakedState.controllerOf(context),
           builder: (context, spec) {
-            final thumbSpec = spec.thumb ?? const StyleSpec(spec: BoxSpec());
+            final thumbSpec = spec.thumb;
             final thumbSize = _resolveThumbSize(context, thumbSpec);
             final trackThickness = spec.trackThickness > 0
                 ? spec.trackThickness
@@ -177,14 +177,10 @@ class RemixSlider extends StatelessWidget {
                           height: constraints.maxHeight,
                           child: _AnimatedTrack(
                             value: normalizedValue,
-                            rangeColor: spec.rangeColor ?? MixColors.black,
-                            rangeWidth:
-                                spec.rangeWidth ??
-                                RemixSliderSpec.defaultTrackStrokeWidth,
-                            trackColor: spec.trackColor ?? MixColors.grey,
-                            trackWidth:
-                                spec.trackWidth ??
-                                RemixSliderSpec.defaultTrackStrokeWidth,
+                            rangeColor: spec.rangeColor,
+                            rangeWidth: spec.rangeWidth,
+                            trackColor: spec.trackColor,
+                            trackWidth: spec.trackWidth,
                             duration: const Duration(milliseconds: 200),
                             curve: Curves.linear,
                           ),

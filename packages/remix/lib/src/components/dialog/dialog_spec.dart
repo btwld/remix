@@ -4,15 +4,15 @@ part of 'dialog.dart';
 class RemixDialogSpec extends Spec<RemixDialogSpec>
     with Diagnosticable, _$RemixDialogSpecMethods {
   @override
-  final StyleSpec<BoxSpec>? container;
+  final StyleSpec<BoxSpec> container;
   @override
-  final StyleSpec<TextSpec>? title;
+  final StyleSpec<TextSpec> title;
   @override
-  final StyleSpec<TextSpec>? description;
+  final StyleSpec<TextSpec> description;
   @override
-  final StyleSpec<FlexBoxSpec>? actions;
+  final StyleSpec<FlexBoxSpec> actions;
   @override
-  final StyleSpec<BoxSpec>? overlay;
+  final StyleSpec<BoxSpec> overlay;
 
   const RemixDialogSpec({
     StyleSpec<BoxSpec>? container,

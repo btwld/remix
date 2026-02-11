@@ -8,11 +8,11 @@ part of 'menu.dart';
 class RemixMenuTriggerSpec extends Spec<RemixMenuTriggerSpec>
     with Diagnosticable, _$RemixMenuTriggerSpecMethods {
   @override
-  final StyleSpec<FlexBoxSpec>? container;
+  final StyleSpec<FlexBoxSpec> container;
   @override
-  final StyleSpec<TextSpec>? label;
+  final StyleSpec<TextSpec> label;
   @override
-  final StyleSpec<IconSpec>? icon;
+  final StyleSpec<IconSpec> icon;
 
   const RemixMenuTriggerSpec({
     StyleSpec<FlexBoxSpec>? container,
@@ -31,13 +31,13 @@ class RemixMenuTriggerSpec extends Spec<RemixMenuTriggerSpec>
 class RemixMenuSpec extends Spec<RemixMenuSpec>
     with Diagnosticable, _$RemixMenuSpecMethods {
   @override
-  final StyleSpec<RemixMenuTriggerSpec>? trigger;
+  final StyleSpec<RemixMenuTriggerSpec> trigger;
   @override
-  final StyleSpec<FlexBoxSpec>? overlay;
+  final StyleSpec<FlexBoxSpec> overlay;
   @override
-  final StyleSpec<RemixMenuItemSpec>? item;
+  final StyleSpec<RemixMenuItemSpec> item;
   @override
-  final StyleSpec<RemixDividerSpec>? divider;
+  final StyleSpec<RemixDividerSpec> divider;
 
   const RemixMenuSpec({
     StyleSpec<RemixMenuTriggerSpec>? trigger,
@@ -58,13 +58,13 @@ class RemixMenuSpec extends Spec<RemixMenuSpec>
 class RemixMenuItemSpec extends Spec<RemixMenuItemSpec>
     with Diagnosticable, _$RemixMenuItemSpecMethods {
   @override
-  final StyleSpec<FlexBoxSpec>? container;
+  final StyleSpec<FlexBoxSpec> container;
   @override
-  final StyleSpec<TextSpec>? label;
+  final StyleSpec<TextSpec> label;
   @override
-  final StyleSpec<IconSpec>? leadingIcon;
+  final StyleSpec<IconSpec> leadingIcon;
   @override
-  final StyleSpec<IconSpec>? trailingIcon;
+  final StyleSpec<IconSpec> trailingIcon;
 
   const RemixMenuItemSpec({
     StyleSpec<FlexBoxSpec>? container,

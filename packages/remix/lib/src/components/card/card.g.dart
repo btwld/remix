@@ -7,7 +7,7 @@ part of 'card.dart';
 // **************************************************************************
 
 mixin _$RemixCardSpecMethods on Spec<RemixCardSpec>, Diagnosticable {
-  StyleSpec<BoxSpec>? get container;
+  StyleSpec<BoxSpec> get container;
 
   @override
   RemixCardSpec copyWith({StyleSpec<BoxSpec>? container}) {
@@ -16,7 +16,7 @@ mixin _$RemixCardSpecMethods on Spec<RemixCardSpec>, Diagnosticable {
 
   @override
   RemixCardSpec lerp(RemixCardSpec? other, double t) {
-    return RemixCardSpec(container: container?.lerp(other?.container, t));
+    return RemixCardSpec(container: container.lerp(other?.container, t));
   }
 
   @override

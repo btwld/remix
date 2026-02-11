@@ -4,11 +4,11 @@ part of 'icon_button.dart';
 class RemixIconButtonSpec extends Spec<RemixIconButtonSpec>
     with Diagnosticable, _$RemixIconButtonSpecMethods {
   @override
-  final StyleSpec<BoxSpec>? container;
+  final StyleSpec<BoxSpec> container;
   @override
-  final StyleSpec<IconSpec>? icon;
+  final StyleSpec<IconSpec> icon;
   @override
-  final StyleSpec<RemixSpinnerSpec>? spinner;
+  final StyleSpec<RemixSpinnerSpec> spinner;
 
   const RemixIconButtonSpec({
     StyleSpec<BoxSpec>? container,

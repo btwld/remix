@@ -7,8 +7,8 @@ part of 'radio.dart';
 // **************************************************************************
 
 mixin _$RemixRadioSpecMethods on Spec<RemixRadioSpec>, Diagnosticable {
-  StyleSpec<BoxSpec>? get container;
-  StyleSpec<BoxSpec>? get indicator;
+  StyleSpec<BoxSpec> get container;
+  StyleSpec<BoxSpec> get indicator;
 
   @override
   RemixRadioSpec copyWith({
@@ -24,8 +24,8 @@ mixin _$RemixRadioSpecMethods on Spec<RemixRadioSpec>, Diagnosticable {
   @override
   RemixRadioSpec lerp(RemixRadioSpec? other, double t) {
     return RemixRadioSpec(
-      container: container?.lerp(other?.container, t),
-      indicator: indicator?.lerp(other?.indicator, t),
+      container: container.lerp(other?.container, t),
+      indicator: indicator.lerp(other?.indicator, t),
     );
   }
 

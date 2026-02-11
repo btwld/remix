@@ -7,7 +7,7 @@ part of 'divider.dart';
 // **************************************************************************
 
 mixin _$RemixDividerSpecMethods on Spec<RemixDividerSpec>, Diagnosticable {
-  StyleSpec<BoxSpec>? get container;
+  StyleSpec<BoxSpec> get container;
 
   @override
   RemixDividerSpec copyWith({StyleSpec<BoxSpec>? container}) {
@@ -16,7 +16,7 @@ mixin _$RemixDividerSpecMethods on Spec<RemixDividerSpec>, Diagnosticable {
 
   @override
   RemixDividerSpec lerp(RemixDividerSpec? other, double t) {
-    return RemixDividerSpec(container: container?.lerp(other?.container, t));
+    return RemixDividerSpec(container: container.lerp(other?.container, t));
   }
 
   @override

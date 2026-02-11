@@ -4,9 +4,9 @@ part of 'tooltip.dart';
 class RemixTooltipSpec extends Spec<RemixTooltipSpec>
     with Diagnosticable, _$RemixTooltipSpecMethods {
   @override
-  final StyleSpec<BoxSpec>? container;
+  final StyleSpec<BoxSpec> container;
   @override
-  final StyleSpec<TextSpec>? label;
+  final StyleSpec<TextSpec> label;
   @override
   final Duration? waitDuration;
   @override

@@ -4,15 +4,15 @@ part of 'accordion.dart';
 class RemixAccordionSpec extends Spec<RemixAccordionSpec>
     with Diagnosticable, _$RemixAccordionSpecMethods {
   @override
-  final StyleSpec<FlexBoxSpec>? trigger;
+  final StyleSpec<FlexBoxSpec> trigger;
   @override
-  final StyleSpec<IconSpec>? leadingIcon;
+  final StyleSpec<IconSpec> leadingIcon;
   @override
-  final StyleSpec<TextSpec>? title;
+  final StyleSpec<TextSpec> title;
   @override
-  final StyleSpec<IconSpec>? trailingIcon;
+  final StyleSpec<IconSpec> trailingIcon;
   @override
-  final StyleSpec<BoxSpec>? content;
+  final StyleSpec<BoxSpec> content;
 
   const RemixAccordionSpec({
     StyleSpec<FlexBoxSpec>? trigger,

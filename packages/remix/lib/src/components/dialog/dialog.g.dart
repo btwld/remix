@@ -7,11 +7,11 @@ part of 'dialog.dart';
 // **************************************************************************
 
 mixin _$RemixDialogSpecMethods on Spec<RemixDialogSpec>, Diagnosticable {
-  StyleSpec<BoxSpec>? get container;
-  StyleSpec<TextSpec>? get title;
-  StyleSpec<TextSpec>? get description;
-  StyleSpec<FlexBoxSpec>? get actions;
-  StyleSpec<BoxSpec>? get overlay;
+  StyleSpec<BoxSpec> get container;
+  StyleSpec<TextSpec> get title;
+  StyleSpec<TextSpec> get description;
+  StyleSpec<FlexBoxSpec> get actions;
+  StyleSpec<BoxSpec> get overlay;
 
   @override
   RemixDialogSpec copyWith({
@@ -33,11 +33,11 @@ mixin _$RemixDialogSpecMethods on Spec<RemixDialogSpec>, Diagnosticable {
   @override
   RemixDialogSpec lerp(RemixDialogSpec? other, double t) {
     return RemixDialogSpec(
-      container: container?.lerp(other?.container, t),
-      title: title?.lerp(other?.title, t),
-      description: description?.lerp(other?.description, t),
-      actions: actions?.lerp(other?.actions, t),
-      overlay: overlay?.lerp(other?.overlay, t),
+      container: container.lerp(other?.container, t),
+      title: title.lerp(other?.title, t),
+      description: description.lerp(other?.description, t),
+      actions: actions.lerp(other?.actions, t),
+      overlay: overlay.lerp(other?.overlay, t),
     );
   }
 

@@ -324,8 +324,7 @@ class RemixTextField extends StatelessWidget {
           controller: controller,
           builder: (context, spec) {
             // Apply text style from spec
-            final textStyleSpec =
-                spec.text ?? const StyleSpec(spec: TextSpec());
+            final textStyleSpec = spec.text;
             final textStyle = textStyleSpec.spec.style ?? const TextStyle();
 
             final styledEditableText = DefaultTextStyle(

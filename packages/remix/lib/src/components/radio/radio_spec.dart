@@ -9,9 +9,9 @@ part of 'radio.dart';
 class RemixRadioSpec extends Spec<RemixRadioSpec>
     with Diagnosticable, _$RemixRadioSpecMethods {
   @override
-  final StyleSpec<BoxSpec>? container;
+  final StyleSpec<BoxSpec> container;
   @override
-  final StyleSpec<BoxSpec>? indicator;
+  final StyleSpec<BoxSpec> indicator;
 
   const RemixRadioSpec({
     StyleSpec<BoxSpec>? container,

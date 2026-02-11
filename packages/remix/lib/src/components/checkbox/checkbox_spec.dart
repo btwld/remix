@@ -62,7 +62,7 @@ class RemixCheckboxSpec extends Spec<RemixCheckboxSpec>
   /// background color, border, size, and shape. This is the visual
   /// element that users click to toggle the checkbox state.
   @override
-  final StyleSpec<BoxSpec>? container;
+  final StyleSpec<BoxSpec> container;
 
   /// Styling specification for the checkbox indicator icon.
   ///
@@ -70,7 +70,7 @@ class RemixCheckboxSpec extends Spec<RemixCheckboxSpec>
   /// the checkbox is in the checked state. Defines color, size,
   /// and other icon-specific properties.
   @override
-  final StyleSpec<IconSpec>? indicator;
+  final StyleSpec<IconSpec> indicator;
 
   /// Creates a RemixCheckboxSpec with optional styling specifications.
   ///

@@ -7,8 +7,8 @@ part of 'checkbox.dart';
 // **************************************************************************
 
 mixin _$RemixCheckboxSpecMethods on Spec<RemixCheckboxSpec>, Diagnosticable {
-  StyleSpec<BoxSpec>? get container;
-  StyleSpec<IconSpec>? get indicator;
+  StyleSpec<BoxSpec> get container;
+  StyleSpec<IconSpec> get indicator;
 
   @override
   RemixCheckboxSpec copyWith({
@@ -24,8 +24,8 @@ mixin _$RemixCheckboxSpecMethods on Spec<RemixCheckboxSpec>, Diagnosticable {
   @override
   RemixCheckboxSpec lerp(RemixCheckboxSpec? other, double t) {
     return RemixCheckboxSpec(
-      container: container?.lerp(other?.container, t),
-      indicator: indicator?.lerp(other?.indicator, t),
+      container: container.lerp(other?.container, t),
+      indicator: indicator.lerp(other?.indicator, t),
     );
   }
 

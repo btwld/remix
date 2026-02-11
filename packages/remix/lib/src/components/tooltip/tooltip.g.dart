@@ -7,8 +7,8 @@ part of 'tooltip.dart';
 // **************************************************************************
 
 mixin _$RemixTooltipSpecMethods on Spec<RemixTooltipSpec>, Diagnosticable {
-  StyleSpec<BoxSpec>? get container;
-  StyleSpec<TextSpec>? get label;
+  StyleSpec<BoxSpec> get container;
+  StyleSpec<TextSpec> get label;
   Duration? get waitDuration;
   Duration? get showDuration;
 
@@ -30,8 +30,8 @@ mixin _$RemixTooltipSpecMethods on Spec<RemixTooltipSpec>, Diagnosticable {
   @override
   RemixTooltipSpec lerp(RemixTooltipSpec? other, double t) {
     return RemixTooltipSpec(
-      container: container?.lerp(other?.container, t),
-      label: label?.lerp(other?.label, t),
+      container: container.lerp(other?.container, t),
+      label: label.lerp(other?.label, t),
       waitDuration: MixOps.lerpSnap(waitDuration, other?.waitDuration, t),
       showDuration: MixOps.lerpSnap(showDuration, other?.showDuration, t),
     );

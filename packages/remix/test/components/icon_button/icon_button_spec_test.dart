@@ -11,9 +11,9 @@ void main() {
         expect(spec.container, isA<StyleSpec<BoxSpec>>());
         expect(spec.icon, isA<StyleSpec<IconSpec>>());
         expect(spec.spinner, isA<StyleSpec<RemixSpinnerSpec>>());
-        expect(spec.container?.spec, isA<BoxSpec>());
-        expect(spec.icon?.spec, isA<IconSpec>());
-        expect(spec.spinner?.spec, isA<RemixSpinnerSpec>());
+        expect(spec.container.spec, isA<BoxSpec>());
+        expect(spec.icon.spec, isA<IconSpec>());
+        expect(spec.spinner.spec, isA<RemixSpinnerSpec>());
       });
 
       test('creates spec with provided parameters', () {

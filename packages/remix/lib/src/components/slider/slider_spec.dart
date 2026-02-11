@@ -15,26 +15,27 @@ class RemixSliderSpec extends Spec<RemixSliderSpec>
       _remixSliderDefaultTrackStrokeWidth;
 
   @override
-  final StyleSpec<BoxSpec>? thumb;
+  final StyleSpec<BoxSpec> thumb;
   @override
-  final Color? trackColor;
+  final Color trackColor;
   @override
-  final double? trackWidth;
+  final double trackWidth;
   @override
-  final Color? rangeColor;
+  final Color rangeColor;
   @override
-  final double? rangeWidth;
+  final double rangeWidth;
 
   RemixSliderSpec({
     StyleSpec<BoxSpec>? thumb,
-    this.trackColor = _defaultTrackColor,
-    this.trackWidth = _remixSliderDefaultTrackStrokeWidth,
-    this.rangeColor = _defaultRangeColor,
-    this.rangeWidth = _remixSliderDefaultTrackStrokeWidth,
-  }) : thumb = thumb ?? const StyleSpec(spec: BoxSpec());
+    Color? trackColor,
+    double? trackWidth,
+    Color? rangeColor,
+    double? rangeWidth,
+  }) : thumb = thumb ?? const StyleSpec(spec: BoxSpec()),
+       rangeColor = rangeColor ?? _defaultRangeColor,
+       trackWidth = trackWidth ?? _remixSliderDefaultTrackStrokeWidth,
+       rangeWidth = rangeWidth ?? _remixSliderDefaultTrackStrokeWidth,
+       trackColor = trackColor ?? _defaultTrackColor;
 
-  double get trackThickness => math.max(
-    trackWidth ?? _remixSliderDefaultTrackStrokeWidth,
-    rangeWidth ?? _remixSliderDefaultTrackStrokeWidth,
-  );
+  double get trackThickness => math.max(trackWidth, rangeWidth);
 }
