@@ -8,7 +8,7 @@ extension WidgetTesterHelpers on WidgetTester {
   /// Pumps a Remix widget wrapped in a MaterialApp with Scaffold
   Future<void> pumpRemixApp(Widget widget) async {
     await pumpWidget(
-      createRemixScope(
+      FortalScope(
         child: MaterialApp(
           home: Scaffold(body: Center(child: widget)),
         ),
@@ -18,7 +18,7 @@ extension WidgetTesterHelpers on WidgetTester {
 
   /// Pumps a widget with custom scaffold
   Future<void> pumpRemixAppWithScaffold(Widget scaffold) async {
-    await pumpWidget(createRemixScope(child: MaterialApp(home: scaffold)));
+    await pumpWidget(FortalScope(child: MaterialApp(home: scaffold)));
   }
 
   /// Finds a widget by its key string
@@ -144,7 +144,7 @@ class PerformanceTestHelper {
   ) async {
     final stopwatch = Stopwatch()..start();
     await tester.pumpWidget(
-      createRemixScope(
+      FortalScope(
         child: MaterialApp(
           home: Scaffold(body: Center(child: widget)),
         ),
