@@ -67,13 +67,10 @@ class _ViewportFrame extends StatelessWidget {
       width: size.width,
       height: size.height,
       decoration: BoxDecoration(
-        color:
-            brightness == .light ? MixColors.white : MixColors.black,
+        color: brightness == .light ? MixColors.white : MixColors.black,
         border: Border.all(color: MixColors.greySwatch[300]!),
         borderRadius: BorderRadius.circular(8),
-        boxShadow: const [
-          BoxShadow(blurRadius: 24, color: MixColors.black12),
-        ],
+        boxShadow: const [BoxShadow(blurRadius: 24, color: MixColors.black12)],
       ),
       clipBehavior: .antiAlias,
     );
@@ -94,10 +91,12 @@ class _ViewportFrame extends StatelessWidget {
       ),
     );
 
-    // Note: createRemixScope is applied by the component registry wrapper.
-    return Stack(children: [
-      frame,
-      Positioned.fill(child: media),
-    ]);
+    // Note: FortalScope is applied by the component registry wrapper.
+    return Stack(
+      children: [
+        frame,
+        Positioned.fill(child: media),
+      ],
+    );
   }
 }

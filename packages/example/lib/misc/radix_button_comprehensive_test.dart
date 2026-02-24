@@ -22,7 +22,7 @@ class _FortalButtonComprehensiveTestState
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: createFortalScope(
+      home: FortalScope(
         accent: _accent,
         gray: _gray,
         brightness: _brightness,
@@ -71,16 +71,13 @@ class _ComprehensiveTestScreen extends StatelessWidget {
           // Theme controls
           PopupMenuButton<Brightness>(
             itemBuilder: (context) => [
-              const PopupMenuItem(
-                value: .light,
-                child: Text('Light'),
-              ),
+              const PopupMenuItem(value: .light, child: Text('Light')),
               const PopupMenuItem(value: .dark, child: Text('Dark')),
             ],
             onSelected: onBrightnessChanged,
-            icon: Icon(currentBrightness == .light
-                ? Icons.light_mode
-                : Icons.dark_mode),
+            icon: Icon(
+              currentBrightness == .light ? Icons.light_mode : Icons.dark_mode,
+            ),
           ),
         ],
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -218,8 +215,9 @@ class _AllVariantsSection extends StatelessWidget {
   final int size;
 
   void _showSnackBar(BuildContext context, String message) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   RemixButtonStyle _getSizedStyle(RemixButtonStyle Function() _) {
@@ -229,7 +227,8 @@ class _AllVariantsSection extends StatelessWidget {
       3 => FortalButtonStyle.base(size: FortalButtonSize.size3),
       4 => FortalButtonStyle.base(size: FortalButtonSize.size4),
       _ => FortalButtonStyle.base(
-          size: FortalButtonSize.size2), // Default to size 2
+        size: FortalButtonSize.size2,
+      ), // Default to size 2
     };
   }
 
@@ -370,11 +369,9 @@ class _StateTestingSection extends StatelessWidget {
               ),
 
               // Disabled
-              _getVariantButton(variantName).call(
-                label: 'Disabled',
-                enabled: false,
-                onPressed: null,
-              ),
+              _getVariantButton(
+                variantName,
+              ).call(label: 'Disabled', enabled: false, onPressed: null),
             ],
           ),
           const SizedBox(height: 16),
@@ -403,7 +400,7 @@ class _AccentShowcaseSection extends StatelessWidget {
       runSpacing: 8,
       children: popularAccents.map((accentColor) {
         // Create temporary scope to show the accent
-        return createFortalScope(
+        return FortalScope(
           accent: accentColor,
           gray: FortalGrayColor.slate,
           brightness: Theme.of(context).brightness,

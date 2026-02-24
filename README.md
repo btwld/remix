@@ -169,7 +169,7 @@ While Remix gives you complete freedom to build any design system, it also inclu
 
 ### Quick Start with Fortal
 
-To use Fortal styles, wrap your app with `createFortalScope()` to provide the design tokens:
+To use Fortal styles, wrap your app with `FortalScope` to provide the design tokens:
 
 ```dart
 import 'package:flutter/material.dart';
@@ -180,7 +180,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: createFortalScope(
+        body: FortalScope(
           child: Center(
             child: RemixButton(
               onPressed: () {},
