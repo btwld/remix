@@ -11,7 +11,7 @@ class FortalButtonExampleApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: createFortalScope(
+      home: FortalScope(
         accent: FortalAccentColor.indigo,
         gray: FortalGrayColor.slate,
         brightness: .light,
@@ -72,9 +72,9 @@ class _VariantSection extends StatelessWidget {
   const _VariantSection();
 
   void _showSnackBar(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override

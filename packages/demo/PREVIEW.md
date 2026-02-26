@@ -95,12 +95,15 @@ Always use `createRemixPreview()` helper to ensure:
 ### Preview Helper Function
 ```dart
 Widget createRemixPreview(Widget child) {
-  return createRemixScope(
-    child: MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        backgroundColor: Colors.grey[50],
-        body: Center(child: child),
+  return MaterialApp(
+    debugShowCheckedModeBanner: false,
+    home: Builder(
+      builder: (context) => FortalScope(
+        brightness: Theme.of(context).brightness,
+        child: Scaffold(
+          backgroundColor: Colors.grey[50],
+          body: Center(child: child),
+        ),
       ),
     ),
   );

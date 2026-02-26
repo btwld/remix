@@ -16,9 +16,7 @@ class HotReload extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Widgetbook.material(
-      addons: [
-        FortalThemeAddon(),
-      ],
+      addons: [FortalThemeAddon()],
       appBuilder: (context, child) => child,
       directories: directories,
     );
@@ -28,37 +26,37 @@ class HotReload extends StatelessWidget {
 class FortalThemeAddon extends ThemeAddon<ThemeData> {
   /// Creates a new instance of [MaterialThemeAddon].
   FortalThemeAddon()
-      : super(
-          themes: [
-            WidgetbookTheme(
-              name: 'light',
-              data: ThemeData(
-                brightness: .light,
-                scaffoldBackgroundColor: Colors.white,
-              ),
+    : super(
+        themes: [
+          WidgetbookTheme(
+            name: 'light',
+            data: ThemeData(
+              brightness: .light,
+              scaffoldBackgroundColor: Colors.white,
             ),
-            WidgetbookTheme(
-              name: 'dark',
-              data: ThemeData(
-                brightness: .dark,
-                scaffoldBackgroundColor: const Color(0xFF111111),
-              ),
+          ),
+          WidgetbookTheme(
+            name: 'dark',
+            data: ThemeData(
+              brightness: .dark,
+              scaffoldBackgroundColor: const Color(0xFF111111),
             ),
-          ],
-          themeBuilder: (context, theme, child) {
-            return Theme(
-              data: theme,
-              child: createFortalScope(
-                brightness: theme.brightness,
-                child: ColoredBox(
-                  color: theme.scaffoldBackgroundColor,
-                  child: DefaultTextStyle(
-                    style: theme.textTheme.bodyMedium!,
-                    child: child,
-                  ),
+          ),
+        ],
+        themeBuilder: (context, theme, child) {
+          return Theme(
+            data: theme,
+            child: FortalScope(
+              brightness: theme.brightness,
+              child: ColoredBox(
+                color: theme.scaffoldBackgroundColor,
+                child: DefaultTextStyle(
+                  style: theme.textTheme.bodyMedium!,
+                  child: child,
                 ),
               ),
-            );
-          },
-        );
+            ),
+          );
+        },
+      );
 }

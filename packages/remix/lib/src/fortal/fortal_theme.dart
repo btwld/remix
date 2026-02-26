@@ -21,7 +21,7 @@ import 'computed.dart';
 /// )
 /// ```
 ///
-/// Must be used within [createFortalScope] to resolve actual values.
+/// Must be used within [FortalScope] to resolve actual values.
 class FortalTokens {
   // ============================================================================
   // BACKGROUND AND SURFACE COLORS
@@ -529,51 +529,11 @@ class FortalTokens {
   static const transitionSlow = DurationToken('fortal.transition.slow');
 }
 
-/// Creates a MixScope with Fortal design tokens configured for the specified theme.
-///
-/// This function sets up the complete Fortal token system with resolved color values
-/// (sourced from Radix Colors) based on the chosen accent color, gray scale, and
-/// brightness settings. All [FortalTokens] must be used within this scope to have
-/// actual values.
-///
-/// **Theme Configuration:**
-/// - [accent]: The accent color scale (indigo, blue, red, etc.)
-/// - [gray]: The neutral gray scale with different undertones
-/// - [brightness]: Light or dark mode
-///
-/// **Color Theory:**
-/// The Fortal color system builds on Radix color science for perceptual
-/// uniformity and accessibility:
-/// - Each color scale has 12 steps with semantic meaning
-/// - Colors are designed to work together harmoniously
-/// - Alpha variants provide translucency without losing saturation
-/// - Dark mode uses different algorithms to maintain contrast ratios
-///
-/// Example:
-/// ```dart
-/// createFortalScope(
-///   accent: FortalAccentColor.blue,
-///   gray: FortalGrayColor.slate,
-///   brightness: Brightness.light,
-///   child: MyApp(),
-/// )
-/// ```
-///
-/// The scope provides access to all design tokens through Mix styles:
-/// ```dart
-/// Style(
-///   $box.color.ref(FortalTokens.accent9),     // Solid accent
-///   $text.color.ref(FortalTokens.gray12),      // High contrast text
-///   $box.padding.ref(FortalTokens.space4),     // 16px padding
-///   $box.shadow.ref(FortalTokens.shadow2),     // Subtle elevation
-/// )
-/// ```
-Widget createFortalScope({
-  FortalAccentColor accent = .indigo,
-  FortalGrayColor gray = .slate,
-  Brightness brightness = .light,
-  List<Type>? orderOfModifiers,
-  required Widget child,
+/// Builds the token map for a Fortal scope. Used by [FortalScope].
+Map<MixToken, Object> _buildFortalScopeTokens({
+  required FortalAccentColor accent,
+  required FortalGrayColor gray,
+  required Brightness brightness,
 }) {
   final theme = FortalThemeConfig(
     accent: accent,
@@ -909,11 +869,75 @@ Widget createFortalScope({
     FortalTokens.transitionSlow: Duration(milliseconds: 300),
   };
 
-  return MixScope(
-    tokens: allTokens,
-    orderOfModifiers: orderOfModifiers,
-    child: child,
-  );
+  return allTokens;
+}
+
+/// Widget that provides Fortal design tokens to its subtree via [MixScope].
+///
+/// Use [FortalScope] at the root of your app (or around any subtree that uses
+/// Fortal styles) so that [FortalTokens] resolve to actual values.
+///
+/// **Theme Configuration:**
+/// - [accent]: The accent color scale (indigo, blue, red, etc.)
+/// - [gray]: The neutral gray scale with different undertones
+/// - [brightness]: Light or dark mode
+///
+/// **Color Theory:**
+/// The Fortal color system builds on Radix color science for perceptual
+/// uniformity and accessibility:
+/// - Each color scale has 12 steps with semantic meaning
+/// - Colors are designed to work together harmoniously
+/// - Alpha variants provide translucency without losing saturation
+/// - Dark mode uses different algorithms to maintain contrast ratios
+///
+/// Example:
+/// ```dart
+/// FortalScope(
+///   accent: FortalAccentColor.blue,
+///   gray: FortalGrayColor.slate,
+///   brightness: Brightness.light,
+///   child: MyApp(),
+/// )
+/// ```
+///
+/// The scope provides access to all design tokens through Mix styles:
+/// ```dart
+/// Style(
+///   $box.color.ref(FortalTokens.accent9),     // Solid accent
+///   $text.color.ref(FortalTokens.gray12),      // High contrast text
+///   $box.padding.ref(FortalTokens.space4),     // 16px padding
+///   $box.shadow.ref(FortalTokens.shadow2),     // Subtle elevation
+/// )
+/// ```
+class FortalScope extends StatelessWidget {
+  const FortalScope({
+    super.key,
+    this.accent = FortalAccentColor.indigo,
+    this.gray = FortalGrayColor.slate,
+    this.brightness = Brightness.light,
+    this.orderOfModifiers,
+    required this.child,
+  });
+
+  final FortalAccentColor accent;
+  final FortalGrayColor gray;
+  final Brightness brightness;
+  final List<Type>? orderOfModifiers;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final tokens = _buildFortalScopeTokens(
+      accent: accent,
+      gray: gray,
+      brightness: brightness,
+    );
+    return MixScope(
+      tokens: tokens,
+      orderOfModifiers: orderOfModifiers,
+      child: child,
+    );
+  }
 }
 
 // OKLab mixing implemented in computed.dart; no helper here.
@@ -1005,7 +1029,7 @@ class FortalThemeConfig {
   );
 
   Widget createScope({List<Type>? orderOfModifiers, required Widget child}) =>
-      createFortalScope(
+      FortalScope(
         accent: accent,
         gray: gray,
         brightness: brightness,
