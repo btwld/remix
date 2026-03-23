@@ -1,0 +1,17 @@
+{
+  "skill_name": "remix-ui",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Build a settings page with a form that has text fields for name and email, a select dropdown for language preference, some checkboxes for notification options, and a submit button. Use Fortal theming with indigo accent. Make it look polished.",
+      "expected_output": "A complete Flutter widget using RemixTextField, RemixSelect, RemixCheckbox, RemixButton with Fortal preset styles, wrapped in FortalScope",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Create a custom-styled button that has a gradient background, rounded corners, scales down on press, and glows on hover. Don't use Fortal — build a fully custom style from scratch using the Remix fluent API. Show me the complete code.",
+      "expected_output": "A RemixButton with a fully custom RemixButtonStyle using the fluent API — gradient, borderRounded, .onPressed with scale, .onHovered with shadow/glow, .animate for transitions",
+      "files": []
+    }
+  ]
+}
