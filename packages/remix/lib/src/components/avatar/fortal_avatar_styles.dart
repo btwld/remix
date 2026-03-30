@@ -17,27 +17,21 @@ class FortalAvatarStyles {
     };
   }
 
-  static RemixAvatarStyle base({
-    FortalAvatarSize size = .size2,
-  }) {
+  static RemixAvatarStyle base({FortalAvatarSize size = .size2}) {
     return RemixAvatarStyle()
         .clipBehavior(.hardEdge)
         .labelFontWeight(FontWeight.w500)
         .merge(_sizeStyle(size));
   }
 
-  static RemixAvatarStyle soft({
-    FortalAvatarSize size = .size2,
-  }) {
+  static RemixAvatarStyle soft({FortalAvatarSize size = .size2}) {
     return base(size: size)
         .color(FortalTokens.accentA3())
         .labelColor(FortalTokens.accentA10())
         .iconColor(FortalTokens.accentA10());
   }
 
-  static RemixAvatarStyle solid({
-    FortalAvatarSize size = .size2,
-  }) {
+  static RemixAvatarStyle solid({FortalAvatarSize size = .size2}) {
     return base(size: size)
         .color(FortalTokens.accent9())
         .labelColor(FortalTokens.accentContrast())
@@ -50,22 +44,22 @@ class FortalAvatarStyles {
         RemixAvatarStyle()
             .square(24.0)
             .borderRadiusAll(FortalTokens.radius2())
-            .labelTextStyle(FortalTokens.text1.mix()),
+            .labelStyle(FortalTokens.text1.mix()),
       .size2 =>
         RemixAvatarStyle()
             .square(32.0)
             .borderRadiusAll(FortalTokens.radius3())
-            .labelTextStyle(FortalTokens.text2.mix()),
+            .labelStyle(FortalTokens.text2.mix()),
       .size3 =>
         RemixAvatarStyle()
             .square(40.0)
             .borderRadiusAll(FortalTokens.radius4())
-            .labelTextStyle(FortalTokens.text3.mix()),
+            .labelStyle(FortalTokens.text3.mix()),
       .size4 =>
         RemixAvatarStyle()
             .square(64.0)
             .borderRadiusAll(FortalTokens.radius5())
-            .labelTextStyle(FortalTokens.text4.mix()),
+            .labelStyle(FortalTokens.text4.mix()),
     };
   }
 }
