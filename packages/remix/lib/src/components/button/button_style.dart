@@ -93,6 +93,72 @@ class RemixButtonStyle
          modifier: modifier,
        );
 
+  // -- Factory constructors for convenience --
+
+  /// Creates a style with the given background color.
+  factory RemixButtonStyle.backgroundColor(Color value) =>
+      RemixButtonStyle().backgroundColor(value);
+
+  /// Creates a style with the given foreground color (label and icon).
+  factory RemixButtonStyle.foregroundColor(Color value) =>
+      RemixButtonStyle().foregroundColor(value);
+
+  /// Creates a style with the given padding.
+  factory RemixButtonStyle.padding(EdgeInsetsGeometryMix value) =>
+      RemixButtonStyle().padding(value);
+
+  /// Creates a style with the given margin.
+  factory RemixButtonStyle.margin(EdgeInsetsGeometryMix value) =>
+      RemixButtonStyle().margin(value);
+
+  /// Creates a style with the given decoration.
+  factory RemixButtonStyle.decoration(DecorationMix value) =>
+      RemixButtonStyle().decoration(value);
+
+  /// Creates a style with the given alignment.
+  factory RemixButtonStyle.alignment(Alignment value) =>
+      RemixButtonStyle().alignment(value);
+
+  /// Creates a style with the given spacing.
+  factory RemixButtonStyle.spacing(double value) =>
+      RemixButtonStyle().spacing(value);
+
+  /// Creates a style with the given constraints.
+  factory RemixButtonStyle.constraints(BoxConstraintsMix value) =>
+      RemixButtonStyle().constraints(value);
+
+  /// Creates a style with the given minimum size.
+  factory RemixButtonStyle.minimumSize(Size value) =>
+      RemixButtonStyle().minimumSize(value);
+
+  /// Creates a style with the given fixed size.
+  factory RemixButtonStyle.fixedSize(Size value) =>
+      RemixButtonStyle().fixedSize(value);
+
+  /// Creates a style with the given maximum size.
+  factory RemixButtonStyle.maximumSize(Size value) =>
+      RemixButtonStyle().maximumSize(value);
+
+  /// Creates a style with the given shape.
+  factory RemixButtonStyle.shape(ShapeBorderMix value) =>
+      RemixButtonStyle().shape(value);
+
+  /// Creates a style with the given icon color.
+  factory RemixButtonStyle.iconColor(Color value) =>
+      RemixButtonStyle().iconColor(value);
+
+  /// Creates a style with the given icon size.
+  factory RemixButtonStyle.iconSize(double value) =>
+      RemixButtonStyle().iconSize(value);
+
+  /// Creates a style with the given label style.
+  factory RemixButtonStyle.labelStyle(TextStyleMix value) =>
+      RemixButtonStyle().labelStyle(value);
+
+  /// Creates a style with the given shadow.
+  factory RemixButtonStyle.shadow(BoxShadowMix value) =>
+      RemixButtonStyle()..shadow(value);
+
   /// Sets padding
   RemixButtonStyle padding(EdgeInsetsGeometryMix value) {
     return merge(RemixButtonStyle(container: FlexBoxStyler(padding: value)));
@@ -122,8 +188,48 @@ class RemixButtonStyle
 
   /// Sets constraints
   RemixButtonStyle constraints(BoxConstraintsMix value) {
+    return merge(.new(container: .new(constraints: value)));
+  }
+
+  /// Sets the background color of the button.
+  RemixButtonStyle backgroundColor(Color value) {
     return merge(
-      RemixButtonStyle(container: FlexBoxStyler(constraints: value)),
+      .new(
+        container: .new(decoration: BoxDecorationMix(color: value)),
+      ),
+    );
+  }
+
+  /// Sets the foreground color (label and icon) of the button.
+  RemixButtonStyle foregroundColor(Color value) {
+    return labelColor(value).iconColor(value).labelStyle(.color(value));
+  }
+
+  /// Sets the minimum size of the button.
+  RemixButtonStyle minimumSize(Size value) {
+    return merge(
+      .new().constraintsOnly(minHeight: value.height, minWidth: value.width),
+    );
+  }
+
+  /// Sets the fixed size of the button.
+  ///
+  /// Use [double.infinity] for either dimension to leave it unconstrained.
+  RemixButtonStyle fixedSize(Size value) {
+    return merge(
+      .new().constraintsOnly(
+        minHeight: value.height,
+        minWidth: value.width,
+        maxHeight: value.height,
+        maxWidth: value.width,
+      ),
+    );
+  }
+
+  /// Sets the maximum size of the button.
+  RemixButtonStyle maximumSize(Size value) {
+    return merge(
+      .new().constraintsOnly(maxHeight: value.height, maxWidth: value.width),
     );
   }
 
@@ -147,6 +253,15 @@ class RemixButtonStyle
       enableFeedback: enableFeedback,
       onPressed: onPressed,
       focusNode: focusNode,
+    );
+  }
+
+  /// Sets the shape of the button.
+  RemixButtonStyle shape(ShapeBorderMix value) {
+    return merge(
+      RemixButtonStyle(
+        container: FlexBoxStyler(decoration: ShapeDecorationMix(shape: value)),
+      ),
     );
   }
 

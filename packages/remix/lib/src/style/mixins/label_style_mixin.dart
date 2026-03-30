@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:mix/mix.dart';
 
 /// Mixin that provides convenient label/text styling methods for component styles.
-/// 
+///
 /// This mixin requires the implementing class to provide a method that accepts
 /// a TextStyler and returns the modified component style.
 mixin LabelStyleMixin<T extends Mix<Object?>> {
@@ -11,7 +11,7 @@ mixin LabelStyleMixin<T extends Mix<Object?>> {
   T label(TextStyler value);
 
   /// Sets label/text style using TextStyleMix directly
-  T labelTextStyle(TextStyleMix value) {
+  T labelStyle(TextStyleMix value) {
     return label(TextStyler(style: value));
   }
 
