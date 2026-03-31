@@ -39,40 +39,17 @@ void main() {
 
     group('Style Methods', () {
       styleMethodTest(
-        'checkboxSize sets container size constraints',
+        'shape sets container shape',
         initial: RemixCheckboxStyle(),
-        modify: (style) => style.checkboxSize(24.0),
+        modify: (style) => style.shape(RoundedRectangleBorderMix(borderRadius: BorderRadiusMix.circular(8.0))),
         expect: (style) {
           expect(
             style.$container,
             equals(
               Prop.maybeMix(
                 BoxStyler(
-                  constraints: BoxConstraintsMix(
-                    minWidth: 24.0,
-                    maxWidth: 24.0,
-                    minHeight: 24.0,
-                    maxHeight: 24.0,
-                  ),
-                ),
-              ),
-            ),
-          );
-        },
-      );
-
-      styleMethodTest(
-        'checkboxBorderRadius sets container border radius',
-        initial: RemixCheckboxStyle(),
-        modify: (style) => style.checkboxBorderRadius(8.0),
-        expect: (style) {
-          expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  decoration: BoxDecorationMix(
-                    borderRadius: BorderRadiusMix.circular(8.0),
+                  decoration: ShapeDecorationMix(
+                    shape: RoundedRectangleBorderMix(borderRadius: BorderRadiusMix.circular(8.0)),
                   ),
                 ),
               ),
@@ -153,9 +130,9 @@ void main() {
       );
 
       styleMethodTest(
-        'color sets container background color',
+        'fillColor sets container background color',
         initial: RemixCheckboxStyle(),
-        modify: (style) => style.color(Colors.blue),
+        modify: (style) => style.fillColor(Colors.blue),
         expect: (style) {
           expect(
             style.$container,

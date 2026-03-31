@@ -52,6 +52,16 @@ class RemixIconButtonStyle
     );
   }
 
+  /// Sets the background color of the icon button container.
+  RemixIconButtonStyle backgroundColor(Color value) {
+    return color(value);
+  }
+
+  /// Sets the foreground color (icon color) of the icon button.
+  RemixIconButtonStyle foregroundColor(Color value) {
+    return iconColor(value);
+  }
+
   /// Sets padding
   RemixIconButtonStyle padding(EdgeInsetsGeometryMix value) {
     return merge(RemixIconButtonStyle(container: BoxStyler(padding: value)));
@@ -89,6 +99,47 @@ class RemixIconButtonStyle
     return merge(
       RemixIconButtonStyle(
         container: BoxStyler(decoration: BoxDecorationMix(border: value)),
+      ),
+    );
+  }
+
+  /// Sets the minimum size of the icon button.
+  RemixIconButtonStyle minimumSize(Size value) {
+    return merge(
+      RemixIconButtonStyle().constraintsOnly(
+        minHeight: value.height,
+        minWidth: value.width,
+      ),
+    );
+  }
+
+  /// Sets the maximum size of the icon button.
+  RemixIconButtonStyle maximumSize(Size value) {
+    return merge(
+      RemixIconButtonStyle().constraintsOnly(
+        maxHeight: value.height,
+        maxWidth: value.width,
+      ),
+    );
+  }
+
+  /// Sets the shape of the icon button.
+  RemixIconButtonStyle shape(ShapeBorderMix value) {
+    return merge(
+      RemixIconButtonStyle(
+        container: BoxStyler(decoration: ShapeDecorationMix(shape: value)),
+      ),
+    );
+  }
+
+  /// Sets the shadow of the icon button.
+  @override
+  RemixIconButtonStyle shadow(BoxShadowMix value) {
+    return merge(
+      RemixIconButtonStyle(
+        container: BoxStyler(
+          decoration: BoxDecorationMix(boxShadow: [value]),
+        ),
       ),
     );
   }

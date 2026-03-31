@@ -61,14 +61,18 @@ class RemixDialogStyle
     return merge(RemixDialogStyle(container: BoxStyler(padding: value)));
   }
 
-  @override
-  RemixDialogStyle color(Color value) {
+  /// Sets the background color of the dialog.
+  RemixDialogStyle backgroundColor(Color value) {
     return merge(
       RemixDialogStyle(
         container: BoxStyler(decoration: BoxDecorationMix(color: value)),
       ),
     );
   }
+
+  /// Delegates to [backgroundColor].
+  @override
+  RemixDialogStyle color(Color value) => backgroundColor(value);
 
   @override
   RemixDialogStyle size(double width, double height) {
@@ -127,6 +131,27 @@ class RemixDialogStyle
     return merge(
       RemixDialogStyle(
         container: BoxStyler(transform: value, transformAlignment: alignment),
+      ),
+    );
+  }
+
+  /// Sets the shadow/elevation of the dialog.
+  @override
+  RemixDialogStyle shadow(BoxShadowMix value) {
+    return merge(
+      RemixDialogStyle(
+        container: BoxStyler(
+          decoration: BoxDecorationMix(boxShadow: [value]),
+        ),
+      ),
+    );
+  }
+
+  /// Sets the shape of the dialog.
+  RemixDialogStyle shape(ShapeBorderMix value) {
+    return merge(
+      RemixDialogStyle(
+        container: BoxStyler(decoration: ShapeDecorationMix(shape: value)),
       ),
     );
   }

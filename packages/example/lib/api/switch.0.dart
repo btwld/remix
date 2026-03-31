@@ -46,7 +46,7 @@ class _SwitchExampleState extends State<SwitchExample> {
   RemixSwitchStyle get style {
     return RemixSwitchStyle()
         .thumbColor(Colors.grey.shade600)
-        .color(Colors.deepPurpleAccent.shade200)
+        .trackColor(Colors.deepPurpleAccent.shade200)
         .size(65, 30)
         .borderRadiusAll(const Radius.circular(40))
         .alignment(

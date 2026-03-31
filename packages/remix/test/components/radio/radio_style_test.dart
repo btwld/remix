@@ -108,9 +108,9 @@ void main() {
       );
 
       styleMethodTest(
-        'color',
+        'fillColor',
         initial: RemixRadioStyle(),
-        modify: (style) => style.color(Colors.blue),
+        modify: (style) => style.fillColor(Colors.blue),
         expect: (style) {
           expect(
             style.$container,

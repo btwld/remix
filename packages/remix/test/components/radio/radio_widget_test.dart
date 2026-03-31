@@ -294,7 +294,7 @@ void main() {
       });
 
       testWidgets('applies color styling', (tester) async {
-        final customStyle = RemixRadioStyle().color(Colors.red);
+        final customStyle = RemixRadioStyle().fillColor(Colors.red);
 
         await tester.pumpRemixApp(
           RemixRadioGroup<String>(

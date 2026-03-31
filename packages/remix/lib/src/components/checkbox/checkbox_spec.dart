@@ -37,7 +37,7 @@ part of 'checkbox.dart';
 /// // Style creates and populates the spec
 /// final style = RemixCheckboxStyle()
 ///   .indicatorColor(Colors.blue)
-///   .checkboxSize(20);
+///   .size(20, 20);
 ///
 /// // Widget receives the resolved spec
 /// RemixCheckbox(selected: false, onChanged: (_) {}, style: style)

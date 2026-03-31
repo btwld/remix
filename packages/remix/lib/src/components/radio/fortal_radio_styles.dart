@@ -47,7 +47,7 @@ class FortalRadioStyles {
   }) {
     return base(size: size)
         // Container (the radio circle itself) - no size properties
-        .color(FortalTokens.colorSurface())
+        .fillColor(FortalTokens.colorSurface())
         .borderAll(
           color: FortalTokens.gray6(),
           width: FortalTokens.borderWidth1(),
@@ -62,7 +62,7 @@ class FortalRadioStyles {
         // State variants
         .onSelected(
           RemixRadioStyle()
-              .color(FortalTokens.accent9())
+              .fillColor(FortalTokens.accent9())
               .borderAll(
                 color: FortalTokens.accent9(),
                 width: FortalTokens.borderWidth1(),
@@ -87,7 +87,7 @@ class FortalRadioStyles {
   static RemixRadioStyle soft({FortalRadioSize size = .size2}) {
     return base(size: size)
         // Container (the radio circle itself) - no size properties
-        .color(FortalTokens.accentA4())
+        .fillColor(FortalTokens.accentA4())
         .borderRadiusAll(FortalTokens.radiusFull()) // Circular
         // Radio dot indicator - no size properties
         .indicator(
@@ -98,12 +98,12 @@ class FortalRadioStyles {
         // State variants
         .onSelected(
           RemixRadioStyle()
-              .color(FortalTokens.accentA4())
+              .fillColor(FortalTokens.accentA4())
               .indicator(BoxStyler().color(FortalTokens.accent11())),
         )
         .onDisabled(
           RemixRadioStyle()
-              .color(FortalTokens.gray3())
+              .fillColor(FortalTokens.gray3())
               .indicator(BoxStyler().color(FortalTokens.gray7())),
         );
   }

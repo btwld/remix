@@ -57,7 +57,7 @@ class FortalSwitchStyles {
     FortalSwitchSize size = .size2,
   }) {
     return base(size: size)
-        .color(FortalTokens.gray5())
+        .trackColor(FortalTokens.gray5())
         .borderRadius(BorderRadiusMix.circular(999))
         .borderAll(
           color: FortalTokens.gray8(),
@@ -66,12 +66,12 @@ class FortalSwitchStyles {
         )
         .onSelected(
           RemixSwitchStyle()
-              .color(FortalTokens.accentTrack())
+              .trackColor(FortalTokens.accentTrack())
               .borderAll(color: FortalTokens.accent9()),
         )
         .onDisabled(
           RemixSwitchStyle()
-              .color(FortalTokens.grayA3())
+              .trackColor(FortalTokens.grayA3())
               .borderAll(color: FortalTokens.gray5())
               .thumbColor(FortalTokens.gray2()),
         );
@@ -85,7 +85,7 @@ class FortalSwitchStyles {
     FortalSwitchSize size = .size2,
   }) {
     return base(size: size)
-        .color(FortalTokens.gray5())
+        .trackColor(FortalTokens.gray5())
         .borderRadius(BorderRadiusMix.circular(999))
         .borderAll(
           color: FortalTokens.gray5(),
@@ -94,12 +94,12 @@ class FortalSwitchStyles {
         )
         .onSelected(
           RemixSwitchStyle()
-              .color(FortalTokens.accentA7())
+              .trackColor(FortalTokens.accentA7())
               .borderAll(color: FortalTokens.accent7()),
         )
         .onDisabled(
           RemixSwitchStyle()
-              .color(FortalTokens.gray5())
+              .trackColor(FortalTokens.gray5())
               .borderAll(color: FortalTokens.gray5())
               .shadow(BoxShadowMix())
               .thumbColor(FortalTokens.gray2()),
