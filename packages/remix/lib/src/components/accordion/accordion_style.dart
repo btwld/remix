@@ -50,6 +50,155 @@ class RemixAccordionStyle
          modifier: modifier,
        );
 
+  // -- Factory constructors for convenience --
+
+  /// Creates a style with the given background color.
+  factory RemixAccordionStyle.backgroundColor(Color value) =>
+      RemixAccordionStyle().backgroundColor(value);
+
+  /// Creates a style with the given padding.
+  factory RemixAccordionStyle.padding(EdgeInsetsGeometryMix value) =>
+      RemixAccordionStyle().padding(value);
+
+  /// Creates a style with the given margin.
+  factory RemixAccordionStyle.margin(EdgeInsetsGeometryMix value) =>
+      RemixAccordionStyle().margin(value);
+
+  /// Creates a style with the given decoration.
+  factory RemixAccordionStyle.decoration(DecorationMix value) =>
+      RemixAccordionStyle().decoration(value);
+
+  /// Creates a style with the given alignment.
+  factory RemixAccordionStyle.alignment(Alignment value) =>
+      RemixAccordionStyle().alignment(value);
+
+  /// Creates a style with the given constraints.
+  factory RemixAccordionStyle.constraints(BoxConstraintsMix value) =>
+      RemixAccordionStyle().constraints(value);
+
+  /// Creates a style with the given border radius.
+  factory RemixAccordionStyle.borderRadius(BorderRadiusGeometryMix value) =>
+      RemixAccordionStyle().borderRadius(value);
+
+  /// Creates a style with the given spacing.
+  factory RemixAccordionStyle.spacing(double value) =>
+      RemixAccordionStyle().spacing(value);
+
+  /// Creates a style with the given title color.
+  factory RemixAccordionStyle.titleColor(Color value) =>
+      RemixAccordionStyle().titleColor(value);
+
+  /// Creates a style with the given title font size.
+  factory RemixAccordionStyle.titleFontSize(double value) =>
+      RemixAccordionStyle().titleFontSize(value);
+
+  /// Creates a style with the given title font weight.
+  factory RemixAccordionStyle.titleFontWeight(FontWeight value) =>
+      RemixAccordionStyle().titleFontWeight(value);
+
+  /// Creates a style with the given title style.
+  factory RemixAccordionStyle.titleStyle(TextStyleMix value) =>
+      RemixAccordionStyle().titleStyle(value);
+
+  /// Creates a style with the given leading icon color.
+  factory RemixAccordionStyle.leadingIconColor(Color value) =>
+      RemixAccordionStyle().leadingIconColor(value);
+
+  /// Creates a style with the given leading icon size.
+  factory RemixAccordionStyle.leadingIconSize(double value) =>
+      RemixAccordionStyle().leadingIconSize(value);
+
+  /// Creates a style with the given trailing icon color.
+  factory RemixAccordionStyle.trailingIconColor(Color value) =>
+      RemixAccordionStyle().trailingIconColor(value);
+
+  /// Creates a style with the given trailing icon size.
+  factory RemixAccordionStyle.trailingIconSize(double value) =>
+      RemixAccordionStyle().trailingIconSize(value);
+
+  /// Creates a style with the given content color.
+  factory RemixAccordionStyle.contentColor(Color value) =>
+      RemixAccordionStyle().contentColor(value);
+
+  /// Creates a style with the given content padding.
+  factory RemixAccordionStyle.contentPadding(EdgeInsetsGeometryMix value) =>
+      RemixAccordionStyle().contentPadding(value);
+
+  /// Creates a style with the given content decoration.
+  factory RemixAccordionStyle.contentDecoration(DecorationMix value) =>
+      RemixAccordionStyle().contentDecoration(value);
+
+  // -- Convenience instance methods --
+
+  /// Sets the background color of the trigger.
+  RemixAccordionStyle backgroundColor(Color value) {
+    return merge(
+      .new(
+        trigger: .new(decoration: BoxDecorationMix(color: value)),
+      ),
+    );
+  }
+
+  /// Sets the spacing between items in the trigger.
+  RemixAccordionStyle spacing(double value) {
+    return merge(RemixAccordionStyle(trigger: FlexBoxStyler(spacing: value)));
+  }
+
+  /// Sets title color.
+  RemixAccordionStyle titleColor(Color value) {
+    return title(TextStyler(style: TextStyleMix(color: value)));
+  }
+
+  /// Sets title font size.
+  RemixAccordionStyle titleFontSize(double value) {
+    return title(TextStyler(style: TextStyleMix(fontSize: value)));
+  }
+
+  /// Sets title font weight.
+  RemixAccordionStyle titleFontWeight(FontWeight value) {
+    return title(TextStyler(style: TextStyleMix(fontWeight: value)));
+  }
+
+  /// Sets title style using TextStyleMix directly.
+  RemixAccordionStyle titleStyle(TextStyleMix value) {
+    return title(TextStyler(style: value));
+  }
+
+  /// Sets leading icon color.
+  RemixAccordionStyle leadingIconColor(Color value) {
+    return leadingIcon(IconStyler(color: value));
+  }
+
+  /// Sets leading icon size.
+  RemixAccordionStyle leadingIconSize(double value) {
+    return leadingIcon(IconStyler(size: value));
+  }
+
+  /// Sets trailing icon color.
+  RemixAccordionStyle trailingIconColor(Color value) {
+    return trailingIcon(IconStyler(color: value));
+  }
+
+  /// Sets trailing icon size.
+  RemixAccordionStyle trailingIconSize(double value) {
+    return trailingIcon(IconStyler(size: value));
+  }
+
+  /// Sets content background color.
+  RemixAccordionStyle contentColor(Color value) {
+    return content(BoxStyler(decoration: BoxDecorationMix(color: value)));
+  }
+
+  /// Sets content padding.
+  RemixAccordionStyle contentPadding(EdgeInsetsGeometryMix value) {
+    return content(BoxStyler(padding: value));
+  }
+
+  /// Sets content decoration.
+  RemixAccordionStyle contentDecoration(DecorationMix value) {
+    return content(BoxStyler(decoration: value));
+  }
+
   /// Sets container alignment
   RemixAccordionStyle alignment(Alignment value) {
     return merge(RemixAccordionStyle(trigger: FlexBoxStyler(alignment: value)));

@@ -315,6 +315,201 @@ void main() {
       );
 
       styleMethodTest(
+        'backgroundColor',
+        initial: RemixAccordionStyle(),
+        modify: (style) => style.backgroundColor(Colors.red),
+        expect: (style) {
+          expect(
+            style.$trigger,
+            equals(
+              Prop.maybeMix(
+                FlexBoxStyler(decoration: BoxDecorationMix(color: Colors.red)),
+              ),
+            ),
+          );
+        },
+      );
+
+      styleMethodTest(
+        'spacing',
+        initial: RemixAccordionStyle(),
+        modify: (style) => style.spacing(8.0),
+        expect: (style) {
+          expect(
+            style.$trigger,
+            equals(Prop.maybeMix(FlexBoxStyler(spacing: 8.0))),
+          );
+        },
+      );
+
+      styleMethodTest(
+        'titleColor',
+        initial: RemixAccordionStyle(),
+        modify: (style) => style.titleColor(Colors.blue),
+        expect: (style) {
+          expect(
+            style.$title,
+            equals(
+              Prop.maybeMix(
+                TextStyler(style: TextStyleMix(color: Colors.blue)),
+              ),
+            ),
+          );
+        },
+      );
+
+      styleMethodTest(
+        'titleFontSize',
+        initial: RemixAccordionStyle(),
+        modify: (style) => style.titleFontSize(20.0),
+        expect: (style) {
+          expect(
+            style.$title,
+            equals(
+              Prop.maybeMix(
+                TextStyler(style: TextStyleMix(fontSize: 20.0)),
+              ),
+            ),
+          );
+        },
+      );
+
+      styleMethodTest(
+        'titleFontWeight',
+        initial: RemixAccordionStyle(),
+        modify: (style) => style.titleFontWeight(FontWeight.bold),
+        expect: (style) {
+          expect(
+            style.$title,
+            equals(
+              Prop.maybeMix(
+                TextStyler(style: TextStyleMix(fontWeight: FontWeight.bold)),
+              ),
+            ),
+          );
+        },
+      );
+
+      styleMethodTest(
+        'titleStyle',
+        initial: RemixAccordionStyle(),
+        modify: (style) => style.titleStyle(
+          TextStyleMix(color: Colors.green, fontSize: 18.0),
+        ),
+        expect: (style) {
+          expect(
+            style.$title,
+            equals(
+              Prop.maybeMix(
+                TextStyler(
+                  style: TextStyleMix(color: Colors.green, fontSize: 18.0),
+                ),
+              ),
+            ),
+          );
+        },
+      );
+
+      styleMethodTest(
+        'leadingIconColor',
+        initial: RemixAccordionStyle(),
+        modify: (style) => style.leadingIconColor(Colors.orange),
+        expect: (style) {
+          expect(
+            style.$leadingIcon,
+            equals(Prop.maybeMix(IconStyler(color: Colors.orange))),
+          );
+        },
+      );
+
+      styleMethodTest(
+        'leadingIconSize',
+        initial: RemixAccordionStyle(),
+        modify: (style) => style.leadingIconSize(24.0),
+        expect: (style) {
+          expect(
+            style.$leadingIcon,
+            equals(Prop.maybeMix(IconStyler(size: 24.0))),
+          );
+        },
+      );
+
+      styleMethodTest(
+        'trailingIconColor',
+        initial: RemixAccordionStyle(),
+        modify: (style) => style.trailingIconColor(Colors.purple),
+        expect: (style) {
+          expect(
+            style.$trailingIcon,
+            equals(Prop.maybeMix(IconStyler(color: Colors.purple))),
+          );
+        },
+      );
+
+      styleMethodTest(
+        'trailingIconSize',
+        initial: RemixAccordionStyle(),
+        modify: (style) => style.trailingIconSize(16.0),
+        expect: (style) {
+          expect(
+            style.$trailingIcon,
+            equals(Prop.maybeMix(IconStyler(size: 16.0))),
+          );
+        },
+      );
+
+      styleMethodTest(
+        'contentColor',
+        initial: RemixAccordionStyle(),
+        modify: (style) => style.contentColor(Colors.grey),
+        expect: (style) {
+          expect(
+            style.$content,
+            equals(
+              Prop.maybeMix(
+                BoxStyler(decoration: BoxDecorationMix(color: Colors.grey)),
+              ),
+            ),
+          );
+        },
+      );
+
+      styleMethodTest(
+        'contentPadding',
+        initial: RemixAccordionStyle(),
+        modify: (style) =>
+            style.contentPadding(EdgeInsetsGeometryMix.all(12.0)),
+        expect: (style) {
+          expect(
+            style.$content,
+            equals(
+              Prop.maybeMix(
+                BoxStyler(padding: EdgeInsetsGeometryMix.all(12.0)),
+              ),
+            ),
+          );
+        },
+      );
+
+      styleMethodTest(
+        'contentDecoration',
+        initial: RemixAccordionStyle(),
+        modify: (style) => style.contentDecoration(
+          BoxDecorationMix(color: Colors.white),
+        ),
+        expect: (style) {
+          expect(
+            style.$content,
+            equals(
+              Prop.maybeMix(
+                BoxStyler(decoration: BoxDecorationMix(color: Colors.white)),
+              ),
+            ),
+          );
+        },
+      );
+
+      styleMethodTest(
         'wrap',
         initial: RemixAccordionStyle(),
         modify: (style) => style.wrap(WidgetModifierConfig.clipOval()),
@@ -331,6 +526,119 @@ void main() {
           expect(style.$variants, equals(<VariantStyle<RemixAccordionSpec>>[]));
         },
       );
+    });
+
+    group('Factory Constructors', () {
+      test('backgroundColor factory', () {
+        final style = RemixAccordionStyle.backgroundColor(Colors.red);
+        expect(style.$trigger, isNotNull);
+      });
+
+      test('padding factory', () {
+        final style = RemixAccordionStyle.padding(
+          EdgeInsetsGeometryMix.all(16.0),
+        );
+        expect(style.$trigger, isNotNull);
+      });
+
+      test('margin factory', () {
+        final style = RemixAccordionStyle.margin(
+          EdgeInsetsGeometryMix.all(8.0),
+        );
+        expect(style.$trigger, isNotNull);
+      });
+
+      test('decoration factory', () {
+        final style = RemixAccordionStyle.decoration(
+          BoxDecorationMix(color: Colors.blue),
+        );
+        expect(style.$trigger, isNotNull);
+      });
+
+      test('alignment factory', () {
+        final style = RemixAccordionStyle.alignment(Alignment.center);
+        expect(style.$trigger, isNotNull);
+      });
+
+      test('constraints factory', () {
+        final style = RemixAccordionStyle.constraints(
+          BoxConstraintsMix(minWidth: 100.0),
+        );
+        expect(style.$trigger, isNotNull);
+      });
+
+      test('borderRadius factory', () {
+        final style = RemixAccordionStyle.borderRadius(
+          BorderRadiusMix.circular(8.0),
+        );
+        expect(style.$trigger, isNotNull);
+      });
+
+      test('spacing factory', () {
+        final style = RemixAccordionStyle.spacing(8.0);
+        expect(style.$trigger, isNotNull);
+      });
+
+      test('titleColor factory', () {
+        final style = RemixAccordionStyle.titleColor(Colors.blue);
+        expect(style.$title, isNotNull);
+      });
+
+      test('titleFontSize factory', () {
+        final style = RemixAccordionStyle.titleFontSize(16.0);
+        expect(style.$title, isNotNull);
+      });
+
+      test('titleFontWeight factory', () {
+        final style = RemixAccordionStyle.titleFontWeight(FontWeight.bold);
+        expect(style.$title, isNotNull);
+      });
+
+      test('titleStyle factory', () {
+        final style = RemixAccordionStyle.titleStyle(
+          TextStyleMix(color: Colors.red),
+        );
+        expect(style.$title, isNotNull);
+      });
+
+      test('leadingIconColor factory', () {
+        final style = RemixAccordionStyle.leadingIconColor(Colors.green);
+        expect(style.$leadingIcon, isNotNull);
+      });
+
+      test('leadingIconSize factory', () {
+        final style = RemixAccordionStyle.leadingIconSize(24.0);
+        expect(style.$leadingIcon, isNotNull);
+      });
+
+      test('trailingIconColor factory', () {
+        final style = RemixAccordionStyle.trailingIconColor(Colors.purple);
+        expect(style.$trailingIcon, isNotNull);
+      });
+
+      test('trailingIconSize factory', () {
+        final style = RemixAccordionStyle.trailingIconSize(16.0);
+        expect(style.$trailingIcon, isNotNull);
+      });
+
+      test('contentColor factory', () {
+        final style = RemixAccordionStyle.contentColor(Colors.grey);
+        expect(style.$content, isNotNull);
+      });
+
+      test('contentPadding factory', () {
+        final style = RemixAccordionStyle.contentPadding(
+          EdgeInsetsGeometryMix.all(12.0),
+        );
+        expect(style.$content, isNotNull);
+      });
+
+      test('contentDecoration factory', () {
+        final style = RemixAccordionStyle.contentDecoration(
+          BoxDecorationMix(color: Colors.white),
+        );
+        expect(style.$content, isNotNull);
+      });
     });
 
     group('Core Methods', () {
