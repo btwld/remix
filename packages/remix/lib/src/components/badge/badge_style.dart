@@ -35,15 +35,50 @@ class RemixBadgeStyle
          modifier: modifier,
        );
 
+  // -- Factory constructors for convenience --
+
+  /// Creates a style with the given background color.
+  factory RemixBadgeStyle.backgroundColor(Color value) =>
+      RemixBadgeStyle().backgroundColor(value);
+
+  /// Creates a style with the given foreground color (text).
+  factory RemixBadgeStyle.foregroundColor(Color value) =>
+      RemixBadgeStyle().foregroundColor(value);
+
+  /// Creates a style with the given padding.
+  factory RemixBadgeStyle.padding(EdgeInsetsGeometryMix value) =>
+      RemixBadgeStyle().padding(value);
+
+  /// Creates a style with the given margin.
+  factory RemixBadgeStyle.margin(EdgeInsetsGeometryMix value) =>
+      RemixBadgeStyle().margin(value);
+
+  /// Creates a style with the given decoration.
+  factory RemixBadgeStyle.decoration(DecorationMix value) =>
+      RemixBadgeStyle().decoration(value);
+
+  /// Creates a style with the given alignment.
+  factory RemixBadgeStyle.alignment(Alignment value) =>
+      RemixBadgeStyle().alignment(value);
+
+  /// Creates a style with the given constraints.
+  factory RemixBadgeStyle.constraints(BoxConstraintsMix value) =>
+      RemixBadgeStyle().constraints(value);
+
   // Instance methods (chainable)
 
   /// Sets background color
-  RemixBadgeStyle color(Color value) {
+  RemixBadgeStyle backgroundColor(Color value) {
     return merge(
       RemixBadgeStyle(
         container: BoxStyler(decoration: BoxDecorationMix(color: value)),
       ),
     );
+  }
+
+  /// Sets the foreground color (text) of the badge.
+  RemixBadgeStyle foregroundColor(Color value) {
+    return labelColor(value);
   }
 
   /// Sets border radius
@@ -60,11 +95,6 @@ class RemixBadgeStyle
   /// Sets padding
   RemixBadgeStyle padding(EdgeInsetsGeometryMix value) {
     return merge(RemixBadgeStyle(container: BoxStyler(padding: value)));
-  }
-
-  /// Sets text color
-  RemixBadgeStyle textColor(Color value) {
-    return label(TextStyler(style: TextStyleMix(color: value)));
   }
 
   // Additional convenience methods that delegate to container
