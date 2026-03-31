@@ -86,9 +86,9 @@ void main() {
       );
 
       styleMethodTest(
-        'color sets container background color',
+        'backgroundColor sets container background color',
         initial: RemixCalloutStyle(),
-        modify: (style) => style.color(Colors.yellow),
+        modify: (style) => style.backgroundColor(Colors.yellow),
         expect: (style) {
           expect(
             style.$container,
@@ -96,6 +96,52 @@ void main() {
               Prop.maybeMix(
                 FlexBoxStyler(
                   decoration: BoxDecorationMix(color: Colors.yellow),
+                ),
+              ),
+            ),
+          );
+        },
+      );
+
+      styleMethodTest(
+        'foregroundColor sets both icon and text color',
+        initial: RemixCalloutStyle(),
+        modify: (style) => style.foregroundColor(Colors.red),
+        expect: (style) {
+          expect(
+            style.$icon,
+            equals(Prop.maybeMix(IconStyler(color: Colors.red))),
+          );
+          expect(
+            style.$text,
+            equals(
+              Prop.maybeMix(
+                TextStyler(style: TextStyleMix(color: Colors.red)),
+              ),
+            ),
+          );
+        },
+      );
+
+      styleMethodTest(
+        'shape sets container shape decoration',
+        initial: RemixCalloutStyle(),
+        modify: (style) => style.shape(
+          RoundedRectangleBorderMix(
+            borderRadius: BorderRadiusGeometryMix.circular(16.0),
+          ),
+        ),
+        expect: (style) {
+          expect(
+            style.$container,
+            equals(
+              Prop.maybeMix(
+                FlexBoxStyler(
+                  decoration: ShapeDecorationMix(
+                    shape: RoundedRectangleBorderMix(
+                      borderRadius: BorderRadiusGeometryMix.circular(16.0),
+                    ),
+                  ),
                 ),
               ),
             ),

@@ -45,7 +45,7 @@ class FortalCalloutStyles {
     FortalCalloutSize size = .size2,
   }) {
     return base(size: size)
-        .color(Colors.transparent)
+        .backgroundColor(Colors.transparent)
         .borderAll(
           color: FortalTokens.accent7(),
           width: FortalTokens.borderWidth1(),
@@ -60,7 +60,7 @@ class FortalCalloutStyles {
     FortalCalloutSize size = .size2,
   }) {
     return base(size: size)
-        .color(FortalTokens.accentSurface())
+        .backgroundColor(FortalTokens.accentSurface())
         .borderAll(
           color: FortalTokens.accent6(),
           width: FortalTokens.borderWidth1(),
@@ -75,7 +75,7 @@ class FortalCalloutStyles {
     FortalCalloutSize size = .size2,
   }) {
     return base(size: size)
-        .color(FortalTokens.accent3())
+        .backgroundColor(FortalTokens.accent3())
         .borderRadiusAll(FortalTokens.radius3())
         .textColor(FortalTokens.accent11())
         .iconColor(FortalTokens.accent11());
