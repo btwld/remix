@@ -42,6 +42,68 @@ class RemixAvatarStyle
          modifier: modifier,
        );
 
+  // -- Factory constructors for convenience --
+
+  /// Creates a style with the given foreground color (text and icon).
+  factory RemixAvatarStyle.foregroundColor(Color value) =>
+      RemixAvatarStyle().foregroundColor(value);
+
+  /// Creates a style with the given background color.
+  factory RemixAvatarStyle.backgroundColor(Color value) =>
+      RemixAvatarStyle().backgroundColor(value);
+
+  /// Creates a style with the given padding.
+  factory RemixAvatarStyle.padding(EdgeInsetsGeometryMix value) =>
+      RemixAvatarStyle().padding(value);
+
+  /// Creates a style with the given margin.
+  factory RemixAvatarStyle.margin(EdgeInsetsGeometryMix value) =>
+      RemixAvatarStyle().margin(value);
+
+  /// Creates a style with the given decoration.
+  factory RemixAvatarStyle.decoration(DecorationMix value) =>
+      RemixAvatarStyle().decoration(value);
+
+  /// Creates a style with the given alignment.
+  factory RemixAvatarStyle.alignment(Alignment value) =>
+      RemixAvatarStyle().alignment(value);
+
+  /// Creates a style with the given constraints.
+  factory RemixAvatarStyle.constraints(BoxConstraintsMix value) =>
+      RemixAvatarStyle().constraints(value);
+
+  /// Creates a style with a square size.
+  factory RemixAvatarStyle.square(double size) =>
+      RemixAvatarStyle().square(size);
+
+  /// Creates a style with the given icon color.
+  factory RemixAvatarStyle.iconColor(Color value) =>
+      RemixAvatarStyle().iconColor(value);
+
+  /// Creates a style with the given text color.
+  factory RemixAvatarStyle.textColor(Color value) =>
+      RemixAvatarStyle().textColor(value);
+
+  /// Creates a style with the given border radius.
+  factory RemixAvatarStyle.borderRadius(BorderRadiusGeometryMix radius) =>
+      RemixAvatarStyle().borderRadius(radius);
+
+  /// Creates a style with the given clip behavior.
+  factory RemixAvatarStyle.clipBehavior(Clip clip) =>
+      RemixAvatarStyle().clipBehavior(clip);
+
+  // -- Instance methods --
+
+  /// Sets the foreground color (text and icon) of the avatar.
+  RemixAvatarStyle foregroundColor(Color value) {
+    return textColor(value).iconColor(value);
+  }
+
+  /// Sets the background color of the avatar.
+  RemixAvatarStyle backgroundColor(Color value) {
+    return color(value);
+  }
+
   /// Sets avatar size to a square
   RemixAvatarStyle square(double size) {
     return this.size(size, size);
