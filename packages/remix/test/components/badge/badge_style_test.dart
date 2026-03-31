@@ -36,15 +36,31 @@ void main() {
 
     group('Style Methods', () {
       styleMethodTest(
-        'color sets background color',
+        'backgroundColor sets background color',
         initial: RemixBadgeStyle(),
-        modify: (style) => style.color(Colors.blue),
+        modify: (style) => style.backgroundColor(Colors.blue),
         expect: (style) {
           expect(
             style.$container,
             equals(
               Prop.maybeMix(
                 BoxStyler(decoration: BoxDecorationMix(color: Colors.blue)),
+              ),
+            ),
+          );
+        },
+      );
+
+      styleMethodTest(
+        'foregroundColor sets text color',
+        initial: RemixBadgeStyle(),
+        modify: (style) => style.foregroundColor(Colors.green),
+        expect: (style) {
+          expect(
+            style.$text,
+            equals(
+              Prop.maybeMix(
+                TextStyler(style: TextStyleMix(color: Colors.green)),
               ),
             ),
           );
@@ -82,22 +98,6 @@ void main() {
             equals(
               Prop.maybeMix(
                 BoxStyler(padding: EdgeInsetsGeometryMix.all(16.0)),
-              ),
-            ),
-          );
-        },
-      );
-
-      styleMethodTest(
-        'textColor sets text color',
-        initial: RemixBadgeStyle(),
-        modify: (style) => style.textColor(Colors.green),
-        expect: (style) {
-          expect(
-            style.$text,
-            equals(
-              Prop.maybeMix(
-                TextStyler(style: TextStyleMix(color: Colors.green)),
               ),
             ),
           );

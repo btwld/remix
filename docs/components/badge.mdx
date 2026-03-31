@@ -51,7 +51,7 @@ class BadgeExample extends StatelessWidget {
               .wrapAlign(Alignment.center)
               .fontFeatures([const FontFeature.tabularFigures()]),
         )
-        .textColor(Colors.greenAccent.shade700)
+        .foregroundColor(Colors.greenAccent.shade700)
         .labelColor(Colors.white)
         .labelFontWeight(FontWeight.bold)
         .labelFontSize(15);
@@ -67,7 +67,7 @@ class BadgeExample extends StatelessWidget {
               .wrapAlign(Alignment.center)
               .fontFeatures([const FontFeature.tabularFigures()]),
         )
-        .textColor(Colors.redAccent)
+        .foregroundColor(Colors.redAccent)
         .wrapIconTheme(const IconThemeData(color: Colors.white, size: 15));
   }
 }
@@ -155,9 +155,13 @@ Optional. Optional builder that receives the resolved [TextSpec] so callers can 
 
 ### Style Methods
 
-#### `color(Color value)`
+#### `backgroundColor(Color value)`
 
 Sets background color
+
+#### `foregroundColor(Color value)`
+
+Sets the foreground color (text) of the badge
 
 #### `borderRadius(BorderRadiusGeometryMix radius)`
 
@@ -166,10 +170,6 @@ Sets border radius
 #### `padding(EdgeInsetsGeometryMix value)`
 
 Sets padding
-
-#### `textColor(Color value)`
-
-Sets text color
 
 #### `margin(EdgeInsetsGeometryMix value)`
 

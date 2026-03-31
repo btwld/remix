@@ -40,9 +40,9 @@ class FortalBadgeStyles {
   static RemixBadgeStyle solid({FortalBadgeSize size = .size2}) {
     return base(size: size)
         // Container styling - no size properties
-        .color(FortalTokens.accent9())
+        .backgroundColor(FortalTokens.accent9())
         // Text styling
-        .labelColor(FortalTokens.accentContrast());
+        .foregroundColor(FortalTokens.accentContrast());
   }
 
   /// Creates a soft variant badge style.
@@ -52,9 +52,9 @@ class FortalBadgeStyles {
   static RemixBadgeStyle soft({FortalBadgeSize size = .size2}) {
     return base(size: size)
         // Container styling - no size properties
-        .color(FortalTokens.accentA3())
+        .backgroundColor(FortalTokens.accentA3())
         // Text styling
-        .labelColor(FortalTokens.accentA10());
+        .foregroundColor(FortalTokens.accentA10());
   }
 
   /// Creates a surface variant badge style.
@@ -66,13 +66,13 @@ class FortalBadgeStyles {
   }) {
     return base(size: size)
         // Container styling - no size properties
-        .color(FortalTokens.accentA2())
+        .backgroundColor(FortalTokens.accentA2())
         .borderAll(
           color: FortalTokens.accent6(),
           width: FortalTokens.borderWidth1(),
         )
         // Text styling
-        .labelColor(FortalTokens.accentA10());
+        .foregroundColor(FortalTokens.accentA10());
   }
 
   /// Creates an outline variant badge style.
@@ -84,13 +84,13 @@ class FortalBadgeStyles {
   }) {
     return base(size: size)
         // Container styling - no size properties
-        .color(Colors.transparent)
+        .backgroundColor(Colors.transparent)
         .borderAll(
           color: FortalTokens.accent7(),
           width: FortalTokens.borderWidth1(),
         )
         // Text styling
-        .labelColor(FortalTokens.accentA10());
+        .foregroundColor(FortalTokens.accentA10());
   }
 
   // ---------------------------------------------------------------------------
