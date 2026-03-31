@@ -42,6 +42,60 @@ class RemixCalloutStyle
          modifier: modifier,
        );
 
+  // -- Factory constructors for convenience --
+
+  /// Creates a style with the given background color.
+  factory RemixCalloutStyle.backgroundColor(Color value) =>
+      RemixCalloutStyle().backgroundColor(value);
+
+  /// Creates a style with the given foreground color (icon and text).
+  factory RemixCalloutStyle.foregroundColor(Color value) =>
+      RemixCalloutStyle().foregroundColor(value);
+
+  /// Creates a style with the given padding.
+  factory RemixCalloutStyle.padding(EdgeInsetsGeometryMix value) =>
+      RemixCalloutStyle().padding(value);
+
+  /// Creates a style with the given margin.
+  factory RemixCalloutStyle.margin(EdgeInsetsGeometryMix value) =>
+      RemixCalloutStyle().margin(value);
+
+  /// Creates a style with the given decoration.
+  factory RemixCalloutStyle.decoration(DecorationMix value) =>
+      RemixCalloutStyle().decoration(value);
+
+  /// Creates a style with the given alignment.
+  factory RemixCalloutStyle.alignment(Alignment value) =>
+      RemixCalloutStyle().alignment(value);
+
+  /// Creates a style with the given spacing.
+  factory RemixCalloutStyle.spacing(double value) =>
+      RemixCalloutStyle().spacing(value);
+
+  /// Creates a style with the given constraints.
+  factory RemixCalloutStyle.constraints(BoxConstraintsMix value) =>
+      RemixCalloutStyle().constraints(value);
+
+  /// Creates a style with the given shape.
+  factory RemixCalloutStyle.shape(ShapeBorderMix value) =>
+      RemixCalloutStyle().shape(value);
+
+  /// Creates a style with the given icon color.
+  factory RemixCalloutStyle.iconColor(Color value) =>
+      RemixCalloutStyle().iconColor(value);
+
+  /// Creates a style with the given icon size.
+  factory RemixCalloutStyle.iconSize(double value) =>
+      RemixCalloutStyle().iconSize(value);
+
+  /// Creates a style with the given text color.
+  factory RemixCalloutStyle.textColor(Color value) =>
+      RemixCalloutStyle().textColor(value);
+
+  /// Creates a style with the given text style.
+  factory RemixCalloutStyle.textStyle(TextStyleMix value) =>
+      RemixCalloutStyle().textStyle(value);
+
   /// Sets container padding
   RemixCalloutStyle padding(EdgeInsetsGeometryMix value) {
     return merge(RemixCalloutStyle(container: FlexBoxStyler(padding: value)));
@@ -53,10 +107,24 @@ class RemixCalloutStyle
   }
 
   /// Sets container background color
-  RemixCalloutStyle color(Color value) {
+  RemixCalloutStyle backgroundColor(Color value) {
     return merge(
       RemixCalloutStyle(
         container: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
+      ),
+    );
+  }
+
+  /// Sets the foreground color (icon and text) of the callout.
+  RemixCalloutStyle foregroundColor(Color value) {
+    return iconColor(value).textColor(value);
+  }
+
+  /// Sets the shape of the callout.
+  RemixCalloutStyle shape(ShapeBorderMix value) {
+    return merge(
+      RemixCalloutStyle(
+        container: FlexBoxStyler(decoration: ShapeDecorationMix(shape: value)),
       ),
     );
   }
@@ -128,6 +196,11 @@ class RemixCalloutStyle
         ),
       ),
     );
+  }
+
+  @override
+  RemixCalloutStyle color(Color value) {
+    return backgroundColor(value);
   }
 
   // FlexStyleMixin implementation

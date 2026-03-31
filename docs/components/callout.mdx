@@ -34,7 +34,7 @@ class CalloutExample extends StatelessWidget {
 
   RemixCalloutStyle get style {
     return RemixCalloutStyle()
-        .color(Colors.grey.shade200)
+        .backgroundColor(Colors.grey.shade200)
         .spacing(12)
         .height(60)
         .paddingRight(12)
@@ -148,9 +148,17 @@ Sets container padding
 
 Sets container margin
 
-#### `color(Color value)`
+#### `backgroundColor(Color value)`
 
 Sets container background color
+
+#### `foregroundColor(Color value)`
+
+Sets the foreground color (icon and text) of the callout
+
+#### `shape(ShapeBorderMix value)`
+
+Sets the shape of the callout
 
 #### `borderRadius(BorderRadiusGeometryMix radius)`
 

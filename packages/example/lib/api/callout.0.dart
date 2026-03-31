@@ -28,7 +28,7 @@ class CalloutExample extends StatelessWidget {
 
   RemixCalloutStyle get style {
     return RemixCalloutStyle()
-        .color(Colors.grey.shade200)
+        .backgroundColor(Colors.grey.shade200)
         .spacing(12)
         .height(60)
         .paddingRight(12)
