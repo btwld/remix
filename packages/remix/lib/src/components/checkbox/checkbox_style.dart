@@ -36,31 +36,11 @@ class RemixCheckboxStyle
          modifier: modifier,
        );
 
-  /// Sets checkbox size by constraining the container.
-  RemixCheckboxStyle checkboxSize(double value) {
+  /// Sets the shape of the checkbox.
+  RemixCheckboxStyle shape(ShapeBorderMix value) {
     return merge(
       RemixCheckboxStyle(
-        container: BoxStyler(
-          constraints: BoxConstraintsMix(
-            minWidth: value,
-            maxWidth: value,
-            minHeight: value,
-            maxHeight: value,
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// Sets checkbox border radius on the container.
-  RemixCheckboxStyle checkboxBorderRadius(double radius) {
-    return merge(
-      RemixCheckboxStyle(
-        container: BoxStyler(
-          decoration: BoxDecorationMix(
-            borderRadius: BorderRadiusMix.circular(radius),
-          ),
-        ),
+        container: BoxStyler(decoration: ShapeDecorationMix(shape: value)),
       ),
     );
   }
@@ -105,15 +85,19 @@ class RemixCheckboxStyle
     return merge(RemixCheckboxStyle(container: BoxStyler(padding: value)));
   }
 
-  /// Sets checkbox background color on the container.
-  @override
-  RemixCheckboxStyle color(Color value) {
+  /// Sets checkbox fill color on the container.
+  RemixCheckboxStyle fillColor(Color value) {
     return merge(
       RemixCheckboxStyle(
         container: BoxStyler(decoration: BoxDecorationMix(color: value)),
       ),
     );
   }
+
+  /// Sets checkbox background color on the container.
+  /// Delegates to [fillColor].
+  @override
+  RemixCheckboxStyle color(Color value) => fillColor(value);
 
   /// Sets checkbox size with separate width and height.
   @override
@@ -183,8 +167,8 @@ class RemixCheckboxStyle
   /// Example:
   /// ```dart
   /// final checkbox = RemixCheckboxStyle()
-  ///   .color(Colors.blue)
-  ///   .checkboxSize(24);
+  ///   .fillColor(Colors.blue)
+  ///   .size(24, 24);
   ///
   /// // Use it like a function
   /// checkbox(

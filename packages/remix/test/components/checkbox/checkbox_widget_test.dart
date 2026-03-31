@@ -324,7 +324,7 @@ void main() {
 
     group('Layout and Sizing', () {
       testWidgets('checkbox adapts to custom size', (tester) async {
-        final smallStyle = RemixCheckboxStyle().checkboxSize(16.0);
+        final smallStyle = RemixCheckboxStyle().size(16.0, 16.0);
         await tester.pumpRemixApp(
           RemixCheckbox(
             selected: false,
@@ -336,7 +336,7 @@ void main() {
 
         final smallSize = tester.getSize(find.byType(RemixCheckbox));
 
-        final largeStyle = RemixCheckboxStyle().checkboxSize(32.0);
+        final largeStyle = RemixCheckboxStyle().size(32.0, 32.0);
         await tester.pumpRemixApp(
           RemixCheckbox(
             selected: false,

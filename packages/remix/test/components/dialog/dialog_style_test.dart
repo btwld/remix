@@ -141,9 +141,9 @@ void main() {
       );
 
       styleMethodTest(
-        'color sets container background color',
+        'backgroundColor sets container background color',
         initial: RemixDialogStyle(),
-        modify: (style) => style.color(Colors.white),
+        modify: (style) => style.backgroundColor(Colors.white),
         expect: (style) {
           expect(
             style.$container,

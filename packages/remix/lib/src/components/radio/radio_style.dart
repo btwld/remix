@@ -79,12 +79,25 @@ class RemixRadioStyle
     return merge(RemixRadioStyle(container: BoxStyler(margin: value)));
   }
 
-  /// Sets background color on the container.
-  @override
-  RemixRadioStyle color(Color value) {
+  /// Sets fill color on the container.
+  RemixRadioStyle fillColor(Color value) {
     return merge(
       RemixRadioStyle(
         container: BoxStyler(decoration: BoxDecorationMix(color: value)),
+      ),
+    );
+  }
+
+  /// Sets background color on the container.
+  /// Delegates to [fillColor].
+  @override
+  RemixRadioStyle color(Color value) => fillColor(value);
+
+  /// Sets the indicator's fill color.
+  RemixRadioStyle indicatorColor(Color value) {
+    return merge(
+      RemixRadioStyle(
+        indicator: BoxStyler(decoration: BoxDecorationMix(color: value)),
       ),
     );
   }

@@ -50,7 +50,7 @@ class FortalDialogStyle {
           ),
         )
         .borderRadius(.all(FortalTokens.radius3()))
-        .color(FortalTokens.gray1())
+        .backgroundColor(FortalTokens.gray1())
         .shadow(
           BoxShadowMix()
               .color(FortalTokens.blackA3())

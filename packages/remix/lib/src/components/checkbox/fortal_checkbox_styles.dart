@@ -60,7 +60,7 @@ class FortalCheckboxStyles {
         // State variants
         .onSelected(
           RemixCheckboxStyle()
-              .color(FortalTokens.accent9())
+              .fillColor(FortalTokens.accent9())
               .borderAll(
                 color: FortalTokens.accent9(),
                 width: FortalTokens.borderWidth1(),
@@ -69,7 +69,7 @@ class FortalCheckboxStyles {
         )
         .onDisabled(
           RemixCheckboxStyle()
-              .color(FortalTokens.grayA3())
+              .fillColor(FortalTokens.grayA3())
               .borderAll(
                 color: FortalTokens.gray7(),
                 width: FortalTokens.borderWidth1(),
@@ -86,14 +86,14 @@ class FortalCheckboxStyles {
     FortalCheckboxSize size = .size2,
   }) {
     return base(size: size)
-        .color(FortalTokens.accentA4())
+        .fillColor(FortalTokens.accentA4())
         .borderRadiusAll(FortalTokens.radius2())
         .onSelected(
           RemixCheckboxStyle().indicatorColor(FortalTokens.accentA11()),
         )
         .onDisabled(
           RemixCheckboxStyle()
-              .color(FortalTokens.grayA3())
+              .fillColor(FortalTokens.grayA3())
               .indicatorColor(FortalTokens.gray8()),
         );
   }

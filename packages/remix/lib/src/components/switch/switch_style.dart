@@ -49,6 +49,11 @@ class RemixSwitchStyle
     return merge(RemixSwitchStyle(thumb: value));
   }
 
+  /// Sets the track/rail background color.
+  RemixSwitchStyle trackColor(Color value) {
+    return color(value);
+  }
+
   /// Sets container alignment
   RemixSwitchStyle alignment(Alignment value) {
     return merge(RemixSwitchStyle(container: BoxStyler(alignment: value)));
@@ -141,7 +146,7 @@ class RemixSwitchStyle
   /// ```dart
   /// final toggle = RemixSwitchStyle()
   ///   .thumbColor(Colors.white)
-  ///   .color(Colors.blue);
+  ///   .trackColor(Colors.blue);
   ///
   /// // Use it like a function
   /// toggle(
