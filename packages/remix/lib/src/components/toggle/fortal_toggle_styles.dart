@@ -22,7 +22,9 @@ class FortalToggleStyles {
   /// Base sizing and shared styling.
   static RemixToggleStyle base({FortalToggleSize size = .size2}) {
     return RemixToggleStyle()
+        .container(.new().mainAxisSize(.min))
         .foregroundColor(FortalTokens.gray12())
+        .labelFontWeight(.w500)
         .onFocused(
           RemixToggleStyle().borderAll(
             color: FortalTokens.focusA8(),
@@ -42,7 +44,6 @@ class FortalToggleStyles {
     return base(size: size)
         .backgroundColor(Colors.transparent)
         .onHovered(RemixToggleStyle().backgroundColor(FortalTokens.grayA3()))
-        .onPressed(RemixToggleStyle().scale(0.97))
         .onSelected(
           RemixToggleStyle()
               .backgroundColor(FortalTokens.accent3())
@@ -60,12 +61,11 @@ class FortalToggleStyles {
           strokeAlign: BorderSide.strokeAlignInside,
         )
         .onHovered(RemixToggleStyle().backgroundColor(FortalTokens.grayA3()))
-        .onPressed(RemixToggleStyle().scale(0.97))
         .onSelected(
           RemixToggleStyle()
-              .backgroundColor(FortalTokens.accent9())
-              .foregroundColor(FortalTokens.accentContrast())
-              .borderAll(color: FortalTokens.accent9()),
+              .backgroundColor(FortalTokens.accentA3())
+              .foregroundColor(FortalTokens.accent10())
+              .borderAll(color: FortalTokens.accentA5()),
         );
   }
 
@@ -76,25 +76,37 @@ class FortalToggleStyles {
         container: FlexBoxStyler()
             .paddingX(FortalTokens.space2())
             .paddingY(FortalTokens.space1())
-            .borderRadiusAll(FortalTokens.radius2()),
-        label: TextStyler(style: FortalTokens.text1.mix()),
-        icon: IconStyler(size: 14),
+            .borderRadiusAll(FortalTokens.radius2())
+            .spacing(2),
+        label: TextStyler()
+            .fontSize(12.0)
+            .height(16.0 / 12.0)
+            .letterSpacing(0.0025),
+        icon: IconStyler(size: 12),
       ),
       .size2 => RemixToggleStyle(
         container: FlexBoxStyler()
             .paddingX(FortalTokens.space3())
             .paddingY(FortalTokens.space2())
-            .borderRadiusAll(FortalTokens.radius2()),
-        label: TextStyler(style: FortalTokens.text2.mix()),
+            .borderRadiusAll(FortalTokens.radius2())
+            .spacing(4),
+        label: TextStyler()
+            .fontSize(14.0)
+            .height(20.0 / 14.0) // lineHeight as ratio
+            .letterSpacing(0.0),
         icon: IconStyler(size: 16),
       ),
       .size3 => RemixToggleStyle(
         container: FlexBoxStyler()
             .paddingX(FortalTokens.space4())
             .paddingY(FortalTokens.space2())
-            .borderRadiusAll(FortalTokens.radius3()),
-        label: TextStyler(style: FortalTokens.text3.mix()),
-        icon: IconStyler(size: 18),
+            .borderRadiusAll(FortalTokens.radius3())
+            .spacing(6),
+        label: TextStyler()
+            .fontSize(16.0)
+            .height(24.0 / 16.0) // lineHeight as ratio
+            .letterSpacing(0.0),
+        icon: IconStyler(size: 20),
       ),
     };
   }

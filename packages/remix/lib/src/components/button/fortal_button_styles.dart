@@ -29,9 +29,7 @@ class FortalButtonStyle {
     };
   }
 
-  static RemixButtonStyle base({
-    FortalButtonSize size = .size2,
-  }) {
+  static RemixButtonStyle base({FortalButtonSize size = .size2}) {
     return RemixButtonStyle()
         // Generic font weight (not size-specific)
         .label(TextStyler().fontWeight(FortalTokens.fontWeightMedium()))
@@ -53,9 +51,7 @@ class FortalButtonStyle {
         .merge(_sizeStyle(size));
   }
 
-  static RemixButtonStyle solid({
-    FortalButtonSize size = .size2,
-  }) {
+  static RemixButtonStyle solid({FortalButtonSize size = .size2}) {
     return base(size: size)
         .color(FortalTokens.accent9())
         .labelColor(FortalTokens.accentContrast())
@@ -78,9 +74,7 @@ class FortalButtonStyle {
         );
   }
 
-  static RemixButtonStyle soft({
-    FortalButtonSize size = .size2,
-  }) {
+  static RemixButtonStyle soft({FortalButtonSize size = .size2}) {
     return base(size: size)
         .color(FortalTokens.accent3())
         .labelColor(FortalTokens.accent11())
@@ -101,9 +95,7 @@ class FortalButtonStyle {
         );
   }
 
-  static RemixButtonStyle surface({
-    FortalButtonSize size = .size2,
-  }) {
+  static RemixButtonStyle surface({FortalButtonSize size = .size2}) {
     return base(size: size)
         .color(FortalTokens.accentA2())
         .borderAll(
@@ -136,9 +128,7 @@ class FortalButtonStyle {
         );
   }
 
-  static RemixButtonStyle outline({
-    FortalButtonSize size = .size2,
-  }) {
+  static RemixButtonStyle outline({FortalButtonSize size = .size2}) {
     return base(size: size)
         .color(Colors.transparent)
         .borderAll(
@@ -169,9 +159,7 @@ class FortalButtonStyle {
         );
   }
 
-  static RemixButtonStyle ghost({
-    FortalButtonSize size = .size2,
-  }) {
+  static RemixButtonStyle ghost({FortalButtonSize size = .size2}) {
     var style = base(size: size)
         .color(Colors.transparent)
         .labelColor(FortalTokens.accent11())
@@ -189,15 +177,6 @@ class FortalButtonStyle {
                     .strokeWidth(FortalTokens.borderWidth1()),
               ),
         );
-
-    // Ghost variant uses special padding for size2 from JSON:
-    // button-ghost-padding-x: var(--space-4)
-    // button-ghost-padding-y: var(--space-2)
-    if (size == .size2) {
-      style = style
-          .paddingX(FortalTokens.space4())
-          .paddingY(FortalTokens.space2());
-    }
 
     return style;
   }
