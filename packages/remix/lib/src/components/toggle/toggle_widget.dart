@@ -91,19 +91,12 @@ class RemixToggle extends StatelessWidget {
           style: style,
           controller: NakedState.controllerOf(context),
           builder: (context, spec) {
-            final children = <Widget>[
-              if (icon != null) StyledIcon(icon: icon, styleSpec: spec.icon),
-              if (label != null) StyledText(label!, styleSpec: spec.label),
-            ];
-
-            return Box(
+            return RowBox(
               styleSpec: spec.container,
-              child: children.length == 1
-                  ? children.first
-                  : Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: children,
-                    ),
+              children: [
+                if (icon != null) StyledIcon(icon: icon, styleSpec: spec.icon),
+                if (label != null) StyledText(label!, styleSpec: spec.label),
+              ],
             );
           },
         );

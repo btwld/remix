@@ -8,13 +8,13 @@ void main() {
       test('creates spec with default values when no parameters provided', () {
         const spec = RemixToggleSpec();
 
-        expect(spec.container, isA<StyleSpec<BoxSpec>>());
+        expect(spec.container, isA<StyleSpec<FlexBoxSpec>>());
         expect(spec.label, isA<StyleSpec<TextSpec>>());
         expect(spec.icon, isA<StyleSpec<IconSpec>>());
       });
 
       test('creates spec with provided parameters', () {
-        final container = StyleSpec(spec: BoxSpec());
+        final container = StyleSpec(spec: FlexBoxSpec());
         final label = StyleSpec(spec: TextSpec());
         final icon = StyleSpec(spec: IconSpec());
 
@@ -33,7 +33,7 @@ void main() {
     group('copyWith', () {
       test('returns new instance with updated properties', () {
         const originalSpec = RemixToggleSpec();
-        final newContainer = StyleSpec(spec: BoxSpec());
+        final newContainer = StyleSpec(spec: FlexBoxSpec());
 
         final updatedSpec = originalSpec.copyWith(container: newContainer);
 
@@ -44,7 +44,7 @@ void main() {
       test('preserves immutability - original spec unchanged', () {
         const originalSpec = RemixToggleSpec();
         final originalContainer = originalSpec.container;
-        final newContainer = StyleSpec(spec: BoxSpec());
+        final newContainer = StyleSpec(spec: FlexBoxSpec());
 
         final updatedSpec = originalSpec.copyWith(container: newContainer);
 
@@ -55,7 +55,7 @@ void main() {
 
       test('returns new instance with all properties updated', () {
         const originalSpec = RemixToggleSpec();
-        final newContainer = StyleSpec(spec: BoxSpec());
+        final newContainer = StyleSpec(spec: FlexBoxSpec());
         final newLabel = StyleSpec(spec: TextSpec());
         final newIcon = StyleSpec(spec: IconSpec());
 
@@ -83,12 +83,12 @@ void main() {
 
       test('interpolates between two specs at t=0.0', () {
         final spec1 = RemixToggleSpec(
-          container: StyleSpec(spec: BoxSpec()),
+          container: StyleSpec(spec: FlexBoxSpec()),
           label: StyleSpec(spec: TextSpec()),
           icon: StyleSpec(spec: IconSpec()),
         );
         final spec2 = RemixToggleSpec(
-          container: StyleSpec(spec: BoxSpec()),
+          container: StyleSpec(spec: FlexBoxSpec()),
           label: StyleSpec(spec: TextSpec()),
           icon: StyleSpec(spec: IconSpec()),
         );
@@ -103,12 +103,12 @@ void main() {
 
       test('interpolates between two specs at t=1.0', () {
         final spec1 = RemixToggleSpec(
-          container: StyleSpec(spec: BoxSpec()),
+          container: StyleSpec(spec: FlexBoxSpec()),
           label: StyleSpec(spec: TextSpec()),
           icon: StyleSpec(spec: IconSpec()),
         );
         final spec2 = RemixToggleSpec(
-          container: StyleSpec(spec: BoxSpec()),
+          container: StyleSpec(spec: FlexBoxSpec()),
           label: StyleSpec(spec: TextSpec()),
           icon: StyleSpec(spec: IconSpec()),
         );
@@ -123,12 +123,12 @@ void main() {
 
       test('interpolates between two specs at t=0.5', () {
         final spec1 = RemixToggleSpec(
-          container: StyleSpec(spec: BoxSpec()),
+          container: StyleSpec(spec: FlexBoxSpec()),
           label: StyleSpec(spec: TextSpec()),
           icon: StyleSpec(spec: IconSpec()),
         );
         final spec2 = RemixToggleSpec(
-          container: StyleSpec(spec: BoxSpec()),
+          container: StyleSpec(spec: FlexBoxSpec()),
           label: StyleSpec(spec: TextSpec()),
           icon: StyleSpec(spec: IconSpec()),
         );
@@ -154,7 +154,7 @@ void main() {
       test('two specs with different properties are not equal', () {
         final spec1 = RemixToggleSpec(
           container: StyleSpec(
-            spec: const BoxSpec(),
+            spec: const FlexBoxSpec(),
             animation: AnimationConfig.linear(
               const Duration(milliseconds: 100),
             ),
@@ -162,7 +162,7 @@ void main() {
         );
         final spec2 = RemixToggleSpec(
           container: StyleSpec(
-            spec: const BoxSpec(),
+            spec: const FlexBoxSpec(),
             animation: AnimationConfig.linear(
               const Duration(milliseconds: 200),
             ),
@@ -212,7 +212,7 @@ void main() {
 
       test('handles empty StyleSpec', () {
         const spec = RemixToggleSpec(
-          container: StyleSpec(spec: BoxSpec()),
+          container: StyleSpec(spec: FlexBoxSpec()),
           label: StyleSpec(spec: TextSpec()),
           icon: StyleSpec(spec: IconSpec()),
         );

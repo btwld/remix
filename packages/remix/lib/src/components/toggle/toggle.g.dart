@@ -7,13 +7,13 @@ part of 'toggle.dart';
 // **************************************************************************
 
 mixin _$RemixToggleSpecMethods on Spec<RemixToggleSpec>, Diagnosticable {
-  StyleSpec<BoxSpec> get container;
+  StyleSpec<FlexBoxSpec> get container;
   StyleSpec<TextSpec> get label;
   StyleSpec<IconSpec> get icon;
 
   @override
   RemixToggleSpec copyWith({
-    StyleSpec<BoxSpec>? container,
+    StyleSpec<FlexBoxSpec>? container,
     StyleSpec<TextSpec>? label,
     StyleSpec<IconSpec>? icon,
   }) {
@@ -51,12 +51,12 @@ mixin _$RemixToggleSpecMethods on Spec<RemixToggleSpec>, Diagnosticable {
 // **************************************************************************
 
 mixin _$RemixToggleStyleMixin on Style<RemixToggleSpec>, Diagnosticable {
-  Prop<StyleSpec<BoxSpec>>? get $container;
+  Prop<StyleSpec<FlexBoxSpec>>? get $container;
   Prop<StyleSpec<IconSpec>>? get $icon;
   Prop<StyleSpec<TextSpec>>? get $label;
 
   /// Sets the container.
-  RemixToggleStyle container(BoxStyler value) {
+  RemixToggleStyle container(FlexBoxStyler value) {
     return merge(RemixToggleStyle(container: value));
   }
 

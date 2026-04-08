@@ -2,22 +2,22 @@ part of 'toggle.dart';
 
 @MixableStyler()
 class RemixToggleStyle
-    extends RemixContainerStyle<RemixToggleSpec, RemixToggleStyle>
+    extends RemixFlexContainerStyle<RemixToggleSpec, RemixToggleStyle>
     with
         LabelStyleMixin<RemixToggleStyle>,
         IconStyleMixin<RemixToggleStyle>,
         SelectedWidgetStateVariantMixin<RemixToggleSpec, RemixToggleStyle>,
         Diagnosticable,
         _$RemixToggleStyleMixin {
-  @MixableField(setterType: BoxStyler)
-  final Prop<StyleSpec<BoxSpec>>? $container;
+  @MixableField(setterType: FlexBoxStyler)
+  final Prop<StyleSpec<FlexBoxSpec>>? $container;
   @MixableField(setterType: TextStyler)
   final Prop<StyleSpec<TextSpec>>? $label;
   @MixableField(setterType: IconStyler)
   final Prop<StyleSpec<IconSpec>>? $icon;
 
   const RemixToggleStyle.create({
-    Prop<StyleSpec<BoxSpec>>? container,
+    Prop<StyleSpec<FlexBoxSpec>>? container,
     Prop<StyleSpec<TextSpec>>? label,
     Prop<StyleSpec<IconSpec>>? icon,
     super.variants,
@@ -28,7 +28,7 @@ class RemixToggleStyle
        $icon = icon;
 
   RemixToggleStyle({
-    BoxStyler? container,
+    FlexBoxStyler? container,
     TextStyler? label,
     IconStyler? icon,
     AnimationConfig? animation,
@@ -46,14 +46,14 @@ class RemixToggleStyle
   /// Sets container alignment.
   @override
   RemixToggleStyle alignment(Alignment value) {
-    return merge(RemixToggleStyle(container: BoxStyler(alignment: value)));
+    return merge(RemixToggleStyle(container: FlexBoxStyler(alignment: value)));
   }
 
   /// Sets the background color.
   RemixToggleStyle backgroundColor(Color value) {
     return merge(
       RemixToggleStyle(
-        container: BoxStyler(decoration: BoxDecorationMix(color: value)),
+        container: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
       ),
     );
   }
@@ -67,35 +67,42 @@ class RemixToggleStyle
   RemixToggleStyle shape(ShapeBorderMix value) {
     return merge(
       RemixToggleStyle(
-        container: BoxStyler(decoration: ShapeDecorationMix(shape: value)),
+        container: FlexBoxStyler(decoration: ShapeDecorationMix(shape: value)),
       ),
     );
   }
 
+  /// Sets item spacing between icon and label.
+  RemixToggleStyle spacing(double value) {
+    return merge(RemixToggleStyle(container: FlexBoxStyler(spacing: value)));
+  }
+
   @override
   RemixToggleStyle padding(EdgeInsetsGeometryMix value) {
-    return merge(RemixToggleStyle(container: BoxStyler(padding: value)));
+    return merge(RemixToggleStyle(container: FlexBoxStyler(padding: value)));
   }
 
   @override
   RemixToggleStyle margin(EdgeInsetsGeometryMix value) {
-    return merge(RemixToggleStyle(container: BoxStyler(margin: value)));
+    return merge(RemixToggleStyle(container: FlexBoxStyler(margin: value)));
   }
 
   @override
   RemixToggleStyle decoration(DecorationMix value) {
-    return merge(RemixToggleStyle(container: BoxStyler(decoration: value)));
+    return merge(RemixToggleStyle(container: FlexBoxStyler(decoration: value)));
   }
 
   @override
   RemixToggleStyle constraints(BoxConstraintsMix value) {
-    return merge(RemixToggleStyle(container: BoxStyler(constraints: value)));
+    return merge(
+      RemixToggleStyle(container: FlexBoxStyler(constraints: value)),
+    );
   }
 
   @override
   RemixToggleStyle foregroundDecoration(DecorationMix value) {
     return merge(
-      RemixToggleStyle(container: BoxStyler(foregroundDecoration: value)),
+      RemixToggleStyle(container: FlexBoxStyler(foregroundDecoration: value)),
     );
   }
 
@@ -106,9 +113,17 @@ class RemixToggleStyle
   }) {
     return merge(
       RemixToggleStyle(
-        container: BoxStyler(transform: value, transformAlignment: alignment),
+        container: FlexBoxStyler(
+          transform: value,
+          transformAlignment: alignment,
+        ),
       ),
     );
+  }
+
+  @override
+  RemixToggleStyle flex(FlexStyler value) {
+    return merge(RemixToggleStyle(container: FlexBoxStyler().flex(value)));
   }
 
   /// Creates a [RemixToggle] widget with this style applied.

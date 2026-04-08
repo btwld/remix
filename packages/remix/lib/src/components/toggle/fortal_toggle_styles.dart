@@ -20,9 +20,7 @@ class FortalToggleStyles {
   }
 
   /// Base sizing and shared styling.
-  static RemixToggleStyle base({
-    FortalToggleSize size = .size2,
-  }) {
+  static RemixToggleStyle base({FortalToggleSize size = .size2}) {
     return RemixToggleStyle()
         .foregroundColor(FortalTokens.gray12())
         .onFocused(
@@ -40,17 +38,11 @@ class FortalToggleStyles {
   }
 
   /// Ghost variant: borderless, subtle background on hover, accent on selected.
-  static RemixToggleStyle ghost({
-    FortalToggleSize size = .size2,
-  }) {
+  static RemixToggleStyle ghost({FortalToggleSize size = .size2}) {
     return base(size: size)
         .backgroundColor(Colors.transparent)
-        .onHovered(
-          RemixToggleStyle().backgroundColor(FortalTokens.grayA3()),
-        )
-        .onPressed(
-          RemixToggleStyle().scale(0.97),
-        )
+        .onHovered(RemixToggleStyle().backgroundColor(FortalTokens.grayA3()))
+        .onPressed(RemixToggleStyle().scale(0.97))
         .onSelected(
           RemixToggleStyle()
               .backgroundColor(FortalTokens.accent3())
@@ -59,9 +51,7 @@ class FortalToggleStyles {
   }
 
   /// Outline variant: border-based, accent fill when selected.
-  static RemixToggleStyle outline({
-    FortalToggleSize size = .size2,
-  }) {
+  static RemixToggleStyle outline({FortalToggleSize size = .size2}) {
     return base(size: size)
         .backgroundColor(Colors.transparent)
         .borderAll(
@@ -69,12 +59,8 @@ class FortalToggleStyles {
           width: FortalTokens.borderWidth1(),
           strokeAlign: BorderSide.strokeAlignInside,
         )
-        .onHovered(
-          RemixToggleStyle().backgroundColor(FortalTokens.grayA3()),
-        )
-        .onPressed(
-          RemixToggleStyle().scale(0.97),
-        )
+        .onHovered(RemixToggleStyle().backgroundColor(FortalTokens.grayA3()))
+        .onPressed(RemixToggleStyle().scale(0.97))
         .onSelected(
           RemixToggleStyle()
               .backgroundColor(FortalTokens.accent9())
@@ -87,7 +73,7 @@ class FortalToggleStyles {
   static RemixToggleStyle _sizeStyle(FortalToggleSize size) {
     return switch (size) {
       .size1 => RemixToggleStyle(
-        container: BoxStyler()
+        container: FlexBoxStyler()
             .paddingX(FortalTokens.space2())
             .paddingY(FortalTokens.space1())
             .borderRadiusAll(FortalTokens.radius2()),
@@ -95,7 +81,7 @@ class FortalToggleStyles {
         icon: IconStyler(size: 14),
       ),
       .size2 => RemixToggleStyle(
-        container: BoxStyler()
+        container: FlexBoxStyler()
             .paddingX(FortalTokens.space3())
             .paddingY(FortalTokens.space2())
             .borderRadiusAll(FortalTokens.radius2()),
@@ -103,7 +89,7 @@ class FortalToggleStyles {
         icon: IconStyler(size: 16),
       ),
       .size3 => RemixToggleStyle(
-        container: BoxStyler()
+        container: FlexBoxStyler()
             .paddingX(FortalTokens.space4())
             .paddingY(FortalTokens.space2())
             .borderRadiusAll(FortalTokens.radius3()),

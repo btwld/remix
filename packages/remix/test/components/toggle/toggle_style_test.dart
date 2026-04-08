@@ -15,7 +15,7 @@ void main() {
       });
 
       test('create constructor with all parameters', () {
-        final container = Prop.maybeMix(BoxStyler());
+        final container = Prop.maybeMix(FlexBoxStyler());
         final label = Prop.maybeMix(TextStyler());
         final icon = Prop.maybeMix(IconStyler());
         final variants = <VariantStyle<RemixToggleSpec>>[];
@@ -35,7 +35,7 @@ void main() {
       });
 
       test('constructor with styler parameters', () {
-        final containerStyler = BoxStyler();
+        final containerStyler = FlexBoxStyler();
         final labelStyler = TextStyler();
         final iconStyler = IconStyler();
 
@@ -60,7 +60,7 @@ void main() {
         expect: (style) {
           expect(
             style.$container,
-            equals(Prop.maybeMix(BoxStyler(alignment: Alignment.center))),
+            equals(Prop.maybeMix(FlexBoxStyler(alignment: Alignment.center))),
           );
         },
       );
@@ -74,7 +74,7 @@ void main() {
             style.$container,
             equals(
               Prop.maybeMix(
-                BoxStyler(decoration: BoxDecorationMix(color: Colors.blue)),
+                FlexBoxStyler(decoration: BoxDecorationMix(color: Colors.blue)),
               ),
             ),
           );
@@ -90,7 +90,7 @@ void main() {
             style.$container,
             equals(
               Prop.maybeMix(
-                BoxStyler(padding: EdgeInsetsGeometryMix.all(16.0)),
+                FlexBoxStyler(padding: EdgeInsetsGeometryMix.all(16.0)),
               ),
             ),
           );
@@ -105,7 +105,7 @@ void main() {
           expect(
             style.$container,
             equals(
-              Prop.maybeMix(BoxStyler(margin: EdgeInsetsGeometryMix.all(8.0))),
+              Prop.maybeMix(FlexBoxStyler(margin: EdgeInsetsGeometryMix.all(8.0))),
             ),
           );
         },
@@ -122,7 +122,7 @@ void main() {
             style.$container,
             equals(
               Prop.maybeMix(
-                BoxStyler(
+                FlexBoxStyler(
                   constraints: BoxConstraintsMix(
                     minWidth: 20.0,
                     minHeight: 20.0,
@@ -148,7 +148,7 @@ void main() {
             style.$container,
             equals(
               Prop.maybeMix(
-                BoxStyler(
+                FlexBoxStyler(
                   decoration: BoxDecorationMix(
                     color: Colors.blue,
                     borderRadius: BorderRadiusMix.circular(8.0),
@@ -173,7 +173,7 @@ void main() {
             style.$container,
             equals(
               Prop.maybeMix(
-                BoxStyler(
+                FlexBoxStyler(
                   foregroundDecoration: BoxDecorationMix(
                     border: BoxBorderMix.all(BorderSideMix(color: Colors.red)),
                   ),
@@ -194,7 +194,7 @@ void main() {
             style.$container,
             equals(
               Prop.maybeMix(
-                BoxStyler(
+                FlexBoxStyler(
                   transform: Matrix4.identity(),
                   transformAlignment: Alignment.topLeft,
                 ),
@@ -290,7 +290,7 @@ void main() {
 
                 expect(spec, isA<StyleSpec<RemixToggleSpec>>());
                 expect(spec.spec, isA<RemixToggleSpec>());
-                expect(spec.spec.container, isA<StyleSpec<BoxSpec>>());
+                expect(spec.spec.container, isA<StyleSpec<FlexBoxSpec>>());
                 expect(spec.spec.label, isA<StyleSpec<TextSpec>>());
                 expect(spec.spec.icon, isA<StyleSpec<IconSpec>>());
 
@@ -311,7 +311,7 @@ void main() {
 
       test('merge combines properties correctly', () {
         final style1 = RemixToggleStyle(
-          container: BoxStyler(alignment: Alignment.centerLeft),
+          container: FlexBoxStyler(alignment: Alignment.centerLeft),
         );
         final style2 = RemixToggleStyle(
           label: TextStyler(style: TextStyleMix(color: Colors.blue)),
@@ -321,7 +321,7 @@ void main() {
 
         expect(
           merged.$container,
-          equals(Prop.maybeMix(BoxStyler(alignment: Alignment.centerLeft))),
+          equals(Prop.maybeMix(FlexBoxStyler(alignment: Alignment.centerLeft))),
         );
         expect(
           merged.$label,
