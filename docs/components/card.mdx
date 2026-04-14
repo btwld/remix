@@ -91,13 +91,13 @@ const RemixCard({
 ## Properties
 ### Widget Properties
 
-#### `style` → `Key?`
+#### `style` → `RemixCardStyle`
 
-Optional. 
+Optional. The style configuration for the card. Customize colors, sizing, borders, and state-based styling.
 
-#### `styleSpec` → `Key?`
+#### `styleSpec` → `RemixCardSpec?`
 
-Optional. 
+Optional. A pre-resolved style spec that bypasses style resolution. Useful for performance when sharing resolved styles across multiple instances.
 
 #### `key` → `Key?`
 
@@ -116,7 +116,7 @@ Sets container padding
 
 #### `textColor(Color value)`
 
-Sets container background color
+Sets text color
 
 #### `borderRadius(BorderRadiusGeometryMix radius)`
 
@@ -136,11 +136,21 @@ Sets container decoration
 
 #### `wrap(WidgetModifierConfig value)`
 
+Applies widget modifiers such as clipping, opacity, or scaling.
+
 #### `animate(AnimationConfig config)`
+
+Configures implicit animation for style transitions.
 
 #### `constraints(BoxConstraintsMix value)`
 
+Sets size constraints on the component.
+
 #### `foregroundDecoration(DecorationMix value)`
 
+Sets a foreground decoration painted on top of the component.
+
 #### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
+
+Applies a matrix transformation to the component.
 

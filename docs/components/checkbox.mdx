@@ -109,18 +109,20 @@ class _FortalCheckboxExampleState extends State<FortalCheckboxExample> {
 ```dart
 const RemixCheckbox({
   Key? key,
-  required bool selected,
-  required ValueChanged<bool?>? onChanged,
   bool enabled = true,
-  bool? indeterminate,
-  MouseCursor mouseCursor = SystemMouseCursors.click,
-  bool enableFeedback = true,
-  FocusNode? focusNode,
+  required bool? selected,
+  bool tristate = false,
+  ValueChanged<bool?>? onChanged,
   bool autofocus = false,
-  String? semanticLabel,
-  RemixCheckboxIconBuilder? iconBuilder,
+  IconData checkedIcon = Icons.check_rounded,
+  IconData? uncheckedIcon,
+  IconData indeterminateIcon = Icons.horizontal_rule,
+  bool enableFeedback = true,
   RemixCheckboxStyle style = const RemixCheckboxStyle.create(),
   RemixCheckboxSpec? styleSpec,
+  FocusNode? focusNode,
+  String? semanticLabel,
+  MouseCursor mouseCursor = SystemMouseCursors.click,
 })
 ```
 </CodeGroup>
@@ -147,7 +149,7 @@ Optional. Whether the checkbox can be true, false, or null (indeterminate).
 
 #### `onChanged` → `ValueChanged<bool?>?`
 
-Optional. The callback function that is called when the checkbox is tapped. When [tristate] is true, the value can be null.
+Optional. Called when the user toggles the checkbox. When tristate is true, the value can be null.
 
 #### `autofocus` → `bool`
 
@@ -155,7 +157,7 @@ Optional. Whether the checkbox should automatically request focus when it is cre
 
 #### `checkedIcon` → `IconData`
 
-Optional. The icon to display when the checkbox is checked.
+Optional. The icon to display when the checkbox is checked. Defaults to Icons.check_rounded.
 
 #### `uncheckedIcon` → `IconData?`
 
@@ -163,7 +165,7 @@ Optional. The icon to display when the checkbox is unchecked.
 
 #### `indeterminateIcon` → `IconData`
 
-Optional. The icon to display when the checkbox is in indeterminate state (null value).
+Optional. The icon to display when the checkbox is in indeterminate state. Defaults to Icons.horizontal_rule.
 
 #### `enableFeedback` → `bool`
 
@@ -214,7 +216,11 @@ Sets container alignment.
 
 #### `onIndeterminate(RemixCheckboxStyle value)`
 
+Style applied when the checkbox is in the indeterminate state.
+
 #### `icon(IconStyler value)`
+
+Configures the icon style using an IconStyler.
 
 #### `padding(EdgeInsetsGeometryMix value)`
 
@@ -238,15 +244,27 @@ Sets animation configuration.
 
 #### `wrap(WidgetModifierConfig value)`
 
+Applies widget modifiers such as clipping, opacity, or scaling.
+
 #### `constraints(BoxConstraintsMix value)`
+
+Sets size constraints on the component.
 
 #### `decoration(DecorationMix value)`
 
+Sets the container decoration.
+
 #### `margin(EdgeInsetsGeometryMix value)`
+
+Sets the container margin.
 
 #### `foregroundDecoration(DecorationMix value)`
 
+Sets a foreground decoration painted on top of the component.
+
 #### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
+
+Applies a matrix transformation to the component.
 
 #### `iconColor(Color value)`
 

@@ -178,12 +178,20 @@ class FortalMenuExample extends StatelessWidget {
 const RemixMenu({
   Key? key,
   required RemixMenuTrigger trigger,
-  required List<Widget> items,
-  required ValueChanged<T>? onSelected,
+  required List<RemixMenuItemData<T>> items,
   MenuController? controller,
+  ValueChanged<T>? onSelected,
+  VoidCallback? onOpen,
+  VoidCallback? onClose,
+  VoidCallback? onCanceled,
+  RawMenuAnchorOpenRequestedCallback? onOpenRequested,
+  RawMenuAnchorCloseRequestedCallback? onCloseRequested,
+  bool consumeOutsideTaps = true,
+  bool useRootOverlay = false,
+  bool closeOnClickOutside = true,
+  FocusNode? triggerFocusNode,
   OverlayPositionConfig positioning = const OverlayPositionConfig(),
   RemixMenuStyle style = const RemixMenuStyle.create(),
-  RemixMenuSpec? styleSpec,
 })
 ```
 </CodeGroup>
@@ -261,9 +269,15 @@ Optional. The style configuration for the menu.
 
 #### `label(TextStyler value)`
 
+Configures the label text style using a TextStyler.
+
 #### `leadingIcon(IconStyler value)`
 
+Configures the leading icon style.
+
 #### `trailingIcon(IconStyler value)`
+
+Configures the trailing icon style.
 
 #### `alignment(Alignment value)`
 
@@ -271,27 +285,51 @@ Sets container alignment
 
 #### `padding(EdgeInsetsGeometryMix value)`
 
+Sets the container padding.
+
 #### `color(Color value)`
+
+Sets background color.
 
 #### `size(double width, double height)`
 
+Sets the component size.
+
 #### `borderRadius(BorderRadiusGeometryMix radius)`
+
+Sets the border radius.
 
 #### `constraints(BoxConstraintsMix value)`
 
+Sets size constraints on the component.
+
 #### `decoration(DecorationMix value)`
+
+Sets the container decoration.
 
 #### `margin(EdgeInsetsGeometryMix value)`
 
+Sets the container margin.
+
 #### `foregroundDecoration(DecorationMix value)`
+
+Sets a foreground decoration painted on top of the component.
 
 #### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
 
+Applies a matrix transformation to the component.
+
 #### `flex(FlexStyler value)`
+
+Configures the flex layout properties.
 
 #### `animate(AnimationConfig animation)`
 
+Configures implicit animation for style transitions.
+
 #### `wrap(WidgetModifierConfig value)`
+
+Applies widget modifiers such as clipping, opacity, or scaling.
 
 #### `labelTextStyle(TextStyleMix value)`
 
@@ -339,7 +377,7 @@ Sets label/text decoration color
 
 #### `icon(IconStyler value)`
 
-Must be implemented by the class using this mixin Should merge the provided IconStyler with the component's icon style
+Configures the icon style using an IconStyler.
 
 #### `iconColor(Color value)`
 

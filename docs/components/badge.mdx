@@ -128,13 +128,13 @@ const RemixBadge({
 ## Properties
 ### Widget Properties
 
-#### `style` → `Key?`
+#### `style` → `RemixBadgeStyle`
 
-Optional. 
+Optional. The style configuration for the badge. Customize colors, sizing, shape, and state-based styling.
 
-#### `styleSpec` → `Key?`
+#### `styleSpec` → `RemixBadgeSpec?`
 
-Optional. 
+Optional. A pre-resolved style spec that bypasses style resolution. Useful for performance when sharing resolved styles across multiple instances.
 
 #### `key` → `Key?`
 
@@ -185,6 +185,8 @@ Sets container alignment
 
 #### `label(TextStyler value)`
 
+Configures the label text style using a TextStyler.
+
 #### `constraints(BoxConstraintsMix value)`
 
 Sets constraints
@@ -195,9 +197,15 @@ Sets animation
 
 #### `wrap(WidgetModifierConfig value)`
 
+Applies widget modifiers such as clipping, opacity, or scaling.
+
 #### `foregroundDecoration(DecorationMix value)`
 
+Sets a foreground decoration painted on top of the component.
+
 #### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
+
+Applies a matrix transformation to the component.
 
 #### `labelTextStyle(TextStyleMix value)`
 

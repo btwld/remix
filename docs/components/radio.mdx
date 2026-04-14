@@ -157,7 +157,7 @@ class _FortalRadioExampleState extends State<FortalRadioExample> {
 const RemixRadioGroup({
   Key? key,
   required T? groupValue,
-  required ValueChanged<T?>? onChanged,
+  required ValueChanged<T?> onChanged,
   required Widget child,
 })
 
@@ -166,11 +166,11 @@ const RemixRadio({
   Key? key,
   required T value,
   bool enabled = true,
-  MouseCursor mouseCursor = SystemMouseCursors.click,
+  bool toggleable = false,
+  MouseCursor? mouseCursor,
   bool enableFeedback = true,
   FocusNode? focusNode,
   bool autofocus = false,
-  String? semanticLabel,
   RemixRadioStyle style = const RemixRadioStyle.create(),
   RemixRadioSpec? styleSpec,
 })
@@ -183,11 +183,11 @@ const RemixRadio({
 
 #### `style` → `RemixRadioStyle`
 
-Optional. 
+Optional. The style configuration for the radio button. Customize colors, borders, and state-based styling.
 
 #### `styleSpec` → `RemixRadioSpec?`
 
-Optional. 
+Optional. A pre-resolved style spec that bypasses style resolution. Useful for performance when sharing resolved styles across multiple instances.
 
 #### `key` → `Key?`
 
@@ -258,11 +258,21 @@ Sets animation configuration.
 
 #### `wrap(WidgetModifierConfig value)`
 
+Applies widget modifiers such as clipping, opacity, or scaling.
+
 #### `constraints(BoxConstraintsMix value)`
+
+Sets size constraints on the component.
 
 #### `decoration(DecorationMix value)`
 
+Sets the container decoration.
+
 #### `foregroundDecoration(DecorationMix value)`
 
+Sets a foreground decoration painted on top of the component.
+
 #### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
+
+Applies a matrix transformation to the component.
 

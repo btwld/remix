@@ -134,8 +134,7 @@ const RemixTooltip({
   Key? key,
   required Widget child,
   required Widget tooltipChild,
-  Duration? waitDuration,
-  Duration? showDuration,
+  String? tooltipSemantics,
   RemixTooltipStyle style = const RemixTooltipStyle.create(),
   RemixTooltipSpec? styleSpec,
 })
@@ -207,11 +206,21 @@ Sets the show duration before hiding tooltip
 
 #### `wrap(WidgetModifierConfig value)`
 
+Applies widget modifiers such as clipping, opacity, or scaling.
+
 #### `animate(AnimationConfig config)`
+
+Configures implicit animation for style transitions.
 
 #### `constraints(BoxConstraintsMix value)`
 
+Sets size constraints on the component.
+
 #### `foregroundDecoration(DecorationMix value)`
 
+Sets a foreground decoration painted on top of the component.
+
 #### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
+
+Applies a matrix transformation to the component.
 
