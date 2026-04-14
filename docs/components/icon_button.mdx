@@ -124,13 +124,11 @@ const RemixIconButton({
   RemixIconButtonIconBuilder? iconBuilder,
   RemixIconButtonLoadingBuilder? loadingBuilder,
   bool loading = false,
-  bool enabled = true,
+  bool enableFeedback = true,
   required VoidCallback? onPressed,
   VoidCallback? onLongPress,
-  VoidCallback? onDoubleTap,
   FocusNode? focusNode,
   bool autofocus = false,
-  bool enableFeedback = true,
   String? semanticLabel,
   String? semanticHint,
   bool excludeSemantics = false,
@@ -147,11 +145,11 @@ const RemixIconButton({
 
 #### `style` → `RemixIconButtonStyle`
 
-Optional. 
+Optional. The style configuration for the icon button. Customize colors, sizing, and state-based styling.
 
 #### `styleSpec` → `RemixIconButtonSpec?`
 
-Optional. 
+Optional. A pre-resolved style spec that bypasses style resolution. Useful for performance when sharing resolved styles across multiple instances.
 
 #### `key` → `Key?`
 
@@ -189,10 +187,6 @@ Optional. Whether to provide feedback when the button is pressed.  Defaults to t
 
 Optional. Callback function called when the button is long pressed.
 
-#### `onDoubleTap` → `VoidCallback?`
-
-Optional. Callback function called when the button is double tapped.
-
 #### `focusNode` → `FocusNode?`
 
 Optional. Optional focus node to control the button's focus behavior.
@@ -218,7 +212,11 @@ Optional. Cursor when hovering over the button.  Defaults to [SystemMouseCursors
 
 #### `icon(IconStyler value)`
 
+Configures the icon style using an IconStyler.
+
 #### `spinner(RemixSpinnerStyle value)`
+
+Configures the loading spinner style.
 
 #### `color(Color value)`
 
@@ -274,11 +272,19 @@ Sets height
 
 #### `animate(AnimationConfig animation)`
 
+Configures implicit animation for style transitions.
+
 #### `foregroundDecoration(DecorationMix value)`
+
+Sets a foreground decoration painted on top of the component.
 
 #### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
 
+Applies a matrix transformation to the component.
+
 #### `wrap(WidgetModifierConfig value)`
+
+Applies widget modifiers such as clipping, opacity, or scaling.
 
 #### `iconOpacity(double value)`
 

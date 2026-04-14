@@ -91,11 +91,6 @@ class FortalSpinnerExample extends StatelessWidget {
 ```dart
 const RemixSpinner({
   Key? key,
-  double? size,
-  double? strokeWidth,
-  Color? indicatorColor,
-  Color? trackColor,
-  Duration? duration,
   RemixSpinnerStyle style = const RemixSpinnerStyle.create(),
   RemixSpinnerSpec? styleSpec,
 })
@@ -106,13 +101,13 @@ const RemixSpinner({
 ## Properties
 ### Widget Properties
 
-#### `style` → `Key?`
+#### `style` → `RemixSpinnerStyle`
 
-Optional. 
+Optional. The style configuration for the spinner. Customize colors, sizing, stroke, and animation duration.
 
-#### `styleSpec` → `Key?`
+#### `styleSpec` → `RemixSpinnerSpec?`
 
-Optional. 
+Optional. A pre-resolved style spec that bypasses style resolution. Useful for performance when sharing resolved styles across multiple instances.
 
 #### `key` → `Key?`
 
@@ -123,17 +118,33 @@ Optional. Controls how one widget replaces another widget in the tree.
 
 #### `size(double value)`
 
+Sets the spinner size (width and height).
+
 #### `indicatorColor(Color value)`
+
+Sets the color of the spinning indicator.
 
 #### `trackColor(Color value)`
 
+Sets the color of the track (background ring).
+
 #### `strokeWidth(double value)`
+
+Sets the stroke width of the indicator.
 
 #### `trackStrokeWidth(double value)`
 
+Sets the stroke width of the track.
+
 #### `duration(Duration value)`
+
+Sets the duration of one full rotation.
 
 #### `animate(AnimationConfig animation)`
 
+Configures implicit animation for style transitions.
+
 #### `wrap(WidgetModifierConfig value)`
+
+Applies widget modifiers such as clipping, opacity, or scaling.
 

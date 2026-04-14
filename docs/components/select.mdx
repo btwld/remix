@@ -149,13 +149,18 @@ class _FortalSelectExampleState extends State<FortalSelectExample> {
 const RemixSelect({
   Key? key,
   required RemixSelectTrigger trigger,
-  required List<RemixSelectItem> items,
-  required T? selectedValue,
+  required List<RemixSelectItem<T>> items,
+  T? selectedValue,
   Alignment? targetAnchor,
   Alignment? followerAnchor,
-  required ValueChanged<T?>? onChanged,
+  ValueChanged<T?>? onChanged,
+  VoidCallback? onOpen,
+  VoidCallback? onClose,
+  bool enabled = true,
+  String? semanticLabel,
+  bool closeOnSelect = true,
+  FocusNode? focusNode,
   RemixSelectStyle style = const RemixSelectStyle.create(),
-  RemixSelectSpec? styleSpec,
 })
 ```
 </CodeGroup>
@@ -233,21 +238,39 @@ Sets label styling (delegates to text for consistency with mixin)
 
 #### `animate(AnimationConfig config)`
 
+Configures implicit animation for style transitions.
+
 #### `constraints(BoxConstraintsMix value)`
+
+Sets size constraints on the component.
 
 #### `decoration(DecorationMix value)`
 
+Sets the container decoration.
+
 #### `margin(EdgeInsetsGeometryMix value)`
+
+Sets the container margin.
 
 #### `padding(EdgeInsetsGeometryMix value)`
 
+Sets the container padding.
+
 #### `wrap(WidgetModifierConfig value)`
+
+Applies widget modifiers such as clipping, opacity, or scaling.
 
 #### `foregroundDecoration(DecorationMix value)`
 
+Sets a foreground decoration painted on top of the component.
+
 #### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
 
+Applies a matrix transformation to the component.
+
 #### `flex(FlexStyler value)`
+
+Configures the flex layout properties.
 
 #### `labelTextStyle(TextStyleMix value)`
 

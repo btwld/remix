@@ -164,9 +164,11 @@ class FortalButtonExample extends StatelessWidget {
 const RemixButton({
   Key? key,
   required String label,
-  IconData? icon,
+  IconData? leadingIcon,
+  IconData? trailingIcon,
   RemixButtonTextBuilder? textBuilder,
-  RemixButtonIconBuilder? iconBuilder,
+  RemixButtonIconBuilder? leadingIconBuilder,
+  RemixButtonIconBuilder? trailingIconBuilder,
   RemixButtonLoadingBuilder? loadingBuilder,
   bool loading = false,
   bool enabled = true,
@@ -191,11 +193,11 @@ const RemixButton({
 
 #### `style` → `RemixButtonStyle`
 
-Optional. 
+Optional. The style configuration for the button. Customize colors, sizing, spacing, and state-based styling.
 
 #### `styleSpec` → `RemixButtonSpec?`
 
-Optional. 
+Optional. A pre-resolved style spec that bypasses style resolution. Useful for performance when sharing resolved styles across multiple instances.
 
 #### `key` → `Key?`
 
@@ -205,17 +207,25 @@ Optional. Controls how one widget replaces another widget in the tree.
 
 **Required**. The label text to display in the button. If [textBuilder] is provided, this is ignored.
 
-#### `icon` → `IconData?`
+#### `leadingIcon` → `IconData?`
 
-Optional. The icon to display in the button. If [iconBuilder] is provided, this is ignored.
+Optional. The leading icon to display before the label. If [leadingIconBuilder] is provided, this is ignored.
+
+#### `trailingIcon` → `IconData?`
+
+Optional. The trailing icon to display after the label. If [trailingIconBuilder] is provided, this is ignored.
 
 #### `textBuilder` → `RemixButtonTextBuilder?`
 
 Optional. Builder for customizing the text rendering.
 
-#### `iconBuilder` → `RemixButtonIconBuilder?`
+#### `leadingIconBuilder` → `RemixButtonIconBuilder?`
 
-Optional. Builder for customizing the icon rendering.
+Optional. Builder for customizing the leading icon rendering.
+
+#### `trailingIconBuilder` → `RemixButtonIconBuilder?`
+
+Optional. Builder for customizing the trailing icon rendering.
 
 #### `loadingBuilder` → `RemixButtonLoadingBuilder?`
 
@@ -270,9 +280,15 @@ Optional. Cursor when hovering over the button.  Defaults to [SystemMouseCursors
 
 #### `label(TextStyler value)`
 
+Configures the label text style using a TextStyler.
+
 #### `icon(IconStyler value)`
 
+Configures the icon style using an IconStyler.
+
 #### `spinner(RemixSpinnerStyle value)`
+
+Configures the loading spinner style.
 
 #### `padding(EdgeInsetsGeometryMix value)`
 
@@ -300,15 +316,27 @@ Sets constraints
 
 #### `animate(AnimationConfig animation)`
 
+Configures implicit animation for style transitions.
+
 #### `flex(FlexStyler value)`
+
+Configures the flex layout properties.
 
 #### `foregroundDecoration(DecorationMix value)`
 
+Sets a foreground decoration painted on top of the component.
+
 #### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
+
+Applies a matrix transformation to the component.
 
 #### `color(Color value)`
 
+Sets background color.
+
 #### `wrap(WidgetModifierConfig value)`
+
+Applies widget modifiers such as clipping, opacity, or scaling.
 
 #### `labelTextStyle(TextStyleMix value)`
 

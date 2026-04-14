@@ -172,9 +172,13 @@ class _FortalTabsExampleState extends State<FortalTabsExample> {
 // Tabs Container
 const RemixTabs({
   Key? key,
-  required String selectedTabId,
-  required ValueChanged<String> onChanged,
   required Widget child,
+  NakedTabController? controller,
+  String? selectedTabId,
+  ValueChanged<String>? onChanged,
+  Axis orientation = Axis.horizontal,
+  bool enabled = true,
+  VoidCallback? onEscapePressed,
 })
 
 // Tab Bar
@@ -182,17 +186,26 @@ const RemixTabBar({
   Key? key,
   required Widget child,
   RemixTabBarStyle style = const RemixTabBarStyle.create(),
-  RemixTabBarSpec? styleSpec,
 })
 
 // Individual Tab
 const RemixTab({
   Key? key,
   required String tabId,
+  Widget? child,
   String? label,
   IconData? icon,
+  bool enabled = true,
+  MouseCursor mouseCursor = SystemMouseCursors.click,
+  bool enableFeedback = true,
+  FocusNode? focusNode,
+  bool autofocus = false,
+  ValueChanged<bool>? onFocusChange,
+  ValueChanged<bool>? onHoverChange,
+  ValueChanged<bool>? onPressChange,
+  ValueWidgetBuilder<NakedTabState>? builder,
+  String? semanticLabel,
   RemixTabStyle style = const RemixTabStyle.create(),
-  RemixTabSpec? styleSpec,
 })
 
 // Tab View
@@ -201,7 +214,6 @@ const RemixTabView({
   required String tabId,
   required Widget child,
   RemixTabViewStyle style = const RemixTabViewStyle.create(),
-  RemixTabViewSpec? styleSpec,
 })
 ```
 </CodeGroup>
@@ -251,29 +263,55 @@ Sets container alignment
 
 #### `container(FlexBoxStyler value)`
 
+Configures the container flex box style.
+
 #### `label(TextStyler value)`
+
+Configures the label text style using a TextStyler.
 
 #### `icon(IconStyler value)`
 
+Configures the icon style using an IconStyler.
+
 #### `animate(AnimationConfig animation)`
+
+Configures implicit animation for style transitions.
 
 #### `wrap(WidgetModifierConfig value)`
 
+Applies widget modifiers such as clipping, opacity, or scaling.
+
 #### `flex(FlexStyler value)`
+
+Configures the flex layout properties.
 
 #### `foregroundDecoration(DecorationMix value)`
 
+Sets a foreground decoration painted on top of the component.
+
 #### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
+
+Applies a matrix transformation to the component.
 
 #### `color(Color value)`
 
+Sets background color.
+
 #### `constraints(BoxConstraintsMix value)`
+
+Sets size constraints on the component.
 
 #### `decoration(DecorationMix value)`
 
+Sets the container decoration.
+
 #### `margin(EdgeInsetsGeometryMix value)`
 
+Sets the container margin.
+
 #### `padding(EdgeInsetsGeometryMix value)`
+
+Sets the container padding.
 
 #### `labelTextStyle(TextStyleMix value)`
 

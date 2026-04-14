@@ -129,9 +129,10 @@ const RemixSlider({
   double min = 0.0,
   double max = 1.0,
   bool enabled = true,
+  bool enableHapticFeedback = true,
   FocusNode? focusNode,
   bool autofocus = false,
-  String? semanticLabel,
+  int? snapDivisions,
   RemixSliderStyle style = const RemixSliderStyle.create(),
   RemixSliderSpec? styleSpec,
 })
@@ -239,23 +240,45 @@ Sets stroke width for the range only (filled portion).
 
 #### `padding(EdgeInsetsGeometryMix value)`
 
+Sets the container padding.
+
 #### `color(Color value)`
+
+Sets background color.
 
 #### `size(double width, double height)`
 
+Sets the component size.
+
 #### `borderRadius(BorderRadiusGeometryMix radius)`
+
+Sets the border radius.
 
 #### `constraints(BoxConstraintsMix value)`
 
+Sets size constraints on the component.
+
 #### `decoration(DecorationMix value)`
+
+Sets the container decoration.
 
 #### `margin(EdgeInsetsGeometryMix value)`
 
+Sets the container margin.
+
 #### `foregroundDecoration(DecorationMix value)`
+
+Sets a foreground decoration painted on top of the component.
 
 #### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
 
+Applies a matrix transformation to the component.
+
 #### `wrap(WidgetModifierConfig value)`
 
+Applies widget modifiers such as clipping, opacity, or scaling.
+
 #### `animate(AnimationConfig animation)`
+
+Configures implicit animation for style transitions.
 

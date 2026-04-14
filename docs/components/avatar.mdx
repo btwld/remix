@@ -138,13 +138,13 @@ const RemixAvatar({
 ## Properties
 ### Widget Properties
 
-#### `style` → `Key?`
+#### `style` → `RemixAvatarStyle`
 
-Optional. 
+Optional. The style configuration for the avatar. Customize colors, sizing, shape, and state-based styling.
 
-#### `styleSpec` → `Key?`
+#### `styleSpec` → `RemixAvatarSpec?`
 
-Optional. 
+Optional. A pre-resolved style spec that bypasses style resolution. Useful for performance when sharing resolved styles across multiple instances.
 
 #### `key` → `Key?`
 
@@ -243,7 +243,11 @@ Sets the clip behavior for the avatar container.
 
 #### `label(TextStyler value)`
 
+Configures the label text style using a TextStyler.
+
 #### `icon(IconStyler value)`
+
+Configures the icon style using an IconStyler.
 
 #### `size(double width, double height)`
 
@@ -251,9 +255,15 @@ Sets avatar size with width and height
 
 #### `wrap(WidgetModifierConfig value)`
 
+Applies widget modifiers such as clipping, opacity, or scaling.
+
 #### `foregroundDecoration(DecorationMix value)`
 
+Sets a foreground decoration painted on top of the component.
+
 #### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
+
+Applies a matrix transformation to the component.
 
 #### `labelTextStyle(TextStyleMix value)`
 

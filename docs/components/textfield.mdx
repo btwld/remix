@@ -145,18 +145,57 @@ const RemixTextField({
   String? label,
   String? hintText,
   String? helperText,
-  String? errorText,
+  bool error = false,
   TextInputType? keyboardType,
   TextInputAction? textInputAction,
+  TextCapitalization textCapitalization = TextCapitalization.none,
+  TextDirection? textDirection,
   bool obscureText = false,
   bool enabled = true,
   bool readOnly = false,
   bool autofocus = false,
   int? maxLines = 1,
+  int? minLines,
+  bool expands = false,
   int? maxLength,
+  MaxLengthEnforcement? maxLengthEnforcement,
   ValueChanged<String>? onChanged,
   VoidCallback? onEditingComplete,
   ValueChanged<String>? onSubmitted,
+  AppPrivateCommandCallback? onAppPrivateCommand,
+  List<TextInputFormatter>? inputFormatters,
+  bool? showCursor,
+  String obscuringCharacter = '•',
+  bool autocorrect = true,
+  bool enableSuggestions = true,
+  SmartDashesType? smartDashesType,
+  SmartQuotesType? smartQuotesType,
+  DragStartBehavior dragStartBehavior = DragStartBehavior.start,
+  bool enableInteractiveSelection = true,
+  TextSelectionControls? selectionControls,
+  TapRegionCallback? onTapOutside,
+  TapRegionUpCallback? onPressUpOutside,
+  bool onTapAlwaysCalled = false,
+  ScrollController? scrollController,
+  ScrollPhysics? scrollPhysics,
+  Iterable<String>? autofillHints,
+  ContentInsertionConfiguration? contentInsertionConfiguration,
+  Clip clipBehavior = Clip.hardEdge,
+  String? restorationId,
+  bool stylusHandwritingEnabled = true,
+  bool enableIMEPersonalizedLearning = true,
+  EditableTextContextMenuBuilder? contextMenuBuilder,
+  SpellCheckConfiguration? spellCheckConfiguration,
+  TextMagnifierConfiguration? magnifierConfiguration,
+  bool canRequestFocus = true,
+  bool? ignorePointers,
+  UndoHistoryController? undoController,
+  Object groupId = EditableText,
+  Widget? leading,
+  Widget? trailing,
+  String? semanticLabel,
+  String? semanticHint,
+  bool excludeSemantics = false,
   RemixTextFieldStyle style = const RemixTextFieldStyle.create(),
   RemixTextFieldSpec? styleSpec,
 })
@@ -387,10 +426,6 @@ Optional. A widget to display at the leading edge of the text field.
 
 Optional. A widget to display at the trailing edge of the text field.
 
-#### `onPressed` → `VoidCallback?`
-
-Optional. Called when the text field is pressed (for tap interactions).
-
 #### `semanticLabel` → `String?`
 
 Optional. The semantic label for the text field.
@@ -452,7 +487,7 @@ Sets hint text color
 
 #### `hintText(TextStyler value)`
 
-Sets hint text color
+Sets hint text style using a TextStyler.
 
 #### `margin(EdgeInsetsGeometryMix value)`
 
@@ -492,11 +527,19 @@ Sets animation
 
 #### `wrap(WidgetModifierConfig value)`
 
+Applies widget modifiers such as clipping, opacity, or scaling.
+
 #### `foregroundDecoration(DecorationMix value)`
+
+Sets a foreground decoration painted on top of the component.
 
 #### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
 
+Applies a matrix transformation to the component.
+
 #### `flex(FlexStyler value)`
+
+Configures the flex layout properties.
 
 #### `labelTextStyle(TextStyleMix value)`
 
