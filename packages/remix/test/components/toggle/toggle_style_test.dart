@@ -54,13 +54,33 @@ void main() {
 
     group('Style Methods', () {
       styleMethodTest(
+        'label',
+        initial: RemixToggleStyle(),
+        modify: (style) => style.label(TextStyler()),
+        expect: (style) {
+          expect(style.$label, Prop.maybeMix(TextStyler()));
+        },
+      );
+
+      styleMethodTest(
+        'icon',
+        initial: RemixToggleStyle(),
+        modify: (style) => style.icon(IconStyler()),
+        expect: (style) {
+          expect(style.$icon, equals(Prop.maybeMix(IconStyler())));
+        },
+      );
+
+      styleMethodTest(
         'alignment',
         initial: RemixToggleStyle(),
-        modify: (style) => style.alignment(Alignment.center),
+        modify: (style) => style.alignment(Alignment.centerLeft),
         expect: (style) {
           expect(
             style.$container,
-            equals(Prop.maybeMix(FlexBoxStyler(alignment: Alignment.center))),
+            equals(
+              Prop.maybeMix(FlexBoxStyler(alignment: Alignment.centerLeft)),
+            ),
           );
         },
       );
@@ -105,29 +125,8 @@ void main() {
           expect(
             style.$container,
             equals(
-              Prop.maybeMix(FlexBoxStyler(margin: EdgeInsetsGeometryMix.all(8.0))),
-            ),
-          );
-        },
-      );
-
-      styleMethodTest(
-        'constraints',
-        initial: RemixToggleStyle(),
-        modify: (style) => style.constraints(
-          BoxConstraintsMix(minWidth: 20.0, minHeight: 20.0),
-        ),
-        expect: (style) {
-          expect(
-            style.$container,
-            equals(
               Prop.maybeMix(
-                FlexBoxStyler(
-                  constraints: BoxConstraintsMix(
-                    minWidth: 20.0,
-                    minHeight: 20.0,
-                  ),
-                ),
+                FlexBoxStyler(margin: EdgeInsetsGeometryMix.all(8.0)),
               ),
             ),
           );
@@ -152,6 +151,41 @@ void main() {
                   decoration: BoxDecorationMix(
                     color: Colors.blue,
                     borderRadius: BorderRadiusMix.circular(8.0),
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      );
+
+      styleMethodTest(
+        'spacing',
+        initial: RemixToggleStyle(),
+        modify: (style) => style.spacing(12.0),
+        expect: (style) {
+          expect(
+            style.$container,
+            equals(Prop.maybeMix(FlexBoxStyler(spacing: 12.0))),
+          );
+        },
+      );
+
+      styleMethodTest(
+        'constraints',
+        initial: RemixToggleStyle(),
+        modify: (style) => style.constraints(
+          BoxConstraintsMix(minWidth: 100.0, minHeight: 40.0),
+        ),
+        expect: (style) {
+          expect(
+            style.$container,
+            equals(
+              Prop.maybeMix(
+                FlexBoxStyler(
+                  constraints: BoxConstraintsMix(
+                    minWidth: 100.0,
+                    minHeight: 40.0,
                   ),
                 ),
               ),
@@ -200,6 +234,18 @@ void main() {
                 ),
               ),
             ),
+          );
+        },
+      );
+
+      styleMethodTest(
+        'flex',
+        initial: RemixToggleStyle(),
+        modify: (style) => style.flex(FlexStyler()),
+        expect: (style) {
+          expect(
+            style.$container,
+            equals(Prop.maybeMix(FlexBoxStyler().flex(FlexStyler()))),
           );
         },
       );
@@ -276,6 +322,54 @@ void main() {
       );
     });
 
+    group('Call Method', () {
+      test('call method creates RemixToggle with required parameters', () {
+        final style = RemixToggleStyle();
+        final onChanged = (bool v) {};
+
+        final toggle = style.call(
+          selected: false,
+          onChanged: onChanged,
+          label: 'Test Toggle',
+        );
+
+        expect(toggle, isA<RemixToggle>());
+        expect(toggle.label, equals('Test Toggle'));
+        expect(toggle.onChanged, equals(onChanged));
+      });
+
+      test('call method creates RemixToggle with all parameters', () {
+        final style = RemixToggleStyle();
+        final focusNode = FocusNode();
+
+        final toggle = style.call(
+          selected: true,
+          onChanged: (value) {},
+          label: 'Bold',
+          icon: Icons.format_bold,
+          enabled: false,
+          enableFeedback: false,
+          focusNode: focusNode,
+          autofocus: true,
+          semanticLabel: 'Test Toggle',
+          mouseCursor: SystemMouseCursors.forbidden,
+        );
+
+        expect(toggle, isA<RemixToggle>());
+        expect(toggle.selected, isTrue);
+        expect(toggle.label, equals('Bold'));
+        expect(toggle.icon, equals(Icons.format_bold));
+        expect(toggle.enabled, isFalse);
+        expect(toggle.enableFeedback, isFalse);
+        expect(toggle.focusNode, equals(focusNode));
+        expect(toggle.autofocus, isTrue);
+        expect(toggle.semanticLabel, equals('Test Toggle'));
+        expect(toggle.mouseCursor, equals(SystemMouseCursors.forbidden));
+
+        focusNode.dispose();
+      });
+    });
+
     group('Core Methods', () {
       testWidgets('resolve method returns StyleSpec', (
         WidgetTester tester,
@@ -332,60 +426,6 @@ void main() {
       });
     });
 
-    group('Call Method', () {
-      testWidgets('call method creates RemixToggle with all parameters', (
-        tester,
-      ) async {
-        final style = RemixToggleStyle().backgroundColor(Colors.blue);
-        final focusNode = FocusNode();
-
-        final toggleWidget = style.call(
-          selected: true,
-          onChanged: (value) {},
-          label: 'Bold',
-          icon: Icons.format_bold,
-          enabled: false,
-          enableFeedback: false,
-          focusNode: focusNode,
-          autofocus: true,
-          semanticLabel: 'Test Toggle',
-          mouseCursor: SystemMouseCursors.forbidden,
-        );
-
-        expect(toggleWidget, isA<RemixToggle>());
-        expect(toggleWidget.selected, equals(true));
-        expect(toggleWidget.label, equals('Bold'));
-        expect(toggleWidget.icon, equals(Icons.format_bold));
-        expect(toggleWidget.enabled, equals(false));
-        expect(toggleWidget.enableFeedback, equals(false));
-        expect(toggleWidget.focusNode, same(focusNode));
-        expect(toggleWidget.autofocus, equals(true));
-        expect(toggleWidget.semanticLabel, equals('Test Toggle'));
-        expect(toggleWidget.mouseCursor, equals(SystemMouseCursors.forbidden));
-        expect(toggleWidget.style, same(style));
-
-        focusNode.dispose();
-      });
-
-      testWidgets('call method creates RemixToggle with minimal parameters', (
-        tester,
-      ) async {
-        final style = RemixToggleStyle();
-
-        final toggleWidget = style.call(
-          selected: false,
-          onChanged: (v) {},
-          label: 'Test',
-        );
-
-        expect(toggleWidget, isA<RemixToggle>());
-        expect(toggleWidget.selected, equals(false));
-        expect(toggleWidget.enabled, equals(true));
-        expect(toggleWidget.enableFeedback, equals(true));
-        expect(toggleWidget.style, same(style));
-      });
-    });
-
     group('Equality', () {
       test('identical styles are equal', () {
         final style1 = RemixToggleStyle();
@@ -396,8 +436,12 @@ void main() {
       });
 
       test('styles with different properties are not equal', () {
-        final style1 = RemixToggleStyle().backgroundColor(Colors.blue);
-        final style2 = RemixToggleStyle().backgroundColor(Colors.red);
+        final style1 = RemixToggleStyle().padding(
+          EdgeInsetsGeometryMix.all(16.0),
+        );
+        final style2 = RemixToggleStyle().padding(
+          EdgeInsetsGeometryMix.all(8.0),
+        );
 
         expect(style1, isNot(equals(style2)));
       });

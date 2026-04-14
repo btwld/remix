@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
 
 import '../../helpers/test_helpers.dart';
+import '../../helpers/test_methods.dart';
 
 void main() {
   group('RemixToggle', () {
@@ -17,8 +19,8 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        expect(find.byType(RemixToggle), findsOneWidget);
         expect(find.text('Bold'), findsOneWidget);
+        expect(find.byType(NakedToggle), findsOneWidget);
       });
 
       testWidgets('renders toggle with icon only', (tester) async {
@@ -31,7 +33,8 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        expect(find.byType(RemixToggle), findsOneWidget);
+        expect(find.byIcon(Icons.format_bold), findsOneWidget);
+        expect(find.byType(NakedToggle), findsOneWidget);
       });
 
       testWidgets('renders toggle with both icon and label', (tester) async {
@@ -45,36 +48,55 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        expect(find.byType(RemixToggle), findsOneWidget);
         expect(find.text('Bold'), findsOneWidget);
+        expect(find.byIcon(Icons.format_bold), findsOneWidget);
       });
+    });
 
-      testWidgets('renders in selected state', (tester) async {
-        await tester.pumpRemixApp(
-          RemixToggle(
-            selected: true,
-            onChanged: (value) {},
-            label: 'Bold',
-          ),
-        );
-        await tester.pumpAndSettle();
+    group('WidgetStateController', () {
+      widgetControllerTest<RemixToggleSpec>(
+        'contains disabled state when enabled is false',
+        build: () => RemixToggle(
+          selected: false,
+          onChanged: (value) {},
+          label: 'Bold',
+          enabled: false,
+        ),
+        expectedStates: {WidgetState.disabled},
+      );
 
-        expect(find.byType(RemixToggle), findsOneWidget);
-      });
+      widgetControllerTest<RemixToggleSpec>(
+        'contains hovered state when hovered',
+        build: () => RemixToggle(
+          selected: false,
+          onChanged: (value) {},
+          label: 'Hover Me',
+        ),
+        act: hoverAction<RemixToggle>,
+        expectedStates: {WidgetState.hovered},
+      );
 
-      testWidgets('renders with custom style', (tester) async {
-        await tester.pumpRemixApp(
-          RemixToggle(
-            selected: false,
-            onChanged: (value) {},
-            label: 'Bold',
-            style: RemixToggleStyle().backgroundColor(Colors.blue),
-          ),
-        );
-        await tester.pumpAndSettle();
+      widgetControllerTest<RemixToggleSpec>(
+        'contains focused state when focused',
+        build: () => RemixToggle(
+          selected: false,
+          onChanged: (value) {},
+          label: 'Focus Me',
+        ),
+        act: focusAction<RemixToggle>,
+        expectedStates: {WidgetState.focused},
+      );
 
-        expect(find.byType(RemixToggle), findsOneWidget);
-      });
+      widgetControllerTest<RemixToggleSpec>(
+        'contains pressed state when pressed',
+        build: () => RemixToggle(
+          selected: false,
+          onChanged: (value) {},
+          label: 'Press Me',
+        ),
+        act: pressAction<RemixToggle>,
+        expectedStates: {WidgetState.pressed},
+      );
     });
 
     group('Interaction', () {
@@ -154,42 +176,52 @@ void main() {
 
         expect(wasChanged, isFalse);
       });
+
+      testWidgets('enableFeedback controls haptic feedback', (tester) async {
+        await tester.pumpRemixApp(
+          RemixToggle(
+            selected: false,
+            onChanged: (value) {},
+            label: 'No Feedback',
+            enableFeedback: false,
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final nakedToggle = tester.widget<NakedToggle>(
+          find.byType(NakedToggle),
+        );
+        expect(nakedToggle.enableFeedback, isFalse);
+      });
     });
 
-    group('Focus', () {
-      testWidgets('accepts focusNode parameter', (tester) async {
+    group('Focus and Keyboard', () {
+      testWidgets('autofocus requests focus on mount', (tester) async {
         final focusNode = FocusNode();
+        addTearDown(() {
+          focusNode.dispose();
+        });
 
         await tester.pumpRemixApp(
           RemixToggle(
             selected: false,
             onChanged: (value) {},
-            label: 'Bold',
+            label: 'Auto Focus',
+            autofocus: true,
             focusNode: focusNode,
           ),
         );
         await tester.pumpAndSettle();
 
-        expect(find.byType(RemixToggle), findsOneWidget);
-        focusNode.dispose();
-      });
-
-      testWidgets('handles autofocus parameter', (tester) async {
-        await tester.pumpRemixApp(
-          RemixToggle(
-            selected: false,
-            onChanged: (value) {},
-            label: 'Bold',
-            autofocus: true,
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixToggle), findsOneWidget);
+        final focused = tester.binding.focusManager.primaryFocus;
+        expect(focused, equals(focusNode));
       });
 
       testWidgets('can request focus programmatically', (tester) async {
         final focusNode = FocusNode();
+        addTearDown(() {
+          focusNode.dispose();
+        });
 
         await tester.pumpRemixApp(
           RemixToggle(
@@ -205,7 +237,58 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(focusNode.hasFocus, isTrue);
-        focusNode.dispose();
+      });
+    });
+
+    group('Semantics and Accessibility', () {
+      testWidgets('accepts semanticLabel parameter', (tester) async {
+        await tester.pumpRemixApp(
+          RemixToggle(
+            selected: false,
+            onChanged: (value) {},
+            label: 'Bold',
+            semanticLabel: 'Toggle bold formatting',
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(find.byType(Semantics), findsAtLeastNWidgets(1));
+
+        final toggle = tester.widget<RemixToggle>(find.byType(RemixToggle));
+        expect(toggle.semanticLabel, equals('Toggle bold formatting'));
+      });
+    });
+
+    group('Layout and Sizing', () {
+      testWidgets('mouseCursor defaults to SystemMouseCursors.click', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          RemixToggle(
+            selected: false,
+            onChanged: (value) {},
+            label: 'Bold',
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final toggle = tester.widget<RemixToggle>(find.byType(RemixToggle));
+        expect(toggle.mouseCursor, equals(SystemMouseCursors.click));
+      });
+
+      testWidgets('custom mouseCursor is applied', (tester) async {
+        await tester.pumpRemixApp(
+          RemixToggle(
+            selected: false,
+            onChanged: (value) {},
+            label: 'Bold',
+            mouseCursor: SystemMouseCursors.forbidden,
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final toggle = tester.widget<RemixToggle>(find.byType(RemixToggle));
+        expect(toggle.mouseCursor, equals(SystemMouseCursors.forbidden));
       });
     });
 
@@ -339,54 +422,6 @@ void main() {
             expect(find.byType(RemixToggle), findsOneWidget);
           }
         }
-      });
-    });
-
-    group('Semantics and Accessibility', () {
-      testWidgets('accepts semanticLabel parameter', (tester) async {
-        await tester.pumpRemixApp(
-          RemixToggle(
-            selected: false,
-            onChanged: (value) {},
-            label: 'Bold',
-            semanticLabel: 'Toggle bold formatting',
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixToggle), findsOneWidget);
-      });
-    });
-
-    group('Mouse Cursor', () {
-      testWidgets('accepts mouseCursor parameter', (tester) async {
-        await tester.pumpRemixApp(
-          RemixToggle(
-            selected: false,
-            onChanged: (value) {},
-            label: 'Bold',
-            mouseCursor: SystemMouseCursors.forbidden,
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixToggle), findsOneWidget);
-      });
-    });
-
-    group('Haptic Feedback', () {
-      testWidgets('handles disabled feedback', (tester) async {
-        await tester.pumpRemixApp(
-          RemixToggle(
-            selected: false,
-            onChanged: (value) {},
-            label: 'Bold',
-            enableFeedback: false,
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixToggle), findsOneWidget);
       });
     });
 

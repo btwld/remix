@@ -30,6 +30,7 @@ class RemixToggle extends StatelessWidget {
     this.label,
     this.icon,
     this.style = const RemixToggleStyle.create(),
+    this.styleSpec,
     this.enableFeedback = true,
     this.focusNode,
     this.autofocus = false,
@@ -57,6 +58,9 @@ class RemixToggle extends StatelessWidget {
 
   /// The style configuration for the toggle.
   final RemixToggleStyle style;
+
+  /// The style spec for the toggle.
+  final RemixToggleSpec? styleSpec;
 
   static final styleFrom = RemixToggleStyle.new;
 

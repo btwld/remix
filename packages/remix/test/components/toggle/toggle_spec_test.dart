@@ -12,34 +12,38 @@ void main() {
         expect(spec.label, isA<StyleSpec<TextSpec>>());
         expect(spec.icon, isA<StyleSpec<IconSpec>>());
       });
-
-      test('creates spec with provided parameters', () {
-        final container = StyleSpec(spec: FlexBoxSpec());
-        final label = StyleSpec(spec: TextSpec());
-        final icon = StyleSpec(spec: IconSpec());
-
-        final spec = RemixToggleSpec(
-          container: container,
-          label: label,
-          icon: icon,
-        );
-
-        expect(spec.container, equals(container));
-        expect(spec.label, equals(label));
-        expect(spec.icon, equals(icon));
-      });
     });
 
     group('copyWith', () {
       test('returns new instance with updated properties', () {
         const originalSpec = RemixToggleSpec();
         final newContainer = StyleSpec(spec: FlexBoxSpec());
+        final newLabel = StyleSpec(spec: TextSpec());
 
-        final updatedSpec = originalSpec.copyWith(container: newContainer);
+        final updatedSpec = originalSpec.copyWith(
+          container: newContainer,
+          label: newLabel,
+        );
 
         expect(updatedSpec, isNot(same(originalSpec)));
         expect(updatedSpec.container, equals(newContainer));
+        expect(updatedSpec.label, equals(newLabel));
+        expect(updatedSpec.icon, equals(originalSpec.icon));
       });
+
+      test(
+        'returns new instance with no changes when no parameters provided',
+        () {
+          const originalSpec = RemixToggleSpec();
+
+          final updatedSpec = originalSpec.copyWith();
+
+          expect(updatedSpec, isNot(same(originalSpec)));
+          expect(updatedSpec.container, equals(originalSpec.container));
+          expect(updatedSpec.label, equals(originalSpec.label));
+          expect(updatedSpec.icon, equals(originalSpec.icon));
+        },
+      );
 
       test('preserves immutability - original spec unchanged', () {
         const originalSpec = RemixToggleSpec();
@@ -51,23 +55,6 @@ void main() {
         expect(originalSpec.container, equals(originalContainer));
         expect(updatedSpec.container, equals(newContainer));
         expect(updatedSpec.container, isNot(same(originalContainer)));
-      });
-
-      test('returns new instance with all properties updated', () {
-        const originalSpec = RemixToggleSpec();
-        final newContainer = StyleSpec(spec: FlexBoxSpec());
-        final newLabel = StyleSpec(spec: TextSpec());
-        final newIcon = StyleSpec(spec: IconSpec());
-
-        final updatedSpec = originalSpec.copyWith(
-          container: newContainer,
-          label: newLabel,
-          icon: newIcon,
-        );
-
-        expect(updatedSpec.container, equals(newContainer));
-        expect(updatedSpec.label, equals(newLabel));
-        expect(updatedSpec.icon, equals(newIcon));
       });
     });
 
@@ -85,60 +72,53 @@ void main() {
         final spec1 = RemixToggleSpec(
           container: StyleSpec(spec: FlexBoxSpec()),
           label: StyleSpec(spec: TextSpec()),
-          icon: StyleSpec(spec: IconSpec()),
         );
         final spec2 = RemixToggleSpec(
           container: StyleSpec(spec: FlexBoxSpec()),
           label: StyleSpec(spec: TextSpec()),
-          icon: StyleSpec(spec: IconSpec()),
         );
 
         final result = spec1.lerp(spec2, 0.0);
 
         expect(result, isNot(same(spec1)));
+        expect(result, isNot(same(spec2)));
         expect(result.container, equals(spec1.container));
         expect(result.label, equals(spec1.label));
-        expect(result.icon, equals(spec1.icon));
       });
 
       test('interpolates between two specs at t=1.0', () {
         final spec1 = RemixToggleSpec(
           container: StyleSpec(spec: FlexBoxSpec()),
           label: StyleSpec(spec: TextSpec()),
-          icon: StyleSpec(spec: IconSpec()),
         );
         final spec2 = RemixToggleSpec(
           container: StyleSpec(spec: FlexBoxSpec()),
           label: StyleSpec(spec: TextSpec()),
-          icon: StyleSpec(spec: IconSpec()),
         );
 
         final result = spec1.lerp(spec2, 1.0);
 
+        expect(result, isNot(same(spec1)));
         expect(result, isNot(same(spec2)));
         expect(result.container, equals(spec2.container));
         expect(result.label, equals(spec2.label));
-        expect(result.icon, equals(spec2.icon));
       });
 
       test('interpolates between two specs at t=0.5', () {
         final spec1 = RemixToggleSpec(
           container: StyleSpec(spec: FlexBoxSpec()),
           label: StyleSpec(spec: TextSpec()),
-          icon: StyleSpec(spec: IconSpec()),
         );
         final spec2 = RemixToggleSpec(
           container: StyleSpec(spec: FlexBoxSpec()),
           label: StyleSpec(spec: TextSpec()),
-          icon: StyleSpec(spec: IconSpec()),
         );
 
         final result = spec1.lerp(spec2, 0.5);
 
-        expect(result, isNotNull);
-        expect(result.container, isNotNull);
-        expect(result.label, isNotNull);
-        expect(result.icon, isNotNull);
+        expect(result, isNot(same(spec1)));
+        expect(result, isNot(same(spec2)));
+        expect(result, isA<RemixToggleSpec>());
       });
     });
 
@@ -198,6 +178,21 @@ void main() {
         expect(spec.toString(), isA<String>());
         expect(spec.toString(), isNotEmpty);
       });
+
+      test('diagnostic properties are properly formatted', () {
+        const spec = RemixToggleSpec();
+        final builder = DiagnosticPropertiesBuilder();
+
+        spec.debugFillProperties(builder);
+
+        final properties = builder.properties;
+        expect(properties, hasLength(3));
+
+        final propertyNames = properties.map((p) => p.name).toList();
+        expect(propertyNames, contains('container'));
+        expect(propertyNames, contains('label'));
+        expect(propertyNames, contains('icon'));
+      });
     });
 
     group('Edge Cases', () {
@@ -208,28 +203,6 @@ void main() {
         final updatedSpec = spec.copyWith(container: null);
 
         expect(updatedSpec.container, equals(originalContainer));
-      });
-
-      test('handles empty StyleSpec', () {
-        const spec = RemixToggleSpec(
-          container: StyleSpec(spec: FlexBoxSpec()),
-          label: StyleSpec(spec: TextSpec()),
-          icon: StyleSpec(spec: IconSpec()),
-        );
-
-        expect(spec.container, isNotNull);
-        expect(spec.label, isNotNull);
-        expect(spec.icon, isNotNull);
-      });
-    });
-
-    group('Default Values', () {
-      test('provides default values for all properties', () {
-        const spec = RemixToggleSpec();
-
-        expect(spec.container, isNotNull);
-        expect(spec.label, isNotNull);
-        expect(spec.icon, isNotNull);
       });
     });
   });
