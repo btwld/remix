@@ -1,3 +1,23 @@
+## 0.2.0
+
+- **FEAT**: Add RemixToggle component (#50).
+- **FEAT**: Add backgroundColor, foregroundColor, shape and factory methods to RemixCalloutStyle (#49).
+- **FEAT**: Add factory constructors and shape to RemixCardStyle (#48).
+- **FEAT**: Align component style APIs with Material conventions (#47).
+- **FEAT**: Rename badge color to backgroundColor, add foregroundColor and factory constructors (#46).
+- **FEAT**: Add convenience factory methods to RemixAccordionStyle (#44).
+- **FEAT**: Add convenience methods and factory constructors to RemixAvatarStyle (#45).
+- **FEAT**: Add Material-like style convenience methods to RemixButtonStyle (#43).
+- **FEAT**: Create FortalScope widget (#37).
+- **FEAT**: Add leading and trailing icon support to RemixButton (#20).
+- **FEAT**: Add call() method to design system styles (#30).
+- **REFACTOR**: Migrate components to mix annotations and code generation (#35).
+- **FIX**: Handle unbounded width constraints in RemixSelect (#31).
+- **FIX**: Add slider min/max validation and export StyledTextStyleMixin (#32).
+- **DOCS**: Fix component documentation to match Dart source code (#51).
+- **CHORE**: Migrate to Dart 3.10 dot shorthand syntax (#34).
+- **CHORE**: Fix documentation API references and add error logging (#33).
+
 ## 0.1.0-beta.3
 
 - **FEAT**: Add iconAlignment property to Button component (#29).
