@@ -435,26 +435,26 @@ packages:
     dependency: transitive
     description:
       name: mix
-      sha256: "3b782f1d706d3276f7aa54ef6df39d3363d5e8c603a5cc109221aa690f0fe86f"
+      sha256: "0d23b5004465a91350dd0d1eca1095a4f2a6fb7c77b21b4157da5961a17db9a8"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.0-rc.1"
+    version: "2.0.1"
   mix_annotations:
     dependency: transitive
     description:
       name: mix_annotations
-      sha256: a8387e680134f3f0dbe260e77dd6d4093906a3d626007a02a2efd60656f78a88
+      sha256: dc5227da34a81585ce815ebc76ddb8bc6cc904c2109cda8a40ed1d518b9c9cf1
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.0-rc.1"
+    version: "2.0.0"
   mix_generator:
     dependency: transitive
     description:
       name: mix_generator
-      sha256: ede2795dd5f4431fdbc694f844f4f1e14fc6a9edd4662b30df37db49eb27b836
+      sha256: da3fb57ce057fcf71f7807a4453ae28fa1c85ddb8ec64cbb3af7b12782fe49e7
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.0-rc.1"
+    version: "2.0.0"
   mustache_template:
     dependency: transitive
     description:
@@ -861,5 +861,5 @@ packages:
     source: hosted
     version: "2.2.3"
 sdks:
-  dart: ">=3.10.0 <4.0.0"
-  flutter: ">=3.38.1"
+  dart: ">=3.11.0 <4.0.0"
+  flutter: ">=3.41.0"

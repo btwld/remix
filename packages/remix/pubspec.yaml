@@ -5,7 +5,6 @@ documentation: https://docs.page/btwld/remix
 issue_tracker: https://github.com/btwld/remix/issues
 license: BSD-3-Clause
 resolution: workspace
-publish_to: none
 
 version: 0.2.0
 
