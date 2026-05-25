@@ -6,9 +6,12 @@ part of 'badge.dart';
 // SpecGenerator
 // **************************************************************************
 
-mixin _$RemixBadgeSpecMethods on Spec<RemixBadgeSpec>, Diagnosticable {
+mixin _$RemixBadgeSpec implements Spec<RemixBadgeSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
   StyleSpec<TextSpec> get text;
+
+  @override
+  Type get type => RemixBadgeSpec;
 
   @override
   RemixBadgeSpec copyWith({
@@ -30,16 +33,57 @@ mixin _$RemixBadgeSpecMethods on Spec<RemixBadgeSpec>, Diagnosticable {
   }
 
   @override
+  List<Object?> get props => [container, text];
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is RemixBadgeSpec &&
+            runtimeType == other.runtimeType &&
+            propsEquals(props, other.props);
+  }
+
+  @override
+  int get hashCode => propsHash(runtimeType, props);
+
+  @override
+  bool get stringify => true;
+
+  @override
+  Map<String, String> getDiff(Equatable other) {
+    if (this == other) return const {};
+
+    return propsDiff(props, other.props);
+  }
+
+  @override
+  String toStringShort() => '$runtimeType';
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) =>
+      toDiagnosticsNode(
+        style: DiagnosticsTreeStyle.singleLine,
+      ).toString(minLevel: minLevel);
+
+  @override
+  DiagnosticsNode toDiagnosticsNode({
+    String? name,
+    DiagnosticsTreeStyle? style,
+  }) =>
+      DiagnosticableNode<Diagnosticable>(name: name, value: this, style: style);
+
+  @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('text', text));
   }
-
-  @override
-  List<Object?> get props => [container, text];
 }
+
+@Deprecated(
+  'Rename to `_\$RemixBadgeSpec` and migrate the class declaration to `class RemixBadgeSpec with _\$RemixBadgeSpec`. The `_\$RemixBadgeSpecMethods` alias will be removed in mix_generator 3.0.',
+)
+typedef _$RemixBadgeSpecMethods = _$RemixBadgeSpec; // ignore: unused_element
 
 // **************************************************************************
 // StylerGenerator

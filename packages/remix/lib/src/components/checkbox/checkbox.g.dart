@@ -6,9 +6,12 @@ part of 'checkbox.dart';
 // SpecGenerator
 // **************************************************************************
 
-mixin _$RemixCheckboxSpecMethods on Spec<RemixCheckboxSpec>, Diagnosticable {
+mixin _$RemixCheckboxSpec implements Spec<RemixCheckboxSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
   StyleSpec<IconSpec> get indicator;
+
+  @override
+  Type get type => RemixCheckboxSpec;
 
   @override
   RemixCheckboxSpec copyWith({
@@ -30,16 +33,57 @@ mixin _$RemixCheckboxSpecMethods on Spec<RemixCheckboxSpec>, Diagnosticable {
   }
 
   @override
+  List<Object?> get props => [container, indicator];
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is RemixCheckboxSpec &&
+            runtimeType == other.runtimeType &&
+            propsEquals(props, other.props);
+  }
+
+  @override
+  int get hashCode => propsHash(runtimeType, props);
+
+  @override
+  bool get stringify => true;
+
+  @override
+  Map<String, String> getDiff(Equatable other) {
+    if (this == other) return const {};
+
+    return propsDiff(props, other.props);
+  }
+
+  @override
+  String toStringShort() => '$runtimeType';
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) =>
+      toDiagnosticsNode(
+        style: DiagnosticsTreeStyle.singleLine,
+      ).toString(minLevel: minLevel);
+
+  @override
+  DiagnosticsNode toDiagnosticsNode({
+    String? name,
+    DiagnosticsTreeStyle? style,
+  }) =>
+      DiagnosticableNode<Diagnosticable>(name: name, value: this, style: style);
+
+  @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('indicator', indicator));
   }
-
-  @override
-  List<Object?> get props => [container, indicator];
 }
+
+@Deprecated(
+  'Rename to `_\$RemixCheckboxSpec` and migrate the class declaration to `class RemixCheckboxSpec with _\$RemixCheckboxSpec`. The `_\$RemixCheckboxSpecMethods` alias will be removed in mix_generator 3.0.',
+)
+typedef _$RemixCheckboxSpecMethods = _$RemixCheckboxSpec; // ignore: unused_element
 
 // **************************************************************************
 // StylerGenerator

@@ -6,11 +6,14 @@ part of 'icon_button.dart';
 // SpecGenerator
 // **************************************************************************
 
-mixin _$RemixIconButtonSpecMethods
-    on Spec<RemixIconButtonSpec>, Diagnosticable {
+mixin _$RemixIconButtonSpec
+    implements Spec<RemixIconButtonSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
   StyleSpec<IconSpec> get icon;
   StyleSpec<RemixSpinnerSpec> get spinner;
+
+  @override
+  Type get type => RemixIconButtonSpec;
 
   @override
   RemixIconButtonSpec copyWith({
@@ -35,17 +38,58 @@ mixin _$RemixIconButtonSpecMethods
   }
 
   @override
+  List<Object?> get props => [container, icon, spinner];
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is RemixIconButtonSpec &&
+            runtimeType == other.runtimeType &&
+            propsEquals(props, other.props);
+  }
+
+  @override
+  int get hashCode => propsHash(runtimeType, props);
+
+  @override
+  bool get stringify => true;
+
+  @override
+  Map<String, String> getDiff(Equatable other) {
+    if (this == other) return const {};
+
+    return propsDiff(props, other.props);
+  }
+
+  @override
+  String toStringShort() => '$runtimeType';
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) =>
+      toDiagnosticsNode(
+        style: DiagnosticsTreeStyle.singleLine,
+      ).toString(minLevel: minLevel);
+
+  @override
+  DiagnosticsNode toDiagnosticsNode({
+    String? name,
+    DiagnosticsTreeStyle? style,
+  }) =>
+      DiagnosticableNode<Diagnosticable>(name: name, value: this, style: style);
+
+  @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('icon', icon))
       ..add(DiagnosticsProperty('spinner', spinner));
   }
-
-  @override
-  List<Object?> get props => [container, icon, spinner];
 }
+
+@Deprecated(
+  'Rename to `_\$RemixIconButtonSpec` and migrate the class declaration to `class RemixIconButtonSpec with _\$RemixIconButtonSpec`. The `_\$RemixIconButtonSpecMethods` alias will be removed in mix_generator 3.0.',
+)
+typedef _$RemixIconButtonSpecMethods = _$RemixIconButtonSpec; // ignore: unused_element
 
 // **************************************************************************
 // StylerGenerator

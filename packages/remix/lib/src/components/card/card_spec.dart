@@ -1,8 +1,7 @@
 part of 'card.dart';
 
 @MixableSpec()
-class RemixCardSpec extends Spec<RemixCardSpec>
-    with Diagnosticable, _$RemixCardSpecMethods {
+class RemixCardSpec with _$RemixCardSpec {
   @override
   final StyleSpec<BoxSpec> container;
 

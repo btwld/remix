@@ -6,7 +6,7 @@ part of 'textfield.dart';
 // SpecGenerator
 // **************************************************************************
 
-mixin _$RemixTextFieldSpecMethods on Spec<RemixTextFieldSpec>, Diagnosticable {
+mixin _$RemixTextFieldSpec implements Spec<RemixTextFieldSpec>, Diagnosticable {
   StyleSpec<TextSpec> get text;
   StyleSpec<TextSpec> get hintText;
   TextAlign? get textAlign;
@@ -24,6 +24,9 @@ mixin _$RemixTextFieldSpecMethods on Spec<RemixTextFieldSpec>, Diagnosticable {
   StyleSpec<FlexBoxSpec> get container;
   StyleSpec<TextSpec> get helperText;
   StyleSpec<TextSpec> get label;
+
+  @override
+  Type get type => RemixTextFieldSpec;
 
   @override
   RemixTextFieldSpec copyWith({
@@ -107,29 +110,6 @@ mixin _$RemixTextFieldSpecMethods on Spec<RemixTextFieldSpec>, Diagnosticable {
   }
 
   @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('text', text))
-      ..add(DiagnosticsProperty('hintText', hintText))
-      ..add(EnumProperty<TextAlign>('textAlign', textAlign))
-      ..add(DoubleProperty('cursorWidth', cursorWidth))
-      ..add(DoubleProperty('cursorHeight', cursorHeight))
-      ..add(DiagnosticsProperty('cursorRadius', cursorRadius))
-      ..add(ColorProperty('cursorColor', cursorColor))
-      ..add(DiagnosticsProperty('cursorOffset', cursorOffset))
-      ..add(DiagnosticsProperty('selectionHeightStyle', selectionHeightStyle))
-      ..add(DiagnosticsProperty('selectionWidthStyle', selectionWidthStyle))
-      ..add(DiagnosticsProperty('scrollPadding', scrollPadding))
-      ..add(DiagnosticsProperty('keyboardAppearance', keyboardAppearance))
-      ..add(DiagnosticsProperty('cursorOpacityAnimates', cursorOpacityAnimates))
-      ..add(DoubleProperty('spacing', spacing))
-      ..add(DiagnosticsProperty('container', container))
-      ..add(DiagnosticsProperty('helperText', helperText))
-      ..add(DiagnosticsProperty('label', label));
-  }
-
-  @override
   List<Object?> get props => [
     text,
     hintText,
@@ -149,7 +129,71 @@ mixin _$RemixTextFieldSpecMethods on Spec<RemixTextFieldSpec>, Diagnosticable {
     helperText,
     label,
   ];
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is RemixTextFieldSpec &&
+            runtimeType == other.runtimeType &&
+            propsEquals(props, other.props);
+  }
+
+  @override
+  int get hashCode => propsHash(runtimeType, props);
+
+  @override
+  bool get stringify => true;
+
+  @override
+  Map<String, String> getDiff(Equatable other) {
+    if (this == other) return const {};
+
+    return propsDiff(props, other.props);
+  }
+
+  @override
+  String toStringShort() => '$runtimeType';
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) =>
+      toDiagnosticsNode(
+        style: DiagnosticsTreeStyle.singleLine,
+      ).toString(minLevel: minLevel);
+
+  @override
+  DiagnosticsNode toDiagnosticsNode({
+    String? name,
+    DiagnosticsTreeStyle? style,
+  }) =>
+      DiagnosticableNode<Diagnosticable>(name: name, value: this, style: style);
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    properties
+      ..add(DiagnosticsProperty('text', text))
+      ..add(DiagnosticsProperty('hintText', hintText))
+      ..add(EnumProperty<TextAlign>('textAlign', textAlign))
+      ..add(DoubleProperty('cursorWidth', cursorWidth))
+      ..add(DoubleProperty('cursorHeight', cursorHeight))
+      ..add(DiagnosticsProperty('cursorRadius', cursorRadius))
+      ..add(ColorProperty('cursorColor', cursorColor))
+      ..add(DiagnosticsProperty('cursorOffset', cursorOffset))
+      ..add(DiagnosticsProperty('selectionHeightStyle', selectionHeightStyle))
+      ..add(DiagnosticsProperty('selectionWidthStyle', selectionWidthStyle))
+      ..add(DiagnosticsProperty('scrollPadding', scrollPadding))
+      ..add(DiagnosticsProperty('keyboardAppearance', keyboardAppearance))
+      ..add(DiagnosticsProperty('cursorOpacityAnimates', cursorOpacityAnimates))
+      ..add(DoubleProperty('spacing', spacing))
+      ..add(DiagnosticsProperty('container', container))
+      ..add(DiagnosticsProperty('helperText', helperText))
+      ..add(DiagnosticsProperty('label', label));
+  }
 }
+
+@Deprecated(
+  'Rename to `_\$RemixTextFieldSpec` and migrate the class declaration to `class RemixTextFieldSpec with _\$RemixTextFieldSpec`. The `_\$RemixTextFieldSpecMethods` alias will be removed in mix_generator 3.0.',
+)
+typedef _$RemixTextFieldSpecMethods = _$RemixTextFieldSpec; // ignore: unused_element
 
 // **************************************************************************
 // StylerGenerator

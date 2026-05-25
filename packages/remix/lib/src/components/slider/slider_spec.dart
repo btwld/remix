@@ -8,8 +8,7 @@ const Color _defaultTrackColor = MixColors.grey;
 const Color _defaultRangeColor = MixColors.black;
 
 @MixableSpec()
-class RemixSliderSpec extends Spec<RemixSliderSpec>
-    with Diagnosticable, _$RemixSliderSpecMethods {
+class RemixSliderSpec with _$RemixSliderSpec {
   static const Size defaultThumbSize = _remixSliderDefaultThumbSize;
   static const double defaultTrackStrokeWidth =
       _remixSliderDefaultTrackStrokeWidth;

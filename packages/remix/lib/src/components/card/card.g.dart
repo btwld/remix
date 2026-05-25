@@ -6,8 +6,11 @@ part of 'card.dart';
 // SpecGenerator
 // **************************************************************************
 
-mixin _$RemixCardSpecMethods on Spec<RemixCardSpec>, Diagnosticable {
+mixin _$RemixCardSpec implements Spec<RemixCardSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
+
+  @override
+  Type get type => RemixCardSpec;
 
   @override
   RemixCardSpec copyWith({StyleSpec<BoxSpec>? container}) {
@@ -20,14 +23,55 @@ mixin _$RemixCardSpecMethods on Spec<RemixCardSpec>, Diagnosticable {
   }
 
   @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties..add(DiagnosticsProperty('container', container));
+  List<Object?> get props => [container];
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is RemixCardSpec &&
+            runtimeType == other.runtimeType &&
+            propsEquals(props, other.props);
   }
 
   @override
-  List<Object?> get props => [container];
+  int get hashCode => propsHash(runtimeType, props);
+
+  @override
+  bool get stringify => true;
+
+  @override
+  Map<String, String> getDiff(Equatable other) {
+    if (this == other) return const {};
+
+    return propsDiff(props, other.props);
+  }
+
+  @override
+  String toStringShort() => '$runtimeType';
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) =>
+      toDiagnosticsNode(
+        style: DiagnosticsTreeStyle.singleLine,
+      ).toString(minLevel: minLevel);
+
+  @override
+  DiagnosticsNode toDiagnosticsNode({
+    String? name,
+    DiagnosticsTreeStyle? style,
+  }) =>
+      DiagnosticableNode<Diagnosticable>(name: name, value: this, style: style);
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    properties..add(DiagnosticsProperty('container', container));
+  }
 }
+
+@Deprecated(
+  'Rename to `_\$RemixCardSpec` and migrate the class declaration to `class RemixCardSpec with _\$RemixCardSpec`. The `_\$RemixCardSpecMethods` alias will be removed in mix_generator 3.0.',
+)
+typedef _$RemixCardSpecMethods = _$RemixCardSpec; // ignore: unused_element
 
 // **************************************************************************
 // StylerGenerator

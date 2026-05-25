@@ -1,8 +1,7 @@
 part of 'avatar.dart';
 
 @MixableSpec()
-class RemixAvatarSpec extends Spec<RemixAvatarSpec>
-    with Diagnosticable, _$RemixAvatarSpecMethods {
+class RemixAvatarSpec with _$RemixAvatarSpec {
   @override
   final StyleSpec<BoxSpec> container;
   @override

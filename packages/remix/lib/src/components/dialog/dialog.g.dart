@@ -6,12 +6,15 @@ part of 'dialog.dart';
 // SpecGenerator
 // **************************************************************************
 
-mixin _$RemixDialogSpecMethods on Spec<RemixDialogSpec>, Diagnosticable {
+mixin _$RemixDialogSpec implements Spec<RemixDialogSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
   StyleSpec<TextSpec> get title;
   StyleSpec<TextSpec> get description;
   StyleSpec<FlexBoxSpec> get actions;
   StyleSpec<BoxSpec> get overlay;
+
+  @override
+  Type get type => RemixDialogSpec;
 
   @override
   RemixDialogSpec copyWith({
@@ -42,8 +45,47 @@ mixin _$RemixDialogSpecMethods on Spec<RemixDialogSpec>, Diagnosticable {
   }
 
   @override
+  List<Object?> get props => [container, title, description, actions, overlay];
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is RemixDialogSpec &&
+            runtimeType == other.runtimeType &&
+            propsEquals(props, other.props);
+  }
+
+  @override
+  int get hashCode => propsHash(runtimeType, props);
+
+  @override
+  bool get stringify => true;
+
+  @override
+  Map<String, String> getDiff(Equatable other) {
+    if (this == other) return const {};
+
+    return propsDiff(props, other.props);
+  }
+
+  @override
+  String toStringShort() => '$runtimeType';
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) =>
+      toDiagnosticsNode(
+        style: DiagnosticsTreeStyle.singleLine,
+      ).toString(minLevel: minLevel);
+
+  @override
+  DiagnosticsNode toDiagnosticsNode({
+    String? name,
+    DiagnosticsTreeStyle? style,
+  }) =>
+      DiagnosticableNode<Diagnosticable>(name: name, value: this, style: style);
+
+  @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('title', title))
@@ -51,10 +93,12 @@ mixin _$RemixDialogSpecMethods on Spec<RemixDialogSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('actions', actions))
       ..add(DiagnosticsProperty('overlay', overlay));
   }
-
-  @override
-  List<Object?> get props => [container, title, description, actions, overlay];
 }
+
+@Deprecated(
+  'Rename to `_\$RemixDialogSpec` and migrate the class declaration to `class RemixDialogSpec with _\$RemixDialogSpec`. The `_\$RemixDialogSpecMethods` alias will be removed in mix_generator 3.0.',
+)
+typedef _$RemixDialogSpecMethods = _$RemixDialogSpec; // ignore: unused_element
 
 // **************************************************************************
 // StylerGenerator

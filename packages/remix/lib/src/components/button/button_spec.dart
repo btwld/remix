@@ -50,8 +50,7 @@ part of 'button.dart';
 /// - [RemixButton] for the widget implementation
 /// - [Spec] for the base specification pattern
 @MixableSpec()
-class RemixButtonSpec extends Spec<RemixButtonSpec>
-    with Diagnosticable, _$RemixButtonSpecMethods {
+class RemixButtonSpec with _$RemixButtonSpec {
   /// Styling specification for the button's container.
   ///
   /// Controls the button's layout, background, borders, padding,

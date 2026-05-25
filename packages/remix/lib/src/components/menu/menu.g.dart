@@ -6,11 +6,14 @@ part of 'menu.dart';
 // SpecGenerator
 // **************************************************************************
 
-mixin _$RemixMenuTriggerSpecMethods
-    on Spec<RemixMenuTriggerSpec>, Diagnosticable {
+mixin _$RemixMenuTriggerSpec
+    implements Spec<RemixMenuTriggerSpec>, Diagnosticable {
   StyleSpec<FlexBoxSpec> get container;
   StyleSpec<TextSpec> get label;
   StyleSpec<IconSpec> get icon;
+
+  @override
+  Type get type => RemixMenuTriggerSpec;
 
   @override
   RemixMenuTriggerSpec copyWith({
@@ -35,23 +38,67 @@ mixin _$RemixMenuTriggerSpecMethods
   }
 
   @override
+  List<Object?> get props => [container, label, icon];
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is RemixMenuTriggerSpec &&
+            runtimeType == other.runtimeType &&
+            propsEquals(props, other.props);
+  }
+
+  @override
+  int get hashCode => propsHash(runtimeType, props);
+
+  @override
+  bool get stringify => true;
+
+  @override
+  Map<String, String> getDiff(Equatable other) {
+    if (this == other) return const {};
+
+    return propsDiff(props, other.props);
+  }
+
+  @override
+  String toStringShort() => '$runtimeType';
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) =>
+      toDiagnosticsNode(
+        style: DiagnosticsTreeStyle.singleLine,
+      ).toString(minLevel: minLevel);
+
+  @override
+  DiagnosticsNode toDiagnosticsNode({
+    String? name,
+    DiagnosticsTreeStyle? style,
+  }) =>
+      DiagnosticableNode<Diagnosticable>(name: name, value: this, style: style);
+
+  @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('label', label))
       ..add(DiagnosticsProperty('icon', icon));
   }
-
-  @override
-  List<Object?> get props => [container, label, icon];
 }
 
-mixin _$RemixMenuSpecMethods on Spec<RemixMenuSpec>, Diagnosticable {
+@Deprecated(
+  'Rename to `_\$RemixMenuTriggerSpec` and migrate the class declaration to `class RemixMenuTriggerSpec with _\$RemixMenuTriggerSpec`. The `_\$RemixMenuTriggerSpecMethods` alias will be removed in mix_generator 3.0.',
+)
+typedef _$RemixMenuTriggerSpecMethods = _$RemixMenuTriggerSpec; // ignore: unused_element
+
+mixin _$RemixMenuSpec implements Spec<RemixMenuSpec>, Diagnosticable {
   StyleSpec<RemixMenuTriggerSpec> get trigger;
   StyleSpec<FlexBoxSpec> get overlay;
   StyleSpec<RemixMenuItemSpec> get item;
   StyleSpec<RemixDividerSpec> get divider;
+
+  @override
+  Type get type => RemixMenuSpec;
 
   @override
   RemixMenuSpec copyWith({
@@ -79,24 +126,68 @@ mixin _$RemixMenuSpecMethods on Spec<RemixMenuSpec>, Diagnosticable {
   }
 
   @override
+  List<Object?> get props => [trigger, overlay, item, divider];
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is RemixMenuSpec &&
+            runtimeType == other.runtimeType &&
+            propsEquals(props, other.props);
+  }
+
+  @override
+  int get hashCode => propsHash(runtimeType, props);
+
+  @override
+  bool get stringify => true;
+
+  @override
+  Map<String, String> getDiff(Equatable other) {
+    if (this == other) return const {};
+
+    return propsDiff(props, other.props);
+  }
+
+  @override
+  String toStringShort() => '$runtimeType';
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) =>
+      toDiagnosticsNode(
+        style: DiagnosticsTreeStyle.singleLine,
+      ).toString(minLevel: minLevel);
+
+  @override
+  DiagnosticsNode toDiagnosticsNode({
+    String? name,
+    DiagnosticsTreeStyle? style,
+  }) =>
+      DiagnosticableNode<Diagnosticable>(name: name, value: this, style: style);
+
+  @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('trigger', trigger))
       ..add(DiagnosticsProperty('overlay', overlay))
       ..add(DiagnosticsProperty('item', item))
       ..add(DiagnosticsProperty('divider', divider));
   }
-
-  @override
-  List<Object?> get props => [trigger, overlay, item, divider];
 }
 
-mixin _$RemixMenuItemSpecMethods on Spec<RemixMenuItemSpec>, Diagnosticable {
+@Deprecated(
+  'Rename to `_\$RemixMenuSpec` and migrate the class declaration to `class RemixMenuSpec with _\$RemixMenuSpec`. The `_\$RemixMenuSpecMethods` alias will be removed in mix_generator 3.0.',
+)
+typedef _$RemixMenuSpecMethods = _$RemixMenuSpec; // ignore: unused_element
+
+mixin _$RemixMenuItemSpec implements Spec<RemixMenuItemSpec>, Diagnosticable {
   StyleSpec<FlexBoxSpec> get container;
   StyleSpec<TextSpec> get label;
   StyleSpec<IconSpec> get leadingIcon;
   StyleSpec<IconSpec> get trailingIcon;
+
+  @override
+  Type get type => RemixMenuItemSpec;
 
   @override
   RemixMenuItemSpec copyWith({
@@ -124,18 +215,59 @@ mixin _$RemixMenuItemSpecMethods on Spec<RemixMenuItemSpec>, Diagnosticable {
   }
 
   @override
+  List<Object?> get props => [container, label, leadingIcon, trailingIcon];
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is RemixMenuItemSpec &&
+            runtimeType == other.runtimeType &&
+            propsEquals(props, other.props);
+  }
+
+  @override
+  int get hashCode => propsHash(runtimeType, props);
+
+  @override
+  bool get stringify => true;
+
+  @override
+  Map<String, String> getDiff(Equatable other) {
+    if (this == other) return const {};
+
+    return propsDiff(props, other.props);
+  }
+
+  @override
+  String toStringShort() => '$runtimeType';
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) =>
+      toDiagnosticsNode(
+        style: DiagnosticsTreeStyle.singleLine,
+      ).toString(minLevel: minLevel);
+
+  @override
+  DiagnosticsNode toDiagnosticsNode({
+    String? name,
+    DiagnosticsTreeStyle? style,
+  }) =>
+      DiagnosticableNode<Diagnosticable>(name: name, value: this, style: style);
+
+  @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('label', label))
       ..add(DiagnosticsProperty('leadingIcon', leadingIcon))
       ..add(DiagnosticsProperty('trailingIcon', trailingIcon));
   }
-
-  @override
-  List<Object?> get props => [container, label, leadingIcon, trailingIcon];
 }
+
+@Deprecated(
+  'Rename to `_\$RemixMenuItemSpec` and migrate the class declaration to `class RemixMenuItemSpec with _\$RemixMenuItemSpec`. The `_\$RemixMenuItemSpecMethods` alias will be removed in mix_generator 3.0.',
+)
+typedef _$RemixMenuItemSpecMethods = _$RemixMenuItemSpec; // ignore: unused_element
 
 // **************************************************************************
 // StylerGenerator
