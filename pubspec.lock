@@ -437,7 +437,7 @@ packages:
       path: "packages/mix"
       ref: "feat/mix-widget-generator"
       resolved-ref: d26e68119356be338735fc4576c7bf02531563c2
-      url: "git@github.com:btwld/mix.git"
+      url: "https://github.com/btwld/mix.git"
     source: git
     version: "2.0.3"
   mix_annotations:
@@ -446,7 +446,7 @@ packages:
       path: "packages/mix_annotations"
       ref: "feat/mix-widget-generator"
       resolved-ref: d26e68119356be338735fc4576c7bf02531563c2
-      url: "git@github.com:btwld/mix.git"
+      url: "https://github.com/btwld/mix.git"
     source: git
     version: "2.0.1"
   mix_generator:
@@ -455,7 +455,7 @@ packages:
       path: "packages/mix_generator"
       ref: "feat/mix-widget-generator"
       resolved-ref: d26e68119356be338735fc4576c7bf02531563c2
-      url: "git@github.com:btwld/mix.git"
+      url: "https://github.com/btwld/mix.git"
     source: git
     version: "2.0.3"
   mustache_template:

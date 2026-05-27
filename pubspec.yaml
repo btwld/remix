@@ -11,17 +11,17 @@ dependencies:
 dependency_overrides:
   mix:
     git:
-      url: git@github.com:btwld/mix.git
+      url: https://github.com/btwld/mix.git
       ref: feat/mix-widget-generator
       path: packages/mix
   mix_annotations:
     git:
-      url: git@github.com:btwld/mix.git
+      url: https://github.com/btwld/mix.git
       ref: feat/mix-widget-generator
       path: packages/mix_annotations
   mix_generator:
     git:
-      url: git@github.com:btwld/mix.git
+      url: https://github.com/btwld/mix.git
       ref: feat/mix-widget-generator
       path: packages/mix_generator
 
