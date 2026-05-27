@@ -5,10 +5,7 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 final _key = GlobalKey();
 
-@widgetbook.UseCase(
-  name: 'TextField Component',
-  type: RemixTextField,
-)
+@widgetbook.UseCase(name: 'TextField Component', type: RemixTextField)
 Widget buildTextFieldUseCase(BuildContext context) {
   return KeyedSubtree(
     key: _key,
@@ -17,15 +14,18 @@ Widget buildTextFieldUseCase(BuildContext context) {
         child: SizedBox(
           width: 300,
           child: RemixTextField(
-            trailing: context.knobs
-                    .boolean(label: 'Show Trailing', initialValue: false)
-                ? RemixIconButton(
-                    icon: Icons.close_rounded,
-                    onPressed: () {},
-                  )
+            trailing:
+                context.knobs.boolean(
+                  label: 'Show Trailing',
+                  initialValue: false,
+                )
+                ? RemixIconButton(icon: Icons.close_rounded, onPressed: () {})
                 : null,
-            leading: context.knobs
-                    .boolean(label: 'Show Leading', initialValue: false)
+            leading:
+                context.knobs.boolean(
+                  label: 'Show Leading',
+                  initialValue: false,
+                )
                 ? const Icon(Icons.search)
                 : null,
             maxLines: context.knobs.int.input(
@@ -40,9 +40,11 @@ Widget buildTextFieldUseCase(BuildContext context) {
               label: 'Helper Text',
               initialValue: 'Helper Text',
             ),
-            enabled:
-                context.knobs.boolean(label: 'Enabled', initialValue: true),
-            style: FortalTextFieldStyles.create(
+            enabled: context.knobs.boolean(
+              label: 'Enabled',
+              initialValue: true,
+            ),
+            style: fortalTextFieldStyle(
               variant: context.knobs.object.dropdown(
                 label: 'variant',
                 options: FortalTextFieldVariant.values,

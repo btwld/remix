@@ -6,10 +6,7 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 final _key = GlobalKey();
 
-@widgetbook.UseCase(
-  name: 'Switch Component',
-  type: RemixSwitch,
-)
+@widgetbook.UseCase(name: 'Switch Component', type: RemixSwitch)
 Widget buildSwitchUseCase(BuildContext context) {
   final knobState = WidgetbookState.of(context);
 
@@ -21,7 +18,7 @@ Widget buildSwitchUseCase(BuildContext context) {
           selected: context.knobs.boolean(label: 'Toggle', initialValue: true),
           enabled: context.knobs.boolean(label: 'Enabled', initialValue: true),
           onChanged: (value) => knobState.updateKnob('Toggle', value),
-          style: FortalSwitchStyles.create(
+          style: fortalSwitchStyle(
             variant: context.knobs.object.dropdown(
               label: 'variant',
               options: FortalSwitchVariant.values,

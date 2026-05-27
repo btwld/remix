@@ -4,126 +4,91 @@ enum FortalCheckboxSize { size1, size2, size3 }
 
 enum FortalCheckboxVariant { surface, soft }
 
-/// Factory class for creating Fortal-compliant checkbox styles.
-///
-/// Provides static methods to create RemixCheckboxStyle instances for all
-/// Fortal UI checkbox variants using the FortalTokens system.
-class FortalCheckboxStyles {
-  const FortalCheckboxStyles._();
+@MixWidget()
+RemixCheckboxStyle fortalCheckboxStyle({
+  FortalCheckboxVariant variant = .surface,
+  FortalCheckboxSize size = .size2,
+}) {
+  return switch (variant) {
+    .surface => _fortalCheckboxSurfaceStyle(size),
+    .soft => _fortalCheckboxSoftStyle(size),
+  };
+}
 
-  /// Factory constructor for FortalCheckboxStyle with variant and size parameters.
-  ///
-  /// Returns a RemixCheckboxStyle configured with Fortal design tokens.
-  /// Defaults to classic variant with size2.
-  static RemixCheckboxStyle create({
-    FortalCheckboxVariant variant = .surface,
-    FortalCheckboxSize size = .size2,
-  }) {
-    return switch (variant) {
-      .surface => surface(size: size),
-      .soft => soft(size: size),
-    };
-  }
+RemixCheckboxStyle _fortalCheckboxBaseStyle(FortalCheckboxSize size) {
+  return RemixCheckboxStyle()
+      .onFocused(
+        RemixCheckboxStyle().borderAll(
+          color: FortalTokens.focusA8(),
+          width: FortalTokens.focusRingWidth(),
+        ),
+      )
+      .merge(_fortalCheckboxSizeStyle(size));
+}
 
-  static RemixCheckboxStyle base({
-    FortalCheckboxSize size = .size2,
-  }) {
-    return RemixCheckboxStyle()
-        // Focus state (generic)
-        .onFocused(
-          RemixCheckboxStyle().borderAll(
-            color: FortalTokens.focusA8(),
-            width: FortalTokens.focusRingWidth(),
-          ),
-        )
-        // Merge with size-specific styles
-        .merge(_sizeStyle(size));
-  }
+RemixCheckboxStyle _fortalCheckboxSurfaceStyle([
+  FortalCheckboxSize size = .size2,
+]) {
+  return _fortalCheckboxBaseStyle(size)
+      .borderAll(
+        color: FortalTokens.gray6(),
+        width: FortalTokens.borderWidth1(),
+      )
+      .borderRadiusAll(FortalTokens.radius2())
+      .indicatorColor(FortalTokens.accent9())
+      .onSelected(
+        RemixCheckboxStyle()
+            .fillColor(FortalTokens.accent9())
+            .borderAll(
+              color: FortalTokens.accent9(),
+              width: FortalTokens.borderWidth1(),
+            )
+            .indicatorColor(FortalTokens.accentContrast()),
+      )
+      .onDisabled(
+        RemixCheckboxStyle()
+            .fillColor(FortalTokens.grayA3())
+            .borderAll(
+              color: FortalTokens.gray7(),
+              width: FortalTokens.borderWidth1(),
+            )
+            .indicatorColor(FortalTokens.gray8()),
+      );
+}
 
-  /// Creates a surface variant checkbox style.
-  ///
-  /// Surface checkboxes use neutral surface with subtle borders.
-  /// Used for forms with softer visual appearance.
-  static RemixCheckboxStyle surface({
-    FortalCheckboxSize size = .size2,
-  }) {
-    return base(size: size)
-        // Container (the checkbox box itself) - no size properties
-        .borderAll(
-          color: FortalTokens.gray6(),
-          width: FortalTokens.borderWidth1(),
-        )
-        // Use token-based radius matching JSON intent.
-        .borderRadiusAll(FortalTokens.radius2())
-        // Check mark icon color
-        .indicatorColor(FortalTokens.accent9())
-        // State variants
-        .onSelected(
-          RemixCheckboxStyle()
-              .fillColor(FortalTokens.accent9())
-              .borderAll(
-                color: FortalTokens.accent9(),
-                width: FortalTokens.borderWidth1(),
-              )
-              .indicatorColor(FortalTokens.accentContrast()),
-        )
-        .onDisabled(
-          RemixCheckboxStyle()
-              .fillColor(FortalTokens.grayA3())
-              .borderAll(
-                color: FortalTokens.gray7(),
-                width: FortalTokens.borderWidth1(),
-              )
-              .indicatorColor(FortalTokens.gray8()),
-        );
-  }
+RemixCheckboxStyle _fortalCheckboxSoftStyle([
+  FortalCheckboxSize size = .size2,
+]) {
+  return _fortalCheckboxBaseStyle(size)
+      .fillColor(FortalTokens.accentA4())
+      .borderRadiusAll(FortalTokens.radius2())
+      .onSelected(RemixCheckboxStyle().indicatorColor(FortalTokens.accentA11()))
+      .onDisabled(
+        RemixCheckboxStyle()
+            .fillColor(FortalTokens.grayA3())
+            .indicatorColor(FortalTokens.gray8()),
+      );
+}
 
-  /// Creates a soft variant checkbox style.
-  ///
-  /// Soft checkboxes use accent-tinted background with accent borders.
-  /// Used for forms that need accent color integration.
-  static RemixCheckboxStyle soft({
-    FortalCheckboxSize size = .size2,
-  }) {
-    return base(size: size)
-        .fillColor(FortalTokens.accentA4())
-        .borderRadiusAll(FortalTokens.radius2())
-        .onSelected(
-          RemixCheckboxStyle().indicatorColor(FortalTokens.accentA11()),
-        )
-        .onDisabled(
-          RemixCheckboxStyle()
-              .fillColor(FortalTokens.grayA3())
-              .indicatorColor(FortalTokens.gray8()),
-        );
-  }
-
-  // ---------------------------------------------------------------------------
-  // Internal builders
-  // ---------------------------------------------------------------------------
-
-  static RemixCheckboxStyle _sizeStyle(FortalCheckboxSize size) {
-    return switch (size) {
-      .size1 => RemixCheckboxStyle(
-        container: BoxStyler()
-            // checkbox-size (size1) ~ space-4 (16px)
-            .width(FortalTokens.space4())
-            .height(FortalTokens.space4()),
-        // Indicator icon size uses token step
-        indicator: IconStyler().size(FortalTokens.space3()),
-      ),
-      .size2 => RemixCheckboxStyle(
-        container: BoxStyler()
-            .width(FortalTokens.space5())
-            .height(FortalTokens.space5()),
-        indicator: IconStyler().size(FortalTokens.space4()),
-      ),
-      .size3 => RemixCheckboxStyle(
-        container: BoxStyler()
-            .width(FortalTokens.space6())
-            .height(FortalTokens.space6()),
-        indicator: IconStyler().size(FortalTokens.space5()),
-      ),
-    };
-  }
+RemixCheckboxStyle _fortalCheckboxSizeStyle(FortalCheckboxSize size) {
+  return switch (size) {
+    .size1 => RemixCheckboxStyle(
+      container: BoxStyler()
+          .width(FortalTokens.space4())
+          .height(FortalTokens.space4()),
+      indicator: IconStyler().size(FortalTokens.space3()),
+    ),
+    .size2 => RemixCheckboxStyle(
+      container: BoxStyler()
+          .width(FortalTokens.space5())
+          .height(FortalTokens.space5()),
+      indicator: IconStyler().size(FortalTokens.space4()),
+    ),
+    .size3 => RemixCheckboxStyle(
+      container: BoxStyler()
+          .width(FortalTokens.space6())
+          .height(FortalTokens.space6()),
+      indicator: IconStyler().size(FortalTokens.space5()),
+    ),
+  };
 }

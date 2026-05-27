@@ -95,7 +95,7 @@ class RemixAccordion<T> extends StatelessWidget {
       opacity: animation,
       child: SizeTransition(
         sizeFactor: animation,
-        axisAlignment: 1,
+        alignment: AlignmentDirectional.bottomStart,
         child: panel,
       ),
     );

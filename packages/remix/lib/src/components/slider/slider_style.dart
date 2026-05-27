@@ -1,7 +1,10 @@
 part of 'slider.dart';
 
+@MixableStyler()
 class RemixSliderStyle
-    extends RemixContainerStyle<RemixSliderSpec, RemixSliderStyle> {
+    extends RemixContainerStyle<RemixSliderSpec, RemixSliderStyle>
+    with Diagnosticable, _$RemixSliderStyleMixin {
+  @MixableField(setterType: BoxStyler)
   final Prop<StyleSpec<BoxSpec>>? $thumb;
   final Prop<Color>? $trackColor;
   final Prop<double>? $trackWidth;
@@ -170,52 +173,6 @@ class RemixSliderStyle
     );
   }
 
-  @override
-  StyleSpec<RemixSliderSpec> resolve(BuildContext context) {
-    return StyleSpec(
-      spec: RemixSliderSpec(
-        thumb: MixOps.resolve(context, $thumb),
-        trackColor: MixOps.resolve(context, $trackColor),
-        trackWidth: MixOps.resolve(context, $trackWidth),
-        rangeColor: MixOps.resolve(context, $rangeColor),
-        rangeWidth: MixOps.resolve(context, $rangeWidth),
-      ),
-      animation: $animation,
-      widgetModifiers: $modifier?.resolve(context),
-    );
-  }
-
-  @override
-  RemixSliderStyle merge(RemixSliderStyle? other) {
-    if (other == null) return this;
-
-    return RemixSliderStyle.create(
-      thumb: MixOps.merge($thumb, other.$thumb),
-      trackColor: MixOps.merge($trackColor, other.$trackColor),
-      trackWidth: MixOps.merge($trackWidth, other.$trackWidth),
-      rangeColor: MixOps.merge($rangeColor, other.$rangeColor),
-      rangeWidth: MixOps.merge($rangeWidth, other.$rangeWidth),
-      variants: MixOps.mergeVariants($variants, other.$variants),
-      animation: MixOps.mergeAnimation($animation, other.$animation),
-      modifier: MixOps.mergeModifier($modifier, other.$modifier),
-    );
-  }
-
-  @override
-  RemixSliderStyle variants(List<VariantStyle<RemixSliderSpec>> value) {
-    return merge(RemixSliderStyle(variants: value));
-  }
-
-  @override
-  RemixSliderStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixSliderStyle(modifier: value));
-  }
-
-  @override
-  RemixSliderStyle animate(AnimationConfig animation) {
-    return merge(RemixSliderStyle(animation: animation));
-  }
-
   /// Creates a [RemixSlider] widget with this style applied.
   ///
   /// Example:
@@ -258,16 +215,4 @@ class RemixSliderStyle
       style: this,
     );
   }
-
-  @override
-  List<Object?> get props => [
-    $thumb,
-    $trackColor,
-    $trackWidth,
-    $rangeColor,
-    $rangeWidth,
-    $variants,
-    $animation,
-    $modifier,
-  ];
 }

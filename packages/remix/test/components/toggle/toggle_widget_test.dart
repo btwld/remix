@@ -11,11 +11,7 @@ void main() {
     group('Basic Rendering', () {
       testWidgets('renders toggle with label only', (tester) async {
         await tester.pumpRemixApp(
-          RemixToggle(
-            selected: false,
-            onChanged: (value) {},
-            label: 'Bold',
-          ),
+          RemixToggle(selected: false, onChanged: (value) {}, label: 'Bold'),
         );
         await tester.pumpAndSettle();
 
@@ -264,11 +260,7 @@ void main() {
         tester,
       ) async {
         await tester.pumpRemixApp(
-          RemixToggle(
-            selected: false,
-            onChanged: (value) {},
-            label: 'Bold',
-          ),
+          RemixToggle(selected: false, onChanged: (value) {}, label: 'Bold'),
         );
         await tester.pumpAndSettle();
 
@@ -318,9 +310,7 @@ void main() {
             .iconColor(Colors.white)
             .padding(EdgeInsetsGeometryMix.all(8.0))
             .decoration(
-              BoxDecorationMix(
-                borderRadius: BorderRadiusMix.circular(8.0),
-              ),
+              BoxDecorationMix(borderRadius: BorderRadiusMix.circular(8.0)),
             );
 
         await tester.pumpRemixApp(
@@ -363,7 +353,7 @@ void main() {
             selected: false,
             onChanged: (value) {},
             label: 'Bold',
-            style: FortalToggleStyles.ghost(),
+            style: fortalToggleStyle(),
           ),
         );
         await tester.pumpAndSettle();
@@ -377,7 +367,7 @@ void main() {
             selected: false,
             onChanged: (value) {},
             label: 'Bold',
-            style: FortalToggleStyles.outline(),
+            style: fortalToggleStyle(variant: .outline),
           ),
         );
         await tester.pumpAndSettle();
@@ -392,7 +382,7 @@ void main() {
               selected: false,
               onChanged: (value) {},
               label: 'Bold',
-              style: FortalToggleStyles.ghost(size: size),
+              style: fortalToggleStyle(size: size),
             ),
           );
           await tester.pumpAndSettle();
@@ -401,9 +391,7 @@ void main() {
         }
       });
 
-      testWidgets('create factory works for all variant/size combos', (
-        tester,
-      ) async {
+      testWidgets('recipe works for all variant/size combos', (tester) async {
         for (final variant in FortalToggleVariant.values) {
           for (final size in FortalToggleSize.values) {
             await tester.pumpRemixApp(
@@ -411,10 +399,7 @@ void main() {
                 selected: false,
                 onChanged: (value) {},
                 label: 'Bold',
-                style: FortalToggleStyles.create(
-                  variant: variant,
-                  size: size,
-                ),
+                style: fortalToggleStyle(variant: variant, size: size),
               ),
             );
             await tester.pumpAndSettle();

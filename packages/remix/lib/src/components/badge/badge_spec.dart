@@ -1,8 +1,7 @@
 part of 'badge.dart';
 
 @MixableSpec()
-class RemixBadgeSpec extends Spec<RemixBadgeSpec>
-    with Diagnosticable, _$RemixBadgeSpecMethods {
+class RemixBadgeSpec with _$RemixBadgeSpec {
   @override
   final StyleSpec<BoxSpec> container;
   @override

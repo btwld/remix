@@ -157,7 +157,7 @@ class RemixButtonStyle
 
   /// Creates a style with the given shadow.
   factory RemixButtonStyle.shadow(BoxShadowMix value) =>
-      RemixButtonStyle()..shadow(value);
+      RemixButtonStyle().shadow(value);
 
   /// Sets padding
   RemixButtonStyle padding(EdgeInsetsGeometryMix value) {
@@ -188,27 +188,34 @@ class RemixButtonStyle
 
   /// Sets constraints
   RemixButtonStyle constraints(BoxConstraintsMix value) {
-    return merge(.new(container: .new(constraints: value)));
+    return merge(
+      RemixButtonStyle(container: FlexBoxStyler(constraints: value)),
+    );
   }
 
   /// Sets the background color of the button.
   RemixButtonStyle backgroundColor(Color value) {
     return merge(
-      .new(
-        container: .new(decoration: BoxDecorationMix(color: value)),
+      RemixButtonStyle(
+        container: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
       ),
     );
   }
 
   /// Sets the foreground color (label and icon) of the button.
   RemixButtonStyle foregroundColor(Color value) {
-    return labelColor(value).iconColor(value).labelStyle(.color(value));
+    return labelColor(
+      value,
+    ).iconColor(value).labelStyle(TextStyleMix(color: value));
   }
 
   /// Sets the minimum size of the button.
   RemixButtonStyle minimumSize(Size value) {
     return merge(
-      .new().constraintsOnly(minHeight: value.height, minWidth: value.width),
+      RemixButtonStyle().constraintsOnly(
+        minHeight: value.height,
+        minWidth: value.width,
+      ),
     );
   }
 
@@ -217,7 +224,7 @@ class RemixButtonStyle
   /// Use [double.infinity] for either dimension to leave it unconstrained.
   RemixButtonStyle fixedSize(Size value) {
     return merge(
-      .new().constraintsOnly(
+      RemixButtonStyle().constraintsOnly(
         minHeight: value.height,
         minWidth: value.width,
         maxHeight: value.height,
@@ -229,7 +236,10 @@ class RemixButtonStyle
   /// Sets the maximum size of the button.
   RemixButtonStyle maximumSize(Size value) {
     return merge(
-      .new().constraintsOnly(maxHeight: value.height, maxWidth: value.width),
+      RemixButtonStyle().constraintsOnly(
+        maxHeight: value.height,
+        maxWidth: value.width,
+      ),
     );
   }
 

@@ -1,8 +1,7 @@
 part of 'tabs.dart';
 
 @MixableSpec()
-class RemixTabBarSpec extends Spec<RemixTabBarSpec>
-    with Diagnosticable, _$RemixTabBarSpecMethods {
+class RemixTabBarSpec with _$RemixTabBarSpec {
   @override
   final StyleSpec<FlexBoxSpec> container;
 
@@ -11,8 +10,7 @@ class RemixTabBarSpec extends Spec<RemixTabBarSpec>
 }
 
 @MixableSpec()
-class RemixTabSpec extends Spec<RemixTabSpec>
-    with Diagnosticable, _$RemixTabSpecMethods {
+class RemixTabSpec with _$RemixTabSpec {
   @override
   final StyleSpec<FlexBoxSpec> container;
   @override
@@ -30,8 +28,7 @@ class RemixTabSpec extends Spec<RemixTabSpec>
 }
 
 @MixableSpec()
-class RemixTabViewSpec extends Spec<RemixTabViewSpec>
-    with Diagnosticable, _$RemixTabViewSpecMethods {
+class RemixTabViewSpec with _$RemixTabViewSpec {
   @override
   final StyleSpec<BoxSpec> container;
 

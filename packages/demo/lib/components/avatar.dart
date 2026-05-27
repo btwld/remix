@@ -5,10 +5,7 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 final _key = GlobalKey();
 
-@widgetbook.UseCase(
-  name: 'Avatar Component',
-  type: RemixAvatar,
-)
+@widgetbook.UseCase(name: 'Avatar Component', type: RemixAvatar)
 Widget buildAvatarUseCase(BuildContext context) {
   final imageUrl = context.knobs.string(
     label: 'Image URL',
@@ -24,9 +21,10 @@ Widget buildAvatarUseCase(BuildContext context) {
           children: [
             RemixAvatar(
               label: 'LF',
-              foregroundImage:
-                  imageUrl.isNotEmpty ? NetworkImage(imageUrl) : null,
-              style: FortalAvatarStyles.create(
+              foregroundImage: imageUrl.isNotEmpty
+                  ? NetworkImage(imageUrl)
+                  : null,
+              style: fortalAvatarStyle(
                 variant: context.knobs.object.dropdown(
                   label: 'label',
                   options: FortalAvatarVariant.values,

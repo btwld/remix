@@ -133,8 +133,8 @@ class RemixAccordionStyle
   /// Sets the background color of the trigger.
   RemixAccordionStyle backgroundColor(Color value) {
     return merge(
-      .new(
-        trigger: .new(decoration: BoxDecorationMix(color: value)),
+      RemixAccordionStyle(
+        trigger: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
       ),
     );
   }

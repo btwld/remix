@@ -5,10 +5,7 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 final _key = GlobalKey();
 
-@widgetbook.UseCase(
-  name: 'Divider Component',
-  type: RemixDivider,
-)
+@widgetbook.UseCase(name: 'Divider Component', type: RemixDivider)
 Widget buildDividerUseCase(BuildContext context) {
   return KeyedSubtree(
     key: _key,
@@ -19,7 +16,7 @@ Widget buildDividerUseCase(BuildContext context) {
           width: 300,
           child: Center(
             child: RemixDivider(
-              style: FortalDividerStyles.create(
+              style: fortalDividerStyle(
                 size: context.knobs.object.dropdown(
                   label: 'size',
                   options: FortalDividerSize.values,

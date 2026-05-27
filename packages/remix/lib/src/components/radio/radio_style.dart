@@ -35,11 +35,6 @@ class RemixRadioStyle
          modifier: modifier,
        );
 
-  /// Sets indicator styling (selected fill).
-  RemixRadioStyle indicator(BoxStyler value) {
-    return merge(RemixRadioStyle(indicator: value));
-  }
-
   /// Sets container alignment.
   RemixRadioStyle alignment(Alignment value) {
     return merge(RemixRadioStyle(container: BoxStyler(alignment: value)));
@@ -131,22 +126,6 @@ class RemixRadioStyle
     );
   }
 
-  /// Sets animation configuration.
-  @override
-  RemixRadioStyle animate(AnimationConfig animation) {
-    return merge(RemixRadioStyle(animation: animation));
-  }
-
-  @override
-  RemixRadioStyle variants(List<VariantStyle<RemixRadioSpec>> value) {
-    return merge(RemixRadioStyle(variants: value));
-  }
-
-  @override
-  RemixRadioStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixRadioStyle(modifier: value));
-  }
-
   @override
   RemixRadioStyle constraints(BoxConstraintsMix value) {
     return merge(RemixRadioStyle(container: BoxStyler(constraints: value)));
@@ -175,38 +154,4 @@ class RemixRadioStyle
       ),
     );
   }
-
-  @override
-  StyleSpec<RemixRadioSpec> resolve(BuildContext context) {
-    return StyleSpec(
-      spec: RemixRadioSpec(
-        container: MixOps.resolve(context, $container),
-        indicator: MixOps.resolve(context, $indicator),
-      ),
-      animation: $animation,
-      widgetModifiers: $modifier?.resolve(context),
-    );
-  }
-
-  @override
-  RemixRadioStyle merge(RemixRadioStyle? other) {
-    if (other == null) return this;
-
-    return RemixRadioStyle.create(
-      container: MixOps.merge($container, other.$container),
-      indicator: MixOps.merge($indicator, other.$indicator),
-      variants: MixOps.mergeVariants($variants, other.$variants),
-      animation: MixOps.mergeAnimation($animation, other.$animation),
-      modifier: MixOps.mergeModifier($modifier, other.$modifier),
-    );
-  }
-
-  @override
-  List<Object?> get props => [
-    $container,
-    $indicator,
-    $variants,
-    $animation,
-    $modifier,
-  ];
 }

@@ -6,12 +6,15 @@ part of 'button.dart';
 // SpecGenerator
 // **************************************************************************
 
-mixin _$RemixButtonSpecMethods on Spec<RemixButtonSpec>, Diagnosticable {
+mixin _$RemixButtonSpec implements Spec<RemixButtonSpec>, Diagnosticable {
   StyleSpec<FlexBoxSpec> get container;
   StyleSpec<TextSpec> get label;
   StyleSpec<IconSpec> get icon;
   StyleSpec<RemixSpinnerSpec> get spinner;
   IconAlignment get iconAlignment;
+
+  @override
+  Type get type => RemixButtonSpec;
 
   @override
   RemixButtonSpec copyWith({
@@ -42,8 +45,47 @@ mixin _$RemixButtonSpecMethods on Spec<RemixButtonSpec>, Diagnosticable {
   }
 
   @override
+  List<Object?> get props => [container, label, icon, spinner, iconAlignment];
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is RemixButtonSpec &&
+            runtimeType == other.runtimeType &&
+            propsEquals(props, other.props);
+  }
+
+  @override
+  int get hashCode => propsHash(runtimeType, props);
+
+  @override
+  bool get stringify => true;
+
+  @override
+  Map<String, String> getDiff(Equatable other) {
+    if (this == other) return const {};
+
+    return propsDiff(props, other.props);
+  }
+
+  @override
+  String toStringShort() => '$runtimeType';
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) =>
+      toDiagnosticsNode(
+        style: DiagnosticsTreeStyle.singleLine,
+      ).toString(minLevel: minLevel);
+
+  @override
+  DiagnosticsNode toDiagnosticsNode({
+    String? name,
+    DiagnosticsTreeStyle? style,
+  }) =>
+      DiagnosticableNode<Diagnosticable>(name: name, value: this, style: style);
+
+  @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('label', label))
@@ -51,9 +93,69 @@ mixin _$RemixButtonSpecMethods on Spec<RemixButtonSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('spinner', spinner))
       ..add(DiagnosticsProperty('iconAlignment', iconAlignment));
   }
+}
+
+@Deprecated(
+  'Rename to `_\$RemixButtonSpec` and migrate the class declaration to `class RemixButtonSpec with _\$RemixButtonSpec`. The `_\$RemixButtonSpecMethods` alias will be removed in mix_generator 3.0.',
+)
+typedef _$RemixButtonSpecMethods = _$RemixButtonSpec; // ignore: unused_element
+
+// **************************************************************************
+// MixWidgetGenerator
+// **************************************************************************
+
+/// Creates a Fortal-themed button style.
+///
+/// The `@MixWidget` generator derives the `FortalButton` widget from this
+/// function name.
+class FortalButton extends StatelessWidget {
+  const FortalButton({
+    super.key,
+    this.variant = .solid,
+    this.size = .size2,
+    required this.label,
+    this.leadingIcon,
+    this.trailingIcon,
+    this.loading = false,
+    this.enabled = true,
+    this.enableFeedback = true,
+    required this.onPressed,
+    this.focusNode,
+  });
+
+  final FortalButtonVariant variant;
+
+  final FortalButtonSize size;
+
+  final String label;
+
+  final IconData? leadingIcon;
+
+  final IconData? trailingIcon;
+
+  final bool loading;
+
+  final bool enabled;
+
+  final bool enableFeedback;
+
+  final VoidCallback? onPressed;
+
+  final FocusNode? focusNode;
 
   @override
-  List<Object?> get props => [container, label, icon, spinner, iconAlignment];
+  Widget build(BuildContext context) {
+    return fortalButtonStyle(variant: this.variant, size: this.size).call(
+      label: this.label,
+      leadingIcon: this.leadingIcon,
+      trailingIcon: this.trailingIcon,
+      loading: this.loading,
+      enabled: this.enabled,
+      enableFeedback: this.enableFeedback,
+      onPressed: this.onPressed,
+      focusNode: this.focusNode,
+    );
+  }
 }
 
 // **************************************************************************
@@ -122,7 +224,7 @@ mixin _$RemixButtonStyleMixin on Style<RemixButtonSpec>, Diagnosticable {
     );
   }
 
-  /// Resolves to [StyleSpec<RemixButtonSpec>] using context.
+  /// Resolves to [StyleSpec<RemixButtonSpec>] using [context].
   @override
   StyleSpec<RemixButtonSpec> resolve(BuildContext context) {
     final spec = RemixButtonSpec(

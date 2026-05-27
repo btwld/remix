@@ -6,16 +6,9 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 final _key = GlobalKey();
 
-enum Theme {
-  dark,
-  light,
-  system;
-}
+enum Theme { dark, light, system }
 
-@widgetbook.UseCase(
-  name: 'Radio Component',
-  type: RemixRadio,
-)
+@widgetbook.UseCase(name: 'Radio Component', type: RemixRadio)
 Widget buildRadioUseCase(BuildContext context) {
   return KeyedSubtree(
     key: _key,
@@ -41,7 +34,7 @@ Widget buildRadioUseCase(BuildContext context) {
                           mainAxisSize: .min,
                           children: [
                             RemixRadio<Theme>(
-                              style: FortalRadioStyles.create(
+                              style: fortalRadioStyle(
                                 variant: context.knobs.object.dropdown(
                                   label: 'variant',
                                   options: FortalRadioVariant.values,

@@ -1,8 +1,7 @@
 part of 'divider.dart';
 
 @MixableSpec()
-class RemixDividerSpec extends Spec<RemixDividerSpec>
-    with Diagnosticable, _$RemixDividerSpecMethods {
+class RemixDividerSpec with _$RemixDividerSpec {
   @override
   final StyleSpec<BoxSpec> container;
 

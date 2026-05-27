@@ -6,10 +6,7 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 final _key = GlobalKey();
 
-@widgetbook.UseCase(
-  name: 'Callout Component',
-  type: RemixCallout,
-)
+@widgetbook.UseCase(name: 'Callout Component', type: RemixCallout)
 Widget buildCalloutUseCase(BuildContext context) {
   return KeyedSubtree(
     key: _key,
@@ -19,7 +16,7 @@ Widget buildCalloutUseCase(BuildContext context) {
           width: 300,
           child: RemixCallout(
             icon: m.Icons.info_outline,
-            style: FortalCalloutStyles.create(
+            style: fortalCalloutStyle(
               variant: context.knobs.object.dropdown(
                 label: 'variant',
                 options: FortalCalloutVariant.values,

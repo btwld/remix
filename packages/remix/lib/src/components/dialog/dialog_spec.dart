@@ -1,8 +1,7 @@
 part of 'dialog.dart';
 
 @MixableSpec()
-class RemixDialogSpec extends Spec<RemixDialogSpec>
-    with Diagnosticable, _$RemixDialogSpecMethods {
+class RemixDialogSpec with _$RemixDialogSpec {
   @override
   final StyleSpec<BoxSpec> container;
   @override

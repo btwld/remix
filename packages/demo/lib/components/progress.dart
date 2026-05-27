@@ -5,10 +5,7 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 final _key = GlobalKey();
 
-@widgetbook.UseCase(
-  name: 'Progress Component',
-  type: RemixProgress,
-)
+@widgetbook.UseCase(name: 'Progress Component', type: RemixProgress)
 Widget buildProgressUseCase(BuildContext context) {
   return KeyedSubtree(
     key: _key,
@@ -17,7 +14,7 @@ Widget buildProgressUseCase(BuildContext context) {
         child: SizedBox(
           width: 200,
           child: RemixProgress(
-            style: FortalProgressStyles.create(
+            style: fortalProgressStyle(
               variant: context.knobs.object.dropdown(
                 label: 'variant',
                 options: FortalProgressVariant.values,

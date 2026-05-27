@@ -26,10 +26,6 @@ class RemixTabBarStyle
          modifier: modifier,
        );
 
-  RemixTabBarStyle container(FlexBoxStyler value) {
-    return merge(RemixTabBarStyle(container: value));
-  }
-
   /// Sets container alignment
   RemixTabBarStyle alignment(Alignment value) {
     return merge(RemixTabBarStyle(container: FlexBoxStyler(alignment: value)));
@@ -119,45 +115,6 @@ class RemixTabBarStyle
   RemixTabBarStyle flex(FlexStyler value) {
     return merge(RemixTabBarStyle(container: FlexBoxStyler().flex(value)));
   }
-
-  @override
-  StyleSpec<RemixTabBarSpec> resolve(BuildContext context) {
-    return StyleSpec(
-      spec: RemixTabBarSpec(container: MixOps.resolve(context, $container)),
-      animation: $animation,
-      widgetModifiers: $modifier?.resolve(context),
-    );
-  }
-
-  @override
-  RemixTabBarStyle merge(RemixTabBarStyle? other) {
-    if (other == null) return this;
-
-    return RemixTabBarStyle.create(
-      container: MixOps.merge($container, other.$container),
-      variants: MixOps.mergeVariants($variants, other.$variants),
-      animation: MixOps.mergeAnimation($animation, other.$animation),
-      modifier: MixOps.mergeModifier($modifier, other.$modifier),
-    );
-  }
-
-  @override
-  RemixTabBarStyle variants(List<VariantStyle<RemixTabBarSpec>> value) {
-    return merge(RemixTabBarStyle(variants: value));
-  }
-
-  @override
-  RemixTabBarStyle animate(AnimationConfig animation) {
-    return merge(RemixTabBarStyle(animation: animation));
-  }
-
-  @override
-  RemixTabBarStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixTabBarStyle(modifier: value));
-  }
-
-  @override
-  List<Object?> get props => [$container, $variants, $animation, $modifier];
 }
 
 @MixableStyler()
@@ -252,45 +209,6 @@ class RemixTabViewStyle
       ),
     );
   }
-
-  @override
-  StyleSpec<RemixTabViewSpec> resolve(BuildContext context) {
-    return StyleSpec(
-      spec: RemixTabViewSpec(container: MixOps.resolve(context, $container)),
-      animation: $animation,
-      widgetModifiers: $modifier?.resolve(context),
-    );
-  }
-
-  @override
-  RemixTabViewStyle merge(RemixTabViewStyle? other) {
-    if (other == null) return this;
-
-    return RemixTabViewStyle.create(
-      container: MixOps.merge($container, other.$container),
-      variants: MixOps.mergeVariants($variants, other.$variants),
-      animation: MixOps.mergeAnimation($animation, other.$animation),
-      modifier: MixOps.mergeModifier($modifier, other.$modifier),
-    );
-  }
-
-  @override
-  RemixTabViewStyle variants(List<VariantStyle<RemixTabViewSpec>> value) {
-    return merge(RemixTabViewStyle(variants: value));
-  }
-
-  @override
-  RemixTabViewStyle animate(AnimationConfig animation) {
-    return merge(RemixTabViewStyle(animation: animation));
-  }
-
-  @override
-  RemixTabViewStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixTabViewStyle(modifier: value));
-  }
-
-  @override
-  List<Object?> get props => [$container, $variants, $animation, $modifier];
 }
 
 @MixableStyler()
@@ -338,62 +256,6 @@ class RemixTabStyle extends RemixFlexContainerStyle<RemixTabSpec, RemixTabStyle>
   /// Sets container alignment
   RemixTabStyle alignment(Alignment value) {
     return merge(RemixTabStyle(container: FlexBoxStyler(alignment: value)));
-  }
-
-  RemixTabStyle container(FlexBoxStyler value) {
-    return merge(RemixTabStyle(container: value));
-  }
-
-  @override
-  RemixTabStyle label(TextStyler value) {
-    return merge(RemixTabStyle(label: value));
-  }
-
-  @override
-  RemixTabStyle icon(IconStyler value) {
-    return merge(RemixTabStyle(icon: value));
-  }
-
-  @override
-  StyleSpec<RemixTabSpec> resolve(BuildContext context) {
-    return StyleSpec(
-      spec: RemixTabSpec(
-        container: MixOps.resolve(context, $container),
-        label: MixOps.resolve(context, $label),
-        icon: MixOps.resolve(context, $icon),
-      ),
-      animation: $animation,
-      widgetModifiers: $modifier?.resolve(context),
-    );
-  }
-
-  @override
-  RemixTabStyle merge(RemixTabStyle? other) {
-    if (other == null) return this;
-
-    return RemixTabStyle.create(
-      container: MixOps.merge($container, other.$container),
-      label: MixOps.merge($label, other.$label),
-      icon: MixOps.merge($icon, other.$icon),
-      variants: MixOps.mergeVariants($variants, other.$variants),
-      animation: MixOps.mergeAnimation($animation, other.$animation),
-      modifier: MixOps.mergeModifier($modifier, other.$modifier),
-    );
-  }
-
-  @override
-  RemixTabStyle animate(AnimationConfig animation) {
-    return merge(RemixTabStyle(animation: animation));
-  }
-
-  @override
-  RemixTabStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixTabStyle(modifier: value));
-  }
-
-  @override
-  RemixTabStyle variants(List<VariantStyle<RemixTabSpec>> value) {
-    return merge(RemixTabStyle(variants: value));
   }
 
   // Mixin implementations - delegate to container
@@ -452,14 +314,4 @@ class RemixTabStyle extends RemixFlexContainerStyle<RemixTabSpec, RemixTabStyle>
   RemixTabStyle padding(EdgeInsetsGeometryMix value) {
     return merge(RemixTabStyle(container: FlexBoxStyler(padding: value)));
   }
-
-  @override
-  List<Object?> get props => [
-    $container,
-    $label,
-    $icon,
-    $variants,
-    $animation,
-    $modifier,
-  ];
 }

@@ -1,8 +1,7 @@
 part of 'spinner.dart';
 
 @MixableSpec()
-class RemixSpinnerSpec extends Spec<RemixSpinnerSpec>
-    with Diagnosticable, _$RemixSpinnerSpecMethods {
+class RemixSpinnerSpec with _$RemixSpinnerSpec {
   @override
   final double? size;
   @override

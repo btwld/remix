@@ -36,6 +36,71 @@ void main() {
       });
     });
 
+    group('FortalButton generated widget', () {
+      testWidgets('renders generated button and forwards core params', (
+        tester,
+      ) async {
+        var pressCount = 0;
+        final focusNode = FocusNode();
+        addTearDown(focusNode.dispose);
+
+        await tester.pumpRemixApp(
+          FortalButton(
+            variant: .soft,
+            size: .size3,
+            label: 'Save',
+            leadingIcon: Icons.save,
+            trailingIcon: Icons.check,
+            loading: false,
+            enabled: true,
+            enableFeedback: false,
+            onPressed: () => pressCount++,
+            focusNode: focusNode,
+          ),
+        );
+
+        await tester.pumpAndSettle();
+
+        expect(find.byType(FortalButton), findsOneWidget);
+        expect(find.byType(RemixButton), findsOneWidget);
+        expect(find.text('Save'), findsOneWidget);
+        expect(find.byIcon(Icons.save), findsOneWidget);
+        expect(find.byIcon(Icons.check), findsOneWidget);
+
+        final generated = tester.widget<FortalButton>(
+          find.byType(FortalButton),
+        );
+        expect(generated.variant, equals(FortalButtonVariant.soft));
+        expect(generated.size, equals(FortalButtonSize.size3));
+
+        final remixButton = tester.widget<RemixButton>(
+          find.byType(RemixButton),
+        );
+        expect(
+          remixButton.style,
+          equals(fortalButtonStyle(variant: .soft, size: .size3)),
+        );
+        expect(remixButton.label, equals('Save'));
+        expect(remixButton.leadingIcon, equals(Icons.save));
+        expect(remixButton.trailingIcon, equals(Icons.check));
+        expect(remixButton.loading, isFalse);
+        expect(remixButton.enabled, isTrue);
+        expect(remixButton.enableFeedback, isFalse);
+        expect(remixButton.onPressed, isNotNull);
+        expect(remixButton.focusNode, same(focusNode));
+
+        final nakedButton = tester.widget<NakedButton>(
+          find.byType(NakedButton),
+        );
+        expect(nakedButton.enableFeedback, isFalse);
+
+        await tester.tap(find.byType(FortalButton));
+        await tester.pumpAndSettle();
+
+        expect(pressCount, equals(1));
+      });
+    });
+
     group('WidgetStateController', () {
       widgetControllerTest<RemixButtonSpec>(
         'contains disabled state when enabled is false',

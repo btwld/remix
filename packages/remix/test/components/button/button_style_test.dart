@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
+import '../../helpers/test_helpers.dart';
 import '../../helpers/test_methods.dart';
 
 void main() {
@@ -55,6 +56,20 @@ void main() {
         expect(style.$label, isNotNull);
         expect(style.$icon, isNotNull);
         expect(style.$spinner, isNotNull);
+      });
+
+      test('shadow factory applies shadow style', () {
+        final shadow = BoxShadowMix().color(Colors.black).blurRadius(4.0);
+        final style = RemixButtonStyle.shadow(shadow);
+
+        expect(
+          style.$container,
+          equals(
+            Prop.maybeMix(
+              FlexBoxStyler(decoration: BoxDecorationMix(boxShadow: [shadow])),
+            ),
+          ),
+        );
       });
     });
 
@@ -376,4 +391,65 @@ void main() {
       });
     });
   });
+
+  group('FortalButton recipe', () {
+    test('defaults to solid variant and size2', () {
+      expect(
+        fortalButtonStyle(),
+        equals(fortalButtonStyle(variant: .solid, size: .size2)),
+      );
+    });
+
+    for (final variant in FortalButtonVariant.values) {
+      testWidgets('resolves $variant variant', (tester) async {
+        final resolved = await _resolveFortalButtonStyle(
+          tester,
+          fortalButtonStyle(variant: variant),
+        );
+
+        expect(resolved, isA<StyleSpec<RemixButtonSpec>>());
+        expect(resolved.spec, isA<RemixButtonSpec>());
+      });
+    }
+
+    testWidgets('each size resolves distinct layout metrics', (tester) async {
+      final resolvedBySize = <FortalButtonSize, StyleSpec<RemixButtonSpec>>{};
+
+      for (final size in FortalButtonSize.values) {
+        resolvedBySize[size] = await _resolveFortalButtonStyle(
+          tester,
+          fortalButtonStyle(size: size),
+        );
+      }
+
+      final paddings = resolvedBySize.values
+          .map((spec) => spec.spec.container.spec.box?.spec.padding)
+          .toSet();
+      final spacings = resolvedBySize.values
+          .map((spec) => spec.spec.container.spec.flex?.spec.spacing)
+          .toSet();
+
+      expect(paddings, hasLength(FortalButtonSize.values.length));
+      expect(spacings, hasLength(FortalButtonSize.values.length));
+    });
+  });
+}
+
+Future<StyleSpec<RemixButtonSpec>> _resolveFortalButtonStyle(
+  WidgetTester tester,
+  RemixButtonStyle style,
+) async {
+  late final StyleSpec<RemixButtonSpec> resolved;
+
+  await tester.pumpRemixApp(
+    Builder(
+      builder: (context) {
+        resolved = style.resolve(context);
+
+        return const SizedBox.shrink();
+      },
+    ),
+  );
+
+  return resolved;
 }

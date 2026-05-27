@@ -6,8 +6,11 @@ part of 'tabs.dart';
 // SpecGenerator
 // **************************************************************************
 
-mixin _$RemixTabBarSpecMethods on Spec<RemixTabBarSpec>, Diagnosticable {
+mixin _$RemixTabBarSpec implements Spec<RemixTabBarSpec>, Diagnosticable {
   StyleSpec<FlexBoxSpec> get container;
+
+  @override
+  Type get type => RemixTabBarSpec;
 
   @override
   RemixTabBarSpec copyWith({StyleSpec<FlexBoxSpec>? container}) {
@@ -20,19 +23,63 @@ mixin _$RemixTabBarSpecMethods on Spec<RemixTabBarSpec>, Diagnosticable {
   }
 
   @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties..add(DiagnosticsProperty('container', container));
+  List<Object?> get props => [container];
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is RemixTabBarSpec &&
+            runtimeType == other.runtimeType &&
+            propsEquals(props, other.props);
   }
 
   @override
-  List<Object?> get props => [container];
+  int get hashCode => propsHash(runtimeType, props);
+
+  @override
+  bool get stringify => true;
+
+  @override
+  Map<String, String> getDiff(Equatable other) {
+    if (this == other) return const {};
+
+    return propsDiff(props, other.props);
+  }
+
+  @override
+  String toStringShort() => '$runtimeType';
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) =>
+      toDiagnosticsNode(
+        style: DiagnosticsTreeStyle.singleLine,
+      ).toString(minLevel: minLevel);
+
+  @override
+  DiagnosticsNode toDiagnosticsNode({
+    String? name,
+    DiagnosticsTreeStyle? style,
+  }) =>
+      DiagnosticableNode<Diagnosticable>(name: name, value: this, style: style);
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    properties..add(DiagnosticsProperty('container', container));
+  }
 }
 
-mixin _$RemixTabSpecMethods on Spec<RemixTabSpec>, Diagnosticable {
+@Deprecated(
+  'Rename to `_\$RemixTabBarSpec` and migrate the class declaration to `class RemixTabBarSpec with _\$RemixTabBarSpec`. The `_\$RemixTabBarSpecMethods` alias will be removed in mix_generator 3.0.',
+)
+typedef _$RemixTabBarSpecMethods = _$RemixTabBarSpec; // ignore: unused_element
+
+mixin _$RemixTabSpec implements Spec<RemixTabSpec>, Diagnosticable {
   StyleSpec<FlexBoxSpec> get container;
   StyleSpec<TextSpec> get label;
   StyleSpec<IconSpec> get icon;
+
+  @override
+  Type get type => RemixTabSpec;
 
   @override
   RemixTabSpec copyWith({
@@ -57,20 +104,64 @@ mixin _$RemixTabSpecMethods on Spec<RemixTabSpec>, Diagnosticable {
   }
 
   @override
+  List<Object?> get props => [container, label, icon];
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is RemixTabSpec &&
+            runtimeType == other.runtimeType &&
+            propsEquals(props, other.props);
+  }
+
+  @override
+  int get hashCode => propsHash(runtimeType, props);
+
+  @override
+  bool get stringify => true;
+
+  @override
+  Map<String, String> getDiff(Equatable other) {
+    if (this == other) return const {};
+
+    return propsDiff(props, other.props);
+  }
+
+  @override
+  String toStringShort() => '$runtimeType';
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) =>
+      toDiagnosticsNode(
+        style: DiagnosticsTreeStyle.singleLine,
+      ).toString(minLevel: minLevel);
+
+  @override
+  DiagnosticsNode toDiagnosticsNode({
+    String? name,
+    DiagnosticsTreeStyle? style,
+  }) =>
+      DiagnosticableNode<Diagnosticable>(name: name, value: this, style: style);
+
+  @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('label', label))
       ..add(DiagnosticsProperty('icon', icon));
   }
-
-  @override
-  List<Object?> get props => [container, label, icon];
 }
 
-mixin _$RemixTabViewSpecMethods on Spec<RemixTabViewSpec>, Diagnosticable {
+@Deprecated(
+  'Rename to `_\$RemixTabSpec` and migrate the class declaration to `class RemixTabSpec with _\$RemixTabSpec`. The `_\$RemixTabSpecMethods` alias will be removed in mix_generator 3.0.',
+)
+typedef _$RemixTabSpecMethods = _$RemixTabSpec; // ignore: unused_element
+
+mixin _$RemixTabViewSpec implements Spec<RemixTabViewSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
+
+  @override
+  Type get type => RemixTabViewSpec;
 
   @override
   RemixTabViewSpec copyWith({StyleSpec<BoxSpec>? container}) {
@@ -83,14 +174,55 @@ mixin _$RemixTabViewSpecMethods on Spec<RemixTabViewSpec>, Diagnosticable {
   }
 
   @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties..add(DiagnosticsProperty('container', container));
+  List<Object?> get props => [container];
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is RemixTabViewSpec &&
+            runtimeType == other.runtimeType &&
+            propsEquals(props, other.props);
   }
 
   @override
-  List<Object?> get props => [container];
+  int get hashCode => propsHash(runtimeType, props);
+
+  @override
+  bool get stringify => true;
+
+  @override
+  Map<String, String> getDiff(Equatable other) {
+    if (this == other) return const {};
+
+    return propsDiff(props, other.props);
+  }
+
+  @override
+  String toStringShort() => '$runtimeType';
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) =>
+      toDiagnosticsNode(
+        style: DiagnosticsTreeStyle.singleLine,
+      ).toString(minLevel: minLevel);
+
+  @override
+  DiagnosticsNode toDiagnosticsNode({
+    String? name,
+    DiagnosticsTreeStyle? style,
+  }) =>
+      DiagnosticableNode<Diagnosticable>(name: name, value: this, style: style);
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    properties..add(DiagnosticsProperty('container', container));
+  }
 }
+
+@Deprecated(
+  'Rename to `_\$RemixTabViewSpec` and migrate the class declaration to `class RemixTabViewSpec with _\$RemixTabViewSpec`. The `_\$RemixTabViewSpecMethods` alias will be removed in mix_generator 3.0.',
+)
+typedef _$RemixTabViewSpecMethods = _$RemixTabViewSpec; // ignore: unused_element
 
 // **************************************************************************
 // StylerGenerator
@@ -130,7 +262,7 @@ mixin _$RemixTabBarStyleMixin on Style<RemixTabBarSpec>, Diagnosticable {
     );
   }
 
-  /// Resolves to [StyleSpec<RemixTabBarSpec>] using context.
+  /// Resolves to [StyleSpec<RemixTabBarSpec>] using [context].
   @override
   StyleSpec<RemixTabBarSpec> resolve(BuildContext context) {
     final spec = RemixTabBarSpec(
@@ -188,7 +320,7 @@ mixin _$RemixTabViewStyleMixin on Style<RemixTabViewSpec>, Diagnosticable {
     );
   }
 
-  /// Resolves to [StyleSpec<RemixTabViewSpec>] using context.
+  /// Resolves to [StyleSpec<RemixTabViewSpec>] using [context].
   @override
   StyleSpec<RemixTabViewSpec> resolve(BuildContext context) {
     final spec = RemixTabViewSpec(
@@ -260,7 +392,7 @@ mixin _$RemixTabStyleMixin on Style<RemixTabSpec>, Diagnosticable {
     );
   }
 
-  /// Resolves to [StyleSpec<RemixTabSpec>] using context.
+  /// Resolves to [StyleSpec<RemixTabSpec>] using [context].
   @override
   StyleSpec<RemixTabSpec> resolve(BuildContext context) {
     final spec = RemixTabSpec(
