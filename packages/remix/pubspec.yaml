@@ -18,9 +18,6 @@ dependencies:
   mix: ^2.0.1
   mix_annotations: ^2.0.0
   naked_ui: ^0.2.0-beta.7
-  meta: ^1.16.0
-  prism: ^2.0.0
-  prism_flutter: ^2.0.0
 
 dev_dependencies:
   flutter_test:

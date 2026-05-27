@@ -530,22 +530,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.5.2"
-  prism:
-    dependency: transitive
-    description:
-      name: prism
-      sha256: cb5b80867392ed138ca7651d55c1c0013903f20355e3e015e2f6be5c1dcf7020
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.0"
-  prism_flutter:
-    dependency: transitive
-    description:
-      name: prism_flutter
-      sha256: c915d488b864d92dc605091f28e631748a723f77d5c755d08dc4b70726a7bef4
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.0"
   process:
     dependency: transitive
     description:
