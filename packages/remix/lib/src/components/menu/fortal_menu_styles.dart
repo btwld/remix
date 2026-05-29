@@ -24,7 +24,7 @@ RemixMenuStyle _fortalMenuBaseStyle(FortalMenuSize size) {
                 style: TextStyleMix(
                   color: FortalTokens.gray12(),
                   fontSize: 14,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: .w500,
                 ),
               ),
             )
@@ -73,7 +73,7 @@ RemixMenuStyle _fortalMenuSoftStyle([FortalMenuSize size = .size2]) {
             style: TextStyleMix(
               color: FortalTokens.accent11(),
               fontSize: 14,
-              fontWeight: FontWeight.w500,
+              fontWeight: .w500,
             ),
           ),
         )

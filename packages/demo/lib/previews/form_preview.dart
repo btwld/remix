@@ -10,21 +10,11 @@ Widget previewCheckboxStates() {
     const Column(
       mainAxisAlignment: .center,
       children: [
-        _PreviewCheckbox(
-          selected: false,
-          label: 'Unchecked',
-        ),
+        _PreviewCheckbox(selected: false, label: 'Unchecked'),
         SizedBox(height: 12),
-        _PreviewCheckbox(
-          selected: true,
-          label: 'Checked',
-        ),
+        _PreviewCheckbox(selected: true, label: 'Checked'),
         SizedBox(height: 12),
-        _PreviewCheckbox(
-          selected: false,
-          enabled: false,
-          label: 'Disabled',
-        ),
+        _PreviewCheckbox(selected: false, enabled: false, label: 'Disabled'),
       ],
     ),
   );
@@ -36,27 +26,13 @@ Widget previewSwitchStates() {
     Column(
       mainAxisAlignment: .center,
       children: [
-        RemixSwitch(
-          selected: true,
-          onChanged: (value) {},
-        ),
+        RemixSwitch(selected: true, onChanged: (value) {}),
         const SizedBox(height: 12),
-        RemixSwitch(
-          selected: false,
-          onChanged: (value) {},
-        ),
+        RemixSwitch(selected: false, onChanged: (value) {}),
         const SizedBox(height: 12),
-        RemixSwitch(
-          selected: true,
-          enabled: false,
-          onChanged: (value) {},
-        ),
+        RemixSwitch(selected: true, enabled: false, onChanged: (value) {}),
         const SizedBox(height: 12),
-        RemixSwitch(
-          selected: false,
-          enabled: false,
-          onChanged: (value) {},
-        ),
+        RemixSwitch(selected: false, enabled: false, onChanged: (value) {}),
       ],
     ),
   );
@@ -132,10 +108,7 @@ class _PreviewRadio extends StatelessWidget {
       child: Row(
         mainAxisSize: .min,
         children: [
-          RemixRadio<String>(
-            value: value,
-            enabled: enabled,
-          ),
+          RemixRadio<String>(value: value, enabled: enabled),
           const SizedBox(width: 8),
           Text(label),
         ],
@@ -152,9 +125,7 @@ Widget previewTextFields() {
       child: Column(
         mainAxisAlignment: .center,
         children: [
-          RemixTextField(
-            hintText: 'Enter your name',
-          ),
+          RemixTextField(hintText: 'Enter your name'),
           SizedBox(height: 16),
           RemixTextField(
             hintText: 'Enter your email',
@@ -167,10 +138,7 @@ Widget previewTextFields() {
             trailing: Icon(Icons.visibility),
           ),
           SizedBox(height: 16),
-          RemixTextField(
-            hintText: 'This field is disabled',
-            enabled: false,
-          ),
+          RemixTextField(hintText: 'This field is disabled', enabled: false),
         ],
       ),
     ),
@@ -186,23 +154,13 @@ Widget previewSliders() {
         mainAxisAlignment: .center,
         children: [
           const Text('Volume: 50%'),
-          RemixSlider(
-            value: 0.5,
-            onChanged: (value) {},
-          ),
+          RemixSlider(value: 0.5, onChanged: (value) {}),
           const SizedBox(height: 20),
           const Text('Brightness: 75%'),
-          RemixSlider(
-            value: 0.75,
-            onChanged: (value) {},
-          ),
+          RemixSlider(value: 0.75, onChanged: (value) {}),
           const SizedBox(height: 20),
           const Text('Disabled Slider'),
-          RemixSlider(
-            value: 0.3,
-            enabled: false,
-            onChanged: (value) {},
-          ),
+          RemixSlider(value: 0.3, enabled: false, onChanged: (value) {}),
         ],
       ),
     ),
@@ -213,9 +171,7 @@ Widget previewSliders() {
 Widget previewSelect() {
   return createRemixPreview(
     RemixSelect<String>(
-      trigger: const RemixSelectTrigger(
-        placeholder: 'Select an option',
-      ),
+      trigger: const RemixSelectTrigger(placeholder: 'Select an option'),
       selectedValue: 'option1',
       items: const [
         RemixSelectItem(value: 'option1', label: 'First Option'),

@@ -4,8 +4,9 @@ import 'package:remix/src/theme/remix_theme.dart';
 
 void main() {
   group('resolveRemixBrightness', () {
-    testWidgets('prefers media query platform brightness when available',
-        (tester) async {
+    testWidgets('prefers media query platform brightness when available', (
+      tester,
+    ) async {
       late Brightness resolved;
 
       await tester.pumpWidget(
@@ -26,7 +27,9 @@ void main() {
       expect(resolved, Brightness.dark);
     });
 
-    testWidgets('respects explicit override before media query', (tester) async {
+    testWidgets('respects explicit override before media query', (
+      tester,
+    ) async {
       late Brightness resolved;
 
       await tester.pumpWidget(
@@ -49,7 +52,6 @@ void main() {
 
       expect(resolved, Brightness.light);
     });
-
   });
 
   group('resolveRemixBrightnessValues', () {

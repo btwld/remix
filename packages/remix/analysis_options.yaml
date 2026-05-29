@@ -54,6 +54,9 @@ dart_code_metrics:
     
 analyzer:
   errors:
+    # TODO: Remove after the remaining @MixableStyler components migrate to
+    # @MixableSpec(target: Widget.new).
+    deprecated_member_use: ignore
     non_constant_identifier_names: ignore
 
 linter:

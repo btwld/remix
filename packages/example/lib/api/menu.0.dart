@@ -12,10 +12,7 @@ void main() {
 
   runApp(
     const MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.white,
-        body: MenuExample(),
-      ),
+      home: Scaffold(backgroundColor: Colors.white, body: MenuExample()),
     ),
   );
 }
@@ -60,9 +57,7 @@ class _MenuExampleState extends State<MenuExample> {
                 style: menuItemStyle.onHovered(
                   RemixMenuItemStyle()
                       .color(Colors.redAccent.withValues(alpha: 0.05))
-                      .label(
-                        TextStyler().color(Colors.redAccent),
-                      )
+                      .label(TextStyler().color(Colors.redAccent))
                       .leadingIcon(IconStyler().color(Colors.redAccent)),
                 ),
               ),
@@ -108,16 +103,20 @@ class _MenuExampleState extends State<MenuExample> {
                 BoxDecorationMix()
                     .color(Colors.white)
                     .borderRadius(
-                        BorderRadiusMix.all(const Radius.circular(12)))
-                    .border(BorderMix.all(
-                        BorderSideMix(color: Colors.blueGrey.shade100)))
+                      BorderRadiusMix.all(const Radius.circular(12)),
+                    )
+                    .border(
+                      BorderMix.all(
+                        BorderSideMix(color: Colors.blueGrey.shade100),
+                      ),
+                    )
                     .boxShadow([
-                  BoxShadowMix(
-                    color: Colors.blueGrey.withValues(alpha: 0.1),
-                    blurRadius: 3,
-                    offset: const Offset(0, 3),
-                  ),
-                ]),
+                      BoxShadowMix(
+                        color: Colors.blueGrey.withValues(alpha: 0.1),
+                        blurRadius: 3,
+                        offset: const Offset(0, 3),
+                      ),
+                    ]),
               )
               .constraints(BoxConstraintsMix(minHeight: 40))
               .label(
@@ -125,9 +124,7 @@ class _MenuExampleState extends State<MenuExample> {
                     .color(Colors.blueGrey.shade700)
                     .fontWeight(FontWeight.w400),
               )
-              .onHovered(
-                RemixMenuTriggerStyle().color(Colors.red),
-              ),
+              .onHovered(RemixMenuTriggerStyle().color(Colors.red)),
         )
         .overlay(
           FlexBoxStyler(
@@ -163,8 +160,6 @@ class _MenuExampleState extends State<MenuExample> {
         .spacing(8)
         .borderRadiusAll(const Radius.circular(8))
         .label(TextStyler().color(Colors.blueGrey.shade800))
-        .onHovered(
-          RemixMenuItemStyle().color(Colors.blueGrey.shade50),
-        );
+        .onHovered(RemixMenuItemStyle().color(Colors.blueGrey.shade50));
   }
 }

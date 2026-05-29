@@ -7,12 +7,8 @@ Widget buildRadioExample() {
   return const SizedBox(
     width: 360,
     child: ComparisonView(
-      remix: [
-        _RemixRadioGroupPreview(),
-      ],
-      material: [
-        _MaterialRadioGroupPreview(),
-      ],
+      remix: [_RemixRadioGroupPreview()],
+      material: [_MaterialRadioGroupPreview()],
     ),
   );
 }
@@ -32,11 +28,7 @@ class _RemixRadioGroupPreview extends StatelessWidget {
         children: [
           _RemixLabeledRadio(value: 'A', label: 'Option A'),
           _RemixLabeledRadio(value: 'B', label: 'Option B'),
-          _RemixLabeledRadio(
-            value: 'C',
-            label: 'Disabled',
-            enabled: false,
-          ),
+          _RemixLabeledRadio(value: 'C', label: 'Disabled', enabled: false),
         ],
       ),
     );
@@ -59,10 +51,7 @@ class _RemixLabeledRadio extends StatelessWidget {
     return Row(
       mainAxisSize: .min,
       children: [
-        RemixRadio<String>(
-          value: value,
-          enabled: enabled,
-        ),
+        RemixRadio<String>(value: value, enabled: enabled),
         const SizedBox(width: 8),
         Text(label),
       ],
@@ -74,10 +63,12 @@ class _MaterialRadioGroupPreview extends StatefulWidget {
   const _MaterialRadioGroupPreview();
 
   @override
-  State<_MaterialRadioGroupPreview> createState() => _MaterialRadioGroupPreviewState();
+  State<_MaterialRadioGroupPreview> createState() =>
+      _MaterialRadioGroupPreviewState();
 }
 
-class _MaterialRadioGroupPreviewState extends State<_MaterialRadioGroupPreview> {
+class _MaterialRadioGroupPreviewState
+    extends State<_MaterialRadioGroupPreview> {
   String groupValue = 'B';
 
   @override
@@ -141,7 +132,9 @@ class _LabeledRadio extends StatelessWidget {
               shape: BoxShape.circle,
               border: Border.all(
                 color: enabled
-                    ? (isSelected ? Theme.of(context).primaryColor : Colors.grey)
+                    ? (isSelected
+                          ? Theme.of(context).primaryColor
+                          : Colors.grey)
                     : Colors.grey.shade400,
                 width: 2,
               ),
@@ -164,9 +157,7 @@ class _LabeledRadio extends StatelessWidget {
           const SizedBox(width: 8),
           Text(
             label,
-            style: TextStyle(
-              color: enabled ? null : Colors.grey.shade400,
-            ),
+            style: TextStyle(color: enabled ? null : Colors.grey.shade400),
           ),
         ],
       ),

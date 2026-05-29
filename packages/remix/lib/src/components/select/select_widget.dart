@@ -165,13 +165,14 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
 
   Widget _buildOverlayMenu(RemixSelectSpec spec) {
     final menuContainerSpec = spec.menuContainer;
+
     return _AnimatedOverlayMenu(
       controller: animationController,
       duration: const Duration(milliseconds: 150),
       curve: Curves.easeInOut,
       menuContainer: menuContainerSpec,
       children: widget.items
-          .map((item) => _RemixSelectItemWidget<T>(data: item))
+          .map((item) => _RemixSelectItemWidget(data: item))
           .toList(),
     );
   }
@@ -236,6 +237,7 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
           controller: NakedState.controllerOf(context),
           builder: (context, spec) {
             final triggerSpec = spec.trigger;
+
             return _RemixSelectTriggerWidget(
               trigger: widget.trigger,
               displayLabel: _getDisplayLabel(),

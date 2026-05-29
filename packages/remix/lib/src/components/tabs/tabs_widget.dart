@@ -41,9 +41,9 @@ class RemixTabs extends StatelessWidget {
     this.enabled = true,
     this.onEscapePressed,
   }) : assert(
-          controller != null || selectedTabId != null,
-          'Either controller or selectedTabId must be provided',
-        );
+         controller != null || selectedTabId != null,
+         'Either controller or selectedTabId must be provided',
+       );
 
   /// The tabs content.
   final Widget child;
@@ -127,9 +127,9 @@ class RemixTab extends StatelessWidget {
     this.icon,
     this.label,
   }) : assert(
-          child != null || builder != null || label != null,
-          'Either child, builder, or label must be provided',
-        );
+         child != null || builder != null || label != null,
+         'Either child, builder, or label must be provided',
+       );
 
   /// The tab content when not using [builder].
   final Widget? child;
@@ -183,7 +183,8 @@ class RemixTab extends StatelessWidget {
     RemixTabSpec spec,
     NakedTabState state,
   ) {
-    final defaultContent = child ??
+    final defaultContent =
+        child ??
         FlexBox(
           styleSpec: spec.container,
           children: [

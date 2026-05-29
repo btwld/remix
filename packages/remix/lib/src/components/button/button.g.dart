@@ -116,11 +116,21 @@ class FortalButton extends StatelessWidget {
     required this.label,
     this.leadingIcon,
     this.trailingIcon,
+    this.textBuilder,
+    this.leadingIconBuilder,
+    this.trailingIconBuilder,
+    this.loadingBuilder,
+    this.autofocus = false,
     this.loading = false,
     this.enabled = true,
     this.enableFeedback = true,
     required this.onPressed,
+    this.onLongPress,
     this.focusNode,
+    this.semanticLabel,
+    this.semanticHint,
+    this.excludeSemantics = false,
+    this.mouseCursor = SystemMouseCursors.click,
   });
 
   final FortalButtonVariant variant;
@@ -133,6 +143,16 @@ class FortalButton extends StatelessWidget {
 
   final IconData? trailingIcon;
 
+  final RemixButtonTextBuilder? textBuilder;
+
+  final RemixButtonIconBuilder? leadingIconBuilder;
+
+  final RemixButtonIconBuilder? trailingIconBuilder;
+
+  final RemixButtonLoadingBuilder? loadingBuilder;
+
+  final bool autofocus;
+
   final bool loading;
 
   final bool enabled;
@@ -141,19 +161,40 @@ class FortalButton extends StatelessWidget {
 
   final VoidCallback? onPressed;
 
+  final VoidCallback? onLongPress;
+
   final FocusNode? focusNode;
+
+  final String? semanticLabel;
+
+  final String? semanticHint;
+
+  final bool excludeSemantics;
+
+  final MouseCursor mouseCursor;
 
   @override
   Widget build(BuildContext context) {
     return fortalButtonStyle(variant: this.variant, size: this.size).call(
+      key: this.key,
       label: this.label,
       leadingIcon: this.leadingIcon,
       trailingIcon: this.trailingIcon,
+      textBuilder: this.textBuilder,
+      leadingIconBuilder: this.leadingIconBuilder,
+      trailingIconBuilder: this.trailingIconBuilder,
+      loadingBuilder: this.loadingBuilder,
+      autofocus: this.autofocus,
       loading: this.loading,
       enabled: this.enabled,
       enableFeedback: this.enableFeedback,
       onPressed: this.onPressed,
+      onLongPress: this.onLongPress,
       focusNode: this.focusNode,
+      semanticLabel: this.semanticLabel,
+      semanticHint: this.semanticHint,
+      excludeSemantics: this.excludeSemantics,
+      mouseCursor: this.mouseCursor,
     );
   }
 }
@@ -164,24 +205,14 @@ class FortalButton extends StatelessWidget {
 
 mixin _$RemixButtonStyleMixin on Style<RemixButtonSpec>, Diagnosticable {
   Prop<StyleSpec<FlexBoxSpec>>? get $container;
-  Prop<StyleSpec<IconSpec>>? get $icon;
-  Prop<IconAlignment>? get $iconAlignment;
   Prop<StyleSpec<TextSpec>>? get $label;
+  Prop<StyleSpec<IconSpec>>? get $icon;
   Prop<StyleSpec<RemixSpinnerSpec>>? get $spinner;
+  Prop<IconAlignment>? get $iconAlignment;
 
   /// Sets the container.
   RemixButtonStyle container(FlexBoxStyler value) {
     return merge(RemixButtonStyle(container: value));
-  }
-
-  /// Sets the icon.
-  RemixButtonStyle icon(IconStyler value) {
-    return merge(RemixButtonStyle(icon: value));
-  }
-
-  /// Sets the iconAlignment.
-  RemixButtonStyle iconAlignment(IconAlignment value) {
-    return merge(RemixButtonStyle(iconAlignment: value));
   }
 
   /// Sets the label.
@@ -189,9 +220,19 @@ mixin _$RemixButtonStyleMixin on Style<RemixButtonSpec>, Diagnosticable {
     return merge(RemixButtonStyle(label: value));
   }
 
+  /// Sets the icon.
+  RemixButtonStyle icon(IconStyler value) {
+    return merge(RemixButtonStyle(icon: value));
+  }
+
   /// Sets the spinner.
   RemixButtonStyle spinner(RemixSpinnerStyle value) {
     return merge(RemixButtonStyle(spinner: value));
+  }
+
+  /// Sets the iconAlignment.
+  RemixButtonStyle iconAlignment(IconAlignment value) {
+    return merge(RemixButtonStyle(iconAlignment: value));
   }
 
   /// Sets the animation configuration.
@@ -209,15 +250,65 @@ mixin _$RemixButtonStyleMixin on Style<RemixButtonSpec>, Diagnosticable {
     return merge(RemixButtonStyle(modifier: value));
   }
 
+  /// Sets the widget modifier.
+  RemixButtonStyle modifier(WidgetModifierConfig value) {
+    return merge(RemixButtonStyle(modifier: value));
+  }
+
+  RemixButton call({
+    Key? key,
+    required String label,
+    IconData? leadingIcon,
+    IconData? trailingIcon,
+    RemixButtonTextBuilder? textBuilder,
+    RemixButtonIconBuilder? leadingIconBuilder,
+    RemixButtonIconBuilder? trailingIconBuilder,
+    RemixButtonLoadingBuilder? loadingBuilder,
+    bool autofocus = false,
+    bool loading = false,
+    bool enabled = true,
+    bool enableFeedback = true,
+    required VoidCallback? onPressed,
+    VoidCallback? onLongPress,
+    FocusNode? focusNode,
+    String? semanticLabel,
+    String? semanticHint,
+    bool excludeSemantics = false,
+    MouseCursor mouseCursor = SystemMouseCursors.click,
+  }) {
+    return RemixButton(
+      key: key,
+      style: this,
+      label: label,
+      leadingIcon: leadingIcon,
+      trailingIcon: trailingIcon,
+      textBuilder: textBuilder,
+      leadingIconBuilder: leadingIconBuilder,
+      trailingIconBuilder: trailingIconBuilder,
+      loadingBuilder: loadingBuilder,
+      autofocus: autofocus,
+      loading: loading,
+      enabled: enabled,
+      enableFeedback: enableFeedback,
+      onPressed: onPressed,
+      onLongPress: onLongPress,
+      focusNode: focusNode,
+      semanticLabel: semanticLabel,
+      semanticHint: semanticHint,
+      excludeSemantics: excludeSemantics,
+      mouseCursor: mouseCursor,
+    );
+  }
+
   /// Merges with another [RemixButtonStyle].
   @override
   RemixButtonStyle merge(RemixButtonStyle? other) {
     return RemixButtonStyle.create(
       container: MixOps.merge($container, other?.$container),
-      icon: MixOps.merge($icon, other?.$icon),
-      iconAlignment: MixOps.merge($iconAlignment, other?.$iconAlignment),
       label: MixOps.merge($label, other?.$label),
+      icon: MixOps.merge($icon, other?.$icon),
       spinner: MixOps.merge($spinner, other?.$spinner),
+      iconAlignment: MixOps.merge($iconAlignment, other?.$iconAlignment),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -229,10 +320,10 @@ mixin _$RemixButtonStyleMixin on Style<RemixButtonSpec>, Diagnosticable {
   StyleSpec<RemixButtonSpec> resolve(BuildContext context) {
     final spec = RemixButtonSpec(
       container: MixOps.resolve(context, $container),
-      icon: MixOps.resolve(context, $icon),
-      iconAlignment: MixOps.resolve(context, $iconAlignment),
       label: MixOps.resolve(context, $label),
+      icon: MixOps.resolve(context, $icon),
       spinner: MixOps.resolve(context, $spinner),
+      iconAlignment: MixOps.resolve(context, $iconAlignment),
     );
 
     return StyleSpec(
@@ -247,19 +338,19 @@ mixin _$RemixButtonStyleMixin on Style<RemixButtonSpec>, Diagnosticable {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', $container))
-      ..add(DiagnosticsProperty('icon', $icon))
-      ..add(DiagnosticsProperty('iconAlignment', $iconAlignment))
       ..add(DiagnosticsProperty('label', $label))
-      ..add(DiagnosticsProperty('spinner', $spinner));
+      ..add(DiagnosticsProperty('icon', $icon))
+      ..add(DiagnosticsProperty('spinner', $spinner))
+      ..add(DiagnosticsProperty('iconAlignment', $iconAlignment));
   }
 
   @override
   List<Object?> get props => [
     $container,
-    $icon,
-    $iconAlignment,
     $label,
+    $icon,
     $spinner,
+    $iconAlignment,
     $animation,
     $modifier,
     $variants,

@@ -62,6 +62,24 @@ class RemixRadioStyle
     );
   }
 
+  /// Sets fill color on the container.
+  RemixRadioStyle fillColor(Color value) {
+    return merge(
+      RemixRadioStyle(
+        container: BoxStyler(decoration: BoxDecorationMix(color: value)),
+      ),
+    );
+  }
+
+  /// Sets the indicator's fill color.
+  RemixRadioStyle indicatorColor(Color value) {
+    return merge(
+      RemixRadioStyle(
+        indicator: BoxStyler(decoration: BoxDecorationMix(color: value)),
+      ),
+    );
+  }
+
   /// Convenience for applying padding around the control.
   @override
   RemixRadioStyle padding(EdgeInsetsGeometryMix value) {
@@ -74,28 +92,10 @@ class RemixRadioStyle
     return merge(RemixRadioStyle(container: BoxStyler(margin: value)));
   }
 
-  /// Sets fill color on the container.
-  RemixRadioStyle fillColor(Color value) {
-    return merge(
-      RemixRadioStyle(
-        container: BoxStyler(decoration: BoxDecorationMix(color: value)),
-      ),
-    );
-  }
-
   /// Sets background color on the container.
   /// Delegates to [fillColor].
   @override
   RemixRadioStyle color(Color value) => fillColor(value);
-
-  /// Sets the indicator's fill color.
-  RemixRadioStyle indicatorColor(Color value) {
-    return merge(
-      RemixRadioStyle(
-        indicator: BoxStyler(decoration: BoxDecorationMix(color: value)),
-      ),
-    );
-  }
 
   /// Sets container size using explicit constraints.
   @override

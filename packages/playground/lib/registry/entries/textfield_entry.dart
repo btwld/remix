@@ -8,20 +8,13 @@ Widget buildTextFieldExample() {
     width: 320,
     child: ComparisonView(
       remix: [
-        RemixTextField(
-          label: 'Label',
-          hintText: 'Type something…',
-        ),
+        RemixTextField(label: 'Label', hintText: 'Type something…'),
         RemixTextField(
           label: 'With helper',
           hintText: 'Email',
           helperText: 'We will not share your email',
         ),
-        RemixTextField(
-          label: 'Error',
-          hintText: 'Invalid input',
-          error: true,
-        ),
+        RemixTextField(label: 'Error', hintText: 'Invalid input', error: true),
       ],
       material: [
         TextField(

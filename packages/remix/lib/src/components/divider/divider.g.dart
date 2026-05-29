@@ -100,6 +100,11 @@ mixin _$RemixDividerStyleMixin on Style<RemixDividerSpec>, Diagnosticable {
     return merge(RemixDividerStyle(modifier: value));
   }
 
+  /// Sets the widget modifier.
+  RemixDividerStyle modifier(WidgetModifierConfig value) {
+    return merge(RemixDividerStyle(modifier: value));
+  }
+
   /// Merges with another [RemixDividerStyle].
   @override
   RemixDividerStyle merge(RemixDividerStyle? other) {

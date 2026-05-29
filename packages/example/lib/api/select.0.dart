@@ -4,10 +4,7 @@ import 'package:remix/remix.dart';
 void main() {
   runApp(
     const MaterialApp(
-      home: Scaffold(
-        backgroundColor: Color(0xFFECEFEB),
-        body: SelectExample(),
-      ),
+      home: Scaffold(backgroundColor: Color(0xFFECEFEB), body: SelectExample()),
     ),
   );
 }

@@ -115,8 +115,8 @@ class RemixCheckbox extends StatelessWidget {
             final iconData = tristate && selected == null
                 ? indeterminateIcon
                 : selected == true
-                    ? checkedIcon
-                    : uncheckedIcon;
+                ? checkedIcon
+                : uncheckedIcon;
 
             return Box(
               styleSpec: spec.container,

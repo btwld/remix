@@ -4,10 +4,7 @@ import 'package:remix/remix.dart';
 void main() {
   runApp(
     const MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.white,
-        body: ToggleExample(),
-      ),
+      home: Scaffold(backgroundColor: Colors.white, body: ToggleExample()),
     ),
   );
 }
@@ -67,12 +64,8 @@ class _ToggleExampleState extends State<ToggleExample> {
         .iconSize(22)
         .backgroundColor(Colors.grey.shade100)
         .borderRadiusAll(const Radius.circular(8))
-        .onHovered(
-          RemixToggleStyle().backgroundColor(Colors.grey.shade200),
-        )
-        .onPressed(
-          RemixToggleStyle().scale(0.93),
-        )
+        .onHovered(RemixToggleStyle().backgroundColor(Colors.grey.shade200))
+        .onPressed(RemixToggleStyle().scale(0.93))
         .onSelected(
           RemixToggleStyle()
               .backgroundColor(Colors.deepPurple.shade50)

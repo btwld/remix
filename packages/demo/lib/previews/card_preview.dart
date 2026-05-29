@@ -18,18 +18,12 @@ Widget previewBasicCard() {
             children: [
               Text(
                 'Card Title',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 8),
               Text(
                 'This is a basic card component with some content inside. Cards are great for grouping related information.',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: MixColors.grey,
-                ),
+                style: TextStyle(fontSize: 14, color: MixColors.grey),
               ),
             ],
           ),
@@ -57,34 +51,22 @@ Widget previewCardWithActions() {
                   SizedBox(width: 12),
                   Text(
                     'Article Title',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                   ),
                 ],
               ),
               SizedBox(height: 12),
               Text(
                 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: MixColors.grey,
-                ),
+                style: TextStyle(fontSize: 14, color: MixColors.grey),
               ),
               SizedBox(height: 16),
               Row(
                 mainAxisAlignment: .end,
                 children: [
-                  RemixButton(
-                    label: 'Cancel',
-                    onPressed: null,
-                  ),
+                  RemixButton(label: 'Cancel', onPressed: null),
                   SizedBox(width: 8),
-                  RemixButton(
-                    label: 'Read More',
-                    onPressed: null,
-                  ),
+                  RemixButton(label: 'Read More', onPressed: null),
                 ],
               ),
             ],
@@ -109,55 +91,33 @@ Widget previewProfileCard() {
               CircleAvatar(
                 radius: 40,
                 backgroundColor: MixColors.blue,
-                child: Icon(
-                  Icons.person,
-                  size: 40,
-                  color: MixColors.white,
-                ),
+                child: Icon(Icons.person, size: 40, color: MixColors.white),
               ),
               SizedBox(height: 16),
               Text(
                 'John Doe',
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 4),
               Text(
                 'Software Developer',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: MixColors.grey,
-                ),
+                style: TextStyle(fontSize: 16, color: MixColors.grey),
               ),
               SizedBox(height: 16),
               Text(
                 'Passionate about creating amazing user experiences and building scalable applications.',
                 textAlign: .center,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: MixColors.grey,
-                ),
+                style: TextStyle(fontSize: 14, color: MixColors.grey),
               ),
               SizedBox(height: 20),
               Row(
                 mainAxisAlignment: .center,
                 children: [
-                  RemixIconButton(
-                    icon: Icons.email,
-                    onPressed: null,
-                  ),
+                  RemixIconButton(icon: Icons.email, onPressed: null),
                   SizedBox(width: 12),
-                  RemixIconButton(
-                    icon: Icons.phone,
-                    onPressed: null,
-                  ),
+                  RemixIconButton(icon: Icons.phone, onPressed: null),
                   SizedBox(width: 12),
-                  RemixIconButton(
-                    icon: Icons.message,
-                    onPressed: null,
-                  ),
+                  RemixIconButton(icon: Icons.message, onPressed: null),
                 ],
               ),
             ],
@@ -181,10 +141,7 @@ Widget previewStatsCard() {
             children: [
               Text(
                 'Dashboard Statistics',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
               ),
               SizedBox(height: 20),
               Row(
@@ -203,10 +160,7 @@ Widget previewStatsCard() {
                       SizedBox(height: 4),
                       Text(
                         'Users',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: MixColors.grey,
-                        ),
+                        style: TextStyle(fontSize: 12, color: MixColors.grey),
                       ),
                     ],
                   ),
@@ -223,10 +177,7 @@ Widget previewStatsCard() {
                       SizedBox(height: 4),
                       Text(
                         'Orders',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: MixColors.grey,
-                        ),
+                        style: TextStyle(fontSize: 12, color: MixColors.grey),
                       ),
                     ],
                   ),
@@ -243,10 +194,7 @@ Widget previewStatsCard() {
                       SizedBox(height: 4),
                       Text(
                         'Revenue',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: MixColors.grey,
-                        ),
+                        style: TextStyle(fontSize: 12, color: MixColors.grey),
                       ),
                     ],
                   ),

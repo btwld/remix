@@ -25,7 +25,7 @@ RemixTextFieldStyle _fortalTextFieldBaseStyle(FortalTextFieldSize size) {
         cursorWidth: 1.5,
       )
       .spacing(8)
-      .wrap(.iconTheme(size: 16.0, color: FortalTokens.gray10()))
+      .wrap(.iconTheme(color: FortalTokens.gray10(), size: 16.0))
       .onFocused(
         RemixTextFieldStyle().borderAll(
           color: FortalTokens.accent8(),

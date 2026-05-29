@@ -43,12 +43,6 @@ class RemixToggleStyle
          modifier: modifier,
        );
 
-  /// Sets container alignment.
-  @override
-  RemixToggleStyle alignment(Alignment value) {
-    return merge(RemixToggleStyle(container: FlexBoxStyler(alignment: value)));
-  }
-
   /// Sets the background color.
   RemixToggleStyle backgroundColor(Color value) {
     return merge(
@@ -75,6 +69,40 @@ class RemixToggleStyle
   /// Sets item spacing between icon and label.
   RemixToggleStyle spacing(double value) {
     return merge(RemixToggleStyle(container: FlexBoxStyler(spacing: value)));
+  }
+
+  /// Creates a [RemixToggle] widget with this style applied.
+  RemixToggle call({
+    required bool selected,
+    required ValueChanged<bool> onChanged,
+    String? label,
+    IconData? icon,
+    bool enabled = true,
+    bool enableFeedback = true,
+    FocusNode? focusNode,
+    bool autofocus = false,
+    String? semanticLabel,
+    MouseCursor mouseCursor = SystemMouseCursors.click,
+  }) {
+    return RemixToggle(
+      enabled: enabled,
+      selected: selected,
+      onChanged: onChanged,
+      label: label,
+      icon: icon,
+      style: this,
+      enableFeedback: enableFeedback,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      semanticLabel: semanticLabel,
+      mouseCursor: mouseCursor,
+    );
+  }
+
+  /// Sets container alignment.
+  @override
+  RemixToggleStyle alignment(Alignment value) {
+    return merge(RemixToggleStyle(container: FlexBoxStyler(alignment: value)));
   }
 
   @override
@@ -124,33 +152,5 @@ class RemixToggleStyle
   @override
   RemixToggleStyle flex(FlexStyler value) {
     return merge(RemixToggleStyle(container: FlexBoxStyler().flex(value)));
-  }
-
-  /// Creates a [RemixToggle] widget with this style applied.
-  RemixToggle call({
-    required bool selected,
-    required ValueChanged<bool> onChanged,
-    String? label,
-    IconData? icon,
-    bool enabled = true,
-    bool enableFeedback = true,
-    FocusNode? focusNode,
-    bool autofocus = false,
-    String? semanticLabel,
-    MouseCursor mouseCursor = SystemMouseCursors.click,
-  }) {
-    return RemixToggle(
-      selected: selected,
-      onChanged: onChanged,
-      label: label,
-      icon: icon,
-      enabled: enabled,
-      enableFeedback: enableFeedback,
-      focusNode: focusNode,
-      autofocus: autofocus,
-      semanticLabel: semanticLabel,
-      mouseCursor: mouseCursor,
-      style: this,
-    );
   }
 }

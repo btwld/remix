@@ -932,6 +932,7 @@ class FortalScope extends StatelessWidget {
       gray: gray,
       brightness: brightness,
     );
+
     return MixScope(
       tokens: tokens,
       orderOfModifiers: orderOfModifiers,
@@ -1022,7 +1023,7 @@ class FortalThemeConfig {
     FortalAccentColor? accent,
     FortalGrayColor? gray,
     Brightness? brightness,
-  }) => FortalThemeConfig(
+  }) => .new(
     accent: accent ?? this.accent,
     gray: gray ?? this.gray,
     brightness: brightness ?? this.brightness,

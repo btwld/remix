@@ -1,30 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:widgetbook/widgetbook.dart';
 
-enum IconDataEnum {
-  none,
-  home,
-  settings,
-  favorite,
-  add,
-  delete,
-}
+enum IconDataEnum { none, home, settings, favorite, add, delete }
 
 class IconDataKnob extends Knob<IconData?> {
-  IconDataKnob({
-    required super.label,
-    super.initialValue,
-  });
+  IconDataKnob({required super.label, super.initialValue});
 
   @override
   List<Field> get fields => [
-        ObjectDropdownField<IconDataEnum>(
-          name: label,
-          initialValue: IconDataEnum.none,
-          labelBuilder: (value) => value.name,
-          values: IconDataEnum.values,
-        ),
-      ];
+    ObjectDropdownField<IconDataEnum>(
+      name: label,
+      initialValue: IconDataEnum.none,
+      labelBuilder: (value) => value.name,
+      values: IconDataEnum.values,
+    ),
+  ];
 
   @override
   IconData? valueFromQueryGroup(Map<String, String> group) {
@@ -52,15 +42,7 @@ class IconDataKnob extends Knob<IconData?> {
 }
 
 extension IconDataKnobBuilder on KnobsBuilder {
-  IconData? iconData({
-    required String label,
-    IconData? initialValue,
-  }) =>
-      onKnobAdded(
-        IconDataKnob(
-          label: label,
-          initialValue: initialValue,
-        ),
-      ) ??
+  IconData? iconData({required String label, IconData? initialValue}) =>
+      onKnobAdded(IconDataKnob(label: label, initialValue: initialValue)) ??
       initialValue;
 }

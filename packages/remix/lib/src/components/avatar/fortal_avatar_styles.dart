@@ -17,7 +17,7 @@ RemixAvatarStyle fortalAvatarStyle({
 RemixAvatarStyle _fortalAvatarBaseStyle(FortalAvatarSize size) {
   return RemixAvatarStyle()
       .clipBehavior(.hardEdge)
-      .labelFontWeight(FontWeight.w500)
+      .labelFontWeight(.w500)
       .merge(_fortalAvatarSizeStyle(size));
 }
 

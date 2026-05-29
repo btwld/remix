@@ -8,10 +8,7 @@ import 'package:remix/remix.dart';
 void main() {
   runApp(
     const MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.white,
-        body: IconButtonExample(),
-      ),
+      home: Scaffold(backgroundColor: Colors.white, body: IconButtonExample()),
     ),
   );
 }
@@ -57,12 +54,14 @@ class IconButtonExample extends StatelessWidget {
               .indicatorColor(Colors.blueGrey.shade600),
         )
         .onHovered(
-          RemixIconButtonStyle()
-              .color(Colors.blueGrey.shade100.withValues(alpha: 0.4)),
+          RemixIconButtonStyle().color(
+            Colors.blueGrey.shade100.withValues(alpha: 0.4),
+          ),
         )
         .onPressed(
-          RemixIconButtonStyle()
-              .color(Colors.blueGrey.shade100.withValues(alpha: 0.8)),
+          RemixIconButtonStyle().color(
+            Colors.blueGrey.shade100.withValues(alpha: 0.8),
+          ),
         );
   }
 }

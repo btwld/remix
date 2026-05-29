@@ -41,7 +41,11 @@ void main() {
       styleMethodTest(
         'shape sets container shape',
         initial: RemixCheckboxStyle(),
-        modify: (style) => style.shape(RoundedRectangleBorderMix(borderRadius: BorderRadiusMix.circular(8.0))),
+        modify: (style) => style.shape(
+          RoundedRectangleBorderMix(
+            borderRadius: BorderRadiusMix.circular(8.0),
+          ),
+        ),
         expect: (style) {
           expect(
             style.$container,
@@ -49,7 +53,9 @@ void main() {
               Prop.maybeMix(
                 BoxStyler(
                   decoration: ShapeDecorationMix(
-                    shape: RoundedRectangleBorderMix(borderRadius: BorderRadiusMix.circular(8.0)),
+                    shape: RoundedRectangleBorderMix(
+                      borderRadius: BorderRadiusMix.circular(8.0),
+                    ),
                   ),
                 ),
               ),

@@ -83,12 +83,6 @@ class RemixCardStyle extends RemixContainerStyle<RemixCardSpec, RemixCardStyle>
     return merge(RemixCardStyle(container: BoxStyler(alignment: value)));
   }
 
-  /// Sets container decoration
-  @override
-  RemixCardStyle decoration(DecorationMix value) {
-    return merge(RemixCardStyle(container: BoxStyler(decoration: value)));
-  }
-
   /// Sets the shape of the card.
   RemixCardStyle shape(ShapeBorderMix value) {
     return merge(
@@ -96,6 +90,12 @@ class RemixCardStyle extends RemixContainerStyle<RemixCardSpec, RemixCardStyle>
         container: BoxStyler(decoration: ShapeDecorationMix(shape: value)),
       ),
     );
+  }
+
+  /// Sets container decoration
+  @override
+  RemixCardStyle decoration(DecorationMix value) {
+    return merge(RemixCardStyle(container: BoxStyler(decoration: value)));
   }
 
   // Abstract method implementations for mixins

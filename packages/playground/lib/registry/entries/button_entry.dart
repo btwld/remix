@@ -62,14 +62,8 @@ Widget buildButtonExample() {
       ),
     ],
     material: [
-      FilledButton(
-        onPressed: () {},
-        child: const Text('Primary Button'),
-      ),
-      const FilledButton(
-        onPressed: null,
-        child: Text('Disabled'),
-      ),
+      FilledButton(onPressed: () {}, child: const Text('Primary Button')),
+      const FilledButton(onPressed: null, child: Text('Disabled')),
       // Simulated loading state for Material (no built-in loading flag)
       const FilledButton(
         onPressed: null,

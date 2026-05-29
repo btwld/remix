@@ -103,7 +103,7 @@ class RemixAvatar extends StyleWidget<RemixAvatarSpec> {
                 image: DecorationImage(
                   image: backgroundImage!,
                   onError: onBackgroundImageError,
-                  fit: BoxFit.cover,
+                  fit: .cover,
                 ),
               )
             : null,
@@ -112,7 +112,7 @@ class RemixAvatar extends StyleWidget<RemixAvatarSpec> {
                 image: DecorationImage(
                   image: foregroundImage!,
                   onError: onForegroundImageError,
-                  fit: BoxFit.cover,
+                  fit: .cover,
                 ),
               )
             : null,

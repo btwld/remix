@@ -118,6 +118,11 @@ mixin _$RemixRadioStyleMixin on Style<RemixRadioSpec>, Diagnosticable {
     return merge(RemixRadioStyle(modifier: value));
   }
 
+  /// Sets the widget modifier.
+  RemixRadioStyle modifier(WidgetModifierConfig value) {
+    return merge(RemixRadioStyle(modifier: value));
+  }
+
   /// Merges with another [RemixRadioStyle].
   @override
   RemixRadioStyle merge(RemixRadioStyle? other) {

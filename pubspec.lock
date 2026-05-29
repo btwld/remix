@@ -435,8 +435,8 @@ packages:
     dependency: "direct overridden"
     description:
       path: "packages/mix"
-      ref: "feat/mix-widget-generator"
-      resolved-ref: d26e68119356be338735fc4576c7bf02531563c2
+      ref: "feat/styler-generator"
+      resolved-ref: ee735897748eccbd1d2fdcfb0edba90192e7bebe
       url: "https://github.com/btwld/mix.git"
     source: git
     version: "2.0.3"
@@ -444,8 +444,8 @@ packages:
     dependency: "direct overridden"
     description:
       path: "packages/mix_annotations"
-      ref: "feat/mix-widget-generator"
-      resolved-ref: d26e68119356be338735fc4576c7bf02531563c2
+      ref: "feat/styler-generator"
+      resolved-ref: ee735897748eccbd1d2fdcfb0edba90192e7bebe
       url: "https://github.com/btwld/mix.git"
     source: git
     version: "2.0.1"
@@ -453,8 +453,8 @@ packages:
     dependency: "direct overridden"
     description:
       path: "packages/mix_generator"
-      ref: "feat/mix-widget-generator"
-      resolved-ref: d26e68119356be338735fc4576c7bf02531563c2
+      ref: "feat/styler-generator"
+      resolved-ref: ee735897748eccbd1d2fdcfb0edba90192e7bebe
       url: "https://github.com/btwld/mix.git"
     source: git
     version: "2.0.3"

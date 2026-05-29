@@ -5,4 +5,3 @@ class ViewportPresets {
   static const Size tablet = Size(768, 1024); // iPad portrait
   static const Size desktop = Size(1280, 800);
 }
-

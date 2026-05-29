@@ -169,9 +169,7 @@ class RemixSlider extends StatelessWidget {
                     alignment: .centerLeft,
                     children: [
                       Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: horizontalPadding / 2,
-                        ),
+                        padding: .symmetric(horizontal: horizontalPadding / 2),
                         child: SizedBox(
                           width: constraints.maxWidth,
                           height: constraints.maxHeight,
@@ -393,7 +391,7 @@ class _AnimatedTrack extends StatefulWidget {
   final Curve curve;
 
   @override
-  _AnimatedTrackState createState() => _AnimatedTrackState();
+  _AnimatedTrackState createState() => .new();
 }
 
 class _AnimatedTrackState extends State<_AnimatedTrack> {

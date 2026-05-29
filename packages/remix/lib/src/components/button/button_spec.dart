@@ -49,7 +49,7 @@ part of 'button.dart';
 /// - [RemixButtonStyle] for the styling API
 /// - [RemixButton] for the widget implementation
 /// - [Spec] for the base specification pattern
-@MixableSpec()
+@MixableSpec(target: RemixButton.new)
 class RemixButtonSpec with _$RemixButtonSpec {
   /// Styling specification for the button's container.
   ///
@@ -111,5 +111,5 @@ class RemixButtonSpec with _$RemixButtonSpec {
        label = label ?? const StyleSpec(spec: TextSpec()),
        icon = icon ?? const StyleSpec(spec: IconSpec()),
        spinner = spinner ?? const StyleSpec(spec: RemixSpinnerSpec()),
-       iconAlignment = iconAlignment ?? IconAlignment.start;
+       iconAlignment = iconAlignment ?? .start;
 }

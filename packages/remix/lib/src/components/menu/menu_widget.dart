@@ -219,7 +219,7 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
               children: widget.items.map((item) {
                 // Pattern matching ensures exhaustiveness
                 return switch (item) {
-                  RemixMenuItem<T>() => _RemixMenuItemWidget<T>(data: item),
+                  RemixMenuItem<T>() => _RemixMenuItemWidget(data: item),
                   RemixMenuDivider<T>() => RemixDivider(
                     styleSpec: spec.divider,
                   ),

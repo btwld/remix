@@ -18,9 +18,9 @@ class RemixProgress extends StyleWidget<RemixProgressSpec> {
     super.key,
     required this.value,
   }) : assert(
-          value >= 0 && value <= 1,
-          'Progress value must be between 0 and 1',
-        );
+         value >= 0 && value <= 1,
+         'Progress value must be between 0 and 1',
+       );
 
   /// The progress value between 0 and 1.
   ///

@@ -55,12 +55,6 @@ class RemixDialogStyle
     return merge(RemixDialogStyle(container: BoxStyler(alignment: value)));
   }
 
-  // RemixContainerStyle mixin implementations
-  @override
-  RemixDialogStyle padding(EdgeInsetsGeometryMix value) {
-    return merge(RemixDialogStyle(container: BoxStyler(padding: value)));
-  }
-
   /// Sets the background color of the dialog.
   RemixDialogStyle backgroundColor(Color value) {
     return merge(
@@ -68,6 +62,21 @@ class RemixDialogStyle
         container: BoxStyler(decoration: BoxDecorationMix(color: value)),
       ),
     );
+  }
+
+  /// Sets the shape of the dialog.
+  RemixDialogStyle shape(ShapeBorderMix value) {
+    return merge(
+      RemixDialogStyle(
+        container: BoxStyler(decoration: ShapeDecorationMix(shape: value)),
+      ),
+    );
+  }
+
+  // RemixContainerStyle mixin implementations
+  @override
+  RemixDialogStyle padding(EdgeInsetsGeometryMix value) {
+    return merge(RemixDialogStyle(container: BoxStyler(padding: value)));
   }
 
   /// Delegates to [backgroundColor].
@@ -140,18 +149,7 @@ class RemixDialogStyle
   RemixDialogStyle shadow(BoxShadowMix value) {
     return merge(
       RemixDialogStyle(
-        container: BoxStyler(
-          decoration: BoxDecorationMix(boxShadow: [value]),
-        ),
-      ),
-    );
-  }
-
-  /// Sets the shape of the dialog.
-  RemixDialogStyle shape(ShapeBorderMix value) {
-    return merge(
-      RemixDialogStyle(
-        container: BoxStyler(decoration: ShapeDecorationMix(shape: value)),
+        container: BoxStyler(decoration: BoxDecorationMix(boxShadow: [value])),
       ),
     );
   }

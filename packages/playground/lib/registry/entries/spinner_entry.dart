@@ -8,17 +8,8 @@ Widget buildSpinnerExample() {
     width: 360,
     child: ComparisonView(
       remix: [
-        RemixSpinner(
-          style: RemixSpinnerStyle(
-            strokeWidth: 2,
-          ),
-        ),
-        RemixSpinner(
-          style: RemixSpinnerStyle(
-            size: 32,
-            strokeWidth: 2,
-          ),
-        ),
+        RemixSpinner(style: RemixSpinnerStyle(strokeWidth: 2)),
+        RemixSpinner(style: RemixSpinnerStyle(size: 32, strokeWidth: 2)),
       ],
       material: const [
         CircularProgressIndicator(strokeWidth: 2),

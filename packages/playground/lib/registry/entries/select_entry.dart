@@ -15,9 +15,7 @@ Widget buildSelectExample() {
     child: ComparisonView(
       remix: [
         RemixSelect<String>(
-          trigger: const RemixSelectTrigger(
-            placeholder: 'Select an option',
-          ),
+          trigger: const RemixSelectTrigger(placeholder: 'Select an option'),
           selectedValue: 'Two',
           onChanged: (_) {},
           items: items
@@ -25,9 +23,7 @@ Widget buildSelectExample() {
               .toList(),
         ),
         RemixSelect<String>(
-          trigger: const RemixSelectTrigger(
-            placeholder: 'Select an option',
-          ),
+          trigger: const RemixSelectTrigger(placeholder: 'Select an option'),
           selectedValue: 'Two',
           onChanged: null,
           items: items

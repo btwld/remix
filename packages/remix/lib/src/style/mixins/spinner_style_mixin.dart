@@ -43,16 +43,22 @@ mixin SpinnerStyleMixin<T extends Mix<Object?>> {
 
   /// Sets spinner animation to fast (500ms)
   T spinnerFast() {
-    return spinner(RemixSpinnerStyle(duration: const Duration(milliseconds: 500)));
+    return spinner(
+      RemixSpinnerStyle(duration: const Duration(milliseconds: 500)),
+    );
   }
 
   /// Sets spinner animation to normal (1000ms)
   T spinnerNormal() {
-    return spinner(RemixSpinnerStyle(duration: const Duration(milliseconds: 1000)));
+    return spinner(
+      RemixSpinnerStyle(duration: const Duration(milliseconds: 1000)),
+    );
   }
 
   /// Sets spinner animation to slow (1500ms)
   T spinnerSlow() {
-    return spinner(RemixSpinnerStyle(duration: const Duration(milliseconds: 1500)));
+    return spinner(
+      RemixSpinnerStyle(duration: const Duration(milliseconds: 1500)),
+    );
   }
 }
