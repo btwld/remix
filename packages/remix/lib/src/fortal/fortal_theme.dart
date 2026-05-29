@@ -910,12 +910,6 @@ Map<MixToken, Object> _buildFortalScopeTokens({
 /// )
 /// ```
 class FortalScope extends StatelessWidget {
-  final FortalAccentColor accent;
-
-  final FortalGrayColor gray;
-  final Brightness brightness;
-  final List<Type>? orderOfModifiers;
-  final Widget child;
   const FortalScope({
     super.key,
     this.accent = .indigo,
@@ -924,6 +918,12 @@ class FortalScope extends StatelessWidget {
     this.orderOfModifiers,
     required this.child,
   });
+
+  final FortalAccentColor accent;
+  final FortalGrayColor gray;
+  final Brightness brightness;
+  final List<Type>? orderOfModifiers;
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
@@ -1023,7 +1023,7 @@ class FortalThemeConfig {
     FortalAccentColor? accent,
     FortalGrayColor? gray,
     Brightness? brightness,
-  }) => FortalThemeConfig(
+  }) => .new(
     accent: accent ?? this.accent,
     gray: gray ?? this.gray,
     brightness: brightness ?? this.brightness,

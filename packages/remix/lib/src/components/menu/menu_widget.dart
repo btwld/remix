@@ -111,6 +111,25 @@ final class RemixMenuDivider<T> extends RemixMenuItemData<T> {
 /// )
 /// ```
 class RemixMenu<T> extends StatefulWidget {
+  const RemixMenu({
+    super.key,
+    required this.trigger,
+    required this.items,
+    this.controller,
+    this.onSelected,
+    this.onOpen,
+    this.onClose,
+    this.onCanceled,
+    this.onOpenRequested,
+    this.onCloseRequested,
+    this.consumeOutsideTaps = true,
+    this.useRootOverlay = false,
+    this.closeOnClickOutside = true,
+    this.triggerFocusNode,
+    this.positioning = const OverlayPositionConfig(),
+    this.style = const RemixMenuStyle.create(),
+  });
+
   /// The trigger data that defines the menu's button.
   final RemixMenuTrigger trigger;
 
@@ -159,31 +178,18 @@ class RemixMenu<T> extends StatefulWidget {
 
   static final styleFrom = RemixMenuStyle.new;
 
-  const RemixMenu({
-    super.key,
-    required this.trigger,
-    required this.items,
-    this.controller,
-    this.onSelected,
-    this.onOpen,
-    this.onClose,
-    this.onCanceled,
-    this.onOpenRequested,
-    this.onCloseRequested,
-    this.consumeOutsideTaps = true,
-    this.useRootOverlay = false,
-    this.closeOnClickOutside = true,
-    this.triggerFocusNode,
-    this.positioning = const OverlayPositionConfig(),
-    this.style = const RemixMenuStyle.create(),
-  });
-
   @override
   State<RemixMenu<T>> createState() => _RemixMenuState<T>();
 }
 
 class _RemixMenuState<T> extends State<RemixMenu<T>> {
   late final MenuController _internalController;
+
+  @override
+  void initState() {
+    super.initState();
+    _internalController = widget.controller ?? MenuController();
+  }
 
   // Note: MenuController doesn't require disposal - it's not a ChangeNotifier
 
@@ -202,12 +208,6 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
       widget.controller ?? _internalController;
 
   @override
-  void initState() {
-    super.initState();
-    _internalController = widget.controller ?? MenuController();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return NakedMenu<T>(
       // Render items list with direct spec passing
@@ -220,7 +220,7 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
               children: widget.items.map((item) {
                 // Pattern matching ensures exhaustiveness
                 return switch (item) {
-                  RemixMenuItem<T>() => _RemixMenuItemWidget<T>(data: item),
+                  RemixMenuItem<T>() => _RemixMenuItemWidget(data: item),
                   RemixMenuDivider<T>() => RemixDivider(
                     styleSpec: spec.divider,
                   ),
@@ -278,9 +278,9 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
 ///
 /// Receives styling directly from parent [RemixMenu] via styleSpec parameter.
 class _RemixMenuItemWidget<T> extends StatelessWidget {
-  final RemixMenuItem<T> data;
-
   const _RemixMenuItemWidget({required this.data});
+
+  final RemixMenuItem<T> data;
 
   @override
   Widget build(BuildContext context) {

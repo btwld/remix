@@ -72,6 +72,23 @@ class RemixSelectItem<T> {
 /// )
 /// ```
 class RemixSelect<T> extends StatefulWidget {
+  const RemixSelect({
+    super.key,
+    required this.trigger,
+    required this.items,
+    this.selectedValue,
+    this.targetAnchor,
+    this.followerAnchor,
+    this.onChanged,
+    this.onOpen,
+    this.onClose,
+    this.enabled = true,
+    this.semanticLabel,
+    this.closeOnSelect = true,
+    this.focusNode,
+    this.style = const RemixSelectStyle.create(),
+  });
+
   /// The trigger data that defines the select's button.
   final RemixSelectTrigger trigger;
 
@@ -113,23 +130,6 @@ class RemixSelect<T> extends StatefulWidget {
 
   static final styleFrom = RemixSelectStyle.new;
 
-  const RemixSelect({
-    super.key,
-    required this.trigger,
-    required this.items,
-    this.selectedValue,
-    this.targetAnchor,
-    this.followerAnchor,
-    this.onChanged,
-    this.onOpen,
-    this.onClose,
-    this.enabled = true,
-    this.semanticLabel,
-    this.closeOnSelect = true,
-    this.focusNode,
-    this.style = const RemixSelectStyle.create(),
-  });
-
   @override
   State<RemixSelect<T>> createState() => _RemixSelectState<T>();
 }
@@ -137,6 +137,16 @@ class RemixSelect<T> extends StatefulWidget {
 class _RemixSelectState<T> extends State<RemixSelect<T>>
     with SingleTickerProviderStateMixin {
   late final AnimationController animationController;
+
+  @override
+  void initState() {
+    super.initState();
+    animationController = AnimationController(
+      duration: const Duration(milliseconds: 150),
+      reverseDuration: const Duration(milliseconds: 150),
+      vsync: this,
+    );
+  }
 
   RemixSelectStyle _buildStyle() {
     return RemixSelectStyle()
@@ -162,7 +172,7 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
       curve: Curves.easeInOut,
       menuContainer: menuContainerSpec,
       children: widget.items
-          .map((item) => _RemixSelectItemWidget<T>(data: item))
+          .map((item) => _RemixSelectItemWidget(data: item))
           .toList(),
     );
   }
@@ -186,16 +196,6 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
 
     // Gracefully degrade in release mode - show placeholder
     return widget.trigger.placeholder;
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    animationController = AnimationController(
-      duration: const Duration(milliseconds: 150),
-      reverseDuration: const Duration(milliseconds: 150),
-      vsync: this,
-    );
   }
 
   @override
@@ -252,12 +252,6 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
 }
 
 class _AnimatedOverlayMenu extends StatefulWidget {
-  final AnimationController controller;
-
-  final Duration duration;
-  final Curve curve;
-  final StyleSpec<FlexBoxSpec> menuContainer;
-  final List<Widget> children;
   const _AnimatedOverlayMenu({
     required this.controller,
     required this.duration,
@@ -265,6 +259,12 @@ class _AnimatedOverlayMenu extends StatefulWidget {
     required this.menuContainer,
     required this.children,
   });
+
+  final AnimationController controller;
+  final Duration duration;
+  final Curve curve;
+  final StyleSpec<FlexBoxSpec> menuContainer;
+  final List<Widget> children;
 
   @override
   State<_AnimatedOverlayMenu> createState() => _AnimatedOverlayMenuState();
@@ -326,17 +326,17 @@ class _AnimatedOverlayMenuState extends State<_AnimatedOverlayMenu> {
 
 /// Internal widget for rendering the select trigger.
 class _RemixSelectTriggerWidget extends StatelessWidget {
-  final RemixSelectTrigger trigger;
-
-  final String displayLabel;
-  final bool isOpen;
-  final StyleSpec<RemixSelectTriggerSpec> styleSpec;
   const _RemixSelectTriggerWidget({
     required this.trigger,
     required this.displayLabel,
     required this.isOpen,
     required this.styleSpec,
   });
+
+  final RemixSelectTrigger trigger;
+  final String displayLabel;
+  final bool isOpen;
+  final StyleSpec<RemixSelectTriggerSpec> styleSpec;
 
   @override
   Widget build(BuildContext context) {
@@ -365,9 +365,9 @@ class _RemixSelectTriggerWidget extends StatelessWidget {
 
 /// Internal widget for rendering a selectable item.
 class _RemixSelectItemWidget<T> extends StatelessWidget {
-  final RemixSelectItem<T> data;
-
   const _RemixSelectItemWidget({required this.data});
+
+  final RemixSelectItem<T> data;
 
   @override
   Widget build(BuildContext context) {

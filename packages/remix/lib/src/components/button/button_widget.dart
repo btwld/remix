@@ -56,6 +56,34 @@ typedef RemixButtonLoadingBuilder =
 /// ```
 ///
 class RemixButton extends StatelessWidget {
+  /// Creates a Remix button.
+  ///
+  /// The [label] parameter is required and specifies the button text.
+  /// Use builders to customize rendering of specific parts.
+  const RemixButton({
+    this.style = const RemixButtonStyle.create(),
+    this.styleSpec,
+    super.key,
+    required this.label,
+    this.leadingIcon,
+    this.trailingIcon,
+    this.textBuilder,
+    this.leadingIconBuilder,
+    this.trailingIconBuilder,
+    this.loadingBuilder,
+    this.autofocus = false,
+    this.loading = false,
+    this.enabled = true,
+    this.enableFeedback = true,
+    required this.onPressed,
+    this.onLongPress,
+    this.focusNode,
+    this.semanticLabel,
+    this.semanticHint,
+    this.excludeSemantics = false,
+    this.mouseCursor = SystemMouseCursors.click,
+  });
+
   final RemixButtonStyle style;
 
   final RemixButtonSpec? styleSpec;
@@ -137,34 +165,6 @@ class RemixButton extends StatelessWidget {
   ///
   /// Defaults to [SystemMouseCursors.click] when enabled.
   final MouseCursor mouseCursor;
-
-  /// Creates a Remix button.
-  ///
-  /// The [label] parameter is required and specifies the button text.
-  /// Use builders to customize rendering of specific parts.
-  const RemixButton({
-    this.style = const RemixButtonStyle.create(),
-    this.styleSpec,
-    super.key,
-    required this.label,
-    this.leadingIcon,
-    this.trailingIcon,
-    this.textBuilder,
-    this.leadingIconBuilder,
-    this.trailingIconBuilder,
-    this.loadingBuilder,
-    this.autofocus = false,
-    this.loading = false,
-    this.enabled = true,
-    this.enableFeedback = true,
-    required this.onPressed,
-    this.onLongPress,
-    this.focusNode,
-    this.semanticLabel,
-    this.semanticHint,
-    this.excludeSemantics = false,
-    this.mouseCursor = SystemMouseCursors.click,
-  });
 
   RemixButtonStyle _buildStyle() {
     return RemixButtonStyle().mainAxisSize(.min).merge(style);
