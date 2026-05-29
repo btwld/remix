@@ -29,7 +29,7 @@ class FortalProgressStyles {
   static RemixProgressStyle base({FortalProgressSize size = .size2}) {
     return RemixProgressStyle()
         // Container styling - no focus for progress
-        .width(double.infinity)
+        .width(.infinity)
         // Merge with size-specific styles
         .merge(_sizeStyle(size));
   }
@@ -49,7 +49,7 @@ class FortalProgressStyles {
         .track(
           BoxStyler()
               .color(FortalTokens.gray3()) // gray6 equivalent
-              .width(double.infinity),
+              .width(.infinity),
         )
         // Indicator styling (progress fill) - same as classic
         .indicator(BoxStyler().color(FortalTokens.accentIndicator()));
@@ -62,7 +62,7 @@ class FortalProgressStyles {
           BoxStyler()
               .color(FortalTokens.gray4())
               .borderRadiusAll(FortalTokens.radiusFull())
-              .width(double.infinity),
+              .width(.infinity),
         )
         // Indicator styling (progress fill) - uses accent9
         .indicator(

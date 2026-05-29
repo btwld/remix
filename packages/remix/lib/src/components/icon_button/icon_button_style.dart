@@ -107,8 +107,8 @@ class RemixIconButtonStyle
   RemixIconButtonStyle minimumSize(Size value) {
     return merge(
       RemixIconButtonStyle().constraintsOnly(
-        minHeight: value.height,
         minWidth: value.width,
+        minHeight: value.height,
       ),
     );
   }
@@ -117,8 +117,8 @@ class RemixIconButtonStyle
   RemixIconButtonStyle maximumSize(Size value) {
     return merge(
       RemixIconButtonStyle().constraintsOnly(
-        maxHeight: value.height,
         maxWidth: value.width,
+        maxHeight: value.height,
       ),
     );
   }

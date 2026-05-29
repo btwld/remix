@@ -17,6 +17,27 @@ part of 'slider.dart';
 /// )
 /// ```
 class RemixSlider extends StatelessWidget {
+  const RemixSlider({
+    super.key,
+    this.min = 0.0,
+    this.max = 1.0,
+    required this.onChanged,
+    required this.value,
+    this.onChangeEnd,
+    this.onChangeStart,
+    this.style = const RemixSliderStyle.create(),
+    this.styleSpec,
+    this.enabled = true,
+    this.enableHapticFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
+    this.snapDivisions,
+  }) : assert(min <= max, 'Slider min must be less than or equal to max'),
+       assert(
+         value >= min && value <= max,
+         'Slider value must be between min and max values',
+       );
+
   /// The minimum value the slider can have.
   final double min;
 
@@ -61,27 +82,6 @@ class RemixSlider extends StatelessWidget {
 
   /// The focus node for the slider.
   final FocusNode? focusNode;
-
-  const RemixSlider({
-    super.key,
-    this.min = 0.0,
-    this.max = 1.0,
-    required this.onChanged,
-    required this.value,
-    this.onChangeEnd,
-    this.onChangeStart,
-    this.style = const RemixSliderStyle.create(),
-    this.styleSpec,
-    this.enabled = true,
-    this.enableHapticFeedback = true,
-    this.focusNode,
-    this.autofocus = false,
-    this.snapDivisions,
-  }) : assert(min <= max, 'Slider min must be less than or equal to max'),
-       assert(
-         value >= min && value <= max,
-         'Slider value must be between min and max values',
-       );
 
   @override
   Widget build(BuildContext context) {
@@ -169,9 +169,7 @@ class RemixSlider extends StatelessWidget {
                     alignment: .centerLeft,
                     children: [
                       Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: horizontalPadding / 2,
-                        ),
+                        padding: .symmetric(horizontal: horizontalPadding / 2),
                         child: SizedBox(
                           width: constraints.maxWidth,
                           height: constraints.maxHeight,
@@ -374,14 +372,6 @@ Paint _createPaint(Color color, double width) {
 
 // Animated track widget for smooth color transitions
 class _AnimatedTrack extends StatefulWidget {
-  final double value;
-
-  final Color rangeColor;
-  final double rangeWidth;
-  final Color trackColor;
-  final double trackWidth;
-  final Duration duration;
-  final Curve curve;
   const _AnimatedTrack({
     required this.value,
     required this.rangeColor,
@@ -392,8 +382,16 @@ class _AnimatedTrack extends StatefulWidget {
     required this.curve,
   });
 
+  final double value;
+  final Color rangeColor;
+  final double rangeWidth;
+  final Color trackColor;
+  final double trackWidth;
+  final Duration duration;
+  final Curve curve;
+
   @override
-  _AnimatedTrackState createState() => _AnimatedTrackState();
+  _AnimatedTrackState createState() => .new();
 }
 
 class _AnimatedTrackState extends State<_AnimatedTrack> {

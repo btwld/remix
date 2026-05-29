@@ -61,7 +61,7 @@ class RemixSpinnerPainter extends CustomPainter {
         ..strokeWidth = 2 * (trackStrokeWidth ?? strokeWidth)
         ..color = trackColor!;
 
-      canvas.drawCircle(Offset.zero, radius, trackPaint);
+      canvas.drawCircle(.zero, radius, trackPaint);
     }
 
     // Draw indicator arc
@@ -98,7 +98,7 @@ class RemixSpinnerPainter extends CustomPainter {
     /// As animation cycles from 0 to 1, the start angle advances by 2π,
     /// making the arc appear to rotate smoothly around the center.
     canvas.drawArc(
-      Rect.fromCircle(center: Offset.zero, radius: radius),
+      Rect.fromCircle(center: .zero, radius: radius),
       startAngle + animation.value * 2 * pi,
       sweepAngle,
       false, // useCenter: false - draws arc stroke, not a pie slice

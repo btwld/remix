@@ -139,10 +139,7 @@ class RemixAvatarStyle
     return merge(
       RemixAvatarStyle(
         container: BoxStyler(
-          decoration: BoxDecorationMix(
-            borderRadius: radius,
-            shape: BoxShape.rectangle,
-          ),
+          decoration: BoxDecorationMix(borderRadius: radius, shape: .rectangle),
         ),
       ),
     );

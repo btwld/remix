@@ -31,6 +31,19 @@ part of 'radio.dart';
 /// ```
 ///
 class RemixRadio<T> extends StatelessWidget {
+  const RemixRadio({
+    this.style = const RemixRadioStyle.create(),
+    this.styleSpec,
+    super.key,
+    required this.value,
+    this.autofocus = false,
+    this.enabled = true,
+    this.toggleable = false,
+    this.focusNode,
+    this.mouseCursor,
+    this.enableFeedback = true,
+  });
+
   final RemixRadioStyle style;
 
   final RemixRadioSpec? styleSpec;
@@ -57,19 +70,6 @@ class RemixRadio<T> extends StatelessWidget {
 
   /// Whether to provide feedback when the radio button is pressed.
   final bool enableFeedback;
-
-  const RemixRadio({
-    this.style = const RemixRadioStyle.create(),
-    this.styleSpec,
-    super.key,
-    required this.value,
-    this.autofocus = false,
-    this.enabled = true,
-    this.toggleable = false,
-    this.focusNode,
-    this.mouseCursor,
-    this.enableFeedback = true,
-  });
 
   @override
   Widget build(BuildContext context) {

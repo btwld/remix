@@ -33,5 +33,5 @@ Brightness resolveRemixBrightnessValues({
     return themeBrightness;
   }
 
-  return Brightness.light;
+  return .light;
 }

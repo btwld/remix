@@ -12,12 +12,6 @@ part of 'progress.dart';
 /// )
 /// ```
 class RemixProgress extends StyleWidget<RemixProgressSpec> {
-  /// The progress value between 0 and 1.
-  ///
-  /// This value determines how much of the progress bar is filled.
-  /// A value of 0 means empty, while 1 means completely filled.
-  final double value;
-
   const RemixProgress({
     super.style = const RemixProgressStyle.create(),
     super.styleSpec,
@@ -27,6 +21,12 @@ class RemixProgress extends StyleWidget<RemixProgressSpec> {
          value >= 0 && value <= 1,
          'Progress value must be between 0 and 1',
        );
+
+  /// The progress value between 0 and 1.
+  ///
+  /// This value determines how much of the progress bar is filled.
+  /// A value of 0 means empty, while 1 means completely filled.
+  final double value;
 
   @override
   Widget build(BuildContext context, RemixProgressSpec spec) {

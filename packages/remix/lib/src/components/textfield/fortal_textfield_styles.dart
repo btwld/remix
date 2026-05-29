@@ -37,7 +37,7 @@ class FortalTextFieldStyles {
           cursorWidth: 1.5,
         )
         .spacing(8)
-        .wrap(.iconTheme(size: 16.0, color: FortalTokens.gray10()))
+        .wrap(.iconTheme(color: FortalTokens.gray10(), size: 16.0))
         // Focus state
         .onFocused(
           RemixTextFieldStyle().borderAll(
