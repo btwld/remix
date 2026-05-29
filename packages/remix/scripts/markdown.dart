@@ -22,10 +22,10 @@ void main() {
         final fileName = fileOrDir.path.split('/').last;
         final fileContent = fileOrDir.readAsStringSync();
 
-        contextFile.writeAsStringSync('# $fileName\n', mode: FileMode.append);
-        contextFile.writeAsStringSync('```dart\n', mode: FileMode.append);
-        contextFile.writeAsStringSync(fileContent, mode: FileMode.append);
-        contextFile.writeAsStringSync('\n```\n', mode: FileMode.append);
+        contextFile.writeAsStringSync('# $fileName\n', mode: .append);
+        contextFile.writeAsStringSync('```dart\n', mode: .append);
+        contextFile.writeAsStringSync(fileContent, mode: .append);
+        contextFile.writeAsStringSync('\n```\n', mode: .append);
       } else if (fileOrDir is Directory) {
         processDirectory(fileOrDir);
       }

@@ -208,7 +208,7 @@ class RemixButtonStyle
   /// Sets the minimum size of the button.
   RemixButtonStyle minimumSize(Size value) {
     return merge(
-      .new().constraintsOnly(minHeight: value.height, minWidth: value.width),
+      .new().constraintsOnly(minWidth: value.width, minHeight: value.height),
     );
   }
 
@@ -218,10 +218,10 @@ class RemixButtonStyle
   RemixButtonStyle fixedSize(Size value) {
     return merge(
       .new().constraintsOnly(
-        minHeight: value.height,
         minWidth: value.width,
-        maxHeight: value.height,
         maxWidth: value.width,
+        minHeight: value.height,
+        maxHeight: value.height,
       ),
     );
   }
@@ -229,7 +229,7 @@ class RemixButtonStyle
   /// Sets the maximum size of the button.
   RemixButtonStyle maximumSize(Size value) {
     return merge(
-      .new().constraintsOnly(maxHeight: value.height, maxWidth: value.width),
+      .new().constraintsOnly(maxWidth: value.width, maxHeight: value.height),
     );
   }
 

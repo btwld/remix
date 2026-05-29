@@ -38,7 +38,7 @@ class FortalMenuStyles {
                   style: TextStyleMix(
                     color: FortalTokens.gray12(),
                     fontSize: 14,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: .w500,
                   ),
                 ),
               )
@@ -88,7 +88,7 @@ class FortalMenuStyles {
               style: TextStyleMix(
                 color: FortalTokens.accent11(),
                 fontSize: 14,
-                fontWeight: FontWeight.w500,
+                fontWeight: .w500,
               ),
             ),
           )

@@ -19,7 +19,7 @@ class FortalDialogStyle {
         .title(
           TextStyler()
               .fontSize(18)
-              .fontWeight(FontWeight.w600)
+              .fontWeight(.w600)
               .color(FortalTokens.gray12())
               .wrap(
                 WidgetModifierConfig.padding(
