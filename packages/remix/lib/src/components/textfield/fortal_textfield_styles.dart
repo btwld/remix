@@ -26,9 +26,7 @@ class FortalTextFieldStyles {
     };
   }
 
-  static RemixTextFieldStyle base({
-    FortalTextFieldSize size = .size2,
-  }) {
+  static RemixTextFieldStyle base({FortalTextFieldSize size = .size2}) {
     return RemixTextFieldStyle(
           hintText: TextStyler().textHeightBehavior(
             TextHeightBehaviorMix()
@@ -52,9 +50,7 @@ class FortalTextFieldStyles {
         .merge(_sizeStyle(size));
   }
 
-  static RemixTextFieldStyle surface({
-    FortalTextFieldSize size = .size2,
-  }) {
+  static RemixTextFieldStyle surface({FortalTextFieldSize size = .size2}) {
     return base(size: size)
         .merge(
           RemixTextFieldStyle(
@@ -99,9 +95,7 @@ class FortalTextFieldStyles {
         );
   }
 
-  static RemixTextFieldStyle soft({
-    FortalTextFieldSize size = .size2,
-  }) {
+  static RemixTextFieldStyle soft({FortalTextFieldSize size = .size2}) {
     return base(size: size)
         .merge(
           RemixTextFieldStyle(

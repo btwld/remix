@@ -7,10 +7,7 @@ import 'package:remix/remix.dart';
 void main() {
   runApp(
     const MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.white,
-        body: CheckboxExample(),
-      ),
+      home: Scaffold(backgroundColor: Colors.white, body: CheckboxExample()),
     ),
   );
 }
@@ -43,16 +40,10 @@ class _CheckboxExampleState extends State<CheckboxExample> {
     return RemixCheckboxStyle()
         .size(24, 24)
         .icon(IconStyler().size(20).color(Colors.white))
-        .onSelected(
-          RemixCheckboxStyle().color(Colors.grey.shade900),
-        )
-        .borderRadiusAll(
-          const Radius.circular(3),
-        )
+        .onSelected(RemixCheckboxStyle().color(Colors.grey.shade900))
+        .borderRadiusAll(const Radius.circular(3))
         .border(
-          BoxBorderMix.all(
-            BorderSideMix().color(Colors.black87).width(2),
-          ),
+          BoxBorderMix.all(BorderSideMix().color(Colors.black87).width(2)),
         );
   }
 }

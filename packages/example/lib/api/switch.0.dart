@@ -4,10 +4,7 @@ import 'package:remix/remix.dart';
 void main() {
   runApp(
     const MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.white,
-        body: SwitchExample(),
-      ),
+      home: Scaffold(backgroundColor: Colors.white, body: SwitchExample()),
     ),
   );
 }
@@ -49,9 +46,7 @@ class _SwitchExampleState extends State<SwitchExample> {
         .trackColor(Colors.deepPurpleAccent.shade200)
         .size(65, 30)
         .borderRadiusAll(const Radius.circular(40))
-        .alignment(
-          _selected.value ? .centerRight : .centerLeft,
-        )
+        .alignment(_selected.value ? .centerRight : .centerLeft)
         .animate(AnimationConfig.easeOut(300.ms))
         .thumb(
           BoxStyler()
@@ -68,13 +63,10 @@ class _SwitchExampleState extends State<SwitchExample> {
               .keyframeAnimation(
                 trigger: _selected,
                 timeline: [
-                  KeyframeTrack<double>(
-                      'scale',
-                      [
-                        Keyframe.easeOutSine(1.25, 200.ms),
-                        Keyframe.elasticOut(0.85, 500.ms),
-                      ],
-                      initial: 0.85),
+                  KeyframeTrack<double>('scale', [
+                    Keyframe.easeOutSine(1.25, 200.ms),
+                    Keyframe.elasticOut(0.85, 500.ms),
+                  ], initial: 0.85),
                   KeyframeTrack<double>(
                     'width',
                     [

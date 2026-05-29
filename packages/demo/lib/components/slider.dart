@@ -6,10 +6,7 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 final _key = GlobalKey();
 
-@widgetbook.UseCase(
-  name: 'Slider Component',
-  type: RemixSlider,
-)
+@widgetbook.UseCase(name: 'Slider Component', type: RemixSlider)
 Widget buildSliderUseCase(BuildContext context) {
   final knobState = WidgetbookState.of(context);
   return KeyedSubtree(

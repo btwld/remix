@@ -29,9 +29,7 @@ class FortalSelectStyles {
     };
   }
 
-  static RemixSelectStyle base({
-    FortalSelectSize size = .size2,
-  }) {
+  static RemixSelectStyle base({FortalSelectSize size = .size2}) {
     return RemixSelectStyle()
         .trigger(
           RemixSelectTriggerStyle()
@@ -66,9 +64,7 @@ class FortalSelectStyles {
         .merge(_sizeStyle(size));
   }
 
-  static RemixSelectStyle surface({
-    FortalSelectSize size = .size2,
-  }) {
+  static RemixSelectStyle surface({FortalSelectSize size = .size2}) {
     return base(size: size).trigger(
       RemixSelectTriggerStyle()
           .color(FortalTokens.colorSurface())
@@ -79,9 +75,7 @@ class FortalSelectStyles {
     );
   }
 
-  static RemixSelectStyle soft({
-    FortalSelectSize size = .size2,
-  }) {
+  static RemixSelectStyle soft({FortalSelectSize size = .size2}) {
     return base(size: size).trigger(
       RemixSelectTriggerStyle()
           .color(FortalTokens.accent3())
@@ -90,9 +84,7 @@ class FortalSelectStyles {
     );
   }
 
-  static RemixSelectStyle ghost({
-    FortalSelectSize size = .size2,
-  }) {
+  static RemixSelectStyle ghost({FortalSelectSize size = .size2}) {
     return base(size: size).trigger(
       RemixSelectTriggerStyle()
           .color(Colors.transparent)
@@ -140,18 +132,14 @@ class FortalSelectItemStyles {
     };
   }
 
-  static RemixSelectMenuItemStyle base({
-    FortalSelectSize size = .size2,
-  }) {
+  static RemixSelectMenuItemStyle base({FortalSelectSize size = .size2}) {
     return RemixSelectMenuItemStyle()
         .icon(IconStyler(size: 16.0))
         .borderRadiusAll(FortalTokens.radius2())
         .merge(_sizeStyle(size));
   }
 
-  static RemixSelectMenuItemStyle surface({
-    FortalSelectSize size = .size2,
-  }) {
+  static RemixSelectMenuItemStyle surface({FortalSelectSize size = .size2}) {
     return base(size: size)
         .color(Colors.transparent)
         .text(TextStyler().color(FortalTokens.gray12()))
@@ -162,9 +150,7 @@ class FortalSelectItemStyles {
         );
   }
 
-  static RemixSelectMenuItemStyle soft({
-    FortalSelectSize size = .size2,
-  }) {
+  static RemixSelectMenuItemStyle soft({FortalSelectSize size = .size2}) {
     return base(size: size)
         .color(Colors.transparent)
         .text(TextStyler().color(FortalTokens.gray12()))
@@ -176,9 +162,7 @@ class FortalSelectItemStyles {
         );
   }
 
-  static RemixSelectMenuItemStyle ghost({
-    FortalSelectSize size = .size2,
-  }) {
+  static RemixSelectMenuItemStyle ghost({FortalSelectSize size = .size2}) {
     return base(size: size)
         .color(Colors.transparent)
         .text(TextStyler().color(FortalTokens.gray12()))
@@ -195,12 +179,9 @@ class FortalSelectItemStyles {
 
   static RemixSelectMenuItemStyle _sizeStyle(FortalSelectSize size) {
     return switch (size) {
-      .size1 =>
-        RemixSelectMenuItemStyle().paddingX(6.0).height(20.0),
-      .size2 =>
-        RemixSelectMenuItemStyle().paddingX(8.0).height(24.0),
-      .size3 =>
-        RemixSelectMenuItemStyle().paddingX(10.0).height(28.0),
+      .size1 => RemixSelectMenuItemStyle().paddingX(6.0).height(20.0),
+      .size2 => RemixSelectMenuItemStyle().paddingX(8.0).height(24.0),
+      .size3 => RemixSelectMenuItemStyle().paddingX(10.0).height(28.0),
     };
   }
 }

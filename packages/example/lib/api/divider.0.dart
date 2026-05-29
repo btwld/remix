@@ -7,10 +7,7 @@ import 'package:remix/remix.dart';
 void main() {
   runApp(
     const MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.white,
-        body: DividerExample(),
-      ),
+      home: Scaffold(backgroundColor: Colors.white, body: DividerExample()),
     ),
   );
 }
@@ -20,11 +17,7 @@ class DividerExample extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: RemixDivider(
-        style: style,
-      ),
-    );
+    return Center(child: RemixDivider(style: style));
   }
 
   RemixDividerStyle get style {

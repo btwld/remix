@@ -155,9 +155,7 @@ class FortalMenuItemStyles {
         .merge(_sizeStyle(size));
   }
 
-  static RemixMenuItemStyle solid({
-    FortalMenuSize size = .size2,
-  }) {
+  static RemixMenuItemStyle solid({FortalMenuSize size = .size2}) {
     return base(size: size)
         .color(FortalTokens.graySurface())
         .onHovered(

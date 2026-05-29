@@ -25,9 +25,7 @@ class FortalCheckboxStyles {
     };
   }
 
-  static RemixCheckboxStyle base({
-    FortalCheckboxSize size = .size2,
-  }) {
+  static RemixCheckboxStyle base({FortalCheckboxSize size = .size2}) {
     return RemixCheckboxStyle()
         // Focus state (generic)
         .onFocused(
@@ -44,9 +42,7 @@ class FortalCheckboxStyles {
   ///
   /// Surface checkboxes use neutral surface with subtle borders.
   /// Used for forms with softer visual appearance.
-  static RemixCheckboxStyle surface({
-    FortalCheckboxSize size = .size2,
-  }) {
+  static RemixCheckboxStyle surface({FortalCheckboxSize size = .size2}) {
     return base(size: size)
         // Container (the checkbox box itself) - no size properties
         .borderAll(
@@ -82,9 +78,7 @@ class FortalCheckboxStyles {
   ///
   /// Soft checkboxes use accent-tinted background with accent borders.
   /// Used for forms that need accent color integration.
-  static RemixCheckboxStyle soft({
-    FortalCheckboxSize size = .size2,
-  }) {
+  static RemixCheckboxStyle soft({FortalCheckboxSize size = .size2}) {
     return base(size: size)
         .fillColor(FortalTokens.accentA4())
         .borderRadiusAll(FortalTokens.radius2())

@@ -3,10 +3,8 @@ import 'package:remix/remix.dart';
 import '../../widgets/comparison_view.dart';
 
 Widget buildTooltipExample() {
-  Widget iconButtonWithTooltip(Widget child) => IconButton(
-        onPressed: () {},
-        icon: child,
-      );
+  Widget iconButtonWithTooltip(Widget child) =>
+      IconButton(onPressed: () {}, icon: child);
 
   return SizedBox(
     width: 360,

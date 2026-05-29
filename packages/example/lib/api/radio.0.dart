@@ -7,10 +7,7 @@ import 'package:remix/remix.dart';
 void main() {
   runApp(
     const MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.white,
-        body: RadioExample(),
-      ),
+      home: Scaffold(backgroundColor: Colors.white, body: RadioExample()),
     ),
   );
 }

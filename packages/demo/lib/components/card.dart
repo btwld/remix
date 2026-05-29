@@ -5,10 +5,7 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 final _key = GlobalKey();
 
-@widgetbook.UseCase(
-  name: 'Card Component',
-  type: RemixCard,
-)
+@widgetbook.UseCase(name: 'Card Component', type: RemixCard)
 Widget buildCardUseCase(BuildContext context) {
   return KeyedSubtree(
     key: _key,

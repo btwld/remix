@@ -47,8 +47,9 @@ class RemixSpinnerPainter extends CustomPainter {
     canvas.translate(size.width / 2, size.height / 2);
 
     final indicatorThickness = strokeWidth * 2;
-    final trackThickness =
-        trackColor != null ? 2 * (trackStrokeWidth ?? strokeWidth) : 0;
+    final trackThickness = trackColor != null
+        ? 2 * (trackStrokeWidth ?? strokeWidth)
+        : 0;
     final maxThickness = max(indicatorThickness, trackThickness);
 
     final radius = min(size.width, size.height) / 2 - maxThickness;

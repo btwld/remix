@@ -26,9 +26,7 @@ class FortalSliderStyles {
     };
   }
 
-  static RemixSliderStyle base({
-    FortalSliderSize size = .size2,
-  }) {
+  static RemixSliderStyle base({FortalSliderSize size = .size2}) {
     return RemixSliderStyle()
         // Focus state
         .thumb(
@@ -50,9 +48,7 @@ class FortalSliderStyles {
         .merge(_sizeStyle(size));
   }
 
-  static RemixSliderStyle surface({
-    FortalSliderSize size = .size2,
-  }) {
+  static RemixSliderStyle surface({FortalSliderSize size = .size2}) {
     return base(size: size)
         .trackColor(FortalTokens.gray3())
         .rangeColor(FortalTokens.accentIndicator())
@@ -64,9 +60,7 @@ class FortalSliderStyles {
         );
   }
 
-  static RemixSliderStyle soft({
-    FortalSliderSize size = .size2,
-  }) {
+  static RemixSliderStyle soft({FortalSliderSize size = .size2}) {
     return base(size: size)
         .trackColor(FortalTokens.gray4())
         .rangeColor(FortalTokens.accent6())

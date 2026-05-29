@@ -554,9 +554,7 @@ void main() {
         expect(find.text('Select'), findsOneWidget);
       });
 
-      testWidgets('asserts when selected value not in items', (
-        tester,
-      ) async {
+      testWidgets('asserts when selected value not in items', (tester) async {
         // In debug mode, an assertion should be thrown when selectedValue
         // doesn't match any item in the items list.
         // The assertion happens during widget build, so we catch it via takeException.

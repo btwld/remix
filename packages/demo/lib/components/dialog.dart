@@ -4,10 +4,7 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 final _key = GlobalKey();
 
-@widgetbook.UseCase(
-  name: 'Dialog Component',
-  type: RemixDialog,
-)
+@widgetbook.UseCase(name: 'Dialog Component', type: RemixDialog)
 Widget buildDividerUseCase(BuildContext context) {
   return KeyedSubtree(
     key: _key,

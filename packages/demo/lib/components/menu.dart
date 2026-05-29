@@ -5,10 +5,7 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 final _key = GlobalKey();
 
-@widgetbook.UseCase(
-  name: 'Menu Component',
-  type: RemixMenu,
-)
+@widgetbook.UseCase(name: 'Menu Component', type: RemixMenu)
 Widget buildMenuUseCase(BuildContext context) {
   final variant = context.knobs.object.dropdown(
     label: 'Variant',
@@ -46,20 +43,26 @@ Widget buildMenuUseCase(BuildContext context) {
                 RemixMenuItem(
                   label: 'Item 1',
                   value: 'item1',
-                  style:
-                      FortalMenuItemStyles.create(variant: variant, size: size),
+                  style: FortalMenuItemStyles.create(
+                    variant: variant,
+                    size: size,
+                  ),
                 ),
                 RemixMenuItem(
                   label: 'Item 2',
                   value: 'item2',
-                  style:
-                      FortalMenuItemStyles.create(variant: variant, size: size),
+                  style: FortalMenuItemStyles.create(
+                    variant: variant,
+                    size: size,
+                  ),
                 ),
                 RemixMenuItem(
                   label: 'Item 3',
                   value: 'item3',
-                  style:
-                      FortalMenuItemStyles.create(variant: variant, size: size),
+                  style: FortalMenuItemStyles.create(
+                    variant: variant,
+                    size: size,
+                  ),
                 ),
               ],
               onSelected: (value) {},

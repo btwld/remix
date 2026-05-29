@@ -1,10 +1,6 @@
 part of 'spinner.dart';
 
-enum FortalSpinnerSize {
-  size1,
-  size2,
-  size3,
-}
+enum FortalSpinnerSize { size1, size2, size3 }
 
 /// FortalSpinnerStyles utility class for creating Fortal-themed spinner styles.
 ///
@@ -18,27 +14,21 @@ class FortalSpinnerStyles {
   ///
   /// Returns a RemixSpinnerStyle configured with Fortal design tokens.
   /// Defaults to size2. Spinners have no variants, only defaultStyle().
-  static RemixSpinnerStyle create({
-    FortalSpinnerSize size = .size2,
-  }) {
+  static RemixSpinnerStyle create({FortalSpinnerSize size = .size2}) {
     return defaultStyle(size: size);
   }
 
-  static RemixSpinnerStyle base({
-    FortalSpinnerSize size = .size2,
-  }) {
+  static RemixSpinnerStyle base({FortalSpinnerSize size = .size2}) {
     return RemixSpinnerStyle(
       // Default properties (no focus state for spinners)
       indicatorColor: FortalTokens.accent9(), // Uses accent step 9 as per spec
       duration: const Duration(milliseconds: 800), // per component token
     )
-        // Merge with size-specific styles
-        .merge(_sizeStyle(size));
+    // Merge with size-specific styles
+    .merge(_sizeStyle(size));
   }
 
-  static RemixSpinnerStyle defaultStyle({
-    FortalSpinnerSize size = .size2,
-  }) {
+  static RemixSpinnerStyle defaultStyle({FortalSpinnerSize size = .size2}) {
     return base(size: size);
   }
 
@@ -48,18 +38,9 @@ class FortalSpinnerStyles {
 
   static RemixSpinnerStyle _sizeStyle(FortalSpinnerSize size) {
     return switch (size) {
-      .size1 => RemixSpinnerStyle(
-          size: 16.0,
-          strokeWidth: 1.5,
-        ),
-      .size2 => RemixSpinnerStyle(
-          size: 20.0,
-          strokeWidth: 2.0,
-        ),
-      .size3 => RemixSpinnerStyle(
-          size: 24.0,
-          strokeWidth: 2.5,
-        ),
+      .size1 => RemixSpinnerStyle(size: 16.0, strokeWidth: 1.5),
+      .size2 => RemixSpinnerStyle(size: 20.0, strokeWidth: 2.0),
+      .size3 => RemixSpinnerStyle(size: 24.0, strokeWidth: 2.5),
     };
   }
 }

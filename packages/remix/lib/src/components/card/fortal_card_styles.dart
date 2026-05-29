@@ -84,16 +84,10 @@ class FortalCardStyles {
 
   static RemixCardStyle _sizeStyle(FortalCardSize size) {
     return switch (size) {
-      .size1 => RemixCardStyle().paddingAll(
-        FortalTokens.space4(),
-      ),
+      .size1 => RemixCardStyle().paddingAll(FortalTokens.space4()),
       // Per JSON: card-padding = space-8 (32px) for default
-      .size2 => RemixCardStyle().paddingAll(
-        FortalTokens.space5(),
-      ),
-      .size3 => RemixCardStyle().paddingAll(
-        FortalTokens.space6(),
-      ),
+      .size2 => RemixCardStyle().paddingAll(FortalTokens.space5()),
+      .size3 => RemixCardStyle().paddingAll(FortalTokens.space6()),
     };
   }
 }

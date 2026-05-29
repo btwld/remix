@@ -11,11 +11,7 @@ void main() {
     group('Basic Rendering', () {
       testWidgets('renders toggle with label only', (tester) async {
         await tester.pumpRemixApp(
-          RemixToggle(
-            selected: false,
-            onChanged: (value) {},
-            label: 'Bold',
-          ),
+          RemixToggle(selected: false, onChanged: (value) {}, label: 'Bold'),
         );
         await tester.pumpAndSettle();
 
@@ -264,11 +260,7 @@ void main() {
         tester,
       ) async {
         await tester.pumpRemixApp(
-          RemixToggle(
-            selected: false,
-            onChanged: (value) {},
-            label: 'Bold',
-          ),
+          RemixToggle(selected: false, onChanged: (value) {}, label: 'Bold'),
         );
         await tester.pumpAndSettle();
 
@@ -318,9 +310,7 @@ void main() {
             .iconColor(Colors.white)
             .padding(EdgeInsetsGeometryMix.all(8.0))
             .decoration(
-              BoxDecorationMix(
-                borderRadius: BorderRadiusMix.circular(8.0),
-              ),
+              BoxDecorationMix(borderRadius: BorderRadiusMix.circular(8.0)),
             );
 
         await tester.pumpRemixApp(
@@ -411,10 +401,7 @@ void main() {
                 selected: false,
                 onChanged: (value) {},
                 label: 'Bold',
-                style: FortalToggleStyles.create(
-                  variant: variant,
-                  size: size,
-                ),
+                style: FortalToggleStyles.create(variant: variant, size: size),
               ),
             );
             await tester.pumpAndSettle();

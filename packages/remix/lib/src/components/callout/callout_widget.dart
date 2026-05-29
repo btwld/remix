@@ -11,6 +11,15 @@ part of 'callout.dart';
 /// )
 /// ```
 class RemixCallout extends StyleWidget<RemixCalloutSpec> {
+  /// The text to display in the callout.
+  final String? text;
+
+  /// The icon to display in the callout.
+  final IconData? icon;
+
+  /// Optional custom child content for the callout body.
+  final Widget? child;
+
   /// Creates a callout widget with optional text, icon, or custom [child]. At
   /// least one of [text] or [child] must be provided.
   const RemixCallout({
@@ -26,15 +35,6 @@ class RemixCallout extends StyleWidget<RemixCalloutSpec> {
          text != null || child != null,
          'Provide either text or child to RemixCallout.',
        );
-
-  /// The text to display in the callout.
-  final String? text;
-
-  /// The icon to display in the callout.
-  final IconData? icon;
-
-  /// Optional custom child content for the callout body.
-  final Widget? child;
 
   @override
   Widget build(BuildContext context, RemixCalloutSpec spec) {

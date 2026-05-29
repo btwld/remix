@@ -37,21 +37,11 @@ Widget previewButtonStates() {
     const Column(
       mainAxisAlignment: .center,
       children: [
-        RemixButton(
-          label: 'Enabled Button',
-          onPressed: null,
-        ),
+        RemixButton(label: 'Enabled Button', onPressed: null),
         SizedBox(height: 12),
-        RemixButton(
-          label: 'Disabled Button',
-          onPressed: null,
-        ),
+        RemixButton(label: 'Disabled Button', onPressed: null),
         SizedBox(height: 12),
-        RemixButton(
-          label: 'Loading Button',
-          loading: true,
-          onPressed: null,
-        ),
+        RemixButton(label: 'Loading Button', loading: true, onPressed: null),
         SizedBox(height: 12),
         RemixButton(
           label: 'Icon Loading',
@@ -70,25 +60,13 @@ Widget previewIconButtons() {
     const Row(
       mainAxisAlignment: .center,
       children: [
-        RemixIconButton(
-          icon: Icons.add,
-          onPressed: null,
-        ),
+        RemixIconButton(icon: Icons.add, onPressed: null),
         SizedBox(width: 12),
-        RemixIconButton(
-          icon: Icons.edit,
-          onPressed: null,
-        ),
+        RemixIconButton(icon: Icons.edit, onPressed: null),
         SizedBox(width: 12),
-        RemixIconButton(
-          icon: Icons.delete,
-          onPressed: null,
-        ),
+        RemixIconButton(icon: Icons.delete, onPressed: null),
         SizedBox(width: 12),
-        RemixIconButton(
-          icon: Icons.settings,
-          onPressed: null,
-        ),
+        RemixIconButton(icon: Icons.settings, onPressed: null),
       ],
     ),
   );
@@ -109,10 +87,7 @@ Widget previewButtonVariations() {
               onPressed: null,
             ),
             SizedBox(width: 12),
-            RemixButton(
-              label: 'Cancel',
-              onPressed: null,
-            ),
+            RemixButton(label: 'Cancel', onPressed: null),
           ],
         ),
         SizedBox(height: 16),
@@ -125,20 +100,11 @@ Widget previewButtonVariations() {
         Row(
           mainAxisAlignment: .center,
           children: [
-            RemixIconButton(
-              icon: Icons.thumb_up,
-              onPressed: null,
-            ),
+            RemixIconButton(icon: Icons.thumb_up, onPressed: null),
             SizedBox(width: 8),
-            RemixIconButton(
-              icon: Icons.thumb_down,
-              onPressed: null,
-            ),
+            RemixIconButton(icon: Icons.thumb_down, onPressed: null),
             SizedBox(width: 8),
-            RemixIconButton(
-              icon: Icons.share,
-              onPressed: null,
-            ),
+            RemixIconButton(icon: Icons.share, onPressed: null),
           ],
         ),
         SizedBox(height: 16),

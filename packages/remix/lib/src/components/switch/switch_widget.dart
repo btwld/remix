@@ -15,20 +15,6 @@ part of 'switch.dart';
 /// )
 /// ```
 class RemixSwitch extends StatelessWidget {
-  const RemixSwitch({
-    super.key,
-    this.enabled = true,
-    required this.selected,
-    required this.onChanged,
-    this.style = const RemixSwitchStyle.create(),
-    this.styleSpec,
-    this.enableFeedback = true,
-    this.focusNode,
-    this.autofocus = false,
-    this.semanticLabel,
-    this.mouseCursor = SystemMouseCursors.click,
-  });
-
   /// Whether this switch is enabled.
   final bool enabled;
 
@@ -60,6 +46,20 @@ class RemixSwitch extends StatelessWidget {
 
   /// Cursor when hovering over the switch.
   final MouseCursor mouseCursor;
+
+  const RemixSwitch({
+    super.key,
+    this.enabled = true,
+    required this.selected,
+    required this.onChanged,
+    this.style = const RemixSwitchStyle.create(),
+    this.styleSpec,
+    this.enableFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
+    this.semanticLabel,
+    this.mouseCursor = SystemMouseCursors.click,
+  });
 
   RemixSwitchStyle _buildStyle() {
     return RemixSwitchStyle()

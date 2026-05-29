@@ -80,20 +80,6 @@ Future<T?> showRemixDialog<T>({
 /// )
 /// ```
 class RemixDialog extends StatelessWidget {
-  const RemixDialog({
-    super.key,
-    this.child,
-    this.title,
-    this.description,
-    this.actions,
-    this.modal = true,
-    this.semanticLabel,
-    this.style = const RemixDialogStyle.create(),
-  }) : assert(
-         child != null || title != null || description != null,
-         'Either child, title, or description must be provided',
-       );
-
   /// Custom content widget (overrides title and description).
   final Widget? child;
 
@@ -116,6 +102,20 @@ class RemixDialog extends StatelessWidget {
   final RemixDialogStyle style;
 
   static final styleFrom = RemixDialogStyle.new;
+
+  const RemixDialog({
+    super.key,
+    this.child,
+    this.title,
+    this.description,
+    this.actions,
+    this.modal = true,
+    this.semanticLabel,
+    this.style = const RemixDialogStyle.create(),
+  }) : assert(
+         child != null || title != null || description != null,
+         'Either child, title, or description must be provided',
+       );
 
   @override
   Widget build(BuildContext context) {

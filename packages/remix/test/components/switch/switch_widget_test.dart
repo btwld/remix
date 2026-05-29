@@ -125,7 +125,9 @@ void main() {
         expect(wasChanged, isFalse);
       });
 
-      testWidgets('calls onChanged when enabled and not when disabled', (tester) async {
+      testWidgets('calls onChanged when enabled and not when disabled', (
+        tester,
+      ) async {
         bool enabledChanged = false;
         bool disabledChanged = false;
 

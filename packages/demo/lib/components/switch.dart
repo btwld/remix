@@ -6,10 +6,7 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 final _key = GlobalKey();
 
-@widgetbook.UseCase(
-  name: 'Switch Component',
-  type: RemixSwitch,
-)
+@widgetbook.UseCase(name: 'Switch Component', type: RemixSwitch)
 Widget buildSwitchUseCase(BuildContext context) {
   final knobState = WidgetbookState.of(context);
 
