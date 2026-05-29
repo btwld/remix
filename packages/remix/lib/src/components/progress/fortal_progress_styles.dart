@@ -16,7 +16,7 @@ RemixProgressStyle fortalProgressStyle({
 
 RemixProgressStyle _fortalProgressBaseStyle(FortalProgressSize size) {
   return RemixProgressStyle()
-      .width(double.infinity)
+      .width(.infinity)
       .merge(_fortalProgressSizeStyle(size));
 }
 
@@ -33,7 +33,7 @@ RemixProgressStyle _fortalProgressSurfaceStyle([
               BorderRadiusGeometryMix.all(FortalTokens.radiusFull()),
             ),
       )
-      .track(BoxStyler().color(FortalTokens.gray3()).width(double.infinity))
+      .track(BoxStyler().color(FortalTokens.gray3()).width(.infinity))
       .indicator(BoxStyler().color(FortalTokens.accentIndicator()));
 }
 
@@ -45,7 +45,7 @@ RemixProgressStyle _fortalProgressSoftStyle([
         BoxStyler()
             .color(FortalTokens.gray4())
             .borderRadiusAll(FortalTokens.radiusFull())
-            .width(double.infinity),
+            .width(.infinity),
       )
       .indicator(
         BoxStyler()

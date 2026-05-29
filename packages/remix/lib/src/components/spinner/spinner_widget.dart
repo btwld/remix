@@ -32,9 +32,9 @@ class RemixSpinner extends StyleWidget<RemixSpinnerSpec> {
 }
 
 class _SpinnerSpecWidget extends StatefulWidget {
-  final RemixSpinnerSpec spec;
-
   const _SpinnerSpecWidget({required this.spec});
+
+  final RemixSpinnerSpec spec;
 
   @override
   State createState() => _SpinnerSpecWidgetState();

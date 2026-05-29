@@ -118,6 +118,11 @@ mixin _$RemixBadgeStyleMixin on Style<RemixBadgeSpec>, Diagnosticable {
     return merge(RemixBadgeStyle(modifier: value));
   }
 
+  /// Sets the widget modifier.
+  RemixBadgeStyle modifier(WidgetModifierConfig value) {
+    return merge(RemixBadgeStyle(modifier: value));
+  }
+
   /// Merges with another [RemixBadgeStyle].
   @override
   RemixBadgeStyle merge(RemixBadgeStyle? other) {

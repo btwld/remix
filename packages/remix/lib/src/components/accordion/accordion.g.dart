@@ -111,15 +111,15 @@ typedef _$RemixAccordionSpecMethods = _$RemixAccordionSpec; // ignore: unused_el
 // **************************************************************************
 
 mixin _$RemixAccordionStyleMixin on Style<RemixAccordionSpec>, Diagnosticable {
-  Prop<StyleSpec<BoxSpec>>? get $content;
+  Prop<StyleSpec<FlexBoxSpec>>? get $trigger;
   Prop<StyleSpec<IconSpec>>? get $leadingIcon;
   Prop<StyleSpec<TextSpec>>? get $title;
   Prop<StyleSpec<IconSpec>>? get $trailingIcon;
-  Prop<StyleSpec<FlexBoxSpec>>? get $trigger;
+  Prop<StyleSpec<BoxSpec>>? get $content;
 
-  /// Sets the content.
-  RemixAccordionStyle content(BoxStyler value) {
-    return merge(RemixAccordionStyle(content: value));
+  /// Sets the trigger.
+  RemixAccordionStyle trigger(FlexBoxStyler value) {
+    return merge(RemixAccordionStyle(trigger: value));
   }
 
   /// Sets the leadingIcon.
@@ -137,9 +137,9 @@ mixin _$RemixAccordionStyleMixin on Style<RemixAccordionSpec>, Diagnosticable {
     return merge(RemixAccordionStyle(trailingIcon: value));
   }
 
-  /// Sets the trigger.
-  RemixAccordionStyle trigger(FlexBoxStyler value) {
-    return merge(RemixAccordionStyle(trigger: value));
+  /// Sets the content.
+  RemixAccordionStyle content(BoxStyler value) {
+    return merge(RemixAccordionStyle(content: value));
   }
 
   /// Sets the animation configuration.
@@ -157,15 +157,20 @@ mixin _$RemixAccordionStyleMixin on Style<RemixAccordionSpec>, Diagnosticable {
     return merge(RemixAccordionStyle(modifier: value));
   }
 
+  /// Sets the widget modifier.
+  RemixAccordionStyle modifier(WidgetModifierConfig value) {
+    return merge(RemixAccordionStyle(modifier: value));
+  }
+
   /// Merges with another [RemixAccordionStyle].
   @override
   RemixAccordionStyle merge(RemixAccordionStyle? other) {
     return RemixAccordionStyle.create(
-      content: MixOps.merge($content, other?.$content),
+      trigger: MixOps.merge($trigger, other?.$trigger),
       leadingIcon: MixOps.merge($leadingIcon, other?.$leadingIcon),
       title: MixOps.merge($title, other?.$title),
       trailingIcon: MixOps.merge($trailingIcon, other?.$trailingIcon),
-      trigger: MixOps.merge($trigger, other?.$trigger),
+      content: MixOps.merge($content, other?.$content),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -176,11 +181,11 @@ mixin _$RemixAccordionStyleMixin on Style<RemixAccordionSpec>, Diagnosticable {
   @override
   StyleSpec<RemixAccordionSpec> resolve(BuildContext context) {
     final spec = RemixAccordionSpec(
-      content: MixOps.resolve(context, $content),
+      trigger: MixOps.resolve(context, $trigger),
       leadingIcon: MixOps.resolve(context, $leadingIcon),
       title: MixOps.resolve(context, $title),
       trailingIcon: MixOps.resolve(context, $trailingIcon),
-      trigger: MixOps.resolve(context, $trigger),
+      content: MixOps.resolve(context, $content),
     );
 
     return StyleSpec(
@@ -194,20 +199,20 @@ mixin _$RemixAccordionStyleMixin on Style<RemixAccordionSpec>, Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(DiagnosticsProperty('content', $content))
+      ..add(DiagnosticsProperty('trigger', $trigger))
       ..add(DiagnosticsProperty('leadingIcon', $leadingIcon))
       ..add(DiagnosticsProperty('title', $title))
       ..add(DiagnosticsProperty('trailingIcon', $trailingIcon))
-      ..add(DiagnosticsProperty('trigger', $trigger));
+      ..add(DiagnosticsProperty('content', $content));
   }
 
   @override
   List<Object?> get props => [
-    $content,
+    $trigger,
     $leadingIcon,
     $title,
     $trailingIcon,
-    $trigger,
+    $content,
     $animation,
     $modifier,
     $variants,

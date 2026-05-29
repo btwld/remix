@@ -105,20 +105,20 @@ typedef _$RemixDialogSpecMethods = _$RemixDialogSpec; // ignore: unused_element
 // **************************************************************************
 
 mixin _$RemixDialogStyleMixin on Style<RemixDialogSpec>, Diagnosticable {
-  Prop<StyleSpec<FlexBoxSpec>>? get $actions;
   Prop<StyleSpec<BoxSpec>>? get $container;
-  Prop<StyleSpec<TextSpec>>? get $description;
-  Prop<StyleSpec<BoxSpec>>? get $overlay;
   Prop<StyleSpec<TextSpec>>? get $title;
-
-  /// Sets the actions.
-  RemixDialogStyle actions(FlexBoxStyler value) {
-    return merge(RemixDialogStyle(actions: value));
-  }
+  Prop<StyleSpec<TextSpec>>? get $description;
+  Prop<StyleSpec<FlexBoxSpec>>? get $actions;
+  Prop<StyleSpec<BoxSpec>>? get $overlay;
 
   /// Sets the container.
   RemixDialogStyle container(BoxStyler value) {
     return merge(RemixDialogStyle(container: value));
+  }
+
+  /// Sets the title.
+  RemixDialogStyle title(TextStyler value) {
+    return merge(RemixDialogStyle(title: value));
   }
 
   /// Sets the description.
@@ -126,14 +126,14 @@ mixin _$RemixDialogStyleMixin on Style<RemixDialogSpec>, Diagnosticable {
     return merge(RemixDialogStyle(description: value));
   }
 
+  /// Sets the actions.
+  RemixDialogStyle actions(FlexBoxStyler value) {
+    return merge(RemixDialogStyle(actions: value));
+  }
+
   /// Sets the overlay.
   RemixDialogStyle overlay(BoxStyler value) {
     return merge(RemixDialogStyle(overlay: value));
-  }
-
-  /// Sets the title.
-  RemixDialogStyle title(TextStyler value) {
-    return merge(RemixDialogStyle(title: value));
   }
 
   /// Sets the animation configuration.
@@ -151,15 +151,20 @@ mixin _$RemixDialogStyleMixin on Style<RemixDialogSpec>, Diagnosticable {
     return merge(RemixDialogStyle(modifier: value));
   }
 
+  /// Sets the widget modifier.
+  RemixDialogStyle modifier(WidgetModifierConfig value) {
+    return merge(RemixDialogStyle(modifier: value));
+  }
+
   /// Merges with another [RemixDialogStyle].
   @override
   RemixDialogStyle merge(RemixDialogStyle? other) {
     return RemixDialogStyle.create(
-      actions: MixOps.merge($actions, other?.$actions),
       container: MixOps.merge($container, other?.$container),
-      description: MixOps.merge($description, other?.$description),
-      overlay: MixOps.merge($overlay, other?.$overlay),
       title: MixOps.merge($title, other?.$title),
+      description: MixOps.merge($description, other?.$description),
+      actions: MixOps.merge($actions, other?.$actions),
+      overlay: MixOps.merge($overlay, other?.$overlay),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -170,11 +175,11 @@ mixin _$RemixDialogStyleMixin on Style<RemixDialogSpec>, Diagnosticable {
   @override
   StyleSpec<RemixDialogSpec> resolve(BuildContext context) {
     final spec = RemixDialogSpec(
-      actions: MixOps.resolve(context, $actions),
       container: MixOps.resolve(context, $container),
-      description: MixOps.resolve(context, $description),
-      overlay: MixOps.resolve(context, $overlay),
       title: MixOps.resolve(context, $title),
+      description: MixOps.resolve(context, $description),
+      actions: MixOps.resolve(context, $actions),
+      overlay: MixOps.resolve(context, $overlay),
     );
 
     return StyleSpec(
@@ -188,20 +193,20 @@ mixin _$RemixDialogStyleMixin on Style<RemixDialogSpec>, Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(DiagnosticsProperty('actions', $actions))
       ..add(DiagnosticsProperty('container', $container))
+      ..add(DiagnosticsProperty('title', $title))
       ..add(DiagnosticsProperty('description', $description))
-      ..add(DiagnosticsProperty('overlay', $overlay))
-      ..add(DiagnosticsProperty('title', $title));
+      ..add(DiagnosticsProperty('actions', $actions))
+      ..add(DiagnosticsProperty('overlay', $overlay));
   }
 
   @override
   List<Object?> get props => [
-    $actions,
     $container,
-    $description,
-    $overlay,
     $title,
+    $description,
+    $actions,
+    $overlay,
     $animation,
     $modifier,
     $variants,

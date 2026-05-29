@@ -213,8 +213,8 @@ class RemixButtonStyle
   RemixButtonStyle minimumSize(Size value) {
     return merge(
       RemixButtonStyle().constraintsOnly(
-        minHeight: value.height,
         minWidth: value.width,
+        minHeight: value.height,
       ),
     );
   }
@@ -225,10 +225,10 @@ class RemixButtonStyle
   RemixButtonStyle fixedSize(Size value) {
     return merge(
       RemixButtonStyle().constraintsOnly(
-        minHeight: value.height,
         minWidth: value.width,
-        maxHeight: value.height,
         maxWidth: value.width,
+        minHeight: value.height,
+        maxHeight: value.height,
       ),
     );
   }
@@ -237,32 +237,54 @@ class RemixButtonStyle
   RemixButtonStyle maximumSize(Size value) {
     return merge(
       RemixButtonStyle().constraintsOnly(
-        maxHeight: value.height,
         maxWidth: value.width,
+        maxHeight: value.height,
       ),
     );
   }
 
   RemixButton call({
+    Key? key,
     required String label,
     IconData? leadingIcon,
     IconData? trailingIcon,
+    RemixButtonTextBuilder? textBuilder,
+    RemixButtonIconBuilder? leadingIconBuilder,
+    RemixButtonIconBuilder? trailingIconBuilder,
+    RemixButtonLoadingBuilder? loadingBuilder,
+    bool autofocus = false,
     bool loading = false,
     bool enabled = true,
     bool enableFeedback = true,
     required VoidCallback? onPressed,
+    VoidCallback? onLongPress,
     FocusNode? focusNode,
+    String? semanticLabel,
+    String? semanticHint,
+    bool excludeSemantics = false,
+    MouseCursor mouseCursor = SystemMouseCursors.click,
   }) {
     return RemixButton(
+      key: key,
       style: this,
       label: label,
       leadingIcon: leadingIcon,
       trailingIcon: trailingIcon,
+      textBuilder: textBuilder,
+      leadingIconBuilder: leadingIconBuilder,
+      trailingIconBuilder: trailingIconBuilder,
+      loadingBuilder: loadingBuilder,
+      autofocus: autofocus,
       loading: loading,
       enabled: enabled,
       enableFeedback: enableFeedback,
       onPressed: onPressed,
+      onLongPress: onLongPress,
       focusNode: focusNode,
+      semanticLabel: semanticLabel,
+      semanticHint: semanticHint,
+      excludeSemantics: excludeSemantics,
+      mouseCursor: mouseCursor,
     );
   }
 

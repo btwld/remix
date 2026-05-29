@@ -45,6 +45,13 @@ part of 'radio.dart';
 /// )
 /// ```
 class RemixRadioGroup<T> extends StatelessWidget {
+  const RemixRadioGroup({
+    super.key,
+    required this.groupValue,
+    required this.onChanged,
+    required this.child,
+  });
+
   /// The currently selected value for the group.
   final T? groupValue;
 
@@ -53,13 +60,6 @@ class RemixRadioGroup<T> extends StatelessWidget {
 
   /// The child widget that contains the radio buttons.
   final Widget child;
-
-  const RemixRadioGroup({
-    super.key,
-    required this.groupValue,
-    required this.onChanged,
-    required this.child,
-  });
 
   @override
   Widget build(BuildContext context) {

@@ -177,21 +177,11 @@ class FortalSlider extends StatelessWidget {
 // **************************************************************************
 
 mixin _$RemixSliderStyleMixin on Style<RemixSliderSpec>, Diagnosticable {
-  Prop<Color>? get $rangeColor;
-  Prop<double>? get $rangeWidth;
   Prop<StyleSpec<BoxSpec>>? get $thumb;
   Prop<Color>? get $trackColor;
   Prop<double>? get $trackWidth;
-
-  /// Sets the rangeColor.
-  RemixSliderStyle rangeColor(Color value) {
-    return merge(RemixSliderStyle(rangeColor: value));
-  }
-
-  /// Sets the rangeWidth.
-  RemixSliderStyle rangeWidth(double value) {
-    return merge(RemixSliderStyle(rangeWidth: value));
-  }
+  Prop<Color>? get $rangeColor;
+  Prop<double>? get $rangeWidth;
 
   /// Sets the thumb.
   RemixSliderStyle thumb(BoxStyler value) {
@@ -206,6 +196,16 @@ mixin _$RemixSliderStyleMixin on Style<RemixSliderSpec>, Diagnosticable {
   /// Sets the trackWidth.
   RemixSliderStyle trackWidth(double value) {
     return merge(RemixSliderStyle(trackWidth: value));
+  }
+
+  /// Sets the rangeColor.
+  RemixSliderStyle rangeColor(Color value) {
+    return merge(RemixSliderStyle(rangeColor: value));
+  }
+
+  /// Sets the rangeWidth.
+  RemixSliderStyle rangeWidth(double value) {
+    return merge(RemixSliderStyle(rangeWidth: value));
   }
 
   /// Sets the animation configuration.
@@ -223,15 +223,20 @@ mixin _$RemixSliderStyleMixin on Style<RemixSliderSpec>, Diagnosticable {
     return merge(RemixSliderStyle(modifier: value));
   }
 
+  /// Sets the widget modifier.
+  RemixSliderStyle modifier(WidgetModifierConfig value) {
+    return merge(RemixSliderStyle(modifier: value));
+  }
+
   /// Merges with another [RemixSliderStyle].
   @override
   RemixSliderStyle merge(RemixSliderStyle? other) {
     return RemixSliderStyle.create(
-      rangeColor: MixOps.merge($rangeColor, other?.$rangeColor),
-      rangeWidth: MixOps.merge($rangeWidth, other?.$rangeWidth),
       thumb: MixOps.merge($thumb, other?.$thumb),
       trackColor: MixOps.merge($trackColor, other?.$trackColor),
       trackWidth: MixOps.merge($trackWidth, other?.$trackWidth),
+      rangeColor: MixOps.merge($rangeColor, other?.$rangeColor),
+      rangeWidth: MixOps.merge($rangeWidth, other?.$rangeWidth),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -242,11 +247,11 @@ mixin _$RemixSliderStyleMixin on Style<RemixSliderSpec>, Diagnosticable {
   @override
   StyleSpec<RemixSliderSpec> resolve(BuildContext context) {
     final spec = RemixSliderSpec(
-      rangeColor: MixOps.resolve(context, $rangeColor),
-      rangeWidth: MixOps.resolve(context, $rangeWidth),
       thumb: MixOps.resolve(context, $thumb),
       trackColor: MixOps.resolve(context, $trackColor),
       trackWidth: MixOps.resolve(context, $trackWidth),
+      rangeColor: MixOps.resolve(context, $rangeColor),
+      rangeWidth: MixOps.resolve(context, $rangeWidth),
     );
 
     return StyleSpec(
@@ -260,20 +265,20 @@ mixin _$RemixSliderStyleMixin on Style<RemixSliderSpec>, Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(DiagnosticsProperty('rangeColor', $rangeColor))
-      ..add(DiagnosticsProperty('rangeWidth', $rangeWidth))
       ..add(DiagnosticsProperty('thumb', $thumb))
       ..add(DiagnosticsProperty('trackColor', $trackColor))
-      ..add(DiagnosticsProperty('trackWidth', $trackWidth));
+      ..add(DiagnosticsProperty('trackWidth', $trackWidth))
+      ..add(DiagnosticsProperty('rangeColor', $rangeColor))
+      ..add(DiagnosticsProperty('rangeWidth', $rangeWidth));
   }
 
   @override
   List<Object?> get props => [
-    $rangeColor,
-    $rangeWidth,
     $thumb,
     $trackColor,
     $trackWidth,
+    $rangeColor,
+    $rangeWidth,
     $animation,
     $modifier,
     $variants,

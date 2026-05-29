@@ -102,8 +102,8 @@ typedef _$RemixTooltipSpecMethods = _$RemixTooltipSpec; // ignore: unused_elemen
 mixin _$RemixTooltipStyleMixin on Style<RemixTooltipSpec>, Diagnosticable {
   Prop<StyleSpec<BoxSpec>>? get $container;
   Prop<StyleSpec<TextSpec>>? get $label;
-  Prop<Duration>? get $showDuration;
   Prop<Duration>? get $waitDuration;
+  Prop<Duration>? get $showDuration;
 
   /// Sets the container.
   RemixTooltipStyle container(BoxStyler value) {
@@ -115,14 +115,14 @@ mixin _$RemixTooltipStyleMixin on Style<RemixTooltipSpec>, Diagnosticable {
     return merge(RemixTooltipStyle(label: value));
   }
 
-  /// Sets the showDuration.
-  RemixTooltipStyle showDuration(Duration value) {
-    return merge(RemixTooltipStyle(showDuration: value));
-  }
-
   /// Sets the waitDuration.
   RemixTooltipStyle waitDuration(Duration value) {
     return merge(RemixTooltipStyle(waitDuration: value));
+  }
+
+  /// Sets the showDuration.
+  RemixTooltipStyle showDuration(Duration value) {
+    return merge(RemixTooltipStyle(showDuration: value));
   }
 
   /// Sets the animation configuration.
@@ -140,14 +140,19 @@ mixin _$RemixTooltipStyleMixin on Style<RemixTooltipSpec>, Diagnosticable {
     return merge(RemixTooltipStyle(modifier: value));
   }
 
+  /// Sets the widget modifier.
+  RemixTooltipStyle modifier(WidgetModifierConfig value) {
+    return merge(RemixTooltipStyle(modifier: value));
+  }
+
   /// Merges with another [RemixTooltipStyle].
   @override
   RemixTooltipStyle merge(RemixTooltipStyle? other) {
     return RemixTooltipStyle.create(
       container: MixOps.merge($container, other?.$container),
       label: MixOps.merge($label, other?.$label),
-      showDuration: MixOps.merge($showDuration, other?.$showDuration),
       waitDuration: MixOps.merge($waitDuration, other?.$waitDuration),
+      showDuration: MixOps.merge($showDuration, other?.$showDuration),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -160,8 +165,8 @@ mixin _$RemixTooltipStyleMixin on Style<RemixTooltipSpec>, Diagnosticable {
     final spec = RemixTooltipSpec(
       container: MixOps.resolve(context, $container),
       label: MixOps.resolve(context, $label),
-      showDuration: MixOps.resolve(context, $showDuration),
       waitDuration: MixOps.resolve(context, $waitDuration),
+      showDuration: MixOps.resolve(context, $showDuration),
     );
 
     return StyleSpec(
@@ -177,16 +182,16 @@ mixin _$RemixTooltipStyleMixin on Style<RemixTooltipSpec>, Diagnosticable {
     properties
       ..add(DiagnosticsProperty('container', $container))
       ..add(DiagnosticsProperty('label', $label))
-      ..add(DiagnosticsProperty('showDuration', $showDuration))
-      ..add(DiagnosticsProperty('waitDuration', $waitDuration));
+      ..add(DiagnosticsProperty('waitDuration', $waitDuration))
+      ..add(DiagnosticsProperty('showDuration', $showDuration));
   }
 
   @override
   List<Object?> get props => [
     $container,
     $label,
-    $showDuration,
     $waitDuration,
+    $showDuration,
     $animation,
     $modifier,
     $variants,

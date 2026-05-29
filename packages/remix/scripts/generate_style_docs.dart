@@ -393,7 +393,7 @@ class WidgetPropertyVisitor extends RecursiveAstVisitor<void> {
   Iterable<ClassMember> _classMembers(ClassDeclaration node) {
     return switch (node.body) {
       BlockClassBody(:final members) => members,
-      EmptyClassBody() => const <ClassMember>[],
+      EmptyClassBody() => const [],
     };
   }
 

@@ -172,6 +172,11 @@ mixin _$RemixSwitchStyleMixin on Style<RemixSwitchSpec>, Diagnosticable {
     return merge(RemixSwitchStyle(modifier: value));
   }
 
+  /// Sets the widget modifier.
+  RemixSwitchStyle modifier(WidgetModifierConfig value) {
+    return merge(RemixSwitchStyle(modifier: value));
+  }
+
   /// Merges with another [RemixSwitchStyle].
   @override
   RemixSwitchStyle merge(RemixSwitchStyle? other) {

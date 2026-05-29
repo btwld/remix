@@ -12,13 +12,13 @@ RemixAccordionStyle fortalAccordionStyle() {
       .title(
         TextStyler()
             .fontSize(15)
-            .fontWeight(FontWeight.w500)
+            .fontWeight(.w500)
             .color(FortalTokens.gray12()),
       )
       .trailingIcon(IconStyler().color(FortalTokens.gray11()).size(20))
       .content(
         BoxStyler()
-            .width(double.infinity)
+            .width(.infinity)
             .borderTop(
               color: FortalTokens.gray6(),
               width: FortalTokens.borderWidth1(),

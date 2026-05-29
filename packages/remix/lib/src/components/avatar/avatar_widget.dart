@@ -21,6 +21,24 @@ typedef RemixAvatarIconBuilder =
     Widget Function(BuildContext context, IconSpec spec, IconData? icon);
 
 class RemixAvatar extends StyleWidget<RemixAvatarSpec> {
+  /// Creates a Remix avatar with optional text [label], custom [child], and
+  /// background/foreground imagery. When textual content is supplied, it is
+  /// styled using the avatar text spec so typography stays consistent.
+  const RemixAvatar({
+    super.style = const RemixAvatarStyle.create(),
+    super.styleSpec,
+    super.key,
+    this.backgroundImage,
+    this.foregroundImage,
+    this.onBackgroundImageError,
+    this.onForegroundImageError,
+    this.child,
+    this.label,
+    this.labelBuilder,
+    this.icon,
+    this.iconBuilder,
+  });
+
   /// The background image to display in the avatar.
   final ImageProvider? backgroundImage;
 
@@ -50,24 +68,6 @@ class RemixAvatar extends StyleWidget<RemixAvatarSpec> {
   /// Optional builder that exposes the resolved [IconSpec] for custom icon
   /// rendering while preserving configured icon styling.
   final RemixAvatarIconBuilder? iconBuilder;
-
-  /// Creates a Remix avatar with optional text [label], custom [child], and
-  /// background/foreground imagery. When textual content is supplied, it is
-  /// styled using the avatar text spec so typography stays consistent.
-  const RemixAvatar({
-    super.style = const RemixAvatarStyle.create(),
-    super.styleSpec,
-    super.key,
-    this.backgroundImage,
-    this.foregroundImage,
-    this.onBackgroundImageError,
-    this.onForegroundImageError,
-    this.child,
-    this.label,
-    this.labelBuilder,
-    this.icon,
-    this.iconBuilder,
-  });
 
   @override
   Widget build(BuildContext context, RemixAvatarSpec spec) {
@@ -103,7 +103,7 @@ class RemixAvatar extends StyleWidget<RemixAvatarSpec> {
                 image: DecorationImage(
                   image: backgroundImage!,
                   onError: onBackgroundImageError,
-                  fit: BoxFit.cover,
+                  fit: .cover,
                 ),
               )
             : null,
@@ -112,7 +112,7 @@ class RemixAvatar extends StyleWidget<RemixAvatarSpec> {
                 image: DecorationImage(
                   image: foregroundImage!,
                   onError: onForegroundImageError,
-                  fit: BoxFit.cover,
+                  fit: .cover,
                 ),
               )
             : null,

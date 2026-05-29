@@ -158,22 +158,22 @@ class FortalToggle extends StatelessWidget {
 
 mixin _$RemixToggleStyleMixin on Style<RemixToggleSpec>, Diagnosticable {
   Prop<StyleSpec<FlexBoxSpec>>? get $container;
-  Prop<StyleSpec<IconSpec>>? get $icon;
   Prop<StyleSpec<TextSpec>>? get $label;
+  Prop<StyleSpec<IconSpec>>? get $icon;
 
   /// Sets the container.
   RemixToggleStyle container(FlexBoxStyler value) {
     return merge(RemixToggleStyle(container: value));
   }
 
-  /// Sets the icon.
-  RemixToggleStyle icon(IconStyler value) {
-    return merge(RemixToggleStyle(icon: value));
-  }
-
   /// Sets the label.
   RemixToggleStyle label(TextStyler value) {
     return merge(RemixToggleStyle(label: value));
+  }
+
+  /// Sets the icon.
+  RemixToggleStyle icon(IconStyler value) {
+    return merge(RemixToggleStyle(icon: value));
   }
 
   /// Sets the animation configuration.
@@ -191,13 +191,18 @@ mixin _$RemixToggleStyleMixin on Style<RemixToggleSpec>, Diagnosticable {
     return merge(RemixToggleStyle(modifier: value));
   }
 
+  /// Sets the widget modifier.
+  RemixToggleStyle modifier(WidgetModifierConfig value) {
+    return merge(RemixToggleStyle(modifier: value));
+  }
+
   /// Merges with another [RemixToggleStyle].
   @override
   RemixToggleStyle merge(RemixToggleStyle? other) {
     return RemixToggleStyle.create(
       container: MixOps.merge($container, other?.$container),
-      icon: MixOps.merge($icon, other?.$icon),
       label: MixOps.merge($label, other?.$label),
+      icon: MixOps.merge($icon, other?.$icon),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -209,8 +214,8 @@ mixin _$RemixToggleStyleMixin on Style<RemixToggleSpec>, Diagnosticable {
   StyleSpec<RemixToggleSpec> resolve(BuildContext context) {
     final spec = RemixToggleSpec(
       container: MixOps.resolve(context, $container),
-      icon: MixOps.resolve(context, $icon),
       label: MixOps.resolve(context, $label),
+      icon: MixOps.resolve(context, $icon),
     );
 
     return StyleSpec(
@@ -225,15 +230,15 @@ mixin _$RemixToggleStyleMixin on Style<RemixToggleSpec>, Diagnosticable {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', $container))
-      ..add(DiagnosticsProperty('icon', $icon))
-      ..add(DiagnosticsProperty('label', $label));
+      ..add(DiagnosticsProperty('label', $label))
+      ..add(DiagnosticsProperty('icon', $icon));
   }
 
   @override
   List<Object?> get props => [
     $container,
-    $icon,
     $label,
+    $icon,
     $animation,
     $modifier,
     $variants,

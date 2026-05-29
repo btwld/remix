@@ -28,6 +28,24 @@ part of 'checkbox.dart';
 /// )
 /// ```
 class RemixCheckbox extends StatelessWidget {
+  const RemixCheckbox({
+    super.key,
+    this.enabled = true,
+    required this.selected,
+    this.tristate = false,
+    this.onChanged,
+    this.autofocus = false,
+    this.checkedIcon = Icons.check_rounded,
+    this.uncheckedIcon,
+    this.indeterminateIcon = Icons.horizontal_rule,
+    this.enableFeedback = true,
+    this.style = const RemixCheckboxStyle.create(),
+    this.styleSpec,
+    this.focusNode,
+    this.semanticLabel,
+    this.mouseCursor = SystemMouseCursors.click,
+  });
+
   /// Whether the checkbox is enabled for interaction.
   final bool enabled;
 
@@ -74,24 +92,6 @@ class RemixCheckbox extends StatelessWidget {
 
   /// Cursor when hovering over the checkbox.
   final MouseCursor mouseCursor;
-
-  const RemixCheckbox({
-    super.key,
-    this.enabled = true,
-    required this.selected,
-    this.tristate = false,
-    this.onChanged,
-    this.autofocus = false,
-    this.checkedIcon = Icons.check_rounded,
-    this.uncheckedIcon,
-    this.indeterminateIcon = Icons.horizontal_rule,
-    this.enableFeedback = true,
-    this.style = const RemixCheckboxStyle.create(),
-    this.styleSpec,
-    this.focusNode,
-    this.semanticLabel,
-    this.mouseCursor = SystemMouseCursors.click,
-  });
 
   @override
   Widget build(BuildContext context) {
