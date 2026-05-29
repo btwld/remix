@@ -1,15 +1,6 @@
 part of 'tooltip.dart';
 
 class RemixTooltip extends StatelessWidget {
-  const RemixTooltip({
-    super.key,
-    this.style = const RemixTooltipStyle.create(),
-    this.styleSpec,
-    required this.tooltipChild,
-    required this.child,
-    this.tooltipSemantics,
-  });
-
   /// The style configuration for the tooltip.
   final RemixTooltipStyle style;
 
@@ -26,6 +17,15 @@ class RemixTooltip extends StatelessWidget {
   final String? tooltipSemantics;
 
   static final styleFrom = RemixTooltipStyle.new;
+
+  const RemixTooltip({
+    super.key,
+    this.style = const RemixTooltipStyle.create(),
+    this.styleSpec,
+    required this.tooltipChild,
+    required this.child,
+    this.tooltipSemantics,
+  });
 
   @override
   Widget build(BuildContext context) {

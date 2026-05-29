@@ -22,25 +22,6 @@ part of 'toggle.dart';
 /// )
 /// ```
 class RemixToggle extends StatelessWidget {
-  const RemixToggle({
-    super.key,
-    this.enabled = true,
-    required this.selected,
-    required this.onChanged,
-    this.label,
-    this.icon,
-    this.style = const RemixToggleStyle.create(),
-    this.styleSpec,
-    this.enableFeedback = true,
-    this.focusNode,
-    this.autofocus = false,
-    this.semanticLabel,
-    this.mouseCursor = SystemMouseCursors.click,
-  }) : assert(
-         label != null || icon != null,
-         'At least one of label or icon must be provided',
-       );
-
   /// Whether this toggle is enabled.
   final bool enabled;
 
@@ -78,6 +59,25 @@ class RemixToggle extends StatelessWidget {
 
   /// Cursor when hovering over the toggle.
   final MouseCursor mouseCursor;
+
+  const RemixToggle({
+    super.key,
+    this.enabled = true,
+    required this.selected,
+    required this.onChanged,
+    this.label,
+    this.icon,
+    this.style = const RemixToggleStyle.create(),
+    this.styleSpec,
+    this.enableFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
+    this.semanticLabel,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : assert(
+         label != null || icon != null,
+         'At least one of label or icon must be provided',
+       );
 
   @override
   Widget build(BuildContext context) {

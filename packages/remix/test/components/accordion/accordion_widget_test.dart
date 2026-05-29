@@ -150,33 +150,35 @@ void main() {
         expect(find.byIcon(Icons.arrow_drop_down), findsOneWidget);
       });
 
-      testWidgets('shows add icon when collapsed and remove icon when expanded',
-          (tester) async {
-        await tester.pumpRemixApp(
-          RemixAccordionGroup<String>(
-            controller: RemixAccordionController<String>(),
-            child: RemixAccordion<String>(
-              value: 'item1',
-              title: 'Test Title',
-              child: const Text('Content'),
+      testWidgets(
+        'shows add icon when collapsed and remove icon when expanded',
+        (tester) async {
+          await tester.pumpRemixApp(
+            RemixAccordionGroup<String>(
+              controller: RemixAccordionController<String>(),
+              child: RemixAccordion<String>(
+                value: 'item1',
+                title: 'Test Title',
+                child: const Text('Content'),
+              ),
             ),
-          ),
-        );
+          );
 
-        await tester.pumpAndSettle();
+          await tester.pumpAndSettle();
 
-        // When collapsed, should show add icon
-        expect(find.byIcon(Icons.add), findsOneWidget);
-        expect(find.byIcon(Icons.remove), findsNothing);
+          // When collapsed, should show add icon
+          expect(find.byIcon(Icons.add), findsOneWidget);
+          expect(find.byIcon(Icons.remove), findsNothing);
 
-        // Tap to expand
-        await tester.tap(find.text('Test Title'));
-        await tester.pumpAndSettle();
+          // Tap to expand
+          await tester.tap(find.text('Test Title'));
+          await tester.pumpAndSettle();
 
-        // When expanded, should show remove icon
-        expect(find.byIcon(Icons.remove), findsOneWidget);
-        expect(find.byIcon(Icons.add), findsNothing);
-      });
+          // When expanded, should show remove icon
+          expect(find.byIcon(Icons.remove), findsOneWidget);
+          expect(find.byIcon(Icons.add), findsNothing);
+        },
+      );
     });
 
     group('Expansion Behavior', () {
@@ -309,9 +311,7 @@ void main() {
               builder: (context, state) {
                 return Container(
                   key: const ValueKey('custom_trigger'),
-                  child: Text(
-                    state.isExpanded ? 'Expanded' : 'Collapsed',
-                  ),
+                  child: Text(state.isExpanded ? 'Expanded' : 'Collapsed'),
                 );
               },
               child: const Text('Content'),
@@ -357,23 +357,25 @@ void main() {
     });
 
     group('Accessibility', () {
-      testWidgets('uses title as semantic label when no semanticLabel provided',
-          (tester) async {
-        await tester.pumpRemixApp(
-          RemixAccordionGroup<String>(
-            controller: RemixAccordionController<String>(),
-            child: RemixAccordion<String>(
-              value: 'item1',
-              title: 'Test Title',
-              child: const Text('Content'),
+      testWidgets(
+        'uses title as semantic label when no semanticLabel provided',
+        (tester) async {
+          await tester.pumpRemixApp(
+            RemixAccordionGroup<String>(
+              controller: RemixAccordionController<String>(),
+              child: RemixAccordion<String>(
+                value: 'item1',
+                title: 'Test Title',
+                child: const Text('Content'),
+              ),
             ),
-          ),
-        );
+          );
 
-        await tester.pumpAndSettle();
+          await tester.pumpAndSettle();
 
-        expect(find.text('Test Title'), findsOneWidget);
-      });
+          expect(find.text('Test Title'), findsOneWidget);
+        },
+      );
 
       testWidgets('uses custom semanticLabel when provided', (tester) async {
         await tester.pumpRemixApp(

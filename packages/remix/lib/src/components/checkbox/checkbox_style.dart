@@ -74,6 +74,60 @@ class RemixCheckboxStyle
     );
   }
 
+  /// Sets checkbox fill color on the container.
+  RemixCheckboxStyle fillColor(Color value) {
+    return merge(
+      RemixCheckboxStyle(
+        container: BoxStyler(decoration: BoxDecorationMix(color: value)),
+      ),
+    );
+  }
+
+  /// Creates a [RemixCheckbox] widget with this style applied.
+  ///
+  /// Example:
+  /// ```dart
+  /// final checkbox = RemixCheckboxStyle()
+  ///   .fillColor(Colors.blue)
+  ///   .size(24, 24);
+  ///
+  /// // Use it like a function
+  /// checkbox(
+  ///   selected: isChecked,
+  ///   onChanged: (value) => setState(() => isChecked = value),
+  /// )
+  /// ```
+  RemixCheckbox call({
+    required bool? selected,
+    ValueChanged<bool?>? onChanged,
+    bool enabled = true,
+    bool tristate = false,
+    bool autofocus = false,
+    IconData checkedIcon = Icons.check_rounded,
+    IconData? uncheckedIcon,
+    IconData indeterminateIcon = Icons.horizontal_rule,
+    bool enableFeedback = true,
+    FocusNode? focusNode,
+    String? semanticLabel,
+    MouseCursor mouseCursor = SystemMouseCursors.click,
+  }) {
+    return RemixCheckbox(
+      enabled: enabled,
+      selected: selected,
+      tristate: tristate,
+      onChanged: onChanged,
+      autofocus: autofocus,
+      checkedIcon: checkedIcon,
+      uncheckedIcon: uncheckedIcon,
+      indeterminateIcon: indeterminateIcon,
+      enableFeedback: enableFeedback,
+      style: this,
+      focusNode: focusNode,
+      semanticLabel: semanticLabel,
+      mouseCursor: mouseCursor,
+    );
+  }
+
   @override
   RemixCheckboxStyle icon(IconStyler value) {
     return merge(RemixCheckboxStyle(indicator: value));
@@ -83,15 +137,6 @@ class RemixCheckboxStyle
   @override
   RemixCheckboxStyle padding(EdgeInsetsGeometryMix value) {
     return merge(RemixCheckboxStyle(container: BoxStyler(padding: value)));
-  }
-
-  /// Sets checkbox fill color on the container.
-  RemixCheckboxStyle fillColor(Color value) {
-    return merge(
-      RemixCheckboxStyle(
-        container: BoxStyler(decoration: BoxDecorationMix(color: value)),
-      ),
-    );
   }
 
   /// Sets checkbox background color on the container.
@@ -159,51 +204,6 @@ class RemixCheckboxStyle
       RemixCheckboxStyle(
         container: BoxStyler(transform: value, transformAlignment: alignment),
       ),
-    );
-  }
-
-  /// Creates a [RemixCheckbox] widget with this style applied.
-  ///
-  /// Example:
-  /// ```dart
-  /// final checkbox = RemixCheckboxStyle()
-  ///   .fillColor(Colors.blue)
-  ///   .size(24, 24);
-  ///
-  /// // Use it like a function
-  /// checkbox(
-  ///   selected: isChecked,
-  ///   onChanged: (value) => setState(() => isChecked = value),
-  /// )
-  /// ```
-  RemixCheckbox call({
-    required bool? selected,
-    ValueChanged<bool?>? onChanged,
-    bool enabled = true,
-    bool tristate = false,
-    bool autofocus = false,
-    IconData checkedIcon = Icons.check_rounded,
-    IconData? uncheckedIcon,
-    IconData indeterminateIcon = Icons.horizontal_rule,
-    bool enableFeedback = true,
-    FocusNode? focusNode,
-    String? semanticLabel,
-    MouseCursor mouseCursor = SystemMouseCursors.click,
-  }) {
-    return RemixCheckbox(
-      selected: selected,
-      onChanged: onChanged,
-      enabled: enabled,
-      tristate: tristate,
-      autofocus: autofocus,
-      checkedIcon: checkedIcon,
-      uncheckedIcon: uncheckedIcon,
-      indeterminateIcon: indeterminateIcon,
-      enableFeedback: enableFeedback,
-      focusNode: focusNode,
-      semanticLabel: semanticLabel,
-      mouseCursor: mouseCursor,
-      style: this,
     );
   }
 }

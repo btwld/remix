@@ -31,20 +31,6 @@ part of 'tabs.dart';
 /// )
 /// ```
 class RemixTabs extends StatelessWidget {
-  const RemixTabs({
-    super.key,
-    required this.child,
-    this.controller,
-    this.selectedTabId,
-    this.onChanged,
-    this.orientation = .horizontal,
-    this.enabled = true,
-    this.onEscapePressed,
-  }) : assert(
-          controller != null || selectedTabId != null,
-          'Either controller or selectedTabId must be provided',
-        );
-
   /// The tabs content.
   final Widget child;
 
@@ -66,6 +52,20 @@ class RemixTabs extends StatelessWidget {
   /// Called when Escape is pressed while a tab has focus.
   final VoidCallback? onEscapePressed;
 
+  const RemixTabs({
+    super.key,
+    required this.child,
+    this.controller,
+    this.selectedTabId,
+    this.onChanged,
+    this.orientation = .horizontal,
+    this.enabled = true,
+    this.onEscapePressed,
+  }) : assert(
+         controller != null || selectedTabId != null,
+         'Either controller or selectedTabId must be provided',
+       );
+
   @override
   Widget build(BuildContext context) {
     return NakedTabs(
@@ -82,12 +82,6 @@ class RemixTabs extends StatelessWidget {
 
 /// A container widget for tab buttons.
 class RemixTabBar extends StatelessWidget {
-  const RemixTabBar({
-    super.key,
-    required this.child,
-    this.style = const RemixTabBarStyle.create(),
-  });
-
   /// The tab buttons.
   final Widget child;
 
@@ -95,6 +89,12 @@ class RemixTabBar extends StatelessWidget {
   final RemixTabBarStyle style;
 
   static final styleFrom = RemixTabBarStyle.new;
+
+  const RemixTabBar({
+    super.key,
+    required this.child,
+    this.style = const RemixTabBarStyle.create(),
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -109,28 +109,6 @@ class RemixTabBar extends StatelessWidget {
 
 /// An individual tab button.
 class RemixTab extends StatelessWidget {
-  const RemixTab({
-    super.key,
-    this.child,
-    required this.tabId,
-    this.enabled = true,
-    this.mouseCursor = SystemMouseCursors.click,
-    this.enableFeedback = true,
-    this.focusNode,
-    this.autofocus = false,
-    this.onFocusChange,
-    this.onHoverChange,
-    this.onPressChange,
-    this.builder,
-    this.semanticLabel,
-    this.style = const RemixTabStyle.create(),
-    this.icon,
-    this.label,
-  }) : assert(
-          child != null || builder != null || label != null,
-          'Either child, builder, or label must be provided',
-        );
-
   /// The tab content when not using [builder].
   final Widget? child;
 
@@ -178,12 +156,35 @@ class RemixTab extends StatelessWidget {
 
   static final styleFrom = RemixTabStyle.new;
 
+  const RemixTab({
+    super.key,
+    this.child,
+    required this.tabId,
+    this.enabled = true,
+    this.mouseCursor = SystemMouseCursors.click,
+    this.enableFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
+    this.onFocusChange,
+    this.onHoverChange,
+    this.onPressChange,
+    this.builder,
+    this.semanticLabel,
+    this.style = const RemixTabStyle.create(),
+    this.icon,
+    this.label,
+  }) : assert(
+         child != null || builder != null || label != null,
+         'Either child, builder, or label must be provided',
+       );
+
   Widget _buildTabContent(
     BuildContext context,
     RemixTabSpec spec,
     NakedTabState state,
   ) {
-    final defaultContent = child ??
+    final defaultContent =
+        child ??
         FlexBox(
           styleSpec: spec.container,
           children: [
@@ -225,13 +226,6 @@ class RemixTab extends StatelessWidget {
 
 /// A tab content panel that is shown when its corresponding tab is selected.
 class RemixTabView extends StatelessWidget {
-  const RemixTabView({
-    super.key,
-    required this.tabId,
-    required this.child,
-    this.style = const RemixTabViewStyle.create(),
-  });
-
   /// The unique identifier that matches a tab.
   final String tabId;
 
@@ -242,6 +236,13 @@ class RemixTabView extends StatelessWidget {
   final RemixTabViewStyle style;
 
   static final styleFrom = RemixTabViewStyle.new;
+
+  const RemixTabView({
+    super.key,
+    required this.tabId,
+    required this.child,
+    this.style = const RemixTabViewStyle.create(),
+  });
 
   @override
   Widget build(BuildContext context) {

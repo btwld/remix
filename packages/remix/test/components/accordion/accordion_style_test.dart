@@ -366,9 +366,7 @@ void main() {
           expect(
             style.$title,
             equals(
-              Prop.maybeMix(
-                TextStyler(style: TextStyleMix(fontSize: 20.0)),
-              ),
+              Prop.maybeMix(TextStyler(style: TextStyleMix(fontSize: 20.0))),
             ),
           );
         },
@@ -393,9 +391,8 @@ void main() {
       styleMethodTest(
         'titleStyle',
         initial: RemixAccordionStyle(),
-        modify: (style) => style.titleStyle(
-          TextStyleMix(color: Colors.green, fontSize: 18.0),
-        ),
+        modify: (style) =>
+            style.titleStyle(TextStyleMix(color: Colors.green, fontSize: 18.0)),
         expect: (style) {
           expect(
             style.$title,
@@ -494,9 +491,8 @@ void main() {
       styleMethodTest(
         'contentDecoration',
         initial: RemixAccordionStyle(),
-        modify: (style) => style.contentDecoration(
-          BoxDecorationMix(color: Colors.white),
-        ),
+        modify: (style) =>
+            style.contentDecoration(BoxDecorationMix(color: Colors.white)),
         expect: (style) {
           expect(
             style.$content,

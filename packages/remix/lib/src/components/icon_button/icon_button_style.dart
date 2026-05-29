@@ -132,18 +132,6 @@ class RemixIconButtonStyle
     );
   }
 
-  /// Sets the shadow of the icon button.
-  @override
-  RemixIconButtonStyle shadow(BoxShadowMix value) {
-    return merge(
-      RemixIconButtonStyle(
-        container: BoxStyler(
-          decoration: BoxDecorationMix(boxShadow: [value]),
-        ),
-      ),
-    );
-  }
-
   // Additional convenience methods
 
   /// Sets margin
@@ -159,14 +147,6 @@ class RemixIconButtonStyle
   /// Sets decoration
   RemixIconButtonStyle decoration(DecorationMix value) {
     return merge(RemixIconButtonStyle(container: BoxStyler(decoration: value)));
-  }
-
-  /// Sets constraints
-  @override
-  RemixIconButtonStyle constraints(BoxConstraintsMix value) {
-    return merge(
-      RemixIconButtonStyle(container: BoxStyler(constraints: value)),
-    );
   }
 
   /// Sets icon color
@@ -215,6 +195,24 @@ class RemixIconButtonStyle
       enableFeedback: enableFeedback,
       onPressed: onPressed,
       focusNode: focusNode,
+    );
+  }
+
+  /// Sets the shadow of the icon button.
+  @override
+  RemixIconButtonStyle shadow(BoxShadowMix value) {
+    return merge(
+      RemixIconButtonStyle(
+        container: BoxStyler(decoration: BoxDecorationMix(boxShadow: [value])),
+      ),
+    );
+  }
+
+  /// Sets constraints
+  @override
+  RemixIconButtonStyle constraints(BoxConstraintsMix value) {
+    return merge(
+      RemixIconButtonStyle(container: BoxStyler(constraints: value)),
     );
   }
 

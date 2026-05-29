@@ -386,6 +386,7 @@ class WidgetPropertyVisitor extends RecursiveAstVisitor<void> {
         docLines.add(line.substring(3).trim());
       }
     }
+
     return docLines.isNotEmpty ? docLines.join(' ') : null;
   }
 
@@ -440,6 +441,7 @@ String _capitalize(String s) {
       .split('_')
       .map((word) {
         if (word.isEmpty) return word;
+
         return word[0].toUpperCase() + word.substring(1);
       })
       .join('');
@@ -463,6 +465,7 @@ List<PropertyInfo> _extractWidgetProperties(
   } catch (e, stackTrace) {
     print('  ⚠ Error extracting properties from $componentName: $e');
     print('     Stack trace: $stackTrace');
+
     return [];
   }
 }
@@ -579,6 +582,7 @@ List<MethodInfo> _extractMethodsFromMixin(String mixinName, String returnType) {
   } catch (e, stackTrace) {
     print('  ⚠ Error extracting methods from mixin $mixinName: $e');
     print('     Stack trace: $stackTrace');
+
     return [];
   }
 }
@@ -624,6 +628,7 @@ String _generateMarkdown(
       final params = method.parameters
           .map((p) {
             final param = '${p.type} ${p.name}';
+
             return p.defaultValue != null
                 ? '$param = ${p.defaultValue}'
                 : param;
