@@ -16,17 +16,6 @@ typedef RemixBadgeLabelBuilder =
     Widget Function(BuildContext context, TextSpec spec, String label);
 
 class RemixBadge extends StyleWidget<RemixBadgeSpec> {
-  /// Creates a badge widget. Provide [label] for a text badge or [child] for
-  /// fully custom content. When nothing is provided, an empty label is used.
-  const RemixBadge({
-    super.style = const RemixBadgeStyle.create(),
-    super.styleSpec,
-    super.key,
-    this.label,
-    this.child,
-    this.labelBuilder,
-  });
-
   /// Optional text label rendered with the badge text style.
   final String? label;
 
@@ -37,6 +26,17 @@ class RemixBadge extends StyleWidget<RemixBadgeSpec> {
   /// Optional builder that receives the resolved [TextSpec] so callers can
   /// render text with custom widgets while preserving badge typography.
   final RemixBadgeLabelBuilder? labelBuilder;
+
+  /// Creates a badge widget. Provide [label] for a text badge or [child] for
+  /// fully custom content. When nothing is provided, an empty label is used.
+  const RemixBadge({
+    super.style = const RemixBadgeStyle.create(),
+    super.styleSpec,
+    super.key,
+    this.label,
+    this.child,
+    this.labelBuilder,
+  });
 
   @override
   Widget build(BuildContext context, RemixBadgeSpec spec) {

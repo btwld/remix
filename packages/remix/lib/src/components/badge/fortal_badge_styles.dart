@@ -61,9 +61,7 @@ class FortalBadgeStyles {
   ///
   /// Surface badges have subtle emphasis with accent-tinted surface.
   /// Used for neutral status indicators.
-  static RemixBadgeStyle surface({
-    FortalBadgeSize size = .size2,
-  }) {
+  static RemixBadgeStyle surface({FortalBadgeSize size = .size2}) {
     return base(size: size)
         // Container styling - no size properties
         .backgroundColor(FortalTokens.accentA2())
@@ -79,9 +77,7 @@ class FortalBadgeStyles {
   ///
   /// Outline badges have border-focused emphasis with transparent background.
   /// Used for subtle status indicators.
-  static RemixBadgeStyle outline({
-    FortalBadgeSize size = .size2,
-  }) {
+  static RemixBadgeStyle outline({FortalBadgeSize size = .size2}) {
     return base(size: size)
         // Container styling - no size properties
         .backgroundColor(Colors.transparent)

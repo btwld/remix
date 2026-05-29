@@ -62,10 +62,7 @@ void main() {
 
       testWidgets('divider stretches to fill available width', (tester) async {
         await tester.pumpRemixApp(
-          SizedBox(
-            width: 200,
-            child: const RemixDivider(),
-          ),
+          SizedBox(width: 200, child: const RemixDivider()),
         );
 
         await tester.pumpAndSettle();
@@ -125,14 +122,10 @@ void main() {
     group('StyleSpec Usage', () {
       testWidgets('renders with styleSpec parameter', (tester) async {
         const styleSpec = StyleSpec(
-          spec: RemixDividerSpec(
-            container: StyleSpec(spec: BoxSpec()),
-          ),
+          spec: RemixDividerSpec(container: StyleSpec(spec: BoxSpec())),
         );
 
-        await tester.pumpRemixApp(
-          RemixDivider(styleSpec: styleSpec),
-        );
+        await tester.pumpRemixApp(RemixDivider(styleSpec: styleSpec));
 
         await tester.pumpAndSettle();
 

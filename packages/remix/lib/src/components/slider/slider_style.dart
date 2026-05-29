@@ -96,6 +96,49 @@ class RemixSliderStyle
     return merge(RemixSliderStyle(rangeWidth: value));
   }
 
+  /// Creates a [RemixSlider] widget with this style applied.
+  ///
+  /// Example:
+  /// ```dart
+  /// final slider = RemixSliderStyle()
+  ///   .thumbColor(Colors.blue)
+  ///   .rangeColor(Colors.blue.shade200);
+  ///
+  /// // Use it like a function
+  /// slider(
+  ///   value: _sliderValue,
+  ///   onChanged: (value) => setState(() => _sliderValue = value),
+  /// )
+  /// ```
+  RemixSlider call({
+    required double value,
+    required ValueChanged<double>? onChanged,
+    double min = 0.0,
+    double max = 1.0,
+    ValueChanged<double>? onChangeStart,
+    ValueChanged<double>? onChangeEnd,
+    bool enabled = true,
+    bool enableHapticFeedback = true,
+    FocusNode? focusNode,
+    bool autofocus = false,
+    int? snapDivisions,
+  }) {
+    return RemixSlider(
+      min: min,
+      max: max,
+      onChanged: onChanged,
+      value: value,
+      onChangeEnd: onChangeEnd,
+      onChangeStart: onChangeStart,
+      style: this,
+      enabled: enabled,
+      enableHapticFeedback: enableHapticFeedback,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      snapDivisions: snapDivisions,
+    );
+  }
+
   // RemixContainerStyle mixin implementations
   @override
   RemixSliderStyle padding(EdgeInsetsGeometryMix value) {
@@ -214,49 +257,6 @@ class RemixSliderStyle
   @override
   RemixSliderStyle animate(AnimationConfig animation) {
     return merge(RemixSliderStyle(animation: animation));
-  }
-
-  /// Creates a [RemixSlider] widget with this style applied.
-  ///
-  /// Example:
-  /// ```dart
-  /// final slider = RemixSliderStyle()
-  ///   .thumbColor(Colors.blue)
-  ///   .rangeColor(Colors.blue.shade200);
-  ///
-  /// // Use it like a function
-  /// slider(
-  ///   value: _sliderValue,
-  ///   onChanged: (value) => setState(() => _sliderValue = value),
-  /// )
-  /// ```
-  RemixSlider call({
-    required double value,
-    required ValueChanged<double>? onChanged,
-    double min = 0.0,
-    double max = 1.0,
-    ValueChanged<double>? onChangeStart,
-    ValueChanged<double>? onChangeEnd,
-    bool enabled = true,
-    bool enableHapticFeedback = true,
-    FocusNode? focusNode,
-    bool autofocus = false,
-    int? snapDivisions,
-  }) {
-    return RemixSlider(
-      value: value,
-      onChanged: onChanged,
-      min: min,
-      max: max,
-      onChangeStart: onChangeStart,
-      onChangeEnd: onChangeEnd,
-      enabled: enabled,
-      enableHapticFeedback: enableHapticFeedback,
-      focusNode: focusNode,
-      autofocus: autofocus,
-      snapDivisions: snapDivisions,
-      style: this,
-    );
   }
 
   @override

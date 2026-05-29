@@ -29,9 +29,7 @@ class FortalIconButtonStyle {
     };
   }
 
-  static RemixIconButtonStyle base({
-    FortalIconButtonSize size = .size2,
-  }) {
+  static RemixIconButtonStyle base({FortalIconButtonSize size = .size2}) {
     return RemixIconButtonStyle()
         // Generic spinner properties (size set by _sizeStyle)
         .spinner(
@@ -51,9 +49,7 @@ class FortalIconButtonStyle {
         .merge(_sizeStyle(size));
   }
 
-  static RemixIconButtonStyle solid({
-    FortalIconButtonSize size = .size2,
-  }) {
+  static RemixIconButtonStyle solid({FortalIconButtonSize size = .size2}) {
     return base(size: size)
         .color(FortalTokens.accent9())
         .iconColor(FortalTokens.accentContrast())
@@ -74,9 +70,7 @@ class FortalIconButtonStyle {
         );
   }
 
-  static RemixIconButtonStyle soft({
-    FortalIconButtonSize size = .size2,
-  }) {
+  static RemixIconButtonStyle soft({FortalIconButtonSize size = .size2}) {
     return base(size: size)
         .color(FortalTokens.accent3())
         .iconColor(FortalTokens.accent11())
@@ -95,9 +89,7 @@ class FortalIconButtonStyle {
         );
   }
 
-  static RemixIconButtonStyle surface({
-    FortalIconButtonSize size = .size2,
-  }) {
+  static RemixIconButtonStyle surface({FortalIconButtonSize size = .size2}) {
     return base(size: size)
         .color(FortalTokens.accentA2())
         .borderAll(
@@ -128,9 +120,7 @@ class FortalIconButtonStyle {
         );
   }
 
-  static RemixIconButtonStyle outline({
-    FortalIconButtonSize size = .size2,
-  }) {
+  static RemixIconButtonStyle outline({FortalIconButtonSize size = .size2}) {
     return base(size: size)
         .color(Colors.transparent)
         .borderAll(
@@ -159,9 +149,7 @@ class FortalIconButtonStyle {
         );
   }
 
-  static RemixIconButtonStyle ghost({
-    FortalIconButtonSize size = .size2,
-  }) {
+  static RemixIconButtonStyle ghost({FortalIconButtonSize size = .size2}) {
     return base(size: size)
         .color(Colors.transparent)
         .iconColor(FortalTokens.accent11())

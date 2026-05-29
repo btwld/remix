@@ -21,11 +21,7 @@ class ComparisonView extends StatelessWidget {
       mainAxisSize: .min,
       crossAxisAlignment: .start,
       children: [
-        _ComparisonSection(
-          title: 'Remix',
-          spacing: spacing,
-          children: remix,
-        ),
+        _ComparisonSection(title: 'Remix', spacing: spacing, children: remix),
         SizedBox(width: sectionSpacing),
         _ComparisonSection(
           title: 'Material',

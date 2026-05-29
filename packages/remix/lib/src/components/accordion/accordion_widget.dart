@@ -35,13 +35,6 @@ typedef RemixAccordionController<T> = NakedAccordionController<T>;
 /// )
 /// ```
 class RemixAccordionGroup<T> extends StatelessWidget {
-  const RemixAccordionGroup({
-    super.key,
-    required this.child,
-    required this.controller,
-    this.initialExpandedValues = const [],
-  });
-
   /// Accordion items to render.
   final Widget child;
 
@@ -50,6 +43,13 @@ class RemixAccordionGroup<T> extends StatelessWidget {
 
   /// Values expanded on the first build when the controller is empty.
   final List<T> initialExpandedValues;
+
+  const RemixAccordionGroup({
+    super.key,
+    required this.child,
+    required this.controller,
+    this.initialExpandedValues = const [],
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -63,44 +63,6 @@ class RemixAccordionGroup<T> extends StatelessWidget {
 
 /// An individual accordion item.
 class RemixAccordion<T> extends StatelessWidget {
-  const RemixAccordion({
-    super.key,
-    required this.value,
-    required this.child,
-    this.title,
-    this.leadingIcon,
-    this.trailingIcon,
-    this.builder,
-    this.enabled = true,
-    this.mouseCursor = SystemMouseCursors.click,
-    this.enableFeedback = true,
-    this.autofocus = false,
-    this.focusNode,
-    this.onFocusChange,
-    this.onHoverChange,
-    this.onPressChange,
-    this.semanticLabel,
-    this.style = const RemixAccordionStyle.create(),
-    this.transitionBuilder = defaultAccordionTransitionBuilder,
-  }) : assert(
-         title != null || builder != null,
-         'Either title or builder must be provided',
-       );
-
-  static Widget defaultAccordionTransitionBuilder(
-    Widget panel,
-    Animation<double> animation,
-  ) {
-    return FadeTransition(
-      opacity: animation,
-      child: SizeTransition(
-        sizeFactor: animation,
-        axisAlignment: 1,
-        child: panel,
-      ),
-    );
-  }
-
   /// Unique identifier tracked by the controller.
   final T value;
 
@@ -153,6 +115,44 @@ class RemixAccordion<T> extends StatelessWidget {
   final Widget Function(Widget, Animation<double>) transitionBuilder;
 
   static final styleFrom = RemixAccordionStyle.new;
+
+  const RemixAccordion({
+    super.key,
+    required this.value,
+    required this.child,
+    this.title,
+    this.leadingIcon,
+    this.trailingIcon,
+    this.builder,
+    this.enabled = true,
+    this.mouseCursor = SystemMouseCursors.click,
+    this.enableFeedback = true,
+    this.autofocus = false,
+    this.focusNode,
+    this.onFocusChange,
+    this.onHoverChange,
+    this.onPressChange,
+    this.semanticLabel,
+    this.style = const RemixAccordionStyle.create(),
+    this.transitionBuilder = defaultAccordionTransitionBuilder,
+  }) : assert(
+         title != null || builder != null,
+         'Either title or builder must be provided',
+       );
+
+  static Widget defaultAccordionTransitionBuilder(
+    Widget panel,
+    Animation<double> animation,
+  ) {
+    return FadeTransition(
+      opacity: animation,
+      child: SizeTransition(
+        sizeFactor: animation,
+        axisAlignment: 1,
+        child: panel,
+      ),
+    );
+  }
 
   Widget _buildDefaultTrigger(
     BuildContext context,

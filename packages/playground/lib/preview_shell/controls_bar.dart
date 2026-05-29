@@ -39,23 +39,27 @@ class ControlsBar extends StatelessWidget {
             ),
             const SizedBox(width: 16),
             _PresetChip(
-                label: 'Mobile',
-                onTap: () => onChange(size: const Size(375, 812))),
+              label: 'Mobile',
+              onTap: () => onChange(size: const Size(375, 812)),
+            ),
             const SizedBox(width: 8),
             _PresetChip(
-                label: 'Tablet',
-                onTap: () => onChange(size: const Size(768, 1024))),
+              label: 'Tablet',
+              onTap: () => onChange(size: const Size(768, 1024)),
+            ),
             const SizedBox(width: 8),
             _PresetChip(
-                label: 'Desktop',
-                onTap: () => onChange(size: const Size(1280, 800))),
+              label: 'Desktop',
+              onTap: () => onChange(size: const Size(1280, 800)),
+            ),
             const Spacer(),
             Text('W', style: textTheme.labelMedium),
             const SizedBox(width: 6),
             _SizeField(
               initial: size.width.round(),
               onSubmitted: (w) => onChange(
-                  size: Size(w.toDouble().clamp(200, 3000), size.height)),
+                size: Size(w.toDouble().clamp(200, 3000), size.height),
+              ),
             ),
             const SizedBox(width: 12),
             Text('H', style: textTheme.labelMedium),
@@ -63,7 +67,8 @@ class ControlsBar extends StatelessWidget {
             _SizeField(
               initial: size.height.round(),
               onSubmitted: (h) => onChange(
-                  size: Size(size.width, h.toDouble().clamp(200, 3000))),
+                size: Size(size.width, h.toDouble().clamp(200, 3000)),
+              ),
             ),
           ],
         ),
@@ -99,8 +104,9 @@ class _SizeField extends StatefulWidget {
 }
 
 class _SizeFieldState extends State<_SizeField> {
-  late final controller =
-      TextEditingController(text: widget.initial.toString());
+  late final controller = TextEditingController(
+    text: widget.initial.toString(),
+  );
 
   @override
   void dispose() {
@@ -121,8 +127,10 @@ class _SizeFieldState extends State<_SizeField> {
         controller: controller,
         decoration: InputDecoration(
           isDense: true,
-          contentPadding:
-              const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+          contentPadding: const EdgeInsets.symmetric(
+            vertical: 8,
+            horizontal: 8,
+          ),
           focusedBorder: border,
           enabledBorder: border,
           border: border,

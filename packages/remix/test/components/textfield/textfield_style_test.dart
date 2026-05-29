@@ -557,10 +557,12 @@ void main() {
     });
 
     group('Call Method', () {
-      testWidgets('call method creates RemixTextField with common parameters',
-          (tester) async {
-        final style =
-            RemixTextFieldStyle().backgroundColor(Colors.grey.shade100);
+      testWidgets('call method creates RemixTextField with common parameters', (
+        tester,
+      ) async {
+        final style = RemixTextFieldStyle().backgroundColor(
+          Colors.grey.shade100,
+        );
         final controller = TextEditingController();
         final focusNode = FocusNode();
 
@@ -595,37 +597,37 @@ void main() {
         focusNode.dispose();
       });
 
-      testWidgets('call method creates RemixTextField with minimal parameters',
-          (tester) async {
-        final style = RemixTextFieldStyle();
+      testWidgets(
+        'call method creates RemixTextField with minimal parameters',
+        (tester) async {
+          final style = RemixTextFieldStyle();
 
-        final textField = style.call();
+          final textField = style.call();
 
-        expect(textField, isA<RemixTextField>());
-        expect(textField.enabled, equals(true));
-        expect(textField.autofocus, equals(false));
-        expect(textField.obscureText, equals(false));
-        expect(textField.maxLines, equals(1));
-        expect(textField.error, equals(false));
-        expect(textField.style, same(style));
-      });
+          expect(textField, isA<RemixTextField>());
+          expect(textField.enabled, equals(true));
+          expect(textField.autofocus, equals(false));
+          expect(textField.obscureText, equals(false));
+          expect(textField.maxLines, equals(1));
+          expect(textField.error, equals(false));
+          expect(textField.style, same(style));
+        },
+      );
 
       testWidgets(
-          'call method creates RemixTextField with leading and trailing',
-          (tester) async {
-        final style = RemixTextFieldStyle();
-        const leading = Icon(Icons.person);
-        const trailing = Icon(Icons.clear);
+        'call method creates RemixTextField with leading and trailing',
+        (tester) async {
+          final style = RemixTextFieldStyle();
+          const leading = Icon(Icons.person);
+          const trailing = Icon(Icons.clear);
 
-        final textField = style.call(
-          leading: leading,
-          trailing: trailing,
-        );
+          final textField = style.call(leading: leading, trailing: trailing);
 
-        expect(textField, isA<RemixTextField>());
-        expect(textField.leading, same(leading));
-        expect(textField.trailing, same(trailing));
-      });
+          expect(textField, isA<RemixTextField>());
+          expect(textField.leading, same(leading));
+          expect(textField.trailing, same(trailing));
+        },
+      );
     });
 
     group('Equality', () {

@@ -15,10 +15,7 @@ void _showToast(BuildContext context, String message) {
   );
 }
 
-@widgetbook.UseCase(
-  name: 'Icon Button Component',
-  type: RemixIconButton,
-)
+@widgetbook.UseCase(name: 'Icon Button Component', type: RemixIconButton)
 Widget buildIconButtonUseCase(BuildContext context) {
   return KeyedSubtree(
     key: _key,
@@ -28,14 +25,8 @@ Widget buildIconButtonUseCase(BuildContext context) {
           onPressed: () {
             _showToast(context, 'RemixIconButton pressed');
           },
-          loading: context.knobs.boolean(
-            label: 'Loading',
-            initialValue: false,
-          ),
-          icon: context.knobs.iconData(
-            label: 'Icon',
-            initialValue: Icons.add,
-          )!,
+          loading: context.knobs.boolean(label: 'Loading', initialValue: false),
+          icon: context.knobs.iconData(label: 'Icon', initialValue: Icons.add)!,
           style: FortalIconButtonStyle.create(
             size: context.knobs.object.dropdown(
               label: 'size',

@@ -18,6 +18,11 @@ part of 'card.dart';
 /// )
 /// ```
 class RemixCard extends StyleWidget<RemixCardSpec> {
+  /// The widget below this widget in the tree.
+  ///
+  /// This widget can only have one child. To lay out multiple children, let this widget's child be a widget such as [RowBox], [ColumnBox], or [StackBox], which have a children property, and then provide the children to that widget.
+  final Widget? child;
+
   /// Creates a Material Design card.
   const RemixCard({
     super.style = const RemixCardStyle.create(),
@@ -25,11 +30,6 @@ class RemixCard extends StyleWidget<RemixCardSpec> {
     super.key,
     this.child,
   });
-
-  /// The widget below this widget in the tree.
-  ///
-  /// This widget can only have one child. To lay out multiple children, let this widget's child be a widget such as [RowBox], [ColumnBox], or [StackBox], which have a children property, and then provide the children to that widget.
-  final Widget? child;
 
   @override
   Widget build(BuildContext context, RemixCardSpec spec) {

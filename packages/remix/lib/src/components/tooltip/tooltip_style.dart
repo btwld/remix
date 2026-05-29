@@ -44,6 +44,11 @@ class RemixTooltipStyle
          modifier: modifier,
        );
 
+  /// Sets container alignment
+  RemixTooltipStyle alignment(Alignment value) {
+    return merge(RemixTooltipStyle(container: BoxStyler(alignment: value)));
+  }
+
   /// Sets container padding
   @override
   RemixTooltipStyle padding(EdgeInsetsGeometryMix value) {
@@ -54,11 +59,6 @@ class RemixTooltipStyle
   @override
   RemixTooltipStyle margin(EdgeInsetsGeometryMix value) {
     return merge(RemixTooltipStyle(container: BoxStyler(margin: value)));
-  }
-
-  /// Sets container alignment
-  RemixTooltipStyle alignment(Alignment value) {
-    return merge(RemixTooltipStyle(container: BoxStyler(alignment: value)));
   }
 
   /// Sets container background color

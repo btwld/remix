@@ -26,9 +26,7 @@ class FortalProgressStyles {
     };
   }
 
-  static RemixProgressStyle base({
-    FortalProgressSize size = .size2,
-  }) {
+  static RemixProgressStyle base({FortalProgressSize size = .size2}) {
     return RemixProgressStyle()
         // Container styling - no focus for progress
         .width(double.infinity)
@@ -36,9 +34,7 @@ class FortalProgressStyles {
         .merge(_sizeStyle(size));
   }
 
-  static RemixProgressStyle surface({
-    FortalProgressSize size = .size2,
-  }) {
+  static RemixProgressStyle surface({FortalProgressSize size = .size2}) {
     return base(size: size)
         .foregroundDecoration(
           BoxDecorationMix()
@@ -59,9 +55,7 @@ class FortalProgressStyles {
         .indicator(BoxStyler().color(FortalTokens.accentIndicator()));
   }
 
-  static RemixProgressStyle soft({
-    FortalProgressSize size = .size2,
-  }) {
+  static RemixProgressStyle soft({FortalProgressSize size = .size2}) {
     return base(size: size)
         // Track styling (background bar) - uses accent4 instead of gray
         .track(

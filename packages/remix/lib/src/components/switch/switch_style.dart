@@ -59,6 +59,43 @@ class RemixSwitchStyle
     return merge(RemixSwitchStyle(container: BoxStyler(alignment: value)));
   }
 
+  /// Creates a [RemixSwitch] widget with this style applied.
+  ///
+  /// Example:
+  /// ```dart
+  /// final toggle = RemixSwitchStyle()
+  ///   .thumbColor(Colors.white)
+  ///   .trackColor(Colors.blue);
+  ///
+  /// // Use it like a function
+  /// toggle(
+  ///   selected: _isEnabled,
+  ///   onChanged: (value) => setState(() => _isEnabled = value),
+  /// )
+  /// ```
+  RemixSwitch call({
+    required bool selected,
+    required ValueChanged<bool> onChanged,
+    bool enabled = true,
+    bool enableFeedback = true,
+    FocusNode? focusNode,
+    bool autofocus = false,
+    String? semanticLabel,
+    MouseCursor mouseCursor = SystemMouseCursors.click,
+  }) {
+    return RemixSwitch(
+      enabled: enabled,
+      selected: selected,
+      onChanged: onChanged,
+      style: this,
+      enableFeedback: enableFeedback,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      semanticLabel: semanticLabel,
+      mouseCursor: mouseCursor,
+    );
+  }
+
   @override
   StyleSpec<RemixSwitchSpec> resolve(BuildContext context) {
     return StyleSpec(
@@ -137,43 +174,6 @@ class RemixSwitchStyle
       RemixSwitchStyle(
         container: BoxStyler(transform: value, transformAlignment: alignment),
       ),
-    );
-  }
-
-  /// Creates a [RemixSwitch] widget with this style applied.
-  ///
-  /// Example:
-  /// ```dart
-  /// final toggle = RemixSwitchStyle()
-  ///   .thumbColor(Colors.white)
-  ///   .trackColor(Colors.blue);
-  ///
-  /// // Use it like a function
-  /// toggle(
-  ///   selected: _isEnabled,
-  ///   onChanged: (value) => setState(() => _isEnabled = value),
-  /// )
-  /// ```
-  RemixSwitch call({
-    required bool selected,
-    required ValueChanged<bool> onChanged,
-    bool enabled = true,
-    bool enableFeedback = true,
-    FocusNode? focusNode,
-    bool autofocus = false,
-    String? semanticLabel,
-    MouseCursor mouseCursor = SystemMouseCursors.click,
-  }) {
-    return RemixSwitch(
-      selected: selected,
-      onChanged: onChanged,
-      enabled: enabled,
-      enableFeedback: enableFeedback,
-      focusNode: focusNode,
-      autofocus: autofocus,
-      semanticLabel: semanticLabel,
-      mouseCursor: mouseCursor,
-      style: this,
     );
   }
 

@@ -7,10 +7,7 @@ import 'package:remix/remix.dart';
 void main() {
   runApp(
     const MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.white,
-        body: CardExample(),
-      ),
+      home: Scaffold(backgroundColor: Colors.white, body: CardExample()),
     ),
   );
 }
@@ -24,11 +21,7 @@ class CardExample extends StatelessWidget {
       child: Row(
         mainAxisAlignment: .center,
         spacing: 16,
-        children: [
-          RemixCard(
-            style: style,
-          ),
-        ],
+        children: [RemixCard(style: style)],
       ),
     );
   }

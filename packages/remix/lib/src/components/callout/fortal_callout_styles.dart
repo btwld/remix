@@ -23,9 +23,7 @@ class FortalCalloutStyles {
     };
   }
 
-  static RemixCalloutStyle base({
-    FortalCalloutSize size = .size2,
-  }) {
+  static RemixCalloutStyle base({FortalCalloutSize size = .size2}) {
     return RemixCalloutStyle()
         // Horizontal layout with spacing between icon and text
         .merge(
@@ -41,9 +39,7 @@ class FortalCalloutStyles {
   }
 
   /// Neutral/gray variant (surface background with gray border + gray text)
-  static RemixCalloutStyle outline({
-    FortalCalloutSize size = .size2,
-  }) {
+  static RemixCalloutStyle outline({FortalCalloutSize size = .size2}) {
     return base(size: size)
         .backgroundColor(Colors.transparent)
         .borderAll(
@@ -56,9 +52,7 @@ class FortalCalloutStyles {
   }
 
   /// Accent-tinted surface variant (accentSurface background + accent border/text)
-  static RemixCalloutStyle surface({
-    FortalCalloutSize size = .size2,
-  }) {
+  static RemixCalloutStyle surface({FortalCalloutSize size = .size2}) {
     return base(size: size)
         .backgroundColor(FortalTokens.accentSurface())
         .borderAll(
@@ -71,9 +65,7 @@ class FortalCalloutStyles {
   }
 
   /// Soft tinted variant (accent3 background + accent6 border + accent11 text)
-  static RemixCalloutStyle soft({
-    FortalCalloutSize size = .size2,
-  }) {
+  static RemixCalloutStyle soft({FortalCalloutSize size = .size2}) {
     return base(size: size)
         .backgroundColor(FortalTokens.accent3())
         .borderRadiusAll(FortalTokens.radius3())

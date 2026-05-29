@@ -115,9 +115,7 @@ void main() {
           expect(
             style.$text,
             equals(
-              Prop.maybeMix(
-                TextStyler(style: TextStyleMix(color: Colors.red)),
-              ),
+              Prop.maybeMix(TextStyler(style: TextStyleMix(color: Colors.red))),
             ),
           );
         },

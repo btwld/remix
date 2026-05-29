@@ -5,10 +5,7 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 final _key = GlobalKey();
 
-@widgetbook.UseCase(
-  name: 'Tooltip Component',
-  type: RemixTooltip,
-)
+@widgetbook.UseCase(name: 'Tooltip Component', type: RemixTooltip)
 Widget buildTooltipUseCase(BuildContext context) {
   return KeyedSubtree(
     key: _key,

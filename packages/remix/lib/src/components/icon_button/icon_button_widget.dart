@@ -35,29 +35,6 @@ typedef RemixIconButtonLoadingBuilder =
 /// )
 /// ```
 class RemixIconButton extends StatelessWidget {
-  /// Creates a Remix icon button.
-  ///
-  /// The [icon] parameter is required and specifies which icon to display.
-  /// Use builders to customize rendering of specific parts.
-  const RemixIconButton({
-    this.style = const RemixIconButtonStyle.create(),
-    this.styleSpec,
-    super.key,
-    required this.icon,
-    this.iconBuilder,
-    this.loadingBuilder,
-    this.autofocus = false,
-    this.loading = false,
-    this.enableFeedback = true,
-    required this.onPressed,
-    this.onLongPress,
-    this.focusNode,
-    this.semanticLabel,
-    this.semanticHint,
-    this.excludeSemantics = false,
-    this.mouseCursor = SystemMouseCursors.click,
-  });
-
   final RemixIconButtonStyle style;
 
   final RemixIconButtonSpec? styleSpec;
@@ -117,6 +94,29 @@ class RemixIconButton extends StatelessWidget {
   ///
   /// Defaults to [SystemMouseCursors.click] when enabled.
   final MouseCursor mouseCursor;
+
+  /// Creates a Remix icon button.
+  ///
+  /// The [icon] parameter is required and specifies which icon to display.
+  /// Use builders to customize rendering of specific parts.
+  const RemixIconButton({
+    this.style = const RemixIconButtonStyle.create(),
+    this.styleSpec,
+    super.key,
+    required this.icon,
+    this.iconBuilder,
+    this.loadingBuilder,
+    this.autofocus = false,
+    this.loading = false,
+    this.enableFeedback = true,
+    required this.onPressed,
+    this.onLongPress,
+    this.focusNode,
+    this.semanticLabel,
+    this.semanticHint,
+    this.excludeSemantics = false,
+    this.mouseCursor = SystemMouseCursors.click,
+  });
 
   bool get _isEnabled => !loading && onPressed != null;
 

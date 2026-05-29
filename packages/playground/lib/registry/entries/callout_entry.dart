@@ -10,7 +10,9 @@ Widget buildCalloutExample() {
       remix: [
         RemixCallout(text: 'Information message', icon: Icons.info),
         RemixCallout(
-            text: 'Warning message', icon: Icons.warning_amber_rounded),
+          text: 'Warning message',
+          icon: Icons.warning_amber_rounded,
+        ),
       ],
       material: [
         MaterialBanner(

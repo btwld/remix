@@ -6,10 +6,7 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 final _key = GlobalKey();
 
-@widgetbook.UseCase(
-  name: 'Callout Component',
-  type: RemixCallout,
-)
+@widgetbook.UseCase(name: 'Callout Component', type: RemixCallout)
 Widget buildCalloutUseCase(BuildContext context) {
   return KeyedSubtree(
     key: _key,

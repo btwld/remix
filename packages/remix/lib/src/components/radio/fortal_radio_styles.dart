@@ -42,9 +42,7 @@ class FortalRadioStyles {
   ///
   /// Surface radios use neutral surface with subtle borders.
   /// Used for forms with softer visual appearance.
-  static RemixRadioStyle surface({
-    FortalRadioSize size = .size2,
-  }) {
+  static RemixRadioStyle surface({FortalRadioSize size = .size2}) {
     return base(size: size)
         // Container (the radio circle itself) - no size properties
         .fillColor(FortalTokens.colorSurface())
@@ -115,24 +113,15 @@ class FortalRadioStyles {
   static RemixRadioStyle _sizeStyle(FortalRadioSize size) {
     return switch (size) {
       .size1 => RemixRadioStyle(
-        container: BoxStyler()
-            .width(16.0)
-            .height(16.0)
-            .alignment(.center),
+        container: BoxStyler().width(16.0).height(16.0).alignment(.center),
         indicator: BoxStyler().width(6.0).height(6.0),
       ),
       .size2 => RemixRadioStyle(
-        container: BoxStyler()
-            .width(20.0)
-            .height(20.0)
-            .alignment(.center),
+        container: BoxStyler().width(20.0).height(20.0).alignment(.center),
         indicator: BoxStyler().width(8.0).height(8.0),
       ),
       .size3 => RemixRadioStyle(
-        container: BoxStyler()
-            .width(24.0)
-            .height(24.0)
-            .alignment(.center),
+        container: BoxStyler().width(24.0).height(24.0).alignment(.center),
         indicator: BoxStyler().width(10.0).height(10.0),
       ),
     };

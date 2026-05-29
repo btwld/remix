@@ -5,10 +5,7 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 final _key = GlobalKey();
 
-@widgetbook.UseCase(
-  name: 'Spinner Component',
-  type: RemixSpinner,
-)
+@widgetbook.UseCase(name: 'Spinner Component', type: RemixSpinner)
 Widget buildSpinnerUseCase(BuildContext context) {
   return KeyedSubtree(
     key: _key,

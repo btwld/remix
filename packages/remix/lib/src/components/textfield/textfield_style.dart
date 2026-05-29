@@ -259,44 +259,6 @@ class RemixTextFieldStyle
     return merge(RemixTextFieldStyle(helperText: value));
   }
 
-  /// Sets label text
-  @override
-  RemixTextFieldStyle label(TextStyler value) {
-    return merge(RemixTextFieldStyle(label: value));
-  }
-
-  // Abstract method implementations for mixins
-
-  @override
-  RemixTextFieldStyle foregroundDecoration(DecorationMix value) {
-    return merge(
-      RemixTextFieldStyle(
-        container: FlexBoxStyler(foregroundDecoration: value),
-      ),
-    );
-  }
-
-  @override
-  RemixTextFieldStyle transform(
-    Matrix4 value, {
-    AlignmentGeometry alignment = Alignment.center,
-  }) {
-    return merge(
-      RemixTextFieldStyle(
-        container: FlexBoxStyler(
-          transform: value,
-          transformAlignment: alignment,
-        ),
-      ),
-    );
-  }
-
-  // FlexStyleMixin implementation
-  @override
-  RemixTextFieldStyle flex(FlexStyler value) {
-    return merge(RemixTextFieldStyle(container: FlexBoxStyler().flex(value)));
-  }
-
   /// Creates a [RemixTextField] widget with this style applied.
   ///
   /// Example:
@@ -428,5 +390,43 @@ class RemixTextFieldStyle
       excludeSemantics: excludeSemantics,
       style: this,
     );
+  }
+
+  /// Sets label text
+  @override
+  RemixTextFieldStyle label(TextStyler value) {
+    return merge(RemixTextFieldStyle(label: value));
+  }
+
+  // Abstract method implementations for mixins
+
+  @override
+  RemixTextFieldStyle foregroundDecoration(DecorationMix value) {
+    return merge(
+      RemixTextFieldStyle(
+        container: FlexBoxStyler(foregroundDecoration: value),
+      ),
+    );
+  }
+
+  @override
+  RemixTextFieldStyle transform(
+    Matrix4 value, {
+    AlignmentGeometry alignment = Alignment.center,
+  }) {
+    return merge(
+      RemixTextFieldStyle(
+        container: FlexBoxStyler(
+          transform: value,
+          transformAlignment: alignment,
+        ),
+      ),
+    );
+  }
+
+  // FlexStyleMixin implementation
+  @override
+  RemixTextFieldStyle flex(FlexStyler value) {
+    return merge(RemixTextFieldStyle(container: FlexBoxStyler().flex(value)));
   }
 }

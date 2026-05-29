@@ -25,9 +25,7 @@ class FortalSwitchStyles {
     };
   }
 
-  static RemixSwitchStyle base({
-    FortalSwitchSize size = .size2,
-  }) {
+  static RemixSwitchStyle base({FortalSwitchSize size = .size2}) {
     return RemixSwitchStyle()
         .thumbColor(Colors.white)
         .thumb(
@@ -53,9 +51,7 @@ class FortalSwitchStyles {
   ///
   /// Surface switches use neutral track with neutral thumb when checked.
   /// Used for forms with softer visual appearance.
-  static RemixSwitchStyle surface({
-    FortalSwitchSize size = .size2,
-  }) {
+  static RemixSwitchStyle surface({FortalSwitchSize size = .size2}) {
     return base(size: size)
         .trackColor(FortalTokens.gray5())
         .borderRadius(BorderRadiusMix.circular(999))
@@ -81,9 +77,7 @@ class FortalSwitchStyles {
   ///
   /// Soft switches use accent-tinted track with accent thumb.
   /// Used for forms that need accent color integration.
-  static RemixSwitchStyle soft({
-    FortalSwitchSize size = .size2,
-  }) {
+  static RemixSwitchStyle soft({FortalSwitchSize size = .size2}) {
     return base(size: size)
         .trackColor(FortalTokens.gray5())
         .borderRadius(BorderRadiusMix.circular(999))

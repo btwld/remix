@@ -283,10 +283,7 @@ void main() {
         initial: RemixToggleStyle(),
         modify: (style) => style.iconSize(24.0),
         expect: (style) {
-          expect(
-            style.$icon,
-            equals(Prop.maybeMix(IconStyler(size: 24.0))),
-          );
+          expect(style.$icon, equals(Prop.maybeMix(IconStyler(size: 24.0))));
         },
       );
 
