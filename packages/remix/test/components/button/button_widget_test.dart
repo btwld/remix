@@ -36,7 +36,7 @@ void main() {
       });
     });
 
-    group('FortalButton generated widget', () {
+    group('FortalButton wrapper widget', () {
       testWidgets('renders generated button and forwards core params', (
         tester,
       ) async {

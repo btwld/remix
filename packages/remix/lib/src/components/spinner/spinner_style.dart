@@ -55,6 +55,24 @@ class RemixSpinnerStyle extends RemixStyle<RemixSpinnerSpec, RemixSpinnerStyle>
          modifier: modifier,
        );
 
+  factory RemixSpinnerStyle.duration(Duration value) =>
+      RemixSpinnerStyle().duration(value);
+
+  factory RemixSpinnerStyle.indicatorColor(Color value) =>
+      RemixSpinnerStyle().indicatorColor(value);
+
+  factory RemixSpinnerStyle.size(double value) =>
+      RemixSpinnerStyle().size(value);
+
+  factory RemixSpinnerStyle.strokeWidth(double value) =>
+      RemixSpinnerStyle().strokeWidth(value);
+
+  factory RemixSpinnerStyle.trackColor(Color value) =>
+      RemixSpinnerStyle().trackColor(value);
+
+  factory RemixSpinnerStyle.trackStrokeWidth(double value) =>
+      RemixSpinnerStyle().trackStrokeWidth(value);
+
   RemixSpinner call() {
     return RemixSpinner(style: this);
   }
