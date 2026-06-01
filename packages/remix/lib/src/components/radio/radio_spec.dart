@@ -6,8 +6,7 @@ part of 'radio.dart';
 /// building the control. It provides two [StyleSpec] segments representing the
 /// container (outer ring) and the indicator fill shown when the radio is selected.
 @MixableSpec()
-class RemixRadioSpec extends Spec<RemixRadioSpec>
-    with Diagnosticable, _$RemixRadioSpecMethods {
+class RemixRadioSpec with _$RemixRadioSpec {
   @override
   final StyleSpec<BoxSpec> container;
   @override

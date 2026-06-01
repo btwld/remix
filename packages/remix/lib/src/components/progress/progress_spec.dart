@@ -1,8 +1,7 @@
 part of 'progress.dart';
 
 @MixableSpec()
-class RemixProgressSpec extends Spec<RemixProgressSpec>
-    with Diagnosticable, _$RemixProgressSpecMethods {
+class RemixProgressSpec with _$RemixProgressSpec {
   @override
   final StyleSpec<BoxSpec> container;
   @override

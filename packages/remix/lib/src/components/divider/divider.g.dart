@@ -6,8 +6,11 @@ part of 'divider.dart';
 // SpecGenerator
 // **************************************************************************
 
-mixin _$RemixDividerSpecMethods on Spec<RemixDividerSpec>, Diagnosticable {
+mixin _$RemixDividerSpec implements Spec<RemixDividerSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
+
+  @override
+  Type get type => RemixDividerSpec;
 
   @override
   RemixDividerSpec copyWith({StyleSpec<BoxSpec>? container}) {
@@ -20,14 +23,55 @@ mixin _$RemixDividerSpecMethods on Spec<RemixDividerSpec>, Diagnosticable {
   }
 
   @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties..add(DiagnosticsProperty('container', container));
+  List<Object?> get props => [container];
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is RemixDividerSpec &&
+            runtimeType == other.runtimeType &&
+            propsEquals(props, other.props);
   }
 
   @override
-  List<Object?> get props => [container];
+  int get hashCode => propsHash(runtimeType, props);
+
+  @override
+  bool get stringify => true;
+
+  @override
+  Map<String, String> getDiff(Equatable other) {
+    if (this == other) return const {};
+
+    return propsDiff(props, other.props);
+  }
+
+  @override
+  String toStringShort() => '$runtimeType';
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) =>
+      toDiagnosticsNode(
+        style: DiagnosticsTreeStyle.singleLine,
+      ).toString(minLevel: minLevel);
+
+  @override
+  DiagnosticsNode toDiagnosticsNode({
+    String? name,
+    DiagnosticsTreeStyle? style,
+  }) =>
+      DiagnosticableNode<Diagnosticable>(name: name, value: this, style: style);
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    properties..add(DiagnosticsProperty('container', container));
+  }
 }
+
+@Deprecated(
+  'Rename to `_\$RemixDividerSpec` and migrate the class declaration to `class RemixDividerSpec with _\$RemixDividerSpec`. The `_\$RemixDividerSpecMethods` alias will be removed in mix_generator 3.0.',
+)
+typedef _$RemixDividerSpecMethods = _$RemixDividerSpec; // ignore: unused_element
 
 // **************************************************************************
 // StylerGenerator

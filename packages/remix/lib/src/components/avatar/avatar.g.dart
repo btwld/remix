@@ -6,10 +6,13 @@ part of 'avatar.dart';
 // SpecGenerator
 // **************************************************************************
 
-mixin _$RemixAvatarSpecMethods on Spec<RemixAvatarSpec>, Diagnosticable {
+mixin _$RemixAvatarSpec implements Spec<RemixAvatarSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
   StyleSpec<TextSpec> get text;
   StyleSpec<IconSpec> get icon;
+
+  @override
+  Type get type => RemixAvatarSpec;
 
   @override
   RemixAvatarSpec copyWith({
@@ -34,17 +37,58 @@ mixin _$RemixAvatarSpecMethods on Spec<RemixAvatarSpec>, Diagnosticable {
   }
 
   @override
+  List<Object?> get props => [container, text, icon];
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is RemixAvatarSpec &&
+            runtimeType == other.runtimeType &&
+            propsEquals(props, other.props);
+  }
+
+  @override
+  int get hashCode => propsHash(runtimeType, props);
+
+  @override
+  bool get stringify => true;
+
+  @override
+  Map<String, String> getDiff(Equatable other) {
+    if (this == other) return const {};
+
+    return propsDiff(props, other.props);
+  }
+
+  @override
+  String toStringShort() => '$runtimeType';
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) =>
+      toDiagnosticsNode(
+        style: DiagnosticsTreeStyle.singleLine,
+      ).toString(minLevel: minLevel);
+
+  @override
+  DiagnosticsNode toDiagnosticsNode({
+    String? name,
+    DiagnosticsTreeStyle? style,
+  }) =>
+      DiagnosticableNode<Diagnosticable>(name: name, value: this, style: style);
+
+  @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('text', text))
       ..add(DiagnosticsProperty('icon', icon));
   }
-
-  @override
-  List<Object?> get props => [container, text, icon];
 }
+
+@Deprecated(
+  'Rename to `_\$RemixAvatarSpec` and migrate the class declaration to `class RemixAvatarSpec with _\$RemixAvatarSpec`. The `_\$RemixAvatarSpecMethods` alias will be removed in mix_generator 3.0.',
+)
+typedef _$RemixAvatarSpecMethods = _$RemixAvatarSpec; // ignore: unused_element
 
 // **************************************************************************
 // StylerGenerator

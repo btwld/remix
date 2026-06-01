@@ -6,9 +6,12 @@ part of 'switch.dart';
 // SpecGenerator
 // **************************************************************************
 
-mixin _$RemixSwitchSpecMethods on Spec<RemixSwitchSpec>, Diagnosticable {
+mixin _$RemixSwitchSpec implements Spec<RemixSwitchSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
   StyleSpec<BoxSpec> get thumb;
+
+  @override
+  Type get type => RemixSwitchSpec;
 
   @override
   RemixSwitchSpec copyWith({
@@ -30,16 +33,57 @@ mixin _$RemixSwitchSpecMethods on Spec<RemixSwitchSpec>, Diagnosticable {
   }
 
   @override
+  List<Object?> get props => [container, thumb];
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is RemixSwitchSpec &&
+            runtimeType == other.runtimeType &&
+            propsEquals(props, other.props);
+  }
+
+  @override
+  int get hashCode => propsHash(runtimeType, props);
+
+  @override
+  bool get stringify => true;
+
+  @override
+  Map<String, String> getDiff(Equatable other) {
+    if (this == other) return const {};
+
+    return propsDiff(props, other.props);
+  }
+
+  @override
+  String toStringShort() => '$runtimeType';
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) =>
+      toDiagnosticsNode(
+        style: DiagnosticsTreeStyle.singleLine,
+      ).toString(minLevel: minLevel);
+
+  @override
+  DiagnosticsNode toDiagnosticsNode({
+    String? name,
+    DiagnosticsTreeStyle? style,
+  }) =>
+      DiagnosticableNode<Diagnosticable>(name: name, value: this, style: style);
+
+  @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('thumb', thumb));
   }
-
-  @override
-  List<Object?> get props => [container, thumb];
 }
+
+@Deprecated(
+  'Rename to `_\$RemixSwitchSpec` and migrate the class declaration to `class RemixSwitchSpec with _\$RemixSwitchSpec`. The `_\$RemixSwitchSpecMethods` alias will be removed in mix_generator 3.0.',
+)
+typedef _$RemixSwitchSpecMethods = _$RemixSwitchSpec; // ignore: unused_element
 
 // **************************************************************************
 // StylerGenerator

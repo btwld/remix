@@ -6,11 +6,14 @@ part of 'tooltip.dart';
 // SpecGenerator
 // **************************************************************************
 
-mixin _$RemixTooltipSpecMethods on Spec<RemixTooltipSpec>, Diagnosticable {
+mixin _$RemixTooltipSpec implements Spec<RemixTooltipSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
   StyleSpec<TextSpec> get label;
   Duration? get waitDuration;
   Duration? get showDuration;
+
+  @override
+  Type get type => RemixTooltipSpec;
 
   @override
   RemixTooltipSpec copyWith({
@@ -38,18 +41,59 @@ mixin _$RemixTooltipSpecMethods on Spec<RemixTooltipSpec>, Diagnosticable {
   }
 
   @override
+  List<Object?> get props => [container, label, waitDuration, showDuration];
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is RemixTooltipSpec &&
+            runtimeType == other.runtimeType &&
+            propsEquals(props, other.props);
+  }
+
+  @override
+  int get hashCode => propsHash(runtimeType, props);
+
+  @override
+  bool get stringify => true;
+
+  @override
+  Map<String, String> getDiff(Equatable other) {
+    if (this == other) return const {};
+
+    return propsDiff(props, other.props);
+  }
+
+  @override
+  String toStringShort() => '$runtimeType';
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) =>
+      toDiagnosticsNode(
+        style: DiagnosticsTreeStyle.singleLine,
+      ).toString(minLevel: minLevel);
+
+  @override
+  DiagnosticsNode toDiagnosticsNode({
+    String? name,
+    DiagnosticsTreeStyle? style,
+  }) =>
+      DiagnosticableNode<Diagnosticable>(name: name, value: this, style: style);
+
+  @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('label', label))
       ..add(DiagnosticsProperty('waitDuration', waitDuration))
       ..add(DiagnosticsProperty('showDuration', showDuration));
   }
-
-  @override
-  List<Object?> get props => [container, label, waitDuration, showDuration];
 }
+
+@Deprecated(
+  'Rename to `_\$RemixTooltipSpec` and migrate the class declaration to `class RemixTooltipSpec with _\$RemixTooltipSpec`. The `_\$RemixTooltipSpecMethods` alias will be removed in mix_generator 3.0.',
+)
+typedef _$RemixTooltipSpecMethods = _$RemixTooltipSpec; // ignore: unused_element
 
 // **************************************************************************
 // StylerGenerator

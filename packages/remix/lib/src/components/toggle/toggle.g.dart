@@ -6,10 +6,13 @@ part of 'toggle.dart';
 // SpecGenerator
 // **************************************************************************
 
-mixin _$RemixToggleSpecMethods on Spec<RemixToggleSpec>, Diagnosticable {
+mixin _$RemixToggleSpec implements Spec<RemixToggleSpec>, Diagnosticable {
   StyleSpec<FlexBoxSpec> get container;
   StyleSpec<TextSpec> get label;
   StyleSpec<IconSpec> get icon;
+
+  @override
+  Type get type => RemixToggleSpec;
 
   @override
   RemixToggleSpec copyWith({
@@ -34,17 +37,58 @@ mixin _$RemixToggleSpecMethods on Spec<RemixToggleSpec>, Diagnosticable {
   }
 
   @override
+  List<Object?> get props => [container, label, icon];
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is RemixToggleSpec &&
+            runtimeType == other.runtimeType &&
+            propsEquals(props, other.props);
+  }
+
+  @override
+  int get hashCode => propsHash(runtimeType, props);
+
+  @override
+  bool get stringify => true;
+
+  @override
+  Map<String, String> getDiff(Equatable other) {
+    if (this == other) return const {};
+
+    return propsDiff(props, other.props);
+  }
+
+  @override
+  String toStringShort() => '$runtimeType';
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) =>
+      toDiagnosticsNode(
+        style: DiagnosticsTreeStyle.singleLine,
+      ).toString(minLevel: minLevel);
+
+  @override
+  DiagnosticsNode toDiagnosticsNode({
+    String? name,
+    DiagnosticsTreeStyle? style,
+  }) =>
+      DiagnosticableNode<Diagnosticable>(name: name, value: this, style: style);
+
+  @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('label', label))
       ..add(DiagnosticsProperty('icon', icon));
   }
-
-  @override
-  List<Object?> get props => [container, label, icon];
 }
+
+@Deprecated(
+  'Rename to `_\$RemixToggleSpec` and migrate the class declaration to `class RemixToggleSpec with _\$RemixToggleSpec`. The `_\$RemixToggleSpecMethods` alias will be removed in mix_generator 3.0.',
+)
+typedef _$RemixToggleSpecMethods = _$RemixToggleSpec; // ignore: unused_element
 
 // **************************************************************************
 // StylerGenerator

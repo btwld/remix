@@ -1,8 +1,7 @@
 part of 'accordion.dart';
 
 @MixableSpec()
-class RemixAccordionSpec extends Spec<RemixAccordionSpec>
-    with Diagnosticable, _$RemixAccordionSpecMethods {
+class RemixAccordionSpec with _$RemixAccordionSpec {
   @override
   final StyleSpec<FlexBoxSpec> trigger;
   @override

@@ -1,8 +1,7 @@
 part of 'toggle.dart';
 
 @MixableSpec()
-class RemixToggleSpec extends Spec<RemixToggleSpec>
-    with Diagnosticable, _$RemixToggleSpecMethods {
+class RemixToggleSpec with _$RemixToggleSpec {
   @override
   final StyleSpec<FlexBoxSpec> container;
   @override

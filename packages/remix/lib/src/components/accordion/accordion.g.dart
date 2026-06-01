@@ -6,12 +6,15 @@ part of 'accordion.dart';
 // SpecGenerator
 // **************************************************************************
 
-mixin _$RemixAccordionSpecMethods on Spec<RemixAccordionSpec>, Diagnosticable {
+mixin _$RemixAccordionSpec implements Spec<RemixAccordionSpec>, Diagnosticable {
   StyleSpec<FlexBoxSpec> get trigger;
   StyleSpec<IconSpec> get leadingIcon;
   StyleSpec<TextSpec> get title;
   StyleSpec<IconSpec> get trailingIcon;
   StyleSpec<BoxSpec> get content;
+
+  @override
+  Type get type => RemixAccordionSpec;
 
   @override
   RemixAccordionSpec copyWith({
@@ -42,17 +45,6 @@ mixin _$RemixAccordionSpecMethods on Spec<RemixAccordionSpec>, Diagnosticable {
   }
 
   @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('trigger', trigger))
-      ..add(DiagnosticsProperty('leadingIcon', leadingIcon))
-      ..add(DiagnosticsProperty('title', title))
-      ..add(DiagnosticsProperty('trailingIcon', trailingIcon))
-      ..add(DiagnosticsProperty('content', content));
-  }
-
-  @override
   List<Object?> get props => [
     trigger,
     leadingIcon,
@@ -60,7 +52,59 @@ mixin _$RemixAccordionSpecMethods on Spec<RemixAccordionSpec>, Diagnosticable {
     trailingIcon,
     content,
   ];
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is RemixAccordionSpec &&
+            runtimeType == other.runtimeType &&
+            propsEquals(props, other.props);
+  }
+
+  @override
+  int get hashCode => propsHash(runtimeType, props);
+
+  @override
+  bool get stringify => true;
+
+  @override
+  Map<String, String> getDiff(Equatable other) {
+    if (this == other) return const {};
+
+    return propsDiff(props, other.props);
+  }
+
+  @override
+  String toStringShort() => '$runtimeType';
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) =>
+      toDiagnosticsNode(
+        style: DiagnosticsTreeStyle.singleLine,
+      ).toString(minLevel: minLevel);
+
+  @override
+  DiagnosticsNode toDiagnosticsNode({
+    String? name,
+    DiagnosticsTreeStyle? style,
+  }) =>
+      DiagnosticableNode<Diagnosticable>(name: name, value: this, style: style);
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    properties
+      ..add(DiagnosticsProperty('trigger', trigger))
+      ..add(DiagnosticsProperty('leadingIcon', leadingIcon))
+      ..add(DiagnosticsProperty('title', title))
+      ..add(DiagnosticsProperty('trailingIcon', trailingIcon))
+      ..add(DiagnosticsProperty('content', content));
+  }
 }
+
+@Deprecated(
+  'Rename to `_\$RemixAccordionSpec` and migrate the class declaration to `class RemixAccordionSpec with _\$RemixAccordionSpec`. The `_\$RemixAccordionSpecMethods` alias will be removed in mix_generator 3.0.',
+)
+typedef _$RemixAccordionSpecMethods = _$RemixAccordionSpec; // ignore: unused_element
 
 // **************************************************************************
 // StylerGenerator

@@ -1,8 +1,7 @@
 part of 'callout.dart';
 
 @MixableSpec()
-class RemixCalloutSpec extends Spec<RemixCalloutSpec>
-    with Diagnosticable, _$RemixCalloutSpecMethods {
+class RemixCalloutSpec with _$RemixCalloutSpec {
   @override
   final StyleSpec<FlexBoxSpec> container;
   @override

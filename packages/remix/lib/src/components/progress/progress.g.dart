@@ -6,11 +6,14 @@ part of 'progress.dart';
 // SpecGenerator
 // **************************************************************************
 
-mixin _$RemixProgressSpecMethods on Spec<RemixProgressSpec>, Diagnosticable {
+mixin _$RemixProgressSpec implements Spec<RemixProgressSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
   StyleSpec<BoxSpec> get track;
   StyleSpec<BoxSpec> get indicator;
   StyleSpec<BoxSpec> get trackContainer;
+
+  @override
+  Type get type => RemixProgressSpec;
 
   @override
   RemixProgressSpec copyWith({
@@ -38,18 +41,59 @@ mixin _$RemixProgressSpecMethods on Spec<RemixProgressSpec>, Diagnosticable {
   }
 
   @override
+  List<Object?> get props => [container, track, indicator, trackContainer];
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is RemixProgressSpec &&
+            runtimeType == other.runtimeType &&
+            propsEquals(props, other.props);
+  }
+
+  @override
+  int get hashCode => propsHash(runtimeType, props);
+
+  @override
+  bool get stringify => true;
+
+  @override
+  Map<String, String> getDiff(Equatable other) {
+    if (this == other) return const {};
+
+    return propsDiff(props, other.props);
+  }
+
+  @override
+  String toStringShort() => '$runtimeType';
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) =>
+      toDiagnosticsNode(
+        style: DiagnosticsTreeStyle.singleLine,
+      ).toString(minLevel: minLevel);
+
+  @override
+  DiagnosticsNode toDiagnosticsNode({
+    String? name,
+    DiagnosticsTreeStyle? style,
+  }) =>
+      DiagnosticableNode<Diagnosticable>(name: name, value: this, style: style);
+
+  @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('track', track))
       ..add(DiagnosticsProperty('indicator', indicator))
       ..add(DiagnosticsProperty('trackContainer', trackContainer));
   }
-
-  @override
-  List<Object?> get props => [container, track, indicator, trackContainer];
 }
+
+@Deprecated(
+  'Rename to `_\$RemixProgressSpec` and migrate the class declaration to `class RemixProgressSpec with _\$RemixProgressSpec`. The `_\$RemixProgressSpecMethods` alias will be removed in mix_generator 3.0.',
+)
+typedef _$RemixProgressSpecMethods = _$RemixProgressSpec; // ignore: unused_element
 
 // **************************************************************************
 // StylerGenerator
