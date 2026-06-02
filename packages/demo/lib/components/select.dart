@@ -19,11 +19,8 @@ Widget buildSelectUseCase(BuildContext context) {
     initialOption: FortalSelectSize.size3,
   );
 
-  final styleSelect = FortalSelectStyles.create(variant: variant, size: size);
-  final styleItems = FortalSelectItemStyles.create(
-    variant: variant,
-    size: size,
-  );
+  final styleSelect = fortalSelectStyle(variant: variant, size: size);
+  final styleItems = fortalSelectMenuItemStyle(variant: variant, size: size);
   String selectedValue = 'Apple';
   return KeyedSubtree(
     key: _key,

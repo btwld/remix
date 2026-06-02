@@ -12,7 +12,7 @@ Widget buildCardUseCase(BuildContext context) {
     child: Scaffold(
       body: Center(
         child: RemixCard(
-          style: FortalCardStyles.create(
+          style: fortalCardStyle(
             variant: context.knobs.object.dropdown(
               label: 'variant',
               options: FortalCardVariant.values,
@@ -31,7 +31,7 @@ Widget buildCardUseCase(BuildContext context) {
             children: [
               RemixAvatar(
                 label: 'LF',
-                style: FortalAvatarStyles.create(
+                style: fortalAvatarStyle(
                   variant: FortalAvatarVariant.solid,
                   size: FortalAvatarSize.size3,
                 ),

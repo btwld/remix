@@ -3,11 +3,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
 void main() {
-  group('SpinnerStyleMixin Tests', () {
-    test('spinnerIndicatorColor method works', () {
+  group('RemixButtonStyler spinner nesting', () {
+    test('spinner indicator color can be set through nested shorthand', () {
       const testColor = Colors.red;
-      final originalStyle = RemixButtonStyle();
-      final modifiedStyle = originalStyle.spinnerIndicatorColor(testColor);
+      final originalStyle = RemixButtonStyler();
+      final modifiedStyle = originalStyle.spinner(.indicatorColor(testColor));
 
       final expectedSpinner = Prop.maybeMix(
         RemixSpinnerStyle(indicatorColor: testColor),
@@ -17,10 +17,10 @@ void main() {
       expect(modifiedStyle.$spinner, equals(expectedSpinner));
     });
 
-    test('spinnerTrackColor method works', () {
+    test('spinner track color can be set through nested shorthand', () {
       const testColor = Colors.blue;
-      final originalStyle = RemixButtonStyle();
-      final modifiedStyle = originalStyle.spinnerTrackColor(testColor);
+      final originalStyle = RemixButtonStyler();
+      final modifiedStyle = originalStyle.spinner(.trackColor(testColor));
 
       final expectedSpinner = Prop.maybeMix(
         RemixSpinnerStyle(trackColor: testColor),
@@ -30,10 +30,10 @@ void main() {
       expect(modifiedStyle.$spinner, equals(expectedSpinner));
     });
 
-    test('spinnerSize method works', () {
+    test('spinner size can be set through nested shorthand', () {
       const testSize = 32.0;
-      final originalStyle = RemixButtonStyle();
-      final modifiedStyle = originalStyle.spinnerSize(testSize);
+      final originalStyle = RemixButtonStyler();
+      final modifiedStyle = originalStyle.spinner(.size(testSize));
 
       final expectedSpinner = Prop.maybeMix(RemixSpinnerStyle(size: testSize));
 
@@ -41,10 +41,10 @@ void main() {
       expect(modifiedStyle.$spinner, equals(expectedSpinner));
     });
 
-    test('spinnerStrokeWidth method works', () {
+    test('spinner stroke width can be set through nested shorthand', () {
       const testWidth = 3.0;
-      final originalStyle = RemixButtonStyle();
-      final modifiedStyle = originalStyle.spinnerStrokeWidth(testWidth);
+      final originalStyle = RemixButtonStyler();
+      final modifiedStyle = originalStyle.spinner(.strokeWidth(testWidth));
 
       final expectedSpinner = Prop.maybeMix(
         RemixSpinnerStyle(strokeWidth: testWidth),
@@ -54,10 +54,10 @@ void main() {
       expect(modifiedStyle.$spinner, equals(expectedSpinner));
     });
 
-    test('spinnerTrackStrokeWidth method works', () {
+    test('spinner track stroke width can be set through nested shorthand', () {
       const testWidth = 2.5;
-      final originalStyle = RemixButtonStyle();
-      final modifiedStyle = originalStyle.spinnerTrackStrokeWidth(testWidth);
+      final originalStyle = RemixButtonStyler();
+      final modifiedStyle = originalStyle.spinner(.trackStrokeWidth(testWidth));
 
       final expectedSpinner = Prop.maybeMix(
         RemixSpinnerStyle(trackStrokeWidth: testWidth),
@@ -67,10 +67,10 @@ void main() {
       expect(modifiedStyle.$spinner, equals(expectedSpinner));
     });
 
-    test('spinnerDuration method works', () {
+    test('spinner duration can be set through nested shorthand', () {
       const testDuration = Duration(milliseconds: 800);
-      final originalStyle = RemixButtonStyle();
-      final modifiedStyle = originalStyle.spinnerDuration(testDuration);
+      final originalStyle = RemixButtonStyler();
+      final modifiedStyle = originalStyle.spinner(.duration(testDuration));
 
       final expectedSpinner = Prop.maybeMix(
         RemixSpinnerStyle(duration: testDuration),
@@ -80,48 +80,14 @@ void main() {
       expect(modifiedStyle.$spinner, equals(expectedSpinner));
     });
 
-    test('convenience duration methods work', () {
-      final originalStyle = RemixButtonStyle();
-
-      // Test convenience duration methods
-      final fastStyle = originalStyle.spinnerFast();
-      final normalStyle = originalStyle.spinnerNormal();
-      final slowStyle = originalStyle.spinnerSlow();
-
-      expect(
-        fastStyle.$spinner,
-        equals(
-          Prop.maybeMix(
-            RemixSpinnerStyle(duration: const Duration(milliseconds: 500)),
-          ),
-        ),
-      );
-      expect(
-        normalStyle.$spinner,
-        equals(
-          Prop.maybeMix(
-            RemixSpinnerStyle(duration: const Duration(milliseconds: 1000)),
-          ),
-        ),
-      );
-      expect(
-        slowStyle.$spinner,
-        equals(
-          Prop.maybeMix(
-            RemixSpinnerStyle(duration: const Duration(milliseconds: 1500)),
-          ),
-        ),
-      );
-    });
-
-    testWidgets('spinner methods can be chained together', (tester) async {
-      final originalStyle = RemixButtonStyle();
+    testWidgets('spinner styles can be chained together', (tester) async {
+      final originalStyle = RemixButtonStyler();
       final chainedStyle = originalStyle
-          .spinnerIndicatorColor(Colors.blue)
-          .spinnerTrackColor(Colors.blue.withValues(alpha: 0.2))
-          .spinnerSize(28.0)
-          .spinnerStrokeWidth(2.5)
-          .spinnerFast();
+          .spinner(.indicatorColor(Colors.blue))
+          .spinner(.trackColor(Colors.blue.withValues(alpha: 0.2)))
+          .spinner(.size(28.0))
+          .spinner(.strokeWidth(2.5))
+          .spinner(.duration(const Duration(milliseconds: 500)));
 
       expect(chainedStyle, isNot(same(originalStyle)));
 
@@ -147,37 +113,17 @@ void main() {
       );
     });
 
-    test('spinner helpers can be chained with other mixins', () {
-      final combinedStyle = RemixButtonStyle()
-          .labelColor(Colors.white)
-          .iconColor(Colors.white)
-          .spinnerIndicatorColor(Colors.white)
+    test('spinner nesting can be chained with label and icon nesting', () {
+      final combinedStyle = RemixButtonStyler()
+          .label(.color(Colors.white))
+          .icon(.color(Colors.white))
+          .spinner(.indicatorColor(Colors.white))
           .color(Colors.blue);
 
       expect(
         combinedStyle.$spinner,
         equals(Prop.maybeMix(RemixSpinnerStyle(indicatorColor: Colors.white))),
       );
-    });
-
-    test('all spinner helper methods execute without errors', () {
-      final style = RemixButtonStyle();
-
-      expect(() => style.spinnerIndicatorColor(Colors.red), returnsNormally);
-      expect(
-        () => style.spinnerTrackColor(Colors.red.withValues(alpha: 0.2)),
-        returnsNormally,
-      );
-      expect(() => style.spinnerSize(24.0), returnsNormally);
-      expect(() => style.spinnerStrokeWidth(2.0), returnsNormally);
-      expect(() => style.spinnerTrackStrokeWidth(1.5), returnsNormally);
-      expect(
-        () => style.spinnerDuration(const Duration(seconds: 1)),
-        returnsNormally,
-      );
-      expect(() => style.spinnerFast(), returnsNormally);
-      expect(() => style.spinnerNormal(), returnsNormally);
-      expect(() => style.spinnerSlow(), returnsNormally);
     });
   });
 }

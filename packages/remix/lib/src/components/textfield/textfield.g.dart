@@ -6,7 +6,7 @@ part of 'textfield.dart';
 // SpecGenerator
 // **************************************************************************
 
-mixin _$RemixTextFieldSpecMethods on Spec<RemixTextFieldSpec>, Diagnosticable {
+mixin _$RemixTextFieldSpec implements Spec<RemixTextFieldSpec>, Diagnosticable {
   StyleSpec<TextSpec> get text;
   StyleSpec<TextSpec> get hintText;
   TextAlign? get textAlign;
@@ -24,6 +24,9 @@ mixin _$RemixTextFieldSpecMethods on Spec<RemixTextFieldSpec>, Diagnosticable {
   StyleSpec<FlexBoxSpec> get container;
   StyleSpec<TextSpec> get helperText;
   StyleSpec<TextSpec> get label;
+
+  @override
+  Type get type => RemixTextFieldSpec;
 
   @override
   RemixTextFieldSpec copyWith({
@@ -107,29 +110,6 @@ mixin _$RemixTextFieldSpecMethods on Spec<RemixTextFieldSpec>, Diagnosticable {
   }
 
   @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('text', text))
-      ..add(DiagnosticsProperty('hintText', hintText))
-      ..add(EnumProperty<TextAlign>('textAlign', textAlign))
-      ..add(DoubleProperty('cursorWidth', cursorWidth))
-      ..add(DoubleProperty('cursorHeight', cursorHeight))
-      ..add(DiagnosticsProperty('cursorRadius', cursorRadius))
-      ..add(ColorProperty('cursorColor', cursorColor))
-      ..add(DiagnosticsProperty('cursorOffset', cursorOffset))
-      ..add(DiagnosticsProperty('selectionHeightStyle', selectionHeightStyle))
-      ..add(DiagnosticsProperty('selectionWidthStyle', selectionWidthStyle))
-      ..add(DiagnosticsProperty('scrollPadding', scrollPadding))
-      ..add(DiagnosticsProperty('keyboardAppearance', keyboardAppearance))
-      ..add(DiagnosticsProperty('cursorOpacityAnimates', cursorOpacityAnimates))
-      ..add(DoubleProperty('spacing', spacing))
-      ..add(DiagnosticsProperty('container', container))
-      ..add(DiagnosticsProperty('helperText', helperText))
-      ..add(DiagnosticsProperty('label', label));
-  }
-
-  @override
   List<Object?> get props => [
     text,
     hintText,
@@ -149,6 +129,316 @@ mixin _$RemixTextFieldSpecMethods on Spec<RemixTextFieldSpec>, Diagnosticable {
     helperText,
     label,
   ];
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is RemixTextFieldSpec &&
+            runtimeType == other.runtimeType &&
+            propsEquals(props, other.props);
+  }
+
+  @override
+  int get hashCode => propsHash(runtimeType, props);
+
+  @override
+  bool get stringify => true;
+
+  @override
+  Map<String, String> getDiff(Equatable other) {
+    if (this == other) return const {};
+
+    return propsDiff(props, other.props);
+  }
+
+  @override
+  String toStringShort() => '$runtimeType';
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) =>
+      toDiagnosticsNode(
+        style: DiagnosticsTreeStyle.singleLine,
+      ).toString(minLevel: minLevel);
+
+  @override
+  DiagnosticsNode toDiagnosticsNode({
+    String? name,
+    DiagnosticsTreeStyle? style,
+  }) =>
+      DiagnosticableNode<Diagnosticable>(name: name, value: this, style: style);
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    properties
+      ..add(DiagnosticsProperty('text', text))
+      ..add(DiagnosticsProperty('hintText', hintText))
+      ..add(EnumProperty<TextAlign>('textAlign', textAlign))
+      ..add(DoubleProperty('cursorWidth', cursorWidth))
+      ..add(DoubleProperty('cursorHeight', cursorHeight))
+      ..add(DiagnosticsProperty('cursorRadius', cursorRadius))
+      ..add(ColorProperty('cursorColor', cursorColor))
+      ..add(DiagnosticsProperty('cursorOffset', cursorOffset))
+      ..add(DiagnosticsProperty('selectionHeightStyle', selectionHeightStyle))
+      ..add(DiagnosticsProperty('selectionWidthStyle', selectionWidthStyle))
+      ..add(DiagnosticsProperty('scrollPadding', scrollPadding))
+      ..add(DiagnosticsProperty('keyboardAppearance', keyboardAppearance))
+      ..add(DiagnosticsProperty('cursorOpacityAnimates', cursorOpacityAnimates))
+      ..add(DoubleProperty('spacing', spacing))
+      ..add(DiagnosticsProperty('container', container))
+      ..add(DiagnosticsProperty('helperText', helperText))
+      ..add(DiagnosticsProperty('label', label));
+  }
+}
+
+@Deprecated(
+  'Rename to `_\$RemixTextFieldSpec` and migrate the class declaration to `class RemixTextFieldSpec with _\$RemixTextFieldSpec`. The `_\$RemixTextFieldSpecMethods` alias will be removed in mix_generator 3.0.',
+)
+typedef _$RemixTextFieldSpecMethods = _$RemixTextFieldSpec; // ignore: unused_element
+
+// **************************************************************************
+// MixWidgetGenerator
+// **************************************************************************
+
+class FortalTextField extends StatelessWidget {
+  const FortalTextField({
+    super.key,
+    this.variant = .surface,
+    this.size = .size2,
+    this.controller,
+    this.focusNode,
+    this.keyboardType,
+    this.textInputAction,
+    this.textCapitalization = .none,
+    this.textDirection,
+    this.readOnly = false,
+    this.showCursor,
+    this.autofocus = false,
+    this.obscuringCharacter = '•',
+    this.obscureText = false,
+    this.autocorrect = true,
+    this.enableSuggestions = true,
+    this.smartDashesType,
+    this.smartQuotesType,
+    this.maxLines = 1,
+    this.minLines,
+    this.expands = false,
+    this.maxLength,
+    this.maxLengthEnforcement,
+    this.onChanged,
+    this.onEditingComplete,
+    this.onSubmitted,
+    this.onAppPrivateCommand,
+    this.inputFormatters,
+    this.enabled = true,
+    this.dragStartBehavior = .start,
+    this.enableInteractiveSelection = true,
+    this.selectionControls,
+    this.onTapOutside,
+    this.onPressUpOutside,
+    this.onTapAlwaysCalled = false,
+    this.scrollController,
+    this.scrollPhysics,
+    this.autofillHints,
+    this.contentInsertionConfiguration,
+    this.clipBehavior = .hardEdge,
+    this.restorationId,
+    this.stylusHandwritingEnabled = true,
+    this.enableIMEPersonalizedLearning = true,
+    this.contextMenuBuilder,
+    this.spellCheckConfiguration,
+    this.magnifierConfiguration,
+    this.canRequestFocus = true,
+    this.ignorePointers,
+    this.undoController,
+    this.groupId = EditableText,
+    this.hintText,
+    this.helperText,
+    this.label,
+    this.error = false,
+    this.leading,
+    this.trailing,
+    this.semanticLabel,
+    this.semanticHint,
+    this.excludeSemantics = false,
+  });
+
+  final FortalTextFieldVariant variant;
+
+  final FortalTextFieldSize size;
+
+  final TextEditingController? controller;
+
+  final FocusNode? focusNode;
+
+  final TextInputType? keyboardType;
+
+  final TextInputAction? textInputAction;
+
+  final TextCapitalization textCapitalization;
+
+  final TextDirection? textDirection;
+
+  final bool readOnly;
+
+  final bool? showCursor;
+
+  final bool autofocus;
+
+  final String obscuringCharacter;
+
+  final bool obscureText;
+
+  final bool autocorrect;
+
+  final bool enableSuggestions;
+
+  final SmartDashesType? smartDashesType;
+
+  final SmartQuotesType? smartQuotesType;
+
+  final int? maxLines;
+
+  final int? minLines;
+
+  final bool expands;
+
+  final int? maxLength;
+
+  final MaxLengthEnforcement? maxLengthEnforcement;
+
+  final ValueChanged<String>? onChanged;
+
+  final VoidCallback? onEditingComplete;
+
+  final ValueChanged<String>? onSubmitted;
+
+  final AppPrivateCommandCallback? onAppPrivateCommand;
+
+  final List<TextInputFormatter>? inputFormatters;
+
+  final bool enabled;
+
+  final DragStartBehavior dragStartBehavior;
+
+  final bool enableInteractiveSelection;
+
+  final TextSelectionControls? selectionControls;
+
+  final TapRegionCallback? onTapOutside;
+
+  final TapRegionUpCallback? onPressUpOutside;
+
+  final bool onTapAlwaysCalled;
+
+  final ScrollController? scrollController;
+
+  final ScrollPhysics? scrollPhysics;
+
+  final Iterable<String>? autofillHints;
+
+  final ContentInsertionConfiguration? contentInsertionConfiguration;
+
+  final Clip clipBehavior;
+
+  final String? restorationId;
+
+  final bool stylusHandwritingEnabled;
+
+  final bool enableIMEPersonalizedLearning;
+
+  final EditableTextContextMenuBuilder? contextMenuBuilder;
+
+  final SpellCheckConfiguration? spellCheckConfiguration;
+
+  final TextMagnifierConfiguration? magnifierConfiguration;
+
+  final bool canRequestFocus;
+
+  final bool? ignorePointers;
+
+  final UndoHistoryController? undoController;
+
+  final Object groupId;
+
+  final String? hintText;
+
+  final String? helperText;
+
+  final String? label;
+
+  final bool error;
+
+  final Widget? leading;
+
+  final Widget? trailing;
+
+  final String? semanticLabel;
+
+  final String? semanticHint;
+
+  final bool excludeSemantics;
+
+  @override
+  Widget build(BuildContext context) {
+    return fortalTextFieldStyle(variant: this.variant, size: this.size).call(
+      controller: this.controller,
+      focusNode: this.focusNode,
+      keyboardType: this.keyboardType,
+      textInputAction: this.textInputAction,
+      textCapitalization: this.textCapitalization,
+      textDirection: this.textDirection,
+      readOnly: this.readOnly,
+      showCursor: this.showCursor,
+      autofocus: this.autofocus,
+      obscuringCharacter: this.obscuringCharacter,
+      obscureText: this.obscureText,
+      autocorrect: this.autocorrect,
+      enableSuggestions: this.enableSuggestions,
+      smartDashesType: this.smartDashesType,
+      smartQuotesType: this.smartQuotesType,
+      maxLines: this.maxLines,
+      minLines: this.minLines,
+      expands: this.expands,
+      maxLength: this.maxLength,
+      maxLengthEnforcement: this.maxLengthEnforcement,
+      onChanged: this.onChanged,
+      onEditingComplete: this.onEditingComplete,
+      onSubmitted: this.onSubmitted,
+      onAppPrivateCommand: this.onAppPrivateCommand,
+      inputFormatters: this.inputFormatters,
+      enabled: this.enabled,
+      dragStartBehavior: this.dragStartBehavior,
+      enableInteractiveSelection: this.enableInteractiveSelection,
+      selectionControls: this.selectionControls,
+      onTapOutside: this.onTapOutside,
+      onPressUpOutside: this.onPressUpOutside,
+      onTapAlwaysCalled: this.onTapAlwaysCalled,
+      scrollController: this.scrollController,
+      scrollPhysics: this.scrollPhysics,
+      autofillHints: this.autofillHints,
+      contentInsertionConfiguration: this.contentInsertionConfiguration,
+      clipBehavior: this.clipBehavior,
+      restorationId: this.restorationId,
+      stylusHandwritingEnabled: this.stylusHandwritingEnabled,
+      enableIMEPersonalizedLearning: this.enableIMEPersonalizedLearning,
+      contextMenuBuilder: this.contextMenuBuilder,
+      spellCheckConfiguration: this.spellCheckConfiguration,
+      magnifierConfiguration: this.magnifierConfiguration,
+      canRequestFocus: this.canRequestFocus,
+      ignorePointers: this.ignorePointers,
+      undoController: this.undoController,
+      groupId: this.groupId,
+      hintText: this.hintText,
+      helperText: this.helperText,
+      label: this.label,
+      error: this.error,
+      leading: this.leading,
+      trailing: this.trailing,
+      semanticLabel: this.semanticLabel,
+      semanticHint: this.semanticHint,
+      excludeSemantics: this.excludeSemantics,
+    );
+  }
 }
 
 // **************************************************************************
@@ -313,7 +603,7 @@ mixin _$RemixTextFieldStyleMixin on Style<RemixTextFieldSpec>, Diagnosticable {
     );
   }
 
-  /// Resolves to [StyleSpec<RemixTextFieldSpec>] using context.
+  /// Resolves to [StyleSpec<RemixTextFieldSpec>] using [context].
   @override
   StyleSpec<RemixTextFieldSpec> resolve(BuildContext context) {
     final spec = RemixTextFieldSpec(

@@ -38,31 +38,22 @@ Widget buildMenuUseCase(BuildContext context) {
                 label: 'Menu',
                 icon: Icons.keyboard_arrow_down,
               ),
-              style: FortalMenuStyles.create(variant: variant, size: size),
+              style: fortalMenuStyle(variant: variant, size: size),
               items: [
                 RemixMenuItem(
                   label: 'Item 1',
                   value: 'item1',
-                  style: FortalMenuItemStyles.create(
-                    variant: variant,
-                    size: size,
-                  ),
+                  style: fortalMenuItemStyle(variant: variant, size: size),
                 ),
                 RemixMenuItem(
                   label: 'Item 2',
                   value: 'item2',
-                  style: FortalMenuItemStyles.create(
-                    variant: variant,
-                    size: size,
-                  ),
+                  style: fortalMenuItemStyle(variant: variant, size: size),
                 ),
                 RemixMenuItem(
                   label: 'Item 3',
                   value: 'item3',
-                  style: FortalMenuItemStyles.create(
-                    variant: variant,
-                    size: size,
-                  ),
+                  style: fortalMenuItemStyle(variant: variant, size: size),
                 ),
               ],
               onSelected: (value) {},

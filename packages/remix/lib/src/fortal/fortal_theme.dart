@@ -893,9 +893,9 @@ Map<MixToken, Object> _buildFortalScopeTokens({
 /// Example:
 /// ```dart
 /// FortalScope(
-///   accent: FortalAccentColor.blue,
-///   gray: FortalGrayColor.slate,
-///   brightness: Brightness.light,
+///   accent: .blue,
+///   gray: .slate,
+///   brightness: .light,
 ///   child: MyApp(),
 /// )
 /// ```
@@ -912,9 +912,9 @@ Map<MixToken, Object> _buildFortalScopeTokens({
 class FortalScope extends StatelessWidget {
   const FortalScope({
     super.key,
-    this.accent = FortalAccentColor.indigo,
-    this.gray = FortalGrayColor.slate,
-    this.brightness = Brightness.light,
+    this.accent = .indigo,
+    this.gray = .slate,
+    this.brightness = .light,
     this.orderOfModifiers,
     required this.child,
   });
@@ -994,13 +994,13 @@ enum FortalGrayColor { gray, mauve, slate, sage, olive, sand }
 /// Example:
 /// ```dart
 /// const theme = FortalThemeConfig(
-///   accent: FortalAccentColor.green,
-///   gray: FortalGrayColor.sage,
-///   brightness: Brightness.dark,
+///   accent: .green,
+///   gray: .sage,
+///   brightness: .dark,
 /// );
 ///
 /// // Create variants
-/// final lightTheme = theme.copyWith(brightness: Brightness.light);
+/// final lightTheme = theme.copyWith(brightness: .light);
 ///
 /// // Apply to widgets
 /// theme.createScope(child: MyApp())

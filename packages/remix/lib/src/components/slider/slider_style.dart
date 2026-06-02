@@ -1,7 +1,10 @@
 part of 'slider.dart';
 
+@MixableStyler()
 class RemixSliderStyle
-    extends RemixContainerStyle<RemixSliderSpec, RemixSliderStyle> {
+    extends RemixContainerStyle<RemixSliderSpec, RemixSliderStyle>
+    with Diagnosticable, _$RemixSliderStyleMixin {
+  @MixableField(setterType: BoxStyler)
   final Prop<StyleSpec<BoxSpec>>? $thumb;
   final Prop<Color>? $trackColor;
   final Prop<double>? $trackWidth;
@@ -96,49 +99,6 @@ class RemixSliderStyle
     return merge(RemixSliderStyle(rangeWidth: value));
   }
 
-  /// Creates a [RemixSlider] widget with this style applied.
-  ///
-  /// Example:
-  /// ```dart
-  /// final slider = RemixSliderStyle()
-  ///   .thumbColor(Colors.blue)
-  ///   .rangeColor(Colors.blue.shade200);
-  ///
-  /// // Use it like a function
-  /// slider(
-  ///   value: _sliderValue,
-  ///   onChanged: (value) => setState(() => _sliderValue = value),
-  /// )
-  /// ```
-  RemixSlider call({
-    required double value,
-    required ValueChanged<double>? onChanged,
-    double min = 0.0,
-    double max = 1.0,
-    ValueChanged<double>? onChangeStart,
-    ValueChanged<double>? onChangeEnd,
-    bool enabled = true,
-    bool enableHapticFeedback = true,
-    FocusNode? focusNode,
-    bool autofocus = false,
-    int? snapDivisions,
-  }) {
-    return RemixSlider(
-      min: min,
-      max: max,
-      onChanged: onChanged,
-      value: value,
-      onChangeEnd: onChangeEnd,
-      onChangeStart: onChangeStart,
-      style: this,
-      enabled: enabled,
-      enableHapticFeedback: enableHapticFeedback,
-      focusNode: focusNode,
-      autofocus: autofocus,
-      snapDivisions: snapDivisions,
-    );
-  }
-
   // RemixContainerStyle mixin implementations
   @override
   RemixSliderStyle padding(EdgeInsetsGeometryMix value) {
@@ -213,61 +173,46 @@ class RemixSliderStyle
     );
   }
 
-  @override
-  StyleSpec<RemixSliderSpec> resolve(BuildContext context) {
-    return StyleSpec(
-      spec: RemixSliderSpec(
-        thumb: MixOps.resolve(context, $thumb),
-        trackColor: MixOps.resolve(context, $trackColor),
-        trackWidth: MixOps.resolve(context, $trackWidth),
-        rangeColor: MixOps.resolve(context, $rangeColor),
-        rangeWidth: MixOps.resolve(context, $rangeWidth),
-      ),
-      animation: $animation,
-      widgetModifiers: $modifier?.resolve(context),
+  /// Creates a [RemixSlider] widget with this style applied.
+  ///
+  /// Example:
+  /// ```dart
+  /// final slider = RemixSliderStyle()
+  ///   .thumbColor(Colors.blue)
+  ///   .rangeColor(Colors.blue.shade200);
+  ///
+  /// // Use it like a function
+  /// slider(
+  ///   value: _sliderValue,
+  ///   onChanged: (value) => setState(() => _sliderValue = value),
+  /// )
+  /// ```
+  RemixSlider call({
+    required double value,
+    required ValueChanged<double>? onChanged,
+    double min = 0.0,
+    double max = 1.0,
+    ValueChanged<double>? onChangeStart,
+    ValueChanged<double>? onChangeEnd,
+    bool enabled = true,
+    bool enableHapticFeedback = true,
+    FocusNode? focusNode,
+    bool autofocus = false,
+    int? snapDivisions,
+  }) {
+    return RemixSlider(
+      value: value,
+      onChanged: onChanged,
+      min: min,
+      max: max,
+      onChangeStart: onChangeStart,
+      onChangeEnd: onChangeEnd,
+      enabled: enabled,
+      enableHapticFeedback: enableHapticFeedback,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      snapDivisions: snapDivisions,
+      style: this,
     );
   }
-
-  @override
-  RemixSliderStyle merge(RemixSliderStyle? other) {
-    if (other == null) return this;
-
-    return RemixSliderStyle.create(
-      thumb: MixOps.merge($thumb, other.$thumb),
-      trackColor: MixOps.merge($trackColor, other.$trackColor),
-      trackWidth: MixOps.merge($trackWidth, other.$trackWidth),
-      rangeColor: MixOps.merge($rangeColor, other.$rangeColor),
-      rangeWidth: MixOps.merge($rangeWidth, other.$rangeWidth),
-      variants: MixOps.mergeVariants($variants, other.$variants),
-      animation: MixOps.mergeAnimation($animation, other.$animation),
-      modifier: MixOps.mergeModifier($modifier, other.$modifier),
-    );
-  }
-
-  @override
-  RemixSliderStyle variants(List<VariantStyle<RemixSliderSpec>> value) {
-    return merge(RemixSliderStyle(variants: value));
-  }
-
-  @override
-  RemixSliderStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixSliderStyle(modifier: value));
-  }
-
-  @override
-  RemixSliderStyle animate(AnimationConfig animation) {
-    return merge(RemixSliderStyle(animation: animation));
-  }
-
-  @override
-  List<Object?> get props => [
-    $thumb,
-    $trackColor,
-    $trackWidth,
-    $rangeColor,
-    $rangeWidth,
-    $variants,
-    $animation,
-    $modifier,
-  ];
 }

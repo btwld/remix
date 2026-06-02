@@ -4,248 +4,266 @@ enum FortalButtonSize { size1, size2, size3, size4 }
 
 enum FortalButtonVariant { solid, soft, surface, outline, ghost }
 
-/// FortalButtonStyle utility class for creating Fortal-themed button styles.
-///
-/// Provides factory constructor with variant and size parameters plus named
-/// static methods for direct access. Composes the correct base metrics,
-/// variant visuals, and size-specific styles sourced from the Fortal token JSON.
-class FortalButtonStyle {
-  const FortalButtonStyle._();
+/// Creates a Fortal-themed button style.
+RemixButtonStyler fortalButtonStyle({
+  FortalButtonVariant variant = .solid,
+  FortalButtonSize size = .size2,
+}) {
+  return switch (variant) {
+    .solid => _fortalButtonSolidStyle(size),
+    .soft => _fortalButtonSoftStyle(size),
+    .surface => _fortalButtonSurfaceStyle(size),
+    .outline => _fortalButtonOutlineStyle(size),
+    .ghost => _fortalButtonGhostStyle(size),
+  };
+}
 
-  /// Factory constructor for FortalButtonStyle with variant and size parameters.
-  ///
-  /// Returns a RemixButtonStyle configured with Fortal design tokens.
-  /// Defaults to solid variant with size2.
-  static RemixButtonStyle create({
-    FortalButtonVariant variant = .solid,
-    FortalButtonSize size = .size2,
-  }) {
-    return switch (variant) {
-      .solid => solid(size: size),
-      .soft => soft(size: size),
-      .surface => surface(size: size),
-      .outline => outline(size: size),
-      .ghost => ghost(size: size),
-    };
+class FortalButton extends StatelessWidget {
+  const FortalButton({
+    super.key,
+    this.variant = .solid,
+    this.size = .size2,
+    required this.label,
+    this.leadingIcon,
+    this.trailingIcon,
+    this.loading = false,
+    this.enabled = true,
+    this.enableFeedback = true,
+    required this.onPressed,
+    this.focusNode,
+  });
+
+  final FortalButtonVariant variant;
+
+  final FortalButtonSize size;
+
+  final String label;
+
+  final IconData? leadingIcon;
+
+  final IconData? trailingIcon;
+
+  final bool loading;
+
+  final bool enabled;
+
+  final bool enableFeedback;
+
+  final VoidCallback? onPressed;
+
+  final FocusNode? focusNode;
+
+  @override
+  Widget build(BuildContext context) {
+    return fortalButtonStyle(variant: variant, size: size).call(
+      label: label,
+      leadingIcon: leadingIcon,
+      trailingIcon: trailingIcon,
+      loading: loading,
+      enabled: enabled,
+      enableFeedback: enableFeedback,
+      onPressed: onPressed,
+      focusNode: focusNode,
+    );
   }
+}
 
-  static RemixButtonStyle base({FortalButtonSize size = .size2}) {
-    return RemixButtonStyle()
-        // Generic font weight (not size-specific)
-        .label(TextStyler().fontWeight(FortalTokens.fontWeightMedium()))
-        // Generic spinner properties (size set by _sizeStyle)
-        .spinner(
-          RemixSpinnerStyle(
-            strokeWidth: FortalTokens.borderWidth2(),
-            duration: const Duration(milliseconds: 800),
-          ),
-        )
-        // Focus ring (generic)
-        .onFocused(
-          RemixButtonStyle().borderAll(
-            color: FortalTokens.focusA8(),
-            width: FortalTokens.focusRingWidth(),
-          ),
-        )
-        // Merge with size-specific styles
-        .merge(_sizeStyle(size));
-  }
+RemixButtonStyler _fortalButtonBaseStyle(FortalButtonSize size) {
+  return RemixButtonStyler()
+      .label(TextStyler().fontWeight(FortalTokens.fontWeightMedium()))
+      .spinner(
+        .strokeWidth(
+          FortalTokens.borderWidth2(),
+        ).duration(const Duration(milliseconds: 800)),
+      )
+      .onFocused(
+        RemixButtonStyler().borderAll(
+          color: FortalTokens.focusA8(),
+          width: FortalTokens.focusRingWidth(),
+        ),
+      )
+      .merge(_fortalButtonSizeStyle(size));
+}
 
-  static RemixButtonStyle solid({FortalButtonSize size = .size2}) {
-    return base(size: size)
-        .color(FortalTokens.accent9())
-        .labelColor(FortalTokens.accentContrast())
-        .iconColor(FortalTokens.accentContrast())
-        .spinner(
-          RemixSpinnerStyle().indicatorColor(FortalTokens.accentContrast()),
-        )
-        .onHovered(RemixButtonStyle().color(FortalTokens.accent10()))
-        .onPressed(RemixButtonStyle().color(FortalTokens.accent10()))
-        .onDisabled(
-          RemixButtonStyle()
-              .color(FortalTokens.grayA3())
-              .labelColor(FortalTokens.gray8())
-              .iconColor(FortalTokens.gray8())
-              .spinner(
-                RemixSpinnerStyle()
-                    .indicatorColor(FortalTokens.gray8())
-                    .strokeWidth(FortalTokens.borderWidth1()),
-              ),
-        );
-  }
+RemixButtonStyler _fortalButtonSolidStyle([FortalButtonSize size = .size2]) {
+  return _fortalButtonBaseStyle(size)
+      .color(FortalTokens.accent9())
+      .label(.color(FortalTokens.accentContrast()))
+      .icon(.color(FortalTokens.accentContrast()))
+      .spinner(.indicatorColor(FortalTokens.accentContrast()))
+      .onHovered(RemixButtonStyler().color(FortalTokens.accent10()))
+      .onPressed(RemixButtonStyler().color(FortalTokens.accent10()))
+      .onDisabled(
+        RemixButtonStyler()
+            .color(FortalTokens.grayA3())
+            .label(.color(FortalTokens.gray8()))
+            .icon(.color(FortalTokens.gray8()))
+            .spinner(
+              .indicatorColor(
+                FortalTokens.gray8(),
+              ).strokeWidth(FortalTokens.borderWidth1()),
+            ),
+      );
+}
 
-  static RemixButtonStyle soft({FortalButtonSize size = .size2}) {
-    return base(size: size)
-        .color(FortalTokens.accent3())
-        .labelColor(FortalTokens.accent11())
-        .iconColor(FortalTokens.accent11())
-        .spinner(RemixSpinnerStyle().indicatorColor(FortalTokens.accent11()))
-        .onHovered(RemixButtonStyle().color(FortalTokens.accent4()))
-        .onPressed(RemixButtonStyle().color(FortalTokens.accent5()))
-        .onDisabled(
-          RemixButtonStyle()
-              .color(FortalTokens.grayA3())
-              .labelColor(FortalTokens.gray8())
-              .iconColor(FortalTokens.gray8())
-              .spinner(
-                RemixSpinnerStyle()
-                    .indicatorColor(FortalTokens.gray8())
-                    .strokeWidth(FortalTokens.borderWidth1()),
-              ),
-        );
-  }
+RemixButtonStyler _fortalButtonSoftStyle([FortalButtonSize size = .size2]) {
+  return _fortalButtonBaseStyle(size)
+      .color(FortalTokens.accent3())
+      .label(.color(FortalTokens.accent11()))
+      .icon(.color(FortalTokens.accent11()))
+      .spinner(.indicatorColor(FortalTokens.accent11()))
+      .onHovered(RemixButtonStyler().color(FortalTokens.accent4()))
+      .onPressed(RemixButtonStyler().color(FortalTokens.accent5()))
+      .onDisabled(
+        RemixButtonStyler()
+            .color(FortalTokens.grayA3())
+            .label(.color(FortalTokens.gray8()))
+            .icon(.color(FortalTokens.gray8()))
+            .spinner(
+              .indicatorColor(
+                FortalTokens.gray8(),
+              ).strokeWidth(FortalTokens.borderWidth1()),
+            ),
+      );
+}
 
-  static RemixButtonStyle surface({FortalButtonSize size = .size2}) {
-    return base(size: size)
-        .color(FortalTokens.accentA2())
-        .borderAll(
-          color: FortalTokens.accent6(),
+RemixButtonStyler _fortalButtonSurfaceStyle([FortalButtonSize size = .size2]) {
+  return _fortalButtonBaseStyle(size)
+      .color(FortalTokens.accentA2())
+      .borderAll(
+        color: FortalTokens.accent6(),
+        width: FortalTokens.borderWidth1(),
+      )
+      .label(.color(FortalTokens.accent11()))
+      .icon(.color(FortalTokens.accent11()))
+      .spinner(.indicatorColor(FortalTokens.accent11()))
+      .onHovered(
+        RemixButtonStyler().borderAll(
+          color: FortalTokens.accent8(),
           width: FortalTokens.borderWidth1(),
-        )
-        .labelColor(FortalTokens.accent11())
-        .iconColor(FortalTokens.accent11())
-        .spinner(RemixSpinnerStyle().indicatorColor(FortalTokens.accent11()))
-        .onHovered(
-          RemixButtonStyle().borderAll(
-            color: FortalTokens.accent8(),
-            width: FortalTokens.borderWidth1(),
-          ),
-        )
-        .onDisabled(
-          RemixButtonStyle()
-              .color(FortalTokens.grayA2())
-              .labelColor(FortalTokens.gray8())
-              .iconColor(FortalTokens.gray8())
-              .borderAll(
-                color: FortalTokens.gray5(),
-                width: FortalTokens.borderWidth1(),
-              )
-              .spinner(
-                RemixSpinnerStyle()
-                    .indicatorColor(FortalTokens.gray8())
-                    .strokeWidth(FortalTokens.borderWidth1()),
-              ),
-        );
-  }
-
-  static RemixButtonStyle outline({FortalButtonSize size = .size2}) {
-    return base(size: size)
-        .color(Colors.transparent)
-        .borderAll(
-          color: FortalTokens.accent7(),
-          width: FortalTokens.borderWidth1(),
-        )
-        .labelColor(FortalTokens.accent11())
-        .iconColor(FortalTokens.accent11())
-        .spinner(RemixSpinnerStyle().indicatorColor(FortalTokens.accent11()))
-        .onHovered(
-          RemixButtonStyle()
-              .color(FortalTokens.accentA2())
-              .borderAll(
-                color: FortalTokens.accent8(),
-                width: FortalTokens.borderWidth1(),
-              ),
-        )
-        .onDisabled(
-          RemixButtonStyle()
-              .labelColor(FortalTokens.gray8())
-              .iconColor(FortalTokens.gray8())
-              .borderAll(color: FortalTokens.gray5())
-              .spinner(
-                RemixSpinnerStyle()
-                    .indicatorColor(FortalTokens.gray8())
-                    .strokeWidth(FortalTokens.borderWidth1()),
-              ),
-        );
-  }
-
-  static RemixButtonStyle ghost({FortalButtonSize size = .size2}) {
-    var style = base(size: size)
-        .color(Colors.transparent)
-        .labelColor(FortalTokens.accent11())
-        .iconColor(FortalTokens.accent11())
-        .spinner(RemixSpinnerStyle().indicatorColor(FortalTokens.accent11()))
-        .onHovered(RemixButtonStyle().color(FortalTokens.accentA3()))
-        .onPressed(RemixButtonStyle().color(FortalTokens.accentA4()))
-        .onDisabled(
-          RemixButtonStyle()
-              .labelColor(FortalTokens.gray8())
-              .iconColor(FortalTokens.gray8())
-              .spinner(
-                RemixSpinnerStyle()
-                    .indicatorColor(FortalTokens.gray8())
-                    .strokeWidth(FortalTokens.borderWidth1()),
-              ),
-        );
-
-    return style;
-  }
-
-  // ---------------------------------------------------------------------------
-  // Internal builders
-  // ---------------------------------------------------------------------------
-
-  static RemixButtonStyle _sizeStyle(FortalButtonSize size) {
-    final style = RemixButtonStyle();
-
-    return switch (size) {
-      .size1 =>
-        style
-            .paddingX(FortalTokens.space2())
-            .paddingY(FortalTokens.space1())
-            .spacing(FortalTokens.space1())
-            .borderRadiusAll(FortalTokens.radius2())
-            .label(
-              TextStyler()
-                  .fontSize(12.0)
-                  .height(16.0 / 12.0) // lineHeight as ratio
-                  .letterSpacing(0.0025),
+        ),
+      )
+      .onDisabled(
+        RemixButtonStyler()
+            .color(FortalTokens.grayA2())
+            .label(.color(FortalTokens.gray8()))
+            .icon(.color(FortalTokens.gray8()))
+            .borderAll(
+              color: FortalTokens.gray5(),
+              width: FortalTokens.borderWidth1(),
             )
-            .iconSize(12.0)
-            .spinner(RemixSpinnerStyle(size: 12.0)),
-      .size2 =>
-        style
-            // Generic size padding (ghost overrides provided via variant config)
-            .paddingX(FortalTokens.space3())
-            .paddingY(FortalTokens.space2())
-            .spacing(FortalTokens.space2())
-            .borderRadiusAll(FortalTokens.radius3())
-            .label(
-              TextStyler()
-                  .fontSize(14.0)
-                  .height(20.0 / 14.0) // lineHeight as ratio
-                  .letterSpacing(0.0),
-            )
-            .iconSize(16.0)
-            .spinner(RemixSpinnerStyle(size: 16.0)),
-      .size3 =>
-        style
-            .paddingX(FortalTokens.space4())
-            .paddingY(FortalTokens.space3())
-            .spacing(FortalTokens.space3())
-            .borderRadiusAll(FortalTokens.radius4())
-            .label(
-              TextStyler()
-                  .fontSize(16.0)
-                  .height(24.0 / 16.0) // lineHeight as ratio
-                  .letterSpacing(0.0),
-            )
-            .iconSize(20.0)
-            .spinner(RemixSpinnerStyle(size: 20.0)),
-      .size4 =>
-        style
-            .paddingX(FortalTokens.space5())
-            .paddingY(FortalTokens.space4())
-            .spacing(FortalTokens.space4())
-            .borderRadiusAll(FortalTokens.radius5())
-            .label(
-              TextStyler()
-                  .fontSize(18.0)
-                  .height(26.0 / 18.0) // lineHeight as ratio
-                  .letterSpacing(-0.0025),
-            )
-            .iconSize(24.0)
-            .spinner(RemixSpinnerStyle(size: 24.0)),
-    };
-  }
+            .spinner(
+              .indicatorColor(
+                FortalTokens.gray8(),
+              ).strokeWidth(FortalTokens.borderWidth1()),
+            ),
+      );
+}
+
+RemixButtonStyler _fortalButtonOutlineStyle([FortalButtonSize size = .size2]) {
+  return _fortalButtonBaseStyle(size)
+      .color(Colors.transparent)
+      .borderAll(
+        color: FortalTokens.accent7(),
+        width: FortalTokens.borderWidth1(),
+      )
+      .label(.color(FortalTokens.accent11()))
+      .icon(.color(FortalTokens.accent11()))
+      .spinner(.indicatorColor(FortalTokens.accent11()))
+      .onHovered(
+        RemixButtonStyler()
+            .color(FortalTokens.accentA2())
+            .borderAll(
+              color: FortalTokens.accent8(),
+              width: FortalTokens.borderWidth1(),
+            ),
+      )
+      .onDisabled(
+        RemixButtonStyler()
+            .label(.color(FortalTokens.gray8()))
+            .icon(.color(FortalTokens.gray8()))
+            .borderAll(color: FortalTokens.gray5())
+            .spinner(
+              .indicatorColor(
+                FortalTokens.gray8(),
+              ).strokeWidth(FortalTokens.borderWidth1()),
+            ),
+      );
+}
+
+RemixButtonStyler _fortalButtonGhostStyle([FortalButtonSize size = .size2]) {
+  return _fortalButtonBaseStyle(size)
+      .color(Colors.transparent)
+      .label(.color(FortalTokens.accent11()))
+      .icon(.color(FortalTokens.accent11()))
+      .spinner(.indicatorColor(FortalTokens.accent11()))
+      .onHovered(RemixButtonStyler().color(FortalTokens.accentA3()))
+      .onPressed(RemixButtonStyler().color(FortalTokens.accentA4()))
+      .onDisabled(
+        RemixButtonStyler()
+            .label(.color(FortalTokens.gray8()))
+            .icon(.color(FortalTokens.gray8()))
+            .spinner(
+              .indicatorColor(
+                FortalTokens.gray8(),
+              ).strokeWidth(FortalTokens.borderWidth1()),
+            ),
+      );
+}
+
+RemixButtonStyler _fortalButtonSizeStyle(FortalButtonSize size) {
+  final style = RemixButtonStyler();
+
+  return switch (size) {
+    .size1 =>
+      style
+          .paddingX(FortalTokens.space2())
+          .paddingY(FortalTokens.space1())
+          .spacing(FortalTokens.space1())
+          .borderRadiusAll(FortalTokens.radius2())
+          .label(
+            TextStyler()
+                .fontSize(12.0)
+                .height(16.0 / 12.0)
+                .letterSpacing(0.0025),
+          )
+          .icon(.size(12.0))
+          .spinner(.size(12.0)),
+    .size2 =>
+      style
+          .paddingX(FortalTokens.space3())
+          .paddingY(FortalTokens.space2())
+          .spacing(FortalTokens.space2())
+          .borderRadiusAll(FortalTokens.radius3())
+          .label(
+            TextStyler().fontSize(14.0).height(20.0 / 14.0).letterSpacing(0.0),
+          )
+          .icon(.size(16.0))
+          .spinner(.size(16.0)),
+    .size3 =>
+      style
+          .paddingX(FortalTokens.space4())
+          .paddingY(FortalTokens.space3())
+          .spacing(FortalTokens.space3())
+          .borderRadiusAll(FortalTokens.radius4())
+          .label(
+            TextStyler().fontSize(16.0).height(24.0 / 16.0).letterSpacing(0.0),
+          )
+          .icon(.size(20.0))
+          .spinner(.size(20.0)),
+    .size4 =>
+      style
+          .paddingX(FortalTokens.space5())
+          .paddingY(FortalTokens.space4())
+          .spacing(FortalTokens.space4())
+          .borderRadiusAll(FortalTokens.radius5())
+          .label(
+            TextStyler()
+                .fontSize(18.0)
+                .height(26.0 / 18.0)
+                .letterSpacing(-0.0025),
+          )
+          .icon(.size(24.0))
+          .spinner(.size(24.0)),
+  };
 }

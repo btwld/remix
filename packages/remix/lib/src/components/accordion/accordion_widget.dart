@@ -53,7 +53,7 @@ class RemixAccordionGroup<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return NakedAccordionGroup(
+    return NakedAccordionGroup<T>(
       controller: controller,
       initialExpandedValues: initialExpandedValues,
       child: child,
@@ -95,7 +95,7 @@ class RemixAccordion<T> extends StatelessWidget {
       opacity: animation,
       child: SizeTransition(
         sizeFactor: animation,
-        axisAlignment: 1,
+        alignment: AlignmentDirectional.bottomStart,
         child: panel,
       ),
     );

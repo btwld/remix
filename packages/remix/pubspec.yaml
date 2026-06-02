@@ -9,13 +9,13 @@ resolution: workspace
 version: 0.2.0
 
 environment:
-  sdk: ">=3.11.0 <4.0.0"
-  flutter: ">=3.41.0"
+  sdk: ">=3.12.0 <4.0.0"
+  flutter: ">=3.44.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  mix: ^2.0.3
+  mix: ^2.0.1
   mix_annotations: ^2.0.0
   naked_ui: ^0.2.0-beta.7
   meta: ^1.16.0

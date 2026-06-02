@@ -6,19 +6,19 @@ part of 'button.dart';
 /// should be styled and structured. It follows the Spec pattern used
 /// throughout the Remix framework, where:
 ///
-/// 1. **Style classes** (like [RemixButtonStyle]) define styling APIs
+/// 1. **Style classes** (like [RemixButtonStyler]) define styling APIs
 /// 2. **Spec classes** (like [RemixButtonSpec]) hold resolved styling properties
 /// 3. **Widget classes** (like [RemixButton]) consume specs to render UI
 ///
 /// The RemixButtonSpec contains [StyleSpec] properties for each visual element
 /// of the button: container layout, text label, icon, and loading spinner.
-/// These properties are built by [RemixButtonStyle] and consumed by
+/// These properties are built by [RemixButtonStyler] and consumed by
 /// [RemixButton] to create the final rendered widget.
 ///
 /// ## Architecture Overview
 ///
 /// ```
-/// RemixButtonStyle -> RemixButtonSpec -> RemixButton Widget
+/// RemixButtonStyler -> RemixButtonSpec -> RemixButton Widget
 /// (Define styles)    (Hold props)   (Render UI)
 /// ```
 ///
@@ -29,9 +29,9 @@ part of 'button.dart';
 ///
 /// ```dart
 /// // Style creates and populates the spec
-/// final style = RemixButtonStyle()
-///   .labelColor(Colors.white)
-///   .iconSize(20.0);
+/// final style = RemixButtonStyler()
+///   .label(.color(Colors.white))
+///   .icon(.size(20.0));
 ///
 /// // Widget receives the resolved spec
 /// RemixButton('Click me', style: style)
@@ -46,17 +46,17 @@ part of 'button.dart';
 /// - [spinner]: Loading spinner styling during async operations
 ///
 /// See also:
-/// - [RemixButtonStyle] for the styling API
+/// - [RemixButtonStyler] for the styling API
 /// - [RemixButton] for the widget implementation
 /// - [Spec] for the base specification pattern
-@MixableSpec()
-class RemixButtonSpec extends Spec<RemixButtonSpec>
-    with Diagnosticable, _$RemixButtonSpecMethods {
+@MixableSpec(target: RemixButton.new)
+class RemixButtonSpec with _$RemixButtonSpec {
   /// Styling specification for the button's container.
   ///
   /// Controls the button's layout, background, borders, padding,
   /// and other visual container properties. Uses [FlexBoxSpec]
   /// to support flexible layout arrangements.
+  @MixableField(ignoreSetter: true, skipFactory: true)
   @override
   final StyleSpec<FlexBoxSpec> container;
 
@@ -64,6 +64,7 @@ class RemixButtonSpec extends Spec<RemixButtonSpec>
   ///
   /// Defines typography, color, and text-specific properties
   /// when the button displays text content.
+  @MixableField(ignoreSetter: true, skipFactory: true)
   @override
   final StyleSpec<TextSpec> label;
 
@@ -71,6 +72,7 @@ class RemixButtonSpec extends Spec<RemixButtonSpec>
   ///
   /// Controls icon size, color, and positioning when an icon
   /// is displayed alongside or instead of text.
+  @MixableField(ignoreSetter: true, skipFactory: true)
   @override
   final StyleSpec<IconSpec> icon;
 
@@ -78,6 +80,7 @@ class RemixButtonSpec extends Spec<RemixButtonSpec>
   ///
   /// Defines the appearance of the spinner shown during
   /// asynchronous operations when the button is in loading state.
+  @MixableField(ignoreSetter: true, skipFactory: true)
   @override
   final StyleSpec<RemixSpinnerSpec> spinner;
 

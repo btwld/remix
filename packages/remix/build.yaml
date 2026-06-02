@@ -1,9 +1,23 @@
 targets:
   $default:
     builders:
-      mix_generator|spec:
+      mix_generator|mix_generator:
+        enabled: true
         generate_for:
           - lib/**/*.dart
-      mix_generator|property:
+      mix_generator|spec_styler_generator:
+        enabled: true
+        generate_for:
+          - lib/src/components/button/button.dart
+      mix_generator|styler_generator:
+        enabled: true
+        generate_for:
+          - lib/**/*.dart
+      mix_generator|mixable_generator:
+        enabled: true
         generate_for:
           - lib/components/**/*.dart
+      mix_generator|mix_widget_generator:
+        enabled: true
+        generate_for:
+          - lib/**/*.dart

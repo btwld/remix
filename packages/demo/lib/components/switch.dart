@@ -18,7 +18,7 @@ Widget buildSwitchUseCase(BuildContext context) {
           selected: context.knobs.boolean(label: 'Toggle', initialValue: true),
           enabled: context.knobs.boolean(label: 'Enabled', initialValue: true),
           onChanged: (value) => knobState.updateKnob('Toggle', value),
-          style: FortalSwitchStyles.create(
+          style: fortalSwitchStyle(
             variant: context.knobs.object.dropdown(
               label: 'variant',
               options: FortalSwitchVariant.values,

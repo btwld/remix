@@ -34,7 +34,7 @@ Widget buildRadioUseCase(BuildContext context) {
                           mainAxisSize: .min,
                           children: [
                             RemixRadio<Theme>(
-                              style: FortalRadioStyles.create(
+                              style: fortalRadioStyle(
                                 variant: context.knobs.object.dropdown(
                                   label: 'variant',
                                   options: FortalRadioVariant.values,

@@ -1,8 +1,7 @@
 part of 'icon_button.dart';
 
 @MixableSpec()
-class RemixIconButtonSpec extends Spec<RemixIconButtonSpec>
-    with Diagnosticable, _$RemixIconButtonSpecMethods {
+class RemixIconButtonSpec with _$RemixIconButtonSpec {
   @override
   final StyleSpec<BoxSpec> container;
   @override

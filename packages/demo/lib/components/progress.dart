@@ -14,7 +14,7 @@ Widget buildProgressUseCase(BuildContext context) {
         child: SizedBox(
           width: 200,
           child: RemixProgress(
-            style: FortalProgressStyles.create(
+            style: fortalProgressStyle(
               variant: context.knobs.object.dropdown(
                 label: 'variant',
                 options: FortalProgressVariant.values,

@@ -28,14 +28,14 @@ Widget buildAvatarUseCase(BuildContext context) {
                   RemixAccordion(
                     value: 'accordion1',
                     title: 'Is it accessible?',
-                    style: FortalAccordionStyle.base(),
+                    style: fortalAccordionStyle(),
                     child: const Text('Yes, it is accessible.'),
                   ),
-                  RemixDivider(style: FortalDividerStyles.create()),
+                  RemixDivider(style: fortalDividerStyle()),
                   RemixAccordion(
                     value: 'accordion2',
                     title: 'What payment methods are accepted?',
-                    style: FortalAccordionStyle.base(),
+                    style: fortalAccordionStyle(),
                     child: const Text(
                       'Major credit and debit cards like Visa, MasterCard, and American Express, as well as digital payment options like PayPal and Apple Pay.',
                     ),

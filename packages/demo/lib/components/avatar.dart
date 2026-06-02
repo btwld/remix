@@ -24,7 +24,7 @@ Widget buildAvatarUseCase(BuildContext context) {
               foregroundImage: imageUrl.isNotEmpty
                   ? NetworkImage(imageUrl)
                   : null,
-              style: FortalAvatarStyles.create(
+              style: fortalAvatarStyle(
                 variant: context.knobs.object.dropdown(
                   label: 'label',
                   options: FortalAvatarVariant.values,

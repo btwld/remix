@@ -31,16 +31,6 @@ class RemixSelectStyle extends RemixStyle<RemixSelectSpec, RemixSelectStyle>
          modifier: modifier,
        );
 
-  /// Sets menu container styling
-  RemixSelectStyle menuContainer(FlexBoxStyler value) {
-    return merge(RemixSelectStyle(menuContainer: value));
-  }
-
-  /// Sets trigger styling
-  RemixSelectStyle trigger(RemixSelectTriggerStyle value) {
-    return merge(RemixSelectStyle(trigger: value));
-  }
-
   /// Creates a [RemixSelect] widget with this style applied.
   ///
   /// Example:
@@ -106,55 +96,6 @@ class RemixSelectStyle extends RemixStyle<RemixSelectSpec, RemixSelectStyle>
       ),
     );
   }
-
-  @override
-  RemixSelectStyle variants(List<VariantStyle<RemixSelectSpec>> value) {
-    return merge(RemixSelectStyle(variants: value));
-  }
-
-  @override
-  RemixSelectStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixSelectStyle(modifier: value));
-  }
-
-  @override
-  RemixSelectStyle animate(AnimationConfig animation) {
-    return merge(RemixSelectStyle(animation: animation));
-  }
-
-  @override
-  StyleSpec<RemixSelectSpec> resolve(BuildContext context) {
-    return StyleSpec(
-      spec: RemixSelectSpec(
-        trigger: MixOps.resolve(context, $trigger),
-        menuContainer: MixOps.resolve(context, $menuContainer),
-      ),
-      animation: $animation,
-      widgetModifiers: $modifier?.resolve(context),
-    );
-  }
-
-  @override
-  RemixSelectStyle merge(RemixSelectStyle? other) {
-    if (other == null) return this;
-
-    return RemixSelectStyle.create(
-      menuContainer: MixOps.merge($menuContainer, other.$menuContainer),
-      trigger: MixOps.merge($trigger, other.$trigger),
-      variants: MixOps.mergeVariants($variants, other.$variants),
-      animation: MixOps.mergeAnimation($animation, other.$animation),
-      modifier: MixOps.mergeModifier($modifier, other.$modifier),
-    );
-  }
-
-  @override
-  List<Object?> get props => [
-    $menuContainer,
-    $trigger,
-    $variants,
-    $animation,
-    $modifier,
-  ];
 }
 
 // Style classes for sub-specs
@@ -201,16 +142,6 @@ class RemixSelectTriggerStyle
          modifier: modifier,
        );
 
-  /// Sets label styling
-  RemixSelectTriggerStyle label(TextStyler value) {
-    return merge(RemixSelectTriggerStyle(label: value));
-  }
-
-  /// Sets icon styling
-  RemixSelectTriggerStyle icon(IconStyler value) {
-    return merge(RemixSelectTriggerStyle(icon: value));
-  }
-
   /// Sets container alignment
   RemixSelectTriggerStyle alignment(Alignment value) {
     return merge(
@@ -218,39 +149,7 @@ class RemixSelectTriggerStyle
     );
   }
 
-  @override
-  StyleSpec<RemixSelectTriggerSpec> resolve(BuildContext context) {
-    return StyleSpec(
-      spec: RemixSelectTriggerSpec(
-        container: MixOps.resolve(context, $container),
-        label: MixOps.resolve(context, $label),
-        icon: MixOps.resolve(context, $icon),
-      ),
-      animation: $animation,
-      widgetModifiers: $modifier?.resolve(context),
-    );
-  }
-
-  @override
-  RemixSelectTriggerStyle merge(RemixSelectTriggerStyle? other) {
-    if (other == null) return this;
-
-    return RemixSelectTriggerStyle.create(
-      container: MixOps.merge($container, other.$container),
-      label: MixOps.merge($label, other.$label),
-      icon: MixOps.merge($icon, other.$icon),
-      variants: MixOps.mergeVariants($variants, other.$variants),
-      animation: MixOps.mergeAnimation($animation, other.$animation),
-      modifier: MixOps.mergeModifier($modifier, other.$modifier),
-    );
-  }
-
   // Abstract method implementations for mixins
-
-  @override
-  RemixSelectTriggerStyle animate(AnimationConfig config) {
-    return merge(RemixSelectTriggerStyle(animation: config));
-  }
 
   @override
   RemixSelectTriggerStyle constraints(BoxConstraintsMix value) {
@@ -267,13 +166,6 @@ class RemixSelectTriggerStyle
   }
 
   @override
-  RemixSelectTriggerStyle variants(
-    List<VariantStyle<RemixSelectTriggerSpec>> value,
-  ) {
-    return merge(RemixSelectTriggerStyle(variants: value));
-  }
-
-  @override
   RemixSelectTriggerStyle margin(EdgeInsetsGeometryMix value) {
     return merge(
       RemixSelectTriggerStyle(container: FlexBoxStyler(margin: value)),
@@ -285,11 +177,6 @@ class RemixSelectTriggerStyle
     return merge(
       RemixSelectTriggerStyle(container: FlexBoxStyler(padding: value)),
     );
-  }
-
-  @override
-  RemixSelectTriggerStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixSelectTriggerStyle(modifier: value));
   }
 
   @override
@@ -323,16 +210,6 @@ class RemixSelectTriggerStyle
       RemixSelectTriggerStyle(container: FlexBoxStyler().flex(value)),
     );
   }
-
-  @override
-  List<Object?> get props => [
-    $container,
-    $label,
-    $icon,
-    $variants,
-    $animation,
-    $modifier,
-  ];
 }
 
 @MixableStyler()
@@ -381,16 +258,6 @@ class RemixSelectMenuItemStyle
          modifier: modifier,
        );
 
-  /// Sets text styling
-  RemixSelectMenuItemStyle text(TextStyler value) {
-    return merge(RemixSelectMenuItemStyle(text: value));
-  }
-
-  /// Sets icon styling
-  RemixSelectMenuItemStyle icon(IconStyler value) {
-    return merge(RemixSelectMenuItemStyle(icon: value));
-  }
-
   /// Sets container alignment
   RemixSelectMenuItemStyle alignment(Alignment value) {
     return merge(
@@ -404,52 +271,13 @@ class RemixSelectMenuItemStyle
     return text(value);
   }
 
-  @override
-  StyleSpec<RemixSelectMenuItemSpec> resolve(BuildContext context) {
-    return StyleSpec(
-      spec: RemixSelectMenuItemSpec(
-        container: MixOps.resolve(context, $container),
-        text: MixOps.resolve(context, $text),
-        icon: MixOps.resolve(context, $icon),
-      ),
-      animation: $animation,
-      widgetModifiers: $modifier?.resolve(context),
-    );
-  }
-
-  @override
-  RemixSelectMenuItemStyle merge(RemixSelectMenuItemStyle? other) {
-    if (other == null) return this;
-
-    return RemixSelectMenuItemStyle.create(
-      container: MixOps.merge($container, other.$container),
-      text: MixOps.merge($text, other.$text),
-      icon: MixOps.merge($icon, other.$icon),
-      variants: MixOps.mergeVariants($variants, other.$variants),
-      animation: MixOps.mergeAnimation($animation, other.$animation),
-      modifier: MixOps.mergeModifier($modifier, other.$modifier),
-    );
-  }
-
   // Abstract method implementations for mixins
-
-  @override
-  RemixSelectMenuItemStyle animate(AnimationConfig config) {
-    return merge(RemixSelectMenuItemStyle(animation: config));
-  }
 
   @override
   RemixSelectMenuItemStyle constraints(BoxConstraintsMix value) {
     return merge(
       RemixSelectMenuItemStyle(container: FlexBoxStyler(constraints: value)),
     );
-  }
-
-  @override
-  RemixSelectMenuItemStyle variants(
-    List<VariantStyle<RemixSelectMenuItemSpec>> value,
-  ) {
-    return merge(RemixSelectMenuItemStyle(variants: value));
   }
 
   @override
@@ -471,11 +299,6 @@ class RemixSelectMenuItemStyle
     return merge(
       RemixSelectMenuItemStyle(container: FlexBoxStyler(padding: value)),
     );
-  }
-
-  @override
-  RemixSelectMenuItemStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixSelectMenuItemStyle(modifier: value));
   }
 
   @override
@@ -509,14 +332,4 @@ class RemixSelectMenuItemStyle
       RemixSelectMenuItemStyle(container: FlexBoxStyler().flex(value)),
     );
   }
-
-  @override
-  List<Object?> get props => [
-    $container,
-    $text,
-    $icon,
-    $variants,
-    $animation,
-    $modifier,
-  ];
 }

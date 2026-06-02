@@ -6,9 +6,12 @@ part of 'radio.dart';
 // SpecGenerator
 // **************************************************************************
 
-mixin _$RemixRadioSpecMethods on Spec<RemixRadioSpec>, Diagnosticable {
+mixin _$RemixRadioSpec implements Spec<RemixRadioSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
   StyleSpec<BoxSpec> get indicator;
+
+  @override
+  Type get type => RemixRadioSpec;
 
   @override
   RemixRadioSpec copyWith({
@@ -30,16 +33,57 @@ mixin _$RemixRadioSpecMethods on Spec<RemixRadioSpec>, Diagnosticable {
   }
 
   @override
+  List<Object?> get props => [container, indicator];
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is RemixRadioSpec &&
+            runtimeType == other.runtimeType &&
+            propsEquals(props, other.props);
+  }
+
+  @override
+  int get hashCode => propsHash(runtimeType, props);
+
+  @override
+  bool get stringify => true;
+
+  @override
+  Map<String, String> getDiff(Equatable other) {
+    if (this == other) return const {};
+
+    return propsDiff(props, other.props);
+  }
+
+  @override
+  String toStringShort() => '$runtimeType';
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) =>
+      toDiagnosticsNode(
+        style: DiagnosticsTreeStyle.singleLine,
+      ).toString(minLevel: minLevel);
+
+  @override
+  DiagnosticsNode toDiagnosticsNode({
+    String? name,
+    DiagnosticsTreeStyle? style,
+  }) =>
+      DiagnosticableNode<Diagnosticable>(name: name, value: this, style: style);
+
+  @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('indicator', indicator));
   }
-
-  @override
-  List<Object?> get props => [container, indicator];
 }
+
+@Deprecated(
+  'Rename to `_\$RemixRadioSpec` and migrate the class declaration to `class RemixRadioSpec with _\$RemixRadioSpec`. The `_\$RemixRadioSpecMethods` alias will be removed in mix_generator 3.0.',
+)
+typedef _$RemixRadioSpecMethods = _$RemixRadioSpec; // ignore: unused_element
 
 // **************************************************************************
 // StylerGenerator
@@ -86,7 +130,7 @@ mixin _$RemixRadioStyleMixin on Style<RemixRadioSpec>, Diagnosticable {
     );
   }
 
-  /// Resolves to [StyleSpec<RemixRadioSpec>] using context.
+  /// Resolves to [StyleSpec<RemixRadioSpec>] using [context].
   @override
   StyleSpec<RemixRadioSpec> resolve(BuildContext context) {
     final spec = RemixRadioSpec(

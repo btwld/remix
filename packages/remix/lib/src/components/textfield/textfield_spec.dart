@@ -50,8 +50,7 @@ part of 'textfield.dart';
 /// - [RemixTextField] for the widget implementation
 /// - [Spec] for the base specification pattern
 @MixableSpec()
-class RemixTextFieldSpec extends Spec<RemixTextFieldSpec>
-    with Diagnosticable, _$RemixTextFieldSpecMethods {
+class RemixTextFieldSpec with _$RemixTextFieldSpec {
   /// Styling specification for the input text.
   ///
   /// Controls typography, color, and text-specific properties

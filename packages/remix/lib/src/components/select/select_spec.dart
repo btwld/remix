@@ -1,8 +1,7 @@
 part of 'select.dart';
 
 @MixableSpec()
-class RemixSelectSpec extends Spec<RemixSelectSpec>
-    with Diagnosticable, _$RemixSelectSpecMethods {
+class RemixSelectSpec with _$RemixSelectSpec {
   @override
   final StyleSpec<RemixSelectTriggerSpec> trigger;
   @override
@@ -20,8 +19,7 @@ class RemixSelectSpec extends Spec<RemixSelectSpec>
 }
 
 @MixableSpec()
-class RemixSelectTriggerSpec extends Spec<RemixSelectTriggerSpec>
-    with Diagnosticable, _$RemixSelectTriggerSpecMethods {
+class RemixSelectTriggerSpec with _$RemixSelectTriggerSpec {
   @override
   final StyleSpec<FlexBoxSpec> container;
   @override
@@ -39,8 +37,7 @@ class RemixSelectTriggerSpec extends Spec<RemixSelectTriggerSpec>
 }
 
 @MixableSpec()
-class RemixSelectMenuItemSpec extends Spec<RemixSelectMenuItemSpec>
-    with Diagnosticable, _$RemixSelectMenuItemSpecMethods {
+class RemixSelectMenuItemSpec with _$RemixSelectMenuItemSpec {
   @override
   final StyleSpec<FlexBoxSpec> container;
   @override

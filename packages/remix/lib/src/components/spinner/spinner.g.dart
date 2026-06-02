@@ -6,13 +6,16 @@ part of 'spinner.dart';
 // SpecGenerator
 // **************************************************************************
 
-mixin _$RemixSpinnerSpecMethods on Spec<RemixSpinnerSpec>, Diagnosticable {
+mixin _$RemixSpinnerSpec implements Spec<RemixSpinnerSpec>, Diagnosticable {
   double? get size;
   double? get strokeWidth;
   Color? get indicatorColor;
   Color? get trackColor;
   double? get trackStrokeWidth;
   Duration? get duration;
+
+  @override
+  Type get type => RemixSpinnerSpec;
 
   @override
   RemixSpinnerSpec copyWith({
@@ -50,18 +53,6 @@ mixin _$RemixSpinnerSpecMethods on Spec<RemixSpinnerSpec>, Diagnosticable {
   }
 
   @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DoubleProperty('size', size))
-      ..add(DoubleProperty('strokeWidth', strokeWidth))
-      ..add(ColorProperty('indicatorColor', indicatorColor))
-      ..add(ColorProperty('trackColor', trackColor))
-      ..add(DoubleProperty('trackStrokeWidth', trackStrokeWidth))
-      ..add(DiagnosticsProperty('duration', duration));
-  }
-
-  @override
   List<Object?> get props => [
     size,
     strokeWidth,
@@ -70,6 +61,74 @@ mixin _$RemixSpinnerSpecMethods on Spec<RemixSpinnerSpec>, Diagnosticable {
     trackStrokeWidth,
     duration,
   ];
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is RemixSpinnerSpec &&
+            runtimeType == other.runtimeType &&
+            propsEquals(props, other.props);
+  }
+
+  @override
+  int get hashCode => propsHash(runtimeType, props);
+
+  @override
+  bool get stringify => true;
+
+  @override
+  Map<String, String> getDiff(Equatable other) {
+    if (this == other) return const {};
+
+    return propsDiff(props, other.props);
+  }
+
+  @override
+  String toStringShort() => '$runtimeType';
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) =>
+      toDiagnosticsNode(
+        style: DiagnosticsTreeStyle.singleLine,
+      ).toString(minLevel: minLevel);
+
+  @override
+  DiagnosticsNode toDiagnosticsNode({
+    String? name,
+    DiagnosticsTreeStyle? style,
+  }) =>
+      DiagnosticableNode<Diagnosticable>(name: name, value: this, style: style);
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    properties
+      ..add(DoubleProperty('size', size))
+      ..add(DoubleProperty('strokeWidth', strokeWidth))
+      ..add(ColorProperty('indicatorColor', indicatorColor))
+      ..add(ColorProperty('trackColor', trackColor))
+      ..add(DoubleProperty('trackStrokeWidth', trackStrokeWidth))
+      ..add(DiagnosticsProperty('duration', duration));
+  }
+}
+
+@Deprecated(
+  'Rename to `_\$RemixSpinnerSpec` and migrate the class declaration to `class RemixSpinnerSpec with _\$RemixSpinnerSpec`. The `_\$RemixSpinnerSpecMethods` alias will be removed in mix_generator 3.0.',
+)
+typedef _$RemixSpinnerSpecMethods = _$RemixSpinnerSpec; // ignore: unused_element
+
+// **************************************************************************
+// MixWidgetGenerator
+// **************************************************************************
+
+class FortalSpinner extends StatelessWidget {
+  const FortalSpinner({super.key, this.size = .size2});
+
+  final FortalSpinnerSize size;
+
+  @override
+  Widget build(BuildContext context) {
+    return fortalSpinnerStyle(size: this.size).call();
+  }
 }
 
 // **************************************************************************
@@ -148,7 +207,7 @@ mixin _$RemixSpinnerStyleMixin on Style<RemixSpinnerSpec>, Diagnosticable {
     );
   }
 
-  /// Resolves to [StyleSpec<RemixSpinnerSpec>] using context.
+  /// Resolves to [StyleSpec<RemixSpinnerSpec>] using [context].
   @override
   StyleSpec<RemixSpinnerSpec> resolve(BuildContext context) {
     final spec = RemixSpinnerSpec(

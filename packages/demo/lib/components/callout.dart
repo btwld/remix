@@ -16,7 +16,7 @@ Widget buildCalloutUseCase(BuildContext context) {
           width: 300,
           child: RemixCallout(
             icon: m.Icons.info_outline,
-            style: FortalCalloutStyles.create(
+            style: fortalCalloutStyle(
               variant: context.knobs.object.dropdown(
                 label: 'variant',
                 options: FortalCalloutVariant.values,

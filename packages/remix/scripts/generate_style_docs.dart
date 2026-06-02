@@ -242,7 +242,7 @@ class StyleClassFinder extends RecursiveAstVisitor<void> {
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
-    final className = node.name.toString();
+    final className = node.namePart.typeName.lexeme;
     if (className.endsWith('Style')) {
       styleClassName = className;
 
@@ -390,15 +390,22 @@ class WidgetPropertyVisitor extends RecursiveAstVisitor<void> {
     return docLines.isNotEmpty ? docLines.join(' ') : null;
   }
 
+  Iterable<ClassMember> _classMembers(ClassDeclaration node) {
+    return switch (node.body) {
+      BlockClassBody(:final members) => members,
+      EmptyClassBody() => const <ClassMember>[],
+    };
+  }
+
   @override
   void visitClassDeclaration(ClassDeclaration node) {
-    final className = node.name.toString();
+    final className = node.namePart.typeName.lexeme;
     // Look for the widget class (e.g., RemixButton)
     final expectedClassName = 'Remix${_capitalize(componentName)}';
     print(expectedClassName);
     if (className.toLowerCase() == expectedClassName.toLowerCase()) {
       // First pass: collect field documentation and types
-      for (final member in node.members) {
+      for (final member in _classMembers(node)) {
         if (member is FieldDeclaration) {
           final docComment = _extractDocComment(member.documentationComment);
           final type = member.fields.type?.toString();
@@ -415,7 +422,7 @@ class WidgetPropertyVisitor extends RecursiveAstVisitor<void> {
       }
 
       // Second pass: extract constructor parameters
-      for (final member in node.members) {
+      for (final member in _classMembers(node)) {
         if (member is ConstructorDeclaration && member.name == null) {
           // This is the default constructor
           _extractConstructorParameters(member.parameters);

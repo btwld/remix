@@ -5,8 +5,7 @@ part of 'menu.dart';
 // ============================================================================
 
 @MixableSpec()
-class RemixMenuTriggerSpec extends Spec<RemixMenuTriggerSpec>
-    with Diagnosticable, _$RemixMenuTriggerSpecMethods {
+class RemixMenuTriggerSpec with _$RemixMenuTriggerSpec {
   @override
   final StyleSpec<FlexBoxSpec> container;
   @override
@@ -28,8 +27,7 @@ class RemixMenuTriggerSpec extends Spec<RemixMenuTriggerSpec>
 // ============================================================================
 
 @MixableSpec()
-class RemixMenuSpec extends Spec<RemixMenuSpec>
-    with Diagnosticable, _$RemixMenuSpecMethods {
+class RemixMenuSpec with _$RemixMenuSpec {
   @override
   final StyleSpec<RemixMenuTriggerSpec> trigger;
   @override
@@ -55,8 +53,7 @@ class RemixMenuSpec extends Spec<RemixMenuSpec>
 // ============================================================================
 
 @MixableSpec()
-class RemixMenuItemSpec extends Spec<RemixMenuItemSpec>
-    with Diagnosticable, _$RemixMenuItemSpecMethods {
+class RemixMenuItemSpec with _$RemixMenuItemSpec {
   @override
   final StyleSpec<FlexBoxSpec> container;
   @override

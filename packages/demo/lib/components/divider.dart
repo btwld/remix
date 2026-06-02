@@ -16,7 +16,7 @@ Widget buildDividerUseCase(BuildContext context) {
           width: 300,
           child: Center(
             child: RemixDivider(
-              style: FortalDividerStyles.create(
+              style: fortalDividerStyle(
                 size: context.knobs.object.dropdown(
                   label: 'size',
                   options: FortalDividerSize.values,

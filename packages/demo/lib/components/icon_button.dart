@@ -27,7 +27,7 @@ Widget buildIconButtonUseCase(BuildContext context) {
           },
           loading: context.knobs.boolean(label: 'Loading', initialValue: false),
           icon: context.knobs.iconData(label: 'Icon', initialValue: Icons.add)!,
-          style: FortalIconButtonStyle.create(
+          style: fortalIconButtonStyle(
             size: context.knobs.object.dropdown(
               label: 'size',
               options: FortalIconButtonSize.values,

@@ -6,9 +6,12 @@ part of 'switch.dart';
 // SpecGenerator
 // **************************************************************************
 
-mixin _$RemixSwitchSpecMethods on Spec<RemixSwitchSpec>, Diagnosticable {
+mixin _$RemixSwitchSpec implements Spec<RemixSwitchSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
   StyleSpec<BoxSpec> get thumb;
+
+  @override
+  Type get type => RemixSwitchSpec;
 
   @override
   RemixSwitchSpec copyWith({
@@ -30,15 +33,110 @@ mixin _$RemixSwitchSpecMethods on Spec<RemixSwitchSpec>, Diagnosticable {
   }
 
   @override
+  List<Object?> get props => [container, thumb];
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is RemixSwitchSpec &&
+            runtimeType == other.runtimeType &&
+            propsEquals(props, other.props);
+  }
+
+  @override
+  int get hashCode => propsHash(runtimeType, props);
+
+  @override
+  bool get stringify => true;
+
+  @override
+  Map<String, String> getDiff(Equatable other) {
+    if (this == other) return const {};
+
+    return propsDiff(props, other.props);
+  }
+
+  @override
+  String toStringShort() => '$runtimeType';
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) =>
+      toDiagnosticsNode(
+        style: DiagnosticsTreeStyle.singleLine,
+      ).toString(minLevel: minLevel);
+
+  @override
+  DiagnosticsNode toDiagnosticsNode({
+    String? name,
+    DiagnosticsTreeStyle? style,
+  }) =>
+      DiagnosticableNode<Diagnosticable>(name: name, value: this, style: style);
+
+  @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('thumb', thumb));
   }
+}
+
+@Deprecated(
+  'Rename to `_\$RemixSwitchSpec` and migrate the class declaration to `class RemixSwitchSpec with _\$RemixSwitchSpec`. The `_\$RemixSwitchSpecMethods` alias will be removed in mix_generator 3.0.',
+)
+typedef _$RemixSwitchSpecMethods = _$RemixSwitchSpec; // ignore: unused_element
+
+// **************************************************************************
+// MixWidgetGenerator
+// **************************************************************************
+
+class FortalSwitch extends StatelessWidget {
+  const FortalSwitch({
+    super.key,
+    this.variant = .surface,
+    this.size = .size2,
+    required this.selected,
+    required this.onChanged,
+    this.enabled = true,
+    this.enableFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
+    this.semanticLabel,
+    this.mouseCursor = SystemMouseCursors.click,
+  });
+
+  final FortalSwitchVariant variant;
+
+  final FortalSwitchSize size;
+
+  final bool selected;
+
+  final ValueChanged<bool> onChanged;
+
+  final bool enabled;
+
+  final bool enableFeedback;
+
+  final FocusNode? focusNode;
+
+  final bool autofocus;
+
+  final String? semanticLabel;
+
+  final MouseCursor mouseCursor;
 
   @override
-  List<Object?> get props => [container, thumb];
+  Widget build(BuildContext context) {
+    return fortalSwitchStyle(variant: this.variant, size: this.size).call(
+      selected: this.selected,
+      onChanged: this.onChanged,
+      enabled: this.enabled,
+      enableFeedback: this.enableFeedback,
+      focusNode: this.focusNode,
+      autofocus: this.autofocus,
+      semanticLabel: this.semanticLabel,
+      mouseCursor: this.mouseCursor,
+    );
+  }
 }
 
 // **************************************************************************
@@ -86,7 +184,7 @@ mixin _$RemixSwitchStyleMixin on Style<RemixSwitchSpec>, Diagnosticable {
     );
   }
 
-  /// Resolves to [StyleSpec<RemixSwitchSpec>] using context.
+  /// Resolves to [StyleSpec<RemixSwitchSpec>] using [context].
   @override
   StyleSpec<RemixSwitchSpec> resolve(BuildContext context) {
     final spec = RemixSwitchSpec(

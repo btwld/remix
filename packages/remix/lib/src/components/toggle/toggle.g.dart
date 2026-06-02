@@ -6,10 +6,13 @@ part of 'toggle.dart';
 // SpecGenerator
 // **************************************************************************
 
-mixin _$RemixToggleSpecMethods on Spec<RemixToggleSpec>, Diagnosticable {
+mixin _$RemixToggleSpec implements Spec<RemixToggleSpec>, Diagnosticable {
   StyleSpec<FlexBoxSpec> get container;
   StyleSpec<TextSpec> get label;
   StyleSpec<IconSpec> get icon;
+
+  @override
+  Type get type => RemixToggleSpec;
 
   @override
   RemixToggleSpec copyWith({
@@ -34,16 +37,119 @@ mixin _$RemixToggleSpecMethods on Spec<RemixToggleSpec>, Diagnosticable {
   }
 
   @override
+  List<Object?> get props => [container, label, icon];
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is RemixToggleSpec &&
+            runtimeType == other.runtimeType &&
+            propsEquals(props, other.props);
+  }
+
+  @override
+  int get hashCode => propsHash(runtimeType, props);
+
+  @override
+  bool get stringify => true;
+
+  @override
+  Map<String, String> getDiff(Equatable other) {
+    if (this == other) return const {};
+
+    return propsDiff(props, other.props);
+  }
+
+  @override
+  String toStringShort() => '$runtimeType';
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) =>
+      toDiagnosticsNode(
+        style: DiagnosticsTreeStyle.singleLine,
+      ).toString(minLevel: minLevel);
+
+  @override
+  DiagnosticsNode toDiagnosticsNode({
+    String? name,
+    DiagnosticsTreeStyle? style,
+  }) =>
+      DiagnosticableNode<Diagnosticable>(name: name, value: this, style: style);
+
+  @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('label', label))
       ..add(DiagnosticsProperty('icon', icon));
   }
+}
+
+@Deprecated(
+  'Rename to `_\$RemixToggleSpec` and migrate the class declaration to `class RemixToggleSpec with _\$RemixToggleSpec`. The `_\$RemixToggleSpecMethods` alias will be removed in mix_generator 3.0.',
+)
+typedef _$RemixToggleSpecMethods = _$RemixToggleSpec; // ignore: unused_element
+
+// **************************************************************************
+// MixWidgetGenerator
+// **************************************************************************
+
+class FortalToggle extends StatelessWidget {
+  const FortalToggle({
+    super.key,
+    this.variant = .ghost,
+    this.size = .size2,
+    required this.selected,
+    required this.onChanged,
+    this.label,
+    this.icon,
+    this.enabled = true,
+    this.enableFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
+    this.semanticLabel,
+    this.mouseCursor = SystemMouseCursors.click,
+  });
+
+  final FortalToggleVariant variant;
+
+  final FortalToggleSize size;
+
+  final bool selected;
+
+  final ValueChanged<bool> onChanged;
+
+  final String? label;
+
+  final IconData? icon;
+
+  final bool enabled;
+
+  final bool enableFeedback;
+
+  final FocusNode? focusNode;
+
+  final bool autofocus;
+
+  final String? semanticLabel;
+
+  final MouseCursor mouseCursor;
 
   @override
-  List<Object?> get props => [container, label, icon];
+  Widget build(BuildContext context) {
+    return fortalToggleStyle(variant: this.variant, size: this.size).call(
+      selected: this.selected,
+      onChanged: this.onChanged,
+      label: this.label,
+      icon: this.icon,
+      enabled: this.enabled,
+      enableFeedback: this.enableFeedback,
+      focusNode: this.focusNode,
+      autofocus: this.autofocus,
+      semanticLabel: this.semanticLabel,
+      mouseCursor: this.mouseCursor,
+    );
+  }
 }
 
 // **************************************************************************
@@ -98,7 +204,7 @@ mixin _$RemixToggleStyleMixin on Style<RemixToggleSpec>, Diagnosticable {
     );
   }
 
-  /// Resolves to [StyleSpec<RemixToggleSpec>] using context.
+  /// Resolves to [StyleSpec<RemixToggleSpec>] using [context].
   @override
   StyleSpec<RemixToggleSpec> resolve(BuildContext context) {
     final spec = RemixToggleSpec(

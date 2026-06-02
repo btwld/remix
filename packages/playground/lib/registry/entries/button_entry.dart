@@ -9,46 +9,46 @@ Widget buildButtonExample() {
       RemixButton(
         label: 'Primary Button',
         onPressed: () {},
-        style: RemixButtonStyle()
+        style: RemixButtonStyler()
             .paddingX(16)
             .paddingY(10)
             .borderRadiusAll(const Radius.circular(8))
             .color(const Color(0xFF1F2937))
-            .labelColor(Colors.white),
+            .label(.color(Colors.white)),
       ),
       RemixButton(
         label: 'Disabled',
         onPressed: null,
-        style: RemixButtonStyle()
+        style: RemixButtonStyler()
             .paddingX(16)
             .paddingY(10)
             .borderRadiusAll(const Radius.circular(8))
             .color(const Color(0xFFE5E7EB))
-            .labelColor(const Color(0xFF9CA3AF)),
+            .label(.color(const Color(0xFF9CA3AF))),
       ),
       RemixButton(
         label: 'Loading',
         loading: true,
         onPressed: () {},
-        style: RemixButtonStyle()
+        style: RemixButtonStyler()
             .paddingX(16)
             .paddingY(10)
             .borderRadiusAll(const Radius.circular(8))
             .color(const Color(0xFF1F2937).withValues(alpha: 0.6))
-            .labelColor(Colors.white.withValues(alpha: 0.7))
-            .spinnerIndicatorColor(Colors.white),
+            .label(.color(Colors.white.withValues(alpha: 0.7)))
+            .spinner(.indicatorColor(Colors.white)),
       ),
       RemixButton(
         label: 'With Icon',
         leadingIcon: Icons.star,
         onPressed: () {},
-        style: RemixButtonStyle()
+        style: RemixButtonStyler()
             .paddingX(16)
             .paddingY(10)
             .borderRadiusAll(const Radius.circular(8))
             .color(const Color(0xFF1F2937))
-            .labelColor(Colors.white)
-            .iconColor(Colors.white),
+            .label(.color(Colors.white))
+            .icon(.color(Colors.white)),
       ),
       RemixIconButton(
         icon: Icons.star,

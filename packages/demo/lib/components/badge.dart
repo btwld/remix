@@ -13,7 +13,7 @@ Widget buildBadgeUseCase(BuildContext context) {
       body: Center(
         child: RemixBadge(
           label: context.knobs.string(label: 'Label', initialValue: 'New'),
-          style: FortalBadgeStyles.create(
+          style: fortalBadgeStyle(
             variant: context.knobs.object.dropdown(
               label: 'variant',
               options: FortalBadgeVariant.values,

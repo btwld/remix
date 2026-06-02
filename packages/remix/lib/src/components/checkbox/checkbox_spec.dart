@@ -54,8 +54,7 @@ part of 'checkbox.dart';
 /// - [RemixCheckbox] for the widget implementation
 /// - [Spec] for the base specification pattern
 @MixableSpec()
-class RemixCheckboxSpec extends Spec<RemixCheckboxSpec>
-    with Diagnosticable, _$RemixCheckboxSpecMethods {
+class RemixCheckboxSpec with _$RemixCheckboxSpec {
   /// Styling specification for the checkbox box container.
   ///
   /// Defines the appearance of the checkbox box itself, including

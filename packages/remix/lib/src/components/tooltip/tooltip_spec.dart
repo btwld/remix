@@ -1,8 +1,7 @@
 part of 'tooltip.dart';
 
 @MixableSpec()
-class RemixTooltipSpec extends Spec<RemixTooltipSpec>
-    with Diagnosticable, _$RemixTooltipSpecMethods {
+class RemixTooltipSpec with _$RemixTooltipSpec {
   @override
   final StyleSpec<BoxSpec> container;
   @override

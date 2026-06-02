@@ -84,42 +84,12 @@ class RemixProgressStyle
     );
   }
 
-  /// Sets track styling
-  RemixProgressStyle track(BoxStyler value) {
-    return merge(RemixProgressStyle(track: value));
-  }
-
-  /// Sets fill styling
-  RemixProgressStyle indicator(BoxStyler value) {
-    return merge(RemixProgressStyle(indicator: value));
-  }
-
-  /// Sets outer container styling
-  RemixProgressStyle trackContainer(BoxStyler value) {
-    return merge(RemixProgressStyle(trackContainer: value));
-  }
-
   /// Sets container alignment
   RemixProgressStyle alignment(Alignment value) {
     return merge(RemixProgressStyle(container: BoxStyler(alignment: value)));
   }
 
-  @override
-  RemixProgressStyle variants(List<VariantStyle<RemixProgressSpec>> value) {
-    return merge(RemixProgressStyle(variants: value));
-  }
-
-  @override
-  RemixProgressStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixProgressStyle(modifier: value));
-  }
-
   // Abstract method implementations for mixins
-
-  @override
-  RemixProgressStyle animate(AnimationConfig config) {
-    return merge(RemixProgressStyle(animation: config));
-  }
 
   @override
   RemixProgressStyle constraints(BoxConstraintsMix value) {
@@ -159,44 +129,4 @@ class RemixProgressStyle
       ),
     );
   }
-
-  @override
-  StyleSpec<RemixProgressSpec> resolve(BuildContext context) {
-    return StyleSpec(
-      spec: RemixProgressSpec(
-        container: MixOps.resolve(context, $container),
-        track: MixOps.resolve(context, $track),
-        indicator: MixOps.resolve(context, $indicator),
-        trackContainer: MixOps.resolve(context, $trackContainer),
-      ),
-      animation: $animation,
-      widgetModifiers: $modifier?.resolve(context),
-    );
-  }
-
-  @override
-  RemixProgressStyle merge(RemixProgressStyle? other) {
-    if (other == null) return this;
-
-    return RemixProgressStyle.create(
-      container: MixOps.merge($container, other.$container),
-      track: MixOps.merge($track, other.$track),
-      indicator: MixOps.merge($indicator, other.$indicator),
-      trackContainer: MixOps.merge($trackContainer, other.$trackContainer),
-      variants: MixOps.mergeVariants($variants, other.$variants),
-      animation: MixOps.mergeAnimation($animation, other.$animation),
-      modifier: MixOps.mergeModifier($modifier, other.$modifier),
-    );
-  }
-
-  @override
-  List<Object?> get props => [
-    $container,
-    $track,
-    $indicator,
-    $trackContainer,
-    $variants,
-    $animation,
-    $modifier,
-  ];
 }
