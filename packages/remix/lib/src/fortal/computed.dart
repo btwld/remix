@@ -47,6 +47,9 @@ Color computeColorPanelTranslucent(RadixColorScale gray) => gray.alphaStep(2);
 Color computeColorOverlay({required bool isDark}) =>
     isDark ? blackAlpha[8]! : blackAlpha[6]!;
 
+Color computeShadowStroke(RadixColorScale gray) =>
+    Color.lerp(gray.alphaStep(6), gray.step(6), 0.25)!;
+
 // ============================================================================
 // RESOLVER (merged from resolver.dart)
 // ============================================================================
