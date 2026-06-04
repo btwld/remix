@@ -19,8 +19,8 @@ import 'fortal_theme.dart';
 // FUNCTIONAL / COMPUTED IMPLEMENTATIONS
 // ============================================================================
 
-/// Computes contrast foreground color for solid accent backgrounds.
-///
+// Computes contrast foreground color for solid accent backgrounds.
+//
 
 /// Computes solid focus ring color (accent step 8).
 Color computeFocus8(RadixColorScale accent) => accent.step(8);
@@ -46,14 +46,6 @@ Color computeColorPanelTranslucent(RadixColorScale gray) => gray.alphaStep(2);
 /// Uses black alpha step 6 (light mode) or step 8 (dark mode).
 Color computeColorOverlay({required bool isDark}) =>
     isDark ? blackAlpha[8]! : blackAlpha[6]!;
-
-// ============================================================================
-// SHADOWS
-// ============================================================================
-
-/// Computes the OKLab-mixed shadow stroke color used in Fortal shadows.
-///
-/// Matches: color-mix(in oklab, var(--gray-a6), var(--gray-6) 25%)
 
 // ============================================================================
 // RESOLVER (merged from resolver.dart)
