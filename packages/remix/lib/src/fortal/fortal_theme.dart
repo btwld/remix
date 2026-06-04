@@ -621,7 +621,7 @@ Map<MixToken, Object> _buildFortalScopeTokens({
     FortalTokens.blackA6: tokens.blackAlpha[6]!,
     FortalTokens.blackA7: tokens.blackAlpha[7]!,
     FortalTokens.blackA11: tokens.blackAlpha[11]!,
-    // Shadow stroke (OKLab mix)
+    // Shadow stroke helper from black alpha primitives
     FortalTokens.shadowStroke: tokens.blackAlpha[6]!,
   };
 
