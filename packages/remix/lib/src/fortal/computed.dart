@@ -11,49 +11,16 @@
 import 'dart:ui' show Color;
 
 import 'package:flutter/painting.dart' show ColorSwatch;
-import 'package:prism_flutter/prism_flutter.dart';
 
 import '../radix/colors/colors.dart';
 import 'fortal_theme.dart';
 
 // ============================================================================
-// CONSTANTS
-// ============================================================================
-
-// Overlay comes from Radix black alpha swatch (a6 light / a8 dark).
-
-// ============================================================================
-// SWITCH HELPERS (prefer switches over partial Maps; analyzer-friendly)
-// ============================================================================
-
-/// Returns optimal contrast color for text on solid accent backgrounds.
-///
-/// Most colors use white; bright colors (sky, mint, lime, yellow, amber)
-/// use near-black for better readability.
-
-// ============================================================================
-// GENERIC COLOR MIXING (CSS parity)
-// ============================================================================
-
-/// Mixes two colors in OKLab like CSS `color-mix(in oklab, A, B p%)`.
-Color _computeColorMixOklab({
-  required Color a,
-  required Color b,
-  required double bPercent,
-}) {
-  final t = (bPercent.isNaN ? 0.0 : bPercent).clamp(0.0, 100.0) / 100.0;
-  final oa = a.toRayRgb8().toOklab();
-  final ob = b.toRayRgb8().toOklab();
-
-  return oa.lerp(ob, t).toRgb8().toColor();
-}
-
-// ============================================================================
 // FUNCTIONAL / COMPUTED IMPLEMENTATIONS
 // ============================================================================
 
-/// Computes contrast foreground color for solid accent backgrounds.
-///
+// Computes contrast foreground color for solid accent backgrounds.
+//
 
 /// Computes solid focus ring color (accent step 8).
 Color computeFocus8(RadixColorScale accent) => accent.step(8);
@@ -80,15 +47,8 @@ Color computeColorPanelTranslucent(RadixColorScale gray) => gray.alphaStep(2);
 Color computeColorOverlay({required bool isDark}) =>
     isDark ? blackAlpha[8]! : blackAlpha[6]!;
 
-// ============================================================================
-// SHADOWS
-// ============================================================================
-
-/// Computes the OKLab-mixed shadow stroke color used in Fortal shadows.
-///
-/// Matches: color-mix(in oklab, var(--gray-a6), var(--gray-6) 25%)
 Color computeShadowStroke(RadixColorScale gray) =>
-    _computeColorMixOklab(a: gray.alphaStep(6), b: gray.step(6), bPercent: 25);
+    Color.lerp(gray.alphaStep(6), gray.step(6), 0.25)!;
 
 // ============================================================================
 // RESOLVER (merged from resolver.dart)

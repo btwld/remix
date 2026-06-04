@@ -434,11 +434,10 @@ packages:
   mix:
     dependency: "direct overridden"
     description:
-      path: "packages/mix"
-      ref: "feat/styler-generator"
-      resolved-ref: ee735897748eccbd1d2fdcfb0edba90192e7bebe
-      url: "https://github.com/btwld/mix.git"
-    source: git
+      name: mix
+      sha256: "9086fd222f2b6faeab9743dc98788c1a1083d8f8072bcd21c2c07ecd16cf876f"
+      url: "https://pub.dev"
+    source: hosted
     version: "2.0.3"
   mix_annotations:
     dependency: "direct overridden"
@@ -530,22 +529,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.5.2"
-  prism:
-    dependency: transitive
-    description:
-      name: prism
-      sha256: cb5b80867392ed138ca7651d55c1c0013903f20355e3e015e2f6be5c1dcf7020
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.0"
-  prism_flutter:
-    dependency: transitive
-    description:
-      name: prism_flutter
-      sha256: c915d488b864d92dc605091f28e631748a723f77d5c755d08dc4b70726a7bef4
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.0"
   process:
     dependency: transitive
     description:
