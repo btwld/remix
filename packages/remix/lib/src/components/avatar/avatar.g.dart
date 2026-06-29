@@ -96,22 +96,22 @@ typedef _$RemixAvatarSpecMethods = _$RemixAvatarSpec; // ignore: unused_element
 
 mixin _$RemixAvatarStyleMixin on Style<RemixAvatarSpec>, Diagnosticable {
   Prop<StyleSpec<BoxSpec>>? get $container;
-  Prop<StyleSpec<IconSpec>>? get $icon;
   Prop<StyleSpec<TextSpec>>? get $text;
+  Prop<StyleSpec<IconSpec>>? get $icon;
 
   /// Sets the container.
   RemixAvatarStyle container(BoxStyler value) {
     return merge(RemixAvatarStyle(container: value));
   }
 
-  /// Sets the icon.
-  RemixAvatarStyle icon(IconStyler value) {
-    return merge(RemixAvatarStyle(icon: value));
-  }
-
   /// Sets the text.
   RemixAvatarStyle text(TextStyler value) {
     return merge(RemixAvatarStyle(text: value));
+  }
+
+  /// Sets the icon.
+  RemixAvatarStyle icon(IconStyler value) {
+    return merge(RemixAvatarStyle(icon: value));
   }
 
   /// Sets the animation configuration.
@@ -129,13 +129,18 @@ mixin _$RemixAvatarStyleMixin on Style<RemixAvatarSpec>, Diagnosticable {
     return merge(RemixAvatarStyle(modifier: value));
   }
 
+  /// Sets the widget modifier.
+  RemixAvatarStyle modifier(WidgetModifierConfig value) {
+    return merge(RemixAvatarStyle(modifier: value));
+  }
+
   /// Merges with another [RemixAvatarStyle].
   @override
   RemixAvatarStyle merge(RemixAvatarStyle? other) {
     return RemixAvatarStyle.create(
       container: MixOps.merge($container, other?.$container),
-      icon: MixOps.merge($icon, other?.$icon),
       text: MixOps.merge($text, other?.$text),
+      icon: MixOps.merge($icon, other?.$icon),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -147,8 +152,8 @@ mixin _$RemixAvatarStyleMixin on Style<RemixAvatarSpec>, Diagnosticable {
   StyleSpec<RemixAvatarSpec> resolve(BuildContext context) {
     final spec = RemixAvatarSpec(
       container: MixOps.resolve(context, $container),
-      icon: MixOps.resolve(context, $icon),
       text: MixOps.resolve(context, $text),
+      icon: MixOps.resolve(context, $icon),
     );
 
     return StyleSpec(
@@ -163,15 +168,15 @@ mixin _$RemixAvatarStyleMixin on Style<RemixAvatarSpec>, Diagnosticable {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', $container))
-      ..add(DiagnosticsProperty('icon', $icon))
-      ..add(DiagnosticsProperty('text', $text));
+      ..add(DiagnosticsProperty('text', $text))
+      ..add(DiagnosticsProperty('icon', $icon));
   }
 
   @override
   List<Object?> get props => [
     $container,
-    $icon,
     $text,
+    $icon,
     $animation,
     $modifier,
     $variants,

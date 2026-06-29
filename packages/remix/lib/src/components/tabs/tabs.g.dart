@@ -64,7 +64,7 @@ mixin _$RemixTabBarSpec implements Spec<RemixTabBarSpec>, Diagnosticable {
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    properties..add(DiagnosticsProperty('container', container));
+    properties.add(DiagnosticsProperty('container', container));
   }
 }
 
@@ -215,7 +215,7 @@ mixin _$RemixTabViewSpec implements Spec<RemixTabViewSpec>, Diagnosticable {
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    properties..add(DiagnosticsProperty('container', container));
+    properties.add(DiagnosticsProperty('container', container));
   }
 }
 
@@ -251,6 +251,11 @@ mixin _$RemixTabBarStyleMixin on Style<RemixTabBarSpec>, Diagnosticable {
     return merge(RemixTabBarStyle(modifier: value));
   }
 
+  /// Sets the widget modifier.
+  RemixTabBarStyle modifier(WidgetModifierConfig value) {
+    return merge(RemixTabBarStyle(modifier: value));
+  }
+
   /// Merges with another [RemixTabBarStyle].
   @override
   RemixTabBarStyle merge(RemixTabBarStyle? other) {
@@ -279,7 +284,7 @@ mixin _$RemixTabBarStyleMixin on Style<RemixTabBarSpec>, Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties..add(DiagnosticsProperty('container', $container));
+    properties.add(DiagnosticsProperty('container', $container));
   }
 
   @override
@@ -306,6 +311,11 @@ mixin _$RemixTabViewStyleMixin on Style<RemixTabViewSpec>, Diagnosticable {
 
   /// Wraps with a widget modifier.
   RemixTabViewStyle wrap(WidgetModifierConfig value) {
+    return merge(RemixTabViewStyle(modifier: value));
+  }
+
+  /// Sets the widget modifier.
+  RemixTabViewStyle modifier(WidgetModifierConfig value) {
     return merge(RemixTabViewStyle(modifier: value));
   }
 
@@ -337,7 +347,7 @@ mixin _$RemixTabViewStyleMixin on Style<RemixTabViewSpec>, Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties..add(DiagnosticsProperty('container', $container));
+    properties.add(DiagnosticsProperty('container', $container));
   }
 
   @override
@@ -346,22 +356,22 @@ mixin _$RemixTabViewStyleMixin on Style<RemixTabViewSpec>, Diagnosticable {
 
 mixin _$RemixTabStyleMixin on Style<RemixTabSpec>, Diagnosticable {
   Prop<StyleSpec<FlexBoxSpec>>? get $container;
-  Prop<StyleSpec<IconSpec>>? get $icon;
   Prop<StyleSpec<TextSpec>>? get $label;
+  Prop<StyleSpec<IconSpec>>? get $icon;
 
   /// Sets the container.
   RemixTabStyle container(FlexBoxStyler value) {
     return merge(RemixTabStyle(container: value));
   }
 
-  /// Sets the icon.
-  RemixTabStyle icon(IconStyler value) {
-    return merge(RemixTabStyle(icon: value));
-  }
-
   /// Sets the label.
   RemixTabStyle label(TextStyler value) {
     return merge(RemixTabStyle(label: value));
+  }
+
+  /// Sets the icon.
+  RemixTabStyle icon(IconStyler value) {
+    return merge(RemixTabStyle(icon: value));
   }
 
   /// Sets the animation configuration.
@@ -379,13 +389,18 @@ mixin _$RemixTabStyleMixin on Style<RemixTabSpec>, Diagnosticable {
     return merge(RemixTabStyle(modifier: value));
   }
 
+  /// Sets the widget modifier.
+  RemixTabStyle modifier(WidgetModifierConfig value) {
+    return merge(RemixTabStyle(modifier: value));
+  }
+
   /// Merges with another [RemixTabStyle].
   @override
   RemixTabStyle merge(RemixTabStyle? other) {
     return RemixTabStyle.create(
       container: MixOps.merge($container, other?.$container),
-      icon: MixOps.merge($icon, other?.$icon),
       label: MixOps.merge($label, other?.$label),
+      icon: MixOps.merge($icon, other?.$icon),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -397,8 +412,8 @@ mixin _$RemixTabStyleMixin on Style<RemixTabSpec>, Diagnosticable {
   StyleSpec<RemixTabSpec> resolve(BuildContext context) {
     final spec = RemixTabSpec(
       container: MixOps.resolve(context, $container),
-      icon: MixOps.resolve(context, $icon),
       label: MixOps.resolve(context, $label),
+      icon: MixOps.resolve(context, $icon),
     );
 
     return StyleSpec(
@@ -413,15 +428,15 @@ mixin _$RemixTabStyleMixin on Style<RemixTabSpec>, Diagnosticable {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', $container))
-      ..add(DiagnosticsProperty('icon', $icon))
-      ..add(DiagnosticsProperty('label', $label));
+      ..add(DiagnosticsProperty('label', $label))
+      ..add(DiagnosticsProperty('icon', $icon));
   }
 
   @override
   List<Object?> get props => [
     $container,
-    $icon,
     $label,
+    $icon,
     $animation,
     $modifier,
     $variants,

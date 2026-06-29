@@ -4,26 +4,18 @@ environment:
   flutter: ">=3.44.0"
 
 dependencies:
-  # mix: ^2.0.0-rc.0
   naked_ui: ^0.2.0-beta.7
   meta: ^1.16.0
 
 dependency_overrides:
-  mix:
+  # mix, mix_annotations and mix_generator now resolve from pub.dev (^2.1.0).
+  # mix_lint 2.0.0 (the analysis_server_plugin rebuild required for the
+  # `plugins:` analyzer config) is not published yet, so it is sourced from git.
+  mix_lint:
     git:
       url: https://github.com/btwld/mix.git
-      ref: feat/styler-generator
-      path: packages/mix
-  mix_annotations:
-    git:
-      url: https://github.com/btwld/mix.git
-      ref: feat/styler-generator
-      path: packages/mix_annotations
-  mix_generator:
-    git:
-      url: https://github.com/btwld/mix.git
-      ref: feat/styler-generator
-      path: packages/mix_generator
+      ref: main
+      path: packages/mix_lint
 
 dev_dependencies:
   melos: ^7.1.1

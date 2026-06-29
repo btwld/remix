@@ -64,7 +64,7 @@ mixin _$RemixCardSpec implements Spec<RemixCardSpec>, Diagnosticable {
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    properties..add(DiagnosticsProperty('container', container));
+    properties.add(DiagnosticsProperty('container', container));
   }
 }
 
@@ -100,6 +100,11 @@ mixin _$RemixCardStyleMixin on Style<RemixCardSpec>, Diagnosticable {
     return merge(RemixCardStyle(modifier: value));
   }
 
+  /// Sets the widget modifier.
+  RemixCardStyle modifier(WidgetModifierConfig value) {
+    return merge(RemixCardStyle(modifier: value));
+  }
+
   /// Merges with another [RemixCardStyle].
   @override
   RemixCardStyle merge(RemixCardStyle? other) {
@@ -126,7 +131,7 @@ mixin _$RemixCardStyleMixin on Style<RemixCardSpec>, Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties..add(DiagnosticsProperty('container', $container));
+    properties.add(DiagnosticsProperty('container', $container));
   }
 
   @override

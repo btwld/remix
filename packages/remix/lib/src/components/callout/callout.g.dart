@@ -96,22 +96,22 @@ typedef _$RemixCalloutSpecMethods = _$RemixCalloutSpec; // ignore: unused_elemen
 
 mixin _$RemixCalloutStyleMixin on Style<RemixCalloutSpec>, Diagnosticable {
   Prop<StyleSpec<FlexBoxSpec>>? get $container;
-  Prop<StyleSpec<IconSpec>>? get $icon;
   Prop<StyleSpec<TextSpec>>? get $text;
+  Prop<StyleSpec<IconSpec>>? get $icon;
 
   /// Sets the container.
   RemixCalloutStyle container(FlexBoxStyler value) {
     return merge(RemixCalloutStyle(container: value));
   }
 
-  /// Sets the icon.
-  RemixCalloutStyle icon(IconStyler value) {
-    return merge(RemixCalloutStyle(icon: value));
-  }
-
   /// Sets the text.
   RemixCalloutStyle text(TextStyler value) {
     return merge(RemixCalloutStyle(text: value));
+  }
+
+  /// Sets the icon.
+  RemixCalloutStyle icon(IconStyler value) {
+    return merge(RemixCalloutStyle(icon: value));
   }
 
   /// Sets the animation configuration.
@@ -129,13 +129,18 @@ mixin _$RemixCalloutStyleMixin on Style<RemixCalloutSpec>, Diagnosticable {
     return merge(RemixCalloutStyle(modifier: value));
   }
 
+  /// Sets the widget modifier.
+  RemixCalloutStyle modifier(WidgetModifierConfig value) {
+    return merge(RemixCalloutStyle(modifier: value));
+  }
+
   /// Merges with another [RemixCalloutStyle].
   @override
   RemixCalloutStyle merge(RemixCalloutStyle? other) {
     return RemixCalloutStyle.create(
       container: MixOps.merge($container, other?.$container),
-      icon: MixOps.merge($icon, other?.$icon),
       text: MixOps.merge($text, other?.$text),
+      icon: MixOps.merge($icon, other?.$icon),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -147,8 +152,8 @@ mixin _$RemixCalloutStyleMixin on Style<RemixCalloutSpec>, Diagnosticable {
   StyleSpec<RemixCalloutSpec> resolve(BuildContext context) {
     final spec = RemixCalloutSpec(
       container: MixOps.resolve(context, $container),
-      icon: MixOps.resolve(context, $icon),
       text: MixOps.resolve(context, $text),
+      icon: MixOps.resolve(context, $icon),
     );
 
     return StyleSpec(
@@ -163,15 +168,15 @@ mixin _$RemixCalloutStyleMixin on Style<RemixCalloutSpec>, Diagnosticable {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', $container))
-      ..add(DiagnosticsProperty('icon', $icon))
-      ..add(DiagnosticsProperty('text', $text));
+      ..add(DiagnosticsProperty('text', $text))
+      ..add(DiagnosticsProperty('icon', $icon));
   }
 
   @override
   List<Object?> get props => [
     $container,
-    $icon,
     $text,
+    $icon,
     $animation,
     $modifier,
     $variants,
