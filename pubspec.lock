@@ -492,10 +492,10 @@ packages:
     dependency: "direct main"
     description:
       name: naked_ui
-      sha256: "7c908f67a5b37d6434183bf261d0adc9cd53a52b62e58dca6f1e2e78929b29f7"
+      sha256: "73d6ce1991b38aa27a02c012f7ecdd071ea7398d4faed53d83bcff5ed55d0878"
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.0-beta.7"
+    version: "1.0.0-beta.1"
   nested:
     dependency: transitive
     description:
