@@ -446,37 +446,57 @@ class FortalTextField extends StatelessWidget {
 // **************************************************************************
 
 mixin _$RemixTextFieldStyleMixin on Style<RemixTextFieldSpec>, Diagnosticable {
-  Prop<StyleSpec<FlexBoxSpec>>? get $container;
-  Prop<Color>? get $cursorColor;
+  Prop<StyleSpec<TextSpec>>? get $text;
+  Prop<StyleSpec<TextSpec>>? get $hintText;
+  Prop<TextAlign>? get $textAlign;
+  Prop<double>? get $cursorWidth;
   Prop<double>? get $cursorHeight;
+  Prop<Radius>? get $cursorRadius;
+  Prop<Color>? get $cursorColor;
   Prop<Offset>? get $cursorOffset;
   Prop<bool>? get $cursorOpacityAnimates;
-  Prop<Radius>? get $cursorRadius;
-  Prop<double>? get $cursorWidth;
-  Prop<StyleSpec<TextSpec>>? get $helperText;
-  Prop<StyleSpec<TextSpec>>? get $hintText;
-  Prop<Brightness>? get $keyboardAppearance;
-  Prop<StyleSpec<TextSpec>>? get $label;
-  Prop<EdgeInsets>? get $scrollPadding;
   Prop<BoxHeightStyle>? get $selectionHeightStyle;
   Prop<BoxWidthStyle>? get $selectionWidthStyle;
+  Prop<EdgeInsets>? get $scrollPadding;
+  Prop<Brightness>? get $keyboardAppearance;
   Prop<double>? get $spacing;
-  Prop<StyleSpec<TextSpec>>? get $text;
-  Prop<TextAlign>? get $textAlign;
+  Prop<StyleSpec<FlexBoxSpec>>? get $container;
+  Prop<StyleSpec<TextSpec>>? get $helperText;
+  Prop<StyleSpec<TextSpec>>? get $label;
 
-  /// Sets the container.
-  RemixTextFieldStyle container(FlexBoxStyler value) {
-    return merge(RemixTextFieldStyle(container: value));
+  /// Sets the text.
+  RemixTextFieldStyle text(TextStyler value) {
+    return merge(RemixTextFieldStyle(text: value));
   }
 
-  /// Sets the cursorColor.
-  RemixTextFieldStyle cursorColor(Color value) {
-    return merge(RemixTextFieldStyle(cursorColor: value));
+  /// Sets the hintText.
+  RemixTextFieldStyle hintText(TextStyler value) {
+    return merge(RemixTextFieldStyle(hintText: value));
+  }
+
+  /// Sets the textAlign.
+  RemixTextFieldStyle textAlign(TextAlign value) {
+    return merge(RemixTextFieldStyle(textAlign: value));
+  }
+
+  /// Sets the cursorWidth.
+  RemixTextFieldStyle cursorWidth(double value) {
+    return merge(RemixTextFieldStyle(cursorWidth: value));
   }
 
   /// Sets the cursorHeight.
   RemixTextFieldStyle cursorHeight(double value) {
     return merge(RemixTextFieldStyle(cursorHeight: value));
+  }
+
+  /// Sets the cursorRadius.
+  RemixTextFieldStyle cursorRadius(Radius value) {
+    return merge(RemixTextFieldStyle(cursorRadius: value));
+  }
+
+  /// Sets the cursorColor.
+  RemixTextFieldStyle cursorColor(Color value) {
+    return merge(RemixTextFieldStyle(cursorColor: value));
   }
 
   /// Sets the cursorOffset.
@@ -489,41 +509,6 @@ mixin _$RemixTextFieldStyleMixin on Style<RemixTextFieldSpec>, Diagnosticable {
     return merge(RemixTextFieldStyle(cursorOpacityAnimates: value));
   }
 
-  /// Sets the cursorRadius.
-  RemixTextFieldStyle cursorRadius(Radius value) {
-    return merge(RemixTextFieldStyle(cursorRadius: value));
-  }
-
-  /// Sets the cursorWidth.
-  RemixTextFieldStyle cursorWidth(double value) {
-    return merge(RemixTextFieldStyle(cursorWidth: value));
-  }
-
-  /// Sets the helperText.
-  RemixTextFieldStyle helperText(TextStyler value) {
-    return merge(RemixTextFieldStyle(helperText: value));
-  }
-
-  /// Sets the hintText.
-  RemixTextFieldStyle hintText(TextStyler value) {
-    return merge(RemixTextFieldStyle(hintText: value));
-  }
-
-  /// Sets the keyboardAppearance.
-  RemixTextFieldStyle keyboardAppearance(Brightness value) {
-    return merge(RemixTextFieldStyle(keyboardAppearance: value));
-  }
-
-  /// Sets the label.
-  RemixTextFieldStyle label(TextStyler value) {
-    return merge(RemixTextFieldStyle(label: value));
-  }
-
-  /// Sets the scrollPadding.
-  RemixTextFieldStyle scrollPadding(EdgeInsets value) {
-    return merge(RemixTextFieldStyle(scrollPadding: value));
-  }
-
   /// Sets the selectionHeightStyle.
   RemixTextFieldStyle selectionHeightStyle(BoxHeightStyle value) {
     return merge(RemixTextFieldStyle(selectionHeightStyle: value));
@@ -534,19 +519,34 @@ mixin _$RemixTextFieldStyleMixin on Style<RemixTextFieldSpec>, Diagnosticable {
     return merge(RemixTextFieldStyle(selectionWidthStyle: value));
   }
 
+  /// Sets the scrollPadding.
+  RemixTextFieldStyle scrollPadding(EdgeInsets value) {
+    return merge(RemixTextFieldStyle(scrollPadding: value));
+  }
+
+  /// Sets the keyboardAppearance.
+  RemixTextFieldStyle keyboardAppearance(Brightness value) {
+    return merge(RemixTextFieldStyle(keyboardAppearance: value));
+  }
+
   /// Sets the spacing.
   RemixTextFieldStyle spacing(double value) {
     return merge(RemixTextFieldStyle(spacing: value));
   }
 
-  /// Sets the text.
-  RemixTextFieldStyle text(TextStyler value) {
-    return merge(RemixTextFieldStyle(text: value));
+  /// Sets the container.
+  RemixTextFieldStyle container(FlexBoxStyler value) {
+    return merge(RemixTextFieldStyle(container: value));
   }
 
-  /// Sets the textAlign.
-  RemixTextFieldStyle textAlign(TextAlign value) {
-    return merge(RemixTextFieldStyle(textAlign: value));
+  /// Sets the helperText.
+  RemixTextFieldStyle helperText(TextStyler value) {
+    return merge(RemixTextFieldStyle(helperText: value));
+  }
+
+  /// Sets the label.
+  RemixTextFieldStyle label(TextStyler value) {
+    return merge(RemixTextFieldStyle(label: value));
   }
 
   /// Sets the animation configuration.
@@ -564,28 +564,27 @@ mixin _$RemixTextFieldStyleMixin on Style<RemixTextFieldSpec>, Diagnosticable {
     return merge(RemixTextFieldStyle(modifier: value));
   }
 
+  /// Sets the widget modifier.
+  RemixTextFieldStyle modifier(WidgetModifierConfig value) {
+    return merge(RemixTextFieldStyle(modifier: value));
+  }
+
   /// Merges with another [RemixTextFieldStyle].
   @override
   RemixTextFieldStyle merge(RemixTextFieldStyle? other) {
     return RemixTextFieldStyle.create(
-      container: MixOps.merge($container, other?.$container),
-      cursorColor: MixOps.merge($cursorColor, other?.$cursorColor),
+      text: MixOps.merge($text, other?.$text),
+      hintText: MixOps.merge($hintText, other?.$hintText),
+      textAlign: MixOps.merge($textAlign, other?.$textAlign),
+      cursorWidth: MixOps.merge($cursorWidth, other?.$cursorWidth),
       cursorHeight: MixOps.merge($cursorHeight, other?.$cursorHeight),
+      cursorRadius: MixOps.merge($cursorRadius, other?.$cursorRadius),
+      cursorColor: MixOps.merge($cursorColor, other?.$cursorColor),
       cursorOffset: MixOps.merge($cursorOffset, other?.$cursorOffset),
       cursorOpacityAnimates: MixOps.merge(
         $cursorOpacityAnimates,
         other?.$cursorOpacityAnimates,
       ),
-      cursorRadius: MixOps.merge($cursorRadius, other?.$cursorRadius),
-      cursorWidth: MixOps.merge($cursorWidth, other?.$cursorWidth),
-      helperText: MixOps.merge($helperText, other?.$helperText),
-      hintText: MixOps.merge($hintText, other?.$hintText),
-      keyboardAppearance: MixOps.merge(
-        $keyboardAppearance,
-        other?.$keyboardAppearance,
-      ),
-      label: MixOps.merge($label, other?.$label),
-      scrollPadding: MixOps.merge($scrollPadding, other?.$scrollPadding),
       selectionHeightStyle: MixOps.merge(
         $selectionHeightStyle,
         other?.$selectionHeightStyle,
@@ -594,9 +593,15 @@ mixin _$RemixTextFieldStyleMixin on Style<RemixTextFieldSpec>, Diagnosticable {
         $selectionWidthStyle,
         other?.$selectionWidthStyle,
       ),
+      scrollPadding: MixOps.merge($scrollPadding, other?.$scrollPadding),
+      keyboardAppearance: MixOps.merge(
+        $keyboardAppearance,
+        other?.$keyboardAppearance,
+      ),
       spacing: MixOps.merge($spacing, other?.$spacing),
-      text: MixOps.merge($text, other?.$text),
-      textAlign: MixOps.merge($textAlign, other?.$textAlign),
+      container: MixOps.merge($container, other?.$container),
+      helperText: MixOps.merge($helperText, other?.$helperText),
+      label: MixOps.merge($label, other?.$label),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -607,23 +612,23 @@ mixin _$RemixTextFieldStyleMixin on Style<RemixTextFieldSpec>, Diagnosticable {
   @override
   StyleSpec<RemixTextFieldSpec> resolve(BuildContext context) {
     final spec = RemixTextFieldSpec(
-      container: MixOps.resolve(context, $container),
-      cursorColor: MixOps.resolve(context, $cursorColor),
+      text: MixOps.resolve(context, $text),
+      hintText: MixOps.resolve(context, $hintText),
+      textAlign: MixOps.resolve(context, $textAlign),
+      cursorWidth: MixOps.resolve(context, $cursorWidth),
       cursorHeight: MixOps.resolve(context, $cursorHeight),
+      cursorRadius: MixOps.resolve(context, $cursorRadius),
+      cursorColor: MixOps.resolve(context, $cursorColor),
       cursorOffset: MixOps.resolve(context, $cursorOffset),
       cursorOpacityAnimates: MixOps.resolve(context, $cursorOpacityAnimates),
-      cursorRadius: MixOps.resolve(context, $cursorRadius),
-      cursorWidth: MixOps.resolve(context, $cursorWidth),
-      helperText: MixOps.resolve(context, $helperText),
-      hintText: MixOps.resolve(context, $hintText),
-      keyboardAppearance: MixOps.resolve(context, $keyboardAppearance),
-      label: MixOps.resolve(context, $label),
-      scrollPadding: MixOps.resolve(context, $scrollPadding),
       selectionHeightStyle: MixOps.resolve(context, $selectionHeightStyle),
       selectionWidthStyle: MixOps.resolve(context, $selectionWidthStyle),
+      scrollPadding: MixOps.resolve(context, $scrollPadding),
+      keyboardAppearance: MixOps.resolve(context, $keyboardAppearance),
       spacing: MixOps.resolve(context, $spacing),
-      text: MixOps.resolve(context, $text),
-      textAlign: MixOps.resolve(context, $textAlign),
+      container: MixOps.resolve(context, $container),
+      helperText: MixOps.resolve(context, $helperText),
+      label: MixOps.resolve(context, $label),
     );
 
     return StyleSpec(
@@ -637,46 +642,46 @@ mixin _$RemixTextFieldStyleMixin on Style<RemixTextFieldSpec>, Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(DiagnosticsProperty('container', $container))
-      ..add(DiagnosticsProperty('cursorColor', $cursorColor))
+      ..add(DiagnosticsProperty('text', $text))
+      ..add(DiagnosticsProperty('hintText', $hintText))
+      ..add(DiagnosticsProperty('textAlign', $textAlign))
+      ..add(DiagnosticsProperty('cursorWidth', $cursorWidth))
       ..add(DiagnosticsProperty('cursorHeight', $cursorHeight))
+      ..add(DiagnosticsProperty('cursorRadius', $cursorRadius))
+      ..add(DiagnosticsProperty('cursorColor', $cursorColor))
       ..add(DiagnosticsProperty('cursorOffset', $cursorOffset))
       ..add(
         DiagnosticsProperty('cursorOpacityAnimates', $cursorOpacityAnimates),
       )
-      ..add(DiagnosticsProperty('cursorRadius', $cursorRadius))
-      ..add(DiagnosticsProperty('cursorWidth', $cursorWidth))
-      ..add(DiagnosticsProperty('helperText', $helperText))
-      ..add(DiagnosticsProperty('hintText', $hintText))
-      ..add(DiagnosticsProperty('keyboardAppearance', $keyboardAppearance))
-      ..add(DiagnosticsProperty('label', $label))
-      ..add(DiagnosticsProperty('scrollPadding', $scrollPadding))
       ..add(DiagnosticsProperty('selectionHeightStyle', $selectionHeightStyle))
       ..add(DiagnosticsProperty('selectionWidthStyle', $selectionWidthStyle))
+      ..add(DiagnosticsProperty('scrollPadding', $scrollPadding))
+      ..add(DiagnosticsProperty('keyboardAppearance', $keyboardAppearance))
       ..add(DiagnosticsProperty('spacing', $spacing))
-      ..add(DiagnosticsProperty('text', $text))
-      ..add(DiagnosticsProperty('textAlign', $textAlign));
+      ..add(DiagnosticsProperty('container', $container))
+      ..add(DiagnosticsProperty('helperText', $helperText))
+      ..add(DiagnosticsProperty('label', $label));
   }
 
   @override
   List<Object?> get props => [
-    $container,
-    $cursorColor,
+    $text,
+    $hintText,
+    $textAlign,
+    $cursorWidth,
     $cursorHeight,
+    $cursorRadius,
+    $cursorColor,
     $cursorOffset,
     $cursorOpacityAnimates,
-    $cursorRadius,
-    $cursorWidth,
-    $helperText,
-    $hintText,
-    $keyboardAppearance,
-    $label,
-    $scrollPadding,
     $selectionHeightStyle,
     $selectionWidthStyle,
+    $scrollPadding,
+    $keyboardAppearance,
     $spacing,
-    $text,
-    $textAlign,
+    $container,
+    $helperText,
+    $label,
     $animation,
     $modifier,
     $variants,

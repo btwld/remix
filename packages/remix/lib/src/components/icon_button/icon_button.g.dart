@@ -173,6 +173,11 @@ mixin _$RemixIconButtonStyleMixin
     return merge(RemixIconButtonStyle(modifier: value));
   }
 
+  /// Sets the widget modifier.
+  RemixIconButtonStyle modifier(WidgetModifierConfig value) {
+    return merge(RemixIconButtonStyle(modifier: value));
+  }
+
   /// Merges with another [RemixIconButtonStyle].
   @override
   RemixIconButtonStyle merge(RemixIconButtonStyle? other) {

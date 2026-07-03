@@ -64,7 +64,7 @@ mixin _$RemixDividerSpec implements Spec<RemixDividerSpec>, Diagnosticable {
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    properties..add(DiagnosticsProperty('container', container));
+    properties.add(DiagnosticsProperty('container', container));
   }
 }
 
@@ -100,6 +100,11 @@ mixin _$RemixDividerStyleMixin on Style<RemixDividerSpec>, Diagnosticable {
     return merge(RemixDividerStyle(modifier: value));
   }
 
+  /// Sets the widget modifier.
+  RemixDividerStyle modifier(WidgetModifierConfig value) {
+    return merge(RemixDividerStyle(modifier: value));
+  }
+
   /// Merges with another [RemixDividerStyle].
   @override
   RemixDividerStyle merge(RemixDividerStyle? other) {
@@ -128,7 +133,7 @@ mixin _$RemixDividerStyleMixin on Style<RemixDividerSpec>, Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties..add(DiagnosticsProperty('container', $container));
+    properties.add(DiagnosticsProperty('container', $container));
   }
 
   @override

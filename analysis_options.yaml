@@ -1,0 +1,18 @@
+# Workspace-level analyzer config.
+#
+# `plugins:` must be declared at the root of the pub workspace (the analyzer
+# rejects it inside member packages). mix_lint adds Mix-specific diagnostics on
+# top of each package's own analysis_options.yaml.
+#
+# See https://www.fluttermix.com/documentation/mix/ecosystem/mix-lint
+plugins:
+  mix_lint:
+    diagnostics:
+      mix_avoid_defining_tokens_within_style: true
+      mix_avoid_defining_tokens_within_scope: true
+      mix_avoid_token_ref_outside_mix: true
+      mix_avoid_empty_variants: true
+      mix_max_number_of_attributes_per_style: true
+      mix_variants_last: true
+      mix_mixable_styler_has_create: true
+      mix_prefer_dot_shorthands: true

@@ -188,6 +188,11 @@ mixin _$RemixCheckboxStyleMixin on Style<RemixCheckboxSpec>, Diagnosticable {
     return merge(RemixCheckboxStyle(modifier: value));
   }
 
+  /// Sets the widget modifier.
+  RemixCheckboxStyle modifier(WidgetModifierConfig value) {
+    return merge(RemixCheckboxStyle(modifier: value));
+  }
+
   /// Merges with another [RemixCheckboxStyle].
   @override
   RemixCheckboxStyle merge(RemixCheckboxStyle? other) {
