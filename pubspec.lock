@@ -459,18 +459,18 @@ packages:
     dependency: transitive
     description:
       name: mix_annotations
-      sha256: fe52ce2e53efc5af2539882cadbe601688021701cb6e4c425d6c1df4687e2ac7
+      sha256: "926c11dbc6d0df9f7b5eeb22491bb76500d4427bd6a639776216abd5ac71a9d0"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.0"
+    version: "2.1.1"
   mix_generator:
     dependency: transitive
     description:
       name: mix_generator
-      sha256: d3d5e718546865933c79f164857b034277fa8a0f5cd12c189d2108e66d3a5ee5
+      sha256: c1a0f693c1c3cd9fdff2ad505efc62e92a29590c0114bfe76bf748a06362b49c
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.0"
+    version: "2.1.1"
   mix_lint:
     dependency: "direct overridden"
     description:

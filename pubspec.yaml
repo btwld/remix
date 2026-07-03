@@ -8,7 +8,7 @@ dependencies:
   meta: ^1.16.0
 
 dependency_overrides:
-  # mix, mix_annotations and mix_generator now resolve from pub.dev (^2.1.0).
+  # mix, mix_annotations and mix_generator now resolve from pub.dev (^2.1.1).
   # mix_lint 2.0.0 (the analysis_server_plugin rebuild required for the
   # `plugins:` analyzer config) is not published yet, so it is sourced from git.
   mix_lint:
