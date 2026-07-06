@@ -64,7 +64,7 @@ mixin _$RemixCardSpec implements Spec<RemixCardSpec>, Diagnosticable {
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    properties..add(DiagnosticsProperty('container', container));
+    properties.add(DiagnosticsProperty('container', container));
   }
 }
 
@@ -72,6 +72,34 @@ mixin _$RemixCardSpec implements Spec<RemixCardSpec>, Diagnosticable {
   'Rename to `_\$RemixCardSpec` and migrate the class declaration to `class RemixCardSpec with _\$RemixCardSpec`. The `_\$RemixCardSpecMethods` alias will be removed in mix_generator 3.0.',
 )
 typedef _$RemixCardSpecMethods = _$RemixCardSpec; // ignore: unused_element
+
+// **************************************************************************
+// MixWidgetGenerator
+// **************************************************************************
+
+/// Creates a Fortal-themed [RemixCardStyle].
+class FortalCard extends StatelessWidget {
+  const FortalCard({
+    super.key,
+    this.variant = .surface,
+    this.size = .size2,
+    this.child,
+  });
+
+  final FortalCardVariant variant;
+
+  final FortalCardSize size;
+
+  final Widget? child;
+
+  @override
+  Widget build(BuildContext context) {
+    return fortalCardStyle(
+      variant: this.variant,
+      size: this.size,
+    ).call(key: this.key, child: this.child);
+  }
+}
 
 // **************************************************************************
 // StylerGenerator
@@ -97,6 +125,11 @@ mixin _$RemixCardStyleMixin on Style<RemixCardSpec>, Diagnosticable {
 
   /// Wraps with a widget modifier.
   RemixCardStyle wrap(WidgetModifierConfig value) {
+    return merge(RemixCardStyle(modifier: value));
+  }
+
+  /// Sets the widget modifier.
+  RemixCardStyle modifier(WidgetModifierConfig value) {
     return merge(RemixCardStyle(modifier: value));
   }
 
@@ -126,7 +159,7 @@ mixin _$RemixCardStyleMixin on Style<RemixCardSpec>, Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties..add(DiagnosticsProperty('container', $container));
+    properties.add(DiagnosticsProperty('container', $container));
   }
 
   @override

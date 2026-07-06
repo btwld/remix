@@ -37,7 +37,7 @@ part of 'textfield.dart';
 /// ```dart
 /// // Style creates and populates the spec
 /// final style = RemixTextFieldStyle()
-///   .textColor(Colors.black)
+///   .color(Colors.black)
 ///   .cursorColor(Colors.blue)
 ///   .spacing(8.0);
 ///

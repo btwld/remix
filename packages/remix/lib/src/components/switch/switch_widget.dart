@@ -17,16 +17,16 @@ part of 'switch.dart';
 class RemixSwitch extends StatelessWidget {
   const RemixSwitch({
     super.key,
-    this.enabled = true,
     required this.selected,
-    required this.onChanged,
-    this.style = const RemixSwitchStyle.create(),
-    this.styleSpec,
+    this.onChanged,
+    this.enabled = true,
     this.enableFeedback = true,
     this.focusNode,
     this.autofocus = false,
     this.semanticLabel,
     this.mouseCursor = SystemMouseCursors.click,
+    this.style = const RemixSwitchStyle.create(),
+    this.styleSpec,
   });
 
   /// Whether this switch is enabled.
@@ -36,7 +36,10 @@ class RemixSwitch extends StatelessWidget {
   final bool selected;
 
   /// Called when the user toggles the switch.
-  final ValueChanged<bool> onChanged;
+  ///
+  /// When null, the switch is visually disabled and does not respond to
+  /// interaction.
+  final ValueChanged<bool>? onChanged;
 
   /// The style configuration for the switch.
   final RemixSwitchStyle style;
@@ -71,9 +74,11 @@ class RemixSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final effectiveOnChanged = enabled && onChanged != null ? onChanged : null;
+
     return NakedToggle(
       value: selected,
-      onChanged: enabled ? onChanged : null,
+      onChanged: effectiveOnChanged,
       enabled: enabled,
       mouseCursor: mouseCursor,
       enableFeedback: enableFeedback,
@@ -82,8 +87,9 @@ class RemixSwitch extends StatelessWidget {
       semanticLabel: semanticLabel,
       asSwitch: true,
       builder: (context, state, _) {
-        return StyleBuilder(
+        return RemixStyleSpecBuilder<RemixSwitchSpec>(
           style: _buildStyle(),
+          styleSpec: styleSpec,
           controller: NakedState.controllerOf(context),
           builder: (context, spec) {
             return Box(

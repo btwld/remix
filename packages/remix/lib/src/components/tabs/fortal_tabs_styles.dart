@@ -1,5 +1,6 @@
 part of 'tabs.dart';
 
+/// Creates a Fortal-themed [RemixTabStyle].
 RemixTabStyle fortalTabStyle() {
   return RemixTabStyle()
       .label(TextStyler().color(FortalTokens.gray12()))

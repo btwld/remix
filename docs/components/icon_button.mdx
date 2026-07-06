@@ -47,10 +47,10 @@ class IconButtonExample extends StatelessWidget {
 
   RemixIconButtonStyle get style {
     return RemixIconButtonStyle()
-        .iconColor(Colors.blueGrey.shade700)
+        .foregroundColor(Colors.blueGrey.shade700)
         .iconSize(22)
         .size(40, 40)
-        .color(Colors.blueGrey.shade50.withValues(alpha: 0.6))
+        .backgroundColor(Colors.blueGrey.shade50.withValues(alpha: 0.6))
         .borderAll(color: Colors.blueGrey.shade100, width: 1.5)
         .borderRadiusAll(const Radius.circular(8))
         .spinner(
@@ -61,11 +61,11 @@ class IconButtonExample extends StatelessWidget {
         )
         .onHovered(
           RemixIconButtonStyle()
-              .color(Colors.blueGrey.shade100.withValues(alpha: 0.4)),
+              .backgroundColor(Colors.blueGrey.shade100.withValues(alpha: 0.4)),
         )
         .onPressed(
           RemixIconButtonStyle()
-              .color(Colors.blueGrey.shade100.withValues(alpha: 0.8)),
+              .backgroundColor(Colors.blueGrey.shade100.withValues(alpha: 0.8)),
         );
   }
 }
@@ -92,17 +92,17 @@ class FortalIconButtonExample extends StatelessWidget {
         RemixIconButton(
           icon: Icons.add,
           onPressed: () {},
-          style: FortalIconButtonStyle.solid(),
+          style: fortalIconButtonStyle(variant: FortalIconButtonVariant.solid),
         ),
         RemixIconButton(
           icon: Icons.edit,
           onPressed: () {},
-          style: FortalIconButtonStyle.soft(),
+          style: fortalIconButtonStyle(variant: FortalIconButtonVariant.soft),
         ),
         RemixIconButton(
           icon: Icons.delete,
           onPressed: () {},
-          style: FortalIconButtonStyle.ghost(),
+          style: fortalIconButtonStyle(variant: FortalIconButtonVariant.ghost),
         ),
       ],
     );
@@ -112,7 +112,7 @@ class FortalIconButtonExample extends StatelessWidget {
 </CodeGroup>
 
 <Info>
-  See the [FortalIconButtonStyle source code](https://github.com/btwld/remix/blob/main/lib/src/components/icon_button/fortal_icon_button_styles.dart) for all available options.
+  See the [fortalIconButtonStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/icon_button/fortal_icon_button_styles.dart) for all available options.
 </Info>
 
 ## Constructor
@@ -124,8 +124,9 @@ const RemixIconButton({
   RemixIconButtonIconBuilder? iconBuilder,
   RemixIconButtonLoadingBuilder? loadingBuilder,
   bool loading = false,
+  bool enabled = true,
   bool enableFeedback = true,
-  required VoidCallback? onPressed,
+  VoidCallback? onPressed,
   VoidCallback? onLongPress,
   FocusNode? focusNode,
   bool autofocus = false,
@@ -175,13 +176,17 @@ Optional. Whether the button should automatically request focus when it is creat
 
 Optional. Whether the button is in a loading state.  When true, the button will display a spinner and become non-interactive.
 
+#### `enabled` → `bool`
+
+Optional. Whether this icon button is enabled. When false, press callbacks are suppressed even if [onPressed] is provided.
+
 #### `enableFeedback` → `bool`
 
 Optional. Whether to provide feedback when the button is pressed.  Defaults to true.
 
 #### `onPressed` → `VoidCallback?`
 
-**Required**. Callback function called when the button is pressed.  If null, the button will be considered disabled.
+Optional. Callback function called when the button is pressed. If null, the button will be considered disabled.
 
 #### `onLongPress` → `VoidCallback?`
 
@@ -210,6 +215,10 @@ Optional. Cursor when hovering over the button.  Defaults to [SystemMouseCursors
 
 ### Style Methods
 
+#### `container(BoxStyler value)`
+
+Configures the icon button container style.
+
 #### `icon(IconStyler value)`
 
 Configures the icon style using an IconStyler.
@@ -221,6 +230,14 @@ Configures the loading spinner style.
 #### `color(Color value)`
 
 Sets background color
+
+#### `backgroundColor(Color value)`
+
+Sets the background color of the icon button container.
+
+#### `foregroundColor(Color value)`
+
+Sets the foreground color (icon color) of the icon button.
 
 #### `padding(EdgeInsetsGeometryMix value)`
 
@@ -270,9 +287,13 @@ Sets width
 
 Sets height
 
-#### `animate(AnimationConfig animation)`
+#### `animate(AnimationConfig value)`
 
 Configures implicit animation for style transitions.
+
+#### `variants(List<VariantStyle<RemixIconButtonSpec>> value)`
+
+Sets style variants.
 
 #### `foregroundDecoration(DecorationMix value)`
 
@@ -285,6 +306,14 @@ Applies a matrix transformation to the component.
 #### `wrap(WidgetModifierConfig value)`
 
 Applies widget modifiers such as clipping, opacity, or scaling.
+
+#### `modifier(WidgetModifierConfig value)`
+
+Sets the widget modifier.
+
+#### `call({ ... })`
+
+Creates a RemixIconButton widget with this style applied.
 
 #### `iconOpacity(double value)`
 
@@ -321,4 +350,3 @@ Sets icon shadows
 #### `iconShadow(ShadowMix value)`
 
 Sets single icon shadow
-

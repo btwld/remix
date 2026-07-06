@@ -89,6 +89,7 @@ typedef _$RemixCheckboxSpecMethods = _$RemixCheckboxSpec; // ignore: unused_elem
 // MixWidgetGenerator
 // **************************************************************************
 
+/// Creates a Fortal-themed [RemixCheckboxStyle].
 class FortalCheckbox extends StatelessWidget {
   const FortalCheckbox({
     super.key,
@@ -98,12 +99,12 @@ class FortalCheckbox extends StatelessWidget {
     this.onChanged,
     this.enabled = true,
     this.tristate = false,
-    this.autofocus = false,
     this.checkedIcon = Icons.check_rounded,
     this.uncheckedIcon,
     this.indeterminateIcon = Icons.horizontal_rule,
-    this.enableFeedback = true,
     this.focusNode,
+    this.autofocus = false,
+    this.enableFeedback = true,
     this.semanticLabel,
     this.mouseCursor = SystemMouseCursors.click,
   });
@@ -120,17 +121,17 @@ class FortalCheckbox extends StatelessWidget {
 
   final bool tristate;
 
-  final bool autofocus;
-
   final IconData checkedIcon;
 
   final IconData? uncheckedIcon;
 
   final IconData indeterminateIcon;
 
-  final bool enableFeedback;
-
   final FocusNode? focusNode;
+
+  final bool autofocus;
+
+  final bool enableFeedback;
 
   final String? semanticLabel;
 
@@ -143,12 +144,12 @@ class FortalCheckbox extends StatelessWidget {
       onChanged: this.onChanged,
       enabled: this.enabled,
       tristate: this.tristate,
-      autofocus: this.autofocus,
       checkedIcon: this.checkedIcon,
       uncheckedIcon: this.uncheckedIcon,
       indeterminateIcon: this.indeterminateIcon,
-      enableFeedback: this.enableFeedback,
       focusNode: this.focusNode,
+      autofocus: this.autofocus,
+      enableFeedback: this.enableFeedback,
       semanticLabel: this.semanticLabel,
       mouseCursor: this.mouseCursor,
     );
@@ -185,6 +186,11 @@ mixin _$RemixCheckboxStyleMixin on Style<RemixCheckboxSpec>, Diagnosticable {
 
   /// Wraps with a widget modifier.
   RemixCheckboxStyle wrap(WidgetModifierConfig value) {
+    return merge(RemixCheckboxStyle(modifier: value));
+  }
+
+  /// Sets the widget modifier.
+  RemixCheckboxStyle modifier(WidgetModifierConfig value) {
     return merge(RemixCheckboxStyle(modifier: value));
   }
 

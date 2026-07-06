@@ -379,7 +379,7 @@ void main() {
       testWidgets('call method creates RemixCheckbox with all parameters', (
         tester,
       ) async {
-        final style = RemixCheckboxStyle().color(Colors.blue);
+        final style = RemixCheckboxStyle().fillColor(Colors.blue);
         final focusNode = FocusNode();
 
         final checkbox = style.call(

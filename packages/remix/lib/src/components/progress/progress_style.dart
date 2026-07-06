@@ -1,5 +1,9 @@
 part of 'progress.dart';
 
+/// Style builder for [RemixProgress].
+///
+/// Use this class to style the progress container, track, indicator, and track
+/// layout container.
 @MixableStyler()
 class RemixProgressStyle
     extends RemixContainerStyle<RemixProgressSpec, RemixProgressStyle>
@@ -87,6 +91,11 @@ class RemixProgressStyle
   /// Sets container alignment
   RemixProgressStyle alignment(Alignment value) {
     return merge(RemixProgressStyle(container: BoxStyler(alignment: value)));
+  }
+
+  /// Creates a [RemixProgress] widget with this style applied.
+  RemixProgress call({Key? key, required double value}) {
+    return RemixProgress(key: key, value: value, style: this);
   }
 
   // Abstract method implementations for mixins

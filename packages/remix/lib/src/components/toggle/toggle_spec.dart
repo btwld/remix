@@ -1,5 +1,6 @@
 part of 'toggle.dart';
 
+/// Resolved visual properties for a [RemixToggle].
 @MixableSpec()
 class RemixToggleSpec with _$RemixToggleSpec {
   @override

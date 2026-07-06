@@ -1,5 +1,6 @@
 part of 'icon_button.dart';
 
+/// Style configuration for [RemixIconButton] container, icon, and loading spinner.
 @MixableStyler()
 class RemixIconButtonStyle
     extends RemixContainerStyle<RemixIconButtonSpec, RemixIconButtonStyle>
@@ -183,8 +184,9 @@ class RemixIconButtonStyle
 
   RemixIconButton call({
     required IconData icon,
-    required VoidCallback? onPressed,
+    VoidCallback? onPressed,
     bool loading = false,
+    bool enabled = true,
     bool enableFeedback = true,
     FocusNode? focusNode,
   }) {
@@ -192,6 +194,7 @@ class RemixIconButtonStyle
       style: this,
       icon: icon,
       loading: loading,
+      enabled: enabled,
       enableFeedback: enableFeedback,
       onPressed: onPressed,
       focusNode: focusNode,

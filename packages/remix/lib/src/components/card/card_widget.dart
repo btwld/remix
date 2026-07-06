@@ -20,10 +20,10 @@ part of 'card.dart';
 class RemixCard extends StyleWidget<RemixCardSpec> {
   /// Creates a Material Design card.
   const RemixCard({
-    super.style = const RemixCardStyle.create(),
-    super.styleSpec,
     super.key,
     this.child,
+    super.style = const RemixCardStyle.create(),
+    super.styleSpec,
   });
 
   /// The widget below this widget in the tree.

@@ -5,10 +5,6 @@ targets:
         enabled: true
         generate_for:
           - lib/**/*.dart
-      mix_generator|spec_styler_generator:
-        enabled: true
-        generate_for:
-          - lib/src/components/button/button.dart
       mix_generator|styler_generator:
         enabled: true
         generate_for:

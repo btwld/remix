@@ -67,7 +67,7 @@ class _MenuExampleState extends State<MenuExample> {
       ),
       style: menuStyle,
       onSelected: (value) {
-        print('Selected: $value');
+        debugPrint('Selected: $value');
       },
       controller: controller,
     );
@@ -151,17 +151,15 @@ class FortalMenuExample extends StatelessWidget {
           value: 'edit',
           label: 'Edit',
           leadingIcon: Icons.edit,
-          style: FortalMenuItemStyle.base(),
         ),
         RemixMenuItem(
           value: 'delete',
           label: 'Delete',
           leadingIcon: Icons.delete,
-          style: FortalMenuItemStyle.base(),
         ),
       ],
-      style: FortalMenuStyle.base(),
-      onSelected: (value) => print(value),
+      style: fortalMenuStyle(),
+      onSelected: (value) => debugPrint(value),
     );
   }
 }
@@ -169,7 +167,7 @@ class FortalMenuExample extends StatelessWidget {
 </CodeGroup>
 
 <Info>
-  See the [FortalMenuStyle source code](https://github.com/btwld/remix/blob/main/lib/src/components/menu/fortal_menu_styles.dart) for all available options.
+  See the [fortalMenuStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/menu/fortal_menu_styles.dart) for all available options.
 </Info>
 
 ## Constructor
@@ -265,7 +263,79 @@ Optional. Overlay positioning configuration.
 Optional. The style configuration for the menu.
 
 
-### Style Methods
+### Menu Style Methods
+
+#### `trigger(RemixMenuTriggerStyle value)`
+
+Configures the trigger button style.
+
+#### `overlay(FlexBoxStyler value)`
+
+Configures the menu overlay container style.
+
+#### `item(RemixMenuItemStyle value)`
+
+Configures the default menu item style.
+
+#### `divider(RemixDividerStyle value)`
+
+Configures divider style.
+
+#### `animate(AnimationConfig value)`
+
+Configures implicit animation for style transitions.
+
+#### `variants(List<VariantStyle<RemixMenuSpec>> value)`
+
+Sets style variants.
+
+#### `wrap(WidgetModifierConfig value)`
+
+Applies widget modifiers such as clipping, opacity, or scaling.
+
+#### `modifier(WidgetModifierConfig value)`
+
+Sets the widget modifier.
+
+#### `call<T>({ ... })`
+
+Creates a RemixMenu widget with this style applied.
+
+### Menu Trigger Style Methods
+
+#### `container(FlexBoxStyler value)`
+
+Configures the trigger container style.
+
+#### `label(TextStyler value)`
+
+Configures the trigger label style.
+
+#### `icon(IconStyler value)`
+
+Configures the trigger icon style.
+
+#### `animate(AnimationConfig value)`
+
+Configures implicit animation for trigger style transitions.
+
+#### `variants(List<VariantStyle<RemixMenuTriggerSpec>> value)`
+
+Sets trigger style variants.
+
+#### `wrap(WidgetModifierConfig value)`
+
+Applies widget modifiers such as clipping, opacity, or scaling.
+
+#### `modifier(WidgetModifierConfig value)`
+
+Sets the trigger widget modifier.
+
+### Menu Item Style Methods
+
+#### `container(FlexBoxStyler value)`
+
+Configures the item container style.
 
 #### `label(TextStyler value)`
 
@@ -323,13 +393,21 @@ Applies a matrix transformation to the component.
 
 Configures the flex layout properties.
 
-#### `animate(AnimationConfig animation)`
+#### `animate(AnimationConfig value)`
 
 Configures implicit animation for style transitions.
+
+#### `variants(List<VariantStyle<RemixMenuItemSpec>> value)`
+
+Sets item style variants.
 
 #### `wrap(WidgetModifierConfig value)`
 
 Applies widget modifiers such as clipping, opacity, or scaling.
+
+#### `modifier(WidgetModifierConfig value)`
+
+Sets the item widget modifier.
 
 #### `labelTextStyle(TextStyleMix value)`
 
@@ -422,4 +500,3 @@ Sets icon shadows
 #### `iconShadow(ShadowMix value)`
 
 Sets single icon shadow
-

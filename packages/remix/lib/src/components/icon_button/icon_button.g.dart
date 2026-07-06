@@ -95,14 +95,16 @@ typedef _$RemixIconButtonSpecMethods = _$RemixIconButtonSpec; // ignore: unused_
 // MixWidgetGenerator
 // **************************************************************************
 
+/// Creates a Fortal-themed [RemixIconButtonStyle].
 class FortalIconButton extends StatelessWidget {
   const FortalIconButton({
     super.key,
     this.variant = .solid,
     this.size = .size2,
     required this.icon,
-    required this.onPressed,
+    this.onPressed,
     this.loading = false,
+    this.enabled = true,
     this.enableFeedback = true,
     this.focusNode,
   });
@@ -117,6 +119,8 @@ class FortalIconButton extends StatelessWidget {
 
   final bool loading;
 
+  final bool enabled;
+
   final bool enableFeedback;
 
   final FocusNode? focusNode;
@@ -127,6 +131,7 @@ class FortalIconButton extends StatelessWidget {
       icon: this.icon,
       onPressed: this.onPressed,
       loading: this.loading,
+      enabled: this.enabled,
       enableFeedback: this.enableFeedback,
       focusNode: this.focusNode,
     );
@@ -170,6 +175,11 @@ mixin _$RemixIconButtonStyleMixin
 
   /// Wraps with a widget modifier.
   RemixIconButtonStyle wrap(WidgetModifierConfig value) {
+    return merge(RemixIconButtonStyle(modifier: value));
+  }
+
+  /// Sets the widget modifier.
+  RemixIconButtonStyle modifier(WidgetModifierConfig value) {
     return merge(RemixIconButtonStyle(modifier: value));
   }
 

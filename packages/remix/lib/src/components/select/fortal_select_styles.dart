@@ -1,9 +1,30 @@
 part of 'select.dart';
 
-enum FortalSelectSize { size1, size2, size3 }
+/// Fortal select size presets.
+enum FortalSelectSize {
+  /// Compact select.
+  size1,
 
-enum FortalSelectVariant { surface, soft, ghost }
+  /// Default select.
+  size2,
 
+  /// Large select.
+  size3,
+}
+
+/// Fortal select color and emphasis variants.
+enum FortalSelectVariant {
+  /// Surface-backed trigger with border.
+  surface,
+
+  /// Soft accent trigger.
+  soft,
+
+  /// Transparent trigger.
+  ghost,
+}
+
+/// Creates a Fortal-themed [RemixSelectStyle].
 RemixSelectStyle fortalSelectStyle({
   FortalSelectVariant variant = .surface,
   FortalSelectSize size = .size2,
@@ -89,6 +110,7 @@ RemixSelectStyle _fortalSelectSizeStyle(FortalSelectSize size) {
   };
 }
 
+/// Creates a Fortal-themed [RemixSelectMenuItemStyle].
 RemixSelectMenuItemStyle fortalSelectMenuItemStyle({
   FortalSelectVariant variant = .surface,
   FortalSelectSize size = .size2,

@@ -371,13 +371,13 @@ void main() {
     });
 
     group('Call Method', () {
-      test('call method creates RemixIconButton with required parameters', () {
+      test('call method creates RemixIconButton with minimal parameters', () {
         const style = RemixIconButtonStyle.create();
-        final button = style.call(icon: Icons.add, onPressed: () {});
+        final button = style.call(icon: Icons.add);
 
         expect(button, isA<RemixIconButton>());
         expect(button.icon, equals(Icons.add));
-        expect(button.onPressed, isNotNull);
+        expect(button.onPressed, isNull);
       });
 
       test('call method with all parameters', () {
@@ -386,6 +386,7 @@ void main() {
           icon: Icons.delete,
           onPressed: () {},
           loading: true,
+          enabled: false,
           enableFeedback: false,
           focusNode: FocusNode(),
         );
@@ -394,6 +395,7 @@ void main() {
         expect(button.icon, equals(Icons.delete));
         expect(button.onPressed, isNotNull);
         expect(button.loading, isTrue);
+        expect(button.enabled, isFalse);
         expect(button.enableFeedback, isFalse);
         expect(button.focusNode, isNotNull);
       });

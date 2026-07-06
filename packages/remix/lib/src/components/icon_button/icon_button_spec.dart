@@ -1,5 +1,6 @@
 part of 'icon_button.dart';
 
+/// Resolved visual properties for a [RemixIconButton].
 @MixableSpec()
 class RemixIconButtonSpec with _$RemixIconButtonSpec {
   @override

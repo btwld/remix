@@ -1,7 +1,6 @@
 part of 'divider.dart';
 
-// Private per-component constants (none)
-
+/// Style configuration for a [RemixDivider] container.
 @MixableStyler()
 class RemixDividerStyle
     extends RemixContainerStyle<RemixDividerSpec, RemixDividerStyle>
@@ -67,6 +66,11 @@ class RemixDividerStyle
   @override
   RemixDividerStyle decoration(DecorationMix value) {
     return merge(RemixDividerStyle(container: BoxStyler(decoration: value)));
+  }
+
+  /// Creates a [RemixDivider] widget with this style applied.
+  RemixDivider call({Key? key}) {
+    return RemixDivider(key: key, style: this);
   }
 
   // Abstract method implementations for mixins

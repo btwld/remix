@@ -1,11 +1,19 @@
 part of 'divider.dart';
 
+/// Fortal divider thickness presets.
 enum FortalDividerSize {
-  size1, // hairline
-  size2, // medium
-  size3, // thick
+  /// Hairline divider.
+  size1,
+
+  /// Medium divider.
+  size2,
+
+  /// Thick divider.
+  size3,
 }
 
+/// Creates a Fortal-themed [RemixDividerStyle].
+@MixWidget()
 RemixDividerStyle fortalDividerStyle({FortalDividerSize size = .size1}) {
   return RemixDividerStyle()
       .color(FortalTokens.gray6())

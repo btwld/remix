@@ -1,9 +1,27 @@
 part of 'textfield.dart';
 
-enum FortalTextFieldSize { size1, size2, size3 }
+/// Fortal text field size presets.
+enum FortalTextFieldSize {
+  /// Compact text field.
+  size1,
 
-enum FortalTextFieldVariant { surface, soft }
+  /// Default text field.
+  size2,
 
+  /// Large text field.
+  size3,
+}
+
+/// Fortal text field color variants.
+enum FortalTextFieldVariant {
+  /// Surface treatment with neutral border and text colors.
+  surface,
+
+  /// Soft accent treatment.
+  soft,
+}
+
+/// Creates a Fortal-themed [RemixTextFieldStyle].
 @MixWidget()
 RemixTextFieldStyle fortalTextFieldStyle({
   FortalTextFieldVariant variant = .surface,

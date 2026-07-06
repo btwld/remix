@@ -1,9 +1,30 @@
 part of 'slider.dart';
 
-enum FortalSliderSize { size1, size2, size3 }
+/// Fortal slider size presets.
+enum FortalSliderSize {
+  /// Compact slider with a 13 px thumb and 6 px track.
+  size1,
 
-enum FortalSliderVariant { surface, soft }
+  /// Default slider with a 16 px thumb and 8 px track.
+  size2,
 
+  /// Large slider with a 19 px thumb and 10 px track.
+  size3,
+}
+
+/// Fortal slider color variants.
+enum FortalSliderVariant {
+  /// Neutral track with the active accent indicator.
+  surface,
+
+  /// Softer accent treatment for lower-emphasis controls.
+  soft,
+}
+
+/// Creates a Fortal-themed [RemixSliderStyle].
+///
+/// The returned style can be passed to [RemixSlider.style] or called directly
+/// as a widget factory via [RemixSliderStyle.call].
 @MixWidget()
 RemixSliderStyle fortalSliderStyle({
   FortalSliderVariant variant = .surface,

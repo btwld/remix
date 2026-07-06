@@ -1,9 +1,27 @@
 part of 'switch.dart';
 
-enum FortalSwitchSize { size1, size2, size3 }
+/// Fortal switch size presets.
+enum FortalSwitchSize {
+  /// Compact switch.
+  size1,
 
-enum FortalSwitchVariant { surface, soft }
+  /// Default switch.
+  size2,
 
+  /// Large switch.
+  size3,
+}
+
+/// Fortal switch color variants.
+enum FortalSwitchVariant {
+  /// Surface treatment with a visible border.
+  surface,
+
+  /// Softer accent treatment.
+  soft,
+}
+
+/// Creates a Fortal-themed [RemixSwitchStyle].
 @MixWidget()
 RemixSwitchStyle fortalSwitchStyle({
   FortalSwitchVariant variant = .surface,

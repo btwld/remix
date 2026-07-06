@@ -22,21 +22,21 @@ typedef RemixButtonLoadingBuilder =
 /// // Basic button
 /// RemixButton(
 ///   label: 'Click Me',
-///   onPressed: () => print('Button pressed!'),
+///   onPressed: () => debugPrint('Button pressed!'),
 /// )
 ///
 /// // Button with leading icon
 /// RemixButton(
 ///   label: 'Save Changes',
 ///   leadingIcon: Icons.save,
-///   onPressed: () => print('Save pressed!'),
+///   onPressed: () => debugPrint('Save pressed!'),
 /// )
 ///
 /// // Button with trailing icon
 /// RemixButton(
 ///   label: 'Next',
 ///   trailingIcon: Icons.arrow_forward,
-///   onPressed: () => print('Next pressed!'),
+///   onPressed: () => debugPrint('Next pressed!'),
 /// )
 ///
 /// // Button with both icons
@@ -44,14 +44,14 @@ typedef RemixButtonLoadingBuilder =
 ///   label: 'Send',
 ///   leadingIcon: Icons.send,
 ///   trailingIcon: Icons.check,
-///   onPressed: () => print('Send pressed!'),
+///   onPressed: () => debugPrint('Send pressed!'),
 /// )
 ///
 /// // Loading button
 /// RemixButton(
 ///   label: 'Processing',
 ///   loading: true,
-///   onPressed: () => print('Processing...'),
+///   onPressed: () => debugPrint('Processing...'),
 /// )
 /// ```
 ///
@@ -61,8 +61,6 @@ class RemixButton extends StyleWidget<RemixButtonSpec> {
   /// The [label] parameter is required and specifies the button text.
   /// Use builders to customize rendering of specific parts.
   const RemixButton({
-    super.style = const RemixButtonStyler.create(),
-    super.styleSpec,
     super.key,
     required this.label,
     this.leadingIcon,
@@ -71,20 +69,22 @@ class RemixButton extends StyleWidget<RemixButtonSpec> {
     this.leadingIconBuilder,
     this.trailingIconBuilder,
     this.loadingBuilder,
-    this.autofocus = false,
     this.loading = false,
     this.enabled = true,
-    this.enableFeedback = true,
-    required this.onPressed,
+    this.onPressed,
     this.onLongPress,
     this.focusNode,
+    this.autofocus = false,
+    this.enableFeedback = true,
     this.semanticLabel,
     this.semanticHint,
     this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
+    super.style = const RemixButtonStyle.create(),
+    super.styleSpec,
   });
 
-  static final styleFrom = RemixButtonStyler.new;
+  static final styleFrom = RemixButtonStyle.new;
 
   /// Whether the button is in a loading state.
   ///
@@ -166,8 +166,8 @@ class RemixButton extends StyleWidget<RemixButtonSpec> {
 
   Style<RemixButtonSpec> _buildStyle() {
     final currentStyle = style;
-    if (currentStyle is RemixButtonStyler) {
-      return RemixButtonStyler().mainAxisSize(.min).merge(currentStyle);
+    if (currentStyle is RemixButtonStyle) {
+      return RemixButtonStyle().mainAxisSize(.min).merge(currentStyle);
     }
 
     return currentStyle;

@@ -64,7 +64,7 @@ mixin _$RemixDividerSpec implements Spec<RemixDividerSpec>, Diagnosticable {
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    properties..add(DiagnosticsProperty('container', container));
+    properties.add(DiagnosticsProperty('container', container));
   }
 }
 
@@ -72,6 +72,22 @@ mixin _$RemixDividerSpec implements Spec<RemixDividerSpec>, Diagnosticable {
   'Rename to `_\$RemixDividerSpec` and migrate the class declaration to `class RemixDividerSpec with _\$RemixDividerSpec`. The `_\$RemixDividerSpecMethods` alias will be removed in mix_generator 3.0.',
 )
 typedef _$RemixDividerSpecMethods = _$RemixDividerSpec; // ignore: unused_element
+
+// **************************************************************************
+// MixWidgetGenerator
+// **************************************************************************
+
+/// Creates a Fortal-themed [RemixDividerStyle].
+class FortalDivider extends StatelessWidget {
+  const FortalDivider({super.key, this.size = .size1});
+
+  final FortalDividerSize size;
+
+  @override
+  Widget build(BuildContext context) {
+    return fortalDividerStyle(size: this.size).call(key: this.key);
+  }
+}
 
 // **************************************************************************
 // StylerGenerator
@@ -97,6 +113,11 @@ mixin _$RemixDividerStyleMixin on Style<RemixDividerSpec>, Diagnosticable {
 
   /// Wraps with a widget modifier.
   RemixDividerStyle wrap(WidgetModifierConfig value) {
+    return merge(RemixDividerStyle(modifier: value));
+  }
+
+  /// Sets the widget modifier.
+  RemixDividerStyle modifier(WidgetModifierConfig value) {
     return merge(RemixDividerStyle(modifier: value));
   }
 
@@ -128,7 +149,7 @@ mixin _$RemixDividerStyleMixin on Style<RemixDividerSpec>, Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties..add(DiagnosticsProperty('container', $container));
+    properties.add(DiagnosticsProperty('container', $container));
   }
 
   @override

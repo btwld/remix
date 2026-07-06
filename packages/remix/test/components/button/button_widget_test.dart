@@ -10,9 +10,7 @@ void main() {
   group('RemixButton Widget Tests', () {
     group('Basic Rendering', () {
       testWidgets('renders button with label only', (tester) async {
-        await tester.pumpRemixApp(
-          RemixButton(label: 'Click Me', onPressed: () {}),
-        );
+        await tester.pumpRemixApp(RemixButton(label: 'Click Me'));
 
         await tester.pumpAndSettle();
 
@@ -106,6 +104,12 @@ void main() {
         'contains disabled state when enabled is false',
         build: () =>
             RemixButton(label: 'Click Me', onPressed: () {}, enabled: false),
+        expectedStates: {WidgetState.disabled},
+      );
+
+      widgetControllerTest<RemixButtonSpec>(
+        'contains disabled state when onPressed is omitted',
+        build: () => RemixButton(label: 'Click Me'),
         expectedStates: {WidgetState.disabled},
       );
 
@@ -338,6 +342,15 @@ void main() {
             loading: true,
             onPressed: () {},
           ),
+        );
+
+        await tester.pump();
+        await tester.tap(find.byType(RemixButton));
+        expect(pressedCount, equals(1));
+
+        // Test case 4: onPressed omitted -> should be disabled
+        await tester.pumpRemixApp(
+          const RemixButton(label: 'Test', enabled: true, loading: false),
         );
 
         await tester.pump();

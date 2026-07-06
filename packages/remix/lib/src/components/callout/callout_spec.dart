@@ -1,5 +1,6 @@
 part of 'callout.dart';
 
+/// Resolved visual values for a [RemixCallout].
 @MixableSpec()
 class RemixCalloutSpec with _$RemixCalloutSpec {
   @override

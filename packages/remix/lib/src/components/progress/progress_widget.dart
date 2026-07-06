@@ -13,10 +13,10 @@ part of 'progress.dart';
 /// ```
 class RemixProgress extends StyleWidget<RemixProgressSpec> {
   const RemixProgress({
-    super.style = const RemixProgressStyle.create(),
-    super.styleSpec,
     super.key,
     required this.value,
+    super.style = const RemixProgressStyle.create(),
+    super.styleSpec,
   }) : assert(
          value >= 0 && value <= 1,
          'Progress value must be between 0 and 1',

@@ -18,7 +18,7 @@ void main() {
           container: BoxStyler(
             decoration: BoxDecorationMix(color: Colors.blue),
           ),
-          text: TextStyler(style: TextStyleMix(color: Colors.white)),
+          label: TextStyler(style: TextStyleMix(color: Colors.white)),
           icon: IconStyler(color: Colors.red),
         );
 
@@ -114,12 +114,48 @@ void main() {
       );
 
       styleMethodTest(
-        'textColor method sets text color',
+        'backgroundColor method sets background color',
         initial: RemixAvatarStyle(),
-        modify: (style) => style.textColor(Colors.purple),
+        modify: (style) => style.backgroundColor(Colors.green),
         expect: (style) {
           expect(
-            style.$text,
+            style.$container,
+            equals(
+              Prop.maybeMix(
+                BoxStyler(decoration: BoxDecorationMix(color: Colors.green)),
+              ),
+            ),
+          );
+        },
+      );
+
+      styleMethodTest(
+        'foregroundColor method sets label and icon color',
+        initial: RemixAvatarStyle(),
+        modify: (style) => style.foregroundColor(Colors.purple),
+        expect: (style) {
+          expect(
+            style.$label,
+            equals(
+              Prop.maybeMix(
+                TextStyler(style: TextStyleMix(color: Colors.purple)),
+              ),
+            ),
+          );
+          expect(
+            style.$icon,
+            equals(Prop.maybeMix(IconStyler(color: Colors.purple))),
+          );
+        },
+      );
+
+      styleMethodTest(
+        'labelColor method sets label color',
+        initial: RemixAvatarStyle(),
+        modify: (style) => style.labelColor(Colors.purple),
+        expect: (style) {
+          expect(
+            style.$label,
             equals(
               Prop.maybeMix(
                 TextStyler(style: TextStyleMix(color: Colors.purple)),
@@ -248,7 +284,7 @@ void main() {
             style.label(TextStyler(style: TextStyleMix(fontSize: 16))),
         expect: (style) {
           expect(
-            style.$text,
+            style.$label,
             equals(
               Prop.maybeMix(TextStyler(style: TextStyleMix(fontSize: 16))),
             ),
@@ -358,7 +394,7 @@ void main() {
       test('style methods can be chained', () {
         final style = RemixAvatarStyle()
             .square(100.0)
-            .textColor(Colors.white)
+            .foregroundColor(Colors.white)
             .iconColor(Colors.yellow);
 
         expect(style, isA<RemixAvatarStyle>());

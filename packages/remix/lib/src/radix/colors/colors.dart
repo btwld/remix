@@ -1,5 +1,3 @@
-// ignore_for_file: avoid-commented-out-code
-
 library radix_colors; // moved to radix/colors/
 
 import 'package:flutter/painting.dart';

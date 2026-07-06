@@ -8,9 +8,7 @@ void main() {
   group('RemixSlider', () {
     group('Basic Rendering', () {
       testWidgets('renders slider with minimal props', (tester) async {
-        await tester.pumpRemixApp(
-          RemixSlider(value: 0.5, min: 0.0, max: 1.0, onChanged: (value) {}),
-        );
+        await tester.pumpRemixApp(const RemixSlider(value: 0.5));
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixSlider), findsOneWidget);
@@ -374,6 +372,32 @@ void main() {
         expect(find.byType(RemixSlider), findsOneWidget);
       });
 
+      testWidgets('does not react to swipe when onChanged is omitted', (
+        tester,
+      ) async {
+        bool onChangeStartCalled = false;
+        bool onChangeEndCalled = false;
+
+        await tester.pumpRemixApp(
+          RemixSlider(
+            value: 0.5,
+            min: 0.0,
+            max: 1.0,
+            onChangeStart: (value) => onChangeStartCalled = true,
+            onChangeEnd: (value) => onChangeEndCalled = true,
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final sliderFinder = find.byType(RemixSlider);
+        await tester.drag(sliderFinder, const Offset(100.0, 0.0));
+        await tester.pumpAndSettle();
+
+        expect(onChangeStartCalled, isFalse);
+        expect(onChangeEndCalled, isFalse);
+        expect(find.byType(RemixSlider), findsOneWidget);
+      });
+
       testWidgets('handles onChangeStart callback', (tester) async {
         bool onChangeStartCalled = false;
 
@@ -513,15 +537,15 @@ void main() {
       });
     });
 
-    group('Haptic Feedback', () {
-      testWidgets('accepts enableHapticFeedback parameter', (tester) async {
+    group('Feedback', () {
+      testWidgets('accepts enableFeedback parameter', (tester) async {
         await tester.pumpRemixApp(
           RemixSlider(
             value: 0.5,
             min: 0.0,
             max: 1.0,
             onChanged: (value) {},
-            enableHapticFeedback: true,
+            enableFeedback: true,
           ),
         );
         await tester.pumpAndSettle();
@@ -529,14 +553,14 @@ void main() {
         expect(find.byType(RemixSlider), findsOneWidget);
       });
 
-      testWidgets('handles disabled haptic feedback', (tester) async {
+      testWidgets('handles disabled feedback', (tester) async {
         await tester.pumpRemixApp(
           RemixSlider(
             value: 0.5,
             min: 0.0,
             max: 1.0,
             onChanged: (value) {},
-            enableHapticFeedback: false,
+            enableFeedback: false,
           ),
         );
         await tester.pumpAndSettle();
@@ -705,6 +729,36 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixSlider), findsOneWidget);
+      });
+    });
+
+    group('StyleSpec Parameter', () {
+      testWidgets('applies raw styleSpec when provided', (tester) async {
+        final spec = RemixSliderSpec(
+          thumb: const StyleSpec(
+            spec: BoxSpec(decoration: BoxDecoration(color: Colors.red)),
+          ),
+        );
+
+        await tester.pumpRemixApp(
+          RemixSlider(
+            value: 0.5,
+            min: 0.0,
+            max: 1.0,
+            onChanged: (value) {},
+            styleSpec: spec,
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final decorations = tester
+            .widgetList<Box>(find.byType(Box))
+            .map((box) => box.styleSpec?.spec.decoration);
+
+        expect(
+          decorations,
+          contains(equals(const BoxDecoration(color: Colors.red))),
+        );
       });
     });
 

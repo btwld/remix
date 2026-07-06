@@ -20,9 +20,9 @@ part of 'spinner.dart';
 /// ```
 class RemixSpinner extends StyleWidget<RemixSpinnerSpec> {
   const RemixSpinner({
+    super.key,
     super.style = const RemixSpinnerStyle.create(),
     super.styleSpec,
-    super.key,
   });
 
   @override

@@ -1,13 +1,18 @@
 part of 'tooltip.dart';
 
+/// A trigger widget that shows styled overlay content in a tooltip.
+///
+/// [tooltipChild] is rendered inside the tooltip overlay. [child] is the
+/// widget users hover, focus, or long-press to reveal the tooltip.
 class RemixTooltip extends StatelessWidget {
   const RemixTooltip({
     super.key,
-    this.style = const RemixTooltipStyle.create(),
-    this.styleSpec,
     required this.tooltipChild,
     required this.child,
     this.tooltipSemantics,
+    this.positioning = const OverlayPositionConfig(),
+    this.style = const RemixTooltipStyle.create(),
+    this.styleSpec,
   });
 
   /// The style configuration for the tooltip.
@@ -25,19 +30,24 @@ class RemixTooltip extends StatelessWidget {
   /// The semantic label for the tooltip.
   final String? tooltipSemantics;
 
+  /// Overlay positioning configuration.
+  final OverlayPositionConfig positioning;
+
   static final styleFrom = RemixTooltipStyle.new;
 
   @override
   Widget build(BuildContext context) {
-    return StyleBuilder(
+    return RemixStyleSpecBuilder<RemixTooltipSpec>(
       style: style,
+      styleSpec: styleSpec,
       builder: (context, spec) {
         return NakedTooltip(
           overlayBuilder: (context, info) =>
               Box(styleSpec: spec.container, child: tooltipChild),
-          showDuration: spec.showDuration ?? const Duration(milliseconds: 1500),
-          waitDuration: spec.waitDuration ?? const Duration(milliseconds: 300),
-          semanticsLabel: tooltipSemantics,
+          touchDelay: spec.showDuration ?? const Duration(milliseconds: 1500),
+          hoverDelay: spec.waitDuration ?? const Duration(milliseconds: 300),
+          positioning: positioning,
+          semanticLabel: tooltipSemantics,
           child: child,
         );
       },

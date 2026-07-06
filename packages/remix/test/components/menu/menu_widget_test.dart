@@ -393,6 +393,83 @@ void main() {
 
       expect(find.byType(RemixMenu<String>), findsOneWidget);
     });
+
+    testWidgets('applies menu-level default item style', (tester) async {
+      await tester.pumpRemixApp(
+        RemixMenu<String>(
+          trigger: const RemixMenuTrigger(label: 'Options'),
+          items: const [RemixMenuItem<String>(value: 'copy', label: 'Copy')],
+          style: RemixMenuStyle().item(
+            RemixMenuItemStyle().label(TextStyler().color(Colors.red)),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Options'));
+      await tester.pumpAndSettle();
+
+      final itemText = tester.widget<Text>(find.text('Copy'));
+      expect(itemText.style?.color, equals(Colors.red));
+    });
+
+    testWidgets('lets per-item style override menu-level item style', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(
+        RemixMenu<String>(
+          trigger: const RemixMenuTrigger(label: 'Options'),
+          items: [
+            RemixMenuItem<String>(
+              value: 'copy',
+              label: 'Copy',
+              style: RemixMenuItemStyle().label(
+                TextStyler().color(Colors.blue),
+              ),
+            ),
+          ],
+          style: RemixMenuStyle().item(
+            RemixMenuItemStyle().label(TextStyler().color(Colors.red)),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Options'));
+      await tester.pumpAndSettle();
+
+      final itemText = tester.widget<Text>(find.text('Copy'));
+      expect(itemText.style?.color, equals(Colors.blue));
+    });
+
+    testWidgets('applies menu-level divider style', (tester) async {
+      await tester.pumpRemixApp(
+        RemixMenu<String>(
+          trigger: const RemixMenuTrigger(label: 'Options'),
+          items: const [
+            RemixMenuItem<String>(value: 'copy', label: 'Copy'),
+            RemixMenuDivider<String>(),
+            RemixMenuItem<String>(value: 'paste', label: 'Paste'),
+          ],
+          style: RemixMenuStyle().divider(
+            RemixDividerStyle().color(Colors.purple),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Options'));
+      await tester.pumpAndSettle();
+
+      final decorations = tester
+          .widgetList<Box>(find.byType(Box))
+          .map((box) => box.styleSpec?.spec.decoration);
+
+      expect(
+        decorations,
+        contains(equals(const BoxDecoration(color: Colors.purple))),
+      );
+    });
   });
 
   group('RemixMenu Semantics and Accessibility', () {

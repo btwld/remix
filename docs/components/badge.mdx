@@ -44,11 +44,11 @@ class BadgeExample extends StatelessWidget {
   RemixBadgeStyle get styleLabel {
     return RemixBadgeStyle()
         .size(24, 24)
-        .wrapClipOval()
+        .wrap(WidgetModifierConfig.clipOval())
         .label(
           TextStyler()
               .fontSize(15)
-              .wrapAlign(Alignment.center)
+              .textAlign(TextAlign.center)
               .fontFeatures([const FontFeature.tabularFigures()]),
         )
         .foregroundColor(Colors.greenAccent.shade700)
@@ -60,15 +60,15 @@ class BadgeExample extends StatelessWidget {
   RemixBadgeStyle get styleIcon {
     return RemixBadgeStyle()
         .size(24, 24)
-        .wrapClipOval()
+        .wrap(WidgetModifierConfig.clipOval())
         .label(
           TextStyler()
               .fontSize(15)
-              .wrapAlign(Alignment.center)
+              .textAlign(TextAlign.center)
               .fontFeatures([const FontFeature.tabularFigures()]),
         )
         .foregroundColor(Colors.redAccent)
-        .wrapIconTheme(const IconThemeData(color: Colors.white, size: 15));
+        .wrap(WidgetModifierConfig.iconTheme(color: Colors.white, size: 15));
   }
 }
 ```
@@ -93,11 +93,11 @@ class FortalBadgeExample extends StatelessWidget {
       children: [
         RemixBadge(
           label: '5',
-          style: FortalBadgeStyle.solid(),
+          style: fortalBadgeStyle(variant: FortalBadgeVariant.solid),
         ),
         RemixBadge(
           label: 'New',
-          style: FortalBadgeStyle.soft(),
+          style: fortalBadgeStyle(variant: FortalBadgeVariant.soft),
         ),
       ],
     );
@@ -107,7 +107,7 @@ class FortalBadgeExample extends StatelessWidget {
 </CodeGroup>
 
 <Info>
-  See the [FortalBadgeStyle source code](https://github.com/btwld/remix/blob/main/lib/src/components/badge/fortal_badge_styles.dart) for all available options.
+  See the [fortalBadgeStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/badge/fortal_badge_styles.dart) for all available options.
 </Info>
 
 ## Constructor
@@ -115,11 +115,11 @@ class FortalBadgeExample extends StatelessWidget {
 ```dart
 const RemixBadge({
   Key? key,
-  Widget? child,
   String? label,
+  Widget? child,
   RemixBadgeLabelBuilder? labelBuilder,
   RemixBadgeStyle style = const RemixBadgeStyle.create(),
-  RemixBadgeSpec? styleSpec,
+  StyleSpec<RemixBadgeSpec>? styleSpec,
 })
 ```
 </CodeGroup>
@@ -132,7 +132,7 @@ const RemixBadge({
 
 Optional. The style configuration for the badge. Customize colors, sizing, shape, and state-based styling.
 
-#### `styleSpec` → `RemixBadgeSpec?`
+#### `styleSpec` → `StyleSpec<RemixBadgeSpec>?`
 
 Optional. A pre-resolved style spec that bypasses style resolution. Useful for performance when sharing resolved styles across multiple instances.
 
@@ -191,7 +191,7 @@ Configures the label text style using a TextStyler.
 
 Sets constraints
 
-#### `animate(AnimationConfig animation)`
+#### `animate(AnimationConfig value)`
 
 Sets animation
 
@@ -251,3 +251,6 @@ Sets label/text word spacing
 
 Sets label/text decoration color
 
+#### `call({Key? key, String? label, Widget? child, RemixBadgeLabelBuilder? labelBuilder})`
+
+Creates a `RemixBadge` widget with this style applied.

@@ -3,10 +3,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
 void main() {
-  group('RemixButtonStyler spinner nesting', () {
+  group('RemixButtonStyle spinner nesting', () {
     test('spinner indicator color can be set through nested shorthand', () {
       const testColor = Colors.red;
-      final originalStyle = RemixButtonStyler();
+      final originalStyle = RemixButtonStyle();
       final modifiedStyle = originalStyle.spinner(.indicatorColor(testColor));
 
       final expectedSpinner = Prop.maybeMix(
@@ -19,7 +19,7 @@ void main() {
 
     test('spinner track color can be set through nested shorthand', () {
       const testColor = Colors.blue;
-      final originalStyle = RemixButtonStyler();
+      final originalStyle = RemixButtonStyle();
       final modifiedStyle = originalStyle.spinner(.trackColor(testColor));
 
       final expectedSpinner = Prop.maybeMix(
@@ -32,7 +32,7 @@ void main() {
 
     test('spinner size can be set through nested shorthand', () {
       const testSize = 32.0;
-      final originalStyle = RemixButtonStyler();
+      final originalStyle = RemixButtonStyle();
       final modifiedStyle = originalStyle.spinner(.size(testSize));
 
       final expectedSpinner = Prop.maybeMix(RemixSpinnerStyle(size: testSize));
@@ -43,7 +43,7 @@ void main() {
 
     test('spinner stroke width can be set through nested shorthand', () {
       const testWidth = 3.0;
-      final originalStyle = RemixButtonStyler();
+      final originalStyle = RemixButtonStyle();
       final modifiedStyle = originalStyle.spinner(.strokeWidth(testWidth));
 
       final expectedSpinner = Prop.maybeMix(
@@ -56,7 +56,7 @@ void main() {
 
     test('spinner track stroke width can be set through nested shorthand', () {
       const testWidth = 2.5;
-      final originalStyle = RemixButtonStyler();
+      final originalStyle = RemixButtonStyle();
       final modifiedStyle = originalStyle.spinner(.trackStrokeWidth(testWidth));
 
       final expectedSpinner = Prop.maybeMix(
@@ -69,7 +69,7 @@ void main() {
 
     test('spinner duration can be set through nested shorthand', () {
       const testDuration = Duration(milliseconds: 800);
-      final originalStyle = RemixButtonStyler();
+      final originalStyle = RemixButtonStyle();
       final modifiedStyle = originalStyle.spinner(.duration(testDuration));
 
       final expectedSpinner = Prop.maybeMix(
@@ -81,7 +81,7 @@ void main() {
     });
 
     testWidgets('spinner styles can be chained together', (tester) async {
-      final originalStyle = RemixButtonStyler();
+      final originalStyle = RemixButtonStyle();
       final chainedStyle = originalStyle
           .spinner(.indicatorColor(Colors.blue))
           .spinner(.trackColor(Colors.blue.withValues(alpha: 0.2)))
@@ -114,7 +114,7 @@ void main() {
     });
 
     test('spinner nesting can be chained with label and icon nesting', () {
-      final combinedStyle = RemixButtonStyler()
+      final combinedStyle = RemixButtonStyle()
           .label(.color(Colors.white))
           .icon(.color(Colors.white))
           .spinner(.indicatorColor(Colors.white))

@@ -416,7 +416,7 @@ packages:
     source: hosted
     version: "7.8.0"
   meta:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: meta
       sha256: "1741988757a65eb6b36abe716829688cf01910bbf91c34354ff7ec1c3de2b349"
@@ -432,31 +432,29 @@ packages:
     source: hosted
     version: "2.0.0"
   mix:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: mix
-      sha256: "9086fd222f2b6faeab9743dc98788c1a1083d8f8072bcd21c2c07ecd16cf876f"
+      sha256: ed8382ac70d5d85c3d0f753c9f8f68f61d74958afbd05f3e3d7144a11ab8efad
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.3"
+    version: "2.1.0"
   mix_annotations:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: "packages/mix_annotations"
-      ref: "feat/styler-generator"
-      resolved-ref: ee735897748eccbd1d2fdcfb0edba90192e7bebe
-      url: "https://github.com/btwld/mix.git"
-    source: git
-    version: "2.0.1"
+      name: mix_annotations
+      sha256: "926c11dbc6d0df9f7b5eeb22491bb76500d4427bd6a639776216abd5ac71a9d0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.1"
   mix_generator:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: "packages/mix_generator"
-      ref: "feat/styler-generator"
-      resolved-ref: ee735897748eccbd1d2fdcfb0edba90192e7bebe
-      url: "https://github.com/btwld/mix.git"
-    source: git
-    version: "2.0.3"
+      name: mix_generator
+      sha256: c1a0f693c1c3cd9fdff2ad505efc62e92a29590c0114bfe76bf748a06362b49c
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.1"
   mustache_template:
     dependency: transitive
     description:
@@ -466,13 +464,13 @@ packages:
     source: hosted
     version: "2.0.4"
   naked_ui:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: naked_ui
-      sha256: "7c908f67a5b37d6434183bf261d0adc9cd53a52b62e58dca6f1e2e78929b29f7"
+      sha256: "73d6ce1991b38aa27a02c012f7ecdd071ea7398d4faed53d83bcff5ed55d0878"
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.0-beta.7"
+    version: "1.0.0-beta.1"
   nested:
     dependency: transitive
     description:

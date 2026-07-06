@@ -1,7 +1,6 @@
 part of 'card.dart';
 
-// Private per-component constants (sizes only)
-
+/// Style configuration for a [RemixCard] container.
 @MixableStyler()
 class RemixCardStyle extends RemixContainerStyle<RemixCardSpec, RemixCardStyle>
     with Diagnosticable, _$RemixCardStyleMixin {
@@ -49,6 +48,10 @@ class RemixCardStyle extends RemixContainerStyle<RemixCardSpec, RemixCardStyle>
   factory RemixCardStyle.decoration(DecorationMix value) =>
       RemixCardStyle().decoration(value);
 
+  /// Creates a style with the given background color.
+  factory RemixCardStyle.backgroundColor(Color value) =>
+      RemixCardStyle().backgroundColor(value);
+
   /// Creates a style with the given constraints.
   factory RemixCardStyle.constraints(BoxConstraintsMix value) =>
       RemixCardStyle().constraints(value);
@@ -61,6 +64,9 @@ class RemixCardStyle extends RemixContainerStyle<RemixCardSpec, RemixCardStyle>
   RemixCardStyle padding(EdgeInsetsGeometryMix value) {
     return merge(RemixCardStyle(container: BoxStyler(padding: value)));
   }
+
+  /// Sets the card background color.
+  RemixCardStyle backgroundColor(Color value) => color(value);
 
   /// Sets container border radius
   RemixCardStyle borderRadius(BorderRadiusGeometryMix radius) {
@@ -96,6 +102,11 @@ class RemixCardStyle extends RemixContainerStyle<RemixCardSpec, RemixCardStyle>
   @override
   RemixCardStyle decoration(DecorationMix value) {
     return merge(RemixCardStyle(container: BoxStyler(decoration: value)));
+  }
+
+  /// Creates a [RemixCard] widget with this style applied.
+  RemixCard call({Key? key, Widget? child}) {
+    return RemixCard(key: key, child: child, style: this);
   }
 
   // Abstract method implementations for mixins

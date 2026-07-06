@@ -97,7 +97,7 @@ final class RemixMenuDivider<T> extends RemixMenuItemData<T> {
 ///     RemixMenuDivider(),
 ///     RemixMenuItem(value: 'delete', label: 'Delete', leadingIcon: Icons.delete),
 ///   ],
-///   onSelected: (value) => print('Selected: $value'),
+///   onSelected: (value) => debugPrint('Selected: $value'),
 ///   style: FortalMenuTheme.menu,
 /// )
 ///
@@ -107,7 +107,7 @@ final class RemixMenuDivider<T> extends RemixMenuItemData<T> {
 ///   controller: menuController,
 ///   trigger: RemixMenuTrigger(label: 'Options'),
 ///   items: [...],
-///   onSelected: (value) => print(value),
+///   onSelected: (value) => debugPrint(value),
 /// )
 /// ```
 class RemixMenu<T> extends StatefulWidget {
@@ -209,18 +209,23 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
 
   @override
   Widget build(BuildContext context) {
+    final style = _buildStyle();
+
     return NakedMenu<T>(
       // Render items list with direct spec passing
       overlayBuilder: (context, info) {
         return StyleBuilder(
-          style: _buildStyle(),
+          style: style,
           builder: (context, spec) {
             return ColumnBox(
               styleSpec: spec.overlay,
               children: widget.items.map((item) {
                 // Pattern matching ensures exhaustiveness
                 return switch (item) {
-                  RemixMenuItem<T>() => _RemixMenuItemWidget(data: item),
+                  RemixMenuItem<T>() => _RemixMenuItemWidget(
+                    data: item,
+                    defaultStyle: style.$item,
+                  ),
                   RemixMenuDivider<T>() => RemixDivider(
                     styleSpec: spec.divider,
                   ),
@@ -245,7 +250,7 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
       // Render trigger from RemixMenuTrigger data
       builder: (context, state, _) {
         return StyleBuilder(
-          style: _buildStyle(),
+          style: style,
           controller: NakedMenuState.controllerOf(context),
           builder: (context, spec) {
             // Render trigger from data (label with optional leading icon)
@@ -278,9 +283,10 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
 ///
 /// Receives styling directly from parent [RemixMenu] via styleSpec parameter.
 class _RemixMenuItemWidget<T> extends StatelessWidget {
-  const _RemixMenuItemWidget({required this.data});
+  const _RemixMenuItemWidget({required this.data, this.defaultStyle});
 
   final RemixMenuItem<T> data;
+  final Prop<StyleSpec<RemixMenuItemSpec>>? defaultStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -290,26 +296,46 @@ class _RemixMenuItemWidget<T> extends StatelessWidget {
       semanticLabel: data.semanticLabel ?? data.label,
       closeOnActivate: data.closeOnActivate,
       builder: (context, state, _) {
-        // Render item with label and icons
-        return StyleBuilder(
-          style: data.style,
-          controller: NakedState.controllerOf(context),
-          builder: (context, spec) {
-            return FlexBox(
-              styleSpec: spec.container,
-              children: [
-                if (data.leadingIcon != null)
-                  StyledIcon(
-                    icon: data.leadingIcon!,
-                    styleSpec: spec.leadingIcon,
-                  ),
-                StyledText(data.label, styleSpec: spec.label),
-                if (data.trailingIcon != null)
-                  StyledIcon(
-                    icon: data.trailingIcon!,
-                    styleSpec: spec.trailingIcon,
-                  ),
-              ],
+        final controller = NakedState.controllerOf(context);
+
+        return ListenableBuilder(
+          listenable: controller,
+          builder: (context, child) {
+            return WidgetStateProvider(
+              states: controller.value,
+              child: Builder(
+                builder: (context) {
+                  final itemStyle = MixOps.merge(
+                    defaultStyle,
+                    Prop.maybeMix<StyleSpec<RemixMenuItemSpec>>(data.style),
+                  );
+                  final spec =
+                      MixOps.resolve(context, itemStyle) ??
+                      const StyleSpec(spec: RemixMenuItemSpec());
+
+                  return StyleSpecBuilder<RemixMenuItemSpec>(
+                    styleSpec: spec,
+                    builder: (context, spec) {
+                      return FlexBox(
+                        styleSpec: spec.container,
+                        children: [
+                          if (data.leadingIcon != null)
+                            StyledIcon(
+                              icon: data.leadingIcon!,
+                              styleSpec: spec.leadingIcon,
+                            ),
+                          StyledText(data.label, styleSpec: spec.label),
+                          if (data.trailingIcon != null)
+                            StyledIcon(
+                              icon: data.trailingIcon!,
+                              styleSpec: spec.trailingIcon,
+                            ),
+                        ],
+                      );
+                    },
+                  );
+                },
+              ),
             );
           },
         );

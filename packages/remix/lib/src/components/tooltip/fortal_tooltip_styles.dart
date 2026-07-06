@@ -1,5 +1,6 @@
 part of 'tooltip.dart';
 
+/// Creates a Fortal-themed [RemixTooltipStyle].
 RemixTooltipStyle fortalTooltipStyle() {
   return RemixTooltipStyle()
       .borderRadiusAll(FortalTokens.radius2())
@@ -11,5 +12,5 @@ RemixTooltipStyle fortalTooltipStyle() {
           style: TextStyleMix().color(FortalTokens.gray1()),
         ),
       )
-      .color(FortalTokens.gray11());
+      .backgroundColor(FortalTokens.gray11());
 }

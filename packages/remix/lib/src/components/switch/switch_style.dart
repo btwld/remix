@@ -1,5 +1,9 @@
 part of 'switch.dart';
 
+/// Style builder for [RemixSwitch].
+///
+/// Use this class to style the switch track and thumb, including selected,
+/// focused, disabled, hovered, and pressed state variants.
 @MixableStyler()
 class RemixSwitchStyle
     extends RemixContainerStyle<RemixSwitchSpec, RemixSwitchStyle>
@@ -111,7 +115,7 @@ class RemixSwitchStyle
   /// ```
   RemixSwitch call({
     required bool selected,
-    required ValueChanged<bool> onChanged,
+    ValueChanged<bool>? onChanged,
     bool enabled = true,
     bool enableFeedback = true,
     FocusNode? focusNode,

@@ -16,20 +16,22 @@ typedef RemixAccordionController<T> = NakedAccordionController<T>;
 ///   children: [
 ///     RemixAccordionGroup<String>(
 ///       controller: RemixAccordionController<String>(min: 0, max: 1),
-///       children: [
-///         RemixAccordion<String>(
-///           value: 'item1',
-///           title: 'First Item',
-///           style: itemStyle,
-///           child: Text('First content'),
-///         ),
-///         RemixAccordion<String>(
-///           value: 'item2',
-///           title: 'Second Item',
-///           style: itemStyle,
-///           child: Text('Second content'),
-///         ),
-///       ],
+///       child: Column(
+///         children: [
+///           RemixAccordion<String>(
+///             value: 'item1',
+///             title: 'First Item',
+///             style: itemStyle,
+///             child: Text('First content'),
+///           ),
+///           RemixAccordion<String>(
+///             value: 'item2',
+///             title: 'Second Item',
+///             style: itemStyle,
+///             child: Text('Second content'),
+///           ),
+///         ],
+///       ),
 ///     ),
 ///   ],
 /// )
@@ -80,8 +82,8 @@ class RemixAccordion<T> extends StatelessWidget {
     this.onHoverChange,
     this.onPressChange,
     this.semanticLabel,
-    this.style = const RemixAccordionStyle.create(),
     this.transitionBuilder = defaultAccordionTransitionBuilder,
+    this.style = const RemixAccordionStyle.create(),
   }) : assert(
          title != null || builder != null,
          'Either title or builder must be provided',

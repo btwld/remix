@@ -1,5 +1,6 @@
 part of 'dialog.dart';
 
+/// Style configuration for [RemixDialog] container, title, description, and actions.
 @MixableStyler()
 class RemixDialogStyle
     extends RemixContainerStyle<RemixDialogSpec, RemixDialogStyle>
@@ -151,6 +152,28 @@ class RemixDialogStyle
       RemixDialogStyle(
         container: BoxStyler(decoration: BoxDecorationMix(boxShadow: [value])),
       ),
+    );
+  }
+
+  /// Creates a [RemixDialog] widget with this style applied.
+  RemixDialog call({
+    Key? key,
+    Widget? child,
+    String? title,
+    String? description,
+    List<Widget>? actions,
+    bool modal = true,
+    String? semanticLabel,
+  }) {
+    return RemixDialog(
+      key: key,
+      child: child,
+      title: title,
+      description: description,
+      actions: actions,
+      modal: modal,
+      semanticLabel: semanticLabel,
+      style: this,
     );
   }
 }

@@ -1,5 +1,6 @@
 part of 'dialog.dart';
 
+/// Creates a Fortal-themed [RemixDialogStyle].
 RemixDialogStyle fortalDialogStyle() {
   return RemixDialogStyle()
       .title(

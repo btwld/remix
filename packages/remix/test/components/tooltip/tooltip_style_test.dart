@@ -123,6 +123,22 @@ void main() {
       );
 
       styleMethodTest(
+        'backgroundColor() sets background color',
+        initial: RemixTooltipStyle(),
+        modify: (style) => style.backgroundColor(Colors.blue),
+        expect: (style) {
+          expect(
+            style.$container,
+            equals(
+              Prop.maybeMix(
+                BoxStyler(decoration: BoxDecorationMix(color: Colors.blue)),
+              ),
+            ),
+          );
+        },
+      );
+
+      styleMethodTest(
         'borderRadius() sets border radius',
         initial: RemixTooltipStyle(),
         modify: (style) =>
@@ -314,6 +330,20 @@ void main() {
         final merged = style.merge(null);
 
         expect(merged, equals(style));
+      });
+
+      test('call() creates RemixTooltip with this style', () {
+        final style = RemixTooltipStyle().color(Colors.black);
+
+        final tooltip = style.call(
+          tooltipChild: const Text('More info'),
+          child: const SizedBox(key: Key('trigger')),
+        );
+
+        expect(tooltip, isA<RemixTooltip>());
+        expect(tooltip.style, same(style));
+        expect(tooltip.tooltipChild, isA<Text>());
+        expect(tooltip.child.key, const Key('trigger'));
       });
 
       testWidgets('resolve() provides default durations', (tester) async {

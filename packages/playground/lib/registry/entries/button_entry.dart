@@ -9,46 +9,45 @@ Widget buildButtonExample() {
       RemixButton(
         label: 'Primary Button',
         onPressed: () {},
-        style: RemixButtonStyler()
+        style: RemixButtonStyle()
             .paddingX(16)
             .paddingY(10)
             .borderRadiusAll(const Radius.circular(8))
-            .color(const Color(0xFF1F2937))
-            .label(.color(Colors.white)),
+            .backgroundColor(const Color(0xFF1F2937))
+            .foregroundColor(Colors.white),
       ),
       RemixButton(
         label: 'Disabled',
         onPressed: null,
-        style: RemixButtonStyler()
+        style: RemixButtonStyle()
             .paddingX(16)
             .paddingY(10)
             .borderRadiusAll(const Radius.circular(8))
-            .color(const Color(0xFFE5E7EB))
-            .label(.color(const Color(0xFF9CA3AF))),
+            .backgroundColor(const Color(0xFFE5E7EB))
+            .foregroundColor(const Color(0xFF9CA3AF)),
       ),
       RemixButton(
         label: 'Loading',
         loading: true,
         onPressed: () {},
-        style: RemixButtonStyler()
+        style: RemixButtonStyle()
             .paddingX(16)
             .paddingY(10)
             .borderRadiusAll(const Radius.circular(8))
-            .color(const Color(0xFF1F2937).withValues(alpha: 0.6))
-            .label(.color(Colors.white.withValues(alpha: 0.7)))
+            .backgroundColor(const Color(0xFF1F2937).withValues(alpha: 0.6))
+            .foregroundColor(Colors.white.withValues(alpha: 0.7))
             .spinner(.indicatorColor(Colors.white)),
       ),
       RemixButton(
         label: 'With Icon',
         leadingIcon: Icons.star,
         onPressed: () {},
-        style: RemixButtonStyler()
+        style: RemixButtonStyle()
             .paddingX(16)
             .paddingY(10)
             .borderRadiusAll(const Radius.circular(8))
-            .color(const Color(0xFF1F2937))
-            .label(.color(Colors.white))
-            .icon(.color(Colors.white)),
+            .backgroundColor(const Color(0xFF1F2937))
+            .foregroundColor(Colors.white),
       ),
       RemixIconButton(
         icon: Icons.star,
@@ -57,8 +56,8 @@ Widget buildButtonExample() {
         style: RemixIconButtonStyle()
             .paddingAll(10)
             .borderRadiusAll(const Radius.circular(8))
-            .color(const Color(0xFF1F2937))
-            .iconColor(Colors.white),
+            .backgroundColor(const Color(0xFF1F2937))
+            .foregroundColor(Colors.white),
       ),
     ],
     material: [

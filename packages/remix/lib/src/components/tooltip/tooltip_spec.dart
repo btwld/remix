@@ -1,5 +1,6 @@
 part of 'tooltip.dart';
 
+/// Resolved visual values for a [RemixTooltip].
 @MixableSpec()
 class RemixTooltipSpec with _$RemixTooltipSpec {
   @override

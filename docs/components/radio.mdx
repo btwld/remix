@@ -136,8 +136,8 @@ class _FortalRadioExampleState extends State<FortalRadioExample> {
       onChanged: (value) => setState(() => _selected = value),
       child: Column(
         children: [
-          RemixRadio(value: 'soft', style: FortalRadioStyle.soft()),
-          RemixRadio(value: 'solid', style: FortalRadioStyle.solid()),
+          FortalRadio(value: 'soft', variant: FortalRadioVariant.soft),
+          FortalRadio(value: 'surface'),
         ],
       ),
     );
@@ -147,7 +147,7 @@ class _FortalRadioExampleState extends State<FortalRadioExample> {
 </CodeGroup>
 
 <Info>
-  See the [FortalRadioStyle source code](https://github.com/btwld/remix/blob/main/lib/src/components/radio/fortal_radio_styles.dart) for all available options.
+  See the [fortalRadioStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/radio/fortal_radio_styles.dart) for all available options.
 </Info>
 
 ## Constructor
@@ -157,7 +157,7 @@ class _FortalRadioExampleState extends State<FortalRadioExample> {
 const RemixRadioGroup({
   Key? key,
   required T? groupValue,
-  required ValueChanged<T?> onChanged,
+  ValueChanged<T?>? onChanged,
   required Widget child,
 })
 
@@ -180,6 +180,18 @@ const RemixRadio({
 
 ## Properties
 ### Widget Properties
+
+#### `groupValue` → `T?`
+
+**Required**. The currently selected value for the radio group.
+
+#### `onChanged` → `ValueChanged<T?>?`
+
+Optional. Called when a radio button in the group is selected. When omitted, the radio group is disabled.
+
+#### `child` → `Widget`
+
+**Required**. The child widget that contains the radio buttons.
 
 #### `style` → `RemixRadioStyle`
 
@@ -240,10 +252,6 @@ Convenience for applying padding around the control.
 
 Convenience for applying margin around the control.
 
-#### `color(Color value)`
-
-Sets background color on the container.
-
 #### `size(double width, double height)`
 
 Sets container size using explicit constraints.
@@ -252,7 +260,7 @@ Sets container size using explicit constraints.
 
 Sets border radius on the outer container.
 
-#### `animate(AnimationConfig animation)`
+#### `animate(AnimationConfig value)`
 
 Sets animation configuration.
 
@@ -276,3 +284,6 @@ Sets a foreground decoration painted on top of the component.
 
 Applies a matrix transformation to the component.
 
+#### `call<T>({required T value, bool enabled = true, bool autofocus = false, bool toggleable = false, FocusNode? focusNode, MouseCursor? mouseCursor, bool enableFeedback = true})`
+
+Creates a `RemixRadio<T>` widget with this style applied.

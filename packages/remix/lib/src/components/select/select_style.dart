@@ -1,5 +1,6 @@
 part of 'select.dart';
 
+/// Style configuration for [RemixSelect] trigger and menu overlay.
 @MixableStyler()
 class RemixSelectStyle extends RemixStyle<RemixSelectSpec, RemixSelectStyle>
     with Diagnosticable, _$RemixSelectStyleMixin {
@@ -98,7 +99,7 @@ class RemixSelectStyle extends RemixStyle<RemixSelectSpec, RemixSelectStyle>
   }
 }
 
-// Style classes for sub-specs
+/// Style configuration for the visible [RemixSelect] trigger.
 @MixableStyler()
 class RemixSelectTriggerStyle
     extends
@@ -212,6 +213,7 @@ class RemixSelectTriggerStyle
   }
 }
 
+/// Style configuration for an item in a [RemixSelect] menu.
 @MixableStyler()
 class RemixSelectMenuItemStyle
     extends

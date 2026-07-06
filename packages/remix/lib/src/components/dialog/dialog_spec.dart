@@ -1,5 +1,6 @@
 part of 'dialog.dart';
 
+/// Resolved visual properties for a [RemixDialog].
 @MixableSpec()
 class RemixDialogSpec with _$RemixDialogSpec {
   @override

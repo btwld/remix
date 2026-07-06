@@ -1,9 +1,19 @@
 part of 'avatar.dart';
 
-/// A customizable avatar component that can display an image or a label.
+/// Builder for rendering avatar label content with the resolved text spec.
+typedef RemixAvatarLabelBuilder =
+    Widget Function(BuildContext context, TextSpec spec, String label);
+
+/// Builder for rendering avatar icon content with the resolved icon spec.
+typedef RemixAvatarIconBuilder =
+    Widget Function(BuildContext context, IconSpec spec, IconData? icon);
+
+/// A customizable avatar component that can display an image, label, icon, or
+/// custom child.
 ///
-/// The [RemixAvatar] widget is designed to present a user's avatar with various customization options.
-/// It supports displaying background and foreground images, a text label, and provides builders for loading and error states.
+/// The [RemixAvatar] widget presents user or entity identity with optional
+/// background and foreground images. Text and icon content can use builders to
+/// preserve resolved Remix typography or icon styling.
 ///
 /// ## Example
 ///
@@ -14,19 +24,11 @@ part of 'avatar.dart';
 ///   label: 'User',
 /// )
 /// ```
-typedef RemixAvatarLabelBuilder =
-    Widget Function(BuildContext context, TextSpec spec, String label);
-
-typedef RemixAvatarIconBuilder =
-    Widget Function(BuildContext context, IconSpec spec, IconData? icon);
-
 class RemixAvatar extends StyleWidget<RemixAvatarSpec> {
   /// Creates a Remix avatar with optional text [label], custom [child], and
   /// background/foreground imagery. When textual content is supplied, it is
   /// styled using the avatar text spec so typography stays consistent.
   const RemixAvatar({
-    super.style = const RemixAvatarStyle.create(),
-    super.styleSpec,
     super.key,
     this.backgroundImage,
     this.foregroundImage,
@@ -37,6 +39,8 @@ class RemixAvatar extends StyleWidget<RemixAvatarSpec> {
     this.labelBuilder,
     this.icon,
     this.iconBuilder,
+    super.style = const RemixAvatarStyle.create(),
+    super.styleSpec,
   });
 
   /// The background image to display in the avatar.
@@ -77,9 +81,9 @@ class RemixAvatar extends StyleWidget<RemixAvatarSpec> {
     if (content == null) {
       if (labelBuilder != null || label != null) {
         content = labelBuilder == null
-            ? StyledText(resolvedLabel, styleSpec: spec.text)
+            ? StyledText(resolvedLabel, styleSpec: spec.label)
             : StyleSpecBuilder<TextSpec>(
-                styleSpec: spec.text,
+                styleSpec: spec.label,
                 builder: (context, textSpec) =>
                     labelBuilder!(context, textSpec, resolvedLabel),
               );

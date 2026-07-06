@@ -293,6 +293,11 @@ mixin _$RemixSelectStyleMixin on Style<RemixSelectSpec>, Diagnosticable {
     return merge(RemixSelectStyle(modifier: value));
   }
 
+  /// Sets the widget modifier.
+  RemixSelectStyle modifier(WidgetModifierConfig value) {
+    return merge(RemixSelectStyle(modifier: value));
+  }
+
   /// Merges with another [RemixSelectStyle].
   @override
   RemixSelectStyle merge(RemixSelectStyle? other) {
@@ -341,22 +346,22 @@ mixin _$RemixSelectStyleMixin on Style<RemixSelectSpec>, Diagnosticable {
 mixin _$RemixSelectTriggerStyleMixin
     on Style<RemixSelectTriggerSpec>, Diagnosticable {
   Prop<StyleSpec<FlexBoxSpec>>? get $container;
-  Prop<StyleSpec<IconSpec>>? get $icon;
   Prop<StyleSpec<TextSpec>>? get $label;
+  Prop<StyleSpec<IconSpec>>? get $icon;
 
   /// Sets the container.
   RemixSelectTriggerStyle container(FlexBoxStyler value) {
     return merge(RemixSelectTriggerStyle(container: value));
   }
 
-  /// Sets the icon.
-  RemixSelectTriggerStyle icon(IconStyler value) {
-    return merge(RemixSelectTriggerStyle(icon: value));
-  }
-
   /// Sets the label.
   RemixSelectTriggerStyle label(TextStyler value) {
     return merge(RemixSelectTriggerStyle(label: value));
+  }
+
+  /// Sets the icon.
+  RemixSelectTriggerStyle icon(IconStyler value) {
+    return merge(RemixSelectTriggerStyle(icon: value));
   }
 
   /// Sets the animation configuration.
@@ -376,13 +381,18 @@ mixin _$RemixSelectTriggerStyleMixin
     return merge(RemixSelectTriggerStyle(modifier: value));
   }
 
+  /// Sets the widget modifier.
+  RemixSelectTriggerStyle modifier(WidgetModifierConfig value) {
+    return merge(RemixSelectTriggerStyle(modifier: value));
+  }
+
   /// Merges with another [RemixSelectTriggerStyle].
   @override
   RemixSelectTriggerStyle merge(RemixSelectTriggerStyle? other) {
     return RemixSelectTriggerStyle.create(
       container: MixOps.merge($container, other?.$container),
-      icon: MixOps.merge($icon, other?.$icon),
       label: MixOps.merge($label, other?.$label),
+      icon: MixOps.merge($icon, other?.$icon),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -394,8 +404,8 @@ mixin _$RemixSelectTriggerStyleMixin
   StyleSpec<RemixSelectTriggerSpec> resolve(BuildContext context) {
     final spec = RemixSelectTriggerSpec(
       container: MixOps.resolve(context, $container),
-      icon: MixOps.resolve(context, $icon),
       label: MixOps.resolve(context, $label),
+      icon: MixOps.resolve(context, $icon),
     );
 
     return StyleSpec(
@@ -410,15 +420,15 @@ mixin _$RemixSelectTriggerStyleMixin
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', $container))
-      ..add(DiagnosticsProperty('icon', $icon))
-      ..add(DiagnosticsProperty('label', $label));
+      ..add(DiagnosticsProperty('label', $label))
+      ..add(DiagnosticsProperty('icon', $icon));
   }
 
   @override
   List<Object?> get props => [
     $container,
-    $icon,
     $label,
+    $icon,
     $animation,
     $modifier,
     $variants,
@@ -428,22 +438,22 @@ mixin _$RemixSelectTriggerStyleMixin
 mixin _$RemixSelectMenuItemStyleMixin
     on Style<RemixSelectMenuItemSpec>, Diagnosticable {
   Prop<StyleSpec<FlexBoxSpec>>? get $container;
-  Prop<StyleSpec<IconSpec>>? get $icon;
   Prop<StyleSpec<TextSpec>>? get $text;
+  Prop<StyleSpec<IconSpec>>? get $icon;
 
   /// Sets the container.
   RemixSelectMenuItemStyle container(FlexBoxStyler value) {
     return merge(RemixSelectMenuItemStyle(container: value));
   }
 
-  /// Sets the icon.
-  RemixSelectMenuItemStyle icon(IconStyler value) {
-    return merge(RemixSelectMenuItemStyle(icon: value));
-  }
-
   /// Sets the text.
   RemixSelectMenuItemStyle text(TextStyler value) {
     return merge(RemixSelectMenuItemStyle(text: value));
+  }
+
+  /// Sets the icon.
+  RemixSelectMenuItemStyle icon(IconStyler value) {
+    return merge(RemixSelectMenuItemStyle(icon: value));
   }
 
   /// Sets the animation configuration.
@@ -463,13 +473,18 @@ mixin _$RemixSelectMenuItemStyleMixin
     return merge(RemixSelectMenuItemStyle(modifier: value));
   }
 
+  /// Sets the widget modifier.
+  RemixSelectMenuItemStyle modifier(WidgetModifierConfig value) {
+    return merge(RemixSelectMenuItemStyle(modifier: value));
+  }
+
   /// Merges with another [RemixSelectMenuItemStyle].
   @override
   RemixSelectMenuItemStyle merge(RemixSelectMenuItemStyle? other) {
     return RemixSelectMenuItemStyle.create(
       container: MixOps.merge($container, other?.$container),
-      icon: MixOps.merge($icon, other?.$icon),
       text: MixOps.merge($text, other?.$text),
+      icon: MixOps.merge($icon, other?.$icon),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -481,8 +496,8 @@ mixin _$RemixSelectMenuItemStyleMixin
   StyleSpec<RemixSelectMenuItemSpec> resolve(BuildContext context) {
     final spec = RemixSelectMenuItemSpec(
       container: MixOps.resolve(context, $container),
-      icon: MixOps.resolve(context, $icon),
       text: MixOps.resolve(context, $text),
+      icon: MixOps.resolve(context, $icon),
     );
 
     return StyleSpec(
@@ -497,15 +512,15 @@ mixin _$RemixSelectMenuItemStyleMixin
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', $container))
-      ..add(DiagnosticsProperty('icon', $icon))
-      ..add(DiagnosticsProperty('text', $text));
+      ..add(DiagnosticsProperty('text', $text))
+      ..add(DiagnosticsProperty('icon', $icon));
   }
 
   @override
   List<Object?> get props => [
     $container,
-    $icon,
     $text,
+    $icon,
     $animation,
     $modifier,
     $variants,

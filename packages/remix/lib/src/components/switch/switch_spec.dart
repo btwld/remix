@@ -1,5 +1,6 @@
 part of 'switch.dart';
 
+/// Resolved visual values for a [RemixSwitch].
 @MixableSpec()
 class RemixSwitchSpec with _$RemixSwitchSpec {
   @override

@@ -1,5 +1,6 @@
 part of 'avatar.dart';
 
+/// Style configuration for [RemixAvatar] container, label, and fallback icon.
 @MixableStyler()
 class RemixAvatarStyle
     extends RemixContainerStyle<RemixAvatarSpec, RemixAvatarStyle>
@@ -11,31 +12,31 @@ class RemixAvatarStyle
   @MixableField(setterType: BoxStyler)
   final Prop<StyleSpec<BoxSpec>>? $container;
   @MixableField(setterType: TextStyler)
-  final Prop<StyleSpec<TextSpec>>? $text;
+  final Prop<StyleSpec<TextSpec>>? $label;
   @MixableField(setterType: IconStyler)
   final Prop<StyleSpec<IconSpec>>? $icon;
 
   const RemixAvatarStyle.create({
     Prop<StyleSpec<BoxSpec>>? container,
-    Prop<StyleSpec<TextSpec>>? text,
+    Prop<StyleSpec<TextSpec>>? label,
     Prop<StyleSpec<IconSpec>>? icon,
     super.variants,
     super.animation,
     super.modifier,
   }) : $container = container,
-       $text = text,
+       $label = label,
        $icon = icon;
 
   RemixAvatarStyle({
     BoxStyler? container,
-    TextStyler? text,
+    TextStyler? label,
     IconStyler? icon,
     AnimationConfig? animation,
     List<VariantStyle<RemixAvatarSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
          container: Prop.maybeMix(container),
-         text: Prop.maybeMix(text),
+         label: Prop.maybeMix(label),
          icon: Prop.maybeMix(icon),
          variants: variants,
          animation: animation,
@@ -76,14 +77,6 @@ class RemixAvatarStyle
   factory RemixAvatarStyle.square(double size) =>
       RemixAvatarStyle().square(size);
 
-  /// Creates a style with the given icon color.
-  factory RemixAvatarStyle.iconColor(Color value) =>
-      RemixAvatarStyle().iconColor(value);
-
-  /// Creates a style with the given text color.
-  factory RemixAvatarStyle.textColor(Color value) =>
-      RemixAvatarStyle().textColor(value);
-
   /// Creates a style with the given border radius.
   factory RemixAvatarStyle.borderRadius(BorderRadiusGeometryMix radius) =>
       RemixAvatarStyle().borderRadius(radius);
@@ -96,7 +89,7 @@ class RemixAvatarStyle
 
   /// Sets the foreground color (text and icon) of the avatar.
   RemixAvatarStyle foregroundColor(Color value) {
-    return textColor(value).iconColor(value);
+    return labelColor(value).iconColor(value);
   }
 
   /// Sets the background color of the avatar.
@@ -145,16 +138,6 @@ class RemixAvatarStyle
     );
   }
 
-  /// Sets text color
-  RemixAvatarStyle textColor(Color value) {
-    return label(TextStyler(style: TextStyleMix(color: value)));
-  }
-
-  /// Sets icon color
-  RemixAvatarStyle iconColor(Color value) {
-    return icon(IconStyler(color: value));
-  }
-
   // Additional convenience methods that delegate to container
 
   /// Sets padding
@@ -189,7 +172,35 @@ class RemixAvatarStyle
 
   @override
   RemixAvatarStyle label(TextStyler value) {
-    return merge(RemixAvatarStyle(text: value));
+    return merge(RemixAvatarStyle(label: value));
+  }
+
+  /// Creates a [RemixAvatar] widget with this style applied.
+  RemixAvatar call({
+    Key? key,
+    ImageProvider? backgroundImage,
+    ImageProvider? foregroundImage,
+    ImageErrorListener? onBackgroundImageError,
+    ImageErrorListener? onForegroundImageError,
+    Widget? child,
+    String? label,
+    RemixAvatarLabelBuilder? labelBuilder,
+    IconData? icon,
+    RemixAvatarIconBuilder? iconBuilder,
+  }) {
+    return RemixAvatar(
+      key: key,
+      backgroundImage: backgroundImage,
+      foregroundImage: foregroundImage,
+      onBackgroundImageError: onBackgroundImageError,
+      onForegroundImageError: onForegroundImageError,
+      child: child,
+      label: label,
+      labelBuilder: labelBuilder,
+      icon: icon,
+      iconBuilder: iconBuilder,
+      style: this,
+    );
   }
 
   // Instance methods (chainable)

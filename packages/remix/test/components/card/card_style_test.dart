@@ -66,6 +66,22 @@ void main() {
       );
 
       styleMethodTest(
+        'backgroundColor sets container background color',
+        initial: RemixCardStyle(),
+        modify: (style) => style.backgroundColor(Colors.blue),
+        expect: (style) {
+          expect(
+            style.$container,
+            equals(
+              Prop.maybeMix(
+                BoxStyler(decoration: BoxDecorationMix(color: Colors.blue)),
+              ),
+            ),
+          );
+        },
+      );
+
+      styleMethodTest(
         'borderRadius sets container border radius',
         initial: RemixCardStyle(),
         modify: (style) =>

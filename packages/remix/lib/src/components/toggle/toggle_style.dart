@@ -1,5 +1,6 @@
 part of 'toggle.dart';
 
+/// Style configuration for [RemixToggle] container, label, icon, and states.
 @MixableStyler()
 class RemixToggleStyle
     extends RemixFlexContainerStyle<RemixToggleSpec, RemixToggleStyle>
@@ -74,10 +75,10 @@ class RemixToggleStyle
   /// Creates a [RemixToggle] widget with this style applied.
   RemixToggle call({
     required bool selected,
-    required ValueChanged<bool> onChanged,
+    ValueChanged<bool>? onChanged,
+    bool enabled = true,
     String? label,
     IconData? icon,
-    bool enabled = true,
     bool enableFeedback = true,
     FocusNode? focusNode,
     bool autofocus = false,
@@ -85,17 +86,17 @@ class RemixToggleStyle
     MouseCursor mouseCursor = SystemMouseCursors.click,
   }) {
     return RemixToggle(
-      enabled: enabled,
       selected: selected,
       onChanged: onChanged,
+      enabled: enabled,
       label: label,
       icon: icon,
-      style: this,
       enableFeedback: enableFeedback,
       focusNode: focusNode,
       autofocus: autofocus,
       semanticLabel: semanticLabel,
       mouseCursor: mouseCursor,
+      style: this,
     );
   }
 

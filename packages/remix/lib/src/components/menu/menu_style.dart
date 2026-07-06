@@ -1,10 +1,9 @@
 part of 'menu.dart';
 
-// ============================================================================
-// TRIGGER STYLE - Menu trigger content styling (not a button!)
-// Note: NakedMenu wraps trigger in NakedButton, so this styles the content only
-// ============================================================================
-
+/// Style configuration for [RemixMenu] trigger content.
+///
+/// Naked menu behavior wraps the trigger in a button; this style only controls
+/// the visible trigger content.
 @MixableStyler()
 class RemixMenuTriggerStyle
     extends RemixFlexContainerStyle<RemixMenuTriggerSpec, RemixMenuTriggerStyle>
@@ -147,11 +146,7 @@ class RemixMenuTriggerStyle
   }
 }
 
-// ============================================================================
-// MENU STYLE - Main menu style
-// Provides trigger/overlay specs + default styles for items/dividers via StyleProvider
-// ============================================================================
-
+/// Style configuration for [RemixMenu] trigger, overlay, items, and dividers.
 @MixableStyler()
 class RemixMenuStyle extends RemixStyle<RemixMenuSpec, RemixMenuStyle>
     with Diagnosticable, _$RemixMenuStyleMixin {
@@ -238,6 +233,7 @@ class RemixMenuStyle extends RemixStyle<RemixMenuSpec, RemixMenuStyle>
   }
 }
 
+/// Style configuration for an item in a [RemixMenu].
 @MixableStyler()
 class RemixMenuItemStyle
     extends RemixFlexContainerStyle<RemixMenuItemSpec, RemixMenuItemStyle>

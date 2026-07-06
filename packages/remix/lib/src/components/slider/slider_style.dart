@@ -1,5 +1,10 @@
 part of 'slider.dart';
 
+/// Style builder for [RemixSlider].
+///
+/// Use this class to customize the thumb, track, and filled range. It supports
+/// Mix variants and widget state variants such as disabled, hovered, focused,
+/// and pressed states.
 @MixableStyler()
 class RemixSliderStyle
     extends RemixContainerStyle<RemixSliderSpec, RemixSliderStyle>
@@ -11,6 +16,7 @@ class RemixSliderStyle
   final Prop<Color>? $rangeColor;
   final Prop<double>? $rangeWidth;
 
+  /// Creates a slider style from raw Mix properties.
   const RemixSliderStyle.create({
     Prop<StyleSpec<BoxSpec>>? thumb,
     Prop<Color>? trackColor,
@@ -26,6 +32,7 @@ class RemixSliderStyle
        $rangeColor = rangeColor,
        $rangeWidth = rangeWidth;
 
+  /// Creates a slider style from plain Dart values and Mix stylers.
   RemixSliderStyle({
     BoxStyler? thumb,
     Color? trackColor,
@@ -189,13 +196,13 @@ class RemixSliderStyle
   /// ```
   RemixSlider call({
     required double value,
-    required ValueChanged<double>? onChanged,
-    double min = 0.0,
-    double max = 1.0,
+    ValueChanged<double>? onChanged,
     ValueChanged<double>? onChangeStart,
     ValueChanged<double>? onChangeEnd,
+    double min = 0.0,
+    double max = 1.0,
     bool enabled = true,
-    bool enableHapticFeedback = true,
+    bool enableFeedback = true,
     FocusNode? focusNode,
     bool autofocus = false,
     int? snapDivisions,
@@ -203,12 +210,12 @@ class RemixSliderStyle
     return RemixSlider(
       value: value,
       onChanged: onChanged,
-      min: min,
-      max: max,
       onChangeStart: onChangeStart,
       onChangeEnd: onChangeEnd,
+      min: min,
+      max: max,
       enabled: enabled,
-      enableHapticFeedback: enableHapticFeedback,
+      enableFeedback: enableFeedback,
       focusNode: focusNode,
       autofocus: autofocus,
       snapDivisions: snapDivisions,

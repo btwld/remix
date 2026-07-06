@@ -17,7 +17,7 @@ void main() {
         final container = Prop.maybeMix(BoxStyler());
         final text = Prop.maybeMix(TextStyler());
 
-        final style = RemixBadgeStyle.create(container: container, text: text);
+        final style = RemixBadgeStyle.create(container: container, label: text);
 
         expect(style, isNotNull);
         expect(style, isA<RemixBadgeStyle>());
@@ -26,7 +26,7 @@ void main() {
       test('constructor with styler parameters', () {
         final style = RemixBadgeStyle(
           container: BoxStyler(padding: EdgeInsetsGeometryMix.all(8.0)),
-          text: TextStyler(style: TextStyleMix(color: Colors.red)),
+          label: TextStyler(style: TextStyleMix(color: Colors.red)),
         );
 
         expect(style, isNotNull);
@@ -57,7 +57,7 @@ void main() {
         modify: (style) => style.foregroundColor(Colors.green),
         expect: (style) {
           expect(
-            style.$text,
+            style.$label,
             equals(
               Prop.maybeMix(
                 TextStyler(style: TextStyleMix(color: Colors.green)),
@@ -163,7 +163,7 @@ void main() {
             style.label(TextStyler(style: TextStyleMix(fontSize: 14.0))),
         expect: (style) {
           expect(
-            style.$text,
+            style.$label,
             equals(
               Prop.maybeMix(TextStyler(style: TextStyleMix(fontSize: 14.0))),
             ),
@@ -304,7 +304,7 @@ void main() {
         const style = RemixBadgeStyle.create();
         expect(style.props, hasLength(5));
         expect(style.props, contains(style.$container));
-        expect(style.props, contains(style.$text));
+        expect(style.props, contains(style.$label));
         expect(style.props, contains(style.$variants));
         expect(style.props, contains(style.$animation));
         expect(style.props, contains(style.$modifier));

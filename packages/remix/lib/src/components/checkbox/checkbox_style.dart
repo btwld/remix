@@ -1,5 +1,6 @@
 part of 'checkbox.dart';
 
+/// Style configuration for [RemixCheckbox] container and indicator icon.
 @MixableStyler()
 class RemixCheckboxStyle
     extends RemixContainerStyle<RemixCheckboxSpec, RemixCheckboxStyle>
@@ -102,29 +103,29 @@ class RemixCheckboxStyle
     ValueChanged<bool?>? onChanged,
     bool enabled = true,
     bool tristate = false,
-    bool autofocus = false,
     IconData checkedIcon = Icons.check_rounded,
     IconData? uncheckedIcon,
     IconData indeterminateIcon = Icons.horizontal_rule,
-    bool enableFeedback = true,
     FocusNode? focusNode,
+    bool autofocus = false,
+    bool enableFeedback = true,
     String? semanticLabel,
     MouseCursor mouseCursor = SystemMouseCursors.click,
   }) {
     return RemixCheckbox(
-      enabled: enabled,
       selected: selected,
-      tristate: tristate,
       onChanged: onChanged,
-      autofocus: autofocus,
+      enabled: enabled,
+      tristate: tristate,
       checkedIcon: checkedIcon,
       uncheckedIcon: uncheckedIcon,
       indeterminateIcon: indeterminateIcon,
-      enableFeedback: enableFeedback,
-      style: this,
       focusNode: focusNode,
+      autofocus: autofocus,
+      enableFeedback: enableFeedback,
       semanticLabel: semanticLabel,
       mouseCursor: mouseCursor,
+      style: this,
     );
   }
 
@@ -138,11 +139,6 @@ class RemixCheckboxStyle
   RemixCheckboxStyle padding(EdgeInsetsGeometryMix value) {
     return merge(RemixCheckboxStyle(container: BoxStyler(padding: value)));
   }
-
-  /// Sets checkbox background color on the container.
-  /// Delegates to [fillColor].
-  @override
-  RemixCheckboxStyle color(Color value) => fillColor(value);
 
   /// Sets checkbox size with separate width and height.
   @override

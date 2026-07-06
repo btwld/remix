@@ -1,9 +1,13 @@
 part of 'progress.dart';
 
+/// Fortal progress size presets.
 enum FortalProgressSize { size1, size2, size3 }
 
+/// Fortal progress color variants.
 enum FortalProgressVariant { surface, soft }
 
+/// Creates a Fortal-themed [RemixProgressStyle].
+@MixWidget()
 RemixProgressStyle fortalProgressStyle({
   FortalProgressVariant variant = .surface,
   FortalProgressSize size = .size2,

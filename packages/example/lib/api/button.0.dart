@@ -30,11 +30,11 @@ class ButtonExample extends StatelessWidget {
     );
   }
 
-  RemixButtonStyler get destructiveStyle {
-    return RemixButtonStyler()
+  RemixButtonStyle get destructiveStyle {
+    return RemixButtonStyle()
         .paddingX(16)
         .paddingY(10)
-        .color(const Color(0xFF4D1919))
+        .backgroundColor(const Color(0xFF4D1919))
         .shadow(
           BoxShadowMix().color(Colors.redAccent).blurRadius(10).spreadRadius(0),
         )
@@ -47,21 +47,19 @@ class ButtonExample extends StatelessWidget {
         )
         .wrap(WidgetModifierConfig.scale(x: 1, y: 1))
         .onPressed(
-          RemixButtonStyler().wrap(
-            WidgetModifierConfig.scale(x: 0.90, y: 0.90),
-          ),
+          RemixButtonStyle().wrap(WidgetModifierConfig.scale(x: 0.90, y: 0.90)),
         )
         .onHovered(
-          RemixButtonStyler()
-              .color(const Color(0xFF732D2D))
+          RemixButtonStyle()
+              .backgroundColor(const Color(0xFF732D2D))
               .animate(.spring(300.ms)),
         )
-        .onFocused(RemixButtonStyler().color(const Color(0xFF732D2D)));
+        .onFocused(RemixButtonStyle().backgroundColor(const Color(0xFF732D2D)));
   }
 
-  RemixButtonStyler get successStyle {
+  RemixButtonStyle get successStyle {
     return destructiveStyle
-        .color(const Color.fromARGB(255, 15, 61, 15))
+        .backgroundColor(const Color.fromARGB(255, 15, 61, 15))
         .label(TextStyler().uppercase().color(Colors.greenAccent))
         .shapeBeveledRectangle(side: BorderSideMix().color(Colors.greenAccent))
         .shadow(
@@ -70,7 +68,7 @@ class ButtonExample extends StatelessWidget {
               .blurRadius(10)
               .spreadRadius(0),
         )
-        .onHovered(RemixButtonStyler().color(const Color(0xFF357857)))
-        .onFocused(RemixButtonStyler().color(const Color(0xFF357857)));
+        .onHovered(RemixButtonStyle().backgroundColor(const Color(0xFF357857)))
+        .onFocused(RemixButtonStyle().backgroundColor(const Color(0xFF357857)));
   }
 }

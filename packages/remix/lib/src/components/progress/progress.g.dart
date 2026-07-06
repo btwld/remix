@@ -96,13 +96,41 @@ mixin _$RemixProgressSpec implements Spec<RemixProgressSpec>, Diagnosticable {
 typedef _$RemixProgressSpecMethods = _$RemixProgressSpec; // ignore: unused_element
 
 // **************************************************************************
+// MixWidgetGenerator
+// **************************************************************************
+
+/// Creates a Fortal-themed [RemixProgressStyle].
+class FortalProgress extends StatelessWidget {
+  const FortalProgress({
+    super.key,
+    this.variant = .surface,
+    this.size = .size2,
+    required this.value,
+  });
+
+  final FortalProgressVariant variant;
+
+  final FortalProgressSize size;
+
+  final double value;
+
+  @override
+  Widget build(BuildContext context) {
+    return fortalProgressStyle(
+      variant: this.variant,
+      size: this.size,
+    ).call(key: this.key, value: this.value);
+  }
+}
+
+// **************************************************************************
 // StylerGenerator
 // **************************************************************************
 
 mixin _$RemixProgressStyleMixin on Style<RemixProgressSpec>, Diagnosticable {
   Prop<StyleSpec<BoxSpec>>? get $container;
-  Prop<StyleSpec<BoxSpec>>? get $indicator;
   Prop<StyleSpec<BoxSpec>>? get $track;
+  Prop<StyleSpec<BoxSpec>>? get $indicator;
   Prop<StyleSpec<BoxSpec>>? get $trackContainer;
 
   /// Sets the container.
@@ -110,14 +138,14 @@ mixin _$RemixProgressStyleMixin on Style<RemixProgressSpec>, Diagnosticable {
     return merge(RemixProgressStyle(container: value));
   }
 
-  /// Sets the indicator.
-  RemixProgressStyle indicator(BoxStyler value) {
-    return merge(RemixProgressStyle(indicator: value));
-  }
-
   /// Sets the track.
   RemixProgressStyle track(BoxStyler value) {
     return merge(RemixProgressStyle(track: value));
+  }
+
+  /// Sets the indicator.
+  RemixProgressStyle indicator(BoxStyler value) {
+    return merge(RemixProgressStyle(indicator: value));
   }
 
   /// Sets the trackContainer.
@@ -140,13 +168,18 @@ mixin _$RemixProgressStyleMixin on Style<RemixProgressSpec>, Diagnosticable {
     return merge(RemixProgressStyle(modifier: value));
   }
 
+  /// Sets the widget modifier.
+  RemixProgressStyle modifier(WidgetModifierConfig value) {
+    return merge(RemixProgressStyle(modifier: value));
+  }
+
   /// Merges with another [RemixProgressStyle].
   @override
   RemixProgressStyle merge(RemixProgressStyle? other) {
     return RemixProgressStyle.create(
       container: MixOps.merge($container, other?.$container),
-      indicator: MixOps.merge($indicator, other?.$indicator),
       track: MixOps.merge($track, other?.$track),
+      indicator: MixOps.merge($indicator, other?.$indicator),
       trackContainer: MixOps.merge($trackContainer, other?.$trackContainer),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
@@ -159,8 +192,8 @@ mixin _$RemixProgressStyleMixin on Style<RemixProgressSpec>, Diagnosticable {
   StyleSpec<RemixProgressSpec> resolve(BuildContext context) {
     final spec = RemixProgressSpec(
       container: MixOps.resolve(context, $container),
-      indicator: MixOps.resolve(context, $indicator),
       track: MixOps.resolve(context, $track),
+      indicator: MixOps.resolve(context, $indicator),
       trackContainer: MixOps.resolve(context, $trackContainer),
     );
 
@@ -176,16 +209,16 @@ mixin _$RemixProgressStyleMixin on Style<RemixProgressSpec>, Diagnosticable {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', $container))
-      ..add(DiagnosticsProperty('indicator', $indicator))
       ..add(DiagnosticsProperty('track', $track))
+      ..add(DiagnosticsProperty('indicator', $indicator))
       ..add(DiagnosticsProperty('trackContainer', $trackContainer));
   }
 
   @override
   List<Object?> get props => [
     $container,
-    $indicator,
     $track,
+    $indicator,
     $trackContainer,
     $animation,
     $modifier,

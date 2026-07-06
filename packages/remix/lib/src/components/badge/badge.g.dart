@@ -8,7 +8,7 @@ part of 'badge.dart';
 
 mixin _$RemixBadgeSpec implements Spec<RemixBadgeSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
-  StyleSpec<TextSpec> get text;
+  StyleSpec<TextSpec> get label;
 
   @override
   Type get type => RemixBadgeSpec;
@@ -16,11 +16,11 @@ mixin _$RemixBadgeSpec implements Spec<RemixBadgeSpec>, Diagnosticable {
   @override
   RemixBadgeSpec copyWith({
     StyleSpec<BoxSpec>? container,
-    StyleSpec<TextSpec>? text,
+    StyleSpec<TextSpec>? label,
   }) {
     return RemixBadgeSpec(
       container: container ?? this.container,
-      text: text ?? this.text,
+      label: label ?? this.label,
     );
   }
 
@@ -28,12 +28,12 @@ mixin _$RemixBadgeSpec implements Spec<RemixBadgeSpec>, Diagnosticable {
   RemixBadgeSpec lerp(RemixBadgeSpec? other, double t) {
     return RemixBadgeSpec(
       container: container.lerp(other?.container, t),
-      text: text.lerp(other?.text, t),
+      label: label.lerp(other?.label, t),
     );
   }
 
   @override
-  List<Object?> get props => [container, text];
+  List<Object?> get props => [container, label];
 
   @override
   bool operator ==(Object other) {
@@ -76,7 +76,7 @@ mixin _$RemixBadgeSpec implements Spec<RemixBadgeSpec>, Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     properties
       ..add(DiagnosticsProperty('container', container))
-      ..add(DiagnosticsProperty('text', text));
+      ..add(DiagnosticsProperty('label', label));
   }
 }
 
@@ -86,21 +86,57 @@ mixin _$RemixBadgeSpec implements Spec<RemixBadgeSpec>, Diagnosticable {
 typedef _$RemixBadgeSpecMethods = _$RemixBadgeSpec; // ignore: unused_element
 
 // **************************************************************************
+// MixWidgetGenerator
+// **************************************************************************
+
+/// Creates a Fortal-themed [RemixBadgeStyle].
+class FortalBadge extends StatelessWidget {
+  const FortalBadge({
+    super.key,
+    this.variant = .solid,
+    this.size = .size2,
+    this.label,
+    this.child,
+    this.labelBuilder,
+  });
+
+  final FortalBadgeVariant variant;
+
+  final FortalBadgeSize size;
+
+  final String? label;
+
+  final Widget? child;
+
+  final RemixBadgeLabelBuilder? labelBuilder;
+
+  @override
+  Widget build(BuildContext context) {
+    return fortalBadgeStyle(variant: this.variant, size: this.size).call(
+      key: this.key,
+      label: this.label,
+      child: this.child,
+      labelBuilder: this.labelBuilder,
+    );
+  }
+}
+
+// **************************************************************************
 // StylerGenerator
 // **************************************************************************
 
 mixin _$RemixBadgeStyleMixin on Style<RemixBadgeSpec>, Diagnosticable {
   Prop<StyleSpec<BoxSpec>>? get $container;
-  Prop<StyleSpec<TextSpec>>? get $text;
+  Prop<StyleSpec<TextSpec>>? get $label;
 
   /// Sets the container.
   RemixBadgeStyle container(BoxStyler value) {
     return merge(RemixBadgeStyle(container: value));
   }
 
-  /// Sets the text.
-  RemixBadgeStyle text(TextStyler value) {
-    return merge(RemixBadgeStyle(text: value));
+  /// Sets the label.
+  RemixBadgeStyle label(TextStyler value) {
+    return merge(RemixBadgeStyle(label: value));
   }
 
   /// Sets the animation configuration.
@@ -118,12 +154,17 @@ mixin _$RemixBadgeStyleMixin on Style<RemixBadgeSpec>, Diagnosticable {
     return merge(RemixBadgeStyle(modifier: value));
   }
 
+  /// Sets the widget modifier.
+  RemixBadgeStyle modifier(WidgetModifierConfig value) {
+    return merge(RemixBadgeStyle(modifier: value));
+  }
+
   /// Merges with another [RemixBadgeStyle].
   @override
   RemixBadgeStyle merge(RemixBadgeStyle? other) {
     return RemixBadgeStyle.create(
       container: MixOps.merge($container, other?.$container),
-      text: MixOps.merge($text, other?.$text),
+      label: MixOps.merge($label, other?.$label),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -135,7 +176,7 @@ mixin _$RemixBadgeStyleMixin on Style<RemixBadgeSpec>, Diagnosticable {
   StyleSpec<RemixBadgeSpec> resolve(BuildContext context) {
     final spec = RemixBadgeSpec(
       container: MixOps.resolve(context, $container),
-      text: MixOps.resolve(context, $text),
+      label: MixOps.resolve(context, $label),
     );
 
     return StyleSpec(
@@ -150,13 +191,13 @@ mixin _$RemixBadgeStyleMixin on Style<RemixBadgeSpec>, Diagnosticable {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', $container))
-      ..add(DiagnosticsProperty('text', $text));
+      ..add(DiagnosticsProperty('label', $label));
   }
 
   @override
   List<Object?> get props => [
     $container,
-    $text,
+    $label,
     $animation,
     $modifier,
     $variants,

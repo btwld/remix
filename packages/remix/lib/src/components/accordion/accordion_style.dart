@@ -1,5 +1,6 @@
 part of 'accordion.dart';
 
+/// Style configuration for [RemixAccordion] trigger, icons, title, and content.
 @MixableStyler()
 class RemixAccordionStyle
     extends RemixFlexContainerStyle<RemixAccordionSpec, RemixAccordionStyle>
@@ -204,7 +205,7 @@ class RemixAccordionStyle
     return merge(RemixAccordionStyle(trigger: FlexBoxStyler(alignment: value)));
   }
 
-  /// Style when accordion is collapsed
+  /// Style when the accordion is expanded.
   RemixAccordionStyle onExpanded<T>(RemixAccordionStyle value) {
     return variants([
       VariantStyle(
@@ -228,7 +229,7 @@ class RemixAccordionStyle
     ]);
   }
 
-  /// onCanCollapse
+  /// Style when the accordion item can collapse.
   RemixAccordionStyle onCanCollapse(RemixAccordionStyle value) {
     return variants([
       VariantStyle(
@@ -240,7 +241,7 @@ class RemixAccordionStyle
     ]);
   }
 
-  /// onCanExpand
+  /// Style when the accordion item can expand.
   RemixAccordionStyle onCanExpand<T>(RemixAccordionStyle value) {
     return variants([
       VariantStyle(
@@ -250,6 +251,49 @@ class RemixAccordionStyle
         value,
       ),
     ]);
+  }
+
+  /// Creates a [RemixAccordion] widget with this style applied.
+  RemixAccordion<T> call<T>({
+    Key? key,
+    required T value,
+    required Widget child,
+    String? title,
+    IconData? leadingIcon,
+    IconData? trailingIcon,
+    NakedAccordionTriggerBuilder<T>? builder,
+    bool enabled = true,
+    MouseCursor mouseCursor = SystemMouseCursors.click,
+    bool enableFeedback = true,
+    bool autofocus = false,
+    FocusNode? focusNode,
+    ValueChanged<bool>? onFocusChange,
+    ValueChanged<bool>? onHoverChange,
+    ValueChanged<bool>? onPressChange,
+    String? semanticLabel,
+    Widget Function(Widget, Animation<double>)? transitionBuilder,
+  }) {
+    return RemixAccordion<T>(
+      key: key,
+      value: value,
+      child: child,
+      title: title,
+      leadingIcon: leadingIcon,
+      trailingIcon: trailingIcon,
+      builder: builder,
+      enabled: enabled,
+      mouseCursor: mouseCursor,
+      enableFeedback: enableFeedback,
+      autofocus: autofocus,
+      focusNode: focusNode,
+      onFocusChange: onFocusChange,
+      onHoverChange: onHoverChange,
+      onPressChange: onPressChange,
+      semanticLabel: semanticLabel,
+      transitionBuilder:
+          transitionBuilder ?? RemixAccordion.defaultAccordionTransitionBuilder,
+      style: this,
+    );
   }
 
   // RemixFlexContainerStyle mixin implementations

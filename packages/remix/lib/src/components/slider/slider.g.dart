@@ -110,19 +110,23 @@ typedef _$RemixSliderSpecMethods = _$RemixSliderSpec; // ignore: unused_element
 // MixWidgetGenerator
 // **************************************************************************
 
+/// Creates a Fortal-themed [RemixSliderStyle].
+///
+/// The returned style can be passed to [RemixSlider.style] or called directly
+/// as a widget factory via [RemixSliderStyle.call].
 class FortalSlider extends StatelessWidget {
   const FortalSlider({
     super.key,
     this.variant = .surface,
     this.size = .size2,
     required this.value,
-    required this.onChanged,
-    this.min = 0.0,
-    this.max = 1.0,
+    this.onChanged,
     this.onChangeStart,
     this.onChangeEnd,
+    this.min = 0.0,
+    this.max = 1.0,
     this.enabled = true,
-    this.enableHapticFeedback = true,
+    this.enableFeedback = true,
     this.focusNode,
     this.autofocus = false,
     this.snapDivisions,
@@ -136,17 +140,17 @@ class FortalSlider extends StatelessWidget {
 
   final ValueChanged<double>? onChanged;
 
-  final double min;
-
-  final double max;
-
   final ValueChanged<double>? onChangeStart;
 
   final ValueChanged<double>? onChangeEnd;
 
+  final double min;
+
+  final double max;
+
   final bool enabled;
 
-  final bool enableHapticFeedback;
+  final bool enableFeedback;
 
   final FocusNode? focusNode;
 
@@ -159,12 +163,12 @@ class FortalSlider extends StatelessWidget {
     return fortalSliderStyle(variant: this.variant, size: this.size).call(
       value: this.value,
       onChanged: this.onChanged,
-      min: this.min,
-      max: this.max,
       onChangeStart: this.onChangeStart,
       onChangeEnd: this.onChangeEnd,
+      min: this.min,
+      max: this.max,
       enabled: this.enabled,
-      enableHapticFeedback: this.enableHapticFeedback,
+      enableFeedback: this.enableFeedback,
       focusNode: this.focusNode,
       autofocus: this.autofocus,
       snapDivisions: this.snapDivisions,
@@ -177,21 +181,11 @@ class FortalSlider extends StatelessWidget {
 // **************************************************************************
 
 mixin _$RemixSliderStyleMixin on Style<RemixSliderSpec>, Diagnosticable {
-  Prop<Color>? get $rangeColor;
-  Prop<double>? get $rangeWidth;
   Prop<StyleSpec<BoxSpec>>? get $thumb;
   Prop<Color>? get $trackColor;
   Prop<double>? get $trackWidth;
-
-  /// Sets the rangeColor.
-  RemixSliderStyle rangeColor(Color value) {
-    return merge(RemixSliderStyle(rangeColor: value));
-  }
-
-  /// Sets the rangeWidth.
-  RemixSliderStyle rangeWidth(double value) {
-    return merge(RemixSliderStyle(rangeWidth: value));
-  }
+  Prop<Color>? get $rangeColor;
+  Prop<double>? get $rangeWidth;
 
   /// Sets the thumb.
   RemixSliderStyle thumb(BoxStyler value) {
@@ -206,6 +200,16 @@ mixin _$RemixSliderStyleMixin on Style<RemixSliderSpec>, Diagnosticable {
   /// Sets the trackWidth.
   RemixSliderStyle trackWidth(double value) {
     return merge(RemixSliderStyle(trackWidth: value));
+  }
+
+  /// Sets the rangeColor.
+  RemixSliderStyle rangeColor(Color value) {
+    return merge(RemixSliderStyle(rangeColor: value));
+  }
+
+  /// Sets the rangeWidth.
+  RemixSliderStyle rangeWidth(double value) {
+    return merge(RemixSliderStyle(rangeWidth: value));
   }
 
   /// Sets the animation configuration.
@@ -223,15 +227,20 @@ mixin _$RemixSliderStyleMixin on Style<RemixSliderSpec>, Diagnosticable {
     return merge(RemixSliderStyle(modifier: value));
   }
 
+  /// Sets the widget modifier.
+  RemixSliderStyle modifier(WidgetModifierConfig value) {
+    return merge(RemixSliderStyle(modifier: value));
+  }
+
   /// Merges with another [RemixSliderStyle].
   @override
   RemixSliderStyle merge(RemixSliderStyle? other) {
     return RemixSliderStyle.create(
-      rangeColor: MixOps.merge($rangeColor, other?.$rangeColor),
-      rangeWidth: MixOps.merge($rangeWidth, other?.$rangeWidth),
       thumb: MixOps.merge($thumb, other?.$thumb),
       trackColor: MixOps.merge($trackColor, other?.$trackColor),
       trackWidth: MixOps.merge($trackWidth, other?.$trackWidth),
+      rangeColor: MixOps.merge($rangeColor, other?.$rangeColor),
+      rangeWidth: MixOps.merge($rangeWidth, other?.$rangeWidth),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -242,11 +251,11 @@ mixin _$RemixSliderStyleMixin on Style<RemixSliderSpec>, Diagnosticable {
   @override
   StyleSpec<RemixSliderSpec> resolve(BuildContext context) {
     final spec = RemixSliderSpec(
-      rangeColor: MixOps.resolve(context, $rangeColor),
-      rangeWidth: MixOps.resolve(context, $rangeWidth),
       thumb: MixOps.resolve(context, $thumb),
       trackColor: MixOps.resolve(context, $trackColor),
       trackWidth: MixOps.resolve(context, $trackWidth),
+      rangeColor: MixOps.resolve(context, $rangeColor),
+      rangeWidth: MixOps.resolve(context, $rangeWidth),
     );
 
     return StyleSpec(
@@ -260,20 +269,20 @@ mixin _$RemixSliderStyleMixin on Style<RemixSliderSpec>, Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(DiagnosticsProperty('rangeColor', $rangeColor))
-      ..add(DiagnosticsProperty('rangeWidth', $rangeWidth))
       ..add(DiagnosticsProperty('thumb', $thumb))
       ..add(DiagnosticsProperty('trackColor', $trackColor))
-      ..add(DiagnosticsProperty('trackWidth', $trackWidth));
+      ..add(DiagnosticsProperty('trackWidth', $trackWidth))
+      ..add(DiagnosticsProperty('rangeColor', $rangeColor))
+      ..add(DiagnosticsProperty('rangeWidth', $rangeWidth));
   }
 
   @override
   List<Object?> get props => [
-    $rangeColor,
-    $rangeWidth,
     $thumb,
     $trackColor,
     $trackWidth,
+    $rangeColor,
+    $rangeWidth,
     $animation,
     $modifier,
     $variants,

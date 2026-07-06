@@ -89,13 +89,14 @@ typedef _$RemixSwitchSpecMethods = _$RemixSwitchSpec; // ignore: unused_element
 // MixWidgetGenerator
 // **************************************************************************
 
+/// Creates a Fortal-themed [RemixSwitchStyle].
 class FortalSwitch extends StatelessWidget {
   const FortalSwitch({
     super.key,
     this.variant = .surface,
     this.size = .size2,
     required this.selected,
-    required this.onChanged,
+    this.onChanged,
     this.enabled = true,
     this.enableFeedback = true,
     this.focusNode,
@@ -110,7 +111,7 @@ class FortalSwitch extends StatelessWidget {
 
   final bool selected;
 
-  final ValueChanged<bool> onChanged;
+  final ValueChanged<bool>? onChanged;
 
   final bool enabled;
 
@@ -169,6 +170,11 @@ mixin _$RemixSwitchStyleMixin on Style<RemixSwitchSpec>, Diagnosticable {
 
   /// Wraps with a widget modifier.
   RemixSwitchStyle wrap(WidgetModifierConfig value) {
+    return merge(RemixSwitchStyle(modifier: value));
+  }
+
+  /// Sets the widget modifier.
+  RemixSwitchStyle modifier(WidgetModifierConfig value) {
     return merge(RemixSwitchStyle(modifier: value));
   }
 

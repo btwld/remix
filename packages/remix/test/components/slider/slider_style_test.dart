@@ -442,7 +442,7 @@ void main() {
           onChangeStart: (value) {},
           onChangeEnd: (value) {},
           enabled: false,
-          enableHapticFeedback: false,
+          enableFeedback: false,
           focusNode: focusNode,
           autofocus: true,
           snapDivisions: 10,
@@ -453,7 +453,7 @@ void main() {
         expect(slider.min, equals(0.0));
         expect(slider.max, equals(100.0));
         expect(slider.enabled, equals(false));
-        expect(slider.enableHapticFeedback, equals(false));
+        expect(slider.enableFeedback, equals(false));
         expect(slider.focusNode, same(focusNode));
         expect(slider.autofocus, equals(true));
         expect(slider.snapDivisions, equals(10));

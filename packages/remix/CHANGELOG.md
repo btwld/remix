@@ -1,4 +1,4 @@
-## 0.2.0
+## 1.0.0
 
 - **FEAT**: Add RemixToggle component (#50).
 - **FEAT**: Add backgroundColor, foregroundColor, shape and factory methods to RemixCalloutStyle (#49).
@@ -117,4 +117,3 @@
 
  - **FEAT**: Ability to pass MixWidgetStateController to SpecBuilder (#391).
  - **FEAT**: Foundational components (#317).
-

@@ -32,16 +32,16 @@ part of 'radio.dart';
 ///
 class RemixRadio<T> extends StatelessWidget {
   const RemixRadio({
-    this.style = const RemixRadioStyle.create(),
-    this.styleSpec,
     super.key,
     required this.value,
-    this.autofocus = false,
     this.enabled = true,
     this.toggleable = false,
-    this.focusNode,
     this.mouseCursor,
     this.enableFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
+    this.style = const RemixRadioStyle.create(),
+    this.styleSpec,
   });
 
   final RemixRadioStyle style;
@@ -74,6 +74,7 @@ class RemixRadio<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final registry = RadioGroup.maybeOf<T>(context);
+    final groupScope = _RemixRadioGroupScope.maybeOf<T>(context);
 
     // Always require registry - same as NakedRadio
     if (registry == null) {
@@ -100,20 +101,23 @@ class RemixRadio<T> extends StatelessWidget {
       ]);
     }
 
+    final effectiveEnabled = enabled && (groupScope?.enabled ?? true);
+
     // Check if selected
     final isSelected = registry.groupValue == value;
 
     // NakedRadio handles semantics through RawRadio - no need for wrapper
     return NakedRadio<T>(
       value: value,
-      enabled: enabled,
+      enabled: effectiveEnabled,
       mouseCursor: mouseCursor,
       focusNode: focusNode,
       autofocus: autofocus,
       toggleable: toggleable,
       builder: (context, _, __) {
-        return StyleBuilder(
+        return RemixStyleSpecBuilder<RemixRadioSpec>(
           style: style,
+          styleSpec: styleSpec,
           controller: NakedState.controllerOf(context),
           builder: (context, spec) {
             return Box(

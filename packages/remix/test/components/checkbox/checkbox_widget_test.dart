@@ -353,6 +353,34 @@ void main() {
       });
     });
 
+    group('StyleSpec Parameter', () {
+      testWidgets('applies raw styleSpec when provided', (tester) async {
+        const spec = RemixCheckboxSpec(
+          container: StyleSpec(
+            spec: BoxSpec(decoration: BoxDecoration(color: Colors.red)),
+          ),
+        );
+
+        await tester.pumpRemixApp(
+          RemixCheckbox(
+            selected: false,
+            onChanged: (value) {},
+            styleSpec: spec,
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final decorations = tester
+            .widgetList<Box>(find.byType(Box))
+            .map((box) => box.styleSpec?.spec.decoration);
+
+        expect(
+          decorations,
+          contains(equals(const BoxDecoration(color: Colors.red))),
+        );
+      });
+    });
+
     group('Edge Cases', () {
       testWidgets('handles null onChanged gracefully', (tester) async {
         await tester.pumpRemixApp(

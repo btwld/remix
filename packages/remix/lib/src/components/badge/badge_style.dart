@@ -1,5 +1,6 @@
 part of 'badge.dart';
 
+/// Style configuration for [RemixBadge] container and label text.
 @MixableStyler()
 class RemixBadgeStyle
     extends RemixContainerStyle<RemixBadgeSpec, RemixBadgeStyle>
@@ -10,26 +11,26 @@ class RemixBadgeStyle
   @MixableField(setterType: BoxStyler)
   final Prop<StyleSpec<BoxSpec>>? $container;
   @MixableField(setterType: TextStyler)
-  final Prop<StyleSpec<TextSpec>>? $text;
+  final Prop<StyleSpec<TextSpec>>? $label;
 
   const RemixBadgeStyle.create({
     Prop<StyleSpec<BoxSpec>>? container,
-    Prop<StyleSpec<TextSpec>>? text,
+    Prop<StyleSpec<TextSpec>>? label,
     super.variants,
     super.animation,
     super.modifier,
   }) : $container = container,
-       $text = text;
+       $label = label;
 
   RemixBadgeStyle({
     BoxStyler? container,
-    TextStyler? text,
+    TextStyler? label,
     AnimationConfig? animation,
     List<VariantStyle<RemixBadgeSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
          container: Prop.maybeMix(container),
-         text: Prop.maybeMix(text),
+         label: Prop.maybeMix(label),
          variants: variants,
          animation: animation,
          modifier: modifier,
@@ -116,7 +117,23 @@ class RemixBadgeStyle
 
   @override
   RemixBadgeStyle label(TextStyler value) {
-    return merge(RemixBadgeStyle(text: value));
+    return merge(RemixBadgeStyle(label: value));
+  }
+
+  /// Creates a [RemixBadge] widget with this style applied.
+  RemixBadge call({
+    Key? key,
+    String? label,
+    Widget? child,
+    RemixBadgeLabelBuilder? labelBuilder,
+  }) {
+    return RemixBadge(
+      key: key,
+      label: label,
+      child: child,
+      labelBuilder: labelBuilder,
+      style: this,
+    );
   }
 
   /// Sets constraints

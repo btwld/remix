@@ -1,6 +1,47 @@
 import 'package:flutter/widgets.dart';
 import 'package:mix/mix.dart' hide AnimationConfig;
 
+/// Builds from a raw spec when supplied, otherwise resolves the fluent style.
+class RemixStyleSpecBuilder<S extends Spec<S>> extends StatelessWidget {
+  /// Creates a builder that supports both style and raw spec inputs.
+  const RemixStyleSpecBuilder({
+    super.key,
+    required this.style,
+    required this.styleSpec,
+    required this.builder,
+    this.controller,
+  });
+
+  /// The fluent style to resolve when [styleSpec] is null.
+  final Style<S> style;
+
+  /// Optional raw spec that bypasses style resolution when provided.
+  final S? styleSpec;
+
+  /// Optional widget state controller for fluent style resolution.
+  final WidgetStatesController? controller;
+
+  /// Builds the widget with the resolved or supplied spec.
+  final Widget Function(BuildContext context, S spec) builder;
+
+  @override
+  Widget build(BuildContext context) {
+    final spec = styleSpec;
+    if (spec != null) {
+      return StyleSpecBuilder<S>(
+        styleSpec: StyleSpec<S>(spec: spec),
+        builder: builder,
+      );
+    }
+
+    return StyleBuilder<S>(
+      style: style,
+      controller: controller,
+      builder: builder,
+    );
+  }
+}
+
 /// Base abstract class for all Remix component styles.
 ///
 /// Provides universal mixins that all components share:
@@ -10,7 +51,7 @@ import 'package:mix/mix.dart' hide AnimationConfig;
 ///
 /// Usage: Extend this class for basic component styles.
 /// ```dart
-/// class MyStyle extends RemixStyle<MySpec> {
+/// class MyStyle extends RemixStyle<MySpec, MyStyle> {
 ///   // your implementation
 /// }
 /// ```
@@ -37,7 +78,7 @@ abstract class RemixStyle<S extends Spec<S>, T extends RemixStyle<S, T>>
 ///
 /// Usage: Extend this class for component styles that use BoxSpec containers.
 /// ```dart
-/// class MyStyle extends RemixContainerStyle<MySpec> {
+/// class MyStyle extends RemixContainerStyle<MySpec, MyStyle> {
 ///   // your implementation
 /// }
 /// ```
@@ -73,7 +114,7 @@ abstract class RemixContainerStyle<
 ///
 /// Usage: Extend this class for component styles that use FlexBoxSpec containers.
 /// ```dart
-/// class MyStyle extends RemixFlexContainerStyle<MySpec> {
+/// class MyStyle extends RemixFlexContainerStyle<MySpec, MyStyle> {
 ///   // your implementation
 /// }
 /// ```

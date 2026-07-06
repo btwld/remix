@@ -369,6 +369,26 @@ void main() {
         expect(merged, isA<RemixDialogStyle>());
       });
 
+      test('call creates RemixDialog with this style', () {
+        final style = RemixDialogStyle().backgroundColor(Colors.white);
+
+        final dialog = style.call(
+          title: 'Confirm',
+          description: 'Continue?',
+          actions: const [Text('OK')],
+          modal: false,
+          semanticLabel: 'Confirmation dialog',
+        );
+
+        expect(dialog, isA<RemixDialog>());
+        expect(dialog.style, same(style));
+        expect(dialog.title, 'Confirm');
+        expect(dialog.description, 'Continue?');
+        expect(dialog.actions, hasLength(1));
+        expect(dialog.modal, isFalse);
+        expect(dialog.semanticLabel, 'Confirmation dialog');
+      });
+
       test('props list contains all properties', () {
         const style = RemixDialogStyle.create();
         expect(style.props, hasLength(8));

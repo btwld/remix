@@ -104,12 +104,12 @@ class _FortalSwitchExampleState extends State<FortalSwitchExample> {
         RemixSwitch(
           selected: _value,
           onChanged: (v) => setState(() => _value = v),
-          style: FortalSwitchStyle.solid(),
+          style: fortalSwitchStyle(variant: FortalSwitchVariant.surface),
         ),
         RemixSwitch(
           selected: _value,
           onChanged: (v) => setState(() => _value = v),
-          style: FortalSwitchStyle.soft(),
+          style: fortalSwitchStyle(variant: FortalSwitchVariant.soft),
         ),
       ],
     );
@@ -119,7 +119,7 @@ class _FortalSwitchExampleState extends State<FortalSwitchExample> {
 </CodeGroup>
 
 <Info>
-  See the [FortalSwitchStyle source code](https://github.com/btwld/remix/blob/main/lib/src/components/switch/fortal_switch_styles.dart) for all available options.
+  See the [fortalSwitchStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/switch/fortal_switch_styles.dart) for all available options.
 </Info>
 
 ## Constructor
@@ -128,13 +128,13 @@ class _FortalSwitchExampleState extends State<FortalSwitchExample> {
 const RemixSwitch({
   Key? key,
   required bool selected,
-  required ValueChanged<bool>? onChanged,
+  ValueChanged<bool>? onChanged,
   bool enabled = true,
-  MouseCursor mouseCursor = SystemMouseCursors.click,
   bool enableFeedback = true,
   FocusNode? focusNode,
   bool autofocus = false,
   String? semanticLabel,
+  MouseCursor mouseCursor = SystemMouseCursors.click,
   RemixSwitchStyle style = const RemixSwitchStyle.create(),
   RemixSwitchSpec? styleSpec,
 })
@@ -157,9 +157,9 @@ Optional. Whether this switch is enabled.
 
 **Required**. Whether the switch is currently selected.
 
-#### `onChanged` → `ValueChanged<bool>`
+#### `onChanged` → `ValueChanged<bool>?`
 
-**Required**. Called when the user toggles the switch.
+Optional. Called when the user toggles the switch. When omitted, the switch is disabled.
 
 #### `style` → `RemixSwitchStyle`
 
@@ -200,17 +200,37 @@ Sets thumb color
 
 Sets thumb styling
 
+#### `container(BoxStyler value)`
+
+Configures the switch track container style.
+
 #### `alignment(Alignment value)`
 
 Sets container alignment
+
+#### `trackColor(Color value)`
+
+Sets the track background color.
+
+#### `color(Color value)`
+
+Sets the track background color.
+
+#### `onSelected(RemixSwitchStyle value)`
+
+Applies a style while the switch is selected.
 
 #### `wrap(WidgetModifierConfig value)`
 
 Applies widget modifiers such as clipping, opacity, or scaling.
 
-#### `animate(AnimationConfig config)`
+#### `animate(AnimationConfig value)`
 
 Configures implicit animation for style transitions.
+
+#### `variants(List<VariantStyle<RemixSwitchSpec>> value)`
+
+Sets custom style variants.
 
 #### `constraints(BoxConstraintsMix value)`
 
@@ -236,3 +256,6 @@ Sets a foreground decoration painted on top of the component.
 
 Applies a matrix transformation to the component.
 
+#### `call({ ... })`
+
+Creates a `RemixSwitch` widget with this style applied.

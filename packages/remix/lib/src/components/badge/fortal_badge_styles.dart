@@ -1,9 +1,13 @@
 part of 'badge.dart';
 
+/// Fortal badge size presets.
 enum FortalBadgeSize { size1, size2, size3 }
 
+/// Fortal badge color and emphasis variants.
 enum FortalBadgeVariant { solid, soft, surface, outline }
 
+/// Creates a Fortal-themed [RemixBadgeStyle].
+@MixWidget()
 RemixBadgeStyle fortalBadgeStyle({
   FortalBadgeVariant variant = .solid,
   FortalBadgeSize size = .size2,
@@ -59,21 +63,21 @@ RemixBadgeStyle _fortalBadgeSizeStyle(FortalBadgeSize size) {
           .paddingX(6.0)
           .paddingY(2.0)
           .borderRadiusAll(FortalTokens.radius2()),
-      text: TextStyler().fontSize(11.0).height(16.0 / 11.0),
+      label: TextStyler().fontSize(11.0).height(16.0 / 11.0),
     ),
     .size2 => RemixBadgeStyle(
       container: BoxStyler()
           .paddingX(8.0)
           .paddingY(3.0)
           .borderRadiusAll(FortalTokens.radius3()),
-      text: TextStyler().fontSize(12.0).height(18.0 / 12.0),
+      label: TextStyler().fontSize(12.0).height(18.0 / 12.0),
     ),
     .size3 => RemixBadgeStyle(
       container: BoxStyler()
           .paddingX(10.0)
           .paddingY(4.0)
           .borderRadiusAll(FortalTokens.radius3()),
-      text: TextStyler().fontSize(13.0).height(20.0 / 13.0),
+      label: TextStyler().fontSize(13.0).height(20.0 / 13.0),
     ),
   };
 }

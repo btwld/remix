@@ -1,0 +1,123 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:remix/remix.dart';
+
+import '../helpers/test_helpers.dart';
+
+void main() {
+  group('Fortal widgets', () {
+    testWidgets('renders FortalAvatar', (tester) async {
+      await tester.pumpRemixApp(const FortalAvatar(label: 'LF'));
+
+      expect(find.byType(FortalAvatar), findsOneWidget);
+      expect(find.byType(RemixAvatar), findsOneWidget);
+    });
+
+    testWidgets('renders FortalBadge', (tester) async {
+      await tester.pumpRemixApp(const FortalBadge(label: 'New'));
+
+      expect(find.byType(FortalBadge), findsOneWidget);
+      expect(find.byType(RemixBadge), findsOneWidget);
+    });
+
+    testWidgets('renders FortalButton', (tester) async {
+      await tester.pumpRemixApp(const FortalButton(label: 'Save'));
+
+      expect(find.byType(FortalButton), findsOneWidget);
+      expect(find.byType(RemixButton), findsOneWidget);
+    });
+
+    testWidgets('renders FortalCard', (tester) async {
+      await tester.pumpRemixApp(
+        const FortalCard(child: SizedBox(width: 24, height: 24)),
+      );
+
+      expect(find.byType(FortalCard), findsOneWidget);
+      expect(find.byType(RemixCard), findsOneWidget);
+    });
+
+    testWidgets('renders FortalCallout', (tester) async {
+      await tester.pumpRemixApp(const FortalCallout(text: 'Heads up'));
+
+      expect(find.byType(FortalCallout), findsOneWidget);
+      expect(find.byType(RemixCallout), findsOneWidget);
+    });
+
+    testWidgets('renders FortalCheckbox', (tester) async {
+      await tester.pumpRemixApp(const FortalCheckbox(selected: true));
+
+      expect(find.byType(FortalCheckbox), findsOneWidget);
+      expect(find.byType(RemixCheckbox), findsOneWidget);
+    });
+
+    testWidgets('renders FortalDivider', (tester) async {
+      await tester.pumpRemixApp(const FortalDivider());
+
+      expect(find.byType(FortalDivider), findsOneWidget);
+      expect(find.byType(RemixDivider), findsOneWidget);
+    });
+
+    testWidgets('renders FortalIconButton', (tester) async {
+      await tester.pumpRemixApp(const FortalIconButton(icon: Icons.add));
+
+      expect(find.byType(FortalIconButton), findsOneWidget);
+      expect(find.byType(RemixIconButton), findsOneWidget);
+    });
+
+    testWidgets('renders FortalProgress', (tester) async {
+      await tester.pumpRemixApp(const FortalProgress(value: 0.5));
+
+      expect(find.byType(FortalProgress), findsOneWidget);
+      expect(find.byType(RemixProgress), findsOneWidget);
+    });
+
+    testWidgets('renders FortalRadio', (tester) async {
+      await tester.pumpRemixApp(
+        const RemixRadioGroup<String>(
+          groupValue: 'option',
+          child: FortalRadio<String>(value: 'option'),
+        ),
+      );
+
+      expect(find.byType(FortalRadio<String>), findsOneWidget);
+      expect(find.byType(RemixRadio<String>), findsOneWidget);
+    });
+
+    testWidgets('renders FortalSlider', (tester) async {
+      await tester.pumpRemixApp(const FortalSlider(value: 0.5));
+
+      expect(find.byType(FortalSlider), findsOneWidget);
+      expect(find.byType(RemixSlider), findsOneWidget);
+    });
+
+    testWidgets('renders FortalSpinner', (tester) async {
+      await tester.pumpRemixApp(const FortalSpinner());
+
+      expect(find.byType(FortalSpinner), findsOneWidget);
+      expect(find.byType(RemixSpinner), findsOneWidget);
+    });
+
+    testWidgets('renders FortalSwitch', (tester) async {
+      await tester.pumpRemixApp(const FortalSwitch(selected: true));
+
+      expect(find.byType(FortalSwitch), findsOneWidget);
+      expect(find.byType(RemixSwitch), findsOneWidget);
+    });
+
+    testWidgets('renders FortalTextField', (tester) async {
+      await tester.pumpRemixApp(const FortalTextField(hintText: 'Email'));
+
+      expect(find.byType(FortalTextField), findsOneWidget);
+      expect(find.byType(RemixTextField), findsOneWidget);
+    });
+
+    testWidgets('renders FortalToggle', (tester) async {
+      await tester.pumpRemixApp(
+        const FortalToggle(selected: true, label: 'Bold'),
+      );
+
+      expect(find.byType(FortalToggle), findsOneWidget);
+      expect(find.byType(RemixToggle), findsOneWidget);
+    });
+  });
+}

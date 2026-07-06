@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
 
 import '../../helpers/test_helpers.dart';
@@ -121,6 +122,27 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixRadio<String>), findsOneWidget);
+      });
+
+      testWidgets('is disabled when onChanged is omitted', (tester) async {
+        String? selectedValue;
+
+        await tester.pumpRemixApp(
+          RemixRadioGroup<String>(
+            groupValue: selectedValue,
+            child: RemixRadio<String>(value: 'option1'),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byType(RemixRadio<String>));
+        await tester.pumpAndSettle();
+
+        final nakedRadio = tester.widget<NakedRadio<String>>(
+          find.byType(NakedRadio<String>),
+        );
+        expect(nakedRadio.enabled, isFalse);
+        expect(selectedValue, isNull);
       });
     });
 
@@ -323,6 +345,39 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixRadio<String>), findsOneWidget);
+      });
+
+      testWidgets('applies raw styleSpec when provided', (tester) async {
+        const spec = RemixRadioSpec(
+          container: StyleSpec(
+            spec: BoxSpec(decoration: BoxDecoration(color: Colors.red)),
+          ),
+          indicator: StyleSpec(
+            spec: BoxSpec(decoration: BoxDecoration(color: Colors.blue)),
+          ),
+        );
+
+        await tester.pumpRemixApp(
+          RemixRadioGroup<String>(
+            groupValue: 'option1',
+            onChanged: (value) {},
+            child: const RemixRadio<String>(value: 'option1', styleSpec: spec),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final decorations = tester
+            .widgetList<Box>(find.byType(Box))
+            .map((box) => box.styleSpec?.spec.decoration);
+
+        expect(
+          decorations,
+          contains(equals(const BoxDecoration(color: Colors.red))),
+        );
+        expect(
+          decorations,
+          contains(equals(const BoxDecoration(color: Colors.blue))),
+        );
       });
     });
 

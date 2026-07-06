@@ -395,7 +395,10 @@ void main() {
     group('StyleSpec Parameter', () {
       testWidgets('uses styleSpec when provided', (tester) async {
         const spec = RemixTooltipSpec(
-          waitDuration: Duration(milliseconds: 400),
+          container: StyleSpec(
+            spec: BoxSpec(decoration: BoxDecoration(color: Colors.red)),
+          ),
+          waitDuration: Duration.zero,
           showDuration: Duration(milliseconds: 2500),
         );
 
@@ -408,7 +411,43 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        expect(find.byType(RemixTooltip), findsOneWidget);
+        final gesture = await tester.createGesture(
+          kind: PointerDeviceKind.mouse,
+        );
+        await gesture.addPointer(location: Offset.zero);
+        await tester.pump();
+
+        await gesture.moveTo(tester.getCenter(find.text('Trigger')));
+        await tester.pumpAndSettle();
+
+        final decorations = tester
+            .widgetList<Box>(find.byType(Box))
+            .map((box) => box.styleSpec?.spec.decoration);
+
+        expect(
+          decorations,
+          contains(equals(const BoxDecoration(color: Colors.red))),
+        );
+      });
+
+      testWidgets('accepts custom positioning', (tester) async {
+        const positioning = OverlayPositionConfig(
+          targetAnchor: Alignment.topCenter,
+          followerAnchor: Alignment.bottomCenter,
+          offset: Offset(0, -8),
+        );
+
+        await tester.pumpRemixApp(
+          const RemixTooltip(
+            positioning: positioning,
+            tooltipChild: Text('Tooltip'),
+            child: Text('Trigger'),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final tooltip = tester.widget<RemixTooltip>(find.byType(RemixTooltip));
+        expect(tooltip.positioning, equals(positioning));
       });
     });
 

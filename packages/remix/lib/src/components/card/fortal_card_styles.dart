@@ -1,9 +1,13 @@
 part of 'card.dart';
 
+/// Fortal card size presets.
 enum FortalCardSize { size1, size2, size3 }
 
+/// Fortal card surface variants.
 enum FortalCardVariant { surface, classic, ghost }
 
+/// Creates a Fortal-themed [RemixCardStyle].
+@MixWidget()
 RemixCardStyle fortalCardStyle({
   FortalCardVariant variant = .surface,
   FortalCardSize size = .size2,
@@ -30,7 +34,7 @@ RemixCardStyle _fortalCardSurfaceStyle([FortalCardSize size = .size2]) {
 
 RemixCardStyle _fortalCardClassicStyle([FortalCardSize size = .size2]) {
   return _fortalCardBaseStyle(size)
-      .color(FortalTokens.graySurface())
+      .backgroundColor(FortalTokens.graySurface())
       .borderAll(
         color: FortalTokens.gray6(),
         width: FortalTokens.borderWidth1(),
@@ -47,7 +51,7 @@ RemixCardStyle _fortalCardClassicStyle([FortalCardSize size = .size2]) {
 }
 
 RemixCardStyle _fortalCardGhostStyle([FortalCardSize size = .size2]) {
-  return _fortalCardBaseStyle(size).color(Colors.transparent);
+  return _fortalCardBaseStyle(size).backgroundColor(Colors.transparent);
 }
 
 RemixCardStyle _fortalCardSizeStyle(FortalCardSize size) {

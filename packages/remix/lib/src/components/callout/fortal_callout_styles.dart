@@ -1,9 +1,13 @@
 part of 'callout.dart';
 
+/// Fortal callout size presets.
 enum FortalCalloutSize { size1, size2, size3 }
 
+/// Fortal callout color and emphasis variants.
 enum FortalCalloutVariant { outline, surface, soft }
 
+/// Creates a Fortal-themed [RemixCalloutStyle].
+@MixWidget()
 RemixCalloutStyle fortalCalloutStyle({
   FortalCalloutVariant variant = .surface,
   FortalCalloutSize size = .size2,
@@ -38,8 +42,7 @@ RemixCalloutStyle _fortalCalloutOutlineStyle([
         width: FortalTokens.borderWidth1(),
       )
       .borderRadiusAll(FortalTokens.radius3())
-      .textColor(FortalTokens.accent11())
-      .iconColor(FortalTokens.accent11());
+      .foregroundColor(FortalTokens.accent11());
 }
 
 RemixCalloutStyle _fortalCalloutSurfaceStyle([
@@ -52,16 +55,14 @@ RemixCalloutStyle _fortalCalloutSurfaceStyle([
         width: FortalTokens.borderWidth1(),
       )
       .borderRadiusAll(FortalTokens.radius3())
-      .textColor(FortalTokens.accent11())
-      .iconColor(FortalTokens.accent11());
+      .foregroundColor(FortalTokens.accent11());
 }
 
 RemixCalloutStyle _fortalCalloutSoftStyle([FortalCalloutSize size = .size2]) {
   return _fortalCalloutBaseStyle(size)
       .backgroundColor(FortalTokens.accent3())
       .borderRadiusAll(FortalTokens.radius3())
-      .textColor(FortalTokens.accent11())
-      .iconColor(FortalTokens.accent11());
+      .foregroundColor(FortalTokens.accent11());
 }
 
 RemixCalloutStyle _fortalCalloutSizeStyle(FortalCalloutSize size) {

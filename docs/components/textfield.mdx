@@ -115,14 +115,14 @@ class _FortalTextFieldExampleState extends State<FortalTextFieldExample> {
           controller: controller,
           label: 'Email',
           hintText: 'Enter your email',
-          style: FortalTextFieldStyle.base(),
+          style: fortalTextFieldStyle(),
         ),
         RemixTextField(
           controller: controller,
           label: 'Password',
           hintText: 'Enter password',
           obscureText: true,
-          style: FortalTextFieldStyle.base(),
+          style: fortalTextFieldStyle(),
         ),
       ],
     );
@@ -132,7 +132,7 @@ class _FortalTextFieldExampleState extends State<FortalTextFieldExample> {
 </CodeGroup>
 
 <Info>
-  See the [FortalTextFieldStyle source code](https://github.com/btwld/remix/blob/main/lib/src/components/textfield/fortal_textfield_styles.dart) for all available options.
+  See the [fortalTextFieldStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/textfield/fortal_textfield_styles.dart) for all available options.
 </Info>
 
 ## Constructor
@@ -449,6 +449,10 @@ Optional. The style configuration for the text field.
 
 Sets text color
 
+#### `text(TextStyler value)`
+
+Sets editable text style using a TextStyler.
+
 #### `backgroundColor(Color value)`
 
 Sets background color
@@ -480,6 +484,42 @@ Sets height
 #### `cursorColor(Color value)`
 
 Sets cursor color
+
+#### `cursorWidth(double value)`
+
+Sets cursor width.
+
+#### `cursorHeight(double value)`
+
+Sets cursor height.
+
+#### `cursorRadius(Radius value)`
+
+Sets cursor radius.
+
+#### `cursorOffset(Offset value)`
+
+Sets cursor paint offset.
+
+#### `cursorOpacityAnimates(bool value)`
+
+Controls whether cursor opacity animates.
+
+#### `selectionHeightStyle(BoxHeightStyle value)`
+
+Sets selection box height behavior.
+
+#### `selectionWidthStyle(BoxWidthStyle value)`
+
+Sets selection box width behavior.
+
+#### `scrollPadding(EdgeInsets value)`
+
+Sets the padding used when scrolling the field into view.
+
+#### `keyboardAppearance(Brightness value)`
+
+Sets the platform keyboard appearance.
 
 #### `hintColor(Color value)`
 
@@ -521,13 +561,25 @@ Sets helper text
 
 Sets label text
 
-#### `animate(AnimationConfig animation)`
+#### `animate(AnimationConfig value)`
 
-Sets animation
+Sets animation configuration.
+
+#### `variants(List<VariantStyle<RemixTextFieldSpec>> value)`
+
+Sets style variants.
 
 #### `wrap(WidgetModifierConfig value)`
 
 Applies widget modifiers such as clipping, opacity, or scaling.
+
+#### `modifier(WidgetModifierConfig value)`
+
+Sets the widget modifier.
+
+#### `call({ ... })`
+
+Creates a RemixTextField widget with this style applied.
 
 #### `foregroundDecoration(DecorationMix value)`
 
@@ -584,4 +636,3 @@ Sets label/text word spacing
 #### `labelDecorationColor(Color value)`
 
 Sets label/text decoration color
-

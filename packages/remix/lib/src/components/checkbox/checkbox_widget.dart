@@ -30,20 +30,20 @@ part of 'checkbox.dart';
 class RemixCheckbox extends StatelessWidget {
   const RemixCheckbox({
     super.key,
-    this.enabled = true,
     required this.selected,
-    this.tristate = false,
     this.onChanged,
-    this.autofocus = false,
+    this.enabled = true,
+    this.tristate = false,
     this.checkedIcon = Icons.check_rounded,
     this.uncheckedIcon,
     this.indeterminateIcon = Icons.horizontal_rule,
-    this.enableFeedback = true,
-    this.style = const RemixCheckboxStyle.create(),
-    this.styleSpec,
     this.focusNode,
+    this.autofocus = false,
+    this.enableFeedback = true,
     this.semanticLabel,
     this.mouseCursor = SystemMouseCursors.click,
+    this.style = const RemixCheckboxStyle.create(),
+    this.styleSpec,
   });
 
   /// Whether the checkbox is enabled for interaction.
@@ -108,8 +108,9 @@ class RemixCheckbox extends StatelessWidget {
       autofocus: autofocus,
       semanticLabel: semanticLabel,
       builder: (context, state, _) {
-        return StyleBuilder(
+        return RemixStyleSpecBuilder<RemixCheckboxSpec>(
           style: style,
+          styleSpec: styleSpec,
           controller: NakedState.controllerOf(context),
           builder: (context, spec) {
             final iconData = tristate && selected == null

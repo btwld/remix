@@ -57,8 +57,8 @@ class FortalDividerExample extends StatelessWidget {
     return Column(
       spacing: 16,
       children: [
-        RemixDivider(style: FortalDividerStyle.horizontal()),
-        RemixDivider(style: FortalDividerStyle.vertical()),
+        RemixDivider(style: fortalDividerStyle(size: FortalDividerSize.size1)),
+        RemixDivider(style: fortalDividerStyle(size: FortalDividerSize.size3)),
       ],
     );
   }
@@ -67,7 +67,7 @@ class FortalDividerExample extends StatelessWidget {
 </CodeGroup>
 
 <Info>
-  See the [FortalDividerStyle source code](https://github.com/btwld/remix/blob/main/lib/src/components/divider/fortal_divider_styles.dart) for all available options.
+  See the [fortalDividerStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/divider/fortal_divider_styles.dart) for all available options.
 </Info>
 
 ## Constructor
@@ -76,7 +76,7 @@ class FortalDividerExample extends StatelessWidget {
 const RemixDivider({
   Key? key,
   RemixDividerStyle style = const RemixDividerStyle.create(),
-  RemixDividerSpec? styleSpec,
+  StyleSpec<RemixDividerSpec>? styleSpec,
 })
 ```
 </CodeGroup>
@@ -89,7 +89,7 @@ const RemixDivider({
 
 Optional. The style configuration for the divider. Customize color, thickness, and spacing.
 
-#### `styleSpec` → `RemixDividerSpec?`
+#### `styleSpec` → `StyleSpec<RemixDividerSpec>?`
 
 Optional. A pre-resolved style spec that bypasses style resolution. Useful for performance when sharing resolved styles across multiple instances.
 
@@ -128,7 +128,7 @@ Sets container decoration
 
 Applies widget modifiers such as clipping, opacity, or scaling.
 
-#### `animate(AnimationConfig config)`
+#### `animate(AnimationConfig value)`
 
 Configures implicit animation for style transitions.
 
@@ -144,3 +144,6 @@ Sets a foreground decoration painted on top of the component.
 
 Applies a matrix transformation to the component.
 
+#### `call({Key? key})`
+
+Creates a `RemixDivider` widget with this style applied.

@@ -173,6 +173,23 @@ void main() {
         expect(wasChanged, isFalse);
       });
 
+      testWidgets('omitted onChanged disables interaction', (tester) async {
+        await tester.pumpRemixApp(
+          const RemixToggle(selected: false, label: 'Bold'),
+        );
+        await tester.pumpAndSettle();
+
+        final nakedToggle = tester.widget<NakedToggle>(
+          find.byType(NakedToggle),
+        );
+        expect(nakedToggle.onChanged, isNull);
+
+        await tester.tap(find.byType(RemixToggle));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(RemixToggle), findsOneWidget);
+      });
+
       testWidgets('enableFeedback controls haptic feedback', (tester) async {
         await tester.pumpRemixApp(
           RemixToggle(
@@ -429,6 +446,37 @@ void main() {
     });
 
     group('Edge Cases', () {
+      testWidgets('applies raw styleSpec when provided', (tester) async {
+        const spec = RemixToggleSpec(
+          container: StyleSpec(
+            spec: FlexBoxSpec(
+              box: StyleSpec(
+                spec: BoxSpec(decoration: BoxDecoration(color: Colors.red)),
+              ),
+            ),
+          ),
+        );
+
+        await tester.pumpRemixApp(
+          RemixToggle(
+            selected: false,
+            onChanged: (value) {},
+            label: 'Bold',
+            styleSpec: spec,
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final decorations = tester
+            .widgetList<RowBox>(find.byType(RowBox))
+            .map((box) => box.styleSpec?.spec.box?.spec.decoration);
+
+        expect(
+          decorations,
+          contains(equals(const BoxDecoration(color: Colors.red))),
+        );
+      });
+
       testWidgets('handles rapid toggling', (tester) async {
         bool toggleValue = false;
 

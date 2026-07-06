@@ -40,7 +40,7 @@ class _CheckboxExampleState extends State<CheckboxExample> {
     return RemixCheckboxStyle()
         .size(24, 24)
         .icon(IconStyler().size(20).color(Colors.white))
-        .onSelected(RemixCheckboxStyle().color(Colors.grey.shade900))
+        .onSelected(RemixCheckboxStyle().fillColor(Colors.grey.shade900))
         .borderRadiusAll(const Radius.circular(3))
         .border(
           BoxBorderMix.all(BorderSideMix().color(Colors.black87).width(2)),

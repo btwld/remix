@@ -101,131 +101,65 @@ mixin _$RemixButtonSpec implements Spec<RemixButtonSpec>, Diagnosticable {
 typedef _$RemixButtonSpecMethods = _$RemixButtonSpec; // ignore: unused_element
 
 // **************************************************************************
-// SpecStylerGenerator
+// StylerGenerator
 // **************************************************************************
 
-class RemixButtonStyler extends MixStyler<RemixButtonStyler, RemixButtonSpec> {
-  final Prop<StyleSpec<FlexBoxSpec>>? $container;
-  final Prop<StyleSpec<TextSpec>>? $label;
-  final Prop<StyleSpec<IconSpec>>? $icon;
-  final Prop<StyleSpec<RemixSpinnerSpec>>? $spinner;
-  final Prop<IconAlignment>? $iconAlignment;
+mixin _$RemixButtonStyleMixin on Style<RemixButtonSpec>, Diagnosticable {
+  Prop<StyleSpec<FlexBoxSpec>>? get $container;
+  Prop<StyleSpec<TextSpec>>? get $label;
+  Prop<StyleSpec<IconSpec>>? get $icon;
+  Prop<StyleSpec<RemixSpinnerSpec>>? get $spinner;
+  Prop<IconAlignment>? get $iconAlignment;
 
-  const RemixButtonStyler.create({
-    Prop<StyleSpec<FlexBoxSpec>>? container,
-    Prop<StyleSpec<TextSpec>>? label,
-    Prop<StyleSpec<IconSpec>>? icon,
-    Prop<StyleSpec<RemixSpinnerSpec>>? spinner,
-    Prop<IconAlignment>? iconAlignment,
-    super.variants,
-    super.modifier,
-    super.animation,
-  }) : $container = container,
-       $label = label,
-       $icon = icon,
-       $spinner = spinner,
-       $iconAlignment = iconAlignment;
+  /// Sets the container.
+  RemixButtonStyle container(FlexBoxStyler value) {
+    return merge(RemixButtonStyle(container: value));
+  }
 
-  RemixButtonStyler({
-    StyleSpec<FlexBoxSpec>? container,
-    StyleSpec<TextSpec>? label,
-    StyleSpec<IconSpec>? icon,
-    StyleSpec<RemixSpinnerSpec>? spinner,
-    IconAlignment? iconAlignment,
-    AnimationConfig? animation,
-    WidgetModifierConfig? modifier,
-    List<VariantStyle<RemixButtonSpec>>? variants,
-  }) : this.create(
-         container: Prop.maybe(container),
-         label: Prop.maybe(label),
-         icon: Prop.maybe(icon),
-         spinner: Prop.maybe(spinner),
-         iconAlignment: Prop.maybe(iconAlignment),
-         variants: variants,
-         modifier: modifier,
-         animation: animation,
-       );
+  /// Sets the label.
+  RemixButtonStyle label(TextStyler value) {
+    return merge(RemixButtonStyle(label: value));
+  }
 
-  factory RemixButtonStyler.iconAlignment(IconAlignment value) =>
-      RemixButtonStyler().iconAlignment(value);
+  /// Sets the icon.
+  RemixButtonStyle icon(IconStyler value) {
+    return merge(RemixButtonStyle(icon: value));
+  }
+
+  /// Sets the spinner.
+  RemixButtonStyle spinner(RemixSpinnerStyle value) {
+    return merge(RemixButtonStyle(spinner: value));
+  }
 
   /// Sets the iconAlignment.
-  RemixButtonStyler iconAlignment(IconAlignment value) {
-    return merge(RemixButtonStyler(iconAlignment: value));
+  RemixButtonStyle iconAlignment(IconAlignment value) {
+    return merge(RemixButtonStyle(iconAlignment: value));
   }
 
   /// Sets the animation configuration.
-  @override
-  RemixButtonStyler animate(AnimationConfig value) {
-    return merge(RemixButtonStyler(animation: value));
+  RemixButtonStyle animate(AnimationConfig value) {
+    return merge(RemixButtonStyle(animation: value));
   }
 
   /// Sets the style variants.
-  @override
-  RemixButtonStyler variants(List<VariantStyle<RemixButtonSpec>> value) {
-    return merge(RemixButtonStyler(variants: value));
+  RemixButtonStyle variants(List<VariantStyle<RemixButtonSpec>> value) {
+    return merge(RemixButtonStyle(variants: value));
   }
 
   /// Wraps with a widget modifier.
-  @override
-  RemixButtonStyler wrap(WidgetModifierConfig value) {
-    return merge(RemixButtonStyler(modifier: value));
+  RemixButtonStyle wrap(WidgetModifierConfig value) {
+    return merge(RemixButtonStyle(modifier: value));
   }
 
   /// Sets the widget modifier.
-  RemixButtonStyler modifier(WidgetModifierConfig value) {
-    return merge(RemixButtonStyler(modifier: value));
+  RemixButtonStyle modifier(WidgetModifierConfig value) {
+    return merge(RemixButtonStyle(modifier: value));
   }
 
-  RemixButton call({
-    Key? key,
-    required String label,
-    IconData? leadingIcon,
-    IconData? trailingIcon,
-    RemixButtonTextBuilder? textBuilder,
-    RemixButtonIconBuilder? leadingIconBuilder,
-    RemixButtonIconBuilder? trailingIconBuilder,
-    RemixButtonLoadingBuilder? loadingBuilder,
-    bool autofocus = false,
-    bool loading = false,
-    bool enabled = true,
-    bool enableFeedback = true,
-    required VoidCallback? onPressed,
-    VoidCallback? onLongPress,
-    FocusNode? focusNode,
-    String? semanticLabel,
-    String? semanticHint,
-    bool excludeSemantics = false,
-    MouseCursor mouseCursor = SystemMouseCursors.click,
-  }) {
-    return RemixButton(
-      key: key,
-      style: this,
-      label: label,
-      leadingIcon: leadingIcon,
-      trailingIcon: trailingIcon,
-      textBuilder: textBuilder,
-      leadingIconBuilder: leadingIconBuilder,
-      trailingIconBuilder: trailingIconBuilder,
-      loadingBuilder: loadingBuilder,
-      autofocus: autofocus,
-      loading: loading,
-      enabled: enabled,
-      enableFeedback: enableFeedback,
-      onPressed: onPressed,
-      onLongPress: onLongPress,
-      focusNode: focusNode,
-      semanticLabel: semanticLabel,
-      semanticHint: semanticHint,
-      excludeSemantics: excludeSemantics,
-      mouseCursor: mouseCursor,
-    );
-  }
-
-  /// Merges with another [RemixButtonStyler].
+  /// Merges with another [RemixButtonStyle].
   @override
-  RemixButtonStyler merge(RemixButtonStyler? other) {
-    return RemixButtonStyler.create(
+  RemixButtonStyle merge(RemixButtonStyle? other) {
+    return RemixButtonStyle.create(
       container: MixOps.merge($container, other?.$container),
       label: MixOps.merge($label, other?.$label),
       icon: MixOps.merge($icon, other?.$icon),

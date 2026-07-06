@@ -1,9 +1,24 @@
 part of 'menu.dart';
 
-enum FortalMenuSize { size1, size2 }
+/// Size scale for Fortal menu triggers and items.
+enum FortalMenuSize {
+  /// Compact menu controls.
+  size1,
 
-enum FortalMenuVariant { solid, soft }
+  /// Default menu controls.
+  size2,
+}
 
+/// Visual variants for Fortal menu controls.
+enum FortalMenuVariant {
+  /// High-emphasis menu trigger and item hover treatment.
+  solid,
+
+  /// Subtle accent-backed menu trigger and item hover treatment.
+  soft,
+}
+
+/// Creates a Fortal-themed [RemixMenuStyle].
 RemixMenuStyle fortalMenuStyle({
   FortalMenuVariant variant = .solid,
   FortalMenuSize size = .size2,
@@ -102,6 +117,7 @@ RemixMenuStyle _fortalMenuSizeStyle(FortalMenuSize size) {
   };
 }
 
+/// Creates a Fortal-themed [RemixMenuItemStyle].
 RemixMenuItemStyle fortalMenuItemStyle({
   FortalMenuVariant variant = .solid,
   FortalMenuSize size = .size2,

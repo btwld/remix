@@ -33,7 +33,7 @@ class ProgressExample extends StatelessWidget {
 
   RemixProgressStyle get style {
     return RemixProgressStyle()
-        .wrapClipRRect(borderRadius: BorderRadius.circular(10))
+        .wrap(WidgetModifierConfig.clipRRect(borderRadius: BorderRadiusGeometryMix.circular(10)))
         .trackColor(Colors.grey.shade300)
         .indicatorColor(Colors.grey.shade900)
         .width(300)
@@ -62,11 +62,11 @@ class FortalProgressExample extends StatelessWidget {
       children: [
         RemixProgress(
           value: 0.6,
-          style: FortalProgressStyle.solid(),
+          style: fortalProgressStyle(variant: FortalProgressVariant.surface),
         ),
         RemixProgress(
           value: 0.4,
-          style: FortalProgressStyle.soft(),
+          style: fortalProgressStyle(variant: FortalProgressVariant.soft),
         ),
       ],
     );
@@ -76,7 +76,7 @@ class FortalProgressExample extends StatelessWidget {
 </CodeGroup>
 
 <Info>
-  See the [FortalProgressStyle source code](https://github.com/btwld/remix/blob/main/lib/src/components/progress/fortal_progress_styles.dart) for all available options.
+  See the [fortalProgressStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/progress/fortal_progress_styles.dart) for all available options.
 </Info>
 
 ## Constructor
@@ -86,7 +86,7 @@ const RemixProgress({
   Key? key,
   required double value,
   RemixProgressStyle style = const RemixProgressStyle.create(),
-  RemixProgressSpec? styleSpec,
+  StyleSpec<RemixProgressSpec>? styleSpec,
 })
 ```
 </CodeGroup>
@@ -99,7 +99,7 @@ const RemixProgress({
 
 Optional. The style configuration for the progress indicator. Customize colors, sizing, and track appearance.
 
-#### `styleSpec` → `RemixProgressSpec?`
+#### `styleSpec` → `StyleSpec<RemixProgressSpec>?`
 
 Optional. A pre-resolved style spec that bypasses style resolution. Useful for performance when sharing resolved styles across multiple instances.
 
@@ -150,7 +150,7 @@ Sets container alignment
 
 Applies widget modifiers such as clipping, opacity, or scaling.
 
-#### `animate(AnimationConfig config)`
+#### `animate(AnimationConfig value)`
 
 Configures implicit animation for style transitions.
 
@@ -178,3 +178,6 @@ Sets a foreground decoration painted on top of the component.
 
 Applies a matrix transformation to the component.
 
+#### `call({Key? key, required double value})`
+
+Creates a `RemixProgress` widget with this style applied.

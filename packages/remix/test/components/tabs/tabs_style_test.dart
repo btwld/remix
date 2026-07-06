@@ -221,6 +221,16 @@ void main() {
 
         expect(merged, equals(style));
       });
+
+      test('call() creates RemixTabBar with this style', () {
+        final style = RemixTabBarStyle().padding(EdgeInsetsGeometryMix.all(8));
+
+        final tabBar = style.call(child: const Text('Tabs'));
+
+        expect(tabBar, isA<RemixTabBar>());
+        expect(tabBar.style, same(style));
+        expect(tabBar.child, isA<Text>());
+      });
     });
 
     group('Equality', () {
@@ -437,6 +447,20 @@ void main() {
         final merged = style.merge(null);
 
         expect(merged, equals(style));
+      });
+
+      test('call() creates RemixTabView with this style', () {
+        final style = RemixTabViewStyle().padding(EdgeInsetsGeometryMix.all(8));
+
+        final tabView = style.call(
+          tabId: 'overview',
+          child: const Text('Overview'),
+        );
+
+        expect(tabView, isA<RemixTabView>());
+        expect(tabView.style, same(style));
+        expect(tabView.tabId, 'overview');
+        expect(tabView.child, isA<Text>());
       });
     });
 
@@ -685,6 +709,24 @@ void main() {
         final merged = style.merge(null);
 
         expect(merged, equals(style));
+      });
+
+      test('call() creates RemixTab with this style', () {
+        final style = RemixTabStyle().padding(EdgeInsetsGeometryMix.all(8));
+
+        final tab = style.call(
+          tabId: 'overview',
+          label: 'Overview',
+          icon: Icons.info,
+          enabled: false,
+        );
+
+        expect(tab, isA<RemixTab>());
+        expect(tab.style, same(style));
+        expect(tab.tabId, 'overview');
+        expect(tab.label, 'Overview');
+        expect(tab.icon, Icons.info);
+        expect(tab.enabled, isFalse);
       });
     });
 

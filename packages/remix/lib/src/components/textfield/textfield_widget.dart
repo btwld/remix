@@ -11,9 +11,9 @@ part of 'textfield.dart';
 ///   hintText: 'Enter your name',
 ///   helperText: 'Required field',
 ///   onChanged: (value) {
-///     print('Value changed: $value');
+///     debugPrint('Value changed: $value');
 ///   },
-///   style: TextFieldStyle(),
+///   style: RemixTextFieldStyle(),
 /// )
 /// ```
 class RemixTextField extends StatelessWidget {
@@ -21,19 +21,18 @@ class RemixTextField extends StatelessWidget {
     super.key,
     this.controller,
     this.focusNode,
+    this.label,
+    this.hintText,
+    this.helperText,
+    this.error = false,
     this.keyboardType,
     this.textInputAction,
     this.textCapitalization = .none,
     this.textDirection,
-    this.readOnly = false,
-    this.showCursor,
-    this.autofocus = false,
-    this.obscuringCharacter = '•',
     this.obscureText = false,
-    this.autocorrect = true,
-    this.enableSuggestions = true,
-    this.smartDashesType,
-    this.smartQuotesType,
+    this.enabled = true,
+    this.readOnly = false,
+    this.autofocus = false,
     this.maxLines = 1,
     this.minLines,
     this.expands = false,
@@ -44,7 +43,12 @@ class RemixTextField extends StatelessWidget {
     this.onSubmitted,
     this.onAppPrivateCommand,
     this.inputFormatters,
-    this.enabled = true,
+    this.showCursor,
+    this.obscuringCharacter = '•',
+    this.autocorrect = true,
+    this.enableSuggestions = true,
+    this.smartDashesType,
+    this.smartQuotesType,
     this.dragStartBehavior = .start,
     this.enableInteractiveSelection = true,
     this.selectionControls,
@@ -66,17 +70,13 @@ class RemixTextField extends StatelessWidget {
     this.ignorePointers,
     this.undoController,
     this.groupId = EditableText,
-    this.hintText,
-    this.helperText,
-    this.label,
-    this.error = false,
-    this.styleSpec,
     this.leading,
     this.trailing,
     this.semanticLabel,
     this.semanticHint,
     this.excludeSemantics = false,
     this.style = const RemixTextFieldStyle.create(),
+    this.styleSpec,
   });
 
   /// Controls the text being edited.
@@ -319,8 +319,9 @@ class RemixTextField extends StatelessWidget {
           if (error) .error,
         });
 
-        return StyleBuilder(
+        return RemixStyleSpecBuilder<RemixTextFieldSpec>(
           style: style,
+          styleSpec: styleSpec,
           controller: controller,
           builder: (context, spec) {
             // Apply text style from spec

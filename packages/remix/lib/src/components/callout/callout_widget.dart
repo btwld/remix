@@ -14,12 +14,12 @@ class RemixCallout extends StyleWidget<RemixCalloutSpec> {
   /// Creates a callout widget with optional text, icon, or custom [child]. At
   /// least one of [text] or [child] must be provided.
   const RemixCallout({
-    super.style = const RemixCalloutStyle.create(),
-    super.styleSpec,
     super.key,
     String? text,
     this.icon,
     Widget? child,
+    super.style = const RemixCalloutStyle.create(),
+    super.styleSpec,
   }) : text = text,
        child = child,
        assert(

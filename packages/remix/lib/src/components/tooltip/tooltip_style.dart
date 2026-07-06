@@ -1,5 +1,9 @@
 part of 'tooltip.dart';
 
+/// Style builder for [RemixTooltip].
+///
+/// Use this class to style tooltip container, label, wait duration, and show
+/// duration.
 @MixableStyler()
 class RemixTooltipStyle
     extends RemixContainerStyle<RemixTooltipSpec, RemixTooltipStyle>
@@ -71,6 +75,9 @@ class RemixTooltipStyle
     );
   }
 
+  /// Sets tooltip container background color.
+  RemixTooltipStyle backgroundColor(Color value) => color(value);
+
   /// Sets container border radius
   @override
   RemixTooltipStyle borderRadius(BorderRadiusGeometryMix radius) {
@@ -87,6 +94,24 @@ class RemixTooltipStyle
   @override
   RemixTooltipStyle decoration(DecorationMix value) {
     return merge(RemixTooltipStyle(container: BoxStyler(decoration: value)));
+  }
+
+  /// Creates a [RemixTooltip] widget with this style applied.
+  RemixTooltip call({
+    Key? key,
+    required Widget tooltipChild,
+    required Widget child,
+    String? tooltipSemantics,
+    OverlayPositionConfig positioning = const OverlayPositionConfig(),
+  }) {
+    return RemixTooltip(
+      key: key,
+      tooltipChild: tooltipChild,
+      child: child,
+      tooltipSemantics: tooltipSemantics,
+      positioning: positioning,
+      style: this,
+    );
   }
 
   // Abstract method implementations for mixins

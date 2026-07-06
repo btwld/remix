@@ -111,8 +111,10 @@ class RemixTabBar extends StatelessWidget {
 class RemixTab extends StatelessWidget {
   const RemixTab({
     super.key,
-    this.child,
     required this.tabId,
+    this.child,
+    this.label,
+    this.icon,
     this.enabled = true,
     this.mouseCursor = SystemMouseCursors.click,
     this.enableFeedback = true,
@@ -124,8 +126,6 @@ class RemixTab extends StatelessWidget {
     this.builder,
     this.semanticLabel,
     this.style = const RemixTabStyle.create(),
-    this.icon,
-    this.label,
   }) : assert(
          child != null || builder != null || label != null,
          'Either child, builder, or label must be provided',

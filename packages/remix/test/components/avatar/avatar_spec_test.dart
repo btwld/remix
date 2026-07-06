@@ -11,7 +11,7 @@ void main() {
         const spec = RemixAvatarSpec();
 
         expect(spec.container, isA<StyleSpec<BoxSpec>>());
-        expect(spec.text, isA<StyleSpec<TextSpec>>());
+        expect(spec.label, isA<StyleSpec<TextSpec>>());
         expect(spec.icon, isA<StyleSpec<IconSpec>>());
       });
     });
@@ -25,7 +25,7 @@ void main() {
 
         expect(updatedSpec, isNot(same(originalSpec)));
         expect(updatedSpec.container, equals(newContainer));
-        expect(updatedSpec.text, equals(originalSpec.text));
+        expect(updatedSpec.label, equals(originalSpec.label));
         expect(updatedSpec.icon, equals(originalSpec.icon));
       });
 
@@ -33,11 +33,11 @@ void main() {
         const originalSpec = RemixAvatarSpec();
         final newText = StyleSpec(spec: TextSpec());
 
-        final updatedSpec = originalSpec.copyWith(text: newText);
+        final updatedSpec = originalSpec.copyWith(label: newText);
 
         expect(updatedSpec, isNot(same(originalSpec)));
         expect(updatedSpec.container, equals(originalSpec.container));
-        expect(updatedSpec.text, equals(newText));
+        expect(updatedSpec.label, equals(newText));
         expect(updatedSpec.icon, equals(originalSpec.icon));
       });
 
@@ -49,7 +49,7 @@ void main() {
 
         expect(updatedSpec, isNot(same(originalSpec)));
         expect(updatedSpec.container, equals(originalSpec.container));
-        expect(updatedSpec.text, equals(originalSpec.text));
+        expect(updatedSpec.label, equals(originalSpec.label));
         expect(updatedSpec.icon, equals(newIcon));
       });
 
@@ -61,27 +61,27 @@ void main() {
 
         final updatedSpec = originalSpec.copyWith(
           container: newContainer,
-          text: newText,
+          label: newText,
           icon: newIcon,
         );
 
         expect(updatedSpec, isNot(same(originalSpec)));
         expect(updatedSpec.container, equals(newContainer));
-        expect(updatedSpec.text, equals(newText));
+        expect(updatedSpec.label, equals(newText));
         expect(updatedSpec.icon, equals(newIcon));
       });
 
       test('preserves immutability - original spec unchanged', () {
         const originalSpec = RemixAvatarSpec();
         final originalContainer = originalSpec.container;
-        final originalText = originalSpec.text;
+        final originalText = originalSpec.label;
         final originalIcon = originalSpec.icon;
         final newContainer = StyleSpec(spec: BoxSpec());
 
         final updatedSpec = originalSpec.copyWith(container: newContainer);
 
         expect(originalSpec.container, equals(originalContainer));
-        expect(originalSpec.text, equals(originalText));
+        expect(originalSpec.label, equals(originalText));
         expect(originalSpec.icon, equals(originalIcon));
         expect(updatedSpec.container, equals(newContainer));
         expect(updatedSpec.container, isNot(same(originalContainer)));
@@ -108,12 +108,12 @@ void main() {
 
         final spec1 = RemixAvatarSpec(
           container: containerSpec1,
-          text: textSpec1,
+          label: textSpec1,
           icon: iconSpec1,
         );
         final spec2 = RemixAvatarSpec(
           container: containerSpec2,
-          text: textSpec2,
+          label: textSpec2,
           icon: iconSpec2,
         );
 
@@ -121,7 +121,7 @@ void main() {
 
         expect(result, isNot(same(spec1)));
         expect(result.container, equals(spec1.container));
-        expect(result.text, equals(spec1.text));
+        expect(result.label, equals(spec1.label));
         expect(result.icon, equals(spec1.icon));
       });
 
@@ -136,12 +136,12 @@ void main() {
 
         final spec1 = RemixAvatarSpec(
           container: containerSpec1,
-          text: textSpec1,
+          label: textSpec1,
           icon: iconSpec1,
         );
         final spec2 = RemixAvatarSpec(
           container: containerSpec2,
-          text: textSpec2,
+          label: textSpec2,
           icon: iconSpec2,
         );
 
@@ -149,7 +149,7 @@ void main() {
 
         expect(result, isNot(same(spec2)));
         expect(result.container, equals(spec2.container));
-        expect(result.text, equals(spec2.text));
+        expect(result.label, equals(spec2.label));
         expect(result.icon, equals(spec2.icon));
       });
 
@@ -164,12 +164,12 @@ void main() {
 
         final spec1 = RemixAvatarSpec(
           container: containerSpec1,
-          text: textSpec1,
+          label: textSpec1,
           icon: iconSpec1,
         );
         final spec2 = RemixAvatarSpec(
           container: containerSpec2,
-          text: textSpec2,
+          label: textSpec2,
           icon: iconSpec2,
         );
 
@@ -196,8 +196,8 @@ void main() {
           spec: TextSpec(style: TextStyle(fontSize: 16)),
         );
 
-        final spec1 = RemixAvatarSpec(text: textSpec1);
-        final spec2 = RemixAvatarSpec(text: textSpec2);
+        final spec1 = RemixAvatarSpec(label: textSpec1);
+        final spec2 = RemixAvatarSpec(label: textSpec2);
 
         expect(spec1, isNot(equals(spec2)));
       });
@@ -207,7 +207,7 @@ void main() {
 
         expect(spec.props, hasLength(3));
         expect(spec.props, contains(spec.container));
-        expect(spec.props, contains(spec.text));
+        expect(spec.props, contains(spec.label));
         expect(spec.props, contains(spec.icon));
       });
     });
@@ -234,7 +234,7 @@ void main() {
         // Check that all expected properties are included
         final propertyNames = properties.map((p) => p.name).toSet();
         expect(propertyNames, contains('container'));
-        expect(propertyNames, contains('text'));
+        expect(propertyNames, contains('label'));
         expect(propertyNames, contains('icon'));
       });
 

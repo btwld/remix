@@ -46,24 +46,23 @@ class AvatarExample extends StatelessWidget {
 
   RemixAvatarStyle get labelStyle {
     return RemixAvatarStyle()
-        .textColor(Colors.deepPurpleAccent)
+        .backgroundColor(Colors.deepPurpleAccent)
         .size(50, 50)
         .shapeCircle()
-        .wrapClipOval()
-        .labelColor(Colors.white)
+        .wrap(WidgetModifierConfig.clipOval())
+        .foregroundColor(Colors.white)
         .labelFontWeight(FontWeight.bold)
         .labelFontSize(15);
   }
 
   RemixAvatarStyle get iconStyle {
     return RemixAvatarStyle()
-        .textColor(Colors.deepOrangeAccent)
+        .backgroundColor(Colors.deepOrangeAccent)
         .size(70, 70)
-        .iconColor(Colors.white)
+        .foregroundColor(Colors.white)
         .iconSize(70)
-        .icon(IconStyler().wrapTranslate(x: 0, y: 12))
         .shapeCircle()
-        .wrapClipOval();
+        .wrap(WidgetModifierConfig.clipOval());
   }
 
   RemixAvatarStyle get image {
@@ -96,12 +95,12 @@ class FortalAvatarExample extends StatelessWidget {
         // Soft variant - Subtle background
         RemixAvatar(
           label: 'AB',
-          style: FortalAvatarStyles.soft(),
+          style: fortalAvatarStyle(variant: FortalAvatarVariant.soft),
         ),
         // Solid variant - Bold background
         RemixAvatar(
           label: 'CD',
-          style: FortalAvatarStyles.solid(),
+          style: fortalAvatarStyle(variant: FortalAvatarVariant.solid),
         ),
       ],
     );
@@ -111,7 +110,7 @@ class FortalAvatarExample extends StatelessWidget {
 </CodeGroup>
 
 <Info>
-  See the [FortalAvatarStyles source code](https://github.com/btwld/remix/blob/main/lib/src/components/avatar/fortal_avatar_styles.dart) for all available options.
+  See the [fortalAvatarStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/avatar/fortal_avatar_styles.dart) for all available options.
 </Info>
 
 ## Constructor
@@ -129,7 +128,7 @@ const RemixAvatar({
   IconData? icon,
   RemixAvatarIconBuilder? iconBuilder,
   RemixAvatarStyle style = const RemixAvatarStyle.create(),
-  RemixAvatarSpec? styleSpec,
+  StyleSpec<RemixAvatarSpec>? styleSpec,
 })
 ```
 </CodeGroup>
@@ -142,7 +141,7 @@ const RemixAvatar({
 
 Optional. The style configuration for the avatar. Customize colors, sizing, shape, and state-based styling.
 
-#### `styleSpec` → `RemixAvatarSpec?`
+#### `styleSpec` → `StyleSpec<RemixAvatarSpec>?`
 
 Optional. A pre-resolved style spec that bypasses style resolution. Useful for performance when sharing resolved styles across multiple instances.
 
@@ -197,6 +196,14 @@ Sets avatar size to a square
 
 Sets avatar size with width and height (alias)
 
+#### `backgroundColor(Color value)`
+
+Sets background color
+
+#### `foregroundColor(Color value)`
+
+Sets the foreground color (label and icon) of the avatar.
+
 #### `color(Color value)`
 
 Sets background color
@@ -204,10 +211,6 @@ Sets background color
 #### `borderRadius(BorderRadiusGeometryMix radius)`
 
 Sets border radius
-
-#### `textColor(Color value)`
-
-Sets text color
 
 #### `iconColor(Color value)`
 
@@ -233,7 +236,7 @@ Sets decoration
 
 Sets constraints
 
-#### `animate(AnimationConfig animation)`
+#### `animate(AnimationConfig value)`
 
 Sets animation
 
@@ -265,7 +268,11 @@ Sets a foreground decoration painted on top of the component.
 
 Applies a matrix transformation to the component.
 
-#### `labelTextStyle(TextStyleMix value)`
+#### `call({Key? key, ImageProvider? backgroundImage, ImageProvider? foregroundImage, ImageErrorListener? onBackgroundImageError, ImageErrorListener? onForegroundImageError, Widget? child, String? label, RemixAvatarLabelBuilder? labelBuilder, IconData? icon, RemixAvatarIconBuilder? iconBuilder})`
+
+Creates a `RemixAvatar` widget with this style applied.
+
+#### `labelStyle(TextStyleMix value)`
 
 Sets label/text style using TextStyleMix directly
 
@@ -348,4 +355,3 @@ Sets icon shadows
 #### `iconShadow(ShadowMix value)`
 
 Sets single icon shadow
-

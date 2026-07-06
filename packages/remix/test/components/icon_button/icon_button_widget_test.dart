@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
 
 import '../../helpers/test_helpers.dart';
@@ -8,12 +9,14 @@ void main() {
   group('RemixIconButton', () {
     group('Basic Rendering', () {
       testWidgets('renders icon button with minimal props', (tester) async {
-        await tester.pumpRemixApp(
-          RemixIconButton(icon: Icons.add, onPressed: () {}),
-        );
+        await tester.pumpRemixApp(RemixIconButton(icon: Icons.add));
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixIconButton), findsOneWidget);
+        expect(
+          tester.widget<NakedButton>(find.byType(NakedButton)).enabled,
+          isFalse,
+        );
         expect(find.byType(Box), findsOneWidget);
         expect(find.byType(StyledIcon), findsOneWidget);
         expect(find.byIcon(Icons.add), findsOneWidget);
@@ -27,6 +30,7 @@ void main() {
             onLongPress: () {},
             autofocus: false,
             loading: false,
+            enabled: true,
             enableFeedback: true,
             style: RemixIconButtonStyle.create(),
             semanticLabel: 'Delete Button',
@@ -189,6 +193,29 @@ void main() {
         expect(pressedCount, equals(0));
         expect(longPressCount, equals(0));
       });
+
+      testWidgets('does not call callbacks when enabled is false', (
+        tester,
+      ) async {
+        int pressedCount = 0;
+        int longPressCount = 0;
+        await tester.pumpRemixApp(
+          RemixIconButton(
+            icon: Icons.add,
+            enabled: false,
+            onPressed: () => pressedCount++,
+            onLongPress: () => longPressCount++,
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byType(RemixIconButton));
+        await tester.longPress(find.byType(RemixIconButton));
+        await tester.pumpAndSettle();
+
+        expect(pressedCount, equals(0));
+        expect(longPressCount, equals(0));
+      });
     });
 
     group('Focus and Keyboard', () {
@@ -295,6 +322,17 @@ void main() {
         expect(find.byType(Box), findsOneWidget);
         expect(find.byType(StyledIcon), findsOneWidget);
       });
+
+      testWidgets('renders correctly when enabled is false', (tester) async {
+        await tester.pumpRemixApp(
+          RemixIconButton(icon: Icons.add, enabled: false, onPressed: () {}),
+        );
+        await tester.pumpAndSettle();
+
+        expect(find.byType(RemixIconButton), findsOneWidget);
+        expect(find.byType(Box), findsOneWidget);
+        expect(find.byType(StyledIcon), findsOneWidget);
+      });
     });
 
     group('Style Integration', () {
@@ -367,6 +405,28 @@ void main() {
         expect(find.byType(RemixIconButton), findsOneWidget);
         expect(find.byType(Box), findsOneWidget);
         expect(find.byType(StyledIcon), findsOneWidget);
+      });
+
+      testWidgets('applies raw styleSpec when provided', (tester) async {
+        const spec = RemixIconButtonSpec(
+          container: StyleSpec(
+            spec: BoxSpec(decoration: BoxDecoration(color: Colors.red)),
+          ),
+        );
+
+        await tester.pumpRemixApp(
+          RemixIconButton(icon: Icons.add, onPressed: () {}, styleSpec: spec),
+        );
+        await tester.pumpAndSettle();
+
+        final decorations = tester
+            .widgetList<Box>(find.byType(Box))
+            .map((box) => box.styleSpec?.spec.decoration);
+
+        expect(
+          decorations,
+          contains(equals(const BoxDecoration(color: Colors.red))),
+        );
       });
     });
 

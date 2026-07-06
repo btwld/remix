@@ -142,8 +142,7 @@ class _SizeSection extends StatelessWidget {
             ).call(
               label: 'Solid',
               leadingIcon: Icons.check,
-              // ignore: avoid_print
-              onPressed: () => print('Button pressed'),
+              onPressed: () => debugPrint('Button pressed'),
             ),
             fortalButtonStyle(
               variant: .soft,
@@ -151,8 +150,7 @@ class _SizeSection extends StatelessWidget {
             ).call(
               label: 'Soft',
               leadingIcon: Icons.star,
-              // ignore: avoid_print
-              onPressed: () => print('Button pressed'),
+              onPressed: () => debugPrint('Button pressed'),
             ),
             fortalButtonStyle(
               variant: .outline,
@@ -160,8 +158,7 @@ class _SizeSection extends StatelessWidget {
             ).call(
               label: 'Outline',
               leadingIcon: Icons.favorite,
-              // ignore: avoid_print
-              onPressed: () => print('Button pressed'),
+              onPressed: () => debugPrint('Button pressed'),
             ),
           ],
         ),
@@ -177,8 +174,7 @@ class _SizeSection extends StatelessWidget {
             ).call(
               label: 'Solid',
               leadingIcon: Icons.check,
-              // ignore: avoid_print
-              onPressed: () => print('Button pressed'),
+              onPressed: () => debugPrint('Button pressed'),
             ),
             fortalButtonStyle(
               variant: .soft,
@@ -186,8 +182,7 @@ class _SizeSection extends StatelessWidget {
             ).call(
               label: 'Soft',
               leadingIcon: Icons.star,
-              // ignore: avoid_print
-              onPressed: () => print('Button pressed'),
+              onPressed: () => debugPrint('Button pressed'),
             ),
             fortalButtonStyle(
               variant: .outline,
@@ -195,8 +190,7 @@ class _SizeSection extends StatelessWidget {
             ).call(
               label: 'Outline',
               leadingIcon: Icons.favorite,
-              // ignore: avoid_print
-              onPressed: () => print('Button pressed'),
+              onPressed: () => debugPrint('Button pressed'),
             ),
           ],
         ),
@@ -212,8 +206,7 @@ class _SizeSection extends StatelessWidget {
             ).call(
               label: 'Solid',
               leadingIcon: Icons.check,
-              // ignore: avoid_print
-              onPressed: () => print('Button pressed'),
+              onPressed: () => debugPrint('Button pressed'),
             ),
             fortalButtonStyle(
               variant: .soft,
@@ -221,8 +214,7 @@ class _SizeSection extends StatelessWidget {
             ).call(
               label: 'Soft',
               leadingIcon: Icons.star,
-              // ignore: avoid_print
-              onPressed: () => print('Button pressed'),
+              onPressed: () => debugPrint('Button pressed'),
             ),
             fortalButtonStyle(
               variant: .outline,
@@ -230,8 +222,7 @@ class _SizeSection extends StatelessWidget {
             ).call(
               label: 'Outline',
               leadingIcon: Icons.favorite,
-              // ignore: avoid_print
-              onPressed: () => print('Button pressed'),
+              onPressed: () => debugPrint('Button pressed'),
             ),
           ],
         ),
@@ -247,8 +238,7 @@ class _SizeSection extends StatelessWidget {
             ).call(
               label: 'Solid',
               leadingIcon: Icons.check,
-              // ignore: avoid_print
-              onPressed: () => print('Button pressed'),
+              onPressed: () => debugPrint('Button pressed'),
             ),
             fortalButtonStyle(
               variant: .soft,
@@ -256,8 +246,7 @@ class _SizeSection extends StatelessWidget {
             ).call(
               label: 'Soft',
               leadingIcon: Icons.star,
-              // ignore: avoid_print
-              onPressed: () => print('Button pressed'),
+              onPressed: () => debugPrint('Button pressed'),
             ),
             fortalButtonStyle(
               variant: .outline,
@@ -265,8 +254,7 @@ class _SizeSection extends StatelessWidget {
             ).call(
               label: 'Outline',
               leadingIcon: Icons.favorite,
-              // ignore: avoid_print
-              onPressed: () => print('Button pressed'),
+              onPressed: () => debugPrint('Button pressed'),
             ),
           ],
         ),
@@ -293,8 +281,7 @@ class _StateSection extends StatelessWidget {
         fortalButtonStyle(variant: .solid).call(
           label: 'Loading',
           loading: true,
-          // ignore: avoid_print
-          onPressed: () => print('Button pressed'),
+          onPressed: () => debugPrint('Button pressed'),
         ),
 
         // Disabled state
@@ -306,8 +293,7 @@ class _StateSection extends StatelessWidget {
         fortalButtonStyle(variant: .solid).call(
           label: 'With Icon',
           leadingIcon: Icons.download,
-          // ignore: avoid_print
-          onPressed: () => print('Button pressed'),
+          onPressed: () => debugPrint('Button pressed'),
         ),
       ],
     );

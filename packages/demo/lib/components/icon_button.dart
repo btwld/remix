@@ -25,6 +25,7 @@ Widget buildIconButtonUseCase(BuildContext context) {
           onPressed: () {
             _showToast(context, 'RemixIconButton pressed');
           },
+          enabled: context.knobs.boolean(label: 'Enabled', initialValue: true),
           loading: context.knobs.boolean(label: 'Loading', initialValue: false),
           icon: context.knobs.iconData(label: 'Icon', initialValue: Icons.add)!,
           style: fortalIconButtonStyle(

@@ -73,8 +73,8 @@ class FortalSpinnerExample extends StatelessWidget {
     return Row(
       spacing: 16,
       children: [
-        RemixSpinner(style: FortalSpinnerStyle.solid()),
-        RemixSpinner(style: FortalSpinnerStyle.soft()),
+        RemixSpinner(style: fortalSpinnerStyle(size: FortalSpinnerSize.size2)),
+        RemixSpinner(style: fortalSpinnerStyle(size: FortalSpinnerSize.size3)),
       ],
     );
   }
@@ -83,7 +83,7 @@ class FortalSpinnerExample extends StatelessWidget {
 </CodeGroup>
 
 <Info>
-  See the [FortalSpinnerStyle source code](https://github.com/btwld/remix/blob/main/lib/src/components/spinner/fortal_spinner_styles.dart) for all available options.
+  See the [fortalSpinnerStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/spinner/fortal_spinner_styles.dart) for all available options.
 </Info>
 
 ## Constructor
@@ -92,7 +92,7 @@ class FortalSpinnerExample extends StatelessWidget {
 const RemixSpinner({
   Key? key,
   RemixSpinnerStyle style = const RemixSpinnerStyle.create(),
-  RemixSpinnerSpec? styleSpec,
+  StyleSpec<RemixSpinnerSpec>? styleSpec,
 })
 ```
 </CodeGroup>
@@ -105,7 +105,7 @@ const RemixSpinner({
 
 Optional. The style configuration for the spinner. Customize colors, sizing, stroke, and animation duration.
 
-#### `styleSpec` → `RemixSpinnerSpec?`
+#### `styleSpec` → `StyleSpec<RemixSpinnerSpec>?`
 
 Optional. A pre-resolved style spec that bypasses style resolution. Useful for performance when sharing resolved styles across multiple instances.
 
@@ -140,7 +140,7 @@ Sets the stroke width of the track.
 
 Sets the duration of one full rotation.
 
-#### `animate(AnimationConfig animation)`
+#### `animate(AnimationConfig value)`
 
 Configures implicit animation for style transitions.
 
@@ -148,3 +148,6 @@ Configures implicit animation for style transitions.
 
 Applies widget modifiers such as clipping, opacity, or scaling.
 
+#### `call()`
+
+Creates a `RemixSpinner` widget with this style applied.

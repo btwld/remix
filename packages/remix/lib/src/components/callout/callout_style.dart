@@ -1,5 +1,6 @@
 part of 'callout.dart';
 
+/// Style configuration for [RemixCallout] layout, icon, and text.
 @MixableStyler()
 class RemixCalloutStyle
     extends RemixFlexContainerStyle<RemixCalloutSpec, RemixCalloutStyle>
@@ -80,17 +81,9 @@ class RemixCalloutStyle
   factory RemixCalloutStyle.shape(ShapeBorderMix value) =>
       RemixCalloutStyle().shape(value);
 
-  /// Creates a style with the given icon color.
-  factory RemixCalloutStyle.iconColor(Color value) =>
-      RemixCalloutStyle().iconColor(value);
-
   /// Creates a style with the given icon size.
   factory RemixCalloutStyle.iconSize(double value) =>
       RemixCalloutStyle().iconSize(value);
-
-  /// Creates a style with the given text color.
-  factory RemixCalloutStyle.textColor(Color value) =>
-      RemixCalloutStyle().textColor(value);
 
   /// Creates a style with the given text style.
   factory RemixCalloutStyle.textStyle(TextStyleMix value) =>
@@ -157,18 +150,6 @@ class RemixCalloutStyle
     return merge(RemixCalloutStyle(container: FlexBoxStyler(spacing: value)));
   }
 
-  /// Sets icon color
-  RemixCalloutStyle iconColor(Color value) {
-    return merge(RemixCalloutStyle(icon: IconStyler(color: value)));
-  }
-
-  /// Sets text color
-  RemixCalloutStyle textColor(Color value) {
-    final text = TextStyler(style: TextStyleMix(color: value));
-
-    return merge(RemixCalloutStyle(text: text));
-  }
-
   @override
   RemixCalloutStyle constraints(BoxConstraintsMix value) {
     return merge(
@@ -201,6 +182,17 @@ class RemixCalloutStyle
   @override
   RemixCalloutStyle color(Color value) {
     return backgroundColor(value);
+  }
+
+  /// Creates a [RemixCallout] widget with this style applied.
+  RemixCallout call({Key? key, String? text, IconData? icon, Widget? child}) {
+    return RemixCallout(
+      key: key,
+      text: text,
+      icon: icon,
+      child: child,
+      style: this,
+    );
   }
 
   // FlexStyleMixin implementation

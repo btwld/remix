@@ -1,9 +1,27 @@
 part of 'checkbox.dart';
 
-enum FortalCheckboxSize { size1, size2, size3 }
+/// Fortal checkbox size presets.
+enum FortalCheckboxSize {
+  /// Compact checkbox.
+  size1,
 
-enum FortalCheckboxVariant { surface, soft }
+  /// Default checkbox.
+  size2,
 
+  /// Large checkbox.
+  size3,
+}
+
+/// Fortal checkbox color variants.
+enum FortalCheckboxVariant {
+  /// Surface treatment with neutral border.
+  surface,
+
+  /// Soft accent treatment.
+  soft,
+}
+
+/// Creates a Fortal-themed [RemixCheckboxStyle].
 @MixWidget()
 RemixCheckboxStyle fortalCheckboxStyle({
   FortalCheckboxVariant variant = .surface,

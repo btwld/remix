@@ -69,8 +69,7 @@ class _MenuExampleState extends State<MenuExample> {
             ),
             style: menuStyle,
             onSelected: (value) {
-              // ignore: avoid_print
-              print('RemixMenu: $value');
+              debugPrint('RemixMenu: $value');
             },
             controller: controller,
           ),
@@ -78,8 +77,7 @@ class _MenuExampleState extends State<MenuExample> {
           // Material PopupMenuButton for comparison
           PopupMenuButton<String>(
             onSelected: (value) {
-              // ignore: avoid_print
-              print('Material Menu: $value');
+              debugPrint('Material Menu: $value');
             },
             itemBuilder: (context) => const [
               PopupMenuItem(value: 'History', child: Text('History')),

@@ -99,12 +99,12 @@ class _FortalSliderExampleState extends State<FortalSliderExample> {
         RemixSlider(
           value: _value,
           onChanged: (v) => setState(() => _value = v),
-          style: FortalSliderStyle.solid(),
+          style: fortalSliderStyle(variant: FortalSliderVariant.surface),
         ),
         RemixSlider(
           value: _value,
           onChanged: (v) => setState(() => _value = v),
-          style: FortalSliderStyle.soft(),
+          style: fortalSliderStyle(variant: FortalSliderVariant.soft),
         ),
       ],
     );
@@ -114,7 +114,7 @@ class _FortalSliderExampleState extends State<FortalSliderExample> {
 </CodeGroup>
 
 <Info>
-  See the [FortalSliderStyle source code](https://github.com/btwld/remix/blob/main/lib/src/components/slider/fortal_slider_styles.dart) for all available options.
+  See the [fortalSliderStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/slider/fortal_slider_styles.dart) for all available options.
 </Info>
 
 ## Constructor
@@ -123,13 +123,13 @@ class _FortalSliderExampleState extends State<FortalSliderExample> {
 const RemixSlider({
   Key? key,
   required double value,
-  required ValueChanged<double>? onChanged,
+  ValueChanged<double>? onChanged,
   ValueChanged<double>? onChangeStart,
   ValueChanged<double>? onChangeEnd,
   double min = 0.0,
   double max = 1.0,
   bool enabled = true,
-  bool enableHapticFeedback = true,
+  bool enableFeedback = true,
   FocusNode? focusNode,
   bool autofocus = false,
   int? snapDivisions,
@@ -157,7 +157,7 @@ Optional. The maximum value the slider can have.
 
 #### `onChanged` → `ValueChanged<double>?`
 
-**Required**. Called during drag with the new value.
+Optional. Called during drag with the new value. When omitted, the slider is disabled.
 
 #### `value` → `double`
 
@@ -183,9 +183,9 @@ Optional. The style spec for the slider.
 
 Optional. Whether the slider is enabled for interaction.
 
-#### `enableHapticFeedback` → `bool`
+#### `enableFeedback` → `bool`
 
-Optional. Whether to provide haptic feedback during value changes. Defaults to true.
+Optional. Whether to provide platform feedback during value changes. Defaults to true.
 
 #### `focusNode` → `FocusNode?`
 
@@ -234,9 +234,17 @@ Sets stroke width for both track and range.
 
 Sets stroke width for the track only (background rail).
 
+#### `trackWidth(double value)`
+
+Sets stroke width for the track only.
+
 #### `rangeThickness(double value)`
 
 Sets stroke width for the range only (filled portion).
+
+#### `rangeWidth(double value)`
+
+Sets stroke width for the range only.
 
 #### `padding(EdgeInsetsGeometryMix value)`
 
@@ -278,7 +286,18 @@ Applies a matrix transformation to the component.
 
 Applies widget modifiers such as clipping, opacity, or scaling.
 
-#### `animate(AnimationConfig animation)`
+#### `animate(AnimationConfig value)`
 
 Configures implicit animation for style transitions.
 
+#### `variants(List<VariantStyle<RemixSliderSpec>> value)`
+
+Sets style variants.
+
+#### `modifier(WidgetModifierConfig value)`
+
+Sets the widget modifier.
+
+#### `call({ ... })`
+
+Creates a RemixSlider widget with this style applied.

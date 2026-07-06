@@ -491,6 +491,13 @@ void main() {
     group('StyleSpec Parameter', () {
       testWidgets('uses styleSpec when provided', (tester) async {
         const spec = RemixTextFieldSpec(
+          container: StyleSpec(
+            spec: FlexBoxSpec(
+              box: StyleSpec(
+                spec: BoxSpec(decoration: BoxDecoration(color: Colors.red)),
+              ),
+            ),
+          ),
           textAlign: TextAlign.center,
           cursorWidth: 3.0,
         );
@@ -498,7 +505,21 @@ void main() {
         await tester.pumpRemixApp(const RemixTextField(styleSpec: spec));
         await tester.pumpAndSettle();
 
-        expect(find.byType(RemixTextField), findsOneWidget);
+        final rowBoxDecorations = tester
+            .widgetList<RowBox>(find.byType(RowBox))
+            .map((box) => box.styleSpec?.spec.box?.spec.decoration);
+        final defaultTextStyles = tester.widgetList<DefaultTextStyle>(
+          find.byType(DefaultTextStyle),
+        );
+
+        expect(
+          rowBoxDecorations,
+          contains(equals(const BoxDecoration(color: Colors.red))),
+        );
+        expect(
+          defaultTextStyles.map((widget) => widget.textAlign),
+          contains(TextAlign.center),
+        );
       });
     });
 

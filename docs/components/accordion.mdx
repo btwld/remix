@@ -73,14 +73,14 @@ class _AccordionExampleState extends State<AccordionExample> {
     );
   }
 
-  RemixAccordionStyle<String> get itemStyle {
-    return RemixAccordionStyle<String>()
+  RemixAccordionStyle get itemStyle {
+    return RemixAccordionStyle()
         .content(BoxStyler().paddingX(16).paddingTop(8))
-        .wrapClipRRect(borderRadius: BorderRadius.circular(8))
+        .wrap(WidgetModifierConfig.clipRRect(borderRadius: BorderRadiusGeometryMix.circular(8)))
         .paddingX(16)
         .paddingY(14)
         .borderRounded(8)
-        .onHovered(RemixAccordionStyle<String>().color(Colors.grey.shade100))
+        .onHovered(RemixAccordionStyle().backgroundColor(Colors.grey.shade100))
         .decoration(
           BoxDecorationMix(
             color: Colors.white,
@@ -143,13 +143,19 @@ class _FortalAccordionExampleState extends State<FortalAccordionExample> {
           RemixAccordion(
             value: 'item1',
             title: 'First Item',
-            style: FortalAccordionStyle.base(),
+            style: fortalAccordionStyle(
+              variant: FortalAccordionVariant.surface,
+              size: FortalAccordionSize.size2,
+            ),
             child: Text('First content'),
           ),
           RemixAccordion(
             value: 'item2',
             title: 'Second Item',
-            style: FortalAccordionStyle.base(),
+            style: fortalAccordionStyle(
+              variant: FortalAccordionVariant.soft,
+              size: FortalAccordionSize.size3,
+            ),
             child: Text('Second content'),
           ),
         ],
@@ -161,7 +167,7 @@ class _FortalAccordionExampleState extends State<FortalAccordionExample> {
 </CodeGroup>
 
 <Info>
-  See the [FortalAccordionStyle source code](https://github.com/btwld/remix/blob/main/lib/src/components/accordion/fortal_accordion_styles.dart) for all available options.
+  See the [fortalAccordionStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/accordion/fortal_accordion_styles.dart) for all available options.
 </Info>
 
 ## Constructor
@@ -193,8 +199,8 @@ const RemixAccordion({
   ValueChanged<bool>? onHoverChange,
   ValueChanged<bool>? onPressChange,
   String? semanticLabel,
-  RemixAccordionStyle style = const RemixAccordionStyle.create(),
   Widget Function(Widget, Animation<double>) transitionBuilder = defaultAccordionTransitionBuilder,
+  RemixAccordionStyle style = const RemixAccordionStyle.create(),
 })
 ```
 </CodeGroup>
@@ -266,7 +272,7 @@ Optional. Called when the header's pressed state changes.
 
 Optional. Semantic label announced for the header.
 
-#### `style` → `RemixAccordionStyle<T>`
+#### `style` → `RemixAccordionStyle`
 
 Optional. The style configuration for the accordion item.
 
@@ -274,4 +280,148 @@ Optional. The style configuration for the accordion item.
 
 Optional. The transition builder for the accordion item.
 
+### Style Methods
 
+#### `trigger(FlexBoxStyler value)`
+
+Configures the trigger row style.
+
+#### `leadingIcon(IconStyler value)`
+
+Configures the leading icon style.
+
+#### `title(TextStyler value)`
+
+Configures the title text style.
+
+#### `trailingIcon(IconStyler value)`
+
+Configures the trailing icon style.
+
+#### `content(BoxStyler value)`
+
+Configures the expanded content container style.
+
+#### `backgroundColor(Color value)` / `color(Color value)`
+
+Sets the trigger background color.
+
+#### `padding(EdgeInsetsGeometryMix value)`
+
+Sets trigger padding.
+
+#### `margin(EdgeInsetsGeometryMix value)`
+
+Sets trigger margin.
+
+#### `spacing(double value)`
+
+Sets spacing between trigger children.
+
+#### `alignment(Alignment value)`
+
+Sets trigger alignment.
+
+#### `size(double width, double height)`
+
+Sets fixed trigger width and height constraints.
+
+#### `constraints(BoxConstraintsMix value)`
+
+Sets trigger constraints.
+
+#### `decoration(DecorationMix value)`
+
+Sets trigger decoration.
+
+#### `borderRadius(BorderRadiusGeometryMix radius)`
+
+Sets trigger border radius.
+
+#### `foregroundDecoration(DecorationMix value)`
+
+Sets trigger foreground decoration.
+
+#### `transform(Matrix4 value, {AlignmentGeometry alignment = Alignment.center})`
+
+Applies a matrix transform to the trigger.
+
+#### `flex(FlexStyler value)`
+
+Configures trigger flex behavior.
+
+#### `titleColor(Color value)`
+
+Sets title color.
+
+#### `titleFontSize(double value)`
+
+Sets title font size.
+
+#### `titleFontWeight(FontWeight value)`
+
+Sets title font weight.
+
+#### `titleStyle(TextStyleMix value)`
+
+Sets title style using a `TextStyleMix`.
+
+#### `leadingIconColor(Color value)`
+
+Sets leading icon color.
+
+#### `leadingIconSize(double value)`
+
+Sets leading icon size.
+
+#### `trailingIconColor(Color value)`
+
+Sets trailing icon color.
+
+#### `trailingIconSize(double value)`
+
+Sets trailing icon size.
+
+#### `contentColor(Color value)`
+
+Sets expanded content background color.
+
+#### `contentPadding(EdgeInsetsGeometryMix value)`
+
+Sets expanded content padding.
+
+#### `contentDecoration(DecorationMix value)`
+
+Sets expanded content decoration.
+
+#### `onExpanded<T>(RemixAccordionStyle value)`
+
+Applies a style while the item is expanded.
+
+#### `onCollapsed<T>(RemixAccordionStyle value)`
+
+Applies a style while the item is collapsed.
+
+#### `onCanCollapse(RemixAccordionStyle value)`
+
+Applies a style while the item can be collapsed.
+
+#### `onCanExpand<T>(RemixAccordionStyle value)`
+
+Applies a style while the item can be expanded.
+
+#### `animate(AnimationConfig value)`
+
+Configures implicit animation for style transitions.
+
+#### `variants(List<VariantStyle<RemixAccordionSpec>> value)`
+
+Sets custom style variants.
+
+#### `wrap(WidgetModifierConfig value)`
+
+Applies widget modifiers such as clipping, opacity, or scaling.
+
+#### `call<T>({Key? key, required T value, required Widget child, String? title, IconData? leadingIcon, IconData? trailingIcon, NakedAccordionTriggerBuilder<T>? builder, bool enabled = true, MouseCursor mouseCursor = SystemMouseCursors.click, bool enableFeedback = true, bool autofocus = false, FocusNode? focusNode, ValueChanged<bool>? onFocusChange, ValueChanged<bool>? onHoverChange, ValueChanged<bool>? onPressChange, String? semanticLabel, Widget Function(Widget, Animation<double>)? transitionBuilder})`
+
+Creates a `RemixAccordion<T>` widget with this style applied.

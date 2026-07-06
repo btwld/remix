@@ -122,17 +122,15 @@ class _FortalSelectExampleState extends State<FortalSelectExample> {
         RemixSelectItem(
           value: 'opt1',
           label: 'Option 1',
-          style: FortalSelectMenuItemStyle.base(),
         ),
         RemixSelectItem(
           value: 'opt2',
           label: 'Option 2',
-          style: FortalSelectMenuItemStyle.base(),
         ),
       ],
       selectedValue: _selected,
       onChanged: (value) => setState(() => _selected = value),
-      style: FortalSelectStyle.base(),
+      style: fortalSelectStyle(),
     );
   }
 }
@@ -140,7 +138,7 @@ class _FortalSelectExampleState extends State<FortalSelectExample> {
 </CodeGroup>
 
 <Info>
-  See the [FortalSelectStyle source code](https://github.com/btwld/remix/blob/main/lib/src/components/select/fortal_select_styles.dart) for all available options.
+  See the [fortalSelectStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/select/fortal_select_styles.dart) for all available options.
 </Info>
 
 ## Constructor
@@ -218,27 +216,23 @@ Optional. Optional focus node to control focus behavior.
 Optional. The style configuration for the select.
 
 
-### Style Methods
+### Select Style Methods
 
-#### `text(TextStyler value)`
+#### `menuContainer(FlexBoxStyler value)`
 
-Sets text styling
+Configures the select menu overlay container.
 
-#### `icon(IconStyler value)`
+#### `trigger(RemixSelectTriggerStyle value)`
 
-Sets icon styling
+Configures the select trigger style.
 
-#### `alignment(Alignment value)`
-
-Sets container alignment
-
-#### `label(TextStyler value)`
-
-Sets label styling (delegates to text for consistency with mixin)
-
-#### `animate(AnimationConfig config)`
+#### `animate(AnimationConfig value)`
 
 Configures implicit animation for style transitions.
+
+#### `variants(List<VariantStyle<RemixSelectSpec>> value)`
+
+Sets style variants.
 
 #### `constraints(BoxConstraintsMix value)`
 
@@ -260,17 +254,75 @@ Sets the container padding.
 
 Applies widget modifiers such as clipping, opacity, or scaling.
 
+#### `modifier(WidgetModifierConfig value)`
+
+Sets the widget modifier.
+
+#### `call({ ... })`
+
+Creates a RemixSelect widget with this style applied.
+
+### Select Trigger Style Methods
+
+#### `container(FlexBoxStyler value)`
+
+Configures the trigger container style.
+
+#### `label(TextStyler value)`
+
+Sets trigger label styling.
+
+#### `icon(IconStyler value)`
+
+Sets trigger icon styling.
+
+#### `alignment(Alignment value)`
+
+Sets trigger container alignment.
+
+#### `constraints(BoxConstraintsMix value)`
+
+Sets trigger size constraints.
+
+#### `decoration(DecorationMix value)`
+
+Sets trigger container decoration.
+
+#### `margin(EdgeInsetsGeometryMix value)`
+
+Sets trigger container margin.
+
+#### `padding(EdgeInsetsGeometryMix value)`
+
+Sets trigger container padding.
+
 #### `foregroundDecoration(DecorationMix value)`
 
-Sets a foreground decoration painted on top of the component.
+Sets a foreground decoration painted on top of the trigger.
 
 #### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
 
-Applies a matrix transformation to the component.
+Applies a matrix transformation to the trigger.
 
 #### `flex(FlexStyler value)`
 
-Configures the flex layout properties.
+Configures trigger flex layout properties.
+
+#### `animate(AnimationConfig value)`
+
+Configures implicit animation for trigger style transitions.
+
+#### `variants(List<VariantStyle<RemixSelectTriggerSpec>> value)`
+
+Sets trigger style variants.
+
+#### `wrap(WidgetModifierConfig value)`
+
+Applies widget modifiers such as clipping, opacity, or scaling.
+
+#### `modifier(WidgetModifierConfig value)`
+
+Sets the trigger widget modifier.
 
 #### `labelTextStyle(TextStyleMix value)`
 
@@ -360,3 +412,156 @@ Sets icon shadows
 
 Sets single icon shadow
 
+### Select Menu Item Style Methods
+
+#### `container(FlexBoxStyler value)`
+
+Configures the menu item container style.
+
+#### `text(TextStyler value)`
+
+Sets menu item text styling.
+
+#### `label(TextStyler value)`
+
+Sets menu item text styling through the label alias.
+
+#### `icon(IconStyler value)`
+
+Sets menu item icon styling.
+
+#### `alignment(Alignment value)`
+
+Sets menu item container alignment.
+
+#### `constraints(BoxConstraintsMix value)`
+
+Sets menu item size constraints.
+
+#### `decoration(DecorationMix value)`
+
+Sets menu item container decoration.
+
+#### `margin(EdgeInsetsGeometryMix value)`
+
+Sets menu item container margin.
+
+#### `padding(EdgeInsetsGeometryMix value)`
+
+Sets menu item container padding.
+
+#### `foregroundDecoration(DecorationMix value)`
+
+Sets a foreground decoration painted on top of the menu item.
+
+#### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
+
+Applies a matrix transformation to the menu item.
+
+#### `flex(FlexStyler value)`
+
+Configures menu item flex layout properties.
+
+#### `animate(AnimationConfig value)`
+
+Configures implicit animation for menu item style transitions.
+
+#### `variants(List<VariantStyle<RemixSelectMenuItemSpec>> value)`
+
+Sets menu item style variants.
+
+#### `wrap(WidgetModifierConfig value)`
+
+Applies widget modifiers such as clipping, opacity, or scaling.
+
+#### `modifier(WidgetModifierConfig value)`
+
+Sets the menu item widget modifier.
+
+#### `labelTextStyle(TextStyleMix value)`
+
+Sets item text style using TextStyleMix directly.
+
+#### `labelColor(Color value)`
+
+Sets item text color.
+
+#### `labelFontSize(double value)`
+
+Sets item text font size.
+
+#### `labelFontWeight(FontWeight value)`
+
+Sets item text font weight.
+
+#### `labelFontStyle(FontStyle value)`
+
+Sets item text font style.
+
+#### `labelLetterSpacing(double value)`
+
+Sets item text letter spacing.
+
+#### `labelDecoration(TextDecoration value)`
+
+Sets item text decoration.
+
+#### `labelFontFamily(String value)`
+
+Sets item text font family.
+
+#### `labelHeight(double value)`
+
+Sets item text line height.
+
+#### `labelWordSpacing(double value)`
+
+Sets item text word spacing.
+
+#### `labelDecorationColor(Color value)`
+
+Sets item text decoration color.
+
+#### `iconColor(Color value)`
+
+Sets item icon color.
+
+#### `iconSize(double value)`
+
+Sets item icon size.
+
+#### `iconOpacity(double value)`
+
+Sets item icon opacity.
+
+#### `iconWeight(double value)`
+
+Sets item icon weight.
+
+#### `iconGrade(double value)`
+
+Sets item icon grade.
+
+#### `iconFill(double value)`
+
+Sets item icon fill.
+
+#### `iconOpticalSize(double value)`
+
+Sets item icon optical size.
+
+#### `iconBlendMode(BlendMode value)`
+
+Sets item icon blend mode.
+
+#### `iconTextDirection(TextDirection value)`
+
+Sets item icon text direction.
+
+#### `iconShadows(List<ShadowMix> value)`
+
+Sets item icon shadows.
+
+#### `iconShadow(ShadowMix value)`
+
+Sets single item icon shadow.

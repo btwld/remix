@@ -1,9 +1,12 @@
 part of 'toggle.dart';
 
+/// Fortal toggle size presets.
 enum FortalToggleSize { size1, size2, size3 }
 
+/// Fortal toggle color and border variants.
 enum FortalToggleVariant { ghost, outline }
 
+/// Creates a Fortal-themed toggle style.
 @MixWidget()
 RemixToggleStyle fortalToggleStyle({
   FortalToggleVariant variant = .ghost,

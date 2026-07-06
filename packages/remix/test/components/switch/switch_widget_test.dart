@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
 
 import '../../helpers/test_helpers.dart';
@@ -8,9 +9,7 @@ void main() {
   group('RemixSwitch', () {
     group('Basic Rendering', () {
       testWidgets('renders switch with minimal props', (tester) async {
-        await tester.pumpRemixApp(
-          RemixSwitch(selected: false, onChanged: (value) {}),
-        );
+        await tester.pumpRemixApp(const RemixSwitch(selected: false));
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixSwitch), findsOneWidget);
@@ -123,6 +122,21 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(wasChanged, isFalse);
+      });
+
+      testWidgets('omitted onChanged disables interaction', (tester) async {
+        await tester.pumpRemixApp(const RemixSwitch(selected: false));
+        await tester.pumpAndSettle();
+
+        final nakedToggle = tester.widget<NakedToggle>(
+          find.byType(NakedToggle),
+        );
+        expect(nakedToggle.onChanged, isNull);
+
+        await tester.tap(find.byType(RemixSwitch));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(RemixSwitch), findsOneWidget);
       });
 
       testWidgets('calls onChanged when enabled and not when disabled', (
@@ -537,8 +551,12 @@ void main() {
     group('StyleSpec Parameter', () {
       testWidgets('accepts styleSpec parameter', (tester) async {
         const spec = RemixSwitchSpec(
-          container: StyleSpec(spec: BoxSpec()),
-          thumb: StyleSpec(spec: BoxSpec()),
+          container: StyleSpec(
+            spec: BoxSpec(decoration: BoxDecoration(color: Colors.red)),
+          ),
+          thumb: StyleSpec(
+            spec: BoxSpec(decoration: BoxDecoration(color: Colors.blue)),
+          ),
         );
 
         await tester.pumpRemixApp(
@@ -546,7 +564,18 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        expect(find.byType(RemixSwitch), findsOneWidget);
+        final decorations = tester
+            .widgetList<Box>(find.byType(Box))
+            .map((box) => box.styleSpec?.spec.decoration);
+
+        expect(
+          decorations,
+          contains(equals(const BoxDecoration(color: Colors.red))),
+        );
+        expect(
+          decorations,
+          contains(equals(const BoxDecoration(color: Colors.blue))),
+        );
       });
     });
 

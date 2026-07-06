@@ -1,5 +1,6 @@
 part of 'radio.dart';
 
+/// Style configuration for [RemixRadio] container and selected indicator.
 @MixableStyler()
 class RemixRadioStyle
     extends RemixContainerStyle<RemixRadioSpec, RemixRadioStyle>
@@ -44,21 +45,21 @@ class RemixRadioStyle
   RemixRadio<T> call<T>({
     required T value,
     bool enabled = true,
-    bool autofocus = false,
     bool toggleable = false,
-    FocusNode? focusNode,
     MouseCursor? mouseCursor,
     bool enableFeedback = true,
+    FocusNode? focusNode,
+    bool autofocus = false,
   }) {
     return RemixRadio(
-      style: this,
       value: value,
-      autofocus: autofocus,
       enabled: enabled,
       toggleable: toggleable,
-      focusNode: focusNode,
       mouseCursor: mouseCursor,
       enableFeedback: enableFeedback,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      style: this,
     );
   }
 
@@ -91,11 +92,6 @@ class RemixRadioStyle
   RemixRadioStyle margin(EdgeInsetsGeometryMix value) {
     return merge(RemixRadioStyle(container: BoxStyler(margin: value)));
   }
-
-  /// Sets background color on the container.
-  /// Delegates to [fillColor].
-  @override
-  RemixRadioStyle color(Color value) => fillColor(value);
 
   /// Sets container size using explicit constraints.
   @override

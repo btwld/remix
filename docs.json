@@ -102,6 +102,10 @@
           "href": "/components/checkbox"
         },
         {
+          "title": "Dialog",
+          "href": "/components/dialog"
+        },
+        {
           "title": "Divider",
           "href": "/components/divider"
         },
@@ -144,6 +148,10 @@
         {
           "title": "TextField",
           "href": "/components/textfield"
+        },
+        {
+          "title": "Toggle",
+          "href": "/components/toggle"
         },
         {
           "title": "Tooltip",

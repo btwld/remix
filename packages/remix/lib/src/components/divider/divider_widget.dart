@@ -20,9 +20,9 @@ part of 'divider.dart';
 class RemixDivider extends StyleWidget<RemixDividerSpec> {
   /// Creates a Remix divider.
   const RemixDivider({
+    super.key,
     super.style = const RemixDividerStyle.create(),
     super.styleSpec,
-    super.key,
   });
 
   @override

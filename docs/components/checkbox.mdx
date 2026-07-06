@@ -47,7 +47,7 @@ class _CheckboxExampleState extends State<CheckboxExample> {
     return RemixCheckboxStyle()
         .size(24, 24)
         .icon(IconStyler().size(20).color(Colors.white))
-        .onSelected(RemixCheckboxStyle().color(Colors.grey.shade900))
+        .onSelected(RemixCheckboxStyle().fillColor(Colors.grey.shade900))
         .borderRadiusAll(const Radius.circular(3))
         .border(
           BoxBorderMix.all(
@@ -86,12 +86,12 @@ class _FortalCheckboxExampleState extends State<FortalCheckboxExample> {
         RemixCheckbox(
           selected: _isChecked,
           onChanged: (value) => setState(() => _isChecked = value ?? false),
-          style: FortalCheckboxStyle.solid(),
+          style: fortalCheckboxStyle(variant: FortalCheckboxVariant.surface),
         ),
         RemixCheckbox(
           selected: _isChecked,
           onChanged: (value) => setState(() => _isChecked = value ?? false),
-          style: FortalCheckboxStyle.soft(),
+          style: fortalCheckboxStyle(variant: FortalCheckboxVariant.soft),
         ),
       ],
     );
@@ -101,7 +101,7 @@ class _FortalCheckboxExampleState extends State<FortalCheckboxExample> {
 </CodeGroup>
 
 <Info>
-  See the [FortalCheckboxStyle source code](https://github.com/btwld/remix/blob/main/lib/src/components/checkbox/fortal_checkbox_styles.dart) for all available options.
+  See the [fortalCheckboxStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/checkbox/fortal_checkbox_styles.dart) for all available options.
 </Info>
 
 ## Constructor
@@ -109,20 +109,20 @@ class _FortalCheckboxExampleState extends State<FortalCheckboxExample> {
 ```dart
 const RemixCheckbox({
   Key? key,
-  bool enabled = true,
   required bool? selected,
-  bool tristate = false,
   ValueChanged<bool?>? onChanged,
-  bool autofocus = false,
+  bool enabled = true,
+  bool tristate = false,
   IconData checkedIcon = Icons.check_rounded,
   IconData? uncheckedIcon,
   IconData indeterminateIcon = Icons.horizontal_rule,
-  bool enableFeedback = true,
-  RemixCheckboxStyle style = const RemixCheckboxStyle.create(),
-  RemixCheckboxSpec? styleSpec,
   FocusNode? focusNode,
+  bool autofocus = false,
+  bool enableFeedback = true,
   String? semanticLabel,
   MouseCursor mouseCursor = SystemMouseCursors.click,
+  RemixCheckboxStyle style = const RemixCheckboxStyle.create(),
+  RemixCheckboxSpec? styleSpec,
 })
 ```
 </CodeGroup>
@@ -194,11 +194,23 @@ Optional. Cursor when hovering over the checkbox.
 
 ### Style Methods
 
-#### `checkboxSize(double value)`
+#### `container(BoxStyler value)`
+
+Sets the checkbox container style.
+
+#### `indicator(IconStyler value)`
+
+Sets the checkbox indicator style.
+
+#### `shape(ShapeBorderMix value)`
+
+Sets the checkbox shape.
+
+#### `size(double width, double height)`
 
 Sets checkbox size by constraining the container.
 
-#### `checkboxBorderRadius(double radius)`
+#### `borderRadius(BorderRadiusGeometryMix radius)`
 
 Sets checkbox border radius on the container.
 
@@ -210,6 +222,10 @@ Sets checkbox border on the container.
 
 Sets indicator color.
 
+#### `fillColor(Color value)`
+
+Sets checkbox fill color on the container.
+
 #### `alignment(Alignment value)`
 
 Sets container alignment.
@@ -217,6 +233,10 @@ Sets container alignment.
 #### `onIndeterminate(RemixCheckboxStyle value)`
 
 Style applied when the checkbox is in the indeterminate state.
+
+#### `onSelected(RemixCheckboxStyle value)`
+
+Style applied when the checkbox is selected.
 
 #### `icon(IconStyler value)`
 
@@ -226,25 +246,25 @@ Configures the icon style using an IconStyler.
 
 Sets container padding.
 
-#### `color(Color value)`
-
-Sets checkbox background color on the container.
-
-#### `size(double width, double height)`
-
-Sets checkbox size with separate width and height.
-
-#### `borderRadius(BorderRadiusGeometryMix radius)`
-
-Sets border radius on the outer container.
-
-#### `animate(AnimationConfig animation)`
+#### `animate(AnimationConfig value)`
 
 Sets animation configuration.
+
+#### `variants(List<VariantStyle<RemixCheckboxSpec>> value)`
+
+Sets style variants.
 
 #### `wrap(WidgetModifierConfig value)`
 
 Applies widget modifiers such as clipping, opacity, or scaling.
+
+#### `modifier(WidgetModifierConfig value)`
+
+Sets the widget modifier.
+
+#### `call({ ... })`
+
+Creates a RemixCheckbox widget with this style applied.
 
 #### `constraints(BoxConstraintsMix value)`
 
@@ -309,4 +329,3 @@ Sets icon shadows
 #### `iconShadow(ShadowMix value)`
 
 Sets single icon shadow
-

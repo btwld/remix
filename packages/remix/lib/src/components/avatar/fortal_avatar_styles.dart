@@ -1,9 +1,13 @@
 part of 'avatar.dart';
 
+/// Fortal avatar size presets.
 enum FortalAvatarSize { size1, size2, size3, size4 }
 
+/// Fortal avatar color variants.
 enum FortalAvatarVariant { soft, solid }
 
+/// Creates a Fortal-themed [RemixAvatarStyle].
+@MixWidget()
 RemixAvatarStyle fortalAvatarStyle({
   FortalAvatarVariant variant = .soft,
   FortalAvatarSize size = .size2,
@@ -23,16 +27,14 @@ RemixAvatarStyle _fortalAvatarBaseStyle(FortalAvatarSize size) {
 
 RemixAvatarStyle _fortalAvatarSoftStyle([FortalAvatarSize size = .size2]) {
   return _fortalAvatarBaseStyle(size)
-      .color(FortalTokens.accentA3())
-      .labelColor(FortalTokens.accentA10())
-      .iconColor(FortalTokens.accentA10());
+      .backgroundColor(FortalTokens.accentA3())
+      .foregroundColor(FortalTokens.accentA10());
 }
 
 RemixAvatarStyle _fortalAvatarSolidStyle([FortalAvatarSize size = .size2]) {
   return _fortalAvatarBaseStyle(size)
-      .color(FortalTokens.accent9())
-      .labelColor(FortalTokens.accentContrast())
-      .iconColor(FortalTokens.accentContrast());
+      .backgroundColor(FortalTokens.accent9())
+      .foregroundColor(FortalTokens.accentContrast());
 }
 
 RemixAvatarStyle _fortalAvatarSizeStyle(FortalAvatarSize size) {
