@@ -66,6 +66,21 @@ With Remix, you get:
 
 ## Quick Start
 
+### Installation
+
+Add Remix to your project:
+
+```bash
+flutter pub add remix
+```
+
+Or add it to your `pubspec.yaml`:
+
+```yaml
+dependencies:
+  remix: ^1.0.0
+```
+
 ### Your First Component
 
 Let's build your first button with Remix. This simple example demonstrates how easy it is to create a fully customizable using Remix's styling API.
@@ -237,6 +252,7 @@ Remix provides a comprehensive set of production-ready components:
 - **Button** - Clickable actions with full styling control
 - **IconButton** - Icon-based actions
 - **Switch** - Toggle controls
+- **Toggle** - Two-state on/off buttons
 - **Checkbox** - Multiple selection
 - **Radio** - Single selection from a group
 - **Slider** - Continuous value selection

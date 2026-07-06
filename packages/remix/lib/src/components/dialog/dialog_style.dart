@@ -1,6 +1,6 @@
 part of 'dialog.dart';
 
-/// Style configuration for [RemixDialog] container, title, description, and actions.
+/// Style configuration for [RemixDialog] container, title, description, actions, and overlay.
 @MixableStyler()
 class RemixDialogStyle
     extends RemixContainerStyle<RemixDialogSpec, RemixDialogStyle>
