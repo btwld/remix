@@ -101,6 +101,102 @@ mixin _$RemixButtonSpec implements Spec<RemixButtonSpec>, Diagnosticable {
 typedef _$RemixButtonSpecMethods = _$RemixButtonSpec; // ignore: unused_element
 
 // **************************************************************************
+// MixWidgetGenerator
+// **************************************************************************
+
+/// Fortal-themed button style and widget presets.
+class FortalButton extends StatelessWidget {
+  const FortalButton({
+    super.key,
+    this.variant = .solid,
+    this.size = .size2,
+    required this.label,
+    this.leadingIcon,
+    this.trailingIcon,
+    this.textBuilder,
+    this.leadingIconBuilder,
+    this.trailingIconBuilder,
+    this.loadingBuilder,
+    this.loading = false,
+    this.enabled = true,
+    this.onPressed,
+    this.onLongPress,
+    this.focusNode,
+    this.autofocus = false,
+    this.enableFeedback = true,
+    this.semanticLabel,
+    this.semanticHint,
+    this.excludeSemantics = false,
+    this.mouseCursor = SystemMouseCursors.click,
+  });
+
+  final FortalButtonVariant variant;
+
+  final FortalButtonSize size;
+
+  final String label;
+
+  final IconData? leadingIcon;
+
+  final IconData? trailingIcon;
+
+  final RemixButtonTextBuilder? textBuilder;
+
+  final RemixButtonIconBuilder? leadingIconBuilder;
+
+  final RemixButtonIconBuilder? trailingIconBuilder;
+
+  final RemixButtonLoadingBuilder? loadingBuilder;
+
+  final bool loading;
+
+  final bool enabled;
+
+  final VoidCallback? onPressed;
+
+  final VoidCallback? onLongPress;
+
+  final FocusNode? focusNode;
+
+  final bool autofocus;
+
+  final bool enableFeedback;
+
+  final String? semanticLabel;
+
+  final String? semanticHint;
+
+  final bool excludeSemantics;
+
+  final MouseCursor mouseCursor;
+
+  @override
+  Widget build(BuildContext context) {
+    return fortalButtonStyle(variant: this.variant, size: this.size).call(
+      key: this.key,
+      label: this.label,
+      leadingIcon: this.leadingIcon,
+      trailingIcon: this.trailingIcon,
+      textBuilder: this.textBuilder,
+      leadingIconBuilder: this.leadingIconBuilder,
+      trailingIconBuilder: this.trailingIconBuilder,
+      loadingBuilder: this.loadingBuilder,
+      loading: this.loading,
+      enabled: this.enabled,
+      onPressed: this.onPressed,
+      onLongPress: this.onLongPress,
+      focusNode: this.focusNode,
+      autofocus: this.autofocus,
+      enableFeedback: this.enableFeedback,
+      semanticLabel: this.semanticLabel,
+      semanticHint: this.semanticHint,
+      excludeSemantics: this.excludeSemantics,
+      mouseCursor: this.mouseCursor,
+    );
+  }
+}
+
+// **************************************************************************
 // StylerGenerator
 // **************************************************************************
 

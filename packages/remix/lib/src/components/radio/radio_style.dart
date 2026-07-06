@@ -43,6 +43,7 @@ class RemixRadioStyle
 
   /// Creates a RemixRadio widget with this style applied.
   RemixRadio<T> call<T>({
+    Key? key,
     required T value,
     bool enabled = true,
     bool toggleable = false,
@@ -52,6 +53,7 @@ class RemixRadioStyle
     bool autofocus = false,
   }) {
     return RemixRadio(
+      key: key,
       value: value,
       enabled: enabled,
       toggleable: toggleable,

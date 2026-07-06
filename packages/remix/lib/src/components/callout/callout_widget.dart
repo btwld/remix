@@ -27,6 +27,8 @@ class RemixCallout extends StyleWidget<RemixCalloutSpec> {
          'Provide either text or child to RemixCallout.',
        );
 
+  static final styleFrom = RemixCalloutStyle.new;
+
   /// The text to display in the callout.
   final String? text;
 

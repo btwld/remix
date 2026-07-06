@@ -46,6 +46,7 @@ class RemixStyleSpecBuilder<S extends Spec<S>> extends StatelessWidget {
 ///
 /// Provides universal mixins that all components share:
 /// - [VariantStyleMixin] for style variants
+/// - [WidgetStateVariantMixin] for widget-state variants
 /// - [WidgetModifierStyleMixin] for widget modifiers
 /// - [AnimationStyleMixin] for animations
 ///

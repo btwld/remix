@@ -25,6 +25,8 @@ class RemixSpinner extends StyleWidget<RemixSpinnerSpec> {
     super.styleSpec,
   });
 
+  static final styleFrom = RemixSpinnerStyle.new;
+
   @override
   Widget build(BuildContext context, RemixSpinnerSpec spec) {
     return _SpinnerSpecWidget(spec: spec);

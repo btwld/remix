@@ -43,6 +43,8 @@ class RemixAvatar extends StyleWidget<RemixAvatarSpec> {
     super.styleSpec,
   });
 
+  static final styleFrom = RemixAvatarStyle.new;
+
   /// The background image to display in the avatar.
   final ImageProvider? backgroundImage;
 

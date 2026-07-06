@@ -22,6 +22,8 @@ class RemixProgress extends StyleWidget<RemixProgressSpec> {
          'Progress value must be between 0 and 1',
        );
 
+  static final styleFrom = RemixProgressStyle.new;
+
   /// The progress value between 0 and 1.
   ///
   /// This value determines how much of the progress bar is filled.

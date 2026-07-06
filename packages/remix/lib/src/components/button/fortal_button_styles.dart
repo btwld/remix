@@ -33,7 +33,8 @@ enum FortalButtonVariant {
   ghost,
 }
 
-/// Creates a Fortal-themed button style.
+/// Fortal-themed button style and widget presets.
+@MixWidget()
 RemixButtonStyle fortalButtonStyle({
   FortalButtonVariant variant = .solid,
   FortalButtonSize size = .size2,
@@ -45,68 +46,6 @@ RemixButtonStyle fortalButtonStyle({
     .outline => _fortalButtonOutlineStyle(size),
     .ghost => _fortalButtonGhostStyle(size),
   };
-}
-
-/// A [RemixButton] preconfigured with Fortal size and variant presets.
-class FortalButton extends StatelessWidget {
-  /// Creates a Fortal-themed button.
-  const FortalButton({
-    super.key,
-    this.variant = .solid,
-    this.size = .size2,
-    required this.label,
-    this.leadingIcon,
-    this.trailingIcon,
-    this.loading = false,
-    this.enabled = true,
-    this.enableFeedback = true,
-    this.onPressed,
-    this.focusNode,
-  });
-
-  /// Visual emphasis variant for the button.
-  final FortalButtonVariant variant;
-
-  /// Size preset for the button.
-  final FortalButtonSize size;
-
-  /// Text displayed in the button.
-  final String label;
-
-  /// Icon displayed before the label.
-  final IconData? leadingIcon;
-
-  /// Icon displayed after the label.
-  final IconData? trailingIcon;
-
-  /// Whether to show the loading spinner and suppress presses.
-  final bool loading;
-
-  /// Whether the button can be pressed.
-  final bool enabled;
-
-  /// Whether interactions should trigger platform feedback.
-  final bool enableFeedback;
-
-  /// Called when the button is pressed.
-  final VoidCallback? onPressed;
-
-  /// Focus node used by the underlying button.
-  final FocusNode? focusNode;
-
-  @override
-  Widget build(BuildContext context) {
-    return fortalButtonStyle(variant: variant, size: size).call(
-      label: label,
-      leadingIcon: leadingIcon,
-      trailingIcon: trailingIcon,
-      loading: loading,
-      enabled: enabled,
-      enableFeedback: enableFeedback,
-      onPressed: onPressed,
-      focusNode: focusNode,
-    );
-  }
 }
 
 RemixButtonStyle _fortalButtonBaseStyle(FortalButtonSize size) {

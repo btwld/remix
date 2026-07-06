@@ -74,11 +74,6 @@ class RemixButtonStyle extends MixStyler<RemixButtonStyle, RemixButtonSpec>
     return RemixButtonStyle().iconAlignment(value);
   }
 
-  /// Sets the widget modifier.
-  RemixButtonStyle modifier(WidgetModifierConfig value) {
-    return merge(RemixButtonStyle(modifier: value));
-  }
-
   /// Creates a [RemixButton] widget with this style applied.
   RemixButton call({
     Key? key,

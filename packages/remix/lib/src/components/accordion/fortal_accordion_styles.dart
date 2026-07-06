@@ -6,7 +6,8 @@ enum FortalAccordionSize { size1, size2, size3 }
 /// Fortal accordion color variants.
 enum FortalAccordionVariant { surface, soft }
 
-/// Creates a Fortal-themed [RemixAccordionStyle].
+/// Fortal-themed accordion style and widget presets.
+@MixWidget()
 RemixAccordionStyle fortalAccordionStyle({
   FortalAccordionVariant variant = .surface,
   FortalAccordionSize size = .size2,

@@ -86,6 +86,58 @@ mixin _$RemixRadioSpec implements Spec<RemixRadioSpec>, Diagnosticable {
 typedef _$RemixRadioSpecMethods = _$RemixRadioSpec; // ignore: unused_element
 
 // **************************************************************************
+// MixWidgetGenerator
+// **************************************************************************
+
+/// Fortal-themed radio style and widget presets.
+class FortalRadio<T> extends StatelessWidget {
+  const FortalRadio({
+    super.key,
+    this.variant = .surface,
+    this.size = .size2,
+    required this.value,
+    this.enabled = true,
+    this.toggleable = false,
+    this.mouseCursor,
+    this.enableFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
+  });
+
+  final FortalRadioVariant variant;
+
+  final FortalRadioSize size;
+
+  final T value;
+
+  final bool enabled;
+
+  final bool toggleable;
+
+  final MouseCursor? mouseCursor;
+
+  final bool enableFeedback;
+
+  final FocusNode? focusNode;
+
+  final bool autofocus;
+
+  @override
+  Widget build(BuildContext context) {
+    return fortalRadioStyle(variant: this.variant, size: this.size).call<T>(
+      key: this.key,
+      value: this.value,
+      enabled: this.enabled,
+      toggleable: this.toggleable,
+      mouseCursor: this.mouseCursor,
+      enableFeedback: this.enableFeedback,
+      focusNode: this.focusNode,
+      autofocus: this.autofocus,
+    );
+  }
+}
+
+// **************************************************************************
 // StylerGenerator
 // **************************************************************************
 

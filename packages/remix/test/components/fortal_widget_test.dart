@@ -6,6 +6,22 @@ import '../helpers/test_helpers.dart';
 
 void main() {
   group('Fortal widgets', () {
+    testWidgets('renders FortalAccordion', (tester) async {
+      await tester.pumpRemixApp(
+        RemixAccordionGroup<String>(
+          controller: RemixAccordionController<String>(),
+          child: const FortalAccordion<String>(
+            value: 'item',
+            title: 'Item',
+            child: Text('Content'),
+          ),
+        ),
+      );
+
+      expect(find.byType(FortalAccordion<String>), findsOneWidget);
+      expect(find.byType(RemixAccordion<String>), findsOneWidget);
+    });
+
     testWidgets('renders FortalAvatar', (tester) async {
       await tester.pumpRemixApp(const FortalAvatar(label: 'LF'));
 

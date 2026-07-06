@@ -28,6 +28,8 @@ class RemixBadge extends StyleWidget<RemixBadgeSpec> {
     super.styleSpec,
   });
 
+  static final styleFrom = RemixBadgeStyle.new;
+
   /// Optional text label rendered with the badge text style.
   final String? label;
 
