@@ -2,13 +2,13 @@ part of 'avatar.dart';
 
 /// Style configuration for [RemixAvatar] container, label, and fallback icon.
 @MixableStyler()
-class RemixAvatarStyle
-    extends RemixContainerStyle<RemixAvatarSpec, RemixAvatarStyle>
+class RemixAvatarStyler
+    extends RemixContainerStyler<RemixAvatarSpec, RemixAvatarStyler>
     with
-        LabelStyleMixin<RemixAvatarStyle>,
-        IconStyleMixin<RemixAvatarStyle>,
+        LabelStyleMixin<RemixAvatarStyler>,
+        IconStyleMixin<RemixAvatarStyler>,
         Diagnosticable,
-        _$RemixAvatarStyleMixin {
+        _$RemixAvatarStylerMixin {
   @MixableField(setterType: BoxStyler)
   final Prop<StyleSpec<BoxSpec>>? $container;
   @MixableField(setterType: TextStyler)
@@ -16,7 +16,7 @@ class RemixAvatarStyle
   @MixableField(setterType: IconStyler)
   final Prop<StyleSpec<IconSpec>>? $icon;
 
-  const RemixAvatarStyle.create({
+  const RemixAvatarStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
     Prop<StyleSpec<TextSpec>>? label,
     Prop<StyleSpec<IconSpec>>? icon,
@@ -27,7 +27,7 @@ class RemixAvatarStyle
        $label = label,
        $icon = icon;
 
-  RemixAvatarStyle({
+  RemixAvatarStyler({
     BoxStyler? container,
     TextStyler? label,
     IconStyler? icon,
@@ -46,66 +46,66 @@ class RemixAvatarStyle
   // -- Factory constructors for convenience --
 
   /// Creates a style with the given foreground color (text and icon).
-  factory RemixAvatarStyle.foregroundColor(Color value) =>
-      RemixAvatarStyle().foregroundColor(value);
+  factory RemixAvatarStyler.foregroundColor(Color value) =>
+      RemixAvatarStyler().foregroundColor(value);
 
   /// Creates a style with the given background color.
-  factory RemixAvatarStyle.backgroundColor(Color value) =>
-      RemixAvatarStyle().backgroundColor(value);
+  factory RemixAvatarStyler.backgroundColor(Color value) =>
+      RemixAvatarStyler().backgroundColor(value);
 
   /// Creates a style with the given padding.
-  factory RemixAvatarStyle.padding(EdgeInsetsGeometryMix value) =>
-      RemixAvatarStyle().padding(value);
+  factory RemixAvatarStyler.padding(EdgeInsetsGeometryMix value) =>
+      RemixAvatarStyler().padding(value);
 
   /// Creates a style with the given margin.
-  factory RemixAvatarStyle.margin(EdgeInsetsGeometryMix value) =>
-      RemixAvatarStyle().margin(value);
+  factory RemixAvatarStyler.margin(EdgeInsetsGeometryMix value) =>
+      RemixAvatarStyler().margin(value);
 
   /// Creates a style with the given decoration.
-  factory RemixAvatarStyle.decoration(DecorationMix value) =>
-      RemixAvatarStyle().decoration(value);
+  factory RemixAvatarStyler.decoration(DecorationMix value) =>
+      RemixAvatarStyler().decoration(value);
 
   /// Creates a style with the given alignment.
-  factory RemixAvatarStyle.alignment(Alignment value) =>
-      RemixAvatarStyle().alignment(value);
+  factory RemixAvatarStyler.alignment(Alignment value) =>
+      RemixAvatarStyler().alignment(value);
 
   /// Creates a style with the given constraints.
-  factory RemixAvatarStyle.constraints(BoxConstraintsMix value) =>
-      RemixAvatarStyle().constraints(value);
+  factory RemixAvatarStyler.constraints(BoxConstraintsMix value) =>
+      RemixAvatarStyler().constraints(value);
 
   /// Creates a style with a square size.
-  factory RemixAvatarStyle.square(double size) =>
-      RemixAvatarStyle().square(size);
+  factory RemixAvatarStyler.square(double size) =>
+      RemixAvatarStyler().square(size);
 
   /// Creates a style with the given border radius.
-  factory RemixAvatarStyle.borderRadius(BorderRadiusGeometryMix radius) =>
-      RemixAvatarStyle().borderRadius(radius);
+  factory RemixAvatarStyler.borderRadius(BorderRadiusGeometryMix radius) =>
+      RemixAvatarStyler().borderRadius(radius);
 
   /// Creates a style with the given clip behavior.
-  factory RemixAvatarStyle.clipBehavior(Clip clip) =>
-      RemixAvatarStyle().clipBehavior(clip);
+  factory RemixAvatarStyler.clipBehavior(Clip clip) =>
+      RemixAvatarStyler().clipBehavior(clip);
 
   // -- Instance methods --
 
   /// Sets the foreground color (text and icon) of the avatar.
-  RemixAvatarStyle foregroundColor(Color value) {
+  RemixAvatarStyler foregroundColor(Color value) {
     return labelColor(value).iconColor(value);
   }
 
   /// Sets the background color of the avatar.
-  RemixAvatarStyle backgroundColor(Color value) {
+  RemixAvatarStyler backgroundColor(Color value) {
     return color(value);
   }
 
   /// Sets avatar size to a square
-  RemixAvatarStyle square(double size) {
+  RemixAvatarStyler square(double size) {
     return this.size(size, size);
   }
 
   /// Sets avatar size with width and height (alias)
-  RemixAvatarStyle sizeWH(double width, double height) {
+  RemixAvatarStyler sizeWH(double width, double height) {
     return merge(
-      RemixAvatarStyle(
+      RemixAvatarStyler(
         container: BoxStyler(
           constraints: BoxConstraintsMix(
             minWidth: width,
@@ -119,18 +119,18 @@ class RemixAvatarStyle
   }
 
   /// Sets background color
-  RemixAvatarStyle color(Color value) {
+  RemixAvatarStyler color(Color value) {
     return merge(
-      RemixAvatarStyle(
+      RemixAvatarStyler(
         container: BoxStyler(decoration: BoxDecorationMix(color: value)),
       ),
     );
   }
 
   /// Sets border radius
-  RemixAvatarStyle borderRadius(BorderRadiusGeometryMix radius) {
+  RemixAvatarStyler borderRadius(BorderRadiusGeometryMix radius) {
     return merge(
-      RemixAvatarStyle(
+      RemixAvatarStyler(
         container: BoxStyler(
           decoration: BoxDecorationMix(borderRadius: radius, shape: .rectangle),
         ),
@@ -141,38 +141,38 @@ class RemixAvatarStyle
   // Additional convenience methods that delegate to container
 
   /// Sets padding
-  RemixAvatarStyle padding(EdgeInsetsGeometryMix value) {
-    return merge(RemixAvatarStyle(container: BoxStyler(padding: value)));
+  RemixAvatarStyler padding(EdgeInsetsGeometryMix value) {
+    return merge(RemixAvatarStyler(container: BoxStyler(padding: value)));
   }
 
   /// Sets margin
-  RemixAvatarStyle margin(EdgeInsetsGeometryMix value) {
-    return merge(RemixAvatarStyle(container: BoxStyler(margin: value)));
+  RemixAvatarStyler margin(EdgeInsetsGeometryMix value) {
+    return merge(RemixAvatarStyler(container: BoxStyler(margin: value)));
   }
 
   /// Sets container alignment
-  RemixAvatarStyle alignment(Alignment value) {
-    return merge(RemixAvatarStyle(container: BoxStyler(alignment: value)));
+  RemixAvatarStyler alignment(Alignment value) {
+    return merge(RemixAvatarStyler(container: BoxStyler(alignment: value)));
   }
 
   /// Sets decoration
-  RemixAvatarStyle decoration(DecorationMix value) {
-    return merge(RemixAvatarStyle(container: BoxStyler(decoration: value)));
+  RemixAvatarStyler decoration(DecorationMix value) {
+    return merge(RemixAvatarStyler(container: BoxStyler(decoration: value)));
   }
 
   /// Sets constraints
-  RemixAvatarStyle constraints(BoxConstraintsMix value) {
-    return merge(RemixAvatarStyle(container: BoxStyler(constraints: value)));
+  RemixAvatarStyler constraints(BoxConstraintsMix value) {
+    return merge(RemixAvatarStyler(container: BoxStyler(constraints: value)));
   }
 
   /// Sets the clip behavior for the avatar container.
-  RemixAvatarStyle clipBehavior(Clip clip) {
-    return merge(RemixAvatarStyle(container: BoxStyler(clipBehavior: clip)));
+  RemixAvatarStyler clipBehavior(Clip clip) {
+    return merge(RemixAvatarStyler(container: BoxStyler(clipBehavior: clip)));
   }
 
   @override
-  RemixAvatarStyle label(TextStyler value) {
-    return merge(RemixAvatarStyle(label: value));
+  RemixAvatarStyler label(TextStyler value) {
+    return merge(RemixAvatarStyler(label: value));
   }
 
   /// Creates a [RemixAvatar] widget with this style applied.
@@ -207,9 +207,9 @@ class RemixAvatarStyle
 
   /// Sets avatar size with width and height
   @override
-  RemixAvatarStyle size(double width, double height) {
+  RemixAvatarStyler size(double width, double height) {
     return merge(
-      RemixAvatarStyle(
+      RemixAvatarStyler(
         container: BoxStyler(
           constraints: BoxConstraintsMix(
             minWidth: width,
@@ -225,19 +225,19 @@ class RemixAvatarStyle
   // Abstract method implementations for mixins (only missing ones)
 
   @override
-  RemixAvatarStyle foregroundDecoration(DecorationMix value) {
+  RemixAvatarStyler foregroundDecoration(DecorationMix value) {
     return merge(
-      RemixAvatarStyle(container: BoxStyler(foregroundDecoration: value)),
+      RemixAvatarStyler(container: BoxStyler(foregroundDecoration: value)),
     );
   }
 
   @override
-  RemixAvatarStyle transform(
+  RemixAvatarStyler transform(
     Matrix4 value, {
     AlignmentGeometry alignment = Alignment.center,
   }) {
     return merge(
-      RemixAvatarStyle(
+      RemixAvatarStyler(
         container: BoxStyler(transform: value, transformAlignment: alignment),
       ),
     );

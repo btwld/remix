@@ -273,53 +273,53 @@ typedef _$RemixMenuItemSpecMethods = _$RemixMenuItemSpec; // ignore: unused_elem
 // StylerGenerator
 // **************************************************************************
 
-mixin _$RemixMenuTriggerStyleMixin
+mixin _$RemixMenuTriggerStylerMixin
     on Style<RemixMenuTriggerSpec>, Diagnosticable {
   Prop<StyleSpec<FlexBoxSpec>>? get $container;
   Prop<StyleSpec<TextSpec>>? get $label;
   Prop<StyleSpec<IconSpec>>? get $icon;
 
   /// Sets the container.
-  RemixMenuTriggerStyle container(FlexBoxStyler value) {
-    return merge(RemixMenuTriggerStyle(container: value));
+  RemixMenuTriggerStyler container(FlexBoxStyler value) {
+    return merge(RemixMenuTriggerStyler(container: value));
   }
 
   /// Sets the label.
-  RemixMenuTriggerStyle label(TextStyler value) {
-    return merge(RemixMenuTriggerStyle(label: value));
+  RemixMenuTriggerStyler label(TextStyler value) {
+    return merge(RemixMenuTriggerStyler(label: value));
   }
 
   /// Sets the icon.
-  RemixMenuTriggerStyle icon(IconStyler value) {
-    return merge(RemixMenuTriggerStyle(icon: value));
+  RemixMenuTriggerStyler icon(IconStyler value) {
+    return merge(RemixMenuTriggerStyler(icon: value));
   }
 
   /// Sets the animation configuration.
-  RemixMenuTriggerStyle animate(AnimationConfig value) {
-    return merge(RemixMenuTriggerStyle(animation: value));
+  RemixMenuTriggerStyler animate(AnimationConfig value) {
+    return merge(RemixMenuTriggerStyler(animation: value));
   }
 
   /// Sets the style variants.
-  RemixMenuTriggerStyle variants(
+  RemixMenuTriggerStyler variants(
     List<VariantStyle<RemixMenuTriggerSpec>> value,
   ) {
-    return merge(RemixMenuTriggerStyle(variants: value));
+    return merge(RemixMenuTriggerStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
-  RemixMenuTriggerStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixMenuTriggerStyle(modifier: value));
+  RemixMenuTriggerStyler wrap(WidgetModifierConfig value) {
+    return merge(RemixMenuTriggerStyler(modifier: value));
   }
 
   /// Sets the widget modifier.
-  RemixMenuTriggerStyle modifier(WidgetModifierConfig value) {
-    return merge(RemixMenuTriggerStyle(modifier: value));
+  RemixMenuTriggerStyler modifier(WidgetModifierConfig value) {
+    return merge(RemixMenuTriggerStyler(modifier: value));
   }
 
-  /// Merges with another [RemixMenuTriggerStyle].
+  /// Merges with another [RemixMenuTriggerStyler].
   @override
-  RemixMenuTriggerStyle merge(RemixMenuTriggerStyle? other) {
-    return RemixMenuTriggerStyle.create(
+  RemixMenuTriggerStyler merge(RemixMenuTriggerStyler? other) {
+    return RemixMenuTriggerStyler.create(
       container: MixOps.merge($container, other?.$container),
       label: MixOps.merge($label, other?.$label),
       icon: MixOps.merge($icon, other?.$icon),
@@ -365,56 +365,56 @@ mixin _$RemixMenuTriggerStyleMixin
   ];
 }
 
-mixin _$RemixMenuStyleMixin on Style<RemixMenuSpec>, Diagnosticable {
+mixin _$RemixMenuStylerMixin on Style<RemixMenuSpec>, Diagnosticable {
   Prop<StyleSpec<RemixMenuTriggerSpec>>? get $trigger;
   Prop<StyleSpec<FlexBoxSpec>>? get $overlay;
   Prop<StyleSpec<RemixMenuItemSpec>>? get $item;
   Prop<StyleSpec<RemixDividerSpec>>? get $divider;
 
   /// Sets the trigger.
-  RemixMenuStyle trigger(RemixMenuTriggerStyle value) {
-    return merge(RemixMenuStyle(trigger: value));
+  RemixMenuStyler trigger(RemixMenuTriggerStyler value) {
+    return merge(RemixMenuStyler(trigger: value));
   }
 
   /// Sets the overlay.
-  RemixMenuStyle overlay(FlexBoxStyler value) {
-    return merge(RemixMenuStyle(overlay: value));
+  RemixMenuStyler overlay(FlexBoxStyler value) {
+    return merge(RemixMenuStyler(overlay: value));
   }
 
   /// Sets the item.
-  RemixMenuStyle item(RemixMenuItemStyle value) {
-    return merge(RemixMenuStyle(item: value));
+  RemixMenuStyler item(RemixMenuItemStyler value) {
+    return merge(RemixMenuStyler(item: value));
   }
 
   /// Sets the divider.
-  RemixMenuStyle divider(RemixDividerStyle value) {
-    return merge(RemixMenuStyle(divider: value));
+  RemixMenuStyler divider(RemixDividerStyler value) {
+    return merge(RemixMenuStyler(divider: value));
   }
 
   /// Sets the animation configuration.
-  RemixMenuStyle animate(AnimationConfig value) {
-    return merge(RemixMenuStyle(animation: value));
+  RemixMenuStyler animate(AnimationConfig value) {
+    return merge(RemixMenuStyler(animation: value));
   }
 
   /// Sets the style variants.
-  RemixMenuStyle variants(List<VariantStyle<RemixMenuSpec>> value) {
-    return merge(RemixMenuStyle(variants: value));
+  RemixMenuStyler variants(List<VariantStyle<RemixMenuSpec>> value) {
+    return merge(RemixMenuStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
-  RemixMenuStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixMenuStyle(modifier: value));
+  RemixMenuStyler wrap(WidgetModifierConfig value) {
+    return merge(RemixMenuStyler(modifier: value));
   }
 
   /// Sets the widget modifier.
-  RemixMenuStyle modifier(WidgetModifierConfig value) {
-    return merge(RemixMenuStyle(modifier: value));
+  RemixMenuStyler modifier(WidgetModifierConfig value) {
+    return merge(RemixMenuStyler(modifier: value));
   }
 
-  /// Merges with another [RemixMenuStyle].
+  /// Merges with another [RemixMenuStyler].
   @override
-  RemixMenuStyle merge(RemixMenuStyle? other) {
-    return RemixMenuStyle.create(
+  RemixMenuStyler merge(RemixMenuStyler? other) {
+    return RemixMenuStyler.create(
       trigger: MixOps.merge($trigger, other?.$trigger),
       overlay: MixOps.merge($overlay, other?.$overlay),
       item: MixOps.merge($item, other?.$item),
@@ -464,56 +464,56 @@ mixin _$RemixMenuStyleMixin on Style<RemixMenuSpec>, Diagnosticable {
   ];
 }
 
-mixin _$RemixMenuItemStyleMixin on Style<RemixMenuItemSpec>, Diagnosticable {
+mixin _$RemixMenuItemStylerMixin on Style<RemixMenuItemSpec>, Diagnosticable {
   Prop<StyleSpec<FlexBoxSpec>>? get $container;
   Prop<StyleSpec<TextSpec>>? get $label;
   Prop<StyleSpec<IconSpec>>? get $leadingIcon;
   Prop<StyleSpec<IconSpec>>? get $trailingIcon;
 
   /// Sets the container.
-  RemixMenuItemStyle container(FlexBoxStyler value) {
-    return merge(RemixMenuItemStyle(container: value));
+  RemixMenuItemStyler container(FlexBoxStyler value) {
+    return merge(RemixMenuItemStyler(container: value));
   }
 
   /// Sets the label.
-  RemixMenuItemStyle label(TextStyler value) {
-    return merge(RemixMenuItemStyle(label: value));
+  RemixMenuItemStyler label(TextStyler value) {
+    return merge(RemixMenuItemStyler(label: value));
   }
 
   /// Sets the leadingIcon.
-  RemixMenuItemStyle leadingIcon(IconStyler value) {
-    return merge(RemixMenuItemStyle(leadingIcon: value));
+  RemixMenuItemStyler leadingIcon(IconStyler value) {
+    return merge(RemixMenuItemStyler(leadingIcon: value));
   }
 
   /// Sets the trailingIcon.
-  RemixMenuItemStyle trailingIcon(IconStyler value) {
-    return merge(RemixMenuItemStyle(trailingIcon: value));
+  RemixMenuItemStyler trailingIcon(IconStyler value) {
+    return merge(RemixMenuItemStyler(trailingIcon: value));
   }
 
   /// Sets the animation configuration.
-  RemixMenuItemStyle animate(AnimationConfig value) {
-    return merge(RemixMenuItemStyle(animation: value));
+  RemixMenuItemStyler animate(AnimationConfig value) {
+    return merge(RemixMenuItemStyler(animation: value));
   }
 
   /// Sets the style variants.
-  RemixMenuItemStyle variants(List<VariantStyle<RemixMenuItemSpec>> value) {
-    return merge(RemixMenuItemStyle(variants: value));
+  RemixMenuItemStyler variants(List<VariantStyle<RemixMenuItemSpec>> value) {
+    return merge(RemixMenuItemStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
-  RemixMenuItemStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixMenuItemStyle(modifier: value));
+  RemixMenuItemStyler wrap(WidgetModifierConfig value) {
+    return merge(RemixMenuItemStyler(modifier: value));
   }
 
   /// Sets the widget modifier.
-  RemixMenuItemStyle modifier(WidgetModifierConfig value) {
-    return merge(RemixMenuItemStyle(modifier: value));
+  RemixMenuItemStyler modifier(WidgetModifierConfig value) {
+    return merge(RemixMenuItemStyler(modifier: value));
   }
 
-  /// Merges with another [RemixMenuItemStyle].
+  /// Merges with another [RemixMenuItemStyler].
   @override
-  RemixMenuItemStyle merge(RemixMenuItemStyle? other) {
-    return RemixMenuItemStyle.create(
+  RemixMenuItemStyler merge(RemixMenuItemStyler? other) {
+    return RemixMenuItemStyler.create(
       container: MixOps.merge($container, other?.$container),
       label: MixOps.merge($label, other?.$label),
       leadingIcon: MixOps.merge($leadingIcon, other?.$leadingIcon),

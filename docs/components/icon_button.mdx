@@ -45,8 +45,8 @@ class IconButtonExample extends StatelessWidget {
     );
   }
 
-  RemixIconButtonStyle get style {
-    return RemixIconButtonStyle()
+  RemixIconButtonStyler get style {
+    return RemixIconButtonStyler()
         .foregroundColor(Colors.blueGrey.shade700)
         .iconSize(22)
         .size(40, 40)
@@ -54,17 +54,17 @@ class IconButtonExample extends StatelessWidget {
         .borderAll(color: Colors.blueGrey.shade100, width: 1.5)
         .borderRadiusAll(const Radius.circular(8))
         .spinner(
-          RemixSpinnerStyle()
+          RemixSpinnerStyler()
               .size(22)
               .strokeWidth(1.3)
               .indicatorColor(Colors.blueGrey.shade600),
         )
         .onHovered(
-          RemixIconButtonStyle()
+          RemixIconButtonStyler()
               .backgroundColor(Colors.blueGrey.shade100.withValues(alpha: 0.4)),
         )
         .onPressed(
-          RemixIconButtonStyle()
+          RemixIconButtonStyler()
               .backgroundColor(Colors.blueGrey.shade100.withValues(alpha: 0.8)),
         );
   }
@@ -86,23 +86,34 @@ class FortalIconButtonExample extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Wrap(
       spacing: 16,
+      runSpacing: 16,
       children: [
         RemixIconButton(
           icon: Icons.add,
           onPressed: () {},
-          style: fortalIconButtonStyle(variant: FortalIconButtonVariant.solid),
+          style: fortalIconButtonStyler(variant: FortalIconButtonVariant.solid),
         ),
         RemixIconButton(
           icon: Icons.edit,
           onPressed: () {},
-          style: fortalIconButtonStyle(variant: FortalIconButtonVariant.soft),
+          style: fortalIconButtonStyler(variant: FortalIconButtonVariant.soft),
+        ),
+        RemixIconButton(
+          icon: Icons.layers,
+          onPressed: () {},
+          style: fortalIconButtonStyler(variant: FortalIconButtonVariant.surface),
+        ),
+        RemixIconButton(
+          icon: Icons.border_style,
+          onPressed: () {},
+          style: fortalIconButtonStyler(variant: FortalIconButtonVariant.outline),
         ),
         RemixIconButton(
           icon: Icons.delete,
           onPressed: () {},
-          style: fortalIconButtonStyle(variant: FortalIconButtonVariant.ghost),
+          style: fortalIconButtonStyler(variant: FortalIconButtonVariant.ghost),
         ),
       ],
     );
@@ -112,7 +123,7 @@ class FortalIconButtonExample extends StatelessWidget {
 </CodeGroup>
 
 <Info>
-  See the [fortalIconButtonStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/icon_button/fortal_icon_button_styles.dart) for all available options.
+  See the [fortalIconButtonStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/icon_button/fortal_icon_button_styles.dart) for all available options.
 </Info>
 
 ## Constructor
@@ -134,7 +145,7 @@ const RemixIconButton({
   String? semanticHint,
   bool excludeSemantics = false,
   MouseCursor mouseCursor = SystemMouseCursors.click,
-  RemixIconButtonStyle style = const RemixIconButtonStyle.create(),
+  RemixIconButtonStyler style = const RemixIconButtonStyler.create(),
   RemixIconButtonSpec? styleSpec,
 })
 ```
@@ -144,7 +155,7 @@ const RemixIconButton({
 ## Properties
 ### Widget Properties
 
-#### `style` → `RemixIconButtonStyle`
+#### `style` → `RemixIconButtonStyler`
 
 Optional. The style configuration for the icon button. Customize colors, sizing, and state-based styling.
 
@@ -223,7 +234,7 @@ Configures the icon button container style.
 
 Configures the icon style using an IconStyler.
 
-#### `spinner(RemixSpinnerStyle value)`
+#### `spinner(RemixSpinnerStyler value)`
 
 Configures the loading spinner style.
 

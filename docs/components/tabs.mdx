@@ -74,16 +74,16 @@ class _TabsExampleState extends State<TabsExample> {
     );
   }
 
-  RemixTabBarStyle get tabBarStyle {
-    return RemixTabBarStyle()
+  RemixTabBarStyler get tabBarStyle {
+    return RemixTabBarStyler()
         .paddingAll(4)
         .borderRounded(12)
         .color(const Color(0xFFF4F6FF))
         .borderAll(color: Colors.indigo.shade100);
   }
 
-  RemixTabStyle get tabStyle {
-    return RemixTabStyle()
+  RemixTabStyler get tabStyle {
+    return RemixTabStyler()
         .paddingX(18)
         .paddingY(10)
         .borderRounded(10)
@@ -93,12 +93,12 @@ class _TabsExampleState extends State<TabsExample> {
         .labelColor(Colors.indigo.shade600)
         .iconColor(Colors.indigo.shade500)
         .onHovered(
-          RemixTabStyle()
+          RemixTabStyler()
               .color(Colors.indigo.shade50)
               .labelColor(Colors.indigo.shade700),
         )
         .onSelected(
-          RemixTabStyle()
+          RemixTabStyler()
               .color(Colors.white)
               .borderAll(color: Colors.indigo.shade400, width: 2)
               .labelColor(Colors.indigo.shade700)
@@ -106,8 +106,8 @@ class _TabsExampleState extends State<TabsExample> {
         );
   }
 
-  RemixTabViewStyle get tabViewStyle {
-    return RemixTabViewStyle()
+  RemixTabViewStyler get tabViewStyle {
+    return RemixTabViewStyler()
         .paddingAll(20)
         .borderRounded(14)
         .color(Colors.white)
@@ -149,12 +149,12 @@ class _FortalTabsExampleState extends State<FortalTabsExample> {
                 RemixTab(
                   tabId: 'tab1',
                   label: 'Tab 1',
-                  style: fortalTabStyle(),
+                  style: fortalTabStyler(),
                 ),
                 RemixTab(
                   tabId: 'tab2',
                   label: 'Tab 2',
-                  style: fortalTabStyle(),
+                  style: fortalTabStyler(),
                 ),
               ],
             ),
@@ -170,7 +170,7 @@ class _FortalTabsExampleState extends State<FortalTabsExample> {
 </CodeGroup>
 
 <Info>
-  See the [fortalTabStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/tabs/fortal_tabs_styles.dart) for all available options.
+  See the [fortalTabStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/tabs/fortal_tabs_styles.dart) for all available options.
 </Info>
 
 ## Constructor
@@ -192,7 +192,7 @@ const RemixTabs({
 const RemixTabBar({
   Key? key,
   required Widget child,
-  RemixTabBarStyle style = const RemixTabBarStyle.create(),
+  RemixTabBarStyler style = const RemixTabBarStyler.create(),
 })
 
 // Individual Tab
@@ -212,7 +212,7 @@ const RemixTab({
   ValueChanged<bool>? onPressChange,
   ValueWidgetBuilder<NakedTabState>? builder,
   String? semanticLabel,
-  RemixTabStyle style = const RemixTabStyle.create(),
+  RemixTabStyler style = const RemixTabStyler.create(),
 })
 
 // Tab View
@@ -220,7 +220,7 @@ const RemixTabView({
   Key? key,
   required String tabId,
   required Widget child,
-  RemixTabViewStyle style = const RemixTabViewStyle.create(),
+  RemixTabViewStyler style = const RemixTabViewStyler.create(),
 })
 ```
 </CodeGroup>
@@ -264,7 +264,7 @@ Optional. Called when Escape is pressed while a tab has focus.
 
 ### Tab Bar Style Methods
 
-Methods on `RemixTabBarStyle` configure the tab-list container.
+Methods on `RemixTabBarStyler` configure the tab-list container.
 
 #### `container(FlexBoxStyler value)`
 
@@ -332,7 +332,7 @@ Creates a `RemixTabBar` widget with this style applied.
 
 ### Tab Style Methods
 
-Methods on `RemixTabStyle` configure each interactive tab item.
+Methods on `RemixTabStyler` configure each interactive tab item.
 
 #### `container(FlexBoxStyler value)`
 
@@ -470,7 +470,7 @@ Sets tab icon shadows.
 
 Sets a single tab icon shadow.
 
-#### `onSelected(RemixTabStyle value)`
+#### `onSelected(RemixTabStyler value)`
 
 Applies a style while the tab is selected.
 
@@ -492,7 +492,7 @@ Creates a `RemixTab` widget with this style applied.
 
 ### Tab View Style Methods
 
-Methods on `RemixTabViewStyle` configure each tab panel.
+Methods on `RemixTabViewStyler` configure each tab panel.
 
 #### `container(BoxStyler value)`
 
@@ -534,7 +534,7 @@ Sets a foreground decoration on the tab view.
 
 Applies a matrix transform to the tab view.
 
-#### `onSelected(RemixTabViewStyle value)`
+#### `onSelected(RemixTabViewStyler value)`
 
 Applies a style while the tab view is selected.
 

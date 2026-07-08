@@ -448,14 +448,13 @@ packages:
     source: hosted
     version: "2.1.1"
   mix_generator:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: "packages/mix_generator"
-      ref: "fix/mix-widget-generic-call"
-      resolved-ref: "150f40401c33ba42abf4799dcbc79234318b66d2"
-      url: "https://github.com/btwld/mix.git"
-    source: git
-    version: "2.1.2"
+      name: mix_generator
+      sha256: c1a0f693c1c3cd9fdff2ad505efc62e92a29590c0114bfe76bf748a06362b49c
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.1"
   mustache_template:
     dependency: transitive
     description:

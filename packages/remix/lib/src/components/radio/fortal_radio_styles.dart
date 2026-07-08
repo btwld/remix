@@ -21,31 +21,33 @@ enum FortalRadioVariant {
   soft,
 }
 
-/// Fortal-themed radio style and widget presets.
-@MixWidget()
-RemixRadioStyle fortalRadioStyle({
+/// Creates a Fortal-themed [RemixRadioStyler].
+///
+/// Fortal widget wrapper is hand-written: hosted `mix_generator` 2.1.1 does
+/// not support generic `call<T>()` methods.
+RemixRadioStyler fortalRadioStyler({
   FortalRadioVariant variant = .surface,
   FortalRadioSize size = .size2,
 }) {
   return switch (variant) {
-    .surface => _fortalRadioSurfaceStyle(size),
-    .soft => _fortalRadioSoftStyle(size),
+    .surface => _fortalRadioSurfaceStyler(size),
+    .soft => _fortalRadioSoftStyler(size),
   };
 }
 
-RemixRadioStyle _fortalRadioBaseStyle(FortalRadioSize size) {
-  return RemixRadioStyle()
+RemixRadioStyler _fortalRadioBaseStyler(FortalRadioSize size) {
+  return RemixRadioStyler()
       .onFocused(
-        RemixRadioStyle().borderAll(
+        RemixRadioStyler().borderAll(
           color: FortalTokens.focusA8(),
           width: FortalTokens.focusRingWidth(),
         ),
       )
-      .merge(_fortalRadioSizeStyle(size));
+      .merge(_fortalRadioSizeStyler(size));
 }
 
-RemixRadioStyle _fortalRadioSurfaceStyle([FortalRadioSize size = .size2]) {
-  return _fortalRadioBaseStyle(size)
+RemixRadioStyler _fortalRadioSurfaceStyler([FortalRadioSize size = .size2]) {
+  return _fortalRadioBaseStyler(size)
       .fillColor(FortalTokens.colorSurface())
       .borderAll(
         color: FortalTokens.gray6(),
@@ -58,7 +60,7 @@ RemixRadioStyle _fortalRadioSurfaceStyle([FortalRadioSize size = .size2]) {
             .borderRadiusAll(FortalTokens.radiusFull()),
       )
       .onSelected(
-        RemixRadioStyle()
+        RemixRadioStyler()
             .fillColor(FortalTokens.accent9())
             .borderAll(
               color: FortalTokens.accent9(),
@@ -67,7 +69,7 @@ RemixRadioStyle _fortalRadioSurfaceStyle([FortalRadioSize size = .size2]) {
             .indicator(BoxStyler().color(Colors.white)),
       )
       .onDisabled(
-        RemixRadioStyle()
+        RemixRadioStyler()
             .fillColor(FortalTokens.gray3())
             .borderAll(
               color: FortalTokens.gray6(),
@@ -77,8 +79,8 @@ RemixRadioStyle _fortalRadioSurfaceStyle([FortalRadioSize size = .size2]) {
       );
 }
 
-RemixRadioStyle _fortalRadioSoftStyle([FortalRadioSize size = .size2]) {
-  return _fortalRadioBaseStyle(size)
+RemixRadioStyler _fortalRadioSoftStyler([FortalRadioSize size = .size2]) {
+  return _fortalRadioBaseStyler(size)
       .fillColor(FortalTokens.accentA4())
       .borderRadiusAll(FortalTokens.radiusFull())
       .indicator(
@@ -87,30 +89,67 @@ RemixRadioStyle _fortalRadioSoftStyle([FortalRadioSize size = .size2]) {
             .borderRadiusAll(FortalTokens.radiusFull()),
       )
       .onSelected(
-        RemixRadioStyle()
+        RemixRadioStyler()
             .fillColor(FortalTokens.accentA4())
             .indicator(BoxStyler().color(FortalTokens.accent11())),
       )
       .onDisabled(
-        RemixRadioStyle()
+        RemixRadioStyler()
             .fillColor(FortalTokens.gray3())
             .indicator(BoxStyler().color(FortalTokens.gray7())),
       );
 }
 
-RemixRadioStyle _fortalRadioSizeStyle(FortalRadioSize size) {
+RemixRadioStyler _fortalRadioSizeStyler(FortalRadioSize size) {
   return switch (size) {
-    .size1 => RemixRadioStyle(
+    .size1 => RemixRadioStyler(
       container: BoxStyler().width(16.0).height(16.0).alignment(.center),
       indicator: BoxStyler().width(6.0).height(6.0),
     ),
-    .size2 => RemixRadioStyle(
+    .size2 => RemixRadioStyler(
       container: BoxStyler().width(20.0).height(20.0).alignment(.center),
       indicator: BoxStyler().width(8.0).height(8.0),
     ),
-    .size3 => RemixRadioStyle(
+    .size3 => RemixRadioStyler(
       container: BoxStyler().width(24.0).height(24.0).alignment(.center),
       indicator: BoxStyler().width(10.0).height(10.0),
     ),
   };
+}
+
+/// Fortal-themed radio widget wrapper.
+class FortalRadio<T> extends StatelessWidget {
+  const FortalRadio({
+    super.key,
+    this.variant = .surface,
+    this.size = .size2,
+    required this.value,
+    this.enabled = true,
+    this.toggleable = false,
+    this.mouseCursor,
+    this.focusNode,
+    this.autofocus = false,
+  });
+
+  final FortalRadioVariant variant;
+  final FortalRadioSize size;
+  final T value;
+  final bool enabled;
+  final bool toggleable;
+  final MouseCursor? mouseCursor;
+  final FocusNode? focusNode;
+  final bool autofocus;
+
+  @override
+  Widget build(BuildContext context) {
+    return fortalRadioStyler(variant: variant, size: size).call<T>(
+      key: key,
+      value: value,
+      enabled: enabled,
+      toggleable: toggleable,
+      mouseCursor: mouseCursor,
+      focusNode: focusNode,
+      autofocus: autofocus,
+    );
+  }
 }

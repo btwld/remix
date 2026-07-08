@@ -1,8 +1,9 @@
 part of 'dialog.dart';
 
-/// Creates a Fortal-themed [RemixDialogStyle].
-RemixDialogStyle fortalDialogStyle() {
-  return RemixDialogStyle()
+/// Creates a Fortal-themed [RemixDialogStyler].
+@MixWidget(name: 'FortalDialog')
+RemixDialogStyler fortalDialogStyler() {
+  return RemixDialogStyler()
       .title(
         TextStyler()
             .fontSize(18)

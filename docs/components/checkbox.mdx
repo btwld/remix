@@ -43,11 +43,11 @@ class _CheckboxExampleState extends State<CheckboxExample> {
     );
   }
 
-  RemixCheckboxStyle get style {
-    return RemixCheckboxStyle()
+  RemixCheckboxStyler get style {
+    return RemixCheckboxStyler()
         .size(24, 24)
         .icon(IconStyler().size(20).color(Colors.white))
-        .onSelected(RemixCheckboxStyle().fillColor(Colors.grey.shade900))
+        .onSelected(RemixCheckboxStyler().fillColor(Colors.grey.shade900))
         .borderRadiusAll(const Radius.circular(3))
         .border(
           BoxBorderMix.all(
@@ -86,12 +86,12 @@ class _FortalCheckboxExampleState extends State<FortalCheckboxExample> {
         RemixCheckbox(
           selected: _isChecked,
           onChanged: (value) => setState(() => _isChecked = value ?? false),
-          style: fortalCheckboxStyle(variant: FortalCheckboxVariant.surface),
+          style: fortalCheckboxStyler(variant: FortalCheckboxVariant.surface),
         ),
         RemixCheckbox(
           selected: _isChecked,
           onChanged: (value) => setState(() => _isChecked = value ?? false),
-          style: fortalCheckboxStyle(variant: FortalCheckboxVariant.soft),
+          style: fortalCheckboxStyler(variant: FortalCheckboxVariant.soft),
         ),
       ],
     );
@@ -101,7 +101,7 @@ class _FortalCheckboxExampleState extends State<FortalCheckboxExample> {
 </CodeGroup>
 
 <Info>
-  See the [fortalCheckboxStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/checkbox/fortal_checkbox_styles.dart) for all available options.
+  See the [fortalCheckboxStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/checkbox/fortal_checkbox_styles.dart) for all available options.
 </Info>
 
 ## Constructor
@@ -121,7 +121,7 @@ const RemixCheckbox({
   bool enableFeedback = true,
   String? semanticLabel,
   MouseCursor mouseCursor = SystemMouseCursors.click,
-  RemixCheckboxStyle style = const RemixCheckboxStyle.create(),
+  RemixCheckboxStyler style = const RemixCheckboxStyler.create(),
   RemixCheckboxSpec? styleSpec,
 })
 ```
@@ -171,7 +171,7 @@ Optional. The icon to display when the checkbox is in indeterminate state. Defau
 
 Optional. Whether to provide haptic feedback when the checkbox is toggled. Defaults to true.
 
-#### `style` → `RemixCheckboxStyle`
+#### `style` → `RemixCheckboxStyler`
 
 Optional. The style configuration for the checkbox.
 
@@ -230,11 +230,11 @@ Sets checkbox fill color on the container.
 
 Sets container alignment.
 
-#### `onIndeterminate(RemixCheckboxStyle value)`
+#### `onIndeterminate(RemixCheckboxStyler value)`
 
 Style applied when the checkbox is in the indeterminate state.
 
-#### `onSelected(RemixCheckboxStyle value)`
+#### `onSelected(RemixCheckboxStyler value)`
 
 Style applied when the checkbox is selected.
 

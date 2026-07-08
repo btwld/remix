@@ -2,14 +2,14 @@ part of 'select.dart';
 
 /// Style configuration for [RemixSelect] trigger and menu overlay.
 @MixableStyler()
-class RemixSelectStyle extends RemixStyle<RemixSelectSpec, RemixSelectStyle>
-    with Diagnosticable, _$RemixSelectStyleMixin {
+class RemixSelectStyler extends RemixStyler<RemixSelectSpec, RemixSelectStyler>
+    with Diagnosticable, _$RemixSelectStylerMixin {
   @MixableField(setterType: FlexBoxStyler)
   final Prop<StyleSpec<FlexBoxSpec>>? $menuContainer;
-  @MixableField(setterType: RemixSelectTriggerStyle)
+  @MixableField(setterType: RemixSelectTriggerStyler)
   final Prop<StyleSpec<RemixSelectTriggerSpec>>? $trigger;
 
-  const RemixSelectStyle.create({
+  const RemixSelectStyler.create({
     Prop<StyleSpec<FlexBoxSpec>>? menuContainer,
     Prop<StyleSpec<RemixSelectTriggerSpec>>? trigger,
     super.variants,
@@ -18,9 +18,9 @@ class RemixSelectStyle extends RemixStyle<RemixSelectSpec, RemixSelectStyle>
   }) : $menuContainer = menuContainer,
        $trigger = trigger;
 
-  RemixSelectStyle({
+  RemixSelectStyler({
     FlexBoxStyler? menuContainer,
-    RemixSelectTriggerStyle? trigger,
+    RemixSelectTriggerStyler? trigger,
     AnimationConfig? animation,
     List<VariantStyle<RemixSelectSpec>>? variants,
     WidgetModifierConfig? modifier,
@@ -36,7 +36,7 @@ class RemixSelectStyle extends RemixStyle<RemixSelectSpec, RemixSelectStyle>
   ///
   /// Example:
   /// ```dart
-  /// RemixSelectStyle()
+  /// RemixSelectStyler()
   ///   .trigger(...)
   ///   .menuContainer(...)
   ///   .call<String>(
@@ -48,9 +48,14 @@ class RemixSelectStyle extends RemixStyle<RemixSelectSpec, RemixSelectStyle>
   ///   )
   /// ```
   RemixSelect<T> call<T>({
+    Key? key,
     required RemixSelectTrigger trigger,
     required List<RemixSelectItem<T>> items,
     T? selectedValue,
+    OverlayPositionConfig positioning = const OverlayPositionConfig(
+      targetAnchor: Alignment.bottomCenter,
+      followerAnchor: Alignment.topCenter,
+    ),
     ValueChanged<T?>? onChanged,
     VoidCallback? onOpen,
     VoidCallback? onClose,
@@ -60,9 +65,11 @@ class RemixSelectStyle extends RemixStyle<RemixSelectSpec, RemixSelectStyle>
     FocusNode? focusNode,
   }) {
     return RemixSelect(
+      key: key,
       trigger: trigger,
       items: items,
       selectedValue: selectedValue,
+      positioning: positioning,
       onChanged: onChanged,
       onOpen: onOpen,
       onClose: onClose,
@@ -76,20 +83,20 @@ class RemixSelectStyle extends RemixStyle<RemixSelectSpec, RemixSelectStyle>
 
   // Abstract method implementations for mixins (delegating to menuContainer)
 
-  RemixSelectStyle foregroundDecoration(DecorationMix value) {
+  RemixSelectStyler foregroundDecoration(DecorationMix value) {
     return merge(
-      RemixSelectStyle(
+      RemixSelectStyler(
         menuContainer: FlexBoxStyler(foregroundDecoration: value),
       ),
     );
   }
 
-  RemixSelectStyle transform(
+  RemixSelectStyler transform(
     Matrix4 value, {
     AlignmentGeometry alignment = Alignment.center,
   }) {
     return merge(
-      RemixSelectStyle(
+      RemixSelectStyler(
         menuContainer: FlexBoxStyler(
           transform: value,
           transformAlignment: alignment,
@@ -101,14 +108,17 @@ class RemixSelectStyle extends RemixStyle<RemixSelectSpec, RemixSelectStyle>
 
 /// Style configuration for the visible [RemixSelect] trigger.
 @MixableStyler()
-class RemixSelectTriggerStyle
+class RemixSelectTriggerStyler
     extends
-        RemixFlexContainerStyle<RemixSelectTriggerSpec, RemixSelectTriggerStyle>
+        RemixFlexContainerStyler<
+          RemixSelectTriggerSpec,
+          RemixSelectTriggerStyler
+        >
     with
-        LabelStyleMixin<RemixSelectTriggerStyle>,
-        IconStyleMixin<RemixSelectTriggerStyle>,
+        LabelStyleMixin<RemixSelectTriggerStyler>,
+        IconStyleMixin<RemixSelectTriggerStyler>,
         Diagnosticable,
-        _$RemixSelectTriggerStyleMixin {
+        _$RemixSelectTriggerStylerMixin {
   @MixableField(setterType: FlexBoxStyler)
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   @MixableField(setterType: TextStyler)
@@ -116,7 +126,7 @@ class RemixSelectTriggerStyle
   @MixableField(setterType: IconStyler)
   final Prop<StyleSpec<IconSpec>>? $icon;
 
-  const RemixSelectTriggerStyle.create({
+  const RemixSelectTriggerStyler.create({
     Prop<StyleSpec<FlexBoxSpec>>? container,
     Prop<StyleSpec<TextSpec>>? label,
     Prop<StyleSpec<IconSpec>>? icon,
@@ -127,7 +137,7 @@ class RemixSelectTriggerStyle
        $label = label,
        $icon = icon;
 
-  RemixSelectTriggerStyle({
+  RemixSelectTriggerStyler({
     FlexBoxStyler? container,
     TextStyler? label,
     IconStyler? icon,
@@ -144,58 +154,58 @@ class RemixSelectTriggerStyle
        );
 
   /// Sets container alignment
-  RemixSelectTriggerStyle alignment(Alignment value) {
+  RemixSelectTriggerStyler alignment(Alignment value) {
     return merge(
-      RemixSelectTriggerStyle(container: FlexBoxStyler(alignment: value)),
+      RemixSelectTriggerStyler(container: FlexBoxStyler(alignment: value)),
     );
   }
 
   // Abstract method implementations for mixins
 
   @override
-  RemixSelectTriggerStyle constraints(BoxConstraintsMix value) {
+  RemixSelectTriggerStyler constraints(BoxConstraintsMix value) {
     return merge(
-      RemixSelectTriggerStyle(container: FlexBoxStyler(constraints: value)),
+      RemixSelectTriggerStyler(container: FlexBoxStyler(constraints: value)),
     );
   }
 
   @override
-  RemixSelectTriggerStyle decoration(DecorationMix value) {
+  RemixSelectTriggerStyler decoration(DecorationMix value) {
     return merge(
-      RemixSelectTriggerStyle(container: FlexBoxStyler(decoration: value)),
+      RemixSelectTriggerStyler(container: FlexBoxStyler(decoration: value)),
     );
   }
 
   @override
-  RemixSelectTriggerStyle margin(EdgeInsetsGeometryMix value) {
+  RemixSelectTriggerStyler margin(EdgeInsetsGeometryMix value) {
     return merge(
-      RemixSelectTriggerStyle(container: FlexBoxStyler(margin: value)),
+      RemixSelectTriggerStyler(container: FlexBoxStyler(margin: value)),
     );
   }
 
   @override
-  RemixSelectTriggerStyle padding(EdgeInsetsGeometryMix value) {
+  RemixSelectTriggerStyler padding(EdgeInsetsGeometryMix value) {
     return merge(
-      RemixSelectTriggerStyle(container: FlexBoxStyler(padding: value)),
+      RemixSelectTriggerStyler(container: FlexBoxStyler(padding: value)),
     );
   }
 
   @override
-  RemixSelectTriggerStyle foregroundDecoration(DecorationMix value) {
+  RemixSelectTriggerStyler foregroundDecoration(DecorationMix value) {
     return merge(
-      RemixSelectTriggerStyle(
+      RemixSelectTriggerStyler(
         container: FlexBoxStyler(foregroundDecoration: value),
       ),
     );
   }
 
   @override
-  RemixSelectTriggerStyle transform(
+  RemixSelectTriggerStyler transform(
     Matrix4 value, {
     AlignmentGeometry alignment = Alignment.center,
   }) {
     return merge(
-      RemixSelectTriggerStyle(
+      RemixSelectTriggerStyler(
         container: FlexBoxStyler(
           transform: value,
           transformAlignment: alignment,
@@ -206,26 +216,26 @@ class RemixSelectTriggerStyle
 
   // FlexStyleMixin implementation
   @override
-  RemixSelectTriggerStyle flex(FlexStyler value) {
+  RemixSelectTriggerStyler flex(FlexStyler value) {
     return merge(
-      RemixSelectTriggerStyle(container: FlexBoxStyler().flex(value)),
+      RemixSelectTriggerStyler(container: FlexBoxStyler().flex(value)),
     );
   }
 }
 
 /// Style configuration for an item in a [RemixSelect] menu.
 @MixableStyler()
-class RemixSelectMenuItemStyle
+class RemixSelectMenuItemStyler
     extends
-        RemixFlexContainerStyle<
+        RemixFlexContainerStyler<
           RemixSelectMenuItemSpec,
-          RemixSelectMenuItemStyle
+          RemixSelectMenuItemStyler
         >
     with
-        LabelStyleMixin<RemixSelectMenuItemStyle>,
-        IconStyleMixin<RemixSelectMenuItemStyle>,
+        LabelStyleMixin<RemixSelectMenuItemStyler>,
+        IconStyleMixin<RemixSelectMenuItemStyler>,
         Diagnosticable,
-        _$RemixSelectMenuItemStyleMixin {
+        _$RemixSelectMenuItemStylerMixin {
   @MixableField(setterType: FlexBoxStyler)
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   @MixableField(setterType: TextStyler)
@@ -233,7 +243,7 @@ class RemixSelectMenuItemStyle
   @MixableField(setterType: IconStyler)
   final Prop<StyleSpec<IconSpec>>? $icon;
 
-  const RemixSelectMenuItemStyle.create({
+  const RemixSelectMenuItemStyler.create({
     Prop<StyleSpec<FlexBoxSpec>>? container,
     Prop<StyleSpec<TextSpec>>? text,
     Prop<StyleSpec<IconSpec>>? icon,
@@ -244,7 +254,7 @@ class RemixSelectMenuItemStyle
        $text = text,
        $icon = icon;
 
-  RemixSelectMenuItemStyle({
+  RemixSelectMenuItemStyler({
     FlexBoxStyler? container,
     TextStyler? text,
     IconStyler? icon,
@@ -261,64 +271,64 @@ class RemixSelectMenuItemStyle
        );
 
   /// Sets container alignment
-  RemixSelectMenuItemStyle alignment(Alignment value) {
+  RemixSelectMenuItemStyler alignment(Alignment value) {
     return merge(
-      RemixSelectMenuItemStyle(container: FlexBoxStyler(alignment: value)),
+      RemixSelectMenuItemStyler(container: FlexBoxStyler(alignment: value)),
     );
   }
 
   /// Sets label styling (delegates to text for consistency with mixin)
   @override
-  RemixSelectMenuItemStyle label(TextStyler value) {
+  RemixSelectMenuItemStyler label(TextStyler value) {
     return text(value);
   }
 
   // Abstract method implementations for mixins
 
   @override
-  RemixSelectMenuItemStyle constraints(BoxConstraintsMix value) {
+  RemixSelectMenuItemStyler constraints(BoxConstraintsMix value) {
     return merge(
-      RemixSelectMenuItemStyle(container: FlexBoxStyler(constraints: value)),
+      RemixSelectMenuItemStyler(container: FlexBoxStyler(constraints: value)),
     );
   }
 
   @override
-  RemixSelectMenuItemStyle decoration(DecorationMix value) {
+  RemixSelectMenuItemStyler decoration(DecorationMix value) {
     return merge(
-      RemixSelectMenuItemStyle(container: FlexBoxStyler(decoration: value)),
+      RemixSelectMenuItemStyler(container: FlexBoxStyler(decoration: value)),
     );
   }
 
   @override
-  RemixSelectMenuItemStyle margin(EdgeInsetsGeometryMix value) {
+  RemixSelectMenuItemStyler margin(EdgeInsetsGeometryMix value) {
     return merge(
-      RemixSelectMenuItemStyle(container: FlexBoxStyler(margin: value)),
+      RemixSelectMenuItemStyler(container: FlexBoxStyler(margin: value)),
     );
   }
 
   @override
-  RemixSelectMenuItemStyle padding(EdgeInsetsGeometryMix value) {
+  RemixSelectMenuItemStyler padding(EdgeInsetsGeometryMix value) {
     return merge(
-      RemixSelectMenuItemStyle(container: FlexBoxStyler(padding: value)),
+      RemixSelectMenuItemStyler(container: FlexBoxStyler(padding: value)),
     );
   }
 
   @override
-  RemixSelectMenuItemStyle foregroundDecoration(DecorationMix value) {
+  RemixSelectMenuItemStyler foregroundDecoration(DecorationMix value) {
     return merge(
-      RemixSelectMenuItemStyle(
+      RemixSelectMenuItemStyler(
         container: FlexBoxStyler(foregroundDecoration: value),
       ),
     );
   }
 
   @override
-  RemixSelectMenuItemStyle transform(
+  RemixSelectMenuItemStyler transform(
     Matrix4 value, {
     AlignmentGeometry alignment = Alignment.center,
   }) {
     return merge(
-      RemixSelectMenuItemStyle(
+      RemixSelectMenuItemStyler(
         container: FlexBoxStyler(
           transform: value,
           transformAlignment: alignment,
@@ -329,9 +339,9 @@ class RemixSelectMenuItemStyle
 
   // FlexStyleMixin implementation
   @override
-  RemixSelectMenuItemStyle flex(FlexStyler value) {
+  RemixSelectMenuItemStyler flex(FlexStyler value) {
     return merge(
-      RemixSelectMenuItemStyle(container: FlexBoxStyler().flex(value)),
+      RemixSelectMenuItemStyler(container: FlexBoxStyler().flex(value)),
     );
   }
 }

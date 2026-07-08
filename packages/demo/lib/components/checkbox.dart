@@ -22,7 +22,7 @@ Widget buildCheckboxUseCase(BuildContext context) {
             label: 'Label',
             initialValue: 'Label',
           ),
-          style: fortalCheckboxStyle(
+          style: fortalCheckboxStyler(
             variant: context.knobs.object.dropdown(
               label: 'variant',
               options: FortalCheckboxVariant.values,

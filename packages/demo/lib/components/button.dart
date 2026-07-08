@@ -45,7 +45,7 @@ Widget buildButtonUseCase(BuildContext context) {
             label: 'Trailing Icon',
             initialValue: null,
           ),
-          style: fortalButtonStyle(
+          style: fortalButtonStyler(
             variant: context.knobs.object.dropdown(
               label: 'variant',
               options: FortalButtonVariant.values,

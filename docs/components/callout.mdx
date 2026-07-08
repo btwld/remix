@@ -32,8 +32,8 @@ class CalloutExample extends StatelessWidget {
     );
   }
 
-  RemixCalloutStyle get style {
-    return RemixCalloutStyle()
+  RemixCalloutStyler get style {
+    return RemixCalloutStyler()
         .backgroundColor(Colors.grey.shade200)
         .spacing(12)
         .height(60)
@@ -75,19 +75,19 @@ class FortalCalloutExample extends StatelessWidget {
       spacing: 16,
       children: [
         RemixCallout(
-          text: 'Information callout',
-          icon: Icons.info,
-          style: fortalCalloutStyle(variant: FortalCalloutVariant.surface),
+          text: 'Surface callout',
+          icon: Icons.info_outline,
+          style: fortalCalloutStyler(variant: FortalCalloutVariant.surface),
         ),
         RemixCallout(
-          text: 'Success callout',
-          icon: Icons.check_circle,
-          style: fortalCalloutStyle(variant: FortalCalloutVariant.soft),
+          text: 'Soft callout',
+          icon: Icons.lightbulb_outline,
+          style: fortalCalloutStyler(variant: FortalCalloutVariant.soft),
         ),
         RemixCallout(
-          text: 'Warning callout',
-          icon: Icons.warning,
-          style: fortalCalloutStyle(variant: FortalCalloutVariant.outline),
+          text: 'Outline callout',
+          icon: Icons.border_outer,
+          style: fortalCalloutStyler(variant: FortalCalloutVariant.outline),
         ),
       ],
     );
@@ -97,7 +97,7 @@ class FortalCalloutExample extends StatelessWidget {
 </CodeGroup>
 
 <Info>
-  See the [fortalCalloutStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/callout/fortal_callout_styles.dart) for all available options.
+  See the [fortalCalloutStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/callout/fortal_callout_styles.dart) for all available options.
 </Info>
 
 ## Constructor
@@ -108,8 +108,8 @@ const RemixCallout({
   String? text,
   IconData? icon,
   Widget? child,
-  RemixCalloutStyle style = const RemixCalloutStyle.create(),
-  StyleSpec<RemixCalloutSpec>? styleSpec,
+  RemixCalloutStyler style = const RemixCalloutStyler.create(),
+  RemixCalloutSpec? styleSpec,
 })
 ```
 </CodeGroup>
@@ -118,11 +118,11 @@ const RemixCallout({
 ## Properties
 ### Widget Properties
 
-#### `style` → `RemixCalloutStyle`
+#### `style` → `RemixCalloutStyler`
 
 Optional. The style configuration for the callout. Customize colors, sizing, spacing, and state-based styling.
 
-#### `styleSpec` → `StyleSpec<RemixCalloutSpec>?`
+#### `styleSpec` → `RemixCalloutSpec?`
 
 Optional. A pre-resolved style spec that bypasses style resolution. Useful for performance when sharing resolved styles across multiple instances.
 

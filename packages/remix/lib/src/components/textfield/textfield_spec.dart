@@ -6,7 +6,7 @@ part of 'textfield.dart';
 /// should be styled, structured, and behave. It follows the Spec pattern used
 /// throughout the Remix framework, where:
 ///
-/// 1. **Style classes** (like [RemixTextFieldStyle]) define styling APIs
+/// 1. **Style classes** (like [RemixTextFieldStyler]) define styling APIs
 /// 2. **Spec classes** (like [RemixTextFieldSpec]) hold resolved styling properties
 /// 3. **Widget classes** (like [RemixTextField]) consume specs to render UI
 ///
@@ -17,7 +17,7 @@ part of 'textfield.dart';
 /// ## Architecture Overview
 ///
 /// ```
-/// RemixTextFieldStyle -> RemixTextFieldSpec -> RemixTextField Widget
+/// RemixTextFieldStyler -> RemixTextFieldSpec -> RemixTextField Widget
 /// (Define styles)       (Hold props)     (Render UI)
 /// ```
 ///
@@ -36,7 +36,7 @@ part of 'textfield.dart';
 ///
 /// ```dart
 /// // Style creates and populates the spec
-/// final style = RemixTextFieldStyle()
+/// final style = RemixTextFieldStyler()
 ///   .color(Colors.black)
 ///   .cursorColor(Colors.blue)
 ///   .spacing(8.0);
@@ -46,7 +46,7 @@ part of 'textfield.dart';
 /// ```
 ///
 /// See also:
-/// - [RemixTextFieldStyle] for the styling API
+/// - [RemixTextFieldStyler] for the styling API
 /// - [RemixTextField] for the widget implementation
 /// - [Spec] for the base specification pattern
 @MixableSpec()

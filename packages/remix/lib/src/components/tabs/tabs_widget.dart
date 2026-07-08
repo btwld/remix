@@ -85,21 +85,26 @@ class RemixTabBar extends StatelessWidget {
   const RemixTabBar({
     super.key,
     required this.child,
-    this.style = const RemixTabBarStyle.create(),
+    this.style = const RemixTabBarStyler.create(),
+    this.styleSpec,
   });
 
   /// The tab buttons.
   final Widget child;
 
   /// Style applied to the tab bar container.
-  final RemixTabBarStyle style;
+  final RemixTabBarStyler style;
 
-  static final styleFrom = RemixTabBarStyle.new;
+  /// Optional raw style spec that bypasses fluent style resolution.
+  final RemixTabBarSpec? styleSpec;
+
+  static final styleFrom = RemixTabBarStyler.new;
 
   @override
   Widget build(BuildContext context) {
-    return StyleBuilder<RemixTabBarSpec>(
+    return RemixStyleSpecBuilder<RemixTabBarSpec>(
       style: style,
+      styleSpec: styleSpec,
       builder: (context, spec) {
         return FlexBox(styleSpec: spec.container, children: [child]);
       },
@@ -125,7 +130,8 @@ class RemixTab extends StatelessWidget {
     this.onPressChange,
     this.builder,
     this.semanticLabel,
-    this.style = const RemixTabStyle.create(),
+    this.style = const RemixTabStyler.create(),
+    this.styleSpec,
   }) : assert(
          child != null || builder != null || label != null,
          'Either child, builder, or label must be provided',
@@ -168,7 +174,10 @@ class RemixTab extends StatelessWidget {
   final String? semanticLabel;
 
   /// The style configuration for this tab.
-  final RemixTabStyle style;
+  final RemixTabStyler style;
+
+  /// Optional raw style spec that bypasses fluent style resolution.
+  final RemixTabSpec? styleSpec;
 
   /// Optional icon to display in the tab.
   final IconData? icon;
@@ -176,7 +185,7 @@ class RemixTab extends StatelessWidget {
   /// Optional label text for the tab.
   final String? label;
 
-  static final styleFrom = RemixTabStyle.new;
+  static final styleFrom = RemixTabStyler.new;
 
   Widget _buildTabContent(
     BuildContext context,
@@ -214,8 +223,9 @@ class RemixTab extends StatelessWidget {
       onPressChange: onPressChange,
       semanticLabel: semanticLabel ?? label,
       builder: (context, state, _) {
-        return StyleBuilder<RemixTabSpec>(
+        return RemixStyleSpecBuilder<RemixTabSpec>(
           style: style,
+          styleSpec: styleSpec,
           controller: NakedTabState.controllerOf(context),
           builder: (context, spec) => _buildTabContent(context, spec, state),
         );
@@ -230,7 +240,8 @@ class RemixTabView extends StatelessWidget {
     super.key,
     required this.tabId,
     required this.child,
-    this.style = const RemixTabViewStyle.create(),
+    this.style = const RemixTabViewStyler.create(),
+    this.styleSpec,
   });
 
   /// The unique identifier that matches a tab.
@@ -240,16 +251,20 @@ class RemixTabView extends StatelessWidget {
   final Widget child;
 
   /// Style applied to the tab view container.
-  final RemixTabViewStyle style;
+  final RemixTabViewStyler style;
 
-  static final styleFrom = RemixTabViewStyle.new;
+  /// Optional raw style spec that bypasses fluent style resolution.
+  final RemixTabViewSpec? styleSpec;
+
+  static final styleFrom = RemixTabViewStyler.new;
 
   @override
   Widget build(BuildContext context) {
     return NakedTabView(
       tabId: tabId,
-      child: StyleBuilder<RemixTabViewSpec>(
+      child: RemixStyleSpecBuilder<RemixTabViewSpec>(
         style: style,
+        styleSpec: styleSpec,
         builder: (context, spec) {
           return Box(styleSpec: spec.container, child: child);
         },

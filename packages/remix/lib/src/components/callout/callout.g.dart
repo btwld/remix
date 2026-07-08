@@ -94,7 +94,7 @@ typedef _$RemixCalloutSpecMethods = _$RemixCalloutSpec; // ignore: unused_elemen
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Creates a Fortal-themed [RemixCalloutStyle].
+/// Creates a Fortal-themed [RemixCalloutStyler].
 class FortalCallout extends StatelessWidget {
   const FortalCallout({
     super.key,
@@ -117,7 +117,7 @@ class FortalCallout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return fortalCalloutStyle(
+    return fortalCalloutStyler(
       variant: this.variant,
       size: this.size,
     ).call(key: this.key, text: this.text, icon: this.icon, child: this.child);
@@ -128,50 +128,50 @@ class FortalCallout extends StatelessWidget {
 // StylerGenerator
 // **************************************************************************
 
-mixin _$RemixCalloutStyleMixin on Style<RemixCalloutSpec>, Diagnosticable {
+mixin _$RemixCalloutStylerMixin on Style<RemixCalloutSpec>, Diagnosticable {
   Prop<StyleSpec<FlexBoxSpec>>? get $container;
   Prop<StyleSpec<TextSpec>>? get $text;
   Prop<StyleSpec<IconSpec>>? get $icon;
 
   /// Sets the container.
-  RemixCalloutStyle container(FlexBoxStyler value) {
-    return merge(RemixCalloutStyle(container: value));
+  RemixCalloutStyler container(FlexBoxStyler value) {
+    return merge(RemixCalloutStyler(container: value));
   }
 
   /// Sets the text.
-  RemixCalloutStyle text(TextStyler value) {
-    return merge(RemixCalloutStyle(text: value));
+  RemixCalloutStyler text(TextStyler value) {
+    return merge(RemixCalloutStyler(text: value));
   }
 
   /// Sets the icon.
-  RemixCalloutStyle icon(IconStyler value) {
-    return merge(RemixCalloutStyle(icon: value));
+  RemixCalloutStyler icon(IconStyler value) {
+    return merge(RemixCalloutStyler(icon: value));
   }
 
   /// Sets the animation configuration.
-  RemixCalloutStyle animate(AnimationConfig value) {
-    return merge(RemixCalloutStyle(animation: value));
+  RemixCalloutStyler animate(AnimationConfig value) {
+    return merge(RemixCalloutStyler(animation: value));
   }
 
   /// Sets the style variants.
-  RemixCalloutStyle variants(List<VariantStyle<RemixCalloutSpec>> value) {
-    return merge(RemixCalloutStyle(variants: value));
+  RemixCalloutStyler variants(List<VariantStyle<RemixCalloutSpec>> value) {
+    return merge(RemixCalloutStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
-  RemixCalloutStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixCalloutStyle(modifier: value));
+  RemixCalloutStyler wrap(WidgetModifierConfig value) {
+    return merge(RemixCalloutStyler(modifier: value));
   }
 
   /// Sets the widget modifier.
-  RemixCalloutStyle modifier(WidgetModifierConfig value) {
-    return merge(RemixCalloutStyle(modifier: value));
+  RemixCalloutStyler modifier(WidgetModifierConfig value) {
+    return merge(RemixCalloutStyler(modifier: value));
   }
 
-  /// Merges with another [RemixCalloutStyle].
+  /// Merges with another [RemixCalloutStyler].
   @override
-  RemixCalloutStyle merge(RemixCalloutStyle? other) {
-    return RemixCalloutStyle.create(
+  RemixCalloutStyler merge(RemixCalloutStyler? other) {
+    return RemixCalloutStyler.create(
       container: MixOps.merge($container, other?.$container),
       text: MixOps.merge($text, other?.$text),
       icon: MixOps.merge($icon, other?.$icon),

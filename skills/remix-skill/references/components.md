@@ -20,7 +20,7 @@ Complete constructor parameters for every Remix component.
 |-----------|------|---------|----------|
 | `label` | `String` | — | yes |
 | `onPressed` | `VoidCallback?` | — | yes |
-| `style` | `RemixButtonStyle` | `RemixButtonStyle.create()` | no |
+| `style` | `RemixButtonStyler` | `RemixButtonStyler.create()` | no |
 | `styleSpec` | `RemixButtonSpec?` | `null` | no |
 | `leadingIcon` | `IconData?` | `null` | no |
 | `trailingIcon` | `IconData?` | `null` | no |
@@ -47,7 +47,7 @@ The button is disabled when `enabled == false`, `loading == true`, or `onPressed
 |-----------|------|---------|----------|
 | `icon` | `IconData` | — | yes |
 | `onPressed` | `VoidCallback?` | — | yes |
-| `style` | `RemixIconButtonStyle` | `RemixIconButtonStyle.create()` | no |
+| `style` | `RemixIconButtonStyler` | `RemixIconButtonStyler.create()` | no |
 | `styleSpec` | `RemixIconButtonSpec?` | `null` | no |
 | `loading` | `bool` | `false` | no |
 | `enableFeedback` | `bool` | `true` | no |
@@ -73,7 +73,7 @@ No separate `enabled` parameter — disabled when `loading == true` or `onPresse
 |-----------|------|---------|----------|
 | `selected` | `bool?` | — | yes |
 | `onChanged` | `ValueChanged<bool?>?` | `null` | no |
-| `style` | `RemixCheckboxStyle` | `RemixCheckboxStyle.create()` | no |
+| `style` | `RemixCheckboxStyler` | `RemixCheckboxStyler.create()` | no |
 | `styleSpec` | `RemixCheckboxSpec?` | `null` | no |
 | `enabled` | `bool` | `true` | no |
 | `tristate` | `bool` | `false` | no |
@@ -101,14 +101,13 @@ Must be a descendant of `RemixRadioGroup<T>`.
 | Parameter | Type | Default | Required |
 |-----------|------|---------|----------|
 | `value` | `T` | — | yes |
-| `style` | `RemixRadioStyle` | `RemixRadioStyle.create()` | no |
+| `style` | `RemixRadioStyler` | `RemixRadioStyler.create()` | no |
 | `styleSpec` | `RemixRadioSpec?` | `null` | no |
 | `enabled` | `bool` | `true` | no |
 | `autofocus` | `bool` | `false` | no |
 | `toggleable` | `bool` | `false` | no |
 | `focusNode` | `FocusNode?` | `null` | no |
 | `mouseCursor` | `MouseCursor?` | `null` | no |
-| `enableFeedback` | `bool` | `true` | no |
 
 ### RemixSwitch
 
@@ -116,7 +115,7 @@ Must be a descendant of `RemixRadioGroup<T>`.
 |-----------|------|---------|----------|
 | `selected` | `bool` | — | yes |
 | `onChanged` | `ValueChanged<bool>` | — | yes |
-| `style` | `RemixSwitchStyle` | `RemixSwitchStyle.create()` | no |
+| `style` | `RemixSwitchStyler` | `RemixSwitchStyler.create()` | no |
 | `styleSpec` | `RemixSwitchSpec?` | `null` | no |
 | `enabled` | `bool` | `true` | no |
 | `enableFeedback` | `bool` | `true` | no |
@@ -131,12 +130,12 @@ Must be a descendant of `RemixRadioGroup<T>`.
 |-----------|------|---------|----------|
 | `value` | `double` | — | yes |
 | `onChanged` | `ValueChanged<double>?` | — | yes |
-| `style` | `RemixSliderStyle` | `RemixSliderStyle.create()` | no |
+| `style` | `RemixSliderStyler` | `RemixSliderStyler.create()` | no |
 | `styleSpec` | `RemixSliderSpec?` | `null` | no |
 | `min` | `double` | `0.0` | no |
 | `max` | `double` | `1.0` | no |
 | `enabled` | `bool` | `true` | no |
-| `enableHapticFeedback` | `bool` | `true` | no |
+| `enableFeedback` | `bool` | `true` | no |
 | `focusNode` | `FocusNode?` | `null` | no |
 | `autofocus` | `bool` | `false` | no |
 | `snapDivisions` | `int?` | `null` | no |
@@ -147,7 +146,7 @@ Must be a descendant of `RemixRadioGroup<T>`.
 
 | Parameter | Type | Default | Required |
 |-----------|------|---------|----------|
-| `style` | `RemixTextFieldStyle` | `RemixTextFieldStyle.create()` | no |
+| `style` | `RemixTextFieldStyler` | `RemixTextFieldStyler.create()` | no |
 | `styleSpec` | `RemixTextFieldSpec?` | `null` | no |
 | `controller` | `TextEditingController?` | `null` | no |
 | `focusNode` | `FocusNode?` | `null` | no |
@@ -183,7 +182,7 @@ Sets `WidgetState.error` when `error == true`, enabling error-state styling.
 |-----------|------|---------|----------|
 | `trigger` | `RemixSelectTrigger` | — | yes |
 | `items` | `List<RemixSelectItem<T>>` | — | yes |
-| `style` | `RemixSelectStyle` | `RemixSelectStyle.create()` | no |
+| `style` | `RemixSelectStyler` | `RemixSelectStyler.create()` | no |
 | `selectedValue` | `T?` | `null` | no |
 | `onChanged` | `ValueChanged<T?>?` | `null` | no |
 | `onOpen` | `VoidCallback?` | `null` | no |
@@ -206,7 +205,7 @@ Sets `WidgetState.error` when `error == true`, enabling error-state styling.
 
 | Parameter | Type | Default | Required |
 |-----------|------|---------|----------|
-| `style` | `RemixAvatarStyle` | `RemixAvatarStyle.create()` | no |
+| `style` | `RemixAvatarStyler` | `RemixAvatarStyler.create()` | no |
 | `styleSpec` | `RemixAvatarSpec?` | `null` | no |
 | `label` | `String?` | `null` | no |
 | `icon` | `IconData?` | `null` | no |
@@ -222,7 +221,7 @@ Sets `WidgetState.error` when `error == true`, enabling error-state styling.
 
 | Parameter | Type | Default | Required |
 |-----------|------|---------|----------|
-| `style` | `RemixBadgeStyle` | `RemixBadgeStyle.create()` | no |
+| `style` | `RemixBadgeStyler` | `RemixBadgeStyler.create()` | no |
 | `styleSpec` | `RemixBadgeSpec?` | `null` | no |
 | `label` | `String?` | `null` | no |
 | `child` | `Widget?` | `null` | no |
@@ -232,7 +231,7 @@ Sets `WidgetState.error` when `error == true`, enabling error-state styling.
 
 | Parameter | Type | Default | Required |
 |-----------|------|---------|----------|
-| `style` | `RemixCardStyle` | `RemixCardStyle.create()` | no |
+| `style` | `RemixCardStyler` | `RemixCardStyler.create()` | no |
 | `styleSpec` | `RemixCardSpec?` | `null` | no |
 | `child` | `Widget?` | `null` | no |
 
@@ -240,7 +239,7 @@ Sets `WidgetState.error` when `error == true`, enabling error-state styling.
 
 | Parameter | Type | Default | Required |
 |-----------|------|---------|----------|
-| `style` | `RemixCalloutStyle` | `RemixCalloutStyle.create()` | no |
+| `style` | `RemixCalloutStyler` | `RemixCalloutStyler.create()` | no |
 | `styleSpec` | `RemixCalloutSpec?` | `null` | no |
 | `text` | `String?` | `null` | no |
 | `icon` | `IconData?` | `null` | no |
@@ -253,7 +252,7 @@ Either `text` or `child` must be provided.
 | Parameter | Type | Default | Required |
 |-----------|------|---------|----------|
 | `value` | `double` | — | yes |
-| `style` | `RemixProgressStyle` | `RemixProgressStyle.create()` | no |
+| `style` | `RemixProgressStyler` | `RemixProgressStyler.create()` | no |
 | `styleSpec` | `RemixProgressSpec?` | `null` | no |
 
 Value must be between 0.0 and 1.0.
@@ -262,14 +261,14 @@ Value must be between 0.0 and 1.0.
 
 | Parameter | Type | Default | Required |
 |-----------|------|---------|----------|
-| `style` | `RemixSpinnerStyle` | `RemixSpinnerStyle.create()` | no |
+| `style` | `RemixSpinnerStyler` | `RemixSpinnerStyler.create()` | no |
 | `styleSpec` | `RemixSpinnerSpec?` | `null` | no |
 
 ### RemixDivider
 
 | Parameter | Type | Default | Required |
 |-----------|------|---------|----------|
-| `style` | `RemixDividerStyle` | `RemixDividerStyle.create()` | no |
+| `style` | `RemixDividerStyler` | `RemixDividerStyler.create()` | no |
 | `styleSpec` | `RemixDividerSpec?` | `null` | no |
 
 ---
@@ -294,7 +293,7 @@ Value must be between 0.0 and 1.0.
 
 | Parameter | Type | Default | Required |
 |-----------|------|---------|----------|
-| `style` | `RemixDialogStyle` | `RemixDialogStyle.create()` | no |
+| `style` | `RemixDialogStyler` | `RemixDialogStyler.create()` | no |
 | `title` | `String?` | `null` | no |
 | `description` | `String?` | `null` | no |
 | `actions` | `List<Widget>?` | `null` | no |
@@ -310,7 +309,7 @@ At least one of `child`, `title`, or `description` must be provided.
 |-----------|------|---------|----------|
 | `tooltipChild` | `Widget` | — | yes |
 | `child` | `Widget` | — | yes |
-| `style` | `RemixTooltipStyle` | `RemixTooltipStyle.create()` | no |
+| `style` | `RemixTooltipStyler` | `RemixTooltipStyler.create()` | no |
 | `styleSpec` | `RemixTooltipSpec?` | `null` | no |
 | `tooltipSemantics` | `String?` | `null` | no |
 
@@ -322,7 +321,7 @@ At least one of `child`, `title`, or `description` must be provided.
 |-----------|------|---------|----------|
 | `trigger` | `RemixMenuTrigger` | — | yes |
 | `items` | `List<RemixMenuItemData<T>>` | — | yes |
-| `style` | `RemixMenuStyle` | `RemixMenuStyle.create()` | no |
+| `style` | `RemixMenuStyler` | `RemixMenuStyler.create()` | no |
 | `controller` | `MenuController?` | `null` | no |
 | `onSelected` | `ValueChanged<T>?` | `null` | no |
 | `onOpen` | `VoidCallback?` | `null` | no |
@@ -360,7 +359,7 @@ At least one of `child`, `title`, or `description` must be provided.
 | Parameter | Type | Default | Required |
 |-----------|------|---------|----------|
 | `child` | `Widget` | — | yes |
-| `style` | `RemixTabBarStyle` | `RemixTabBarStyle.create()` | no |
+| `style` | `RemixTabBarStyler` | `RemixTabBarStyler.create()` | no |
 
 ### RemixTab
 
@@ -371,7 +370,7 @@ At least one of `child`, `title`, or `description` must be provided.
 | `icon` | `IconData?` | `null` | no |
 | `child` | `Widget?` | `null` | \* |
 | `builder` | `ValueWidgetBuilder<NakedTabState>?` | `null` | \* |
-| `style` | `RemixTabStyle` | `RemixTabStyle.create()` | no |
+| `style` | `RemixTabStyler` | `RemixTabStyler.create()` | no |
 | `enabled` | `bool` | `true` | no |
 | `autofocus` | `bool` | `false` | no |
 | `mouseCursor` | `MouseCursor` | `SystemMouseCursors.click` | no |
@@ -387,7 +386,7 @@ At least one of `child`, `title`, or `description` must be provided.
 |-----------|------|---------|----------|
 | `tabId` | `String` | — | yes |
 | `child` | `Widget` | — | yes |
-| `style` | `RemixTabViewStyle` | `RemixTabViewStyle.create()` | no |
+| `style` | `RemixTabViewStyler` | `RemixTabViewStyler.create()` | no |
 
 ### RemixAccordionGroup\<T\>
 
@@ -405,7 +404,7 @@ At least one of `child`, `title`, or `description` must be provided.
 | `child` | `Widget` | — | yes |
 | `title` | `String?` | `null` | \* |
 | `builder` | `NakedAccordionTriggerBuilder<T>?` | `null` | \* |
-| `style` | `RemixAccordionStyle` | `RemixAccordionStyle.create()` | no |
+| `style` | `RemixAccordionStyler` | `RemixAccordionStyler.create()` | no |
 | `leadingIcon` | `IconData?` | `null` | no |
 | `trailingIcon` | `IconData?` | `null` | no |
 | `enabled` | `bool` | `true` | no |

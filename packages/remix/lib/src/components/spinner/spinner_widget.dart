@@ -11,25 +11,35 @@ part of 'spinner.dart';
 ///
 /// // Custom spinner with track
 /// RemixSpinner(
-///   style: RemixSpinnerStyle(
+///   style: RemixSpinnerStyler(
 ///     size: 32,
 ///     indicatorColor: Colors.blue,
 ///     trackColor: Colors.blue.withValues(alpha: 0.2),
 ///   ),
 /// )
 /// ```
-class RemixSpinner extends StyleWidget<RemixSpinnerSpec> {
+class RemixSpinner extends StatelessWidget {
   const RemixSpinner({
     super.key,
-    super.style = const RemixSpinnerStyle.create(),
-    super.styleSpec,
+    this.style = const RemixSpinnerStyler.create(),
+    this.styleSpec,
   });
 
-  static final styleFrom = RemixSpinnerStyle.new;
+  static final styleFrom = RemixSpinnerStyler.new;
+
+  /// The style configuration for the spinner.
+  final RemixSpinnerStyler style;
+
+  /// Optional raw style spec that bypasses fluent style resolution.
+  final RemixSpinnerSpec? styleSpec;
 
   @override
-  Widget build(BuildContext context, RemixSpinnerSpec spec) {
-    return _SpinnerSpecWidget(spec: spec);
+  Widget build(BuildContext context) {
+    return RemixStyleSpecBuilder<RemixSpinnerSpec>(
+      style: style,
+      styleSpec: styleSpec,
+      builder: (context, spec) => _SpinnerSpecWidget(spec: spec),
+    );
   }
 }
 

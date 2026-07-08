@@ -41,18 +41,18 @@ class _ToggleExampleState extends State<ToggleExample> {
     );
   }
 
-  RemixToggleStyle get style {
-    return RemixToggleStyle()
+  RemixToggleStyler get style {
+    return RemixToggleStyler()
         .paddingX(12)
         .paddingY(8)
         .spacing(6)
         .backgroundColor(Colors.grey.shade100)
         .foregroundColor(Colors.grey.shade700)
         .borderRadiusAll(const Radius.circular(8))
-        .onHovered(RemixToggleStyle().backgroundColor(Colors.grey.shade200))
-        .onPressed(RemixToggleStyle().scale(0.93))
+        .onHovered(RemixToggleStyler().backgroundColor(Colors.grey.shade200))
+        .onPressed(RemixToggleStyler().scale(0.93))
         .onSelected(
-          RemixToggleStyle()
+          RemixToggleStyler()
               .backgroundColor(Colors.deepPurple.shade50)
               .foregroundColor(Colors.deepPurple),
         )
@@ -90,13 +90,13 @@ class _FortalToggleExampleState extends State<FortalToggleExample> {
           selected: _value,
           onChanged: (v) => setState(() => _value = v),
           label: 'Ghost',
-          style: fortalToggleStyle(variant: FortalToggleVariant.ghost),
+          style: fortalToggleStyler(variant: FortalToggleVariant.ghost),
         ),
         RemixToggle(
           selected: _value,
           onChanged: (v) => setState(() => _value = v),
           label: 'Outline',
-          style: fortalToggleStyle(variant: FortalToggleVariant.outline),
+          style: fortalToggleStyler(variant: FortalToggleVariant.outline),
         ),
       ],
     );
@@ -106,7 +106,7 @@ class _FortalToggleExampleState extends State<FortalToggleExample> {
 </CodeGroup>
 
 <Info>
-  See the [fortalToggleStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/toggle/fortal_toggle_styles.dart) for all available options.
+  See the [fortalToggleStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/toggle/fortal_toggle_styles.dart) for all available options.
 </Info>
 
 ## Constructor
@@ -124,7 +124,7 @@ const RemixToggle({
   bool autofocus = false,
   String? semanticLabel,
   MouseCursor mouseCursor = SystemMouseCursors.click,
-  RemixToggleStyle style = const RemixToggleStyle.create(),
+  RemixToggleStyler style = const RemixToggleStyler.create(),
   RemixToggleSpec? styleSpec,
 })
 ```
@@ -153,7 +153,7 @@ Optional. Text rendered inside the toggle. At least one of `label` or `icon` mus
 
 Optional. Icon rendered inside the toggle. At least one of `label` or `icon` must be provided.
 
-#### `style` -> `RemixToggleStyle`
+#### `style` -> `RemixToggleStyler`
 
 Optional. The style configuration for the toggle.
 
@@ -331,15 +331,15 @@ Sets icon shadows
 
 Sets single icon shadow
 
-#### `onSelected(RemixToggleStyle value)`
+#### `onSelected(RemixToggleStyler value)`
 
 Applies style overrides while the toggle is selected.
 
-#### `onHovered(RemixToggleStyle value)`
+#### `onHovered(RemixToggleStyler value)`
 
 Applies style overrides while the toggle is hovered.
 
-#### `onPressed(RemixToggleStyle value)`
+#### `onPressed(RemixToggleStyler value)`
 
 Applies style overrides while the toggle is pressed.
 

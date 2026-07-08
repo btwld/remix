@@ -34,7 +34,7 @@ class RemixSelectItem<T> {
   final bool enabled;
 
   /// The style for the item.
-  final RemixSelectMenuItemStyle style;
+  final RemixSelectMenuItemStyler style;
 
   /// Semantic label for accessibility.
   final String? semanticLabel;
@@ -43,7 +43,7 @@ class RemixSelectItem<T> {
     required this.value,
     required this.label,
     this.enabled = true,
-    this.style = const RemixSelectMenuItemStyle.create(),
+    this.style = const RemixSelectMenuItemStyler.create(),
     this.semanticLabel,
   });
 }
@@ -77,8 +77,10 @@ class RemixSelect<T> extends StatefulWidget {
     required this.trigger,
     required this.items,
     this.selectedValue,
-    this.targetAnchor,
-    this.followerAnchor,
+    this.positioning = const OverlayPositionConfig(
+      targetAnchor: Alignment.bottomCenter,
+      followerAnchor: Alignment.topCenter,
+    ),
     this.onChanged,
     this.onOpen,
     this.onClose,
@@ -86,7 +88,8 @@ class RemixSelect<T> extends StatefulWidget {
     this.semanticLabel,
     this.closeOnSelect = true,
     this.focusNode,
-    this.style = const RemixSelectStyle.create(),
+    this.style = const RemixSelectStyler.create(),
+    this.styleSpec,
   });
 
   /// The trigger data that defines the select's button.
@@ -98,11 +101,8 @@ class RemixSelect<T> extends StatefulWidget {
   /// The currently selected value.
   final T? selectedValue;
 
-  /// The target anchor for the dropdown.
-  final Alignment? targetAnchor;
-
-  /// The follower anchor for the dropdown.
-  final Alignment? followerAnchor;
+  /// Overlay positioning configuration for the dropdown.
+  final OverlayPositionConfig positioning;
 
   /// Called when the selected value changes.
   final ValueChanged<T?>? onChanged;
@@ -126,9 +126,12 @@ class RemixSelect<T> extends StatefulWidget {
   final FocusNode? focusNode;
 
   /// The style configuration for the select.
-  final RemixSelectStyle style;
+  final RemixSelectStyler style;
 
-  static final styleFrom = RemixSelectStyle.new;
+  /// Optional raw style spec that bypasses fluent style resolution.
+  final RemixSelectSpec? styleSpec;
+
+  static final styleFrom = RemixSelectStyler.new;
 
   @override
   State<RemixSelect<T>> createState() => _RemixSelectState<T>();
@@ -148,10 +151,10 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
     );
   }
 
-  RemixSelectStyle _buildStyle() {
-    return RemixSelectStyle()
+  RemixSelectStyler _buildStyle() {
+    return RemixSelectStyler()
         .trigger(
-          RemixSelectTriggerStyle()
+          RemixSelectTriggerStyler()
               .mainAxisSize(.min)
               .wrap(WidgetModifierConfig.intrinsicWidth()),
         )
@@ -208,8 +211,9 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
   Widget build(BuildContext context) {
     return NakedSelect<T>(
       overlayBuilder: (context, info) {
-        return StyleBuilder<RemixSelectSpec>(
+        return RemixStyleSpecBuilder<RemixSelectSpec>(
           style: _buildStyle(),
+          styleSpec: widget.styleSpec,
           builder: (context, spec) => _buildOverlayMenu(spec),
         );
       },
@@ -219,10 +223,7 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
       enabled: widget.enabled,
       triggerFocusNode: widget.focusNode,
       semanticLabel: widget.semanticLabel,
-      positioning: OverlayPositionConfig(
-        targetAnchor: widget.targetAnchor ?? .bottomCenter,
-        followerAnchor: widget.followerAnchor ?? .topCenter,
-      ),
+      positioning: widget.positioning,
       onOpen: () {
         animationController.forward();
         widget.onOpen?.call();
@@ -232,8 +233,9 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
         widget.onClose?.call();
       },
       builder: (context, state, _) {
-        return StyleBuilder<RemixSelectSpec>(
+        return RemixStyleSpecBuilder<RemixSelectSpec>(
           style: _buildStyle(),
+          styleSpec: widget.styleSpec,
           controller: NakedState.controllerOf(context),
           builder: (context, spec) {
             final triggerSpec = spec.trigger;

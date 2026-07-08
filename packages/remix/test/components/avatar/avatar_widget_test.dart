@@ -229,7 +229,7 @@ void main() {
 
     group('Style Integration', () {
       testWidgets('avatar uses provided styleSpec', (tester) async {
-        const styleSpec = StyleSpec<RemixAvatarSpec>(spec: RemixAvatarSpec());
+        const styleSpec = RemixAvatarSpec();
 
         await tester.pumpRemixApp(
           const RemixAvatar(styleSpec: styleSpec, label: 'Test'),

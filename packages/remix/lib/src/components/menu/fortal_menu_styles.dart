@@ -18,21 +18,21 @@ enum FortalMenuVariant {
   soft,
 }
 
-/// Creates a Fortal-themed [RemixMenuStyle].
-RemixMenuStyle fortalMenuStyle({
+/// Creates a Fortal-themed [RemixMenuStyler].
+RemixMenuStyler fortalMenuStyler({
   FortalMenuVariant variant = .solid,
   FortalMenuSize size = .size2,
 }) {
   return switch (variant) {
-    .solid => _fortalMenuSolidStyle(size),
-    .soft => _fortalMenuSoftStyle(size),
+    .solid => _fortalMenuSolidStyler(size),
+    .soft => _fortalMenuSoftStyler(size),
   };
 }
 
-RemixMenuStyle _fortalMenuBaseStyle(FortalMenuSize size) {
-  return RemixMenuStyle()
+RemixMenuStyler _fortalMenuBaseStyler(FortalMenuSize size) {
+  return RemixMenuStyler()
       .trigger(
-        RemixMenuTriggerStyle()
+        RemixMenuTriggerStyler()
             .borderRadius(BorderRadiusMix.all(FortalTokens.radius2()))
             .label(
               TextStyler(
@@ -61,17 +61,17 @@ RemixMenuStyle _fortalMenuBaseStyle(FortalMenuSize size) {
         ).marginTop(8),
       )
       .divider(
-        RemixDividerStyle()
+        RemixDividerStyler()
             .margin(EdgeInsetsMix.symmetric(vertical: FortalTokens.space1()))
             .height(FortalTokens.borderWidth1())
             .color(FortalTokens.gray6()),
       )
-      .merge(_fortalMenuSizeStyle(size));
+      .merge(_fortalMenuSizeStyler(size));
 }
 
-RemixMenuStyle _fortalMenuSolidStyle([FortalMenuSize size = .size2]) {
-  return _fortalMenuBaseStyle(size).trigger(
-    RemixMenuTriggerStyle()
+RemixMenuStyler _fortalMenuSolidStyler([FortalMenuSize size = .size2]) {
+  return _fortalMenuBaseStyler(size).trigger(
+    RemixMenuTriggerStyler()
         .icon(IconStyler(color: FortalTokens.accentContrast(), size: 16))
         .spacing(8)
         .color(FortalTokens.accent9())
@@ -79,9 +79,9 @@ RemixMenuStyle _fortalMenuSolidStyle([FortalMenuSize size = .size2]) {
   );
 }
 
-RemixMenuStyle _fortalMenuSoftStyle([FortalMenuSize size = .size2]) {
-  return _fortalMenuBaseStyle(size).trigger(
-    RemixMenuTriggerStyle()
+RemixMenuStyler _fortalMenuSoftStyler([FortalMenuSize size = .size2]) {
+  return _fortalMenuBaseStyler(size).trigger(
+    RemixMenuTriggerStyler()
         .decoration(BoxDecorationMix(color: FortalTokens.accent3()))
         .label(
           TextStyler(
@@ -96,18 +96,18 @@ RemixMenuStyle _fortalMenuSoftStyle([FortalMenuSize size = .size2]) {
   );
 }
 
-RemixMenuStyle _fortalMenuSizeStyle(FortalMenuSize size) {
+RemixMenuStyler _fortalMenuSizeStyler(FortalMenuSize size) {
   return switch (size) {
-    .size1 => RemixMenuStyle().trigger(
-      RemixMenuTriggerStyle().padding(
+    .size1 => RemixMenuStyler().trigger(
+      RemixMenuTriggerStyler().padding(
         EdgeInsetsMix.symmetric(
           vertical: FortalTokens.space1(),
           horizontal: FortalTokens.space2(),
         ),
       ),
     ),
-    .size2 => RemixMenuStyle().trigger(
-      RemixMenuTriggerStyle().padding(
+    .size2 => RemixMenuStyler().trigger(
+      RemixMenuTriggerStyler().padding(
         EdgeInsetsMix.symmetric(
           vertical: FortalTokens.space2(),
           horizontal: FortalTokens.space3(),
@@ -117,19 +117,19 @@ RemixMenuStyle _fortalMenuSizeStyle(FortalMenuSize size) {
   };
 }
 
-/// Creates a Fortal-themed [RemixMenuItemStyle].
-RemixMenuItemStyle fortalMenuItemStyle({
+/// Creates a Fortal-themed [RemixMenuItemStyler].
+RemixMenuItemStyler fortalMenuItemStyler({
   FortalMenuVariant variant = .solid,
   FortalMenuSize size = .size2,
 }) {
   return switch (variant) {
-    .solid => _fortalMenuItemSolidStyle(size),
-    .soft => _fortalMenuItemSoftStyle(size),
+    .solid => _fortalMenuItemSolidStyler(size),
+    .soft => _fortalMenuItemSoftStyler(size),
   };
 }
 
-RemixMenuItemStyle _fortalMenuItemBaseStyle(FortalMenuSize size) {
-  return RemixMenuItemStyle()
+RemixMenuItemStyler _fortalMenuItemBaseStyler(FortalMenuSize size) {
+  return RemixMenuItemStyler()
       .borderRadius(BorderRadiusMix.all(FortalTokens.radius2()))
       .label(
         TextStyler(
@@ -138,24 +138,24 @@ RemixMenuItemStyle _fortalMenuItemBaseStyle(FortalMenuSize size) {
       )
       .leadingIcon(IconStyler(color: FortalTokens.gray11(), size: 16))
       .trailingIcon(IconStyler(color: FortalTokens.gray11(), size: 16))
-      .merge(_fortalMenuItemSizeStyle(size));
+      .merge(_fortalMenuItemSizeStyler(size));
 }
 
-RemixMenuItemStyle _fortalMenuItemSolidStyle([FortalMenuSize size = .size2]) {
-  return _fortalMenuItemBaseStyle(size)
+RemixMenuItemStyler _fortalMenuItemSolidStyler([FortalMenuSize size = .size2]) {
+  return _fortalMenuItemBaseStyler(size)
       .color(FortalTokens.graySurface())
       .onHovered(
-        RemixMenuItemStyle()
+        RemixMenuItemStyler()
             .color(FortalTokens.accent9())
             .label(TextStyler().color(FortalTokens.accentContrast())),
       );
 }
 
-RemixMenuItemStyle _fortalMenuItemSoftStyle([FortalMenuSize size = .size2]) {
-  return _fortalMenuItemBaseStyle(size)
+RemixMenuItemStyler _fortalMenuItemSoftStyler([FortalMenuSize size = .size2]) {
+  return _fortalMenuItemBaseStyler(size)
       .decoration(BoxDecorationMix(color: Colors.transparent))
       .onHovered(
-        RemixMenuItemStyle()
+        RemixMenuItemStyler()
             .decoration(BoxDecorationMix(color: FortalTokens.accentA3()))
             .label(
               TextStyler(
@@ -170,19 +170,65 @@ RemixMenuItemStyle _fortalMenuItemSoftStyle([FortalMenuSize size = .size2]) {
       );
 }
 
-RemixMenuItemStyle _fortalMenuItemSizeStyle(FortalMenuSize size) {
+RemixMenuItemStyler _fortalMenuItemSizeStyler(FortalMenuSize size) {
   return switch (size) {
-    .size1 => RemixMenuItemStyle().padding(
+    .size1 => RemixMenuItemStyler().padding(
       EdgeInsetsMix.symmetric(
         vertical: FortalTokens.space1(),
         horizontal: FortalTokens.space1(),
       ),
     ),
-    .size2 => RemixMenuItemStyle().padding(
+    .size2 => RemixMenuItemStyler().padding(
       EdgeInsetsMix.symmetric(
         vertical: FortalTokens.space2(),
         horizontal: FortalTokens.space2(),
       ),
     ),
   };
+}
+
+/// Fortal-themed menu widget wrapper.
+///
+/// Hand-written: hosted `mix_generator` 2.1.1 does not support generic
+/// `call<T>()` methods.
+class FortalMenu<T> extends StatelessWidget {
+  const FortalMenu({
+    super.key,
+    this.variant = .solid,
+    this.size = .size2,
+    required this.trigger,
+    required this.items,
+    this.controller,
+    this.onSelected,
+    this.onOpen,
+    this.onClose,
+    this.onCanceled,
+    this.triggerFocusNode,
+  });
+
+  final FortalMenuVariant variant;
+  final FortalMenuSize size;
+  final RemixMenuTrigger trigger;
+  final List<RemixMenuItemData<T>> items;
+  final MenuController? controller;
+  final ValueChanged<T>? onSelected;
+  final VoidCallback? onOpen;
+  final VoidCallback? onClose;
+  final VoidCallback? onCanceled;
+  final FocusNode? triggerFocusNode;
+
+  @override
+  Widget build(BuildContext context) {
+    return fortalMenuStyler(variant: variant, size: size).call<T>(
+      key: key,
+      trigger: trigger,
+      items: items,
+      controller: controller,
+      onSelected: onSelected,
+      onOpen: onOpen,
+      onClose: onClose,
+      onCanceled: onCanceled,
+      triggerFocusNode: triggerFocusNode,
+    );
+  }
 }

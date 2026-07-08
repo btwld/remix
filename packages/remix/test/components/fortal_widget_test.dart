@@ -135,5 +135,67 @@ void main() {
       expect(find.byType(FortalToggle), findsOneWidget);
       expect(find.byType(RemixToggle), findsOneWidget);
     });
+
+    testWidgets('renders FortalDialog', (tester) async {
+      await tester.pumpRemixApp(const FortalDialog(title: 'Hello'));
+      expect(find.byType(FortalDialog), findsOneWidget);
+      expect(find.byType(RemixDialog), findsOneWidget);
+    });
+
+    testWidgets('renders FortalTooltip', (tester) async {
+      await tester.pumpRemixApp(
+        const FortalTooltip(tooltipChild: Text('tip'), child: Text('target')),
+      );
+      expect(find.byType(FortalTooltip), findsOneWidget);
+      expect(find.byType(RemixTooltip), findsOneWidget);
+    });
+
+    testWidgets('renders FortalMenu', (tester) async {
+      await tester.pumpRemixApp(
+        FortalMenu<String>(
+          trigger: const RemixMenuTrigger(label: 'Menu'),
+          items: const [RemixMenuItem(value: 'a', label: 'A')],
+        ),
+      );
+      expect(find.byType(FortalMenu<String>), findsOneWidget);
+      expect(find.byType(RemixMenu<String>), findsOneWidget);
+    });
+
+    testWidgets('renders FortalSelect', (tester) async {
+      await tester.pumpRemixApp(
+        FortalSelect<String>(
+          trigger: const RemixSelectTrigger(placeholder: 'Pick'),
+          items: const [RemixSelectItem(value: 'a', label: 'A')],
+        ),
+      );
+      expect(find.byType(FortalSelect<String>), findsOneWidget);
+      expect(find.byType(RemixSelect<String>), findsOneWidget);
+    });
+
+    testWidgets('renders FortalTabBar/Tab/TabView', (tester) async {
+      await tester.pumpRemixApp(
+        RemixTabs(
+          selectedTabId: 'a',
+          onChanged: (_) {},
+          child: Column(
+            children: [
+              FortalTabBar(
+                child: Row(
+                  children: const [
+                    FortalTab(tabId: 'a', label: 'A'),
+                    FortalTab(tabId: 'b', label: 'B'),
+                  ],
+                ),
+              ),
+              const FortalTabView(tabId: 'a', child: Text('A view')),
+              const FortalTabView(tabId: 'b', child: Text('B view')),
+            ],
+          ),
+        ),
+      );
+      expect(find.byType(FortalTabBar), findsOneWidget);
+      expect(find.byType(FortalTab), findsNWidgets(2));
+      expect(find.byType(FortalTabView), findsNWidgets(2));
+    });
   });
 }

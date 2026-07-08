@@ -43,14 +43,14 @@ class _RemixExampleScreenState extends State<RemixExampleScreen> {
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 420),
               child: RemixCard(
-                style: fortalCardStyle(variant: .classic, size: .size3),
+                style: fortalCardStyler(variant: .classic, size: .size3),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     RemixBadge(
                       label: 'Remix 1.0',
-                      style: fortalBadgeStyle(variant: .soft),
+                      style: fortalBadgeStyler(variant: .soft),
                     ),
                     const SizedBox(height: 16),
                     const Text(
@@ -73,12 +73,12 @@ class _RemixExampleScreenState extends State<RemixExampleScreen> {
                           },
                           icon: Icons.notifications_active_outlined,
                           label: 'Notifications',
-                          style: fortalToggleStyle(variant: .outline),
+                          style: fortalToggleStyler(variant: .outline),
                         ),
                         RemixButton(
                           label: 'Continue',
                           trailingIcon: Icons.arrow_forward_rounded,
-                          style: fortalButtonStyle(),
+                          style: fortalButtonStyler(),
                           onPressed: () {
                             debugPrint('Continue pressed');
                           },

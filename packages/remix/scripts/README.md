@@ -13,7 +13,7 @@ This script:
 2. **Uses the Dart analyzer to parse files into AST (Abstract Syntax Tree)**
 3. Extracts **style methods** from:
    - The style class itself
-   - **Base classes it extends** (e.g., `RemixContainerStyle`, `RemixFlexContainerStyle`)
+   - **Base classes it extends** (e.g., `RemixContainerStyler`, `RemixFlexContainerStyler`)
    - **Mixins applied with `with` clause** (e.g., `LabelStyleMixin`, `IconStyleMixin`)
 4. Extracts **widget properties** from:
    - The component's widget class constructor parameters

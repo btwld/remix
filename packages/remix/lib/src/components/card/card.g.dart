@@ -77,7 +77,7 @@ typedef _$RemixCardSpecMethods = _$RemixCardSpec; // ignore: unused_element
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Creates a Fortal-themed [RemixCardStyle].
+/// Creates a Fortal-themed [RemixCardStyler].
 class FortalCard extends StatelessWidget {
   const FortalCard({
     super.key,
@@ -94,7 +94,7 @@ class FortalCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return fortalCardStyle(
+    return fortalCardStyler(
       variant: this.variant,
       size: this.size,
     ).call(key: this.key, child: this.child);
@@ -105,38 +105,38 @@ class FortalCard extends StatelessWidget {
 // StylerGenerator
 // **************************************************************************
 
-mixin _$RemixCardStyleMixin on Style<RemixCardSpec>, Diagnosticable {
+mixin _$RemixCardStylerMixin on Style<RemixCardSpec>, Diagnosticable {
   Prop<StyleSpec<BoxSpec>>? get $container;
 
   /// Sets the container.
-  RemixCardStyle container(BoxStyler value) {
-    return merge(RemixCardStyle(container: value));
+  RemixCardStyler container(BoxStyler value) {
+    return merge(RemixCardStyler(container: value));
   }
 
   /// Sets the animation configuration.
-  RemixCardStyle animate(AnimationConfig value) {
-    return merge(RemixCardStyle(animation: value));
+  RemixCardStyler animate(AnimationConfig value) {
+    return merge(RemixCardStyler(animation: value));
   }
 
   /// Sets the style variants.
-  RemixCardStyle variants(List<VariantStyle<RemixCardSpec>> value) {
-    return merge(RemixCardStyle(variants: value));
+  RemixCardStyler variants(List<VariantStyle<RemixCardSpec>> value) {
+    return merge(RemixCardStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
-  RemixCardStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixCardStyle(modifier: value));
+  RemixCardStyler wrap(WidgetModifierConfig value) {
+    return merge(RemixCardStyler(modifier: value));
   }
 
   /// Sets the widget modifier.
-  RemixCardStyle modifier(WidgetModifierConfig value) {
-    return merge(RemixCardStyle(modifier: value));
+  RemixCardStyler modifier(WidgetModifierConfig value) {
+    return merge(RemixCardStyler(modifier: value));
   }
 
-  /// Merges with another [RemixCardStyle].
+  /// Merges with another [RemixCardStyler].
   @override
-  RemixCardStyle merge(RemixCardStyle? other) {
-    return RemixCardStyle.create(
+  RemixCardStyler merge(RemixCardStyler? other) {
+    return RemixCardStyler.create(
       container: MixOps.merge($container, other?.$container),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),

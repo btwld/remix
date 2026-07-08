@@ -151,11 +151,12 @@ void main() {
       test('props includes all relevant properties', () {
         const spec = RemixTooltipSpec();
 
-        expect(spec.props.length, equals(4));
+        expect(spec.props.length, equals(5));
         expect(spec.props, contains(spec.container));
         expect(spec.props, contains(spec.label));
         expect(spec.props, contains(spec.waitDuration));
         expect(spec.props, contains(spec.showDuration));
+        expect(spec.props, contains(spec.dismissDuration));
       });
     });
 
@@ -171,6 +172,7 @@ void main() {
         expect(properties.any((p) => p.name == 'label'), isTrue);
         expect(properties.any((p) => p.name == 'waitDuration'), isTrue);
         expect(properties.any((p) => p.name == 'showDuration'), isTrue);
+        expect(properties.any((p) => p.name == 'dismissDuration'), isTrue);
       });
     });
 

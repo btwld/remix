@@ -9,7 +9,7 @@ Widget buildButtonExample() {
       RemixButton(
         label: 'Primary Button',
         onPressed: () {},
-        style: RemixButtonStyle()
+        style: RemixButtonStyler()
             .paddingX(16)
             .paddingY(10)
             .borderRadiusAll(const Radius.circular(8))
@@ -19,7 +19,7 @@ Widget buildButtonExample() {
       RemixButton(
         label: 'Disabled',
         onPressed: null,
-        style: RemixButtonStyle()
+        style: RemixButtonStyler()
             .paddingX(16)
             .paddingY(10)
             .borderRadiusAll(const Radius.circular(8))
@@ -30,7 +30,7 @@ Widget buildButtonExample() {
         label: 'Loading',
         loading: true,
         onPressed: () {},
-        style: RemixButtonStyle()
+        style: RemixButtonStyler()
             .paddingX(16)
             .paddingY(10)
             .borderRadiusAll(const Radius.circular(8))
@@ -42,7 +42,7 @@ Widget buildButtonExample() {
         label: 'With Icon',
         leadingIcon: Icons.star,
         onPressed: () {},
-        style: RemixButtonStyle()
+        style: RemixButtonStyler()
             .paddingX(16)
             .paddingY(10)
             .borderRadiusAll(const Radius.circular(8))
@@ -53,7 +53,7 @@ Widget buildButtonExample() {
         icon: Icons.star,
         onPressed: () {},
         semanticLabel: 'Favorite',
-        style: RemixIconButtonStyle()
+        style: RemixIconButtonStyler()
             .paddingAll(10)
             .borderRadiusAll(const Radius.circular(8))
             .backgroundColor(const Color(0xFF1F2937))

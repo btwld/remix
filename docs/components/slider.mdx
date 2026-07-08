@@ -46,8 +46,8 @@ class _SliderExampleState extends State<SliderExample> {
     );
   }
 
-  RemixSliderStyle get style {
-    return RemixSliderStyle()
+  RemixSliderStyler get style {
+    return RemixSliderStyler()
         .thumbSize(const Size(24, 24))
         .thumb(
           BoxStyler().shapeCircle().shadow(
@@ -62,7 +62,7 @@ class _SliderExampleState extends State<SliderExample> {
         .trackColor(Colors.grey.shade300)
         .rangeColor(Colors.black)
         .onDisabled(
-          RemixSliderStyle()
+          RemixSliderStyler()
               .trackColor(Colors.grey.shade300)
               .rangeColor(Colors.blueGrey)
               .thumbColor(Colors.white.withValues(alpha: 0.6)),
@@ -99,12 +99,12 @@ class _FortalSliderExampleState extends State<FortalSliderExample> {
         RemixSlider(
           value: _value,
           onChanged: (v) => setState(() => _value = v),
-          style: fortalSliderStyle(variant: FortalSliderVariant.surface),
+          style: fortalSliderStyler(variant: FortalSliderVariant.surface),
         ),
         RemixSlider(
           value: _value,
           onChanged: (v) => setState(() => _value = v),
-          style: fortalSliderStyle(variant: FortalSliderVariant.soft),
+          style: fortalSliderStyler(variant: FortalSliderVariant.soft),
         ),
       ],
     );
@@ -114,7 +114,7 @@ class _FortalSliderExampleState extends State<FortalSliderExample> {
 </CodeGroup>
 
 <Info>
-  See the [fortalSliderStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/slider/fortal_slider_styles.dart) for all available options.
+  See the [fortalSliderStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/slider/fortal_slider_styles.dart) for all available options.
 </Info>
 
 ## Constructor
@@ -133,7 +133,7 @@ const RemixSlider({
   FocusNode? focusNode,
   bool autofocus = false,
   int? snapDivisions,
-  RemixSliderStyle style = const RemixSliderStyle.create(),
+  RemixSliderStyler style = const RemixSliderStyler.create(),
   RemixSliderSpec? styleSpec,
 })
 ```
@@ -171,7 +171,7 @@ Optional. Called when the user is done selecting a new value.
 
 Optional. Called when the user starts dragging the slider.
 
-#### `style` → `RemixSliderStyle`
+#### `style` → `RemixSliderStyler`
 
 Optional. The style configuration for the slider.
 

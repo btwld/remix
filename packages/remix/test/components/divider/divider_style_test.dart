@@ -5,20 +5,20 @@ import 'package:remix/remix.dart';
 import '../../helpers/test_methods.dart';
 
 void main() {
-  group('RemixDividerStyle', () {
+  group('RemixDividerStyler', () {
     group('Constructors', () {
       test('default constructor creates valid instance', () {
-        final style = RemixDividerStyle();
+        final style = RemixDividerStyler();
 
         expect(style, isNotNull);
-        expect(style, isA<RemixDividerStyle>());
+        expect(style, isA<RemixDividerStyler>());
       });
 
       test('create constructor with all parameters', () {
         final container = Prop.maybeMix(BoxStyler());
         final variants = <VariantStyle<RemixDividerSpec>>[];
 
-        final style = RemixDividerStyle.create(
+        final style = RemixDividerStyler.create(
           container: container,
           variants: variants,
         );
@@ -31,7 +31,7 @@ void main() {
       test('constructor with styler parameters', () {
         final containerStyler = BoxStyler();
 
-        final style = RemixDividerStyle(container: containerStyler);
+        final style = RemixDividerStyler(container: containerStyler);
 
         expect(style, isNotNull);
         expect(style.$container, isNotNull);
@@ -41,7 +41,7 @@ void main() {
     group('Style Methods', () {
       styleMethodTest(
         'color',
-        initial: RemixDividerStyle(),
+        initial: RemixDividerStyler(),
         modify: (style) => style.color(Colors.red),
         expect: (style) {
           expect(
@@ -57,7 +57,7 @@ void main() {
 
       styleMethodTest(
         'thickness',
-        initial: RemixDividerStyle(),
+        initial: RemixDividerStyler(),
         modify: (style) => style.thickness(2.0),
         expect: (style) {
           expect(
@@ -78,7 +78,7 @@ void main() {
 
       styleMethodTest(
         'padding',
-        initial: RemixDividerStyle(),
+        initial: RemixDividerStyler(),
         modify: (style) => style.padding(EdgeInsetsGeometryMix.all(16.0)),
         expect: (style) {
           expect(
@@ -94,7 +94,7 @@ void main() {
 
       styleMethodTest(
         'margin',
-        initial: RemixDividerStyle(),
+        initial: RemixDividerStyler(),
         modify: (style) => style.margin(EdgeInsetsGeometryMix.all(8.0)),
         expect: (style) {
           expect(
@@ -108,7 +108,7 @@ void main() {
 
       styleMethodTest(
         'alignment',
-        initial: RemixDividerStyle(),
+        initial: RemixDividerStyler(),
         modify: (style) => style.alignment(Alignment.center),
         expect: (style) {
           expect(
@@ -120,7 +120,7 @@ void main() {
 
       styleMethodTest(
         'decoration',
-        initial: RemixDividerStyle(),
+        initial: RemixDividerStyler(),
         modify: (style) => style.decoration(
           BoxDecorationMix(
             color: Colors.blue,
@@ -146,7 +146,7 @@ void main() {
 
       styleMethodTest(
         'constraints',
-        initial: RemixDividerStyle(),
+        initial: RemixDividerStyler(),
         modify: (style) => style.constraints(
           BoxConstraintsMix(minWidth: 100.0, minHeight: 1.0),
         ),
@@ -169,7 +169,7 @@ void main() {
 
       styleMethodTest(
         'foregroundDecoration',
-        initial: RemixDividerStyle(),
+        initial: RemixDividerStyler(),
         modify: (style) => style.foregroundDecoration(
           BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(color: Colors.black)),
@@ -195,7 +195,7 @@ void main() {
 
       styleMethodTest(
         'transform',
-        initial: RemixDividerStyle(),
+        initial: RemixDividerStyler(),
         modify: (style) =>
             style.transform(Matrix4.identity(), alignment: Alignment.topCenter),
         expect: (style) {
@@ -215,7 +215,7 @@ void main() {
 
       styleMethodTest(
         'wrap',
-        initial: RemixDividerStyle(),
+        initial: RemixDividerStyler(),
         modify: (style) => style.wrap(WidgetModifierConfig.clipOval()),
         expect: (style) {
           expect(style.$modifier, equals(WidgetModifierConfig.clipOval()));
@@ -224,7 +224,7 @@ void main() {
 
       styleMethodTest(
         'variants',
-        initial: RemixDividerStyle(),
+        initial: RemixDividerStyler(),
         modify: (style) => style.variants(<VariantStyle<RemixDividerSpec>>[]),
         expect: (style) {
           expect(style.$variants, equals(<VariantStyle<RemixDividerSpec>>[]));
@@ -233,7 +233,7 @@ void main() {
 
       styleMethodTest(
         'animate',
-        initial: RemixDividerStyle(),
+        initial: RemixDividerStyler(),
         modify: (style) => style.animate(
           AnimationConfig.linear(const Duration(milliseconds: 300)),
         ),
@@ -250,7 +250,7 @@ void main() {
       testWidgets('resolve method returns StyleSpec', (
         WidgetTester tester,
       ) async {
-        final style = RemixDividerStyle();
+        final style = RemixDividerStyler();
 
         await tester.pumpWidget(
           MaterialApp(
@@ -270,7 +270,7 @@ void main() {
       });
 
       test('merge with null returns style equal to original', () {
-        final originalStyle = RemixDividerStyle();
+        final originalStyle = RemixDividerStyler();
 
         final mergedStyle = originalStyle.merge(null);
 
@@ -278,8 +278,8 @@ void main() {
       });
 
       test('merge combines two styles', () {
-        final style1 = RemixDividerStyle().color(Colors.red);
-        final style2 = RemixDividerStyle().thickness(2.0);
+        final style1 = RemixDividerStyler().color(Colors.red);
+        final style2 = RemixDividerStyler().thickness(2.0);
 
         final merged = style1.merge(style2);
 
@@ -291,16 +291,16 @@ void main() {
 
     group('Equality', () {
       test('identical styles are equal', () {
-        final style1 = RemixDividerStyle();
-        final style2 = RemixDividerStyle();
+        final style1 = RemixDividerStyler();
+        final style2 = RemixDividerStyler();
 
         expect(style1, equals(style2));
         expect(style1.hashCode, equals(style2.hashCode));
       });
 
       test('styles with different properties are not equal', () {
-        final style1 = RemixDividerStyle().color(Colors.red);
-        final style2 = RemixDividerStyle().color(Colors.blue);
+        final style1 = RemixDividerStyler().color(Colors.red);
+        final style2 = RemixDividerStyler().color(Colors.blue);
 
         expect(style1, isNot(equals(style2)));
       });
@@ -308,7 +308,7 @@ void main() {
 
     group('Props', () {
       test('props list contains all properties', () {
-        final style = RemixDividerStyle();
+        final style = RemixDividerStyler();
 
         expect(style.props, hasLength(4));
         expect(style.props, contains(style.$container));
@@ -320,12 +320,12 @@ void main() {
 
     group('Chaining', () {
       test('multiple style methods can be chained', () {
-        final style = RemixDividerStyle()
+        final style = RemixDividerStyler()
             .color(Colors.grey)
             .thickness(1.0)
             .margin(EdgeInsetsGeometryMix.symmetric(vertical: 8.0));
 
-        expect(style, isA<RemixDividerStyle>());
+        expect(style, isA<RemixDividerStyler>());
         expect(style.$container, isNotNull);
       });
     });

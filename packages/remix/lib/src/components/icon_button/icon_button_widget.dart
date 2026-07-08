@@ -23,7 +23,7 @@ typedef RemixIconButtonLoadingBuilder =
 /// // Custom styled icon button
 /// RemixIconButton(
 ///   icon: Icons.delete,
-///   style: RemixIconButtonStyle().backgroundColor(Colors.red),
+///   style: RemixIconButtonStyler().backgroundColor(Colors.red),
 ///   onPressed: () => debugPrint('Delete pressed!'),
 /// )
 ///
@@ -55,15 +55,15 @@ class RemixIconButton extends StatelessWidget {
     this.semanticHint,
     this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
-    this.style = const RemixIconButtonStyle.create(),
+    this.style = const RemixIconButtonStyler.create(),
     this.styleSpec,
   });
 
-  final RemixIconButtonStyle style;
+  final RemixIconButtonStyler style;
 
   final RemixIconButtonSpec? styleSpec;
 
-  static final styleFrom = RemixIconButtonStyle.new;
+  static final styleFrom = RemixIconButtonStyler.new;
 
   /// Whether the button is in a loading state.
   ///
@@ -158,7 +158,7 @@ class RemixIconButton extends StatelessWidget {
             // Build spinner (used when loading)
             final spinner = Center(
               child: loadingBuilder == null
-                  ? RemixSpinner(styleSpec: spec.spinner)
+                  ? RemixSpinner(styleSpec: spec.spinner.spec)
                   : StyleSpecBuilder(
                       styleSpec: spec.spinner,
                       builder: loadingBuilder!,

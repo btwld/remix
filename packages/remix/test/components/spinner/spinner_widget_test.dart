@@ -17,7 +17,7 @@ void main() {
       testWidgets('renders spinner with custom style', (tester) async {
         await tester.pumpRemixApp(
           RemixSpinner(
-            style: RemixSpinnerStyle(
+            style: RemixSpinnerStyler(
               size: 32.0,
               indicatorColor: const Color(0xFF0000FF),
             ),
@@ -45,7 +45,7 @@ void main() {
 
     group('Styling', () {
       testWidgets('applies custom size', (tester) async {
-        final customStyle = RemixSpinnerStyle().size(48.0);
+        final customStyle = RemixSpinnerStyler().size(48.0);
 
         await tester.pumpRemixApp(RemixSpinner(style: customStyle));
         await tester.pump();
@@ -54,7 +54,7 @@ void main() {
       });
 
       testWidgets('applies custom indicator color', (tester) async {
-        final customStyle = RemixSpinnerStyle().indicatorColor(
+        final customStyle = RemixSpinnerStyler().indicatorColor(
           const Color(0xFF0000FF),
         );
 
@@ -65,7 +65,7 @@ void main() {
       });
 
       testWidgets('applies custom track color', (tester) async {
-        final customStyle = RemixSpinnerStyle().trackColor(
+        final customStyle = RemixSpinnerStyler().trackColor(
           const Color(0xFFCCCCCC),
         );
 
@@ -76,7 +76,7 @@ void main() {
       });
 
       testWidgets('applies custom stroke width', (tester) async {
-        final customStyle = RemixSpinnerStyle().strokeWidth(3.0);
+        final customStyle = RemixSpinnerStyler().strokeWidth(3.0);
 
         await tester.pumpRemixApp(RemixSpinner(style: customStyle));
         await tester.pump();
@@ -85,7 +85,7 @@ void main() {
       });
 
       testWidgets('applies custom track stroke width', (tester) async {
-        final customStyle = RemixSpinnerStyle().trackStrokeWidth(2.0);
+        final customStyle = RemixSpinnerStyler().trackStrokeWidth(2.0);
 
         await tester.pumpRemixApp(RemixSpinner(style: customStyle));
         await tester.pump();
@@ -94,7 +94,7 @@ void main() {
       });
 
       testWidgets('applies custom duration', (tester) async {
-        final customStyle = RemixSpinnerStyle().duration(
+        final customStyle = RemixSpinnerStyler().duration(
           const Duration(milliseconds: 500),
         );
 
@@ -123,7 +123,7 @@ void main() {
         const customDuration = Duration(milliseconds: 500);
 
         await tester.pumpRemixApp(
-          RemixSpinner(style: RemixSpinnerStyle(duration: customDuration)),
+          RemixSpinner(style: RemixSpinnerStyler(duration: customDuration)),
         );
         await tester.pump();
 
@@ -147,7 +147,7 @@ void main() {
     group('Different Sizes', () {
       testWidgets('renders small spinner', (tester) async {
         await tester.pumpRemixApp(
-          RemixSpinner(style: RemixSpinnerStyle(size: 16.0)),
+          RemixSpinner(style: RemixSpinnerStyler(size: 16.0)),
         );
         await tester.pump();
 
@@ -156,7 +156,7 @@ void main() {
 
       testWidgets('renders medium spinner', (tester) async {
         await tester.pumpRemixApp(
-          RemixSpinner(style: RemixSpinnerStyle(size: 32.0)),
+          RemixSpinner(style: RemixSpinnerStyler(size: 32.0)),
         );
         await tester.pump();
 
@@ -165,7 +165,7 @@ void main() {
 
       testWidgets('renders large spinner', (tester) async {
         await tester.pumpRemixApp(
-          RemixSpinner(style: RemixSpinnerStyle(size: 64.0)),
+          RemixSpinner(style: RemixSpinnerStyler(size: 64.0)),
         );
         await tester.pump();
 
@@ -175,7 +175,7 @@ void main() {
 
     group('Advanced Styling', () {
       testWidgets('applies multiple style methods', (tester) async {
-        final customStyle = RemixSpinnerStyle()
+        final customStyle = RemixSpinnerStyler()
             .size(48.0)
             .strokeWidth(3.0)
             .indicatorColor(const Color(0xFF0000FF))
@@ -190,7 +190,7 @@ void main() {
       });
 
       testWidgets('applies animation config', (tester) async {
-        final customStyle = RemixSpinnerStyle().animate(
+        final customStyle = RemixSpinnerStyler().animate(
           AnimationConfig.linear(const Duration(milliseconds: 200)),
         );
 
@@ -203,7 +203,7 @@ void main() {
 
     group('Widget Modifiers', () {
       testWidgets('applies widget modifiers from style', (tester) async {
-        final customStyle = RemixSpinnerStyle().wrap(
+        final customStyle = RemixSpinnerStyler().wrap(
           WidgetModifierConfig.clipOval(),
         );
 
@@ -231,9 +231,7 @@ void main() {
           size: 32.0,
           indicatorColor: Color(0xFF0000FF),
         );
-        const styleSpec = StyleSpec(spec: spec);
-
-        await tester.pumpRemixApp(const RemixSpinner(styleSpec: styleSpec));
+        await tester.pumpRemixApp(const RemixSpinner(styleSpec: spec));
         await tester.pump();
 
         expect(find.byType(RemixSpinner), findsOneWidget);
@@ -243,7 +241,7 @@ void main() {
     group('Edge Cases', () {
       testWidgets('handles zero size', (tester) async {
         await tester.pumpRemixApp(
-          RemixSpinner(style: RemixSpinnerStyle(size: 0.0)),
+          RemixSpinner(style: RemixSpinnerStyler(size: 0.0)),
         );
         await tester.pump();
 
@@ -252,7 +250,7 @@ void main() {
 
       testWidgets('handles very large size', (tester) async {
         await tester.pumpRemixApp(
-          RemixSpinner(style: RemixSpinnerStyle(size: 200.0)),
+          RemixSpinner(style: RemixSpinnerStyler(size: 200.0)),
         );
         await tester.pump();
 
@@ -261,7 +259,7 @@ void main() {
 
       testWidgets('handles zero stroke width', (tester) async {
         await tester.pumpRemixApp(
-          RemixSpinner(style: RemixSpinnerStyle(strokeWidth: 0.0)),
+          RemixSpinner(style: RemixSpinnerStyler(strokeWidth: 0.0)),
         );
         await tester.pump();
 
@@ -271,7 +269,7 @@ void main() {
       testWidgets('handles very long duration', (tester) async {
         await tester.pumpRemixApp(
           RemixSpinner(
-            style: RemixSpinnerStyle(duration: const Duration(seconds: 10)),
+            style: RemixSpinnerStyler(duration: const Duration(seconds: 10)),
           ),
         );
         await tester.pump();
@@ -282,7 +280,7 @@ void main() {
       testWidgets('handles very short duration', (tester) async {
         await tester.pumpRemixApp(
           RemixSpinner(
-            style: RemixSpinnerStyle(
+            style: RemixSpinnerStyler(
               duration: const Duration(milliseconds: 100),
             ),
           ),
@@ -311,7 +309,7 @@ void main() {
         const newDuration = Duration(milliseconds: 500);
 
         await tester.pumpRemixApp(
-          RemixSpinner(style: RemixSpinnerStyle(duration: initialDuration)),
+          RemixSpinner(style: RemixSpinnerStyler(duration: initialDuration)),
         );
         await tester.pump();
 
@@ -319,7 +317,7 @@ void main() {
 
         // Update duration
         await tester.pumpRemixApp(
-          RemixSpinner(style: RemixSpinnerStyle(duration: newDuration)),
+          RemixSpinner(style: RemixSpinnerStyler(duration: newDuration)),
         );
         await tester.pump();
 

@@ -5,16 +5,16 @@ import 'package:remix/remix.dart';
 import '../../helpers/test_methods.dart';
 
 void main() {
-  group('RemixAvatarStyle', () {
+  group('RemixAvatarStyler', () {
     group('Constructors', () {
       test('default constructor creates valid instance', () {
-        const style = RemixAvatarStyle.create();
+        const style = RemixAvatarStyler.create();
         expect(style, isNotNull);
-        expect(style, isA<RemixAvatarStyle>());
+        expect(style, isA<RemixAvatarStyler>());
       });
 
       test('constructor with styler parameters', () {
-        final style = RemixAvatarStyle(
+        final style = RemixAvatarStyler(
           container: BoxStyler(
             decoration: BoxDecorationMix(color: Colors.blue),
           ),
@@ -23,14 +23,14 @@ void main() {
         );
 
         expect(style, isNotNull);
-        expect(style, isA<RemixAvatarStyle>());
+        expect(style, isA<RemixAvatarStyler>());
       });
     });
 
     group('Style Methods', () {
       styleMethodTest(
         'square method sets equal width and height',
-        initial: RemixAvatarStyle(),
+        initial: RemixAvatarStyler(),
         modify: (style) => style.square(50.0),
         expect: (style) {
           expect(
@@ -53,7 +53,7 @@ void main() {
 
       styleMethodTest(
         'sizeWH method sets width and height',
-        initial: RemixAvatarStyle(),
+        initial: RemixAvatarStyler(),
         modify: (style) => style.sizeWH(100.0, 80.0),
         expect: (style) {
           expect(
@@ -76,7 +76,7 @@ void main() {
 
       styleMethodTest(
         'color method sets background color',
-        initial: RemixAvatarStyle(),
+        initial: RemixAvatarStyler(),
         modify: (style) => style.color(Colors.green),
         expect: (style) {
           expect(
@@ -92,7 +92,7 @@ void main() {
 
       styleMethodTest(
         'borderRadius method sets border radius',
-        initial: RemixAvatarStyle(),
+        initial: RemixAvatarStyler(),
         modify: (style) => style.borderRadius(
           BorderRadiusGeometryMix.all(Radius.circular(10)),
         ),
@@ -115,7 +115,7 @@ void main() {
 
       styleMethodTest(
         'backgroundColor method sets background color',
-        initial: RemixAvatarStyle(),
+        initial: RemixAvatarStyler(),
         modify: (style) => style.backgroundColor(Colors.green),
         expect: (style) {
           expect(
@@ -131,7 +131,7 @@ void main() {
 
       styleMethodTest(
         'foregroundColor method sets label and icon color',
-        initial: RemixAvatarStyle(),
+        initial: RemixAvatarStyler(),
         modify: (style) => style.foregroundColor(Colors.purple),
         expect: (style) {
           expect(
@@ -151,7 +151,7 @@ void main() {
 
       styleMethodTest(
         'labelColor method sets label color',
-        initial: RemixAvatarStyle(),
+        initial: RemixAvatarStyler(),
         modify: (style) => style.labelColor(Colors.purple),
         expect: (style) {
           expect(
@@ -167,7 +167,7 @@ void main() {
 
       styleMethodTest(
         'iconColor method sets icon color',
-        initial: RemixAvatarStyle(),
+        initial: RemixAvatarStyler(),
         modify: (style) => style.iconColor(Colors.orange),
         expect: (style) {
           expect(
@@ -179,7 +179,7 @@ void main() {
 
       styleMethodTest(
         'padding method sets padding',
-        initial: RemixAvatarStyle(),
+        initial: RemixAvatarStyler(),
         modify: (style) => style.padding(EdgeInsetsGeometryMix.all(8.0)),
         expect: (style) {
           expect(
@@ -193,7 +193,7 @@ void main() {
 
       styleMethodTest(
         'margin method sets margin',
-        initial: RemixAvatarStyle(),
+        initial: RemixAvatarStyler(),
         modify: (style) => style.margin(EdgeInsetsGeometryMix.all(4.0)),
         expect: (style) {
           expect(
@@ -207,7 +207,7 @@ void main() {
 
       styleMethodTest(
         'alignment method sets container alignment',
-        initial: RemixAvatarStyle(),
+        initial: RemixAvatarStyler(),
         modify: (style) => style.alignment(Alignment.topLeft),
         expect: (style) {
           expect(
@@ -219,7 +219,7 @@ void main() {
 
       styleMethodTest(
         'decoration method sets decoration',
-        initial: RemixAvatarStyle(),
+        initial: RemixAvatarStyler(),
         modify: (style) =>
             style.decoration(BoxDecorationMix(color: Colors.yellow)),
         expect: (style) {
@@ -236,7 +236,7 @@ void main() {
 
       styleMethodTest(
         'constraints method sets constraints',
-        initial: RemixAvatarStyle(),
+        initial: RemixAvatarStyler(),
         modify: (style) => style.constraints(
           BoxConstraintsMix(
             minWidth: 50,
@@ -266,7 +266,7 @@ void main() {
 
       styleMethodTest(
         'animate method sets animation',
-        initial: RemixAvatarStyle(),
+        initial: RemixAvatarStyler(),
         modify: (style) =>
             style.animate(AnimationConfig.linear(Duration(milliseconds: 300))),
         expect: (style) {
@@ -279,7 +279,7 @@ void main() {
 
       styleMethodTest(
         'label method sets text styler',
-        initial: RemixAvatarStyle(),
+        initial: RemixAvatarStyler(),
         modify: (style) =>
             style.label(TextStyler(style: TextStyleMix(fontSize: 16))),
         expect: (style) {
@@ -294,7 +294,7 @@ void main() {
 
       styleMethodTest(
         'icon method sets icon styler',
-        initial: RemixAvatarStyle(),
+        initial: RemixAvatarStyler(),
         modify: (style) => style.icon(IconStyler(size: 24)),
         expect: (style) {
           expect(style.$icon, equals(Prop.maybeMix(IconStyler(size: 24))));
@@ -303,7 +303,7 @@ void main() {
 
       styleMethodTest(
         'size method sets width and height',
-        initial: RemixAvatarStyle(),
+        initial: RemixAvatarStyler(),
         modify: (style) => style.size(60.0, 40.0),
         expect: (style) {
           expect(
@@ -326,7 +326,7 @@ void main() {
 
       styleMethodTest(
         'variants method sets variants',
-        initial: RemixAvatarStyle(),
+        initial: RemixAvatarStyler(),
         modify: (style) => style.variants([]),
         expect: (style) {
           expect(style.$variants, equals([]));
@@ -335,7 +335,7 @@ void main() {
 
       styleMethodTest(
         'wrap method sets modifier',
-        initial: RemixAvatarStyle(),
+        initial: RemixAvatarStyler(),
         modify: (style) => style.wrap(WidgetModifierConfig.align()),
         expect: (style) {
           expect(style.$modifier, equals(WidgetModifierConfig.align()));
@@ -344,7 +344,7 @@ void main() {
 
       styleMethodTest(
         'foregroundDecoration method sets foreground decoration',
-        initial: RemixAvatarStyle(),
+        initial: RemixAvatarStyler(),
         modify: (style) =>
             style.foregroundDecoration(BoxDecorationMix(color: Colors.cyan)),
         expect: (style) {
@@ -363,7 +363,7 @@ void main() {
 
       styleMethodTest(
         'transform method sets transform',
-        initial: RemixAvatarStyle(),
+        initial: RemixAvatarStyler(),
         modify: (style) => style.transform(Matrix4.identity()),
         expect: (style) {
           expect(
@@ -383,7 +383,7 @@ void main() {
 
     group('Style Integration', () {
       test('style can be used to create RemixAvatar widget', () {
-        final style = RemixAvatarStyle().square(50.0);
+        final style = RemixAvatarStyler().square(50.0);
         final avatar = RemixAvatar(style: style, label: 'Test User');
 
         expect(avatar, isA<RemixAvatar>());
@@ -392,18 +392,18 @@ void main() {
       });
 
       test('style methods can be chained', () {
-        final style = RemixAvatarStyle()
+        final style = RemixAvatarStyler()
             .square(100.0)
             .foregroundColor(Colors.white)
             .iconColor(Colors.yellow);
 
-        expect(style, isA<RemixAvatarStyle>());
+        expect(style, isA<RemixAvatarStyler>());
       });
     });
 
     group('Core Methods', () {
       testWidgets('resolve method returns StyleSpec', (tester) async {
-        final style = RemixAvatarStyle();
+        final style = RemixAvatarStyler();
         await tester.pumpWidget(
           MaterialApp(
             home: Builder(
@@ -418,39 +418,39 @@ void main() {
       });
 
       test('merge with null returns style equal to original', () {
-        final originalStyle = RemixAvatarStyle();
+        final originalStyle = RemixAvatarStyler();
         final mergedStyle = originalStyle.merge(null);
         expect(mergedStyle, equals(originalStyle));
       });
 
       test('merge with other style returns new instance', () {
-        final style1 = RemixAvatarStyle();
-        final style2 = RemixAvatarStyle().square(50.0);
+        final style1 = RemixAvatarStyler();
+        final style2 = RemixAvatarStyler().square(50.0);
         final mergedStyle = style1.merge(style2);
 
         expect(mergedStyle, isNot(same(style1)));
         expect(mergedStyle, isNot(same(style2)));
-        expect(mergedStyle, isA<RemixAvatarStyle>());
+        expect(mergedStyle, isA<RemixAvatarStyler>());
       });
     });
 
     group('Equality', () {
       test('identical styles are equal', () {
-        const style1 = RemixAvatarStyle.create();
-        const style2 = RemixAvatarStyle.create();
+        const style1 = RemixAvatarStyler.create();
+        const style2 = RemixAvatarStyler.create();
         expect(style1, equals(style2));
         expect(style1.hashCode, equals(style2.hashCode));
       });
 
       test('styles with different properties are not equal', () {
-        final style1 = RemixAvatarStyle().square(50.0);
-        final style2 = RemixAvatarStyle().square(100.0);
+        final style1 = RemixAvatarStyler().square(50.0);
+        final style2 = RemixAvatarStyler().square(100.0);
         expect(style1, isNot(equals(style2)));
       });
 
       test('styles with same properties are equal', () {
-        final style1 = RemixAvatarStyle().square(50.0);
-        final style2 = RemixAvatarStyle().square(50.0);
+        final style1 = RemixAvatarStyler().square(50.0);
+        final style2 = RemixAvatarStyler().square(50.0);
         expect(style1, equals(style2));
         expect(style1.hashCode, equals(style2.hashCode));
       });

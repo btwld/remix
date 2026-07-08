@@ -24,7 +24,7 @@ typedef RemixAvatarIconBuilder =
 ///   label: 'User',
 /// )
 /// ```
-class RemixAvatar extends StyleWidget<RemixAvatarSpec> {
+class RemixAvatar extends StatelessWidget {
   /// Creates a Remix avatar with optional text [label], custom [child], and
   /// background/foreground imagery. When textual content is supplied, it is
   /// styled using the avatar text spec so typography stays consistent.
@@ -39,11 +39,11 @@ class RemixAvatar extends StyleWidget<RemixAvatarSpec> {
     this.labelBuilder,
     this.icon,
     this.iconBuilder,
-    super.style = const RemixAvatarStyle.create(),
-    super.styleSpec,
+    this.style = const RemixAvatarStyler.create(),
+    this.styleSpec,
   });
 
-  static final styleFrom = RemixAvatarStyle.new;
+  static final styleFrom = RemixAvatarStyler.new;
 
   /// The background image to display in the avatar.
   final ImageProvider? backgroundImage;
@@ -75,55 +75,67 @@ class RemixAvatar extends StyleWidget<RemixAvatarSpec> {
   /// rendering while preserving configured icon styling.
   final RemixAvatarIconBuilder? iconBuilder;
 
+  /// The style configuration for the avatar.
+  final RemixAvatarStyler style;
+
+  /// Optional raw style spec that bypasses fluent style resolution.
+  final RemixAvatarSpec? styleSpec;
+
   @override
-  Widget build(BuildContext context, RemixAvatarSpec spec) {
-    Widget? content = child;
-    final resolvedLabel = label ?? '';
+  Widget build(BuildContext context) {
+    return RemixStyleSpecBuilder<RemixAvatarSpec>(
+      style: style,
+      styleSpec: styleSpec,
+      builder: (context, spec) {
+        Widget? content = child;
+        final resolvedLabel = label ?? '';
 
-    if (content == null) {
-      if (labelBuilder != null || label != null) {
-        content = labelBuilder == null
-            ? StyledText(resolvedLabel, styleSpec: spec.label)
-            : StyleSpecBuilder<TextSpec>(
-                styleSpec: spec.label,
-                builder: (context, textSpec) =>
-                    labelBuilder!(context, textSpec, resolvedLabel),
-              );
-      } else if (iconBuilder != null || icon != null) {
-        content = iconBuilder == null
-            ? StyledIcon(icon: icon, styleSpec: spec.icon)
-            : StyleSpecBuilder<IconSpec>(
-                styleSpec: spec.icon,
-                builder: (context, iconSpec) =>
-                    iconBuilder!(context, iconSpec, icon),
-              );
-      }
-    }
+        if (content == null) {
+          if (labelBuilder != null || label != null) {
+            content = labelBuilder == null
+                ? StyledText(resolvedLabel, styleSpec: spec.label)
+                : StyleSpecBuilder<TextSpec>(
+                    styleSpec: spec.label,
+                    builder: (context, textSpec) =>
+                        labelBuilder!(context, textSpec, resolvedLabel),
+                  );
+          } else if (iconBuilder != null || icon != null) {
+            content = iconBuilder == null
+                ? StyledIcon(icon: icon, styleSpec: spec.icon)
+                : StyleSpecBuilder<IconSpec>(
+                    styleSpec: spec.icon,
+                    builder: (context, iconSpec) =>
+                        iconBuilder!(context, iconSpec, icon),
+                  );
+          }
+        }
 
-    return Box(
-      styleSpec: spec.container,
-      child: Container(
-        alignment: .center,
-        decoration: backgroundImage != null
-            ? BoxDecoration(
-                image: DecorationImage(
-                  image: backgroundImage!,
-                  onError: onBackgroundImageError,
-                  fit: .cover,
-                ),
-              )
-            : null,
-        foregroundDecoration: foregroundImage != null
-            ? BoxDecoration(
-                image: DecorationImage(
-                  image: foregroundImage!,
-                  onError: onForegroundImageError,
-                  fit: .cover,
-                ),
-              )
-            : null,
-        child: content,
-      ),
+        return Box(
+          styleSpec: spec.container,
+          child: Container(
+            alignment: .center,
+            decoration: backgroundImage != null
+                ? BoxDecoration(
+                    image: DecorationImage(
+                      image: backgroundImage!,
+                      onError: onBackgroundImageError,
+                      fit: .cover,
+                    ),
+                  )
+                : null,
+            foregroundDecoration: foregroundImage != null
+                ? BoxDecoration(
+                    image: DecorationImage(
+                      image: foregroundImage!,
+                      onError: onForegroundImageError,
+                      fit: .cover,
+                    ),
+                  )
+                : null,
+            child: content,
+          ),
+        );
+      },
     );
   }
 }

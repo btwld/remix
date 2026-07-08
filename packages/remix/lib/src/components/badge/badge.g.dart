@@ -89,7 +89,7 @@ typedef _$RemixBadgeSpecMethods = _$RemixBadgeSpec; // ignore: unused_element
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Creates a Fortal-themed [RemixBadgeStyle].
+/// Creates a Fortal-themed [RemixBadgeStyler].
 class FortalBadge extends StatelessWidget {
   const FortalBadge({
     super.key,
@@ -112,7 +112,7 @@ class FortalBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return fortalBadgeStyle(variant: this.variant, size: this.size).call(
+    return fortalBadgeStyler(variant: this.variant, size: this.size).call(
       key: this.key,
       label: this.label,
       child: this.child,
@@ -125,44 +125,44 @@ class FortalBadge extends StatelessWidget {
 // StylerGenerator
 // **************************************************************************
 
-mixin _$RemixBadgeStyleMixin on Style<RemixBadgeSpec>, Diagnosticable {
+mixin _$RemixBadgeStylerMixin on Style<RemixBadgeSpec>, Diagnosticable {
   Prop<StyleSpec<BoxSpec>>? get $container;
   Prop<StyleSpec<TextSpec>>? get $label;
 
   /// Sets the container.
-  RemixBadgeStyle container(BoxStyler value) {
-    return merge(RemixBadgeStyle(container: value));
+  RemixBadgeStyler container(BoxStyler value) {
+    return merge(RemixBadgeStyler(container: value));
   }
 
   /// Sets the label.
-  RemixBadgeStyle label(TextStyler value) {
-    return merge(RemixBadgeStyle(label: value));
+  RemixBadgeStyler label(TextStyler value) {
+    return merge(RemixBadgeStyler(label: value));
   }
 
   /// Sets the animation configuration.
-  RemixBadgeStyle animate(AnimationConfig value) {
-    return merge(RemixBadgeStyle(animation: value));
+  RemixBadgeStyler animate(AnimationConfig value) {
+    return merge(RemixBadgeStyler(animation: value));
   }
 
   /// Sets the style variants.
-  RemixBadgeStyle variants(List<VariantStyle<RemixBadgeSpec>> value) {
-    return merge(RemixBadgeStyle(variants: value));
+  RemixBadgeStyler variants(List<VariantStyle<RemixBadgeSpec>> value) {
+    return merge(RemixBadgeStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
-  RemixBadgeStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixBadgeStyle(modifier: value));
+  RemixBadgeStyler wrap(WidgetModifierConfig value) {
+    return merge(RemixBadgeStyler(modifier: value));
   }
 
   /// Sets the widget modifier.
-  RemixBadgeStyle modifier(WidgetModifierConfig value) {
-    return merge(RemixBadgeStyle(modifier: value));
+  RemixBadgeStyler modifier(WidgetModifierConfig value) {
+    return merge(RemixBadgeStyler(modifier: value));
   }
 
-  /// Merges with another [RemixBadgeStyle].
+  /// Merges with another [RemixBadgeStyler].
   @override
-  RemixBadgeStyle merge(RemixBadgeStyle? other) {
-    return RemixBadgeStyle.create(
+  RemixBadgeStyler merge(RemixBadgeStyler? other) {
+    return RemixBadgeStyler.create(
       container: MixOps.merge($container, other?.$container),
       label: MixOps.merge($label, other?.$label),
       variants: MixOps.mergeVariants($variants, other?.$variants),

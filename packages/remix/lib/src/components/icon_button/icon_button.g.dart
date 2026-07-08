@@ -95,7 +95,7 @@ typedef _$RemixIconButtonSpecMethods = _$RemixIconButtonSpec; // ignore: unused_
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Creates a Fortal-themed [RemixIconButtonStyle].
+/// Creates a Fortal-themed [RemixIconButtonStyler].
 class FortalIconButton extends StatelessWidget {
   const FortalIconButton({
     super.key,
@@ -127,7 +127,7 @@ class FortalIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return fortalIconButtonStyle(variant: this.variant, size: this.size).call(
+    return fortalIconButtonStyler(variant: this.variant, size: this.size).call(
       icon: this.icon,
       onPressed: this.onPressed,
       loading: this.loading,
@@ -142,51 +142,53 @@ class FortalIconButton extends StatelessWidget {
 // StylerGenerator
 // **************************************************************************
 
-mixin _$RemixIconButtonStyleMixin
+mixin _$RemixIconButtonStylerMixin
     on Style<RemixIconButtonSpec>, Diagnosticable {
   Prop<StyleSpec<BoxSpec>>? get $container;
   Prop<StyleSpec<IconSpec>>? get $icon;
   Prop<StyleSpec<RemixSpinnerSpec>>? get $spinner;
 
   /// Sets the container.
-  RemixIconButtonStyle container(BoxStyler value) {
-    return merge(RemixIconButtonStyle(container: value));
+  RemixIconButtonStyler container(BoxStyler value) {
+    return merge(RemixIconButtonStyler(container: value));
   }
 
   /// Sets the icon.
-  RemixIconButtonStyle icon(IconStyler value) {
-    return merge(RemixIconButtonStyle(icon: value));
+  RemixIconButtonStyler icon(IconStyler value) {
+    return merge(RemixIconButtonStyler(icon: value));
   }
 
   /// Sets the spinner.
-  RemixIconButtonStyle spinner(RemixSpinnerStyle value) {
-    return merge(RemixIconButtonStyle(spinner: value));
+  RemixIconButtonStyler spinner(RemixSpinnerStyler value) {
+    return merge(RemixIconButtonStyler(spinner: value));
   }
 
   /// Sets the animation configuration.
-  RemixIconButtonStyle animate(AnimationConfig value) {
-    return merge(RemixIconButtonStyle(animation: value));
+  RemixIconButtonStyler animate(AnimationConfig value) {
+    return merge(RemixIconButtonStyler(animation: value));
   }
 
   /// Sets the style variants.
-  RemixIconButtonStyle variants(List<VariantStyle<RemixIconButtonSpec>> value) {
-    return merge(RemixIconButtonStyle(variants: value));
+  RemixIconButtonStyler variants(
+    List<VariantStyle<RemixIconButtonSpec>> value,
+  ) {
+    return merge(RemixIconButtonStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
-  RemixIconButtonStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixIconButtonStyle(modifier: value));
+  RemixIconButtonStyler wrap(WidgetModifierConfig value) {
+    return merge(RemixIconButtonStyler(modifier: value));
   }
 
   /// Sets the widget modifier.
-  RemixIconButtonStyle modifier(WidgetModifierConfig value) {
-    return merge(RemixIconButtonStyle(modifier: value));
+  RemixIconButtonStyler modifier(WidgetModifierConfig value) {
+    return merge(RemixIconButtonStyler(modifier: value));
   }
 
-  /// Merges with another [RemixIconButtonStyle].
+  /// Merges with another [RemixIconButtonStyler].
   @override
-  RemixIconButtonStyle merge(RemixIconButtonStyle? other) {
-    return RemixIconButtonStyle.create(
+  RemixIconButtonStyler merge(RemixIconButtonStyler? other) {
+    return RemixIconButtonStyler.create(
       container: MixOps.merge($container, other?.$container),
       icon: MixOps.merge($icon, other?.$icon),
       spinner: MixOps.merge($spinner, other?.$spinner),

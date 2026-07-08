@@ -39,21 +39,21 @@ class DialogExample extends StatelessWidget {
                 RemixButton(
                   label: 'Cancel',
                   onPressed: () => Navigator.pop(context),
-                  style: fortalButtonStyle(
+                  style: fortalButtonStyler(
                     variant: FortalButtonVariant.ghost,
                   ),
                 ),
                 RemixButton(
                   label: 'Revoke access',
                   onPressed: () => Navigator.pop(context),
-                  style: fortalButtonStyle(),
+                  style: fortalButtonStyler(),
                 ),
               ],
             ),
           ),
         );
       },
-      style: fortalButtonStyle(),
+      style: fortalButtonStyler(),
     );
   }
 }
@@ -77,17 +77,17 @@ class FortalDialogExample extends StatelessWidget {
     return RemixDialog(
       title: 'Confirm changes',
       description: 'Save these settings before leaving?',
-      style: fortalDialogStyle(),
+      style: fortalDialogStyler(),
       actions: [
         RemixButton(
           label: 'Cancel',
           onPressed: () => Navigator.pop(context),
-          style: fortalButtonStyle(variant: FortalButtonVariant.ghost),
+          style: fortalButtonStyler(variant: FortalButtonVariant.ghost),
         ),
         RemixButton(
           label: 'Save',
           onPressed: () => Navigator.pop(context),
-          style: fortalButtonStyle(),
+          style: fortalButtonStyler(),
         ),
       ],
     );
@@ -97,7 +97,7 @@ class FortalDialogExample extends StatelessWidget {
 </CodeGroup>
 
 <Info>
-  See the [fortalDialogStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/dialog/fortal_dialog_styles.dart) for all available options.
+  See the [fortalDialogStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/dialog/fortal_dialog_styles.dart) for all available options.
 </Info>
 
 ## Show function
@@ -131,7 +131,7 @@ const RemixDialog({
   List<Widget>? actions,
   bool modal = true,
   String? semanticLabel,
-  RemixDialogStyle style = const RemixDialogStyle.create(),
+  RemixDialogStyler style = const RemixDialogStyler.create(),
 })
 ```
 </CodeGroup>
@@ -163,7 +163,7 @@ Optional. Whether the dialog blocks interaction with background content.
 
 Optional. Accessibility label for the dialog. Defaults to the title when omitted.
 
-#### `style` → `RemixDialogStyle`
+#### `style` → `RemixDialogStyler`
 
 Optional. The style configuration for the dialog container, title, description, and actions.
 

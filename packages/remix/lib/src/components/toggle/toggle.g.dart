@@ -138,7 +138,7 @@ class FortalToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return fortalToggleStyle(variant: this.variant, size: this.size).call(
+    return fortalToggleStyler(variant: this.variant, size: this.size).call(
       selected: this.selected,
       onChanged: this.onChanged,
       enabled: this.enabled,
@@ -157,50 +157,50 @@ class FortalToggle extends StatelessWidget {
 // StylerGenerator
 // **************************************************************************
 
-mixin _$RemixToggleStyleMixin on Style<RemixToggleSpec>, Diagnosticable {
+mixin _$RemixToggleStylerMixin on Style<RemixToggleSpec>, Diagnosticable {
   Prop<StyleSpec<FlexBoxSpec>>? get $container;
   Prop<StyleSpec<TextSpec>>? get $label;
   Prop<StyleSpec<IconSpec>>? get $icon;
 
   /// Sets the container.
-  RemixToggleStyle container(FlexBoxStyler value) {
-    return merge(RemixToggleStyle(container: value));
+  RemixToggleStyler container(FlexBoxStyler value) {
+    return merge(RemixToggleStyler(container: value));
   }
 
   /// Sets the label.
-  RemixToggleStyle label(TextStyler value) {
-    return merge(RemixToggleStyle(label: value));
+  RemixToggleStyler label(TextStyler value) {
+    return merge(RemixToggleStyler(label: value));
   }
 
   /// Sets the icon.
-  RemixToggleStyle icon(IconStyler value) {
-    return merge(RemixToggleStyle(icon: value));
+  RemixToggleStyler icon(IconStyler value) {
+    return merge(RemixToggleStyler(icon: value));
   }
 
   /// Sets the animation configuration.
-  RemixToggleStyle animate(AnimationConfig value) {
-    return merge(RemixToggleStyle(animation: value));
+  RemixToggleStyler animate(AnimationConfig value) {
+    return merge(RemixToggleStyler(animation: value));
   }
 
   /// Sets the style variants.
-  RemixToggleStyle variants(List<VariantStyle<RemixToggleSpec>> value) {
-    return merge(RemixToggleStyle(variants: value));
+  RemixToggleStyler variants(List<VariantStyle<RemixToggleSpec>> value) {
+    return merge(RemixToggleStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
-  RemixToggleStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixToggleStyle(modifier: value));
+  RemixToggleStyler wrap(WidgetModifierConfig value) {
+    return merge(RemixToggleStyler(modifier: value));
   }
 
   /// Sets the widget modifier.
-  RemixToggleStyle modifier(WidgetModifierConfig value) {
-    return merge(RemixToggleStyle(modifier: value));
+  RemixToggleStyler modifier(WidgetModifierConfig value) {
+    return merge(RemixToggleStyler(modifier: value));
   }
 
-  /// Merges with another [RemixToggleStyle].
+  /// Merges with another [RemixToggleStyler].
   @override
-  RemixToggleStyle merge(RemixToggleStyle? other) {
-    return RemixToggleStyle.create(
+  RemixToggleStyler merge(RemixToggleStyler? other) {
+    return RemixToggleStyler.create(
       container: MixOps.merge($container, other?.$container),
       label: MixOps.merge($label, other?.$label),
       icon: MixOps.merge($icon, other?.$icon),

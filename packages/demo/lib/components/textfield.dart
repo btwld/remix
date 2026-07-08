@@ -44,7 +44,7 @@ Widget buildTextFieldUseCase(BuildContext context) {
               label: 'Enabled',
               initialValue: true,
             ),
-            style: fortalTextFieldStyle(
+            style: fortalTextFieldStyler(
               variant: context.knobs.object.dropdown(
                 label: 'variant',
                 options: FortalTextFieldVariant.values,

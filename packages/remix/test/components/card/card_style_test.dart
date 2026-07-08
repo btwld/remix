@@ -5,37 +5,37 @@ import 'package:remix/remix.dart';
 import '../../helpers/test_methods.dart';
 
 void main() {
-  group('RemixCardStyle', () {
+  group('RemixCardStyler', () {
     group('Constructors', () {
       test('default constructor creates valid instance', () {
-        const style = RemixCardStyle.create();
+        const style = RemixCardStyler.create();
         expect(style, isNotNull);
-        expect(style, isA<RemixCardStyle>());
+        expect(style, isA<RemixCardStyler>());
       });
 
       test('create constructor with all parameters', () {
         final container = Prop.maybeMix(BoxStyler());
 
-        final style = RemixCardStyle.create(container: container);
+        final style = RemixCardStyler.create(container: container);
 
         expect(style, isNotNull);
-        expect(style, isA<RemixCardStyle>());
+        expect(style, isA<RemixCardStyler>());
       });
 
       test('constructor with styler parameters', () {
-        final style = RemixCardStyle(
+        final style = RemixCardStyler(
           container: BoxStyler(padding: EdgeInsetsGeometryMix.all(16.0)),
         );
 
         expect(style, isNotNull);
-        expect(style, isA<RemixCardStyle>());
+        expect(style, isA<RemixCardStyler>());
       });
     });
 
     group('Style Methods', () {
       styleMethodTest(
         'padding sets container padding',
-        initial: RemixCardStyle(),
+        initial: RemixCardStyler(),
         modify: (style) => style.padding(EdgeInsetsGeometryMix.all(20.0)),
         expect: (style) {
           expect(
@@ -51,7 +51,7 @@ void main() {
 
       styleMethodTest(
         'color sets container background color',
-        initial: RemixCardStyle(),
+        initial: RemixCardStyler(),
         modify: (style) => style.color(Colors.blue),
         expect: (style) {
           expect(
@@ -67,7 +67,7 @@ void main() {
 
       styleMethodTest(
         'backgroundColor sets container background color',
-        initial: RemixCardStyle(),
+        initial: RemixCardStyler(),
         modify: (style) => style.backgroundColor(Colors.blue),
         expect: (style) {
           expect(
@@ -83,7 +83,7 @@ void main() {
 
       styleMethodTest(
         'borderRadius sets container border radius',
-        initial: RemixCardStyle(),
+        initial: RemixCardStyler(),
         modify: (style) =>
             style.borderRadius(BorderRadiusGeometryMix.circular(12.0)),
         expect: (style) {
@@ -104,7 +104,7 @@ void main() {
 
       styleMethodTest(
         'margin sets container margin',
-        initial: RemixCardStyle(),
+        initial: RemixCardStyler(),
         modify: (style) => style.margin(EdgeInsetsGeometryMix.all(8.0)),
         expect: (style) {
           expect(
@@ -118,7 +118,7 @@ void main() {
 
       styleMethodTest(
         'alignment sets container alignment',
-        initial: RemixCardStyle(),
+        initial: RemixCardStyler(),
         modify: (style) => style.alignment(Alignment.centerLeft),
         expect: (style) {
           expect(
@@ -130,7 +130,7 @@ void main() {
 
       styleMethodTest(
         'decoration sets container decoration',
-        initial: RemixCardStyle(),
+        initial: RemixCardStyler(),
         modify: (style) => style.decoration(
           BoxDecorationMix(
             color: Colors.purple,
@@ -156,7 +156,7 @@ void main() {
 
       styleMethodTest(
         'variants sets variant styles',
-        initial: RemixCardStyle(),
+        initial: RemixCardStyler(),
         modify: (style) => style.variants([]),
         expect: (style) {
           expect(style.$variants, equals([]));
@@ -165,7 +165,7 @@ void main() {
 
       styleMethodTest(
         'wrap sets widget modifier config',
-        initial: RemixCardStyle(),
+        initial: RemixCardStyler(),
         modify: (style) => style.wrap(WidgetModifierConfig()),
         expect: (style) {
           expect(style.$modifier, equals(WidgetModifierConfig()));
@@ -174,7 +174,7 @@ void main() {
 
       styleMethodTest(
         'animate sets animation config',
-        initial: RemixCardStyle(),
+        initial: RemixCardStyler(),
         modify: (style) =>
             style.animate(AnimationConfig.linear(Duration(milliseconds: 300))),
         expect: (style) {
@@ -187,7 +187,7 @@ void main() {
 
       styleMethodTest(
         'constraints sets container constraints',
-        initial: RemixCardStyle(),
+        initial: RemixCardStyler(),
         modify: (style) => style.constraints(
           BoxConstraintsMix(minWidth: 200.0, minHeight: 100.0),
         ),
@@ -210,7 +210,7 @@ void main() {
 
       styleMethodTest(
         'foregroundDecoration sets foreground decoration',
-        initial: RemixCardStyle(),
+        initial: RemixCardStyler(),
         modify: (style) => style.foregroundDecoration(
           BoxDecorationMix(color: Colors.yellow.withValues(alpha: 0.5)),
         ),
@@ -232,7 +232,7 @@ void main() {
 
       styleMethodTest(
         'transform sets container transform',
-        initial: RemixCardStyle(),
+        initial: RemixCardStyler(),
         modify: (style) => style.transform(Matrix4.rotationZ(0.1)),
         expect: (style) {
           expect(
@@ -252,7 +252,7 @@ void main() {
 
     group('Core Methods', () {
       testWidgets('resolve method returns StyleSpec', (tester) async {
-        const style = RemixCardStyle.create();
+        const style = RemixCardStyler.create();
         await tester.pumpWidget(
           MaterialApp(
             home: Builder(
@@ -268,23 +268,23 @@ void main() {
       });
 
       test('merge with null returns style equal to original', () {
-        const originalStyle = RemixCardStyle.create();
+        const originalStyle = RemixCardStyler.create();
         final mergedStyle = originalStyle.merge(null);
         expect(mergedStyle, equals(originalStyle));
       });
 
       test('merge with other style combines properties', () {
-        const style1 = RemixCardStyle.create();
-        final style2 = RemixCardStyle();
+        const style1 = RemixCardStyler.create();
+        final style2 = RemixCardStyler();
 
         final merged = style1.merge(style2);
         expect(merged, isNot(same(style1)));
         expect(merged, isNot(same(style2)));
-        expect(merged, isA<RemixCardStyle>());
+        expect(merged, isA<RemixCardStyler>());
       });
 
       test('props list contains all properties', () {
-        const style = RemixCardStyle.create();
+        const style = RemixCardStyler.create();
         expect(style.props, hasLength(4));
         expect(style.props, contains(style.$container));
         expect(style.props, contains(style.$variants));
@@ -295,21 +295,21 @@ void main() {
 
     group('Equality', () {
       test('identical styles are equal', () {
-        const style1 = RemixCardStyle.create();
-        const style2 = RemixCardStyle.create();
+        const style1 = RemixCardStyler.create();
+        const style2 = RemixCardStyler.create();
         expect(style1, equals(style2));
         expect(style1.hashCode, equals(style2.hashCode));
       });
 
       test('styles with different properties are not equal', () {
-        const style1 = RemixCardStyle.create();
-        final style2 = RemixCardStyle();
+        const style1 = RemixCardStyler.create();
+        final style2 = RemixCardStyler();
         expect(style1, equals(style2));
       });
 
       test('styles with same properties are equal', () {
-        final style1 = RemixCardStyle();
-        final style2 = RemixCardStyle();
+        final style1 = RemixCardStyler();
+        final style2 = RemixCardStyler();
         expect(style1, equals(style2));
         expect(style1.hashCode, equals(style2.hashCode));
       });

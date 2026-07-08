@@ -303,7 +303,7 @@ void main() {
 
     group('Styling', () {
       testWidgets('applies padding styling', (tester) async {
-        final customStyle = RemixToggleStyle().padding(
+        final customStyle = RemixToggleStyler().padding(
           EdgeInsetsGeometryMix.all(16.0),
         );
 
@@ -321,7 +321,7 @@ void main() {
       });
 
       testWidgets('applies multiple style methods', (tester) async {
-        final customStyle = RemixToggleStyle()
+        final customStyle = RemixToggleStyler()
             .backgroundColor(Colors.blue)
             .labelColor(Colors.white)
             .iconColor(Colors.white)
@@ -345,7 +345,7 @@ void main() {
       });
 
       testWidgets('applies animation config', (tester) async {
-        final customStyle = RemixToggleStyle().animate(
+        final customStyle = RemixToggleStyler().animate(
           AnimationConfig.linear(const Duration(milliseconds: 200)),
         );
 
@@ -370,7 +370,7 @@ void main() {
             selected: false,
             onChanged: (value) {},
             label: 'Bold',
-            style: fortalToggleStyle(),
+            style: fortalToggleStyler(),
           ),
         );
         await tester.pumpAndSettle();
@@ -384,7 +384,7 @@ void main() {
             selected: false,
             onChanged: (value) {},
             label: 'Bold',
-            style: fortalToggleStyle(variant: .outline),
+            style: fortalToggleStyler(variant: .outline),
           ),
         );
         await tester.pumpAndSettle();
@@ -399,7 +399,7 @@ void main() {
               selected: false,
               onChanged: (value) {},
               label: 'Bold',
-              style: fortalToggleStyle(size: size),
+              style: fortalToggleStyler(size: size),
             ),
           );
           await tester.pumpAndSettle();
@@ -416,7 +416,7 @@ void main() {
                 selected: false,
                 onChanged: (value) {},
                 label: 'Bold',
-                style: fortalToggleStyle(variant: variant, size: size),
+                style: fortalToggleStyler(variant: variant, size: size),
               ),
             );
             await tester.pumpAndSettle();

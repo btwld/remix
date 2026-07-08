@@ -2,9 +2,9 @@ part of 'accordion.dart';
 
 /// Style configuration for [RemixAccordion] trigger, icons, title, and content.
 @MixableStyler()
-class RemixAccordionStyle
-    extends RemixFlexContainerStyle<RemixAccordionSpec, RemixAccordionStyle>
-    with Diagnosticable, _$RemixAccordionStyleMixin {
+class RemixAccordionStyler
+    extends RemixFlexContainerStyler<RemixAccordionSpec, RemixAccordionStyler>
+    with Diagnosticable, _$RemixAccordionStylerMixin {
   @MixableField(setterType: FlexBoxStyler)
   final Prop<StyleSpec<FlexBoxSpec>>? $trigger;
   @MixableField(setterType: IconStyler)
@@ -16,7 +16,7 @@ class RemixAccordionStyle
   @MixableField(setterType: BoxStyler)
   final Prop<StyleSpec<BoxSpec>>? $content;
 
-  const RemixAccordionStyle.create({
+  const RemixAccordionStyler.create({
     Prop<StyleSpec<FlexBoxSpec>>? trigger,
     Prop<StyleSpec<IconSpec>>? leadingIcon,
     Prop<StyleSpec<TextSpec>>? title,
@@ -31,7 +31,7 @@ class RemixAccordionStyle
        $trailingIcon = trailingIcon,
        $content = content;
 
-  RemixAccordionStyle({
+  RemixAccordionStyler({
     FlexBoxStyler? trigger,
     IconStyler? leadingIcon,
     TextStyler? title,
@@ -54,159 +54,161 @@ class RemixAccordionStyle
   // -- Factory constructors for convenience --
 
   /// Creates a style with the given background color.
-  factory RemixAccordionStyle.backgroundColor(Color value) =>
-      RemixAccordionStyle().backgroundColor(value);
+  factory RemixAccordionStyler.backgroundColor(Color value) =>
+      RemixAccordionStyler().backgroundColor(value);
 
   /// Creates a style with the given padding.
-  factory RemixAccordionStyle.padding(EdgeInsetsGeometryMix value) =>
-      RemixAccordionStyle().padding(value);
+  factory RemixAccordionStyler.padding(EdgeInsetsGeometryMix value) =>
+      RemixAccordionStyler().padding(value);
 
   /// Creates a style with the given margin.
-  factory RemixAccordionStyle.margin(EdgeInsetsGeometryMix value) =>
-      RemixAccordionStyle().margin(value);
+  factory RemixAccordionStyler.margin(EdgeInsetsGeometryMix value) =>
+      RemixAccordionStyler().margin(value);
 
   /// Creates a style with the given decoration.
-  factory RemixAccordionStyle.decoration(DecorationMix value) =>
-      RemixAccordionStyle().decoration(value);
+  factory RemixAccordionStyler.decoration(DecorationMix value) =>
+      RemixAccordionStyler().decoration(value);
 
   /// Creates a style with the given alignment.
-  factory RemixAccordionStyle.alignment(Alignment value) =>
-      RemixAccordionStyle().alignment(value);
+  factory RemixAccordionStyler.alignment(Alignment value) =>
+      RemixAccordionStyler().alignment(value);
 
   /// Creates a style with the given constraints.
-  factory RemixAccordionStyle.constraints(BoxConstraintsMix value) =>
-      RemixAccordionStyle().constraints(value);
+  factory RemixAccordionStyler.constraints(BoxConstraintsMix value) =>
+      RemixAccordionStyler().constraints(value);
 
   /// Creates a style with the given border radius.
-  factory RemixAccordionStyle.borderRadius(BorderRadiusGeometryMix value) =>
-      RemixAccordionStyle().borderRadius(value);
+  factory RemixAccordionStyler.borderRadius(BorderRadiusGeometryMix value) =>
+      RemixAccordionStyler().borderRadius(value);
 
   /// Creates a style with the given spacing.
-  factory RemixAccordionStyle.spacing(double value) =>
-      RemixAccordionStyle().spacing(value);
+  factory RemixAccordionStyler.spacing(double value) =>
+      RemixAccordionStyler().spacing(value);
 
   /// Creates a style with the given title color.
-  factory RemixAccordionStyle.titleColor(Color value) =>
-      RemixAccordionStyle().titleColor(value);
+  factory RemixAccordionStyler.titleColor(Color value) =>
+      RemixAccordionStyler().titleColor(value);
 
   /// Creates a style with the given title font size.
-  factory RemixAccordionStyle.titleFontSize(double value) =>
-      RemixAccordionStyle().titleFontSize(value);
+  factory RemixAccordionStyler.titleFontSize(double value) =>
+      RemixAccordionStyler().titleFontSize(value);
 
   /// Creates a style with the given title font weight.
-  factory RemixAccordionStyle.titleFontWeight(FontWeight value) =>
-      RemixAccordionStyle().titleFontWeight(value);
+  factory RemixAccordionStyler.titleFontWeight(FontWeight value) =>
+      RemixAccordionStyler().titleFontWeight(value);
 
   /// Creates a style with the given title style.
-  factory RemixAccordionStyle.titleStyle(TextStyleMix value) =>
-      RemixAccordionStyle().titleStyle(value);
+  factory RemixAccordionStyler.titleStyle(TextStyleMix value) =>
+      RemixAccordionStyler().titleStyle(value);
 
   /// Creates a style with the given leading icon color.
-  factory RemixAccordionStyle.leadingIconColor(Color value) =>
-      RemixAccordionStyle().leadingIconColor(value);
+  factory RemixAccordionStyler.leadingIconColor(Color value) =>
+      RemixAccordionStyler().leadingIconColor(value);
 
   /// Creates a style with the given leading icon size.
-  factory RemixAccordionStyle.leadingIconSize(double value) =>
-      RemixAccordionStyle().leadingIconSize(value);
+  factory RemixAccordionStyler.leadingIconSize(double value) =>
+      RemixAccordionStyler().leadingIconSize(value);
 
   /// Creates a style with the given trailing icon color.
-  factory RemixAccordionStyle.trailingIconColor(Color value) =>
-      RemixAccordionStyle().trailingIconColor(value);
+  factory RemixAccordionStyler.trailingIconColor(Color value) =>
+      RemixAccordionStyler().trailingIconColor(value);
 
   /// Creates a style with the given trailing icon size.
-  factory RemixAccordionStyle.trailingIconSize(double value) =>
-      RemixAccordionStyle().trailingIconSize(value);
+  factory RemixAccordionStyler.trailingIconSize(double value) =>
+      RemixAccordionStyler().trailingIconSize(value);
 
   /// Creates a style with the given content color.
-  factory RemixAccordionStyle.contentColor(Color value) =>
-      RemixAccordionStyle().contentColor(value);
+  factory RemixAccordionStyler.contentColor(Color value) =>
+      RemixAccordionStyler().contentColor(value);
 
   /// Creates a style with the given content padding.
-  factory RemixAccordionStyle.contentPadding(EdgeInsetsGeometryMix value) =>
-      RemixAccordionStyle().contentPadding(value);
+  factory RemixAccordionStyler.contentPadding(EdgeInsetsGeometryMix value) =>
+      RemixAccordionStyler().contentPadding(value);
 
   /// Creates a style with the given content decoration.
-  factory RemixAccordionStyle.contentDecoration(DecorationMix value) =>
-      RemixAccordionStyle().contentDecoration(value);
+  factory RemixAccordionStyler.contentDecoration(DecorationMix value) =>
+      RemixAccordionStyler().contentDecoration(value);
 
   // -- Convenience instance methods --
 
   /// Sets the background color of the trigger.
-  RemixAccordionStyle backgroundColor(Color value) {
+  RemixAccordionStyler backgroundColor(Color value) {
     return merge(
-      RemixAccordionStyle(
+      RemixAccordionStyler(
         trigger: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
       ),
     );
   }
 
   /// Sets the spacing between items in the trigger.
-  RemixAccordionStyle spacing(double value) {
-    return merge(RemixAccordionStyle(trigger: FlexBoxStyler(spacing: value)));
+  RemixAccordionStyler spacing(double value) {
+    return merge(RemixAccordionStyler(trigger: FlexBoxStyler(spacing: value)));
   }
 
   /// Sets title color.
-  RemixAccordionStyle titleColor(Color value) {
+  RemixAccordionStyler titleColor(Color value) {
     return title(TextStyler(style: TextStyleMix(color: value)));
   }
 
   /// Sets title font size.
-  RemixAccordionStyle titleFontSize(double value) {
+  RemixAccordionStyler titleFontSize(double value) {
     return title(TextStyler(style: TextStyleMix(fontSize: value)));
   }
 
   /// Sets title font weight.
-  RemixAccordionStyle titleFontWeight(FontWeight value) {
+  RemixAccordionStyler titleFontWeight(FontWeight value) {
     return title(TextStyler(style: TextStyleMix(fontWeight: value)));
   }
 
   /// Sets title style using TextStyleMix directly.
-  RemixAccordionStyle titleStyle(TextStyleMix value) {
+  RemixAccordionStyler titleStyle(TextStyleMix value) {
     return title(TextStyler(style: value));
   }
 
   /// Sets leading icon color.
-  RemixAccordionStyle leadingIconColor(Color value) {
+  RemixAccordionStyler leadingIconColor(Color value) {
     return leadingIcon(IconStyler(color: value));
   }
 
   /// Sets leading icon size.
-  RemixAccordionStyle leadingIconSize(double value) {
+  RemixAccordionStyler leadingIconSize(double value) {
     return leadingIcon(IconStyler(size: value));
   }
 
   /// Sets trailing icon color.
-  RemixAccordionStyle trailingIconColor(Color value) {
+  RemixAccordionStyler trailingIconColor(Color value) {
     return trailingIcon(IconStyler(color: value));
   }
 
   /// Sets trailing icon size.
-  RemixAccordionStyle trailingIconSize(double value) {
+  RemixAccordionStyler trailingIconSize(double value) {
     return trailingIcon(IconStyler(size: value));
   }
 
   /// Sets content background color.
-  RemixAccordionStyle contentColor(Color value) {
+  RemixAccordionStyler contentColor(Color value) {
     return content(BoxStyler(decoration: BoxDecorationMix(color: value)));
   }
 
   /// Sets content padding.
-  RemixAccordionStyle contentPadding(EdgeInsetsGeometryMix value) {
+  RemixAccordionStyler contentPadding(EdgeInsetsGeometryMix value) {
     return content(BoxStyler(padding: value));
   }
 
   /// Sets content decoration.
-  RemixAccordionStyle contentDecoration(DecorationMix value) {
+  RemixAccordionStyler contentDecoration(DecorationMix value) {
     return content(BoxStyler(decoration: value));
   }
 
   /// Sets container alignment
-  RemixAccordionStyle alignment(Alignment value) {
-    return merge(RemixAccordionStyle(trigger: FlexBoxStyler(alignment: value)));
+  RemixAccordionStyler alignment(Alignment value) {
+    return merge(
+      RemixAccordionStyler(trigger: FlexBoxStyler(alignment: value)),
+    );
   }
 
   /// Style when the accordion is expanded.
-  RemixAccordionStyle onExpanded<T>(RemixAccordionStyle value) {
+  RemixAccordionStyler onExpanded<T>(RemixAccordionStyler value) {
     return variants([
       VariantStyle(
         ContextVariant('onExpanded', (context) {
@@ -218,7 +220,7 @@ class RemixAccordionStyle
   }
 
   /// Style when accordion is collapsed
-  RemixAccordionStyle onCollapsed<T>(RemixAccordionStyle value) {
+  RemixAccordionStyler onCollapsed<T>(RemixAccordionStyler value) {
     return variants([
       VariantStyle(
         ContextVariant('onCollapsed', (context) {
@@ -230,7 +232,7 @@ class RemixAccordionStyle
   }
 
   /// Style when the accordion item can collapse.
-  RemixAccordionStyle onCanCollapse(RemixAccordionStyle value) {
+  RemixAccordionStyler onCanCollapse(RemixAccordionStyler value) {
     return variants([
       VariantStyle(
         ContextVariant('onCanCollapse', (context) {
@@ -242,7 +244,7 @@ class RemixAccordionStyle
   }
 
   /// Style when the accordion item can expand.
-  RemixAccordionStyle onCanExpand<T>(RemixAccordionStyle value) {
+  RemixAccordionStyler onCanExpand<T>(RemixAccordionStyler value) {
     return variants([
       VariantStyle(
         ContextVariant('onCanExpand', (context) {
@@ -296,25 +298,25 @@ class RemixAccordionStyle
     );
   }
 
-  // RemixFlexContainerStyle mixin implementations
+  // RemixFlexContainerStyler mixin implementations
   @override
-  RemixAccordionStyle padding(EdgeInsetsGeometryMix value) {
-    return merge(RemixAccordionStyle(trigger: FlexBoxStyler(padding: value)));
+  RemixAccordionStyler padding(EdgeInsetsGeometryMix value) {
+    return merge(RemixAccordionStyler(trigger: FlexBoxStyler(padding: value)));
   }
 
   @override
-  RemixAccordionStyle color(Color value) {
+  RemixAccordionStyler color(Color value) {
     return merge(
-      RemixAccordionStyle(
+      RemixAccordionStyler(
         trigger: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
       ),
     );
   }
 
   @override
-  RemixAccordionStyle size(double width, double height) {
+  RemixAccordionStyler size(double width, double height) {
     return merge(
-      RemixAccordionStyle(
+      RemixAccordionStyler(
         trigger: FlexBoxStyler(
           constraints: BoxConstraintsMix(
             minWidth: width,
@@ -328,9 +330,9 @@ class RemixAccordionStyle
   }
 
   @override
-  RemixAccordionStyle borderRadius(BorderRadiusGeometryMix radius) {
+  RemixAccordionStyler borderRadius(BorderRadiusGeometryMix radius) {
     return merge(
-      RemixAccordionStyle(
+      RemixAccordionStyler(
         trigger: FlexBoxStyler(
           decoration: BoxDecorationMix(borderRadius: radius),
         ),
@@ -339,45 +341,45 @@ class RemixAccordionStyle
   }
 
   @override
-  RemixAccordionStyle constraints(BoxConstraintsMix value) {
+  RemixAccordionStyler constraints(BoxConstraintsMix value) {
     return merge(
-      RemixAccordionStyle(trigger: FlexBoxStyler(constraints: value)),
+      RemixAccordionStyler(trigger: FlexBoxStyler(constraints: value)),
     );
   }
 
   @override
-  RemixAccordionStyle decoration(DecorationMix value) {
+  RemixAccordionStyler decoration(DecorationMix value) {
     return merge(
-      RemixAccordionStyle(trigger: FlexBoxStyler(decoration: value)),
+      RemixAccordionStyler(trigger: FlexBoxStyler(decoration: value)),
     );
   }
 
   @override
-  RemixAccordionStyle margin(EdgeInsetsGeometryMix value) {
-    return merge(RemixAccordionStyle(trigger: FlexBoxStyler(margin: value)));
+  RemixAccordionStyler margin(EdgeInsetsGeometryMix value) {
+    return merge(RemixAccordionStyler(trigger: FlexBoxStyler(margin: value)));
   }
 
   @override
-  RemixAccordionStyle foregroundDecoration(DecorationMix value) {
+  RemixAccordionStyler foregroundDecoration(DecorationMix value) {
     return merge(
-      RemixAccordionStyle(trigger: FlexBoxStyler(foregroundDecoration: value)),
+      RemixAccordionStyler(trigger: FlexBoxStyler(foregroundDecoration: value)),
     );
   }
 
   @override
-  RemixAccordionStyle transform(
+  RemixAccordionStyler transform(
     Matrix4 value, {
     AlignmentGeometry alignment = Alignment.center,
   }) {
     return merge(
-      RemixAccordionStyle(
+      RemixAccordionStyler(
         trigger: FlexBoxStyler(transform: value, transformAlignment: alignment),
       ),
     );
   }
 
   @override
-  RemixAccordionStyle flex(FlexStyler value) {
-    return merge(RemixAccordionStyle(trigger: FlexBoxStyler().flex(value)));
+  RemixAccordionStyler flex(FlexStyler value) {
+    return merge(RemixAccordionStyler(trigger: FlexBoxStyler().flex(value)));
   }
 }

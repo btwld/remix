@@ -37,18 +37,17 @@ class RemixRadio<T> extends StatelessWidget {
     this.enabled = true,
     this.toggleable = false,
     this.mouseCursor,
-    this.enableFeedback = true,
     this.focusNode,
     this.autofocus = false,
-    this.style = const RemixRadioStyle.create(),
+    this.style = const RemixRadioStyler.create(),
     this.styleSpec,
   });
 
-  final RemixRadioStyle style;
+  final RemixRadioStyler style;
 
   final RemixRadioSpec? styleSpec;
 
-  static final styleFrom = RemixRadioStyle.new;
+  static final styleFrom = RemixRadioStyler.new;
 
   /// The value represented by this radio button.
   final T value;
@@ -67,9 +66,6 @@ class RemixRadio<T> extends StatelessWidget {
 
   /// The mouse cursor to use when hovering over the radio button.
   final MouseCursor? mouseCursor;
-
-  /// Whether to provide feedback when the radio button is pressed.
-  final bool enableFeedback;
 
   @override
   Widget build(BuildContext context) {

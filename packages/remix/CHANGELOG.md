@@ -1,26 +1,33 @@
 ## 1.0.0
 
-- **BREAKING**: Rename `RemixButtonStyler` to `RemixButtonStyle`, aligning button with the `RemixXStyle` convention used by every other component.
-- **BREAKING**: `RemixButtonStyle` unnamed constructor now takes unresolved stylers (`FlexBoxStyler`, `TextStyler`, `IconStyler`, `RemixSpinnerStyle`) instead of resolved `StyleSpec` values, matching sibling components.
-- **BREAKING**: Rename `text` to `label` on `RemixAvatarSpec`/`RemixAvatarStyle` and `RemixBadgeSpec`/`RemixBadgeStyle` (fields, constructor params, and generated setters).
-- **BREAKING**: Remove `RemixAvatarStyle.iconColor`/`.textColor` and `RemixCalloutStyle.iconColor`/`.textColor` factory constructors; use the `iconColor()`/`labelColor()`/`textColor()` instance methods instead.
+- **BREAKING**: Rename fluent style builders from `RemixXStyle` to `RemixXStyler` and Fortal helpers from `fortalXStyle()` to `fortalXStyler()`, matching Mix terminology (`BoxStyler`, `TextStyler`, `MixStyler`). Widget parameter stays `style:`. No deprecated aliases.
+- **BREAKING**: Public `styleSpec` is raw `RemixXSpec?` on all component surfaces (resolved via `RemixStyleSpecBuilder`); StyleWidget-based components converted to explicit widgets.
+- **BREAKING**: `RemixSelect` overlay placement is `positioning: OverlayPositionConfig` (removed public `targetAnchor`/`followerAnchor`).
+- **BREAKING**: Remove `enableFeedback` from `RemixRadio` (not exposed by `NakedRadio`).
+- **BREAKING**: `RemixButtonStyler` unnamed constructor now takes unresolved stylers (`FlexBoxStyler`, `TextStyler`, `IconStyler`, `RemixSpinnerStyler`) instead of resolved `StyleSpec` values, matching sibling components.
+- **BREAKING**: Rename `text` to `label` on `RemixAvatarSpec`/`RemixAvatarStyler` and `RemixBadgeSpec`/`RemixBadgeStyler` (fields, constructor params, and generated setters).
+- **BREAKING**: Remove `RemixAvatarStyler.iconColor`/`.textColor` and `RemixCalloutStyler.iconColor`/`.textColor` factory constructors; use the `iconColor()`/`labelColor()`/`textColor()` instance methods instead.
 - **BREAKING**: Rename `RemixSlider.enableHapticFeedback` to `enableFeedback`, matching the other interactive components.
 - **BREAKING**: `onChanged` is now optional/nullable on `RemixSlider`, `RemixSwitch`, `RemixToggle`, and `RemixRadioGroup`; omitting it (or passing null) disables the control.
 - **BREAKING**: `RemixButton.onPressed` and `RemixIconButton.onPressed` are no longer `required`; omitting them renders a disabled button.
 - **BREAKING**: `package:remix/remix.dart` no longer exports `src/theme/remix_theme.dart` (`resolveRemixBrightness`/`resolveRemixBrightnessValues` were test-only helpers).
-- **BREAKING**: Bump `mix` to ^2.1.0 and `naked_ui` to ^1.0.0-beta.1.
-- **FEAT**: Add `call()` widget-builder methods to all component styles and generated `FortalX` convenience widgets for most components.
+- **BREAKING**: Bump `mix` to ^2.1.0, `mix_annotations`/`mix_generator` to hosted `^2.1.1`, and `naked_ui` to `^1.0.0-beta.1` (stable 1.0 pub tag blocked until `naked_ui` is stable).
+- **FEAT**: Add `call()` widget-builder methods to all component styles and `FortalX` convenience widgets (generated via `@MixWidget` for non-generic surfaces; hand-written for generic Radio/Accordion/Menu/Select).
+- **FEAT**: Fortal wrappers for dialog, menu, select, tooltip, and tabs parts (`FortalTabBar`/`FortalTab`/`FortalTabView`).
+- **FEAT**: Tooltip `dismissDuration` (hover-exit → `NakedTooltip.dismissDelay`); `showDuration` remains touch wait → `touchDelay`.
 - **FEAT**: Add `positioning` (`OverlayPositionConfig`) to `RemixTooltip` and `enabled` to `RemixIconButton`.
-- **FEAT**: Add `FortalAccordionVariant`/`FortalAccordionSize` parameters to `fortalAccordionStyle()`.
-- **FIX**: `RemixMenuStyle.item(...)` default item styling is now applied to menu items (per-item styles override it); previously it was silently ignored.
+- **FEAT**: Add `FortalAccordionVariant`/`FortalAccordionSize` parameters to `fortalAccordionStyler()`.
+- **FIX**: Menu trigger renders icon before label.
+- **FIX**: Fortal TextField disabled surface/soft use background-fill tokens (no debug `Colors.red`).
+- **FIX**: `RemixMenuStyler.item(...)` default item styling is now applied to menu items (per-item styles override it); previously it was silently ignored.
 - **FEAT**: Add RemixToggle component (#50).
-- **FEAT**: Add backgroundColor, foregroundColor, shape and factory methods to RemixCalloutStyle (#49).
-- **FEAT**: Add factory constructors and shape to RemixCardStyle (#48).
+- **FEAT**: Add backgroundColor, foregroundColor, shape and factory methods to RemixCalloutStyler (#49).
+- **FEAT**: Add factory constructors and shape to RemixCardStyler (#48).
 - **FEAT**: Align component style APIs with Material conventions (#47).
 - **FEAT**: Rename badge color to backgroundColor, add foregroundColor and factory constructors (#46).
-- **FEAT**: Add convenience factory methods to RemixAccordionStyle (#44).
-- **FEAT**: Add convenience methods and factory constructors to RemixAvatarStyle (#45).
-- **FEAT**: Add Material-like style convenience methods to RemixButtonStyle (#43).
+- **FEAT**: Add convenience factory methods to RemixAccordionStyler (#44).
+- **FEAT**: Add convenience methods and factory constructors to RemixAvatarStyler (#45).
+- **FEAT**: Add Material-like style convenience methods to RemixButtonStyler (#43).
 - **FEAT**: Create FortalScope widget (#37).
 - **FEAT**: Add leading and trailing icon support to RemixButton (#20).
 - **FEAT**: Add call() method to design system styles (#30).

@@ -18,7 +18,7 @@ Complete reference for the Fortal design system — variants, sizes, and tokens.
 
 ## Component Variants & Sizes
 
-### Button — `FortalButtonStyle`
+### Button — `fortalButtonStyler`
 
 | Variant | Description |
 |---------|-------------|
@@ -36,15 +36,15 @@ Complete reference for the Fortal design system — variants, sizes, and tokens.
 | `size4` | 18px (text4) | radius5 | large |
 
 ```dart
-FortalButtonStyle.create(variant: FortalButtonVariant.solid, size: FortalButtonSize.size2)
-FortalButtonStyle.solid()
-FortalButtonStyle.soft(size: FortalButtonSize.size3)
-FortalButtonStyle.outline()
-FortalButtonStyle.surface()
-FortalButtonStyle.ghost()
+fortalButtonStyler(variant: .solid, size: .size2)
+fortalButtonStyler(variant: .solid)
+fortalButtonStyler(variant: .soft, size: .size3)
+fortalButtonStyler(variant: .outline)
+fortalButtonStyler(variant: .surface)
+fortalButtonStyler(variant: .ghost)
 ```
 
-### IconButton — `FortalIconButtonStyle`
+### IconButton — `fortalIconButtonStyler`
 
 Same variants as Button: `solid`, `soft`, `surface`, `outline`, `ghost`.
 
@@ -56,11 +56,11 @@ Same variants as Button: `solid`, `soft`, `surface`, `outline`, `ghost`.
 | `size4` | 48×48 | 24px | radius5 |
 
 ```dart
-FortalIconButtonStyle.create(variant: FortalIconButtonVariant.solid, size: FortalIconButtonSize.size2)
-FortalIconButtonStyle.ghost()
+fortalIconButtonStyler(variant: .solid, size: .size2)
+fortalIconButtonStyler(variant: .ghost)
 ```
 
-### Checkbox — `FortalCheckboxStyles`
+### Checkbox — `fortalCheckboxStyler`
 
 | Variant | Description |
 |---------|-------------|
@@ -74,28 +74,28 @@ FortalIconButtonStyle.ghost()
 | `size3` | 32×32 | 24px icon |
 
 ```dart
-FortalCheckboxStyles.create(variant: FortalCheckboxVariant.surface, size: FortalCheckboxSize.size2)
-FortalCheckboxStyles.surface()
-FortalCheckboxStyles.soft()
+fortalCheckboxStyler(variant: .create, variant: FortalCheckboxVariant.surface, size: .size2)
+fortalCheckboxStyler(variant: .surface)
+fortalCheckboxStyler(variant: .soft)
 ```
 
-### Radio — `FortalRadioStyles`
+### Radio — `fortalRadioStyler`
 
 Variants: `surface`, `soft`. Sizes: `size1` (16×16, 6px dot), `size2` (20×20, 8px dot), `size3` (24×24, 10px dot).
 
 ```dart
-FortalRadioStyles.create(variant: FortalRadioVariant.surface, size: FortalRadioSize.size2)
+fortalRadioStyler(variant: .create, variant: FortalRadioVariant.surface, size: .size2)
 ```
 
-### Switch — `FortalSwitchStyles`
+### Switch — `fortalSwitchStyler`
 
 Variants: `surface`, `soft`. Sizes: `size1` (28×16 track), `size2` (35×20 track), `size3` (42×24 track).
 
 ```dart
-FortalSwitchStyles.create(variant: FortalSwitchVariant.surface, size: FortalSwitchSize.size2)
+fortalSwitchStyler(variant: .create, variant: FortalSwitchVariant.surface, size: .size2)
 ```
 
-### Badge — `FortalBadgeStyles`
+### Badge — `fortalBadgeStyler`
 
 | Variant | Description |
 |---------|-------------|
@@ -107,20 +107,20 @@ FortalSwitchStyles.create(variant: FortalSwitchVariant.surface, size: FortalSwit
 Sizes: `size1` (11px), `size2` (12px), `size3` (13px).
 
 ```dart
-FortalBadgeStyles.create(variant: FortalBadgeVariant.solid, size: FortalBadgeSize.size2)
-FortalBadgeStyles.solid()
-FortalBadgeStyles.outline()
+fortalBadgeStyler(variant: .create, variant: FortalBadgeVariant.solid, size: .size2)
+fortalBadgeStyler(variant: .solid)
+fortalBadgeStyler(variant: .outline)
 ```
 
-### Avatar — `FortalAvatarStyles`
+### Avatar — `fortalAvatarStyler`
 
 Variants: `soft`, `solid`. Sizes: `size1` (24px), `size2` (32px), `size3` (40px), `size4` (64px).
 
 ```dart
-FortalAvatarStyles.create(variant: FortalAvatarVariant.soft, size: FortalAvatarSize.size3)
+fortalAvatarStyler(variant: .create, variant: FortalAvatarVariant.soft, size: .size3)
 ```
 
-### Card — `FortalCardStyles`
+### Card — `fortalCardStyler`
 
 | Variant | Description |
 |---------|-------------|
@@ -131,101 +131,101 @@ FortalAvatarStyles.create(variant: FortalAvatarVariant.soft, size: FortalAvatarS
 Sizes: `size1` (16px padding), `size2` (24px padding), `size3` (32px padding).
 
 ```dart
-FortalCardStyles.create(variant: FortalCardVariant.surface, size: FortalCardSize.size2)
-FortalCardStyles.classic()
+fortalCardStyler(variant: .create, variant: FortalCardVariant.surface, size: .size2)
+fortalCardStyler(variant: .classic)
 ```
 
-### Callout — `FortalCalloutStyles`
+### Callout — `fortalCalloutStyler`
 
 Variants: `outline`, `surface`, `soft`. Sizes: `size1` (compact), `size2` (default), `size3` (spacious).
 
 ```dart
-FortalCalloutStyles.create(variant: FortalCalloutVariant.surface, size: FortalCalloutSize.size2)
+fortalCalloutStyler(variant: .create, variant: FortalCalloutVariant.surface, size: .size2)
 ```
 
-### Progress — `FortalProgressStyles`
+### Progress — `fortalProgressStyler`
 
 Variants: `surface`, `soft`. Sizes: `size1` (4px height), `size2` (8px), `size3` (12px).
 
 ```dart
-FortalProgressStyles.create(variant: FortalProgressVariant.surface, size: FortalProgressSize.size2)
+fortalProgressStyler(variant: .create, variant: FortalProgressVariant.surface, size: .size2)
 ```
 
-### Slider — `FortalSliderStyles`
+### Slider — `fortalSliderStyler`
 
 Variants: `surface`, `soft`. Sizes: `size1` (13px thumb), `size2` (16px thumb), `size3` (19px thumb).
 
 ```dart
-FortalSliderStyles.create(variant: FortalSliderVariant.surface, size: FortalSliderSize.size2)
+fortalSliderStyler(variant: .create, variant: FortalSliderVariant.surface, size: .size2)
 ```
 
-### Spinner — `FortalSpinnerStyles`
+### Spinner — `fortalSpinnerStyler`
 
 No variants. Sizes: `size1` (16px), `size2` (20px), `size3` (24px).
 
 ```dart
-FortalSpinnerStyles.create(size: FortalSpinnerSize.size2)
+fortalSpinnerStyler(variant: .create, size: .size2)
 ```
 
-### TextField — `FortalTextFieldStyles`
+### TextField — `fortalTextFieldStyler`
 
 Variants: `surface`, `soft`. Sizes: `size1` (12px text), `size2` (14px text), `size3` (15px text).
 
 ```dart
-FortalTextFieldStyles.create(variant: FortalTextFieldVariant.surface, size: FortalTextFieldSize.size2)
+fortalTextFieldStyler(variant: .create, variant: FortalTextFieldVariant.surface, size: .size2)
 ```
 
-### Select — `FortalSelectStyles` + `FortalSelectItemStyles`
+### Select — `fortalSelectStyler` + `fortalSelectItemStyler`
 
 Variants: `surface`, `soft`, `ghost`. Sizes: `size1`, `size2`, `size3`.
 
 ```dart
-FortalSelectStyles.create(variant: FortalSelectVariant.surface, size: FortalSelectSize.size2)
+fortalSelectStyler(variant: .create, variant: FortalSelectVariant.surface, size: .size2)
 ```
 
-### Menu — `FortalMenuStyles` + `FortalMenuItemStyles`
+### Menu — `fortalMenuStyler` + `fortalMenuItemStyler`
 
 Variants: `solid`, `soft`. Sizes: `size1`, `size2`.
 
 ```dart
-FortalMenuStyles.create(variant: FortalMenuVariant.solid, size: FortalMenuSize.size2)
+fortalMenuStyler(variant: .create, variant: FortalMenuVariant.solid, size: .size2)
 ```
 
-### Tabs — `FortalTabsStyles`
+### Tabs — `fortalTabsStyler`
 
 No variants, no sizes.
 
 ```dart
-FortalTabsStyles.create()
+fortalTabsStyler(variant: .create)
 ```
 
-### Tooltip — `FortalTooltipStyles`
+### Tooltip — `fortalTooltipStyler`
 
 No variants, no sizes.
 
 ```dart
-FortalTooltipStyles.create()
+fortalTooltipStyler(variant: .create)
 ```
 
-### Dialog — `FortalDialogStyle`
+### Dialog — `fortalDialogStyler`
 
 No variants, no sizes.
 
 ```dart
-FortalDialogStyle.create()
+fortalDialogStyler(variant: .create)
 ```
 
-### Divider — `FortalDividerStyles`
+### Divider — `fortalDividerStyler`
 
 No variants. Sizes: `size1` (1px), `size2` (2px), `size3` (3px).
 
 ```dart
-FortalDividerStyles.create(size: FortalDividerSize.size1)
+fortalDividerStyler(variant: .create, size: .size1)
 ```
 
-### Accordion — `FortalAccordionStyle`
+### Accordion — `fortalAccordionStyler`
 
-No variants, no sizes. Use `FortalAccordionStyle.base()`.
+No variants, no sizes. Use `fortalAccordionStyler(variant: .base)`.
 
 ---
 

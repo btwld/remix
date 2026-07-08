@@ -172,7 +172,7 @@ class FortalButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return fortalButtonStyle(variant: this.variant, size: this.size).call(
+    return fortalButtonStyler(variant: this.variant, size: this.size).call(
       key: this.key,
       label: this.label,
       leadingIcon: this.leadingIcon,
@@ -200,7 +200,7 @@ class FortalButton extends StatelessWidget {
 // StylerGenerator
 // **************************************************************************
 
-mixin _$RemixButtonStyleMixin on Style<RemixButtonSpec>, Diagnosticable {
+mixin _$RemixButtonStylerMixin on Style<RemixButtonSpec>, Diagnosticable {
   Prop<StyleSpec<FlexBoxSpec>>? get $container;
   Prop<StyleSpec<TextSpec>>? get $label;
   Prop<StyleSpec<IconSpec>>? get $icon;
@@ -208,54 +208,54 @@ mixin _$RemixButtonStyleMixin on Style<RemixButtonSpec>, Diagnosticable {
   Prop<IconAlignment>? get $iconAlignment;
 
   /// Sets the container.
-  RemixButtonStyle container(FlexBoxStyler value) {
-    return merge(RemixButtonStyle(container: value));
+  RemixButtonStyler container(FlexBoxStyler value) {
+    return merge(RemixButtonStyler(container: value));
   }
 
   /// Sets the label.
-  RemixButtonStyle label(TextStyler value) {
-    return merge(RemixButtonStyle(label: value));
+  RemixButtonStyler label(TextStyler value) {
+    return merge(RemixButtonStyler(label: value));
   }
 
   /// Sets the icon.
-  RemixButtonStyle icon(IconStyler value) {
-    return merge(RemixButtonStyle(icon: value));
+  RemixButtonStyler icon(IconStyler value) {
+    return merge(RemixButtonStyler(icon: value));
   }
 
   /// Sets the spinner.
-  RemixButtonStyle spinner(RemixSpinnerStyle value) {
-    return merge(RemixButtonStyle(spinner: value));
+  RemixButtonStyler spinner(RemixSpinnerStyler value) {
+    return merge(RemixButtonStyler(spinner: value));
   }
 
   /// Sets the iconAlignment.
-  RemixButtonStyle iconAlignment(IconAlignment value) {
-    return merge(RemixButtonStyle(iconAlignment: value));
+  RemixButtonStyler iconAlignment(IconAlignment value) {
+    return merge(RemixButtonStyler(iconAlignment: value));
   }
 
   /// Sets the animation configuration.
-  RemixButtonStyle animate(AnimationConfig value) {
-    return merge(RemixButtonStyle(animation: value));
+  RemixButtonStyler animate(AnimationConfig value) {
+    return merge(RemixButtonStyler(animation: value));
   }
 
   /// Sets the style variants.
-  RemixButtonStyle variants(List<VariantStyle<RemixButtonSpec>> value) {
-    return merge(RemixButtonStyle(variants: value));
+  RemixButtonStyler variants(List<VariantStyle<RemixButtonSpec>> value) {
+    return merge(RemixButtonStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
-  RemixButtonStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixButtonStyle(modifier: value));
+  RemixButtonStyler wrap(WidgetModifierConfig value) {
+    return merge(RemixButtonStyler(modifier: value));
   }
 
   /// Sets the widget modifier.
-  RemixButtonStyle modifier(WidgetModifierConfig value) {
-    return merge(RemixButtonStyle(modifier: value));
+  RemixButtonStyler modifier(WidgetModifierConfig value) {
+    return merge(RemixButtonStyler(modifier: value));
   }
 
-  /// Merges with another [RemixButtonStyle].
+  /// Merges with another [RemixButtonStyler].
   @override
-  RemixButtonStyle merge(RemixButtonStyle? other) {
-    return RemixButtonStyle.create(
+  RemixButtonStyler merge(RemixButtonStyler? other) {
+    return RemixButtonStyler.create(
       container: MixOps.merge($container, other?.$container),
       label: MixOps.merge($label, other?.$label),
       icon: MixOps.merge($icon, other?.$icon),

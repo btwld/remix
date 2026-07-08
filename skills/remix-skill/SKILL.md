@@ -24,7 +24,7 @@ FortalScope(
 )
 ```
 
-Every Remix component works without `FortalScope`, but Fortal preset styles (like `FortalButtonStyle.solid()`) require it to resolve tokens.
+Every Remix component works without `FortalScope`, but Fortal preset styles (like `fortalButtonStyler(variant: .solid)`) require it to resolve tokens.
 
 ---
 
@@ -52,7 +52,7 @@ See `references/components.md` for the full API of every component.
 RemixButton(
   label: 'Submit',
   onPressed: () => handleSubmit(),
-  style: FortalButtonStyle.solid(size: FortalButtonSize.size2),
+  style: fortalButtonStyler(variant: .solid, size: .size2),
 )
 
 RemixButton(
@@ -61,13 +61,13 @@ RemixButton(
   loading: isDeleting,
   enabled: canDelete,
   onPressed: () => handleDelete(),
-  style: FortalButtonStyle.outline(),
+  style: fortalButtonStyler(variant: .outline),
 )
 
 RemixIconButton(
   icon: Icons.settings,
   onPressed: () => openSettings(),
-  style: FortalIconButtonStyle.ghost(),
+  style: fortalIconButtonStyler(variant: .ghost),
 )
 ```
 
@@ -78,7 +78,7 @@ RemixIconButton(
 RemixCheckbox(
   selected: isChecked,
   onChanged: (val) => setState(() => isChecked = val),
-  style: FortalCheckboxStyles.surface(),
+  style: fortalCheckboxStyler(variant: .surface),
 )
 
 // Radio group
@@ -96,7 +96,7 @@ RemixRadioGroup<String>(
 RemixSwitch(
   selected: isDarkMode,
   onChanged: (val) => toggleDarkMode(val),
-  style: FortalSwitchStyles.soft(),
+  style: fortalSwitchStyler(variant: .soft),
 )
 
 // Slider
@@ -114,7 +114,7 @@ RemixTextField(
   hintText: 'you@example.com',
   helperText: 'We will never share your email',
   error: hasError,
-  style: FortalTextFieldStyles.surface(),
+  style: fortalTextFieldStyler(variant: .surface),
 )
 ```
 
@@ -131,7 +131,7 @@ RemixSelect<String>(
   ],
   selectedValue: selectedFruit,
   onChanged: (val) => setState(() => selectedFruit = val),
-  style: FortalSelectStyles.surface(),
+  style: fortalSelectStyler(variant: .surface),
 )
 
 // Menu (action menu)
@@ -189,18 +189,18 @@ RemixAccordionGroup<String>(
 RemixAvatar(
   label: 'JD',
   backgroundImage: NetworkImage('https://...'),
-  style: FortalAvatarStyles.soft(size: FortalAvatarSize.size3),
+  style: fortalAvatarStyler(variant: .soft, size: .size3),
 )
 
 // Badge
 RemixBadge(
   label: 'New',
-  style: FortalBadgeStyles.solid(),
+  style: fortalBadgeStyler(variant: .solid),
 )
 
 // Card
 RemixCard(
-  style: FortalCardStyles.surface(size: FortalCardSize.size2),
+  style: fortalCardStyler(variant: .surface, size: .size2),
   child: Column(children: [
     Text('Card Title'),
     Text('Card content goes here'),
@@ -211,17 +211,17 @@ RemixCard(
 RemixCallout(
   icon: Icons.info,
   text: 'This is an informational callout.',
-  style: FortalCalloutStyles.surface(),
+  style: fortalCalloutStyler(variant: .surface),
 )
 
 // Progress
-RemixProgress(value: 0.65, style: FortalProgressStyles.surface())
+RemixProgress(value: 0.65, style: fortalProgressStyler(variant: .surface))
 
 // Spinner
-RemixSpinner(style: FortalSpinnerStyles.create(size: FortalSpinnerSize.size2))
+RemixSpinner(style: fortalSpinnerStyler(variant: .create, size: .size2))
 
 // Divider
-RemixDivider(style: FortalDividerStyles.create(size: FortalDividerSize.size1))
+RemixDivider(style: fortalDividerStyler(variant: .create, size: .size1))
 ```
 
 ### Overlays
@@ -235,9 +235,9 @@ showRemixDialog(
     description: 'Are you sure you want to proceed?',
     actions: [
       RemixButton(label: 'Cancel', onPressed: () => Navigator.pop(context),
-        style: FortalButtonStyle.outline()),
+        style: fortalButtonStyler(variant: .outline)),
       RemixButton(label: 'Confirm', onPressed: () { confirm(); Navigator.pop(context); },
-        style: FortalButtonStyle.solid()),
+        style: fortalButtonStyler(variant: .solid)),
     ],
   ),
 )
@@ -253,7 +253,9 @@ RemixTooltip(
 
 ## Styling Components
 
-Every component takes a `style` parameter. There are two approaches:
+Every component takes a fluent `style:` parameter (`RemixXStyler`) and optional raw `styleSpec:` (`RemixXSpec?`) that bypasses style resolution.
+
+There are two fluent-style approaches:
 
 ### 1. Fortal Presets (Recommended for Consistency)
 
@@ -261,16 +263,16 @@ Fortal styles give you pre-built variants and sizes that follow the design syste
 
 ```dart
 // Variant + size
-FortalButtonStyle.solid(size: FortalButtonSize.size3)
-FortalButtonStyle.outline()
-FortalButtonStyle.ghost()
-FortalButtonStyle.soft()
-FortalButtonStyle.surface()
+fortalButtonStyler(variant: .solid, size: .size3)
+fortalButtonStyler(variant: .outline)
+fortalButtonStyler(variant: .ghost)
+fortalButtonStyler(variant: .soft)
+fortalButtonStyler(variant: .surface)
 
 // Or via create():
-FortalButtonStyle.create(
-  variant: FortalButtonVariant.solid,
-  size: FortalButtonSize.size2,
+fortalButtonStyler(
+  variant: .solid,
+  size: .size2,
 )
 ```
 
@@ -281,7 +283,7 @@ See `references/fortal-reference.md` for all variants and sizes per component.
 Build styles from scratch using the chainable fluent API:
 
 ```dart
-RemixButtonStyle()
+RemixButtonStyler()
     .color(Colors.blue)
     .borderRounded(12)
     .paddingX(24)
@@ -299,23 +301,23 @@ RemixButtonStyle()
 Chain state modifiers to respond to hover, press, focus, and disabled:
 
 ```dart
-RemixButtonStyle()
+RemixButtonStyler()
     .color(Colors.blue)
     .labelColor(Colors.white)
     .onHovered(
-      RemixButtonStyle()
+      RemixButtonStyler()
           .color(Colors.blue.shade700)
     )
     .onPressed(
-      RemixButtonStyle()
+      RemixButtonStyler()
           .scale(0.97)
     )
     .onFocused(
-      RemixButtonStyle()
+      RemixButtonStyler()
           .borderAll(color: Colors.white, width: 2)
     )
     .onDisabled(
-      RemixButtonStyle()
+      RemixButtonStyler()
           .color(Colors.grey)
           .labelColor(Colors.grey.shade400)
     )
@@ -324,10 +326,10 @@ RemixButtonStyle()
 Components that support selection (checkbox, radio, switch, tabs) also have `.onSelected()`:
 
 ```dart
-RemixCheckboxStyle()
+RemixCheckboxStyler()
     .color(Colors.grey.shade200)
     .onSelected(
-      RemixCheckboxStyle()
+      RemixCheckboxStyler()
           .color(Colors.blue)
           .indicatorColor(Colors.white)
     )
@@ -338,9 +340,9 @@ RemixCheckboxStyle()
 Add smooth transitions between states with `.animate()`:
 
 ```dart
-RemixButtonStyle()
+RemixButtonStyler()
     .color(Colors.blue)
-    .onHovered(RemixButtonStyle().color(Colors.blue.shade800))
+    .onHovered(RemixButtonStyler().color(Colors.blue.shade800))
     .animate(AnimationConfig.spring(300.ms))
 ```
 
@@ -358,8 +360,8 @@ RemixButtonStyle()
 Start from a Fortal preset and layer custom modifications:
 
 ```dart
-final style = FortalButtonStyle.solid()
-    .onHovered(RemixButtonStyle().scale(1.02))
+final style = fortalButtonStyler(variant: .solid)
+    .onHovered(RemixButtonStyler().scale(1.02))
     .animate(AnimationConfig.spring(200.ms));
 
 RemixButton(label: 'Click', onPressed: doThing, style: style)
@@ -371,8 +373,8 @@ When defining styles within a widget class, use a **getter** — this is idiomat
 
 ```dart
 class MyScreen extends StatelessWidget {
-  RemixButtonStyle get _gradientButtonStyle {
-    return RemixButtonStyle.create(
+  RemixButtonStyler get _gradientButtonStyle {
+    return RemixButtonStyler.create(
       container: FlexBoxStyler()
         ..gradient.linear(
           begin: Alignment.topLeft,
@@ -391,12 +393,12 @@ class MyScreen extends StatelessWidget {
           blurRadius: 12,
           offset: Offset(0, 4),
         ))
-        .onHovered(RemixButtonStyle().shadow(BoxShadow(
+        .onHovered(RemixButtonStyler().shadow(BoxShadow(
           color: Color(0x80EC4899),
           blurRadius: 28,
           spreadRadius: 4,
         )))
-        .onPressed(RemixButtonStyle().scale(0.95))
+        .onPressed(RemixButtonStyler().scale(0.95))
         .animate(AnimationConfig.spring(250.ms));
   }
 
@@ -417,7 +419,7 @@ class MyScreen extends StatelessWidget {
 Styles with a `call()` method can be used as functions to create widgets directly:
 
 ```dart
-final primaryButton = RemixButtonStyle()
+final primaryButton = RemixButtonStyler()
     .color(Colors.blue)
     .labelColor(Colors.white)
     .paddingX(24)
@@ -428,7 +430,7 @@ final primaryButton = RemixButtonStyle()
 primaryButton(label: 'Save', onPressed: save)
 ```
 
-This works on: `RemixButtonStyle`, `RemixIconButtonStyle`, `RemixCheckboxStyle`, `RemixSwitchStyle`, `RemixRadioStyle`, `RemixSliderStyle`, `RemixTextFieldStyle`, `RemixSelectStyle`, `RemixMenuStyle`, `RemixSpinnerStyle`.
+This works on: `RemixButtonStyler`, `RemixIconButtonStyler`, `RemixCheckboxStyler`, `RemixSwitchStyler`, `RemixRadioStyler`, `RemixSliderStyler`, `RemixTextFieldStyler`, `RemixSelectStyler`, `RemixMenuStyler`, `RemixSpinnerStyler`.
 
 ---
 
@@ -472,14 +474,9 @@ config.createScope(child: MyApp())
 Every component with Fortal support follows the same pattern:
 
 ```dart
-Fortal<Component>Style.create(
-  variant: Fortal<Component>Variant.<name>,
-  size: Fortal<Component>Size.<name>,
-)
-
-// Or use named constructors for variants:
-FortalButtonStyle.solid()
-FortalButtonStyle.outline(size: FortalButtonSize.size3)
+fortalButtonStyler(variant: .solid, size: .size2)
+fortalButtonStyler(variant: .outline, size: .size3)
+// Widget wrappers: FortalButton, FortalCheckbox, FortalTab, ...
 ```
 
 ### Fortal Tokens
@@ -487,7 +484,7 @@ FortalButtonStyle.outline(size: FortalButtonSize.size3)
 When building custom styles that should respect the Fortal theme, reference tokens using `FortalTokens`:
 
 ```dart
-RemixButtonStyle.create(
+RemixButtonStyler.create(
   container: FlexBoxStyler()
     ..color.ref(FortalTokens.accent9)
     ..borderRadius.ref(FortalTokens.radius3)
@@ -511,20 +508,20 @@ See `references/fortal-reference.md` for the complete token catalog.
 
 ---
 
-## Responsive & Platform Variants
+## Interaction Variants (not platform shims)
 
-Styles support responsive and platform-aware overrides:
+Prefer widget-state variants over platform/theme shims:
 
 ```dart
-RemixButtonStyle()
+RemixButtonStyler()
     .paddingX(24)
-    .onMobile(RemixButtonStyle().paddingX(16).labelFontSize(14))
-    .onTablet(RemixButtonStyle().paddingX(20))
-    .onDark(RemixButtonStyle().color(Colors.blue.shade800))
-    .onLight(RemixButtonStyle().color(Colors.blue))
+    .onHovered(RemixButtonStyler().paddingX(16).labelFontSize(14))
+    .onPressed(RemixButtonStyler().scale(0.98))
+    .onFocused(RemixButtonStyler().borderAll(color: Colors.blue, width: 2))
+    .onDisabled(RemixButtonStyler().color(Colors.grey))
 ```
 
-Available context variants: `.onDark()`, `.onLight()`, `.onMobile()`, `.onTablet()`, `.onDesktop()`, `.onPortrait()`, `.onLandscape()`, `.onIos()`, `.onAndroid()`, `.onMacos()`, `.onWindows()`, `.onLinux()`, `.onWeb()`.
+Use `FortalScope(brightness: ...)` for light/dark theming rather than platform or theme-branch style variants.
 
 ---
 
@@ -532,8 +529,8 @@ Available context variants: `.onDark()`, `.onLight()`, `.onMobile()`, `.onTablet
 
 All component styles inherit from a base that determines what convenience methods are available:
 
-- **`RemixContainerStyle`** (box-based): `.color()`, `.padding()`, `.margin()`, `.borderRadius()`, `.border()`, `.shadow()`, `.size()`, `.width()`, `.height()`, `.constraints()`, `.alignment()`, `.transform()`, `.scale()`, `.rotate()`
-- **`RemixFlexContainerStyle`** (flex-based): everything above + `.spacing()`, `.direction()`, `.mainAxisAlignment()`, `.crossAxisAlignment()`, `.row()`, `.column()`
+- **`RemixContainerStyler`** (box-based): `.color()`, `.padding()`, `.margin()`, `.borderRadius()`, `.border()`, `.shadow()`, `.size()`, `.width()`, `.height()`, `.constraints()`, `.alignment()`, `.transform()`, `.scale()`, `.rotate()`
+- **`RemixFlexContainerStyler`** (flex-based): everything above + `.spacing()`, `.direction()`, `.mainAxisAlignment()`, `.crossAxisAlignment()`, `.row()`, `.column()`
 
 Plus shared mixins on specific components:
 - **`LabelStyleMixin`**: `.labelColor()`, `.labelFontSize()`, `.labelFontWeight()`, `.labelFontStyle()`, `.labelLetterSpacing()`
@@ -553,15 +550,15 @@ Create a shared style file for your app. Use `static` getters for styles that ch
 
 ```dart
 class AppStyles {
-  static RemixButtonStyle get primaryButton => FortalButtonStyle.solid()
+  static RemixButtonStyler get primaryButton => fortalButtonStyler(variant: .solid)
       .animate(AnimationConfig.spring(200.ms));
 
-  static RemixButtonStyle get secondaryButton => FortalButtonStyle.outline()
+  static RemixButtonStyler get secondaryButton => fortalButtonStyler(variant: .outline)
       .animate(AnimationConfig.spring(200.ms));
 
-  static RemixButtonStyle get dangerButton => FortalButtonStyle.solid()
+  static RemixButtonStyler get dangerButton => fortalButtonStyler(variant: .solid)
       .color(Colors.red)
-      .onHovered(RemixButtonStyle().color(Colors.red.shade700))
+      .onHovered(RemixButtonStyler().color(Colors.red.shade700))
       .animate(AnimationConfig.spring(200.ms));
 }
 ```
@@ -607,14 +604,14 @@ Column(
       controller: nameController,
       label: 'Name',
       hintText: 'Enter your name',
-      style: FortalTextFieldStyles.surface(),
+      style: fortalTextFieldStyler(variant: .surface),
     ),
     RemixTextField(
       controller: emailController,
       label: 'Email',
       hintText: 'you@example.com',
       error: emailError,
-      style: FortalTextFieldStyles.surface(),
+      style: fortalTextFieldStyler(variant: .surface),
     ),
     RemixSelect<String>(
       trigger: RemixSelectTrigger(placeholder: 'Country'),
@@ -634,7 +631,7 @@ Column(
     RemixButton(
       label: 'Submit',
       onPressed: agreedToTerms ? handleSubmit : null,
-      style: FortalButtonStyle.solid(size: FortalButtonSize.size3),
+      style: fortalButtonStyler(variant: .solid, size: .size3),
     ),
   ],
 )

@@ -12,7 +12,7 @@ Widget buildSpinnerUseCase(BuildContext context) {
     child: Scaffold(
       body: Center(
         child: RemixSpinner(
-          style: fortalSpinnerStyle(
+          style: fortalSpinnerStyler(
             size: context.knobs.object.dropdown(
               label: 'size',
               options: FortalSpinnerSize.values,

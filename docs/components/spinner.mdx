@@ -36,18 +36,18 @@ class SpinnerExample extends StatelessWidget {
     );
   }
 
-  RemixSpinnerStyle get styleDefault {
-    return RemixSpinnerStyle().indicatorColor(Colors.blue);
+  RemixSpinnerStyler get styleDefault {
+    return RemixSpinnerStyler().indicatorColor(Colors.blue);
   }
 
-  RemixSpinnerStyle get styleWithTrack {
-    return RemixSpinnerStyle()
+  RemixSpinnerStyler get styleWithTrack {
+    return RemixSpinnerStyler()
         .indicatorColor(Colors.green)
         .trackColor(Colors.green.withValues(alpha: 0.2));
   }
 
-  RemixSpinnerStyle get styleCustomColors {
-    return RemixSpinnerStyle()
+  RemixSpinnerStyler get styleCustomColors {
+    return RemixSpinnerStyler()
         .indicatorColor(Colors.redAccent)
         .trackColor(Colors.red.withValues(alpha: 0.15))
         .duration(2.s);
@@ -73,8 +73,8 @@ class FortalSpinnerExample extends StatelessWidget {
     return Row(
       spacing: 16,
       children: [
-        RemixSpinner(style: fortalSpinnerStyle(size: FortalSpinnerSize.size2)),
-        RemixSpinner(style: fortalSpinnerStyle(size: FortalSpinnerSize.size3)),
+        RemixSpinner(style: fortalSpinnerStyler(size: FortalSpinnerSize.size2)),
+        RemixSpinner(style: fortalSpinnerStyler(size: FortalSpinnerSize.size3)),
       ],
     );
   }
@@ -83,7 +83,7 @@ class FortalSpinnerExample extends StatelessWidget {
 </CodeGroup>
 
 <Info>
-  See the [fortalSpinnerStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/spinner/fortal_spinner_styles.dart) for all available options.
+  See the [fortalSpinnerStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/spinner/fortal_spinner_styles.dart) for all available options.
 </Info>
 
 ## Constructor
@@ -91,8 +91,8 @@ class FortalSpinnerExample extends StatelessWidget {
 ```dart
 const RemixSpinner({
   Key? key,
-  RemixSpinnerStyle style = const RemixSpinnerStyle.create(),
-  StyleSpec<RemixSpinnerSpec>? styleSpec,
+  RemixSpinnerStyler style = const RemixSpinnerStyler.create(),
+  RemixSpinnerSpec? styleSpec,
 })
 ```
 </CodeGroup>
@@ -101,11 +101,11 @@ const RemixSpinner({
 ## Properties
 ### Widget Properties
 
-#### `style` → `RemixSpinnerStyle`
+#### `style` → `RemixSpinnerStyler`
 
 Optional. The style configuration for the spinner. Customize colors, sizing, stroke, and animation duration.
 
-#### `styleSpec` → `StyleSpec<RemixSpinnerSpec>?`
+#### `styleSpec` → `RemixSpinnerSpec?`
 
 Optional. A pre-resolved style spec that bypasses style resolution. Useful for performance when sharing resolved styles across multiple instances.
 

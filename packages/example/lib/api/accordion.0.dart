@@ -84,14 +84,14 @@ class _AccordionExampleState extends State<AccordionExample> {
     );
   }
 
-  RemixAccordionStyle get itemStyle {
-    return RemixAccordionStyle()
+  RemixAccordionStyler get itemStyle {
+    return RemixAccordionStyler()
         .content(BoxStyler().paddingX(16).paddingTop(8))
         .wrap(WidgetModifierConfig.clipRRect(borderRadius: .circular(8)))
         .paddingX(16)
         .paddingY(14)
         .borderRounded(8)
-        .onHovered(RemixAccordionStyle().backgroundColor(Colors.grey.shade100))
+        .onHovered(RemixAccordionStyler().backgroundColor(Colors.grey.shade100))
         .decoration(
           BoxDecorationMix(
             color: Colors.white,

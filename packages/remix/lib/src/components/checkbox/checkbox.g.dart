@@ -89,7 +89,7 @@ typedef _$RemixCheckboxSpecMethods = _$RemixCheckboxSpec; // ignore: unused_elem
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Creates a Fortal-themed [RemixCheckboxStyle].
+/// Creates a Fortal-themed [RemixCheckboxStyler].
 class FortalCheckbox extends StatelessWidget {
   const FortalCheckbox({
     super.key,
@@ -139,7 +139,7 @@ class FortalCheckbox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return fortalCheckboxStyle(variant: this.variant, size: this.size).call(
+    return fortalCheckboxStyler(variant: this.variant, size: this.size).call(
       selected: this.selected,
       onChanged: this.onChanged,
       enabled: this.enabled,
@@ -160,44 +160,44 @@ class FortalCheckbox extends StatelessWidget {
 // StylerGenerator
 // **************************************************************************
 
-mixin _$RemixCheckboxStyleMixin on Style<RemixCheckboxSpec>, Diagnosticable {
+mixin _$RemixCheckboxStylerMixin on Style<RemixCheckboxSpec>, Diagnosticable {
   Prop<StyleSpec<BoxSpec>>? get $container;
   Prop<StyleSpec<IconSpec>>? get $indicator;
 
   /// Sets the container.
-  RemixCheckboxStyle container(BoxStyler value) {
-    return merge(RemixCheckboxStyle(container: value));
+  RemixCheckboxStyler container(BoxStyler value) {
+    return merge(RemixCheckboxStyler(container: value));
   }
 
   /// Sets the indicator.
-  RemixCheckboxStyle indicator(IconStyler value) {
-    return merge(RemixCheckboxStyle(indicator: value));
+  RemixCheckboxStyler indicator(IconStyler value) {
+    return merge(RemixCheckboxStyler(indicator: value));
   }
 
   /// Sets the animation configuration.
-  RemixCheckboxStyle animate(AnimationConfig value) {
-    return merge(RemixCheckboxStyle(animation: value));
+  RemixCheckboxStyler animate(AnimationConfig value) {
+    return merge(RemixCheckboxStyler(animation: value));
   }
 
   /// Sets the style variants.
-  RemixCheckboxStyle variants(List<VariantStyle<RemixCheckboxSpec>> value) {
-    return merge(RemixCheckboxStyle(variants: value));
+  RemixCheckboxStyler variants(List<VariantStyle<RemixCheckboxSpec>> value) {
+    return merge(RemixCheckboxStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
-  RemixCheckboxStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixCheckboxStyle(modifier: value));
+  RemixCheckboxStyler wrap(WidgetModifierConfig value) {
+    return merge(RemixCheckboxStyler(modifier: value));
   }
 
   /// Sets the widget modifier.
-  RemixCheckboxStyle modifier(WidgetModifierConfig value) {
-    return merge(RemixCheckboxStyle(modifier: value));
+  RemixCheckboxStyler modifier(WidgetModifierConfig value) {
+    return merge(RemixCheckboxStyler(modifier: value));
   }
 
-  /// Merges with another [RemixCheckboxStyle].
+  /// Merges with another [RemixCheckboxStyler].
   @override
-  RemixCheckboxStyle merge(RemixCheckboxStyle? other) {
-    return RemixCheckboxStyle.create(
+  RemixCheckboxStyler merge(RemixCheckboxStyler? other) {
+    return RemixCheckboxStyler.create(
       container: MixOps.merge($container, other?.$container),
       indicator: MixOps.merge($indicator, other?.$indicator),
       variants: MixOps.mergeVariants($variants, other?.$variants),

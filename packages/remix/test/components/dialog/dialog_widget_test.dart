@@ -66,7 +66,7 @@ void main() {
             actions: actions,
             modal: true,
             semanticLabel: 'Complete Dialog',
-            style: RemixDialogStyle.create(),
+            style: RemixDialogStyler.create(),
           ),
         );
         await tester.pumpAndSettle();
@@ -224,7 +224,7 @@ void main() {
 
     group('Style Integration', () {
       testWidgets('applies custom style to container', (tester) async {
-        final customStyle = RemixDialogStyle(
+        final customStyle = RemixDialogStyler(
           container: BoxStyler(
             padding: EdgeInsetsGeometryMix.all(32.0),
             decoration: BoxDecorationMix(
@@ -245,7 +245,7 @@ void main() {
       });
 
       testWidgets('applies custom title style', (tester) async {
-        final customStyle = RemixDialogStyle(
+        final customStyle = RemixDialogStyler(
           title: TextStyler(
             style: TextStyleMix(
               color: Colors.red,
@@ -266,7 +266,7 @@ void main() {
       });
 
       testWidgets('applies custom description style', (tester) async {
-        final customStyle = RemixDialogStyle(
+        final customStyle = RemixDialogStyler(
           description: TextStyler(
             style: TextStyleMix(
               color: Colors.blue,
@@ -287,7 +287,7 @@ void main() {
       });
 
       testWidgets('applies custom actions style', (tester) async {
-        final customStyle = RemixDialogStyle(
+        final customStyle = RemixDialogStyler(
           actions: FlexBoxStyler(
             spacing: 16.0,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

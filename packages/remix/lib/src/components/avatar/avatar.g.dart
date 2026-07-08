@@ -94,7 +94,7 @@ typedef _$RemixAvatarSpecMethods = _$RemixAvatarSpec; // ignore: unused_element
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Creates a Fortal-themed [RemixAvatarStyle].
+/// Creates a Fortal-themed [RemixAvatarStyler].
 class FortalAvatar extends StatelessWidget {
   const FortalAvatar({
     super.key,
@@ -135,7 +135,7 @@ class FortalAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return fortalAvatarStyle(variant: this.variant, size: this.size).call(
+    return fortalAvatarStyler(variant: this.variant, size: this.size).call(
       key: this.key,
       backgroundImage: this.backgroundImage,
       foregroundImage: this.foregroundImage,
@@ -154,50 +154,50 @@ class FortalAvatar extends StatelessWidget {
 // StylerGenerator
 // **************************************************************************
 
-mixin _$RemixAvatarStyleMixin on Style<RemixAvatarSpec>, Diagnosticable {
+mixin _$RemixAvatarStylerMixin on Style<RemixAvatarSpec>, Diagnosticable {
   Prop<StyleSpec<BoxSpec>>? get $container;
   Prop<StyleSpec<TextSpec>>? get $label;
   Prop<StyleSpec<IconSpec>>? get $icon;
 
   /// Sets the container.
-  RemixAvatarStyle container(BoxStyler value) {
-    return merge(RemixAvatarStyle(container: value));
+  RemixAvatarStyler container(BoxStyler value) {
+    return merge(RemixAvatarStyler(container: value));
   }
 
   /// Sets the label.
-  RemixAvatarStyle label(TextStyler value) {
-    return merge(RemixAvatarStyle(label: value));
+  RemixAvatarStyler label(TextStyler value) {
+    return merge(RemixAvatarStyler(label: value));
   }
 
   /// Sets the icon.
-  RemixAvatarStyle icon(IconStyler value) {
-    return merge(RemixAvatarStyle(icon: value));
+  RemixAvatarStyler icon(IconStyler value) {
+    return merge(RemixAvatarStyler(icon: value));
   }
 
   /// Sets the animation configuration.
-  RemixAvatarStyle animate(AnimationConfig value) {
-    return merge(RemixAvatarStyle(animation: value));
+  RemixAvatarStyler animate(AnimationConfig value) {
+    return merge(RemixAvatarStyler(animation: value));
   }
 
   /// Sets the style variants.
-  RemixAvatarStyle variants(List<VariantStyle<RemixAvatarSpec>> value) {
-    return merge(RemixAvatarStyle(variants: value));
+  RemixAvatarStyler variants(List<VariantStyle<RemixAvatarSpec>> value) {
+    return merge(RemixAvatarStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
-  RemixAvatarStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixAvatarStyle(modifier: value));
+  RemixAvatarStyler wrap(WidgetModifierConfig value) {
+    return merge(RemixAvatarStyler(modifier: value));
   }
 
   /// Sets the widget modifier.
-  RemixAvatarStyle modifier(WidgetModifierConfig value) {
-    return merge(RemixAvatarStyle(modifier: value));
+  RemixAvatarStyler modifier(WidgetModifierConfig value) {
+    return merge(RemixAvatarStyler(modifier: value));
   }
 
-  /// Merges with another [RemixAvatarStyle].
+  /// Merges with another [RemixAvatarStyler].
   @override
-  RemixAvatarStyle merge(RemixAvatarStyle? other) {
-    return RemixAvatarStyle.create(
+  RemixAvatarStyler merge(RemixAvatarStyler? other) {
+    return RemixAvatarStyler.create(
       container: MixOps.merge($container, other?.$container),
       label: MixOps.merge($label, other?.$label),
       icon: MixOps.merge($icon, other?.$icon),

@@ -37,8 +37,8 @@ class _TextfieldExampleState extends State<TextfieldExample> {
     );
   }
 
-  RemixTextFieldStyle get style {
-    return RemixTextFieldStyle()
+  RemixTextFieldStyler get style {
+    return RemixTextFieldStyler()
         .color(Colors.grey.shade800)
         .backgroundColor(Colors.white)
         .borderRadiusAll(const Radius.circular(8.0))
@@ -61,7 +61,7 @@ class _TextfieldExampleState extends State<TextfieldExample> {
         )
         .border(BoxBorderMix.all(BorderSideMix(color: Colors.grey.shade300)))
         .onFocused(
-          RemixTextFieldStyle().border(
+          RemixTextFieldStyler().border(
             BoxBorderMix.all(
               BorderSideMix()
                   .color(Colors.deepPurpleAccent)

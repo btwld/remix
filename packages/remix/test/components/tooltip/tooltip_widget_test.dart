@@ -55,7 +55,7 @@ void main() {
       testWidgets('shows tooltip on hover', (tester) async {
         await tester.pumpRemixApp(
           RemixTooltip(
-            style: RemixTooltipStyle().waitDuration(Duration.zero),
+            style: RemixTooltipStyler().waitDuration(Duration.zero),
             tooltipChild: const Text('Tooltip Content'),
             child: const Icon(Icons.info),
           ),
@@ -80,7 +80,7 @@ void main() {
       testWidgets('applies custom padding', (tester) async {
         await tester.pumpRemixApp(
           RemixTooltip(
-            style: RemixTooltipStyle().padding(EdgeInsetsGeometryMix.all(20)),
+            style: RemixTooltipStyler().padding(EdgeInsetsGeometryMix.all(20)),
             tooltipChild: const Text('Tooltip'),
             child: const Text('Trigger'),
           ),
@@ -93,7 +93,7 @@ void main() {
       testWidgets('applies custom background color', (tester) async {
         await tester.pumpRemixApp(
           RemixTooltip(
-            style: RemixTooltipStyle().color(Colors.blue),
+            style: RemixTooltipStyler().color(Colors.blue),
             tooltipChild: const Text('Tooltip'),
             child: const Text('Trigger'),
           ),
@@ -106,7 +106,7 @@ void main() {
       testWidgets('applies custom border radius', (tester) async {
         await tester.pumpRemixApp(
           RemixTooltip(
-            style: RemixTooltipStyle().borderRadius(
+            style: RemixTooltipStyler().borderRadius(
               BorderRadiusGeometryMix.circular(12),
             ),
             tooltipChild: const Text('Tooltip'),
@@ -121,7 +121,7 @@ void main() {
       testWidgets('applies custom margin', (tester) async {
         await tester.pumpRemixApp(
           RemixTooltip(
-            style: RemixTooltipStyle().margin(EdgeInsetsGeometryMix.all(8)),
+            style: RemixTooltipStyler().margin(EdgeInsetsGeometryMix.all(8)),
             tooltipChild: const Text('Tooltip'),
             child: const Text('Trigger'),
           ),
@@ -134,7 +134,7 @@ void main() {
       testWidgets('applies custom alignment', (tester) async {
         await tester.pumpRemixApp(
           RemixTooltip(
-            style: RemixTooltipStyle().alignment(Alignment.topCenter),
+            style: RemixTooltipStyler().alignment(Alignment.topCenter),
             tooltipChild: const Text('Tooltip'),
             child: const Text('Trigger'),
           ),
@@ -147,7 +147,7 @@ void main() {
       testWidgets('applies custom decoration', (tester) async {
         await tester.pumpRemixApp(
           RemixTooltip(
-            style: RemixTooltipStyle().decoration(
+            style: RemixTooltipStyler().decoration(
               BoxDecorationMix(color: Colors.red),
             ),
             tooltipChild: const Text('Tooltip'),
@@ -164,7 +164,7 @@ void main() {
       testWidgets('applies custom wait duration', (tester) async {
         await tester.pumpRemixApp(
           RemixTooltip(
-            style: RemixTooltipStyle().waitDuration(
+            style: RemixTooltipStyler().waitDuration(
               const Duration(milliseconds: 500),
             ),
             tooltipChild: const Text('Tooltip'),
@@ -179,7 +179,7 @@ void main() {
       testWidgets('applies custom show duration', (tester) async {
         await tester.pumpRemixApp(
           RemixTooltip(
-            style: RemixTooltipStyle().showDuration(
+            style: RemixTooltipStyler().showDuration(
               const Duration(milliseconds: 2000),
             ),
             tooltipChild: const Text('Tooltip'),
@@ -299,7 +299,7 @@ void main() {
       testWidgets('applies constraints', (tester) async {
         await tester.pumpRemixApp(
           RemixTooltip(
-            style: RemixTooltipStyle().constraints(
+            style: RemixTooltipStyler().constraints(
               BoxConstraintsMix(minWidth: 100, maxWidth: 200),
             ),
             tooltipChild: const Text('Tooltip'),
@@ -314,7 +314,7 @@ void main() {
       testWidgets('applies foreground decoration', (tester) async {
         await tester.pumpRemixApp(
           RemixTooltip(
-            style: RemixTooltipStyle().foregroundDecoration(
+            style: RemixTooltipStyler().foregroundDecoration(
               BoxDecorationMix(shape: BoxShape.circle),
             ),
             tooltipChild: const Text('Tooltip'),
@@ -329,7 +329,7 @@ void main() {
       testWidgets('applies transform', (tester) async {
         await tester.pumpRemixApp(
           RemixTooltip(
-            style: RemixTooltipStyle().transform(
+            style: RemixTooltipStyler().transform(
               Matrix4.rotationZ(0.1),
               alignment: Alignment.center,
             ),
@@ -345,7 +345,7 @@ void main() {
       testWidgets('applies combined styles', (tester) async {
         await tester.pumpRemixApp(
           RemixTooltip(
-            style: RemixTooltipStyle()
+            style: RemixTooltipStyler()
                 .color(Colors.blue)
                 .padding(EdgeInsetsGeometryMix.all(16))
                 .borderRadius(BorderRadiusGeometryMix.circular(8))
@@ -364,7 +364,7 @@ void main() {
       testWidgets('applies widget modifiers from style', (tester) async {
         await tester.pumpRemixApp(
           RemixTooltip(
-            style: RemixTooltipStyle().wrap(WidgetModifierConfig.clipOval()),
+            style: RemixTooltipStyler().wrap(WidgetModifierConfig.clipOval()),
             tooltipChild: const Text('Tooltip'),
             child: const Text('Trigger'),
           ),
@@ -455,7 +455,7 @@ void main() {
       testWidgets('applies animation config', (tester) async {
         await tester.pumpRemixApp(
           RemixTooltip(
-            style: RemixTooltipStyle().animate(
+            style: RemixTooltipStyler().animate(
               AnimationConfig.linear(const Duration(milliseconds: 300)),
             ),
             tooltipChild: const Text('Tooltip'),

@@ -53,7 +53,7 @@ class _MenuExampleState extends State<MenuExample> {
           leadingIcon: Icons.logout,
           label: 'Logout',
           style: menuItemStyle.onHovered(
-            RemixMenuItemStyle()
+            RemixMenuItemStyler()
                 .color(Colors.redAccent.withValues(alpha: 0.05))
                 .label(TextStyler().color(Colors.redAccent))
                 .leadingIcon(IconStyler().color(Colors.redAccent)),
@@ -73,10 +73,10 @@ class _MenuExampleState extends State<MenuExample> {
     );
   }
 
-  RemixMenuStyle get menuStyle {
-    return RemixMenuStyle()
+  RemixMenuStyler get menuStyle {
+    return RemixMenuStyler()
         .trigger(
-          RemixMenuTriggerStyle()
+          RemixMenuTriggerStyler()
               .padding(EdgeInsetsMix.symmetric(horizontal: 14))
               .decoration(
                 BoxDecorationMix()
@@ -117,14 +117,14 @@ class _MenuExampleState extends State<MenuExample> {
         );
   }
 
-  RemixMenuItemStyle get menuItemStyle {
-    return RemixMenuItemStyle()
+  RemixMenuItemStyler get menuItemStyle {
+    return RemixMenuItemStyler()
         .paddingAll(6)
         .leadingIcon(IconStyler().size(20).color(Colors.blueGrey.shade800))
         .spacing(8)
         .borderRadiusAll(const Radius.circular(8))
         .label(TextStyler().color(Colors.blueGrey.shade800))
-        .onHovered(RemixMenuItemStyle().color(Colors.blueGrey.shade50));
+        .onHovered(RemixMenuItemStyler().color(Colors.blueGrey.shade50));
   }
 }
 ```
@@ -134,7 +134,7 @@ class _MenuExampleState extends State<MenuExample> {
 
 Remix includes Fortal-themed style helpers for this component:
 
-<CodeGroup title="Fortal base style" defaultLanguage="dart">
+<CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
@@ -144,22 +144,34 @@ class FortalMenuExample extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RemixMenu<String>(
-      trigger: const RemixMenuTrigger(label: 'Options'),
-      items: [
-        RemixMenuItem(
-          value: 'edit',
-          label: 'Edit',
-          leadingIcon: Icons.edit,
+    final items = <RemixMenuItemData<String>>[
+      RemixMenuItem(
+        value: 'edit',
+        label: 'Edit',
+        leadingIcon: Icons.edit,
+      ),
+      RemixMenuItem(
+        value: 'delete',
+        label: 'Delete',
+        leadingIcon: Icons.delete,
+      ),
+    ];
+    return Row(
+      spacing: 16,
+      children: [
+        RemixMenu<String>(
+          trigger: const RemixMenuTrigger(label: 'Solid', icon: Icons.menu),
+          items: items,
+          style: fortalMenuStyler(variant: FortalMenuVariant.solid),
+          onSelected: (value) => debugPrint(value),
         ),
-        RemixMenuItem(
-          value: 'delete',
-          label: 'Delete',
-          leadingIcon: Icons.delete,
+        RemixMenu<String>(
+          trigger: const RemixMenuTrigger(label: 'Soft', icon: Icons.menu),
+          items: items,
+          style: fortalMenuStyler(variant: FortalMenuVariant.soft),
+          onSelected: (value) => debugPrint(value),
         ),
       ],
-      style: fortalMenuStyle(),
-      onSelected: (value) => debugPrint(value),
     );
   }
 }
@@ -167,7 +179,7 @@ class FortalMenuExample extends StatelessWidget {
 </CodeGroup>
 
 <Info>
-  See the [fortalMenuStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/menu/fortal_menu_styles.dart) for all available options.
+  See the [fortalMenuStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/menu/fortal_menu_styles.dart) for all available options.
 </Info>
 
 ## Constructor
@@ -189,7 +201,7 @@ const RemixMenu({
   bool closeOnClickOutside = true,
   FocusNode? triggerFocusNode,
   OverlayPositionConfig positioning = const OverlayPositionConfig(),
-  RemixMenuStyle style = const RemixMenuStyle.create(),
+  RemixMenuStyler style = const RemixMenuStyler.create(),
 })
 ```
 </CodeGroup>
@@ -258,14 +270,14 @@ Optional. Optional focus node for the trigger.
 
 Optional. Overlay positioning configuration.
 
-#### `style` → `RemixMenuStyle`
+#### `style` → `RemixMenuStyler`
 
 Optional. The style configuration for the menu.
 
 
 ### Menu Style Methods
 
-#### `trigger(RemixMenuTriggerStyle value)`
+#### `trigger(RemixMenuTriggerStyler value)`
 
 Configures the trigger button style.
 
@@ -273,11 +285,11 @@ Configures the trigger button style.
 
 Configures the menu overlay container style.
 
-#### `item(RemixMenuItemStyle value)`
+#### `item(RemixMenuItemStyler value)`
 
 Configures the default menu item style.
 
-#### `divider(RemixDividerStyle value)`
+#### `divider(RemixDividerStyler value)`
 
 Configures divider style.
 

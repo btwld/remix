@@ -6,9 +6,9 @@ part of 'slider.dart';
 /// Mix variants and widget state variants such as disabled, hovered, focused,
 /// and pressed states.
 @MixableStyler()
-class RemixSliderStyle
-    extends RemixContainerStyle<RemixSliderSpec, RemixSliderStyle>
-    with Diagnosticable, _$RemixSliderStyleMixin {
+class RemixSliderStyler
+    extends RemixContainerStyler<RemixSliderSpec, RemixSliderStyler>
+    with Diagnosticable, _$RemixSliderStylerMixin {
   @MixableField(setterType: BoxStyler)
   final Prop<StyleSpec<BoxSpec>>? $thumb;
   final Prop<Color>? $trackColor;
@@ -17,7 +17,7 @@ class RemixSliderStyle
   final Prop<double>? $rangeWidth;
 
   /// Creates a slider style from raw Mix properties.
-  const RemixSliderStyle.create({
+  const RemixSliderStyler.create({
     Prop<StyleSpec<BoxSpec>>? thumb,
     Prop<Color>? trackColor,
     Prop<double>? trackWidth,
@@ -33,7 +33,7 @@ class RemixSliderStyle
        $rangeWidth = rangeWidth;
 
   /// Creates a slider style from plain Dart values and Mix stylers.
-  RemixSliderStyle({
+  RemixSliderStyler({
     BoxStyler? thumb,
     Color? trackColor,
     double? trackWidth,
@@ -54,77 +54,77 @@ class RemixSliderStyle
        );
 
   /// Sets thumb color
-  RemixSliderStyle thumbColor(Color value) {
+  RemixSliderStyler thumbColor(Color value) {
     return merge(
-      RemixSliderStyle(
+      RemixSliderStyler(
         thumb: BoxStyler(decoration: BoxDecorationMix(color: value)),
       ),
     );
   }
 
   /// Sets track color (background rail)
-  RemixSliderStyle trackColor(Color value) {
-    return merge(RemixSliderStyle(trackColor: value));
+  RemixSliderStyler trackColor(Color value) {
+    return merge(RemixSliderStyler(trackColor: value));
   }
 
   /// Sets range color (filled progress portion)
-  RemixSliderStyle rangeColor(Color value) {
-    return merge(RemixSliderStyle(rangeColor: value));
+  RemixSliderStyler rangeColor(Color value) {
+    return merge(RemixSliderStyler(rangeColor: value));
   }
 
   /// Sets thumb styling
-  RemixSliderStyle thumb(BoxStyler value) {
-    return merge(RemixSliderStyle(thumb: value));
+  RemixSliderStyler thumb(BoxStyler value) {
+    return merge(RemixSliderStyler(thumb: value));
   }
 
   /// Sets thumb to a fixed [size].
-  RemixSliderStyle thumbSize(Size size) {
+  RemixSliderStyler thumbSize(Size size) {
     return merge(
-      RemixSliderStyle(
+      RemixSliderStyler(
         thumb: BoxStyler(constraints: BoxConstraintsMix.size(size)),
       ),
     );
   }
 
   /// Sets thumb alignment
-  RemixSliderStyle alignment(Alignment value) {
-    return merge(RemixSliderStyle(thumb: BoxStyler(alignment: value)));
+  RemixSliderStyler alignment(Alignment value) {
+    return merge(RemixSliderStyler(thumb: BoxStyler(alignment: value)));
   }
 
   /// Sets stroke width for both track and range.
-  RemixSliderStyle thickness(double value) {
-    return merge(RemixSliderStyle(trackWidth: value, rangeWidth: value));
+  RemixSliderStyler thickness(double value) {
+    return merge(RemixSliderStyler(trackWidth: value, rangeWidth: value));
   }
 
   /// Sets stroke width for the track only (background rail).
-  RemixSliderStyle trackThickness(double value) {
-    return merge(RemixSliderStyle(trackWidth: value));
+  RemixSliderStyler trackThickness(double value) {
+    return merge(RemixSliderStyler(trackWidth: value));
   }
 
   /// Sets stroke width for the range only (filled portion).
-  RemixSliderStyle rangeThickness(double value) {
-    return merge(RemixSliderStyle(rangeWidth: value));
+  RemixSliderStyler rangeThickness(double value) {
+    return merge(RemixSliderStyler(rangeWidth: value));
   }
 
-  // RemixContainerStyle mixin implementations
+  // RemixContainerStyler mixin implementations
   @override
-  RemixSliderStyle padding(EdgeInsetsGeometryMix value) {
-    return merge(RemixSliderStyle(thumb: BoxStyler(padding: value)));
+  RemixSliderStyler padding(EdgeInsetsGeometryMix value) {
+    return merge(RemixSliderStyler(thumb: BoxStyler(padding: value)));
   }
 
   @override
-  RemixSliderStyle color(Color value) {
+  RemixSliderStyler color(Color value) {
     return merge(
-      RemixSliderStyle(
+      RemixSliderStyler(
         thumb: BoxStyler(decoration: BoxDecorationMix(color: value)),
       ),
     );
   }
 
   @override
-  RemixSliderStyle size(double width, double height) {
+  RemixSliderStyler size(double width, double height) {
     return merge(
-      RemixSliderStyle(
+      RemixSliderStyler(
         thumb: BoxStyler(
           constraints: BoxConstraintsMix(
             minWidth: width,
@@ -138,43 +138,43 @@ class RemixSliderStyle
   }
 
   @override
-  RemixSliderStyle borderRadius(BorderRadiusGeometryMix radius) {
+  RemixSliderStyler borderRadius(BorderRadiusGeometryMix radius) {
     return merge(
-      RemixSliderStyle(
+      RemixSliderStyler(
         thumb: BoxStyler(decoration: BoxDecorationMix(borderRadius: radius)),
       ),
     );
   }
 
   @override
-  RemixSliderStyle constraints(BoxConstraintsMix value) {
-    return merge(RemixSliderStyle(thumb: BoxStyler(constraints: value)));
+  RemixSliderStyler constraints(BoxConstraintsMix value) {
+    return merge(RemixSliderStyler(thumb: BoxStyler(constraints: value)));
   }
 
   @override
-  RemixSliderStyle decoration(DecorationMix value) {
-    return merge(RemixSliderStyle(thumb: BoxStyler(decoration: value)));
+  RemixSliderStyler decoration(DecorationMix value) {
+    return merge(RemixSliderStyler(thumb: BoxStyler(decoration: value)));
   }
 
   @override
-  RemixSliderStyle margin(EdgeInsetsGeometryMix value) {
-    return merge(RemixSliderStyle(thumb: BoxStyler(margin: value)));
+  RemixSliderStyler margin(EdgeInsetsGeometryMix value) {
+    return merge(RemixSliderStyler(thumb: BoxStyler(margin: value)));
   }
 
   @override
-  RemixSliderStyle foregroundDecoration(DecorationMix value) {
+  RemixSliderStyler foregroundDecoration(DecorationMix value) {
     return merge(
-      RemixSliderStyle(thumb: BoxStyler(foregroundDecoration: value)),
+      RemixSliderStyler(thumb: BoxStyler(foregroundDecoration: value)),
     );
   }
 
   @override
-  RemixSliderStyle transform(
+  RemixSliderStyler transform(
     Matrix4 value, {
     AlignmentGeometry alignment = Alignment.center,
   }) {
     return merge(
-      RemixSliderStyle(
+      RemixSliderStyler(
         thumb: BoxStyler(transform: value, transformAlignment: alignment),
       ),
     );
@@ -184,7 +184,7 @@ class RemixSliderStyle
   ///
   /// Example:
   /// ```dart
-  /// final slider = RemixSliderStyle()
+  /// final slider = RemixSliderStyler()
   ///   .thumbColor(Colors.blue)
   ///   .rangeColor(Colors.blue.shade200);
   ///

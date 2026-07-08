@@ -18,7 +18,7 @@ void main() {
 
       testWidgets('renders divider with custom style', (tester) async {
         await tester.pumpRemixApp(
-          RemixDivider(style: RemixDividerStyle().color(Colors.red)),
+          RemixDivider(style: RemixDividerStyler().color(Colors.red)),
         );
 
         await tester.pumpAndSettle();
@@ -29,7 +29,7 @@ void main() {
 
       testWidgets('renders divider with thickness', (tester) async {
         await tester.pumpRemixApp(
-          RemixDivider(style: RemixDividerStyle().thickness(2.0)),
+          RemixDivider(style: RemixDividerStyler().thickness(2.0)),
         );
 
         await tester.pumpAndSettle();
@@ -76,7 +76,7 @@ void main() {
       testWidgets('applies padding style correctly', (tester) async {
         await tester.pumpRemixApp(
           RemixDivider(
-            style: RemixDividerStyle().padding(
+            style: RemixDividerStyler().padding(
               EdgeInsetsGeometryMix.symmetric(vertical: 8.0),
             ),
           ),
@@ -90,7 +90,7 @@ void main() {
       testWidgets('applies margin style correctly', (tester) async {
         await tester.pumpRemixApp(
           RemixDivider(
-            style: RemixDividerStyle().margin(
+            style: RemixDividerStyler().margin(
               EdgeInsetsGeometryMix.symmetric(horizontal: 16.0),
             ),
           ),
@@ -104,7 +104,7 @@ void main() {
       testWidgets('applies decoration style correctly', (tester) async {
         await tester.pumpRemixApp(
           RemixDivider(
-            style: RemixDividerStyle().decoration(
+            style: RemixDividerStyler().decoration(
               BoxDecorationMix(
                 color: Colors.blue,
                 borderRadius: BorderRadiusMix.circular(4.0),
@@ -121,8 +121,8 @@ void main() {
 
     group('StyleSpec Usage', () {
       testWidgets('renders with styleSpec parameter', (tester) async {
-        const styleSpec = StyleSpec(
-          spec: RemixDividerSpec(container: StyleSpec(spec: BoxSpec())),
+        const styleSpec = RemixDividerSpec(
+          container: StyleSpec(spec: BoxSpec()),
         );
 
         await tester.pumpRemixApp(RemixDivider(styleSpec: styleSpec));

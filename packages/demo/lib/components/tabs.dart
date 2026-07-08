@@ -31,12 +31,12 @@ Widget buildTabsUseCase(BuildContext context) {
                           RemixTab(
                             tabId: 'tab1',
                             label: 'Tab 1',
-                            style: fortalTabStyle(),
+                            style: fortalTabStyler(),
                           ),
                           RemixTab(
                             tabId: 'tab2',
                             label: 'Tab 2',
-                            style: fortalTabStyle(),
+                            style: fortalTabStyler(),
                           ),
                         ],
                       ),

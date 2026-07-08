@@ -6,19 +6,19 @@ part of 'button.dart';
 /// should be styled and structured. It follows the Spec pattern used
 /// throughout the Remix framework, where:
 ///
-/// 1. **Style classes** (like [RemixButtonStyle]) define styling APIs
+/// 1. **Style classes** (like [RemixButtonStyler]) define styling APIs
 /// 2. **Spec classes** (like [RemixButtonSpec]) hold resolved styling properties
 /// 3. **Widget classes** (like [RemixButton]) consume specs to render UI
 ///
 /// The RemixButtonSpec contains [StyleSpec] properties for each visual element
 /// of the button: container layout, text label, icon, and loading spinner.
-/// These properties are built by [RemixButtonStyle] and consumed by
+/// These properties are built by [RemixButtonStyler] and consumed by
 /// [RemixButton] to create the final rendered widget.
 ///
 /// ## Architecture Overview
 ///
 /// ```
-/// RemixButtonStyle -> RemixButtonSpec -> RemixButton Widget
+/// RemixButtonStyler -> RemixButtonSpec -> RemixButton Widget
 /// (Define styles)    (Hold props)   (Render UI)
 /// ```
 ///
@@ -29,7 +29,7 @@ part of 'button.dart';
 ///
 /// ```dart
 /// // Style creates and populates the spec
-/// final style = RemixButtonStyle()
+/// final style = RemixButtonStyler()
 ///   .backgroundColor(Colors.blue)
 ///   .foregroundColor(Colors.white)
 ///   .iconSize(20.0);
@@ -51,7 +51,7 @@ part of 'button.dart';
 /// - [spinner]: Loading spinner styling during async operations
 ///
 /// See also:
-/// - [RemixButtonStyle] for the styling API
+/// - [RemixButtonStyler] for the styling API
 /// - [RemixButton] for the widget implementation
 /// - [Spec] for the base specification pattern
 @MixableSpec()

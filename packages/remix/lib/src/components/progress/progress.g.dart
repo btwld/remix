@@ -99,7 +99,7 @@ typedef _$RemixProgressSpecMethods = _$RemixProgressSpec; // ignore: unused_elem
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Creates a Fortal-themed [RemixProgressStyle].
+/// Creates a Fortal-themed [RemixProgressStyler].
 class FortalProgress extends StatelessWidget {
   const FortalProgress({
     super.key,
@@ -116,7 +116,7 @@ class FortalProgress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return fortalProgressStyle(
+    return fortalProgressStyler(
       variant: this.variant,
       size: this.size,
     ).call(key: this.key, value: this.value);
@@ -127,56 +127,56 @@ class FortalProgress extends StatelessWidget {
 // StylerGenerator
 // **************************************************************************
 
-mixin _$RemixProgressStyleMixin on Style<RemixProgressSpec>, Diagnosticable {
+mixin _$RemixProgressStylerMixin on Style<RemixProgressSpec>, Diagnosticable {
   Prop<StyleSpec<BoxSpec>>? get $container;
   Prop<StyleSpec<BoxSpec>>? get $track;
   Prop<StyleSpec<BoxSpec>>? get $indicator;
   Prop<StyleSpec<BoxSpec>>? get $trackContainer;
 
   /// Sets the container.
-  RemixProgressStyle container(BoxStyler value) {
-    return merge(RemixProgressStyle(container: value));
+  RemixProgressStyler container(BoxStyler value) {
+    return merge(RemixProgressStyler(container: value));
   }
 
   /// Sets the track.
-  RemixProgressStyle track(BoxStyler value) {
-    return merge(RemixProgressStyle(track: value));
+  RemixProgressStyler track(BoxStyler value) {
+    return merge(RemixProgressStyler(track: value));
   }
 
   /// Sets the indicator.
-  RemixProgressStyle indicator(BoxStyler value) {
-    return merge(RemixProgressStyle(indicator: value));
+  RemixProgressStyler indicator(BoxStyler value) {
+    return merge(RemixProgressStyler(indicator: value));
   }
 
   /// Sets the trackContainer.
-  RemixProgressStyle trackContainer(BoxStyler value) {
-    return merge(RemixProgressStyle(trackContainer: value));
+  RemixProgressStyler trackContainer(BoxStyler value) {
+    return merge(RemixProgressStyler(trackContainer: value));
   }
 
   /// Sets the animation configuration.
-  RemixProgressStyle animate(AnimationConfig value) {
-    return merge(RemixProgressStyle(animation: value));
+  RemixProgressStyler animate(AnimationConfig value) {
+    return merge(RemixProgressStyler(animation: value));
   }
 
   /// Sets the style variants.
-  RemixProgressStyle variants(List<VariantStyle<RemixProgressSpec>> value) {
-    return merge(RemixProgressStyle(variants: value));
+  RemixProgressStyler variants(List<VariantStyle<RemixProgressSpec>> value) {
+    return merge(RemixProgressStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
-  RemixProgressStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixProgressStyle(modifier: value));
+  RemixProgressStyler wrap(WidgetModifierConfig value) {
+    return merge(RemixProgressStyler(modifier: value));
   }
 
   /// Sets the widget modifier.
-  RemixProgressStyle modifier(WidgetModifierConfig value) {
-    return merge(RemixProgressStyle(modifier: value));
+  RemixProgressStyler modifier(WidgetModifierConfig value) {
+    return merge(RemixProgressStyler(modifier: value));
   }
 
-  /// Merges with another [RemixProgressStyle].
+  /// Merges with another [RemixProgressStyler].
   @override
-  RemixProgressStyle merge(RemixProgressStyle? other) {
-    return RemixProgressStyle.create(
+  RemixProgressStyler merge(RemixProgressStyler? other) {
+    return RemixProgressStyler.create(
       container: MixOps.merge($container, other?.$container),
       track: MixOps.merge($track, other?.$track),
       indicator: MixOps.merge($indicator, other?.$indicator),

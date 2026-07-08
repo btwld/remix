@@ -101,10 +101,52 @@ mixin _$RemixDialogSpec implements Spec<RemixDialogSpec>, Diagnosticable {
 typedef _$RemixDialogSpecMethods = _$RemixDialogSpec; // ignore: unused_element
 
 // **************************************************************************
+// MixWidgetGenerator
+// **************************************************************************
+
+/// Creates a Fortal-themed [RemixDialogStyler].
+class FortalDialog extends StatelessWidget {
+  const FortalDialog({
+    super.key,
+    this.child,
+    this.title,
+    this.description,
+    this.actions,
+    this.modal = true,
+    this.semanticLabel,
+  });
+
+  final Widget? child;
+
+  final String? title;
+
+  final String? description;
+
+  final List<Widget>? actions;
+
+  final bool modal;
+
+  final String? semanticLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    return fortalDialogStyler().call(
+      key: this.key,
+      child: this.child,
+      title: this.title,
+      description: this.description,
+      actions: this.actions,
+      modal: this.modal,
+      semanticLabel: this.semanticLabel,
+    );
+  }
+}
+
+// **************************************************************************
 // StylerGenerator
 // **************************************************************************
 
-mixin _$RemixDialogStyleMixin on Style<RemixDialogSpec>, Diagnosticable {
+mixin _$RemixDialogStylerMixin on Style<RemixDialogSpec>, Diagnosticable {
   Prop<StyleSpec<BoxSpec>>? get $container;
   Prop<StyleSpec<TextSpec>>? get $title;
   Prop<StyleSpec<TextSpec>>? get $description;
@@ -112,54 +154,54 @@ mixin _$RemixDialogStyleMixin on Style<RemixDialogSpec>, Diagnosticable {
   Prop<StyleSpec<BoxSpec>>? get $overlay;
 
   /// Sets the container.
-  RemixDialogStyle container(BoxStyler value) {
-    return merge(RemixDialogStyle(container: value));
+  RemixDialogStyler container(BoxStyler value) {
+    return merge(RemixDialogStyler(container: value));
   }
 
   /// Sets the title.
-  RemixDialogStyle title(TextStyler value) {
-    return merge(RemixDialogStyle(title: value));
+  RemixDialogStyler title(TextStyler value) {
+    return merge(RemixDialogStyler(title: value));
   }
 
   /// Sets the description.
-  RemixDialogStyle description(TextStyler value) {
-    return merge(RemixDialogStyle(description: value));
+  RemixDialogStyler description(TextStyler value) {
+    return merge(RemixDialogStyler(description: value));
   }
 
   /// Sets the actions.
-  RemixDialogStyle actions(FlexBoxStyler value) {
-    return merge(RemixDialogStyle(actions: value));
+  RemixDialogStyler actions(FlexBoxStyler value) {
+    return merge(RemixDialogStyler(actions: value));
   }
 
   /// Sets the overlay.
-  RemixDialogStyle overlay(BoxStyler value) {
-    return merge(RemixDialogStyle(overlay: value));
+  RemixDialogStyler overlay(BoxStyler value) {
+    return merge(RemixDialogStyler(overlay: value));
   }
 
   /// Sets the animation configuration.
-  RemixDialogStyle animate(AnimationConfig value) {
-    return merge(RemixDialogStyle(animation: value));
+  RemixDialogStyler animate(AnimationConfig value) {
+    return merge(RemixDialogStyler(animation: value));
   }
 
   /// Sets the style variants.
-  RemixDialogStyle variants(List<VariantStyle<RemixDialogSpec>> value) {
-    return merge(RemixDialogStyle(variants: value));
+  RemixDialogStyler variants(List<VariantStyle<RemixDialogSpec>> value) {
+    return merge(RemixDialogStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
-  RemixDialogStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixDialogStyle(modifier: value));
+  RemixDialogStyler wrap(WidgetModifierConfig value) {
+    return merge(RemixDialogStyler(modifier: value));
   }
 
   /// Sets the widget modifier.
-  RemixDialogStyle modifier(WidgetModifierConfig value) {
-    return merge(RemixDialogStyle(modifier: value));
+  RemixDialogStyler modifier(WidgetModifierConfig value) {
+    return merge(RemixDialogStyler(modifier: value));
   }
 
-  /// Merges with another [RemixDialogStyle].
+  /// Merges with another [RemixDialogStyler].
   @override
-  RemixDialogStyle merge(RemixDialogStyle? other) {
-    return RemixDialogStyle.create(
+  RemixDialogStyler merge(RemixDialogStyler? other) {
+    return RemixDialogStyler.create(
       container: MixOps.merge($container, other?.$container),
       title: MixOps.merge($title, other?.$title),
       description: MixOps.merge($description, other?.$description),

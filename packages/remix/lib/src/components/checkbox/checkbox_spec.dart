@@ -6,7 +6,7 @@ part of 'checkbox.dart';
 /// should be styled and structured. It follows the Spec pattern used
 /// throughout the Remix framework, where:
 ///
-/// 1. **Style classes** (like [RemixCheckboxStyle]) define styling APIs
+/// 1. **Style classes** (like [RemixCheckboxStyler]) define styling APIs
 /// 2. **Spec classes** (like [RemixCheckboxSpec]) hold resolved styling properties
 /// 3. **Widget classes** (like [RemixCheckbox]) consume specs to render UI
 ///
@@ -16,7 +16,7 @@ part of 'checkbox.dart';
 /// ## Architecture Overview
 ///
 /// ```
-/// RemixCheckboxStyle -> RemixCheckboxSpec -> RemixCheckbox Widget
+/// RemixCheckboxStyler -> RemixCheckboxSpec -> RemixCheckbox Widget
 /// (Define styles)      (Hold props)    (Render UI)
 /// ```
 ///
@@ -35,7 +35,7 @@ part of 'checkbox.dart';
 ///
 /// ```dart
 /// // Style creates and populates the spec
-/// final style = RemixCheckboxStyle()
+/// final style = RemixCheckboxStyler()
 ///   .indicatorColor(Colors.blue)
 ///   .size(20, 20);
 ///
@@ -50,7 +50,7 @@ part of 'checkbox.dart';
 /// - [indicator]: The checkmark icon styling (color, size)
 ///
 /// See also:
-/// - [RemixCheckboxStyle] for the styling API
+/// - [RemixCheckboxStyler] for the styling API
 /// - [RemixCheckbox] for the widget implementation
 /// - [Spec] for the base specification pattern
 @MixableSpec()

@@ -6,25 +6,25 @@ enum FortalCardSize { size1, size2, size3 }
 /// Fortal card surface variants.
 enum FortalCardVariant { surface, classic, ghost }
 
-/// Creates a Fortal-themed [RemixCardStyle].
-@MixWidget()
-RemixCardStyle fortalCardStyle({
+/// Creates a Fortal-themed [RemixCardStyler].
+@MixWidget(name: 'FortalCard')
+RemixCardStyler fortalCardStyler({
   FortalCardVariant variant = .surface,
   FortalCardSize size = .size2,
 }) {
   return switch (variant) {
-    .surface => _fortalCardSurfaceStyle(size),
-    .classic => _fortalCardClassicStyle(size),
-    .ghost => _fortalCardGhostStyle(size),
+    .surface => _fortalCardSurfaceStyler(size),
+    .classic => _fortalCardClassicStyler(size),
+    .ghost => _fortalCardGhostStyler(size),
   };
 }
 
-RemixCardStyle _fortalCardBaseStyle(FortalCardSize size) {
-  return RemixCardStyle().merge(_fortalCardSizeStyle(size));
+RemixCardStyler _fortalCardBaseStyler(FortalCardSize size) {
+  return RemixCardStyler().merge(_fortalCardSizeStyler(size));
 }
 
-RemixCardStyle _fortalCardSurfaceStyle([FortalCardSize size = .size2]) {
-  return _fortalCardBaseStyle(size)
+RemixCardStyler _fortalCardSurfaceStyler([FortalCardSize size = .size2]) {
+  return _fortalCardBaseStyler(size)
       .borderAll(
         color: FortalTokens.gray6(),
         width: FortalTokens.borderWidth1(),
@@ -32,8 +32,8 @@ RemixCardStyle _fortalCardSurfaceStyle([FortalCardSize size = .size2]) {
       .borderRadiusAll(FortalTokens.radius5());
 }
 
-RemixCardStyle _fortalCardClassicStyle([FortalCardSize size = .size2]) {
-  return _fortalCardBaseStyle(size)
+RemixCardStyler _fortalCardClassicStyler([FortalCardSize size = .size2]) {
+  return _fortalCardBaseStyler(size)
       .backgroundColor(FortalTokens.graySurface())
       .borderAll(
         color: FortalTokens.gray6(),
@@ -47,17 +47,17 @@ RemixCardStyle _fortalCardClassicStyle([FortalCardSize size = .size2]) {
             .spreadRadius(0),
       )
       .borderRadiusAll(FortalTokens.radius5())
-      .merge(RemixCardStyle(container: BoxStyler()));
+      .merge(RemixCardStyler(container: BoxStyler()));
 }
 
-RemixCardStyle _fortalCardGhostStyle([FortalCardSize size = .size2]) {
-  return _fortalCardBaseStyle(size).backgroundColor(Colors.transparent);
+RemixCardStyler _fortalCardGhostStyler([FortalCardSize size = .size2]) {
+  return _fortalCardBaseStyler(size).backgroundColor(Colors.transparent);
 }
 
-RemixCardStyle _fortalCardSizeStyle(FortalCardSize size) {
+RemixCardStyler _fortalCardSizeStyler(FortalCardSize size) {
   return switch (size) {
-    .size1 => RemixCardStyle().paddingAll(FortalTokens.space4()),
-    .size2 => RemixCardStyle().paddingAll(FortalTokens.space5()),
-    .size3 => RemixCardStyle().paddingAll(FortalTokens.space6()),
+    .size1 => RemixCardStyler().paddingAll(FortalTokens.space4()),
+    .size2 => RemixCardStyler().paddingAll(FortalTokens.space5()),
+    .size3 => RemixCardStyler().paddingAll(FortalTokens.space6()),
   };
 }

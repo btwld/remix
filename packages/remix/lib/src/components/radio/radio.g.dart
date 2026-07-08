@@ -86,99 +86,47 @@ mixin _$RemixRadioSpec implements Spec<RemixRadioSpec>, Diagnosticable {
 typedef _$RemixRadioSpecMethods = _$RemixRadioSpec; // ignore: unused_element
 
 // **************************************************************************
-// MixWidgetGenerator
-// **************************************************************************
-
-/// Fortal-themed radio style and widget presets.
-class FortalRadio<T> extends StatelessWidget {
-  const FortalRadio({
-    super.key,
-    this.variant = .surface,
-    this.size = .size2,
-    required this.value,
-    this.enabled = true,
-    this.toggleable = false,
-    this.mouseCursor,
-    this.enableFeedback = true,
-    this.focusNode,
-    this.autofocus = false,
-  });
-
-  final FortalRadioVariant variant;
-
-  final FortalRadioSize size;
-
-  final T value;
-
-  final bool enabled;
-
-  final bool toggleable;
-
-  final MouseCursor? mouseCursor;
-
-  final bool enableFeedback;
-
-  final FocusNode? focusNode;
-
-  final bool autofocus;
-
-  @override
-  Widget build(BuildContext context) {
-    return fortalRadioStyle(variant: this.variant, size: this.size).call<T>(
-      key: this.key,
-      value: this.value,
-      enabled: this.enabled,
-      toggleable: this.toggleable,
-      mouseCursor: this.mouseCursor,
-      enableFeedback: this.enableFeedback,
-      focusNode: this.focusNode,
-      autofocus: this.autofocus,
-    );
-  }
-}
-
-// **************************************************************************
 // StylerGenerator
 // **************************************************************************
 
-mixin _$RemixRadioStyleMixin on Style<RemixRadioSpec>, Diagnosticable {
+mixin _$RemixRadioStylerMixin on Style<RemixRadioSpec>, Diagnosticable {
   Prop<StyleSpec<BoxSpec>>? get $container;
   Prop<StyleSpec<BoxSpec>>? get $indicator;
 
   /// Sets the container.
-  RemixRadioStyle container(BoxStyler value) {
-    return merge(RemixRadioStyle(container: value));
+  RemixRadioStyler container(BoxStyler value) {
+    return merge(RemixRadioStyler(container: value));
   }
 
   /// Sets the indicator.
-  RemixRadioStyle indicator(BoxStyler value) {
-    return merge(RemixRadioStyle(indicator: value));
+  RemixRadioStyler indicator(BoxStyler value) {
+    return merge(RemixRadioStyler(indicator: value));
   }
 
   /// Sets the animation configuration.
-  RemixRadioStyle animate(AnimationConfig value) {
-    return merge(RemixRadioStyle(animation: value));
+  RemixRadioStyler animate(AnimationConfig value) {
+    return merge(RemixRadioStyler(animation: value));
   }
 
   /// Sets the style variants.
-  RemixRadioStyle variants(List<VariantStyle<RemixRadioSpec>> value) {
-    return merge(RemixRadioStyle(variants: value));
+  RemixRadioStyler variants(List<VariantStyle<RemixRadioSpec>> value) {
+    return merge(RemixRadioStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
-  RemixRadioStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixRadioStyle(modifier: value));
+  RemixRadioStyler wrap(WidgetModifierConfig value) {
+    return merge(RemixRadioStyler(modifier: value));
   }
 
   /// Sets the widget modifier.
-  RemixRadioStyle modifier(WidgetModifierConfig value) {
-    return merge(RemixRadioStyle(modifier: value));
+  RemixRadioStyler modifier(WidgetModifierConfig value) {
+    return merge(RemixRadioStyler(modifier: value));
   }
 
-  /// Merges with another [RemixRadioStyle].
+  /// Merges with another [RemixRadioStyler].
   @override
-  RemixRadioStyle merge(RemixRadioStyle? other) {
-    return RemixRadioStyle.create(
+  RemixRadioStyler merge(RemixRadioStyler? other) {
+    return RemixRadioStyler.create(
       container: MixOps.merge($container, other?.$container),
       indicator: MixOps.merge($indicator, other?.$indicator),
       variants: MixOps.mergeVariants($variants, other?.$variants),

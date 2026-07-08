@@ -5,18 +5,18 @@ part of 'switch.dart';
 /// Use this class to style the switch track and thumb, including selected,
 /// focused, disabled, hovered, and pressed state variants.
 @MixableStyler()
-class RemixSwitchStyle
-    extends RemixContainerStyle<RemixSwitchSpec, RemixSwitchStyle>
+class RemixSwitchStyler
+    extends RemixContainerStyler<RemixSwitchSpec, RemixSwitchStyler>
     with
-        SelectedWidgetStateVariantMixin<RemixSwitchSpec, RemixSwitchStyle>,
+        SelectedWidgetStateVariantMixin<RemixSwitchSpec, RemixSwitchStyler>,
         Diagnosticable,
-        _$RemixSwitchStyleMixin {
+        _$RemixSwitchStylerMixin {
   @MixableField(setterType: BoxStyler)
   final Prop<StyleSpec<BoxSpec>>? $container;
   @MixableField(setterType: BoxStyler)
   final Prop<StyleSpec<BoxSpec>>? $thumb;
 
-  const RemixSwitchStyle.create({
+  const RemixSwitchStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
     Prop<StyleSpec<BoxSpec>>? thumb,
     super.variants,
@@ -25,7 +25,7 @@ class RemixSwitchStyle
   }) : $container = container,
        $thumb = thumb;
 
-  RemixSwitchStyle({
+  RemixSwitchStyler({
     BoxStyler? container,
     BoxStyler? thumb,
     AnimationConfig? animation,
@@ -40,60 +40,60 @@ class RemixSwitchStyle
        );
 
   /// Sets thumb color
-  RemixSwitchStyle thumbColor(Color value) {
+  RemixSwitchStyler thumbColor(Color value) {
     return merge(
-      RemixSwitchStyle(
+      RemixSwitchStyler(
         thumb: BoxStyler(decoration: BoxDecorationMix(color: value)),
       ),
     );
   }
 
   /// Sets the track/rail background color.
-  RemixSwitchStyle trackColor(Color value) {
+  RemixSwitchStyler trackColor(Color value) {
     return color(value);
   }
 
   /// Sets container alignment
-  RemixSwitchStyle alignment(Alignment value) {
-    return merge(RemixSwitchStyle(container: BoxStyler(alignment: value)));
+  RemixSwitchStyler alignment(Alignment value) {
+    return merge(RemixSwitchStyler(container: BoxStyler(alignment: value)));
   }
 
   // Abstract method implementations for mixins
 
   @override
-  RemixSwitchStyle constraints(BoxConstraintsMix value) {
-    return merge(RemixSwitchStyle(container: BoxStyler(constraints: value)));
+  RemixSwitchStyler constraints(BoxConstraintsMix value) {
+    return merge(RemixSwitchStyler(container: BoxStyler(constraints: value)));
   }
 
   @override
-  RemixSwitchStyle decoration(DecorationMix value) {
-    return merge(RemixSwitchStyle(container: BoxStyler(decoration: value)));
+  RemixSwitchStyler decoration(DecorationMix value) {
+    return merge(RemixSwitchStyler(container: BoxStyler(decoration: value)));
   }
 
   @override
-  RemixSwitchStyle margin(EdgeInsetsGeometryMix value) {
-    return merge(RemixSwitchStyle(container: BoxStyler(margin: value)));
+  RemixSwitchStyler margin(EdgeInsetsGeometryMix value) {
+    return merge(RemixSwitchStyler(container: BoxStyler(margin: value)));
   }
 
   @override
-  RemixSwitchStyle padding(EdgeInsetsGeometryMix value) {
-    return merge(RemixSwitchStyle(container: BoxStyler(padding: value)));
+  RemixSwitchStyler padding(EdgeInsetsGeometryMix value) {
+    return merge(RemixSwitchStyler(container: BoxStyler(padding: value)));
   }
 
   @override
-  RemixSwitchStyle foregroundDecoration(DecorationMix value) {
+  RemixSwitchStyler foregroundDecoration(DecorationMix value) {
     return merge(
-      RemixSwitchStyle(container: BoxStyler(foregroundDecoration: value)),
+      RemixSwitchStyler(container: BoxStyler(foregroundDecoration: value)),
     );
   }
 
   @override
-  RemixSwitchStyle transform(
+  RemixSwitchStyler transform(
     Matrix4 value, {
     AlignmentGeometry alignment = Alignment.center,
   }) {
     return merge(
-      RemixSwitchStyle(
+      RemixSwitchStyler(
         container: BoxStyler(transform: value, transformAlignment: alignment),
       ),
     );
@@ -103,7 +103,7 @@ class RemixSwitchStyle
   ///
   /// Example:
   /// ```dart
-  /// final toggle = RemixSwitchStyle()
+  /// final toggle = RemixSwitchStyler()
   ///   .thumbColor(Colors.white)
   ///   .trackColor(Colors.blue);
   ///

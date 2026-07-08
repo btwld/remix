@@ -32,7 +32,7 @@ void main() {
             loading: false,
             enabled: true,
             enableFeedback: true,
-            style: RemixIconButtonStyle.create(),
+            style: RemixIconButtonStyler.create(),
             semanticLabel: 'Delete Button',
             semanticHint: 'Deletes the item',
             excludeSemantics: false,
@@ -337,7 +337,7 @@ void main() {
 
     group('Style Integration', () {
       testWidgets('applies custom style to container', (tester) async {
-        final customStyle = RemixIconButtonStyle(
+        final customStyle = RemixIconButtonStyler(
           container: BoxStyler(
             padding: EdgeInsetsGeometryMix.all(16.0),
             decoration: BoxDecorationMix(
@@ -362,7 +362,7 @@ void main() {
       });
 
       testWidgets('applies custom icon style', (tester) async {
-        final customStyle = RemixIconButtonStyle(
+        final customStyle = RemixIconButtonStyler(
           icon: IconStyler(color: Colors.red, size: 24.0),
         );
 
@@ -380,7 +380,9 @@ void main() {
       });
 
       testWidgets('applies custom spinner style', (tester) async {
-        final customStyle = RemixIconButtonStyle(spinner: RemixSpinnerStyle());
+        final customStyle = RemixIconButtonStyler(
+          spinner: RemixSpinnerStyler(),
+        );
 
         await tester.pumpRemixApp(
           RemixIconButton(
@@ -432,7 +434,7 @@ void main() {
 
     group('Layout and Sizing', () {
       testWidgets('icon button adapts to custom size', (tester) async {
-        final smallStyle = RemixIconButtonStyle().iconButtonSize(32.0);
+        final smallStyle = RemixIconButtonStyler().iconButtonSize(32.0);
         await tester.pumpRemixApp(
           RemixIconButton(icon: Icons.add, onPressed: () {}, style: smallStyle),
         );
@@ -440,7 +442,7 @@ void main() {
 
         final smallSize = tester.getSize(find.byType(RemixIconButton));
 
-        final largeStyle = RemixIconButtonStyle().iconButtonSize(64.0);
+        final largeStyle = RemixIconButtonStyler().iconButtonSize(64.0);
         await tester.pumpRemixApp(
           RemixIconButton(icon: Icons.add, onPressed: () {}, style: largeStyle),
         );

@@ -29,8 +29,8 @@ class BadgeExample extends StatelessWidget {
     );
   }
 
-  RemixBadgeStyle get styleLabel {
-    return RemixBadgeStyle()
+  RemixBadgeStyler get styleLabel {
+    return RemixBadgeStyler()
         .size(24, 24)
         .wrap(WidgetModifierConfig.clipOval())
         .label(
@@ -45,8 +45,8 @@ class BadgeExample extends StatelessWidget {
         .labelFontSize(15);
   }
 
-  RemixBadgeStyle get styleIcon {
-    return RemixBadgeStyle()
+  RemixBadgeStyler get styleIcon {
+    return RemixBadgeStyler()
         .size(24, 24)
         .wrap(WidgetModifierConfig.clipOval())
         .label(

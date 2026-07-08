@@ -120,7 +120,7 @@ typedef _$RemixSpinnerSpecMethods = _$RemixSpinnerSpec; // ignore: unused_elemen
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Creates a Fortal-themed [RemixSpinnerStyle].
+/// Creates a Fortal-themed [RemixSpinnerStyler].
 class FortalSpinner extends StatelessWidget {
   const FortalSpinner({super.key, this.size = .size2});
 
@@ -128,7 +128,7 @@ class FortalSpinner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return fortalSpinnerStyle(size: this.size).call();
+    return fortalSpinnerStyler(size: this.size).call();
   }
 }
 
@@ -136,7 +136,7 @@ class FortalSpinner extends StatelessWidget {
 // StylerGenerator
 // **************************************************************************
 
-mixin _$RemixSpinnerStyleMixin on Style<RemixSpinnerSpec>, Diagnosticable {
+mixin _$RemixSpinnerStylerMixin on Style<RemixSpinnerSpec>, Diagnosticable {
   Prop<double>? get $size;
   Prop<double>? get $strokeWidth;
   Prop<Color>? get $indicatorColor;
@@ -145,59 +145,59 @@ mixin _$RemixSpinnerStyleMixin on Style<RemixSpinnerSpec>, Diagnosticable {
   Prop<Duration>? get $duration;
 
   /// Sets the size.
-  RemixSpinnerStyle size(double value) {
-    return merge(RemixSpinnerStyle(size: value));
+  RemixSpinnerStyler size(double value) {
+    return merge(RemixSpinnerStyler(size: value));
   }
 
   /// Sets the strokeWidth.
-  RemixSpinnerStyle strokeWidth(double value) {
-    return merge(RemixSpinnerStyle(strokeWidth: value));
+  RemixSpinnerStyler strokeWidth(double value) {
+    return merge(RemixSpinnerStyler(strokeWidth: value));
   }
 
   /// Sets the indicatorColor.
-  RemixSpinnerStyle indicatorColor(Color value) {
-    return merge(RemixSpinnerStyle(indicatorColor: value));
+  RemixSpinnerStyler indicatorColor(Color value) {
+    return merge(RemixSpinnerStyler(indicatorColor: value));
   }
 
   /// Sets the trackColor.
-  RemixSpinnerStyle trackColor(Color value) {
-    return merge(RemixSpinnerStyle(trackColor: value));
+  RemixSpinnerStyler trackColor(Color value) {
+    return merge(RemixSpinnerStyler(trackColor: value));
   }
 
   /// Sets the trackStrokeWidth.
-  RemixSpinnerStyle trackStrokeWidth(double value) {
-    return merge(RemixSpinnerStyle(trackStrokeWidth: value));
+  RemixSpinnerStyler trackStrokeWidth(double value) {
+    return merge(RemixSpinnerStyler(trackStrokeWidth: value));
   }
 
   /// Sets the duration.
-  RemixSpinnerStyle duration(Duration value) {
-    return merge(RemixSpinnerStyle(duration: value));
+  RemixSpinnerStyler duration(Duration value) {
+    return merge(RemixSpinnerStyler(duration: value));
   }
 
   /// Sets the animation configuration.
-  RemixSpinnerStyle animate(AnimationConfig value) {
-    return merge(RemixSpinnerStyle(animation: value));
+  RemixSpinnerStyler animate(AnimationConfig value) {
+    return merge(RemixSpinnerStyler(animation: value));
   }
 
   /// Sets the style variants.
-  RemixSpinnerStyle variants(List<VariantStyle<RemixSpinnerSpec>> value) {
-    return merge(RemixSpinnerStyle(variants: value));
+  RemixSpinnerStyler variants(List<VariantStyle<RemixSpinnerSpec>> value) {
+    return merge(RemixSpinnerStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
-  RemixSpinnerStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixSpinnerStyle(modifier: value));
+  RemixSpinnerStyler wrap(WidgetModifierConfig value) {
+    return merge(RemixSpinnerStyler(modifier: value));
   }
 
   /// Sets the widget modifier.
-  RemixSpinnerStyle modifier(WidgetModifierConfig value) {
-    return merge(RemixSpinnerStyle(modifier: value));
+  RemixSpinnerStyler modifier(WidgetModifierConfig value) {
+    return merge(RemixSpinnerStyler(modifier: value));
   }
 
-  /// Merges with another [RemixSpinnerStyle].
+  /// Merges with another [RemixSpinnerStyler].
   @override
-  RemixSpinnerStyle merge(RemixSpinnerStyle? other) {
-    return RemixSpinnerStyle.create(
+  RemixSpinnerStyler merge(RemixSpinnerStyler? other) {
+    return RemixSpinnerStyler.create(
       size: MixOps.merge($size, other?.$size),
       strokeWidth: MixOps.merge($strokeWidth, other?.$strokeWidth),
       indicatorColor: MixOps.merge($indicatorColor, other?.$indicatorColor),

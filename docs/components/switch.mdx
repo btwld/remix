@@ -49,8 +49,8 @@ class _SwitchExampleState extends State<SwitchExample> {
     );
   }
 
-  RemixSwitchStyle get style {
-    return RemixSwitchStyle()
+  RemixSwitchStyler get style {
+    return RemixSwitchStyler()
         .thumbColor(Colors.grey.shade600)
         .trackColor(Colors.deepPurpleAccent.shade200)
         .size(65, 30)
@@ -104,12 +104,12 @@ class _FortalSwitchExampleState extends State<FortalSwitchExample> {
         RemixSwitch(
           selected: _value,
           onChanged: (v) => setState(() => _value = v),
-          style: fortalSwitchStyle(variant: FortalSwitchVariant.surface),
+          style: fortalSwitchStyler(variant: FortalSwitchVariant.surface),
         ),
         RemixSwitch(
           selected: _value,
           onChanged: (v) => setState(() => _value = v),
-          style: fortalSwitchStyle(variant: FortalSwitchVariant.soft),
+          style: fortalSwitchStyler(variant: FortalSwitchVariant.soft),
         ),
       ],
     );
@@ -119,7 +119,7 @@ class _FortalSwitchExampleState extends State<FortalSwitchExample> {
 </CodeGroup>
 
 <Info>
-  See the [fortalSwitchStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/switch/fortal_switch_styles.dart) for all available options.
+  See the [fortalSwitchStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/switch/fortal_switch_styles.dart) for all available options.
 </Info>
 
 ## Constructor
@@ -135,7 +135,7 @@ const RemixSwitch({
   bool autofocus = false,
   String? semanticLabel,
   MouseCursor mouseCursor = SystemMouseCursors.click,
-  RemixSwitchStyle style = const RemixSwitchStyle.create(),
+  RemixSwitchStyler style = const RemixSwitchStyler.create(),
   RemixSwitchSpec? styleSpec,
 })
 ```
@@ -161,7 +161,7 @@ Optional. Whether this switch is enabled.
 
 Optional. Called when the user toggles the switch. When omitted, the switch is disabled.
 
-#### `style` → `RemixSwitchStyle`
+#### `style` → `RemixSwitchStyler`
 
 Optional. The style configuration for the switch.
 
@@ -216,7 +216,7 @@ Sets the track background color.
 
 Sets the track background color.
 
-#### `onSelected(RemixSwitchStyle value)`
+#### `onSelected(RemixSwitchStyler value)`
 
 Applies a style while the switch is selected.
 

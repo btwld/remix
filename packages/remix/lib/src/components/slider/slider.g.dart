@@ -110,10 +110,10 @@ typedef _$RemixSliderSpecMethods = _$RemixSliderSpec; // ignore: unused_element
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Creates a Fortal-themed [RemixSliderStyle].
+/// Creates a Fortal-themed [RemixSliderStyler].
 ///
 /// The returned style can be passed to [RemixSlider.style] or called directly
-/// as a widget factory via [RemixSliderStyle.call].
+/// as a widget factory via [RemixSliderStyler.call].
 class FortalSlider extends StatelessWidget {
   const FortalSlider({
     super.key,
@@ -160,7 +160,7 @@ class FortalSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return fortalSliderStyle(variant: this.variant, size: this.size).call(
+    return fortalSliderStyler(variant: this.variant, size: this.size).call(
       value: this.value,
       onChanged: this.onChanged,
       onChangeStart: this.onChangeStart,
@@ -180,7 +180,7 @@ class FortalSlider extends StatelessWidget {
 // StylerGenerator
 // **************************************************************************
 
-mixin _$RemixSliderStyleMixin on Style<RemixSliderSpec>, Diagnosticable {
+mixin _$RemixSliderStylerMixin on Style<RemixSliderSpec>, Diagnosticable {
   Prop<StyleSpec<BoxSpec>>? get $thumb;
   Prop<Color>? get $trackColor;
   Prop<double>? get $trackWidth;
@@ -188,54 +188,54 @@ mixin _$RemixSliderStyleMixin on Style<RemixSliderSpec>, Diagnosticable {
   Prop<double>? get $rangeWidth;
 
   /// Sets the thumb.
-  RemixSliderStyle thumb(BoxStyler value) {
-    return merge(RemixSliderStyle(thumb: value));
+  RemixSliderStyler thumb(BoxStyler value) {
+    return merge(RemixSliderStyler(thumb: value));
   }
 
   /// Sets the trackColor.
-  RemixSliderStyle trackColor(Color value) {
-    return merge(RemixSliderStyle(trackColor: value));
+  RemixSliderStyler trackColor(Color value) {
+    return merge(RemixSliderStyler(trackColor: value));
   }
 
   /// Sets the trackWidth.
-  RemixSliderStyle trackWidth(double value) {
-    return merge(RemixSliderStyle(trackWidth: value));
+  RemixSliderStyler trackWidth(double value) {
+    return merge(RemixSliderStyler(trackWidth: value));
   }
 
   /// Sets the rangeColor.
-  RemixSliderStyle rangeColor(Color value) {
-    return merge(RemixSliderStyle(rangeColor: value));
+  RemixSliderStyler rangeColor(Color value) {
+    return merge(RemixSliderStyler(rangeColor: value));
   }
 
   /// Sets the rangeWidth.
-  RemixSliderStyle rangeWidth(double value) {
-    return merge(RemixSliderStyle(rangeWidth: value));
+  RemixSliderStyler rangeWidth(double value) {
+    return merge(RemixSliderStyler(rangeWidth: value));
   }
 
   /// Sets the animation configuration.
-  RemixSliderStyle animate(AnimationConfig value) {
-    return merge(RemixSliderStyle(animation: value));
+  RemixSliderStyler animate(AnimationConfig value) {
+    return merge(RemixSliderStyler(animation: value));
   }
 
   /// Sets the style variants.
-  RemixSliderStyle variants(List<VariantStyle<RemixSliderSpec>> value) {
-    return merge(RemixSliderStyle(variants: value));
+  RemixSliderStyler variants(List<VariantStyle<RemixSliderSpec>> value) {
+    return merge(RemixSliderStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
-  RemixSliderStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixSliderStyle(modifier: value));
+  RemixSliderStyler wrap(WidgetModifierConfig value) {
+    return merge(RemixSliderStyler(modifier: value));
   }
 
   /// Sets the widget modifier.
-  RemixSliderStyle modifier(WidgetModifierConfig value) {
-    return merge(RemixSliderStyle(modifier: value));
+  RemixSliderStyler modifier(WidgetModifierConfig value) {
+    return merge(RemixSliderStyler(modifier: value));
   }
 
-  /// Merges with another [RemixSliderStyle].
+  /// Merges with another [RemixSliderStyler].
   @override
-  RemixSliderStyle merge(RemixSliderStyle? other) {
-    return RemixSliderStyle.create(
+  RemixSliderStyler merge(RemixSliderStyler? other) {
+    return RemixSliderStyler.create(
       thumb: MixOps.merge($thumb, other?.$thumb),
       trackColor: MixOps.merge($trackColor, other?.$trackColor),
       trackWidth: MixOps.merge($trackWidth, other?.$trackWidth),

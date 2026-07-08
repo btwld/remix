@@ -76,7 +76,7 @@ void main() {
         );
         expect(
           remixButton.style,
-          equals(fortalButtonStyle(variant: .soft, size: .size3)),
+          equals(fortalButtonStyler(variant: .soft, size: .size3)),
         );
         expect(remixButton.label, equals('Save'));
         expect(remixButton.leadingIcon, equals(Icons.save));

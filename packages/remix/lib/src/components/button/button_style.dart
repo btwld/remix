@@ -6,13 +6,13 @@ part of 'button.dart';
 /// spinner. It supports Mix variants and widget state variants for focused,
 /// hovered, pressed, disabled, and loading states.
 @MixableStyler()
-class RemixButtonStyle extends MixStyler<RemixButtonStyle, RemixButtonSpec>
+class RemixButtonStyler extends MixStyler<RemixButtonStyler, RemixButtonSpec>
     with
-        LabelStyleMixin<RemixButtonStyle>,
-        IconStyleMixin<RemixButtonStyle>,
-        SpinnerStyleMixin<RemixButtonStyle>,
+        LabelStyleMixin<RemixButtonStyler>,
+        IconStyleMixin<RemixButtonStyler>,
+        SpinnerStyleMixin<RemixButtonStyler>,
         Diagnosticable,
-        _$RemixButtonStyleMixin {
+        _$RemixButtonStylerMixin {
   /// Style applied to the button's outer layout and decoration.
   @MixableField(setterType: FlexBoxStyler)
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
@@ -26,14 +26,14 @@ class RemixButtonStyle extends MixStyler<RemixButtonStyle, RemixButtonSpec>
   final Prop<StyleSpec<IconSpec>>? $icon;
 
   /// Style applied to the loading spinner.
-  @MixableField(setterType: RemixSpinnerStyle)
+  @MixableField(setterType: RemixSpinnerStyler)
   final Prop<StyleSpec<RemixSpinnerSpec>>? $spinner;
 
   /// Alignment used when rendering an icon next to the label.
   final Prop<IconAlignment>? $iconAlignment;
 
   /// Creates a button style from raw Mix properties.
-  const RemixButtonStyle.create({
+  const RemixButtonStyler.create({
     Prop<StyleSpec<FlexBoxSpec>>? container,
     Prop<StyleSpec<TextSpec>>? label,
     Prop<StyleSpec<IconSpec>>? icon,
@@ -49,11 +49,11 @@ class RemixButtonStyle extends MixStyler<RemixButtonStyle, RemixButtonSpec>
        $iconAlignment = iconAlignment;
 
   /// Creates a button style from plain Dart values and Mix stylers.
-  RemixButtonStyle({
+  RemixButtonStyler({
     FlexBoxStyler? container,
     TextStyler? label,
     IconStyler? icon,
-    RemixSpinnerStyle? spinner,
+    RemixSpinnerStyler? spinner,
     IconAlignment? iconAlignment,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
@@ -70,8 +70,8 @@ class RemixButtonStyle extends MixStyler<RemixButtonStyle, RemixButtonSpec>
        );
 
   /// Creates a button style that only sets [IconAlignment].
-  factory RemixButtonStyle.iconAlignment(IconAlignment value) {
-    return RemixButtonStyle().iconAlignment(value);
+  factory RemixButtonStyler.iconAlignment(IconAlignment value) {
+    return RemixButtonStyler().iconAlignment(value);
   }
 
   /// Creates a [RemixButton] widget with this style applied.
@@ -121,48 +121,48 @@ class RemixButtonStyle extends MixStyler<RemixButtonStyle, RemixButtonSpec>
   }
 }
 
-extension RemixButtonStyleContainerHelpers on RemixButtonStyle {
-  RemixButtonStyle padding(EdgeInsetsGeometryMix value) {
+extension RemixButtonStyleContainerHelpers on RemixButtonStyler {
+  RemixButtonStyler padding(EdgeInsetsGeometryMix value) {
     return container(FlexBoxStyler(padding: value));
   }
 
-  RemixButtonStyle paddingTop(double value) {
+  RemixButtonStyler paddingTop(double value) {
     return padding(EdgeInsetsGeometryMix.top(value));
   }
 
-  RemixButtonStyle paddingBottom(double value) {
+  RemixButtonStyler paddingBottom(double value) {
     return padding(EdgeInsetsGeometryMix.bottom(value));
   }
 
-  RemixButtonStyle paddingLeft(double value) {
+  RemixButtonStyler paddingLeft(double value) {
     return padding(EdgeInsetsGeometryMix.left(value));
   }
 
-  RemixButtonStyle paddingRight(double value) {
+  RemixButtonStyler paddingRight(double value) {
     return padding(EdgeInsetsGeometryMix.right(value));
   }
 
-  RemixButtonStyle paddingX(double value) {
+  RemixButtonStyler paddingX(double value) {
     return padding(EdgeInsetsGeometryMix.horizontal(value));
   }
 
-  RemixButtonStyle paddingY(double value) {
+  RemixButtonStyler paddingY(double value) {
     return padding(EdgeInsetsGeometryMix.vertical(value));
   }
 
-  RemixButtonStyle paddingAll(double value) {
+  RemixButtonStyler paddingAll(double value) {
     return padding(EdgeInsetsGeometryMix.all(value));
   }
 
-  RemixButtonStyle paddingStart(double value) {
+  RemixButtonStyler paddingStart(double value) {
     return padding(EdgeInsetsGeometryMix.start(value));
   }
 
-  RemixButtonStyle paddingEnd(double value) {
+  RemixButtonStyler paddingEnd(double value) {
     return padding(EdgeInsetsGeometryMix.end(value));
   }
 
-  RemixButtonStyle paddingOnly({
+  RemixButtonStyler paddingOnly({
     double? horizontal,
     double? vertical,
     double? start,
@@ -193,47 +193,47 @@ extension RemixButtonStyleContainerHelpers on RemixButtonStyle {
     );
   }
 
-  RemixButtonStyle margin(EdgeInsetsGeometryMix value) {
+  RemixButtonStyler margin(EdgeInsetsGeometryMix value) {
     return container(FlexBoxStyler(margin: value));
   }
 
-  RemixButtonStyle marginTop(double value) {
+  RemixButtonStyler marginTop(double value) {
     return margin(EdgeInsetsGeometryMix.top(value));
   }
 
-  RemixButtonStyle marginBottom(double value) {
+  RemixButtonStyler marginBottom(double value) {
     return margin(EdgeInsetsGeometryMix.bottom(value));
   }
 
-  RemixButtonStyle marginLeft(double value) {
+  RemixButtonStyler marginLeft(double value) {
     return margin(EdgeInsetsGeometryMix.left(value));
   }
 
-  RemixButtonStyle marginRight(double value) {
+  RemixButtonStyler marginRight(double value) {
     return margin(EdgeInsetsGeometryMix.right(value));
   }
 
-  RemixButtonStyle marginX(double value) {
+  RemixButtonStyler marginX(double value) {
     return margin(EdgeInsetsGeometryMix.horizontal(value));
   }
 
-  RemixButtonStyle marginY(double value) {
+  RemixButtonStyler marginY(double value) {
     return margin(EdgeInsetsGeometryMix.vertical(value));
   }
 
-  RemixButtonStyle marginAll(double value) {
+  RemixButtonStyler marginAll(double value) {
     return margin(EdgeInsetsGeometryMix.all(value));
   }
 
-  RemixButtonStyle marginStart(double value) {
+  RemixButtonStyler marginStart(double value) {
     return margin(EdgeInsetsGeometryMix.start(value));
   }
 
-  RemixButtonStyle marginEnd(double value) {
+  RemixButtonStyler marginEnd(double value) {
     return margin(EdgeInsetsGeometryMix.end(value));
   }
 
-  RemixButtonStyle marginOnly({
+  RemixButtonStyler marginOnly({
     double? horizontal,
     double? vertical,
     double? start,
@@ -264,23 +264,23 @@ extension RemixButtonStyleContainerHelpers on RemixButtonStyle {
     );
   }
 
-  RemixButtonStyle decoration(DecorationMix value) {
+  RemixButtonStyler decoration(DecorationMix value) {
     return container(FlexBoxStyler(decoration: value));
   }
 
-  RemixButtonStyle foregroundDecoration(DecorationMix value) {
+  RemixButtonStyler foregroundDecoration(DecorationMix value) {
     return container(FlexBoxStyler(foregroundDecoration: value));
   }
 
-  RemixButtonStyle alignment(AlignmentGeometry value) {
+  RemixButtonStyler alignment(AlignmentGeometry value) {
     return container(FlexBoxStyler(alignment: value));
   }
 
-  RemixButtonStyle constraints(BoxConstraintsMix value) {
+  RemixButtonStyler constraints(BoxConstraintsMix value) {
     return container(FlexBoxStyler(constraints: value));
   }
 
-  RemixButtonStyle constraintsOnly({
+  RemixButtonStyler constraintsOnly({
     double? width,
     double? height,
     double? minWidth,
@@ -298,39 +298,39 @@ extension RemixButtonStyleContainerHelpers on RemixButtonStyle {
     );
   }
 
-  RemixButtonStyle width(double value) {
+  RemixButtonStyler width(double value) {
     return constraints(BoxConstraintsMix.width(value));
   }
 
-  RemixButtonStyle height(double value) {
+  RemixButtonStyler height(double value) {
     return constraints(BoxConstraintsMix.height(value));
   }
 
-  RemixButtonStyle minWidth(double value) {
+  RemixButtonStyler minWidth(double value) {
     return constraints(BoxConstraintsMix.minWidth(value));
   }
 
-  RemixButtonStyle maxWidth(double value) {
+  RemixButtonStyler maxWidth(double value) {
     return constraints(BoxConstraintsMix.maxWidth(value));
   }
 
-  RemixButtonStyle minHeight(double value) {
+  RemixButtonStyler minHeight(double value) {
     return constraints(BoxConstraintsMix.minHeight(value));
   }
 
-  RemixButtonStyle maxHeight(double value) {
+  RemixButtonStyler maxHeight(double value) {
     return constraints(BoxConstraintsMix.maxHeight(value));
   }
 
-  RemixButtonStyle size(double width, double height) {
+  RemixButtonStyler size(double width, double height) {
     return constraintsOnly(width: width, height: height);
   }
 
-  RemixButtonStyle minimumSize(Size value) {
+  RemixButtonStyler minimumSize(Size value) {
     return constraintsOnly(minWidth: value.width, minHeight: value.height);
   }
 
-  RemixButtonStyle fixedSize(Size value) {
+  RemixButtonStyler fixedSize(Size value) {
     return constraintsOnly(
       minWidth: value.width,
       maxWidth: value.width,
@@ -339,55 +339,55 @@ extension RemixButtonStyleContainerHelpers on RemixButtonStyle {
     );
   }
 
-  RemixButtonStyle maximumSize(Size value) {
+  RemixButtonStyler maximumSize(Size value) {
     return constraintsOnly(maxWidth: value.width, maxHeight: value.height);
   }
 
-  RemixButtonStyle flex(FlexStyler value) {
+  RemixButtonStyler flex(FlexStyler value) {
     return container(FlexBoxStyler().flex(value));
   }
 
-  RemixButtonStyle direction(Axis value) {
+  RemixButtonStyler direction(Axis value) {
     return container(FlexBoxStyler(direction: value));
   }
 
-  RemixButtonStyle mainAxisAlignment(MainAxisAlignment value) {
+  RemixButtonStyler mainAxisAlignment(MainAxisAlignment value) {
     return container(FlexBoxStyler(mainAxisAlignment: value));
   }
 
-  RemixButtonStyle crossAxisAlignment(CrossAxisAlignment value) {
+  RemixButtonStyler crossAxisAlignment(CrossAxisAlignment value) {
     return container(FlexBoxStyler(crossAxisAlignment: value));
   }
 
-  RemixButtonStyle mainAxisSize(MainAxisSize value) {
+  RemixButtonStyler mainAxisSize(MainAxisSize value) {
     return container(FlexBoxStyler(mainAxisSize: value));
   }
 
-  RemixButtonStyle verticalDirection(VerticalDirection value) {
+  RemixButtonStyler verticalDirection(VerticalDirection value) {
     return container(FlexBoxStyler(verticalDirection: value));
   }
 
-  RemixButtonStyle textDirection(TextDirection value) {
+  RemixButtonStyler textDirection(TextDirection value) {
     return container(FlexBoxStyler(textDirection: value));
   }
 
-  RemixButtonStyle textBaseline(TextBaseline value) {
+  RemixButtonStyler textBaseline(TextBaseline value) {
     return container(FlexBoxStyler(textBaseline: value));
   }
 
-  RemixButtonStyle spacing(double value) {
+  RemixButtonStyler spacing(double value) {
     return container(FlexBoxStyler(spacing: value));
   }
 
-  RemixButtonStyle row() {
+  RemixButtonStyler row() {
     return direction(.horizontal);
   }
 
-  RemixButtonStyle column() {
+  RemixButtonStyler column() {
     return direction(.vertical);
   }
 
-  RemixButtonStyle transform(
+  RemixButtonStyler transform(
     Matrix4 value, {
     AlignmentGeometry alignment = Alignment.center,
   }) {
@@ -396,7 +396,7 @@ extension RemixButtonStyleContainerHelpers on RemixButtonStyle {
     );
   }
 
-  RemixButtonStyle rotate(
+  RemixButtonStyler rotate(
     double radians, {
     Alignment alignment = Alignment.center,
   }) {
@@ -405,7 +405,7 @@ extension RemixButtonStyleContainerHelpers on RemixButtonStyle {
     );
   }
 
-  RemixButtonStyle scale(
+  RemixButtonStyler scale(
     double value, {
     Alignment alignment = Alignment.center,
   }) {
@@ -415,11 +415,11 @@ extension RemixButtonStyleContainerHelpers on RemixButtonStyle {
     );
   }
 
-  RemixButtonStyle translate(double x, double y, [double z = 0.0]) {
+  RemixButtonStyler translate(double x, double y, [double z = 0.0]) {
     return transform(Matrix4.translationValues(x, y, z));
   }
 
-  RemixButtonStyle skew(double skewX, double skewY) {
+  RemixButtonStyler skew(double skewX, double skewY) {
     final matrix = Matrix4.identity()
       ..setEntry(0, 1, skewX)
       ..setEntry(1, 0, skewY);
@@ -427,27 +427,27 @@ extension RemixButtonStyleContainerHelpers on RemixButtonStyle {
     return transform(matrix);
   }
 
-  RemixButtonStyle transformReset() {
+  RemixButtonStyler transformReset() {
     return transform(Matrix4.identity());
   }
 }
 
-extension RemixButtonStyleDecorationHelpers on RemixButtonStyle {
-  RemixButtonStyle color(Color value) {
+extension RemixButtonStyleDecorationHelpers on RemixButtonStyler {
+  RemixButtonStyler color(Color value) {
     return decoration(BoxDecorationMix(color: value));
   }
 
-  RemixButtonStyle backgroundColor(Color value) => color(value);
+  RemixButtonStyler backgroundColor(Color value) => color(value);
 
-  RemixButtonStyle foregroundColor(Color value) {
+  RemixButtonStyler foregroundColor(Color value) {
     return label(.color(value)).icon(.color(value));
   }
 
-  RemixButtonStyle border(BoxBorderMix value) {
+  RemixButtonStyler border(BoxBorderMix value) {
     return decoration(BoxDecorationMix(border: value));
   }
 
-  RemixButtonStyle borderTop({
+  RemixButtonStyler borderTop({
     Color? color,
     double? width,
     BorderStyle? style,
@@ -463,7 +463,7 @@ extension RemixButtonStyleDecorationHelpers on RemixButtonStyle {
     );
   }
 
-  RemixButtonStyle borderBottom({
+  RemixButtonStyler borderBottom({
     Color? color,
     double? width,
     BorderStyle? style,
@@ -479,7 +479,7 @@ extension RemixButtonStyleDecorationHelpers on RemixButtonStyle {
     );
   }
 
-  RemixButtonStyle borderLeft({
+  RemixButtonStyler borderLeft({
     Color? color,
     double? width,
     BorderStyle? style,
@@ -495,7 +495,7 @@ extension RemixButtonStyleDecorationHelpers on RemixButtonStyle {
     );
   }
 
-  RemixButtonStyle borderRight({
+  RemixButtonStyler borderRight({
     Color? color,
     double? width,
     BorderStyle? style,
@@ -511,7 +511,7 @@ extension RemixButtonStyleDecorationHelpers on RemixButtonStyle {
     );
   }
 
-  RemixButtonStyle borderStart({
+  RemixButtonStyler borderStart({
     Color? color,
     double? width,
     BorderStyle? style,
@@ -527,7 +527,7 @@ extension RemixButtonStyleDecorationHelpers on RemixButtonStyle {
     );
   }
 
-  RemixButtonStyle borderEnd({
+  RemixButtonStyler borderEnd({
     Color? color,
     double? width,
     BorderStyle? style,
@@ -543,7 +543,7 @@ extension RemixButtonStyleDecorationHelpers on RemixButtonStyle {
     );
   }
 
-  RemixButtonStyle borderVertical({
+  RemixButtonStyler borderVertical({
     Color? color,
     double? width,
     BorderStyle? style,
@@ -559,7 +559,7 @@ extension RemixButtonStyleDecorationHelpers on RemixButtonStyle {
     );
   }
 
-  RemixButtonStyle borderHorizontal({
+  RemixButtonStyler borderHorizontal({
     Color? color,
     double? width,
     BorderStyle? style,
@@ -575,7 +575,7 @@ extension RemixButtonStyleDecorationHelpers on RemixButtonStyle {
     );
   }
 
-  RemixButtonStyle borderAll({
+  RemixButtonStyler borderAll({
     Color? color,
     double? width,
     BorderStyle? style,
@@ -593,123 +593,123 @@ extension RemixButtonStyleDecorationHelpers on RemixButtonStyle {
     );
   }
 
-  RemixButtonStyle borderRadius(BorderRadiusGeometryMix value) {
+  RemixButtonStyler borderRadius(BorderRadiusGeometryMix value) {
     return decoration(BoxDecorationMix(borderRadius: value));
   }
 
-  RemixButtonStyle borderRadiusAll(Radius radius) {
+  RemixButtonStyler borderRadiusAll(Radius radius) {
     return borderRadius(BorderRadiusGeometryMix.all(radius));
   }
 
-  RemixButtonStyle borderRadiusTop(Radius radius) {
+  RemixButtonStyler borderRadiusTop(Radius radius) {
     return borderRadius(BorderRadiusGeometryMix.top(radius));
   }
 
-  RemixButtonStyle borderRadiusBottom(Radius radius) {
+  RemixButtonStyler borderRadiusBottom(Radius radius) {
     return borderRadius(BorderRadiusGeometryMix.bottom(radius));
   }
 
-  RemixButtonStyle borderRadiusLeft(Radius radius) {
+  RemixButtonStyler borderRadiusLeft(Radius radius) {
     return borderRadius(BorderRadiusGeometryMix.left(radius));
   }
 
-  RemixButtonStyle borderRadiusRight(Radius radius) {
+  RemixButtonStyler borderRadiusRight(Radius radius) {
     return borderRadius(BorderRadiusGeometryMix.right(radius));
   }
 
-  RemixButtonStyle borderRadiusTopLeft(Radius radius) {
+  RemixButtonStyler borderRadiusTopLeft(Radius radius) {
     return borderRadius(BorderRadiusGeometryMix.topLeft(radius));
   }
 
-  RemixButtonStyle borderRadiusTopRight(Radius radius) {
+  RemixButtonStyler borderRadiusTopRight(Radius radius) {
     return borderRadius(BorderRadiusGeometryMix.topRight(radius));
   }
 
-  RemixButtonStyle borderRadiusBottomLeft(Radius radius) {
+  RemixButtonStyler borderRadiusBottomLeft(Radius radius) {
     return borderRadius(BorderRadiusGeometryMix.bottomLeft(radius));
   }
 
-  RemixButtonStyle borderRadiusBottomRight(Radius radius) {
+  RemixButtonStyler borderRadiusBottomRight(Radius radius) {
     return borderRadius(BorderRadiusGeometryMix.bottomRight(radius));
   }
 
-  RemixButtonStyle borderRadiusTopStart(Radius radius) {
+  RemixButtonStyler borderRadiusTopStart(Radius radius) {
     return borderRadius(BorderRadiusGeometryMix.topStart(radius));
   }
 
-  RemixButtonStyle borderRadiusTopEnd(Radius radius) {
+  RemixButtonStyler borderRadiusTopEnd(Radius radius) {
     return borderRadius(BorderRadiusGeometryMix.topEnd(radius));
   }
 
-  RemixButtonStyle borderRadiusBottomStart(Radius radius) {
+  RemixButtonStyler borderRadiusBottomStart(Radius radius) {
     return borderRadius(BorderRadiusGeometryMix.bottomStart(radius));
   }
 
-  RemixButtonStyle borderRadiusBottomEnd(Radius radius) {
+  RemixButtonStyler borderRadiusBottomEnd(Radius radius) {
     return borderRadius(BorderRadiusGeometryMix.bottomEnd(radius));
   }
 
-  RemixButtonStyle borderRounded(double radius) {
+  RemixButtonStyler borderRounded(double radius) {
     return borderRadius(BorderRadiusGeometryMix.circular(radius));
   }
 
-  RemixButtonStyle borderRoundedTop(double radius) {
+  RemixButtonStyler borderRoundedTop(double radius) {
     return borderRadius(BorderRadiusGeometryMix.top(.circular(radius)));
   }
 
-  RemixButtonStyle borderRoundedBottom(double radius) {
+  RemixButtonStyler borderRoundedBottom(double radius) {
     return borderRadius(BorderRadiusGeometryMix.bottom(.circular(radius)));
   }
 
-  RemixButtonStyle borderRoundedLeft(double radius) {
+  RemixButtonStyler borderRoundedLeft(double radius) {
     return borderRadius(BorderRadiusGeometryMix.left(.circular(radius)));
   }
 
-  RemixButtonStyle borderRoundedRight(double radius) {
+  RemixButtonStyler borderRoundedRight(double radius) {
     return borderRadius(BorderRadiusGeometryMix.right(.circular(radius)));
   }
 
-  RemixButtonStyle borderRoundedTopLeft(double radius) {
+  RemixButtonStyler borderRoundedTopLeft(double radius) {
     return borderRadius(BorderRadiusGeometryMix.topLeft(.circular(radius)));
   }
 
-  RemixButtonStyle borderRoundedTopRight(double radius) {
+  RemixButtonStyler borderRoundedTopRight(double radius) {
     return borderRadius(BorderRadiusGeometryMix.topRight(.circular(radius)));
   }
 
-  RemixButtonStyle borderRoundedBottomLeft(double radius) {
+  RemixButtonStyler borderRoundedBottomLeft(double radius) {
     return borderRadius(BorderRadiusGeometryMix.bottomLeft(.circular(radius)));
   }
 
-  RemixButtonStyle borderRoundedBottomRight(double radius) {
+  RemixButtonStyler borderRoundedBottomRight(double radius) {
     return borderRadius(BorderRadiusGeometryMix.bottomRight(.circular(radius)));
   }
 
-  RemixButtonStyle borderRoundedTopStart(double radius) {
+  RemixButtonStyler borderRoundedTopStart(double radius) {
     return borderRadius(BorderRadiusGeometryMix.topStart(.circular(radius)));
   }
 
-  RemixButtonStyle borderRoundedTopEnd(double radius) {
+  RemixButtonStyler borderRoundedTopEnd(double radius) {
     return borderRadius(BorderRadiusGeometryMix.topEnd(.circular(radius)));
   }
 
-  RemixButtonStyle borderRoundedBottomStart(double radius) {
+  RemixButtonStyler borderRoundedBottomStart(double radius) {
     return borderRadius(BorderRadiusGeometryMix.bottomStart(.circular(radius)));
   }
 
-  RemixButtonStyle borderRoundedBottomEnd(double radius) {
+  RemixButtonStyler borderRoundedBottomEnd(double radius) {
     return borderRadius(BorderRadiusGeometryMix.bottomEnd(.circular(radius)));
   }
 
-  RemixButtonStyle shadow(BoxShadowMix value) {
+  RemixButtonStyler shadow(BoxShadowMix value) {
     return decoration(BoxDecorationMix(boxShadow: [value]));
   }
 
-  RemixButtonStyle shadows(List<BoxShadowMix> value) {
+  RemixButtonStyler shadows(List<BoxShadowMix> value) {
     return decoration(BoxDecorationMix(boxShadow: value));
   }
 
-  RemixButtonStyle shadowOnly({
+  RemixButtonStyler shadowOnly({
     Color? color,
     Offset? offset,
     double? blurRadius,
@@ -725,39 +725,39 @@ extension RemixButtonStyleDecorationHelpers on RemixButtonStyle {
     );
   }
 
-  RemixButtonStyle boxShadows(List<BoxShadowMix> value) {
+  RemixButtonStyler boxShadows(List<BoxShadowMix> value) {
     return shadows(value);
   }
 
-  RemixButtonStyle elevation(ElevationShadow value) {
+  RemixButtonStyler elevation(ElevationShadow value) {
     return container(FlexBoxStyler().elevation(value));
   }
 
-  RemixButtonStyle boxElevation(ElevationShadow value) {
+  RemixButtonStyler boxElevation(ElevationShadow value) {
     return elevation(value);
   }
 
-  RemixButtonStyle gradient(GradientMix value) {
+  RemixButtonStyler gradient(GradientMix value) {
     return container(FlexBoxStyler().gradient(value));
   }
 
-  RemixButtonStyle image(DecorationImageMix value) {
+  RemixButtonStyler image(DecorationImageMix value) {
     return container(FlexBoxStyler().image(value));
   }
 
-  RemixButtonStyle shape(ShapeBorderMix value) {
+  RemixButtonStyler shape(ShapeBorderMix value) {
     return decoration(ShapeDecorationMix(shape: value));
   }
 
-  RemixButtonStyle shapeCircle({BorderSideMix? side}) {
+  RemixButtonStyler shapeCircle({BorderSideMix? side}) {
     return shape(CircleBorderMix(side: side));
   }
 
-  RemixButtonStyle shapeStadium({BorderSideMix? side}) {
+  RemixButtonStyler shapeStadium({BorderSideMix? side}) {
     return shape(StadiumBorderMix(side: side));
   }
 
-  RemixButtonStyle shapeRoundedRectangle({
+  RemixButtonStyler shapeRoundedRectangle({
     BorderSideMix? side,
     BorderRadiusMix? borderRadius,
   }) {
@@ -766,7 +766,7 @@ extension RemixButtonStyleDecorationHelpers on RemixButtonStyle {
     );
   }
 
-  RemixButtonStyle shapeBeveledRectangle({
+  RemixButtonStyler shapeBeveledRectangle({
     BorderSideMix? side,
     BorderRadiusMix? borderRadius,
   }) {
@@ -775,7 +775,7 @@ extension RemixButtonStyleDecorationHelpers on RemixButtonStyle {
     );
   }
 
-  RemixButtonStyle shapeContinuousRectangle({
+  RemixButtonStyler shapeContinuousRectangle({
     BorderSideMix? side,
     BorderRadiusMix? borderRadius,
   }) {
@@ -784,7 +784,7 @@ extension RemixButtonStyleDecorationHelpers on RemixButtonStyle {
     );
   }
 
-  RemixButtonStyle shapeStar({
+  RemixButtonStyler shapeStar({
     BorderSideMix? side,
     double? points,
     double? innerRadiusRatio,
@@ -806,7 +806,7 @@ extension RemixButtonStyleDecorationHelpers on RemixButtonStyle {
     );
   }
 
-  RemixButtonStyle shapeLinear({
+  RemixButtonStyler shapeLinear({
     BorderSideMix? side,
     LinearBorderEdgeMix? start,
     LinearBorderEdgeMix? end,
@@ -824,7 +824,7 @@ extension RemixButtonStyleDecorationHelpers on RemixButtonStyle {
     );
   }
 
-  RemixButtonStyle shapeSuperellipse({
+  RemixButtonStyler shapeSuperellipse({
     BorderSideMix? side,
     BorderRadiusMix? borderRadius,
   }) {
@@ -833,7 +833,7 @@ extension RemixButtonStyleDecorationHelpers on RemixButtonStyle {
     );
   }
 
-  RemixButtonStyle backgroundImage(
+  RemixButtonStyler backgroundImage(
     ImageProvider image, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -849,7 +849,7 @@ extension RemixButtonStyleDecorationHelpers on RemixButtonStyle {
     );
   }
 
-  RemixButtonStyle backgroundImageUrl(
+  RemixButtonStyler backgroundImageUrl(
     String url, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -863,7 +863,7 @@ extension RemixButtonStyleDecorationHelpers on RemixButtonStyle {
     );
   }
 
-  RemixButtonStyle backgroundImageAsset(
+  RemixButtonStyler backgroundImageAsset(
     String path, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
@@ -877,7 +877,7 @@ extension RemixButtonStyleDecorationHelpers on RemixButtonStyle {
     );
   }
 
-  RemixButtonStyle foregroundLinearGradient({
+  RemixButtonStyler foregroundLinearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
@@ -895,7 +895,7 @@ extension RemixButtonStyleDecorationHelpers on RemixButtonStyle {
     );
   }
 
-  RemixButtonStyle foregroundRadialGradient({
+  RemixButtonStyler foregroundRadialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -917,7 +917,7 @@ extension RemixButtonStyleDecorationHelpers on RemixButtonStyle {
     );
   }
 
-  RemixButtonStyle foregroundSweepGradient({
+  RemixButtonStyler foregroundSweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -937,7 +937,7 @@ extension RemixButtonStyleDecorationHelpers on RemixButtonStyle {
     );
   }
 
-  RemixButtonStyle linearGradient({
+  RemixButtonStyler linearGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? begin,
@@ -955,7 +955,7 @@ extension RemixButtonStyleDecorationHelpers on RemixButtonStyle {
     );
   }
 
-  RemixButtonStyle radialGradient({
+  RemixButtonStyler radialGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,
@@ -977,7 +977,7 @@ extension RemixButtonStyleDecorationHelpers on RemixButtonStyle {
     );
   }
 
-  RemixButtonStyle sweepGradient({
+  RemixButtonStyler sweepGradient({
     required List<Color> colors,
     List<double>? stops,
     AlignmentGeometry? center,

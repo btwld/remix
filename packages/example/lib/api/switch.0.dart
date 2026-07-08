@@ -40,8 +40,8 @@ class _SwitchExampleState extends State<SwitchExample> {
     );
   }
 
-  RemixSwitchStyle get style {
-    return RemixSwitchStyle()
+  RemixSwitchStyler get style {
+    return RemixSwitchStyler()
         .thumbColor(Colors.grey.shade600)
         .trackColor(Colors.deepPurpleAccent.shade200)
         .size(65, 30)

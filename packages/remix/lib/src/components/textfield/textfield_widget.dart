@@ -13,7 +13,7 @@ part of 'textfield.dart';
 ///   onChanged: (value) {
 ///     debugPrint('Value changed: $value');
 ///   },
-///   style: RemixTextFieldStyle(),
+///   style: RemixTextFieldStyler(),
 /// )
 /// ```
 class RemixTextField extends StatelessWidget {
@@ -75,7 +75,7 @@ class RemixTextField extends StatelessWidget {
     this.semanticLabel,
     this.semanticHint,
     this.excludeSemantics = false,
-    this.style = const RemixTextFieldStyle.create(),
+    this.style = const RemixTextFieldStyler.create(),
     this.styleSpec,
   });
 
@@ -248,12 +248,12 @@ class RemixTextField extends StatelessWidget {
   final bool excludeSemantics;
 
   /// The style configuration for the text field.
-  final RemixTextFieldStyle style;
+  final RemixTextFieldStyler style;
 
   /// The style spec for the text field.
   final RemixTextFieldSpec? styleSpec;
 
-  static final styleFrom = RemixTextFieldStyle.new;
+  static final styleFrom = RemixTextFieldStyler.new;
 
   @override
   Widget build(BuildContext context) {

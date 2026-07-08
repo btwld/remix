@@ -88,7 +88,8 @@ class RemixDialog extends StatelessWidget {
     this.actions,
     this.modal = true,
     this.semanticLabel,
-    this.style = const RemixDialogStyle.create(),
+    this.style = const RemixDialogStyler.create(),
+    this.styleSpec,
   }) : assert(
          child != null || title != null || description != null,
          'Either child, title, or description must be provided',
@@ -113,17 +114,21 @@ class RemixDialog extends StatelessWidget {
   final String? semanticLabel;
 
   /// The style configuration for the dialog.
-  final RemixDialogStyle style;
+  final RemixDialogStyler style;
 
-  static final styleFrom = RemixDialogStyle.new;
+  /// Optional raw style spec that bypasses fluent style resolution.
+  final RemixDialogSpec? styleSpec;
+
+  static final styleFrom = RemixDialogStyler.new;
 
   @override
   Widget build(BuildContext context) {
     return NakedDialog(
       modal: modal,
       semanticLabel: semanticLabel ?? title,
-      child: StyleBuilder(
+      child: RemixStyleSpecBuilder<RemixDialogSpec>(
         style: style,
+        styleSpec: styleSpec,
         builder: (context, spec) {
           // Use custom child if provided
           if (child != null) {

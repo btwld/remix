@@ -6,28 +6,28 @@ enum FortalProgressSize { size1, size2, size3 }
 /// Fortal progress color variants.
 enum FortalProgressVariant { surface, soft }
 
-/// Creates a Fortal-themed [RemixProgressStyle].
-@MixWidget()
-RemixProgressStyle fortalProgressStyle({
+/// Creates a Fortal-themed [RemixProgressStyler].
+@MixWidget(name: 'FortalProgress')
+RemixProgressStyler fortalProgressStyler({
   FortalProgressVariant variant = .surface,
   FortalProgressSize size = .size2,
 }) {
   return switch (variant) {
-    .surface => _fortalProgressSurfaceStyle(size),
-    .soft => _fortalProgressSoftStyle(size),
+    .surface => _fortalProgressSurfaceStyler(size),
+    .soft => _fortalProgressSoftStyler(size),
   };
 }
 
-RemixProgressStyle _fortalProgressBaseStyle(FortalProgressSize size) {
-  return RemixProgressStyle()
+RemixProgressStyler _fortalProgressBaseStyler(FortalProgressSize size) {
+  return RemixProgressStyler()
       .width(double.infinity)
-      .merge(_fortalProgressSizeStyle(size));
+      .merge(_fortalProgressSizeStyler(size));
 }
 
-RemixProgressStyle _fortalProgressSurfaceStyle([
+RemixProgressStyler _fortalProgressSurfaceStyler([
   FortalProgressSize size = .size2,
 ]) {
-  return _fortalProgressBaseStyle(size)
+  return _fortalProgressBaseStyler(size)
       .foregroundDecoration(
         BoxDecorationMix()
             .border(
@@ -41,10 +41,10 @@ RemixProgressStyle _fortalProgressSurfaceStyle([
       .indicator(BoxStyler().color(FortalTokens.accentIndicator()));
 }
 
-RemixProgressStyle _fortalProgressSoftStyle([
+RemixProgressStyler _fortalProgressSoftStyler([
   FortalProgressSize size = .size2,
 ]) {
-  return _fortalProgressBaseStyle(size)
+  return _fortalProgressBaseStyler(size)
       .track(
         BoxStyler()
             .color(FortalTokens.gray4())
@@ -58,10 +58,10 @@ RemixProgressStyle _fortalProgressSoftStyle([
       );
 }
 
-RemixProgressStyle _fortalProgressSizeStyle(FortalProgressSize size) {
+RemixProgressStyler _fortalProgressSizeStyler(FortalProgressSize size) {
   return switch (size) {
     .size1 =>
-      RemixProgressStyle()
+      RemixProgressStyler()
           .height(4.0)
           .track(
             BoxStyler().height(4.0).borderRadiusAll(FortalTokens.radius1()),
@@ -70,7 +70,7 @@ RemixProgressStyle _fortalProgressSizeStyle(FortalProgressSize size) {
             BoxStyler().height(4.0).borderRadiusAll(FortalTokens.radius1()),
           ),
     .size2 =>
-      RemixProgressStyle()
+      RemixProgressStyler()
           .height(8.0)
           .track(
             BoxStyler().height(8.0).borderRadiusAll(FortalTokens.radius2()),
@@ -79,7 +79,7 @@ RemixProgressStyle _fortalProgressSizeStyle(FortalProgressSize size) {
             BoxStyler().height(8.0).borderRadiusAll(FortalTokens.radius2()),
           ),
     .size3 =>
-      RemixProgressStyle()
+      RemixProgressStyler()
           .height(12.0)
           .track(
             BoxStyler().height(12.0).borderRadiusAll(FortalTokens.radius3()),

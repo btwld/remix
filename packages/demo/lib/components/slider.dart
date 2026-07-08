@@ -31,7 +31,7 @@ Widget buildSliderUseCase(BuildContext context) {
               max: 1,
               initialValue: 0.25,
             ),
-            style: fortalSliderStyle(
+            style: fortalSliderStyler(
               variant: context.knobs.object.dropdown(
                 label: 'variant',
                 options: FortalSliderVariant.values,

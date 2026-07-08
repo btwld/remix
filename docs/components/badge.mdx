@@ -41,8 +41,8 @@ class BadgeExample extends StatelessWidget {
     );
   }
 
-  RemixBadgeStyle get styleLabel {
-    return RemixBadgeStyle()
+  RemixBadgeStyler get styleLabel {
+    return RemixBadgeStyler()
         .size(24, 24)
         .wrap(WidgetModifierConfig.clipOval())
         .label(
@@ -57,8 +57,8 @@ class BadgeExample extends StatelessWidget {
         .labelFontSize(15);
   }
 
-  RemixBadgeStyle get styleIcon {
-    return RemixBadgeStyle()
+  RemixBadgeStyler get styleIcon {
+    return RemixBadgeStyler()
         .size(24, 24)
         .wrap(WidgetModifierConfig.clipOval())
         .label(
@@ -92,12 +92,20 @@ class FortalBadgeExample extends StatelessWidget {
       spacing: 16,
       children: [
         RemixBadge(
-          label: '5',
-          style: fortalBadgeStyle(variant: FortalBadgeVariant.solid),
+          label: 'Solid',
+          style: fortalBadgeStyler(variant: FortalBadgeVariant.solid),
         ),
         RemixBadge(
-          label: 'New',
-          style: fortalBadgeStyle(variant: FortalBadgeVariant.soft),
+          label: 'Soft',
+          style: fortalBadgeStyler(variant: FortalBadgeVariant.soft),
+        ),
+        RemixBadge(
+          label: 'Surface',
+          style: fortalBadgeStyler(variant: FortalBadgeVariant.surface),
+        ),
+        RemixBadge(
+          label: 'Outline',
+          style: fortalBadgeStyler(variant: FortalBadgeVariant.outline),
         ),
       ],
     );
@@ -107,7 +115,7 @@ class FortalBadgeExample extends StatelessWidget {
 </CodeGroup>
 
 <Info>
-  See the [fortalBadgeStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/badge/fortal_badge_styles.dart) for all available options.
+  See the [fortalBadgeStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/badge/fortal_badge_styles.dart) for all available options.
 </Info>
 
 ## Constructor
@@ -118,8 +126,8 @@ const RemixBadge({
   String? label,
   Widget? child,
   RemixBadgeLabelBuilder? labelBuilder,
-  RemixBadgeStyle style = const RemixBadgeStyle.create(),
-  StyleSpec<RemixBadgeSpec>? styleSpec,
+  RemixBadgeStyler style = const RemixBadgeStyler.create(),
+  RemixBadgeSpec? styleSpec,
 })
 ```
 </CodeGroup>
@@ -128,11 +136,11 @@ const RemixBadge({
 ## Properties
 ### Widget Properties
 
-#### `style` → `RemixBadgeStyle`
+#### `style` → `RemixBadgeStyler`
 
 Optional. The style configuration for the badge. Customize colors, sizing, shape, and state-based styling.
 
-#### `styleSpec` → `StyleSpec<RemixBadgeSpec>?`
+#### `styleSpec` → `RemixBadgeSpec?`
 
 Optional. A pre-resolved style spec that bypasses style resolution. Useful for performance when sharing resolved styles across multiple instances.
 

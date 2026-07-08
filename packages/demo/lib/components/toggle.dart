@@ -23,7 +23,7 @@ Widget buildToggleUseCase(BuildContext context) {
           label: context.knobs.string(label: 'Label', initialValue: 'Bold'),
           icon: Icons.alarm_sharp,
           onChanged: (value) => knobState.updateKnob('Selected', value),
-          style: fortalToggleStyle(
+          style: fortalToggleStyler(
             variant: context.knobs.object.dropdown(
               label: 'variant',
               options: FortalToggleVariant.values,

@@ -2,20 +2,20 @@ part of 'icon_button.dart';
 
 /// Style configuration for [RemixIconButton] container, icon, and loading spinner.
 @MixableStyler()
-class RemixIconButtonStyle
-    extends RemixContainerStyle<RemixIconButtonSpec, RemixIconButtonStyle>
+class RemixIconButtonStyler
+    extends RemixContainerStyler<RemixIconButtonSpec, RemixIconButtonStyler>
     with
-        IconStyleMixin<RemixIconButtonStyle>,
+        IconStyleMixin<RemixIconButtonStyler>,
         Diagnosticable,
-        _$RemixIconButtonStyleMixin {
+        _$RemixIconButtonStylerMixin {
   @MixableField(setterType: BoxStyler)
   final Prop<StyleSpec<BoxSpec>>? $container;
   @MixableField(setterType: IconStyler)
   final Prop<StyleSpec<IconSpec>>? $icon;
-  @MixableField(setterType: RemixSpinnerStyle)
+  @MixableField(setterType: RemixSpinnerStyler)
   final Prop<StyleSpec<RemixSpinnerSpec>>? $spinner;
 
-  const RemixIconButtonStyle.create({
+  const RemixIconButtonStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
     Prop<StyleSpec<IconSpec>>? icon,
     Prop<StyleSpec<RemixSpinnerSpec>>? spinner,
@@ -26,10 +26,10 @@ class RemixIconButtonStyle
        $icon = icon,
        $spinner = spinner;
 
-  RemixIconButtonStyle({
+  RemixIconButtonStyler({
     BoxStyler? container,
     IconStyler? icon,
-    RemixSpinnerStyle? spinner,
+    RemixSpinnerStyler? spinner,
     AnimationConfig? animation,
     List<VariantStyle<RemixIconButtonSpec>>? variants,
     WidgetModifierConfig? modifier,
@@ -45,33 +45,33 @@ class RemixIconButtonStyle
   // Instance methods (chainable)
 
   /// Sets background color
-  RemixIconButtonStyle color(Color value) {
+  RemixIconButtonStyler color(Color value) {
     return merge(
-      RemixIconButtonStyle(
+      RemixIconButtonStyler(
         container: BoxStyler(decoration: BoxDecorationMix(color: value)),
       ),
     );
   }
 
   /// Sets the background color of the icon button container.
-  RemixIconButtonStyle backgroundColor(Color value) {
+  RemixIconButtonStyler backgroundColor(Color value) {
     return color(value);
   }
 
   /// Sets the foreground color (icon color) of the icon button.
-  RemixIconButtonStyle foregroundColor(Color value) {
+  RemixIconButtonStyler foregroundColor(Color value) {
     return iconColor(value);
   }
 
   /// Sets padding
-  RemixIconButtonStyle padding(EdgeInsetsGeometryMix value) {
-    return merge(RemixIconButtonStyle(container: BoxStyler(padding: value)));
+  RemixIconButtonStyler padding(EdgeInsetsGeometryMix value) {
+    return merge(RemixIconButtonStyler(container: BoxStyler(padding: value)));
   }
 
   /// Sets border radius
-  RemixIconButtonStyle borderRadius(BorderRadiusGeometryMix radius) {
+  RemixIconButtonStyler borderRadius(BorderRadiusGeometryMix radius) {
     return merge(
-      RemixIconButtonStyle(
+      RemixIconButtonStyler(
         container: BoxStyler(
           decoration: BoxDecorationMix(borderRadius: radius),
         ),
@@ -80,9 +80,9 @@ class RemixIconButtonStyle
   }
 
   /// Sets size (width and height - icon buttons are square)
-  RemixIconButtonStyle iconButtonSize(double size) {
+  RemixIconButtonStyler iconButtonSize(double size) {
     return merge(
-      RemixIconButtonStyle(
+      RemixIconButtonStyler(
         container: BoxStyler(
           constraints: BoxConstraintsMix(
             minWidth: size,
@@ -96,18 +96,18 @@ class RemixIconButtonStyle
   }
 
   /// Sets border
-  RemixIconButtonStyle border(BoxBorderMix value) {
+  RemixIconButtonStyler border(BoxBorderMix value) {
     return merge(
-      RemixIconButtonStyle(
+      RemixIconButtonStyler(
         container: BoxStyler(decoration: BoxDecorationMix(border: value)),
       ),
     );
   }
 
   /// Sets the minimum size of the icon button.
-  RemixIconButtonStyle minimumSize(Size value) {
+  RemixIconButtonStyler minimumSize(Size value) {
     return merge(
-      RemixIconButtonStyle().constraintsOnly(
+      RemixIconButtonStyler().constraintsOnly(
         minWidth: value.width,
         minHeight: value.height,
       ),
@@ -115,9 +115,9 @@ class RemixIconButtonStyle
   }
 
   /// Sets the maximum size of the icon button.
-  RemixIconButtonStyle maximumSize(Size value) {
+  RemixIconButtonStyler maximumSize(Size value) {
     return merge(
-      RemixIconButtonStyle().constraintsOnly(
+      RemixIconButtonStyler().constraintsOnly(
         maxWidth: value.width,
         maxHeight: value.height,
       ),
@@ -125,9 +125,9 @@ class RemixIconButtonStyle
   }
 
   /// Sets the shape of the icon button.
-  RemixIconButtonStyle shape(ShapeBorderMix value) {
+  RemixIconButtonStyler shape(ShapeBorderMix value) {
     return merge(
-      RemixIconButtonStyle(
+      RemixIconButtonStyler(
         container: BoxStyler(decoration: ShapeDecorationMix(shape: value)),
       ),
     );
@@ -136,34 +136,36 @@ class RemixIconButtonStyle
   // Additional convenience methods
 
   /// Sets margin
-  RemixIconButtonStyle margin(EdgeInsetsGeometryMix value) {
-    return merge(RemixIconButtonStyle(container: BoxStyler(margin: value)));
+  RemixIconButtonStyler margin(EdgeInsetsGeometryMix value) {
+    return merge(RemixIconButtonStyler(container: BoxStyler(margin: value)));
   }
 
   /// Sets container alignment
-  RemixIconButtonStyle alignment(Alignment value) {
-    return merge(RemixIconButtonStyle(container: BoxStyler(alignment: value)));
+  RemixIconButtonStyler alignment(Alignment value) {
+    return merge(RemixIconButtonStyler(container: BoxStyler(alignment: value)));
   }
 
   /// Sets decoration
-  RemixIconButtonStyle decoration(DecorationMix value) {
-    return merge(RemixIconButtonStyle(container: BoxStyler(decoration: value)));
+  RemixIconButtonStyler decoration(DecorationMix value) {
+    return merge(
+      RemixIconButtonStyler(container: BoxStyler(decoration: value)),
+    );
   }
 
   /// Sets icon color
-  RemixIconButtonStyle iconColor(Color value) {
+  RemixIconButtonStyler iconColor(Color value) {
     return icon(IconStyler(color: value));
   }
 
   /// Sets icon size
-  RemixIconButtonStyle iconSize(double value) {
-    return merge(RemixIconButtonStyle(icon: IconStyler(size: value)));
+  RemixIconButtonStyler iconSize(double value) {
+    return merge(RemixIconButtonStyler(icon: IconStyler(size: value)));
   }
 
   /// Sets width
-  RemixIconButtonStyle width(double value) {
+  RemixIconButtonStyler width(double value) {
     return merge(
-      RemixIconButtonStyle(
+      RemixIconButtonStyler(
         container: BoxStyler(
           constraints: BoxConstraintsMix(minWidth: value, maxWidth: value),
         ),
@@ -172,9 +174,9 @@ class RemixIconButtonStyle
   }
 
   /// Sets height
-  RemixIconButtonStyle height(double value) {
+  RemixIconButtonStyler height(double value) {
     return merge(
-      RemixIconButtonStyle(
+      RemixIconButtonStyler(
         container: BoxStyler(
           constraints: BoxConstraintsMix(minHeight: value, maxHeight: value),
         ),
@@ -203,9 +205,9 @@ class RemixIconButtonStyle
 
   /// Sets the shadow of the icon button.
   @override
-  RemixIconButtonStyle shadow(BoxShadowMix value) {
+  RemixIconButtonStyler shadow(BoxShadowMix value) {
     return merge(
-      RemixIconButtonStyle(
+      RemixIconButtonStyler(
         container: BoxStyler(decoration: BoxDecorationMix(boxShadow: [value])),
       ),
     );
@@ -213,28 +215,28 @@ class RemixIconButtonStyle
 
   /// Sets constraints
   @override
-  RemixIconButtonStyle constraints(BoxConstraintsMix value) {
+  RemixIconButtonStyler constraints(BoxConstraintsMix value) {
     return merge(
-      RemixIconButtonStyle(container: BoxStyler(constraints: value)),
+      RemixIconButtonStyler(container: BoxStyler(constraints: value)),
     );
   }
 
   // Abstract method implementations for mixins
 
   @override
-  RemixIconButtonStyle foregroundDecoration(DecorationMix value) {
+  RemixIconButtonStyler foregroundDecoration(DecorationMix value) {
     return merge(
-      RemixIconButtonStyle(container: BoxStyler(foregroundDecoration: value)),
+      RemixIconButtonStyler(container: BoxStyler(foregroundDecoration: value)),
     );
   }
 
   @override
-  RemixIconButtonStyle transform(
+  RemixIconButtonStyler transform(
     Matrix4 value, {
     AlignmentGeometry alignment = Alignment.center,
   }) {
     return merge(
-      RemixIconButtonStyle(
+      RemixIconButtonStyler(
         container: BoxStyler(transform: value, transformAlignment: alignment),
       ),
     );

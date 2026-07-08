@@ -12,18 +12,18 @@ enum FortalDividerSize {
   size3,
 }
 
-/// Creates a Fortal-themed [RemixDividerStyle].
-@MixWidget()
-RemixDividerStyle fortalDividerStyle({FortalDividerSize size = .size1}) {
-  return RemixDividerStyle()
+/// Creates a Fortal-themed [RemixDividerStyler].
+@MixWidget(name: 'FortalDivider')
+RemixDividerStyler fortalDividerStyler({FortalDividerSize size = .size1}) {
+  return RemixDividerStyler()
       .color(FortalTokens.gray6())
-      .merge(_fortalDividerSizeStyle(size));
+      .merge(_fortalDividerSizeStyler(size));
 }
 
-RemixDividerStyle _fortalDividerSizeStyle(FortalDividerSize size) {
+RemixDividerStyler _fortalDividerSizeStyler(FortalDividerSize size) {
   return switch (size) {
-    .size1 => RemixDividerStyle().thickness(1.0),
-    .size2 => RemixDividerStyle().thickness(2.0),
-    .size3 => RemixDividerStyle().thickness(3.0),
+    .size1 => RemixDividerStyler().thickness(1.0),
+    .size2 => RemixDividerStyler().thickness(2.0),
+    .size3 => RemixDividerStyler().thickness(3.0),
   };
 }

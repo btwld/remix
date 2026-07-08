@@ -65,8 +65,8 @@ class _RadioExampleState extends State<RadioExample> {
     );
   }
 
-  RemixRadioStyle get style {
-    return RemixRadioStyle()
+  RemixRadioStyler get style {
+    return RemixRadioStyler()
         .borderRadiusAll(const Radius.circular(30))
         .size(22, 22)
         .border(
@@ -78,7 +78,7 @@ class _RadioExampleState extends State<RadioExample> {
           ),
         )
         .onHovered(
-          RemixRadioStyle().shadow(
+          RemixRadioStyler().shadow(
             BoxShadowMix()
                 .color(Colors.blueGrey.shade50.withValues(alpha: 0.7))
                 .blurRadius(0)
@@ -86,7 +86,7 @@ class _RadioExampleState extends State<RadioExample> {
           ),
         )
         .onPressed(
-          RemixRadioStyle().border(
+          RemixRadioStyler().border(
             BoxBorderMix.all(
               BorderSideMix()
                   .color(Colors.blueGrey.shade100)
@@ -96,7 +96,7 @@ class _RadioExampleState extends State<RadioExample> {
           ),
         )
         .onSelected(
-          RemixRadioStyle().border(
+          RemixRadioStyler().border(
             BoxBorderMix.all(
               BorderSideMix()
                   .color(Colors.blueAccent.shade700)
@@ -136,8 +136,26 @@ class _FortalRadioExampleState extends State<FortalRadioExample> {
       onChanged: (value) => setState(() => _selected = value),
       child: Column(
         children: [
-          FortalRadio(value: 'soft', variant: FortalRadioVariant.soft),
-          FortalRadio(value: 'surface'),
+          Row(
+            children: [
+              FortalRadio(
+                value: 'surface',
+                variant: FortalRadioVariant.surface,
+              ),
+              const SizedBox(width: 8),
+              const Text('Surface'),
+            ],
+          ),
+          Row(
+            children: [
+              FortalRadio(
+                value: 'soft',
+                variant: FortalRadioVariant.soft,
+              ),
+              const SizedBox(width: 8),
+              const Text('Soft'),
+            ],
+          ),
         ],
       ),
     );
@@ -147,7 +165,7 @@ class _FortalRadioExampleState extends State<FortalRadioExample> {
 </CodeGroup>
 
 <Info>
-  See the [fortalRadioStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/radio/fortal_radio_styles.dart) for all available options.
+  See the [fortalRadioStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/radio/fortal_radio_styles.dart) for all available options.
 </Info>
 
 ## Constructor
@@ -168,10 +186,9 @@ const RemixRadio({
   bool enabled = true,
   bool toggleable = false,
   MouseCursor? mouseCursor,
-  bool enableFeedback = true,
   FocusNode? focusNode,
   bool autofocus = false,
-  RemixRadioStyle style = const RemixRadioStyle.create(),
+  RemixRadioStyler style = const RemixRadioStyler.create(),
   RemixRadioSpec? styleSpec,
 })
 ```
@@ -193,7 +210,7 @@ Optional. Called when a radio button in the group is selected. When omitted, the
 
 **Required**. The child widget that contains the radio buttons.
 
-#### `style` → `RemixRadioStyle`
+#### `style` → `RemixRadioStyler`
 
 Optional. The style configuration for the radio button. Customize colors, borders, and state-based styling.
 
@@ -229,12 +246,6 @@ Optional. The focus node for the radio button.
 
 Optional. The mouse cursor to use when hovering over the radio button.
 
-#### `enableFeedback` → `bool`
-
-Optional. Whether to provide feedback when the radio button is pressed.
-
-
-### Style Methods
 
 #### `indicator(BoxStyler value)`
 
@@ -284,6 +295,6 @@ Sets a foreground decoration painted on top of the component.
 
 Applies a matrix transformation to the component.
 
-#### `call<T>({required T value, bool enabled = true, bool autofocus = false, bool toggleable = false, FocusNode? focusNode, MouseCursor? mouseCursor, bool enableFeedback = true})`
+#### `call<T>({required T value, bool enabled = true, bool autofocus = false, bool toggleable = false, FocusNode? focusNode, MouseCursor? mouseCursor})`
 
 Creates a `RemixRadio<T>` widget with this style applied.

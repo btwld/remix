@@ -61,21 +61,21 @@ class _SelectExampleState extends State<SelectExample> {
     );
   }
 
-  RemixSelectMenuItemStyle get itemStyle {
-    return RemixSelectMenuItemStyle()
+  RemixSelectMenuItemStyler get itemStyle {
+    return RemixSelectMenuItemStyler()
         .iconSize(16)
         .paddingAll(8)
         .borderRadiusAll(const Radius.circular(8))
-        .onHovered(RemixSelectMenuItemStyle().color(Colors.blueGrey.shade50))
+        .onHovered(RemixSelectMenuItemStyler().color(Colors.blueGrey.shade50))
         .onDisabled(
-          RemixSelectMenuItemStyle().labelColor(Colors.grey.shade300),
+          RemixSelectMenuItemStyler().labelColor(Colors.grey.shade300),
         );
   }
 
-  RemixSelectStyle get style {
-    return RemixSelectStyle()
+  RemixSelectStyler get style {
+    return RemixSelectStyler()
         .trigger(
-          RemixSelectTriggerStyle()
+          RemixSelectTriggerStyler()
               .color(Colors.transparent)
               .borderAll(color: const Color(0xFF898988))
               .paddingY(10)
@@ -99,7 +99,7 @@ class _SelectExampleState extends State<SelectExample> {
 
 Remix includes Fortal-themed style helpers for this component:
 
-<CodeGroup title="Fortal base style" defaultLanguage="dart">
+<CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
@@ -112,25 +112,42 @@ class FortalSelectExample extends StatefulWidget {
 }
 
 class _FortalSelectExampleState extends State<FortalSelectExample> {
-  String? _selected;
+  String? _surface;
+  String? _soft;
+  String? _ghost;
+
+  List<RemixSelectItem<String>> get _items => const [
+        RemixSelectItem(value: 'opt1', label: 'Option 1'),
+        RemixSelectItem(value: 'opt2', label: 'Option 2'),
+      ];
 
   @override
   Widget build(BuildContext context) {
-    return RemixSelect(
-      trigger: const RemixSelectTrigger(placeholder: 'Select option'),
-      items: [
-        RemixSelectItem(
-          value: 'opt1',
-          label: 'Option 1',
+    return Column(
+      spacing: 16,
+      children: [
+        RemixSelect(
+          trigger: const RemixSelectTrigger(placeholder: 'Surface'),
+          items: _items,
+          selectedValue: _surface,
+          onChanged: (value) => setState(() => _surface = value),
+          style: fortalSelectStyler(variant: FortalSelectVariant.surface),
         ),
-        RemixSelectItem(
-          value: 'opt2',
-          label: 'Option 2',
+        RemixSelect(
+          trigger: const RemixSelectTrigger(placeholder: 'Soft'),
+          items: _items,
+          selectedValue: _soft,
+          onChanged: (value) => setState(() => _soft = value),
+          style: fortalSelectStyler(variant: FortalSelectVariant.soft),
+        ),
+        RemixSelect(
+          trigger: const RemixSelectTrigger(placeholder: 'Ghost'),
+          items: _items,
+          selectedValue: _ghost,
+          onChanged: (value) => setState(() => _ghost = value),
+          style: fortalSelectStyler(variant: FortalSelectVariant.ghost),
         ),
       ],
-      selectedValue: _selected,
-      onChanged: (value) => setState(() => _selected = value),
-      style: fortalSelectStyle(),
     );
   }
 }
@@ -138,7 +155,7 @@ class _FortalSelectExampleState extends State<FortalSelectExample> {
 </CodeGroup>
 
 <Info>
-  See the [fortalSelectStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/select/fortal_select_styles.dart) for all available options.
+  See the [fortalSelectStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/select/fortal_select_styles.dart) for all available options.
 </Info>
 
 ## Constructor
@@ -149,8 +166,10 @@ const RemixSelect({
   required RemixSelectTrigger trigger,
   required List<RemixSelectItem<T>> items,
   T? selectedValue,
-  Alignment? targetAnchor,
-  Alignment? followerAnchor,
+  OverlayPositionConfig positioning = const OverlayPositionConfig(
+    targetAnchor: Alignment.bottomCenter,
+    followerAnchor: Alignment.topCenter,
+  ),
   ValueChanged<T?>? onChanged,
   VoidCallback? onOpen,
   VoidCallback? onClose,
@@ -158,7 +177,7 @@ const RemixSelect({
   String? semanticLabel,
   bool closeOnSelect = true,
   FocusNode? focusNode,
-  RemixSelectStyle style = const RemixSelectStyle.create(),
+  RemixSelectStyler style = const RemixSelectStyler.create(),
 })
 ```
 </CodeGroup>
@@ -211,7 +230,7 @@ Optional. Whether to automatically close the dropdown when an item is selected.
 
 Optional. Optional focus node to control focus behavior.
 
-#### `style` → `RemixSelectStyle`
+#### `style` → `RemixSelectStyler`
 
 Optional. The style configuration for the select.
 
@@ -222,7 +241,7 @@ Optional. The style configuration for the select.
 
 Configures the select menu overlay container.
 
-#### `trigger(RemixSelectTriggerStyle value)`
+#### `trigger(RemixSelectTriggerStyler value)`
 
 Configures the select trigger style.
 

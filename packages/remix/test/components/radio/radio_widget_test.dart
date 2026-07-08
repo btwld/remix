@@ -269,7 +269,7 @@ void main() {
 
     group('Styling', () {
       testWidgets('applies custom style', (tester) async {
-        final customStyle = RemixRadioStyle().size(32.0, 32.0);
+        final customStyle = RemixRadioStyler().size(32.0, 32.0);
 
         await tester.pumpRemixApp(
           RemixRadioGroup<String>(
@@ -284,7 +284,7 @@ void main() {
       });
 
       testWidgets('applies indicator styling', (tester) async {
-        final customStyle = RemixRadioStyle().indicator(
+        final customStyle = RemixRadioStyler().indicator(
           BoxStyler(decoration: BoxDecorationMix(color: Colors.blue)),
         );
 
@@ -301,7 +301,7 @@ void main() {
       });
 
       testWidgets('applies alignment styling', (tester) async {
-        final customStyle = RemixRadioStyle().alignment(Alignment.center);
+        final customStyle = RemixRadioStyler().alignment(Alignment.center);
 
         await tester.pumpRemixApp(
           RemixRadioGroup<String>(
@@ -316,7 +316,7 @@ void main() {
       });
 
       testWidgets('applies color styling', (tester) async {
-        final customStyle = RemixRadioStyle().fillColor(Colors.red);
+        final customStyle = RemixRadioStyler().fillColor(Colors.red);
 
         await tester.pumpRemixApp(
           RemixRadioGroup<String>(
@@ -331,7 +331,7 @@ void main() {
       });
 
       testWidgets('applies border radius styling', (tester) async {
-        final customStyle = RemixRadioStyle().borderRadius(
+        final customStyle = RemixRadioStyler().borderRadius(
           BorderRadiusMix.circular(8.0),
         );
 
@@ -491,12 +491,12 @@ void main() {
         expect(find.byType(RemixRadio<String>), findsOneWidget);
       });
 
-      testWidgets('handles enableFeedback parameter', (tester) async {
+      testWidgets('handles toggleable parameter', (tester) async {
         await tester.pumpRemixApp(
           RemixRadioGroup<String>(
             groupValue: null,
             onChanged: (value) {},
-            child: RemixRadio<String>(value: 'option1', enableFeedback: false),
+            child: RemixRadio<String>(value: 'option1', toggleable: true),
           ),
         );
         await tester.pumpAndSettle();
@@ -609,7 +609,7 @@ void main() {
 
     group('Widget Modifiers', () {
       testWidgets('applies widget modifiers from style', (tester) async {
-        final customStyle = RemixRadioStyle().wrap(
+        final customStyle = RemixRadioStyler().wrap(
           WidgetModifierConfig.clipOval(),
         );
 

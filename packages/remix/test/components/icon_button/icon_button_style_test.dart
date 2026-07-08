@@ -5,45 +5,45 @@ import 'package:remix/remix.dart';
 import '../../helpers/test_methods.dart';
 
 void main() {
-  group('RemixIconButtonStyle', () {
+  group('RemixIconButtonStyler', () {
     group('Constructors', () {
       test('default constructor creates valid instance', () {
-        const style = RemixIconButtonStyle.create();
+        const style = RemixIconButtonStyler.create();
         expect(style, isNotNull);
-        expect(style, isA<RemixIconButtonStyle>());
+        expect(style, isA<RemixIconButtonStyler>());
       });
 
       test('create constructor with all parameters', () {
         final container = Prop.maybeMix(BoxStyler());
         final icon = Prop.maybeMix(IconStyler());
-        final spinner = Prop.maybeMix(RemixSpinnerStyle());
+        final spinner = Prop.maybeMix(RemixSpinnerStyler());
 
-        final style = RemixIconButtonStyle.create(
+        final style = RemixIconButtonStyler.create(
           container: container,
           icon: icon,
           spinner: spinner,
         );
 
         expect(style, isNotNull);
-        expect(style, isA<RemixIconButtonStyle>());
+        expect(style, isA<RemixIconButtonStyler>());
       });
 
       test('constructor with styler parameters', () {
-        final style = RemixIconButtonStyle(
+        final style = RemixIconButtonStyler(
           container: BoxStyler(padding: EdgeInsetsGeometryMix.all(12.0)),
           icon: IconStyler(color: Colors.blue),
-          spinner: RemixSpinnerStyle(),
+          spinner: RemixSpinnerStyler(),
         );
 
         expect(style, isNotNull);
-        expect(style, isA<RemixIconButtonStyle>());
+        expect(style, isA<RemixIconButtonStyler>());
       });
     });
 
     group('Style Methods', () {
       styleMethodTest(
         'icon sets icon styler',
-        initial: RemixIconButtonStyle(),
+        initial: RemixIconButtonStyler(),
         modify: (style) => style.icon(IconStyler(color: Colors.red)),
         expect: (style) {
           expect(
@@ -55,16 +55,16 @@ void main() {
 
       styleMethodTest(
         'spinner sets spinner style',
-        initial: RemixIconButtonStyle(),
-        modify: (style) => style.spinner(RemixSpinnerStyle()),
+        initial: RemixIconButtonStyler(),
+        modify: (style) => style.spinner(RemixSpinnerStyler()),
         expect: (style) {
-          expect(style.$spinner, equals(Prop.maybeMix(RemixSpinnerStyle())));
+          expect(style.$spinner, equals(Prop.maybeMix(RemixSpinnerStyler())));
         },
       );
 
       styleMethodTest(
         'color sets container background color',
-        initial: RemixIconButtonStyle(),
+        initial: RemixIconButtonStyler(),
         modify: (style) => style.color(Colors.blue),
         expect: (style) {
           expect(
@@ -80,7 +80,7 @@ void main() {
 
       styleMethodTest(
         'padding sets container padding',
-        initial: RemixIconButtonStyle(),
+        initial: RemixIconButtonStyler(),
         modify: (style) => style.padding(EdgeInsetsGeometryMix.all(16.0)),
         expect: (style) {
           expect(
@@ -96,7 +96,7 @@ void main() {
 
       styleMethodTest(
         'borderRadius sets container border radius',
-        initial: RemixIconButtonStyle(),
+        initial: RemixIconButtonStyler(),
         modify: (style) =>
             style.borderRadius(BorderRadiusGeometryMix.circular(8.0)),
         expect: (style) {
@@ -117,7 +117,7 @@ void main() {
 
       styleMethodTest(
         'iconButtonSize sets container size constraints',
-        initial: RemixIconButtonStyle(),
+        initial: RemixIconButtonStyler(),
         modify: (style) => style.iconButtonSize(48.0),
         expect: (style) {
           expect(
@@ -140,7 +140,7 @@ void main() {
 
       styleMethodTest(
         'border sets container border',
-        initial: RemixIconButtonStyle(),
+        initial: RemixIconButtonStyler(),
         modify: (style) =>
             style.border(BoxBorderMix.all(BorderSideMix(color: Colors.grey))),
         expect: (style) {
@@ -161,7 +161,7 @@ void main() {
 
       styleMethodTest(
         'margin sets container margin',
-        initial: RemixIconButtonStyle(),
+        initial: RemixIconButtonStyler(),
         modify: (style) => style.margin(EdgeInsetsGeometryMix.all(4.0)),
         expect: (style) {
           expect(
@@ -175,7 +175,7 @@ void main() {
 
       styleMethodTest(
         'alignment sets container alignment',
-        initial: RemixIconButtonStyle(),
+        initial: RemixIconButtonStyler(),
         modify: (style) => style.alignment(Alignment.centerLeft),
         expect: (style) {
           expect(
@@ -187,7 +187,7 @@ void main() {
 
       styleMethodTest(
         'decoration sets container decoration',
-        initial: RemixIconButtonStyle(),
+        initial: RemixIconButtonStyler(),
         modify: (style) => style.decoration(
           BoxDecorationMix(
             color: Colors.lightBlue,
@@ -213,7 +213,7 @@ void main() {
 
       styleMethodTest(
         'constraints sets container constraints',
-        initial: RemixIconButtonStyle(),
+        initial: RemixIconButtonStyler(),
         modify: (style) => style.constraints(
           BoxConstraintsMix(minWidth: 40.0, minHeight: 40.0),
         ),
@@ -236,7 +236,7 @@ void main() {
 
       styleMethodTest(
         'iconColor sets icon color',
-        initial: RemixIconButtonStyle(),
+        initial: RemixIconButtonStyler(),
         modify: (style) => style.iconColor(Colors.green),
         expect: (style) {
           expect(
@@ -248,7 +248,7 @@ void main() {
 
       styleMethodTest(
         'iconSize sets icon size',
-        initial: RemixIconButtonStyle(),
+        initial: RemixIconButtonStyler(),
         modify: (style) => style.iconSize(24.0),
         expect: (style) {
           expect(style.$icon, equals(Prop.maybeMix(IconStyler(size: 24.0))));
@@ -257,7 +257,7 @@ void main() {
 
       styleMethodTest(
         'width sets container width',
-        initial: RemixIconButtonStyle(),
+        initial: RemixIconButtonStyler(),
         modify: (style) => style.width(50.0),
         expect: (style) {
           expect(
@@ -278,7 +278,7 @@ void main() {
 
       styleMethodTest(
         'height sets container height',
-        initial: RemixIconButtonStyle(),
+        initial: RemixIconButtonStyler(),
         modify: (style) => style.height(50.0),
         expect: (style) {
           expect(
@@ -299,7 +299,7 @@ void main() {
 
       styleMethodTest(
         'animate sets animation config',
-        initial: RemixIconButtonStyle(),
+        initial: RemixIconButtonStyler(),
         modify: (style) =>
             style.animate(AnimationConfig.linear(Duration(milliseconds: 200))),
         expect: (style) {
@@ -312,7 +312,7 @@ void main() {
 
       styleMethodTest(
         'variants sets variant styles',
-        initial: RemixIconButtonStyle(),
+        initial: RemixIconButtonStyler(),
         modify: (style) => style.variants([]),
         expect: (style) {
           expect(style.$variants, equals([]));
@@ -321,7 +321,7 @@ void main() {
 
       styleMethodTest(
         'wrap sets widget modifier config',
-        initial: RemixIconButtonStyle(),
+        initial: RemixIconButtonStyler(),
         modify: (style) => style.wrap(WidgetModifierConfig()),
         expect: (style) {
           expect(style.$modifier, equals(WidgetModifierConfig()));
@@ -330,7 +330,7 @@ void main() {
 
       styleMethodTest(
         'foregroundDecoration sets foreground decoration',
-        initial: RemixIconButtonStyle(),
+        initial: RemixIconButtonStyler(),
         modify: (style) => style.foregroundDecoration(
           BoxDecorationMix(color: Colors.yellow.withValues(alpha: 0.3)),
         ),
@@ -352,7 +352,7 @@ void main() {
 
       styleMethodTest(
         'transform sets container transform',
-        initial: RemixIconButtonStyle(),
+        initial: RemixIconButtonStyler(),
         modify: (style) => style.transform(Matrix4.rotationZ(0.1)),
         expect: (style) {
           expect(
@@ -372,7 +372,7 @@ void main() {
 
     group('Call Method', () {
       test('call method creates RemixIconButton with minimal parameters', () {
-        const style = RemixIconButtonStyle.create();
+        const style = RemixIconButtonStyler.create();
         final button = style.call(icon: Icons.add);
 
         expect(button, isA<RemixIconButton>());
@@ -381,7 +381,7 @@ void main() {
       });
 
       test('call method with all parameters', () {
-        const style = RemixIconButtonStyle.create();
+        const style = RemixIconButtonStyler.create();
         final button = style.call(
           icon: Icons.delete,
           onPressed: () {},
@@ -403,7 +403,7 @@ void main() {
 
     group('Core Methods', () {
       testWidgets('resolve method returns StyleSpec', (tester) async {
-        const style = RemixIconButtonStyle.create();
+        const style = RemixIconButtonStyler.create();
         await tester.pumpWidget(
           MaterialApp(
             home: Builder(
@@ -419,23 +419,23 @@ void main() {
       });
 
       test('merge with null returns style equal to original', () {
-        const originalStyle = RemixIconButtonStyle.create();
+        const originalStyle = RemixIconButtonStyler.create();
         final mergedStyle = originalStyle.merge(null);
         expect(mergedStyle, equals(originalStyle));
       });
 
       test('merge with other style combines properties', () {
-        const style1 = RemixIconButtonStyle.create();
-        final style2 = RemixIconButtonStyle();
+        const style1 = RemixIconButtonStyler.create();
+        final style2 = RemixIconButtonStyler();
 
         final merged = style1.merge(style2);
         expect(merged, isNot(same(style1)));
         expect(merged, isNot(same(style2)));
-        expect(merged, isA<RemixIconButtonStyle>());
+        expect(merged, isA<RemixIconButtonStyler>());
       });
 
       test('props list contains all properties', () {
-        const style = RemixIconButtonStyle.create();
+        const style = RemixIconButtonStyler.create();
         expect(style.props, hasLength(6));
         expect(style.props, contains(style.$container));
         expect(style.props, contains(style.$icon));
@@ -448,21 +448,21 @@ void main() {
 
     group('Equality', () {
       test('identical styles are equal', () {
-        const style1 = RemixIconButtonStyle.create();
-        const style2 = RemixIconButtonStyle.create();
+        const style1 = RemixIconButtonStyler.create();
+        const style2 = RemixIconButtonStyler.create();
         expect(style1, equals(style2));
         expect(style1.hashCode, equals(style2.hashCode));
       });
 
       test('styles with different properties are not equal', () {
-        const style1 = RemixIconButtonStyle.create();
-        final style2 = RemixIconButtonStyle();
+        const style1 = RemixIconButtonStyler.create();
+        final style2 = RemixIconButtonStyler();
         expect(style1, equals(style2));
       });
 
       test('styles with same properties are equal', () {
-        final style1 = RemixIconButtonStyle();
-        final style2 = RemixIconButtonStyle();
+        final style1 = RemixIconButtonStyler();
+        final style2 = RemixIconButtonStyler();
         expect(style1, equals(style2));
         expect(style1.hashCode, equals(style2.hashCode));
       });

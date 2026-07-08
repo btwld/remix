@@ -358,8 +358,8 @@ void main() {
 
   group('RemixMenu Styling Tests', () {
     testWidgets('applies custom style to menu', (tester) async {
-      final style = RemixMenuStyle().trigger(
-        RemixMenuTriggerStyle().padding(EdgeInsetsGeometryMix.all(20.0)),
+      final style = RemixMenuStyler().trigger(
+        RemixMenuTriggerStyler().padding(EdgeInsetsGeometryMix.all(20.0)),
       );
 
       await tester.pumpRemixApp(
@@ -382,7 +382,7 @@ void main() {
             RemixMenuItem<String>(
               value: 'copy',
               label: 'Copy',
-              style: RemixMenuItemStyle().padding(
+              style: RemixMenuItemStyler().padding(
                 EdgeInsetsGeometryMix.all(12.0),
               ),
             ),
@@ -399,8 +399,8 @@ void main() {
         RemixMenu<String>(
           trigger: const RemixMenuTrigger(label: 'Options'),
           items: const [RemixMenuItem<String>(value: 'copy', label: 'Copy')],
-          style: RemixMenuStyle().item(
-            RemixMenuItemStyle().label(TextStyler().color(Colors.red)),
+          style: RemixMenuStyler().item(
+            RemixMenuItemStyler().label(TextStyler().color(Colors.red)),
           ),
         ),
       );
@@ -423,13 +423,13 @@ void main() {
             RemixMenuItem<String>(
               value: 'copy',
               label: 'Copy',
-              style: RemixMenuItemStyle().label(
+              style: RemixMenuItemStyler().label(
                 TextStyler().color(Colors.blue),
               ),
             ),
           ],
-          style: RemixMenuStyle().item(
-            RemixMenuItemStyle().label(TextStyler().color(Colors.red)),
+          style: RemixMenuStyler().item(
+            RemixMenuItemStyler().label(TextStyler().color(Colors.red)),
           ),
         ),
       );
@@ -451,8 +451,8 @@ void main() {
             RemixMenuDivider<String>(),
             RemixMenuItem<String>(value: 'paste', label: 'Paste'),
           ],
-          style: RemixMenuStyle().divider(
-            RemixDividerStyle().color(Colors.purple),
+          style: RemixMenuStyler().divider(
+            RemixDividerStyler().color(Colors.purple),
           ),
         ),
       );

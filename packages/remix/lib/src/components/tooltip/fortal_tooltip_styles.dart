@@ -1,8 +1,9 @@
 part of 'tooltip.dart';
 
-/// Creates a Fortal-themed [RemixTooltipStyle].
-RemixTooltipStyle fortalTooltipStyle() {
-  return RemixTooltipStyle()
+/// Creates a Fortal-themed [RemixTooltipStyler].
+@MixWidget(name: 'FortalTooltip')
+RemixTooltipStyler fortalTooltipStyler() {
+  return RemixTooltipStyler()
       .borderRadiusAll(FortalTokens.radius2())
       .paddingY(FortalTokens.space2())
       .paddingX(FortalTokens.space2())

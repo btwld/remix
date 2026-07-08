@@ -13,7 +13,7 @@ part of 'slider.dart';
 ///   onChanged: (value) {
 ///     debugPrint('Slider value changed: $value');
 ///   },
-///   style: RemixSliderStyle(),
+///   style: RemixSliderStyler(),
 /// )
 /// ```
 class RemixSlider extends StatelessWidget {
@@ -30,7 +30,7 @@ class RemixSlider extends StatelessWidget {
     this.focusNode,
     this.autofocus = false,
     this.snapDivisions,
-    this.style = const RemixSliderStyle.create(),
+    this.style = const RemixSliderStyler.create(),
     this.styleSpec,
   }) : assert(min <= max, 'Slider min must be less than or equal to max'),
        assert(
@@ -57,12 +57,12 @@ class RemixSlider extends StatelessWidget {
   final double value;
 
   /// The style configuration for the slider.
-  final RemixSliderStyle style;
+  final RemixSliderStyler style;
 
   /// The style spec for the slider.
   final RemixSliderSpec? styleSpec;
 
-  static final styleFrom = RemixSliderStyle.new;
+  static final styleFrom = RemixSliderStyler.new;
 
   /// Whether the slider is enabled for interaction.
   final bool enabled;

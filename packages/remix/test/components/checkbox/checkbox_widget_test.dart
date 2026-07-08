@@ -30,7 +30,7 @@ void main() {
             uncheckedIcon: Icons.close,
             indeterminateIcon: Icons.remove,
             enableFeedback: true,
-            style: RemixCheckboxStyle.create(),
+            style: RemixCheckboxStyler.create(),
             semanticLabel: 'Test Checkbox',
             mouseCursor: SystemMouseCursors.click,
           ),
@@ -324,7 +324,7 @@ void main() {
 
     group('Layout and Sizing', () {
       testWidgets('checkbox adapts to custom size', (tester) async {
-        final smallStyle = RemixCheckboxStyle().size(16.0, 16.0);
+        final smallStyle = RemixCheckboxStyler().size(16.0, 16.0);
         await tester.pumpRemixApp(
           RemixCheckbox(
             selected: false,
@@ -336,7 +336,7 @@ void main() {
 
         final smallSize = tester.getSize(find.byType(RemixCheckbox));
 
-        final largeStyle = RemixCheckboxStyle().size(32.0, 32.0);
+        final largeStyle = RemixCheckboxStyler().size(32.0, 32.0);
         await tester.pumpRemixApp(
           RemixCheckbox(
             selected: false,

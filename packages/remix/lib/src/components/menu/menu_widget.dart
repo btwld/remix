@@ -55,7 +55,7 @@ final class RemixMenuItem<T> extends RemixMenuItemData<T> {
   final String? semanticLabel;
 
   /// The style for the menu item.
-  final RemixMenuItemStyle style;
+  final RemixMenuItemStyler style;
 
   const RemixMenuItem({
     required this.value,
@@ -65,7 +65,7 @@ final class RemixMenuItem<T> extends RemixMenuItemData<T> {
     this.enabled = true,
     this.closeOnActivate = true,
     this.semanticLabel,
-    this.style = const RemixMenuItemStyle.create(),
+    this.style = const RemixMenuItemStyler.create(),
   });
 }
 
@@ -83,7 +83,7 @@ final class RemixMenuDivider<T> extends RemixMenuItemData<T> {
 /// A customizable menu component with data-driven API.
 ///
 /// Uses a simple, declarative API with data classes for trigger and items.
-/// All styling is centralized in [RemixMenuStyle] and passed directly to children.
+/// All styling is centralized in [RemixMenuStyler] and passed directly to children.
 ///
 /// ## Example
 ///
@@ -98,7 +98,7 @@ final class RemixMenuDivider<T> extends RemixMenuItemData<T> {
 ///     RemixMenuItem(value: 'delete', label: 'Delete', leadingIcon: Icons.delete),
 ///   ],
 ///   onSelected: (value) => debugPrint('Selected: $value'),
-///   style: FortalMenuTheme.menu,
+///   style: fortalMenuStyler(),
 /// )
 ///
 /// // Advanced usage - provide controller for programmatic control
@@ -127,7 +127,8 @@ class RemixMenu<T> extends StatefulWidget {
     this.closeOnClickOutside = true,
     this.triggerFocusNode,
     this.positioning = const OverlayPositionConfig(),
-    this.style = const RemixMenuStyle.create(),
+    this.style = const RemixMenuStyler.create(),
+    this.styleSpec,
   });
 
   /// The trigger data that defines the menu's button.
@@ -174,9 +175,12 @@ class RemixMenu<T> extends StatefulWidget {
   final OverlayPositionConfig positioning;
 
   /// The style configuration for the menu.
-  final RemixMenuStyle style;
+  final RemixMenuStyler style;
 
-  static final styleFrom = RemixMenuStyle.new;
+  /// Optional raw style spec that bypasses fluent style resolution.
+  final RemixMenuSpec? styleSpec;
+
+  static final styleFrom = RemixMenuStyler.new;
 
   @override
   State<RemixMenu<T>> createState() => _RemixMenuState<T>();
@@ -193,9 +197,9 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
 
   // Note: MenuController doesn't require disposal - it's not a ChangeNotifier
 
-  RemixMenuStyle _buildStyle() {
-    return RemixMenuStyle()
-        .trigger(RemixMenuTriggerStyle().mainAxisSize(.min))
+  RemixMenuStyler _buildStyle() {
+    return RemixMenuStyler()
+        .trigger(RemixMenuTriggerStyler().mainAxisSize(.min))
         .overlay(
           FlexBoxStyler()
               .mainAxisSize(.min)
@@ -214,8 +218,9 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
     return NakedMenu<T>(
       // Render items list with direct spec passing
       overlayBuilder: (context, info) {
-        return StyleBuilder(
+        return RemixStyleSpecBuilder<RemixMenuSpec>(
           style: style,
+          styleSpec: widget.styleSpec,
           builder: (context, spec) {
             return ColumnBox(
               styleSpec: spec.overlay,
@@ -227,7 +232,7 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
                     defaultStyle: style.$item,
                   ),
                   RemixMenuDivider<T>() => RemixDivider(
-                    styleSpec: spec.divider,
+                    styleSpec: spec.divider.spec,
                   ),
                 };
               }).toList(),
@@ -249,23 +254,24 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
       positioning: widget.positioning,
       // Render trigger from RemixMenuTrigger data
       builder: (context, state, _) {
-        return StyleBuilder(
+        return RemixStyleSpecBuilder<RemixMenuSpec>(
           style: style,
+          styleSpec: widget.styleSpec,
           controller: NakedMenuState.controllerOf(context),
           builder: (context, spec) {
-            // Render trigger from data (label with optional leading icon)
+            // Render trigger from data (icon leading, then label)
             final triggerStyleSpec = spec.trigger;
             final triggerSpec = triggerStyleSpec.spec;
 
             return RowBox(
               styleSpec: triggerSpec.container,
               children: [
-                StyledText(widget.trigger.label, styleSpec: triggerSpec.label),
                 if (widget.trigger.icon != null)
                   StyledIcon(
                     icon: widget.trigger.icon!,
                     styleSpec: triggerSpec.icon,
                   ),
+                StyledText(widget.trigger.label, styleSpec: triggerSpec.label),
               ],
             );
           },

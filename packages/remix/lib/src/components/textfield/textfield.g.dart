@@ -199,7 +199,7 @@ typedef _$RemixTextFieldSpecMethods = _$RemixTextFieldSpec; // ignore: unused_el
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Creates a Fortal-themed [RemixTextFieldStyle].
+/// Creates a Fortal-themed [RemixTextFieldStyler].
 class FortalTextField extends StatelessWidget {
   const FortalTextField({
     super.key,
@@ -381,7 +381,7 @@ class FortalTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return fortalTextFieldStyle(variant: this.variant, size: this.size).call(
+    return fortalTextFieldStyler(variant: this.variant, size: this.size).call(
       controller: this.controller,
       focusNode: this.focusNode,
       label: this.label,
@@ -446,7 +446,7 @@ class FortalTextField extends StatelessWidget {
 // StylerGenerator
 // **************************************************************************
 
-mixin _$RemixTextFieldStyleMixin on Style<RemixTextFieldSpec>, Diagnosticable {
+mixin _$RemixTextFieldStylerMixin on Style<RemixTextFieldSpec>, Diagnosticable {
   Prop<StyleSpec<TextSpec>>? get $text;
   Prop<StyleSpec<TextSpec>>? get $hintText;
   Prop<TextAlign>? get $textAlign;
@@ -466,114 +466,114 @@ mixin _$RemixTextFieldStyleMixin on Style<RemixTextFieldSpec>, Diagnosticable {
   Prop<StyleSpec<TextSpec>>? get $label;
 
   /// Sets the text.
-  RemixTextFieldStyle text(TextStyler value) {
-    return merge(RemixTextFieldStyle(text: value));
+  RemixTextFieldStyler text(TextStyler value) {
+    return merge(RemixTextFieldStyler(text: value));
   }
 
   /// Sets the hintText.
-  RemixTextFieldStyle hintText(TextStyler value) {
-    return merge(RemixTextFieldStyle(hintText: value));
+  RemixTextFieldStyler hintText(TextStyler value) {
+    return merge(RemixTextFieldStyler(hintText: value));
   }
 
   /// Sets the textAlign.
-  RemixTextFieldStyle textAlign(TextAlign value) {
-    return merge(RemixTextFieldStyle(textAlign: value));
+  RemixTextFieldStyler textAlign(TextAlign value) {
+    return merge(RemixTextFieldStyler(textAlign: value));
   }
 
   /// Sets the cursorWidth.
-  RemixTextFieldStyle cursorWidth(double value) {
-    return merge(RemixTextFieldStyle(cursorWidth: value));
+  RemixTextFieldStyler cursorWidth(double value) {
+    return merge(RemixTextFieldStyler(cursorWidth: value));
   }
 
   /// Sets the cursorHeight.
-  RemixTextFieldStyle cursorHeight(double value) {
-    return merge(RemixTextFieldStyle(cursorHeight: value));
+  RemixTextFieldStyler cursorHeight(double value) {
+    return merge(RemixTextFieldStyler(cursorHeight: value));
   }
 
   /// Sets the cursorRadius.
-  RemixTextFieldStyle cursorRadius(Radius value) {
-    return merge(RemixTextFieldStyle(cursorRadius: value));
+  RemixTextFieldStyler cursorRadius(Radius value) {
+    return merge(RemixTextFieldStyler(cursorRadius: value));
   }
 
   /// Sets the cursorColor.
-  RemixTextFieldStyle cursorColor(Color value) {
-    return merge(RemixTextFieldStyle(cursorColor: value));
+  RemixTextFieldStyler cursorColor(Color value) {
+    return merge(RemixTextFieldStyler(cursorColor: value));
   }
 
   /// Sets the cursorOffset.
-  RemixTextFieldStyle cursorOffset(Offset value) {
-    return merge(RemixTextFieldStyle(cursorOffset: value));
+  RemixTextFieldStyler cursorOffset(Offset value) {
+    return merge(RemixTextFieldStyler(cursorOffset: value));
   }
 
   /// Sets the cursorOpacityAnimates.
-  RemixTextFieldStyle cursorOpacityAnimates(bool value) {
-    return merge(RemixTextFieldStyle(cursorOpacityAnimates: value));
+  RemixTextFieldStyler cursorOpacityAnimates(bool value) {
+    return merge(RemixTextFieldStyler(cursorOpacityAnimates: value));
   }
 
   /// Sets the selectionHeightStyle.
-  RemixTextFieldStyle selectionHeightStyle(BoxHeightStyle value) {
-    return merge(RemixTextFieldStyle(selectionHeightStyle: value));
+  RemixTextFieldStyler selectionHeightStyle(BoxHeightStyle value) {
+    return merge(RemixTextFieldStyler(selectionHeightStyle: value));
   }
 
   /// Sets the selectionWidthStyle.
-  RemixTextFieldStyle selectionWidthStyle(BoxWidthStyle value) {
-    return merge(RemixTextFieldStyle(selectionWidthStyle: value));
+  RemixTextFieldStyler selectionWidthStyle(BoxWidthStyle value) {
+    return merge(RemixTextFieldStyler(selectionWidthStyle: value));
   }
 
   /// Sets the scrollPadding.
-  RemixTextFieldStyle scrollPadding(EdgeInsets value) {
-    return merge(RemixTextFieldStyle(scrollPadding: value));
+  RemixTextFieldStyler scrollPadding(EdgeInsets value) {
+    return merge(RemixTextFieldStyler(scrollPadding: value));
   }
 
   /// Sets the keyboardAppearance.
-  RemixTextFieldStyle keyboardAppearance(Brightness value) {
-    return merge(RemixTextFieldStyle(keyboardAppearance: value));
+  RemixTextFieldStyler keyboardAppearance(Brightness value) {
+    return merge(RemixTextFieldStyler(keyboardAppearance: value));
   }
 
   /// Sets the spacing.
-  RemixTextFieldStyle spacing(double value) {
-    return merge(RemixTextFieldStyle(spacing: value));
+  RemixTextFieldStyler spacing(double value) {
+    return merge(RemixTextFieldStyler(spacing: value));
   }
 
   /// Sets the container.
-  RemixTextFieldStyle container(FlexBoxStyler value) {
-    return merge(RemixTextFieldStyle(container: value));
+  RemixTextFieldStyler container(FlexBoxStyler value) {
+    return merge(RemixTextFieldStyler(container: value));
   }
 
   /// Sets the helperText.
-  RemixTextFieldStyle helperText(TextStyler value) {
-    return merge(RemixTextFieldStyle(helperText: value));
+  RemixTextFieldStyler helperText(TextStyler value) {
+    return merge(RemixTextFieldStyler(helperText: value));
   }
 
   /// Sets the label.
-  RemixTextFieldStyle label(TextStyler value) {
-    return merge(RemixTextFieldStyle(label: value));
+  RemixTextFieldStyler label(TextStyler value) {
+    return merge(RemixTextFieldStyler(label: value));
   }
 
   /// Sets the animation configuration.
-  RemixTextFieldStyle animate(AnimationConfig value) {
-    return merge(RemixTextFieldStyle(animation: value));
+  RemixTextFieldStyler animate(AnimationConfig value) {
+    return merge(RemixTextFieldStyler(animation: value));
   }
 
   /// Sets the style variants.
-  RemixTextFieldStyle variants(List<VariantStyle<RemixTextFieldSpec>> value) {
-    return merge(RemixTextFieldStyle(variants: value));
+  RemixTextFieldStyler variants(List<VariantStyle<RemixTextFieldSpec>> value) {
+    return merge(RemixTextFieldStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
-  RemixTextFieldStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixTextFieldStyle(modifier: value));
+  RemixTextFieldStyler wrap(WidgetModifierConfig value) {
+    return merge(RemixTextFieldStyler(modifier: value));
   }
 
   /// Sets the widget modifier.
-  RemixTextFieldStyle modifier(WidgetModifierConfig value) {
-    return merge(RemixTextFieldStyle(modifier: value));
+  RemixTextFieldStyler modifier(WidgetModifierConfig value) {
+    return merge(RemixTextFieldStyler(modifier: value));
   }
 
-  /// Merges with another [RemixTextFieldStyle].
+  /// Merges with another [RemixTextFieldStyler].
   @override
-  RemixTextFieldStyle merge(RemixTextFieldStyle? other) {
-    return RemixTextFieldStyle.create(
+  RemixTextFieldStyler merge(RemixTextFieldStyler? other) {
+    return RemixTextFieldStyler.create(
       text: MixOps.merge($text, other?.$text),
       hintText: MixOps.merge($hintText, other?.$hintText),
       textAlign: MixOps.merge($textAlign, other?.$textAlign),

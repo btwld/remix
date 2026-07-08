@@ -31,8 +31,8 @@ class ProgressExample extends StatelessWidget {
     );
   }
 
-  RemixProgressStyle get style {
-    return RemixProgressStyle()
+  RemixProgressStyler get style {
+    return RemixProgressStyler()
         .wrap(WidgetModifierConfig.clipRRect(borderRadius: BorderRadiusGeometryMix.circular(10)))
         .trackColor(Colors.grey.shade300)
         .indicatorColor(Colors.grey.shade900)
@@ -62,11 +62,11 @@ class FortalProgressExample extends StatelessWidget {
       children: [
         RemixProgress(
           value: 0.6,
-          style: fortalProgressStyle(variant: FortalProgressVariant.surface),
+          style: fortalProgressStyler(variant: FortalProgressVariant.surface),
         ),
         RemixProgress(
           value: 0.4,
-          style: fortalProgressStyle(variant: FortalProgressVariant.soft),
+          style: fortalProgressStyler(variant: FortalProgressVariant.soft),
         ),
       ],
     );
@@ -76,7 +76,7 @@ class FortalProgressExample extends StatelessWidget {
 </CodeGroup>
 
 <Info>
-  See the [fortalProgressStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/progress/fortal_progress_styles.dart) for all available options.
+  See the [fortalProgressStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/progress/fortal_progress_styles.dart) for all available options.
 </Info>
 
 ## Constructor
@@ -85,8 +85,8 @@ class FortalProgressExample extends StatelessWidget {
 const RemixProgress({
   Key? key,
   required double value,
-  RemixProgressStyle style = const RemixProgressStyle.create(),
-  StyleSpec<RemixProgressSpec>? styleSpec,
+  RemixProgressStyler style = const RemixProgressStyler.create(),
+  RemixProgressSpec? styleSpec,
 })
 ```
 </CodeGroup>
@@ -95,11 +95,11 @@ const RemixProgress({
 ## Properties
 ### Widget Properties
 
-#### `style` → `RemixProgressStyle`
+#### `style` → `RemixProgressStyler`
 
 Optional. The style configuration for the progress indicator. Customize colors, sizing, and track appearance.
 
-#### `styleSpec` → `StyleSpec<RemixProgressSpec>?`
+#### `styleSpec` → `RemixProgressSpec?`
 
 Optional. A pre-resolved style spec that bypasses style resolution. Useful for performance when sharing resolved styles across multiple instances.
 

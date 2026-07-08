@@ -283,7 +283,7 @@ void main() {
 
     group('Styling', () {
       testWidgets('applies custom style', (tester) async {
-        final customStyle = RemixSelectStyle().menuContainer(
+        final customStyle = RemixSelectStyler().menuContainer(
           FlexBoxStyler(padding: EdgeInsetsGeometryMix.all(16.0)),
         );
 
@@ -300,8 +300,8 @@ void main() {
       });
 
       testWidgets('applies trigger styling', (tester) async {
-        final customStyle = RemixSelectStyle().trigger(
-          RemixSelectTriggerStyle().label(
+        final customStyle = RemixSelectStyler().trigger(
+          RemixSelectTriggerStyler().label(
             TextStyler(style: TextStyleMix(color: Colors.blue)),
           ),
         );
@@ -326,7 +326,7 @@ void main() {
               RemixSelectItem(
                 value: 'a',
                 label: 'Option A',
-                style: RemixSelectMenuItemStyle().text(
+                style: RemixSelectMenuItemStyler().text(
                   TextStyler(style: TextStyleMix(color: Colors.red)),
                 ),
               ),
@@ -452,25 +452,15 @@ void main() {
     });
 
     group('Positioning', () {
-      testWidgets('accepts targetAnchor parameter', (tester) async {
+      testWidgets('accepts positioning OverlayPositionConfig', (tester) async {
         await tester.pumpRemixApp(
           RemixSelect<String>(
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
             items: const [RemixSelectItem(value: 'a', label: 'Option A')],
-            targetAnchor: Alignment.bottomLeft,
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixSelect<String>), findsOneWidget);
-      });
-
-      testWidgets('accepts followerAnchor parameter', (tester) async {
-        await tester.pumpRemixApp(
-          RemixSelect<String>(
-            trigger: const RemixSelectTrigger(placeholder: 'Select'),
-            items: const [RemixSelectItem(value: 'a', label: 'Option A')],
-            followerAnchor: Alignment.topLeft,
+            positioning: const OverlayPositionConfig(
+              targetAnchor: Alignment.bottomLeft,
+              followerAnchor: Alignment.topLeft,
+            ),
           ),
         );
         await tester.pumpAndSettle();

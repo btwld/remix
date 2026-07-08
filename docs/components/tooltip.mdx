@@ -48,21 +48,22 @@ class TooltipExample extends StatelessWidget {
     );
   }
 
-  RemixTooltipStyle get styleDefault {
-    return RemixTooltipStyle()
+  RemixTooltipStyler get styleDefault {
+    return RemixTooltipStyler()
         .padding(EdgeInsetsGeometryMix.symmetric(horizontal: 12, vertical: 8))
         .backgroundColor(Colors.black87)
         .borderRadius(BorderRadiusGeometryMix.all(const Radius.circular(6)))
         .wrap(WidgetModifierConfig.defaultTextStyle(style: TextStyleMix().color(Colors.white).fontSize(14)));
   }
 
-  RemixTooltipStyle get styleFast {
+  RemixTooltipStyler get styleFast {
     return styleDefault
         .waitDuration(const Duration(milliseconds: 100))
-        .showDuration(const Duration(milliseconds: 800));
+        .showDuration(const Duration(milliseconds: 800)) // touch wait
+        .dismissDuration(const Duration(milliseconds: 100)); // hover exit
   }
 
-  RemixTooltipStyle get styleSlow {
+  RemixTooltipStyler get styleSlow {
     return styleDefault
         .waitDuration(const Duration(seconds: 1))
         .showDuration(const Duration(seconds: 3));
@@ -108,12 +109,12 @@ class FortalTooltipExample extends StatelessWidget {
       children: [
         RemixTooltip(
           tooltipChild: const Text('Information tooltip'),
-          style: fortalTooltipStyle(),
+          style: fortalTooltipStyler(),
           child: const Icon(Icons.info),
         ),
         RemixTooltip(
           tooltipChild: const Text('Help tooltip'),
-          style: fortalTooltipStyle(),
+          style: fortalTooltipStyler(),
           child: const Icon(Icons.help),
         ),
       ],
@@ -124,7 +125,7 @@ class FortalTooltipExample extends StatelessWidget {
 </CodeGroup>
 
 <Info>
-  See the [fortalTooltipStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/tooltip/fortal_tooltip_styles.dart) for all available options.
+  See the [fortalTooltipStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/tooltip/fortal_tooltip_styles.dart) for all available options.
 </Info>
 
 ## Constructor
@@ -136,7 +137,7 @@ const RemixTooltip({
   required Widget child,
   String? tooltipSemantics,
   OverlayPositionConfig positioning = const OverlayPositionConfig(),
-  RemixTooltipStyle style = const RemixTooltipStyle.create(),
+  RemixTooltipStyler style = const RemixTooltipStyler.create(),
   RemixTooltipSpec? styleSpec,
 })
 ```
@@ -150,7 +151,7 @@ const RemixTooltip({
 
 Optional. Controls how one widget replaces another widget in the tree.
 
-#### `style` → `RemixTooltipStyle`
+#### `style` → `RemixTooltipStyler`
 
 Optional. The style configuration for the tooltip.
 
@@ -218,6 +219,12 @@ Sets container decoration
 Sets the wait duration before showing tooltip
 
 #### `showDuration(Duration value)`
+
+Maps to touch long-press wait (`NakedTooltip.touchDelay`), not hover dismiss.
+
+#### `dismissDuration(Duration value)`
+
+Maps to hover-exit dismiss grace (`NakedTooltip.dismissDelay`).
 
 Sets the show duration before hiding tooltip
 

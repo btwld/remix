@@ -30,8 +30,8 @@ class DividerExample extends StatelessWidget {
     );
   }
 
-  RemixDividerStyle get style {
-    return RemixDividerStyle()
+  RemixDividerStyler get style {
+    return RemixDividerStyler()
         .height(1)
         .color(Colors.grey.shade400)
         .width(300);
@@ -57,8 +57,8 @@ class FortalDividerExample extends StatelessWidget {
     return Column(
       spacing: 16,
       children: [
-        RemixDivider(style: fortalDividerStyle(size: FortalDividerSize.size1)),
-        RemixDivider(style: fortalDividerStyle(size: FortalDividerSize.size3)),
+        RemixDivider(style: fortalDividerStyler(size: FortalDividerSize.size1)),
+        RemixDivider(style: fortalDividerStyler(size: FortalDividerSize.size3)),
       ],
     );
   }
@@ -67,7 +67,7 @@ class FortalDividerExample extends StatelessWidget {
 </CodeGroup>
 
 <Info>
-  See the [fortalDividerStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/divider/fortal_divider_styles.dart) for all available options.
+  See the [fortalDividerStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/divider/fortal_divider_styles.dart) for all available options.
 </Info>
 
 ## Constructor
@@ -75,8 +75,8 @@ class FortalDividerExample extends StatelessWidget {
 ```dart
 const RemixDivider({
   Key? key,
-  RemixDividerStyle style = const RemixDividerStyle.create(),
-  StyleSpec<RemixDividerSpec>? styleSpec,
+  RemixDividerStyler style = const RemixDividerStyler.create(),
+  RemixDividerSpec? styleSpec,
 })
 ```
 </CodeGroup>
@@ -85,11 +85,11 @@ const RemixDivider({
 ## Properties
 ### Widget Properties
 
-#### `style` → `RemixDividerStyle`
+#### `style` → `RemixDividerStyler`
 
 Optional. The style configuration for the divider. Customize color, thickness, and spacing.
 
-#### `styleSpec` → `StyleSpec<RemixDividerSpec>?`
+#### `styleSpec` → `RemixDividerSpec?`
 
 Optional. A pre-resolved style spec that bypasses style resolution. Useful for performance when sharing resolved styles across multiple instances.
 

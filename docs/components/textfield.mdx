@@ -44,8 +44,8 @@ class _TextfieldExampleState extends State<TextfieldExample> {
     );
   }
 
-  RemixTextFieldStyle get style {
-    return RemixTextFieldStyle()
+  RemixTextFieldStyler get style {
+    return RemixTextFieldStyler()
         .color(Colors.grey.shade800)
         .backgroundColor(Colors.white)
         .borderRadiusAll(const Radius.circular(8.0))
@@ -73,7 +73,7 @@ class _TextfieldExampleState extends State<TextfieldExample> {
           BoxBorderMix.all(BorderSideMix(color: Colors.grey.shade300)),
         )
         .onFocused(
-          RemixTextFieldStyle().border(
+          RemixTextFieldStyler().border(
             BoxBorderMix.all(
               BorderSideMix()
                   .color(Colors.deepPurpleAccent)
@@ -91,7 +91,7 @@ class _TextfieldExampleState extends State<TextfieldExample> {
 
 Remix includes Fortal-themed style helpers for this component:
 
-<CodeGroup title="Fortal base style" defaultLanguage="dart">
+<CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
@@ -113,16 +113,15 @@ class _FortalTextFieldExampleState extends State<FortalTextFieldExample> {
       children: [
         RemixTextField(
           controller: controller,
-          label: 'Email',
-          hintText: 'Enter your email',
-          style: fortalTextFieldStyle(),
+          label: 'Surface',
+          hintText: 'Neutral surface field',
+          style: fortalTextFieldStyler(variant: FortalTextFieldVariant.surface),
         ),
         RemixTextField(
           controller: controller,
-          label: 'Password',
-          hintText: 'Enter password',
-          obscureText: true,
-          style: fortalTextFieldStyle(),
+          label: 'Soft',
+          hintText: 'Accent soft field',
+          style: fortalTextFieldStyler(variant: FortalTextFieldVariant.soft),
         ),
       ],
     );
@@ -132,7 +131,7 @@ class _FortalTextFieldExampleState extends State<FortalTextFieldExample> {
 </CodeGroup>
 
 <Info>
-  See the [fortalTextFieldStyle source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/textfield/fortal_textfield_styles.dart) for all available options.
+  See the [fortalTextFieldStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/textfield/fortal_textfield_styles.dart) for all available options.
 </Info>
 
 ## Constructor
@@ -196,7 +195,7 @@ const RemixTextField({
   String? semanticLabel,
   String? semanticHint,
   bool excludeSemantics = false,
-  RemixTextFieldStyle style = const RemixTextFieldStyle.create(),
+  RemixTextFieldStyler style = const RemixTextFieldStyler.create(),
   RemixTextFieldSpec? styleSpec,
 })
 ```
@@ -438,7 +437,7 @@ Optional. The semantic hint for the text field.
 
 Optional. Whether to exclude child semantics.
 
-#### `style` → `RemixTextFieldStyle`
+#### `style` → `RemixTextFieldStyler`
 
 Optional. The style configuration for the text field.
 
