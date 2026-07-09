@@ -70,30 +70,34 @@ RemixMenuStyler _fortalMenuBaseStyler(FortalMenuSize size) {
 }
 
 RemixMenuStyler _fortalMenuSolidStyler([FortalMenuSize size = .size2]) {
-  return _fortalMenuBaseStyler(size).trigger(
-    RemixMenuTriggerStyler()
-        .icon(IconStyler(color: FortalTokens.accentContrast(), size: 16))
-        .spacing(8)
-        .color(FortalTokens.accent9())
-        .label(TextStyler().color(FortalTokens.accentContrast())),
-  );
+  return _fortalMenuBaseStyler(size)
+      .trigger(
+        RemixMenuTriggerStyler()
+            .icon(IconStyler(color: FortalTokens.accentContrast(), size: 16))
+            .spacing(8)
+            .color(FortalTokens.accent9())
+            .label(TextStyler().color(FortalTokens.accentContrast())),
+      )
+      .item(_fortalMenuItemSolidStyler(size));
 }
 
 RemixMenuStyler _fortalMenuSoftStyler([FortalMenuSize size = .size2]) {
-  return _fortalMenuBaseStyler(size).trigger(
-    RemixMenuTriggerStyler()
-        .decoration(BoxDecorationMix(color: FortalTokens.accent3()))
-        .label(
-          TextStyler(
-            style: TextStyleMix(
-              color: FortalTokens.accent11(),
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        )
-        .icon(IconStyler(color: FortalTokens.accent11(), size: 16)),
-  );
+  return _fortalMenuBaseStyler(size)
+      .trigger(
+        RemixMenuTriggerStyler()
+            .decoration(BoxDecorationMix(color: FortalTokens.accent3()))
+            .label(
+              TextStyler(
+                style: TextStyleMix(
+                  color: FortalTokens.accent11(),
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            )
+            .icon(IconStyler(color: FortalTokens.accent11(), size: 16)),
+      )
+      .item(_fortalMenuItemSoftStyler(size));
 }
 
 RemixMenuStyler _fortalMenuSizeStyler(FortalMenuSize size) {
@@ -203,7 +207,13 @@ class FortalMenu<T> extends StatelessWidget {
     this.onOpen,
     this.onClose,
     this.onCanceled,
+    this.onOpenRequested,
+    this.onCloseRequested,
+    this.consumeOutsideTaps = true,
+    this.useRootOverlay = false,
+    this.closeOnClickOutside = true,
     this.triggerFocusNode,
+    this.positioning = const OverlayPositionConfig(),
   });
 
   final FortalMenuVariant variant;
@@ -215,11 +225,17 @@ class FortalMenu<T> extends StatelessWidget {
   final VoidCallback? onOpen;
   final VoidCallback? onClose;
   final VoidCallback? onCanceled;
+  final RawMenuAnchorOpenRequestedCallback? onOpenRequested;
+  final RawMenuAnchorCloseRequestedCallback? onCloseRequested;
+  final bool consumeOutsideTaps;
+  final bool useRootOverlay;
+  final bool closeOnClickOutside;
   final FocusNode? triggerFocusNode;
+  final OverlayPositionConfig positioning;
 
   @override
   Widget build(BuildContext context) {
-    return fortalMenuStyler(variant: variant, size: size).call<T>(
+    return RemixMenu<T>(
       key: key,
       trigger: trigger,
       items: items,
@@ -228,7 +244,14 @@ class FortalMenu<T> extends StatelessWidget {
       onOpen: onOpen,
       onClose: onClose,
       onCanceled: onCanceled,
+      onOpenRequested: onOpenRequested,
+      onCloseRequested: onCloseRequested,
+      consumeOutsideTaps: consumeOutsideTaps,
+      useRootOverlay: useRootOverlay,
+      closeOnClickOutside: closeOnClickOutside,
       triggerFocusNode: triggerFocusNode,
+      positioning: positioning,
+      style: fortalMenuStyler(variant: variant, size: size),
     );
   }
 }

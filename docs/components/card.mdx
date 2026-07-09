@@ -46,9 +46,9 @@ class CardExample extends StatelessWidget {
 ```
 </CodeGroup>
 
-## Fortal styles
+## Fortal widgets
 
-Remix includes Fortal-themed style helpers for this component:
+Remix includes a generated Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
@@ -63,11 +63,11 @@ class FortalCardExample extends StatelessWidget {
     return Column(
       spacing: 16,
       children: [
-        RemixCard(
-          style: fortalCardStyler(variant: FortalCardVariant.classic),
+        FortalCard(
+          variant: FortalCardVariant.classic,
         ),
-        RemixCard(
-          style: fortalCardStyler(variant: FortalCardVariant.surface),
+        FortalCard(
+          variant: FortalCardVariant.surface,
         ),
       ],
     );

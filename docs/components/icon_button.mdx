@@ -72,9 +72,9 @@ class IconButtonExample extends StatelessWidget {
 ```
 </CodeGroup>
 
-## Fortal styles
+## Fortal widgets
 
-Remix includes Fortal-themed style helpers for this component:
+Remix includes a generated Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
@@ -90,30 +90,30 @@ class FortalIconButtonExample extends StatelessWidget {
       spacing: 16,
       runSpacing: 16,
       children: [
-        RemixIconButton(
+        FortalIconButton(
           icon: Icons.add,
           onPressed: () {},
-          style: fortalIconButtonStyler(variant: FortalIconButtonVariant.solid),
+          variant: FortalIconButtonVariant.solid,
         ),
-        RemixIconButton(
+        FortalIconButton(
           icon: Icons.edit,
           onPressed: () {},
-          style: fortalIconButtonStyler(variant: FortalIconButtonVariant.soft),
+          variant: FortalIconButtonVariant.soft,
         ),
-        RemixIconButton(
+        FortalIconButton(
           icon: Icons.layers,
           onPressed: () {},
-          style: fortalIconButtonStyler(variant: FortalIconButtonVariant.surface),
+          variant: FortalIconButtonVariant.surface,
         ),
-        RemixIconButton(
+        FortalIconButton(
           icon: Icons.border_style,
           onPressed: () {},
-          style: fortalIconButtonStyler(variant: FortalIconButtonVariant.outline),
+          variant: FortalIconButtonVariant.outline,
         ),
-        RemixIconButton(
+        FortalIconButton(
           icon: Icons.delete,
           onPressed: () {},
-          style: fortalIconButtonStyler(variant: FortalIconButtonVariant.ghost),
+          variant: FortalIconButtonVariant.ghost,
         ),
       ],
     );

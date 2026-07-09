@@ -100,9 +100,9 @@ class ButtonExample extends StatelessWidget {
 ```
 </CodeGroup>
 
-## Fortal styles
+## Fortal widgets
 
-Remix includes Fortal-themed style helpers for this component:
+Remix includes a generated Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
@@ -118,34 +118,34 @@ class FortalButtonExample extends StatelessWidget {
       spacing: 16,
       children: [
         // Solid variant - High emphasis, primary actions
-        RemixButton(
+        FortalButton(
           label: 'Solid Button',
           onPressed: () {},
-          style: fortalButtonStyler(variant: FortalButtonVariant.solid),
+          variant: FortalButtonVariant.solid,
         ),
         // Soft variant - Medium emphasis, secondary actions
-        RemixButton(
+        FortalButton(
           label: 'Soft Button',
           onPressed: () {},
-          style: fortalButtonStyler(variant: FortalButtonVariant.soft),
+          variant: FortalButtonVariant.soft,
         ),
         // Surface variant - Subtle emphasis with border
-        RemixButton(
+        FortalButton(
           label: 'Surface Button',
           onPressed: () {},
-          style: fortalButtonStyler(variant: FortalButtonVariant.surface),
+          variant: FortalButtonVariant.surface,
         ),
         // Outline variant - Low emphasis, tertiary actions
-        RemixButton(
+        FortalButton(
           label: 'Outline Button',
           onPressed: () {},
-          style: fortalButtonStyler(variant: FortalButtonVariant.outline),
+          variant: FortalButtonVariant.outline,
         ),
         // Ghost variant - Minimal styling, inline actions
-        RemixButton(
+        FortalButton(
           label: 'Ghost Button',
           onPressed: () {},
-          style: fortalButtonStyler(variant: FortalButtonVariant.ghost),
+          variant: FortalButtonVariant.ghost,
         ),
       ],
     );

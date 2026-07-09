@@ -42,16 +42,14 @@ class _RemixExampleScreenState extends State<RemixExampleScreen> {
             padding: const EdgeInsets.all(16),
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 420),
-              child: RemixCard(
-                style: fortalCardStyler(variant: .classic, size: .size3),
+              child: FortalCard(
+                variant: .classic,
+                size: .size3,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    RemixBadge(
-                      label: 'Remix 1.0',
-                      style: fortalBadgeStyler(variant: .soft),
-                    ),
+                    const FortalBadge(label: 'Remix 1.0', variant: .soft),
                     const SizedBox(height: 16),
                     const Text(
                       'Build themed Flutter interfaces with Remix widgets and Fortal recipes.',
@@ -66,19 +64,18 @@ class _RemixExampleScreenState extends State<RemixExampleScreen> {
                       runSpacing: 12,
                       crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
-                        RemixToggle(
+                        FortalToggle(
                           selected: notificationsEnabled,
                           onChanged: (value) {
                             setState(() => notificationsEnabled = value);
                           },
                           icon: Icons.notifications_active_outlined,
                           label: 'Notifications',
-                          style: fortalToggleStyler(variant: .outline),
+                          variant: .outline,
                         ),
-                        RemixButton(
+                        FortalButton(
                           label: 'Continue',
                           trailingIcon: Icons.arrow_forward_rounded,
-                          style: fortalButtonStyler(),
                           onPressed: () {
                             debugPrint('Continue pressed');
                           },

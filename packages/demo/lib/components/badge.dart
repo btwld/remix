@@ -11,20 +11,18 @@ Widget buildBadgeUseCase(BuildContext context) {
     key: _key,
     child: Scaffold(
       body: Center(
-        child: RemixBadge(
+        child: FortalBadge(
           label: context.knobs.string(label: 'Label', initialValue: 'New'),
-          style: fortalBadgeStyler(
-            variant: context.knobs.object.dropdown(
-              label: 'variant',
-              options: FortalBadgeVariant.values,
-              labelBuilder: (variant) => variant.name,
-            ),
-            size: context.knobs.object.dropdown(
-              label: 'size',
-              options: FortalBadgeSize.values,
-              labelBuilder: (size) => size.name,
-              initialOption: FortalBadgeSize.size2,
-            ),
+          variant: context.knobs.object.dropdown(
+            label: 'variant',
+            options: FortalBadgeVariant.values,
+            labelBuilder: (variant) => variant.name,
+          ),
+          size: context.knobs.object.dropdown(
+            label: 'size',
+            options: FortalBadgeSize.values,
+            labelBuilder: (size) => size.name,
+            initialOption: FortalBadgeSize.size2,
           ),
         ),
       ),

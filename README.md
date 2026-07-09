@@ -178,13 +178,13 @@ final destructiveButton = baseButtonStyle
     .label(TextStyler().color(Colors.white));
 ```
 
-## The Fortal Styles
+## The Fortal Widgets
 
 While Remix gives you complete freedom to build any design system, it also includes **Fortal Design System** - a comprehensive set of prebuilt styles based on Radix. These styles provide a polished, modern UI out of the box while maintaining full customizability.
 
 ### Quick Start with Fortal
 
-To use Fortal styles, wrap your app with `FortalScope` to provide the design tokens:
+To use Fortal widgets, wrap your app with `FortalScope` to provide the design tokens, then use the generated `Fortal*` widgets:
 
 ```dart
 import 'package:flutter/material.dart';
@@ -197,10 +197,10 @@ class MyApp extends StatelessWidget {
       home: Scaffold(
         body: FortalScope(
           child: Center(
-            child: RemixButton(
+            child: FortalButton(
               onPressed: () {},
               label: 'Fortal Button',
-              style: fortalButtonStyler(variant: FortalButtonVariant.solid), // Prebuilt style
+              variant: FortalButtonVariant.solid,
             ),
           ),
         ),
@@ -212,7 +212,7 @@ class MyApp extends StatelessWidget {
 
 ### Customizing Fortal Styles
 
-Fortal styles are built using the Remix styling API, so you can easily extend and customize them:
+Generated Fortal widgets call the matching `fortal*Styler` internally. Use those stylers directly when you need a custom Remix widget composition:
 
 ```dart
 final style = fortalButtonStyler(variant: FortalButtonVariant.solid)

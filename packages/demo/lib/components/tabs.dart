@@ -26,27 +26,21 @@ Widget buildTabsUseCase(BuildContext context) {
                   child: ColumnBox(
                     style: FlexBoxStyler().spacing(12),
                     children: [
-                      RowBox(
-                        children: [
-                          RemixTab(
-                            tabId: 'tab1',
-                            label: 'Tab 1',
-                            style: fortalTabStyler(),
-                          ),
-                          RemixTab(
-                            tabId: 'tab2',
-                            label: 'Tab 2',
-                            style: fortalTabStyler(),
-                          ),
-                        ],
+                      FortalTabBar(
+                        child: RowBox(
+                          children: [
+                            FortalTab(tabId: 'tab1', label: 'Tab 1'),
+                            FortalTab(tabId: 'tab2', label: 'Tab 2'),
+                          ],
+                        ),
                       ),
                       const RowBox(
                         children: [
-                          RemixTabView(
+                          FortalTabView(
                             tabId: 'tab1',
                             child: Text('Content of tab 1'),
                           ),
-                          RemixTabView(
+                          FortalTabView(
                             tabId: 'tab2',
                             child: Text('Content of tab 2'),
                           ),

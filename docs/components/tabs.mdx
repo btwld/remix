@@ -117,11 +117,11 @@ class _TabsExampleState extends State<TabsExample> {
 ```
 </CodeGroup>
 
-## Fortal styles
+## Fortal widgets
 
-Remix includes Fortal-themed style helpers for this component:
+Remix includes a generated Fortal-themed widget for this component:
 
-<CodeGroup title="Fortal base style" defaultLanguage="dart">
+<CodeGroup title="Fortal widget" defaultLanguage="dart">
 ```dart
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
@@ -143,24 +143,22 @@ class _FortalTabsExampleState extends State<FortalTabsExample> {
       onChanged: (id) => setState(() => _tab = id),
       child: Column(
         children: [
-          RemixTabBar(
+          FortalTabBar(
             child: Row(
               children: [
-                RemixTab(
+                FortalTab(
                   tabId: 'tab1',
                   label: 'Tab 1',
-                  style: fortalTabStyler(),
                 ),
-                RemixTab(
+                FortalTab(
                   tabId: 'tab2',
                   label: 'Tab 2',
-                  style: fortalTabStyler(),
                 ),
               ],
             ),
           ),
-          const RemixTabView(tabId: 'tab1', child: Text('Content 1')),
-          const RemixTabView(tabId: 'tab2', child: Text('Content 2')),
+          const FortalTabView(tabId: 'tab1', child: Text('Content 1')),
+          const FortalTabView(tabId: 'tab2', child: Text('Content 2')),
         ],
       ),
     );

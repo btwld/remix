@@ -74,9 +74,9 @@ class BadgeExample extends StatelessWidget {
 ```
 </CodeGroup>
 
-## Fortal styles
+## Fortal widgets
 
-Remix includes Fortal-themed style helpers for this component:
+Remix includes a generated Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
@@ -91,21 +91,21 @@ class FortalBadgeExample extends StatelessWidget {
     return Row(
       spacing: 16,
       children: [
-        RemixBadge(
+        FortalBadge(
           label: 'Solid',
-          style: fortalBadgeStyler(variant: FortalBadgeVariant.solid),
+          variant: FortalBadgeVariant.solid,
         ),
-        RemixBadge(
+        FortalBadge(
           label: 'Soft',
-          style: fortalBadgeStyler(variant: FortalBadgeVariant.soft),
+          variant: FortalBadgeVariant.soft,
         ),
-        RemixBadge(
+        FortalBadge(
           label: 'Surface',
-          style: fortalBadgeStyler(variant: FortalBadgeVariant.surface),
+          variant: FortalBadgeVariant.surface,
         ),
-        RemixBadge(
+        FortalBadge(
           label: 'Outline',
-          style: fortalBadgeStyler(variant: FortalBadgeVariant.outline),
+          variant: FortalBadgeVariant.outline,
         ),
       ],
     );

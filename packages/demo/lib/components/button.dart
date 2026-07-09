@@ -21,7 +21,7 @@ Widget buildButtonUseCase(BuildContext context) {
     key: _key,
     child: Scaffold(
       body: Center(
-        child: RemixButton(
+        child: FortalButton(
           onPressed: () {
             _showToast(context, 'RemixButton pressed');
           },
@@ -45,18 +45,16 @@ Widget buildButtonUseCase(BuildContext context) {
             label: 'Trailing Icon',
             initialValue: null,
           ),
-          style: fortalButtonStyler(
-            variant: context.knobs.object.dropdown(
-              label: 'variant',
-              options: FortalButtonVariant.values,
-              labelBuilder: (variant) => variant.name,
-            ),
-            size: context.knobs.object.dropdown(
-              label: 'size',
-              options: FortalButtonSize.values,
-              labelBuilder: (size) => size.name,
-              initialOption: FortalButtonSize.size2,
-            ),
+          variant: context.knobs.object.dropdown(
+            label: 'variant',
+            options: FortalButtonVariant.values,
+            labelBuilder: (variant) => variant.name,
+          ),
+          size: context.knobs.object.dropdown(
+            label: 'size',
+            options: FortalButtonSize.values,
+            labelBuilder: (size) => size.name,
+            initialOption: FortalButtonSize.size2,
           ),
         ),
       ),

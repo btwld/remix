@@ -13,13 +13,17 @@ Widget buildTextFieldUseCase(BuildContext context) {
       body: Center(
         child: SizedBox(
           width: 300,
-          child: RemixTextField(
+          child: FortalTextField(
             trailing:
                 context.knobs.boolean(
                   label: 'Show Trailing',
                   initialValue: false,
                 )
-                ? RemixIconButton(icon: Icons.close_rounded, onPressed: () {})
+                ? FortalIconButton(
+                    icon: Icons.close_rounded,
+                    variant: FortalIconButtonVariant.ghost,
+                    onPressed: () {},
+                  )
                 : null,
             leading:
                 context.knobs.boolean(
@@ -44,18 +48,16 @@ Widget buildTextFieldUseCase(BuildContext context) {
               label: 'Enabled',
               initialValue: true,
             ),
-            style: fortalTextFieldStyler(
-              variant: context.knobs.object.dropdown(
-                label: 'variant',
-                options: FortalTextFieldVariant.values,
-                labelBuilder: (variant) => variant.name,
-              ),
-              size: context.knobs.object.dropdown(
-                label: 'size',
-                options: FortalTextFieldSize.values,
-                labelBuilder: (size) => size.name,
-                initialOption: FortalTextFieldSize.size2,
-              ),
+            variant: context.knobs.object.dropdown(
+              label: 'variant',
+              options: FortalTextFieldVariant.values,
+              labelBuilder: (variant) => variant.name,
+            ),
+            size: context.knobs.object.dropdown(
+              label: 'size',
+              options: FortalTextFieldSize.values,
+              labelBuilder: (size) => size.name,
+              initialOption: FortalTextFieldSize.size2,
             ),
           ),
         ),

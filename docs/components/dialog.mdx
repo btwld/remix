@@ -25,46 +25,42 @@ class DialogExample extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RemixButton(
+    return FortalButton(
       label: 'Open dialog',
       onPressed: () {
         showRemixDialog(
           context: context,
           builder: (context) => Center(
-            child: RemixDialog(
+            child: FortalDialog(
               title: 'Revoke access',
               description:
                   'This application will no longer be accessible.',
               actions: [
-                RemixButton(
+                FortalButton(
                   label: 'Cancel',
                   onPressed: () => Navigator.pop(context),
-                  style: fortalButtonStyler(
-                    variant: FortalButtonVariant.ghost,
-                  ),
+                  variant: FortalButtonVariant.ghost,
                 ),
-                RemixButton(
+                FortalButton(
                   label: 'Revoke access',
                   onPressed: () => Navigator.pop(context),
-                  style: fortalButtonStyler(),
                 ),
               ],
             ),
           ),
         );
       },
-      style: fortalButtonStyler(),
     );
   }
 }
 ```
 </CodeGroup>
 
-## Fortal styles
+## Fortal widgets
 
-Remix includes a Fortal-themed style helper for this component:
+Remix includes a generated Fortal-themed widget for this component:
 
-<CodeGroup title="Fortal base style" defaultLanguage="dart">
+<CodeGroup title="Fortal widget" defaultLanguage="dart">
 ```dart
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
@@ -74,20 +70,18 @@ class FortalDialogExample extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RemixDialog(
+    return FortalDialog(
       title: 'Confirm changes',
       description: 'Save these settings before leaving?',
-      style: fortalDialogStyler(),
       actions: [
-        RemixButton(
+        FortalButton(
           label: 'Cancel',
           onPressed: () => Navigator.pop(context),
-          style: fortalButtonStyler(variant: FortalButtonVariant.ghost),
+          variant: FortalButtonVariant.ghost,
         ),
-        RemixButton(
+        FortalButton(
           label: 'Save',
           onPressed: () => Navigator.pop(context),
-          style: fortalButtonStyler(),
         ),
       ],
     );

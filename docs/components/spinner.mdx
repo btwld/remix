@@ -56,11 +56,11 @@ class SpinnerExample extends StatelessWidget {
 ```
 </CodeGroup>
 
-## Fortal styles
+## Fortal widgets
 
-Remix includes Fortal-themed style helpers for this component:
+Remix includes a generated Fortal-themed widget for this component:
 
-<CodeGroup title="Fortal base style" defaultLanguage="dart">
+<CodeGroup title="Fortal widget" defaultLanguage="dart">
 ```dart
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
@@ -73,8 +73,8 @@ class FortalSpinnerExample extends StatelessWidget {
     return Row(
       spacing: 16,
       children: [
-        RemixSpinner(style: fortalSpinnerStyler(size: FortalSpinnerSize.size2)),
-        RemixSpinner(style: fortalSpinnerStyler(size: FortalSpinnerSize.size3)),
+        FortalSpinner(size: FortalSpinnerSize.size2),
+        FortalSpinner(size: FortalSpinnerSize.size3),
       ],
     );
   }

@@ -14,20 +14,18 @@ Widget buildCalloutUseCase(BuildContext context) {
       body: Center(
         child: SizedBox(
           width: 300,
-          child: RemixCallout(
+          child: FortalCallout(
             icon: m.Icons.info_outline,
-            style: fortalCalloutStyler(
-              variant: context.knobs.object.dropdown(
-                label: 'variant',
-                options: FortalCalloutVariant.values,
-                labelBuilder: (variant) => variant.name,
-              ),
-              size: context.knobs.object.dropdown(
-                label: 'size',
-                options: FortalCalloutSize.values,
-                labelBuilder: (size) => size.name,
-                initialOption: FortalCalloutSize.size2,
-              ),
+            variant: context.knobs.object.dropdown(
+              label: 'variant',
+              options: FortalCalloutVariant.values,
+              labelBuilder: (variant) => variant.name,
+            ),
+            size: context.knobs.object.dropdown(
+              label: 'size',
+              options: FortalCalloutSize.values,
+              labelBuilder: (size) => size.name,
+              initialOption: FortalCalloutSize.size2,
             ),
             text: context.knobs.string(
               label: 'Text',

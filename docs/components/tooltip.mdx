@@ -90,11 +90,11 @@ class _TriggerButton extends StatelessWidget {
 ```
 </CodeGroup>
 
-## Fortal styles
+## Fortal widgets
 
-Remix includes Fortal-themed style helpers for this component:
+Remix includes a generated Fortal-themed widget for this component:
 
-<CodeGroup title="Fortal base style" defaultLanguage="dart">
+<CodeGroup title="Fortal widget" defaultLanguage="dart">
 ```dart
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
@@ -107,14 +107,12 @@ class FortalTooltipExample extends StatelessWidget {
     return Row(
       spacing: 16,
       children: [
-        RemixTooltip(
+        FortalTooltip(
           tooltipChild: const Text('Information tooltip'),
-          style: fortalTooltipStyler(),
           child: const Icon(Icons.info),
         ),
-        RemixTooltip(
+        FortalTooltip(
           tooltipChild: const Text('Help tooltip'),
-          style: fortalTooltipStyler(),
           child: const Icon(Icons.help),
         ),
       ],

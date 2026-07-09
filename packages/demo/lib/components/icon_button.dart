@@ -21,25 +21,23 @@ Widget buildIconButtonUseCase(BuildContext context) {
     key: _key,
     child: Scaffold(
       body: Center(
-        child: RemixIconButton(
+        child: FortalIconButton(
           onPressed: () {
             _showToast(context, 'RemixIconButton pressed');
           },
           enabled: context.knobs.boolean(label: 'Enabled', initialValue: true),
           loading: context.knobs.boolean(label: 'Loading', initialValue: false),
           icon: context.knobs.iconData(label: 'Icon', initialValue: Icons.add)!,
-          style: fortalIconButtonStyler(
-            size: context.knobs.object.dropdown(
-              label: 'size',
-              options: FortalIconButtonSize.values,
-              labelBuilder: (size) => size.name,
-              initialOption: FortalIconButtonSize.size2,
-            ),
-            variant: context.knobs.object.dropdown(
-              label: 'variant',
-              options: FortalIconButtonVariant.values,
-              labelBuilder: (variant) => variant.name,
-            ),
+          size: context.knobs.object.dropdown(
+            label: 'size',
+            options: FortalIconButtonSize.values,
+            labelBuilder: (size) => size.name,
+            initialOption: FortalIconButtonSize.size2,
+          ),
+          variant: context.knobs.object.dropdown(
+            label: 'variant',
+            options: FortalIconButtonVariant.values,
+            labelBuilder: (variant) => variant.name,
           ),
         ),
       ),

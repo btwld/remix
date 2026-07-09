@@ -24,13 +24,13 @@ FortalScope(
 )
 ```
 
-Every Remix component works without `FortalScope`, but Fortal preset styles (like `fortalButtonStyler(variant: .solid)`) require it to resolve tokens.
+Every Remix component works without `FortalScope`, but generated Fortal widgets and Fortal preset stylers require it to resolve tokens. Prefer `Fortal*` widgets for standard Fortal UI; use `fortal*Styler` directly only when composing or extending a raw `Remix*` widget.
 
 ---
 
 ## Component Catalog
 
-Remix ships 20 components. Each accepts a `style` parameter for full visual control.
+Remix ships 20 components. Each raw `Remix*` component accepts a `style` parameter for full visual control, and Fortal provides generated `Fortal*` widgets for preset design-system usage.
 
 | Category | Components |
 |----------|-----------|
@@ -49,25 +49,26 @@ See `references/components.md` for the full API of every component.
 ### Buttons
 
 ```dart
-RemixButton(
+FortalButton(
   label: 'Submit',
   onPressed: () => handleSubmit(),
-  style: fortalButtonStyler(variant: .solid, size: .size2),
+  variant: .solid,
+  size: .size2,
 )
 
-RemixButton(
+FortalButton(
   label: 'Delete',
   leadingIcon: Icons.delete,
   loading: isDeleting,
   enabled: canDelete,
   onPressed: () => handleDelete(),
-  style: fortalButtonStyler(variant: .outline),
+  variant: .outline,
 )
 
-RemixIconButton(
+FortalIconButton(
   icon: Icons.settings,
   onPressed: () => openSettings(),
-  style: fortalIconButtonStyler(variant: .ghost),
+  variant: .ghost,
 )
 ```
 
@@ -75,10 +76,10 @@ RemixIconButton(
 
 ```dart
 // Checkbox
-RemixCheckbox(
+FortalCheckbox(
   selected: isChecked,
   onChanged: (val) => setState(() => isChecked = val),
-  style: fortalCheckboxStyler(variant: .surface),
+  variant: .surface,
 )
 
 // Radio group
@@ -86,21 +87,21 @@ RemixRadioGroup<String>(
   groupValue: selectedOption,
   onChanged: (val) => setState(() => selectedOption = val),
   child: Column(children: [
-    RemixRadio(value: 'a'),
-    RemixRadio(value: 'b'),
-    RemixRadio(value: 'c'),
+    FortalRadio(value: 'a'),
+    FortalRadio(value: 'b'),
+    FortalRadio(value: 'c'),
   ]),
 )
 
 // Switch
-RemixSwitch(
+FortalSwitch(
   selected: isDarkMode,
   onChanged: (val) => toggleDarkMode(val),
-  style: fortalSwitchStyler(variant: .soft),
+  variant: .soft,
 )
 
 // Slider
-RemixSlider(
+FortalSlider(
   value: volume,
   onChanged: (val) => setState(() => volume = val),
   min: 0,
@@ -108,13 +109,13 @@ RemixSlider(
 )
 
 // TextField
-RemixTextField(
+FortalTextField(
   controller: emailController,
   label: 'Email',
   hintText: 'you@example.com',
   helperText: 'We will never share your email',
   error: hasError,
-  style: fortalTextFieldStyler(variant: .surface),
+  variant: .surface,
 )
 ```
 
@@ -122,20 +123,22 @@ RemixTextField(
 
 ```dart
 // Select (dropdown)
-RemixSelect<String>(
+final itemStyle = fortalSelectMenuItemStyler(variant: .surface);
+
+FortalSelect<String>(
+  variant: .surface,
   trigger: RemixSelectTrigger(placeholder: 'Choose a fruit'),
   items: [
-    RemixSelectItem(value: 'apple', label: 'Apple'),
-    RemixSelectItem(value: 'banana', label: 'Banana'),
-    RemixSelectItem(value: 'cherry', label: 'Cherry'),
+    RemixSelectItem(value: 'apple', label: 'Apple', style: itemStyle),
+    RemixSelectItem(value: 'banana', label: 'Banana', style: itemStyle),
+    RemixSelectItem(value: 'cherry', label: 'Cherry', style: itemStyle),
   ],
   selectedValue: selectedFruit,
   onChanged: (val) => setState(() => selectedFruit = val),
-  style: fortalSelectStyler(variant: .surface),
 )
 
 // Menu (action menu)
-RemixMenu<String>(
+FortalMenu<String>(
   trigger: RemixMenuTrigger(label: 'Actions', icon: Icons.more_vert),
   items: [
     RemixMenuItem(value: 'edit', label: 'Edit', leadingIcon: Icons.edit),
@@ -154,17 +157,17 @@ RemixTabs(
   selectedTabId: currentTab,
   onChanged: (id) => setState(() => currentTab = id),
   child: Column(children: [
-    RemixTabBar(
+    FortalTabBar(
       child: Row(children: [
-        RemixTab(tabId: 'overview', label: 'Overview'),
-        RemixTab(tabId: 'details', label: 'Details', icon: Icons.info),
-        RemixTab(tabId: 'settings', label: 'Settings'),
+        FortalTab(tabId: 'overview', label: 'Overview'),
+        FortalTab(tabId: 'details', label: 'Details', icon: Icons.info),
+        FortalTab(tabId: 'settings', label: 'Settings'),
       ]),
     ),
     Expanded(child: Column(children: [
-      RemixTabView(tabId: 'overview', child: OverviewPanel()),
-      RemixTabView(tabId: 'details', child: DetailsPanel()),
-      RemixTabView(tabId: 'settings', child: SettingsPanel()),
+      FortalTabView(tabId: 'overview', child: OverviewPanel()),
+      FortalTabView(tabId: 'details', child: DetailsPanel()),
+      FortalTabView(tabId: 'settings', child: SettingsPanel()),
     ])),
   ]),
 )
@@ -176,8 +179,8 @@ RemixTabs(
 RemixAccordionGroup<String>(
   controller: accordionController,
   child: Column(children: [
-    RemixAccordion(value: 'faq1', title: 'What is Remix?', child: Text('...')),
-    RemixAccordion(value: 'faq2', title: 'How does theming work?', child: Text('...')),
+    FortalAccordion(value: 'faq1', title: 'What is Remix?', child: Text('...')),
+    FortalAccordion(value: 'faq2', title: 'How does theming work?', child: Text('...')),
   ]),
 )
 ```
@@ -186,21 +189,23 @@ RemixAccordionGroup<String>(
 
 ```dart
 // Avatar
-RemixAvatar(
+FortalAvatar(
   label: 'JD',
   backgroundImage: NetworkImage('https://...'),
-  style: fortalAvatarStyler(variant: .soft, size: .size3),
+  variant: .soft,
+  size: .size3,
 )
 
 // Badge
-RemixBadge(
+FortalBadge(
   label: 'New',
-  style: fortalBadgeStyler(variant: .solid),
+  variant: .solid,
 )
 
 // Card
-RemixCard(
-  style: fortalCardStyler(variant: .surface, size: .size2),
+FortalCard(
+  variant: .surface,
+  size: .size2,
   child: Column(children: [
     Text('Card Title'),
     Text('Card content goes here'),
@@ -208,20 +213,20 @@ RemixCard(
 )
 
 // Callout
-RemixCallout(
+FortalCallout(
   icon: Icons.info,
   text: 'This is an informational callout.',
-  style: fortalCalloutStyler(variant: .surface),
+  variant: .surface,
 )
 
 // Progress
-RemixProgress(value: 0.65, style: fortalProgressStyler(variant: .surface))
+FortalProgress(value: 0.65, variant: .surface)
 
 // Spinner
-RemixSpinner(style: fortalSpinnerStyler(variant: .create, size: .size2))
+FortalSpinner(size: .size2)
 
 // Divider
-RemixDivider(style: fortalDividerStyler(variant: .create, size: .size1))
+FortalDivider(size: .size1)
 ```
 
 ### Overlays
@@ -230,22 +235,22 @@ RemixDivider(style: fortalDividerStyler(variant: .create, size: .size1))
 // Dialog
 showRemixDialog(
   context: context,
-  builder: (_) => RemixDialog(
+  builder: (_) => FortalDialog(
     title: 'Confirm',
     description: 'Are you sure you want to proceed?',
     actions: [
-      RemixButton(label: 'Cancel', onPressed: () => Navigator.pop(context),
-        style: fortalButtonStyler(variant: .outline)),
-      RemixButton(label: 'Confirm', onPressed: () { confirm(); Navigator.pop(context); },
-        style: fortalButtonStyler(variant: .solid)),
+      FortalButton(label: 'Cancel', onPressed: () => Navigator.pop(context),
+        variant: .outline),
+      FortalButton(label: 'Confirm', onPressed: () { confirm(); Navigator.pop(context); },
+        variant: .solid),
     ],
   ),
 )
 
 // Tooltip
-RemixTooltip(
+FortalTooltip(
   tooltipChild: Text('This button saves your work'),
-  child: RemixIconButton(icon: Icons.save, onPressed: save),
+  child: FortalIconButton(icon: Icons.save, onPressed: save),
 )
 ```
 
@@ -253,30 +258,29 @@ RemixTooltip(
 
 ## Styling Components
 
-Every component takes a fluent `style:` parameter (`RemixXStyler`) and optional raw `styleSpec:` (`RemixXSpec?`) that bypasses style resolution.
+Every raw `Remix*` component takes a fluent `style:` parameter (`RemixXStyler`) and optional raw `styleSpec:` (`RemixXSpec?`) that bypasses style resolution.
 
-There are two fluent-style approaches:
+There are two styling approaches:
 
-### 1. Fortal Presets (Recommended for Consistency)
+### 1. Fortal Widgets (Recommended for Consistency)
 
-Fortal styles give you pre-built variants and sizes that follow the design system:
+Fortal widgets give you pre-built variants and sizes that follow the design system without passing styles manually:
 
 ```dart
-// Variant + size
-fortalButtonStyler(variant: .solid, size: .size3)
-fortalButtonStyler(variant: .outline)
-fortalButtonStyler(variant: .ghost)
-fortalButtonStyler(variant: .soft)
-fortalButtonStyler(variant: .surface)
-
-// Or via create():
-fortalButtonStyler(
+FortalButton(
+  label: 'Save',
   variant: .solid,
-  size: .size2,
+  size: .size3,
+  onPressed: save,
 )
+
+FortalButton(label: 'Cancel', variant: .outline, onPressed: cancel)
+FortalIconButton(icon: Icons.settings, variant: .ghost, onPressed: openSettings)
 ```
 
-See `references/fortal-reference.md` for all variants and sizes per component.
+See `references/fortal-reference.md` for all Fortal widget variants and sizes per component.
+
+Use `fortal*Styler` directly when you need a custom raw `Remix*` composition or want to layer additional style changes on top of the preset.
 
 ### 2. Custom Styles (Full Control via Fluent API)
 
@@ -357,7 +361,7 @@ RemixButtonStyler()
 
 ### Combining Fortal with Overrides
 
-Start from a Fortal preset and layer custom modifications:
+Start from a Fortal styler and layer custom modifications when a generated `Fortal*` widget is not enough:
 
 ```dart
 final style = fortalButtonStyler(variant: .solid)
@@ -469,14 +473,15 @@ final config = FortalThemeConfig(
 config.createScope(child: MyApp())
 ```
 
-### Component Fortal Styles
+### Component Fortal Widgets
 
-Every component with Fortal support follows the same pattern:
+Every component with Fortal support exposes a generated widget wrapper for normal use:
 
 ```dart
-fortalButtonStyler(variant: .solid, size: .size2)
-fortalButtonStyler(variant: .outline, size: .size3)
-// Widget wrappers: FortalButton, FortalCheckbox, FortalTab, ...
+FortalButton(variant: .solid, size: .size2, label: 'Save')
+FortalButton(variant: .outline, size: .size3, label: 'Cancel')
+FortalCheckbox(variant: .surface, selected: accepted)
+FortalTab(tabId: 'details', label: 'Details')
 ```
 
 ### Fortal Tokens
@@ -580,7 +585,7 @@ class _MyAppState extends State<MyApp> {
         theme: ThemeData(brightness: _brightness),
         home: Scaffold(
           body: Column(children: [
-            RemixSwitch(
+            FortalSwitch(
               selected: _brightness == Brightness.dark,
               onChanged: (val) => setState(() =>
                 _brightness = val ? Brightness.dark : Brightness.light),
@@ -600,38 +605,45 @@ class _MyAppState extends State<MyApp> {
 Column(
   spacing: 16,
   children: [
-    RemixTextField(
+    FortalTextField(
       controller: nameController,
       label: 'Name',
       hintText: 'Enter your name',
-      style: fortalTextFieldStyler(variant: .surface),
+      variant: .surface,
     ),
-    RemixTextField(
+    FortalTextField(
       controller: emailController,
       label: 'Email',
       hintText: 'you@example.com',
       error: emailError,
-      style: fortalTextFieldStyler(variant: .surface),
+      variant: .surface,
     ),
-    RemixSelect<String>(
+    FortalSelect<String>(
+      variant: .surface,
       trigger: RemixSelectTrigger(placeholder: 'Country'),
-      items: countries.map((c) =>
-        RemixSelectItem(value: c.code, label: c.name)).toList(),
+      items: countries.map((c) {
+        return RemixSelectItem(
+          value: c.code,
+          label: c.name,
+          style: fortalSelectMenuItemStyler(variant: .surface),
+        );
+      }).toList(),
       selectedValue: selectedCountry,
       onChanged: (val) => setState(() => selectedCountry = val),
     ),
     Row(children: [
-      RemixCheckbox(
+      FortalCheckbox(
         selected: agreedToTerms,
         onChanged: (val) => setState(() => agreedToTerms = val ?? false),
       ),
       SizedBox(width: 8),
       Text('I agree to the terms'),
     ]),
-    RemixButton(
+    FortalButton(
       label: 'Submit',
       onPressed: agreedToTerms ? handleSubmit : null,
-      style: fortalButtonStyler(variant: .solid, size: .size3),
+      variant: .solid,
+      size: .size3,
     ),
   ],
 )

@@ -130,9 +130,9 @@ class _MenuExampleState extends State<MenuExample> {
 ```
 </CodeGroup>
 
-## Fortal styles
+## Fortal widgets
 
-Remix includes Fortal-themed style helpers for this component:
+Remix includes a generated Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
@@ -159,16 +159,16 @@ class FortalMenuExample extends StatelessWidget {
     return Row(
       spacing: 16,
       children: [
-        RemixMenu<String>(
+        FortalMenu<String>(
           trigger: const RemixMenuTrigger(label: 'Solid', icon: Icons.menu),
           items: items,
-          style: fortalMenuStyler(variant: FortalMenuVariant.solid),
+          variant: FortalMenuVariant.solid,
           onSelected: (value) => debugPrint(value),
         ),
-        RemixMenu<String>(
+        FortalMenu<String>(
           trigger: const RemixMenuTrigger(label: 'Soft', icon: Icons.menu),
           items: items,
-          style: fortalMenuStyler(variant: FortalMenuVariant.soft),
+          variant: FortalMenuVariant.soft,
           onSelected: (value) => debugPrint(value),
         ),
       ],

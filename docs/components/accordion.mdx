@@ -109,11 +109,11 @@ class _AccordionExampleState extends State<AccordionExample> {
 ```
 </CodeGroup>
 
-## Fortal styles
+## Fortal widgets
 
-Remix includes Fortal-themed style helpers for this component:
+Remix includes a generated Fortal-themed widget for this component:
 
-<CodeGroup title="Fortal base style" defaultLanguage="dart">
+<CodeGroup title="Fortal widget" defaultLanguage="dart">
 ```dart
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
@@ -140,22 +140,18 @@ class _FortalAccordionExampleState extends State<FortalAccordionExample> {
       controller: controller,
       child: Column(
         children: [
-          RemixAccordion(
+          FortalAccordion(
             value: 'item1',
             title: 'First Item',
-            style: fortalAccordionStyler(
-              variant: FortalAccordionVariant.surface,
-              size: FortalAccordionSize.size2,
-            ),
+            variant: FortalAccordionVariant.surface,
+            size: FortalAccordionSize.size2,
             child: Text('First content'),
           ),
-          RemixAccordion(
+          FortalAccordion(
             value: 'item2',
             title: 'Second Item',
-            style: fortalAccordionStyler(
-              variant: FortalAccordionVariant.soft,
-              size: FortalAccordionSize.size3,
-            ),
+            variant: FortalAccordionVariant.soft,
+            size: FortalAccordionSize.size3,
             child: Text('Second content'),
           ),
         ],

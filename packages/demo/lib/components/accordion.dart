@@ -25,18 +25,16 @@ Widget buildAvatarUseCase(BuildContext context) {
               child: ColumnBox(
                 style: FlexBoxStyler().mainAxisSize(.min),
                 children: [
-                  RemixAccordion(
+                  const FortalAccordion<String>(
                     value: 'accordion1',
                     title: 'Is it accessible?',
-                    style: fortalAccordionStyler(),
-                    child: const Text('Yes, it is accessible.'),
+                    child: Text('Yes, it is accessible.'),
                   ),
-                  RemixDivider(style: fortalDividerStyler()),
-                  RemixAccordion(
+                  const FortalDivider(),
+                  const FortalAccordion<String>(
                     value: 'accordion2',
                     title: 'What payment methods are accepted?',
-                    style: fortalAccordionStyler(),
-                    child: const Text(
+                    child: Text(
                       'Major credit and debit cards like Visa, MasterCard, and American Express, as well as digital payment options like PayPal and Apple Pay.',
                     ),
                   ),

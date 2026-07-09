@@ -19,8 +19,7 @@ Widget buildSelectUseCase(BuildContext context) {
     initialOption: FortalSelectSize.size3,
   );
 
-  final styleSelect = fortalSelectStyler(variant: variant, size: size);
-  final styleItems = fortalSelectMenuItemStyler(variant: variant, size: size);
+  final itemStyle = fortalSelectMenuItemStyler(variant: variant, size: size);
   String selectedValue = 'Apple';
   return KeyedSubtree(
     key: _key,
@@ -28,8 +27,9 @@ Widget buildSelectUseCase(BuildContext context) {
       body: Center(
         child: StatefulBuilder(
           builder: (context, setState) {
-            return RemixSelect<String>(
-              style: styleSelect,
+            return FortalSelect<String>(
+              variant: variant,
+              size: size,
               trigger: RemixSelectTrigger(
                 placeholder: context.knobs.string(
                   label: 'Placeholder',
@@ -46,17 +46,17 @@ Widget buildSelectUseCase(BuildContext context) {
                 RemixSelectItem<String>(
                   value: 'Apple',
                   label: 'Apple',
-                  style: styleItems,
+                  style: itemStyle,
                 ),
                 RemixSelectItem<String>(
                   value: 'Banana',
                   label: 'Banana',
-                  style: styleItems,
+                  style: itemStyle,
                 ),
                 RemixSelectItem<String>(
                   value: 'Orange',
                   label: 'Orange',
-                  style: styleItems,
+                  style: itemStyle,
                 ),
               ],
             );

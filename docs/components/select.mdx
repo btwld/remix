@@ -95,9 +95,9 @@ class _SelectExampleState extends State<SelectExample> {
 ```
 </CodeGroup>
 
-## Fortal styles
+## Fortal widgets
 
-Remix includes Fortal-themed style helpers for this component:
+Remix includes a generated Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
@@ -116,36 +116,40 @@ class _FortalSelectExampleState extends State<FortalSelectExample> {
   String? _soft;
   String? _ghost;
 
-  List<RemixSelectItem<String>> get _items => const [
-        RemixSelectItem(value: 'opt1', label: 'Option 1'),
-        RemixSelectItem(value: 'opt2', label: 'Option 2'),
-      ];
+  List<RemixSelectItem<String>> _items(FortalSelectVariant variant) {
+    final itemStyle = fortalSelectMenuItemStyler(variant: variant);
+
+    return [
+      RemixSelectItem(value: 'opt1', label: 'Option 1', style: itemStyle),
+      RemixSelectItem(value: 'opt2', label: 'Option 2', style: itemStyle),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       spacing: 16,
       children: [
-        RemixSelect(
+        FortalSelect(
           trigger: const RemixSelectTrigger(placeholder: 'Surface'),
-          items: _items,
+          items: _items(FortalSelectVariant.surface),
           selectedValue: _surface,
           onChanged: (value) => setState(() => _surface = value),
-          style: fortalSelectStyler(variant: FortalSelectVariant.surface),
+          variant: FortalSelectVariant.surface,
         ),
-        RemixSelect(
+        FortalSelect(
           trigger: const RemixSelectTrigger(placeholder: 'Soft'),
-          items: _items,
+          items: _items(FortalSelectVariant.soft),
           selectedValue: _soft,
           onChanged: (value) => setState(() => _soft = value),
-          style: fortalSelectStyler(variant: FortalSelectVariant.soft),
+          variant: FortalSelectVariant.soft,
         ),
-        RemixSelect(
+        FortalSelect(
           trigger: const RemixSelectTrigger(placeholder: 'Ghost'),
-          items: _items,
+          items: _items(FortalSelectVariant.ghost),
           selectedValue: _ghost,
           onChanged: (value) => setState(() => _ghost = value),
-          style: fortalSelectStyler(variant: FortalSelectVariant.ghost),
+          variant: FortalSelectVariant.ghost,
         ),
       ],
     );
@@ -155,6 +159,7 @@ class _FortalSelectExampleState extends State<FortalSelectExample> {
 </CodeGroup>
 
 <Info>
+  `FortalSelect` applies the trigger and menu container styles. Use `fortalSelectMenuItemStyler` on `RemixSelectItem` rows to match item styling.
   See the [fortalSelectStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/select/fortal_select_styles.dart) for all available options.
 </Info>
 

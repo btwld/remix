@@ -87,9 +87,9 @@ class _TextfieldExampleState extends State<TextfieldExample> {
 ```
 </CodeGroup>
 
-## Fortal styles
+## Fortal widgets
 
-Remix includes Fortal-themed style helpers for this component:
+Remix includes a generated Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
@@ -111,17 +111,17 @@ class _FortalTextFieldExampleState extends State<FortalTextFieldExample> {
     return Column(
       spacing: 16,
       children: [
-        RemixTextField(
+        FortalTextField(
           controller: controller,
           label: 'Surface',
           hintText: 'Neutral surface field',
-          style: fortalTextFieldStyler(variant: FortalTextFieldVariant.surface),
+          variant: FortalTextFieldVariant.surface,
         ),
-        RemixTextField(
+        FortalTextField(
           controller: controller,
           label: 'Soft',
           hintText: 'Accent soft field',
-          style: fortalTextFieldStyler(variant: FortalTextFieldVariant.soft),
+          variant: FortalTextFieldVariant.soft,
         ),
       ],
     );

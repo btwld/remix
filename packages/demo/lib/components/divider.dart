@@ -15,14 +15,12 @@ Widget buildDividerUseCase(BuildContext context) {
           height: 300,
           width: 300,
           child: Center(
-            child: RemixDivider(
-              style: fortalDividerStyler(
-                size: context.knobs.object.dropdown(
-                  label: 'size',
-                  options: FortalDividerSize.values,
-                  labelBuilder: (size) => size.name,
-                  initialOption: FortalDividerSize.size1,
-                ),
+            child: FortalDivider(
+              size: context.knobs.object.dropdown(
+                label: 'size',
+                options: FortalDividerSize.values,
+                labelBuilder: (size) => size.name,
+                initialOption: FortalDividerSize.size1,
               ),
             ),
           ),

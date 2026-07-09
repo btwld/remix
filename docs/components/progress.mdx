@@ -43,9 +43,9 @@ class ProgressExample extends StatelessWidget {
 ```
 </CodeGroup>
 
-## Fortal styles
+## Fortal widgets
 
-Remix includes Fortal-themed style helpers for this component:
+Remix includes a generated Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
@@ -60,13 +60,13 @@ class FortalProgressExample extends StatelessWidget {
     return Column(
       spacing: 16,
       children: [
-        RemixProgress(
+        FortalProgress(
           value: 0.6,
-          style: fortalProgressStyler(variant: FortalProgressVariant.surface),
+          variant: FortalProgressVariant.surface,
         ),
-        RemixProgress(
+        FortalProgress(
           value: 0.4,
-          style: fortalProgressStyler(variant: FortalProgressVariant.soft),
+          variant: FortalProgressVariant.soft,
         ),
       ],
     );

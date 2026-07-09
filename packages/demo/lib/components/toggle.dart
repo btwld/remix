@@ -14,7 +14,7 @@ Widget buildToggleUseCase(BuildContext context) {
     key: _key,
     child: Scaffold(
       body: Center(
-        child: RemixToggle(
+        child: FortalToggle(
           selected: context.knobs.boolean(
             label: 'Selected',
             initialValue: false,
@@ -23,18 +23,16 @@ Widget buildToggleUseCase(BuildContext context) {
           label: context.knobs.string(label: 'Label', initialValue: 'Bold'),
           icon: Icons.alarm_sharp,
           onChanged: (value) => knobState.updateKnob('Selected', value),
-          style: fortalToggleStyler(
-            variant: context.knobs.object.dropdown(
-              label: 'variant',
-              options: FortalToggleVariant.values,
-              labelBuilder: (variant) => variant.name,
-            ),
-            size: context.knobs.object.dropdown(
-              label: 'size',
-              options: FortalToggleSize.values,
-              labelBuilder: (size) => size.name,
-              initialOption: FortalToggleSize.size2,
-            ),
+          variant: context.knobs.object.dropdown(
+            label: 'variant',
+            options: FortalToggleVariant.values,
+            labelBuilder: (variant) => variant.name,
+          ),
+          size: context.knobs.object.dropdown(
+            label: 'size',
+            options: FortalToggleSize.values,
+            labelBuilder: (size) => size.name,
+            initialOption: FortalToggleSize.size2,
           ),
         ),
       ),

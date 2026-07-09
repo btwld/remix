@@ -72,9 +72,9 @@ class _SliderExampleState extends State<SliderExample> {
 ```
 </CodeGroup>
 
-## Fortal styles
+## Fortal widgets
 
-Remix includes Fortal-themed style helpers for this component:
+Remix includes a generated Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
@@ -96,15 +96,15 @@ class _FortalSliderExampleState extends State<FortalSliderExample> {
     return Column(
       spacing: 16,
       children: [
-        RemixSlider(
+        FortalSlider(
           value: _value,
           onChanged: (v) => setState(() => _value = v),
-          style: fortalSliderStyler(variant: FortalSliderVariant.surface),
+          variant: FortalSliderVariant.surface,
         ),
-        RemixSlider(
+        FortalSlider(
           value: _value,
           onChanged: (v) => setState(() => _value = v),
-          style: fortalSliderStyler(variant: FortalSliderVariant.soft),
+          variant: FortalSliderVariant.soft,
         ),
       ],
     );

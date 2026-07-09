@@ -18,214 +18,243 @@ Complete reference for the Fortal design system — variants, sizes, and tokens.
 
 ## Component Variants & Sizes
 
-### Button — `fortalButtonStyler`
+Use generated `Fortal*` widgets for standard Fortal UI. The matching `fortal*Styler` functions remain available for custom raw `Remix*` compositions.
 
-| Variant | Description |
-|---------|-------------|
-| `solid` | Filled accent background, high contrast text |
-| `soft` | Subtle accent surface, accent text |
-| `surface` | Neutral surface with accent border |
-| `outline` | Transparent with accent border |
-| `ghost` | Transparent, accent text only |
+### Button — `FortalButton`
 
-| Size | Font | Radius | Padding |
-|------|------|--------|---------|
-| `size1` | 12px (text1) | radius2 | compact |
-| `size2` | 14px (text2) | radius3 | default |
-| `size3` | 16px (text3) | radius4 | spacious |
-| `size4` | 18px (text4) | radius5 | large |
+Variants: `solid`, `soft`, `surface`, `outline`, `ghost`.
+Sizes: `size1`, `size2`, `size3`, `size4`.
 
 ```dart
-fortalButtonStyler(variant: .solid, size: .size2)
-fortalButtonStyler(variant: .solid)
-fortalButtonStyler(variant: .soft, size: .size3)
-fortalButtonStyler(variant: .outline)
-fortalButtonStyler(variant: .surface)
-fortalButtonStyler(variant: .ghost)
+FortalButton(label: 'Save', variant: .solid, size: .size2)
+FortalButton(label: 'Cancel', variant: .outline)
 ```
 
-### IconButton — `fortalIconButtonStyler`
+Custom styler: `fortalButtonStyler(variant: .solid, size: .size2)`.
 
-Same variants as Button: `solid`, `soft`, `surface`, `outline`, `ghost`.
+### IconButton — `FortalIconButton`
 
-| Size | Dimensions | Icon | Radius |
-|------|-----------|------|--------|
-| `size1` | 24×24 | 12px | radius2 |
-| `size2` | 32×32 | 16px | radius3 |
-| `size3` | 40×40 | 20px | radius4 |
-| `size4` | 48×48 | 24px | radius5 |
+Variants: `solid`, `soft`, `surface`, `outline`, `ghost`.
+Sizes: `size1`, `size2`, `size3`, `size4`.
 
 ```dart
-fortalIconButtonStyler(variant: .solid, size: .size2)
-fortalIconButtonStyler(variant: .ghost)
+FortalIconButton(icon: Icons.add, variant: .solid, size: .size2)
+FortalIconButton(icon: Icons.settings, variant: .ghost)
 ```
 
-### Checkbox — `fortalCheckboxStyler`
+Custom styler: `fortalIconButtonStyler(variant: .ghost, size: .size2)`.
 
-| Variant | Description |
-|---------|-------------|
-| `surface` | Neutral surface container |
-| `soft` | Subtle accent surface |
+### Checkbox — `FortalCheckbox`
 
-| Size | Dimensions | Indicator |
-|------|-----------|-----------|
-| `size1` | 16×16 | 12px icon |
-| `size2` | 24×24 | 16px icon |
-| `size3` | 32×32 | 24px icon |
+Variants: `surface`, `soft`. Sizes: `size1`, `size2`, `size3`.
 
 ```dart
-fortalCheckboxStyler(variant: .create, variant: FortalCheckboxVariant.surface, size: .size2)
-fortalCheckboxStyler(variant: .surface)
-fortalCheckboxStyler(variant: .soft)
+FortalCheckbox(selected: accepted, variant: .surface, size: .size2)
 ```
 
-### Radio — `fortalRadioStyler`
+Custom styler: `fortalCheckboxStyler(variant: .surface, size: .size2)`.
 
-Variants: `surface`, `soft`. Sizes: `size1` (16×16, 6px dot), `size2` (20×20, 8px dot), `size3` (24×24, 10px dot).
+### Radio — `FortalRadio`
+
+Variants: `surface`, `soft`. Sizes: `size1`, `size2`, `size3`.
 
 ```dart
-fortalRadioStyler(variant: .create, variant: FortalRadioVariant.surface, size: .size2)
+FortalRadio<String>(value: 'email', variant: .surface, size: .size2)
 ```
 
-### Switch — `fortalSwitchStyler`
+Custom styler: `fortalRadioStyler(variant: .surface, size: .size2)`.
 
-Variants: `surface`, `soft`. Sizes: `size1` (28×16 track), `size2` (35×20 track), `size3` (42×24 track).
+### Switch — `FortalSwitch`
+
+Variants: `surface`, `soft`. Sizes: `size1`, `size2`, `size3`.
 
 ```dart
-fortalSwitchStyler(variant: .create, variant: FortalSwitchVariant.surface, size: .size2)
+FortalSwitch(selected: enabled, variant: .soft, size: .size2)
 ```
 
-### Badge — `fortalBadgeStyler`
+Custom styler: `fortalSwitchStyler(variant: .soft, size: .size2)`.
 
-| Variant | Description |
-|---------|-------------|
-| `solid` | Filled accent |
-| `soft` | Subtle accent surface |
-| `surface` | Neutral surface |
-| `outline` | Border only |
+### Slider — `FortalSlider`
 
-Sizes: `size1` (11px), `size2` (12px), `size3` (13px).
+Variants: `surface`, `soft`. Sizes: `size1`, `size2`, `size3`.
 
 ```dart
-fortalBadgeStyler(variant: .create, variant: FortalBadgeVariant.solid, size: .size2)
-fortalBadgeStyler(variant: .solid)
-fortalBadgeStyler(variant: .outline)
+FortalSlider(value: progress, variant: .surface, size: .size2)
 ```
 
-### Avatar — `fortalAvatarStyler`
+Custom styler: `fortalSliderStyler(variant: .surface, size: .size2)`.
 
-Variants: `soft`, `solid`. Sizes: `size1` (24px), `size2` (32px), `size3` (40px), `size4` (64px).
+### TextField — `FortalTextField`
+
+Variants: `surface`, `soft`. Sizes: `size1`, `size2`, `size3`.
 
 ```dart
-fortalAvatarStyler(variant: .create, variant: FortalAvatarVariant.soft, size: .size3)
+FortalTextField(label: 'Email', variant: .surface, size: .size2)
 ```
 
-### Card — `fortalCardStyler`
+Custom styler: `fortalTextFieldStyler(variant: .surface, size: .size2)`.
 
-| Variant | Description |
-|---------|-------------|
-| `surface` | Neutral surface with subtle border |
-| `classic` | Traditional card with shadow |
-| `ghost` | Transparent, no border |
-
-Sizes: `size1` (16px padding), `size2` (24px padding), `size3` (32px padding).
-
-```dart
-fortalCardStyler(variant: .create, variant: FortalCardVariant.surface, size: .size2)
-fortalCardStyler(variant: .classic)
-```
-
-### Callout — `fortalCalloutStyler`
-
-Variants: `outline`, `surface`, `soft`. Sizes: `size1` (compact), `size2` (default), `size3` (spacious).
-
-```dart
-fortalCalloutStyler(variant: .create, variant: FortalCalloutVariant.surface, size: .size2)
-```
-
-### Progress — `fortalProgressStyler`
-
-Variants: `surface`, `soft`. Sizes: `size1` (4px height), `size2` (8px), `size3` (12px).
-
-```dart
-fortalProgressStyler(variant: .create, variant: FortalProgressVariant.surface, size: .size2)
-```
-
-### Slider — `fortalSliderStyler`
-
-Variants: `surface`, `soft`. Sizes: `size1` (13px thumb), `size2` (16px thumb), `size3` (19px thumb).
-
-```dart
-fortalSliderStyler(variant: .create, variant: FortalSliderVariant.surface, size: .size2)
-```
-
-### Spinner — `fortalSpinnerStyler`
-
-No variants. Sizes: `size1` (16px), `size2` (20px), `size3` (24px).
-
-```dart
-fortalSpinnerStyler(variant: .create, size: .size2)
-```
-
-### TextField — `fortalTextFieldStyler`
-
-Variants: `surface`, `soft`. Sizes: `size1` (12px text), `size2` (14px text), `size3` (15px text).
-
-```dart
-fortalTextFieldStyler(variant: .create, variant: FortalTextFieldVariant.surface, size: .size2)
-```
-
-### Select — `fortalSelectStyler` + `fortalSelectItemStyler`
+### Select — `FortalSelect`
 
 Variants: `surface`, `soft`, `ghost`. Sizes: `size1`, `size2`, `size3`.
 
 ```dart
-fortalSelectStyler(variant: .create, variant: FortalSelectVariant.surface, size: .size2)
+final itemStyle = fortalSelectMenuItemStyler(variant: .surface, size: .size2);
+
+FortalSelect<String>(
+  variant: .surface,
+  size: .size2,
+  trigger: RemixSelectTrigger(placeholder: 'Choose one'),
+  items: [
+    RemixSelectItem(value: 'a', label: 'A', style: itemStyle),
+  ],
+)
 ```
 
-### Menu — `fortalMenuStyler` + `fortalMenuItemStyler`
+`FortalSelect` styles the trigger and menu container. Item rows are `RemixSelectItem` data objects; use `fortalSelectMenuItemStyler` for matching item styling.
+
+Custom styler: `fortalSelectStyler(variant: .surface, size: .size2)`.
+
+### Badge — `FortalBadge`
+
+Variants: `solid`, `soft`, `surface`, `outline`. Sizes: `size1`, `size2`, `size3`.
+
+```dart
+FortalBadge(label: 'New', variant: .solid, size: .size2)
+```
+
+Custom styler: `fortalBadgeStyler(variant: .solid, size: .size2)`.
+
+### Avatar — `FortalAvatar`
+
+Variants: `soft`, `solid`. Sizes: `size1`, `size2`, `size3`, `size4`.
+
+```dart
+FortalAvatar(label: 'LF', variant: .soft, size: .size3)
+```
+
+Custom styler: `fortalAvatarStyler(variant: .soft, size: .size3)`.
+
+### Card — `FortalCard`
+
+Variants: `surface`, `classic`, `ghost`. Sizes: `size1`, `size2`, `size3`.
+
+```dart
+FortalCard(variant: .surface, size: .size2, child: Text('Content'))
+```
+
+Custom styler: `fortalCardStyler(variant: .surface, size: .size2)`.
+
+### Callout — `FortalCallout`
+
+Variants: `outline`, `surface`, `soft`. Sizes: `size1`, `size2`, `size3`.
+
+```dart
+FortalCallout(text: 'Heads up', variant: .surface, size: .size2)
+```
+
+Custom styler: `fortalCalloutStyler(variant: .surface, size: .size2)`.
+
+### Progress — `FortalProgress`
+
+Variants: `surface`, `soft`. Sizes: `size1`, `size2`, `size3`.
+
+```dart
+FortalProgress(value: 0.65, variant: .surface, size: .size2)
+```
+
+Custom styler: `fortalProgressStyler(variant: .surface, size: .size2)`.
+
+### Spinner — `FortalSpinner`
+
+No variants. Sizes: `size1`, `size2`, `size3`.
+
+```dart
+FortalSpinner(size: .size2)
+```
+
+Custom styler: `fortalSpinnerStyler(size: .size2)`.
+
+### Divider — `FortalDivider`
+
+No variants. Sizes: `size1`, `size2`, `size3`.
+
+```dart
+FortalDivider(size: .size1)
+```
+
+Custom styler: `fortalDividerStyler(size: .size1)`.
+
+### Accordion — `FortalAccordion`
+
+Variants: `surface`, `soft`. Sizes: `size1`, `size2`, `size3`.
+
+```dart
+FortalAccordion<String>(
+  value: 'item',
+  title: 'Question',
+  variant: .surface,
+  size: .size2,
+  child: Text('Answer'),
+)
+```
+
+Custom styler: `fortalAccordionStyler(variant: .surface, size: .size2)`.
+
+### Menu — `FortalMenu`
 
 Variants: `solid`, `soft`. Sizes: `size1`, `size2`.
 
 ```dart
-fortalMenuStyler(variant: .create, variant: FortalMenuVariant.solid, size: .size2)
+FortalMenu<String>(
+  variant: .solid,
+  size: .size2,
+  trigger: RemixMenuTrigger(label: 'Actions', icon: Icons.more_vert),
+  items: [
+    RemixMenuItem(value: 'edit', label: 'Edit'),
+  ],
+)
 ```
 
-### Tabs — `fortalTabsStyler`
+Custom stylers: `fortalMenuStyler(variant: .solid, size: .size2)` and `fortalMenuItemStyler(variant: .solid, size: .size2)`.
+
+### Tabs — `FortalTabBar`, `FortalTab`, `FortalTabView`
 
 No variants, no sizes.
 
 ```dart
-fortalTabsStyler(variant: .create)
+FortalTabBar(
+  child: Row(children: [
+    FortalTab(tabId: 'overview', label: 'Overview'),
+  ]),
+)
+FortalTabView(tabId: 'overview', child: OverviewPanel())
 ```
 
-### Tooltip — `fortalTooltipStyler`
+Custom stylers: `fortalTabBarStyler()`, `fortalTabStyler()`, `fortalTabViewStyler()`.
+
+### Tooltip — `FortalTooltip`
 
 No variants, no sizes.
 
 ```dart
-fortalTooltipStyler(variant: .create)
+FortalTooltip(
+  tooltipChild: Text('Help text'),
+  child: Icon(Icons.help),
+)
 ```
 
-### Dialog — `fortalDialogStyler`
+Custom styler: `fortalTooltipStyler()`.
+
+### Dialog — `FortalDialog`
 
 No variants, no sizes.
 
 ```dart
-fortalDialogStyler(variant: .create)
+FortalDialog(title: 'Confirm', description: 'Save changes?')
 ```
 
-### Divider — `fortalDividerStyler`
-
-No variants. Sizes: `size1` (1px), `size2` (2px), `size3` (3px).
-
-```dart
-fortalDividerStyler(variant: .create, size: .size1)
-```
-
-### Accordion — `fortalAccordionStyler`
-
-No variants, no sizes. Use `fortalAccordionStyler(variant: .base)`.
+Custom styler: `fortalDialogStyler()`.
 
 ---
 
