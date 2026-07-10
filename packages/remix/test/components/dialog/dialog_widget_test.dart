@@ -83,9 +83,10 @@ void main() {
     });
 
     group('Content Combinations', () {
-      // Deliberate behavior change: child used to override title/description,
-      // silently discarding them (and actions). Provided content now composes
-      // in AlertDialog order and must never disappear.
+      // These tests pin the composition contract: child composes with title,
+      // description, and actions in AlertDialog order, and provided content
+      // is never silently discarded. Earlier versions let child override the
+      // other content; do not reintroduce that behavior.
       testWidgets('child composes with title and description', (tester) async {
         final testChild = Container(
           key: ValueKey('composed_child'),

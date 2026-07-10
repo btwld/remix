@@ -94,11 +94,12 @@ class RemixDialog extends StatelessWidget {
          'Either child, title, or description must be provided',
        );
 
-  /// Custom body content.
+  /// Custom content displayed as the dialog body.
   ///
-  /// Composes with [title], [description], and [actions] when they are also
-  /// provided, matching [AlertDialog]: title, description, then [child], then
-  /// actions. When it is the only content, it fills the dialog container.
+  /// When [title], [description], or [actions] are also provided, this widget
+  /// is rendered after the title and description and before the actions,
+  /// following the [AlertDialog] content order. When it is the only content,
+  /// it is placed directly in the dialog container and keeps its own layout.
   final Widget? child;
 
   /// Dialog title text.
@@ -136,15 +137,16 @@ class RemixDialog extends StatelessWidget {
               description == null &&
               !hasActions;
 
-          // A lone child fills the container directly, outside the default
-          // column, so fully custom dialog bodies keep their own layout.
+          // A lone child is placed directly in the container, outside the
+          // default column, so fully custom dialog bodies keep their own
+          // layout.
           if (isLoneChild) {
             return Box(styleSpec: spec.container, child: child!);
           }
 
-          // Compose everything that was provided, in AlertDialog order.
-          // Previously a non-null child silently discarded title, description,
-          // and actions; provided content must never disappear.
+          // Compose all provided content in AlertDialog order: title,
+          // description, child, then actions. Content passed to the dialog
+          // must never be silently discarded.
           return Box(
             styleSpec: spec.container,
             child: Column(
