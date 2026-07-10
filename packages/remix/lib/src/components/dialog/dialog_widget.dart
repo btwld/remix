@@ -94,7 +94,11 @@ class RemixDialog extends StatelessWidget {
          'Either child, title, or description must be provided',
        );
 
-  /// Custom content widget (overrides title and description).
+  /// Custom body content.
+  ///
+  /// Composes with [title], [description], and [actions] when they are also
+  /// provided, matching [AlertDialog]: title, description, then [child], then
+  /// actions. When it is the only content, it fills the dialog container.
   final Widget? child;
 
   /// Dialog title text.
@@ -125,12 +129,20 @@ class RemixDialog extends StatelessWidget {
       child: StyleBuilder(
         style: style,
         builder: (context, spec) {
-          // Use custom child if provided
-          if (child != null) {
+          final hasActions = actions != null && actions!.isNotEmpty;
+
+          // A lone child fills the container directly, outside the default
+          // column, so fully custom dialog bodies keep their own layout.
+          if (child != null &&
+              title == null &&
+              description == null &&
+              !hasActions) {
             return Box(styleSpec: spec.container, child: child!);
           }
 
-          // Build default dialog content
+          // Compose everything that was provided, in AlertDialog order.
+          // Previously a non-null child silently discarded title, description,
+          // and actions; provided content must never disappear.
           return Box(
             styleSpec: spec.container,
             child: Column(
@@ -141,7 +153,8 @@ class RemixDialog extends StatelessWidget {
                 if (title != null) StyledText(title!, styleSpec: spec.title),
                 if (description != null)
                   StyledText(description!, styleSpec: spec.description),
-                if (actions != null && actions!.isNotEmpty)
+                if (child != null) child!,
+                if (hasActions)
                   FlexBox(styleSpec: spec.actions, children: actions!),
               ],
             ),

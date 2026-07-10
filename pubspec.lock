@@ -434,10 +434,11 @@ packages:
   mix:
     dependency: "direct overridden"
     description:
-      name: mix
-      sha256: "9086fd222f2b6faeab9743dc98788c1a1083d8f8072bcd21c2c07ecd16cf876f"
-      url: "https://pub.dev"
-    source: hosted
+      path: "packages/mix"
+      ref: "feat/styler-generator"
+      resolved-ref: ee735897748eccbd1d2fdcfb0edba90192e7bebe
+      url: "https://github.com/btwld/mix.git"
+    source: git
     version: "2.0.3"
   mix_annotations:
     dependency: "direct overridden"

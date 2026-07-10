@@ -1,3 +1,10 @@
+## Unreleased
+
+- **BREAKING** **FIX**: `RemixDialog.child` now composes with `title`,
+  `description`, and `actions` in `AlertDialog` order instead of silently
+  discarding them. A lone `child` still fills the container directly, so fully
+  custom dialog bodies are unaffected.
+
 ## 0.2.0
 
 - **FEAT**: Add RemixToggle component (#50).
