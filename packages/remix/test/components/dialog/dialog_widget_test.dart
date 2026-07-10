@@ -83,10 +83,7 @@ void main() {
     });
 
     group('Content Combinations', () {
-      // These tests pin the composition contract: child composes with title,
-      // description, and actions in AlertDialog order, and provided content
-      // is never silently discarded. Earlier versions let child override the
-      // other content; do not reintroduce that behavior.
+      // child composes with other content; it must not override them.
       testWidgets('child composes with title and description', (tester) async {
         final testChild = Container(
           key: ValueKey('composed_child'),
@@ -107,7 +104,6 @@ void main() {
         expect(find.text('Dialog Title'), findsOneWidget);
         expect(find.text('Dialog description'), findsOneWidget);
 
-        // AlertDialog order: title, then description, then child.
         expect(
           tester.getTopLeft(find.text('Dialog Title')).dy,
           lessThan(tester.getTopLeft(find.text('Dialog description')).dy),
@@ -131,7 +127,6 @@ void main() {
         expect(find.text('Cancel'), findsOneWidget);
         expect(find.text('Delete'), findsOneWidget);
 
-        // Child body sits above the actions row.
         expect(
           tester.getTopLeft(find.text('Body')).dy,
           lessThan(tester.getTopLeft(find.text('Cancel')).dy),
@@ -163,7 +158,6 @@ void main() {
           );
           await tester.pumpAndSettle();
 
-          // AlertDialog order: title, description, child, then actions.
           final titleY = tester.getTopLeft(find.text('Title')).dy;
           final descY = tester.getTopLeft(find.text('Description')).dy;
           final bodyY = tester.getTopLeft(find.text('Body')).dy;
