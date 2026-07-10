@@ -83,28 +83,91 @@ void main() {
     });
 
     group('Content Combinations', () {
-      testWidgets('child takes priority over title and description', (
-        tester,
-      ) async {
+      // child composes with other content; it must not override them.
+      testWidgets('child composes with title and description', (tester) async {
         final testChild = Container(
-          key: ValueKey('priority_child'),
+          key: ValueKey('composed_child'),
           child: Text('Custom Child'),
         );
         await tester.pumpRemixApp(
           RemixDialog(
-            title: 'Should not show',
-            description: 'Should not show',
+            title: 'Dialog Title',
+            description: 'Dialog description',
             child: testChild,
           ),
         );
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixDialog), findsOneWidget);
-        expect(find.byType(Box), findsOneWidget);
-        expect(find.byKey(ValueKey('priority_child')), findsOneWidget);
+        expect(find.byKey(ValueKey('composed_child')), findsOneWidget);
         expect(find.text('Custom Child'), findsOneWidget);
-        expect(find.text('Should not show'), findsNothing);
+        expect(find.text('Dialog Title'), findsOneWidget);
+        expect(find.text('Dialog description'), findsOneWidget);
+
+        expect(
+          tester.getTopLeft(find.text('Dialog Title')).dy,
+          lessThan(tester.getTopLeft(find.text('Dialog description')).dy),
+        );
+        expect(
+          tester.getTopLeft(find.text('Dialog description')).dy,
+          lessThan(tester.getTopLeft(find.text('Custom Child')).dy),
+        );
       });
+
+      testWidgets('child composes with actions', (tester) async {
+        await tester.pumpRemixApp(
+          RemixDialog(
+            child: Text('Body'),
+            actions: [Text('Cancel'), Text('Delete')],
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(find.text('Body'), findsOneWidget);
+        expect(find.text('Cancel'), findsOneWidget);
+        expect(find.text('Delete'), findsOneWidget);
+
+        expect(
+          tester.getTopLeft(find.text('Body')).dy,
+          lessThan(tester.getTopLeft(find.text('Cancel')).dy),
+        );
+      });
+
+      testWidgets('a lone child fills the container directly', (tester) async {
+        await tester.pumpRemixApp(RemixDialog(child: Text('Only child')));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Only child'), findsOneWidget);
+        expect(
+          find.descendant(of: find.byType(Box), matching: find.byType(Column)),
+          findsNothing,
+          reason: 'a fully custom body keeps its own layout',
+        );
+      });
+
+      testWidgets(
+        'child composes with title, description, and actions in order',
+        (tester) async {
+          await tester.pumpRemixApp(
+            RemixDialog(
+              title: 'Title',
+              description: 'Description',
+              child: Text('Body'),
+              actions: [TextButton(onPressed: () {}, child: Text('OK'))],
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          final titleY = tester.getTopLeft(find.text('Title')).dy;
+          final descY = tester.getTopLeft(find.text('Description')).dy;
+          final bodyY = tester.getTopLeft(find.text('Body')).dy;
+          final actionY = tester.getTopLeft(find.text('OK')).dy;
+
+          expect(titleY, lessThan(descY));
+          expect(descY, lessThan(bodyY));
+          expect(bodyY, lessThan(actionY));
+        },
+      );
 
       testWidgets('title and description are rendered together', (
         tester,
