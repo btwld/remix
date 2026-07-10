@@ -130,13 +130,15 @@ class RemixDialog extends StatelessWidget {
         style: style,
         builder: (context, spec) {
           final hasActions = actions != null && actions!.isNotEmpty;
+          final isLoneChild =
+              child != null &&
+              title == null &&
+              description == null &&
+              !hasActions;
 
           // A lone child fills the container directly, outside the default
           // column, so fully custom dialog bodies keep their own layout.
-          if (child != null &&
-              title == null &&
-              description == null &&
-              !hasActions) {
+          if (isLoneChild) {
             return Box(styleSpec: spec.container, child: child!);
           }
 

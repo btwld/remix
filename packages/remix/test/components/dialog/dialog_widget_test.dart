@@ -105,6 +105,16 @@ void main() {
         expect(find.text('Custom Child'), findsOneWidget);
         expect(find.text('Dialog Title'), findsOneWidget);
         expect(find.text('Dialog description'), findsOneWidget);
+
+        // AlertDialog order: title, then description, then child.
+        expect(
+          tester.getTopLeft(find.text('Dialog Title')).dy,
+          lessThan(tester.getTopLeft(find.text('Dialog description')).dy),
+        );
+        expect(
+          tester.getTopLeft(find.text('Dialog description')).dy,
+          lessThan(tester.getTopLeft(find.text('Custom Child')).dy),
+        );
       });
 
       testWidgets('child composes with actions', (tester) async {
@@ -119,6 +129,12 @@ void main() {
         expect(find.text('Body'), findsOneWidget);
         expect(find.text('Cancel'), findsOneWidget);
         expect(find.text('Delete'), findsOneWidget);
+
+        // Child body sits above the actions row.
+        expect(
+          tester.getTopLeft(find.text('Body')).dy,
+          lessThan(tester.getTopLeft(find.text('Cancel')).dy),
+        );
       });
 
       testWidgets('a lone child fills the container directly', (tester) async {
@@ -132,6 +148,31 @@ void main() {
           reason: 'a fully custom body keeps its own layout',
         );
       });
+
+      testWidgets(
+        'child composes with title, description, and actions in order',
+        (tester) async {
+          await tester.pumpRemixApp(
+            RemixDialog(
+              title: 'Title',
+              description: 'Description',
+              child: Text('Body'),
+              actions: [TextButton(onPressed: () {}, child: Text('OK'))],
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          // AlertDialog order: title, description, child, then actions.
+          final titleY = tester.getTopLeft(find.text('Title')).dy;
+          final descY = tester.getTopLeft(find.text('Description')).dy;
+          final bodyY = tester.getTopLeft(find.text('Body')).dy;
+          final actionY = tester.getTopLeft(find.text('OK')).dy;
+
+          expect(titleY, lessThan(descY));
+          expect(descY, lessThan(bodyY));
+          expect(bodyY, lessThan(actionY));
+        },
+      );
 
       testWidgets('title and description are rendered together', (
         tester,
