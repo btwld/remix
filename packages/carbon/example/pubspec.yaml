@@ -1,0 +1,21 @@
+name: carbon_example
+description: Example gallery for the carbon package (themes, sizes, buttons).
+publish_to: "none"
+resolution: workspace
+
+environment:
+  sdk: ">=3.12.0 <4.0.0"
+  flutter: ">=3.44.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  carbon:
+    path: ../
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
