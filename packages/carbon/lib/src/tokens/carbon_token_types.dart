@@ -66,29 +66,32 @@ class CarbonTextStyleData {
   /// Letter spacing in logical pixels.
   final double? letterSpacing;
 
-  // Carbon type uses only the light/regular/semibold weights.
-  FontWeight? get flutterFontWeight => switch (fontWeight) {
-        300 => FontWeight.w300,
-        400 => FontWeight.w400,
-        600 => FontWeight.w600,
-        null => null,
-        _ => FontWeight.w400,
-      };
+  /// The CSS numeric weight as a Flutter [FontWeight] (100–900 supported).
+  FontWeight? get flutterFontWeight {
+    final weight = fontWeight;
+    if (weight == null) return null;
 
-  /// Builds a Flutter [TextStyle] from these measurements, optionally applying
-  /// [fontFamily] and [overrides] (used by the fluid resolver).
-  TextStyle toTextStyle({String? fontFamily, CarbonTextStyleData? overrides}) {
-    final size = overrides?.fontSize ?? fontSize;
-    final weight = overrides?.flutterFontWeight ?? flutterFontWeight;
-    final height = overrides?.lineHeight ?? lineHeight;
-    final spacing = overrides?.letterSpacing ?? letterSpacing;
+    return FontWeight.values[(weight ~/ 100).clamp(1, 9) - 1];
+  }
 
+  /// Returns a copy where [other]'s non-null fields replace this style's.
+  ///
+  /// The single merge rule used by the fluid breakpoint resolver.
+  CarbonTextStyleData merge(CarbonTextStyleData other) => CarbonTextStyleData(
+        fontSize: other.fontSize ?? fontSize,
+        fontWeight: other.fontWeight ?? fontWeight,
+        lineHeight: other.lineHeight ?? lineHeight,
+        letterSpacing: other.letterSpacing ?? letterSpacing,
+      );
+
+  /// Builds a Flutter [TextStyle] from these measurements.
+  TextStyle toTextStyle({String? fontFamily}) {
     return TextStyle(
       fontFamily: fontFamily,
-      fontSize: size,
-      fontWeight: weight,
-      height: height,
-      letterSpacing: spacing,
+      fontSize: fontSize,
+      fontWeight: flutterFontWeight,
+      height: lineHeight,
+      letterSpacing: letterSpacing,
     );
   }
 }
@@ -108,16 +111,10 @@ class CarbonFluidTypeStyle {
   CarbonTextStyleData resolveAt(double width, List<CarbonBreakpointData> bps) {
     var effective = base;
     for (final bp in bps) {
-      if (width >= bp.width && breakpoints.containsKey(bp.name)) {
-        final ov = breakpoints[bp.name]!;
-        effective = CarbonTextStyleData(
-          fontSize: ov.fontSize ?? effective.fontSize,
-          fontWeight: ov.fontWeight ?? effective.fontWeight,
-          lineHeight: ov.lineHeight ?? effective.lineHeight,
-          letterSpacing: ov.letterSpacing ?? effective.letterSpacing,
-        );
-      }
+      final override = width >= bp.width ? breakpoints[bp.name] : null;
+      if (override != null) effective = effective.merge(override);
     }
+
     return effective;
   }
 }

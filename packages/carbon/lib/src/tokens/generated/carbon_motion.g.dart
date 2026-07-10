@@ -12,14 +12,14 @@ import 'package:mix/mix.dart';
 import 'carbon_tokens.g.dart';
 
 /// Motion duration token values.
-Map<DurationToken, Duration> carbonDurationValues() => {
-    CarbonTokens.durationFast01: const Duration(milliseconds: 70),
-    CarbonTokens.durationFast02: const Duration(milliseconds: 110),
-    CarbonTokens.durationModerate01: const Duration(milliseconds: 150),
-    CarbonTokens.durationModerate02: const Duration(milliseconds: 240),
-    CarbonTokens.durationSlow01: const Duration(milliseconds: 400),
-    CarbonTokens.durationSlow02: const Duration(milliseconds: 700),
-  };
+final Map<DurationToken, Duration> carbonDurationValues = {
+  CarbonTokens.durationFast01: Duration(milliseconds: 70),
+  CarbonTokens.durationFast02: Duration(milliseconds: 110),
+  CarbonTokens.durationModerate01: Duration(milliseconds: 150),
+  CarbonTokens.durationModerate02: Duration(milliseconds: 240),
+  CarbonTokens.durationSlow01: Duration(milliseconds: 400),
+  CarbonTokens.durationSlow02: Duration(milliseconds: 700),
+};
 
 /// Carbon easing curves by intent (standard/entrance/exit) and mode
 /// (productive/expressive), as Flutter [Cubic] curves.

@@ -108,23 +108,27 @@ Carbon repo commit: `b288a66af010622bedc6de4d6d0b81ee3c9f5520` (2026-07-09).
 The pipeline (extract → normalize → generate → verify) lives under `tool/`; see
 [`tool/README.md`](tool/README.md). Consumers never run it — the normalized
 snapshot and generated Dart are committed. It is deterministic: regenerating from
-the same source lock is byte-identical, enforced in CI by `tool/verify_generated.mjs`.
+the same source lock is byte-identical, enforced by `tool/verify_generated.mjs`
+in the `Carbon tokens` GitHub workflow (`.github/workflows/carbon_tokens.yml`).
 
 ## Fonts
 
 Carbon typography uses IBM Plex. This package does **not** bundle the fonts; pass
-a bundled family through `CarbonScope`:
+a bundled family through `CarbonScope` — it applies to every fixed text-style
+token *and* to `CarbonType.fluidTextStyle`:
 
 ```dart
 CarbonScope(
   theme: CarbonTheme.white,
-  overrides: CarbonThemeOverrides(fontFamily: 'IBM Plex Sans'),
+  overrides: const CarbonThemeOverrides(fontFamily: CarbonFontFamilies.sans),
   child: app,
 );
 ```
 
-`CarbonFontFamilies` exposes the official Plex fallback stacks. IBM Plex is
-licensed under the SIL Open Font License; see `NOTICE`.
+`CarbonFontFamilies` exposes each official Plex stack as a usable family name
+(e.g. `CarbonFontFamilies.sans == 'IBM Plex Sans'`) plus a separate
+`*Fallback` list for `TextStyle.fontFamilyFallback`. IBM Plex is licensed under
+the SIL Open Font License; see `NOTICE`.
 
 ## Roadmap
 

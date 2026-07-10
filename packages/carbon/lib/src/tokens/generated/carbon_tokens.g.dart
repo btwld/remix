@@ -360,3 +360,24 @@ class CarbonTokens {
   static const fontWeightRegular = FontWeightToken('carbon.fontWeight.fontWeightRegular');
   static const fontWeightSemibold = FontWeightToken('carbon.fontWeight.fontWeightSemibold');
 }
+
+/// Every indexed role family (levels 01–03), grouped from the theme roles.
+/// The contextual layer model resolves against these; a test asserts the
+/// hand-written aliases cover every family here (15 at this baseline).
+const Map<String, List<ColorToken>> carbonIndexedRoleFamilies = {
+  'borderStrong': [CarbonTokens.borderStrong01, CarbonTokens.borderStrong02, CarbonTokens.borderStrong03],
+  'borderSubtle': [CarbonTokens.borderSubtle01, CarbonTokens.borderSubtle02, CarbonTokens.borderSubtle03],
+  'borderSubtleSelected': [CarbonTokens.borderSubtleSelected01, CarbonTokens.borderSubtleSelected02, CarbonTokens.borderSubtleSelected03],
+  'borderTile': [CarbonTokens.borderTile01, CarbonTokens.borderTile02, CarbonTokens.borderTile03],
+  'field': [CarbonTokens.field01, CarbonTokens.field02, CarbonTokens.field03],
+  'fieldHover': [CarbonTokens.fieldHover01, CarbonTokens.fieldHover02, CarbonTokens.fieldHover03],
+  'layer': [CarbonTokens.layer01, CarbonTokens.layer02, CarbonTokens.layer03],
+  'layerAccent': [CarbonTokens.layerAccent01, CarbonTokens.layerAccent02, CarbonTokens.layerAccent03],
+  'layerAccentActive': [CarbonTokens.layerAccentActive01, CarbonTokens.layerAccentActive02, CarbonTokens.layerAccentActive03],
+  'layerAccentHover': [CarbonTokens.layerAccentHover01, CarbonTokens.layerAccentHover02, CarbonTokens.layerAccentHover03],
+  'layerActive': [CarbonTokens.layerActive01, CarbonTokens.layerActive02, CarbonTokens.layerActive03],
+  'layerBackground': [CarbonTokens.layerBackground01, CarbonTokens.layerBackground02, CarbonTokens.layerBackground03],
+  'layerHover': [CarbonTokens.layerHover01, CarbonTokens.layerHover02, CarbonTokens.layerHover03],
+  'layerSelected': [CarbonTokens.layerSelected01, CarbonTokens.layerSelected02, CarbonTokens.layerSelected03],
+  'layerSelectedHover': [CarbonTokens.layerSelectedHover01, CarbonTokens.layerSelectedHover02, CarbonTokens.layerSelectedHover03],
+};

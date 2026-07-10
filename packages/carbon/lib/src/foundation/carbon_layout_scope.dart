@@ -78,20 +78,29 @@ class CarbonLayoutScope extends StatelessWidget {
 
   final Widget child;
 
-  /// The nearest [CarbonLayoutData], defaulting to `md` / `normal`.
-  static CarbonLayoutData of(BuildContext context) {
+  /// The nearest [CarbonLayoutData], or null when there is no enclosing scope.
+  ///
+  /// Components with their own Carbon default size (e.g. Button's `lg`) use
+  /// this to distinguish "no scope" from "scope chose the default".
+  static CarbonLayoutData? maybeOf(BuildContext context) {
     final scope =
         context.dependOnInheritedWidgetOfExactType<_CarbonLayoutInherited>();
 
-    return scope?.data ?? const CarbonLayoutData();
+    return scope?.data;
   }
+
+  /// The nearest [CarbonLayoutData], defaulting to `md` / `normal`.
+  static CarbonLayoutData of(BuildContext context) =>
+      maybeOf(context) ?? const CarbonLayoutData();
 
   @override
   Widget build(BuildContext context) {
     final parent = CarbonLayoutScope.of(context);
-    final data = parent.copyWith(size: size, density: density);
 
-    return _CarbonLayoutInherited(data: data, child: child);
+    return _CarbonLayoutInherited(
+      data: parent.copyWith(size: size, density: density),
+      child: child,
+    );
   }
 }
 

@@ -11,6 +11,17 @@
 /** Carbon's rem base is a fixed 16px. Only applied at generation time. */
 export const REM_BASE_PX = 16;
 
+/**
+ * The four Carbon themes as [upstreamKey, dartSuffix] pairs — the single
+ * source of truth for every pipeline stage that iterates themes.
+ */
+export const THEMES = [
+  ['white', 'White'],
+  ['g10', 'G10'],
+  ['g90', 'G90'],
+  ['g100', 'G100'],
+];
+
 /** Convert a rem value (number) to logical pixels. */
 export function remToPx(rem) {
   return round4(rem * REM_BASE_PX);
@@ -22,8 +33,9 @@ export function parseRem(value) {
   const s = value.trim();
   if (s === '0') return 0;
   const m = /^(-?[\d.]+)rem$/.exec(s);
-  if (!m) throw new Error(`Not a rem value: ${value}`);
-  return Number(m[1]);
+  const n = m ? Number(m[1]) : NaN;
+  if (Number.isNaN(n)) throw new Error(`Not a rem value: ${value}`);
+  return n;
 }
 
 /** Parse a px string like "0.16px" or a number to logical pixels. */
@@ -32,8 +44,9 @@ export function parsePx(value) {
   const s = String(value).trim();
   if (s === '0') return 0;
   const m = /^(-?[\d.]+)px$/.exec(s);
-  if (!m) throw new Error(`Not a px value: ${value}`);
-  return Number(m[1]);
+  const n = m ? Number(m[1]) : NaN;
+  if (Number.isNaN(n)) throw new Error(`Not a px value: ${value}`);
+  return n;
 }
 
 /** Round to 4 decimal places to keep generation byte-stable across runs. */
@@ -108,14 +121,13 @@ export function colorToArgb(input) {
   return ((a << 24) >>> 0) + (r << 16) + (g << 8) + b;
 }
 
-/** Format a 0xAARRGGBB int as an 8-digit uppercase Dart `Color(0x...)` literal. */
-export function argbToDart(argb) {
-  return `Color(0x${argb.toString(16).toUpperCase().padStart(8, '0')})`;
-}
-
-/** Convenience: CSS color string directly to a Dart `Color(0x...)` literal. */
-export function colorToDart(input) {
-  return argbToDart(colorToArgb(input));
+/**
+ * Format a CSS color as the normalized `0xAARRGGBB` literal used in the
+ * snapshot and validated by the Dart emitter. Single formatting rule for the
+ * whole pipeline.
+ */
+export function cssColorToArgbHex(input) {
+  return '0x' + colorToArgb(input).toString(16).toUpperCase().padStart(8, '0');
 }
 
 /** Parse a duration string like "70ms" to integer milliseconds. */

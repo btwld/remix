@@ -6,7 +6,8 @@ import '../tokens/generated/carbon_tokens.g.dart';
 /// Carbon's contextual color aliases.
 ///
 /// Their concrete value depends on the current [CarbonLayer] level, so a widget
-/// asks for `layer` rather than hard-coding `layer01`. See
+/// asks for `layer` rather than hard-coding `layer01`. Covers every indexed
+/// role family in the generated token set (asserted by test). See
 /// <https://carbondesignsystem.com/elements/color/tokens/#layer-tokens>.
 enum CarbonContextualColor {
   layer,
@@ -15,9 +16,13 @@ enum CarbonContextualColor {
   layerSelected,
   layerSelectedHover,
   layerAccent,
+  layerAccentHover,
+  layerAccentActive,
+  layerBackground,
   field,
   fieldHover,
   borderSubtle,
+  borderSubtleSelected,
   borderStrong,
   borderTile,
 }
@@ -25,12 +30,12 @@ enum CarbonContextualColor {
 /// Selects, or increments, Carbon's contextual layer level (1–3) for a subtree
 /// and resolves contextual aliases to the matching indexed role token.
 ///
-/// The page background is level 1. Nesting a [CarbonLayer] with no explicit
-/// [level] increments the parent level (clamped to 3), mirroring Carbon's layer
-/// model where each nested surface steps up one layer.
+/// The page background is level 1. A [CarbonLayer] with no explicit [level]
+/// steps up one from its surroundings (clamped to 3), mirroring Carbon's layer
+/// model where each nested surface increments the layer.
 ///
 /// ```dart
-/// CarbonLayer(               // level 2 inside a level-1 subtree
+/// CarbonLayer(               // level 2: one step above the page (level 1)
 ///   child: Builder(builder: (context) {
 ///     final token = CarbonLayer.of(context).color(CarbonContextualColor.layer);
 ///     // -> CarbonTokens.layer02
@@ -57,7 +62,9 @@ class CarbonLayer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final parent = _of(context)?.level ?? 0;
+    // No enclosing layer means the page itself (level 1), so the first
+    // CarbonLayer in a tree resolves to level 2.
+    final parent = _of(context)?.level ?? 1;
     final resolved = (level ?? parent + 1).clamp(1, 3).toInt();
 
     return _CarbonLayerInherited(level: resolved, child: child);
@@ -72,73 +79,93 @@ class CarbonLayerData {
   /// Current layer level, 1–3.
   final int level;
 
+  // Alias -> [level01, level02, level03]. Mirrors the generated
+  // `carbonIndexedRoleFamilies`; a token test asserts full coverage so new
+  // upstream families cannot be missed silently.
+  static const Map<CarbonContextualColor, List<ColorToken>> _families = {
+    CarbonContextualColor.layer: [
+      CarbonTokens.layer01,
+      CarbonTokens.layer02,
+      CarbonTokens.layer03,
+    ],
+    CarbonContextualColor.layerHover: [
+      CarbonTokens.layerHover01,
+      CarbonTokens.layerHover02,
+      CarbonTokens.layerHover03,
+    ],
+    CarbonContextualColor.layerActive: [
+      CarbonTokens.layerActive01,
+      CarbonTokens.layerActive02,
+      CarbonTokens.layerActive03,
+    ],
+    CarbonContextualColor.layerSelected: [
+      CarbonTokens.layerSelected01,
+      CarbonTokens.layerSelected02,
+      CarbonTokens.layerSelected03,
+    ],
+    CarbonContextualColor.layerSelectedHover: [
+      CarbonTokens.layerSelectedHover01,
+      CarbonTokens.layerSelectedHover02,
+      CarbonTokens.layerSelectedHover03,
+    ],
+    CarbonContextualColor.layerAccent: [
+      CarbonTokens.layerAccent01,
+      CarbonTokens.layerAccent02,
+      CarbonTokens.layerAccent03,
+    ],
+    CarbonContextualColor.layerAccentHover: [
+      CarbonTokens.layerAccentHover01,
+      CarbonTokens.layerAccentHover02,
+      CarbonTokens.layerAccentHover03,
+    ],
+    CarbonContextualColor.layerAccentActive: [
+      CarbonTokens.layerAccentActive01,
+      CarbonTokens.layerAccentActive02,
+      CarbonTokens.layerAccentActive03,
+    ],
+    CarbonContextualColor.layerBackground: [
+      CarbonTokens.layerBackground01,
+      CarbonTokens.layerBackground02,
+      CarbonTokens.layerBackground03,
+    ],
+    CarbonContextualColor.field: [
+      CarbonTokens.field01,
+      CarbonTokens.field02,
+      CarbonTokens.field03,
+    ],
+    CarbonContextualColor.fieldHover: [
+      CarbonTokens.fieldHover01,
+      CarbonTokens.fieldHover02,
+      CarbonTokens.fieldHover03,
+    ],
+    CarbonContextualColor.borderSubtle: [
+      CarbonTokens.borderSubtle01,
+      CarbonTokens.borderSubtle02,
+      CarbonTokens.borderSubtle03,
+    ],
+    CarbonContextualColor.borderSubtleSelected: [
+      CarbonTokens.borderSubtleSelected01,
+      CarbonTokens.borderSubtleSelected02,
+      CarbonTokens.borderSubtleSelected03,
+    ],
+    CarbonContextualColor.borderStrong: [
+      CarbonTokens.borderStrong01,
+      CarbonTokens.borderStrong02,
+      CarbonTokens.borderStrong03,
+    ],
+    CarbonContextualColor.borderTile: [
+      CarbonTokens.borderTile01,
+      CarbonTokens.borderTile02,
+      CarbonTokens.borderTile03,
+    ],
+  };
+
   /// The indexed [ColorToken] for [alias] at this layer level.
   ///
-  /// `borderSubtle` has a level-0 variant (`borderSubtle00`) used on the page
-  /// background; every other alias is defined for levels 1–3.
-  ColorToken color(CarbonContextualColor alias) {
-    final n = level.clamp(1, 3).toInt();
-
-    return switch (alias) {
-      CarbonContextualColor.layer => _pick(n, [
-          CarbonTokens.layer01,
-          CarbonTokens.layer02,
-          CarbonTokens.layer03,
-        ]),
-      CarbonContextualColor.layerHover => _pick(n, [
-          CarbonTokens.layerHover01,
-          CarbonTokens.layerHover02,
-          CarbonTokens.layerHover03,
-        ]),
-      CarbonContextualColor.layerActive => _pick(n, [
-          CarbonTokens.layerActive01,
-          CarbonTokens.layerActive02,
-          CarbonTokens.layerActive03,
-        ]),
-      CarbonContextualColor.layerSelected => _pick(n, [
-          CarbonTokens.layerSelected01,
-          CarbonTokens.layerSelected02,
-          CarbonTokens.layerSelected03,
-        ]),
-      CarbonContextualColor.layerSelectedHover => _pick(n, [
-          CarbonTokens.layerSelectedHover01,
-          CarbonTokens.layerSelectedHover02,
-          CarbonTokens.layerSelectedHover03,
-        ]),
-      CarbonContextualColor.layerAccent => _pick(n, [
-          CarbonTokens.layerAccent01,
-          CarbonTokens.layerAccent02,
-          CarbonTokens.layerAccent03,
-        ]),
-      CarbonContextualColor.field => _pick(n, [
-          CarbonTokens.field01,
-          CarbonTokens.field02,
-          CarbonTokens.field03,
-        ]),
-      CarbonContextualColor.fieldHover => _pick(n, [
-          CarbonTokens.fieldHover01,
-          CarbonTokens.fieldHover02,
-          CarbonTokens.fieldHover03,
-        ]),
-      CarbonContextualColor.borderSubtle => _pick(n, [
-          CarbonTokens.borderSubtle01,
-          CarbonTokens.borderSubtle02,
-          CarbonTokens.borderSubtle03,
-        ]),
-      CarbonContextualColor.borderStrong => _pick(n, [
-          CarbonTokens.borderStrong01,
-          CarbonTokens.borderStrong02,
-          CarbonTokens.borderStrong03,
-        ]),
-      CarbonContextualColor.borderTile => _pick(n, [
-          CarbonTokens.borderTile01,
-          CarbonTokens.borderTile02,
-          CarbonTokens.borderTile03,
-        ]),
-    };
-  }
-
-  ColorToken _pick(int level, List<ColorToken> tokens) => tokens[level - 1];
+  /// `borderSubtle` also has a level-0 variant (`borderSubtle00`) used directly
+  /// on the page background; every alias here is defined for levels 1–3.
+  ColorToken color(CarbonContextualColor alias) =>
+      _families[alias]![level.clamp(1, 3).toInt() - 1];
 }
 
 class _CarbonLayerInherited extends InheritedWidget {

@@ -16,7 +16,7 @@ import { createRequire } from 'node:module';
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
-import { stableStringify } from './lib/convert.mjs';
+import { stableStringify, THEMES } from './lib/convert.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const upstreamDir = join(__dirname, 'upstream');
@@ -28,13 +28,18 @@ const require = createRequire(join(upstreamDir, 'noop.js'));
 const CARBON_COMMIT = 'b288a66af010622bedc6de4d6d0b81ee3c9f5520';
 const CARBON_COMMIT_DATE = '2026-07-09';
 const EXTRACTION_SCHEMA_VERSION = 1;
-const PINNED = {
-  '@carbon/colors': '11.53.0',
-  '@carbon/layout': '11.54.0',
-  '@carbon/motion': '11.47.0',
-  '@carbon/themes': '11.76.0',
-  '@carbon/type': '11.62.0',
-};
+
+// The pinned package versions come from the upstream manifest itself, so
+// bumping upstream/package.json automatically flows into every provenance
+// record (source lock, snapshot, generated manifest) — no second copy to drift.
+const PINNED = JSON.parse(
+  readFileSync(join(upstreamDir, 'package.json'), 'utf8'),
+).dependencies;
+for (const [name, version] of Object.entries(PINNED)) {
+  if (!/^\d/.test(version)) {
+    throw new Error(`Upstream dependency ${name} must pin an exact version, got: ${version}`);
+  }
+}
 
 function loadUpstream(name) {
   return require(require.resolve(name, { paths: [upstreamDir] }));
@@ -67,9 +72,8 @@ async function main() {
   }
 
   // --- Theme color roles (exactly the color-valued keys of each theme) ---
-  const themeNames = { white: 'white', g10: 'g10', g90: 'g90', g100: 'g100' };
   const themeRoles = {};
-  for (const key of Object.keys(themeNames)) {
+  for (const [key] of THEMES) {
     const theme = themes[key];
     const roles = {};
     for (const [role, value] of Object.entries(theme)) {
@@ -158,7 +162,7 @@ async function main() {
 
   // Assertions guard against silent upstream drift.
   assertEqual(Object.keys(palette).length, 246, 'scalar palette colors');
-  for (const key of Object.keys(themeNames)) {
+  for (const [key] of THEMES) {
     assertEqual(Object.keys(themeRoles[key]).length, 234, `${key} color roles`);
   }
   const compCount = Object.values(componentTokens)

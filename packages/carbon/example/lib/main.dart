@@ -28,87 +28,83 @@ class _CarbonGalleryPageState extends State<CarbonGalleryPage> {
   CarbonSize _size = CarbonSize.lg;
   bool _loading = false;
 
-  // Demo-only backgrounds pulled from the primitive palette so the page chrome
-  // tracks the selected theme.
-  Color get _background => switch (_theme) {
-        CarbonTheme.white => CarbonPalette.white,
-        CarbonTheme.g10 => CarbonPalette.gray10,
-        CarbonTheme.g90 => CarbonPalette.gray90,
-        CarbonTheme.g100 => CarbonPalette.gray100,
-      };
-
-  Color get _onBackground =>
-      _theme.isDark ? CarbonPalette.gray10 : CarbonPalette.gray100;
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: _background,
-      body: SafeArea(
-        child: CarbonScope(
-          theme: _theme,
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Carbon for Flutter',
-                    style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.w600,
-                        color: _onBackground)),
-                const SizedBox(height: 4),
-                Text('Foundation + Button vertical slice',
-                    style: TextStyle(fontSize: 14, color: _onBackground)),
-                const SizedBox(height: 24),
-                _controls(),
-                const SizedBox(height: 24),
-                _sectionTitle('Button kinds'),
-                const SizedBox(height: 12),
-                Wrap(
-                  spacing: 16,
-                  runSpacing: 16,
-                  children: [
-                    for (final kind in CarbonButtonKind.values)
-                      CarbonButton(
-                        label: _kindLabel(kind),
-                        kind: kind,
-                        size: _size,
-                        loading: _loading,
-                        onPressed: () {},
-                      ),
-                  ],
-                ),
-                const SizedBox(height: 32),
-                _sectionTitle('Disabled'),
-                const SizedBox(height: 12),
-                Wrap(
-                  spacing: 16,
-                  runSpacing: 16,
-                  children: [
-                    for (final kind in [
-                      CarbonButtonKind.primary,
-                      CarbonButtonKind.secondary,
-                      CarbonButtonKind.tertiary,
-                      CarbonButtonKind.ghost,
-                    ])
-                      CarbonButton(
-                        label: _kindLabel(kind),
-                        kind: kind,
-                        size: _size,
-                        onPressed: null,
-                      ),
-                  ],
-                ),
-              ],
+    // The scope sits above everything so the page chrome itself resolves
+    // Carbon role tokens — the same path components use.
+    return CarbonScope(
+      theme: _theme,
+      child: Builder(builder: (context) {
+        final background = CarbonTokens.background.resolve(context);
+        final textPrimary = CarbonTokens.textPrimary.resolve(context);
+        final textSecondary = CarbonTokens.textSecondary.resolve(context);
+
+        return Scaffold(
+          backgroundColor: background,
+          body: SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Carbon for Flutter',
+                      style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.w600,
+                          color: textPrimary)),
+                  const SizedBox(height: 4),
+                  Text('Foundation + Button vertical slice',
+                      style: TextStyle(fontSize: 14, color: textSecondary)),
+                  const SizedBox(height: 24),
+                  _controls(background, textPrimary),
+                  const SizedBox(height: 24),
+                  _sectionTitle('Button kinds', textPrimary),
+                  const SizedBox(height: 12),
+                  Wrap(
+                    spacing: 16,
+                    runSpacing: 16,
+                    children: [
+                      for (final kind in CarbonButtonKind.values)
+                        CarbonButton(
+                          label: _kindLabel(kind),
+                          kind: kind,
+                          size: _size,
+                          loading: _loading,
+                          onPressed: () {},
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 32),
+                  _sectionTitle('Disabled', textPrimary),
+                  const SizedBox(height: 12),
+                  Wrap(
+                    spacing: 16,
+                    runSpacing: 16,
+                    children: [
+                      for (final kind in [
+                        CarbonButtonKind.primary,
+                        CarbonButtonKind.secondary,
+                        CarbonButtonKind.tertiary,
+                        CarbonButtonKind.ghost,
+                      ])
+                        CarbonButton(
+                          label: _kindLabel(kind),
+                          kind: kind,
+                          size: _size,
+                          onPressed: null,
+                        ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 
-  Widget _controls() {
+  Widget _controls(Color background, Color onBackground) {
     return Wrap(
       spacing: 24,
       runSpacing: 12,
@@ -116,10 +112,11 @@ class _CarbonGalleryPageState extends State<CarbonGalleryPage> {
       children: [
         _labeled(
           'Theme',
+          onBackground,
           DropdownButton<CarbonTheme>(
             value: _theme,
-            dropdownColor: _background,
-            style: TextStyle(color: _onBackground),
+            dropdownColor: background,
+            style: TextStyle(color: onBackground),
             onChanged: (v) => setState(() => _theme = v ?? _theme),
             items: [
               for (final t in CarbonTheme.values)
@@ -129,10 +126,11 @@ class _CarbonGalleryPageState extends State<CarbonGalleryPage> {
         ),
         _labeled(
           'Size',
+          onBackground,
           DropdownButton<CarbonSize>(
             value: _size,
-            dropdownColor: _background,
-            style: TextStyle(color: _onBackground),
+            dropdownColor: background,
+            style: TextStyle(color: onBackground),
             onChanged: (v) => setState(() => _size = v ?? _size),
             items: [
               for (final s in CarbonSize.values)
@@ -142,6 +140,7 @@ class _CarbonGalleryPageState extends State<CarbonGalleryPage> {
         ),
         _labeled(
           'Loading',
+          onBackground,
           Switch(
             value: _loading,
             onChanged: (v) => setState(() => _loading = v),
@@ -151,20 +150,20 @@ class _CarbonGalleryPageState extends State<CarbonGalleryPage> {
     );
   }
 
-  Widget _labeled(String label, Widget child) {
+  Widget _labeled(String label, Color color, Widget child) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text('$label: ', style: TextStyle(color: _onBackground)),
+        Text('$label: ', style: TextStyle(color: color)),
         child,
       ],
     );
   }
 
-  Widget _sectionTitle(String text) => Text(
+  Widget _sectionTitle(String text, Color color) => Text(
         text,
-        style: TextStyle(
-            fontSize: 18, fontWeight: FontWeight.w600, color: _onBackground),
+        style:
+            TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: color),
       );
 
   String _kindLabel(CarbonButtonKind kind) => switch (kind) {

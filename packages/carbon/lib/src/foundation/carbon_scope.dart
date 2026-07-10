@@ -47,6 +47,17 @@ class CarbonScope extends StatelessWidget {
     return scope?.theme;
   }
 
+  /// The active [CarbonThemeOverrides] for [context] (empty with no scope).
+  ///
+  /// Lets font-aware helpers such as `CarbonType.fluidTextStyle` pick up the
+  /// scope's configured font family without re-passing it at every call site.
+  static CarbonThemeOverrides overridesOf(BuildContext context) {
+    final scope =
+        context.dependOnInheritedWidgetOfExactType<_CarbonInherited>();
+
+    return scope?.overrides ?? const CarbonThemeOverrides();
+  }
+
   /// The active [CarbonTheme] for [context].
   ///
   /// Throws if there is no enclosing [CarbonScope]; use [maybeThemeOf] when the
@@ -62,6 +73,7 @@ class CarbonScope extends StatelessWidget {
   Widget build(BuildContext context) {
     return _CarbonInherited(
       theme: theme,
+      overrides: overrides,
       child: MixScope(
         tokens: buildCarbonTokenMap(theme, overrides: overrides),
         orderOfModifiers: orderOfModifiers,
@@ -72,11 +84,16 @@ class CarbonScope extends StatelessWidget {
 }
 
 class _CarbonInherited extends InheritedWidget {
-  const _CarbonInherited({required this.theme, required super.child});
+  const _CarbonInherited({
+    required this.theme,
+    required this.overrides,
+    required super.child,
+  });
 
   final CarbonTheme theme;
+  final CarbonThemeOverrides overrides;
 
   @override
   bool updateShouldNotify(_CarbonInherited oldWidget) =>
-      oldWidget.theme != theme;
+      oldWidget.theme != theme || oldWidget.overrides != overrides;
 }

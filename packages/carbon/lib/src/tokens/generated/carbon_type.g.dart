@@ -13,44 +13,44 @@ import '../carbon_token_types.dart';
 import 'carbon_tokens.g.dart';
 
 /// Fixed (non-responsive) Carbon text styles (36).
-Map<TextStyleToken, TextStyle> carbonTextStyleTokens() => {
-    CarbonTokens.body01: const TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, height: 1.4286, letterSpacing: 0.16),
-    CarbonTokens.body02: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.w400, height: 1.5, letterSpacing: 0.0),
-    CarbonTokens.bodyCompact01: const TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, height: 1.2857, letterSpacing: 0.16),
-    CarbonTokens.bodyCompact02: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.w400, height: 1.375, letterSpacing: 0.0),
-    CarbonTokens.bodyLong01: const TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, height: 1.4286, letterSpacing: 0.16),
-    CarbonTokens.bodyLong02: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.w400, height: 1.5, letterSpacing: 0.0),
-    CarbonTokens.bodyShort01: const TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, height: 1.2857, letterSpacing: 0.16),
-    CarbonTokens.bodyShort02: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.w400, height: 1.375, letterSpacing: 0.0),
-    CarbonTokens.caption01: const TextStyle(fontSize: 12.0, fontWeight: FontWeight.w400, height: 1.3333, letterSpacing: 0.32),
-    CarbonTokens.caption02: const TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, height: 1.2857, letterSpacing: 0.32),
-    CarbonTokens.code01: const TextStyle(fontSize: 12.0, fontWeight: FontWeight.w400, height: 1.3333, letterSpacing: 0.32),
-    CarbonTokens.code02: const TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, height: 1.4286, letterSpacing: 0.32),
-    CarbonTokens.expressiveHeading01: const TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600, height: 1.25, letterSpacing: 0.16),
-    CarbonTokens.expressiveHeading02: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600, height: 1.5, letterSpacing: 0.0),
-    CarbonTokens.heading01: const TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600, height: 1.4286, letterSpacing: 0.16),
-    CarbonTokens.heading02: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600, height: 1.5, letterSpacing: 0.0),
-    CarbonTokens.heading03: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.w400, height: 1.4, letterSpacing: 0.0),
-    CarbonTokens.heading04: const TextStyle(fontSize: 28.0, fontWeight: FontWeight.w400, height: 1.2857, letterSpacing: 0.0),
-    CarbonTokens.heading05: const TextStyle(fontSize: 32.0, fontWeight: FontWeight.w400, height: 1.25, letterSpacing: 0.0),
-    CarbonTokens.heading06: const TextStyle(fontSize: 42.0, fontWeight: FontWeight.w300, height: 1.199, letterSpacing: 0.0),
-    CarbonTokens.heading07: const TextStyle(fontSize: 54.0, fontWeight: FontWeight.w300, height: 1.199, letterSpacing: 0.0),
-    CarbonTokens.headingCompact01: const TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600, height: 1.2857, letterSpacing: 0.16),
-    CarbonTokens.headingCompact02: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600, height: 1.375, letterSpacing: 0.0),
-    CarbonTokens.helperText01: const TextStyle(fontSize: 12.0, height: 1.3333, letterSpacing: 0.32),
-    CarbonTokens.helperText02: const TextStyle(fontSize: 14.0, height: 1.2857, letterSpacing: 0.16),
-    CarbonTokens.label01: const TextStyle(fontSize: 12.0, fontWeight: FontWeight.w400, height: 1.3333, letterSpacing: 0.32),
-    CarbonTokens.label02: const TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, height: 1.2857, letterSpacing: 0.16),
-    CarbonTokens.legal01: const TextStyle(fontSize: 12.0, fontWeight: FontWeight.w400, height: 1.3333, letterSpacing: 0.32),
-    CarbonTokens.legal02: const TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, height: 1.2857, letterSpacing: 0.16),
-    CarbonTokens.productiveHeading01: const TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600, height: 1.2857, letterSpacing: 0.16),
-    CarbonTokens.productiveHeading02: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600, height: 1.375, letterSpacing: 0.0),
-    CarbonTokens.productiveHeading03: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.w400, height: 1.4, letterSpacing: 0.0),
-    CarbonTokens.productiveHeading04: const TextStyle(fontSize: 28.0, fontWeight: FontWeight.w400, height: 1.2857, letterSpacing: 0.0),
-    CarbonTokens.productiveHeading05: const TextStyle(fontSize: 32.0, fontWeight: FontWeight.w400, height: 1.25, letterSpacing: 0.0),
-    CarbonTokens.productiveHeading06: const TextStyle(fontSize: 42.0, fontWeight: FontWeight.w300, height: 1.199, letterSpacing: 0.0),
-    CarbonTokens.productiveHeading07: const TextStyle(fontSize: 54.0, fontWeight: FontWeight.w300, height: 1.199, letterSpacing: 0.0),
-  };
+final Map<TextStyleToken, TextStyle> carbonTextStyleTokens = {
+  CarbonTokens.body01: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, height: 1.4286, letterSpacing: 0.16),
+  CarbonTokens.body02: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w400, height: 1.5, letterSpacing: 0.0),
+  CarbonTokens.bodyCompact01: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, height: 1.2857, letterSpacing: 0.16),
+  CarbonTokens.bodyCompact02: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w400, height: 1.375, letterSpacing: 0.0),
+  CarbonTokens.bodyLong01: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, height: 1.4286, letterSpacing: 0.16),
+  CarbonTokens.bodyLong02: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w400, height: 1.5, letterSpacing: 0.0),
+  CarbonTokens.bodyShort01: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, height: 1.2857, letterSpacing: 0.16),
+  CarbonTokens.bodyShort02: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w400, height: 1.375, letterSpacing: 0.0),
+  CarbonTokens.caption01: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w400, height: 1.3333, letterSpacing: 0.32),
+  CarbonTokens.caption02: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, height: 1.2857, letterSpacing: 0.32),
+  CarbonTokens.code01: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w400, height: 1.3333, letterSpacing: 0.32),
+  CarbonTokens.code02: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, height: 1.4286, letterSpacing: 0.32),
+  CarbonTokens.expressiveHeading01: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600, height: 1.25, letterSpacing: 0.16),
+  CarbonTokens.expressiveHeading02: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600, height: 1.5, letterSpacing: 0.0),
+  CarbonTokens.heading01: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600, height: 1.4286, letterSpacing: 0.16),
+  CarbonTokens.heading02: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600, height: 1.5, letterSpacing: 0.0),
+  CarbonTokens.heading03: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w400, height: 1.4, letterSpacing: 0.0),
+  CarbonTokens.heading04: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w400, height: 1.2857, letterSpacing: 0.0),
+  CarbonTokens.heading05: TextStyle(fontSize: 32.0, fontWeight: FontWeight.w400, height: 1.25, letterSpacing: 0.0),
+  CarbonTokens.heading06: TextStyle(fontSize: 42.0, fontWeight: FontWeight.w300, height: 1.199, letterSpacing: 0.0),
+  CarbonTokens.heading07: TextStyle(fontSize: 54.0, fontWeight: FontWeight.w300, height: 1.199, letterSpacing: 0.0),
+  CarbonTokens.headingCompact01: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600, height: 1.2857, letterSpacing: 0.16),
+  CarbonTokens.headingCompact02: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600, height: 1.375, letterSpacing: 0.0),
+  CarbonTokens.helperText01: TextStyle(fontSize: 12.0, height: 1.3333, letterSpacing: 0.32),
+  CarbonTokens.helperText02: TextStyle(fontSize: 14.0, height: 1.2857, letterSpacing: 0.16),
+  CarbonTokens.label01: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w400, height: 1.3333, letterSpacing: 0.32),
+  CarbonTokens.label02: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, height: 1.2857, letterSpacing: 0.16),
+  CarbonTokens.legal01: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w400, height: 1.3333, letterSpacing: 0.32),
+  CarbonTokens.legal02: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, height: 1.2857, letterSpacing: 0.16),
+  CarbonTokens.productiveHeading01: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600, height: 1.2857, letterSpacing: 0.16),
+  CarbonTokens.productiveHeading02: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600, height: 1.375, letterSpacing: 0.0),
+  CarbonTokens.productiveHeading03: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w400, height: 1.4, letterSpacing: 0.0),
+  CarbonTokens.productiveHeading04: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w400, height: 1.2857, letterSpacing: 0.0),
+  CarbonTokens.productiveHeading05: TextStyle(fontSize: 32.0, fontWeight: FontWeight.w400, height: 1.25, letterSpacing: 0.0),
+  CarbonTokens.productiveHeading06: TextStyle(fontSize: 42.0, fontWeight: FontWeight.w300, height: 1.199, letterSpacing: 0.0),
+  CarbonTokens.productiveHeading07: TextStyle(fontSize: 54.0, fontWeight: FontWeight.w300, height: 1.199, letterSpacing: 0.0),
+};
 
 /// Responsive Carbon type styles with per-breakpoint overrides (22).
 const Map<String, CarbonFluidTypeStyle> carbonFluidTypeStyles = {
@@ -243,18 +243,74 @@ const Map<String, CarbonFluidTypeStyle> carbonFluidTypeStyles = {
 };
 
 /// Font-weight token values.
-Map<FontWeightToken, FontWeight> carbonFontWeightValues() => {
-    CarbonTokens.fontWeightLight: FontWeight.w300,
-    CarbonTokens.fontWeightRegular: FontWeight.w400,
-    CarbonTokens.fontWeightSemibold: FontWeight.w600,
-  };
+final Map<FontWeightToken, FontWeight> carbonFontWeightValues = {
+  CarbonTokens.fontWeightLight: FontWeight.w300,
+  CarbonTokens.fontWeightRegular: FontWeight.w400,
+  CarbonTokens.fontWeightSemibold: FontWeight.w600,
+};
 
-/// IBM Plex font-family fallback stacks.
+/// IBM Plex font families from Carbon's official stacks, split into a
+/// primary family name (for `TextStyle.fontFamily`) and fallback list
+/// (for `TextStyle.fontFamilyFallback`).
 class CarbonFontFamilies {
   CarbonFontFamilies._();
-  static const String mono = "'IBM Plex Mono', 'Menlo', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', Courier, monospace";
-  static const String sans = "'IBM Plex Sans', system-ui, -apple-system, BlinkMacSystemFont, '.SFNSText-Regular', sans-serif";
-  static const String sansCondensed = "'IBM Plex Sans Condensed', 'Helvetica Neue', Arial, sans-serif";
-  static const String sansHebrew = "'IBM Plex Sans Hebrew', 'Helvetica Hebrew', 'Arial Hebrew', sans-serif";
-  static const String serif = "'IBM Plex Serif', 'Georgia', Times, serif";
+
+  /// Primary family of Carbon's `mono` stack. Register the font asset
+  /// in the app before using it.
+  static const String mono = "IBM Plex Mono";
+
+  /// Fallback families of Carbon's `mono` stack, for `TextStyle.fontFamilyFallback`.
+  static const List<String> monoFallback = [
+    "Menlo",
+    "DejaVu Sans Mono",
+    "Bitstream Vera Sans Mono",
+    "Courier",
+    "monospace",
+  ];
+
+  /// Primary family of Carbon's `sans` stack. Register the font asset
+  /// in the app before using it.
+  static const String sans = "IBM Plex Sans";
+
+  /// Fallback families of Carbon's `sans` stack, for `TextStyle.fontFamilyFallback`.
+  static const List<String> sansFallback = [
+    "system-ui",
+    "-apple-system",
+    "BlinkMacSystemFont",
+    ".SFNSText-Regular",
+    "sans-serif",
+  ];
+
+  /// Primary family of Carbon's `sansCondensed` stack. Register the font asset
+  /// in the app before using it.
+  static const String sansCondensed = "IBM Plex Sans Condensed";
+
+  /// Fallback families of Carbon's `sansCondensed` stack, for `TextStyle.fontFamilyFallback`.
+  static const List<String> sansCondensedFallback = [
+    "Helvetica Neue",
+    "Arial",
+    "sans-serif",
+  ];
+
+  /// Primary family of Carbon's `sansHebrew` stack. Register the font asset
+  /// in the app before using it.
+  static const String sansHebrew = "IBM Plex Sans Hebrew";
+
+  /// Fallback families of Carbon's `sansHebrew` stack, for `TextStyle.fontFamilyFallback`.
+  static const List<String> sansHebrewFallback = [
+    "Helvetica Hebrew",
+    "Arial Hebrew",
+    "sans-serif",
+  ];
+
+  /// Primary family of Carbon's `serif` stack. Register the font asset
+  /// in the app before using it.
+  static const String serif = "IBM Plex Serif";
+
+  /// Fallback families of Carbon's `serif` stack, for `TextStyle.fontFamilyFallback`.
+  static const List<String> serifFallback = [
+    "Georgia",
+    "Times",
+    "serif",
+  ];
 }

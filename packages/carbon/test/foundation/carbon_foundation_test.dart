@@ -28,24 +28,54 @@ void main() {
           CarbonTokens.field03);
       expect(const CarbonLayerData(1).color(CarbonContextualColor.borderSubtle),
           CarbonTokens.borderSubtle01);
+      expect(
+          const CarbonLayerData(2)
+              .color(CarbonContextualColor.layerAccentHover),
+          CarbonTokens.layerAccentHover02);
     });
 
-    testWidgets('increments the layer level when nested', (tester) async {
-      late int inner;
+    testWidgets('a single CarbonLayer steps up from the page (level 1 -> 2)',
+        (tester) async {
+      late int single;
+      late int nested;
+      await tester.pumpWidget(
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: CarbonLayer(
+            child: Builder(builder: (context) {
+              single = CarbonLayer.levelOf(context);
+              return CarbonLayer(
+                child: Builder(builder: (context) {
+                  nested = CarbonLayer.levelOf(context);
+                  return const SizedBox();
+                }),
+              );
+            }),
+          ),
+        ),
+      );
+      expect(single, 2, reason: 'first layer must not be a no-op');
+      expect(nested, 3);
+    });
+
+    testWidgets('levels clamp at 3', (tester) async {
+      late int level;
       await tester.pumpWidget(
         Directionality(
           textDirection: TextDirection.ltr,
           child: CarbonLayer(
             child: CarbonLayer(
-              child: Builder(builder: (context) {
-                inner = CarbonLayer.levelOf(context);
-                return const SizedBox();
-              }),
+              child: CarbonLayer(
+                child: Builder(builder: (context) {
+                  level = CarbonLayer.levelOf(context);
+                  return const SizedBox();
+                }),
+              ),
             ),
           ),
         ),
       );
-      expect(inner, 2);
+      expect(level, 3);
     });
   });
 
@@ -63,6 +93,34 @@ void main() {
       expect(CarbonType.resolveFluid('fluidHeading05', 400).fontSize, 32);
       expect(CarbonType.resolveFluid('fluidHeading05', 700).fontSize, 36);
       expect(CarbonType.resolveFluid('fluidHeading05', 1600).fontSize, 60);
+    });
+
+    test('throws on an unknown style name in every build mode', () {
+      expect(() => CarbonType.resolveFluid('fluidHeading99', 400),
+          throwsArgumentError);
+    });
+
+    testWidgets("fluidTextStyle uses the scope's fontFamily override",
+        (tester) async {
+      late TextStyle style;
+      await tester.pumpWidget(
+        MediaQuery(
+          data: const MediaQueryData(size: Size(700, 800)),
+          child: Directionality(
+            textDirection: TextDirection.ltr,
+            child: CarbonScope(
+              overrides:
+                  const CarbonThemeOverrides(fontFamily: 'IBM Plex Sans'),
+              child: Builder(builder: (context) {
+                style = CarbonType.fluidTextStyle(context, 'fluidHeading05');
+                return const SizedBox();
+              }),
+            ),
+          ),
+        ),
+      );
+      expect(style.fontFamily, 'IBM Plex Sans');
+      expect(style.fontSize, 36);
     });
   });
 

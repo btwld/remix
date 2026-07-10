@@ -71,7 +71,59 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      expect(find.text('Large'), findsOneWidget);
+      expect(tester.getSize(find.byType(CarbonButton)).height, 64.0);
+    });
+
+    testWidgets("defaults to Carbon's lg (48px) without a CarbonLayoutScope",
+        (tester) async {
+      await tester.pumpCarbonApp(
+        CarbonButton(label: 'Default', onPressed: () {}),
+      );
+      await tester.pumpAndSettle();
+      expect(tester.getSize(find.byType(CarbonButton)).height, 48.0);
+    });
+
+    testWidgets('inherits the contextual CarbonLayoutScope size',
+        (tester) async {
+      await tester.pumpCarbonApp(
+        CarbonLayoutScope(
+          size: CarbonSize.sm,
+          child: CarbonButton(label: 'Contextual', onPressed: () {}),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(tester.getSize(find.byType(CarbonButton)).height, 32.0);
+    });
+
+    testWidgets('loading keeps the kind fill instead of the disabled gray',
+        (tester) async {
+      Color? containerColor() {
+        final box = tester
+            .widgetList<DecoratedBox>(find.descendant(
+              of: find.byType(CarbonButton),
+              matching: find.byType(DecoratedBox),
+            ))
+            .map((w) => w.decoration)
+            .whereType<BoxDecoration>()
+            .firstWhere((d) => d.color != null, orElse: BoxDecoration.new)
+            .color;
+        return box;
+      }
+
+      await tester.pumpCarbonApp(
+        CarbonButton(label: 'Save', loading: true, onPressed: () {}),
+      );
+      // The loading spinner animates forever; pump a fixed frame instead of
+      // settling.
+      await tester.pump(const Duration(milliseconds: 100));
+      // buttonPrimary blue, not buttonDisabled gray.
+      expect(containerColor(), const Color(0xFF0F62FE));
+
+      await tester.pumpCarbonApp(
+        const CarbonButton(label: 'Save', enabled: false, onPressed: null),
+      );
+      await tester.pumpAndSettle();
+      expect(containerColor(), const Color(0xFFC6C6C6));
     });
   });
 }

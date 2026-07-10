@@ -23,15 +23,19 @@ import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import {
-  colorToArgb, parseRem, remToPx, parsePx, parseMs, parseCubicBezier,
-  stableStringify, round4,
+  cssColorToArgbHex as argbHex, parseRem, remToPx, parsePx, parseMs,
+  parseCubicBezier, stableStringify, round4, THEMES,
 } from './lib/convert.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const buildDir = join(__dirname, 'build');
 const tokensDir = join(__dirname, 'tokens');
 
-const argbHex = (css) => '0x' + colorToArgb(css).toString(16).toUpperCase().padStart(8, '0');
+// Optional output override (used by verify_generated.mjs for a read-only check).
+const outFlag = process.argv.indexOf('--out');
+const outPath = outFlag !== -1
+  ? process.argv[outFlag + 1]
+  : join(tokensDir, 'carbon-tokens.normalized.json');
 
 function normColorMap(map) {
   const out = {};
@@ -166,24 +170,18 @@ function main() {
     paletteFamilies: Object.fromEntries(
       Object.entries(raw.paletteFamilies).map(([k, v]) => [k, normColorMap(v)]),
     ),
-    themes: {
-      white: normColorMap(raw.themeRoles.white),
-      g10: normColorMap(raw.themeRoles.g10),
-      g90: normColorMap(raw.themeRoles.g90),
-      g100: normColorMap(raw.themeRoles.g100),
-    },
+    themes: Object.fromEntries(
+      THEMES.map(([key]) => [key, normColorMap(raw.themeRoles[key])]),
+    ),
     componentTokens: normComponentTokens(raw.componentTokens),
     layout: normLayout(raw.layout),
     type: normType(raw.type),
     motion: normMotion(raw.motion),
   };
 
-  mkdirSync(tokensDir, { recursive: true });
-  writeFileSync(
-    join(tokensDir, 'carbon-tokens.normalized.json'),
-    stableStringify(normalized),
-  );
-  console.log('normalize: wrote tokens/carbon-tokens.normalized.json');
+  mkdirSync(dirname(outPath), { recursive: true });
+  writeFileSync(outPath, stableStringify(normalized));
+  console.log(`normalize: wrote ${outPath}`);
 }
 
 main();

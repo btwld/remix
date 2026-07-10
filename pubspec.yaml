@@ -42,6 +42,9 @@ workspace:
 melos:
   packages:
     - packages/*
+    # `packages/*` does not cross path separators; nested workspace members
+    # must be listed explicitly or melos scripts silently skip them.
+    - packages/carbon/example
 
   command:
     bootstrap:

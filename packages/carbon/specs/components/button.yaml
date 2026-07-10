@@ -49,7 +49,8 @@ states:
   - active (pressed)
   - focus
   - disabled
-  - loading
+  - loading   # non-interactive (Remix folds loading into the disabled
+              # widget-state) but keeps the kind's colors with a spinner
 
 tokens:
   role:
@@ -77,10 +78,10 @@ tokens:
     - iconSize01 (16px) icon size
 
 non_token_measurements:
-  - label style body-compact-01 measurements are inlined (14 / 18 / 0.16 / w400)
-    because Mix text tokens are theme-map values; kept in sync with
-    CarbonTokens.bodyCompact01. Source: @carbon/type body-compact-01.
   - border width 1px for tertiary/outline kinds (Carbon component-local).
+  - focus ring width 2px (Carbon component-local).
+  # The label consumes CarbonTokens.bodyCompact01 directly via
+  # TextStyler().style(token.mix()) — no inlined type measurements.
 
 shape:
   border_radius: 0   # Carbon buttons are square; do not invent a radius scale.
@@ -93,8 +94,16 @@ behavior:
   rtl: horizontal padding is symmetric (paddingX); icon slot follows text direction
 
 approximations:
-  - Carbon renders the focus ring as an inset box-shadow (no layout shift). This
-    slice approximates it with a 2px border on focus. Tracked for goldens.
+  - Carbon renders the focus ring as an inset box-shadow. This slice paints a
+    2px border in the container's foreground decoration: no layout shift, and
+    each kind's own border stays intact. Golden coverage still pending (needs
+    the approved Figma kit reference).
+  - Loading state is non-interactive via the disabled widget-state; visually it
+    keeps the kind's rest colors with a textOnColor spinner (upstream Carbon
+    animates the transition, which this slice does not yet).
+  - State changes are not yet animated (upstream transitions backgrounds over
+    duration-fast-01 with the productive standard curve). Tracked as follow-up;
+    recipes must route motion through CarbonMotion when added.
   - Full-width and icon-only (IconButton) buttons are out of scope for this slice.
 
 examples_to_reproduce:

@@ -7,6 +7,10 @@ issue_tracker: https://github.com/btwld/remix/issues
 license: Apache-2.0
 resolution: workspace
 
+# Not publishable while remix is a path dependency; remove this (and switch
+# remix to a hosted version) when Remix 1.0 ships on pub.dev.
+publish_to: none
+
 # Pre-1.0: foundations + Carbon equivalents of the Remix component set.
 version: 0.0.1
 

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:mix/mix.dart';
 
@@ -51,42 +52,71 @@ class CarbonThemeOverrides {
   /// Font family applied to every text style token (e.g. an `IBM Plex Sans`
   /// family the app has bundled). When null the platform default font is used.
   final String? fontFamily;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CarbonThemeOverrides &&
+          other.fontFamily == fontFamily &&
+          mapEquals(other.colors, colors);
+
+  @override
+  int get hashCode => Object.hash(fontFamily, Object.hashAllUnordered(
+        colors.entries.map((e) => Object.hash(e.key, e.value)),
+      ));
+}
+
+// Base token maps are pure functions of the theme, so they are built once per
+// theme and shared. Returning the identical instance also lets MixScope's
+// dependents short-circuit equality checks on rebuilds that change nothing.
+final Map<CarbonTheme, Map<MixToken, Object>> _baseTokenMaps = {};
+
+Map<MixToken, Object> _baseTokenMapFor(CarbonTheme theme) {
+  return _baseTokenMaps.putIfAbsent(theme, () {
+    final roleColors = switch (theme) {
+      CarbonTheme.white => carbonRoleColorsWhite,
+      CarbonTheme.g10 => carbonRoleColorsG10,
+      CarbonTheme.g90 => carbonRoleColorsG90,
+      CarbonTheme.g100 => carbonRoleColorsG100,
+    };
+    final componentColors = switch (theme) {
+      CarbonTheme.white => carbonComponentColorsWhite,
+      CarbonTheme.g10 => carbonComponentColorsG10,
+      CarbonTheme.g90 => carbonComponentColorsG90,
+      CarbonTheme.g100 => carbonComponentColorsG100,
+    };
+
+    return Map.unmodifiable(<MixToken, Object>{
+      ...roleColors,
+      ...componentColors,
+      ...carbonSpacingValues,
+      ...carbonTextStyleTokens,
+      ...carbonDurationValues,
+      ...carbonFontWeightValues,
+    });
+  });
 }
 
 /// Builds the full `MixScope` token map for [theme].
 ///
 /// Combines theme-dependent role and component colors with theme-independent
 /// spacing, type, motion and font-weight values, then applies [overrides].
+/// With no overrides this returns a cached, unmodifiable map, so repeated
+/// scope rebuilds are allocation-free.
 Map<MixToken, Object> buildCarbonTokenMap(
   CarbonTheme theme, {
   CarbonThemeOverrides overrides = const CarbonThemeOverrides(),
 }) {
-  final roleColors = switch (theme) {
-    CarbonTheme.white => carbonRoleColorsWhite(),
-    CarbonTheme.g10 => carbonRoleColorsG10(),
-    CarbonTheme.g90 => carbonRoleColorsG90(),
-    CarbonTheme.g100 => carbonRoleColorsG100(),
-  };
-  final componentColors = switch (theme) {
-    CarbonTheme.white => carbonComponentColorsWhite(),
-    CarbonTheme.g10 => carbonComponentColorsG10(),
-    CarbonTheme.g90 => carbonComponentColorsG90(),
-    CarbonTheme.g100 => carbonComponentColorsG100(),
-  };
-
+  final base = _baseTokenMapFor(theme);
   final fontFamily = overrides.fontFamily;
-  final textStyles = carbonTextStyleTokens();
-  final resolvedText = fontFamily == null
-      ? textStyles
-      : textStyles.map((k, v) => MapEntry(k, v.copyWith(fontFamily: fontFamily)));
+  if (fontFamily == null && overrides.colors.isEmpty) return base;
 
   return <MixToken, Object>{
-    ...roleColors,
-    ...componentColors,
-    ...carbonSpacingValues(),
-    ...resolvedText,
-    ...carbonDurationValues(),
-    ...carbonFontWeightValues(),
+    ...base,
+    if (fontFamily != null)
+      ...carbonTextStyleTokens.map(
+        (k, v) => MapEntry(k, v.copyWith(fontFamily: fontFamily)),
+      ),
     // Overrides win over generated values.
     ...overrides.colors,
   };

@@ -19,62 +19,87 @@ enum CarbonButtonKind {
   dangerGhost,
 }
 
+// Styles are pure functions of (kind, size, loading); the full input space is
+// 7 x 5 x 2 immutable stylers, so they are built once and shared.
+final Map<(CarbonButtonKind, CarbonSize, bool), RemixButtonStyler> _styleCache =
+    {};
+
 /// Builds a Carbon-themed [RemixButtonStyler] for a [kind] and [size].
 ///
 /// Consumes Carbon component and role tokens; resolves inside a `CarbonScope`.
 /// Carbon buttons use square corners (radius 0) and the `body-compact-01` label
 /// style. Heights come from the Carbon control-size scale.
+///
+/// Pass [loading] when the button renders a loading spinner: Remix folds
+/// loading into the disabled widget-state, and a loading Carbon button keeps
+/// its kind's colors (with a `textOnColor` spinner) instead of the disabled
+/// gray treatment.
 RemixButtonStyler carbonButtonStyle({
   CarbonButtonKind kind = CarbonButtonKind.primary,
   CarbonSize size = CarbonSize.lg,
+  bool loading = false,
 }) {
   final clamped = size.clampTo(CarbonSize.sm, CarbonSize.x2l);
-  final base = _carbonButtonBaseStyle(clamped);
 
-  return switch (kind) {
-    CarbonButtonKind.primary => _fillStyle(
-        base,
-        fill: CarbonComponentTokens.buttonPrimary,
-        hover: CarbonComponentTokens.buttonPrimaryHover,
-        active: CarbonComponentTokens.buttonPrimaryActive,
-      ),
-    CarbonButtonKind.secondary => _fillStyle(
-        base,
-        fill: CarbonComponentTokens.buttonSecondary,
-        hover: CarbonComponentTokens.buttonSecondaryHover,
-        active: CarbonComponentTokens.buttonSecondaryActive,
-      ),
-    CarbonButtonKind.danger => _fillStyle(
-        base,
-        fill: CarbonComponentTokens.buttonDangerPrimary,
-        hover: CarbonComponentTokens.buttonDangerHover,
-        active: CarbonComponentTokens.buttonDangerActive,
-      ),
-    CarbonButtonKind.tertiary => _outlineStyle(
-        base,
-        line: CarbonComponentTokens.buttonTertiary,
-        hover: CarbonComponentTokens.buttonTertiaryHover,
-        active: CarbonComponentTokens.buttonTertiaryActive,
-      ),
-    CarbonButtonKind.dangerTertiary => _outlineStyle(
-        base,
-        line: CarbonComponentTokens.buttonDangerSecondary,
-        hover: CarbonComponentTokens.buttonDangerHover,
-        active: CarbonComponentTokens.buttonDangerActive,
-      ),
-    CarbonButtonKind.ghost => _ghostStyle(
-        base,
-        text: CarbonTokens.linkPrimary,
-        textHover: CarbonTokens.linkPrimaryHover,
-      ),
-    CarbonButtonKind.dangerGhost => _ghostStyle(
-        base,
-        text: CarbonComponentTokens.buttonDangerSecondary,
-        textHover: CarbonComponentTokens.buttonDangerSecondary,
-        hoverFill: CarbonComponentTokens.buttonDangerHover,
-        hoverText: CarbonTokens.textOnColor,
-      ),
-  };
+  return _styleCache.putIfAbsent((kind, clamped, loading), () {
+    final base = _carbonButtonBaseStyle(clamped);
+
+    return switch (kind) {
+      CarbonButtonKind.primary => _fillStyle(
+          base,
+          fill: CarbonComponentTokens.buttonPrimary,
+          hover: CarbonComponentTokens.buttonPrimaryHover,
+          active: CarbonComponentTokens.buttonPrimaryActive,
+          loading: loading,
+        ),
+      CarbonButtonKind.secondary => _fillStyle(
+          base,
+          fill: CarbonComponentTokens.buttonSecondary,
+          hover: CarbonComponentTokens.buttonSecondaryHover,
+          active: CarbonComponentTokens.buttonSecondaryActive,
+          loading: loading,
+        ),
+      CarbonButtonKind.danger => _fillStyle(
+          base,
+          fill: CarbonComponentTokens.buttonDangerPrimary,
+          hover: CarbonComponentTokens.buttonDangerHover,
+          active: CarbonComponentTokens.buttonDangerActive,
+          loading: loading,
+        ),
+      CarbonButtonKind.tertiary => _outlineStyle(
+          base,
+          line: CarbonComponentTokens.buttonTertiary,
+          hover: CarbonComponentTokens.buttonTertiaryHover,
+          active: CarbonComponentTokens.buttonTertiaryActive,
+          loading: loading,
+        ),
+      CarbonButtonKind.dangerTertiary => _outlineStyle(
+          base,
+          line: CarbonComponentTokens.buttonDangerSecondary,
+          hover: CarbonComponentTokens.buttonDangerHover,
+          active: CarbonComponentTokens.buttonDangerActive,
+          loading: loading,
+        ),
+      CarbonButtonKind.ghost => _ghostStyle(
+          base,
+          text: CarbonTokens.linkPrimary,
+          hoverFill: CarbonTokens.backgroundHover,
+          hoverText: CarbonTokens.linkPrimaryHover,
+          activeFill: CarbonTokens.backgroundActive,
+          activeText: CarbonTokens.linkPrimaryHover,
+          loading: loading,
+        ),
+      CarbonButtonKind.dangerGhost => _ghostStyle(
+          base,
+          text: CarbonComponentTokens.buttonDangerSecondary,
+          hoverFill: CarbonComponentTokens.buttonDangerHover,
+          hoverText: CarbonTokens.textOnColor,
+          activeFill: CarbonComponentTokens.buttonDangerActive,
+          activeText: CarbonTokens.textOnColor,
+          loading: loading,
+        ),
+    };
+  });
 }
 
 // Carbon buttons share height, padding, label typography and focus ring.
@@ -83,18 +108,30 @@ RemixButtonStyler _carbonButtonBaseStyle(CarbonSize size) {
       .height(size.height)
       .paddingX(CarbonTokens.spacing05())
       .spacing(CarbonTokens.spacing03())
+      // Carbon justifies label/icon to opposite edges when the button is
+      // given a width; shrink-wrapped buttons are unaffected.
       .mainAxisAlignment(MainAxisAlignment.spaceBetween)
       .borderRadiusAll(Radius.zero)
-      .label(_labelStyler())
+      // Label consumes the body-compact-01 token, so upstream type changes and
+      // the scope's fontFamily override flow through without hand-synced values.
+      .label(TextStyler().style(CarbonTokens.bodyCompact01.mix()))
       .icon(IconStyler().size(CarbonTokens.iconSize01()))
       .spinner(
         RemixSpinnerStyle()
             .size(CarbonTokens.iconSize01())
             .strokeWidth(2.0),
       )
-      // Carbon focus is a 2px `focus`-colored ring (approximated with a border).
+      // Carbon's focus ring is an inset box-shadow. Painting it as a
+      // foreground-decoration border keeps layout stable (no padding change)
+      // and leaves each kind's own border intact.
       .onFocused(
-        RemixButtonStyler().borderAll(color: CarbonTokens.focus(), width: 2.0),
+        RemixButtonStyler().foregroundDecoration(
+          BoxDecorationMix(
+            border: BoxBorderMix.all(
+              BorderSideMix(color: CarbonTokens.focus(), width: 2.0),
+            ),
+          ),
+        ),
       );
 }
 
@@ -104,14 +141,23 @@ RemixButtonStyler _fillStyle(
   required ColorToken fill,
   required ColorToken hover,
   required ColorToken active,
+  required bool loading,
 }) {
+  // Loading buttons are non-interactive (Remix maps loading to the disabled
+  // state) but keep their kind's fill with a textOnColor spinner.
+  final disabledStyle = loading
+      ? RemixButtonStyler()
+          .color(fill())
+          .spinner(RemixSpinnerStyle().indicatorColor(CarbonTokens.textOnColor()))
+      : _disabledFill();
+
   return base
       .color(fill())
       .foregroundColor(CarbonTokens.textOnColor())
       .spinner(RemixSpinnerStyle().indicatorColor(CarbonTokens.textOnColor()))
       .onHovered(RemixButtonStyler().color(hover()))
       .onPressed(RemixButtonStyler().color(active()))
-      .onDisabled(_disabledFill());
+      .onDisabled(disabledStyle);
 }
 
 // Outline kinds (tertiary, danger tertiary): colored border + text, fills on hover.
@@ -120,7 +166,18 @@ RemixButtonStyler _outlineStyle(
   required ColorToken line,
   required ColorToken hover,
   required ColorToken active,
+  required bool loading,
 }) {
+  final disabledStyle = loading
+      ? RemixButtonStyler()
+          .color(const Color(0x00000000))
+          .borderAll(color: line(), width: 1.0)
+          .spinner(RemixSpinnerStyle().indicatorColor(line()))
+      : RemixButtonStyler()
+          .color(const Color(0x00000000))
+          .borderAll(color: CarbonTokens.borderDisabled(), width: 1.0)
+          .foregroundColor(CarbonTokens.textDisabled());
+
   return base
       .color(const Color(0x00000000))
       .borderAll(color: line(), width: 1.0)
@@ -136,35 +193,35 @@ RemixButtonStyler _outlineStyle(
             .color(active())
             .foregroundColor(CarbonTokens.textOnColor()),
       )
-      .onDisabled(
-        RemixButtonStyler()
-            .color(const Color(0x00000000))
-            .borderAll(color: CarbonTokens.borderDisabled(), width: 1.0)
-            .foregroundColor(CarbonTokens.textDisabled()),
-      );
+      .onDisabled(disabledStyle);
 }
 
-// Ghost kinds: transparent, colored text, subtle hover fill.
+// Ghost kinds: transparent, colored text, per-kind hover/active fills.
 RemixButtonStyler _ghostStyle(
   RemixButtonStyler base, {
   required ColorToken text,
-  required ColorToken textHover,
-  ColorToken? hoverFill,
-  ColorToken? hoverText,
+  required ColorToken hoverFill,
+  required ColorToken hoverText,
+  required ColorToken activeFill,
+  required ColorToken activeText,
+  required bool loading,
 }) {
+  final disabledStyle = loading
+      ? RemixButtonStyler()
+          .spinner(RemixSpinnerStyle().indicatorColor(text()))
+      : RemixButtonStyler().foregroundColor(CarbonTokens.textDisabled());
+
   return base
       .color(const Color(0x00000000))
       .foregroundColor(text())
       .spinner(RemixSpinnerStyle().indicatorColor(text()))
       .onHovered(
-        RemixButtonStyler()
-            .color((hoverFill ?? CarbonTokens.backgroundHover)())
-            .foregroundColor((hoverText ?? textHover)()),
+        RemixButtonStyler().color(hoverFill()).foregroundColor(hoverText()),
       )
-      .onPressed(RemixButtonStyler().color(CarbonTokens.backgroundActive()))
-      .onDisabled(
-        RemixButtonStyler().foregroundColor(CarbonTokens.textDisabled()),
-      );
+      .onPressed(
+        RemixButtonStyler().color(activeFill()).foregroundColor(activeText()),
+      )
+      .onDisabled(disabledStyle);
 }
 
 RemixButtonStyler _disabledFill() {
@@ -178,15 +235,6 @@ RemixButtonStyler _disabledFill() {
       );
 }
 
-// Carbon buttons use the body-compact-01 label style (14px / 400 / 0.16 tracking).
-TextStyler _labelStyler() {
-  return TextStyler()
-      .fontSize(14.0)
-      .height(18.0 / 14.0)
-      .letterSpacing(0.16)
-      .fontWeight(FontWeight.w400);
-}
-
 /// A Carbon button.
 ///
 /// ```dart
@@ -198,7 +246,8 @@ TextStyler _labelStyler() {
 /// ```
 ///
 /// Resolve inside a `CarbonScope`. When [size] is null, the button inherits the
-/// contextual size from a `CarbonLayoutScope` (defaulting to `lg`), clamped to
+/// contextual size from an enclosing `CarbonLayoutScope`; without one it uses
+/// Carbon's default button size (`lg`, 48px). Either way the size is clamped to
 /// the range Carbon buttons support (`sm`–`2xl`).
 class CarbonButton extends StatelessWidget {
   const CarbonButton({
@@ -222,7 +271,8 @@ class CarbonButton extends StatelessWidget {
   /// Carbon button kind.
   final CarbonButtonKind kind;
 
-  /// Explicit size; inherits the contextual `CarbonLayoutScope` size when null.
+  /// Explicit size; when null, inherits from `CarbonLayoutScope` or defaults
+  /// to Carbon's `lg`.
   final CarbonSize? size;
 
   /// Optional trailing icon (Carbon places button icons after the label).
@@ -248,13 +298,19 @@ class CarbonButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final effectiveSize = size ?? CarbonLayoutScope.of(context).size;
+    final effectiveSize = size ??
+        CarbonLayoutScope.maybeOf(context)?.size ??
+        CarbonSize.lg;
 
-    return carbonButtonStyle(kind: kind, size: effectiveSize).call(
+    return carbonButtonStyle(
+      kind: kind,
+      size: effectiveSize,
+      loading: loading,
+    ).call(
       label: label,
       trailingIcon: icon,
       loading: loading,
-      enabled: enabled && onPressed != null,
+      enabled: enabled,
       enableFeedback: enableFeedback,
       onPressed: onPressed,
       focusNode: focusNode,

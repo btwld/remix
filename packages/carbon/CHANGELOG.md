@@ -1,5 +1,50 @@
 # Changelog
 
+## 0.0.2
+
+Full-package review round: correctness fixes, consolidation, and performance.
+
+### Fixed
+
+- **CarbonButton loading state** no longer renders the disabled gray treatment;
+  it keeps the kind's colors with a `textOnColor` spinner (Remix folds loading
+  into the disabled widget-state, which the recipe now accounts for).
+- **CarbonButton default size** is Carbon's `lg` (48px) when no
+  `CarbonLayoutScope` is present, matching the docs and `carbonButtonStyle()`.
+- **CarbonLayer off-by-one**: a single `CarbonLayer` now steps the page (level 1)
+  up to level 2 instead of being a no-op; also added the four missing contextual
+  aliases (`layerAccentHover`, `layerAccentActive`, `layerBackground`,
+  `borderSubtleSelected`), with a test asserting full coverage of the generated
+  indexed role families.
+- **dangerGhost pressed state** uses `buttonDangerActive` + `textOnColor`
+  instead of an illegible white-on-gray combination.
+- **Focus ring** paints as a foreground decoration: no layout shift on focus and
+  the tertiary outline is no longer replaced.
+- **Button label** consumes `CarbonTokens.bodyCompact01` via
+  `TextStyler().style(token.mix())` instead of hand-copied measurements, so the
+  scope's `fontFamily` override now reaches button labels.
+- **`CarbonThemeOverrides.fontFamily` reaches fluid type**:
+  `CarbonType.fluidTextStyle` reads the enclosing scope's override.
+- **`CarbonFontFamilies`** now exposes usable family names (e.g. `'IBM Plex
+  Sans'`) plus separate `*Fallback` lists instead of raw CSS stacks.
+- **`CarbonType.resolveFluid`** throws `ArgumentError` on unknown names in all
+  build modes instead of silently falling back in release.
+- **`verify_generated.mjs`** is fully read-only (scripts gained `--out` flags;
+  the committed snapshot can no longer be clobbered by a verify run) and reports
+  per-stage results accurately.
+- Token pipeline hardening: pinned versions derive from `upstream/package.json`
+  (single source of truth), shared theme tuple and color-formatting helpers,
+  NaN guards in unit parsers.
+
+### Changed
+
+- Generated token maps are top-level `final`s (built once per isolate) and the
+  per-theme scope token map is cached, making repeated `CarbonScope` rebuilds
+  allocation-free; button stylers are memoized per (kind, size, loading).
+- Determinism is now actually CI-enforced via `.github/workflows/carbon_tokens.yml`.
+- `packages/carbon/example` added to the melos package globs; `publish_to: none`
+  while remix is a path dependency.
+
 ## 0.0.1
 
 Initial pre-1.0 foundation release.

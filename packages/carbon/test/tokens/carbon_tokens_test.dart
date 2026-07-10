@@ -41,9 +41,14 @@ void main() {
       expect(carbonBreakpoints.firstWhere((b) => b.name == 'lg').columns, 16);
     });
 
-    test('control sizes span 24..80px', () {
+    test('control sizes span 24..80px and cover every CarbonSize', () {
       expect(carbonControlSizePx['xSmall'], 24);
       expect(carbonControlSizePx['xxLarge'], 80);
+      // Guards the enum<->generated-map string bridge: an upstream key rename
+      // must fail here, not at first widget build.
+      for (final size in CarbonSize.values) {
+        expect(size.height, isA<double>(), reason: 'size $size must resolve');
+      }
     });
   });
 
@@ -52,12 +57,12 @@ void main() {
         buildCarbonTokenMap(theme)[token]! as Color;
 
     test('all four themes expose the same 234 role names', () {
-      final white = carbonRoleColorsWhite().keys.toSet();
+      final white = carbonRoleColorsWhite.keys.toSet();
       expect(white.length, 234);
       for (final roles in [
-        carbonRoleColorsG10(),
-        carbonRoleColorsG90(),
-        carbonRoleColorsG100(),
+        carbonRoleColorsG10,
+        carbonRoleColorsG90,
+        carbonRoleColorsG100,
       ]) {
         expect(roles.keys.toSet(), white);
       }
@@ -85,6 +90,15 @@ void main() {
       expect(map[CarbonTokens.fontWeightRegular], FontWeight.w400);
     });
 
+    test('base maps are cached and unmodifiable', () {
+      final a = buildCarbonTokenMap(CarbonTheme.g90);
+      final b = buildCarbonTokenMap(CarbonTheme.g90);
+      expect(identical(a, b), isTrue,
+          reason: 'no-override builds must reuse the cached base map');
+      expect(() => a[CarbonTokens.background] = const Color(0x00000000),
+          throwsUnsupportedError);
+    });
+
     test('typed overrides win without mutating generated maps', () {
       const override = Color(0xFF00FF00);
       final map = buildCarbonTokenMap(
@@ -95,26 +109,37 @@ void main() {
       );
       expect(map[CarbonTokens.background], override);
       // Generated map is unchanged.
-      expect(carbonRoleColorsWhite()[CarbonTokens.background],
+      expect(carbonRoleColorsWhite[CarbonTokens.background],
           const Color(0xFFFFFFFF));
+    });
+
+    test('fontFamily override applies to every fixed text style', () {
+      final map = buildCarbonTokenMap(
+        CarbonTheme.white,
+        overrides: const CarbonThemeOverrides(fontFamily: 'IBM Plex Sans'),
+      );
+      expect((map[CarbonTokens.body01]! as TextStyle).fontFamily,
+          'IBM Plex Sans');
+      expect((map[CarbonTokens.heading07]! as TextStyle).fontFamily,
+          'IBM Plex Sans');
     });
   });
 
   group('Component tokens', () {
     test('button primary resolves', () {
-      expect(carbonComponentColorsWhite()[CarbonComponentTokens.buttonPrimary],
+      expect(carbonComponentColorsWhite[CarbonComponentTokens.buttonPrimary],
           const Color(0xFF0F62FE));
     });
 
     test('partial-theme tokens are omitted, not fabricated', () {
       // notificationActionHover exists only for white + g10 upstream.
       expect(
-        carbonComponentColorsWhite()
+        carbonComponentColorsWhite
             .containsKey(CarbonComponentTokens.notificationActionHover),
         isTrue,
       );
       expect(
-        carbonComponentColorsG100()
+        carbonComponentColorsG100
             .containsKey(CarbonComponentTokens.notificationActionHover),
         isFalse,
       );
@@ -125,6 +150,35 @@ void main() {
           .expand((tokens) => tokens)
           .toSet();
       expect(grouped.length, 78);
+    });
+  });
+
+  group('Indexed role families', () {
+    test('CarbonContextualColor covers every generated family', () {
+      // If a Carbon upgrade adds an indexed role family (e.g. layerBackground
+      // appeared in v11), the alias enum must grow with it.
+      final aliasNames =
+          CarbonContextualColor.values.map((a) => a.name).toSet();
+      expect(aliasNames, carbonIndexedRoleFamilies.keys.toSet());
+    });
+
+    test('every alias resolves each of the three levels', () {
+      for (final alias in CarbonContextualColor.values) {
+        final family = carbonIndexedRoleFamilies[alias.name]!;
+        for (var level = 1; level <= 3; level++) {
+          expect(CarbonLayerData(level).color(alias), family[level - 1]);
+        }
+      }
+    });
+  });
+
+  group('CarbonFontFamilies', () {
+    test('exposes usable family names with separate fallbacks', () {
+      expect(CarbonFontFamilies.sans, 'IBM Plex Sans');
+      expect(CarbonFontFamilies.mono, 'IBM Plex Mono');
+      expect(CarbonFontFamilies.sansFallback, contains('sans-serif'));
+      // A family name must never be a raw CSS stack.
+      expect(CarbonFontFamilies.sans.contains(','), isFalse);
     });
   });
 }

@@ -17,11 +17,16 @@
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
-import { dartIdentifier } from './lib/convert.mjs';
+import { dartIdentifier, THEMES } from './lib/convert.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const tokensDir = join(__dirname, 'tokens');
-const outDir = join(__dirname, '..', 'lib', 'src', 'tokens', 'generated');
+
+// Optional output override (used by verify_generated.mjs for a read-only check).
+const outFlag = process.argv.indexOf('--out');
+const outDir = outFlag !== -1
+  ? process.argv[outFlag + 1]
+  : join(__dirname, '..', 'lib', 'src', 'tokens', 'generated');
 
 const snapshot = JSON.parse(
   readFileSync(join(tokensDir, 'carbon-tokens.normalized.json'), 'utf8'),
@@ -176,6 +181,17 @@ const sizeTokenName = (dartName) =>
   parts.push(weightNames.map(
     ([n]) => `  static const ${n} = FontWeightToken('${KEY.fontWeight(n)}');`).join('\n'));
 
+  // Indexed role families: every role family with 01/02/03 layer levels,
+  // grouped mechanically so the layer model can be validated against upstream.
+  const familyNames = roleNames
+    .filter((n) => n.endsWith('01')
+      && roleNames.includes(n.slice(0, -2) + '02')
+      && roleNames.includes(n.slice(0, -2) + '03'))
+    .map((n) => n.slice(0, -2))
+    .sort();
+  const familyEntries = familyNames.map((f) =>
+    `  '${f}': [CarbonTokens.${f}01, CarbonTokens.${f}02, CarbonTokens.${f}03],`);
+
   emit('carbon_tokens.g.dart',
     header('Public Carbon token handles.',
       `@carbon/themes ${P.packages['@carbon/themes']}, @carbon/layout ${P.packages['@carbon/layout']}, @carbon/type ${P.packages['@carbon/type']}, @carbon/motion ${P.packages['@carbon/motion']}`)
@@ -187,7 +203,12 @@ const sizeTokenName = (dartName) =>
     + 'class CarbonTokens {\n'
     + '  CarbonTokens._();\n'
     + parts.join('\n') + '\n'
-    + '}\n');
+    + '}\n\n'
+    + '/// Every indexed role family (levels 01–03), grouped from the theme roles.\n'
+    + '/// The contextual layer model resolves against these; a test asserts the\n'
+    + `/// hand-written aliases cover every family here (${familyNames.length} at this baseline).\n`
+    + 'const Map<String, List<ColorToken>> carbonIndexedRoleFamilies = {\n'
+    + familyEntries.join('\n') + '\n};\n');
 }
 
 // ============================================================================
@@ -195,16 +216,14 @@ const sizeTokenName = (dartName) =>
 // ============================================================================
 {
   const themeFns = [];
-  for (const [themeKey, dartName] of [
-    ['white', 'White'], ['g10', 'G10'], ['g90', 'G90'], ['g100', 'G100'],
-  ]) {
+  for (const [themeKey, dartName] of THEMES) {
     const roles = snapshot.themes[themeKey];
     const entries = roleNames.map(
-      (n) => `    CarbonTokens.${dartIdentifier(n)}: const ${color(roles[n])},`);
+      (n) => `  CarbonTokens.${dartIdentifier(n)}: ${color(roles[n])},`);
     themeFns.push(
       `/// Resolved color roles for the Carbon ${dartName} theme (${roleNames.length} roles).\n`
-      + `Map<ColorToken, Color> carbonRoleColors${dartName}() => {\n`
-      + entries.join('\n') + '\n  };\n');
+      + `final Map<ColorToken, Color> carbonRoleColors${dartName} = {\n`
+      + entries.join('\n') + '\n};\n');
   }
   emit('carbon_themes.g.dart',
     header('Resolved color roles for the four Carbon themes.',
@@ -238,16 +257,14 @@ const sizeTokenName = (dartName) =>
 
   // Per-theme resolution: value = theme value, else fallback, else omitted.
   const themeFns = [];
-  for (const [themeKey, dartName] of [
-    ['white', 'White'], ['g10', 'G10'], ['g90', 'G90'], ['g100', 'G100'],
-  ]) {
+  for (const [themeKey, dartName] of THEMES) {
     const lines = [];
     for (const group of Object.keys(groups).sort()) {
       for (const n of Object.keys(groups[group]).sort()) {
         const entry = groups[group][n];
         const value = entry[themeKey] ?? entry.fallback;
         if (value) {
-          lines.push(`    CarbonComponentTokens.${dartIdentifier(n)}: const ${color(value)},`);
+          lines.push(`  CarbonComponentTokens.${dartIdentifier(n)}: ${color(value)},`);
         }
         // Missing theme value with no fallback is preserved as an omission.
       }
@@ -255,8 +272,8 @@ const sizeTokenName = (dartName) =>
     themeFns.push(
       `/// Resolved component-token colors for the ${dartName} theme.\n`
       + `/// Tokens with no ${themeKey} value and no fallback are intentionally omitted.\n`
-      + `Map<ColorToken, Color> carbonComponentColors${dartName}() => {\n`
-      + lines.join('\n') + '\n  };\n');
+      + `final Map<ColorToken, Color> carbonComponentColors${dartName} = {\n`
+      + lines.join('\n') + '\n};\n');
   }
 
   emit('carbon_component_tokens.g.dart',
@@ -281,10 +298,10 @@ const sizeTokenName = (dartName) =>
 // ============================================================================
 {
   const spacingVals = [
-    ...spacing.map((s) => `    CarbonTokens.${s.token}: ${d(s.px)},`),
-    ...containers.map((c) => `    CarbonTokens.${c.token}: ${d(c.px)},`),
-    ...iconSizes.map((c) => `    CarbonTokens.${c.token}: ${d(c.px)},`),
-    ...sizeEntries.map(([dartName, s]) => `    CarbonTokens.${sizeTokenName(dartName)}: ${d(s.px)},`),
+    ...spacing.map((s) => `  CarbonTokens.${s.token}: ${d(s.px)},`),
+    ...containers.map((c) => `  CarbonTokens.${c.token}: ${d(c.px)},`),
+    ...iconSizes.map((c) => `  CarbonTokens.${c.token}: ${d(c.px)},`),
+    ...sizeEntries.map(([dartName, s]) => `  CarbonTokens.${sizeTokenName(dartName)}: ${d(s.px)},`),
   ];
   const bpOrder = ['sm', 'md', 'lg', 'xlg', 'max'];
   const bps = bpOrder.filter((k) => snapshot.layout.breakpoints[k]).map((k) => {
@@ -303,8 +320,8 @@ const sizeTokenName = (dartName) =>
     + "import '../carbon_token_types.dart';\n"
     + "import 'carbon_tokens.g.dart';\n\n"
     + '/// Fixed spacing, container, icon and control-size token values (logical px).\n'
-    + 'Map<SpaceToken, double> carbonSpacingValues() => {\n'
-    + spacingVals.join('\n') + '\n  };\n\n'
+    + 'final Map<SpaceToken, double> carbonSpacingValues = {\n'
+    + spacingVals.join('\n') + '\n};\n\n'
     + `/// The 13-step fixed spacing scale in logical pixels.\n`
     + `const List<double> carbonFixedSpacingPx = [${spacing.map((s) => d(s.px)).join(', ')}];\n\n`
     + '/// Responsive breakpoints, ordered small to large.\n'
@@ -329,7 +346,7 @@ const sizeTokenName = (dartName) =>
       s.lineHeight != null ? `height: ${d(s.lineHeight)}` : null,
       s.letterSpacingPx != null ? `letterSpacing: ${d(s.letterSpacingPx)}` : null,
     ].filter(Boolean);
-    return `    CarbonTokens.${dartIdentifier(name)}: const TextStyle(${props.join(', ')}),`;
+    return `  CarbonTokens.${dartIdentifier(name)}: TextStyle(${props.join(', ')}),`;
   };
   const fixed = typeNames.map((n) => styleEntry(n, snapshot.type.styles[n]));
 
@@ -354,10 +371,33 @@ const sizeTokenName = (dartName) =>
   });
 
   const weights = weightNames.map(
-    ([n, v]) => `    CarbonTokens.${n}: FontWeight.w${v},`);
+    ([n, v]) => `  CarbonTokens.${n}: FontWeight.w${v},`);
+
+  // CSS font stacks are unusable as a Flutter `fontFamily` (which expects one
+  // registered family name). Split each stack into the primary family plus a
+  // `fontFamilyFallback`-shaped list.
   const families = Object.entries(snapshot.type.fontFamilies)
     .sort(([a], [b]) => a.localeCompare(b))
-    .map(([k, v]) => `  static const String ${k} = ${JSON.stringify(v)};`);
+    .flatMap(([k, stack]) => {
+      const parts = String(stack)
+        .split(',')
+        .map((p) => p.trim().replace(/^['"]|['"]$/g, ''))
+        .filter(Boolean);
+      const [family, ...fallback] = parts;
+      return [
+        `  /// Primary family of Carbon's \`${k}\` stack. Register the font asset`,
+        '  /// in the app before using it.',
+        `  static const String ${k} = ${JSON.stringify(family)};`,
+        '',
+        `  /// Fallback families of Carbon's \`${k}\` stack, for \`TextStyle.fontFamilyFallback\`.`,
+        `  static const List<String> ${k}Fallback = [`,
+        ...fallback.map((f) => `    ${JSON.stringify(f)},`),
+        '  ];',
+        '',
+      ];
+    });
+  // Trim trailing blank entry.
+  if (families[families.length - 1] === '') families.pop();
 
   emit('carbon_type.g.dart',
     header('Carbon typography: fixed styles, fluid styles, weights, families.',
@@ -367,17 +407,19 @@ const sizeTokenName = (dartName) =>
     + "import '../carbon_token_types.dart';\n"
     + "import 'carbon_tokens.g.dart';\n\n"
     + `/// Fixed (non-responsive) Carbon text styles (${typeNames.length}).\n`
-    + 'Map<TextStyleToken, TextStyle> carbonTextStyleTokens() => {\n'
-    + fixed.join('\n') + '\n  };\n\n'
+    + 'final Map<TextStyleToken, TextStyle> carbonTextStyleTokens = {\n'
+    + fixed.join('\n') + '\n};\n\n'
     + `/// Responsive Carbon type styles with per-breakpoint overrides (${fluidNames.length}).\n`
     + 'const Map<String, CarbonFluidTypeStyle> carbonFluidTypeStyles = {\n'
     + fluidEntries.join('\n') + '\n};\n\n'
     + '/// Font-weight token values.\n'
-    + 'Map<FontWeightToken, FontWeight> carbonFontWeightValues() => {\n'
-    + weights.join('\n') + '\n  };\n\n'
-    + '/// IBM Plex font-family fallback stacks.\n'
+    + 'final Map<FontWeightToken, FontWeight> carbonFontWeightValues = {\n'
+    + weights.join('\n') + '\n};\n\n'
+    + '/// IBM Plex font families from Carbon\'s official stacks, split into a\n'
+    + '/// primary family name (for `TextStyle.fontFamily`) and fallback list\n'
+    + '/// (for `TextStyle.fontFamilyFallback`).\n'
     + 'class CarbonFontFamilies {\n'
-    + '  CarbonFontFamilies._();\n'
+    + '  CarbonFontFamilies._();\n\n'
     + families.join('\n') + '\n'
     + '}\n');
 }
@@ -387,7 +429,7 @@ const sizeTokenName = (dartName) =>
 // ============================================================================
 {
   const durs = durationNames.map(
-    (n) => `    CarbonTokens.${n}: const Duration(milliseconds: ${snapshot.motion.durations[n]}),`);
+    (n) => `  CarbonTokens.${n}: Duration(milliseconds: ${snapshot.motion.durations[n]}),`);
   const easingConsts = [];
   for (const intent of Object.keys(snapshot.motion.easings).sort()) {
     for (const mode of Object.keys(snapshot.motion.easings[intent]).sort()) {
@@ -404,8 +446,8 @@ const sizeTokenName = (dartName) =>
     + "import 'package:mix/mix.dart';\n\n"
     + "import 'carbon_tokens.g.dart';\n\n"
     + '/// Motion duration token values.\n'
-    + 'Map<DurationToken, Duration> carbonDurationValues() => {\n'
-    + durs.join('\n') + '\n  };\n\n'
+    + 'final Map<DurationToken, Duration> carbonDurationValues = {\n'
+    + durs.join('\n') + '\n};\n\n'
     + '/// Carbon easing curves by intent (standard/entrance/exit) and mode\n'
     + '/// (productive/expressive), as Flutter [Cubic] curves.\n'
     + 'class CarbonEasings {\n'
