@@ -1,0 +1,451 @@
+---
+name: using-remix
+description: This skill should be used when the user wants to build Flutter UI with the Remix component library (Mix + Naked UI + Fortal theme) — create screens or widgets with Remix components, style or customize Remix widgets, set up Fortal theming, handle interaction states, or use any Remix/Fortal widget (RemixButton, FortalButton, RemixSelect, FortalTextField, RemixTabs, etc.). Also trigger on mentions of Remix styling, stylers, Fortal tokens/variants, or generic UI requests like "make a button" or "style this form" in a project that depends on the remix package.
+---
+
+# Using Remix — Building Flutter Interfaces
+
+Remix is a Flutter design-system library. It combines **Naked UI** (headless
+accessible behavior) with **Mix** (styling engine) to deliver fully styled,
+interaction-aware components. The built-in **Fortal** theme provides
+Radix-inspired design tokens and ready-made preset widgets.
+
+## Quick Start
+
+```dart
+import 'package:remix/remix.dart';
+```
+
+Wrap the app (or a subtree) in `FortalScope` to provide the Fortal tokens:
+
+```dart
+FortalScope(
+  accent: FortalAccentColor.indigo,  // 31 options (default .indigo)
+  gray: FortalGrayColor.slate,       // 6 neutral scales (default .slate)
+  brightness: Brightness.light,      // or .dark
+  child: MaterialApp(home: MyScreen()),
+)
+```
+
+Then use the Fortal preset widgets:
+
+```dart
+FortalButton(label: 'Submit', onPressed: handleSubmit)
+FortalButton(label: 'Cancel', variant: .ghost, onPressed: cancel)
+FortalTextField(hintText: 'you@example.com', label: 'Email')
+FortalCheckbox(selected: agreed, onChanged: (v) => setState(() => agreed = v))
+```
+
+Plain `Remix*` widgets work without `FortalScope`, but anything Fortal
+(`Fortal*` widgets, `fortal*Styler()` functions, `FortalTokens`) requires it
+to resolve tokens.
+
+## Three levels of styling
+
+1. **Fortal preset widgets** — `FortalButton(variant: .soft, size: .size2)`.
+   Fastest path; consistent by construction. Use for standard UI.
+2. **Fortal styler + overrides** — `fortal*Styler()` returns the component's
+   `Remix*Styler`; chain custom modifications and pass it to the `Remix*`
+   widget's `style:`:
+
+   ```dart
+   RemixButton(
+     label: 'Save',
+     onPressed: save,
+     style: fortalButtonStyler(variant: .solid)
+         .borderRadiusAll(const Radius.circular(8))
+         .paddingX(32)
+         .onHovered(RemixButtonStyler().wrap(WidgetModifierConfig.scale(x: 1.05, y: 1.05))),
+   )
+   ```
+
+3. **Fully custom styler** — build a `Remix*Styler` from scratch with the
+   fluent API (below). Use for bespoke designs that don't start from Fortal.
+
+## Component Catalog
+
+Remix ships 21 components. Each `Remix*` widget accepts `style` (a
+`Remix*Styler`) and has a `Fortal*` preset counterpart.
+
+| Category | Remix widgets | Fortal presets |
+|----------|---------------|----------------|
+| **Actions** | `RemixButton`, `RemixIconButton`, `RemixToggle` | `FortalButton`, `FortalIconButton`, `FortalToggle` |
+| **Forms** | `RemixCheckbox`, `RemixRadio` + `RemixRadioGroup`, `RemixSwitch`, `RemixSlider`, `RemixTextField`, `RemixSelect` | `FortalCheckbox`, `FortalRadio`, `FortalSwitch`, `FortalSlider`, `FortalTextField`, `FortalSelect` |
+| **Data display** | `RemixAvatar`, `RemixBadge`, `RemixCard`, `RemixCallout`, `RemixProgress`, `RemixSpinner`, `RemixDivider` | `FortalAvatar`, `FortalBadge`, `FortalCard`, `FortalCallout`, `FortalProgress`, `FortalSpinner`, `FortalDivider` |
+| **Overlays** | `RemixDialog` (+ `showRemixDialog`), `RemixTooltip`, `RemixMenu` | `FortalDialog`, `FortalTooltip`, `FortalMenu` |
+| **Navigation** | `RemixTabs` + `RemixTabBar`/`RemixTab`/`RemixTabView`, `RemixAccordion` + `RemixAccordionGroup` | `FortalTabBar`/`FortalTab`/`FortalTabView` (no `FortalTabs` — use `RemixTabs`), `FortalAccordion` |
+
+Full constructor parameters for every component: `references/components.md`.
+All Fortal variants, sizes, and tokens: `references/fortal-reference.md`.
+
+## Using Components
+
+### Buttons
+
+```dart
+FortalButton(
+  label: 'Delete',
+  leadingIcon: Icons.delete,
+  loading: isDeleting,
+  enabled: canDelete,
+  variant: .outline,
+  size: .size2,
+  onPressed: handleDelete,
+)
+
+FortalIconButton(icon: Icons.settings, variant: .ghost, onPressed: openSettings)
+
+// Toggle: a pressable button that stays active while selected
+FortalToggle(selected: isBold, label: 'Bold', onChanged: (v) => setBold(v))
+```
+
+A button is interactive only when `enabled && !loading && onPressed != null`
+— `loading: true` disables it (and the `.onDisabled` variant styles the
+loading state).
+
+### Form Controls
+
+```dart
+FortalCheckbox(
+  selected: isChecked,
+  onChanged: (val) => setState(() => isChecked = val),
+)
+
+// Radio: FortalRadio still needs a RemixRadioGroup ancestor
+RemixRadioGroup<String>(
+  groupValue: selectedOption,
+  onChanged: (val) => setState(() => selectedOption = val),
+  child: Column(children: [
+    for (final option in ['a', 'b', 'c'])
+      Row(children: [FortalRadio<String>(value: option), Text(option)]),
+  ]),
+)
+
+FortalSwitch(
+  selected: isDarkMode,
+  onChanged: (val) => toggleDarkMode(val),
+)
+
+FortalSlider(
+  value: volume,
+  min: 0,
+  max: 100,
+  onChanged: (val) => setState(() => volume = val),
+)
+
+FortalTextField(
+  controller: emailController,
+  label: 'Email',
+  hintText: 'you@example.com',
+  helperText: 'Never shared',
+  error: hasError,          // enables error-state styling
+  leading: const Icon(Icons.mail),
+)
+```
+
+### Select & Menu
+
+`RemixSelectTrigger`, `RemixSelectItem`, `RemixMenuTrigger`, and
+`RemixMenuItem` are data classes, not widgets.
+
+```dart
+// Select — set each item's style explicitly (FortalSelect styles only
+// the trigger and menu container):
+final itemStyle = fortalSelectMenuItemStyler(variant: .surface, size: .size2);
+
+FortalSelect<String>(
+  trigger: const RemixSelectTrigger(placeholder: 'Choose a fruit'),
+  items: [
+    RemixSelectItem(value: 'apple', label: 'Apple', style: itemStyle),
+    RemixSelectItem(value: 'banana', label: 'Banana', style: itemStyle),
+  ],
+  selectedValue: selectedFruit,
+  onChanged: (val) => setState(() => selectedFruit = val),
+)
+
+// Menu — item styling is baked into the preset; no per-item wiring:
+FortalMenu<String>(
+  trigger: const RemixMenuTrigger(label: 'Actions', icon: Icons.more_vert),
+  items: const [
+    RemixMenuItem(value: 'edit', label: 'Edit', leadingIcon: Icons.edit),
+    RemixMenuItem(value: 'copy', label: 'Copy', leadingIcon: Icons.copy),
+    RemixMenuDivider(),
+    RemixMenuItem(value: 'delete', label: 'Delete', leadingIcon: Icons.delete),
+  ],
+  onSelected: (action) => handleAction(action),
+)
+```
+
+### Tabs
+
+```dart
+RemixTabs(
+  selectedTabId: currentTab,
+  onChanged: (id) => setState(() => currentTab = id),
+  child: Column(children: [
+    FortalTabBar(
+      child: Row(children: [
+        FortalTab(tabId: 'overview', label: 'Overview'),
+        FortalTab(tabId: 'details', label: 'Details', icon: Icons.info),
+      ]),
+    ),
+    Expanded(child: Column(children: [
+      FortalTabView(tabId: 'overview', child: OverviewPanel()),
+      FortalTabView(tabId: 'details', child: DetailsPanel()),
+    ])),
+  ]),
+)
+```
+
+### Accordion
+
+`RemixAccordionGroup` requires an explicit controller:
+
+```dart
+RemixAccordionGroup<String>(
+  controller: RemixAccordionController<String>(min: 0, max: 1),
+  child: Column(children: [
+    FortalAccordion<String>(value: 'faq1', title: 'What is Remix?', child: Text('...')),
+    const FortalDivider(),
+    FortalAccordion<String>(value: 'faq2', title: 'How does theming work?', child: Text('...')),
+  ]),
+)
+```
+
+### Dialog & Tooltip
+
+```dart
+showRemixDialog(
+  context: context,
+  builder: (_) => Center(
+    child: FortalDialog(
+      title: 'Confirm',
+      description: 'Are you sure you want to proceed?',
+      actions: [
+        FortalButton(label: 'Cancel', variant: .ghost,
+            onPressed: () => Navigator.pop(context)),
+        FortalButton(label: 'Confirm',
+            onPressed: () { confirm(); Navigator.pop(context); }),
+      ],
+    ),
+  ),
+)
+
+FortalTooltip(
+  tooltipChild: const Text('Saves your work'),
+  child: FortalIconButton(icon: Icons.save, onPressed: save),
+)
+```
+
+### Data Display
+
+```dart
+FortalAvatar(label: 'JD', backgroundImage: NetworkImage('https://...'), size: .size3)
+FortalBadge(label: 'New')
+FortalCard(size: .size2, child: Column(children: [...]))
+FortalCallout(icon: Icons.info, text: 'Informational callout.')
+FortalProgress(value: 0.65)
+FortalSpinner(size: .size2)
+FortalDivider()
+```
+
+## Custom Styling with Stylers
+
+Every component's style is a chainable, immutable `Remix*Styler`:
+
+```dart
+RemixButtonStyler()
+    .color(Colors.blue)          // container fill (universal primitive)
+    .borderRounded(12)           // circular radius shortcut
+    .paddingX(24)
+    .paddingY(12)
+    .labelColor(Colors.white)
+    .labelFontSize(16)
+    .labelFontWeight(FontWeight.w600)
+    .iconColor(Colors.white)
+    .iconSize(20)
+    .spacing(8)                  // icon↔label gap (flex-based components)
+```
+
+Fluent surface shared by container-based stylers: `.color()`, `.gradient()`,
+`.border*()`, `.borderRadius*()` / `.borderRounded()`, `.shadow()` /
+`.shadows()` / `.elevation()`, `.padding*()` / `.margin*()` (incl.
+`.paddingX/.paddingY`), `.width()` / `.height()` / `.size()`, `.scale()` /
+`.rotate()` / `.translate()`. Flex-based ones add `.spacing()`,
+`.direction()`, `.mainAxisAlignment()`, `.crossAxisAlignment()`, `.row()`,
+`.column()`. Component-part mixins add `.label*()` (color, fontSize,
+fontWeight, letterSpacing, …), `.icon*()` (color, size, opacity, …), and
+`.spinner*()` (indicatorColor, size, strokeWidth, …) where the component has
+those parts. `.backgroundColor()` is an alias that exists only on Button,
+IconButton, and Card stylers — `.color()` is the universal method.
+
+### Interaction States
+
+State variants take a styler of the same type and merge it over the base:
+
+```dart
+RemixButtonStyler()
+    .color(Colors.blue)
+    .labelColor(Colors.white)
+    .onHovered(RemixButtonStyler().color(Colors.blue.shade700))
+    .onPressed(RemixButtonStyler().scale(0.97))
+    .onFocused(RemixButtonStyler().borderAll(color: Colors.white, width: 2))
+    .onDisabled(RemixButtonStyler().color(Colors.grey))
+```
+
+`.onSelected()` exists on the selection components only — Checkbox, Radio,
+Switch, Toggle, Tab, and TabView stylers:
+
+```dart
+RemixCheckboxStyler()
+    .color(Colors.grey.shade200)
+    .onSelected(RemixCheckboxStyler().color(Colors.blue))
+```
+
+### Context Variants
+
+Respond to platform, brightness, and form factor:
+
+```dart
+RemixButtonStyler()
+    .paddingX(24)
+    .onMobile(RemixButtonStyler().paddingX(16).labelFontSize(14))
+    .onDark(RemixButtonStyler().color(Colors.blue.shade800))
+```
+
+Available: `.onDark()`, `.onLight()`, `.onMobile()`, `.onTablet()`,
+`.onDesktop()`, `.onPortrait()`, `.onLandscape()`, `.onLtr()`, `.onRtl()`,
+`.onIos()`, `.onAndroid()`, `.onMacos()`, `.onWindows()`, `.onLinux()`,
+`.onWeb()`, `.onBreakpoint(...)`, `.onNot(...)`, `.onBuilder(...)`.
+
+### Animation
+
+Add transitions between states with `.animate(AnimationConfig)`:
+
+```dart
+RemixButtonStyler()
+    .color(Colors.blue)
+    .onHovered(RemixButtonStyler().color(Colors.blue.shade800))
+    .animate(AnimationConfig.spring(300.ms))
+```
+
+`AnimationConfig` factories: `.spring(duration, {bounce})`,
+`.curve({duration, curve})`, and shortcuts like `.easeOut(200.ms)`,
+`.easeIn(...)`, `.linear(...)`, `.decelerate(...)`. The `.ms` / `.s`
+duration extensions come from Mix.
+
+### Callable Styles
+
+Most stylers have a `call()` method that builds the widget directly:
+
+```dart
+final primaryButton = RemixButtonStyler()
+    .color(Colors.blue)
+    .labelColor(Colors.white)
+    .paddingX(24)
+    .borderRounded(8);
+
+primaryButton(label: 'Save', onPressed: save)   // → RemixButton
+```
+
+Callable: Button, IconButton, Toggle, Checkbox, Switch, Slider, TextField,
+Avatar, Badge, Card, Callout, Progress, Spinner, Divider, Dialog, Tooltip,
+TabBar, Tab, TabView, and Accordion (via `call<T>()`). **Not callable**:
+Menu, Radio, and Select stylers — construct those widgets directly.
+
+### Styling with Fortal Tokens
+
+Reference Fortal tokens in custom styles so they respect the active theme.
+Call the token inside styler chains; `.mix()` for text-style tokens;
+`.resolve(context)` for direct values in widget code:
+
+```dart
+RemixButtonStyler()
+    .color(FortalTokens.accent9())
+    .paddingAll(FortalTokens.space4())
+    .borderRadiusAll(FortalTokens.radius3())
+    .label(TextStyler().style(FortalTokens.text2.mix())
+        .color(FortalTokens.accentContrast()))
+
+Container(color: FortalTokens.colorBackground.resolve(context))
+```
+
+Token families: `accent1–12`, `gray1–12` (+ `accentA*`/`grayA*` alpha),
+functional colors (`accentContrast`, `colorSurface`, …), `space1–9`,
+`radius1–6` + `radiusFull`, `text1–9`, `shadow1–6`, font weights, and
+transition durations. Full catalog: `references/fortal-reference.md`.
+
+## Common Patterns
+
+### Reusable App Styles
+
+```dart
+class AppStyles {
+  static RemixButtonStyler get primaryButton => fortalButtonStyler(variant: .solid)
+      .animate(AnimationConfig.spring(200.ms));
+
+  static RemixButtonStyler get dangerButton => fortalButtonStyler(variant: .solid)
+      .color(Colors.red)
+      .onHovered(RemixButtonStyler().color(Colors.red.shade700))
+      .animate(AnimationConfig.spring(200.ms));
+}
+
+RemixButton(label: 'Save', onPressed: save, style: AppStyles.primaryButton)
+```
+
+### Dark Mode Toggle
+
+```dart
+class _MyAppState extends State<MyApp> {
+  var _brightness = Brightness.light;
+
+  @override
+  Widget build(BuildContext context) {
+    return FortalScope(
+      accent: FortalAccentColor.indigo,
+      brightness: _brightness,
+      child: MaterialApp(
+        theme: ThemeData(brightness: _brightness),
+        home: Scaffold(
+          body: FortalSwitch(
+            selected: _brightness == Brightness.dark,
+            onChanged: (dark) => setState(() =>
+                _brightness = dark ? Brightness.dark : Brightness.light),
+          ),
+        ),
+      ),
+    );
+  }
+}
+```
+
+`FortalThemeConfig` is the value-object form for dynamic theming:
+`config.createScope(child: …)`, `config.copyWith(brightness: …)`.
+
+## Pitfalls
+
+- **`FortalIconButton` forwards only** `icon`, `onPressed`, `loading`,
+  `enabled`, `enableFeedback`, `focusNode`. For `onLongPress`, semantics, or
+  builders, use `RemixIconButton(style: fortalIconButtonStyler(...))`.
+- **`FortalSelect` doesn't style items** — pass
+  `fortalSelectMenuItemStyler(...)` to each `RemixSelectItem.style`.
+- **No `FortalTabs`** — the behavioral root is always `RemixTabs`.
+- **`RemixAccordionGroup.controller` is required** (Tabs/Menu controllers are
+  optional).
+- **`loading` implies disabled** on buttons — style the loading appearance
+  through `.onDisabled()`.
+- **`.backgroundColor()` is not universal** — only Button/IconButton/Card;
+  use `.color()` elsewhere.
+- **`.onSelected()` is not on Button** — only Checkbox, Radio, Switch,
+  Toggle, Tab, TabView.
+
+For deeper Mix-level styling (specs, `StyleSpec`, `BoxStyler`, `TextStyler`,
+`build_runner` codegen), consult the **Mix** skill.
+
+## Additional Resources
+
+- **`references/components.md`** — full constructor parameters for all 21
+  components and their Fortal presets.
+- **`references/fortal-reference.md`** — every Fortal variant/size per
+  component, `FortalScope`/`FortalThemeConfig`, and the complete token
+  catalog with values.

@@ -1,0 +1,41 @@
+{
+  "skill_name": "building-remix-design-system",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I want to implement Shopify Polaris as a Flutter package in this monorepo, built on Remix. Set up the package skeleton and the token pipeline plan — Polaris publishes its tokens in the @shopify/polaris-tokens npm package.",
+      "expected_output": "A packages/polaris skeleton (pubspec with publish_to: none + path dep on remix, workspace + melos wiring including any nested example, NOTICE with Shopify attribution) and a tool/ pipeline plan pinning exact @shopify/polaris-tokens versions with extract/normalize/generate/verify stages, committed snapshot + generated Dart, --out flags, and a CI verify workflow — a generated standalone package, not a clone of Fortal with swapped colors.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Add a Button component to our new design system package. The upstream system has primary/secondary/plain variants, three sizes (28/36/44px), a 3px focus ring, and loading buttons keep their variant color with a white spinner.",
+      "expected_output": "A specs/components/button.yaml worksheet first, then a hand-written facade with a memoized styler recipe keyed by (variant, size, loading): loading styled through the onDisabled variant keeping variant fill (RemixButton folds loading into disabled), focus ring via foregroundDecoration (no layout shift), label typography consumed via a text-style token with TextStyler().style(token.mix()), size fallback explicit ?? LayoutScope.maybeOf ?? system default, plus widget tests measuring heights and asserting the loading container color (using pump, not pumpAndSettle).",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Our design system's tokens were updated upstream — bump the pinned token package from 3.1.0 to 3.4.0 and regenerate.",
+      "expected_output": "A dedicated change editing only tool/upstream/package.json (the single version source), reinstalling and re-running the full pipeline, then reviewing the diffs of the source lock, normalized snapshot, and generated Dart; the verify script passes and inventory-count assertions in extract are updated deliberately if the token surface grew; affected component tests/goldens re-checked.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "We don't have any code for this design system — just a 40-page brand guidelines PDF and a handful of @2x PNG screenshots of the buttons and form fields. Build the token layer from these.",
+      "expected_output": "Classifies domains by source tier (PDF = tier 3, screenshots = tier 4), authors the inventory first, then a committed tool/authored/<sys>-authored-tokens.json where every value has a cite (PDF page or screenshot file+coordinates) and a confidence level (specified/measured/assumed, with assumed values echoed in worksheet approximations); screenshots calibrated for scale before measuring, colors sampled from flat regions; normalize/generate/verify run unchanged on the authored file, and no invented scales for tokens the sources don't define.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "Our design system lives in a Figma file — variables for colors and text styles, components laid out in frames. We have an API token. Build the token layer from it.",
+      "expected_output": "Classifies the Figma file as tier 2 (queryable source), pins the file version so harvests are reproducible, maps variables/styles to color/type tokens and reads spacing from component frame layout values with node-link citations, lands results in a committed tool/authored/<sys>-authored-tokens.json with confidence specified/derived, and runs normalize/generate/verify unchanged on top of it; checks first whether a higher-tier source (published tokens package or export) exists before harvesting.",
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "We have no design assets at all. Our brand is 'calm, premium, dark-first', primary color is teal #0D9488, and we use Inter. Generate a design system package from that.",
+      "expected_output": "Treats the brief as the pinned source (committed verbatim), asks for or confirms missing constraints (themes, density, gray preference) rather than silently inventing, decides the token inventory and theme model first and records it in an ADR, then authors tool/authored tokens with confidence 'designed' or 'derived' (values produced by documented rules like a perceptually even teal ramp and a modular type scale, each citing the brief or the rule); the standard normalize/generate/verify pipeline and package scaffold apply unchanged.",
+      "files": []
+    }
+  ]
+}

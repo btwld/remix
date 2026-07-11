@@ -1,0 +1,23 @@
+{
+  "skill_name": "using-remix",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Build a settings page with a form that has text fields for name and email, a select dropdown for language preference, some checkboxes for notification options, and a submit button. Use Fortal theming with indigo accent. Make it look polished.",
+      "expected_output": "A complete Flutter widget wrapped in FortalScope(accent: .indigo) using FortalTextField, FortalSelect (with fortalSelectMenuItemStyler applied to each RemixSelectItem), FortalCheckbox, and FortalButton preset widgets.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Create a custom-styled button that has a gradient background, rounded corners, scales down on press, and glows on hover. Don't use Fortal — build a fully custom style from scratch using the Remix fluent API. Show me the complete code.",
+      "expected_output": "A RemixButton with a fully custom RemixButtonStyler using the fluent API — gradient, borderRounded, .onPressed with scale, .onHovered with shadow/glow, .animate(AnimationConfig...) for transitions. Uses RemixButtonStyler (not the removed RemixButtonStyle) throughout.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "I'm using FortalIconButton but I need a long-press action and a semantic label on it. How do I do that?",
+      "expected_output": "Explains that FortalIconButton forwards only a subset of params (icon, onPressed, loading, enabled, enableFeedback, focusNode) and shows RemixIconButton(style: fortalIconButtonStyler(variant: ..., size: ...), onLongPress: ..., semanticLabel: ...) as the correct approach.",
+      "files": []
+    }
+  ]
+}
