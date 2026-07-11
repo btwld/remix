@@ -1,0 +1,23 @@
+{
+  "skill_name": "remix-design-system",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I want to implement Shopify Polaris as a Flutter package in this monorepo, built on Remix like the carbon package. Set up the package skeleton and the token pipeline plan — Polaris publishes its tokens in the @shopify/polaris-tokens npm package.",
+      "expected_output": "A packages/polaris skeleton (pubspec with publish_to: none + path dep on remix, workspace + melos wiring including any nested example, NOTICE with Shopify attribution) and a tool/ pipeline plan pinning exact @shopify/polaris-tokens versions with extract/normalize/generate/verify stages, committed snapshot + generated Dart, --out flags, and a CI verify workflow — following the carbon reference implementation rather than cloning Fortal.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Add a Button component to our new design system package. The upstream system has primary/secondary/plain variants, three sizes (28/36/44px), a 3px focus ring, and loading buttons keep their variant color with a white spinner.",
+      "expected_output": "A specs/components/button.yaml worksheet first, then a hand-written facade with a memoized styler recipe keyed by (variant, size, loading): loading styled through the onDisabled variant keeping variant fill (RemixButton folds loading into disabled), focus ring via foregroundDecoration (no layout shift), label typography consumed via a text-style token with TextStyler().style(token.mix()), size fallback explicit ?? LayoutScope.maybeOf ?? system default, plus widget tests measuring heights and asserting the loading container color (using pump, not pumpAndSettle).",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Our design system's tokens were updated upstream — bump the pinned token package from 3.1.0 to 3.4.0 and regenerate.",
+      "expected_output": "A dedicated change editing only tool/upstream/package.json (the single version source), running npm install + tokens:all, then reviewing the diffs of the source lock, normalized snapshot, and generated Dart; verify_generated.mjs passes and inventory-count assertions in extract are updated deliberately if the token surface grew; affected component tests/goldens re-checked.",
+      "files": []
+    }
+  ]
+}
