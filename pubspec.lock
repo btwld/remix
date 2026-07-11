@@ -464,14 +464,13 @@ packages:
     source: hosted
     version: "2.0.4"
   naked_ui:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: "packages/naked_ui"
-      ref: "9468cec6ede3354b7a44ff71e545ad351d7158ee"
-      resolved-ref: "9468cec6ede3354b7a44ff71e545ad351d7158ee"
-      url: "https://github.com/btwld/naked_ui.git"
-    source: git
-    version: "1.0.0-beta.2"
+      name: naked_ui
+      sha256: d83e2dbb89daad44243dae199ebe9a7149086be43ec4732a77128270d2f6ac69
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0-beta.3"
   nested:
     dependency: transitive
     description:

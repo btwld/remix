@@ -91,8 +91,8 @@ PR #63 is directionally correct (Fortal function API, nullable callbacks, docs r
 
 - [ ] **`naked_ui: ^1.0.0-beta.3` on package version 1.0.0** · **CONFIRMED**
   - File: `packages/remix/pubspec.yaml`  
-  - The workspace temporarily pins PR #62 commit `9468cec` until beta.3 is published.
-  - Before publishing Remix: remove the root override, regenerate the lockfile, and rerun analysis/tests.
+  - Beta.3 was published on 2026-07-11; the temporary PR #62 override has been removed.
+  - The workspace lockfile now resolves hosted beta.3; analysis and tests were rerun.
   - Decide: wait for stable `naked_ui` 1.0 **or** ship `1.0.0-rc.1` / document beta dep in CHANGELOG + README
 
 - [ ] **Rewrite `skills/remix-skill/` to match real 1.0 API** · **CONFIRMED**  
