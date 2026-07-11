@@ -1,6 +1,6 @@
 ---
 name: remix-design-system
-description: Playbook for creating a new design-system package on top of Remix (Mix + Naked UI), the way packages/carbon implements IBM Carbon. Use this skill whenever the user wants to build, port, or scaffold a design system or theme package in this monorepo — e.g. "implement Material/Polaris/Fluent/Spectrum/Base on Remix", "create a new design system package", "add a token pipeline for <system>", "add a themed component to <system package>", or "wrap Remix components in <brand> styling". Also trigger for questions about the token extraction pipeline, design-token generation, theme scopes, or component recipes for any Remix-based design system other than Fortal itself.
+description: Playbook for creating a new design-system package on top of Remix (Mix + Naked UI), the way packages/carbon implements IBM Carbon. Use this skill whenever the user wants to build, port, or scaffold a design system or theme package in this monorepo — e.g. "implement Material/Polaris/Fluent/Spectrum/Base on Remix", "create a new design system package", "add a token pipeline for <system>", "add a themed component to <system package>", or "wrap Remix components in <brand> styling". Also trigger for questions about the token extraction pipeline, design-token generation, theme scopes, or component recipes for any Remix-based design system other than Fortal itself — including when the design source is not code: a Figma file, a PDF/brand book, a docs website, or screenshots ("build our design system from these screenshots/brand guidelines").
 ---
 
 # Building a Design System Package on Remix
@@ -51,14 +51,21 @@ Work through the phases in order. Each phase ends with something verifiable.
 
 ### Phase 0 — Pin sources and record decisions
 
-1. Identify the official machine-readable token sources (npm packages, JSON
-   releases, published theme files). Pin **exact versions** and, when the
-   upstream is a repo, a commit SHA. No caret ranges, no "latest".
-2. Record in an ADR (`docs/adr/0001-…`): dependency strategy, what the first
-   release covers, what is explicitly out of scope, font/icon strategy, and
-   naming/trademark constraints. Copy the shape of
+1. Inventory every available source and **classify each token domain by
+   source tier** (see `references/source-extraction.md`): tier 1 =
+   executable/machine-readable (npm, tokens JSON, CSS variables), tier 2 =
+   Figma API or live docs site, tier 3 = PDF/brand book, tier 4 = screenshots
+   only. Mixed tiers per domain are normal; always take the highest tier
+   available for each domain, and record the tiers plus a conflict-precedence
+   order in the ADR.
+2. Pin whatever can be pinned: **exact versions** and commit SHAs for tier 1;
+   file versions, URLs + retrieval dates, and sha256 hashes for everything
+   else. No caret ranges, no "latest", no un-dated web sources.
+3. Record in an ADR (`docs/adr/0001-…`): source tiers, dependency strategy,
+   what the first release covers, what is explicitly out of scope, font/icon
+   strategy, and naming/trademark constraints. Copy the shape of
    `packages/carbon/docs/adr/0001-carbon-token-pipeline.md`.
-3. Decide the theme model up front: how many themes, whether the system uses
+4. Decide the theme model up front: how many themes, whether the system uses
    role-based tokens (Carbon), numbered scales (Radix/Fortal), or something
    else. **Preserve the target system's model** — never translate it into
    another system's concepts.
@@ -88,7 +95,18 @@ Non-obvious requirements (each one bit carbon):
 ### Phase 2 — Token pipeline
 
 Read `references/token-pipeline.md` before writing any pipeline code, then
-model on `packages/carbon/tool/`. The contract:
+model on `packages/carbon/tool/`. When the source is not executable code
+(Figma, PDF, website, screenshots), also read
+`references/source-extraction.md` — only the **extract** stage changes:
+
+- Tier 1 sources use an automated `extract_tokens.mjs` (carbon's path).
+- Tiers 2–4 replace it with a committed, hand-authored
+  `tool/authored/<sys>-authored-tokens.json` where **every value carries a
+  citation and a confidence level** (`specified`/`derived`/`measured`/
+  `assumed`), authored inventory-first so gaps are explicit. Normalize,
+  generate, and verify run unchanged on top of it.
+
+The contract:
 
 - Four stages: **extract → normalize → generate → verify**, all Node
   (`tool/*.mjs`), sharing helpers from `tool/lib/convert.mjs`.

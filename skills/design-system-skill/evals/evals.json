@@ -18,6 +18,12 @@
       "prompt": "Our design system's tokens were updated upstream — bump the pinned token package from 3.1.0 to 3.4.0 and regenerate.",
       "expected_output": "A dedicated change editing only tool/upstream/package.json (the single version source), running npm install + tokens:all, then reviewing the diffs of the source lock, normalized snapshot, and generated Dart; verify_generated.mjs passes and inventory-count assertions in extract are updated deliberately if the token surface grew; affected component tests/goldens re-checked.",
       "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "We don't have any code for this design system — just a 40-page brand guidelines PDF and a handful of @2x PNG screenshots of the buttons and form fields. Build the token layer from these.",
+      "expected_output": "Classifies domains by source tier (PDF = tier 3, screenshots = tier 4), authors the inventory first, then a committed tool/authored/<sys>-authored-tokens.json where every value has a cite (PDF page or screenshot file+coordinates) and a confidence level (specified/measured/assumed, with assumed values echoed in worksheet approximations); screenshots calibrated for scale before measuring, colors sampled from flat regions; normalize/generate/verify run unchanged on the authored file, and no invented scales for tokens the sources don't define.",
+      "files": []
     }
   ]
 }
