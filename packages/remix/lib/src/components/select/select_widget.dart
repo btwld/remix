@@ -105,6 +105,9 @@ class RemixSelect<T> extends StatefulWidget {
   final OverlayPositionConfig positioning;
 
   /// Called when the selected value changes.
+  ///
+  /// When null, selection changes are ignored, but an enabled select can still
+  /// open so its options can be inspected.
   final ValueChanged<T?>? onChanged;
 
   /// Called when the dropdown opens.
@@ -201,6 +204,8 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
     return widget.trigger.placeholder;
   }
 
+  void _handleChanged(T? value) => widget.onChanged?.call(value);
+
   @override
   void dispose() {
     animationController.dispose();
@@ -218,7 +223,7 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
         );
       },
       value: widget.selectedValue,
-      onChanged: widget.onChanged,
+      onChanged: _handleChanged,
       closeOnSelect: widget.closeOnSelect,
       enabled: widget.enabled,
       triggerFocusNode: widget.focusNode,
@@ -236,7 +241,7 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
         return RemixStyleSpecBuilder<RemixSelectSpec>(
           style: _buildStyle(),
           styleSpec: widget.styleSpec,
-          controller: NakedState.controllerOf(context),
+          controller: NakedSelectState.controllerOf<T>(context),
           builder: (context, spec) {
             final triggerSpec = spec.trigger;
 
@@ -380,7 +385,7 @@ class _RemixSelectItemWidget<T> extends StatelessWidget {
       builder: (context, states, _) {
         return StyleBuilder(
           style: data.style,
-          controller: NakedState.controllerOf(context),
+          controller: NakedSelectOptionState.controllerOf<T>(context),
           builder: (context, spec) {
             return StyleSpecBuilder<RemixSelectMenuItemSpec>(
               styleSpec: StyleSpec(spec: spec),

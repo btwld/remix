@@ -99,7 +99,7 @@ class RemixToggle extends StatelessWidget {
         return RemixStyleSpecBuilder<RemixToggleSpec>(
           style: style,
           styleSpec: styleSpec,
-          controller: NakedState.controllerOf(context),
+          controller: NakedToggleState.controllerOf(context),
           builder: (context, spec) {
             return RowBox(
               styleSpec: spec.container,

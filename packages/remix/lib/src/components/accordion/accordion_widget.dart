@@ -167,7 +167,7 @@ class RemixAccordion<T> extends StatelessWidget {
     return RemixStyleSpecBuilder<RemixAccordionSpec>(
       style: style,
       styleSpec: styleSpec,
-      controller: NakedAccordionItemState.controllerOf(context),
+      controller: NakedAccordionItemState.controllerOf<T>(context),
       builder: (context, spec) {
         return FlexBox(
           styleSpec: spec.trigger,

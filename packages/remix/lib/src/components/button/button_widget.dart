@@ -264,7 +264,7 @@ class RemixButton extends StatelessWidget {
         return RemixStyleSpecBuilder<RemixButtonSpec>(
           style: _buildStyle(),
           styleSpec: styleSpec,
-          controller: NakedState.controllerOf(context),
+          controller: NakedButtonState.controllerOf(context),
           builder: _buildContent,
         );
       },

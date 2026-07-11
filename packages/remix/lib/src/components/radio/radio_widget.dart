@@ -114,7 +114,7 @@ class RemixRadio<T> extends StatelessWidget {
         return RemixStyleSpecBuilder<RemixRadioSpec>(
           style: style,
           styleSpec: styleSpec,
-          controller: NakedState.controllerOf(context),
+          controller: NakedRadioState.controllerOf<T>(context),
           builder: (context, spec) {
             return Box(
               styleSpec: spec.container,

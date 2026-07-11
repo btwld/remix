@@ -302,7 +302,7 @@ class _RemixMenuItemWidget<T> extends StatelessWidget {
       semanticLabel: data.semanticLabel ?? data.label,
       closeOnActivate: data.closeOnActivate,
       builder: (context, state, _) {
-        final controller = NakedState.controllerOf(context);
+        final controller = NakedMenuItemState.controllerOf<T>(context);
 
         return ListenableBuilder(
           listenable: controller,

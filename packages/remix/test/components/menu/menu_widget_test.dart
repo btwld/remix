@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
 
 import '../../helpers/test_helpers.dart';
@@ -357,6 +358,34 @@ void main() {
   });
 
   group('RemixMenu Styling Tests', () {
+    testWidgets('item styling listens to the typed menu-item controller', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(
+        RemixMenu<String>(
+          trigger: const RemixMenuTrigger(label: 'Options'),
+          items: const [RemixMenuItem(value: 'copy', label: 'Copy')],
+        ),
+      );
+      await tester.tap(find.text('Options'));
+      await tester.pumpAndSettle();
+
+      final itemContext = tester.element(find.text('Copy'));
+      final itemController = NakedMenuItemState.controllerOf<String>(
+        itemContext,
+      );
+      final stylingListeners = tester
+          .widgetList<ListenableBuilder>(
+            find.ancestor(
+              of: find.text('Copy'),
+              matching: find.byType(ListenableBuilder),
+            ),
+          )
+          .map((builder) => builder.listenable);
+
+      expect(stylingListeners, contains(same(itemController)));
+    });
+
     testWidgets('applies custom style to menu', (tester) async {
       final style = RemixMenuStyler().trigger(
         RemixMenuTriggerStyler().padding(EdgeInsetsGeometryMix.all(20.0)),

@@ -16,7 +16,8 @@
 - **BREAKING**: `onChanged` is now optional/nullable on `RemixSlider`, `RemixSwitch`, `RemixToggle`, and `RemixRadioGroup`; omitting it (or passing null) disables the control.
 - **BREAKING**: `RemixButton.onPressed` and `RemixIconButton.onPressed` are no longer `required`; omitting them renders a disabled button.
 - **BREAKING**: `package:remix/remix.dart` no longer exports `src/theme/remix_theme.dart` (`resolveRemixBrightness`/`resolveRemixBrightnessValues` were test-only helpers).
-- **BREAKING**: Bump `mix` to ^2.1.0, `mix_annotations`/`mix_generator` to hosted `^2.1.1`, and `naked_ui` to `^1.0.0-beta.1` (stable 1.0 pub tag blocked until `naked_ui` is stable).
+- **BREAKING**: Bump `mix` to ^2.1.0, `mix_annotations`/`mix_generator` to hosted `^2.1.1`, and `naked_ui` to `^1.0.0-beta.3` (stable 1.0 pub tag blocked until `naked_ui` is stable).
+- **FIX**: Consume `naked_ui` beta.3's type-specific state scopes, including typed menu-item and select-option controllers, while preserving callback-optional `RemixSelect` browsing.
 - **FEAT**: Add `call()` widget-builder methods to all component styles and `FortalX` convenience widgets (generated via `@MixWidget` for non-generic surfaces; hand-written for generic Radio/Accordion/Menu/Select).
 - **FEAT**: Fortal wrappers for dialog, menu, select, tooltip, and tabs parts (`FortalTabBar`/`FortalTab`/`FortalTabView`).
 - **FEAT**: Tooltip `dismissDuration` (hover-exit → `NakedTooltip.dismissDelay`); `showDuration` remains touch wait → `touchDelay`.

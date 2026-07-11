@@ -90,7 +90,7 @@ class RemixSwitch extends StatelessWidget {
         return RemixStyleSpecBuilder<RemixSwitchSpec>(
           style: _buildStyle(),
           styleSpec: styleSpec,
-          controller: NakedState.controllerOf(context),
+          controller: NakedToggleState.controllerOf(context),
           builder: (context, spec) {
             return Box(
               styleSpec: spec.container,

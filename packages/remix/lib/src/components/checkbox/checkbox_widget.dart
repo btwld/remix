@@ -111,7 +111,7 @@ class RemixCheckbox extends StatelessWidget {
         return RemixStyleSpecBuilder<RemixCheckboxSpec>(
           style: style,
           styleSpec: styleSpec,
-          controller: NakedState.controllerOf(context),
+          controller: NakedCheckboxState.controllerOf(context),
           builder: (context, spec) {
             final iconData = tristate && selected == null
                 ? indeterminateIcon

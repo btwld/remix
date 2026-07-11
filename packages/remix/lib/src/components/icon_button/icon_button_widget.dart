@@ -141,7 +141,7 @@ class RemixIconButton extends StatelessWidget {
         return RemixStyleSpecBuilder<RemixIconButtonSpec>(
           style: style,
           styleSpec: styleSpec,
-          controller: NakedState.controllerOf(context),
+          controller: NakedButtonState.controllerOf(context),
           builder: (context, spec) {
             Widget? iconWidget;
 

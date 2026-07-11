@@ -106,7 +106,7 @@ class RemixSlider extends StatelessWidget {
         return RemixStyleSpecBuilder<RemixSliderSpec>(
           style: style,
           styleSpec: styleSpec,
-          controller: NakedState.controllerOf(context),
+          controller: NakedSliderState.controllerOf(context),
           builder: (context, spec) {
             final thumbSpec = spec.thumb;
             final thumbSize = _resolveThumbSize(context, thumbSpec);

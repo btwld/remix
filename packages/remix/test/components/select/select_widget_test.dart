@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
 
 import '../../helpers/test_helpers.dart';
@@ -282,6 +283,33 @@ void main() {
     });
 
     group('Styling', () {
+      testWidgets('item styling uses the typed select-option controller', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          RemixSelect<String>(
+            trigger: const RemixSelectTrigger(placeholder: 'Select'),
+            items: const [RemixSelectItem(value: 'a', label: 'Option A')],
+          ),
+        );
+        await tester.tap(find.byType(RemixSelect<String>));
+        await tester.pumpAndSettle();
+
+        final optionContext = tester.element(find.text('Option A'));
+        final optionController = NakedSelectOptionState.controllerOf<String>(
+          optionContext,
+        );
+        final styleBuilder = tester
+            .widget<StyleBuilder<RemixSelectMenuItemSpec>>(
+              find.ancestor(
+                of: find.text('Option A'),
+                matching: find.byType(StyleBuilder<RemixSelectMenuItemSpec>),
+              ),
+            );
+
+        expect(styleBuilder.controller, same(optionController));
+      });
+
       testWidgets('applies custom style', (tester) async {
         final customStyle = RemixSelectStyler().menuContainer(
           FlexBoxStyler(padding: EdgeInsetsGeometryMix.all(16.0)),

@@ -29,7 +29,7 @@ PR #63 is directionally correct (Fortal function API, nullable callbacks, docs r
 3. **`styleSpec` has three shapes** — `StyleSpec<T>?`, raw `RemixXSpec?`, or absent — button uses a custom `StyleWidget` state path
 4. **Color APIs are legitimately different per family** — do not flatten; document and fix only true bugs
 5. **`skills/remix-skill/` is entirely stale** — teaches fictional `FortalXStyle.solid()` APIs
-6. **Release blockers** — `mix_generator` git override; `naked_ui` beta on stable `1.0.0`
+6. **Release blocker** — `naked_ui` beta/temporary PR pin on stable `1.0.0`
 7. **Naming freeze (D1)** — **`RemixXStylerr`** everywhere for Mix alignment (1.0 not shipped yet; ignore interim CHANGELOG Style rename)
 
 ---
@@ -85,13 +85,14 @@ PR #63 is directionally correct (Fortal function API, nullable callbacks, docs r
 
 ### Release blockers
 
-- [ ] **Remove `mix_generator` git override before publish** · **CONFIRMED**  
-  - File: `pubspec_overrides.yaml` (pins `btwld/mix.git@fix/mix-widget-generic-call`)  
-  - Lock: `mix` **2.1.0** from pub.dev; `mix_generator` **2.1.2** from git override  
-  - Merge/release Mix PR, publish generator, delete override, re-run `dart analyze` + `build_runner` + tests
+- [x] **Remove `mix_generator` git override before publish** · **RESOLVED**
+  - No `pubspec_overrides.yaml` remains; `mix_generator` resolves to hosted **2.1.1**.
+  - Verified 2026-07-11: hosted generation rewrote 80 outputs with no Git diff.
 
-- [ ] **`naked_ui: ^1.0.0-beta.1` on package version 1.0.0** · **CONFIRMED**  
+- [ ] **`naked_ui: ^1.0.0-beta.3` on package version 1.0.0** · **CONFIRMED**
   - File: `packages/remix/pubspec.yaml`  
+  - The workspace temporarily pins PR #62 commit `9468cec` until beta.3 is published.
+  - Before publishing Remix: remove the root override, regenerate the lockfile, and rerun analysis/tests.
   - Decide: wait for stable `naked_ui` 1.0 **or** ship `1.0.0-rc.1` / document beta dep in CHANGELOG + README
 
 - [ ] **Rewrite `skills/remix-skill/` to match real 1.0 API** · **CONFIRMED**  
@@ -335,7 +336,7 @@ Components: accordion, menu, tabs, select sub-styles
 - Docs site uses `fortalXStylerr({variant, size})` — not fictional Fortal classes
 - Apps/docs currently use `RemixButtonStyler` consistently — will need full rename to `RemixButtonStyler` per D1 before tag
 - `RemixMenuStyler.item()` merge fix works; covered by tests (`applies menu-level default item style`)
-- `mix: ^2.1.0` resolves from pub (runtime OK; only generator overridden)
+- `mix: ^2.1.0` and `mix_generator: ^2.1.1` resolve from pub; generated output is reproducible
 - `remix_theme.dart` export removed (no theme dir under package)
 - Card docs no longer use `.textColor()` on `RemixCardStyler`
 - Slider docs use `enableFeedback`
@@ -378,7 +379,7 @@ Components: accordion, menu, tabs, select sub-styles
 1. **Fix real P0 bugs** — menu icon order; Fortal textfield disabled (surface + soft red)
 2. **Tooltip** — fix docs + optional dismiss API + timing tests (**do not** remap to `dismissDelay`)
 3. **Lock freeze decisions D1–D8** — **apply `RemixXStylerr` rename (D1)**; document styleSpec (D3)
-4. **Remove mix_generator override** — after Mix PR merge
+4. **Generator reproducibility** — resolved; hosted 2.1.1 regenerates without diff
 5. **Rewrite or exclude `skills/remix-skill/`**
 6. **Structural alignment** — button/icon-button pattern, `call()` gaps, radio enableFeedback
 7. **Document color families A–E** — CHANGELOG + docs; do not rename working part APIs
