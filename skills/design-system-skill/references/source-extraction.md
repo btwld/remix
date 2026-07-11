@@ -1,185 +1,168 @@
-# Source extraction — tokens from any kind of source
+# Source extraction strategy — getting the critical set out of any source
 
-Not every design system ships executable tokens like Carbon. Sources arrive as
-npm packages, Figma files, docs websites, PDFs, or just screenshots. **Do not
-build a different pipeline per source.** The normalized snapshot
-(`tool/tokens/<sys>-tokens.normalized.json`) is the universal meeting point —
-only the *extract* stage varies, and every downstream stage (generate, verify,
-foundation, components) is identical regardless of where values came from.
+This is a **strategy, not a toolchain**. Sources vary (code, Figma, websites,
+PDFs, screenshots) and the tools available to you will vary even more between
+environments. Never let a missing tool change *what* you extract — only *how*
+a value gets read and how much confidence it carries. Tools are named below
+only as examples; at extraction time, survey what the current environment
+actually offers and pick the best available capability.
 
-```
-Tier 1  npm/JSON/CSS-vars   ─ extract_tokens.mjs (automated)      ┐
-Tier 2  Figma / live site   ─ harvest script → authored file      ├─▶ normalized
-Tier 3  PDF / brand book    ─ transcription  → authored file      │   snapshot
-Tier 4  screenshots only    ─ measurement    → authored file      ┘      │
-                                                            normalize/generate/verify
-```
+## 1. The critical set — what must come out, regardless of source
 
-## Step 0 — Classify the source, per domain
+Extraction is done when you can fill this, or have explicitly marked a gap:
 
-Classify **each token domain separately** (colors, spacing, type, motion,
-components). Mixed tiers are normal: colors from a website's CSS variables
-(tier 1) + spacing measured from screenshots (tier 4) is fine. Always use the
-highest tier available for each domain, and record the tier in the ADR.
+**Per token domain:**
 
-| Tier | Source | Extraction | Trust |
+| Domain | Minimum extraction |
+| --- | --- |
+| Color | every named role/token per theme; raw palette if the system has one; state colors (hover/active/disabled) — these are tokens, not effects to guess |
+| Spacing | the scale (every step, exact values); component-local paddings that aren't on the scale |
+| Sizes | control heights per size name; icon sizes; container widths; breakpoints |
+| Typography | families + weights; every named text style (size, line height, letter spacing, weight); responsive behavior if any |
+| Motion | durations; easing curves; which interactions animate at all |
+| Shape/elevation | radii and shadows **only if the system defines them** — absence is a finding, not a gap to fill |
+
+**Per component (feeds the worksheet):**
+
+- anatomy (slots, structure), variants/kinds, supported sizes + default,
+- every state with distinct visuals (rest/hover/active/focus/disabled/loading/error/…),
+- exactly which tokens each state consumes,
+- non-token measurements, each with its source,
+- behavior notes (keyboard, focus, RTL) when the source shows them.
+
+## 2. The invariants — hold these under any tooling
+
+1. **One meeting point.** Everything converges on the committed normalized
+   snapshot; generation and verification downstream never care where values
+   came from.
+2. **Inventory before values.** Enumerate every token name and every
+   component's variants/sizes/states from the source *first*; then fill
+   values. Gaps become explicit (`"status": "missing-in-source"`), never
+   silent absences.
+3. **Every value is traceable**: a citation (page, node link, URL + date,
+   image + coordinates) and a confidence level:
+   `specified` (stated) / `derived` (computed by a documented rule) /
+   `measured` (sampled from a rendering) / `assumed` (judgment — must also
+   appear in a worksheet's approximations).
+4. **Pin what can be pinned; hash and date the rest.** Versions and commits
+   for code; file versions + sha256 + retrieval dates for documents and
+   images; URLs + dates + viewport for anything rendered.
+5. **Never fabricate.** No invented scale steps, no guessed hover colors, no
+   filled-in themes the source doesn't define. Absence is data.
+6. **Deterministic downstream.** From the committed extraction artifacts,
+   regeneration is byte-identical and verification is read-only.
+
+## 3. Classify each source by capability, per domain
+
+Classify **per domain** (colors may come from a better source than spacing).
+The tier is a function of the source *and* of what the current environment
+lets you do with it — re-survey both each time:
+
+| Tier | You have… | Extraction mode | Default confidence |
 | --- | --- | --- | --- |
-| 1 | npm package, tokens JSON, CSS custom properties file | automated script, re-runnable | authoritative |
-| 2 | Figma file (API access), live docs site | semi-automated harvest, re-runnable with review | authoritative-ish |
-| 3 | PDF, brand book, docs prose | manual transcription with citations | stated, not verifiable mechanically |
-| 4 | screenshots / exported images | manual measurement with methodology | measured, lowest confidence |
+| 1 | machine-readable values (token packages, tokens JSON, stylesheet variables) | automated, re-runnable script | specified |
+| 2 | a queryable structured source (design-tool API, a rendered page you can programmatically inspect) | semi-automated harvest, re-runnable against a pinned version | specified/derived |
+| 3 | a readable document (PDF, brand book, docs prose) | manual transcription with citations | specified |
+| 4 | only images (screenshots, exports) | manual measurement with a recorded methodology | measured |
 
-## The authored source file (tiers 2–4)
+**Degrade gracefully.** If the capability a tier needs is missing in the
+current environment (no browser automation, no API token), treat the source
+as the next tier down rather than blocking — e.g. a live styleguide you can't
+programmatically inspect becomes a document you read (tier 3) or screenshots
+you measure (tier 4). Record the degradation so a later environment can
+upgrade it.
 
-For anything that can't be re-extracted mechanically, the extract stage's
-output is a **hand-authored, committed** file: `tool/authored/<sys>-authored-tokens.json`.
-It replaces `build/raw-tokens.json` as normalize's input. Rules:
+**Upgrade opportunistically.** Before manual work, check whether the source
+secretly offers a higher tier: websites often ship their tokens as stylesheet
+custom properties (tier 1 hiding behind a tier 2/3 page); design files often
+have an export or API path; vendors often publish a tokens package you
+weren't told about. Ten minutes of looking beats a day of measuring.
 
-- Same role as raw extract output — normalize still does all unit conversion.
-- **Every value carries a citation and a confidence level**:
+## 4. Extraction mode notes (tool-agnostic)
+
+### Automated (tier 1)
+
+Import/parse the machine-readable source with a small, package-owned script.
+Pin exact versions; assert inventory counts so upstream drift fails loudly.
+Whatever the language/runtime, the script's contract is: committed lock +
+re-runnable + deterministic output.
+
+### Queryable (tier 2)
+
+- Pin the queryable source's version (file version, API revision) so
+  harvests are reproducible against it.
+- For rendered pages: prefer the page's own declared values (stylesheet
+  variables) over computed values; when you must read computed values, record
+  the viewport and simulate each state the styleguide can render. Computed
+  values freeze responsive behavior — harvest at multiple widths if the
+  system is fluid.
+- For design files: variables/styles usually map to color/type tokens;
+  spacing usually lives in the component frames' layout values. Cite node
+  links.
+
+### Transcription (tier 3)
+
+- Read the document end-to-end for the inventory pass, then transcribe token
+  tables with per-page citations.
+- Prefer digital color values stated in the document; print-space values
+  (CMYK/Pantone) need an officially stated digital mapping, else the value is
+  `assumed`.
+
+### Measurement (tier 4)
+
+Record the methodology once in provenance and apply it consistently:
+
+- Lossless images only; compression artifacts corrupt colors and edges.
+- **Calibrate scale first** against an element of known size; record the
+  calibration; convert all measurements through it.
+- Colors: sample flat regions away from edges (anti-aliasing bleeds); use the
+  dominant value of a patch, not one pixel.
+- Spacing: measure raw, convert, and only snap to a base grid when multiple
+  independent measurements agree; keep raw and snapped values.
+- Each interaction state needs its own capture; a state with no capture is a
+  gap or an `assumed` value, never a silent invention.
+- Keep the images (license permitting) or their hashes + origin, plus
+  coordinates per sample, so any value can be re-checked.
+
+## 5. Where values land
+
+Tier 1 output feeds normalize directly. Tiers 2–4 land in a committed,
+hand-reviewable authored file (`tool/authored/<sys>-authored-tokens.json`)
+holding the inventory, values, citations, confidences, and gap markers —
+normalize/generate/verify run unchanged on top of it. Verification for
+authored sources lints traceability (every value cited, every `assumed`
+echoed in a worksheet) instead of re-running extraction; human review of the
+authored file against the source *is* the extraction test.
 
 ```json
 {
-  "$schema": "<sys>-tokens/authored/v1",
-  "provenance": {
-    "sources": [
-      {"id": "brandbook", "type": "pdf", "title": "Acme Brand Guidelines v2.3",
-       "sha256": "…", "retrieved": "2026-07-11"},
-      {"id": "btn-states", "type": "screenshot", "file": "sources/button-states@2x.png",
-       "scale": 2, "origin": "vendor email 2026-07-02"}
-    ]
-  },
+  "provenance": {"sources": [{"id": "brandbook", "type": "pdf",
+    "title": "Acme Brand Guidelines v2.3", "sha256": "…", "retrieved": "2026-07-11"}]},
   "colors": {
     "interactivePrimary": {"value": "#0B5FFF", "cite": "brandbook p.14", "confidence": "specified"},
-    "interactivePrimaryHover": {"value": "#0A54E0", "cite": "btn-states (120,44) flat region", "confidence": "measured"}
-  },
-  "spacing": {
-    "sm": {"value": 8, "unit": "px", "cite": "brandbook p.22", "confidence": "specified"},
-    "buttonPaddingX": {"value": 16, "unit": "px", "cite": "btn-states, 32px@2x / scale 2", "confidence": "measured"}
+    "interactivePrimaryHover": {"value": null, "status": "missing-in-source"}
   }
 }
 ```
 
-Confidence enum — this is the honesty mechanism, keep it small:
+## 6. Conflicts and upgrades
 
-- `specified` — stated verbatim in the source.
-- `derived` — computed by a documented rule (e.g. rem→px, hover = darken step).
-- `measured` — sampled/measured from an image or rendered page.
-- `assumed` — a gap you filled with judgment. Every `assumed` value must also
-  appear in the relevant component worksheet's `approximations`.
+- **Precedence** when sources disagree: shipped code/styles → design-tool
+  source → docs prose → PDF → screenshots. Deviate deliberately (record it in
+  the ADR) and keep the losing source cited so the conflict stays visible.
+- **Tier upgrades**: when a better source or capability appears later, run
+  the higher-tier extraction and diff against the authored file — changed
+  `measured`/`assumed` values are expected corrections; changed `specified`
+  values are transcription bugs worth a look. Then retire the authored file
+  for that domain.
 
-Verification for authored sources: the extract-determinism check doesn't
-apply (there's nothing to re-run), so `verify_generated.mjs` instead lints the
-authored file — every value has `cite` + `confidence`, no `assumed` without a
-worksheet entry — and the generate-from-committed-files byte-identity check
-runs unchanged. Human review of the authored file against the source *is* the
-extraction test; keep the file diff-reviewable (sorted keys, one value per line).
+## 7. What NOT to build
 
-## Step 1 — Inventory before values
-
-With no upstream package to assert counts against, **author the inventory
-first**: enumerate every token name per domain, and every component with its
-variants/sizes/states, by reading the source end-to-end — *before* filling in
-any value. Gaps become explicit entries (`"value": null, "status":
-"missing-in-source"`), never silent absences. This replaces carbon's
-"expected 234 roles" assertions: you assert against your own committed
-inventory, and a reviewer can check the inventory against the source without
-checking every value.
-
-## Per-tier recipes
-
-### Tier 1 — executable / machine-readable
-
-Carbon's path; see `token-pipeline.md`. Also counts as tier 1: a published
-tokens JSON (Style Dictionary output, `tokens.json` from a Figma tokens
-plugin) or a stylesheet of CSS custom properties — fetch the file, pin its
-URL + hash in the source lock, parse `--token: value;` declarations
-mechanically.
-
-### Tier 2a — Figma with API access
-
-- Use the REST API (`/v1/files/:key/styles`, and the variables endpoints when
-  the file uses Variables) with a read token. Record file key, node IDs, and
-  the file's `version` in the source lock; re-harvest is then reproducible
-  against that version.
-- Variables usually map modes → your themes. Styles give color/type; spacing
-  usually requires reading auto-layout values from the component frames
-  themselves (`/v1/files/:key/nodes?ids=…`).
-- Harvest into the authored-file schema with `cite` = the Figma node URL and
-  `confidence: specified`.
-- No API access → treat the Figma file as tier 4 (screenshots of it), but
-  record node links as cites so values can be re-checked.
-
-### Tier 2b — live website / docs styleguide
-
-The best web source is the site's own CSS, not its prose:
-
-1. Check the stylesheets for CSS custom properties first — if the site ships
-   `--color-…`/`--spacing-…` variables, fetch + parse them (this is tier 1).
-2. Otherwise harvest **computed styles** with the pre-installed Chromium via
-   Playwright: navigate to the styleguide's component examples and read
-   `getComputedStyle` for the properties you need; simulate states with
-   `page.hover`/`:focus` where the styleguide renders them.
-3. Record in the source lock: page URLs, retrieval date, **viewport size**
-   (computed values freeze responsive behavior — harvest at multiple
-   viewports if the system has fluid tokens), and browser version.
-4. Mark values `derived` (computed by the browser) unless the page states
-   them verbatim (`specified`).
-
-### Tier 3 — PDF / brand book
-
-- Read the PDF directly (the Read tool renders PDF pages) and transcribe token
-  tables into the authored file with `cite: "<doc> p.<n>"`.
-- Prefer stated hex/RGB values; print documents may show CMYK or
-  Pantone — if only those exist, use the vendor's official digital
-  equivalents and cite where the mapping came from, else mark `assumed`.
-- Record the document version and a sha256 of the file in the source lock;
-  commit the PDF under `tool/authored/sources/` only if licensing allows,
-  else hash + origin reference.
-
-### Tier 4 — screenshots only
-
-Measurement methodology — record it once in the authored file's provenance
-and follow it consistently:
-
-- **Lossless originals only.** JPEG artifacts corrupt both colors and edges;
-  request PNGs at a known scale (@2x preferred).
-- **Calibrate the scale first**: find an element with a known size (stated
-  1px border, a standard 16px icon) and derive the device-pixel ratio; divide
-  all measurements by it. Record the calibration in provenance.
-- **Colors**: sample flat fill regions ≥4px away from any edge (anti-aliasing
-  bleeds); take the dominant value of a small patch, not a single pixel.
-- **Spacing/sizes**: measure in raw pixels, convert by scale, then check
-  whether the measurements agree on a base grid (4px/8px). Snap to the grid
-  only when multiple measurements agree; record raw and snapped values.
-- **States need their own captures** (hover, focus, active, disabled,
-  loading). A state you have no capture for is a `missing-in-source` gap or
-  an `assumed` value — never invent it silently.
-- Commit the images under `tool/authored/sources/` (license permitting) and
-  cite `file (x,y)` coordinates so any value can be re-sampled.
-
-## Conflicts and upgrades
-
-- **Precedence**: when sources disagree, default order is
-  shipped code/CSS → design-tool source → docs prose → PDF → screenshots.
-  Deviate only deliberately (some vendors' Figma is fresher than their site)
-  and record the chosen order in the ADR. Cite the losing source in the
-  value's `cite` too, so the conflict stays visible.
-- **Upgrade path**: when a better tier appears later (the vendor publishes a
-  tokens package), write the tier-1 extractor and diff its output against the
-  authored file — every `measured`/`assumed` value that changes is expected;
-  every `specified` value that changes is a transcription bug worth a
-  post-mortem. Then retire the authored file for that domain.
-
-## What NOT to build
-
-Over-optimization warning signs — all of these are wrong for a first system:
-
-- OCR/vision tooling to "automate" PDF or screenshot extraction. Hand-author:
-  a brand book defines dozens of tokens, not hundreds; transcription with
-  citations is faster and reviewable.
-- A generic multi-source extraction framework. Each tier-1/2 harvester is a
-  ~100-line script owned by one package.
-- Fabricating scales the source doesn't define (a full 13-step spacing scale
-  from three measured paddings). Ship the tokens the source defines; mark the
-  rest `missing-in-source` and extend when evidence appears.
+- Automation for its own sake (OCR/vision pipelines for a 40-page PDF): a
+  brand book defines dozens of tokens; cited transcription is faster and
+  reviewable.
+- A generic multi-source extraction framework, or tooling that assumes a
+  specific environment. Each harvester is a small script owned by one
+  package, written against whatever the environment offers *that day*.
+- Completeness the source doesn't support. Ship what the source defines;
+  mark the rest missing; extend when evidence appears.

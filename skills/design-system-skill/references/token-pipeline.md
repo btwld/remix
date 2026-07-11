@@ -3,6 +3,14 @@
 The pipeline turns pinned upstream design-token sources into committed,
 strongly-typed Dart. Reference implementation: `packages/carbon/tool/`.
 
+The stage *contract* below is what matters; the runtime is an implementation
+detail. Carbon uses Node because its upstream tokens are executable JS modules
+— pick whatever single toolchain best reads *your* source, as long as the
+stages, committed artifacts, determinism, and read-only verification hold.
+For non-code sources (Figma/PDF/websites/screenshots), the extract stage is
+replaced per `source-extraction.md`; everything from normalize down is
+unchanged.
+
 ```
 upstream npm pkgs ──extract──▶ build/raw-tokens.json          (gitignored)
                   ──normalize▶ tokens/<sys>-tokens.normalized.json  (COMMITTED)

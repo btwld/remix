@@ -106,10 +106,11 @@ model on `packages/carbon/tool/`. When the source is not executable code
   `assumed`), authored inventory-first so gaps are explicit. Normalize,
   generate, and verify run unchanged on top of it.
 
-The contract:
+The contract (runtime-agnostic — carbon implements it in Node under
+`tool/`, but any single toolchain that satisfies these properties works):
 
-- Four stages: **extract → normalize → generate → verify**, all Node
-  (`tool/*.mjs`), sharing helpers from `tool/lib/convert.mjs`.
+- Four stages: **extract → normalize → generate → verify**, with all
+  conversion rules in one shared module so stages can never disagree.
 - The normalized JSON snapshot **and** the generated Dart are **committed**.
 - Regeneration from the same source lock is **byte-identical**, and
   `verify_generated.mjs` is **read-only** (every writer takes `--out`).
