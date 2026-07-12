@@ -57,6 +57,12 @@ Effective enabled state is `enabled && !loading && onPressed != null`. During
 loading, content stays laid out (invisible) with a spinner overlay to prevent
 layout shift.
 
+Icon placement is style-driven when exactly one icon is present:
+`RemixButtonStyler().iconAlignment(IconAlignment.end)` places it after the
+label, regardless of whether the value came from `leadingIcon` or
+`trailingIcon`. With both icons present, Remix preserves
+leading → label → trailing order.
+
 Fortal preset: `FortalButton` — all params above plus
 `variant` (`solid|soft|surface|outline|ghost`) and `size` (`size1–size4`).
 
@@ -222,6 +228,8 @@ Plus the standard Flutter text-input surface, passed through: `focusNode`,
 `ignorePointers`, `undoController`, `groupId`.
 
 Sets `WidgetState.error` when `error == true`, enabling error-state styling.
+Semantics use `semanticLabel ?? label`, `semanticHint ?? hintText`, and expose
+`helperText` as the semantic error text only when `error` is true.
 
 Fortal preset: `FortalTextField` — mirrors the entire param list plus
 `variant` (`surface|soft`), `size` (`size1–size3`).
@@ -248,6 +256,9 @@ widgets:
 - **RemixSelectItem\<T\>**: `value` (required), `label` (required),
   `enabled` (default true), `style` (a `RemixSelectMenuItemStyler`),
   `semanticLabel`.
+
+`onChanged: null` does not disable the Select. When `enabled` is true it can
+still open for inspection; choosing an item simply does not report a change.
 
 Fortal preset: `FortalSelect<T>` — `variant` (`surface|soft|ghost`), `size`
 (`size1–size3`). The preset includes a matching default item style; an
@@ -339,14 +350,18 @@ thickness), no variant.
 
 ### showRemixDialog\<T\>
 
-The only `showRemix*` helper in the package. It wraps `showNakedDialog` and
-re-injects the current `MixScope` tokens into the dialog route.
+The only `showRemix*` helper in the package. It wraps `showNakedDialog`. When
+the calling context has a `MixScope`, it clones that scope's tokens and
+modifier order into the dialog route; it also works when no `MixScope` is
+present. That makes the route helper scope-optional; Fortal-styled dialog
+content still needs a `FortalScope` above the calling context so its tokens
+can resolve.
 
 | Parameter | Type | Default | Required |
 |-----------|------|---------|----------|
 | `context` | `BuildContext` | — | yes |
 | `builder` | `WidgetBuilder` | — | yes |
-| `barrierColor` | `Color?` | `null` | no |
+| `barrierColor` | `Color?` | `Colors.black54` when null | no |
 | `barrierDismissible` | `bool` | `true` | no |
 | `barrierLabel` | `String?` | `null` | no |
 | `transitionDuration` | `Duration` | `400ms` | no |
@@ -384,6 +399,8 @@ Fortal preset: `FortalDialog` — same params, no variant/size (single style).
 
 Spec timing defaults: `waitDuration` 300ms (hover delay), `showDuration`
 1500ms (touch long-press), `dismissDuration` 100ms (hover-exit grace).
+The tooltip styler's `label(...)` spec is applied through `DefaultTextStyle`,
+so normal `Text` descendants inside an arbitrary `tooltipChild` inherit it.
 
 Fortal preset: `FortalTooltip` — same params, no variant/size.
 
@@ -412,8 +429,8 @@ Fortal preset: `FortalTooltip` — same params, no variant/size.
 - **RemixMenuDivider\<T\>**: no fields, visual separator.
 
 Fortal preset: `FortalMenu<T>` — `variant` (`solid|soft`), `size`
-(`size1–size2`). Unlike Select, `fortalMenuStyler` already bakes in the
-matching item styler — no per-item `style` wiring needed.
+(`size1–size2`). Like Select, `fortalMenuStyler` already bakes in the matching
+item styler; use an individual item's `style` only for a row-level override.
 
 ---
 

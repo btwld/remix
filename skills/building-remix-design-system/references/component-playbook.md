@@ -47,11 +47,50 @@ Use a generated `@MixWidget` wrapper **only if all of**:
 
 Otherwise write a **hand-written facade**: a `StatelessWidget` in the target
 vocabulary that builds a `Remix*Styler` recipe and invokes its `.call(...)`.
-(With `mix_generator` 2.1.2 or newer, a generic `call<T>()` target is not by
-itself a reason to hand-write the facade: `@MixWidget` supports generic
-wrappers and generates named constructors for enum-backed variants.)
-(Note: `@MixWidget` generation from a package *outside* remix is unproven —
-run a spike before committing to it.)
+
+With `mix_generator` 2.1.2 or newer, a generic `call<T>()` target is not by
+itself a reason to hand-write the facade. `@MixWidget` copies the styler
+`call<T>()` type parameters onto the generated widget, so callers normally
+infer `T` from items, values, and callbacks. The annotated recipe function
+itself must remain non-generic.
+
+The generator contract is intentionally convention-based:
+
+- annotate a top-level styler variable or a non-generic top-level function
+  returning `Style<S>`;
+- factory parameters become constructor parameters, followed by the styler's
+  `call()` parameters; `Key? key` is forwarded when `call()` exposes it;
+- factory and `call()` parameter names must not collide. State-dependent
+  recipes often collide on names such as `loading`; use a hand-written facade
+  when the public widget needs that same input for both styling and behavior;
+- to generate `Widget.solid(...)`, `Widget.soft(...)`, and similar named
+  constructors, use a **named, non-nullable enum parameter named exactly
+  `variant`** on a function recipe. Required positional parameters, other
+  parameter names, nullable enums, and non-enum types do not produce named
+  variant constructors. Optional positional factory parameters are rejected
+  entirely;
+- each visible enum value becomes a named constructor and carries its
+  dartdoc/deprecation metadata into generated code. If an enum value has the
+  same name as a generated widget type parameter, the generator suppresses
+  all named variant constructors to keep the output valid;
+- use a lower-camel recipe name ending in `Style`, or pass
+  `@MixWidget(name: '<System><Component>')` explicitly.
+
+```dart
+enum AcmeSelectVariant { surface, soft, ghost }
+
+@MixWidget(name: 'AcmeSelect')
+RemixSelectStyler acmeSelectStyle({
+  AcmeSelectVariant variant = .surface,
+}) => switch (variant) {
+  .surface => _surfaceSelectStyle(),
+  .soft => _softSelectStyle(),
+  .ghost => _ghostSelectStyle(),
+};
+```
+
+Generation from a standalone package that returns Remix stylers should still
+be proven with a package-local spike before committing to the public API.
 
 For that spike, add the generator surface explicitly:
 
@@ -69,13 +108,17 @@ Import `mix_annotations`, add a `part '<component>.g.dart';` directive to the
 library containing the annotated styler recipe, then run:
 
 ```bash
-dart run build_runner build --delete-conflicting-outputs
+dart run build_runner build
 ```
 
 Commit the generated part and prove regeneration is a no-op before relying on
 the wrapper in the public API.
 
 ## 3. Recipe shape
+
+This Button recipe is for a hand-written facade: its `loading` styling input
+collides with `RemixButtonStyler.call(loading: ...)`, so it cannot be exposed
+unchanged through `@MixWidget`.
 
 ```dart
 // Pure function of a few enums → memoize; stylers are immutable value objects.
@@ -144,6 +187,15 @@ activeText)` rather than sharing one hardcoded pressed treatment.
 buttons ignore `mainAxisAlignment`; it only matters when the parent forces a
 width. Set alignment for the width-constrained case if the source system
 specifies it, and don't fight the min-size default.
+
+### One-icon alignment is style-driven
+
+`RemixButtonStyler.iconAlignment(IconAlignment.start|end)` controls which
+side of the label a **single** icon occupies. It applies regardless of whether
+the caller supplied `leadingIcon` or `trailingIcon`. When both icons are
+present, Remix deliberately preserves leading → label → trailing order. Test
+both the one-icon override and the two-icon stability if the target system
+exposes this behavior.
 
 ### Misc
 

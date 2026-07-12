@@ -10,6 +10,10 @@ accessible behavior) with **Mix** (styling engine) to deliver fully styled,
 interaction-aware components. The built-in **Fortal** theme provides
 Radix-inspired design tokens and ready-made preset widgets.
 
+This skill is for consuming Remix and its built-in Fortal theme. For a
+standalone branded design-system package built on Remix, use the
+`building-remix-design-system` skill instead.
+
 ## Quick Start
 
 ```dart

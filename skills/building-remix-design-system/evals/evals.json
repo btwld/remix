@@ -36,6 +36,12 @@
       "prompt": "We have no design assets at all. Our brand is 'calm, premium, dark-first', primary color is teal #0D9488, and we use Inter. Generate a design system package from that.",
       "expected_output": "Treats the brief as the pinned source (committed verbatim), asks for or confirms missing constraints (themes, density, gray preference) rather than silently inventing, decides the token inventory and theme model first and records it in an ADR, then authors tool/authored tokens with confidence 'designed' or 'derived' (values produced by documented rules like a perceptually even teal ramp and a modular type scale, each citing the brief or the rule); the standard normalize/generate/verify pipeline and package scaffold apply unchanged.",
       "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "Our RemixSelect-based component has a generic call<T>() and three variants. Can mix_generator 2.1.2 generate the public AcmeSelect wrapper and named constructors, or do we still need to hand-write it? Show the recipe shape and explain the boundary.",
+      "expected_output": "Explains that genericity comes from the styler call<T>() and is copied to the generated widget, while the annotated top-level recipe function itself must be non-generic. Shows @MixWidget(name: 'AcmeSelect') on a non-generic Style-returning function with a named, non-nullable enum parameter named exactly variant, which generates AcmeSelect.<enumValue> constructors and lets T infer from values/items/callbacks. Checks that the generated call parameters do not leak Remix-only public types; if they do, chooses a hand-written target-vocabulary facade. Mentions that nullable, required-positional, differently named, or non-enum variant parameters do not generate named constructors, while optional positional factory parameters are rejected. Requires a standalone-package spike and a second plain `dart run build_runner build` that leaves generated output unchanged before committing to this API.",
+      "files": []
     }
   ]
 }

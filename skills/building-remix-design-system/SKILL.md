@@ -1,6 +1,17 @@
 ---
 name: building-remix-design-system
-description: This skill should be used when the user wants to build, port, generate, or scaffold a design-system package on top of Remix (Mix + Naked UI) — e.g. "implement Material/Polaris/Fluent/Spectrum on Remix", "create a new design system package", "add a token pipeline for <system>", or "wrap Remix components in <brand> styling". Also trigger for token extraction pipelines, design-token generation, theme scopes, or component recipes for any Remix-based design system other than Fortal. Any design source applies: npm token packages, Figma files, docs websites, PDFs/brand books, screenshots, or nothing but a written brand brief ("generate a design system from this description").
+description: >-
+  Use this skill when the user wants to build, port, generate, or scaffold a
+  design-system package on top of Remix (Mix + Naked UI), such as implementing
+  Material, Polaris, Fluent, or Spectrum on Remix; creating a design-system
+  package; adding a token pipeline for a named system; or wrapping Remix
+  components in brand-specific styling. Also trigger for token extraction,
+  design-token generation, theme scopes, or component recipes for any
+  Remix-based design system other than Fortal, including questions about
+  @MixWidget, mix_generator, generic generated wrappers, or named variant
+  constructors in such a package. Sources can be npm token packages, Figma
+  files, documentation, PDFs or brand books, screenshots, or only a written
+  brand brief.
 ---
 
 # Building a Design System Package on Remix

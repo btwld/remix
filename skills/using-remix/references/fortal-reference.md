@@ -76,6 +76,10 @@ Notes:
 - There is no `FortalTabs` — use `RemixTabs` as the behavioral root.
 - `FortalIconButton` forwards the complete `RemixIconButton` behavior surface,
   including builders, long press, focus, semantics, and cursor options.
+- Generated `FortalButton` does not accept a style override. For Fortal visuals
+  with custom one-icon placement, use
+  `RemixButton(style: fortalButtonStyler(...).iconAlignment(.end), ...)`.
+  With two icons, leading → label → trailing order remains stable.
 - `FortalSelect` and `FortalMenu` both include matching default item styles.
   Set an individual item's `style` only when that row needs an override.
 
