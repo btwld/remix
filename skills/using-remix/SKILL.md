@@ -65,7 +65,7 @@ to resolve tokens.
      style: fortalButtonStyler(variant: .solid)
          .borderRadiusAll(const Radius.circular(8))
          .paddingX(32)
-         .onHovered(RemixButtonStyler().wrap(WidgetModifierConfig.scale(x: 1.05, y: 1.05))),
+         .onHovered(RemixButtonStyler().wrap(.scale(x: 1.05, y: 1.05))),
    )
    ```
 

@@ -609,9 +609,7 @@ void main() {
 
     group('Widget Modifiers', () {
       testWidgets('applies widget modifiers from style', (tester) async {
-        final customStyle = RemixRadioStyler().wrap(
-          WidgetModifierConfig.clipOval(),
-        );
+        final customStyle = RemixRadioStyler().wrap(.clipOval());
 
         await tester.pumpRemixApp(
           RemixRadioGroup<String>(

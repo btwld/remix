@@ -44,7 +44,7 @@ class BadgeExample extends StatelessWidget {
   RemixBadgeStyler get styleLabel {
     return RemixBadgeStyler()
         .size(24, 24)
-        .wrap(WidgetModifierConfig.clipOval())
+        .wrap(.clipOval())
         .label(
           TextStyler()
               .fontSize(15)
@@ -60,7 +60,7 @@ class BadgeExample extends StatelessWidget {
   RemixBadgeStyler get styleIcon {
     return RemixBadgeStyler()
         .size(24, 24)
-        .wrap(WidgetModifierConfig.clipOval())
+        .wrap(.clipOval())
         .label(
           TextStyler()
               .fontSize(15)
@@ -68,7 +68,7 @@ class BadgeExample extends StatelessWidget {
               .fontFeatures([const FontFeature.tabularFigures()]),
         )
         .foregroundColor(Colors.redAccent)
-        .wrap(WidgetModifierConfig.iconTheme(color: Colors.white, size: 15));
+        .wrap(.iconTheme(color: Colors.white, size: 15));
   }
 }
 ```

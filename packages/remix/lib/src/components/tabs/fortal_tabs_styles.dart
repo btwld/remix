@@ -24,7 +24,7 @@ RemixTabStyler fortalTabStyler() {
       .label(TextStyler().color(FortalTokens.gray12()))
       .icon(IconStyler(color: FortalTokens.gray12(), size: 16.0))
       .wrap(
-        WidgetModifierConfig.box(
+        .box(
           BoxStyler()
               .height(40)
               .paddingX(4)
@@ -48,9 +48,7 @@ RemixTabStyler fortalTabStyler() {
         RemixTabStyler()
             .label(TextStyler().fontWeight(FortalTokens.fontWeightMedium()))
             .wrap(
-              WidgetModifierConfig.box(
-                BoxStyler().borderBottom(color: FortalTokens.accent9()),
-              ),
+              .box(BoxStyler().borderBottom(color: FortalTokens.accent9())),
             ),
       )
       .padding(EdgeInsetsMix.symmetric(vertical: 6.0, horizontal: 12.0));

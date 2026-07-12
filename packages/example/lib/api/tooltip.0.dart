@@ -48,7 +48,7 @@ class TooltipExample extends StatelessWidget {
         .backgroundColor(Colors.black87)
         .borderRadius(BorderRadiusGeometryMix.all(const .circular(6)))
         .wrap(
-          WidgetModifierConfig.defaultTextStyle(
+          .defaultTextStyle(
             style: TextStyleMix().color(Colors.white).fontSize(14),
           ),
         );

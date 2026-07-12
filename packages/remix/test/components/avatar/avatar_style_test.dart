@@ -336,7 +336,7 @@ void main() {
       styleMethodTest(
         'wrap method sets modifier',
         initial: RemixAvatarStyler(),
-        modify: (style) => style.wrap(WidgetModifierConfig.align()),
+        modify: (style) => style.wrap(.align()),
         expect: (style) {
           expect(style.$modifier, equals(WidgetModifierConfig.align()));
         },

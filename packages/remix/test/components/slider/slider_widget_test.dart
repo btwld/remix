@@ -713,9 +713,7 @@ void main() {
 
     group('Widget Modifiers', () {
       testWidgets('applies widget modifiers from style', (tester) async {
-        final customStyle = RemixSliderStyler().wrap(
-          WidgetModifierConfig.clipOval(),
-        );
+        final customStyle = RemixSliderStyler().wrap(.clipOval());
 
         await tester.pumpRemixApp(
           RemixSlider(

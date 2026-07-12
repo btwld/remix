@@ -87,7 +87,7 @@ class _AccordionExampleState extends State<AccordionExample> {
   RemixAccordionStyler get itemStyle {
     return RemixAccordionStyler()
         .content(BoxStyler().paddingX(16).paddingTop(8))
-        .wrap(WidgetModifierConfig.clipRRect(borderRadius: .circular(8)))
+        .wrap(.clipRRect(borderRadius: .circular(8)))
         .paddingX(16)
         .paddingY(14)
         .borderRounded(8)

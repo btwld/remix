@@ -396,9 +396,7 @@ extension RemixButtonStyleContainerHelpers on RemixButtonStyler {
   }
 
   RemixButtonStyler rotate(double radians, {Alignment alignment = .center}) {
-    return wrap(
-      WidgetModifierConfig.rotate(radians: radians, alignment: alignment),
-    );
+    return wrap(.rotate(radians: radians, alignment: alignment));
   }
 
   RemixButtonStyler scale(double value, {Alignment alignment = .center}) {

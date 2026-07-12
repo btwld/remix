@@ -9,9 +9,7 @@ RemixTooltipStyler fortalTooltipStyler() {
       .paddingX(FortalTokens.space2())
       .marginY(FortalTokens.space1())
       .wrap(
-        WidgetModifierConfig.defaultTextStyle(
-          style: TextStyleMix().color(FortalTokens.gray1()),
-        ),
+        .defaultTextStyle(style: TextStyleMix().color(FortalTokens.gray1())),
       )
       .backgroundColor(FortalTokens.gray11());
 }

@@ -304,7 +304,7 @@ void main() {
       styleMethodTest(
         'wrap',
         initial: RemixMenuTriggerStyler(),
-        modify: (style) => style.wrap(WidgetModifierConfig.clipOval()),
+        modify: (style) => style.wrap(.clipOval()),
         expect: (style) {
           expect(style.$modifier, equals(WidgetModifierConfig.clipOval()));
         },
@@ -472,7 +472,7 @@ void main() {
       styleMethodTest(
         'wrap',
         initial: RemixMenuStyler(),
-        modify: (style) => style.wrap(WidgetModifierConfig.clipOval()),
+        modify: (style) => style.wrap(.clipOval()),
         expect: (style) {
           expect(style.$modifier, equals(WidgetModifierConfig.clipOval()));
         },
@@ -916,7 +916,7 @@ void main() {
       styleMethodTest(
         'wrap',
         initial: RemixMenuItemStyler(),
-        modify: (style) => style.wrap(WidgetModifierConfig.clipOval()),
+        modify: (style) => style.wrap(.clipOval()),
         expect: (style) {
           expect(style.$modifier, equals(WidgetModifierConfig.clipOval()));
         },

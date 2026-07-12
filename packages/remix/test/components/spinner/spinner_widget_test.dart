@@ -203,9 +203,7 @@ void main() {
 
     group('Widget Modifiers', () {
       testWidgets('applies widget modifiers from style', (tester) async {
-        final customStyle = RemixSpinnerStyler().wrap(
-          WidgetModifierConfig.clipOval(),
-        );
+        final customStyle = RemixSpinnerStyler().wrap(.clipOval());
 
         await tester.pumpRemixApp(RemixSpinner(style: customStyle));
         await tester.pump();

@@ -362,7 +362,7 @@ void main() {
       await tester.pumpRemixApp(
         RemixProgress(
           value: 0.5,
-          style: RemixProgressStyler().wrap(WidgetModifierConfig.clipOval()),
+          style: RemixProgressStyler().wrap(.clipOval()),
         ),
       );
       await tester.pumpAndSettle();

@@ -458,7 +458,7 @@ void main() {
       styleMethodTest(
         'wrap() adds widget modifier',
         initial: RemixTextFieldStyler(),
-        modify: (style) => style.wrap(WidgetModifierConfig.clipOval()),
+        modify: (style) => style.wrap(.clipOval()),
         expect: (style) {
           expect(style.$modifier, equals(WidgetModifierConfig.clipOval()));
         },

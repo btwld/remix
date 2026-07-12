@@ -33,7 +33,7 @@ class ProgressExample extends StatelessWidget {
 
   RemixProgressStyler get style {
     return RemixProgressStyler()
-        .wrap(WidgetModifierConfig.clipRRect(borderRadius: BorderRadiusGeometryMix.circular(10)))
+        .wrap(.clipRRect(borderRadius: BorderRadiusGeometryMix.circular(10)))
         .trackColor(Colors.grey.shade300)
         .indicatorColor(Colors.grey.shade900)
         .width(300)

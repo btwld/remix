@@ -200,11 +200,7 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
   RemixMenuStyler _buildStyle() {
     return RemixMenuStyler()
         .trigger(RemixMenuTriggerStyler().mainAxisSize(.min))
-        .overlay(
-          FlexBoxStyler()
-              .mainAxisSize(.min)
-              .wrap(WidgetModifierConfig.intrinsicWidth()),
-        )
+        .overlay(FlexBoxStyler().mainAxisSize(.min).wrap(.intrinsicWidth()))
         .merge(widget.style);
   }
 

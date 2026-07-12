@@ -10,9 +10,7 @@ RemixDialogStyler fortalDialogStyler() {
             .fontWeight(.w600)
             .color(FortalTokens.gray12())
             .wrap(
-              WidgetModifierConfig.padding(
-                EdgeInsetsMix.fromLTRB(0, 0, 0, FortalTokens.space4()),
-              ),
+              .padding(EdgeInsetsMix.fromLTRB(0, 0, 0, FortalTokens.space4())),
             ),
       )
       .description(TextStyler().fontSize(14).color(FortalTokens.gray11()))

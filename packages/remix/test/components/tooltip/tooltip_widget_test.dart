@@ -391,7 +391,7 @@ void main() {
       testWidgets('applies widget modifiers from style', (tester) async {
         await tester.pumpRemixApp(
           RemixTooltip(
-            style: RemixTooltipStyler().wrap(WidgetModifierConfig.clipOval()),
+            style: RemixTooltipStyler().wrap(.clipOval()),
             tooltipChild: const Text('Tooltip'),
             child: const Text('Trigger'),
           ),

@@ -573,9 +573,7 @@ void main() {
     group('Widget Modifiers', () {
       testWidgets('applies widget modifiers from style', (tester) async {
         await tester.pumpRemixApp(
-          RemixTextField(
-            style: RemixTextFieldStyler().wrap(WidgetModifierConfig.clipOval()),
-          ),
+          RemixTextField(style: RemixTextFieldStyler().wrap(.clipOval())),
         );
         await tester.pumpAndSettle();
 
