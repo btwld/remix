@@ -75,7 +75,10 @@ class RemixCheckbox extends StatelessWidget {
   /// The style configuration for the checkbox.
   final RemixCheckboxStyle style;
 
-  /// The style spec for the checkbox.
+  /// Pre-resolved spec for the checkbox.
+  ///
+  /// When set, it is rendered as-is and interaction-driven style resolution
+  /// is skipped, mirroring [RemixButton.styleSpec].
   final RemixCheckboxSpec? styleSpec;
 
   static final styleFrom = RemixCheckboxStyle.new;
@@ -93,6 +96,21 @@ class RemixCheckbox extends StatelessWidget {
   /// Cursor when hovering over the checkbox.
   final MouseCursor mouseCursor;
 
+  Widget _buildCheckbox(BuildContext context, RemixCheckboxSpec spec) {
+    final iconData = tristate && selected == null
+        ? indeterminateIcon
+        : selected == true
+        ? checkedIcon
+        : uncheckedIcon;
+
+    return Box(
+      styleSpec: spec.container,
+      child: iconData != null
+          ? StyledIcon(icon: iconData, styleSpec: spec.indicator)
+          : null,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return NakedCheckbox(
@@ -108,23 +126,15 @@ class RemixCheckbox extends StatelessWidget {
       autofocus: autofocus,
       semanticLabel: semanticLabel,
       builder: (context, state, _) {
+        final styleSpec = this.styleSpec;
+        if (styleSpec != null) {
+          return _buildCheckbox(context, styleSpec);
+        }
+
         return StyleBuilder(
           style: style,
           controller: NakedState.controllerOf(context),
-          builder: (context, spec) {
-            final iconData = tristate && selected == null
-                ? indeterminateIcon
-                : selected == true
-                ? checkedIcon
-                : uncheckedIcon;
-
-            return Box(
-              styleSpec: spec.container,
-              child: iconData != null
-                  ? StyledIcon(icon: iconData, styleSpec: spec.indicator)
-                  : null,
-            );
-          },
+          builder: _buildCheckbox,
         );
       },
     );

@@ -4,22 +4,9 @@ import 'package:mix_specimen/golden.dart';
 import 'package:mix_specimen/mix_specimen.dart';
 import 'package:remix/remix.dart';
 
-void _noop() {}
+import 'support/fortal_themes.dart';
 
-final _themes = [
-  SpecimenTheme(
-    'fortal-light',
-    background: const Color(0xFFFFFFFF),
-    builder: (context, child) => FortalScope(child: child),
-  ),
-  SpecimenTheme(
-    'fortal-dark',
-    brightness: Brightness.dark,
-    background: const Color(0xFF111113),
-    builder: (context, child) =>
-        FortalScope(brightness: Brightness.dark, child: child),
-  ),
-];
+void _noop() {}
 
 Specimen _buttonSpecimen() {
   return Specimen(
@@ -48,9 +35,7 @@ Specimen _buttonSpecimen() {
 }
 
 void main() {
-  tearDownAll(SpecimenManifest.write);
-
-  for (final theme in _themes) {
+  for (final theme in fortalThemes) {
     testWidgets('button specimen - ${theme.id}', (tester) async {
       await expectSpecimenGolden(
         tester,

@@ -41,7 +41,11 @@ class RemixSwitch extends StatelessWidget {
   /// The style configuration for the switch.
   final RemixSwitchStyle style;
 
-  /// The style spec for the switch.
+  /// Pre-resolved spec for the switch.
+  ///
+  /// When set, it is rendered as-is and interaction-driven style resolution
+  /// is skipped, mirroring [RemixButton.styleSpec]. The resolved spec must
+  /// already include the widget's base defaults (thumb alignment).
   final RemixSwitchSpec? styleSpec;
 
   static final styleFrom = RemixSwitchStyle.new;
@@ -69,6 +73,13 @@ class RemixSwitch extends StatelessWidget {
         .merge(style);
   }
 
+  Widget _buildSwitch(BuildContext context, RemixSwitchSpec spec) {
+    return Box(
+      styleSpec: spec.container,
+      child: Box(styleSpec: spec.thumb),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return NakedToggle(
@@ -82,15 +93,15 @@ class RemixSwitch extends StatelessWidget {
       semanticLabel: semanticLabel,
       asSwitch: true,
       builder: (context, state, _) {
+        final styleSpec = this.styleSpec;
+        if (styleSpec != null) {
+          return _buildSwitch(context, styleSpec);
+        }
+
         return StyleBuilder(
           style: _buildStyle(),
           controller: NakedState.controllerOf(context),
-          builder: (context, spec) {
-            return Box(
-              styleSpec: spec.container,
-              child: Box(styleSpec: spec.thumb),
-            );
-          },
+          builder: _buildSwitch,
         );
       },
     );

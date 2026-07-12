@@ -1,0 +1,56 @@
+{
+  "schema": "mix_specimen/v0",
+  "component": "button",
+  "theme": "fortal-dark",
+  "brightness": "dark",
+  "file": "button.png",
+  "rows": [
+    "solid",
+    "soft",
+    "surface",
+    "outline",
+    "ghost"
+  ],
+  "columns": [
+    {
+      "id": "default",
+      "states": [],
+      "props": {}
+    },
+    {
+      "id": "hovered",
+      "states": [
+        "hovered"
+      ],
+      "props": {}
+    },
+    {
+      "id": "pressed",
+      "states": [
+        "pressed"
+      ],
+      "props": {}
+    },
+    {
+      "id": "focused",
+      "states": [
+        "focused"
+      ],
+      "props": {}
+    },
+    {
+      "id": "disabled",
+      "states": [
+        "disabled"
+      ],
+      "props": {}
+    },
+    {
+      "id": "loading",
+      "states": [],
+      "props": {
+        "loading": true
+      }
+    }
+  ]
+}

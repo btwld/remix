@@ -1,0 +1,68 @@
+{
+  "schema": "mix_specimen/v0",
+  "component": "checkbox",
+  "theme": "fortal-light",
+  "brightness": "light",
+  "file": "checkbox.png",
+  "rows": [
+    "surface",
+    "soft"
+  ],
+  "columns": [
+    {
+      "id": "default",
+      "states": [],
+      "props": {}
+    },
+    {
+      "id": "hovered",
+      "states": [
+        "hovered"
+      ],
+      "props": {}
+    },
+    {
+      "id": "pressed",
+      "states": [
+        "pressed"
+      ],
+      "props": {}
+    },
+    {
+      "id": "focused",
+      "states": [
+        "focused"
+      ],
+      "props": {}
+    },
+    {
+      "id": "selected",
+      "states": [
+        "selected"
+      ],
+      "props": {}
+    },
+    {
+      "id": "disabled",
+      "states": [
+        "disabled"
+      ],
+      "props": {}
+    },
+    {
+      "id": "selected-hovered",
+      "states": [
+        "selected",
+        "hovered"
+      ],
+      "props": {}
+    },
+    {
+      "id": "indeterminate",
+      "states": [],
+      "props": {
+        "indeterminate": true
+      }
+    }
+  ]
+}
