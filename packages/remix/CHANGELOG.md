@@ -1,4 +1,4 @@
-## 1.0.0
+## 1.0.0-beta.1
 
 - **BREAKING** **FIX**: `RemixDialog.child` now composes with `title`,
   `description`, and `actions` in `AlertDialog` order instead of silently
