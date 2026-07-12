@@ -21,7 +21,7 @@ enum FortalSwitchVariant {
   soft,
 }
 
-/// Creates a Fortal-themed [RemixSwitchStyler].
+/// Fortal-themed preset for [RemixSwitch].
 @MixWidget(name: 'FortalSwitch')
 RemixSwitchStyler fortalSwitchStyler({
   FortalSwitchVariant variant = .surface,

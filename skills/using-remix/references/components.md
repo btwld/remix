@@ -13,6 +13,11 @@ Shared contract for every leaf `Remix*` widget:
 The tables below list the component-specific parameters; `style`/`styleSpec`
 are omitted from each table since they are universal.
 
+Fortal presets with variants expose a named constructor for every variant
+(`FortalButton.solid(...)`, `FortalSelect.ghost(...)`, and so on). Use the
+unnamed constructor's `variant:` parameter for runtime-selected variants.
+Generic named constructors infer `T` from values, item lists, and callbacks.
+
 ## Table of Contents
 
 - [Actions](#actions): Button, IconButton, Toggle
@@ -75,10 +80,8 @@ Fortal preset: `FortalButton` — all params above plus
 | `loadingBuilder` | `RemixIconButtonLoadingBuilder?` | `null` | no |
 
 Fortal preset: `FortalIconButton` — `variant` (`solid|soft|surface|outline|ghost`),
-`size` (`size1–size4`). **Caveat:** `FortalIconButton` forwards only `icon`,
-`onPressed`, `loading`, `enabled`, `enableFeedback`, `focusNode`. For
-`onLongPress`, semantics, builders, etc., use
-`RemixIconButton(style: fortalIconButtonStyler(variant: …, size: …), …)`.
+`size` (`size1–size4`). It forwards the complete `RemixIconButton` behavior
+surface, including long press, semantics, builders, autofocus, and cursor.
 
 ### RemixToggle
 
@@ -210,7 +213,7 @@ Plus the standard Flutter text-input surface, passed through: `focusNode`,
 `maxLines` (default `1`), `minLines`, `expands`, `maxLength`,
 `maxLengthEnforcement`, `onChanged`, `onEditingComplete`, `onSubmitted`,
 `onAppPrivateCommand`, `inputFormatters`, `dragStartBehavior`,
-`enableInteractiveSelection`, `selectionControls`, `onTapOutside`,
+`enableInteractiveSelection`, `selectionControls`, `onTap`, `onTapOutside`,
 `onPressUpOutside`, `onTapAlwaysCalled`, `scrollController`, `scrollPhysics`,
 `autofillHints`, `contentInsertionConfiguration`, `clipBehavior`,
 `restorationId`, `stylusHandwritingEnabled`,
@@ -247,9 +250,8 @@ widgets:
   `semanticLabel`.
 
 Fortal preset: `FortalSelect<T>` — `variant` (`surface|soft|ghost`), `size`
-(`size1–size3`). **Caveat:** it styles only the trigger and menu container;
-set each item's `style: fortalSelectMenuItemStyler(variant: …, size: …)`
-yourself or items render unstyled.
+(`size1–size3`). The preset includes a matching default item style; an
+individual `RemixSelectItem.style` is an optional row-level override.
 
 ---
 

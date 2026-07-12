@@ -8,25 +8,31 @@ class RemixSelectStyler extends RemixStyler<RemixSelectSpec, RemixSelectStyler>
   final Prop<StyleSpec<FlexBoxSpec>>? $menuContainer;
   @MixableField(setterType: RemixSelectTriggerStyler)
   final Prop<StyleSpec<RemixSelectTriggerSpec>>? $trigger;
+  @MixableField(setterType: RemixSelectMenuItemStyler)
+  final Prop<StyleSpec<RemixSelectMenuItemSpec>>? $item;
 
   const RemixSelectStyler.create({
     Prop<StyleSpec<FlexBoxSpec>>? menuContainer,
     Prop<StyleSpec<RemixSelectTriggerSpec>>? trigger,
+    Prop<StyleSpec<RemixSelectMenuItemSpec>>? item,
     super.variants,
     super.animation,
     super.modifier,
   }) : $menuContainer = menuContainer,
-       $trigger = trigger;
+       $trigger = trigger,
+       $item = item;
 
   RemixSelectStyler({
     FlexBoxStyler? menuContainer,
     RemixSelectTriggerStyler? trigger,
+    RemixSelectMenuItemStyler? item,
     AnimationConfig? animation,
     List<VariantStyle<RemixSelectSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
          menuContainer: Prop.maybeMix(menuContainer),
          trigger: Prop.maybeMix(trigger),
+         item: Prop.maybeMix(item),
          variants: variants,
          animation: animation,
          modifier: modifier,
@@ -53,8 +59,8 @@ class RemixSelectStyler extends RemixStyler<RemixSelectSpec, RemixSelectStyler>
     required List<RemixSelectItem<T>> items,
     T? selectedValue,
     OverlayPositionConfig positioning = const OverlayPositionConfig(
-      targetAnchor: Alignment.bottomCenter,
-      followerAnchor: Alignment.topCenter,
+      targetAnchor: .bottomCenter,
+      followerAnchor: .topCenter,
     ),
     ValueChanged<T?>? onChanged,
     VoidCallback? onOpen,

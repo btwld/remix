@@ -140,17 +140,15 @@ class _FortalAccordionExampleState extends State<FortalAccordionExample> {
       controller: controller,
       child: Column(
         children: [
-          FortalAccordion(
+          FortalAccordion.surface(
             value: 'item1',
             title: 'First Item',
-            variant: FortalAccordionVariant.surface,
             size: FortalAccordionSize.size2,
             child: Text('First content'),
           ),
-          FortalAccordion(
+          FortalAccordion.soft(
             value: 'item2',
             title: 'Second Item',
-            variant: FortalAccordionVariant.soft,
             size: FortalAccordionSize.size3,
             child: Text('Second content'),
           ),
@@ -197,6 +195,7 @@ const RemixAccordion({
   String? semanticLabel,
   Widget Function(Widget, Animation<double>) transitionBuilder = defaultAccordionTransitionBuilder,
   RemixAccordionStyler style = const RemixAccordionStyler.create(),
+  RemixAccordionSpec? styleSpec,
 })
 ```
 </CodeGroup>
@@ -271,6 +270,10 @@ Optional. Semantic label announced for the header.
 #### `style` → `RemixAccordionStyler`
 
 Optional. The style configuration for the accordion item.
+
+#### `styleSpec` → `RemixAccordionSpec?`
+
+Optional. A raw resolved style spec that bypasses fluent style resolution.
 
 #### `transitionBuilder` → `Widget Function(Widget, Animation<double>)`
 

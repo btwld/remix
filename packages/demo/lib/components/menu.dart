@@ -29,7 +29,7 @@ Widget buildMenuUseCase(BuildContext context) {
           height: 300,
           width: 300,
           child: Center(
-            child: FortalMenu<String>(
+            child: FortalMenu(
               positioning: const OverlayPositionConfig(
                 followerAnchor: .topCenter,
                 targetAnchor: .bottomCenter,

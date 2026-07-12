@@ -47,8 +47,33 @@ Use a generated `@MixWidget` wrapper **only if all of**:
 
 Otherwise write a **hand-written facade**: a `StatelessWidget` in the target
 vocabulary that builds a `Remix*Styler` recipe and invokes its `.call(...)`.
+(With `mix_generator` 2.1.2 or newer, a generic `call<T>()` target is not by
+itself a reason to hand-write the facade: `@MixWidget` supports generic
+wrappers and generates named constructors for enum-backed variants.)
 (Note: `@MixWidget` generation from a package *outside* remix is unproven —
 run a spike before committing to it.)
+
+For that spike, add the generator surface explicitly:
+
+```yaml
+dependencies:
+  remix: ^1.0.0
+  mix_annotations: ^2.1.2
+
+dev_dependencies:
+  build_runner: ^2.10.1
+  mix_generator: ^2.1.2
+```
+
+Import `mix_annotations`, add a `part '<component>.g.dart';` directive to the
+library containing the annotated styler recipe, then run:
+
+```bash
+dart run build_runner build --delete-conflicting-outputs
+```
+
+Commit the generated part and prove regeneration is a no-op before relying on
+the wrapper in the public API.
 
 ## 3. Recipe shape
 

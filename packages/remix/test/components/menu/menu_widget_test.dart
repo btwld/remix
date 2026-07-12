@@ -499,6 +499,30 @@ void main() {
         contains(equals(const BoxDecoration(color: Colors.purple))),
       );
     });
+
+    testWidgets('applies raw menu item styleSpec defaults', (tester) async {
+      await tester.pumpRemixApp(
+        RemixMenu<String>(
+          trigger: const RemixMenuTrigger(label: 'Options'),
+          items: const [RemixMenuItem(value: 'copy', label: 'Copy')],
+          styleSpec: const RemixMenuSpec(
+            item: StyleSpec(
+              spec: RemixMenuItemSpec(
+                label: StyleSpec(
+                  spec: TextSpec(style: TextStyle(color: Colors.red)),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Options'));
+      await tester.pumpAndSettle();
+
+      expect(tester.widget<Text>(find.text('Copy')).style?.color, Colors.red);
+    });
   });
 
   group('RemixMenu Semantics and Accessibility', () {

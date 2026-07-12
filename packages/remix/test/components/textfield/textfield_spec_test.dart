@@ -18,13 +18,11 @@ void main() {
         expect(spec.cursorHeight, isNull);
         expect(spec.cursorRadius, isNull);
         expect(spec.cursorColor, isNull);
-        expect(spec.cursorOffset, equals(Offset.zero));
         expect(spec.cursorOpacityAnimates, isNull);
         expect(spec.selectionHeightStyle, equals(BoxHeightStyle.tight));
         expect(spec.selectionWidthStyle, equals(BoxWidthStyle.tight));
         expect(spec.scrollPadding, equals(const EdgeInsets.all(20.0)));
         expect(spec.keyboardAppearance, isNull);
-        expect(spec.spacing, equals(4.0));
         expect(spec.container, equals(const StyleSpec(spec: FlexBoxSpec())));
         expect(spec.helperText, equals(const StyleSpec(spec: TextSpec())));
         expect(spec.label, equals(const StyleSpec(spec: TextSpec())));
@@ -38,13 +36,11 @@ void main() {
         const cursorHeight = 20.0;
         const cursorRadius = Radius.circular(2);
         const cursorColor = Colors.blue;
-        const cursorOffset = Offset(1, 0);
         const cursorOpacityAnimates = true;
         const selectionHeightStyle = BoxHeightStyle.max;
         const selectionWidthStyle = BoxWidthStyle.max;
         const scrollPadding = EdgeInsets.all(10);
         const keyboardAppearance = Brightness.dark;
-        const spacing = 8.0;
         final container = StyleSpec(spec: const FlexBoxSpec());
         final helperText = StyleSpec(spec: const TextSpec());
         final label = StyleSpec(spec: const TextSpec());
@@ -57,13 +53,11 @@ void main() {
           cursorHeight: cursorHeight,
           cursorRadius: cursorRadius,
           cursorColor: cursorColor,
-          cursorOffset: cursorOffset,
           cursorOpacityAnimates: cursorOpacityAnimates,
           selectionHeightStyle: selectionHeightStyle,
           selectionWidthStyle: selectionWidthStyle,
           scrollPadding: scrollPadding,
           keyboardAppearance: keyboardAppearance,
-          spacing: spacing,
           container: container,
           helperText: helperText,
           label: label,
@@ -76,13 +70,11 @@ void main() {
         expect(spec.cursorHeight, equals(cursorHeight));
         expect(spec.cursorRadius, equals(cursorRadius));
         expect(spec.cursorColor, equals(cursorColor));
-        expect(spec.cursorOffset, equals(cursorOffset));
         expect(spec.cursorOpacityAnimates, equals(cursorOpacityAnimates));
         expect(spec.selectionHeightStyle, equals(selectionHeightStyle));
         expect(spec.selectionWidthStyle, equals(selectionWidthStyle));
         expect(spec.scrollPadding, equals(scrollPadding));
         expect(spec.keyboardAppearance, equals(keyboardAppearance));
-        expect(spec.spacing, equals(spacing));
         expect(spec.container, equals(container));
         expect(spec.helperText, equals(helperText));
         expect(spec.label, equals(label));
@@ -101,12 +93,10 @@ void main() {
         expect(copy.cursorHeight, equals(spec.cursorHeight));
         expect(copy.cursorRadius, equals(spec.cursorRadius));
         expect(copy.cursorColor, equals(spec.cursorColor));
-        expect(copy.cursorOffset, equals(spec.cursorOffset));
         expect(copy.selectionHeightStyle, equals(spec.selectionHeightStyle));
         expect(copy.selectionWidthStyle, equals(spec.selectionWidthStyle));
         expect(copy.scrollPadding, equals(spec.scrollPadding));
         expect(copy.keyboardAppearance, equals(spec.keyboardAppearance));
-        expect(copy.spacing, equals(spec.spacing));
         expect(copy.container, equals(spec.container));
         expect(copy.helperText, equals(spec.helperText));
         expect(copy.label, equals(spec.label));
@@ -171,14 +161,12 @@ void main() {
         const spec2 = RemixTextFieldSpec(
           textAlign: TextAlign.center,
           cursorWidth: 4.0,
-          spacing: 8.0,
         );
 
         final result = spec1.lerp(spec2, 0.0);
 
         expect(result.textAlign, equals(spec1.textAlign));
         expect(result.cursorWidth, equals(spec1.cursorWidth));
-        expect(result.spacing, equals(spec1.spacing));
       });
 
       test('interpolates between two specs at t=1', () {
@@ -186,24 +174,21 @@ void main() {
         const spec2 = RemixTextFieldSpec(
           textAlign: TextAlign.center,
           cursorWidth: 4.0,
-          spacing: 8.0,
         );
 
         final result = spec1.lerp(spec2, 1.0);
 
         expect(result.textAlign, equals(spec2.textAlign));
         expect(result.cursorWidth, equals(spec2.cursorWidth));
-        expect(result.spacing, equals(spec2.spacing));
       });
 
       test('interpolates between two specs at t=0.5', () {
-        const spec1 = RemixTextFieldSpec(cursorWidth: 2.0, spacing: 4.0);
-        const spec2 = RemixTextFieldSpec(cursorWidth: 4.0, spacing: 8.0);
+        const spec1 = RemixTextFieldSpec(cursorWidth: 2.0);
+        const spec2 = RemixTextFieldSpec(cursorWidth: 4.0);
 
         final result = spec1.lerp(spec2, 0.5);
 
         expect(result.cursorWidth, equals(3.0));
-        expect(result.spacing, equals(6.0));
       });
 
       test('interpolates colors correctly', () {
@@ -248,7 +233,7 @@ void main() {
       test('props includes all relevant properties', () {
         const spec = RemixTextFieldSpec();
 
-        expect(spec.props.length, equals(17));
+        expect(spec.props.length, equals(15));
         expect(spec.props, contains(spec.text));
         expect(spec.props, contains(spec.hintText));
         expect(spec.props, contains(spec.textAlign));
@@ -256,13 +241,11 @@ void main() {
         expect(spec.props, contains(spec.cursorHeight));
         expect(spec.props, contains(spec.cursorRadius));
         expect(spec.props, contains(spec.cursorColor));
-        expect(spec.props, contains(spec.cursorOffset));
         expect(spec.props, contains(spec.cursorOpacityAnimates));
         expect(spec.props, contains(spec.selectionHeightStyle));
         expect(spec.props, contains(spec.selectionWidthStyle));
         expect(spec.props, contains(spec.scrollPadding));
         expect(spec.props, contains(spec.keyboardAppearance));
-        expect(spec.props, contains(spec.spacing));
         expect(spec.props, contains(spec.container));
         expect(spec.props, contains(spec.helperText));
         expect(spec.props, contains(spec.label));
@@ -284,7 +267,6 @@ void main() {
         expect(properties.any((p) => p.name == 'cursorHeight'), isTrue);
         expect(properties.any((p) => p.name == 'cursorRadius'), isTrue);
         expect(properties.any((p) => p.name == 'cursorColor'), isTrue);
-        expect(properties.any((p) => p.name == 'cursorOffset'), isTrue);
         expect(
           properties.any((p) => p.name == 'cursorOpacityAnimates'),
           isTrue,
@@ -293,7 +275,6 @@ void main() {
         expect(properties.any((p) => p.name == 'selectionWidthStyle'), isTrue);
         expect(properties.any((p) => p.name == 'scrollPadding'), isTrue);
         expect(properties.any((p) => p.name == 'keyboardAppearance'), isTrue);
-        expect(properties.any((p) => p.name == 'spacing'), isTrue);
         expect(properties.any((p) => p.name == 'container'), isTrue);
         expect(properties.any((p) => p.name == 'helperText'), isTrue);
         expect(properties.any((p) => p.name == 'label'), isTrue);

@@ -184,7 +184,7 @@ While Remix gives you complete freedom to build any design system, it also inclu
 
 ### Quick Start with Fortal
 
-To use Fortal widgets, wrap your app with `FortalScope` to provide the design tokens, then use the generated `Fortal*` widgets:
+To use Fortal widgets, wrap your app with `FortalScope` to provide the design tokens, then use the generated `Fortal*` widgets. Named constructors select a fixed variant; use the unnamed constructor with `variant:` when the choice is dynamic:
 
 ```dart
 import 'package:flutter/material.dart';
@@ -197,10 +197,9 @@ class MyApp extends StatelessWidget {
       home: Scaffold(
         body: FortalScope(
           child: Center(
-            child: FortalButton(
+            child: FortalButton.solid(
               onPressed: () {},
               label: 'Fortal Button',
-              variant: FortalButtonVariant.solid,
             ),
           ),
         ),

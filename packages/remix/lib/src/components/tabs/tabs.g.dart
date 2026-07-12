@@ -228,7 +228,7 @@ typedef _$RemixTabViewSpecMethods = _$RemixTabViewSpec; // ignore: unused_elemen
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Creates a Fortal-themed [RemixTabBarStyler].
+/// Fortal-themed preset for [RemixTabBar].
 class FortalTabBar extends StatelessWidget {
   const FortalTabBar({super.key, required this.child});
 
@@ -240,7 +240,7 @@ class FortalTabBar extends StatelessWidget {
   }
 }
 
-/// Creates a Fortal-themed [RemixTabViewStyler].
+/// Fortal-themed preset for [RemixTabView].
 class FortalTabView extends StatelessWidget {
   const FortalTabView({super.key, required this.tabId, required this.child});
 
@@ -258,7 +258,7 @@ class FortalTabView extends StatelessWidget {
   }
 }
 
-/// Creates a Fortal-themed [RemixTabStyler].
+/// Fortal-themed preset for [RemixTab].
 class FortalTab extends StatelessWidget {
   const FortalTab({
     super.key,

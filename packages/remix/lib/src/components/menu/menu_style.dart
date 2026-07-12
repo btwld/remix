@@ -161,11 +161,11 @@ class RemixMenuStyler extends RemixStyler<RemixMenuSpec, RemixMenuStyler>
   @MixableField(setterType: FlexBoxStyler)
   final Prop<StyleSpec<FlexBoxSpec>>? $overlay;
 
-  /// Default item style (provided to children via StyleProvider, NOT in spec)
+  /// Default item style resolved by each item against its own widget state.
   @MixableField(setterType: RemixMenuItemStyler)
   final Prop<StyleSpec<RemixMenuItemSpec>>? $item;
 
-  /// Default divider style (provided to children via StyleProvider, NOT in spec)
+  /// Default divider style for separators in the overlay.
   @MixableField(setterType: RemixDividerStyler)
   final Prop<StyleSpec<RemixDividerSpec>>? $divider;
 
@@ -221,7 +221,13 @@ class RemixMenuStyler extends RemixStyler<RemixMenuSpec, RemixMenuStyler>
     VoidCallback? onOpen,
     VoidCallback? onClose,
     VoidCallback? onCanceled,
+    RawMenuAnchorOpenRequestedCallback? onOpenRequested,
+    RawMenuAnchorCloseRequestedCallback? onCloseRequested,
+    bool consumeOutsideTaps = true,
+    bool useRootOverlay = false,
+    bool closeOnClickOutside = true,
     FocusNode? triggerFocusNode,
+    OverlayPositionConfig positioning = const OverlayPositionConfig(),
   }) {
     return RemixMenu(
       key: key,
@@ -232,7 +238,13 @@ class RemixMenuStyler extends RemixStyler<RemixMenuSpec, RemixMenuStyler>
       onOpen: onOpen,
       onClose: onClose,
       onCanceled: onCanceled,
+      onOpenRequested: onOpenRequested,
+      onCloseRequested: onCloseRequested,
+      consumeOutsideTaps: consumeOutsideTaps,
+      useRootOverlay: useRootOverlay,
+      closeOnClickOutside: closeOnClickOutside,
       triggerFocusNode: triggerFocusNode,
+      positioning: positioning,
       style: this,
     );
   }

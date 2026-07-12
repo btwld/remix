@@ -6,7 +6,7 @@ enum FortalIconButtonSize { size1, size2, size3, size4 }
 /// Fortal icon button color and emphasis variants.
 enum FortalIconButtonVariant { solid, soft, surface, outline, ghost }
 
-/// Creates a Fortal-themed [RemixIconButtonStyler].
+/// Fortal-themed preset for [RemixIconButton].
 @MixWidget(name: 'FortalIconButton')
 RemixIconButtonStyler fortalIconButtonStyler({
   FortalIconButtonVariant variant = .solid,

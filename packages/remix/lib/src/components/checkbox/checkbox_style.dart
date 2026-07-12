@@ -99,6 +99,7 @@ class RemixCheckboxStyler
   /// )
   /// ```
   RemixCheckbox call({
+    Key? key,
     required bool? selected,
     ValueChanged<bool?>? onChanged,
     bool enabled = true,
@@ -113,6 +114,7 @@ class RemixCheckboxStyler
     MouseCursor mouseCursor = SystemMouseCursors.click,
   }) {
     return RemixCheckbox(
+      key: key,
       selected: selected,
       onChanged: onChanged,
       enabled: enabled,

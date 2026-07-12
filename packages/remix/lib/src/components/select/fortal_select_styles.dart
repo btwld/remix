@@ -24,7 +24,8 @@ enum FortalSelectVariant {
   ghost,
 }
 
-/// Creates a Fortal-themed [RemixSelectStyler].
+/// Fortal-themed preset for [RemixSelect].
+@MixWidget(name: 'FortalSelect')
 RemixSelectStyler fortalSelectStyler({
   FortalSelectVariant variant = .surface,
   FortalSelectSize size = .size2,
@@ -36,7 +37,10 @@ RemixSelectStyler fortalSelectStyler({
   };
 }
 
-RemixSelectStyler _fortalSelectBaseStyler(FortalSelectSize size) {
+RemixSelectStyler _fortalSelectBaseStyler(
+  FortalSelectVariant variant,
+  FortalSelectSize size,
+) {
   return RemixSelectStyler()
       .trigger(
         RemixSelectTriggerStyler()
@@ -59,6 +63,7 @@ RemixSelectStyler _fortalSelectBaseStyler(FortalSelectSize size) {
             .borderRadiusAll(FortalTokens.radius3())
             .padding(EdgeInsetsMix.all(8.0)),
       )
+      .item(fortalSelectMenuItemStyler(variant: variant, size: size))
       .onFocused(
         RemixSelectStyler().trigger(
           RemixSelectTriggerStyler().borderAll(
@@ -71,7 +76,7 @@ RemixSelectStyler _fortalSelectBaseStyler(FortalSelectSize size) {
 }
 
 RemixSelectStyler _fortalSelectSurfaceStyler([FortalSelectSize size = .size2]) {
-  return _fortalSelectBaseStyler(size).trigger(
+  return _fortalSelectBaseStyler(.surface, size).trigger(
     RemixSelectTriggerStyler()
         .color(FortalTokens.colorSurface())
         .borderAll(
@@ -82,7 +87,7 @@ RemixSelectStyler _fortalSelectSurfaceStyler([FortalSelectSize size = .size2]) {
 }
 
 RemixSelectStyler _fortalSelectSoftStyler([FortalSelectSize size = .size2]) {
-  return _fortalSelectBaseStyler(size).trigger(
+  return _fortalSelectBaseStyler(.soft, size).trigger(
     RemixSelectTriggerStyler()
         .color(FortalTokens.accent3())
         .label(TextStyler().color(FortalTokens.accent11()))
@@ -92,6 +97,7 @@ RemixSelectStyler _fortalSelectSoftStyler([FortalSelectSize size = .size2]) {
 
 RemixSelectStyler _fortalSelectGhostStyler([FortalSelectSize size = .size2]) {
   return _fortalSelectBaseStyler(
+    .ghost,
     size,
   ).trigger(RemixSelectTriggerStyler().color(Colors.transparent).paddingY(6.0));
 }
@@ -179,62 +185,4 @@ RemixSelectMenuItemStyler _fortalSelectMenuItemSizeStyler(
     .size2 => RemixSelectMenuItemStyler().paddingX(8.0).height(24.0),
     .size3 => RemixSelectMenuItemStyler().paddingX(10.0).height(28.0),
   };
-}
-
-/// Fortal-themed select widget wrapper.
-///
-/// Hand-written: hosted `mix_generator` 2.1.1 does not support generic
-/// `call<T>()` methods.
-class FortalSelect<T> extends StatelessWidget {
-  const FortalSelect({
-    super.key,
-    this.variant = .surface,
-    this.size = .size2,
-    required this.trigger,
-    required this.items,
-    this.selectedValue,
-    this.positioning = const OverlayPositionConfig(
-      targetAnchor: Alignment.bottomCenter,
-      followerAnchor: Alignment.topCenter,
-    ),
-    this.onChanged,
-    this.onOpen,
-    this.onClose,
-    this.enabled = true,
-    this.closeOnSelect = true,
-    this.semanticLabel,
-    this.focusNode,
-  });
-
-  final FortalSelectVariant variant;
-  final FortalSelectSize size;
-  final RemixSelectTrigger trigger;
-  final List<RemixSelectItem<T>> items;
-  final T? selectedValue;
-  final OverlayPositionConfig positioning;
-  final ValueChanged<T?>? onChanged;
-  final VoidCallback? onOpen;
-  final VoidCallback? onClose;
-  final bool enabled;
-  final bool closeOnSelect;
-  final String? semanticLabel;
-  final FocusNode? focusNode;
-
-  @override
-  Widget build(BuildContext context) {
-    return fortalSelectStyler(variant: variant, size: size).call<T>(
-      key: key,
-      trigger: trigger,
-      items: items,
-      selectedValue: selectedValue,
-      positioning: positioning,
-      onChanged: onChanged,
-      onOpen: onOpen,
-      onClose: onClose,
-      enabled: enabled,
-      closeOnSelect: closeOnSelect,
-      semanticLabel: semanticLabel,
-      focusNode: focusNode,
-    );
-  }
 }

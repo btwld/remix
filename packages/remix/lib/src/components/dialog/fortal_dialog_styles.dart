@@ -1,13 +1,13 @@
 part of 'dialog.dart';
 
-/// Creates a Fortal-themed [RemixDialogStyler].
+/// Fortal-themed preset for [RemixDialog].
 @MixWidget(name: 'FortalDialog')
 RemixDialogStyler fortalDialogStyler() {
   return RemixDialogStyler()
       .title(
         TextStyler()
             .fontSize(18)
-            .fontWeight(FontWeight.w600)
+            .fontWeight(.w600)
             .color(FortalTokens.gray12())
             .wrap(
               WidgetModifierConfig.padding(
@@ -22,11 +22,6 @@ RemixDialogStyler fortalDialogStyler() {
             .crossAxisAlignment(.center)
             .spacing(FortalTokens.space3())
             .marginTop(FortalTokens.space5()),
-      )
-      .overlay(
-        BoxStyler().decoration(
-          BoxDecorationMix().color(FortalTokens.blackA7()),
-        ),
       )
       .padding(.all(FortalTokens.space5()))
       .constraints(BoxConstraintsMix(maxWidth: 450))

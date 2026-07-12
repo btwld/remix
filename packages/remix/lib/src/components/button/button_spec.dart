@@ -89,13 +89,15 @@ class RemixButtonSpec with _$RemixButtonSpec {
   @override
   final StyleSpec<RemixSpinnerSpec> spinner;
 
-  /// The alignment of the icon relative to the label.
+  /// Optional alignment override for a button with exactly one icon.
   ///
   /// When set to [IconAlignment.start], the icon appears before the label.
   /// When set to [IconAlignment.end], the icon appears after the label.
-  /// Defaults to [IconAlignment.start].
+  /// When omitted, [RemixButton.leadingIcon] and [RemixButton.trailingIcon]
+  /// keep their named positions.
+  /// Buttons with both icons always keep both explicit positions.
   @override
-  final IconAlignment iconAlignment;
+  final IconAlignment? iconAlignment;
 
   /// Creates a RemixButtonSpec with optional styling specifications.
   ///
@@ -120,5 +122,5 @@ class RemixButtonSpec with _$RemixButtonSpec {
        label = label ?? const StyleSpec(spec: TextSpec()),
        icon = icon ?? const StyleSpec(spec: IconSpec()),
        spinner = spinner ?? const StyleSpec(spec: RemixSpinnerSpec()),
-       iconAlignment = iconAlignment ?? .start;
+       iconAlignment = iconAlignment;
 }

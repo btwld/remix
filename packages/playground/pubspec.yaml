@@ -1,5 +1,5 @@
 name: playground
-description: Standalone playground app for previewing Remix components with Mix 2.0 styling.
+description: Standalone playground app for previewing Remix components with Mix 2 styling.
 publish_to: "none"
 version: 0.1.0+1
 resolution: workspace
@@ -10,6 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  cupertino_icons: ^1.0.8
   remix:
     path: ../remix
 

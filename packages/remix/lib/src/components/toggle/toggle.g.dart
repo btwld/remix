@@ -94,7 +94,7 @@ typedef _$RemixToggleSpecMethods = _$RemixToggleSpec; // ignore: unused_element
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Creates a Fortal-themed toggle style.
+/// Fortal-themed preset for [RemixToggle].
 class FortalToggle extends StatelessWidget {
   const FortalToggle({
     super.key,
@@ -111,6 +111,36 @@ class FortalToggle extends StatelessWidget {
     this.semanticLabel,
     this.mouseCursor = SystemMouseCursors.click,
   });
+
+  const FortalToggle.ghost({
+    super.key,
+    this.size = .size2,
+    required this.selected,
+    this.onChanged,
+    this.enabled = true,
+    this.label,
+    this.icon,
+    this.enableFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
+    this.semanticLabel,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = FortalToggleVariant.ghost;
+
+  const FortalToggle.outline({
+    super.key,
+    this.size = .size2,
+    required this.selected,
+    this.onChanged,
+    this.enabled = true,
+    this.label,
+    this.icon,
+    this.enableFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
+    this.semanticLabel,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = FortalToggleVariant.outline;
 
   final FortalToggleVariant variant;
 
@@ -139,6 +169,7 @@ class FortalToggle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return fortalToggleStyler(variant: this.variant, size: this.size).call(
+      key: this.key,
       selected: this.selected,
       onChanged: this.onChanged,
       enabled: this.enabled,

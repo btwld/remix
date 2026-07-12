@@ -191,6 +191,7 @@ const RemixTabBar({
   Key? key,
   required Widget child,
   RemixTabBarStyler style = const RemixTabBarStyler.create(),
+  RemixTabBarSpec? styleSpec,
 })
 
 // Individual Tab
@@ -211,6 +212,7 @@ const RemixTab({
   ValueWidgetBuilder<NakedTabState>? builder,
   String? semanticLabel,
   RemixTabStyler style = const RemixTabStyler.create(),
+  RemixTabSpec? styleSpec,
 })
 
 // Tab View
@@ -219,6 +221,7 @@ const RemixTabView({
   required String tabId,
   required Widget child,
   RemixTabViewStyler style = const RemixTabViewStyler.create(),
+  RemixTabViewSpec? styleSpec,
 })
 ```
 </CodeGroup>
@@ -258,6 +261,12 @@ Optional. Whether the tabs are enabled.
 #### `onEscapePressed` → `VoidCallback?`
 
 Optional. Called when Escape is pressed while a tab has focus.
+
+### Styled Leaf Properties
+
+`RemixTabBar`, `RemixTab`, and `RemixTabView` each accept their matching
+`Remix*Styler` through `style` and an optional raw `Remix*Spec` through
+`styleSpec`. A raw spec bypasses fluent style resolution.
 
 
 ### Tab Bar Style Methods

@@ -89,7 +89,7 @@ typedef _$RemixCheckboxSpecMethods = _$RemixCheckboxSpec; // ignore: unused_elem
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Creates a Fortal-themed [RemixCheckboxStyler].
+/// Fortal-themed preset for [RemixCheckbox].
 class FortalCheckbox extends StatelessWidget {
   const FortalCheckbox({
     super.key,
@@ -108,6 +108,42 @@ class FortalCheckbox extends StatelessWidget {
     this.semanticLabel,
     this.mouseCursor = SystemMouseCursors.click,
   });
+
+  /// Surface treatment with neutral border.
+  const FortalCheckbox.surface({
+    super.key,
+    this.size = .size2,
+    required this.selected,
+    this.onChanged,
+    this.enabled = true,
+    this.tristate = false,
+    this.checkedIcon = Icons.check_rounded,
+    this.uncheckedIcon,
+    this.indeterminateIcon = Icons.horizontal_rule,
+    this.focusNode,
+    this.autofocus = false,
+    this.enableFeedback = true,
+    this.semanticLabel,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = FortalCheckboxVariant.surface;
+
+  /// Soft accent treatment.
+  const FortalCheckbox.soft({
+    super.key,
+    this.size = .size2,
+    required this.selected,
+    this.onChanged,
+    this.enabled = true,
+    this.tristate = false,
+    this.checkedIcon = Icons.check_rounded,
+    this.uncheckedIcon,
+    this.indeterminateIcon = Icons.horizontal_rule,
+    this.focusNode,
+    this.autofocus = false,
+    this.enableFeedback = true,
+    this.semanticLabel,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = FortalCheckboxVariant.soft;
 
   final FortalCheckboxVariant variant;
 
@@ -140,6 +176,7 @@ class FortalCheckbox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return fortalCheckboxStyler(variant: this.variant, size: this.size).call(
+      key: this.key,
       selected: this.selected,
       onChanged: this.onChanged,
       enabled: this.enabled,

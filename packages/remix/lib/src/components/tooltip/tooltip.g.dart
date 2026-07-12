@@ -114,7 +114,7 @@ typedef _$RemixTooltipSpecMethods = _$RemixTooltipSpec; // ignore: unused_elemen
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Creates a Fortal-themed [RemixTooltipStyler].
+/// Fortal-themed preset for [RemixTooltip].
 class FortalTooltip extends StatelessWidget {
   const FortalTooltip({
     super.key,

@@ -6,7 +6,7 @@ enum FortalProgressSize { size1, size2, size3 }
 /// Fortal progress color variants.
 enum FortalProgressVariant { surface, soft }
 
-/// Creates a Fortal-themed [RemixProgressStyler].
+/// Fortal-themed preset for [RemixProgress].
 @MixWidget(name: 'FortalProgress')
 RemixProgressStyler fortalProgressStyler({
   FortalProgressVariant variant = .surface,
@@ -20,7 +20,7 @@ RemixProgressStyler fortalProgressStyler({
 
 RemixProgressStyler _fortalProgressBaseStyler(FortalProgressSize size) {
   return RemixProgressStyler()
-      .width(double.infinity)
+      .width(.infinity)
       .merge(_fortalProgressSizeStyler(size));
 }
 
@@ -37,7 +37,7 @@ RemixProgressStyler _fortalProgressSurfaceStyler([
               BorderRadiusGeometryMix.all(FortalTokens.radiusFull()),
             ),
       )
-      .track(BoxStyler().color(FortalTokens.gray3()).width(double.infinity))
+      .track(BoxStyler().color(FortalTokens.gray3()).width(.infinity))
       .indicator(BoxStyler().color(FortalTokens.accentIndicator()));
 }
 
@@ -49,7 +49,7 @@ RemixProgressStyler _fortalProgressSoftStyler([
         BoxStyler()
             .color(FortalTokens.gray4())
             .borderRadiusAll(FortalTokens.radiusFull())
-            .width(double.infinity),
+            .width(.infinity),
       )
       .indicator(
         BoxStyler()

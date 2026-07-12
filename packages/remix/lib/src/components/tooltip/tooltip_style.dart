@@ -59,6 +59,27 @@ class RemixTooltipStyler
     return merge(RemixTooltipStyler(container: BoxStyler(alignment: value)));
   }
 
+  /// Sets tooltip container background color.
+  RemixTooltipStyler backgroundColor(Color value) => color(value);
+
+  /// Creates a [RemixTooltip] widget with this style applied.
+  RemixTooltip call({
+    Key? key,
+    required Widget tooltipChild,
+    required Widget child,
+    String? tooltipSemantics,
+    OverlayPositionConfig positioning = const OverlayPositionConfig(),
+  }) {
+    return RemixTooltip(
+      key: key,
+      tooltipChild: tooltipChild,
+      tooltipSemantics: tooltipSemantics,
+      positioning: positioning,
+      style: this,
+      child: child,
+    );
+  }
+
   /// Sets container padding
   @override
   RemixTooltipStyler padding(EdgeInsetsGeometryMix value) {
@@ -81,9 +102,6 @@ class RemixTooltipStyler
     );
   }
 
-  /// Sets tooltip container background color.
-  RemixTooltipStyler backgroundColor(Color value) => color(value);
-
   /// Sets container border radius
   @override
   RemixTooltipStyler borderRadius(BorderRadiusGeometryMix radius) {
@@ -100,24 +118,6 @@ class RemixTooltipStyler
   @override
   RemixTooltipStyler decoration(DecorationMix value) {
     return merge(RemixTooltipStyler(container: BoxStyler(decoration: value)));
-  }
-
-  /// Creates a [RemixTooltip] widget with this style applied.
-  RemixTooltip call({
-    Key? key,
-    required Widget tooltipChild,
-    required Widget child,
-    String? tooltipSemantics,
-    OverlayPositionConfig positioning = const OverlayPositionConfig(),
-  }) {
-    return RemixTooltip(
-      key: key,
-      tooltipChild: tooltipChild,
-      child: child,
-      tooltipSemantics: tooltipSemantics,
-      positioning: positioning,
-      style: this,
-    );
   }
 
   // Abstract method implementations for mixins

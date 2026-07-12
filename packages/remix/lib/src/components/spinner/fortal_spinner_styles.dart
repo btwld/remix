@@ -3,7 +3,7 @@ part of 'spinner.dart';
 /// Fortal spinner size presets.
 enum FortalSpinnerSize { size1, size2, size3 }
 
-/// Creates a Fortal-themed [RemixSpinnerStyler].
+/// Fortal-themed preset for [RemixSpinner].
 @MixWidget(name: 'FortalSpinner')
 RemixSpinnerStyler fortalSpinnerStyler({FortalSpinnerSize size = .size2}) {
   return RemixSpinnerStyler(

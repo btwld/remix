@@ -11,7 +11,6 @@ class RemixButtonStyler extends MixStyler<RemixButtonStyler, RemixButtonSpec>
         LabelStyleMixin<RemixButtonStyler>,
         IconStyleMixin<RemixButtonStyler>,
         SpinnerStyleMixin<RemixButtonStyler>,
-        Diagnosticable,
         _$RemixButtonStylerMixin {
   /// Style applied to the button's outer layout and decoration.
   @MixableField(setterType: FlexBoxStyler)
@@ -98,7 +97,6 @@ class RemixButtonStyler extends MixStyler<RemixButtonStyler, RemixButtonSpec>
   }) {
     return RemixButton(
       key: key,
-      style: this,
       label: label,
       leadingIcon: leadingIcon,
       trailingIcon: trailingIcon,
@@ -117,6 +115,7 @@ class RemixButtonStyler extends MixStyler<RemixButtonStyler, RemixButtonSpec>
       semanticHint: semanticHint,
       excludeSemantics: excludeSemantics,
       mouseCursor: mouseCursor,
+      style: this,
     );
   }
 }
@@ -396,19 +395,13 @@ extension RemixButtonStyleContainerHelpers on RemixButtonStyler {
     );
   }
 
-  RemixButtonStyler rotate(
-    double radians, {
-    Alignment alignment = Alignment.center,
-  }) {
+  RemixButtonStyler rotate(double radians, {Alignment alignment = .center}) {
     return wrap(
       WidgetModifierConfig.rotate(radians: radians, alignment: alignment),
     );
   }
 
-  RemixButtonStyler scale(
-    double value, {
-    Alignment alignment = Alignment.center,
-  }) {
+  RemixButtonStyler scale(double value, {Alignment alignment = .center}) {
     return transform(
       Matrix4.diagonal3Values(value, value, 1.0),
       alignment: alignment,
@@ -585,9 +578,9 @@ extension RemixButtonStyleDecorationHelpers on RemixButtonStyler {
       BoxBorderMix.all(
         BorderSideMix(
           color: color,
-          width: width,
-          style: style,
           strokeAlign: strokeAlign,
+          style: style,
+          width: width,
         ),
       ),
     );
@@ -837,7 +830,7 @@ extension RemixButtonStyleDecorationHelpers on RemixButtonStyler {
     ImageProvider image, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
-    ImageRepeat repeat = ImageRepeat.noRepeat,
+    ImageRepeat repeat = .noRepeat,
   }) {
     return container(
       FlexBoxStyler().backgroundImage(
@@ -853,7 +846,7 @@ extension RemixButtonStyleDecorationHelpers on RemixButtonStyler {
     String url, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
-    ImageRepeat repeat = ImageRepeat.noRepeat,
+    ImageRepeat repeat = .noRepeat,
   }) {
     return backgroundImage(
       NetworkImage(url),
@@ -867,7 +860,7 @@ extension RemixButtonStyleDecorationHelpers on RemixButtonStyler {
     String path, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
-    ImageRepeat repeat = ImageRepeat.noRepeat,
+    ImageRepeat repeat = .noRepeat,
   }) {
     return backgroundImage(
       AssetImage(path),

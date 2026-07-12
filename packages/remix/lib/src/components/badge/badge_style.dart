@@ -115,11 +115,6 @@ class RemixBadgeStyler
     return merge(RemixBadgeStyler(container: BoxStyler(alignment: value)));
   }
 
-  @override
-  RemixBadgeStyler label(TextStyler value) {
-    return merge(RemixBadgeStyler(label: value));
-  }
-
   /// Creates a [RemixBadge] widget with this style applied.
   RemixBadge call({
     Key? key,
@@ -130,10 +125,15 @@ class RemixBadgeStyler
     return RemixBadge(
       key: key,
       label: label,
-      child: child,
       labelBuilder: labelBuilder,
       style: this,
+      child: child,
     );
+  }
+
+  @override
+  RemixBadgeStyler label(TextStyler value) {
+    return merge(RemixBadgeStyler(label: value));
   }
 
   /// Sets constraints

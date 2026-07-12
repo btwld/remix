@@ -138,9 +138,8 @@ class _FortalRadioExampleState extends State<FortalRadioExample> {
         children: [
           Row(
             children: [
-              FortalRadio(
+              FortalRadio.surface(
                 value: 'surface',
-                variant: FortalRadioVariant.surface,
               ),
               const SizedBox(width: 8),
               const Text('Surface'),
@@ -148,9 +147,8 @@ class _FortalRadioExampleState extends State<FortalRadioExample> {
           ),
           Row(
             children: [
-              FortalRadio(
+              FortalRadio.soft(
                 value: 'soft',
-                variant: FortalRadioVariant.soft,
               ),
               const SizedBox(width: 8),
               const Text('Soft'),

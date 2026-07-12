@@ -29,7 +29,7 @@ class RemixStyleSpecBuilder<S extends Spec<S>> extends StatelessWidget {
     final spec = styleSpec;
     if (spec != null) {
       return StyleSpecBuilder<S>(
-        styleSpec: StyleSpec<S>(spec: spec),
+        styleSpec: StyleSpec(spec: spec),
         builder: builder,
       );
     }

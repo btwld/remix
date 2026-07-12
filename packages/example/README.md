@@ -1,16 +1,12 @@
-# example
+# Remix documentation examples
 
-A new Flutter project.
+This package contains focused Dart examples used to validate and illustrate the
+public Remix component APIs. Files under `lib/api` correspond to individual
+components; `lib/misc` contains larger compositions and experiments.
 
-## Getting Started
+It is a source-example package, not a standalone Flutter application. Analyze
+it from the repository root with:
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```sh
+fvm flutter analyze packages/example
+```

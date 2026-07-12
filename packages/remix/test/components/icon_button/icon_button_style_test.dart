@@ -382,22 +382,58 @@ void main() {
 
       test('call method with all parameters', () {
         const style = RemixIconButtonStyler.create();
+        const key = ValueKey('icon-button');
+        final focusNode = FocusNode();
+        void onPressed() {}
+        void onLongPress() {}
+        Widget iconBuilder(
+          BuildContext context,
+          IconSpec spec,
+          IconData? icon,
+        ) {
+          return const SizedBox();
+        }
+
+        Widget loadingBuilder(BuildContext context, RemixSpinnerSpec spec) {
+          return const SizedBox();
+        }
+
         final button = style.call(
+          key: key,
           icon: Icons.delete,
-          onPressed: () {},
+          iconBuilder: iconBuilder,
+          loadingBuilder: loadingBuilder,
           loading: true,
           enabled: false,
           enableFeedback: false,
-          focusNode: FocusNode(),
+          onPressed: onPressed,
+          onLongPress: onLongPress,
+          focusNode: focusNode,
+          autofocus: true,
+          semanticLabel: 'Delete',
+          semanticHint: 'Deletes the item',
+          excludeSemantics: true,
+          mouseCursor: SystemMouseCursors.forbidden,
         );
 
         expect(button, isA<RemixIconButton>());
+        expect(button.key, key);
         expect(button.icon, equals(Icons.delete));
-        expect(button.onPressed, isNotNull);
+        expect(button.iconBuilder, same(iconBuilder));
+        expect(button.loadingBuilder, same(loadingBuilder));
+        expect(button.onPressed, same(onPressed));
+        expect(button.onLongPress, same(onLongPress));
         expect(button.loading, isTrue);
         expect(button.enabled, isFalse);
         expect(button.enableFeedback, isFalse);
-        expect(button.focusNode, isNotNull);
+        expect(button.focusNode, same(focusNode));
+        expect(button.autofocus, isTrue);
+        expect(button.semanticLabel, 'Delete');
+        expect(button.semanticHint, 'Deletes the item');
+        expect(button.excludeSemantics, isTrue);
+        expect(button.mouseCursor, SystemMouseCursors.forbidden);
+
+        focusNode.dispose();
       });
     });
 

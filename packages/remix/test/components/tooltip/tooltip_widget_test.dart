@@ -158,6 +158,33 @@ void main() {
 
         expect(find.byType(RemixTooltip), findsOneWidget);
       });
+
+      testWidgets('applies label style to text tooltip children', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          RemixTooltip(
+            style: RemixTooltipStyler(
+              label: TextStyler(style: TextStyleMix(color: Colors.purple)),
+              waitDuration: Duration.zero,
+            ),
+            tooltipChild: const Text('Styled tooltip'),
+            child: const Icon(Icons.info),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final gesture = await tester.createGesture(
+          kind: PointerDeviceKind.mouse,
+        );
+        await gesture.addPointer(location: Offset.zero);
+        await tester.pump();
+        await gesture.moveTo(tester.getCenter(find.byIcon(Icons.info)));
+        await tester.pumpAndSettle();
+
+        final tooltipContext = tester.element(find.text('Styled tooltip'));
+        expect(DefaultTextStyle.of(tooltipContext).style.color, Colors.purple);
+      });
     });
 
     group('Duration Configuration', () {

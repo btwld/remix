@@ -77,7 +77,7 @@ typedef _$RemixCardSpecMethods = _$RemixCardSpec; // ignore: unused_element
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Creates a Fortal-themed [RemixCardStyler].
+/// Fortal-themed preset for [RemixCard].
 class FortalCard extends StatelessWidget {
   const FortalCard({
     super.key,
@@ -85,6 +85,15 @@ class FortalCard extends StatelessWidget {
     this.size = .size2,
     this.child,
   });
+
+  const FortalCard.surface({super.key, this.size = .size2, this.child})
+    : variant = FortalCardVariant.surface;
+
+  const FortalCard.classic({super.key, this.size = .size2, this.child})
+    : variant = FortalCardVariant.classic;
+
+  const FortalCard.ghost({super.key, this.size = .size2, this.child})
+    : variant = FortalCardVariant.ghost;
 
   final FortalCardVariant variant;
 

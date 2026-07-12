@@ -6,7 +6,7 @@ enum FortalCalloutSize { size1, size2, size3 }
 /// Fortal callout color and emphasis variants.
 enum FortalCalloutVariant { outline, surface, soft }
 
-/// Creates a Fortal-themed [RemixCalloutStyler].
+/// Fortal-themed preset for [RemixCallout].
 @MixWidget(name: 'FortalCallout')
 RemixCalloutStyler fortalCalloutStyler({
   FortalCalloutVariant variant = .surface,

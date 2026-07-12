@@ -34,6 +34,11 @@ class RemixTabBarStyler
     return merge(RemixTabBarStyler(container: FlexBoxStyler(alignment: value)));
   }
 
+  /// Creates a [RemixTabBar] widget with this style applied.
+  RemixTabBar call({Key? key, required Widget child}) {
+    return RemixTabBar(key: key, style: this, child: child);
+  }
+
   @override
   RemixTabBarStyler padding(EdgeInsetsGeometryMix value) {
     return merge(RemixTabBarStyler(container: FlexBoxStyler(padding: value)));
@@ -120,11 +125,6 @@ class RemixTabBarStyler
   RemixTabBarStyler flex(FlexStyler value) {
     return merge(RemixTabBarStyler(container: FlexBoxStyler().flex(value)));
   }
-
-  /// Creates a [RemixTabBar] widget with this style applied.
-  RemixTabBar call({Key? key, required Widget child}) {
-    return RemixTabBar(key: key, child: child, style: this);
-  }
 }
 
 /// Style builder for [RemixTabView].
@@ -163,6 +163,11 @@ class RemixTabViewStyler
   /// Sets container alignment
   RemixTabViewStyler alignment(Alignment value) {
     return merge(RemixTabViewStyler(container: BoxStyler(alignment: value)));
+  }
+
+  /// Creates a [RemixTabView] widget with this style applied.
+  RemixTabView call({Key? key, required String tabId, required Widget child}) {
+    return RemixTabView(key: key, tabId: tabId, style: this, child: child);
   }
 
   @override
@@ -223,11 +228,6 @@ class RemixTabViewStyler
       ),
     );
   }
-
-  /// Creates a [RemixTabView] widget with this style applied.
-  RemixTabView call({Key? key, required String tabId, required Widget child}) {
-    return RemixTabView(key: key, tabId: tabId, child: child, style: this);
-  }
 }
 
 /// Style builder for [RemixTab].
@@ -280,6 +280,44 @@ class RemixTabStyler
   /// Sets container alignment
   RemixTabStyler alignment(Alignment value) {
     return merge(RemixTabStyler(container: FlexBoxStyler(alignment: value)));
+  }
+
+  /// Creates a [RemixTab] widget with this style applied.
+  RemixTab call({
+    Key? key,
+    required String tabId,
+    Widget? child,
+    String? label,
+    IconData? icon,
+    bool enabled = true,
+    MouseCursor mouseCursor = SystemMouseCursors.click,
+    bool enableFeedback = true,
+    FocusNode? focusNode,
+    bool autofocus = false,
+    ValueChanged<bool>? onFocusChange,
+    ValueChanged<bool>? onHoverChange,
+    ValueChanged<bool>? onPressChange,
+    ValueWidgetBuilder<NakedTabState>? builder,
+    String? semanticLabel,
+  }) {
+    return RemixTab(
+      key: key,
+      tabId: tabId,
+      label: label,
+      icon: icon,
+      enabled: enabled,
+      mouseCursor: mouseCursor,
+      enableFeedback: enableFeedback,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      onFocusChange: onFocusChange,
+      onHoverChange: onHoverChange,
+      onPressChange: onPressChange,
+      semanticLabel: semanticLabel,
+      style: this,
+      child: child,
+      builder: builder,
+    );
   }
 
   // Mixin implementations - delegate to container
@@ -337,43 +375,5 @@ class RemixTabStyler
   @override
   RemixTabStyler padding(EdgeInsetsGeometryMix value) {
     return merge(RemixTabStyler(container: FlexBoxStyler(padding: value)));
-  }
-
-  /// Creates a [RemixTab] widget with this style applied.
-  RemixTab call({
-    Key? key,
-    required String tabId,
-    Widget? child,
-    String? label,
-    IconData? icon,
-    bool enabled = true,
-    MouseCursor mouseCursor = SystemMouseCursors.click,
-    bool enableFeedback = true,
-    FocusNode? focusNode,
-    bool autofocus = false,
-    ValueChanged<bool>? onFocusChange,
-    ValueChanged<bool>? onHoverChange,
-    ValueChanged<bool>? onPressChange,
-    ValueWidgetBuilder<NakedTabState>? builder,
-    String? semanticLabel,
-  }) {
-    return RemixTab(
-      key: key,
-      tabId: tabId,
-      child: child,
-      label: label,
-      icon: icon,
-      enabled: enabled,
-      mouseCursor: mouseCursor,
-      enableFeedback: enableFeedback,
-      focusNode: focusNode,
-      autofocus: autofocus,
-      onFocusChange: onFocusChange,
-      onHoverChange: onHoverChange,
-      onPressChange: onPressChange,
-      builder: builder,
-      semanticLabel: semanticLabel,
-      style: this,
-    );
   }
 }

@@ -69,23 +69,22 @@ class RemixRadioGroup<T> extends StatelessWidget {
 
     return RadioGroup<T>(
       groupValue: groupValue,
-      onChanged: onChanged ?? _disabledRadioGroupOnChanged<T>,
+      onChanged: onChanged ?? _disabledRadioGroupOnChanged,
       child: _RemixRadioGroupScope<T>(enabled: groupEnabled, child: child),
     );
   }
 }
 
-void _disabledRadioGroupOnChanged<T>(T? value) {}
+void _disabledRadioGroupOnChanged<T>(T? _) => null;
 
 class _RemixRadioGroupScope<T> extends InheritedWidget {
   const _RemixRadioGroupScope({required this.enabled, required super.child});
 
-  final bool enabled;
-
   static _RemixRadioGroupScope<T>? maybeOf<T>(BuildContext context) {
-    return context
-        .dependOnInheritedWidgetOfExactType<_RemixRadioGroupScope<T>>();
+    return context.dependOnInheritedWidgetOfExactType();
   }
+
+  final bool enabled;
 
   @override
   bool updateShouldNotify(_RemixRadioGroupScope<T> oldWidget) {

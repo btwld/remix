@@ -94,7 +94,7 @@ typedef _$RemixCalloutSpecMethods = _$RemixCalloutSpec; // ignore: unused_elemen
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Creates a Fortal-themed [RemixCalloutStyler].
+/// Fortal-themed preset for [RemixCallout].
 class FortalCallout extends StatelessWidget {
   const FortalCallout({
     super.key,
@@ -104,6 +104,30 @@ class FortalCallout extends StatelessWidget {
     this.icon,
     this.child,
   });
+
+  const FortalCallout.outline({
+    super.key,
+    this.size = .size2,
+    this.text,
+    this.icon,
+    this.child,
+  }) : variant = FortalCalloutVariant.outline;
+
+  const FortalCallout.surface({
+    super.key,
+    this.size = .size2,
+    this.text,
+    this.icon,
+    this.child,
+  }) : variant = FortalCalloutVariant.surface;
+
+  const FortalCallout.soft({
+    super.key,
+    this.size = .size2,
+    this.text,
+    this.icon,
+    this.child,
+  }) : variant = FortalCalloutVariant.soft;
 
   final FortalCalloutVariant variant;
 

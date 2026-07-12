@@ -6,7 +6,7 @@ enum FortalAvatarSize { size1, size2, size3, size4 }
 /// Fortal avatar color variants.
 enum FortalAvatarVariant { soft, solid }
 
-/// Creates a Fortal-themed [RemixAvatarStyler].
+/// Fortal-themed preset for [RemixAvatar].
 @MixWidget(name: 'FortalAvatar')
 RemixAvatarStyler fortalAvatarStyler({
   FortalAvatarVariant variant = .soft,
@@ -21,7 +21,7 @@ RemixAvatarStyler fortalAvatarStyler({
 RemixAvatarStyler _fortalAvatarBaseStyler(FortalAvatarSize size) {
   return RemixAvatarStyler()
       .clipBehavior(.hardEdge)
-      .labelFontWeight(FontWeight.w500)
+      .labelFontWeight(.w500)
       .merge(_fortalAvatarSizeStyler(size));
 }
 

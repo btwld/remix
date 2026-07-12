@@ -62,15 +62,15 @@ class RemixDividerStyler
     return merge(RemixDividerStyler(container: BoxStyler(alignment: value)));
   }
 
+  /// Creates a [RemixDivider] widget with this style applied.
+  RemixDivider call({Key? key}) {
+    return RemixDivider(key: key, style: this);
+  }
+
   /// Sets container decoration
   @override
   RemixDividerStyler decoration(DecorationMix value) {
     return merge(RemixDividerStyler(container: BoxStyler(decoration: value)));
-  }
-
-  /// Creates a [RemixDivider] widget with this style applied.
-  RemixDivider call({Key? key}) {
-    return RemixDivider(key: key, style: this);
   }
 
   // Abstract method implementations for mixins

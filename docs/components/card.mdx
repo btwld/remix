@@ -63,12 +63,9 @@ class FortalCardExample extends StatelessWidget {
     return Column(
       spacing: 16,
       children: [
-        FortalCard(
-          variant: FortalCardVariant.classic,
-        ),
-        FortalCard(
-          variant: FortalCardVariant.surface,
-        ),
+        FortalCard.classic(),
+        FortalCard.surface(),
+        FortalCard.ghost(),
       ],
     );
   }

@@ -12,7 +12,7 @@ enum FortalDividerSize {
   size3,
 }
 
-/// Creates a Fortal-themed [RemixDividerStyler].
+/// Fortal-themed preset for [RemixDivider].
 @MixWidget(name: 'FortalDivider')
 RemixDividerStyler fortalDividerStyler({FortalDividerSize size = .size1}) {
   return RemixDividerStyler()

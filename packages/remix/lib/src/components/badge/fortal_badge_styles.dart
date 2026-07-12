@@ -6,7 +6,7 @@ enum FortalBadgeSize { size1, size2, size3 }
 /// Fortal badge color and emphasis variants.
 enum FortalBadgeVariant { solid, soft, surface, outline }
 
-/// Creates a Fortal-themed [RemixBadgeStyler].
+/// Fortal-themed preset for [RemixBadge].
 @MixWidget(name: 'FortalBadge')
 RemixBadgeStyler fortalBadgeStyler({
   FortalBadgeVariant variant = .solid,

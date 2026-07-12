@@ -90,30 +90,25 @@ class FortalIconButtonExample extends StatelessWidget {
       spacing: 16,
       runSpacing: 16,
       children: [
-        FortalIconButton(
+        FortalIconButton.solid(
           icon: Icons.add,
           onPressed: () {},
-          variant: FortalIconButtonVariant.solid,
         ),
-        FortalIconButton(
+        FortalIconButton.soft(
           icon: Icons.edit,
           onPressed: () {},
-          variant: FortalIconButtonVariant.soft,
         ),
-        FortalIconButton(
+        FortalIconButton.surface(
           icon: Icons.layers,
           onPressed: () {},
-          variant: FortalIconButtonVariant.surface,
         ),
-        FortalIconButton(
+        FortalIconButton.outline(
           icon: Icons.border_style,
           onPressed: () {},
-          variant: FortalIconButtonVariant.outline,
         ),
-        FortalIconButton(
+        FortalIconButton.ghost(
           icon: Icons.delete,
           onPressed: () {},
-          variant: FortalIconButtonVariant.ghost,
         ),
       ],
     );

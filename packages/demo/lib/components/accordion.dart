@@ -25,13 +25,13 @@ Widget buildAvatarUseCase(BuildContext context) {
               child: ColumnBox(
                 style: FlexBoxStyler().mainAxisSize(.min),
                 children: [
-                  const FortalAccordion<String>(
+                  const FortalAccordion(
                     value: 'accordion1',
                     title: 'Is it accessible?',
                     child: Text('Yes, it is accessible.'),
                   ),
                   const FortalDivider(),
-                  const FortalAccordion<String>(
+                  const FortalAccordion(
                     value: 'accordion2',
                     title: 'What payment methods are accepted?',
                     child: Text(

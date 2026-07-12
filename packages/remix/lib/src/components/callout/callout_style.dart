@@ -152,6 +152,17 @@ class RemixCalloutStyler
     return merge(RemixCalloutStyler(container: FlexBoxStyler(spacing: value)));
   }
 
+  /// Creates a [RemixCallout] widget with this style applied.
+  RemixCallout call({Key? key, String? text, IconData? icon, Widget? child}) {
+    return RemixCallout(
+      key: key,
+      text: text,
+      icon: icon,
+      style: this,
+      child: child,
+    );
+  }
+
   @override
   RemixCalloutStyler constraints(BoxConstraintsMix value) {
     return merge(
@@ -184,17 +195,6 @@ class RemixCalloutStyler
   @override
   RemixCalloutStyler color(Color value) {
     return backgroundColor(value);
-  }
-
-  /// Creates a [RemixCallout] widget with this style applied.
-  RemixCallout call({Key? key, String? text, IconData? icon, Widget? child}) {
-    return RemixCallout(
-      key: key,
-      text: text,
-      icon: icon,
-      child: child,
-      style: this,
-    );
   }
 
   // FlexStyleMixin implementation

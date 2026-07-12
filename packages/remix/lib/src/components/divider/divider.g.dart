@@ -77,7 +77,7 @@ typedef _$RemixDividerSpecMethods = _$RemixDividerSpec; // ignore: unused_elemen
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Creates a Fortal-themed [RemixDividerStyler].
+/// Fortal-themed preset for [RemixDivider].
 class FortalDivider extends StatelessWidget {
   const FortalDivider({super.key, this.size = .size1});
 

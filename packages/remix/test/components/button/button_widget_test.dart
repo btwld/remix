@@ -32,6 +32,46 @@ void main() {
         expect(find.text('Save'), findsOneWidget);
         expect(find.byIcon(Icons.save), findsOneWidget);
       });
+
+      testWidgets('iconAlignment repositions a single icon', (tester) async {
+        await tester.pumpRemixApp(
+          RemixButton(
+            label: 'Continue',
+            leadingIcon: Icons.arrow_forward,
+            style: RemixButtonStyler().iconAlignment(.end),
+            onPressed: () {},
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(
+          tester.getTopLeft(find.byIcon(Icons.arrow_forward)).dx,
+          greaterThan(tester.getTopLeft(find.text('Continue')).dx),
+        );
+      });
+
+      testWidgets('both explicit icon positions remain stable', (tester) async {
+        await tester.pumpRemixApp(
+          RemixButton(
+            label: 'Continue',
+            leadingIcon: Icons.arrow_back,
+            trailingIcon: Icons.arrow_forward,
+            style: RemixButtonStyler().iconAlignment(.end),
+            onPressed: () {},
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final labelX = tester.getTopLeft(find.text('Continue')).dx;
+        expect(
+          tester.getTopLeft(find.byIcon(Icons.arrow_back)).dx,
+          lessThan(labelX),
+        );
+        expect(
+          tester.getTopLeft(find.byIcon(Icons.arrow_forward)).dx,
+          greaterThan(labelX),
+        );
+      });
     });
 
     group('FortalButton wrapper widget', () {

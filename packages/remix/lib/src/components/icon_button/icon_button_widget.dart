@@ -158,7 +158,11 @@ class RemixIconButton extends StatelessWidget {
             // Build spinner (used when loading)
             final spinner = Center(
               child: loadingBuilder == null
-                  ? RemixSpinner(styleSpec: spec.spinner.spec)
+                  ? StyleSpecBuilder(
+                      styleSpec: spec.spinner,
+                      builder: (context, spinnerSpec) =>
+                          RemixSpinner(styleSpec: spinnerSpec),
+                    )
                   : StyleSpecBuilder(
                       styleSpec: spec.spinner,
                       builder: loadingBuilder!,

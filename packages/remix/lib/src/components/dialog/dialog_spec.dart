@@ -11,18 +11,14 @@ class RemixDialogSpec with _$RemixDialogSpec {
   final StyleSpec<TextSpec> description;
   @override
   final StyleSpec<FlexBoxSpec> actions;
-  @override
-  final StyleSpec<BoxSpec> overlay;
 
   const RemixDialogSpec({
     StyleSpec<BoxSpec>? container,
     StyleSpec<TextSpec>? title,
     StyleSpec<TextSpec>? description,
     StyleSpec<FlexBoxSpec>? actions,
-    StyleSpec<BoxSpec>? overlay,
   }) : container = container ?? const StyleSpec(spec: BoxSpec()),
        title = title ?? const StyleSpec(spec: TextSpec()),
        description = description ?? const StyleSpec(spec: TextSpec()),
-       actions = actions ?? const StyleSpec(spec: FlexBoxSpec()),
-       overlay = overlay ?? const StyleSpec(spec: BoxSpec());
+       actions = actions ?? const StyleSpec(spec: FlexBoxSpec());
 }

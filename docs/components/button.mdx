@@ -118,34 +118,29 @@ class FortalButtonExample extends StatelessWidget {
       spacing: 16,
       children: [
         // Solid variant - High emphasis, primary actions
-        FortalButton(
+        FortalButton.solid(
           label: 'Solid Button',
           onPressed: () {},
-          variant: FortalButtonVariant.solid,
         ),
         // Soft variant - Medium emphasis, secondary actions
-        FortalButton(
+        FortalButton.soft(
           label: 'Soft Button',
           onPressed: () {},
-          variant: FortalButtonVariant.soft,
         ),
         // Surface variant - Subtle emphasis with border
-        FortalButton(
+        FortalButton.surface(
           label: 'Surface Button',
           onPressed: () {},
-          variant: FortalButtonVariant.surface,
         ),
         // Outline variant - Low emphasis, tertiary actions
-        FortalButton(
+        FortalButton.outline(
           label: 'Outline Button',
           onPressed: () {},
-          variant: FortalButtonVariant.outline,
         ),
         // Ghost variant - Minimal styling, inline actions
-        FortalButton(
+        FortalButton.ghost(
           label: 'Ghost Button',
           onPressed: () {},
-          variant: FortalButtonVariant.ghost,
         ),
       ],
     );
@@ -296,7 +291,8 @@ Configures the loading spinner style.
 
 #### `iconAlignment(IconAlignment value)`
 
-Sets icon placement relative to the label.
+Overrides placement when the button has exactly one icon. Buttons with both
+`leadingIcon` and `trailingIcon` keep those explicit positions.
 
 #### `padding(EdgeInsetsGeometryMix value)`
 

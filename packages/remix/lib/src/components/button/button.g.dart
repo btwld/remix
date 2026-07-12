@@ -11,7 +11,7 @@ mixin _$RemixButtonSpec implements Spec<RemixButtonSpec>, Diagnosticable {
   StyleSpec<TextSpec> get label;
   StyleSpec<IconSpec> get icon;
   StyleSpec<RemixSpinnerSpec> get spinner;
-  IconAlignment get iconAlignment;
+  IconAlignment? get iconAlignment;
 
   @override
   Type get type => RemixButtonSpec;
@@ -129,6 +129,126 @@ class FortalButton extends StatelessWidget {
     this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
   });
+
+  /// High-emphasis filled button.
+  const FortalButton.solid({
+    super.key,
+    this.size = .size2,
+    required this.label,
+    this.leadingIcon,
+    this.trailingIcon,
+    this.textBuilder,
+    this.leadingIconBuilder,
+    this.trailingIconBuilder,
+    this.loadingBuilder,
+    this.loading = false,
+    this.enabled = true,
+    this.onPressed,
+    this.onLongPress,
+    this.focusNode,
+    this.autofocus = false,
+    this.enableFeedback = true,
+    this.semanticLabel,
+    this.semanticHint,
+    this.excludeSemantics = false,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = FortalButtonVariant.solid;
+
+  /// Low-emphasis filled button.
+  const FortalButton.soft({
+    super.key,
+    this.size = .size2,
+    required this.label,
+    this.leadingIcon,
+    this.trailingIcon,
+    this.textBuilder,
+    this.leadingIconBuilder,
+    this.trailingIconBuilder,
+    this.loadingBuilder,
+    this.loading = false,
+    this.enabled = true,
+    this.onPressed,
+    this.onLongPress,
+    this.focusNode,
+    this.autofocus = false,
+    this.enableFeedback = true,
+    this.semanticLabel,
+    this.semanticHint,
+    this.excludeSemantics = false,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = FortalButtonVariant.soft;
+
+  /// Subtle surface button with a border.
+  const FortalButton.surface({
+    super.key,
+    this.size = .size2,
+    required this.label,
+    this.leadingIcon,
+    this.trailingIcon,
+    this.textBuilder,
+    this.leadingIconBuilder,
+    this.trailingIconBuilder,
+    this.loadingBuilder,
+    this.loading = false,
+    this.enabled = true,
+    this.onPressed,
+    this.onLongPress,
+    this.focusNode,
+    this.autofocus = false,
+    this.enableFeedback = true,
+    this.semanticLabel,
+    this.semanticHint,
+    this.excludeSemantics = false,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = FortalButtonVariant.surface;
+
+  /// Transparent button with an outline.
+  const FortalButton.outline({
+    super.key,
+    this.size = .size2,
+    required this.label,
+    this.leadingIcon,
+    this.trailingIcon,
+    this.textBuilder,
+    this.leadingIconBuilder,
+    this.trailingIconBuilder,
+    this.loadingBuilder,
+    this.loading = false,
+    this.enabled = true,
+    this.onPressed,
+    this.onLongPress,
+    this.focusNode,
+    this.autofocus = false,
+    this.enableFeedback = true,
+    this.semanticLabel,
+    this.semanticHint,
+    this.excludeSemantics = false,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = FortalButtonVariant.outline;
+
+  /// Transparent button without a persistent border.
+  const FortalButton.ghost({
+    super.key,
+    this.size = .size2,
+    required this.label,
+    this.leadingIcon,
+    this.trailingIcon,
+    this.textBuilder,
+    this.leadingIconBuilder,
+    this.trailingIconBuilder,
+    this.loadingBuilder,
+    this.loading = false,
+    this.enabled = true,
+    this.onPressed,
+    this.onLongPress,
+    this.focusNode,
+    this.autofocus = false,
+    this.enableFeedback = true,
+    this.semanticLabel,
+    this.semanticHint,
+    this.excludeSemantics = false,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = FortalButtonVariant.ghost;
 
   final FortalButtonVariant variant;
 

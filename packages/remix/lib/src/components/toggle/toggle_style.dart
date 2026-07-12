@@ -74,6 +74,7 @@ class RemixToggleStyler
 
   /// Creates a [RemixToggle] widget with this style applied.
   RemixToggle call({
+    Key? key,
     required bool selected,
     ValueChanged<bool>? onChanged,
     bool enabled = true,
@@ -86,6 +87,7 @@ class RemixToggleStyler
     MouseCursor mouseCursor = SystemMouseCursors.click,
   }) {
     return RemixToggle(
+      key: key,
       selected: selected,
       onChanged: onChanged,
       enabled: enabled,

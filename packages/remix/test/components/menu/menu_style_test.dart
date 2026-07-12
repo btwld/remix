@@ -497,9 +497,18 @@ void main() {
         final style = RemixMenuStyler();
         final controller = MenuController();
         final focusNode = FocusNode();
-        int selectedCount = 0;
-        int openCount = 0;
-        int closeCount = 0;
+        addTearDown(focusNode.dispose);
+
+        void onSelected(String value) {}
+        void onOpen() {}
+        void onClose() {}
+        void onCanceled() {}
+        void onOpenRequested(Offset? position, VoidCallback showOverlay) {}
+        void onCloseRequested(VoidCallback hideOverlay) {}
+        const positioning = OverlayPositionConfig(
+          targetAnchor: Alignment.topLeft,
+          followerAnchor: Alignment.bottomRight,
+        );
 
         final menu = style.call<String>(
           trigger: const RemixMenuTrigger(
@@ -512,10 +521,17 @@ void main() {
             const RemixMenuItem<String>(value: 'paste', label: 'Paste'),
           ],
           controller: controller,
-          onSelected: (value) => selectedCount++,
-          onOpen: () => openCount++,
-          onClose: () => closeCount++,
+          onSelected: onSelected,
+          onOpen: onOpen,
+          onClose: onClose,
+          onCanceled: onCanceled,
+          onOpenRequested: onOpenRequested,
+          onCloseRequested: onCloseRequested,
+          consumeOutsideTaps: false,
+          useRootOverlay: true,
+          closeOnClickOutside: false,
           triggerFocusNode: focusNode,
+          positioning: positioning,
         );
 
         expect(menu, isA<RemixMenu<String>>());
@@ -523,10 +539,17 @@ void main() {
         expect(menu.trigger.icon, equals(Icons.more_vert));
         expect(menu.items.length, equals(3));
         expect(menu.controller, equals(controller));
-        expect(menu.onSelected, isNotNull);
-        expect(menu.onOpen, isNotNull);
-        expect(menu.onClose, isNotNull);
+        expect(menu.onSelected, same(onSelected));
+        expect(menu.onOpen, same(onOpen));
+        expect(menu.onClose, same(onClose));
+        expect(menu.onCanceled, same(onCanceled));
+        expect(menu.onOpenRequested, same(onOpenRequested));
+        expect(menu.onCloseRequested, same(onCloseRequested));
+        expect(menu.consumeOutsideTaps, isFalse);
+        expect(menu.useRootOverlay, isTrue);
+        expect(menu.closeOnClickOutside, isFalse);
         expect(menu.triggerFocusNode, equals(focusNode));
+        expect(menu.positioning, same(positioning));
       });
     });
 

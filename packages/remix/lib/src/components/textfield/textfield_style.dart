@@ -26,8 +26,6 @@ class RemixTextFieldStyler
   @MixableField()
   final Prop<Color>? $cursorColor;
   @MixableField()
-  final Prop<Offset>? $cursorOffset;
-  @MixableField()
   final Prop<bool>? $cursorOpacityAnimates;
   @MixableField()
   final Prop<BoxHeightStyle>? $selectionHeightStyle;
@@ -37,8 +35,6 @@ class RemixTextFieldStyler
   final Prop<EdgeInsets>? $scrollPadding;
   @MixableField()
   final Prop<Brightness>? $keyboardAppearance;
-  @MixableField()
-  final Prop<double>? $spacing;
   @MixableField(setterType: FlexBoxStyler)
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   @MixableField(setterType: TextStyler)
@@ -54,13 +50,11 @@ class RemixTextFieldStyler
     Prop<double>? cursorHeight,
     Prop<Radius>? cursorRadius,
     Prop<Color>? cursorColor,
-    Prop<Offset>? cursorOffset,
     Prop<bool>? cursorOpacityAnimates,
     Prop<BoxHeightStyle>? selectionHeightStyle,
     Prop<BoxWidthStyle>? selectionWidthStyle,
     Prop<EdgeInsets>? scrollPadding,
     Prop<Brightness>? keyboardAppearance,
-    Prop<double>? spacing,
     Prop<StyleSpec<FlexBoxSpec>>? container,
     Prop<StyleSpec<TextSpec>>? helperText,
     Prop<StyleSpec<TextSpec>>? label,
@@ -74,13 +68,11 @@ class RemixTextFieldStyler
        $cursorHeight = cursorHeight,
        $cursorRadius = cursorRadius,
        $cursorColor = cursorColor,
-       $cursorOffset = cursorOffset,
        $cursorOpacityAnimates = cursorOpacityAnimates,
        $selectionHeightStyle = selectionHeightStyle,
        $selectionWidthStyle = selectionWidthStyle,
        $scrollPadding = scrollPadding,
        $keyboardAppearance = keyboardAppearance,
-       $spacing = spacing,
        $container = container,
        $helperText = helperText,
        $label = label;
@@ -93,13 +85,11 @@ class RemixTextFieldStyler
     double? cursorHeight,
     Radius? cursorRadius,
     Color? cursorColor,
-    Offset? cursorOffset,
     bool? cursorOpacityAnimates,
     BoxHeightStyle? selectionHeightStyle,
     BoxWidthStyle? selectionWidthStyle,
     EdgeInsets? scrollPadding,
     Brightness? keyboardAppearance,
-    double? spacing,
     FlexBoxStyler? container,
     TextStyler? helperText,
     TextStyler? label,
@@ -114,13 +104,11 @@ class RemixTextFieldStyler
          cursorHeight: Prop.maybe(cursorHeight),
          cursorRadius: Prop.maybe(cursorRadius),
          cursorColor: Prop.maybe(cursorColor),
-         cursorOffset: Prop.maybe(cursorOffset),
          cursorOpacityAnimates: Prop.maybe(cursorOpacityAnimates),
          selectionHeightStyle: Prop.maybe(selectionHeightStyle),
          selectionWidthStyle: Prop.maybe(selectionWidthStyle),
          scrollPadding: Prop.maybe(scrollPadding),
          keyboardAppearance: Prop.maybe(keyboardAppearance),
-         spacing: Prop.maybe(spacing),
          container: Prop.maybeMix(container),
          helperText: Prop.maybeMix(helperText),
          label: Prop.maybeMix(label),
@@ -282,6 +270,7 @@ class RemixTextFieldStyler
   /// )
   /// ```
   RemixTextField call({
+    Key? key,
     TextEditingController? controller,
     FocusNode? focusNode,
     String? label,
@@ -315,6 +304,7 @@ class RemixTextFieldStyler
     DragStartBehavior dragStartBehavior = .start,
     bool enableInteractiveSelection = true,
     TextSelectionControls? selectionControls,
+    GestureTapCallback? onTap,
     TapRegionCallback? onTapOutside,
     TapRegionUpCallback? onPressUpOutside,
     bool onTapAlwaysCalled = false,
@@ -340,6 +330,7 @@ class RemixTextFieldStyler
     bool excludeSemantics = false,
   }) {
     return RemixTextField(
+      key: key,
       controller: controller,
       focusNode: focusNode,
       label: label,
@@ -373,6 +364,7 @@ class RemixTextFieldStyler
       dragStartBehavior: dragStartBehavior,
       enableInteractiveSelection: enableInteractiveSelection,
       selectionControls: selectionControls,
+      onTap: onTap,
       onTapOutside: onTapOutside,
       onPressUpOutside: onPressUpOutside,
       onTapAlwaysCalled: onTapAlwaysCalled,

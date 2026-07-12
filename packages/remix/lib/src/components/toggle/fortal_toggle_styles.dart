@@ -6,7 +6,7 @@ enum FortalToggleSize { size1, size2, size3 }
 /// Fortal toggle color and border variants.
 enum FortalToggleVariant { ghost, outline }
 
-/// Creates a Fortal-themed toggle style.
+/// Fortal-themed preset for [RemixToggle].
 @MixWidget(name: 'FortalToggle')
 RemixToggleStyler fortalToggleStyler({
   FortalToggleVariant variant = .ghost,

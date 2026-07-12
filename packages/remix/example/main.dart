@@ -42,14 +42,13 @@ class _RemixExampleScreenState extends State<RemixExampleScreen> {
             padding: const EdgeInsets.all(16),
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 420),
-              child: FortalCard(
-                variant: .classic,
+              child: FortalCard.classic(
                 size: .size3,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const FortalBadge(label: 'Remix 1.0', variant: .soft),
+                    const FortalBadge.soft(label: 'Remix 1.0'),
                     const SizedBox(height: 16),
                     const Text(
                       'Build themed Flutter interfaces with Remix widgets and Fortal recipes.',
@@ -64,14 +63,13 @@ class _RemixExampleScreenState extends State<RemixExampleScreen> {
                       runSpacing: 12,
                       crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
-                        FortalToggle(
+                        FortalToggle.outline(
                           selected: notificationsEnabled,
                           onChanged: (value) {
                             setState(() => notificationsEnabled = value);
                           },
                           icon: Icons.notifications_active_outlined,
                           label: 'Notifications',
-                          variant: .outline,
                         ),
                         FortalButton(
                           label: 'Continue',

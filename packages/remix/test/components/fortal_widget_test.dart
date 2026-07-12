@@ -6,6 +6,30 @@ import '../helpers/test_helpers.dart';
 
 void main() {
   group('Fortal widgets', () {
+    test('named constructors pin variants and infer generic types', () {
+      const button = FortalButton.soft(label: 'Save');
+      const accordion = FortalAccordion.soft(value: 'item', child: SizedBox());
+      const radio = FortalRadio.soft(value: 'option');
+      const menu = FortalMenu.soft(
+        trigger: RemixMenuTrigger(label: 'Menu'),
+        items: [RemixMenuItem(value: 'a', label: 'A')],
+      );
+      const select = FortalSelect.ghost(
+        trigger: RemixSelectTrigger(placeholder: 'Pick'),
+        items: [RemixSelectItem(value: 'a', label: 'A')],
+      );
+
+      expect(button.variant, FortalButtonVariant.soft);
+      expect(accordion, isA<FortalAccordion<String>>());
+      expect(accordion.variant, FortalAccordionVariant.soft);
+      expect(radio, isA<FortalRadio<String>>());
+      expect(radio.variant, FortalRadioVariant.soft);
+      expect(menu, isA<FortalMenu<String>>());
+      expect(menu.variant, FortalMenuVariant.soft);
+      expect(select, isA<FortalSelect<String>>());
+      expect(select.variant, FortalSelectVariant.ghost);
+    });
+
     testWidgets('renders FortalAccordion', (tester) async {
       await tester.pumpRemixApp(
         RemixAccordionGroup<String>(

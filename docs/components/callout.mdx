@@ -74,20 +74,17 @@ class FortalCalloutExample extends StatelessWidget {
     return Column(
       spacing: 16,
       children: [
-        FortalCallout(
+        FortalCallout.surface(
           text: 'Surface callout',
           icon: Icons.info_outline,
-          variant: FortalCalloutVariant.surface,
         ),
-        FortalCallout(
+        FortalCallout.soft(
           text: 'Soft callout',
           icon: Icons.lightbulb_outline,
-          variant: FortalCalloutVariant.soft,
         ),
-        FortalCallout(
+        FortalCallout.outline(
           text: 'Outline callout',
           icon: Icons.border_outer,
-          variant: FortalCalloutVariant.outline,
         ),
       ],
     );

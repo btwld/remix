@@ -270,6 +270,126 @@ mixin _$RemixMenuItemSpec implements Spec<RemixMenuItemSpec>, Diagnosticable {
 typedef _$RemixMenuItemSpecMethods = _$RemixMenuItemSpec; // ignore: unused_element
 
 // **************************************************************************
+// MixWidgetGenerator
+// **************************************************************************
+
+/// Fortal-themed preset for [RemixMenu].
+class FortalMenu<T> extends StatelessWidget {
+  const FortalMenu({
+    super.key,
+    this.variant = .solid,
+    this.size = .size2,
+    required this.trigger,
+    required this.items,
+    this.controller,
+    this.onSelected,
+    this.onOpen,
+    this.onClose,
+    this.onCanceled,
+    this.onOpenRequested,
+    this.onCloseRequested,
+    this.consumeOutsideTaps = true,
+    this.useRootOverlay = false,
+    this.closeOnClickOutside = true,
+    this.triggerFocusNode,
+    this.positioning = const OverlayPositionConfig(),
+  });
+
+  /// High-emphasis menu trigger and item hover treatment.
+  const FortalMenu.solid({
+    super.key,
+    this.size = .size2,
+    required this.trigger,
+    required this.items,
+    this.controller,
+    this.onSelected,
+    this.onOpen,
+    this.onClose,
+    this.onCanceled,
+    this.onOpenRequested,
+    this.onCloseRequested,
+    this.consumeOutsideTaps = true,
+    this.useRootOverlay = false,
+    this.closeOnClickOutside = true,
+    this.triggerFocusNode,
+    this.positioning = const OverlayPositionConfig(),
+  }) : variant = FortalMenuVariant.solid;
+
+  /// Subtle accent-backed menu trigger and item hover treatment.
+  const FortalMenu.soft({
+    super.key,
+    this.size = .size2,
+    required this.trigger,
+    required this.items,
+    this.controller,
+    this.onSelected,
+    this.onOpen,
+    this.onClose,
+    this.onCanceled,
+    this.onOpenRequested,
+    this.onCloseRequested,
+    this.consumeOutsideTaps = true,
+    this.useRootOverlay = false,
+    this.closeOnClickOutside = true,
+    this.triggerFocusNode,
+    this.positioning = const OverlayPositionConfig(),
+  }) : variant = FortalMenuVariant.soft;
+
+  final FortalMenuVariant variant;
+
+  final FortalMenuSize size;
+
+  final RemixMenuTrigger trigger;
+
+  final List<RemixMenuItemData<T>> items;
+
+  final MenuController? controller;
+
+  final ValueChanged<T>? onSelected;
+
+  final VoidCallback? onOpen;
+
+  final VoidCallback? onClose;
+
+  final VoidCallback? onCanceled;
+
+  final RawMenuAnchorOpenRequestedCallback? onOpenRequested;
+
+  final RawMenuAnchorCloseRequestedCallback? onCloseRequested;
+
+  final bool consumeOutsideTaps;
+
+  final bool useRootOverlay;
+
+  final bool closeOnClickOutside;
+
+  final FocusNode? triggerFocusNode;
+
+  final OverlayPositionConfig positioning;
+
+  @override
+  Widget build(BuildContext context) {
+    return fortalMenuStyler(variant: this.variant, size: this.size).call<T>(
+      key: this.key,
+      trigger: this.trigger,
+      items: this.items,
+      controller: this.controller,
+      onSelected: this.onSelected,
+      onOpen: this.onOpen,
+      onClose: this.onClose,
+      onCanceled: this.onCanceled,
+      onOpenRequested: this.onOpenRequested,
+      onCloseRequested: this.onCloseRequested,
+      consumeOutsideTaps: this.consumeOutsideTaps,
+      useRootOverlay: this.useRootOverlay,
+      closeOnClickOutside: this.closeOnClickOutside,
+      triggerFocusNode: this.triggerFocusNode,
+      positioning: this.positioning,
+    );
+  }
+}
+
+// **************************************************************************
 // StylerGenerator
 // **************************************************************************
 

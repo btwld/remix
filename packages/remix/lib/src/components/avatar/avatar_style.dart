@@ -170,11 +170,6 @@ class RemixAvatarStyler
     return merge(RemixAvatarStyler(container: BoxStyler(clipBehavior: clip)));
   }
 
-  @override
-  RemixAvatarStyler label(TextStyler value) {
-    return merge(RemixAvatarStyler(label: value));
-  }
-
   /// Creates a [RemixAvatar] widget with this style applied.
   RemixAvatar call({
     Key? key,
@@ -194,13 +189,18 @@ class RemixAvatarStyler
       foregroundImage: foregroundImage,
       onBackgroundImageError: onBackgroundImageError,
       onForegroundImageError: onForegroundImageError,
-      child: child,
       label: label,
       labelBuilder: labelBuilder,
       icon: icon,
       iconBuilder: iconBuilder,
       style: this,
+      child: child,
     );
+  }
+
+  @override
+  RemixAvatarStyler label(TextStyler value) {
+    return merge(RemixAvatarStyler(label: value));
   }
 
   // Instance methods (chainable)

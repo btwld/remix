@@ -89,7 +89,7 @@ typedef _$RemixSwitchSpecMethods = _$RemixSwitchSpec; // ignore: unused_element
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Creates a Fortal-themed [RemixSwitchStyler].
+/// Fortal-themed preset for [RemixSwitch].
 class FortalSwitch extends StatelessWidget {
   const FortalSwitch({
     super.key,
@@ -104,6 +104,34 @@ class FortalSwitch extends StatelessWidget {
     this.semanticLabel,
     this.mouseCursor = SystemMouseCursors.click,
   });
+
+  /// Surface treatment with a visible border.
+  const FortalSwitch.surface({
+    super.key,
+    this.size = .size2,
+    required this.selected,
+    this.onChanged,
+    this.enabled = true,
+    this.enableFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
+    this.semanticLabel,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = FortalSwitchVariant.surface;
+
+  /// Softer accent treatment.
+  const FortalSwitch.soft({
+    super.key,
+    this.size = .size2,
+    required this.selected,
+    this.onChanged,
+    this.enabled = true,
+    this.enableFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
+    this.semanticLabel,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = FortalSwitchVariant.soft;
 
   final FortalSwitchVariant variant;
 
@@ -128,6 +156,7 @@ class FortalSwitch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return fortalSwitchStyler(variant: this.variant, size: this.size).call(
+      key: this.key,
       selected: this.selected,
       onChanged: this.onChanged,
       enabled: this.enabled,

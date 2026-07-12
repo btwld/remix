@@ -21,10 +21,7 @@ enum FortalSliderVariant {
   soft,
 }
 
-/// Creates a Fortal-themed [RemixSliderStyler].
-///
-/// The returned style can be passed to [RemixSlider.style] or called directly
-/// as a widget factory via [RemixSliderStyler.call].
+/// Fortal-themed preset for [RemixSlider].
 @MixWidget(name: 'FortalSlider')
 RemixSliderStyler fortalSliderStyler({
   FortalSliderVariant variant = .surface,

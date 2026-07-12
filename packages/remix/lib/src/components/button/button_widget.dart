@@ -209,25 +209,41 @@ class RemixButton extends StatelessWidget {
 
     // Build spinner (used when loading)
     final spinner = loadingBuilder == null
-        ? RemixSpinner(styleSpec: spec.spinner.spec)
+        ? StyleSpecBuilder(
+            styleSpec: spec.spinner,
+            builder: (context, spinnerSpec) =>
+                RemixSpinner(styleSpec: spinnerSpec),
+          )
         : StyleSpecBuilder(styleSpec: spec.spinner, builder: loadingBuilder!);
 
-    final rowChildren =
-        <Widget>[
-              if (leadingIconWidget != null) leadingIconWidget,
+    final hasBothIcons =
+        leadingIconWidget != null && trailingIconWidget != null;
+    final explicitAlignment = spec.iconAlignment;
+    final children = hasBothIcons || explicitAlignment == null
+        ? <Widget>[?leadingIconWidget, textWidget, ?trailingIconWidget]
+        : switch (explicitAlignment) {
+            .start => <Widget>[
+              ?leadingIconWidget,
+              ?trailingIconWidget,
               textWidget,
-              if (trailingIconWidget != null) trailingIconWidget,
-            ]
-            .map(
-              (e) => Visibility(
-                visible: !loading,
-                maintainState: true,
-                maintainAnimation: true,
-                maintainSize: true,
-                child: e,
-              ),
-            )
-            .toList();
+            ],
+            .end => <Widget>[
+              textWidget,
+              ?leadingIconWidget,
+              ?trailingIconWidget,
+            ],
+          };
+    final rowChildren = children
+        .map(
+          (e) => Visibility(
+            visible: !loading,
+            maintainState: true,
+            maintainAnimation: true,
+            maintainSize: true,
+            child: e,
+          ),
+        )
+        .toList();
 
     // Create content row with visibility control for loading state
     final contentRow = RowBox(styleSpec: spec.container, children: rowChildren);

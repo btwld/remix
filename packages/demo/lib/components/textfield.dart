@@ -19,9 +19,8 @@ Widget buildTextFieldUseCase(BuildContext context) {
                   label: 'Show Trailing',
                   initialValue: false,
                 )
-                ? FortalIconButton(
+                ? FortalIconButton.ghost(
                     icon: Icons.close_rounded,
-                    variant: FortalIconButtonVariant.ghost,
                     onPressed: () {},
                   )
                 : null,

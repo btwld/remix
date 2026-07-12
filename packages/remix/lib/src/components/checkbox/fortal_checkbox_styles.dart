@@ -21,7 +21,7 @@ enum FortalCheckboxVariant {
   soft,
 }
 
-/// Creates a Fortal-themed [RemixCheckboxStyler].
+/// Fortal-themed preset for [RemixCheckbox].
 @MixWidget(name: 'FortalCheckbox')
 RemixCheckboxStyler fortalCheckboxStyler({
   FortalCheckboxVariant variant = .surface,

@@ -275,14 +275,12 @@ class RemixAccordionStyler
     String? semanticLabel,
     Widget Function(Widget, Animation<double>)? transitionBuilder,
   }) {
-    return RemixAccordion<T>(
+    return RemixAccordion(
       key: key,
       value: value,
-      child: child,
       title: title,
       leadingIcon: leadingIcon,
       trailingIcon: trailingIcon,
-      builder: builder,
       enabled: enabled,
       mouseCursor: mouseCursor,
       enableFeedback: enableFeedback,
@@ -295,6 +293,8 @@ class RemixAccordionStyler
       transitionBuilder:
           transitionBuilder ?? RemixAccordion.defaultAccordionTransitionBuilder,
       style: this,
+      child: child,
+      builder: builder,
     );
   }
 

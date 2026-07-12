@@ -120,7 +120,7 @@ typedef _$RemixSpinnerSpecMethods = _$RemixSpinnerSpec; // ignore: unused_elemen
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Creates a Fortal-themed [RemixSpinnerStyler].
+/// Fortal-themed preset for [RemixSpinner].
 class FortalSpinner extends StatelessWidget {
   const FortalSpinner({super.key, this.size = .size2});
 
@@ -128,7 +128,7 @@ class FortalSpinner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return fortalSpinnerStyler(size: this.size).call();
+    return fortalSpinnerStyler(size: this.size).call(key: this.key);
   }
 }
 

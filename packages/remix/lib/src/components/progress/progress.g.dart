@@ -99,7 +99,7 @@ typedef _$RemixProgressSpecMethods = _$RemixProgressSpec; // ignore: unused_elem
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Creates a Fortal-themed [RemixProgressStyler].
+/// Fortal-themed preset for [RemixProgress].
 class FortalProgress extends StatelessWidget {
   const FortalProgress({
     super.key,
@@ -107,6 +107,18 @@ class FortalProgress extends StatelessWidget {
     this.size = .size2,
     required this.value,
   });
+
+  const FortalProgress.surface({
+    super.key,
+    this.size = .size2,
+    required this.value,
+  }) : variant = FortalProgressVariant.surface;
+
+  const FortalProgress.soft({
+    super.key,
+    this.size = .size2,
+    required this.value,
+  }) : variant = FortalProgressVariant.soft;
 
   final FortalProgressVariant variant;
 

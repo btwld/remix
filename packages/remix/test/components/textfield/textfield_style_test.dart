@@ -20,13 +20,11 @@ void main() {
         expect(style.$cursorHeight, isNull);
         expect(style.$cursorRadius, isNull);
         expect(style.$cursorColor, isNull);
-        expect(style.$cursorOffset, isNull);
         expect(style.$cursorOpacityAnimates, isNull);
         expect(style.$selectionHeightStyle, isNull);
         expect(style.$selectionWidthStyle, isNull);
         expect(style.$scrollPadding, isNull);
         expect(style.$keyboardAppearance, isNull);
-        expect(style.$spacing, isNull);
         expect(style.$container, isNull);
         expect(style.$helperText, isNull);
         expect(style.$label, isNull);
@@ -43,13 +41,11 @@ void main() {
         final cursorHeight = Prop.maybe(20.0);
         final cursorRadius = Prop.maybe(const Radius.circular(2));
         final cursorColor = Prop.maybe(Colors.blue);
-        final cursorOffset = Prop.maybe(const Offset(1, 0));
         final cursorOpacityAnimates = Prop.maybe(true);
         final selectionHeightStyle = Prop.maybe(BoxHeightStyle.max);
         final selectionWidthStyle = Prop.maybe(BoxWidthStyle.max);
         final scrollPadding = Prop.maybe(const EdgeInsets.all(10));
         final keyboardAppearance = Prop.maybe(Brightness.dark);
-        final spacing = Prop.maybe(8.0);
         final container = Prop.maybeMix(FlexBoxStyler());
         final helperText = Prop.maybeMix(TextStyler());
         final label = Prop.maybeMix(TextStyler());
@@ -67,13 +63,11 @@ void main() {
           cursorHeight: cursorHeight,
           cursorRadius: cursorRadius,
           cursorColor: cursorColor,
-          cursorOffset: cursorOffset,
           cursorOpacityAnimates: cursorOpacityAnimates,
           selectionHeightStyle: selectionHeightStyle,
           selectionWidthStyle: selectionWidthStyle,
           scrollPadding: scrollPadding,
           keyboardAppearance: keyboardAppearance,
-          spacing: spacing,
           container: container,
           helperText: helperText,
           label: label,
@@ -89,13 +83,11 @@ void main() {
         expect(style.$cursorHeight, equals(cursorHeight));
         expect(style.$cursorRadius, equals(cursorRadius));
         expect(style.$cursorColor, equals(cursorColor));
-        expect(style.$cursorOffset, equals(cursorOffset));
         expect(style.$cursorOpacityAnimates, equals(cursorOpacityAnimates));
         expect(style.$selectionHeightStyle, equals(selectionHeightStyle));
         expect(style.$selectionWidthStyle, equals(selectionWidthStyle));
         expect(style.$scrollPadding, equals(scrollPadding));
         expect(style.$keyboardAppearance, equals(keyboardAppearance));
-        expect(style.$spacing, equals(spacing));
         expect(style.$container, equals(container));
         expect(style.$helperText, equals(helperText));
         expect(style.$label, equals(label));
@@ -113,13 +105,11 @@ void main() {
           cursorHeight: 20.0,
           cursorRadius: const Radius.circular(2),
           cursorColor: Colors.blue,
-          cursorOffset: const Offset(1, 0),
           cursorOpacityAnimates: true,
           selectionHeightStyle: BoxHeightStyle.max,
           selectionWidthStyle: BoxWidthStyle.max,
           scrollPadding: const EdgeInsets.all(10),
           keyboardAppearance: Brightness.dark,
-          spacing: 8.0,
           container: FlexBoxStyler(),
           helperText: TextStyler(),
           label: TextStyler(),
@@ -135,13 +125,11 @@ void main() {
         expect(style.$cursorHeight, isNotNull);
         expect(style.$cursorRadius, isNotNull);
         expect(style.$cursorColor, isNotNull);
-        expect(style.$cursorOffset, isNotNull);
         expect(style.$cursorOpacityAnimates, isNotNull);
         expect(style.$selectionHeightStyle, isNotNull);
         expect(style.$selectionWidthStyle, isNotNull);
         expect(style.$scrollPadding, isNotNull);
         expect(style.$keyboardAppearance, isNotNull);
-        expect(style.$spacing, isNotNull);
         expect(style.$container, isNotNull);
         expect(style.$helperText, isNotNull);
         expect(style.$label, isNotNull);

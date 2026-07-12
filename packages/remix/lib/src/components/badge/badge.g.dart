@@ -89,7 +89,7 @@ typedef _$RemixBadgeSpecMethods = _$RemixBadgeSpec; // ignore: unused_element
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Creates a Fortal-themed [RemixBadgeStyler].
+/// Fortal-themed preset for [RemixBadge].
 class FortalBadge extends StatelessWidget {
   const FortalBadge({
     super.key,
@@ -99,6 +99,38 @@ class FortalBadge extends StatelessWidget {
     this.child,
     this.labelBuilder,
   });
+
+  const FortalBadge.solid({
+    super.key,
+    this.size = .size2,
+    this.label,
+    this.child,
+    this.labelBuilder,
+  }) : variant = FortalBadgeVariant.solid;
+
+  const FortalBadge.soft({
+    super.key,
+    this.size = .size2,
+    this.label,
+    this.child,
+    this.labelBuilder,
+  }) : variant = FortalBadgeVariant.soft;
+
+  const FortalBadge.surface({
+    super.key,
+    this.size = .size2,
+    this.label,
+    this.child,
+    this.labelBuilder,
+  }) : variant = FortalBadgeVariant.surface;
+
+  const FortalBadge.outline({
+    super.key,
+    this.size = .size2,
+    this.label,
+    this.child,
+    this.labelBuilder,
+  }) : variant = FortalBadgeVariant.outline;
 
   final FortalBadgeVariant variant;
 

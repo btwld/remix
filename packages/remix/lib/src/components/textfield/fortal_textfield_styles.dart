@@ -21,7 +21,7 @@ enum FortalTextFieldVariant {
   soft,
 }
 
-/// Creates a Fortal-themed [RemixTextFieldStyler].
+/// Fortal-themed preset for [RemixTextField].
 @MixWidget(name: 'FortalTextField')
 RemixTextFieldStyler fortalTextFieldStyler({
   FortalTextFieldVariant variant = .surface,
@@ -43,7 +43,7 @@ RemixTextFieldStyler _fortalTextFieldBaseStyler(FortalTextFieldSize size) {
         cursorWidth: 1.5,
       )
       .spacing(8)
-      .wrap(.iconTheme(size: 16.0, color: FortalTokens.gray10()))
+      .wrap(.iconTheme(color: FortalTokens.gray10(), size: 16.0))
       .onFocused(
         RemixTextFieldStyler().borderAll(
           color: FortalTokens.accent8(),

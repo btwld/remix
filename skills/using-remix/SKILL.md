@@ -31,10 +31,16 @@ Then use the Fortal preset widgets:
 
 ```dart
 FortalButton(label: 'Submit', onPressed: handleSubmit)
-FortalButton(label: 'Cancel', variant: .ghost, onPressed: cancel)
+FortalButton.ghost(label: 'Cancel', onPressed: cancel)
 FortalTextField(hintText: 'you@example.com', label: 'Email')
 FortalCheckbox(selected: agreed, onChanged: (v) => setState(() => agreed = v))
 ```
+
+Variant presets have named constructors such as `FortalButton.solid(...)` and
+`FortalSelect.ghost(...)`. Prefer them when the variant is fixed; use the
+unnamed constructor with `variant:` when the value is selected dynamically.
+For generic presets, Dart infers `T` from values, items, and callbacks, so
+calls such as `FortalRadio.soft(value: 'option')` do not need `<String>`.
 
 Plain `Remix*` widgets work without `FortalScope`, but anything Fortal
 (`Fortal*` widgets, `fortal*Styler()` functions, `FortalTokens`) requires it
@@ -42,7 +48,7 @@ to resolve tokens.
 
 ## Three levels of styling
 
-1. **Fortal preset widgets** — `FortalButton(variant: .soft, size: .size2)`.
+1. **Fortal preset widgets** — `FortalButton.soft(size: .size2)`.
    Fastest path; consistent by construction. Use for standard UI.
 2. **Fortal styler + overrides** — `fortal*Styler()` returns the component's
    `Remix*Styler`; chain custom modifications and pass it to the `Remix*`
@@ -64,8 +70,10 @@ to resolve tokens.
 
 ## Component Catalog
 
-Remix ships 21 components. Each `Remix*` widget accepts `style` (a
-`Remix*Styler`) and has a `Fortal*` preset counterpart.
+Remix ships 21 components. Each styled leaf widget accepts `style` (a
+`Remix*Styler`) and has a `Fortal*` preset counterpart. Behavioral roots and
+groups (`RemixTabs`, `RemixRadioGroup`, and `RemixAccordionGroup`) intentionally
+have neither a styler nor a Fortal wrapper.
 
 | Category | Remix widgets | Fortal presets |
 |----------|---------------|----------------|
@@ -83,17 +91,16 @@ All Fortal variants, sizes, and tokens: `references/fortal-reference.md`.
 ### Buttons
 
 ```dart
-FortalButton(
+FortalButton.outline(
   label: 'Delete',
   leadingIcon: Icons.delete,
   loading: isDeleting,
   enabled: canDelete,
-  variant: .outline,
   size: .size2,
   onPressed: handleDelete,
 )
 
-FortalIconButton(icon: Icons.settings, variant: .ghost, onPressed: openSettings)
+FortalIconButton.ghost(icon: Icons.settings, onPressed: openSettings)
 
 // Toggle: a pressable button that stays active while selected
 FortalToggle(selected: isBold, label: 'Bold', onChanged: (v) => setBold(v))
@@ -117,7 +124,7 @@ RemixRadioGroup<String>(
   onChanged: (val) => setState(() => selectedOption = val),
   child: Column(children: [
     for (final option in ['a', 'b', 'c'])
-      Row(children: [FortalRadio<String>(value: option), Text(option)]),
+      Row(children: [FortalRadio.surface(value: option), Text(option)]),
   ]),
 )
 
@@ -149,22 +156,18 @@ FortalTextField(
 `RemixMenuItem` are data classes, not widgets.
 
 ```dart
-// Select — set each item's style explicitly (FortalSelect styles only
-// the trigger and menu container):
-final itemStyle = fortalSelectMenuItemStyler(variant: .surface, size: .size2);
-
-FortalSelect<String>(
+FortalSelect.surface(
   trigger: const RemixSelectTrigger(placeholder: 'Choose a fruit'),
-  items: [
-    RemixSelectItem(value: 'apple', label: 'Apple', style: itemStyle),
-    RemixSelectItem(value: 'banana', label: 'Banana', style: itemStyle),
+  items: const [
+    RemixSelectItem(value: 'apple', label: 'Apple'),
+    RemixSelectItem(value: 'banana', label: 'Banana'),
   ],
   selectedValue: selectedFruit,
   onChanged: (val) => setState(() => selectedFruit = val),
 )
 
-// Menu — item styling is baked into the preset; no per-item wiring:
-FortalMenu<String>(
+// Menu — item styling is also baked into the preset:
+FortalMenu.solid(
   trigger: const RemixMenuTrigger(label: 'Actions', icon: Icons.more_vert),
   items: const [
     RemixMenuItem(value: 'edit', label: 'Edit', leadingIcon: Icons.edit),
@@ -205,9 +208,9 @@ RemixTabs(
 RemixAccordionGroup<String>(
   controller: RemixAccordionController<String>(min: 0, max: 1),
   child: Column(children: [
-    FortalAccordion<String>(value: 'faq1', title: 'What is Remix?', child: Text('...')),
+    FortalAccordion.surface(value: 'faq1', title: 'What is Remix?', child: Text('...')),
     const FortalDivider(),
-    FortalAccordion<String>(value: 'faq2', title: 'How does theming work?', child: Text('...')),
+    FortalAccordion.surface(value: 'faq2', title: 'How does theming work?', child: Text('...')),
   ]),
 )
 ```
@@ -222,7 +225,7 @@ showRemixDialog(
       title: 'Confirm',
       description: 'Are you sure you want to proceed?',
       actions: [
-        FortalButton(label: 'Cancel', variant: .ghost,
+        FortalButton.ghost(label: 'Cancel',
             onPressed: () => Navigator.pop(context)),
         FortalButton(label: 'Confirm',
             onPressed: () { confirm(); Navigator.pop(context); }),
@@ -276,8 +279,10 @@ Fluent surface shared by container-based stylers: `.color()`, `.gradient()`,
 `.column()`. Component-part mixins add `.label*()` (color, fontSize,
 fontWeight, letterSpacing, …), `.icon*()` (color, size, opacity, …), and
 `.spinner*()` (indicatorColor, size, strokeWidth, …) where the component has
-those parts. `.backgroundColor()` is an alias that exists only on Button,
-IconButton, and Card stylers — `.color()` is the universal method.
+those parts. `.backgroundColor()` is an alias on Accordion, Avatar, Badge,
+Button, Callout, Card, Dialog, IconButton, TextField, Toggle, and Tooltip
+stylers. It is not universal; use the component's `.color()` method where
+available and check the per-component reference for exact surface area.
 
 ### Interaction States
 
@@ -336,7 +341,8 @@ duration extensions come from Mix.
 
 ### Callable Styles
 
-Most stylers have a `call()` method that builds the widget directly:
+Every leaf component styler has a `call()` method that builds the widget
+directly:
 
 ```dart
 final primaryButton = RemixButtonStyler()
@@ -348,10 +354,11 @@ final primaryButton = RemixButtonStyler()
 primaryButton(label: 'Save', onPressed: save)   // → RemixButton
 ```
 
-Callable: Button, IconButton, Toggle, Checkbox, Switch, Slider, TextField,
-Avatar, Badge, Card, Callout, Progress, Spinner, Divider, Dialog, Tooltip,
-TabBar, Tab, TabView, and Accordion (via `call<T>()`). **Not callable**:
-Menu, Radio, and Select stylers — construct those widgets directly.
+Generic surfaces use `call<T>()`: Accordion, Menu, Radio, and Select. Dart can
+usually infer `T` from the required values or item lists. All other leaf
+component stylers use a non-generic `call()` method. Behavioral group/root
+widgets such as `RemixAccordionGroup`, `RemixRadioGroup`, and `RemixTabs` are
+constructed directly because they do not have stylers.
 
 ### Styling with Fortal Tokens
 
@@ -424,18 +431,14 @@ class _MyAppState extends State<MyApp> {
 
 ## Pitfalls
 
-- **`FortalIconButton` forwards only** `icon`, `onPressed`, `loading`,
-  `enabled`, `enableFeedback`, `focusNode`. For `onLongPress`, semantics, or
-  builders, use `RemixIconButton(style: fortalIconButtonStyler(...))`.
-- **`FortalSelect` doesn't style items** — pass
-  `fortalSelectMenuItemStyler(...)` to each `RemixSelectItem.style`.
 - **No `FortalTabs`** — the behavioral root is always `RemixTabs`.
 - **`RemixAccordionGroup.controller` is required** (Tabs/Menu controllers are
   optional).
 - **`loading` implies disabled** on buttons — style the loading appearance
   through `.onDisabled()`.
-- **`.backgroundColor()` is not universal** — only Button/IconButton/Card;
-  use `.color()` elsewhere.
+- **`.backgroundColor()` is not universal** — use it only on the stylers
+  listed above; otherwise use the component's `.color()` method where
+  available.
 - **`.onSelected()` is not on Button** — only Checkbox, Radio, Switch,
   Toggle, Tab, TabView.
 

@@ -36,10 +36,9 @@ class DialogExample extends StatelessWidget {
               description:
                   'This application will no longer be accessible.',
               actions: [
-                FortalButton(
+                FortalButton.ghost(
                   label: 'Cancel',
                   onPressed: () => Navigator.pop(context),
-                  variant: FortalButtonVariant.ghost,
                 ),
                 FortalButton(
                   label: 'Revoke access',
@@ -74,10 +73,9 @@ class FortalDialogExample extends StatelessWidget {
       title: 'Confirm changes',
       description: 'Save these settings before leaving?',
       actions: [
-        FortalButton(
+        FortalButton.ghost(
           label: 'Cancel',
           onPressed: () => Navigator.pop(context),
-          variant: FortalButtonVariant.ghost,
         ),
         FortalButton(
           label: 'Save',
@@ -126,6 +124,7 @@ const RemixDialog({
   bool modal = true,
   String? semanticLabel,
   RemixDialogStyler style = const RemixDialogStyler.create(),
+  RemixDialogSpec? styleSpec,
 })
 ```
 </CodeGroup>
@@ -135,7 +134,7 @@ const RemixDialog({
 
 #### `child` -> `Widget?`
 
-Optional. Fully custom dialog content. When provided, it replaces the default title, description, and actions layout.
+Optional. Custom dialog content rendered after the description and before the actions. When it is the only content provided, it fills the container directly.
 
 #### `title` -> `String?`
 
@@ -160,6 +159,10 @@ Optional. Accessibility label for the dialog. Defaults to the title when omitted
 #### `style` → `RemixDialogStyler`
 
 Optional. The style configuration for the dialog container, title, description, and actions.
+
+#### `styleSpec` → `RemixDialogSpec?`
+
+Optional. A raw resolved style spec that bypasses fluent style resolution.
 
 ### Style Methods
 

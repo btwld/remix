@@ -1,6 +1,6 @@
 part of 'tooltip.dart';
 
-/// Creates a Fortal-themed [RemixTooltipStyler].
+/// Fortal-themed preset for [RemixTooltip].
 @MixWidget(name: 'FortalTooltip')
 RemixTooltipStyler fortalTooltipStyler() {
   return RemixTooltipStyler()

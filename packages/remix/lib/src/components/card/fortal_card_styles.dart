@@ -6,7 +6,7 @@ enum FortalCardSize { size1, size2, size3 }
 /// Fortal card surface variants.
 enum FortalCardVariant { surface, classic, ghost }
 
-/// Creates a Fortal-themed [RemixCardStyler].
+/// Fortal-themed preset for [RemixCard].
 @MixWidget(name: 'FortalCard')
 RemixCardStyler fortalCardStyler({
   FortalCardVariant variant = .surface,

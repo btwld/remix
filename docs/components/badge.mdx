@@ -91,21 +91,17 @@ class FortalBadgeExample extends StatelessWidget {
     return Row(
       spacing: 16,
       children: [
-        FortalBadge(
+        FortalBadge.solid(
           label: 'Solid',
-          variant: FortalBadgeVariant.solid,
         ),
-        FortalBadge(
+        FortalBadge.soft(
           label: 'Soft',
-          variant: FortalBadgeVariant.soft,
         ),
-        FortalBadge(
+        FortalBadge.surface(
           label: 'Surface',
-          variant: FortalBadgeVariant.surface,
         ),
-        FortalBadge(
+        FortalBadge.outline(
           label: 'Outline',
-          variant: FortalBadgeVariant.outline,
         ),
       ],
     );

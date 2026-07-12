@@ -18,7 +18,8 @@ enum FortalMenuVariant {
   soft,
 }
 
-/// Creates a Fortal-themed [RemixMenuStyler].
+/// Fortal-themed preset for [RemixMenu].
+@MixWidget(name: 'FortalMenu')
 RemixMenuStyler fortalMenuStyler({
   FortalMenuVariant variant = .solid,
   FortalMenuSize size = .size2,
@@ -39,7 +40,7 @@ RemixMenuStyler _fortalMenuBaseStyler(FortalMenuSize size) {
                 style: TextStyleMix(
                   color: FortalTokens.gray12(),
                   fontSize: 14,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: .w500,
                 ),
               ),
             )
@@ -91,7 +92,7 @@ RemixMenuStyler _fortalMenuSoftStyler([FortalMenuSize size = .size2]) {
                 style: TextStyleMix(
                   color: FortalTokens.accent11(),
                   fontSize: 14,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: .w500,
                 ),
               ),
             )
@@ -189,69 +190,4 @@ RemixMenuItemStyler _fortalMenuItemSizeStyler(FortalMenuSize size) {
       ),
     ),
   };
-}
-
-/// Fortal-themed menu widget wrapper.
-///
-/// Hand-written: hosted `mix_generator` 2.1.1 does not support generic
-/// `call<T>()` methods.
-class FortalMenu<T> extends StatelessWidget {
-  const FortalMenu({
-    super.key,
-    this.variant = .solid,
-    this.size = .size2,
-    required this.trigger,
-    required this.items,
-    this.controller,
-    this.onSelected,
-    this.onOpen,
-    this.onClose,
-    this.onCanceled,
-    this.onOpenRequested,
-    this.onCloseRequested,
-    this.consumeOutsideTaps = true,
-    this.useRootOverlay = false,
-    this.closeOnClickOutside = true,
-    this.triggerFocusNode,
-    this.positioning = const OverlayPositionConfig(),
-  });
-
-  final FortalMenuVariant variant;
-  final FortalMenuSize size;
-  final RemixMenuTrigger trigger;
-  final List<RemixMenuItemData<T>> items;
-  final MenuController? controller;
-  final ValueChanged<T>? onSelected;
-  final VoidCallback? onOpen;
-  final VoidCallback? onClose;
-  final VoidCallback? onCanceled;
-  final RawMenuAnchorOpenRequestedCallback? onOpenRequested;
-  final RawMenuAnchorCloseRequestedCallback? onCloseRequested;
-  final bool consumeOutsideTaps;
-  final bool useRootOverlay;
-  final bool closeOnClickOutside;
-  final FocusNode? triggerFocusNode;
-  final OverlayPositionConfig positioning;
-
-  @override
-  Widget build(BuildContext context) {
-    return RemixMenu<T>(
-      key: key,
-      trigger: trigger,
-      items: items,
-      controller: controller,
-      onSelected: onSelected,
-      onOpen: onOpen,
-      onClose: onClose,
-      onCanceled: onCanceled,
-      onOpenRequested: onOpenRequested,
-      onCloseRequested: onCloseRequested,
-      consumeOutsideTaps: consumeOutsideTaps,
-      useRootOverlay: useRootOverlay,
-      closeOnClickOutside: closeOnClickOutside,
-      triggerFocusNode: triggerFocusNode,
-      positioning: positioning,
-      style: fortalMenuStyler(variant: variant, size: size),
-    );
-  }
 }

@@ -299,15 +299,23 @@ void main() {
         final optionController = NakedSelectOptionState.controllerOf<String>(
           optionContext,
         );
-        final styleBuilder = tester
-            .widget<StyleBuilder<RemixSelectMenuItemSpec>>(
-              find.ancestor(
+        final stateProvider = tester.widget<WidgetStateProvider>(
+          find
+              .ancestor(
                 of: find.text('Option A'),
-                matching: find.byType(StyleBuilder<RemixSelectMenuItemSpec>),
-              ),
-            );
+                matching: find.byType(WidgetStateProvider),
+              )
+              .first,
+        );
 
-        expect(styleBuilder.controller, same(optionController));
+        expect(
+          stateProvider.disabled,
+          optionController.value.contains(WidgetState.disabled),
+        );
+        expect(
+          stateProvider.selected,
+          optionController.value.contains(WidgetState.selected),
+        );
       });
 
       testWidgets('applies custom style', (tester) async {
@@ -364,6 +372,56 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixSelect<String>), findsOneWidget);
+      });
+
+      testWidgets('applies select-level default item styling', (tester) async {
+        await tester.pumpRemixApp(
+          RemixSelect<String>(
+            trigger: const RemixSelectTrigger(placeholder: 'Select'),
+            items: const [RemixSelectItem(value: 'a', label: 'Option A')],
+            style: RemixSelectStyler().item(
+              RemixSelectMenuItemStyler().text(
+                TextStyler(style: TextStyleMix(color: Colors.red)),
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byType(RemixSelect<String>));
+        await tester.pumpAndSettle();
+
+        expect(
+          tester.widget<Text>(find.text('Option A')).style?.color,
+          Colors.red,
+        );
+      });
+
+      testWidgets('applies raw select item styleSpec defaults', (tester) async {
+        await tester.pumpRemixApp(
+          RemixSelect<String>(
+            trigger: const RemixSelectTrigger(placeholder: 'Select'),
+            items: const [RemixSelectItem(value: 'a', label: 'Option A')],
+            styleSpec: const RemixSelectSpec(
+              item: StyleSpec(
+                spec: RemixSelectMenuItemSpec(
+                  text: StyleSpec(
+                    spec: TextSpec(style: TextStyle(color: Colors.blue)),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byType(RemixSelect<String>));
+        await tester.pumpAndSettle();
+
+        expect(
+          tester.widget<Text>(find.text('Option A')).style?.color,
+          Colors.blue,
+        );
       });
     });
 

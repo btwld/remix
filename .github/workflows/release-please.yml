@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "Version to release (e.g., 2.0.0)"
+        description: "Optional next-version override (e.g., 1.1.0)"
         required: false
         default: ""
 
@@ -13,32 +13,13 @@ permissions:
   pull-requests: write
 
 jobs:
-  release-please:
+  release_please:
     name: Run release-please
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Check version input
-        id: check-version
-        run: |
-          if [[ -z "${{ github.event.inputs.version }}" ]]; then
-            echo "Version input is empty. Skipping commit."
-            exit 0
-          fi
-          echo "Version input provided: ${{ github.event.inputs.version }}"
-          echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
-
-      - name: Create empty commit
-        if: ${{ env.VERSION }}
-        run: |
-          git config --global user.name "${{ github.actor }}"
-          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
-          git commit --allow-empty -m "chore: release ${{ env.VERSION }}" -m "Release-As: ${{ env.VERSION }}"
-          git push origin HEAD
-
-      - uses: google-github-actions/release-please-action@v4
+      # Release tags stay manual so the tag-triggered pub.dev OIDC workflow runs.
+      - uses: googleapis/release-please-action@v4
         with:
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
+          release-as: ${{ inputs.version }}

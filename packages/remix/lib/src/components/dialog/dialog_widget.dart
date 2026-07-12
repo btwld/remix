@@ -37,7 +37,7 @@ Future<T?> showRemixDialog<T>({
   bool requestFocus = true,
   TraversalEdgeBehavior? traversalEdgeBehavior,
 }) {
-  final scope = MixScope.of(context);
+  final scope = MixScope.maybeOf(context);
 
   return showNakedDialog(
     context: context,
@@ -51,11 +51,15 @@ Future<T?> showRemixDialog<T>({
     transitionBuilder: transitionBuilder,
     requestFocus: requestFocus,
     traversalEdgeBehavior: traversalEdgeBehavior,
-    builder: (context) => MixScope(
-      tokens: scope.tokens,
-      orderOfModifiers: scope.orderOfModifiers,
-      child: builder(context),
-    ),
+    builder: (routeContext) {
+      if (scope == null) return builder(routeContext);
+
+      return MixScope(
+        tokens: scope.tokens,
+        orderOfModifiers: scope.orderOfModifiers,
+        child: Builder(builder: builder),
+      );
+    },
   );
 }
 
@@ -156,7 +160,7 @@ class RemixDialog extends StatelessWidget {
                 if (title != null) StyledText(title!, styleSpec: spec.title),
                 if (description != null)
                   StyledText(description!, styleSpec: spec.description),
-                if (child != null) child!,
+                ?child,
                 if (hasActions)
                   FlexBox(styleSpec: spec.actions, children: actions!),
               ],

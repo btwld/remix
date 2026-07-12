@@ -1,6 +1,6 @@
 part of 'dialog.dart';
 
-/// Style configuration for [RemixDialog] container, title, description, actions, and overlay.
+/// Style configuration for [RemixDialog] container, title, description, and actions.
 @MixableStyler()
 class RemixDialogStyler
     extends RemixContainerStyler<RemixDialogSpec, RemixDialogStyler>
@@ -13,30 +13,24 @@ class RemixDialogStyler
   final Prop<StyleSpec<TextSpec>>? $description;
   @MixableField(setterType: FlexBoxStyler)
   final Prop<StyleSpec<FlexBoxSpec>>? $actions;
-  @MixableField(setterType: BoxStyler)
-  final Prop<StyleSpec<BoxSpec>>? $overlay;
-
   const RemixDialogStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
     Prop<StyleSpec<TextSpec>>? title,
     Prop<StyleSpec<TextSpec>>? description,
     Prop<StyleSpec<FlexBoxSpec>>? actions,
-    Prop<StyleSpec<BoxSpec>>? overlay,
     super.variants,
     super.animation,
     super.modifier,
   }) : $container = container,
        $title = title,
        $description = description,
-       $actions = actions,
-       $overlay = overlay;
+       $actions = actions;
 
   RemixDialogStyler({
     BoxStyler? container,
     TextStyler? title,
     TextStyler? description,
     FlexBoxStyler? actions,
-    BoxStyler? overlay,
     AnimationConfig? animation,
     List<VariantStyle<RemixDialogSpec>>? variants,
     WidgetModifierConfig? modifier,
@@ -45,7 +39,6 @@ class RemixDialogStyler
          title: Prop.maybeMix(title),
          description: Prop.maybeMix(description),
          actions: Prop.maybeMix(actions),
-         overlay: Prop.maybeMix(overlay),
          variants: variants,
          animation: animation,
          modifier: modifier,
@@ -71,6 +64,28 @@ class RemixDialogStyler
       RemixDialogStyler(
         container: BoxStyler(decoration: ShapeDecorationMix(shape: value)),
       ),
+    );
+  }
+
+  /// Creates a [RemixDialog] widget with this style applied.
+  RemixDialog call({
+    Key? key,
+    Widget? child,
+    String? title,
+    String? description,
+    List<Widget>? actions,
+    bool modal = true,
+    String? semanticLabel,
+  }) {
+    return RemixDialog(
+      key: key,
+      title: title,
+      description: description,
+      actions: actions,
+      modal: modal,
+      semanticLabel: semanticLabel,
+      style: this,
+      child: child,
     );
   }
 
@@ -152,28 +167,6 @@ class RemixDialogStyler
       RemixDialogStyler(
         container: BoxStyler(decoration: BoxDecorationMix(boxShadow: [value])),
       ),
-    );
-  }
-
-  /// Creates a [RemixDialog] widget with this style applied.
-  RemixDialog call({
-    Key? key,
-    Widget? child,
-    String? title,
-    String? description,
-    List<Widget>? actions,
-    bool modal = true,
-    String? semanticLabel,
-  }) {
-    return RemixDialog(
-      key: key,
-      child: child,
-      title: title,
-      description: description,
-      actions: actions,
-      modal: modal,
-      semanticLabel: semanticLabel,
-      style: this,
     );
   }
 }

@@ -229,10 +229,15 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
                 return switch (item) {
                   RemixMenuItem<T>() => _RemixMenuItemWidget(
                     data: item,
-                    defaultStyle: style.$item,
+                    defaultStyle: widget.styleSpec == null ? style.$item : null,
+                    defaultStyleSpec: widget.styleSpec == null
+                        ? null
+                        : spec.item,
                   ),
-                  RemixMenuDivider<T>() => RemixDivider(
-                    styleSpec: spec.divider.spec,
+                  RemixMenuDivider<T>() => StyleSpecBuilder(
+                    styleSpec: spec.divider,
+                    builder: (context, dividerSpec) =>
+                        RemixDivider(styleSpec: dividerSpec),
                   ),
                 };
               }).toList(),
@@ -259,20 +264,22 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
           styleSpec: widget.styleSpec,
           controller: NakedMenuState.controllerOf(context),
           builder: (context, spec) {
-            // Render trigger from data (icon leading, then label)
-            final triggerStyleSpec = spec.trigger;
-            final triggerSpec = triggerStyleSpec.spec;
-
-            return RowBox(
-              styleSpec: triggerSpec.container,
-              children: [
-                if (widget.trigger.icon != null)
-                  StyledIcon(
-                    icon: widget.trigger.icon!,
-                    styleSpec: triggerSpec.icon,
+            return StyleSpecBuilder(
+              styleSpec: spec.trigger,
+              builder: (context, triggerSpec) => RowBox(
+                styleSpec: triggerSpec.container,
+                children: [
+                  if (widget.trigger.icon != null)
+                    StyledIcon(
+                      icon: widget.trigger.icon!,
+                      styleSpec: triggerSpec.icon,
+                    ),
+                  StyledText(
+                    widget.trigger.label,
+                    styleSpec: triggerSpec.label,
                   ),
-                StyledText(widget.trigger.label, styleSpec: triggerSpec.label),
-              ],
+                ],
+              ),
             );
           },
         );
@@ -289,10 +296,45 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
 ///
 /// Receives styling directly from parent [RemixMenu] via styleSpec parameter.
 class _RemixMenuItemWidget<T> extends StatelessWidget {
-  const _RemixMenuItemWidget({required this.data, this.defaultStyle});
+  const _RemixMenuItemWidget({
+    required this.data,
+    this.defaultStyle,
+    this.defaultStyleSpec,
+  });
 
   final RemixMenuItem<T> data;
   final Prop<StyleSpec<RemixMenuItemSpec>>? defaultStyle;
+  final StyleSpec<RemixMenuItemSpec>? defaultStyleSpec;
+
+  StyleSpec<RemixMenuItemSpec> _resolveStyle(BuildContext context) {
+    final rawDefault = defaultStyleSpec;
+    if (rawDefault != null) {
+      final resolved = RemixMenuItemStyler.create(
+        container: Prop.value(rawDefault.spec.container),
+        label: Prop.value(rawDefault.spec.label),
+        leadingIcon: Prop.value(rawDefault.spec.leadingIcon),
+        trailingIcon: Prop.value(rawDefault.spec.trailingIcon),
+      ).merge(data.style).build(context);
+      final modifiers = [
+        ...?rawDefault.widgetModifiers,
+        ...?resolved.widgetModifiers,
+      ];
+
+      return StyleSpec(
+        spec: resolved.spec,
+        animation: resolved.animation ?? rawDefault.animation,
+        widgetModifiers: modifiers.isEmpty ? null : modifiers,
+      );
+    }
+
+    final itemStyle = MixOps.merge(
+      defaultStyle,
+      Prop.maybeMix<StyleSpec<RemixMenuItemSpec>>(data.style),
+    );
+
+    return MixOps.resolve(context, itemStyle) ??
+        const StyleSpec(spec: RemixMenuItemSpec());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -311,16 +353,8 @@ class _RemixMenuItemWidget<T> extends StatelessWidget {
               states: controller.value,
               child: Builder(
                 builder: (context) {
-                  final itemStyle = MixOps.merge(
-                    defaultStyle,
-                    Prop.maybeMix<StyleSpec<RemixMenuItemSpec>>(data.style),
-                  );
-                  final spec =
-                      MixOps.resolve(context, itemStyle) ??
-                      const StyleSpec(spec: RemixMenuItemSpec());
-
                   return StyleSpecBuilder<RemixMenuItemSpec>(
-                    styleSpec: spec,
+                    styleSpec: _resolveStyle(context),
                     builder: (context, spec) {
                       return FlexBox(
                         styleSpec: spec.container,

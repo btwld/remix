@@ -261,12 +261,144 @@ mixin _$RemixSelectMenuItemSpec
 typedef _$RemixSelectMenuItemSpecMethods = _$RemixSelectMenuItemSpec; // ignore: unused_element
 
 // **************************************************************************
+// MixWidgetGenerator
+// **************************************************************************
+
+/// Fortal-themed preset for [RemixSelect].
+class FortalSelect<T> extends StatelessWidget {
+  const FortalSelect({
+    super.key,
+    this.variant = .surface,
+    this.size = .size2,
+    required this.trigger,
+    required this.items,
+    this.selectedValue,
+    this.positioning = const OverlayPositionConfig(
+      targetAnchor: .bottomCenter,
+      followerAnchor: .topCenter,
+    ),
+    this.onChanged,
+    this.onOpen,
+    this.onClose,
+    this.enabled = true,
+    this.closeOnSelect = true,
+    this.semanticLabel,
+    this.focusNode,
+  });
+
+  /// Surface-backed trigger with border.
+  const FortalSelect.surface({
+    super.key,
+    this.size = .size2,
+    required this.trigger,
+    required this.items,
+    this.selectedValue,
+    this.positioning = const OverlayPositionConfig(
+      targetAnchor: .bottomCenter,
+      followerAnchor: .topCenter,
+    ),
+    this.onChanged,
+    this.onOpen,
+    this.onClose,
+    this.enabled = true,
+    this.closeOnSelect = true,
+    this.semanticLabel,
+    this.focusNode,
+  }) : variant = FortalSelectVariant.surface;
+
+  /// Soft accent trigger.
+  const FortalSelect.soft({
+    super.key,
+    this.size = .size2,
+    required this.trigger,
+    required this.items,
+    this.selectedValue,
+    this.positioning = const OverlayPositionConfig(
+      targetAnchor: .bottomCenter,
+      followerAnchor: .topCenter,
+    ),
+    this.onChanged,
+    this.onOpen,
+    this.onClose,
+    this.enabled = true,
+    this.closeOnSelect = true,
+    this.semanticLabel,
+    this.focusNode,
+  }) : variant = FortalSelectVariant.soft;
+
+  /// Transparent trigger.
+  const FortalSelect.ghost({
+    super.key,
+    this.size = .size2,
+    required this.trigger,
+    required this.items,
+    this.selectedValue,
+    this.positioning = const OverlayPositionConfig(
+      targetAnchor: .bottomCenter,
+      followerAnchor: .topCenter,
+    ),
+    this.onChanged,
+    this.onOpen,
+    this.onClose,
+    this.enabled = true,
+    this.closeOnSelect = true,
+    this.semanticLabel,
+    this.focusNode,
+  }) : variant = FortalSelectVariant.ghost;
+
+  final FortalSelectVariant variant;
+
+  final FortalSelectSize size;
+
+  final RemixSelectTrigger trigger;
+
+  final List<RemixSelectItem<T>> items;
+
+  final T? selectedValue;
+
+  final OverlayPositionConfig positioning;
+
+  final ValueChanged<T?>? onChanged;
+
+  final VoidCallback? onOpen;
+
+  final VoidCallback? onClose;
+
+  final bool enabled;
+
+  final bool closeOnSelect;
+
+  final String? semanticLabel;
+
+  final FocusNode? focusNode;
+
+  @override
+  Widget build(BuildContext context) {
+    return fortalSelectStyler(variant: this.variant, size: this.size).call<T>(
+      key: this.key,
+      trigger: this.trigger,
+      items: this.items,
+      selectedValue: this.selectedValue,
+      positioning: this.positioning,
+      onChanged: this.onChanged,
+      onOpen: this.onOpen,
+      onClose: this.onClose,
+      enabled: this.enabled,
+      closeOnSelect: this.closeOnSelect,
+      semanticLabel: this.semanticLabel,
+      focusNode: this.focusNode,
+    );
+  }
+}
+
+// **************************************************************************
 // StylerGenerator
 // **************************************************************************
 
 mixin _$RemixSelectStylerMixin on Style<RemixSelectSpec>, Diagnosticable {
   Prop<StyleSpec<FlexBoxSpec>>? get $menuContainer;
   Prop<StyleSpec<RemixSelectTriggerSpec>>? get $trigger;
+  Prop<StyleSpec<RemixSelectMenuItemSpec>>? get $item;
 
   /// Sets the menuContainer.
   RemixSelectStyler menuContainer(FlexBoxStyler value) {
@@ -276,6 +408,11 @@ mixin _$RemixSelectStylerMixin on Style<RemixSelectSpec>, Diagnosticable {
   /// Sets the trigger.
   RemixSelectStyler trigger(RemixSelectTriggerStyler value) {
     return merge(RemixSelectStyler(trigger: value));
+  }
+
+  /// Sets the item.
+  RemixSelectStyler item(RemixSelectMenuItemStyler value) {
+    return merge(RemixSelectStyler(item: value));
   }
 
   /// Sets the animation configuration.
@@ -304,6 +441,7 @@ mixin _$RemixSelectStylerMixin on Style<RemixSelectSpec>, Diagnosticable {
     return RemixSelectStyler.create(
       menuContainer: MixOps.merge($menuContainer, other?.$menuContainer),
       trigger: MixOps.merge($trigger, other?.$trigger),
+      item: MixOps.merge($item, other?.$item),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -316,6 +454,7 @@ mixin _$RemixSelectStylerMixin on Style<RemixSelectSpec>, Diagnosticable {
     final spec = RemixSelectSpec(
       menuContainer: MixOps.resolve(context, $menuContainer),
       trigger: MixOps.resolve(context, $trigger),
+      item: MixOps.resolve(context, $item),
     );
 
     return StyleSpec(
@@ -330,13 +469,15 @@ mixin _$RemixSelectStylerMixin on Style<RemixSelectSpec>, Diagnosticable {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('menuContainer', $menuContainer))
-      ..add(DiagnosticsProperty('trigger', $trigger));
+      ..add(DiagnosticsProperty('trigger', $trigger))
+      ..add(DiagnosticsProperty('item', $item));
   }
 
   @override
   List<Object?> get props => [
     $menuContainer,
     $trigger,
+    $item,
     $animation,
     $modifier,
     $variants,

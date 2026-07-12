@@ -110,10 +110,7 @@ typedef _$RemixSliderSpecMethods = _$RemixSliderSpec; // ignore: unused_element
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Creates a Fortal-themed [RemixSliderStyler].
-///
-/// The returned style can be passed to [RemixSlider.style] or called directly
-/// as a widget factory via [RemixSliderStyler.call].
+/// Fortal-themed preset for [RemixSlider].
 class FortalSlider extends StatelessWidget {
   const FortalSlider({
     super.key,
@@ -131,6 +128,40 @@ class FortalSlider extends StatelessWidget {
     this.autofocus = false,
     this.snapDivisions,
   });
+
+  /// Neutral track with the active accent indicator.
+  const FortalSlider.surface({
+    super.key,
+    this.size = .size2,
+    required this.value,
+    this.onChanged,
+    this.onChangeStart,
+    this.onChangeEnd,
+    this.min = 0.0,
+    this.max = 1.0,
+    this.enabled = true,
+    this.enableFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
+    this.snapDivisions,
+  }) : variant = FortalSliderVariant.surface;
+
+  /// Softer accent treatment for lower-emphasis controls.
+  const FortalSlider.soft({
+    super.key,
+    this.size = .size2,
+    required this.value,
+    this.onChanged,
+    this.onChangeStart,
+    this.onChangeEnd,
+    this.min = 0.0,
+    this.max = 1.0,
+    this.enabled = true,
+    this.enableFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
+    this.snapDivisions,
+  }) : variant = FortalSliderVariant.soft;
 
   final FortalSliderVariant variant;
 
@@ -161,6 +192,7 @@ class FortalSlider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return fortalSliderStyler(variant: this.variant, size: this.size).call(
+      key: this.key,
       value: this.value,
       onChanged: this.onChanged,
       onChangeStart: this.onChangeStart,

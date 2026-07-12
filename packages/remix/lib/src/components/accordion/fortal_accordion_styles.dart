@@ -6,10 +6,8 @@ enum FortalAccordionSize { size1, size2, size3 }
 /// Fortal accordion color variants.
 enum FortalAccordionVariant { surface, soft }
 
-/// Creates a Fortal-themed [RemixAccordionStyler].
-///
-/// Fortal widget wrapper is hand-written: hosted `mix_generator` 2.1.1 does
-/// not support generic `call<T>()` methods.
+/// Fortal-themed preset for [RemixAccordion].
+@MixWidget(name: 'FortalAccordion')
 RemixAccordionStyler fortalAccordionStyler({
   FortalAccordionVariant variant = .surface,
   FortalAccordionSize size = .size2,
@@ -23,11 +21,9 @@ RemixAccordionStyler fortalAccordionStyler({
 RemixAccordionStyler _fortalAccordionBaseStyler(FortalAccordionSize size) {
   return RemixAccordionStyler()
       .trigger(FlexBoxStyler().direction(.horizontal))
-      .title(
-        TextStyler().fontWeight(FontWeight.w500).color(FortalTokens.gray12()),
-      )
+      .title(TextStyler().fontWeight(.w500).color(FortalTokens.gray12()))
       .trailingIcon(IconStyler().color(FortalTokens.gray11()))
-      .content(BoxStyler().width(double.infinity))
+      .content(BoxStyler().width(.infinity))
       .merge(_fortalAccordionSizeStyler(size));
 }
 
@@ -90,71 +86,4 @@ RemixAccordionStyler _fortalAccordionSizeStyler(FortalAccordionSize size) {
       content: BoxStyler().paddingAll(FortalTokens.space4()),
     ),
   };
-}
-
-/// Fortal-themed accordion widget wrapper.
-class FortalAccordion<T> extends StatelessWidget {
-  const FortalAccordion({
-    super.key,
-    this.variant = .surface,
-    this.size = .size2,
-    required this.value,
-    required this.child,
-    this.title,
-    this.leadingIcon,
-    this.trailingIcon,
-    this.builder,
-    this.enabled = true,
-    this.mouseCursor = SystemMouseCursors.click,
-    this.enableFeedback = true,
-    this.autofocus = false,
-    this.focusNode,
-    this.onFocusChange,
-    this.onHoverChange,
-    this.onPressChange,
-    this.semanticLabel,
-    this.transitionBuilder,
-  });
-
-  final FortalAccordionVariant variant;
-  final FortalAccordionSize size;
-  final T value;
-  final Widget child;
-  final String? title;
-  final IconData? leadingIcon;
-  final IconData? trailingIcon;
-  final NakedAccordionTriggerBuilder<T>? builder;
-  final bool enabled;
-  final MouseCursor mouseCursor;
-  final bool enableFeedback;
-  final bool autofocus;
-  final FocusNode? focusNode;
-  final ValueChanged<bool>? onFocusChange;
-  final ValueChanged<bool>? onHoverChange;
-  final ValueChanged<bool>? onPressChange;
-  final String? semanticLabel;
-  final Widget Function(Widget, Animation<double>)? transitionBuilder;
-
-  @override
-  Widget build(BuildContext context) {
-    return fortalAccordionStyler(variant: variant, size: size).call<T>(
-      key: key,
-      value: value,
-      child: child,
-      title: title,
-      leadingIcon: leadingIcon,
-      trailingIcon: trailingIcon,
-      builder: builder,
-      enabled: enabled,
-      mouseCursor: mouseCursor,
-      enableFeedback: enableFeedback,
-      autofocus: autofocus,
-      focusNode: focusNode,
-      onFocusChange: onFocusChange,
-      onHoverChange: onHoverChange,
-      onPressChange: onPressChange,
-      semanticLabel: semanticLabel,
-      transitionBuilder: transitionBuilder,
-    );
-  }
 }

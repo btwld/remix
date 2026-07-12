@@ -11,7 +11,6 @@ mixin _$RemixDialogSpec implements Spec<RemixDialogSpec>, Diagnosticable {
   StyleSpec<TextSpec> get title;
   StyleSpec<TextSpec> get description;
   StyleSpec<FlexBoxSpec> get actions;
-  StyleSpec<BoxSpec> get overlay;
 
   @override
   Type get type => RemixDialogSpec;
@@ -22,14 +21,12 @@ mixin _$RemixDialogSpec implements Spec<RemixDialogSpec>, Diagnosticable {
     StyleSpec<TextSpec>? title,
     StyleSpec<TextSpec>? description,
     StyleSpec<FlexBoxSpec>? actions,
-    StyleSpec<BoxSpec>? overlay,
   }) {
     return RemixDialogSpec(
       container: container ?? this.container,
       title: title ?? this.title,
       description: description ?? this.description,
       actions: actions ?? this.actions,
-      overlay: overlay ?? this.overlay,
     );
   }
 
@@ -40,12 +37,11 @@ mixin _$RemixDialogSpec implements Spec<RemixDialogSpec>, Diagnosticable {
       title: title.lerp(other?.title, t),
       description: description.lerp(other?.description, t),
       actions: actions.lerp(other?.actions, t),
-      overlay: overlay.lerp(other?.overlay, t),
     );
   }
 
   @override
-  List<Object?> get props => [container, title, description, actions, overlay];
+  List<Object?> get props => [container, title, description, actions];
 
   @override
   bool operator ==(Object other) {
@@ -90,8 +86,7 @@ mixin _$RemixDialogSpec implements Spec<RemixDialogSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('title', title))
       ..add(DiagnosticsProperty('description', description))
-      ..add(DiagnosticsProperty('actions', actions))
-      ..add(DiagnosticsProperty('overlay', overlay));
+      ..add(DiagnosticsProperty('actions', actions));
   }
 }
 
@@ -104,7 +99,7 @@ typedef _$RemixDialogSpecMethods = _$RemixDialogSpec; // ignore: unused_element
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Creates a Fortal-themed [RemixDialogStyler].
+/// Fortal-themed preset for [RemixDialog].
 class FortalDialog extends StatelessWidget {
   const FortalDialog({
     super.key,
@@ -151,7 +146,6 @@ mixin _$RemixDialogStylerMixin on Style<RemixDialogSpec>, Diagnosticable {
   Prop<StyleSpec<TextSpec>>? get $title;
   Prop<StyleSpec<TextSpec>>? get $description;
   Prop<StyleSpec<FlexBoxSpec>>? get $actions;
-  Prop<StyleSpec<BoxSpec>>? get $overlay;
 
   /// Sets the container.
   RemixDialogStyler container(BoxStyler value) {
@@ -171,11 +165,6 @@ mixin _$RemixDialogStylerMixin on Style<RemixDialogSpec>, Diagnosticable {
   /// Sets the actions.
   RemixDialogStyler actions(FlexBoxStyler value) {
     return merge(RemixDialogStyler(actions: value));
-  }
-
-  /// Sets the overlay.
-  RemixDialogStyler overlay(BoxStyler value) {
-    return merge(RemixDialogStyler(overlay: value));
   }
 
   /// Sets the animation configuration.
@@ -206,7 +195,6 @@ mixin _$RemixDialogStylerMixin on Style<RemixDialogSpec>, Diagnosticable {
       title: MixOps.merge($title, other?.$title),
       description: MixOps.merge($description, other?.$description),
       actions: MixOps.merge($actions, other?.$actions),
-      overlay: MixOps.merge($overlay, other?.$overlay),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -221,7 +209,6 @@ mixin _$RemixDialogStylerMixin on Style<RemixDialogSpec>, Diagnosticable {
       title: MixOps.resolve(context, $title),
       description: MixOps.resolve(context, $description),
       actions: MixOps.resolve(context, $actions),
-      overlay: MixOps.resolve(context, $overlay),
     );
 
     return StyleSpec(
@@ -238,8 +225,7 @@ mixin _$RemixDialogStylerMixin on Style<RemixDialogSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('container', $container))
       ..add(DiagnosticsProperty('title', $title))
       ..add(DiagnosticsProperty('description', $description))
-      ..add(DiagnosticsProperty('actions', $actions))
-      ..add(DiagnosticsProperty('overlay', $overlay));
+      ..add(DiagnosticsProperty('actions', $actions));
   }
 
   @override
@@ -248,7 +234,6 @@ mixin _$RemixDialogStylerMixin on Style<RemixDialogSpec>, Diagnosticable {
     $title,
     $description,
     $actions,
-    $overlay,
     $animation,
     $modifier,
     $variants,

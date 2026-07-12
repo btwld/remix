@@ -1,6 +1,6 @@
 part of 'tabs.dart';
 
-/// Creates a Fortal-themed [RemixTabBarStyler].
+/// Fortal-themed preset for [RemixTabBar].
 @MixWidget(name: 'FortalTabBar')
 RemixTabBarStyler fortalTabBarStyler() {
   return RemixTabBarStyler().container(
@@ -11,13 +11,13 @@ RemixTabBarStyler fortalTabBarStyler() {
   );
 }
 
-/// Creates a Fortal-themed [RemixTabViewStyler].
+/// Fortal-themed preset for [RemixTabView].
 @MixWidget(name: 'FortalTabView')
 RemixTabViewStyler fortalTabViewStyler() {
   return RemixTabViewStyler().paddingAll(FortalTokens.space3());
 }
 
-/// Creates a Fortal-themed [RemixTabStyler].
+/// Fortal-themed preset for [RemixTab].
 @MixWidget(name: 'FortalTab')
 RemixTabStyler fortalTabStyler() {
   return RemixTabStyler()

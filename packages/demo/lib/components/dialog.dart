@@ -22,12 +22,11 @@ Widget buildDividerUseCase(BuildContext context) {
                     description:
                         'Are you sure? This application will no longer be accessible and any existing sessions will be expired.',
                     actions: [
-                      FortalButton(
+                      FortalButton.ghost(
                         label: 'Cancel',
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        variant: FortalButtonVariant.ghost,
                       ),
                       FortalButton(label: 'Revoke access', onPressed: () {}),
                     ],

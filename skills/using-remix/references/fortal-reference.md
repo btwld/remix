@@ -10,8 +10,8 @@ component's `Remix*Styler`, plus a `Fortal<Name>` preset widget that applies
 it. Two equivalent ways to use a preset:
 
 ```dart
-// 1. Preset widget — Remix widget params + variant/size
-FortalButton(label: 'Save', onPressed: save, variant: .soft, size: .size3)
+// 1. Preset widget — Remix widget params + fixed variant/size
+FortalButton.soft(label: 'Save', onPressed: save, size: .size3)
 
 // 2. Styler function — returns a RemixButtonStyler to extend
 RemixButton(
@@ -24,6 +24,13 @@ RemixButton(
 
 Fortal preset styles resolve `FortalTokens`, so a `FortalScope` ancestor is
 required.
+
+Every variant has a matching named constructor. Prefer a named constructor
+when the variant is fixed and reserve the unnamed constructor's `variant:`
+parameter for runtime-selected values. Generic presets infer their type from
+required values and item lists, so `FortalRadio.soft(value: 'option')`,
+`FortalMenu.solid(items: items, ...)`, and similar calls do not need an
+explicit `<String>`.
 
 ## Component Variants & Sizes
 
@@ -67,12 +74,10 @@ Notes:
 - Enum names are per component: `FortalButtonVariant`, `FortalButtonSize`,
   `FortalCheckboxVariant`, etc.
 - There is no `FortalTabs` — use `RemixTabs` as the behavioral root.
-- `FortalIconButton` forwards only a subset of `RemixIconButton` params
-  (icon, onPressed, loading, enabled, enableFeedback, focusNode); for the
-  rest use `RemixIconButton(style: fortalIconButtonStyler(...))`.
-- `FortalSelect` styles trigger + menu only; give each `RemixSelectItem`
-  `style: fortalSelectMenuItemStyler(variant: …, size: …)`. `FortalMenu`
-  needs no such wiring — its item styler is baked in.
+- `FortalIconButton` forwards the complete `RemixIconButton` behavior surface,
+  including builders, long press, focus, semantics, and cursor options.
+- `FortalSelect` and `FortalMenu` both include matching default item styles.
+  Set an individual item's `style` only when that row needs an override.
 
 ---
 

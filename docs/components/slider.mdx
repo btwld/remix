@@ -96,15 +96,13 @@ class _FortalSliderExampleState extends State<FortalSliderExample> {
     return Column(
       spacing: 16,
       children: [
-        FortalSlider(
+        FortalSlider.surface(
           value: _value,
           onChanged: (v) => setState(() => _value = v),
-          variant: FortalSliderVariant.surface,
         ),
-        FortalSlider(
+        FortalSlider.soft(
           value: _value,
           onChanged: (v) => setState(() => _value = v),
-          variant: FortalSliderVariant.soft,
         ),
       ],
     );

@@ -78,7 +78,7 @@ class RemixSpinnerStyler
   factory RemixSpinnerStyler.trackStrokeWidth(double value) =>
       RemixSpinnerStyler().trackStrokeWidth(value);
 
-  RemixSpinner call() {
-    return RemixSpinner(style: this);
+  RemixSpinner call({Key? key}) {
+    return RemixSpinner(key: key, style: this);
   }
 }

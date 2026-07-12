@@ -99,15 +99,15 @@ class RemixCardStyler
     );
   }
 
+  /// Creates a [RemixCard] widget with this style applied.
+  RemixCard call({Key? key, Widget? child}) {
+    return RemixCard(key: key, style: this, child: child);
+  }
+
   /// Sets container decoration
   @override
   RemixCardStyler decoration(DecorationMix value) {
     return merge(RemixCardStyler(container: BoxStyler(decoration: value)));
-  }
-
-  /// Creates a [RemixCard] widget with this style applied.
-  RemixCard call({Key? key, Widget? child}) {
-    return RemixCard(key: key, child: child, style: this);
   }
 
   // Abstract method implementations for mixins

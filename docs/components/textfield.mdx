@@ -111,17 +111,15 @@ class _FortalTextFieldExampleState extends State<FortalTextFieldExample> {
     return Column(
       spacing: 16,
       children: [
-        FortalTextField(
+        FortalTextField.surface(
           controller: controller,
           label: 'Surface',
           hintText: 'Neutral surface field',
-          variant: FortalTextFieldVariant.surface,
         ),
-        FortalTextField(
+        FortalTextField.soft(
           controller: controller,
           label: 'Soft',
           hintText: 'Accent soft field',
-          variant: FortalTextFieldVariant.soft,
         ),
       ],
     );
@@ -172,6 +170,7 @@ const RemixTextField({
   DragStartBehavior dragStartBehavior = DragStartBehavior.start,
   bool enableInteractiveSelection = true,
   TextSelectionControls? selectionControls,
+  GestureTapCallback? onTap,
   TapRegionCallback? onTapOutside,
   TapRegionUpCallback? onPressUpOutside,
   bool onTapAlwaysCalled = false,
@@ -324,6 +323,10 @@ Optional. Whether to enable user interface affordances for changing the text sel
 #### `selectionControls` → `TextSelectionControls?`
 
 Optional. Optional delegate for building the text selection handles and toolbar.
+
+#### `onTap` → `GestureTapCallback?`
+
+Optional. Called when the text field is tapped.
 
 #### `onTapOutside` → `TapRegionCallback?`
 
@@ -495,10 +498,6 @@ Sets cursor height.
 #### `cursorRadius(Radius value)`
 
 Sets cursor radius.
-
-#### `cursorOffset(Offset value)`
-
-Sets cursor paint offset.
 
 #### `cursorOpacityAnimates(bool value)`
 

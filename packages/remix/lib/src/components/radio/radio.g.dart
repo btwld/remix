@@ -86,6 +86,78 @@ mixin _$RemixRadioSpec implements Spec<RemixRadioSpec>, Diagnosticable {
 typedef _$RemixRadioSpecMethods = _$RemixRadioSpec; // ignore: unused_element
 
 // **************************************************************************
+// MixWidgetGenerator
+// **************************************************************************
+
+/// Fortal-themed preset for [RemixRadio].
+class FortalRadio<T> extends StatelessWidget {
+  const FortalRadio({
+    super.key,
+    this.variant = .surface,
+    this.size = .size2,
+    required this.value,
+    this.enabled = true,
+    this.toggleable = false,
+    this.mouseCursor,
+    this.focusNode,
+    this.autofocus = false,
+  });
+
+  /// Surface treatment with neutral border.
+  const FortalRadio.surface({
+    super.key,
+    this.size = .size2,
+    required this.value,
+    this.enabled = true,
+    this.toggleable = false,
+    this.mouseCursor,
+    this.focusNode,
+    this.autofocus = false,
+  }) : variant = FortalRadioVariant.surface;
+
+  /// Soft accent treatment.
+  const FortalRadio.soft({
+    super.key,
+    this.size = .size2,
+    required this.value,
+    this.enabled = true,
+    this.toggleable = false,
+    this.mouseCursor,
+    this.focusNode,
+    this.autofocus = false,
+  }) : variant = FortalRadioVariant.soft;
+
+  final FortalRadioVariant variant;
+
+  final FortalRadioSize size;
+
+  final T value;
+
+  final bool enabled;
+
+  final bool toggleable;
+
+  final MouseCursor? mouseCursor;
+
+  final FocusNode? focusNode;
+
+  final bool autofocus;
+
+  @override
+  Widget build(BuildContext context) {
+    return fortalRadioStyler(variant: this.variant, size: this.size).call<T>(
+      key: this.key,
+      value: this.value,
+      enabled: this.enabled,
+      toggleable: this.toggleable,
+      mouseCursor: this.mouseCursor,
+      focusNode: this.focusNode,
+      autofocus: this.autofocus,
+    );
+  }
+}
+
+// **************************************************************************
 // StylerGenerator
 // **************************************************************************
 

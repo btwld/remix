@@ -78,8 +78,8 @@ class RemixSelect<T> extends StatefulWidget {
     required this.items,
     this.selectedValue,
     this.positioning = const OverlayPositionConfig(
-      targetAnchor: Alignment.bottomCenter,
-      followerAnchor: Alignment.topCenter,
+      targetAnchor: .bottomCenter,
+      followerAnchor: .topCenter,
     ),
     this.onChanged,
     this.onOpen,
@@ -169,7 +169,10 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
         .merge(widget.style);
   }
 
-  Widget _buildOverlayMenu(RemixSelectSpec spec) {
+  Widget _buildOverlayMenu(
+    RemixSelectSpec spec,
+    Prop<StyleSpec<RemixSelectMenuItemSpec>>? defaultItemStyle,
+  ) {
     final menuContainerSpec = spec.menuContainer;
 
     return _AnimatedOverlayMenu(
@@ -178,7 +181,13 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
       curve: Curves.easeInOut,
       menuContainer: menuContainerSpec,
       children: widget.items
-          .map((item) => _RemixSelectItemWidget(data: item))
+          .map(
+            (item) => _RemixSelectItemWidget(
+              data: item,
+              defaultStyle: widget.styleSpec == null ? defaultItemStyle : null,
+              defaultStyleSpec: widget.styleSpec == null ? null : spec.item,
+            ),
+          )
           .toList(),
     );
   }
@@ -193,9 +202,8 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
       }
     }
 
-    // Assert in debug mode to catch developer errors
     assert(
-      false,
+      widget.items.any((item) => item.value == widget.selectedValue),
       'RemixSelect: selectedValue "${widget.selectedValue}" not found in items. '
       'Ensure selectedValue matches one of the item values.',
     );
@@ -214,12 +222,14 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
 
   @override
   Widget build(BuildContext context) {
+    final style = _buildStyle();
+
     return NakedSelect<T>(
       overlayBuilder: (context, info) {
         return RemixStyleSpecBuilder<RemixSelectSpec>(
-          style: _buildStyle(),
+          style: style,
           styleSpec: widget.styleSpec,
-          builder: (context, spec) => _buildOverlayMenu(spec),
+          builder: (context, spec) => _buildOverlayMenu(spec, style.$item),
         );
       },
       value: widget.selectedValue,
@@ -239,7 +249,7 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
       },
       builder: (context, state, _) {
         return RemixStyleSpecBuilder<RemixSelectSpec>(
-          style: _buildStyle(),
+          style: style,
           styleSpec: widget.styleSpec,
           controller: NakedSelectState.controllerOf<T>(context),
           builder: (context, spec) {
@@ -372,36 +382,75 @@ class _RemixSelectTriggerWidget extends StatelessWidget {
 
 /// Internal widget for rendering a selectable item.
 class _RemixSelectItemWidget<T> extends StatelessWidget {
-  const _RemixSelectItemWidget({required this.data});
+  const _RemixSelectItemWidget({
+    required this.data,
+    this.defaultStyle,
+    this.defaultStyleSpec,
+  });
 
   final RemixSelectItem<T> data;
+  final Prop<StyleSpec<RemixSelectMenuItemSpec>>? defaultStyle;
+  final StyleSpec<RemixSelectMenuItemSpec>? defaultStyleSpec;
+
+  StyleSpec<RemixSelectMenuItemSpec> _resolveStyle(BuildContext context) {
+    final rawDefault = defaultStyleSpec;
+    if (rawDefault != null) {
+      final resolved = RemixSelectMenuItemStyler.create(
+        container: Prop.value(rawDefault.spec.container),
+        text: Prop.value(rawDefault.spec.text),
+        icon: Prop.value(rawDefault.spec.icon),
+      ).merge(data.style).build(context);
+      final modifiers = [
+        ...?rawDefault.widgetModifiers,
+        ...?resolved.widgetModifiers,
+      ];
+
+      return StyleSpec(
+        spec: resolved.spec,
+        animation: resolved.animation ?? rawDefault.animation,
+        widgetModifiers: modifiers.isEmpty ? null : modifiers,
+      );
+    }
+
+    final itemStyle = MixOps.merge(
+      defaultStyle,
+      Prop.maybeMix<StyleSpec<RemixSelectMenuItemSpec>>(data.style),
+    );
+
+    return MixOps.resolve(context, itemStyle) ??
+        const StyleSpec(spec: RemixSelectMenuItemSpec());
+  }
 
   @override
   Widget build(BuildContext context) {
-    return NakedSelect.Option<T>(
+    return NakedSelectOption<T>(
+      value: data.value,
       enabled: data.enabled,
       semanticLabel: data.semanticLabel ?? data.label,
-      value: data.value,
       builder: (context, states, _) {
-        return StyleBuilder(
-          style: data.style,
-          controller: NakedSelectOptionState.controllerOf<T>(context),
-          builder: (context, spec) {
-            return StyleSpecBuilder<RemixSelectMenuItemSpec>(
-              styleSpec: StyleSpec(spec: spec),
-              builder: (context, spec) {
-                return RowBox(
-                  styleSpec: spec.container,
-                  children: [
-                    // ignore: avoid-flexible-outside-flex
-                    Expanded(
-                      child: StyledText(data.label, styleSpec: spec.text),
-                    ),
-                    if (states.isSelected)
-                      StyledIcon(icon: Icons.check, styleSpec: spec.icon),
-                  ],
-                );
-              },
+        final controller = NakedSelectOptionState.controllerOf<T>(context);
+
+        return ListenableBuilder(
+          listenable: controller,
+          builder: (context, _) {
+            return WidgetStateProvider(
+              states: controller.value,
+              child: Builder(
+                builder: (context) => StyleSpecBuilder(
+                  styleSpec: _resolveStyle(context),
+                  builder: (context, spec) => RowBox(
+                    styleSpec: spec.container,
+                    children: [
+                      // ignore: avoid-flexible-outside-flex
+                      Expanded(
+                        child: StyledText(data.label, styleSpec: spec.text),
+                      ),
+                      if (states.isSelected)
+                        StyledIcon(icon: Icons.check, styleSpec: spec.icon),
+                    ],
+                  ),
+                ),
+              ),
             );
           },
         );

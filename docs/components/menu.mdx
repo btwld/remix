@@ -159,16 +159,14 @@ class FortalMenuExample extends StatelessWidget {
     return Row(
       spacing: 16,
       children: [
-        FortalMenu<String>(
+        FortalMenu.solid(
           trigger: const RemixMenuTrigger(label: 'Solid', icon: Icons.menu),
           items: items,
-          variant: FortalMenuVariant.solid,
           onSelected: (value) => debugPrint(value),
         ),
-        FortalMenu<String>(
+        FortalMenu.soft(
           trigger: const RemixMenuTrigger(label: 'Soft', icon: Icons.menu),
           items: items,
-          variant: FortalMenuVariant.soft,
           onSelected: (value) => debugPrint(value),
         ),
       ],
@@ -202,6 +200,7 @@ const RemixMenu({
   FocusNode? triggerFocusNode,
   OverlayPositionConfig positioning = const OverlayPositionConfig(),
   RemixMenuStyler style = const RemixMenuStyler.create(),
+  RemixMenuSpec? styleSpec,
 })
 ```
 </CodeGroup>
@@ -273,6 +272,10 @@ Optional. Overlay positioning configuration.
 #### `style` → `RemixMenuStyler`
 
 Optional. The style configuration for the menu.
+
+#### `styleSpec` → `RemixMenuSpec?`
+
+Optional. A raw resolved style spec that bypasses fluent style resolution.
 
 
 ### Menu Style Methods

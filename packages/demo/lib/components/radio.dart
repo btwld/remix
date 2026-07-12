@@ -33,7 +33,7 @@ Widget buildRadioUseCase(BuildContext context) {
                         child: Row(
                           mainAxisSize: .min,
                           children: [
-                            FortalRadio<Theme>(
+                            FortalRadio(
                               variant: context.knobs.object.dropdown(
                                 label: 'variant',
                                 options: FortalRadioVariant.values,

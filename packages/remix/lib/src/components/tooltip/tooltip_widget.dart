@@ -42,11 +42,19 @@ class RemixTooltip extends StatelessWidget {
       styleSpec: styleSpec,
       builder: (context, spec) {
         return NakedTooltip(
-          overlayBuilder: (context, info) =>
-              Box(styleSpec: spec.container, child: tooltipChild),
+          overlayBuilder: (context, info) => Box(
+            styleSpec: spec.container,
+            child: StyleSpecBuilder(
+              styleSpec: spec.label,
+              builder: (context, labelSpec) => DefaultTextStyle.merge(
+                style: labelSpec.style,
+                child: tooltipChild,
+              ),
+            ),
+          ),
+          hoverDelay: spec.waitDuration ?? const Duration(milliseconds: 300),
           // showDuration is touch long-press wait (Material-aligned touchDelay).
           touchDelay: spec.showDuration ?? const Duration(milliseconds: 1500),
-          hoverDelay: spec.waitDuration ?? const Duration(milliseconds: 300),
           // dismissDuration is hover-exit grace before the tooltip closes.
           dismissDelay:
               spec.dismissDuration ?? const Duration(milliseconds: 100),

@@ -55,7 +55,7 @@ class RemixAccordionGroup<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return NakedAccordionGroup<T>(
+    return NakedAccordionGroup(
       controller: controller,
       initialExpandedValues: initialExpandedValues,
       child: child,

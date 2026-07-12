@@ -60,13 +60,11 @@ class FortalProgressExample extends StatelessWidget {
     return Column(
       spacing: 16,
       children: [
-        FortalProgress(
+        FortalProgress.surface(
           value: 0.6,
-          variant: FortalProgressVariant.surface,
         ),
-        FortalProgress(
+        FortalProgress.soft(
           value: 0.4,
-          variant: FortalProgressVariant.soft,
         ),
       ],
     );

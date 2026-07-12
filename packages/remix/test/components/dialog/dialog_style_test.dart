@@ -18,14 +18,12 @@ void main() {
         final title = Prop.maybeMix(TextStyler());
         final description = Prop.maybeMix(TextStyler());
         final actions = Prop.maybeMix(FlexBoxStyler());
-        final overlay = Prop.maybeMix(BoxStyler());
 
         final style = RemixDialogStyler.create(
           container: container,
           title: title,
           description: description,
           actions: actions,
-          overlay: overlay,
         );
 
         expect(style, isNotNull);
@@ -38,9 +36,6 @@ void main() {
           title: TextStyler(style: TextStyleMix(color: Colors.blue)),
           description: TextStyler(style: TextStyleMix(color: Colors.grey)),
           actions: FlexBoxStyler(spacing: 8.0),
-          overlay: BoxStyler(
-            decoration: BoxDecorationMix(color: Colors.black54),
-          ),
         );
 
         expect(style, isNotNull);
@@ -90,24 +85,6 @@ void main() {
           expect(
             style.$actions,
             equals(Prop.maybeMix(FlexBoxStyler(spacing: 12.0))),
-          );
-        },
-      );
-
-      styleMethodTest(
-        'overlay sets overlay box styler',
-        initial: RemixDialogStyler(),
-        modify: (style) => style.overlay(
-          BoxStyler(decoration: BoxDecorationMix(color: Colors.black87)),
-        ),
-        expect: (style) {
-          expect(
-            style.$overlay,
-            equals(
-              Prop.maybeMix(
-                BoxStyler(decoration: BoxDecorationMix(color: Colors.black87)),
-              ),
-            ),
           );
         },
       );
@@ -391,12 +368,11 @@ void main() {
 
       test('props list contains all properties', () {
         const style = RemixDialogStyler.create();
-        expect(style.props, hasLength(8));
+        expect(style.props, hasLength(7));
         expect(style.props, contains(style.$container));
         expect(style.props, contains(style.$title));
         expect(style.props, contains(style.$description));
         expect(style.props, contains(style.$actions));
-        expect(style.props, contains(style.$overlay));
         expect(style.props, contains(style.$variants));
         expect(style.props, contains(style.$animation));
         expect(style.props, contains(style.$modifier));

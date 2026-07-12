@@ -106,6 +106,51 @@ class RemixSliderStyler
     return merge(RemixSliderStyler(rangeWidth: value));
   }
 
+  /// Creates a [RemixSlider] widget with this style applied.
+  ///
+  /// Example:
+  /// ```dart
+  /// final slider = RemixSliderStyler()
+  ///   .thumbColor(Colors.blue)
+  ///   .rangeColor(Colors.blue.shade200);
+  ///
+  /// // Use it like a function
+  /// slider(
+  ///   value: _sliderValue,
+  ///   onChanged: (value) => setState(() => _sliderValue = value),
+  /// )
+  /// ```
+  RemixSlider call({
+    Key? key,
+    required double value,
+    ValueChanged<double>? onChanged,
+    ValueChanged<double>? onChangeStart,
+    ValueChanged<double>? onChangeEnd,
+    double min = 0.0,
+    double max = 1.0,
+    bool enabled = true,
+    bool enableFeedback = true,
+    FocusNode? focusNode,
+    bool autofocus = false,
+    int? snapDivisions,
+  }) {
+    return RemixSlider(
+      key: key,
+      value: value,
+      onChanged: onChanged,
+      onChangeStart: onChangeStart,
+      onChangeEnd: onChangeEnd,
+      min: min,
+      max: max,
+      enabled: enabled,
+      enableFeedback: enableFeedback,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      snapDivisions: snapDivisions,
+      style: this,
+    );
+  }
+
   // RemixContainerStyler mixin implementations
   @override
   RemixSliderStyler padding(EdgeInsetsGeometryMix value) {
@@ -177,49 +222,6 @@ class RemixSliderStyler
       RemixSliderStyler(
         thumb: BoxStyler(transform: value, transformAlignment: alignment),
       ),
-    );
-  }
-
-  /// Creates a [RemixSlider] widget with this style applied.
-  ///
-  /// Example:
-  /// ```dart
-  /// final slider = RemixSliderStyler()
-  ///   .thumbColor(Colors.blue)
-  ///   .rangeColor(Colors.blue.shade200);
-  ///
-  /// // Use it like a function
-  /// slider(
-  ///   value: _sliderValue,
-  ///   onChanged: (value) => setState(() => _sliderValue = value),
-  /// )
-  /// ```
-  RemixSlider call({
-    required double value,
-    ValueChanged<double>? onChanged,
-    ValueChanged<double>? onChangeStart,
-    ValueChanged<double>? onChangeEnd,
-    double min = 0.0,
-    double max = 1.0,
-    bool enabled = true,
-    bool enableFeedback = true,
-    FocusNode? focusNode,
-    bool autofocus = false,
-    int? snapDivisions,
-  }) {
-    return RemixSlider(
-      value: value,
-      onChanged: onChanged,
-      onChangeStart: onChangeStart,
-      onChangeEnd: onChangeEnd,
-      min: min,
-      max: max,
-      enabled: enabled,
-      enableFeedback: enableFeedback,
-      focusNode: focusNode,
-      autofocus: autofocus,
-      snapDivisions: snapDivisions,
-      style: this,
     );
   }
 }
