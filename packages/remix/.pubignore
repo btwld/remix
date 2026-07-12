@@ -4,3 +4,5 @@ demo/*
 demo/macos/Podfile.lock
 .cursor/*
 docs/*
+scripts/*
+test/*

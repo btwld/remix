@@ -8,10 +8,10 @@ import '../../helpers/test_helpers.dart';
 import '../../helpers/test_methods.dart';
 
 void main() {
-  group('RemixTextFieldStyle', () {
+  group('RemixTextFieldStyler', () {
     group('Constructors', () {
       test('create() constructs with null parameters', () {
-        const style = RemixTextFieldStyle.create();
+        const style = RemixTextFieldStyler.create();
 
         expect(style.$text, isNull);
         expect(style.$hintText, isNull);
@@ -20,13 +20,11 @@ void main() {
         expect(style.$cursorHeight, isNull);
         expect(style.$cursorRadius, isNull);
         expect(style.$cursorColor, isNull);
-        expect(style.$cursorOffset, isNull);
         expect(style.$cursorOpacityAnimates, isNull);
         expect(style.$selectionHeightStyle, isNull);
         expect(style.$selectionWidthStyle, isNull);
         expect(style.$scrollPadding, isNull);
         expect(style.$keyboardAppearance, isNull);
-        expect(style.$spacing, isNull);
         expect(style.$container, isNull);
         expect(style.$helperText, isNull);
         expect(style.$label, isNull);
@@ -43,13 +41,11 @@ void main() {
         final cursorHeight = Prop.maybe(20.0);
         final cursorRadius = Prop.maybe(const Radius.circular(2));
         final cursorColor = Prop.maybe(Colors.blue);
-        final cursorOffset = Prop.maybe(const Offset(1, 0));
         final cursorOpacityAnimates = Prop.maybe(true);
         final selectionHeightStyle = Prop.maybe(BoxHeightStyle.max);
         final selectionWidthStyle = Prop.maybe(BoxWidthStyle.max);
         final scrollPadding = Prop.maybe(const EdgeInsets.all(10));
         final keyboardAppearance = Prop.maybe(Brightness.dark);
-        final spacing = Prop.maybe(8.0);
         final container = Prop.maybeMix(FlexBoxStyler());
         final helperText = Prop.maybeMix(TextStyler());
         final label = Prop.maybeMix(TextStyler());
@@ -59,7 +55,7 @@ void main() {
         );
         final modifier = WidgetModifierConfig();
 
-        final style = RemixTextFieldStyle.create(
+        final style = RemixTextFieldStyler.create(
           text: text,
           hintText: hintText,
           textAlign: textAlign,
@@ -67,13 +63,11 @@ void main() {
           cursorHeight: cursorHeight,
           cursorRadius: cursorRadius,
           cursorColor: cursorColor,
-          cursorOffset: cursorOffset,
           cursorOpacityAnimates: cursorOpacityAnimates,
           selectionHeightStyle: selectionHeightStyle,
           selectionWidthStyle: selectionWidthStyle,
           scrollPadding: scrollPadding,
           keyboardAppearance: keyboardAppearance,
-          spacing: spacing,
           container: container,
           helperText: helperText,
           label: label,
@@ -89,13 +83,11 @@ void main() {
         expect(style.$cursorHeight, equals(cursorHeight));
         expect(style.$cursorRadius, equals(cursorRadius));
         expect(style.$cursorColor, equals(cursorColor));
-        expect(style.$cursorOffset, equals(cursorOffset));
         expect(style.$cursorOpacityAnimates, equals(cursorOpacityAnimates));
         expect(style.$selectionHeightStyle, equals(selectionHeightStyle));
         expect(style.$selectionWidthStyle, equals(selectionWidthStyle));
         expect(style.$scrollPadding, equals(scrollPadding));
         expect(style.$keyboardAppearance, equals(keyboardAppearance));
-        expect(style.$spacing, equals(spacing));
         expect(style.$container, equals(container));
         expect(style.$helperText, equals(helperText));
         expect(style.$label, equals(label));
@@ -105,7 +97,7 @@ void main() {
       });
 
       test('default constructor converts types correctly', () {
-        final style = RemixTextFieldStyle(
+        final style = RemixTextFieldStyler(
           text: TextStyler(),
           hintText: TextStyler(),
           textAlign: TextAlign.center,
@@ -113,13 +105,11 @@ void main() {
           cursorHeight: 20.0,
           cursorRadius: const Radius.circular(2),
           cursorColor: Colors.blue,
-          cursorOffset: const Offset(1, 0),
           cursorOpacityAnimates: true,
           selectionHeightStyle: BoxHeightStyle.max,
           selectionWidthStyle: BoxWidthStyle.max,
           scrollPadding: const EdgeInsets.all(10),
           keyboardAppearance: Brightness.dark,
-          spacing: 8.0,
           container: FlexBoxStyler(),
           helperText: TextStyler(),
           label: TextStyler(),
@@ -135,13 +125,11 @@ void main() {
         expect(style.$cursorHeight, isNotNull);
         expect(style.$cursorRadius, isNotNull);
         expect(style.$cursorColor, isNotNull);
-        expect(style.$cursorOffset, isNotNull);
         expect(style.$cursorOpacityAnimates, isNotNull);
         expect(style.$selectionHeightStyle, isNotNull);
         expect(style.$selectionWidthStyle, isNotNull);
         expect(style.$scrollPadding, isNotNull);
         expect(style.$keyboardAppearance, isNotNull);
-        expect(style.$spacing, isNotNull);
         expect(style.$container, isNotNull);
         expect(style.$helperText, isNotNull);
         expect(style.$label, isNotNull);
@@ -154,7 +142,7 @@ void main() {
     group('Style Methods', () {
       styleMethodTest(
         'color() sets text color',
-        initial: RemixTextFieldStyle(),
+        initial: RemixTextFieldStyler(),
         modify: (style) => style.color(Colors.blue),
         expect: (style) {
           expect(
@@ -170,7 +158,7 @@ void main() {
 
       styleMethodTest(
         'backgroundColor() sets background color',
-        initial: RemixTextFieldStyle(),
+        initial: RemixTextFieldStyler(),
         modify: (style) => style.backgroundColor(Colors.grey),
         expect: (style) {
           expect(
@@ -186,7 +174,7 @@ void main() {
 
       styleMethodTest(
         'container() sets container styling',
-        initial: RemixTextFieldStyle(),
+        initial: RemixTextFieldStyler(),
         modify: (style) => style.container(FlexBoxStyler()),
         expect: (style) {
           expect(style.$container, equals(Prop.maybeMix(FlexBoxStyler())));
@@ -195,7 +183,7 @@ void main() {
 
       styleMethodTest(
         'borderRadius() sets border radius',
-        initial: RemixTextFieldStyle(),
+        initial: RemixTextFieldStyler(),
         modify: (style) =>
             style.borderRadius(BorderRadiusGeometryMix.circular(8)),
         expect: (style) {
@@ -216,7 +204,7 @@ void main() {
 
       styleMethodTest(
         'padding() sets padding',
-        initial: RemixTextFieldStyle(),
+        initial: RemixTextFieldStyler(),
         modify: (style) => style.padding(EdgeInsetsGeometryMix.all(16)),
         expect: (style) {
           expect(
@@ -232,7 +220,7 @@ void main() {
 
       styleMethodTest(
         'border() sets border',
-        initial: RemixTextFieldStyle(),
+        initial: RemixTextFieldStyler(),
         modify: (style) => style.border(
           BoxBorderMix.all(BorderSideMix(color: Colors.black, width: 1)),
         ),
@@ -256,7 +244,7 @@ void main() {
 
       styleMethodTest(
         'width() sets width',
-        initial: RemixTextFieldStyle(),
+        initial: RemixTextFieldStyler(),
         modify: (style) => style.width(200),
         expect: (style) {
           expect(
@@ -274,7 +262,7 @@ void main() {
 
       styleMethodTest(
         'height() sets height',
-        initial: RemixTextFieldStyle(),
+        initial: RemixTextFieldStyler(),
         modify: (style) => style.height(50),
         expect: (style) {
           expect(
@@ -292,7 +280,7 @@ void main() {
 
       styleMethodTest(
         'cursorColor() sets cursor color',
-        initial: RemixTextFieldStyle(),
+        initial: RemixTextFieldStyler(),
         modify: (style) => style.cursorColor(Color.fromARGB(255, 255, 0, 0)),
         expect: (style) {
           expect(
@@ -304,7 +292,7 @@ void main() {
 
       styleMethodTest(
         'hintColor() sets hint text color',
-        initial: RemixTextFieldStyle(),
+        initial: RemixTextFieldStyler(),
         modify: (style) => style.hintColor(Colors.grey),
         expect: (style) {
           expect(
@@ -320,7 +308,7 @@ void main() {
 
       styleMethodTest(
         'hintText() sets hint text styling',
-        initial: RemixTextFieldStyle(),
+        initial: RemixTextFieldStyler(),
         modify: (style) => style.hintText(TextStyler()),
         expect: (style) {
           expect(style.$hintText, equals(Prop.maybeMix(TextStyler())));
@@ -329,7 +317,7 @@ void main() {
 
       styleMethodTest(
         'margin() sets margin',
-        initial: RemixTextFieldStyle(),
+        initial: RemixTextFieldStyler(),
         modify: (style) => style.margin(EdgeInsetsGeometryMix.all(8)),
         expect: (style) {
           expect(
@@ -345,7 +333,7 @@ void main() {
 
       styleMethodTest(
         'spacing() sets spacing',
-        initial: RemixTextFieldStyle(),
+        initial: RemixTextFieldStyler(),
         modify: (style) => style.spacing(12),
         expect: (style) {
           expect(
@@ -357,7 +345,7 @@ void main() {
 
       styleMethodTest(
         'decoration() sets decoration',
-        initial: RemixTextFieldStyle(),
+        initial: RemixTextFieldStyler(),
         modify: (style) =>
             style.decoration(BoxDecorationMix(color: Colors.red)),
         expect: (style) {
@@ -374,7 +362,7 @@ void main() {
 
       styleMethodTest(
         'alignment() sets alignment',
-        initial: RemixTextFieldStyle(),
+        initial: RemixTextFieldStyler(),
         modify: (style) => style.alignment(Alignment.center),
         expect: (style) {
           expect(
@@ -386,7 +374,7 @@ void main() {
 
       styleMethodTest(
         'constraints() sets constraints',
-        initial: RemixTextFieldStyle(),
+        initial: RemixTextFieldStyler(),
         modify: (style) =>
             style.constraints(BoxConstraintsMix(minWidth: 100, maxWidth: 200)),
         expect: (style) {
@@ -405,7 +393,7 @@ void main() {
 
       styleMethodTest(
         'textAlign() sets text alignment',
-        initial: RemixTextFieldStyle(),
+        initial: RemixTextFieldStyler(),
         modify: (style) => style.textAlign(TextAlign.center),
         expect: (style) {
           expect(style.$textAlign, equals(Prop.maybe(TextAlign.center)));
@@ -414,7 +402,7 @@ void main() {
 
       styleMethodTest(
         'helperText() sets helper text styling',
-        initial: RemixTextFieldStyle(),
+        initial: RemixTextFieldStyler(),
         modify: (style) => style.helperText(TextStyler().color(Colors.blue)),
         expect: (style) {
           expect(
@@ -430,7 +418,7 @@ void main() {
 
       styleMethodTest(
         'label() sets label styling',
-        initial: RemixTextFieldStyle(),
+        initial: RemixTextFieldStyler(),
         modify: (style) => style.label(TextStyler().color(Colors.blue)),
         expect: (style) {
           expect(
@@ -446,7 +434,7 @@ void main() {
 
       styleMethodTest(
         'animate() adds animation config',
-        initial: RemixTextFieldStyle(),
+        initial: RemixTextFieldStyler(),
         modify: (style) => style.animate(
           AnimationConfig.linear(const Duration(milliseconds: 300)),
         ),
@@ -460,7 +448,7 @@ void main() {
 
       styleMethodTest(
         'variants() adds variants',
-        initial: RemixTextFieldStyle(),
+        initial: RemixTextFieldStyler(),
         modify: (style) => style.variants([]),
         expect: (style) {
           expect(style.$variants, equals([]));
@@ -469,8 +457,8 @@ void main() {
 
       styleMethodTest(
         'wrap() adds widget modifier',
-        initial: RemixTextFieldStyle(),
-        modify: (style) => style.wrap(WidgetModifierConfig.clipOval()),
+        initial: RemixTextFieldStyler(),
+        modify: (style) => style.wrap(.clipOval()),
         expect: (style) {
           expect(style.$modifier, equals(WidgetModifierConfig.clipOval()));
         },
@@ -478,7 +466,7 @@ void main() {
 
       styleMethodTest(
         'foregroundDecoration() adds foreground decoration',
-        initial: RemixTextFieldStyle(),
+        initial: RemixTextFieldStyler(),
         modify: (style) => style.foregroundDecoration(
           BoxDecorationMix(shape: BoxShape.circle),
         ),
@@ -500,7 +488,7 @@ void main() {
 
       styleMethodTest(
         'transform() adds transform',
-        initial: RemixTextFieldStyle(),
+        initial: RemixTextFieldStyler(),
         modify: (style) => style.transform(
           Matrix4.rotationZ(0.1),
           alignment: Alignment.topLeft,
@@ -523,7 +511,7 @@ void main() {
 
     group('Core Methods', () {
       testWidgets('resolve() creates StyleSpec', (tester) async {
-        const style = RemixTextFieldStyle.create();
+        const style = RemixTextFieldStyler.create();
 
         await tester.pumpMaterialApp(Container());
         final context = tester.element(find.byType(Container));
@@ -535,8 +523,8 @@ void main() {
       });
 
       test('merge() combines two styles', () {
-        final style1 = RemixTextFieldStyle(text: TextStyler());
-        final style2 = RemixTextFieldStyle(
+        final style1 = RemixTextFieldStyler(text: TextStyler());
+        final style2 = RemixTextFieldStyler(
           hintText: TextStyler(),
           animation: AnimationConfig.linear(const Duration(milliseconds: 200)),
         );
@@ -549,7 +537,7 @@ void main() {
       });
 
       test('merge() with null returns original', () {
-        final style = RemixTextFieldStyle(text: TextStyler());
+        final style = RemixTextFieldStyler(text: TextStyler());
         final merged = style.merge(null);
 
         expect(merged, equals(style));
@@ -560,7 +548,7 @@ void main() {
       testWidgets('call method creates RemixTextField with common parameters', (
         tester,
       ) async {
-        final style = RemixTextFieldStyle().backgroundColor(
+        final style = RemixTextFieldStyler().backgroundColor(
           Colors.grey.shade100,
         );
         final controller = TextEditingController();
@@ -600,7 +588,7 @@ void main() {
       testWidgets(
         'call method creates RemixTextField with minimal parameters',
         (tester) async {
-          final style = RemixTextFieldStyle();
+          final style = RemixTextFieldStyler();
 
           final textField = style.call();
 
@@ -617,7 +605,7 @@ void main() {
       testWidgets(
         'call method creates RemixTextField with leading and trailing',
         (tester) async {
-          final style = RemixTextFieldStyle();
+          final style = RemixTextFieldStyler();
           const leading = Icon(Icons.person);
           const trailing = Icon(Icons.clear);
 
@@ -632,16 +620,16 @@ void main() {
 
     group('Equality', () {
       test('two identical styles are equal', () {
-        const style1 = RemixTextFieldStyle.create();
-        const style2 = RemixTextFieldStyle.create();
+        const style1 = RemixTextFieldStyler.create();
+        const style2 = RemixTextFieldStyler.create();
 
         expect(style1, equals(style2));
         expect(style1.hashCode, equals(style2.hashCode));
       });
 
       test('two styles with different properties are not equal', () {
-        final style1 = RemixTextFieldStyle(text: TextStyler());
-        const style2 = RemixTextFieldStyle.create();
+        final style1 = RemixTextFieldStyler(text: TextStyler());
+        const style2 = RemixTextFieldStyler.create();
 
         expect(style1, isNot(equals(style2)));
       });

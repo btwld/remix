@@ -42,25 +42,25 @@ class TooltipExample extends StatelessWidget {
     );
   }
 
-  RemixTooltipStyle get styleDefault {
-    return RemixTooltipStyle()
+  RemixTooltipStyler get styleDefault {
+    return RemixTooltipStyler()
         .padding(EdgeInsetsGeometryMix.symmetric(horizontal: 12, vertical: 8))
-        .color(Colors.black87)
+        .backgroundColor(Colors.black87)
         .borderRadius(BorderRadiusGeometryMix.all(const .circular(6)))
         .wrap(
-          WidgetModifierConfig.defaultTextStyle(
+          .defaultTextStyle(
             style: TextStyleMix().color(Colors.white).fontSize(14),
           ),
         );
   }
 
-  RemixTooltipStyle get styleFast {
+  RemixTooltipStyler get styleFast {
     return styleDefault
         .waitDuration(const Duration(milliseconds: 100))
         .showDuration(const Duration(milliseconds: 800));
   }
 
-  RemixTooltipStyle get styleSlow {
+  RemixTooltipStyler get styleSlow {
     return styleDefault
         .waitDuration(const Duration(seconds: 1))
         .showDuration(const Duration(seconds: 3));

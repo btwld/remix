@@ -11,27 +11,27 @@ part of 'slider.dart';
 ///   max: 100.0,
 ///   value: 50.0,
 ///   onChanged: (value) {
-///     print('Slider value changed: $value');
+///     debugPrint('Slider value changed: $value');
 ///   },
-///   style: SliderStyle(),
+///   style: RemixSliderStyler(),
 /// )
 /// ```
 class RemixSlider extends StatelessWidget {
   const RemixSlider({
     super.key,
+    required this.value,
+    this.onChanged,
+    this.onChangeStart,
+    this.onChangeEnd,
     this.min = 0.0,
     this.max = 1.0,
-    required this.onChanged,
-    required this.value,
-    this.onChangeEnd,
-    this.onChangeStart,
-    this.style = const RemixSliderStyle.create(),
-    this.styleSpec,
     this.enabled = true,
-    this.enableHapticFeedback = true,
+    this.enableFeedback = true,
     this.focusNode,
     this.autofocus = false,
     this.snapDivisions,
+    this.style = const RemixSliderStyler.create(),
+    this.styleSpec,
   }) : assert(min <= max, 'Slider min must be less than or equal to max'),
        assert(
          value >= min && value <= max,
@@ -57,24 +57,27 @@ class RemixSlider extends StatelessWidget {
   final double value;
 
   /// The style configuration for the slider.
-  final RemixSliderStyle style;
+  final RemixSliderStyler style;
 
   /// The style spec for the slider.
   final RemixSliderSpec? styleSpec;
 
-  static final styleFrom = RemixSliderStyle.new;
+  static final styleFrom = RemixSliderStyler.new;
 
   /// Whether the slider is enabled for interaction.
   final bool enabled;
 
-  /// Whether to provide haptic feedback during value changes.
+  /// Whether to provide platform feedback during value changes.
   /// Defaults to true.
-  final bool enableHapticFeedback;
+  final bool enableFeedback;
 
   /// Called when the user starts dragging the slider.
   final ValueChanged<double>? onChangeStart;
 
   /// Called during drag with the new value.
+  ///
+  /// When null, the slider is visually disabled and does not respond to
+  /// interaction.
   final ValueChanged<double>? onChanged;
 
   /// Called when the user is done selecting a new value.
@@ -94,15 +97,16 @@ class RemixSlider extends StatelessWidget {
       onDragStart: () => onChangeStart?.call(value),
       onDragEnd: onChangeEnd,
       enabled: enabled,
-      enableFeedback: enableHapticFeedback,
+      enableFeedback: enableFeedback,
       focusNode: focusNode,
       autofocus: autofocus,
       direction: .horizontal,
       divisions: snapDivisions,
       builder: (context, state, _) {
-        return StyleBuilder(
+        return RemixStyleSpecBuilder<RemixSliderSpec>(
           style: style,
-          controller: NakedState.controllerOf(context),
+          styleSpec: styleSpec,
+          controller: NakedSliderState.controllerOf(context),
           builder: (context, spec) {
             final thumbSpec = spec.thumb;
             final thumbSize = _resolveThumbSize(context, thumbSpec);

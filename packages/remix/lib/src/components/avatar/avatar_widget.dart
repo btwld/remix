@@ -1,9 +1,19 @@
 part of 'avatar.dart';
 
-/// A customizable avatar component that can display an image or a label.
+/// Builder for rendering avatar label content with the resolved text spec.
+typedef RemixAvatarLabelBuilder =
+    Widget Function(BuildContext context, TextSpec spec, String label);
+
+/// Builder for rendering avatar icon content with the resolved icon spec.
+typedef RemixAvatarIconBuilder =
+    Widget Function(BuildContext context, IconSpec spec, IconData? icon);
+
+/// A customizable avatar component that can display an image, label, icon, or
+/// custom child.
 ///
-/// The [RemixAvatar] widget is designed to present a user's avatar with various customization options.
-/// It supports displaying background and foreground images, a text label, and provides builders for loading and error states.
+/// The [RemixAvatar] widget presents user or entity identity with optional
+/// background and foreground images. Text and icon content can use builders to
+/// preserve resolved Remix typography or icon styling.
 ///
 /// ## Example
 ///
@@ -14,19 +24,11 @@ part of 'avatar.dart';
 ///   label: 'User',
 /// )
 /// ```
-typedef RemixAvatarLabelBuilder =
-    Widget Function(BuildContext context, TextSpec spec, String label);
-
-typedef RemixAvatarIconBuilder =
-    Widget Function(BuildContext context, IconSpec spec, IconData? icon);
-
-class RemixAvatar extends StyleWidget<RemixAvatarSpec> {
+class RemixAvatar extends StatelessWidget {
   /// Creates a Remix avatar with optional text [label], custom [child], and
   /// background/foreground imagery. When textual content is supplied, it is
   /// styled using the avatar text spec so typography stays consistent.
   const RemixAvatar({
-    super.style = const RemixAvatarStyle.create(),
-    super.styleSpec,
     super.key,
     this.backgroundImage,
     this.foregroundImage,
@@ -37,7 +39,11 @@ class RemixAvatar extends StyleWidget<RemixAvatarSpec> {
     this.labelBuilder,
     this.icon,
     this.iconBuilder,
+    this.style = const RemixAvatarStyler.create(),
+    this.styleSpec,
   });
+
+  static final styleFrom = RemixAvatarStyler.new;
 
   /// The background image to display in the avatar.
   final ImageProvider? backgroundImage;
@@ -69,55 +75,67 @@ class RemixAvatar extends StyleWidget<RemixAvatarSpec> {
   /// rendering while preserving configured icon styling.
   final RemixAvatarIconBuilder? iconBuilder;
 
+  /// The style configuration for the avatar.
+  final RemixAvatarStyler style;
+
+  /// Optional raw style spec that bypasses fluent style resolution.
+  final RemixAvatarSpec? styleSpec;
+
   @override
-  Widget build(BuildContext context, RemixAvatarSpec spec) {
-    Widget? content = child;
-    final resolvedLabel = label ?? '';
+  Widget build(BuildContext context) {
+    return RemixStyleSpecBuilder<RemixAvatarSpec>(
+      style: style,
+      styleSpec: styleSpec,
+      builder: (context, spec) {
+        Widget? content = child;
+        final resolvedLabel = label ?? '';
 
-    if (content == null) {
-      if (labelBuilder != null || label != null) {
-        content = labelBuilder == null
-            ? StyledText(resolvedLabel, styleSpec: spec.text)
-            : StyleSpecBuilder<TextSpec>(
-                styleSpec: spec.text,
-                builder: (context, textSpec) =>
-                    labelBuilder!(context, textSpec, resolvedLabel),
-              );
-      } else if (iconBuilder != null || icon != null) {
-        content = iconBuilder == null
-            ? StyledIcon(icon: icon, styleSpec: spec.icon)
-            : StyleSpecBuilder<IconSpec>(
-                styleSpec: spec.icon,
-                builder: (context, iconSpec) =>
-                    iconBuilder!(context, iconSpec, icon),
-              );
-      }
-    }
+        if (content == null) {
+          if (labelBuilder != null || label != null) {
+            content = labelBuilder == null
+                ? StyledText(resolvedLabel, styleSpec: spec.label)
+                : StyleSpecBuilder<TextSpec>(
+                    styleSpec: spec.label,
+                    builder: (context, textSpec) =>
+                        labelBuilder!(context, textSpec, resolvedLabel),
+                  );
+          } else if (iconBuilder != null || icon != null) {
+            content = iconBuilder == null
+                ? StyledIcon(icon: icon, styleSpec: spec.icon)
+                : StyleSpecBuilder<IconSpec>(
+                    styleSpec: spec.icon,
+                    builder: (context, iconSpec) =>
+                        iconBuilder!(context, iconSpec, icon),
+                  );
+          }
+        }
 
-    return Box(
-      styleSpec: spec.container,
-      child: Container(
-        alignment: .center,
-        decoration: backgroundImage != null
-            ? BoxDecoration(
-                image: DecorationImage(
-                  image: backgroundImage!,
-                  onError: onBackgroundImageError,
-                  fit: .cover,
-                ),
-              )
-            : null,
-        foregroundDecoration: foregroundImage != null
-            ? BoxDecoration(
-                image: DecorationImage(
-                  image: foregroundImage!,
-                  onError: onForegroundImageError,
-                  fit: .cover,
-                ),
-              )
-            : null,
-        child: content,
-      ),
+        return Box(
+          styleSpec: spec.container,
+          child: Container(
+            alignment: .center,
+            decoration: backgroundImage != null
+                ? BoxDecoration(
+                    image: DecorationImage(
+                      image: backgroundImage!,
+                      onError: onBackgroundImageError,
+                      fit: .cover,
+                    ),
+                  )
+                : null,
+            foregroundDecoration: foregroundImage != null
+                ? BoxDecoration(
+                    image: DecorationImage(
+                      image: foregroundImage!,
+                      onError: onForegroundImageError,
+                      fit: .cover,
+                    ),
+                  )
+                : null,
+            child: content,
+          ),
+        );
+      },
     );
   }
 }

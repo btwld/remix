@@ -1,20 +1,23 @@
 part of 'tabs.dart';
 
+/// Style builder for [RemixTabBar].
+///
+/// Use this class to style the flex container that lays out tab triggers.
 @MixableStyler()
-class RemixTabBarStyle
-    extends RemixFlexContainerStyle<RemixTabBarSpec, RemixTabBarStyle>
-    with Diagnosticable, _$RemixTabBarStyleMixin {
+class RemixTabBarStyler
+    extends RemixFlexContainerStyler<RemixTabBarSpec, RemixTabBarStyler>
+    with Diagnosticable, _$RemixTabBarStylerMixin {
   @MixableField(setterType: FlexBoxStyler)
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
 
-  const RemixTabBarStyle.create({
+  const RemixTabBarStyler.create({
     Prop<StyleSpec<FlexBoxSpec>>? container,
     super.variants,
     super.animation,
     super.modifier,
   }) : $container = container;
 
-  RemixTabBarStyle({
+  RemixTabBarStyler({
     FlexBoxStyler? container,
     AnimationConfig? animation,
     List<VariantStyle<RemixTabBarSpec>>? variants,
@@ -27,28 +30,33 @@ class RemixTabBarStyle
        );
 
   /// Sets container alignment
-  RemixTabBarStyle alignment(Alignment value) {
-    return merge(RemixTabBarStyle(container: FlexBoxStyler(alignment: value)));
+  RemixTabBarStyler alignment(Alignment value) {
+    return merge(RemixTabBarStyler(container: FlexBoxStyler(alignment: value)));
+  }
+
+  /// Creates a [RemixTabBar] widget with this style applied.
+  RemixTabBar call({Key? key, required Widget child}) {
+    return RemixTabBar(key: key, style: this, child: child);
   }
 
   @override
-  RemixTabBarStyle padding(EdgeInsetsGeometryMix value) {
-    return merge(RemixTabBarStyle(container: FlexBoxStyler(padding: value)));
+  RemixTabBarStyler padding(EdgeInsetsGeometryMix value) {
+    return merge(RemixTabBarStyler(container: FlexBoxStyler(padding: value)));
   }
 
   @override
-  RemixTabBarStyle color(Color value) {
+  RemixTabBarStyler color(Color value) {
     return merge(
-      RemixTabBarStyle(
+      RemixTabBarStyler(
         container: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
       ),
     );
   }
 
   @override
-  RemixTabBarStyle size(double width, double height) {
+  RemixTabBarStyler size(double width, double height) {
     return merge(
-      RemixTabBarStyle(
+      RemixTabBarStyler(
         container: FlexBoxStyler(
           constraints: BoxConstraintsMix(
             minWidth: width,
@@ -62,9 +70,9 @@ class RemixTabBarStyle
   }
 
   @override
-  RemixTabBarStyle borderRadius(BorderRadiusGeometryMix radius) {
+  RemixTabBarStyler borderRadius(BorderRadiusGeometryMix radius) {
     return merge(
-      RemixTabBarStyle(
+      RemixTabBarStyler(
         container: FlexBoxStyler(
           decoration: BoxDecorationMix(borderRadius: radius),
         ),
@@ -73,36 +81,38 @@ class RemixTabBarStyle
   }
 
   @override
-  RemixTabBarStyle constraints(BoxConstraintsMix value) {
+  RemixTabBarStyler constraints(BoxConstraintsMix value) {
     return merge(
-      RemixTabBarStyle(container: FlexBoxStyler(constraints: value)),
+      RemixTabBarStyler(container: FlexBoxStyler(constraints: value)),
     );
   }
 
   @override
-  RemixTabBarStyle decoration(DecorationMix value) {
-    return merge(RemixTabBarStyle(container: FlexBoxStyler(decoration: value)));
-  }
-
-  @override
-  RemixTabBarStyle margin(EdgeInsetsGeometryMix value) {
-    return merge(RemixTabBarStyle(container: FlexBoxStyler(margin: value)));
-  }
-
-  @override
-  RemixTabBarStyle foregroundDecoration(DecorationMix value) {
+  RemixTabBarStyler decoration(DecorationMix value) {
     return merge(
-      RemixTabBarStyle(container: FlexBoxStyler(foregroundDecoration: value)),
+      RemixTabBarStyler(container: FlexBoxStyler(decoration: value)),
     );
   }
 
   @override
-  RemixTabBarStyle transform(
+  RemixTabBarStyler margin(EdgeInsetsGeometryMix value) {
+    return merge(RemixTabBarStyler(container: FlexBoxStyler(margin: value)));
+  }
+
+  @override
+  RemixTabBarStyler foregroundDecoration(DecorationMix value) {
+    return merge(
+      RemixTabBarStyler(container: FlexBoxStyler(foregroundDecoration: value)),
+    );
+  }
+
+  @override
+  RemixTabBarStyler transform(
     Matrix4 value, {
     AlignmentGeometry alignment = Alignment.center,
   }) {
     return merge(
-      RemixTabBarStyle(
+      RemixTabBarStyler(
         container: FlexBoxStyler(
           transform: value,
           transformAlignment: alignment,
@@ -112,29 +122,33 @@ class RemixTabBarStyle
   }
 
   @override
-  RemixTabBarStyle flex(FlexStyler value) {
-    return merge(RemixTabBarStyle(container: FlexBoxStyler().flex(value)));
+  RemixTabBarStyler flex(FlexStyler value) {
+    return merge(RemixTabBarStyler(container: FlexBoxStyler().flex(value)));
   }
 }
 
+/// Style builder for [RemixTabView].
+///
+/// Use this class to style the content container associated with a selected
+/// tab.
 @MixableStyler()
-class RemixTabViewStyle
-    extends RemixContainerStyle<RemixTabViewSpec, RemixTabViewStyle>
+class RemixTabViewStyler
+    extends RemixContainerStyler<RemixTabViewSpec, RemixTabViewStyler>
     with
-        SelectedWidgetStateVariantMixin<RemixTabViewSpec, RemixTabViewStyle>,
+        SelectedWidgetStateVariantMixin<RemixTabViewSpec, RemixTabViewStyler>,
         Diagnosticable,
-        _$RemixTabViewStyleMixin {
+        _$RemixTabViewStylerMixin {
   @MixableField(setterType: BoxStyler)
   final Prop<StyleSpec<BoxSpec>>? $container;
 
-  const RemixTabViewStyle.create({
+  const RemixTabViewStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
     super.variants,
     super.animation,
     super.modifier,
   }) : $container = container;
 
-  RemixTabViewStyle({
+  RemixTabViewStyler({
     BoxStyler? container,
     AnimationConfig? animation,
     List<VariantStyle<RemixTabViewSpec>>? variants,
@@ -147,28 +161,33 @@ class RemixTabViewStyle
        );
 
   /// Sets container alignment
-  RemixTabViewStyle alignment(Alignment value) {
-    return merge(RemixTabViewStyle(container: BoxStyler(alignment: value)));
+  RemixTabViewStyler alignment(Alignment value) {
+    return merge(RemixTabViewStyler(container: BoxStyler(alignment: value)));
+  }
+
+  /// Creates a [RemixTabView] widget with this style applied.
+  RemixTabView call({Key? key, required String tabId, required Widget child}) {
+    return RemixTabView(key: key, tabId: tabId, style: this, child: child);
   }
 
   @override
-  RemixTabViewStyle padding(EdgeInsetsGeometryMix value) {
-    return merge(RemixTabViewStyle(container: BoxStyler(padding: value)));
+  RemixTabViewStyler padding(EdgeInsetsGeometryMix value) {
+    return merge(RemixTabViewStyler(container: BoxStyler(padding: value)));
   }
 
   @override
-  RemixTabViewStyle color(Color value) {
+  RemixTabViewStyler color(Color value) {
     return merge(
-      RemixTabViewStyle(
+      RemixTabViewStyler(
         container: BoxStyler(decoration: BoxDecorationMix(color: value)),
       ),
     );
   }
 
   @override
-  RemixTabViewStyle borderRadius(BorderRadiusGeometryMix radius) {
+  RemixTabViewStyler borderRadius(BorderRadiusGeometryMix radius) {
     return merge(
-      RemixTabViewStyle(
+      RemixTabViewStyler(
         container: BoxStyler(
           decoration: BoxDecorationMix(borderRadius: radius),
         ),
@@ -177,48 +196,53 @@ class RemixTabViewStyle
   }
 
   @override
-  RemixTabViewStyle constraints(BoxConstraintsMix value) {
-    return merge(RemixTabViewStyle(container: BoxStyler(constraints: value)));
+  RemixTabViewStyler constraints(BoxConstraintsMix value) {
+    return merge(RemixTabViewStyler(container: BoxStyler(constraints: value)));
   }
 
   @override
-  RemixTabViewStyle decoration(DecorationMix value) {
-    return merge(RemixTabViewStyle(container: BoxStyler(decoration: value)));
+  RemixTabViewStyler decoration(DecorationMix value) {
+    return merge(RemixTabViewStyler(container: BoxStyler(decoration: value)));
   }
 
   @override
-  RemixTabViewStyle margin(EdgeInsetsGeometryMix value) {
-    return merge(RemixTabViewStyle(container: BoxStyler(margin: value)));
+  RemixTabViewStyler margin(EdgeInsetsGeometryMix value) {
+    return merge(RemixTabViewStyler(container: BoxStyler(margin: value)));
   }
 
   @override
-  RemixTabViewStyle foregroundDecoration(DecorationMix value) {
+  RemixTabViewStyler foregroundDecoration(DecorationMix value) {
     return merge(
-      RemixTabViewStyle(container: BoxStyler(foregroundDecoration: value)),
+      RemixTabViewStyler(container: BoxStyler(foregroundDecoration: value)),
     );
   }
 
   @override
-  RemixTabViewStyle transform(
+  RemixTabViewStyler transform(
     Matrix4 value, {
     AlignmentGeometry alignment = Alignment.center,
   }) {
     return merge(
-      RemixTabViewStyle(
+      RemixTabViewStyler(
         container: BoxStyler(transform: value, transformAlignment: alignment),
       ),
     );
   }
 }
 
+/// Style builder for [RemixTab].
+///
+/// Use this class to style an individual tab trigger, including its container,
+/// label, icon, and selected state.
 @MixableStyler()
-class RemixTabStyle extends RemixFlexContainerStyle<RemixTabSpec, RemixTabStyle>
+class RemixTabStyler
+    extends RemixFlexContainerStyler<RemixTabSpec, RemixTabStyler>
     with
-        LabelStyleMixin<RemixTabStyle>,
-        IconStyleMixin<RemixTabStyle>,
-        SelectedWidgetStateVariantMixin<RemixTabSpec, RemixTabStyle>,
+        LabelStyleMixin<RemixTabStyler>,
+        IconStyleMixin<RemixTabStyler>,
+        SelectedWidgetStateVariantMixin<RemixTabSpec, RemixTabStyler>,
         Diagnosticable,
-        _$RemixTabStyleMixin {
+        _$RemixTabStylerMixin {
   @MixableField(setterType: FlexBoxStyler)
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   @MixableField(setterType: TextStyler)
@@ -226,7 +250,7 @@ class RemixTabStyle extends RemixFlexContainerStyle<RemixTabSpec, RemixTabStyle>
   @MixableField(setterType: IconStyler)
   final Prop<StyleSpec<IconSpec>>? $icon;
 
-  const RemixTabStyle.create({
+  const RemixTabStyler.create({
     Prop<StyleSpec<FlexBoxSpec>>? container,
     Prop<StyleSpec<TextSpec>>? label,
     Prop<StyleSpec<IconSpec>>? icon,
@@ -237,7 +261,7 @@ class RemixTabStyle extends RemixFlexContainerStyle<RemixTabSpec, RemixTabStyle>
        $label = label,
        $icon = icon;
 
-  RemixTabStyle({
+  RemixTabStyler({
     FlexBoxStyler? container,
     TextStyler? label,
     IconStyler? icon,
@@ -254,30 +278,68 @@ class RemixTabStyle extends RemixFlexContainerStyle<RemixTabSpec, RemixTabStyle>
        );
 
   /// Sets container alignment
-  RemixTabStyle alignment(Alignment value) {
-    return merge(RemixTabStyle(container: FlexBoxStyler(alignment: value)));
+  RemixTabStyler alignment(Alignment value) {
+    return merge(RemixTabStyler(container: FlexBoxStyler(alignment: value)));
+  }
+
+  /// Creates a [RemixTab] widget with this style applied.
+  RemixTab call({
+    Key? key,
+    required String tabId,
+    Widget? child,
+    String? label,
+    IconData? icon,
+    bool enabled = true,
+    MouseCursor mouseCursor = SystemMouseCursors.click,
+    bool enableFeedback = true,
+    FocusNode? focusNode,
+    bool autofocus = false,
+    ValueChanged<bool>? onFocusChange,
+    ValueChanged<bool>? onHoverChange,
+    ValueChanged<bool>? onPressChange,
+    ValueWidgetBuilder<NakedTabState>? builder,
+    String? semanticLabel,
+  }) {
+    return RemixTab(
+      key: key,
+      tabId: tabId,
+      label: label,
+      icon: icon,
+      enabled: enabled,
+      mouseCursor: mouseCursor,
+      enableFeedback: enableFeedback,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      onFocusChange: onFocusChange,
+      onHoverChange: onHoverChange,
+      onPressChange: onPressChange,
+      semanticLabel: semanticLabel,
+      style: this,
+      child: child,
+      builder: builder,
+    );
   }
 
   // Mixin implementations - delegate to container
   @override
-  RemixTabStyle flex(FlexStyler value) {
-    return merge(RemixTabStyle(container: FlexBoxStyler().flex(value)));
+  RemixTabStyler flex(FlexStyler value) {
+    return merge(RemixTabStyler(container: FlexBoxStyler().flex(value)));
   }
 
   @override
-  RemixTabStyle foregroundDecoration(DecorationMix value) {
+  RemixTabStyler foregroundDecoration(DecorationMix value) {
     return merge(
-      RemixTabStyle(container: FlexBoxStyler(foregroundDecoration: value)),
+      RemixTabStyler(container: FlexBoxStyler(foregroundDecoration: value)),
     );
   }
 
   @override
-  RemixTabStyle transform(
+  RemixTabStyler transform(
     Matrix4 value, {
     AlignmentGeometry alignment = Alignment.center,
   }) {
     return merge(
-      RemixTabStyle(
+      RemixTabStyler(
         container: FlexBoxStyler(
           transform: value,
           transformAlignment: alignment,
@@ -287,31 +349,31 @@ class RemixTabStyle extends RemixFlexContainerStyle<RemixTabSpec, RemixTabStyle>
   }
 
   @override
-  RemixTabStyle color(Color value) {
+  RemixTabStyler color(Color value) {
     return merge(
-      RemixTabStyle(
+      RemixTabStyler(
         container: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
       ),
     );
   }
 
   @override
-  RemixTabStyle constraints(BoxConstraintsMix value) {
-    return merge(RemixTabStyle(container: FlexBoxStyler(constraints: value)));
+  RemixTabStyler constraints(BoxConstraintsMix value) {
+    return merge(RemixTabStyler(container: FlexBoxStyler(constraints: value)));
   }
 
   @override
-  RemixTabStyle decoration(DecorationMix value) {
-    return merge(RemixTabStyle(container: FlexBoxStyler(decoration: value)));
+  RemixTabStyler decoration(DecorationMix value) {
+    return merge(RemixTabStyler(container: FlexBoxStyler(decoration: value)));
   }
 
   @override
-  RemixTabStyle margin(EdgeInsetsGeometryMix value) {
-    return merge(RemixTabStyle(container: FlexBoxStyler(margin: value)));
+  RemixTabStyler margin(EdgeInsetsGeometryMix value) {
+    return merge(RemixTabStyler(container: FlexBoxStyler(margin: value)));
   }
 
   @override
-  RemixTabStyle padding(EdgeInsetsGeometryMix value) {
-    return merge(RemixTabStyle(container: FlexBoxStyler(padding: value)));
+  RemixTabStyler padding(EdgeInsetsGeometryMix value) {
+    return merge(RemixTabStyler(container: FlexBoxStyler(padding: value)));
   }
 }

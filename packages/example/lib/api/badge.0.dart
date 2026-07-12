@@ -29,14 +29,14 @@ class BadgeExample extends StatelessWidget {
     );
   }
 
-  RemixBadgeStyle get styleLabel {
-    return RemixBadgeStyle()
+  RemixBadgeStyler get styleLabel {
+    return RemixBadgeStyler()
         .size(24, 24)
-        .wrap(WidgetModifierConfig.clipOval())
+        .wrap(.clipOval())
         .label(
           TextStyler()
               .fontSize(15)
-              .wrap(WidgetModifierConfig.align(alignment: .center))
+              .wrap(.align(alignment: .center))
               .fontFeatures([const FontFeature.tabularFigures()]),
         )
         .foregroundColor(Colors.greenAccent.shade700)
@@ -45,14 +45,14 @@ class BadgeExample extends StatelessWidget {
         .labelFontSize(15);
   }
 
-  RemixBadgeStyle get styleIcon {
-    return RemixBadgeStyle()
+  RemixBadgeStyler get styleIcon {
+    return RemixBadgeStyler()
         .size(24, 24)
-        .wrap(WidgetModifierConfig.clipOval())
+        .wrap(.clipOval())
         .label(
           TextStyler()
               .fontSize(15)
-              .wrap(WidgetModifierConfig.align(alignment: .center))
+              .wrap(.align(alignment: .center))
               .fontFeatures([const FontFeature.tabularFigures()]),
         )
         .foregroundColor(Colors.redAccent)

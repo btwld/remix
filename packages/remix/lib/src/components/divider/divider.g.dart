@@ -64,7 +64,7 @@ mixin _$RemixDividerSpec implements Spec<RemixDividerSpec>, Diagnosticable {
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    properties..add(DiagnosticsProperty('container', container));
+    properties.add(DiagnosticsProperty('container', container));
   }
 }
 
@@ -74,36 +74,57 @@ mixin _$RemixDividerSpec implements Spec<RemixDividerSpec>, Diagnosticable {
 typedef _$RemixDividerSpecMethods = _$RemixDividerSpec; // ignore: unused_element
 
 // **************************************************************************
+// MixWidgetGenerator
+// **************************************************************************
+
+/// Fortal-themed preset for [RemixDivider].
+class FortalDivider extends StatelessWidget {
+  const FortalDivider({super.key, this.size = .size1});
+
+  final FortalDividerSize size;
+
+  @override
+  Widget build(BuildContext context) {
+    return fortalDividerStyler(size: this.size).call(key: this.key);
+  }
+}
+
+// **************************************************************************
 // StylerGenerator
 // **************************************************************************
 
-mixin _$RemixDividerStyleMixin on Style<RemixDividerSpec>, Diagnosticable {
+mixin _$RemixDividerStylerMixin on Style<RemixDividerSpec>, Diagnosticable {
   Prop<StyleSpec<BoxSpec>>? get $container;
 
   /// Sets the container.
-  RemixDividerStyle container(BoxStyler value) {
-    return merge(RemixDividerStyle(container: value));
+  RemixDividerStyler container(BoxStyler value) {
+    return merge(RemixDividerStyler(container: value));
   }
 
   /// Sets the animation configuration.
-  RemixDividerStyle animate(AnimationConfig value) {
-    return merge(RemixDividerStyle(animation: value));
+  RemixDividerStyler animate(AnimationConfig value) {
+    return merge(RemixDividerStyler(animation: value));
   }
 
   /// Sets the style variants.
-  RemixDividerStyle variants(List<VariantStyle<RemixDividerSpec>> value) {
-    return merge(RemixDividerStyle(variants: value));
+  RemixDividerStyler variants(List<VariantStyle<RemixDividerSpec>> value) {
+    return merge(RemixDividerStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
-  RemixDividerStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixDividerStyle(modifier: value));
+  RemixDividerStyler wrap(WidgetModifierConfig value) {
+    return merge(RemixDividerStyler(modifier: value));
   }
 
-  /// Merges with another [RemixDividerStyle].
+  /// Sets the widget modifier.
+  RemixDividerStyler modifier(WidgetModifierConfig value) {
+    return merge(RemixDividerStyler(modifier: value));
+  }
+
+  /// Merges with another [RemixDividerStyler].
   @override
-  RemixDividerStyle merge(RemixDividerStyle? other) {
-    return RemixDividerStyle.create(
+  RemixDividerStyler merge(RemixDividerStyler? other) {
+    return RemixDividerStyler.create(
       container: MixOps.merge($container, other?.$container),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
@@ -128,7 +149,7 @@ mixin _$RemixDividerStyleMixin on Style<RemixDividerSpec>, Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties..add(DiagnosticsProperty('container', $container));
+    properties.add(DiagnosticsProperty('container', $container));
   }
 
   @override

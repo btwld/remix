@@ -1,5 +1,6 @@
 part of 'progress.dart';
 
+/// Resolved visual values for a [RemixProgress].
 @MixableSpec()
 class RemixProgressSpec with _$RemixProgressSpec {
   @override

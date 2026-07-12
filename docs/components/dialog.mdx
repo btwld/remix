@@ -1,0 +1,207 @@
+---
+title: Dialog
+description: A modal dialog component for focused decisions, confirmations, and custom content
+keywords: [flutter, remix, dialog, modal, overlay, confirmation, alert]
+---
+
+A modal dialog component for focused content and actions.
+
+## When to use this
+
+- **Confirmations**: Ask users to confirm destructive or important actions
+- **Focused forms**: Collect a small amount of information without leaving the current screen
+- **Alerts**: Present information that needs immediate attention
+- **Custom modal content**: Render a fully custom body inside Remix dialog chrome
+
+## Basic implementation
+
+<CodeGroup title="Basic implementation" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class DialogExample extends StatelessWidget {
+  const DialogExample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return FortalButton(
+      label: 'Open dialog',
+      onPressed: () {
+        showRemixDialog(
+          context: context,
+          builder: (context) => Center(
+            child: FortalDialog(
+              title: 'Revoke access',
+              description:
+                  'This application will no longer be accessible.',
+              actions: [
+                FortalButton.ghost(
+                  label: 'Cancel',
+                  onPressed: () => Navigator.pop(context),
+                ),
+                FortalButton(
+                  label: 'Revoke access',
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+```
+</CodeGroup>
+
+## Fortal widgets
+
+Remix includes a generated Fortal-themed widget for this component:
+
+<CodeGroup title="Fortal widget" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class FortalDialogExample extends StatelessWidget {
+  const FortalDialogExample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return FortalDialog(
+      title: 'Confirm changes',
+      description: 'Save these settings before leaving?',
+      actions: [
+        FortalButton.ghost(
+          label: 'Cancel',
+          onPressed: () => Navigator.pop(context),
+        ),
+        FortalButton(
+          label: 'Save',
+          onPressed: () => Navigator.pop(context),
+        ),
+      ],
+    );
+  }
+}
+```
+</CodeGroup>
+
+<Info>
+  See the [fortalDialogStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/dialog/fortal_dialog_styles.dart) for all available options.
+</Info>
+
+## Show function
+<CodeGroup title="showRemixDialog" defaultLanguage="dart">
+```dart
+Future<T?> showRemixDialog<T>({
+  required BuildContext context,
+  required WidgetBuilder builder,
+  Color? barrierColor,
+  bool barrierDismissible = true,
+  String? barrierLabel,
+  bool useRootNavigator = true,
+  RouteSettings? routeSettings,
+  Offset? anchorPoint,
+  Duration transitionDuration = const Duration(milliseconds: 400),
+  RouteTransitionsBuilder? transitionBuilder,
+  bool requestFocus = true,
+  TraversalEdgeBehavior? traversalEdgeBehavior,
+})
+```
+</CodeGroup>
+
+## Constructor
+<CodeGroup title="Constructor" defaultLanguage="dart">
+```dart
+const RemixDialog({
+  Key? key,
+  Widget? child,
+  String? title,
+  String? description,
+  List<Widget>? actions,
+  bool modal = true,
+  String? semanticLabel,
+  RemixDialogStyler style = const RemixDialogStyler.create(),
+  RemixDialogSpec? styleSpec,
+})
+```
+</CodeGroup>
+
+## Properties
+### Widget Properties
+
+#### `child` -> `Widget?`
+
+Optional. Custom dialog content rendered after the description and before the actions. When it is the only content provided, it fills the container directly.
+
+#### `title` -> `String?`
+
+Optional. The dialog title text. Either `child`, `title`, or `description` must be provided.
+
+#### `description` -> `String?`
+
+Optional. Supporting body text rendered below the title.
+
+#### `actions` -> `List<Widget>?`
+
+Optional. Action widgets rendered in the dialog actions row.
+
+#### `modal` -> `bool`
+
+Optional. Whether the dialog blocks interaction with background content.
+
+#### `semanticLabel` → `String?`
+
+Optional. Accessibility label for the dialog. Defaults to the title when omitted.
+
+#### `style` → `RemixDialogStyler`
+
+Optional. The style configuration for the dialog container, title, description, and actions.
+
+#### `styleSpec` → `RemixDialogSpec?`
+
+Optional. A raw resolved style spec that bypasses fluent style resolution.
+
+### Style Methods
+
+#### `container(BoxStyler value)`
+
+Configures the dialog container style.
+
+#### `title(TextStyler value)`
+
+Configures the title text style.
+
+#### `description(TextStyler value)`
+
+Configures the description text style.
+
+#### `actions(FlexBoxStyler value)`
+
+Configures the actions row style.
+
+#### `backgroundColor(Color value)`
+
+Sets the dialog container background color.
+
+#### `padding(EdgeInsetsGeometryMix value)`
+
+Sets dialog container padding.
+
+#### `borderRadius(BorderRadiusGeometryMix radius)`
+
+Sets dialog container border radius.
+
+#### `shadow(BoxShadowMix value)`
+
+Sets dialog container shadow.
+
+#### `wrap(WidgetModifierConfig value)`
+
+Applies widget modifiers such as clipping, opacity, or scaling.
+
+#### `call({Key? key, Widget? child, String? title, String? description, List<Widget>? actions, bool modal = true, String? semanticLabel})`
+
+Creates a `RemixDialog` widget with this style applied.

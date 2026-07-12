@@ -4,7 +4,7 @@ Flutter Widget Preview integration for Remix components, providing an interactiv
 
 ## Prerequisites
 
-- **Flutter 3.36.0+** (beta channel recommended)
+- **Flutter 3.44.0** through FVM (the stable version pinned in `.fvmrc`)
 - **Chrome browser** (required for widget preview)
 - Widget preview is an experimental feature - APIs may change
 
@@ -12,21 +12,21 @@ Flutter Widget Preview integration for Remix components, providing an interactiv
 
 ### Option 1: Use the Script (Recommended)
 ```bash
-cd demo
+cd packages/demo
 ./scripts/preview.sh
 ```
 
 ### Option 2: Direct Command
 ```bash
-cd demo
-flutter widget-preview start
+cd packages/demo
+fvm flutter widget-preview start
 ```
 
 ### Option 3: Clean and Start
 ```bash
-cd demo
-flutter widget-preview clean
-flutter widget-preview start
+cd packages/demo
+fvm flutter widget-preview clean
+fvm flutter widget-preview start
 ```
 
 ## What's Included
@@ -40,7 +40,6 @@ flutter widget-preview start
 - **Select Dropdown**: Dropdown with multiple options
 
 ### 🎛️ Layout Components  
-- **Accordion**: Basic, with icons, pre-expanded, rich content
 - **Cards**: Basic card, with actions, profile card, stats dashboard
 - **Buttons**: Basic buttons, states, icon-only, variations
 
@@ -55,9 +54,8 @@ flutter widget-preview start
 ## Preview Structure
 
 ```
-demo/lib/previews/
+packages/demo/lib/previews/
 ├── preview_helper.dart      # Shared helper function
-├── accordion_preview.dart   # Accordion component previews
 ├── button_preview.dart      # Button component previews  
 ├── card_preview.dart        # Card component previews
 └── form_preview.dart        # Form component previews
@@ -101,7 +99,7 @@ Widget createRemixPreview(Widget child) {
       builder: (context) => FortalScope(
         brightness: Theme.of(context).brightness,
         child: Scaffold(
-          backgroundColor: Colors.grey[50],
+          backgroundColor: MixColors.grey[50],
           body: Center(child: child),
         ),
       ),
@@ -136,8 +134,8 @@ Widget createRemixPreview(Widget child) {
 ### Port Already in Use
 If you see port conflicts:
 ```bash
-flutter widget-preview clean
-flutter widget-preview start
+fvm flutter widget-preview clean
+fvm flutter widget-preview start
 ```
 
 ### Chrome Not Opening
@@ -177,13 +175,13 @@ When adding new component previews:
 flutter widget-preview clean
 
 # Check Flutter version
-flutter --version
+fvm flutter --version
 
 # View available Flutter commands
-flutter help
+fvm flutter help
 
 # Check widget preview help
-flutter widget-preview --help
+fvm flutter widget-preview --help
 ```
 
 ---

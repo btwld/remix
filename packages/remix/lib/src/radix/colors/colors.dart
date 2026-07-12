@@ -1,16 +1,8 @@
-// ignore_for_file: avoid-commented-out-code
-
 library radix_colors; // moved to radix/colors/
 
 import 'package:flutter/painting.dart';
 
 part 'colors_generated.dart';
-
-// Radix color families:
-// Accent: amber, blue, bronze, brown, crimson, cyan, gold, grass, green, indigo,
-//         iris, jade, lime, mint, orange, pink, plum, purple, red, ruby, sky,
-//         teal, tomato, violet, yellow
-// Gray: gray, mauve, slate, sage, olive, sand (with different undertones)
 
 class RadixColor {
   final RadixColorScale scale;

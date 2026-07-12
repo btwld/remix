@@ -1,16 +1,15 @@
-# demo
+# Remix component demo
 
-A new Flutter project.
+This package is the Widgetbook catalog for reviewing Remix components, Fortal
+presets, variants, states, and preview scenarios.
 
-## Getting Started
+From the repository root:
 
-This project is a starting point for a Flutter application.
+```sh
+fvm dart run melos bootstrap
+cd packages/demo
+fvm flutter run -d chrome
+```
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+See [PREVIEW.md](PREVIEW.md) for the macOS preview workflow and component
+inventory.

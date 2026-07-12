@@ -5,6 +5,56 @@ import 'package:remix/remix.dart';
 import '../../helpers/test_helpers.dart';
 
 void main() {
+  group('showRemixDialog', () {
+    testWidgets('opens without a MixScope ancestor', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Builder(
+            builder: (context) => TextButton(
+              onPressed: () => showRemixDialog<void>(
+                context: context,
+                builder: (context) => const RemixDialog(title: 'Plain dialog'),
+              ),
+              child: const Text('Open'),
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Open'));
+      await tester.pumpAndSettle();
+
+      expect(tester.takeException(), isNull);
+      expect(find.text('Plain dialog'), findsOneWidget);
+    });
+
+    testWidgets('passes a cloned MixScope to the dialog builder', (
+      tester,
+    ) async {
+      bool builderHasScope = false;
+      await tester.pumpRemixApp(
+        Builder(
+          builder: (context) => TextButton(
+            onPressed: () => showRemixDialog<void>(
+              context: context,
+              builder: (context) {
+                builderHasScope = MixScope.maybeOf(context) != null;
+                return const RemixDialog(title: 'Scoped dialog');
+              },
+            ),
+            child: const Text('Open'),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Open'));
+      await tester.pumpAndSettle();
+
+      expect(builderHasScope, isTrue);
+      expect(find.text('Scoped dialog'), findsOneWidget);
+    });
+  });
+
   group('RemixDialog', () {
     group('Basic Rendering', () {
       testWidgets('renders dialog with title only', (tester) async {
@@ -66,7 +116,7 @@ void main() {
             actions: actions,
             modal: true,
             semanticLabel: 'Complete Dialog',
-            style: RemixDialogStyle.create(),
+            style: RemixDialogStyler.create(),
           ),
         );
         await tester.pumpAndSettle();
@@ -287,7 +337,7 @@ void main() {
 
     group('Style Integration', () {
       testWidgets('applies custom style to container', (tester) async {
-        final customStyle = RemixDialogStyle(
+        final customStyle = RemixDialogStyler(
           container: BoxStyler(
             padding: EdgeInsetsGeometryMix.all(32.0),
             decoration: BoxDecorationMix(
@@ -308,7 +358,7 @@ void main() {
       });
 
       testWidgets('applies custom title style', (tester) async {
-        final customStyle = RemixDialogStyle(
+        final customStyle = RemixDialogStyler(
           title: TextStyler(
             style: TextStyleMix(
               color: Colors.red,
@@ -329,7 +379,7 @@ void main() {
       });
 
       testWidgets('applies custom description style', (tester) async {
-        final customStyle = RemixDialogStyle(
+        final customStyle = RemixDialogStyler(
           description: TextStyler(
             style: TextStyleMix(
               color: Colors.blue,
@@ -350,7 +400,7 @@ void main() {
       });
 
       testWidgets('applies custom actions style', (tester) async {
-        final customStyle = RemixDialogStyle(
+        final customStyle = RemixDialogStyler(
           actions: FlexBoxStyler(
             spacing: 16.0,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

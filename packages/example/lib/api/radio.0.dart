@@ -59,8 +59,8 @@ class _RadioExampleState extends State<RadioExample> {
     );
   }
 
-  RemixRadioStyle get style {
-    return RemixRadioStyle()
+  RemixRadioStyler get style {
+    return RemixRadioStyler()
         .borderRadiusAll(const Radius.circular(30))
         .size(22, 22)
         .border(
@@ -72,7 +72,7 @@ class _RadioExampleState extends State<RadioExample> {
           ),
         )
         .onHovered(
-          RemixRadioStyle().shadow(
+          RemixRadioStyler().shadow(
             BoxShadowMix()
                 .color(Colors.blueGrey.shade50.withValues(alpha: 0.7))
                 .blurRadius(0)
@@ -80,7 +80,7 @@ class _RadioExampleState extends State<RadioExample> {
           ),
         )
         .onPressed(
-          RemixRadioStyle().border(
+          RemixRadioStyler().border(
             BoxBorderMix.all(
               BorderSideMix()
                   .color(Colors.blueGrey.shade100)
@@ -90,7 +90,7 @@ class _RadioExampleState extends State<RadioExample> {
           ),
         )
         .onSelected(
-          RemixRadioStyle().border(
+          RemixRadioStyler().border(
             BoxBorderMix.all(
               BorderSideMix()
                   .color(Colors.blueAccent.shade700)

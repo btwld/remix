@@ -55,7 +55,7 @@ class _MenuExampleState extends State<MenuExample> {
                 leadingIcon: Icons.logout,
                 label: 'Logout',
                 style: menuItemStyle.onHovered(
-                  RemixMenuItemStyle()
+                  RemixMenuItemStyler()
                       .color(Colors.redAccent.withValues(alpha: 0.05))
                       .label(TextStyler().color(Colors.redAccent))
                       .leadingIcon(IconStyler().color(Colors.redAccent)),
@@ -69,8 +69,7 @@ class _MenuExampleState extends State<MenuExample> {
             ),
             style: menuStyle,
             onSelected: (value) {
-              // ignore: avoid_print
-              print('RemixMenu: $value');
+              debugPrint('RemixMenu: $value');
             },
             controller: controller,
           ),
@@ -78,8 +77,7 @@ class _MenuExampleState extends State<MenuExample> {
           // Material PopupMenuButton for comparison
           PopupMenuButton<String>(
             onSelected: (value) {
-              // ignore: avoid_print
-              print('Material Menu: $value');
+              debugPrint('Material Menu: $value');
             },
             itemBuilder: (context) => const [
               PopupMenuItem(value: 'History', child: Text('History')),
@@ -94,10 +92,10 @@ class _MenuExampleState extends State<MenuExample> {
     );
   }
 
-  RemixMenuStyle get menuStyle {
-    return RemixMenuStyle()
+  RemixMenuStyler get menuStyle {
+    return RemixMenuStyler()
         .trigger(
-          RemixMenuTriggerStyle()
+          RemixMenuTriggerStyler()
               .padding(EdgeInsetsMix.symmetric(horizontal: 14))
               .decoration(
                 BoxDecorationMix()
@@ -124,7 +122,7 @@ class _MenuExampleState extends State<MenuExample> {
                     .color(Colors.blueGrey.shade700)
                     .fontWeight(FontWeight.w400),
               )
-              .onHovered(RemixMenuTriggerStyle().color(Colors.red)),
+              .onHovered(RemixMenuTriggerStyler().color(Colors.red)),
         )
         .overlay(
           FlexBoxStyler(
@@ -146,20 +144,20 @@ class _MenuExampleState extends State<MenuExample> {
           ),
         )
         .divider(
-          RemixDividerStyle()
+          RemixDividerStyler()
               .color(Colors.blueGrey.shade100)
               .height(1)
               .marginY(6),
         );
   }
 
-  RemixMenuItemStyle get menuItemStyle {
-    return RemixMenuItemStyle()
+  RemixMenuItemStyler get menuItemStyle {
+    return RemixMenuItemStyler()
         .paddingAll(6)
         .leadingIcon(IconStyler().size(20).color(Colors.blueGrey.shade800))
         .spacing(8)
         .borderRadiusAll(const Radius.circular(8))
         .label(TextStyler().color(Colors.blueGrey.shade800))
-        .onHovered(RemixMenuItemStyle().color(Colors.blueGrey.shade50));
+        .onHovered(RemixMenuItemStyler().color(Colors.blueGrey.shade50));
   }
 }

@@ -8,9 +8,7 @@ void main() {
   group('RemixSlider', () {
     group('Basic Rendering', () {
       testWidgets('renders slider with minimal props', (tester) async {
-        await tester.pumpRemixApp(
-          RemixSlider(value: 0.5, min: 0.0, max: 1.0, onChanged: (value) {}),
-        );
+        await tester.pumpRemixApp(const RemixSlider(value: 0.5));
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixSlider), findsOneWidget);
@@ -138,7 +136,7 @@ void main() {
 
     group('Styling', () {
       testWidgets('applies custom style', (tester) async {
-        final customStyle = RemixSliderStyle().trackColor(Colors.blue);
+        final customStyle = RemixSliderStyler().trackColor(Colors.blue);
 
         await tester.pumpRemixApp(
           RemixSlider(
@@ -155,7 +153,7 @@ void main() {
       });
 
       testWidgets('applies thumb color styling', (tester) async {
-        final customStyle = RemixSliderStyle().thumbColor(Colors.red);
+        final customStyle = RemixSliderStyler().thumbColor(Colors.red);
 
         await tester.pumpRemixApp(
           RemixSlider(
@@ -172,7 +170,7 @@ void main() {
       });
 
       testWidgets('applies range color styling', (tester) async {
-        final customStyle = RemixSliderStyle().rangeColor(Colors.green);
+        final customStyle = RemixSliderStyler().rangeColor(Colors.green);
 
         await tester.pumpRemixApp(
           RemixSlider(
@@ -189,7 +187,7 @@ void main() {
       });
 
       testWidgets('applies thumb size styling', (tester) async {
-        final customStyle = RemixSliderStyle().thumbSize(const Size(24, 24));
+        final customStyle = RemixSliderStyler().thumbSize(const Size(24, 24));
 
         await tester.pumpRemixApp(
           RemixSlider(
@@ -206,7 +204,7 @@ void main() {
       });
 
       testWidgets('applies thickness styling', (tester) async {
-        final customStyle = RemixSliderStyle().thickness(12.0);
+        final customStyle = RemixSliderStyler().thickness(12.0);
 
         await tester.pumpRemixApp(
           RemixSlider(
@@ -223,7 +221,7 @@ void main() {
       });
 
       testWidgets('applies track thickness styling', (tester) async {
-        final customStyle = RemixSliderStyle().trackThickness(10.0);
+        final customStyle = RemixSliderStyler().trackThickness(10.0);
 
         await tester.pumpRemixApp(
           RemixSlider(
@@ -240,7 +238,7 @@ void main() {
       });
 
       testWidgets('applies range thickness styling', (tester) async {
-        final customStyle = RemixSliderStyle().rangeThickness(8.0);
+        final customStyle = RemixSliderStyler().rangeThickness(8.0);
 
         await tester.pumpRemixApp(
           RemixSlider(
@@ -369,6 +367,32 @@ void main() {
 
         // Value should not have changed
         expect(changedValue, equals(0.5));
+        expect(onChangeStartCalled, isFalse);
+        expect(onChangeEndCalled, isFalse);
+        expect(find.byType(RemixSlider), findsOneWidget);
+      });
+
+      testWidgets('does not react to swipe when onChanged is omitted', (
+        tester,
+      ) async {
+        bool onChangeStartCalled = false;
+        bool onChangeEndCalled = false;
+
+        await tester.pumpRemixApp(
+          RemixSlider(
+            value: 0.5,
+            min: 0.0,
+            max: 1.0,
+            onChangeStart: (value) => onChangeStartCalled = true,
+            onChangeEnd: (value) => onChangeEndCalled = true,
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final sliderFinder = find.byType(RemixSlider);
+        await tester.drag(sliderFinder, const Offset(100.0, 0.0));
+        await tester.pumpAndSettle();
+
         expect(onChangeStartCalled, isFalse);
         expect(onChangeEndCalled, isFalse);
         expect(find.byType(RemixSlider), findsOneWidget);
@@ -513,15 +537,15 @@ void main() {
       });
     });
 
-    group('Haptic Feedback', () {
-      testWidgets('accepts enableHapticFeedback parameter', (tester) async {
+    group('Feedback', () {
+      testWidgets('accepts enableFeedback parameter', (tester) async {
         await tester.pumpRemixApp(
           RemixSlider(
             value: 0.5,
             min: 0.0,
             max: 1.0,
             onChanged: (value) {},
-            enableHapticFeedback: true,
+            enableFeedback: true,
           ),
         );
         await tester.pumpAndSettle();
@@ -529,14 +553,14 @@ void main() {
         expect(find.byType(RemixSlider), findsOneWidget);
       });
 
-      testWidgets('handles disabled haptic feedback', (tester) async {
+      testWidgets('handles disabled feedback', (tester) async {
         await tester.pumpRemixApp(
           RemixSlider(
             value: 0.5,
             min: 0.0,
             max: 1.0,
             onChanged: (value) {},
-            enableHapticFeedback: false,
+            enableFeedback: false,
           ),
         );
         await tester.pumpAndSettle();
@@ -623,7 +647,7 @@ void main() {
 
     group('Advanced Styling', () {
       testWidgets('applies multiple style methods', (tester) async {
-        final customStyle = RemixSliderStyle()
+        final customStyle = RemixSliderStyler()
             .trackColor(Colors.blue)
             .rangeColor(Colors.red)
             .thumbColor(Colors.green)
@@ -644,7 +668,7 @@ void main() {
       });
 
       testWidgets('applies thumb styling with decoration', (tester) async {
-        final customStyle = RemixSliderStyle().thumb(
+        final customStyle = RemixSliderStyler().thumb(
           BoxStyler(
             decoration: BoxDecorationMix(
               color: Colors.blue,
@@ -668,7 +692,7 @@ void main() {
       });
 
       testWidgets('applies border radius styling', (tester) async {
-        final customStyle = RemixSliderStyle().borderRadius(
+        final customStyle = RemixSliderStyler().borderRadius(
           BorderRadiusMix.circular(16.0),
         );
 
@@ -689,9 +713,7 @@ void main() {
 
     group('Widget Modifiers', () {
       testWidgets('applies widget modifiers from style', (tester) async {
-        final customStyle = RemixSliderStyle().wrap(
-          WidgetModifierConfig.clipOval(),
-        );
+        final customStyle = RemixSliderStyler().wrap(.clipOval());
 
         await tester.pumpRemixApp(
           RemixSlider(
@@ -705,6 +727,36 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixSlider), findsOneWidget);
+      });
+    });
+
+    group('StyleSpec Parameter', () {
+      testWidgets('applies raw styleSpec when provided', (tester) async {
+        final spec = RemixSliderSpec(
+          thumb: const StyleSpec(
+            spec: BoxSpec(decoration: BoxDecoration(color: Colors.red)),
+          ),
+        );
+
+        await tester.pumpRemixApp(
+          RemixSlider(
+            value: 0.5,
+            min: 0.0,
+            max: 1.0,
+            onChanged: (value) {},
+            styleSpec: spec,
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final decorations = tester
+            .widgetList<Box>(find.byType(Box))
+            .map((box) => box.styleSpec?.spec.decoration);
+
+        expect(
+          decorations,
+          contains(equals(const BoxDecoration(color: Colors.red))),
+        );
       });
     });
 

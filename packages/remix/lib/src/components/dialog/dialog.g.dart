@@ -11,7 +11,6 @@ mixin _$RemixDialogSpec implements Spec<RemixDialogSpec>, Diagnosticable {
   StyleSpec<TextSpec> get title;
   StyleSpec<TextSpec> get description;
   StyleSpec<FlexBoxSpec> get actions;
-  StyleSpec<BoxSpec> get overlay;
 
   @override
   Type get type => RemixDialogSpec;
@@ -22,14 +21,12 @@ mixin _$RemixDialogSpec implements Spec<RemixDialogSpec>, Diagnosticable {
     StyleSpec<TextSpec>? title,
     StyleSpec<TextSpec>? description,
     StyleSpec<FlexBoxSpec>? actions,
-    StyleSpec<BoxSpec>? overlay,
   }) {
     return RemixDialogSpec(
       container: container ?? this.container,
       title: title ?? this.title,
       description: description ?? this.description,
       actions: actions ?? this.actions,
-      overlay: overlay ?? this.overlay,
     );
   }
 
@@ -40,12 +37,11 @@ mixin _$RemixDialogSpec implements Spec<RemixDialogSpec>, Diagnosticable {
       title: title.lerp(other?.title, t),
       description: description.lerp(other?.description, t),
       actions: actions.lerp(other?.actions, t),
-      overlay: overlay.lerp(other?.overlay, t),
     );
   }
 
   @override
-  List<Object?> get props => [container, title, description, actions, overlay];
+  List<Object?> get props => [container, title, description, actions];
 
   @override
   bool operator ==(Object other) {
@@ -90,8 +86,7 @@ mixin _$RemixDialogSpec implements Spec<RemixDialogSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('title', title))
       ..add(DiagnosticsProperty('description', description))
-      ..add(DiagnosticsProperty('actions', actions))
-      ..add(DiagnosticsProperty('overlay', overlay));
+      ..add(DiagnosticsProperty('actions', actions));
   }
 }
 
@@ -101,65 +96,105 @@ mixin _$RemixDialogSpec implements Spec<RemixDialogSpec>, Diagnosticable {
 typedef _$RemixDialogSpecMethods = _$RemixDialogSpec; // ignore: unused_element
 
 // **************************************************************************
+// MixWidgetGenerator
+// **************************************************************************
+
+/// Fortal-themed preset for [RemixDialog].
+class FortalDialog extends StatelessWidget {
+  const FortalDialog({
+    super.key,
+    this.child,
+    this.title,
+    this.description,
+    this.actions,
+    this.modal = true,
+    this.semanticLabel,
+  });
+
+  final Widget? child;
+
+  final String? title;
+
+  final String? description;
+
+  final List<Widget>? actions;
+
+  final bool modal;
+
+  final String? semanticLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    return fortalDialogStyler().call(
+      key: this.key,
+      child: this.child,
+      title: this.title,
+      description: this.description,
+      actions: this.actions,
+      modal: this.modal,
+      semanticLabel: this.semanticLabel,
+    );
+  }
+}
+
+// **************************************************************************
 // StylerGenerator
 // **************************************************************************
 
-mixin _$RemixDialogStyleMixin on Style<RemixDialogSpec>, Diagnosticable {
-  Prop<StyleSpec<FlexBoxSpec>>? get $actions;
+mixin _$RemixDialogStylerMixin on Style<RemixDialogSpec>, Diagnosticable {
   Prop<StyleSpec<BoxSpec>>? get $container;
-  Prop<StyleSpec<TextSpec>>? get $description;
-  Prop<StyleSpec<BoxSpec>>? get $overlay;
   Prop<StyleSpec<TextSpec>>? get $title;
-
-  /// Sets the actions.
-  RemixDialogStyle actions(FlexBoxStyler value) {
-    return merge(RemixDialogStyle(actions: value));
-  }
+  Prop<StyleSpec<TextSpec>>? get $description;
+  Prop<StyleSpec<FlexBoxSpec>>? get $actions;
 
   /// Sets the container.
-  RemixDialogStyle container(BoxStyler value) {
-    return merge(RemixDialogStyle(container: value));
-  }
-
-  /// Sets the description.
-  RemixDialogStyle description(TextStyler value) {
-    return merge(RemixDialogStyle(description: value));
-  }
-
-  /// Sets the overlay.
-  RemixDialogStyle overlay(BoxStyler value) {
-    return merge(RemixDialogStyle(overlay: value));
+  RemixDialogStyler container(BoxStyler value) {
+    return merge(RemixDialogStyler(container: value));
   }
 
   /// Sets the title.
-  RemixDialogStyle title(TextStyler value) {
-    return merge(RemixDialogStyle(title: value));
+  RemixDialogStyler title(TextStyler value) {
+    return merge(RemixDialogStyler(title: value));
+  }
+
+  /// Sets the description.
+  RemixDialogStyler description(TextStyler value) {
+    return merge(RemixDialogStyler(description: value));
+  }
+
+  /// Sets the actions.
+  RemixDialogStyler actions(FlexBoxStyler value) {
+    return merge(RemixDialogStyler(actions: value));
   }
 
   /// Sets the animation configuration.
-  RemixDialogStyle animate(AnimationConfig value) {
-    return merge(RemixDialogStyle(animation: value));
+  RemixDialogStyler animate(AnimationConfig value) {
+    return merge(RemixDialogStyler(animation: value));
   }
 
   /// Sets the style variants.
-  RemixDialogStyle variants(List<VariantStyle<RemixDialogSpec>> value) {
-    return merge(RemixDialogStyle(variants: value));
+  RemixDialogStyler variants(List<VariantStyle<RemixDialogSpec>> value) {
+    return merge(RemixDialogStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
-  RemixDialogStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixDialogStyle(modifier: value));
+  RemixDialogStyler wrap(WidgetModifierConfig value) {
+    return merge(RemixDialogStyler(modifier: value));
   }
 
-  /// Merges with another [RemixDialogStyle].
+  /// Sets the widget modifier.
+  RemixDialogStyler modifier(WidgetModifierConfig value) {
+    return merge(RemixDialogStyler(modifier: value));
+  }
+
+  /// Merges with another [RemixDialogStyler].
   @override
-  RemixDialogStyle merge(RemixDialogStyle? other) {
-    return RemixDialogStyle.create(
-      actions: MixOps.merge($actions, other?.$actions),
+  RemixDialogStyler merge(RemixDialogStyler? other) {
+    return RemixDialogStyler.create(
       container: MixOps.merge($container, other?.$container),
-      description: MixOps.merge($description, other?.$description),
-      overlay: MixOps.merge($overlay, other?.$overlay),
       title: MixOps.merge($title, other?.$title),
+      description: MixOps.merge($description, other?.$description),
+      actions: MixOps.merge($actions, other?.$actions),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -170,11 +205,10 @@ mixin _$RemixDialogStyleMixin on Style<RemixDialogSpec>, Diagnosticable {
   @override
   StyleSpec<RemixDialogSpec> resolve(BuildContext context) {
     final spec = RemixDialogSpec(
-      actions: MixOps.resolve(context, $actions),
       container: MixOps.resolve(context, $container),
-      description: MixOps.resolve(context, $description),
-      overlay: MixOps.resolve(context, $overlay),
       title: MixOps.resolve(context, $title),
+      description: MixOps.resolve(context, $description),
+      actions: MixOps.resolve(context, $actions),
     );
 
     return StyleSpec(
@@ -188,20 +222,18 @@ mixin _$RemixDialogStyleMixin on Style<RemixDialogSpec>, Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(DiagnosticsProperty('actions', $actions))
       ..add(DiagnosticsProperty('container', $container))
+      ..add(DiagnosticsProperty('title', $title))
       ..add(DiagnosticsProperty('description', $description))
-      ..add(DiagnosticsProperty('overlay', $overlay))
-      ..add(DiagnosticsProperty('title', $title));
+      ..add(DiagnosticsProperty('actions', $actions));
   }
 
   @override
   List<Object?> get props => [
-    $actions,
     $container,
-    $description,
-    $overlay,
     $title,
+    $description,
+    $actions,
     $animation,
     $modifier,
     $variants,

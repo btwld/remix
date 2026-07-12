@@ -11,6 +11,7 @@ mixin _$RemixTooltipSpec implements Spec<RemixTooltipSpec>, Diagnosticable {
   StyleSpec<TextSpec> get label;
   Duration? get waitDuration;
   Duration? get showDuration;
+  Duration? get dismissDuration;
 
   @override
   Type get type => RemixTooltipSpec;
@@ -21,12 +22,14 @@ mixin _$RemixTooltipSpec implements Spec<RemixTooltipSpec>, Diagnosticable {
     StyleSpec<TextSpec>? label,
     Duration? waitDuration,
     Duration? showDuration,
+    Duration? dismissDuration,
   }) {
     return RemixTooltipSpec(
       container: container ?? this.container,
       label: label ?? this.label,
       waitDuration: waitDuration ?? this.waitDuration,
       showDuration: showDuration ?? this.showDuration,
+      dismissDuration: dismissDuration ?? this.dismissDuration,
     );
   }
 
@@ -37,11 +40,22 @@ mixin _$RemixTooltipSpec implements Spec<RemixTooltipSpec>, Diagnosticable {
       label: label.lerp(other?.label, t),
       waitDuration: MixOps.lerpSnap(waitDuration, other?.waitDuration, t),
       showDuration: MixOps.lerpSnap(showDuration, other?.showDuration, t),
+      dismissDuration: MixOps.lerpSnap(
+        dismissDuration,
+        other?.dismissDuration,
+        t,
+      ),
     );
   }
 
   @override
-  List<Object?> get props => [container, label, waitDuration, showDuration];
+  List<Object?> get props => [
+    container,
+    label,
+    waitDuration,
+    showDuration,
+    dismissDuration,
+  ];
 
   @override
   bool operator ==(Object other) {
@@ -86,7 +100,8 @@ mixin _$RemixTooltipSpec implements Spec<RemixTooltipSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('label', label))
       ..add(DiagnosticsProperty('waitDuration', waitDuration))
-      ..add(DiagnosticsProperty('showDuration', showDuration));
+      ..add(DiagnosticsProperty('showDuration', showDuration))
+      ..add(DiagnosticsProperty('dismissDuration', dismissDuration));
   }
 }
 
@@ -96,58 +111,104 @@ mixin _$RemixTooltipSpec implements Spec<RemixTooltipSpec>, Diagnosticable {
 typedef _$RemixTooltipSpecMethods = _$RemixTooltipSpec; // ignore: unused_element
 
 // **************************************************************************
+// MixWidgetGenerator
+// **************************************************************************
+
+/// Fortal-themed preset for [RemixTooltip].
+class FortalTooltip extends StatelessWidget {
+  const FortalTooltip({
+    super.key,
+    required this.tooltipChild,
+    required this.child,
+    this.tooltipSemantics,
+    this.positioning = const OverlayPositionConfig(),
+  });
+
+  final Widget tooltipChild;
+
+  final Widget child;
+
+  final String? tooltipSemantics;
+
+  final OverlayPositionConfig positioning;
+
+  @override
+  Widget build(BuildContext context) {
+    return fortalTooltipStyler().call(
+      key: this.key,
+      tooltipChild: this.tooltipChild,
+      child: this.child,
+      tooltipSemantics: this.tooltipSemantics,
+      positioning: this.positioning,
+    );
+  }
+}
+
+// **************************************************************************
 // StylerGenerator
 // **************************************************************************
 
-mixin _$RemixTooltipStyleMixin on Style<RemixTooltipSpec>, Diagnosticable {
+mixin _$RemixTooltipStylerMixin on Style<RemixTooltipSpec>, Diagnosticable {
   Prop<StyleSpec<BoxSpec>>? get $container;
   Prop<StyleSpec<TextSpec>>? get $label;
-  Prop<Duration>? get $showDuration;
   Prop<Duration>? get $waitDuration;
+  Prop<Duration>? get $showDuration;
+  Prop<Duration>? get $dismissDuration;
 
   /// Sets the container.
-  RemixTooltipStyle container(BoxStyler value) {
-    return merge(RemixTooltipStyle(container: value));
+  RemixTooltipStyler container(BoxStyler value) {
+    return merge(RemixTooltipStyler(container: value));
   }
 
   /// Sets the label.
-  RemixTooltipStyle label(TextStyler value) {
-    return merge(RemixTooltipStyle(label: value));
-  }
-
-  /// Sets the showDuration.
-  RemixTooltipStyle showDuration(Duration value) {
-    return merge(RemixTooltipStyle(showDuration: value));
+  RemixTooltipStyler label(TextStyler value) {
+    return merge(RemixTooltipStyler(label: value));
   }
 
   /// Sets the waitDuration.
-  RemixTooltipStyle waitDuration(Duration value) {
-    return merge(RemixTooltipStyle(waitDuration: value));
+  RemixTooltipStyler waitDuration(Duration value) {
+    return merge(RemixTooltipStyler(waitDuration: value));
+  }
+
+  /// Sets the showDuration.
+  RemixTooltipStyler showDuration(Duration value) {
+    return merge(RemixTooltipStyler(showDuration: value));
+  }
+
+  /// Sets the dismissDuration.
+  RemixTooltipStyler dismissDuration(Duration value) {
+    return merge(RemixTooltipStyler(dismissDuration: value));
   }
 
   /// Sets the animation configuration.
-  RemixTooltipStyle animate(AnimationConfig value) {
-    return merge(RemixTooltipStyle(animation: value));
+  RemixTooltipStyler animate(AnimationConfig value) {
+    return merge(RemixTooltipStyler(animation: value));
   }
 
   /// Sets the style variants.
-  RemixTooltipStyle variants(List<VariantStyle<RemixTooltipSpec>> value) {
-    return merge(RemixTooltipStyle(variants: value));
+  RemixTooltipStyler variants(List<VariantStyle<RemixTooltipSpec>> value) {
+    return merge(RemixTooltipStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
-  RemixTooltipStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixTooltipStyle(modifier: value));
+  RemixTooltipStyler wrap(WidgetModifierConfig value) {
+    return merge(RemixTooltipStyler(modifier: value));
   }
 
-  /// Merges with another [RemixTooltipStyle].
+  /// Sets the widget modifier.
+  RemixTooltipStyler modifier(WidgetModifierConfig value) {
+    return merge(RemixTooltipStyler(modifier: value));
+  }
+
+  /// Merges with another [RemixTooltipStyler].
   @override
-  RemixTooltipStyle merge(RemixTooltipStyle? other) {
-    return RemixTooltipStyle.create(
+  RemixTooltipStyler merge(RemixTooltipStyler? other) {
+    return RemixTooltipStyler.create(
       container: MixOps.merge($container, other?.$container),
       label: MixOps.merge($label, other?.$label),
-      showDuration: MixOps.merge($showDuration, other?.$showDuration),
       waitDuration: MixOps.merge($waitDuration, other?.$waitDuration),
+      showDuration: MixOps.merge($showDuration, other?.$showDuration),
+      dismissDuration: MixOps.merge($dismissDuration, other?.$dismissDuration),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -160,8 +221,9 @@ mixin _$RemixTooltipStyleMixin on Style<RemixTooltipSpec>, Diagnosticable {
     final spec = RemixTooltipSpec(
       container: MixOps.resolve(context, $container),
       label: MixOps.resolve(context, $label),
-      showDuration: MixOps.resolve(context, $showDuration),
       waitDuration: MixOps.resolve(context, $waitDuration),
+      showDuration: MixOps.resolve(context, $showDuration),
+      dismissDuration: MixOps.resolve(context, $dismissDuration),
     );
 
     return StyleSpec(
@@ -177,16 +239,18 @@ mixin _$RemixTooltipStyleMixin on Style<RemixTooltipSpec>, Diagnosticable {
     properties
       ..add(DiagnosticsProperty('container', $container))
       ..add(DiagnosticsProperty('label', $label))
+      ..add(DiagnosticsProperty('waitDuration', $waitDuration))
       ..add(DiagnosticsProperty('showDuration', $showDuration))
-      ..add(DiagnosticsProperty('waitDuration', $waitDuration));
+      ..add(DiagnosticsProperty('dismissDuration', $dismissDuration));
   }
 
   @override
   List<Object?> get props => [
     $container,
     $label,
-    $showDuration,
     $waitDuration,
+    $showDuration,
+    $dismissDuration,
     $animation,
     $modifier,
     $variants,

@@ -30,20 +30,20 @@ part of 'checkbox.dart';
 class RemixCheckbox extends StatelessWidget {
   const RemixCheckbox({
     super.key,
-    this.enabled = true,
     required this.selected,
-    this.tristate = false,
     this.onChanged,
-    this.autofocus = false,
+    this.enabled = true,
+    this.tristate = false,
     this.checkedIcon = Icons.check_rounded,
     this.uncheckedIcon,
     this.indeterminateIcon = Icons.horizontal_rule,
-    this.enableFeedback = true,
-    this.style = const RemixCheckboxStyle.create(),
-    this.styleSpec,
     this.focusNode,
+    this.autofocus = false,
+    this.enableFeedback = true,
     this.semanticLabel,
     this.mouseCursor = SystemMouseCursors.click,
+    this.style = const RemixCheckboxStyler.create(),
+    this.styleSpec,
   });
 
   /// Whether the checkbox is enabled for interaction.
@@ -73,12 +73,12 @@ class RemixCheckbox extends StatelessWidget {
   final ValueChanged<bool?>? onChanged;
 
   /// The style configuration for the checkbox.
-  final RemixCheckboxStyle style;
+  final RemixCheckboxStyler style;
 
   /// The style spec for the checkbox.
   final RemixCheckboxSpec? styleSpec;
 
-  static final styleFrom = RemixCheckboxStyle.new;
+  static final styleFrom = RemixCheckboxStyler.new;
 
   /// Whether to provide haptic feedback when the checkbox is toggled.
   /// Defaults to true.
@@ -108,9 +108,10 @@ class RemixCheckbox extends StatelessWidget {
       autofocus: autofocus,
       semanticLabel: semanticLabel,
       builder: (context, state, _) {
-        return StyleBuilder(
+        return RemixStyleSpecBuilder<RemixCheckboxSpec>(
           style: style,
-          controller: NakedState.controllerOf(context),
+          styleSpec: styleSpec,
+          controller: NakedCheckboxState.controllerOf(context),
           builder: (context, spec) {
             final iconData = tristate && selected == null
                 ? indeterminateIcon

@@ -15,7 +15,7 @@ Widget buildSliderUseCase(BuildContext context) {
       body: Center(
         child: SizedBox(
           width: 200,
-          child: RemixSlider(
+          child: FortalSlider(
             onChanged: (value) => knobState.updateKnob('value', value),
             enabled: context.knobs.boolean(
               label: 'enabled',
@@ -31,18 +31,16 @@ Widget buildSliderUseCase(BuildContext context) {
               max: 1,
               initialValue: 0.25,
             ),
-            style: fortalSliderStyle(
-              variant: context.knobs.object.dropdown(
-                label: 'variant',
-                options: FortalSliderVariant.values,
-                labelBuilder: (variant) => variant.name,
-              ),
-              size: context.knobs.object.dropdown(
-                label: 'size',
-                options: FortalSliderSize.values,
-                labelBuilder: (size) => size.name,
-                initialOption: FortalSliderSize.size2,
-              ),
+            variant: context.knobs.object.dropdown(
+              label: 'variant',
+              options: FortalSliderVariant.values,
+              labelBuilder: (variant) => variant.name,
+            ),
+            size: context.knobs.object.dropdown(
+              label: 'size',
+              options: FortalSliderSize.values,
+              labelBuilder: (size) => size.name,
+              initialOption: FortalSliderSize.size2,
             ),
           ),
         ),

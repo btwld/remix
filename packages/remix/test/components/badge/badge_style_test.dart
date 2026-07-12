@@ -5,39 +5,42 @@ import 'package:remix/remix.dart';
 import '../../helpers/test_methods.dart';
 
 void main() {
-  group('RemixBadgeStyle', () {
+  group('RemixBadgeStyler', () {
     group('Constructors', () {
       test('default constructor creates valid instance', () {
-        const style = RemixBadgeStyle.create();
+        const style = RemixBadgeStyler.create();
         expect(style, isNotNull);
-        expect(style, isA<RemixBadgeStyle>());
+        expect(style, isA<RemixBadgeStyler>());
       });
 
       test('create constructor with all parameters', () {
         final container = Prop.maybeMix(BoxStyler());
         final text = Prop.maybeMix(TextStyler());
 
-        final style = RemixBadgeStyle.create(container: container, text: text);
-
-        expect(style, isNotNull);
-        expect(style, isA<RemixBadgeStyle>());
-      });
-
-      test('constructor with styler parameters', () {
-        final style = RemixBadgeStyle(
-          container: BoxStyler(padding: EdgeInsetsGeometryMix.all(8.0)),
-          text: TextStyler(style: TextStyleMix(color: Colors.red)),
+        final style = RemixBadgeStyler.create(
+          container: container,
+          label: text,
         );
 
         expect(style, isNotNull);
-        expect(style, isA<RemixBadgeStyle>());
+        expect(style, isA<RemixBadgeStyler>());
+      });
+
+      test('constructor with styler parameters', () {
+        final style = RemixBadgeStyler(
+          container: BoxStyler(padding: EdgeInsetsGeometryMix.all(8.0)),
+          label: TextStyler(style: TextStyleMix(color: Colors.red)),
+        );
+
+        expect(style, isNotNull);
+        expect(style, isA<RemixBadgeStyler>());
       });
     });
 
     group('Style Methods', () {
       styleMethodTest(
         'backgroundColor sets background color',
-        initial: RemixBadgeStyle(),
+        initial: RemixBadgeStyler(),
         modify: (style) => style.backgroundColor(Colors.blue),
         expect: (style) {
           expect(
@@ -53,11 +56,11 @@ void main() {
 
       styleMethodTest(
         'foregroundColor sets text color',
-        initial: RemixBadgeStyle(),
+        initial: RemixBadgeStyler(),
         modify: (style) => style.foregroundColor(Colors.green),
         expect: (style) {
           expect(
-            style.$text,
+            style.$label,
             equals(
               Prop.maybeMix(
                 TextStyler(style: TextStyleMix(color: Colors.green)),
@@ -69,7 +72,7 @@ void main() {
 
       styleMethodTest(
         'borderRadius sets border radius',
-        initial: RemixBadgeStyle(),
+        initial: RemixBadgeStyler(),
         modify: (style) =>
             style.borderRadius(BorderRadiusGeometryMix.circular(12.0)),
         expect: (style) {
@@ -90,7 +93,7 @@ void main() {
 
       styleMethodTest(
         'padding sets container padding',
-        initial: RemixBadgeStyle(),
+        initial: RemixBadgeStyler(),
         modify: (style) => style.padding(EdgeInsetsGeometryMix.all(16.0)),
         expect: (style) {
           expect(
@@ -106,7 +109,7 @@ void main() {
 
       styleMethodTest(
         'margin sets container margin',
-        initial: RemixBadgeStyle(),
+        initial: RemixBadgeStyler(),
         modify: (style) => style.margin(EdgeInsetsGeometryMix.all(4.0)),
         expect: (style) {
           expect(
@@ -120,7 +123,7 @@ void main() {
 
       styleMethodTest(
         'decoration sets container decoration',
-        initial: RemixBadgeStyle(),
+        initial: RemixBadgeStyler(),
         modify: (style) => style.decoration(
           BoxDecorationMix(
             color: Colors.purple,
@@ -146,7 +149,7 @@ void main() {
 
       styleMethodTest(
         'alignment sets container alignment',
-        initial: RemixBadgeStyle(),
+        initial: RemixBadgeStyler(),
         modify: (style) => style.alignment(Alignment.centerLeft),
         expect: (style) {
           expect(
@@ -158,12 +161,12 @@ void main() {
 
       styleMethodTest(
         'label sets text styler',
-        initial: RemixBadgeStyle(),
+        initial: RemixBadgeStyler(),
         modify: (style) =>
             style.label(TextStyler(style: TextStyleMix(fontSize: 14.0))),
         expect: (style) {
           expect(
-            style.$text,
+            style.$label,
             equals(
               Prop.maybeMix(TextStyler(style: TextStyleMix(fontSize: 14.0))),
             ),
@@ -173,7 +176,7 @@ void main() {
 
       styleMethodTest(
         'constraints sets container constraints',
-        initial: RemixBadgeStyle(),
+        initial: RemixBadgeStyler(),
         modify: (style) => style.constraints(
           BoxConstraintsMix(minWidth: 50.0, minHeight: 20.0),
         ),
@@ -196,7 +199,7 @@ void main() {
 
       styleMethodTest(
         'animate sets animation config',
-        initial: RemixBadgeStyle(),
+        initial: RemixBadgeStyler(),
         modify: (style) =>
             style.animate(AnimationConfig.linear(Duration(milliseconds: 300))),
         expect: (style) {
@@ -209,7 +212,7 @@ void main() {
 
       styleMethodTest(
         'variants sets variant styles',
-        initial: RemixBadgeStyle(),
+        initial: RemixBadgeStyler(),
         modify: (style) => style.variants([]),
         expect: (style) {
           expect(style.$variants, equals([]));
@@ -218,7 +221,7 @@ void main() {
 
       styleMethodTest(
         'wrap sets widget modifier config',
-        initial: RemixBadgeStyle(),
+        initial: RemixBadgeStyler(),
         modify: (style) => style.wrap(WidgetModifierConfig()),
         expect: (style) {
           expect(style.$modifier, equals(WidgetModifierConfig()));
@@ -227,7 +230,7 @@ void main() {
 
       styleMethodTest(
         'foregroundDecoration sets foreground decoration',
-        initial: RemixBadgeStyle(),
+        initial: RemixBadgeStyler(),
         modify: (style) => style.foregroundDecoration(
           BoxDecorationMix(color: Colors.yellow.withValues(alpha: 0.5)),
         ),
@@ -249,7 +252,7 @@ void main() {
 
       styleMethodTest(
         'transform sets container transform',
-        initial: RemixBadgeStyle(),
+        initial: RemixBadgeStyler(),
         modify: (style) => style.transform(Matrix4.rotationZ(0.1)),
         expect: (style) {
           expect(
@@ -269,7 +272,7 @@ void main() {
 
     group('Core Methods', () {
       testWidgets('resolve method returns StyleSpec', (tester) async {
-        const style = RemixBadgeStyle.create();
+        const style = RemixBadgeStyler.create();
         await tester.pumpWidget(
           MaterialApp(
             home: Builder(
@@ -285,26 +288,26 @@ void main() {
       });
 
       test('merge with null returns style equal to original', () {
-        const originalStyle = RemixBadgeStyle.create();
+        const originalStyle = RemixBadgeStyler.create();
         final mergedStyle = originalStyle.merge(null);
         expect(mergedStyle, equals(originalStyle));
       });
 
       test('merge with other style combines properties', () {
-        const style1 = RemixBadgeStyle.create();
-        final style2 = RemixBadgeStyle();
+        const style1 = RemixBadgeStyler.create();
+        final style2 = RemixBadgeStyler();
 
         final merged = style1.merge(style2);
         expect(merged, isNot(same(style1)));
         expect(merged, isNot(same(style2)));
-        expect(merged, isA<RemixBadgeStyle>());
+        expect(merged, isA<RemixBadgeStyler>());
       });
 
       test('props list contains all properties', () {
-        const style = RemixBadgeStyle.create();
+        const style = RemixBadgeStyler.create();
         expect(style.props, hasLength(5));
         expect(style.props, contains(style.$container));
-        expect(style.props, contains(style.$text));
+        expect(style.props, contains(style.$label));
         expect(style.props, contains(style.$variants));
         expect(style.props, contains(style.$animation));
         expect(style.props, contains(style.$modifier));
@@ -313,21 +316,21 @@ void main() {
 
     group('Equality', () {
       test('identical styles are equal', () {
-        const style1 = RemixBadgeStyle.create();
-        const style2 = RemixBadgeStyle.create();
+        const style1 = RemixBadgeStyler.create();
+        const style2 = RemixBadgeStyler.create();
         expect(style1, equals(style2));
         expect(style1.hashCode, equals(style2.hashCode));
       });
 
       test('styles with different properties are not equal', () {
-        const style1 = RemixBadgeStyle.create();
-        final style2 = RemixBadgeStyle();
+        const style1 = RemixBadgeStyler.create();
+        final style2 = RemixBadgeStyler();
         expect(style1, equals(style2));
       });
 
       test('styles with same properties are equal', () {
-        final style1 = RemixBadgeStyle();
-        final style2 = RemixBadgeStyle();
+        final style1 = RemixBadgeStyler();
+        final style2 = RemixBadgeStyler();
         expect(style1, equals(style2));
         expect(style1.hashCode, equals(style2.hashCode));
       });

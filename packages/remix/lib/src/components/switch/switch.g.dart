@@ -89,13 +89,14 @@ typedef _$RemixSwitchSpecMethods = _$RemixSwitchSpec; // ignore: unused_element
 // MixWidgetGenerator
 // **************************************************************************
 
+/// Fortal-themed preset for [RemixSwitch].
 class FortalSwitch extends StatelessWidget {
   const FortalSwitch({
     super.key,
     this.variant = .surface,
     this.size = .size2,
     required this.selected,
-    required this.onChanged,
+    this.onChanged,
     this.enabled = true,
     this.enableFeedback = true,
     this.focusNode,
@@ -104,13 +105,41 @@ class FortalSwitch extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   });
 
+  /// Surface treatment with a visible border.
+  const FortalSwitch.surface({
+    super.key,
+    this.size = .size2,
+    required this.selected,
+    this.onChanged,
+    this.enabled = true,
+    this.enableFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
+    this.semanticLabel,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = FortalSwitchVariant.surface;
+
+  /// Softer accent treatment.
+  const FortalSwitch.soft({
+    super.key,
+    this.size = .size2,
+    required this.selected,
+    this.onChanged,
+    this.enabled = true,
+    this.enableFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
+    this.semanticLabel,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = FortalSwitchVariant.soft;
+
   final FortalSwitchVariant variant;
 
   final FortalSwitchSize size;
 
   final bool selected;
 
-  final ValueChanged<bool> onChanged;
+  final ValueChanged<bool>? onChanged;
 
   final bool enabled;
 
@@ -126,7 +155,8 @@ class FortalSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return fortalSwitchStyle(variant: this.variant, size: this.size).call(
+    return fortalSwitchStyler(variant: this.variant, size: this.size).call(
+      key: this.key,
       selected: this.selected,
       onChanged: this.onChanged,
       enabled: this.enabled,
@@ -143,39 +173,44 @@ class FortalSwitch extends StatelessWidget {
 // StylerGenerator
 // **************************************************************************
 
-mixin _$RemixSwitchStyleMixin on Style<RemixSwitchSpec>, Diagnosticable {
+mixin _$RemixSwitchStylerMixin on Style<RemixSwitchSpec>, Diagnosticable {
   Prop<StyleSpec<BoxSpec>>? get $container;
   Prop<StyleSpec<BoxSpec>>? get $thumb;
 
   /// Sets the container.
-  RemixSwitchStyle container(BoxStyler value) {
-    return merge(RemixSwitchStyle(container: value));
+  RemixSwitchStyler container(BoxStyler value) {
+    return merge(RemixSwitchStyler(container: value));
   }
 
   /// Sets the thumb.
-  RemixSwitchStyle thumb(BoxStyler value) {
-    return merge(RemixSwitchStyle(thumb: value));
+  RemixSwitchStyler thumb(BoxStyler value) {
+    return merge(RemixSwitchStyler(thumb: value));
   }
 
   /// Sets the animation configuration.
-  RemixSwitchStyle animate(AnimationConfig value) {
-    return merge(RemixSwitchStyle(animation: value));
+  RemixSwitchStyler animate(AnimationConfig value) {
+    return merge(RemixSwitchStyler(animation: value));
   }
 
   /// Sets the style variants.
-  RemixSwitchStyle variants(List<VariantStyle<RemixSwitchSpec>> value) {
-    return merge(RemixSwitchStyle(variants: value));
+  RemixSwitchStyler variants(List<VariantStyle<RemixSwitchSpec>> value) {
+    return merge(RemixSwitchStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
-  RemixSwitchStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixSwitchStyle(modifier: value));
+  RemixSwitchStyler wrap(WidgetModifierConfig value) {
+    return merge(RemixSwitchStyler(modifier: value));
   }
 
-  /// Merges with another [RemixSwitchStyle].
+  /// Sets the widget modifier.
+  RemixSwitchStyler modifier(WidgetModifierConfig value) {
+    return merge(RemixSwitchStyler(modifier: value));
+  }
+
+  /// Merges with another [RemixSwitchStyler].
   @override
-  RemixSwitchStyle merge(RemixSwitchStyle? other) {
-    return RemixSwitchStyle.create(
+  RemixSwitchStyler merge(RemixSwitchStyler? other) {
+    return RemixSwitchStyler.create(
       container: MixOps.merge($container, other?.$container),
       thumb: MixOps.merge($thumb, other?.$thumb),
       variants: MixOps.mergeVariants($variants, other?.$variants),

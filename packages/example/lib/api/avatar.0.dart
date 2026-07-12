@@ -30,30 +30,30 @@ class AvatarExample extends StatelessWidget {
     );
   }
 
-  RemixAvatarStyle get labelStyle {
-    return RemixAvatarStyle()
-        .textColor(Colors.deepPurpleAccent)
+  RemixAvatarStyler get labelStyle {
+    return RemixAvatarStyler()
+        .backgroundColor(Colors.deepPurpleAccent)
         .size(50, 50)
         .shapeCircle()
-        .wrap(WidgetModifierConfig.clipOval())
-        .labelColor(Colors.white)
+        .wrap(.clipOval())
+        .foregroundColor(Colors.white)
         .labelFontWeight(FontWeight.bold)
         .labelFontSize(15);
   }
 
-  RemixAvatarStyle get iconStyle {
-    return RemixAvatarStyle()
-        .textColor(Colors.deepOrangeAccent)
+  RemixAvatarStyler get iconStyle {
+    return RemixAvatarStyler()
+        .backgroundColor(Colors.deepOrangeAccent)
         .size(70, 70)
-        .iconColor(Colors.white)
+        .foregroundColor(Colors.white)
         .iconSize(70)
-        .icon(IconStyler().wrap(WidgetModifierConfig.translate(x: 0, y: 12)))
+        .icon(IconStyler().wrap(.translate(x: 0, y: 12)))
         .shapeCircle()
-        .wrap(WidgetModifierConfig.clipOval());
+        .wrap(.clipOval());
   }
 
-  RemixAvatarStyle get image {
-    return RemixAvatarStyle()
+  RemixAvatarStyler get image {
+    return RemixAvatarStyler()
         .size(90, 90)
         .backgroundImageUrl('https://i.pravatar.cc/150?img=48')
         .shapeCircle();

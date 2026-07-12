@@ -1,0 +1,362 @@
+---
+title: Toggle
+description: A pressable toggle button for persistent selected and unselected states
+keywords: [flutter, remix, toggle, button, selected, pressed, toolbar]
+---
+
+A pressable toggle button that stays visually active when selected.
+
+## When to use this
+
+- **Formatting controls**: Toggle bold, italic, alignment, or similar toolbar actions
+- **Segment-like actions**: Show a compact on/off choice without a switch track
+- **Filter chips**: Let users enable or disable a single filter
+- **Tool states**: Represent active tools in editors or drawing surfaces
+
+## Basic implementation
+
+<CodeGroup title="Basic implementation" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class ToggleExample extends StatefulWidget {
+  const ToggleExample({super.key});
+
+  @override
+  State<ToggleExample> createState() => _ToggleExampleState();
+}
+
+class _ToggleExampleState extends State<ToggleExample> {
+  bool _isBold = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixToggle(
+      selected: _isBold,
+      onChanged: (value) => setState(() => _isBold = value),
+      icon: Icons.format_bold,
+      label: 'Bold',
+      style: style,
+    );
+  }
+
+  RemixToggleStyler get style {
+    return RemixToggleStyler()
+        .paddingX(12)
+        .paddingY(8)
+        .spacing(6)
+        .backgroundColor(Colors.grey.shade100)
+        .foregroundColor(Colors.grey.shade700)
+        .borderRadiusAll(const Radius.circular(8))
+        .onHovered(RemixToggleStyler().backgroundColor(Colors.grey.shade200))
+        .onPressed(RemixToggleStyler().scale(0.93))
+        .onSelected(
+          RemixToggleStyler()
+              .backgroundColor(Colors.deepPurple.shade50)
+              .foregroundColor(Colors.deepPurple),
+        )
+        .animate(AnimationConfig.easeOut(200.ms));
+  }
+}
+```
+</CodeGroup>
+
+## Fortal widgets
+
+Remix includes a generated Fortal-themed widget for this component:
+
+<CodeGroup title="Fortal variants" defaultLanguage="dart">
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class FortalToggleExample extends StatefulWidget {
+  const FortalToggleExample({super.key});
+
+  @override
+  State<FortalToggleExample> createState() => _FortalToggleExampleState();
+}
+
+class _FortalToggleExampleState extends State<FortalToggleExample> {
+  bool _value = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      spacing: 8,
+      children: [
+        FortalToggle.ghost(
+          selected: _value,
+          onChanged: (v) => setState(() => _value = v),
+          label: 'Ghost',
+        ),
+        FortalToggle.outline(
+          selected: _value,
+          onChanged: (v) => setState(() => _value = v),
+          label: 'Outline',
+        ),
+      ],
+    );
+  }
+}
+```
+</CodeGroup>
+
+<Info>
+  See the [fortalToggleStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/toggle/fortal_toggle_styles.dart) for all available options.
+</Info>
+
+## Constructor
+<CodeGroup title="Constructor" defaultLanguage="dart">
+```dart
+const RemixToggle({
+  Key? key,
+  required bool selected,
+  ValueChanged<bool>? onChanged,
+  bool enabled = true,
+  String? label,
+  IconData? icon,
+  bool enableFeedback = true,
+  FocusNode? focusNode,
+  bool autofocus = false,
+  String? semanticLabel,
+  MouseCursor mouseCursor = SystemMouseCursors.click,
+  RemixToggleStyler style = const RemixToggleStyler.create(),
+  RemixToggleSpec? styleSpec,
+})
+```
+</CodeGroup>
+
+## Properties
+### Widget Properties
+
+#### `enabled` -> `bool`
+
+Optional. Whether this toggle can be interacted with.
+
+#### `selected` -> `bool`
+
+**Required**. Whether the toggle is currently selected.
+
+#### `onChanged` -> `ValueChanged<bool>?`
+
+Optional. Called with the next selected state when the toggle is pressed. When omitted, the toggle is disabled.
+
+#### `label` -> `String?`
+
+Optional. Text rendered inside the toggle. At least one of `label` or `icon` must be provided.
+
+#### `icon` -> `IconData?`
+
+Optional. Icon rendered inside the toggle. At least one of `label` or `icon` must be provided.
+
+#### `style` -> `RemixToggleStyler`
+
+Optional. The style configuration for the toggle.
+
+#### `styleSpec` → `RemixToggleSpec?`
+
+Optional. A pre-resolved style spec for the toggle.
+
+#### `enableFeedback` -> `bool`
+
+Optional. Whether to enable haptic feedback when toggled.
+
+#### `focusNode` -> `FocusNode?`
+
+Optional. The focus node for the toggle.
+
+#### `autofocus` -> `bool`
+
+Optional. Whether the toggle should automatically request focus when it is created.
+
+#### `semanticLabel` -> `String?`
+
+Optional. The semantic label for the toggle.
+
+#### `mouseCursor` -> `MouseCursor`
+
+Optional. Cursor when hovering over the toggle.
+
+### Style Methods
+
+#### `container(FlexBoxStyler value)`
+
+Configures the toggle container style.
+
+#### `label(TextStyler value)`
+
+Configures the label text style.
+
+#### `icon(IconStyler value)`
+
+Configures the icon style.
+
+#### `backgroundColor(Color value)`
+
+Sets the toggle background color.
+
+#### `foregroundColor(Color value)`
+
+Sets the label and icon color.
+
+#### `shape(ShapeBorderMix value)`
+
+Sets the toggle shape.
+
+#### `spacing(double value)`
+
+Sets spacing between the icon and label.
+
+#### `alignment(Alignment value)`
+
+Sets container alignment.
+
+#### `padding(EdgeInsetsGeometryMix value)`
+
+Sets container padding.
+
+#### `margin(EdgeInsetsGeometryMix value)`
+
+Sets container margin.
+
+#### `decoration(DecorationMix value)`
+
+Sets container decoration.
+
+#### `constraints(BoxConstraintsMix value)`
+
+Sets size constraints on the component.
+
+#### `foregroundDecoration(DecorationMix value)`
+
+Sets a foreground decoration painted on top of the component.
+
+#### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
+
+Applies a matrix transformation to the component.
+
+#### `flex(FlexStyler value)`
+
+Configures the flex layout properties.
+
+#### `labelStyle(TextStyleMix value)`
+
+Sets label/text style using TextStyleMix directly
+
+#### `labelColor(Color value)`
+
+Sets label/text color
+
+#### `labelFontSize(double value)`
+
+Sets label/text font size
+
+#### `labelFontWeight(FontWeight value)`
+
+Sets label/text font weight
+
+#### `labelFontStyle(FontStyle value)`
+
+Sets label/text font style (italic/normal)
+
+#### `labelLetterSpacing(double value)`
+
+Sets label/text letter spacing
+
+#### `labelDecoration(TextDecoration value)`
+
+Sets label/text decoration (underline, strikethrough, etc.)
+
+#### `labelFontFamily(String value)`
+
+Sets label/text font family
+
+#### `labelHeight(double value)`
+
+Sets label/text line height
+
+#### `labelWordSpacing(double value)`
+
+Sets label/text word spacing
+
+#### `labelDecorationColor(Color value)`
+
+Sets label/text decoration color
+
+#### `iconColor(Color value)`
+
+Sets icon color
+
+#### `iconSize(double value)`
+
+Sets icon size
+
+#### `iconOpacity(double value)`
+
+Sets icon opacity
+
+#### `iconWeight(double value)`
+
+Sets icon weight (useful for variable icons like Material Symbols)
+
+#### `iconGrade(double value)`
+
+Sets icon grade (useful for Material Icons)
+
+#### `iconFill(double value)`
+
+Sets icon fill (useful for Material Icons filled variants)
+
+#### `iconOpticalSize(double value)`
+
+Sets icon optical size (useful for Material Icons)
+
+#### `iconBlendMode(BlendMode value)`
+
+Sets icon blend mode
+
+#### `iconTextDirection(TextDirection value)`
+
+Sets icon text direction
+
+#### `iconShadows(List<ShadowMix> value)`
+
+Sets icon shadows
+
+#### `iconShadow(ShadowMix value)`
+
+Sets single icon shadow
+
+#### `onSelected(RemixToggleStyler value)`
+
+Applies style overrides while the toggle is selected.
+
+#### `onHovered(RemixToggleStyler value)`
+
+Applies style overrides while the toggle is hovered.
+
+#### `onPressed(RemixToggleStyler value)`
+
+Applies style overrides while the toggle is pressed.
+
+#### `animate(AnimationConfig value)`
+
+Sets animation configuration.
+
+#### `variants(List<VariantStyle<RemixToggleSpec>> value)`
+
+Sets style variants.
+
+#### `wrap(WidgetModifierConfig value)`
+
+Applies widget modifiers such as clipping, opacity, or scaling.
+
+#### `modifier(WidgetModifierConfig value)`
+
+Sets the widget modifier.
+
+#### `call({ ... })`
+
+Creates a RemixToggle widget with this style applied.

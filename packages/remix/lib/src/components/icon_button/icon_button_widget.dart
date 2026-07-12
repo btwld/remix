@@ -17,21 +17,21 @@ typedef RemixIconButtonLoadingBuilder =
 /// // Basic icon button
 /// RemixIconButton(
 ///   icon: Icons.add,
-///   onPressed: () => print('Add pressed!'),
+///   onPressed: () => debugPrint('Add pressed!'),
 /// )
 ///
 /// // Custom styled icon button
 /// RemixIconButton(
 ///   icon: Icons.delete,
-///   style: RemixIconButtonStyles.baseStyle.color(Colors.red),
-///   onPressed: () => print('Delete pressed!'),
+///   style: RemixIconButtonStyler().backgroundColor(Colors.red),
+///   onPressed: () => debugPrint('Delete pressed!'),
 /// )
 ///
 /// // Loading icon button
 /// RemixIconButton(
 ///   icon: Icons.save,
 ///   loading: true,
-///   onPressed: () => print('Save pressed!'),
+///   onPressed: () => debugPrint('Save pressed!'),
 /// )
 /// ```
 class RemixIconButton extends StatelessWidget {
@@ -40,34 +40,40 @@ class RemixIconButton extends StatelessWidget {
   /// The [icon] parameter is required and specifies which icon to display.
   /// Use builders to customize rendering of specific parts.
   const RemixIconButton({
-    this.style = const RemixIconButtonStyle.create(),
-    this.styleSpec,
     super.key,
     required this.icon,
     this.iconBuilder,
     this.loadingBuilder,
-    this.autofocus = false,
     this.loading = false,
+    this.enabled = true,
     this.enableFeedback = true,
-    required this.onPressed,
+    this.onPressed,
     this.onLongPress,
     this.focusNode,
+    this.autofocus = false,
     this.semanticLabel,
     this.semanticHint,
     this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
+    this.style = const RemixIconButtonStyler.create(),
+    this.styleSpec,
   });
 
-  final RemixIconButtonStyle style;
+  final RemixIconButtonStyler style;
 
   final RemixIconButtonSpec? styleSpec;
 
-  static final styleFrom = RemixIconButtonStyle.new;
+  static final styleFrom = RemixIconButtonStyler.new;
 
   /// Whether the button is in a loading state.
   ///
   /// When true, the button will display a spinner and become non-interactive.
   final bool loading;
+
+  /// Whether this icon button is enabled.
+  ///
+  /// When false, press callbacks are suppressed even if [onPressed] is provided.
+  final bool enabled;
 
   /// Callback function called when the button is pressed.
   ///
@@ -118,7 +124,7 @@ class RemixIconButton extends StatelessWidget {
   /// Defaults to [SystemMouseCursors.click] when enabled.
   final MouseCursor mouseCursor;
 
-  bool get _isEnabled => !loading && onPressed != null;
+  bool get _isEnabled => enabled && !loading && onPressed != null;
 
   @override
   Widget build(BuildContext context) {
@@ -132,9 +138,10 @@ class RemixIconButton extends StatelessWidget {
       autofocus: autofocus,
       semanticLabel: semanticLabel,
       builder: (context, states, child) {
-        return StyleBuilder(
+        return RemixStyleSpecBuilder<RemixIconButtonSpec>(
           style: style,
-          controller: NakedState.controllerOf(context),
+          styleSpec: styleSpec,
+          controller: NakedButtonState.controllerOf(context),
           builder: (context, spec) {
             Widget? iconWidget;
 
@@ -151,7 +158,11 @@ class RemixIconButton extends StatelessWidget {
             // Build spinner (used when loading)
             final spinner = Center(
               child: loadingBuilder == null
-                  ? RemixSpinner(styleSpec: spec.spinner)
+                  ? StyleSpecBuilder(
+                      styleSpec: spec.spinner,
+                      builder: (context, spinnerSpec) =>
+                          RemixSpinner(styleSpec: spinnerSpec),
+                    )
                   : StyleSpecBuilder(
                       styleSpec: spec.spinner,
                       builder: loadingBuilder!,

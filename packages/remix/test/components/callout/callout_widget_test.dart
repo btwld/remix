@@ -47,7 +47,7 @@ void main() {
           RemixCallout(
             text: 'Complete Callout',
             icon: Icons.warning,
-            style: RemixCalloutStyle.create(),
+            style: RemixCalloutStyler.create(),
           ),
         );
         await tester.pumpAndSettle();
@@ -147,7 +147,7 @@ void main() {
       });
 
       testWidgets('icon styling is applied correctly', (tester) async {
-        final customStyle = RemixCalloutStyle(
+        final customStyle = RemixCalloutStyler(
           icon: IconStyler(color: Colors.red, size: 24.0),
         );
 
@@ -200,7 +200,7 @@ void main() {
       });
 
       testWidgets('text styling is applied correctly', (tester) async {
-        final customStyle = RemixCalloutStyle(
+        final customStyle = RemixCalloutStyler(
           text: TextStyler(
             style: TextStyleMix(
               color: Colors.blue,
@@ -223,7 +223,7 @@ void main() {
 
     group('Style Integration', () {
       testWidgets('applies custom container style', (tester) async {
-        final customStyle = RemixCalloutStyle(
+        final customStyle = RemixCalloutStyler(
           container: FlexBoxStyler(
             padding: EdgeInsetsGeometryMix.all(20.0),
             decoration: BoxDecorationMix(
@@ -244,7 +244,7 @@ void main() {
       });
 
       testWidgets('applies flex spacing between icon and text', (tester) async {
-        final customStyle = RemixCalloutStyle(
+        final customStyle = RemixCalloutStyler(
           container: FlexBoxStyler(spacing: 16.0),
         );
 

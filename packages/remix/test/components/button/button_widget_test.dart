@@ -10,9 +10,7 @@ void main() {
   group('RemixButton Widget Tests', () {
     group('Basic Rendering', () {
       testWidgets('renders button with label only', (tester) async {
-        await tester.pumpRemixApp(
-          RemixButton(label: 'Click Me', onPressed: () {}),
-        );
+        await tester.pumpRemixApp(RemixButton(label: 'Click Me'));
 
         await tester.pumpAndSettle();
 
@@ -33,6 +31,46 @@ void main() {
         // Verify both text and icon are rendered
         expect(find.text('Save'), findsOneWidget);
         expect(find.byIcon(Icons.save), findsOneWidget);
+      });
+
+      testWidgets('iconAlignment repositions a single icon', (tester) async {
+        await tester.pumpRemixApp(
+          RemixButton(
+            label: 'Continue',
+            leadingIcon: Icons.arrow_forward,
+            style: RemixButtonStyler().iconAlignment(.end),
+            onPressed: () {},
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(
+          tester.getTopLeft(find.byIcon(Icons.arrow_forward)).dx,
+          greaterThan(tester.getTopLeft(find.text('Continue')).dx),
+        );
+      });
+
+      testWidgets('both explicit icon positions remain stable', (tester) async {
+        await tester.pumpRemixApp(
+          RemixButton(
+            label: 'Continue',
+            leadingIcon: Icons.arrow_back,
+            trailingIcon: Icons.arrow_forward,
+            style: RemixButtonStyler().iconAlignment(.end),
+            onPressed: () {},
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final labelX = tester.getTopLeft(find.text('Continue')).dx;
+        expect(
+          tester.getTopLeft(find.byIcon(Icons.arrow_back)).dx,
+          lessThan(labelX),
+        );
+        expect(
+          tester.getTopLeft(find.byIcon(Icons.arrow_forward)).dx,
+          greaterThan(labelX),
+        );
       });
     });
 
@@ -78,7 +116,7 @@ void main() {
         );
         expect(
           remixButton.style,
-          equals(fortalButtonStyle(variant: .soft, size: .size3)),
+          equals(fortalButtonStyler(variant: .soft, size: .size3)),
         );
         expect(remixButton.label, equals('Save'));
         expect(remixButton.leadingIcon, equals(Icons.save));
@@ -106,6 +144,12 @@ void main() {
         'contains disabled state when enabled is false',
         build: () =>
             RemixButton(label: 'Click Me', onPressed: () {}, enabled: false),
+        expectedStates: {WidgetState.disabled},
+      );
+
+      widgetControllerTest<RemixButtonSpec>(
+        'contains disabled state when onPressed is omitted',
+        build: () => RemixButton(label: 'Click Me'),
         expectedStates: {WidgetState.disabled},
       );
 
@@ -338,6 +382,15 @@ void main() {
             loading: true,
             onPressed: () {},
           ),
+        );
+
+        await tester.pump();
+        await tester.tap(find.byType(RemixButton));
+        expect(pressedCount, equals(1));
+
+        // Test case 4: onPressed omitted -> should be disabled
+        await tester.pumpRemixApp(
+          const RemixButton(label: 'Test', enabled: true, loading: false),
         );
 
         await tester.pump();

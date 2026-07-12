@@ -11,7 +11,7 @@ mixin _$RemixButtonSpec implements Spec<RemixButtonSpec>, Diagnosticable {
   StyleSpec<TextSpec> get label;
   StyleSpec<IconSpec> get icon;
   StyleSpec<RemixSpinnerSpec> get spinner;
-  IconAlignment get iconAlignment;
+  IconAlignment? get iconAlignment;
 
   @override
   Type get type => RemixButtonSpec;
@@ -101,53 +101,251 @@ mixin _$RemixButtonSpec implements Spec<RemixButtonSpec>, Diagnosticable {
 typedef _$RemixButtonSpecMethods = _$RemixButtonSpec; // ignore: unused_element
 
 // **************************************************************************
-// SpecStylerGenerator
+// MixWidgetGenerator
 // **************************************************************************
 
-class RemixButtonStyler extends MixStyler<RemixButtonStyler, RemixButtonSpec> {
-  final Prop<StyleSpec<FlexBoxSpec>>? $container;
-  final Prop<StyleSpec<TextSpec>>? $label;
-  final Prop<StyleSpec<IconSpec>>? $icon;
-  final Prop<StyleSpec<RemixSpinnerSpec>>? $spinner;
-  final Prop<IconAlignment>? $iconAlignment;
+/// Fortal-themed button style and widget presets.
+class FortalButton extends StatelessWidget {
+  const FortalButton({
+    super.key,
+    this.variant = .solid,
+    this.size = .size2,
+    required this.label,
+    this.leadingIcon,
+    this.trailingIcon,
+    this.textBuilder,
+    this.leadingIconBuilder,
+    this.trailingIconBuilder,
+    this.loadingBuilder,
+    this.loading = false,
+    this.enabled = true,
+    this.onPressed,
+    this.onLongPress,
+    this.focusNode,
+    this.autofocus = false,
+    this.enableFeedback = true,
+    this.semanticLabel,
+    this.semanticHint,
+    this.excludeSemantics = false,
+    this.mouseCursor = SystemMouseCursors.click,
+  });
 
-  const RemixButtonStyler.create({
-    Prop<StyleSpec<FlexBoxSpec>>? container,
-    Prop<StyleSpec<TextSpec>>? label,
-    Prop<StyleSpec<IconSpec>>? icon,
-    Prop<StyleSpec<RemixSpinnerSpec>>? spinner,
-    Prop<IconAlignment>? iconAlignment,
-    super.variants,
-    super.modifier,
-    super.animation,
-  }) : $container = container,
-       $label = label,
-       $icon = icon,
-       $spinner = spinner,
-       $iconAlignment = iconAlignment;
+  /// High-emphasis filled button.
+  const FortalButton.solid({
+    super.key,
+    this.size = .size2,
+    required this.label,
+    this.leadingIcon,
+    this.trailingIcon,
+    this.textBuilder,
+    this.leadingIconBuilder,
+    this.trailingIconBuilder,
+    this.loadingBuilder,
+    this.loading = false,
+    this.enabled = true,
+    this.onPressed,
+    this.onLongPress,
+    this.focusNode,
+    this.autofocus = false,
+    this.enableFeedback = true,
+    this.semanticLabel,
+    this.semanticHint,
+    this.excludeSemantics = false,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = FortalButtonVariant.solid;
 
-  RemixButtonStyler({
-    StyleSpec<FlexBoxSpec>? container,
-    StyleSpec<TextSpec>? label,
-    StyleSpec<IconSpec>? icon,
-    StyleSpec<RemixSpinnerSpec>? spinner,
-    IconAlignment? iconAlignment,
-    AnimationConfig? animation,
-    WidgetModifierConfig? modifier,
-    List<VariantStyle<RemixButtonSpec>>? variants,
-  }) : this.create(
-         container: Prop.maybe(container),
-         label: Prop.maybe(label),
-         icon: Prop.maybe(icon),
-         spinner: Prop.maybe(spinner),
-         iconAlignment: Prop.maybe(iconAlignment),
-         variants: variants,
-         modifier: modifier,
-         animation: animation,
-       );
+  /// Low-emphasis filled button.
+  const FortalButton.soft({
+    super.key,
+    this.size = .size2,
+    required this.label,
+    this.leadingIcon,
+    this.trailingIcon,
+    this.textBuilder,
+    this.leadingIconBuilder,
+    this.trailingIconBuilder,
+    this.loadingBuilder,
+    this.loading = false,
+    this.enabled = true,
+    this.onPressed,
+    this.onLongPress,
+    this.focusNode,
+    this.autofocus = false,
+    this.enableFeedback = true,
+    this.semanticLabel,
+    this.semanticHint,
+    this.excludeSemantics = false,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = FortalButtonVariant.soft;
 
-  factory RemixButtonStyler.iconAlignment(IconAlignment value) =>
-      RemixButtonStyler().iconAlignment(value);
+  /// Subtle surface button with a border.
+  const FortalButton.surface({
+    super.key,
+    this.size = .size2,
+    required this.label,
+    this.leadingIcon,
+    this.trailingIcon,
+    this.textBuilder,
+    this.leadingIconBuilder,
+    this.trailingIconBuilder,
+    this.loadingBuilder,
+    this.loading = false,
+    this.enabled = true,
+    this.onPressed,
+    this.onLongPress,
+    this.focusNode,
+    this.autofocus = false,
+    this.enableFeedback = true,
+    this.semanticLabel,
+    this.semanticHint,
+    this.excludeSemantics = false,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = FortalButtonVariant.surface;
+
+  /// Transparent button with an outline.
+  const FortalButton.outline({
+    super.key,
+    this.size = .size2,
+    required this.label,
+    this.leadingIcon,
+    this.trailingIcon,
+    this.textBuilder,
+    this.leadingIconBuilder,
+    this.trailingIconBuilder,
+    this.loadingBuilder,
+    this.loading = false,
+    this.enabled = true,
+    this.onPressed,
+    this.onLongPress,
+    this.focusNode,
+    this.autofocus = false,
+    this.enableFeedback = true,
+    this.semanticLabel,
+    this.semanticHint,
+    this.excludeSemantics = false,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = FortalButtonVariant.outline;
+
+  /// Transparent button without a persistent border.
+  const FortalButton.ghost({
+    super.key,
+    this.size = .size2,
+    required this.label,
+    this.leadingIcon,
+    this.trailingIcon,
+    this.textBuilder,
+    this.leadingIconBuilder,
+    this.trailingIconBuilder,
+    this.loadingBuilder,
+    this.loading = false,
+    this.enabled = true,
+    this.onPressed,
+    this.onLongPress,
+    this.focusNode,
+    this.autofocus = false,
+    this.enableFeedback = true,
+    this.semanticLabel,
+    this.semanticHint,
+    this.excludeSemantics = false,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = FortalButtonVariant.ghost;
+
+  final FortalButtonVariant variant;
+
+  final FortalButtonSize size;
+
+  final String label;
+
+  final IconData? leadingIcon;
+
+  final IconData? trailingIcon;
+
+  final RemixButtonTextBuilder? textBuilder;
+
+  final RemixButtonIconBuilder? leadingIconBuilder;
+
+  final RemixButtonIconBuilder? trailingIconBuilder;
+
+  final RemixButtonLoadingBuilder? loadingBuilder;
+
+  final bool loading;
+
+  final bool enabled;
+
+  final VoidCallback? onPressed;
+
+  final VoidCallback? onLongPress;
+
+  final FocusNode? focusNode;
+
+  final bool autofocus;
+
+  final bool enableFeedback;
+
+  final String? semanticLabel;
+
+  final String? semanticHint;
+
+  final bool excludeSemantics;
+
+  final MouseCursor mouseCursor;
+
+  @override
+  Widget build(BuildContext context) {
+    return fortalButtonStyler(variant: this.variant, size: this.size).call(
+      key: this.key,
+      label: this.label,
+      leadingIcon: this.leadingIcon,
+      trailingIcon: this.trailingIcon,
+      textBuilder: this.textBuilder,
+      leadingIconBuilder: this.leadingIconBuilder,
+      trailingIconBuilder: this.trailingIconBuilder,
+      loadingBuilder: this.loadingBuilder,
+      loading: this.loading,
+      enabled: this.enabled,
+      onPressed: this.onPressed,
+      onLongPress: this.onLongPress,
+      focusNode: this.focusNode,
+      autofocus: this.autofocus,
+      enableFeedback: this.enableFeedback,
+      semanticLabel: this.semanticLabel,
+      semanticHint: this.semanticHint,
+      excludeSemantics: this.excludeSemantics,
+      mouseCursor: this.mouseCursor,
+    );
+  }
+}
+
+// **************************************************************************
+// StylerGenerator
+// **************************************************************************
+
+mixin _$RemixButtonStylerMixin on Style<RemixButtonSpec>, Diagnosticable {
+  Prop<StyleSpec<FlexBoxSpec>>? get $container;
+  Prop<StyleSpec<TextSpec>>? get $label;
+  Prop<StyleSpec<IconSpec>>? get $icon;
+  Prop<StyleSpec<RemixSpinnerSpec>>? get $spinner;
+  Prop<IconAlignment>? get $iconAlignment;
+
+  /// Sets the container.
+  RemixButtonStyler container(FlexBoxStyler value) {
+    return merge(RemixButtonStyler(container: value));
+  }
+
+  /// Sets the label.
+  RemixButtonStyler label(TextStyler value) {
+    return merge(RemixButtonStyler(label: value));
+  }
+
+  /// Sets the icon.
+  RemixButtonStyler icon(IconStyler value) {
+    return merge(RemixButtonStyler(icon: value));
+  }
+
+  /// Sets the spinner.
+  RemixButtonStyler spinner(RemixSpinnerStyler value) {
+    return merge(RemixButtonStyler(spinner: value));
+  }
 
   /// Sets the iconAlignment.
   RemixButtonStyler iconAlignment(IconAlignment value) {
@@ -155,19 +353,16 @@ class RemixButtonStyler extends MixStyler<RemixButtonStyler, RemixButtonSpec> {
   }
 
   /// Sets the animation configuration.
-  @override
   RemixButtonStyler animate(AnimationConfig value) {
     return merge(RemixButtonStyler(animation: value));
   }
 
   /// Sets the style variants.
-  @override
   RemixButtonStyler variants(List<VariantStyle<RemixButtonSpec>> value) {
     return merge(RemixButtonStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
-  @override
   RemixButtonStyler wrap(WidgetModifierConfig value) {
     return merge(RemixButtonStyler(modifier: value));
   }
@@ -175,51 +370,6 @@ class RemixButtonStyler extends MixStyler<RemixButtonStyler, RemixButtonSpec> {
   /// Sets the widget modifier.
   RemixButtonStyler modifier(WidgetModifierConfig value) {
     return merge(RemixButtonStyler(modifier: value));
-  }
-
-  RemixButton call({
-    Key? key,
-    required String label,
-    IconData? leadingIcon,
-    IconData? trailingIcon,
-    RemixButtonTextBuilder? textBuilder,
-    RemixButtonIconBuilder? leadingIconBuilder,
-    RemixButtonIconBuilder? trailingIconBuilder,
-    RemixButtonLoadingBuilder? loadingBuilder,
-    bool autofocus = false,
-    bool loading = false,
-    bool enabled = true,
-    bool enableFeedback = true,
-    required VoidCallback? onPressed,
-    VoidCallback? onLongPress,
-    FocusNode? focusNode,
-    String? semanticLabel,
-    String? semanticHint,
-    bool excludeSemantics = false,
-    MouseCursor mouseCursor = SystemMouseCursors.click,
-  }) {
-    return RemixButton(
-      key: key,
-      style: this,
-      label: label,
-      leadingIcon: leadingIcon,
-      trailingIcon: trailingIcon,
-      textBuilder: textBuilder,
-      leadingIconBuilder: leadingIconBuilder,
-      trailingIconBuilder: trailingIconBuilder,
-      loadingBuilder: loadingBuilder,
-      autofocus: autofocus,
-      loading: loading,
-      enabled: enabled,
-      enableFeedback: enableFeedback,
-      onPressed: onPressed,
-      onLongPress: onLongPress,
-      focusNode: focusNode,
-      semanticLabel: semanticLabel,
-      semanticHint: semanticHint,
-      excludeSemantics: excludeSemantics,
-      mouseCursor: mouseCursor,
-    );
   }
 
   /// Merges with another [RemixButtonStyler].

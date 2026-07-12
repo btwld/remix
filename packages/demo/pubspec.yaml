@@ -1,5 +1,5 @@
 name: demo
-description: "A new Flutter project."
+description: Widgetbook catalog for reviewing Remix and Fortal components.
 publish_to: "none"
 version: 1.0.0+1
 resolution: workspace
@@ -14,16 +14,16 @@ dependencies:
   flutter:
     sdk: flutter
 
-  cupertino_icons: ^1.0.2
-  widgetbook_annotation: ^3.9.0
-  widgetbook: ^3.20.2
-  remix: 
+  cupertino_icons: ^1.0.8
+  widgetbook_annotation: ^3.11.0
+  widgetbook: ^3.25.0
+  remix:
     path: ../remix
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  widgetbook_generator: ^3.20.1
+  widgetbook_generator: ^3.24.0
 
 flutter:
   uses-material-design: true

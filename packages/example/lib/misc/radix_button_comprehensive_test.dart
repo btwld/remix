@@ -222,11 +222,11 @@ class _AllVariantsSection extends StatelessWidget {
 
   RemixButtonStyler _getSizedStyle(FortalButtonVariant variant) {
     return switch (size) {
-      1 => fortalButtonStyle(variant: variant, size: .size1),
-      2 => fortalButtonStyle(variant: variant, size: .size2),
-      3 => fortalButtonStyle(variant: variant, size: .size3),
-      4 => fortalButtonStyle(variant: variant, size: .size4),
-      _ => fortalButtonStyle(variant: variant, size: .size2),
+      1 => fortalButtonStyler(variant: variant, size: .size1),
+      2 => fortalButtonStyler(variant: variant, size: .size2),
+      3 => fortalButtonStyler(variant: variant, size: .size3),
+      4 => fortalButtonStyler(variant: variant, size: .size4),
+      _ => fortalButtonStyler(variant: variant, size: .size2),
     };
   }
 
@@ -292,25 +292,25 @@ class _SizeComparisonSection extends StatelessWidget {
       children: [
         const Text('Size 1 (Small)'),
         const SizedBox(height: 8),
-        fortalButtonStyle(
+        fortalButtonStyler(
           variant: .solid,
         ).call(label: 'Size 1', onPressed: () {}),
         const SizedBox(height: 16),
         const Text('Size 2 (Medium - Default)'),
         const SizedBox(height: 8),
-        fortalButtonStyle(
+        fortalButtonStyler(
           variant: .solid,
         ).call(label: 'Size 2', onPressed: () {}),
         const SizedBox(height: 16),
         const Text('Size 3 (Large)'),
         const SizedBox(height: 8),
-        fortalButtonStyle(
+        fortalButtonStyler(
           variant: .solid,
         ).call(label: 'Size 3', onPressed: () {}),
         const SizedBox(height: 16),
         const Text('Size 4 (Extra Large)'),
         const SizedBox(height: 8),
-        fortalButtonStyle(
+        fortalButtonStyler(
           variant: .solid,
         ).call(label: 'Size 4', onPressed: () {}),
       ],
@@ -324,17 +324,17 @@ class _StateTestingSection extends StatelessWidget {
   RemixButtonStyler _getVariantButton(String variantName) {
     switch (variantName) {
       case 'Solid':
-        return fortalButtonStyle(variant: .solid);
+        return fortalButtonStyler(variant: .solid);
       case 'Soft':
-        return fortalButtonStyle(variant: .soft);
+        return fortalButtonStyler(variant: .soft);
       case 'Surface':
-        return fortalButtonStyle(variant: .surface);
+        return fortalButtonStyler(variant: .surface);
       case 'Outline':
-        return fortalButtonStyle(variant: .outline);
+        return fortalButtonStyler(variant: .outline);
       case 'Ghost':
-        return fortalButtonStyle(variant: .ghost);
+        return fortalButtonStyler(variant: .ghost);
       default:
-        return fortalButtonStyle(variant: .solid);
+        return fortalButtonStyler(variant: .solid);
     }
   }
 
@@ -362,16 +362,14 @@ class _StateTestingSection extends StatelessWidget {
               // Normal
               _getVariantButton(variantName).call(
                 label: 'Normal',
-                // ignore: avoid_print
-                onPressed: () => print('Button pressed'),
+                onPressed: () => debugPrint('Button pressed'),
               ),
 
               // Loading
               _getVariantButton(variantName).call(
                 label: 'Loading',
                 loading: true,
-                // ignore: avoid_print
-                onPressed: () => print('Button pressed'),
+                onPressed: () => debugPrint('Button pressed'),
               ),
 
               // Disabled
@@ -410,10 +408,9 @@ class _AccentShowcaseSection extends StatelessWidget {
           accent: accentColor,
           gray: FortalGrayColor.slate,
           brightness: Theme.of(context).brightness,
-          child: fortalButtonStyle(variant: .solid).call(
+          child: fortalButtonStyler(variant: .solid).call(
             label: accentColor.name,
-            // ignore: avoid_print
-            onPressed: () => print('Button pressed'),
+            onPressed: () => debugPrint('Button pressed'),
           ),
         );
       }).toList(),

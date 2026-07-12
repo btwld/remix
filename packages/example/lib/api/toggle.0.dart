@@ -57,17 +57,17 @@ class _ToggleExampleState extends State<ToggleExample> {
     );
   }
 
-  RemixToggleStyle get style {
-    return RemixToggleStyle()
+  RemixToggleStyler get style {
+    return RemixToggleStyler()
         .size(40, 40)
         .iconColor(Colors.grey.shade700)
         .iconSize(22)
         .backgroundColor(Colors.grey.shade100)
         .borderRadiusAll(const Radius.circular(8))
-        .onHovered(RemixToggleStyle().backgroundColor(Colors.grey.shade200))
-        .onPressed(RemixToggleStyle().scale(0.93))
+        .onHovered(RemixToggleStyler().backgroundColor(Colors.grey.shade200))
+        .onPressed(RemixToggleStyler().scale(0.93))
         .onSelected(
-          RemixToggleStyle()
+          RemixToggleStyler()
               .backgroundColor(Colors.deepPurple.shade50)
               .iconColor(Colors.deepPurple),
         )

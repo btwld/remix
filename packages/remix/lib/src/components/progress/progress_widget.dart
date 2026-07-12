@@ -11,16 +11,18 @@ part of 'progress.dart';
 ///   value: 0.5,
 /// )
 /// ```
-class RemixProgress extends StyleWidget<RemixProgressSpec> {
+class RemixProgress extends StatelessWidget {
   const RemixProgress({
-    super.style = const RemixProgressStyle.create(),
-    super.styleSpec,
     super.key,
     required this.value,
+    this.style = const RemixProgressStyler.create(),
+    this.styleSpec,
   }) : assert(
          value >= 0 && value <= 1,
          'Progress value must be between 0 and 1',
        );
+
+  static final styleFrom = RemixProgressStyler.new;
 
   /// The progress value between 0 and 1.
   ///
@@ -28,29 +30,41 @@ class RemixProgress extends StyleWidget<RemixProgressSpec> {
   /// A value of 0 means empty, while 1 means completely filled.
   final double value;
 
-  @override
-  Widget build(BuildContext context, RemixProgressSpec spec) {
-    return Box(
-      styleSpec: spec.container,
-      child: Stack(
-        children: [
-          // Track background
-          Box(styleSpec: spec.track),
-          // Indicator foreground based on value
-          LayoutBuilder(
-            builder: (context, constraints) {
-              final biggestSize = constraints.biggest;
+  /// The style configuration for the progress bar.
+  final RemixProgressStyler style;
 
-              return SizedBox(
-                width: biggestSize.width * value.clamp(0.0, 1.0),
-                child: Box(styleSpec: spec.indicator),
-              );
-            },
+  /// Optional raw style spec that bypasses fluent style resolution.
+  final RemixProgressSpec? styleSpec;
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixStyleSpecBuilder<RemixProgressSpec>(
+      style: style,
+      styleSpec: styleSpec,
+      builder: (context, spec) {
+        return Box(
+          styleSpec: spec.container,
+          child: Stack(
+            children: [
+              // Track background
+              Box(styleSpec: spec.track),
+              // Indicator foreground based on value
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final biggestSize = constraints.biggest;
+
+                  return SizedBox(
+                    width: biggestSize.width * value.clamp(0.0, 1.0),
+                    child: Box(styleSpec: spec.indicator),
+                  );
+                },
+              ),
+              // Track container (for any additional styling)
+              Box(styleSpec: spec.trackContainer),
+            ],
           ),
-          // Track container (for any additional styling)
-          Box(styleSpec: spec.trackContainer),
-        ],
-      ),
+        );
+      },
     );
   }
 }

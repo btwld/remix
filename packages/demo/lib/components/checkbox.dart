@@ -14,7 +14,7 @@ Widget buildCheckboxUseCase(BuildContext context) {
     key: _key,
     child: Scaffold(
       body: Center(
-        child: RemixCheckbox(
+        child: FortalCheckbox(
           enabled: context.knobs.boolean(label: 'Enabled', initialValue: true),
           selected: context.knobs.boolean(label: 'Checked', initialValue: true),
           onChanged: (value) => knobState.updateKnob('Checked', value),
@@ -22,18 +22,16 @@ Widget buildCheckboxUseCase(BuildContext context) {
             label: 'Label',
             initialValue: 'Label',
           ),
-          style: fortalCheckboxStyle(
-            variant: context.knobs.object.dropdown(
-              label: 'variant',
-              options: FortalCheckboxVariant.values,
-              labelBuilder: (variant) => variant.name,
-            ),
-            size: context.knobs.object.dropdown(
-              label: 'size',
-              options: FortalCheckboxSize.values,
-              labelBuilder: (size) => size.name,
-              initialOption: FortalCheckboxSize.size2,
-            ),
+          variant: context.knobs.object.dropdown(
+            label: 'variant',
+            options: FortalCheckboxVariant.values,
+            labelBuilder: (variant) => variant.name,
+          ),
+          size: context.knobs.object.dropdown(
+            label: 'size',
+            options: FortalCheckboxSize.values,
+            labelBuilder: (size) => size.name,
+            initialOption: FortalCheckboxSize.size2,
           ),
         ),
       ),

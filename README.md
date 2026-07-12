@@ -21,14 +21,14 @@ Flutter developers commonly face these challenges when building custom UIs:
 ### The Solution
 
 ```dart
-final style = RemixButtonStyle()
+final style = RemixButtonStyler()
   .paddingX(16)
   .paddingY(10)
   .color(Colors.blue)
   .borderRadiusAll(const Radius.circular(8))
   .animate(AnimationConfig.spring(300.ms))
   .onHovered(
-    RemixButtonStyle()
+    RemixButtonStyler()
         .color(Colors.blue.shade700)
   );
 
@@ -41,13 +41,13 @@ RemixButton(
 
 Or using callable styles:
 ```dart
-final button = RemixButtonStyle()
+final button = RemixButtonStyler()
   .paddingX(16)
   .paddingY(10)
   .color(Colors.blue)
   .borderRadiusAll(const Radius.circular(8))
   .onHovered(
-    RemixButtonStyle()
+    RemixButtonStyler()
         .color(Colors.blue.shade700)
   )
   .animate(AnimationConfig.spring(300.ms));
@@ -66,9 +66,24 @@ With Remix, you get:
 
 ## Quick Start
 
+### Installation
+
+Add Remix to your project:
+
+```bash
+flutter pub add remix
+```
+
+Or add it to your `pubspec.yaml`:
+
+```yaml
+dependencies:
+  remix: ^1.0.0
+```
+
 ### Your First Component
 
-Let's build your first button with Remix. This simple example demonstrates how easy it is to create a fully customizable using Remix's styling API.
+Let's build your first button with Remix. This simple example demonstrates how easy it is to create a fully customizable component using Remix's styling API.
 
 ```dart
 import 'package:flutter/material.dart';
@@ -76,7 +91,7 @@ import 'package:remix/remix.dart';
 
 class MyApp extends StatelessWidget {
 
-  final button = RemixButtonStyle()
+  final button = RemixButtonStyler()
     .paddingX(16)
     .paddingY(10)
     .color(Colors.blue)
@@ -90,7 +105,7 @@ class MyApp extends StatelessWidget {
         body: Center(
           child: button(
             label: 'Click Me',
-            onPressed: () => print('Button pressed!'),
+            onPressed: () => debugPrint('Button pressed!'),
           ),
         ),
       ),
@@ -104,18 +119,18 @@ class MyApp extends StatelessWidget {
 Easily define how components should look in different interaction states.
 
 ```dart
-final button = RemixButtonStyle()
+final button = RemixButtonStyler()
   .paddingX(16)
   .paddingY(10)
   .color(Colors.blue)
   .borderRadiusAll(const Radius.circular(8))
   .label(TextStyler().color(Colors.white))
   .onHovered(
-    RemixButtonStyle()
+    RemixButtonStyler()
         .color(Colors.blue.shade700),
   )
   .onPressed(
-    RemixButtonStyle().wrap(WidgetModifierConfig.scale(x: 0.95, y: 0.95)),
+    RemixButtonStyler().wrap(.scale(x: 0.95, y: 0.95)),
   );
 ```
 
@@ -124,19 +139,19 @@ final button = RemixButtonStyle()
 Make your button style smoothly animate when its state changes by chaining `.animate()` with your state-specific styles. You can use `AnimationConfig.spring` to get natural, spring-based motion.
 
 ```dart
-final style = RemixButtonStyle()
+final style = RemixButtonStyler()
   .paddingX(16)
   .paddingY(10)
   .color(Colors.blue)
   .borderRadiusAll(const Radius.circular(8))
   .animate(AnimationConfig.spring(300.ms))
   .onHovered(
-    RemixButtonStyle()
+    RemixButtonStyler()
         .color(Colors.blue.shade700),
   )
   .onPressed(
-    RemixButtonStyle()
-        .wrap(WidgetModifierConfig.scale(x: 0.95, y: 0.95)),
+    RemixButtonStyler()
+        .wrap(.scale(x: 0.95, y: 0.95)),
   );
 ```
 
@@ -149,7 +164,7 @@ This example animates both the color on hover and the scale on press, creating a
 Create base styles and extend them to build variants:
 
 ```dart
-final baseButtonStyle = RemixButtonStyle()
+final baseButtonStyle = RemixButtonStyler()
     .paddingX(16)
     .paddingY(10)
     .borderRadiusAll(const Radius.circular(8));
@@ -163,13 +178,13 @@ final destructiveButton = baseButtonStyle
     .label(TextStyler().color(Colors.white));
 ```
 
-## The Fortal Styles
+## The Fortal Widgets
 
 While Remix gives you complete freedom to build any design system, it also includes **Fortal Design System** - a comprehensive set of prebuilt styles based on Radix. These styles provide a polished, modern UI out of the box while maintaining full customizability.
 
 ### Quick Start with Fortal
 
-To use Fortal styles, wrap your app with `FortalScope` to provide the design tokens:
+To use Fortal widgets, wrap your app with `FortalScope` to provide the design tokens, then use the generated `Fortal*` widgets. Named constructors select a fixed variant; use the unnamed constructor with `variant:` when the choice is dynamic:
 
 ```dart
 import 'package:flutter/material.dart';
@@ -182,10 +197,9 @@ class MyApp extends StatelessWidget {
       home: Scaffold(
         body: FortalScope(
           child: Center(
-            child: RemixButton(
+            child: FortalButton.solid(
               onPressed: () {},
               label: 'Fortal Button',
-              style: FortalButtonStyle.solid(), // Prebuilt style
             ),
           ),
         ),
@@ -197,14 +211,14 @@ class MyApp extends StatelessWidget {
 
 ### Customizing Fortal Styles
 
-Fortal styles are built using the Remix styling API, so you can easily extend and customize them:
+Generated Fortal widgets call the matching `fortal*Styler` internally. Use those stylers directly when you need a custom Remix widget composition:
 
 ```dart
-final style = FortalButtonStyle.solid()
+final style = fortalButtonStyler(variant: FortalButtonVariant.solid)
   .borderRadiusAll(const Radius.circular(8))
   .paddingX(32)
   .onHovered(
-    RemixButtonStyle().wrap(WidgetModifierConfig.scale(x: 1.05, y: 1.05)),
+    RemixButtonStyler().wrap(.scale(x: 1.05, y: 1.05)),
   );
 ```
 
@@ -222,7 +236,7 @@ Fortal styles are built on a robust token system that includes:
 You can use these tokens directly in your custom styles:
 
 ```dart
-final style = RemixButtonStyle()
+final style = RemixButtonStyler()
   .color(FortalTokens.accent9())
   .paddingAll(FortalTokens.space4())
   .borderRadiusAll(FortalTokens.radius3())
@@ -237,6 +251,7 @@ Remix provides a comprehensive set of production-ready components:
 - **Button** - Clickable actions with full styling control
 - **IconButton** - Icon-based actions
 - **Switch** - Toggle controls
+- **Toggle** - Two-state on/off buttons
 - **Checkbox** - Multiple selection
 - **Radio** - Single selection from a group
 - **Slider** - Continuous value selection

@@ -44,8 +44,8 @@ class _TextfieldExampleState extends State<TextfieldExample> {
     );
   }
 
-  RemixTextFieldStyle get style {
-    return RemixTextFieldStyle()
+  RemixTextFieldStyler get style {
+    return RemixTextFieldStyler()
         .color(Colors.grey.shade800)
         .backgroundColor(Colors.white)
         .borderRadiusAll(const Radius.circular(8.0))
@@ -73,7 +73,7 @@ class _TextfieldExampleState extends State<TextfieldExample> {
           BoxBorderMix.all(BorderSideMix(color: Colors.grey.shade300)),
         )
         .onFocused(
-          RemixTextFieldStyle().border(
+          RemixTextFieldStyler().border(
             BoxBorderMix.all(
               BorderSideMix()
                   .color(Colors.deepPurpleAccent)
@@ -87,11 +87,11 @@ class _TextfieldExampleState extends State<TextfieldExample> {
 ```
 </CodeGroup>
 
-## Fortal styles
+## Fortal widgets
 
-Remix includes Fortal-themed style helpers for this component:
+Remix includes a generated Fortal-themed widget for this component:
 
-<CodeGroup title="Fortal base style" defaultLanguage="dart">
+<CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
@@ -111,18 +111,15 @@ class _FortalTextFieldExampleState extends State<FortalTextFieldExample> {
     return Column(
       spacing: 16,
       children: [
-        RemixTextField(
+        FortalTextField.surface(
           controller: controller,
-          label: 'Email',
-          hintText: 'Enter your email',
-          style: FortalTextFieldStyle.base(),
+          label: 'Surface',
+          hintText: 'Neutral surface field',
         ),
-        RemixTextField(
+        FortalTextField.soft(
           controller: controller,
-          label: 'Password',
-          hintText: 'Enter password',
-          obscureText: true,
-          style: FortalTextFieldStyle.base(),
+          label: 'Soft',
+          hintText: 'Accent soft field',
         ),
       ],
     );
@@ -132,7 +129,7 @@ class _FortalTextFieldExampleState extends State<FortalTextFieldExample> {
 </CodeGroup>
 
 <Info>
-  See the [FortalTextFieldStyle source code](https://github.com/btwld/remix/blob/main/lib/src/components/textfield/fortal_textfield_styles.dart) for all available options.
+  See the [fortalTextFieldStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/textfield/fortal_textfield_styles.dart) for all available options.
 </Info>
 
 ## Constructor
@@ -173,6 +170,7 @@ const RemixTextField({
   DragStartBehavior dragStartBehavior = DragStartBehavior.start,
   bool enableInteractiveSelection = true,
   TextSelectionControls? selectionControls,
+  GestureTapCallback? onTap,
   TapRegionCallback? onTapOutside,
   TapRegionUpCallback? onPressUpOutside,
   bool onTapAlwaysCalled = false,
@@ -196,7 +194,7 @@ const RemixTextField({
   String? semanticLabel,
   String? semanticHint,
   bool excludeSemantics = false,
-  RemixTextFieldStyle style = const RemixTextFieldStyle.create(),
+  RemixTextFieldStyler style = const RemixTextFieldStyler.create(),
   RemixTextFieldSpec? styleSpec,
 })
 ```
@@ -326,6 +324,10 @@ Optional. Whether to enable user interface affordances for changing the text sel
 
 Optional. Optional delegate for building the text selection handles and toolbar.
 
+#### `onTap` → `GestureTapCallback?`
+
+Optional. Called when the text field is tapped.
+
 #### `onTapOutside` → `TapRegionCallback?`
 
 Optional. Called when the user taps outside of this text field.
@@ -438,7 +440,7 @@ Optional. The semantic hint for the text field.
 
 Optional. Whether to exclude child semantics.
 
-#### `style` → `RemixTextFieldStyle`
+#### `style` → `RemixTextFieldStyler`
 
 Optional. The style configuration for the text field.
 
@@ -448,6 +450,10 @@ Optional. The style configuration for the text field.
 #### `color(Color value)`
 
 Sets text color
+
+#### `text(TextStyler value)`
+
+Sets editable text style using a TextStyler.
 
 #### `backgroundColor(Color value)`
 
@@ -480,6 +486,38 @@ Sets height
 #### `cursorColor(Color value)`
 
 Sets cursor color
+
+#### `cursorWidth(double value)`
+
+Sets cursor width.
+
+#### `cursorHeight(double value)`
+
+Sets cursor height.
+
+#### `cursorRadius(Radius value)`
+
+Sets cursor radius.
+
+#### `cursorOpacityAnimates(bool value)`
+
+Controls whether cursor opacity animates.
+
+#### `selectionHeightStyle(BoxHeightStyle value)`
+
+Sets selection box height behavior.
+
+#### `selectionWidthStyle(BoxWidthStyle value)`
+
+Sets selection box width behavior.
+
+#### `scrollPadding(EdgeInsets value)`
+
+Sets the padding used when scrolling the field into view.
+
+#### `keyboardAppearance(Brightness value)`
+
+Sets the platform keyboard appearance.
 
 #### `hintColor(Color value)`
 
@@ -521,13 +559,25 @@ Sets helper text
 
 Sets label text
 
-#### `animate(AnimationConfig animation)`
+#### `animate(AnimationConfig value)`
 
-Sets animation
+Sets animation configuration.
+
+#### `variants(List<VariantStyle<RemixTextFieldSpec>> value)`
+
+Sets style variants.
 
 #### `wrap(WidgetModifierConfig value)`
 
 Applies widget modifiers such as clipping, opacity, or scaling.
+
+#### `modifier(WidgetModifierConfig value)`
+
+Sets the widget modifier.
+
+#### `call({ ... })`
+
+Creates a RemixTextField widget with this style applied.
 
 #### `foregroundDecoration(DecorationMix value)`
 
@@ -541,7 +591,7 @@ Applies a matrix transformation to the component.
 
 Configures the flex layout properties.
 
-#### `labelTextStyle(TextStyleMix value)`
+#### `labelStyle(TextStyleMix value)`
 
 Sets label/text style using TextStyleMix directly
 
@@ -584,4 +634,3 @@ Sets label/text word spacing
 #### `labelDecorationColor(Color value)`
 
 Sets label/text decoration color
-

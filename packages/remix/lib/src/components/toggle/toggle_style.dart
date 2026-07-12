@@ -1,14 +1,15 @@
 part of 'toggle.dart';
 
+/// Style configuration for [RemixToggle] container, label, icon, and states.
 @MixableStyler()
-class RemixToggleStyle
-    extends RemixFlexContainerStyle<RemixToggleSpec, RemixToggleStyle>
+class RemixToggleStyler
+    extends RemixFlexContainerStyler<RemixToggleSpec, RemixToggleStyler>
     with
-        LabelStyleMixin<RemixToggleStyle>,
-        IconStyleMixin<RemixToggleStyle>,
-        SelectedWidgetStateVariantMixin<RemixToggleSpec, RemixToggleStyle>,
+        LabelStyleMixin<RemixToggleStyler>,
+        IconStyleMixin<RemixToggleStyler>,
+        SelectedWidgetStateVariantMixin<RemixToggleSpec, RemixToggleStyler>,
         Diagnosticable,
-        _$RemixToggleStyleMixin {
+        _$RemixToggleStylerMixin {
   @MixableField(setterType: FlexBoxStyler)
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   @MixableField(setterType: TextStyler)
@@ -16,7 +17,7 @@ class RemixToggleStyle
   @MixableField(setterType: IconStyler)
   final Prop<StyleSpec<IconSpec>>? $icon;
 
-  const RemixToggleStyle.create({
+  const RemixToggleStyler.create({
     Prop<StyleSpec<FlexBoxSpec>>? container,
     Prop<StyleSpec<TextSpec>>? label,
     Prop<StyleSpec<IconSpec>>? icon,
@@ -27,7 +28,7 @@ class RemixToggleStyle
        $label = label,
        $icon = icon;
 
-  RemixToggleStyle({
+  RemixToggleStyler({
     FlexBoxStyler? container,
     TextStyler? label,
     IconStyler? icon,
@@ -44,40 +45,41 @@ class RemixToggleStyle
        );
 
   /// Sets the background color.
-  RemixToggleStyle backgroundColor(Color value) {
+  RemixToggleStyler backgroundColor(Color value) {
     return merge(
-      RemixToggleStyle(
+      RemixToggleStyler(
         container: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
       ),
     );
   }
 
   /// Sets the foreground color (label and icon).
-  RemixToggleStyle foregroundColor(Color value) {
+  RemixToggleStyler foregroundColor(Color value) {
     return labelColor(value).iconColor(value);
   }
 
   /// Sets the shape of the toggle.
-  RemixToggleStyle shape(ShapeBorderMix value) {
+  RemixToggleStyler shape(ShapeBorderMix value) {
     return merge(
-      RemixToggleStyle(
+      RemixToggleStyler(
         container: FlexBoxStyler(decoration: ShapeDecorationMix(shape: value)),
       ),
     );
   }
 
   /// Sets item spacing between icon and label.
-  RemixToggleStyle spacing(double value) {
-    return merge(RemixToggleStyle(container: FlexBoxStyler(spacing: value)));
+  RemixToggleStyler spacing(double value) {
+    return merge(RemixToggleStyler(container: FlexBoxStyler(spacing: value)));
   }
 
   /// Creates a [RemixToggle] widget with this style applied.
   RemixToggle call({
+    Key? key,
     required bool selected,
-    required ValueChanged<bool> onChanged,
+    ValueChanged<bool>? onChanged,
+    bool enabled = true,
     String? label,
     IconData? icon,
-    bool enabled = true,
     bool enableFeedback = true,
     FocusNode? focusNode,
     bool autofocus = false,
@@ -85,62 +87,65 @@ class RemixToggleStyle
     MouseCursor mouseCursor = SystemMouseCursors.click,
   }) {
     return RemixToggle(
-      enabled: enabled,
+      key: key,
       selected: selected,
       onChanged: onChanged,
+      enabled: enabled,
       label: label,
       icon: icon,
-      style: this,
       enableFeedback: enableFeedback,
       focusNode: focusNode,
       autofocus: autofocus,
       semanticLabel: semanticLabel,
       mouseCursor: mouseCursor,
+      style: this,
     );
   }
 
   /// Sets container alignment.
   @override
-  RemixToggleStyle alignment(Alignment value) {
-    return merge(RemixToggleStyle(container: FlexBoxStyler(alignment: value)));
+  RemixToggleStyler alignment(Alignment value) {
+    return merge(RemixToggleStyler(container: FlexBoxStyler(alignment: value)));
   }
 
   @override
-  RemixToggleStyle padding(EdgeInsetsGeometryMix value) {
-    return merge(RemixToggleStyle(container: FlexBoxStyler(padding: value)));
+  RemixToggleStyler padding(EdgeInsetsGeometryMix value) {
+    return merge(RemixToggleStyler(container: FlexBoxStyler(padding: value)));
   }
 
   @override
-  RemixToggleStyle margin(EdgeInsetsGeometryMix value) {
-    return merge(RemixToggleStyle(container: FlexBoxStyler(margin: value)));
+  RemixToggleStyler margin(EdgeInsetsGeometryMix value) {
+    return merge(RemixToggleStyler(container: FlexBoxStyler(margin: value)));
   }
 
   @override
-  RemixToggleStyle decoration(DecorationMix value) {
-    return merge(RemixToggleStyle(container: FlexBoxStyler(decoration: value)));
-  }
-
-  @override
-  RemixToggleStyle constraints(BoxConstraintsMix value) {
+  RemixToggleStyler decoration(DecorationMix value) {
     return merge(
-      RemixToggleStyle(container: FlexBoxStyler(constraints: value)),
+      RemixToggleStyler(container: FlexBoxStyler(decoration: value)),
     );
   }
 
   @override
-  RemixToggleStyle foregroundDecoration(DecorationMix value) {
+  RemixToggleStyler constraints(BoxConstraintsMix value) {
     return merge(
-      RemixToggleStyle(container: FlexBoxStyler(foregroundDecoration: value)),
+      RemixToggleStyler(container: FlexBoxStyler(constraints: value)),
     );
   }
 
   @override
-  RemixToggleStyle transform(
+  RemixToggleStyler foregroundDecoration(DecorationMix value) {
+    return merge(
+      RemixToggleStyler(container: FlexBoxStyler(foregroundDecoration: value)),
+    );
+  }
+
+  @override
+  RemixToggleStyler transform(
     Matrix4 value, {
     AlignmentGeometry alignment = Alignment.center,
   }) {
     return merge(
-      RemixToggleStyle(
+      RemixToggleStyler(
         container: FlexBoxStyler(
           transform: value,
           transformAlignment: alignment,
@@ -150,7 +155,7 @@ class RemixToggleStyle
   }
 
   @override
-  RemixToggleStyle flex(FlexStyler value) {
-    return merge(RemixToggleStyle(container: FlexBoxStyler().flex(value)));
+  RemixToggleStyler flex(FlexStyler value) {
+    return merge(RemixToggleStyler(container: FlexBoxStyler().flex(value)));
   }
 }

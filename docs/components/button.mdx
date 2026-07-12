@@ -45,11 +45,11 @@ class ButtonExample extends StatelessWidget {
     );
   }
 
-  RemixButtonStyle get destructiveStyle {
-    return RemixButtonStyle()
+  RemixButtonStyler get destructiveStyle {
+    return RemixButtonStyler()
         .paddingX(16)
         .paddingY(10)
-        .color(const Color(0xFF4D1919))
+        .backgroundColor(const Color(0xFF4D1919))
         .shadow(
           BoxShadowMix().color(Colors.redAccent).blurRadius(10).spreadRadius(0),
         )
@@ -62,23 +62,23 @@ class ButtonExample extends StatelessWidget {
               .topRight(const Radius.circular(12)),
           side: BorderSideMix.width(1).color(Colors.redAccent),
         )
-        .wrap(WidgetModifierConfig.scale(x: 1, y: 1))
+        .wrap(.scale(x: 1, y: 1))
         .onPressed(
-          RemixButtonStyle().wrap(WidgetModifierConfig.scale(x: 0.90, y: 0.90)),
+          RemixButtonStyler().wrap(.scale(x: 0.90, y: 0.90)),
         )
         .onHovered(
-          RemixButtonStyle()
-              .color(const Color(0xFF732D2D))
+          RemixButtonStyler()
+              .backgroundColor(const Color(0xFF732D2D))
               .animate(AnimationConfig.spring(300.ms)),
         )
         .onFocused(
-          RemixButtonStyle().color(const Color(0xFF732D2D)),
+          RemixButtonStyler().backgroundColor(const Color(0xFF732D2D)),
         );
   }
 
-  RemixButtonStyle get successStyle {
+  RemixButtonStyler get successStyle {
     return destructiveStyle
-        .color(const Color.fromARGB(255, 15, 61, 15))
+        .backgroundColor(const Color.fromARGB(255, 15, 61, 15))
         .label(TextStyler().uppercase().color(Colors.greenAccent))
         .shapeBeveledRectangle(
           side: BorderSideMix().color(Colors.greenAccent),
@@ -90,19 +90,19 @@ class ButtonExample extends StatelessWidget {
               .spreadRadius(0),
         )
         .onHovered(
-          RemixButtonStyle().color(const Color(0xFF357857)),
+          RemixButtonStyler().backgroundColor(const Color(0xFF357857)),
         )
         .onFocused(
-          RemixButtonStyle().color(const Color(0xFF357857)),
+          RemixButtonStyler().backgroundColor(const Color(0xFF357857)),
         );
   }
 }
 ```
 </CodeGroup>
 
-## Fortal styles
+## Fortal widgets
 
-Remix includes Fortal-themed style helpers for this component:
+Remix includes a generated Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
@@ -118,34 +118,29 @@ class FortalButtonExample extends StatelessWidget {
       spacing: 16,
       children: [
         // Solid variant - High emphasis, primary actions
-        RemixButton(
+        FortalButton.solid(
           label: 'Solid Button',
           onPressed: () {},
-          style: FortalButtonStyle.solid(),
         ),
         // Soft variant - Medium emphasis, secondary actions
-        RemixButton(
+        FortalButton.soft(
           label: 'Soft Button',
           onPressed: () {},
-          style: FortalButtonStyle.soft(),
         ),
         // Surface variant - Subtle emphasis with border
-        RemixButton(
+        FortalButton.surface(
           label: 'Surface Button',
           onPressed: () {},
-          style: FortalButtonStyle.surface(),
         ),
         // Outline variant - Low emphasis, tertiary actions
-        RemixButton(
+        FortalButton.outline(
           label: 'Outline Button',
           onPressed: () {},
-          style: FortalButtonStyle.outline(),
         ),
         // Ghost variant - Minimal styling, inline actions
-        RemixButton(
+        FortalButton.ghost(
           label: 'Ghost Button',
           onPressed: () {},
-          style: FortalButtonStyle.ghost(),
         ),
       ],
     );
@@ -155,7 +150,7 @@ class FortalButtonExample extends StatelessWidget {
 </CodeGroup>
 
 <Info>
-  See the [FortalButtonStyle source code](https://github.com/btwld/remix/blob/main/lib/src/components/button/fortal_button_styles.dart) for all available options.
+  See the [fortalButtonStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/button/fortal_button_styles.dart) for all available options.
 </Info>
 
 ## Constructor
@@ -172,7 +167,7 @@ const RemixButton({
   RemixButtonLoadingBuilder? loadingBuilder,
   bool loading = false,
   bool enabled = true,
-  required VoidCallback? onPressed,
+  VoidCallback? onPressed,
   VoidCallback? onLongPress,
   FocusNode? focusNode,
   bool autofocus = false,
@@ -181,7 +176,7 @@ const RemixButton({
   String? semanticHint,
   bool excludeSemantics = false,
   MouseCursor mouseCursor = SystemMouseCursors.click,
-  RemixButtonStyle style = const RemixButtonStyle.create(),
+  RemixButtonStyler style = const RemixButtonStyler.create(),
   RemixButtonSpec? styleSpec,
 })
 ```
@@ -191,7 +186,7 @@ const RemixButton({
 ## Properties
 ### Widget Properties
 
-#### `style` → `RemixButtonStyle`
+#### `style` → `RemixButtonStyler`
 
 Optional. The style configuration for the button. Customize colors, sizing, spacing, and state-based styling.
 
@@ -237,7 +232,7 @@ Optional. Whether the button should automatically request focus when it is creat
 
 #### `loading` → `bool`
 
-Optional. Whether the button is in a loading state.  When true, the button will display a spinner and become non-interactive. The spinner can be customized via [spinnerBuilder].
+Optional. Whether the button is in a loading state.  When true, the button will display a spinner and become non-interactive. The spinner can be customized via [loadingBuilder].
 
 #### `enabled` → `bool`
 
@@ -249,7 +244,7 @@ Optional. Whether to provide feedback when the button is pressed.  Defaults to t
 
 #### `onPressed` → `VoidCallback?`
 
-**Required**. Callback function called when the button is pressed.  If null, the button will be considered disabled.
+Optional. Callback function called when the button is pressed. If null, the button will be considered disabled.
 
 #### `onLongPress` → `VoidCallback?`
 
@@ -278,6 +273,10 @@ Optional. Cursor when hovering over the button.  Defaults to [SystemMouseCursors
 
 ### Style Methods
 
+#### `container(FlexBoxStyler value)`
+
+Configures the button container style.
+
 #### `label(TextStyler value)`
 
 Configures the label text style using a TextStyler.
@@ -286,9 +285,14 @@ Configures the label text style using a TextStyler.
 
 Configures the icon style using an IconStyler.
 
-#### `spinner(RemixSpinnerStyle value)`
+#### `spinner(RemixSpinnerStyler value)`
 
 Configures the loading spinner style.
+
+#### `iconAlignment(IconAlignment value)`
+
+Overrides placement when the button has exactly one icon. Buttons with both
+`leadingIcon` and `trailingIcon` keep those explicit positions.
 
 #### `padding(EdgeInsetsGeometryMix value)`
 
@@ -314,9 +318,13 @@ Sets item spacing between icon and label (Flex spacing)
 
 Sets constraints
 
-#### `animate(AnimationConfig animation)`
+#### `animate(AnimationConfig value)`
 
 Configures implicit animation for style transitions.
+
+#### `variants(List<VariantStyle<RemixButtonSpec>> value)`
+
+Sets style variants.
 
 #### `flex(FlexStyler value)`
 
@@ -334,11 +342,27 @@ Applies a matrix transformation to the component.
 
 Sets background color.
 
+#### `backgroundColor(Color value)`
+
+Sets background color.
+
+#### `foregroundColor(Color value)`
+
+Sets the label and icon color.
+
 #### `wrap(WidgetModifierConfig value)`
 
 Applies widget modifiers such as clipping, opacity, or scaling.
 
-#### `labelTextStyle(TextStyleMix value)`
+#### `modifier(WidgetModifierConfig value)`
+
+Sets the widget modifier.
+
+#### `call({ ... })`
+
+Creates a RemixButton widget with this style applied.
+
+#### `labelStyle(TextStyleMix value)`
 
 Sets label/text style using TextStyleMix directly
 
@@ -461,4 +485,3 @@ Sets spinner animation to normal (1000ms)
 #### `spinnerSlow()`
 
 Sets spinner animation to slow (1500ms)
-

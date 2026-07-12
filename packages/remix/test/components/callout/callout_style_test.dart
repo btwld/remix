@@ -5,12 +5,12 @@ import 'package:remix/remix.dart';
 import '../../helpers/test_methods.dart';
 
 void main() {
-  group('RemixCalloutStyle', () {
+  group('RemixCalloutStyler', () {
     group('Constructors', () {
       test('default constructor creates valid instance', () {
-        const style = RemixCalloutStyle.create();
+        const style = RemixCalloutStyler.create();
         expect(style, isNotNull);
-        expect(style, isA<RemixCalloutStyle>());
+        expect(style, isA<RemixCalloutStyler>());
       });
 
       test('create constructor with all parameters', () {
@@ -18,32 +18,32 @@ void main() {
         final text = Prop.maybeMix(TextStyler());
         final icon = Prop.maybeMix(IconStyler());
 
-        final style = RemixCalloutStyle.create(
+        final style = RemixCalloutStyler.create(
           container: container,
           text: text,
           icon: icon,
         );
 
         expect(style, isNotNull);
-        expect(style, isA<RemixCalloutStyle>());
+        expect(style, isA<RemixCalloutStyler>());
       });
 
       test('constructor with styler parameters', () {
-        final style = RemixCalloutStyle(
+        final style = RemixCalloutStyler(
           container: FlexBoxStyler(padding: EdgeInsetsGeometryMix.all(16.0)),
           text: TextStyler(style: TextStyleMix(color: Colors.blue)),
           icon: IconStyler(color: Colors.green),
         );
 
         expect(style, isNotNull);
-        expect(style, isA<RemixCalloutStyle>());
+        expect(style, isA<RemixCalloutStyler>());
       });
     });
 
     group('Style Methods', () {
       styleMethodTest(
         'padding sets container padding',
-        initial: RemixCalloutStyle(),
+        initial: RemixCalloutStyler(),
         modify: (style) => style.padding(EdgeInsetsGeometryMix.all(20.0)),
         expect: (style) {
           expect(
@@ -59,7 +59,7 @@ void main() {
 
       styleMethodTest(
         'icon sets icon styler',
-        initial: RemixCalloutStyle(),
+        initial: RemixCalloutStyler(),
         modify: (style) => style.icon(IconStyler(color: Colors.red)),
         expect: (style) {
           expect(
@@ -71,7 +71,7 @@ void main() {
 
       styleMethodTest(
         'margin sets container margin',
-        initial: RemixCalloutStyle(),
+        initial: RemixCalloutStyler(),
         modify: (style) => style.margin(EdgeInsetsGeometryMix.all(8.0)),
         expect: (style) {
           expect(
@@ -87,7 +87,7 @@ void main() {
 
       styleMethodTest(
         'backgroundColor sets container background color',
-        initial: RemixCalloutStyle(),
+        initial: RemixCalloutStyler(),
         modify: (style) => style.backgroundColor(Colors.yellow),
         expect: (style) {
           expect(
@@ -105,7 +105,7 @@ void main() {
 
       styleMethodTest(
         'foregroundColor sets both icon and text color',
-        initial: RemixCalloutStyle(),
+        initial: RemixCalloutStyler(),
         modify: (style) => style.foregroundColor(Colors.red),
         expect: (style) {
           expect(
@@ -123,7 +123,7 @@ void main() {
 
       styleMethodTest(
         'shape sets container shape decoration',
-        initial: RemixCalloutStyle(),
+        initial: RemixCalloutStyler(),
         modify: (style) => style.shape(
           RoundedRectangleBorderMix(
             borderRadius: BorderRadiusGeometryMix.circular(16.0),
@@ -149,7 +149,7 @@ void main() {
 
       styleMethodTest(
         'borderRadius sets container border radius',
-        initial: RemixCalloutStyle(),
+        initial: RemixCalloutStyler(),
         modify: (style) =>
             style.borderRadius(BorderRadiusGeometryMix.circular(12.0)),
         expect: (style) {
@@ -170,7 +170,7 @@ void main() {
 
       styleMethodTest(
         'decoration sets container decoration',
-        initial: RemixCalloutStyle(),
+        initial: RemixCalloutStyler(),
         modify: (style) => style.decoration(
           BoxDecorationMix(
             color: Colors.purple,
@@ -196,7 +196,7 @@ void main() {
 
       styleMethodTest(
         'alignment sets container alignment',
-        initial: RemixCalloutStyle(),
+        initial: RemixCalloutStyler(),
         modify: (style) => style.alignment(Alignment.centerRight),
         expect: (style) {
           expect(
@@ -210,7 +210,7 @@ void main() {
 
       styleMethodTest(
         'spacing sets flex spacing',
-        initial: RemixCalloutStyle(),
+        initial: RemixCalloutStyler(),
         modify: (style) => style.spacing(16.0),
         expect: (style) {
           expect(
@@ -222,7 +222,7 @@ void main() {
 
       styleMethodTest(
         'iconColor sets icon color',
-        initial: RemixCalloutStyle(),
+        initial: RemixCalloutStyler(),
         modify: (style) => style.iconColor(Colors.orange),
         expect: (style) {
           expect(
@@ -234,7 +234,7 @@ void main() {
 
       styleMethodTest(
         'textColor sets text color',
-        initial: RemixCalloutStyle(),
+        initial: RemixCalloutStyler(),
         modify: (style) => style.textColor(Colors.indigo),
         expect: (style) {
           expect(
@@ -250,7 +250,7 @@ void main() {
 
       styleMethodTest(
         'variants sets variant styles',
-        initial: RemixCalloutStyle(),
+        initial: RemixCalloutStyler(),
         modify: (style) => style.variants([]),
         expect: (style) {
           expect(style.$variants, equals([]));
@@ -259,7 +259,7 @@ void main() {
 
       styleMethodTest(
         'wrap sets widget modifier config',
-        initial: RemixCalloutStyle(),
+        initial: RemixCalloutStyler(),
         modify: (style) => style.wrap(WidgetModifierConfig()),
         expect: (style) {
           expect(style.$modifier, equals(WidgetModifierConfig()));
@@ -268,7 +268,7 @@ void main() {
 
       styleMethodTest(
         'animate sets animation config',
-        initial: RemixCalloutStyle(),
+        initial: RemixCalloutStyler(),
         modify: (style) =>
             style.animate(AnimationConfig.linear(Duration(milliseconds: 300))),
         expect: (style) {
@@ -281,7 +281,7 @@ void main() {
 
       styleMethodTest(
         'constraints sets container constraints',
-        initial: RemixCalloutStyle(),
+        initial: RemixCalloutStyler(),
         modify: (style) => style.constraints(
           BoxConstraintsMix(minWidth: 200.0, minHeight: 50.0),
         ),
@@ -304,7 +304,7 @@ void main() {
 
       styleMethodTest(
         'foregroundDecoration sets foreground decoration',
-        initial: RemixCalloutStyle(),
+        initial: RemixCalloutStyler(),
         modify: (style) => style.foregroundDecoration(
           BoxDecorationMix(color: Colors.cyan.withValues(alpha: 0.3)),
         ),
@@ -326,7 +326,7 @@ void main() {
 
       styleMethodTest(
         'transform sets container transform',
-        initial: RemixCalloutStyle(),
+        initial: RemixCalloutStyler(),
         modify: (style) => style.transform(Matrix4.rotationZ(0.2)),
         expect: (style) {
           expect(
@@ -345,7 +345,7 @@ void main() {
 
       styleMethodTest(
         'flex sets flex styler',
-        initial: RemixCalloutStyle(),
+        initial: RemixCalloutStyler(),
         modify: (style) => style.flex(
           FlexStyler(
             direction: Axis.vertical,
@@ -372,7 +372,7 @@ void main() {
 
     group('Core Methods', () {
       testWidgets('resolve method returns StyleSpec', (tester) async {
-        const style = RemixCalloutStyle.create();
+        const style = RemixCalloutStyler.create();
         await tester.pumpWidget(
           MaterialApp(
             home: Builder(
@@ -388,23 +388,23 @@ void main() {
       });
 
       test('merge with null returns style equal to original', () {
-        const originalStyle = RemixCalloutStyle.create();
+        const originalStyle = RemixCalloutStyler.create();
         final mergedStyle = originalStyle.merge(null);
         expect(mergedStyle, equals(originalStyle));
       });
 
       test('merge with other style combines properties', () {
-        const style1 = RemixCalloutStyle.create();
-        final style2 = RemixCalloutStyle();
+        const style1 = RemixCalloutStyler.create();
+        final style2 = RemixCalloutStyler();
 
         final merged = style1.merge(style2);
         expect(merged, isNot(same(style1)));
         expect(merged, isNot(same(style2)));
-        expect(merged, isA<RemixCalloutStyle>());
+        expect(merged, isA<RemixCalloutStyler>());
       });
 
       test('props list contains all properties', () {
-        const style = RemixCalloutStyle.create();
+        const style = RemixCalloutStyler.create();
         expect(style.props, hasLength(6));
         expect(style.props, contains(style.$container));
         expect(style.props, contains(style.$text));
@@ -417,21 +417,21 @@ void main() {
 
     group('Equality', () {
       test('identical styles are equal', () {
-        const style1 = RemixCalloutStyle.create();
-        const style2 = RemixCalloutStyle.create();
+        const style1 = RemixCalloutStyler.create();
+        const style2 = RemixCalloutStyler.create();
         expect(style1, equals(style2));
         expect(style1.hashCode, equals(style2.hashCode));
       });
 
       test('styles with different properties are not equal', () {
-        const style1 = RemixCalloutStyle.create();
-        final style2 = RemixCalloutStyle();
+        const style1 = RemixCalloutStyler.create();
+        final style2 = RemixCalloutStyler();
         expect(style1, equals(style2));
       });
 
       test('styles with same properties are equal', () {
-        final style1 = RemixCalloutStyle();
-        final style2 = RemixCalloutStyle();
+        final style1 = RemixCalloutStyler();
+        final style2 = RemixCalloutStyler();
         expect(style1, equals(style2));
         expect(style1.hashCode, equals(style2.hashCode));
       });

@@ -1,22 +1,40 @@
 part of 'slider.dart';
 
-enum FortalSliderSize { size1, size2, size3 }
+/// Fortal slider size presets.
+enum FortalSliderSize {
+  /// Compact slider with a 13 px thumb and 6 px track.
+  size1,
 
-enum FortalSliderVariant { surface, soft }
+  /// Default slider with a 16 px thumb and 8 px track.
+  size2,
 
-@MixWidget()
-RemixSliderStyle fortalSliderStyle({
+  /// Large slider with a 19 px thumb and 10 px track.
+  size3,
+}
+
+/// Fortal slider color variants.
+enum FortalSliderVariant {
+  /// Neutral track with the active accent indicator.
+  surface,
+
+  /// Softer accent treatment for lower-emphasis controls.
+  soft,
+}
+
+/// Fortal-themed preset for [RemixSlider].
+@MixWidget(name: 'FortalSlider')
+RemixSliderStyler fortalSliderStyler({
   FortalSliderVariant variant = .surface,
   FortalSliderSize size = .size2,
 }) {
   return switch (variant) {
-    .surface => _fortalSliderSurfaceStyle(size),
-    .soft => _fortalSliderSoftStyle(size),
+    .surface => _fortalSliderSurfaceStyler(size),
+    .soft => _fortalSliderSoftStyler(size),
   };
 }
 
-RemixSliderStyle _fortalSliderBaseStyle(FortalSliderSize size) {
-  return RemixSliderStyle()
+RemixSliderStyler _fortalSliderBaseStyler(FortalSliderSize size) {
+  return RemixSliderStyler()
       .thumb(
         BoxStyler()
             .color(Colors.white)
@@ -32,46 +50,46 @@ RemixSliderStyle _fortalSliderBaseStyle(FortalSliderSize size) {
                   .color(FortalTokens.gray7()),
             ),
       )
-      .merge(_fortalSliderSizeStyle(size));
+      .merge(_fortalSliderSizeStyler(size));
 }
 
-RemixSliderStyle _fortalSliderSurfaceStyle([FortalSliderSize size = .size2]) {
-  return _fortalSliderBaseStyle(size)
+RemixSliderStyler _fortalSliderSurfaceStyler([FortalSliderSize size = .size2]) {
+  return _fortalSliderBaseStyler(size)
       .trackColor(FortalTokens.gray3())
       .rangeColor(FortalTokens.accentIndicator())
       .onDisabled(
-        RemixSliderStyle()
+        RemixSliderStyler()
             .trackColor(FortalTokens.accentTrack())
             .rangeColor(FortalTokens.accentIndicator())
             .thumbColor(FortalTokens.colorSurface()),
       );
 }
 
-RemixSliderStyle _fortalSliderSoftStyle([FortalSliderSize size = .size2]) {
-  return _fortalSliderBaseStyle(size)
+RemixSliderStyler _fortalSliderSoftStyler([FortalSliderSize size = .size2]) {
+  return _fortalSliderBaseStyler(size)
       .trackColor(FortalTokens.gray4())
       .rangeColor(FortalTokens.accent6())
       .onDisabled(
-        RemixSliderStyle()
+        RemixSliderStyler()
             .trackColor(FortalTokens.accent4())
             .rangeColor(FortalTokens.accent9())
             .thumbColor(FortalTokens.accent9()),
       );
 }
 
-RemixSliderStyle _fortalSliderSizeStyle(FortalSliderSize size) {
+RemixSliderStyler _fortalSliderSizeStyler(FortalSliderSize size) {
   return switch (size) {
-    .size1 => RemixSliderStyle(
+    .size1 => RemixSliderStyler(
       thumb: BoxStyler().size(13.0, 13.0),
       trackWidth: 6.0,
       rangeWidth: 6.0,
     ),
-    .size2 => RemixSliderStyle(
+    .size2 => RemixSliderStyler(
       thumb: BoxStyler().size(16.0, 16.0),
       trackWidth: 8.0,
       rangeWidth: 8.0,
     ),
-    .size3 => RemixSliderStyle(
+    .size3 => RemixSliderStyler(
       thumb: BoxStyler().size(19.0, 19.0),
       trackWidth: 10.0,
       rangeWidth: 10.0,

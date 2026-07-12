@@ -173,6 +173,23 @@ void main() {
         expect(wasChanged, isFalse);
       });
 
+      testWidgets('omitted onChanged disables interaction', (tester) async {
+        await tester.pumpRemixApp(
+          const RemixToggle(selected: false, label: 'Bold'),
+        );
+        await tester.pumpAndSettle();
+
+        final nakedToggle = tester.widget<NakedToggle>(
+          find.byType(NakedToggle),
+        );
+        expect(nakedToggle.onChanged, isNull);
+
+        await tester.tap(find.byType(RemixToggle));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(RemixToggle), findsOneWidget);
+      });
+
       testWidgets('enableFeedback controls haptic feedback', (tester) async {
         await tester.pumpRemixApp(
           RemixToggle(
@@ -286,7 +303,7 @@ void main() {
 
     group('Styling', () {
       testWidgets('applies padding styling', (tester) async {
-        final customStyle = RemixToggleStyle().padding(
+        final customStyle = RemixToggleStyler().padding(
           EdgeInsetsGeometryMix.all(16.0),
         );
 
@@ -304,7 +321,7 @@ void main() {
       });
 
       testWidgets('applies multiple style methods', (tester) async {
-        final customStyle = RemixToggleStyle()
+        final customStyle = RemixToggleStyler()
             .backgroundColor(Colors.blue)
             .labelColor(Colors.white)
             .iconColor(Colors.white)
@@ -328,7 +345,7 @@ void main() {
       });
 
       testWidgets('applies animation config', (tester) async {
-        final customStyle = RemixToggleStyle().animate(
+        final customStyle = RemixToggleStyler().animate(
           AnimationConfig.linear(const Duration(milliseconds: 200)),
         );
 
@@ -353,7 +370,7 @@ void main() {
             selected: false,
             onChanged: (value) {},
             label: 'Bold',
-            style: fortalToggleStyle(),
+            style: fortalToggleStyler(),
           ),
         );
         await tester.pumpAndSettle();
@@ -367,7 +384,7 @@ void main() {
             selected: false,
             onChanged: (value) {},
             label: 'Bold',
-            style: fortalToggleStyle(variant: .outline),
+            style: fortalToggleStyler(variant: .outline),
           ),
         );
         await tester.pumpAndSettle();
@@ -382,7 +399,7 @@ void main() {
               selected: false,
               onChanged: (value) {},
               label: 'Bold',
-              style: fortalToggleStyle(size: size),
+              style: fortalToggleStyler(size: size),
             ),
           );
           await tester.pumpAndSettle();
@@ -399,7 +416,7 @@ void main() {
                 selected: false,
                 onChanged: (value) {},
                 label: 'Bold',
-                style: fortalToggleStyle(variant: variant, size: size),
+                style: fortalToggleStyler(variant: variant, size: size),
               ),
             );
             await tester.pumpAndSettle();
@@ -429,6 +446,37 @@ void main() {
     });
 
     group('Edge Cases', () {
+      testWidgets('applies raw styleSpec when provided', (tester) async {
+        const spec = RemixToggleSpec(
+          container: StyleSpec(
+            spec: FlexBoxSpec(
+              box: StyleSpec(
+                spec: BoxSpec(decoration: BoxDecoration(color: Colors.red)),
+              ),
+            ),
+          ),
+        );
+
+        await tester.pumpRemixApp(
+          RemixToggle(
+            selected: false,
+            onChanged: (value) {},
+            label: 'Bold',
+            styleSpec: spec,
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final decorations = tester
+            .widgetList<RowBox>(find.byType(RowBox))
+            .map((box) => box.styleSpec?.spec.box?.spec.decoration);
+
+        expect(
+          decorations,
+          contains(equals(const BoxDecoration(color: Colors.red))),
+        );
+      });
+
       testWidgets('handles rapid toggling', (tester) async {
         bool toggleValue = false;
 

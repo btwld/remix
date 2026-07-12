@@ -1,9 +1,13 @@
 part of 'progress.dart';
 
+/// Style builder for [RemixProgress].
+///
+/// Use this class to style the progress container, track, indicator, and track
+/// layout container.
 @MixableStyler()
-class RemixProgressStyle
-    extends RemixContainerStyle<RemixProgressSpec, RemixProgressStyle>
-    with Diagnosticable, _$RemixProgressStyleMixin {
+class RemixProgressStyler
+    extends RemixContainerStyler<RemixProgressSpec, RemixProgressStyler>
+    with Diagnosticable, _$RemixProgressStylerMixin {
   @MixableField(setterType: BoxStyler)
   final Prop<StyleSpec<BoxSpec>>? $container;
   @MixableField(setterType: BoxStyler)
@@ -13,7 +17,7 @@ class RemixProgressStyle
   @MixableField(setterType: BoxStyler)
   final Prop<StyleSpec<BoxSpec>>? $trackContainer;
 
-  const RemixProgressStyle.create({
+  const RemixProgressStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
     Prop<StyleSpec<BoxSpec>>? track,
     Prop<StyleSpec<BoxSpec>>? indicator,
@@ -26,7 +30,7 @@ class RemixProgressStyle
        $indicator = indicator,
        $trackContainer = trackContainer;
 
-  RemixProgressStyle({
+  RemixProgressStyler({
     BoxStyler? container,
     BoxStyler? track,
     BoxStyler? indicator,
@@ -45,9 +49,9 @@ class RemixProgressStyle
        );
 
   /// Sets progress height
-  RemixProgressStyle height(double value) {
+  RemixProgressStyler height(double value) {
     return merge(
-      RemixProgressStyle(
+      RemixProgressStyler(
         container: BoxStyler(
           constraints: BoxConstraintsMix(minHeight: value, maxHeight: value),
         ),
@@ -56,18 +60,18 @@ class RemixProgressStyle
   }
 
   /// Sets track color
-  RemixProgressStyle trackColor(Color value) {
+  RemixProgressStyler trackColor(Color value) {
     return merge(
-      RemixProgressStyle(
+      RemixProgressStyler(
         track: BoxStyler(decoration: BoxDecorationMix(color: value)),
       ),
     );
   }
 
   /// Sets progress width
-  RemixProgressStyle width(double value) {
+  RemixProgressStyler width(double value) {
     return merge(
-      RemixProgressStyle(
+      RemixProgressStyler(
         container: BoxStyler(
           constraints: BoxConstraintsMix(minWidth: value, maxWidth: value),
         ),
@@ -76,55 +80,60 @@ class RemixProgressStyle
   }
 
   /// Sets fill color
-  RemixProgressStyle indicatorColor(Color value) {
+  RemixProgressStyler indicatorColor(Color value) {
     return merge(
-      RemixProgressStyle(
+      RemixProgressStyler(
         indicator: BoxStyler(decoration: BoxDecorationMix(color: value)),
       ),
     );
   }
 
   /// Sets container alignment
-  RemixProgressStyle alignment(Alignment value) {
-    return merge(RemixProgressStyle(container: BoxStyler(alignment: value)));
+  RemixProgressStyler alignment(Alignment value) {
+    return merge(RemixProgressStyler(container: BoxStyler(alignment: value)));
+  }
+
+  /// Creates a [RemixProgress] widget with this style applied.
+  RemixProgress call({Key? key, required double value}) {
+    return RemixProgress(key: key, value: value, style: this);
   }
 
   // Abstract method implementations for mixins
 
   @override
-  RemixProgressStyle constraints(BoxConstraintsMix value) {
-    return merge(RemixProgressStyle(container: BoxStyler(constraints: value)));
+  RemixProgressStyler constraints(BoxConstraintsMix value) {
+    return merge(RemixProgressStyler(container: BoxStyler(constraints: value)));
   }
 
   @override
-  RemixProgressStyle decoration(DecorationMix value) {
-    return merge(RemixProgressStyle(container: BoxStyler(decoration: value)));
+  RemixProgressStyler decoration(DecorationMix value) {
+    return merge(RemixProgressStyler(container: BoxStyler(decoration: value)));
   }
 
   @override
-  RemixProgressStyle margin(EdgeInsetsGeometryMix value) {
-    return merge(RemixProgressStyle(container: BoxStyler(margin: value)));
+  RemixProgressStyler margin(EdgeInsetsGeometryMix value) {
+    return merge(RemixProgressStyler(container: BoxStyler(margin: value)));
   }
 
   @override
-  RemixProgressStyle padding(EdgeInsetsGeometryMix value) {
-    return merge(RemixProgressStyle(container: BoxStyler(padding: value)));
+  RemixProgressStyler padding(EdgeInsetsGeometryMix value) {
+    return merge(RemixProgressStyler(container: BoxStyler(padding: value)));
   }
 
   @override
-  RemixProgressStyle foregroundDecoration(DecorationMix value) {
+  RemixProgressStyler foregroundDecoration(DecorationMix value) {
     return merge(
-      RemixProgressStyle(container: BoxStyler(foregroundDecoration: value)),
+      RemixProgressStyler(container: BoxStyler(foregroundDecoration: value)),
     );
   }
 
   @override
-  RemixProgressStyle transform(
+  RemixProgressStyler transform(
     Matrix4 value, {
     AlignmentGeometry alignment = Alignment.center,
   }) {
     return merge(
-      RemixProgressStyle(
+      RemixProgressStyler(
         container: BoxStyler(transform: value, transformAlignment: alignment),
       ),
     );

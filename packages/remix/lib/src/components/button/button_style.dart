@@ -1,24 +1,126 @@
 part of 'button.dart';
 
-extension RemixButtonStylerNestedFields on RemixButtonStyler {
-  RemixButtonStyler container(FlexBoxStyler value) {
-    return merge(RemixButtonStyler.create(container: Prop.maybeMix(value)));
+/// Style builder for [RemixButton].
+///
+/// Use this class to style the button container, label, icons, and loading
+/// spinner. It supports Mix variants and widget state variants for focused,
+/// hovered, pressed, disabled, and loading states.
+@MixableStyler()
+class RemixButtonStyler extends MixStyler<RemixButtonStyler, RemixButtonSpec>
+    with
+        LabelStyleMixin<RemixButtonStyler>,
+        IconStyleMixin<RemixButtonStyler>,
+        SpinnerStyleMixin<RemixButtonStyler>,
+        _$RemixButtonStylerMixin {
+  /// Style applied to the button's outer layout and decoration.
+  @MixableField(setterType: FlexBoxStyler)
+  final Prop<StyleSpec<FlexBoxSpec>>? $container;
+
+  /// Style applied to the button label.
+  @MixableField(setterType: TextStyler)
+  final Prop<StyleSpec<TextSpec>>? $label;
+
+  /// Style applied to leading and trailing icons.
+  @MixableField(setterType: IconStyler)
+  final Prop<StyleSpec<IconSpec>>? $icon;
+
+  /// Style applied to the loading spinner.
+  @MixableField(setterType: RemixSpinnerStyler)
+  final Prop<StyleSpec<RemixSpinnerSpec>>? $spinner;
+
+  /// Alignment used when rendering an icon next to the label.
+  final Prop<IconAlignment>? $iconAlignment;
+
+  /// Creates a button style from raw Mix properties.
+  const RemixButtonStyler.create({
+    Prop<StyleSpec<FlexBoxSpec>>? container,
+    Prop<StyleSpec<TextSpec>>? label,
+    Prop<StyleSpec<IconSpec>>? icon,
+    Prop<StyleSpec<RemixSpinnerSpec>>? spinner,
+    Prop<IconAlignment>? iconAlignment,
+    super.variants,
+    super.modifier,
+    super.animation,
+  }) : $container = container,
+       $label = label,
+       $icon = icon,
+       $spinner = spinner,
+       $iconAlignment = iconAlignment;
+
+  /// Creates a button style from plain Dart values and Mix stylers.
+  RemixButtonStyler({
+    FlexBoxStyler? container,
+    TextStyler? label,
+    IconStyler? icon,
+    RemixSpinnerStyler? spinner,
+    IconAlignment? iconAlignment,
+    AnimationConfig? animation,
+    WidgetModifierConfig? modifier,
+    List<VariantStyle<RemixButtonSpec>>? variants,
+  }) : this.create(
+         container: Prop.maybeMix(container),
+         label: Prop.maybeMix(label),
+         icon: Prop.maybeMix(icon),
+         spinner: Prop.maybeMix(spinner),
+         iconAlignment: Prop.maybe(iconAlignment),
+         variants: variants,
+         modifier: modifier,
+         animation: animation,
+       );
+
+  /// Creates a button style that only sets [IconAlignment].
+  factory RemixButtonStyler.iconAlignment(IconAlignment value) {
+    return RemixButtonStyler().iconAlignment(value);
   }
 
-  RemixButtonStyler label(TextStyler value) {
-    return merge(RemixButtonStyler.create(label: Prop.maybeMix(value)));
-  }
-
-  RemixButtonStyler icon(IconStyler value) {
-    return merge(RemixButtonStyler.create(icon: Prop.maybeMix(value)));
-  }
-
-  RemixButtonStyler spinner(RemixSpinnerStyle value) {
-    return merge(RemixButtonStyler.create(spinner: Prop.maybeMix(value)));
+  /// Creates a [RemixButton] widget with this style applied.
+  RemixButton call({
+    Key? key,
+    required String label,
+    IconData? leadingIcon,
+    IconData? trailingIcon,
+    RemixButtonTextBuilder? textBuilder,
+    RemixButtonIconBuilder? leadingIconBuilder,
+    RemixButtonIconBuilder? trailingIconBuilder,
+    RemixButtonLoadingBuilder? loadingBuilder,
+    bool loading = false,
+    bool enabled = true,
+    VoidCallback? onPressed,
+    VoidCallback? onLongPress,
+    FocusNode? focusNode,
+    bool autofocus = false,
+    bool enableFeedback = true,
+    String? semanticLabel,
+    String? semanticHint,
+    bool excludeSemantics = false,
+    MouseCursor mouseCursor = SystemMouseCursors.click,
+  }) {
+    return RemixButton(
+      key: key,
+      label: label,
+      leadingIcon: leadingIcon,
+      trailingIcon: trailingIcon,
+      textBuilder: textBuilder,
+      leadingIconBuilder: leadingIconBuilder,
+      trailingIconBuilder: trailingIconBuilder,
+      loadingBuilder: loadingBuilder,
+      loading: loading,
+      enabled: enabled,
+      onPressed: onPressed,
+      onLongPress: onLongPress,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      enableFeedback: enableFeedback,
+      semanticLabel: semanticLabel,
+      semanticHint: semanticHint,
+      excludeSemantics: excludeSemantics,
+      mouseCursor: mouseCursor,
+      style: this,
+    );
   }
 }
 
-extension RemixButtonStylerContainerHelpers on RemixButtonStyler {
+extension RemixButtonStyleContainerHelpers on RemixButtonStyler {
   RemixButtonStyler padding(EdgeInsetsGeometryMix value) {
     return container(FlexBoxStyler(padding: value));
   }
@@ -293,19 +395,11 @@ extension RemixButtonStylerContainerHelpers on RemixButtonStyler {
     );
   }
 
-  RemixButtonStyler rotate(
-    double radians, {
-    Alignment alignment = Alignment.center,
-  }) {
-    return wrap(
-      WidgetModifierConfig.rotate(radians: radians, alignment: alignment),
-    );
+  RemixButtonStyler rotate(double radians, {Alignment alignment = .center}) {
+    return wrap(.rotate(radians: radians, alignment: alignment));
   }
 
-  RemixButtonStyler scale(
-    double value, {
-    Alignment alignment = Alignment.center,
-  }) {
+  RemixButtonStyler scale(double value, {Alignment alignment = .center}) {
     return transform(
       Matrix4.diagonal3Values(value, value, 1.0),
       alignment: alignment,
@@ -329,7 +423,7 @@ extension RemixButtonStylerContainerHelpers on RemixButtonStyler {
   }
 }
 
-extension RemixButtonStylerDecorationHelpers on RemixButtonStyler {
+extension RemixButtonStyleDecorationHelpers on RemixButtonStyler {
   RemixButtonStyler color(Color value) {
     return decoration(BoxDecorationMix(color: value));
   }
@@ -482,9 +576,9 @@ extension RemixButtonStylerDecorationHelpers on RemixButtonStyler {
       BoxBorderMix.all(
         BorderSideMix(
           color: color,
-          width: width,
-          style: style,
           strokeAlign: strokeAlign,
+          style: style,
+          width: width,
         ),
       ),
     );
@@ -734,7 +828,7 @@ extension RemixButtonStylerDecorationHelpers on RemixButtonStyler {
     ImageProvider image, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
-    ImageRepeat repeat = ImageRepeat.noRepeat,
+    ImageRepeat repeat = .noRepeat,
   }) {
     return container(
       FlexBoxStyler().backgroundImage(
@@ -750,7 +844,7 @@ extension RemixButtonStylerDecorationHelpers on RemixButtonStyler {
     String url, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
-    ImageRepeat repeat = ImageRepeat.noRepeat,
+    ImageRepeat repeat = .noRepeat,
   }) {
     return backgroundImage(
       NetworkImage(url),
@@ -764,7 +858,7 @@ extension RemixButtonStylerDecorationHelpers on RemixButtonStyler {
     String path, {
     BoxFit? fit,
     AlignmentGeometry? alignment,
-    ImageRepeat repeat = ImageRepeat.noRepeat,
+    ImageRepeat repeat = .noRepeat,
   }) {
     return backgroundImage(
       AssetImage(path),

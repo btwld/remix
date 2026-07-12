@@ -17,16 +17,16 @@ part of 'switch.dart';
 class RemixSwitch extends StatelessWidget {
   const RemixSwitch({
     super.key,
-    this.enabled = true,
     required this.selected,
-    required this.onChanged,
-    this.style = const RemixSwitchStyle.create(),
-    this.styleSpec,
+    this.onChanged,
+    this.enabled = true,
     this.enableFeedback = true,
     this.focusNode,
     this.autofocus = false,
     this.semanticLabel,
     this.mouseCursor = SystemMouseCursors.click,
+    this.style = const RemixSwitchStyler.create(),
+    this.styleSpec,
   });
 
   /// Whether this switch is enabled.
@@ -36,15 +36,18 @@ class RemixSwitch extends StatelessWidget {
   final bool selected;
 
   /// Called when the user toggles the switch.
-  final ValueChanged<bool> onChanged;
+  ///
+  /// When null, the switch is visually disabled and does not respond to
+  /// interaction.
+  final ValueChanged<bool>? onChanged;
 
   /// The style configuration for the switch.
-  final RemixSwitchStyle style;
+  final RemixSwitchStyler style;
 
   /// The style spec for the switch.
   final RemixSwitchSpec? styleSpec;
 
-  static final styleFrom = RemixSwitchStyle.new;
+  static final styleFrom = RemixSwitchStyler.new;
 
   /// Whether to enable haptic feedback when toggled.
   final bool enableFeedback;
@@ -61,19 +64,21 @@ class RemixSwitch extends StatelessWidget {
   /// Cursor when hovering over the switch.
   final MouseCursor mouseCursor;
 
-  RemixSwitchStyle _buildStyle() {
-    return RemixSwitchStyle()
+  RemixSwitchStyler _buildStyle() {
+    return RemixSwitchStyler()
         .alignment(.centerLeft)
         // Small thumb inset
-        .onSelected(RemixSwitchStyle().alignment(.centerRight))
+        .onSelected(RemixSwitchStyler().alignment(.centerRight))
         .merge(style);
   }
 
   @override
   Widget build(BuildContext context) {
+    final effectiveOnChanged = enabled && onChanged != null ? onChanged : null;
+
     return NakedToggle(
       value: selected,
-      onChanged: enabled ? onChanged : null,
+      onChanged: effectiveOnChanged,
       enabled: enabled,
       mouseCursor: mouseCursor,
       enableFeedback: enableFeedback,
@@ -82,9 +87,10 @@ class RemixSwitch extends StatelessWidget {
       semanticLabel: semanticLabel,
       asSwitch: true,
       builder: (context, state, _) {
-        return StyleBuilder(
+        return RemixStyleSpecBuilder<RemixSwitchSpec>(
           style: _buildStyle(),
-          controller: NakedState.controllerOf(context),
+          styleSpec: styleSpec,
+          controller: NakedToggleState.controllerOf(context),
           builder: (context, spec) {
             return Box(
               styleSpec: spec.container,

@@ -1,3 +1,4 @@
+/// Remix design system widgets, styles, Fortal recipes, and Radix colors.
 library remix;
 
 /// COMPONENTS
@@ -27,6 +28,5 @@ export 'src/components/tooltip/tooltip.dart';
 export 'package:mix/mix.dart';
 export 'package:naked_ui/naked_ui.dart' show OverlayPositionConfig;
 
-/// THEME
-export 'src/theme/remix_theme.dart';
+/// FORTAL
 export 'src/fortal/fortal.dart';

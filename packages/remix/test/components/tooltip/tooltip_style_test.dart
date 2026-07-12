@@ -6,10 +6,10 @@ import '../../helpers/test_helpers.dart';
 import '../../helpers/test_methods.dart';
 
 void main() {
-  group('RemixTooltipStyle', () {
+  group('RemixTooltipStyler', () {
     group('Constructors', () {
       test('create() constructs with null parameters', () {
-        const style = RemixTooltipStyle.create();
+        const style = RemixTooltipStyler.create();
 
         expect(style.$container, isNull);
         expect(style.$waitDuration, isNull);
@@ -29,7 +29,7 @@ void main() {
         );
         final modifier = WidgetModifierConfig();
 
-        final style = RemixTooltipStyle.create(
+        final style = RemixTooltipStyler.create(
           container: container,
           waitDuration: waitDuration,
           showDuration: showDuration,
@@ -47,7 +47,7 @@ void main() {
       });
 
       test('default constructor converts types correctly', () {
-        final style = RemixTooltipStyle(
+        final style = RemixTooltipStyler(
           container: BoxStyler(),
           waitDuration: const Duration(milliseconds: 500),
           showDuration: const Duration(milliseconds: 2000),
@@ -68,7 +68,7 @@ void main() {
     group('Style Methods', () {
       styleMethodTest(
         'padding() sets padding',
-        initial: RemixTooltipStyle(),
+        initial: RemixTooltipStyler(),
         modify: (style) => style.padding(EdgeInsetsGeometryMix.all(16)),
         expect: (style) {
           expect(
@@ -82,7 +82,7 @@ void main() {
 
       styleMethodTest(
         'margin() sets margin',
-        initial: RemixTooltipStyle(),
+        initial: RemixTooltipStyler(),
         modify: (style) => style.margin(EdgeInsetsGeometryMix.all(8)),
         expect: (style) {
           expect(
@@ -96,7 +96,7 @@ void main() {
 
       styleMethodTest(
         'alignment() sets alignment',
-        initial: RemixTooltipStyle(),
+        initial: RemixTooltipStyler(),
         modify: (style) => style.alignment(Alignment.center),
         expect: (style) {
           expect(
@@ -108,7 +108,7 @@ void main() {
 
       styleMethodTest(
         'color() sets background color',
-        initial: RemixTooltipStyle(),
+        initial: RemixTooltipStyler(),
         modify: (style) => style.color(Colors.blue),
         expect: (style) {
           expect(
@@ -123,8 +123,24 @@ void main() {
       );
 
       styleMethodTest(
+        'backgroundColor() sets background color',
+        initial: RemixTooltipStyler(),
+        modify: (style) => style.backgroundColor(Colors.blue),
+        expect: (style) {
+          expect(
+            style.$container,
+            equals(
+              Prop.maybeMix(
+                BoxStyler(decoration: BoxDecorationMix(color: Colors.blue)),
+              ),
+            ),
+          );
+        },
+      );
+
+      styleMethodTest(
         'borderRadius() sets border radius',
-        initial: RemixTooltipStyle(),
+        initial: RemixTooltipStyler(),
         modify: (style) =>
             style.borderRadius(BorderRadiusGeometryMix.circular(8)),
         expect: (style) {
@@ -145,7 +161,7 @@ void main() {
 
       styleMethodTest(
         'decoration() sets decoration',
-        initial: RemixTooltipStyle(),
+        initial: RemixTooltipStyler(),
         modify: (style) =>
             style.decoration(BoxDecorationMix(color: Colors.red)),
         expect: (style) {
@@ -162,7 +178,7 @@ void main() {
 
       styleMethodTest(
         'waitDuration() sets wait duration',
-        initial: RemixTooltipStyle(),
+        initial: RemixTooltipStyler(),
         modify: (style) =>
             style.waitDuration(const Duration(milliseconds: 500)),
         expect: (style) {
@@ -175,7 +191,7 @@ void main() {
 
       styleMethodTest(
         'showDuration() sets show duration',
-        initial: RemixTooltipStyle(),
+        initial: RemixTooltipStyler(),
         modify: (style) =>
             style.showDuration(const Duration(milliseconds: 2000)),
         expect: (style) {
@@ -188,7 +204,7 @@ void main() {
 
       styleMethodTest(
         'constraints() adds box constraints',
-        initial: RemixTooltipStyle(),
+        initial: RemixTooltipStyler(),
         modify: (style) =>
             style.constraints(BoxConstraintsMix(minWidth: 100, maxWidth: 200)),
         expect: (style) {
@@ -207,7 +223,7 @@ void main() {
 
       styleMethodTest(
         'foregroundDecoration() adds foreground decoration',
-        initial: RemixTooltipStyle(),
+        initial: RemixTooltipStyler(),
         modify: (style) => style.foregroundDecoration(
           BoxDecorationMix(shape: BoxShape.circle),
         ),
@@ -229,7 +245,7 @@ void main() {
 
       styleMethodTest(
         'transform() adds transform',
-        initial: RemixTooltipStyle(),
+        initial: RemixTooltipStyler(),
         modify: (style) => style.transform(
           Matrix4.rotationZ(0.1),
           alignment: Alignment.topLeft,
@@ -251,7 +267,7 @@ void main() {
 
       styleMethodTest(
         'animate() adds animation config',
-        initial: RemixTooltipStyle(),
+        initial: RemixTooltipStyler(),
         modify: (style) => style.animate(
           AnimationConfig.linear(const Duration(milliseconds: 300)),
         ),
@@ -265,7 +281,7 @@ void main() {
 
       styleMethodTest(
         'variants() adds variants',
-        initial: RemixTooltipStyle(),
+        initial: RemixTooltipStyler(),
         modify: (style) => style.variants([]),
         expect: (style) {
           expect(style.$variants, equals([]));
@@ -274,8 +290,8 @@ void main() {
 
       styleMethodTest(
         'wrap() adds widget modifier',
-        initial: RemixTooltipStyle(),
-        modify: (style) => style.wrap(WidgetModifierConfig.clipOval()),
+        initial: RemixTooltipStyler(),
+        modify: (style) => style.wrap(.clipOval()),
         expect: (style) {
           expect(style.$modifier, equals(WidgetModifierConfig.clipOval()));
         },
@@ -284,7 +300,7 @@ void main() {
 
     group('Core Methods', () {
       testWidgets('resolve() creates StyleSpec', (tester) async {
-        const style = RemixTooltipStyle.create();
+        const style = RemixTooltipStyler.create();
 
         await tester.pumpMaterialApp(Container());
         final context = tester.element(find.byType(Container));
@@ -296,8 +312,8 @@ void main() {
       });
 
       test('merge() combines two styles', () {
-        final style1 = RemixTooltipStyle(container: BoxStyler());
-        final style2 = RemixTooltipStyle(
+        final style1 = RemixTooltipStyler(container: BoxStyler());
+        final style2 = RemixTooltipStyler(
           waitDuration: const Duration(milliseconds: 500),
           animation: AnimationConfig.linear(const Duration(milliseconds: 200)),
         );
@@ -310,14 +326,28 @@ void main() {
       });
 
       test('merge() with null returns original', () {
-        final style = RemixTooltipStyle(container: BoxStyler());
+        final style = RemixTooltipStyler(container: BoxStyler());
         final merged = style.merge(null);
 
         expect(merged, equals(style));
       });
 
+      test('call() creates RemixTooltip with this style', () {
+        final style = RemixTooltipStyler().color(Colors.black);
+
+        final tooltip = style.call(
+          tooltipChild: const Text('More info'),
+          child: const SizedBox(key: Key('trigger')),
+        );
+
+        expect(tooltip, isA<RemixTooltip>());
+        expect(tooltip.style, same(style));
+        expect(tooltip.tooltipChild, isA<Text>());
+        expect(tooltip.child.key, const Key('trigger'));
+      });
+
       testWidgets('resolve() provides default durations', (tester) async {
-        const style = RemixTooltipStyle.create();
+        const style = RemixTooltipStyler.create();
 
         await tester.pumpMaterialApp(Container());
         final context = tester.element(find.byType(Container));
@@ -332,16 +362,16 @@ void main() {
 
     group('Equality', () {
       test('two identical styles are equal', () {
-        const style1 = RemixTooltipStyle.create();
-        const style2 = RemixTooltipStyle.create();
+        const style1 = RemixTooltipStyler.create();
+        const style2 = RemixTooltipStyler.create();
 
         expect(style1, equals(style2));
         expect(style1.hashCode, equals(style2.hashCode));
       });
 
       test('two styles with different properties are not equal', () {
-        final style1 = RemixTooltipStyle(container: BoxStyler());
-        const style2 = RemixTooltipStyle.create();
+        final style1 = RemixTooltipStyler(container: BoxStyler());
+        const style2 = RemixTooltipStyler.create();
 
         expect(style1, isNot(equals(style2)));
       });

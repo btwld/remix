@@ -1,9 +1,13 @@
 part of 'tooltip.dart';
 
+/// Style builder for [RemixTooltip].
+///
+/// Use this class to style tooltip container, label, wait duration, and show
+/// duration.
 @MixableStyler()
-class RemixTooltipStyle
-    extends RemixContainerStyle<RemixTooltipSpec, RemixTooltipStyle>
-    with Diagnosticable, _$RemixTooltipStyleMixin {
+class RemixTooltipStyler
+    extends RemixContainerStyler<RemixTooltipSpec, RemixTooltipStyler>
+    with Diagnosticable, _$RemixTooltipStylerMixin {
   @MixableField(setterType: BoxStyler)
   final Prop<StyleSpec<BoxSpec>>? $container;
   @MixableField(setterType: TextStyler)
@@ -12,25 +16,30 @@ class RemixTooltipStyle
   final Prop<Duration>? $waitDuration;
   @MixableField()
   final Prop<Duration>? $showDuration;
+  @MixableField()
+  final Prop<Duration>? $dismissDuration;
 
-  const RemixTooltipStyle.create({
+  const RemixTooltipStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
     Prop<StyleSpec<TextSpec>>? label,
     Prop<Duration>? waitDuration,
     Prop<Duration>? showDuration,
+    Prop<Duration>? dismissDuration,
     super.variants,
     super.animation,
     super.modifier,
   }) : $container = container,
        $label = label,
        $waitDuration = waitDuration,
-       $showDuration = showDuration;
+       $showDuration = showDuration,
+       $dismissDuration = dismissDuration;
 
-  RemixTooltipStyle({
+  RemixTooltipStyler({
     BoxStyler? container,
     TextStyler? label,
     Duration? waitDuration,
     Duration? showDuration,
+    Duration? dismissDuration,
     AnimationConfig? animation,
     List<VariantStyle<RemixTooltipSpec>>? variants,
     WidgetModifierConfig? modifier,
@@ -39,33 +48,55 @@ class RemixTooltipStyle
          label: Prop.maybeMix(label),
          waitDuration: Prop.maybe(waitDuration),
          showDuration: Prop.maybe(showDuration),
+         dismissDuration: Prop.maybe(dismissDuration),
          variants: variants,
          animation: animation,
          modifier: modifier,
        );
 
   /// Sets container alignment
-  RemixTooltipStyle alignment(Alignment value) {
-    return merge(RemixTooltipStyle(container: BoxStyler(alignment: value)));
+  RemixTooltipStyler alignment(Alignment value) {
+    return merge(RemixTooltipStyler(container: BoxStyler(alignment: value)));
+  }
+
+  /// Sets tooltip container background color.
+  RemixTooltipStyler backgroundColor(Color value) => color(value);
+
+  /// Creates a [RemixTooltip] widget with this style applied.
+  RemixTooltip call({
+    Key? key,
+    required Widget tooltipChild,
+    required Widget child,
+    String? tooltipSemantics,
+    OverlayPositionConfig positioning = const OverlayPositionConfig(),
+  }) {
+    return RemixTooltip(
+      key: key,
+      tooltipChild: tooltipChild,
+      tooltipSemantics: tooltipSemantics,
+      positioning: positioning,
+      style: this,
+      child: child,
+    );
   }
 
   /// Sets container padding
   @override
-  RemixTooltipStyle padding(EdgeInsetsGeometryMix value) {
-    return merge(RemixTooltipStyle(container: BoxStyler(padding: value)));
+  RemixTooltipStyler padding(EdgeInsetsGeometryMix value) {
+    return merge(RemixTooltipStyler(container: BoxStyler(padding: value)));
   }
 
   /// Sets container margin
   @override
-  RemixTooltipStyle margin(EdgeInsetsGeometryMix value) {
-    return merge(RemixTooltipStyle(container: BoxStyler(margin: value)));
+  RemixTooltipStyler margin(EdgeInsetsGeometryMix value) {
+    return merge(RemixTooltipStyler(container: BoxStyler(margin: value)));
   }
 
   /// Sets container background color
   @override
-  RemixTooltipStyle color(Color value) {
+  RemixTooltipStyler color(Color value) {
     return merge(
-      RemixTooltipStyle(
+      RemixTooltipStyler(
         container: BoxStyler(decoration: BoxDecorationMix(color: value)),
       ),
     );
@@ -73,9 +104,9 @@ class RemixTooltipStyle
 
   /// Sets container border radius
   @override
-  RemixTooltipStyle borderRadius(BorderRadiusGeometryMix radius) {
+  RemixTooltipStyler borderRadius(BorderRadiusGeometryMix radius) {
     return merge(
-      RemixTooltipStyle(
+      RemixTooltipStyler(
         container: BoxStyler(
           decoration: BoxDecorationMix(borderRadius: radius),
         ),
@@ -85,31 +116,31 @@ class RemixTooltipStyle
 
   /// Sets container decoration
   @override
-  RemixTooltipStyle decoration(DecorationMix value) {
-    return merge(RemixTooltipStyle(container: BoxStyler(decoration: value)));
+  RemixTooltipStyler decoration(DecorationMix value) {
+    return merge(RemixTooltipStyler(container: BoxStyler(decoration: value)));
   }
 
   // Abstract method implementations for mixins
 
   @override
-  RemixTooltipStyle constraints(BoxConstraintsMix value) {
-    return merge(RemixTooltipStyle(container: BoxStyler(constraints: value)));
+  RemixTooltipStyler constraints(BoxConstraintsMix value) {
+    return merge(RemixTooltipStyler(container: BoxStyler(constraints: value)));
   }
 
   @override
-  RemixTooltipStyle foregroundDecoration(DecorationMix value) {
+  RemixTooltipStyler foregroundDecoration(DecorationMix value) {
     return merge(
-      RemixTooltipStyle(container: BoxStyler(foregroundDecoration: value)),
+      RemixTooltipStyler(container: BoxStyler(foregroundDecoration: value)),
     );
   }
 
   @override
-  RemixTooltipStyle transform(
+  RemixTooltipStyler transform(
     Matrix4 value, {
     AlignmentGeometry alignment = Alignment.center,
   }) {
     return merge(
-      RemixTooltipStyle(
+      RemixTooltipStyler(
         container: BoxStyler(transform: value, transformAlignment: alignment),
       ),
     );

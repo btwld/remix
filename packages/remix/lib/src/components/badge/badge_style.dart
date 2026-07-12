@@ -1,35 +1,36 @@
 part of 'badge.dart';
 
+/// Style configuration for [RemixBadge] container and label text.
 @MixableStyler()
-class RemixBadgeStyle
-    extends RemixContainerStyle<RemixBadgeSpec, RemixBadgeStyle>
+class RemixBadgeStyler
+    extends RemixContainerStyler<RemixBadgeSpec, RemixBadgeStyler>
     with
-        LabelStyleMixin<RemixBadgeStyle>,
+        LabelStyleMixin<RemixBadgeStyler>,
         Diagnosticable,
-        _$RemixBadgeStyleMixin {
+        _$RemixBadgeStylerMixin {
   @MixableField(setterType: BoxStyler)
   final Prop<StyleSpec<BoxSpec>>? $container;
   @MixableField(setterType: TextStyler)
-  final Prop<StyleSpec<TextSpec>>? $text;
+  final Prop<StyleSpec<TextSpec>>? $label;
 
-  const RemixBadgeStyle.create({
+  const RemixBadgeStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
-    Prop<StyleSpec<TextSpec>>? text,
+    Prop<StyleSpec<TextSpec>>? label,
     super.variants,
     super.animation,
     super.modifier,
   }) : $container = container,
-       $text = text;
+       $label = label;
 
-  RemixBadgeStyle({
+  RemixBadgeStyler({
     BoxStyler? container,
-    TextStyler? text,
+    TextStyler? label,
     AnimationConfig? animation,
     List<VariantStyle<RemixBadgeSpec>>? variants,
     WidgetModifierConfig? modifier,
   }) : this.create(
          container: Prop.maybeMix(container),
-         text: Prop.maybeMix(text),
+         label: Prop.maybeMix(label),
          variants: variants,
          animation: animation,
          modifier: modifier,
@@ -38,53 +39,53 @@ class RemixBadgeStyle
   // -- Factory constructors for convenience --
 
   /// Creates a style with the given background color.
-  factory RemixBadgeStyle.backgroundColor(Color value) =>
-      RemixBadgeStyle().backgroundColor(value);
+  factory RemixBadgeStyler.backgroundColor(Color value) =>
+      RemixBadgeStyler().backgroundColor(value);
 
   /// Creates a style with the given foreground color (text).
-  factory RemixBadgeStyle.foregroundColor(Color value) =>
-      RemixBadgeStyle().foregroundColor(value);
+  factory RemixBadgeStyler.foregroundColor(Color value) =>
+      RemixBadgeStyler().foregroundColor(value);
 
   /// Creates a style with the given padding.
-  factory RemixBadgeStyle.padding(EdgeInsetsGeometryMix value) =>
-      RemixBadgeStyle().padding(value);
+  factory RemixBadgeStyler.padding(EdgeInsetsGeometryMix value) =>
+      RemixBadgeStyler().padding(value);
 
   /// Creates a style with the given margin.
-  factory RemixBadgeStyle.margin(EdgeInsetsGeometryMix value) =>
-      RemixBadgeStyle().margin(value);
+  factory RemixBadgeStyler.margin(EdgeInsetsGeometryMix value) =>
+      RemixBadgeStyler().margin(value);
 
   /// Creates a style with the given decoration.
-  factory RemixBadgeStyle.decoration(DecorationMix value) =>
-      RemixBadgeStyle().decoration(value);
+  factory RemixBadgeStyler.decoration(DecorationMix value) =>
+      RemixBadgeStyler().decoration(value);
 
   /// Creates a style with the given alignment.
-  factory RemixBadgeStyle.alignment(Alignment value) =>
-      RemixBadgeStyle().alignment(value);
+  factory RemixBadgeStyler.alignment(Alignment value) =>
+      RemixBadgeStyler().alignment(value);
 
   /// Creates a style with the given constraints.
-  factory RemixBadgeStyle.constraints(BoxConstraintsMix value) =>
-      RemixBadgeStyle().constraints(value);
+  factory RemixBadgeStyler.constraints(BoxConstraintsMix value) =>
+      RemixBadgeStyler().constraints(value);
 
   // Instance methods (chainable)
 
   /// Sets background color
-  RemixBadgeStyle backgroundColor(Color value) {
+  RemixBadgeStyler backgroundColor(Color value) {
     return merge(
-      RemixBadgeStyle(
+      RemixBadgeStyler(
         container: BoxStyler(decoration: BoxDecorationMix(color: value)),
       ),
     );
   }
 
   /// Sets the foreground color (text) of the badge.
-  RemixBadgeStyle foregroundColor(Color value) {
+  RemixBadgeStyler foregroundColor(Color value) {
     return labelColor(value);
   }
 
   /// Sets border radius
-  RemixBadgeStyle borderRadius(BorderRadiusGeometryMix radius) {
+  RemixBadgeStyler borderRadius(BorderRadiusGeometryMix radius) {
     return merge(
-      RemixBadgeStyle(
+      RemixBadgeStyler(
         container: BoxStyler(
           decoration: BoxDecorationMix(borderRadius: radius),
         ),
@@ -93,54 +94,70 @@ class RemixBadgeStyle
   }
 
   /// Sets padding
-  RemixBadgeStyle padding(EdgeInsetsGeometryMix value) {
-    return merge(RemixBadgeStyle(container: BoxStyler(padding: value)));
+  RemixBadgeStyler padding(EdgeInsetsGeometryMix value) {
+    return merge(RemixBadgeStyler(container: BoxStyler(padding: value)));
   }
 
   // Additional convenience methods that delegate to container
 
   /// Sets margin
-  RemixBadgeStyle margin(EdgeInsetsGeometryMix value) {
-    return merge(RemixBadgeStyle(container: BoxStyler(margin: value)));
+  RemixBadgeStyler margin(EdgeInsetsGeometryMix value) {
+    return merge(RemixBadgeStyler(container: BoxStyler(margin: value)));
   }
 
   /// Sets decoration
-  RemixBadgeStyle decoration(DecorationMix value) {
-    return merge(RemixBadgeStyle(container: BoxStyler(decoration: value)));
+  RemixBadgeStyler decoration(DecorationMix value) {
+    return merge(RemixBadgeStyler(container: BoxStyler(decoration: value)));
   }
 
   /// Sets container alignment
-  RemixBadgeStyle alignment(Alignment value) {
-    return merge(RemixBadgeStyle(container: BoxStyler(alignment: value)));
+  RemixBadgeStyler alignment(Alignment value) {
+    return merge(RemixBadgeStyler(container: BoxStyler(alignment: value)));
+  }
+
+  /// Creates a [RemixBadge] widget with this style applied.
+  RemixBadge call({
+    Key? key,
+    String? label,
+    Widget? child,
+    RemixBadgeLabelBuilder? labelBuilder,
+  }) {
+    return RemixBadge(
+      key: key,
+      label: label,
+      labelBuilder: labelBuilder,
+      style: this,
+      child: child,
+    );
   }
 
   @override
-  RemixBadgeStyle label(TextStyler value) {
-    return merge(RemixBadgeStyle(text: value));
+  RemixBadgeStyler label(TextStyler value) {
+    return merge(RemixBadgeStyler(label: value));
   }
 
   /// Sets constraints
   @override
-  RemixBadgeStyle constraints(BoxConstraintsMix value) {
-    return merge(RemixBadgeStyle(container: BoxStyler(constraints: value)));
+  RemixBadgeStyler constraints(BoxConstraintsMix value) {
+    return merge(RemixBadgeStyler(container: BoxStyler(constraints: value)));
   }
 
   // Abstract method implementations for mixins
 
   @override
-  RemixBadgeStyle foregroundDecoration(DecorationMix value) {
+  RemixBadgeStyler foregroundDecoration(DecorationMix value) {
     return merge(
-      RemixBadgeStyle(container: BoxStyler(foregroundDecoration: value)),
+      RemixBadgeStyler(container: BoxStyler(foregroundDecoration: value)),
     );
   }
 
   @override
-  RemixBadgeStyle transform(
+  RemixBadgeStyler transform(
     Matrix4 value, {
     AlignmentGeometry alignment = Alignment.center,
   }) {
     return merge(
-      RemixBadgeStyle(
+      RemixBadgeStyler(
         container: BoxStyler(transform: value, transformAlignment: alignment),
       ),
     );

@@ -1,5 +1,6 @@
 part of 'spinner.dart';
 
+/// Resolved visual values for a [RemixSpinner].
 @MixableSpec()
 class RemixSpinnerSpec with _$RemixSpinnerSpec {
   @override

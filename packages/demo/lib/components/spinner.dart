@@ -11,13 +11,11 @@ Widget buildSpinnerUseCase(BuildContext context) {
     key: _key,
     child: Scaffold(
       body: Center(
-        child: RemixSpinner(
-          style: fortalSpinnerStyle(
-            size: context.knobs.object.dropdown(
-              label: 'size',
-              options: FortalSpinnerSize.values,
-              labelBuilder: (size) => size.name,
-            ),
+        child: FortalSpinner(
+          size: context.knobs.object.dropdown(
+            label: 'size',
+            options: FortalSpinnerSize.values,
+            labelBuilder: (size) => size.name,
           ),
         ),
       ),

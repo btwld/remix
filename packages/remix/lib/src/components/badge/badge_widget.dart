@@ -1,6 +1,10 @@
 part of 'badge.dart';
 
-/// A badge widget that displays a label.
+/// Builder for rendering badge label content with the resolved text spec.
+typedef RemixBadgeLabelBuilder =
+    Widget Function(BuildContext context, TextSpec spec, String label);
+
+/// A badge widget that displays compact text or custom content.
 ///
 /// Badges are used to display small amounts of information, such as
 /// notification counts, status indicators, or labels.
@@ -12,20 +16,19 @@ part of 'badge.dart';
 ///   label: 'New',
 /// )
 /// ```
-typedef RemixBadgeLabelBuilder =
-    Widget Function(BuildContext context, TextSpec spec, String label);
-
-class RemixBadge extends StyleWidget<RemixBadgeSpec> {
+class RemixBadge extends StatelessWidget {
   /// Creates a badge widget. Provide [label] for a text badge or [child] for
   /// fully custom content. When nothing is provided, an empty label is used.
   const RemixBadge({
-    super.style = const RemixBadgeStyle.create(),
-    super.styleSpec,
     super.key,
     this.label,
     this.child,
     this.labelBuilder,
+    this.style = const RemixBadgeStyler.create(),
+    this.styleSpec,
   });
+
+  static final styleFrom = RemixBadgeStyler.new;
 
   /// Optional text label rendered with the badge text style.
   final String? label;
@@ -38,21 +41,33 @@ class RemixBadge extends StyleWidget<RemixBadgeSpec> {
   /// render text with custom widgets while preserving badge typography.
   final RemixBadgeLabelBuilder? labelBuilder;
 
+  /// The style configuration for the badge.
+  final RemixBadgeStyler style;
+
+  /// Optional raw style spec that bypasses fluent style resolution.
+  final RemixBadgeSpec? styleSpec;
+
   @override
-  Widget build(BuildContext context, RemixBadgeSpec spec) {
-    Widget? content = child;
-    final resolvedLabel = label ?? '';
+  Widget build(BuildContext context) {
+    return RemixStyleSpecBuilder<RemixBadgeSpec>(
+      style: style,
+      styleSpec: styleSpec,
+      builder: (context, spec) {
+        Widget? content = child;
+        final resolvedLabel = label ?? '';
 
-    if (content == null) {
-      content = labelBuilder == null
-          ? StyledText(resolvedLabel, styleSpec: spec.text)
-          : StyleSpecBuilder<TextSpec>(
-              styleSpec: spec.text,
-              builder: (context, textSpec) =>
-                  labelBuilder!(context, textSpec, resolvedLabel),
-            );
-    }
+        if (content == null) {
+          content = labelBuilder == null
+              ? StyledText(resolvedLabel, styleSpec: spec.label)
+              : StyleSpecBuilder<TextSpec>(
+                  styleSpec: spec.label,
+                  builder: (context, textSpec) =>
+                      labelBuilder!(context, textSpec, resolvedLabel),
+                );
+        }
 
-    return Box(styleSpec: spec.container, child: content);
+        return Box(styleSpec: spec.container, child: content);
+      },
+    );
   }
 }

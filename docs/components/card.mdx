@@ -27,13 +27,18 @@ class CardExample extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixCard(
       style: style,
+      child: const Text(
+        'Card content',
+        style: TextStyle(color: Colors.white),
+      ),
     );
   }
 
-  RemixCardStyle get style {
-    return RemixCardStyle()
+  RemixCardStyler get style {
+    return RemixCardStyler()
         .size(300, 200)
-        .textColor(Colors.white)
+        .backgroundColor(const Color(0xFF111827))
+        .padding(EdgeInsetsGeometryMix.all(24))
         .borderRadiusAll(const Radius.circular(4))
         .borderAll(color: Colors.grey.shade300);
   }
@@ -41,9 +46,9 @@ class CardExample extends StatelessWidget {
 ```
 </CodeGroup>
 
-## Fortal styles
+## Fortal widgets
 
-Remix includes Fortal-themed style helpers for this component:
+Remix includes a generated Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
@@ -58,12 +63,9 @@ class FortalCardExample extends StatelessWidget {
     return Column(
       spacing: 16,
       children: [
-        RemixCard(
-          style: FortalCardStyle.elevated(),
-        ),
-        RemixCard(
-          style: FortalCardStyle.outlined(),
-        ),
+        FortalCard.classic(),
+        FortalCard.surface(),
+        FortalCard.ghost(),
       ],
     );
   }
@@ -72,7 +74,7 @@ class FortalCardExample extends StatelessWidget {
 </CodeGroup>
 
 <Info>
-  See the [FortalCardStyle source code](https://github.com/btwld/remix/blob/main/lib/src/components/card/fortal_card_styles.dart) for all available options.
+  See the [fortalCardStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/card/fortal_card_styles.dart) for all available options.
 </Info>
 
 ## Constructor
@@ -81,7 +83,7 @@ class FortalCardExample extends StatelessWidget {
 const RemixCard({
   Key? key,
   Widget? child,
-  RemixCardStyle style = const RemixCardStyle.create(),
+  RemixCardStyler style = const RemixCardStyler.create(),
   RemixCardSpec? styleSpec,
 })
 ```
@@ -91,7 +93,7 @@ const RemixCard({
 ## Properties
 ### Widget Properties
 
-#### `style` → `RemixCardStyle`
+#### `style` → `RemixCardStyler`
 
 Optional. The style configuration for the card. Customize colors, sizing, borders, and state-based styling.
 
@@ -114,9 +116,9 @@ Optional. The widget below this widget in the tree.  This widget can only have o
 
 Sets container padding
 
-#### `textColor(Color value)`
+#### `backgroundColor(Color value)`
 
-Sets text color
+Sets card background color
 
 #### `borderRadius(BorderRadiusGeometryMix radius)`
 
@@ -138,7 +140,7 @@ Sets container decoration
 
 Applies widget modifiers such as clipping, opacity, or scaling.
 
-#### `animate(AnimationConfig config)`
+#### `animate(AnimationConfig value)`
 
 Configures implicit animation for style transitions.
 
@@ -154,3 +156,6 @@ Sets a foreground decoration painted on top of the component.
 
 Applies a matrix transformation to the component.
 
+#### `call({Key? key, Widget? child})`
+
+Creates a `RemixCard` widget with this style applied.

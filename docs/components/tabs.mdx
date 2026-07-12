@@ -74,16 +74,16 @@ class _TabsExampleState extends State<TabsExample> {
     );
   }
 
-  RemixTabBarStyle get tabBarStyle {
-    return RemixTabBarStyle()
+  RemixTabBarStyler get tabBarStyle {
+    return RemixTabBarStyler()
         .paddingAll(4)
         .borderRounded(12)
         .color(const Color(0xFFF4F6FF))
         .borderAll(color: Colors.indigo.shade100);
   }
 
-  RemixTabStyle get tabStyle {
-    return RemixTabStyle()
+  RemixTabStyler get tabStyle {
+    return RemixTabStyler()
         .paddingX(18)
         .paddingY(10)
         .borderRounded(10)
@@ -93,12 +93,12 @@ class _TabsExampleState extends State<TabsExample> {
         .labelColor(Colors.indigo.shade600)
         .iconColor(Colors.indigo.shade500)
         .onHovered(
-          RemixTabStyle()
+          RemixTabStyler()
               .color(Colors.indigo.shade50)
               .labelColor(Colors.indigo.shade700),
         )
         .onSelected(
-          RemixTabStyle()
+          RemixTabStyler()
               .color(Colors.white)
               .borderAll(color: Colors.indigo.shade400, width: 2)
               .labelColor(Colors.indigo.shade700)
@@ -106,8 +106,8 @@ class _TabsExampleState extends State<TabsExample> {
         );
   }
 
-  RemixTabViewStyle get tabViewStyle {
-    return RemixTabViewStyle()
+  RemixTabViewStyler get tabViewStyle {
+    return RemixTabViewStyler()
         .paddingAll(20)
         .borderRounded(14)
         .color(Colors.white)
@@ -117,11 +117,11 @@ class _TabsExampleState extends State<TabsExample> {
 ```
 </CodeGroup>
 
-## Fortal styles
+## Fortal widgets
 
-Remix includes Fortal-themed style helpers for this component:
+Remix includes a generated Fortal-themed widget for this component:
 
-<CodeGroup title="Fortal base style" defaultLanguage="dart">
+<CodeGroup title="Fortal widget" defaultLanguage="dart">
 ```dart
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
@@ -143,17 +143,22 @@ class _FortalTabsExampleState extends State<FortalTabsExample> {
       onChanged: (id) => setState(() => _tab = id),
       child: Column(
         children: [
-          RemixTabBar(
-            style: FortalTabBarStyle.base(),
+          FortalTabBar(
             child: Row(
               children: [
-                RemixTab(tabId: 'tab1', label: 'Tab 1', style: FortalTabStyle.base()),
-                RemixTab(tabId: 'tab2', label: 'Tab 2', style: FortalTabStyle.base()),
+                FortalTab(
+                  tabId: 'tab1',
+                  label: 'Tab 1',
+                ),
+                FortalTab(
+                  tabId: 'tab2',
+                  label: 'Tab 2',
+                ),
               ],
             ),
           ),
-          RemixTabView(tabId: 'tab1', style: FortalTabViewStyle.base(), child: Text('Content 1')),
-          RemixTabView(tabId: 'tab2', style: FortalTabViewStyle.base(), child: Text('Content 2')),
+          const FortalTabView(tabId: 'tab1', child: Text('Content 1')),
+          const FortalTabView(tabId: 'tab2', child: Text('Content 2')),
         ],
       ),
     );
@@ -163,7 +168,7 @@ class _FortalTabsExampleState extends State<FortalTabsExample> {
 </CodeGroup>
 
 <Info>
-  See the [FortalTabsStyle source code](https://github.com/btwld/remix/blob/main/lib/src/components/tabs/fortal_tabs_styles.dart) for all available options.
+  See the [fortalTabStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/tabs/fortal_tabs_styles.dart) for all available options.
 </Info>
 
 ## Constructor
@@ -185,7 +190,8 @@ const RemixTabs({
 const RemixTabBar({
   Key? key,
   required Widget child,
-  RemixTabBarStyle style = const RemixTabBarStyle.create(),
+  RemixTabBarStyler style = const RemixTabBarStyler.create(),
+  RemixTabBarSpec? styleSpec,
 })
 
 // Individual Tab
@@ -205,7 +211,8 @@ const RemixTab({
   ValueChanged<bool>? onPressChange,
   ValueWidgetBuilder<NakedTabState>? builder,
   String? semanticLabel,
-  RemixTabStyle style = const RemixTabStyle.create(),
+  RemixTabStyler style = const RemixTabStyler.create(),
+  RemixTabSpec? styleSpec,
 })
 
 // Tab View
@@ -213,7 +220,8 @@ const RemixTabView({
   Key? key,
   required String tabId,
   required Widget child,
-  RemixTabViewStyle style = const RemixTabViewStyle.create(),
+  RemixTabViewStyler style = const RemixTabViewStyler.create(),
+  RemixTabViewSpec? styleSpec,
 })
 ```
 </CodeGroup>
@@ -254,150 +262,301 @@ Optional. Whether the tabs are enabled.
 
 Optional. Called when Escape is pressed while a tab has focus.
 
+### Styled Leaf Properties
 
-### Style Methods
+`RemixTabBar`, `RemixTab`, and `RemixTabView` each accept their matching
+`Remix*Styler` through `style` and an optional raw `Remix*Spec` through
+`styleSpec`. A raw spec bypasses fluent style resolution.
 
-#### `alignment(Alignment value)`
 
-Sets container alignment
+### Tab Bar Style Methods
+
+Methods on `RemixTabBarStyler` configure the tab-list container.
 
 #### `container(FlexBoxStyler value)`
 
-Configures the container flex box style.
+Configures the tab bar flex box style.
 
-#### `label(TextStyler value)`
+#### `alignment(Alignment value)`
 
-Configures the label text style using a TextStyler.
-
-#### `icon(IconStyler value)`
-
-Configures the icon style using an IconStyler.
-
-#### `animate(AnimationConfig animation)`
-
-Configures implicit animation for style transitions.
-
-#### `wrap(WidgetModifierConfig value)`
-
-Applies widget modifiers such as clipping, opacity, or scaling.
-
-#### `flex(FlexStyler value)`
-
-Configures the flex layout properties.
-
-#### `foregroundDecoration(DecorationMix value)`
-
-Sets a foreground decoration painted on top of the component.
-
-#### `transform(Matrix4 value, AlignmentGeometry alignment = Alignment.center)`
-
-Applies a matrix transformation to the component.
-
-#### `color(Color value)`
-
-Sets background color.
-
-#### `constraints(BoxConstraintsMix value)`
-
-Sets size constraints on the component.
-
-#### `decoration(DecorationMix value)`
-
-Sets the container decoration.
-
-#### `margin(EdgeInsetsGeometryMix value)`
-
-Sets the container margin.
+Sets tab bar alignment.
 
 #### `padding(EdgeInsetsGeometryMix value)`
 
-Sets the container padding.
+Sets tab bar padding.
 
-#### `labelTextStyle(TextStyleMix value)`
+#### `margin(EdgeInsetsGeometryMix value)`
 
-Sets label/text style using TextStyleMix directly
+Sets tab bar margin.
+
+#### `color(Color value)`
+
+Sets tab bar background color.
+
+#### `size(double width, double height)`
+
+Sets fixed tab bar width and height constraints.
+
+#### `constraints(BoxConstraintsMix value)`
+
+Sets tab bar constraints.
+
+#### `decoration(DecorationMix value)`
+
+Sets tab bar decoration.
+
+#### `borderRadius(BorderRadiusGeometryMix radius)`
+
+Sets tab bar border radius.
+
+#### `foregroundDecoration(DecorationMix value)`
+
+Sets a foreground decoration on the tab bar.
+
+#### `transform(Matrix4 value, {AlignmentGeometry alignment = Alignment.center})`
+
+Applies a matrix transform to the tab bar.
+
+#### `flex(FlexStyler value)`
+
+Configures tab bar flex behavior.
+
+#### `animate(AnimationConfig value)`
+
+Configures implicit animation for tab bar style transitions.
+
+#### `variants(List<VariantStyle<RemixTabBarSpec>> value)`
+
+Sets custom tab bar variants.
+
+#### `wrap(WidgetModifierConfig value)`
+
+Applies widget modifiers to the tab bar.
+
+#### `call({Key? key, required Widget child})`
+
+Creates a `RemixTabBar` widget with this style applied.
+
+### Tab Style Methods
+
+Methods on `RemixTabStyler` configure each interactive tab item.
+
+#### `container(FlexBoxStyler value)`
+
+Configures the tab item flex box style.
+
+#### `label(TextStyler value)`
+
+Configures the tab label style.
+
+#### `icon(IconStyler value)`
+
+Configures the tab icon style.
+
+#### `alignment(Alignment value)`
+
+Sets tab item alignment.
+
+#### `padding(EdgeInsetsGeometryMix value)`
+
+Sets tab item padding.
+
+#### `margin(EdgeInsetsGeometryMix value)`
+
+Sets tab item margin.
+
+#### `color(Color value)`
+
+Sets tab item background color.
+
+#### `constraints(BoxConstraintsMix value)`
+
+Sets tab item constraints.
+
+#### `decoration(DecorationMix value)`
+
+Sets tab item decoration.
+
+#### `foregroundDecoration(DecorationMix value)`
+
+Sets a foreground decoration on the tab item.
+
+#### `transform(Matrix4 value, {AlignmentGeometry alignment = Alignment.center})`
+
+Applies a matrix transform to the tab item.
+
+#### `flex(FlexStyler value)`
+
+Configures tab item flex behavior.
+
+#### `labelStyle(TextStyleMix value)`
+
+Sets tab label style using a `TextStyleMix`.
 
 #### `labelColor(Color value)`
 
-Sets label/text color
+Sets tab label color.
 
 #### `labelFontSize(double value)`
 
-Sets label/text font size
+Sets tab label font size.
 
 #### `labelFontWeight(FontWeight value)`
 
-Sets label/text font weight
+Sets tab label font weight.
 
 #### `labelFontStyle(FontStyle value)`
 
-Sets label/text font style (italic/normal)
+Sets tab label font style.
 
 #### `labelLetterSpacing(double value)`
 
-Sets label/text letter spacing
+Sets tab label letter spacing.
 
 #### `labelDecoration(TextDecoration value)`
 
-Sets label/text decoration (underline, strikethrough, etc.)
+Sets tab label decoration.
 
 #### `labelFontFamily(String value)`
 
-Sets label/text font family
+Sets tab label font family.
 
 #### `labelHeight(double value)`
 
-Sets label/text line height
+Sets tab label line height.
 
 #### `labelWordSpacing(double value)`
 
-Sets label/text word spacing
+Sets tab label word spacing.
 
 #### `labelDecorationColor(Color value)`
 
-Sets label/text decoration color
+Sets tab label decoration color.
 
 #### `iconColor(Color value)`
 
-Sets icon color
+Sets tab icon color.
 
 #### `iconSize(double value)`
 
-Sets icon size
+Sets tab icon size.
 
 #### `iconOpacity(double value)`
 
-Sets icon opacity
+Sets tab icon opacity.
 
 #### `iconWeight(double value)`
 
-Sets icon weight (useful for variable icons like Material Symbols)
+Sets tab icon weight.
 
 #### `iconGrade(double value)`
 
-Sets icon grade (useful for Material Icons)
+Sets tab icon grade.
 
 #### `iconFill(double value)`
 
-Sets icon fill (useful for Material Icons filled variants)
+Sets tab icon fill.
 
 #### `iconOpticalSize(double value)`
 
-Sets icon optical size (useful for Material Icons)
+Sets tab icon optical size.
 
 #### `iconBlendMode(BlendMode value)`
 
-Sets icon blend mode
+Sets tab icon blend mode.
 
 #### `iconTextDirection(TextDirection value)`
 
-Sets icon text direction
+Sets tab icon text direction.
 
 #### `iconShadows(List<ShadowMix> value)`
 
-Sets icon shadows
+Sets tab icon shadows.
 
 #### `iconShadow(ShadowMix value)`
 
-Sets single icon shadow
+Sets a single tab icon shadow.
 
+#### `onSelected(RemixTabStyler value)`
+
+Applies a style while the tab is selected.
+
+#### `animate(AnimationConfig value)`
+
+Configures implicit animation for tab item style transitions.
+
+#### `variants(List<VariantStyle<RemixTabSpec>> value)`
+
+Sets custom tab item variants.
+
+#### `wrap(WidgetModifierConfig value)`
+
+Applies widget modifiers to the tab item.
+
+#### `call({Key? key, required String tabId, Widget? child, bool enabled = true, MouseCursor mouseCursor = SystemMouseCursors.click, bool enableFeedback = true, FocusNode? focusNode, bool autofocus = false, ValueChanged<bool>? onFocusChange, ValueChanged<bool>? onHoverChange, ValueChanged<bool>? onPressChange, ValueWidgetBuilder<NakedTabState>? builder, String? semanticLabel, IconData? icon, String? label})`
+
+Creates a `RemixTab` widget with this style applied.
+
+### Tab View Style Methods
+
+Methods on `RemixTabViewStyler` configure each tab panel.
+
+#### `container(BoxStyler value)`
+
+Configures the tab view container style.
+
+#### `alignment(Alignment value)`
+
+Sets tab view alignment.
+
+#### `padding(EdgeInsetsGeometryMix value)`
+
+Sets tab view padding.
+
+#### `margin(EdgeInsetsGeometryMix value)`
+
+Sets tab view margin.
+
+#### `color(Color value)`
+
+Sets tab view background color.
+
+#### `constraints(BoxConstraintsMix value)`
+
+Sets tab view constraints.
+
+#### `decoration(DecorationMix value)`
+
+Sets tab view decoration.
+
+#### `borderRadius(BorderRadiusGeometryMix radius)`
+
+Sets tab view border radius.
+
+#### `foregroundDecoration(DecorationMix value)`
+
+Sets a foreground decoration on the tab view.
+
+#### `transform(Matrix4 value, {AlignmentGeometry alignment = Alignment.center})`
+
+Applies a matrix transform to the tab view.
+
+#### `onSelected(RemixTabViewStyler value)`
+
+Applies a style while the tab view is selected.
+
+#### `animate(AnimationConfig value)`
+
+Configures implicit animation for tab view style transitions.
+
+#### `variants(List<VariantStyle<RemixTabViewSpec>> value)`
+
+Sets custom tab view variants.
+
+#### `wrap(WidgetModifierConfig value)`
+
+Applies widget modifiers to the tab view.
+
+#### `call({Key? key, required String tabId, required Widget child})`
+
+Creates a `RemixTabView` widget with this style applied.

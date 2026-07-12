@@ -1,22 +1,21 @@
 part of 'divider.dart';
 
-// Private per-component constants (none)
-
+/// Style configuration for a [RemixDivider] container.
 @MixableStyler()
-class RemixDividerStyle
-    extends RemixContainerStyle<RemixDividerSpec, RemixDividerStyle>
-    with Diagnosticable, _$RemixDividerStyleMixin {
+class RemixDividerStyler
+    extends RemixContainerStyler<RemixDividerSpec, RemixDividerStyler>
+    with Diagnosticable, _$RemixDividerStylerMixin {
   @MixableField(setterType: BoxStyler)
   final Prop<StyleSpec<BoxSpec>>? $container;
 
-  const RemixDividerStyle.create({
+  const RemixDividerStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
     super.variants,
     super.animation,
     super.modifier,
   }) : $container = container;
 
-  RemixDividerStyle({
+  RemixDividerStyler({
     BoxStyler? container,
     AnimationConfig? animation,
     List<VariantStyle<RemixDividerSpec>>? variants,
@@ -29,18 +28,18 @@ class RemixDividerStyle
        );
 
   /// Sets divider color
-  RemixDividerStyle color(Color value) {
+  RemixDividerStyler color(Color value) {
     return merge(
-      RemixDividerStyle(
+      RemixDividerStyler(
         container: BoxStyler(decoration: BoxDecorationMix(color: value)),
       ),
     );
   }
 
   /// Sets divider thickness (height for horizontal, width for vertical)
-  RemixDividerStyle thickness(double value) {
+  RemixDividerStyler thickness(double value) {
     return merge(
-      RemixDividerStyle(
+      RemixDividerStyler(
         container: BoxStyler(
           constraints: BoxConstraintsMix(minHeight: value, maxHeight: value),
         ),
@@ -49,47 +48,52 @@ class RemixDividerStyle
   }
 
   /// Sets container padding
-  RemixDividerStyle padding(EdgeInsetsGeometryMix value) {
-    return merge(RemixDividerStyle(container: BoxStyler(padding: value)));
+  RemixDividerStyler padding(EdgeInsetsGeometryMix value) {
+    return merge(RemixDividerStyler(container: BoxStyler(padding: value)));
   }
 
   /// Sets container margin
-  RemixDividerStyle margin(EdgeInsetsGeometryMix value) {
-    return merge(RemixDividerStyle(container: BoxStyler(margin: value)));
+  RemixDividerStyler margin(EdgeInsetsGeometryMix value) {
+    return merge(RemixDividerStyler(container: BoxStyler(margin: value)));
   }
 
   /// Sets container alignment
-  RemixDividerStyle alignment(Alignment value) {
-    return merge(RemixDividerStyle(container: BoxStyler(alignment: value)));
+  RemixDividerStyler alignment(Alignment value) {
+    return merge(RemixDividerStyler(container: BoxStyler(alignment: value)));
+  }
+
+  /// Creates a [RemixDivider] widget with this style applied.
+  RemixDivider call({Key? key}) {
+    return RemixDivider(key: key, style: this);
   }
 
   /// Sets container decoration
   @override
-  RemixDividerStyle decoration(DecorationMix value) {
-    return merge(RemixDividerStyle(container: BoxStyler(decoration: value)));
+  RemixDividerStyler decoration(DecorationMix value) {
+    return merge(RemixDividerStyler(container: BoxStyler(decoration: value)));
   }
 
   // Abstract method implementations for mixins
 
   @override
-  RemixDividerStyle constraints(BoxConstraintsMix value) {
-    return merge(RemixDividerStyle(container: BoxStyler(constraints: value)));
+  RemixDividerStyler constraints(BoxConstraintsMix value) {
+    return merge(RemixDividerStyler(container: BoxStyler(constraints: value)));
   }
 
   @override
-  RemixDividerStyle foregroundDecoration(DecorationMix value) {
+  RemixDividerStyler foregroundDecoration(DecorationMix value) {
     return merge(
-      RemixDividerStyle(container: BoxStyler(foregroundDecoration: value)),
+      RemixDividerStyler(container: BoxStyler(foregroundDecoration: value)),
     );
   }
 
   @override
-  RemixDividerStyle transform(
+  RemixDividerStyler transform(
     Matrix4 value, {
     AlignmentGeometry alignment = Alignment.center,
   }) {
     return merge(
-      RemixDividerStyle(
+      RemixDividerStyler(
         container: BoxStyler(transform: value, transformAlignment: alignment),
       ),
     );

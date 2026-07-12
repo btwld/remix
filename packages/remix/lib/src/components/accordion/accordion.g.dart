@@ -107,65 +107,203 @@ mixin _$RemixAccordionSpec implements Spec<RemixAccordionSpec>, Diagnosticable {
 typedef _$RemixAccordionSpecMethods = _$RemixAccordionSpec; // ignore: unused_element
 
 // **************************************************************************
+// MixWidgetGenerator
+// **************************************************************************
+
+/// Fortal-themed preset for [RemixAccordion].
+class FortalAccordion<T> extends StatelessWidget {
+  const FortalAccordion({
+    super.key,
+    this.variant = .surface,
+    this.size = .size2,
+    required this.value,
+    required this.child,
+    this.title,
+    this.leadingIcon,
+    this.trailingIcon,
+    this.builder,
+    this.enabled = true,
+    this.mouseCursor = SystemMouseCursors.click,
+    this.enableFeedback = true,
+    this.autofocus = false,
+    this.focusNode,
+    this.onFocusChange,
+    this.onHoverChange,
+    this.onPressChange,
+    this.semanticLabel,
+    this.transitionBuilder,
+  });
+
+  const FortalAccordion.surface({
+    super.key,
+    this.size = .size2,
+    required this.value,
+    required this.child,
+    this.title,
+    this.leadingIcon,
+    this.trailingIcon,
+    this.builder,
+    this.enabled = true,
+    this.mouseCursor = SystemMouseCursors.click,
+    this.enableFeedback = true,
+    this.autofocus = false,
+    this.focusNode,
+    this.onFocusChange,
+    this.onHoverChange,
+    this.onPressChange,
+    this.semanticLabel,
+    this.transitionBuilder,
+  }) : variant = FortalAccordionVariant.surface;
+
+  const FortalAccordion.soft({
+    super.key,
+    this.size = .size2,
+    required this.value,
+    required this.child,
+    this.title,
+    this.leadingIcon,
+    this.trailingIcon,
+    this.builder,
+    this.enabled = true,
+    this.mouseCursor = SystemMouseCursors.click,
+    this.enableFeedback = true,
+    this.autofocus = false,
+    this.focusNode,
+    this.onFocusChange,
+    this.onHoverChange,
+    this.onPressChange,
+    this.semanticLabel,
+    this.transitionBuilder,
+  }) : variant = FortalAccordionVariant.soft;
+
+  final FortalAccordionVariant variant;
+
+  final FortalAccordionSize size;
+
+  final T value;
+
+  final Widget child;
+
+  final String? title;
+
+  final IconData? leadingIcon;
+
+  final IconData? trailingIcon;
+
+  final NakedAccordionTriggerBuilder<T>? builder;
+
+  final bool enabled;
+
+  final MouseCursor mouseCursor;
+
+  final bool enableFeedback;
+
+  final bool autofocus;
+
+  final FocusNode? focusNode;
+
+  final ValueChanged<bool>? onFocusChange;
+
+  final ValueChanged<bool>? onHoverChange;
+
+  final ValueChanged<bool>? onPressChange;
+
+  final String? semanticLabel;
+
+  final Widget Function(Widget, Animation<double>)? transitionBuilder;
+
+  @override
+  Widget build(BuildContext context) {
+    return fortalAccordionStyler(
+      variant: this.variant,
+      size: this.size,
+    ).call<T>(
+      key: this.key,
+      value: this.value,
+      child: this.child,
+      title: this.title,
+      leadingIcon: this.leadingIcon,
+      trailingIcon: this.trailingIcon,
+      builder: this.builder,
+      enabled: this.enabled,
+      mouseCursor: this.mouseCursor,
+      enableFeedback: this.enableFeedback,
+      autofocus: this.autofocus,
+      focusNode: this.focusNode,
+      onFocusChange: this.onFocusChange,
+      onHoverChange: this.onHoverChange,
+      onPressChange: this.onPressChange,
+      semanticLabel: this.semanticLabel,
+      transitionBuilder: this.transitionBuilder,
+    );
+  }
+}
+
+// **************************************************************************
 // StylerGenerator
 // **************************************************************************
 
-mixin _$RemixAccordionStyleMixin on Style<RemixAccordionSpec>, Diagnosticable {
-  Prop<StyleSpec<BoxSpec>>? get $content;
+mixin _$RemixAccordionStylerMixin on Style<RemixAccordionSpec>, Diagnosticable {
+  Prop<StyleSpec<FlexBoxSpec>>? get $trigger;
   Prop<StyleSpec<IconSpec>>? get $leadingIcon;
   Prop<StyleSpec<TextSpec>>? get $title;
   Prop<StyleSpec<IconSpec>>? get $trailingIcon;
-  Prop<StyleSpec<FlexBoxSpec>>? get $trigger;
+  Prop<StyleSpec<BoxSpec>>? get $content;
 
-  /// Sets the content.
-  RemixAccordionStyle content(BoxStyler value) {
-    return merge(RemixAccordionStyle(content: value));
+  /// Sets the trigger.
+  RemixAccordionStyler trigger(FlexBoxStyler value) {
+    return merge(RemixAccordionStyler(trigger: value));
   }
 
   /// Sets the leadingIcon.
-  RemixAccordionStyle leadingIcon(IconStyler value) {
-    return merge(RemixAccordionStyle(leadingIcon: value));
+  RemixAccordionStyler leadingIcon(IconStyler value) {
+    return merge(RemixAccordionStyler(leadingIcon: value));
   }
 
   /// Sets the title.
-  RemixAccordionStyle title(TextStyler value) {
-    return merge(RemixAccordionStyle(title: value));
+  RemixAccordionStyler title(TextStyler value) {
+    return merge(RemixAccordionStyler(title: value));
   }
 
   /// Sets the trailingIcon.
-  RemixAccordionStyle trailingIcon(IconStyler value) {
-    return merge(RemixAccordionStyle(trailingIcon: value));
+  RemixAccordionStyler trailingIcon(IconStyler value) {
+    return merge(RemixAccordionStyler(trailingIcon: value));
   }
 
-  /// Sets the trigger.
-  RemixAccordionStyle trigger(FlexBoxStyler value) {
-    return merge(RemixAccordionStyle(trigger: value));
+  /// Sets the content.
+  RemixAccordionStyler content(BoxStyler value) {
+    return merge(RemixAccordionStyler(content: value));
   }
 
   /// Sets the animation configuration.
-  RemixAccordionStyle animate(AnimationConfig value) {
-    return merge(RemixAccordionStyle(animation: value));
+  RemixAccordionStyler animate(AnimationConfig value) {
+    return merge(RemixAccordionStyler(animation: value));
   }
 
   /// Sets the style variants.
-  RemixAccordionStyle variants(List<VariantStyle<RemixAccordionSpec>> value) {
-    return merge(RemixAccordionStyle(variants: value));
+  RemixAccordionStyler variants(List<VariantStyle<RemixAccordionSpec>> value) {
+    return merge(RemixAccordionStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
-  RemixAccordionStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixAccordionStyle(modifier: value));
+  RemixAccordionStyler wrap(WidgetModifierConfig value) {
+    return merge(RemixAccordionStyler(modifier: value));
   }
 
-  /// Merges with another [RemixAccordionStyle].
+  /// Sets the widget modifier.
+  RemixAccordionStyler modifier(WidgetModifierConfig value) {
+    return merge(RemixAccordionStyler(modifier: value));
+  }
+
+  /// Merges with another [RemixAccordionStyler].
   @override
-  RemixAccordionStyle merge(RemixAccordionStyle? other) {
-    return RemixAccordionStyle.create(
-      content: MixOps.merge($content, other?.$content),
+  RemixAccordionStyler merge(RemixAccordionStyler? other) {
+    return RemixAccordionStyler.create(
+      trigger: MixOps.merge($trigger, other?.$trigger),
       leadingIcon: MixOps.merge($leadingIcon, other?.$leadingIcon),
       title: MixOps.merge($title, other?.$title),
       trailingIcon: MixOps.merge($trailingIcon, other?.$trailingIcon),
-      trigger: MixOps.merge($trigger, other?.$trigger),
+      content: MixOps.merge($content, other?.$content),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -176,11 +314,11 @@ mixin _$RemixAccordionStyleMixin on Style<RemixAccordionSpec>, Diagnosticable {
   @override
   StyleSpec<RemixAccordionSpec> resolve(BuildContext context) {
     final spec = RemixAccordionSpec(
-      content: MixOps.resolve(context, $content),
+      trigger: MixOps.resolve(context, $trigger),
       leadingIcon: MixOps.resolve(context, $leadingIcon),
       title: MixOps.resolve(context, $title),
       trailingIcon: MixOps.resolve(context, $trailingIcon),
-      trigger: MixOps.resolve(context, $trigger),
+      content: MixOps.resolve(context, $content),
     );
 
     return StyleSpec(
@@ -194,20 +332,20 @@ mixin _$RemixAccordionStyleMixin on Style<RemixAccordionSpec>, Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(DiagnosticsProperty('content', $content))
+      ..add(DiagnosticsProperty('trigger', $trigger))
       ..add(DiagnosticsProperty('leadingIcon', $leadingIcon))
       ..add(DiagnosticsProperty('title', $title))
       ..add(DiagnosticsProperty('trailingIcon', $trailingIcon))
-      ..add(DiagnosticsProperty('trigger', $trigger));
+      ..add(DiagnosticsProperty('content', $content));
   }
 
   @override
   List<Object?> get props => [
-    $content,
+    $trigger,
     $leadingIcon,
     $title,
     $trailingIcon,
-    $trigger,
+    $content,
     $animation,
     $modifier,
     $variants,

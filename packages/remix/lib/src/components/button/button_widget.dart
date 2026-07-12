@@ -22,21 +22,21 @@ typedef RemixButtonLoadingBuilder =
 /// // Basic button
 /// RemixButton(
 ///   label: 'Click Me',
-///   onPressed: () => print('Button pressed!'),
+///   onPressed: () => debugPrint('Button pressed!'),
 /// )
 ///
 /// // Button with leading icon
 /// RemixButton(
 ///   label: 'Save Changes',
 ///   leadingIcon: Icons.save,
-///   onPressed: () => print('Save pressed!'),
+///   onPressed: () => debugPrint('Save pressed!'),
 /// )
 ///
 /// // Button with trailing icon
 /// RemixButton(
 ///   label: 'Next',
 ///   trailingIcon: Icons.arrow_forward,
-///   onPressed: () => print('Next pressed!'),
+///   onPressed: () => debugPrint('Next pressed!'),
 /// )
 ///
 /// // Button with both icons
@@ -44,25 +44,23 @@ typedef RemixButtonLoadingBuilder =
 ///   label: 'Send',
 ///   leadingIcon: Icons.send,
 ///   trailingIcon: Icons.check,
-///   onPressed: () => print('Send pressed!'),
+///   onPressed: () => debugPrint('Send pressed!'),
 /// )
 ///
 /// // Loading button
 /// RemixButton(
 ///   label: 'Processing',
 ///   loading: true,
-///   onPressed: () => print('Processing...'),
+///   onPressed: () => debugPrint('Processing...'),
 /// )
 /// ```
 ///
-class RemixButton extends StyleWidget<RemixButtonSpec> {
+class RemixButton extends StatelessWidget {
   /// Creates a Remix button.
   ///
   /// The [label] parameter is required and specifies the button text.
   /// Use builders to customize rendering of specific parts.
   const RemixButton({
-    super.style = const RemixButtonStyler.create(),
-    super.styleSpec,
     super.key,
     required this.label,
     this.leadingIcon,
@@ -71,17 +69,19 @@ class RemixButton extends StyleWidget<RemixButtonSpec> {
     this.leadingIconBuilder,
     this.trailingIconBuilder,
     this.loadingBuilder,
-    this.autofocus = false,
     this.loading = false,
     this.enabled = true,
-    this.enableFeedback = true,
-    required this.onPressed,
+    this.onPressed,
     this.onLongPress,
     this.focusNode,
+    this.autofocus = false,
+    this.enableFeedback = true,
     this.semanticLabel,
     this.semanticHint,
     this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
+    this.style = const RemixButtonStyler.create(),
+    this.styleSpec,
   });
 
   static final styleFrom = RemixButtonStyler.new;
@@ -162,22 +162,19 @@ class RemixButton extends StyleWidget<RemixButtonSpec> {
   /// Defaults to [SystemMouseCursors.click] when enabled.
   final MouseCursor mouseCursor;
 
+  /// The style configuration for the button.
+  final RemixButtonStyler style;
+
+  /// Optional raw style spec that bypasses fluent style resolution.
+  final RemixButtonSpec? styleSpec;
+
   bool get _isEnabled => enabled && !loading && onPressed != null;
 
-  Style<RemixButtonSpec> _buildStyle() {
-    final currentStyle = style;
-    if (currentStyle is RemixButtonStyler) {
-      return RemixButtonStyler().mainAxisSize(.min).merge(currentStyle);
-    }
-
-    return currentStyle;
+  RemixButtonStyler _buildStyle() {
+    return RemixButtonStyler().mainAxisSize(.min).merge(style);
   }
 
-  @override
-  State<RemixButton> createState() => _RemixButtonState();
-
-  @override
-  Widget build(BuildContext context, RemixButtonSpec spec) {
+  Widget _buildContent(BuildContext context, RemixButtonSpec spec) {
     Widget? leadingIconWidget;
     Widget? trailingIconWidget;
 
@@ -212,25 +209,41 @@ class RemixButton extends StyleWidget<RemixButtonSpec> {
 
     // Build spinner (used when loading)
     final spinner = loadingBuilder == null
-        ? RemixSpinner(styleSpec: spec.spinner)
+        ? StyleSpecBuilder(
+            styleSpec: spec.spinner,
+            builder: (context, spinnerSpec) =>
+                RemixSpinner(styleSpec: spinnerSpec),
+          )
         : StyleSpecBuilder(styleSpec: spec.spinner, builder: loadingBuilder!);
 
-    final rowChildren =
-        <Widget>[
-              if (leadingIconWidget != null) leadingIconWidget,
+    final hasBothIcons =
+        leadingIconWidget != null && trailingIconWidget != null;
+    final explicitAlignment = spec.iconAlignment;
+    final children = hasBothIcons || explicitAlignment == null
+        ? <Widget>[?leadingIconWidget, textWidget, ?trailingIconWidget]
+        : switch (explicitAlignment) {
+            .start => <Widget>[
+              ?leadingIconWidget,
+              ?trailingIconWidget,
               textWidget,
-              if (trailingIconWidget != null) trailingIconWidget,
-            ]
-            .map(
-              (e) => Visibility(
-                visible: !loading,
-                maintainState: true,
-                maintainAnimation: true,
-                maintainSize: true,
-                child: e,
-              ),
-            )
-            .toList();
+            ],
+            .end => <Widget>[
+              textWidget,
+              ?leadingIconWidget,
+              ?trailingIconWidget,
+            ],
+          };
+    final rowChildren = children
+        .map(
+          (e) => Visibility(
+            visible: !loading,
+            maintainState: true,
+            maintainAnimation: true,
+            maintainSize: true,
+            child: e,
+          ),
+        )
+        .toList();
 
     // Create content row with visibility control for loading state
     final contentRow = RowBox(styleSpec: spec.container, children: rowChildren);
@@ -251,33 +264,24 @@ class RemixButton extends StyleWidget<RemixButtonSpec> {
       ),
     );
   }
-}
 
-class _RemixButtonState extends State<RemixButton> {
   @override
   Widget build(BuildContext context) {
     return NakedButton(
-      onPressed: widget._isEnabled ? widget.onPressed : null,
-      onLongPress: widget._isEnabled ? widget.onLongPress : null,
-      enabled: widget._isEnabled,
-      mouseCursor: widget.mouseCursor,
-      enableFeedback: widget.enableFeedback,
-      focusNode: widget.focusNode,
-      autofocus: widget.autofocus,
-      semanticLabel: widget.semanticLabel,
+      onPressed: _isEnabled ? onPressed : null,
+      onLongPress: _isEnabled ? onLongPress : null,
+      enabled: _isEnabled,
+      mouseCursor: mouseCursor,
+      enableFeedback: enableFeedback,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      semanticLabel: semanticLabel,
       builder: (context, _, _) {
-        final styleSpec = widget.styleSpec;
-        if (styleSpec != null) {
-          return StyleSpecBuilder<RemixButtonSpec>(
-            styleSpec: styleSpec,
-            builder: widget.build,
-          );
-        }
-
-        return StyleBuilder<RemixButtonSpec>(
-          style: widget._buildStyle(),
-          controller: NakedState.controllerOf(context),
-          builder: widget.build,
+        return RemixStyleSpecBuilder<RemixButtonSpec>(
+          style: _buildStyle(),
+          styleSpec: styleSpec,
+          controller: NakedButtonState.controllerOf(context),
+          builder: _buildContent,
         );
       },
     );

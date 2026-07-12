@@ -94,16 +94,17 @@ typedef _$RemixToggleSpecMethods = _$RemixToggleSpec; // ignore: unused_element
 // MixWidgetGenerator
 // **************************************************************************
 
+/// Fortal-themed preset for [RemixToggle].
 class FortalToggle extends StatelessWidget {
   const FortalToggle({
     super.key,
     this.variant = .ghost,
     this.size = .size2,
     required this.selected,
-    required this.onChanged,
+    this.onChanged,
+    this.enabled = true,
     this.label,
     this.icon,
-    this.enabled = true,
     this.enableFeedback = true,
     this.focusNode,
     this.autofocus = false,
@@ -111,19 +112,49 @@ class FortalToggle extends StatelessWidget {
     this.mouseCursor = SystemMouseCursors.click,
   });
 
+  const FortalToggle.ghost({
+    super.key,
+    this.size = .size2,
+    required this.selected,
+    this.onChanged,
+    this.enabled = true,
+    this.label,
+    this.icon,
+    this.enableFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
+    this.semanticLabel,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = FortalToggleVariant.ghost;
+
+  const FortalToggle.outline({
+    super.key,
+    this.size = .size2,
+    required this.selected,
+    this.onChanged,
+    this.enabled = true,
+    this.label,
+    this.icon,
+    this.enableFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
+    this.semanticLabel,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = FortalToggleVariant.outline;
+
   final FortalToggleVariant variant;
 
   final FortalToggleSize size;
 
   final bool selected;
 
-  final ValueChanged<bool> onChanged;
+  final ValueChanged<bool>? onChanged;
+
+  final bool enabled;
 
   final String? label;
 
   final IconData? icon;
-
-  final bool enabled;
 
   final bool enableFeedback;
 
@@ -137,12 +168,13 @@ class FortalToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return fortalToggleStyle(variant: this.variant, size: this.size).call(
+    return fortalToggleStyler(variant: this.variant, size: this.size).call(
+      key: this.key,
       selected: this.selected,
       onChanged: this.onChanged,
+      enabled: this.enabled,
       label: this.label,
       icon: this.icon,
-      enabled: this.enabled,
       enableFeedback: this.enableFeedback,
       focusNode: this.focusNode,
       autofocus: this.autofocus,
@@ -156,48 +188,53 @@ class FortalToggle extends StatelessWidget {
 // StylerGenerator
 // **************************************************************************
 
-mixin _$RemixToggleStyleMixin on Style<RemixToggleSpec>, Diagnosticable {
+mixin _$RemixToggleStylerMixin on Style<RemixToggleSpec>, Diagnosticable {
   Prop<StyleSpec<FlexBoxSpec>>? get $container;
-  Prop<StyleSpec<IconSpec>>? get $icon;
   Prop<StyleSpec<TextSpec>>? get $label;
+  Prop<StyleSpec<IconSpec>>? get $icon;
 
   /// Sets the container.
-  RemixToggleStyle container(FlexBoxStyler value) {
-    return merge(RemixToggleStyle(container: value));
-  }
-
-  /// Sets the icon.
-  RemixToggleStyle icon(IconStyler value) {
-    return merge(RemixToggleStyle(icon: value));
+  RemixToggleStyler container(FlexBoxStyler value) {
+    return merge(RemixToggleStyler(container: value));
   }
 
   /// Sets the label.
-  RemixToggleStyle label(TextStyler value) {
-    return merge(RemixToggleStyle(label: value));
+  RemixToggleStyler label(TextStyler value) {
+    return merge(RemixToggleStyler(label: value));
+  }
+
+  /// Sets the icon.
+  RemixToggleStyler icon(IconStyler value) {
+    return merge(RemixToggleStyler(icon: value));
   }
 
   /// Sets the animation configuration.
-  RemixToggleStyle animate(AnimationConfig value) {
-    return merge(RemixToggleStyle(animation: value));
+  RemixToggleStyler animate(AnimationConfig value) {
+    return merge(RemixToggleStyler(animation: value));
   }
 
   /// Sets the style variants.
-  RemixToggleStyle variants(List<VariantStyle<RemixToggleSpec>> value) {
-    return merge(RemixToggleStyle(variants: value));
+  RemixToggleStyler variants(List<VariantStyle<RemixToggleSpec>> value) {
+    return merge(RemixToggleStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
-  RemixToggleStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixToggleStyle(modifier: value));
+  RemixToggleStyler wrap(WidgetModifierConfig value) {
+    return merge(RemixToggleStyler(modifier: value));
   }
 
-  /// Merges with another [RemixToggleStyle].
+  /// Sets the widget modifier.
+  RemixToggleStyler modifier(WidgetModifierConfig value) {
+    return merge(RemixToggleStyler(modifier: value));
+  }
+
+  /// Merges with another [RemixToggleStyler].
   @override
-  RemixToggleStyle merge(RemixToggleStyle? other) {
-    return RemixToggleStyle.create(
+  RemixToggleStyler merge(RemixToggleStyler? other) {
+    return RemixToggleStyler.create(
       container: MixOps.merge($container, other?.$container),
-      icon: MixOps.merge($icon, other?.$icon),
       label: MixOps.merge($label, other?.$label),
+      icon: MixOps.merge($icon, other?.$icon),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -209,8 +246,8 @@ mixin _$RemixToggleStyleMixin on Style<RemixToggleSpec>, Diagnosticable {
   StyleSpec<RemixToggleSpec> resolve(BuildContext context) {
     final spec = RemixToggleSpec(
       container: MixOps.resolve(context, $container),
-      icon: MixOps.resolve(context, $icon),
       label: MixOps.resolve(context, $label),
+      icon: MixOps.resolve(context, $icon),
     );
 
     return StyleSpec(
@@ -225,15 +262,15 @@ mixin _$RemixToggleStyleMixin on Style<RemixToggleSpec>, Diagnosticable {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', $container))
-      ..add(DiagnosticsProperty('icon', $icon))
-      ..add(DiagnosticsProperty('label', $label));
+      ..add(DiagnosticsProperty('label', $label))
+      ..add(DiagnosticsProperty('icon', $icon));
   }
 
   @override
   List<Object?> get props => [
     $container,
-    $icon,
     $label,
+    $icon,
     $animation,
     $modifier,
     $variants,

@@ -15,14 +15,9 @@ Widget buildTooltipUseCase(BuildContext context) {
           height: 300,
           width: 300,
           child: Center(
-            child: RemixTooltip(
-              style: fortalTooltipStyle(),
+            child: FortalTooltip(
               tooltipChild: const Text('Tooltip content'),
-              child: RemixButton(
-                label: 'Hover me',
-                onPressed: () {},
-                style: fortalButtonStyle(),
-              ),
+              child: FortalButton(label: 'Hover me', onPressed: () {}),
             ),
           ),
         ),

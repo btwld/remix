@@ -1,8 +1,13 @@
 part of 'spinner.dart';
 
+/// Style builder for [RemixSpinner].
+///
+/// Use this class to customize spinner size, stroke widths, colors, duration,
+/// and Mix variants.
 @MixableStyler()
-class RemixSpinnerStyle extends RemixStyle<RemixSpinnerSpec, RemixSpinnerStyle>
-    with Diagnosticable, _$RemixSpinnerStyleMixin {
+class RemixSpinnerStyler
+    extends RemixStyler<RemixSpinnerSpec, RemixSpinnerStyler>
+    with Diagnosticable, _$RemixSpinnerStylerMixin {
   @MixableField()
   final Prop<double>? $size;
   @MixableField()
@@ -16,7 +21,7 @@ class RemixSpinnerStyle extends RemixStyle<RemixSpinnerSpec, RemixSpinnerStyle>
   @MixableField()
   final Prop<Duration>? $duration;
 
-  const RemixSpinnerStyle.create({
+  const RemixSpinnerStyler.create({
     Prop<double>? size,
     Prop<double>? strokeWidth,
     Prop<Color>? indicatorColor,
@@ -33,7 +38,7 @@ class RemixSpinnerStyle extends RemixStyle<RemixSpinnerSpec, RemixSpinnerStyle>
        $trackStrokeWidth = trackStrokeWidth,
        $duration = duration;
 
-  RemixSpinnerStyle({
+  RemixSpinnerStyler({
     double? size,
     double? strokeWidth,
     Color? indicatorColor,
@@ -55,25 +60,25 @@ class RemixSpinnerStyle extends RemixStyle<RemixSpinnerSpec, RemixSpinnerStyle>
          modifier: modifier,
        );
 
-  factory RemixSpinnerStyle.duration(Duration value) =>
-      RemixSpinnerStyle().duration(value);
+  factory RemixSpinnerStyler.duration(Duration value) =>
+      RemixSpinnerStyler().duration(value);
 
-  factory RemixSpinnerStyle.indicatorColor(Color value) =>
-      RemixSpinnerStyle().indicatorColor(value);
+  factory RemixSpinnerStyler.indicatorColor(Color value) =>
+      RemixSpinnerStyler().indicatorColor(value);
 
-  factory RemixSpinnerStyle.size(double value) =>
-      RemixSpinnerStyle().size(value);
+  factory RemixSpinnerStyler.size(double value) =>
+      RemixSpinnerStyler().size(value);
 
-  factory RemixSpinnerStyle.strokeWidth(double value) =>
-      RemixSpinnerStyle().strokeWidth(value);
+  factory RemixSpinnerStyler.strokeWidth(double value) =>
+      RemixSpinnerStyler().strokeWidth(value);
 
-  factory RemixSpinnerStyle.trackColor(Color value) =>
-      RemixSpinnerStyle().trackColor(value);
+  factory RemixSpinnerStyler.trackColor(Color value) =>
+      RemixSpinnerStyler().trackColor(value);
 
-  factory RemixSpinnerStyle.trackStrokeWidth(double value) =>
-      RemixSpinnerStyle().trackStrokeWidth(value);
+  factory RemixSpinnerStyler.trackStrokeWidth(double value) =>
+      RemixSpinnerStyler().trackStrokeWidth(value);
 
-  RemixSpinner call() {
-    return RemixSpinner(style: this);
+  RemixSpinner call({Key? key}) {
+    return RemixSpinner(key: key, style: this);
   }
 }

@@ -13,8 +13,8 @@ Widget buildButtonExample() {
             .paddingX(16)
             .paddingY(10)
             .borderRadiusAll(const Radius.circular(8))
-            .color(const Color(0xFF1F2937))
-            .label(.color(Colors.white)),
+            .backgroundColor(const Color(0xFF1F2937))
+            .foregroundColor(Colors.white),
       ),
       RemixButton(
         label: 'Disabled',
@@ -23,8 +23,8 @@ Widget buildButtonExample() {
             .paddingX(16)
             .paddingY(10)
             .borderRadiusAll(const Radius.circular(8))
-            .color(const Color(0xFFE5E7EB))
-            .label(.color(const Color(0xFF9CA3AF))),
+            .backgroundColor(const Color(0xFFE5E7EB))
+            .foregroundColor(const Color(0xFF9CA3AF)),
       ),
       RemixButton(
         label: 'Loading',
@@ -34,8 +34,8 @@ Widget buildButtonExample() {
             .paddingX(16)
             .paddingY(10)
             .borderRadiusAll(const Radius.circular(8))
-            .color(const Color(0xFF1F2937).withValues(alpha: 0.6))
-            .label(.color(Colors.white.withValues(alpha: 0.7)))
+            .backgroundColor(const Color(0xFF1F2937).withValues(alpha: 0.6))
+            .foregroundColor(Colors.white.withValues(alpha: 0.7))
             .spinner(.indicatorColor(Colors.white)),
       ),
       RemixButton(
@@ -46,19 +46,18 @@ Widget buildButtonExample() {
             .paddingX(16)
             .paddingY(10)
             .borderRadiusAll(const Radius.circular(8))
-            .color(const Color(0xFF1F2937))
-            .label(.color(Colors.white))
-            .icon(.color(Colors.white)),
+            .backgroundColor(const Color(0xFF1F2937))
+            .foregroundColor(Colors.white),
       ),
       RemixIconButton(
         icon: Icons.star,
         onPressed: () {},
         semanticLabel: 'Favorite',
-        style: RemixIconButtonStyle()
+        style: RemixIconButtonStyler()
             .paddingAll(10)
             .borderRadiusAll(const Radius.circular(8))
-            .color(const Color(0xFF1F2937))
-            .iconColor(Colors.white),
+            .backgroundColor(const Color(0xFF1F2937))
+            .foregroundColor(Colors.white),
       ),
     ],
     material: [

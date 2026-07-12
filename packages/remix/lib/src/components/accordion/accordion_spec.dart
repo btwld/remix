@@ -1,5 +1,6 @@
 part of 'accordion.dart';
 
+/// Resolved visual properties for a [RemixAccordion].
 @MixableSpec()
 class RemixAccordionSpec with _$RemixAccordionSpec {
   @override

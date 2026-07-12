@@ -1,18 +1,19 @@
 part of 'radio.dart';
 
+/// Style configuration for [RemixRadio] container and selected indicator.
 @MixableStyler()
-class RemixRadioStyle
-    extends RemixContainerStyle<RemixRadioSpec, RemixRadioStyle>
+class RemixRadioStyler
+    extends RemixContainerStyler<RemixRadioSpec, RemixRadioStyler>
     with
-        SelectedWidgetStateVariantMixin<RemixRadioSpec, RemixRadioStyle>,
+        SelectedWidgetStateVariantMixin<RemixRadioSpec, RemixRadioStyler>,
         Diagnosticable,
-        _$RemixRadioStyleMixin {
+        _$RemixRadioStylerMixin {
   @MixableField(setterType: BoxStyler)
   final Prop<StyleSpec<BoxSpec>>? $container;
   @MixableField(setterType: BoxStyler)
   final Prop<StyleSpec<BoxSpec>>? $indicator;
 
-  const RemixRadioStyle.create({
+  const RemixRadioStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
     Prop<StyleSpec<BoxSpec>>? indicator,
     super.variants,
@@ -21,7 +22,7 @@ class RemixRadioStyle
   }) : $container = container,
        $indicator = indicator;
 
-  RemixRadioStyle({
+  RemixRadioStyler({
     BoxStyler? container,
     BoxStyler? indicator,
     AnimationConfig? animation,
@@ -36,45 +37,45 @@ class RemixRadioStyle
        );
 
   /// Sets container alignment.
-  RemixRadioStyle alignment(Alignment value) {
-    return merge(RemixRadioStyle(container: BoxStyler(alignment: value)));
+  RemixRadioStyler alignment(Alignment value) {
+    return merge(RemixRadioStyler(container: BoxStyler(alignment: value)));
   }
 
   /// Creates a RemixRadio widget with this style applied.
   RemixRadio<T> call<T>({
+    Key? key,
     required T value,
     bool enabled = true,
-    bool autofocus = false,
     bool toggleable = false,
-    FocusNode? focusNode,
     MouseCursor? mouseCursor,
-    bool enableFeedback = true,
+    FocusNode? focusNode,
+    bool autofocus = false,
   }) {
     return RemixRadio(
-      style: this,
+      key: key,
       value: value,
-      autofocus: autofocus,
       enabled: enabled,
       toggleable: toggleable,
-      focusNode: focusNode,
       mouseCursor: mouseCursor,
-      enableFeedback: enableFeedback,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      style: this,
     );
   }
 
   /// Sets fill color on the container.
-  RemixRadioStyle fillColor(Color value) {
+  RemixRadioStyler fillColor(Color value) {
     return merge(
-      RemixRadioStyle(
+      RemixRadioStyler(
         container: BoxStyler(decoration: BoxDecorationMix(color: value)),
       ),
     );
   }
 
   /// Sets the indicator's fill color.
-  RemixRadioStyle indicatorColor(Color value) {
+  RemixRadioStyler indicatorColor(Color value) {
     return merge(
-      RemixRadioStyle(
+      RemixRadioStyler(
         indicator: BoxStyler(decoration: BoxDecorationMix(color: value)),
       ),
     );
@@ -82,26 +83,21 @@ class RemixRadioStyle
 
   /// Convenience for applying padding around the control.
   @override
-  RemixRadioStyle padding(EdgeInsetsGeometryMix value) {
-    return merge(RemixRadioStyle(container: BoxStyler(padding: value)));
+  RemixRadioStyler padding(EdgeInsetsGeometryMix value) {
+    return merge(RemixRadioStyler(container: BoxStyler(padding: value)));
   }
 
   /// Convenience for applying margin around the control.
   @override
-  RemixRadioStyle margin(EdgeInsetsGeometryMix value) {
-    return merge(RemixRadioStyle(container: BoxStyler(margin: value)));
+  RemixRadioStyler margin(EdgeInsetsGeometryMix value) {
+    return merge(RemixRadioStyler(container: BoxStyler(margin: value)));
   }
-
-  /// Sets background color on the container.
-  /// Delegates to [fillColor].
-  @override
-  RemixRadioStyle color(Color value) => fillColor(value);
 
   /// Sets container size using explicit constraints.
   @override
-  RemixRadioStyle size(double width, double height) {
+  RemixRadioStyler size(double width, double height) {
     return merge(
-      RemixRadioStyle(
+      RemixRadioStyler(
         container: BoxStyler(
           constraints: BoxConstraintsMix(
             minWidth: width,
@@ -116,9 +112,9 @@ class RemixRadioStyle
 
   /// Sets border radius on the outer container.
   @override
-  RemixRadioStyle borderRadius(BorderRadiusGeometryMix radius) {
+  RemixRadioStyler borderRadius(BorderRadiusGeometryMix radius) {
     return merge(
-      RemixRadioStyle(
+      RemixRadioStyler(
         container: BoxStyler(
           decoration: BoxDecorationMix(borderRadius: radius),
         ),
@@ -127,29 +123,29 @@ class RemixRadioStyle
   }
 
   @override
-  RemixRadioStyle constraints(BoxConstraintsMix value) {
-    return merge(RemixRadioStyle(container: BoxStyler(constraints: value)));
+  RemixRadioStyler constraints(BoxConstraintsMix value) {
+    return merge(RemixRadioStyler(container: BoxStyler(constraints: value)));
   }
 
   @override
-  RemixRadioStyle decoration(DecorationMix value) {
-    return merge(RemixRadioStyle(container: BoxStyler(decoration: value)));
+  RemixRadioStyler decoration(DecorationMix value) {
+    return merge(RemixRadioStyler(container: BoxStyler(decoration: value)));
   }
 
   @override
-  RemixRadioStyle foregroundDecoration(DecorationMix value) {
+  RemixRadioStyler foregroundDecoration(DecorationMix value) {
     return merge(
-      RemixRadioStyle(container: BoxStyler(foregroundDecoration: value)),
+      RemixRadioStyler(container: BoxStyler(foregroundDecoration: value)),
     );
   }
 
   @override
-  RemixRadioStyle transform(
+  RemixRadioStyler transform(
     Matrix4 value, {
     AlignmentGeometry alignment = Alignment.center,
   }) {
     return merge(
-      RemixRadioStyle(
+      RemixRadioStyler(
         container: BoxStyler(transform: value, transformAlignment: alignment),
       ),
     );

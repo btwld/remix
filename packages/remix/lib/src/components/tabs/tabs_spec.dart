@@ -1,5 +1,6 @@
 part of 'tabs.dart';
 
+/// Resolved visual values for a [RemixTabBar].
 @MixableSpec()
 class RemixTabBarSpec with _$RemixTabBarSpec {
   @override
@@ -9,6 +10,7 @@ class RemixTabBarSpec with _$RemixTabBarSpec {
     : container = container ?? const StyleSpec(spec: FlexBoxSpec());
 }
 
+/// Resolved visual values for an individual [RemixTab].
 @MixableSpec()
 class RemixTabSpec with _$RemixTabSpec {
   @override
@@ -27,6 +29,7 @@ class RemixTabSpec with _$RemixTabSpec {
        icon = icon ?? const StyleSpec(spec: IconSpec());
 }
 
+/// Resolved visual values for a [RemixTabView].
 @MixableSpec()
 class RemixTabViewSpec with _$RemixTabViewSpec {
   @override

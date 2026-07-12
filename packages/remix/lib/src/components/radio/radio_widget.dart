@@ -32,23 +32,22 @@ part of 'radio.dart';
 ///
 class RemixRadio<T> extends StatelessWidget {
   const RemixRadio({
-    this.style = const RemixRadioStyle.create(),
-    this.styleSpec,
     super.key,
     required this.value,
-    this.autofocus = false,
     this.enabled = true,
     this.toggleable = false,
-    this.focusNode,
     this.mouseCursor,
-    this.enableFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
+    this.style = const RemixRadioStyler.create(),
+    this.styleSpec,
   });
 
-  final RemixRadioStyle style;
+  final RemixRadioStyler style;
 
   final RemixRadioSpec? styleSpec;
 
-  static final styleFrom = RemixRadioStyle.new;
+  static final styleFrom = RemixRadioStyler.new;
 
   /// The value represented by this radio button.
   final T value;
@@ -68,12 +67,10 @@ class RemixRadio<T> extends StatelessWidget {
   /// The mouse cursor to use when hovering over the radio button.
   final MouseCursor? mouseCursor;
 
-  /// Whether to provide feedback when the radio button is pressed.
-  final bool enableFeedback;
-
   @override
   Widget build(BuildContext context) {
     final registry = RadioGroup.maybeOf<T>(context);
+    final groupScope = _RemixRadioGroupScope.maybeOf<T>(context);
 
     // Always require registry - same as NakedRadio
     if (registry == null) {
@@ -100,21 +97,24 @@ class RemixRadio<T> extends StatelessWidget {
       ]);
     }
 
+    final effectiveEnabled = enabled && (groupScope?.enabled ?? true);
+
     // Check if selected
     final isSelected = registry.groupValue == value;
 
     // NakedRadio handles semantics through RawRadio - no need for wrapper
     return NakedRadio<T>(
       value: value,
-      enabled: enabled,
+      enabled: effectiveEnabled,
       mouseCursor: mouseCursor,
       focusNode: focusNode,
       autofocus: autofocus,
       toggleable: toggleable,
       builder: (context, _, __) {
-        return StyleBuilder(
+        return RemixStyleSpecBuilder<RemixRadioSpec>(
           style: style,
-          controller: NakedState.controllerOf(context),
+          styleSpec: styleSpec,
+          controller: NakedRadioState.controllerOf<T>(context),
           builder: (context, spec) {
             return Box(
               styleSpec: spec.container,

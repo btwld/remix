@@ -29,7 +29,7 @@ Widget buildMenuUseCase(BuildContext context) {
           height: 300,
           width: 300,
           child: Center(
-            child: RemixMenu(
+            child: FortalMenu(
               positioning: const OverlayPositionConfig(
                 followerAnchor: .topCenter,
                 targetAnchor: .bottomCenter,
@@ -38,23 +38,12 @@ Widget buildMenuUseCase(BuildContext context) {
                 label: 'Menu',
                 icon: Icons.keyboard_arrow_down,
               ),
-              style: fortalMenuStyle(variant: variant, size: size),
+              variant: variant,
+              size: size,
               items: [
-                RemixMenuItem(
-                  label: 'Item 1',
-                  value: 'item1',
-                  style: fortalMenuItemStyle(variant: variant, size: size),
-                ),
-                RemixMenuItem(
-                  label: 'Item 2',
-                  value: 'item2',
-                  style: fortalMenuItemStyle(variant: variant, size: size),
-                ),
-                RemixMenuItem(
-                  label: 'Item 3',
-                  value: 'item3',
-                  style: fortalMenuItemStyle(variant: variant, size: size),
-                ),
+                const RemixMenuItem(label: 'Item 1', value: 'item1'),
+                const RemixMenuItem(label: 'Item 2', value: 'item2'),
+                const RemixMenuItem(label: 'Item 3', value: 'item3'),
               ],
               onSelected: (value) {},
             ),

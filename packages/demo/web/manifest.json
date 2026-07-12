@@ -1,11 +1,11 @@
 {
-    "name": "demo",
-    "short_name": "demo",
+    "name": "Remix Component Demo",
+    "short_name": "Remix Demo",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Widgetbook catalog for Remix and Fortal components.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

@@ -5,13 +5,13 @@ import 'package:remix/remix.dart';
 import '../../helpers/test_methods.dart';
 
 void main() {
-  group('RemixProgressStyle', () {
+  group('RemixProgressStyler', () {
     group('Constructors', () {
       test('default constructor creates valid instance', () {
-        final style = RemixProgressStyle();
+        final style = RemixProgressStyler();
 
         expect(style, isNotNull);
-        expect(style, isA<RemixProgressStyle>());
+        expect(style, isA<RemixProgressStyler>());
       });
 
       test('create constructor with all parameters', () {
@@ -21,7 +21,7 @@ void main() {
         final trackContainer = Prop.maybeMix(BoxStyler());
         final variants = <VariantStyle<RemixProgressSpec>>[];
 
-        final style = RemixProgressStyle.create(
+        final style = RemixProgressStyler.create(
           container: container,
           track: track,
           indicator: indicator,
@@ -43,7 +43,7 @@ void main() {
         final indicatorStyler = BoxStyler();
         final trackContainerStyler = BoxStyler();
 
-        final style = RemixProgressStyle(
+        final style = RemixProgressStyler(
           container: containerStyler,
           track: trackStyler,
           indicator: indicatorStyler,
@@ -61,7 +61,7 @@ void main() {
     group('Style Methods', () {
       styleMethodTest(
         'height',
-        initial: RemixProgressStyle(),
+        initial: RemixProgressStyler(),
         modify: (style) => style.height(20.0),
         expect: (style) {
           expect(
@@ -82,7 +82,7 @@ void main() {
 
       styleMethodTest(
         'width',
-        initial: RemixProgressStyle(),
+        initial: RemixProgressStyler(),
         modify: (style) => style.width(200.0),
         expect: (style) {
           expect(
@@ -103,7 +103,7 @@ void main() {
 
       styleMethodTest(
         'trackColor',
-        initial: RemixProgressStyle(),
+        initial: RemixProgressStyler(),
         modify: (style) => style.trackColor(Colors.grey),
         expect: (style) {
           expect(
@@ -119,7 +119,7 @@ void main() {
 
       styleMethodTest(
         'indicatorColor',
-        initial: RemixProgressStyle(),
+        initial: RemixProgressStyler(),
         modify: (style) => style.indicatorColor(Colors.blue),
         expect: (style) {
           expect(
@@ -135,7 +135,7 @@ void main() {
 
       styleMethodTest(
         'track',
-        initial: RemixProgressStyle(),
+        initial: RemixProgressStyler(),
         modify: (style) => style.track(
           BoxStyler(decoration: BoxDecorationMix(color: Colors.red)),
         ),
@@ -153,7 +153,7 @@ void main() {
 
       styleMethodTest(
         'indicator',
-        initial: RemixProgressStyle(),
+        initial: RemixProgressStyler(),
         modify: (style) => style.indicator(
           BoxStyler(decoration: BoxDecorationMix(color: Colors.green)),
         ),
@@ -171,7 +171,7 @@ void main() {
 
       styleMethodTest(
         'trackContainer',
-        initial: RemixProgressStyle(),
+        initial: RemixProgressStyler(),
         modify: (style) => style.trackContainer(
           BoxStyler(padding: EdgeInsetsGeometryMix.all(4.0)),
         ),
@@ -187,7 +187,7 @@ void main() {
 
       styleMethodTest(
         'alignment',
-        initial: RemixProgressStyle(),
+        initial: RemixProgressStyler(),
         modify: (style) => style.alignment(Alignment.center),
         expect: (style) {
           expect(
@@ -199,7 +199,7 @@ void main() {
 
       styleMethodTest(
         'padding',
-        initial: RemixProgressStyle(),
+        initial: RemixProgressStyler(),
         modify: (style) => style.padding(EdgeInsetsGeometryMix.all(16.0)),
         expect: (style) {
           expect(
@@ -215,7 +215,7 @@ void main() {
 
       styleMethodTest(
         'margin',
-        initial: RemixProgressStyle(),
+        initial: RemixProgressStyler(),
         modify: (style) => style.margin(EdgeInsetsGeometryMix.all(8.0)),
         expect: (style) {
           expect(
@@ -229,7 +229,7 @@ void main() {
 
       styleMethodTest(
         'constraints',
-        initial: RemixProgressStyle(),
+        initial: RemixProgressStyler(),
         modify: (style) => style.constraints(
           BoxConstraintsMix(minWidth: 100.0, minHeight: 40.0),
         ),
@@ -252,7 +252,7 @@ void main() {
 
       styleMethodTest(
         'decoration',
-        initial: RemixProgressStyle(),
+        initial: RemixProgressStyler(),
         modify: (style) => style.decoration(
           BoxDecorationMix(
             color: Colors.blue,
@@ -278,7 +278,7 @@ void main() {
 
       styleMethodTest(
         'foregroundDecoration',
-        initial: RemixProgressStyle(),
+        initial: RemixProgressStyler(),
         modify: (style) => style.foregroundDecoration(
           BoxDecorationMix(
             border: BoxBorderMix.all(BorderSideMix(color: Colors.red)),
@@ -302,7 +302,7 @@ void main() {
 
       styleMethodTest(
         'transform',
-        initial: RemixProgressStyle(),
+        initial: RemixProgressStyler(),
         modify: (style) =>
             style.transform(Matrix4.identity(), alignment: Alignment.topLeft),
         expect: (style) {
@@ -322,7 +322,7 @@ void main() {
 
       styleMethodTest(
         'variants',
-        initial: RemixProgressStyle(),
+        initial: RemixProgressStyler(),
         modify: (style) => style.variants(<VariantStyle<RemixProgressSpec>>[]),
         expect: (style) {
           expect(style.$variants, equals(<VariantStyle<RemixProgressSpec>>[]));
@@ -331,8 +331,8 @@ void main() {
 
       styleMethodTest(
         'wrap',
-        initial: RemixProgressStyle(),
-        modify: (style) => style.wrap(WidgetModifierConfig.clipOval()),
+        initial: RemixProgressStyler(),
+        modify: (style) => style.wrap(.clipOval()),
         expect: (style) {
           expect(style.$modifier, equals(WidgetModifierConfig.clipOval()));
         },
@@ -343,7 +343,7 @@ void main() {
       testWidgets('resolve method returns StyleSpec', (
         WidgetTester tester,
       ) async {
-        final style = RemixProgressStyle();
+        final style = RemixProgressStyler();
 
         await tester.pumpWidget(
           MaterialApp(
@@ -366,7 +366,7 @@ void main() {
       });
 
       test('merge with null returns style equal to original', () {
-        final originalStyle = RemixProgressStyle();
+        final originalStyle = RemixProgressStyler();
 
         final mergedStyle = originalStyle.merge(null);
 
@@ -376,16 +376,16 @@ void main() {
 
     group('Equality', () {
       test('identical styles are equal', () {
-        final style1 = RemixProgressStyle();
-        final style2 = RemixProgressStyle();
+        final style1 = RemixProgressStyler();
+        final style2 = RemixProgressStyler();
 
         expect(style1, equals(style2));
         expect(style1.hashCode, equals(style2.hashCode));
       });
 
       test('styles with different properties are not equal', () {
-        final style1 = RemixProgressStyle().height(10.0);
-        final style2 = RemixProgressStyle().height(20.0);
+        final style1 = RemixProgressStyler().height(10.0);
+        final style2 = RemixProgressStyler().height(20.0);
 
         expect(style1, isNot(equals(style2)));
       });

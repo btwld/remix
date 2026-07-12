@@ -1,6 +1,9 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
 
 import '../../helpers/test_helpers.dart';
@@ -218,7 +221,7 @@ void main() {
     group('Styling', () {
       testWidgets('applies custom text color', (tester) async {
         await tester.pumpRemixApp(
-          RemixTextField(style: RemixTextFieldStyle().color(Colors.red)),
+          RemixTextField(style: RemixTextFieldStyler().color(Colors.red)),
         );
         await tester.pumpAndSettle();
 
@@ -228,7 +231,7 @@ void main() {
       testWidgets('applies custom background color', (tester) async {
         await tester.pumpRemixApp(
           RemixTextField(
-            style: RemixTextFieldStyle().backgroundColor(Colors.grey),
+            style: RemixTextFieldStyler().backgroundColor(Colors.grey),
           ),
         );
         await tester.pumpAndSettle();
@@ -239,7 +242,9 @@ void main() {
       testWidgets('applies custom padding', (tester) async {
         await tester.pumpRemixApp(
           RemixTextField(
-            style: RemixTextFieldStyle().padding(EdgeInsetsGeometryMix.all(20)),
+            style: RemixTextFieldStyler().padding(
+              EdgeInsetsGeometryMix.all(20),
+            ),
           ),
         );
         await tester.pumpAndSettle();
@@ -250,7 +255,7 @@ void main() {
       testWidgets('applies custom border radius', (tester) async {
         await tester.pumpRemixApp(
           RemixTextField(
-            style: RemixTextFieldStyle().borderRadius(
+            style: RemixTextFieldStyler().borderRadius(
               BorderRadiusGeometryMix.circular(12),
             ),
           ),
@@ -262,18 +267,94 @@ void main() {
 
       testWidgets('applies custom cursor color', (tester) async {
         await tester.pumpRemixApp(
-          RemixTextField(style: RemixTextFieldStyle().cursorColor(Colors.blue)),
+          RemixTextField(
+            style: RemixTextFieldStyler().cursorColor(Colors.blue),
+          ),
         );
         await tester.pumpAndSettle();
 
-        expect(find.byType(RemixTextField), findsOneWidget);
+        final textField = tester.widget<NakedTextField>(
+          find.byType(NakedTextField),
+        );
+        expect(textField.cursorColor, Colors.blue);
+      });
+
+      testWidgets('forwards input style values to NakedTextField', (
+        tester,
+      ) async {
+        const scrollPadding = EdgeInsets.all(12);
+        const cursorRadius = Radius.circular(3);
+        await tester.pumpRemixApp(
+          RemixTextField(
+            style: RemixTextFieldStyler(
+              textAlign: TextAlign.end,
+              cursorWidth: 4,
+              cursorHeight: 18,
+              cursorRadius: cursorRadius,
+              cursorColor: Colors.purple,
+              cursorOpacityAnimates: false,
+              selectionHeightStyle: BoxHeightStyle.max,
+              selectionWidthStyle: BoxWidthStyle.max,
+              scrollPadding: scrollPadding,
+              keyboardAppearance: Brightness.dark,
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final textField = tester.widget<NakedTextField>(
+          find.byType(NakedTextField),
+        );
+        expect(textField.textAlign, TextAlign.end);
+        expect(textField.cursorWidth, 4);
+        expect(textField.cursorHeight, 18);
+        expect(textField.cursorRadius, cursorRadius);
+        expect(textField.cursorColor, Colors.purple);
+        expect(textField.cursorOpacityAnimates, isFalse);
+        expect(textField.selectionHeightStyle, BoxHeightStyle.max);
+        expect(textField.selectionWidthStyle, BoxWidthStyle.max);
+        expect(textField.scrollPadding, scrollPadding);
+        expect(textField.keyboardAppearance, Brightness.dark);
+      });
+
+      testWidgets('keeps focus variants connected to NakedTextField state', (
+        tester,
+      ) async {
+        final focusNode = FocusNode();
+        addTearDown(focusNode.dispose);
+        await tester.pumpRemixApp(
+          RemixTextField(
+            focusNode: focusNode,
+            style: RemixTextFieldStyler(
+              cursorColor: Colors.blue,
+            ).onFocused(RemixTextFieldStyler(cursorColor: Colors.red)),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(
+          tester
+              .widget<NakedTextField>(find.byType(NakedTextField))
+              .cursorColor,
+          Colors.blue,
+        );
+
+        focusNode.requestFocus();
+        await tester.pumpAndSettle();
+
+        expect(
+          tester
+              .widget<NakedTextField>(find.byType(NakedTextField))
+              .cursorColor,
+          Colors.red,
+        );
       });
 
       testWidgets('applies custom hint color', (tester) async {
         await tester.pumpRemixApp(
           RemixTextField(
             hintText: 'Hint',
-            style: RemixTextFieldStyle().hintColor(Colors.grey),
+            style: RemixTextFieldStyler().hintColor(Colors.grey),
           ),
         );
         await tester.pumpAndSettle();
@@ -283,6 +364,31 @@ void main() {
     });
 
     group('Semantics & Accessibility', () {
+      testWidgets('forwards pointer and semantics behavior', (tester) async {
+        void onTap() {}
+        void onTapUpOutside(PointerUpEvent event) {}
+
+        await tester.pumpRemixApp(
+          RemixTextField(
+            onTap: onTap,
+            onTapAlwaysCalled: true,
+            onPressUpOutside: onTapUpOutside,
+            ignorePointers: true,
+            excludeSemantics: true,
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final textField = tester.widget<NakedTextField>(
+          find.byType(NakedTextField),
+        );
+        expect(textField.onTap, same(onTap));
+        expect(textField.onTapAlwaysCalled, isTrue);
+        expect(textField.onTapUpOutside, same(onTapUpOutside));
+        expect(textField.ignorePointers, isTrue);
+        expect(textField.excludeSemantics, isTrue);
+      });
+
       testWidgets('uses semantic label parameter', (tester) async {
         await tester.pumpRemixApp(
           const RemixTextField(label: 'Email', semanticLabel: 'Email Address'),
@@ -430,7 +536,7 @@ void main() {
       testWidgets('applies container styling', (tester) async {
         await tester.pumpRemixApp(
           RemixTextField(
-            style: RemixTextFieldStyle().container(
+            style: RemixTextFieldStyler().container(
               FlexBoxStyler(
                 decoration: BoxDecorationMix(color: Colors.grey),
                 padding: EdgeInsetsGeometryMix.all(16),
@@ -445,7 +551,7 @@ void main() {
 
       testWidgets('applies width and height constraints', (tester) async {
         await tester.pumpRemixApp(
-          RemixTextField(style: RemixTextFieldStyle().width(300).height(60)),
+          RemixTextField(style: RemixTextFieldStyler().width(300).height(60)),
         );
         await tester.pumpAndSettle();
 
@@ -455,7 +561,7 @@ void main() {
       testWidgets('applies text alignment', (tester) async {
         await tester.pumpRemixApp(
           RemixTextField(
-            style: RemixTextFieldStyle().textAlign(TextAlign.center),
+            style: RemixTextFieldStyler().textAlign(TextAlign.center),
           ),
         );
         await tester.pumpAndSettle();
@@ -467,9 +573,7 @@ void main() {
     group('Widget Modifiers', () {
       testWidgets('applies widget modifiers from style', (tester) async {
         await tester.pumpRemixApp(
-          RemixTextField(
-            style: RemixTextFieldStyle().wrap(WidgetModifierConfig.clipOval()),
-          ),
+          RemixTextField(style: RemixTextFieldStyler().wrap(.clipOval())),
         );
         await tester.pumpAndSettle();
 
@@ -491,6 +595,13 @@ void main() {
     group('StyleSpec Parameter', () {
       testWidgets('uses styleSpec when provided', (tester) async {
         const spec = RemixTextFieldSpec(
+          container: StyleSpec(
+            spec: FlexBoxSpec(
+              box: StyleSpec(
+                spec: BoxSpec(decoration: BoxDecoration(color: Colors.red)),
+              ),
+            ),
+          ),
           textAlign: TextAlign.center,
           cursorWidth: 3.0,
         );
@@ -498,7 +609,19 @@ void main() {
         await tester.pumpRemixApp(const RemixTextField(styleSpec: spec));
         await tester.pumpAndSettle();
 
-        expect(find.byType(RemixTextField), findsOneWidget);
+        final rowBoxDecorations = tester
+            .widgetList<RowBox>(find.byType(RowBox))
+            .map((box) => box.styleSpec?.spec.box?.spec.decoration);
+        final textField = tester.widget<NakedTextField>(
+          find.byType(NakedTextField),
+        );
+
+        expect(
+          rowBoxDecorations,
+          contains(equals(const BoxDecoration(color: Colors.red))),
+        );
+        expect(textField.textAlign, TextAlign.center);
+        expect(textField.cursorWidth, 3.0);
       });
     });
 

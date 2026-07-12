@@ -35,18 +35,18 @@ class _SpinnerExampleState extends State<SpinnerExample> {
     );
   }
 
-  RemixSpinnerStyle get styleDefault {
-    return RemixSpinnerStyle().indicatorColor(Colors.blue);
+  RemixSpinnerStyler get styleDefault {
+    return RemixSpinnerStyler().indicatorColor(Colors.blue);
   }
 
-  RemixSpinnerStyle get styleWithTrack {
-    return RemixSpinnerStyle()
+  RemixSpinnerStyler get styleWithTrack {
+    return RemixSpinnerStyler()
         .indicatorColor(Colors.green)
         .trackColor(Colors.green.withValues(alpha: 0.2));
   }
 
-  RemixSpinnerStyle get styleCustomColors {
-    return RemixSpinnerStyle()
+  RemixSpinnerStyler get styleCustomColors {
+    return RemixSpinnerStyler()
         .indicatorColor(Colors.redAccent)
         .trackColor(Colors.red.withValues(alpha: 0.15))
         .duration(2.s);

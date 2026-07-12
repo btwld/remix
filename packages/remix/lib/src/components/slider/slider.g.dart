@@ -110,23 +110,58 @@ typedef _$RemixSliderSpecMethods = _$RemixSliderSpec; // ignore: unused_element
 // MixWidgetGenerator
 // **************************************************************************
 
+/// Fortal-themed preset for [RemixSlider].
 class FortalSlider extends StatelessWidget {
   const FortalSlider({
     super.key,
     this.variant = .surface,
     this.size = .size2,
     required this.value,
-    required this.onChanged,
-    this.min = 0.0,
-    this.max = 1.0,
+    this.onChanged,
     this.onChangeStart,
     this.onChangeEnd,
+    this.min = 0.0,
+    this.max = 1.0,
     this.enabled = true,
-    this.enableHapticFeedback = true,
+    this.enableFeedback = true,
     this.focusNode,
     this.autofocus = false,
     this.snapDivisions,
   });
+
+  /// Neutral track with the active accent indicator.
+  const FortalSlider.surface({
+    super.key,
+    this.size = .size2,
+    required this.value,
+    this.onChanged,
+    this.onChangeStart,
+    this.onChangeEnd,
+    this.min = 0.0,
+    this.max = 1.0,
+    this.enabled = true,
+    this.enableFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
+    this.snapDivisions,
+  }) : variant = FortalSliderVariant.surface;
+
+  /// Softer accent treatment for lower-emphasis controls.
+  const FortalSlider.soft({
+    super.key,
+    this.size = .size2,
+    required this.value,
+    this.onChanged,
+    this.onChangeStart,
+    this.onChangeEnd,
+    this.min = 0.0,
+    this.max = 1.0,
+    this.enabled = true,
+    this.enableFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
+    this.snapDivisions,
+  }) : variant = FortalSliderVariant.soft;
 
   final FortalSliderVariant variant;
 
@@ -136,17 +171,17 @@ class FortalSlider extends StatelessWidget {
 
   final ValueChanged<double>? onChanged;
 
-  final double min;
-
-  final double max;
-
   final ValueChanged<double>? onChangeStart;
 
   final ValueChanged<double>? onChangeEnd;
 
+  final double min;
+
+  final double max;
+
   final bool enabled;
 
-  final bool enableHapticFeedback;
+  final bool enableFeedback;
 
   final FocusNode? focusNode;
 
@@ -156,15 +191,16 @@ class FortalSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return fortalSliderStyle(variant: this.variant, size: this.size).call(
+    return fortalSliderStyler(variant: this.variant, size: this.size).call(
+      key: this.key,
       value: this.value,
       onChanged: this.onChanged,
-      min: this.min,
-      max: this.max,
       onChangeStart: this.onChangeStart,
       onChangeEnd: this.onChangeEnd,
+      min: this.min,
+      max: this.max,
       enabled: this.enabled,
-      enableHapticFeedback: this.enableHapticFeedback,
+      enableFeedback: this.enableFeedback,
       focusNode: this.focusNode,
       autofocus: this.autofocus,
       snapDivisions: this.snapDivisions,
@@ -176,62 +212,67 @@ class FortalSlider extends StatelessWidget {
 // StylerGenerator
 // **************************************************************************
 
-mixin _$RemixSliderStyleMixin on Style<RemixSliderSpec>, Diagnosticable {
-  Prop<Color>? get $rangeColor;
-  Prop<double>? get $rangeWidth;
+mixin _$RemixSliderStylerMixin on Style<RemixSliderSpec>, Diagnosticable {
   Prop<StyleSpec<BoxSpec>>? get $thumb;
   Prop<Color>? get $trackColor;
   Prop<double>? get $trackWidth;
-
-  /// Sets the rangeColor.
-  RemixSliderStyle rangeColor(Color value) {
-    return merge(RemixSliderStyle(rangeColor: value));
-  }
-
-  /// Sets the rangeWidth.
-  RemixSliderStyle rangeWidth(double value) {
-    return merge(RemixSliderStyle(rangeWidth: value));
-  }
+  Prop<Color>? get $rangeColor;
+  Prop<double>? get $rangeWidth;
 
   /// Sets the thumb.
-  RemixSliderStyle thumb(BoxStyler value) {
-    return merge(RemixSliderStyle(thumb: value));
+  RemixSliderStyler thumb(BoxStyler value) {
+    return merge(RemixSliderStyler(thumb: value));
   }
 
   /// Sets the trackColor.
-  RemixSliderStyle trackColor(Color value) {
-    return merge(RemixSliderStyle(trackColor: value));
+  RemixSliderStyler trackColor(Color value) {
+    return merge(RemixSliderStyler(trackColor: value));
   }
 
   /// Sets the trackWidth.
-  RemixSliderStyle trackWidth(double value) {
-    return merge(RemixSliderStyle(trackWidth: value));
+  RemixSliderStyler trackWidth(double value) {
+    return merge(RemixSliderStyler(trackWidth: value));
+  }
+
+  /// Sets the rangeColor.
+  RemixSliderStyler rangeColor(Color value) {
+    return merge(RemixSliderStyler(rangeColor: value));
+  }
+
+  /// Sets the rangeWidth.
+  RemixSliderStyler rangeWidth(double value) {
+    return merge(RemixSliderStyler(rangeWidth: value));
   }
 
   /// Sets the animation configuration.
-  RemixSliderStyle animate(AnimationConfig value) {
-    return merge(RemixSliderStyle(animation: value));
+  RemixSliderStyler animate(AnimationConfig value) {
+    return merge(RemixSliderStyler(animation: value));
   }
 
   /// Sets the style variants.
-  RemixSliderStyle variants(List<VariantStyle<RemixSliderSpec>> value) {
-    return merge(RemixSliderStyle(variants: value));
+  RemixSliderStyler variants(List<VariantStyle<RemixSliderSpec>> value) {
+    return merge(RemixSliderStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
-  RemixSliderStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixSliderStyle(modifier: value));
+  RemixSliderStyler wrap(WidgetModifierConfig value) {
+    return merge(RemixSliderStyler(modifier: value));
   }
 
-  /// Merges with another [RemixSliderStyle].
+  /// Sets the widget modifier.
+  RemixSliderStyler modifier(WidgetModifierConfig value) {
+    return merge(RemixSliderStyler(modifier: value));
+  }
+
+  /// Merges with another [RemixSliderStyler].
   @override
-  RemixSliderStyle merge(RemixSliderStyle? other) {
-    return RemixSliderStyle.create(
-      rangeColor: MixOps.merge($rangeColor, other?.$rangeColor),
-      rangeWidth: MixOps.merge($rangeWidth, other?.$rangeWidth),
+  RemixSliderStyler merge(RemixSliderStyler? other) {
+    return RemixSliderStyler.create(
       thumb: MixOps.merge($thumb, other?.$thumb),
       trackColor: MixOps.merge($trackColor, other?.$trackColor),
       trackWidth: MixOps.merge($trackWidth, other?.$trackWidth),
+      rangeColor: MixOps.merge($rangeColor, other?.$rangeColor),
+      rangeWidth: MixOps.merge($rangeWidth, other?.$rangeWidth),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -242,11 +283,11 @@ mixin _$RemixSliderStyleMixin on Style<RemixSliderSpec>, Diagnosticable {
   @override
   StyleSpec<RemixSliderSpec> resolve(BuildContext context) {
     final spec = RemixSliderSpec(
-      rangeColor: MixOps.resolve(context, $rangeColor),
-      rangeWidth: MixOps.resolve(context, $rangeWidth),
       thumb: MixOps.resolve(context, $thumb),
       trackColor: MixOps.resolve(context, $trackColor),
       trackWidth: MixOps.resolve(context, $trackWidth),
+      rangeColor: MixOps.resolve(context, $rangeColor),
+      rangeWidth: MixOps.resolve(context, $rangeWidth),
     );
 
     return StyleSpec(
@@ -260,20 +301,20 @@ mixin _$RemixSliderStyleMixin on Style<RemixSliderSpec>, Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(DiagnosticsProperty('rangeColor', $rangeColor))
-      ..add(DiagnosticsProperty('rangeWidth', $rangeWidth))
       ..add(DiagnosticsProperty('thumb', $thumb))
       ..add(DiagnosticsProperty('trackColor', $trackColor))
-      ..add(DiagnosticsProperty('trackWidth', $trackWidth));
+      ..add(DiagnosticsProperty('trackWidth', $trackWidth))
+      ..add(DiagnosticsProperty('rangeColor', $rangeColor))
+      ..add(DiagnosticsProperty('rangeWidth', $rangeWidth));
   }
 
   @override
   List<Object?> get props => [
-    $rangeColor,
-    $rangeWidth,
     $thumb,
     $trackColor,
     $trackWidth,
+    $rangeColor,
+    $rangeWidth,
     $animation,
     $modifier,
     $variants,

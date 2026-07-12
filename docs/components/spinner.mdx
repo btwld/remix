@@ -36,18 +36,18 @@ class SpinnerExample extends StatelessWidget {
     );
   }
 
-  RemixSpinnerStyle get styleDefault {
-    return RemixSpinnerStyle().indicatorColor(Colors.blue);
+  RemixSpinnerStyler get styleDefault {
+    return RemixSpinnerStyler().indicatorColor(Colors.blue);
   }
 
-  RemixSpinnerStyle get styleWithTrack {
-    return RemixSpinnerStyle()
+  RemixSpinnerStyler get styleWithTrack {
+    return RemixSpinnerStyler()
         .indicatorColor(Colors.green)
         .trackColor(Colors.green.withValues(alpha: 0.2));
   }
 
-  RemixSpinnerStyle get styleCustomColors {
-    return RemixSpinnerStyle()
+  RemixSpinnerStyler get styleCustomColors {
+    return RemixSpinnerStyler()
         .indicatorColor(Colors.redAccent)
         .trackColor(Colors.red.withValues(alpha: 0.15))
         .duration(2.s);
@@ -56,11 +56,11 @@ class SpinnerExample extends StatelessWidget {
 ```
 </CodeGroup>
 
-## Fortal styles
+## Fortal widgets
 
-Remix includes Fortal-themed style helpers for this component:
+Remix includes a generated Fortal-themed widget for this component:
 
-<CodeGroup title="Fortal base style" defaultLanguage="dart">
+<CodeGroup title="Fortal widget" defaultLanguage="dart">
 ```dart
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
@@ -73,8 +73,8 @@ class FortalSpinnerExample extends StatelessWidget {
     return Row(
       spacing: 16,
       children: [
-        RemixSpinner(style: FortalSpinnerStyle.solid()),
-        RemixSpinner(style: FortalSpinnerStyle.soft()),
+        FortalSpinner(size: FortalSpinnerSize.size2),
+        FortalSpinner(size: FortalSpinnerSize.size3),
       ],
     );
   }
@@ -83,7 +83,7 @@ class FortalSpinnerExample extends StatelessWidget {
 </CodeGroup>
 
 <Info>
-  See the [FortalSpinnerStyle source code](https://github.com/btwld/remix/blob/main/lib/src/components/spinner/fortal_spinner_styles.dart) for all available options.
+  See the [fortalSpinnerStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/spinner/fortal_spinner_styles.dart) for all available options.
 </Info>
 
 ## Constructor
@@ -91,7 +91,7 @@ class FortalSpinnerExample extends StatelessWidget {
 ```dart
 const RemixSpinner({
   Key? key,
-  RemixSpinnerStyle style = const RemixSpinnerStyle.create(),
+  RemixSpinnerStyler style = const RemixSpinnerStyler.create(),
   RemixSpinnerSpec? styleSpec,
 })
 ```
@@ -101,7 +101,7 @@ const RemixSpinner({
 ## Properties
 ### Widget Properties
 
-#### `style` → `RemixSpinnerStyle`
+#### `style` → `RemixSpinnerStyler`
 
 Optional. The style configuration for the spinner. Customize colors, sizing, stroke, and animation duration.
 
@@ -140,7 +140,7 @@ Sets the stroke width of the track.
 
 Sets the duration of one full rotation.
 
-#### `animate(AnimationConfig animation)`
+#### `animate(AnimationConfig value)`
 
 Configures implicit animation for style transitions.
 
@@ -148,3 +148,6 @@ Configures implicit animation for style transitions.
 
 Applies widget modifiers such as clipping, opacity, or scaling.
 
+#### `call()`
+
+Creates a `RemixSpinner` widget with this style applied.

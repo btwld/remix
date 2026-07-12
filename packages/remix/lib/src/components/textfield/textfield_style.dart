@@ -1,12 +1,16 @@
 part of 'textfield.dart';
 
+/// Style builder for [RemixTextField].
+///
+/// Use this class to style the text field container, text, hint text, helper
+/// text, label, cursor, selection behavior, and spacing.
 @MixableStyler()
-class RemixTextFieldStyle
-    extends RemixFlexContainerStyle<RemixTextFieldSpec, RemixTextFieldStyle>
+class RemixTextFieldStyler
+    extends RemixFlexContainerStyler<RemixTextFieldSpec, RemixTextFieldStyler>
     with
-        LabelStyleMixin<RemixTextFieldStyle>,
+        LabelStyleMixin<RemixTextFieldStyler>,
         Diagnosticable,
-        _$RemixTextFieldStyleMixin {
+        _$RemixTextFieldStylerMixin {
   @MixableField(setterType: TextStyler)
   final Prop<StyleSpec<TextSpec>>? $text;
   @MixableField(setterType: TextStyler)
@@ -22,8 +26,6 @@ class RemixTextFieldStyle
   @MixableField()
   final Prop<Color>? $cursorColor;
   @MixableField()
-  final Prop<Offset>? $cursorOffset;
-  @MixableField()
   final Prop<bool>? $cursorOpacityAnimates;
   @MixableField()
   final Prop<BoxHeightStyle>? $selectionHeightStyle;
@@ -33,8 +35,6 @@ class RemixTextFieldStyle
   final Prop<EdgeInsets>? $scrollPadding;
   @MixableField()
   final Prop<Brightness>? $keyboardAppearance;
-  @MixableField()
-  final Prop<double>? $spacing;
   @MixableField(setterType: FlexBoxStyler)
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   @MixableField(setterType: TextStyler)
@@ -42,7 +42,7 @@ class RemixTextFieldStyle
   @MixableField(setterType: TextStyler)
   final Prop<StyleSpec<TextSpec>>? $label;
 
-  const RemixTextFieldStyle.create({
+  const RemixTextFieldStyler.create({
     Prop<StyleSpec<TextSpec>>? text,
     Prop<StyleSpec<TextSpec>>? hintText,
     Prop<TextAlign>? textAlign,
@@ -50,13 +50,11 @@ class RemixTextFieldStyle
     Prop<double>? cursorHeight,
     Prop<Radius>? cursorRadius,
     Prop<Color>? cursorColor,
-    Prop<Offset>? cursorOffset,
     Prop<bool>? cursorOpacityAnimates,
     Prop<BoxHeightStyle>? selectionHeightStyle,
     Prop<BoxWidthStyle>? selectionWidthStyle,
     Prop<EdgeInsets>? scrollPadding,
     Prop<Brightness>? keyboardAppearance,
-    Prop<double>? spacing,
     Prop<StyleSpec<FlexBoxSpec>>? container,
     Prop<StyleSpec<TextSpec>>? helperText,
     Prop<StyleSpec<TextSpec>>? label,
@@ -70,18 +68,16 @@ class RemixTextFieldStyle
        $cursorHeight = cursorHeight,
        $cursorRadius = cursorRadius,
        $cursorColor = cursorColor,
-       $cursorOffset = cursorOffset,
        $cursorOpacityAnimates = cursorOpacityAnimates,
        $selectionHeightStyle = selectionHeightStyle,
        $selectionWidthStyle = selectionWidthStyle,
        $scrollPadding = scrollPadding,
        $keyboardAppearance = keyboardAppearance,
-       $spacing = spacing,
        $container = container,
        $helperText = helperText,
        $label = label;
 
-  RemixTextFieldStyle({
+  RemixTextFieldStyler({
     TextStyler? text,
     TextStyler? hintText,
     TextAlign? textAlign,
@@ -89,13 +85,11 @@ class RemixTextFieldStyle
     double? cursorHeight,
     Radius? cursorRadius,
     Color? cursorColor,
-    Offset? cursorOffset,
     bool? cursorOpacityAnimates,
     BoxHeightStyle? selectionHeightStyle,
     BoxWidthStyle? selectionWidthStyle,
     EdgeInsets? scrollPadding,
     Brightness? keyboardAppearance,
-    double? spacing,
     FlexBoxStyler? container,
     TextStyler? helperText,
     TextStyler? label,
@@ -110,13 +104,11 @@ class RemixTextFieldStyle
          cursorHeight: Prop.maybe(cursorHeight),
          cursorRadius: Prop.maybe(cursorRadius),
          cursorColor: Prop.maybe(cursorColor),
-         cursorOffset: Prop.maybe(cursorOffset),
          cursorOpacityAnimates: Prop.maybe(cursorOpacityAnimates),
          selectionHeightStyle: Prop.maybe(selectionHeightStyle),
          selectionWidthStyle: Prop.maybe(selectionWidthStyle),
          scrollPadding: Prop.maybe(scrollPadding),
          keyboardAppearance: Prop.maybe(keyboardAppearance),
-         spacing: Prop.maybe(spacing),
          container: Prop.maybeMix(container),
          helperText: Prop.maybeMix(helperText),
          label: Prop.maybeMix(label),
@@ -128,32 +120,32 @@ class RemixTextFieldStyle
   // Instance methods (chainable)
 
   /// Sets text color
-  RemixTextFieldStyle color(Color value) {
+  RemixTextFieldStyler color(Color value) {
     return merge(
-      RemixTextFieldStyle(
+      RemixTextFieldStyler(
         text: TextStyler(style: TextStyleMix(color: value)),
       ),
     );
   }
 
   /// Sets background color
-  RemixTextFieldStyle backgroundColor(Color value) {
+  RemixTextFieldStyler backgroundColor(Color value) {
     return merge(
-      RemixTextFieldStyle(
+      RemixTextFieldStyler(
         container: FlexBoxStyler(decoration: BoxDecorationMix(color: value)),
       ),
     );
   }
 
   /// Sets container that wraps editable text area
-  RemixTextFieldStyle container(FlexBoxStyler value) {
-    return merge(RemixTextFieldStyle(container: value));
+  RemixTextFieldStyler container(FlexBoxStyler value) {
+    return merge(RemixTextFieldStyler(container: value));
   }
 
   /// Sets border radius
-  RemixTextFieldStyle borderRadius(BorderRadiusGeometryMix radius) {
+  RemixTextFieldStyler borderRadius(BorderRadiusGeometryMix radius) {
     return merge(
-      RemixTextFieldStyle(
+      RemixTextFieldStyler(
         container: FlexBoxStyler(
           decoration: BoxDecorationMix(borderRadius: radius),
         ),
@@ -162,23 +154,25 @@ class RemixTextFieldStyle
   }
 
   /// Sets padding
-  RemixTextFieldStyle padding(EdgeInsetsGeometryMix value) {
-    return merge(RemixTextFieldStyle(container: FlexBoxStyler(padding: value)));
+  RemixTextFieldStyler padding(EdgeInsetsGeometryMix value) {
+    return merge(
+      RemixTextFieldStyler(container: FlexBoxStyler(padding: value)),
+    );
   }
 
   /// Sets border
-  RemixTextFieldStyle border(BoxBorderMix value) {
+  RemixTextFieldStyler border(BoxBorderMix value) {
     return merge(
-      RemixTextFieldStyle(
+      RemixTextFieldStyler(
         container: FlexBoxStyler(decoration: BoxDecorationMix(border: value)),
       ),
     );
   }
 
   /// Sets width
-  RemixTextFieldStyle width(double value) {
+  RemixTextFieldStyler width(double value) {
     return merge(
-      RemixTextFieldStyle(
+      RemixTextFieldStyler(
         container: FlexBoxStyler(
           constraints: BoxConstraintsMix(minWidth: value, maxWidth: value),
         ),
@@ -187,9 +181,9 @@ class RemixTextFieldStyle
   }
 
   /// Sets height
-  RemixTextFieldStyle height(double value) {
+  RemixTextFieldStyler height(double value) {
     return merge(
-      RemixTextFieldStyle(
+      RemixTextFieldStyler(
         container: FlexBoxStyler(
           constraints: BoxConstraintsMix(minHeight: value, maxHeight: value),
         ),
@@ -198,97 +192,99 @@ class RemixTextFieldStyle
   }
 
   /// Sets cursor color
-  RemixTextFieldStyle cursorColor(Color value) {
-    return merge(RemixTextFieldStyle(cursorColor: value));
+  RemixTextFieldStyler cursorColor(Color value) {
+    return merge(RemixTextFieldStyler(cursorColor: value));
   }
 
   /// Sets hint text color
-  RemixTextFieldStyle hintColor(Color value) {
+  RemixTextFieldStyler hintColor(Color value) {
     return merge(
-      RemixTextFieldStyle(
+      RemixTextFieldStyler(
         hintText: TextStyler(style: TextStyleMix(color: value)),
       ),
     );
   }
 
   /// Sets hint text color
-  RemixTextFieldStyle hintText(TextStyler value) {
-    return merge(RemixTextFieldStyle(hintText: value));
+  RemixTextFieldStyler hintText(TextStyler value) {
+    return merge(RemixTextFieldStyler(hintText: value));
   }
 
   // Additional convenience methods that delegate to container
 
   /// Sets margin
-  RemixTextFieldStyle margin(EdgeInsetsGeometryMix value) {
-    return merge(RemixTextFieldStyle(container: FlexBoxStyler(margin: value)));
+  RemixTextFieldStyler margin(EdgeInsetsGeometryMix value) {
+    return merge(RemixTextFieldStyler(container: FlexBoxStyler(margin: value)));
   }
 
   /// Sets flex spacing
-  RemixTextFieldStyle spacing(double value) {
-    return merge(RemixTextFieldStyle(container: FlexBoxStyler(spacing: value)));
+  RemixTextFieldStyler spacing(double value) {
+    return merge(
+      RemixTextFieldStyler(container: FlexBoxStyler(spacing: value)),
+    );
   }
 
   /// Sets decoration
-  RemixTextFieldStyle decoration(DecorationMix value) {
+  RemixTextFieldStyler decoration(DecorationMix value) {
     return merge(
-      RemixTextFieldStyle(container: FlexBoxStyler(decoration: value)),
+      RemixTextFieldStyler(container: FlexBoxStyler(decoration: value)),
     );
   }
 
   /// Sets container alignment
-  RemixTextFieldStyle alignment(Alignment value) {
+  RemixTextFieldStyler alignment(Alignment value) {
     return merge(
-      RemixTextFieldStyle(container: FlexBoxStyler(alignment: value)),
+      RemixTextFieldStyler(container: FlexBoxStyler(alignment: value)),
     );
   }
 
   /// Sets constraints
-  RemixTextFieldStyle constraints(BoxConstraintsMix value) {
+  RemixTextFieldStyler constraints(BoxConstraintsMix value) {
     return merge(
-      RemixTextFieldStyle(container: FlexBoxStyler(constraints: value)),
+      RemixTextFieldStyler(container: FlexBoxStyler(constraints: value)),
     );
   }
 
   /// Sets text alignment
-  RemixTextFieldStyle textAlign(TextAlign value) {
-    return merge(RemixTextFieldStyle(textAlign: value));
+  RemixTextFieldStyler textAlign(TextAlign value) {
+    return merge(RemixTextFieldStyler(textAlign: value));
   }
 
   /// Sets helper text
-  RemixTextFieldStyle helperText(TextStyler value) {
-    return merge(RemixTextFieldStyle(helperText: value));
+  RemixTextFieldStyler helperText(TextStyler value) {
+    return merge(RemixTextFieldStyler(helperText: value));
   }
 
   /// Creates a [RemixTextField] widget with this style applied.
   ///
   /// Example:
   /// ```dart
-  /// final textField = RemixTextFieldStyle()
+  /// final textField = RemixTextFieldStyler()
   ///   .backgroundColor(Colors.grey.shade100)
   ///   .borderRadius(BorderRadiusMix.circular(8));
   ///
   /// // Use it like a function
   /// textField(
   ///   hintText: 'Enter your name',
-  ///   onChanged: (value) => print(value),
+  ///   onChanged: (value) => debugPrint(value),
   /// )
   /// ```
   RemixTextField call({
+    Key? key,
     TextEditingController? controller,
     FocusNode? focusNode,
+    String? label,
+    String? hintText,
+    String? helperText,
+    bool error = false,
     TextInputType? keyboardType,
     TextInputAction? textInputAction,
     TextCapitalization textCapitalization = .none,
     TextDirection? textDirection,
-    bool readOnly = false,
-    bool? showCursor,
-    bool autofocus = false,
-    String obscuringCharacter = '•',
     bool obscureText = false,
-    bool autocorrect = true,
-    bool enableSuggestions = true,
-    SmartDashesType? smartDashesType,
-    SmartQuotesType? smartQuotesType,
+    bool enabled = true,
+    bool readOnly = false,
+    bool autofocus = false,
     int? maxLines = 1,
     int? minLines,
     bool expands = false,
@@ -299,10 +295,16 @@ class RemixTextFieldStyle
     ValueChanged<String>? onSubmitted,
     AppPrivateCommandCallback? onAppPrivateCommand,
     List<TextInputFormatter>? inputFormatters,
-    bool enabled = true,
+    bool? showCursor,
+    String obscuringCharacter = '•',
+    bool autocorrect = true,
+    bool enableSuggestions = true,
+    SmartDashesType? smartDashesType,
+    SmartQuotesType? smartQuotesType,
     DragStartBehavior dragStartBehavior = .start,
     bool enableInteractiveSelection = true,
     TextSelectionControls? selectionControls,
+    GestureTapCallback? onTap,
     TapRegionCallback? onTapOutside,
     TapRegionUpCallback? onPressUpOutside,
     bool onTapAlwaysCalled = false,
@@ -321,10 +323,6 @@ class RemixTextFieldStyle
     bool? ignorePointers,
     UndoHistoryController? undoController,
     Object groupId = EditableText,
-    String? hintText,
-    String? helperText,
-    String? label,
-    bool error = false,
     Widget? leading,
     Widget? trailing,
     String? semanticLabel,
@@ -332,21 +330,21 @@ class RemixTextFieldStyle
     bool excludeSemantics = false,
   }) {
     return RemixTextField(
+      key: key,
       controller: controller,
       focusNode: focusNode,
+      label: label,
+      hintText: hintText,
+      helperText: helperText,
+      error: error,
       keyboardType: keyboardType,
       textInputAction: textInputAction,
       textCapitalization: textCapitalization,
       textDirection: textDirection,
-      readOnly: readOnly,
-      showCursor: showCursor,
-      autofocus: autofocus,
-      obscuringCharacter: obscuringCharacter,
       obscureText: obscureText,
-      autocorrect: autocorrect,
-      enableSuggestions: enableSuggestions,
-      smartDashesType: smartDashesType,
-      smartQuotesType: smartQuotesType,
+      enabled: enabled,
+      readOnly: readOnly,
+      autofocus: autofocus,
       maxLines: maxLines,
       minLines: minLines,
       expands: expands,
@@ -357,10 +355,16 @@ class RemixTextFieldStyle
       onSubmitted: onSubmitted,
       onAppPrivateCommand: onAppPrivateCommand,
       inputFormatters: inputFormatters,
-      enabled: enabled,
+      showCursor: showCursor,
+      obscuringCharacter: obscuringCharacter,
+      autocorrect: autocorrect,
+      enableSuggestions: enableSuggestions,
+      smartDashesType: smartDashesType,
+      smartQuotesType: smartQuotesType,
       dragStartBehavior: dragStartBehavior,
       enableInteractiveSelection: enableInteractiveSelection,
       selectionControls: selectionControls,
+      onTap: onTap,
       onTapOutside: onTapOutside,
       onPressUpOutside: onPressUpOutside,
       onTapAlwaysCalled: onTapAlwaysCalled,
@@ -379,10 +383,6 @@ class RemixTextFieldStyle
       ignorePointers: ignorePointers,
       undoController: undoController,
       groupId: groupId,
-      hintText: hintText,
-      helperText: helperText,
-      label: label,
-      error: error,
       leading: leading,
       trailing: trailing,
       semanticLabel: semanticLabel,
@@ -394,28 +394,28 @@ class RemixTextFieldStyle
 
   /// Sets label text
   @override
-  RemixTextFieldStyle label(TextStyler value) {
-    return merge(RemixTextFieldStyle(label: value));
+  RemixTextFieldStyler label(TextStyler value) {
+    return merge(RemixTextFieldStyler(label: value));
   }
 
   // Abstract method implementations for mixins
 
   @override
-  RemixTextFieldStyle foregroundDecoration(DecorationMix value) {
+  RemixTextFieldStyler foregroundDecoration(DecorationMix value) {
     return merge(
-      RemixTextFieldStyle(
+      RemixTextFieldStyler(
         container: FlexBoxStyler(foregroundDecoration: value),
       ),
     );
   }
 
   @override
-  RemixTextFieldStyle transform(
+  RemixTextFieldStyler transform(
     Matrix4 value, {
     AlignmentGeometry alignment = Alignment.center,
   }) {
     return merge(
-      RemixTextFieldStyle(
+      RemixTextFieldStyler(
         container: FlexBoxStyler(
           transform: value,
           transformAlignment: alignment,
@@ -426,7 +426,7 @@ class RemixTextFieldStyle
 
   // FlexStyleMixin implementation
   @override
-  RemixTextFieldStyle flex(FlexStyler value) {
-    return merge(RemixTextFieldStyle(container: FlexBoxStyler().flex(value)));
+  RemixTextFieldStyler flex(FlexStyler value) {
+    return merge(RemixTextFieldStyler(container: FlexBoxStyler().flex(value)));
   }
 }

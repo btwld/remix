@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
 
 import '../../helpers/test_helpers.dart';
@@ -357,9 +358,37 @@ void main() {
   });
 
   group('RemixMenu Styling Tests', () {
+    testWidgets('item styling listens to the typed menu-item controller', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(
+        RemixMenu<String>(
+          trigger: const RemixMenuTrigger(label: 'Options'),
+          items: const [RemixMenuItem(value: 'copy', label: 'Copy')],
+        ),
+      );
+      await tester.tap(find.text('Options'));
+      await tester.pumpAndSettle();
+
+      final itemContext = tester.element(find.text('Copy'));
+      final itemController = NakedMenuItemState.controllerOf<String>(
+        itemContext,
+      );
+      final stylingListeners = tester
+          .widgetList<ListenableBuilder>(
+            find.ancestor(
+              of: find.text('Copy'),
+              matching: find.byType(ListenableBuilder),
+            ),
+          )
+          .map((builder) => builder.listenable);
+
+      expect(stylingListeners, contains(same(itemController)));
+    });
+
     testWidgets('applies custom style to menu', (tester) async {
-      final style = RemixMenuStyle().trigger(
-        RemixMenuTriggerStyle().padding(EdgeInsetsGeometryMix.all(20.0)),
+      final style = RemixMenuStyler().trigger(
+        RemixMenuTriggerStyler().padding(EdgeInsetsGeometryMix.all(20.0)),
       );
 
       await tester.pumpRemixApp(
@@ -382,7 +411,7 @@ void main() {
             RemixMenuItem<String>(
               value: 'copy',
               label: 'Copy',
-              style: RemixMenuItemStyle().padding(
+              style: RemixMenuItemStyler().padding(
                 EdgeInsetsGeometryMix.all(12.0),
               ),
             ),
@@ -392,6 +421,107 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(RemixMenu<String>), findsOneWidget);
+    });
+
+    testWidgets('applies menu-level default item style', (tester) async {
+      await tester.pumpRemixApp(
+        RemixMenu<String>(
+          trigger: const RemixMenuTrigger(label: 'Options'),
+          items: const [RemixMenuItem<String>(value: 'copy', label: 'Copy')],
+          style: RemixMenuStyler().item(
+            RemixMenuItemStyler().label(TextStyler().color(Colors.red)),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Options'));
+      await tester.pumpAndSettle();
+
+      final itemText = tester.widget<Text>(find.text('Copy'));
+      expect(itemText.style?.color, equals(Colors.red));
+    });
+
+    testWidgets('lets per-item style override menu-level item style', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(
+        RemixMenu<String>(
+          trigger: const RemixMenuTrigger(label: 'Options'),
+          items: [
+            RemixMenuItem<String>(
+              value: 'copy',
+              label: 'Copy',
+              style: RemixMenuItemStyler().label(
+                TextStyler().color(Colors.blue),
+              ),
+            ),
+          ],
+          style: RemixMenuStyler().item(
+            RemixMenuItemStyler().label(TextStyler().color(Colors.red)),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Options'));
+      await tester.pumpAndSettle();
+
+      final itemText = tester.widget<Text>(find.text('Copy'));
+      expect(itemText.style?.color, equals(Colors.blue));
+    });
+
+    testWidgets('applies menu-level divider style', (tester) async {
+      await tester.pumpRemixApp(
+        RemixMenu<String>(
+          trigger: const RemixMenuTrigger(label: 'Options'),
+          items: const [
+            RemixMenuItem<String>(value: 'copy', label: 'Copy'),
+            RemixMenuDivider<String>(),
+            RemixMenuItem<String>(value: 'paste', label: 'Paste'),
+          ],
+          style: RemixMenuStyler().divider(
+            RemixDividerStyler().color(Colors.purple),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Options'));
+      await tester.pumpAndSettle();
+
+      final decorations = tester
+          .widgetList<Box>(find.byType(Box))
+          .map((box) => box.styleSpec?.spec.decoration);
+
+      expect(
+        decorations,
+        contains(equals(const BoxDecoration(color: Colors.purple))),
+      );
+    });
+
+    testWidgets('applies raw menu item styleSpec defaults', (tester) async {
+      await tester.pumpRemixApp(
+        RemixMenu<String>(
+          trigger: const RemixMenuTrigger(label: 'Options'),
+          items: const [RemixMenuItem(value: 'copy', label: 'Copy')],
+          styleSpec: const RemixMenuSpec(
+            item: StyleSpec(
+              spec: RemixMenuItemSpec(
+                label: StyleSpec(
+                  spec: TextSpec(style: TextStyle(color: Colors.red)),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Options'));
+      await tester.pumpAndSettle();
+
+      expect(tester.widget<Text>(find.text('Copy')).style?.color, Colors.red);
     });
   });
 

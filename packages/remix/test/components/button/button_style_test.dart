@@ -19,7 +19,7 @@ void main() {
         final container = Prop.maybeMix(FlexBoxStyler());
         final label = Prop.maybeMix(TextStyler());
         final icon = Prop.maybeMix(IconStyler());
-        final spinner = Prop.maybeMix(RemixSpinnerStyle());
+        final spinner = Prop.maybeMix(RemixSpinnerStyler());
         final variants = <VariantStyle<RemixButtonSpec>>[];
 
         final style = RemixButtonStyler.create(
@@ -42,7 +42,7 @@ void main() {
         final containerStyler = FlexBoxStyler();
         final labelStyler = TextStyler();
         final iconStyler = IconStyler();
-        final spinnerStyle = RemixSpinnerStyle();
+        final spinnerStyle = RemixSpinnerStyler();
 
         final style = RemixButtonStyler()
             .container(containerStyler)
@@ -94,9 +94,9 @@ void main() {
       styleMethodTest(
         'spinner',
         initial: RemixButtonStyler(),
-        modify: (style) => style.spinner(RemixSpinnerStyle()),
+        modify: (style) => style.spinner(RemixSpinnerStyler()),
         expect: (style) {
-          expect(style.$spinner, equals(Prop.maybeMix(RemixSpinnerStyle())));
+          expect(style.$spinner, equals(Prop.maybeMix(RemixSpinnerStyler())));
         },
       );
 
@@ -384,7 +384,7 @@ void main() {
       styleMethodTest(
         'wrap',
         initial: RemixButtonStyler(),
-        modify: (style) => style.wrap(WidgetModifierConfig.clipOval()),
+        modify: (style) => style.wrap(.clipOval()),
         expect: (style) {
           expect(style.$modifier, equals(WidgetModifierConfig.clipOval()));
         },
@@ -426,15 +426,14 @@ void main() {
     });
 
     group('Call Method', () {
-      test('call method creates RemixButton with required parameters', () {
+      test('call method creates RemixButton with minimal parameters', () {
         final style = RemixButtonStyler();
-        final onPressed = () {};
 
-        final button = style.call(label: 'Test Button', onPressed: onPressed);
+        final button = style.call(label: 'Test Button');
 
         expect(button, isA<RemixButton>());
         expect(button.label, equals('Test Button'));
-        expect(button.onPressed, equals(onPressed));
+        expect(button.onPressed, isNull);
       });
 
       test('call method creates RemixButton with all parameters', () {
@@ -522,8 +521,8 @@ void main() {
   group('FortalButton recipe', () {
     test('defaults to solid variant and size2', () {
       expect(
-        fortalButtonStyle(),
-        equals(fortalButtonStyle(variant: .solid, size: .size2)),
+        fortalButtonStyler(),
+        equals(fortalButtonStyler(variant: .solid, size: .size2)),
       );
     });
 
@@ -531,7 +530,7 @@ void main() {
       testWidgets('resolves $variant variant', (tester) async {
         final resolved = await _resolveFortalButtonStyle(
           tester,
-          fortalButtonStyle(variant: variant),
+          fortalButtonStyler(variant: variant),
         );
 
         expect(resolved, isA<StyleSpec<RemixButtonSpec>>());
@@ -545,7 +544,7 @@ void main() {
       for (final size in FortalButtonSize.values) {
         resolvedBySize[size] = await _resolveFortalButtonStyle(
           tester,
-          fortalButtonStyle(size: size),
+          fortalButtonStyler(size: size),
         );
       }
 

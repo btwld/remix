@@ -13,19 +13,17 @@ Widget buildProgressUseCase(BuildContext context) {
       body: Center(
         child: SizedBox(
           width: 200,
-          child: RemixProgress(
-            style: fortalProgressStyle(
-              variant: context.knobs.object.dropdown(
-                label: 'variant',
-                options: FortalProgressVariant.values,
-                labelBuilder: (variant) => variant.name,
-              ),
-              size: context.knobs.object.dropdown(
-                label: 'size',
-                options: FortalProgressSize.values,
-                labelBuilder: (size) => size.name,
-                initialOption: FortalProgressSize.size2,
-              ),
+          child: FortalProgress(
+            variant: context.knobs.object.dropdown(
+              label: 'variant',
+              options: FortalProgressVariant.values,
+              labelBuilder: (variant) => variant.name,
+            ),
+            size: context.knobs.object.dropdown(
+              label: 'size',
+              options: FortalProgressSize.values,
+              labelBuilder: (size) => size.name,
+              initialOption: FortalProgressSize.size2,
             ),
             value: context.knobs.double.slider(
               label: 'value',

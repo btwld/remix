@@ -39,27 +39,27 @@ class IconButtonExample extends StatelessWidget {
     );
   }
 
-  RemixIconButtonStyle get style {
-    return RemixIconButtonStyle()
-        .iconColor(Colors.blueGrey.shade700)
+  RemixIconButtonStyler get style {
+    return RemixIconButtonStyler()
+        .foregroundColor(Colors.blueGrey.shade700)
         .iconSize(22)
         .size(40, 40)
-        .color(Colors.blueGrey.shade50.withValues(alpha: 0.6))
+        .backgroundColor(Colors.blueGrey.shade50.withValues(alpha: 0.6))
         .borderAll(color: Colors.blueGrey.shade100, width: 1.5)
         .borderRadiusAll(const Radius.circular(8))
         .spinner(
-          RemixSpinnerStyle()
+          RemixSpinnerStyler()
               .size(22)
               .strokeWidth(1.3)
               .indicatorColor(Colors.blueGrey.shade600),
         )
         .onHovered(
-          RemixIconButtonStyle().color(
+          RemixIconButtonStyler().backgroundColor(
             Colors.blueGrey.shade100.withValues(alpha: 0.4),
           ),
         )
         .onPressed(
-          RemixIconButtonStyle().color(
+          RemixIconButtonStyler().backgroundColor(
             Colors.blueGrey.shade100.withValues(alpha: 0.8),
           ),
         );

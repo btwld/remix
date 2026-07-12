@@ -11,38 +11,29 @@ Widget buildDividerUseCase(BuildContext context) {
     child: Scaffold(
       body: Center(
         child: Center(
-          child: RemixButton(
+          child: FortalButton(
             label: 'Open Dialog',
             onPressed: () {
               showRemixDialog(
                 context: context,
                 builder: (context) => Center(
-                  child: RemixDialog(
+                  child: FortalDialog(
                     title: 'Revoke access',
                     description:
                         'Are you sure? This application will no longer be accessible and any existing sessions will be expired.',
-                    style: fortalDialogStyle(),
                     actions: [
-                      RemixButton(
+                      FortalButton.ghost(
                         label: 'Cancel',
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        style: fortalButtonStyle(
-                          variant: FortalButtonVariant.ghost,
-                        ),
                       ),
-                      RemixButton(
-                        label: 'Revoke access',
-                        onPressed: () {},
-                        style: fortalButtonStyle(),
-                      ),
+                      FortalButton(label: 'Revoke access', onPressed: () {}),
                     ],
                   ),
                 ),
               );
             },
-            style: fortalButtonStyle(),
           ),
         ),
       ),

@@ -24,18 +24,18 @@ part of 'toggle.dart';
 class RemixToggle extends StatelessWidget {
   const RemixToggle({
     super.key,
-    this.enabled = true,
     required this.selected,
-    required this.onChanged,
+    this.onChanged,
+    this.enabled = true,
     this.label,
     this.icon,
-    this.style = const RemixToggleStyle.create(),
-    this.styleSpec,
     this.enableFeedback = true,
     this.focusNode,
     this.autofocus = false,
     this.semanticLabel,
     this.mouseCursor = SystemMouseCursors.click,
+    this.style = const RemixToggleStyler.create(),
+    this.styleSpec,
   }) : assert(
          label != null || icon != null,
          'At least one of label or icon must be provided',
@@ -48,7 +48,10 @@ class RemixToggle extends StatelessWidget {
   final bool selected;
 
   /// Called when the user toggles the button.
-  final ValueChanged<bool> onChanged;
+  ///
+  /// When null, the toggle is visually disabled and does not respond to
+  /// interaction.
+  final ValueChanged<bool>? onChanged;
 
   /// Optional text label.
   final String? label;
@@ -57,12 +60,12 @@ class RemixToggle extends StatelessWidget {
   final IconData? icon;
 
   /// The style configuration for the toggle.
-  final RemixToggleStyle style;
+  final RemixToggleStyler style;
 
   /// The style spec for the toggle.
   final RemixToggleSpec? styleSpec;
 
-  static final styleFrom = RemixToggleStyle.new;
+  static final styleFrom = RemixToggleStyler.new;
 
   /// Whether to enable haptic feedback when toggled.
   final bool enableFeedback;
@@ -81,9 +84,11 @@ class RemixToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final effectiveOnChanged = enabled && onChanged != null ? onChanged : null;
+
     return NakedToggle(
       value: selected,
-      onChanged: enabled ? onChanged : null,
+      onChanged: effectiveOnChanged,
       enabled: enabled,
       mouseCursor: mouseCursor,
       enableFeedback: enableFeedback,
@@ -91,9 +96,10 @@ class RemixToggle extends StatelessWidget {
       autofocus: autofocus,
       semanticLabel: semanticLabel,
       builder: (context, state, _) {
-        return StyleBuilder(
+        return RemixStyleSpecBuilder<RemixToggleSpec>(
           style: style,
-          controller: NakedState.controllerOf(context),
+          styleSpec: styleSpec,
+          controller: NakedToggleState.controllerOf(context),
           builder: (context, spec) {
             return RowBox(
               styleSpec: spec.container,

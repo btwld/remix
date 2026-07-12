@@ -49,21 +49,21 @@ class _SelectExampleState extends State<SelectExample> {
     );
   }
 
-  RemixSelectMenuItemStyle get itemStyle {
-    return RemixSelectMenuItemStyle()
+  RemixSelectMenuItemStyler get itemStyle {
+    return RemixSelectMenuItemStyler()
         .iconSize(16)
         .paddingAll(8)
         .borderRadiusAll(const Radius.circular(8))
-        .onHovered(RemixSelectMenuItemStyle().color(Colors.blueGrey.shade50))
+        .onHovered(RemixSelectMenuItemStyler().color(Colors.blueGrey.shade50))
         .onDisabled(
-          RemixSelectMenuItemStyle().labelColor(Colors.grey.shade300),
+          RemixSelectMenuItemStyler().labelColor(Colors.grey.shade300),
         );
   }
 
-  RemixSelectStyle get style {
-    return RemixSelectStyle()
+  RemixSelectStyler get style {
+    return RemixSelectStyler()
         .trigger(
-          RemixSelectTriggerStyle()
+          RemixSelectTriggerStyler()
               .color(Colors.transparent)
               .borderAll(color: const Color(0xFF898988))
               .paddingY(10)

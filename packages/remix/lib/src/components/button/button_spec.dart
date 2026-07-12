@@ -30,11 +30,16 @@ part of 'button.dart';
 /// ```dart
 /// // Style creates and populates the spec
 /// final style = RemixButtonStyler()
-///   .label(.color(Colors.white))
-///   .icon(.size(20.0));
+///   .backgroundColor(Colors.blue)
+///   .foregroundColor(Colors.white)
+///   .iconSize(20.0);
 ///
 /// // Widget receives the resolved spec
-/// RemixButton('Click me', style: style)
+/// RemixButton(
+///   label: 'Click me',
+///   style: style,
+///   onPressed: () {},
+/// )
 /// ```
 ///
 /// ## Properties
@@ -49,7 +54,7 @@ part of 'button.dart';
 /// - [RemixButtonStyler] for the styling API
 /// - [RemixButton] for the widget implementation
 /// - [Spec] for the base specification pattern
-@MixableSpec(target: RemixButton.new)
+@MixableSpec()
 class RemixButtonSpec with _$RemixButtonSpec {
   /// Styling specification for the button's container.
   ///
@@ -84,13 +89,15 @@ class RemixButtonSpec with _$RemixButtonSpec {
   @override
   final StyleSpec<RemixSpinnerSpec> spinner;
 
-  /// The alignment of the icon relative to the label.
+  /// Optional alignment override for a button with exactly one icon.
   ///
-  /// When set to [IconAlignment.left], the icon appears before the label.
-  /// When set to [IconAlignment.right], the icon appears after the label.
-  /// Defaults to [IconAlignment.left].
+  /// When set to [IconAlignment.start], the icon appears before the label.
+  /// When set to [IconAlignment.end], the icon appears after the label.
+  /// When omitted, [RemixButton.leadingIcon] and [RemixButton.trailingIcon]
+  /// keep their named positions.
+  /// Buttons with both icons always keep both explicit positions.
   @override
-  final IconAlignment iconAlignment;
+  final IconAlignment? iconAlignment;
 
   /// Creates a RemixButtonSpec with optional styling specifications.
   ///
@@ -115,5 +122,5 @@ class RemixButtonSpec with _$RemixButtonSpec {
        label = label ?? const StyleSpec(spec: TextSpec()),
        icon = icon ?? const StyleSpec(spec: IconSpec()),
        spinner = spinner ?? const StyleSpec(spec: RemixSpinnerSpec()),
-       iconAlignment = iconAlignment ?? .start;
+       iconAlignment = iconAlignment;
 }

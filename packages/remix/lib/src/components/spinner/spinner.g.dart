@@ -120,6 +120,7 @@ typedef _$RemixSpinnerSpecMethods = _$RemixSpinnerSpec; // ignore: unused_elemen
 // MixWidgetGenerator
 // **************************************************************************
 
+/// Fortal-themed preset for [RemixSpinner].
 class FortalSpinner extends StatelessWidget {
   const FortalSpinner({super.key, this.size = .size2});
 
@@ -127,7 +128,7 @@ class FortalSpinner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return fortalSpinnerStyle(size: this.size).call();
+    return fortalSpinnerStyler(size: this.size).call(key: this.key);
   }
 }
 
@@ -135,72 +136,77 @@ class FortalSpinner extends StatelessWidget {
 // StylerGenerator
 // **************************************************************************
 
-mixin _$RemixSpinnerStyleMixin on Style<RemixSpinnerSpec>, Diagnosticable {
-  Prop<Duration>? get $duration;
-  Prop<Color>? get $indicatorColor;
+mixin _$RemixSpinnerStylerMixin on Style<RemixSpinnerSpec>, Diagnosticable {
   Prop<double>? get $size;
   Prop<double>? get $strokeWidth;
+  Prop<Color>? get $indicatorColor;
   Prop<Color>? get $trackColor;
   Prop<double>? get $trackStrokeWidth;
-
-  /// Sets the duration.
-  RemixSpinnerStyle duration(Duration value) {
-    return merge(RemixSpinnerStyle(duration: value));
-  }
-
-  /// Sets the indicatorColor.
-  RemixSpinnerStyle indicatorColor(Color value) {
-    return merge(RemixSpinnerStyle(indicatorColor: value));
-  }
+  Prop<Duration>? get $duration;
 
   /// Sets the size.
-  RemixSpinnerStyle size(double value) {
-    return merge(RemixSpinnerStyle(size: value));
+  RemixSpinnerStyler size(double value) {
+    return merge(RemixSpinnerStyler(size: value));
   }
 
   /// Sets the strokeWidth.
-  RemixSpinnerStyle strokeWidth(double value) {
-    return merge(RemixSpinnerStyle(strokeWidth: value));
+  RemixSpinnerStyler strokeWidth(double value) {
+    return merge(RemixSpinnerStyler(strokeWidth: value));
+  }
+
+  /// Sets the indicatorColor.
+  RemixSpinnerStyler indicatorColor(Color value) {
+    return merge(RemixSpinnerStyler(indicatorColor: value));
   }
 
   /// Sets the trackColor.
-  RemixSpinnerStyle trackColor(Color value) {
-    return merge(RemixSpinnerStyle(trackColor: value));
+  RemixSpinnerStyler trackColor(Color value) {
+    return merge(RemixSpinnerStyler(trackColor: value));
   }
 
   /// Sets the trackStrokeWidth.
-  RemixSpinnerStyle trackStrokeWidth(double value) {
-    return merge(RemixSpinnerStyle(trackStrokeWidth: value));
+  RemixSpinnerStyler trackStrokeWidth(double value) {
+    return merge(RemixSpinnerStyler(trackStrokeWidth: value));
+  }
+
+  /// Sets the duration.
+  RemixSpinnerStyler duration(Duration value) {
+    return merge(RemixSpinnerStyler(duration: value));
   }
 
   /// Sets the animation configuration.
-  RemixSpinnerStyle animate(AnimationConfig value) {
-    return merge(RemixSpinnerStyle(animation: value));
+  RemixSpinnerStyler animate(AnimationConfig value) {
+    return merge(RemixSpinnerStyler(animation: value));
   }
 
   /// Sets the style variants.
-  RemixSpinnerStyle variants(List<VariantStyle<RemixSpinnerSpec>> value) {
-    return merge(RemixSpinnerStyle(variants: value));
+  RemixSpinnerStyler variants(List<VariantStyle<RemixSpinnerSpec>> value) {
+    return merge(RemixSpinnerStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
-  RemixSpinnerStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixSpinnerStyle(modifier: value));
+  RemixSpinnerStyler wrap(WidgetModifierConfig value) {
+    return merge(RemixSpinnerStyler(modifier: value));
   }
 
-  /// Merges with another [RemixSpinnerStyle].
+  /// Sets the widget modifier.
+  RemixSpinnerStyler modifier(WidgetModifierConfig value) {
+    return merge(RemixSpinnerStyler(modifier: value));
+  }
+
+  /// Merges with another [RemixSpinnerStyler].
   @override
-  RemixSpinnerStyle merge(RemixSpinnerStyle? other) {
-    return RemixSpinnerStyle.create(
-      duration: MixOps.merge($duration, other?.$duration),
-      indicatorColor: MixOps.merge($indicatorColor, other?.$indicatorColor),
+  RemixSpinnerStyler merge(RemixSpinnerStyler? other) {
+    return RemixSpinnerStyler.create(
       size: MixOps.merge($size, other?.$size),
       strokeWidth: MixOps.merge($strokeWidth, other?.$strokeWidth),
+      indicatorColor: MixOps.merge($indicatorColor, other?.$indicatorColor),
       trackColor: MixOps.merge($trackColor, other?.$trackColor),
       trackStrokeWidth: MixOps.merge(
         $trackStrokeWidth,
         other?.$trackStrokeWidth,
       ),
+      duration: MixOps.merge($duration, other?.$duration),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -211,12 +217,12 @@ mixin _$RemixSpinnerStyleMixin on Style<RemixSpinnerSpec>, Diagnosticable {
   @override
   StyleSpec<RemixSpinnerSpec> resolve(BuildContext context) {
     final spec = RemixSpinnerSpec(
-      duration: MixOps.resolve(context, $duration),
-      indicatorColor: MixOps.resolve(context, $indicatorColor),
       size: MixOps.resolve(context, $size),
       strokeWidth: MixOps.resolve(context, $strokeWidth),
+      indicatorColor: MixOps.resolve(context, $indicatorColor),
       trackColor: MixOps.resolve(context, $trackColor),
       trackStrokeWidth: MixOps.resolve(context, $trackStrokeWidth),
+      duration: MixOps.resolve(context, $duration),
     );
 
     return StyleSpec(
@@ -230,22 +236,22 @@ mixin _$RemixSpinnerStyleMixin on Style<RemixSpinnerSpec>, Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(DiagnosticsProperty('duration', $duration))
-      ..add(DiagnosticsProperty('indicatorColor', $indicatorColor))
       ..add(DiagnosticsProperty('size', $size))
       ..add(DiagnosticsProperty('strokeWidth', $strokeWidth))
+      ..add(DiagnosticsProperty('indicatorColor', $indicatorColor))
       ..add(DiagnosticsProperty('trackColor', $trackColor))
-      ..add(DiagnosticsProperty('trackStrokeWidth', $trackStrokeWidth));
+      ..add(DiagnosticsProperty('trackStrokeWidth', $trackStrokeWidth))
+      ..add(DiagnosticsProperty('duration', $duration));
   }
 
   @override
   List<Object?> get props => [
-    $duration,
-    $indicatorColor,
     $size,
     $strokeWidth,
+    $indicatorColor,
     $trackColor,
     $trackStrokeWidth,
+    $duration,
     $animation,
     $modifier,
     $variants,

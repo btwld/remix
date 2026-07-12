@@ -1,9 +1,10 @@
 part of 'dialog.dart';
 
+/// Style configuration for [RemixDialog] container, title, description, and actions.
 @MixableStyler()
-class RemixDialogStyle
-    extends RemixContainerStyle<RemixDialogSpec, RemixDialogStyle>
-    with Diagnosticable, _$RemixDialogStyleMixin {
+class RemixDialogStyler
+    extends RemixContainerStyler<RemixDialogSpec, RemixDialogStyler>
+    with Diagnosticable, _$RemixDialogStylerMixin {
   @MixableField(setterType: BoxStyler)
   final Prop<StyleSpec<BoxSpec>>? $container;
   @MixableField(setterType: TextStyler)
@@ -12,30 +13,24 @@ class RemixDialogStyle
   final Prop<StyleSpec<TextSpec>>? $description;
   @MixableField(setterType: FlexBoxStyler)
   final Prop<StyleSpec<FlexBoxSpec>>? $actions;
-  @MixableField(setterType: BoxStyler)
-  final Prop<StyleSpec<BoxSpec>>? $overlay;
-
-  const RemixDialogStyle.create({
+  const RemixDialogStyler.create({
     Prop<StyleSpec<BoxSpec>>? container,
     Prop<StyleSpec<TextSpec>>? title,
     Prop<StyleSpec<TextSpec>>? description,
     Prop<StyleSpec<FlexBoxSpec>>? actions,
-    Prop<StyleSpec<BoxSpec>>? overlay,
     super.variants,
     super.animation,
     super.modifier,
   }) : $container = container,
        $title = title,
        $description = description,
-       $actions = actions,
-       $overlay = overlay;
+       $actions = actions;
 
-  RemixDialogStyle({
+  RemixDialogStyler({
     BoxStyler? container,
     TextStyler? title,
     TextStyler? description,
     FlexBoxStyler? actions,
-    BoxStyler? overlay,
     AnimationConfig? animation,
     List<VariantStyle<RemixDialogSpec>>? variants,
     WidgetModifierConfig? modifier,
@@ -44,49 +39,70 @@ class RemixDialogStyle
          title: Prop.maybeMix(title),
          description: Prop.maybeMix(description),
          actions: Prop.maybeMix(actions),
-         overlay: Prop.maybeMix(overlay),
          variants: variants,
          animation: animation,
          modifier: modifier,
        );
 
   /// Sets container alignment
-  RemixDialogStyle alignment(Alignment value) {
-    return merge(RemixDialogStyle(container: BoxStyler(alignment: value)));
+  RemixDialogStyler alignment(Alignment value) {
+    return merge(RemixDialogStyler(container: BoxStyler(alignment: value)));
   }
 
   /// Sets the background color of the dialog.
-  RemixDialogStyle backgroundColor(Color value) {
+  RemixDialogStyler backgroundColor(Color value) {
     return merge(
-      RemixDialogStyle(
+      RemixDialogStyler(
         container: BoxStyler(decoration: BoxDecorationMix(color: value)),
       ),
     );
   }
 
   /// Sets the shape of the dialog.
-  RemixDialogStyle shape(ShapeBorderMix value) {
+  RemixDialogStyler shape(ShapeBorderMix value) {
     return merge(
-      RemixDialogStyle(
+      RemixDialogStyler(
         container: BoxStyler(decoration: ShapeDecorationMix(shape: value)),
       ),
     );
   }
 
-  // RemixContainerStyle mixin implementations
+  /// Creates a [RemixDialog] widget with this style applied.
+  RemixDialog call({
+    Key? key,
+    Widget? child,
+    String? title,
+    String? description,
+    List<Widget>? actions,
+    bool modal = true,
+    String? semanticLabel,
+  }) {
+    return RemixDialog(
+      key: key,
+      title: title,
+      description: description,
+      actions: actions,
+      modal: modal,
+      semanticLabel: semanticLabel,
+      style: this,
+      child: child,
+    );
+  }
+
+  // RemixContainerStyler mixin implementations
   @override
-  RemixDialogStyle padding(EdgeInsetsGeometryMix value) {
-    return merge(RemixDialogStyle(container: BoxStyler(padding: value)));
+  RemixDialogStyler padding(EdgeInsetsGeometryMix value) {
+    return merge(RemixDialogStyler(container: BoxStyler(padding: value)));
   }
 
   /// Delegates to [backgroundColor].
   @override
-  RemixDialogStyle color(Color value) => backgroundColor(value);
+  RemixDialogStyler color(Color value) => backgroundColor(value);
 
   @override
-  RemixDialogStyle size(double width, double height) {
+  RemixDialogStyler size(double width, double height) {
     return merge(
-      RemixDialogStyle(
+      RemixDialogStyler(
         container: BoxStyler(
           constraints: BoxConstraintsMix(
             minWidth: width,
@@ -100,9 +116,9 @@ class RemixDialogStyle
   }
 
   @override
-  RemixDialogStyle borderRadius(BorderRadiusGeometryMix radius) {
+  RemixDialogStyler borderRadius(BorderRadiusGeometryMix radius) {
     return merge(
-      RemixDialogStyle(
+      RemixDialogStyler(
         container: BoxStyler(
           decoration: BoxDecorationMix(borderRadius: radius),
         ),
@@ -111,34 +127,34 @@ class RemixDialogStyle
   }
 
   @override
-  RemixDialogStyle constraints(BoxConstraintsMix value) {
-    return merge(RemixDialogStyle(container: BoxStyler(constraints: value)));
+  RemixDialogStyler constraints(BoxConstraintsMix value) {
+    return merge(RemixDialogStyler(container: BoxStyler(constraints: value)));
   }
 
   @override
-  RemixDialogStyle decoration(DecorationMix value) {
-    return merge(RemixDialogStyle(container: BoxStyler(decoration: value)));
+  RemixDialogStyler decoration(DecorationMix value) {
+    return merge(RemixDialogStyler(container: BoxStyler(decoration: value)));
   }
 
   @override
-  RemixDialogStyle margin(EdgeInsetsGeometryMix value) {
-    return merge(RemixDialogStyle(container: BoxStyler(margin: value)));
+  RemixDialogStyler margin(EdgeInsetsGeometryMix value) {
+    return merge(RemixDialogStyler(container: BoxStyler(margin: value)));
   }
 
   @override
-  RemixDialogStyle foregroundDecoration(DecorationMix value) {
+  RemixDialogStyler foregroundDecoration(DecorationMix value) {
     return merge(
-      RemixDialogStyle(container: BoxStyler(foregroundDecoration: value)),
+      RemixDialogStyler(container: BoxStyler(foregroundDecoration: value)),
     );
   }
 
   @override
-  RemixDialogStyle transform(
+  RemixDialogStyler transform(
     Matrix4 value, {
     AlignmentGeometry alignment = Alignment.center,
   }) {
     return merge(
-      RemixDialogStyle(
+      RemixDialogStyler(
         container: BoxStyler(transform: value, transformAlignment: alignment),
       ),
     );
@@ -146,9 +162,9 @@ class RemixDialogStyle
 
   /// Sets the shadow/elevation of the dialog.
   @override
-  RemixDialogStyle shadow(BoxShadowMix value) {
+  RemixDialogStyler shadow(BoxShadowMix value) {
     return merge(
-      RemixDialogStyle(
+      RemixDialogStyler(
         container: BoxStyler(decoration: BoxDecorationMix(boxShadow: [value])),
       ),
     );

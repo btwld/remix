@@ -11,9 +11,9 @@ part of 'textfield.dart';
 ///   hintText: 'Enter your name',
 ///   helperText: 'Required field',
 ///   onChanged: (value) {
-///     print('Value changed: $value');
+///     debugPrint('Value changed: $value');
 ///   },
-///   style: TextFieldStyle(),
+///   style: RemixTextFieldStyler(),
 /// )
 /// ```
 class RemixTextField extends StatelessWidget {
@@ -21,19 +21,18 @@ class RemixTextField extends StatelessWidget {
     super.key,
     this.controller,
     this.focusNode,
+    this.label,
+    this.hintText,
+    this.helperText,
+    this.error = false,
     this.keyboardType,
     this.textInputAction,
     this.textCapitalization = .none,
     this.textDirection,
-    this.readOnly = false,
-    this.showCursor,
-    this.autofocus = false,
-    this.obscuringCharacter = '•',
     this.obscureText = false,
-    this.autocorrect = true,
-    this.enableSuggestions = true,
-    this.smartDashesType,
-    this.smartQuotesType,
+    this.enabled = true,
+    this.readOnly = false,
+    this.autofocus = false,
     this.maxLines = 1,
     this.minLines,
     this.expands = false,
@@ -44,10 +43,16 @@ class RemixTextField extends StatelessWidget {
     this.onSubmitted,
     this.onAppPrivateCommand,
     this.inputFormatters,
-    this.enabled = true,
+    this.showCursor,
+    this.obscuringCharacter = '•',
+    this.autocorrect = true,
+    this.enableSuggestions = true,
+    this.smartDashesType,
+    this.smartQuotesType,
     this.dragStartBehavior = .start,
     this.enableInteractiveSelection = true,
     this.selectionControls,
+    this.onTap,
     this.onTapOutside,
     this.onPressUpOutside,
     this.onTapAlwaysCalled = false,
@@ -66,17 +71,13 @@ class RemixTextField extends StatelessWidget {
     this.ignorePointers,
     this.undoController,
     this.groupId = EditableText,
-    this.hintText,
-    this.helperText,
-    this.label,
-    this.error = false,
-    this.styleSpec,
     this.leading,
     this.trailing,
     this.semanticLabel,
     this.semanticHint,
     this.excludeSemantics = false,
-    this.style = const RemixTextFieldStyle.create(),
+    this.style = const RemixTextFieldStyler.create(),
+    this.styleSpec,
   });
 
   /// Controls the text being edited.
@@ -172,6 +173,9 @@ class RemixTextField extends StatelessWidget {
   /// Optional delegate for building the text selection handles and toolbar.
   final TextSelectionControls? selectionControls;
 
+  /// Called when the text field is tapped.
+  final GestureTapCallback? onTap;
+
   /// Called when the user taps outside of this text field.
   final TapRegionCallback? onTapOutside;
 
@@ -248,16 +252,17 @@ class RemixTextField extends StatelessWidget {
   final bool excludeSemantics;
 
   /// The style configuration for the text field.
-  final RemixTextFieldStyle style;
+  final RemixTextFieldStyler style;
 
   /// The style spec for the text field.
   final RemixTextFieldSpec? styleSpec;
 
-  static final styleFrom = RemixTextFieldStyle.new;
+  static final styleFrom = RemixTextFieldStyler.new;
 
-  @override
-  Widget build(BuildContext context) {
-    // NakedTextField handles semantics internally, no outer Semantics needed
+  Widget _buildResolved(
+    RemixTextFieldSpec spec,
+    WidgetStatesController styleController,
+  ) {
     return NakedTextField(
       groupId: groupId,
       controller: controller,
@@ -266,7 +271,7 @@ class RemixTextField extends StatelessWidget {
       keyboardType: keyboardType,
       textInputAction: textInputAction,
       textCapitalization: textCapitalization,
-      textAlign: .start,
+      textAlign: spec.textAlign ?? .start,
       textDirection: textDirection,
       readOnly: readOnly,
       showCursor: showCursor,
@@ -288,10 +293,20 @@ class RemixTextField extends StatelessWidget {
       onAppPrivateCommand: onAppPrivateCommand,
       inputFormatters: inputFormatters,
       enabled: enabled,
-      // Cursor properties will be styled via StyleBuilder
+      error: error,
+      cursorWidth: spec.cursorWidth ?? 2.0,
+      cursorHeight: spec.cursorHeight,
+      cursorRadius: spec.cursorRadius,
+      cursorOpacityAnimates: spec.cursorOpacityAnimates,
+      cursorColor: spec.cursorColor,
+      selectionHeightStyle: spec.selectionHeightStyle ?? .tight,
+      selectionWidthStyle: spec.selectionWidthStyle ?? .tight,
+      keyboardAppearance: spec.keyboardAppearance,
+      scrollPadding: spec.scrollPadding ?? const .all(20.0),
       dragStartBehavior: dragStartBehavior,
       enableInteractiveSelection: enableInteractiveSelection,
       selectionControls: selectionControls,
+      onTap: onTap,
       onTapAlwaysCalled: onTapAlwaysCalled,
       onTapOutside: onTapOutside,
       scrollController: scrollController,
@@ -300,91 +315,123 @@ class RemixTextField extends StatelessWidget {
       contentInsertionConfiguration: contentInsertionConfiguration,
       clipBehavior: clipBehavior,
       restorationId: restorationId,
+      onTapUpOutside: onPressUpOutside,
       stylusHandwritingEnabled: stylusHandwritingEnabled,
       enableIMEPersonalizedLearning: enableIMEPersonalizedLearning,
       contextMenuBuilder: contextMenuBuilder,
       canRequestFocus: canRequestFocus,
       spellCheckConfiguration: spellCheckConfiguration,
       magnifierConfiguration: magnifierConfiguration,
+      onHoverChange: (value) => styleController.update(.hovered, value),
+      onFocusChange: (value) => styleController.update(.focused, value),
+      onPressChange: (value) => styleController.update(.pressed, value),
+      ignorePointers: ignorePointers,
       semanticLabel: semanticLabel ?? label,
       semanticHint: semanticHint ?? hintText,
-      builder: (BuildContext context, state, Widget editableText) {
+      semanticErrorText: error ? helperText : null,
+      excludeSemantics: excludeSemantics,
+      builder: (BuildContext context, _, Widget editableText) {
         final textFieldState = NakedTextFieldState.of(context);
-
-        // Create a controller with the current states plus error state if needed.
-        // Note: This controller is used transiently for style resolution and
-        // doesn't need explicit disposal as it's not a listener subscription.
-        final controller = WidgetStatesController({
-          ...NakedTextFieldState.controllerOf(context).value,
-          if (error) .error,
-        });
-
-        return StyleBuilder(
-          style: style,
-          controller: controller,
-          builder: (context, spec) {
-            // Apply text style from spec
-            final textStyleSpec = spec.text;
-            final textStyle = textStyleSpec.spec.style ?? const TextStyle();
-
-            final styledEditableText = DefaultTextStyle(
-              style: textStyle,
-              textAlign: spec.textAlign,
-              child: editableText,
-            );
-
-            // Build the core editable with hint overlay if needed
-            final editableWithHint = hintText != null
-                ? Stack(
-                    alignment: AlignmentDirectional.centerStart,
-                    children: [
-                      if (textFieldState.text.isEmpty)
-                        Positioned.fill(
-                          child: Align(
-                            alignment: AlignmentDirectional.centerStart,
-                            child: StyledText(
-                              hintText!,
-                              styleSpec: spec.hintText,
-                            ),
-                          ),
-                        ),
-                      styledEditableText,
-                    ],
-                  )
-                : styledEditableText;
-
-            // Use Box widgets instead of deprecated createWidget
-
-            // Add leading/trailing widgets if present
-            final withAccessories = RowBox(
-              styleSpec: spec.container,
-              children: [
-                if (leading != null) leading!,
-                // ignore: avoid-flexible-outside-flex
-                Expanded(child: editableWithHint),
-                if (trailing != null) trailing!,
-              ],
-            );
-
-            // Add label and helper text if present
-            final needsWrapper = label != null || helperText != null;
-
-            return needsWrapper
-                ? Column(
-                    mainAxisSize: .min,
-                    crossAxisAlignment: .start,
-                    children: [
-                      if (label != null)
-                        StyledText(label!, styleSpec: spec.label),
-                      withAccessories,
-                      if (helperText != null)
-                        StyledText(helperText!, styleSpec: spec.helperText),
-                    ],
-                  )
-                : withAccessories;
-          },
+        final styledEditableText = StyleSpecBuilder(
+          styleSpec: spec.text,
+          builder: (context, textSpec) => DefaultTextStyle.merge(
+            style: textSpec.style,
+            child: editableText,
+          ),
         );
+
+        final editableWithHint = hintText != null
+            ? Stack(
+                alignment: AlignmentDirectional.centerStart,
+                children: [
+                  if (textFieldState.text.isEmpty)
+                    Positioned.fill(
+                      child: Align(
+                        alignment: AlignmentDirectional.centerStart,
+                        child: StyledText(hintText!, styleSpec: spec.hintText),
+                      ),
+                    ),
+                  styledEditableText,
+                ],
+              )
+            : styledEditableText;
+
+        final withAccessories = RowBox(
+          styleSpec: spec.container,
+          children: [
+            ?leading,
+            // ignore: avoid-flexible-outside-flex
+            Expanded(child: editableWithHint),
+            ?trailing,
+          ],
+        );
+
+        final needsWrapper = label != null || helperText != null;
+
+        return needsWrapper
+            ? Column(
+                mainAxisSize: .min,
+                crossAxisAlignment: .start,
+                children: [
+                  if (label != null) StyledText(label!, styleSpec: spec.label),
+                  withAccessories,
+                  if (helperText != null)
+                    StyledText(helperText!, styleSpec: spec.helperText),
+                ],
+              )
+            : withAccessories;
       },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) => _RemixTextFieldBody(config: this);
+}
+
+class _RemixTextFieldBody extends StatefulWidget {
+  const _RemixTextFieldBody({required this.config});
+
+  final RemixTextField config;
+
+  @override
+  State<_RemixTextFieldBody> createState() => _RemixTextFieldBodyState();
+}
+
+class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
+  late final WidgetStatesController _styleController;
+
+  @override
+  void initState() {
+    super.initState();
+    _styleController = WidgetStatesController({
+      if (!widget.config.enabled) .disabled,
+      if (widget.config.error) .error,
+    });
+  }
+
+  @override
+  void didUpdateWidget(_RemixTextFieldBody oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _styleController
+      ..update(.disabled, !widget.config.enabled)
+      ..update(.error, widget.config.error);
+  }
+
+  @override
+  void dispose() {
+    _styleController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final config = widget.config;
+
+    return RemixStyleSpecBuilder<RemixTextFieldSpec>(
+      style: config.style,
+      styleSpec: config.styleSpec,
+      controller: _styleController,
+      builder: (context, spec) => config._buildResolved(spec, _styleController),
     );
   }
 }

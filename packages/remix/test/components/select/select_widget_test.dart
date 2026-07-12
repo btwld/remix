@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
 
 import '../../helpers/test_helpers.dart';
@@ -282,8 +283,43 @@ void main() {
     });
 
     group('Styling', () {
+      testWidgets('item styling uses the typed select-option controller', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          RemixSelect<String>(
+            trigger: const RemixSelectTrigger(placeholder: 'Select'),
+            items: const [RemixSelectItem(value: 'a', label: 'Option A')],
+          ),
+        );
+        await tester.tap(find.byType(RemixSelect<String>));
+        await tester.pumpAndSettle();
+
+        final optionContext = tester.element(find.text('Option A'));
+        final optionController = NakedSelectOptionState.controllerOf<String>(
+          optionContext,
+        );
+        final stateProvider = tester.widget<WidgetStateProvider>(
+          find
+              .ancestor(
+                of: find.text('Option A'),
+                matching: find.byType(WidgetStateProvider),
+              )
+              .first,
+        );
+
+        expect(
+          stateProvider.disabled,
+          optionController.value.contains(WidgetState.disabled),
+        );
+        expect(
+          stateProvider.selected,
+          optionController.value.contains(WidgetState.selected),
+        );
+      });
+
       testWidgets('applies custom style', (tester) async {
-        final customStyle = RemixSelectStyle().menuContainer(
+        final customStyle = RemixSelectStyler().menuContainer(
           FlexBoxStyler(padding: EdgeInsetsGeometryMix.all(16.0)),
         );
 
@@ -300,8 +336,8 @@ void main() {
       });
 
       testWidgets('applies trigger styling', (tester) async {
-        final customStyle = RemixSelectStyle().trigger(
-          RemixSelectTriggerStyle().label(
+        final customStyle = RemixSelectStyler().trigger(
+          RemixSelectTriggerStyler().label(
             TextStyler(style: TextStyleMix(color: Colors.blue)),
           ),
         );
@@ -326,7 +362,7 @@ void main() {
               RemixSelectItem(
                 value: 'a',
                 label: 'Option A',
-                style: RemixSelectMenuItemStyle().text(
+                style: RemixSelectMenuItemStyler().text(
                   TextStyler(style: TextStyleMix(color: Colors.red)),
                 ),
               ),
@@ -336,6 +372,56 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RemixSelect<String>), findsOneWidget);
+      });
+
+      testWidgets('applies select-level default item styling', (tester) async {
+        await tester.pumpRemixApp(
+          RemixSelect<String>(
+            trigger: const RemixSelectTrigger(placeholder: 'Select'),
+            items: const [RemixSelectItem(value: 'a', label: 'Option A')],
+            style: RemixSelectStyler().item(
+              RemixSelectMenuItemStyler().text(
+                TextStyler(style: TextStyleMix(color: Colors.red)),
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byType(RemixSelect<String>));
+        await tester.pumpAndSettle();
+
+        expect(
+          tester.widget<Text>(find.text('Option A')).style?.color,
+          Colors.red,
+        );
+      });
+
+      testWidgets('applies raw select item styleSpec defaults', (tester) async {
+        await tester.pumpRemixApp(
+          RemixSelect<String>(
+            trigger: const RemixSelectTrigger(placeholder: 'Select'),
+            items: const [RemixSelectItem(value: 'a', label: 'Option A')],
+            styleSpec: const RemixSelectSpec(
+              item: StyleSpec(
+                spec: RemixSelectMenuItemSpec(
+                  text: StyleSpec(
+                    spec: TextSpec(style: TextStyle(color: Colors.blue)),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byType(RemixSelect<String>));
+        await tester.pumpAndSettle();
+
+        expect(
+          tester.widget<Text>(find.text('Option A')).style?.color,
+          Colors.blue,
+        );
       });
     });
 
@@ -452,25 +538,15 @@ void main() {
     });
 
     group('Positioning', () {
-      testWidgets('accepts targetAnchor parameter', (tester) async {
+      testWidgets('accepts positioning OverlayPositionConfig', (tester) async {
         await tester.pumpRemixApp(
           RemixSelect<String>(
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
             items: const [RemixSelectItem(value: 'a', label: 'Option A')],
-            targetAnchor: Alignment.bottomLeft,
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixSelect<String>), findsOneWidget);
-      });
-
-      testWidgets('accepts followerAnchor parameter', (tester) async {
-        await tester.pumpRemixApp(
-          RemixSelect<String>(
-            trigger: const RemixSelectTrigger(placeholder: 'Select'),
-            items: const [RemixSelectItem(value: 'a', label: 'Option A')],
-            followerAnchor: Alignment.topLeft,
+            positioning: const OverlayPositionConfig(
+              targetAnchor: Alignment.bottomLeft,
+              followerAnchor: Alignment.topLeft,
+            ),
           ),
         );
         await tester.pumpAndSettle();

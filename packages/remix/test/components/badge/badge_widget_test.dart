@@ -40,7 +40,7 @@ void main() {
         await tester.pumpRemixApp(
           const RemixBadge(
             label: 'Complete Badge',
-            style: RemixBadgeStyle.create(),
+            style: RemixBadgeStyler.create(),
           ),
         );
         await tester.pumpAndSettle();

@@ -1,32 +1,51 @@
 part of 'radio.dart';
 
-enum FortalRadioSize { size1, size2, size3 }
+/// Fortal radio size presets.
+enum FortalRadioSize {
+  /// Compact radio.
+  size1,
 
-enum FortalRadioVariant { surface, soft }
+  /// Default radio.
+  size2,
 
-RemixRadioStyle fortalRadioStyle({
+  /// Large radio.
+  size3,
+}
+
+/// Fortal radio color variants.
+enum FortalRadioVariant {
+  /// Surface treatment with neutral border.
+  surface,
+
+  /// Soft accent treatment.
+  soft,
+}
+
+/// Fortal-themed preset for [RemixRadio].
+@MixWidget(name: 'FortalRadio')
+RemixRadioStyler fortalRadioStyler({
   FortalRadioVariant variant = .surface,
   FortalRadioSize size = .size2,
 }) {
   return switch (variant) {
-    .surface => _fortalRadioSurfaceStyle(size),
-    .soft => _fortalRadioSoftStyle(size),
+    .surface => _fortalRadioSurfaceStyler(size),
+    .soft => _fortalRadioSoftStyler(size),
   };
 }
 
-RemixRadioStyle _fortalRadioBaseStyle(FortalRadioSize size) {
-  return RemixRadioStyle()
+RemixRadioStyler _fortalRadioBaseStyler(FortalRadioSize size) {
+  return RemixRadioStyler()
       .onFocused(
-        RemixRadioStyle().borderAll(
+        RemixRadioStyler().borderAll(
           color: FortalTokens.focusA8(),
           width: FortalTokens.focusRingWidth(),
         ),
       )
-      .merge(_fortalRadioSizeStyle(size));
+      .merge(_fortalRadioSizeStyler(size));
 }
 
-RemixRadioStyle _fortalRadioSurfaceStyle([FortalRadioSize size = .size2]) {
-  return _fortalRadioBaseStyle(size)
+RemixRadioStyler _fortalRadioSurfaceStyler([FortalRadioSize size = .size2]) {
+  return _fortalRadioBaseStyler(size)
       .fillColor(FortalTokens.colorSurface())
       .borderAll(
         color: FortalTokens.gray6(),
@@ -39,7 +58,7 @@ RemixRadioStyle _fortalRadioSurfaceStyle([FortalRadioSize size = .size2]) {
             .borderRadiusAll(FortalTokens.radiusFull()),
       )
       .onSelected(
-        RemixRadioStyle()
+        RemixRadioStyler()
             .fillColor(FortalTokens.accent9())
             .borderAll(
               color: FortalTokens.accent9(),
@@ -48,8 +67,8 @@ RemixRadioStyle _fortalRadioSurfaceStyle([FortalRadioSize size = .size2]) {
             .indicator(BoxStyler().color(Colors.white)),
       )
       .onDisabled(
-        RemixRadioStyle()
-            .color(FortalTokens.gray3())
+        RemixRadioStyler()
+            .fillColor(FortalTokens.gray3())
             .borderAll(
               color: FortalTokens.gray6(),
               width: FortalTokens.borderWidth1(),
@@ -58,8 +77,8 @@ RemixRadioStyle _fortalRadioSurfaceStyle([FortalRadioSize size = .size2]) {
       );
 }
 
-RemixRadioStyle _fortalRadioSoftStyle([FortalRadioSize size = .size2]) {
-  return _fortalRadioBaseStyle(size)
+RemixRadioStyler _fortalRadioSoftStyler([FortalRadioSize size = .size2]) {
+  return _fortalRadioBaseStyler(size)
       .fillColor(FortalTokens.accentA4())
       .borderRadiusAll(FortalTokens.radiusFull())
       .indicator(
@@ -68,28 +87,28 @@ RemixRadioStyle _fortalRadioSoftStyle([FortalRadioSize size = .size2]) {
             .borderRadiusAll(FortalTokens.radiusFull()),
       )
       .onSelected(
-        RemixRadioStyle()
+        RemixRadioStyler()
             .fillColor(FortalTokens.accentA4())
             .indicator(BoxStyler().color(FortalTokens.accent11())),
       )
       .onDisabled(
-        RemixRadioStyle()
+        RemixRadioStyler()
             .fillColor(FortalTokens.gray3())
             .indicator(BoxStyler().color(FortalTokens.gray7())),
       );
 }
 
-RemixRadioStyle _fortalRadioSizeStyle(FortalRadioSize size) {
+RemixRadioStyler _fortalRadioSizeStyler(FortalRadioSize size) {
   return switch (size) {
-    .size1 => RemixRadioStyle(
+    .size1 => RemixRadioStyler(
       container: BoxStyler().width(16.0).height(16.0).alignment(.center),
       indicator: BoxStyler().width(6.0).height(6.0),
     ),
-    .size2 => RemixRadioStyle(
+    .size2 => RemixRadioStyler(
       container: BoxStyler().width(20.0).height(20.0).alignment(.center),
       indicator: BoxStyler().width(8.0).height(8.0),
     ),
-    .size3 => RemixRadioStyle(
+    .size3 => RemixRadioStyler(
       container: BoxStyler().width(24.0).height(24.0).alignment(.center),
       indicator: BoxStyler().width(10.0).height(10.0),
     ),

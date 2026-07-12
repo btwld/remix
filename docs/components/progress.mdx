@@ -31,9 +31,9 @@ class ProgressExample extends StatelessWidget {
     );
   }
 
-  RemixProgressStyle get style {
-    return RemixProgressStyle()
-        .wrapClipRRect(borderRadius: BorderRadius.circular(10))
+  RemixProgressStyler get style {
+    return RemixProgressStyler()
+        .wrap(.clipRRect(borderRadius: BorderRadiusGeometryMix.circular(10)))
         .trackColor(Colors.grey.shade300)
         .indicatorColor(Colors.grey.shade900)
         .width(300)
@@ -43,9 +43,9 @@ class ProgressExample extends StatelessWidget {
 ```
 </CodeGroup>
 
-## Fortal styles
+## Fortal widgets
 
-Remix includes Fortal-themed style helpers for this component:
+Remix includes a generated Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
@@ -60,13 +60,11 @@ class FortalProgressExample extends StatelessWidget {
     return Column(
       spacing: 16,
       children: [
-        RemixProgress(
+        FortalProgress.surface(
           value: 0.6,
-          style: FortalProgressStyle.solid(),
         ),
-        RemixProgress(
+        FortalProgress.soft(
           value: 0.4,
-          style: FortalProgressStyle.soft(),
         ),
       ],
     );
@@ -76,7 +74,7 @@ class FortalProgressExample extends StatelessWidget {
 </CodeGroup>
 
 <Info>
-  See the [FortalProgressStyle source code](https://github.com/btwld/remix/blob/main/lib/src/components/progress/fortal_progress_styles.dart) for all available options.
+  See the [fortalProgressStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/progress/fortal_progress_styles.dart) for all available options.
 </Info>
 
 ## Constructor
@@ -85,7 +83,7 @@ class FortalProgressExample extends StatelessWidget {
 const RemixProgress({
   Key? key,
   required double value,
-  RemixProgressStyle style = const RemixProgressStyle.create(),
+  RemixProgressStyler style = const RemixProgressStyler.create(),
   RemixProgressSpec? styleSpec,
 })
 ```
@@ -95,7 +93,7 @@ const RemixProgress({
 ## Properties
 ### Widget Properties
 
-#### `style` → `RemixProgressStyle`
+#### `style` → `RemixProgressStyler`
 
 Optional. The style configuration for the progress indicator. Customize colors, sizing, and track appearance.
 
@@ -150,7 +148,7 @@ Sets container alignment
 
 Applies widget modifiers such as clipping, opacity, or scaling.
 
-#### `animate(AnimationConfig config)`
+#### `animate(AnimationConfig value)`
 
 Configures implicit animation for style transitions.
 
@@ -178,3 +176,6 @@ Sets a foreground decoration painted on top of the component.
 
 Applies a matrix transformation to the component.
 
+#### `call({Key? key, required double value})`
+
+Creates a `RemixProgress` widget with this style applied.

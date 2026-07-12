@@ -17,16 +17,30 @@ part of 'divider.dart';
 ///   ],
 /// )
 /// ```
-class RemixDivider extends StyleWidget<RemixDividerSpec> {
+class RemixDivider extends StatelessWidget {
   /// Creates a Remix divider.
   const RemixDivider({
-    super.style = const RemixDividerStyle.create(),
-    super.styleSpec,
     super.key,
+    this.style = const RemixDividerStyler.create(),
+    this.styleSpec,
   });
 
+  static final styleFrom = RemixDividerStyler.new;
+
+  /// The style configuration for the divider.
+  final RemixDividerStyler style;
+
+  /// Optional raw style spec that bypasses fluent style resolution.
+  final RemixDividerSpec? styleSpec;
+
   @override
-  Widget build(BuildContext context, RemixDividerSpec spec) {
-    return Box(styleSpec: spec.container);
+  Widget build(BuildContext context) {
+    return RemixStyleSpecBuilder<RemixDividerSpec>(
+      style: style,
+      styleSpec: styleSpec,
+      builder: (context, spec) {
+        return Box(styleSpec: spec.container);
+      },
+    );
   }
 }

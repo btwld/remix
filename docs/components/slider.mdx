@@ -46,8 +46,8 @@ class _SliderExampleState extends State<SliderExample> {
     );
   }
 
-  RemixSliderStyle get style {
-    return RemixSliderStyle()
+  RemixSliderStyler get style {
+    return RemixSliderStyler()
         .thumbSize(const Size(24, 24))
         .thumb(
           BoxStyler().shapeCircle().shadow(
@@ -62,7 +62,7 @@ class _SliderExampleState extends State<SliderExample> {
         .trackColor(Colors.grey.shade300)
         .rangeColor(Colors.black)
         .onDisabled(
-          RemixSliderStyle()
+          RemixSliderStyler()
               .trackColor(Colors.grey.shade300)
               .rangeColor(Colors.blueGrey)
               .thumbColor(Colors.white.withValues(alpha: 0.6)),
@@ -72,9 +72,9 @@ class _SliderExampleState extends State<SliderExample> {
 ```
 </CodeGroup>
 
-## Fortal styles
+## Fortal widgets
 
-Remix includes Fortal-themed style helpers for this component:
+Remix includes a generated Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
@@ -96,15 +96,13 @@ class _FortalSliderExampleState extends State<FortalSliderExample> {
     return Column(
       spacing: 16,
       children: [
-        RemixSlider(
+        FortalSlider.surface(
           value: _value,
           onChanged: (v) => setState(() => _value = v),
-          style: FortalSliderStyle.solid(),
         ),
-        RemixSlider(
+        FortalSlider.soft(
           value: _value,
           onChanged: (v) => setState(() => _value = v),
-          style: FortalSliderStyle.soft(),
         ),
       ],
     );
@@ -114,7 +112,7 @@ class _FortalSliderExampleState extends State<FortalSliderExample> {
 </CodeGroup>
 
 <Info>
-  See the [FortalSliderStyle source code](https://github.com/btwld/remix/blob/main/lib/src/components/slider/fortal_slider_styles.dart) for all available options.
+  See the [fortalSliderStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/slider/fortal_slider_styles.dart) for all available options.
 </Info>
 
 ## Constructor
@@ -123,17 +121,17 @@ class _FortalSliderExampleState extends State<FortalSliderExample> {
 const RemixSlider({
   Key? key,
   required double value,
-  required ValueChanged<double>? onChanged,
+  ValueChanged<double>? onChanged,
   ValueChanged<double>? onChangeStart,
   ValueChanged<double>? onChangeEnd,
   double min = 0.0,
   double max = 1.0,
   bool enabled = true,
-  bool enableHapticFeedback = true,
+  bool enableFeedback = true,
   FocusNode? focusNode,
   bool autofocus = false,
   int? snapDivisions,
-  RemixSliderStyle style = const RemixSliderStyle.create(),
+  RemixSliderStyler style = const RemixSliderStyler.create(),
   RemixSliderSpec? styleSpec,
 })
 ```
@@ -157,7 +155,7 @@ Optional. The maximum value the slider can have.
 
 #### `onChanged` → `ValueChanged<double>?`
 
-**Required**. Called during drag with the new value.
+Optional. Called during drag with the new value. When omitted, the slider is disabled.
 
 #### `value` → `double`
 
@@ -171,7 +169,7 @@ Optional. Called when the user is done selecting a new value.
 
 Optional. Called when the user starts dragging the slider.
 
-#### `style` → `RemixSliderStyle`
+#### `style` → `RemixSliderStyler`
 
 Optional. The style configuration for the slider.
 
@@ -183,9 +181,9 @@ Optional. The style spec for the slider.
 
 Optional. Whether the slider is enabled for interaction.
 
-#### `enableHapticFeedback` → `bool`
+#### `enableFeedback` → `bool`
 
-Optional. Whether to provide haptic feedback during value changes. Defaults to true.
+Optional. Whether to provide platform feedback during value changes. Defaults to true.
 
 #### `focusNode` → `FocusNode?`
 
@@ -234,9 +232,17 @@ Sets stroke width for both track and range.
 
 Sets stroke width for the track only (background rail).
 
+#### `trackWidth(double value)`
+
+Sets stroke width for the track only.
+
 #### `rangeThickness(double value)`
 
 Sets stroke width for the range only (filled portion).
+
+#### `rangeWidth(double value)`
+
+Sets stroke width for the range only.
 
 #### `padding(EdgeInsetsGeometryMix value)`
 
@@ -278,7 +284,18 @@ Applies a matrix transformation to the component.
 
 Applies widget modifiers such as clipping, opacity, or scaling.
 
-#### `animate(AnimationConfig animation)`
+#### `animate(AnimationConfig value)`
 
 Configures implicit animation for style transitions.
 
+#### `variants(List<VariantStyle<RemixSliderSpec>> value)`
+
+Sets style variants.
+
+#### `modifier(WidgetModifierConfig value)`
+
+Sets the widget modifier.
+
+#### `call({ ... })`
+
+Creates a RemixSlider widget with this style applied.

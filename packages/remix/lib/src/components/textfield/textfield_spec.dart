@@ -6,7 +6,7 @@ part of 'textfield.dart';
 /// should be styled, structured, and behave. It follows the Spec pattern used
 /// throughout the Remix framework, where:
 ///
-/// 1. **Style classes** (like [RemixTextFieldStyle]) define styling APIs
+/// 1. **Style classes** (like [RemixTextFieldStyler]) define styling APIs
 /// 2. **Spec classes** (like [RemixTextFieldSpec]) hold resolved styling properties
 /// 3. **Widget classes** (like [RemixTextField]) consume specs to render UI
 ///
@@ -17,15 +17,15 @@ part of 'textfield.dart';
 /// ## Architecture Overview
 ///
 /// ```
-/// RemixTextFieldStyle -> RemixTextFieldSpec -> RemixTextField Widget
+/// RemixTextFieldStyler -> RemixTextFieldSpec -> RemixTextField Widget
 /// (Define styles)       (Hold props)     (Render UI)
 /// ```
 ///
 /// ## Property Categories
 ///
 /// **Visual Styling**: [text], [hintText], [container], [helperText], [label]
-/// **Text Behavior**: [textAlign], [spacing]
-/// **Cursor Configuration**: [cursorWidth], [cursorHeight], [cursorRadius], [cursorColor], [cursorOffset], [cursorOpacityAnimates]
+/// **Text Behavior**: [textAlign]
+/// **Cursor Configuration**: [cursorWidth], [cursorHeight], [cursorRadius], [cursorColor], [cursorOpacityAnimates]
 /// **Selection Styling**: [selectionHeightStyle], [selectionWidthStyle]
 /// **Input Configuration**: [scrollPadding], [keyboardAppearance]
 ///
@@ -36,8 +36,8 @@ part of 'textfield.dart';
 ///
 /// ```dart
 /// // Style creates and populates the spec
-/// final style = RemixTextFieldStyle()
-///   .textColor(Colors.black)
+/// final style = RemixTextFieldStyler()
+///   .color(Colors.black)
 ///   .cursorColor(Colors.blue)
 ///   .spacing(8.0);
 ///
@@ -46,7 +46,7 @@ part of 'textfield.dart';
 /// ```
 ///
 /// See also:
-/// - [RemixTextFieldStyle] for the styling API
+/// - [RemixTextFieldStyler] for the styling API
 /// - [RemixTextField] for the widget implementation
 /// - [Spec] for the base specification pattern
 @MixableSpec()
@@ -100,13 +100,6 @@ class RemixTextFieldSpec with _$RemixTextFieldSpec {
   @override
   final Color? cursorColor;
 
-  /// Offset of the cursor from its default position.
-  ///
-  /// Allows fine-tuning of cursor positioning relative to the text.
-  /// Defaults to [Offset.zero] for standard positioning.
-  @override
-  final Offset? cursorOffset;
-
   /// Whether the cursor opacity should animate.
   ///
   /// When true, the cursor will fade in and out with a blinking animation.
@@ -141,13 +134,6 @@ class RemixTextFieldSpec with _$RemixTextFieldSpec {
   @override
   final Brightness? keyboardAppearance;
 
-  /// Vertical spacing between text field elements.
-  ///
-  /// Controls the gap between label, input, helper text, and other
-  /// text field components when they are stacked vertically.
-  @override
-  final double? spacing;
-
   /// Styling specification for the text field's container.
   ///
   /// Controls the text field's layout, background, borders, padding,
@@ -177,10 +163,8 @@ class RemixTextFieldSpec with _$RemixTextFieldSpec {
   ///
   /// - Text alignment defaults to [TextAlign.start]
   /// - Cursor width defaults to 2.0 logical pixels
-  /// - Cursor offset defaults to [Offset.zero]
   /// - Selection styles default to tight sizing
   /// - Scroll padding defaults to 20.0 on all sides
-  /// - Spacing defaults to 4.0 logical pixels
   /// - All [StyleSpec] properties default to empty specifications
   ///
   /// Example:
@@ -189,7 +173,6 @@ class RemixTextFieldSpec with _$RemixTextFieldSpec {
   ///   textAlign: TextAlign.center,
   ///   cursorWidth: 3.0,
   ///   cursorColor: Colors.blue,
-  ///   spacing: 8.0,
   /// );
   /// ```
   const RemixTextFieldSpec({
@@ -200,13 +183,11 @@ class RemixTextFieldSpec with _$RemixTextFieldSpec {
     this.cursorHeight,
     this.cursorRadius,
     this.cursorColor,
-    this.cursorOffset = Offset.zero,
     this.selectionHeightStyle = BoxHeightStyle.tight,
     this.selectionWidthStyle = BoxWidthStyle.tight,
     this.scrollPadding = const EdgeInsets.all(20.0),
     this.keyboardAppearance,
     this.cursorOpacityAnimates,
-    this.spacing = 4,
     StyleSpec<FlexBoxSpec>? container,
     StyleSpec<TextSpec>? helperText,
     StyleSpec<TextSpec>? label,

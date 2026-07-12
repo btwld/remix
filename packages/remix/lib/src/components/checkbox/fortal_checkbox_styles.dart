@@ -1,35 +1,53 @@
 part of 'checkbox.dart';
 
-enum FortalCheckboxSize { size1, size2, size3 }
+/// Fortal checkbox size presets.
+enum FortalCheckboxSize {
+  /// Compact checkbox.
+  size1,
 
-enum FortalCheckboxVariant { surface, soft }
+  /// Default checkbox.
+  size2,
 
-@MixWidget()
-RemixCheckboxStyle fortalCheckboxStyle({
+  /// Large checkbox.
+  size3,
+}
+
+/// Fortal checkbox color variants.
+enum FortalCheckboxVariant {
+  /// Surface treatment with neutral border.
+  surface,
+
+  /// Soft accent treatment.
+  soft,
+}
+
+/// Fortal-themed preset for [RemixCheckbox].
+@MixWidget(name: 'FortalCheckbox')
+RemixCheckboxStyler fortalCheckboxStyler({
   FortalCheckboxVariant variant = .surface,
   FortalCheckboxSize size = .size2,
 }) {
   return switch (variant) {
-    .surface => _fortalCheckboxSurfaceStyle(size),
-    .soft => _fortalCheckboxSoftStyle(size),
+    .surface => _fortalCheckboxSurfaceStyler(size),
+    .soft => _fortalCheckboxSoftStyler(size),
   };
 }
 
-RemixCheckboxStyle _fortalCheckboxBaseStyle(FortalCheckboxSize size) {
-  return RemixCheckboxStyle()
+RemixCheckboxStyler _fortalCheckboxBaseStyler(FortalCheckboxSize size) {
+  return RemixCheckboxStyler()
       .onFocused(
-        RemixCheckboxStyle().borderAll(
+        RemixCheckboxStyler().borderAll(
           color: FortalTokens.focusA8(),
           width: FortalTokens.focusRingWidth(),
         ),
       )
-      .merge(_fortalCheckboxSizeStyle(size));
+      .merge(_fortalCheckboxSizeStyler(size));
 }
 
-RemixCheckboxStyle _fortalCheckboxSurfaceStyle([
+RemixCheckboxStyler _fortalCheckboxSurfaceStyler([
   FortalCheckboxSize size = .size2,
 ]) {
-  return _fortalCheckboxBaseStyle(size)
+  return _fortalCheckboxBaseStyler(size)
       .borderAll(
         color: FortalTokens.gray6(),
         width: FortalTokens.borderWidth1(),
@@ -37,7 +55,7 @@ RemixCheckboxStyle _fortalCheckboxSurfaceStyle([
       .borderRadiusAll(FortalTokens.radius2())
       .indicatorColor(FortalTokens.accent9())
       .onSelected(
-        RemixCheckboxStyle()
+        RemixCheckboxStyler()
             .fillColor(FortalTokens.accent9())
             .borderAll(
               color: FortalTokens.accent9(),
@@ -46,7 +64,7 @@ RemixCheckboxStyle _fortalCheckboxSurfaceStyle([
             .indicatorColor(FortalTokens.accentContrast()),
       )
       .onDisabled(
-        RemixCheckboxStyle()
+        RemixCheckboxStyler()
             .fillColor(FortalTokens.grayA3())
             .borderAll(
               color: FortalTokens.gray7(),
@@ -56,35 +74,37 @@ RemixCheckboxStyle _fortalCheckboxSurfaceStyle([
       );
 }
 
-RemixCheckboxStyle _fortalCheckboxSoftStyle([
+RemixCheckboxStyler _fortalCheckboxSoftStyler([
   FortalCheckboxSize size = .size2,
 ]) {
-  return _fortalCheckboxBaseStyle(size)
+  return _fortalCheckboxBaseStyler(size)
       .fillColor(FortalTokens.accentA4())
       .borderRadiusAll(FortalTokens.radius2())
-      .onSelected(RemixCheckboxStyle().indicatorColor(FortalTokens.accentA11()))
+      .onSelected(
+        RemixCheckboxStyler().indicatorColor(FortalTokens.accentA11()),
+      )
       .onDisabled(
-        RemixCheckboxStyle()
+        RemixCheckboxStyler()
             .fillColor(FortalTokens.grayA3())
             .indicatorColor(FortalTokens.gray8()),
       );
 }
 
-RemixCheckboxStyle _fortalCheckboxSizeStyle(FortalCheckboxSize size) {
+RemixCheckboxStyler _fortalCheckboxSizeStyler(FortalCheckboxSize size) {
   return switch (size) {
-    .size1 => RemixCheckboxStyle(
+    .size1 => RemixCheckboxStyler(
       container: BoxStyler()
           .width(FortalTokens.space4())
           .height(FortalTokens.space4()),
       indicator: IconStyler().size(FortalTokens.space3()),
     ),
-    .size2 => RemixCheckboxStyle(
+    .size2 => RemixCheckboxStyler(
       container: BoxStyler()
           .width(FortalTokens.space5())
           .height(FortalTokens.space5()),
       indicator: IconStyler().size(FortalTokens.space4()),
     ),
-    .size3 => RemixCheckboxStyle(
+    .size3 => RemixCheckboxStyler(
       container: BoxStyler()
           .width(FortalTokens.space6())
           .height(FortalTokens.space6()),

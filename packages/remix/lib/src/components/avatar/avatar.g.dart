@@ -8,7 +8,7 @@ part of 'avatar.dart';
 
 mixin _$RemixAvatarSpec implements Spec<RemixAvatarSpec>, Diagnosticable {
   StyleSpec<BoxSpec> get container;
-  StyleSpec<TextSpec> get text;
+  StyleSpec<TextSpec> get label;
   StyleSpec<IconSpec> get icon;
 
   @override
@@ -17,12 +17,12 @@ mixin _$RemixAvatarSpec implements Spec<RemixAvatarSpec>, Diagnosticable {
   @override
   RemixAvatarSpec copyWith({
     StyleSpec<BoxSpec>? container,
-    StyleSpec<TextSpec>? text,
+    StyleSpec<TextSpec>? label,
     StyleSpec<IconSpec>? icon,
   }) {
     return RemixAvatarSpec(
       container: container ?? this.container,
-      text: text ?? this.text,
+      label: label ?? this.label,
       icon: icon ?? this.icon,
     );
   }
@@ -31,13 +31,13 @@ mixin _$RemixAvatarSpec implements Spec<RemixAvatarSpec>, Diagnosticable {
   RemixAvatarSpec lerp(RemixAvatarSpec? other, double t) {
     return RemixAvatarSpec(
       container: container.lerp(other?.container, t),
-      text: text.lerp(other?.text, t),
+      label: label.lerp(other?.label, t),
       icon: icon.lerp(other?.icon, t),
     );
   }
 
   @override
-  List<Object?> get props => [container, text, icon];
+  List<Object?> get props => [container, label, icon];
 
   @override
   bool operator ==(Object other) {
@@ -80,7 +80,7 @@ mixin _$RemixAvatarSpec implements Spec<RemixAvatarSpec>, Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     properties
       ..add(DiagnosticsProperty('container', container))
-      ..add(DiagnosticsProperty('text', text))
+      ..add(DiagnosticsProperty('label', label))
       ..add(DiagnosticsProperty('icon', icon));
   }
 }
@@ -91,51 +91,144 @@ mixin _$RemixAvatarSpec implements Spec<RemixAvatarSpec>, Diagnosticable {
 typedef _$RemixAvatarSpecMethods = _$RemixAvatarSpec; // ignore: unused_element
 
 // **************************************************************************
+// MixWidgetGenerator
+// **************************************************************************
+
+/// Fortal-themed preset for [RemixAvatar].
+class FortalAvatar extends StatelessWidget {
+  const FortalAvatar({
+    super.key,
+    this.variant = .soft,
+    this.size = .size2,
+    this.backgroundImage,
+    this.foregroundImage,
+    this.onBackgroundImageError,
+    this.onForegroundImageError,
+    this.child,
+    this.label,
+    this.labelBuilder,
+    this.icon,
+    this.iconBuilder,
+  });
+
+  const FortalAvatar.soft({
+    super.key,
+    this.size = .size2,
+    this.backgroundImage,
+    this.foregroundImage,
+    this.onBackgroundImageError,
+    this.onForegroundImageError,
+    this.child,
+    this.label,
+    this.labelBuilder,
+    this.icon,
+    this.iconBuilder,
+  }) : variant = FortalAvatarVariant.soft;
+
+  const FortalAvatar.solid({
+    super.key,
+    this.size = .size2,
+    this.backgroundImage,
+    this.foregroundImage,
+    this.onBackgroundImageError,
+    this.onForegroundImageError,
+    this.child,
+    this.label,
+    this.labelBuilder,
+    this.icon,
+    this.iconBuilder,
+  }) : variant = FortalAvatarVariant.solid;
+
+  final FortalAvatarVariant variant;
+
+  final FortalAvatarSize size;
+
+  final ImageProvider<Object>? backgroundImage;
+
+  final ImageProvider<Object>? foregroundImage;
+
+  final ImageErrorListener? onBackgroundImageError;
+
+  final ImageErrorListener? onForegroundImageError;
+
+  final Widget? child;
+
+  final String? label;
+
+  final RemixAvatarLabelBuilder? labelBuilder;
+
+  final IconData? icon;
+
+  final RemixAvatarIconBuilder? iconBuilder;
+
+  @override
+  Widget build(BuildContext context) {
+    return fortalAvatarStyler(variant: this.variant, size: this.size).call(
+      key: this.key,
+      backgroundImage: this.backgroundImage,
+      foregroundImage: this.foregroundImage,
+      onBackgroundImageError: this.onBackgroundImageError,
+      onForegroundImageError: this.onForegroundImageError,
+      child: this.child,
+      label: this.label,
+      labelBuilder: this.labelBuilder,
+      icon: this.icon,
+      iconBuilder: this.iconBuilder,
+    );
+  }
+}
+
+// **************************************************************************
 // StylerGenerator
 // **************************************************************************
 
-mixin _$RemixAvatarStyleMixin on Style<RemixAvatarSpec>, Diagnosticable {
+mixin _$RemixAvatarStylerMixin on Style<RemixAvatarSpec>, Diagnosticable {
   Prop<StyleSpec<BoxSpec>>? get $container;
+  Prop<StyleSpec<TextSpec>>? get $label;
   Prop<StyleSpec<IconSpec>>? get $icon;
-  Prop<StyleSpec<TextSpec>>? get $text;
 
   /// Sets the container.
-  RemixAvatarStyle container(BoxStyler value) {
-    return merge(RemixAvatarStyle(container: value));
+  RemixAvatarStyler container(BoxStyler value) {
+    return merge(RemixAvatarStyler(container: value));
+  }
+
+  /// Sets the label.
+  RemixAvatarStyler label(TextStyler value) {
+    return merge(RemixAvatarStyler(label: value));
   }
 
   /// Sets the icon.
-  RemixAvatarStyle icon(IconStyler value) {
-    return merge(RemixAvatarStyle(icon: value));
-  }
-
-  /// Sets the text.
-  RemixAvatarStyle text(TextStyler value) {
-    return merge(RemixAvatarStyle(text: value));
+  RemixAvatarStyler icon(IconStyler value) {
+    return merge(RemixAvatarStyler(icon: value));
   }
 
   /// Sets the animation configuration.
-  RemixAvatarStyle animate(AnimationConfig value) {
-    return merge(RemixAvatarStyle(animation: value));
+  RemixAvatarStyler animate(AnimationConfig value) {
+    return merge(RemixAvatarStyler(animation: value));
   }
 
   /// Sets the style variants.
-  RemixAvatarStyle variants(List<VariantStyle<RemixAvatarSpec>> value) {
-    return merge(RemixAvatarStyle(variants: value));
+  RemixAvatarStyler variants(List<VariantStyle<RemixAvatarSpec>> value) {
+    return merge(RemixAvatarStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
-  RemixAvatarStyle wrap(WidgetModifierConfig value) {
-    return merge(RemixAvatarStyle(modifier: value));
+  RemixAvatarStyler wrap(WidgetModifierConfig value) {
+    return merge(RemixAvatarStyler(modifier: value));
   }
 
-  /// Merges with another [RemixAvatarStyle].
+  /// Sets the widget modifier.
+  RemixAvatarStyler modifier(WidgetModifierConfig value) {
+    return merge(RemixAvatarStyler(modifier: value));
+  }
+
+  /// Merges with another [RemixAvatarStyler].
   @override
-  RemixAvatarStyle merge(RemixAvatarStyle? other) {
-    return RemixAvatarStyle.create(
+  RemixAvatarStyler merge(RemixAvatarStyler? other) {
+    return RemixAvatarStyler.create(
       container: MixOps.merge($container, other?.$container),
+      label: MixOps.merge($label, other?.$label),
       icon: MixOps.merge($icon, other?.$icon),
-      text: MixOps.merge($text, other?.$text),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -147,8 +240,8 @@ mixin _$RemixAvatarStyleMixin on Style<RemixAvatarSpec>, Diagnosticable {
   StyleSpec<RemixAvatarSpec> resolve(BuildContext context) {
     final spec = RemixAvatarSpec(
       container: MixOps.resolve(context, $container),
+      label: MixOps.resolve(context, $label),
       icon: MixOps.resolve(context, $icon),
-      text: MixOps.resolve(context, $text),
     );
 
     return StyleSpec(
@@ -163,15 +256,15 @@ mixin _$RemixAvatarStyleMixin on Style<RemixAvatarSpec>, Diagnosticable {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('container', $container))
-      ..add(DiagnosticsProperty('icon', $icon))
-      ..add(DiagnosticsProperty('text', $text));
+      ..add(DiagnosticsProperty('label', $label))
+      ..add(DiagnosticsProperty('icon', $icon));
   }
 
   @override
   List<Object?> get props => [
     $container,
+    $label,
     $icon,
-    $text,
     $animation,
     $modifier,
     $variants,

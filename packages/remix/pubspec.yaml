@@ -5,8 +5,14 @@ documentation: https://docs.page/btwld/remix
 issue_tracker: https://github.com/btwld/remix/issues
 license: BSD-3-Clause
 resolution: workspace
+topics:
+  - design-system
+  - ui
+  - widgets
+  - styling
+  - mix
 
-version: 0.2.0
+version: 1.0.0
 
 environment:
   sdk: ">=3.12.0 <4.0.0"
@@ -15,17 +21,17 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  mix: ^2.0.3
-  mix_annotations: ^2.0.0
-  naked_ui: ^0.2.0-beta.7
+  mix: ^2.1.0
+  mix_annotations: ^2.1.2
+  naked_ui: ^1.0.0-beta.3
 
 dev_dependencies:
+  dart_code_metrics_presets: ^2.32.0
   flutter_test:
     sdk: flutter
-  integration_test:
-    sdk: flutter
   build_runner: ^2.10.1
-  mix_generator: ^2.0.0
+  meta: ^1.18.0
+  mix_generator: ^2.1.2
 
 flutter:
   uses-material-design: true

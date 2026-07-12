@@ -6,10 +6,10 @@ import '../../helpers/test_helpers.dart';
 import '../../helpers/test_methods.dart';
 
 void main() {
-  group('RemixTabBarStyle', () {
+  group('RemixTabBarStyler', () {
     group('Constructors', () {
       test('create() constructs with null parameters', () {
-        const style = RemixTabBarStyle.create();
+        const style = RemixTabBarStyler.create();
 
         expect(style.$container, isNull);
         expect(style.$variants, isNull);
@@ -25,7 +25,7 @@ void main() {
         );
         final modifier = WidgetModifierConfig();
 
-        final style = RemixTabBarStyle.create(
+        final style = RemixTabBarStyler.create(
           container: container,
           variants: variants,
           animation: animation,
@@ -39,7 +39,7 @@ void main() {
       });
 
       test('default constructor converts types correctly', () {
-        final style = RemixTabBarStyle(
+        final style = RemixTabBarStyler(
           container: FlexBoxStyler(),
           animation: AnimationConfig.linear(const Duration(milliseconds: 200)),
           variants: [],
@@ -56,7 +56,7 @@ void main() {
     group('Style Methods', () {
       styleMethodTest(
         'container() adds container styling',
-        initial: RemixTabBarStyle(),
+        initial: RemixTabBarStyler(),
         modify: (style) => style.container(FlexBoxStyler()),
         expect: (style) {
           expect(style.$container, isNotNull);
@@ -65,7 +65,7 @@ void main() {
 
       styleMethodTest(
         'alignment() adds alignment',
-        initial: RemixTabBarStyle(),
+        initial: RemixTabBarStyler(),
         modify: (style) => style.alignment(Alignment.center),
         expect: (style) {
           expect(style.$container, isNotNull);
@@ -74,7 +74,7 @@ void main() {
 
       styleMethodTest(
         'padding() adds padding',
-        initial: RemixTabBarStyle(),
+        initial: RemixTabBarStyler(),
         modify: (style) => style.padding(EdgeInsetsGeometryMix.all(16)),
         expect: (style) {
           expect(style.$container, isNotNull);
@@ -83,7 +83,7 @@ void main() {
 
       styleMethodTest(
         'color() adds background color',
-        initial: RemixTabBarStyle(),
+        initial: RemixTabBarStyler(),
         modify: (style) => style.color(Colors.blue),
         expect: (style) {
           expect(style.$container, isNotNull);
@@ -92,7 +92,7 @@ void main() {
 
       styleMethodTest(
         'size() sets width and height',
-        initial: RemixTabBarStyle(),
+        initial: RemixTabBarStyler(),
         modify: (style) => style.size(100, 50),
         expect: (style) {
           expect(style.$container, isNotNull);
@@ -101,7 +101,7 @@ void main() {
 
       styleMethodTest(
         'borderRadius() adds border radius',
-        initial: RemixTabBarStyle(),
+        initial: RemixTabBarStyler(),
         modify: (style) =>
             style.borderRadius(BorderRadiusGeometryMix.circular(8)),
         expect: (style) {
@@ -111,7 +111,7 @@ void main() {
 
       styleMethodTest(
         'constraints() adds box constraints',
-        initial: RemixTabBarStyle(),
+        initial: RemixTabBarStyler(),
         modify: (style) =>
             style.constraints(BoxConstraintsMix(minWidth: 100, maxWidth: 200)),
         expect: (style) {
@@ -121,7 +121,7 @@ void main() {
 
       styleMethodTest(
         'decoration() adds decoration',
-        initial: RemixTabBarStyle(),
+        initial: RemixTabBarStyler(),
         modify: (style) =>
             style.decoration(BoxDecorationMix(color: Colors.red)),
         expect: (style) {
@@ -131,7 +131,7 @@ void main() {
 
       styleMethodTest(
         'margin() adds margin',
-        initial: RemixTabBarStyle(),
+        initial: RemixTabBarStyler(),
         modify: (style) => style.margin(EdgeInsetsGeometryMix.all(8)),
         expect: (style) {
           expect(style.$container, isNotNull);
@@ -140,7 +140,7 @@ void main() {
 
       styleMethodTest(
         'foregroundDecoration() adds foreground decoration',
-        initial: RemixTabBarStyle(),
+        initial: RemixTabBarStyler(),
         modify: (style) =>
             style.foregroundDecoration(BoxDecorationMix(color: Colors.green)),
         expect: (style) {
@@ -150,7 +150,7 @@ void main() {
 
       styleMethodTest(
         'transform() adds transform',
-        initial: RemixTabBarStyle(),
+        initial: RemixTabBarStyler(),
         modify: (style) => style.transform(
           Matrix4.rotationZ(0.1),
           alignment: Alignment.topLeft,
@@ -162,7 +162,7 @@ void main() {
 
       styleMethodTest(
         'variants() adds variants',
-        initial: RemixTabBarStyle(),
+        initial: RemixTabBarStyler(),
         modify: (style) => style.variants([]),
         expect: (style) {
           expect(style.$variants, isNotNull);
@@ -171,7 +171,7 @@ void main() {
 
       styleMethodTest(
         'animate() adds animation config',
-        initial: RemixTabBarStyle(),
+        initial: RemixTabBarStyler(),
         modify: (style) => style.animate(
           AnimationConfig.linear(const Duration(milliseconds: 300)),
         ),
@@ -182,7 +182,7 @@ void main() {
 
       styleMethodTest(
         'wrap() adds widget modifier',
-        initial: RemixTabBarStyle(),
+        initial: RemixTabBarStyler(),
         modify: (style) => style.wrap(WidgetModifierConfig()),
         expect: (style) {
           expect(style.$modifier, isNotNull);
@@ -192,7 +192,7 @@ void main() {
 
     group('Core Methods', () {
       testWidgets('resolve() creates StyleSpec', (tester) async {
-        const style = RemixTabBarStyle.create();
+        const style = RemixTabBarStyler.create();
 
         await tester.pumpMaterialApp(Container());
         final context = tester.element(find.byType(Container));
@@ -204,8 +204,8 @@ void main() {
       });
 
       test('merge() combines two styles', () {
-        final style1 = RemixTabBarStyle(container: FlexBoxStyler());
-        final style2 = RemixTabBarStyle(
+        final style1 = RemixTabBarStyler(container: FlexBoxStyler());
+        final style2 = RemixTabBarStyler(
           animation: AnimationConfig.linear(const Duration(milliseconds: 200)),
         );
 
@@ -216,35 +216,45 @@ void main() {
       });
 
       test('merge() with null returns original', () {
-        final style = RemixTabBarStyle(container: FlexBoxStyler());
+        final style = RemixTabBarStyler(container: FlexBoxStyler());
         final merged = style.merge(null);
 
         expect(merged, equals(style));
+      });
+
+      test('call() creates RemixTabBar with this style', () {
+        final style = RemixTabBarStyler().padding(EdgeInsetsGeometryMix.all(8));
+
+        final tabBar = style.call(child: const Text('Tabs'));
+
+        expect(tabBar, isA<RemixTabBar>());
+        expect(tabBar.style, same(style));
+        expect(tabBar.child, isA<Text>());
       });
     });
 
     group('Equality', () {
       test('two identical styles are equal', () {
-        const style1 = RemixTabBarStyle.create();
-        const style2 = RemixTabBarStyle.create();
+        const style1 = RemixTabBarStyler.create();
+        const style2 = RemixTabBarStyler.create();
 
         expect(style1, equals(style2));
         expect(style1.hashCode, equals(style2.hashCode));
       });
 
       test('two styles with different properties are not equal', () {
-        final style1 = RemixTabBarStyle(container: FlexBoxStyler());
-        const style2 = RemixTabBarStyle.create();
+        final style1 = RemixTabBarStyler(container: FlexBoxStyler());
+        const style2 = RemixTabBarStyler.create();
 
         expect(style1, isNot(equals(style2)));
       });
     });
   });
 
-  group('RemixTabViewStyle', () {
+  group('RemixTabViewStyler', () {
     group('Constructors', () {
       test('create() constructs with null parameters', () {
-        const style = RemixTabViewStyle.create();
+        const style = RemixTabViewStyler.create();
 
         expect(style.$container, isNull);
         expect(style.$variants, isNull);
@@ -260,7 +270,7 @@ void main() {
         );
         final modifier = WidgetModifierConfig();
 
-        final style = RemixTabViewStyle.create(
+        final style = RemixTabViewStyler.create(
           container: container,
           variants: variants,
           animation: animation,
@@ -274,7 +284,7 @@ void main() {
       });
 
       test('default constructor converts types correctly', () {
-        final style = RemixTabViewStyle(
+        final style = RemixTabViewStyler(
           container: BoxStyler(),
           animation: AnimationConfig.linear(const Duration(milliseconds: 200)),
           variants: [],
@@ -291,7 +301,7 @@ void main() {
     group('Style Methods', () {
       styleMethodTest(
         'alignment() adds alignment',
-        initial: RemixTabViewStyle(),
+        initial: RemixTabViewStyler(),
         modify: (style) => style.alignment(Alignment.center),
         expect: (style) {
           expect(style.$container, isNotNull);
@@ -300,7 +310,7 @@ void main() {
 
       styleMethodTest(
         'padding() adds padding',
-        initial: RemixTabViewStyle(),
+        initial: RemixTabViewStyler(),
         modify: (style) => style.padding(EdgeInsetsGeometryMix.all(16)),
         expect: (style) {
           expect(style.$container, isNotNull);
@@ -309,7 +319,7 @@ void main() {
 
       styleMethodTest(
         'color() adds background color',
-        initial: RemixTabViewStyle(),
+        initial: RemixTabViewStyler(),
         modify: (style) => style.color(Colors.blue),
         expect: (style) {
           expect(style.$container, isNotNull);
@@ -318,7 +328,7 @@ void main() {
 
       styleMethodTest(
         'borderRadius() adds border radius',
-        initial: RemixTabViewStyle(),
+        initial: RemixTabViewStyler(),
         modify: (style) =>
             style.borderRadius(BorderRadiusGeometryMix.circular(8)),
         expect: (style) {
@@ -328,7 +338,7 @@ void main() {
 
       styleMethodTest(
         'constraints() adds box constraints',
-        initial: RemixTabViewStyle(),
+        initial: RemixTabViewStyler(),
         modify: (style) =>
             style.constraints(BoxConstraintsMix(minWidth: 100, maxWidth: 200)),
         expect: (style) {
@@ -338,7 +348,7 @@ void main() {
 
       styleMethodTest(
         'decoration() adds decoration',
-        initial: RemixTabViewStyle(),
+        initial: RemixTabViewStyler(),
         modify: (style) =>
             style.decoration(BoxDecorationMix(color: Colors.red)),
         expect: (style) {
@@ -348,7 +358,7 @@ void main() {
 
       styleMethodTest(
         'margin() adds margin',
-        initial: RemixTabViewStyle(),
+        initial: RemixTabViewStyler(),
         modify: (style) => style.margin(EdgeInsetsGeometryMix.all(8)),
         expect: (style) {
           expect(style.$container, isNotNull);
@@ -357,7 +367,7 @@ void main() {
 
       styleMethodTest(
         'foregroundDecoration() adds foreground decoration',
-        initial: RemixTabViewStyle(),
+        initial: RemixTabViewStyler(),
         modify: (style) =>
             style.foregroundDecoration(BoxDecorationMix(color: Colors.green)),
         expect: (style) {
@@ -367,7 +377,7 @@ void main() {
 
       styleMethodTest(
         'transform() adds transform',
-        initial: RemixTabViewStyle(),
+        initial: RemixTabViewStyler(),
         modify: (style) => style.transform(
           Matrix4.rotationZ(0.1),
           alignment: Alignment.topLeft,
@@ -379,7 +389,7 @@ void main() {
 
       styleMethodTest(
         'variants() adds variants',
-        initial: RemixTabViewStyle(),
+        initial: RemixTabViewStyler(),
         modify: (style) => style.variants([]),
         expect: (style) {
           expect(style.$variants, isNotNull);
@@ -388,7 +398,7 @@ void main() {
 
       styleMethodTest(
         'animate() adds animation config',
-        initial: RemixTabViewStyle(),
+        initial: RemixTabViewStyler(),
         modify: (style) => style.animate(
           AnimationConfig.linear(const Duration(milliseconds: 300)),
         ),
@@ -399,7 +409,7 @@ void main() {
 
       styleMethodTest(
         'wrap() adds widget modifier',
-        initial: RemixTabViewStyle(),
+        initial: RemixTabViewStyler(),
         modify: (style) => style.wrap(WidgetModifierConfig()),
         expect: (style) {
           expect(style.$modifier, isNotNull);
@@ -409,7 +419,7 @@ void main() {
 
     group('Core Methods', () {
       testWidgets('resolve() creates StyleSpec', (tester) async {
-        const style = RemixTabViewStyle.create();
+        const style = RemixTabViewStyler.create();
 
         await tester.pumpMaterialApp(Container());
         final context = tester.element(find.byType(Container));
@@ -421,8 +431,8 @@ void main() {
       });
 
       test('merge() combines two styles', () {
-        final style1 = RemixTabViewStyle(container: BoxStyler());
-        final style2 = RemixTabViewStyle(
+        final style1 = RemixTabViewStyler(container: BoxStyler());
+        final style2 = RemixTabViewStyler(
           animation: AnimationConfig.linear(const Duration(milliseconds: 200)),
         );
 
@@ -433,35 +443,51 @@ void main() {
       });
 
       test('merge() with null returns original', () {
-        final style = RemixTabViewStyle(container: BoxStyler());
+        final style = RemixTabViewStyler(container: BoxStyler());
         final merged = style.merge(null);
 
         expect(merged, equals(style));
+      });
+
+      test('call() creates RemixTabView with this style', () {
+        final style = RemixTabViewStyler().padding(
+          EdgeInsetsGeometryMix.all(8),
+        );
+
+        final tabView = style.call(
+          tabId: 'overview',
+          child: const Text('Overview'),
+        );
+
+        expect(tabView, isA<RemixTabView>());
+        expect(tabView.style, same(style));
+        expect(tabView.tabId, 'overview');
+        expect(tabView.child, isA<Text>());
       });
     });
 
     group('Equality', () {
       test('two identical styles are equal', () {
-        const style1 = RemixTabViewStyle.create();
-        const style2 = RemixTabViewStyle.create();
+        const style1 = RemixTabViewStyler.create();
+        const style2 = RemixTabViewStyler.create();
 
         expect(style1, equals(style2));
         expect(style1.hashCode, equals(style2.hashCode));
       });
 
       test('two styles with different properties are not equal', () {
-        final style1 = RemixTabViewStyle(container: BoxStyler());
-        const style2 = RemixTabViewStyle.create();
+        final style1 = RemixTabViewStyler(container: BoxStyler());
+        const style2 = RemixTabViewStyler.create();
 
         expect(style1, isNot(equals(style2)));
       });
     });
   });
 
-  group('RemixTabStyle', () {
+  group('RemixTabStyler', () {
     group('Constructors', () {
       test('create() constructs with null parameters', () {
-        const style = RemixTabStyle.create();
+        const style = RemixTabStyler.create();
 
         expect(style.$container, isNull);
         expect(style.$label, isNull);
@@ -481,7 +507,7 @@ void main() {
         );
         final modifier = WidgetModifierConfig();
 
-        final style = RemixTabStyle.create(
+        final style = RemixTabStyler.create(
           container: container,
           label: label,
           icon: icon,
@@ -499,7 +525,7 @@ void main() {
       });
 
       test('default constructor converts types correctly', () {
-        final style = RemixTabStyle(
+        final style = RemixTabStyler(
           container: FlexBoxStyler(),
           label: TextStyler(),
           icon: IconStyler(),
@@ -520,7 +546,7 @@ void main() {
     group('Style Methods', () {
       styleMethodTest(
         'container() adds container styling',
-        initial: RemixTabStyle(),
+        initial: RemixTabStyler(),
         modify: (style) => style.container(FlexBoxStyler()),
         expect: (style) {
           expect(style.$container, isNotNull);
@@ -529,7 +555,7 @@ void main() {
 
       styleMethodTest(
         'label() adds label styling',
-        initial: RemixTabStyle(),
+        initial: RemixTabStyler(),
         modify: (style) => style.label(TextStyler()),
         expect: (style) {
           expect(style.$label, isNotNull);
@@ -538,7 +564,7 @@ void main() {
 
       styleMethodTest(
         'icon() adds icon styling',
-        initial: RemixTabStyle(),
+        initial: RemixTabStyler(),
         modify: (style) => style.icon(IconStyler()),
         expect: (style) {
           expect(style.$icon, isNotNull);
@@ -547,7 +573,7 @@ void main() {
 
       styleMethodTest(
         'alignment() adds alignment',
-        initial: RemixTabStyle(),
+        initial: RemixTabStyler(),
         modify: (style) => style.alignment(Alignment.center),
         expect: (style) {
           expect(style.$container, isNotNull);
@@ -556,7 +582,7 @@ void main() {
 
       styleMethodTest(
         'padding() adds padding',
-        initial: RemixTabStyle(),
+        initial: RemixTabStyler(),
         modify: (style) => style.padding(EdgeInsetsGeometryMix.all(16)),
         expect: (style) {
           expect(style.$container, isNotNull);
@@ -565,7 +591,7 @@ void main() {
 
       styleMethodTest(
         'color() adds background color',
-        initial: RemixTabStyle(),
+        initial: RemixTabStyler(),
         modify: (style) => style.color(Colors.blue),
         expect: (style) {
           expect(style.$container, isNotNull);
@@ -574,7 +600,7 @@ void main() {
 
       styleMethodTest(
         'constraints() adds box constraints',
-        initial: RemixTabStyle(),
+        initial: RemixTabStyler(),
         modify: (style) =>
             style.constraints(BoxConstraintsMix(minWidth: 100, maxWidth: 200)),
         expect: (style) {
@@ -584,7 +610,7 @@ void main() {
 
       styleMethodTest(
         'decoration() adds decoration',
-        initial: RemixTabStyle(),
+        initial: RemixTabStyler(),
         modify: (style) =>
             style.decoration(BoxDecorationMix(color: Colors.red)),
         expect: (style) {
@@ -594,7 +620,7 @@ void main() {
 
       styleMethodTest(
         'margin() adds margin',
-        initial: RemixTabStyle(),
+        initial: RemixTabStyler(),
         modify: (style) => style.margin(EdgeInsetsGeometryMix.all(8)),
         expect: (style) {
           expect(style.$container, isNotNull);
@@ -603,7 +629,7 @@ void main() {
 
       styleMethodTest(
         'foregroundDecoration() adds foreground decoration',
-        initial: RemixTabStyle(),
+        initial: RemixTabStyler(),
         modify: (style) =>
             style.foregroundDecoration(BoxDecorationMix(color: Colors.green)),
         expect: (style) {
@@ -613,7 +639,7 @@ void main() {
 
       styleMethodTest(
         'transform() adds transform',
-        initial: RemixTabStyle(),
+        initial: RemixTabStyler(),
         modify: (style) => style.transform(
           Matrix4.rotationZ(0.1),
           alignment: Alignment.topLeft,
@@ -625,7 +651,7 @@ void main() {
 
       styleMethodTest(
         'variants() adds variants',
-        initial: RemixTabStyle(),
+        initial: RemixTabStyler(),
         modify: (style) => style.variants([]),
         expect: (style) {
           expect(style.$variants, isNotNull);
@@ -634,7 +660,7 @@ void main() {
 
       styleMethodTest(
         'animate() adds animation config',
-        initial: RemixTabStyle(),
+        initial: RemixTabStyler(),
         modify: (style) => style.animate(
           AnimationConfig.linear(const Duration(milliseconds: 300)),
         ),
@@ -645,7 +671,7 @@ void main() {
 
       styleMethodTest(
         'wrap() adds widget modifier',
-        initial: RemixTabStyle(),
+        initial: RemixTabStyler(),
         modify: (style) => style.wrap(WidgetModifierConfig()),
         expect: (style) {
           expect(style.$modifier, isNotNull);
@@ -655,7 +681,7 @@ void main() {
 
     group('Core Methods', () {
       testWidgets('resolve() creates StyleSpec', (tester) async {
-        const style = RemixTabStyle.create();
+        const style = RemixTabStyler.create();
 
         await tester.pumpMaterialApp(Container());
         final context = tester.element(find.byType(Container));
@@ -667,8 +693,8 @@ void main() {
       });
 
       test('merge() combines two styles', () {
-        final style1 = RemixTabStyle(container: FlexBoxStyler());
-        final style2 = RemixTabStyle(
+        final style1 = RemixTabStyler(container: FlexBoxStyler());
+        final style2 = RemixTabStyler(
           label: TextStyler(),
           animation: AnimationConfig.linear(const Duration(milliseconds: 200)),
         );
@@ -681,25 +707,43 @@ void main() {
       });
 
       test('merge() with null returns original', () {
-        final style = RemixTabStyle(container: FlexBoxStyler());
+        final style = RemixTabStyler(container: FlexBoxStyler());
         final merged = style.merge(null);
 
         expect(merged, equals(style));
+      });
+
+      test('call() creates RemixTab with this style', () {
+        final style = RemixTabStyler().padding(EdgeInsetsGeometryMix.all(8));
+
+        final tab = style.call(
+          tabId: 'overview',
+          label: 'Overview',
+          icon: Icons.info,
+          enabled: false,
+        );
+
+        expect(tab, isA<RemixTab>());
+        expect(tab.style, same(style));
+        expect(tab.tabId, 'overview');
+        expect(tab.label, 'Overview');
+        expect(tab.icon, Icons.info);
+        expect(tab.enabled, isFalse);
       });
     });
 
     group('Equality', () {
       test('two identical styles are equal', () {
-        const style1 = RemixTabStyle.create();
-        const style2 = RemixTabStyle.create();
+        const style1 = RemixTabStyler.create();
+        const style2 = RemixTabStyler.create();
 
         expect(style1, equals(style2));
         expect(style1.hashCode, equals(style2.hashCode));
       });
 
       test('two styles with different properties are not equal', () {
-        final style1 = RemixTabStyle(container: FlexBoxStyler());
-        const style2 = RemixTabStyle.create();
+        final style1 = RemixTabStyler(container: FlexBoxStyler());
+        const style2 = RemixTabStyler.create();
 
         expect(style1, isNot(equals(style2)));
       });

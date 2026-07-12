@@ -1,11 +1,30 @@
 part of 'tabs.dart';
 
-RemixTabStyle fortalTabStyle() {
-  return RemixTabStyle()
+/// Fortal-themed preset for [RemixTabBar].
+@MixWidget(name: 'FortalTabBar')
+RemixTabBarStyler fortalTabBarStyler() {
+  return RemixTabBarStyler().container(
+    FlexBoxStyler()
+        .direction(.horizontal)
+        .spacing(FortalTokens.space1())
+        .mainAxisSize(.min),
+  );
+}
+
+/// Fortal-themed preset for [RemixTabView].
+@MixWidget(name: 'FortalTabView')
+RemixTabViewStyler fortalTabViewStyler() {
+  return RemixTabViewStyler().paddingAll(FortalTokens.space3());
+}
+
+/// Fortal-themed preset for [RemixTab].
+@MixWidget(name: 'FortalTab')
+RemixTabStyler fortalTabStyler() {
+  return RemixTabStyler()
       .label(TextStyler().color(FortalTokens.gray12()))
       .icon(IconStyler(color: FortalTokens.gray12(), size: 16.0))
       .wrap(
-        WidgetModifierConfig.box(
+        .box(
           BoxStyler()
               .height(40)
               .paddingX(4)
@@ -24,14 +43,12 @@ RemixTabStyle fortalTabStyle() {
             .crossAxisAlignment(.center)
             .spacing(8.0),
       )
-      .onHovered(RemixTabStyle().color(FortalTokens.gray3()))
+      .onHovered(RemixTabStyler().color(FortalTokens.gray3()))
       .onSelected(
-        RemixTabStyle()
+        RemixTabStyler()
             .label(TextStyler().fontWeight(FortalTokens.fontWeightMedium()))
             .wrap(
-              WidgetModifierConfig.box(
-                BoxStyler().borderBottom(color: FortalTokens.accent9()),
-              ),
+              .box(BoxStyler().borderBottom(color: FortalTokens.accent9())),
             ),
       )
       .padding(EdgeInsetsMix.symmetric(vertical: 6.0, horizontal: 12.0));

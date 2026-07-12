@@ -1,5 +1,6 @@
 part of 'select.dart';
 
+/// Resolved visual values for a [RemixSelect].
 @MixableSpec()
 class RemixSelectSpec with _$RemixSelectSpec {
   @override
@@ -18,6 +19,7 @@ class RemixSelectSpec with _$RemixSelectSpec {
        menuContainer = menuContainer ?? const StyleSpec(spec: FlexBoxSpec());
 }
 
+/// Resolved visual values for the select trigger.
 @MixableSpec()
 class RemixSelectTriggerSpec with _$RemixSelectTriggerSpec {
   @override
@@ -36,6 +38,7 @@ class RemixSelectTriggerSpec with _$RemixSelectTriggerSpec {
        icon = icon ?? const StyleSpec(spec: IconSpec());
 }
 
+/// Resolved visual values for a select menu item.
 @MixableSpec()
 class RemixSelectMenuItemSpec with _$RemixSelectMenuItemSpec {
   @override

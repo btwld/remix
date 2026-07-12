@@ -32,17 +32,24 @@ class CalloutExample extends StatelessWidget {
     );
   }
 
-  RemixCalloutStyle get style {
-    return RemixCalloutStyle()
+  RemixCalloutStyler get style {
+    return RemixCalloutStyler()
         .backgroundColor(Colors.grey.shade200)
         .spacing(12)
         .height(60)
         .paddingRight(12)
         .icon(
-          IconStyler().size(24).color(Colors.white).wrapBox(BoxStyler()
-              .color(Colors.blue.shade900)
-              .paddingX(12)
-              .height(double.infinity)),
+          IconStyler()
+              .size(24)
+              .color(Colors.white)
+              .wrap(
+                .box(
+                  BoxStyler()
+                      .color(Colors.blue.shade900)
+                      .paddingX(12)
+                      .height(double.infinity),
+                ),
+              ),
         )
         .mainAxisSize(MainAxisSize.min);
   }
@@ -50,9 +57,9 @@ class CalloutExample extends StatelessWidget {
 ```
 </CodeGroup>
 
-## Fortal styles
+## Fortal widgets
 
-Remix includes Fortal-themed style helpers for this component:
+Remix includes a generated Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
@@ -67,20 +74,17 @@ class FortalCalloutExample extends StatelessWidget {
     return Column(
       spacing: 16,
       children: [
-        RemixCallout(
-          text: 'Information callout',
-          icon: Icons.info,
-          style: FortalCalloutStyle.info(),
+        FortalCallout.surface(
+          text: 'Surface callout',
+          icon: Icons.info_outline,
         ),
-        RemixCallout(
-          text: 'Success callout',
-          icon: Icons.check_circle,
-          style: FortalCalloutStyle.success(),
+        FortalCallout.soft(
+          text: 'Soft callout',
+          icon: Icons.lightbulb_outline,
         ),
-        RemixCallout(
-          text: 'Warning callout',
-          icon: Icons.warning,
-          style: FortalCalloutStyle.warning(),
+        FortalCallout.outline(
+          text: 'Outline callout',
+          icon: Icons.border_outer,
         ),
       ],
     );
@@ -90,7 +94,7 @@ class FortalCalloutExample extends StatelessWidget {
 </CodeGroup>
 
 <Info>
-  See the [FortalCalloutStyle source code](https://github.com/btwld/remix/blob/main/lib/src/components/callout/fortal_callout_styles.dart) for all available options.
+  See the [fortalCalloutStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/callout/fortal_callout_styles.dart) for all available options.
 </Info>
 
 ## Constructor
@@ -98,10 +102,10 @@ class FortalCalloutExample extends StatelessWidget {
 ```dart
 const RemixCallout({
   Key? key,
-  Widget? child,
   String? text,
   IconData? icon,
-  RemixCalloutStyle style = const RemixCalloutStyle.create(),
+  Widget? child,
+  RemixCalloutStyler style = const RemixCalloutStyler.create(),
   RemixCalloutSpec? styleSpec,
 })
 ```
@@ -111,7 +115,7 @@ const RemixCallout({
 ## Properties
 ### Widget Properties
 
-#### `style` → `RemixCalloutStyle`
+#### `style` → `RemixCalloutStyler`
 
 Optional. The style configuration for the callout. Customize colors, sizing, spacing, and state-based styling.
 
@@ -185,7 +189,7 @@ Sets text color
 
 Applies widget modifiers such as clipping, opacity, or scaling.
 
-#### `animate(AnimationConfig config)`
+#### `animate(AnimationConfig value)`
 
 Configures implicit animation for style transitions.
 
@@ -253,3 +257,6 @@ Sets icon shadows
 
 Sets single icon shadow
 
+#### `call({Key? key, String? text, IconData? icon, Widget? child})`
+
+Creates a `RemixCallout` widget with this style applied.

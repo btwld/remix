@@ -11,30 +11,25 @@ Widget buildCardUseCase(BuildContext context) {
     key: _key,
     child: Scaffold(
       body: Center(
-        child: RemixCard(
-          style: fortalCardStyle(
-            variant: context.knobs.object.dropdown(
-              label: 'variant',
-              options: FortalCardVariant.values,
-              labelBuilder: (variant) => variant.name,
-            ),
-            size: context.knobs.object.dropdown(
-              label: 'size',
-              options: FortalCardSize.values,
-              labelBuilder: (size) => size.name,
-              initialOption: FortalCardSize.size1,
-            ),
+        child: FortalCard(
+          variant: context.knobs.object.dropdown(
+            label: 'variant',
+            options: FortalCardVariant.values,
+            labelBuilder: (variant) => variant.name,
+          ),
+          size: context.knobs.object.dropdown(
+            label: 'size',
+            options: FortalCardSize.values,
+            labelBuilder: (size) => size.name,
+            initialOption: FortalCardSize.size1,
           ),
           child: Row(
             mainAxisSize: .min,
             spacing: 16,
             children: [
-              RemixAvatar(
+              const FortalAvatar.solid(
                 label: 'LF',
-                style: fortalAvatarStyle(
-                  variant: FortalAvatarVariant.solid,
-                  size: FortalAvatarSize.size3,
-                ),
+                size: FortalAvatarSize.size3,
               ),
               Column(
                 mainAxisSize: .min,
