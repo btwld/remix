@@ -1,42 +1,39 @@
 import 'package:flutter/material.dart';
 
-import 'sheet.dart';
-import 'specimen.dart';
+import 'component_sheet.dart';
+import 'sheet_view.dart';
 import 'theme.dart';
 
 @immutable
-class SpecimenViewerSelection {
-  const SpecimenViewerSelection({
-    required this.specimenId,
-    required this.themeId,
-  });
+class SheetCatalogSelection {
+  const SheetCatalogSelection({required this.sheetId, required this.themeId});
 
-  final String specimenId;
+  final String sheetId;
   final String themeId;
 
   @override
   bool operator ==(Object other) =>
-      other is SpecimenViewerSelection &&
-      other.specimenId == specimenId &&
+      other is SheetCatalogSelection &&
+      other.sheetId == sheetId &&
       other.themeId == themeId;
 
   @override
-  int get hashCode => Object.hash(specimenId, themeId);
+  int get hashCode => Object.hash(sheetId, themeId);
 }
 
-class SpecimenViewerController extends ChangeNotifier {
-  SpecimenViewerController(this.catalog, {String? specimenId, String? themeId})
-    : _selection = _normalize(catalog, specimenId, themeId);
+class SheetCatalogController extends ChangeNotifier {
+  SheetCatalogController(this.catalog, {String? sheetId, String? themeId})
+    : _selection = _normalize(catalog, sheetId, themeId);
 
-  final SpecimenCatalog catalog;
-  SpecimenViewerSelection? _selection;
+  final SheetCatalog catalog;
+  SheetCatalogSelection? _selection;
 
-  SpecimenViewerSelection? get selection => _selection;
+  SheetCatalogSelection? get selection => _selection;
 
-  void select({String? specimenId, String? themeId}) {
+  void select({String? sheetId, String? themeId}) {
     final next = _normalize(
       catalog,
-      specimenId ?? _selection?.specimenId,
+      sheetId ?? _selection?.sheetId,
       themeId ?? _selection?.themeId,
     );
     if (next == _selection) return;
@@ -44,51 +41,47 @@ class SpecimenViewerController extends ChangeNotifier {
     notifyListeners();
   }
 
-  static SpecimenViewerSelection? _normalize(
-    SpecimenCatalog catalog,
-    String? specimenId,
+  static SheetCatalogSelection? _normalize(
+    SheetCatalog catalog,
+    String? sheetId,
     String? themeId,
   ) {
-    if (catalog.specimens.isEmpty || catalog.themes.isEmpty) return null;
-    final specimen = catalog.specimens.cast<Specimen?>().firstWhere(
-      (item) => item!.id == specimenId,
-      orElse: () => catalog.specimens.first,
+    if (catalog.sheets.isEmpty || catalog.themes.isEmpty) return null;
+    final sheet = catalog.sheets.cast<ComponentSheet?>().firstWhere(
+      (item) => item!.id == sheetId,
+      orElse: () => catalog.sheets.first,
     )!;
-    final theme = catalog.themes.cast<SpecimenTheme?>().firstWhere(
+    final theme = catalog.themes.cast<SheetTheme?>().firstWhere(
       (item) => item!.id == themeId,
       orElse: () => catalog.themes.first,
     )!;
-    return SpecimenViewerSelection(specimenId: specimen.id, themeId: theme.id);
+    return SheetCatalogSelection(sheetId: sheet.id, themeId: theme.id);
   }
 }
 
-class SpecimenCatalogViewer extends StatefulWidget {
-  const SpecimenCatalogViewer({
-    super.key,
-    required this.catalog,
-    this.controller,
-  });
+class SheetCatalogViewer extends StatefulWidget {
+  const SheetCatalogViewer({super.key, required this.catalog, this.controller});
 
-  final SpecimenCatalog catalog;
-  final SpecimenViewerController? controller;
+  final SheetCatalog catalog;
+  final SheetCatalogController? controller;
 
   @override
-  State<SpecimenCatalogViewer> createState() => _SpecimenCatalogViewerState();
+  State<SheetCatalogViewer> createState() => _SheetCatalogViewerState();
 }
 
-class _SpecimenCatalogViewerState extends State<SpecimenCatalogViewer> {
-  late SpecimenViewerController _controller;
+class _SheetCatalogViewerState extends State<SheetCatalogViewer> {
+  late SheetCatalogController _controller;
   final _search = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _controller = widget.controller ?? SpecimenViewerController(widget.catalog);
+    _controller = widget.controller ?? SheetCatalogController(widget.catalog);
     _controller.addListener(_changed);
   }
 
   @override
-  void didUpdateWidget(covariant SpecimenCatalogViewer oldWidget) {
+  void didUpdateWidget(covariant SheetCatalogViewer oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.controller == widget.controller &&
         oldWidget.catalog == widget.catalog) {
@@ -96,7 +89,7 @@ class _SpecimenCatalogViewerState extends State<SpecimenCatalogViewer> {
     }
     _controller.removeListener(_changed);
     if (oldWidget.controller == null) _controller.dispose();
-    _controller = widget.controller ?? SpecimenViewerController(widget.catalog);
+    _controller = widget.controller ?? SheetCatalogController(widget.catalog);
     _controller.addListener(_changed);
   }
 
@@ -112,15 +105,15 @@ class _SpecimenCatalogViewerState extends State<SpecimenCatalogViewer> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.catalog.specimens.isEmpty || widget.catalog.themes.isEmpty) {
+    if (widget.catalog.sheets.isEmpty || widget.catalog.themes.isEmpty) {
       return const ColoredBox(
         color: Color(0xfff4f6f8),
-        child: Center(child: Text('No specimens to display')),
+        child: Center(child: Text('No sheets to display')),
       );
     }
     final selection = _controller.selection!;
-    final specimen = widget.catalog.specimens.firstWhere(
-      (item) => item.id == selection.specimenId,
+    final sheet = widget.catalog.sheets.firstWhere(
+      (item) => item.id == selection.sheetId,
     );
     final theme = widget.catalog.themes.firstWhere(
       (item) => item.id == selection.themeId,
@@ -150,7 +143,7 @@ class _SpecimenCatalogViewerState extends State<SpecimenCatalogViewer> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     _InspectorHeader(
-                      specimen: specimen,
+                      sheet: sheet,
                       theme: theme,
                       themes: widget.catalog.themes,
                       onTheme: (id) => _controller.select(themeId: id),
@@ -166,16 +159,16 @@ class _SpecimenCatalogViewerState extends State<SpecimenCatalogViewer> {
                               child: Padding(
                                 padding: const EdgeInsets.all(32),
                                 child: IgnorePointer(
-                                  child: SpecimenSheet(
-                                    // Key by specimen id so switching specimens
+                                  child: SheetView(
+                                    // Key by sheet id so switching sheets
                                     // rebuilds a fresh sheet subtree. Overlay
                                     // cells host a local Navigator whose routes
                                     // (incl. imperatively pushed dialogs) would
                                     // otherwise survive element reuse and leak
-                                    // into the next specimen's cells.
-                                    key: ValueKey(specimen.id),
-                                    specimen: specimen,
-                                    title: specimen.label ?? specimen.id,
+                                    // into the next sheet's cells.
+                                    key: ValueKey(sheet.id),
+                                    sheet: sheet,
+                                    title: sheet.label ?? sheet.id,
                                     labelColor:
                                         theme.brightness == Brightness.dark
                                         ? const Color(0x99ffffff)
@@ -206,15 +199,15 @@ class _Sidebar extends StatelessWidget {
     required this.search,
     required this.onSearch,
   });
-  final SpecimenCatalog catalog;
-  final SpecimenViewerController controller;
+  final SheetCatalog catalog;
+  final SheetCatalogController controller;
   final TextEditingController search;
   final ValueChanged<String> onSearch;
 
   @override
   Widget build(BuildContext context) {
     final query = search.text.trim().toLowerCase();
-    final items = catalog.specimens.where((item) {
+    final items = catalog.sheets.where((item) {
       return item.id.toLowerCase().contains(query) ||
           (item.label ?? '').toLowerCase().contains(query);
     }).toList();
@@ -239,14 +232,14 @@ class _Sidebar extends StatelessWidget {
               children: [
                 for (final item in items)
                   ListTile(
-                    selected: controller.selection?.specimenId == item.id,
+                    selected: controller.selection?.sheetId == item.id,
                     title: Text(item.label ?? item.id),
                     subtitle: Text(
                       item.id,
                       style: const TextStyle(fontFamily: 'monospace'),
                     ),
                     onTap: () {
-                      controller.select(specimenId: item.id);
+                      controller.select(sheetId: item.id);
                       if (Scaffold.maybeOf(context)?.hasDrawer ?? false) {
                         Navigator.of(context).pop();
                       }
@@ -263,14 +256,14 @@ class _Sidebar extends StatelessWidget {
 
 class _InspectorHeader extends StatelessWidget {
   const _InspectorHeader({
-    required this.specimen,
+    required this.sheet,
     required this.theme,
     required this.themes,
     required this.onTheme,
   });
-  final Specimen specimen;
-  final SpecimenTheme theme;
-  final List<SpecimenTheme> themes;
+  final ComponentSheet sheet;
+  final SheetTheme theme;
+  final List<SheetTheme> themes;
   final ValueChanged<String> onTheme;
 
   @override
@@ -282,12 +275,12 @@ class _InspectorHeader extends StatelessWidget {
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
         Text(
-          specimen.label ?? specimen.id,
+          sheet.label ?? sheet.id,
           style: Theme.of(context).textTheme.headlineSmall,
         ),
         Text(
-          '${specimen.rows.length} rows × ${specimen.scenarios.length} scenarios = '
-          '${specimen.rows.length * specimen.scenarios.length} cells',
+          '${sheet.rows.length} rows × ${sheet.scenarios.length} scenarios = '
+          '${sheet.rows.length * sheet.scenarios.length} cells',
           style: const TextStyle(fontFamily: 'monospace'),
         ),
         DropdownButton<String>(
@@ -309,8 +302,8 @@ class _InspectorHeader extends StatelessWidget {
 }
 
 /// A local Navigator and Overlay that keeps component overlays inside its box.
-class SpecimenOverlayHost extends StatelessWidget {
-  const SpecimenOverlayHost({super.key, required this.child});
+class SheetOverlayHost extends StatelessWidget {
+  const SheetOverlayHost({super.key, required this.child});
   final Widget child;
 
   @override

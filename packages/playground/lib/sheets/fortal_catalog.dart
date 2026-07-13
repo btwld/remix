@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mix_specimen/mix_specimen.dart';
+import 'package:mix_sheets/mix_sheets.dart';
 import 'package:remix/remix.dart';
 
 import 'fortal_themes.dart';
@@ -7,40 +7,40 @@ import 'fortal_themes.dart';
 void _noop() {}
 void _changed<T>(T? _) {}
 
-const _variantAxis = SpecimenAxis('variant', 'Variant');
-const _sizeAxis = SpecimenAxis('size', 'Size');
+const _variantAxis = SheetAxis('variant', 'Variant');
+const _sizeAxis = SheetAxis('size', 'Size');
 
-SpecimenAxisValue _value(Enum value) =>
-    SpecimenAxisValue(value.name, _label(value.name));
+SheetAxisValue _value(Enum value) =>
+    SheetAxisValue(value.name, _label(value.name));
 
 String _label(String value) =>
     '${value[0].toUpperCase()}${value.substring(1).replaceAllMapped(RegExp(r'([0-9]+)'), (match) => ' ${match[1]}')}';
 
-SpecimenRow _row({
+SheetRow _row({
   required Enum variant,
   required Enum size,
-  required SpecimenCellBuilder builder,
-}) => SpecimenRow(
+  required SheetCellBuilder builder,
+}) => SheetRow(
   '${variant.name}-${size.name}',
   builder,
   values: {'variant': _value(variant), 'size': _value(size)},
 );
 
-SpecimenRow _sizeRow(Enum size, SpecimenCellBuilder builder) =>
-    SpecimenRow(size.name, builder, values: {'size': _value(size)});
+SheetRow _sizeRow(Enum size, SheetCellBuilder builder) =>
+    SheetRow(size.name, builder, values: {'size': _value(size)});
 
-const _selectedHovered = SpecimenScenario(
+const _selectedHovered = SheetScenario(
   'selected-hovered',
   label: 'Selected + hovered',
   states: {WidgetState.selected, WidgetState.hovered},
 );
-const _loading = SpecimenScenario('loading', props: {'loading': true});
+const _loading = SheetScenario('loading', props: {'loading': true});
 
-final fortalCatalog = SpecimenCatalog(
+final fortalCatalog = SheetCatalog(
   id: 'fortal',
   label: 'Fortal',
   themes: fortalThemes,
-  specimens: [
+  sheets: [
     _accordion(),
     _avatar(),
     _badge(),
@@ -65,13 +65,13 @@ final fortalCatalog = SpecimenCatalog(
   ],
 );
 
-Specimen _avatar() => Specimen(
+ComponentSheet _avatar() => ComponentSheet(
   id: 'avatar',
   label: 'Avatar',
   rowAxes: const [_variantAxis, _sizeAxis],
   scenarios: const [
-    SpecimenScenario('label'),
-    SpecimenScenario('icon', props: {'icon': true}),
+    SheetScenario('label'),
+    SheetScenario('icon', props: {'icon': true}),
   ],
   rows: [
     for (final variant in FortalAvatarVariant.values)
@@ -79,10 +79,10 @@ Specimen _avatar() => Specimen(
         _row(
           variant: variant,
           size: size,
-          builder: (context, sim) => RemixAvatar(
-            label: sim.propOr('icon', false) ? null : 'AB',
-            icon: sim.propOr('icon', false) ? Icons.person : null,
-            styleSpec: sim.resolve(
+          builder: (context, cell) => RemixAvatar(
+            label: cell.propOr('icon', false) ? null : 'AB',
+            icon: cell.propOr('icon', false) ? Icons.person : null,
+            styleSpec: cell.resolve(
               context,
               fortalAvatarStyle(variant: variant, size: size),
             ),
@@ -91,20 +91,20 @@ Specimen _avatar() => Specimen(
   ],
 );
 
-Specimen _badge() => Specimen(
+ComponentSheet _badge() => ComponentSheet(
   id: 'badge',
   label: 'Badge',
   rowAxes: const [_variantAxis, _sizeAxis],
-  scenarios: const [Scenarios.base],
+  scenarios: const [SheetScenarios.base],
   rows: [
     for (final variant in FortalBadgeVariant.values)
       for (final size in FortalBadgeSize.values)
         _row(
           variant: variant,
           size: size,
-          builder: (context, sim) => RemixBadge(
+          builder: (context, cell) => RemixBadge(
             label: 'Badge',
-            styleSpec: sim.resolve(
+            styleSpec: cell.resolve(
               context,
               fortalBadgeStyle(variant: variant, size: size),
             ),
@@ -113,24 +113,24 @@ Specimen _badge() => Specimen(
   ],
 );
 
-Specimen _button() => Specimen(
+ComponentSheet _button() => ComponentSheet(
   id: 'button',
   label: 'Button',
   rowAxes: const [_variantAxis, _sizeAxis],
-  scenarios: const [...Scenarios.interactive, _loading],
+  scenarios: const [...SheetScenarios.interactive, _loading],
   rows: [
     for (final variant in FortalButtonVariant.values)
       for (final size in FortalButtonSize.values)
         _row(
           variant: variant,
           size: size,
-          builder: (context, sim) => RemixButton(
+          builder: (context, cell) => RemixButton(
             label: 'Button',
             leadingIcon: Icons.add,
-            enabled: !sim.disabled,
-            loading: sim.propOr('loading', false),
-            onPressed: sim.disabled ? null : _noop,
-            styleSpec: sim.resolve(
+            enabled: !cell.disabled,
+            loading: cell.propOr('loading', false),
+            onPressed: cell.disabled ? null : _noop,
+            styleSpec: cell.resolve(
               context,
               RemixButtonStyler()
                   .mainAxisSize(MainAxisSize.min)
@@ -141,21 +141,21 @@ Specimen _button() => Specimen(
   ],
 );
 
-Specimen _callout() => Specimen(
+ComponentSheet _callout() => ComponentSheet(
   id: 'callout',
   label: 'Callout',
   rowAxes: const [_variantAxis, _sizeAxis],
-  scenarios: const [SpecimenScenario('default-composed')],
+  scenarios: const [SheetScenario('default-composed')],
   rows: [
     for (final variant in FortalCalloutVariant.values)
       for (final size in FortalCalloutSize.values)
         _row(
           variant: variant,
           size: size,
-          builder: (context, sim) => RemixCallout(
+          builder: (context, cell) => RemixCallout(
             icon: Icons.info_outline,
             text: 'Helpful information',
-            styleSpec: sim.resolve(
+            styleSpec: cell.resolve(
               context,
               fortalCalloutStyle(variant: variant, size: size),
             ),
@@ -164,19 +164,19 @@ Specimen _callout() => Specimen(
   ],
 );
 
-Specimen _card() => Specimen(
+ComponentSheet _card() => ComponentSheet(
   id: 'card',
   label: 'Card',
   rowAxes: const [_variantAxis, _sizeAxis],
-  scenarios: const [SpecimenScenario('default-composed')],
+  scenarios: const [SheetScenario('default-composed')],
   rows: [
     for (final variant in FortalCardVariant.values)
       for (final size in FortalCardSize.values)
         _row(
           variant: variant,
           size: size,
-          builder: (context, sim) => RemixCard(
-            styleSpec: sim.resolve(
+          builder: (context, cell) => RemixCard(
+            styleSpec: cell.resolve(
               context,
               fortalCardStyle(variant: variant, size: size),
             ),
@@ -190,14 +190,14 @@ Specimen _card() => Specimen(
   ],
 );
 
-Specimen _checkbox() => Specimen(
+ComponentSheet _checkbox() => ComponentSheet(
   id: 'checkbox',
   label: 'Checkbox',
   rowAxes: const [_variantAxis, _sizeAxis],
   scenarios: const [
-    ...Scenarios.selectable,
+    ...SheetScenarios.selectable,
     _selectedHovered,
-    SpecimenScenario('indeterminate', props: {'indeterminate': true}),
+    SheetScenario('indeterminate', props: {'indeterminate': true}),
   ],
   rows: [
     for (final variant in FortalCheckboxVariant.values)
@@ -205,14 +205,14 @@ Specimen _checkbox() => Specimen(
         _row(
           variant: variant,
           size: size,
-          builder: (context, sim) {
-            final indeterminate = sim.propOr('indeterminate', false);
+          builder: (context, cell) {
+            final indeterminate = cell.propOr('indeterminate', false);
             return RemixCheckbox(
-              selected: indeterminate ? null : sim.selected,
+              selected: indeterminate ? null : cell.selected,
               tristate: indeterminate,
-              enabled: !sim.disabled,
-              onChanged: sim.disabled ? null : _changed,
-              styleSpec: sim
+              enabled: !cell.disabled,
+              onChanged: cell.disabled ? null : _changed,
+              styleSpec: cell
                   .resolve(
                     context,
                     fortalCheckboxStyle(variant: variant, size: size),
@@ -224,41 +224,41 @@ Specimen _checkbox() => Specimen(
   ],
 );
 
-Specimen _divider() => Specimen(
+ComponentSheet _divider() => ComponentSheet(
   id: 'divider',
   label: 'Divider',
   rowAxes: const [_sizeAxis],
-  scenarios: const [Scenarios.base],
+  scenarios: const [SheetScenarios.base],
   rows: [
     for (final size in FortalDividerSize.values)
       _sizeRow(
         size,
-        (context, sim) => SizedBox(
+        (context, cell) => SizedBox(
           width: 160,
           child: RemixDivider(
-            styleSpec: sim.resolve(context, fortalDividerStyle(size: size)),
+            styleSpec: cell.resolve(context, fortalDividerStyle(size: size)),
           ),
         ),
       ),
   ],
 );
 
-Specimen _iconButton() => Specimen(
+ComponentSheet _iconButton() => ComponentSheet(
   id: 'icon-button',
   label: 'Icon Button',
   rowAxes: const [_variantAxis, _sizeAxis],
-  scenarios: const [...Scenarios.interactive, _loading],
+  scenarios: const [...SheetScenarios.interactive, _loading],
   rows: [
     for (final variant in FortalIconButtonVariant.values)
       for (final size in FortalIconButtonSize.values)
         _row(
           variant: variant,
           size: size,
-          builder: (context, sim) => RemixIconButton(
+          builder: (context, cell) => RemixIconButton(
             icon: Icons.add,
-            loading: sim.propOr('loading', false),
-            onPressed: sim.disabled ? null : _noop,
-            styleSpec: sim
+            loading: cell.propOr('loading', false),
+            onPressed: cell.disabled ? null : _noop,
+            styleSpec: cell
                 .resolve(
                   context,
                   fortalIconButtonStyle(variant: variant, size: size),
@@ -269,15 +269,15 @@ Specimen _iconButton() => Specimen(
   ],
 );
 
-Specimen _progress() => Specimen(
+ComponentSheet _progress() => ComponentSheet(
   id: 'progress',
   label: 'Progress',
   rowAxes: const [_variantAxis, _sizeAxis],
   scenarios: const [
-    SpecimenScenario('empty', props: {'value': 0.0}),
-    SpecimenScenario('quarter', props: {'value': 0.25}),
-    SpecimenScenario('half', props: {'value': 0.5}),
-    SpecimenScenario('full', props: {'value': 1.0}),
+    SheetScenario('empty', props: {'value': 0.0}),
+    SheetScenario('quarter', props: {'value': 0.25}),
+    SheetScenario('half', props: {'value': 0.5}),
+    SheetScenario('full', props: {'value': 1.0}),
   ],
   rows: [
     for (final variant in FortalProgressVariant.values)
@@ -285,11 +285,11 @@ Specimen _progress() => Specimen(
         _row(
           variant: variant,
           size: size,
-          builder: (context, sim) => SizedBox(
+          builder: (context, cell) => SizedBox(
             width: 140,
             child: RemixProgress(
-              value: sim.propOr('value', 0.0),
-              styleSpec: sim.resolve(
+              value: cell.propOr('value', 0.0),
+              styleSpec: cell.resolve(
                 context,
                 fortalProgressStyle(variant: variant, size: size),
               ),
@@ -299,40 +299,40 @@ Specimen _progress() => Specimen(
   ],
 );
 
-Specimen _spinner() => Specimen(
+ComponentSheet _spinner() => ComponentSheet(
   id: 'spinner',
   label: 'Spinner',
   rowAxes: const [_sizeAxis],
-  scenarios: const [Scenarios.base],
+  scenarios: const [SheetScenarios.base],
   rows: [
     for (final size in FortalSpinnerSize.values)
       _sizeRow(
         size,
-        (context, sim) => RemixSpinner(
-          styleSpec: sim.resolve(context, fortalSpinnerStyle(size: size)),
+        (context, cell) => RemixSpinner(
+          styleSpec: cell.resolve(context, fortalSpinnerStyle(size: size)),
         ),
       ),
   ],
 );
 
-Specimen _radio() => Specimen(
+ComponentSheet _radio() => ComponentSheet(
   id: 'radio',
   label: 'Radio',
   rowAxes: const [_variantAxis, _sizeAxis],
-  scenarios: const [...Scenarios.selectable, _selectedHovered],
+  scenarios: const [...SheetScenarios.selectable, _selectedHovered],
   rows: [
     for (final variant in FortalRadioVariant.values)
       for (final size in FortalRadioSize.values)
         _row(
           variant: variant,
           size: size,
-          builder: (context, sim) => RemixRadioGroup<String>(
-            groupValue: sim.selected ? 'value' : null,
+          builder: (context, cell) => RemixRadioGroup<String>(
+            groupValue: cell.selected ? 'value' : null,
             onChanged: _changed,
             child: RemixRadio<String>(
               value: 'value',
-              enabled: !sim.disabled,
-              styleSpec: sim
+              enabled: !cell.disabled,
+              styleSpec: cell
                   .resolve(
                     context,
                     fortalRadioStyle(variant: variant, size: size),
@@ -344,34 +344,34 @@ Specimen _radio() => Specimen(
   ],
 );
 
-Specimen _slider() => Specimen(
+ComponentSheet _slider() => ComponentSheet(
   id: 'slider',
   label: 'Slider',
   rowAxes: const [_variantAxis, _sizeAxis],
   scenarios: const [
-    SpecimenScenario('mid', props: {'value': 0.5}),
-    SpecimenScenario(
+    SheetScenario('mid', props: {'value': 0.5}),
+    SheetScenario(
       'hovered',
       states: {WidgetState.hovered},
       props: {'value': 0.5},
     ),
-    SpecimenScenario(
+    SheetScenario(
       'pressed',
       states: {WidgetState.pressed},
       props: {'value': 0.5},
     ),
-    SpecimenScenario(
+    SheetScenario(
       'focused',
       states: {WidgetState.focused},
       props: {'value': 0.5},
     ),
-    SpecimenScenario(
+    SheetScenario(
       'disabled',
       states: {WidgetState.disabled},
       props: {'value': 0.5},
     ),
-    SpecimenScenario('minimum', props: {'value': 0.0}),
-    SpecimenScenario('maximum', props: {'value': 1.0}),
+    SheetScenario('minimum', props: {'value': 0.0}),
+    SheetScenario('maximum', props: {'value': 1.0}),
   ],
   rows: [
     for (final variant in FortalSliderVariant.values)
@@ -379,13 +379,13 @@ Specimen _slider() => Specimen(
         _row(
           variant: variant,
           size: size,
-          builder: (context, sim) => SizedBox(
+          builder: (context, cell) => SizedBox(
             width: 160,
             child: RemixSlider(
-              value: sim.propOr('value', 0.5),
+              value: cell.propOr('value', 0.5),
               onChanged: _changed,
-              enabled: !sim.disabled,
-              styleSpec: sim
+              enabled: !cell.disabled,
+              styleSpec: cell
                   .resolve(
                     context,
                     fortalSliderStyle(variant: variant, size: size),
@@ -397,48 +397,44 @@ Specimen _slider() => Specimen(
   ],
 );
 
-Specimen _switch() => Specimen(
+ComponentSheet _switch() => ComponentSheet(
   id: 'switch',
   label: 'Switch',
   rowAxes: const [_variantAxis, _sizeAxis],
-  scenarios: const [...Scenarios.selectable, _selectedHovered],
+  scenarios: const [...SheetScenarios.selectable, _selectedHovered],
   rows: [
     for (final variant in FortalSwitchVariant.values)
       for (final size in FortalSwitchSize.values)
         _row(
           variant: variant,
           size: size,
-          builder: (context, sim) {
+          builder: (context, cell) {
             final style = RemixSwitchStyle()
                 .alignment(Alignment.centerLeft)
                 .onSelected(RemixSwitchStyle().alignment(Alignment.centerRight))
                 .merge(fortalSwitchStyle(variant: variant, size: size));
             return RemixSwitch(
-              selected: sim.selected,
-              enabled: !sim.disabled,
+              selected: cell.selected,
+              enabled: !cell.disabled,
               onChanged: _changed,
-              styleSpec: sim.resolve(context, style).spec,
+              styleSpec: cell.resolve(context, style).spec,
             );
           },
         ),
   ],
 );
 
-Specimen _textField() => Specimen(
+ComponentSheet _textField() => ComponentSheet(
   id: 'text-field',
   label: 'Text Field',
   rowAxes: const [_variantAxis, _sizeAxis],
   scenarios: const [
-    Scenarios.base,
-    Scenarios.hovered,
-    Scenarios.focused,
-    Scenarios.disabled,
-    SpecimenScenario(
-      'error',
-      states: {WidgetState.error},
-      props: {'error': true},
-    ),
-    SpecimenScenario('populated', props: {'populated': true}),
+    SheetScenarios.base,
+    SheetScenarios.hovered,
+    SheetScenarios.focused,
+    SheetScenarios.disabled,
+    SheetScenario('error', states: {WidgetState.error}, props: {'error': true}),
+    SheetScenario('populated', props: {'populated': true}),
   ],
   rows: [
     for (final variant in FortalTextFieldVariant.values)
@@ -446,17 +442,17 @@ Specimen _textField() => Specimen(
         _row(
           variant: variant,
           size: size,
-          builder: (context, sim) => SizedBox(
+          builder: (context, cell) => SizedBox(
             width: 190,
             child: RemixTextField(
               label: 'Label',
-              hintText: sim.propOr('populated', false) ? null : 'Placeholder',
-              controller: sim.propOr('populated', false)
+              hintText: cell.propOr('populated', false) ? null : 'Placeholder',
+              controller: cell.propOr('populated', false)
                   ? TextEditingController(text: 'Value')
                   : null,
-              enabled: !sim.disabled,
-              error: sim.propOr('error', false),
-              styleSpec: sim
+              enabled: !cell.disabled,
+              error: cell.propOr('error', false),
+              styleSpec: cell
                   .resolve(
                     context,
                     RemixTextFieldStyle()
@@ -474,24 +470,24 @@ Specimen _textField() => Specimen(
   ],
 );
 
-Specimen _toggle() => Specimen(
+ComponentSheet _toggle() => ComponentSheet(
   id: 'toggle',
   label: 'Toggle',
   rowAxes: const [_variantAxis, _sizeAxis],
-  scenarios: const [...Scenarios.selectable, _selectedHovered],
+  scenarios: const [...SheetScenarios.selectable, _selectedHovered],
   rows: [
     for (final variant in FortalToggleVariant.values)
       for (final size in FortalToggleSize.values)
         _row(
           variant: variant,
           size: size,
-          builder: (context, sim) => RemixToggle(
-            selected: sim.selected,
-            enabled: !sim.disabled,
+          builder: (context, cell) => RemixToggle(
+            selected: cell.selected,
+            enabled: !cell.disabled,
             onChanged: _changed,
             icon: Icons.format_bold,
             label: 'Bold',
-            styleSpec: sim
+            styleSpec: cell
                 .resolve(
                   context,
                   fortalToggleStyle(variant: variant, size: size),
@@ -502,32 +498,32 @@ Specimen _toggle() => Specimen(
   ],
 );
 
-Specimen _accordion() => Specimen(
+ComponentSheet _accordion() => ComponentSheet(
   id: 'accordion',
   label: 'Accordion',
   scenarios: const [
-    SpecimenScenario('collapsed'),
-    SpecimenScenario('expanded', props: {'expanded': true}),
-    Scenarios.hovered,
-    Scenarios.pressed,
-    Scenarios.focused,
-    Scenarios.disabled,
+    SheetScenario('collapsed'),
+    SheetScenario('expanded', props: {'expanded': true}),
+    SheetScenarios.hovered,
+    SheetScenarios.pressed,
+    SheetScenarios.focused,
+    SheetScenarios.disabled,
   ],
   rows: [
-    SpecimenRow(
+    SheetRow(
       'default',
-      (context, sim) => SizedBox(
+      (context, cell) => SizedBox(
         width: 240,
         child: RemixAccordionGroup<String>(
           controller: RemixAccordionController<String>(min: 0, max: 1),
-          initialExpandedValues: sim.propOr('expanded', false)
+          initialExpandedValues: cell.propOr('expanded', false)
               ? const ['a']
               : const [],
           child: RemixAccordion<String>(
             value: 'a',
             title: 'Accordion item',
-            enabled: !sim.disabled,
-            styleSpec: sim.resolve(context, fortalAccordionStyle()).spec,
+            enabled: !cell.disabled,
+            styleSpec: cell.resolve(context, fortalAccordionStyle()).spec,
             child: const Text('Expanded panel content'),
           ),
         ),
@@ -536,17 +532,17 @@ Specimen _accordion() => Specimen(
   ],
 );
 
-Specimen _tabs() => Specimen(
+ComponentSheet _tabs() => ComponentSheet(
   id: 'tabs',
   label: 'Tabs',
-  scenarios: const [...Scenarios.selectable],
+  scenarios: const [...SheetScenarios.selectable],
   rows: [
-    SpecimenRow(
+    SheetRow(
       'default',
-      (context, sim) => SizedBox(
+      (context, cell) => SizedBox(
         width: 260,
         child: RemixTabs(
-          selectedTabId: sim.selected ? 'second' : 'first',
+          selectedTabId: cell.selected ? 'second' : 'first',
           onChanged: (_) {},
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -557,13 +553,13 @@ Specimen _tabs() => Specimen(
                     RemixTab(
                       tabId: 'first',
                       label: 'First',
-                      enabled: !sim.disabled,
-                      styleSpec: sim.resolve(context, fortalTabStyle()).spec,
+                      enabled: !cell.disabled,
+                      styleSpec: cell.resolve(context, fortalTabStyle()).spec,
                     ),
                     RemixTab(
                       tabId: 'second',
                       label: 'Second',
-                      styleSpec: sim.resolve(context, fortalTabStyle()).spec,
+                      styleSpec: cell.resolve(context, fortalTabStyle()).spec,
                     ),
                   ],
                 ),
@@ -578,16 +574,16 @@ Specimen _tabs() => Specimen(
   ],
 );
 
-Specimen _menu() => Specimen(
+ComponentSheet _menu() => ComponentSheet(
   id: 'menu',
   label: 'Menu',
   rowAxes: const [_variantAxis, _sizeAxis],
   scenarios: const [
-    SpecimenScenario('closed'),
-    Scenarios.hovered,
-    Scenarios.focused,
-    Scenarios.disabled,
-    SpecimenScenario('open', props: {'open': true}),
+    SheetScenario('closed'),
+    SheetScenarios.hovered,
+    SheetScenarios.focused,
+    SheetScenarios.disabled,
+    SheetScenario('open', props: {'open': true}),
   ],
   rows: [
     for (final variant in FortalMenuVariant.values)
@@ -595,17 +591,17 @@ Specimen _menu() => Specimen(
         _row(
           variant: variant,
           size: size,
-          builder: (context, sim) => SizedBox(
+          builder: (context, cell) => SizedBox(
             width: 220,
             height: 150,
-            child: SpecimenOverlayHost(
+            child: SheetOverlayHost(
               child: Align(
                 alignment: Alignment.topLeft,
                 child: _ResolvedMenuCell(
-                  open: sim.propOr('open', false),
-                  enabled: !sim.disabled,
+                  open: cell.propOr('open', false),
+                  enabled: !cell.disabled,
                   itemStyle: fortalMenuItemStyle(variant: variant, size: size),
-                  styleSpec: sim
+                  styleSpec: cell
                       .resolve(
                         context,
                         RemixMenuStyle()
@@ -632,17 +628,17 @@ Specimen _menu() => Specimen(
   ],
 );
 
-Specimen _select() => Specimen(
+ComponentSheet _select() => ComponentSheet(
   id: 'select',
   label: 'Select',
   rowAxes: const [_variantAxis, _sizeAxis],
   scenarios: const [
-    SpecimenScenario('placeholder'),
-    SpecimenScenario('selected-value', props: {'selected': true}),
-    Scenarios.hovered,
-    Scenarios.focused,
-    Scenarios.disabled,
-    SpecimenScenario('open', props: {'open': true}),
+    SheetScenario('placeholder'),
+    SheetScenario('selected-value', props: {'selected': true}),
+    SheetScenarios.hovered,
+    SheetScenarios.focused,
+    SheetScenarios.disabled,
+    SheetScenario('open', props: {'open': true}),
   ],
   rows: [
     for (final variant in FortalSelectVariant.values)
@@ -650,23 +646,23 @@ Specimen _select() => Specimen(
         _row(
           variant: variant,
           size: size,
-          builder: (context, sim) => SizedBox(
+          builder: (context, cell) => SizedBox(
             width: 220,
             height: 170,
-            child: SpecimenOverlayHost(
+            child: SheetOverlayHost(
               child: Align(
                 alignment: Alignment.topLeft,
                 child: _SelectCell(
-                  open: sim.propOr('open', false),
-                  enabled: !sim.disabled,
-                  selected: sim.propOr('selected', false),
-                  itemStyleSpec: sim
+                  open: cell.propOr('open', false),
+                  enabled: !cell.disabled,
+                  selected: cell.propOr('selected', false),
+                  itemStyleSpec: cell
                       .resolve(
                         context,
                         fortalSelectMenuItemStyle(variant: variant, size: size),
                       )
                       .spec,
-                  styleSpec: sim
+                  styleSpec: cell
                       .resolve(
                         context,
                         RemixSelectStyle()
@@ -693,26 +689,26 @@ Specimen _select() => Specimen(
   ],
 );
 
-Specimen _tooltip() => Specimen(
+ComponentSheet _tooltip() => ComponentSheet(
   id: 'tooltip',
   label: 'Tooltip',
   scenarios: const [
-    SpecimenScenario('closed'),
-    SpecimenScenario('open', props: {'open': true}),
+    SheetScenario('closed'),
+    SheetScenario('open', props: {'open': true}),
   ],
   rows: [
-    SpecimenRow(
+    SheetRow(
       'default',
-      (context, sim) => SizedBox(
+      (context, cell) => SizedBox(
         width: 180,
         height: 90,
-        child: SpecimenOverlayHost(
+        child: SheetOverlayHost(
           child: Align(
             alignment: Alignment.bottomCenter,
             child: RemixTooltip(
-              initiallyOpen: sim.propOr('open', false),
+              initiallyOpen: cell.propOr('open', false),
               tooltipChild: const Text('Helpful tooltip'),
-              styleSpec: sim.resolve(context, fortalTooltipStyle()).spec,
+              styleSpec: cell.resolve(context, fortalTooltipStyle()).spec,
               child: const Icon(Icons.info_outline),
             ),
           ),
@@ -722,19 +718,19 @@ Specimen _tooltip() => Specimen(
   ],
 );
 
-Specimen _dialog() => Specimen(
+ComponentSheet _dialog() => ComponentSheet(
   id: 'dialog',
   label: 'Dialog',
-  scenarios: const [SpecimenScenario('modal')],
+  scenarios: const [SheetScenario('modal')],
   rows: [
-    SpecimenRow(
+    SheetRow(
       'default',
-      (context, sim) => SizedBox(
+      (context, cell) => SizedBox(
         width: 420,
         height: 300,
-        child: SpecimenOverlayHost(
+        child: SheetOverlayHost(
           child: _DialogCell(
-            styleSpec: sim.resolve(context, fortalDialogStyle()).spec,
+            styleSpec: cell.resolve(context, fortalDialogStyle()).spec,
           ),
         ),
       ),

@@ -1,5 +1,5 @@
 {
-  "schema": "mix_specimen/catalog/v1",
+  "schema": "mix_sheets/catalog/v1",
   "id": "fortal",
   "label": "Fortal",
   "themes": [
@@ -14,7 +14,7 @@
       "brightness": "dark"
     }
   ],
-  "specimens": [
+  "sheets": [
     {
       "id": "accordion",
       "label": "Accordion",

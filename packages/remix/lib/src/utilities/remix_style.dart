@@ -3,7 +3,7 @@ import 'package:mix/mix.dart' hide AnimationConfig;
 
 /// Resolves [style] normally, or renders [styleSpec] directly when supplied.
 ///
-/// This keeps component behavior wrappers identical while allowing specimen
+/// This keeps component behavior wrappers identical while allowing sheet
 /// sheets and other deterministic renderers to bypass state-driven resolution.
 class RemixStyleBuilder<S extends Spec<S>> extends StatelessWidget {
   const RemixStyleBuilder({

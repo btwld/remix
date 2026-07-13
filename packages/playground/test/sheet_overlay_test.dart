@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mix_specimen/mix_specimen.dart';
-import 'package:playground/specimens/fortal_catalog.dart';
+import 'package:mix_sheets/mix_sheets.dart';
+import 'package:playground/sheets/fortal_catalog.dart';
 import 'package:remix/remix.dart';
 
 void main() {
   testWidgets('open select stays inside its local overlay host', (
     tester,
   ) async {
-    final select = fortalCatalog.specimens.firstWhere(
+    final select = fortalCatalog.sheets.firstWhere(
       (item) => item.id == 'select',
     );
-    final specimen = Specimen(
+    final sheet = ComponentSheet(
       id: 'select-open-spike',
       scenarios: [select.scenarios.firstWhere((item) => item.id == 'open')],
       rows: [select.rows.first],
@@ -22,7 +22,7 @@ void main() {
         home: FortalScope(
           child: Align(
             alignment: Alignment.topLeft,
-            child: SpecimenSheet(specimen: specimen),
+            child: SheetView(sheet: sheet),
           ),
         ),
       ),
@@ -35,7 +35,7 @@ void main() {
     );
     expect(anchors.any((anchor) => anchor.controller.isOpen), isTrue);
     expect(find.text('Option one'), findsOneWidget);
-    final host = tester.getRect(find.byType(SpecimenOverlayHost));
+    final host = tester.getRect(find.byType(SheetOverlayHost));
     final option = tester.getRect(find.text('Option one'));
     expect(host.contains(option.topLeft), isTrue);
     expect(host.contains(option.bottomRight), isTrue);

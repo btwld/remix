@@ -4,12 +4,12 @@ import 'package:flutter/semantics.dart' show SemanticsBinding;
 import 'package:flutter_web_plugins/url_strategy.dart';
 
 import 'registry/component_registry.dart';
-import 'specimens/fortal_viewer.dart';
+import 'sheets/fortal_viewer.dart';
 
 void main() {
   // Ensure bindings are initialized before enabling semantics
   WidgetsFlutterBinding.ensureInitialized();
-  // Use the path URL strategy so `?specimen=&theme=` live in a real query
+  // Use the path URL strategy so `?sheet=&theme=` live in a real query
   // string instead of the `#` fragment. The viewer reads selection from
   // `Uri.base.queryParameters` and browser history; a fragment is invisible to
   // both, which breaks deep links, reload, and back/forward. No-op off web.

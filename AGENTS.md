@@ -14,12 +14,12 @@ pointer to this file instead of duplicating guidance there.
 - Do not claim a change is complete from inspection alone. Run the relevant
   formatter check, analyzer, tests, and visual checks described below.
 
-## Specimen design contract
+## Sheet design contract
 
-`packages/mix_specimen` is a generic engine for static design-system specimen
+`packages/mix_sheets` is a generic engine for static design-system component
 sheets. It must depend on Mix, not Remix or Fortal.
 
-- A specimen sheet is intentionally non-interactive. It exhaustively renders
+- A component sheet is intentionally non-interactive. It exhaustively renders
   declared component appearances for human and AI review.
 - Themes are separate sheets. Scenarios are columns. Appearance axes are rows.
 - Keep axes generic. The engine may model `variant`, `size`, `density`, `tone`,
@@ -29,7 +29,7 @@ sheets. It must depend on Mix, not Remix or Fortal.
   corresponding human-readable text displayed in sheets.
 - Axis declaration order controls presentation. With multiple row axes, all
   axes except the last form section groups; the last axis labels concrete rows.
-- Preserve caller-declared row, scenario, specimen, and theme order. Do not
+- Preserve caller-declared row, scenario, sheet, and theme order. Do not
   silently sort visual output.
 - Keep one golden image per component and theme. Do not replace reviewable
   component sheets with one enormous `all.png`.
@@ -38,7 +38,7 @@ Design-system catalogs belong to their consumer package, not the generic
 engine. Definitions that will also power a live viewer must live under that
 package's `lib/` tree; production code must not import a catalog from `test/`.
 
-## Creating or extending a specimen
+## Creating or extending a sheet
 
 1. Inventory the component's public appearance inputs: variants, sizes,
    boolean/enum visual states, and relevant theme combinations.
@@ -52,9 +52,9 @@ package's `lib/` tree; production code must not import a catalog from `test/`.
    the cell builder's context, and inject the resulting pre-resolved spec.
 5. Audit the component's normal style-resolution path before injecting a spec.
    A pre-resolved spec bypasses private defaults. Mirror every required default
-   in the specimen style—for example, `RemixButton` uses
+   in the sheet style—for example, `RemixButton` uses
    `MainAxisSize.min`, while `RemixSwitch` supplies thumb alignment.
-6. Add the specimen to its catalog so golden tests and future viewers share
+6. Add the sheet to its catalog so golden tests and future viewers share
    one definition.
 7. Regenerate the PNG, per-sheet JSON sidecar, and catalog index together.
 
@@ -83,7 +83,7 @@ bytes are deterministic.
 For engine changes, also run:
 
 ```sh
-cd packages/mix_specimen
+cd packages/mix_sheets
 fvm dart format lib test --output=none --set-exit-if-changed
 fvm flutter analyze --fatal-infos
 fvm flutter test --reporter failures-only
@@ -154,7 +154,7 @@ report it before presenting the screenshots as approved.
 
 ## Completion checklist
 
-Before committing or handing off specimen work, confirm:
+Before committing or handing off sheet work, confirm:
 
 - The engine remains design-system agnostic.
 - Catalog definitions are reusable by both tests and production viewers.
@@ -164,4 +164,3 @@ Before committing or handing off specimen work, confirm:
 - Generated JSON parses and matches the sheet structure.
 - Every changed screenshot has been reviewed at original resolution.
 - `git diff --check` is clean and `git status` contains only intended files.
-

@@ -1,11 +1,11 @@
-# mix_specimen
+# mix_sheets
 
-Static specimen sheets for Mix-based design systems. Renders every
+Static component sheets for Mix-based design systems. Renders every
 variant × state combination of a component into a single contact-sheet
 image — for human review, golden snapshots, and AI-agent validation.
 
 Unlike Storybook/Widgetbook there are no knobs: nothing is interactive by
-design. A specimen is an exhaustive, deterministic enumeration of what a
+design. A sheet is an exhaustive, deterministic enumeration of what a
 component can look like.
 
 ## How it works
@@ -15,7 +15,7 @@ Widget states (hover, pressed, focused, ...) are *forced*, not simulated:
 1. Each sheet cell is wrapped in Mix's `WidgetStateProvider` carrying the
    scenario's states.
 2. The cell builder resolves the component's styler under that provider
-   (`sim.resolve(context, style)`), so `onHovered`/`onPressed`/... variants
+   (`cell.resolve(context, style)`), so `onHovered`/`onPressed`/... variants
    activate without any real interaction.
 3. The resolved spec is handed to the component's `styleSpec` parameter,
    which renders it as-is and skips interaction-driven resolution.
@@ -26,26 +26,26 @@ something gesture simulation (one mouse pointer per test) cannot do.
 ## Authoring
 
 ```dart
-Specimen(
+ComponentSheet(
   id: 'button',
   rowAxes: const [
-    SpecimenAxis('variant', 'Variant'),
-    SpecimenAxis('size', 'Size'),
+    SheetAxis('variant', 'Variant'),
+    SheetAxis('size', 'Size'),
   ],
   scenarios: [
-    ...Scenarios.interactive, // default / hovered / pressed / focused / disabled
-    const SpecimenScenario('loading', props: {'loading': true}),
+    ...SheetScenarios.interactive,
+    const SheetScenario('loading', props: {'loading': true}),
   ],
   rows: [
-    SpecimenRow('solid-size1', (context, sim) => MyButton(
+    SheetRow('solid-size1', (context, cell) => MyButton(
         label: 'Button',
-        enabled: !sim.disabled,
-        loading: sim.propOr('loading', false),
-        onPressed: sim.disabled ? null : () {},
-        styleSpec: sim.resolve(context, myButtonStyle()),
+        enabled: !cell.disabled,
+        loading: cell.propOr('loading', false),
+        onPressed: cell.disabled ? null : () {},
+        styleSpec: cell.resolve(context, myButtonStyle()),
       ), values: const {
-        'variant': SpecimenAxisValue('solid', 'Solid'),
-        'size': SpecimenAxisValue('size1', 'Size 1'),
+        'variant': SheetAxisValue('solid', 'Solid'),
+        'size': SheetAxisValue('size1', 'Size 1'),
       }),
   ],
 )
@@ -54,22 +54,22 @@ Specimen(
 - **Row axes** are arbitrary ordered metadata such as variant, size, density,
   or tone. With one axis its value labels each row; with multiple axes every
   axis except the last creates nested section headers and the last labels rows.
-- **Rows** map every declared axis ID to a `SpecimenAxisValue`. With no axes,
+- **Rows** map every declared axis ID to a `SheetAxisValue`. With no axes,
   the row ID remains the label for source compatibility.
 - **Scenarios** are columns: forced `WidgetState`s plus prop overrides for
   states that are component properties rather than widget states
   (`loading`, `indeterminate`, ...).
-- **Themes** (`SpecimenTheme`) are a sheet-level axis: one image per theme.
-  `SpecimenCatalogViewer` renders the same list as a switcher.
+- **Themes** (`SheetTheme`) are a sheet-level axis: one image per theme.
+  `SheetCatalogViewer` renders the same list as a switcher.
 
 ## Live viewer
 
-`SpecimenCatalogViewer` accepts exactly one catalog. Its controller normalizes
-missing or invalid IDs to the first caller-declared specimen and theme, while
+`SheetCatalogViewer` accepts exactly one catalog. Its controller normalizes
+missing or invalid IDs to the first caller-declared sheet and theme, while
 preserving declaration order for navigation and search. The selected theme is
 applied only inside the non-interactive, two-axis scrolling canvas.
 
-Use `SpecimenOverlayHost` around bounded overlay cells so real component
+Use `SheetOverlayHost` around bounded overlay cells so real component
 overlays use a local Navigator/Overlay and remain inside both the live sheet
 and golden repaint boundary.
 
@@ -81,8 +81,8 @@ flutter test                         # compare against committed baselines
 ```
 
 For a shared input to snapshots and a future viewer, create a
-`SpecimenCatalog(id: ..., themes: ..., specimens: ...)` and register its tests
-with `registerSpecimenCatalogGoldens(catalog)`. Golden updates also write a
+`SheetCatalog(id: ..., themes: ..., sheets: ...)` and register its tests
+with `registerSheetCatalogGoldens(catalog)`. Golden updates also write a
 deterministically ordered `goldens/catalog.json` index.
 
 Output per component per theme:
@@ -97,7 +97,7 @@ Commit both. Visual regression review then *is* PR review: a styling change
 shows up as a changed PNG in the diff.
 
 Goldens are only generated/compared on the platforms in
-`SpecimenGoldens.platforms` (default: macOS) because font rasterization
+`SheetGoldens.platforms` (default: macOS) because font rasterization
 differs across OSes; other platforms skip the comparison. Set it in
 `flutter_test_config.dart` to match where your team generates goldens,
 and load real fonts there too:
@@ -105,8 +105,8 @@ and load real fonts there too:
 ```dart
 Future<void> testExecutable(FutureOr<void> Function() testMain) async {
   TestWidgetsFlutterBinding.ensureInitialized();
-  configureSpecimenGoldenComparator();
-  await loadSpecimenFonts();
+  configureSheetGoldenComparator();
+  await loadSheetFonts();
   return testMain();
 }
 ```
@@ -123,7 +123,7 @@ Future<void> testExecutable(FutureOr<void> Function() testMain) async {
 
 - Components must honor `styleSpec` and render a pre-resolved spec.
 - Widget defaults baked privately into a component's build (e.g. switch
-  thumb alignment) must be mirrored in the specimen's style, since
+  thumb alignment) must be mirrored in the sheet's style, since
   `styleSpec` bypasses them.
 - Overlay composites need deterministic public controller/initial-open APIs
-  and must be hosted inside a bounded `SpecimenOverlayHost`.
+  and must be hosted inside a bounded `SheetOverlayHost`.

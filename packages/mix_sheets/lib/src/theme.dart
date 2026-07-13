@@ -1,16 +1,15 @@
 import 'package:flutter/widgets.dart';
 
 /// Wraps [child] with a design system's token scope (e.g. `FortalScope`).
-typedef SpecimenThemeWrapper =
-    Widget Function(BuildContext context, Widget child);
+typedef SheetThemeWrapper = Widget Function(BuildContext context, Widget child);
 
-/// A design-system context under which specimens are rendered.
+/// A design-system context under which sheets are rendered.
 ///
 /// Themes are a sheet-level axis: the golden harness emits one image per
 /// theme, and a live gallery renders the same list as a switcher.
 @immutable
-class SpecimenTheme {
-  const SpecimenTheme(
+class SheetTheme {
+  const SheetTheme(
     this.id, {
     this.label,
     this.brightness = Brightness.light,
@@ -30,5 +29,5 @@ class SpecimenTheme {
   final Color background;
 
   /// Wraps the sheet with the design system's scope.
-  final SpecimenThemeWrapper builder;
+  final SheetThemeWrapper builder;
 }

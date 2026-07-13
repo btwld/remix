@@ -6,13 +6,13 @@ import 'theme.dart';
 
 /// Handed to cell builders with the active scenario applied.
 ///
-/// The sheet has already forced [SpecimenScenario.states] through a
+/// The sheet has already forced [SheetScenario.states] through a
 /// `WidgetStateProvider` above the cell, so [resolve] produces the spec a
 /// user would see in that state without any real interaction.
-class SpecimenSim {
-  const SpecimenSim(this.scenario);
+class SheetCellContext {
+  const SheetCellContext(this.scenario);
 
-  final SpecimenScenario scenario;
+  final SheetScenario scenario;
 
   Set<WidgetState> get states => scenario.states;
   bool get hovered => states.contains(WidgetState.hovered);
@@ -39,7 +39,7 @@ class SpecimenSim {
   ) {
     assert(
       WidgetStateProvider.of(context) != null,
-      'SpecimenSim.resolve must be called with the cell builder context so '
+      'SheetCellContext.resolve must be called with the cell builder context so '
       'forced widget states are visible to style resolution.',
     );
 
@@ -47,50 +47,45 @@ class SpecimenSim {
   }
 }
 
-/// Builds one cell of a specimen sheet for a given scenario.
-typedef SpecimenCellBuilder =
-    Widget Function(BuildContext context, SpecimenSim sim);
+/// Builds one cell of a component sheet for a given scenario.
+typedef SheetCellBuilder =
+    Widget Function(BuildContext context, SheetCellContext cell);
 
-/// A row of a specimen sheet, typically one component variant.
+/// A row of a component sheet, typically one component variant.
 @immutable
-class SpecimenRow {
-  const SpecimenRow(
-    this.id,
-    this.builder, {
-    this.label,
-    this.values = const {},
-  });
+class SheetRow {
+  const SheetRow(this.id, this.builder, {this.label, this.values = const {}});
 
   /// Identifier shown as the row label and recorded in the manifest.
   final String id;
   final String? label;
 
-  final SpecimenCellBuilder builder;
+  final SheetCellBuilder builder;
 
-  /// Values for each axis declared by [Specimen.rowAxes].
-  final Map<String, SpecimenAxisValue> values;
+  /// Values for each axis declared by [ComponentSheet.rowAxes].
+  final Map<String, SheetAxisValue> values;
 }
 
 @immutable
-class SpecimenAxis {
-  const SpecimenAxis(this.id, this.label);
+class SheetAxis {
+  const SheetAxis(this.id, this.label);
 
   final String id;
   final String label;
 }
 
 @immutable
-class SpecimenAxisValue {
-  const SpecimenAxisValue(this.id, this.label);
+class SheetAxisValue {
+  const SheetAxisValue(this.id, this.label);
 
   final String id;
   final String label;
 }
 
-/// A component's full specimen: rows (variants) crossed with scenario columns.
+/// A component's full sheet: rows (variants) crossed with scenario columns.
 @immutable
-class Specimen {
-  const Specimen({
+class ComponentSheet {
+  const ComponentSheet({
     required this.id,
     required this.scenarios,
     required this.rows,
@@ -102,16 +97,16 @@ class Specimen {
   final String id;
   final String? label;
 
-  final List<SpecimenScenario> scenarios;
+  final List<SheetScenario> scenarios;
 
-  final List<SpecimenRow> rows;
+  final List<SheetRow> rows;
 
   /// Ordered axes used to group and label rows.
-  final List<SpecimenAxis> rowAxes;
+  final List<SheetAxis> rowAxes;
 
   /// Validates identifiers and the row/scenario matrix before rendering.
   void validate() {
-    _requireId(id, 'specimen');
+    _requireId(id, 'sheet');
     _requireUnique(scenarios.map((item) => item.id), 'scenario');
     _requireUnique(rowAxes.map((item) => item.id), 'axis');
     _requireUnique(rows.map((item) => item.id), 'row');
@@ -159,27 +154,27 @@ void _requireUnique(Iterable<String> ids, String kind) {
   }
 }
 
-/// Shared source of themes and specimens for snapshots and future viewers.
+/// Shared source of themes and sheets for snapshots and future viewers.
 @immutable
-class SpecimenCatalog {
-  const SpecimenCatalog({
+class SheetCatalog {
+  const SheetCatalog({
     required this.id,
     required this.themes,
-    required this.specimens,
+    required this.sheets,
     this.label,
   });
 
   final String id;
   final String? label;
-  final List<SpecimenTheme> themes;
-  final List<Specimen> specimens;
+  final List<SheetTheme> themes;
+  final List<ComponentSheet> sheets;
 
   void validate() {
     _requireId(id, 'catalog');
     _requireUnique(themes.map((item) => item.id), 'theme');
-    _requireUnique(specimens.map((item) => item.id), 'specimen');
-    for (final specimen in specimens) {
-      specimen.validate();
+    _requireUnique(sheets.map((item) => item.id), 'sheet');
+    for (final sheet in sheets) {
+      sheet.validate();
     }
   }
 }

@@ -1,6 +1,6 @@
-name: mix_specimen
+name: mix_sheets
 description: >-
-  Static specimen sheets for Mix-based design systems. Renders every
+  Static component sheets for Mix-based design systems. Renders every
   variant x state combination of a component for visual review, golden
   snapshots, and AI-agent validation.
 publish_to: none

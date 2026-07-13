@@ -1,4 +1,4 @@
-/// Golden-snapshot harness for specimen sheets.
+/// Golden-snapshot harness for component sheets.
 ///
 /// Test-only entrypoint (depends on `flutter_test`); import from test files
 /// and `flutter_test_config.dart`, never from app code.
@@ -11,33 +11,33 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'mix_specimen.dart';
+import 'mix_sheets.dart';
 
-/// Configuration for specimen golden generation.
-abstract final class SpecimenGoldens {
+/// Configuration for sheet golden generation.
+abstract final class SheetGoldens {
   /// Operating systems whose rendered bytes match the committed baselines.
   ///
   /// Font rasterization differs subtly across platforms, so goldens are only
   /// generated and compared on the platforms listed here; everywhere else
-  /// [expectSpecimenGolden] skips the comparison. Override in
+  /// [expectSheetGolden] skips the comparison. Override in
   /// `flutter_test_config.dart` if your team generates goldens elsewhere.
   static Set<String> platforms = {'macos'};
 }
 
-/// Loads Roboto and MaterialIcons from the Flutter SDK cache so specimen
+/// Loads Roboto and MaterialIcons from the Flutter SDK cache so sheet
 /// goldens render legible text and icons instead of the block test font.
 ///
 /// Call from `flutter_test_config.dart` before running tests. Throws when
 /// the fonts cannot be located: silently falling back to the block font
 /// would produce baselines that mismatch every correctly-rendered run.
-Future<void> loadSpecimenFonts() async {
+Future<void> loadSheetFonts() async {
   final flutterRoot = Platform.environment['FLUTTER_ROOT'];
   final fontsDir = flutterRoot == null
       ? null
       : Directory('$flutterRoot/bin/cache/artifacts/material_fonts');
   if (fontsDir == null || !fontsDir.existsSync()) {
     throw StateError(
-      'mix_specimen could not locate the Flutter SDK material fonts '
+      'mix_sheets could not locate the Flutter SDK material fonts '
       '(FLUTTER_ROOT=${flutterRoot ?? 'unset'}). Run tests through the '
       'flutter tool so FLUTTER_ROOT is set and the font cache exists.',
     );
@@ -73,20 +73,19 @@ Future<ByteData> _fontData(File file) async =>
 /// is both reliable and negligible compared with rendering the sheet.
 ///
 /// Call this once from `flutter_test_config.dart` before [testMain].
-void configureSpecimenGoldenComparator() {
+void configureSheetGoldenComparator() {
   final current = goldenFileComparator;
-  if (current is! LocalFileComparator ||
-      current is _SpecimenLocalFileComparator) {
+  if (current is! LocalFileComparator || current is _SheetLocalFileComparator) {
     return;
   }
 
-  goldenFileComparator = _SpecimenLocalFileComparator(
-    current.basedir.resolve('.mix_specimen_test.dart'),
+  goldenFileComparator = _SheetLocalFileComparator(
+    current.basedir.resolve('.mix_sheets_test.dart'),
   );
 }
 
-final class _SpecimenLocalFileComparator extends LocalFileComparator {
-  _SpecimenLocalFileComparator(super.testFile);
+final class _SheetLocalFileComparator extends LocalFileComparator {
+  _SheetLocalFileComparator(super.testFile);
 
   @override
   Future<void> update(Uri golden, Uint8List imageBytes) {
@@ -98,24 +97,24 @@ final class _SpecimenLocalFileComparator extends LocalFileComparator {
   }
 }
 
-/// Pumps [specimen] under [theme] and compares it against
-/// `goldens/<theme.id>/<specimen.id>.png` (relative to the test file).
+/// Pumps [sheet] under [theme] and compares it against
+/// `goldens/<theme.id>/<sheet.id>.png` (relative to the test file).
 ///
-/// With `--update-goldens` it also writes a `<specimen.id>.json` sidecar next
+/// With `--update-goldens` it also writes a `<sheet.id>.json` sidecar next
 /// to the image describing the sheet's axes, so agents can interpret the grid
 /// without reading the test source. Each test owns its own sidecar; test
 /// files run in separate processes, so a shared manifest would lose entries.
 ///
-/// On platforms outside [SpecimenGoldens.platforms] the test is skipped.
-Future<void> expectSpecimenGolden(
+/// On platforms outside [SheetGoldens.platforms] the test is skipped.
+Future<void> expectSheetGolden(
   WidgetTester tester, {
-  required Specimen specimen,
-  required SpecimenTheme theme,
+  required ComponentSheet sheet,
+  required SheetTheme theme,
 }) async {
-  specimen.validate();
-  if (!SpecimenGoldens.platforms.contains(Platform.operatingSystem)) {
+  sheet.validate();
+  if (!SheetGoldens.platforms.contains(Platform.operatingSystem)) {
     markTestSkipped(
-      'Specimen goldens are generated on ${SpecimenGoldens.platforms}; '
+      'Sheet goldens are generated on ${SheetGoldens.platforms}; '
       'rendering differs on ${Platform.operatingSystem}.',
     );
 
@@ -128,7 +127,7 @@ Future<void> expectSpecimenGolden(
   addTearDown(tester.view.reset);
   addTearDown(tester.platformDispatcher.clearPlatformBrightnessTestValue);
 
-  const sheetKey = ValueKey('mix_specimen.sheet');
+  const sheetKey = ValueKey('mix_sheets.sheet');
   final isDark = theme.brightness == Brightness.dark;
 
   await tester.pumpWidget(
@@ -154,9 +153,9 @@ Future<void> expectSpecimenGolden(
                       type: MaterialType.transparency,
                       child: Padding(
                         padding: const EdgeInsets.all(24),
-                        child: SpecimenSheet(
-                          specimen: specimen,
-                          title: '${specimen.id} - ${theme.id}',
+                        child: SheetView(
+                          sheet: sheet,
+                          title: '${sheet.id} - ${theme.id}',
                           labelColor: isDark
                               ? const Color(0x99FFFFFF)
                               : const Color(0x99000000),
@@ -180,55 +179,55 @@ Future<void> expectSpecimenGolden(
   await tester.pump();
   await tester.pump(const Duration(milliseconds: 200));
 
-  final goldenPath = 'goldens/${theme.id}/${specimen.id}.png';
+  final goldenPath = 'goldens/${theme.id}/${sheet.id}.png';
   await expectLater(find.byKey(sheetKey), matchesGoldenFile(goldenPath));
 
-  _writeSidecar(specimen, theme, goldenPath);
+  _writeSidecar(sheet, theme, goldenPath);
 }
 
 /// Writes the machine-readable sidecar describing a sheet's axes. No-op
 /// unless the run passed `--update-goldens`, mirroring when the golden
 /// image itself changes.
-void _writeSidecar(Specimen specimen, SpecimenTheme theme, String goldenPath) {
+void _writeSidecar(ComponentSheet sheet, SheetTheme theme, String goldenPath) {
   if (!autoUpdateGoldenFiles) return;
 
   final comparator = goldenFileComparator;
   if (comparator is! LocalFileComparator) return;
 
-  final sidecarPath = 'goldens/${theme.id}/${specimen.id}.json';
+  final sidecarPath = 'goldens/${theme.id}/${sheet.id}.json';
   final file = File.fromUri(comparator.basedir.resolve(sidecarPath));
   file.parent.createSync(recursive: true);
   file.writeAsStringSync(
     const JsonEncoder.withIndent(
       '  ',
-    ).convert(specimenSheetMetadata(specimen, theme)),
+    ).convert(componentSheetMetadata(sheet, theme)),
   );
 }
 
 /// Creates the structured v1 sidecar payload for a sheet.
-Map<String, Object?> specimenSheetMetadata(
-  Specimen specimen,
-  SpecimenTheme theme,
+Map<String, Object?> componentSheetMetadata(
+  ComponentSheet sheet,
+  SheetTheme theme,
 ) {
-  specimen.validate();
+  sheet.validate();
   return {
-    'schema': 'mix_specimen/sheet/v1',
-    'component': specimen.id,
-    if (specimen.label != null) 'componentLabel': specimen.label,
+    'schema': 'mix_sheets/sheet/v1',
+    'component': sheet.id,
+    if (sheet.label != null) 'componentLabel': sheet.label,
     'theme': theme.id,
     if (theme.label != null) 'themeLabel': theme.label,
     'brightness': theme.brightness.name,
-    'file': '${specimen.id}.png',
+    'file': '${sheet.id}.png',
     'rowAxes': [
-      for (final axis in specimen.rowAxes) {'id': axis.id, 'label': axis.label},
+      for (final axis in sheet.rowAxes) {'id': axis.id, 'label': axis.label},
     ],
     'rows': [
-      for (final row in specimen.rows)
+      for (final row in sheet.rows)
         {
           'id': row.id,
           if (row.label != null) 'label': row.label,
           'values': {
-            for (final axis in specimen.rowAxes)
+            for (final axis in sheet.rowAxes)
               axis.id: {
                 'id': row.values[axis.id]!.id,
                 'label': row.values[axis.id]!.label,
@@ -237,7 +236,7 @@ Map<String, Object?> specimenSheetMetadata(
         },
     ],
     'columns': [
-      for (final scenario in specimen.scenarios)
+      for (final scenario in sheet.scenarios)
         {
           'id': scenario.id,
           if (scenario.label != null) 'label': scenario.label,
@@ -248,21 +247,54 @@ Map<String, Object?> specimenSheetMetadata(
   };
 }
 
-/// Registers one golden test per catalog specimen/theme pair and writes a
+/// Creates the deterministic v1 catalog index payload.
+Map<String, Object?> sheetCatalogMetadata(SheetCatalog catalog) {
+  catalog.validate();
+  return {
+    'schema': 'mix_sheets/catalog/v1',
+    'id': catalog.id,
+    if (catalog.label != null) 'label': catalog.label,
+    'themes': [
+      for (final theme in catalog.themes)
+        {
+          'id': theme.id,
+          if (theme.label != null) 'label': theme.label,
+          'brightness': theme.brightness.name,
+        },
+    ],
+    'sheets': [
+      for (final sheet in catalog.sheets)
+        {
+          'id': sheet.id,
+          if (sheet.label != null) 'label': sheet.label,
+          'files': [
+            for (final theme in catalog.themes)
+              {
+                'theme': theme.id,
+                'image': '${theme.id}/${sheet.id}.png',
+                'metadata': '${theme.id}/${sheet.id}.json',
+              },
+          ],
+        },
+    ],
+  };
+}
+
+/// Registers one golden test per catalog sheet/theme pair and writes a
 /// deterministic `goldens/catalog.json` index during golden updates.
-void registerSpecimenCatalogGoldens(SpecimenCatalog catalog) {
+void registerSheetCatalogGoldens(SheetCatalog catalog) {
   catalog.validate();
   for (final theme in catalog.themes) {
-    for (final specimen in catalog.specimens) {
-      testWidgets('${specimen.id} specimen - ${theme.id}', (tester) async {
-        await expectSpecimenGolden(tester, specimen: specimen, theme: theme);
+    for (final sheet in catalog.sheets) {
+      testWidgets('${sheet.id} sheet - ${theme.id}', (tester) async {
+        await expectSheetGolden(tester, sheet: sheet, theme: theme);
         _writeCatalogIndex(catalog);
       });
     }
   }
 }
 
-void _writeCatalogIndex(SpecimenCatalog catalog) {
+void _writeCatalogIndex(SheetCatalog catalog) {
   if (!autoUpdateGoldenFiles) return;
   final comparator = goldenFileComparator;
   if (comparator is! LocalFileComparator) return;
@@ -270,33 +302,6 @@ void _writeCatalogIndex(SpecimenCatalog catalog) {
   final file = File.fromUri(comparator.basedir.resolve('goldens/catalog.json'));
   file.parent.createSync(recursive: true);
   file.writeAsStringSync(
-    const JsonEncoder.withIndent('  ').convert({
-      'schema': 'mix_specimen/catalog/v1',
-      'id': catalog.id,
-      if (catalog.label != null) 'label': catalog.label,
-      'themes': [
-        for (final theme in catalog.themes)
-          {
-            'id': theme.id,
-            if (theme.label != null) 'label': theme.label,
-            'brightness': theme.brightness.name,
-          },
-      ],
-      'specimens': [
-        for (final specimen in catalog.specimens)
-          {
-            'id': specimen.id,
-            if (specimen.label != null) 'label': specimen.label,
-            'files': [
-              for (final theme in catalog.themes)
-                {
-                  'theme': theme.id,
-                  'image': '${theme.id}/${specimen.id}.png',
-                  'metadata': '${theme.id}/${specimen.id}.json',
-                },
-            ],
-          },
-      ],
-    }),
+    const JsonEncoder.withIndent('  ').convert(sheetCatalogMetadata(catalog)),
   );
 }

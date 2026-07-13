@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:playground/specimens/fortal_catalog.dart';
+import 'package:playground/sheets/fortal_catalog.dart';
 
 void main() {
   test('Fortal catalog is complete, ordered, and valid', () {
@@ -8,7 +8,7 @@ void main() {
       'fortal-light',
       'fortal-dark',
     ]);
-    expect(fortalCatalog.specimens.map((specimen) => specimen.id), [
+    expect(fortalCatalog.sheets.map((sheet) => sheet.id), [
       'accordion',
       'avatar',
       'badge',
@@ -31,26 +31,26 @@ void main() {
       'toggle',
       'tooltip',
     ]);
-    for (final specimen in fortalCatalog.specimens) {
-      expect(specimen.rows, isNotEmpty, reason: specimen.id);
-      expect(specimen.scenarios, isNotEmpty, reason: specimen.id);
+    for (final sheet in fortalCatalog.sheets) {
+      expect(sheet.rows, isNotEmpty, reason: sheet.id);
+      expect(sheet.scenarios, isNotEmpty, reason: sheet.id);
     }
   });
 
   test('variant and size products include every public enum value', () {
-    for (final specimen in fortalCatalog.specimens.where(
+    for (final sheet in fortalCatalog.sheets.where(
       (item) => item.rowAxes.length == 2,
     )) {
-      final variants = specimen.rows
+      final variants = sheet.rows
           .map((row) => row.values['variant']!.id)
           .toSet();
-      final sizes = specimen.rows.map((row) => row.values['size']!.id).toSet();
+      final sizes = sheet.rows.map((row) => row.values['size']!.id).toSet();
       expect(
-        specimen.rows.length,
+        sheet.rows.length,
         variants.length * sizes.length,
-        reason: specimen.id,
+        reason: sheet.id,
       );
-      expect(specimen.rowAxes.map((axis) => axis.id), ['variant', 'size']);
+      expect(sheet.rowAxes.map((axis) => axis.id), ['variant', 'size']);
     }
   });
 }

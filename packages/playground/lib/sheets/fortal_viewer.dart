@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:mix_specimen/mix_specimen.dart';
+import 'package:mix_sheets/mix_sheets.dart';
 
 import 'fortal_catalog.dart';
 
 /// Hosts the Fortal catalog viewer with URL-bound selection.
 ///
 /// Uses the Router API so Flutter owns the address bar, browser history, and
-/// back/forward: `?specimen=&theme=` deep links restore on load and survive
+/// back/forward: `?sheet=&theme=` deep links restore on load and survive
 /// reloads, selection changes push history entries, and invalid IDs
 /// canonicalize. A plain `MaterialApp(home:)` would instead announce `/` to the
 /// engine on its first frame — dropping deep-link query params and forcing
@@ -19,11 +19,11 @@ class FortalViewerApp extends StatefulWidget {
 }
 
 class _FortalViewerAppState extends State<FortalViewerApp> {
-  final SpecimenRouterDelegate _routerDelegate = SpecimenRouterDelegate(
+  final SheetRouterDelegate _routerDelegate = SheetRouterDelegate(
     fortalCatalog,
   );
-  final SpecimenRouteInformationParser _routeInformationParser =
-      const SpecimenRouteInformationParser();
+  final SheetRouteInformationParser _routeInformationParser =
+      const SheetRouteInformationParser();
 
   @override
   void dispose() {
@@ -42,8 +42,8 @@ class _FortalViewerAppState extends State<FortalViewerApp> {
 }
 
 /// Parses a browser location into the raw [Uri]; the delegate interprets it.
-class SpecimenRouteInformationParser extends RouteInformationParser<Uri> {
-  const SpecimenRouteInformationParser();
+class SheetRouteInformationParser extends RouteInformationParser<Uri> {
+  const SheetRouteInformationParser();
 
   @override
   Future<Uri> parseRouteInformation(RouteInformation routeInformation) async =>
@@ -54,25 +54,25 @@ class SpecimenRouteInformationParser extends RouteInformationParser<Uri> {
       RouteInformation(uri: configuration);
 }
 
-/// Binds a [SpecimenViewerController] to the browser URL.
+/// Binds a [SheetCatalogController] to the browser URL.
 ///
-/// [currentConfiguration] is the canonical `?specimen=&theme=` URL for the
+/// [currentConfiguration] is the canonical `?sheet=&theme=` URL for the
 /// current selection, so the Router keeps the address bar in sync (and
 /// canonicalizes unknown IDs, since the controller normalizes them before this
 /// runs). [setNewRoutePath] applies deep links and back/forward navigations.
-class SpecimenRouterDelegate extends RouterDelegate<Uri>
+class SheetRouterDelegate extends RouterDelegate<Uri>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<Uri> {
-  SpecimenRouterDelegate(this.catalog)
-    : controller = SpecimenViewerController(catalog) {
+  SheetRouterDelegate(this.catalog)
+    : controller = SheetCatalogController(catalog) {
     // A freshly built controller resolves to the declared defaults; capture
     // them before any selection so the URL alone can restore full state.
     _defaults = controller.selection;
     controller.addListener(notifyListeners);
   }
 
-  final SpecimenCatalog catalog;
-  final SpecimenViewerController controller;
-  late final SpecimenViewerSelection? _defaults;
+  final SheetCatalog catalog;
+  final SheetCatalogController controller;
+  late final SheetCatalogSelection? _defaults;
 
   @override
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -86,8 +86,7 @@ class SpecimenRouterDelegate extends RouterDelegate<Uri>
     // the current value". Falling back to the current selection would let a
     // stale theme survive a back/forward to a URL that omits `theme`.
     controller.select(
-      specimenId:
-          configuration.queryParameters['specimen'] ?? _defaults?.specimenId,
+      sheetId: configuration.queryParameters['sheet'] ?? _defaults?.sheetId,
       themeId: configuration.queryParameters['theme'] ?? _defaults?.themeId,
     );
   }
@@ -99,7 +98,7 @@ class SpecimenRouterDelegate extends RouterDelegate<Uri>
     pages: [
       MaterialPage(
         key: const ValueKey('fortal-viewer'),
-        child: SpecimenCatalogViewer(catalog: catalog, controller: controller),
+        child: SheetCatalogViewer(catalog: catalog, controller: controller),
       ),
     ],
   );
@@ -116,8 +115,8 @@ class SpecimenRouterDelegate extends RouterDelegate<Uri>
   Uri _selectionUri() {
     final selection = controller.selection!;
     final query = <String, String>{};
-    if (selection.specimenId != _defaults?.specimenId) {
-      query['specimen'] = selection.specimenId;
+    if (selection.sheetId != _defaults?.sheetId) {
+      query['sheet'] = selection.sheetId;
     }
     if (selection.themeId != _defaults?.themeId) {
       query['theme'] = selection.themeId;

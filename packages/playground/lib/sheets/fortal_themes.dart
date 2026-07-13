@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:mix_specimen/mix_specimen.dart';
+import 'package:mix_sheets/mix_sheets.dart';
 import 'package:remix/remix.dart';
 
 final fortalThemes = [
-  SpecimenTheme(
+  SheetTheme(
     'fortal-light',
     label: 'Light',
     background: const Color(0xFFFFFFFF),
     builder: (context, child) => FortalScope(child: child),
   ),
-  SpecimenTheme(
+  SheetTheme(
     'fortal-dark',
     label: 'Dark',
     brightness: Brightness.dark,

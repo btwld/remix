@@ -1,24 +1,24 @@
 import 'package:flutter/widgets.dart';
 import 'package:mix/mix.dart';
 
+import 'component_sheet.dart';
 import 'scenario.dart';
-import 'specimen.dart';
 
-/// Renders a [Specimen] as a static grid: rows x scenario columns.
+/// Renders a [ComponentSheet] as a static grid: rows x scenario columns.
 ///
 /// Each cell is wrapped in a `WidgetStateProvider` carrying the scenario's
 /// forced states, so cell builders resolve styles as if the interaction
 /// were really happening.
-class SpecimenSheet extends StatelessWidget {
-  const SpecimenSheet({
+class SheetView extends StatelessWidget {
+  const SheetView({
     super.key,
-    required this.specimen,
+    required this.sheet,
     this.title,
     this.labelColor = const Color(0x99000000),
     this.cellPadding = const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
   });
 
-  final Specimen specimen;
+  final ComponentSheet sheet;
 
   /// Optional heading, e.g. `button - fortal-light`.
   final String? title;
@@ -37,8 +37,8 @@ class SpecimenSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    specimen.validate();
-    final tableRows = _tableRows(specimen);
+    sheet.validate();
+    final tableRows = _tableRows(sheet);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -61,7 +61,7 @@ class SpecimenSheet extends StatelessWidget {
             TableRow(
               children: [
                 const SizedBox.shrink(),
-                for (final scenario in specimen.scenarios)
+                for (final scenario in sheet.scenarios)
                   Padding(
                     padding: cellPadding,
                     child: Text(
@@ -80,11 +80,11 @@ class SpecimenSheet extends StatelessWidget {
                       padding: cellPadding,
                       child: Text(tableRow.label, style: _labelStyle),
                     ),
-                    for (final scenario in specimen.scenarios)
+                    for (final scenario in sheet.scenarios)
                       Padding(
                         padding: cellPadding,
                         child: Center(
-                          child: _SpecimenCell(row: row, scenario: scenario),
+                          child: _SheetCell(row: row, scenario: scenario),
                         ),
                       ),
                   ],
@@ -101,7 +101,7 @@ class SpecimenSheet extends StatelessWidget {
                         ),
                       ),
                     ),
-                    for (final _ in specimen.scenarios) const SizedBox.shrink(),
+                    for (final _ in sheet.scenarios) const SizedBox.shrink(),
                   ],
                 ),
           ],
@@ -111,18 +111,18 @@ class SpecimenSheet extends StatelessWidget {
   }
 }
 
-List<({SpecimenRow? row, String label})> _tableRows(Specimen specimen) {
-  if (specimen.rowAxes.isEmpty) {
+List<({SheetRow? row, String label})> _tableRows(ComponentSheet sheet) {
+  if (sheet.rowAxes.isEmpty) {
     return [
-      for (final row in specimen.rows) (row: row, label: row.label ?? row.id),
+      for (final row in sheet.rows) (row: row, label: row.label ?? row.id),
     ];
   }
 
-  final result = <({SpecimenRow? row, String label})>[];
+  final result = <({SheetRow? row, String label})>[];
   List<String>? previousGroups;
-  for (final row in specimen.rows) {
-    final groups = specimen.rowAxes
-        .take(specimen.rowAxes.length - 1)
+  for (final row in sheet.rows) {
+    final groups = sheet.rowAxes
+        .take(sheet.rowAxes.length - 1)
         .map((axis) => row.values[axis.id]!.label)
         .toList();
     var ancestorChanged = previousGroups == null;
@@ -135,25 +135,25 @@ List<({SpecimenRow? row, String label})> _tableRows(Specimen specimen) {
         result.add((row: null, label: groups[depth]));
       }
     }
-    final rowLabel = row.values[specimen.rowAxes.last.id]!.label;
+    final rowLabel = row.values[sheet.rowAxes.last.id]!.label;
     result.add((row: row, label: rowLabel));
     previousGroups = groups;
   }
   return result;
 }
 
-class _SpecimenCell extends StatelessWidget {
-  const _SpecimenCell({required this.row, required this.scenario});
+class _SheetCell extends StatelessWidget {
+  const _SheetCell({required this.row, required this.scenario});
 
-  final SpecimenRow row;
-  final SpecimenScenario scenario;
+  final SheetRow row;
+  final SheetScenario scenario;
 
   @override
   Widget build(BuildContext context) {
     return WidgetStateProvider(
       states: scenario.states,
       child: Builder(
-        builder: (context) => row.builder(context, SpecimenSim(scenario)),
+        builder: (context) => row.builder(context, SheetCellContext(scenario)),
       ),
     );
   }

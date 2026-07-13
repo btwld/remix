@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mix/mix.dart';
-import 'package:mix_specimen/mix_specimen.dart';
+import 'package:mix_sheets/mix_sheets.dart';
 
 void main() {
   testWidgets('sheet cells force scenario states into style resolution', (
@@ -11,19 +11,19 @@ void main() {
     const hoverColor = Color(0xFF2196F3);
     final resolvedColors = <String, Color?>{};
 
-    final specimen = Specimen(
+    final sheet = ComponentSheet(
       id: 'box',
-      scenarios: const [Scenarios.base, Scenarios.hovered],
+      scenarios: const [SheetScenarios.base, SheetScenarios.hovered],
       rows: [
-        SpecimenRow('base', (context, sim) {
-          final spec = sim.resolve(
+        SheetRow('base', (context, cell) {
+          final spec = cell.resolve(
             context,
             BoxStyler()
                 .color(baseColor)
                 .onHovered(BoxStyler().color(hoverColor)),
           );
           final decoration = spec.spec.decoration as BoxDecoration?;
-          resolvedColors[sim.scenario.id] = decoration?.color;
+          resolvedColors[cell.scenario.id] = decoration?.color;
 
           return const SizedBox(width: 10, height: 10);
         }),
@@ -33,7 +33,7 @@ void main() {
     await tester.pumpWidget(
       Directionality(
         textDirection: TextDirection.ltr,
-        child: SpecimenSheet(specimen: specimen),
+        child: SheetView(sheet: sheet),
       ),
     );
 

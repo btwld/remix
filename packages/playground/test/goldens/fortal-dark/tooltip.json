@@ -1,5 +1,5 @@
 {
-  "schema": "mix_specimen/sheet/v1",
+  "schema": "mix_sheets/sheet/v1",
   "component": "tooltip",
   "componentLabel": "Tooltip",
   "theme": "fortal-dark",

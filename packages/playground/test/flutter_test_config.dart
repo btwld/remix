@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mix_specimen/golden.dart';
+import 'package:mix_sheets/golden.dart';
 
 Future<void> testExecutable(FutureOr<void> Function() testMain) async {
   TestWidgetsFlutterBinding.ensureInitialized();
-  configureSpecimenGoldenComparator();
-  await loadSpecimenFonts();
+  configureSheetGoldenComparator();
+  await loadSheetFonts();
 
   return testMain();
 }

@@ -1,32 +1,32 @@
-# Remix playground and Fortal specimens
+# Remix playground and Fortal sheets
 
-The default playground route is the live Fortal specimen viewer. It renders
-the production catalog from `lib/specimens/fortal_catalog.dart`; golden tests
+The default playground route is the live Fortal sheet viewer. It renders
+the production catalog from `lib/sheets/fortal_catalog.dart`; golden tests
 import that same catalog, so live and captured sheets cannot drift.
 
 Deep-link a sheet with:
 
 ```text
-/?specimen=button&theme=fortal-dark
+/?sheet=button&theme=fortal-dark
 ```
 
-Invalid IDs are canonicalized to the first declared specimen or theme. Missing
+Invalid IDs are canonicalized to the first declared sheet or theme. Missing
 parameters use those defaults without adding query-string clutter. Existing
 direct previews still take precedence through `--dart-define=COMPONENT=...` or
 `?component=...`.
 
 ## Using another Remix-based design system
 
-Define a production-owned `SpecimenCatalog` under that package's `lib/` tree:
+Define a production-owned `SheetCatalog` under that package's `lib/` tree:
 
-1. Declare its theme wrappers as `SpecimenTheme` values.
+1. Declare its theme wrappers as `SheetTheme` values.
 2. Declare generic row axes and stable IDs for each public component.
 3. Resolve the design system's Mix styles in each cell and pass the resulting
    pre-resolved spec through the component's `styleSpec` parameter.
-4. Launch `SpecimenCatalogViewer(catalog: yourCatalog)`.
-5. Register the same catalog with `registerSpecimenCatalogGoldens` in tests.
+4. Launch `SheetCatalogViewer(catalog: yourCatalog)`.
+5. Register the same catalog with `registerSheetCatalogGoldens` in tests.
 
-No Fortal or Remix catalog knowledge belongs in `mix_specimen`.
+No Fortal or Remix catalog knowledge belongs in `mix_sheets`.
 
 ## AI inspection
 

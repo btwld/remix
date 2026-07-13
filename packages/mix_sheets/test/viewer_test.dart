@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mix_specimen/mix_specimen.dart';
+import 'package:mix_sheets/mix_sheets.dart';
 
-Widget _cell(BuildContext context, SpecimenSim sim) => const Text('cell');
+Widget _cell(BuildContext context, SheetCellContext cell) => const Text('cell');
 
-SpecimenCatalog _catalog() => SpecimenCatalog(
+SheetCatalog _catalog() => SheetCatalog(
   id: 'custom',
   label: 'Custom system',
   themes: [
-    SpecimenTheme(
+    SheetTheme(
       'day',
       label: 'Day',
       background: Colors.white,
       builder: (context, child) => child,
     ),
-    SpecimenTheme(
+    SheetTheme(
       'night',
       label: 'Night',
       brightness: Brightness.dark,
@@ -22,24 +22,24 @@ SpecimenCatalog _catalog() => SpecimenCatalog(
       builder: (context, child) => child,
     ),
   ],
-  specimens: [
-    Specimen(
+  sheets: [
+    ComponentSheet(
       id: 'zeta',
       label: 'Zeta control',
-      scenarios: const [SpecimenScenario('rest', label: 'Resting')],
-      rows: [SpecimenRow('plain', _cell, label: 'Plain row')],
+      scenarios: const [SheetScenario('rest', label: 'Resting')],
+      rows: [SheetRow('plain', _cell, label: 'Plain row')],
     ),
-    Specimen(
+    ComponentSheet(
       id: 'alpha',
       label: 'Alpha control',
-      scenarios: const [SpecimenScenario('rest')],
-      rows: [SpecimenRow('plain', _cell)],
+      scenarios: const [SheetScenario('rest')],
+      rows: [SheetRow('plain', _cell)],
     ),
   ],
 );
 
-/// A cell that pushes an overlay route onto the local [SpecimenOverlayHost]
-/// Navigator, mirroring how the Dialog specimen opens its modal.
+/// A cell that pushes an overlay route onto the local [SheetOverlayHost]
+/// Navigator, mirroring how the Dialog sheet opens its modal.
 class _PushingCell extends StatefulWidget {
   const _PushingCell(this.label);
   final String label;
@@ -70,44 +70,38 @@ class _PushingCellState extends State<_PushingCell> {
   Widget build(BuildContext context) => const SizedBox(width: 40, height: 40);
 }
 
-/// Two specimens whose cells share the `SizedBox > SpecimenOverlayHost` shape,
-/// so their local Navigators reuse the same element across a specimen switch.
-SpecimenCatalog _overlayCatalog() => SpecimenCatalog(
+/// Two sheets whose cells share the `SizedBox > SheetOverlayHost` shape,
+/// so their local Navigators reuse the same element across a sheet switch.
+SheetCatalog _overlayCatalog() => SheetCatalog(
   id: 'overlays',
   themes: [
-    SpecimenTheme(
-      'day',
-      background: Colors.white,
-      builder: (_, child) => child,
-    ),
+    SheetTheme('day', background: Colors.white, builder: (_, child) => child),
   ],
-  specimens: [
-    Specimen(
+  sheets: [
+    ComponentSheet(
       id: 'first',
-      scenarios: const [SpecimenScenario('rest')],
+      scenarios: const [SheetScenario('rest')],
       rows: [
-        SpecimenRow(
+        SheetRow(
           'plain',
-          (context, sim) => const SizedBox(
+          (context, cell) => const SizedBox(
             width: 120,
             height: 80,
-            child: SpecimenOverlayHost(child: _PushingCell('leak-first')),
+            child: SheetOverlayHost(child: _PushingCell('leak-first')),
           ),
         ),
       ],
     ),
-    Specimen(
+    ComponentSheet(
       id: 'second',
-      scenarios: const [SpecimenScenario('rest')],
+      scenarios: const [SheetScenario('rest')],
       rows: [
-        SpecimenRow(
+        SheetRow(
           'plain',
-          (context, sim) => const SizedBox(
+          (context, cell) => const SizedBox(
             width: 120,
             height: 80,
-            child: SpecimenOverlayHost(
-              child: Center(child: Text('second-cell')),
-            ),
+            child: SheetOverlayHost(child: Center(child: Text('second-cell'))),
           ),
         ),
       ],
@@ -117,19 +111,19 @@ SpecimenCatalog _overlayCatalog() => SpecimenCatalog(
 
 void main() {
   test('controller normalizes invalid IDs and keeps declared defaults', () {
-    final controller = SpecimenViewerController(
+    final controller = SheetCatalogController(
       _catalog(),
-      specimenId: 'missing',
+      sheetId: 'missing',
       themeId: 'missing',
     );
     expect(
       controller.selection,
-      const SpecimenViewerSelection(specimenId: 'zeta', themeId: 'day'),
+      const SheetCatalogSelection(sheetId: 'zeta', themeId: 'day'),
     );
-    controller.select(specimenId: 'alpha', themeId: 'night');
+    controller.select(sheetId: 'alpha', themeId: 'night');
     expect(
       controller.selection,
-      const SpecimenViewerSelection(specimenId: 'alpha', themeId: 'night'),
+      const SheetCatalogSelection(sheetId: 'alpha', themeId: 'night'),
     );
   });
 
@@ -137,7 +131,7 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(
-      MaterialApp(home: SpecimenCatalogViewer(catalog: _catalog())),
+      MaterialApp(home: SheetCatalogViewer(catalog: _catalog())),
     );
     expect(find.text('Custom system'), findsOneWidget);
     expect(find.text('1 rows × 1 scenarios = 1 cells'), findsOneWidget);
@@ -157,7 +151,7 @@ void main() {
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
-      MaterialApp(home: SpecimenCatalogViewer(catalog: _catalog())),
+      MaterialApp(home: SheetCatalogViewer(catalog: _catalog())),
     );
     await tester.tap(find.byTooltip('Open navigation menu'));
     await tester.pumpAndSettle();
@@ -167,12 +161,12 @@ void main() {
   testWidgets('empty catalog has a useful state', (tester) async {
     await tester.pumpWidget(
       const MaterialApp(
-        home: SpecimenCatalogViewer(
-          catalog: SpecimenCatalog(id: 'empty', themes: [], specimens: []),
+        home: SheetCatalogViewer(
+          catalog: SheetCatalog(id: 'empty', themes: [], sheets: []),
         ),
       ),
     );
-    expect(find.text('No specimens to display'), findsOneWidget);
+    expect(find.text('No sheets to display'), findsOneWidget);
   });
 
   testWidgets('sheet uses human labels and metadata retains IDs', (
@@ -182,28 +176,28 @@ void main() {
     await tester.pumpWidget(
       Directionality(
         textDirection: TextDirection.ltr,
-        child: SpecimenSheet(specimen: catalog.specimens.first),
+        child: SheetView(sheet: catalog.sheets.first),
       ),
     );
     expect(find.text('Resting'), findsOneWidget);
     expect(find.text('Plain row'), findsOneWidget);
   });
 
-  testWidgets('switching specimens disposes stale overlay-host routes', (
+  testWidgets('switching sheets disposes stale overlay-host routes', (
     tester,
   ) async {
     final catalog = _overlayCatalog();
-    final controller = SpecimenViewerController(catalog);
+    final controller = SheetCatalogController(catalog);
     addTearDown(controller.dispose);
     await tester.pumpWidget(
       MaterialApp(
-        home: SpecimenCatalogViewer(catalog: catalog, controller: controller),
+        home: SheetCatalogViewer(catalog: catalog, controller: controller),
       ),
     );
     await tester.pumpAndSettle();
     expect(find.text('leak-first'), findsOneWidget);
 
-    controller.select(specimenId: 'second');
+    controller.select(sheetId: 'second');
     await tester.pumpAndSettle();
     expect(find.text('second-cell'), findsOneWidget);
     expect(find.text('leak-first'), findsNothing);
