@@ -38,6 +38,83 @@ SpecimenCatalog _catalog() => SpecimenCatalog(
   ],
 );
 
+/// A cell that pushes an overlay route onto the local [SpecimenOverlayHost]
+/// Navigator, mirroring how the Dialog specimen opens its modal.
+class _PushingCell extends StatefulWidget {
+  const _PushingCell(this.label);
+  final String label;
+
+  @override
+  State<_PushingCell> createState() => _PushingCellState();
+}
+
+class _PushingCellState extends State<_PushingCell> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      Navigator.of(context).push(
+        PageRouteBuilder<void>(
+          opaque: false,
+          transitionDuration: Duration.zero,
+          reverseTransitionDuration: Duration.zero,
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              Center(child: Text(widget.label)),
+        ),
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => const SizedBox(width: 40, height: 40);
+}
+
+/// Two specimens whose cells share the `SizedBox > SpecimenOverlayHost` shape,
+/// so their local Navigators reuse the same element across a specimen switch.
+SpecimenCatalog _overlayCatalog() => SpecimenCatalog(
+  id: 'overlays',
+  themes: [
+    SpecimenTheme(
+      'day',
+      background: Colors.white,
+      builder: (_, child) => child,
+    ),
+  ],
+  specimens: [
+    Specimen(
+      id: 'first',
+      scenarios: const [SpecimenScenario('rest')],
+      rows: [
+        SpecimenRow(
+          'plain',
+          (context, sim) => const SizedBox(
+            width: 120,
+            height: 80,
+            child: SpecimenOverlayHost(child: _PushingCell('leak-first')),
+          ),
+        ),
+      ],
+    ),
+    Specimen(
+      id: 'second',
+      scenarios: const [SpecimenScenario('rest')],
+      rows: [
+        SpecimenRow(
+          'plain',
+          (context, sim) => const SizedBox(
+            width: 120,
+            height: 80,
+            child: SpecimenOverlayHost(
+              child: Center(child: Text('second-cell')),
+            ),
+          ),
+        ),
+      ],
+    ),
+  ],
+);
+
 void main() {
   test('controller normalizes invalid IDs and keeps declared defaults', () {
     final controller = SpecimenViewerController(
@@ -110,5 +187,25 @@ void main() {
     );
     expect(find.text('Resting'), findsOneWidget);
     expect(find.text('Plain row'), findsOneWidget);
+  });
+
+  testWidgets('switching specimens disposes stale overlay-host routes', (
+    tester,
+  ) async {
+    final catalog = _overlayCatalog();
+    final controller = SpecimenViewerController(catalog);
+    addTearDown(controller.dispose);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: SpecimenCatalogViewer(catalog: catalog, controller: controller),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('leak-first'), findsOneWidget);
+
+    controller.select(specimenId: 'second');
+    await tester.pumpAndSettle();
+    expect(find.text('second-cell'), findsOneWidget);
+    expect(find.text('leak-first'), findsNothing);
   });
 }

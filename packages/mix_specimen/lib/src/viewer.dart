@@ -167,6 +167,13 @@ class _SpecimenCatalogViewerState extends State<SpecimenCatalogViewer> {
                                 padding: const EdgeInsets.all(32),
                                 child: IgnorePointer(
                                   child: SpecimenSheet(
+                                    // Key by specimen id so switching specimens
+                                    // rebuilds a fresh sheet subtree. Overlay
+                                    // cells host a local Navigator whose routes
+                                    // (incl. imperatively pushed dialogs) would
+                                    // otherwise survive element reuse and leak
+                                    // into the next specimen's cells.
+                                    key: ValueKey(specimen.id),
                                     specimen: specimen,
                                     title: specimen.label ?? specimen.id,
                                     labelColor:
