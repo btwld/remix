@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mix_sheets/mix_sheets.dart';
 
 import 'fortal_catalog.dart';
+import 'fortal_catalog_viewer.dart';
 
 /// Hosts the Fortal catalog viewer with URL-bound selection.
 ///
@@ -98,7 +99,7 @@ class SheetRouterDelegate extends RouterDelegate<Uri>
     pages: [
       MaterialPage(
         key: const ValueKey('fortal-viewer'),
-        child: SheetCatalogViewer(catalog: catalog, controller: controller),
+        child: FortalCatalogViewer(catalog: catalog, controller: controller),
       ),
     ],
   );
