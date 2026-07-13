@@ -66,7 +66,10 @@ final class RemixMenuItem<T> extends RemixMenuItemData<T> {
     this.closeOnActivate = true,
     this.semanticLabel,
     this.style = const RemixMenuItemStyle.create(),
+    this.styleSpec,
   });
+
+  final RemixMenuItemSpec? styleSpec;
 }
 
 /// Data class representing a menu divider.
@@ -128,6 +131,7 @@ class RemixMenu<T> extends StatefulWidget {
     this.triggerFocusNode,
     this.positioning = const OverlayPositionConfig(),
     this.style = const RemixMenuStyle.create(),
+    this.styleSpec,
   });
 
   /// The trigger data that defines the menu's button.
@@ -175,6 +179,7 @@ class RemixMenu<T> extends StatefulWidget {
 
   /// The style configuration for the menu.
   final RemixMenuStyle style;
+  final RemixMenuSpec? styleSpec;
 
   static final styleFrom = RemixMenuStyle.new;
 
@@ -212,8 +217,9 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
     return NakedMenu<T>(
       // Render items list with direct spec passing
       overlayBuilder: (context, info) {
-        return StyleBuilder(
+        return RemixStyleBuilder(
           style: _buildStyle(),
+          styleSpec: widget.styleSpec,
           builder: (context, spec) {
             return ColumnBox(
               styleSpec: spec.overlay,
@@ -244,8 +250,9 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
       positioning: widget.positioning,
       // Render trigger from RemixMenuTrigger data
       builder: (context, state, _) {
-        return StyleBuilder(
+        return RemixStyleBuilder(
           style: _buildStyle(),
+          styleSpec: widget.styleSpec,
           controller: NakedMenuState.controllerOf(context),
           builder: (context, spec) {
             // Render trigger from data (label with optional leading icon)
@@ -291,8 +298,9 @@ class _RemixMenuItemWidget<T> extends StatelessWidget {
       closeOnActivate: data.closeOnActivate,
       builder: (context, state, _) {
         // Render item with label and icons
-        return StyleBuilder(
+        return RemixStyleBuilder(
           style: data.style,
+          styleSpec: data.styleSpec,
           controller: NakedState.controllerOf(context),
           builder: (context, spec) {
             return FlexBox(

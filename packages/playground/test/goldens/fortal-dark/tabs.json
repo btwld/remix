@@ -1,0 +1,58 @@
+{
+  "schema": "mix_specimen/sheet/v1",
+  "component": "tabs",
+  "componentLabel": "Tabs",
+  "theme": "fortal-dark",
+  "themeLabel": "Dark",
+  "brightness": "dark",
+  "file": "tabs.png",
+  "rowAxes": [],
+  "rows": [
+    {
+      "id": "default",
+      "values": {}
+    }
+  ],
+  "columns": [
+    {
+      "id": "default",
+      "states": [],
+      "props": {}
+    },
+    {
+      "id": "hovered",
+      "states": [
+        "hovered"
+      ],
+      "props": {}
+    },
+    {
+      "id": "pressed",
+      "states": [
+        "pressed"
+      ],
+      "props": {}
+    },
+    {
+      "id": "focused",
+      "states": [
+        "focused"
+      ],
+      "props": {}
+    },
+    {
+      "id": "selected",
+      "states": [
+        "selected"
+      ],
+      "props": {}
+    },
+    {
+      "id": "disabled",
+      "states": [
+        "disabled"
+      ],
+      "props": {}
+    }
+  ]
+}

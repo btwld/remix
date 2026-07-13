@@ -60,7 +60,18 @@ Specimen(
   states that are component properties rather than widget states
   (`loading`, `indeterminate`, ...).
 - **Themes** (`SpecimenTheme`) are a sheet-level axis: one image per theme.
-  A live gallery can render the same list as a switcher.
+  `SpecimenCatalogViewer` renders the same list as a switcher.
+
+## Live viewer
+
+`SpecimenCatalogViewer` accepts exactly one catalog. Its controller normalizes
+missing or invalid IDs to the first caller-declared specimen and theme, while
+preserving declaration order for navigation and search. The selected theme is
+applied only inside the non-interactive, two-axis scrolling canvas.
+
+Use `SpecimenOverlayHost` around bounded overlay cells so real component
+overlays use a local Navigator/Overlay and remain inside both the live sheet
+and golden repaint boundary.
 
 ## Generating snapshots
 
@@ -102,17 +113,17 @@ Future<void> testExecutable(FutureOr<void> Function() testMain) async {
 
 ## AI-agent workflow
 
-1. Run `flutter test --update-goldens`.
-2. `git status` / `git diff --stat` — only changed sheets need review.
-3. Read the changed PNGs; use the JSON sidecar to interpret the grid
-   (row/column order, which states each column forces).
+1. Read `catalog.json` to find component/theme artifacts.
+2. Read the selected JSON sidecar to interpret stable IDs, labels, axes,
+   scenarios, states, and props.
+3. Open the referenced PNG at original resolution.
+4. Use a deep-linked live viewer only as supplemental browser evidence.
 
 ## Current limitations
 
-- Components must honor `styleSpec` (render a pre-resolved spec). Remix
-  button/checkbox/switch do; components that ignore it can't be forced.
+- Components must honor `styleSpec` and render a pre-resolved spec.
 - Widget defaults baked privately into a component's build (e.g. switch
   thumb alignment) must be mirrored in the specimen's style, since
   `styleSpec` bypasses them.
-- Overlay composites (select popover, tooltip) need a forced-states scope
-  in `naked_ui` to specimen their open states; planned upstream.
+- Overlay composites need deterministic public controller/initial-open APIs
+  and must be hosted inside a bounded `SpecimenOverlayHost`.

@@ -112,8 +112,9 @@ class RemixRadio<T> extends StatelessWidget {
       autofocus: autofocus,
       toggleable: toggleable,
       builder: (context, _, __) {
-        return StyleBuilder(
+        return RemixStyleBuilder(
           style: style,
+          styleSpec: styleSpec,
           controller: NakedState.controllerOf(context),
           builder: (context, spec) {
             return Box(

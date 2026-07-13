@@ -12,6 +12,7 @@ typedef SpecimenThemeWrapper =
 class SpecimenTheme {
   const SpecimenTheme(
     this.id, {
+    this.label,
     this.brightness = Brightness.light,
     required this.background,
     required this.builder,
@@ -19,6 +20,7 @@ class SpecimenTheme {
 
   /// Identifier used in golden file paths and the manifest.
   final String id;
+  final String? label;
 
   /// Applied to the test window's platform brightness so context variants
   /// like `onDark` resolve correctly.

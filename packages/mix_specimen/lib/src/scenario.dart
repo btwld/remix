@@ -10,12 +10,14 @@ import 'package:flutter/widgets.dart';
 class SpecimenScenario {
   const SpecimenScenario(
     this.id, {
+    this.label,
     this.states = const {},
     this.props = const {},
   });
 
   /// Identifier shown as the column label and recorded in the manifest.
   final String id;
+  final String? label;
 
   /// Widget states forced while resolving styles for this scenario.
   final Set<WidgetState> states;

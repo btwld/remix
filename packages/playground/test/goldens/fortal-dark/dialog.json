@@ -1,0 +1,23 @@
+{
+  "schema": "mix_specimen/sheet/v1",
+  "component": "dialog",
+  "componentLabel": "Dialog",
+  "theme": "fortal-dark",
+  "themeLabel": "Dark",
+  "brightness": "dark",
+  "file": "dialog.png",
+  "rowAxes": [],
+  "rows": [
+    {
+      "id": "default",
+      "values": {}
+    }
+  ],
+  "columns": [
+    {
+      "id": "modal",
+      "states": [],
+      "props": {}
+    }
+  ]
+}

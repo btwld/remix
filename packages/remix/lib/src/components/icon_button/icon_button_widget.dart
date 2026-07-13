@@ -132,8 +132,9 @@ class RemixIconButton extends StatelessWidget {
       autofocus: autofocus,
       semanticLabel: semanticLabel,
       builder: (context, states, child) {
-        return StyleBuilder(
+        return RemixStyleBuilder(
           style: style,
+          styleSpec: styleSpec,
           controller: NakedState.controllerOf(context),
           builder: (context, spec) {
             Widget? iconWidget;

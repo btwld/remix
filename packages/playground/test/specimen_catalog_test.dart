@@ -1,5 +1,5 @@
 import 'package:mix_specimen/golden.dart';
 
-import 'support/fortal_catalog.dart';
+import 'package:playground/specimens/fortal_catalog.dart';
 
 void main() => registerSpecimenCatalogGoldens(fortalCatalog);

@@ -91,8 +91,9 @@ class RemixToggle extends StatelessWidget {
       autofocus: autofocus,
       semanticLabel: semanticLabel,
       builder: (context, state, _) {
-        return StyleBuilder(
+        return RemixStyleBuilder(
           style: style,
+          styleSpec: styleSpec,
           controller: NakedState.controllerOf(context),
           builder: (context, spec) {
             return RowBox(

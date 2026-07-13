@@ -8,3 +8,4 @@ export 'src/scenario.dart';
 export 'src/sheet.dart';
 export 'src/specimen.dart';
 export 'src/theme.dart';
+export 'src/viewer.dart';

@@ -1,7 +1,9 @@
 {
   "schema": "mix_specimen/sheet/v1",
   "component": "button",
+  "componentLabel": "Button",
   "theme": "fortal-light",
+  "themeLabel": "Light",
   "brightness": "light",
   "file": "button.png",
   "rowAxes": [

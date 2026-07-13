@@ -675,6 +675,24 @@ void main() {
         expect(find.text('Option A'), findsNothing);
       });
     });
+
+    testWidgets('initiallyOpen renders the real option overlay', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(
+        RemixSelect<String>(
+          initiallyOpen: true,
+          trigger: const RemixSelectTrigger(placeholder: 'Choose'),
+          items: const [RemixSelectItem(value: 'a', label: 'Initial option')],
+          onChanged: (_) {},
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 200));
+
+      expect(find.text('Initial option'), findsOneWidget);
+      expect(find.byType(RawMenuAnchor), findsOneWidget);
+    });
   });
 }
 

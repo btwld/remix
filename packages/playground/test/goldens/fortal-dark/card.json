@@ -1,0 +1,145 @@
+{
+  "schema": "mix_specimen/sheet/v1",
+  "component": "card",
+  "componentLabel": "Card",
+  "theme": "fortal-dark",
+  "themeLabel": "Dark",
+  "brightness": "dark",
+  "file": "card.png",
+  "rowAxes": [
+    {
+      "id": "variant",
+      "label": "Variant"
+    },
+    {
+      "id": "size",
+      "label": "Size"
+    }
+  ],
+  "rows": [
+    {
+      "id": "surface-size1",
+      "values": {
+        "variant": {
+          "id": "surface",
+          "label": "Surface"
+        },
+        "size": {
+          "id": "size1",
+          "label": "Size 1"
+        }
+      }
+    },
+    {
+      "id": "surface-size2",
+      "values": {
+        "variant": {
+          "id": "surface",
+          "label": "Surface"
+        },
+        "size": {
+          "id": "size2",
+          "label": "Size 2"
+        }
+      }
+    },
+    {
+      "id": "surface-size3",
+      "values": {
+        "variant": {
+          "id": "surface",
+          "label": "Surface"
+        },
+        "size": {
+          "id": "size3",
+          "label": "Size 3"
+        }
+      }
+    },
+    {
+      "id": "classic-size1",
+      "values": {
+        "variant": {
+          "id": "classic",
+          "label": "Classic"
+        },
+        "size": {
+          "id": "size1",
+          "label": "Size 1"
+        }
+      }
+    },
+    {
+      "id": "classic-size2",
+      "values": {
+        "variant": {
+          "id": "classic",
+          "label": "Classic"
+        },
+        "size": {
+          "id": "size2",
+          "label": "Size 2"
+        }
+      }
+    },
+    {
+      "id": "classic-size3",
+      "values": {
+        "variant": {
+          "id": "classic",
+          "label": "Classic"
+        },
+        "size": {
+          "id": "size3",
+          "label": "Size 3"
+        }
+      }
+    },
+    {
+      "id": "ghost-size1",
+      "values": {
+        "variant": {
+          "id": "ghost",
+          "label": "Ghost"
+        },
+        "size": {
+          "id": "size1",
+          "label": "Size 1"
+        }
+      }
+    },
+    {
+      "id": "ghost-size2",
+      "values": {
+        "variant": {
+          "id": "ghost",
+          "label": "Ghost"
+        },
+        "size": {
+          "id": "size2",
+          "label": "Size 2"
+        }
+      }
+    },
+    {
+      "id": "ghost-size3",
+      "values": {
+        "variant": {
+          "id": "ghost",
+          "label": "Ghost"
+        },
+        "size": {
+          "id": "size3",
+          "label": "Size 3"
+        }
+      }
+    }
+  ],
+  "columns": [
+    {
+      "id": "default-composed",
+      "states": [],
+      "props": {}
+    }
+  ]
+}

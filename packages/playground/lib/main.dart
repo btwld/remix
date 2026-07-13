@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart' show SemanticsBinding;
 
 import 'registry/component_registry.dart';
-import 'routes/playground_home.dart';
+import 'specimens/fortal_viewer.dart';
 
 void main() {
   // Ensure bindings are initialized before enabling semantics
@@ -27,7 +27,7 @@ class _App extends StatelessWidget {
     return MaterialApp(
       home: builder != null
           ? Scaffold(body: Builder(builder: builder))
-          : const PlaygroundHome(),
+          : const FortalViewer(),
       title: 'Remix Playground',
       theme: ThemeData(useMaterial3: true),
       debugShowCheckedModeBanner: false,

@@ -477,5 +477,21 @@ void main() {
         expect(find.text('Success'), findsOneWidget);
       });
     });
+
+    testWidgets('initiallyOpen renders the real anchored overlay', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(
+        const RemixTooltip(
+          initiallyOpen: true,
+          tooltipChild: Text('Initially visible tooltip'),
+          child: Text('Trigger'),
+        ),
+      );
+      await tester.pump();
+
+      expect(find.text('Initially visible tooltip'), findsOneWidget);
+      expect(find.byType(RawMenuAnchor), findsOneWidget);
+    });
   });
 }

@@ -1,7 +1,9 @@
 {
   "schema": "mix_specimen/sheet/v1",
   "component": "switch",
+  "componentLabel": "Switch",
   "theme": "fortal-light",
+  "themeLabel": "Light",
   "brightness": "light",
   "file": "switch.png",
   "rowAxes": [
@@ -137,6 +139,7 @@
     },
     {
       "id": "selected-hovered",
+      "label": "Selected + hovered",
       "states": [
         "selected",
         "hovered"

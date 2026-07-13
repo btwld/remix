@@ -1,0 +1,180 @@
+{
+  "schema": "mix_specimen/sheet/v1",
+  "component": "select",
+  "componentLabel": "Select",
+  "theme": "fortal-dark",
+  "themeLabel": "Dark",
+  "brightness": "dark",
+  "file": "select.png",
+  "rowAxes": [
+    {
+      "id": "variant",
+      "label": "Variant"
+    },
+    {
+      "id": "size",
+      "label": "Size"
+    }
+  ],
+  "rows": [
+    {
+      "id": "surface-size1",
+      "values": {
+        "variant": {
+          "id": "surface",
+          "label": "Surface"
+        },
+        "size": {
+          "id": "size1",
+          "label": "Size 1"
+        }
+      }
+    },
+    {
+      "id": "surface-size2",
+      "values": {
+        "variant": {
+          "id": "surface",
+          "label": "Surface"
+        },
+        "size": {
+          "id": "size2",
+          "label": "Size 2"
+        }
+      }
+    },
+    {
+      "id": "surface-size3",
+      "values": {
+        "variant": {
+          "id": "surface",
+          "label": "Surface"
+        },
+        "size": {
+          "id": "size3",
+          "label": "Size 3"
+        }
+      }
+    },
+    {
+      "id": "soft-size1",
+      "values": {
+        "variant": {
+          "id": "soft",
+          "label": "Soft"
+        },
+        "size": {
+          "id": "size1",
+          "label": "Size 1"
+        }
+      }
+    },
+    {
+      "id": "soft-size2",
+      "values": {
+        "variant": {
+          "id": "soft",
+          "label": "Soft"
+        },
+        "size": {
+          "id": "size2",
+          "label": "Size 2"
+        }
+      }
+    },
+    {
+      "id": "soft-size3",
+      "values": {
+        "variant": {
+          "id": "soft",
+          "label": "Soft"
+        },
+        "size": {
+          "id": "size3",
+          "label": "Size 3"
+        }
+      }
+    },
+    {
+      "id": "ghost-size1",
+      "values": {
+        "variant": {
+          "id": "ghost",
+          "label": "Ghost"
+        },
+        "size": {
+          "id": "size1",
+          "label": "Size 1"
+        }
+      }
+    },
+    {
+      "id": "ghost-size2",
+      "values": {
+        "variant": {
+          "id": "ghost",
+          "label": "Ghost"
+        },
+        "size": {
+          "id": "size2",
+          "label": "Size 2"
+        }
+      }
+    },
+    {
+      "id": "ghost-size3",
+      "values": {
+        "variant": {
+          "id": "ghost",
+          "label": "Ghost"
+        },
+        "size": {
+          "id": "size3",
+          "label": "Size 3"
+        }
+      }
+    }
+  ],
+  "columns": [
+    {
+      "id": "placeholder",
+      "states": [],
+      "props": {}
+    },
+    {
+      "id": "selected-value",
+      "states": [],
+      "props": {
+        "selected": true
+      }
+    },
+    {
+      "id": "hovered",
+      "states": [
+        "hovered"
+      ],
+      "props": {}
+    },
+    {
+      "id": "focused",
+      "states": [
+        "focused"
+      ],
+      "props": {}
+    },
+    {
+      "id": "disabled",
+      "states": [
+        "disabled"
+      ],
+      "props": {}
+    },
+    {
+      "id": "open",
+      "states": [],
+      "props": {
+        "open": true
+      }
+    }
+  ]
+}

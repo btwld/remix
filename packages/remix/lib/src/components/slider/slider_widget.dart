@@ -100,8 +100,9 @@ class RemixSlider extends StatelessWidget {
       direction: .horizontal,
       divisions: snapDivisions,
       builder: (context, state, _) {
-        return StyleBuilder(
+        return RemixStyleBuilder(
           style: style,
+          styleSpec: styleSpec,
           controller: NakedState.controllerOf(context),
           builder: (context, spec) {
             final thumbSpec = spec.thumb;

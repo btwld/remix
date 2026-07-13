@@ -44,8 +44,11 @@ class RemixSelectItem<T> {
     required this.label,
     this.enabled = true,
     this.style = const RemixSelectMenuItemStyle.create(),
+    this.styleSpec,
     this.semanticLabel,
   });
+
+  final RemixSelectMenuItemSpec? styleSpec;
 }
 
 // ============================================================================
@@ -87,6 +90,9 @@ class RemixSelect<T> extends StatefulWidget {
     this.closeOnSelect = true,
     this.focusNode,
     this.style = const RemixSelectStyle.create(),
+    this.styleSpec,
+    this.initiallyOpen = false,
+    this.controller,
   });
 
   /// The trigger data that defines the select's button.
@@ -127,6 +133,13 @@ class RemixSelect<T> extends StatefulWidget {
 
   /// The style configuration for the select.
   final RemixSelectStyle style;
+  final RemixSelectSpec? styleSpec;
+
+  /// Opens the real select overlay after the first layout pass.
+  final bool initiallyOpen;
+
+  /// Optional controller for deterministic programmatic overlay control.
+  final MenuController? controller;
 
   static final styleFrom = RemixSelectStyle.new;
 
@@ -137,6 +150,7 @@ class RemixSelect<T> extends StatefulWidget {
 class _RemixSelectState<T> extends State<RemixSelect<T>>
     with SingleTickerProviderStateMixin {
   late final AnimationController animationController;
+  late final MenuController menuController;
 
   @override
   void initState() {
@@ -146,6 +160,12 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
       reverseDuration: const Duration(milliseconds: 150),
       vsync: this,
     );
+    menuController = widget.controller ?? MenuController();
+    if (widget.initiallyOpen && widget.enabled && widget.onChanged != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) menuController.open();
+      });
+    }
   }
 
   RemixSelectStyle _buildStyle() {
@@ -172,7 +192,14 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
       curve: Curves.easeInOut,
       menuContainer: menuContainerSpec,
       children: widget.items
-          .map((item) => _RemixSelectItemWidget(data: item))
+          .map(
+            (item) => _RemixSelectItemWidget(
+              data: item,
+              selected: item.value == widget.selectedValue,
+              closeOnSelect: widget.closeOnSelect,
+              useMenu: widget.initiallyOpen,
+            ),
+          )
           .toList(),
     );
   }
@@ -206,19 +233,59 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
 
   @override
   Widget build(BuildContext context) {
-    return NakedSelect<T>(
+    if (!widget.initiallyOpen) {
+      return NakedSelect<T>(
+        overlayBuilder: (context, info) {
+          return RemixStyleBuilder<RemixSelectSpec>(
+            style: _buildStyle(),
+            styleSpec: widget.styleSpec,
+            builder: (context, spec) => _buildOverlayMenu(spec),
+          );
+        },
+        value: widget.selectedValue,
+        onChanged: widget.onChanged,
+        closeOnSelect: widget.closeOnSelect,
+        enabled: widget.enabled,
+        triggerFocusNode: widget.focusNode,
+        semanticLabel: widget.semanticLabel,
+        positioning: OverlayPositionConfig(
+          targetAnchor: widget.targetAnchor ?? .bottomCenter,
+          followerAnchor: widget.followerAnchor ?? .topCenter,
+        ),
+        onOpen: () {
+          animationController.forward();
+          widget.onOpen?.call();
+        },
+        onClose: () {
+          animationController.reverse();
+          widget.onClose?.call();
+        },
+        builder: (context, state, _) {
+          return RemixStyleBuilder<RemixSelectSpec>(
+            style: _buildStyle(),
+            styleSpec: widget.styleSpec,
+            controller: NakedState.controllerOf(context),
+            builder: (context, spec) => _RemixSelectTriggerWidget(
+              trigger: widget.trigger,
+              displayLabel: _getDisplayLabel(),
+              isOpen: state.isOpen,
+              styleSpec: spec.trigger,
+            ),
+          );
+        },
+      );
+    }
+    final select = NakedMenu<T>(
+      controller: menuController,
       overlayBuilder: (context, info) {
-        return StyleBuilder<RemixSelectSpec>(
+        return RemixStyleBuilder<RemixSelectSpec>(
           style: _buildStyle(),
+          styleSpec: widget.styleSpec,
           builder: (context, spec) => _buildOverlayMenu(spec),
         );
       },
-      value: widget.selectedValue,
-      onChanged: widget.onChanged,
-      closeOnSelect: widget.closeOnSelect,
-      enabled: widget.enabled,
+      onSelected: widget.onChanged,
       triggerFocusNode: widget.focusNode,
-      semanticLabel: widget.semanticLabel,
       positioning: OverlayPositionConfig(
         targetAnchor: widget.targetAnchor ?? .bottomCenter,
         followerAnchor: widget.followerAnchor ?? .topCenter,
@@ -232,8 +299,9 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
         widget.onClose?.call();
       },
       builder: (context, state, _) {
-        return StyleBuilder<RemixSelectSpec>(
+        return RemixStyleBuilder<RemixSelectSpec>(
           style: _buildStyle(),
+          styleSpec: widget.styleSpec,
           controller: NakedState.controllerOf(context),
           builder: (context, spec) {
             final triggerSpec = spec.trigger;
@@ -247,6 +315,14 @@ class _RemixSelectState<T> extends State<RemixSelect<T>>
           },
         );
       },
+    );
+    return Semantics(
+      label: widget.semanticLabel,
+      enabled: widget.enabled && widget.onChanged != null,
+      child: IgnorePointer(
+        ignoring: !widget.enabled || widget.onChanged == null,
+        child: select,
+      ),
     );
   }
 }
@@ -365,39 +441,68 @@ class _RemixSelectTriggerWidget extends StatelessWidget {
 
 /// Internal widget for rendering a selectable item.
 class _RemixSelectItemWidget<T> extends StatelessWidget {
-  const _RemixSelectItemWidget({required this.data});
+  const _RemixSelectItemWidget({
+    required this.data,
+    required this.selected,
+    required this.closeOnSelect,
+    required this.useMenu,
+  });
 
   final RemixSelectItem<T> data;
+  final bool selected;
+  final bool closeOnSelect;
+  final bool useMenu;
 
   @override
   Widget build(BuildContext context) {
+    Widget buildItem(WidgetStatesController controller) => RemixStyleBuilder(
+      style: data.style,
+      styleSpec: data.styleSpec,
+      controller: controller,
+      builder: (context, spec) {
+        return StyleSpecBuilder<RemixSelectMenuItemSpec>(
+          styleSpec: StyleSpec(spec: spec),
+          builder: (context, spec) {
+            return RowBox(
+              styleSpec: spec.container,
+              children: [
+                // ignore: avoid-flexible-outside-flex
+                Expanded(child: StyledText(data.label, styleSpec: spec.text)),
+                if (selected)
+                  StyledIcon(icon: Icons.check, styleSpec: spec.icon),
+              ],
+            );
+          },
+        );
+      },
+    );
+
+    if (useMenu) {
+      return NakedMenu.Item<T>(
+        enabled: data.enabled,
+        semanticLabel: data.semanticLabel ?? data.label,
+        value: data.value,
+        closeOnActivate: closeOnSelect,
+        builder: (context, states, _) {
+          final controller = WidgetStatesController({
+            ...NakedState.controllerOf(context).value,
+            if (selected) WidgetState.selected,
+          });
+          return buildItem(controller);
+        },
+      );
+    }
+
     return NakedSelect.Option<T>(
       enabled: data.enabled,
       semanticLabel: data.semanticLabel ?? data.label,
       value: data.value,
       builder: (context, states, _) {
-        return StyleBuilder(
-          style: data.style,
-          controller: NakedState.controllerOf(context),
-          builder: (context, spec) {
-            return StyleSpecBuilder<RemixSelectMenuItemSpec>(
-              styleSpec: StyleSpec(spec: spec),
-              builder: (context, spec) {
-                return RowBox(
-                  styleSpec: spec.container,
-                  children: [
-                    // ignore: avoid-flexible-outside-flex
-                    Expanded(
-                      child: StyledText(data.label, styleSpec: spec.text),
-                    ),
-                    if (states.isSelected)
-                      StyledIcon(icon: Icons.check, styleSpec: spec.icon),
-                  ],
-                );
-              },
-            );
-          },
-        );
+        final controller = WidgetStatesController({
+          ...NakedState.controllerOf(context).value,
+          if (selected) WidgetState.selected,
+        });
+        return buildItem(controller);
       },
     );
   }

@@ -1,0 +1,58 @@
+{
+  "schema": "mix_specimen/sheet/v1",
+  "component": "accordion",
+  "componentLabel": "Accordion",
+  "theme": "fortal-dark",
+  "themeLabel": "Dark",
+  "brightness": "dark",
+  "file": "accordion.png",
+  "rowAxes": [],
+  "rows": [
+    {
+      "id": "default",
+      "values": {}
+    }
+  ],
+  "columns": [
+    {
+      "id": "collapsed",
+      "states": [],
+      "props": {}
+    },
+    {
+      "id": "expanded",
+      "states": [],
+      "props": {
+        "expanded": true
+      }
+    },
+    {
+      "id": "hovered",
+      "states": [
+        "hovered"
+      ],
+      "props": {}
+    },
+    {
+      "id": "pressed",
+      "states": [
+        "pressed"
+      ],
+      "props": {}
+    },
+    {
+      "id": "focused",
+      "states": [
+        "focused"
+      ],
+      "props": {}
+    },
+    {
+      "id": "disabled",
+      "states": [
+        "disabled"
+      ],
+      "props": {}
+    }
+  ]
+}

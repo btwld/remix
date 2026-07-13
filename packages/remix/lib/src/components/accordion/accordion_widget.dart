@@ -81,6 +81,7 @@ class RemixAccordion<T> extends StatelessWidget {
     this.onPressChange,
     this.semanticLabel,
     this.style = const RemixAccordionStyle.create(),
+    this.styleSpec,
     this.transitionBuilder = defaultAccordionTransitionBuilder,
   }) : assert(
          title != null || builder != null,
@@ -148,6 +149,7 @@ class RemixAccordion<T> extends StatelessWidget {
 
   /// The style configuration for the accordion item.
   final RemixAccordionStyle style;
+  final RemixAccordionSpec? styleSpec;
 
   /// The transition builder for the accordion item.
   final Widget Function(Widget, Animation<double>) transitionBuilder;
@@ -158,8 +160,9 @@ class RemixAccordion<T> extends StatelessWidget {
     BuildContext context,
     NakedAccordionItemState<T> state,
   ) {
-    return StyleBuilder(
+    return RemixStyleBuilder(
       style: style,
+      styleSpec: styleSpec,
       controller: NakedAccordionItemState.controllerOf(context),
       builder: (context, spec) {
         return FlexBox(
@@ -188,8 +191,9 @@ class RemixAccordion<T> extends StatelessWidget {
         final scope = NakedAccordionScope.of<T>(context);
         final isExpanded = scope.controller.contains(value);
         final child = isExpanded
-            ? StyleBuilder(
+            ? RemixStyleBuilder(
                 style: style,
+                styleSpec: styleSpec,
                 builder: (context, spec) {
                   return Box(styleSpec: spec.content, child: panel);
                 },

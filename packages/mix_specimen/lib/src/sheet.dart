@@ -65,7 +65,7 @@ class SpecimenSheet extends StatelessWidget {
                   Padding(
                     padding: cellPadding,
                     child: Text(
-                      scenario.id,
+                      scenario.label ?? scenario.id,
                       style: _labelStyle,
                       textAlign: TextAlign.center,
                     ),
@@ -113,7 +113,9 @@ class SpecimenSheet extends StatelessWidget {
 
 List<({SpecimenRow? row, String label})> _tableRows(Specimen specimen) {
   if (specimen.rowAxes.isEmpty) {
-    return [for (final row in specimen.rows) (row: row, label: row.id)];
+    return [
+      for (final row in specimen.rows) (row: row, label: row.label ?? row.id),
+    ];
   }
 
   final result = <({SpecimenRow? row, String label})>[];

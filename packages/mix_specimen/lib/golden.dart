@@ -175,6 +175,9 @@ Future<void> expectSpecimenGolden(
 
   // Fixed pump instead of pumpAndSettle: looping animations (spinners) never
   // settle, and a fixed offset keeps their captured frame deterministic.
+  // The zero-duration pump also flushes deterministic post-frame overlay opens
+  // after nested local Navigators have attached their anchors.
+  await tester.pump();
   await tester.pump(const Duration(milliseconds: 200));
 
   final goldenPath = 'goldens/${theme.id}/${specimen.id}.png';
@@ -211,7 +214,9 @@ Map<String, Object?> specimenSheetMetadata(
   return {
     'schema': 'mix_specimen/sheet/v1',
     'component': specimen.id,
+    if (specimen.label != null) 'componentLabel': specimen.label,
     'theme': theme.id,
+    if (theme.label != null) 'themeLabel': theme.label,
     'brightness': theme.brightness.name,
     'file': '${specimen.id}.png',
     'rowAxes': [
@@ -221,6 +226,7 @@ Map<String, Object?> specimenSheetMetadata(
       for (final row in specimen.rows)
         {
           'id': row.id,
+          if (row.label != null) 'label': row.label,
           'values': {
             for (final axis in specimen.rowAxes)
               axis.id: {
@@ -234,6 +240,7 @@ Map<String, Object?> specimenSheetMetadata(
       for (final scenario in specimen.scenarios)
         {
           'id': scenario.id,
+          if (scenario.label != null) 'label': scenario.label,
           'states': [for (final state in scenario.states) state.name],
           'props': scenario.props,
         },
@@ -266,14 +273,20 @@ void _writeCatalogIndex(SpecimenCatalog catalog) {
     const JsonEncoder.withIndent('  ').convert({
       'schema': 'mix_specimen/catalog/v1',
       'id': catalog.id,
+      if (catalog.label != null) 'label': catalog.label,
       'themes': [
         for (final theme in catalog.themes)
-          {'id': theme.id, 'brightness': theme.brightness.name},
+          {
+            'id': theme.id,
+            if (theme.label != null) 'label': theme.label,
+            'brightness': theme.brightness.name,
+          },
       ],
       'specimens': [
         for (final specimen in catalog.specimens)
           {
             'id': specimen.id,
+            if (specimen.label != null) 'label': specimen.label,
             'files': [
               for (final theme in catalog.themes)
                 {

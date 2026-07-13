@@ -1,0 +1,145 @@
+{
+  "schema": "mix_specimen/sheet/v1",
+  "component": "callout",
+  "componentLabel": "Callout",
+  "theme": "fortal-light",
+  "themeLabel": "Light",
+  "brightness": "light",
+  "file": "callout.png",
+  "rowAxes": [
+    {
+      "id": "variant",
+      "label": "Variant"
+    },
+    {
+      "id": "size",
+      "label": "Size"
+    }
+  ],
+  "rows": [
+    {
+      "id": "outline-size1",
+      "values": {
+        "variant": {
+          "id": "outline",
+          "label": "Outline"
+        },
+        "size": {
+          "id": "size1",
+          "label": "Size 1"
+        }
+      }
+    },
+    {
+      "id": "outline-size2",
+      "values": {
+        "variant": {
+          "id": "outline",
+          "label": "Outline"
+        },
+        "size": {
+          "id": "size2",
+          "label": "Size 2"
+        }
+      }
+    },
+    {
+      "id": "outline-size3",
+      "values": {
+        "variant": {
+          "id": "outline",
+          "label": "Outline"
+        },
+        "size": {
+          "id": "size3",
+          "label": "Size 3"
+        }
+      }
+    },
+    {
+      "id": "surface-size1",
+      "values": {
+        "variant": {
+          "id": "surface",
+          "label": "Surface"
+        },
+        "size": {
+          "id": "size1",
+          "label": "Size 1"
+        }
+      }
+    },
+    {
+      "id": "surface-size2",
+      "values": {
+        "variant": {
+          "id": "surface",
+          "label": "Surface"
+        },
+        "size": {
+          "id": "size2",
+          "label": "Size 2"
+        }
+      }
+    },
+    {
+      "id": "surface-size3",
+      "values": {
+        "variant": {
+          "id": "surface",
+          "label": "Surface"
+        },
+        "size": {
+          "id": "size3",
+          "label": "Size 3"
+        }
+      }
+    },
+    {
+      "id": "soft-size1",
+      "values": {
+        "variant": {
+          "id": "soft",
+          "label": "Soft"
+        },
+        "size": {
+          "id": "size1",
+          "label": "Size 1"
+        }
+      }
+    },
+    {
+      "id": "soft-size2",
+      "values": {
+        "variant": {
+          "id": "soft",
+          "label": "Soft"
+        },
+        "size": {
+          "id": "size2",
+          "label": "Size 2"
+        }
+      }
+    },
+    {
+      "id": "soft-size3",
+      "values": {
+        "variant": {
+          "id": "soft",
+          "label": "Soft"
+        },
+        "size": {
+          "id": "size3",
+          "label": "Size 3"
+        }
+      }
+    }
+  ],
+  "columns": [
+    {
+      "id": "default-composed",
+      "states": [],
+      "props": {}
+    }
+  ]
+}

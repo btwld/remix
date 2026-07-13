@@ -319,8 +319,9 @@ class RemixTextField extends StatelessWidget {
           if (error) .error,
         });
 
-        return StyleBuilder(
+        return RemixStyleBuilder(
           style: style,
+          styleSpec: styleSpec,
           controller: controller,
           builder: (context, spec) {
             // Apply text style from spec

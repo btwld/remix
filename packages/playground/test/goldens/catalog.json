@@ -1,19 +1,71 @@
 {
   "schema": "mix_specimen/catalog/v1",
   "id": "fortal",
+  "label": "Fortal",
   "themes": [
     {
       "id": "fortal-light",
+      "label": "Light",
       "brightness": "light"
     },
     {
       "id": "fortal-dark",
+      "label": "Dark",
       "brightness": "dark"
     }
   ],
   "specimens": [
     {
+      "id": "accordion",
+      "label": "Accordion",
+      "files": [
+        {
+          "theme": "fortal-light",
+          "image": "fortal-light/accordion.png",
+          "metadata": "fortal-light/accordion.json"
+        },
+        {
+          "theme": "fortal-dark",
+          "image": "fortal-dark/accordion.png",
+          "metadata": "fortal-dark/accordion.json"
+        }
+      ]
+    },
+    {
+      "id": "avatar",
+      "label": "Avatar",
+      "files": [
+        {
+          "theme": "fortal-light",
+          "image": "fortal-light/avatar.png",
+          "metadata": "fortal-light/avatar.json"
+        },
+        {
+          "theme": "fortal-dark",
+          "image": "fortal-dark/avatar.png",
+          "metadata": "fortal-dark/avatar.json"
+        }
+      ]
+    },
+    {
+      "id": "badge",
+      "label": "Badge",
+      "files": [
+        {
+          "theme": "fortal-light",
+          "image": "fortal-light/badge.png",
+          "metadata": "fortal-light/badge.json"
+        },
+        {
+          "theme": "fortal-dark",
+          "image": "fortal-dark/badge.png",
+          "metadata": "fortal-dark/badge.json"
+        }
+      ]
+    },
+    {
       "id": "button",
+      "label": "Button",
       "files": [
         {
           "theme": "fortal-light",
@@ -28,7 +80,40 @@
       ]
     },
     {
+      "id": "callout",
+      "label": "Callout",
+      "files": [
+        {
+          "theme": "fortal-light",
+          "image": "fortal-light/callout.png",
+          "metadata": "fortal-light/callout.json"
+        },
+        {
+          "theme": "fortal-dark",
+          "image": "fortal-dark/callout.png",
+          "metadata": "fortal-dark/callout.json"
+        }
+      ]
+    },
+    {
+      "id": "card",
+      "label": "Card",
+      "files": [
+        {
+          "theme": "fortal-light",
+          "image": "fortal-light/card.png",
+          "metadata": "fortal-light/card.json"
+        },
+        {
+          "theme": "fortal-dark",
+          "image": "fortal-dark/card.png",
+          "metadata": "fortal-dark/card.json"
+        }
+      ]
+    },
+    {
       "id": "checkbox",
+      "label": "Checkbox",
       "files": [
         {
           "theme": "fortal-light",
@@ -43,7 +128,152 @@
       ]
     },
     {
+      "id": "dialog",
+      "label": "Dialog",
+      "files": [
+        {
+          "theme": "fortal-light",
+          "image": "fortal-light/dialog.png",
+          "metadata": "fortal-light/dialog.json"
+        },
+        {
+          "theme": "fortal-dark",
+          "image": "fortal-dark/dialog.png",
+          "metadata": "fortal-dark/dialog.json"
+        }
+      ]
+    },
+    {
+      "id": "divider",
+      "label": "Divider",
+      "files": [
+        {
+          "theme": "fortal-light",
+          "image": "fortal-light/divider.png",
+          "metadata": "fortal-light/divider.json"
+        },
+        {
+          "theme": "fortal-dark",
+          "image": "fortal-dark/divider.png",
+          "metadata": "fortal-dark/divider.json"
+        }
+      ]
+    },
+    {
+      "id": "icon-button",
+      "label": "Icon Button",
+      "files": [
+        {
+          "theme": "fortal-light",
+          "image": "fortal-light/icon-button.png",
+          "metadata": "fortal-light/icon-button.json"
+        },
+        {
+          "theme": "fortal-dark",
+          "image": "fortal-dark/icon-button.png",
+          "metadata": "fortal-dark/icon-button.json"
+        }
+      ]
+    },
+    {
+      "id": "menu",
+      "label": "Menu",
+      "files": [
+        {
+          "theme": "fortal-light",
+          "image": "fortal-light/menu.png",
+          "metadata": "fortal-light/menu.json"
+        },
+        {
+          "theme": "fortal-dark",
+          "image": "fortal-dark/menu.png",
+          "metadata": "fortal-dark/menu.json"
+        }
+      ]
+    },
+    {
+      "id": "progress",
+      "label": "Progress",
+      "files": [
+        {
+          "theme": "fortal-light",
+          "image": "fortal-light/progress.png",
+          "metadata": "fortal-light/progress.json"
+        },
+        {
+          "theme": "fortal-dark",
+          "image": "fortal-dark/progress.png",
+          "metadata": "fortal-dark/progress.json"
+        }
+      ]
+    },
+    {
+      "id": "radio",
+      "label": "Radio",
+      "files": [
+        {
+          "theme": "fortal-light",
+          "image": "fortal-light/radio.png",
+          "metadata": "fortal-light/radio.json"
+        },
+        {
+          "theme": "fortal-dark",
+          "image": "fortal-dark/radio.png",
+          "metadata": "fortal-dark/radio.json"
+        }
+      ]
+    },
+    {
+      "id": "select",
+      "label": "Select",
+      "files": [
+        {
+          "theme": "fortal-light",
+          "image": "fortal-light/select.png",
+          "metadata": "fortal-light/select.json"
+        },
+        {
+          "theme": "fortal-dark",
+          "image": "fortal-dark/select.png",
+          "metadata": "fortal-dark/select.json"
+        }
+      ]
+    },
+    {
+      "id": "slider",
+      "label": "Slider",
+      "files": [
+        {
+          "theme": "fortal-light",
+          "image": "fortal-light/slider.png",
+          "metadata": "fortal-light/slider.json"
+        },
+        {
+          "theme": "fortal-dark",
+          "image": "fortal-dark/slider.png",
+          "metadata": "fortal-dark/slider.json"
+        }
+      ]
+    },
+    {
+      "id": "spinner",
+      "label": "Spinner",
+      "files": [
+        {
+          "theme": "fortal-light",
+          "image": "fortal-light/spinner.png",
+          "metadata": "fortal-light/spinner.json"
+        },
+        {
+          "theme": "fortal-dark",
+          "image": "fortal-dark/spinner.png",
+          "metadata": "fortal-dark/spinner.json"
+        }
+      ]
+    },
+    {
       "id": "switch",
+      "label": "Switch",
       "files": [
         {
           "theme": "fortal-light",
@@ -54,6 +284,70 @@
           "theme": "fortal-dark",
           "image": "fortal-dark/switch.png",
           "metadata": "fortal-dark/switch.json"
+        }
+      ]
+    },
+    {
+      "id": "tabs",
+      "label": "Tabs",
+      "files": [
+        {
+          "theme": "fortal-light",
+          "image": "fortal-light/tabs.png",
+          "metadata": "fortal-light/tabs.json"
+        },
+        {
+          "theme": "fortal-dark",
+          "image": "fortal-dark/tabs.png",
+          "metadata": "fortal-dark/tabs.json"
+        }
+      ]
+    },
+    {
+      "id": "text-field",
+      "label": "Text Field",
+      "files": [
+        {
+          "theme": "fortal-light",
+          "image": "fortal-light/text-field.png",
+          "metadata": "fortal-light/text-field.json"
+        },
+        {
+          "theme": "fortal-dark",
+          "image": "fortal-dark/text-field.png",
+          "metadata": "fortal-dark/text-field.json"
+        }
+      ]
+    },
+    {
+      "id": "toggle",
+      "label": "Toggle",
+      "files": [
+        {
+          "theme": "fortal-light",
+          "image": "fortal-light/toggle.png",
+          "metadata": "fortal-light/toggle.json"
+        },
+        {
+          "theme": "fortal-dark",
+          "image": "fortal-dark/toggle.png",
+          "metadata": "fortal-dark/toggle.json"
+        }
+      ]
+    },
+    {
+      "id": "tooltip",
+      "label": "Tooltip",
+      "files": [
+        {
+          "theme": "fortal-light",
+          "image": "fortal-light/tooltip.png",
+          "metadata": "fortal-light/tooltip.json"
+        },
+        {
+          "theme": "fortal-dark",
+          "image": "fortal-dark/tooltip.png",
+          "metadata": "fortal-dark/tooltip.json"
         }
       ]
     }

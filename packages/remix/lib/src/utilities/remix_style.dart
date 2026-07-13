@@ -1,6 +1,36 @@
 import 'package:flutter/widgets.dart';
 import 'package:mix/mix.dart' hide AnimationConfig;
 
+/// Resolves [style] normally, or renders [styleSpec] directly when supplied.
+///
+/// This keeps component behavior wrappers identical while allowing specimen
+/// sheets and other deterministic renderers to bypass state-driven resolution.
+class RemixStyleBuilder<S extends Spec<S>> extends StatelessWidget {
+  const RemixStyleBuilder({
+    super.key,
+    required this.style,
+    required this.builder,
+    this.styleSpec,
+    this.controller,
+  });
+
+  final Style<S> style;
+  final S? styleSpec;
+  final WidgetStatesController? controller;
+  final Widget Function(BuildContext context, S spec) builder;
+
+  @override
+  Widget build(BuildContext context) {
+    final resolved = styleSpec;
+    if (resolved != null) return builder(context, resolved);
+    return StyleBuilder<S>(
+      style: style,
+      controller: controller,
+      builder: builder,
+    );
+  }
+}
+
 /// Base abstract class for all Remix component styles.
 ///
 /// Provides universal mixins that all components share:

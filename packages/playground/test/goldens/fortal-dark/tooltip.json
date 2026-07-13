@@ -1,0 +1,30 @@
+{
+  "schema": "mix_specimen/sheet/v1",
+  "component": "tooltip",
+  "componentLabel": "Tooltip",
+  "theme": "fortal-dark",
+  "themeLabel": "Dark",
+  "brightness": "dark",
+  "file": "tooltip.png",
+  "rowAxes": [],
+  "rows": [
+    {
+      "id": "default",
+      "values": {}
+    }
+  ],
+  "columns": [
+    {
+      "id": "closed",
+      "states": [],
+      "props": {}
+    },
+    {
+      "id": "open",
+      "states": [],
+      "props": {
+        "open": true
+      }
+    }
+  ]
+}

@@ -54,10 +54,16 @@ typedef SpecimenCellBuilder =
 /// A row of a specimen sheet, typically one component variant.
 @immutable
 class SpecimenRow {
-  const SpecimenRow(this.id, this.builder, {this.values = const {}});
+  const SpecimenRow(
+    this.id,
+    this.builder, {
+    this.label,
+    this.values = const {},
+  });
 
   /// Identifier shown as the row label and recorded in the manifest.
   final String id;
+  final String? label;
 
   final SpecimenCellBuilder builder;
 
@@ -88,11 +94,13 @@ class Specimen {
     required this.id,
     required this.scenarios,
     required this.rows,
+    this.label,
     this.rowAxes = const [],
   });
 
   /// Component identifier used in golden file paths and the manifest.
   final String id;
+  final String? label;
 
   final List<SpecimenScenario> scenarios;
 
@@ -158,9 +166,11 @@ class SpecimenCatalog {
     required this.id,
     required this.themes,
     required this.specimens,
+    this.label,
   });
 
   final String id;
+  final String? label;
   final List<SpecimenTheme> themes;
   final List<Specimen> specimens;
 
