@@ -28,24 +28,34 @@ something gesture simulation (one mouse pointer per test) cannot do.
 ```dart
 Specimen(
   id: 'button',
+  rowAxes: const [
+    SpecimenAxis('variant', 'Variant'),
+    SpecimenAxis('size', 'Size'),
+  ],
   scenarios: [
     ...Scenarios.interactive, // default / hovered / pressed / focused / disabled
     const SpecimenScenario('loading', props: {'loading': true}),
   ],
   rows: [
-    for (final variant in FortalButtonVariant.values)
-      SpecimenRow(variant.name, (context, sim) => RemixButton(
+    SpecimenRow('solid-size1', (context, sim) => MyButton(
         label: 'Button',
         enabled: !sim.disabled,
         loading: sim.propOr('loading', false),
         onPressed: sim.disabled ? null : () {},
-        styleSpec: sim.resolve(context, fortalButtonStyle(variant: variant)),
-      )),
+        styleSpec: sim.resolve(context, myButtonStyle()),
+      ), values: const {
+        'variant': SpecimenAxisValue('solid', 'Solid'),
+        'size': SpecimenAxisValue('size1', 'Size 1'),
+      }),
   ],
 )
 ```
 
-- **Rows** are variants (solid/soft/outline/...).
+- **Row axes** are arbitrary ordered metadata such as variant, size, density,
+  or tone. With one axis its value labels each row; with multiple axes every
+  axis except the last creates nested section headers and the last labels rows.
+- **Rows** map every declared axis ID to a `SpecimenAxisValue`. With no axes,
+  the row ID remains the label for source compatibility.
 - **Scenarios** are columns: forced `WidgetState`s plus prop overrides for
   states that are component properties rather than widget states
   (`loading`, `indeterminate`, ...).
@@ -59,11 +69,17 @@ flutter test --update-goldens        # generate/refresh sheets + sidecars
 flutter test                         # compare against committed baselines
 ```
 
+For a shared input to snapshots and a future viewer, create a
+`SpecimenCatalog(id: ..., themes: ..., specimens: ...)` and register its tests
+with `registerSpecimenCatalogGoldens(catalog)`. Golden updates also write a
+deterministically ordered `goldens/catalog.json` index.
+
 Output per component per theme:
 
 ```
 test/goldens/fortal-light/button.png    # the contact sheet
 test/goldens/fortal-light/button.json   # axes metadata (rows, columns, states)
+test/goldens/catalog.json               # catalog index
 ```
 
 Commit both. Visual regression review then *is* PR review: a styling change

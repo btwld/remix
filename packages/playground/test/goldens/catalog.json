@@ -1,0 +1,61 @@
+{
+  "schema": "mix_specimen/catalog/v1",
+  "id": "fortal",
+  "themes": [
+    {
+      "id": "fortal-light",
+      "brightness": "light"
+    },
+    {
+      "id": "fortal-dark",
+      "brightness": "dark"
+    }
+  ],
+  "specimens": [
+    {
+      "id": "button",
+      "files": [
+        {
+          "theme": "fortal-light",
+          "image": "fortal-light/button.png",
+          "metadata": "fortal-light/button.json"
+        },
+        {
+          "theme": "fortal-dark",
+          "image": "fortal-dark/button.png",
+          "metadata": "fortal-dark/button.json"
+        }
+      ]
+    },
+    {
+      "id": "checkbox",
+      "files": [
+        {
+          "theme": "fortal-light",
+          "image": "fortal-light/checkbox.png",
+          "metadata": "fortal-light/checkbox.json"
+        },
+        {
+          "theme": "fortal-dark",
+          "image": "fortal-dark/checkbox.png",
+          "metadata": "fortal-dark/checkbox.json"
+        }
+      ]
+    },
+    {
+      "id": "switch",
+      "files": [
+        {
+          "theme": "fortal-light",
+          "image": "fortal-light/switch.png",
+          "metadata": "fortal-light/switch.json"
+        },
+        {
+          "theme": "fortal-dark",
+          "image": "fortal-dark/switch.png",
+          "metadata": "fortal-dark/switch.json"
+        }
+      ]
+    }
+  ]
+}

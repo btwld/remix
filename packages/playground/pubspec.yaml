@@ -12,6 +12,8 @@ dependencies:
     sdk: flutter
   remix:
     path: ../remix
+  mix_specimen:
+    path: ../mix_specimen
 
 dev_dependencies:
   flutter_test:

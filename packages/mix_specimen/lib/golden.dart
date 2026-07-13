@@ -112,6 +112,7 @@ Future<void> expectSpecimenGolden(
   required Specimen specimen,
   required SpecimenTheme theme,
 }) async {
+  specimen.validate();
   if (!SpecimenGoldens.platforms.contains(Platform.operatingSystem)) {
     markTestSkipped(
       'Specimen goldens are generated on ${SpecimenGoldens.platforms}; '
@@ -195,19 +196,92 @@ void _writeSidecar(Specimen specimen, SpecimenTheme theme, String goldenPath) {
   final file = File.fromUri(comparator.basedir.resolve(sidecarPath));
   file.parent.createSync(recursive: true);
   file.writeAsStringSync(
+    const JsonEncoder.withIndent(
+      '  ',
+    ).convert(specimenSheetMetadata(specimen, theme)),
+  );
+}
+
+/// Creates the structured v1 sidecar payload for a sheet.
+Map<String, Object?> specimenSheetMetadata(
+  Specimen specimen,
+  SpecimenTheme theme,
+) {
+  specimen.validate();
+  return {
+    'schema': 'mix_specimen/sheet/v1',
+    'component': specimen.id,
+    'theme': theme.id,
+    'brightness': theme.brightness.name,
+    'file': '${specimen.id}.png',
+    'rowAxes': [
+      for (final axis in specimen.rowAxes) {'id': axis.id, 'label': axis.label},
+    ],
+    'rows': [
+      for (final row in specimen.rows)
+        {
+          'id': row.id,
+          'values': {
+            for (final axis in specimen.rowAxes)
+              axis.id: {
+                'id': row.values[axis.id]!.id,
+                'label': row.values[axis.id]!.label,
+              },
+          },
+        },
+    ],
+    'columns': [
+      for (final scenario in specimen.scenarios)
+        {
+          'id': scenario.id,
+          'states': [for (final state in scenario.states) state.name],
+          'props': scenario.props,
+        },
+    ],
+  };
+}
+
+/// Registers one golden test per catalog specimen/theme pair and writes a
+/// deterministic `goldens/catalog.json` index during golden updates.
+void registerSpecimenCatalogGoldens(SpecimenCatalog catalog) {
+  catalog.validate();
+  for (final theme in catalog.themes) {
+    for (final specimen in catalog.specimens) {
+      testWidgets('${specimen.id} specimen - ${theme.id}', (tester) async {
+        await expectSpecimenGolden(tester, specimen: specimen, theme: theme);
+        _writeCatalogIndex(catalog);
+      });
+    }
+  }
+}
+
+void _writeCatalogIndex(SpecimenCatalog catalog) {
+  if (!autoUpdateGoldenFiles) return;
+  final comparator = goldenFileComparator;
+  if (comparator is! LocalFileComparator) return;
+
+  final file = File.fromUri(comparator.basedir.resolve('goldens/catalog.json'));
+  file.parent.createSync(recursive: true);
+  file.writeAsStringSync(
     const JsonEncoder.withIndent('  ').convert({
-      'schema': 'mix_specimen/v0',
-      'component': specimen.id,
-      'theme': theme.id,
-      'brightness': theme.brightness.name,
-      'file': '${specimen.id}.png',
-      'rows': [for (final row in specimen.rows) row.id],
-      'columns': [
-        for (final scenario in specimen.scenarios)
+      'schema': 'mix_specimen/catalog/v1',
+      'id': catalog.id,
+      'themes': [
+        for (final theme in catalog.themes)
+          {'id': theme.id, 'brightness': theme.brightness.name},
+      ],
+      'specimens': [
+        for (final specimen in catalog.specimens)
           {
-            'id': scenario.id,
-            'states': [for (final state in scenario.states) state.name],
-            'props': scenario.props,
+            'id': specimen.id,
+            'files': [
+              for (final theme in catalog.themes)
+                {
+                  'theme': theme.id,
+                  'image': '${theme.id}/${specimen.id}.png',
+                  'metadata': '${theme.id}/${specimen.id}.json',
+                },
+            ],
           },
       ],
     }),
