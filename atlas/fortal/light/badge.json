@@ -1,0 +1,184 @@
+{
+  "schema": "mix_atlas/atlas/v1",
+  "component": "badge",
+  "componentLabel": "Badge",
+  "theme": "light",
+  "themeLabel": "Light",
+  "brightness": "light",
+  "file": "badge.png",
+  "rowAxes": [
+    {
+      "id": "variant",
+      "label": "Variant"
+    },
+    {
+      "id": "size",
+      "label": "Size"
+    }
+  ],
+  "rows": [
+    {
+      "id": "solid-size1",
+      "values": {
+        "variant": {
+          "id": "solid",
+          "label": "Solid"
+        },
+        "size": {
+          "id": "size1",
+          "label": "Size 1"
+        }
+      }
+    },
+    {
+      "id": "solid-size2",
+      "values": {
+        "variant": {
+          "id": "solid",
+          "label": "Solid"
+        },
+        "size": {
+          "id": "size2",
+          "label": "Size 2"
+        }
+      }
+    },
+    {
+      "id": "solid-size3",
+      "values": {
+        "variant": {
+          "id": "solid",
+          "label": "Solid"
+        },
+        "size": {
+          "id": "size3",
+          "label": "Size 3"
+        }
+      }
+    },
+    {
+      "id": "soft-size1",
+      "values": {
+        "variant": {
+          "id": "soft",
+          "label": "Soft"
+        },
+        "size": {
+          "id": "size1",
+          "label": "Size 1"
+        }
+      }
+    },
+    {
+      "id": "soft-size2",
+      "values": {
+        "variant": {
+          "id": "soft",
+          "label": "Soft"
+        },
+        "size": {
+          "id": "size2",
+          "label": "Size 2"
+        }
+      }
+    },
+    {
+      "id": "soft-size3",
+      "values": {
+        "variant": {
+          "id": "soft",
+          "label": "Soft"
+        },
+        "size": {
+          "id": "size3",
+          "label": "Size 3"
+        }
+      }
+    },
+    {
+      "id": "surface-size1",
+      "values": {
+        "variant": {
+          "id": "surface",
+          "label": "Surface"
+        },
+        "size": {
+          "id": "size1",
+          "label": "Size 1"
+        }
+      }
+    },
+    {
+      "id": "surface-size2",
+      "values": {
+        "variant": {
+          "id": "surface",
+          "label": "Surface"
+        },
+        "size": {
+          "id": "size2",
+          "label": "Size 2"
+        }
+      }
+    },
+    {
+      "id": "surface-size3",
+      "values": {
+        "variant": {
+          "id": "surface",
+          "label": "Surface"
+        },
+        "size": {
+          "id": "size3",
+          "label": "Size 3"
+        }
+      }
+    },
+    {
+      "id": "outline-size1",
+      "values": {
+        "variant": {
+          "id": "outline",
+          "label": "Outline"
+        },
+        "size": {
+          "id": "size1",
+          "label": "Size 1"
+        }
+      }
+    },
+    {
+      "id": "outline-size2",
+      "values": {
+        "variant": {
+          "id": "outline",
+          "label": "Outline"
+        },
+        "size": {
+          "id": "size2",
+          "label": "Size 2"
+        }
+      }
+    },
+    {
+      "id": "outline-size3",
+      "values": {
+        "variant": {
+          "id": "outline",
+          "label": "Outline"
+        },
+        "size": {
+          "id": "size3",
+          "label": "Size 3"
+        }
+      }
+    }
+  ],
+  "columns": [
+    {
+      "id": "default",
+      "states": [],
+      "props": {}
+    }
+  ]
+}

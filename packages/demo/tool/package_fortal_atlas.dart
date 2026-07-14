@@ -34,6 +34,8 @@ void main(List<String> arguments) {
         ),
         AtlasCaptureThemeSpec(id: 'dark', documentPath: 'themes/dark.mix.json'),
       ],
+      // Button currently has the bounded portable component-v1 contract. The
+      // catalog and rendered assets may contain additional component families.
       components: const [
         AtlasCaptureComponentSpec(
           id: 'button',
@@ -46,22 +48,6 @@ void main(List<String> arguments) {
       const AtlasCaptureAsset(
         sourcePath: 'catalog.json',
         destinationPath: 'catalog.json',
-      ),
-      const AtlasCaptureAsset(
-        sourcePath: 'light/button.json',
-        destinationPath: 'light/button.json',
-      ),
-      const AtlasCaptureAsset(
-        sourcePath: 'light/button.png',
-        destinationPath: 'light/button.png',
-      ),
-      const AtlasCaptureAsset(
-        sourcePath: 'dark/button.json',
-        destinationPath: 'dark/button.json',
-      ),
-      const AtlasCaptureAsset(
-        sourcePath: 'dark/button.png',
-        destinationPath: 'dark/button.png',
       ),
       const AtlasCaptureAsset(
         sourcePath: 'protocol/themes/light.mix.json',
@@ -79,6 +65,8 @@ void main(List<String> arguments) {
         sourcePath: 'protocol/fixtures/fortal-tokenized-flex-box.mix.json',
         destinationPath: 'protocol/fixtures/fortal-tokenized-flex-box.mix.json',
       ),
+      ..._directoryAssets(sourceRoot, 'light'),
+      ..._directoryAssets(sourceRoot, 'dark'),
       ..._directoryAssets(sourceRoot, 'components'),
       ..._directoryAssets(sourceRoot, 'styles'),
     ],

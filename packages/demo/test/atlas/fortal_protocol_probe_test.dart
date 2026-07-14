@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mix_protocol/mix_protocol.dart';
 import 'package:remix/remix.dart';
 
+import 'support/fortal_atlas_catalog.dart';
 import 'support/fortal_button_component_artifact.dart';
 
 void main() {
@@ -259,6 +260,24 @@ void main() {
             'status': 'unsupported',
             'diagnostics': [for (final error in customErrors) error.toJson()],
           },
+          for (final atlas in fortalAtlasCatalog.atlases)
+            if (atlas.id != 'button')
+              {
+                'id': 'fortal-${atlas.id}-rendered',
+                'runtimeType': '${atlas.label ?? atlas.id} contact sheet',
+                'status': 'rendered-only',
+                'diagnostics': [
+                  {
+                    'code': 'portable_component_document_not_captured',
+                    'severity': 'info',
+                    'path': 'components/${atlas.id}.component.json',
+                    'message':
+                        '${atlas.label ?? atlas.id} is captured as rendered '
+                        'light and dark evidence; a portable slot contract has '
+                        'not been declared.',
+                  },
+                ],
+              },
         ],
       };
       _expectJsonArtifact('goldens/protocol/coverage.json', coverage);

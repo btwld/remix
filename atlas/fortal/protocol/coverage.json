@@ -217,6 +217,266 @@
           "message": "Expected stack_box, got RemixButtonStyler."
         }
       ]
+    },
+    {
+      "id": "fortal-accordion-rendered",
+      "runtimeType": "Accordion contact sheet",
+      "status": "rendered-only",
+      "diagnostics": [
+        {
+          "code": "portable_component_document_not_captured",
+          "severity": "info",
+          "path": "components/accordion.component.json",
+          "message": "Accordion is captured as rendered light and dark evidence; a portable slot contract has not been declared."
+        }
+      ]
+    },
+    {
+      "id": "fortal-avatar-rendered",
+      "runtimeType": "Avatar contact sheet",
+      "status": "rendered-only",
+      "diagnostics": [
+        {
+          "code": "portable_component_document_not_captured",
+          "severity": "info",
+          "path": "components/avatar.component.json",
+          "message": "Avatar is captured as rendered light and dark evidence; a portable slot contract has not been declared."
+        }
+      ]
+    },
+    {
+      "id": "fortal-badge-rendered",
+      "runtimeType": "Badge contact sheet",
+      "status": "rendered-only",
+      "diagnostics": [
+        {
+          "code": "portable_component_document_not_captured",
+          "severity": "info",
+          "path": "components/badge.component.json",
+          "message": "Badge is captured as rendered light and dark evidence; a portable slot contract has not been declared."
+        }
+      ]
+    },
+    {
+      "id": "fortal-callout-rendered",
+      "runtimeType": "Callout contact sheet",
+      "status": "rendered-only",
+      "diagnostics": [
+        {
+          "code": "portable_component_document_not_captured",
+          "severity": "info",
+          "path": "components/callout.component.json",
+          "message": "Callout is captured as rendered light and dark evidence; a portable slot contract has not been declared."
+        }
+      ]
+    },
+    {
+      "id": "fortal-card-rendered",
+      "runtimeType": "Card contact sheet",
+      "status": "rendered-only",
+      "diagnostics": [
+        {
+          "code": "portable_component_document_not_captured",
+          "severity": "info",
+          "path": "components/card.component.json",
+          "message": "Card is captured as rendered light and dark evidence; a portable slot contract has not been declared."
+        }
+      ]
+    },
+    {
+      "id": "fortal-checkbox-rendered",
+      "runtimeType": "Checkbox contact sheet",
+      "status": "rendered-only",
+      "diagnostics": [
+        {
+          "code": "portable_component_document_not_captured",
+          "severity": "info",
+          "path": "components/checkbox.component.json",
+          "message": "Checkbox is captured as rendered light and dark evidence; a portable slot contract has not been declared."
+        }
+      ]
+    },
+    {
+      "id": "fortal-dialog-rendered",
+      "runtimeType": "Dialog contact sheet",
+      "status": "rendered-only",
+      "diagnostics": [
+        {
+          "code": "portable_component_document_not_captured",
+          "severity": "info",
+          "path": "components/dialog.component.json",
+          "message": "Dialog is captured as rendered light and dark evidence; a portable slot contract has not been declared."
+        }
+      ]
+    },
+    {
+      "id": "fortal-divider-rendered",
+      "runtimeType": "Divider contact sheet",
+      "status": "rendered-only",
+      "diagnostics": [
+        {
+          "code": "portable_component_document_not_captured",
+          "severity": "info",
+          "path": "components/divider.component.json",
+          "message": "Divider is captured as rendered light and dark evidence; a portable slot contract has not been declared."
+        }
+      ]
+    },
+    {
+      "id": "fortal-icon-button-rendered",
+      "runtimeType": "Icon Button contact sheet",
+      "status": "rendered-only",
+      "diagnostics": [
+        {
+          "code": "portable_component_document_not_captured",
+          "severity": "info",
+          "path": "components/icon-button.component.json",
+          "message": "Icon Button is captured as rendered light and dark evidence; a portable slot contract has not been declared."
+        }
+      ]
+    },
+    {
+      "id": "fortal-menu-rendered",
+      "runtimeType": "Menu contact sheet",
+      "status": "rendered-only",
+      "diagnostics": [
+        {
+          "code": "portable_component_document_not_captured",
+          "severity": "info",
+          "path": "components/menu.component.json",
+          "message": "Menu is captured as rendered light and dark evidence; a portable slot contract has not been declared."
+        }
+      ]
+    },
+    {
+      "id": "fortal-progress-rendered",
+      "runtimeType": "Progress contact sheet",
+      "status": "rendered-only",
+      "diagnostics": [
+        {
+          "code": "portable_component_document_not_captured",
+          "severity": "info",
+          "path": "components/progress.component.json",
+          "message": "Progress is captured as rendered light and dark evidence; a portable slot contract has not been declared."
+        }
+      ]
+    },
+    {
+      "id": "fortal-radio-rendered",
+      "runtimeType": "Radio contact sheet",
+      "status": "rendered-only",
+      "diagnostics": [
+        {
+          "code": "portable_component_document_not_captured",
+          "severity": "info",
+          "path": "components/radio.component.json",
+          "message": "Radio is captured as rendered light and dark evidence; a portable slot contract has not been declared."
+        }
+      ]
+    },
+    {
+      "id": "fortal-select-rendered",
+      "runtimeType": "Select contact sheet",
+      "status": "rendered-only",
+      "diagnostics": [
+        {
+          "code": "portable_component_document_not_captured",
+          "severity": "info",
+          "path": "components/select.component.json",
+          "message": "Select is captured as rendered light and dark evidence; a portable slot contract has not been declared."
+        }
+      ]
+    },
+    {
+      "id": "fortal-slider-rendered",
+      "runtimeType": "Slider contact sheet",
+      "status": "rendered-only",
+      "diagnostics": [
+        {
+          "code": "portable_component_document_not_captured",
+          "severity": "info",
+          "path": "components/slider.component.json",
+          "message": "Slider is captured as rendered light and dark evidence; a portable slot contract has not been declared."
+        }
+      ]
+    },
+    {
+      "id": "fortal-spinner-rendered",
+      "runtimeType": "Spinner contact sheet",
+      "status": "rendered-only",
+      "diagnostics": [
+        {
+          "code": "portable_component_document_not_captured",
+          "severity": "info",
+          "path": "components/spinner.component.json",
+          "message": "Spinner is captured as rendered light and dark evidence; a portable slot contract has not been declared."
+        }
+      ]
+    },
+    {
+      "id": "fortal-switch-rendered",
+      "runtimeType": "Switch contact sheet",
+      "status": "rendered-only",
+      "diagnostics": [
+        {
+          "code": "portable_component_document_not_captured",
+          "severity": "info",
+          "path": "components/switch.component.json",
+          "message": "Switch is captured as rendered light and dark evidence; a portable slot contract has not been declared."
+        }
+      ]
+    },
+    {
+      "id": "fortal-tabs-rendered",
+      "runtimeType": "Tabs contact sheet",
+      "status": "rendered-only",
+      "diagnostics": [
+        {
+          "code": "portable_component_document_not_captured",
+          "severity": "info",
+          "path": "components/tabs.component.json",
+          "message": "Tabs is captured as rendered light and dark evidence; a portable slot contract has not been declared."
+        }
+      ]
+    },
+    {
+      "id": "fortal-textfield-rendered",
+      "runtimeType": "Text Field contact sheet",
+      "status": "rendered-only",
+      "diagnostics": [
+        {
+          "code": "portable_component_document_not_captured",
+          "severity": "info",
+          "path": "components/textfield.component.json",
+          "message": "Text Field is captured as rendered light and dark evidence; a portable slot contract has not been declared."
+        }
+      ]
+    },
+    {
+      "id": "fortal-toggle-rendered",
+      "runtimeType": "Toggle contact sheet",
+      "status": "rendered-only",
+      "diagnostics": [
+        {
+          "code": "portable_component_document_not_captured",
+          "severity": "info",
+          "path": "components/toggle.component.json",
+          "message": "Toggle is captured as rendered light and dark evidence; a portable slot contract has not been declared."
+        }
+      ]
+    },
+    {
+      "id": "fortal-tooltip-rendered",
+      "runtimeType": "Tooltip contact sheet",
+      "status": "rendered-only",
+      "diagnostics": [
+        {
+          "code": "portable_component_document_not_captured",
+          "severity": "info",
+          "path": "components/tooltip.component.json",
+          "message": "Tooltip is captured as rendered light and dark evidence; a portable slot contract has not been declared."
+        }
+      ]
     }
   ]
 }

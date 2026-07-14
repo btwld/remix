@@ -1,26 +1,39 @@
 # Fortal Atlas capture
 
-This directory contains a deterministic, inert capture of the Fortal Button.
-It is designed for repository readers such as Mix Atlas; loading it does not
-execute or compile Remix source code.
+This directory contains a deterministic, inert capture of all 21 public Fortal
+component families. It is designed for repository readers such as Mix Atlas;
+loading it does not execute or compile Remix source code.
 
 ## Contents
 
 - `capture.json` — integrity envelope and artifact index
 - `catalog.json` — Atlas catalog index
-- `light/` and `dark/` — Button contact-sheet PNGs and structured sidecars
+- `light/` and `dark/` — 42 component contact-sheet PNGs and structured
+  sidecars, one per component and theme
 - `themes/` — strict `mix_protocol` v1 theme documents
 - `components/button.component.json` — bounded Button properties, states,
   anatomy, semantics, recipe coordinates, evidence, and visual-oracle links
 - `styles/button/` — projected built-in container, label, and icon style
   documents for all 20 recipes
-- `protocol/coverage.json` — supported and unsupported protocol probes
+- `protocol/coverage.json` — portable and rendered-only coverage diagnostics
 - `protocol/fixtures/` — a representable built-in style fixture using Fortal
   tokens
 
-The capture covers five Button variants, four sizes, and default, hovered,
-pressed, focused, disabled, and loading scenarios in light and dark themes:
-240 cells total, 200 non-loading cells, and 40 loading cells.
+The catalog covers Accordion, Avatar, Badge, Button, Callout, Card, Checkbox,
+Dialog, Divider, Icon Button, Menu, Progress, Radio, Select, Slider, Spinner,
+Switch, Tabs, Textfield, Toggle, and Tooltip. The golden test also inventories
+the Fortal source tree, so adding a public `fortal_*_styles.dart` component
+without adding it to this catalog fails generation instead of silently reducing
+coverage.
+
+Button retains the deep portable `component/v1` projection. It covers five
+variants, four sizes, and default, hovered, pressed, focused, disabled, and
+loading scenarios in light and dark themes: 240 cells total, 200 non-loading
+cells, and 40 loading cells. The other 20 component families are explicitly
+marked `rendered-only`: their real widgets, declared variants, sizes, and
+meaningful states are visible in the contact sheets, while recipes, slots, and
+resolved properties are not fabricated before a component-specific portable
+adapter exists.
 
 The producer adapter walks the real `RemixButtonStyler` sources and variants,
 then uses each built-in leaf styler's normal merge semantics. It does not copy
