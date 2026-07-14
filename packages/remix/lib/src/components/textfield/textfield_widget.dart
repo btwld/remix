@@ -369,9 +369,8 @@ class RemixTextField extends StatelessWidget {
         final needsWrapper = label != null || helperText != null;
 
         return needsWrapper
-            ? Column(
-                mainAxisSize: .min,
-                crossAxisAlignment: .start,
+            ? ColumnBox(
+                styleSpec: spec.layout,
                 children: [
                   if (label != null) StyledText(label!, styleSpec: spec.label),
                   withAccessories,

@@ -37,6 +37,8 @@ class RemixTextFieldStyler
   final Prop<Brightness>? $keyboardAppearance;
   @MixableField(setterType: FlexBoxStyler)
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
+  @MixableField(setterType: FlexBoxStyler)
+  final Prop<StyleSpec<FlexBoxSpec>>? $layout;
   @MixableField(setterType: TextStyler)
   final Prop<StyleSpec<TextSpec>>? $helperText;
   @MixableField(setterType: TextStyler)
@@ -56,6 +58,7 @@ class RemixTextFieldStyler
     Prop<EdgeInsets>? scrollPadding,
     Prop<Brightness>? keyboardAppearance,
     Prop<StyleSpec<FlexBoxSpec>>? container,
+    Prop<StyleSpec<FlexBoxSpec>>? layout,
     Prop<StyleSpec<TextSpec>>? helperText,
     Prop<StyleSpec<TextSpec>>? label,
     super.variants,
@@ -74,6 +77,7 @@ class RemixTextFieldStyler
        $scrollPadding = scrollPadding,
        $keyboardAppearance = keyboardAppearance,
        $container = container,
+       $layout = layout,
        $helperText = helperText,
        $label = label;
 
@@ -91,6 +95,7 @@ class RemixTextFieldStyler
     EdgeInsets? scrollPadding,
     Brightness? keyboardAppearance,
     FlexBoxStyler? container,
+    FlexBoxStyler? layout,
     TextStyler? helperText,
     TextStyler? label,
     AnimationConfig? animation,
@@ -110,6 +115,7 @@ class RemixTextFieldStyler
          scrollPadding: Prop.maybe(scrollPadding),
          keyboardAppearance: Prop.maybe(keyboardAppearance),
          container: Prop.maybeMix(container),
+         layout: Prop.maybeMix(layout),
          helperText: Prop.maybeMix(helperText),
          label: Prop.maybeMix(label),
          variants: variants,

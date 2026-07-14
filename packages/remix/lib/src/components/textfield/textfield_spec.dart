@@ -142,6 +142,15 @@ class RemixTextFieldSpec with _$RemixTextFieldSpec {
   @override
   final StyleSpec<FlexBoxSpec> container;
 
+  /// Styling specification for the vertical layout that wraps the label,
+  /// input container, and helper text.
+  ///
+  /// Rendered as a [ColumnBox], so its [FlexBoxSpec] controls the vertical
+  /// spacing between the label, field, and helper text, as well as any
+  /// horizontal spacing (padding/alignment) around them.
+  @override
+  final StyleSpec<FlexBoxSpec> layout;
+
   /// Styling specification for helper text.
   ///
   /// Defines typography and color for supplementary text shown
@@ -189,11 +198,24 @@ class RemixTextFieldSpec with _$RemixTextFieldSpec {
     this.keyboardAppearance,
     this.cursorOpacityAnimates,
     StyleSpec<FlexBoxSpec>? container,
+    StyleSpec<FlexBoxSpec>? layout,
     StyleSpec<TextSpec>? helperText,
     StyleSpec<TextSpec>? label,
   }) : text = text ?? const StyleSpec(spec: TextSpec()),
        hintText = hintText ?? const StyleSpec(spec: TextSpec()),
        helperText = helperText ?? const StyleSpec(spec: TextSpec()),
        label = label ?? const StyleSpec(spec: TextSpec()),
-       container = container ?? const StyleSpec(spec: FlexBoxSpec());
+       container = container ?? const StyleSpec(spec: FlexBoxSpec()),
+       layout =
+           layout ??
+           const StyleSpec(
+             spec: FlexBoxSpec(
+               flex: StyleSpec(
+                 spec: FlexSpec(
+                   mainAxisSize: MainAxisSize.min,
+                   crossAxisAlignment: CrossAxisAlignment.start,
+                 ),
+               ),
+             ),
+           );
 }
