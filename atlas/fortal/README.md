@@ -10,18 +10,34 @@ execute or compile Remix source code.
 - `catalog.json` — Atlas catalog index
 - `light/` and `dark/` — Button contact-sheet PNGs and structured sidecars
 - `themes/` — strict `mix_protocol` v1 theme documents
+- `components/button.component.json` — bounded Button properties, states,
+  anatomy, semantics, recipe coordinates, evidence, and visual-oracle links
+- `styles/button/` — projected built-in container, label, and icon style
+  documents for all 20 recipes
 - `protocol/coverage.json` — supported and unsupported protocol probes
 - `protocol/fixtures/` — a representable built-in style fixture using Fortal
   tokens
 
 The capture covers five Button variants, four sizes, and default, hovered,
-pressed, focused, disabled, and loading scenarios in light and dark themes.
+pressed, focused, disabled, and loading scenarios in light and dark themes:
+240 cells total, 200 non-loading cells, and 40 loading cells.
 
-`RemixButtonStyler` is a custom composite styler and is intentionally recorded
-as unsupported by the fixed `mix_protocol` v1 vocabulary. The raw Fortal theme
-also contains nested color-token references in six shadow tokens; the capture
-resolves those colors to concrete runtime theme values before protocol
-encoding, while preserving the raw diagnostics in the coverage report.
+The producer adapter walks the real `RemixButtonStyler` sources and variants,
+then uses each built-in leaf styler's normal merge semantics. It does not copy
+the Fortal recipe. It calls `RemixButton.composeStyle` first so widget-owned
+defaults and tooling share one source of truth. Container, label, and icon
+leaves are portable after the multi-source nested-styler fix from
+`btwld/mix#981`. `RemixSpinner` remains an explicit unsupported slot because no
+neutral primitive has been selected.
+
+The 200 non-loading cells reconstructed from this capture match the existing
+light and dark Button screenshot oracles exactly. The 40 loading cells remain
+screenshot-only until spinner support is deliberately designed.
+
+The raw Fortal theme also contains nested color-token references in six shadow
+tokens; the capture resolves those colors to concrete runtime theme values
+before protocol encoding, while preserving the raw diagnostics in the coverage
+report.
 
 ## Regenerate
 

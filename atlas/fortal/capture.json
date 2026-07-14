@@ -1,5 +1,5 @@
 {
-  "schema": "mix_atlas/capture/v1",
+  "schema": "mix_atlas/capture/v2",
   "id": "fortal",
   "producer": {
     "atlas": "0.1.0",
@@ -18,12 +18,23 @@
       "document": "themes/dark.mix.json"
     }
   ],
+  "components": [
+    {
+      "id": "button",
+      "document": "components/button.component.json"
+    }
+  ],
   "protocolCoverage": "protocol/coverage.json",
   "files": [
     {
       "path": "catalog.json",
       "sha256": "c7b4bfdc8dd0453c94c84541f0f60c7ea01baddb2a0ea5bdff0b48ab34856ed4",
       "bytes": 639
+    },
+    {
+      "path": "components/button.component.json",
+      "sha256": "c00f12de096dce4fc20bf9b170aafae357a8c07c880add9974412e3cb1f3ba83",
+      "bytes": 27584
     },
     {
       "path": "dark/button.json",
@@ -47,13 +58,313 @@
     },
     {
       "path": "protocol/coverage.json",
-      "sha256": "312bc9ac6b2f58b24c21510c82ceb1adbde39321c31475e3bb4c20ca9fb8a149",
-      "bytes": 8535
+      "sha256": "bd34c03c2ff05bc2a540071edca2c2d1885fefbb074bb5e3d772607af098d96b",
+      "bytes": 7886
     },
     {
       "path": "protocol/fixtures/fortal-tokenized-flex-box.mix.json",
       "sha256": "b413d177b00998fe55ddf7d30d9ca8c0891a4e67056db2025c911bf3ee4b4ac3",
       "bytes": 257
+    },
+    {
+      "path": "styles/button/ghost-size1/container.mix.json",
+      "sha256": "c3bc5aa9430266896beb25ab1140688e344aeeb8a5940c69b011c7d2af47856c",
+      "bytes": 2427
+    },
+    {
+      "path": "styles/button/ghost-size1/icon.mix.json",
+      "sha256": "85bcf16a35b2e827395d99d6516de6d375737dd549e48e1bdc73afaae61c939e",
+      "bytes": 302
+    },
+    {
+      "path": "styles/button/ghost-size1/label.mix.json",
+      "sha256": "d446780069282882b24cf823c56396eedfa3bb349e4984b09253cd013e58a5de",
+      "bytes": 638
+    },
+    {
+      "path": "styles/button/ghost-size2/container.mix.json",
+      "sha256": "ded82395e7b0f0d44ef471a0c4e180bdde68194ebbc71411f88b0da0b504772f",
+      "bytes": 2427
+    },
+    {
+      "path": "styles/button/ghost-size2/icon.mix.json",
+      "sha256": "1e6774a0bfebd8bf208b7626154a956c5835dad885970e2164e5d7fb74497bb6",
+      "bytes": 302
+    },
+    {
+      "path": "styles/button/ghost-size2/label.mix.json",
+      "sha256": "8519482344e85cca89b8d6ff6c24e92c48b837e5b93283df82d3076edbecd57a",
+      "bytes": 635
+    },
+    {
+      "path": "styles/button/ghost-size3/container.mix.json",
+      "sha256": "f40afa1467c344729477c5176218a5a1200713ad65f1276fbbbcce36180d8835",
+      "bytes": 2427
+    },
+    {
+      "path": "styles/button/ghost-size3/icon.mix.json",
+      "sha256": "5bd2121f6f6bedb76ec54c28f0b1afc68544d2737873ff8de12d662543452adf",
+      "bytes": 302
+    },
+    {
+      "path": "styles/button/ghost-size3/label.mix.json",
+      "sha256": "c3e61a56cdbcebc85ab6d1c4cd6007e935dcb9ad87d4af943f14faf1e0b79578",
+      "bytes": 620
+    },
+    {
+      "path": "styles/button/ghost-size4/container.mix.json",
+      "sha256": "d21344b171ea76d42127fb021fdcbb6e5569800f0211d52abc45b07c45180b87",
+      "bytes": 2427
+    },
+    {
+      "path": "styles/button/ghost-size4/icon.mix.json",
+      "sha256": "79867c0eb44025ed5e066586e28dd1ec8fcb546bbe697e455d64bfe75b5bb5ba",
+      "bytes": 302
+    },
+    {
+      "path": "styles/button/ghost-size4/label.mix.json",
+      "sha256": "a89d32a028b459dfad58c2f2572334e1302111f18e529bbe1b83e4648b65d12d",
+      "bytes": 639
+    },
+    {
+      "path": "styles/button/outline-size1/container.mix.json",
+      "sha256": "be5f23243abdeb0d705c9e49812be2d54bc39ccd6e32f6f69102246733042593",
+      "bytes": 5111
+    },
+    {
+      "path": "styles/button/outline-size1/icon.mix.json",
+      "sha256": "85bcf16a35b2e827395d99d6516de6d375737dd549e48e1bdc73afaae61c939e",
+      "bytes": 302
+    },
+    {
+      "path": "styles/button/outline-size1/label.mix.json",
+      "sha256": "d446780069282882b24cf823c56396eedfa3bb349e4984b09253cd013e58a5de",
+      "bytes": 638
+    },
+    {
+      "path": "styles/button/outline-size2/container.mix.json",
+      "sha256": "ff073382630fc6c1aec87603354611df7b0a3455161250df84d9c6fac0bd3909",
+      "bytes": 5111
+    },
+    {
+      "path": "styles/button/outline-size2/icon.mix.json",
+      "sha256": "1e6774a0bfebd8bf208b7626154a956c5835dad885970e2164e5d7fb74497bb6",
+      "bytes": 302
+    },
+    {
+      "path": "styles/button/outline-size2/label.mix.json",
+      "sha256": "8519482344e85cca89b8d6ff6c24e92c48b837e5b93283df82d3076edbecd57a",
+      "bytes": 635
+    },
+    {
+      "path": "styles/button/outline-size3/container.mix.json",
+      "sha256": "c7c67b63c90ae3fe3f3c8af2f94a30753a013eb983695055375a257e85211ba2",
+      "bytes": 5111
+    },
+    {
+      "path": "styles/button/outline-size3/icon.mix.json",
+      "sha256": "5bd2121f6f6bedb76ec54c28f0b1afc68544d2737873ff8de12d662543452adf",
+      "bytes": 302
+    },
+    {
+      "path": "styles/button/outline-size3/label.mix.json",
+      "sha256": "c3e61a56cdbcebc85ab6d1c4cd6007e935dcb9ad87d4af943f14faf1e0b79578",
+      "bytes": 620
+    },
+    {
+      "path": "styles/button/outline-size4/container.mix.json",
+      "sha256": "a8360669d38fcd916bc466269d0c538db51ae069def0eaf49230c5e4b3570afe",
+      "bytes": 5111
+    },
+    {
+      "path": "styles/button/outline-size4/icon.mix.json",
+      "sha256": "79867c0eb44025ed5e066586e28dd1ec8fcb546bbe697e455d64bfe75b5bb5ba",
+      "bytes": 302
+    },
+    {
+      "path": "styles/button/outline-size4/label.mix.json",
+      "sha256": "a89d32a028b459dfad58c2f2572334e1302111f18e529bbe1b83e4648b65d12d",
+      "bytes": 639
+    },
+    {
+      "path": "styles/button/soft-size1/container.mix.json",
+      "sha256": "3c67f10d2c1aa3e6bbdea87d05a9b092531754b52abda597710dfc871638c1d7",
+      "bytes": 2692
+    },
+    {
+      "path": "styles/button/soft-size1/icon.mix.json",
+      "sha256": "85bcf16a35b2e827395d99d6516de6d375737dd549e48e1bdc73afaae61c939e",
+      "bytes": 302
+    },
+    {
+      "path": "styles/button/soft-size1/label.mix.json",
+      "sha256": "d446780069282882b24cf823c56396eedfa3bb349e4984b09253cd013e58a5de",
+      "bytes": 638
+    },
+    {
+      "path": "styles/button/soft-size2/container.mix.json",
+      "sha256": "37755194e1e96a2b5ac0e57c496b02b7d594acd609e781fff2ab764269d10ca1",
+      "bytes": 2692
+    },
+    {
+      "path": "styles/button/soft-size2/icon.mix.json",
+      "sha256": "1e6774a0bfebd8bf208b7626154a956c5835dad885970e2164e5d7fb74497bb6",
+      "bytes": 302
+    },
+    {
+      "path": "styles/button/soft-size2/label.mix.json",
+      "sha256": "8519482344e85cca89b8d6ff6c24e92c48b837e5b93283df82d3076edbecd57a",
+      "bytes": 635
+    },
+    {
+      "path": "styles/button/soft-size3/container.mix.json",
+      "sha256": "9d512fd1515476f468f0da31ed5e41804c5aea75fdf072b693cb514d5929953b",
+      "bytes": 2692
+    },
+    {
+      "path": "styles/button/soft-size3/icon.mix.json",
+      "sha256": "5bd2121f6f6bedb76ec54c28f0b1afc68544d2737873ff8de12d662543452adf",
+      "bytes": 302
+    },
+    {
+      "path": "styles/button/soft-size3/label.mix.json",
+      "sha256": "c3e61a56cdbcebc85ab6d1c4cd6007e935dcb9ad87d4af943f14faf1e0b79578",
+      "bytes": 620
+    },
+    {
+      "path": "styles/button/soft-size4/container.mix.json",
+      "sha256": "aa4592105500c6fc1b4d03a75315380fc92deed3b6a251d9967e37ea480e8ff7",
+      "bytes": 2692
+    },
+    {
+      "path": "styles/button/soft-size4/icon.mix.json",
+      "sha256": "79867c0eb44025ed5e066586e28dd1ec8fcb546bbe697e455d64bfe75b5bb5ba",
+      "bytes": 302
+    },
+    {
+      "path": "styles/button/soft-size4/label.mix.json",
+      "sha256": "a89d32a028b459dfad58c2f2572334e1302111f18e529bbe1b83e4648b65d12d",
+      "bytes": 639
+    },
+    {
+      "path": "styles/button/solid-size1/container.mix.json",
+      "sha256": "a697cf46837c1444f2bf4266f8f3752029166fb116b8276b4447fe3f1009670f",
+      "bytes": 2694
+    },
+    {
+      "path": "styles/button/solid-size1/icon.mix.json",
+      "sha256": "87d6287df62a8d9f0dbdbf519ef45752a8a071daf8eaf00b64b952d1ac2f4fd5",
+      "bytes": 308
+    },
+    {
+      "path": "styles/button/solid-size1/label.mix.json",
+      "sha256": "906d184dc3db5b163634089be795eff31370be59293c9cde71f47106421f4f83",
+      "bytes": 644
+    },
+    {
+      "path": "styles/button/solid-size2/container.mix.json",
+      "sha256": "cc992ffca6c974f87bb4171958dbe56b9b03a55227c7e2ce90b4557b6354aa39",
+      "bytes": 2694
+    },
+    {
+      "path": "styles/button/solid-size2/icon.mix.json",
+      "sha256": "5d647a63917081769706012c54332765848bf71a3180fe8dc50edf72152eb777",
+      "bytes": 308
+    },
+    {
+      "path": "styles/button/solid-size2/label.mix.json",
+      "sha256": "4a38f46f015f58daf6c6a4250628d6a5277b1db2a1e5701d366b7571d6157d2d",
+      "bytes": 641
+    },
+    {
+      "path": "styles/button/solid-size3/container.mix.json",
+      "sha256": "2c2411ff3ec2250219470111af64b1cc0b06b73f5f66382b170fd41999f12f6f",
+      "bytes": 2694
+    },
+    {
+      "path": "styles/button/solid-size3/icon.mix.json",
+      "sha256": "3464fd0c045d22b33260e28d439449e0f67a023185ba4fd103a2e38d4cec1e99",
+      "bytes": 308
+    },
+    {
+      "path": "styles/button/solid-size3/label.mix.json",
+      "sha256": "184a013aca7a1082c362469a3cab7d0c687ed4649cd8714e9274f6045a621f64",
+      "bytes": 626
+    },
+    {
+      "path": "styles/button/solid-size4/container.mix.json",
+      "sha256": "761a82023bcc40ecc4c9ea7c1c42d982bdfb97e01f698abfa8e0ef80e49c6ebf",
+      "bytes": 2694
+    },
+    {
+      "path": "styles/button/solid-size4/icon.mix.json",
+      "sha256": "1ae004bb7a22402e7e2812fa7a5a4d0470658c2fe016c65736fb345ec35bc532",
+      "bytes": 308
+    },
+    {
+      "path": "styles/button/solid-size4/label.mix.json",
+      "sha256": "3c6bc13d5a4e08fd05a3a934c4d23d75d5f4de5e7fa100ad4320e36dec8b3e90",
+      "bytes": 645
+    },
+    {
+      "path": "styles/button/surface-size1/container.mix.json",
+      "sha256": "3e20f4862eaf7308661d1d3e8530438c9f699db43d86825fc44e517661c493dd",
+      "bytes": 5648
+    },
+    {
+      "path": "styles/button/surface-size1/icon.mix.json",
+      "sha256": "85bcf16a35b2e827395d99d6516de6d375737dd549e48e1bdc73afaae61c939e",
+      "bytes": 302
+    },
+    {
+      "path": "styles/button/surface-size1/label.mix.json",
+      "sha256": "d446780069282882b24cf823c56396eedfa3bb349e4984b09253cd013e58a5de",
+      "bytes": 638
+    },
+    {
+      "path": "styles/button/surface-size2/container.mix.json",
+      "sha256": "ec51aaef3fdcf52414653a5f1a3adbd1de0e5f81863f19268f12c4cf5fbe567c",
+      "bytes": 5648
+    },
+    {
+      "path": "styles/button/surface-size2/icon.mix.json",
+      "sha256": "1e6774a0bfebd8bf208b7626154a956c5835dad885970e2164e5d7fb74497bb6",
+      "bytes": 302
+    },
+    {
+      "path": "styles/button/surface-size2/label.mix.json",
+      "sha256": "8519482344e85cca89b8d6ff6c24e92c48b837e5b93283df82d3076edbecd57a",
+      "bytes": 635
+    },
+    {
+      "path": "styles/button/surface-size3/container.mix.json",
+      "sha256": "fea154fdad169c11b6dc91f9454ec689f2850fadc6375c143976118657e49907",
+      "bytes": 5648
+    },
+    {
+      "path": "styles/button/surface-size3/icon.mix.json",
+      "sha256": "5bd2121f6f6bedb76ec54c28f0b1afc68544d2737873ff8de12d662543452adf",
+      "bytes": 302
+    },
+    {
+      "path": "styles/button/surface-size3/label.mix.json",
+      "sha256": "c3e61a56cdbcebc85ab6d1c4cd6007e935dcb9ad87d4af943f14faf1e0b79578",
+      "bytes": 620
+    },
+    {
+      "path": "styles/button/surface-size4/container.mix.json",
+      "sha256": "522cddc6fd94d80f6a534f252e4ad353168ddf6452dd1f25ce6163d7d2a459c8",
+      "bytes": 5648
+    },
+    {
+      "path": "styles/button/surface-size4/icon.mix.json",
+      "sha256": "79867c0eb44025ed5e066586e28dd1ec8fcb546bbe697e455d64bfe75b5bb5ba",
+      "bytes": 302
+    },
+    {
+      "path": "styles/button/surface-size4/label.mix.json",
+      "sha256": "a89d32a028b459dfad58c2f2572334e1302111f18e529bbe1b83e4648b65d12d",
+      "bytes": 639
     },
     {
       "path": "themes/dark.mix.json",

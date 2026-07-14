@@ -129,55 +129,37 @@
     {
       "id": "fortal-tokenized-flex-box-fluent",
       "runtimeType": "FlexBoxStyler",
-      "status": "unsupported",
+      "status": "supported",
+      "tokenReferences": [
+        {
+          "kind": "colors",
+          "name": "fortal.accent.9"
+        },
+        {
+          "kind": "spaces",
+          "name": "fortal.space.2"
+        },
+        {
+          "kind": "spaces",
+          "name": "fortal.space.3"
+        }
+      ]
+    },
+    {
+      "id": "fortal-button-portable",
+      "runtimeType": "RemixButtonStyler projection",
+      "status": "partial",
+      "recipeCount": 20,
+      "totalMatrixCells": 240,
+      "nonLoadingCells": 200,
+      "loadingUnsupportedCells": 40,
+      "supportedContainerRecipes": 20,
       "diagnostics": [
         {
-          "code": "unsupported_encode_value",
+          "code": "unsupported_slot_primitive",
           "severity": "error",
-          "path": "",
-          "message": "Expected box, got FlexBoxStyler."
-        },
-        {
-          "code": "unsupported_encode_value",
-          "severity": "error",
-          "path": "",
-          "message": "Expected text, got FlexBoxStyler."
-        },
-        {
-          "code": "unsupported_encode_value",
-          "severity": "error",
-          "path": "",
-          "message": "Expected flex, got FlexBoxStyler."
-        },
-        {
-          "code": "unsupported_encode_value",
-          "severity": "error",
-          "path": "",
-          "message": "Expected stack, got FlexBoxStyler."
-        },
-        {
-          "code": "unsupported_encode_value",
-          "severity": "error",
-          "path": "",
-          "message": "Expected icon, got FlexBoxStyler."
-        },
-        {
-          "code": "unsupported_encode_value",
-          "severity": "error",
-          "path": "",
-          "message": "Expected image, got FlexBoxStyler."
-        },
-        {
-          "code": "unsupported_encode_value",
-          "severity": "error",
-          "path": "",
-          "message": "Field \"box\" has 3 sources; expected one."
-        },
-        {
-          "code": "unsupported_encode_value",
-          "severity": "error",
-          "path": "",
-          "message": "Expected stack_box, got FlexBoxStyler."
+          "path": "spinner",
+          "message": "RemixSpinner has no neutral Mix protocol primitive."
         }
       ]
     },

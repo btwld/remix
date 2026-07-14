@@ -6,6 +6,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mix_protocol/mix_protocol.dart';
 import 'package:remix/remix.dart';
 
+import 'support/fortal_button_component_artifact.dart';
+
 void main() {
   group('Fortal protocol probe', () {
     for (final brightness in Brightness.values) {
@@ -70,22 +72,27 @@ void main() {
       });
     });
 
-    test('fluent multi-source built-in style reports unsupported coverage', () {
+    test('fluent multi-source built-in style round-trips canonically', () {
       final style = FlexBoxStyler()
           .color(FortalTokens.accent9())
           .paddingAll(FortalTokens.space3())
           .spacing(FortalTokens.space2());
 
-      final errors = _expectFailure(mixProtocol.encodeStyle(style));
+      final encoded = _expectSuccess(mixProtocol.encodeStyle(style));
+      final decoded = _expectSuccess(
+        mixProtocol.decodeStyle<FlexBoxStyler>(encoded),
+      );
+      final reencoded = _expectSuccess(mixProtocol.encodeStyle(decoded));
+      final references = tokenReferencesOf(
+        decoded,
+      ).map((reference) => '${reference.kind}:${reference.name}').toSet();
 
-      expect(
-        errors.map((error) => error.code),
-        contains(MixProtocolErrorCode.unsupportedEncodeValue),
-      );
-      expect(
-        errors.map((error) => error.message),
-        contains(contains('has 3 sources; expected one')),
-      );
+      expect(reencoded, encoded);
+      expect(references, {
+        'colors:fortal.accent.9',
+        'spaces:fortal.space.2',
+        'spaces:fortal.space.3',
+      });
     });
 
     test('custom RemixButtonStyler fails with a structured diagnostic', () {
@@ -123,6 +130,7 @@ void main() {
     });
 
     testWidgets('canonical protocol artifacts match', (tester) async {
+      if (autoUpdateGoldenFiles) _resetGeneratedButtonArtifacts();
       final themeCoverage = <Map<String, Object?>>[];
 
       for (final brightness in Brightness.values) {
@@ -166,14 +174,43 @@ void main() {
         builtInDocument,
       );
 
-      final fluentErrors = _expectFailure(
-        mixProtocol.encodeStyle(
-          FlexBoxStyler()
-              .color(FortalTokens.accent9())
-              .paddingAll(FortalTokens.space3())
-              .spacing(FortalTokens.space2()),
-        ),
+      final componentArtifacts = buildFortalButtonComponentArtifacts();
+      _expectJsonArtifact(
+        'goldens/components/button.component.json',
+        componentArtifacts.document,
       );
+      final componentStyleEntries =
+          componentArtifacts.styleDocuments.entries.toList()
+            ..sort((left, right) => left.key.compareTo(right.key));
+      for (final entry in componentStyleEntries) {
+        _expectJsonArtifact('goldens/${entry.key}', entry.value);
+      }
+      final componentRecipes =
+          componentArtifacts.document['recipes']! as List<Object?>;
+      final firstRecipe = componentRecipes.first! as Map<String, Object?>;
+      final firstStyles = firstRecipe['styles']! as Map<String, Object?>;
+      final firstContainer = firstStyles['container']! as Map<String, Object?>;
+      final firstSpinner = firstStyles['spinner']! as Map<String, Object?>;
+      final componentDiagnostics = <Object?>[
+        ...(firstSpinner['diagnostics']! as List<Object?>),
+        if (firstContainer['status'] == 'unsupported')
+          ...(firstContainer['diagnostics']! as List<Object?>),
+      ];
+
+      final fluentStyle = FlexBoxStyler()
+          .color(FortalTokens.accent9())
+          .paddingAll(FortalTokens.space3())
+          .spacing(FortalTokens.space2());
+      final fluentDocument = _expectSuccess(
+        mixProtocol.encodeStyle(fluentStyle),
+      );
+      final fluentRoundTrip = _expectSuccess(
+        mixProtocol.decodeStyle<FlexBoxStyler>(fluentDocument),
+      );
+      final fluentReferences = tokenReferencesOf(fluentRoundTrip).toList()
+        ..sort(
+          (a, b) => '${a.kind}:${a.name}'.compareTo('${b.kind}:${b.name}'),
+        );
       final customErrors = _expectFailure(
         mixProtocol.encodeStyle(fortalButtonStyler()),
       );
@@ -195,8 +232,26 @@ void main() {
           {
             'id': 'fortal-tokenized-flex-box-fluent',
             'runtimeType': 'FlexBoxStyler',
-            'status': 'unsupported',
-            'diagnostics': [for (final error in fluentErrors) error.toJson()],
+            'status': 'supported',
+            'tokenReferences': [
+              for (final reference in fluentReferences)
+                {'kind': reference.kind, 'name': reference.name},
+            ],
+          },
+          {
+            'id': 'fortal-button-portable',
+            'runtimeType': 'RemixButtonStyler projection',
+            'status': componentArtifacts.supportedContainerRecipes == 20
+                ? 'partial'
+                : 'unsupported',
+            'recipeCount': componentRecipes.length,
+            'totalMatrixCells': componentArtifacts.totalMatrixCells,
+            'nonLoadingCells': componentArtifacts.nonLoadingCells,
+            'loadingUnsupportedCells':
+                componentArtifacts.loadingUnsupportedCells,
+            'supportedContainerRecipes':
+                componentArtifacts.supportedContainerRecipes,
+            'diagnostics': componentDiagnostics,
           },
           {
             'id': 'fortal-button',
@@ -209,6 +264,17 @@ void main() {
       _expectJsonArtifact('goldens/protocol/coverage.json', coverage);
     });
   });
+}
+
+void _resetGeneratedButtonArtifacts() {
+  final comparator = goldenFileComparator;
+  if (comparator is! LocalFileComparator) {
+    fail('Protocol artifacts require Flutter LocalFileComparator.');
+  }
+  for (final path in ['goldens/components', 'goldens/styles']) {
+    final directory = Directory.fromUri(comparator.basedir.resolve(path));
+    if (directory.existsSync()) directory.deleteSync(recursive: true);
+  }
 }
 
 Future<Map<MixToken, Object>> _captureFortalTokens(
