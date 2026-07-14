@@ -1,0 +1,69 @@
+{
+  "schema": "mix_atlas/capture/v1",
+  "id": "fortal",
+  "producer": {
+    "atlas": "0.1.0",
+    "mixProtocolVersion": "1.0.0",
+    "mixProtocolFormat": 1,
+    "flutter": "3.44.0"
+  },
+  "catalog": "catalog.json",
+  "themes": [
+    {
+      "id": "light",
+      "document": "themes/light.mix.json"
+    },
+    {
+      "id": "dark",
+      "document": "themes/dark.mix.json"
+    }
+  ],
+  "protocolCoverage": "protocol/coverage.json",
+  "files": [
+    {
+      "path": "catalog.json",
+      "sha256": "c7b4bfdc8dd0453c94c84541f0f60c7ea01baddb2a0ea5bdff0b48ab34856ed4",
+      "bytes": 639
+    },
+    {
+      "path": "dark/button.json",
+      "sha256": "72e80463651344dd034a24ab58b3f50ca05ff108d504943aaa8b93d21b07e646",
+      "bytes": 5612
+    },
+    {
+      "path": "dark/button.png",
+      "sha256": "be2beefecfaef0a0d698fc7d192b37a34309402e0c04067f21776111eb5099de",
+      "bytes": 179541
+    },
+    {
+      "path": "light/button.json",
+      "sha256": "daa4bdba64a673a98e267e4dd9cd1a9940ac03c9e5559a4aa1f1e0fd245e42a3",
+      "bytes": 5615
+    },
+    {
+      "path": "light/button.png",
+      "sha256": "09c0ba921a97f1d32906e3d4b1b414cc1c9fee785d6b433e9a5ee6c0f53be941",
+      "bytes": 171298
+    },
+    {
+      "path": "protocol/coverage.json",
+      "sha256": "312bc9ac6b2f58b24c21510c82ceb1adbde39321c31475e3bb4c20ca9fb8a149",
+      "bytes": 8535
+    },
+    {
+      "path": "protocol/fixtures/fortal-tokenized-flex-box.mix.json",
+      "sha256": "b413d177b00998fe55ddf7d30d9ca8c0891a4e67056db2025c911bf3ee4b4ac3",
+      "bytes": 257
+    },
+    {
+      "path": "themes/dark.mix.json",
+      "sha256": "76484fcdcff252a59efdec0657a6741f379ced392926dccfaaf05ef312e92392",
+      "bytes": 8385
+    },
+    {
+      "path": "themes/light.mix.json",
+      "sha256": "3021364baeb1359fe8d195f404beca0890b0a6b8b5f950222f812ad713b8bab9",
+      "bytes": 8389
+    }
+  ]
+}

@@ -9,6 +9,11 @@ environment:
 
 dependency_overrides:
   accessibility_tools: ^2.8.0
+  mix:
+    git:
+      url: https://github.com/btwld/mix.git
+      ref: 5d243073d28a7aa14978dd39b6f8b72a9a964a44
+      path: packages/mix
 
 dependencies:
   flutter:
@@ -21,8 +26,19 @@ dependencies:
     path: ../remix
 
 dev_dependencies:
+  crypto: ^3.0.7
   flutter_test:
     sdk: flutter
+  mix_atlas:
+    git:
+      url: https://github.com/btwld/mix.git
+      ref: 5d243073d28a7aa14978dd39b6f8b72a9a964a44
+      path: packages/mix_atlas
+  mix_protocol:
+    git:
+      url: https://github.com/btwld/mix.git
+      ref: 5d243073d28a7aa14978dd39b6f8b72a9a964a44
+      path: packages/mix_protocol
   widgetbook_generator: ^3.24.0
 
 flutter:

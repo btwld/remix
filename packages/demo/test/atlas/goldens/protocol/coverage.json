@@ -1,0 +1,240 @@
+{
+  "schema": "mix_atlas/protocol-coverage/v1",
+  "mixProtocolVersion": "1.0.0",
+  "mixProtocolFormat": 1,
+  "themes": [
+    {
+      "id": "dark",
+      "status": "supported",
+      "tokenCount": 111,
+      "rawStatus": "failed",
+      "captureTransform": "concretizeBoxShadowColorTokenReferences",
+      "rawDiagnostics": [
+        {
+          "code": "constraint_violation",
+          "severity": "error",
+          "path": "/boxShadows/fortal.shadow.1",
+          "message": "Theme token values must be concrete; token references are only allowed as same-kind whole-value aliases in theme JSON.",
+          "value": "MixProtocolTokenReference(colors, fortal.gray.a6)"
+        },
+        {
+          "code": "constraint_violation",
+          "severity": "error",
+          "path": "/boxShadows/fortal.shadow.2",
+          "message": "Theme token values must be concrete; token references are only allowed as same-kind whole-value aliases in theme JSON.",
+          "value": "MixProtocolTokenReference(colors, fortal.shadow.stroke)"
+        },
+        {
+          "code": "constraint_violation",
+          "severity": "error",
+          "path": "/boxShadows/fortal.shadow.3",
+          "message": "Theme token values must be concrete; token references are only allowed as same-kind whole-value aliases in theme JSON.",
+          "value": "MixProtocolTokenReference(colors, fortal.shadow.stroke)"
+        },
+        {
+          "code": "constraint_violation",
+          "severity": "error",
+          "path": "/boxShadows/fortal.shadow.4",
+          "message": "Theme token values must be concrete; token references are only allowed as same-kind whole-value aliases in theme JSON.",
+          "value": "MixProtocolTokenReference(colors, fortal.shadow.stroke)"
+        },
+        {
+          "code": "constraint_violation",
+          "severity": "error",
+          "path": "/boxShadows/fortal.shadow.5",
+          "message": "Theme token values must be concrete; token references are only allowed as same-kind whole-value aliases in theme JSON.",
+          "value": "MixProtocolTokenReference(colors, fortal.shadow.stroke)"
+        },
+        {
+          "code": "constraint_violation",
+          "severity": "error",
+          "path": "/boxShadows/fortal.shadow.6",
+          "message": "Theme token values must be concrete; token references are only allowed as same-kind whole-value aliases in theme JSON.",
+          "value": "MixProtocolTokenReference(colors, fortal.shadow.stroke)"
+        }
+      ]
+    },
+    {
+      "id": "light",
+      "status": "supported",
+      "tokenCount": 111,
+      "rawStatus": "failed",
+      "captureTransform": "concretizeBoxShadowColorTokenReferences",
+      "rawDiagnostics": [
+        {
+          "code": "constraint_violation",
+          "severity": "error",
+          "path": "/boxShadows/fortal.shadow.1",
+          "message": "Theme token values must be concrete; token references are only allowed as same-kind whole-value aliases in theme JSON.",
+          "value": "MixProtocolTokenReference(colors, fortal.gray.a6)"
+        },
+        {
+          "code": "constraint_violation",
+          "severity": "error",
+          "path": "/boxShadows/fortal.shadow.2",
+          "message": "Theme token values must be concrete; token references are only allowed as same-kind whole-value aliases in theme JSON.",
+          "value": "MixProtocolTokenReference(colors, fortal.shadow.stroke)"
+        },
+        {
+          "code": "constraint_violation",
+          "severity": "error",
+          "path": "/boxShadows/fortal.shadow.3",
+          "message": "Theme token values must be concrete; token references are only allowed as same-kind whole-value aliases in theme JSON.",
+          "value": "MixProtocolTokenReference(colors, fortal.shadow.stroke)"
+        },
+        {
+          "code": "constraint_violation",
+          "severity": "error",
+          "path": "/boxShadows/fortal.shadow.4",
+          "message": "Theme token values must be concrete; token references are only allowed as same-kind whole-value aliases in theme JSON.",
+          "value": "MixProtocolTokenReference(colors, fortal.shadow.stroke)"
+        },
+        {
+          "code": "constraint_violation",
+          "severity": "error",
+          "path": "/boxShadows/fortal.shadow.5",
+          "message": "Theme token values must be concrete; token references are only allowed as same-kind whole-value aliases in theme JSON.",
+          "value": "MixProtocolTokenReference(colors, fortal.shadow.stroke)"
+        },
+        {
+          "code": "constraint_violation",
+          "severity": "error",
+          "path": "/boxShadows/fortal.shadow.6",
+          "message": "Theme token values must be concrete; token references are only allowed as same-kind whole-value aliases in theme JSON.",
+          "value": "MixProtocolTokenReference(colors, fortal.shadow.stroke)"
+        }
+      ]
+    }
+  ],
+  "styles": [
+    {
+      "id": "fortal-tokenized-flex-box-fixture",
+      "runtimeType": "FlexBoxStyler",
+      "status": "supported",
+      "tokenReferences": [
+        {
+          "kind": "colors",
+          "name": "fortal.accent.9"
+        },
+        {
+          "kind": "spaces",
+          "name": "fortal.space.2"
+        },
+        {
+          "kind": "spaces",
+          "name": "fortal.space.3"
+        }
+      ]
+    },
+    {
+      "id": "fortal-tokenized-flex-box-fluent",
+      "runtimeType": "FlexBoxStyler",
+      "status": "unsupported",
+      "diagnostics": [
+        {
+          "code": "unsupported_encode_value",
+          "severity": "error",
+          "path": "",
+          "message": "Expected box, got FlexBoxStyler."
+        },
+        {
+          "code": "unsupported_encode_value",
+          "severity": "error",
+          "path": "",
+          "message": "Expected text, got FlexBoxStyler."
+        },
+        {
+          "code": "unsupported_encode_value",
+          "severity": "error",
+          "path": "",
+          "message": "Expected flex, got FlexBoxStyler."
+        },
+        {
+          "code": "unsupported_encode_value",
+          "severity": "error",
+          "path": "",
+          "message": "Expected stack, got FlexBoxStyler."
+        },
+        {
+          "code": "unsupported_encode_value",
+          "severity": "error",
+          "path": "",
+          "message": "Expected icon, got FlexBoxStyler."
+        },
+        {
+          "code": "unsupported_encode_value",
+          "severity": "error",
+          "path": "",
+          "message": "Expected image, got FlexBoxStyler."
+        },
+        {
+          "code": "unsupported_encode_value",
+          "severity": "error",
+          "path": "",
+          "message": "Field \"box\" has 3 sources; expected one."
+        },
+        {
+          "code": "unsupported_encode_value",
+          "severity": "error",
+          "path": "",
+          "message": "Expected stack_box, got FlexBoxStyler."
+        }
+      ]
+    },
+    {
+      "id": "fortal-button",
+      "runtimeType": "RemixButtonStyler",
+      "status": "unsupported",
+      "diagnostics": [
+        {
+          "code": "unsupported_encode_value",
+          "severity": "error",
+          "path": "",
+          "message": "Expected box, got RemixButtonStyler."
+        },
+        {
+          "code": "unsupported_encode_value",
+          "severity": "error",
+          "path": "",
+          "message": "Expected text, got RemixButtonStyler."
+        },
+        {
+          "code": "unsupported_encode_value",
+          "severity": "error",
+          "path": "",
+          "message": "Expected flex, got RemixButtonStyler."
+        },
+        {
+          "code": "unsupported_encode_value",
+          "severity": "error",
+          "path": "",
+          "message": "Expected stack, got RemixButtonStyler."
+        },
+        {
+          "code": "unsupported_encode_value",
+          "severity": "error",
+          "path": "",
+          "message": "Expected icon, got RemixButtonStyler."
+        },
+        {
+          "code": "unsupported_encode_value",
+          "severity": "error",
+          "path": "",
+          "message": "Expected image, got RemixButtonStyler."
+        },
+        {
+          "code": "unsupported_encode_value",
+          "severity": "error",
+          "path": "",
+          "message": "Expected flex_box, got RemixButtonStyler."
+        },
+        {
+          "code": "unsupported_encode_value",
+          "severity": "error",
+          "path": "",
+          "message": "Expected stack_box, got RemixButtonStyler."
+        }
+      ]
+    }
+  ]
+}
