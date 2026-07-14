@@ -84,6 +84,13 @@ class RemixButton extends StatelessWidget {
     this.styleSpec,
   });
 
+  /// Composes widget-owned defaults with an incoming Button style.
+  ///
+  /// Protocol and inspection tooling should project this effective style so
+  /// it observes the same layout defaults as [build].
+  static RemixButtonStyler composeStyle(RemixButtonStyler style) =>
+      .new().mainAxisSize(.min).merge(style);
+
   static final styleFrom = RemixButtonStyler.new;
 
   /// Whether the button is in a loading state.
@@ -170,9 +177,7 @@ class RemixButton extends StatelessWidget {
 
   bool get _isEnabled => enabled && !loading && onPressed != null;
 
-  RemixButtonStyler _buildStyle() {
-    return RemixButtonStyler().mainAxisSize(.min).merge(style);
-  }
+  RemixButtonStyler _buildStyle() => composeStyle(style);
 
   Widget _buildContent(BuildContext context, RemixButtonSpec spec) {
     Widget? leadingIconWidget;

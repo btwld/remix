@@ -17,6 +17,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.8.0"
+  ack:
+    dependency: transitive
+    description:
+      name: ack
+      sha256: "1d9c3f8727cd2b2e04804b6b2d5e42953738f97239eee4e20dc7ef584f1775e4"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
   analyzer:
     dependency: transitive
     description:
@@ -425,12 +433,13 @@ packages:
     source: hosted
     version: "2.0.0"
   mix:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: mix
-      sha256: ed8382ac70d5d85c3d0f753c9f8f68f61d74958afbd05f3e3d7144a11ab8efad
-      url: "https://pub.dev"
-    source: hosted
+      path: "packages/mix"
+      ref: "07dafe904e56a9b60a172f4ef1863cf45564603a"
+      resolved-ref: "07dafe904e56a9b60a172f4ef1863cf45564603a"
+      url: "https://github.com/btwld/mix.git"
+    source: git
     version: "2.1.0"
   mix_annotations:
     dependency: transitive
@@ -440,6 +449,24 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.2"
+  mix_atlas:
+    dependency: transitive
+    description:
+      path: "packages/mix_atlas"
+      ref: "07dafe904e56a9b60a172f4ef1863cf45564603a"
+      resolved-ref: "07dafe904e56a9b60a172f4ef1863cf45564603a"
+      url: "https://github.com/btwld/mix.git"
+    source: git
+    version: "0.1.0"
+  mix_atlas_capture:
+    dependency: transitive
+    description:
+      path: "packages/mix_atlas_capture"
+      ref: "07dafe904e56a9b60a172f4ef1863cf45564603a"
+      resolved-ref: "07dafe904e56a9b60a172f4ef1863cf45564603a"
+      url: "https://github.com/btwld/mix.git"
+    source: git
+    version: "0.1.0"
   mix_generator:
     dependency: transitive
     description:
@@ -448,6 +475,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.2"
+  mix_protocol:
+    dependency: transitive
+    description:
+      path: "packages/mix_protocol"
+      ref: "07dafe904e56a9b60a172f4ef1863cf45564603a"
+      resolved-ref: "07dafe904e56a9b60a172f4ef1863cf45564603a"
+      url: "https://github.com/btwld/mix.git"
+    source: git
+    version: "1.0.0"
   mustache_template:
     dependency: transitive
     description:

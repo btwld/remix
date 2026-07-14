@@ -1,0 +1,118 @@
+{
+  "type": "flex_box",
+  "padding": {
+    "$merge": [
+      {
+        "left": {
+          "$token": "fortal.space.4",
+          "kind": "space"
+        },
+        "right": {
+          "$token": "fortal.space.4",
+          "kind": "space"
+        }
+      },
+      {
+        "top": {
+          "$token": "fortal.space.3",
+          "kind": "space"
+        },
+        "bottom": {
+          "$token": "fortal.space.3",
+          "kind": "space"
+        }
+      }
+    ]
+  },
+  "decoration": {
+    "$merge": [
+      {
+        "borderRadius": {
+          "$token": "fortal.radius.4"
+        }
+      },
+      {
+        "color": "#00000000"
+      }
+    ]
+  },
+  "mainAxisSize": "min",
+  "spacing": {
+    "$token": "fortal.space.3",
+    "kind": "space"
+  },
+  "variants": [
+    {
+      "kind": "widget_state",
+      "state": "focused",
+      "style": {
+        "type": "flex_box",
+        "decoration": {
+          "border": {
+            "top": {
+              "color": {
+                "$token": "fortal.focus.a8"
+              },
+              "width": {
+                "$token": "fortal.focus.ring.width",
+                "kind": "space"
+              }
+            },
+            "right": {
+              "color": {
+                "$token": "fortal.focus.a8"
+              },
+              "width": {
+                "$token": "fortal.focus.ring.width",
+                "kind": "space"
+              }
+            },
+            "bottom": {
+              "color": {
+                "$token": "fortal.focus.a8"
+              },
+              "width": {
+                "$token": "fortal.focus.ring.width",
+                "kind": "space"
+              }
+            },
+            "left": {
+              "color": {
+                "$token": "fortal.focus.a8"
+              },
+              "width": {
+                "$token": "fortal.focus.ring.width",
+                "kind": "space"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "kind": "widget_state",
+      "state": "hovered",
+      "style": {
+        "type": "flex_box",
+        "decoration": {
+          "color": {
+            "$token": "fortal.accent.a3"
+          }
+        }
+      }
+    },
+    {
+      "kind": "widget_state",
+      "state": "pressed",
+      "style": {
+        "type": "flex_box",
+        "decoration": {
+          "color": {
+            "$token": "fortal.accent.a4"
+          }
+        }
+      }
+    }
+  ],
+  "v": 1
+}
