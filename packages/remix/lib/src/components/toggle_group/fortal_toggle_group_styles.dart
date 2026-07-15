@@ -25,7 +25,6 @@ RemixToggleGroupStyler fortalToggleGroupStyler({
             width: FortalTokens.borderWidth1(),
           ),
         ),
-        borderRadius: BorderRadiusMix.all(_fortalToggleGroupRadius(size)),
         color: FortalTokens.colorSurface(),
       ),
       clipBehavior: .hardEdge,
@@ -34,12 +33,8 @@ RemixToggleGroupStyler fortalToggleGroupStyler({
     ),
     item: RemixToggleGroupItemStyler()
         .alignment(.center)
-        .spacing(_fortalToggleGroupSpacing(size))
-        .padding(_fortalToggleGroupPadding(size))
         .foregroundColor(FortalTokens.gray11())
         .labelFontWeight(.w500)
-        .labelFontSize(_fortalToggleGroupFontSize(size))
-        .iconSize(_fortalToggleGroupIconSize(size))
         .onHovered(
           RemixToggleGroupItemStyler().backgroundColor(FortalTokens.grayA3()),
         )
@@ -60,54 +55,46 @@ RemixToggleGroupStyler fortalToggleGroupStyler({
               .backgroundColor(FortalTokens.grayA3())
               .foregroundColor(FortalTokens.gray8()),
         ),
-  );
+  ).merge(_fortalToggleGroupSizeStyler(size));
 }
 
-Radius _fortalToggleGroupRadius(FortalToggleGroupSize size) {
+RemixToggleGroupStyler _fortalToggleGroupSizeStyler(
+  FortalToggleGroupSize size,
+) {
   return switch (size) {
-    .size1 || .size2 => FortalTokens.radius2(),
-    .size3 => FortalTokens.radius3(),
-  };
-}
-
-EdgeInsetsGeometryMix _fortalToggleGroupPadding(FortalToggleGroupSize size) {
-  return switch (size) {
-    .size1 => EdgeInsetsMix.symmetric(
-      vertical: FortalTokens.space1(),
-      horizontal: FortalTokens.space2(),
+    .size1 => RemixToggleGroupStyler(
+      container: FlexBoxStyler().borderRadiusAll(FortalTokens.radius2()),
+      item: RemixToggleGroupItemStyler(
+        container: FlexBoxStyler()
+            .paddingX(FortalTokens.space2())
+            .paddingY(FortalTokens.space1())
+            .spacing(2),
+        label: TextStyler().fontSize(12),
+        icon: IconStyler(size: 12),
+      ),
     ),
-    .size2 => EdgeInsetsMix.symmetric(
-      vertical: FortalTokens.space2(),
-      horizontal: FortalTokens.space3(),
+    .size2 => RemixToggleGroupStyler(
+      container: FlexBoxStyler().borderRadiusAll(FortalTokens.radius2()),
+      item: RemixToggleGroupItemStyler(
+        container: FlexBoxStyler()
+            .paddingX(FortalTokens.space3())
+            .paddingY(FortalTokens.space2())
+            .spacing(4),
+        label: TextStyler().fontSize(14),
+        icon: IconStyler(size: 16),
+      ),
     ),
-    .size3 => EdgeInsetsMix.symmetric(
-      vertical: FortalTokens.space2(),
-      horizontal: FortalTokens.space4(),
+    .size3 => RemixToggleGroupStyler(
+      container: FlexBoxStyler().borderRadiusAll(FortalTokens.radius3()),
+      item: RemixToggleGroupItemStyler(
+        container: FlexBoxStyler()
+            .paddingX(FortalTokens.space4())
+            .paddingY(FortalTokens.space2())
+            .spacing(6),
+        label: TextStyler().fontSize(16),
+        icon: IconStyler(size: 20),
+      ),
     ),
-  };
-}
-
-double _fortalToggleGroupSpacing(FortalToggleGroupSize size) {
-  return switch (size) {
-    .size1 => 2,
-    .size2 => 4,
-    .size3 => 6,
-  };
-}
-
-double _fortalToggleGroupFontSize(FortalToggleGroupSize size) {
-  return switch (size) {
-    .size1 => 12,
-    .size2 => 14,
-    .size3 => 16,
-  };
-}
-
-double _fortalToggleGroupIconSize(FortalToggleGroupSize size) {
-  return switch (size) {
-    .size1 => 12,
-    .size2 => 16,
-    .size3 => 20,
   };
 }
 

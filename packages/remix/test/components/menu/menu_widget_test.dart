@@ -500,11 +500,21 @@ void main() {
       );
     });
 
-    testWidgets('applies raw menu item styleSpec defaults', (tester) async {
+    testWidgets('raw item styleSpec bypasses per-item fluent styles', (
+      tester,
+    ) async {
       await tester.pumpRemixApp(
         RemixMenu<String>(
           trigger: const RemixMenuTrigger(label: 'Options'),
-          items: const [RemixMenuItem(value: 'copy', label: 'Copy')],
+          items: [
+            RemixMenuItem(
+              value: 'copy',
+              label: 'Copy',
+              style: RemixMenuItemStyler().label(
+                TextStyler().color(Colors.green),
+              ),
+            ),
+          ],
           styleSpec: const RemixMenuSpec(
             item: StyleSpec(
               spec: RemixMenuItemSpec(
@@ -527,6 +537,8 @@ void main() {
 
   group('RemixMenu Semantics and Accessibility', () {
     testWidgets('menu item has semantic label', (tester) async {
+      final semantics = tester.ensureSemantics();
+
       await tester.pumpRemixApp(
         RemixMenu<String>(
           trigger: const RemixMenuTrigger(label: 'Options'),
@@ -541,12 +553,22 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.byType(RemixMenu<String>), findsOneWidget);
+      await tester.tap(find.text('Options'));
+      await tester.pumpAndSettle();
+
+      final item = find.bySemanticsLabel('Copy item');
+      final itemCount = item.evaluate().length;
+      final itemSemantics = itemCount == 1 ? tester.getSemantics(item) : null;
+      semantics.dispose();
+      expect(itemCount, 1);
+      expect(itemSemantics, isSemantics(label: 'Copy item'));
     });
 
     testWidgets('menu item uses label as default semantic label', (
       tester,
     ) async {
+      final semantics = tester.ensureSemantics();
+
       await tester.pumpRemixApp(
         RemixMenu<String>(
           trigger: const RemixMenuTrigger(label: 'Options'),
@@ -555,7 +577,15 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.byType(RemixMenu<String>), findsOneWidget);
+      await tester.tap(find.text('Options'));
+      await tester.pumpAndSettle();
+
+      final item = find.bySemanticsLabel('Copy');
+      final itemCount = item.evaluate().length;
+      final itemSemantics = itemCount == 1 ? tester.getSemantics(item) : null;
+      semantics.dispose();
+      expect(itemCount, 1);
+      expect(itemSemantics, isSemantics(label: 'Copy'));
     });
   });
 

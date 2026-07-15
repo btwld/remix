@@ -397,11 +397,21 @@ void main() {
         );
       });
 
-      testWidgets('applies raw select item styleSpec defaults', (tester) async {
+      testWidgets('raw item styleSpec bypasses per-item fluent styles', (
+        tester,
+      ) async {
         await tester.pumpRemixApp(
           RemixSelect<String>(
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
-            items: const [RemixSelectItem(value: 'a', label: 'Option A')],
+            items: [
+              RemixSelectItem(
+                value: 'a',
+                label: 'Option A',
+                style: RemixSelectMenuItemStyler().text(
+                  TextStyler().color(Colors.green),
+                ),
+              ),
+            ],
             styleSpec: const RemixSelectSpec(
               item: StyleSpec(
                 spec: RemixSelectMenuItemSpec(
@@ -519,6 +529,8 @@ void main() {
       });
 
       testWidgets('applies semanticLabel to item', (tester) async {
+        final semantics = tester.ensureSemantics();
+
         await tester.pumpRemixApp(
           RemixSelect<String>(
             trigger: const RemixSelectTrigger(placeholder: 'Select'),
@@ -533,7 +545,37 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        expect(find.byType(RemixSelect<String>), findsOneWidget);
+        await tester.tap(find.byType(RemixSelect<String>));
+        await tester.pumpAndSettle();
+
+        final item = find.bySemanticsLabel('Custom Label');
+        final itemCount = item.evaluate().length;
+        final itemSemantics = itemCount == 1 ? tester.getSemantics(item) : null;
+        semantics.dispose();
+        expect(itemCount, 1);
+        expect(itemSemantics, isSemantics(label: 'Custom Label'));
+      });
+
+      testWidgets('uses one visible-label accessible name', (tester) async {
+        final semantics = tester.ensureSemantics();
+
+        await tester.pumpRemixApp(
+          RemixSelect<String>(
+            trigger: const RemixSelectTrigger(placeholder: 'Select'),
+            items: const [RemixSelectItem(value: 'a', label: 'Option A')],
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byType(RemixSelect<String>));
+        await tester.pumpAndSettle();
+
+        final item = find.bySemanticsLabel('Option A');
+        final itemCount = item.evaluate().length;
+        final itemSemantics = itemCount == 1 ? tester.getSemantics(item) : null;
+        semantics.dispose();
+        expect(itemCount, 1);
+        expect(itemSemantics, isSemantics(label: 'Option A'));
       });
     });
 
