@@ -54,6 +54,32 @@ class RemixToggleGroupItem<T> {
 }
 
 /// A styled, single-select toggle group with roving keyboard focus.
+///
+/// ## Example
+///
+/// ```dart
+/// RemixToggleGroup<String>(
+///   selectedValue: selectedValue,
+///   onChanged: (value) => setState(() => selectedValue = value),
+///   items: const [
+///     RemixToggleGroupItem(
+///       value: 'left',
+///       icon: Icons.format_align_left,
+///       semanticLabel: 'Align left',
+///     ),
+///     RemixToggleGroupItem(
+///       value: 'center',
+///       icon: Icons.format_align_center,
+///       semanticLabel: 'Align center',
+///     ),
+///     RemixToggleGroupItem(
+///       value: 'right',
+///       icon: Icons.format_align_right,
+///       semanticLabel: 'Align right',
+///     ),
+///   ],
+/// )
+/// ```
 class RemixToggleGroup<T> extends StatelessWidget {
   const RemixToggleGroup({
     super.key,
@@ -139,6 +165,11 @@ class RemixToggleGroup<T> extends StatelessWidget {
     return true;
   }
 
+  /// Forces the flex [direction] onto a resolved container so the [orientation]
+  /// argument wins over any direction coming from [style] or a raw [styleSpec].
+  ///
+  /// Applied after resolution because the raw [styleSpec] path bypasses styler
+  /// merging entirely, so this is the single point that covers both paths.
   StyleSpec<FlexBoxSpec> _withOrientation(StyleSpec<FlexBoxSpec> container) {
     final flex = container.spec.flex ?? const StyleSpec(spec: FlexSpec());
 
@@ -153,9 +184,10 @@ class RemixToggleGroup<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(_debugItemsAreValid());
 
+    // Direction is enforced post-resolution by _withOrientation so the same
+    // behavior applies to both fluent styles and raw style specs.
     final effectiveStyle = RemixToggleGroupStyler(
       container: FlexBoxStyler(
-        direction: orientation,
         mainAxisSize: .min,
       ).wrap(.intrinsicWidth().intrinsicHeight()),
     ).merge(style);

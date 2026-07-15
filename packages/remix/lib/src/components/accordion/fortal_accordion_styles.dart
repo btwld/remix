@@ -38,7 +38,12 @@ RemixAccordionStyler _fortalAccordionSurfaceStyler([
               color: FortalTokens.gray6(),
               width: FortalTokens.borderWidth1(),
             )
-            .color(FortalTokens.gray2()),
+            .color(FortalTokens.gray2())
+            .wrap(
+              .defaultTextStyle(
+                style: TextStyleMix().color(FortalTokens.gray12()),
+              ),
+            ),
       );
 }
 
@@ -55,7 +60,12 @@ RemixAccordionStyler _fortalAccordionSoftStyler([
               color: FortalTokens.accent6(),
               width: FortalTokens.borderWidth1(),
             )
-            .color(FortalTokens.accent2()),
+            .color(FortalTokens.accent2())
+            .wrap(
+              .defaultTextStyle(
+                style: TextStyleMix().color(FortalTokens.accent12()),
+              ),
+            ),
       );
 }
 

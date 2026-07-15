@@ -549,6 +549,33 @@ void main() {
         expect(find.byType(RemixTextField), findsOneWidget);
       });
 
+      testWidgets(
+        'layout override for one property keeps layout defaults',
+        (tester) async {
+          await tester.pumpRemixApp(
+            RemixTextField(
+              label: 'Label',
+              helperText: 'Helper',
+              style: RemixTextFieldStyler().layout(FlexBoxStyler().spacing(12)),
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          final flex = tester
+              .widget<ColumnBox>(find.byType(ColumnBox))
+              .styleSpec
+              ?.spec
+              .flex
+              ?.spec;
+
+          // Customizing spacing keeps the min-size / start-alignment defaults
+          // instead of falling back to ColumnBox's max / center.
+          expect(flex?.spacing, 12);
+          expect(flex?.mainAxisSize, MainAxisSize.min);
+          expect(flex?.crossAxisAlignment, CrossAxisAlignment.start);
+        },
+      );
+
       testWidgets('applies width and height constraints', (tester) async {
         await tester.pumpRemixApp(
           RemixTextField(style: RemixTextFieldStyler().width(300).height(60)),

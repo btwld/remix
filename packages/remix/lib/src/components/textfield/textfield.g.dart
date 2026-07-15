@@ -20,6 +20,7 @@ mixin _$RemixTextFieldSpec implements Spec<RemixTextFieldSpec>, Diagnosticable {
   Brightness? get keyboardAppearance;
   bool? get cursorOpacityAnimates;
   StyleSpec<FlexBoxSpec> get container;
+  StyleSpec<FlexBoxSpec> get layout;
   StyleSpec<TextSpec> get helperText;
   StyleSpec<TextSpec> get label;
 
@@ -41,6 +42,7 @@ mixin _$RemixTextFieldSpec implements Spec<RemixTextFieldSpec>, Diagnosticable {
     Brightness? keyboardAppearance,
     bool? cursorOpacityAnimates,
     StyleSpec<FlexBoxSpec>? container,
+    StyleSpec<FlexBoxSpec>? layout,
     StyleSpec<TextSpec>? helperText,
     StyleSpec<TextSpec>? label,
   }) {
@@ -59,6 +61,7 @@ mixin _$RemixTextFieldSpec implements Spec<RemixTextFieldSpec>, Diagnosticable {
       cursorOpacityAnimates:
           cursorOpacityAnimates ?? this.cursorOpacityAnimates,
       container: container ?? this.container,
+      layout: layout ?? this.layout,
       helperText: helperText ?? this.helperText,
       label: label ?? this.label,
     );
@@ -96,6 +99,7 @@ mixin _$RemixTextFieldSpec implements Spec<RemixTextFieldSpec>, Diagnosticable {
         t,
       ),
       container: container.lerp(other?.container, t),
+      layout: layout.lerp(other?.layout, t),
       helperText: helperText.lerp(other?.helperText, t),
       label: label.lerp(other?.label, t),
     );
@@ -116,6 +120,7 @@ mixin _$RemixTextFieldSpec implements Spec<RemixTextFieldSpec>, Diagnosticable {
     keyboardAppearance,
     cursorOpacityAnimates,
     container,
+    layout,
     helperText,
     label,
   ];
@@ -173,6 +178,7 @@ mixin _$RemixTextFieldSpec implements Spec<RemixTextFieldSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('keyboardAppearance', keyboardAppearance))
       ..add(DiagnosticsProperty('cursorOpacityAnimates', cursorOpacityAnimates))
       ..add(DiagnosticsProperty('container', container))
+      ..add(DiagnosticsProperty('layout', layout))
       ..add(DiagnosticsProperty('helperText', helperText))
       ..add(DiagnosticsProperty('label', label));
   }
@@ -579,6 +585,7 @@ mixin _$RemixTextFieldStylerMixin on Style<RemixTextFieldSpec>, Diagnosticable {
   Prop<EdgeInsets>? get $scrollPadding;
   Prop<Brightness>? get $keyboardAppearance;
   Prop<StyleSpec<FlexBoxSpec>>? get $container;
+  Prop<StyleSpec<FlexBoxSpec>>? get $layout;
   Prop<StyleSpec<TextSpec>>? get $helperText;
   Prop<StyleSpec<TextSpec>>? get $label;
 
@@ -647,6 +654,11 @@ mixin _$RemixTextFieldStylerMixin on Style<RemixTextFieldSpec>, Diagnosticable {
     return merge(RemixTextFieldStyler(container: value));
   }
 
+  /// Sets the layout.
+  RemixTextFieldStyler layout(FlexBoxStyler value) {
+    return merge(RemixTextFieldStyler(layout: value));
+  }
+
   /// Sets the helperText.
   RemixTextFieldStyler helperText(TextStyler value) {
     return merge(RemixTextFieldStyler(helperText: value));
@@ -706,6 +718,7 @@ mixin _$RemixTextFieldStylerMixin on Style<RemixTextFieldSpec>, Diagnosticable {
         other?.$keyboardAppearance,
       ),
       container: MixOps.merge($container, other?.$container),
+      layout: MixOps.merge($layout, other?.$layout),
       helperText: MixOps.merge($helperText, other?.$helperText),
       label: MixOps.merge($label, other?.$label),
       variants: MixOps.mergeVariants($variants, other?.$variants),
@@ -731,6 +744,7 @@ mixin _$RemixTextFieldStylerMixin on Style<RemixTextFieldSpec>, Diagnosticable {
       scrollPadding: MixOps.resolve(context, $scrollPadding),
       keyboardAppearance: MixOps.resolve(context, $keyboardAppearance),
       container: MixOps.resolve(context, $container),
+      layout: MixOps.resolve(context, $layout),
       helperText: MixOps.resolve(context, $helperText),
       label: MixOps.resolve(context, $label),
     );
@@ -761,6 +775,7 @@ mixin _$RemixTextFieldStylerMixin on Style<RemixTextFieldSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('scrollPadding', $scrollPadding))
       ..add(DiagnosticsProperty('keyboardAppearance', $keyboardAppearance))
       ..add(DiagnosticsProperty('container', $container))
+      ..add(DiagnosticsProperty('layout', $layout))
       ..add(DiagnosticsProperty('helperText', $helperText))
       ..add(DiagnosticsProperty('label', $label));
   }
@@ -780,6 +795,7 @@ mixin _$RemixTextFieldStylerMixin on Style<RemixTextFieldSpec>, Diagnosticable {
     $scrollPadding,
     $keyboardAppearance,
     $container,
+    $layout,
     $helperText,
     $label,
     $animation,

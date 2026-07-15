@@ -246,6 +246,42 @@ void main() {
       );
     });
 
+    testWidgets('item context variants compose with item state variants', (
+      tester,
+    ) async {
+      final style = RemixToggleGroupStyler(
+        item: RemixToggleGroupItemStyler()
+            .foregroundColor(Colors.red)
+            .onSelected(
+              RemixToggleGroupItemStyler().foregroundColor(Colors.blue),
+            )
+            .onRtl(RemixToggleGroupItemStyler().foregroundColor(Colors.green)),
+      );
+
+      await tester.pumpRemixApp(
+        RemixToggleGroup<String>(
+          items: const [
+            RemixToggleGroupItem(value: 'selected', label: 'Selected'),
+            RemixToggleGroupItem(value: 'other', label: 'Other'),
+          ],
+          selectedValue: 'selected',
+          onChanged: (_) {},
+          style: style,
+        ),
+        textDirection: TextDirection.rtl,
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        tester.widget<Text>(find.text('Selected')).style?.color,
+        Colors.blue,
+      );
+      expect(
+        tester.widget<Text>(find.text('Other')).style?.color,
+        Colors.green,
+      );
+    });
+
     testWidgets('tapping an item selects its value', (tester) async {
       final nodes = _focusNodes();
       addTearDown(() => _disposeNodes(nodes));
