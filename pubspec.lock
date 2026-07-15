@@ -436,8 +436,8 @@ packages:
     dependency: "direct overridden"
     description:
       path: "packages/mix"
-      ref: "83443465813a4ed49cd3be13afbc9c0831b540ad"
-      resolved-ref: "83443465813a4ed49cd3be13afbc9c0831b540ad"
+      ref: b926ac42b11f4017970e9c3fc9c5bacc24bfd439
+      resolved-ref: b926ac42b11f4017970e9c3fc9c5bacc24bfd439
       url: "https://github.com/btwld/mix.git"
     source: git
     version: "2.1.0"
@@ -453,8 +453,8 @@ packages:
     dependency: transitive
     description:
       path: "packages/mix_atlas"
-      ref: "83443465813a4ed49cd3be13afbc9c0831b540ad"
-      resolved-ref: "83443465813a4ed49cd3be13afbc9c0831b540ad"
+      ref: b926ac42b11f4017970e9c3fc9c5bacc24bfd439
+      resolved-ref: b926ac42b11f4017970e9c3fc9c5bacc24bfd439
       url: "https://github.com/btwld/mix.git"
     source: git
     version: "0.1.0"
@@ -462,8 +462,8 @@ packages:
     dependency: transitive
     description:
       path: "packages/mix_atlas_capture"
-      ref: "83443465813a4ed49cd3be13afbc9c0831b540ad"
-      resolved-ref: "83443465813a4ed49cd3be13afbc9c0831b540ad"
+      ref: b926ac42b11f4017970e9c3fc9c5bacc24bfd439
+      resolved-ref: b926ac42b11f4017970e9c3fc9c5bacc24bfd439
       url: "https://github.com/btwld/mix.git"
     source: git
     version: "0.1.0"
@@ -479,8 +479,8 @@ packages:
     dependency: transitive
     description:
       path: "packages/mix_protocol"
-      ref: "83443465813a4ed49cd3be13afbc9c0831b540ad"
-      resolved-ref: "83443465813a4ed49cd3be13afbc9c0831b540ad"
+      ref: b926ac42b11f4017970e9c3fc9c5bacc24bfd439
+      resolved-ref: b926ac42b11f4017970e9c3fc9c5bacc24bfd439
       url: "https://github.com/btwld/mix.git"
     source: git
     version: "1.0.0"
