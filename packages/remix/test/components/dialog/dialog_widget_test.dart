@@ -1,10 +1,242 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
 
 import '../../helpers/test_helpers.dart';
 
 void main() {
+  group('showRemixAlertDialog', () {
+    testWidgets('opens and renders alert content', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Builder(
+            builder: (context) => TextButton(
+              onPressed: () => showRemixAlertDialog<void>(
+                context: context,
+                barrierColor: Colors.black54,
+                semanticLabel: 'Delete project',
+                transitionDuration: Duration.zero,
+                builder: (context) => const Text('Alert content'),
+              ),
+              child: const Text('Open'),
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Open'));
+      await tester.pump();
+      await tester.pump();
+
+      expect(find.text('Alert content'), findsOneWidget);
+      expect(find.byType(NakedDialog), findsOneWidget);
+    });
+
+    testWidgets('rejects an empty semantic label', (tester) async {
+      late BuildContext hostContext;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Builder(
+            builder: (context) {
+              hostContext = context;
+              return const SizedBox.shrink();
+            },
+          ),
+        ),
+      );
+
+      expect(
+        () => showRemixAlertDialog<void>(
+          context: hostContext,
+          barrierColor: Colors.black54,
+          semanticLabel: '   ',
+          builder: (context) => const SizedBox.shrink(),
+        ),
+        throwsArgumentError,
+      );
+    });
+
+    testWidgets('does not dismiss from a barrier tap by default', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Builder(
+            builder: (context) => TextButton(
+              onPressed: () => showRemixAlertDialog<void>(
+                context: context,
+                barrierColor: Colors.black54,
+                semanticLabel: 'Delete project',
+                transitionDuration: Duration.zero,
+                builder: (context) => const SizedBox.square(
+                  key: ValueKey('alert-content'),
+                  dimension: 200,
+                ),
+              ),
+              child: const Text('Open'),
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Open'));
+      await tester.pump();
+      await tester.pump();
+      await tester.tapAt(const Offset(4, 4));
+      await tester.pump();
+
+      expect(find.byKey(const ValueKey('alert-content')), findsOneWidget);
+
+      Navigator.of(
+        tester.element(find.byKey(const ValueKey('alert-content'))),
+      ).pop();
+      await tester.pump();
+    });
+
+    testWidgets('Escape cancels with a null result', (tester) async {
+      final cancelNode = FocusNode(debugLabel: 'escape cancel action');
+      addTearDown(cancelNode.dispose);
+      Future<String?>? result;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Builder(
+            builder: (context) => TextButton(
+              onPressed: () {
+                result = showRemixAlertDialog<String>(
+                  context: context,
+                  barrierColor: Colors.black54,
+                  semanticLabel: 'Delete project',
+                  transitionDuration: Duration.zero,
+                  initialFocusNode: cancelNode,
+                  builder: (context) => TextButton(
+                    focusNode: cancelNode,
+                    onPressed: () => Navigator.of(context).pop('cancel'),
+                    child: const Text('Escape alert'),
+                  ),
+                );
+              },
+              child: const Text('Open'),
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Open'));
+      await tester.pump();
+      await tester.pump();
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pump();
+
+      expect(find.text('Escape alert'), findsNothing);
+      expect(await result, isNull);
+    });
+
+    testWidgets('system back cancels with a null result', (tester) async {
+      Future<String?>? result;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Builder(
+            builder: (context) => TextButton(
+              onPressed: () {
+                result = showRemixAlertDialog<String>(
+                  context: context,
+                  barrierColor: Colors.black54,
+                  semanticLabel: 'Delete project',
+                  transitionDuration: Duration.zero,
+                  builder: (context) => const Text('Back alert'),
+                );
+              },
+              child: const Text('Open'),
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Open'));
+      await tester.pump();
+      await tester.pump();
+      expect(await tester.binding.handlePopRoute(), isTrue);
+      await tester.pump();
+
+      expect(find.text('Back alert'), findsNothing);
+      expect(await result, isNull);
+    });
+
+    testWidgets('passes a cloned MixScope to the alert builder', (
+      tester,
+    ) async {
+      bool builderHasScope = false;
+      await tester.pumpRemixApp(
+        Builder(
+          builder: (context) => TextButton(
+            onPressed: () => showRemixAlertDialog<void>(
+              context: context,
+              barrierColor: Colors.black54,
+              semanticLabel: 'Delete project',
+              transitionDuration: Duration.zero,
+              builder: (context) {
+                builderHasScope = MixScope.maybeOf(context) != null;
+                return const Text('Scoped alert');
+              },
+            ),
+            child: const Text('Open'),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Open'));
+      await tester.pump();
+      await tester.pump();
+
+      expect(builderHasScope, isTrue);
+      expect(find.text('Scoped alert'), findsOneWidget);
+    });
+
+    testWidgets('focuses the requested node and wraps RemixDialog once', (
+      tester,
+    ) async {
+      final initialFocusNode = FocusNode(debugLabel: 'safe alert action');
+      addTearDown(initialFocusNode.dispose);
+
+      await tester.pumpRemixApp(
+        Builder(
+          builder: (context) => TextButton(
+            onPressed: () => showRemixAlertDialog<void>(
+              context: context,
+              barrierColor: Colors.black54,
+              semanticLabel: 'Delete project',
+              transitionDuration: Duration.zero,
+              initialFocusNode: initialFocusNode,
+              builder: (context) => Center(
+                child: RemixDialog(
+                  wrapInNakedDialog: false,
+                  title: 'Delete project',
+                  actions: [
+                    TextButton(
+                      focusNode: initialFocusNode,
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: const Text('Cancel'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            child: const Text('Open'),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Open'));
+      await tester.pump();
+      await tester.pump();
+
+      expect(initialFocusNode.hasFocus, isTrue);
+      expect(find.byType(NakedDialog), findsOneWidget);
+    });
+  });
+
   group('showRemixDialog', () {
     testWidgets('opens without a MixScope ancestor', (tester) async {
       await tester.pumpWidget(

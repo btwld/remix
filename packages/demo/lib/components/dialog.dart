@@ -40,3 +40,39 @@ Widget buildDividerUseCase(BuildContext context) {
     ),
   );
 }
+
+@widgetbook.UseCase(name: 'Alert Dialog', type: RemixDialog)
+Widget buildAlertDialogUseCase(BuildContext context) {
+  return Scaffold(
+    body: Center(
+      child: FortalButton(
+        label: 'Delete project',
+        onPressed: () {
+          showRemixAlertDialog<void>(
+            context: context,
+            barrierColor: Colors.black54,
+            semanticLabel: 'Delete project confirmation',
+            builder: (context) => Center(
+              child: FortalDialog(
+                wrapInNakedDialog: false,
+                title: 'Delete project?',
+                description:
+                    'This permanently deletes the project and all of its data.',
+                actions: [
+                  FortalButton.ghost(
+                    label: 'Cancel',
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                  FortalButton(
+                    label: 'Delete project',
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    ),
+  );
+}

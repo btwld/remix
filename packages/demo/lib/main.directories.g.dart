@@ -105,6 +105,10 @@ final directories = <_widgetbook.WidgetbookNode>[
         name: 'RemixDialog',
         useCases: [
           _widgetbook.WidgetbookUseCase(
+            name: 'Alert Dialog',
+            builder: _demo_components_dialog.buildAlertDialogUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
             name: 'Dialog Component',
             builder: _demo_components_dialog.buildDividerUseCase,
           ),

@@ -63,6 +63,51 @@ Future<T?> showRemixDialog<T>({
   );
 }
 
+/// Shows an urgent modal alert dialog with Remix styling support.
+///
+/// The [builder] returns the visual contents of the alert. When using
+/// [RemixDialog], set [RemixDialog.wrapInNakedDialog] to false because this
+/// helper supplies the alert-dialog semantics wrapper.
+Future<T?> showRemixAlertDialog<T>({
+  required BuildContext context,
+  required WidgetBuilder builder,
+  required Color barrierColor,
+  required String semanticLabel,
+  String? barrierLabel,
+  bool barrierDismissible = false,
+  bool useRootNavigator = true,
+  RouteSettings? routeSettings,
+  Offset? anchorPoint,
+  Duration transitionDuration = const Duration(milliseconds: 400),
+  RouteTransitionsBuilder? transitionBuilder,
+  FocusNode? initialFocusNode,
+}) {
+  final scope = MixScope.maybeOf(context);
+
+  return showNakedAlertDialog(
+    context: context,
+    barrierColor: barrierColor,
+    semanticLabel: semanticLabel,
+    barrierLabel: barrierLabel,
+    barrierDismissible: barrierDismissible,
+    useRootNavigator: useRootNavigator,
+    routeSettings: routeSettings,
+    anchorPoint: anchorPoint,
+    transitionDuration: transitionDuration,
+    transitionBuilder: transitionBuilder,
+    initialFocusNode: initialFocusNode,
+    builder: (routeContext) {
+      if (scope == null) return builder(routeContext);
+
+      return MixScope(
+        tokens: scope.tokens,
+        orderOfModifiers: scope.orderOfModifiers,
+        child: Builder(builder: builder),
+      );
+    },
+  );
+}
+
 /// A customizable dialog component.
 ///
 /// ## Example
@@ -92,6 +137,7 @@ class RemixDialog extends StatelessWidget {
     this.actions,
     this.modal = true,
     this.semanticLabel,
+    this.wrapInNakedDialog = true,
     this.style = const RemixDialogStyler.create(),
     this.styleSpec,
   }) : assert(
@@ -120,6 +166,12 @@ class RemixDialog extends StatelessWidget {
   /// Semantic label for accessibility.
   final String? semanticLabel;
 
+  /// Whether to add this component's own [NakedDialog] semantics wrapper.
+  ///
+  /// Set this to false when the component is built by
+  /// [showRemixAlertDialog], which supplies an alert-specific wrapper.
+  final bool wrapInNakedDialog;
+
   /// The style configuration for the dialog.
   final RemixDialogStyler style;
 
@@ -130,44 +182,48 @@ class RemixDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final content = RemixStyleSpecBuilder<RemixDialogSpec>(
+      style: style,
+      styleSpec: styleSpec,
+      builder: (context, spec) {
+        final hasActions = actions != null && actions!.isNotEmpty;
+        final isLoneChild =
+            child != null &&
+            title == null &&
+            description == null &&
+            !hasActions;
+
+        // Skip the default column so a fully custom body keeps its layout.
+        if (isLoneChild) {
+          return Box(styleSpec: spec.container, child: child!);
+        }
+
+        // title → description → child → actions; never discard provided content.
+        return Box(
+          styleSpec: spec.container,
+          child: Column(
+            mainAxisAlignment: .start,
+            mainAxisSize: .min,
+            crossAxisAlignment: .start,
+            children: [
+              if (title != null) StyledText(title!, styleSpec: spec.title),
+              if (description != null)
+                StyledText(description!, styleSpec: spec.description),
+              ?child,
+              if (hasActions)
+                FlexBox(styleSpec: spec.actions, children: actions!),
+            ],
+          ),
+        );
+      },
+    );
+
+    if (!wrapInNakedDialog) return content;
+
     return NakedDialog(
       modal: modal,
       semanticLabel: semanticLabel ?? title,
-      child: RemixStyleSpecBuilder<RemixDialogSpec>(
-        style: style,
-        styleSpec: styleSpec,
-        builder: (context, spec) {
-          final hasActions = actions != null && actions!.isNotEmpty;
-          final isLoneChild =
-              child != null &&
-              title == null &&
-              description == null &&
-              !hasActions;
-
-          // Skip the default column so a fully custom body keeps its layout.
-          if (isLoneChild) {
-            return Box(styleSpec: spec.container, child: child!);
-          }
-
-          // title → description → child → actions; never discard provided content.
-          return Box(
-            styleSpec: spec.container,
-            child: Column(
-              mainAxisAlignment: .start,
-              mainAxisSize: .min,
-              crossAxisAlignment: .start,
-              children: [
-                if (title != null) StyledText(title!, styleSpec: spec.title),
-                if (description != null)
-                  StyledText(description!, styleSpec: spec.description),
-                ?child,
-                if (hasActions)
-                  FlexBox(styleSpec: spec.actions, children: actions!),
-              ],
-            ),
-          );
-        },
-      ),
+      child: content,
     );
   }
 }

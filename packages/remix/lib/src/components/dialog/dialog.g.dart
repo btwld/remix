@@ -109,6 +109,7 @@ class FortalDialog extends StatelessWidget {
     this.actions,
     this.modal = true,
     this.semanticLabel,
+    this.wrapInNakedDialog = true,
   });
 
   final Widget? child;
@@ -123,6 +124,8 @@ class FortalDialog extends StatelessWidget {
 
   final String? semanticLabel;
 
+  final bool wrapInNakedDialog;
+
   @override
   Widget build(BuildContext context) {
     return fortalDialogStyler().call(
@@ -133,6 +136,7 @@ class FortalDialog extends StatelessWidget {
       actions: this.actions,
       modal: this.modal,
       semanticLabel: this.semanticLabel,
+      wrapInNakedDialog: this.wrapInNakedDialog,
     );
   }
 }
