@@ -23,6 +23,10 @@ void main() {
         RemixToggleGroupStyler.color(Colors.blue),
         RemixToggleGroupStyler().color(Colors.blue),
       );
+      expect(
+        RemixPopoverStyler.color(Colors.purple),
+        RemixPopoverStyler().color(Colors.purple),
+      );
     });
 
     test('forward a restricted Box surface from Select menuContainer', () {
