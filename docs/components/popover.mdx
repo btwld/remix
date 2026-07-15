@@ -1,0 +1,151 @@
+---
+title: Popover
+description: An anchored, dismissible overlay for supplementary interactive content.
+---
+
+`RemixPopover` displays rich content next to a trigger. It uses `NakedPopover`
+for positioning, focus restoration, keyboard activation, outside-tap dismissal,
+and programmatic control while Mix styles the overlay surface.
+
+Use a popover for contextual details, lightweight forms, previews, and actions.
+Use `RemixTooltip` for short, non-interactive hints and `RemixDialog` when the
+user must address modal content before continuing.
+
+## Basic usage
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:remix/remix.dart';
+
+class AccountPopover extends StatelessWidget {
+  const AccountPopover({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return FortalPopover(
+      semanticLabel: 'Show account details',
+      positioning: const OverlayPositionConfig(
+        targetAnchor: Alignment.bottomCenter,
+        followerAnchor: Alignment.topCenter,
+      ),
+      popoverChild: const SizedBox(
+        width: 240,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Signed in as'),
+            SizedBox(height: 8),
+            Text('person@example.com'),
+          ],
+        ),
+      ),
+      child: const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        child: Text('Account'),
+      ),
+    );
+  }
+}
+```
+
+The `child` is the trigger surface. `RemixPopover` supplies its tap, keyboard,
+focus, and button semantics, so the trigger normally should be visual content
+rather than another independently interactive button.
+
+## Programmatic control
+
+Provide a Flutter `MenuController` and disable `openOnTap` when another event
+owns the open state.
+
+```dart
+final controller = MenuController();
+
+RemixPopover(
+  controller: controller,
+  openOnTap: false,
+  popoverChild: const Text('Controlled content'),
+  child: const Text('Controlled trigger'),
+);
+
+controller.open();
+controller.close();
+```
+
+`onOpenRequested` and `onCloseRequested` can delay or animate a transition.
+The request callbacks must invoke their provided `showOverlay` or `hideOverlay`
+callback to complete the state change.
+
+## Positioning
+
+`OverlayPositionConfig` aligns one point on the trigger with one point on the
+overlay and can apply an additional offset.
+
+```dart
+const OverlayPositionConfig(
+  targetAnchor: Alignment.topRight,
+  followerAnchor: Alignment.bottomRight,
+  offset: Offset(0, -8),
+)
+```
+
+The overlay is clamped to the available screen bounds.
+
+## Styling
+
+`RemixPopoverStyler` styles the overlay container. The trigger keeps its own
+visual styling.
+
+```dart
+RemixPopover(
+  style: RemixPopoverStyler()
+      .paddingAll(16)
+      .constraints(BoxConstraintsMix(maxWidth: 320))
+      .backgroundColor(Colors.white)
+      .borderRadiusAll(12),
+  popoverChild: const Text('Custom popover'),
+  child: const Text('Open'),
+)
+```
+
+The `FortalPopover` preset adds Fortal spacing, border, radius, surface color,
+shadow, and a maximum width. Content remains fully composable.
+
+## Keyboard and accessibility
+
+- Tap the trigger or press Space or Enter while it is focused to toggle the popover.
+- Press Escape to close it and return focus to the trigger.
+- Clicking outside closes the overlay. `consumeOutsideTaps` controls whether that tap reaches the widget behind it.
+- Use `semanticLabel` when the trigger's visual content does not provide a clear accessible name.
+- Put interactive content in a logical focus order. Wrap complex content in `FocusTraversalGroup` when it needs a custom traversal policy.
+
+## Constructor
+
+```dart
+const RemixPopover({
+  Key? key,
+  required Widget popoverChild,
+  required Widget child,
+  OverlayPositionConfig positioning = const OverlayPositionConfig(),
+  bool consumeOutsideTaps = true,
+  bool useRootOverlay = false,
+  bool openOnTap = true,
+  FocusNode? triggerFocusNode,
+  VoidCallback? onOpen,
+  VoidCallback? onClose,
+  RawMenuAnchorOpenRequestedCallback? onOpenRequested,
+  RawMenuAnchorCloseRequestedCallback? onCloseRequested,
+  MenuController? controller,
+  String? semanticLabel,
+  bool excludeSemantics = false,
+  RemixPopoverStyler style = const RemixPopoverStyler.create(),
+  RemixPopoverSpec? styleSpec,
+})
+```
+
+## Style methods
+
+The styler includes the standard Remix container methods, including `container`,
+`padding`, `margin`, `alignment`, `color`, `backgroundColor`, `border`,
+`borderRadius`, `shadow`, `constraints`, `decoration`, `foregroundDecoration`,
+`transform`, `animate`, `variants`, `wrap`, and `modifier`.
