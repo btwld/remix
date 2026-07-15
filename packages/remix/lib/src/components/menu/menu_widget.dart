@@ -304,24 +304,7 @@ class _RemixMenuItemWidget<T> extends StatelessWidget {
 
   StyleSpec<RemixMenuItemSpec> _resolveStyle(BuildContext context) {
     final rawDefault = defaultStyleSpec;
-    if (rawDefault != null) {
-      final resolved = RemixMenuItemStyler.create(
-        container: Prop.value(rawDefault.spec.container),
-        label: Prop.value(rawDefault.spec.label),
-        leadingIcon: Prop.value(rawDefault.spec.leadingIcon),
-        trailingIcon: Prop.value(rawDefault.spec.trailingIcon),
-      ).merge(data.style).build(context);
-      final modifiers = [
-        ...?rawDefault.widgetModifiers,
-        ...?resolved.widgetModifiers,
-      ];
-
-      return StyleSpec(
-        spec: resolved.spec,
-        animation: resolved.animation ?? rawDefault.animation,
-        widgetModifiers: modifiers.isEmpty ? null : modifiers,
-      );
-    }
+    if (rawDefault != null) return rawDefault;
 
     final itemStyle = MixOps.merge(
       defaultStyle,
@@ -342,38 +325,40 @@ class _RemixMenuItemWidget<T> extends StatelessWidget {
       builder: (context, state, _) {
         final controller = NakedMenuItemState.controllerOf<T>(context);
 
-        return ListenableBuilder(
-          listenable: controller,
-          builder: (context, child) {
-            return WidgetStateProvider(
-              states: controller.value,
-              child: Builder(
-                builder: (context) {
-                  return StyleSpecBuilder<RemixMenuItemSpec>(
-                    styleSpec: _resolveStyle(context),
-                    builder: (context, spec) {
-                      return FlexBox(
-                        styleSpec: spec.container,
-                        children: [
-                          if (data.leadingIcon != null)
-                            StyledIcon(
-                              icon: data.leadingIcon!,
-                              styleSpec: spec.leadingIcon,
-                            ),
-                          StyledText(data.label, styleSpec: spec.label),
-                          if (data.trailingIcon != null)
-                            StyledIcon(
-                              icon: data.trailingIcon!,
-                              styleSpec: spec.trailingIcon,
-                            ),
-                        ],
-                      );
-                    },
-                  );
-                },
-              ),
-            );
-          },
+        return ExcludeSemantics(
+          child: ListenableBuilder(
+            listenable: controller,
+            builder: (context, child) {
+              return WidgetStateProvider(
+                states: controller.value,
+                child: Builder(
+                  builder: (context) {
+                    return StyleSpecBuilder<RemixMenuItemSpec>(
+                      styleSpec: _resolveStyle(context),
+                      builder: (context, spec) {
+                        return FlexBox(
+                          styleSpec: spec.container,
+                          children: [
+                            if (data.leadingIcon != null)
+                              StyledIcon(
+                                icon: data.leadingIcon!,
+                                styleSpec: spec.leadingIcon,
+                              ),
+                            StyledText(data.label, styleSpec: spec.label),
+                            if (data.trailingIcon != null)
+                              StyledIcon(
+                                icon: data.trailingIcon!,
+                                styleSpec: spec.trailingIcon,
+                              ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                ),
+              );
+            },
+          ),
         );
       },
     );

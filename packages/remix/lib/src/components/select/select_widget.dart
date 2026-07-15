@@ -390,23 +390,7 @@ class _RemixSelectItemWidget<T> extends StatelessWidget {
 
   StyleSpec<RemixSelectMenuItemSpec> _resolveStyle(BuildContext context) {
     final rawDefault = defaultStyleSpec;
-    if (rawDefault != null) {
-      final resolved = RemixSelectMenuItemStyler.create(
-        container: Prop.value(rawDefault.spec.container),
-        text: Prop.value(rawDefault.spec.text),
-        icon: Prop.value(rawDefault.spec.icon),
-      ).merge(data.style).build(context);
-      final modifiers = [
-        ...?rawDefault.widgetModifiers,
-        ...?resolved.widgetModifiers,
-      ];
-
-      return StyleSpec(
-        spec: resolved.spec,
-        animation: resolved.animation ?? rawDefault.animation,
-        widgetModifiers: modifiers.isEmpty ? null : modifiers,
-      );
-    }
+    if (rawDefault != null) return rawDefault;
 
     final itemStyle = MixOps.merge(
       defaultStyle,
@@ -426,29 +410,31 @@ class _RemixSelectItemWidget<T> extends StatelessWidget {
       builder: (context, states, _) {
         final controller = NakedSelectOptionState.controllerOf<T>(context);
 
-        return ListenableBuilder(
-          listenable: controller,
-          builder: (context, _) {
-            return WidgetStateProvider(
-              states: controller.value,
-              child: Builder(
-                builder: (context) => StyleSpecBuilder(
-                  styleSpec: _resolveStyle(context),
-                  builder: (context, spec) => RowBox(
-                    styleSpec: spec.container,
-                    children: [
-                      // ignore: avoid-flexible-outside-flex
-                      Expanded(
-                        child: StyledText(data.label, styleSpec: spec.text),
-                      ),
-                      if (states.isSelected)
-                        StyledIcon(icon: Icons.check, styleSpec: spec.icon),
-                    ],
+        return ExcludeSemantics(
+          child: ListenableBuilder(
+            listenable: controller,
+            builder: (context, _) {
+              return WidgetStateProvider(
+                states: controller.value,
+                child: Builder(
+                  builder: (context) => StyleSpecBuilder(
+                    styleSpec: _resolveStyle(context),
+                    builder: (context, spec) => RowBox(
+                      styleSpec: spec.container,
+                      children: [
+                        // ignore: avoid-flexible-outside-flex
+                        Expanded(
+                          child: StyledText(data.label, styleSpec: spec.text),
+                        ),
+                        if (states.isSelected)
+                          StyledIcon(icon: Icons.check, styleSpec: spec.icon),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         );
       },
     );

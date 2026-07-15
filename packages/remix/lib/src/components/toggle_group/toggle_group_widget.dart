@@ -2,7 +2,10 @@ part of 'toggle_group.dart';
 
 /// Declarative data for one option in a [RemixToggleGroup].
 class RemixToggleGroupItem<T> {
-  /// The value selected when this item is activated.
+  /// The non-null value selected when this item is activated.
+  ///
+  /// Values in a group must be unique and must keep stable equality and hash-code
+  /// behavior for the lifetime of the rendered item.
   final T value;
 
   /// Optional text shown in the item.
@@ -13,7 +16,7 @@ class RemixToggleGroupItem<T> {
 
   /// Accessibility label for this item.
   ///
-  /// Falls back to [label] when omitted.
+  /// Falls back to [label] when omitted. Icon-only items must provide this.
   final String? semanticLabel;
 
   /// Whether the item can receive focus and be activated.
@@ -37,9 +40,16 @@ class RemixToggleGroupItem<T> {
     this.focusNode,
     this.autofocus = false,
     this.style = const RemixToggleGroupItemStyler.create(),
-  }) : assert(
+  }) : assert(value != null, 'Toggle group item values must be non-null'),
+       assert(label != '', 'Item labels must not be empty'),
+       assert(semanticLabel != '', 'Item semantic labels must not be empty'),
+       assert(
          label != null || icon != null,
          'At least one of label or icon must be provided',
+       ),
+       assert(
+         label != null || semanticLabel != null,
+         'Icon-only toggle group items require a semanticLabel',
        );
 }
 
@@ -60,12 +70,22 @@ class RemixToggleGroup<T> extends StatelessWidget {
   });
 
   /// Items rendered in visual and focus-traversal order.
+  ///
+  /// Item values must be non-null and unique. The list may be empty when
+  /// [selectedValue] is null. Do not mutate the list after constructing the
+  /// widget; rebuild with a new list when its contents or order change.
   final List<RemixToggleGroupItem<T>> items;
 
-  /// The currently selected item value.
+  /// The currently selected item value, or null when no item is selected.
+  ///
+  /// A non-null value must match exactly one item in [items]. Null is reserved
+  /// as the no-selection sentinel and cannot be used as an item value.
   final T? selectedValue;
 
   /// Called when an item is activated with a different value.
+  ///
+  /// When null, the entire group is disabled, including focus, activation,
+  /// semantics actions, and disabled item-state styling.
   final ValueChanged<T?>? onChanged;
 
   /// Whether the whole group is interactive.
@@ -91,6 +111,34 @@ class RemixToggleGroup<T> extends StatelessWidget {
 
   static final styleFrom = RemixToggleGroupStyler.new;
 
+  bool _debugItemsAreValid() {
+    final values = <T>{};
+    var autofocusCount = 0;
+
+    for (final item in items) {
+      if (!values.add(item.value)) {
+        throw FlutterError(
+          'RemixToggleGroup item values must be unique. '
+          'Duplicate value: ${item.value}.',
+        );
+      }
+      if (item.autofocus) autofocusCount += 1;
+    }
+
+    if (selectedValue != null && !values.contains(selectedValue)) {
+      throw FlutterError(
+        'RemixToggleGroup selectedValue must match one item. '
+        'No item has value: $selectedValue.',
+      );
+    }
+
+    if (autofocusCount > 1) {
+      throw FlutterError('Only one item may autofocus in a RemixToggleGroup.');
+    }
+
+    return true;
+  }
+
   StyleSpec<FlexBoxSpec> _withOrientation(StyleSpec<FlexBoxSpec> container) {
     final flex = container.spec.flex ?? const StyleSpec(spec: FlexSpec());
 
@@ -103,19 +151,14 @@ class RemixToggleGroup<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    assert(_debugItemsAreValid());
+
     final effectiveStyle = RemixToggleGroupStyler(
       container: FlexBoxStyler(
         direction: orientation,
         mainAxisSize: .min,
       ).wrap(.intrinsicWidth().intrinsicHeight()),
     ).merge(style);
-    // Resolve group-level context variants now, while retaining nested item
-    // variants for resolution inside each option's WidgetStateProvider.
-    final activeStyle =
-        // Mix does not expose another way to retain nested item variants.
-        // ignore: invalid_use_of_visible_for_testing_member
-        effectiveStyle.mergeActiveVariants(context, namedVariants: const {})
-            as RemixToggleGroupStyler;
 
     return NakedToggleGroup<T>(
       selectedValue: selectedValue,
@@ -136,7 +179,7 @@ class RemixToggleGroup<T> extends StatelessWidget {
                 _RemixToggleGroupItemWidget(
                   key: ValueKey(item.value),
                   data: item,
-                  defaultStyle: styleSpec == null ? activeStyle.$item : null,
+                  defaultStyle: styleSpec == null ? effectiveStyle : null,
                   defaultStyleSpec: styleSpec == null ? null : spec.item,
                 ),
             ],
@@ -156,36 +199,21 @@ class _RemixToggleGroupItemWidget<T> extends StatelessWidget {
   });
 
   final RemixToggleGroupItem<T> data;
-  final Prop<StyleSpec<RemixToggleGroupItemSpec>>? defaultStyle;
+  final RemixToggleGroupStyler? defaultStyle;
   final StyleSpec<RemixToggleGroupItemSpec>? defaultStyleSpec;
 
   StyleSpec<RemixToggleGroupItemSpec> _resolveStyle(BuildContext context) {
     final rawDefault = defaultStyleSpec;
-    if (rawDefault != null) {
-      final resolved = RemixToggleGroupItemStyler.create(
-        container: Prop.value(rawDefault.spec.container),
-        label: Prop.value(rawDefault.spec.label),
-        icon: Prop.value(rawDefault.spec.icon),
-      ).merge(data.style).build(context);
-      final modifiers = [
-        ...?rawDefault.widgetModifiers,
-        ...?resolved.widgetModifiers,
-      ];
+    if (rawDefault != null) return rawDefault;
 
-      return StyleSpec(
-        spec: resolved.spec,
-        animation: resolved.animation ?? rawDefault.animation,
-        widgetModifiers: modifiers.isEmpty ? null : modifiers,
-      );
-    }
-
-    final itemStyle = MixOps.merge(
-      defaultStyle,
-      Prop.maybeMix<StyleSpec<RemixToggleGroupItemSpec>>(data.style),
+    final groupStyle = defaultStyle!;
+    final compositeStyle = groupStyle.merge(
+      RemixToggleGroupStyler(item: data.style),
     );
 
-    return MixOps.resolve(context, itemStyle) ??
-        const StyleSpec(spec: RemixToggleGroupItemSpec());
+    // Build the composite under this option's WidgetStateProvider. Mix then
+    // resolves group context variants and nested item-state variants together.
+    return compositeStyle.build(context).spec.item;
   }
 
   @override
@@ -201,19 +229,21 @@ class _RemixToggleGroupItemWidget<T> extends StatelessWidget {
           states: state.states,
           child: Builder(
             builder: (context) {
-              return StyleSpecBuilder<RemixToggleGroupItemSpec>(
-                styleSpec: _resolveStyle(context),
-                builder: (context, spec) {
-                  return RowBox(
-                    styleSpec: spec.container,
-                    children: [
-                      if (data.icon != null)
-                        StyledIcon(icon: data.icon!, styleSpec: spec.icon),
-                      if (data.label != null)
-                        StyledText(data.label!, styleSpec: spec.label),
-                    ],
-                  );
-                },
+              return ExcludeSemantics(
+                child: StyleSpecBuilder<RemixToggleGroupItemSpec>(
+                  styleSpec: _resolveStyle(context),
+                  builder: (context, spec) {
+                    return RowBox(
+                      styleSpec: spec.container,
+                      children: [
+                        if (data.icon != null)
+                          StyledIcon(icon: data.icon!, styleSpec: spec.icon),
+                        if (data.label != null)
+                          StyledText(data.label!, styleSpec: spec.label),
+                      ],
+                    );
+                  },
+                ),
               );
             },
           ),

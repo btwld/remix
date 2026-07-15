@@ -43,6 +43,40 @@ void _disposeNodes(List<FocusNode> nodes) {
 }
 
 void main() {
+  group('RemixToggleGroupItem contract', () {
+    test('requires a non-null value', () {
+      String? value;
+
+      expect(
+        () => RemixToggleGroupItem<String?>(value: value, label: 'List'),
+        throwsAssertionError,
+      );
+    });
+
+    test('requires an accessible name for icon-only items', () {
+      expect(
+        () =>
+            RemixToggleGroupItem<String>(value: 'grid', icon: Icons.grid_view),
+        throwsAssertionError,
+      );
+    });
+
+    test('rejects empty labels and semantic labels', () {
+      expect(
+        () => RemixToggleGroupItem(value: 'grid', label: ''),
+        throwsAssertionError,
+      );
+      expect(
+        () => RemixToggleGroupItem(
+          value: 'grid',
+          icon: Icons.grid_view,
+          semanticLabel: '',
+        ),
+        throwsAssertionError,
+      );
+    });
+  });
+
   group('RemixToggleGroup', () {
     testWidgets('renders all items', (tester) async {
       final nodes = _focusNodes();
@@ -106,6 +140,72 @@ void main() {
       expect(listPosition.dy, lessThan(gridPosition.dy));
     });
 
+    testWidgets('styleSpec bypasses fluent style resolution', (tester) async {
+      var fluentBuilds = 0;
+      final fluentStyle = RemixToggleGroupStyler().onBuilder((context) {
+        fluentBuilds += 1;
+
+        return RemixToggleGroupStyler(
+          item: RemixToggleGroupItemStyler().foregroundColor(Colors.blue),
+        );
+      });
+      const rawSpec = RemixToggleGroupSpec(
+        item: StyleSpec(
+          spec: RemixToggleGroupItemSpec(
+            label: StyleSpec(
+              spec: TextSpec(style: TextStyle(color: Colors.red)),
+            ),
+          ),
+        ),
+      );
+
+      await tester.pumpRemixApp(
+        RemixToggleGroup<String>(
+          items: const [RemixToggleGroupItem(value: 'list', label: 'List')],
+          selectedValue: 'list',
+          onChanged: (_) {},
+          style: fluentStyle,
+          styleSpec: rawSpec,
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(fluentBuilds, 0);
+      expect(tester.widget<Text>(find.text('List')).style?.color, Colors.red);
+    });
+
+    testWidgets('raw item defaults bypass per-item fluent styles', (
+      tester,
+    ) async {
+      const rawSpec = RemixToggleGroupSpec(
+        item: StyleSpec(
+          spec: RemixToggleGroupItemSpec(
+            label: StyleSpec(
+              spec: TextSpec(style: TextStyle(color: Colors.red)),
+            ),
+          ),
+        ),
+      );
+
+      await tester.pumpRemixApp(
+        RemixToggleGroup<String>(
+          items: [
+            RemixToggleGroupItem(
+              value: 'list',
+              label: 'List',
+              style: RemixToggleGroupItemStyler().foregroundColor(Colors.green),
+            ),
+          ],
+          selectedValue: 'list',
+          onChanged: (_) {},
+          styleSpec: rawSpec,
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(tester.widget<Text>(find.text('List')).style?.color, Colors.red);
+    });
+
     testWidgets('group context variants compose with item state variants', (
       tester,
     ) async {
@@ -166,6 +266,26 @@ void main() {
       expect(selected, 'grid');
     });
 
+    testWidgets('tapping the selected item does not emit a change', (
+      tester,
+    ) async {
+      var changes = 0;
+
+      await tester.pumpRemixApp(
+        RemixToggleGroup<String>(
+          items: const [RemixToggleGroupItem(value: 'list', label: 'List')],
+          selectedValue: 'list',
+          onChanged: (_) => changes += 1,
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('List'));
+      await tester.pumpAndSettle();
+
+      expect(changes, 0);
+    });
+
     testWidgets('a disabled item ignores taps', (tester) async {
       final nodes = _focusNodes();
       addTearDown(() => _disposeNodes(nodes));
@@ -184,6 +304,45 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(changes, 0);
+    });
+
+    testWidgets('a null callback disables interaction and item styling', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+      await tester.pumpRemixApp(
+        RemixToggleGroup<String>(
+          items: const [RemixToggleGroupItem(value: 'list', label: 'List')],
+          selectedValue: 'list',
+          style: RemixToggleGroupStyler(
+            item: RemixToggleGroupItemStyler()
+                .foregroundColor(Colors.red)
+                .onDisabled(
+                  RemixToggleGroupItemStyler().foregroundColor(Colors.grey),
+                ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(tester.widget<Text>(find.text('List')).style?.color, Colors.grey);
+      final option = find.bySemanticsLabel('List');
+      final optionCount = option.evaluate().length;
+      final optionSemantics = optionCount == 1
+          ? tester.getSemantics(option)
+          : null;
+      semantics.dispose();
+      expect(optionCount, 1);
+      expect(
+        optionSemantics,
+        isSemantics(
+          label: 'List',
+          isButton: true,
+          hasEnabledState: true,
+          isEnabled: false,
+          hasTapAction: false,
+        ),
+      );
     });
 
     testWidgets('exposes one tab stop and then exits the group', (
@@ -387,6 +546,54 @@ void main() {
       expect(nodes[0].hasFocus, isTrue);
     });
 
+    testWidgets('item identity follows values when items reorder', (
+      tester,
+    ) async {
+      final before = FocusNode();
+      addTearDown(before.dispose);
+      late StateSetter update;
+      var values = ['a', 'b', 'c'];
+
+      await tester.pumpRemixApp(
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextButton(
+              focusNode: before,
+              autofocus: true,
+              onPressed: () {},
+              child: const Text('Before'),
+            ),
+            StatefulBuilder(
+              builder: (context, setState) {
+                update = setState;
+
+                return RemixToggleGroup<String>(
+                  items: [
+                    for (final value in values)
+                      RemixToggleGroupItem(
+                        value: value,
+                        label: value.toUpperCase(),
+                      ),
+                  ],
+                  selectedValue: 'b',
+                  onChanged: (_) {},
+                );
+              },
+            ),
+          ],
+        ),
+      );
+      await tester.pumpAndSettle();
+      await sendKeyAndSettle(tester, LogicalKeyboardKey.tab);
+      expect(Focus.of(tester.element(find.text('B'))).hasFocus, isTrue);
+
+      update(() => values = ['c', 'a', 'b']);
+      await tester.pumpAndSettle();
+
+      expect(Focus.of(tester.element(find.text('B'))).hasFocus, isTrue);
+    });
+
     for (final key in [LogicalKeyboardKey.space, LogicalKeyboardKey.enter]) {
       testWidgets('$key activates the focused item', (tester) async {
         final nodes = _focusNodes();
@@ -471,9 +678,14 @@ void main() {
       await tester.pumpAndSettle();
 
       final option = find.bySemanticsLabel('Grid view');
-      expect(option, findsOneWidget);
+      final optionCount = option.evaluate().length;
+      final optionSemantics = optionCount == 1
+          ? tester.getSemantics(option)
+          : null;
+      semantics.dispose();
+      expect(optionCount, 1);
       expect(
-        tester.getSemantics(option),
+        optionSemantics,
         isSemantics(
           label: 'Grid view',
           isButton: true,
@@ -481,8 +693,165 @@ void main() {
           hasSelectedState: true,
         ),
       );
+    });
 
+    testWidgets('visible labels produce one accessible name', (tester) async {
+      final semantics = tester.ensureSemantics();
+
+      await tester.pumpRemixApp(
+        RemixToggleGroup<String>(
+          items: const [RemixToggleGroupItem(value: 'list', label: 'List')],
+          selectedValue: 'list',
+          onChanged: (_) {},
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final option = find.bySemanticsLabel('List');
+      final optionCount = option.evaluate().length;
+      final optionSemantics = optionCount == 1
+          ? tester.getSemantics(option)
+          : null;
       semantics.dispose();
+      expect(optionCount, 1);
+      expect(
+        optionSemantics,
+        isSemantics(
+          label: 'List',
+          isButton: true,
+          isSelected: true,
+          hasSelectedState: true,
+        ),
+      );
+    });
+
+    testWidgets('semanticLabel replaces visible label semantics', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+
+      await tester.pumpRemixApp(
+        RemixToggleGroup<String>(
+          items: const [
+            RemixToggleGroupItem(
+              value: 'list',
+              label: 'List',
+              semanticLabel: 'List view',
+            ),
+          ],
+          selectedValue: 'list',
+          onChanged: (_) {},
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final option = find.bySemanticsLabel('List view');
+      final optionCount = option.evaluate().length;
+      final optionSemantics = optionCount == 1
+          ? tester.getSemantics(option)
+          : null;
+      semantics.dispose();
+      expect(optionCount, 1);
+      expect(
+        optionSemantics,
+        isSemantics(
+          label: 'List view',
+          isButton: true,
+          isSelected: true,
+          hasSelectedState: true,
+        ),
+      );
+    });
+
+    testWidgets('excludeSemantics hides the group and its items', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+
+      await tester.pumpRemixApp(
+        RemixToggleGroup<String>(
+          items: const [RemixToggleGroupItem(value: 'list', label: 'List')],
+          selectedValue: 'list',
+          onChanged: (_) {},
+          semanticLabel: 'View style',
+          excludeSemantics: true,
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final groupCount = find.bySemanticsLabel('View style').evaluate().length;
+      final itemCount = find.bySemanticsLabel('List').evaluate().length;
+      semantics.dispose();
+      expect(groupCount, 0);
+      expect(itemCount, 0);
+    });
+
+    testWidgets('an empty group is valid when nothing is selected', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(
+        RemixToggleGroup<String>(
+          items: const [],
+          selectedValue: null,
+          onChanged: (_) {},
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byType(NakedToggleGroup<String>), findsOneWidget);
+      expect(find.byType(NakedToggleOption<String>), findsNothing);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('rejects duplicate item values', (tester) async {
+      await tester.pumpRemixApp(
+        RemixToggleGroup<String>(
+          items: const [
+            RemixToggleGroupItem(value: 'list', label: 'List'),
+            RemixToggleGroupItem(value: 'list', label: 'List again'),
+          ],
+          selectedValue: 'list',
+          onChanged: (_) {},
+        ),
+      );
+
+      expect(
+        tester.takeException().toString(),
+        contains('item values must be unique'),
+      );
+    });
+
+    testWidgets('rejects a selected value that is not an item', (tester) async {
+      await tester.pumpRemixApp(
+        RemixToggleGroup<String>(
+          items: const [RemixToggleGroupItem(value: 'list', label: 'List')],
+          selectedValue: 'grid',
+          onChanged: (_) {},
+        ),
+      );
+
+      expect(
+        tester.takeException().toString(),
+        contains('selectedValue must match one item'),
+      );
+    });
+
+    testWidgets('rejects more than one autofocus item', (tester) async {
+      await tester.pumpRemixApp(
+        RemixToggleGroup<String>(
+          items: const [
+            RemixToggleGroupItem(value: 'list', label: 'List', autofocus: true),
+            RemixToggleGroupItem(value: 'grid', label: 'Grid', autofocus: true),
+          ],
+          selectedValue: 'list',
+          onChanged: (_) {},
+        ),
+      );
+
+      expect(
+        tester.takeException().toString(),
+        contains('Only one item may autofocus'),
+      );
     });
 
     testWidgets('vertical orientation ignores horizontal arrows', (
@@ -511,41 +880,164 @@ void main() {
     });
   });
 
-  group('item widget states', () {
-    late List<FocusNode> selectedNodes;
-    widgetControllerTestAt<RemixToggleGroupItemSpec>(
-      'selected item exposes selected state',
-      index: 1,
-      build: () {
-        selectedNodes = _focusNodes();
-        addTearDown(() => _disposeNodes(selectedNodes));
-        return RemixToggleGroup<String>(
-          items: _items(selectedNodes),
-          selectedValue: 'grid',
-          onChanged: (_) {},
-        );
-      },
-      expectedStates: {WidgetState.selected},
-    );
+  group('item visual states', () {
+    testWidgets('selected style is removed when selection changes', (
+      tester,
+    ) async {
+      late StateSetter update;
+      var selectedValue = 'list';
+      final style = RemixToggleGroupStyler(
+        item: RemixToggleGroupItemStyler()
+            .foregroundColor(Colors.red)
+            .onSelected(
+              RemixToggleGroupItemStyler().foregroundColor(Colors.blue),
+            ),
+      );
 
-    late List<FocusNode> focusedNodes;
-    widgetControllerTestAt<RemixToggleGroupItemSpec>(
-      'focused item exposes focused state',
-      index: 0,
-      build: () {
-        focusedNodes = _focusNodes();
-        addTearDown(() => _disposeNodes(focusedNodes));
-        return RemixToggleGroup<String>(
-          items: _items(focusedNodes),
-          selectedValue: 'grid',
+      await tester.pumpRemixApp(
+        StatefulBuilder(
+          builder: (context, setState) {
+            update = setState;
+
+            return RemixToggleGroup<String>(
+              items: const [
+                RemixToggleGroupItem(value: 'list', label: 'List'),
+                RemixToggleGroupItem(value: 'grid', label: 'Grid'),
+              ],
+              selectedValue: selectedValue,
+              onChanged: (_) {},
+              style: style,
+            );
+          },
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(tester.widget<Text>(find.text('List')).style?.color, Colors.blue);
+      expect(tester.widget<Text>(find.text('Grid')).style?.color, Colors.red);
+
+      update(() => selectedValue = 'grid');
+      await tester.pumpAndSettle();
+
+      expect(tester.widget<Text>(find.text('List')).style?.color, Colors.red);
+      expect(tester.widget<Text>(find.text('Grid')).style?.color, Colors.blue);
+    });
+
+    testWidgets('disabled style wins when an item is also selected', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(
+        RemixToggleGroup<String>(
+          items: const [
+            RemixToggleGroupItem(value: 'list', label: 'List', enabled: false),
+          ],
+          selectedValue: 'list',
           onChanged: (_) {},
-        );
-      },
-      act: (tester) async {
-        focusedNodes[0].requestFocus();
-        await tester.pumpAndSettle();
-      },
-      expectedStates: {WidgetState.focused},
-    );
+          style: RemixToggleGroupStyler(
+            item: RemixToggleGroupItemStyler()
+                .foregroundColor(Colors.red)
+                .onSelected(
+                  RemixToggleGroupItemStyler().foregroundColor(Colors.blue),
+                )
+                .onDisabled(
+                  RemixToggleGroupItemStyler().foregroundColor(Colors.grey),
+                ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(tester.widget<Text>(find.text('List')).style?.color, Colors.grey);
+    });
+
+    testWidgets('focus style is removed when the focused item is disabled', (
+      tester,
+    ) async {
+      final node = FocusNode();
+      addTearDown(node.dispose);
+      late StateSetter update;
+      var itemEnabled = true;
+
+      await tester.pumpRemixApp(
+        StatefulBuilder(
+          builder: (context, setState) {
+            update = setState;
+
+            return RemixToggleGroup<String>(
+              items: [
+                RemixToggleGroupItem(
+                  value: 'list',
+                  label: 'List',
+                  enabled: itemEnabled,
+                  focusNode: node,
+                ),
+              ],
+              selectedValue: 'list',
+              onChanged: (_) {},
+              style: RemixToggleGroupStyler(
+                item: RemixToggleGroupItemStyler()
+                    .foregroundColor(Colors.red)
+                    .onFocused(
+                      RemixToggleGroupItemStyler().foregroundColor(
+                        Colors.green,
+                      ),
+                    )
+                    .onDisabled(
+                      RemixToggleGroupItemStyler().foregroundColor(Colors.grey),
+                    ),
+              ),
+            );
+          },
+        ),
+      );
+      node.requestFocus();
+      await tester.pumpAndSettle();
+      expect(node.hasFocus, isTrue);
+      expect(tester.widget<Text>(find.text('List')).style?.color, Colors.green);
+
+      update(() => itemEnabled = false);
+      await tester.pumpAndSettle();
+
+      expect(node.hasFocus, isFalse);
+      expect(tester.widget<Text>(find.text('List')).style?.color, Colors.grey);
+    });
+
+    testWidgets('per-item state variants override group item variants', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(
+        RemixToggleGroup<String>(
+          items: [
+            RemixToggleGroupItem(
+              value: 'list',
+              label: 'List',
+              style: RemixToggleGroupItemStyler().onSelected(
+                RemixToggleGroupItemStyler().foregroundColor(Colors.purple),
+              ),
+            ),
+            RemixToggleGroupItem(
+              value: 'grid',
+              label: 'Grid',
+              style: RemixToggleGroupItemStyler().foregroundColor(Colors.green),
+            ),
+          ],
+          selectedValue: 'list',
+          onChanged: (_) {},
+          style: RemixToggleGroupStyler(
+            item: RemixToggleGroupItemStyler()
+                .foregroundColor(Colors.red)
+                .onSelected(
+                  RemixToggleGroupItemStyler().foregroundColor(Colors.blue),
+                ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        tester.widget<Text>(find.text('List')).style?.color,
+        Colors.purple,
+      );
+      expect(tester.widget<Text>(find.text('Grid')).style?.color, Colors.green);
+    });
   });
 }
