@@ -160,6 +160,22 @@ void main() {
       expect(find.byType(RemixToggle), findsOneWidget);
     });
 
+    testWidgets('renders FortalToggleGroup', (tester) async {
+      await tester.pumpRemixApp(
+        FortalToggleGroup<String>(
+          selectedValue: 'a',
+          onChanged: (_) {},
+          items: const [
+            RemixToggleGroupItem(value: 'a', label: 'A'),
+            RemixToggleGroupItem(value: 'b', label: 'B'),
+          ],
+        ),
+      );
+
+      expect(find.byType(FortalToggleGroup<String>), findsOneWidget);
+      expect(find.byType(RemixToggleGroup<String>), findsOneWidget);
+    });
+
     testWidgets('renders FortalDialog', (tester) async {
       await tester.pumpRemixApp(const FortalDialog(title: 'Hello'));
       expect(find.byType(FortalDialog), findsOneWidget);

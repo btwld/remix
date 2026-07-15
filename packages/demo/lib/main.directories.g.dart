@@ -31,6 +31,8 @@ import 'package:demo/components/switch.dart' as _demo_components_switch;
 import 'package:demo/components/tabs.dart' as _demo_components_tabs;
 import 'package:demo/components/textfield.dart' as _demo_components_textfield;
 import 'package:demo/components/toggle.dart' as _demo_components_toggle;
+import 'package:demo/components/toggle_group.dart'
+    as _demo_components_toggle_group;
 import 'package:demo/components/tooltip.dart' as _demo_components_tooltip;
 import 'package:widgetbook/widgetbook.dart' as _widgetbook;
 
@@ -219,6 +221,15 @@ final directories = <_widgetbook.WidgetbookNode>[
           _widgetbook.WidgetbookUseCase(
             name: 'Toggle Component',
             builder: _demo_components_toggle.buildToggleUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'RemixToggleGroup',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Toggle Group Component',
+            builder: _demo_components_toggle_group.buildToggleGroupUseCase,
           ),
         ],
       ),
