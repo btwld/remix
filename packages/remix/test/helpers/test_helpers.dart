@@ -6,11 +6,17 @@ import 'package:remix/remix.dart';
 /// Extension methods for WidgetTester to simplify test setup and interactions
 extension WidgetTesterHelpers on WidgetTester {
   /// Pumps a Remix widget wrapped in a MaterialApp with Scaffold
-  Future<void> pumpRemixApp(Widget widget) async {
+  Future<void> pumpRemixApp(
+    Widget widget, {
+    TextDirection textDirection = TextDirection.ltr,
+  }) async {
     await pumpWidget(
       FortalScope(
         child: MaterialApp(
-          home: Scaffold(body: Center(child: widget)),
+          home: Directionality(
+            textDirection: textDirection,
+            child: Scaffold(body: Center(child: widget)),
+          ),
         ),
       ),
     );

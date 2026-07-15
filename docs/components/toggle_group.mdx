@@ -1,0 +1,150 @@
+---
+title: Toggle Group
+description: A single-select segmented control with roving keyboard focus
+keywords: [flutter, remix, toggle group, segmented control, roving focus, keyboard]
+---
+
+A toggle group presents a compact set of mutually exclusive options. Only one
+item is in the Tab order; arrow keys move focus without changing selection.
+
+## When to use this
+
+- **View switching**: Choose list, grid, or board presentation
+- **Formatting choices**: Pick one alignment or text mode
+- **Compact filters**: Select one option from a short, visible set
+- **Toolbar controls**: Preserve focus-only arrow navigation until activation
+
+## Basic implementation
+
+<CodeGroup title="Basic implementation" defaultLanguage="dart">
+```dart
+class ViewToggle extends StatefulWidget {
+  const ViewToggle({super.key});
+
+  @override
+  State<ViewToggle> createState() => _ViewToggleState();
+}
+
+class _ViewToggleState extends State<ViewToggle> {
+  String _value = 'list';
+
+  @override
+  Widget build(BuildContext context) {
+    return FortalToggleGroup<String>(
+      items: const [
+        RemixToggleGroupItem(
+          value: 'list',
+          label: 'List',
+          icon: Icons.view_list,
+        ),
+        RemixToggleGroupItem(
+          value: 'grid',
+          label: 'Grid',
+          icon: Icons.grid_view,
+        ),
+        RemixToggleGroupItem(
+          value: 'board',
+          label: 'Board',
+          icon: Icons.view_kanban,
+        ),
+      ],
+      selectedValue: _value,
+      onChanged: (value) {
+        if (value != null) setState(() => _value = value);
+      },
+      semanticLabel: 'View style',
+    );
+  }
+}
+```
+</CodeGroup>
+
+## Keyboard behavior
+
+- `Tab` enters on the selected item, or the first enabled item when none is selected
+- A second `Tab` leaves the group instead of visiting every item
+- `Arrow Left` / `Arrow Right` move focus in horizontal groups
+- `Arrow Up` / `Arrow Down` move focus in vertical groups
+- `Home` / `End` move focus to the first / last enabled item
+- `Space` / `Enter` activate the focused item
+- Arrow movement wraps when `loop` is true and clamps when false
+- Horizontal arrow direction follows the ambient text direction in RTL layouts
+
+Arrow, Home, and End keys move focus only. Selection changes after explicit
+activation with Space, Enter, or a pointer.
+
+## Per-item styling
+
+The group's `item` style is the default for every option. An item's `style` is
+merged afterward, so one option can add a local treatment while retaining group
+states and sizing.
+
+<CodeGroup title="Per-item style" defaultLanguage="dart">
+```dart
+RemixToggleGroup<String>(
+  items: [
+    const RemixToggleGroupItem(value: 'draft', label: 'Draft'),
+    RemixToggleGroupItem(
+      value: 'published',
+      label: 'Published',
+      style: RemixToggleGroupItemStyler().foregroundColor(Colors.green),
+    ),
+  ],
+  selectedValue: value,
+  onChanged: onChanged,
+  style: RemixToggleGroupStyler().item(
+    RemixToggleGroupItemStyler()
+        .paddingX(12)
+        .paddingY(8)
+        .onSelected(
+          RemixToggleGroupItemStyler().backgroundColor(Colors.green.shade50),
+        ),
+  ),
+)
+```
+</CodeGroup>
+
+## Constructor
+
+<CodeGroup title="RemixToggleGroup" defaultLanguage="dart">
+```dart
+const RemixToggleGroup<T>({
+  Key? key,
+  required List<RemixToggleGroupItem<T>> items,
+  required T? selectedValue,
+  ValueChanged<T?>? onChanged,
+  bool enabled = true,
+  Axis orientation = Axis.horizontal,
+  bool loop = true,
+  String? semanticLabel,
+  bool excludeSemantics = false,
+  RemixToggleGroupStyler style = const RemixToggleGroupStyler.create(),
+  RemixToggleGroupSpec? styleSpec,
+})
+```
+</CodeGroup>
+
+<CodeGroup title="RemixToggleGroupItem" defaultLanguage="dart">
+```dart
+const RemixToggleGroupItem<T>({
+  required T value,
+  String? label,
+  IconData? icon,
+  bool enabled = true,
+  FocusNode? focusNode,
+  bool autofocus = false,
+  RemixToggleGroupItemStyler style =
+      const RemixToggleGroupItemStyler.create(),
+})
+```
+</CodeGroup>
+
+## Fortal widgets
+
+`FortalToggleGroup` provides `soft` and `surface` variants plus three sizes.
+The recipe uses edge-to-edge items, a bordered surface container, selected
+accent colors, a visible keyboard focus ring, and disabled state styling.
+
+<Info>
+  See the [fortalToggleGroupStyler source code](https://github.com/btwld/remix/blob/main/packages/remix/lib/src/components/toggle_group/fortal_toggle_group_styles.dart) for all available options.
+</Info>
