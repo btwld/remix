@@ -206,17 +206,5 @@ class RemixTextFieldSpec with _$RemixTextFieldSpec {
        helperText = helperText ?? const StyleSpec(spec: TextSpec()),
        label = label ?? const StyleSpec(spec: TextSpec()),
        container = container ?? const StyleSpec(spec: FlexBoxSpec()),
-       layout =
-           layout ??
-           const StyleSpec(
-             spec: FlexBoxSpec(
-               flex: StyleSpec(
-                 spec: FlexSpec(
-                   crossAxisAlignment: .start,
-                   mainAxisSize: .min,
-                   spacing: 8.0,
-                 ),
-               ),
-             ),
-           );
+       layout = layout ?? const StyleSpec(spec: FlexBoxSpec());
 }
