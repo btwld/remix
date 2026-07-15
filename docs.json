@@ -67,6 +67,10 @@
         {
           "title": "Getting Started",
           "href": "/"
+        },
+        {
+          "title": "Styler API",
+          "href": "/styler-api"
         }
       ]
     },

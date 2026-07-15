@@ -86,80 +86,514 @@ mixin _$RemixBadgeSpec implements Spec<RemixBadgeSpec>, Diagnosticable {
 typedef _$RemixBadgeSpecMethods = _$RemixBadgeSpec; // ignore: unused_element
 
 // **************************************************************************
-// MixWidgetGenerator
+// SpecStylerGenerator
 // **************************************************************************
 
-/// Fortal-themed preset for [RemixBadge].
-class FortalBadge extends StatelessWidget {
-  const FortalBadge({
-    super.key,
-    this.variant = .solid,
-    this.size = .size2,
-    this.label,
-    this.child,
-    this.labelBuilder,
-  });
+class RemixBadgeStyler extends MixStyler<RemixBadgeStyler, RemixBadgeSpec>
+    with
+        RemixBoxStylerMixin<RemixBadgeStyler>,
+        LabelStyleMixin<RemixBadgeStyler> {
+  final Prop<StyleSpec<BoxSpec>>? $container;
+  final Prop<StyleSpec<TextSpec>>? $label;
 
-  const FortalBadge.solid({
-    super.key,
-    this.size = .size2,
-    this.label,
-    this.child,
-    this.labelBuilder,
-  }) : variant = FortalBadgeVariant.solid;
+  const RemixBadgeStyler.create({
+    Prop<StyleSpec<BoxSpec>>? container,
+    Prop<StyleSpec<TextSpec>>? label,
+    super.variants,
+    super.modifier,
+    super.animation,
+  }) : $container = container,
+       $label = label;
 
-  const FortalBadge.soft({
-    super.key,
-    this.size = .size2,
-    this.label,
-    this.child,
-    this.labelBuilder,
-  }) : variant = FortalBadgeVariant.soft;
+  RemixBadgeStyler({
+    BoxStyler? container,
+    TextStyler? label,
+    AnimationConfig? animation,
+    WidgetModifierConfig? modifier,
+    List<VariantStyle<RemixBadgeSpec>>? variants,
+  }) : this.create(
+         container: Prop.maybeMix(container),
+         label: Prop.maybeMix(label),
+         variants: variants,
+         modifier: modifier,
+         animation: animation,
+       );
 
-  const FortalBadge.surface({
-    super.key,
-    this.size = .size2,
-    this.label,
-    this.child,
-    this.labelBuilder,
-  }) : variant = FortalBadgeVariant.surface;
+  factory RemixBadgeStyler.container(BoxStyler value) =>
+      RemixBadgeStyler().container(value);
+  factory RemixBadgeStyler.label(TextStyler value) =>
+      RemixBadgeStyler().label(value);
+  factory RemixBadgeStyler.alignment(AlignmentGeometry value) =>
+      RemixBadgeStyler().alignment(value);
+  factory RemixBadgeStyler.padding(EdgeInsetsGeometryMix value) =>
+      RemixBadgeStyler().padding(value);
+  factory RemixBadgeStyler.margin(EdgeInsetsGeometryMix value) =>
+      RemixBadgeStyler().margin(value);
+  factory RemixBadgeStyler.constraints(BoxConstraintsMix value) =>
+      RemixBadgeStyler().constraints(value);
+  factory RemixBadgeStyler.decoration(DecorationMix value) =>
+      RemixBadgeStyler().decoration(value);
+  factory RemixBadgeStyler.foregroundDecoration(DecorationMix value) =>
+      RemixBadgeStyler().foregroundDecoration(value);
+  factory RemixBadgeStyler.clipBehavior(Clip value) =>
+      RemixBadgeStyler().clipBehavior(value);
+  factory RemixBadgeStyler.color(Color value) =>
+      RemixBadgeStyler().color(value);
+  factory RemixBadgeStyler.gradient(GradientMix value) =>
+      RemixBadgeStyler().gradient(value);
+  factory RemixBadgeStyler.border(BoxBorderMix value) =>
+      RemixBadgeStyler().border(value);
+  factory RemixBadgeStyler.borderRadius(BorderRadiusGeometryMix value) =>
+      RemixBadgeStyler().borderRadius(value);
+  factory RemixBadgeStyler.elevation(ElevationShadow value) =>
+      RemixBadgeStyler().elevation(value);
+  factory RemixBadgeStyler.shadow(BoxShadowMix value) =>
+      RemixBadgeStyler().shadow(value);
+  factory RemixBadgeStyler.shadows(List<BoxShadowMix> value) =>
+      RemixBadgeStyler().shadows(value);
+  factory RemixBadgeStyler.width(double value) =>
+      RemixBadgeStyler().width(value);
+  factory RemixBadgeStyler.height(double value) =>
+      RemixBadgeStyler().height(value);
+  factory RemixBadgeStyler.size(double width, double height) =>
+      RemixBadgeStyler().size(width, height);
+  factory RemixBadgeStyler.minWidth(double value) =>
+      RemixBadgeStyler().minWidth(value);
+  factory RemixBadgeStyler.maxWidth(double value) =>
+      RemixBadgeStyler().maxWidth(value);
+  factory RemixBadgeStyler.minHeight(double value) =>
+      RemixBadgeStyler().minHeight(value);
+  factory RemixBadgeStyler.maxHeight(double value) =>
+      RemixBadgeStyler().maxHeight(value);
+  factory RemixBadgeStyler.scale(
+    double scale, {
+    Alignment alignment = .center,
+  }) => RemixBadgeStyler().scale(scale, alignment: alignment);
+  factory RemixBadgeStyler.rotate(
+    double radians, {
+    Alignment alignment = .center,
+  }) => RemixBadgeStyler().rotate(radians, alignment: alignment);
+  factory RemixBadgeStyler.translate(double x, double y, [double z = 0.0]) =>
+      RemixBadgeStyler().translate(x, y, z);
+  factory RemixBadgeStyler.skew(double skewX, double skewY) =>
+      RemixBadgeStyler().skew(skewX, skewY);
+  factory RemixBadgeStyler.textStyle(TextStyler value) =>
+      RemixBadgeStyler().textStyle(value);
+  factory RemixBadgeStyler.image(DecorationImageMix value) =>
+      RemixBadgeStyler().image(value);
+  factory RemixBadgeStyler.shape(ShapeBorderMix value) =>
+      RemixBadgeStyler().shape(value);
+  factory RemixBadgeStyler.backgroundImage(
+    ImageProvider image, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) => RemixBadgeStyler().backgroundImage(
+    image,
+    fit: fit,
+    alignment: alignment,
+    repeat: repeat,
+  );
+  factory RemixBadgeStyler.backgroundImageUrl(
+    String url, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) => RemixBadgeStyler().backgroundImageUrl(
+    url,
+    fit: fit,
+    alignment: alignment,
+    repeat: repeat,
+  );
+  factory RemixBadgeStyler.backgroundImageAsset(
+    String path, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) => RemixBadgeStyler().backgroundImageAsset(
+    path,
+    fit: fit,
+    alignment: alignment,
+    repeat: repeat,
+  );
+  factory RemixBadgeStyler.linearGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? begin,
+    AlignmentGeometry? end,
+    TileMode? tileMode,
+  }) => RemixBadgeStyler().linearGradient(
+    colors: colors,
+    stops: stops,
+    begin: begin,
+    end: end,
+    tileMode: tileMode,
+  );
+  factory RemixBadgeStyler.radialGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? radius,
+    AlignmentGeometry? focal,
+    double? focalRadius,
+    TileMode? tileMode,
+  }) => RemixBadgeStyler().radialGradient(
+    colors: colors,
+    stops: stops,
+    center: center,
+    radius: radius,
+    focal: focal,
+    focalRadius: focalRadius,
+    tileMode: tileMode,
+  );
+  factory RemixBadgeStyler.sweepGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? startAngle,
+    double? endAngle,
+    TileMode? tileMode,
+  }) => RemixBadgeStyler().sweepGradient(
+    colors: colors,
+    stops: stops,
+    center: center,
+    startAngle: startAngle,
+    endAngle: endAngle,
+    tileMode: tileMode,
+  );
+  factory RemixBadgeStyler.foregroundLinearGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? begin,
+    AlignmentGeometry? end,
+    TileMode? tileMode,
+  }) => RemixBadgeStyler().foregroundLinearGradient(
+    colors: colors,
+    stops: stops,
+    begin: begin,
+    end: end,
+    tileMode: tileMode,
+  );
+  factory RemixBadgeStyler.foregroundRadialGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? radius,
+    AlignmentGeometry? focal,
+    double? focalRadius,
+    TileMode? tileMode,
+  }) => RemixBadgeStyler().foregroundRadialGradient(
+    colors: colors,
+    stops: stops,
+    center: center,
+    radius: radius,
+    focal: focal,
+    focalRadius: focalRadius,
+    tileMode: tileMode,
+  );
+  factory RemixBadgeStyler.foregroundSweepGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? startAngle,
+    double? endAngle,
+    TileMode? tileMode,
+  }) => RemixBadgeStyler().foregroundSweepGradient(
+    colors: colors,
+    stops: stops,
+    center: center,
+    startAngle: startAngle,
+    endAngle: endAngle,
+    tileMode: tileMode,
+  );
+  factory RemixBadgeStyler.transform(
+    Matrix4 value, {
+    Alignment alignment = .center,
+  }) => RemixBadgeStyler().transform(value, alignment: alignment);
 
-  const FortalBadge.outline({
-    super.key,
-    this.size = .size2,
-    this.label,
-    this.child,
-    this.labelBuilder,
-  }) : variant = FortalBadgeVariant.outline;
+  RemixBadgeStyler alignment(AlignmentGeometry value) {
+    return container(BoxStyler().alignment(value));
+  }
 
-  final FortalBadgeVariant variant;
+  RemixBadgeStyler padding(EdgeInsetsGeometryMix value) {
+    return container(BoxStyler().padding(value));
+  }
 
-  final FortalBadgeSize size;
+  RemixBadgeStyler margin(EdgeInsetsGeometryMix value) {
+    return container(BoxStyler().margin(value));
+  }
 
-  final String? label;
+  RemixBadgeStyler constraints(BoxConstraintsMix value) {
+    return container(BoxStyler().constraints(value));
+  }
 
-  final Widget? child;
+  RemixBadgeStyler decoration(DecorationMix value) {
+    return container(BoxStyler().decoration(value));
+  }
 
-  final RemixBadgeLabelBuilder? labelBuilder;
+  RemixBadgeStyler foregroundDecoration(DecorationMix value) {
+    return container(BoxStyler().foregroundDecoration(value));
+  }
 
-  @override
-  Widget build(BuildContext context) {
-    return fortalBadgeStyler(variant: this.variant, size: this.size).call(
-      key: this.key,
-      label: this.label,
-      child: this.child,
-      labelBuilder: this.labelBuilder,
+  RemixBadgeStyler clipBehavior(Clip value) {
+    return container(BoxStyler().clipBehavior(value));
+  }
+
+  RemixBadgeStyler color(Color value) {
+    return container(BoxStyler().color(value));
+  }
+
+  RemixBadgeStyler gradient(GradientMix value) {
+    return container(BoxStyler().gradient(value));
+  }
+
+  RemixBadgeStyler border(BoxBorderMix value) {
+    return container(BoxStyler().border(value));
+  }
+
+  RemixBadgeStyler borderRadius(BorderRadiusGeometryMix value) {
+    return container(BoxStyler().borderRadius(value));
+  }
+
+  RemixBadgeStyler elevation(ElevationShadow value) {
+    return container(BoxStyler().elevation(value));
+  }
+
+  RemixBadgeStyler shadow(BoxShadowMix value) {
+    return container(BoxStyler().shadow(value));
+  }
+
+  RemixBadgeStyler shadows(List<BoxShadowMix> value) {
+    return container(BoxStyler().shadows(value));
+  }
+
+  RemixBadgeStyler width(double value) {
+    return container(BoxStyler().width(value));
+  }
+
+  RemixBadgeStyler height(double value) {
+    return container(BoxStyler().height(value));
+  }
+
+  RemixBadgeStyler size(double width, double height) {
+    return container(BoxStyler().size(width, height));
+  }
+
+  RemixBadgeStyler minWidth(double value) {
+    return container(BoxStyler().minWidth(value));
+  }
+
+  RemixBadgeStyler maxWidth(double value) {
+    return container(BoxStyler().maxWidth(value));
+  }
+
+  RemixBadgeStyler minHeight(double value) {
+    return container(BoxStyler().minHeight(value));
+  }
+
+  RemixBadgeStyler maxHeight(double value) {
+    return container(BoxStyler().maxHeight(value));
+  }
+
+  RemixBadgeStyler scale(double scale, {Alignment alignment = .center}) {
+    return container(BoxStyler().scale(scale, alignment: alignment));
+  }
+
+  RemixBadgeStyler rotate(double radians, {Alignment alignment = .center}) {
+    return container(BoxStyler().rotate(radians, alignment: alignment));
+  }
+
+  RemixBadgeStyler translate(double x, double y, [double z = 0.0]) {
+    return container(BoxStyler().translate(x, y, z));
+  }
+
+  RemixBadgeStyler skew(double skewX, double skewY) {
+    return container(BoxStyler().skew(skewX, skewY));
+  }
+
+  RemixBadgeStyler textStyle(TextStyler value) {
+    return container(BoxStyler().textStyle(value));
+  }
+
+  RemixBadgeStyler image(DecorationImageMix value) {
+    return container(BoxStyler().image(value));
+  }
+
+  RemixBadgeStyler shape(ShapeBorderMix value) {
+    return container(BoxStyler().shape(value));
+  }
+
+  RemixBadgeStyler backgroundImage(
+    ImageProvider image, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) {
+    return container(
+      BoxStyler().backgroundImage(
+        image,
+        fit: fit,
+        alignment: alignment,
+        repeat: repeat,
+      ),
     );
   }
-}
 
-// **************************************************************************
-// StylerGenerator
-// **************************************************************************
+  RemixBadgeStyler backgroundImageUrl(
+    String url, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) {
+    return container(
+      BoxStyler().backgroundImageUrl(
+        url,
+        fit: fit,
+        alignment: alignment,
+        repeat: repeat,
+      ),
+    );
+  }
 
-mixin _$RemixBadgeStylerMixin on Style<RemixBadgeSpec>, Diagnosticable {
-  Prop<StyleSpec<BoxSpec>>? get $container;
-  Prop<StyleSpec<TextSpec>>? get $label;
+  RemixBadgeStyler backgroundImageAsset(
+    String path, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) {
+    return container(
+      BoxStyler().backgroundImageAsset(
+        path,
+        fit: fit,
+        alignment: alignment,
+        repeat: repeat,
+      ),
+    );
+  }
+
+  RemixBadgeStyler linearGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? begin,
+    AlignmentGeometry? end,
+    TileMode? tileMode,
+  }) {
+    return container(
+      BoxStyler().linearGradient(
+        colors: colors,
+        stops: stops,
+        begin: begin,
+        end: end,
+        tileMode: tileMode,
+      ),
+    );
+  }
+
+  RemixBadgeStyler radialGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? radius,
+    AlignmentGeometry? focal,
+    double? focalRadius,
+    TileMode? tileMode,
+  }) {
+    return container(
+      BoxStyler().radialGradient(
+        colors: colors,
+        stops: stops,
+        center: center,
+        radius: radius,
+        focal: focal,
+        focalRadius: focalRadius,
+        tileMode: tileMode,
+      ),
+    );
+  }
+
+  RemixBadgeStyler sweepGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? startAngle,
+    double? endAngle,
+    TileMode? tileMode,
+  }) {
+    return container(
+      BoxStyler().sweepGradient(
+        colors: colors,
+        stops: stops,
+        center: center,
+        startAngle: startAngle,
+        endAngle: endAngle,
+        tileMode: tileMode,
+      ),
+    );
+  }
+
+  RemixBadgeStyler foregroundLinearGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? begin,
+    AlignmentGeometry? end,
+    TileMode? tileMode,
+  }) {
+    return container(
+      BoxStyler().foregroundLinearGradient(
+        colors: colors,
+        stops: stops,
+        begin: begin,
+        end: end,
+        tileMode: tileMode,
+      ),
+    );
+  }
+
+  RemixBadgeStyler foregroundRadialGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? radius,
+    AlignmentGeometry? focal,
+    double? focalRadius,
+    TileMode? tileMode,
+  }) {
+    return container(
+      BoxStyler().foregroundRadialGradient(
+        colors: colors,
+        stops: stops,
+        center: center,
+        radius: radius,
+        focal: focal,
+        focalRadius: focalRadius,
+        tileMode: tileMode,
+      ),
+    );
+  }
+
+  RemixBadgeStyler foregroundSweepGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? startAngle,
+    double? endAngle,
+    TileMode? tileMode,
+  }) {
+    return container(
+      BoxStyler().foregroundSweepGradient(
+        colors: colors,
+        stops: stops,
+        center: center,
+        startAngle: startAngle,
+        endAngle: endAngle,
+        tileMode: tileMode,
+      ),
+    );
+  }
+
+  RemixBadgeStyler transform(Matrix4 value, {Alignment alignment = .center}) {
+    return container(BoxStyler().transform(value, alignment: alignment));
+  }
 
   /// Sets the container.
   RemixBadgeStyler container(BoxStyler value) {
@@ -167,21 +601,25 @@ mixin _$RemixBadgeStylerMixin on Style<RemixBadgeSpec>, Diagnosticable {
   }
 
   /// Sets the label.
+  @override
   RemixBadgeStyler label(TextStyler value) {
     return merge(RemixBadgeStyler(label: value));
   }
 
   /// Sets the animation configuration.
+  @override
   RemixBadgeStyler animate(AnimationConfig value) {
     return merge(RemixBadgeStyler(animation: value));
   }
 
   /// Sets the style variants.
+  @override
   RemixBadgeStyler variants(List<VariantStyle<RemixBadgeSpec>> value) {
     return merge(RemixBadgeStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
+  @override
   RemixBadgeStyler wrap(WidgetModifierConfig value) {
     return merge(RemixBadgeStyler(modifier: value));
   }

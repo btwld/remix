@@ -10,7 +10,7 @@ const Color _defaultRangeColor = MixColors.black;
 ///
 /// A slider spec contains the thumb box style plus the track and range colors
 /// and stroke widths used when painting the control.
-@MixableSpec()
+@MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
 class RemixSliderSpec with _$RemixSliderSpec {
   /// Default thumb size used when the thumb style does not resolve a size.
   static const Size defaultThumbSize = _remixSliderDefaultThumbSize;
@@ -21,6 +21,7 @@ class RemixSliderSpec with _$RemixSliderSpec {
 
   /// Resolved style for the slider thumb.
   @override
+  @MixableField(forwardStyler: true)
   final StyleSpec<BoxSpec> thumb;
 
   /// Color of the unfilled slider track.

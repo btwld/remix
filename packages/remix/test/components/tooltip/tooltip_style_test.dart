@@ -72,10 +72,8 @@ void main() {
         modify: (style) => style.padding(EdgeInsetsGeometryMix.all(16)),
         expect: (style) {
           expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(BoxStyler(padding: EdgeInsetsGeometryMix.all(16))),
-            ),
+            style,
+            equals(RemixTooltipStyler.padding(EdgeInsetsGeometryMix.all(16))),
           );
         },
       );
@@ -86,10 +84,8 @@ void main() {
         modify: (style) => style.margin(EdgeInsetsGeometryMix.all(8)),
         expect: (style) {
           expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(BoxStyler(margin: EdgeInsetsGeometryMix.all(8))),
-            ),
+            style,
+            equals(RemixTooltipStyler.margin(EdgeInsetsGeometryMix.all(8))),
           );
         },
       );
@@ -99,10 +95,7 @@ void main() {
         initial: RemixTooltipStyler(),
         modify: (style) => style.alignment(Alignment.center),
         expect: (style) {
-          expect(
-            style.$container,
-            equals(Prop.maybeMix(BoxStyler(alignment: Alignment.center))),
-          );
+          expect(style, equals(RemixTooltipStyler.alignment(Alignment.center)));
         },
       );
 
@@ -111,14 +104,7 @@ void main() {
         initial: RemixTooltipStyler(),
         modify: (style) => style.color(Colors.blue),
         expect: (style) {
-          expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(
-                BoxStyler(decoration: BoxDecorationMix(color: Colors.blue)),
-              ),
-            ),
-          );
+          expect(style, equals(RemixTooltipStyler.color(Colors.blue)));
         },
       );
 
@@ -145,14 +131,10 @@ void main() {
             style.borderRadius(BorderRadiusGeometryMix.circular(8)),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  decoration: BoxDecorationMix(
-                    borderRadius: BorderRadiusGeometryMix.circular(8),
-                  ),
-                ),
+              RemixTooltipStyler.borderRadius(
+                BorderRadiusGeometryMix.circular(8),
               ),
             ),
           );
@@ -166,10 +148,10 @@ void main() {
             style.decoration(BoxDecorationMix(color: Colors.red)),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(decoration: BoxDecorationMix(color: Colors.red)),
+              RemixTooltipStyler.decoration(
+                BoxDecorationMix(color: Colors.red),
               ),
             ),
           );
@@ -209,12 +191,10 @@ void main() {
             style.constraints(BoxConstraintsMix(minWidth: 100, maxWidth: 200)),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  constraints: BoxConstraintsMix(minWidth: 100, maxWidth: 200),
-                ),
+              RemixTooltipStyler.constraints(
+                BoxConstraintsMix(minWidth: 100, maxWidth: 200),
               ),
             ),
           );
@@ -229,14 +209,10 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  foregroundDecoration: BoxDecorationMix(
-                    shape: BoxShape.circle,
-                  ),
-                ),
+              RemixTooltipStyler.foregroundDecoration(
+                BoxDecorationMix(shape: BoxShape.circle),
               ),
             ),
           );
@@ -252,13 +228,11 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  transform: Matrix4.rotationZ(0.1),
-                  transformAlignment: Alignment.topLeft,
-                ),
+              RemixTooltipStyler.transform(
+                Matrix4.rotationZ(0.1),
+                alignment: Alignment.topLeft,
               ),
             ),
           );

@@ -4,123 +4,12 @@ part of 'textfield.dart';
 ///
 /// Use this class to style the text field container, text, hint text, helper
 /// text, label, cursor, selection behavior, and spacing.
-@MixableStyler()
-class RemixTextFieldStyler
-    extends RemixFlexContainerStyler<RemixTextFieldSpec, RemixTextFieldStyler>
-    with
-        LabelStyleMixin<RemixTextFieldStyler>,
-        Diagnosticable,
-        _$RemixTextFieldStylerMixin {
-  @MixableField(setterType: TextStyler)
-  final Prop<StyleSpec<TextSpec>>? $text;
-  @MixableField(setterType: TextStyler)
-  final Prop<StyleSpec<TextSpec>>? $hintText;
-  @MixableField()
-  final Prop<TextAlign>? $textAlign;
-  @MixableField()
-  final Prop<double>? $cursorWidth;
-  @MixableField()
-  final Prop<double>? $cursorHeight;
-  @MixableField()
-  final Prop<Radius>? $cursorRadius;
-  @MixableField()
-  final Prop<Color>? $cursorColor;
-  @MixableField()
-  final Prop<bool>? $cursorOpacityAnimates;
-  @MixableField()
-  final Prop<BoxHeightStyle>? $selectionHeightStyle;
-  @MixableField()
-  final Prop<BoxWidthStyle>? $selectionWidthStyle;
-  @MixableField()
-  final Prop<EdgeInsets>? $scrollPadding;
-  @MixableField()
-  final Prop<Brightness>? $keyboardAppearance;
-  @MixableField(setterType: FlexBoxStyler)
-  final Prop<StyleSpec<FlexBoxSpec>>? $container;
-  @MixableField(setterType: TextStyler)
-  final Prop<StyleSpec<TextSpec>>? $helperText;
-  @MixableField(setterType: TextStyler)
-  final Prop<StyleSpec<TextSpec>>? $label;
-
-  const RemixTextFieldStyler.create({
-    Prop<StyleSpec<TextSpec>>? text,
-    Prop<StyleSpec<TextSpec>>? hintText,
-    Prop<TextAlign>? textAlign,
-    Prop<double>? cursorWidth,
-    Prop<double>? cursorHeight,
-    Prop<Radius>? cursorRadius,
-    Prop<Color>? cursorColor,
-    Prop<bool>? cursorOpacityAnimates,
-    Prop<BoxHeightStyle>? selectionHeightStyle,
-    Prop<BoxWidthStyle>? selectionWidthStyle,
-    Prop<EdgeInsets>? scrollPadding,
-    Prop<Brightness>? keyboardAppearance,
-    Prop<StyleSpec<FlexBoxSpec>>? container,
-    Prop<StyleSpec<TextSpec>>? helperText,
-    Prop<StyleSpec<TextSpec>>? label,
-    super.variants,
-    super.animation,
-    super.modifier,
-  }) : $text = text,
-       $hintText = hintText,
-       $textAlign = textAlign,
-       $cursorWidth = cursorWidth,
-       $cursorHeight = cursorHeight,
-       $cursorRadius = cursorRadius,
-       $cursorColor = cursorColor,
-       $cursorOpacityAnimates = cursorOpacityAnimates,
-       $selectionHeightStyle = selectionHeightStyle,
-       $selectionWidthStyle = selectionWidthStyle,
-       $scrollPadding = scrollPadding,
-       $keyboardAppearance = keyboardAppearance,
-       $container = container,
-       $helperText = helperText,
-       $label = label;
-
-  RemixTextFieldStyler({
-    TextStyler? text,
-    TextStyler? hintText,
-    TextAlign? textAlign,
-    double? cursorWidth,
-    double? cursorHeight,
-    Radius? cursorRadius,
-    Color? cursorColor,
-    bool? cursorOpacityAnimates,
-    BoxHeightStyle? selectionHeightStyle,
-    BoxWidthStyle? selectionWidthStyle,
-    EdgeInsets? scrollPadding,
-    Brightness? keyboardAppearance,
-    FlexBoxStyler? container,
-    TextStyler? helperText,
-    TextStyler? label,
-    AnimationConfig? animation,
-    List<VariantStyle<RemixTextFieldSpec>>? variants,
-    WidgetModifierConfig? modifier,
-  }) : this.create(
-         text: Prop.maybeMix(text),
-         hintText: Prop.maybeMix(hintText),
-         textAlign: Prop.maybe(textAlign),
-         cursorWidth: Prop.maybe(cursorWidth),
-         cursorHeight: Prop.maybe(cursorHeight),
-         cursorRadius: Prop.maybe(cursorRadius),
-         cursorColor: Prop.maybe(cursorColor),
-         cursorOpacityAnimates: Prop.maybe(cursorOpacityAnimates),
-         selectionHeightStyle: Prop.maybe(selectionHeightStyle),
-         selectionWidthStyle: Prop.maybe(selectionWidthStyle),
-         scrollPadding: Prop.maybe(scrollPadding),
-         keyboardAppearance: Prop.maybe(keyboardAppearance),
-         container: Prop.maybeMix(container),
-         helperText: Prop.maybeMix(helperText),
-         label: Prop.maybeMix(label),
-         variants: variants,
-         animation: animation,
-         modifier: modifier,
-       );
-
-  // Instance methods (chainable)
-
-  /// Sets text color
-  RemixTextFieldStyler color(Color value) {
+extension RemixTextFieldStylerRemixHelpers on RemixTextFieldStyler {
+  /// Sets the editable text color.
+  ///
+  /// Use [RemixTextFieldStyler.color] for the generated container color
+  /// shortcut.
+  RemixTextFieldStyler textColor(Color value) {
     return merge(
       RemixTextFieldStyler(
         text: TextStyler(style: TextStyleMix(color: value)),
@@ -137,65 +26,6 @@ class RemixTextFieldStyler
     );
   }
 
-  /// Sets container that wraps editable text area
-  RemixTextFieldStyler container(FlexBoxStyler value) {
-    return merge(RemixTextFieldStyler(container: value));
-  }
-
-  /// Sets border radius
-  RemixTextFieldStyler borderRadius(BorderRadiusGeometryMix radius) {
-    return merge(
-      RemixTextFieldStyler(
-        container: FlexBoxStyler(
-          decoration: BoxDecorationMix(borderRadius: radius),
-        ),
-      ),
-    );
-  }
-
-  /// Sets padding
-  RemixTextFieldStyler padding(EdgeInsetsGeometryMix value) {
-    return merge(
-      RemixTextFieldStyler(container: FlexBoxStyler(padding: value)),
-    );
-  }
-
-  /// Sets border
-  RemixTextFieldStyler border(BoxBorderMix value) {
-    return merge(
-      RemixTextFieldStyler(
-        container: FlexBoxStyler(decoration: BoxDecorationMix(border: value)),
-      ),
-    );
-  }
-
-  /// Sets width
-  RemixTextFieldStyler width(double value) {
-    return merge(
-      RemixTextFieldStyler(
-        container: FlexBoxStyler(
-          constraints: BoxConstraintsMix(minWidth: value, maxWidth: value),
-        ),
-      ),
-    );
-  }
-
-  /// Sets height
-  RemixTextFieldStyler height(double value) {
-    return merge(
-      RemixTextFieldStyler(
-        container: FlexBoxStyler(
-          constraints: BoxConstraintsMix(minHeight: value, maxHeight: value),
-        ),
-      ),
-    );
-  }
-
-  /// Sets cursor color
-  RemixTextFieldStyler cursorColor(Color value) {
-    return merge(RemixTextFieldStyler(cursorColor: value));
-  }
-
   /// Sets hint text color
   RemixTextFieldStyler hintColor(Color value) {
     return merge(
@@ -203,56 +33,6 @@ class RemixTextFieldStyler
         hintText: TextStyler(style: TextStyleMix(color: value)),
       ),
     );
-  }
-
-  /// Sets hint text color
-  RemixTextFieldStyler hintText(TextStyler value) {
-    return merge(RemixTextFieldStyler(hintText: value));
-  }
-
-  // Additional convenience methods that delegate to container
-
-  /// Sets margin
-  RemixTextFieldStyler margin(EdgeInsetsGeometryMix value) {
-    return merge(RemixTextFieldStyler(container: FlexBoxStyler(margin: value)));
-  }
-
-  /// Sets flex spacing
-  RemixTextFieldStyler spacing(double value) {
-    return merge(
-      RemixTextFieldStyler(container: FlexBoxStyler(spacing: value)),
-    );
-  }
-
-  /// Sets decoration
-  RemixTextFieldStyler decoration(DecorationMix value) {
-    return merge(
-      RemixTextFieldStyler(container: FlexBoxStyler(decoration: value)),
-    );
-  }
-
-  /// Sets container alignment
-  RemixTextFieldStyler alignment(Alignment value) {
-    return merge(
-      RemixTextFieldStyler(container: FlexBoxStyler(alignment: value)),
-    );
-  }
-
-  /// Sets constraints
-  RemixTextFieldStyler constraints(BoxConstraintsMix value) {
-    return merge(
-      RemixTextFieldStyler(container: FlexBoxStyler(constraints: value)),
-    );
-  }
-
-  /// Sets text alignment
-  RemixTextFieldStyler textAlign(TextAlign value) {
-    return merge(RemixTextFieldStyler(textAlign: value));
-  }
-
-  /// Sets helper text
-  RemixTextFieldStyler helperText(TextStyler value) {
-    return merge(RemixTextFieldStyler(helperText: value));
   }
 
   /// Creates a [RemixTextField] widget with this style applied.
@@ -392,40 +172,6 @@ class RemixTextFieldStyler
     );
   }
 
-  /// Sets label text
-  @override
-  RemixTextFieldStyler label(TextStyler value) {
-    return merge(RemixTextFieldStyler(label: value));
-  }
-
-  // Abstract method implementations for mixins
-
-  @override
-  RemixTextFieldStyler foregroundDecoration(DecorationMix value) {
-    return merge(
-      RemixTextFieldStyler(
-        container: FlexBoxStyler(foregroundDecoration: value),
-      ),
-    );
-  }
-
-  @override
-  RemixTextFieldStyler transform(
-    Matrix4 value, {
-    AlignmentGeometry alignment = Alignment.center,
-  }) {
-    return merge(
-      RemixTextFieldStyler(
-        container: FlexBoxStyler(
-          transform: value,
-          transformAlignment: alignment,
-        ),
-      ),
-    );
-  }
-
-  // FlexStyleMixin implementation
-  @override
   RemixTextFieldStyler flex(FlexStyler value) {
     return merge(RemixTextFieldStyler(container: FlexBoxStyler().flex(value)));
   }

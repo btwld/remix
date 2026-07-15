@@ -4,7 +4,6 @@ part of 'spinner.dart';
 enum FortalSpinnerSize { size1, size2, size3 }
 
 /// Fortal-themed preset for [RemixSpinner].
-@MixWidget(name: 'FortalSpinner')
 RemixSpinnerStyler fortalSpinnerStyler({FortalSpinnerSize size = .size2}) {
   return RemixSpinnerStyler(
     indicatorColor: FortalTokens.accent9(),
@@ -18,4 +17,16 @@ RemixSpinnerStyler _fortalSpinnerSizeStyler(FortalSpinnerSize size) {
     .size2 => RemixSpinnerStyler(size: 20.0, strokeWidth: 2.0),
     .size3 => RemixSpinnerStyler(size: 24.0, strokeWidth: 2.5),
   };
+}
+
+/// Fortal-themed preset for [RemixSpinner].
+class FortalSpinner extends StatelessWidget {
+  const FortalSpinner({super.key, this.size = .size2});
+
+  final FortalSpinnerSize size;
+
+  @override
+  Widget build(BuildContext context) {
+    return fortalSpinnerStyler(size: this.size).call(key: this.key);
+  }
 }

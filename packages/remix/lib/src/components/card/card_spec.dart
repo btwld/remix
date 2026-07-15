@@ -1,9 +1,10 @@
 part of 'card.dart';
 
 /// Resolved visual properties for a [RemixCard].
-@MixableSpec()
+@MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
 class RemixCardSpec with _$RemixCardSpec {
   @override
+  @MixableField(forwardStyler: true)
   final StyleSpec<BoxSpec> container;
 
   const RemixCardSpec({StyleSpec<BoxSpec>? container})

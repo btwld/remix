@@ -7,7 +7,6 @@ enum FortalIconButtonSize { size1, size2, size3, size4 }
 enum FortalIconButtonVariant { solid, soft, surface, outline, ghost }
 
 /// Fortal-themed preset for [RemixIconButton].
-@MixWidget(name: 'FortalIconButton')
 RemixIconButtonStyler fortalIconButtonStyler({
   FortalIconButtonVariant variant = .solid,
   FortalIconButtonSize size = .size2,
@@ -207,4 +206,175 @@ RemixIconButtonStyler _fortalIconButtonSizeStyler(FortalIconButtonSize size) {
           .iconSize(24.0)
           .spinner(RemixSpinnerStyler(size: 24.0)),
   };
+}
+
+/// Fortal-themed preset for [RemixIconButton].
+class FortalIconButton extends StatelessWidget {
+  const FortalIconButton({
+    super.key,
+    this.variant = .solid,
+    this.size = .size2,
+    required this.icon,
+    this.iconBuilder,
+    this.loadingBuilder,
+    this.loading = false,
+    this.enabled = true,
+    this.enableFeedback = true,
+    this.onPressed,
+    this.onLongPress,
+    this.focusNode,
+    this.autofocus = false,
+    this.semanticLabel,
+    this.semanticHint,
+    this.excludeSemantics = false,
+    this.mouseCursor = SystemMouseCursors.click,
+  });
+
+  const FortalIconButton.solid({
+    super.key,
+    this.size = .size2,
+    required this.icon,
+    this.iconBuilder,
+    this.loadingBuilder,
+    this.loading = false,
+    this.enabled = true,
+    this.enableFeedback = true,
+    this.onPressed,
+    this.onLongPress,
+    this.focusNode,
+    this.autofocus = false,
+    this.semanticLabel,
+    this.semanticHint,
+    this.excludeSemantics = false,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = FortalIconButtonVariant.solid;
+
+  const FortalIconButton.soft({
+    super.key,
+    this.size = .size2,
+    required this.icon,
+    this.iconBuilder,
+    this.loadingBuilder,
+    this.loading = false,
+    this.enabled = true,
+    this.enableFeedback = true,
+    this.onPressed,
+    this.onLongPress,
+    this.focusNode,
+    this.autofocus = false,
+    this.semanticLabel,
+    this.semanticHint,
+    this.excludeSemantics = false,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = FortalIconButtonVariant.soft;
+
+  const FortalIconButton.surface({
+    super.key,
+    this.size = .size2,
+    required this.icon,
+    this.iconBuilder,
+    this.loadingBuilder,
+    this.loading = false,
+    this.enabled = true,
+    this.enableFeedback = true,
+    this.onPressed,
+    this.onLongPress,
+    this.focusNode,
+    this.autofocus = false,
+    this.semanticLabel,
+    this.semanticHint,
+    this.excludeSemantics = false,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = FortalIconButtonVariant.surface;
+
+  const FortalIconButton.outline({
+    super.key,
+    this.size = .size2,
+    required this.icon,
+    this.iconBuilder,
+    this.loadingBuilder,
+    this.loading = false,
+    this.enabled = true,
+    this.enableFeedback = true,
+    this.onPressed,
+    this.onLongPress,
+    this.focusNode,
+    this.autofocus = false,
+    this.semanticLabel,
+    this.semanticHint,
+    this.excludeSemantics = false,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = FortalIconButtonVariant.outline;
+
+  const FortalIconButton.ghost({
+    super.key,
+    this.size = .size2,
+    required this.icon,
+    this.iconBuilder,
+    this.loadingBuilder,
+    this.loading = false,
+    this.enabled = true,
+    this.enableFeedback = true,
+    this.onPressed,
+    this.onLongPress,
+    this.focusNode,
+    this.autofocus = false,
+    this.semanticLabel,
+    this.semanticHint,
+    this.excludeSemantics = false,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = FortalIconButtonVariant.ghost;
+
+  final FortalIconButtonVariant variant;
+
+  final FortalIconButtonSize size;
+
+  final IconData icon;
+
+  final RemixIconButtonIconBuilder? iconBuilder;
+
+  final RemixIconButtonLoadingBuilder? loadingBuilder;
+
+  final bool loading;
+
+  final bool enabled;
+
+  final bool enableFeedback;
+
+  final VoidCallback? onPressed;
+
+  final VoidCallback? onLongPress;
+
+  final FocusNode? focusNode;
+
+  final bool autofocus;
+
+  final String? semanticLabel;
+
+  final String? semanticHint;
+
+  final bool excludeSemantics;
+
+  final MouseCursor mouseCursor;
+
+  @override
+  Widget build(BuildContext context) {
+    return fortalIconButtonStyler(variant: this.variant, size: this.size).call(
+      key: this.key,
+      icon: this.icon,
+      iconBuilder: this.iconBuilder,
+      loadingBuilder: this.loadingBuilder,
+      loading: this.loading,
+      enabled: this.enabled,
+      enableFeedback: this.enableFeedback,
+      onPressed: this.onPressed,
+      onLongPress: this.onLongPress,
+      focusNode: this.focusNode,
+      autofocus: this.autofocus,
+      semanticLabel: this.semanticLabel,
+      semanticHint: this.semanticHint,
+      excludeSemantics: this.excludeSemantics,
+      mouseCursor: this.mouseCursor,
+    );
+  }
 }

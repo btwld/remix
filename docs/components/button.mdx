@@ -64,15 +64,14 @@ class ButtonExample extends StatelessWidget {
         )
         .wrap(.scale(x: 1, y: 1))
         .onPressed(
-          RemixButtonStyler().wrap(.scale(x: 0.90, y: 0.90)),
+          .scale(0.90),
         )
         .onHovered(
-          RemixButtonStyler()
-              .backgroundColor(const Color(0xFF732D2D))
+          .color(const Color(0xFF732D2D))
               .animate(AnimationConfig.spring(300.ms)),
         )
         .onFocused(
-          RemixButtonStyler().backgroundColor(const Color(0xFF732D2D)),
+          .color(const Color(0xFF732D2D)),
         );
   }
 
@@ -90,10 +89,10 @@ class ButtonExample extends StatelessWidget {
               .spreadRadius(0),
         )
         .onHovered(
-          RemixButtonStyler().backgroundColor(const Color(0xFF357857)),
+          .color(const Color(0xFF357857)),
         )
         .onFocused(
-          RemixButtonStyler().backgroundColor(const Color(0xFF357857)),
+          .color(const Color(0xFF357857)),
         );
   }
 }

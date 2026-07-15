@@ -79,14 +79,7 @@ void main() {
         initial: RemixAvatarStyler(),
         modify: (style) => style.color(Colors.green),
         expect: (style) {
-          expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(
-                BoxStyler(decoration: BoxDecorationMix(color: Colors.green)),
-              ),
-            ),
-          );
+          expect(style, equals(RemixAvatarStyler.color(Colors.green)));
         },
       );
 
@@ -98,15 +91,10 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  decoration: BoxDecorationMix(
-                    borderRadius: BorderRadiusMix.circular(10),
-                    shape: BoxShape.rectangle,
-                  ),
-                ),
+              RemixAvatarStyler.borderRadius(
+                BorderRadiusGeometryMix.all(Radius.circular(10)),
               ),
             ),
           );
@@ -183,10 +171,8 @@ void main() {
         modify: (style) => style.padding(EdgeInsetsGeometryMix.all(8.0)),
         expect: (style) {
           expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(BoxStyler(padding: EdgeInsetsGeometryMix.all(8.0))),
-            ),
+            style,
+            equals(RemixAvatarStyler.padding(EdgeInsetsGeometryMix.all(8.0))),
           );
         },
       );
@@ -197,10 +183,8 @@ void main() {
         modify: (style) => style.margin(EdgeInsetsGeometryMix.all(4.0)),
         expect: (style) {
           expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(BoxStyler(margin: EdgeInsetsGeometryMix.all(4.0))),
-            ),
+            style,
+            equals(RemixAvatarStyler.margin(EdgeInsetsGeometryMix.all(4.0))),
           );
         },
       );
@@ -210,10 +194,7 @@ void main() {
         initial: RemixAvatarStyler(),
         modify: (style) => style.alignment(Alignment.topLeft),
         expect: (style) {
-          expect(
-            style.$container,
-            equals(Prop.maybeMix(BoxStyler(alignment: Alignment.topLeft))),
-          );
+          expect(style, equals(RemixAvatarStyler.alignment(Alignment.topLeft)));
         },
       );
 
@@ -224,10 +205,10 @@ void main() {
             style.decoration(BoxDecorationMix(color: Colors.yellow)),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(decoration: BoxDecorationMix(color: Colors.yellow)),
+              RemixAvatarStyler.decoration(
+                BoxDecorationMix(color: Colors.yellow),
               ),
             ),
           );
@@ -247,16 +228,14 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  constraints: BoxConstraintsMix(
-                    minWidth: 50,
-                    maxWidth: 100,
-                    minHeight: 50,
-                    maxHeight: 100,
-                  ),
+              RemixAvatarStyler.constraints(
+                BoxConstraintsMix(
+                  minWidth: 50,
+                  maxWidth: 100,
+                  minHeight: 50,
+                  maxHeight: 100,
                 ),
               ),
             ),
@@ -284,9 +263,11 @@ void main() {
             style.label(TextStyler(style: TextStyleMix(fontSize: 16))),
         expect: (style) {
           expect(
-            style.$label,
+            style,
             equals(
-              Prop.maybeMix(TextStyler(style: TextStyleMix(fontSize: 16))),
+              RemixAvatarStyler.label(
+                TextStyler(style: TextStyleMix(fontSize: 16)),
+              ),
             ),
           );
         },
@@ -306,21 +287,7 @@ void main() {
         initial: RemixAvatarStyler(),
         modify: (style) => style.size(60.0, 40.0),
         expect: (style) {
-          expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  constraints: BoxConstraintsMix(
-                    minWidth: 60.0,
-                    maxWidth: 60.0,
-                    minHeight: 40.0,
-                    maxHeight: 40.0,
-                  ),
-                ),
-              ),
-            ),
-          );
+          expect(style, equals(RemixAvatarStyler.size(60.0, 40.0)));
         },
       );
 
@@ -349,12 +316,10 @@ void main() {
             style.foregroundDecoration(BoxDecorationMix(color: Colors.cyan)),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  foregroundDecoration: BoxDecorationMix(color: Colors.cyan),
-                ),
+              RemixAvatarStyler.foregroundDecoration(
+                BoxDecorationMix(color: Colors.cyan),
               ),
             ),
           );
@@ -367,15 +332,8 @@ void main() {
         modify: (style) => style.transform(Matrix4.identity()),
         expect: (style) {
           expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  transform: Matrix4.identity(),
-                  transformAlignment: Alignment.center,
-                ),
-              ),
-            ),
+            style,
+            equals(RemixAvatarStyler.transform(Matrix4.identity())),
           );
         },
       );

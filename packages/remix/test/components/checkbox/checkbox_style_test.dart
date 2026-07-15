@@ -48,15 +48,11 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  decoration: ShapeDecorationMix(
-                    shape: RoundedRectangleBorderMix(
-                      borderRadius: BorderRadiusMix.circular(8.0),
-                    ),
-                  ),
+              RemixCheckboxStyler.shape(
+                RoundedRectangleBorderMix(
+                  borderRadius: BorderRadiusMix.circular(8.0),
                 ),
               ),
             ),
@@ -71,14 +67,10 @@ void main() {
             style.border(BoxBorderMix.all(BorderSideMix(color: Colors.grey))),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  decoration: BoxDecorationMix(
-                    border: BoxBorderMix.all(BorderSideMix(color: Colors.grey)),
-                  ),
-                ),
+              RemixCheckboxStyler.border(
+                BoxBorderMix.all(BorderSideMix(color: Colors.grey)),
               ),
             ),
           );
@@ -103,8 +95,8 @@ void main() {
         modify: (style) => style.alignment(Alignment.centerLeft),
         expect: (style) {
           expect(
-            style.$container,
-            equals(Prop.maybeMix(BoxStyler(alignment: Alignment.centerLeft))),
+            style,
+            equals(RemixCheckboxStyler.alignment(Alignment.centerLeft)),
           );
         },
       );
@@ -127,10 +119,8 @@ void main() {
         modify: (style) => style.padding(EdgeInsetsGeometryMix.all(8.0)),
         expect: (style) {
           expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(BoxStyler(padding: EdgeInsetsGeometryMix.all(8.0))),
-            ),
+            style,
+            equals(RemixCheckboxStyler.padding(EdgeInsetsGeometryMix.all(8.0))),
           );
         },
       );
@@ -156,21 +146,7 @@ void main() {
         initial: RemixCheckboxStyler(),
         modify: (style) => style.size(20.0, 20.0),
         expect: (style) {
-          expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  constraints: BoxConstraintsMix(
-                    minWidth: 20.0,
-                    maxWidth: 20.0,
-                    minHeight: 20.0,
-                    maxHeight: 20.0,
-                  ),
-                ),
-              ),
-            ),
-          );
+          expect(style, equals(RemixCheckboxStyler.size(20.0, 20.0)));
         },
       );
 
@@ -181,14 +157,10 @@ void main() {
             style.borderRadius(BorderRadiusGeometryMix.circular(6.0)),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  decoration: BoxDecorationMix(
-                    borderRadius: BorderRadiusGeometryMix.circular(6.0),
-                  ),
-                ),
+              RemixCheckboxStyler.borderRadius(
+                BorderRadiusGeometryMix.circular(6.0),
               ),
             ),
           );
@@ -234,15 +206,10 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  constraints: BoxConstraintsMix(
-                    minWidth: 18.0,
-                    minHeight: 18.0,
-                  ),
-                ),
+              RemixCheckboxStyler.constraints(
+                BoxConstraintsMix(minWidth: 18.0, minHeight: 18.0),
               ),
             ),
           );
@@ -260,14 +227,12 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  decoration: BoxDecorationMix(
-                    color: Colors.lightBlue,
-                    borderRadius: BorderRadiusGeometryMix.circular(4.0),
-                  ),
+              RemixCheckboxStyler.decoration(
+                BoxDecorationMix(
+                  color: Colors.lightBlue,
+                  borderRadius: BorderRadiusGeometryMix.circular(4.0),
                 ),
               ),
             ),
@@ -281,10 +246,8 @@ void main() {
         modify: (style) => style.margin(EdgeInsetsGeometryMix.all(4.0)),
         expect: (style) {
           expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(BoxStyler(margin: EdgeInsetsGeometryMix.all(4.0))),
-            ),
+            style,
+            equals(RemixCheckboxStyler.margin(EdgeInsetsGeometryMix.all(4.0))),
           );
         },
       );
@@ -297,14 +260,10 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  foregroundDecoration: BoxDecorationMix(
-                    color: Colors.yellow.withValues(alpha: 0.3),
-                  ),
-                ),
+              RemixCheckboxStyler.foregroundDecoration(
+                BoxDecorationMix(color: Colors.yellow.withValues(alpha: 0.3)),
               ),
             ),
           );
@@ -317,15 +276,8 @@ void main() {
         modify: (style) => style.transform(Matrix4.rotationZ(0.1)),
         expect: (style) {
           expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  transform: Matrix4.rotationZ(0.1),
-                  transformAlignment: Alignment.center,
-                ),
-              ),
-            ),
+            style,
+            equals(RemixCheckboxStyler.transform(Matrix4.rotationZ(0.1))),
           );
         },
       );

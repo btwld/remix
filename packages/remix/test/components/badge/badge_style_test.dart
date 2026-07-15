@@ -77,14 +77,10 @@ void main() {
             style.borderRadius(BorderRadiusGeometryMix.circular(12.0)),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  decoration: BoxDecorationMix(
-                    borderRadius: BorderRadiusGeometryMix.circular(12.0),
-                  ),
-                ),
+              RemixBadgeStyler.borderRadius(
+                BorderRadiusGeometryMix.circular(12.0),
               ),
             ),
           );
@@ -97,12 +93,8 @@ void main() {
         modify: (style) => style.padding(EdgeInsetsGeometryMix.all(16.0)),
         expect: (style) {
           expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(
-                BoxStyler(padding: EdgeInsetsGeometryMix.all(16.0)),
-              ),
-            ),
+            style,
+            equals(RemixBadgeStyler.padding(EdgeInsetsGeometryMix.all(16.0))),
           );
         },
       );
@@ -113,10 +105,8 @@ void main() {
         modify: (style) => style.margin(EdgeInsetsGeometryMix.all(4.0)),
         expect: (style) {
           expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(BoxStyler(margin: EdgeInsetsGeometryMix.all(4.0))),
-            ),
+            style,
+            equals(RemixBadgeStyler.margin(EdgeInsetsGeometryMix.all(4.0))),
           );
         },
       );
@@ -132,14 +122,12 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  decoration: BoxDecorationMix(
-                    color: Colors.purple,
-                    borderRadius: BorderRadiusGeometryMix.circular(8.0),
-                  ),
+              RemixBadgeStyler.decoration(
+                BoxDecorationMix(
+                  color: Colors.purple,
+                  borderRadius: BorderRadiusGeometryMix.circular(8.0),
                 ),
               ),
             ),
@@ -153,8 +141,8 @@ void main() {
         modify: (style) => style.alignment(Alignment.centerLeft),
         expect: (style) {
           expect(
-            style.$container,
-            equals(Prop.maybeMix(BoxStyler(alignment: Alignment.centerLeft))),
+            style,
+            equals(RemixBadgeStyler.alignment(Alignment.centerLeft)),
           );
         },
       );
@@ -166,9 +154,11 @@ void main() {
             style.label(TextStyler(style: TextStyleMix(fontSize: 14.0))),
         expect: (style) {
           expect(
-            style.$label,
+            style,
             equals(
-              Prop.maybeMix(TextStyler(style: TextStyleMix(fontSize: 14.0))),
+              RemixBadgeStyler.label(
+                TextStyler(style: TextStyleMix(fontSize: 14.0)),
+              ),
             ),
           );
         },
@@ -182,15 +172,10 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  constraints: BoxConstraintsMix(
-                    minWidth: 50.0,
-                    minHeight: 20.0,
-                  ),
-                ),
+              RemixBadgeStyler.constraints(
+                BoxConstraintsMix(minWidth: 50.0, minHeight: 20.0),
               ),
             ),
           );
@@ -236,14 +221,10 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  foregroundDecoration: BoxDecorationMix(
-                    color: Colors.yellow.withValues(alpha: 0.5),
-                  ),
-                ),
+              RemixBadgeStyler.foregroundDecoration(
+                BoxDecorationMix(color: Colors.yellow.withValues(alpha: 0.5)),
               ),
             ),
           );
@@ -256,15 +237,8 @@ void main() {
         modify: (style) => style.transform(Matrix4.rotationZ(0.1)),
         expect: (style) {
           expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  transform: Matrix4.rotationZ(0.1),
-                  transformAlignment: Alignment.center,
-                ),
-              ),
-            ),
+            style,
+            equals(RemixBadgeStyler.transform(Matrix4.rotationZ(0.1))),
           );
         },
       );

@@ -1,7 +1,6 @@
 part of 'dialog.dart';
 
 /// Fortal-themed preset for [RemixDialog].
-@MixWidget(name: 'FortalDialog')
 RemixDialogStyler fortalDialogStyler() {
   return RemixDialogStyler()
       .title(
@@ -39,4 +38,42 @@ RemixDialogStyler fortalDialogStyler() {
             .blurRadius(16)
             .spreadRadius(0),
       );
+}
+
+/// Fortal-themed preset for [RemixDialog].
+class FortalDialog extends StatelessWidget {
+  const FortalDialog({
+    super.key,
+    this.child,
+    this.title,
+    this.description,
+    this.actions,
+    this.modal = true,
+    this.semanticLabel,
+  });
+
+  final Widget? child;
+
+  final String? title;
+
+  final String? description;
+
+  final List<Widget>? actions;
+
+  final bool modal;
+
+  final String? semanticLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    return fortalDialogStyler().call(
+      key: this.key,
+      title: this.title,
+      description: this.description,
+      actions: this.actions,
+      modal: this.modal,
+      semanticLabel: this.semanticLabel,
+      child: this.child,
+    );
+  }
 }

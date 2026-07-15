@@ -110,10 +110,8 @@ void main() {
         modify: (style) => style.alignment(Alignment.centerLeft),
         expect: (style) {
           expect(
-            style.$trigger,
-            equals(
-              Prop.maybeMix(FlexBoxStyler(alignment: Alignment.centerLeft)),
-            ),
+            style,
+            equals(RemixAccordionStyler.alignment(Alignment.centerLeft)),
           );
         },
       );
@@ -124,11 +122,9 @@ void main() {
         modify: (style) => style.padding(EdgeInsetsGeometryMix.all(16.0)),
         expect: (style) {
           expect(
-            style.$trigger,
+            style,
             equals(
-              Prop.maybeMix(
-                FlexBoxStyler(padding: EdgeInsetsGeometryMix.all(16.0)),
-              ),
+              RemixAccordionStyler.padding(EdgeInsetsGeometryMix.all(16.0)),
             ),
           );
         },
@@ -140,12 +136,8 @@ void main() {
         modify: (style) => style.margin(EdgeInsetsGeometryMix.all(8.0)),
         expect: (style) {
           expect(
-            style.$trigger,
-            equals(
-              Prop.maybeMix(
-                FlexBoxStyler(margin: EdgeInsetsGeometryMix.all(8.0)),
-              ),
-            ),
+            style,
+            equals(RemixAccordionStyler.margin(EdgeInsetsGeometryMix.all(8.0))),
           );
         },
       );
@@ -155,14 +147,7 @@ void main() {
         initial: RemixAccordionStyler(),
         modify: (style) => style.color(Colors.blue),
         expect: (style) {
-          expect(
-            style.$trigger,
-            equals(
-              Prop.maybeMix(
-                FlexBoxStyler(decoration: BoxDecorationMix(color: Colors.blue)),
-              ),
-            ),
-          );
+          expect(style, equals(RemixAccordionStyler.color(Colors.blue)));
         },
       );
 
@@ -177,14 +162,12 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$trigger,
+            style,
             equals(
-              Prop.maybeMix(
-                FlexBoxStyler(
-                  decoration: BoxDecorationMix(
-                    color: Colors.red,
-                    borderRadius: BorderRadiusMix.circular(8.0),
-                  ),
+              RemixAccordionStyler.decoration(
+                BoxDecorationMix(
+                  color: Colors.red,
+                  borderRadius: BorderRadiusMix.circular(8.0),
                 ),
               ),
             ),
@@ -200,15 +183,10 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$trigger,
+            style,
             equals(
-              Prop.maybeMix(
-                FlexBoxStyler(
-                  constraints: BoxConstraintsMix(
-                    minWidth: 100.0,
-                    minHeight: 40.0,
-                  ),
-                ),
+              RemixAccordionStyler.constraints(
+                BoxConstraintsMix(minWidth: 100.0, minHeight: 40.0),
               ),
             ),
           );
@@ -220,21 +198,7 @@ void main() {
         initial: RemixAccordionStyler(),
         modify: (style) => style.size(200.0, 50.0),
         expect: (style) {
-          expect(
-            style.$trigger,
-            equals(
-              Prop.maybeMix(
-                FlexBoxStyler(
-                  constraints: BoxConstraintsMix(
-                    minWidth: 200.0,
-                    maxWidth: 200.0,
-                    minHeight: 50.0,
-                    maxHeight: 50.0,
-                  ),
-                ),
-              ),
-            ),
-          );
+          expect(style, equals(RemixAccordionStyler.size(200.0, 50.0)));
         },
       );
 
@@ -244,15 +208,9 @@ void main() {
         modify: (style) => style.borderRadius(BorderRadiusMix.circular(12.0)),
         expect: (style) {
           expect(
-            style.$trigger,
+            style,
             equals(
-              Prop.maybeMix(
-                FlexBoxStyler(
-                  decoration: BoxDecorationMix(
-                    borderRadius: BorderRadiusMix.circular(12.0),
-                  ),
-                ),
-              ),
+              RemixAccordionStyler.borderRadius(BorderRadiusMix.circular(12.0)),
             ),
           );
         },
@@ -268,13 +226,11 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$trigger,
+            style,
             equals(
-              Prop.maybeMix(
-                FlexBoxStyler(
-                  foregroundDecoration: BoxDecorationMix(
-                    border: BoxBorderMix.all(BorderSideMix(color: Colors.red)),
-                  ),
+              RemixAccordionStyler.foregroundDecoration(
+                BoxDecorationMix(
+                  border: BoxBorderMix.all(BorderSideMix(color: Colors.red)),
                 ),
               ),
             ),
@@ -289,13 +245,11 @@ void main() {
             style.transform(Matrix4.identity(), alignment: Alignment.topLeft),
         expect: (style) {
           expect(
-            style.$trigger,
+            style,
             equals(
-              Prop.maybeMix(
-                FlexBoxStyler(
-                  transform: Matrix4.identity(),
-                  transformAlignment: Alignment.topLeft,
-                ),
+              RemixAccordionStyler.transform(
+                Matrix4.identity(),
+                alignment: Alignment.topLeft,
               ),
             ),
           );
@@ -335,10 +289,7 @@ void main() {
         initial: RemixAccordionStyler(),
         modify: (style) => style.spacing(8.0),
         expect: (style) {
-          expect(
-            style.$trigger,
-            equals(Prop.maybeMix(FlexBoxStyler(spacing: 8.0))),
-          );
+          expect(style, equals(RemixAccordionStyler.spacing(8.0)));
         },
       );
 
@@ -525,8 +476,8 @@ void main() {
     });
 
     group('Factory Constructors', () {
-      test('backgroundColor factory', () {
-        final style = RemixAccordionStyler.backgroundColor(Colors.red);
+      test('color factory', () {
+        final style = RemixAccordionStyler.color(Colors.red);
         expect(style.$trigger, isNotNull);
       });
 
@@ -575,63 +526,33 @@ void main() {
         expect(style.$trigger, isNotNull);
       });
 
-      test('titleColor factory', () {
-        final style = RemixAccordionStyler.titleColor(Colors.blue);
-        expect(style.$title, isNotNull);
-      });
-
-      test('titleFontSize factory', () {
-        final style = RemixAccordionStyler.titleFontSize(16.0);
-        expect(style.$title, isNotNull);
-      });
-
-      test('titleFontWeight factory', () {
-        final style = RemixAccordionStyler.titleFontWeight(FontWeight.bold);
-        expect(style.$title, isNotNull);
-      });
-
-      test('titleStyle factory', () {
-        final style = RemixAccordionStyler.titleStyle(
-          TextStyleMix(color: Colors.red),
+      test('title factory', () {
+        final style = RemixAccordionStyler.title(
+          TextStyler(style: TextStyleMix(color: Colors.red)),
         );
         expect(style.$title, isNotNull);
       });
 
-      test('leadingIconColor factory', () {
-        final style = RemixAccordionStyler.leadingIconColor(Colors.green);
-        expect(style.$leadingIcon, isNotNull);
-      });
-
-      test('leadingIconSize factory', () {
-        final style = RemixAccordionStyler.leadingIconSize(24.0);
-        expect(style.$leadingIcon, isNotNull);
-      });
-
-      test('trailingIconColor factory', () {
-        final style = RemixAccordionStyler.trailingIconColor(Colors.purple);
-        expect(style.$trailingIcon, isNotNull);
-      });
-
-      test('trailingIconSize factory', () {
-        final style = RemixAccordionStyler.trailingIconSize(16.0);
-        expect(style.$trailingIcon, isNotNull);
-      });
-
-      test('contentColor factory', () {
-        final style = RemixAccordionStyler.contentColor(Colors.grey);
-        expect(style.$content, isNotNull);
-      });
-
-      test('contentPadding factory', () {
-        final style = RemixAccordionStyler.contentPadding(
-          EdgeInsetsGeometryMix.all(12.0),
+      test('leadingIcon factory', () {
+        final style = RemixAccordionStyler.leadingIcon(
+          IconStyler(color: Colors.green, size: 24.0),
         );
-        expect(style.$content, isNotNull);
+        expect(style.$leadingIcon, isNotNull);
       });
 
-      test('contentDecoration factory', () {
-        final style = RemixAccordionStyler.contentDecoration(
-          BoxDecorationMix(color: Colors.white),
+      test('trailingIcon factory', () {
+        final style = RemixAccordionStyler.trailingIcon(
+          IconStyler(color: Colors.purple, size: 16.0),
+        );
+        expect(style.$trailingIcon, isNotNull);
+      });
+
+      test('content factory', () {
+        final style = RemixAccordionStyler.content(
+          BoxStyler(
+            padding: EdgeInsetsGeometryMix.all(12.0),
+            decoration: BoxDecorationMix(color: Colors.white),
+          ),
         );
         expect(style.$content, isNotNull);
       });

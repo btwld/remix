@@ -1,11 +1,12 @@
 part of 'select.dart';
 
 /// Resolved visual values for a [RemixSelect].
-@MixableSpec()
+@MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
 class RemixSelectSpec with _$RemixSelectSpec {
   @override
   final StyleSpec<RemixSelectTriggerSpec> trigger;
   @override
+  @MixableField(forwardStyler: true, stylerSurface: BoxSpec)
   final StyleSpec<FlexBoxSpec> menuContainer;
   @override
   final StyleSpec<RemixSelectMenuItemSpec> item;
@@ -20,9 +21,12 @@ class RemixSelectSpec with _$RemixSelectSpec {
 }
 
 /// Resolved visual values for the select trigger.
-@MixableSpec()
+@MixableSpec(
+  extraStylerMixins: [RemixBoxStylerMixin, LabelStyleMixin, IconStyleMixin],
+)
 class RemixSelectTriggerSpec with _$RemixSelectTriggerSpec {
   @override
+  @MixableField(forwardStyler: true)
   final StyleSpec<FlexBoxSpec> container;
   @override
   final StyleSpec<TextSpec> label;
@@ -39,9 +43,10 @@ class RemixSelectTriggerSpec with _$RemixSelectTriggerSpec {
 }
 
 /// Resolved visual values for a select menu item.
-@MixableSpec()
+@MixableSpec(extraStylerMixins: [RemixBoxStylerMixin, IconStyleMixin])
 class RemixSelectMenuItemSpec with _$RemixSelectMenuItemSpec {
   @override
+  @MixableField(forwardStyler: true)
   final StyleSpec<FlexBoxSpec> container;
   @override
   final StyleSpec<TextSpec> text;

@@ -141,9 +141,9 @@ void main() {
 
     group('Style Methods', () {
       styleMethodTest(
-        'color() sets text color',
+        'textColor() sets text color',
         initial: RemixTextFieldStyler(),
-        modify: (style) => style.color(Colors.blue),
+        modify: (style) => style.textColor(Colors.blue),
         expect: (style) {
           expect(
             style.$text,
@@ -177,7 +177,10 @@ void main() {
         initial: RemixTextFieldStyler(),
         modify: (style) => style.container(FlexBoxStyler()),
         expect: (style) {
-          expect(style.$container, equals(Prop.maybeMix(FlexBoxStyler())));
+          expect(
+            style,
+            equals(RemixTextFieldStyler.container(FlexBoxStyler())),
+          );
         },
       );
 
@@ -188,14 +191,10 @@ void main() {
             style.borderRadius(BorderRadiusGeometryMix.circular(8)),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                FlexBoxStyler(
-                  decoration: BoxDecorationMix(
-                    borderRadius: BorderRadiusGeometryMix.circular(8),
-                  ),
-                ),
+              RemixTextFieldStyler.borderRadius(
+                BorderRadiusGeometryMix.circular(8),
               ),
             ),
           );
@@ -208,12 +207,8 @@ void main() {
         modify: (style) => style.padding(EdgeInsetsGeometryMix.all(16)),
         expect: (style) {
           expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(
-                FlexBoxStyler(padding: EdgeInsetsGeometryMix.all(16)),
-              ),
-            ),
+            style,
+            equals(RemixTextFieldStyler.padding(EdgeInsetsGeometryMix.all(16))),
           );
         },
       );
@@ -226,16 +221,10 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                FlexBoxStyler(
-                  decoration: BoxDecorationMix(
-                    border: BoxBorderMix.all(
-                      BorderSideMix(color: Colors.black, width: 1),
-                    ),
-                  ),
-                ),
+              RemixTextFieldStyler.border(
+                BoxBorderMix.all(BorderSideMix(color: Colors.black, width: 1)),
               ),
             ),
           );
@@ -247,16 +236,7 @@ void main() {
         initial: RemixTextFieldStyler(),
         modify: (style) => style.width(200),
         expect: (style) {
-          expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(
-                FlexBoxStyler(
-                  constraints: BoxConstraintsMix(minWidth: 200, maxWidth: 200),
-                ),
-              ),
-            ),
-          );
+          expect(style, equals(RemixTextFieldStyler.width(200)));
         },
       );
 
@@ -265,16 +245,7 @@ void main() {
         initial: RemixTextFieldStyler(),
         modify: (style) => style.height(50),
         expect: (style) {
-          expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(
-                FlexBoxStyler(
-                  constraints: BoxConstraintsMix(minHeight: 50, maxHeight: 50),
-                ),
-              ),
-            ),
-          );
+          expect(style, equals(RemixTextFieldStyler.height(50)));
         },
       );
 
@@ -284,8 +255,10 @@ void main() {
         modify: (style) => style.cursorColor(Color.fromARGB(255, 255, 0, 0)),
         expect: (style) {
           expect(
-            style.$cursorColor,
-            equals(Prop.maybe(Color.fromARGB(255, 255, 0, 0))),
+            style,
+            equals(
+              RemixTextFieldStyler.cursorColor(Color.fromARGB(255, 255, 0, 0)),
+            ),
           );
         },
       );
@@ -311,7 +284,7 @@ void main() {
         initial: RemixTextFieldStyler(),
         modify: (style) => style.hintText(TextStyler()),
         expect: (style) {
-          expect(style.$hintText, equals(Prop.maybeMix(TextStyler())));
+          expect(style, equals(RemixTextFieldStyler.hintText(TextStyler())));
         },
       );
 
@@ -321,12 +294,8 @@ void main() {
         modify: (style) => style.margin(EdgeInsetsGeometryMix.all(8)),
         expect: (style) {
           expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(
-                FlexBoxStyler(margin: EdgeInsetsGeometryMix.all(8)),
-              ),
-            ),
+            style,
+            equals(RemixTextFieldStyler.margin(EdgeInsetsGeometryMix.all(8))),
           );
         },
       );
@@ -336,10 +305,7 @@ void main() {
         initial: RemixTextFieldStyler(),
         modify: (style) => style.spacing(12),
         expect: (style) {
-          expect(
-            style.$container,
-            equals(Prop.maybeMix(FlexBoxStyler(spacing: 12))),
-          );
+          expect(style, equals(RemixTextFieldStyler.spacing(12)));
         },
       );
 
@@ -350,10 +316,10 @@ void main() {
             style.decoration(BoxDecorationMix(color: Colors.red)),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                FlexBoxStyler(decoration: BoxDecorationMix(color: Colors.red)),
+              RemixTextFieldStyler.decoration(
+                BoxDecorationMix(color: Colors.red),
               ),
             ),
           );
@@ -366,8 +332,8 @@ void main() {
         modify: (style) => style.alignment(Alignment.center),
         expect: (style) {
           expect(
-            style.$container,
-            equals(Prop.maybeMix(FlexBoxStyler(alignment: Alignment.center))),
+            style,
+            equals(RemixTextFieldStyler.alignment(Alignment.center)),
           );
         },
       );
@@ -379,12 +345,10 @@ void main() {
             style.constraints(BoxConstraintsMix(minWidth: 100, maxWidth: 200)),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                FlexBoxStyler(
-                  constraints: BoxConstraintsMix(minWidth: 100, maxWidth: 200),
-                ),
+              RemixTextFieldStyler.constraints(
+                BoxConstraintsMix(minWidth: 100, maxWidth: 200),
               ),
             ),
           );
@@ -396,7 +360,10 @@ void main() {
         initial: RemixTextFieldStyler(),
         modify: (style) => style.textAlign(TextAlign.center),
         expect: (style) {
-          expect(style.$textAlign, equals(Prop.maybe(TextAlign.center)));
+          expect(
+            style,
+            equals(RemixTextFieldStyler.textAlign(TextAlign.center)),
+          );
         },
       );
 
@@ -406,11 +373,9 @@ void main() {
         modify: (style) => style.helperText(TextStyler().color(Colors.blue)),
         expect: (style) {
           expect(
-            style.$helperText,
+            style,
             equals(
-              Prop.maybeMix(
-                TextStyler(style: TextStyleMix(color: Colors.blue)),
-              ),
+              RemixTextFieldStyler.helperText(TextStyler().color(Colors.blue)),
             ),
           );
         },
@@ -422,12 +387,8 @@ void main() {
         modify: (style) => style.label(TextStyler().color(Colors.blue)),
         expect: (style) {
           expect(
-            style.$label,
-            equals(
-              Prop.maybeMix(
-                TextStyler(style: TextStyleMix(color: Colors.blue)),
-              ),
-            ),
+            style,
+            equals(RemixTextFieldStyler.label(TextStyler().color(Colors.blue))),
           );
         },
       );
@@ -472,14 +433,10 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                FlexBoxStyler(
-                  foregroundDecoration: BoxDecorationMix(
-                    shape: BoxShape.circle,
-                  ),
-                ),
+              RemixTextFieldStyler.foregroundDecoration(
+                BoxDecorationMix(shape: BoxShape.circle),
               ),
             ),
           );
@@ -495,13 +452,11 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                FlexBoxStyler(
-                  transform: Matrix4.rotationZ(0.1),
-                  transformAlignment: Alignment.topLeft,
-                ),
+              RemixTextFieldStyler.transform(
+                Matrix4.rotationZ(0.1),
+                alignment: Alignment.topLeft,
               ),
             ),
           );

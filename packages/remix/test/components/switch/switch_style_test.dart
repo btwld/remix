@@ -86,10 +86,7 @@ void main() {
         initial: RemixSwitchStyler(),
         modify: (style) => style.alignment(Alignment.center),
         expect: (style) {
-          expect(
-            style.$container,
-            equals(Prop.maybeMix(BoxStyler(alignment: Alignment.center))),
-          );
+          expect(style, equals(RemixSwitchStyler.alignment(Alignment.center)));
         },
       );
 
@@ -99,12 +96,8 @@ void main() {
         modify: (style) => style.padding(EdgeInsetsGeometryMix.all(16.0)),
         expect: (style) {
           expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(
-                BoxStyler(padding: EdgeInsetsGeometryMix.all(16.0)),
-              ),
-            ),
+            style,
+            equals(RemixSwitchStyler.padding(EdgeInsetsGeometryMix.all(16.0))),
           );
         },
       );
@@ -115,10 +108,8 @@ void main() {
         modify: (style) => style.margin(EdgeInsetsGeometryMix.all(8.0)),
         expect: (style) {
           expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(BoxStyler(margin: EdgeInsetsGeometryMix.all(8.0))),
-            ),
+            style,
+            equals(RemixSwitchStyler.margin(EdgeInsetsGeometryMix.all(8.0))),
           );
         },
       );
@@ -131,15 +122,10 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  constraints: BoxConstraintsMix(
-                    minWidth: 20.0,
-                    minHeight: 20.0,
-                  ),
-                ),
+              RemixSwitchStyler.constraints(
+                BoxConstraintsMix(minWidth: 20.0, minHeight: 20.0),
               ),
             ),
           );
@@ -157,14 +143,12 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  decoration: BoxDecorationMix(
-                    color: Colors.blue,
-                    borderRadius: BorderRadiusMix.circular(8.0),
-                  ),
+              RemixSwitchStyler.decoration(
+                BoxDecorationMix(
+                  color: Colors.blue,
+                  borderRadius: BorderRadiusMix.circular(8.0),
                 ),
               ),
             ),
@@ -182,13 +166,11 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  foregroundDecoration: BoxDecorationMix(
-                    border: BoxBorderMix.all(BorderSideMix(color: Colors.red)),
-                  ),
+              RemixSwitchStyler.foregroundDecoration(
+                BoxDecorationMix(
+                  border: BoxBorderMix.all(BorderSideMix(color: Colors.red)),
                 ),
               ),
             ),
@@ -203,13 +185,11 @@ void main() {
             style.transform(Matrix4.identity(), alignment: Alignment.topLeft),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  transform: Matrix4.identity(),
-                  transformAlignment: Alignment.topLeft,
-                ),
+              RemixSwitchStyler.transform(
+                Matrix4.identity(),
+                alignment: Alignment.topLeft,
               ),
             ),
           );

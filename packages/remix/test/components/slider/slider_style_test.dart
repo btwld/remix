@@ -83,8 +83,8 @@ void main() {
         modify: (style) => style.trackColor(const Color(0xFF0000FF)),
         expect: (style) {
           expect(
-            style.$trackColor,
-            equals(Prop.value(const Color(0xFF0000FF))),
+            style,
+            equals(RemixSliderStyler.trackColor(const Color(0xFF0000FF))),
           );
         },
       );
@@ -95,8 +95,8 @@ void main() {
         modify: (style) => style.rangeColor(const Color(0xFFFF0000)),
         expect: (style) {
           expect(
-            style.$rangeColor,
-            equals(Prop.value(const Color(0xFFFF0000))),
+            style,
+            equals(RemixSliderStyler.rangeColor(const Color(0xFFFF0000))),
           );
         },
       );
@@ -109,9 +109,9 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$thumb,
+            style,
             equals(
-              Prop.maybeMix(
+              RemixSliderStyler.thumb(
                 BoxStyler(decoration: BoxDecorationMix(color: Colors.green)),
               ),
             ),
@@ -142,10 +142,7 @@ void main() {
         initial: RemixSliderStyler(),
         modify: (style) => style.alignment(Alignment.center),
         expect: (style) {
-          expect(
-            style.$thumb,
-            equals(Prop.maybeMix(BoxStyler(alignment: Alignment.center))),
-          );
+          expect(style, equals(RemixSliderStyler.alignment(Alignment.center)));
         },
       );
 
@@ -183,12 +180,8 @@ void main() {
         modify: (style) => style.padding(EdgeInsetsGeometryMix.all(16.0)),
         expect: (style) {
           expect(
-            style.$thumb,
-            equals(
-              Prop.maybeMix(
-                BoxStyler(padding: EdgeInsetsGeometryMix.all(16.0)),
-              ),
-            ),
+            style,
+            equals(RemixSliderStyler.padding(EdgeInsetsGeometryMix.all(16.0))),
           );
         },
       );
@@ -198,14 +191,7 @@ void main() {
         initial: RemixSliderStyler(),
         modify: (style) => style.color(Colors.purple),
         expect: (style) {
-          expect(
-            style.$thumb,
-            equals(
-              Prop.maybeMix(
-                BoxStyler(decoration: BoxDecorationMix(color: Colors.purple)),
-              ),
-            ),
-          );
+          expect(style, equals(RemixSliderStyler.color(Colors.purple)));
         },
       );
 
@@ -214,21 +200,7 @@ void main() {
         initial: RemixSliderStyler(),
         modify: (style) => style.size(24.0, 24.0),
         expect: (style) {
-          expect(
-            style.$thumb,
-            equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  constraints: BoxConstraintsMix(
-                    minWidth: 24.0,
-                    maxWidth: 24.0,
-                    minHeight: 24.0,
-                    maxHeight: 24.0,
-                  ),
-                ),
-              ),
-            ),
-          );
+          expect(style, equals(RemixSliderStyler.size(24.0, 24.0)));
         },
       );
 
@@ -238,15 +210,9 @@ void main() {
         modify: (style) => style.borderRadius(BorderRadiusMix.circular(12.0)),
         expect: (style) {
           expect(
-            style.$thumb,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  decoration: BoxDecorationMix(
-                    borderRadius: BorderRadiusMix.circular(12.0),
-                  ),
-                ),
-              ),
+              RemixSliderStyler.borderRadius(BorderRadiusMix.circular(12.0)),
             ),
           );
         },
@@ -260,15 +226,10 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$thumb,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  constraints: BoxConstraintsMix(
-                    minWidth: 20.0,
-                    minHeight: 20.0,
-                  ),
-                ),
+              RemixSliderStyler.constraints(
+                BoxConstraintsMix(minWidth: 20.0, minHeight: 20.0),
               ),
             ),
           );
@@ -286,14 +247,12 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$thumb,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  decoration: BoxDecorationMix(
-                    color: Colors.blue,
-                    borderRadius: BorderRadiusMix.circular(8.0),
-                  ),
+              RemixSliderStyler.decoration(
+                BoxDecorationMix(
+                  color: Colors.blue,
+                  borderRadius: BorderRadiusMix.circular(8.0),
                 ),
               ),
             ),
@@ -307,10 +266,8 @@ void main() {
         modify: (style) => style.margin(EdgeInsetsGeometryMix.all(8.0)),
         expect: (style) {
           expect(
-            style.$thumb,
-            equals(
-              Prop.maybeMix(BoxStyler(margin: EdgeInsetsGeometryMix.all(8.0))),
-            ),
+            style,
+            equals(RemixSliderStyler.margin(EdgeInsetsGeometryMix.all(8.0))),
           );
         },
       );
@@ -325,13 +282,11 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$thumb,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  foregroundDecoration: BoxDecorationMix(
-                    border: BoxBorderMix.all(BorderSideMix(color: Colors.red)),
-                  ),
+              RemixSliderStyler.foregroundDecoration(
+                BoxDecorationMix(
+                  border: BoxBorderMix.all(BorderSideMix(color: Colors.red)),
                 ),
               ),
             ),
@@ -346,13 +301,11 @@ void main() {
             style.transform(Matrix4.identity(), alignment: Alignment.topLeft),
         expect: (style) {
           expect(
-            style.$thumb,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  transform: Matrix4.identity(),
-                  transformAlignment: Alignment.topLeft,
-                ),
+              RemixSliderStyler.transform(
+                Matrix4.identity(),
+                alignment: Alignment.topLeft,
               ),
             ),
           );

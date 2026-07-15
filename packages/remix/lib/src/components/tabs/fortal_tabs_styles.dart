@@ -1,7 +1,6 @@
 part of 'tabs.dart';
 
 /// Fortal-themed preset for [RemixTabBar].
-@MixWidget(name: 'FortalTabBar')
 RemixTabBarStyler fortalTabBarStyler() {
   return RemixTabBarStyler().container(
     FlexBoxStyler()
@@ -12,13 +11,11 @@ RemixTabBarStyler fortalTabBarStyler() {
 }
 
 /// Fortal-themed preset for [RemixTabView].
-@MixWidget(name: 'FortalTabView')
 RemixTabViewStyler fortalTabViewStyler() {
   return RemixTabViewStyler().paddingAll(FortalTokens.space3());
 }
 
 /// Fortal-themed preset for [RemixTab].
-@MixWidget(name: 'FortalTab')
 RemixTabStyler fortalTabStyler() {
   return RemixTabStyler()
       .label(TextStyler().color(FortalTokens.gray12()))
@@ -52,4 +49,104 @@ RemixTabStyler fortalTabStyler() {
             ),
       )
       .padding(EdgeInsetsMix.symmetric(vertical: 6.0, horizontal: 12.0));
+}
+
+/// Fortal-themed preset for [RemixTabBar].
+class FortalTabBar extends StatelessWidget {
+  const FortalTabBar({super.key, required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return fortalTabBarStyler().call(key: this.key, child: this.child);
+  }
+}
+
+/// Fortal-themed preset for [RemixTabView].
+class FortalTabView extends StatelessWidget {
+  const FortalTabView({super.key, required this.tabId, required this.child});
+
+  final String tabId;
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return fortalTabViewStyler().call(
+      key: this.key,
+      tabId: this.tabId,
+      child: this.child,
+    );
+  }
+}
+
+/// Fortal-themed preset for [RemixTab].
+class FortalTab extends StatelessWidget {
+  const FortalTab({
+    super.key,
+    required this.tabId,
+    this.child,
+    this.label,
+    this.icon,
+    this.enabled = true,
+    this.mouseCursor = SystemMouseCursors.click,
+    this.enableFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
+    this.onFocusChange,
+    this.onHoverChange,
+    this.onPressChange,
+    this.builder,
+    this.semanticLabel,
+  });
+
+  final String tabId;
+
+  final Widget? child;
+
+  final String? label;
+
+  final IconData? icon;
+
+  final bool enabled;
+
+  final MouseCursor mouseCursor;
+
+  final bool enableFeedback;
+
+  final FocusNode? focusNode;
+
+  final bool autofocus;
+
+  final ValueChanged<bool>? onFocusChange;
+
+  final ValueChanged<bool>? onHoverChange;
+
+  final ValueChanged<bool>? onPressChange;
+
+  final ValueWidgetBuilder<NakedTabState>? builder;
+
+  final String? semanticLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    return fortalTabStyler().call(
+      key: this.key,
+      tabId: this.tabId,
+      label: this.label,
+      icon: this.icon,
+      enabled: this.enabled,
+      mouseCursor: this.mouseCursor,
+      enableFeedback: this.enableFeedback,
+      focusNode: this.focusNode,
+      autofocus: this.autofocus,
+      onFocusChange: this.onFocusChange,
+      onHoverChange: this.onHoverChange,
+      onPressChange: this.onPressChange,
+      semanticLabel: this.semanticLabel,
+      child: this.child,
+      builder: this.builder,
+    );
+  }
 }

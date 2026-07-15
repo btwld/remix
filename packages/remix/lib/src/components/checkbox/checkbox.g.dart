@@ -86,120 +86,516 @@ mixin _$RemixCheckboxSpec implements Spec<RemixCheckboxSpec>, Diagnosticable {
 typedef _$RemixCheckboxSpecMethods = _$RemixCheckboxSpec; // ignore: unused_element
 
 // **************************************************************************
-// MixWidgetGenerator
+// SpecStylerGenerator
 // **************************************************************************
 
-/// Fortal-themed preset for [RemixCheckbox].
-class FortalCheckbox extends StatelessWidget {
-  const FortalCheckbox({
-    super.key,
-    this.variant = .surface,
-    this.size = .size2,
-    required this.selected,
-    this.onChanged,
-    this.enabled = true,
-    this.tristate = false,
-    this.checkedIcon = Icons.check_rounded,
-    this.uncheckedIcon,
-    this.indeterminateIcon = Icons.horizontal_rule,
-    this.focusNode,
-    this.autofocus = false,
-    this.enableFeedback = true,
-    this.semanticLabel,
-    this.mouseCursor = SystemMouseCursors.click,
-  });
+class RemixCheckboxStyler
+    extends MixStyler<RemixCheckboxStyler, RemixCheckboxSpec>
+    with RemixBoxStylerMixin<RemixCheckboxStyler> {
+  final Prop<StyleSpec<BoxSpec>>? $container;
+  final Prop<StyleSpec<IconSpec>>? $indicator;
 
-  /// Surface treatment with neutral border.
-  const FortalCheckbox.surface({
-    super.key,
-    this.size = .size2,
-    required this.selected,
-    this.onChanged,
-    this.enabled = true,
-    this.tristate = false,
-    this.checkedIcon = Icons.check_rounded,
-    this.uncheckedIcon,
-    this.indeterminateIcon = Icons.horizontal_rule,
-    this.focusNode,
-    this.autofocus = false,
-    this.enableFeedback = true,
-    this.semanticLabel,
-    this.mouseCursor = SystemMouseCursors.click,
-  }) : variant = FortalCheckboxVariant.surface;
+  const RemixCheckboxStyler.create({
+    Prop<StyleSpec<BoxSpec>>? container,
+    Prop<StyleSpec<IconSpec>>? indicator,
+    super.variants,
+    super.modifier,
+    super.animation,
+  }) : $container = container,
+       $indicator = indicator;
 
-  /// Soft accent treatment.
-  const FortalCheckbox.soft({
-    super.key,
-    this.size = .size2,
-    required this.selected,
-    this.onChanged,
-    this.enabled = true,
-    this.tristate = false,
-    this.checkedIcon = Icons.check_rounded,
-    this.uncheckedIcon,
-    this.indeterminateIcon = Icons.horizontal_rule,
-    this.focusNode,
-    this.autofocus = false,
-    this.enableFeedback = true,
-    this.semanticLabel,
-    this.mouseCursor = SystemMouseCursors.click,
-  }) : variant = FortalCheckboxVariant.soft;
+  RemixCheckboxStyler({
+    BoxStyler? container,
+    IconStyler? indicator,
+    AnimationConfig? animation,
+    WidgetModifierConfig? modifier,
+    List<VariantStyle<RemixCheckboxSpec>>? variants,
+  }) : this.create(
+         container: Prop.maybeMix(container),
+         indicator: Prop.maybeMix(indicator),
+         variants: variants,
+         modifier: modifier,
+         animation: animation,
+       );
 
-  final FortalCheckboxVariant variant;
+  factory RemixCheckboxStyler.container(BoxStyler value) =>
+      RemixCheckboxStyler().container(value);
+  factory RemixCheckboxStyler.indicator(IconStyler value) =>
+      RemixCheckboxStyler().indicator(value);
+  factory RemixCheckboxStyler.alignment(AlignmentGeometry value) =>
+      RemixCheckboxStyler().alignment(value);
+  factory RemixCheckboxStyler.padding(EdgeInsetsGeometryMix value) =>
+      RemixCheckboxStyler().padding(value);
+  factory RemixCheckboxStyler.margin(EdgeInsetsGeometryMix value) =>
+      RemixCheckboxStyler().margin(value);
+  factory RemixCheckboxStyler.constraints(BoxConstraintsMix value) =>
+      RemixCheckboxStyler().constraints(value);
+  factory RemixCheckboxStyler.decoration(DecorationMix value) =>
+      RemixCheckboxStyler().decoration(value);
+  factory RemixCheckboxStyler.foregroundDecoration(DecorationMix value) =>
+      RemixCheckboxStyler().foregroundDecoration(value);
+  factory RemixCheckboxStyler.clipBehavior(Clip value) =>
+      RemixCheckboxStyler().clipBehavior(value);
+  factory RemixCheckboxStyler.color(Color value) =>
+      RemixCheckboxStyler().color(value);
+  factory RemixCheckboxStyler.gradient(GradientMix value) =>
+      RemixCheckboxStyler().gradient(value);
+  factory RemixCheckboxStyler.border(BoxBorderMix value) =>
+      RemixCheckboxStyler().border(value);
+  factory RemixCheckboxStyler.borderRadius(BorderRadiusGeometryMix value) =>
+      RemixCheckboxStyler().borderRadius(value);
+  factory RemixCheckboxStyler.elevation(ElevationShadow value) =>
+      RemixCheckboxStyler().elevation(value);
+  factory RemixCheckboxStyler.shadow(BoxShadowMix value) =>
+      RemixCheckboxStyler().shadow(value);
+  factory RemixCheckboxStyler.shadows(List<BoxShadowMix> value) =>
+      RemixCheckboxStyler().shadows(value);
+  factory RemixCheckboxStyler.width(double value) =>
+      RemixCheckboxStyler().width(value);
+  factory RemixCheckboxStyler.height(double value) =>
+      RemixCheckboxStyler().height(value);
+  factory RemixCheckboxStyler.size(double width, double height) =>
+      RemixCheckboxStyler().size(width, height);
+  factory RemixCheckboxStyler.minWidth(double value) =>
+      RemixCheckboxStyler().minWidth(value);
+  factory RemixCheckboxStyler.maxWidth(double value) =>
+      RemixCheckboxStyler().maxWidth(value);
+  factory RemixCheckboxStyler.minHeight(double value) =>
+      RemixCheckboxStyler().minHeight(value);
+  factory RemixCheckboxStyler.maxHeight(double value) =>
+      RemixCheckboxStyler().maxHeight(value);
+  factory RemixCheckboxStyler.scale(
+    double scale, {
+    Alignment alignment = .center,
+  }) => RemixCheckboxStyler().scale(scale, alignment: alignment);
+  factory RemixCheckboxStyler.rotate(
+    double radians, {
+    Alignment alignment = .center,
+  }) => RemixCheckboxStyler().rotate(radians, alignment: alignment);
+  factory RemixCheckboxStyler.translate(double x, double y, [double z = 0.0]) =>
+      RemixCheckboxStyler().translate(x, y, z);
+  factory RemixCheckboxStyler.skew(double skewX, double skewY) =>
+      RemixCheckboxStyler().skew(skewX, skewY);
+  factory RemixCheckboxStyler.textStyle(TextStyler value) =>
+      RemixCheckboxStyler().textStyle(value);
+  factory RemixCheckboxStyler.image(DecorationImageMix value) =>
+      RemixCheckboxStyler().image(value);
+  factory RemixCheckboxStyler.shape(ShapeBorderMix value) =>
+      RemixCheckboxStyler().shape(value);
+  factory RemixCheckboxStyler.backgroundImage(
+    ImageProvider image, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) => RemixCheckboxStyler().backgroundImage(
+    image,
+    fit: fit,
+    alignment: alignment,
+    repeat: repeat,
+  );
+  factory RemixCheckboxStyler.backgroundImageUrl(
+    String url, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) => RemixCheckboxStyler().backgroundImageUrl(
+    url,
+    fit: fit,
+    alignment: alignment,
+    repeat: repeat,
+  );
+  factory RemixCheckboxStyler.backgroundImageAsset(
+    String path, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) => RemixCheckboxStyler().backgroundImageAsset(
+    path,
+    fit: fit,
+    alignment: alignment,
+    repeat: repeat,
+  );
+  factory RemixCheckboxStyler.linearGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? begin,
+    AlignmentGeometry? end,
+    TileMode? tileMode,
+  }) => RemixCheckboxStyler().linearGradient(
+    colors: colors,
+    stops: stops,
+    begin: begin,
+    end: end,
+    tileMode: tileMode,
+  );
+  factory RemixCheckboxStyler.radialGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? radius,
+    AlignmentGeometry? focal,
+    double? focalRadius,
+    TileMode? tileMode,
+  }) => RemixCheckboxStyler().radialGradient(
+    colors: colors,
+    stops: stops,
+    center: center,
+    radius: radius,
+    focal: focal,
+    focalRadius: focalRadius,
+    tileMode: tileMode,
+  );
+  factory RemixCheckboxStyler.sweepGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? startAngle,
+    double? endAngle,
+    TileMode? tileMode,
+  }) => RemixCheckboxStyler().sweepGradient(
+    colors: colors,
+    stops: stops,
+    center: center,
+    startAngle: startAngle,
+    endAngle: endAngle,
+    tileMode: tileMode,
+  );
+  factory RemixCheckboxStyler.foregroundLinearGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? begin,
+    AlignmentGeometry? end,
+    TileMode? tileMode,
+  }) => RemixCheckboxStyler().foregroundLinearGradient(
+    colors: colors,
+    stops: stops,
+    begin: begin,
+    end: end,
+    tileMode: tileMode,
+  );
+  factory RemixCheckboxStyler.foregroundRadialGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? radius,
+    AlignmentGeometry? focal,
+    double? focalRadius,
+    TileMode? tileMode,
+  }) => RemixCheckboxStyler().foregroundRadialGradient(
+    colors: colors,
+    stops: stops,
+    center: center,
+    radius: radius,
+    focal: focal,
+    focalRadius: focalRadius,
+    tileMode: tileMode,
+  );
+  factory RemixCheckboxStyler.foregroundSweepGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? startAngle,
+    double? endAngle,
+    TileMode? tileMode,
+  }) => RemixCheckboxStyler().foregroundSweepGradient(
+    colors: colors,
+    stops: stops,
+    center: center,
+    startAngle: startAngle,
+    endAngle: endAngle,
+    tileMode: tileMode,
+  );
+  factory RemixCheckboxStyler.transform(
+    Matrix4 value, {
+    Alignment alignment = .center,
+  }) => RemixCheckboxStyler().transform(value, alignment: alignment);
 
-  final FortalCheckboxSize size;
+  RemixCheckboxStyler alignment(AlignmentGeometry value) {
+    return container(BoxStyler().alignment(value));
+  }
 
-  final bool? selected;
+  RemixCheckboxStyler padding(EdgeInsetsGeometryMix value) {
+    return container(BoxStyler().padding(value));
+  }
 
-  final ValueChanged<bool?>? onChanged;
+  RemixCheckboxStyler margin(EdgeInsetsGeometryMix value) {
+    return container(BoxStyler().margin(value));
+  }
 
-  final bool enabled;
+  RemixCheckboxStyler constraints(BoxConstraintsMix value) {
+    return container(BoxStyler().constraints(value));
+  }
 
-  final bool tristate;
+  RemixCheckboxStyler decoration(DecorationMix value) {
+    return container(BoxStyler().decoration(value));
+  }
 
-  final IconData checkedIcon;
+  RemixCheckboxStyler foregroundDecoration(DecorationMix value) {
+    return container(BoxStyler().foregroundDecoration(value));
+  }
 
-  final IconData? uncheckedIcon;
+  RemixCheckboxStyler clipBehavior(Clip value) {
+    return container(BoxStyler().clipBehavior(value));
+  }
 
-  final IconData indeterminateIcon;
+  RemixCheckboxStyler color(Color value) {
+    return container(BoxStyler().color(value));
+  }
 
-  final FocusNode? focusNode;
+  RemixCheckboxStyler gradient(GradientMix value) {
+    return container(BoxStyler().gradient(value));
+  }
 
-  final bool autofocus;
+  RemixCheckboxStyler border(BoxBorderMix value) {
+    return container(BoxStyler().border(value));
+  }
 
-  final bool enableFeedback;
+  RemixCheckboxStyler borderRadius(BorderRadiusGeometryMix value) {
+    return container(BoxStyler().borderRadius(value));
+  }
 
-  final String? semanticLabel;
+  RemixCheckboxStyler elevation(ElevationShadow value) {
+    return container(BoxStyler().elevation(value));
+  }
 
-  final MouseCursor mouseCursor;
+  RemixCheckboxStyler shadow(BoxShadowMix value) {
+    return container(BoxStyler().shadow(value));
+  }
 
-  @override
-  Widget build(BuildContext context) {
-    return fortalCheckboxStyler(variant: this.variant, size: this.size).call(
-      key: this.key,
-      selected: this.selected,
-      onChanged: this.onChanged,
-      enabled: this.enabled,
-      tristate: this.tristate,
-      checkedIcon: this.checkedIcon,
-      uncheckedIcon: this.uncheckedIcon,
-      indeterminateIcon: this.indeterminateIcon,
-      focusNode: this.focusNode,
-      autofocus: this.autofocus,
-      enableFeedback: this.enableFeedback,
-      semanticLabel: this.semanticLabel,
-      mouseCursor: this.mouseCursor,
+  RemixCheckboxStyler shadows(List<BoxShadowMix> value) {
+    return container(BoxStyler().shadows(value));
+  }
+
+  RemixCheckboxStyler width(double value) {
+    return container(BoxStyler().width(value));
+  }
+
+  RemixCheckboxStyler height(double value) {
+    return container(BoxStyler().height(value));
+  }
+
+  RemixCheckboxStyler size(double width, double height) {
+    return container(BoxStyler().size(width, height));
+  }
+
+  RemixCheckboxStyler minWidth(double value) {
+    return container(BoxStyler().minWidth(value));
+  }
+
+  RemixCheckboxStyler maxWidth(double value) {
+    return container(BoxStyler().maxWidth(value));
+  }
+
+  RemixCheckboxStyler minHeight(double value) {
+    return container(BoxStyler().minHeight(value));
+  }
+
+  RemixCheckboxStyler maxHeight(double value) {
+    return container(BoxStyler().maxHeight(value));
+  }
+
+  RemixCheckboxStyler scale(double scale, {Alignment alignment = .center}) {
+    return container(BoxStyler().scale(scale, alignment: alignment));
+  }
+
+  RemixCheckboxStyler rotate(double radians, {Alignment alignment = .center}) {
+    return container(BoxStyler().rotate(radians, alignment: alignment));
+  }
+
+  RemixCheckboxStyler translate(double x, double y, [double z = 0.0]) {
+    return container(BoxStyler().translate(x, y, z));
+  }
+
+  RemixCheckboxStyler skew(double skewX, double skewY) {
+    return container(BoxStyler().skew(skewX, skewY));
+  }
+
+  RemixCheckboxStyler textStyle(TextStyler value) {
+    return container(BoxStyler().textStyle(value));
+  }
+
+  RemixCheckboxStyler image(DecorationImageMix value) {
+    return container(BoxStyler().image(value));
+  }
+
+  RemixCheckboxStyler shape(ShapeBorderMix value) {
+    return container(BoxStyler().shape(value));
+  }
+
+  RemixCheckboxStyler backgroundImage(
+    ImageProvider image, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) {
+    return container(
+      BoxStyler().backgroundImage(
+        image,
+        fit: fit,
+        alignment: alignment,
+        repeat: repeat,
+      ),
     );
   }
-}
 
-// **************************************************************************
-// StylerGenerator
-// **************************************************************************
+  RemixCheckboxStyler backgroundImageUrl(
+    String url, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) {
+    return container(
+      BoxStyler().backgroundImageUrl(
+        url,
+        fit: fit,
+        alignment: alignment,
+        repeat: repeat,
+      ),
+    );
+  }
 
-mixin _$RemixCheckboxStylerMixin on Style<RemixCheckboxSpec>, Diagnosticable {
-  Prop<StyleSpec<BoxSpec>>? get $container;
-  Prop<StyleSpec<IconSpec>>? get $indicator;
+  RemixCheckboxStyler backgroundImageAsset(
+    String path, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) {
+    return container(
+      BoxStyler().backgroundImageAsset(
+        path,
+        fit: fit,
+        alignment: alignment,
+        repeat: repeat,
+      ),
+    );
+  }
+
+  RemixCheckboxStyler linearGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? begin,
+    AlignmentGeometry? end,
+    TileMode? tileMode,
+  }) {
+    return container(
+      BoxStyler().linearGradient(
+        colors: colors,
+        stops: stops,
+        begin: begin,
+        end: end,
+        tileMode: tileMode,
+      ),
+    );
+  }
+
+  RemixCheckboxStyler radialGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? radius,
+    AlignmentGeometry? focal,
+    double? focalRadius,
+    TileMode? tileMode,
+  }) {
+    return container(
+      BoxStyler().radialGradient(
+        colors: colors,
+        stops: stops,
+        center: center,
+        radius: radius,
+        focal: focal,
+        focalRadius: focalRadius,
+        tileMode: tileMode,
+      ),
+    );
+  }
+
+  RemixCheckboxStyler sweepGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? startAngle,
+    double? endAngle,
+    TileMode? tileMode,
+  }) {
+    return container(
+      BoxStyler().sweepGradient(
+        colors: colors,
+        stops: stops,
+        center: center,
+        startAngle: startAngle,
+        endAngle: endAngle,
+        tileMode: tileMode,
+      ),
+    );
+  }
+
+  RemixCheckboxStyler foregroundLinearGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? begin,
+    AlignmentGeometry? end,
+    TileMode? tileMode,
+  }) {
+    return container(
+      BoxStyler().foregroundLinearGradient(
+        colors: colors,
+        stops: stops,
+        begin: begin,
+        end: end,
+        tileMode: tileMode,
+      ),
+    );
+  }
+
+  RemixCheckboxStyler foregroundRadialGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? radius,
+    AlignmentGeometry? focal,
+    double? focalRadius,
+    TileMode? tileMode,
+  }) {
+    return container(
+      BoxStyler().foregroundRadialGradient(
+        colors: colors,
+        stops: stops,
+        center: center,
+        radius: radius,
+        focal: focal,
+        focalRadius: focalRadius,
+        tileMode: tileMode,
+      ),
+    );
+  }
+
+  RemixCheckboxStyler foregroundSweepGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? startAngle,
+    double? endAngle,
+    TileMode? tileMode,
+  }) {
+    return container(
+      BoxStyler().foregroundSweepGradient(
+        colors: colors,
+        stops: stops,
+        center: center,
+        startAngle: startAngle,
+        endAngle: endAngle,
+        tileMode: tileMode,
+      ),
+    );
+  }
+
+  RemixCheckboxStyler transform(
+    Matrix4 value, {
+    Alignment alignment = .center,
+  }) {
+    return container(BoxStyler().transform(value, alignment: alignment));
+  }
 
   /// Sets the container.
   RemixCheckboxStyler container(BoxStyler value) {
@@ -212,16 +608,19 @@ mixin _$RemixCheckboxStylerMixin on Style<RemixCheckboxSpec>, Diagnosticable {
   }
 
   /// Sets the animation configuration.
+  @override
   RemixCheckboxStyler animate(AnimationConfig value) {
     return merge(RemixCheckboxStyler(animation: value));
   }
 
   /// Sets the style variants.
+  @override
   RemixCheckboxStyler variants(List<VariantStyle<RemixCheckboxSpec>> value) {
     return merge(RemixCheckboxStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
+  @override
   RemixCheckboxStyler wrap(WidgetModifierConfig value) {
     return merge(RemixCheckboxStyler(modifier: value));
   }

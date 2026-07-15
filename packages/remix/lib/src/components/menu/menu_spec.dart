@@ -4,10 +4,13 @@ part of 'menu.dart';
 ///
 /// This spec styles the trigger content only. The interactive trigger behavior
 /// is provided by the underlying Naked menu button.
-@MixableSpec()
+@MixableSpec(
+  extraStylerMixins: [RemixBoxStylerMixin, LabelStyleMixin, IconStyleMixin],
+)
 class RemixMenuTriggerSpec with _$RemixMenuTriggerSpec {
   /// Layout and decoration for the trigger content row.
   @override
+  @MixableField(forwardStyler: true)
   final StyleSpec<FlexBoxSpec> container;
 
   /// Text style for the trigger label.
@@ -63,10 +66,11 @@ class RemixMenuSpec with _$RemixMenuSpec {
 }
 
 /// Resolved visual properties for a [RemixMenuItem].
-@MixableSpec()
+@MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
 class RemixMenuItemSpec with _$RemixMenuItemSpec {
   /// Layout and decoration for the item row.
   @override
+  @MixableField(forwardStyler: true)
   final StyleSpec<FlexBoxSpec> container;
 
   /// Text style for the item label.

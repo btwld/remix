@@ -1,9 +1,10 @@
 part of 'accordion.dart';
 
 /// Resolved visual properties for a [RemixAccordion].
-@MixableSpec()
+@MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
 class RemixAccordionSpec with _$RemixAccordionSpec {
   @override
+  @MixableField(forwardStyler: true)
   final StyleSpec<FlexBoxSpec> trigger;
   @override
   final StyleSpec<IconSpec> leadingIcon;

@@ -117,32 +117,69 @@ mixin _$RemixSpinnerSpec implements Spec<RemixSpinnerSpec>, Diagnosticable {
 typedef _$RemixSpinnerSpecMethods = _$RemixSpinnerSpec; // ignore: unused_element
 
 // **************************************************************************
-// MixWidgetGenerator
+// SpecStylerGenerator
 // **************************************************************************
 
-/// Fortal-themed preset for [RemixSpinner].
-class FortalSpinner extends StatelessWidget {
-  const FortalSpinner({super.key, this.size = .size2});
+class RemixSpinnerStyler
+    extends MixStyler<RemixSpinnerStyler, RemixSpinnerSpec> {
+  final Prop<double>? $size;
+  final Prop<double>? $strokeWidth;
+  final Prop<Color>? $indicatorColor;
+  final Prop<Color>? $trackColor;
+  final Prop<double>? $trackStrokeWidth;
+  final Prop<Duration>? $duration;
 
-  final FortalSpinnerSize size;
+  const RemixSpinnerStyler.create({
+    Prop<double>? size,
+    Prop<double>? strokeWidth,
+    Prop<Color>? indicatorColor,
+    Prop<Color>? trackColor,
+    Prop<double>? trackStrokeWidth,
+    Prop<Duration>? duration,
+    super.variants,
+    super.modifier,
+    super.animation,
+  }) : $size = size,
+       $strokeWidth = strokeWidth,
+       $indicatorColor = indicatorColor,
+       $trackColor = trackColor,
+       $trackStrokeWidth = trackStrokeWidth,
+       $duration = duration;
 
-  @override
-  Widget build(BuildContext context) {
-    return fortalSpinnerStyler(size: this.size).call(key: this.key);
-  }
-}
+  RemixSpinnerStyler({
+    double? size,
+    double? strokeWidth,
+    Color? indicatorColor,
+    Color? trackColor,
+    double? trackStrokeWidth,
+    Duration? duration,
+    AnimationConfig? animation,
+    WidgetModifierConfig? modifier,
+    List<VariantStyle<RemixSpinnerSpec>>? variants,
+  }) : this.create(
+         size: Prop.maybe(size),
+         strokeWidth: Prop.maybe(strokeWidth),
+         indicatorColor: Prop.maybe(indicatorColor),
+         trackColor: Prop.maybe(trackColor),
+         trackStrokeWidth: Prop.maybe(trackStrokeWidth),
+         duration: Prop.maybe(duration),
+         variants: variants,
+         modifier: modifier,
+         animation: animation,
+       );
 
-// **************************************************************************
-// StylerGenerator
-// **************************************************************************
-
-mixin _$RemixSpinnerStylerMixin on Style<RemixSpinnerSpec>, Diagnosticable {
-  Prop<double>? get $size;
-  Prop<double>? get $strokeWidth;
-  Prop<Color>? get $indicatorColor;
-  Prop<Color>? get $trackColor;
-  Prop<double>? get $trackStrokeWidth;
-  Prop<Duration>? get $duration;
+  factory RemixSpinnerStyler.size(double value) =>
+      RemixSpinnerStyler().size(value);
+  factory RemixSpinnerStyler.strokeWidth(double value) =>
+      RemixSpinnerStyler().strokeWidth(value);
+  factory RemixSpinnerStyler.indicatorColor(Color value) =>
+      RemixSpinnerStyler().indicatorColor(value);
+  factory RemixSpinnerStyler.trackColor(Color value) =>
+      RemixSpinnerStyler().trackColor(value);
+  factory RemixSpinnerStyler.trackStrokeWidth(double value) =>
+      RemixSpinnerStyler().trackStrokeWidth(value);
+  factory RemixSpinnerStyler.duration(Duration value) =>
+      RemixSpinnerStyler().duration(value);
 
   /// Sets the size.
   RemixSpinnerStyler size(double value) {
@@ -175,16 +212,19 @@ mixin _$RemixSpinnerStylerMixin on Style<RemixSpinnerSpec>, Diagnosticable {
   }
 
   /// Sets the animation configuration.
+  @override
   RemixSpinnerStyler animate(AnimationConfig value) {
     return merge(RemixSpinnerStyler(animation: value));
   }
 
   /// Sets the style variants.
+  @override
   RemixSpinnerStyler variants(List<VariantStyle<RemixSpinnerSpec>> value) {
     return merge(RemixSpinnerStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
+  @override
   RemixSpinnerStyler wrap(WidgetModifierConfig value) {
     return merge(RemixSpinnerStyler(modifier: value));
   }

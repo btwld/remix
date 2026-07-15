@@ -1,9 +1,12 @@
 part of 'toggle.dart';
 
 /// Resolved visual properties for a [RemixToggle].
-@MixableSpec()
+@MixableSpec(
+  extraStylerMixins: [RemixBoxStylerMixin, LabelStyleMixin, IconStyleMixin],
+)
 class RemixToggleSpec with _$RemixToggleSpec {
   @override
+  @MixableField(forwardStyler: true)
   final StyleSpec<FlexBoxSpec> container;
   @override
   final StyleSpec<TextSpec> label;

@@ -184,403 +184,670 @@ mixin _$RemixTextFieldSpec implements Spec<RemixTextFieldSpec>, Diagnosticable {
 typedef _$RemixTextFieldSpecMethods = _$RemixTextFieldSpec; // ignore: unused_element
 
 // **************************************************************************
-// MixWidgetGenerator
+// SpecStylerGenerator
 // **************************************************************************
 
-/// Fortal-themed preset for [RemixTextField].
-class FortalTextField extends StatelessWidget {
-  const FortalTextField({
-    super.key,
-    this.variant = .surface,
-    this.size = .size2,
-    this.controller,
-    this.focusNode,
-    this.label,
-    this.hintText,
-    this.helperText,
-    this.error = false,
-    this.keyboardType,
-    this.textInputAction,
-    this.textCapitalization = .none,
-    this.textDirection,
-    this.obscureText = false,
-    this.enabled = true,
-    this.readOnly = false,
-    this.autofocus = false,
-    this.maxLines = 1,
-    this.minLines,
-    this.expands = false,
-    this.maxLength,
-    this.maxLengthEnforcement,
-    this.onChanged,
-    this.onEditingComplete,
-    this.onSubmitted,
-    this.onAppPrivateCommand,
-    this.inputFormatters,
-    this.showCursor,
-    this.obscuringCharacter = '•',
-    this.autocorrect = true,
-    this.enableSuggestions = true,
-    this.smartDashesType,
-    this.smartQuotesType,
-    this.dragStartBehavior = .start,
-    this.enableInteractiveSelection = true,
-    this.selectionControls,
-    this.onTap,
-    this.onTapOutside,
-    this.onPressUpOutside,
-    this.onTapAlwaysCalled = false,
-    this.scrollController,
-    this.scrollPhysics,
-    this.autofillHints,
-    this.contentInsertionConfiguration,
-    this.clipBehavior = .hardEdge,
-    this.restorationId,
-    this.stylusHandwritingEnabled = true,
-    this.enableIMEPersonalizedLearning = true,
-    this.contextMenuBuilder,
-    this.spellCheckConfiguration,
-    this.magnifierConfiguration,
-    this.canRequestFocus = true,
-    this.ignorePointers,
-    this.undoController,
-    this.groupId = EditableText,
-    this.leading,
-    this.trailing,
-    this.semanticLabel,
-    this.semanticHint,
-    this.excludeSemantics = false,
-  });
+class RemixTextFieldStyler
+    extends MixStyler<RemixTextFieldStyler, RemixTextFieldSpec>
+    with
+        RemixBoxStylerMixin<RemixTextFieldStyler>,
+        LabelStyleMixin<RemixTextFieldStyler> {
+  final Prop<StyleSpec<TextSpec>>? $text;
+  final Prop<StyleSpec<TextSpec>>? $hintText;
+  final Prop<TextAlign>? $textAlign;
+  final Prop<double>? $cursorWidth;
+  final Prop<double>? $cursorHeight;
+  final Prop<Radius>? $cursorRadius;
+  final Prop<Color>? $cursorColor;
+  final Prop<BoxHeightStyle>? $selectionHeightStyle;
+  final Prop<BoxWidthStyle>? $selectionWidthStyle;
+  final Prop<EdgeInsets>? $scrollPadding;
+  final Prop<Brightness>? $keyboardAppearance;
+  final Prop<bool>? $cursorOpacityAnimates;
+  final Prop<StyleSpec<FlexBoxSpec>>? $container;
+  final Prop<StyleSpec<TextSpec>>? $helperText;
+  final Prop<StyleSpec<TextSpec>>? $label;
 
-  /// Surface treatment with neutral border and text colors.
-  const FortalTextField.surface({
-    super.key,
-    this.size = .size2,
-    this.controller,
-    this.focusNode,
-    this.label,
-    this.hintText,
-    this.helperText,
-    this.error = false,
-    this.keyboardType,
-    this.textInputAction,
-    this.textCapitalization = .none,
-    this.textDirection,
-    this.obscureText = false,
-    this.enabled = true,
-    this.readOnly = false,
-    this.autofocus = false,
-    this.maxLines = 1,
-    this.minLines,
-    this.expands = false,
-    this.maxLength,
-    this.maxLengthEnforcement,
-    this.onChanged,
-    this.onEditingComplete,
-    this.onSubmitted,
-    this.onAppPrivateCommand,
-    this.inputFormatters,
-    this.showCursor,
-    this.obscuringCharacter = '•',
-    this.autocorrect = true,
-    this.enableSuggestions = true,
-    this.smartDashesType,
-    this.smartQuotesType,
-    this.dragStartBehavior = .start,
-    this.enableInteractiveSelection = true,
-    this.selectionControls,
-    this.onTap,
-    this.onTapOutside,
-    this.onPressUpOutside,
-    this.onTapAlwaysCalled = false,
-    this.scrollController,
-    this.scrollPhysics,
-    this.autofillHints,
-    this.contentInsertionConfiguration,
-    this.clipBehavior = .hardEdge,
-    this.restorationId,
-    this.stylusHandwritingEnabled = true,
-    this.enableIMEPersonalizedLearning = true,
-    this.contextMenuBuilder,
-    this.spellCheckConfiguration,
-    this.magnifierConfiguration,
-    this.canRequestFocus = true,
-    this.ignorePointers,
-    this.undoController,
-    this.groupId = EditableText,
-    this.leading,
-    this.trailing,
-    this.semanticLabel,
-    this.semanticHint,
-    this.excludeSemantics = false,
-  }) : variant = FortalTextFieldVariant.surface;
+  const RemixTextFieldStyler.create({
+    Prop<StyleSpec<TextSpec>>? text,
+    Prop<StyleSpec<TextSpec>>? hintText,
+    Prop<TextAlign>? textAlign,
+    Prop<double>? cursorWidth,
+    Prop<double>? cursorHeight,
+    Prop<Radius>? cursorRadius,
+    Prop<Color>? cursorColor,
+    Prop<BoxHeightStyle>? selectionHeightStyle,
+    Prop<BoxWidthStyle>? selectionWidthStyle,
+    Prop<EdgeInsets>? scrollPadding,
+    Prop<Brightness>? keyboardAppearance,
+    Prop<bool>? cursorOpacityAnimates,
+    Prop<StyleSpec<FlexBoxSpec>>? container,
+    Prop<StyleSpec<TextSpec>>? helperText,
+    Prop<StyleSpec<TextSpec>>? label,
+    super.variants,
+    super.modifier,
+    super.animation,
+  }) : $text = text,
+       $hintText = hintText,
+       $textAlign = textAlign,
+       $cursorWidth = cursorWidth,
+       $cursorHeight = cursorHeight,
+       $cursorRadius = cursorRadius,
+       $cursorColor = cursorColor,
+       $selectionHeightStyle = selectionHeightStyle,
+       $selectionWidthStyle = selectionWidthStyle,
+       $scrollPadding = scrollPadding,
+       $keyboardAppearance = keyboardAppearance,
+       $cursorOpacityAnimates = cursorOpacityAnimates,
+       $container = container,
+       $helperText = helperText,
+       $label = label;
 
-  /// Soft accent treatment.
-  const FortalTextField.soft({
-    super.key,
-    this.size = .size2,
-    this.controller,
-    this.focusNode,
-    this.label,
-    this.hintText,
-    this.helperText,
-    this.error = false,
-    this.keyboardType,
-    this.textInputAction,
-    this.textCapitalization = .none,
-    this.textDirection,
-    this.obscureText = false,
-    this.enabled = true,
-    this.readOnly = false,
-    this.autofocus = false,
-    this.maxLines = 1,
-    this.minLines,
-    this.expands = false,
-    this.maxLength,
-    this.maxLengthEnforcement,
-    this.onChanged,
-    this.onEditingComplete,
-    this.onSubmitted,
-    this.onAppPrivateCommand,
-    this.inputFormatters,
-    this.showCursor,
-    this.obscuringCharacter = '•',
-    this.autocorrect = true,
-    this.enableSuggestions = true,
-    this.smartDashesType,
-    this.smartQuotesType,
-    this.dragStartBehavior = .start,
-    this.enableInteractiveSelection = true,
-    this.selectionControls,
-    this.onTap,
-    this.onTapOutside,
-    this.onPressUpOutside,
-    this.onTapAlwaysCalled = false,
-    this.scrollController,
-    this.scrollPhysics,
-    this.autofillHints,
-    this.contentInsertionConfiguration,
-    this.clipBehavior = .hardEdge,
-    this.restorationId,
-    this.stylusHandwritingEnabled = true,
-    this.enableIMEPersonalizedLearning = true,
-    this.contextMenuBuilder,
-    this.spellCheckConfiguration,
-    this.magnifierConfiguration,
-    this.canRequestFocus = true,
-    this.ignorePointers,
-    this.undoController,
-    this.groupId = EditableText,
-    this.leading,
-    this.trailing,
-    this.semanticLabel,
-    this.semanticHint,
-    this.excludeSemantics = false,
-  }) : variant = FortalTextFieldVariant.soft;
+  RemixTextFieldStyler({
+    TextStyler? text,
+    TextStyler? hintText,
+    TextAlign? textAlign,
+    double? cursorWidth,
+    double? cursorHeight,
+    Radius? cursorRadius,
+    Color? cursorColor,
+    BoxHeightStyle? selectionHeightStyle,
+    BoxWidthStyle? selectionWidthStyle,
+    EdgeInsets? scrollPadding,
+    Brightness? keyboardAppearance,
+    bool? cursorOpacityAnimates,
+    FlexBoxStyler? container,
+    TextStyler? helperText,
+    TextStyler? label,
+    AnimationConfig? animation,
+    WidgetModifierConfig? modifier,
+    List<VariantStyle<RemixTextFieldSpec>>? variants,
+  }) : this.create(
+         text: Prop.maybeMix(text),
+         hintText: Prop.maybeMix(hintText),
+         textAlign: Prop.maybe(textAlign),
+         cursorWidth: Prop.maybe(cursorWidth),
+         cursorHeight: Prop.maybe(cursorHeight),
+         cursorRadius: Prop.maybe(cursorRadius),
+         cursorColor: Prop.maybe(cursorColor),
+         selectionHeightStyle: Prop.maybe(selectionHeightStyle),
+         selectionWidthStyle: Prop.maybe(selectionWidthStyle),
+         scrollPadding: Prop.maybe(scrollPadding),
+         keyboardAppearance: Prop.maybe(keyboardAppearance),
+         cursorOpacityAnimates: Prop.maybe(cursorOpacityAnimates),
+         container: Prop.maybeMix(container),
+         helperText: Prop.maybeMix(helperText),
+         label: Prop.maybeMix(label),
+         variants: variants,
+         modifier: modifier,
+         animation: animation,
+       );
 
-  final FortalTextFieldVariant variant;
+  factory RemixTextFieldStyler.text(TextStyler value) =>
+      RemixTextFieldStyler().text(value);
+  factory RemixTextFieldStyler.hintText(TextStyler value) =>
+      RemixTextFieldStyler().hintText(value);
+  factory RemixTextFieldStyler.textAlign(TextAlign value) =>
+      RemixTextFieldStyler().textAlign(value);
+  factory RemixTextFieldStyler.cursorWidth(double value) =>
+      RemixTextFieldStyler().cursorWidth(value);
+  factory RemixTextFieldStyler.cursorHeight(double value) =>
+      RemixTextFieldStyler().cursorHeight(value);
+  factory RemixTextFieldStyler.cursorRadius(Radius value) =>
+      RemixTextFieldStyler().cursorRadius(value);
+  factory RemixTextFieldStyler.cursorColor(Color value) =>
+      RemixTextFieldStyler().cursorColor(value);
+  factory RemixTextFieldStyler.selectionHeightStyle(BoxHeightStyle value) =>
+      RemixTextFieldStyler().selectionHeightStyle(value);
+  factory RemixTextFieldStyler.selectionWidthStyle(BoxWidthStyle value) =>
+      RemixTextFieldStyler().selectionWidthStyle(value);
+  factory RemixTextFieldStyler.scrollPadding(EdgeInsets value) =>
+      RemixTextFieldStyler().scrollPadding(value);
+  factory RemixTextFieldStyler.keyboardAppearance(Brightness value) =>
+      RemixTextFieldStyler().keyboardAppearance(value);
+  factory RemixTextFieldStyler.cursorOpacityAnimates(bool value) =>
+      RemixTextFieldStyler().cursorOpacityAnimates(value);
+  factory RemixTextFieldStyler.container(FlexBoxStyler value) =>
+      RemixTextFieldStyler().container(value);
+  factory RemixTextFieldStyler.helperText(TextStyler value) =>
+      RemixTextFieldStyler().helperText(value);
+  factory RemixTextFieldStyler.label(TextStyler value) =>
+      RemixTextFieldStyler().label(value);
+  factory RemixTextFieldStyler.color(Color value) =>
+      RemixTextFieldStyler().color(value);
+  factory RemixTextFieldStyler.gradient(GradientMix value) =>
+      RemixTextFieldStyler().gradient(value);
+  factory RemixTextFieldStyler.border(BoxBorderMix value) =>
+      RemixTextFieldStyler().border(value);
+  factory RemixTextFieldStyler.borderRadius(BorderRadiusGeometryMix value) =>
+      RemixTextFieldStyler().borderRadius(value);
+  factory RemixTextFieldStyler.elevation(ElevationShadow value) =>
+      RemixTextFieldStyler().elevation(value);
+  factory RemixTextFieldStyler.shadow(BoxShadowMix value) =>
+      RemixTextFieldStyler().shadow(value);
+  factory RemixTextFieldStyler.shadows(List<BoxShadowMix> value) =>
+      RemixTextFieldStyler().shadows(value);
+  factory RemixTextFieldStyler.width(double value) =>
+      RemixTextFieldStyler().width(value);
+  factory RemixTextFieldStyler.height(double value) =>
+      RemixTextFieldStyler().height(value);
+  factory RemixTextFieldStyler.size(double width, double height) =>
+      RemixTextFieldStyler().size(width, height);
+  factory RemixTextFieldStyler.minWidth(double value) =>
+      RemixTextFieldStyler().minWidth(value);
+  factory RemixTextFieldStyler.maxWidth(double value) =>
+      RemixTextFieldStyler().maxWidth(value);
+  factory RemixTextFieldStyler.minHeight(double value) =>
+      RemixTextFieldStyler().minHeight(value);
+  factory RemixTextFieldStyler.maxHeight(double value) =>
+      RemixTextFieldStyler().maxHeight(value);
+  factory RemixTextFieldStyler.scale(
+    double scale, {
+    Alignment alignment = .center,
+  }) => RemixTextFieldStyler().scale(scale, alignment: alignment);
+  factory RemixTextFieldStyler.rotate(
+    double radians, {
+    Alignment alignment = .center,
+  }) => RemixTextFieldStyler().rotate(radians, alignment: alignment);
+  factory RemixTextFieldStyler.translate(
+    double x,
+    double y, [
+    double z = 0.0,
+  ]) => RemixTextFieldStyler().translate(x, y, z);
+  factory RemixTextFieldStyler.skew(double skewX, double skewY) =>
+      RemixTextFieldStyler().skew(skewX, skewY);
+  factory RemixTextFieldStyler.textStyle(TextStyler value) =>
+      RemixTextFieldStyler().textStyle(value);
+  factory RemixTextFieldStyler.image(DecorationImageMix value) =>
+      RemixTextFieldStyler().image(value);
+  factory RemixTextFieldStyler.shape(ShapeBorderMix value) =>
+      RemixTextFieldStyler().shape(value);
+  factory RemixTextFieldStyler.backgroundImage(
+    ImageProvider image, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) => RemixTextFieldStyler().backgroundImage(
+    image,
+    fit: fit,
+    alignment: alignment,
+    repeat: repeat,
+  );
+  factory RemixTextFieldStyler.backgroundImageUrl(
+    String url, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) => RemixTextFieldStyler().backgroundImageUrl(
+    url,
+    fit: fit,
+    alignment: alignment,
+    repeat: repeat,
+  );
+  factory RemixTextFieldStyler.backgroundImageAsset(
+    String path, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) => RemixTextFieldStyler().backgroundImageAsset(
+    path,
+    fit: fit,
+    alignment: alignment,
+    repeat: repeat,
+  );
+  factory RemixTextFieldStyler.linearGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? begin,
+    AlignmentGeometry? end,
+    TileMode? tileMode,
+  }) => RemixTextFieldStyler().linearGradient(
+    colors: colors,
+    stops: stops,
+    begin: begin,
+    end: end,
+    tileMode: tileMode,
+  );
+  factory RemixTextFieldStyler.radialGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? radius,
+    AlignmentGeometry? focal,
+    double? focalRadius,
+    TileMode? tileMode,
+  }) => RemixTextFieldStyler().radialGradient(
+    colors: colors,
+    stops: stops,
+    center: center,
+    radius: radius,
+    focal: focal,
+    focalRadius: focalRadius,
+    tileMode: tileMode,
+  );
+  factory RemixTextFieldStyler.sweepGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? startAngle,
+    double? endAngle,
+    TileMode? tileMode,
+  }) => RemixTextFieldStyler().sweepGradient(
+    colors: colors,
+    stops: stops,
+    center: center,
+    startAngle: startAngle,
+    endAngle: endAngle,
+    tileMode: tileMode,
+  );
+  factory RemixTextFieldStyler.foregroundLinearGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? begin,
+    AlignmentGeometry? end,
+    TileMode? tileMode,
+  }) => RemixTextFieldStyler().foregroundLinearGradient(
+    colors: colors,
+    stops: stops,
+    begin: begin,
+    end: end,
+    tileMode: tileMode,
+  );
+  factory RemixTextFieldStyler.foregroundRadialGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? radius,
+    AlignmentGeometry? focal,
+    double? focalRadius,
+    TileMode? tileMode,
+  }) => RemixTextFieldStyler().foregroundRadialGradient(
+    colors: colors,
+    stops: stops,
+    center: center,
+    radius: radius,
+    focal: focal,
+    focalRadius: focalRadius,
+    tileMode: tileMode,
+  );
+  factory RemixTextFieldStyler.foregroundSweepGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? startAngle,
+    double? endAngle,
+    TileMode? tileMode,
+  }) => RemixTextFieldStyler().foregroundSweepGradient(
+    colors: colors,
+    stops: stops,
+    center: center,
+    startAngle: startAngle,
+    endAngle: endAngle,
+    tileMode: tileMode,
+  );
+  factory RemixTextFieldStyler.row() => RemixTextFieldStyler().row();
+  factory RemixTextFieldStyler.column() => RemixTextFieldStyler().column();
+  factory RemixTextFieldStyler.alignment(AlignmentGeometry value) =>
+      RemixTextFieldStyler().alignment(value);
+  factory RemixTextFieldStyler.padding(EdgeInsetsGeometryMix value) =>
+      RemixTextFieldStyler().padding(value);
+  factory RemixTextFieldStyler.margin(EdgeInsetsGeometryMix value) =>
+      RemixTextFieldStyler().margin(value);
+  factory RemixTextFieldStyler.constraints(BoxConstraintsMix value) =>
+      RemixTextFieldStyler().constraints(value);
+  factory RemixTextFieldStyler.decoration(DecorationMix value) =>
+      RemixTextFieldStyler().decoration(value);
+  factory RemixTextFieldStyler.foregroundDecoration(DecorationMix value) =>
+      RemixTextFieldStyler().foregroundDecoration(value);
+  factory RemixTextFieldStyler.clipBehavior(Clip value) =>
+      RemixTextFieldStyler().clipBehavior(value);
+  factory RemixTextFieldStyler.direction(Axis value) =>
+      RemixTextFieldStyler().direction(value);
+  factory RemixTextFieldStyler.mainAxisAlignment(MainAxisAlignment value) =>
+      RemixTextFieldStyler().mainAxisAlignment(value);
+  factory RemixTextFieldStyler.crossAxisAlignment(CrossAxisAlignment value) =>
+      RemixTextFieldStyler().crossAxisAlignment(value);
+  factory RemixTextFieldStyler.mainAxisSize(MainAxisSize value) =>
+      RemixTextFieldStyler().mainAxisSize(value);
+  factory RemixTextFieldStyler.spacing(double value) =>
+      RemixTextFieldStyler().spacing(value);
+  factory RemixTextFieldStyler.verticalDirection(VerticalDirection value) =>
+      RemixTextFieldStyler().verticalDirection(value);
+  factory RemixTextFieldStyler.textDirection(TextDirection value) =>
+      RemixTextFieldStyler().textDirection(value);
+  factory RemixTextFieldStyler.textBaseline(TextBaseline value) =>
+      RemixTextFieldStyler().textBaseline(value);
+  factory RemixTextFieldStyler.transform(
+    Matrix4 value, {
+    Alignment alignment = .center,
+  }) => RemixTextFieldStyler().transform(value, alignment: alignment);
 
-  final FortalTextFieldSize size;
+  RemixTextFieldStyler color(Color value) {
+    return container(FlexBoxStyler().color(value));
+  }
 
-  final TextEditingController? controller;
+  RemixTextFieldStyler gradient(GradientMix value) {
+    return container(FlexBoxStyler().gradient(value));
+  }
 
-  final FocusNode? focusNode;
+  RemixTextFieldStyler border(BoxBorderMix value) {
+    return container(FlexBoxStyler().border(value));
+  }
 
-  final String? label;
+  RemixTextFieldStyler borderRadius(BorderRadiusGeometryMix value) {
+    return container(FlexBoxStyler().borderRadius(value));
+  }
 
-  final String? hintText;
+  RemixTextFieldStyler elevation(ElevationShadow value) {
+    return container(FlexBoxStyler().elevation(value));
+  }
 
-  final String? helperText;
+  RemixTextFieldStyler shadow(BoxShadowMix value) {
+    return container(FlexBoxStyler().shadow(value));
+  }
 
-  final bool error;
+  RemixTextFieldStyler shadows(List<BoxShadowMix> value) {
+    return container(FlexBoxStyler().shadows(value));
+  }
 
-  final TextInputType? keyboardType;
+  RemixTextFieldStyler width(double value) {
+    return container(FlexBoxStyler().width(value));
+  }
 
-  final TextInputAction? textInputAction;
+  RemixTextFieldStyler height(double value) {
+    return container(FlexBoxStyler().height(value));
+  }
 
-  final TextCapitalization textCapitalization;
+  RemixTextFieldStyler size(double width, double height) {
+    return container(FlexBoxStyler().size(width, height));
+  }
 
-  final TextDirection? textDirection;
+  RemixTextFieldStyler minWidth(double value) {
+    return container(FlexBoxStyler().minWidth(value));
+  }
 
-  final bool obscureText;
+  RemixTextFieldStyler maxWidth(double value) {
+    return container(FlexBoxStyler().maxWidth(value));
+  }
 
-  final bool enabled;
+  RemixTextFieldStyler minHeight(double value) {
+    return container(FlexBoxStyler().minHeight(value));
+  }
 
-  final bool readOnly;
+  RemixTextFieldStyler maxHeight(double value) {
+    return container(FlexBoxStyler().maxHeight(value));
+  }
 
-  final bool autofocus;
+  RemixTextFieldStyler scale(double scale, {Alignment alignment = .center}) {
+    return container(FlexBoxStyler().scale(scale, alignment: alignment));
+  }
 
-  final int? maxLines;
+  RemixTextFieldStyler rotate(double radians, {Alignment alignment = .center}) {
+    return container(FlexBoxStyler().rotate(radians, alignment: alignment));
+  }
 
-  final int? minLines;
+  RemixTextFieldStyler translate(double x, double y, [double z = 0.0]) {
+    return container(FlexBoxStyler().translate(x, y, z));
+  }
 
-  final bool expands;
+  RemixTextFieldStyler skew(double skewX, double skewY) {
+    return container(FlexBoxStyler().skew(skewX, skewY));
+  }
 
-  final int? maxLength;
+  RemixTextFieldStyler textStyle(TextStyler value) {
+    return container(FlexBoxStyler().textStyle(value));
+  }
 
-  final MaxLengthEnforcement? maxLengthEnforcement;
+  RemixTextFieldStyler image(DecorationImageMix value) {
+    return container(FlexBoxStyler().image(value));
+  }
 
-  final ValueChanged<String>? onChanged;
+  RemixTextFieldStyler shape(ShapeBorderMix value) {
+    return container(FlexBoxStyler().shape(value));
+  }
 
-  final VoidCallback? onEditingComplete;
-
-  final ValueChanged<String>? onSubmitted;
-
-  final AppPrivateCommandCallback? onAppPrivateCommand;
-
-  final List<TextInputFormatter>? inputFormatters;
-
-  final bool? showCursor;
-
-  final String obscuringCharacter;
-
-  final bool autocorrect;
-
-  final bool enableSuggestions;
-
-  final SmartDashesType? smartDashesType;
-
-  final SmartQuotesType? smartQuotesType;
-
-  final DragStartBehavior dragStartBehavior;
-
-  final bool enableInteractiveSelection;
-
-  final TextSelectionControls? selectionControls;
-
-  final GestureTapCallback? onTap;
-
-  final TapRegionCallback? onTapOutside;
-
-  final TapRegionUpCallback? onPressUpOutside;
-
-  final bool onTapAlwaysCalled;
-
-  final ScrollController? scrollController;
-
-  final ScrollPhysics? scrollPhysics;
-
-  final Iterable<String>? autofillHints;
-
-  final ContentInsertionConfiguration? contentInsertionConfiguration;
-
-  final Clip clipBehavior;
-
-  final String? restorationId;
-
-  final bool stylusHandwritingEnabled;
-
-  final bool enableIMEPersonalizedLearning;
-
-  final EditableTextContextMenuBuilder? contextMenuBuilder;
-
-  final SpellCheckConfiguration? spellCheckConfiguration;
-
-  final TextMagnifierConfiguration? magnifierConfiguration;
-
-  final bool canRequestFocus;
-
-  final bool? ignorePointers;
-
-  final UndoHistoryController? undoController;
-
-  final Object groupId;
-
-  final Widget? leading;
-
-  final Widget? trailing;
-
-  final String? semanticLabel;
-
-  final String? semanticHint;
-
-  final bool excludeSemantics;
-
-  @override
-  Widget build(BuildContext context) {
-    return fortalTextFieldStyler(variant: this.variant, size: this.size).call(
-      key: this.key,
-      controller: this.controller,
-      focusNode: this.focusNode,
-      label: this.label,
-      hintText: this.hintText,
-      helperText: this.helperText,
-      error: this.error,
-      keyboardType: this.keyboardType,
-      textInputAction: this.textInputAction,
-      textCapitalization: this.textCapitalization,
-      textDirection: this.textDirection,
-      obscureText: this.obscureText,
-      enabled: this.enabled,
-      readOnly: this.readOnly,
-      autofocus: this.autofocus,
-      maxLines: this.maxLines,
-      minLines: this.minLines,
-      expands: this.expands,
-      maxLength: this.maxLength,
-      maxLengthEnforcement: this.maxLengthEnforcement,
-      onChanged: this.onChanged,
-      onEditingComplete: this.onEditingComplete,
-      onSubmitted: this.onSubmitted,
-      onAppPrivateCommand: this.onAppPrivateCommand,
-      inputFormatters: this.inputFormatters,
-      showCursor: this.showCursor,
-      obscuringCharacter: this.obscuringCharacter,
-      autocorrect: this.autocorrect,
-      enableSuggestions: this.enableSuggestions,
-      smartDashesType: this.smartDashesType,
-      smartQuotesType: this.smartQuotesType,
-      dragStartBehavior: this.dragStartBehavior,
-      enableInteractiveSelection: this.enableInteractiveSelection,
-      selectionControls: this.selectionControls,
-      onTap: this.onTap,
-      onTapOutside: this.onTapOutside,
-      onPressUpOutside: this.onPressUpOutside,
-      onTapAlwaysCalled: this.onTapAlwaysCalled,
-      scrollController: this.scrollController,
-      scrollPhysics: this.scrollPhysics,
-      autofillHints: this.autofillHints,
-      contentInsertionConfiguration: this.contentInsertionConfiguration,
-      clipBehavior: this.clipBehavior,
-      restorationId: this.restorationId,
-      stylusHandwritingEnabled: this.stylusHandwritingEnabled,
-      enableIMEPersonalizedLearning: this.enableIMEPersonalizedLearning,
-      contextMenuBuilder: this.contextMenuBuilder,
-      spellCheckConfiguration: this.spellCheckConfiguration,
-      magnifierConfiguration: this.magnifierConfiguration,
-      canRequestFocus: this.canRequestFocus,
-      ignorePointers: this.ignorePointers,
-      undoController: this.undoController,
-      groupId: this.groupId,
-      leading: this.leading,
-      trailing: this.trailing,
-      semanticLabel: this.semanticLabel,
-      semanticHint: this.semanticHint,
-      excludeSemantics: this.excludeSemantics,
+  RemixTextFieldStyler backgroundImage(
+    ImageProvider image, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) {
+    return container(
+      FlexBoxStyler().backgroundImage(
+        image,
+        fit: fit,
+        alignment: alignment,
+        repeat: repeat,
+      ),
     );
   }
-}
 
-// **************************************************************************
-// StylerGenerator
-// **************************************************************************
+  RemixTextFieldStyler backgroundImageUrl(
+    String url, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) {
+    return container(
+      FlexBoxStyler().backgroundImageUrl(
+        url,
+        fit: fit,
+        alignment: alignment,
+        repeat: repeat,
+      ),
+    );
+  }
 
-mixin _$RemixTextFieldStylerMixin on Style<RemixTextFieldSpec>, Diagnosticable {
-  Prop<StyleSpec<TextSpec>>? get $text;
-  Prop<StyleSpec<TextSpec>>? get $hintText;
-  Prop<TextAlign>? get $textAlign;
-  Prop<double>? get $cursorWidth;
-  Prop<double>? get $cursorHeight;
-  Prop<Radius>? get $cursorRadius;
-  Prop<Color>? get $cursorColor;
-  Prop<bool>? get $cursorOpacityAnimates;
-  Prop<BoxHeightStyle>? get $selectionHeightStyle;
-  Prop<BoxWidthStyle>? get $selectionWidthStyle;
-  Prop<EdgeInsets>? get $scrollPadding;
-  Prop<Brightness>? get $keyboardAppearance;
-  Prop<StyleSpec<FlexBoxSpec>>? get $container;
-  Prop<StyleSpec<TextSpec>>? get $helperText;
-  Prop<StyleSpec<TextSpec>>? get $label;
+  RemixTextFieldStyler backgroundImageAsset(
+    String path, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) {
+    return container(
+      FlexBoxStyler().backgroundImageAsset(
+        path,
+        fit: fit,
+        alignment: alignment,
+        repeat: repeat,
+      ),
+    );
+  }
+
+  RemixTextFieldStyler linearGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? begin,
+    AlignmentGeometry? end,
+    TileMode? tileMode,
+  }) {
+    return container(
+      FlexBoxStyler().linearGradient(
+        colors: colors,
+        stops: stops,
+        begin: begin,
+        end: end,
+        tileMode: tileMode,
+      ),
+    );
+  }
+
+  RemixTextFieldStyler radialGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? radius,
+    AlignmentGeometry? focal,
+    double? focalRadius,
+    TileMode? tileMode,
+  }) {
+    return container(
+      FlexBoxStyler().radialGradient(
+        colors: colors,
+        stops: stops,
+        center: center,
+        radius: radius,
+        focal: focal,
+        focalRadius: focalRadius,
+        tileMode: tileMode,
+      ),
+    );
+  }
+
+  RemixTextFieldStyler sweepGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? startAngle,
+    double? endAngle,
+    TileMode? tileMode,
+  }) {
+    return container(
+      FlexBoxStyler().sweepGradient(
+        colors: colors,
+        stops: stops,
+        center: center,
+        startAngle: startAngle,
+        endAngle: endAngle,
+        tileMode: tileMode,
+      ),
+    );
+  }
+
+  RemixTextFieldStyler foregroundLinearGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? begin,
+    AlignmentGeometry? end,
+    TileMode? tileMode,
+  }) {
+    return container(
+      FlexBoxStyler().foregroundLinearGradient(
+        colors: colors,
+        stops: stops,
+        begin: begin,
+        end: end,
+        tileMode: tileMode,
+      ),
+    );
+  }
+
+  RemixTextFieldStyler foregroundRadialGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? radius,
+    AlignmentGeometry? focal,
+    double? focalRadius,
+    TileMode? tileMode,
+  }) {
+    return container(
+      FlexBoxStyler().foregroundRadialGradient(
+        colors: colors,
+        stops: stops,
+        center: center,
+        radius: radius,
+        focal: focal,
+        focalRadius: focalRadius,
+        tileMode: tileMode,
+      ),
+    );
+  }
+
+  RemixTextFieldStyler foregroundSweepGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? startAngle,
+    double? endAngle,
+    TileMode? tileMode,
+  }) {
+    return container(
+      FlexBoxStyler().foregroundSweepGradient(
+        colors: colors,
+        stops: stops,
+        center: center,
+        startAngle: startAngle,
+        endAngle: endAngle,
+        tileMode: tileMode,
+      ),
+    );
+  }
+
+  RemixTextFieldStyler row() {
+    return container(FlexBoxStyler().row());
+  }
+
+  RemixTextFieldStyler column() {
+    return container(FlexBoxStyler().column());
+  }
+
+  RemixTextFieldStyler alignment(AlignmentGeometry value) {
+    return container(FlexBoxStyler().alignment(value));
+  }
+
+  RemixTextFieldStyler padding(EdgeInsetsGeometryMix value) {
+    return container(FlexBoxStyler().padding(value));
+  }
+
+  RemixTextFieldStyler margin(EdgeInsetsGeometryMix value) {
+    return container(FlexBoxStyler().margin(value));
+  }
+
+  RemixTextFieldStyler constraints(BoxConstraintsMix value) {
+    return container(FlexBoxStyler().constraints(value));
+  }
+
+  RemixTextFieldStyler decoration(DecorationMix value) {
+    return container(FlexBoxStyler().decoration(value));
+  }
+
+  RemixTextFieldStyler foregroundDecoration(DecorationMix value) {
+    return container(FlexBoxStyler().foregroundDecoration(value));
+  }
+
+  RemixTextFieldStyler clipBehavior(Clip value) {
+    return container(FlexBoxStyler().clipBehavior(value));
+  }
+
+  RemixTextFieldStyler direction(Axis value) {
+    return container(FlexBoxStyler().direction(value));
+  }
+
+  RemixTextFieldStyler mainAxisAlignment(MainAxisAlignment value) {
+    return container(FlexBoxStyler().mainAxisAlignment(value));
+  }
+
+  RemixTextFieldStyler crossAxisAlignment(CrossAxisAlignment value) {
+    return container(FlexBoxStyler().crossAxisAlignment(value));
+  }
+
+  RemixTextFieldStyler mainAxisSize(MainAxisSize value) {
+    return container(FlexBoxStyler().mainAxisSize(value));
+  }
+
+  RemixTextFieldStyler spacing(double value) {
+    return container(FlexBoxStyler().spacing(value));
+  }
+
+  RemixTextFieldStyler verticalDirection(VerticalDirection value) {
+    return container(FlexBoxStyler().verticalDirection(value));
+  }
+
+  RemixTextFieldStyler textDirection(TextDirection value) {
+    return container(FlexBoxStyler().textDirection(value));
+  }
+
+  RemixTextFieldStyler textBaseline(TextBaseline value) {
+    return container(FlexBoxStyler().textBaseline(value));
+  }
+
+  RemixTextFieldStyler transform(
+    Matrix4 value, {
+    Alignment alignment = .center,
+  }) {
+    return container(FlexBoxStyler().transform(value, alignment: alignment));
+  }
 
   /// Sets the text.
   RemixTextFieldStyler text(TextStyler value) {
@@ -617,11 +884,6 @@ mixin _$RemixTextFieldStylerMixin on Style<RemixTextFieldSpec>, Diagnosticable {
     return merge(RemixTextFieldStyler(cursorColor: value));
   }
 
-  /// Sets the cursorOpacityAnimates.
-  RemixTextFieldStyler cursorOpacityAnimates(bool value) {
-    return merge(RemixTextFieldStyler(cursorOpacityAnimates: value));
-  }
-
   /// Sets the selectionHeightStyle.
   RemixTextFieldStyler selectionHeightStyle(BoxHeightStyle value) {
     return merge(RemixTextFieldStyler(selectionHeightStyle: value));
@@ -642,6 +904,11 @@ mixin _$RemixTextFieldStylerMixin on Style<RemixTextFieldSpec>, Diagnosticable {
     return merge(RemixTextFieldStyler(keyboardAppearance: value));
   }
 
+  /// Sets the cursorOpacityAnimates.
+  RemixTextFieldStyler cursorOpacityAnimates(bool value) {
+    return merge(RemixTextFieldStyler(cursorOpacityAnimates: value));
+  }
+
   /// Sets the container.
   RemixTextFieldStyler container(FlexBoxStyler value) {
     return merge(RemixTextFieldStyler(container: value));
@@ -653,21 +920,25 @@ mixin _$RemixTextFieldStylerMixin on Style<RemixTextFieldSpec>, Diagnosticable {
   }
 
   /// Sets the label.
+  @override
   RemixTextFieldStyler label(TextStyler value) {
     return merge(RemixTextFieldStyler(label: value));
   }
 
   /// Sets the animation configuration.
+  @override
   RemixTextFieldStyler animate(AnimationConfig value) {
     return merge(RemixTextFieldStyler(animation: value));
   }
 
   /// Sets the style variants.
+  @override
   RemixTextFieldStyler variants(List<VariantStyle<RemixTextFieldSpec>> value) {
     return merge(RemixTextFieldStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
+  @override
   RemixTextFieldStyler wrap(WidgetModifierConfig value) {
     return merge(RemixTextFieldStyler(modifier: value));
   }
@@ -688,10 +959,6 @@ mixin _$RemixTextFieldStylerMixin on Style<RemixTextFieldSpec>, Diagnosticable {
       cursorHeight: MixOps.merge($cursorHeight, other?.$cursorHeight),
       cursorRadius: MixOps.merge($cursorRadius, other?.$cursorRadius),
       cursorColor: MixOps.merge($cursorColor, other?.$cursorColor),
-      cursorOpacityAnimates: MixOps.merge(
-        $cursorOpacityAnimates,
-        other?.$cursorOpacityAnimates,
-      ),
       selectionHeightStyle: MixOps.merge(
         $selectionHeightStyle,
         other?.$selectionHeightStyle,
@@ -704,6 +971,10 @@ mixin _$RemixTextFieldStylerMixin on Style<RemixTextFieldSpec>, Diagnosticable {
       keyboardAppearance: MixOps.merge(
         $keyboardAppearance,
         other?.$keyboardAppearance,
+      ),
+      cursorOpacityAnimates: MixOps.merge(
+        $cursorOpacityAnimates,
+        other?.$cursorOpacityAnimates,
       ),
       container: MixOps.merge($container, other?.$container),
       helperText: MixOps.merge($helperText, other?.$helperText),
@@ -725,11 +996,11 @@ mixin _$RemixTextFieldStylerMixin on Style<RemixTextFieldSpec>, Diagnosticable {
       cursorHeight: MixOps.resolve(context, $cursorHeight),
       cursorRadius: MixOps.resolve(context, $cursorRadius),
       cursorColor: MixOps.resolve(context, $cursorColor),
-      cursorOpacityAnimates: MixOps.resolve(context, $cursorOpacityAnimates),
       selectionHeightStyle: MixOps.resolve(context, $selectionHeightStyle),
       selectionWidthStyle: MixOps.resolve(context, $selectionWidthStyle),
       scrollPadding: MixOps.resolve(context, $scrollPadding),
       keyboardAppearance: MixOps.resolve(context, $keyboardAppearance),
+      cursorOpacityAnimates: MixOps.resolve(context, $cursorOpacityAnimates),
       container: MixOps.resolve(context, $container),
       helperText: MixOps.resolve(context, $helperText),
       label: MixOps.resolve(context, $label),
@@ -753,13 +1024,13 @@ mixin _$RemixTextFieldStylerMixin on Style<RemixTextFieldSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('cursorHeight', $cursorHeight))
       ..add(DiagnosticsProperty('cursorRadius', $cursorRadius))
       ..add(DiagnosticsProperty('cursorColor', $cursorColor))
-      ..add(
-        DiagnosticsProperty('cursorOpacityAnimates', $cursorOpacityAnimates),
-      )
       ..add(DiagnosticsProperty('selectionHeightStyle', $selectionHeightStyle))
       ..add(DiagnosticsProperty('selectionWidthStyle', $selectionWidthStyle))
       ..add(DiagnosticsProperty('scrollPadding', $scrollPadding))
       ..add(DiagnosticsProperty('keyboardAppearance', $keyboardAppearance))
+      ..add(
+        DiagnosticsProperty('cursorOpacityAnimates', $cursorOpacityAnimates),
+      )
       ..add(DiagnosticsProperty('container', $container))
       ..add(DiagnosticsProperty('helperText', $helperText))
       ..add(DiagnosticsProperty('label', $label));
@@ -774,11 +1045,11 @@ mixin _$RemixTextFieldStylerMixin on Style<RemixTextFieldSpec>, Diagnosticable {
     $cursorHeight,
     $cursorRadius,
     $cursorColor,
-    $cursorOpacityAnimates,
     $selectionHeightStyle,
     $selectionWidthStyle,
     $scrollPadding,
     $keyboardAppearance,
+    $cursorOpacityAnimates,
     $container,
     $helperText,
     $label,

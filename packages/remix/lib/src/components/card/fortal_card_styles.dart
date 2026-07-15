@@ -7,7 +7,6 @@ enum FortalCardSize { size1, size2, size3 }
 enum FortalCardVariant { surface, classic, ghost }
 
 /// Fortal-themed preset for [RemixCard].
-@MixWidget(name: 'FortalCard')
 RemixCardStyler fortalCardStyler({
   FortalCardVariant variant = .surface,
   FortalCardSize size = .size2,
@@ -60,4 +59,37 @@ RemixCardStyler _fortalCardSizeStyler(FortalCardSize size) {
     .size2 => RemixCardStyler().paddingAll(FortalTokens.space5()),
     .size3 => RemixCardStyler().paddingAll(FortalTokens.space6()),
   };
+}
+
+/// Fortal-themed preset for [RemixCard].
+class FortalCard extends StatelessWidget {
+  const FortalCard({
+    super.key,
+    this.variant = .surface,
+    this.size = .size2,
+    this.child,
+  });
+
+  const FortalCard.surface({super.key, this.size = .size2, this.child})
+    : variant = FortalCardVariant.surface;
+
+  const FortalCard.classic({super.key, this.size = .size2, this.child})
+    : variant = FortalCardVariant.classic;
+
+  const FortalCard.ghost({super.key, this.size = .size2, this.child})
+    : variant = FortalCardVariant.ghost;
+
+  final FortalCardVariant variant;
+
+  final FortalCardSize size;
+
+  final Widget? child;
+
+  @override
+  Widget build(BuildContext context) {
+    return fortalCardStyler(
+      variant: this.variant,
+      size: this.size,
+    ).call(key: this.key, child: this.child);
+  }
 }

@@ -64,19 +64,7 @@ void main() {
         initial: RemixProgressStyler(),
         modify: (style) => style.height(20.0),
         expect: (style) {
-          expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  constraints: BoxConstraintsMix(
-                    minHeight: 20.0,
-                    maxHeight: 20.0,
-                  ),
-                ),
-              ),
-            ),
-          );
+          expect(style, equals(RemixProgressStyler.height(20.0)));
         },
       );
 
@@ -85,19 +73,7 @@ void main() {
         initial: RemixProgressStyler(),
         modify: (style) => style.width(200.0),
         expect: (style) {
-          expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  constraints: BoxConstraintsMix(
-                    minWidth: 200.0,
-                    maxWidth: 200.0,
-                  ),
-                ),
-              ),
-            ),
-          );
+          expect(style, equals(RemixProgressStyler.width(200.0)));
         },
       );
 
@@ -191,8 +167,8 @@ void main() {
         modify: (style) => style.alignment(Alignment.center),
         expect: (style) {
           expect(
-            style.$container,
-            equals(Prop.maybeMix(BoxStyler(alignment: Alignment.center))),
+            style,
+            equals(RemixProgressStyler.alignment(Alignment.center)),
           );
         },
       );
@@ -203,11 +179,9 @@ void main() {
         modify: (style) => style.padding(EdgeInsetsGeometryMix.all(16.0)),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(padding: EdgeInsetsGeometryMix.all(16.0)),
-              ),
+              RemixProgressStyler.padding(EdgeInsetsGeometryMix.all(16.0)),
             ),
           );
         },
@@ -219,10 +193,8 @@ void main() {
         modify: (style) => style.margin(EdgeInsetsGeometryMix.all(8.0)),
         expect: (style) {
           expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(BoxStyler(margin: EdgeInsetsGeometryMix.all(8.0))),
-            ),
+            style,
+            equals(RemixProgressStyler.margin(EdgeInsetsGeometryMix.all(8.0))),
           );
         },
       );
@@ -235,15 +207,10 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  constraints: BoxConstraintsMix(
-                    minWidth: 100.0,
-                    minHeight: 40.0,
-                  ),
-                ),
+              RemixProgressStyler.constraints(
+                BoxConstraintsMix(minWidth: 100.0, minHeight: 40.0),
               ),
             ),
           );
@@ -261,14 +228,12 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  decoration: BoxDecorationMix(
-                    color: Colors.blue,
-                    borderRadius: BorderRadiusMix.circular(8.0),
-                  ),
+              RemixProgressStyler.decoration(
+                BoxDecorationMix(
+                  color: Colors.blue,
+                  borderRadius: BorderRadiusMix.circular(8.0),
                 ),
               ),
             ),
@@ -286,13 +251,11 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  foregroundDecoration: BoxDecorationMix(
-                    border: BoxBorderMix.all(BorderSideMix(color: Colors.red)),
-                  ),
+              RemixProgressStyler.foregroundDecoration(
+                BoxDecorationMix(
+                  border: BoxBorderMix.all(BorderSideMix(color: Colors.red)),
                 ),
               ),
             ),
@@ -307,13 +270,11 @@ void main() {
             style.transform(Matrix4.identity(), alignment: Alignment.topLeft),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  transform: Matrix4.identity(),
-                  transformAlignment: Alignment.topLeft,
-                ),
+              RemixProgressStyler.transform(
+                Matrix4.identity(),
+                alignment: Alignment.topLeft,
               ),
             ),
           );

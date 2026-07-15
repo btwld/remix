@@ -1,9 +1,10 @@
 part of 'callout.dart';
 
 /// Resolved visual values for a [RemixCallout].
-@MixableSpec()
+@MixableSpec(extraStylerMixins: [RemixBoxStylerMixin, IconStyleMixin])
 class RemixCalloutSpec with _$RemixCalloutSpec {
   @override
+  @MixableField(forwardStyler: true)
   final StyleSpec<FlexBoxSpec> container;
   @override
   final StyleSpec<TextSpec> text;

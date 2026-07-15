@@ -1,9 +1,12 @@
 part of 'avatar.dart';
 
 /// Resolved visual properties for a [RemixAvatar].
-@MixableSpec()
+@MixableSpec(
+  extraStylerMixins: [RemixBoxStylerMixin, LabelStyleMixin, IconStyleMixin],
+)
 class RemixAvatarSpec with _$RemixAvatarSpec {
   @override
+  @MixableField(forwardStyler: true)
   final StyleSpec<BoxSpec> container;
   @override
   final StyleSpec<TextSpec> label;

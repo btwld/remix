@@ -77,10 +77,8 @@ void main() {
         modify: (style) => style.alignment(Alignment.centerLeft),
         expect: (style) {
           expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(FlexBoxStyler(alignment: Alignment.centerLeft)),
-            ),
+            style,
+            equals(RemixToggleStyler.alignment(Alignment.centerLeft)),
           );
         },
       );
@@ -107,12 +105,8 @@ void main() {
         modify: (style) => style.padding(EdgeInsetsGeometryMix.all(16.0)),
         expect: (style) {
           expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(
-                FlexBoxStyler(padding: EdgeInsetsGeometryMix.all(16.0)),
-              ),
-            ),
+            style,
+            equals(RemixToggleStyler.padding(EdgeInsetsGeometryMix.all(16.0))),
           );
         },
       );
@@ -123,12 +117,8 @@ void main() {
         modify: (style) => style.margin(EdgeInsetsGeometryMix.all(8.0)),
         expect: (style) {
           expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(
-                FlexBoxStyler(margin: EdgeInsetsGeometryMix.all(8.0)),
-              ),
-            ),
+            style,
+            equals(RemixToggleStyler.margin(EdgeInsetsGeometryMix.all(8.0))),
           );
         },
       );
@@ -144,14 +134,12 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                FlexBoxStyler(
-                  decoration: BoxDecorationMix(
-                    color: Colors.blue,
-                    borderRadius: BorderRadiusMix.circular(8.0),
-                  ),
+              RemixToggleStyler.decoration(
+                BoxDecorationMix(
+                  color: Colors.blue,
+                  borderRadius: BorderRadiusMix.circular(8.0),
                 ),
               ),
             ),
@@ -164,10 +152,7 @@ void main() {
         initial: RemixToggleStyler(),
         modify: (style) => style.spacing(12.0),
         expect: (style) {
-          expect(
-            style.$container,
-            equals(Prop.maybeMix(FlexBoxStyler(spacing: 12.0))),
-          );
+          expect(style, equals(RemixToggleStyler.spacing(12.0)));
         },
       );
 
@@ -179,15 +164,10 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                FlexBoxStyler(
-                  constraints: BoxConstraintsMix(
-                    minWidth: 100.0,
-                    minHeight: 40.0,
-                  ),
-                ),
+              RemixToggleStyler.constraints(
+                BoxConstraintsMix(minWidth: 100.0, minHeight: 40.0),
               ),
             ),
           );
@@ -204,13 +184,11 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                FlexBoxStyler(
-                  foregroundDecoration: BoxDecorationMix(
-                    border: BoxBorderMix.all(BorderSideMix(color: Colors.red)),
-                  ),
+              RemixToggleStyler.foregroundDecoration(
+                BoxDecorationMix(
+                  border: BoxBorderMix.all(BorderSideMix(color: Colors.red)),
                 ),
               ),
             ),
@@ -225,13 +203,11 @@ void main() {
             style.transform(Matrix4.identity(), alignment: Alignment.topLeft),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                FlexBoxStyler(
-                  transform: Matrix4.identity(),
-                  transformAlignment: Alignment.topLeft,
-                ),
+              RemixToggleStyler.transform(
+                Matrix4.identity(),
+                alignment: Alignment.topLeft,
               ),
             ),
           );
