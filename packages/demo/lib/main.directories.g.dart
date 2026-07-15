@@ -22,6 +22,7 @@ import 'package:demo/components/divider.dart' as _demo_components_divider;
 import 'package:demo/components/icon_button.dart'
     as _demo_components_icon_button;
 import 'package:demo/components/menu.dart' as _demo_components_menu;
+import 'package:demo/components/popover.dart' as _demo_components_popover;
 import 'package:demo/components/progress.dart' as _demo_components_progress;
 import 'package:demo/components/radio.dart' as _demo_components_radio;
 import 'package:demo/components/select.dart' as _demo_components_select;
@@ -140,6 +141,15 @@ final directories = <_widgetbook.WidgetbookNode>[
           _widgetbook.WidgetbookUseCase(
             name: 'Menu Component',
             builder: _demo_components_menu.buildMenuUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'RemixPopover',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Popover Component',
+            builder: _demo_components_popover.buildPopoverUseCase,
           ),
         ],
       ),
