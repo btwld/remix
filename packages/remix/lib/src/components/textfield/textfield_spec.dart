@@ -212,8 +212,8 @@ class RemixTextFieldSpec with _$RemixTextFieldSpec {
              spec: FlexBoxSpec(
                flex: StyleSpec(
                  spec: FlexSpec(
-                   mainAxisSize: MainAxisSize.min,
-                   crossAxisAlignment: CrossAxisAlignment.start,
+                   crossAxisAlignment: .start,
+                   mainAxisSize: .min,
                    spacing: 8.0,
                  ),
                ),
