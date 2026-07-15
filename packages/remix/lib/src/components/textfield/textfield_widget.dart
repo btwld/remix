@@ -369,9 +369,8 @@ class RemixTextField extends StatelessWidget {
         final needsWrapper = label != null || helperText != null;
 
         return needsWrapper
-            ? Column(
-                mainAxisSize: .min,
-                crossAxisAlignment: .start,
+            ? ColumnBox(
+                styleSpec: spec.layout,
                 children: [
                   if (label != null) StyledText(label!, styleSpec: spec.label),
                   withAccessories,
@@ -428,10 +427,25 @@ class _RemixTextFieldBodyState extends State<_RemixTextFieldBody> {
     final config = widget.config;
 
     return RemixStyleSpecBuilder<RemixTextFieldSpec>(
-      style: config.style,
+      style: _baseStyle.merge(config.style),
       styleSpec: config.styleSpec,
       controller: _styleController,
       builder: (context, spec) => config._buildResolved(spec, _styleController),
     );
   }
 }
+
+/// Baseline style merged beneath the user-supplied style.
+///
+/// It seeds the vertical [ColumnBox] wrapper (the [RemixTextFieldSpec.layout])
+/// with the default min-size / start-alignment layout and an 8px vertical
+/// spacing. Merging it underneath the caller's style means customizing a
+/// single layout property (e.g. `.layout(FlexBoxStyler().spacing(12))`) keeps
+/// the remaining defaults instead of falling back to `ColumnBox`'s
+/// `mainAxisSize: max` / `crossAxisAlignment: center`.
+final RemixTextFieldStyler _baseStyle = RemixTextFieldStyler(
+  layout: FlexBoxStyler()
+      .mainAxisSize(.min)
+      .crossAxisAlignment(.start)
+      .spacing(8),
+);

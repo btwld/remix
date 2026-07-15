@@ -158,6 +158,10 @@
           "href": "/components/toggle"
         },
         {
+          "title": "Toggle Group",
+          "href": "/components/toggle_group"
+        },
+        {
           "title": "Tooltip",
           "href": "/components/tooltip"
         }

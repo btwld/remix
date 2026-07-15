@@ -20,6 +20,7 @@ mixin _$RemixTextFieldSpec implements Spec<RemixTextFieldSpec>, Diagnosticable {
   Brightness? get keyboardAppearance;
   bool? get cursorOpacityAnimates;
   StyleSpec<FlexBoxSpec> get container;
+  StyleSpec<FlexBoxSpec> get layout;
   StyleSpec<TextSpec> get helperText;
   StyleSpec<TextSpec> get label;
 
@@ -41,6 +42,7 @@ mixin _$RemixTextFieldSpec implements Spec<RemixTextFieldSpec>, Diagnosticable {
     Brightness? keyboardAppearance,
     bool? cursorOpacityAnimates,
     StyleSpec<FlexBoxSpec>? container,
+    StyleSpec<FlexBoxSpec>? layout,
     StyleSpec<TextSpec>? helperText,
     StyleSpec<TextSpec>? label,
   }) {
@@ -59,6 +61,7 @@ mixin _$RemixTextFieldSpec implements Spec<RemixTextFieldSpec>, Diagnosticable {
       cursorOpacityAnimates:
           cursorOpacityAnimates ?? this.cursorOpacityAnimates,
       container: container ?? this.container,
+      layout: layout ?? this.layout,
       helperText: helperText ?? this.helperText,
       label: label ?? this.label,
     );
@@ -96,6 +99,7 @@ mixin _$RemixTextFieldSpec implements Spec<RemixTextFieldSpec>, Diagnosticable {
         t,
       ),
       container: container.lerp(other?.container, t),
+      layout: layout.lerp(other?.layout, t),
       helperText: helperText.lerp(other?.helperText, t),
       label: label.lerp(other?.label, t),
     );
@@ -116,6 +120,7 @@ mixin _$RemixTextFieldSpec implements Spec<RemixTextFieldSpec>, Diagnosticable {
     keyboardAppearance,
     cursorOpacityAnimates,
     container,
+    layout,
     helperText,
     label,
   ];
@@ -173,6 +178,7 @@ mixin _$RemixTextFieldSpec implements Spec<RemixTextFieldSpec>, Diagnosticable {
       ..add(DiagnosticsProperty('keyboardAppearance', keyboardAppearance))
       ..add(DiagnosticsProperty('cursorOpacityAnimates', cursorOpacityAnimates))
       ..add(DiagnosticsProperty('container', container))
+      ..add(DiagnosticsProperty('layout', layout))
       ..add(DiagnosticsProperty('helperText', helperText))
       ..add(DiagnosticsProperty('label', label));
   }
@@ -205,6 +211,7 @@ class RemixTextFieldStyler
   final Prop<Brightness>? $keyboardAppearance;
   final Prop<bool>? $cursorOpacityAnimates;
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
+  final Prop<StyleSpec<FlexBoxSpec>>? $layout;
   final Prop<StyleSpec<TextSpec>>? $helperText;
   final Prop<StyleSpec<TextSpec>>? $label;
 
@@ -222,6 +229,7 @@ class RemixTextFieldStyler
     Prop<Brightness>? keyboardAppearance,
     Prop<bool>? cursorOpacityAnimates,
     Prop<StyleSpec<FlexBoxSpec>>? container,
+    Prop<StyleSpec<FlexBoxSpec>>? layout,
     Prop<StyleSpec<TextSpec>>? helperText,
     Prop<StyleSpec<TextSpec>>? label,
     super.variants,
@@ -240,6 +248,7 @@ class RemixTextFieldStyler
        $keyboardAppearance = keyboardAppearance,
        $cursorOpacityAnimates = cursorOpacityAnimates,
        $container = container,
+       $layout = layout,
        $helperText = helperText,
        $label = label;
 
@@ -257,6 +266,7 @@ class RemixTextFieldStyler
     Brightness? keyboardAppearance,
     bool? cursorOpacityAnimates,
     FlexBoxStyler? container,
+    FlexBoxStyler? layout,
     TextStyler? helperText,
     TextStyler? label,
     AnimationConfig? animation,
@@ -276,6 +286,7 @@ class RemixTextFieldStyler
          keyboardAppearance: Prop.maybe(keyboardAppearance),
          cursorOpacityAnimates: Prop.maybe(cursorOpacityAnimates),
          container: Prop.maybeMix(container),
+         layout: Prop.maybeMix(layout),
          helperText: Prop.maybeMix(helperText),
          label: Prop.maybeMix(label),
          variants: variants,
@@ -309,6 +320,8 @@ class RemixTextFieldStyler
       RemixTextFieldStyler().cursorOpacityAnimates(value);
   factory RemixTextFieldStyler.container(FlexBoxStyler value) =>
       RemixTextFieldStyler().container(value);
+  factory RemixTextFieldStyler.layout(FlexBoxStyler value) =>
+      RemixTextFieldStyler().layout(value);
   factory RemixTextFieldStyler.helperText(TextStyler value) =>
       RemixTextFieldStyler().helperText(value);
   factory RemixTextFieldStyler.label(TextStyler value) =>
@@ -914,6 +927,11 @@ class RemixTextFieldStyler
     return merge(RemixTextFieldStyler(container: value));
   }
 
+  /// Sets the layout.
+  RemixTextFieldStyler layout(FlexBoxStyler value) {
+    return merge(RemixTextFieldStyler(layout: value));
+  }
+
   /// Sets the helperText.
   RemixTextFieldStyler helperText(TextStyler value) {
     return merge(RemixTextFieldStyler(helperText: value));
@@ -977,6 +995,7 @@ class RemixTextFieldStyler
         other?.$cursorOpacityAnimates,
       ),
       container: MixOps.merge($container, other?.$container),
+      layout: MixOps.merge($layout, other?.$layout),
       helperText: MixOps.merge($helperText, other?.$helperText),
       label: MixOps.merge($label, other?.$label),
       variants: MixOps.mergeVariants($variants, other?.$variants),
@@ -1002,6 +1021,7 @@ class RemixTextFieldStyler
       keyboardAppearance: MixOps.resolve(context, $keyboardAppearance),
       cursorOpacityAnimates: MixOps.resolve(context, $cursorOpacityAnimates),
       container: MixOps.resolve(context, $container),
+      layout: MixOps.resolve(context, $layout),
       helperText: MixOps.resolve(context, $helperText),
       label: MixOps.resolve(context, $label),
     );
@@ -1032,6 +1052,7 @@ class RemixTextFieldStyler
         DiagnosticsProperty('cursorOpacityAnimates', $cursorOpacityAnimates),
       )
       ..add(DiagnosticsProperty('container', $container))
+      ..add(DiagnosticsProperty('layout', $layout))
       ..add(DiagnosticsProperty('helperText', $helperText))
       ..add(DiagnosticsProperty('label', $label));
   }
@@ -1051,6 +1072,7 @@ class RemixTextFieldStyler
     $keyboardAppearance,
     $cursorOpacityAnimates,
     $container,
+    $layout,
     $helperText,
     $label,
     $animation,

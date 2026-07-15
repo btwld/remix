@@ -19,6 +19,10 @@ void main() {
       );
       expect(RemixSpinnerStyler.size(20), RemixSpinnerStyler().size(20));
       expect(RemixButtonStyler.rotate(0.25), RemixButtonStyler().rotate(0.25));
+      expect(
+        RemixToggleGroupStyler.color(Colors.blue),
+        RemixToggleGroupStyler().color(Colors.blue),
+      );
     });
 
     test('forward a restricted Box surface from Select menuContainer', () {
@@ -35,6 +39,12 @@ void main() {
         RemixMenuStyler.trigger(trigger),
         RemixMenuStyler().trigger(trigger),
       );
+
+      final layout = FlexBoxStyler.spacing(12);
+      expect(
+        RemixTextFieldStyler.layout(layout),
+        RemixTextFieldStyler().layout(layout),
+      );
     });
 
     test('retain fluent-only conveniences and aliases', () {
@@ -49,7 +59,9 @@ void main() {
     });
 
     test('support contextual shorthand for selected state', () {
-      final style = RemixCheckboxStyler().onSelected(.color(Colors.green));
+      final style = RemixToggleGroupItemStyler().onSelected(
+        .color(Colors.green),
+      );
 
       expect(style.$variants, hasLength(1));
     });
@@ -171,6 +183,16 @@ void main() {
             decoration: BoxDecorationMix(color: Colors.white),
           ),
           text: TextStyler(style: TextStyleMix(color: Colors.black)),
+        ),
+      );
+      expectSameSpec(
+        RemixToggleGroupStyler().padding(padding).color(Colors.blue).spacing(4),
+        RemixToggleGroupStyler(
+          container: FlexBoxStyler(
+            padding: padding,
+            decoration: BoxDecorationMix(color: Colors.blue),
+            spacing: 4,
+          ),
         ),
       );
     });

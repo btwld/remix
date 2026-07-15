@@ -22,6 +22,7 @@ export 'src/components/switch/switch.dart';
 export 'src/components/tabs/tabs.dart';
 export 'src/components/textfield/textfield.dart';
 export 'src/components/toggle/toggle.dart';
+export 'src/components/toggle_group/toggle_group.dart';
 export 'src/components/tooltip/tooltip.dart';
 
 /// EXTERNAL DEPENDENCIES
