@@ -61,7 +61,9 @@ class RemixPopover extends StatelessWidget {
   /// Optional controller for programmatic open and close operations.
   final MenuController? controller;
 
-  /// Accessibility label for the trigger.
+  /// Accessibility label for the built-in trigger.
+  ///
+  /// When [openOnTap] is false, [child] owns its accessible label and actions.
   final String? semanticLabel;
 
   /// Whether to hide the trigger subtree from accessibility.
@@ -98,14 +100,15 @@ class RemixPopover extends StatelessWidget {
           excludeSemantics: excludeSemantics,
           child: child,
           builder: (context, state, trigger) {
-            final label = semanticLabel;
-
-            return Semantics(
+            final label = openOnTap ? semanticLabel : null;
+            final semantics = Semantics(
               excludeSemantics: label != null,
               expanded: state.isOpen,
               label: label,
               child: trigger!,
             );
+
+            return openOnTap ? semantics : MergeSemantics(child: semantics);
           },
         );
       },

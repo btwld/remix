@@ -131,23 +131,64 @@ void main() {
       semantics.dispose();
     });
 
-    testWidgets('keeps the semantic label when tap opening is disabled', (
-      tester,
-    ) async {
-      final semantics = tester.ensureSemantics();
+    testWidgets(
+      'controlled mode preserves child semantics and reports expanded state',
+      (tester) async {
+        final semantics = tester.ensureSemantics();
+        final controller = MenuController();
+        var activationCount = 0;
 
-      await tester.pumpRemixApp(
-        const RemixPopover(
-          openOnTap: false,
-          semanticLabel: 'Account details',
-          popoverChild: Text('Account details content'),
-          child: Icon(Icons.person),
-        ),
-      );
+        await tester.pumpRemixApp(
+          RemixPopover(
+            controller: controller,
+            openOnTap: false,
+            semanticLabel: 'Configured popover label',
+            popoverChild: const Text('Controlled content'),
+            child: TextButton(
+              onPressed: () {
+                activationCount++;
+                controller.open();
+              },
+              child: const Text('Open controlled popover'),
+            ),
+          ),
+        );
 
-      expect(find.bySemanticsLabel('Account details'), findsOneWidget);
-      semantics.dispose();
-    });
+        final trigger = find.widgetWithText(
+          TextButton,
+          'Open controlled popover',
+        );
+        final semanticsTrigger = find.semantics.byLabel(
+          'Open controlled popover',
+        );
+        expect(semanticsTrigger, findsOne);
+        expect(
+          find.semantics.byLabel('Configured popover label'),
+          findsNothing,
+        );
+        expect(
+          tester.getSemantics(trigger),
+          isSemantics(
+            label: 'Open controlled popover',
+            isButton: true,
+            hasTapAction: true,
+            hasExpandedState: true,
+            isExpanded: false,
+          ),
+        );
+
+        tester.semantics.tap(semanticsTrigger);
+        await tester.pumpAndSettle();
+
+        expect(activationCount, 1);
+        expect(find.text('Controlled content'), findsOneWidget);
+        expect(
+          tester.getSemantics(trigger),
+          isSemantics(hasExpandedState: true, isExpanded: true),
+        );
+        semantics.dispose();
+      },
+    );
 
     testWidgets('reports collapsed and expanded trigger semantics', (
       tester,

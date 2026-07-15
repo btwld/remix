@@ -65,12 +65,19 @@ RemixPopover(
   controller: controller,
   openOnTap: false,
   popoverChild: const Text('Controlled content'),
-  child: const Text('Controlled trigger'),
+  child: TextButton(
+    onPressed: () => controller.open(),
+    child: const Text('Open controlled popover'),
+  ),
 );
 
-controller.open();
 controller.close();
 ```
+
+With `openOnTap: false`, the child owns activation and its accessibility
+semantics. Give an interactive child its own accessible name and action, or
+provide an equivalent accessible control elsewhere. The popover preserves
+those semantics and adds its expanded/collapsed state.
 
 `onOpenRequested` and `onCloseRequested` can delay or animate a transition.
 The request callbacks must invoke their provided `showOverlay` or `hideOverlay`
@@ -116,7 +123,7 @@ shadow, and a maximum width. Content remains fully composable.
 - Tap the trigger or press Space or Enter while it is focused to toggle the popover.
 - Press Escape to close it and return focus to the trigger.
 - Clicking outside closes the overlay. `consumeOutsideTaps` controls whether that tap reaches the widget behind it.
-- Use `semanticLabel` when the trigger's visual content does not provide a clear accessible name.
+- Use `semanticLabel` when the built-in trigger's visual content does not provide a clear accessible name. With `openOnTap: false`, label the interactive child instead.
 - Put interactive content in a logical focus order. Wrap complex content in `FocusTraversalGroup` when it needs a custom traversal policy.
 
 ## Constructor
