@@ -95,9 +95,18 @@ class RemixPopover extends StatelessWidget {
           onOpenRequested: onOpenRequested,
           onCloseRequested: onCloseRequested,
           controller: controller,
-          semanticLabel: semanticLabel,
           excludeSemantics: excludeSemantics,
           child: child,
+          builder: (context, state, trigger) {
+            final label = semanticLabel;
+
+            return Semantics(
+              excludeSemantics: label != null,
+              expanded: state.isOpen,
+              label: label,
+              child: trigger!,
+            );
+          },
         );
       },
     );

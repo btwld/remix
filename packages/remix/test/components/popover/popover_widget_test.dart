@@ -131,6 +131,59 @@ void main() {
       semantics.dispose();
     });
 
+    testWidgets('keeps the semantic label when tap opening is disabled', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+
+      await tester.pumpRemixApp(
+        const RemixPopover(
+          openOnTap: false,
+          semanticLabel: 'Account details',
+          popoverChild: Text('Account details content'),
+          child: Icon(Icons.person),
+        ),
+      );
+
+      expect(find.bySemanticsLabel('Account details'), findsOneWidget);
+      semantics.dispose();
+    });
+
+    testWidgets('reports collapsed and expanded trigger semantics', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+
+      await tester.pumpRemixApp(
+        const RemixPopover(
+          semanticLabel: 'Show account details',
+          popoverChild: Text('Account details'),
+          child: Icon(Icons.person),
+        ),
+      );
+
+      final trigger = find.bySemanticsLabel('Show account details');
+      expect(
+        tester.getSemantics(trigger),
+        isSemantics(
+          label: 'Show account details',
+          isButton: true,
+          hasTapAction: true,
+          hasExpandedState: true,
+          isExpanded: false,
+        ),
+      );
+
+      await tester.tap(trigger);
+      await tester.pumpAndSettle();
+
+      expect(
+        tester.getSemantics(trigger),
+        isSemantics(hasExpandedState: true, isExpanded: true),
+      );
+      semantics.dispose();
+    });
+
     testWidgets('uses a raw style spec when supplied', (tester) async {
       const rawContainer = StyleSpec(
         spec: BoxSpec(constraints: BoxConstraints.tightFor(width: 240)),
