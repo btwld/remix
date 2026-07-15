@@ -36,13 +36,13 @@ dev_dependencies:
   mix_atlas:
     git:
       url: https://github.com/btwld/muse.git
-      ref: 8d224940447f1fd04a27509d012654a7e197b51c
+      ref: e258ee7655f2336b3abbeb783495f44fb9cf8730
       path: packages/mix_atlas
   mix_protocol: any
   mix_atlas_capture:
     git:
       url: https://github.com/btwld/muse.git
-      ref: 8d224940447f1fd04a27509d012654a7e197b51c
+      ref: e258ee7655f2336b3abbeb783495f44fb9cf8730
       path: packages/mix_atlas_capture
   widgetbook_generator: ^3.24.0
 

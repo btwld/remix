@@ -453,8 +453,8 @@ packages:
     dependency: transitive
     description:
       path: "packages/mix_atlas"
-      ref: "8d224940447f1fd04a27509d012654a7e197b51c"
-      resolved-ref: "8d224940447f1fd04a27509d012654a7e197b51c"
+      ref: e258ee7655f2336b3abbeb783495f44fb9cf8730
+      resolved-ref: e258ee7655f2336b3abbeb783495f44fb9cf8730
       url: "https://github.com/btwld/muse.git"
     source: git
     version: "0.1.0"
@@ -462,8 +462,8 @@ packages:
     dependency: transitive
     description:
       path: "packages/mix_atlas_capture"
-      ref: "8d224940447f1fd04a27509d012654a7e197b51c"
-      resolved-ref: "8d224940447f1fd04a27509d012654a7e197b51c"
+      ref: e258ee7655f2336b3abbeb783495f44fb9cf8730
+      resolved-ref: e258ee7655f2336b3abbeb783495f44fb9cf8730
       url: "https://github.com/btwld/muse.git"
     source: git
     version: "0.1.0"
