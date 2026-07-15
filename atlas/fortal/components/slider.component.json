@@ -1,0 +1,1899 @@
+{
+  "schema": "mix_atlas/component/v2",
+  "id": "slider",
+  "label": "Slider",
+  "properties": [
+    {
+      "id": "variant",
+      "kind": "enum",
+      "values": [
+        "surface",
+        "soft"
+      ],
+      "required": true,
+      "default": "surface"
+    },
+    {
+      "id": "size",
+      "kind": "enum",
+      "values": [
+        "size1",
+        "size2",
+        "size3"
+      ],
+      "required": true,
+      "default": "size1"
+    },
+    {
+      "id": "value",
+      "kind": "number",
+      "required": true,
+      "default": 0.55
+    },
+    {
+      "id": "rangeFactor",
+      "kind": "number",
+      "required": true,
+      "default": 0.55
+    },
+    {
+      "id": "thumbFactor",
+      "kind": "number",
+      "required": true,
+      "default": 0.55
+    },
+    {
+      "id": "enabled",
+      "kind": "boolean",
+      "required": true,
+      "default": true
+    }
+  ],
+  "states": [
+    {
+      "id": "default",
+      "widgetStates": [],
+      "properties": {}
+    },
+    {
+      "id": "hovered",
+      "widgetStates": [
+        "hovered"
+      ],
+      "properties": {}
+    },
+    {
+      "id": "pressed",
+      "widgetStates": [
+        "pressed"
+      ],
+      "properties": {}
+    },
+    {
+      "id": "focused",
+      "widgetStates": [
+        "focused"
+      ],
+      "properties": {}
+    },
+    {
+      "id": "disabled",
+      "widgetStates": [
+        "disabled"
+      ],
+      "properties": {
+        "enabled": false
+      }
+    }
+  ],
+  "slots": [
+    {
+      "id": "outer",
+      "kind": "box"
+    },
+    {
+      "id": "stack",
+      "kind": "stack_box"
+    },
+    {
+      "id": "trackFrame",
+      "kind": "box"
+    },
+    {
+      "id": "trackStack",
+      "kind": "stack_box"
+    },
+    {
+      "id": "track",
+      "kind": "box"
+    },
+    {
+      "id": "range",
+      "kind": "box"
+    },
+    {
+      "id": "positionFrame",
+      "kind": "box"
+    },
+    {
+      "id": "thumbAlign",
+      "kind": "stack_box"
+    },
+    {
+      "id": "thumb",
+      "kind": "box"
+    }
+  ],
+  "anatomy": {
+    "root": "outer",
+    "nodes": [
+      {
+        "id": "outer",
+        "kind": "box",
+        "slot": "outer",
+        "children": [
+          "stack"
+        ]
+      },
+      {
+        "id": "stack",
+        "kind": "stack_box",
+        "slot": "stack",
+        "children": [
+          "trackFrame",
+          "positionFrame"
+        ]
+      },
+      {
+        "id": "trackFrame",
+        "kind": "box",
+        "slot": "trackFrame",
+        "children": [
+          "trackStack"
+        ]
+      },
+      {
+        "id": "trackStack",
+        "kind": "stack_box",
+        "slot": "trackStack",
+        "children": [
+          "track",
+          "rangeWidth"
+        ]
+      },
+      {
+        "id": "track",
+        "kind": "box",
+        "slot": "track",
+        "children": []
+      },
+      {
+        "id": "rangeWidth",
+        "kind": "fractional_position",
+        "children": [
+          "range"
+        ],
+        "bindings": {
+          "widthFactor": {
+            "property": "rangeFactor"
+          },
+          "alignment": {
+            "literal": "centerLeft"
+          }
+        }
+      },
+      {
+        "id": "range",
+        "kind": "box",
+        "slot": "range",
+        "children": []
+      },
+      {
+        "id": "positionFrame",
+        "kind": "box",
+        "slot": "positionFrame",
+        "children": [
+          "thumbWidth"
+        ]
+      },
+      {
+        "id": "thumbWidth",
+        "kind": "fractional_position",
+        "children": [
+          "thumbAlign"
+        ],
+        "bindings": {
+          "widthFactor": {
+            "property": "thumbFactor"
+          },
+          "alignment": {
+            "literal": "centerLeft"
+          }
+        }
+      },
+      {
+        "id": "thumbAlign",
+        "kind": "stack_box",
+        "slot": "thumbAlign",
+        "children": [
+          "thumb"
+        ]
+      },
+      {
+        "id": "thumb",
+        "kind": "box",
+        "slot": "thumb",
+        "children": []
+      }
+    ]
+  },
+  "recipes": [
+    {
+      "id": "surface-size1",
+      "properties": {
+        "variant": "surface",
+        "size": "size1",
+        "rangeFactor": 0.565606936416185,
+        "thumbFactor": 0.5889221556886228
+      },
+      "styles": {
+        "outer": "surface-size1/outer",
+        "stack": "surface-size1/stack",
+        "trackFrame": "surface-size1/trackFrame",
+        "trackStack": "surface-size1/trackStack",
+        "track": "surface-size1/track",
+        "range": "surface-size1/range",
+        "positionFrame": "surface-size1/positionFrame",
+        "thumbAlign": "surface-size1/thumbAlign",
+        "thumb": "surface-size1/thumb"
+      }
+    },
+    {
+      "id": "surface-size2",
+      "properties": {
+        "variant": "surface",
+        "size": "size2",
+        "rangeFactor": 0.5709302325581396,
+        "thumbFactor": 0.5987804878048781
+      },
+      "styles": {
+        "outer": "surface-size2/outer",
+        "stack": "surface-size2/stack",
+        "trackFrame": "surface-size2/trackFrame",
+        "trackStack": "surface-size2/trackStack",
+        "track": "surface-size2/track",
+        "range": "surface-size2/range",
+        "positionFrame": "surface-size2/positionFrame",
+        "thumbAlign": "surface-size2/thumbAlign",
+        "thumb": "surface-size2/thumb"
+      }
+    },
+    {
+      "id": "surface-size3",
+      "properties": {
+        "variant": "surface",
+        "size": "size3",
+        "rangeFactor": 0.5763157894736842,
+        "thumbFactor": 0.6090062111801242
+      },
+      "styles": {
+        "outer": "surface-size3/outer",
+        "stack": "surface-size3/stack",
+        "trackFrame": "surface-size3/trackFrame",
+        "trackStack": "surface-size3/trackStack",
+        "track": "surface-size3/track",
+        "range": "surface-size3/range",
+        "positionFrame": "surface-size3/positionFrame",
+        "thumbAlign": "surface-size3/thumbAlign",
+        "thumb": "surface-size3/thumb"
+      }
+    },
+    {
+      "id": "soft-size1",
+      "properties": {
+        "variant": "soft",
+        "size": "size1",
+        "rangeFactor": 0.565606936416185,
+        "thumbFactor": 0.5889221556886228
+      },
+      "styles": {
+        "outer": "soft-size1/outer",
+        "stack": "soft-size1/stack",
+        "trackFrame": "soft-size1/trackFrame",
+        "trackStack": "soft-size1/trackStack",
+        "track": "soft-size1/track",
+        "range": "soft-size1/range",
+        "positionFrame": "soft-size1/positionFrame",
+        "thumbAlign": "soft-size1/thumbAlign",
+        "thumb": "soft-size1/thumb"
+      }
+    },
+    {
+      "id": "soft-size2",
+      "properties": {
+        "variant": "soft",
+        "size": "size2",
+        "rangeFactor": 0.5709302325581396,
+        "thumbFactor": 0.5987804878048781
+      },
+      "styles": {
+        "outer": "soft-size2/outer",
+        "stack": "soft-size2/stack",
+        "trackFrame": "soft-size2/trackFrame",
+        "trackStack": "soft-size2/trackStack",
+        "track": "soft-size2/track",
+        "range": "soft-size2/range",
+        "positionFrame": "soft-size2/positionFrame",
+        "thumbAlign": "soft-size2/thumbAlign",
+        "thumb": "soft-size2/thumb"
+      }
+    },
+    {
+      "id": "soft-size3",
+      "properties": {
+        "variant": "soft",
+        "size": "size3",
+        "rangeFactor": 0.5763157894736842,
+        "thumbFactor": 0.6090062111801242
+      },
+      "styles": {
+        "outer": "soft-size3/outer",
+        "stack": "soft-size3/stack",
+        "trackFrame": "soft-size3/trackFrame",
+        "trackStack": "soft-size3/trackStack",
+        "track": "soft-size3/track",
+        "range": "soft-size3/range",
+        "positionFrame": "soft-size3/positionFrame",
+        "thumbAlign": "soft-size3/thumbAlign",
+        "thumb": "soft-size3/thumb"
+      }
+    }
+  ],
+  "styles": {
+    "surface-size1/outer": {
+      "type": "box",
+      "constraints": {
+        "$merge": [
+          {
+            "minWidth": 180.0,
+            "maxWidth": 180.0
+          },
+          {
+            "minHeight": 19.0,
+            "maxHeight": 19.0
+          }
+        ]
+      },
+      "v": 1
+    },
+    "surface-size1/stack": {
+      "type": "stack_box",
+      "stackAlignment": "centerLeft",
+      "v": 1
+    },
+    "surface-size1/trackFrame": {
+      "type": "box",
+      "margin": {
+        "left": 3.5,
+        "right": 3.5
+      },
+      "constraints": {
+        "$merge": [
+          {
+            "minWidth": 173.0,
+            "maxWidth": 173.0
+          },
+          {
+            "minHeight": 6.0,
+            "maxHeight": 6.0
+          }
+        ]
+      },
+      "v": 1
+    },
+    "surface-size1/trackStack": {
+      "type": "stack_box",
+      "stackAlignment": "centerLeft",
+      "v": 1
+    },
+    "surface-size1/track": {
+      "type": "box",
+      "constraints": {
+        "$merge": [
+          {
+            "minHeight": 6.0,
+            "maxHeight": 6.0
+          },
+          {
+            "minWidth": 173.0,
+            "maxWidth": 173.0
+          }
+        ]
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "color": {
+              "$token": "fortal.gray.3"
+            }
+          },
+          {
+            "borderRadius": 999.0
+          }
+        ]
+      },
+      "variants": [
+        {
+          "kind": "widget_state",
+          "state": "disabled",
+          "style": {
+            "type": "box",
+            "constraints": {
+              "minWidth": 173.0,
+              "maxWidth": 173.0
+            },
+            "decoration": {
+              "$merge": [
+                {
+                  "color": {
+                    "$token": "fortal.accent.track"
+                  }
+                },
+                {
+                  "borderRadius": 999.0
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "v": 1
+    },
+    "surface-size1/range": {
+      "type": "box",
+      "constraints": {
+        "$merge": [
+          {
+            "minHeight": 6.0,
+            "maxHeight": 6.0
+          },
+          {
+            "minWidth": 173.0,
+            "maxWidth": 173.0
+          }
+        ]
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "color": {
+              "$token": "fortal.accent.indicator"
+            }
+          },
+          {
+            "borderRadius": 999.0
+          }
+        ]
+      },
+      "variants": [
+        {
+          "kind": "widget_state",
+          "state": "disabled",
+          "style": {
+            "type": "box",
+            "constraints": {
+              "minWidth": 173.0,
+              "maxWidth": 173.0
+            },
+            "decoration": {
+              "$merge": [
+                {
+                  "color": {
+                    "$token": "fortal.accent.indicator"
+                  }
+                },
+                {
+                  "borderRadius": 999.0
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "v": 1
+    },
+    "surface-size1/positionFrame": {
+      "type": "box",
+      "margin": {
+        "left": 6.5,
+        "right": 6.5
+      },
+      "constraints": {
+        "$merge": [
+          {
+            "minWidth": 167.0,
+            "maxWidth": 167.0
+          },
+          {
+            "minHeight": 19.0,
+            "maxHeight": 19.0
+          }
+        ]
+      },
+      "v": 1
+    },
+    "surface-size1/thumbAlign": {
+      "type": "stack_box",
+      "stackAlignment": "centerRight",
+      "v": 1
+    },
+    "surface-size1/thumb": {
+      "type": "box",
+      "constraints": {
+        "minWidth": 13.0,
+        "maxWidth": 13.0,
+        "minHeight": 13.0,
+        "maxHeight": 13.0
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "color": "#FFFFFF"
+          },
+          {
+            "border": {
+              "top": {
+                "color": {
+                  "$token": "fortal.gray.a6"
+                },
+                "strokeAlign": 1.0
+              },
+              "right": {
+                "color": {
+                  "$token": "fortal.gray.a6"
+                },
+                "strokeAlign": 1.0
+              },
+              "bottom": {
+                "color": {
+                  "$token": "fortal.gray.a6"
+                },
+                "strokeAlign": 1.0
+              },
+              "left": {
+                "color": {
+                  "$token": "fortal.gray.a6"
+                },
+                "strokeAlign": 1.0
+              }
+            },
+            "shape": "circle"
+          },
+          {
+            "boxShadow": [
+              {
+                "color": {
+                  "$token": "fortal.gray.7"
+                },
+                "offset": {
+                  "x": 0.0,
+                  "y": 1.0
+                },
+                "blurRadius": 2.0
+              }
+            ]
+          }
+        ]
+      },
+      "variants": [
+        {
+          "kind": "widget_state",
+          "state": "disabled",
+          "style": {
+            "type": "box",
+            "decoration": {
+              "color": {
+                "$token": "fortal.color.surface"
+              }
+            },
+            "variants": []
+          }
+        }
+      ],
+      "v": 1
+    },
+    "surface-size2/outer": {
+      "type": "box",
+      "constraints": {
+        "$merge": [
+          {
+            "minWidth": 180.0,
+            "maxWidth": 180.0
+          },
+          {
+            "minHeight": 24.0,
+            "maxHeight": 24.0
+          }
+        ]
+      },
+      "v": 1
+    },
+    "surface-size2/stack": {
+      "type": "stack_box",
+      "stackAlignment": "centerLeft",
+      "v": 1
+    },
+    "surface-size2/trackFrame": {
+      "type": "box",
+      "margin": {
+        "left": 4.0,
+        "right": 4.0
+      },
+      "constraints": {
+        "$merge": [
+          {
+            "minWidth": 172.0,
+            "maxWidth": 172.0
+          },
+          {
+            "minHeight": 8.0,
+            "maxHeight": 8.0
+          }
+        ]
+      },
+      "v": 1
+    },
+    "surface-size2/trackStack": {
+      "type": "stack_box",
+      "stackAlignment": "centerLeft",
+      "v": 1
+    },
+    "surface-size2/track": {
+      "type": "box",
+      "constraints": {
+        "$merge": [
+          {
+            "minHeight": 8.0,
+            "maxHeight": 8.0
+          },
+          {
+            "minWidth": 172.0,
+            "maxWidth": 172.0
+          }
+        ]
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "color": {
+              "$token": "fortal.gray.3"
+            }
+          },
+          {
+            "borderRadius": 999.0
+          }
+        ]
+      },
+      "variants": [
+        {
+          "kind": "widget_state",
+          "state": "disabled",
+          "style": {
+            "type": "box",
+            "constraints": {
+              "minWidth": 172.0,
+              "maxWidth": 172.0
+            },
+            "decoration": {
+              "$merge": [
+                {
+                  "color": {
+                    "$token": "fortal.accent.track"
+                  }
+                },
+                {
+                  "borderRadius": 999.0
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "v": 1
+    },
+    "surface-size2/range": {
+      "type": "box",
+      "constraints": {
+        "$merge": [
+          {
+            "minHeight": 8.0,
+            "maxHeight": 8.0
+          },
+          {
+            "minWidth": 172.0,
+            "maxWidth": 172.0
+          }
+        ]
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "color": {
+              "$token": "fortal.accent.indicator"
+            }
+          },
+          {
+            "borderRadius": 999.0
+          }
+        ]
+      },
+      "variants": [
+        {
+          "kind": "widget_state",
+          "state": "disabled",
+          "style": {
+            "type": "box",
+            "constraints": {
+              "minWidth": 172.0,
+              "maxWidth": 172.0
+            },
+            "decoration": {
+              "$merge": [
+                {
+                  "color": {
+                    "$token": "fortal.accent.indicator"
+                  }
+                },
+                {
+                  "borderRadius": 999.0
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "v": 1
+    },
+    "surface-size2/positionFrame": {
+      "type": "box",
+      "margin": {
+        "left": 8.0,
+        "right": 8.0
+      },
+      "constraints": {
+        "$merge": [
+          {
+            "minWidth": 164.0,
+            "maxWidth": 164.0
+          },
+          {
+            "minHeight": 24.0,
+            "maxHeight": 24.0
+          }
+        ]
+      },
+      "v": 1
+    },
+    "surface-size2/thumbAlign": {
+      "type": "stack_box",
+      "stackAlignment": "centerRight",
+      "v": 1
+    },
+    "surface-size2/thumb": {
+      "type": "box",
+      "constraints": {
+        "minWidth": 16.0,
+        "maxWidth": 16.0,
+        "minHeight": 16.0,
+        "maxHeight": 16.0
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "color": "#FFFFFF"
+          },
+          {
+            "border": {
+              "top": {
+                "color": {
+                  "$token": "fortal.gray.a6"
+                },
+                "strokeAlign": 1.0
+              },
+              "right": {
+                "color": {
+                  "$token": "fortal.gray.a6"
+                },
+                "strokeAlign": 1.0
+              },
+              "bottom": {
+                "color": {
+                  "$token": "fortal.gray.a6"
+                },
+                "strokeAlign": 1.0
+              },
+              "left": {
+                "color": {
+                  "$token": "fortal.gray.a6"
+                },
+                "strokeAlign": 1.0
+              }
+            },
+            "shape": "circle"
+          },
+          {
+            "boxShadow": [
+              {
+                "color": {
+                  "$token": "fortal.gray.7"
+                },
+                "offset": {
+                  "x": 0.0,
+                  "y": 1.0
+                },
+                "blurRadius": 2.0
+              }
+            ]
+          }
+        ]
+      },
+      "variants": [
+        {
+          "kind": "widget_state",
+          "state": "disabled",
+          "style": {
+            "type": "box",
+            "decoration": {
+              "color": {
+                "$token": "fortal.color.surface"
+              }
+            },
+            "variants": []
+          }
+        }
+      ],
+      "v": 1
+    },
+    "surface-size3/outer": {
+      "type": "box",
+      "constraints": {
+        "$merge": [
+          {
+            "minWidth": 180.0,
+            "maxWidth": 180.0
+          },
+          {
+            "minHeight": 29.0,
+            "maxHeight": 29.0
+          }
+        ]
+      },
+      "v": 1
+    },
+    "surface-size3/stack": {
+      "type": "stack_box",
+      "stackAlignment": "centerLeft",
+      "v": 1
+    },
+    "surface-size3/trackFrame": {
+      "type": "box",
+      "margin": {
+        "left": 4.5,
+        "right": 4.5
+      },
+      "constraints": {
+        "$merge": [
+          {
+            "minWidth": 171.0,
+            "maxWidth": 171.0
+          },
+          {
+            "minHeight": 10.0,
+            "maxHeight": 10.0
+          }
+        ]
+      },
+      "v": 1
+    },
+    "surface-size3/trackStack": {
+      "type": "stack_box",
+      "stackAlignment": "centerLeft",
+      "v": 1
+    },
+    "surface-size3/track": {
+      "type": "box",
+      "constraints": {
+        "$merge": [
+          {
+            "minHeight": 10.0,
+            "maxHeight": 10.0
+          },
+          {
+            "minWidth": 171.0,
+            "maxWidth": 171.0
+          }
+        ]
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "color": {
+              "$token": "fortal.gray.3"
+            }
+          },
+          {
+            "borderRadius": 999.0
+          }
+        ]
+      },
+      "variants": [
+        {
+          "kind": "widget_state",
+          "state": "disabled",
+          "style": {
+            "type": "box",
+            "constraints": {
+              "minWidth": 171.0,
+              "maxWidth": 171.0
+            },
+            "decoration": {
+              "$merge": [
+                {
+                  "color": {
+                    "$token": "fortal.accent.track"
+                  }
+                },
+                {
+                  "borderRadius": 999.0
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "v": 1
+    },
+    "surface-size3/range": {
+      "type": "box",
+      "constraints": {
+        "$merge": [
+          {
+            "minHeight": 10.0,
+            "maxHeight": 10.0
+          },
+          {
+            "minWidth": 171.0,
+            "maxWidth": 171.0
+          }
+        ]
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "color": {
+              "$token": "fortal.accent.indicator"
+            }
+          },
+          {
+            "borderRadius": 999.0
+          }
+        ]
+      },
+      "variants": [
+        {
+          "kind": "widget_state",
+          "state": "disabled",
+          "style": {
+            "type": "box",
+            "constraints": {
+              "minWidth": 171.0,
+              "maxWidth": 171.0
+            },
+            "decoration": {
+              "$merge": [
+                {
+                  "color": {
+                    "$token": "fortal.accent.indicator"
+                  }
+                },
+                {
+                  "borderRadius": 999.0
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "v": 1
+    },
+    "surface-size3/positionFrame": {
+      "type": "box",
+      "margin": {
+        "left": 9.5,
+        "right": 9.5
+      },
+      "constraints": {
+        "$merge": [
+          {
+            "minWidth": 161.0,
+            "maxWidth": 161.0
+          },
+          {
+            "minHeight": 29.0,
+            "maxHeight": 29.0
+          }
+        ]
+      },
+      "v": 1
+    },
+    "surface-size3/thumbAlign": {
+      "type": "stack_box",
+      "stackAlignment": "centerRight",
+      "v": 1
+    },
+    "surface-size3/thumb": {
+      "type": "box",
+      "constraints": {
+        "minWidth": 19.0,
+        "maxWidth": 19.0,
+        "minHeight": 19.0,
+        "maxHeight": 19.0
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "color": "#FFFFFF"
+          },
+          {
+            "border": {
+              "top": {
+                "color": {
+                  "$token": "fortal.gray.a6"
+                },
+                "strokeAlign": 1.0
+              },
+              "right": {
+                "color": {
+                  "$token": "fortal.gray.a6"
+                },
+                "strokeAlign": 1.0
+              },
+              "bottom": {
+                "color": {
+                  "$token": "fortal.gray.a6"
+                },
+                "strokeAlign": 1.0
+              },
+              "left": {
+                "color": {
+                  "$token": "fortal.gray.a6"
+                },
+                "strokeAlign": 1.0
+              }
+            },
+            "shape": "circle"
+          },
+          {
+            "boxShadow": [
+              {
+                "color": {
+                  "$token": "fortal.gray.7"
+                },
+                "offset": {
+                  "x": 0.0,
+                  "y": 1.0
+                },
+                "blurRadius": 2.0
+              }
+            ]
+          }
+        ]
+      },
+      "variants": [
+        {
+          "kind": "widget_state",
+          "state": "disabled",
+          "style": {
+            "type": "box",
+            "decoration": {
+              "color": {
+                "$token": "fortal.color.surface"
+              }
+            },
+            "variants": []
+          }
+        }
+      ],
+      "v": 1
+    },
+    "soft-size1/outer": {
+      "type": "box",
+      "constraints": {
+        "$merge": [
+          {
+            "minWidth": 180.0,
+            "maxWidth": 180.0
+          },
+          {
+            "minHeight": 19.0,
+            "maxHeight": 19.0
+          }
+        ]
+      },
+      "v": 1
+    },
+    "soft-size1/stack": {
+      "type": "stack_box",
+      "stackAlignment": "centerLeft",
+      "v": 1
+    },
+    "soft-size1/trackFrame": {
+      "type": "box",
+      "margin": {
+        "left": 3.5,
+        "right": 3.5
+      },
+      "constraints": {
+        "$merge": [
+          {
+            "minWidth": 173.0,
+            "maxWidth": 173.0
+          },
+          {
+            "minHeight": 6.0,
+            "maxHeight": 6.0
+          }
+        ]
+      },
+      "v": 1
+    },
+    "soft-size1/trackStack": {
+      "type": "stack_box",
+      "stackAlignment": "centerLeft",
+      "v": 1
+    },
+    "soft-size1/track": {
+      "type": "box",
+      "constraints": {
+        "$merge": [
+          {
+            "minHeight": 6.0,
+            "maxHeight": 6.0
+          },
+          {
+            "minWidth": 173.0,
+            "maxWidth": 173.0
+          }
+        ]
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "color": {
+              "$token": "fortal.gray.4"
+            }
+          },
+          {
+            "borderRadius": 999.0
+          }
+        ]
+      },
+      "variants": [
+        {
+          "kind": "widget_state",
+          "state": "disabled",
+          "style": {
+            "type": "box",
+            "constraints": {
+              "minWidth": 173.0,
+              "maxWidth": 173.0
+            },
+            "decoration": {
+              "$merge": [
+                {
+                  "color": {
+                    "$token": "fortal.accent.4"
+                  }
+                },
+                {
+                  "borderRadius": 999.0
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "v": 1
+    },
+    "soft-size1/range": {
+      "type": "box",
+      "constraints": {
+        "$merge": [
+          {
+            "minHeight": 6.0,
+            "maxHeight": 6.0
+          },
+          {
+            "minWidth": 173.0,
+            "maxWidth": 173.0
+          }
+        ]
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "color": {
+              "$token": "fortal.accent.6"
+            }
+          },
+          {
+            "borderRadius": 999.0
+          }
+        ]
+      },
+      "variants": [
+        {
+          "kind": "widget_state",
+          "state": "disabled",
+          "style": {
+            "type": "box",
+            "constraints": {
+              "minWidth": 173.0,
+              "maxWidth": 173.0
+            },
+            "decoration": {
+              "$merge": [
+                {
+                  "color": {
+                    "$token": "fortal.accent.9"
+                  }
+                },
+                {
+                  "borderRadius": 999.0
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "v": 1
+    },
+    "soft-size1/positionFrame": {
+      "type": "box",
+      "margin": {
+        "left": 6.5,
+        "right": 6.5
+      },
+      "constraints": {
+        "$merge": [
+          {
+            "minWidth": 167.0,
+            "maxWidth": 167.0
+          },
+          {
+            "minHeight": 19.0,
+            "maxHeight": 19.0
+          }
+        ]
+      },
+      "v": 1
+    },
+    "soft-size1/thumbAlign": {
+      "type": "stack_box",
+      "stackAlignment": "centerRight",
+      "v": 1
+    },
+    "soft-size1/thumb": {
+      "type": "box",
+      "constraints": {
+        "minWidth": 13.0,
+        "maxWidth": 13.0,
+        "minHeight": 13.0,
+        "maxHeight": 13.0
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "color": "#FFFFFF"
+          },
+          {
+            "border": {
+              "top": {
+                "color": {
+                  "$token": "fortal.gray.a6"
+                },
+                "strokeAlign": 1.0
+              },
+              "right": {
+                "color": {
+                  "$token": "fortal.gray.a6"
+                },
+                "strokeAlign": 1.0
+              },
+              "bottom": {
+                "color": {
+                  "$token": "fortal.gray.a6"
+                },
+                "strokeAlign": 1.0
+              },
+              "left": {
+                "color": {
+                  "$token": "fortal.gray.a6"
+                },
+                "strokeAlign": 1.0
+              }
+            },
+            "shape": "circle"
+          },
+          {
+            "boxShadow": [
+              {
+                "color": {
+                  "$token": "fortal.gray.7"
+                },
+                "offset": {
+                  "x": 0.0,
+                  "y": 1.0
+                },
+                "blurRadius": 2.0
+              }
+            ]
+          }
+        ]
+      },
+      "variants": [
+        {
+          "kind": "widget_state",
+          "state": "disabled",
+          "style": {
+            "type": "box",
+            "decoration": {
+              "color": {
+                "$token": "fortal.accent.9"
+              }
+            },
+            "variants": []
+          }
+        }
+      ],
+      "v": 1
+    },
+    "soft-size2/outer": {
+      "type": "box",
+      "constraints": {
+        "$merge": [
+          {
+            "minWidth": 180.0,
+            "maxWidth": 180.0
+          },
+          {
+            "minHeight": 24.0,
+            "maxHeight": 24.0
+          }
+        ]
+      },
+      "v": 1
+    },
+    "soft-size2/stack": {
+      "type": "stack_box",
+      "stackAlignment": "centerLeft",
+      "v": 1
+    },
+    "soft-size2/trackFrame": {
+      "type": "box",
+      "margin": {
+        "left": 4.0,
+        "right": 4.0
+      },
+      "constraints": {
+        "$merge": [
+          {
+            "minWidth": 172.0,
+            "maxWidth": 172.0
+          },
+          {
+            "minHeight": 8.0,
+            "maxHeight": 8.0
+          }
+        ]
+      },
+      "v": 1
+    },
+    "soft-size2/trackStack": {
+      "type": "stack_box",
+      "stackAlignment": "centerLeft",
+      "v": 1
+    },
+    "soft-size2/track": {
+      "type": "box",
+      "constraints": {
+        "$merge": [
+          {
+            "minHeight": 8.0,
+            "maxHeight": 8.0
+          },
+          {
+            "minWidth": 172.0,
+            "maxWidth": 172.0
+          }
+        ]
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "color": {
+              "$token": "fortal.gray.4"
+            }
+          },
+          {
+            "borderRadius": 999.0
+          }
+        ]
+      },
+      "variants": [
+        {
+          "kind": "widget_state",
+          "state": "disabled",
+          "style": {
+            "type": "box",
+            "constraints": {
+              "minWidth": 172.0,
+              "maxWidth": 172.0
+            },
+            "decoration": {
+              "$merge": [
+                {
+                  "color": {
+                    "$token": "fortal.accent.4"
+                  }
+                },
+                {
+                  "borderRadius": 999.0
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "v": 1
+    },
+    "soft-size2/range": {
+      "type": "box",
+      "constraints": {
+        "$merge": [
+          {
+            "minHeight": 8.0,
+            "maxHeight": 8.0
+          },
+          {
+            "minWidth": 172.0,
+            "maxWidth": 172.0
+          }
+        ]
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "color": {
+              "$token": "fortal.accent.6"
+            }
+          },
+          {
+            "borderRadius": 999.0
+          }
+        ]
+      },
+      "variants": [
+        {
+          "kind": "widget_state",
+          "state": "disabled",
+          "style": {
+            "type": "box",
+            "constraints": {
+              "minWidth": 172.0,
+              "maxWidth": 172.0
+            },
+            "decoration": {
+              "$merge": [
+                {
+                  "color": {
+                    "$token": "fortal.accent.9"
+                  }
+                },
+                {
+                  "borderRadius": 999.0
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "v": 1
+    },
+    "soft-size2/positionFrame": {
+      "type": "box",
+      "margin": {
+        "left": 8.0,
+        "right": 8.0
+      },
+      "constraints": {
+        "$merge": [
+          {
+            "minWidth": 164.0,
+            "maxWidth": 164.0
+          },
+          {
+            "minHeight": 24.0,
+            "maxHeight": 24.0
+          }
+        ]
+      },
+      "v": 1
+    },
+    "soft-size2/thumbAlign": {
+      "type": "stack_box",
+      "stackAlignment": "centerRight",
+      "v": 1
+    },
+    "soft-size2/thumb": {
+      "type": "box",
+      "constraints": {
+        "minWidth": 16.0,
+        "maxWidth": 16.0,
+        "minHeight": 16.0,
+        "maxHeight": 16.0
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "color": "#FFFFFF"
+          },
+          {
+            "border": {
+              "top": {
+                "color": {
+                  "$token": "fortal.gray.a6"
+                },
+                "strokeAlign": 1.0
+              },
+              "right": {
+                "color": {
+                  "$token": "fortal.gray.a6"
+                },
+                "strokeAlign": 1.0
+              },
+              "bottom": {
+                "color": {
+                  "$token": "fortal.gray.a6"
+                },
+                "strokeAlign": 1.0
+              },
+              "left": {
+                "color": {
+                  "$token": "fortal.gray.a6"
+                },
+                "strokeAlign": 1.0
+              }
+            },
+            "shape": "circle"
+          },
+          {
+            "boxShadow": [
+              {
+                "color": {
+                  "$token": "fortal.gray.7"
+                },
+                "offset": {
+                  "x": 0.0,
+                  "y": 1.0
+                },
+                "blurRadius": 2.0
+              }
+            ]
+          }
+        ]
+      },
+      "variants": [
+        {
+          "kind": "widget_state",
+          "state": "disabled",
+          "style": {
+            "type": "box",
+            "decoration": {
+              "color": {
+                "$token": "fortal.accent.9"
+              }
+            },
+            "variants": []
+          }
+        }
+      ],
+      "v": 1
+    },
+    "soft-size3/outer": {
+      "type": "box",
+      "constraints": {
+        "$merge": [
+          {
+            "minWidth": 180.0,
+            "maxWidth": 180.0
+          },
+          {
+            "minHeight": 29.0,
+            "maxHeight": 29.0
+          }
+        ]
+      },
+      "v": 1
+    },
+    "soft-size3/stack": {
+      "type": "stack_box",
+      "stackAlignment": "centerLeft",
+      "v": 1
+    },
+    "soft-size3/trackFrame": {
+      "type": "box",
+      "margin": {
+        "left": 4.5,
+        "right": 4.5
+      },
+      "constraints": {
+        "$merge": [
+          {
+            "minWidth": 171.0,
+            "maxWidth": 171.0
+          },
+          {
+            "minHeight": 10.0,
+            "maxHeight": 10.0
+          }
+        ]
+      },
+      "v": 1
+    },
+    "soft-size3/trackStack": {
+      "type": "stack_box",
+      "stackAlignment": "centerLeft",
+      "v": 1
+    },
+    "soft-size3/track": {
+      "type": "box",
+      "constraints": {
+        "$merge": [
+          {
+            "minHeight": 10.0,
+            "maxHeight": 10.0
+          },
+          {
+            "minWidth": 171.0,
+            "maxWidth": 171.0
+          }
+        ]
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "color": {
+              "$token": "fortal.gray.4"
+            }
+          },
+          {
+            "borderRadius": 999.0
+          }
+        ]
+      },
+      "variants": [
+        {
+          "kind": "widget_state",
+          "state": "disabled",
+          "style": {
+            "type": "box",
+            "constraints": {
+              "minWidth": 171.0,
+              "maxWidth": 171.0
+            },
+            "decoration": {
+              "$merge": [
+                {
+                  "color": {
+                    "$token": "fortal.accent.4"
+                  }
+                },
+                {
+                  "borderRadius": 999.0
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "v": 1
+    },
+    "soft-size3/range": {
+      "type": "box",
+      "constraints": {
+        "$merge": [
+          {
+            "minHeight": 10.0,
+            "maxHeight": 10.0
+          },
+          {
+            "minWidth": 171.0,
+            "maxWidth": 171.0
+          }
+        ]
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "color": {
+              "$token": "fortal.accent.6"
+            }
+          },
+          {
+            "borderRadius": 999.0
+          }
+        ]
+      },
+      "variants": [
+        {
+          "kind": "widget_state",
+          "state": "disabled",
+          "style": {
+            "type": "box",
+            "constraints": {
+              "minWidth": 171.0,
+              "maxWidth": 171.0
+            },
+            "decoration": {
+              "$merge": [
+                {
+                  "color": {
+                    "$token": "fortal.accent.9"
+                  }
+                },
+                {
+                  "borderRadius": 999.0
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "v": 1
+    },
+    "soft-size3/positionFrame": {
+      "type": "box",
+      "margin": {
+        "left": 9.5,
+        "right": 9.5
+      },
+      "constraints": {
+        "$merge": [
+          {
+            "minWidth": 161.0,
+            "maxWidth": 161.0
+          },
+          {
+            "minHeight": 29.0,
+            "maxHeight": 29.0
+          }
+        ]
+      },
+      "v": 1
+    },
+    "soft-size3/thumbAlign": {
+      "type": "stack_box",
+      "stackAlignment": "centerRight",
+      "v": 1
+    },
+    "soft-size3/thumb": {
+      "type": "box",
+      "constraints": {
+        "minWidth": 19.0,
+        "maxWidth": 19.0,
+        "minHeight": 19.0,
+        "maxHeight": 19.0
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "color": "#FFFFFF"
+          },
+          {
+            "border": {
+              "top": {
+                "color": {
+                  "$token": "fortal.gray.a6"
+                },
+                "strokeAlign": 1.0
+              },
+              "right": {
+                "color": {
+                  "$token": "fortal.gray.a6"
+                },
+                "strokeAlign": 1.0
+              },
+              "bottom": {
+                "color": {
+                  "$token": "fortal.gray.a6"
+                },
+                "strokeAlign": 1.0
+              },
+              "left": {
+                "color": {
+                  "$token": "fortal.gray.a6"
+                },
+                "strokeAlign": 1.0
+              }
+            },
+            "shape": "circle"
+          },
+          {
+            "boxShadow": [
+              {
+                "color": {
+                  "$token": "fortal.gray.7"
+                },
+                "offset": {
+                  "x": 0.0,
+                  "y": 1.0
+                },
+                "blurRadius": 2.0
+              }
+            ]
+          }
+        ]
+      },
+      "variants": [
+        {
+          "kind": "widget_state",
+          "state": "disabled",
+          "style": {
+            "type": "box",
+            "decoration": {
+              "color": {
+                "$token": "fortal.accent.9"
+              }
+            },
+            "variants": []
+          }
+        }
+      ],
+      "v": 1
+    }
+  },
+  "semantics": {
+    "role": "slider",
+    "bindings": {
+      "enabled": {
+        "property": "enabled"
+      },
+      "value": {
+        "property": "value"
+      }
+    }
+  },
+  "oracles": [
+    {
+      "theme": "light",
+      "image": "light/slider.png",
+      "metadata": "light/slider.json",
+      "evidence": "rendered"
+    },
+    {
+      "theme": "dark",
+      "image": "dark/slider.png",
+      "metadata": "dark/slider.json",
+      "evidence": "rendered"
+    }
+  ],
+  "diagnostics": [
+    {
+      "code": "runtime.callbacks_omitted",
+      "severity": "info",
+      "path": "semantics",
+      "message": "Callbacks are intentionally omitted from portable captures."
+    }
+  ]
+}

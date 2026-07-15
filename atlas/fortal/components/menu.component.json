@@ -1,0 +1,531 @@
+{
+  "schema": "mix_atlas/component/v2",
+  "id": "menu",
+  "label": "Menu",
+  "properties": [
+    {
+      "id": "variant",
+      "kind": "enum",
+      "values": [
+        "solid",
+        "soft"
+      ],
+      "required": true,
+      "default": "solid"
+    },
+    {
+      "id": "size",
+      "kind": "enum",
+      "values": [
+        "size1",
+        "size2"
+      ],
+      "required": true,
+      "default": "size1"
+    },
+    {
+      "id": "label",
+      "kind": "string",
+      "required": true,
+      "default": "Actions"
+    },
+    {
+      "id": "icon",
+      "kind": "icon",
+      "required": true,
+      "default": "keyboard_arrow_down"
+    },
+    {
+      "id": "enabled",
+      "kind": "boolean",
+      "required": true,
+      "default": true
+    }
+  ],
+  "states": [
+    {
+      "id": "default",
+      "widgetStates": [],
+      "properties": {}
+    },
+    {
+      "id": "hovered",
+      "widgetStates": [
+        "hovered"
+      ],
+      "properties": {}
+    },
+    {
+      "id": "pressed",
+      "widgetStates": [
+        "pressed"
+      ],
+      "properties": {}
+    },
+    {
+      "id": "focused",
+      "widgetStates": [
+        "focused"
+      ],
+      "properties": {}
+    },
+    {
+      "id": "disabled",
+      "widgetStates": [
+        "disabled"
+      ],
+      "properties": {
+        "enabled": false
+      }
+    }
+  ],
+  "slots": [
+    {
+      "id": "container",
+      "kind": "flex_box"
+    },
+    {
+      "id": "icon",
+      "kind": "icon"
+    },
+    {
+      "id": "label",
+      "kind": "text"
+    }
+  ],
+  "anatomy": {
+    "root": "container",
+    "nodes": [
+      {
+        "id": "container",
+        "kind": "flex_box",
+        "slot": "container",
+        "children": [
+          "icon",
+          "label"
+        ]
+      },
+      {
+        "id": "icon",
+        "kind": "icon",
+        "slot": "icon",
+        "children": [],
+        "bindings": {
+          "icon": {
+            "property": "icon"
+          }
+        }
+      },
+      {
+        "id": "label",
+        "kind": "text",
+        "slot": "label",
+        "children": [],
+        "bindings": {
+          "text": {
+            "property": "label"
+          }
+        }
+      }
+    ]
+  },
+  "recipes": [
+    {
+      "id": "solid-size1",
+      "properties": {
+        "variant": "solid",
+        "size": "size1"
+      },
+      "styles": {
+        "container": "solid-size1/container",
+        "icon": "solid-size1/icon",
+        "label": "solid-size1/label"
+      }
+    },
+    {
+      "id": "solid-size2",
+      "properties": {
+        "variant": "solid",
+        "size": "size2"
+      },
+      "styles": {
+        "container": "solid-size2/container",
+        "icon": "solid-size2/icon",
+        "label": "solid-size2/label"
+      }
+    },
+    {
+      "id": "soft-size1",
+      "properties": {
+        "variant": "soft",
+        "size": "size1"
+      },
+      "styles": {
+        "container": "soft-size1/container",
+        "icon": "soft-size1/icon",
+        "label": "soft-size1/label"
+      }
+    },
+    {
+      "id": "soft-size2",
+      "properties": {
+        "variant": "soft",
+        "size": "size2"
+      },
+      "styles": {
+        "container": "soft-size2/container",
+        "icon": "soft-size2/icon",
+        "label": "soft-size2/label"
+      }
+    }
+  ],
+  "styles": {
+    "solid-size1/container": {
+      "type": "flex_box",
+      "padding": {
+        "left": {
+          "$token": "fortal.space.2",
+          "kind": "space"
+        },
+        "top": {
+          "$token": "fortal.space.1",
+          "kind": "space"
+        },
+        "right": {
+          "$token": "fortal.space.2",
+          "kind": "space"
+        },
+        "bottom": {
+          "$token": "fortal.space.1",
+          "kind": "space"
+        }
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "borderRadius": {
+              "$token": "fortal.radius.2"
+            }
+          },
+          {
+            "color": {
+              "$token": "fortal.accent.9"
+            }
+          }
+        ]
+      },
+      "mainAxisSize": "min",
+      "spacing": 8.0,
+      "v": 1
+    },
+    "solid-size1/icon": {
+      "type": "icon",
+      "color": {
+        "$merge": [
+          {
+            "$token": "fortal.gray.11"
+          },
+          {
+            "$token": "fortal.accent.contrast"
+          }
+        ]
+      },
+      "size": {
+        "$merge": [
+          16.0,
+          16.0
+        ]
+      },
+      "v": 1
+    },
+    "solid-size1/label": {
+      "type": "text",
+      "style": {
+        "$merge": [
+          {
+            "color": {
+              "$token": "fortal.gray.12"
+            },
+            "fontSize": 14.0,
+            "fontWeight": "w500"
+          },
+          {
+            "color": {
+              "$token": "fortal.accent.contrast"
+            }
+          }
+        ]
+      },
+      "v": 1
+    },
+    "solid-size2/container": {
+      "type": "flex_box",
+      "padding": {
+        "left": {
+          "$token": "fortal.space.3",
+          "kind": "space"
+        },
+        "top": {
+          "$token": "fortal.space.2",
+          "kind": "space"
+        },
+        "right": {
+          "$token": "fortal.space.3",
+          "kind": "space"
+        },
+        "bottom": {
+          "$token": "fortal.space.2",
+          "kind": "space"
+        }
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "borderRadius": {
+              "$token": "fortal.radius.2"
+            }
+          },
+          {
+            "color": {
+              "$token": "fortal.accent.9"
+            }
+          }
+        ]
+      },
+      "mainAxisSize": "min",
+      "spacing": 8.0,
+      "v": 1
+    },
+    "solid-size2/icon": {
+      "type": "icon",
+      "color": {
+        "$merge": [
+          {
+            "$token": "fortal.gray.11"
+          },
+          {
+            "$token": "fortal.accent.contrast"
+          }
+        ]
+      },
+      "size": {
+        "$merge": [
+          16.0,
+          16.0
+        ]
+      },
+      "v": 1
+    },
+    "solid-size2/label": {
+      "type": "text",
+      "style": {
+        "$merge": [
+          {
+            "color": {
+              "$token": "fortal.gray.12"
+            },
+            "fontSize": 14.0,
+            "fontWeight": "w500"
+          },
+          {
+            "color": {
+              "$token": "fortal.accent.contrast"
+            }
+          }
+        ]
+      },
+      "v": 1
+    },
+    "soft-size1/container": {
+      "type": "flex_box",
+      "padding": {
+        "left": {
+          "$token": "fortal.space.2",
+          "kind": "space"
+        },
+        "top": {
+          "$token": "fortal.space.1",
+          "kind": "space"
+        },
+        "right": {
+          "$token": "fortal.space.2",
+          "kind": "space"
+        },
+        "bottom": {
+          "$token": "fortal.space.1",
+          "kind": "space"
+        }
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "borderRadius": {
+              "$token": "fortal.radius.2"
+            }
+          },
+          {
+            "color": {
+              "$token": "fortal.accent.3"
+            }
+          }
+        ]
+      },
+      "mainAxisSize": "min",
+      "v": 1
+    },
+    "soft-size1/icon": {
+      "type": "icon",
+      "color": {
+        "$merge": [
+          {
+            "$token": "fortal.gray.11"
+          },
+          {
+            "$token": "fortal.accent.11"
+          }
+        ]
+      },
+      "size": {
+        "$merge": [
+          16.0,
+          16.0
+        ]
+      },
+      "v": 1
+    },
+    "soft-size1/label": {
+      "type": "text",
+      "style": {
+        "$merge": [
+          {
+            "color": {
+              "$token": "fortal.gray.12"
+            },
+            "fontSize": 14.0,
+            "fontWeight": "w500"
+          },
+          {
+            "color": {
+              "$token": "fortal.accent.11"
+            },
+            "fontSize": 14.0,
+            "fontWeight": "w500"
+          }
+        ]
+      },
+      "v": 1
+    },
+    "soft-size2/container": {
+      "type": "flex_box",
+      "padding": {
+        "left": {
+          "$token": "fortal.space.3",
+          "kind": "space"
+        },
+        "top": {
+          "$token": "fortal.space.2",
+          "kind": "space"
+        },
+        "right": {
+          "$token": "fortal.space.3",
+          "kind": "space"
+        },
+        "bottom": {
+          "$token": "fortal.space.2",
+          "kind": "space"
+        }
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "borderRadius": {
+              "$token": "fortal.radius.2"
+            }
+          },
+          {
+            "color": {
+              "$token": "fortal.accent.3"
+            }
+          }
+        ]
+      },
+      "mainAxisSize": "min",
+      "v": 1
+    },
+    "soft-size2/icon": {
+      "type": "icon",
+      "color": {
+        "$merge": [
+          {
+            "$token": "fortal.gray.11"
+          },
+          {
+            "$token": "fortal.accent.11"
+          }
+        ]
+      },
+      "size": {
+        "$merge": [
+          16.0,
+          16.0
+        ]
+      },
+      "v": 1
+    },
+    "soft-size2/label": {
+      "type": "text",
+      "style": {
+        "$merge": [
+          {
+            "color": {
+              "$token": "fortal.gray.12"
+            },
+            "fontSize": 14.0,
+            "fontWeight": "w500"
+          },
+          {
+            "color": {
+              "$token": "fortal.accent.11"
+            },
+            "fontSize": 14.0,
+            "fontWeight": "w500"
+          }
+        ]
+      },
+      "v": 1
+    }
+  },
+  "semantics": {
+    "role": "button",
+    "bindings": {
+      "label": {
+        "property": "label"
+      },
+      "enabled": {
+        "property": "enabled"
+      }
+    }
+  },
+  "oracles": [
+    {
+      "theme": "light",
+      "image": "light/menu.png",
+      "metadata": "light/menu.json",
+      "evidence": "rendered"
+    },
+    {
+      "theme": "dark",
+      "image": "dark/menu.png",
+      "metadata": "dark/menu.json",
+      "evidence": "rendered"
+    }
+  ],
+  "diagnostics": [
+    {
+      "code": "runtime.overlay_omitted",
+      "severity": "info",
+      "path": "anatomy",
+      "message": "Interactive overlay behavior is intentionally not executed."
+    }
+  ]
+}

@@ -1,0 +1,1617 @@
+{
+  "schema": "mix_atlas/component/v2",
+  "id": "radio",
+  "label": "Radio",
+  "properties": [
+    {
+      "id": "variant",
+      "kind": "enum",
+      "values": [
+        "surface",
+        "soft"
+      ],
+      "required": true,
+      "default": "surface"
+    },
+    {
+      "id": "size",
+      "kind": "enum",
+      "values": [
+        "size1",
+        "size2",
+        "size3"
+      ],
+      "required": true,
+      "default": "size1"
+    },
+    {
+      "id": "label",
+      "kind": "string",
+      "required": true,
+      "default": "Atlas option"
+    },
+    {
+      "id": "selected",
+      "kind": "boolean",
+      "required": true,
+      "default": false
+    },
+    {
+      "id": "enabled",
+      "kind": "boolean",
+      "required": true,
+      "default": true
+    }
+  ],
+  "states": [
+    {
+      "id": "default",
+      "widgetStates": [],
+      "properties": {}
+    },
+    {
+      "id": "hovered",
+      "widgetStates": [
+        "hovered"
+      ],
+      "properties": {}
+    },
+    {
+      "id": "pressed",
+      "widgetStates": [
+        "pressed"
+      ],
+      "properties": {}
+    },
+    {
+      "id": "focused",
+      "widgetStates": [
+        "focused"
+      ],
+      "properties": {}
+    },
+    {
+      "id": "selected",
+      "widgetStates": [
+        "selected"
+      ],
+      "properties": {
+        "selected": true
+      }
+    },
+    {
+      "id": "disabled",
+      "widgetStates": [
+        "disabled"
+      ],
+      "properties": {
+        "enabled": false
+      }
+    }
+  ],
+  "slots": [
+    {
+      "id": "container",
+      "kind": "box"
+    },
+    {
+      "id": "indicator",
+      "kind": "box"
+    }
+  ],
+  "anatomy": {
+    "root": "container",
+    "nodes": [
+      {
+        "id": "container",
+        "kind": "box",
+        "slot": "container",
+        "children": [
+          "indicator"
+        ]
+      },
+      {
+        "id": "indicator",
+        "kind": "box",
+        "slot": "indicator",
+        "children": [],
+        "visibleWhen": {
+          "state": "selected",
+          "operator": "active"
+        }
+      }
+    ]
+  },
+  "recipes": [
+    {
+      "id": "surface-size1",
+      "properties": {
+        "variant": "surface",
+        "size": "size1"
+      },
+      "styles": {
+        "container": "surface-size1/container",
+        "indicator": "surface-size1/indicator"
+      }
+    },
+    {
+      "id": "surface-size2",
+      "properties": {
+        "variant": "surface",
+        "size": "size2"
+      },
+      "styles": {
+        "container": "surface-size2/container",
+        "indicator": "surface-size2/indicator"
+      }
+    },
+    {
+      "id": "surface-size3",
+      "properties": {
+        "variant": "surface",
+        "size": "size3"
+      },
+      "styles": {
+        "container": "surface-size3/container",
+        "indicator": "surface-size3/indicator"
+      }
+    },
+    {
+      "id": "soft-size1",
+      "properties": {
+        "variant": "soft",
+        "size": "size1"
+      },
+      "styles": {
+        "container": "soft-size1/container",
+        "indicator": "soft-size1/indicator"
+      }
+    },
+    {
+      "id": "soft-size2",
+      "properties": {
+        "variant": "soft",
+        "size": "size2"
+      },
+      "styles": {
+        "container": "soft-size2/container",
+        "indicator": "soft-size2/indicator"
+      }
+    },
+    {
+      "id": "soft-size3",
+      "properties": {
+        "variant": "soft",
+        "size": "size3"
+      },
+      "styles": {
+        "container": "soft-size3/container",
+        "indicator": "soft-size3/indicator"
+      }
+    }
+  ],
+  "styles": {
+    "surface-size1/container": {
+      "type": "box",
+      "alignment": "center",
+      "constraints": {
+        "$merge": [
+          {
+            "minWidth": 16.0,
+            "maxWidth": 16.0
+          },
+          {
+            "minHeight": 16.0,
+            "maxHeight": 16.0
+          }
+        ]
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "color": {
+              "$token": "fortal.color.surface"
+            }
+          },
+          {
+            "border": {
+              "top": {
+                "color": {
+                  "$token": "fortal.gray.6"
+                },
+                "width": {
+                  "$token": "fortal.border.width.1",
+                  "kind": "space"
+                }
+              },
+              "right": {
+                "color": {
+                  "$token": "fortal.gray.6"
+                },
+                "width": {
+                  "$token": "fortal.border.width.1",
+                  "kind": "space"
+                }
+              },
+              "bottom": {
+                "color": {
+                  "$token": "fortal.gray.6"
+                },
+                "width": {
+                  "$token": "fortal.border.width.1",
+                  "kind": "space"
+                }
+              },
+              "left": {
+                "color": {
+                  "$token": "fortal.gray.6"
+                },
+                "width": {
+                  "$token": "fortal.border.width.1",
+                  "kind": "space"
+                }
+              }
+            }
+          },
+          {
+            "borderRadius": {
+              "$token": "fortal.radius.full"
+            }
+          }
+        ]
+      },
+      "variants": [
+        {
+          "kind": "widget_state",
+          "state": "focused",
+          "style": {
+            "type": "box",
+            "decoration": {
+              "border": {
+                "top": {
+                  "color": {
+                    "$token": "fortal.focus.a8"
+                  },
+                  "width": {
+                    "$token": "fortal.focus.ring.width",
+                    "kind": "space"
+                  }
+                },
+                "right": {
+                  "color": {
+                    "$token": "fortal.focus.a8"
+                  },
+                  "width": {
+                    "$token": "fortal.focus.ring.width",
+                    "kind": "space"
+                  }
+                },
+                "bottom": {
+                  "color": {
+                    "$token": "fortal.focus.a8"
+                  },
+                  "width": {
+                    "$token": "fortal.focus.ring.width",
+                    "kind": "space"
+                  }
+                },
+                "left": {
+                  "color": {
+                    "$token": "fortal.focus.a8"
+                  },
+                  "width": {
+                    "$token": "fortal.focus.ring.width",
+                    "kind": "space"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "kind": "widget_state",
+          "state": "selected",
+          "style": {
+            "type": "box",
+            "decoration": {
+              "$merge": [
+                {
+                  "color": {
+                    "$token": "fortal.accent.9"
+                  }
+                },
+                {
+                  "border": {
+                    "top": {
+                      "color": {
+                        "$token": "fortal.accent.9"
+                      },
+                      "width": {
+                        "$token": "fortal.border.width.1",
+                        "kind": "space"
+                      }
+                    },
+                    "right": {
+                      "color": {
+                        "$token": "fortal.accent.9"
+                      },
+                      "width": {
+                        "$token": "fortal.border.width.1",
+                        "kind": "space"
+                      }
+                    },
+                    "bottom": {
+                      "color": {
+                        "$token": "fortal.accent.9"
+                      },
+                      "width": {
+                        "$token": "fortal.border.width.1",
+                        "kind": "space"
+                      }
+                    },
+                    "left": {
+                      "color": {
+                        "$token": "fortal.accent.9"
+                      },
+                      "width": {
+                        "$token": "fortal.border.width.1",
+                        "kind": "space"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "kind": "widget_state",
+          "state": "disabled",
+          "style": {
+            "type": "box",
+            "decoration": {
+              "$merge": [
+                {
+                  "color": {
+                    "$token": "fortal.gray.3"
+                  }
+                },
+                {
+                  "border": {
+                    "top": {
+                      "color": {
+                        "$token": "fortal.gray.6"
+                      },
+                      "width": {
+                        "$token": "fortal.border.width.1",
+                        "kind": "space"
+                      }
+                    },
+                    "right": {
+                      "color": {
+                        "$token": "fortal.gray.6"
+                      },
+                      "width": {
+                        "$token": "fortal.border.width.1",
+                        "kind": "space"
+                      }
+                    },
+                    "bottom": {
+                      "color": {
+                        "$token": "fortal.gray.6"
+                      },
+                      "width": {
+                        "$token": "fortal.border.width.1",
+                        "kind": "space"
+                      }
+                    },
+                    "left": {
+                      "color": {
+                        "$token": "fortal.gray.6"
+                      },
+                      "width": {
+                        "$token": "fortal.border.width.1",
+                        "kind": "space"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "v": 1
+    },
+    "surface-size1/indicator": {
+      "type": "box",
+      "constraints": {
+        "$merge": [
+          {
+            "minWidth": 6.0,
+            "maxWidth": 6.0
+          },
+          {
+            "minHeight": 6.0,
+            "maxHeight": 6.0
+          }
+        ]
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "color": {
+              "$token": "fortal.accent.9"
+            }
+          },
+          {
+            "borderRadius": {
+              "$token": "fortal.radius.full"
+            }
+          }
+        ]
+      },
+      "variants": [
+        {
+          "kind": "widget_state",
+          "state": "focused",
+          "style": {
+            "type": "box",
+            "variants": []
+          }
+        },
+        {
+          "kind": "widget_state",
+          "state": "selected",
+          "style": {
+            "type": "box",
+            "decoration": {
+              "color": "#FFFFFF"
+            }
+          }
+        },
+        {
+          "kind": "widget_state",
+          "state": "disabled",
+          "style": {
+            "type": "box",
+            "decoration": {
+              "color": {
+                "$token": "fortal.gray.9"
+              }
+            }
+          }
+        }
+      ],
+      "v": 1
+    },
+    "surface-size2/container": {
+      "type": "box",
+      "alignment": "center",
+      "constraints": {
+        "$merge": [
+          {
+            "minWidth": 20.0,
+            "maxWidth": 20.0
+          },
+          {
+            "minHeight": 20.0,
+            "maxHeight": 20.0
+          }
+        ]
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "color": {
+              "$token": "fortal.color.surface"
+            }
+          },
+          {
+            "border": {
+              "top": {
+                "color": {
+                  "$token": "fortal.gray.6"
+                },
+                "width": {
+                  "$token": "fortal.border.width.1",
+                  "kind": "space"
+                }
+              },
+              "right": {
+                "color": {
+                  "$token": "fortal.gray.6"
+                },
+                "width": {
+                  "$token": "fortal.border.width.1",
+                  "kind": "space"
+                }
+              },
+              "bottom": {
+                "color": {
+                  "$token": "fortal.gray.6"
+                },
+                "width": {
+                  "$token": "fortal.border.width.1",
+                  "kind": "space"
+                }
+              },
+              "left": {
+                "color": {
+                  "$token": "fortal.gray.6"
+                },
+                "width": {
+                  "$token": "fortal.border.width.1",
+                  "kind": "space"
+                }
+              }
+            }
+          },
+          {
+            "borderRadius": {
+              "$token": "fortal.radius.full"
+            }
+          }
+        ]
+      },
+      "variants": [
+        {
+          "kind": "widget_state",
+          "state": "focused",
+          "style": {
+            "type": "box",
+            "decoration": {
+              "border": {
+                "top": {
+                  "color": {
+                    "$token": "fortal.focus.a8"
+                  },
+                  "width": {
+                    "$token": "fortal.focus.ring.width",
+                    "kind": "space"
+                  }
+                },
+                "right": {
+                  "color": {
+                    "$token": "fortal.focus.a8"
+                  },
+                  "width": {
+                    "$token": "fortal.focus.ring.width",
+                    "kind": "space"
+                  }
+                },
+                "bottom": {
+                  "color": {
+                    "$token": "fortal.focus.a8"
+                  },
+                  "width": {
+                    "$token": "fortal.focus.ring.width",
+                    "kind": "space"
+                  }
+                },
+                "left": {
+                  "color": {
+                    "$token": "fortal.focus.a8"
+                  },
+                  "width": {
+                    "$token": "fortal.focus.ring.width",
+                    "kind": "space"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "kind": "widget_state",
+          "state": "selected",
+          "style": {
+            "type": "box",
+            "decoration": {
+              "$merge": [
+                {
+                  "color": {
+                    "$token": "fortal.accent.9"
+                  }
+                },
+                {
+                  "border": {
+                    "top": {
+                      "color": {
+                        "$token": "fortal.accent.9"
+                      },
+                      "width": {
+                        "$token": "fortal.border.width.1",
+                        "kind": "space"
+                      }
+                    },
+                    "right": {
+                      "color": {
+                        "$token": "fortal.accent.9"
+                      },
+                      "width": {
+                        "$token": "fortal.border.width.1",
+                        "kind": "space"
+                      }
+                    },
+                    "bottom": {
+                      "color": {
+                        "$token": "fortal.accent.9"
+                      },
+                      "width": {
+                        "$token": "fortal.border.width.1",
+                        "kind": "space"
+                      }
+                    },
+                    "left": {
+                      "color": {
+                        "$token": "fortal.accent.9"
+                      },
+                      "width": {
+                        "$token": "fortal.border.width.1",
+                        "kind": "space"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "kind": "widget_state",
+          "state": "disabled",
+          "style": {
+            "type": "box",
+            "decoration": {
+              "$merge": [
+                {
+                  "color": {
+                    "$token": "fortal.gray.3"
+                  }
+                },
+                {
+                  "border": {
+                    "top": {
+                      "color": {
+                        "$token": "fortal.gray.6"
+                      },
+                      "width": {
+                        "$token": "fortal.border.width.1",
+                        "kind": "space"
+                      }
+                    },
+                    "right": {
+                      "color": {
+                        "$token": "fortal.gray.6"
+                      },
+                      "width": {
+                        "$token": "fortal.border.width.1",
+                        "kind": "space"
+                      }
+                    },
+                    "bottom": {
+                      "color": {
+                        "$token": "fortal.gray.6"
+                      },
+                      "width": {
+                        "$token": "fortal.border.width.1",
+                        "kind": "space"
+                      }
+                    },
+                    "left": {
+                      "color": {
+                        "$token": "fortal.gray.6"
+                      },
+                      "width": {
+                        "$token": "fortal.border.width.1",
+                        "kind": "space"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "v": 1
+    },
+    "surface-size2/indicator": {
+      "type": "box",
+      "constraints": {
+        "$merge": [
+          {
+            "minWidth": 8.0,
+            "maxWidth": 8.0
+          },
+          {
+            "minHeight": 8.0,
+            "maxHeight": 8.0
+          }
+        ]
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "color": {
+              "$token": "fortal.accent.9"
+            }
+          },
+          {
+            "borderRadius": {
+              "$token": "fortal.radius.full"
+            }
+          }
+        ]
+      },
+      "variants": [
+        {
+          "kind": "widget_state",
+          "state": "focused",
+          "style": {
+            "type": "box",
+            "variants": []
+          }
+        },
+        {
+          "kind": "widget_state",
+          "state": "selected",
+          "style": {
+            "type": "box",
+            "decoration": {
+              "color": "#FFFFFF"
+            }
+          }
+        },
+        {
+          "kind": "widget_state",
+          "state": "disabled",
+          "style": {
+            "type": "box",
+            "decoration": {
+              "color": {
+                "$token": "fortal.gray.9"
+              }
+            }
+          }
+        }
+      ],
+      "v": 1
+    },
+    "surface-size3/container": {
+      "type": "box",
+      "alignment": "center",
+      "constraints": {
+        "$merge": [
+          {
+            "minWidth": 24.0,
+            "maxWidth": 24.0
+          },
+          {
+            "minHeight": 24.0,
+            "maxHeight": 24.0
+          }
+        ]
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "color": {
+              "$token": "fortal.color.surface"
+            }
+          },
+          {
+            "border": {
+              "top": {
+                "color": {
+                  "$token": "fortal.gray.6"
+                },
+                "width": {
+                  "$token": "fortal.border.width.1",
+                  "kind": "space"
+                }
+              },
+              "right": {
+                "color": {
+                  "$token": "fortal.gray.6"
+                },
+                "width": {
+                  "$token": "fortal.border.width.1",
+                  "kind": "space"
+                }
+              },
+              "bottom": {
+                "color": {
+                  "$token": "fortal.gray.6"
+                },
+                "width": {
+                  "$token": "fortal.border.width.1",
+                  "kind": "space"
+                }
+              },
+              "left": {
+                "color": {
+                  "$token": "fortal.gray.6"
+                },
+                "width": {
+                  "$token": "fortal.border.width.1",
+                  "kind": "space"
+                }
+              }
+            }
+          },
+          {
+            "borderRadius": {
+              "$token": "fortal.radius.full"
+            }
+          }
+        ]
+      },
+      "variants": [
+        {
+          "kind": "widget_state",
+          "state": "focused",
+          "style": {
+            "type": "box",
+            "decoration": {
+              "border": {
+                "top": {
+                  "color": {
+                    "$token": "fortal.focus.a8"
+                  },
+                  "width": {
+                    "$token": "fortal.focus.ring.width",
+                    "kind": "space"
+                  }
+                },
+                "right": {
+                  "color": {
+                    "$token": "fortal.focus.a8"
+                  },
+                  "width": {
+                    "$token": "fortal.focus.ring.width",
+                    "kind": "space"
+                  }
+                },
+                "bottom": {
+                  "color": {
+                    "$token": "fortal.focus.a8"
+                  },
+                  "width": {
+                    "$token": "fortal.focus.ring.width",
+                    "kind": "space"
+                  }
+                },
+                "left": {
+                  "color": {
+                    "$token": "fortal.focus.a8"
+                  },
+                  "width": {
+                    "$token": "fortal.focus.ring.width",
+                    "kind": "space"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "kind": "widget_state",
+          "state": "selected",
+          "style": {
+            "type": "box",
+            "decoration": {
+              "$merge": [
+                {
+                  "color": {
+                    "$token": "fortal.accent.9"
+                  }
+                },
+                {
+                  "border": {
+                    "top": {
+                      "color": {
+                        "$token": "fortal.accent.9"
+                      },
+                      "width": {
+                        "$token": "fortal.border.width.1",
+                        "kind": "space"
+                      }
+                    },
+                    "right": {
+                      "color": {
+                        "$token": "fortal.accent.9"
+                      },
+                      "width": {
+                        "$token": "fortal.border.width.1",
+                        "kind": "space"
+                      }
+                    },
+                    "bottom": {
+                      "color": {
+                        "$token": "fortal.accent.9"
+                      },
+                      "width": {
+                        "$token": "fortal.border.width.1",
+                        "kind": "space"
+                      }
+                    },
+                    "left": {
+                      "color": {
+                        "$token": "fortal.accent.9"
+                      },
+                      "width": {
+                        "$token": "fortal.border.width.1",
+                        "kind": "space"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "kind": "widget_state",
+          "state": "disabled",
+          "style": {
+            "type": "box",
+            "decoration": {
+              "$merge": [
+                {
+                  "color": {
+                    "$token": "fortal.gray.3"
+                  }
+                },
+                {
+                  "border": {
+                    "top": {
+                      "color": {
+                        "$token": "fortal.gray.6"
+                      },
+                      "width": {
+                        "$token": "fortal.border.width.1",
+                        "kind": "space"
+                      }
+                    },
+                    "right": {
+                      "color": {
+                        "$token": "fortal.gray.6"
+                      },
+                      "width": {
+                        "$token": "fortal.border.width.1",
+                        "kind": "space"
+                      }
+                    },
+                    "bottom": {
+                      "color": {
+                        "$token": "fortal.gray.6"
+                      },
+                      "width": {
+                        "$token": "fortal.border.width.1",
+                        "kind": "space"
+                      }
+                    },
+                    "left": {
+                      "color": {
+                        "$token": "fortal.gray.6"
+                      },
+                      "width": {
+                        "$token": "fortal.border.width.1",
+                        "kind": "space"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "v": 1
+    },
+    "surface-size3/indicator": {
+      "type": "box",
+      "constraints": {
+        "$merge": [
+          {
+            "minWidth": 10.0,
+            "maxWidth": 10.0
+          },
+          {
+            "minHeight": 10.0,
+            "maxHeight": 10.0
+          }
+        ]
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "color": {
+              "$token": "fortal.accent.9"
+            }
+          },
+          {
+            "borderRadius": {
+              "$token": "fortal.radius.full"
+            }
+          }
+        ]
+      },
+      "variants": [
+        {
+          "kind": "widget_state",
+          "state": "focused",
+          "style": {
+            "type": "box",
+            "variants": []
+          }
+        },
+        {
+          "kind": "widget_state",
+          "state": "selected",
+          "style": {
+            "type": "box",
+            "decoration": {
+              "color": "#FFFFFF"
+            }
+          }
+        },
+        {
+          "kind": "widget_state",
+          "state": "disabled",
+          "style": {
+            "type": "box",
+            "decoration": {
+              "color": {
+                "$token": "fortal.gray.9"
+              }
+            }
+          }
+        }
+      ],
+      "v": 1
+    },
+    "soft-size1/container": {
+      "type": "box",
+      "alignment": "center",
+      "constraints": {
+        "$merge": [
+          {
+            "minWidth": 16.0,
+            "maxWidth": 16.0
+          },
+          {
+            "minHeight": 16.0,
+            "maxHeight": 16.0
+          }
+        ]
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "color": {
+              "$token": "fortal.accent.a4"
+            }
+          },
+          {
+            "borderRadius": {
+              "$token": "fortal.radius.full"
+            }
+          }
+        ]
+      },
+      "variants": [
+        {
+          "kind": "widget_state",
+          "state": "focused",
+          "style": {
+            "type": "box",
+            "decoration": {
+              "border": {
+                "top": {
+                  "color": {
+                    "$token": "fortal.focus.a8"
+                  },
+                  "width": {
+                    "$token": "fortal.focus.ring.width",
+                    "kind": "space"
+                  }
+                },
+                "right": {
+                  "color": {
+                    "$token": "fortal.focus.a8"
+                  },
+                  "width": {
+                    "$token": "fortal.focus.ring.width",
+                    "kind": "space"
+                  }
+                },
+                "bottom": {
+                  "color": {
+                    "$token": "fortal.focus.a8"
+                  },
+                  "width": {
+                    "$token": "fortal.focus.ring.width",
+                    "kind": "space"
+                  }
+                },
+                "left": {
+                  "color": {
+                    "$token": "fortal.focus.a8"
+                  },
+                  "width": {
+                    "$token": "fortal.focus.ring.width",
+                    "kind": "space"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "kind": "widget_state",
+          "state": "selected",
+          "style": {
+            "type": "box",
+            "decoration": {
+              "color": {
+                "$token": "fortal.accent.a4"
+              }
+            }
+          }
+        },
+        {
+          "kind": "widget_state",
+          "state": "disabled",
+          "style": {
+            "type": "box",
+            "decoration": {
+              "color": {
+                "$token": "fortal.gray.3"
+              }
+            }
+          }
+        }
+      ],
+      "v": 1
+    },
+    "soft-size1/indicator": {
+      "type": "box",
+      "constraints": {
+        "$merge": [
+          {
+            "minWidth": 6.0,
+            "maxWidth": 6.0
+          },
+          {
+            "minHeight": 6.0,
+            "maxHeight": 6.0
+          }
+        ]
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "color": {
+              "$token": "fortal.accent.11"
+            }
+          },
+          {
+            "borderRadius": {
+              "$token": "fortal.radius.full"
+            }
+          }
+        ]
+      },
+      "variants": [
+        {
+          "kind": "widget_state",
+          "state": "focused",
+          "style": {
+            "type": "box",
+            "variants": []
+          }
+        },
+        {
+          "kind": "widget_state",
+          "state": "selected",
+          "style": {
+            "type": "box",
+            "decoration": {
+              "color": {
+                "$token": "fortal.accent.11"
+              }
+            }
+          }
+        },
+        {
+          "kind": "widget_state",
+          "state": "disabled",
+          "style": {
+            "type": "box",
+            "decoration": {
+              "color": {
+                "$token": "fortal.gray.7"
+              }
+            }
+          }
+        }
+      ],
+      "v": 1
+    },
+    "soft-size2/container": {
+      "type": "box",
+      "alignment": "center",
+      "constraints": {
+        "$merge": [
+          {
+            "minWidth": 20.0,
+            "maxWidth": 20.0
+          },
+          {
+            "minHeight": 20.0,
+            "maxHeight": 20.0
+          }
+        ]
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "color": {
+              "$token": "fortal.accent.a4"
+            }
+          },
+          {
+            "borderRadius": {
+              "$token": "fortal.radius.full"
+            }
+          }
+        ]
+      },
+      "variants": [
+        {
+          "kind": "widget_state",
+          "state": "focused",
+          "style": {
+            "type": "box",
+            "decoration": {
+              "border": {
+                "top": {
+                  "color": {
+                    "$token": "fortal.focus.a8"
+                  },
+                  "width": {
+                    "$token": "fortal.focus.ring.width",
+                    "kind": "space"
+                  }
+                },
+                "right": {
+                  "color": {
+                    "$token": "fortal.focus.a8"
+                  },
+                  "width": {
+                    "$token": "fortal.focus.ring.width",
+                    "kind": "space"
+                  }
+                },
+                "bottom": {
+                  "color": {
+                    "$token": "fortal.focus.a8"
+                  },
+                  "width": {
+                    "$token": "fortal.focus.ring.width",
+                    "kind": "space"
+                  }
+                },
+                "left": {
+                  "color": {
+                    "$token": "fortal.focus.a8"
+                  },
+                  "width": {
+                    "$token": "fortal.focus.ring.width",
+                    "kind": "space"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "kind": "widget_state",
+          "state": "selected",
+          "style": {
+            "type": "box",
+            "decoration": {
+              "color": {
+                "$token": "fortal.accent.a4"
+              }
+            }
+          }
+        },
+        {
+          "kind": "widget_state",
+          "state": "disabled",
+          "style": {
+            "type": "box",
+            "decoration": {
+              "color": {
+                "$token": "fortal.gray.3"
+              }
+            }
+          }
+        }
+      ],
+      "v": 1
+    },
+    "soft-size2/indicator": {
+      "type": "box",
+      "constraints": {
+        "$merge": [
+          {
+            "minWidth": 8.0,
+            "maxWidth": 8.0
+          },
+          {
+            "minHeight": 8.0,
+            "maxHeight": 8.0
+          }
+        ]
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "color": {
+              "$token": "fortal.accent.11"
+            }
+          },
+          {
+            "borderRadius": {
+              "$token": "fortal.radius.full"
+            }
+          }
+        ]
+      },
+      "variants": [
+        {
+          "kind": "widget_state",
+          "state": "focused",
+          "style": {
+            "type": "box",
+            "variants": []
+          }
+        },
+        {
+          "kind": "widget_state",
+          "state": "selected",
+          "style": {
+            "type": "box",
+            "decoration": {
+              "color": {
+                "$token": "fortal.accent.11"
+              }
+            }
+          }
+        },
+        {
+          "kind": "widget_state",
+          "state": "disabled",
+          "style": {
+            "type": "box",
+            "decoration": {
+              "color": {
+                "$token": "fortal.gray.7"
+              }
+            }
+          }
+        }
+      ],
+      "v": 1
+    },
+    "soft-size3/container": {
+      "type": "box",
+      "alignment": "center",
+      "constraints": {
+        "$merge": [
+          {
+            "minWidth": 24.0,
+            "maxWidth": 24.0
+          },
+          {
+            "minHeight": 24.0,
+            "maxHeight": 24.0
+          }
+        ]
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "color": {
+              "$token": "fortal.accent.a4"
+            }
+          },
+          {
+            "borderRadius": {
+              "$token": "fortal.radius.full"
+            }
+          }
+        ]
+      },
+      "variants": [
+        {
+          "kind": "widget_state",
+          "state": "focused",
+          "style": {
+            "type": "box",
+            "decoration": {
+              "border": {
+                "top": {
+                  "color": {
+                    "$token": "fortal.focus.a8"
+                  },
+                  "width": {
+                    "$token": "fortal.focus.ring.width",
+                    "kind": "space"
+                  }
+                },
+                "right": {
+                  "color": {
+                    "$token": "fortal.focus.a8"
+                  },
+                  "width": {
+                    "$token": "fortal.focus.ring.width",
+                    "kind": "space"
+                  }
+                },
+                "bottom": {
+                  "color": {
+                    "$token": "fortal.focus.a8"
+                  },
+                  "width": {
+                    "$token": "fortal.focus.ring.width",
+                    "kind": "space"
+                  }
+                },
+                "left": {
+                  "color": {
+                    "$token": "fortal.focus.a8"
+                  },
+                  "width": {
+                    "$token": "fortal.focus.ring.width",
+                    "kind": "space"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "kind": "widget_state",
+          "state": "selected",
+          "style": {
+            "type": "box",
+            "decoration": {
+              "color": {
+                "$token": "fortal.accent.a4"
+              }
+            }
+          }
+        },
+        {
+          "kind": "widget_state",
+          "state": "disabled",
+          "style": {
+            "type": "box",
+            "decoration": {
+              "color": {
+                "$token": "fortal.gray.3"
+              }
+            }
+          }
+        }
+      ],
+      "v": 1
+    },
+    "soft-size3/indicator": {
+      "type": "box",
+      "constraints": {
+        "$merge": [
+          {
+            "minWidth": 10.0,
+            "maxWidth": 10.0
+          },
+          {
+            "minHeight": 10.0,
+            "maxHeight": 10.0
+          }
+        ]
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "color": {
+              "$token": "fortal.accent.11"
+            }
+          },
+          {
+            "borderRadius": {
+              "$token": "fortal.radius.full"
+            }
+          }
+        ]
+      },
+      "variants": [
+        {
+          "kind": "widget_state",
+          "state": "focused",
+          "style": {
+            "type": "box",
+            "variants": []
+          }
+        },
+        {
+          "kind": "widget_state",
+          "state": "selected",
+          "style": {
+            "type": "box",
+            "decoration": {
+              "color": {
+                "$token": "fortal.accent.11"
+              }
+            }
+          }
+        },
+        {
+          "kind": "widget_state",
+          "state": "disabled",
+          "style": {
+            "type": "box",
+            "decoration": {
+              "color": {
+                "$token": "fortal.gray.7"
+              }
+            }
+          }
+        }
+      ],
+      "v": 1
+    }
+  },
+  "semantics": {
+    "role": "radio",
+    "bindings": {
+      "label": {
+        "property": "label"
+      },
+      "enabled": {
+        "property": "enabled"
+      },
+      "checked": {
+        "property": "selected"
+      }
+    }
+  },
+  "oracles": [
+    {
+      "theme": "light",
+      "image": "light/radio.png",
+      "metadata": "light/radio.json",
+      "evidence": "rendered"
+    },
+    {
+      "theme": "dark",
+      "image": "dark/radio.png",
+      "metadata": "dark/radio.json",
+      "evidence": "rendered"
+    }
+  ],
+  "diagnostics": [
+    {
+      "code": "runtime.callbacks_omitted",
+      "severity": "info",
+      "path": "semantics",
+      "message": "Callbacks are intentionally omitted from portable captures."
+    }
+  ]
+}

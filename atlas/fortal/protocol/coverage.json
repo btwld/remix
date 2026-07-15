@@ -2,6 +2,14 @@
   "schema": "mix_atlas/protocol-coverage/v1",
   "mixProtocolVersion": "1.0.0",
   "mixProtocolFormat": 1,
+  "inventory": {
+    "componentDocuments": 21,
+    "recipes": 148,
+    "cellsPerTheme": 613,
+    "themeRenders": 1226,
+    "renderedOnlyComponents": 0,
+    "placeholderNodes": 0
+  },
   "themes": [
     {
       "id": "dark",
@@ -124,7 +132,8 @@
           "kind": "spaces",
           "name": "fortal.space.3"
         }
-      ]
+      ],
+      "diagnostics": []
     },
     {
       "id": "fortal-tokenized-flex-box-fluent",
@@ -143,338 +152,328 @@
           "kind": "spaces",
           "name": "fortal.space.3"
         }
-      ]
+      ],
+      "diagnostics": []
+    },
+    {
+      "id": "fortal-accordion-portable",
+      "runtimeType": "Accordion component/v2",
+      "status": "supported",
+      "schema": "mix_atlas/component/v2",
+      "recipeCount": 6,
+      "stateCount": 5,
+      "cellsPerTheme": 30,
+      "themeRenderCount": 60,
+      "diagnostics": []
+    },
+    {
+      "id": "fortal-avatar-portable",
+      "runtimeType": "Avatar component/v2",
+      "status": "supported",
+      "schema": "mix_atlas/component/v2",
+      "recipeCount": 8,
+      "stateCount": 1,
+      "cellsPerTheme": 8,
+      "themeRenderCount": 16,
+      "diagnostics": []
+    },
+    {
+      "id": "fortal-badge-portable",
+      "runtimeType": "Badge component/v2",
+      "status": "supported",
+      "schema": "mix_atlas/component/v2",
+      "recipeCount": 12,
+      "stateCount": 1,
+      "cellsPerTheme": 12,
+      "themeRenderCount": 24,
+      "diagnostics": []
     },
     {
       "id": "fortal-button-portable",
-      "runtimeType": "RemixButtonStyler projection",
-      "status": "partial",
+      "runtimeType": "Button component/v2",
+      "status": "supported",
+      "schema": "mix_atlas/component/v2",
       "recipeCount": 20,
-      "totalMatrixCells": 240,
-      "nonLoadingCells": 200,
-      "loadingUnsupportedCells": 40,
-      "supportedContainerRecipes": 20,
+      "stateCount": 6,
+      "cellsPerTheme": 120,
+      "themeRenderCount": 240,
       "diagnostics": [
         {
-          "code": "unsupported_slot_primitive",
-          "severity": "error",
-          "path": "spinner",
-          "message": "RemixSpinner has no neutral Mix protocol primitive."
-        }
-      ]
-    },
-    {
-      "id": "fortal-button",
-      "runtimeType": "RemixButtonStyler",
-      "status": "unsupported",
-      "diagnostics": [
-        {
-          "code": "unsupported_encode_value",
-          "severity": "error",
-          "path": "",
-          "message": "Expected box, got RemixButtonStyler."
-        },
-        {
-          "code": "unsupported_encode_value",
-          "severity": "error",
-          "path": "",
-          "message": "Expected text, got RemixButtonStyler."
-        },
-        {
-          "code": "unsupported_encode_value",
-          "severity": "error",
-          "path": "",
-          "message": "Expected flex, got RemixButtonStyler."
-        },
-        {
-          "code": "unsupported_encode_value",
-          "severity": "error",
-          "path": "",
-          "message": "Expected stack, got RemixButtonStyler."
-        },
-        {
-          "code": "unsupported_encode_value",
-          "severity": "error",
-          "path": "",
-          "message": "Expected icon, got RemixButtonStyler."
-        },
-        {
-          "code": "unsupported_encode_value",
-          "severity": "error",
-          "path": "",
-          "message": "Expected image, got RemixButtonStyler."
-        },
-        {
-          "code": "unsupported_encode_value",
-          "severity": "error",
-          "path": "",
-          "message": "Expected flex_box, got RemixButtonStyler."
-        },
-        {
-          "code": "unsupported_encode_value",
-          "severity": "error",
-          "path": "",
-          "message": "Expected stack_box, got RemixButtonStyler."
-        }
-      ]
-    },
-    {
-      "id": "fortal-accordion-rendered",
-      "runtimeType": "Accordion contact sheet",
-      "status": "rendered-only",
-      "diagnostics": [
-        {
-          "code": "portable_component_document_not_captured",
+          "code": "runtime.callbacks_omitted",
           "severity": "info",
-          "path": "components/accordion.component.json",
-          "message": "Accordion is captured as rendered light and dark evidence; a portable slot contract has not been declared."
+          "path": "semantics",
+          "message": "Callbacks are intentionally omitted from portable captures."
         }
       ]
     },
     {
-      "id": "fortal-avatar-rendered",
-      "runtimeType": "Avatar contact sheet",
-      "status": "rendered-only",
+      "id": "fortal-callout-portable",
+      "runtimeType": "Callout component/v2",
+      "status": "supported",
+      "schema": "mix_atlas/component/v2",
+      "recipeCount": 9,
+      "stateCount": 1,
+      "cellsPerTheme": 9,
+      "themeRenderCount": 18,
+      "diagnostics": []
+    },
+    {
+      "id": "fortal-card-portable",
+      "runtimeType": "Card component/v2",
+      "status": "supported",
+      "schema": "mix_atlas/component/v2",
+      "recipeCount": 9,
+      "stateCount": 1,
+      "cellsPerTheme": 9,
+      "themeRenderCount": 18,
+      "diagnostics": []
+    },
+    {
+      "id": "fortal-checkbox-portable",
+      "runtimeType": "Checkbox component/v2",
+      "status": "supported",
+      "schema": "mix_atlas/component/v2",
+      "recipeCount": 6,
+      "stateCount": 6,
+      "cellsPerTheme": 36,
+      "themeRenderCount": 72,
       "diagnostics": [
         {
-          "code": "portable_component_document_not_captured",
+          "code": "runtime.callbacks_omitted",
           "severity": "info",
-          "path": "components/avatar.component.json",
-          "message": "Avatar is captured as rendered light and dark evidence; a portable slot contract has not been declared."
+          "path": "semantics",
+          "message": "Callbacks are intentionally omitted from portable captures."
         }
       ]
     },
     {
-      "id": "fortal-badge-rendered",
-      "runtimeType": "Badge contact sheet",
-      "status": "rendered-only",
+      "id": "fortal-dialog-portable",
+      "runtimeType": "Dialog component/v2",
+      "status": "supported",
+      "schema": "mix_atlas/component/v2",
+      "recipeCount": 1,
+      "stateCount": 1,
+      "cellsPerTheme": 1,
+      "themeRenderCount": 2,
       "diagnostics": [
         {
-          "code": "portable_component_document_not_captured",
+          "code": "runtime.callbacks_omitted",
           "severity": "info",
-          "path": "components/badge.component.json",
-          "message": "Badge is captured as rendered light and dark evidence; a portable slot contract has not been declared."
+          "path": "semantics",
+          "message": "Callbacks are intentionally omitted from portable captures."
         }
       ]
     },
     {
-      "id": "fortal-callout-rendered",
-      "runtimeType": "Callout contact sheet",
-      "status": "rendered-only",
+      "id": "fortal-divider-portable",
+      "runtimeType": "Divider component/v2",
+      "status": "supported",
+      "schema": "mix_atlas/component/v2",
+      "recipeCount": 3,
+      "stateCount": 1,
+      "cellsPerTheme": 3,
+      "themeRenderCount": 6,
+      "diagnostics": []
+    },
+    {
+      "id": "fortal-icon-button-portable",
+      "runtimeType": "Icon Button component/v2",
+      "status": "supported",
+      "schema": "mix_atlas/component/v2",
+      "recipeCount": 20,
+      "stateCount": 6,
+      "cellsPerTheme": 120,
+      "themeRenderCount": 240,
       "diagnostics": [
         {
-          "code": "portable_component_document_not_captured",
+          "code": "runtime.callbacks_omitted",
           "severity": "info",
-          "path": "components/callout.component.json",
-          "message": "Callout is captured as rendered light and dark evidence; a portable slot contract has not been declared."
+          "path": "semantics",
+          "message": "Callbacks are intentionally omitted from portable captures."
         }
       ]
     },
     {
-      "id": "fortal-card-rendered",
-      "runtimeType": "Card contact sheet",
-      "status": "rendered-only",
+      "id": "fortal-menu-portable",
+      "runtimeType": "Menu component/v2",
+      "status": "supported",
+      "schema": "mix_atlas/component/v2",
+      "recipeCount": 4,
+      "stateCount": 5,
+      "cellsPerTheme": 20,
+      "themeRenderCount": 40,
       "diagnostics": [
         {
-          "code": "portable_component_document_not_captured",
+          "code": "runtime.overlay_omitted",
           "severity": "info",
-          "path": "components/card.component.json",
-          "message": "Card is captured as rendered light and dark evidence; a portable slot contract has not been declared."
+          "path": "anatomy",
+          "message": "Interactive overlay behavior is intentionally not executed."
         }
       ]
     },
     {
-      "id": "fortal-checkbox-rendered",
-      "runtimeType": "Checkbox contact sheet",
-      "status": "rendered-only",
+      "id": "fortal-progress-portable",
+      "runtimeType": "Progress component/v2",
+      "status": "supported",
+      "schema": "mix_atlas/component/v2",
+      "recipeCount": 6,
+      "stateCount": 3,
+      "cellsPerTheme": 18,
+      "themeRenderCount": 36,
+      "diagnostics": []
+    },
+    {
+      "id": "fortal-radio-portable",
+      "runtimeType": "Radio component/v2",
+      "status": "supported",
+      "schema": "mix_atlas/component/v2",
+      "recipeCount": 6,
+      "stateCount": 6,
+      "cellsPerTheme": 36,
+      "themeRenderCount": 72,
       "diagnostics": [
         {
-          "code": "portable_component_document_not_captured",
+          "code": "runtime.callbacks_omitted",
           "severity": "info",
-          "path": "components/checkbox.component.json",
-          "message": "Checkbox is captured as rendered light and dark evidence; a portable slot contract has not been declared."
+          "path": "semantics",
+          "message": "Callbacks are intentionally omitted from portable captures."
         }
       ]
     },
     {
-      "id": "fortal-dialog-rendered",
-      "runtimeType": "Dialog contact sheet",
-      "status": "rendered-only",
+      "id": "fortal-select-portable",
+      "runtimeType": "Select component/v2",
+      "status": "supported",
+      "schema": "mix_atlas/component/v2",
+      "recipeCount": 9,
+      "stateCount": 5,
+      "cellsPerTheme": 45,
+      "themeRenderCount": 90,
       "diagnostics": [
         {
-          "code": "portable_component_document_not_captured",
+          "code": "runtime.overlay_omitted",
           "severity": "info",
-          "path": "components/dialog.component.json",
-          "message": "Dialog is captured as rendered light and dark evidence; a portable slot contract has not been declared."
+          "path": "anatomy",
+          "message": "Interactive overlay behavior is intentionally not executed."
         }
       ]
     },
     {
-      "id": "fortal-divider-rendered",
-      "runtimeType": "Divider contact sheet",
-      "status": "rendered-only",
+      "id": "fortal-slider-portable",
+      "runtimeType": "Slider component/v2",
+      "status": "supported",
+      "schema": "mix_atlas/component/v2",
+      "recipeCount": 6,
+      "stateCount": 5,
+      "cellsPerTheme": 30,
+      "themeRenderCount": 60,
       "diagnostics": [
         {
-          "code": "portable_component_document_not_captured",
+          "code": "runtime.callbacks_omitted",
           "severity": "info",
-          "path": "components/divider.component.json",
-          "message": "Divider is captured as rendered light and dark evidence; a portable slot contract has not been declared."
+          "path": "semantics",
+          "message": "Callbacks are intentionally omitted from portable captures."
         }
       ]
     },
     {
-      "id": "fortal-icon-button-rendered",
-      "runtimeType": "Icon Button contact sheet",
-      "status": "rendered-only",
+      "id": "fortal-spinner-portable",
+      "runtimeType": "Spinner component/v2",
+      "status": "supported",
+      "schema": "mix_atlas/component/v2",
+      "recipeCount": 3,
+      "stateCount": 1,
+      "cellsPerTheme": 3,
+      "themeRenderCount": 6,
+      "diagnostics": []
+    },
+    {
+      "id": "fortal-switch-portable",
+      "runtimeType": "Switch component/v2",
+      "status": "supported",
+      "schema": "mix_atlas/component/v2",
+      "recipeCount": 6,
+      "stateCount": 6,
+      "cellsPerTheme": 36,
+      "themeRenderCount": 72,
       "diagnostics": [
         {
-          "code": "portable_component_document_not_captured",
+          "code": "runtime.callbacks_omitted",
           "severity": "info",
-          "path": "components/icon-button.component.json",
-          "message": "Icon Button is captured as rendered light and dark evidence; a portable slot contract has not been declared."
+          "path": "semantics",
+          "message": "Callbacks are intentionally omitted from portable captures."
         }
       ]
     },
     {
-      "id": "fortal-menu-rendered",
-      "runtimeType": "Menu contact sheet",
-      "status": "rendered-only",
+      "id": "fortal-tabs-portable",
+      "runtimeType": "Tabs component/v2",
+      "status": "supported",
+      "schema": "mix_atlas/component/v2",
+      "recipeCount": 1,
+      "stateCount": 2,
+      "cellsPerTheme": 2,
+      "themeRenderCount": 4,
       "diagnostics": [
         {
-          "code": "portable_component_document_not_captured",
+          "code": "runtime.callbacks_omitted",
           "severity": "info",
-          "path": "components/menu.component.json",
-          "message": "Menu is captured as rendered light and dark evidence; a portable slot contract has not been declared."
+          "path": "semantics",
+          "message": "Callbacks are intentionally omitted from portable captures."
         }
       ]
     },
     {
-      "id": "fortal-progress-rendered",
-      "runtimeType": "Progress contact sheet",
-      "status": "rendered-only",
+      "id": "fortal-textfield-portable",
+      "runtimeType": "Text Field component/v2",
+      "status": "supported",
+      "schema": "mix_atlas/component/v2",
+      "recipeCount": 6,
+      "stateCount": 6,
+      "cellsPerTheme": 36,
+      "themeRenderCount": 72,
       "diagnostics": [
         {
-          "code": "portable_component_document_not_captured",
+          "code": "runtime.editing_omitted",
           "severity": "info",
-          "path": "components/progress.component.json",
-          "message": "Progress is captured as rendered light and dark evidence; a portable slot contract has not been declared."
+          "path": "anatomy",
+          "message": "Editing, selection, and callbacks are intentionally not executed."
         }
       ]
     },
     {
-      "id": "fortal-radio-rendered",
-      "runtimeType": "Radio contact sheet",
-      "status": "rendered-only",
+      "id": "fortal-toggle-portable",
+      "runtimeType": "Toggle component/v2",
+      "status": "supported",
+      "schema": "mix_atlas/component/v2",
+      "recipeCount": 6,
+      "stateCount": 6,
+      "cellsPerTheme": 36,
+      "themeRenderCount": 72,
       "diagnostics": [
         {
-          "code": "portable_component_document_not_captured",
+          "code": "runtime.callbacks_omitted",
           "severity": "info",
-          "path": "components/radio.component.json",
-          "message": "Radio is captured as rendered light and dark evidence; a portable slot contract has not been declared."
+          "path": "semantics",
+          "message": "Callbacks are intentionally omitted from portable captures."
         }
       ]
     },
     {
-      "id": "fortal-select-rendered",
-      "runtimeType": "Select contact sheet",
-      "status": "rendered-only",
+      "id": "fortal-tooltip-portable",
+      "runtimeType": "Tooltip component/v2",
+      "status": "supported",
+      "schema": "mix_atlas/component/v2",
+      "recipeCount": 1,
+      "stateCount": 3,
+      "cellsPerTheme": 3,
+      "themeRenderCount": 6,
       "diagnostics": [
         {
-          "code": "portable_component_document_not_captured",
+          "code": "runtime.overlay_omitted",
           "severity": "info",
-          "path": "components/select.component.json",
-          "message": "Select is captured as rendered light and dark evidence; a portable slot contract has not been declared."
-        }
-      ]
-    },
-    {
-      "id": "fortal-slider-rendered",
-      "runtimeType": "Slider contact sheet",
-      "status": "rendered-only",
-      "diagnostics": [
-        {
-          "code": "portable_component_document_not_captured",
-          "severity": "info",
-          "path": "components/slider.component.json",
-          "message": "Slider is captured as rendered light and dark evidence; a portable slot contract has not been declared."
-        }
-      ]
-    },
-    {
-      "id": "fortal-spinner-rendered",
-      "runtimeType": "Spinner contact sheet",
-      "status": "rendered-only",
-      "diagnostics": [
-        {
-          "code": "portable_component_document_not_captured",
-          "severity": "info",
-          "path": "components/spinner.component.json",
-          "message": "Spinner is captured as rendered light and dark evidence; a portable slot contract has not been declared."
-        }
-      ]
-    },
-    {
-      "id": "fortal-switch-rendered",
-      "runtimeType": "Switch contact sheet",
-      "status": "rendered-only",
-      "diagnostics": [
-        {
-          "code": "portable_component_document_not_captured",
-          "severity": "info",
-          "path": "components/switch.component.json",
-          "message": "Switch is captured as rendered light and dark evidence; a portable slot contract has not been declared."
-        }
-      ]
-    },
-    {
-      "id": "fortal-tabs-rendered",
-      "runtimeType": "Tabs contact sheet",
-      "status": "rendered-only",
-      "diagnostics": [
-        {
-          "code": "portable_component_document_not_captured",
-          "severity": "info",
-          "path": "components/tabs.component.json",
-          "message": "Tabs is captured as rendered light and dark evidence; a portable slot contract has not been declared."
-        }
-      ]
-    },
-    {
-      "id": "fortal-textfield-rendered",
-      "runtimeType": "Text Field contact sheet",
-      "status": "rendered-only",
-      "diagnostics": [
-        {
-          "code": "portable_component_document_not_captured",
-          "severity": "info",
-          "path": "components/textfield.component.json",
-          "message": "Text Field is captured as rendered light and dark evidence; a portable slot contract has not been declared."
-        }
-      ]
-    },
-    {
-      "id": "fortal-toggle-rendered",
-      "runtimeType": "Toggle contact sheet",
-      "status": "rendered-only",
-      "diagnostics": [
-        {
-          "code": "portable_component_document_not_captured",
-          "severity": "info",
-          "path": "components/toggle.component.json",
-          "message": "Toggle is captured as rendered light and dark evidence; a portable slot contract has not been declared."
-        }
-      ]
-    },
-    {
-      "id": "fortal-tooltip-rendered",
-      "runtimeType": "Tooltip contact sheet",
-      "status": "rendered-only",
-      "diagnostics": [
-        {
-          "code": "portable_component_document_not_captured",
-          "severity": "info",
-          "path": "components/tooltip.component.json",
-          "message": "Tooltip is captured as rendered light and dark evidence; a portable slot contract has not been declared."
+          "path": "anatomy",
+          "message": "Interactive overlay behavior is intentionally not executed."
         }
       ]
     }

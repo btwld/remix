@@ -128,7 +128,9 @@
       "states": [
         "disabled"
       ],
-      "props": {}
+      "props": {
+        "enabled": false
+      }
     },
     {
       "id": "error",
@@ -136,7 +138,8 @@
         "error"
       ],
       "props": {
-        "error": true
+        "error": true,
+        "helperText": "Enter a valid address"
       }
     }
   ]

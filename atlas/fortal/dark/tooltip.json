@@ -17,21 +17,27 @@
     {
       "id": "default",
       "states": [],
-      "props": {}
+      "props": {
+        "buttonState": "default"
+      }
     },
     {
       "id": "hovered",
       "states": [
         "hovered"
       ],
-      "props": {}
+      "props": {
+        "buttonState": "hovered"
+      }
     },
     {
       "id": "focused",
       "states": [
         "focused"
       ],
-      "props": {}
+      "props": {
+        "buttonState": "focused"
+      }
     }
   ]
 }

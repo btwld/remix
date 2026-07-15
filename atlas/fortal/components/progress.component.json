@@ -1,0 +1,902 @@
+{
+  "schema": "mix_atlas/component/v2",
+  "id": "progress",
+  "label": "Progress",
+  "properties": [
+    {
+      "id": "variant",
+      "kind": "enum",
+      "values": [
+        "surface",
+        "soft"
+      ],
+      "required": true,
+      "default": "surface"
+    },
+    {
+      "id": "size",
+      "kind": "enum",
+      "values": [
+        "size1",
+        "size2",
+        "size3"
+      ],
+      "required": true,
+      "default": "size1"
+    },
+    {
+      "id": "value",
+      "kind": "number",
+      "required": true,
+      "default": 0.5
+    }
+  ],
+  "states": [
+    {
+      "id": "empty",
+      "widgetStates": [],
+      "properties": {
+        "value": 0.0
+      }
+    },
+    {
+      "id": "half",
+      "widgetStates": [],
+      "properties": {
+        "value": 0.5
+      }
+    },
+    {
+      "id": "complete",
+      "widgetStates": [],
+      "properties": {
+        "value": 1.0
+      }
+    }
+  ],
+  "slots": [
+    {
+      "id": "outer",
+      "kind": "box"
+    },
+    {
+      "id": "container",
+      "kind": "box"
+    },
+    {
+      "id": "stack",
+      "kind": "stack_box"
+    },
+    {
+      "id": "track",
+      "kind": "box"
+    },
+    {
+      "id": "indicator",
+      "kind": "box"
+    },
+    {
+      "id": "trackContainer",
+      "kind": "box"
+    }
+  ],
+  "anatomy": {
+    "root": "outer",
+    "nodes": [
+      {
+        "id": "outer",
+        "kind": "box",
+        "slot": "outer",
+        "children": [
+          "container"
+        ]
+      },
+      {
+        "id": "container",
+        "kind": "box",
+        "slot": "container",
+        "children": [
+          "stack"
+        ]
+      },
+      {
+        "id": "stack",
+        "kind": "stack_box",
+        "slot": "stack",
+        "children": [
+          "track",
+          "indicatorWidth",
+          "trackContainer"
+        ]
+      },
+      {
+        "id": "track",
+        "kind": "box",
+        "slot": "track",
+        "children": []
+      },
+      {
+        "id": "indicatorWidth",
+        "kind": "fractional_position",
+        "children": [
+          "indicator"
+        ],
+        "bindings": {
+          "widthFactor": {
+            "property": "value"
+          },
+          "alignment": {
+            "literal": "centerLeft"
+          }
+        }
+      },
+      {
+        "id": "indicator",
+        "kind": "box",
+        "slot": "indicator",
+        "children": []
+      },
+      {
+        "id": "trackContainer",
+        "kind": "box",
+        "slot": "trackContainer",
+        "children": []
+      }
+    ]
+  },
+  "recipes": [
+    {
+      "id": "surface-size1",
+      "properties": {
+        "variant": "surface",
+        "size": "size1"
+      },
+      "styles": {
+        "outer": "surface-size1/outer",
+        "container": "surface-size1/container",
+        "stack": "surface-size1/stack",
+        "track": "surface-size1/track",
+        "indicator": "surface-size1/indicator",
+        "trackContainer": "surface-size1/trackContainer"
+      }
+    },
+    {
+      "id": "surface-size2",
+      "properties": {
+        "variant": "surface",
+        "size": "size2"
+      },
+      "styles": {
+        "outer": "surface-size2/outer",
+        "container": "surface-size2/container",
+        "stack": "surface-size2/stack",
+        "track": "surface-size2/track",
+        "indicator": "surface-size2/indicator",
+        "trackContainer": "surface-size2/trackContainer"
+      }
+    },
+    {
+      "id": "surface-size3",
+      "properties": {
+        "variant": "surface",
+        "size": "size3"
+      },
+      "styles": {
+        "outer": "surface-size3/outer",
+        "container": "surface-size3/container",
+        "stack": "surface-size3/stack",
+        "track": "surface-size3/track",
+        "indicator": "surface-size3/indicator",
+        "trackContainer": "surface-size3/trackContainer"
+      }
+    },
+    {
+      "id": "soft-size1",
+      "properties": {
+        "variant": "soft",
+        "size": "size1"
+      },
+      "styles": {
+        "outer": "soft-size1/outer",
+        "container": "soft-size1/container",
+        "stack": "soft-size1/stack",
+        "track": "soft-size1/track",
+        "indicator": "soft-size1/indicator",
+        "trackContainer": "soft-size1/trackContainer"
+      }
+    },
+    {
+      "id": "soft-size2",
+      "properties": {
+        "variant": "soft",
+        "size": "size2"
+      },
+      "styles": {
+        "outer": "soft-size2/outer",
+        "container": "soft-size2/container",
+        "stack": "soft-size2/stack",
+        "track": "soft-size2/track",
+        "indicator": "soft-size2/indicator",
+        "trackContainer": "soft-size2/trackContainer"
+      }
+    },
+    {
+      "id": "soft-size3",
+      "properties": {
+        "variant": "soft",
+        "size": "size3"
+      },
+      "styles": {
+        "outer": "soft-size3/outer",
+        "container": "soft-size3/container",
+        "stack": "soft-size3/stack",
+        "track": "soft-size3/track",
+        "indicator": "soft-size3/indicator",
+        "trackContainer": "soft-size3/trackContainer"
+      }
+    }
+  ],
+  "styles": {
+    "surface-size1/outer": {
+      "type": "box",
+      "constraints": {
+        "minWidth": 180.0,
+        "maxWidth": 180.0
+      },
+      "v": 1
+    },
+    "surface-size1/container": {
+      "type": "box",
+      "constraints": {
+        "$merge": [
+          {
+            "minWidth": 180.0,
+            "maxWidth": 180.0
+          },
+          {
+            "minHeight": 4.0,
+            "maxHeight": 4.0
+          }
+        ]
+      },
+      "foregroundDecoration": {
+        "border": {
+          "top": {
+            "color": {
+              "$token": "fortal.gray.a5"
+            }
+          },
+          "right": {
+            "color": {
+              "$token": "fortal.gray.a5"
+            }
+          },
+          "bottom": {
+            "color": {
+              "$token": "fortal.gray.a5"
+            }
+          },
+          "left": {
+            "color": {
+              "$token": "fortal.gray.a5"
+            }
+          }
+        },
+        "borderRadius": {
+          "$token": "fortal.radius.full"
+        }
+      },
+      "variants": [],
+      "v": 1
+    },
+    "surface-size1/stack": {
+      "type": "stack_box",
+      "stackAlignment": "centerLeft",
+      "v": 1
+    },
+    "surface-size1/track": {
+      "type": "box",
+      "constraints": {
+        "$merge": [
+          {
+            "minWidth": 180.0,
+            "maxWidth": 180.0
+          },
+          {
+            "minHeight": 4.0,
+            "maxHeight": 4.0
+          }
+        ]
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "borderRadius": {
+              "$token": "fortal.radius.1"
+            }
+          },
+          {
+            "color": {
+              "$token": "fortal.gray.3"
+            }
+          }
+        ]
+      },
+      "variants": [],
+      "v": 1
+    },
+    "surface-size1/indicator": {
+      "type": "box",
+      "constraints": {
+        "minHeight": 4.0,
+        "maxHeight": 4.0
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "borderRadius": {
+              "$token": "fortal.radius.1"
+            }
+          },
+          {
+            "color": {
+              "$token": "fortal.accent.indicator"
+            }
+          }
+        ]
+      },
+      "v": 1
+    },
+    "surface-size1/trackContainer": {
+      "type": "box",
+      "variants": [],
+      "v": 1
+    },
+    "surface-size2/outer": {
+      "type": "box",
+      "constraints": {
+        "minWidth": 180.0,
+        "maxWidth": 180.0
+      },
+      "v": 1
+    },
+    "surface-size2/container": {
+      "type": "box",
+      "constraints": {
+        "$merge": [
+          {
+            "minWidth": 180.0,
+            "maxWidth": 180.0
+          },
+          {
+            "minHeight": 8.0,
+            "maxHeight": 8.0
+          }
+        ]
+      },
+      "foregroundDecoration": {
+        "border": {
+          "top": {
+            "color": {
+              "$token": "fortal.gray.a5"
+            }
+          },
+          "right": {
+            "color": {
+              "$token": "fortal.gray.a5"
+            }
+          },
+          "bottom": {
+            "color": {
+              "$token": "fortal.gray.a5"
+            }
+          },
+          "left": {
+            "color": {
+              "$token": "fortal.gray.a5"
+            }
+          }
+        },
+        "borderRadius": {
+          "$token": "fortal.radius.full"
+        }
+      },
+      "variants": [],
+      "v": 1
+    },
+    "surface-size2/stack": {
+      "type": "stack_box",
+      "stackAlignment": "centerLeft",
+      "v": 1
+    },
+    "surface-size2/track": {
+      "type": "box",
+      "constraints": {
+        "$merge": [
+          {
+            "minWidth": 180.0,
+            "maxWidth": 180.0
+          },
+          {
+            "minHeight": 8.0,
+            "maxHeight": 8.0
+          }
+        ]
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "borderRadius": {
+              "$token": "fortal.radius.2"
+            }
+          },
+          {
+            "color": {
+              "$token": "fortal.gray.3"
+            }
+          }
+        ]
+      },
+      "variants": [],
+      "v": 1
+    },
+    "surface-size2/indicator": {
+      "type": "box",
+      "constraints": {
+        "minHeight": 8.0,
+        "maxHeight": 8.0
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "borderRadius": {
+              "$token": "fortal.radius.2"
+            }
+          },
+          {
+            "color": {
+              "$token": "fortal.accent.indicator"
+            }
+          }
+        ]
+      },
+      "v": 1
+    },
+    "surface-size2/trackContainer": {
+      "type": "box",
+      "variants": [],
+      "v": 1
+    },
+    "surface-size3/outer": {
+      "type": "box",
+      "constraints": {
+        "minWidth": 180.0,
+        "maxWidth": 180.0
+      },
+      "v": 1
+    },
+    "surface-size3/container": {
+      "type": "box",
+      "constraints": {
+        "$merge": [
+          {
+            "minWidth": 180.0,
+            "maxWidth": 180.0
+          },
+          {
+            "minHeight": 12.0,
+            "maxHeight": 12.0
+          }
+        ]
+      },
+      "foregroundDecoration": {
+        "border": {
+          "top": {
+            "color": {
+              "$token": "fortal.gray.a5"
+            }
+          },
+          "right": {
+            "color": {
+              "$token": "fortal.gray.a5"
+            }
+          },
+          "bottom": {
+            "color": {
+              "$token": "fortal.gray.a5"
+            }
+          },
+          "left": {
+            "color": {
+              "$token": "fortal.gray.a5"
+            }
+          }
+        },
+        "borderRadius": {
+          "$token": "fortal.radius.full"
+        }
+      },
+      "variants": [],
+      "v": 1
+    },
+    "surface-size3/stack": {
+      "type": "stack_box",
+      "stackAlignment": "centerLeft",
+      "v": 1
+    },
+    "surface-size3/track": {
+      "type": "box",
+      "constraints": {
+        "$merge": [
+          {
+            "minWidth": 180.0,
+            "maxWidth": 180.0
+          },
+          {
+            "minHeight": 12.0,
+            "maxHeight": 12.0
+          }
+        ]
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "borderRadius": {
+              "$token": "fortal.radius.3"
+            }
+          },
+          {
+            "color": {
+              "$token": "fortal.gray.3"
+            }
+          }
+        ]
+      },
+      "variants": [],
+      "v": 1
+    },
+    "surface-size3/indicator": {
+      "type": "box",
+      "constraints": {
+        "minHeight": 12.0,
+        "maxHeight": 12.0
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "borderRadius": {
+              "$token": "fortal.radius.3"
+            }
+          },
+          {
+            "color": {
+              "$token": "fortal.accent.indicator"
+            }
+          }
+        ]
+      },
+      "v": 1
+    },
+    "surface-size3/trackContainer": {
+      "type": "box",
+      "variants": [],
+      "v": 1
+    },
+    "soft-size1/outer": {
+      "type": "box",
+      "constraints": {
+        "minWidth": 180.0,
+        "maxWidth": 180.0
+      },
+      "v": 1
+    },
+    "soft-size1/container": {
+      "type": "box",
+      "constraints": {
+        "$merge": [
+          {
+            "minWidth": 180.0,
+            "maxWidth": 180.0
+          },
+          {
+            "minHeight": 4.0,
+            "maxHeight": 4.0
+          }
+        ]
+      },
+      "variants": [],
+      "v": 1
+    },
+    "soft-size1/stack": {
+      "type": "stack_box",
+      "stackAlignment": "centerLeft",
+      "v": 1
+    },
+    "soft-size1/track": {
+      "type": "box",
+      "constraints": {
+        "$merge": [
+          {
+            "minWidth": 180.0,
+            "maxWidth": 180.0
+          },
+          {
+            "minHeight": 4.0,
+            "maxHeight": 4.0
+          }
+        ]
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "borderRadius": {
+              "$token": "fortal.radius.1"
+            }
+          },
+          {
+            "color": {
+              "$token": "fortal.gray.4"
+            }
+          },
+          {
+            "borderRadius": {
+              "$token": "fortal.radius.full"
+            }
+          }
+        ]
+      },
+      "variants": [],
+      "v": 1
+    },
+    "soft-size1/indicator": {
+      "type": "box",
+      "constraints": {
+        "minHeight": 4.0,
+        "maxHeight": 4.0
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "borderRadius": {
+              "$token": "fortal.radius.1"
+            }
+          },
+          {
+            "color": {
+              "$token": "fortal.accent.9"
+            }
+          },
+          {
+            "borderRadius": {
+              "$token": "fortal.radius.full"
+            }
+          }
+        ]
+      },
+      "v": 1
+    },
+    "soft-size1/trackContainer": {
+      "type": "box",
+      "variants": [],
+      "v": 1
+    },
+    "soft-size2/outer": {
+      "type": "box",
+      "constraints": {
+        "minWidth": 180.0,
+        "maxWidth": 180.0
+      },
+      "v": 1
+    },
+    "soft-size2/container": {
+      "type": "box",
+      "constraints": {
+        "$merge": [
+          {
+            "minWidth": 180.0,
+            "maxWidth": 180.0
+          },
+          {
+            "minHeight": 8.0,
+            "maxHeight": 8.0
+          }
+        ]
+      },
+      "variants": [],
+      "v": 1
+    },
+    "soft-size2/stack": {
+      "type": "stack_box",
+      "stackAlignment": "centerLeft",
+      "v": 1
+    },
+    "soft-size2/track": {
+      "type": "box",
+      "constraints": {
+        "$merge": [
+          {
+            "minWidth": 180.0,
+            "maxWidth": 180.0
+          },
+          {
+            "minHeight": 8.0,
+            "maxHeight": 8.0
+          }
+        ]
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "borderRadius": {
+              "$token": "fortal.radius.2"
+            }
+          },
+          {
+            "color": {
+              "$token": "fortal.gray.4"
+            }
+          },
+          {
+            "borderRadius": {
+              "$token": "fortal.radius.full"
+            }
+          }
+        ]
+      },
+      "variants": [],
+      "v": 1
+    },
+    "soft-size2/indicator": {
+      "type": "box",
+      "constraints": {
+        "minHeight": 8.0,
+        "maxHeight": 8.0
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "borderRadius": {
+              "$token": "fortal.radius.2"
+            }
+          },
+          {
+            "color": {
+              "$token": "fortal.accent.9"
+            }
+          },
+          {
+            "borderRadius": {
+              "$token": "fortal.radius.full"
+            }
+          }
+        ]
+      },
+      "v": 1
+    },
+    "soft-size2/trackContainer": {
+      "type": "box",
+      "variants": [],
+      "v": 1
+    },
+    "soft-size3/outer": {
+      "type": "box",
+      "constraints": {
+        "minWidth": 180.0,
+        "maxWidth": 180.0
+      },
+      "v": 1
+    },
+    "soft-size3/container": {
+      "type": "box",
+      "constraints": {
+        "$merge": [
+          {
+            "minWidth": 180.0,
+            "maxWidth": 180.0
+          },
+          {
+            "minHeight": 12.0,
+            "maxHeight": 12.0
+          }
+        ]
+      },
+      "variants": [],
+      "v": 1
+    },
+    "soft-size3/stack": {
+      "type": "stack_box",
+      "stackAlignment": "centerLeft",
+      "v": 1
+    },
+    "soft-size3/track": {
+      "type": "box",
+      "constraints": {
+        "$merge": [
+          {
+            "minWidth": 180.0,
+            "maxWidth": 180.0
+          },
+          {
+            "minHeight": 12.0,
+            "maxHeight": 12.0
+          }
+        ]
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "borderRadius": {
+              "$token": "fortal.radius.3"
+            }
+          },
+          {
+            "color": {
+              "$token": "fortal.gray.4"
+            }
+          },
+          {
+            "borderRadius": {
+              "$token": "fortal.radius.full"
+            }
+          }
+        ]
+      },
+      "variants": [],
+      "v": 1
+    },
+    "soft-size3/indicator": {
+      "type": "box",
+      "constraints": {
+        "minHeight": 12.0,
+        "maxHeight": 12.0
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "borderRadius": {
+              "$token": "fortal.radius.3"
+            }
+          },
+          {
+            "color": {
+              "$token": "fortal.accent.9"
+            }
+          },
+          {
+            "borderRadius": {
+              "$token": "fortal.radius.full"
+            }
+          }
+        ]
+      },
+      "v": 1
+    },
+    "soft-size3/trackContainer": {
+      "type": "box",
+      "variants": [],
+      "v": 1
+    }
+  },
+  "semantics": {
+    "role": "progressIndicator",
+    "bindings": {
+      "value": {
+        "property": "value"
+      }
+    }
+  },
+  "oracles": [
+    {
+      "theme": "light",
+      "image": "light/progress.png",
+      "metadata": "light/progress.json",
+      "evidence": "rendered"
+    },
+    {
+      "theme": "dark",
+      "image": "dark/progress.png",
+      "metadata": "dark/progress.json",
+      "evidence": "rendered"
+    }
+  ]
+}

@@ -1,0 +1,154 @@
+{
+  "schema": "mix_atlas/component/v2",
+  "id": "divider",
+  "label": "Divider",
+  "properties": [
+    {
+      "id": "size",
+      "kind": "enum",
+      "values": [
+        "size1",
+        "size2",
+        "size3"
+      ],
+      "required": true,
+      "default": "size1"
+    }
+  ],
+  "states": [
+    {
+      "id": "default",
+      "widgetStates": [],
+      "properties": {}
+    }
+  ],
+  "slots": [
+    {
+      "id": "container",
+      "kind": "box"
+    }
+  ],
+  "anatomy": {
+    "root": "container",
+    "nodes": [
+      {
+        "id": "container",
+        "kind": "box",
+        "slot": "container",
+        "children": []
+      }
+    ]
+  },
+  "recipes": [
+    {
+      "id": "size1",
+      "properties": {
+        "size": "size1"
+      },
+      "styles": {
+        "container": "size1/container"
+      }
+    },
+    {
+      "id": "size2",
+      "properties": {
+        "size": "size2"
+      },
+      "styles": {
+        "container": "size2/container"
+      }
+    },
+    {
+      "id": "size3",
+      "properties": {
+        "size": "size3"
+      },
+      "styles": {
+        "container": "size3/container"
+      }
+    }
+  ],
+  "styles": {
+    "size1/container": {
+      "type": "box",
+      "constraints": {
+        "$merge": [
+          {
+            "minHeight": 1.0,
+            "maxHeight": 1.0
+          },
+          {
+            "minWidth": 180.0,
+            "maxWidth": 180.0
+          }
+        ]
+      },
+      "decoration": {
+        "color": {
+          "$token": "fortal.gray.6"
+        }
+      },
+      "v": 1
+    },
+    "size2/container": {
+      "type": "box",
+      "constraints": {
+        "$merge": [
+          {
+            "minHeight": 2.0,
+            "maxHeight": 2.0
+          },
+          {
+            "minWidth": 180.0,
+            "maxWidth": 180.0
+          }
+        ]
+      },
+      "decoration": {
+        "color": {
+          "$token": "fortal.gray.6"
+        }
+      },
+      "v": 1
+    },
+    "size3/container": {
+      "type": "box",
+      "constraints": {
+        "$merge": [
+          {
+            "minHeight": 3.0,
+            "maxHeight": 3.0
+          },
+          {
+            "minWidth": 180.0,
+            "maxWidth": 180.0
+          }
+        ]
+      },
+      "decoration": {
+        "color": {
+          "$token": "fortal.gray.6"
+        }
+      },
+      "v": 1
+    }
+  },
+  "semantics": {
+    "role": "none",
+    "bindings": {}
+  },
+  "oracles": [
+    {
+      "theme": "light",
+      "image": "light/divider.png",
+      "metadata": "light/divider.json",
+      "evidence": "rendered"
+    },
+    {
+      "theme": "dark",
+      "image": "dark/divider.png",
+      "metadata": "dark/divider.json",
+      "evidence": "rendered"
+    }
+  ]
+}

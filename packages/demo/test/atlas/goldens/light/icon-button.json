@@ -310,13 +310,18 @@
       "states": [
         "disabled"
       ],
-      "props": {}
+      "props": {
+        "enabled": false
+      }
     },
     {
       "id": "loading",
       "label": "Loading",
-      "states": [],
+      "states": [
+        "disabled"
+      ],
       "props": {
+        "enabled": false,
         "loading": true
       }
     }

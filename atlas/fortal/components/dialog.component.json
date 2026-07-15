@@ -1,0 +1,399 @@
+{
+  "schema": "mix_atlas/component/v2",
+  "id": "dialog",
+  "label": "Dialog",
+  "properties": [
+    {
+      "id": "title",
+      "kind": "string",
+      "required": true,
+      "default": "Revoke access"
+    },
+    {
+      "id": "description",
+      "kind": "string",
+      "required": true,
+      "default": "This application will no longer be accessible to the user."
+    },
+    {
+      "id": "buttonState",
+      "kind": "enum",
+      "values": [
+        "default"
+      ],
+      "required": true,
+      "default": "default"
+    },
+    {
+      "id": "cancelRecipe",
+      "kind": "enum",
+      "values": [
+        "ghost-size2"
+      ],
+      "required": true,
+      "default": "ghost-size2"
+    },
+    {
+      "id": "revokeRecipe",
+      "kind": "enum",
+      "values": [
+        "solid-size2"
+      ],
+      "required": true,
+      "default": "solid-size2"
+    },
+    {
+      "id": "cancelLabel",
+      "kind": "string",
+      "required": true,
+      "default": "Cancel"
+    },
+    {
+      "id": "revokeLabel",
+      "kind": "string",
+      "required": true,
+      "default": "Revoke"
+    }
+  ],
+  "states": [
+    {
+      "id": "default",
+      "widgetStates": [],
+      "properties": {}
+    }
+  ],
+  "slots": [
+    {
+      "id": "outer",
+      "kind": "box"
+    },
+    {
+      "id": "container",
+      "kind": "box"
+    },
+    {
+      "id": "body",
+      "kind": "flex_box"
+    },
+    {
+      "id": "title",
+      "kind": "text"
+    },
+    {
+      "id": "description",
+      "kind": "text"
+    },
+    {
+      "id": "actions",
+      "kind": "flex_box"
+    }
+  ],
+  "anatomy": {
+    "root": "outer",
+    "nodes": [
+      {
+        "id": "outer",
+        "kind": "box",
+        "slot": "outer",
+        "children": [
+          "container"
+        ]
+      },
+      {
+        "id": "container",
+        "kind": "box",
+        "slot": "container",
+        "children": [
+          "body"
+        ]
+      },
+      {
+        "id": "body",
+        "kind": "flex_box",
+        "slot": "body",
+        "children": [
+          "title",
+          "description",
+          "actions"
+        ]
+      },
+      {
+        "id": "title",
+        "kind": "text",
+        "slot": "title",
+        "children": [],
+        "bindings": {
+          "text": {
+            "property": "title"
+          }
+        }
+      },
+      {
+        "id": "description",
+        "kind": "text",
+        "slot": "description",
+        "children": [],
+        "bindings": {
+          "text": {
+            "property": "description"
+          }
+        }
+      },
+      {
+        "id": "actions",
+        "kind": "flex_box",
+        "slot": "actions",
+        "children": [
+          "cancel",
+          "revoke"
+        ]
+      },
+      {
+        "id": "cancel",
+        "kind": "nested_component",
+        "children": [],
+        "component": "button",
+        "recipe": {
+          "property": "cancelRecipe"
+        },
+        "state": {
+          "property": "buttonState"
+        },
+        "properties": {
+          "label": {
+            "property": "cancelLabel"
+          },
+          "leadingIcon": {
+            "literal": null
+          }
+        }
+      },
+      {
+        "id": "revoke",
+        "kind": "nested_component",
+        "children": [],
+        "component": "button",
+        "recipe": {
+          "property": "revokeRecipe"
+        },
+        "state": {
+          "property": "buttonState"
+        },
+        "properties": {
+          "label": {
+            "property": "revokeLabel"
+          },
+          "leadingIcon": {
+            "literal": null
+          }
+        }
+      }
+    ]
+  },
+  "recipes": [
+    {
+      "id": "default",
+      "properties": {},
+      "styles": {
+        "outer": "default/outer",
+        "container": "default/container",
+        "body": "default/body",
+        "title": "default/title",
+        "description": "default/description",
+        "actions": "default/actions"
+      }
+    }
+  ],
+  "styles": {
+    "default/outer": {
+      "type": "box",
+      "constraints": {
+        "minWidth": 340.0,
+        "maxWidth": 340.0
+      },
+      "v": 1
+    },
+    "default/container": {
+      "type": "box",
+      "padding": {
+        "$token": "fortal.space.5",
+        "kind": "space"
+      },
+      "constraints": {
+        "maxWidth": 450.0
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "border": {
+              "top": {
+                "color": {
+                  "$token": "fortal.gray.6"
+                },
+                "width": {
+                  "$token": "fortal.border.width.1",
+                  "kind": "space"
+                }
+              },
+              "right": {
+                "color": {
+                  "$token": "fortal.gray.6"
+                },
+                "width": {
+                  "$token": "fortal.border.width.1",
+                  "kind": "space"
+                }
+              },
+              "bottom": {
+                "color": {
+                  "$token": "fortal.gray.6"
+                },
+                "width": {
+                  "$token": "fortal.border.width.1",
+                  "kind": "space"
+                }
+              },
+              "left": {
+                "color": {
+                  "$token": "fortal.gray.6"
+                },
+                "width": {
+                  "$token": "fortal.border.width.1",
+                  "kind": "space"
+                }
+              }
+            }
+          },
+          {
+            "borderRadius": {
+              "$token": "fortal.radius.3"
+            }
+          },
+          {
+            "color": {
+              "$token": "fortal.gray.1"
+            }
+          },
+          {
+            "boxShadow": [
+              {
+                "color": {
+                  "$token": "fortal.black.a3"
+                },
+                "offset": {
+                  "x": 0.0,
+                  "y": 8.0
+                },
+                "blurRadius": 16.0,
+                "spreadRadius": 0.0
+              }
+            ]
+          }
+        ]
+      },
+      "v": 1
+    },
+    "default/body": {
+      "type": "flex_box",
+      "direction": "vertical",
+      "crossAxisAlignment": "start",
+      "mainAxisSize": "min",
+      "v": 1
+    },
+    "default/title": {
+      "type": "text",
+      "style": {
+        "$merge": [
+          {
+            "fontSize": 18.0
+          },
+          {
+            "fontWeight": "w600"
+          },
+          {
+            "color": {
+              "$token": "fortal.gray.12"
+            }
+          }
+        ]
+      },
+      "modifiers": [
+        {
+          "type": "padding",
+          "padding": {
+            "left": 0.0,
+            "top": 0.0,
+            "right": 0.0,
+            "bottom": {
+              "$token": "fortal.space.4",
+              "kind": "space"
+            }
+          }
+        }
+      ],
+      "v": 1
+    },
+    "default/description": {
+      "type": "text",
+      "style": {
+        "$merge": [
+          {
+            "fontSize": 14.0
+          },
+          {
+            "color": {
+              "$token": "fortal.gray.11"
+            }
+          }
+        ]
+      },
+      "v": 1
+    },
+    "default/actions": {
+      "type": "flex_box",
+      "margin": {
+        "top": {
+          "$token": "fortal.space.5",
+          "kind": "space"
+        }
+      },
+      "mainAxisAlignment": "end",
+      "crossAxisAlignment": "center",
+      "spacing": {
+        "$token": "fortal.space.3",
+        "kind": "space"
+      },
+      "v": 1
+    }
+  },
+  "semantics": {
+    "role": "dialog",
+    "bindings": {
+      "label": {
+        "property": "title"
+      }
+    }
+  },
+  "oracles": [
+    {
+      "theme": "light",
+      "image": "light/dialog.png",
+      "metadata": "light/dialog.json",
+      "evidence": "rendered"
+    },
+    {
+      "theme": "dark",
+      "image": "dark/dialog.png",
+      "metadata": "dark/dialog.json",
+      "evidence": "rendered"
+    }
+  ],
+  "diagnostics": [
+    {
+      "code": "runtime.callbacks_omitted",
+      "severity": "info",
+      "path": "semantics",
+      "message": "Callbacks are intentionally omitted from portable captures."
+    }
+  ]
+}

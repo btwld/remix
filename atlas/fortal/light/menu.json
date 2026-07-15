@@ -102,7 +102,9 @@
       "states": [
         "disabled"
       ],
-      "props": {}
+      "props": {
+        "enabled": false
+      }
     }
   ]
 }

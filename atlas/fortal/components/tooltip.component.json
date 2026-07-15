@@ -1,0 +1,130 @@
+{
+  "schema": "mix_atlas/component/v2",
+  "id": "tooltip",
+  "label": "Tooltip",
+  "properties": [
+    {
+      "id": "label",
+      "kind": "string",
+      "required": true,
+      "default": "Helpful context"
+    },
+    {
+      "id": "buttonLabel",
+      "kind": "string",
+      "required": true,
+      "default": "Hover me"
+    },
+    {
+      "id": "buttonRecipe",
+      "kind": "enum",
+      "values": [
+        "solid-size2"
+      ],
+      "required": true,
+      "default": "solid-size2"
+    },
+    {
+      "id": "buttonState",
+      "kind": "enum",
+      "values": [
+        "default",
+        "hovered",
+        "focused"
+      ],
+      "required": true,
+      "default": "default"
+    }
+  ],
+  "states": [
+    {
+      "id": "default",
+      "widgetStates": [],
+      "properties": {
+        "buttonState": "default"
+      }
+    },
+    {
+      "id": "hovered",
+      "widgetStates": [
+        "hovered"
+      ],
+      "properties": {
+        "buttonState": "hovered"
+      }
+    },
+    {
+      "id": "focused",
+      "widgetStates": [
+        "focused"
+      ],
+      "properties": {
+        "buttonState": "focused"
+      }
+    }
+  ],
+  "slots": [],
+  "anatomy": {
+    "root": "trigger",
+    "nodes": [
+      {
+        "id": "trigger",
+        "kind": "nested_component",
+        "children": [],
+        "component": "button",
+        "recipe": {
+          "property": "buttonRecipe"
+        },
+        "state": {
+          "property": "buttonState"
+        },
+        "properties": {
+          "label": {
+            "property": "buttonLabel"
+          },
+          "leadingIcon": {
+            "literal": null
+          }
+        }
+      }
+    ]
+  },
+  "recipes": [
+    {
+      "id": "default",
+      "properties": {},
+      "styles": {}
+    }
+  ],
+  "styles": {},
+  "semantics": {
+    "role": "tooltip",
+    "bindings": {
+      "label": {
+        "property": "label"
+      }
+    }
+  },
+  "oracles": [
+    {
+      "theme": "light",
+      "image": "light/tooltip.png",
+      "metadata": "light/tooltip.json",
+      "evidence": "rendered"
+    },
+    {
+      "theme": "dark",
+      "image": "dark/tooltip.png",
+      "metadata": "dark/tooltip.json",
+      "evidence": "rendered"
+    }
+  ],
+  "diagnostics": [
+    {
+      "code": "runtime.overlay_omitted",
+      "severity": "info",
+      "path": "anatomy",
+      "message": "Interactive overlay behavior is intentionally not executed."
+    }
+  ]
+}

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mix_atlas/mix_atlas.dart';
+import 'package:mix_atlas_capture/producer.dart';
 import 'package:remix/remix.dart';
+
+import 'fortal_portable_adapters.dart';
 
 final fortalAtlasCatalog = AtlasCatalog(
   id: 'fortal',
@@ -21,30 +24,65 @@ final fortalAtlasCatalog = AtlasCatalog(
           FortalScope(brightness: Brightness.dark, child: child),
     ),
   ],
-  atlases: [
-    _accordionAtlas,
-    _avatarAtlas,
-    _badgeAtlas,
-    _buttonAtlas,
-    _calloutAtlas,
-    _cardAtlas,
-    _checkboxAtlas,
-    _dialogAtlas,
-    _dividerAtlas,
-    _iconButtonAtlas,
-    _menuAtlas,
-    _progressAtlas,
-    _radioAtlas,
-    _selectAtlas,
-    _sliderAtlas,
-    _spinnerAtlas,
-    _switchAtlas,
-    _tabsAtlas,
-    _textFieldAtlas,
-    _toggleAtlas,
-    _tooltipAtlas,
-  ],
+  atlases: [for (final entry in fortalAtlasEntries) entry.atlas],
 );
+
+final class FortalAtlasEntry {
+  const FortalAtlasEntry({required this.atlas, required this.portableAdapter});
+
+  final ComponentAtlas atlas;
+  final AtlasPortableComponentBuilder Function(ComponentAtlas atlas)
+  portableAdapter;
+
+  AtlasPortableComponentBuilder buildPortable() => portableAdapter(atlas);
+}
+
+const _interactiveScenarios = [
+  AtlasScenarios.base,
+  AtlasScenarios.hovered,
+  AtlasScenarios.pressed,
+  AtlasScenarios.focused,
+  AtlasScenario(
+    'disabled',
+    states: {WidgetState.disabled},
+    props: {'enabled': false},
+  ),
+];
+
+const _selectableScenarios = [
+  AtlasScenarios.base,
+  AtlasScenarios.hovered,
+  AtlasScenarios.pressed,
+  AtlasScenarios.focused,
+  AtlasScenario(
+    'selected',
+    states: {WidgetState.selected},
+    props: {'selected': true},
+  ),
+  AtlasScenario(
+    'disabled',
+    states: {WidgetState.disabled},
+    props: {'enabled': false},
+  ),
+];
+
+const _buttonScenarios = [
+  AtlasScenarios.base,
+  AtlasScenarios.hovered,
+  AtlasScenarios.pressed,
+  AtlasScenarios.focused,
+  AtlasScenario(
+    'disabled',
+    states: {WidgetState.disabled},
+    props: {'enabled': false},
+  ),
+  AtlasScenario(
+    'loading',
+    label: 'Loading',
+    states: {WidgetState.disabled},
+    props: {'enabled': false, 'loading': true},
+  ),
+];
 
 final _accordionAtlas = _matrixAtlas(
   id: 'accordion',
@@ -53,10 +91,17 @@ final _accordionAtlas = _matrixAtlas(
   sizes: FortalAccordionSize.values,
   scenarios: const [
     AtlasScenario('collapsed'),
-    AtlasScenario('expanded', props: {'expanded': true}),
+    AtlasScenario(
+      'expanded',
+      props: {'expanded': true, 'trailingIcon': 'remove'},
+    ),
     AtlasScenarios.hovered,
     AtlasScenarios.focused,
-    AtlasScenarios.disabled,
+    AtlasScenario(
+      'disabled',
+      states: {WidgetState.disabled},
+      props: {'enabled': false},
+    ),
   ],
   builder: (variant, size, cell) => SizedBox(
     width: 240,
@@ -110,10 +155,7 @@ final _buttonAtlas = _matrixAtlas(
   label: 'Button',
   variants: FortalButtonVariant.values,
   sizes: FortalButtonSize.values,
-  scenarios: const [
-    ...AtlasScenarios.interactive,
-    AtlasScenario('loading', label: 'Loading', props: {'loading': true}),
-  ],
+  scenarios: _buttonScenarios,
   builder: (variant, size, cell) => FortalButton(
     variant: variant,
     size: size,
@@ -171,7 +213,7 @@ final _checkboxAtlas = _matrixAtlas(
   label: 'Checkbox',
   variants: FortalCheckboxVariant.values,
   sizes: FortalCheckboxSize.values,
-  scenarios: AtlasScenarios.selectable,
+  scenarios: _selectableScenarios,
   builder: (variant, size, cell) => FortalCheckbox(
     selected: cell.selected,
     enabled: !cell.disabled,
@@ -220,10 +262,7 @@ final _iconButtonAtlas = _matrixAtlas(
   label: 'Icon Button',
   variants: FortalIconButtonVariant.values,
   sizes: FortalIconButtonSize.values,
-  scenarios: const [
-    ...AtlasScenarios.interactive,
-    AtlasScenario('loading', label: 'Loading', props: {'loading': true}),
-  ],
+  scenarios: _buttonScenarios,
   builder: (variant, size, cell) => FortalIconButton(
     icon: Icons.add,
     variant: variant,
@@ -239,7 +278,7 @@ final _menuAtlas = _matrixAtlas(
   label: 'Menu',
   variants: FortalMenuVariant.values,
   sizes: FortalMenuSize.values,
-  scenarios: AtlasScenarios.interactive,
+  scenarios: _interactiveScenarios,
   builder: (variant, size, _) => FortalMenu<String>(
     trigger: const RemixMenuTrigger(
       label: 'Actions',
@@ -280,7 +319,7 @@ final _radioAtlas = _matrixAtlas(
   label: 'Radio',
   variants: FortalRadioVariant.values,
   sizes: FortalRadioSize.values,
-  scenarios: AtlasScenarios.selectable,
+  scenarios: _selectableScenarios,
   builder: (variant, size, cell) => RemixRadioGroup<String>(
     groupValue: cell.selected ? 'atlas-option' : null,
     onChanged: (_) {},
@@ -298,7 +337,7 @@ final _selectAtlas = _matrixAtlas(
   label: 'Select',
   variants: FortalSelectVariant.values,
   sizes: FortalSelectSize.values,
-  scenarios: AtlasScenarios.interactive,
+  scenarios: _interactiveScenarios,
   builder: (variant, size, cell) => FortalSelect<String>(
     trigger: const RemixSelectTrigger(placeholder: 'Choose fruit'),
     items: const [
@@ -318,7 +357,7 @@ final _sliderAtlas = _matrixAtlas(
   label: 'Slider',
   variants: FortalSliderVariant.values,
   sizes: FortalSliderSize.values,
-  scenarios: AtlasScenarios.interactive,
+  scenarios: _interactiveScenarios,
   builder: (variant, size, cell) => SizedBox(
     width: 180,
     child: FortalSlider(
@@ -346,7 +385,7 @@ final _switchAtlas = _matrixAtlas(
   label: 'Switch',
   variants: FortalSwitchVariant.values,
   sizes: FortalSwitchSize.values,
-  scenarios: AtlasScenarios.selectable,
+  scenarios: _selectableScenarios,
   builder: (variant, size, cell) => FortalSwitch(
     selected: cell.selected,
     enabled: !cell.disabled,
@@ -409,8 +448,12 @@ final _textFieldAtlas = _matrixAtlas(
   variants: FortalTextFieldVariant.values,
   sizes: FortalTextFieldSize.values,
   scenarios: const [
-    ...AtlasScenarios.interactive,
-    AtlasScenario('error', states: {WidgetState.error}, props: {'error': true}),
+    ..._interactiveScenarios,
+    AtlasScenario(
+      'error',
+      states: {WidgetState.error},
+      props: {'error': true, 'helperText': 'Enter a valid address'},
+    ),
   ],
   builder: (variant, size, cell) => SizedBox(
     width: 220,
@@ -432,7 +475,7 @@ final _toggleAtlas = _matrixAtlas(
   label: 'Toggle',
   variants: FortalToggleVariant.values,
   sizes: FortalToggleSize.values,
-  scenarios: AtlasScenarios.selectable,
+  scenarios: _selectableScenarios,
   builder: (variant, size, cell) => FortalToggle(
     label: 'Bold',
     icon: Icons.format_bold,
@@ -448,9 +491,17 @@ final _tooltipAtlas = ComponentAtlas(
   id: 'tooltip',
   label: 'Tooltip',
   scenarios: const [
-    AtlasScenarios.base,
-    AtlasScenarios.hovered,
-    AtlasScenarios.focused,
+    AtlasScenario('default', props: {'buttonState': 'default'}),
+    AtlasScenario(
+      'hovered',
+      states: {WidgetState.hovered},
+      props: {'buttonState': 'hovered'},
+    ),
+    AtlasScenario(
+      'focused',
+      states: {WidgetState.focused},
+      props: {'buttonState': 'focused'},
+    ),
   ],
   rows: [
     AtlasRow(
@@ -524,3 +575,81 @@ String _enumSizeLabel(Enum value) {
 }
 
 String _title(String value) => '${value[0].toUpperCase()}${value.substring(1)}';
+
+final fortalAtlasEntries = <FortalAtlasEntry>[
+  FortalAtlasEntry(
+    atlas: _accordionAtlas,
+    portableAdapter: buildFortalAccordionPortable,
+  ),
+  FortalAtlasEntry(
+    atlas: _avatarAtlas,
+    portableAdapter: buildFortalAvatarPortable,
+  ),
+  FortalAtlasEntry(
+    atlas: _badgeAtlas,
+    portableAdapter: buildFortalBadgePortable,
+  ),
+  FortalAtlasEntry(
+    atlas: _buttonAtlas,
+    portableAdapter: buildFortalButtonPortable,
+  ),
+  FortalAtlasEntry(
+    atlas: _calloutAtlas,
+    portableAdapter: buildFortalCalloutPortable,
+  ),
+  FortalAtlasEntry(atlas: _cardAtlas, portableAdapter: buildFortalCardPortable),
+  FortalAtlasEntry(
+    atlas: _checkboxAtlas,
+    portableAdapter: buildFortalCheckboxPortable,
+  ),
+  FortalAtlasEntry(
+    atlas: _dialogAtlas,
+    portableAdapter: buildFortalDialogPortable,
+  ),
+  FortalAtlasEntry(
+    atlas: _dividerAtlas,
+    portableAdapter: buildFortalDividerPortable,
+  ),
+  FortalAtlasEntry(
+    atlas: _iconButtonAtlas,
+    portableAdapter: buildFortalIconButtonPortable,
+  ),
+  FortalAtlasEntry(atlas: _menuAtlas, portableAdapter: buildFortalMenuPortable),
+  FortalAtlasEntry(
+    atlas: _progressAtlas,
+    portableAdapter: buildFortalProgressPortable,
+  ),
+  FortalAtlasEntry(
+    atlas: _radioAtlas,
+    portableAdapter: buildFortalRadioPortable,
+  ),
+  FortalAtlasEntry(
+    atlas: _selectAtlas,
+    portableAdapter: buildFortalSelectPortable,
+  ),
+  FortalAtlasEntry(
+    atlas: _sliderAtlas,
+    portableAdapter: buildFortalSliderPortable,
+  ),
+  FortalAtlasEntry(
+    atlas: _spinnerAtlas,
+    portableAdapter: buildFortalSpinnerPortable,
+  ),
+  FortalAtlasEntry(
+    atlas: _switchAtlas,
+    portableAdapter: buildFortalSwitchPortable,
+  ),
+  FortalAtlasEntry(atlas: _tabsAtlas, portableAdapter: buildFortalTabsPortable),
+  FortalAtlasEntry(
+    atlas: _textFieldAtlas,
+    portableAdapter: buildFortalTextFieldPortable,
+  ),
+  FortalAtlasEntry(
+    atlas: _toggleAtlas,
+    portableAdapter: buildFortalTogglePortable,
+  ),
+  FortalAtlasEntry(
+    atlas: _tooltipAtlas,
+    portableAdapter: buildFortalTooltipPortable,
+  ),
+];

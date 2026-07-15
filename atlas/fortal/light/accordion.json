@@ -106,7 +106,8 @@
       "id": "expanded",
       "states": [],
       "props": {
-        "expanded": true
+        "expanded": true,
+        "trailingIcon": "remove"
       }
     },
     {
@@ -128,7 +129,9 @@
       "states": [
         "disabled"
       ],
-      "props": {}
+      "props": {
+        "enabled": false
+      }
     }
   ]
 }

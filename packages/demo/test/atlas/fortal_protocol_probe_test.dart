@@ -7,7 +7,6 @@ import 'package:mix_protocol/mix_protocol.dart';
 import 'package:remix/remix.dart';
 
 import 'support/fortal_atlas_catalog.dart';
-import 'support/fortal_button_component_artifact.dart';
 
 void main() {
   group('Fortal protocol probe', () {
@@ -131,7 +130,7 @@ void main() {
     });
 
     testWidgets('canonical protocol artifacts match', (tester) async {
-      if (autoUpdateGoldenFiles) _resetGeneratedButtonArtifacts();
+      if (autoUpdateGoldenFiles) _resetGeneratedPortableArtifacts();
       final themeCoverage = <Map<String, Object?>>[];
 
       for (final brightness in Brightness.values) {
@@ -175,28 +174,36 @@ void main() {
         builtInDocument,
       );
 
-      final componentArtifacts = buildFortalButtonComponentArtifacts();
-      _expectJsonArtifact(
-        'goldens/components/button.component.json',
-        componentArtifacts.document,
-      );
-      final componentStyleEntries =
-          componentArtifacts.styleDocuments.entries.toList()
-            ..sort((left, right) => left.key.compareTo(right.key));
-      for (final entry in componentStyleEntries) {
-        _expectJsonArtifact('goldens/${entry.key}', entry.value);
+      final portableCoverage = <Map<String, Object?>>[];
+      var recipeCount = 0;
+      var cellsPerTheme = 0;
+      for (final entry in fortalAtlasEntries) {
+        final component = entry.buildPortable().buildJson();
+        final recipes = component['recipes']! as List<Object?>;
+        final states = component['states']! as List<Object?>;
+        final cells = recipes.length * states.length;
+
+        _expectJsonArtifact(
+          'goldens/components/${entry.atlas.id}.component.json',
+          component,
+        );
+        recipeCount += recipes.length;
+        cellsPerTheme += cells;
+        portableCoverage.add({
+          'id': 'fortal-${entry.atlas.id}-portable',
+          'runtimeType': '${entry.atlas.label ?? entry.atlas.id} component/v2',
+          'status': 'supported',
+          'schema': component['schema'],
+          'recipeCount': recipes.length,
+          'stateCount': states.length,
+          'cellsPerTheme': cells,
+          'themeRenderCount': cells * fortalAtlasCatalog.themes.length,
+          'diagnostics': component['diagnostics'] ?? const <Object?>[],
+        });
       }
-      final componentRecipes =
-          componentArtifacts.document['recipes']! as List<Object?>;
-      final firstRecipe = componentRecipes.first! as Map<String, Object?>;
-      final firstStyles = firstRecipe['styles']! as Map<String, Object?>;
-      final firstContainer = firstStyles['container']! as Map<String, Object?>;
-      final firstSpinner = firstStyles['spinner']! as Map<String, Object?>;
-      final componentDiagnostics = <Object?>[
-        ...(firstSpinner['diagnostics']! as List<Object?>),
-        if (firstContainer['status'] == 'unsupported')
-          ...(firstContainer['diagnostics']! as List<Object?>),
-      ];
+      expect(portableCoverage, hasLength(21));
+      expect(recipeCount, 148);
+      expect(cellsPerTheme, 613);
 
       final fluentStyle = FlexBoxStyler()
           .color(FortalTokens.accent9())
@@ -212,13 +219,18 @@ void main() {
         ..sort(
           (a, b) => '${a.kind}:${a.name}'.compareTo('${b.kind}:${b.name}'),
         );
-      final customErrors = _expectFailure(
-        mixProtocol.encodeStyle(fortalButtonStyler()),
-      );
       final coverage = <String, Object?>{
         'schema': 'mix_atlas/protocol-coverage/v1',
         'mixProtocolVersion': mixProtocolVersion,
         'mixProtocolFormat': mixProtocolFormatVersion,
+        'inventory': {
+          'componentDocuments': portableCoverage.length,
+          'recipes': recipeCount,
+          'cellsPerTheme': cellsPerTheme,
+          'themeRenders': cellsPerTheme * fortalAtlasCatalog.themes.length,
+          'renderedOnlyComponents': 0,
+          'placeholderNodes': 0,
+        },
         'themes': themeCoverage,
         'styles': [
           {
@@ -229,6 +241,7 @@ void main() {
               for (final reference in builtInReferences)
                 {'kind': reference.kind, 'name': reference.name},
             ],
+            'diagnostics': const <Object?>[],
           },
           {
             'id': 'fortal-tokenized-flex-box-fluent',
@@ -238,46 +251,9 @@ void main() {
               for (final reference in fluentReferences)
                 {'kind': reference.kind, 'name': reference.name},
             ],
+            'diagnostics': const <Object?>[],
           },
-          {
-            'id': 'fortal-button-portable',
-            'runtimeType': 'RemixButtonStyler projection',
-            'status': componentArtifacts.supportedContainerRecipes == 20
-                ? 'partial'
-                : 'unsupported',
-            'recipeCount': componentRecipes.length,
-            'totalMatrixCells': componentArtifacts.totalMatrixCells,
-            'nonLoadingCells': componentArtifacts.nonLoadingCells,
-            'loadingUnsupportedCells':
-                componentArtifacts.loadingUnsupportedCells,
-            'supportedContainerRecipes':
-                componentArtifacts.supportedContainerRecipes,
-            'diagnostics': componentDiagnostics,
-          },
-          {
-            'id': 'fortal-button',
-            'runtimeType': 'RemixButtonStyler',
-            'status': 'unsupported',
-            'diagnostics': [for (final error in customErrors) error.toJson()],
-          },
-          for (final atlas in fortalAtlasCatalog.atlases)
-            if (atlas.id != 'button')
-              {
-                'id': 'fortal-${atlas.id}-rendered',
-                'runtimeType': '${atlas.label ?? atlas.id} contact sheet',
-                'status': 'rendered-only',
-                'diagnostics': [
-                  {
-                    'code': 'portable_component_document_not_captured',
-                    'severity': 'info',
-                    'path': 'components/${atlas.id}.component.json',
-                    'message':
-                        '${atlas.label ?? atlas.id} is captured as rendered '
-                        'light and dark evidence; a portable slot contract has '
-                        'not been declared.',
-                  },
-                ],
-              },
+          ...portableCoverage,
         ],
       };
       _expectJsonArtifact('goldens/protocol/coverage.json', coverage);
@@ -285,7 +261,7 @@ void main() {
   });
 }
 
-void _resetGeneratedButtonArtifacts() {
+void _resetGeneratedPortableArtifacts() {
   final comparator = goldenFileComparator;
   if (comparator is! LocalFileComparator) {
     fail('Protocol artifacts require Flutter LocalFileComparator.');

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:mix_atlas_capture/producer.dart';
+import 'package:mix_atlas_capture/packaging.dart';
 
 void main(List<String> arguments) {
   final unknown = arguments.where((argument) => argument != '--check').toList();
@@ -17,6 +17,20 @@ void main(List<String> arguments) {
   final workspaceRoot = packageRoot.parent.parent;
   final sourceRoot = Directory('${packageRoot.path}/test/atlas/goldens');
   final bundleRoot = Directory('${workspaceRoot.path}/atlas/fortal');
+  final componentAssets = _directoryAssets(sourceRoot, 'components');
+  final componentIds = [
+    for (final asset in componentAssets)
+      if (asset.sourcePath.endsWith('.component.json'))
+        asset.sourcePath
+            .substring('components/'.length)
+            .replaceFirst('.component.json', ''),
+  ];
+  if (componentIds.length != 21 || componentIds.toSet().length != 21) {
+    throw StateError(
+      'Expected 21 unique portable component documents, found '
+      '${componentIds.length}.',
+    );
+  }
   final input = AtlasCapturePackageInput(
     sourceDirectory: sourceRoot,
     outputDirectory: bundleRoot,
@@ -34,13 +48,12 @@ void main(List<String> arguments) {
         ),
         AtlasCaptureThemeSpec(id: 'dark', documentPath: 'themes/dark.mix.json'),
       ],
-      // Button currently has the bounded portable component-v1 contract. The
-      // catalog and rendered assets may contain additional component families.
-      components: const [
-        AtlasCaptureComponentSpec(
-          id: 'button',
-          documentPath: 'components/button.component.json',
-        ),
+      components: [
+        for (final id in componentIds)
+          AtlasCaptureComponentSpec(
+            id: id,
+            documentPath: 'components/$id.component.json',
+          ),
       ],
       protocolCoveragePath: 'protocol/coverage.json',
     ),
@@ -67,8 +80,7 @@ void main(List<String> arguments) {
       ),
       ..._directoryAssets(sourceRoot, 'light'),
       ..._directoryAssets(sourceRoot, 'dark'),
-      ..._directoryAssets(sourceRoot, 'components'),
-      ..._directoryAssets(sourceRoot, 'styles'),
+      ...componentAssets,
     ],
     preservedPaths: const {'README.md'},
   );

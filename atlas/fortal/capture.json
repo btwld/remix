@@ -20,8 +20,88 @@
   ],
   "components": [
     {
+      "id": "accordion",
+      "document": "components/accordion.component.json"
+    },
+    {
+      "id": "avatar",
+      "document": "components/avatar.component.json"
+    },
+    {
+      "id": "badge",
+      "document": "components/badge.component.json"
+    },
+    {
       "id": "button",
       "document": "components/button.component.json"
+    },
+    {
+      "id": "callout",
+      "document": "components/callout.component.json"
+    },
+    {
+      "id": "card",
+      "document": "components/card.component.json"
+    },
+    {
+      "id": "checkbox",
+      "document": "components/checkbox.component.json"
+    },
+    {
+      "id": "dialog",
+      "document": "components/dialog.component.json"
+    },
+    {
+      "id": "divider",
+      "document": "components/divider.component.json"
+    },
+    {
+      "id": "icon-button",
+      "document": "components/icon-button.component.json"
+    },
+    {
+      "id": "menu",
+      "document": "components/menu.component.json"
+    },
+    {
+      "id": "progress",
+      "document": "components/progress.component.json"
+    },
+    {
+      "id": "radio",
+      "document": "components/radio.component.json"
+    },
+    {
+      "id": "select",
+      "document": "components/select.component.json"
+    },
+    {
+      "id": "slider",
+      "document": "components/slider.component.json"
+    },
+    {
+      "id": "spinner",
+      "document": "components/spinner.component.json"
+    },
+    {
+      "id": "switch",
+      "document": "components/switch.component.json"
+    },
+    {
+      "id": "tabs",
+      "document": "components/tabs.component.json"
+    },
+    {
+      "id": "textfield",
+      "document": "components/textfield.component.json"
+    },
+    {
+      "id": "toggle",
+      "document": "components/toggle.component.json"
+    },
+    {
+      "id": "tooltip",
+      "document": "components/tooltip.component.json"
     }
   ],
   "protocolCoverage": "protocol/coverage.json",
@@ -32,14 +112,114 @@
       "bytes": 7526
     },
     {
+      "path": "components/accordion.component.json",
+      "sha256": "f8fd3768402e9b4d95af265320644e764fb6800137a40448cb48502967b0687a",
+      "bytes": 23898
+    },
+    {
+      "path": "components/avatar.component.json",
+      "sha256": "cd3c21dfad090aa839bc0ffb63601e7c3f266331d78cb98b90ff6597ddd624e7",
+      "bytes": 10987
+    },
+    {
+      "path": "components/badge.component.json",
+      "sha256": "89bf114ca032311dd81338baee929d2a9e98503a2a2b17996003b031dcfe2002",
+      "bytes": 21954
+    },
+    {
       "path": "components/button.component.json",
-      "sha256": "c00f12de096dce4fc20bf9b170aafae357a8c07c880add9974412e3cb1f3ba83",
-      "bytes": 27584
+      "sha256": "37d37f6260080f4972c1c494a352dd8c4ffb38b27f99df82fcbfc74626ce15dd",
+      "bytes": 147892
+    },
+    {
+      "path": "components/callout.component.json",
+      "sha256": "65b519663c61b12d3ce3300896e1797de11b6a0017a528fc5e0cbd40454581ca",
+      "bytes": 22424
+    },
+    {
+      "path": "components/card.component.json",
+      "sha256": "8dcf3fda6d0892ce0f0a6ef5f39ec0dc7c978764b8e361675a982042ca0bc104",
+      "bytes": 21564
+    },
+    {
+      "path": "components/checkbox.component.json",
+      "sha256": "6d352108a7aaba455be61d46a561a302caa3fdd77cb65c2486eaaa1e79264bf7",
+      "bytes": 38053
+    },
+    {
+      "path": "components/dialog.component.json",
+      "sha256": "5574458982fe2467074b7a1728a7590feccad768df0fedd68df5170d9a634bb7",
+      "bytes": 8110
+    },
+    {
+      "path": "components/divider.component.json",
+      "sha256": "106dbd233a591ee9c707832021820fb7a0de538eb8a79e82b32b98b9dd1a630b",
+      "bytes": 2686
+    },
+    {
+      "path": "components/icon-button.component.json",
+      "sha256": "98292d22dceaa472fdc236301d59f2f634038d2eb8f8c4c1913c3e7fa617caaf",
+      "bytes": 113733
+    },
+    {
+      "path": "components/menu.component.json",
+      "sha256": "3b10770232725302dcd3a27954e28fa244832d03ccd15d10c4529da337d036f6",
+      "bytes": 10208
+    },
+    {
+      "path": "components/progress.component.json",
+      "sha256": "e0184d2275012cc2b8d399dabf6f6f61f8b7aebc66cf2fb543454b7f365813a0",
+      "bytes": 18260
+    },
+    {
+      "path": "components/radio.component.json",
+      "sha256": "f39dace73e4d35b438d51639d84264d2a5d9865f4d654b3258c8f78e6177bfc3",
+      "bytes": 39467
+    },
+    {
+      "path": "components/select.component.json",
+      "sha256": "d2c94bd41c19789713d250c13663e9551f4e92dc76d69ee1c12610d25dd2f880",
+      "bytes": 36717
+    },
+    {
+      "path": "components/slider.component.json",
+      "sha256": "79d166c87736f5029afa008230678ea0509ff1859a266fac9c0feb424390abf9",
+      "bytes": 40590
+    },
+    {
+      "path": "components/spinner.component.json",
+      "sha256": "b861e859242aca49f3b4f6cc54f4ce3f340b87cf094fd2f8606659353b400a64",
+      "bytes": 2180
+    },
+    {
+      "path": "components/switch.component.json",
+      "sha256": "8354ee8a698042486b4309e5a42fc33f85bd3d88f11fc9bf6c47f9f58dbecdb7",
+      "bytes": 45589
+    },
+    {
+      "path": "components/tabs.component.json",
+      "sha256": "50f857c757d166527134c197470ac6e969e4f7a02d0324b36798843b58b3f2a8",
+      "bytes": 18200
+    },
+    {
+      "path": "components/textfield.component.json",
+      "sha256": "b72396b17fe3ff7f9164ab3ba05437f33e74255c5e547404f4a52a6ac7e5718b",
+      "bytes": 60914
+    },
+    {
+      "path": "components/toggle.component.json",
+      "sha256": "6eb8d11f2c3325f6d4cb7f7d8b08ec87ebabf587acedb4146f936c684b7fa734",
+      "bytes": 44035
+    },
+    {
+      "path": "components/tooltip.component.json",
+      "sha256": "b271fcc6b2905029ac71d52a9589fed892eda88e4c68a014ce2a9f64e2068e27",
+      "bytes": 2404
     },
     {
       "path": "dark/accordion.json",
-      "sha256": "a1e152b9d4ed72ef05b612f0dd571b20989f21aa5efa3f4043f0b7a42ca13f23",
-      "bytes": 2239
+      "sha256": "d5e29b6e591a0378f0a06264a5a1e2d8e63674882c1dfe949e5e18b27ef05b8f",
+      "bytes": 2305
     },
     {
       "path": "dark/accordion.png",
@@ -68,13 +248,13 @@
     },
     {
       "path": "dark/button.json",
-      "sha256": "72e80463651344dd034a24ab58b3f50ca05ff108d504943aaa8b93d21b07e646",
-      "bytes": 5612
+      "sha256": "99558c7fe67d7fd96f39349950f6d42f6071c05d10679ed8de0e767ee5df0fdb",
+      "bytes": 5696
     },
     {
       "path": "dark/button.png",
-      "sha256": "f60337eb3023d8504c1d9a7200d27531be0ff43eca73aacfdca4dee95ff3b798",
-      "bytes": 179535
+      "sha256": "0f947883b98814183d357c0c4f6d41f9f821cf6b7b6e793bd2ff0253ffb3b760",
+      "bytes": 178615
     },
     {
       "path": "dark/callout.json",
@@ -98,8 +278,8 @@
     },
     {
       "path": "dark/checkbox.json",
-      "sha256": "92f618ee9380bed40e3ef2399776a5a12168a40f1d2a2a3a3e5f3c5bee4fd465",
-      "bytes": 2327
+      "sha256": "7c414ab9fdb824c35d154cf7ab775ddc1b0e02ab5d1360127daa7bb380796feb",
+      "bytes": 2391
     },
     {
       "path": "dark/checkbox.png",
@@ -128,18 +308,18 @@
     },
     {
       "path": "dark/icon-button.json",
-      "sha256": "53a0e6b655dad77ed11af0a30c5a379ccfd4445bcf7210aed75183469e82128d",
-      "bytes": 5627
+      "sha256": "170bd07058353aac85a4b5f4ac4dc00b207f44cee35dec9a6c804044db0902cd",
+      "bytes": 5711
     },
     {
       "path": "dark/icon-button.png",
-      "sha256": "cf3b434c3c5a601a9d66d3643ce46529f6bc1080fd9635e3f71001d86e0336b1",
-      "bytes": 79194
+      "sha256": "760f3bc9a3979569a0c96ed5f182153f9c75798d084c10985d92f99d6d7a6a30",
+      "bytes": 79173
     },
     {
       "path": "dark/menu.json",
-      "sha256": "18aa9c8012271e23c0635951bc4fdd27ccb5d6402b1276a40a0893fda515e68c",
-      "bytes": 1737
+      "sha256": "57dfa4aa7afe7759514dc0798d8448eef45efc1000e920962d7ca340b137a92d",
+      "bytes": 1769
     },
     {
       "path": "dark/menu.png",
@@ -158,8 +338,8 @@
     },
     {
       "path": "dark/radio.json",
-      "sha256": "2e96c144cf76d9637228865063cdd6a9830baab8b7c6a35cc4add6c31cae5ca6",
-      "bytes": 2318
+      "sha256": "8110e19dcc1c4d5b0e09f46328e7b5aaf6df4130fa398918856dc078f651a716",
+      "bytes": 2382
     },
     {
       "path": "dark/radio.png",
@@ -168,8 +348,8 @@
     },
     {
       "path": "dark/select.json",
-      "sha256": "0f6233cf6f22d14ae6aed0be9a9487edefc6021d06e920cecd93f426fba0b490",
-      "bytes": 2913
+      "sha256": "54a446fb3791906e8ee22bdb59db3b7581232a18fd12bff7ca11367c67e73bbd",
+      "bytes": 2945
     },
     {
       "path": "dark/select.png",
@@ -178,8 +358,8 @@
     },
     {
       "path": "dark/slider.json",
-      "sha256": "870408cf64ced5ba7b52e20b2232c6430efa0b5e1659c4cad4aa21418e263a04",
-      "bytes": 2220
+      "sha256": "39394fe01bccb63cab7c8ac610636aa374ee410e66478ae105fb65c7939ab338",
+      "bytes": 2252
     },
     {
       "path": "dark/slider.png",
@@ -198,8 +378,8 @@
     },
     {
       "path": "dark/switch.json",
-      "sha256": "c5f7a3a790991b32e3cae600b38907abc0ae8a41eaf12a430ce541353f39e5e3",
-      "bytes": 2321
+      "sha256": "bca8922889885d5e2ae1f904530187f0dec052c95e856f606306b6c730640f8c",
+      "bytes": 2385
     },
     {
       "path": "dark/switch.png",
@@ -218,8 +398,8 @@
     },
     {
       "path": "dark/textfield.json",
-      "sha256": "ff1cf7d2e6bc3f69119276624d0fa023610daa322000daf89f42421d77a0e39f",
-      "bytes": 2354
+      "sha256": "d1fb38ca33ad7d4138d23a9e66ce4ab3a505042789bed7235bce726b61926b57",
+      "bytes": 2433
     },
     {
       "path": "dark/textfield.png",
@@ -228,8 +408,8 @@
     },
     {
       "path": "dark/toggle.json",
-      "sha256": "18a84b15a178bcdd80794246cd33b7a48072f9a4cd307516d5d10fb4a3408437",
-      "bytes": 2330
+      "sha256": "f51178702bd04830816a4ba1e5677a659b8496e666cd8cc53a95eedae3771c08",
+      "bytes": 2394
     },
     {
       "path": "dark/toggle.png",
@@ -238,8 +418,8 @@
     },
     {
       "path": "dark/tooltip.json",
-      "sha256": "2b3e7247f07e24d86903d981dd5d4eb575cce0e6c25fc7f8e4d1879e8ccfc7a5",
-      "bytes": 565
+      "sha256": "8f72651161a9ca861e3807e69bbc9e2b06beebd44d4e269ec5d50a7e7f38c727",
+      "bytes": 685
     },
     {
       "path": "dark/tooltip.png",
@@ -248,8 +428,8 @@
     },
     {
       "path": "light/accordion.json",
-      "sha256": "3c783a5c2391fa0816ad0d993902163eee7b1a968c78b691e86a061619d180dd",
-      "bytes": 2242
+      "sha256": "bafa4631906268045e775e92bc25039a88c346f008346e12704be8db3148d5fb",
+      "bytes": 2308
     },
     {
       "path": "light/accordion.png",
@@ -278,13 +458,13 @@
     },
     {
       "path": "light/button.json",
-      "sha256": "daa4bdba64a673a98e267e4dd9cd1a9940ac03c9e5559a4aa1f1e0fd245e42a3",
-      "bytes": 5615
+      "sha256": "147466cc042606a3a7ea81030b5e5f34009c96c43b49d1ac187ae3816fe42f7a",
+      "bytes": 5699
     },
     {
       "path": "light/button.png",
-      "sha256": "27c62c5fa1e7272329457d224705ee6017b7a15ed9f7a08cde2b1635f65cb3cc",
-      "bytes": 170666
+      "sha256": "346c5b70cc163fdad91487abaaf8b6c9c4cb32185767ad46766a95438de2cb82",
+      "bytes": 171050
     },
     {
       "path": "light/callout.json",
@@ -308,8 +488,8 @@
     },
     {
       "path": "light/checkbox.json",
-      "sha256": "ff5c7e902345894aa330bab7d56ab397f124748cf490a0290c7f85ce164097bf",
-      "bytes": 2330
+      "sha256": "ee8ef125605e000fe9d4b3e5c3b553620b693c4594cf171ffc53d984bbeb4de6",
+      "bytes": 2394
     },
     {
       "path": "light/checkbox.png",
@@ -338,18 +518,18 @@
     },
     {
       "path": "light/icon-button.json",
-      "sha256": "14ca917e4134166facbfc47e5fd39322cbe484036a3f8f4e1cf5dda99e301eea",
-      "bytes": 5630
+      "sha256": "d3371f0d398a2d40498d17a63ae4c92515f361b46082484c1ef1f00301c42d29",
+      "bytes": 5714
     },
     {
       "path": "light/icon-button.png",
-      "sha256": "201b497742fd4f6c840f69f20920bbd900d791b498fd3f52c644573b6a1c585c",
-      "bytes": 75453
+      "sha256": "66eff4e359f3f3e2272ffc8c2375ba117374914d08bc89bfb775e9b1225b6db7",
+      "bytes": 75496
     },
     {
       "path": "light/menu.json",
-      "sha256": "200bb9ac34fd7ec16cdbacab1d952f532654247c14cc4a2d028613cb5be29f59",
-      "bytes": 1740
+      "sha256": "3f854f169f35f65f753ba259554ed369d95ce3e44acb8b18be21adfc035f9e08",
+      "bytes": 1772
     },
     {
       "path": "light/menu.png",
@@ -368,8 +548,8 @@
     },
     {
       "path": "light/radio.json",
-      "sha256": "05ee9349b2a04d0948bba69943365f2f24fe66d839725d1a396f3de19ee7901c",
-      "bytes": 2321
+      "sha256": "34a8dfacc3aa2e3bb1fd91e3a00f660f2d569fc9afad678718872f401e0c33d4",
+      "bytes": 2385
     },
     {
       "path": "light/radio.png",
@@ -378,8 +558,8 @@
     },
     {
       "path": "light/select.json",
-      "sha256": "37183cf8ace3671585ed34f88e579ea81b2efdb098f18aaa84e80e498459d050",
-      "bytes": 2916
+      "sha256": "c0c62cb84dd568b01e49c96c6f753a76a4d529d5c36aa2df50b19dbcd838b9fd",
+      "bytes": 2948
     },
     {
       "path": "light/select.png",
@@ -388,8 +568,8 @@
     },
     {
       "path": "light/slider.json",
-      "sha256": "2d13d44d5ed3d42ac78ce4fa4b3459d589aee5d5702507370fa48cc474b411dc",
-      "bytes": 2223
+      "sha256": "dc987814e2e7065f1109265cf78648b564905a88ead7627f0f1e9390839e71c6",
+      "bytes": 2255
     },
     {
       "path": "light/slider.png",
@@ -408,8 +588,8 @@
     },
     {
       "path": "light/switch.json",
-      "sha256": "9aed71f25c734b6e5f5ec276f367cf22e4f2470a9fda472d069b9efbfc07b0ef",
-      "bytes": 2324
+      "sha256": "aa29717d87bab9a96abd47ee837efe766b0e276bb5acfc8ade5fb86d114e9674",
+      "bytes": 2388
     },
     {
       "path": "light/switch.png",
@@ -428,8 +608,8 @@
     },
     {
       "path": "light/textfield.json",
-      "sha256": "c885b920334145c356ece49f982149a6bf64a88a3baeefb934b19a75f36b1623",
-      "bytes": 2357
+      "sha256": "f3f203a2e150e51c1b28cde4374656d4b20329b5afd39dafe0937878b116d827",
+      "bytes": 2436
     },
     {
       "path": "light/textfield.png",
@@ -438,8 +618,8 @@
     },
     {
       "path": "light/toggle.json",
-      "sha256": "56c6d107345c3a19a26026af4e668101a0061480a7a5a96a0217070b2af48dd2",
-      "bytes": 2333
+      "sha256": "7733982d06e6b3ba1ceab45ad8bb7d8845d5eaaaa02dc98223c30a1bac54093a",
+      "bytes": 2397
     },
     {
       "path": "light/toggle.png",
@@ -448,8 +628,8 @@
     },
     {
       "path": "light/tooltip.json",
-      "sha256": "5d76d5456b9595b89a9ac5a20a69ba604be0cc3e37bf0c5da9c536670cfef5a0",
-      "bytes": 568
+      "sha256": "1baef8060fd8d2e01047e2b02bf06e76e8047867d0f3ece1372c10a1fe3f44ee",
+      "bytes": 688
     },
     {
       "path": "light/tooltip.png",
@@ -458,313 +638,13 @@
     },
     {
       "path": "protocol/coverage.json",
-      "sha256": "ca729f76ae97cdc804e0763fc650b33329032304f3e2ff957496f1d6e6c07c77",
-      "bytes": 16992
+      "sha256": "ae1d5356ecd4d5a0203152533bd7b21c323d1fce48ba2e6b35281fe84adca5bb",
+      "bytes": 15004
     },
     {
       "path": "protocol/fixtures/fortal-tokenized-flex-box.mix.json",
       "sha256": "b413d177b00998fe55ddf7d30d9ca8c0891a4e67056db2025c911bf3ee4b4ac3",
       "bytes": 257
-    },
-    {
-      "path": "styles/button/ghost-size1/container.mix.json",
-      "sha256": "c3bc5aa9430266896beb25ab1140688e344aeeb8a5940c69b011c7d2af47856c",
-      "bytes": 2427
-    },
-    {
-      "path": "styles/button/ghost-size1/icon.mix.json",
-      "sha256": "85bcf16a35b2e827395d99d6516de6d375737dd549e48e1bdc73afaae61c939e",
-      "bytes": 302
-    },
-    {
-      "path": "styles/button/ghost-size1/label.mix.json",
-      "sha256": "d446780069282882b24cf823c56396eedfa3bb349e4984b09253cd013e58a5de",
-      "bytes": 638
-    },
-    {
-      "path": "styles/button/ghost-size2/container.mix.json",
-      "sha256": "ded82395e7b0f0d44ef471a0c4e180bdde68194ebbc71411f88b0da0b504772f",
-      "bytes": 2427
-    },
-    {
-      "path": "styles/button/ghost-size2/icon.mix.json",
-      "sha256": "1e6774a0bfebd8bf208b7626154a956c5835dad885970e2164e5d7fb74497bb6",
-      "bytes": 302
-    },
-    {
-      "path": "styles/button/ghost-size2/label.mix.json",
-      "sha256": "8519482344e85cca89b8d6ff6c24e92c48b837e5b93283df82d3076edbecd57a",
-      "bytes": 635
-    },
-    {
-      "path": "styles/button/ghost-size3/container.mix.json",
-      "sha256": "f40afa1467c344729477c5176218a5a1200713ad65f1276fbbbcce36180d8835",
-      "bytes": 2427
-    },
-    {
-      "path": "styles/button/ghost-size3/icon.mix.json",
-      "sha256": "5bd2121f6f6bedb76ec54c28f0b1afc68544d2737873ff8de12d662543452adf",
-      "bytes": 302
-    },
-    {
-      "path": "styles/button/ghost-size3/label.mix.json",
-      "sha256": "c3e61a56cdbcebc85ab6d1c4cd6007e935dcb9ad87d4af943f14faf1e0b79578",
-      "bytes": 620
-    },
-    {
-      "path": "styles/button/ghost-size4/container.mix.json",
-      "sha256": "d21344b171ea76d42127fb021fdcbb6e5569800f0211d52abc45b07c45180b87",
-      "bytes": 2427
-    },
-    {
-      "path": "styles/button/ghost-size4/icon.mix.json",
-      "sha256": "79867c0eb44025ed5e066586e28dd1ec8fcb546bbe697e455d64bfe75b5bb5ba",
-      "bytes": 302
-    },
-    {
-      "path": "styles/button/ghost-size4/label.mix.json",
-      "sha256": "a89d32a028b459dfad58c2f2572334e1302111f18e529bbe1b83e4648b65d12d",
-      "bytes": 639
-    },
-    {
-      "path": "styles/button/outline-size1/container.mix.json",
-      "sha256": "be5f23243abdeb0d705c9e49812be2d54bc39ccd6e32f6f69102246733042593",
-      "bytes": 5111
-    },
-    {
-      "path": "styles/button/outline-size1/icon.mix.json",
-      "sha256": "85bcf16a35b2e827395d99d6516de6d375737dd549e48e1bdc73afaae61c939e",
-      "bytes": 302
-    },
-    {
-      "path": "styles/button/outline-size1/label.mix.json",
-      "sha256": "d446780069282882b24cf823c56396eedfa3bb349e4984b09253cd013e58a5de",
-      "bytes": 638
-    },
-    {
-      "path": "styles/button/outline-size2/container.mix.json",
-      "sha256": "ff073382630fc6c1aec87603354611df7b0a3455161250df84d9c6fac0bd3909",
-      "bytes": 5111
-    },
-    {
-      "path": "styles/button/outline-size2/icon.mix.json",
-      "sha256": "1e6774a0bfebd8bf208b7626154a956c5835dad885970e2164e5d7fb74497bb6",
-      "bytes": 302
-    },
-    {
-      "path": "styles/button/outline-size2/label.mix.json",
-      "sha256": "8519482344e85cca89b8d6ff6c24e92c48b837e5b93283df82d3076edbecd57a",
-      "bytes": 635
-    },
-    {
-      "path": "styles/button/outline-size3/container.mix.json",
-      "sha256": "c7c67b63c90ae3fe3f3c8af2f94a30753a013eb983695055375a257e85211ba2",
-      "bytes": 5111
-    },
-    {
-      "path": "styles/button/outline-size3/icon.mix.json",
-      "sha256": "5bd2121f6f6bedb76ec54c28f0b1afc68544d2737873ff8de12d662543452adf",
-      "bytes": 302
-    },
-    {
-      "path": "styles/button/outline-size3/label.mix.json",
-      "sha256": "c3e61a56cdbcebc85ab6d1c4cd6007e935dcb9ad87d4af943f14faf1e0b79578",
-      "bytes": 620
-    },
-    {
-      "path": "styles/button/outline-size4/container.mix.json",
-      "sha256": "a8360669d38fcd916bc466269d0c538db51ae069def0eaf49230c5e4b3570afe",
-      "bytes": 5111
-    },
-    {
-      "path": "styles/button/outline-size4/icon.mix.json",
-      "sha256": "79867c0eb44025ed5e066586e28dd1ec8fcb546bbe697e455d64bfe75b5bb5ba",
-      "bytes": 302
-    },
-    {
-      "path": "styles/button/outline-size4/label.mix.json",
-      "sha256": "a89d32a028b459dfad58c2f2572334e1302111f18e529bbe1b83e4648b65d12d",
-      "bytes": 639
-    },
-    {
-      "path": "styles/button/soft-size1/container.mix.json",
-      "sha256": "3c67f10d2c1aa3e6bbdea87d05a9b092531754b52abda597710dfc871638c1d7",
-      "bytes": 2692
-    },
-    {
-      "path": "styles/button/soft-size1/icon.mix.json",
-      "sha256": "85bcf16a35b2e827395d99d6516de6d375737dd549e48e1bdc73afaae61c939e",
-      "bytes": 302
-    },
-    {
-      "path": "styles/button/soft-size1/label.mix.json",
-      "sha256": "d446780069282882b24cf823c56396eedfa3bb349e4984b09253cd013e58a5de",
-      "bytes": 638
-    },
-    {
-      "path": "styles/button/soft-size2/container.mix.json",
-      "sha256": "37755194e1e96a2b5ac0e57c496b02b7d594acd609e781fff2ab764269d10ca1",
-      "bytes": 2692
-    },
-    {
-      "path": "styles/button/soft-size2/icon.mix.json",
-      "sha256": "1e6774a0bfebd8bf208b7626154a956c5835dad885970e2164e5d7fb74497bb6",
-      "bytes": 302
-    },
-    {
-      "path": "styles/button/soft-size2/label.mix.json",
-      "sha256": "8519482344e85cca89b8d6ff6c24e92c48b837e5b93283df82d3076edbecd57a",
-      "bytes": 635
-    },
-    {
-      "path": "styles/button/soft-size3/container.mix.json",
-      "sha256": "9d512fd1515476f468f0da31ed5e41804c5aea75fdf072b693cb514d5929953b",
-      "bytes": 2692
-    },
-    {
-      "path": "styles/button/soft-size3/icon.mix.json",
-      "sha256": "5bd2121f6f6bedb76ec54c28f0b1afc68544d2737873ff8de12d662543452adf",
-      "bytes": 302
-    },
-    {
-      "path": "styles/button/soft-size3/label.mix.json",
-      "sha256": "c3e61a56cdbcebc85ab6d1c4cd6007e935dcb9ad87d4af943f14faf1e0b79578",
-      "bytes": 620
-    },
-    {
-      "path": "styles/button/soft-size4/container.mix.json",
-      "sha256": "aa4592105500c6fc1b4d03a75315380fc92deed3b6a251d9967e37ea480e8ff7",
-      "bytes": 2692
-    },
-    {
-      "path": "styles/button/soft-size4/icon.mix.json",
-      "sha256": "79867c0eb44025ed5e066586e28dd1ec8fcb546bbe697e455d64bfe75b5bb5ba",
-      "bytes": 302
-    },
-    {
-      "path": "styles/button/soft-size4/label.mix.json",
-      "sha256": "a89d32a028b459dfad58c2f2572334e1302111f18e529bbe1b83e4648b65d12d",
-      "bytes": 639
-    },
-    {
-      "path": "styles/button/solid-size1/container.mix.json",
-      "sha256": "52f25b4393fc1c0d4bc3a067003b03f554f326e2536d0ceeedeabe453802bca2",
-      "bytes": 2694
-    },
-    {
-      "path": "styles/button/solid-size1/icon.mix.json",
-      "sha256": "87d6287df62a8d9f0dbdbf519ef45752a8a071daf8eaf00b64b952d1ac2f4fd5",
-      "bytes": 308
-    },
-    {
-      "path": "styles/button/solid-size1/label.mix.json",
-      "sha256": "906d184dc3db5b163634089be795eff31370be59293c9cde71f47106421f4f83",
-      "bytes": 644
-    },
-    {
-      "path": "styles/button/solid-size2/container.mix.json",
-      "sha256": "278b6ccb3c5d3ab3ba2535b90c5410dd458e80105b3d3a3000f8e18e93e7b0e1",
-      "bytes": 2694
-    },
-    {
-      "path": "styles/button/solid-size2/icon.mix.json",
-      "sha256": "5d647a63917081769706012c54332765848bf71a3180fe8dc50edf72152eb777",
-      "bytes": 308
-    },
-    {
-      "path": "styles/button/solid-size2/label.mix.json",
-      "sha256": "4a38f46f015f58daf6c6a4250628d6a5277b1db2a1e5701d366b7571d6157d2d",
-      "bytes": 641
-    },
-    {
-      "path": "styles/button/solid-size3/container.mix.json",
-      "sha256": "ca918e7db4506f655ba3887803ab86a7fe411d989fd42f7bbccc672d2df62bfe",
-      "bytes": 2694
-    },
-    {
-      "path": "styles/button/solid-size3/icon.mix.json",
-      "sha256": "3464fd0c045d22b33260e28d439449e0f67a023185ba4fd103a2e38d4cec1e99",
-      "bytes": 308
-    },
-    {
-      "path": "styles/button/solid-size3/label.mix.json",
-      "sha256": "184a013aca7a1082c362469a3cab7d0c687ed4649cd8714e9274f6045a621f64",
-      "bytes": 626
-    },
-    {
-      "path": "styles/button/solid-size4/container.mix.json",
-      "sha256": "e298144e11bf824383273795e5f41fcd33da8eb0c52d674e8d44aa50de8f40b1",
-      "bytes": 2694
-    },
-    {
-      "path": "styles/button/solid-size4/icon.mix.json",
-      "sha256": "1ae004bb7a22402e7e2812fa7a5a4d0470658c2fe016c65736fb345ec35bc532",
-      "bytes": 308
-    },
-    {
-      "path": "styles/button/solid-size4/label.mix.json",
-      "sha256": "3c6bc13d5a4e08fd05a3a934c4d23d75d5f4de5e7fa100ad4320e36dec8b3e90",
-      "bytes": 645
-    },
-    {
-      "path": "styles/button/surface-size1/container.mix.json",
-      "sha256": "3e20f4862eaf7308661d1d3e8530438c9f699db43d86825fc44e517661c493dd",
-      "bytes": 5648
-    },
-    {
-      "path": "styles/button/surface-size1/icon.mix.json",
-      "sha256": "85bcf16a35b2e827395d99d6516de6d375737dd549e48e1bdc73afaae61c939e",
-      "bytes": 302
-    },
-    {
-      "path": "styles/button/surface-size1/label.mix.json",
-      "sha256": "d446780069282882b24cf823c56396eedfa3bb349e4984b09253cd013e58a5de",
-      "bytes": 638
-    },
-    {
-      "path": "styles/button/surface-size2/container.mix.json",
-      "sha256": "ec51aaef3fdcf52414653a5f1a3adbd1de0e5f81863f19268f12c4cf5fbe567c",
-      "bytes": 5648
-    },
-    {
-      "path": "styles/button/surface-size2/icon.mix.json",
-      "sha256": "1e6774a0bfebd8bf208b7626154a956c5835dad885970e2164e5d7fb74497bb6",
-      "bytes": 302
-    },
-    {
-      "path": "styles/button/surface-size2/label.mix.json",
-      "sha256": "8519482344e85cca89b8d6ff6c24e92c48b837e5b93283df82d3076edbecd57a",
-      "bytes": 635
-    },
-    {
-      "path": "styles/button/surface-size3/container.mix.json",
-      "sha256": "fea154fdad169c11b6dc91f9454ec689f2850fadc6375c143976118657e49907",
-      "bytes": 5648
-    },
-    {
-      "path": "styles/button/surface-size3/icon.mix.json",
-      "sha256": "5bd2121f6f6bedb76ec54c28f0b1afc68544d2737873ff8de12d662543452adf",
-      "bytes": 302
-    },
-    {
-      "path": "styles/button/surface-size3/label.mix.json",
-      "sha256": "c3e61a56cdbcebc85ab6d1c4cd6007e935dcb9ad87d4af943f14faf1e0b79578",
-      "bytes": 620
-    },
-    {
-      "path": "styles/button/surface-size4/container.mix.json",
-      "sha256": "522cddc6fd94d80f6a534f252e4ad353168ddf6452dd1f25ce6163d7d2a459c8",
-      "bytes": 5648
-    },
-    {
-      "path": "styles/button/surface-size4/icon.mix.json",
-      "sha256": "79867c0eb44025ed5e066586e28dd1ec8fcb546bbe697e455d64bfe75b5bb5ba",
-      "bytes": 302
-    },
-    {
-      "path": "styles/button/surface-size4/label.mix.json",
-      "sha256": "a89d32a028b459dfad58c2f2572334e1302111f18e529bbe1b83e4648b65d12d",
-      "bytes": 639
     },
     {
       "path": "themes/dark.mix.json",

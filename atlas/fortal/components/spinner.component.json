@@ -1,0 +1,120 @@
+{
+  "schema": "mix_atlas/component/v2",
+  "id": "spinner",
+  "label": "Spinner",
+  "properties": [
+    {
+      "id": "size",
+      "kind": "enum",
+      "values": [
+        "size1",
+        "size2",
+        "size3"
+      ],
+      "required": true,
+      "default": "size1"
+    },
+    {
+      "id": "spinnerSize",
+      "kind": "number",
+      "required": true,
+      "default": 20.0
+    },
+    {
+      "id": "strokeWidth",
+      "kind": "number",
+      "required": true,
+      "default": 2.0
+    },
+    {
+      "id": "duration",
+      "kind": "duration",
+      "required": true,
+      "default": 800
+    }
+  ],
+  "states": [
+    {
+      "id": "default",
+      "widgetStates": [],
+      "properties": {}
+    }
+  ],
+  "slots": [],
+  "anatomy": {
+    "root": "spinner",
+    "nodes": [
+      {
+        "id": "spinner",
+        "kind": "spinner",
+        "children": [],
+        "bindings": {
+          "size": {
+            "property": "spinnerSize"
+          },
+          "strokeWidth": {
+            "property": "strokeWidth"
+          },
+          "color": {
+            "token": "color/fortal.accent.9"
+          },
+          "duration": {
+            "property": "duration"
+          }
+        }
+      }
+    ]
+  },
+  "recipes": [
+    {
+      "id": "size1",
+      "properties": {
+        "size": "size1",
+        "spinnerSize": 16.0,
+        "strokeWidth": 1.5
+      },
+      "styles": {}
+    },
+    {
+      "id": "size2",
+      "properties": {
+        "size": "size2",
+        "spinnerSize": 20.0,
+        "strokeWidth": 2.0
+      },
+      "styles": {}
+    },
+    {
+      "id": "size3",
+      "properties": {
+        "size": "size3",
+        "spinnerSize": 24.0,
+        "strokeWidth": 2.5
+      },
+      "styles": {}
+    }
+  ],
+  "styles": {},
+  "semantics": {
+    "role": "progressIndicator",
+    "bindings": {
+      "liveRegion": {
+        "literal": true
+      }
+    }
+  },
+  "oracles": [
+    {
+      "theme": "light",
+      "image": "light/spinner.png",
+      "metadata": "light/spinner.json",
+      "evidence": "rendered"
+    },
+    {
+      "theme": "dark",
+      "image": "dark/spinner.png",
+      "metadata": "dark/spinner.json",
+      "evidence": "rendered"
+    }
+  ]
+}

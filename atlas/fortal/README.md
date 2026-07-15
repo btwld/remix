@@ -11,11 +11,9 @@ loading it does not execute or compile Remix source code.
 - `light/` and `dark/` — 42 component contact-sheet PNGs and structured
   sidecars, one per component and theme
 - `themes/` — strict `mix_protocol` v1 theme documents
-- `components/button.component.json` — bounded Button properties, states,
-  anatomy, semantics, recipe coordinates, evidence, and visual-oracle links
-- `styles/button/` — projected built-in container, label, and icon style
-  documents for all 20 recipes
-- `protocol/coverage.json` — portable and rendered-only coverage diagnostics
+- `components/` — 21 strict `mix_atlas/component/v2` documents with embedded
+  Mix Protocol style libraries
+- `protocol/coverage.json` — portable inventory, totals, and token diagnostics
 - `protocol/fixtures/` — a representable built-in style fixture using Fortal
   tokens
 
@@ -26,26 +24,19 @@ the Fortal source tree, so adding a public `fortal_*_styles.dart` component
 without adding it to this catalog fails generation instead of silently reducing
 coverage.
 
-Button retains the deep portable `component/v1` projection. It covers five
-variants, four sizes, and default, hovered, pressed, focused, disabled, and
-loading scenarios in light and dark themes: 240 cells total, 200 non-loading
-cells, and 40 loading cells. The other 20 component families are explicitly
-marked `rendered-only`: their real widgets, declared variants, sizes, and
-meaningful states are visible in the contact sheets, while recipes, slots, and
-resolved properties are not fabricated before a component-specific portable
-adapter exists.
+Every catalog entry has a portable adapter and document. Together they contain
+exactly 148 recipes and 613 recipe × state cells per theme, for 1,226 light and
+dark renders. Coverage reports zero rendered-only components and zero
+placeholder nodes. Whole contact sheets remain visual oracles; the component
+documents are the primary selectable catalog representation.
 
-The producer adapter walks the real `RemixButtonStyler` sources and variants,
-then uses each built-in leaf styler's normal merge semantics. It does not copy
-the Fortal recipe. It calls `RemixButton.composeStyle` first so widget-owned
-defaults and tooling share one source of truth. Container, label, and icon
-leaves are portable after the multi-source nested-styler fix from
-`btwld/mix#981`. `RemixSpinner` remains an explicit unsupported slot because no
-neutral primitive has been selected.
-
-The 200 non-loading cells reconstructed from this capture match the existing
-light and dark Button screenshot oracles exactly. The 40 loading cells remain
-screenshot-only until spinner support is deliberately designed.
+Each adapter walks the real Fortal composite styler and recursively projects
+its built-in Mix leaf sources and widget-state variants. Component-v2 embeds
+those canonical style documents under stable recipe and slot identifiers.
+Custom scalar visuals such as spinner timing and strokes, slider geometry, and
+progress fractions use typed bindings. Compound components use explicit
+anatomy and nested-component references; runtime callbacks, editing, and
+overlays are inert diagnostics rather than visual placeholders.
 
 The raw Fortal theme also contains nested color-token references in six shadow
 tokens; the capture resolves those colors to concrete runtime theme values

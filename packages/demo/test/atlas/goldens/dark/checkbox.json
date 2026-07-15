@@ -128,14 +128,18 @@
       "states": [
         "selected"
       ],
-      "props": {}
+      "props": {
+        "selected": true
+      }
     },
     {
       "id": "disabled",
       "states": [
         "disabled"
       ],
-      "props": {}
+      "props": {
+        "enabled": false
+      }
     }
   ]
 }
