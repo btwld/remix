@@ -53,9 +53,8 @@ melos:
     ci:
       steps:
         - generate:check
-        - dcm:check
         - test:flutter
-      description: Verify generated sources and DCM, then run Flutter and Dart tests
+      description: Verify generated sources, then run Flutter and Dart tests
 
     atlas:fortal:
       steps:

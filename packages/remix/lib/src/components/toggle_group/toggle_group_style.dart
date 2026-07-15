@@ -2,10 +2,21 @@ part of 'toggle_group.dart';
 
 /// Style configuration for a [RemixToggleGroup] container and its items.
 @MixableStyler()
-class RemixToggleGroupStyler
-    extends
-        RemixFlexContainerStyler<RemixToggleGroupSpec, RemixToggleGroupStyler>
-    with Diagnosticable, _$RemixToggleGroupStylerMixin {
+class RemixToggleGroupStyler extends Style<RemixToggleGroupSpec>
+    with
+        VariantStyleMixin<RemixToggleGroupStyler, RemixToggleGroupSpec>,
+        WidgetModifierStyleMixin<RemixToggleGroupStyler, RemixToggleGroupSpec>,
+        AnimationStyleMixin<RemixToggleGroupStyler, RemixToggleGroupSpec>,
+        BorderStyleMixin<RemixToggleGroupStyler>,
+        BorderRadiusStyleMixin<RemixToggleGroupStyler>,
+        ShadowStyleMixin<RemixToggleGroupStyler>,
+        DecorationStyleMixin<RemixToggleGroupStyler>,
+        SpacingStyleMixin<RemixToggleGroupStyler>,
+        TransformStyleMixin<RemixToggleGroupStyler>,
+        ConstraintStyleMixin<RemixToggleGroupStyler>,
+        FlexStyleMixin<RemixToggleGroupStyler>,
+        Diagnosticable,
+        _$RemixToggleGroupStylerMixin {
   @MixableField(setterType: FlexBoxStyler)
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
 
@@ -15,11 +26,12 @@ class RemixToggleGroupStyler
   const RemixToggleGroupStyler.create({
     Prop<StyleSpec<FlexBoxSpec>>? container,
     Prop<StyleSpec<RemixToggleGroupItemSpec>>? item,
-    super.variants,
-    super.animation,
-    super.modifier,
+    List<VariantStyle<RemixToggleGroupSpec>>? variants,
+    AnimationConfig? animation,
+    WidgetModifierConfig? modifier,
   }) : $container = container,
-       $item = item;
+       $item = item,
+       super(variants: variants, animation: animation, modifier: modifier);
 
   RemixToggleGroupStyler({
     FlexBoxStyler? container,
@@ -64,7 +76,6 @@ class RemixToggleGroupStyler
     );
   }
 
-  @override
   RemixToggleGroupStyler alignment(Alignment value) {
     return merge(
       RemixToggleGroupStyler(container: FlexBoxStyler(alignment: value)),

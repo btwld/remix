@@ -73,11 +73,32 @@ class _ViewToggleState extends State<ViewToggle> {
 Arrow, Home, and End keys move focus only. Selection changes after explicit
 activation with Space, Enter, or a pointer.
 
+## Value and enabled-state contract
+
+- Item values are non-null, unique keys with stable equality and hash codes
+- `selectedValue: null` means no selection; otherwise it must match one item
+- An empty `items` list is valid when `selectedValue` is null
+- At most one item may set `autofocus: true`
+- `onChanged: null` disables the entire group, just like `enabled: false`
+
+Rebuild with a new item list when values or ordering change. Do not mutate the
+list or a value's equality behavior while it is rendered.
+
+Visible text supplies an item's accessible name. Icon-only items must provide a
+non-empty `semanticLabel`; an explicit semantic label replaces the visible
+label for accessibility services instead of being announced in addition to it.
+
 ## Per-item styling
 
 The group's `item` style is the default for every option. An item's `style` is
 merged afterward, so one option can add a local treatment while retaining group
 states and sizing.
+
+The group styler controls structural container styling and context variants such
+as brightness, breakpoints, and text direction. Put hover, press, focus,
+selected, and disabled variants on `RemixToggleGroupItemStyler`; they resolve
+independently for each option. A raw `styleSpec` is authoritative and bypasses
+both the group and per-item fluent stylers.
 
 <CodeGroup title="Per-item style" defaultLanguage="dart">
 ```dart

@@ -75,68 +75,6 @@ void widgetControllerTest<S extends Spec<S>>(
   });
 }
 
-@isTest
-void widgetControllerTestAt<S extends Spec<S>>(
-  String description, {
-  required int index,
-  required Widget Function() build,
-  Future<void> Function(WidgetTester tester)? act,
-  required Set<WidgetState> expectedStates,
-}) {
-  ftest.testWidgets(description, (tester) async {
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: Center(
-            child: Padding(padding: const EdgeInsets.all(8.0), child: build()),
-          ),
-        ),
-      ),
-    );
-    await tester.pumpAndSettle();
-
-    await act?.call(tester);
-
-    final elements = find
-        .byType(StyleBuilder<S>)
-        .evaluate()
-        .whereType<StatefulElement>()
-        .toList();
-    if (elements.length > index) {
-      final styleBuilder = elements[index].widget as StyleBuilder<S>;
-      final controller = styleBuilder.controller;
-      if (controller == null) {
-        throw Exception(
-          'WidgetStatesController not found in StyleBuilder widget at index '
-          '$index.',
-        );
-      }
-
-      expect(controller.value, equals(expectedStates));
-      return;
-    }
-
-    final providers = find
-        .byType(WidgetStateProvider)
-        .evaluate()
-        .map((element) => element.widget)
-        .whereType<WidgetStateProvider>()
-        .toList();
-    ftest.expect(providers.length, ftest.greaterThan(index));
-    final provider = providers[index];
-    final states = <WidgetState>{
-      if (provider.disabled) WidgetState.disabled,
-      if (provider.hovered) WidgetState.hovered,
-      if (provider.focused) WidgetState.focused,
-      if (provider.pressed) WidgetState.pressed,
-      if (provider.dragged) WidgetState.dragged,
-      if (provider.selected) WidgetState.selected,
-      if (provider.error) WidgetState.error,
-    };
-    expect(states, equals(expectedStates));
-  });
-}
-
 Future<void> sendKeyAndSettle(
   WidgetTester tester,
   LogicalKeyboardKey key,
