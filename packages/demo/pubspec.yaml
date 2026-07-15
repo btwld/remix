@@ -12,8 +12,13 @@ dependency_overrides:
   mix:
     git:
       url: https://github.com/btwld/mix.git
-      ref: b926ac42b11f4017970e9c3fc9c5bacc24bfd439
+      ref: 691eae21bc4bb806a71387186a68cb1682db5474
       path: packages/mix
+  mix_protocol:
+    git:
+      url: https://github.com/btwld/mix.git
+      ref: 691eae21bc4bb806a71387186a68cb1682db5474
+      path: packages/mix_protocol
 
 dependencies:
   flutter:
@@ -30,18 +35,14 @@ dev_dependencies:
     sdk: flutter
   mix_atlas:
     git:
-      url: https://github.com/btwld/mix.git
-      ref: b926ac42b11f4017970e9c3fc9c5bacc24bfd439
+      url: https://github.com/btwld/muse.git
+      ref: 8d224940447f1fd04a27509d012654a7e197b51c
       path: packages/mix_atlas
-  mix_protocol:
-    git:
-      url: https://github.com/btwld/mix.git
-      ref: b926ac42b11f4017970e9c3fc9c5bacc24bfd439
-      path: packages/mix_protocol
+  mix_protocol: any
   mix_atlas_capture:
     git:
-      url: https://github.com/btwld/mix.git
-      ref: b926ac42b11f4017970e9c3fc9c5bacc24bfd439
+      url: https://github.com/btwld/muse.git
+      ref: 8d224940447f1fd04a27509d012654a7e197b51c
       path: packages/mix_atlas_capture
   widgetbook_generator: ^3.24.0
 

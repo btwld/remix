@@ -436,8 +436,8 @@ packages:
     dependency: "direct overridden"
     description:
       path: "packages/mix"
-      ref: b926ac42b11f4017970e9c3fc9c5bacc24bfd439
-      resolved-ref: b926ac42b11f4017970e9c3fc9c5bacc24bfd439
+      ref: "691eae21bc4bb806a71387186a68cb1682db5474"
+      resolved-ref: "691eae21bc4bb806a71387186a68cb1682db5474"
       url: "https://github.com/btwld/mix.git"
     source: git
     version: "2.1.0"
@@ -453,18 +453,18 @@ packages:
     dependency: transitive
     description:
       path: "packages/mix_atlas"
-      ref: b926ac42b11f4017970e9c3fc9c5bacc24bfd439
-      resolved-ref: b926ac42b11f4017970e9c3fc9c5bacc24bfd439
-      url: "https://github.com/btwld/mix.git"
+      ref: "8d224940447f1fd04a27509d012654a7e197b51c"
+      resolved-ref: "8d224940447f1fd04a27509d012654a7e197b51c"
+      url: "https://github.com/btwld/muse.git"
     source: git
     version: "0.1.0"
   mix_atlas_capture:
     dependency: transitive
     description:
       path: "packages/mix_atlas_capture"
-      ref: b926ac42b11f4017970e9c3fc9c5bacc24bfd439
-      resolved-ref: b926ac42b11f4017970e9c3fc9c5bacc24bfd439
-      url: "https://github.com/btwld/mix.git"
+      ref: "8d224940447f1fd04a27509d012654a7e197b51c"
+      resolved-ref: "8d224940447f1fd04a27509d012654a7e197b51c"
+      url: "https://github.com/btwld/muse.git"
     source: git
     version: "0.1.0"
   mix_generator:
@@ -476,11 +476,11 @@ packages:
     source: hosted
     version: "2.1.2"
   mix_protocol:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       path: "packages/mix_protocol"
-      ref: b926ac42b11f4017970e9c3fc9c5bacc24bfd439
-      resolved-ref: b926ac42b11f4017970e9c3fc9c5bacc24bfd439
+      ref: "691eae21bc4bb806a71387186a68cb1682db5474"
+      resolved-ref: "691eae21bc4bb806a71387186a68cb1682db5474"
       url: "https://github.com/btwld/mix.git"
     source: git
     version: "1.0.0"
