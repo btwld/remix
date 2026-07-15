@@ -1,5 +1,16 @@
 part of 'dialog.dart';
 
+WidgetBuilder _captureMixScope(BuildContext context, WidgetBuilder builder) {
+  final scope = MixScope.maybeOf(context);
+  if (scope == null) return builder;
+
+  return (_) => MixScope(
+    tokens: scope.tokens,
+    orderOfModifiers: scope.orderOfModifiers,
+    child: Builder(builder: builder),
+  );
+}
+
 /// Shows a customizable dialog.
 ///
 /// ## Example
@@ -37,8 +48,6 @@ Future<T?> showRemixDialog<T>({
   bool requestFocus = true,
   TraversalEdgeBehavior? traversalEdgeBehavior,
 }) {
-  final scope = MixScope.maybeOf(context);
-
   return showNakedDialog(
     context: context,
     barrierColor: barrierColor ?? Colors.black54,
@@ -51,28 +60,24 @@ Future<T?> showRemixDialog<T>({
     transitionBuilder: transitionBuilder,
     requestFocus: requestFocus,
     traversalEdgeBehavior: traversalEdgeBehavior,
-    builder: (routeContext) {
-      if (scope == null) return builder(routeContext);
-
-      return MixScope(
-        tokens: scope.tokens,
-        orderOfModifiers: scope.orderOfModifiers,
-        child: Builder(builder: builder),
-      );
-    },
+    builder: _captureMixScope(context, builder),
   );
 }
 
 /// Shows an urgent modal alert dialog with Remix styling support.
 ///
-/// The [builder] returns the visual contents of the alert. When using
-/// [RemixDialog], set [RemixDialog.wrapInNakedDialog] to false because this
-/// helper supplies the alert-dialog semantics wrapper.
+/// [semanticLabel] must be a non-empty, localized description of the alert.
+/// When [barrierDismissible] is true, [barrierLabel] must also be non-empty.
+///
+/// [initialFocusNode] remains owned by the caller and should be attached to a
+/// focusable descendant of [builder]. Without one, focus falls back to an
+/// autofocus or the first traversable descendant. Escape and platform Back
+/// dismiss the alert with a null result.
 Future<T?> showRemixAlertDialog<T>({
   required BuildContext context,
   required WidgetBuilder builder,
-  required Color barrierColor,
   required String semanticLabel,
+  Color? barrierColor,
   String? barrierLabel,
   bool barrierDismissible = false,
   bool useRootNavigator = true,
@@ -82,11 +87,9 @@ Future<T?> showRemixAlertDialog<T>({
   RouteTransitionsBuilder? transitionBuilder,
   FocusNode? initialFocusNode,
 }) {
-  final scope = MixScope.maybeOf(context);
-
   return showNakedAlertDialog(
     context: context,
-    barrierColor: barrierColor,
+    barrierColor: barrierColor ?? Colors.black54,
     semanticLabel: semanticLabel,
     barrierLabel: barrierLabel,
     barrierDismissible: barrierDismissible,
@@ -96,15 +99,7 @@ Future<T?> showRemixAlertDialog<T>({
     transitionDuration: transitionDuration,
     transitionBuilder: transitionBuilder,
     initialFocusNode: initialFocusNode,
-    builder: (routeContext) {
-      if (scope == null) return builder(routeContext);
-
-      return MixScope(
-        tokens: scope.tokens,
-        orderOfModifiers: scope.orderOfModifiers,
-        child: Builder(builder: builder),
-      );
-    },
+    builder: _captureMixScope(context, builder),
   );
 }
 
@@ -137,7 +132,6 @@ class RemixDialog extends StatelessWidget {
     this.actions,
     this.modal = true,
     this.semanticLabel,
-    this.wrapInNakedDialog = true,
     this.style = const RemixDialogStyler.create(),
     this.styleSpec,
   }) : assert(
@@ -165,12 +159,6 @@ class RemixDialog extends StatelessWidget {
 
   /// Semantic label for accessibility.
   final String? semanticLabel;
-
-  /// Whether to add this component's own [NakedDialog] semantics wrapper.
-  ///
-  /// Set this to false when the component is built by
-  /// [showRemixAlertDialog], which supplies an alert-specific wrapper.
-  final bool wrapInNakedDialog;
 
   /// The style configuration for the dialog.
   final RemixDialogStyler style;
@@ -218,7 +206,9 @@ class RemixDialog extends StatelessWidget {
       },
     );
 
-    if (!wrapInNakedDialog) return content;
+    final hasDialogAncestor =
+        context.findAncestorWidgetOfExactType<NakedDialog>() != null;
+    if (hasDialogAncestor) return content;
 
     return NakedDialog(
       modal: modal,

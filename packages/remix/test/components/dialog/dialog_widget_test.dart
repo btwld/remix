@@ -1,10 +1,28 @@
+import 'dart:ui' show SemanticsRole;
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:naked_ui/naked_ui.dart';
 import 'package:remix/remix.dart';
 
 import '../../helpers/test_helpers.dart';
+
+List<SemanticsNode> _collectSemanticsNodes(
+  SemanticsNode root,
+  bool Function(SemanticsNode) predicate,
+) {
+  final nodes = <SemanticsNode>[];
+
+  bool visitor(SemanticsNode node) {
+    if (!node.isMergedIntoParent && predicate(node)) nodes.add(node);
+    node.visitChildren(visitor);
+    return true;
+  }
+
+  visitor(root);
+  return nodes;
+}
 
 void main() {
   group('showRemixAlertDialog', () {
@@ -15,7 +33,6 @@ void main() {
             builder: (context) => TextButton(
               onPressed: () => showRemixAlertDialog<void>(
                 context: context,
-                barrierColor: Colors.black54,
                 semanticLabel: 'Delete project',
                 transitionDuration: Duration.zero,
                 builder: (context) => const Text('Alert content'),
@@ -31,7 +48,6 @@ void main() {
       await tester.pump();
 
       expect(find.text('Alert content'), findsOneWidget);
-      expect(find.byType(NakedDialog), findsOneWidget);
     });
 
     testWidgets('rejects an empty semantic label', (tester) async {
@@ -50,7 +66,6 @@ void main() {
       expect(
         () => showRemixAlertDialog<void>(
           context: hostContext,
-          barrierColor: Colors.black54,
           semanticLabel: '   ',
           builder: (context) => const SizedBox.shrink(),
         ),
@@ -67,7 +82,6 @@ void main() {
             builder: (context) => TextButton(
               onPressed: () => showRemixAlertDialog<void>(
                 context: context,
-                barrierColor: Colors.black54,
                 semanticLabel: 'Delete project',
                 transitionDuration: Duration.zero,
                 builder: (context) => const SizedBox.square(
@@ -106,7 +120,6 @@ void main() {
               onPressed: () {
                 result = showRemixAlertDialog<String>(
                   context: context,
-                  barrierColor: Colors.black54,
                   semanticLabel: 'Delete project',
                   transitionDuration: Duration.zero,
                   initialFocusNode: cancelNode,
@@ -142,7 +155,6 @@ void main() {
               onPressed: () {
                 result = showRemixAlertDialog<String>(
                   context: context,
-                  barrierColor: Colors.black54,
                   semanticLabel: 'Delete project',
                   transitionDuration: Duration.zero,
                   builder: (context) => const Text('Back alert'),
@@ -173,7 +185,6 @@ void main() {
           builder: (context) => TextButton(
             onPressed: () => showRemixAlertDialog<void>(
               context: context,
-              barrierColor: Colors.black54,
               semanticLabel: 'Delete project',
               transitionDuration: Duration.zero,
               builder: (context) {
@@ -194,46 +205,71 @@ void main() {
       expect(find.text('Scoped alert'), findsOneWidget);
     });
 
-    testWidgets('focuses the requested node and wraps RemixDialog once', (
+    testWidgets('focuses the requested node and exposes one alert role', (
       tester,
     ) async {
-      final initialFocusNode = FocusNode(debugLabel: 'safe alert action');
-      addTearDown(initialFocusNode.dispose);
+      final semantics = tester.ensureSemantics();
+      try {
+        final initialFocusNode = FocusNode(debugLabel: 'safe alert action');
+        addTearDown(initialFocusNode.dispose);
 
-      await tester.pumpRemixApp(
-        Builder(
-          builder: (context) => TextButton(
-            onPressed: () => showRemixAlertDialog<void>(
-              context: context,
-              barrierColor: Colors.black54,
-              semanticLabel: 'Delete project',
-              transitionDuration: Duration.zero,
-              initialFocusNode: initialFocusNode,
-              builder: (context) => Center(
-                child: RemixDialog(
-                  wrapInNakedDialog: false,
-                  title: 'Delete project',
-                  actions: [
-                    TextButton(
-                      focusNode: initialFocusNode,
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: const Text('Cancel'),
-                    ),
-                  ],
+        await tester.pumpRemixApp(
+          Builder(
+            builder: (context) => TextButton(
+              onPressed: () => showRemixAlertDialog<void>(
+                context: context,
+                semanticLabel: 'Delete project confirmation',
+                transitionDuration: Duration.zero,
+                initialFocusNode: initialFocusNode,
+                builder: (context) => Center(
+                  child: RemixDialog(
+                    title: 'Delete project',
+                    actions: [
+                      TextButton(
+                        focusNode: initialFocusNode,
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: const Text('Cancel'),
+                      ),
+                    ],
+                  ),
                 ),
               ),
+              child: const Text('Open'),
             ),
-            child: const Text('Open'),
           ),
-        ),
-      );
+        );
 
-      await tester.tap(find.text('Open'));
-      await tester.pump();
-      await tester.pump();
+        await tester.tap(find.text('Open'));
+        await tester.pump();
+        await tester.pump();
 
-      expect(initialFocusNode.hasFocus, isTrue);
-      expect(find.byType(NakedDialog), findsOneWidget);
+        expect(initialFocusNode.hasFocus, isTrue);
+
+        final root = tester
+            .binding
+            .renderViews
+            .single
+            .owner!
+            .semanticsOwner!
+            .rootSemanticsNode!;
+        final alerts = _collectSemanticsNodes(
+          root,
+          (node) => node.getSemanticsData().role == SemanticsRole.alertDialog,
+        );
+        final dialogs = _collectSemanticsNodes(
+          root,
+          (node) => node.getSemanticsData().role == SemanticsRole.dialog,
+        );
+
+        expect(alerts, hasLength(1));
+        expect(
+          alerts.single.getSemanticsData().label,
+          'Delete project confirmation',
+        );
+        expect(dialogs, isEmpty);
+      } finally {
+        semantics.dispose();
+      }
     });
   });
 

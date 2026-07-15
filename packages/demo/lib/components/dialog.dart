@@ -50,11 +50,9 @@ Widget buildAlertDialogUseCase(BuildContext context) {
         onPressed: () {
           showRemixAlertDialog<void>(
             context: context,
-            barrierColor: Colors.black54,
             semanticLabel: 'Delete project confirmation',
             builder: (context) => Center(
               child: FortalDialog(
-                wrapInNakedDialog: false,
                 title: 'Delete project?',
                 description:
                     'This permanently deletes the project and all of its data.',

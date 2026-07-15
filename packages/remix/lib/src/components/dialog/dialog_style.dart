@@ -76,7 +76,6 @@ class RemixDialogStyler
     List<Widget>? actions,
     bool modal = true,
     String? semanticLabel,
-    bool wrapInNakedDialog = true,
   }) {
     return RemixDialog(
       key: key,
@@ -85,7 +84,6 @@ class RemixDialogStyler
       actions: actions,
       modal: modal,
       semanticLabel: semanticLabel,
-      wrapInNakedDialog: wrapInNakedDialog,
       style: this,
       child: child,
     );

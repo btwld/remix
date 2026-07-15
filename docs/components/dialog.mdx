@@ -59,19 +59,17 @@ class DialogExample extends StatelessWidget {
 
 Use `showRemixAlertDialog` for urgent or destructive confirmations. It requires
 a localized semantic label, keeps barrier dismissal disabled by default, moves
-focus into the alert, and lets Escape or platform Back cancel safely. Set
-`wrapInNakedDialog: false` on the visual `RemixDialog` so the route contains one
-alert-dialog semantics wrapper.
+focus into the alert, and lets Escape or platform Back cancel safely. A nested
+`RemixDialog` automatically reuses the alert semantics wrapper, so no additional
+configuration is needed.
 
 <CodeGroup title="Destructive alert" defaultLanguage="dart">
 ```dart
 showRemixAlertDialog<void>(
   context: context,
-  barrierColor: Colors.black54,
   semanticLabel: 'Delete project confirmation',
   builder: (context) => Center(
     child: FortalDialog(
-      wrapInNakedDialog: false,
       title: 'Delete project?',
       description: 'This permanently deletes the project and all of its data.',
       actions: [
@@ -152,8 +150,8 @@ Future<T?> showRemixDialog<T>({
 Future<T?> showRemixAlertDialog<T>({
   required BuildContext context,
   required WidgetBuilder builder,
-  required Color barrierColor,
   required String semanticLabel,
+  Color? barrierColor,
   String? barrierLabel,
   bool barrierDismissible = false,
   bool useRootNavigator = true,
@@ -166,6 +164,15 @@ Future<T?> showRemixAlertDialog<T>({
 ```
 </CodeGroup>
 
+`semanticLabel` must be a non-empty, localized description of the alert.
+`barrierColor` defaults to `Colors.black54`. If `barrierDismissible` is enabled,
+provide a non-empty localized `barrierLabel` as well.
+
+An `initialFocusNode` remains owned by the caller and should be attached to a
+focusable widget inside the alert. If it is omitted, focus uses an autofocus
+request or the first traversable descendant. Escape and platform Back dismiss
+the alert with a `null` result.
+
 ## Constructor
 <CodeGroup title="Constructor" defaultLanguage="dart">
 ```dart
@@ -177,7 +184,6 @@ const RemixDialog({
   List<Widget>? actions,
   bool modal = true,
   String? semanticLabel,
-  bool wrapInNakedDialog = true,
   RemixDialogStyler style = const RemixDialogStyler.create(),
   RemixDialogSpec? styleSpec,
 })
@@ -210,11 +216,6 @@ Optional. Whether the dialog blocks interaction with background content.
 #### `semanticLabel` → `String?`
 
 Optional. Accessibility label for the dialog. Defaults to the title when omitted.
-
-#### `wrapInNakedDialog` → `bool`
-
-Optional. Whether to add the component's own dialog semantics wrapper. Set to
-`false` when using `showRemixAlertDialog`, which supplies the alert wrapper.
 
 #### `style` → `RemixDialogStyler`
 
@@ -262,6 +263,6 @@ Sets dialog container shadow.
 
 Applies widget modifiers such as clipping, opacity, or scaling.
 
-#### `call({Key? key, Widget? child, String? title, String? description, List<Widget>? actions, bool modal = true, String? semanticLabel, bool wrapInNakedDialog = true})`
+#### `call({Key? key, Widget? child, String? title, String? description, List<Widget>? actions, bool modal = true, String? semanticLabel})`
 
 Creates a `RemixDialog` widget with this style applied.
