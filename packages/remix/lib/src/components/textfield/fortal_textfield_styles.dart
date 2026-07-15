@@ -43,12 +43,6 @@ RemixTextFieldStyler _fortalTextFieldBaseStyler(FortalTextFieldSize size) {
         cursorWidth: 1.5,
       )
       .spacing(8)
-      .layout(
-        FlexBoxStyler()
-            .mainAxisSize(.min)
-            .crossAxisAlignment(.start)
-            .spacing(8),
-      )
       .wrap(.iconTheme(color: FortalTokens.gray10(), size: 16.0))
       .onFocused(
         RemixTextFieldStyler().borderAll(
