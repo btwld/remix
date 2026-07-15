@@ -106,21 +106,19 @@ void main() {
       expect(listPosition.dy, lessThan(gridPosition.dy));
     });
 
-    testWidgets('group context variants compose with item state variants', (
+    testWidgets('item context variants compose with item state variants', (
       tester,
     ) async {
-      final style =
-          RemixToggleGroupStyler(
-            item: RemixToggleGroupItemStyler()
-                .foregroundColor(Colors.red)
-                .onSelected(
-                  RemixToggleGroupItemStyler().foregroundColor(Colors.blue),
-                ),
-          ).onRtl(
-            RemixToggleGroupStyler(
-              item: RemixToggleGroupItemStyler().foregroundColor(Colors.green),
+      final style = RemixToggleGroupStyler(
+        item: RemixToggleGroupItemStyler()
+            .foregroundColor(Colors.red)
+            .onSelected(
+              RemixToggleGroupItemStyler().foregroundColor(Colors.blue),
+            )
+            .onRtl(
+              RemixToggleGroupItemStyler().foregroundColor(Colors.green),
             ),
-          );
+      );
 
       await tester.pumpRemixApp(
         RemixToggleGroup<String>(

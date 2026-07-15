@@ -44,6 +44,20 @@ class RemixToggleGroupItem<T> {
 }
 
 /// A styled, single-select toggle group with roving keyboard focus.
+///
+/// ## Example
+///
+/// ```dart
+/// RemixToggleGroup<String>(
+///   selectedValue: selectedValue,
+///   onChanged: (value) => setState(() => selectedValue = value),
+///   items: const [
+///     RemixToggleGroupItem(value: 'left', icon: Icons.format_align_left),
+///     RemixToggleGroupItem(value: 'center', icon: Icons.format_align_center),
+///     RemixToggleGroupItem(value: 'right', icon: Icons.format_align_right),
+///   ],
+/// )
+/// ```
 class RemixToggleGroup<T> extends StatelessWidget {
   const RemixToggleGroup({
     super.key,
@@ -109,13 +123,6 @@ class RemixToggleGroup<T> extends StatelessWidget {
         mainAxisSize: .min,
       ).wrap(.intrinsicWidth().intrinsicHeight()),
     ).merge(style);
-    // Resolve group-level context variants now, while retaining nested item
-    // variants for resolution inside each option's WidgetStateProvider.
-    final activeStyle =
-        // Mix does not expose another way to retain nested item variants.
-        // ignore: invalid_use_of_visible_for_testing_member
-        effectiveStyle.mergeActiveVariants(context, namedVariants: const {})
-            as RemixToggleGroupStyler;
 
     return NakedToggleGroup<T>(
       selectedValue: selectedValue,
@@ -136,7 +143,10 @@ class RemixToggleGroup<T> extends StatelessWidget {
                 _RemixToggleGroupItemWidget(
                   key: ValueKey(item.value),
                   data: item,
-                  defaultStyle: styleSpec == null ? activeStyle.$item : null,
+                  // Pass the item default with its nested variants intact; each
+                  // option resolves them inside its own WidgetStateProvider,
+                  // matching RemixSelect/RemixMenu.
+                  defaultStyle: styleSpec == null ? effectiveStyle.$item : null,
                   defaultStyleSpec: styleSpec == null ? null : spec.item,
                 ),
             ],
