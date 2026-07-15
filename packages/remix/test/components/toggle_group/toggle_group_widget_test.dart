@@ -83,6 +83,69 @@ void main() {
       expect(size.height, lessThan(100));
     });
 
+    testWidgets('styleSpec preserves vertical layout orientation', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(
+        RemixToggleGroup<String>(
+          items: const [
+            RemixToggleGroupItem(value: 'list', label: 'List'),
+            RemixToggleGroupItem(value: 'grid', label: 'Grid'),
+          ],
+          selectedValue: 'list',
+          onChanged: (_) {},
+          orientation: Axis.vertical,
+          styleSpec: const RemixToggleGroupSpec(),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final listPosition = tester.getTopLeft(find.text('List'));
+      final gridPosition = tester.getTopLeft(find.text('Grid'));
+      expect(listPosition.dx, gridPosition.dx);
+      expect(listPosition.dy, lessThan(gridPosition.dy));
+    });
+
+    testWidgets('group context variants compose with item state variants', (
+      tester,
+    ) async {
+      final style =
+          RemixToggleGroupStyler(
+            item: RemixToggleGroupItemStyler()
+                .foregroundColor(Colors.red)
+                .onSelected(
+                  RemixToggleGroupItemStyler().foregroundColor(Colors.blue),
+                ),
+          ).onRtl(
+            RemixToggleGroupStyler(
+              item: RemixToggleGroupItemStyler().foregroundColor(Colors.green),
+            ),
+          );
+
+      await tester.pumpRemixApp(
+        RemixToggleGroup<String>(
+          items: const [
+            RemixToggleGroupItem(value: 'selected', label: 'Selected'),
+            RemixToggleGroupItem(value: 'other', label: 'Other'),
+          ],
+          selectedValue: 'selected',
+          onChanged: (_) {},
+          style: style,
+        ),
+        textDirection: TextDirection.rtl,
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        tester.widget<Text>(find.text('Selected')).style?.color,
+        Colors.blue,
+      );
+      expect(
+        tester.widget<Text>(find.text('Other')).style?.color,
+        Colors.green,
+      );
+    });
+
     testWidgets('tapping an item selects its value', (tester) async {
       final nodes = _focusNodes();
       addTearDown(() => _disposeNodes(nodes));
@@ -387,6 +450,39 @@ void main() {
 
       expect(after.hasFocus, isTrue);
       expect(nodes.every((node) => !node.hasFocus), isTrue);
+    });
+
+    testWidgets('icon-only items use their semantic label', (tester) async {
+      final semantics = tester.ensureSemantics();
+
+      await tester.pumpRemixApp(
+        RemixToggleGroup<String>(
+          items: const [
+            RemixToggleGroupItem(
+              value: 'grid',
+              icon: Icons.grid_view,
+              semanticLabel: 'Grid view',
+            ),
+          ],
+          selectedValue: 'grid',
+          onChanged: (_) {},
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final option = find.bySemanticsLabel('Grid view');
+      expect(option, findsOneWidget);
+      expect(
+        tester.getSemantics(option),
+        isSemantics(
+          label: 'Grid view',
+          isButton: true,
+          isSelected: true,
+          hasSelectedState: true,
+        ),
+      );
+
+      semantics.dispose();
     });
 
     testWidgets('vertical orientation ignores horizontal arrows', (

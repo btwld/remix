@@ -11,6 +11,11 @@ class RemixToggleGroupItem<T> {
   /// Optional icon shown before [label].
   final IconData? icon;
 
+  /// Accessibility label for this item.
+  ///
+  /// Falls back to [label] when omitted.
+  final String? semanticLabel;
+
   /// Whether the item can receive focus and be activated.
   final bool enabled;
 
@@ -27,6 +32,7 @@ class RemixToggleGroupItem<T> {
     required this.value,
     this.label,
     this.icon,
+    this.semanticLabel,
     this.enabled = true,
     this.focusNode,
     this.autofocus = false,
@@ -85,6 +91,16 @@ class RemixToggleGroup<T> extends StatelessWidget {
 
   static final styleFrom = RemixToggleGroupStyler.new;
 
+  StyleSpec<FlexBoxSpec> _withOrientation(StyleSpec<FlexBoxSpec> container) {
+    final flex = container.spec.flex ?? const StyleSpec(spec: FlexSpec());
+
+    return container.copyWith(
+      spec: container.spec.copyWith(
+        flex: flex.copyWith(spec: flex.spec.copyWith(direction: orientation)),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final effectiveStyle = RemixToggleGroupStyler(
@@ -93,6 +109,13 @@ class RemixToggleGroup<T> extends StatelessWidget {
         mainAxisSize: .min,
       ).wrap(.intrinsicWidth().intrinsicHeight()),
     ).merge(style);
+    // Resolve group-level context variants now, while retaining nested item
+    // variants for resolution inside each option's WidgetStateProvider.
+    final activeStyle =
+        // Mix does not expose another way to retain nested item variants.
+        // ignore: invalid_use_of_visible_for_testing_member
+        effectiveStyle.mergeActiveVariants(context, namedVariants: const {})
+            as RemixToggleGroupStyler;
 
     return NakedToggleGroup<T>(
       selectedValue: selectedValue,
@@ -107,13 +130,13 @@ class RemixToggleGroup<T> extends StatelessWidget {
         styleSpec: styleSpec,
         builder: (context, spec) {
           return FlexBox(
-            styleSpec: spec.container,
+            styleSpec: _withOrientation(spec.container),
             children: [
               for (final item in items)
                 _RemixToggleGroupItemWidget(
                   key: ValueKey(item.value),
                   data: item,
-                  defaultStyle: styleSpec == null ? effectiveStyle.$item : null,
+                  defaultStyle: styleSpec == null ? activeStyle.$item : null,
                   defaultStyleSpec: styleSpec == null ? null : spec.item,
                 ),
             ],
@@ -172,7 +195,7 @@ class _RemixToggleGroupItemWidget<T> extends StatelessWidget {
       enabled: data.enabled,
       focusNode: data.focusNode,
       autofocus: data.autofocus,
-      semanticLabel: data.label,
+      semanticLabel: data.semanticLabel ?? data.label,
       builder: (context, state, _) {
         return WidgetStateProvider(
           states: state.states,
