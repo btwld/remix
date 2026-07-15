@@ -89,7 +89,7 @@ class RemixButton extends StatelessWidget {
   /// Protocol and inspection tooling should project this effective style so
   /// it observes the same layout defaults as [build].
   static RemixButtonStyler composeStyle(RemixButtonStyler style) =>
-      .new().mainAxisSize(.min).merge(style);
+      .mainAxisSize(.min).merge(style);
 
   static final styleFrom = RemixButtonStyler.new;
 

@@ -54,14 +54,21 @@ part of 'button.dart';
 /// - [RemixButtonStyler] for the styling API
 /// - [RemixButton] for the widget implementation
 /// - [Spec] for the base specification pattern
-@MixableSpec()
+@MixableSpec(
+  extraStylerMixins: [
+    RemixBoxStylerMixin,
+    LabelStyleMixin,
+    IconStyleMixin,
+    SpinnerStyleMixin,
+  ],
+)
 class RemixButtonSpec with _$RemixButtonSpec {
   /// Styling specification for the button's container.
   ///
   /// Controls the button's layout, background, borders, padding,
   /// and other visual container properties. Uses [FlexBoxSpec]
   /// to support flexible layout arrangements.
-  @MixableField(ignoreSetter: true, skipFactory: true)
+  @MixableField(forwardStyler: true)
   @override
   final StyleSpec<FlexBoxSpec> container;
 
@@ -69,7 +76,6 @@ class RemixButtonSpec with _$RemixButtonSpec {
   ///
   /// Defines typography, color, and text-specific properties
   /// when the button displays text content.
-  @MixableField(ignoreSetter: true, skipFactory: true)
   @override
   final StyleSpec<TextSpec> label;
 
@@ -77,7 +83,6 @@ class RemixButtonSpec with _$RemixButtonSpec {
   ///
   /// Controls icon size, color, and positioning when an icon
   /// is displayed alongside or instead of text.
-  @MixableField(ignoreSetter: true, skipFactory: true)
   @override
   final StyleSpec<IconSpec> icon;
 
@@ -85,7 +90,6 @@ class RemixButtonSpec with _$RemixButtonSpec {
   ///
   /// Defines the appearance of the spinner shown during
   /// asynchronous operations when the button is in loading state.
-  @MixableField(ignoreSetter: true, skipFactory: true)
   @override
   final StyleSpec<RemixSpinnerSpec> spinner;
 

@@ -9,6 +9,8 @@ environment:
 
 dependency_overrides:
   accessibility_tools: ^2.8.0
+  # Keep Mix and Atlas on their compatible revision while the generator and
+  # annotation packages use their published beta through Remix.
   mix:
     git:
       url: https://github.com/btwld/mix.git

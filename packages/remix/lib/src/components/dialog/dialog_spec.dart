@@ -1,9 +1,10 @@
 part of 'dialog.dart';
 
 /// Resolved visual properties for a [RemixDialog].
-@MixableSpec()
+@MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
 class RemixDialogSpec with _$RemixDialogSpec {
   @override
+  @MixableField(forwardStyler: true)
   final StyleSpec<BoxSpec> container;
   @override
   final StyleSpec<TextSpec> title;

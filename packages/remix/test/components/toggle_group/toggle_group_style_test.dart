@@ -20,12 +20,7 @@ void main() {
       initial: RemixToggleGroupStyler(),
       modify: (style) => style.backgroundColor(Colors.blue),
       expect: (style) {
-        expect(
-          style.$container,
-          Prop.maybeMix(
-            FlexBoxStyler(decoration: BoxDecorationMix(color: Colors.blue)),
-          ),
-        );
+        expect(style, RemixToggleGroupStyler.color(Colors.blue));
       },
     );
 
@@ -208,7 +203,7 @@ void main() {
       initial: RemixToggleGroupItemStyler(),
       modify: (style) => style.spacing(8),
       expect: (style) {
-        expect(style.$container, Prop.maybeMix(FlexBoxStyler(spacing: 8)));
+        expect(style, RemixToggleGroupItemStyler.spacing(8));
       },
     );
   });

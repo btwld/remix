@@ -7,7 +7,6 @@ enum FortalProgressSize { size1, size2, size3 }
 enum FortalProgressVariant { surface, soft }
 
 /// Fortal-themed preset for [RemixProgress].
-@MixWidget(name: 'FortalProgress')
 RemixProgressStyler fortalProgressStyler({
   FortalProgressVariant variant = .surface,
   FortalProgressSize size = .size2,
@@ -88,4 +87,40 @@ RemixProgressStyler _fortalProgressSizeStyler(FortalProgressSize size) {
             BoxStyler().height(12.0).borderRadiusAll(FortalTokens.radius3()),
           ),
   };
+}
+
+/// Fortal-themed preset for [RemixProgress].
+class FortalProgress extends StatelessWidget {
+  const FortalProgress({
+    super.key,
+    this.variant = .surface,
+    this.size = .size2,
+    required this.value,
+  });
+
+  const FortalProgress.surface({
+    super.key,
+    this.size = .size2,
+    required this.value,
+  }) : variant = FortalProgressVariant.surface;
+
+  const FortalProgress.soft({
+    super.key,
+    this.size = .size2,
+    required this.value,
+  }) : variant = FortalProgressVariant.soft;
+
+  final FortalProgressVariant variant;
+
+  final FortalProgressSize size;
+
+  final double value;
+
+  @override
+  Widget build(BuildContext context) {
+    return fortalProgressStyler(
+      variant: this.variant,
+      size: this.size,
+    ).call(key: this.key, value: this.value);
+  }
 }

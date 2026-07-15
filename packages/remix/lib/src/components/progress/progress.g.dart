@@ -96,54 +96,530 @@ mixin _$RemixProgressSpec implements Spec<RemixProgressSpec>, Diagnosticable {
 typedef _$RemixProgressSpecMethods = _$RemixProgressSpec; // ignore: unused_element
 
 // **************************************************************************
-// MixWidgetGenerator
+// SpecStylerGenerator
 // **************************************************************************
 
-/// Fortal-themed preset for [RemixProgress].
-class FortalProgress extends StatelessWidget {
-  const FortalProgress({
-    super.key,
-    this.variant = .surface,
-    this.size = .size2,
-    required this.value,
-  });
+class RemixProgressStyler
+    extends MixStyler<RemixProgressStyler, RemixProgressSpec>
+    with RemixBoxStylerMixin<RemixProgressStyler> {
+  final Prop<StyleSpec<BoxSpec>>? $container;
+  final Prop<StyleSpec<BoxSpec>>? $track;
+  final Prop<StyleSpec<BoxSpec>>? $indicator;
+  final Prop<StyleSpec<BoxSpec>>? $trackContainer;
 
-  const FortalProgress.surface({
-    super.key,
-    this.size = .size2,
-    required this.value,
-  }) : variant = FortalProgressVariant.surface;
+  const RemixProgressStyler.create({
+    Prop<StyleSpec<BoxSpec>>? container,
+    Prop<StyleSpec<BoxSpec>>? track,
+    Prop<StyleSpec<BoxSpec>>? indicator,
+    Prop<StyleSpec<BoxSpec>>? trackContainer,
+    super.variants,
+    super.modifier,
+    super.animation,
+  }) : $container = container,
+       $track = track,
+       $indicator = indicator,
+       $trackContainer = trackContainer;
 
-  const FortalProgress.soft({
-    super.key,
-    this.size = .size2,
-    required this.value,
-  }) : variant = FortalProgressVariant.soft;
+  RemixProgressStyler({
+    BoxStyler? container,
+    BoxStyler? track,
+    BoxStyler? indicator,
+    BoxStyler? trackContainer,
+    AnimationConfig? animation,
+    WidgetModifierConfig? modifier,
+    List<VariantStyle<RemixProgressSpec>>? variants,
+  }) : this.create(
+         container: Prop.maybeMix(container),
+         track: Prop.maybeMix(track),
+         indicator: Prop.maybeMix(indicator),
+         trackContainer: Prop.maybeMix(trackContainer),
+         variants: variants,
+         modifier: modifier,
+         animation: animation,
+       );
 
-  final FortalProgressVariant variant;
+  factory RemixProgressStyler.container(BoxStyler value) =>
+      RemixProgressStyler().container(value);
+  factory RemixProgressStyler.track(BoxStyler value) =>
+      RemixProgressStyler().track(value);
+  factory RemixProgressStyler.indicator(BoxStyler value) =>
+      RemixProgressStyler().indicator(value);
+  factory RemixProgressStyler.trackContainer(BoxStyler value) =>
+      RemixProgressStyler().trackContainer(value);
+  factory RemixProgressStyler.alignment(AlignmentGeometry value) =>
+      RemixProgressStyler().alignment(value);
+  factory RemixProgressStyler.padding(EdgeInsetsGeometryMix value) =>
+      RemixProgressStyler().padding(value);
+  factory RemixProgressStyler.margin(EdgeInsetsGeometryMix value) =>
+      RemixProgressStyler().margin(value);
+  factory RemixProgressStyler.constraints(BoxConstraintsMix value) =>
+      RemixProgressStyler().constraints(value);
+  factory RemixProgressStyler.decoration(DecorationMix value) =>
+      RemixProgressStyler().decoration(value);
+  factory RemixProgressStyler.foregroundDecoration(DecorationMix value) =>
+      RemixProgressStyler().foregroundDecoration(value);
+  factory RemixProgressStyler.clipBehavior(Clip value) =>
+      RemixProgressStyler().clipBehavior(value);
+  factory RemixProgressStyler.color(Color value) =>
+      RemixProgressStyler().color(value);
+  factory RemixProgressStyler.gradient(GradientMix value) =>
+      RemixProgressStyler().gradient(value);
+  factory RemixProgressStyler.border(BoxBorderMix value) =>
+      RemixProgressStyler().border(value);
+  factory RemixProgressStyler.borderRadius(BorderRadiusGeometryMix value) =>
+      RemixProgressStyler().borderRadius(value);
+  factory RemixProgressStyler.elevation(ElevationShadow value) =>
+      RemixProgressStyler().elevation(value);
+  factory RemixProgressStyler.shadow(BoxShadowMix value) =>
+      RemixProgressStyler().shadow(value);
+  factory RemixProgressStyler.shadows(List<BoxShadowMix> value) =>
+      RemixProgressStyler().shadows(value);
+  factory RemixProgressStyler.width(double value) =>
+      RemixProgressStyler().width(value);
+  factory RemixProgressStyler.height(double value) =>
+      RemixProgressStyler().height(value);
+  factory RemixProgressStyler.size(double width, double height) =>
+      RemixProgressStyler().size(width, height);
+  factory RemixProgressStyler.minWidth(double value) =>
+      RemixProgressStyler().minWidth(value);
+  factory RemixProgressStyler.maxWidth(double value) =>
+      RemixProgressStyler().maxWidth(value);
+  factory RemixProgressStyler.minHeight(double value) =>
+      RemixProgressStyler().minHeight(value);
+  factory RemixProgressStyler.maxHeight(double value) =>
+      RemixProgressStyler().maxHeight(value);
+  factory RemixProgressStyler.scale(
+    double scale, {
+    Alignment alignment = .center,
+  }) => RemixProgressStyler().scale(scale, alignment: alignment);
+  factory RemixProgressStyler.rotate(
+    double radians, {
+    Alignment alignment = .center,
+  }) => RemixProgressStyler().rotate(radians, alignment: alignment);
+  factory RemixProgressStyler.translate(double x, double y, [double z = 0.0]) =>
+      RemixProgressStyler().translate(x, y, z);
+  factory RemixProgressStyler.skew(double skewX, double skewY) =>
+      RemixProgressStyler().skew(skewX, skewY);
+  factory RemixProgressStyler.textStyle(TextStyler value) =>
+      RemixProgressStyler().textStyle(value);
+  factory RemixProgressStyler.image(DecorationImageMix value) =>
+      RemixProgressStyler().image(value);
+  factory RemixProgressStyler.shape(ShapeBorderMix value) =>
+      RemixProgressStyler().shape(value);
+  factory RemixProgressStyler.backgroundImage(
+    ImageProvider image, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) => RemixProgressStyler().backgroundImage(
+    image,
+    fit: fit,
+    alignment: alignment,
+    repeat: repeat,
+  );
+  factory RemixProgressStyler.backgroundImageUrl(
+    String url, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) => RemixProgressStyler().backgroundImageUrl(
+    url,
+    fit: fit,
+    alignment: alignment,
+    repeat: repeat,
+  );
+  factory RemixProgressStyler.backgroundImageAsset(
+    String path, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) => RemixProgressStyler().backgroundImageAsset(
+    path,
+    fit: fit,
+    alignment: alignment,
+    repeat: repeat,
+  );
+  factory RemixProgressStyler.linearGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? begin,
+    AlignmentGeometry? end,
+    TileMode? tileMode,
+  }) => RemixProgressStyler().linearGradient(
+    colors: colors,
+    stops: stops,
+    begin: begin,
+    end: end,
+    tileMode: tileMode,
+  );
+  factory RemixProgressStyler.radialGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? radius,
+    AlignmentGeometry? focal,
+    double? focalRadius,
+    TileMode? tileMode,
+  }) => RemixProgressStyler().radialGradient(
+    colors: colors,
+    stops: stops,
+    center: center,
+    radius: radius,
+    focal: focal,
+    focalRadius: focalRadius,
+    tileMode: tileMode,
+  );
+  factory RemixProgressStyler.sweepGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? startAngle,
+    double? endAngle,
+    TileMode? tileMode,
+  }) => RemixProgressStyler().sweepGradient(
+    colors: colors,
+    stops: stops,
+    center: center,
+    startAngle: startAngle,
+    endAngle: endAngle,
+    tileMode: tileMode,
+  );
+  factory RemixProgressStyler.foregroundLinearGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? begin,
+    AlignmentGeometry? end,
+    TileMode? tileMode,
+  }) => RemixProgressStyler().foregroundLinearGradient(
+    colors: colors,
+    stops: stops,
+    begin: begin,
+    end: end,
+    tileMode: tileMode,
+  );
+  factory RemixProgressStyler.foregroundRadialGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? radius,
+    AlignmentGeometry? focal,
+    double? focalRadius,
+    TileMode? tileMode,
+  }) => RemixProgressStyler().foregroundRadialGradient(
+    colors: colors,
+    stops: stops,
+    center: center,
+    radius: radius,
+    focal: focal,
+    focalRadius: focalRadius,
+    tileMode: tileMode,
+  );
+  factory RemixProgressStyler.foregroundSweepGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? startAngle,
+    double? endAngle,
+    TileMode? tileMode,
+  }) => RemixProgressStyler().foregroundSweepGradient(
+    colors: colors,
+    stops: stops,
+    center: center,
+    startAngle: startAngle,
+    endAngle: endAngle,
+    tileMode: tileMode,
+  );
+  factory RemixProgressStyler.transform(
+    Matrix4 value, {
+    Alignment alignment = .center,
+  }) => RemixProgressStyler().transform(value, alignment: alignment);
 
-  final FortalProgressSize size;
-
-  final double value;
-
-  @override
-  Widget build(BuildContext context) {
-    return fortalProgressStyler(
-      variant: this.variant,
-      size: this.size,
-    ).call(key: this.key, value: this.value);
+  RemixProgressStyler alignment(AlignmentGeometry value) {
+    return container(BoxStyler().alignment(value));
   }
-}
 
-// **************************************************************************
-// StylerGenerator
-// **************************************************************************
+  RemixProgressStyler padding(EdgeInsetsGeometryMix value) {
+    return container(BoxStyler().padding(value));
+  }
 
-mixin _$RemixProgressStylerMixin on Style<RemixProgressSpec>, Diagnosticable {
-  Prop<StyleSpec<BoxSpec>>? get $container;
-  Prop<StyleSpec<BoxSpec>>? get $track;
-  Prop<StyleSpec<BoxSpec>>? get $indicator;
-  Prop<StyleSpec<BoxSpec>>? get $trackContainer;
+  RemixProgressStyler margin(EdgeInsetsGeometryMix value) {
+    return container(BoxStyler().margin(value));
+  }
+
+  RemixProgressStyler constraints(BoxConstraintsMix value) {
+    return container(BoxStyler().constraints(value));
+  }
+
+  RemixProgressStyler decoration(DecorationMix value) {
+    return container(BoxStyler().decoration(value));
+  }
+
+  RemixProgressStyler foregroundDecoration(DecorationMix value) {
+    return container(BoxStyler().foregroundDecoration(value));
+  }
+
+  RemixProgressStyler clipBehavior(Clip value) {
+    return container(BoxStyler().clipBehavior(value));
+  }
+
+  RemixProgressStyler color(Color value) {
+    return container(BoxStyler().color(value));
+  }
+
+  RemixProgressStyler gradient(GradientMix value) {
+    return container(BoxStyler().gradient(value));
+  }
+
+  RemixProgressStyler border(BoxBorderMix value) {
+    return container(BoxStyler().border(value));
+  }
+
+  RemixProgressStyler borderRadius(BorderRadiusGeometryMix value) {
+    return container(BoxStyler().borderRadius(value));
+  }
+
+  RemixProgressStyler elevation(ElevationShadow value) {
+    return container(BoxStyler().elevation(value));
+  }
+
+  RemixProgressStyler shadow(BoxShadowMix value) {
+    return container(BoxStyler().shadow(value));
+  }
+
+  RemixProgressStyler shadows(List<BoxShadowMix> value) {
+    return container(BoxStyler().shadows(value));
+  }
+
+  RemixProgressStyler width(double value) {
+    return container(BoxStyler().width(value));
+  }
+
+  RemixProgressStyler height(double value) {
+    return container(BoxStyler().height(value));
+  }
+
+  RemixProgressStyler size(double width, double height) {
+    return container(BoxStyler().size(width, height));
+  }
+
+  RemixProgressStyler minWidth(double value) {
+    return container(BoxStyler().minWidth(value));
+  }
+
+  RemixProgressStyler maxWidth(double value) {
+    return container(BoxStyler().maxWidth(value));
+  }
+
+  RemixProgressStyler minHeight(double value) {
+    return container(BoxStyler().minHeight(value));
+  }
+
+  RemixProgressStyler maxHeight(double value) {
+    return container(BoxStyler().maxHeight(value));
+  }
+
+  RemixProgressStyler scale(double scale, {Alignment alignment = .center}) {
+    return container(BoxStyler().scale(scale, alignment: alignment));
+  }
+
+  RemixProgressStyler rotate(double radians, {Alignment alignment = .center}) {
+    return container(BoxStyler().rotate(radians, alignment: alignment));
+  }
+
+  RemixProgressStyler translate(double x, double y, [double z = 0.0]) {
+    return container(BoxStyler().translate(x, y, z));
+  }
+
+  RemixProgressStyler skew(double skewX, double skewY) {
+    return container(BoxStyler().skew(skewX, skewY));
+  }
+
+  RemixProgressStyler textStyle(TextStyler value) {
+    return container(BoxStyler().textStyle(value));
+  }
+
+  RemixProgressStyler image(DecorationImageMix value) {
+    return container(BoxStyler().image(value));
+  }
+
+  RemixProgressStyler shape(ShapeBorderMix value) {
+    return container(BoxStyler().shape(value));
+  }
+
+  RemixProgressStyler backgroundImage(
+    ImageProvider image, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) {
+    return container(
+      BoxStyler().backgroundImage(
+        image,
+        fit: fit,
+        alignment: alignment,
+        repeat: repeat,
+      ),
+    );
+  }
+
+  RemixProgressStyler backgroundImageUrl(
+    String url, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) {
+    return container(
+      BoxStyler().backgroundImageUrl(
+        url,
+        fit: fit,
+        alignment: alignment,
+        repeat: repeat,
+      ),
+    );
+  }
+
+  RemixProgressStyler backgroundImageAsset(
+    String path, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) {
+    return container(
+      BoxStyler().backgroundImageAsset(
+        path,
+        fit: fit,
+        alignment: alignment,
+        repeat: repeat,
+      ),
+    );
+  }
+
+  RemixProgressStyler linearGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? begin,
+    AlignmentGeometry? end,
+    TileMode? tileMode,
+  }) {
+    return container(
+      BoxStyler().linearGradient(
+        colors: colors,
+        stops: stops,
+        begin: begin,
+        end: end,
+        tileMode: tileMode,
+      ),
+    );
+  }
+
+  RemixProgressStyler radialGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? radius,
+    AlignmentGeometry? focal,
+    double? focalRadius,
+    TileMode? tileMode,
+  }) {
+    return container(
+      BoxStyler().radialGradient(
+        colors: colors,
+        stops: stops,
+        center: center,
+        radius: radius,
+        focal: focal,
+        focalRadius: focalRadius,
+        tileMode: tileMode,
+      ),
+    );
+  }
+
+  RemixProgressStyler sweepGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? startAngle,
+    double? endAngle,
+    TileMode? tileMode,
+  }) {
+    return container(
+      BoxStyler().sweepGradient(
+        colors: colors,
+        stops: stops,
+        center: center,
+        startAngle: startAngle,
+        endAngle: endAngle,
+        tileMode: tileMode,
+      ),
+    );
+  }
+
+  RemixProgressStyler foregroundLinearGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? begin,
+    AlignmentGeometry? end,
+    TileMode? tileMode,
+  }) {
+    return container(
+      BoxStyler().foregroundLinearGradient(
+        colors: colors,
+        stops: stops,
+        begin: begin,
+        end: end,
+        tileMode: tileMode,
+      ),
+    );
+  }
+
+  RemixProgressStyler foregroundRadialGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? radius,
+    AlignmentGeometry? focal,
+    double? focalRadius,
+    TileMode? tileMode,
+  }) {
+    return container(
+      BoxStyler().foregroundRadialGradient(
+        colors: colors,
+        stops: stops,
+        center: center,
+        radius: radius,
+        focal: focal,
+        focalRadius: focalRadius,
+        tileMode: tileMode,
+      ),
+    );
+  }
+
+  RemixProgressStyler foregroundSweepGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? startAngle,
+    double? endAngle,
+    TileMode? tileMode,
+  }) {
+    return container(
+      BoxStyler().foregroundSweepGradient(
+        colors: colors,
+        stops: stops,
+        center: center,
+        startAngle: startAngle,
+        endAngle: endAngle,
+        tileMode: tileMode,
+      ),
+    );
+  }
+
+  RemixProgressStyler transform(
+    Matrix4 value, {
+    Alignment alignment = .center,
+  }) {
+    return container(BoxStyler().transform(value, alignment: alignment));
+  }
 
   /// Sets the container.
   RemixProgressStyler container(BoxStyler value) {
@@ -166,16 +642,19 @@ mixin _$RemixProgressStylerMixin on Style<RemixProgressSpec>, Diagnosticable {
   }
 
   /// Sets the animation configuration.
+  @override
   RemixProgressStyler animate(AnimationConfig value) {
     return merge(RemixProgressStyler(animation: value));
   }
 
   /// Sets the style variants.
+  @override
   RemixProgressStyler variants(List<VariantStyle<RemixProgressSpec>> value) {
     return merge(RemixProgressStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
+  @override
   RemixProgressStyler wrap(WidgetModifierConfig value) {
     return merge(RemixProgressStyler(modifier: value));
   }

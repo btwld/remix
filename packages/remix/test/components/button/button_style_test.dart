@@ -61,14 +61,7 @@ void main() {
         final shadow = BoxShadowMix().color(Colors.black).blurRadius(4.0);
         final style = RemixButtonStyler().shadow(shadow);
 
-        expect(
-          style.$container,
-          equals(
-            Prop.maybeMix(
-              FlexBoxStyler(decoration: BoxDecorationMix(boxShadow: [shadow])),
-            ),
-          ),
-        );
+        expect(style, equals(RemixButtonStyler.shadow(shadow)));
       });
     });
 
@@ -106,12 +99,8 @@ void main() {
         modify: (style) => style.padding(EdgeInsetsGeometryMix.all(16.0)),
         expect: (style) {
           expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(
-                FlexBoxStyler(padding: EdgeInsetsGeometryMix.all(16.0)),
-              ),
-            ),
+            style,
+            equals(RemixButtonStyler.padding(EdgeInsetsGeometryMix.all(16.0))),
           );
         },
       );
@@ -122,12 +111,8 @@ void main() {
         modify: (style) => style.margin(EdgeInsetsGeometryMix.all(8.0)),
         expect: (style) {
           expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(
-                FlexBoxStyler(margin: EdgeInsetsGeometryMix.all(8.0)),
-              ),
-            ),
+            style,
+            equals(RemixButtonStyler.margin(EdgeInsetsGeometryMix.all(8.0))),
           );
         },
       );
@@ -143,14 +128,12 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                FlexBoxStyler(
-                  decoration: BoxDecorationMix(
-                    color: Colors.blue,
-                    borderRadius: BorderRadiusMix.circular(8.0),
-                  ),
+              RemixButtonStyler.decoration(
+                BoxDecorationMix(
+                  color: Colors.blue,
+                  borderRadius: BorderRadiusMix.circular(8.0),
                 ),
               ),
             ),
@@ -164,10 +147,8 @@ void main() {
         modify: (style) => style.alignment(Alignment.centerLeft),
         expect: (style) {
           expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(FlexBoxStyler(alignment: Alignment.centerLeft)),
-            ),
+            style,
+            equals(RemixButtonStyler.alignment(Alignment.centerLeft)),
           );
         },
       );
@@ -177,10 +158,7 @@ void main() {
         initial: RemixButtonStyler(),
         modify: (style) => style.spacing(12.0),
         expect: (style) {
-          expect(
-            style.$container,
-            equals(Prop.maybeMix(FlexBoxStyler(spacing: 12.0))),
-          );
+          expect(style, equals(RemixButtonStyler.spacing(12.0)));
         },
       );
 
@@ -192,15 +170,10 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                FlexBoxStyler(
-                  constraints: BoxConstraintsMix(
-                    minWidth: 100.0,
-                    minHeight: 40.0,
-                  ),
-                ),
+              RemixButtonStyler.constraints(
+                BoxConstraintsMix(minWidth: 100.0, minHeight: 40.0),
               ),
             ),
           );
@@ -237,13 +210,11 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                FlexBoxStyler(
-                  foregroundDecoration: BoxDecorationMix(
-                    border: BoxBorderMix.all(BorderSideMix(color: Colors.red)),
-                  ),
+              RemixButtonStyler.foregroundDecoration(
+                BoxDecorationMix(
+                  border: BoxBorderMix.all(BorderSideMix(color: Colors.red)),
                 ),
               ),
             ),
@@ -258,13 +229,11 @@ void main() {
             style.transform(Matrix4.identity(), alignment: Alignment.topLeft),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                FlexBoxStyler(
-                  transform: Matrix4.identity(),
-                  transformAlignment: Alignment.topLeft,
-                ),
+              RemixButtonStyler.transform(
+                Matrix4.identity(),
+                alignment: Alignment.topLeft,
               ),
             ),
           );
@@ -272,9 +241,10 @@ void main() {
       );
 
       styleMethodTest(
-        'rotate',
+        'modifierRotate',
         initial: RemixButtonStyler(),
-        modify: (style) => style.rotate(0.5, alignment: Alignment.topLeft),
+        modify: (style) =>
+            style.modifierRotate(0.5, alignment: Alignment.topLeft),
         expect: (style) {
           expect(
             style.$modifier,
@@ -293,7 +263,10 @@ void main() {
         initial: RemixButtonStyler(),
         modify: (style) => style.scale(1.2, alignment: Alignment.topLeft),
         expect: (style) {
-          expect(style.$container, isNotNull);
+          expect(
+            style,
+            equals(RemixButtonStyler.scale(1.2, alignment: Alignment.topLeft)),
+          );
         },
       );
 
@@ -302,7 +275,7 @@ void main() {
         initial: RemixButtonStyler(),
         modify: (style) => style.translate(1.0, 2.0, 3.0),
         expect: (style) {
-          expect(style.$container, isNotNull);
+          expect(style, equals(RemixButtonStyler.translate(1.0, 2.0, 3.0)));
         },
       );
 
@@ -311,7 +284,7 @@ void main() {
         initial: RemixButtonStyler(),
         modify: (style) => style.skew(0.1, 0.2),
         expect: (style) {
-          expect(style.$container, isNotNull);
+          expect(style, equals(RemixButtonStyler.skew(0.1, 0.2)));
         },
       );
 
@@ -370,14 +343,7 @@ void main() {
         initial: RemixButtonStyler(),
         modify: (style) => style.color(Colors.blue),
         expect: (style) {
-          expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(
-                FlexBoxStyler(decoration: BoxDecorationMix(color: Colors.blue)),
-              ),
-            ),
-          );
+          expect(style, equals(RemixButtonStyler.color(Colors.blue)));
         },
       );
 

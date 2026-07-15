@@ -1,9 +1,10 @@
 part of 'tooltip.dart';
 
 /// Resolved visual values for a [RemixTooltip].
-@MixableSpec()
+@MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
 class RemixTooltipSpec with _$RemixTooltipSpec {
   @override
+  @MixableField(forwardStyler: true)
   final StyleSpec<BoxSpec> container;
   @override
   final StyleSpec<TextSpec> label;

@@ -70,10 +70,7 @@ void main() {
         initial: RemixRadioStyler(),
         modify: (style) => style.alignment(Alignment.center),
         expect: (style) {
-          expect(
-            style.$container,
-            equals(Prop.maybeMix(BoxStyler(alignment: Alignment.center))),
-          );
+          expect(style, equals(RemixRadioStyler.alignment(Alignment.center)));
         },
       );
 
@@ -83,12 +80,8 @@ void main() {
         modify: (style) => style.padding(EdgeInsetsGeometryMix.all(16.0)),
         expect: (style) {
           expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(
-                BoxStyler(padding: EdgeInsetsGeometryMix.all(16.0)),
-              ),
-            ),
+            style,
+            equals(RemixRadioStyler.padding(EdgeInsetsGeometryMix.all(16.0))),
           );
         },
       );
@@ -99,10 +92,8 @@ void main() {
         modify: (style) => style.margin(EdgeInsetsGeometryMix.all(8.0)),
         expect: (style) {
           expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(BoxStyler(margin: EdgeInsetsGeometryMix.all(8.0))),
-            ),
+            style,
+            equals(RemixRadioStyler.margin(EdgeInsetsGeometryMix.all(8.0))),
           );
         },
       );
@@ -128,21 +119,7 @@ void main() {
         initial: RemixRadioStyler(),
         modify: (style) => style.size(24.0, 24.0),
         expect: (style) {
-          expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  constraints: BoxConstraintsMix(
-                    minWidth: 24.0,
-                    maxWidth: 24.0,
-                    minHeight: 24.0,
-                    maxHeight: 24.0,
-                  ),
-                ),
-              ),
-            ),
-          );
+          expect(style, equals(RemixRadioStyler.size(24.0, 24.0)));
         },
       );
 
@@ -152,15 +129,9 @@ void main() {
         modify: (style) => style.borderRadius(BorderRadiusMix.circular(12.0)),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  decoration: BoxDecorationMix(
-                    borderRadius: BorderRadiusMix.circular(12.0),
-                  ),
-                ),
-              ),
+              RemixRadioStyler.borderRadius(BorderRadiusMix.circular(12.0)),
             ),
           );
         },
@@ -174,15 +145,10 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  constraints: BoxConstraintsMix(
-                    minWidth: 20.0,
-                    minHeight: 20.0,
-                  ),
-                ),
+              RemixRadioStyler.constraints(
+                BoxConstraintsMix(minWidth: 20.0, minHeight: 20.0),
               ),
             ),
           );
@@ -200,14 +166,12 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  decoration: BoxDecorationMix(
-                    color: Colors.blue,
-                    borderRadius: BorderRadiusMix.circular(8.0),
-                  ),
+              RemixRadioStyler.decoration(
+                BoxDecorationMix(
+                  color: Colors.blue,
+                  borderRadius: BorderRadiusMix.circular(8.0),
                 ),
               ),
             ),
@@ -225,13 +189,11 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  foregroundDecoration: BoxDecorationMix(
-                    border: BoxBorderMix.all(BorderSideMix(color: Colors.red)),
-                  ),
+              RemixRadioStyler.foregroundDecoration(
+                BoxDecorationMix(
+                  border: BoxBorderMix.all(BorderSideMix(color: Colors.red)),
                 ),
               ),
             ),
@@ -246,13 +208,11 @@ void main() {
             style.transform(Matrix4.identity(), alignment: Alignment.topLeft),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  transform: Matrix4.identity(),
-                  transformAlignment: Alignment.topLeft,
-                ),
+              RemixRadioStyler.transform(
+                Matrix4.identity(),
+                alignment: Alignment.topLeft,
               ),
             ),
           );

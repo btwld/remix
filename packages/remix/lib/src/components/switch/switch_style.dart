@@ -4,41 +4,7 @@ part of 'switch.dart';
 ///
 /// Use this class to style the switch track and thumb, including selected,
 /// focused, disabled, hovered, and pressed state variants.
-@MixableStyler()
-class RemixSwitchStyler
-    extends RemixContainerStyler<RemixSwitchSpec, RemixSwitchStyler>
-    with
-        SelectedWidgetStateVariantMixin<RemixSwitchSpec, RemixSwitchStyler>,
-        Diagnosticable,
-        _$RemixSwitchStylerMixin {
-  @MixableField(setterType: BoxStyler)
-  final Prop<StyleSpec<BoxSpec>>? $container;
-  @MixableField(setterType: BoxStyler)
-  final Prop<StyleSpec<BoxSpec>>? $thumb;
-
-  const RemixSwitchStyler.create({
-    Prop<StyleSpec<BoxSpec>>? container,
-    Prop<StyleSpec<BoxSpec>>? thumb,
-    super.variants,
-    super.animation,
-    super.modifier,
-  }) : $container = container,
-       $thumb = thumb;
-
-  RemixSwitchStyler({
-    BoxStyler? container,
-    BoxStyler? thumb,
-    AnimationConfig? animation,
-    List<VariantStyle<RemixSwitchSpec>>? variants,
-    WidgetModifierConfig? modifier,
-  }) : this.create(
-         container: Prop.maybeMix(container),
-         thumb: Prop.maybeMix(thumb),
-         variants: variants,
-         animation: animation,
-         modifier: modifier,
-       );
-
+extension RemixSwitchStylerRemixHelpers on RemixSwitchStyler {
   /// Sets thumb color
   RemixSwitchStyler thumbColor(Color value) {
     return merge(
@@ -51,11 +17,6 @@ class RemixSwitchStyler
   /// Sets the track/rail background color.
   RemixSwitchStyler trackColor(Color value) {
     return color(value);
-  }
-
-  /// Sets container alignment
-  RemixSwitchStyler alignment(Alignment value) {
-    return merge(RemixSwitchStyler(container: BoxStyler(alignment: value)));
   }
 
   /// Creates a [RemixSwitch] widget with this style applied.
@@ -94,47 +55,6 @@ class RemixSwitchStyler
       semanticLabel: semanticLabel,
       mouseCursor: mouseCursor,
       style: this,
-    );
-  }
-
-  // Abstract method implementations for mixins
-
-  @override
-  RemixSwitchStyler constraints(BoxConstraintsMix value) {
-    return merge(RemixSwitchStyler(container: BoxStyler(constraints: value)));
-  }
-
-  @override
-  RemixSwitchStyler decoration(DecorationMix value) {
-    return merge(RemixSwitchStyler(container: BoxStyler(decoration: value)));
-  }
-
-  @override
-  RemixSwitchStyler margin(EdgeInsetsGeometryMix value) {
-    return merge(RemixSwitchStyler(container: BoxStyler(margin: value)));
-  }
-
-  @override
-  RemixSwitchStyler padding(EdgeInsetsGeometryMix value) {
-    return merge(RemixSwitchStyler(container: BoxStyler(padding: value)));
-  }
-
-  @override
-  RemixSwitchStyler foregroundDecoration(DecorationMix value) {
-    return merge(
-      RemixSwitchStyler(container: BoxStyler(foregroundDecoration: value)),
-    );
-  }
-
-  @override
-  RemixSwitchStyler transform(
-    Matrix4 value, {
-    AlignmentGeometry alignment = Alignment.center,
-  }) {
-    return merge(
-      RemixSwitchStyler(
-        container: BoxStyler(transform: value, transformAlignment: alignment),
-      ),
     );
   }
 }

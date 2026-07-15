@@ -1,10 +1,11 @@
 part of 'toggle_group.dart';
 
 /// Resolved visual properties for a [RemixToggleGroup].
-@MixableSpec()
+@MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
 class RemixToggleGroupSpec with _$RemixToggleGroupSpec {
   /// Layout and decoration for the group container.
   @override
+  @MixableField(forwardStyler: true)
   final StyleSpec<FlexBoxSpec> container;
 
   /// Default visual style for every option in the group.
@@ -19,10 +20,13 @@ class RemixToggleGroupSpec with _$RemixToggleGroupSpec {
 }
 
 /// Resolved visual properties for an item in a [RemixToggleGroup].
-@MixableSpec()
+@MixableSpec(
+  extraStylerMixins: [RemixBoxStylerMixin, LabelStyleMixin, IconStyleMixin],
+)
 class RemixToggleGroupItemSpec with _$RemixToggleGroupItemSpec {
   /// Layout and decoration for the item content.
   @override
+  @MixableField(forwardStyler: true)
   final StyleSpec<FlexBoxSpec> container;
 
   /// Text style for the optional label.

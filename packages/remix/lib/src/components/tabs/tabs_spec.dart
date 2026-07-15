@@ -1,9 +1,10 @@
 part of 'tabs.dart';
 
 /// Resolved visual values for a [RemixTabBar].
-@MixableSpec()
+@MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
 class RemixTabBarSpec with _$RemixTabBarSpec {
   @override
+  @MixableField(forwardStyler: true)
   final StyleSpec<FlexBoxSpec> container;
 
   const RemixTabBarSpec({StyleSpec<FlexBoxSpec>? container})
@@ -11,9 +12,12 @@ class RemixTabBarSpec with _$RemixTabBarSpec {
 }
 
 /// Resolved visual values for an individual [RemixTab].
-@MixableSpec()
+@MixableSpec(
+  extraStylerMixins: [RemixBoxStylerMixin, LabelStyleMixin, IconStyleMixin],
+)
 class RemixTabSpec with _$RemixTabSpec {
   @override
+  @MixableField(forwardStyler: true)
   final StyleSpec<FlexBoxSpec> container;
   @override
   final StyleSpec<TextSpec> label;
@@ -30,9 +34,10 @@ class RemixTabSpec with _$RemixTabSpec {
 }
 
 /// Resolved visual values for a [RemixTabView].
-@MixableSpec()
+@MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
 class RemixTabViewSpec with _$RemixTabViewSpec {
   @override
+  @MixableField(forwardStyler: true)
   final StyleSpec<BoxSpec> container;
 
   const RemixTabViewSpec({StyleSpec<BoxSpec>? container})

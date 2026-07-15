@@ -1,12 +1,12 @@
 import 'package:mix/mix.dart';
 
-import 'remix_style.dart';
-
-mixin SelectedWidgetStateVariantMixin<
-  S extends Spec<S>,
-  T extends RemixStyler<S, T>
+/// Adds the selected widget-state variant to generated Remix stylers.
+extension SelectedWidgetStateVariantExtension<
+  T extends Style<S>,
+  S extends Spec<S>
 >
-    on RemixStyler<S, T> {
+    on MixStyler<T, S> {
+  /// Applies [style] while the widget is selected.
   T onSelected(T style) {
     return variant(ContextVariant.widgetState(.selected), style);
   }

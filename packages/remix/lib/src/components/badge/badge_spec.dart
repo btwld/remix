@@ -1,9 +1,10 @@
 part of 'badge.dart';
 
 /// Resolved visual properties for a [RemixBadge].
-@MixableSpec()
+@MixableSpec(extraStylerMixins: [RemixBoxStylerMixin, LabelStyleMixin])
 class RemixBadgeSpec with _$RemixBadgeSpec {
   @override
+  @MixableField(forwardStyler: true)
   final StyleSpec<BoxSpec> container;
   @override
   final StyleSpec<TextSpec> label;

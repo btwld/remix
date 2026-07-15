@@ -101,231 +101,595 @@ mixin _$RemixButtonSpec implements Spec<RemixButtonSpec>, Diagnosticable {
 typedef _$RemixButtonSpecMethods = _$RemixButtonSpec; // ignore: unused_element
 
 // **************************************************************************
-// MixWidgetGenerator
+// SpecStylerGenerator
 // **************************************************************************
 
-/// Fortal-themed button style and widget presets.
-class FortalButton extends StatelessWidget {
-  const FortalButton({
-    super.key,
-    this.variant = .solid,
-    this.size = .size2,
-    required this.label,
-    this.leadingIcon,
-    this.trailingIcon,
-    this.textBuilder,
-    this.leadingIconBuilder,
-    this.trailingIconBuilder,
-    this.loadingBuilder,
-    this.loading = false,
-    this.enabled = true,
-    this.onPressed,
-    this.onLongPress,
-    this.focusNode,
-    this.autofocus = false,
-    this.enableFeedback = true,
-    this.semanticLabel,
-    this.semanticHint,
-    this.excludeSemantics = false,
-    this.mouseCursor = SystemMouseCursors.click,
-  });
+class RemixButtonStyler extends MixStyler<RemixButtonStyler, RemixButtonSpec>
+    with
+        RemixBoxStylerMixin<RemixButtonStyler>,
+        LabelStyleMixin<RemixButtonStyler>,
+        IconStyleMixin<RemixButtonStyler>,
+        SpinnerStyleMixin<RemixButtonStyler> {
+  final Prop<StyleSpec<FlexBoxSpec>>? $container;
+  final Prop<StyleSpec<TextSpec>>? $label;
+  final Prop<StyleSpec<IconSpec>>? $icon;
+  final Prop<StyleSpec<RemixSpinnerSpec>>? $spinner;
+  final Prop<IconAlignment>? $iconAlignment;
 
-  /// High-emphasis filled button.
-  const FortalButton.solid({
-    super.key,
-    this.size = .size2,
-    required this.label,
-    this.leadingIcon,
-    this.trailingIcon,
-    this.textBuilder,
-    this.leadingIconBuilder,
-    this.trailingIconBuilder,
-    this.loadingBuilder,
-    this.loading = false,
-    this.enabled = true,
-    this.onPressed,
-    this.onLongPress,
-    this.focusNode,
-    this.autofocus = false,
-    this.enableFeedback = true,
-    this.semanticLabel,
-    this.semanticHint,
-    this.excludeSemantics = false,
-    this.mouseCursor = SystemMouseCursors.click,
-  }) : variant = FortalButtonVariant.solid;
+  const RemixButtonStyler.create({
+    Prop<StyleSpec<FlexBoxSpec>>? container,
+    Prop<StyleSpec<TextSpec>>? label,
+    Prop<StyleSpec<IconSpec>>? icon,
+    Prop<StyleSpec<RemixSpinnerSpec>>? spinner,
+    Prop<IconAlignment>? iconAlignment,
+    super.variants,
+    super.modifier,
+    super.animation,
+  }) : $container = container,
+       $label = label,
+       $icon = icon,
+       $spinner = spinner,
+       $iconAlignment = iconAlignment;
 
-  /// Low-emphasis filled button.
-  const FortalButton.soft({
-    super.key,
-    this.size = .size2,
-    required this.label,
-    this.leadingIcon,
-    this.trailingIcon,
-    this.textBuilder,
-    this.leadingIconBuilder,
-    this.trailingIconBuilder,
-    this.loadingBuilder,
-    this.loading = false,
-    this.enabled = true,
-    this.onPressed,
-    this.onLongPress,
-    this.focusNode,
-    this.autofocus = false,
-    this.enableFeedback = true,
-    this.semanticLabel,
-    this.semanticHint,
-    this.excludeSemantics = false,
-    this.mouseCursor = SystemMouseCursors.click,
-  }) : variant = FortalButtonVariant.soft;
+  RemixButtonStyler({
+    FlexBoxStyler? container,
+    TextStyler? label,
+    IconStyler? icon,
+    RemixSpinnerStyler? spinner,
+    IconAlignment? iconAlignment,
+    AnimationConfig? animation,
+    WidgetModifierConfig? modifier,
+    List<VariantStyle<RemixButtonSpec>>? variants,
+  }) : this.create(
+         container: Prop.maybeMix(container),
+         label: Prop.maybeMix(label),
+         icon: Prop.maybeMix(icon),
+         spinner: Prop.maybeMix(spinner),
+         iconAlignment: Prop.maybe(iconAlignment),
+         variants: variants,
+         modifier: modifier,
+         animation: animation,
+       );
 
-  /// Subtle surface button with a border.
-  const FortalButton.surface({
-    super.key,
-    this.size = .size2,
-    required this.label,
-    this.leadingIcon,
-    this.trailingIcon,
-    this.textBuilder,
-    this.leadingIconBuilder,
-    this.trailingIconBuilder,
-    this.loadingBuilder,
-    this.loading = false,
-    this.enabled = true,
-    this.onPressed,
-    this.onLongPress,
-    this.focusNode,
-    this.autofocus = false,
-    this.enableFeedback = true,
-    this.semanticLabel,
-    this.semanticHint,
-    this.excludeSemantics = false,
-    this.mouseCursor = SystemMouseCursors.click,
-  }) : variant = FortalButtonVariant.surface;
+  factory RemixButtonStyler.container(FlexBoxStyler value) =>
+      RemixButtonStyler().container(value);
+  factory RemixButtonStyler.label(TextStyler value) =>
+      RemixButtonStyler().label(value);
+  factory RemixButtonStyler.icon(IconStyler value) =>
+      RemixButtonStyler().icon(value);
+  factory RemixButtonStyler.spinner(RemixSpinnerStyler value) =>
+      RemixButtonStyler().spinner(value);
+  factory RemixButtonStyler.iconAlignment(IconAlignment value) =>
+      RemixButtonStyler().iconAlignment(value);
+  factory RemixButtonStyler.color(Color value) =>
+      RemixButtonStyler().color(value);
+  factory RemixButtonStyler.gradient(GradientMix value) =>
+      RemixButtonStyler().gradient(value);
+  factory RemixButtonStyler.border(BoxBorderMix value) =>
+      RemixButtonStyler().border(value);
+  factory RemixButtonStyler.borderRadius(BorderRadiusGeometryMix value) =>
+      RemixButtonStyler().borderRadius(value);
+  factory RemixButtonStyler.elevation(ElevationShadow value) =>
+      RemixButtonStyler().elevation(value);
+  factory RemixButtonStyler.shadow(BoxShadowMix value) =>
+      RemixButtonStyler().shadow(value);
+  factory RemixButtonStyler.shadows(List<BoxShadowMix> value) =>
+      RemixButtonStyler().shadows(value);
+  factory RemixButtonStyler.width(double value) =>
+      RemixButtonStyler().width(value);
+  factory RemixButtonStyler.height(double value) =>
+      RemixButtonStyler().height(value);
+  factory RemixButtonStyler.size(double width, double height) =>
+      RemixButtonStyler().size(width, height);
+  factory RemixButtonStyler.minWidth(double value) =>
+      RemixButtonStyler().minWidth(value);
+  factory RemixButtonStyler.maxWidth(double value) =>
+      RemixButtonStyler().maxWidth(value);
+  factory RemixButtonStyler.minHeight(double value) =>
+      RemixButtonStyler().minHeight(value);
+  factory RemixButtonStyler.maxHeight(double value) =>
+      RemixButtonStyler().maxHeight(value);
+  factory RemixButtonStyler.scale(
+    double scale, {
+    Alignment alignment = .center,
+  }) => RemixButtonStyler().scale(scale, alignment: alignment);
+  factory RemixButtonStyler.rotate(
+    double radians, {
+    Alignment alignment = .center,
+  }) => RemixButtonStyler().rotate(radians, alignment: alignment);
+  factory RemixButtonStyler.translate(double x, double y, [double z = 0.0]) =>
+      RemixButtonStyler().translate(x, y, z);
+  factory RemixButtonStyler.skew(double skewX, double skewY) =>
+      RemixButtonStyler().skew(skewX, skewY);
+  factory RemixButtonStyler.textStyle(TextStyler value) =>
+      RemixButtonStyler().textStyle(value);
+  factory RemixButtonStyler.image(DecorationImageMix value) =>
+      RemixButtonStyler().image(value);
+  factory RemixButtonStyler.shape(ShapeBorderMix value) =>
+      RemixButtonStyler().shape(value);
+  factory RemixButtonStyler.backgroundImage(
+    ImageProvider image, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) => RemixButtonStyler().backgroundImage(
+    image,
+    fit: fit,
+    alignment: alignment,
+    repeat: repeat,
+  );
+  factory RemixButtonStyler.backgroundImageUrl(
+    String url, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) => RemixButtonStyler().backgroundImageUrl(
+    url,
+    fit: fit,
+    alignment: alignment,
+    repeat: repeat,
+  );
+  factory RemixButtonStyler.backgroundImageAsset(
+    String path, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) => RemixButtonStyler().backgroundImageAsset(
+    path,
+    fit: fit,
+    alignment: alignment,
+    repeat: repeat,
+  );
+  factory RemixButtonStyler.linearGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? begin,
+    AlignmentGeometry? end,
+    TileMode? tileMode,
+  }) => RemixButtonStyler().linearGradient(
+    colors: colors,
+    stops: stops,
+    begin: begin,
+    end: end,
+    tileMode: tileMode,
+  );
+  factory RemixButtonStyler.radialGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? radius,
+    AlignmentGeometry? focal,
+    double? focalRadius,
+    TileMode? tileMode,
+  }) => RemixButtonStyler().radialGradient(
+    colors: colors,
+    stops: stops,
+    center: center,
+    radius: radius,
+    focal: focal,
+    focalRadius: focalRadius,
+    tileMode: tileMode,
+  );
+  factory RemixButtonStyler.sweepGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? startAngle,
+    double? endAngle,
+    TileMode? tileMode,
+  }) => RemixButtonStyler().sweepGradient(
+    colors: colors,
+    stops: stops,
+    center: center,
+    startAngle: startAngle,
+    endAngle: endAngle,
+    tileMode: tileMode,
+  );
+  factory RemixButtonStyler.foregroundLinearGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? begin,
+    AlignmentGeometry? end,
+    TileMode? tileMode,
+  }) => RemixButtonStyler().foregroundLinearGradient(
+    colors: colors,
+    stops: stops,
+    begin: begin,
+    end: end,
+    tileMode: tileMode,
+  );
+  factory RemixButtonStyler.foregroundRadialGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? radius,
+    AlignmentGeometry? focal,
+    double? focalRadius,
+    TileMode? tileMode,
+  }) => RemixButtonStyler().foregroundRadialGradient(
+    colors: colors,
+    stops: stops,
+    center: center,
+    radius: radius,
+    focal: focal,
+    focalRadius: focalRadius,
+    tileMode: tileMode,
+  );
+  factory RemixButtonStyler.foregroundSweepGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? startAngle,
+    double? endAngle,
+    TileMode? tileMode,
+  }) => RemixButtonStyler().foregroundSweepGradient(
+    colors: colors,
+    stops: stops,
+    center: center,
+    startAngle: startAngle,
+    endAngle: endAngle,
+    tileMode: tileMode,
+  );
+  factory RemixButtonStyler.row() => RemixButtonStyler().row();
+  factory RemixButtonStyler.column() => RemixButtonStyler().column();
+  factory RemixButtonStyler.alignment(AlignmentGeometry value) =>
+      RemixButtonStyler().alignment(value);
+  factory RemixButtonStyler.padding(EdgeInsetsGeometryMix value) =>
+      RemixButtonStyler().padding(value);
+  factory RemixButtonStyler.margin(EdgeInsetsGeometryMix value) =>
+      RemixButtonStyler().margin(value);
+  factory RemixButtonStyler.constraints(BoxConstraintsMix value) =>
+      RemixButtonStyler().constraints(value);
+  factory RemixButtonStyler.decoration(DecorationMix value) =>
+      RemixButtonStyler().decoration(value);
+  factory RemixButtonStyler.foregroundDecoration(DecorationMix value) =>
+      RemixButtonStyler().foregroundDecoration(value);
+  factory RemixButtonStyler.clipBehavior(Clip value) =>
+      RemixButtonStyler().clipBehavior(value);
+  factory RemixButtonStyler.direction(Axis value) =>
+      RemixButtonStyler().direction(value);
+  factory RemixButtonStyler.mainAxisAlignment(MainAxisAlignment value) =>
+      RemixButtonStyler().mainAxisAlignment(value);
+  factory RemixButtonStyler.crossAxisAlignment(CrossAxisAlignment value) =>
+      RemixButtonStyler().crossAxisAlignment(value);
+  factory RemixButtonStyler.mainAxisSize(MainAxisSize value) =>
+      RemixButtonStyler().mainAxisSize(value);
+  factory RemixButtonStyler.spacing(double value) =>
+      RemixButtonStyler().spacing(value);
+  factory RemixButtonStyler.verticalDirection(VerticalDirection value) =>
+      RemixButtonStyler().verticalDirection(value);
+  factory RemixButtonStyler.textDirection(TextDirection value) =>
+      RemixButtonStyler().textDirection(value);
+  factory RemixButtonStyler.textBaseline(TextBaseline value) =>
+      RemixButtonStyler().textBaseline(value);
+  factory RemixButtonStyler.transform(
+    Matrix4 value, {
+    Alignment alignment = .center,
+  }) => RemixButtonStyler().transform(value, alignment: alignment);
 
-  /// Transparent button with an outline.
-  const FortalButton.outline({
-    super.key,
-    this.size = .size2,
-    required this.label,
-    this.leadingIcon,
-    this.trailingIcon,
-    this.textBuilder,
-    this.leadingIconBuilder,
-    this.trailingIconBuilder,
-    this.loadingBuilder,
-    this.loading = false,
-    this.enabled = true,
-    this.onPressed,
-    this.onLongPress,
-    this.focusNode,
-    this.autofocus = false,
-    this.enableFeedback = true,
-    this.semanticLabel,
-    this.semanticHint,
-    this.excludeSemantics = false,
-    this.mouseCursor = SystemMouseCursors.click,
-  }) : variant = FortalButtonVariant.outline;
+  RemixButtonStyler color(Color value) {
+    return container(FlexBoxStyler().color(value));
+  }
 
-  /// Transparent button without a persistent border.
-  const FortalButton.ghost({
-    super.key,
-    this.size = .size2,
-    required this.label,
-    this.leadingIcon,
-    this.trailingIcon,
-    this.textBuilder,
-    this.leadingIconBuilder,
-    this.trailingIconBuilder,
-    this.loadingBuilder,
-    this.loading = false,
-    this.enabled = true,
-    this.onPressed,
-    this.onLongPress,
-    this.focusNode,
-    this.autofocus = false,
-    this.enableFeedback = true,
-    this.semanticLabel,
-    this.semanticHint,
-    this.excludeSemantics = false,
-    this.mouseCursor = SystemMouseCursors.click,
-  }) : variant = FortalButtonVariant.ghost;
+  RemixButtonStyler gradient(GradientMix value) {
+    return container(FlexBoxStyler().gradient(value));
+  }
 
-  final FortalButtonVariant variant;
+  RemixButtonStyler border(BoxBorderMix value) {
+    return container(FlexBoxStyler().border(value));
+  }
 
-  final FortalButtonSize size;
+  RemixButtonStyler borderRadius(BorderRadiusGeometryMix value) {
+    return container(FlexBoxStyler().borderRadius(value));
+  }
 
-  final String label;
+  RemixButtonStyler elevation(ElevationShadow value) {
+    return container(FlexBoxStyler().elevation(value));
+  }
 
-  final IconData? leadingIcon;
+  RemixButtonStyler shadow(BoxShadowMix value) {
+    return container(FlexBoxStyler().shadow(value));
+  }
 
-  final IconData? trailingIcon;
+  RemixButtonStyler shadows(List<BoxShadowMix> value) {
+    return container(FlexBoxStyler().shadows(value));
+  }
 
-  final RemixButtonTextBuilder? textBuilder;
+  RemixButtonStyler width(double value) {
+    return container(FlexBoxStyler().width(value));
+  }
 
-  final RemixButtonIconBuilder? leadingIconBuilder;
+  RemixButtonStyler height(double value) {
+    return container(FlexBoxStyler().height(value));
+  }
 
-  final RemixButtonIconBuilder? trailingIconBuilder;
+  RemixButtonStyler size(double width, double height) {
+    return container(FlexBoxStyler().size(width, height));
+  }
 
-  final RemixButtonLoadingBuilder? loadingBuilder;
+  RemixButtonStyler minWidth(double value) {
+    return container(FlexBoxStyler().minWidth(value));
+  }
 
-  final bool loading;
+  RemixButtonStyler maxWidth(double value) {
+    return container(FlexBoxStyler().maxWidth(value));
+  }
 
-  final bool enabled;
+  RemixButtonStyler minHeight(double value) {
+    return container(FlexBoxStyler().minHeight(value));
+  }
 
-  final VoidCallback? onPressed;
+  RemixButtonStyler maxHeight(double value) {
+    return container(FlexBoxStyler().maxHeight(value));
+  }
 
-  final VoidCallback? onLongPress;
+  RemixButtonStyler scale(double scale, {Alignment alignment = .center}) {
+    return container(FlexBoxStyler().scale(scale, alignment: alignment));
+  }
 
-  final FocusNode? focusNode;
+  RemixButtonStyler rotate(double radians, {Alignment alignment = .center}) {
+    return container(FlexBoxStyler().rotate(radians, alignment: alignment));
+  }
 
-  final bool autofocus;
+  RemixButtonStyler translate(double x, double y, [double z = 0.0]) {
+    return container(FlexBoxStyler().translate(x, y, z));
+  }
 
-  final bool enableFeedback;
+  RemixButtonStyler skew(double skewX, double skewY) {
+    return container(FlexBoxStyler().skew(skewX, skewY));
+  }
 
-  final String? semanticLabel;
+  RemixButtonStyler textStyle(TextStyler value) {
+    return container(FlexBoxStyler().textStyle(value));
+  }
 
-  final String? semanticHint;
+  RemixButtonStyler image(DecorationImageMix value) {
+    return container(FlexBoxStyler().image(value));
+  }
 
-  final bool excludeSemantics;
+  RemixButtonStyler shape(ShapeBorderMix value) {
+    return container(FlexBoxStyler().shape(value));
+  }
 
-  final MouseCursor mouseCursor;
-
-  @override
-  Widget build(BuildContext context) {
-    return fortalButtonStyler(variant: this.variant, size: this.size).call(
-      key: this.key,
-      label: this.label,
-      leadingIcon: this.leadingIcon,
-      trailingIcon: this.trailingIcon,
-      textBuilder: this.textBuilder,
-      leadingIconBuilder: this.leadingIconBuilder,
-      trailingIconBuilder: this.trailingIconBuilder,
-      loadingBuilder: this.loadingBuilder,
-      loading: this.loading,
-      enabled: this.enabled,
-      onPressed: this.onPressed,
-      onLongPress: this.onLongPress,
-      focusNode: this.focusNode,
-      autofocus: this.autofocus,
-      enableFeedback: this.enableFeedback,
-      semanticLabel: this.semanticLabel,
-      semanticHint: this.semanticHint,
-      excludeSemantics: this.excludeSemantics,
-      mouseCursor: this.mouseCursor,
+  RemixButtonStyler backgroundImage(
+    ImageProvider image, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) {
+    return container(
+      FlexBoxStyler().backgroundImage(
+        image,
+        fit: fit,
+        alignment: alignment,
+        repeat: repeat,
+      ),
     );
   }
-}
 
-// **************************************************************************
-// StylerGenerator
-// **************************************************************************
+  RemixButtonStyler backgroundImageUrl(
+    String url, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) {
+    return container(
+      FlexBoxStyler().backgroundImageUrl(
+        url,
+        fit: fit,
+        alignment: alignment,
+        repeat: repeat,
+      ),
+    );
+  }
 
-mixin _$RemixButtonStylerMixin on Style<RemixButtonSpec>, Diagnosticable {
-  Prop<StyleSpec<FlexBoxSpec>>? get $container;
-  Prop<StyleSpec<TextSpec>>? get $label;
-  Prop<StyleSpec<IconSpec>>? get $icon;
-  Prop<StyleSpec<RemixSpinnerSpec>>? get $spinner;
-  Prop<IconAlignment>? get $iconAlignment;
+  RemixButtonStyler backgroundImageAsset(
+    String path, {
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    ImageRepeat repeat = .noRepeat,
+  }) {
+    return container(
+      FlexBoxStyler().backgroundImageAsset(
+        path,
+        fit: fit,
+        alignment: alignment,
+        repeat: repeat,
+      ),
+    );
+  }
+
+  RemixButtonStyler linearGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? begin,
+    AlignmentGeometry? end,
+    TileMode? tileMode,
+  }) {
+    return container(
+      FlexBoxStyler().linearGradient(
+        colors: colors,
+        stops: stops,
+        begin: begin,
+        end: end,
+        tileMode: tileMode,
+      ),
+    );
+  }
+
+  RemixButtonStyler radialGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? radius,
+    AlignmentGeometry? focal,
+    double? focalRadius,
+    TileMode? tileMode,
+  }) {
+    return container(
+      FlexBoxStyler().radialGradient(
+        colors: colors,
+        stops: stops,
+        center: center,
+        radius: radius,
+        focal: focal,
+        focalRadius: focalRadius,
+        tileMode: tileMode,
+      ),
+    );
+  }
+
+  RemixButtonStyler sweepGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? startAngle,
+    double? endAngle,
+    TileMode? tileMode,
+  }) {
+    return container(
+      FlexBoxStyler().sweepGradient(
+        colors: colors,
+        stops: stops,
+        center: center,
+        startAngle: startAngle,
+        endAngle: endAngle,
+        tileMode: tileMode,
+      ),
+    );
+  }
+
+  RemixButtonStyler foregroundLinearGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? begin,
+    AlignmentGeometry? end,
+    TileMode? tileMode,
+  }) {
+    return container(
+      FlexBoxStyler().foregroundLinearGradient(
+        colors: colors,
+        stops: stops,
+        begin: begin,
+        end: end,
+        tileMode: tileMode,
+      ),
+    );
+  }
+
+  RemixButtonStyler foregroundRadialGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? radius,
+    AlignmentGeometry? focal,
+    double? focalRadius,
+    TileMode? tileMode,
+  }) {
+    return container(
+      FlexBoxStyler().foregroundRadialGradient(
+        colors: colors,
+        stops: stops,
+        center: center,
+        radius: radius,
+        focal: focal,
+        focalRadius: focalRadius,
+        tileMode: tileMode,
+      ),
+    );
+  }
+
+  RemixButtonStyler foregroundSweepGradient({
+    required List<Color> colors,
+    List<double>? stops,
+    AlignmentGeometry? center,
+    double? startAngle,
+    double? endAngle,
+    TileMode? tileMode,
+  }) {
+    return container(
+      FlexBoxStyler().foregroundSweepGradient(
+        colors: colors,
+        stops: stops,
+        center: center,
+        startAngle: startAngle,
+        endAngle: endAngle,
+        tileMode: tileMode,
+      ),
+    );
+  }
+
+  RemixButtonStyler row() {
+    return container(FlexBoxStyler().row());
+  }
+
+  RemixButtonStyler column() {
+    return container(FlexBoxStyler().column());
+  }
+
+  RemixButtonStyler alignment(AlignmentGeometry value) {
+    return container(FlexBoxStyler().alignment(value));
+  }
+
+  RemixButtonStyler padding(EdgeInsetsGeometryMix value) {
+    return container(FlexBoxStyler().padding(value));
+  }
+
+  RemixButtonStyler margin(EdgeInsetsGeometryMix value) {
+    return container(FlexBoxStyler().margin(value));
+  }
+
+  RemixButtonStyler constraints(BoxConstraintsMix value) {
+    return container(FlexBoxStyler().constraints(value));
+  }
+
+  RemixButtonStyler decoration(DecorationMix value) {
+    return container(FlexBoxStyler().decoration(value));
+  }
+
+  RemixButtonStyler foregroundDecoration(DecorationMix value) {
+    return container(FlexBoxStyler().foregroundDecoration(value));
+  }
+
+  RemixButtonStyler clipBehavior(Clip value) {
+    return container(FlexBoxStyler().clipBehavior(value));
+  }
+
+  RemixButtonStyler direction(Axis value) {
+    return container(FlexBoxStyler().direction(value));
+  }
+
+  RemixButtonStyler mainAxisAlignment(MainAxisAlignment value) {
+    return container(FlexBoxStyler().mainAxisAlignment(value));
+  }
+
+  RemixButtonStyler crossAxisAlignment(CrossAxisAlignment value) {
+    return container(FlexBoxStyler().crossAxisAlignment(value));
+  }
+
+  RemixButtonStyler mainAxisSize(MainAxisSize value) {
+    return container(FlexBoxStyler().mainAxisSize(value));
+  }
+
+  RemixButtonStyler spacing(double value) {
+    return container(FlexBoxStyler().spacing(value));
+  }
+
+  RemixButtonStyler verticalDirection(VerticalDirection value) {
+    return container(FlexBoxStyler().verticalDirection(value));
+  }
+
+  RemixButtonStyler textDirection(TextDirection value) {
+    return container(FlexBoxStyler().textDirection(value));
+  }
+
+  RemixButtonStyler textBaseline(TextBaseline value) {
+    return container(FlexBoxStyler().textBaseline(value));
+  }
+
+  RemixButtonStyler transform(Matrix4 value, {Alignment alignment = .center}) {
+    return container(FlexBoxStyler().transform(value, alignment: alignment));
+  }
 
   /// Sets the container.
   RemixButtonStyler container(FlexBoxStyler value) {
@@ -333,16 +697,19 @@ mixin _$RemixButtonStylerMixin on Style<RemixButtonSpec>, Diagnosticable {
   }
 
   /// Sets the label.
+  @override
   RemixButtonStyler label(TextStyler value) {
     return merge(RemixButtonStyler(label: value));
   }
 
   /// Sets the icon.
+  @override
   RemixButtonStyler icon(IconStyler value) {
     return merge(RemixButtonStyler(icon: value));
   }
 
   /// Sets the spinner.
+  @override
   RemixButtonStyler spinner(RemixSpinnerStyler value) {
     return merge(RemixButtonStyler(spinner: value));
   }
@@ -353,16 +720,19 @@ mixin _$RemixButtonStylerMixin on Style<RemixButtonSpec>, Diagnosticable {
   }
 
   /// Sets the animation configuration.
+  @override
   RemixButtonStyler animate(AnimationConfig value) {
     return merge(RemixButtonStyler(animation: value));
   }
 
   /// Sets the style variants.
+  @override
   RemixButtonStyler variants(List<VariantStyle<RemixButtonSpec>> value) {
     return merge(RemixButtonStyler(variants: value));
   }
 
   /// Wraps with a widget modifier.
+  @override
   RemixButtonStyler wrap(WidgetModifierConfig value) {
     return merge(RemixButtonStyler(modifier: value));
   }

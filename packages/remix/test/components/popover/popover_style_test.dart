@@ -25,10 +25,7 @@ void main() {
     });
 
     test('factory constructors create focused styles', () {
-      expect(
-        RemixPopoverStyler.backgroundColor(Colors.purple).$container,
-        isNotNull,
-      );
+      expect(RemixPopoverStyler.color(Colors.purple).$container, isNotNull);
       expect(
         RemixPopoverStyler.padding(EdgeInsetsGeometryMix.all(12)).$container,
         isNotNull,

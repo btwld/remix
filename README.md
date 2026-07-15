@@ -27,10 +27,7 @@ final style = RemixButtonStyler()
   .color(Colors.blue)
   .borderRadiusAll(const Radius.circular(8))
   .animate(AnimationConfig.spring(300.ms))
-  .onHovered(
-    RemixButtonStyler()
-        .color(Colors.blue.shade700)
-  );
+  .onHovered(.color(Colors.blue.shade700));
 
 RemixButton(
   onPressed: () {},
@@ -46,10 +43,7 @@ final button = RemixButtonStyler()
   .paddingY(10)
   .color(Colors.blue)
   .borderRadiusAll(const Radius.circular(8))
-  .onHovered(
-    RemixButtonStyler()
-        .color(Colors.blue.shade700)
-  )
+  .onHovered(.color(Colors.blue.shade700))
   .animate(AnimationConfig.spring(300.ms));
 
 button(
@@ -125,13 +119,8 @@ final button = RemixButtonStyler()
   .color(Colors.blue)
   .borderRadiusAll(const Radius.circular(8))
   .label(TextStyler().color(Colors.white))
-  .onHovered(
-    RemixButtonStyler()
-        .color(Colors.blue.shade700),
-  )
-  .onPressed(
-    RemixButtonStyler().wrap(.scale(x: 0.95, y: 0.95)),
-  );
+  .onHovered(.color(Colors.blue.shade700))
+  .onPressed(.scale(0.95));
 ```
 
 ### Adding Animation
@@ -145,14 +134,8 @@ final style = RemixButtonStyler()
   .color(Colors.blue)
   .borderRadiusAll(const Radius.circular(8))
   .animate(AnimationConfig.spring(300.ms))
-  .onHovered(
-    RemixButtonStyler()
-        .color(Colors.blue.shade700),
-  )
-  .onPressed(
-    RemixButtonStyler()
-        .wrap(.scale(x: 0.95, y: 0.95)),
-  );
+  .onHovered(.color(Colors.blue.shade700))
+  .onPressed(.scale(0.95));
 ```
 
 This example animates both the color on hover and the scale on press, creating a smooth interactive experience for your users. 
@@ -217,9 +200,7 @@ Generated Fortal widgets call the matching `fortal*Styler` internally. Use those
 final style = fortalButtonStyler(variant: FortalButtonVariant.solid)
   .borderRadiusAll(const Radius.circular(8))
   .paddingX(32)
-  .onHovered(
-    RemixButtonStyler().wrap(.scale(x: 1.05, y: 1.05)),
-  );
+  .onHovered(.scale(1.05));
 ```
 
 ### Fortal Design Tokens

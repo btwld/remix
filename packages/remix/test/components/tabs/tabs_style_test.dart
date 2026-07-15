@@ -68,7 +68,7 @@ void main() {
         initial: RemixTabBarStyler(),
         modify: (style) => style.alignment(Alignment.center),
         expect: (style) {
-          expect(style.$container, isNotNull);
+          expect(style, equals(RemixTabBarStyler.alignment(Alignment.center)));
         },
       );
 
@@ -77,7 +77,10 @@ void main() {
         initial: RemixTabBarStyler(),
         modify: (style) => style.padding(EdgeInsetsGeometryMix.all(16)),
         expect: (style) {
-          expect(style.$container, isNotNull);
+          expect(
+            style,
+            equals(RemixTabBarStyler.padding(EdgeInsetsGeometryMix.all(16))),
+          );
         },
       );
 
@@ -86,7 +89,7 @@ void main() {
         initial: RemixTabBarStyler(),
         modify: (style) => style.color(Colors.blue),
         expect: (style) {
-          expect(style.$container, isNotNull);
+          expect(style, equals(RemixTabBarStyler.color(Colors.blue)));
         },
       );
 
@@ -95,7 +98,7 @@ void main() {
         initial: RemixTabBarStyler(),
         modify: (style) => style.size(100, 50),
         expect: (style) {
-          expect(style.$container, isNotNull);
+          expect(style, equals(RemixTabBarStyler.size(100, 50)));
         },
       );
 
@@ -105,7 +108,14 @@ void main() {
         modify: (style) =>
             style.borderRadius(BorderRadiusGeometryMix.circular(8)),
         expect: (style) {
-          expect(style.$container, isNotNull);
+          expect(
+            style,
+            equals(
+              RemixTabBarStyler.borderRadius(
+                BorderRadiusGeometryMix.circular(8),
+              ),
+            ),
+          );
         },
       );
 
@@ -115,7 +125,14 @@ void main() {
         modify: (style) =>
             style.constraints(BoxConstraintsMix(minWidth: 100, maxWidth: 200)),
         expect: (style) {
-          expect(style.$container, isNotNull);
+          expect(
+            style,
+            equals(
+              RemixTabBarStyler.constraints(
+                BoxConstraintsMix(minWidth: 100, maxWidth: 200),
+              ),
+            ),
+          );
         },
       );
 
@@ -125,7 +142,12 @@ void main() {
         modify: (style) =>
             style.decoration(BoxDecorationMix(color: Colors.red)),
         expect: (style) {
-          expect(style.$container, isNotNull);
+          expect(
+            style,
+            equals(
+              RemixTabBarStyler.decoration(BoxDecorationMix(color: Colors.red)),
+            ),
+          );
         },
       );
 
@@ -134,7 +156,10 @@ void main() {
         initial: RemixTabBarStyler(),
         modify: (style) => style.margin(EdgeInsetsGeometryMix.all(8)),
         expect: (style) {
-          expect(style.$container, isNotNull);
+          expect(
+            style,
+            equals(RemixTabBarStyler.margin(EdgeInsetsGeometryMix.all(8))),
+          );
         },
       );
 
@@ -144,7 +169,14 @@ void main() {
         modify: (style) =>
             style.foregroundDecoration(BoxDecorationMix(color: Colors.green)),
         expect: (style) {
-          expect(style.$container, isNotNull);
+          expect(
+            style,
+            equals(
+              RemixTabBarStyler.foregroundDecoration(
+                BoxDecorationMix(color: Colors.green),
+              ),
+            ),
+          );
         },
       );
 
@@ -156,7 +188,15 @@ void main() {
           alignment: Alignment.topLeft,
         ),
         expect: (style) {
-          expect(style.$container, isNotNull);
+          expect(
+            style,
+            equals(
+              RemixTabBarStyler.transform(
+                Matrix4.rotationZ(0.1),
+                alignment: Alignment.topLeft,
+              ),
+            ),
+          );
         },
       );
 
@@ -304,7 +344,7 @@ void main() {
         initial: RemixTabViewStyler(),
         modify: (style) => style.alignment(Alignment.center),
         expect: (style) {
-          expect(style.$container, isNotNull);
+          expect(style, equals(RemixTabViewStyler.alignment(Alignment.center)));
         },
       );
 
@@ -313,7 +353,10 @@ void main() {
         initial: RemixTabViewStyler(),
         modify: (style) => style.padding(EdgeInsetsGeometryMix.all(16)),
         expect: (style) {
-          expect(style.$container, isNotNull);
+          expect(
+            style,
+            equals(RemixTabViewStyler.padding(EdgeInsetsGeometryMix.all(16))),
+          );
         },
       );
 
@@ -322,7 +365,7 @@ void main() {
         initial: RemixTabViewStyler(),
         modify: (style) => style.color(Colors.blue),
         expect: (style) {
-          expect(style.$container, isNotNull);
+          expect(style, equals(RemixTabViewStyler.color(Colors.blue)));
         },
       );
 
@@ -332,7 +375,14 @@ void main() {
         modify: (style) =>
             style.borderRadius(BorderRadiusGeometryMix.circular(8)),
         expect: (style) {
-          expect(style.$container, isNotNull);
+          expect(
+            style,
+            equals(
+              RemixTabViewStyler.borderRadius(
+                BorderRadiusGeometryMix.circular(8),
+              ),
+            ),
+          );
         },
       );
 
@@ -342,7 +392,14 @@ void main() {
         modify: (style) =>
             style.constraints(BoxConstraintsMix(minWidth: 100, maxWidth: 200)),
         expect: (style) {
-          expect(style.$container, isNotNull);
+          expect(
+            style,
+            equals(
+              RemixTabViewStyler.constraints(
+                BoxConstraintsMix(minWidth: 100, maxWidth: 200),
+              ),
+            ),
+          );
         },
       );
 
@@ -352,7 +409,14 @@ void main() {
         modify: (style) =>
             style.decoration(BoxDecorationMix(color: Colors.red)),
         expect: (style) {
-          expect(style.$container, isNotNull);
+          expect(
+            style,
+            equals(
+              RemixTabViewStyler.decoration(
+                BoxDecorationMix(color: Colors.red),
+              ),
+            ),
+          );
         },
       );
 
@@ -361,7 +425,10 @@ void main() {
         initial: RemixTabViewStyler(),
         modify: (style) => style.margin(EdgeInsetsGeometryMix.all(8)),
         expect: (style) {
-          expect(style.$container, isNotNull);
+          expect(
+            style,
+            equals(RemixTabViewStyler.margin(EdgeInsetsGeometryMix.all(8))),
+          );
         },
       );
 
@@ -371,7 +438,14 @@ void main() {
         modify: (style) =>
             style.foregroundDecoration(BoxDecorationMix(color: Colors.green)),
         expect: (style) {
-          expect(style.$container, isNotNull);
+          expect(
+            style,
+            equals(
+              RemixTabViewStyler.foregroundDecoration(
+                BoxDecorationMix(color: Colors.green),
+              ),
+            ),
+          );
         },
       );
 
@@ -383,7 +457,15 @@ void main() {
           alignment: Alignment.topLeft,
         ),
         expect: (style) {
-          expect(style.$container, isNotNull);
+          expect(
+            style,
+            equals(
+              RemixTabViewStyler.transform(
+                Matrix4.rotationZ(0.1),
+                alignment: Alignment.topLeft,
+              ),
+            ),
+          );
         },
       );
 
@@ -576,7 +658,7 @@ void main() {
         initial: RemixTabStyler(),
         modify: (style) => style.alignment(Alignment.center),
         expect: (style) {
-          expect(style.$container, isNotNull);
+          expect(style, equals(RemixTabStyler.alignment(Alignment.center)));
         },
       );
 
@@ -585,7 +667,10 @@ void main() {
         initial: RemixTabStyler(),
         modify: (style) => style.padding(EdgeInsetsGeometryMix.all(16)),
         expect: (style) {
-          expect(style.$container, isNotNull);
+          expect(
+            style,
+            equals(RemixTabStyler.padding(EdgeInsetsGeometryMix.all(16))),
+          );
         },
       );
 
@@ -594,7 +679,7 @@ void main() {
         initial: RemixTabStyler(),
         modify: (style) => style.color(Colors.blue),
         expect: (style) {
-          expect(style.$container, isNotNull);
+          expect(style, equals(RemixTabStyler.color(Colors.blue)));
         },
       );
 
@@ -604,7 +689,14 @@ void main() {
         modify: (style) =>
             style.constraints(BoxConstraintsMix(minWidth: 100, maxWidth: 200)),
         expect: (style) {
-          expect(style.$container, isNotNull);
+          expect(
+            style,
+            equals(
+              RemixTabStyler.constraints(
+                BoxConstraintsMix(minWidth: 100, maxWidth: 200),
+              ),
+            ),
+          );
         },
       );
 
@@ -614,7 +706,12 @@ void main() {
         modify: (style) =>
             style.decoration(BoxDecorationMix(color: Colors.red)),
         expect: (style) {
-          expect(style.$container, isNotNull);
+          expect(
+            style,
+            equals(
+              RemixTabStyler.decoration(BoxDecorationMix(color: Colors.red)),
+            ),
+          );
         },
       );
 
@@ -623,7 +720,10 @@ void main() {
         initial: RemixTabStyler(),
         modify: (style) => style.margin(EdgeInsetsGeometryMix.all(8)),
         expect: (style) {
-          expect(style.$container, isNotNull);
+          expect(
+            style,
+            equals(RemixTabStyler.margin(EdgeInsetsGeometryMix.all(8))),
+          );
         },
       );
 
@@ -633,7 +733,14 @@ void main() {
         modify: (style) =>
             style.foregroundDecoration(BoxDecorationMix(color: Colors.green)),
         expect: (style) {
-          expect(style.$container, isNotNull);
+          expect(
+            style,
+            equals(
+              RemixTabStyler.foregroundDecoration(
+                BoxDecorationMix(color: Colors.green),
+              ),
+            ),
+          );
         },
       );
 
@@ -645,7 +752,15 @@ void main() {
           alignment: Alignment.topLeft,
         ),
         expect: (style) {
-          expect(style.$container, isNotNull);
+          expect(
+            style,
+            equals(
+              RemixTabStyler.transform(
+                Matrix4.rotationZ(0.1),
+                alignment: Alignment.topLeft,
+              ),
+            ),
+          );
         },
       );
 

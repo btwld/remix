@@ -53,7 +53,7 @@ part of 'checkbox.dart';
 /// - [RemixCheckboxStyler] for the styling API
 /// - [RemixCheckbox] for the widget implementation
 /// - [Spec] for the base specification pattern
-@MixableSpec()
+@MixableSpec(extraStylerMixins: [RemixBoxStylerMixin])
 class RemixCheckboxSpec with _$RemixCheckboxSpec {
   /// Styling specification for the checkbox box container.
   ///
@@ -61,6 +61,7 @@ class RemixCheckboxSpec with _$RemixCheckboxSpec {
   /// background color, border, size, and shape. This is the visual
   /// element that users click to toggle the checkbox state.
   @override
+  @MixableField(forwardStyler: true)
   final StyleSpec<BoxSpec> container;
 
   /// Styling specification for the checkbox indicator icon.

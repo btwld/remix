@@ -49,7 +49,7 @@ part of 'textfield.dart';
 /// - [RemixTextFieldStyler] for the styling API
 /// - [RemixTextField] for the widget implementation
 /// - [Spec] for the base specification pattern
-@MixableSpec()
+@MixableSpec(extraStylerMixins: [RemixBoxStylerMixin, LabelStyleMixin])
 class RemixTextFieldSpec with _$RemixTextFieldSpec {
   /// Styling specification for the input text.
   ///
@@ -140,6 +140,7 @@ class RemixTextFieldSpec with _$RemixTextFieldSpec {
   /// and other visual container properties. Uses [FlexBoxSpec]
   /// to support flexible layout arrangements.
   @override
+  @MixableField(forwardStyler: true)
   final StyleSpec<FlexBoxSpec> container;
 
   /// Styling specification for the vertical layout that wraps the label,

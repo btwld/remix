@@ -95,8 +95,8 @@ void main() {
         modify: (style) => style.alignment(Alignment.centerRight),
         expect: (style) {
           expect(
-            style.$container,
-            equals(Prop.maybeMix(BoxStyler(alignment: Alignment.centerRight))),
+            style,
+            equals(RemixDialogStyler.alignment(Alignment.centerRight)),
           );
         },
       );
@@ -107,12 +107,8 @@ void main() {
         modify: (style) => style.padding(EdgeInsetsGeometryMix.all(24.0)),
         expect: (style) {
           expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(
-                BoxStyler(padding: EdgeInsetsGeometryMix.all(24.0)),
-              ),
-            ),
+            style,
+            equals(RemixDialogStyler.padding(EdgeInsetsGeometryMix.all(24.0))),
           );
         },
       );
@@ -138,21 +134,7 @@ void main() {
         initial: RemixDialogStyler(),
         modify: (style) => style.size(400.0, 300.0),
         expect: (style) {
-          expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  constraints: BoxConstraintsMix(
-                    minWidth: 400.0,
-                    maxWidth: 400.0,
-                    minHeight: 300.0,
-                    maxHeight: 300.0,
-                  ),
-                ),
-              ),
-            ),
-          );
+          expect(style, equals(RemixDialogStyler.size(400.0, 300.0)));
         },
       );
 
@@ -163,14 +145,10 @@ void main() {
             style.borderRadius(BorderRadiusGeometryMix.circular(16.0)),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  decoration: BoxDecorationMix(
-                    borderRadius: BorderRadiusGeometryMix.circular(16.0),
-                  ),
-                ),
+              RemixDialogStyler.borderRadius(
+                BorderRadiusGeometryMix.circular(16.0),
               ),
             ),
           );
@@ -185,15 +163,10 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  constraints: BoxConstraintsMix(
-                    minWidth: 300.0,
-                    minHeight: 200.0,
-                  ),
-                ),
+              RemixDialogStyler.constraints(
+                BoxConstraintsMix(minWidth: 300.0, minHeight: 200.0),
               ),
             ),
           );
@@ -211,14 +184,12 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  decoration: BoxDecorationMix(
-                    color: Colors.blue,
-                    borderRadius: BorderRadiusGeometryMix.circular(12.0),
-                  ),
+              RemixDialogStyler.decoration(
+                BoxDecorationMix(
+                  color: Colors.blue,
+                  borderRadius: BorderRadiusGeometryMix.circular(12.0),
                 ),
               ),
             ),
@@ -232,10 +203,8 @@ void main() {
         modify: (style) => style.margin(EdgeInsetsGeometryMix.all(16.0)),
         expect: (style) {
           expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(BoxStyler(margin: EdgeInsetsGeometryMix.all(16.0))),
-            ),
+            style,
+            equals(RemixDialogStyler.margin(EdgeInsetsGeometryMix.all(16.0))),
           );
         },
       );
@@ -248,14 +217,10 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  foregroundDecoration: BoxDecorationMix(
-                    color: Colors.yellow.withValues(alpha: 0.3),
-                  ),
-                ),
+              RemixDialogStyler.foregroundDecoration(
+                BoxDecorationMix(color: Colors.yellow.withValues(alpha: 0.3)),
               ),
             ),
           );
@@ -268,15 +233,8 @@ void main() {
         modify: (style) => style.transform(Matrix4.rotationZ(0.1)),
         expect: (style) {
           expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  transform: Matrix4.rotationZ(0.1),
-                  transformAlignment: Alignment.center,
-                ),
-              ),
-            ),
+            style,
+            equals(RemixDialogStyler.transform(Matrix4.rotationZ(0.1))),
           );
         },
       );

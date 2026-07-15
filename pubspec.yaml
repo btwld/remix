@@ -5,7 +5,6 @@ environment:
 
 dev_dependencies:
   melos: ^7.1.1
-  dart_code_metrics_presets: ^2.32.0
   flutter_lints: ^6.0.0
   build_runner: ^2.10.1
 
@@ -37,12 +36,6 @@ melos:
         - generate
         - git diff --exit-code -- packages/remix/lib
       description: Regenerate Remix sources and fail on generated drift
-
-    dcm:check:
-      exec: dcm analyze lib --fatal-style --fatal-warnings --no-congratulate
-      description: Run Dart Code Metrics with all configured severities fatal
-      packageFilters:
-        scope: remix
 
     test:flutter:
       exec: flutter test --reporter=failures-only

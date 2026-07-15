@@ -84,11 +84,9 @@ void main() {
         modify: (style) => style.padding(EdgeInsetsGeometryMix.all(16.0)),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                FlexBoxStyler(padding: EdgeInsetsGeometryMix.all(16.0)),
-              ),
+              RemixMenuTriggerStyler.padding(EdgeInsetsGeometryMix.all(16.0)),
             ),
           );
         },
@@ -99,14 +97,7 @@ void main() {
         initial: RemixMenuTriggerStyler(),
         modify: (style) => style.color(Colors.blue),
         expect: (style) {
-          expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(
-                FlexBoxStyler(decoration: BoxDecorationMix(color: Colors.blue)),
-              ),
-            ),
-          );
+          expect(style, equals(RemixMenuTriggerStyler.color(Colors.blue)));
         },
       );
 
@@ -116,10 +107,8 @@ void main() {
         modify: (style) => style.alignment(Alignment.centerLeft),
         expect: (style) {
           expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(FlexBoxStyler(alignment: Alignment.centerLeft)),
-            ),
+            style,
+            equals(RemixMenuTriggerStyler.alignment(Alignment.centerLeft)),
           );
         },
       );
@@ -129,21 +118,7 @@ void main() {
         initial: RemixMenuTriggerStyler(),
         modify: (style) => style.size(100.0, 50.0),
         expect: (style) {
-          expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(
-                FlexBoxStyler(
-                  constraints: BoxConstraintsMix(
-                    minWidth: 100.0,
-                    maxWidth: 100.0,
-                    minHeight: 50.0,
-                    maxHeight: 50.0,
-                  ),
-                ),
-              ),
-            ),
-          );
+          expect(style, equals(RemixMenuTriggerStyler.size(100.0, 50.0)));
         },
       );
 
@@ -153,14 +128,10 @@ void main() {
         modify: (style) => style.borderRadius(BorderRadiusMix.circular(8.0)),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                FlexBoxStyler(
-                  decoration: BoxDecorationMix(
-                    borderRadius: BorderRadiusMix.circular(8.0),
-                  ),
-                ),
+              RemixMenuTriggerStyler.borderRadius(
+                BorderRadiusMix.circular(8.0),
               ),
             ),
           );
@@ -175,15 +146,10 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                FlexBoxStyler(
-                  constraints: BoxConstraintsMix(
-                    minWidth: 100.0,
-                    minHeight: 40.0,
-                  ),
-                ),
+              RemixMenuTriggerStyler.constraints(
+                BoxConstraintsMix(minWidth: 100.0, minHeight: 40.0),
               ),
             ),
           );
@@ -201,14 +167,12 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                FlexBoxStyler(
-                  decoration: BoxDecorationMix(
-                    color: Colors.blue,
-                    borderRadius: BorderRadiusMix.circular(8.0),
-                  ),
+              RemixMenuTriggerStyler.decoration(
+                BoxDecorationMix(
+                  color: Colors.blue,
+                  borderRadius: BorderRadiusMix.circular(8.0),
                 ),
               ),
             ),
@@ -222,11 +186,9 @@ void main() {
         modify: (style) => style.margin(EdgeInsetsGeometryMix.all(8.0)),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                FlexBoxStyler(margin: EdgeInsetsGeometryMix.all(8.0)),
-              ),
+              RemixMenuTriggerStyler.margin(EdgeInsetsGeometryMix.all(8.0)),
             ),
           );
         },
@@ -242,13 +204,11 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                FlexBoxStyler(
-                  foregroundDecoration: BoxDecorationMix(
-                    border: BoxBorderMix.all(BorderSideMix(color: Colors.red)),
-                  ),
+              RemixMenuTriggerStyler.foregroundDecoration(
+                BoxDecorationMix(
+                  border: BoxBorderMix.all(BorderSideMix(color: Colors.red)),
                 ),
               ),
             ),
@@ -263,13 +223,11 @@ void main() {
             style.transform(Matrix4.identity(), alignment: Alignment.topLeft),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                FlexBoxStyler(
-                  transform: Matrix4.identity(),
-                  transformAlignment: Alignment.topLeft,
-                ),
+              RemixMenuTriggerStyler.transform(
+                Matrix4.identity(),
+                alignment: Alignment.topLeft,
               ),
             ),
           );
@@ -700,10 +658,8 @@ void main() {
         modify: (style) => style.alignment(Alignment.centerLeft),
         expect: (style) {
           expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(FlexBoxStyler(alignment: Alignment.centerLeft)),
-            ),
+            style,
+            equals(RemixMenuItemStyler.alignment(Alignment.centerLeft)),
           );
         },
       );
@@ -714,11 +670,9 @@ void main() {
         modify: (style) => style.padding(EdgeInsetsGeometryMix.all(16.0)),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                FlexBoxStyler(padding: EdgeInsetsGeometryMix.all(16.0)),
-              ),
+              RemixMenuItemStyler.padding(EdgeInsetsGeometryMix.all(16.0)),
             ),
           );
         },
@@ -729,14 +683,7 @@ void main() {
         initial: RemixMenuItemStyler(),
         modify: (style) => style.color(Colors.blue),
         expect: (style) {
-          expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(
-                FlexBoxStyler(decoration: BoxDecorationMix(color: Colors.blue)),
-              ),
-            ),
-          );
+          expect(style, equals(RemixMenuItemStyler.color(Colors.blue)));
         },
       );
 
@@ -745,21 +692,7 @@ void main() {
         initial: RemixMenuItemStyler(),
         modify: (style) => style.size(200.0, 48.0),
         expect: (style) {
-          expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(
-                FlexBoxStyler(
-                  constraints: BoxConstraintsMix(
-                    minWidth: 200.0,
-                    maxWidth: 200.0,
-                    minHeight: 48.0,
-                    maxHeight: 48.0,
-                  ),
-                ),
-              ),
-            ),
-          );
+          expect(style, equals(RemixMenuItemStyler.size(200.0, 48.0)));
         },
       );
 
@@ -769,15 +702,9 @@ void main() {
         modify: (style) => style.borderRadius(BorderRadiusMix.circular(4.0)),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                FlexBoxStyler(
-                  decoration: BoxDecorationMix(
-                    borderRadius: BorderRadiusMix.circular(4.0),
-                  ),
-                ),
-              ),
+              RemixMenuItemStyler.borderRadius(BorderRadiusMix.circular(4.0)),
             ),
           );
         },
@@ -791,15 +718,10 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                FlexBoxStyler(
-                  constraints: BoxConstraintsMix(
-                    minWidth: 150.0,
-                    minHeight: 36.0,
-                  ),
-                ),
+              RemixMenuItemStyler.constraints(
+                BoxConstraintsMix(minWidth: 150.0, minHeight: 36.0),
               ),
             ),
           );
@@ -817,14 +739,12 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                FlexBoxStyler(
-                  decoration: BoxDecorationMix(
-                    color: Colors.grey,
-                    borderRadius: BorderRadiusMix.circular(4.0),
-                  ),
+              RemixMenuItemStyler.decoration(
+                BoxDecorationMix(
+                  color: Colors.grey,
+                  borderRadius: BorderRadiusMix.circular(4.0),
                 ),
               ),
             ),
@@ -838,12 +758,8 @@ void main() {
         modify: (style) => style.margin(EdgeInsetsGeometryMix.all(4.0)),
         expect: (style) {
           expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(
-                FlexBoxStyler(margin: EdgeInsetsGeometryMix.all(4.0)),
-              ),
-            ),
+            style,
+            equals(RemixMenuItemStyler.margin(EdgeInsetsGeometryMix.all(4.0))),
           );
         },
       );
@@ -858,13 +774,11 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                FlexBoxStyler(
-                  foregroundDecoration: BoxDecorationMix(
-                    border: BoxBorderMix.all(BorderSideMix(color: Colors.blue)),
-                  ),
+              RemixMenuItemStyler.foregroundDecoration(
+                BoxDecorationMix(
+                  border: BoxBorderMix.all(BorderSideMix(color: Colors.blue)),
                 ),
               ),
             ),
@@ -879,13 +793,11 @@ void main() {
             style.transform(Matrix4.identity(), alignment: Alignment.center),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                FlexBoxStyler(
-                  transform: Matrix4.identity(),
-                  transformAlignment: Alignment.center,
-                ),
+              RemixMenuItemStyler.transform(
+                Matrix4.identity(),
+                alignment: Alignment.center,
               ),
             ),
           );

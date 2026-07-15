@@ -44,14 +44,7 @@ void main() {
         initial: RemixDividerStyler(),
         modify: (style) => style.color(Colors.red),
         expect: (style) {
-          expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(
-                BoxStyler(decoration: BoxDecorationMix(color: Colors.red)),
-              ),
-            ),
-          );
+          expect(style, equals(RemixDividerStyler.color(Colors.red)));
         },
       );
 
@@ -82,12 +75,8 @@ void main() {
         modify: (style) => style.padding(EdgeInsetsGeometryMix.all(16.0)),
         expect: (style) {
           expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(
-                BoxStyler(padding: EdgeInsetsGeometryMix.all(16.0)),
-              ),
-            ),
+            style,
+            equals(RemixDividerStyler.padding(EdgeInsetsGeometryMix.all(16.0))),
           );
         },
       );
@@ -98,10 +87,8 @@ void main() {
         modify: (style) => style.margin(EdgeInsetsGeometryMix.all(8.0)),
         expect: (style) {
           expect(
-            style.$container,
-            equals(
-              Prop.maybeMix(BoxStyler(margin: EdgeInsetsGeometryMix.all(8.0))),
-            ),
+            style,
+            equals(RemixDividerStyler.margin(EdgeInsetsGeometryMix.all(8.0))),
           );
         },
       );
@@ -111,10 +98,7 @@ void main() {
         initial: RemixDividerStyler(),
         modify: (style) => style.alignment(Alignment.center),
         expect: (style) {
-          expect(
-            style.$container,
-            equals(Prop.maybeMix(BoxStyler(alignment: Alignment.center))),
-          );
+          expect(style, equals(RemixDividerStyler.alignment(Alignment.center)));
         },
       );
 
@@ -129,14 +113,12 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  decoration: BoxDecorationMix(
-                    color: Colors.blue,
-                    borderRadius: BorderRadiusMix.circular(4.0),
-                  ),
+              RemixDividerStyler.decoration(
+                BoxDecorationMix(
+                  color: Colors.blue,
+                  borderRadius: BorderRadiusMix.circular(4.0),
                 ),
               ),
             ),
@@ -152,15 +134,10 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  constraints: BoxConstraintsMix(
-                    minWidth: 100.0,
-                    minHeight: 1.0,
-                  ),
-                ),
+              RemixDividerStyler.constraints(
+                BoxConstraintsMix(minWidth: 100.0, minHeight: 1.0),
               ),
             ),
           );
@@ -177,15 +154,11 @@ void main() {
         ),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  foregroundDecoration: BoxDecorationMix(
-                    border: BoxBorderMix.all(
-                      BorderSideMix(color: Colors.black),
-                    ),
-                  ),
+              RemixDividerStyler.foregroundDecoration(
+                BoxDecorationMix(
+                  border: BoxBorderMix.all(BorderSideMix(color: Colors.black)),
                 ),
               ),
             ),
@@ -200,13 +173,11 @@ void main() {
             style.transform(Matrix4.identity(), alignment: Alignment.topCenter),
         expect: (style) {
           expect(
-            style.$container,
+            style,
             equals(
-              Prop.maybeMix(
-                BoxStyler(
-                  transform: Matrix4.identity(),
-                  transformAlignment: Alignment.topCenter,
-                ),
+              RemixDividerStyler.transform(
+                Matrix4.identity(),
+                alignment: Alignment.topCenter,
               ),
             ),
           );

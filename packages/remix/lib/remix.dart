@@ -32,3 +32,9 @@ export 'package:naked_ui/naked_ui.dart' show OverlayPositionConfig;
 
 /// FORTAL
 export 'src/fortal/fortal.dart';
+
+/// STYLER CONVENIENCES
+export 'src/utilities/remix_style.dart'
+    show RemixBoxStylerAnchors, RemixBoxStylerMixin, RemixBoxStylerConvenience;
+export 'src/utilities/selected_mixin.dart'
+    show SelectedWidgetStateVariantExtension;
