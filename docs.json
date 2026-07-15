@@ -118,6 +118,10 @@
           "href": "/components/menu"
         },
         {
+          "title": "Popover",
+          "href": "/components/popover"
+        },
+        {
           "title": "Progress",
           "href": "/components/progress"
         },

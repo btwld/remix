@@ -13,6 +13,7 @@ export 'src/components/card/card.dart';
 export 'src/components/checkbox/checkbox.dart';
 export 'src/components/divider/divider.dart';
 export 'src/components/menu/menu.dart';
+export 'src/components/popover/popover.dart';
 export 'src/components/progress/progress.dart';
 export 'src/components/radio/radio.dart';
 export 'src/components/select/select.dart';
