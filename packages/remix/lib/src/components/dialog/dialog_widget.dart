@@ -1,5 +1,16 @@
 part of 'dialog.dart';
 
+WidgetBuilder _captureMixScope(BuildContext context, WidgetBuilder builder) {
+  final scope = MixScope.maybeOf(context);
+  if (scope == null) return builder;
+
+  return (_) => MixScope(
+    tokens: scope.tokens,
+    orderOfModifiers: scope.orderOfModifiers,
+    child: Builder(builder: builder),
+  );
+}
+
 /// Shows a customizable dialog.
 ///
 /// ## Example
@@ -37,8 +48,6 @@ Future<T?> showRemixDialog<T>({
   bool requestFocus = true,
   TraversalEdgeBehavior? traversalEdgeBehavior,
 }) {
-  final scope = MixScope.maybeOf(context);
-
   return showNakedDialog(
     context: context,
     barrierColor: barrierColor ?? Colors.black54,
@@ -51,15 +60,46 @@ Future<T?> showRemixDialog<T>({
     transitionBuilder: transitionBuilder,
     requestFocus: requestFocus,
     traversalEdgeBehavior: traversalEdgeBehavior,
-    builder: (routeContext) {
-      if (scope == null) return builder(routeContext);
+    builder: _captureMixScope(context, builder),
+  );
+}
 
-      return MixScope(
-        tokens: scope.tokens,
-        orderOfModifiers: scope.orderOfModifiers,
-        child: Builder(builder: builder),
-      );
-    },
+/// Shows an urgent modal alert dialog with Remix styling support.
+///
+/// [semanticLabel] must be a non-empty, localized description of the alert.
+/// When [barrierDismissible] is true, [barrierLabel] must also be non-empty.
+///
+/// [initialFocusNode] remains owned by the caller and should be attached to a
+/// focusable descendant of [builder]. Without one, focus falls back to an
+/// autofocus or the first traversable descendant. Escape and platform Back
+/// dismiss the alert with a null result.
+Future<T?> showRemixAlertDialog<T>({
+  required BuildContext context,
+  required WidgetBuilder builder,
+  required String semanticLabel,
+  Color? barrierColor,
+  String? barrierLabel,
+  bool barrierDismissible = false,
+  bool useRootNavigator = true,
+  RouteSettings? routeSettings,
+  Offset? anchorPoint,
+  Duration transitionDuration = const Duration(milliseconds: 400),
+  RouteTransitionsBuilder? transitionBuilder,
+  FocusNode? initialFocusNode,
+}) {
+  return showNakedAlertDialog(
+    context: context,
+    barrierColor: barrierColor ?? Colors.black54,
+    semanticLabel: semanticLabel,
+    barrierLabel: barrierLabel,
+    barrierDismissible: barrierDismissible,
+    useRootNavigator: useRootNavigator,
+    routeSettings: routeSettings,
+    anchorPoint: anchorPoint,
+    transitionDuration: transitionDuration,
+    transitionBuilder: transitionBuilder,
+    initialFocusNode: initialFocusNode,
+    builder: _captureMixScope(context, builder),
   );
 }
 
@@ -130,44 +170,50 @@ class RemixDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final content = RemixStyleSpecBuilder<RemixDialogSpec>(
+      style: style,
+      styleSpec: styleSpec,
+      builder: (context, spec) {
+        final hasActions = actions != null && actions!.isNotEmpty;
+        final isLoneChild =
+            child != null &&
+            title == null &&
+            description == null &&
+            !hasActions;
+
+        // Skip the default column so a fully custom body keeps its layout.
+        if (isLoneChild) {
+          return Box(styleSpec: spec.container, child: child!);
+        }
+
+        // title → description → child → actions; never discard provided content.
+        return Box(
+          styleSpec: spec.container,
+          child: Column(
+            mainAxisAlignment: .start,
+            mainAxisSize: .min,
+            crossAxisAlignment: .start,
+            children: [
+              if (title != null) StyledText(title!, styleSpec: spec.title),
+              if (description != null)
+                StyledText(description!, styleSpec: spec.description),
+              ?child,
+              if (hasActions)
+                FlexBox(styleSpec: spec.actions, children: actions!),
+            ],
+          ),
+        );
+      },
+    );
+
+    final hasDialogAncestor =
+        context.findAncestorWidgetOfExactType<NakedDialog>() != null;
+    if (hasDialogAncestor) return content;
+
     return NakedDialog(
       modal: modal,
       semanticLabel: semanticLabel ?? title,
-      child: RemixStyleSpecBuilder<RemixDialogSpec>(
-        style: style,
-        styleSpec: styleSpec,
-        builder: (context, spec) {
-          final hasActions = actions != null && actions!.isNotEmpty;
-          final isLoneChild =
-              child != null &&
-              title == null &&
-              description == null &&
-              !hasActions;
-
-          // Skip the default column so a fully custom body keeps its layout.
-          if (isLoneChild) {
-            return Box(styleSpec: spec.container, child: child!);
-          }
-
-          // title → description → child → actions; never discard provided content.
-          return Box(
-            styleSpec: spec.container,
-            child: Column(
-              mainAxisAlignment: .start,
-              mainAxisSize: .min,
-              crossAxisAlignment: .start,
-              children: [
-                if (title != null) StyledText(title!, styleSpec: spec.title),
-                if (description != null)
-                  StyledText(description!, styleSpec: spec.description),
-                ?child,
-                if (hasActions)
-                  FlexBox(styleSpec: spec.actions, children: actions!),
-              ],
-            ),
-          );
-        },
-      ),
+      child: content,
     );
   }
 }
