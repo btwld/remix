@@ -105,6 +105,11 @@ class RemixToggleGroup<T> extends StatelessWidget {
 
   static final styleFrom = RemixToggleGroupStyler.new;
 
+  /// Forces the flex [direction] onto a resolved container so the [orientation]
+  /// argument wins over any direction coming from [style] or a raw [styleSpec].
+  ///
+  /// Applied after resolution because the raw [styleSpec] path bypasses styler
+  /// merging entirely, so this is the single point that covers both paths.
   StyleSpec<FlexBoxSpec> _withOrientation(StyleSpec<FlexBoxSpec> container) {
     final flex = container.spec.flex ?? const StyleSpec(spec: FlexSpec());
 
@@ -117,9 +122,11 @@ class RemixToggleGroup<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Direction is enforced once, post-resolution, by _withOrientation (which
+    // must also cover the raw styleSpec path), so it is intentionally not set
+    // on this base styler.
     final effectiveStyle = RemixToggleGroupStyler(
       container: FlexBoxStyler(
-        direction: orientation,
         mainAxisSize: .min,
       ).wrap(.intrinsicWidth().intrinsicHeight()),
     ).merge(style);
