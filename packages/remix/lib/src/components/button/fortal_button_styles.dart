@@ -66,7 +66,7 @@ RemixButtonStyler _fortalButtonBaseStyler(FortalButtonSize size) {
 
 RemixButtonStyler _fortalButtonSolidStyler([FortalButtonSize size = .size2]) {
   return _fortalButtonBaseStyler(size)
-      .backgroundColor(FortalTokens.accent9())
+      .backgroundColor(FortalTokens.accent8())
       .foregroundColor(FortalTokens.accentContrast())
       .spinner(.indicatorColor(FortalTokens.accentContrast()))
       .onHovered(RemixButtonStyler().backgroundColor(FortalTokens.accent10()))

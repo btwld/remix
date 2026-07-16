@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:mix_atlas_capture/producer.dart';
+import 'package:mix_atlas_capture/packaging.dart';
 
 void main(List<String> arguments) {
   final unknown = arguments.where((argument) => argument != '--check').toList();
@@ -17,6 +17,20 @@ void main(List<String> arguments) {
   final workspaceRoot = packageRoot.parent.parent;
   final sourceRoot = Directory('${packageRoot.path}/test/atlas/goldens');
   final bundleRoot = Directory('${workspaceRoot.path}/atlas/fortal');
+  final componentAssets = _directoryAssets(sourceRoot, 'components');
+  final componentIds = [
+    for (final asset in componentAssets)
+      if (asset.sourcePath.endsWith('.component.json'))
+        asset.sourcePath
+            .substring('components/'.length)
+            .replaceFirst('.component.json', ''),
+  ];
+  if (componentIds.length != 21 || componentIds.toSet().length != 21) {
+    throw StateError(
+      'Expected 21 unique portable component documents, found '
+      '${componentIds.length}.',
+    );
+  }
   final input = AtlasCapturePackageInput(
     sourceDirectory: sourceRoot,
     outputDirectory: bundleRoot,
@@ -34,11 +48,12 @@ void main(List<String> arguments) {
         ),
         AtlasCaptureThemeSpec(id: 'dark', documentPath: 'themes/dark.mix.json'),
       ],
-      components: const [
-        AtlasCaptureComponentSpec(
-          id: 'button',
-          documentPath: 'components/button.component.json',
-        ),
+      components: [
+        for (final id in componentIds)
+          AtlasCaptureComponentSpec(
+            id: id,
+            documentPath: 'components/$id.component.json',
+          ),
       ],
       protocolCoveragePath: 'protocol/coverage.json',
     ),
@@ -46,22 +61,6 @@ void main(List<String> arguments) {
       const AtlasCaptureAsset(
         sourcePath: 'catalog.json',
         destinationPath: 'catalog.json',
-      ),
-      const AtlasCaptureAsset(
-        sourcePath: 'light/button.json',
-        destinationPath: 'light/button.json',
-      ),
-      const AtlasCaptureAsset(
-        sourcePath: 'light/button.png',
-        destinationPath: 'light/button.png',
-      ),
-      const AtlasCaptureAsset(
-        sourcePath: 'dark/button.json',
-        destinationPath: 'dark/button.json',
-      ),
-      const AtlasCaptureAsset(
-        sourcePath: 'dark/button.png',
-        destinationPath: 'dark/button.png',
       ),
       const AtlasCaptureAsset(
         sourcePath: 'protocol/themes/light.mix.json',
@@ -79,8 +78,9 @@ void main(List<String> arguments) {
         sourcePath: 'protocol/fixtures/fortal-tokenized-flex-box.mix.json',
         destinationPath: 'protocol/fixtures/fortal-tokenized-flex-box.mix.json',
       ),
-      ..._directoryAssets(sourceRoot, 'components'),
-      ..._directoryAssets(sourceRoot, 'styles'),
+      ..._directoryAssets(sourceRoot, 'light'),
+      ..._directoryAssets(sourceRoot, 'dark'),
+      ...componentAssets,
     ],
     preservedPaths: const {'README.md'},
   );

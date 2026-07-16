@@ -1,0 +1,949 @@
+{
+  "schema": "mix_atlas/component/v2",
+  "id": "card",
+  "label": "Card",
+  "properties": [
+    {
+      "id": "variant",
+      "kind": "enum",
+      "values": [
+        "surface",
+        "classic",
+        "ghost"
+      ],
+      "required": true,
+      "default": "surface"
+    },
+    {
+      "id": "size",
+      "kind": "enum",
+      "values": [
+        "size1",
+        "size2",
+        "size3"
+      ],
+      "required": true,
+      "default": "size1"
+    },
+    {
+      "id": "avatarRecipe",
+      "kind": "enum",
+      "values": [
+        "solid-size2"
+      ],
+      "required": true,
+      "default": "solid-size2"
+    },
+    {
+      "id": "avatarState",
+      "kind": "enum",
+      "values": [
+        "default"
+      ],
+      "required": true,
+      "default": "default"
+    },
+    {
+      "id": "initials",
+      "kind": "string",
+      "required": true,
+      "default": "LF"
+    },
+    {
+      "id": "name",
+      "kind": "string",
+      "required": true,
+      "default": "Leo Farias"
+    },
+    {
+      "id": "role",
+      "kind": "string",
+      "required": true,
+      "default": "Flutter engineer"
+    }
+  ],
+  "states": [
+    {
+      "id": "default",
+      "widgetStates": [],
+      "properties": {}
+    }
+  ],
+  "slots": [
+    {
+      "id": "container",
+      "kind": "box"
+    },
+    {
+      "id": "content",
+      "kind": "flex_box"
+    },
+    {
+      "id": "details",
+      "kind": "flex_box"
+    },
+    {
+      "id": "name",
+      "kind": "text"
+    },
+    {
+      "id": "role",
+      "kind": "text"
+    }
+  ],
+  "anatomy": {
+    "root": "container",
+    "nodes": [
+      {
+        "id": "container",
+        "kind": "box",
+        "slot": "container",
+        "children": [
+          "content"
+        ]
+      },
+      {
+        "id": "content",
+        "kind": "flex_box",
+        "slot": "content",
+        "children": [
+          "avatar",
+          "details"
+        ]
+      },
+      {
+        "id": "avatar",
+        "kind": "nested_component",
+        "children": [],
+        "component": "avatar",
+        "recipe": {
+          "property": "avatarRecipe"
+        },
+        "state": {
+          "property": "avatarState"
+        },
+        "properties": {
+          "label": {
+            "property": "initials"
+          }
+        }
+      },
+      {
+        "id": "details",
+        "kind": "flex_box",
+        "slot": "details",
+        "children": [
+          "name",
+          "role"
+        ]
+      },
+      {
+        "id": "name",
+        "kind": "text",
+        "slot": "name",
+        "children": [],
+        "bindings": {
+          "text": {
+            "property": "name"
+          }
+        }
+      },
+      {
+        "id": "role",
+        "kind": "text",
+        "slot": "role",
+        "children": [],
+        "bindings": {
+          "text": {
+            "property": "role"
+          }
+        }
+      }
+    ]
+  },
+  "recipes": [
+    {
+      "id": "surface-size1",
+      "properties": {
+        "variant": "surface",
+        "size": "size1"
+      },
+      "styles": {
+        "container": "surface-size1/container",
+        "content": "surface-size1/content",
+        "details": "surface-size1/details",
+        "name": "surface-size1/name",
+        "role": "surface-size1/role"
+      }
+    },
+    {
+      "id": "surface-size2",
+      "properties": {
+        "variant": "surface",
+        "size": "size2"
+      },
+      "styles": {
+        "container": "surface-size2/container",
+        "content": "surface-size2/content",
+        "details": "surface-size2/details",
+        "name": "surface-size2/name",
+        "role": "surface-size2/role"
+      }
+    },
+    {
+      "id": "surface-size3",
+      "properties": {
+        "variant": "surface",
+        "size": "size3"
+      },
+      "styles": {
+        "container": "surface-size3/container",
+        "content": "surface-size3/content",
+        "details": "surface-size3/details",
+        "name": "surface-size3/name",
+        "role": "surface-size3/role"
+      }
+    },
+    {
+      "id": "classic-size1",
+      "properties": {
+        "variant": "classic",
+        "size": "size1"
+      },
+      "styles": {
+        "container": "classic-size1/container",
+        "content": "classic-size1/content",
+        "details": "classic-size1/details",
+        "name": "classic-size1/name",
+        "role": "classic-size1/role"
+      }
+    },
+    {
+      "id": "classic-size2",
+      "properties": {
+        "variant": "classic",
+        "size": "size2"
+      },
+      "styles": {
+        "container": "classic-size2/container",
+        "content": "classic-size2/content",
+        "details": "classic-size2/details",
+        "name": "classic-size2/name",
+        "role": "classic-size2/role"
+      }
+    },
+    {
+      "id": "classic-size3",
+      "properties": {
+        "variant": "classic",
+        "size": "size3"
+      },
+      "styles": {
+        "container": "classic-size3/container",
+        "content": "classic-size3/content",
+        "details": "classic-size3/details",
+        "name": "classic-size3/name",
+        "role": "classic-size3/role"
+      }
+    },
+    {
+      "id": "ghost-size1",
+      "properties": {
+        "variant": "ghost",
+        "size": "size1"
+      },
+      "styles": {
+        "container": "ghost-size1/container",
+        "content": "ghost-size1/content",
+        "details": "ghost-size1/details",
+        "name": "ghost-size1/name",
+        "role": "ghost-size1/role"
+      }
+    },
+    {
+      "id": "ghost-size2",
+      "properties": {
+        "variant": "ghost",
+        "size": "size2"
+      },
+      "styles": {
+        "container": "ghost-size2/container",
+        "content": "ghost-size2/content",
+        "details": "ghost-size2/details",
+        "name": "ghost-size2/name",
+        "role": "ghost-size2/role"
+      }
+    },
+    {
+      "id": "ghost-size3",
+      "properties": {
+        "variant": "ghost",
+        "size": "size3"
+      },
+      "styles": {
+        "container": "ghost-size3/container",
+        "content": "ghost-size3/content",
+        "details": "ghost-size3/details",
+        "name": "ghost-size3/name",
+        "role": "ghost-size3/role"
+      }
+    }
+  ],
+  "styles": {
+    "surface-size1/container": {
+      "type": "box",
+      "padding": {
+        "$token": "fortal.space.4",
+        "kind": "space"
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "border": {
+              "top": {
+                "color": {
+                  "$token": "fortal.gray.6"
+                },
+                "width": {
+                  "$token": "fortal.border.width.1",
+                  "kind": "space"
+                }
+              },
+              "right": {
+                "color": {
+                  "$token": "fortal.gray.6"
+                },
+                "width": {
+                  "$token": "fortal.border.width.1",
+                  "kind": "space"
+                }
+              },
+              "bottom": {
+                "color": {
+                  "$token": "fortal.gray.6"
+                },
+                "width": {
+                  "$token": "fortal.border.width.1",
+                  "kind": "space"
+                }
+              },
+              "left": {
+                "color": {
+                  "$token": "fortal.gray.6"
+                },
+                "width": {
+                  "$token": "fortal.border.width.1",
+                  "kind": "space"
+                }
+              }
+            }
+          },
+          {
+            "borderRadius": {
+              "$token": "fortal.radius.5"
+            }
+          }
+        ]
+      },
+      "v": 1
+    },
+    "surface-size1/content": {
+      "type": "flex_box",
+      "direction": "horizontal",
+      "mainAxisSize": "min",
+      "spacing": 10.0,
+      "v": 1
+    },
+    "surface-size1/details": {
+      "type": "flex_box",
+      "direction": "vertical",
+      "crossAxisAlignment": "start",
+      "mainAxisSize": "min",
+      "v": 1
+    },
+    "surface-size1/name": {
+      "type": "text",
+      "v": 1
+    },
+    "surface-size1/role": {
+      "type": "text",
+      "v": 1
+    },
+    "surface-size2/container": {
+      "type": "box",
+      "padding": {
+        "$token": "fortal.space.5",
+        "kind": "space"
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "border": {
+              "top": {
+                "color": {
+                  "$token": "fortal.gray.6"
+                },
+                "width": {
+                  "$token": "fortal.border.width.1",
+                  "kind": "space"
+                }
+              },
+              "right": {
+                "color": {
+                  "$token": "fortal.gray.6"
+                },
+                "width": {
+                  "$token": "fortal.border.width.1",
+                  "kind": "space"
+                }
+              },
+              "bottom": {
+                "color": {
+                  "$token": "fortal.gray.6"
+                },
+                "width": {
+                  "$token": "fortal.border.width.1",
+                  "kind": "space"
+                }
+              },
+              "left": {
+                "color": {
+                  "$token": "fortal.gray.6"
+                },
+                "width": {
+                  "$token": "fortal.border.width.1",
+                  "kind": "space"
+                }
+              }
+            }
+          },
+          {
+            "borderRadius": {
+              "$token": "fortal.radius.5"
+            }
+          }
+        ]
+      },
+      "v": 1
+    },
+    "surface-size2/content": {
+      "type": "flex_box",
+      "direction": "horizontal",
+      "mainAxisSize": "min",
+      "spacing": 10.0,
+      "v": 1
+    },
+    "surface-size2/details": {
+      "type": "flex_box",
+      "direction": "vertical",
+      "crossAxisAlignment": "start",
+      "mainAxisSize": "min",
+      "v": 1
+    },
+    "surface-size2/name": {
+      "type": "text",
+      "v": 1
+    },
+    "surface-size2/role": {
+      "type": "text",
+      "v": 1
+    },
+    "surface-size3/container": {
+      "type": "box",
+      "padding": {
+        "$token": "fortal.space.6",
+        "kind": "space"
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "border": {
+              "top": {
+                "color": {
+                  "$token": "fortal.gray.6"
+                },
+                "width": {
+                  "$token": "fortal.border.width.1",
+                  "kind": "space"
+                }
+              },
+              "right": {
+                "color": {
+                  "$token": "fortal.gray.6"
+                },
+                "width": {
+                  "$token": "fortal.border.width.1",
+                  "kind": "space"
+                }
+              },
+              "bottom": {
+                "color": {
+                  "$token": "fortal.gray.6"
+                },
+                "width": {
+                  "$token": "fortal.border.width.1",
+                  "kind": "space"
+                }
+              },
+              "left": {
+                "color": {
+                  "$token": "fortal.gray.6"
+                },
+                "width": {
+                  "$token": "fortal.border.width.1",
+                  "kind": "space"
+                }
+              }
+            }
+          },
+          {
+            "borderRadius": {
+              "$token": "fortal.radius.5"
+            }
+          }
+        ]
+      },
+      "v": 1
+    },
+    "surface-size3/content": {
+      "type": "flex_box",
+      "direction": "horizontal",
+      "mainAxisSize": "min",
+      "spacing": 10.0,
+      "v": 1
+    },
+    "surface-size3/details": {
+      "type": "flex_box",
+      "direction": "vertical",
+      "crossAxisAlignment": "start",
+      "mainAxisSize": "min",
+      "v": 1
+    },
+    "surface-size3/name": {
+      "type": "text",
+      "v": 1
+    },
+    "surface-size3/role": {
+      "type": "text",
+      "v": 1
+    },
+    "classic-size1/container": {
+      "type": "box",
+      "padding": {
+        "$token": "fortal.space.4",
+        "kind": "space"
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "color": {
+              "$token": "fortal.gray.surface"
+            }
+          },
+          {
+            "border": {
+              "top": {
+                "color": {
+                  "$token": "fortal.gray.6"
+                },
+                "width": {
+                  "$token": "fortal.border.width.1",
+                  "kind": "space"
+                }
+              },
+              "right": {
+                "color": {
+                  "$token": "fortal.gray.6"
+                },
+                "width": {
+                  "$token": "fortal.border.width.1",
+                  "kind": "space"
+                }
+              },
+              "bottom": {
+                "color": {
+                  "$token": "fortal.gray.6"
+                },
+                "width": {
+                  "$token": "fortal.border.width.1",
+                  "kind": "space"
+                }
+              },
+              "left": {
+                "color": {
+                  "$token": "fortal.gray.6"
+                },
+                "width": {
+                  "$token": "fortal.border.width.1",
+                  "kind": "space"
+                }
+              }
+            }
+          },
+          {
+            "boxShadow": [
+              {
+                "color": {
+                  "$token": "fortal.gray.a3"
+                },
+                "offset": {
+                  "x": 0.0,
+                  "y": 2.0
+                },
+                "blurRadius": 3.0,
+                "spreadRadius": 0.0
+              }
+            ]
+          },
+          {
+            "borderRadius": {
+              "$token": "fortal.radius.5"
+            }
+          }
+        ]
+      },
+      "v": 1
+    },
+    "classic-size1/content": {
+      "type": "flex_box",
+      "direction": "horizontal",
+      "mainAxisSize": "min",
+      "spacing": 10.0,
+      "v": 1
+    },
+    "classic-size1/details": {
+      "type": "flex_box",
+      "direction": "vertical",
+      "crossAxisAlignment": "start",
+      "mainAxisSize": "min",
+      "v": 1
+    },
+    "classic-size1/name": {
+      "type": "text",
+      "v": 1
+    },
+    "classic-size1/role": {
+      "type": "text",
+      "v": 1
+    },
+    "classic-size2/container": {
+      "type": "box",
+      "padding": {
+        "$token": "fortal.space.5",
+        "kind": "space"
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "color": {
+              "$token": "fortal.gray.surface"
+            }
+          },
+          {
+            "border": {
+              "top": {
+                "color": {
+                  "$token": "fortal.gray.6"
+                },
+                "width": {
+                  "$token": "fortal.border.width.1",
+                  "kind": "space"
+                }
+              },
+              "right": {
+                "color": {
+                  "$token": "fortal.gray.6"
+                },
+                "width": {
+                  "$token": "fortal.border.width.1",
+                  "kind": "space"
+                }
+              },
+              "bottom": {
+                "color": {
+                  "$token": "fortal.gray.6"
+                },
+                "width": {
+                  "$token": "fortal.border.width.1",
+                  "kind": "space"
+                }
+              },
+              "left": {
+                "color": {
+                  "$token": "fortal.gray.6"
+                },
+                "width": {
+                  "$token": "fortal.border.width.1",
+                  "kind": "space"
+                }
+              }
+            }
+          },
+          {
+            "boxShadow": [
+              {
+                "color": {
+                  "$token": "fortal.gray.a3"
+                },
+                "offset": {
+                  "x": 0.0,
+                  "y": 2.0
+                },
+                "blurRadius": 3.0,
+                "spreadRadius": 0.0
+              }
+            ]
+          },
+          {
+            "borderRadius": {
+              "$token": "fortal.radius.5"
+            }
+          }
+        ]
+      },
+      "v": 1
+    },
+    "classic-size2/content": {
+      "type": "flex_box",
+      "direction": "horizontal",
+      "mainAxisSize": "min",
+      "spacing": 10.0,
+      "v": 1
+    },
+    "classic-size2/details": {
+      "type": "flex_box",
+      "direction": "vertical",
+      "crossAxisAlignment": "start",
+      "mainAxisSize": "min",
+      "v": 1
+    },
+    "classic-size2/name": {
+      "type": "text",
+      "v": 1
+    },
+    "classic-size2/role": {
+      "type": "text",
+      "v": 1
+    },
+    "classic-size3/container": {
+      "type": "box",
+      "padding": {
+        "$token": "fortal.space.6",
+        "kind": "space"
+      },
+      "decoration": {
+        "$merge": [
+          {
+            "color": {
+              "$token": "fortal.gray.surface"
+            }
+          },
+          {
+            "border": {
+              "top": {
+                "color": {
+                  "$token": "fortal.gray.6"
+                },
+                "width": {
+                  "$token": "fortal.border.width.1",
+                  "kind": "space"
+                }
+              },
+              "right": {
+                "color": {
+                  "$token": "fortal.gray.6"
+                },
+                "width": {
+                  "$token": "fortal.border.width.1",
+                  "kind": "space"
+                }
+              },
+              "bottom": {
+                "color": {
+                  "$token": "fortal.gray.6"
+                },
+                "width": {
+                  "$token": "fortal.border.width.1",
+                  "kind": "space"
+                }
+              },
+              "left": {
+                "color": {
+                  "$token": "fortal.gray.6"
+                },
+                "width": {
+                  "$token": "fortal.border.width.1",
+                  "kind": "space"
+                }
+              }
+            }
+          },
+          {
+            "boxShadow": [
+              {
+                "color": {
+                  "$token": "fortal.gray.a3"
+                },
+                "offset": {
+                  "x": 0.0,
+                  "y": 2.0
+                },
+                "blurRadius": 3.0,
+                "spreadRadius": 0.0
+              }
+            ]
+          },
+          {
+            "borderRadius": {
+              "$token": "fortal.radius.5"
+            }
+          }
+        ]
+      },
+      "v": 1
+    },
+    "classic-size3/content": {
+      "type": "flex_box",
+      "direction": "horizontal",
+      "mainAxisSize": "min",
+      "spacing": 10.0,
+      "v": 1
+    },
+    "classic-size3/details": {
+      "type": "flex_box",
+      "direction": "vertical",
+      "crossAxisAlignment": "start",
+      "mainAxisSize": "min",
+      "v": 1
+    },
+    "classic-size3/name": {
+      "type": "text",
+      "v": 1
+    },
+    "classic-size3/role": {
+      "type": "text",
+      "v": 1
+    },
+    "ghost-size1/container": {
+      "type": "box",
+      "padding": {
+        "$token": "fortal.space.4",
+        "kind": "space"
+      },
+      "decoration": {
+        "color": "#00000000"
+      },
+      "v": 1
+    },
+    "ghost-size1/content": {
+      "type": "flex_box",
+      "direction": "horizontal",
+      "mainAxisSize": "min",
+      "spacing": 10.0,
+      "v": 1
+    },
+    "ghost-size1/details": {
+      "type": "flex_box",
+      "direction": "vertical",
+      "crossAxisAlignment": "start",
+      "mainAxisSize": "min",
+      "v": 1
+    },
+    "ghost-size1/name": {
+      "type": "text",
+      "v": 1
+    },
+    "ghost-size1/role": {
+      "type": "text",
+      "v": 1
+    },
+    "ghost-size2/container": {
+      "type": "box",
+      "padding": {
+        "$token": "fortal.space.5",
+        "kind": "space"
+      },
+      "decoration": {
+        "color": "#00000000"
+      },
+      "v": 1
+    },
+    "ghost-size2/content": {
+      "type": "flex_box",
+      "direction": "horizontal",
+      "mainAxisSize": "min",
+      "spacing": 10.0,
+      "v": 1
+    },
+    "ghost-size2/details": {
+      "type": "flex_box",
+      "direction": "vertical",
+      "crossAxisAlignment": "start",
+      "mainAxisSize": "min",
+      "v": 1
+    },
+    "ghost-size2/name": {
+      "type": "text",
+      "v": 1
+    },
+    "ghost-size2/role": {
+      "type": "text",
+      "v": 1
+    },
+    "ghost-size3/container": {
+      "type": "box",
+      "padding": {
+        "$token": "fortal.space.6",
+        "kind": "space"
+      },
+      "decoration": {
+        "color": "#00000000"
+      },
+      "v": 1
+    },
+    "ghost-size3/content": {
+      "type": "flex_box",
+      "direction": "horizontal",
+      "mainAxisSize": "min",
+      "spacing": 10.0,
+      "v": 1
+    },
+    "ghost-size3/details": {
+      "type": "flex_box",
+      "direction": "vertical",
+      "crossAxisAlignment": "start",
+      "mainAxisSize": "min",
+      "v": 1
+    },
+    "ghost-size3/name": {
+      "type": "text",
+      "v": 1
+    },
+    "ghost-size3/role": {
+      "type": "text",
+      "v": 1
+    }
+  },
+  "semantics": {
+    "role": "none",
+    "bindings": {
+      "label": {
+        "property": "name"
+      }
+    }
+  },
+  "oracles": [
+    {
+      "theme": "light",
+      "image": "light/card.png",
+      "metadata": "light/card.json",
+      "evidence": "rendered"
+    },
+    {
+      "theme": "dark",
+      "image": "dark/card.png",
+      "metadata": "dark/card.json",
+      "evidence": "rendered"
+    }
+  ]
+}

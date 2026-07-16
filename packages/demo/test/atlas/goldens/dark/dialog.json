@@ -1,0 +1,23 @@
+{
+  "schema": "mix_atlas/atlas/v1",
+  "component": "dialog",
+  "componentLabel": "Dialog",
+  "theme": "dark",
+  "themeLabel": "Dark",
+  "brightness": "dark",
+  "file": "dialog.png",
+  "rowAxes": [],
+  "rows": [
+    {
+      "id": "default",
+      "values": {}
+    }
+  ],
+  "columns": [
+    {
+      "id": "default",
+      "states": [],
+      "props": {}
+    }
+  ]
+}

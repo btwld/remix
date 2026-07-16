@@ -1,0 +1,862 @@
+{
+  "schema": "mix_atlas/component/v2",
+  "id": "tabs",
+  "label": "Tabs",
+  "properties": [
+    {
+      "id": "tab",
+      "kind": "enum",
+      "values": [
+        "first",
+        "second"
+      ],
+      "required": true,
+      "default": "first"
+    },
+    {
+      "id": "firstLabel",
+      "kind": "string",
+      "required": true,
+      "default": "Overview"
+    },
+    {
+      "id": "secondLabel",
+      "kind": "string",
+      "required": true,
+      "default": "Activity"
+    },
+    {
+      "id": "firstContent",
+      "kind": "string",
+      "required": true,
+      "default": "Overview content"
+    },
+    {
+      "id": "secondContent",
+      "kind": "string",
+      "required": true,
+      "default": "Activity content"
+    }
+  ],
+  "states": [
+    {
+      "id": "first",
+      "widgetStates": [],
+      "properties": {
+        "tab": "first"
+      }
+    },
+    {
+      "id": "second",
+      "widgetStates": [],
+      "properties": {
+        "tab": "second"
+      }
+    }
+  ],
+  "slots": [
+    {
+      "id": "outer",
+      "kind": "box"
+    },
+    {
+      "id": "root",
+      "kind": "flex_box"
+    },
+    {
+      "id": "bar",
+      "kind": "flex_box"
+    },
+    {
+      "id": "viewRow",
+      "kind": "flex_box"
+    },
+    {
+      "id": "firstFrameSelected",
+      "kind": "box"
+    },
+    {
+      "id": "firstTabSelected",
+      "kind": "flex_box"
+    },
+    {
+      "id": "firstLabelSelected",
+      "kind": "text"
+    },
+    {
+      "id": "firstFrameDefault",
+      "kind": "box"
+    },
+    {
+      "id": "firstTabDefault",
+      "kind": "flex_box"
+    },
+    {
+      "id": "firstLabelDefault",
+      "kind": "text"
+    },
+    {
+      "id": "secondFrameSelected",
+      "kind": "box"
+    },
+    {
+      "id": "secondTabSelected",
+      "kind": "flex_box"
+    },
+    {
+      "id": "secondLabelSelected",
+      "kind": "text"
+    },
+    {
+      "id": "secondFrameDefault",
+      "kind": "box"
+    },
+    {
+      "id": "secondTabDefault",
+      "kind": "flex_box"
+    },
+    {
+      "id": "secondLabelDefault",
+      "kind": "text"
+    },
+    {
+      "id": "firstView",
+      "kind": "box"
+    },
+    {
+      "id": "firstContent",
+      "kind": "text"
+    },
+    {
+      "id": "secondView",
+      "kind": "box"
+    },
+    {
+      "id": "secondContent",
+      "kind": "text"
+    }
+  ],
+  "anatomy": {
+    "root": "outer",
+    "nodes": [
+      {
+        "id": "outer",
+        "kind": "box",
+        "slot": "outer",
+        "children": [
+          "root"
+        ]
+      },
+      {
+        "id": "root",
+        "kind": "flex_box",
+        "slot": "root",
+        "children": [
+          "bar",
+          "viewRow"
+        ]
+      },
+      {
+        "id": "bar",
+        "kind": "flex_box",
+        "slot": "bar",
+        "children": [
+          "firstFrameSelected",
+          "firstFrameDefault",
+          "secondFrameSelected",
+          "secondFrameDefault"
+        ]
+      },
+      {
+        "id": "firstFrameSelected",
+        "kind": "box",
+        "slot": "firstFrameSelected",
+        "children": [
+          "firstTabSelected"
+        ],
+        "visibleWhen": {
+          "property": "tab",
+          "operator": "equals",
+          "value": "first"
+        }
+      },
+      {
+        "id": "firstTabSelected",
+        "kind": "flex_box",
+        "slot": "firstTabSelected",
+        "children": [
+          "firstLabelSelected"
+        ]
+      },
+      {
+        "id": "firstLabelSelected",
+        "kind": "text",
+        "slot": "firstLabelSelected",
+        "children": [],
+        "bindings": {
+          "text": {
+            "property": "firstLabel"
+          }
+        }
+      },
+      {
+        "id": "firstFrameDefault",
+        "kind": "box",
+        "slot": "firstFrameDefault",
+        "children": [
+          "firstTabDefault"
+        ],
+        "visibleWhen": {
+          "property": "tab",
+          "operator": "equals",
+          "value": "second"
+        }
+      },
+      {
+        "id": "firstTabDefault",
+        "kind": "flex_box",
+        "slot": "firstTabDefault",
+        "children": [
+          "firstLabelDefault"
+        ]
+      },
+      {
+        "id": "firstLabelDefault",
+        "kind": "text",
+        "slot": "firstLabelDefault",
+        "children": [],
+        "bindings": {
+          "text": {
+            "property": "firstLabel"
+          }
+        }
+      },
+      {
+        "id": "secondFrameSelected",
+        "kind": "box",
+        "slot": "secondFrameSelected",
+        "children": [
+          "secondTabSelected"
+        ],
+        "visibleWhen": {
+          "property": "tab",
+          "operator": "equals",
+          "value": "second"
+        }
+      },
+      {
+        "id": "secondTabSelected",
+        "kind": "flex_box",
+        "slot": "secondTabSelected",
+        "children": [
+          "secondLabelSelected"
+        ]
+      },
+      {
+        "id": "secondLabelSelected",
+        "kind": "text",
+        "slot": "secondLabelSelected",
+        "children": [],
+        "bindings": {
+          "text": {
+            "property": "secondLabel"
+          }
+        }
+      },
+      {
+        "id": "secondFrameDefault",
+        "kind": "box",
+        "slot": "secondFrameDefault",
+        "children": [
+          "secondTabDefault"
+        ],
+        "visibleWhen": {
+          "property": "tab",
+          "operator": "equals",
+          "value": "first"
+        }
+      },
+      {
+        "id": "secondTabDefault",
+        "kind": "flex_box",
+        "slot": "secondTabDefault",
+        "children": [
+          "secondLabelDefault"
+        ]
+      },
+      {
+        "id": "secondLabelDefault",
+        "kind": "text",
+        "slot": "secondLabelDefault",
+        "children": [],
+        "bindings": {
+          "text": {
+            "property": "secondLabel"
+          }
+        }
+      },
+      {
+        "id": "viewRow",
+        "kind": "flex_box",
+        "slot": "viewRow",
+        "children": [
+          "firstView",
+          "secondView"
+        ]
+      },
+      {
+        "id": "firstView",
+        "kind": "box",
+        "slot": "firstView",
+        "children": [
+          "firstContent"
+        ],
+        "visibleWhen": {
+          "property": "tab",
+          "operator": "equals",
+          "value": "first"
+        }
+      },
+      {
+        "id": "firstContent",
+        "kind": "text",
+        "slot": "firstContent",
+        "children": [],
+        "bindings": {
+          "text": {
+            "property": "firstContent"
+          }
+        }
+      },
+      {
+        "id": "secondView",
+        "kind": "box",
+        "slot": "secondView",
+        "children": [
+          "secondContent"
+        ],
+        "visibleWhen": {
+          "property": "tab",
+          "operator": "equals",
+          "value": "second"
+        }
+      },
+      {
+        "id": "secondContent",
+        "kind": "text",
+        "slot": "secondContent",
+        "children": [],
+        "bindings": {
+          "text": {
+            "property": "secondContent"
+          }
+        }
+      }
+    ]
+  },
+  "recipes": [
+    {
+      "id": "default",
+      "properties": {},
+      "styles": {
+        "outer": "default/outer",
+        "root": "default/root",
+        "bar": "default/bar",
+        "viewRow": "default/viewRow",
+        "firstFrameSelected": "default/firstFrameSelected",
+        "firstTabSelected": "default/firstTabSelected",
+        "firstLabelSelected": "default/firstLabelSelected",
+        "firstFrameDefault": "default/firstFrameDefault",
+        "firstTabDefault": "default/firstTabDefault",
+        "firstLabelDefault": "default/firstLabelDefault",
+        "secondFrameSelected": "default/secondFrameSelected",
+        "secondTabSelected": "default/secondTabSelected",
+        "secondLabelSelected": "default/secondLabelSelected",
+        "secondFrameDefault": "default/secondFrameDefault",
+        "secondTabDefault": "default/secondTabDefault",
+        "secondLabelDefault": "default/secondLabelDefault",
+        "firstView": "default/firstView",
+        "firstContent": "default/firstContent",
+        "secondView": "default/secondView",
+        "secondContent": "default/secondContent"
+      }
+    }
+  ],
+  "styles": {
+    "default/outer": {
+      "type": "box",
+      "constraints": {
+        "minWidth": 280.0,
+        "maxWidth": 280.0
+      },
+      "v": 1
+    },
+    "default/root": {
+      "type": "flex_box",
+      "direction": "vertical",
+      "spacing": 12.0,
+      "v": 1
+    },
+    "default/bar": {
+      "type": "flex_box",
+      "direction": "horizontal",
+      "mainAxisSize": "min",
+      "spacing": {
+        "$merge": [
+          {
+            "$token": "fortal.space.1",
+            "kind": "space"
+          },
+          0.0
+        ]
+      },
+      "v": 1
+    },
+    "default/viewRow": {
+      "type": "flex_box",
+      "direction": "horizontal",
+      "v": 1
+    },
+    "default/firstFrameSelected": {
+      "type": "box",
+      "alignment": "center",
+      "padding": {
+        "left": 4.0,
+        "right": 4.0
+      },
+      "constraints": {
+        "minHeight": 40.0,
+        "maxHeight": 40.0
+      },
+      "decoration": {
+        "border": {
+          "bottom": {
+            "color": "#00000000",
+            "width": {
+              "$token": "fortal.border.width.2",
+              "kind": "space"
+            }
+          }
+        }
+      },
+      "v": 1
+    },
+    "default/firstTabSelected": {
+      "type": "flex_box",
+      "padding": {
+        "left": 12.0,
+        "top": 6.0,
+        "right": 12.0,
+        "bottom": 6.0
+      },
+      "decoration": {
+        "borderRadius": {
+          "$token": "fortal.radius.2"
+        }
+      },
+      "direction": "horizontal",
+      "mainAxisAlignment": "center",
+      "crossAxisAlignment": "center",
+      "spacing": 8.0,
+      "variants": [
+        {
+          "kind": "widget_state",
+          "state": "hovered",
+          "style": {
+            "type": "flex_box",
+            "decoration": {
+              "color": {
+                "$token": "fortal.gray.3"
+              }
+            }
+          }
+        },
+        {
+          "kind": "widget_state",
+          "state": "selected",
+          "style": {
+            "type": "flex_box",
+            "variants": []
+          }
+        }
+      ],
+      "v": 1
+    },
+    "default/firstLabelSelected": {
+      "type": "text",
+      "style": {
+        "color": {
+          "$token": "fortal.gray.12"
+        }
+      },
+      "variants": [
+        {
+          "kind": "widget_state",
+          "state": "hovered",
+          "style": {
+            "type": "text",
+            "variants": []
+          }
+        },
+        {
+          "kind": "widget_state",
+          "state": "selected",
+          "style": {
+            "type": "text",
+            "style": {
+              "fontWeight": {
+                "$token": "fortal.font.weight.medium"
+              }
+            }
+          }
+        }
+      ],
+      "v": 1
+    },
+    "default/firstFrameDefault": {
+      "type": "box",
+      "alignment": "center",
+      "padding": {
+        "left": 4.0,
+        "right": 4.0
+      },
+      "constraints": {
+        "minHeight": 40.0,
+        "maxHeight": 40.0
+      },
+      "decoration": {
+        "border": {
+          "bottom": {
+            "color": "#00000000",
+            "width": {
+              "$token": "fortal.border.width.2",
+              "kind": "space"
+            }
+          }
+        }
+      },
+      "v": 1
+    },
+    "default/firstTabDefault": {
+      "type": "flex_box",
+      "padding": {
+        "left": 12.0,
+        "top": 6.0,
+        "right": 12.0,
+        "bottom": 6.0
+      },
+      "decoration": {
+        "borderRadius": {
+          "$token": "fortal.radius.2"
+        }
+      },
+      "direction": "horizontal",
+      "mainAxisAlignment": "center",
+      "crossAxisAlignment": "center",
+      "spacing": 8.0,
+      "variants": [
+        {
+          "kind": "widget_state",
+          "state": "hovered",
+          "style": {
+            "type": "flex_box",
+            "decoration": {
+              "color": {
+                "$token": "fortal.gray.3"
+              }
+            }
+          }
+        },
+        {
+          "kind": "widget_state",
+          "state": "selected",
+          "style": {
+            "type": "flex_box",
+            "variants": []
+          }
+        }
+      ],
+      "v": 1
+    },
+    "default/firstLabelDefault": {
+      "type": "text",
+      "style": {
+        "color": {
+          "$token": "fortal.gray.12"
+        }
+      },
+      "variants": [
+        {
+          "kind": "widget_state",
+          "state": "hovered",
+          "style": {
+            "type": "text",
+            "variants": []
+          }
+        },
+        {
+          "kind": "widget_state",
+          "state": "selected",
+          "style": {
+            "type": "text",
+            "style": {
+              "fontWeight": {
+                "$token": "fortal.font.weight.medium"
+              }
+            }
+          }
+        }
+      ],
+      "v": 1
+    },
+    "default/secondFrameSelected": {
+      "type": "box",
+      "alignment": "center",
+      "padding": {
+        "left": 4.0,
+        "right": 4.0
+      },
+      "constraints": {
+        "minHeight": 40.0,
+        "maxHeight": 40.0
+      },
+      "decoration": {
+        "border": {
+          "bottom": {
+            "color": "#00000000",
+            "width": {
+              "$token": "fortal.border.width.2",
+              "kind": "space"
+            }
+          }
+        }
+      },
+      "v": 1
+    },
+    "default/secondTabSelected": {
+      "type": "flex_box",
+      "padding": {
+        "left": 12.0,
+        "top": 6.0,
+        "right": 12.0,
+        "bottom": 6.0
+      },
+      "decoration": {
+        "borderRadius": {
+          "$token": "fortal.radius.2"
+        }
+      },
+      "direction": "horizontal",
+      "mainAxisAlignment": "center",
+      "crossAxisAlignment": "center",
+      "spacing": 8.0,
+      "variants": [
+        {
+          "kind": "widget_state",
+          "state": "hovered",
+          "style": {
+            "type": "flex_box",
+            "decoration": {
+              "color": {
+                "$token": "fortal.gray.3"
+              }
+            }
+          }
+        },
+        {
+          "kind": "widget_state",
+          "state": "selected",
+          "style": {
+            "type": "flex_box",
+            "variants": []
+          }
+        }
+      ],
+      "v": 1
+    },
+    "default/secondLabelSelected": {
+      "type": "text",
+      "style": {
+        "color": {
+          "$token": "fortal.gray.12"
+        }
+      },
+      "variants": [
+        {
+          "kind": "widget_state",
+          "state": "hovered",
+          "style": {
+            "type": "text",
+            "variants": []
+          }
+        },
+        {
+          "kind": "widget_state",
+          "state": "selected",
+          "style": {
+            "type": "text",
+            "style": {
+              "fontWeight": {
+                "$token": "fortal.font.weight.medium"
+              }
+            }
+          }
+        }
+      ],
+      "v": 1
+    },
+    "default/secondFrameDefault": {
+      "type": "box",
+      "alignment": "center",
+      "padding": {
+        "left": 4.0,
+        "right": 4.0
+      },
+      "constraints": {
+        "minHeight": 40.0,
+        "maxHeight": 40.0
+      },
+      "decoration": {
+        "border": {
+          "bottom": {
+            "color": "#00000000",
+            "width": {
+              "$token": "fortal.border.width.2",
+              "kind": "space"
+            }
+          }
+        }
+      },
+      "v": 1
+    },
+    "default/secondTabDefault": {
+      "type": "flex_box",
+      "padding": {
+        "left": 12.0,
+        "top": 6.0,
+        "right": 12.0,
+        "bottom": 6.0
+      },
+      "decoration": {
+        "borderRadius": {
+          "$token": "fortal.radius.2"
+        }
+      },
+      "direction": "horizontal",
+      "mainAxisAlignment": "center",
+      "crossAxisAlignment": "center",
+      "spacing": 8.0,
+      "variants": [
+        {
+          "kind": "widget_state",
+          "state": "hovered",
+          "style": {
+            "type": "flex_box",
+            "decoration": {
+              "color": {
+                "$token": "fortal.gray.3"
+              }
+            }
+          }
+        },
+        {
+          "kind": "widget_state",
+          "state": "selected",
+          "style": {
+            "type": "flex_box",
+            "variants": []
+          }
+        }
+      ],
+      "v": 1
+    },
+    "default/secondLabelDefault": {
+      "type": "text",
+      "style": {
+        "color": {
+          "$token": "fortal.gray.12"
+        }
+      },
+      "variants": [
+        {
+          "kind": "widget_state",
+          "state": "hovered",
+          "style": {
+            "type": "text",
+            "variants": []
+          }
+        },
+        {
+          "kind": "widget_state",
+          "state": "selected",
+          "style": {
+            "type": "text",
+            "style": {
+              "fontWeight": {
+                "$token": "fortal.font.weight.medium"
+              }
+            }
+          }
+        }
+      ],
+      "v": 1
+    },
+    "default/firstView": {
+      "type": "box",
+      "padding": {
+        "$token": "fortal.space.3",
+        "kind": "space"
+      },
+      "v": 1
+    },
+    "default/firstContent": {
+      "type": "text",
+      "v": 1
+    },
+    "default/secondView": {
+      "type": "box",
+      "padding": {
+        "$token": "fortal.space.3",
+        "kind": "space"
+      },
+      "v": 1
+    },
+    "default/secondContent": {
+      "type": "text",
+      "v": 1
+    }
+  },
+  "semantics": {
+    "role": "tab",
+    "bindings": {
+      "label": {
+        "property": "tab"
+      },
+      "selected": {
+        "literal": true
+      }
+    }
+  },
+  "oracles": [
+    {
+      "theme": "light",
+      "image": "light/tabs.png",
+      "metadata": "light/tabs.json",
+      "evidence": "rendered"
+    },
+    {
+      "theme": "dark",
+      "image": "dark/tabs.png",
+      "metadata": "dark/tabs.json",
+      "evidence": "rendered"
+    }
+  ],
+  "diagnostics": [
+    {
+      "code": "runtime.callbacks_omitted",
+      "severity": "info",
+      "path": "semantics",
+      "message": "Callbacks are intentionally omitted from portable captures."
+    }
+  ]
+}

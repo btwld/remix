@@ -1,0 +1,43 @@
+{
+  "schema": "mix_atlas/atlas/v1",
+  "component": "tooltip",
+  "componentLabel": "Tooltip",
+  "theme": "dark",
+  "themeLabel": "Dark",
+  "brightness": "dark",
+  "file": "tooltip.png",
+  "rowAxes": [],
+  "rows": [
+    {
+      "id": "default",
+      "values": {}
+    }
+  ],
+  "columns": [
+    {
+      "id": "default",
+      "states": [],
+      "props": {
+        "buttonState": "default"
+      }
+    },
+    {
+      "id": "hovered",
+      "states": [
+        "hovered"
+      ],
+      "props": {
+        "buttonState": "hovered"
+      }
+    },
+    {
+      "id": "focused",
+      "states": [
+        "focused"
+      ],
+      "props": {
+        "buttonState": "focused"
+      }
+    }
+  ]
+}
