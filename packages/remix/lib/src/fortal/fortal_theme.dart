@@ -27,19 +27,22 @@ class FortalTokens {
   // BACKGROUND AND SURFACE COLORS
   // ============================================================================
 
-  /// Page background color (gray step 1).
+  /// Page background color selected for the active brightness.
   static const colorBackground = ColorToken('fortal.color.background');
 
   /// Neutral surface color for input fields and controls.
   static const colorSurface = ColorToken('fortal.color.surface');
 
-  /// Solid panel background (gray step 2).
+  /// Solid panel background selected for the active brightness.
   static const colorPanelSolid = ColorToken('fortal.color.panel.solid');
 
   /// Translucent panel background with alpha transparency.
   static const colorPanelTranslucent = ColorToken(
     'fortal.color.panel.translucent',
   );
+
+  /// Panel background selected by [FortalPanelBackground].
+  static const colorPanel = ColorToken('fortal.color.panel');
 
   /// Dark overlay for modals and dialogs.
   static const colorOverlay = ColorToken('fortal.color.overlay');
@@ -235,6 +238,8 @@ class FortalTokens {
   /// Gray alpha steps are declared above (grayA1..grayA12).
 
   /// Black alpha steps used in layered shadows.
+  static const blackA1 = ColorToken('fortal.black.a1');
+  static const blackA2 = ColorToken('fortal.black.a2');
   static const blackA3 = ColorToken('fortal.black.a3');
   static const blackA4 = ColorToken('fortal.black.a4');
   static const blackA5 = ColorToken('fortal.black.a5');
@@ -242,7 +247,7 @@ class FortalTokens {
   static const blackA7 = ColorToken('fortal.black.a7');
   static const blackA11 = ColorToken('fortal.black.a11');
 
-  /// OKLab-mixed shadow stroke: color-mix(in oklab, gray-a6, gray-6 25%).
+  /// Mode-aware mixed shadow stroke.
   static const shadowStroke = ColorToken('fortal.shadow.stroke');
 
   // ============================================================================
@@ -276,31 +281,31 @@ class FortalTokens {
   /// for card padding and section margins.
   static const space4 = SpaceToken('fortal.space.4');
 
-  /// Space step 5 - 20px.
+  /// Space step 5 - 24px.
   ///
   /// Medium spacing for generous padding and
   /// comfortable separation between sections.
   static const space5 = SpaceToken('fortal.space.5');
 
-  /// Space step 6 - 24px.
+  /// Space step 6 - 32px.
   ///
   /// Large spacing for significant visual separation
   /// and generous component padding.
   static const space6 = SpaceToken('fortal.space.6');
 
-  /// Space step 7 - 28px.
+  /// Space step 7 - 40px.
   ///
   /// Extra large spacing for major layout sections
   /// and prominent visual separation.
   static const space7 = SpaceToken('fortal.space.7');
 
-  /// Space step 8 - 32px.
+  /// Space step 8 - 48px.
   ///
   /// Very large spacing for significant page sections
   /// and major layout boundaries.
   static const space8 = SpaceToken('fortal.space.8');
 
-  /// Space step 9 - 36px.
+  /// Space step 9 - 64px.
   ///
   /// Maximum spacing for major page sections
   /// and substantial layout separation.
@@ -349,8 +354,13 @@ class FortalTokens {
   /// Full radius (9999px) for circular shapes.
   ///
   /// Creates perfect circles and pills. Use for avatars,
-  /// badges, and elements that should appear completely rounded.
+  /// badges, and elements that should appear completely rounded. This stays
+  /// 9999px for Fortal's circle/pill primitives; it intentionally differs from
+  /// Radix Themes' theme-level `--radius-full` behavior.
   static const radiusFull = RadiusToken('fortal.radius.full');
+
+  /// Radius used by control thumbs.
+  static const radiusThumb = RadiusToken('fortal.radius.thumb');
 
   // ============================================================================
   // ELEVATION SHADOWS (6 LEVELS)
@@ -506,7 +516,7 @@ class FortalTokens {
   /// more visual weight, like active states and button text.
   static const fontWeightMedium = FontWeightToken('fortal.font.weight.medium');
 
-  /// Bold font weight (600).
+  /// Bold font weight (700).
   ///
   /// For headings and content that needs strong emphasis.
   /// Provides clear hierarchy without being too heavy.
@@ -530,17 +540,7 @@ class FortalTokens {
 }
 
 /// Builds the token map for a Fortal scope. Used by [FortalScope].
-Map<MixToken, Object> _buildFortalScopeTokens({
-  required FortalAccentColor accent,
-  required FortalGrayColor gray,
-  required Brightness brightness,
-}) {
-  final theme = FortalThemeConfig(
-    accent: accent,
-    gray: gray,
-    brightness: brightness,
-  );
-
+Map<MixToken, Object> _buildFortalScopeTokens(FortalThemeConfig theme) {
   final tokens = resolveFortalTokens(theme);
 
   final colorTokens = {
@@ -549,6 +549,9 @@ Map<MixToken, Object> _buildFortalScopeTokens({
     FortalTokens.colorSurface: tokens.colorSurface,
     FortalTokens.colorPanelSolid: tokens.colorPanelSolid,
     FortalTokens.colorPanelTranslucent: tokens.colorPanelTranslucent,
+    FortalTokens.colorPanel: theme.panelBackground == .solid
+        ? tokens.colorPanelSolid
+        : tokens.colorPanelTranslucent,
     FortalTokens.colorOverlay: tokens.colorOverlay,
     FortalTokens.accentSurface: tokens.accent.surface,
     FortalTokens.accentIndicator: tokens.accent.indicator,
@@ -615,198 +618,34 @@ Map<MixToken, Object> _buildFortalScopeTokens({
     FortalTokens.grayA11: tokens.gray.scale.alphaStep(11),
     FortalTokens.grayA12: tokens.gray.scale.alphaStep(12),
     // Neutral helpers derived from primitives
+    FortalTokens.blackA1: tokens.blackAlpha[1]!,
+    FortalTokens.blackA2: tokens.blackAlpha[2]!,
     FortalTokens.blackA3: tokens.blackAlpha[3]!,
     FortalTokens.blackA4: tokens.blackAlpha[4]!,
     FortalTokens.blackA5: tokens.blackAlpha[5]!,
     FortalTokens.blackA6: tokens.blackAlpha[6]!,
     FortalTokens.blackA7: tokens.blackAlpha[7]!,
     FortalTokens.blackA11: tokens.blackAlpha[11]!,
-    // Shadow stroke helper from black alpha primitives
-    FortalTokens.shadowStroke: tokens.blackAlpha[6]!,
+    FortalTokens.shadowStroke: tokens.shadowStroke,
   };
 
   // Build base tokens map
   final allTokens = <MixToken, Object>{
     ...colorTokens,
     // Defaults (may be overridden by JSON tokens below)
-    FortalTokens.space1: 4.0,
-    FortalTokens.space2: 8.0,
-    FortalTokens.space3: 12.0,
-    FortalTokens.space4: 16.0,
-    FortalTokens.space5: 24.0,
-    FortalTokens.space6: 32.0,
-    FortalTokens.space7: 40.0,
-    FortalTokens.space8: 48.0,
-    FortalTokens.space9: 64.0,
-    FortalTokens.radius1: const Radius.circular(3.0),
-    FortalTokens.radius2: const Radius.circular(4.0),
-    FortalTokens.radius3: const Radius.circular(6.0),
-    FortalTokens.radius4: const Radius.circular(8.0),
-    FortalTokens.radius5: const Radius.circular(12.0),
-    FortalTokens.radius6: const Radius.circular(16.0),
-    FortalTokens.radiusFull: const Radius.circular(9999.0),
+    FortalTokens.space1: 4.0 * theme.scaling,
+    FortalTokens.space2: 8.0 * theme.scaling,
+    FortalTokens.space3: 12.0 * theme.scaling,
+    FortalTokens.space4: 16.0 * theme.scaling,
+    FortalTokens.space5: 24.0 * theme.scaling,
+    FortalTokens.space6: 32.0 * theme.scaling,
+    FortalTokens.space7: 40.0 * theme.scaling,
+    FortalTokens.space8: 48.0 * theme.scaling,
+    FortalTokens.space9: 64.0 * theme.scaling,
+    ..._radiusTokensFor(theme.radius, theme.scaling),
 
-    // Shadow lists
-    // Layered shadows approximating Radix Themes CSS tokens
-    // shadow-1: Radix uses inset layers; Flutter lacks inset. Approximate with subtle stroke + small ambient.
-    FortalTokens.shadow1: [
-      BoxShadow(
-        color: FortalTokens.grayA6(),
-        offset: const Offset(0, 0),
-        blurRadius: 0,
-        spreadRadius: 1,
-      ),
-      BoxShadow(
-        color: FortalTokens.blackA5(),
-        offset: const Offset(0, 1),
-        blurRadius: 2,
-        spreadRadius: 0,
-      ),
-    ],
-    // shadow-2
-    FortalTokens.shadow2: [
-      // 0 0 0 1px color-mix(in oklab, gray-a6, gray-6 25%)
-      BoxShadow(
-        color: FortalTokens.shadowStroke(),
-        offset: const Offset(0, 0),
-        blurRadius: 0,
-        spreadRadius: 1,
-      ),
-      // 0 0 0 0.5px black-a3 -> approximate with small blur instead of half-px spread
-      BoxShadow(
-        color: FortalTokens.blackA3(),
-        offset: const Offset(0, 0),
-        blurRadius: 0.5,
-        spreadRadius: 0,
-      ),
-      // 0 1px 1px 0 black-a6
-      BoxShadow(
-        color: FortalTokens.blackA6(),
-        offset: const Offset(0, 1),
-        blurRadius: 1,
-        spreadRadius: 0,
-      ),
-      // 0 2px 1px -1px black-a6
-      BoxShadow(
-        color: FortalTokens.blackA6(),
-        offset: const Offset(0, 2),
-        blurRadius: 1,
-        spreadRadius: -1,
-      ),
-      // 0 1px 3px 0 black-a5
-      BoxShadow(
-        color: FortalTokens.blackA5(),
-        offset: const Offset(0, 1),
-        blurRadius: 3,
-        spreadRadius: 0,
-      ),
-    ],
-    // shadow-3
-    FortalTokens.shadow3: [
-      BoxShadow(
-        color: FortalTokens.shadowStroke(),
-        offset: const Offset(0, 0),
-        blurRadius: 0,
-        spreadRadius: 1,
-      ),
-      // 0 2px 3px -2px black-a3
-      BoxShadow(
-        color: FortalTokens.blackA3(),
-        offset: const Offset(0, 2),
-        blurRadius: 3,
-        spreadRadius: -2,
-      ),
-      // 0 3px 8px -2px black-a6
-      BoxShadow(
-        color: FortalTokens.blackA6(),
-        offset: const Offset(0, 3),
-        blurRadius: 8,
-        spreadRadius: -2,
-      ),
-      // 0 4px 12px -4px black-a7
-      BoxShadow(
-        color: FortalTokens.blackA7(),
-        offset: const Offset(0, 4),
-        blurRadius: 12,
-        spreadRadius: -4,
-      ),
-    ],
-    // shadow-4
-    FortalTokens.shadow4: [
-      BoxShadow(
-        color: FortalTokens.shadowStroke(),
-        offset: const Offset(0, 0),
-        blurRadius: 0,
-        spreadRadius: 1,
-      ),
-      // 0 8px 40px black-a3
-      BoxShadow(
-        color: FortalTokens.blackA3(),
-        offset: const Offset(0, 8),
-        blurRadius: 40,
-        spreadRadius: 0,
-      ),
-      // 0 12px 32px -16px black-a5
-      BoxShadow(
-        color: FortalTokens.blackA5(),
-        offset: const Offset(0, 12),
-        blurRadius: 32,
-        spreadRadius: -16,
-      ),
-    ],
-    // shadow-5
-    FortalTokens.shadow5: [
-      BoxShadow(
-        color: FortalTokens.shadowStroke(),
-        offset: const Offset(0, 0),
-        blurRadius: 0,
-        spreadRadius: 1,
-      ),
-      // 0 12px 60px black-a5
-      BoxShadow(
-        color: FortalTokens.blackA5(),
-        offset: const Offset(0, 12),
-        blurRadius: 60,
-        spreadRadius: 0,
-      ),
-      // 0 12px 32px -16px black-a7
-      BoxShadow(
-        color: FortalTokens.blackA7(),
-        offset: const Offset(0, 12),
-        blurRadius: 32,
-        spreadRadius: -16,
-      ),
-    ],
-    // shadow-6
-    FortalTokens.shadow6: [
-      BoxShadow(
-        color: FortalTokens.shadowStroke(),
-        offset: const Offset(0, 0),
-        blurRadius: 0,
-        spreadRadius: 1,
-      ),
-      // 0 12px 60px black-a4
-      BoxShadow(
-        color: FortalTokens.blackA4(),
-        offset: const Offset(0, 12),
-        blurRadius: 60,
-        spreadRadius: 0,
-      ),
-      // 0 16px 64px black-a6
-      BoxShadow(
-        color: FortalTokens.blackA6(),
-        offset: const Offset(0, 16),
-        blurRadius: 64,
-        spreadRadius: 0,
-      ),
-      // 0 16px 36px -20px black-a11
-      BoxShadow(
-        color: FortalTokens.blackA11(),
-        offset: const Offset(0, 16),
-        blurRadius: 36,
-        spreadRadius: -20,
-      ),
-    ],
+    // Layered shadows approximating Radix Themes CSS tokens.
+    ...buildFortalShadows(isDark: theme.isDark),
     FortalTokens.borderWidth1: 1.0,
     FortalTokens.borderWidth2: 2.0,
     FortalTokens.focusRingWidth: 2.0,
@@ -872,6 +711,74 @@ Map<MixToken, Object> _buildFortalScopeTokens({
   return allTokens;
 }
 
+Map<RadiusToken, Radius> _radiusTokensFor(FortalRadius radius, double scaling) {
+  final factor = switch (radius) {
+    .none => 0.0,
+    .small => 0.75,
+    .medium => 1.0,
+    .large || .full => 1.5,
+  };
+  final thumb = switch (radius) {
+    .none || .small => const Radius.circular(0.5),
+    .medium || .large || .full => const Radius.circular(9999.0),
+  };
+  Radius scaled(double base) => Radius.circular(base * factor * scaling);
+
+  return {
+    FortalTokens.radius1: scaled(3.0),
+    FortalTokens.radius2: scaled(4.0),
+    FortalTokens.radius3: scaled(6.0),
+    FortalTokens.radius4: scaled(8.0),
+    FortalTokens.radius5: scaled(12.0),
+    FortalTokens.radius6: scaled(16.0),
+    // Fortal uses this token for true circles and pills, independent of the
+    // selected theme radius. Per-component pillification is deferred.
+    FortalTokens.radiusFull: const Radius.circular(9999.0),
+    FortalTokens.radiusThumb: thumb,
+  };
+}
+
+Map<ColorToken, Color> _buildAccentOverrideTokens(
+  FortalAccentColor accent,
+  FortalThemeConfig ambient,
+) {
+  final tokens = resolveFortalTokens(ambient.copyWith(accent: accent));
+  final scale = tokens.accent.scale;
+
+  return {
+    FortalTokens.accentSurface: tokens.accent.surface,
+    FortalTokens.accentIndicator: tokens.accent.indicator,
+    FortalTokens.accentTrack: tokens.accent.track,
+    FortalTokens.accentContrast: tokens.accent.contrast,
+    FortalTokens.focus8: tokens.focus8,
+    FortalTokens.focusA8: tokens.focusA8,
+    FortalTokens.accent1: scale.step(1),
+    FortalTokens.accent2: scale.step(2),
+    FortalTokens.accent3: scale.step(3),
+    FortalTokens.accent4: scale.step(4),
+    FortalTokens.accent5: scale.step(5),
+    FortalTokens.accent6: scale.step(6),
+    FortalTokens.accent7: scale.step(7),
+    FortalTokens.accent8: scale.step(8),
+    FortalTokens.accent9: scale.step(9),
+    FortalTokens.accent10: scale.step(10),
+    FortalTokens.accent11: scale.step(11),
+    FortalTokens.accent12: scale.step(12),
+    FortalTokens.accentA1: scale.alphaStep(1),
+    FortalTokens.accentA2: scale.alphaStep(2),
+    FortalTokens.accentA3: scale.alphaStep(3),
+    FortalTokens.accentA4: scale.alphaStep(4),
+    FortalTokens.accentA5: scale.alphaStep(5),
+    FortalTokens.accentA6: scale.alphaStep(6),
+    FortalTokens.accentA7: scale.alphaStep(7),
+    FortalTokens.accentA8: scale.alphaStep(8),
+    FortalTokens.accentA9: scale.alphaStep(9),
+    FortalTokens.accentA10: scale.alphaStep(10),
+    FortalTokens.accentA11: scale.alphaStep(11),
+    FortalTokens.accentA12: scale.alphaStep(12),
+  };
+}
+
 /// Widget that provides Fortal design tokens to its subtree via [MixScope].
 ///
 /// Use [FortalScope] at the root of your app (or around any subtree that uses
@@ -881,6 +788,9 @@ Map<MixToken, Object> _buildFortalScopeTokens({
 /// - [accent]: The accent color scale (indigo, blue, red, etc.)
 /// - [gray]: The neutral gray scale with different undertones
 /// - [brightness]: Light or dark mode
+/// - [radius]: The theme's corner-radius scale
+/// - [scaling]: A multiplier for space and radius tokens
+/// - [panelBackground]: Solid or translucent floating panels
 ///
 /// **Color Theory:**
 /// The Fortal color system builds on Radix color science for perceptual
@@ -915,28 +825,50 @@ class FortalScope extends StatelessWidget {
     this.accent = .indigo,
     this.gray = .slate,
     this.brightness = .light,
+    this.radius = .medium,
+    this.scaling = 1.0,
+    this.panelBackground = .solid,
     this.orderOfModifiers,
     required this.child,
-  });
+  }) : assert(
+         scaling > 0 && scaling < double.infinity,
+         'scaling must be positive and finite.',
+       );
 
   final FortalAccentColor accent;
   final FortalGrayColor gray;
   final Brightness brightness;
+
+  /// Corner-radius multiplier for this theme scope.
+  final FortalRadius radius;
+
+  /// Multiplies space and radius tokens only; text and component geometry do
+  /// not scale in this initial API.
+  final double scaling;
+
+  /// Background treatment consumed by floating Fortal panels.
+  final FortalPanelBackground panelBackground;
   final List<Type>? orderOfModifiers;
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
-    final tokens = _buildFortalScopeTokens(
+    final config = FortalThemeConfig(
       accent: accent,
       gray: gray,
       brightness: brightness,
+      radius: radius,
+      scaling: scaling,
+      panelBackground: panelBackground,
     );
 
-    return MixScope(
-      tokens: tokens,
-      orderOfModifiers: orderOfModifiers,
-      child: child,
+    return FortalTheme(
+      config: config,
+      child: MixScope(
+        tokens: _buildFortalScopeTokens(config),
+        orderOfModifiers: orderOfModifiers,
+        child: child,
+      ),
     );
   }
 }
@@ -984,6 +916,12 @@ enum FortalAccentColor {
 /// Available neutral gray families matching Radix Themes names.
 enum FortalGrayColor { gray, mauve, slate, sage, olive, sand }
 
+/// Theme-level radius multipliers matching the Radix Themes presets.
+enum FortalRadius { none, small, medium, large, full }
+
+/// Background treatment used by floating panels.
+enum FortalPanelBackground { solid, translucent }
+
 /// Immutable configuration object for Fortal theme settings.
 ///
 /// Provides a convenient way to store and pass around theme configuration,
@@ -1011,11 +949,26 @@ class FortalThemeConfig {
   final FortalGrayColor gray;
   final Brightness brightness;
 
+  /// Corner-radius multiplier for generated radius tokens.
+  final FortalRadius radius;
+
+  /// Multiplies space and radius tokens, not typography or hard-coded geometry.
+  final double scaling;
+
+  /// Background treatment selected for floating panels.
+  final FortalPanelBackground panelBackground;
+
   const FortalThemeConfig({
     this.accent = .indigo,
     this.gray = .slate,
     this.brightness = .light,
-  });
+    this.radius = .medium,
+    this.scaling = 1.0,
+    this.panelBackground = .solid,
+  }) : assert(
+         scaling > 0 && scaling < double.infinity,
+         'scaling must be positive and finite.',
+       );
 
   bool get isDark => brightness == .dark;
 
@@ -1023,18 +976,113 @@ class FortalThemeConfig {
     FortalAccentColor? accent,
     FortalGrayColor? gray,
     Brightness? brightness,
+    FortalRadius? radius,
+    double? scaling,
+    FortalPanelBackground? panelBackground,
   }) => .new(
     accent: accent ?? this.accent,
     gray: gray ?? this.gray,
     brightness: brightness ?? this.brightness,
+    radius: radius ?? this.radius,
+    scaling: scaling ?? this.scaling,
+    panelBackground: panelBackground ?? this.panelBackground,
   );
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is FortalThemeConfig &&
+          accent == other.accent &&
+          gray == other.gray &&
+          brightness == other.brightness &&
+          radius == other.radius &&
+          scaling == other.scaling &&
+          panelBackground == other.panelBackground;
+
+  @override
+  int get hashCode =>
+      Object.hash(accent, gray, brightness, radius, scaling, panelBackground);
 
   Widget createScope({List<Type>? orderOfModifiers, required Widget child}) =>
       FortalScope(
         accent: accent,
         gray: gray,
         brightness: brightness,
+        radius: radius,
+        scaling: scaling,
+        panelBackground: panelBackground,
         orderOfModifiers: orderOfModifiers,
         child: child,
       );
+}
+
+/// Makes the active [FortalThemeConfig] available to descendants.
+class FortalTheme extends InheritedWidget {
+  const FortalTheme({super.key, required this.config, required super.child});
+
+  final FortalThemeConfig config;
+
+  /// Returns the closest Fortal theme configuration.
+  static FortalThemeConfig of(BuildContext context) {
+    final config = maybeOf(context);
+    if (config != null) return config;
+    throw FlutterError.fromParts([
+      ErrorSummary('No FortalTheme found.'),
+      ErrorDescription(
+        '${context.widget.runtimeType} tried to read the Fortal theme, but no FortalScope was found above it.',
+      ),
+      context.describeElement('The context used was'),
+    ]);
+  }
+
+  /// Returns the closest Fortal theme configuration, if one is available.
+  static FortalThemeConfig? maybeOf(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<FortalTheme>()?.config;
+
+  @override
+  bool updateShouldNotify(FortalTheme oldWidget) => config != oldWidget.config;
+}
+
+/// Applies a local accent and/or radius token delta to a Fortal subtree.
+///
+/// Per-instance overrides copy the Fortal token map at build time. For a
+/// uniform list, wrap the list once instead of each individual item.
+class FortalOverride extends StatefulWidget {
+  const FortalOverride({
+    super.key,
+    this.color,
+    this.radius,
+    required this.child,
+  });
+
+  final FortalAccentColor? color;
+  final FortalRadius? radius;
+  final Widget child;
+
+  @override
+  State<FortalOverride> createState() => _FortalOverrideState();
+}
+
+class _FortalOverrideState extends State<FortalOverride> {
+  // The override scope appears only when a delta is active. A global key lets
+  // Flutter reparent the existing subtree across that boundary without losing
+  // local control state, while retaining the no-override token-copy fast path.
+  final GlobalKey _childKey = GlobalKey();
+
+  @override
+  Widget build(BuildContext context) {
+    final child = KeyedSubtree(key: _childKey, child: widget.child);
+    if (widget.color == null && widget.radius == null) return child;
+
+    final ambient = FortalTheme.maybeOf(context) ?? const FortalThemeConfig();
+    return MixScope.inherit(
+      colors: widget.color == null
+          ? null
+          : _buildAccentOverrideTokens(widget.color!, ambient),
+      radii: widget.radius == null
+          ? null
+          : _radiusTokensFor(widget.radius!, ambient.scaling),
+      child: child,
+    );
+  }
 }

@@ -2,13 +2,37 @@ part of 'dialog.dart';
 
 WidgetBuilder _captureMixScope(BuildContext context, WidgetBuilder builder) {
   final scope = MixScope.maybeOf(context);
-  if (scope == null) return builder;
+  final theme = FortalTheme.maybeOf(context);
+  if (scope == null && theme == null) return builder;
 
-  return (_) => MixScope(
-    tokens: scope.tokens,
-    orderOfModifiers: scope.orderOfModifiers,
-    child: Builder(builder: builder),
-  );
+  return (_) {
+    Widget child = Builder(builder: builder);
+
+    if (scope != null) {
+      child = MixScope(
+        tokens: scope.tokens,
+        orderOfModifiers: scope.orderOfModifiers,
+        child: child,
+      );
+    }
+
+    if (theme != null) {
+      child = FortalTheme(config: theme, child: child);
+    }
+
+    return child;
+  };
+}
+
+Color _resolveBarrierColor(BuildContext context, Color? explicitColor) {
+  if (explicitColor != null) return explicitColor;
+
+  final tokens = MixScope.maybeOf(context)?.tokens;
+  if (tokens?.containsKey(FortalTokens.colorOverlay) == true) {
+    return MixScope.tokenOf(FortalTokens.colorOverlay, context);
+  }
+
+  return Colors.black54;
 }
 
 /// Shows a customizable dialog.
@@ -50,7 +74,7 @@ Future<T?> showRemixDialog<T>({
 }) {
   return showNakedDialog(
     context: context,
-    barrierColor: barrierColor ?? Colors.black54,
+    barrierColor: _resolveBarrierColor(context, barrierColor),
     barrierDismissible: barrierDismissible,
     barrierLabel: barrierLabel,
     useRootNavigator: useRootNavigator,
@@ -89,7 +113,7 @@ Future<T?> showRemixAlertDialog<T>({
 }) {
   return showNakedAlertDialog(
     context: context,
-    barrierColor: barrierColor ?? Colors.black54,
+    barrierColor: _resolveBarrierColor(context, barrierColor),
     semanticLabel: semanticLabel,
     barrierLabel: barrierLabel,
     barrierDismissible: barrierDismissible,

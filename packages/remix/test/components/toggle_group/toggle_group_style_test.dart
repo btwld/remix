@@ -174,6 +174,30 @@ void main() {
       expect(colors, hasLength(FortalToggleGroupVariant.values.length));
       expect(colors, isNot(contains(null)));
     });
+
+    testWidgets('Fortal high contrast uses accent12 for selected foreground', (
+      tester,
+    ) async {
+      final normal = await _resolveFortalToggleGroupStyle(
+        tester,
+        fortalToggleGroupStyler(),
+        states: {WidgetState.selected},
+      );
+      final highContrast = await _resolveFortalToggleGroupStyle(
+        tester,
+        fortalToggleGroupStyler(highContrast: true),
+        states: {WidgetState.selected},
+      );
+
+      expect(
+        normal.spec.item.spec.label.spec.style?.color,
+        indigo.light.scale.step(11),
+      );
+      expect(
+        highContrast.spec.item.spec.label.spec.style?.color,
+        indigo.light.scale.step(12),
+      );
+    });
   });
 
   group('RemixToggleGroupItemStyler', () {

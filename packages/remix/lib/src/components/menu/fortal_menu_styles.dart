@@ -55,10 +55,29 @@ RemixMenuStyler _fortalMenuBaseStyler(FortalMenuSize size) {
               ),
             ),
             borderRadius: BorderRadiusMix.all(FortalTokens.radius3()),
-            color: FortalTokens.gray1(),
+            color: FortalTokens.colorPanel(),
           ),
           padding: EdgeInsetsMix.all(FortalTokens.space1()),
-        ).marginTop(8),
+        ).marginTop(8)
+        // Uses the mode-aware stroke with neutral deferred layers. Exact
+        // Radix gray-alpha layer swaps remain follow-up work.
+        .shadows([
+          BoxShadowMix()
+              .color(FortalTokens.shadowStroke())
+              .offset(x: 0, y: 0)
+              .blurRadius(0)
+              .spreadRadius(1),
+          BoxShadowMix()
+              .color(FortalTokens.blackA5())
+              .offset(x: 0, y: 12)
+              .blurRadius(60)
+              .spreadRadius(0),
+          BoxShadowMix()
+              .color(FortalTokens.blackA7())
+              .offset(x: 0, y: 12)
+              .blurRadius(32)
+              .spreadRadius(-16),
+        ]),
       )
       .divider(
         RemixDividerStyler()
@@ -197,6 +216,8 @@ class FortalMenu<T> extends StatelessWidget {
     super.key,
     this.variant = .solid,
     this.size = .size2,
+    this.color,
+    this.radius,
     required this.trigger,
     required this.items,
     this.controller,
@@ -217,6 +238,8 @@ class FortalMenu<T> extends StatelessWidget {
   const FortalMenu.solid({
     super.key,
     this.size = .size2,
+    this.color,
+    this.radius,
     required this.trigger,
     required this.items,
     this.controller,
@@ -237,6 +260,8 @@ class FortalMenu<T> extends StatelessWidget {
   const FortalMenu.soft({
     super.key,
     this.size = .size2,
+    this.color,
+    this.radius,
     required this.trigger,
     required this.items,
     this.controller,
@@ -256,6 +281,12 @@ class FortalMenu<T> extends StatelessWidget {
   final FortalMenuVariant variant;
 
   final FortalMenuSize size;
+
+  /// Optional accent color override for this menu subtree.
+  final FortalAccentColor? color;
+
+  /// Optional radius override for this menu subtree.
+  final FortalRadius? radius;
 
   final RemixMenuTrigger trigger;
 
@@ -287,22 +318,26 @@ class FortalMenu<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return fortalMenuStyler(variant: this.variant, size: this.size).call<T>(
-      key: this.key,
-      trigger: this.trigger,
-      items: this.items,
-      controller: this.controller,
-      onSelected: this.onSelected,
-      onOpen: this.onOpen,
-      onClose: this.onClose,
-      onCanceled: this.onCanceled,
-      onOpenRequested: this.onOpenRequested,
-      onCloseRequested: this.onCloseRequested,
-      consumeOutsideTaps: this.consumeOutsideTaps,
-      useRootOverlay: this.useRootOverlay,
-      closeOnClickOutside: this.closeOnClickOutside,
-      triggerFocusNode: this.triggerFocusNode,
-      positioning: this.positioning,
+    return FortalOverride(
+      color: this.color,
+      radius: this.radius,
+      child: fortalMenuStyler(variant: this.variant, size: this.size).call<T>(
+        key: this.key,
+        trigger: this.trigger,
+        items: this.items,
+        controller: this.controller,
+        onSelected: this.onSelected,
+        onOpen: this.onOpen,
+        onClose: this.onClose,
+        onCanceled: this.onCanceled,
+        onOpenRequested: this.onOpenRequested,
+        onCloseRequested: this.onCloseRequested,
+        consumeOutsideTaps: this.consumeOutsideTaps,
+        useRootOverlay: this.useRootOverlay,
+        closeOnClickOutside: this.closeOnClickOutside,
+        triggerFocusNode: this.triggerFocusNode,
+        positioning: this.positioning,
+      ),
     );
   }
 }

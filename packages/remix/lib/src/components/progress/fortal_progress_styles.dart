@@ -10,10 +10,11 @@ enum FortalProgressVariant { surface, soft }
 RemixProgressStyler fortalProgressStyler({
   FortalProgressVariant variant = .surface,
   FortalProgressSize size = .size2,
+  bool highContrast = false,
 }) {
   return switch (variant) {
-    .surface => _fortalProgressSurfaceStyler(size),
-    .soft => _fortalProgressSoftStyler(size),
+    .surface => _fortalProgressSurfaceStyler(size, highContrast: highContrast),
+    .soft => _fortalProgressSoftStyler(size, highContrast: highContrast),
   };
 }
 
@@ -23,37 +24,44 @@ RemixProgressStyler _fortalProgressBaseStyler(FortalProgressSize size) {
       .merge(_fortalProgressSizeStyler(size));
 }
 
-RemixProgressStyler _fortalProgressSurfaceStyler([
-  FortalProgressSize size = .size2,
-]) {
+RemixProgressStyler _fortalProgressSurfaceStyler(
+  FortalProgressSize size, {
+  bool highContrast = false,
+}) {
+  final radius = switch (size) {
+    .size1 => FortalTokens.radius1(),
+    .size2 => FortalTokens.radius2(),
+    .size3 => FortalTokens.radius3(),
+  };
+
   return _fortalProgressBaseStyler(size)
       .foregroundDecoration(
         BoxDecorationMix()
             .border(
               BoxBorderMix.all(BorderSideMix().color(FortalTokens.grayA5())),
             )
-            .borderRadius(
-              BorderRadiusGeometryMix.all(FortalTokens.radiusFull()),
-            ),
+            .borderRadius(BorderRadiusGeometryMix.all(radius)),
       )
       .track(BoxStyler().color(FortalTokens.gray3()).width(.infinity))
-      .indicator(BoxStyler().color(FortalTokens.accentIndicator()));
+      .indicator(
+        BoxStyler().color(
+          highContrast
+              ? FortalTokens.accent12()
+              : FortalTokens.accentIndicator(),
+        ),
+      );
 }
 
-RemixProgressStyler _fortalProgressSoftStyler([
-  FortalProgressSize size = .size2,
-]) {
+RemixProgressStyler _fortalProgressSoftStyler(
+  FortalProgressSize size, {
+  bool highContrast = false,
+}) {
   return _fortalProgressBaseStyler(size)
-      .track(
-        BoxStyler()
-            .color(FortalTokens.gray4())
-            .borderRadiusAll(FortalTokens.radiusFull())
-            .width(.infinity),
-      )
+      .track(BoxStyler().color(FortalTokens.gray4()).width(.infinity))
       .indicator(
-        BoxStyler()
-            .color(FortalTokens.accent9())
-            .borderRadiusAll(FortalTokens.radiusFull()),
+        BoxStyler().color(
+          highContrast ? FortalTokens.accent12() : FortalTokens.accent9(),
+        ),
       );
 }
 
@@ -95,18 +103,27 @@ class FortalProgress extends StatelessWidget {
     super.key,
     this.variant = .surface,
     this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
     required this.value,
   });
 
   const FortalProgress.surface({
     super.key,
     this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
     required this.value,
   }) : variant = FortalProgressVariant.surface;
 
   const FortalProgress.soft({
     super.key,
     this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
     required this.value,
   }) : variant = FortalProgressVariant.soft;
 
@@ -114,13 +131,24 @@ class FortalProgress extends StatelessWidget {
 
   final FortalProgressSize size;
 
+  final FortalAccentColor? color;
+
+  final FortalRadius? radius;
+
+  final bool highContrast;
+
   final double value;
 
   @override
   Widget build(BuildContext context) {
-    return fortalProgressStyler(
-      variant: this.variant,
-      size: this.size,
-    ).call(key: this.key, value: this.value);
+    return FortalOverride(
+      color: this.color,
+      radius: this.radius,
+      child: fortalProgressStyler(
+        variant: this.variant,
+        size: this.size,
+        highContrast: this.highContrast,
+      ).call(key: this.key, value: this.value),
+    );
   }
 }

@@ -10,11 +10,12 @@ enum FortalCalloutVariant { outline, surface, soft }
 RemixCalloutStyler fortalCalloutStyler({
   FortalCalloutVariant variant = .surface,
   FortalCalloutSize size = .size2,
+  bool highContrast = false,
 }) {
   return switch (variant) {
-    .soft => _fortalCalloutSoftStyler(size),
-    .outline => _fortalCalloutOutlineStyler(size),
-    .surface => _fortalCalloutSurfaceStyler(size),
+    .soft => _fortalCalloutSoftStyler(size, highContrast: highContrast),
+    .outline => _fortalCalloutOutlineStyler(size, highContrast: highContrast),
+    .surface => _fortalCalloutSurfaceStyler(size, highContrast: highContrast),
   };
 }
 
@@ -31,9 +32,10 @@ RemixCalloutStyler _fortalCalloutBaseStyler(FortalCalloutSize size) {
       .merge(_fortalCalloutSizeStyler(size));
 }
 
-RemixCalloutStyler _fortalCalloutOutlineStyler([
-  FortalCalloutSize size = .size2,
-]) {
+RemixCalloutStyler _fortalCalloutOutlineStyler(
+  FortalCalloutSize size, {
+  bool highContrast = false,
+}) {
   return _fortalCalloutBaseStyler(size)
       .backgroundColor(Colors.transparent)
       .borderAll(
@@ -41,12 +43,15 @@ RemixCalloutStyler _fortalCalloutOutlineStyler([
         width: FortalTokens.borderWidth1(),
       )
       .borderRadiusAll(FortalTokens.radius3())
-      .foregroundColor(FortalTokens.accent11());
+      .foregroundColor(
+        highContrast ? FortalTokens.accent12() : FortalTokens.accent11(),
+      );
 }
 
-RemixCalloutStyler _fortalCalloutSurfaceStyler([
-  FortalCalloutSize size = .size2,
-]) {
+RemixCalloutStyler _fortalCalloutSurfaceStyler(
+  FortalCalloutSize size, {
+  bool highContrast = false,
+}) {
   return _fortalCalloutBaseStyler(size)
       .backgroundColor(FortalTokens.accentSurface())
       .borderAll(
@@ -54,14 +59,21 @@ RemixCalloutStyler _fortalCalloutSurfaceStyler([
         width: FortalTokens.borderWidth1(),
       )
       .borderRadiusAll(FortalTokens.radius3())
-      .foregroundColor(FortalTokens.accent11());
+      .foregroundColor(
+        highContrast ? FortalTokens.accent12() : FortalTokens.accent11(),
+      );
 }
 
-RemixCalloutStyler _fortalCalloutSoftStyler([FortalCalloutSize size = .size2]) {
+RemixCalloutStyler _fortalCalloutSoftStyler(
+  FortalCalloutSize size, {
+  bool highContrast = false,
+}) {
   return _fortalCalloutBaseStyler(size)
       .backgroundColor(FortalTokens.accent3())
       .borderRadiusAll(FortalTokens.radius3())
-      .foregroundColor(FortalTokens.accent11());
+      .foregroundColor(
+        highContrast ? FortalTokens.accent12() : FortalTokens.accent11(),
+      );
 }
 
 RemixCalloutStyler _fortalCalloutSizeStyler(FortalCalloutSize size) {
@@ -99,6 +111,9 @@ class FortalCallout extends StatelessWidget {
     super.key,
     this.variant = .surface,
     this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
     this.text,
     this.icon,
     this.child,
@@ -107,6 +122,9 @@ class FortalCallout extends StatelessWidget {
   const FortalCallout.outline({
     super.key,
     this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
     this.text,
     this.icon,
     this.child,
@@ -115,6 +133,9 @@ class FortalCallout extends StatelessWidget {
   const FortalCallout.surface({
     super.key,
     this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
     this.text,
     this.icon,
     this.child,
@@ -123,6 +144,9 @@ class FortalCallout extends StatelessWidget {
   const FortalCallout.soft({
     super.key,
     this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
     this.text,
     this.icon,
     this.child,
@@ -132,6 +156,15 @@ class FortalCallout extends StatelessWidget {
 
   final FortalCalloutSize size;
 
+  /// Optional accent color override for this callout subtree.
+  final FortalAccentColor? color;
+
+  /// Optional radius override for this callout subtree.
+  final FortalRadius? radius;
+
+  /// Whether to use higher-contrast accent colors.
+  final bool highContrast;
+
   final String? text;
 
   final IconData? icon;
@@ -140,9 +173,20 @@ class FortalCallout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return fortalCalloutStyler(
-      variant: this.variant,
-      size: this.size,
-    ).call(key: this.key, text: this.text, icon: this.icon, child: this.child);
+    return FortalOverride(
+      color: this.color,
+      radius: this.radius,
+      child:
+          fortalCalloutStyler(
+            variant: this.variant,
+            size: this.size,
+            highContrast: this.highContrast,
+          ).call(
+            key: this.key,
+            text: this.text,
+            icon: this.icon,
+            child: this.child,
+          ),
+    );
   }
 }

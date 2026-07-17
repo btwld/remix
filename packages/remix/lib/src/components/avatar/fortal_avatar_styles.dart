@@ -67,6 +67,8 @@ class FortalAvatar extends StatelessWidget {
     super.key,
     this.variant = .soft,
     this.size = .size2,
+    this.color,
+    this.radius,
     this.backgroundImage,
     this.foregroundImage,
     this.onBackgroundImageError,
@@ -81,6 +83,8 @@ class FortalAvatar extends StatelessWidget {
   const FortalAvatar.soft({
     super.key,
     this.size = .size2,
+    this.color,
+    this.radius,
     this.backgroundImage,
     this.foregroundImage,
     this.onBackgroundImageError,
@@ -95,6 +99,8 @@ class FortalAvatar extends StatelessWidget {
   const FortalAvatar.solid({
     super.key,
     this.size = .size2,
+    this.color,
+    this.radius,
     this.backgroundImage,
     this.foregroundImage,
     this.onBackgroundImageError,
@@ -109,6 +115,10 @@ class FortalAvatar extends StatelessWidget {
   final FortalAvatarVariant variant;
 
   final FortalAvatarSize size;
+
+  final FortalAccentColor? color;
+
+  final FortalRadius? radius;
 
   final ImageProvider<Object>? backgroundImage;
 
@@ -130,17 +140,21 @@ class FortalAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return fortalAvatarStyler(variant: this.variant, size: this.size).call(
-      key: this.key,
-      backgroundImage: this.backgroundImage,
-      foregroundImage: this.foregroundImage,
-      onBackgroundImageError: this.onBackgroundImageError,
-      onForegroundImageError: this.onForegroundImageError,
-      label: this.label,
-      labelBuilder: this.labelBuilder,
-      icon: this.icon,
-      iconBuilder: this.iconBuilder,
-      child: this.child,
+    return FortalOverride(
+      color: this.color,
+      radius: this.radius,
+      child: fortalAvatarStyler(variant: this.variant, size: this.size).call(
+        key: this.key,
+        backgroundImage: this.backgroundImage,
+        foregroundImage: this.foregroundImage,
+        onBackgroundImageError: this.onBackgroundImageError,
+        onForegroundImageError: this.onForegroundImageError,
+        label: this.label,
+        labelBuilder: this.labelBuilder,
+        icon: this.icon,
+        iconBuilder: this.iconBuilder,
+        child: this.child,
+      ),
     );
   }
 }

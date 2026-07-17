@@ -3,9 +3,10 @@
   "type": "theme",
   "colors": {
     "fortal.color.background": "#111113",
-    "fortal.color.surface": "#801F2123",
+    "fortal.color.surface": "#40000000",
     "fortal.color.panel.solid": "#18191B",
     "fortal.color.panel.translucent": "#09D8F4F6",
+    "fortal.color.panel": "#18191B",
     "fortal.color.overlay": "#99000000",
     "fortal.accent.surface": "#80171D3B",
     "fortal.accent.indicator": "#3E63DD",
@@ -65,13 +66,15 @@
     "fortal.gray.a10": "#7BE5EDFD",
     "fortal.gray.a11": "#B5F1F7FE",
     "fortal.gray.a12": "#EFFCFDFF",
+    "fortal.black.a1": "#0D000000",
+    "fortal.black.a2": "#1A000000",
     "fortal.black.a3": "#26000000",
     "fortal.black.a4": "#33000000",
     "fortal.black.a5": "#4D000000",
     "fortal.black.a6": "#66000000",
     "fortal.black.a7": "#80000000",
     "fortal.black.a11": "#E6000000",
-    "fortal.shadow.stroke": "#66000000"
+    "fortal.shadow.stroke": "#64AEBFCE"
   },
   "spaces": {
     "fortal.space.1": 4.0,
@@ -95,7 +98,8 @@
     "fortal.radius.4": 8.0,
     "fortal.radius.5": 12.0,
     "fortal.radius.6": 16.0,
-    "fortal.radius.full": 9999.0
+    "fortal.radius.full": 9999.0,
+    "fortal.radius.thumb": 9999.0
   },
   "textStyles": {
     "fortal.text.1": {
@@ -167,7 +171,7 @@
     ],
     "fortal.shadow.2": [
       {
-        "color": "#66000000",
+        "color": "#64AEBFCE",
         "offset": {
           "x": 0.0,
           "y": 0.0
@@ -214,7 +218,7 @@
     ],
     "fortal.shadow.3": [
       {
-        "color": "#66000000",
+        "color": "#64AEBFCE",
         "offset": {
           "x": 0.0,
           "y": 0.0
@@ -252,7 +256,7 @@
     ],
     "fortal.shadow.4": [
       {
-        "color": "#66000000",
+        "color": "#64AEBFCE",
         "offset": {
           "x": 0.0,
           "y": 0.0
@@ -281,7 +285,7 @@
     ],
     "fortal.shadow.5": [
       {
-        "color": "#66000000",
+        "color": "#64AEBFCE",
         "offset": {
           "x": 0.0,
           "y": 0.0
@@ -310,7 +314,7 @@
     ],
     "fortal.shadow.6": [
       {
-        "color": "#66000000",
+        "color": "#64AEBFCE",
         "offset": {
           "x": 0.0,
           "y": 0.0

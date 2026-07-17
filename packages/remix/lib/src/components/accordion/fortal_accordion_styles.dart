@@ -103,6 +103,8 @@ class FortalAccordion<T> extends StatelessWidget {
     super.key,
     this.variant = .surface,
     this.size = .size2,
+    this.color,
+    this.radius,
     required this.value,
     required this.child,
     this.title,
@@ -124,6 +126,8 @@ class FortalAccordion<T> extends StatelessWidget {
   const FortalAccordion.surface({
     super.key,
     this.size = .size2,
+    this.color,
+    this.radius,
     required this.value,
     required this.child,
     this.title,
@@ -145,6 +149,8 @@ class FortalAccordion<T> extends StatelessWidget {
   const FortalAccordion.soft({
     super.key,
     this.size = .size2,
+    this.color,
+    this.radius,
     required this.value,
     required this.child,
     this.title,
@@ -166,6 +172,10 @@ class FortalAccordion<T> extends StatelessWidget {
   final FortalAccordionVariant variant;
 
   final FortalAccordionSize size;
+
+  final FortalAccentColor? color;
+
+  final FortalRadius? radius;
 
   final T value;
 
@@ -201,27 +211,29 @@ class FortalAccordion<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return fortalAccordionStyler(
-      variant: this.variant,
-      size: this.size,
-    ).call<T>(
-      key: this.key,
-      value: this.value,
-      title: this.title,
-      leadingIcon: this.leadingIcon,
-      trailingIcon: this.trailingIcon,
-      enabled: this.enabled,
-      mouseCursor: this.mouseCursor,
-      enableFeedback: this.enableFeedback,
-      autofocus: this.autofocus,
-      focusNode: this.focusNode,
-      onFocusChange: this.onFocusChange,
-      onHoverChange: this.onHoverChange,
-      onPressChange: this.onPressChange,
-      semanticLabel: this.semanticLabel,
-      transitionBuilder: this.transitionBuilder,
-      child: this.child,
-      builder: this.builder,
+    return FortalOverride(
+      color: this.color,
+      radius: this.radius,
+      child: fortalAccordionStyler(variant: this.variant, size: this.size)
+          .call<T>(
+            key: this.key,
+            value: this.value,
+            title: this.title,
+            leadingIcon: this.leadingIcon,
+            trailingIcon: this.trailingIcon,
+            enabled: this.enabled,
+            mouseCursor: this.mouseCursor,
+            enableFeedback: this.enableFeedback,
+            autofocus: this.autofocus,
+            focusNode: this.focusNode,
+            onFocusChange: this.onFocusChange,
+            onHoverChange: this.onHoverChange,
+            onPressChange: this.onPressChange,
+            semanticLabel: this.semanticLabel,
+            transitionBuilder: this.transitionBuilder,
+            child: this.child,
+            builder: this.builder,
+          ),
     );
   }
 }

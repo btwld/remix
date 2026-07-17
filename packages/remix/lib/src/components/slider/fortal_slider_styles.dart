@@ -25,10 +25,11 @@ enum FortalSliderVariant {
 RemixSliderStyler fortalSliderStyler({
   FortalSliderVariant variant = .surface,
   FortalSliderSize size = .size2,
+  bool highContrast = false,
 }) {
   return switch (variant) {
-    .surface => _fortalSliderSurfaceStyler(size),
-    .soft => _fortalSliderSoftStyler(size),
+    .surface => _fortalSliderSurfaceStyler(size, highContrast: highContrast),
+    .soft => _fortalSliderSoftStyler(size, highContrast: highContrast),
   };
 }
 
@@ -37,10 +38,11 @@ RemixSliderStyler _fortalSliderBaseStyler(FortalSliderSize size) {
       .thumb(
         BoxStyler()
             .color(Colors.white)
-            .shapeCircle(
+            .shapeRoundedRectangle(
               side: BorderSideMix()
                   .color(FortalTokens.grayA6())
                   .strokeAlign(BorderSide.strokeAlignOutside),
+              borderRadius: BorderRadiusMix.all(FortalTokens.radiusThumb()),
             )
             .shadow(
               BoxShadowMix()
@@ -52,10 +54,15 @@ RemixSliderStyler _fortalSliderBaseStyler(FortalSliderSize size) {
       .merge(_fortalSliderSizeStyler(size));
 }
 
-RemixSliderStyler _fortalSliderSurfaceStyler([FortalSliderSize size = .size2]) {
+RemixSliderStyler _fortalSliderSurfaceStyler(
+  FortalSliderSize size, {
+  bool highContrast = false,
+}) {
   return _fortalSliderBaseStyler(size)
       .trackColor(FortalTokens.gray3())
-      .rangeColor(FortalTokens.accentIndicator())
+      .rangeColor(
+        highContrast ? FortalTokens.accent12() : FortalTokens.accentIndicator(),
+      )
       .onDisabled(
         RemixSliderStyler()
             .trackColor(FortalTokens.accentTrack())
@@ -64,10 +71,15 @@ RemixSliderStyler _fortalSliderSurfaceStyler([FortalSliderSize size = .size2]) {
       );
 }
 
-RemixSliderStyler _fortalSliderSoftStyler([FortalSliderSize size = .size2]) {
+RemixSliderStyler _fortalSliderSoftStyler(
+  FortalSliderSize size, {
+  bool highContrast = false,
+}) {
   return _fortalSliderBaseStyler(size)
       .trackColor(FortalTokens.gray4())
-      .rangeColor(FortalTokens.accent6())
+      .rangeColor(
+        highContrast ? FortalTokens.accent12() : FortalTokens.accent6(),
+      )
       .onDisabled(
         RemixSliderStyler()
             .trackColor(FortalTokens.accent4())
@@ -102,6 +114,9 @@ class FortalSlider extends StatelessWidget {
     super.key,
     this.variant = .surface,
     this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
     required this.value,
     this.onChanged,
     this.onChangeStart,
@@ -119,6 +134,9 @@ class FortalSlider extends StatelessWidget {
   const FortalSlider.surface({
     super.key,
     this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
     required this.value,
     this.onChanged,
     this.onChangeStart,
@@ -136,6 +154,9 @@ class FortalSlider extends StatelessWidget {
   const FortalSlider.soft({
     super.key,
     this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
     required this.value,
     this.onChanged,
     this.onChangeStart,
@@ -152,6 +173,12 @@ class FortalSlider extends StatelessWidget {
   final FortalSliderVariant variant;
 
   final FortalSliderSize size;
+
+  final FortalAccentColor? color;
+
+  final FortalRadius? radius;
+
+  final bool highContrast;
 
   final double value;
 
@@ -177,19 +204,28 @@ class FortalSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return fortalSliderStyler(variant: this.variant, size: this.size).call(
-      key: this.key,
-      value: this.value,
-      onChanged: this.onChanged,
-      onChangeStart: this.onChangeStart,
-      onChangeEnd: this.onChangeEnd,
-      min: this.min,
-      max: this.max,
-      enabled: this.enabled,
-      enableFeedback: this.enableFeedback,
-      focusNode: this.focusNode,
-      autofocus: this.autofocus,
-      snapDivisions: this.snapDivisions,
+    return FortalOverride(
+      color: this.color,
+      radius: this.radius,
+      child:
+          fortalSliderStyler(
+            variant: this.variant,
+            size: this.size,
+            highContrast: this.highContrast,
+          ).call(
+            key: this.key,
+            value: this.value,
+            onChanged: this.onChanged,
+            onChangeStart: this.onChangeStart,
+            onChangeEnd: this.onChangeEnd,
+            min: this.min,
+            max: this.max,
+            enabled: this.enabled,
+            enableFeedback: this.enableFeedback,
+            focusNode: this.focusNode,
+            autofocus: this.autofocus,
+            snapDivisions: this.snapDivisions,
+          ),
     );
   }
 }

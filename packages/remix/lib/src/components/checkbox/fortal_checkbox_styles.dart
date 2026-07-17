@@ -25,10 +25,11 @@ enum FortalCheckboxVariant {
 RemixCheckboxStyler fortalCheckboxStyler({
   FortalCheckboxVariant variant = .surface,
   FortalCheckboxSize size = .size2,
+  bool highContrast = false,
 }) {
   return switch (variant) {
-    .surface => _fortalCheckboxSurfaceStyler(size),
-    .soft => _fortalCheckboxSoftStyler(size),
+    .surface => _fortalCheckboxSurfaceStyler(size, highContrast: highContrast),
+    .soft => _fortalCheckboxSoftStyler(size, highContrast: highContrast),
   };
 }
 
@@ -43,9 +44,10 @@ RemixCheckboxStyler _fortalCheckboxBaseStyler(FortalCheckboxSize size) {
       .merge(_fortalCheckboxSizeStyler(size));
 }
 
-RemixCheckboxStyler _fortalCheckboxSurfaceStyler([
-  FortalCheckboxSize size = .size2,
-]) {
+RemixCheckboxStyler _fortalCheckboxSurfaceStyler(
+  FortalCheckboxSize size, {
+  bool highContrast = false,
+}) {
   return _fortalCheckboxBaseStyler(size)
       .borderAll(
         color: FortalTokens.gray6(),
@@ -55,12 +57,20 @@ RemixCheckboxStyler _fortalCheckboxSurfaceStyler([
       .indicatorColor(FortalTokens.accent9())
       .onSelected(
         RemixCheckboxStyler()
-            .fillColor(FortalTokens.accent9())
+            .fillColor(
+              highContrast ? FortalTokens.accent12() : FortalTokens.accent9(),
+            )
             .borderAll(
-              color: FortalTokens.accent9(),
+              color: highContrast
+                  ? FortalTokens.accent12()
+                  : FortalTokens.accent9(),
               width: FortalTokens.borderWidth1(),
             )
-            .indicatorColor(FortalTokens.accentContrast()),
+            .indicatorColor(
+              highContrast
+                  ? FortalTokens.accent1()
+                  : FortalTokens.accentContrast(),
+            ),
       )
       .onDisabled(
         RemixCheckboxStyler()
@@ -73,14 +83,17 @@ RemixCheckboxStyler _fortalCheckboxSurfaceStyler([
       );
 }
 
-RemixCheckboxStyler _fortalCheckboxSoftStyler([
-  FortalCheckboxSize size = .size2,
-]) {
+RemixCheckboxStyler _fortalCheckboxSoftStyler(
+  FortalCheckboxSize size, {
+  bool highContrast = false,
+}) {
   return _fortalCheckboxBaseStyler(size)
       .fillColor(FortalTokens.accentA4())
       .borderRadiusAll(FortalTokens.radius2())
       .onSelected(
-        RemixCheckboxStyler().indicatorColor(FortalTokens.accentA11()),
+        RemixCheckboxStyler().indicatorColor(
+          highContrast ? FortalTokens.accent12() : FortalTokens.accentA11(),
+        ),
       )
       .onDisabled(
         RemixCheckboxStyler()
@@ -118,6 +131,9 @@ class FortalCheckbox extends StatelessWidget {
     super.key,
     this.variant = .surface,
     this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
     required this.selected,
     this.onChanged,
     this.enabled = true,
@@ -136,6 +152,9 @@ class FortalCheckbox extends StatelessWidget {
   const FortalCheckbox.surface({
     super.key,
     this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
     required this.selected,
     this.onChanged,
     this.enabled = true,
@@ -154,6 +173,9 @@ class FortalCheckbox extends StatelessWidget {
   const FortalCheckbox.soft({
     super.key,
     this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
     required this.selected,
     this.onChanged,
     this.enabled = true,
@@ -171,6 +193,15 @@ class FortalCheckbox extends StatelessWidget {
   final FortalCheckboxVariant variant;
 
   final FortalCheckboxSize size;
+
+  /// Optional accent color override for this checkbox subtree.
+  final FortalAccentColor? color;
+
+  /// Optional radius override for this checkbox subtree.
+  final FortalRadius? radius;
+
+  /// Whether to use higher-contrast accent colors.
+  final bool highContrast;
 
   final bool? selected;
 
@@ -198,20 +229,29 @@ class FortalCheckbox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return fortalCheckboxStyler(variant: this.variant, size: this.size).call(
-      key: this.key,
-      selected: this.selected,
-      onChanged: this.onChanged,
-      enabled: this.enabled,
-      tristate: this.tristate,
-      checkedIcon: this.checkedIcon,
-      uncheckedIcon: this.uncheckedIcon,
-      indeterminateIcon: this.indeterminateIcon,
-      focusNode: this.focusNode,
-      autofocus: this.autofocus,
-      enableFeedback: this.enableFeedback,
-      semanticLabel: this.semanticLabel,
-      mouseCursor: this.mouseCursor,
+    return FortalOverride(
+      color: this.color,
+      radius: this.radius,
+      child:
+          fortalCheckboxStyler(
+            variant: this.variant,
+            size: this.size,
+            highContrast: this.highContrast,
+          ).call(
+            key: this.key,
+            selected: this.selected,
+            onChanged: this.onChanged,
+            enabled: this.enabled,
+            tristate: this.tristate,
+            checkedIcon: this.checkedIcon,
+            uncheckedIcon: this.uncheckedIcon,
+            indeterminateIcon: this.indeterminateIcon,
+            focusNode: this.focusNode,
+            autofocus: this.autofocus,
+            enableFeedback: this.enableFeedback,
+            semanticLabel: this.semanticLabel,
+            mouseCursor: this.mouseCursor,
+          ),
     );
   }
 }

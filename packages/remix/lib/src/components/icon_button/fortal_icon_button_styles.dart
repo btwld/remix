@@ -10,13 +10,20 @@ enum FortalIconButtonVariant { solid, soft, surface, outline, ghost }
 RemixIconButtonStyler fortalIconButtonStyler({
   FortalIconButtonVariant variant = .solid,
   FortalIconButtonSize size = .size2,
+  bool highContrast = false,
 }) {
   return switch (variant) {
-    .solid => _fortalIconButtonSolidStyler(size),
-    .soft => _fortalIconButtonSoftStyler(size),
-    .surface => _fortalIconButtonSurfaceStyler(size),
-    .outline => _fortalIconButtonOutlineStyler(size),
-    .ghost => _fortalIconButtonGhostStyler(size),
+    .solid => _fortalIconButtonSolidStyler(size, highContrast: highContrast),
+    .soft => _fortalIconButtonSoftStyler(size, highContrast: highContrast),
+    .surface => _fortalIconButtonSurfaceStyler(
+      size,
+      highContrast: highContrast,
+    ),
+    .outline => _fortalIconButtonOutlineStyler(
+      size,
+      highContrast: highContrast,
+    ),
+    .ghost => _fortalIconButtonGhostStyler(size, highContrast: highContrast),
   };
 }
 
@@ -37,20 +44,31 @@ RemixIconButtonStyler _fortalIconButtonBaseStyler(FortalIconButtonSize size) {
       .merge(_fortalIconButtonSizeStyler(size));
 }
 
-RemixIconButtonStyler _fortalIconButtonSolidStyler([
-  FortalIconButtonSize size = .size2,
-]) {
+RemixIconButtonStyler _fortalIconButtonSolidStyler(
+  FortalIconButtonSize size, {
+  bool highContrast = false,
+}) {
   return _fortalIconButtonBaseStyler(size)
-      .backgroundColor(FortalTokens.accent9())
-      .foregroundColor(FortalTokens.accentContrast())
+      .backgroundColor(
+        highContrast ? FortalTokens.accent12() : FortalTokens.accent9(),
+      )
+      .foregroundColor(
+        highContrast ? FortalTokens.accent1() : FortalTokens.accentContrast(),
+      )
       .spinner(
-        RemixSpinnerStyler().indicatorColor(FortalTokens.accentContrast()),
+        RemixSpinnerStyler().indicatorColor(
+          highContrast ? FortalTokens.accent1() : FortalTokens.accentContrast(),
+        ),
       )
       .onHovered(
-        RemixIconButtonStyler().backgroundColor(FortalTokens.accent10()),
+        RemixIconButtonStyler().backgroundColor(
+          highContrast ? FortalTokens.accent12() : FortalTokens.accent10(),
+        ),
       )
       .onPressed(
-        RemixIconButtonStyler().backgroundColor(FortalTokens.accent10()),
+        RemixIconButtonStyler().backgroundColor(
+          highContrast ? FortalTokens.accent12() : FortalTokens.accent10(),
+        ),
       )
       .onDisabled(
         RemixIconButtonStyler()
@@ -64,13 +82,20 @@ RemixIconButtonStyler _fortalIconButtonSolidStyler([
       );
 }
 
-RemixIconButtonStyler _fortalIconButtonSoftStyler([
-  FortalIconButtonSize size = .size2,
-]) {
+RemixIconButtonStyler _fortalIconButtonSoftStyler(
+  FortalIconButtonSize size, {
+  bool highContrast = false,
+}) {
   return _fortalIconButtonBaseStyler(size)
       .backgroundColor(FortalTokens.accent3())
-      .foregroundColor(FortalTokens.accent11())
-      .spinner(RemixSpinnerStyler().indicatorColor(FortalTokens.accent11()))
+      .foregroundColor(
+        highContrast ? FortalTokens.accent12() : FortalTokens.accent11(),
+      )
+      .spinner(
+        RemixSpinnerStyler().indicatorColor(
+          highContrast ? FortalTokens.accent12() : FortalTokens.accent11(),
+        ),
+      )
       .onHovered(
         RemixIconButtonStyler().backgroundColor(FortalTokens.accent4()),
       )
@@ -89,17 +114,24 @@ RemixIconButtonStyler _fortalIconButtonSoftStyler([
       );
 }
 
-RemixIconButtonStyler _fortalIconButtonSurfaceStyler([
-  FortalIconButtonSize size = .size2,
-]) {
+RemixIconButtonStyler _fortalIconButtonSurfaceStyler(
+  FortalIconButtonSize size, {
+  bool highContrast = false,
+}) {
   return _fortalIconButtonBaseStyler(size)
       .backgroundColor(FortalTokens.accentA2())
       .borderAll(
         color: FortalTokens.accent6(),
         width: FortalTokens.borderWidth1(),
       )
-      .foregroundColor(FortalTokens.accent11())
-      .spinner(RemixSpinnerStyler().indicatorColor(FortalTokens.accent11()))
+      .foregroundColor(
+        highContrast ? FortalTokens.accent12() : FortalTokens.accent11(),
+      )
+      .spinner(
+        RemixSpinnerStyler().indicatorColor(
+          highContrast ? FortalTokens.accent12() : FortalTokens.accent11(),
+        ),
+      )
       .onHovered(
         RemixIconButtonStyler().borderAll(
           color: FortalTokens.accent8(),
@@ -122,17 +154,24 @@ RemixIconButtonStyler _fortalIconButtonSurfaceStyler([
       );
 }
 
-RemixIconButtonStyler _fortalIconButtonOutlineStyler([
-  FortalIconButtonSize size = .size2,
-]) {
+RemixIconButtonStyler _fortalIconButtonOutlineStyler(
+  FortalIconButtonSize size, {
+  bool highContrast = false,
+}) {
   return _fortalIconButtonBaseStyler(size)
       .backgroundColor(Colors.transparent)
       .borderAll(
         color: FortalTokens.accent7(),
         width: FortalTokens.borderWidth1(),
       )
-      .foregroundColor(FortalTokens.accent11())
-      .spinner(RemixSpinnerStyler().indicatorColor(FortalTokens.accent11()))
+      .foregroundColor(
+        highContrast ? FortalTokens.accent12() : FortalTokens.accent11(),
+      )
+      .spinner(
+        RemixSpinnerStyler().indicatorColor(
+          highContrast ? FortalTokens.accent12() : FortalTokens.accent11(),
+        ),
+      )
       .onHovered(
         RemixIconButtonStyler()
             .backgroundColor(FortalTokens.accentA2())
@@ -153,13 +192,20 @@ RemixIconButtonStyler _fortalIconButtonOutlineStyler([
       );
 }
 
-RemixIconButtonStyler _fortalIconButtonGhostStyler([
-  FortalIconButtonSize size = .size2,
-]) {
+RemixIconButtonStyler _fortalIconButtonGhostStyler(
+  FortalIconButtonSize size, {
+  bool highContrast = false,
+}) {
   return _fortalIconButtonBaseStyler(size)
       .backgroundColor(Colors.transparent)
-      .foregroundColor(FortalTokens.accent11())
-      .spinner(RemixSpinnerStyler().indicatorColor(FortalTokens.accent11()))
+      .foregroundColor(
+        highContrast ? FortalTokens.accent12() : FortalTokens.accent11(),
+      )
+      .spinner(
+        RemixSpinnerStyler().indicatorColor(
+          highContrast ? FortalTokens.accent12() : FortalTokens.accent11(),
+        ),
+      )
       .onHovered(
         RemixIconButtonStyler().backgroundColor(FortalTokens.accentA3()),
       )
@@ -214,6 +260,9 @@ class FortalIconButton extends StatelessWidget {
     super.key,
     this.variant = .solid,
     this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
     required this.icon,
     this.iconBuilder,
     this.loadingBuilder,
@@ -233,6 +282,9 @@ class FortalIconButton extends StatelessWidget {
   const FortalIconButton.solid({
     super.key,
     this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
     required this.icon,
     this.iconBuilder,
     this.loadingBuilder,
@@ -252,6 +304,9 @@ class FortalIconButton extends StatelessWidget {
   const FortalIconButton.soft({
     super.key,
     this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
     required this.icon,
     this.iconBuilder,
     this.loadingBuilder,
@@ -271,6 +326,9 @@ class FortalIconButton extends StatelessWidget {
   const FortalIconButton.surface({
     super.key,
     this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
     required this.icon,
     this.iconBuilder,
     this.loadingBuilder,
@@ -290,6 +348,9 @@ class FortalIconButton extends StatelessWidget {
   const FortalIconButton.outline({
     super.key,
     this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
     required this.icon,
     this.iconBuilder,
     this.loadingBuilder,
@@ -309,6 +370,9 @@ class FortalIconButton extends StatelessWidget {
   const FortalIconButton.ghost({
     super.key,
     this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
     required this.icon,
     this.iconBuilder,
     this.loadingBuilder,
@@ -328,6 +392,15 @@ class FortalIconButton extends StatelessWidget {
   final FortalIconButtonVariant variant;
 
   final FortalIconButtonSize size;
+
+  /// Per-instance accent color override.
+  final FortalAccentColor? color;
+
+  /// Per-instance radius override.
+  final FortalRadius? radius;
+
+  /// Uses higher-contrast accent roles where this variant supports them.
+  final bool highContrast;
 
   final IconData icon;
 
@@ -359,22 +432,31 @@ class FortalIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return fortalIconButtonStyler(variant: this.variant, size: this.size).call(
-      key: this.key,
-      icon: this.icon,
-      iconBuilder: this.iconBuilder,
-      loadingBuilder: this.loadingBuilder,
-      loading: this.loading,
-      enabled: this.enabled,
-      enableFeedback: this.enableFeedback,
-      onPressed: this.onPressed,
-      onLongPress: this.onLongPress,
-      focusNode: this.focusNode,
-      autofocus: this.autofocus,
-      semanticLabel: this.semanticLabel,
-      semanticHint: this.semanticHint,
-      excludeSemantics: this.excludeSemantics,
-      mouseCursor: this.mouseCursor,
+    return FortalOverride(
+      color: this.color,
+      radius: this.radius,
+      child:
+          fortalIconButtonStyler(
+            variant: this.variant,
+            size: this.size,
+            highContrast: this.highContrast,
+          ).call(
+            key: this.key,
+            icon: this.icon,
+            iconBuilder: this.iconBuilder,
+            loadingBuilder: this.loadingBuilder,
+            loading: this.loading,
+            enabled: this.enabled,
+            enableFeedback: this.enableFeedback,
+            onPressed: this.onPressed,
+            onLongPress: this.onLongPress,
+            focusNode: this.focusNode,
+            autofocus: this.autofocus,
+            semanticLabel: this.semanticLabel,
+            semanticHint: this.semanticHint,
+            excludeSemantics: this.excludeSemantics,
+            mouseCursor: this.mouseCursor,
+          ),
     );
   }
 }

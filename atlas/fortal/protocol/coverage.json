@@ -6,7 +6,7 @@
     {
       "id": "dark",
       "status": "supported",
-      "tokenCount": 111,
+      "tokenCount": 115,
       "rawStatus": "failed",
       "captureTransform": "concretizeBoxShadowColorTokenReferences",
       "rawDiagnostics": [
@@ -57,7 +57,7 @@
     {
       "id": "light",
       "status": "supported",
-      "tokenCount": 111,
+      "tokenCount": 115,
       "rawStatus": "failed",
       "captureTransform": "concretizeBoxShadowColorTokenReferences",
       "rawDiagnostics": [
@@ -66,7 +66,7 @@
           "severity": "error",
           "path": "/boxShadows/fortal.shadow.1",
           "message": "Theme token values must be concrete; token references are only allowed as same-kind whole-value aliases in theme JSON.",
-          "value": "MixProtocolTokenReference(colors, fortal.gray.a6)"
+          "value": "MixProtocolTokenReference(colors, fortal.gray.a5)"
         },
         {
           "code": "constraint_violation",

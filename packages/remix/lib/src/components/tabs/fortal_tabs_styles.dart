@@ -16,7 +16,7 @@ RemixTabViewStyler fortalTabViewStyler() {
 }
 
 /// Fortal-themed preset for [RemixTab].
-RemixTabStyler fortalTabStyler() {
+RemixTabStyler fortalTabStyler({bool highContrast = false}) {
   return RemixTabStyler()
       .label(TextStyler().color(FortalTokens.gray12()))
       .icon(IconStyler(color: FortalTokens.gray12(), size: 16.0))
@@ -45,7 +45,13 @@ RemixTabStyler fortalTabStyler() {
         RemixTabStyler()
             .label(TextStyler().fontWeight(FortalTokens.fontWeightMedium()))
             .wrap(
-              .box(BoxStyler().borderBottom(color: FortalTokens.accent9())),
+              .box(
+                BoxStyler().borderBottom(
+                  color: highContrast
+                      ? FortalTokens.accent12()
+                      : FortalTokens.accent9(),
+                ),
+              ),
             ),
       )
       .padding(EdgeInsetsMix.symmetric(vertical: 6.0, horizontal: 12.0));
@@ -53,19 +59,37 @@ RemixTabStyler fortalTabStyler() {
 
 /// Fortal-themed preset for [RemixTabBar].
 class FortalTabBar extends StatelessWidget {
-  const FortalTabBar({super.key, required this.child});
+  const FortalTabBar({super.key, this.color, this.radius, required this.child});
+
+  final FortalAccentColor? color;
+
+  final FortalRadius? radius;
 
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
-    return fortalTabBarStyler().call(key: this.key, child: this.child);
+    return FortalOverride(
+      color: this.color,
+      radius: this.radius,
+      child: fortalTabBarStyler().call(key: this.key, child: this.child),
+    );
   }
 }
 
 /// Fortal-themed preset for [RemixTabView].
 class FortalTabView extends StatelessWidget {
-  const FortalTabView({super.key, required this.tabId, required this.child});
+  const FortalTabView({
+    super.key,
+    this.color,
+    this.radius,
+    required this.tabId,
+    required this.child,
+  });
+
+  final FortalAccentColor? color;
+
+  final FortalRadius? radius;
 
   final String tabId;
 
@@ -73,10 +97,14 @@ class FortalTabView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return fortalTabViewStyler().call(
-      key: this.key,
-      tabId: this.tabId,
-      child: this.child,
+    return FortalOverride(
+      color: this.color,
+      radius: this.radius,
+      child: fortalTabViewStyler().call(
+        key: this.key,
+        tabId: this.tabId,
+        child: this.child,
+      ),
     );
   }
 }
@@ -85,6 +113,9 @@ class FortalTabView extends StatelessWidget {
 class FortalTab extends StatelessWidget {
   const FortalTab({
     super.key,
+    this.color,
+    this.radius,
+    this.highContrast = false,
     required this.tabId,
     this.child,
     this.label,
@@ -102,6 +133,12 @@ class FortalTab extends StatelessWidget {
   });
 
   final String tabId;
+
+  final FortalAccentColor? color;
+
+  final FortalRadius? radius;
+
+  final bool highContrast;
 
   final Widget? child;
 
@@ -131,22 +168,26 @@ class FortalTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return fortalTabStyler().call(
-      key: this.key,
-      tabId: this.tabId,
-      label: this.label,
-      icon: this.icon,
-      enabled: this.enabled,
-      mouseCursor: this.mouseCursor,
-      enableFeedback: this.enableFeedback,
-      focusNode: this.focusNode,
-      autofocus: this.autofocus,
-      onFocusChange: this.onFocusChange,
-      onHoverChange: this.onHoverChange,
-      onPressChange: this.onPressChange,
-      semanticLabel: this.semanticLabel,
-      child: this.child,
-      builder: this.builder,
+    return FortalOverride(
+      color: this.color,
+      radius: this.radius,
+      child: fortalTabStyler(highContrast: this.highContrast).call(
+        key: this.key,
+        tabId: this.tabId,
+        label: this.label,
+        icon: this.icon,
+        enabled: this.enabled,
+        mouseCursor: this.mouseCursor,
+        enableFeedback: this.enableFeedback,
+        focusNode: this.focusNode,
+        autofocus: this.autofocus,
+        onFocusChange: this.onFocusChange,
+        onHoverChange: this.onHoverChange,
+        onPressChange: this.onPressChange,
+        semanticLabel: this.semanticLabel,
+        child: this.child,
+        builder: this.builder,
+      ),
     );
   }
 }

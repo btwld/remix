@@ -25,10 +25,11 @@ enum FortalRadioVariant {
 RemixRadioStyler fortalRadioStyler({
   FortalRadioVariant variant = .surface,
   FortalRadioSize size = .size2,
+  bool highContrast = false,
 }) {
   return switch (variant) {
-    .surface => _fortalRadioSurfaceStyler(size),
-    .soft => _fortalRadioSoftStyler(size),
+    .surface => _fortalRadioSurfaceStyler(size, highContrast: highContrast),
+    .soft => _fortalRadioSoftStyler(size, highContrast: highContrast),
   };
 }
 
@@ -43,7 +44,10 @@ RemixRadioStyler _fortalRadioBaseStyler(FortalRadioSize size) {
       .merge(_fortalRadioSizeStyler(size));
 }
 
-RemixRadioStyler _fortalRadioSurfaceStyler([FortalRadioSize size = .size2]) {
+RemixRadioStyler _fortalRadioSurfaceStyler(
+  FortalRadioSize size, {
+  bool highContrast = false,
+}) {
   return _fortalRadioBaseStyler(size)
       .fillColor(FortalTokens.colorSurface())
       .borderAll(
@@ -58,12 +62,20 @@ RemixRadioStyler _fortalRadioSurfaceStyler([FortalRadioSize size = .size2]) {
       )
       .onSelected(
         RemixRadioStyler()
-            .fillColor(FortalTokens.accent9())
+            .fillColor(
+              highContrast ? FortalTokens.accent12() : FortalTokens.accent9(),
+            )
             .borderAll(
-              color: FortalTokens.accent9(),
+              color: highContrast
+                  ? FortalTokens.accent12()
+                  : FortalTokens.accent9(),
               width: FortalTokens.borderWidth1(),
             )
-            .indicator(BoxStyler().color(Colors.white)),
+            .indicator(
+              BoxStyler().color(
+                highContrast ? FortalTokens.accent1() : Colors.white,
+              ),
+            ),
       )
       .onDisabled(
         RemixRadioStyler()
@@ -76,19 +88,30 @@ RemixRadioStyler _fortalRadioSurfaceStyler([FortalRadioSize size = .size2]) {
       );
 }
 
-RemixRadioStyler _fortalRadioSoftStyler([FortalRadioSize size = .size2]) {
+RemixRadioStyler _fortalRadioSoftStyler(
+  FortalRadioSize size, {
+  bool highContrast = false,
+}) {
   return _fortalRadioBaseStyler(size)
       .fillColor(FortalTokens.accentA4())
       .borderRadiusAll(FortalTokens.radiusFull())
       .indicator(
         BoxStyler()
-            .color(FortalTokens.accent11())
+            .color(
+              highContrast ? FortalTokens.accent12() : FortalTokens.accent11(),
+            )
             .borderRadiusAll(FortalTokens.radiusFull()),
       )
       .onSelected(
         RemixRadioStyler()
             .fillColor(FortalTokens.accentA4())
-            .indicator(BoxStyler().color(FortalTokens.accent11())),
+            .indicator(
+              BoxStyler().color(
+                highContrast
+                    ? FortalTokens.accent12()
+                    : FortalTokens.accent11(),
+              ),
+            ),
       )
       .onDisabled(
         RemixRadioStyler()
@@ -120,6 +143,8 @@ class FortalRadio<T> extends StatelessWidget {
     super.key,
     this.variant = .surface,
     this.size = .size2,
+    this.color,
+    this.highContrast = false,
     required this.value,
     this.enabled = true,
     this.toggleable = false,
@@ -132,6 +157,8 @@ class FortalRadio<T> extends StatelessWidget {
   const FortalRadio.surface({
     super.key,
     this.size = .size2,
+    this.color,
+    this.highContrast = false,
     required this.value,
     this.enabled = true,
     this.toggleable = false,
@@ -144,6 +171,8 @@ class FortalRadio<T> extends StatelessWidget {
   const FortalRadio.soft({
     super.key,
     this.size = .size2,
+    this.color,
+    this.highContrast = false,
     required this.value,
     this.enabled = true,
     this.toggleable = false,
@@ -155,6 +184,12 @@ class FortalRadio<T> extends StatelessWidget {
   final FortalRadioVariant variant;
 
   final FortalRadioSize size;
+
+  /// Optional accent color override for this radio subtree.
+  final FortalAccentColor? color;
+
+  /// Whether to use higher-contrast accent colors.
+  final bool highContrast;
 
   final T value;
 
@@ -170,14 +205,22 @@ class FortalRadio<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return fortalRadioStyler(variant: this.variant, size: this.size).call<T>(
-      key: this.key,
-      value: this.value,
-      enabled: this.enabled,
-      toggleable: this.toggleable,
-      mouseCursor: this.mouseCursor,
-      focusNode: this.focusNode,
-      autofocus: this.autofocus,
+    return FortalOverride(
+      color: this.color,
+      child:
+          fortalRadioStyler(
+            variant: this.variant,
+            size: this.size,
+            highContrast: this.highContrast,
+          ).call<T>(
+            key: this.key,
+            value: this.value,
+            enabled: this.enabled,
+            toggleable: this.toggleable,
+            mouseCursor: this.mouseCursor,
+            focusNode: this.focusNode,
+            autofocus: this.autofocus,
+          ),
     );
   }
 }

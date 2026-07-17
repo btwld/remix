@@ -29,12 +29,20 @@ RemixDividerStyler _fortalDividerSizeStyler(FortalDividerSize size) {
 
 /// Fortal-themed preset for [RemixDivider].
 class FortalDivider extends StatelessWidget {
-  const FortalDivider({super.key, this.size = .size1});
+  const FortalDivider({super.key, this.size = .size1, this.color});
 
   final FortalDividerSize size;
 
+  final FortalAccentColor? color;
+
   @override
   Widget build(BuildContext context) {
-    return fortalDividerStyler(size: this.size).call(key: this.key);
+    final style = fortalDividerStyler(size: this.size);
+
+    return FortalOverride(
+      color: this.color,
+      child: (this.color == null ? style : style.color(FortalTokens.accentA6()))
+          .call(key: this.key),
+    );
   }
 }

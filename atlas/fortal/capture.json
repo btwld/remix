@@ -58,7 +58,7 @@
     },
     {
       "path": "protocol/coverage.json",
-      "sha256": "bd34c03c2ff05bc2a540071edca2c2d1885fefbb074bb5e3d772607af098d96b",
+      "sha256": "5d1934a43ef2ad0afdcd0b06fbbdd33231fa5e9ced48c698d097b542bb905e4d",
       "bytes": 7886
     },
     {
@@ -368,13 +368,13 @@
     },
     {
       "path": "themes/dark.mix.json",
-      "sha256": "76484fcdcff252a59efdec0657a6741f379ced392926dccfaaf05ef312e92392",
-      "bytes": 8385
+      "sha256": "8897f8a3cf3b798c1d3a08eaf6c7babc544aa4e26f5add903667f08e69b9f2b0",
+      "bytes": 8529
     },
     {
       "path": "themes/light.mix.json",
-      "sha256": "3021364baeb1359fe8d195f404beca0890b0a6b8b5f950222f812ad713b8bab9",
-      "bytes": 8389
+      "sha256": "f518ee2609851d42cc38651d1d43a36ba70e003a199f57806b1ecb1aba7d3b33",
+      "bytes": 8706
     }
   ]
 }

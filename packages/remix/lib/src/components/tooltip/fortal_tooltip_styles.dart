@@ -10,13 +10,15 @@ RemixTooltipStyler fortalTooltipStyler() {
       .wrap(
         .defaultTextStyle(style: TextStyleMix().color(FortalTokens.gray1())),
       )
-      .backgroundColor(FortalTokens.gray11());
+      .backgroundColor(FortalTokens.gray12());
 }
 
 /// Fortal-themed preset for [RemixTooltip].
 class FortalTooltip extends StatelessWidget {
   const FortalTooltip({
     super.key,
+    this.color,
+    this.radius,
     required this.tooltipChild,
     required this.child,
     this.tooltipSemantics,
@@ -24,6 +26,10 @@ class FortalTooltip extends StatelessWidget {
   });
 
   final Widget tooltipChild;
+
+  final FortalAccentColor? color;
+
+  final FortalRadius? radius;
 
   final Widget child;
 
@@ -33,12 +39,16 @@ class FortalTooltip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return fortalTooltipStyler().call(
-      key: this.key,
-      tooltipChild: this.tooltipChild,
-      tooltipSemantics: this.tooltipSemantics,
-      positioning: this.positioning,
-      child: this.child,
+    return FortalOverride(
+      color: this.color,
+      radius: this.radius,
+      child: fortalTooltipStyler().call(
+        key: this.key,
+        tooltipChild: this.tooltipChild,
+        tooltipSemantics: this.tooltipSemantics,
+        positioning: this.positioning,
+        child: this.child,
+      ),
     );
   }
 }

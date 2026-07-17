@@ -28,18 +28,20 @@ enum FortalSelectVariant {
 RemixSelectStyler fortalSelectStyler({
   FortalSelectVariant variant = .surface,
   FortalSelectSize size = .size2,
+  bool highContrast = false,
 }) {
   return switch (variant) {
-    .surface => _fortalSelectSurfaceStyler(size),
-    .soft => _fortalSelectSoftStyler(size),
-    .ghost => _fortalSelectGhostStyler(size),
+    .surface => _fortalSelectSurfaceStyler(size, highContrast: highContrast),
+    .soft => _fortalSelectSoftStyler(size, highContrast: highContrast),
+    .ghost => _fortalSelectGhostStyler(size, highContrast: highContrast),
   };
 }
 
 RemixSelectStyler _fortalSelectBaseStyler(
   FortalSelectVariant variant,
-  FortalSelectSize size,
-) {
+  FortalSelectSize size, {
+  bool highContrast = false,
+}) {
   return RemixSelectStyler()
       .trigger(
         RemixSelectTriggerStyler()
@@ -53,7 +55,7 @@ RemixSelectStyler _fortalSelectBaseStyler(
       .menuContainer(
         FlexBoxStyler()
             .width(150)
-            .color(FortalTokens.colorPanelSolid())
+            .color(FortalTokens.colorPanel())
             .marginTop(8)
             .borderAll(
               color: FortalTokens.gray6(),
@@ -62,7 +64,13 @@ RemixSelectStyler _fortalSelectBaseStyler(
             .borderRadiusAll(FortalTokens.radius3())
             .padding(EdgeInsetsMix.all(8.0)),
       )
-      .item(fortalSelectMenuItemStyler(variant: variant, size: size))
+      .item(
+        fortalSelectMenuItemStyler(
+          variant: variant,
+          size: size,
+          highContrast: highContrast,
+        ),
+      )
       .onFocused(
         RemixSelectStyler().trigger(
           RemixSelectTriggerStyler().borderAll(
@@ -74,8 +82,15 @@ RemixSelectStyler _fortalSelectBaseStyler(
       .merge(_fortalSelectSizeStyler(size));
 }
 
-RemixSelectStyler _fortalSelectSurfaceStyler([FortalSelectSize size = .size2]) {
-  return _fortalSelectBaseStyler(.surface, size).trigger(
+RemixSelectStyler _fortalSelectSurfaceStyler(
+  FortalSelectSize size, {
+  bool highContrast = false,
+}) {
+  return _fortalSelectBaseStyler(
+    .surface,
+    size,
+    highContrast: highContrast,
+  ).trigger(
     RemixSelectTriggerStyler()
         .color(FortalTokens.colorSurface())
         .borderAll(
@@ -85,19 +100,41 @@ RemixSelectStyler _fortalSelectSurfaceStyler([FortalSelectSize size = .size2]) {
   );
 }
 
-RemixSelectStyler _fortalSelectSoftStyler([FortalSelectSize size = .size2]) {
-  return _fortalSelectBaseStyler(.soft, size).trigger(
+RemixSelectStyler _fortalSelectSoftStyler(
+  FortalSelectSize size, {
+  bool highContrast = false,
+}) {
+  return _fortalSelectBaseStyler(
+    .soft,
+    size,
+    highContrast: highContrast,
+  ).trigger(
     RemixSelectTriggerStyler()
         .color(FortalTokens.accent3())
-        .label(TextStyler().color(FortalTokens.accent11()))
-        .icon(IconStyler(color: FortalTokens.accent11(), size: 16.0)),
+        .label(
+          TextStyler().color(
+            highContrast ? FortalTokens.accent12() : FortalTokens.accent11(),
+          ),
+        )
+        .icon(
+          IconStyler(
+            color: highContrast
+                ? FortalTokens.accent12()
+                : FortalTokens.accent11(),
+            size: 16.0,
+          ),
+        ),
   );
 }
 
-RemixSelectStyler _fortalSelectGhostStyler([FortalSelectSize size = .size2]) {
+RemixSelectStyler _fortalSelectGhostStyler(
+  FortalSelectSize size, {
+  bool highContrast = false,
+}) {
   return _fortalSelectBaseStyler(
     .ghost,
     size,
+    highContrast: highContrast,
   ).trigger(RemixSelectTriggerStyler().color(Colors.transparent).paddingY(6.0));
 }
 
@@ -119,10 +156,11 @@ RemixSelectStyler _fortalSelectSizeStyler(FortalSelectSize size) {
 RemixSelectMenuItemStyler fortalSelectMenuItemStyler({
   FortalSelectVariant variant = .surface,
   FortalSelectSize size = .size2,
+  bool highContrast = false,
 }) {
   return switch (variant) {
     .surface => _fortalSelectMenuItemSurfaceStyler(size),
-    .soft => _fortalSelectMenuItemSoftStyler(size),
+    .soft => _fortalSelectMenuItemSoftStyler(size, highContrast: highContrast),
     .ghost => _fortalSelectMenuItemGhostStyler(size),
   };
 }
@@ -149,17 +187,26 @@ RemixSelectMenuItemStyler _fortalSelectMenuItemSurfaceStyler([
       );
 }
 
-RemixSelectMenuItemStyler _fortalSelectMenuItemSoftStyler([
-  FortalSelectSize size = .size2,
-]) {
+RemixSelectMenuItemStyler _fortalSelectMenuItemSoftStyler(
+  FortalSelectSize size, {
+  bool highContrast = false,
+}) {
   return _fortalSelectMenuItemBaseStyler(size)
       .color(Colors.transparent)
       .text(TextStyler().color(FortalTokens.gray12()))
       .onHovered(
         RemixSelectMenuItemStyler()
             .color(FortalTokens.accentA3())
-            .iconColor(FortalTokens.accent11())
-            .text(TextStyler().color(FortalTokens.accent11())),
+            .iconColor(
+              highContrast ? FortalTokens.accent12() : FortalTokens.accent11(),
+            )
+            .text(
+              TextStyler().color(
+                highContrast
+                    ? FortalTokens.accent12()
+                    : FortalTokens.accent11(),
+              ),
+            ),
       );
 }
 
@@ -192,6 +239,9 @@ class FortalSelect<T> extends StatelessWidget {
     super.key,
     this.variant = .surface,
     this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
     required this.trigger,
     required this.items,
     this.selectedValue,
@@ -212,6 +262,9 @@ class FortalSelect<T> extends StatelessWidget {
   const FortalSelect.surface({
     super.key,
     this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
     required this.trigger,
     required this.items,
     this.selectedValue,
@@ -232,6 +285,9 @@ class FortalSelect<T> extends StatelessWidget {
   const FortalSelect.soft({
     super.key,
     this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
     required this.trigger,
     required this.items,
     this.selectedValue,
@@ -252,6 +308,9 @@ class FortalSelect<T> extends StatelessWidget {
   const FortalSelect.ghost({
     super.key,
     this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
     required this.trigger,
     required this.items,
     this.selectedValue,
@@ -271,6 +330,12 @@ class FortalSelect<T> extends StatelessWidget {
   final FortalSelectVariant variant;
 
   final FortalSelectSize size;
+
+  final FortalAccentColor? color;
+
+  final FortalRadius? radius;
+
+  final bool highContrast;
 
   final RemixSelectTrigger trigger;
 
@@ -296,19 +361,28 @@ class FortalSelect<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return fortalSelectStyler(variant: this.variant, size: this.size).call<T>(
-      key: this.key,
-      trigger: this.trigger,
-      items: this.items,
-      selectedValue: this.selectedValue,
-      positioning: this.positioning,
-      onChanged: this.onChanged,
-      onOpen: this.onOpen,
-      onClose: this.onClose,
-      enabled: this.enabled,
-      closeOnSelect: this.closeOnSelect,
-      semanticLabel: this.semanticLabel,
-      focusNode: this.focusNode,
+    return FortalOverride(
+      color: this.color,
+      radius: this.radius,
+      child:
+          fortalSelectStyler(
+            variant: this.variant,
+            size: this.size,
+            highContrast: this.highContrast,
+          ).call<T>(
+            key: this.key,
+            trigger: this.trigger,
+            items: this.items,
+            selectedValue: this.selectedValue,
+            positioning: this.positioning,
+            onChanged: this.onChanged,
+            onOpen: this.onOpen,
+            onClose: this.onClose,
+            enabled: this.enabled,
+            closeOnSelect: this.closeOnSelect,
+            semanticLabel: this.semanticLabel,
+            focusNode: this.focusNode,
+          ),
     );
   }
 }

@@ -492,6 +492,51 @@ void main() {
       );
     });
 
+    testWidgets('high contrast selects the stronger button roles', (
+      tester,
+    ) async {
+      final solid = await _resolveFortalButtonStyle(
+        tester,
+        fortalButtonStyler(),
+      );
+      final highContrastSolid = await _resolveFortalButtonStyle(
+        tester,
+        fortalButtonStyler(highContrast: true),
+      );
+
+      expect(_containerColor(solid), indigo.light.scale.step(9));
+      expect(_containerColor(highContrastSolid), indigo.light.scale.step(12));
+      expect(solid.spec.label.spec.style?.color, Colors.white);
+      expect(
+        highContrastSolid.spec.label.spec.style?.color,
+        indigo.light.scale.step(1),
+      );
+
+      for (final variant in FortalButtonVariant.values.where(
+        (variant) => variant != .solid,
+      )) {
+        final normal = await _resolveFortalButtonStyle(
+          tester,
+          fortalButtonStyler(variant: variant),
+        );
+        final highContrast = await _resolveFortalButtonStyle(
+          tester,
+          fortalButtonStyler(variant: variant, highContrast: true),
+        );
+
+        expect(
+          normal.spec.label.spec.style?.color,
+          indigo.light.scale.step(11),
+          reason: '$variant normal foreground',
+        );
+        expect(
+          highContrast.spec.label.spec.style?.color,
+          indigo.light.scale.step(12),
+          reason: '$variant high-contrast foreground',
+        );
+      }
+    });
+
     for (final variant in FortalButtonVariant.values) {
       testWidgets('resolves $variant variant', (tester) async {
         final resolved = await _resolveFortalButtonStyle(
@@ -554,3 +599,6 @@ Future<BoxSpec> _resolveContainerBoxSpec(
 
   return resolved.spec.container.spec.box!.spec;
 }
+
+Color? _containerColor(StyleSpec<RemixButtonSpec> spec) =>
+    (spec.spec.container.spec.box?.spec.decoration as BoxDecoration?)?.color;

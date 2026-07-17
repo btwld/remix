@@ -10,12 +10,13 @@ enum FortalBadgeVariant { solid, soft, surface, outline }
 RemixBadgeStyler fortalBadgeStyler({
   FortalBadgeVariant variant = .solid,
   FortalBadgeSize size = .size2,
+  bool highContrast = false,
 }) {
   return switch (variant) {
-    .solid => _fortalBadgeSolidStyler(size),
-    .soft => _fortalBadgeSoftStyler(size),
-    .surface => _fortalBadgeSurfaceStyler(size),
-    .outline => _fortalBadgeOutlineStyler(size),
+    .solid => _fortalBadgeSolidStyler(size, highContrast: highContrast),
+    .soft => _fortalBadgeSoftStyler(size, highContrast: highContrast),
+    .surface => _fortalBadgeSurfaceStyler(size, highContrast: highContrast),
+    .outline => _fortalBadgeOutlineStyler(size, highContrast: highContrast),
   };
 }
 
@@ -23,36 +24,58 @@ RemixBadgeStyler _fortalBadgeBaseStyler(FortalBadgeSize size) {
   return RemixBadgeStyler().merge(_fortalBadgeSizeStyler(size));
 }
 
-RemixBadgeStyler _fortalBadgeSolidStyler([FortalBadgeSize size = .size2]) {
+RemixBadgeStyler _fortalBadgeSolidStyler(
+  FortalBadgeSize size, {
+  bool highContrast = false,
+}) {
   return _fortalBadgeBaseStyler(size)
-      .backgroundColor(FortalTokens.accent9())
-      .foregroundColor(FortalTokens.accentContrast());
+      .backgroundColor(
+        highContrast ? FortalTokens.accent12() : FortalTokens.accent9(),
+      )
+      .foregroundColor(
+        highContrast ? FortalTokens.accent1() : FortalTokens.accentContrast(),
+      );
 }
 
-RemixBadgeStyler _fortalBadgeSoftStyler([FortalBadgeSize size = .size2]) {
+RemixBadgeStyler _fortalBadgeSoftStyler(
+  FortalBadgeSize size, {
+  bool highContrast = false,
+}) {
   return _fortalBadgeBaseStyler(size)
       .backgroundColor(FortalTokens.accentA3())
-      .foregroundColor(FortalTokens.accentA10());
+      .foregroundColor(
+        highContrast ? FortalTokens.accent12() : FortalTokens.accentA10(),
+      );
 }
 
-RemixBadgeStyler _fortalBadgeSurfaceStyler([FortalBadgeSize size = .size2]) {
+RemixBadgeStyler _fortalBadgeSurfaceStyler(
+  FortalBadgeSize size, {
+  bool highContrast = false,
+}) {
   return _fortalBadgeBaseStyler(size)
       .backgroundColor(FortalTokens.accentA2())
       .borderAll(
         color: FortalTokens.accent6(),
         width: FortalTokens.borderWidth1(),
       )
-      .foregroundColor(FortalTokens.accentA10());
+      .foregroundColor(
+        highContrast ? FortalTokens.accent12() : FortalTokens.accentA10(),
+      );
 }
 
-RemixBadgeStyler _fortalBadgeOutlineStyler([FortalBadgeSize size = .size2]) {
+RemixBadgeStyler _fortalBadgeOutlineStyler(
+  FortalBadgeSize size, {
+  bool highContrast = false,
+}) {
   return _fortalBadgeBaseStyler(size)
       .backgroundColor(Colors.transparent)
       .borderAll(
         color: FortalTokens.accent7(),
         width: FortalTokens.borderWidth1(),
       )
-      .foregroundColor(FortalTokens.accentA10());
+      .foregroundColor(
+        highContrast ? FortalTokens.accent12() : FortalTokens.accentA10(),
+      );
 }
 
 RemixBadgeStyler _fortalBadgeSizeStyler(FortalBadgeSize size) {
@@ -87,6 +110,9 @@ class FortalBadge extends StatelessWidget {
     super.key,
     this.variant = .solid,
     this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
     this.label,
     this.child,
     this.labelBuilder,
@@ -95,6 +121,9 @@ class FortalBadge extends StatelessWidget {
   const FortalBadge.solid({
     super.key,
     this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
     this.label,
     this.child,
     this.labelBuilder,
@@ -103,6 +132,9 @@ class FortalBadge extends StatelessWidget {
   const FortalBadge.soft({
     super.key,
     this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
     this.label,
     this.child,
     this.labelBuilder,
@@ -111,6 +143,9 @@ class FortalBadge extends StatelessWidget {
   const FortalBadge.surface({
     super.key,
     this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
     this.label,
     this.child,
     this.labelBuilder,
@@ -119,6 +154,9 @@ class FortalBadge extends StatelessWidget {
   const FortalBadge.outline({
     super.key,
     this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
     this.label,
     this.child,
     this.labelBuilder,
@@ -128,6 +166,15 @@ class FortalBadge extends StatelessWidget {
 
   final FortalBadgeSize size;
 
+  /// Optional accent color override for this badge subtree.
+  final FortalAccentColor? color;
+
+  /// Optional radius override for this badge subtree.
+  final FortalRadius? radius;
+
+  /// Whether to use higher-contrast accent colors.
+  final bool highContrast;
+
   final String? label;
 
   final Widget? child;
@@ -136,11 +183,20 @@ class FortalBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return fortalBadgeStyler(variant: this.variant, size: this.size).call(
-      key: this.key,
-      label: this.label,
-      labelBuilder: this.labelBuilder,
-      child: this.child,
+    return FortalOverride(
+      color: this.color,
+      radius: this.radius,
+      child:
+          fortalBadgeStyler(
+            variant: this.variant,
+            size: this.size,
+            highContrast: this.highContrast,
+          ).call(
+            key: this.key,
+            label: this.label,
+            labelBuilder: this.labelBuilder,
+            child: this.child,
+          ),
     );
   }
 }

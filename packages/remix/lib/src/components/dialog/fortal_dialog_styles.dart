@@ -30,20 +30,39 @@ RemixDialogStyler fortalDialogStyler() {
         ),
       )
       .borderRadius(.all(FortalTokens.radius3()))
-      .backgroundColor(FortalTokens.gray1())
-      .shadow(
+      .backgroundColor(FortalTokens.colorPanel())
+      // Uses the mode-aware stroke with neutral deferred layers. Exact Radix
+      // gray-alpha layer swaps for these overlay stylers remain follow-up work.
+      .shadows([
         BoxShadowMix()
-            .color(FortalTokens.blackA3())
-            .offset(x: 0, y: 8)
-            .blurRadius(16)
+            .color(FortalTokens.shadowStroke())
+            .offset(x: 0, y: 0)
+            .blurRadius(0)
+            .spreadRadius(1),
+        BoxShadowMix()
+            .color(FortalTokens.blackA4())
+            .offset(x: 0, y: 12)
+            .blurRadius(60)
             .spreadRadius(0),
-      );
+        BoxShadowMix()
+            .color(FortalTokens.blackA6())
+            .offset(x: 0, y: 16)
+            .blurRadius(64)
+            .spreadRadius(0),
+        BoxShadowMix()
+            .color(FortalTokens.blackA11())
+            .offset(x: 0, y: 16)
+            .blurRadius(36)
+            .spreadRadius(-20),
+      ]);
 }
 
 /// Fortal-themed preset for [RemixDialog].
 class FortalDialog extends StatelessWidget {
   const FortalDialog({
     super.key,
+    this.color,
+    this.radius,
     this.child,
     this.title,
     this.description,
@@ -51,6 +70,12 @@ class FortalDialog extends StatelessWidget {
     this.modal = true,
     this.semanticLabel,
   });
+
+  /// Optional accent color override for this dialog subtree.
+  final FortalAccentColor? color;
+
+  /// Optional radius override for this dialog subtree.
+  final FortalRadius? radius;
 
   final Widget? child;
 
@@ -66,14 +91,18 @@ class FortalDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return fortalDialogStyler().call(
-      key: this.key,
-      title: this.title,
-      description: this.description,
-      actions: this.actions,
-      modal: this.modal,
-      semanticLabel: this.semanticLabel,
-      child: this.child,
+    return FortalOverride(
+      color: this.color,
+      radius: this.radius,
+      child: fortalDialogStyler().call(
+        key: this.key,
+        title: this.title,
+        description: this.description,
+        actions: this.actions,
+        modal: this.modal,
+        semanticLabel: this.semanticLabel,
+        child: this.child,
+      ),
     );
   }
 }

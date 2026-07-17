@@ -10,10 +10,11 @@ enum FortalToggleVariant { ghost, outline }
 RemixToggleStyler fortalToggleStyler({
   FortalToggleVariant variant = .ghost,
   FortalToggleSize size = .size2,
+  bool highContrast = false,
 }) {
   return switch (variant) {
-    .ghost => _fortalToggleGhostStyler(size),
-    .outline => _fortalToggleOutlineStyler(size),
+    .ghost => _fortalToggleGhostStyler(size, highContrast: highContrast),
+    .outline => _fortalToggleOutlineStyler(size, highContrast: highContrast),
   };
 }
 
@@ -36,18 +37,26 @@ RemixToggleStyler _fortalToggleBaseStyler(FortalToggleSize size) {
       .merge(_fortalToggleSizeStyler(size));
 }
 
-RemixToggleStyler _fortalToggleGhostStyler([FortalToggleSize size = .size2]) {
+RemixToggleStyler _fortalToggleGhostStyler(
+  FortalToggleSize size, {
+  bool highContrast = false,
+}) {
   return _fortalToggleBaseStyler(size)
       .backgroundColor(Colors.transparent)
       .onHovered(RemixToggleStyler().backgroundColor(FortalTokens.grayA3()))
       .onSelected(
         RemixToggleStyler()
             .backgroundColor(FortalTokens.accent3())
-            .foregroundColor(FortalTokens.accent11()),
+            .foregroundColor(
+              highContrast ? FortalTokens.accent12() : FortalTokens.accent11(),
+            ),
       );
 }
 
-RemixToggleStyler _fortalToggleOutlineStyler([FortalToggleSize size = .size2]) {
+RemixToggleStyler _fortalToggleOutlineStyler(
+  FortalToggleSize size, {
+  bool highContrast = false,
+}) {
   return _fortalToggleBaseStyler(size)
       .backgroundColor(Colors.transparent)
       .borderAll(
@@ -59,7 +68,9 @@ RemixToggleStyler _fortalToggleOutlineStyler([FortalToggleSize size = .size2]) {
       .onSelected(
         RemixToggleStyler()
             .backgroundColor(FortalTokens.accentA3())
-            .foregroundColor(FortalTokens.accent10())
+            .foregroundColor(
+              highContrast ? FortalTokens.accent12() : FortalTokens.accent10(),
+            )
             .borderAll(color: FortalTokens.accentA5()),
       );
 }
@@ -105,6 +116,9 @@ class FortalToggle extends StatelessWidget {
     super.key,
     this.variant = .ghost,
     this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
     required this.selected,
     this.onChanged,
     this.enabled = true,
@@ -120,6 +134,9 @@ class FortalToggle extends StatelessWidget {
   const FortalToggle.ghost({
     super.key,
     this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
     required this.selected,
     this.onChanged,
     this.enabled = true,
@@ -135,6 +152,9 @@ class FortalToggle extends StatelessWidget {
   const FortalToggle.outline({
     super.key,
     this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
     required this.selected,
     this.onChanged,
     this.enabled = true,
@@ -150,6 +170,15 @@ class FortalToggle extends StatelessWidget {
   final FortalToggleVariant variant;
 
   final FortalToggleSize size;
+
+  /// Optional accent color override for this toggle subtree.
+  final FortalAccentColor? color;
+
+  /// Optional radius override for this toggle subtree.
+  final FortalRadius? radius;
+
+  /// Whether to use higher-contrast accent colors.
+  final bool highContrast;
 
   final bool selected;
 
@@ -173,18 +202,27 @@ class FortalToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return fortalToggleStyler(variant: this.variant, size: this.size).call(
-      key: this.key,
-      selected: this.selected,
-      onChanged: this.onChanged,
-      enabled: this.enabled,
-      label: this.label,
-      icon: this.icon,
-      enableFeedback: this.enableFeedback,
-      focusNode: this.focusNode,
-      autofocus: this.autofocus,
-      semanticLabel: this.semanticLabel,
-      mouseCursor: this.mouseCursor,
+    return FortalOverride(
+      color: this.color,
+      radius: this.radius,
+      child:
+          fortalToggleStyler(
+            variant: this.variant,
+            size: this.size,
+            highContrast: this.highContrast,
+          ).call(
+            key: this.key,
+            selected: this.selected,
+            onChanged: this.onChanged,
+            enabled: this.enabled,
+            label: this.label,
+            icon: this.icon,
+            enableFeedback: this.enableFeedback,
+            focusNode: this.focusNode,
+            autofocus: this.autofocus,
+            semanticLabel: this.semanticLabel,
+            mouseCursor: this.mouseCursor,
+          ),
     );
   }
 }

@@ -2,10 +2,11 @@
   "v": 1,
   "type": "theme",
   "colors": {
-    "fortal.color.background": "#FCFCFD",
-    "fortal.color.surface": "#CCFFFFFF",
-    "fortal.color.panel.solid": "#F9F9FB",
-    "fortal.color.panel.translucent": "#06000055",
+    "fortal.color.background": "#FFFFFF",
+    "fortal.color.surface": "#D9FFFFFF",
+    "fortal.color.panel.solid": "#FFFFFF",
+    "fortal.color.panel.translucent": "#B3FFFFFF",
+    "fortal.color.panel": "#FFFFFF",
     "fortal.color.overlay": "#66000000",
     "fortal.accent.surface": "#CCF5F8FF",
     "fortal.accent.indicator": "#3E63DD",
@@ -65,13 +66,15 @@
     "fortal.gray.a10": "#7F00051B",
     "fortal.gray.a11": "#9F000211",
     "fortal.gray.a12": "#E3000107",
+    "fortal.black.a1": "#0D000000",
+    "fortal.black.a2": "#1A000000",
     "fortal.black.a3": "#26000000",
     "fortal.black.a4": "#33000000",
     "fortal.black.a5": "#4D000000",
     "fortal.black.a6": "#66000000",
     "fortal.black.a7": "#80000000",
     "fortal.black.a11": "#E6000000",
-    "fortal.shadow.stroke": "#66000000"
+    "fortal.shadow.stroke": "#4B3C486D"
   },
   "spaces": {
     "fortal.space.1": 4.0,
@@ -95,7 +98,8 @@
     "fortal.radius.4": 8.0,
     "fortal.radius.5": 12.0,
     "fortal.radius.6": 16.0,
-    "fortal.radius.full": 9999.0
+    "fortal.radius.full": 9999.0,
+    "fortal.radius.thumb": 9999.0
   },
   "textStyles": {
     "fortal.text.1": {
@@ -147,7 +151,7 @@
   "boxShadows": {
     "fortal.shadow.1": [
       {
-        "color": "#26000735",
+        "color": "#1F000932",
         "offset": {
           "x": 0.0,
           "y": 0.0
@@ -156,10 +160,19 @@
         "spreadRadius": 1.0
       },
       {
-        "color": "#4D000000",
+        "color": "#06000055",
         "offset": {
           "x": 0.0,
-          "y": 1.0
+          "y": 1.5
+        },
+        "blurRadius": 2.0,
+        "spreadRadius": 0.0
+      },
+      {
+        "color": "#1A000000",
+        "offset": {
+          "x": 0.0,
+          "y": 1.5
         },
         "blurRadius": 2.0,
         "spreadRadius": 0.0
@@ -167,7 +180,7 @@
     ],
     "fortal.shadow.2": [
       {
-        "color": "#66000000",
+        "color": "#4B3C486D",
         "offset": {
           "x": 0.0,
           "y": 0.0
@@ -176,7 +189,7 @@
         "spreadRadius": 1.0
       },
       {
-        "color": "#26000000",
+        "color": "#0D000000",
         "offset": {
           "x": 0.0,
           "y": 0.0
@@ -185,7 +198,7 @@
         "spreadRadius": 0.0
       },
       {
-        "color": "#66000000",
+        "color": "#06000055",
         "offset": {
           "x": 0.0,
           "y": 1.0
@@ -194,7 +207,7 @@
         "spreadRadius": 0.0
       },
       {
-        "color": "#66000000",
+        "color": "#0D000000",
         "offset": {
           "x": 0.0,
           "y": 2.0
@@ -203,7 +216,7 @@
         "spreadRadius": -1.0
       },
       {
-        "color": "#4D000000",
+        "color": "#0D000000",
         "offset": {
           "x": 0.0,
           "y": 1.0
@@ -214,7 +227,7 @@
     ],
     "fortal.shadow.3": [
       {
-        "color": "#66000000",
+        "color": "#4B3C486D",
         "offset": {
           "x": 0.0,
           "y": 0.0
@@ -223,7 +236,7 @@
         "spreadRadius": 1.0
       },
       {
-        "color": "#26000000",
+        "color": "#0F001040",
         "offset": {
           "x": 0.0,
           "y": 2.0
@@ -232,27 +245,27 @@
         "spreadRadius": -2.0
       },
       {
-        "color": "#66000000",
+        "color": "#1A000000",
         "offset": {
           "x": 0.0,
           "y": 3.0
         },
-        "blurRadius": 8.0,
-        "spreadRadius": -2.0
+        "blurRadius": 12.0,
+        "spreadRadius": -4.0
       },
       {
-        "color": "#80000000",
+        "color": "#1A000000",
         "offset": {
           "x": 0.0,
           "y": 4.0
         },
-        "blurRadius": 12.0,
-        "spreadRadius": -4.0
+        "blurRadius": 16.0,
+        "spreadRadius": -8.0
       }
     ],
     "fortal.shadow.4": [
       {
-        "color": "#66000000",
+        "color": "#4B3C486D",
         "offset": {
           "x": 0.0,
           "y": 0.0
@@ -261,7 +274,7 @@
         "spreadRadius": 1.0
       },
       {
-        "color": "#26000000",
+        "color": "#0D000000",
         "offset": {
           "x": 0.0,
           "y": 8.0
@@ -270,7 +283,7 @@
         "spreadRadius": 0.0
       },
       {
-        "color": "#4D000000",
+        "color": "#0F001040",
         "offset": {
           "x": 0.0,
           "y": 12.0
@@ -281,7 +294,7 @@
     ],
     "fortal.shadow.5": [
       {
-        "color": "#66000000",
+        "color": "#4B3C486D",
         "offset": {
           "x": 0.0,
           "y": 0.0
@@ -290,7 +303,7 @@
         "spreadRadius": 1.0
       },
       {
-        "color": "#4D000000",
+        "color": "#26000000",
         "offset": {
           "x": 0.0,
           "y": 12.0
@@ -299,7 +312,7 @@
         "spreadRadius": 0.0
       },
       {
-        "color": "#80000000",
+        "color": "#1F000932",
         "offset": {
           "x": 0.0,
           "y": 12.0
@@ -310,7 +323,7 @@
     ],
     "fortal.shadow.6": [
       {
-        "color": "#66000000",
+        "color": "#4B3C486D",
         "offset": {
           "x": 0.0,
           "y": 0.0
@@ -319,7 +332,7 @@
         "spreadRadius": 1.0
       },
       {
-        "color": "#33000000",
+        "color": "#26000000",
         "offset": {
           "x": 0.0,
           "y": 12.0
@@ -328,7 +341,7 @@
         "spreadRadius": 0.0
       },
       {
-        "color": "#66000000",
+        "color": "#06000055",
         "offset": {
           "x": 0.0,
           "y": 16.0
@@ -337,7 +350,7 @@
         "spreadRadius": 0.0
       },
       {
-        "color": "#E6000000",
+        "color": "#32000633",
         "offset": {
           "x": 0.0,
           "y": 16.0

@@ -67,29 +67,54 @@ class FortalCard extends StatelessWidget {
     super.key,
     this.variant = .surface,
     this.size = .size2,
+    this.color,
+    this.radius,
     this.child,
   });
 
-  const FortalCard.surface({super.key, this.size = .size2, this.child})
-    : variant = FortalCardVariant.surface;
+  const FortalCard.surface({
+    super.key,
+    this.size = .size2,
+    this.color,
+    this.radius,
+    this.child,
+  }) : variant = FortalCardVariant.surface;
 
-  const FortalCard.classic({super.key, this.size = .size2, this.child})
-    : variant = FortalCardVariant.classic;
+  const FortalCard.classic({
+    super.key,
+    this.size = .size2,
+    this.color,
+    this.radius,
+    this.child,
+  }) : variant = FortalCardVariant.classic;
 
-  const FortalCard.ghost({super.key, this.size = .size2, this.child})
-    : variant = FortalCardVariant.ghost;
+  const FortalCard.ghost({
+    super.key,
+    this.size = .size2,
+    this.color,
+    this.radius,
+    this.child,
+  }) : variant = FortalCardVariant.ghost;
 
   final FortalCardVariant variant;
 
   final FortalCardSize size;
 
+  final FortalAccentColor? color;
+
+  final FortalRadius? radius;
+
   final Widget? child;
 
   @override
   Widget build(BuildContext context) {
-    return fortalCardStyler(
-      variant: this.variant,
-      size: this.size,
-    ).call(key: this.key, child: this.child);
+    return FortalOverride(
+      color: this.color,
+      radius: this.radius,
+      child: fortalCardStyler(
+        variant: this.variant,
+        size: this.size,
+      ).call(key: this.key, child: this.child),
+    );
   }
 }

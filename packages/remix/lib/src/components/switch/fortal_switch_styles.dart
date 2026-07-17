@@ -25,10 +25,11 @@ enum FortalSwitchVariant {
 RemixSwitchStyler fortalSwitchStyler({
   FortalSwitchVariant variant = .surface,
   FortalSwitchSize size = .size2,
+  bool highContrast = false,
 }) {
   return switch (variant) {
-    .surface => _fortalSwitchSurfaceStyler(size),
-    .soft => _fortalSwitchSoftStyler(size),
+    .surface => _fortalSwitchSurfaceStyler(size, highContrast: highContrast),
+    .soft => _fortalSwitchSoftStyler(size, highContrast: highContrast),
   };
 }
 
@@ -36,12 +37,14 @@ RemixSwitchStyler _fortalSwitchBaseStyler(FortalSwitchSize size) {
   return RemixSwitchStyler()
       .thumbColor(Colors.white)
       .thumb(
-        BoxStyler().shapeCircle().shadow(
-          BoxShadowMix()
-              .color(FortalTokens.grayA7())
-              .offset(x: 0, y: 2)
-              .blurRadius(3),
-        ),
+        BoxStyler()
+            .borderRadiusAll(FortalTokens.radiusThumb())
+            .shadow(
+              BoxShadowMix()
+                  .color(FortalTokens.grayA7())
+                  .offset(x: 0, y: 2)
+                  .blurRadius(3),
+            ),
       )
       .onFocused(
         RemixSwitchStyler().borderAll(
@@ -52,7 +55,10 @@ RemixSwitchStyler _fortalSwitchBaseStyler(FortalSwitchSize size) {
       .merge(_fortalSwitchSizeStyler(size));
 }
 
-RemixSwitchStyler _fortalSwitchSurfaceStyler([FortalSwitchSize size = .size2]) {
+RemixSwitchStyler _fortalSwitchSurfaceStyler(
+  FortalSwitchSize size, {
+  bool highContrast = false,
+}) {
   return _fortalSwitchBaseStyler(size)
       .trackColor(FortalTokens.gray5())
       .borderRadius(BorderRadiusMix.circular(999))
@@ -63,8 +69,17 @@ RemixSwitchStyler _fortalSwitchSurfaceStyler([FortalSwitchSize size = .size2]) {
       )
       .onSelected(
         RemixSwitchStyler()
-            .trackColor(FortalTokens.accentTrack())
-            .borderAll(color: FortalTokens.accent9()),
+            .trackColor(
+              highContrast
+                  ? FortalTokens.accent12()
+                  : FortalTokens.accentTrack(),
+            )
+            .borderAll(
+              color: highContrast
+                  ? FortalTokens.accent12()
+                  : FortalTokens.accent9(),
+            )
+            .thumbColor(highContrast ? FortalTokens.accent1() : Colors.white),
       )
       .onDisabled(
         RemixSwitchStyler()
@@ -74,7 +89,10 @@ RemixSwitchStyler _fortalSwitchSurfaceStyler([FortalSwitchSize size = .size2]) {
       );
 }
 
-RemixSwitchStyler _fortalSwitchSoftStyler([FortalSwitchSize size = .size2]) {
+RemixSwitchStyler _fortalSwitchSoftStyler(
+  FortalSwitchSize size, {
+  bool highContrast = false,
+}) {
   return _fortalSwitchBaseStyler(size)
       .trackColor(FortalTokens.gray5())
       .borderRadius(BorderRadiusMix.circular(999))
@@ -85,8 +103,15 @@ RemixSwitchStyler _fortalSwitchSoftStyler([FortalSwitchSize size = .size2]) {
       )
       .onSelected(
         RemixSwitchStyler()
-            .trackColor(FortalTokens.accentA7())
-            .borderAll(color: FortalTokens.accent7()),
+            .trackColor(
+              highContrast ? FortalTokens.accent12() : FortalTokens.accentA7(),
+            )
+            .borderAll(
+              color: highContrast
+                  ? FortalTokens.accent12()
+                  : FortalTokens.accent7(),
+            )
+            .thumbColor(highContrast ? FortalTokens.accent1() : Colors.white),
       )
       .onDisabled(
         RemixSwitchStyler()
@@ -120,6 +145,9 @@ class FortalSwitch extends StatelessWidget {
     super.key,
     this.variant = .surface,
     this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
     required this.selected,
     this.onChanged,
     this.enabled = true,
@@ -134,6 +162,9 @@ class FortalSwitch extends StatelessWidget {
   const FortalSwitch.surface({
     super.key,
     this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
     required this.selected,
     this.onChanged,
     this.enabled = true,
@@ -148,6 +179,9 @@ class FortalSwitch extends StatelessWidget {
   const FortalSwitch.soft({
     super.key,
     this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
     required this.selected,
     this.onChanged,
     this.enabled = true,
@@ -161,6 +195,15 @@ class FortalSwitch extends StatelessWidget {
   final FortalSwitchVariant variant;
 
   final FortalSwitchSize size;
+
+  /// Optional accent color override for this switch subtree.
+  final FortalAccentColor? color;
+
+  /// Optional radius override for this switch subtree.
+  final FortalRadius? radius;
+
+  /// Whether to use higher-contrast accent colors.
+  final bool highContrast;
 
   final bool selected;
 
@@ -180,16 +223,25 @@ class FortalSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return fortalSwitchStyler(variant: this.variant, size: this.size).call(
-      key: this.key,
-      selected: this.selected,
-      onChanged: this.onChanged,
-      enabled: this.enabled,
-      enableFeedback: this.enableFeedback,
-      focusNode: this.focusNode,
-      autofocus: this.autofocus,
-      semanticLabel: this.semanticLabel,
-      mouseCursor: this.mouseCursor,
+    return FortalOverride(
+      color: this.color,
+      radius: this.radius,
+      child:
+          fortalSwitchStyler(
+            variant: this.variant,
+            size: this.size,
+            highContrast: this.highContrast,
+          ).call(
+            key: this.key,
+            selected: this.selected,
+            onChanged: this.onChanged,
+            enabled: this.enabled,
+            enableFeedback: this.enableFeedback,
+            focusNode: this.focusNode,
+            autofocus: this.autofocus,
+            semanticLabel: this.semanticLabel,
+            mouseCursor: this.mouseCursor,
+          ),
     );
   }
 }

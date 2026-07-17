@@ -11,20 +11,34 @@ RemixPopoverStyler fortalPopoverStyler() {
         width: FortalTokens.borderWidth1(),
       )
       .borderRadiusAll(FortalTokens.radius3())
-      .backgroundColor(FortalTokens.gray1())
-      .shadow(
+      .backgroundColor(FortalTokens.colorPanel())
+      // Uses the mode-aware stroke with neutral deferred layers. Exact Radix
+      // gray-alpha layer swaps for these overlay stylers remain follow-up work.
+      .shadows([
         BoxShadowMix()
-            .color(FortalTokens.blackA3())
-            .offset(x: 0, y: 4)
-            .blurRadius(12)
+            .color(FortalTokens.shadowStroke())
+            .offset(x: 0, y: 0)
+            .blurRadius(0)
+            .spreadRadius(1),
+        BoxShadowMix()
+            .color(FortalTokens.blackA5())
+            .offset(x: 0, y: 12)
+            .blurRadius(60)
             .spreadRadius(0),
-      );
+        BoxShadowMix()
+            .color(FortalTokens.blackA7())
+            .offset(x: 0, y: 12)
+            .blurRadius(32)
+            .spreadRadius(-16),
+      ]);
 }
 
 /// Fortal-themed preset for [RemixPopover].
 class FortalPopover extends StatelessWidget {
   const FortalPopover({
     super.key,
+    this.color,
+    this.radius,
     required this.popoverChild,
     required this.child,
     this.positioning = const OverlayPositionConfig(),
@@ -42,6 +56,10 @@ class FortalPopover extends StatelessWidget {
   });
 
   final Widget popoverChild;
+
+  final FortalAccentColor? color;
+
+  final FortalRadius? radius;
 
   final Widget child;
 
@@ -71,22 +89,26 @@ class FortalPopover extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return fortalPopoverStyler().call(
-      key: this.key,
-      popoverChild: this.popoverChild,
-      child: this.child,
-      positioning: this.positioning,
-      consumeOutsideTaps: this.consumeOutsideTaps,
-      useRootOverlay: this.useRootOverlay,
-      openOnTap: this.openOnTap,
-      triggerFocusNode: this.triggerFocusNode,
-      onOpen: this.onOpen,
-      onClose: this.onClose,
-      onOpenRequested: this.onOpenRequested,
-      onCloseRequested: this.onCloseRequested,
-      controller: this.controller,
-      semanticLabel: this.semanticLabel,
-      excludeSemantics: this.excludeSemantics,
+    return FortalOverride(
+      color: this.color,
+      radius: this.radius,
+      child: fortalPopoverStyler().call(
+        key: this.key,
+        popoverChild: this.popoverChild,
+        child: this.child,
+        positioning: this.positioning,
+        consumeOutsideTaps: this.consumeOutsideTaps,
+        useRootOverlay: this.useRootOverlay,
+        openOnTap: this.openOnTap,
+        triggerFocusNode: this.triggerFocusNode,
+        onOpen: this.onOpen,
+        onClose: this.onClose,
+        onOpenRequested: this.onOpenRequested,
+        onCloseRequested: this.onCloseRequested,
+        controller: this.controller,
+        semanticLabel: this.semanticLabel,
+        excludeSemantics: this.excludeSemantics,
+      ),
     );
   }
 }

@@ -21,12 +21,17 @@ RemixSpinnerStyler _fortalSpinnerSizeStyler(FortalSpinnerSize size) {
 
 /// Fortal-themed preset for [RemixSpinner].
 class FortalSpinner extends StatelessWidget {
-  const FortalSpinner({super.key, this.size = .size2});
+  const FortalSpinner({super.key, this.size = .size2, this.color});
 
   final FortalSpinnerSize size;
 
+  final FortalAccentColor? color;
+
   @override
   Widget build(BuildContext context) {
-    return fortalSpinnerStyler(size: this.size).call(key: this.key);
+    return FortalOverride(
+      color: this.color,
+      child: fortalSpinnerStyler(size: this.size).call(key: this.key),
+    );
   }
 }

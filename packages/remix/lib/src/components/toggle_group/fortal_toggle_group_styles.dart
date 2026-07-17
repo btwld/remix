@@ -10,11 +10,15 @@ enum FortalToggleGroupVariant { soft, surface }
 RemixToggleGroupStyler fortalToggleGroupStyler({
   FortalToggleGroupVariant variant = .soft,
   FortalToggleGroupSize size = .size2,
+  bool highContrast = false,
 }) {
   final selectedColor = switch (variant) {
     .soft => FortalTokens.accent3(),
     .surface => FortalTokens.accentSurface(),
   };
+  final selectedForeground = highContrast
+      ? FortalTokens.accent12()
+      : FortalTokens.accent11();
 
   return RemixToggleGroupStyler(
     container: FlexBoxStyler(
@@ -48,7 +52,7 @@ RemixToggleGroupStyler fortalToggleGroupStyler({
         .onSelected(
           RemixToggleGroupItemStyler()
               .backgroundColor(selectedColor)
-              .foregroundColor(FortalTokens.accent11()),
+              .foregroundColor(selectedForeground),
         )
         .onDisabled(
           RemixToggleGroupItemStyler()
@@ -104,6 +108,9 @@ class FortalToggleGroup<T> extends StatelessWidget {
     super.key,
     this.variant = .soft,
     this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
     required this.items,
     required this.selectedValue,
     this.onChanged,
@@ -117,6 +124,9 @@ class FortalToggleGroup<T> extends StatelessWidget {
   const FortalToggleGroup.soft({
     super.key,
     this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
     required this.items,
     required this.selectedValue,
     this.onChanged,
@@ -130,6 +140,9 @@ class FortalToggleGroup<T> extends StatelessWidget {
   const FortalToggleGroup.surface({
     super.key,
     this.size = .size2,
+    this.color,
+    this.radius,
+    this.highContrast = false,
     required this.items,
     required this.selectedValue,
     this.onChanged,
@@ -143,6 +156,15 @@ class FortalToggleGroup<T> extends StatelessWidget {
   final FortalToggleGroupVariant variant;
 
   final FortalToggleGroupSize size;
+
+  /// Optional accent color override for this toggle-group subtree.
+  final FortalAccentColor? color;
+
+  /// Optional radius override for this toggle-group subtree.
+  final FortalRadius? radius;
+
+  /// Whether to use higher-contrast accent colors.
+  final bool highContrast;
 
   final List<RemixToggleGroupItem<T>> items;
 
@@ -162,19 +184,25 @@ class FortalToggleGroup<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return fortalToggleGroupStyler(
-      variant: this.variant,
-      size: this.size,
-    ).call<T>(
-      key: this.key,
-      items: this.items,
-      selectedValue: this.selectedValue,
-      onChanged: this.onChanged,
-      enabled: this.enabled,
-      orientation: this.orientation,
-      loop: this.loop,
-      semanticLabel: this.semanticLabel,
-      excludeSemantics: this.excludeSemantics,
+    return FortalOverride(
+      color: this.color,
+      radius: this.radius,
+      child:
+          fortalToggleGroupStyler(
+            variant: this.variant,
+            size: this.size,
+            highContrast: this.highContrast,
+          ).call<T>(
+            key: this.key,
+            items: this.items,
+            selectedValue: this.selectedValue,
+            onChanged: this.onChanged,
+            enabled: this.enabled,
+            orientation: this.orientation,
+            loop: this.loop,
+            semanticLabel: this.semanticLabel,
+            excludeSemantics: this.excludeSemantics,
+          ),
     );
   }
 }
