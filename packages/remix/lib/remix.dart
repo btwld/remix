@@ -38,3 +38,6 @@ export 'src/utilities/remix_style.dart'
     show RemixBoxStylerAnchors, RemixBoxStylerMixin, RemixBoxStylerConvenience;
 export 'src/utilities/selected_mixin.dart'
     show SelectedWidgetStateVariantExtension;
+
+/// DEPRECATED
+export 'deprecated.dart' show RemixButtonStyler;

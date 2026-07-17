@@ -22,7 +22,7 @@ The capture covers five Button variants, four sizes, and default, hovered,
 pressed, focused, disabled, and loading scenarios in light and dark themes:
 240 cells total, 200 non-loading cells, and 40 loading cells.
 
-The producer adapter walks the real `RemixButtonStyler` sources and variants,
+The producer adapter walks the real `ButtonStyler` sources and variants,
 then uses each built-in leaf styler's normal merge semantics. It does not copy
 the Fortal recipe. It calls `RemixButton.composeStyle` first so widget-owned
 defaults and tooling share one source of truth. Container, label, and icon

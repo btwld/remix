@@ -5,9 +5,9 @@ Constructor parameters for every Remix component, verified against
 
 Shared contract for every leaf `Remix*` widget:
 
-- `style` — a `Remix*Styler` (defaults to `const Remix*Styler.create()`).
+- `style` — a `*Styler` (defaults to `const *Styler.create()`).
 - `styleSpec` — an optional raw `Remix*Spec?` that bypasses style resolution.
-- `static final styleFrom = Remix*Styler.new` — tear-off convenience for
+- `static final styleFrom = *Styler.new` — tear-off convenience for
   building a styler.
 
 The tables below list the component-specific parameters; `style`/`styleSpec`
@@ -58,7 +58,7 @@ loading, content stays laid out (invisible) with a spinner overlay to prevent
 layout shift.
 
 Icon placement is style-driven when exactly one icon is present:
-`RemixButtonStyler().iconAlignment(IconAlignment.end)` places it after the
+`ButtonStyler().iconAlignment(IconAlignment.end)` places it after the
 label, regardless of whether the value came from `leadingIcon` or
 `trailingIcon`. With both icons present, Remix preserves
 leading → label → trailing order.

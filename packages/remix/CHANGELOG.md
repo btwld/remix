@@ -5,7 +5,10 @@
   discarding them. A lone `child` still fills the container directly, so fully
   custom dialog bodies are unaffected.
 
-- **BREAKING**: Rename fluent style builders from `RemixXStyle` to `RemixXStyler` and Fortal helpers from `fortalXStyle()` to `fortalXStyler()`, matching Mix terminology (`BoxStyler`, `TextStyler`, `MixStyler`). Widget parameter stays `style:`. No deprecated aliases.
+- **FEAT**: Expose `ButtonStyler` as the canonical button styling API.
+  `RemixButtonStyler` remains available as a deprecated compatibility alias.
+
+- **BREAKING**: Rename fluent style builders from `RemixXStyle` to `RemixXStyler` and Fortal helpers from `fortalXStyle()` to `fortalXStyler()`, matching Mix terminology (`BoxStyler`, `TextStyler`, `MixStyler`). Widget parameter stays `style:`. No deprecated aliases were kept for the removed `RemixXStyle` names.
 - **BREAKING**: Public `styleSpec` is raw `RemixXSpec?` on all component surfaces (resolved via `RemixStyleSpecBuilder`); StyleWidget-based components converted to explicit widgets.
 - **BREAKING**: `RemixSelect` overlay placement is `positioning: OverlayPositionConfig` (removed public `targetAnchor`/`followerAnchor`).
 - **BREAKING**: Remove `enableFeedback` from `RemixRadio` (not exposed by `NakedRadio`).

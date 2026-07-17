@@ -55,7 +55,7 @@ to resolve tokens.
 1. **Fortal preset widgets** — `FortalButton.soft(size: .size2)`.
    Fastest path; consistent by construction. Use for standard UI.
 2. **Fortal styler + overrides** — `fortal*Styler()` returns the component's
-   `Remix*Styler`; chain custom modifications and pass it to the `Remix*`
+   `*Styler`; chain custom modifications and pass it to the `Remix*`
    widget's `style:`:
 
    ```dart
@@ -65,17 +65,17 @@ to resolve tokens.
      style: fortalButtonStyler(variant: .solid)
          .borderRadiusAll(const Radius.circular(8))
          .paddingX(32)
-         .onHovered(RemixButtonStyler().wrap(.scale(x: 1.05, y: 1.05))),
+         .onHovered(ButtonStyler().wrap(.scale(x: 1.05, y: 1.05))),
    )
    ```
 
-3. **Fully custom styler** — build a `Remix*Styler` from scratch with the
+3. **Fully custom styler** — build a `*Styler` from scratch with the
    fluent API (below). Use for bespoke designs that don't start from Fortal.
 
 ## Component Catalog
 
 Remix ships 21 components. Each styled leaf widget accepts `style` (a
-`Remix*Styler`) and has a `Fortal*` preset counterpart. Behavioral roots and
+`*Styler`) and has a `Fortal*` preset counterpart. Behavioral roots and
 groups (`RemixTabs`, `RemixRadioGroup`, and `RemixAccordionGroup`) intentionally
 have neither a styler nor a Fortal wrapper.
 
@@ -258,10 +258,10 @@ FortalDivider()
 
 ## Custom Styling with Stylers
 
-Every component's style is a chainable, immutable `Remix*Styler`:
+Every component's style is a chainable, immutable `*Styler`:
 
 ```dart
-RemixButtonStyler()
+ButtonStyler()
     .color(Colors.blue)          // container fill (universal primitive)
     .borderRounded(12)           // circular radius shortcut
     .paddingX(24)
@@ -293,13 +293,13 @@ available and check the per-component reference for exact surface area.
 State variants take a styler of the same type and merge it over the base:
 
 ```dart
-RemixButtonStyler()
+ButtonStyler()
     .color(Colors.blue)
     .labelColor(Colors.white)
-    .onHovered(RemixButtonStyler().color(Colors.blue.shade700))
-    .onPressed(RemixButtonStyler().scale(0.97))
-    .onFocused(RemixButtonStyler().borderAll(color: Colors.white, width: 2))
-    .onDisabled(RemixButtonStyler().color(Colors.grey))
+    .onHovered(ButtonStyler().color(Colors.blue.shade700))
+    .onPressed(ButtonStyler().scale(0.97))
+    .onFocused(ButtonStyler().borderAll(color: Colors.white, width: 2))
+    .onDisabled(ButtonStyler().color(Colors.grey))
 ```
 
 `.onSelected()` exists on the selection components only — Checkbox, Radio,
@@ -316,10 +316,10 @@ RemixCheckboxStyler()
 Respond to platform, brightness, and form factor:
 
 ```dart
-RemixButtonStyler()
+ButtonStyler()
     .paddingX(24)
-    .onMobile(RemixButtonStyler().paddingX(16).labelFontSize(14))
-    .onDark(RemixButtonStyler().color(Colors.blue.shade800))
+    .onMobile(ButtonStyler().paddingX(16).labelFontSize(14))
+    .onDark(ButtonStyler().color(Colors.blue.shade800))
 ```
 
 Available: `.onDark()`, `.onLight()`, `.onMobile()`, `.onTablet()`,
@@ -332,9 +332,9 @@ Available: `.onDark()`, `.onLight()`, `.onMobile()`, `.onTablet()`,
 Add transitions between states with `.animate(AnimationConfig)`:
 
 ```dart
-RemixButtonStyler()
+ButtonStyler()
     .color(Colors.blue)
-    .onHovered(RemixButtonStyler().color(Colors.blue.shade800))
+    .onHovered(ButtonStyler().color(Colors.blue.shade800))
     .animate(AnimationConfig.spring(300.ms))
 ```
 
@@ -349,7 +349,7 @@ Every leaf component styler has a `call()` method that builds the widget
 directly:
 
 ```dart
-final primaryButton = RemixButtonStyler()
+final primaryButton = ButtonStyler()
     .color(Colors.blue)
     .labelColor(Colors.white)
     .paddingX(24)
@@ -371,7 +371,7 @@ Call the token inside styler chains; `.mix()` for text-style tokens;
 `.resolve(context)` for direct values in widget code:
 
 ```dart
-RemixButtonStyler()
+ButtonStyler()
     .color(FortalTokens.accent9())
     .paddingAll(FortalTokens.space4())
     .borderRadiusAll(FortalTokens.radius3())
@@ -392,12 +392,12 @@ transition durations. Full catalog: `references/fortal-reference.md`.
 
 ```dart
 class AppStyles {
-  static RemixButtonStyler get primaryButton => fortalButtonStyler(variant: .solid)
+  static ButtonStyler get primaryButton => fortalButtonStyler(variant: .solid)
       .animate(AnimationConfig.spring(200.ms));
 
-  static RemixButtonStyler get dangerButton => fortalButtonStyler(variant: .solid)
+  static ButtonStyler get dangerButton => fortalButtonStyler(variant: .solid)
       .color(Colors.red)
-      .onHovered(RemixButtonStyler().color(Colors.red.shade700))
+      .onHovered(ButtonStyler().color(Colors.red.shade700))
       .animate(AnimationConfig.spring(200.ms));
 }
 

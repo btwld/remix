@@ -58,8 +58,8 @@
     },
     {
       "path": "protocol/coverage.json",
-      "sha256": "bd34c03c2ff05bc2a540071edca2c2d1885fefbb074bb5e3d772607af098d96b",
-      "bytes": 7886
+      "sha256": "7b1615f04774c6a1ec3bbc80b703fa4557a5a6371680e1da686bd15937c01abb",
+      "bytes": 7836
     },
     {
       "path": "protocol/fixtures/fortal-tokenized-flex-box.mix.json",

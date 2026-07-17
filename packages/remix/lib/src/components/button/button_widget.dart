@@ -80,7 +80,7 @@ class RemixButton extends StatelessWidget {
     this.semanticHint,
     this.excludeSemantics = false,
     this.mouseCursor = SystemMouseCursors.click,
-    this.style = const RemixButtonStyler.create(),
+    this.style = const ButtonStyler.create(),
     this.styleSpec,
   });
 
@@ -88,10 +88,10 @@ class RemixButton extends StatelessWidget {
   ///
   /// Protocol and inspection tooling should project this effective style so
   /// it observes the same layout defaults as [build].
-  static RemixButtonStyler composeStyle(RemixButtonStyler style) =>
+  static ButtonStyler composeStyle(ButtonStyler style) =>
       .mainAxisSize(.min).merge(style);
 
-  static final styleFrom = RemixButtonStyler.new;
+  static final styleFrom = ButtonStyler.new;
 
   /// Whether the button is in a loading state.
   ///
@@ -170,14 +170,14 @@ class RemixButton extends StatelessWidget {
   final MouseCursor mouseCursor;
 
   /// The style configuration for the button.
-  final RemixButtonStyler style;
+  final ButtonStyler style;
 
   /// Optional raw style spec that bypasses fluent style resolution.
   final RemixButtonSpec? styleSpec;
 
   bool get _isEnabled => enabled && !loading && onPressed != null;
 
-  RemixButtonStyler _buildStyle() => composeStyle(style);
+  ButtonStyler _buildStyle() => composeStyle(style);
 
   Widget _buildContent(BuildContext context, RemixButtonSpec spec) {
     Widget? leadingIconWidget;
