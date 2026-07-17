@@ -5,7 +5,7 @@ part of 'button.dart';
 /// Use this class to style the button container, label, icons, and loading
 /// spinner. It supports Mix variants and widget state variants for focused,
 /// hovered, pressed, disabled, and loading states.
-extension ButtonStylerRemixHelpers on ButtonStyler {
+extension RemixButtonStylerRemixHelpers on ButtonStyler {
   /// Creates a [RemixButton] widget with this style applied.
   RemixButton call({
     Key? key,

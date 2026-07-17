@@ -1,12 +1,14 @@
+## Unreleased
+
+- **FEAT**: Expose `ButtonStyler` as the canonical button styling API.
+  `RemixButtonStyler` remains available as a deprecated compatibility alias.
+
 ## 1.0.0-beta.1
 
 - **BREAKING** **FIX**: `RemixDialog.child` now composes with `title`,
   `description`, and `actions` in `AlertDialog` order instead of silently
   discarding them. A lone `child` still fills the container directly, so fully
   custom dialog bodies are unaffected.
-
-- **FEAT**: Expose `ButtonStyler` as the canonical button styling API.
-  `RemixButtonStyler` remains available as a deprecated compatibility alias.
 
 - **BREAKING**: Rename fluent style builders from `RemixXStyle` to `RemixXStyler` and Fortal helpers from `fortalXStyle()` to `fortalXStyler()`, matching Mix terminology (`BoxStyler`, `TextStyler`, `MixStyler`). Widget parameter stays `style:`. No deprecated aliases were kept for the removed `RemixXStyle` names.
 - **BREAKING**: Public `styleSpec` is raw `RemixXSpec?` on all component surfaces (resolved via `RemixStyleSpecBuilder`); StyleWidget-based components converted to explicit widgets.

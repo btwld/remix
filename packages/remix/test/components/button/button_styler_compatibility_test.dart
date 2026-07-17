@@ -12,10 +12,14 @@ void main() {
     final legacyFactory = RemixButtonStyler.color(Colors.blue);
 
     final ButtonStyler canonical = legacy;
+    final legacyWidget = RemixButtonStylerRemixHelpers(
+      legacy,
+    ).call(label: 'Legacy button');
 
     expect(canonical, same(legacy));
     expect(legacy.merge(emptyLegacy), isA<ButtonStyler>());
     expect(legacyFactory, isA<ButtonStyler>());
+    expect(legacyWidget, isA<RemixButton>());
     expect(legacy.runtimeType, ButtonStyler);
   });
 }
