@@ -11,7 +11,7 @@ import 'support/fortal_button_component_artifact.dart';
 void main() {
   group('Fortal Button protocol adapter', () {
     test('projects real composite sources without restating the recipe', () {
-      final projection = projectRemixButtonStyler(
+      final projection = projectButtonStyler(
         fortalButtonStyler(
           variant: FortalButtonVariant.surface,
           size: FortalButtonSize.size3,
@@ -38,7 +38,7 @@ void main() {
     test('all projected slots encode as built-in protocol styles', () {
       for (final variant in FortalButtonVariant.values) {
         for (final size in FortalButtonSize.values) {
-          final projection = projectRemixButtonStyler(
+          final projection = projectButtonStyler(
             fortalButtonStyler(variant: variant, size: size),
           );
 
@@ -64,7 +64,7 @@ void main() {
     test(
       'keeps spinner support explicit instead of projecting custom code',
       () {
-        final projection = projectRemixButtonStyler(fortalButtonStyler());
+        final projection = projectButtonStyler(fortalButtonStyler());
 
         expect(projection.spinnerSupported, isFalse);
         expect(projection.spinnerDiagnostic.code, 'unsupported_slot_primitive');

@@ -34,7 +34,7 @@ enum FortalButtonVariant {
 }
 
 /// Fortal-themed button style and widget presets.
-RemixButtonStyler fortalButtonStyler({
+ButtonStyler fortalButtonStyler({
   FortalButtonVariant variant = .solid,
   FortalButtonSize size = .size2,
 }) {
@@ -47,8 +47,8 @@ RemixButtonStyler fortalButtonStyler({
   };
 }
 
-RemixButtonStyler _fortalButtonBaseStyler(FortalButtonSize size) {
-  return RemixButtonStyler()
+ButtonStyler _fortalButtonBaseStyler(FortalButtonSize size) {
+  return ButtonStyler()
       .label(TextStyler().fontWeight(FortalTokens.fontWeightMedium()))
       .spinner(
         .strokeWidth(
@@ -56,7 +56,7 @@ RemixButtonStyler _fortalButtonBaseStyler(FortalButtonSize size) {
         ).duration(const Duration(milliseconds: 800)),
       )
       .onFocused(
-        RemixButtonStyler().borderAll(
+        ButtonStyler().borderAll(
           color: FortalTokens.focusA8(),
           width: FortalTokens.focusRingWidth(),
         ),
@@ -64,15 +64,15 @@ RemixButtonStyler _fortalButtonBaseStyler(FortalButtonSize size) {
       .merge(_fortalButtonSizeStyler(size));
 }
 
-RemixButtonStyler _fortalButtonSolidStyler([FortalButtonSize size = .size2]) {
+ButtonStyler _fortalButtonSolidStyler([FortalButtonSize size = .size2]) {
   return _fortalButtonBaseStyler(size)
       .backgroundColor(FortalTokens.accent9())
       .foregroundColor(FortalTokens.accentContrast())
       .spinner(.indicatorColor(FortalTokens.accentContrast()))
-      .onHovered(RemixButtonStyler().backgroundColor(FortalTokens.accent10()))
-      .onPressed(RemixButtonStyler().backgroundColor(FortalTokens.accent10()))
+      .onHovered(ButtonStyler().backgroundColor(FortalTokens.accent10()))
+      .onPressed(ButtonStyler().backgroundColor(FortalTokens.accent10()))
       .onDisabled(
-        RemixButtonStyler()
+        ButtonStyler()
             .backgroundColor(FortalTokens.grayA3())
             .foregroundColor(FortalTokens.gray8())
             .spinner(
@@ -83,15 +83,15 @@ RemixButtonStyler _fortalButtonSolidStyler([FortalButtonSize size = .size2]) {
       );
 }
 
-RemixButtonStyler _fortalButtonSoftStyler([FortalButtonSize size = .size2]) {
+ButtonStyler _fortalButtonSoftStyler([FortalButtonSize size = .size2]) {
   return _fortalButtonBaseStyler(size)
       .backgroundColor(FortalTokens.accent3())
       .foregroundColor(FortalTokens.accent11())
       .spinner(.indicatorColor(FortalTokens.accent11()))
-      .onHovered(RemixButtonStyler().backgroundColor(FortalTokens.accent4()))
-      .onPressed(RemixButtonStyler().backgroundColor(FortalTokens.accent5()))
+      .onHovered(ButtonStyler().backgroundColor(FortalTokens.accent4()))
+      .onPressed(ButtonStyler().backgroundColor(FortalTokens.accent5()))
       .onDisabled(
-        RemixButtonStyler()
+        ButtonStyler()
             .backgroundColor(FortalTokens.grayA3())
             .foregroundColor(FortalTokens.gray8())
             .spinner(
@@ -102,7 +102,7 @@ RemixButtonStyler _fortalButtonSoftStyler([FortalButtonSize size = .size2]) {
       );
 }
 
-RemixButtonStyler _fortalButtonSurfaceStyler([FortalButtonSize size = .size2]) {
+ButtonStyler _fortalButtonSurfaceStyler([FortalButtonSize size = .size2]) {
   return _fortalButtonBaseStyler(size)
       .backgroundColor(FortalTokens.accentA2())
       .borderAll(
@@ -112,13 +112,13 @@ RemixButtonStyler _fortalButtonSurfaceStyler([FortalButtonSize size = .size2]) {
       .foregroundColor(FortalTokens.accent11())
       .spinner(.indicatorColor(FortalTokens.accent11()))
       .onHovered(
-        RemixButtonStyler().borderAll(
+        ButtonStyler().borderAll(
           color: FortalTokens.accent8(),
           width: FortalTokens.borderWidth1(),
         ),
       )
       .onDisabled(
-        RemixButtonStyler()
+        ButtonStyler()
             .backgroundColor(FortalTokens.grayA2())
             .foregroundColor(FortalTokens.gray8())
             .borderAll(
@@ -133,7 +133,7 @@ RemixButtonStyler _fortalButtonSurfaceStyler([FortalButtonSize size = .size2]) {
       );
 }
 
-RemixButtonStyler _fortalButtonOutlineStyler([FortalButtonSize size = .size2]) {
+ButtonStyler _fortalButtonOutlineStyler([FortalButtonSize size = .size2]) {
   return _fortalButtonBaseStyler(size)
       .backgroundColor(Colors.transparent)
       .borderAll(
@@ -143,7 +143,7 @@ RemixButtonStyler _fortalButtonOutlineStyler([FortalButtonSize size = .size2]) {
       .foregroundColor(FortalTokens.accent11())
       .spinner(.indicatorColor(FortalTokens.accent11()))
       .onHovered(
-        RemixButtonStyler()
+        ButtonStyler()
             .backgroundColor(FortalTokens.accentA2())
             .borderAll(
               color: FortalTokens.accent8(),
@@ -151,7 +151,7 @@ RemixButtonStyler _fortalButtonOutlineStyler([FortalButtonSize size = .size2]) {
             ),
       )
       .onDisabled(
-        RemixButtonStyler()
+        ButtonStyler()
             .foregroundColor(FortalTokens.gray8())
             .borderAll(color: FortalTokens.gray5())
             .spinner(
@@ -162,15 +162,15 @@ RemixButtonStyler _fortalButtonOutlineStyler([FortalButtonSize size = .size2]) {
       );
 }
 
-RemixButtonStyler _fortalButtonGhostStyler([FortalButtonSize size = .size2]) {
+ButtonStyler _fortalButtonGhostStyler([FortalButtonSize size = .size2]) {
   return _fortalButtonBaseStyler(size)
       .backgroundColor(Colors.transparent)
       .foregroundColor(FortalTokens.accent11())
       .spinner(.indicatorColor(FortalTokens.accent11()))
-      .onHovered(RemixButtonStyler().backgroundColor(FortalTokens.accentA3()))
-      .onPressed(RemixButtonStyler().backgroundColor(FortalTokens.accentA4()))
+      .onHovered(ButtonStyler().backgroundColor(FortalTokens.accentA3()))
+      .onPressed(ButtonStyler().backgroundColor(FortalTokens.accentA4()))
       .onDisabled(
-        RemixButtonStyler()
+        ButtonStyler()
             .foregroundColor(FortalTokens.gray8())
             .spinner(
               .indicatorColor(
@@ -180,8 +180,8 @@ RemixButtonStyler _fortalButtonGhostStyler([FortalButtonSize size = .size2]) {
       );
 }
 
-RemixButtonStyler _fortalButtonSizeStyler(FortalButtonSize size) {
-  final style = RemixButtonStyler();
+ButtonStyler _fortalButtonSizeStyler(FortalButtonSize size) {
+  final style = ButtonStyler();
 
   return switch (size) {
     .size1 =>

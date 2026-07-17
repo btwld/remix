@@ -6,19 +6,19 @@ system: preset widgets, variants, sizes, and tokens.
 ## How Fortal presets work
 
 Each component ships a `fortal<Name>Styler(...)` function that returns the
-component's `Remix*Styler`, plus a `Fortal<Name>` preset widget that applies
+component's `*Styler`, plus a `Fortal<Name>` preset widget that applies
 it. Two equivalent ways to use a preset:
 
 ```dart
 // 1. Preset widget — Remix widget params + fixed variant/size
 FortalButton.soft(label: 'Save', onPressed: save, size: .size3)
 
-// 2. Styler function — returns a RemixButtonStyler to extend
+// 2. Styler function — returns a ButtonStyler to extend
 RemixButton(
   label: 'Save',
   onPressed: save,
   style: fortalButtonStyler(variant: .soft, size: .size3)
-      .onHovered(RemixButtonStyler().scale(1.02)),
+      .onHovered(ButtonStyler().scale(1.02)),
 )
 ```
 
@@ -121,7 +121,7 @@ widgets, resolve against context:
 
 ```dart
 // In a styler chain:
-RemixButtonStyler()
+ButtonStyler()
     .backgroundColor(FortalTokens.accent9())
     .borderRadiusAll(FortalTokens.radius3())
 

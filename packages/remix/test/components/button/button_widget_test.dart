@@ -38,7 +38,7 @@ void main() {
           RemixButton(
             label: 'Continue',
             leadingIcon: Icons.arrow_forward,
-            style: RemixButtonStyler().iconAlignment(.end),
+            style: ButtonStyler().iconAlignment(.end),
             onPressed: () {},
           ),
         );
@@ -56,7 +56,7 @@ void main() {
             label: 'Continue',
             leadingIcon: Icons.arrow_back,
             trailingIcon: Icons.arrow_forward,
-            style: RemixButtonStyler().iconAlignment(.end),
+            style: ButtonStyler().iconAlignment(.end),
             onPressed: () {},
           ),
         );
