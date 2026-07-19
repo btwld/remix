@@ -42,6 +42,51 @@ void main() {
         expect(find.byIcon(Icons.star), findsOneWidget);
       });
 
+      testWidgets('constrains flexible custom content to the callout width', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          SizedBox(
+            width: 320,
+            child: RemixCallout(
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      'A detailed capture failure that should wrap in place.',
+                    ),
+                  ),
+                  TextButton(onPressed: () {}, child: Text('Retry')),
+                ],
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(tester.takeException(), isNull);
+        expect(find.text('Retry'), findsOneWidget);
+      });
+
+      testWidgets('wraps long text beside its icon at a bounded width', (
+        tester,
+      ) async {
+        await tester.pumpRemixApp(
+          SizedBox(
+            width: 320,
+            child: RemixCallout(
+              icon: Icons.info,
+              text:
+                  'A detailed capture failure that should wrap without '
+                  'overflowing the callout.',
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(tester.takeException(), isNull);
+      });
+
       testWidgets('renders callout with all props', (tester) async {
         await tester.pumpRemixApp(
           RemixCallout(

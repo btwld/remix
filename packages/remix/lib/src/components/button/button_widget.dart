@@ -280,7 +280,7 @@ class RemixButton extends StatelessWidget {
       enableFeedback: enableFeedback,
       focusNode: focusNode,
       autofocus: autofocus,
-      semanticLabel: semanticLabel,
+      semanticLabel: semanticLabel ?? label,
       builder: (context, _, _) {
         return RemixStyleSpecBuilder<RemixButtonSpec>(
           style: _buildStyle(),

@@ -60,6 +60,53 @@ void main() {
       expect(find.byType(RemixBadge), findsOneWidget);
     });
 
+    testWidgets('non-solid FortalBadge variants use accessible accent text', (
+      tester,
+    ) async {
+      final colors = resolveFortalTokens(const FortalThemeConfig());
+
+      for (final variant in [
+        FortalBadgeVariant.soft,
+        FortalBadgeVariant.surface,
+        FortalBadgeVariant.outline,
+      ]) {
+        await tester.pumpRemixApp(
+          FortalBadge(label: variant.name, variant: variant),
+        );
+        await tester.pumpAndSettle();
+
+        final label = tester.widget<Text>(find.text(variant.name));
+        expect(
+          label.style?.color,
+          colors.accent.scale.step(12),
+          reason: '${variant.name} badges use the accent text step',
+        );
+      }
+    });
+
+    test('accent text step meets WCAG AA over soft badge backgrounds', () {
+      for (final brightness in Brightness.values) {
+        for (final accent in FortalAccentColor.values) {
+          final colors = resolveFortalTokens(
+            FortalThemeConfig(accent: accent, brightness: brightness),
+          );
+          final background = Color.alphaBlend(
+            colors.accent.scale.alphaStep(3),
+            colors.colorBackground,
+          );
+          final foreground = colors.accent.scale.step(12);
+
+          expect(
+            _contrastRatio(foreground, background),
+            greaterThanOrEqualTo(4.5),
+            reason:
+                '${accent.name}/${brightness.name} soft badges must meet '
+                'WCAG AA contrast',
+          );
+        }
+      }
+    });
+
     testWidgets('renders FortalButton', (tester) async {
       await tester.pumpRemixApp(const FortalButton(label: 'Save'));
 
@@ -238,4 +285,17 @@ void main() {
       expect(find.byType(FortalTabView), findsNWidgets(2));
     });
   });
+}
+
+double _contrastRatio(Color first, Color second) {
+  final firstLuminance = first.computeLuminance();
+  final secondLuminance = second.computeLuminance();
+  final lighter = firstLuminance > secondLuminance
+      ? firstLuminance
+      : secondLuminance;
+  final darker = firstLuminance > secondLuminance
+      ? secondLuminance
+      : firstLuminance;
+
+  return (lighter + 0.05) / (darker + 0.05);
 }

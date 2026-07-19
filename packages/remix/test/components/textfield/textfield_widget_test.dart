@@ -10,6 +10,33 @@ import '../../helpers/test_helpers.dart';
 
 void main() {
   group('RemixTextField', () {
+    testWidgets('Fortal variants keep text and container colors separate', (
+      tester,
+    ) async {
+      await tester.pumpRemixApp(const FortalTextField.surface());
+      var context = tester.element(find.byType(FortalTextField));
+      var colors = resolveFortalTokens(const FortalThemeConfig());
+      var spec = fortalTextFieldStyler(
+        variant: FortalTextFieldVariant.surface,
+      ).resolve(context).spec;
+      var decoration =
+          spec.container.spec.box!.spec.decoration! as BoxDecoration;
+
+      expect(spec.text.spec.style?.color, colors.gray.scale.step(12));
+      expect(decoration.color, isNull);
+
+      await tester.pumpRemixApp(const FortalTextField.soft());
+      context = tester.element(find.byType(FortalTextField));
+      colors = resolveFortalTokens(const FortalThemeConfig());
+      spec = fortalTextFieldStyler(
+        variant: FortalTextFieldVariant.soft,
+      ).resolve(context).spec;
+      decoration = spec.container.spec.box!.spec.decoration! as BoxDecoration;
+
+      expect(spec.text.spec.style?.color, colors.accent.scale.step(12));
+      expect(decoration.color, colors.accent.scale.step(3));
+    });
+
     group('Basic Rendering', () {
       testWidgets('renders with default style', (tester) async {
         await tester.pumpRemixApp(const RemixTextField());

@@ -52,7 +52,15 @@ class RemixCallout extends StatelessWidget {
       builder: (context, spec) {
         // For raw constructor, use provided child directly
         if (child != null) {
-          return RowBox(styleSpec: spec.container, children: [child!]);
+          return RowBox(
+            styleSpec: spec.container,
+            children: [
+              // RowBox resolves to a Flex. A loose fit gives custom content a
+              // bounded maximum width without forcing it to fill the callout.
+              // ignore: avoid-flexible-outside-flex
+              Flexible(child: child!),
+            ],
+          );
         }
 
         // Build the callout content with text and optional icon
@@ -65,7 +73,12 @@ class RemixCallout extends StatelessWidget {
 
         // Add text if present
         if (text?.isNotEmpty == true) {
-          children.add(StyledText(text!, styleSpec: spec.text));
+          children.add(
+            // RowBox resolves to a Flex. A loose fit lets text wrap while
+            // preserving its intrinsic width for short messages.
+            // ignore: avoid-flexible-outside-flex
+            Flexible(child: StyledText(text!, styleSpec: spec.text)),
+          );
         }
 
         return RowBox(styleSpec: spec.container, children: children);
