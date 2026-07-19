@@ -79,7 +79,7 @@ RemixTextFieldStyler _fortalTextFieldSurfaceStyler([
         width: FortalTokens.borderWidth1(),
         strokeAlign: BorderSide.strokeAlignOutside,
       )
-      .color(FortalTokens.gray12())
+      .textColor(FortalTokens.gray12())
       .onFocused(
         RemixTextFieldStyler().borderAll(
           color: FortalTokens.accent7(),
@@ -118,7 +118,7 @@ RemixTextFieldStyler _fortalTextFieldSoftStyler([
               .fontWeight(FortalTokens.fontWeightMedium()),
         ),
       )
-      .color(FortalTokens.accent12())
+      .textColor(FortalTokens.accent12())
       .wrap(.iconTheme(color: FortalTokens.accent10()))
       .backgroundColor(FortalTokens.accent3())
       .borderAll(

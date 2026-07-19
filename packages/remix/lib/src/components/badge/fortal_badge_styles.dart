@@ -32,7 +32,7 @@ RemixBadgeStyler _fortalBadgeSolidStyler([FortalBadgeSize size = .size2]) {
 RemixBadgeStyler _fortalBadgeSoftStyler([FortalBadgeSize size = .size2]) {
   return _fortalBadgeBaseStyler(size)
       .backgroundColor(FortalTokens.accentA3())
-      .foregroundColor(FortalTokens.accentA10());
+      .foregroundColor(FortalTokens.accent12());
 }
 
 RemixBadgeStyler _fortalBadgeSurfaceStyler([FortalBadgeSize size = .size2]) {
@@ -42,7 +42,7 @@ RemixBadgeStyler _fortalBadgeSurfaceStyler([FortalBadgeSize size = .size2]) {
         color: FortalTokens.accent6(),
         width: FortalTokens.borderWidth1(),
       )
-      .foregroundColor(FortalTokens.accentA10());
+      .foregroundColor(FortalTokens.accent12());
 }
 
 RemixBadgeStyler _fortalBadgeOutlineStyler([FortalBadgeSize size = .size2]) {
@@ -52,7 +52,7 @@ RemixBadgeStyler _fortalBadgeOutlineStyler([FortalBadgeSize size = .size2]) {
         color: FortalTokens.accent7(),
         width: FortalTokens.borderWidth1(),
       )
-      .foregroundColor(FortalTokens.accentA10());
+      .foregroundColor(FortalTokens.accent12());
 }
 
 RemixBadgeStyler _fortalBadgeSizeStyler(FortalBadgeSize size) {

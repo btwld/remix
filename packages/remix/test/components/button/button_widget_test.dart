@@ -616,13 +616,8 @@ void main() {
 
         await tester.pumpAndSettle();
 
-        // Verify semantics widget is present
-        expect(find.byType(Semantics), findsAtLeastNWidgets(1));
-
-        // Test that the default label is used by checking accessibility
         final semantics = tester.getSemantics(find.byType(RemixButton));
-        // Note: The label might not be applied as expected, so we'll just verify the button renders
-        expect(semantics, isNotNull);
+        expect(semantics.label, equals('Default Label'));
       });
     });
 
