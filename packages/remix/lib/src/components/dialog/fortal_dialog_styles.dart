@@ -1,23 +1,45 @@
 part of 'dialog.dart';
 
+/// Fortal dialog size presets matching Radix Themes 3.3.0.
+enum FortalDialogSize { size1, size2, size3, size4 }
+
+/// Vertical placement of a Fortal dialog within its viewport.
+enum FortalDialogAlign { start, center }
+
 /// Fortal-themed preset for [RemixDialog].
 @MixWidget(
   name: 'FortalDialog',
   target: RemixDialog.new,
-  factoryParameters: .only({}),
+  factoryParameters: .only({'size'}),
 )
-RemixDialogStyler fortalDialogStyler() {
+RemixDialogStyler fortalDialogStyler({
+  FortalDialogSize size = FortalDialogSize.size3,
+}) {
+  final radius = switch (size) {
+    FortalDialogSize.size1 || FortalDialogSize.size2 => FortalTokens.radius4(),
+    FortalDialogSize.size3 || FortalDialogSize.size4 => FortalTokens.radius5(),
+  };
+  final padding = switch (size) {
+    FortalDialogSize.size1 => FortalTokens.space3(),
+    FortalDialogSize.size2 => FortalTokens.space4(),
+    FortalDialogSize.size3 => FortalTokens.space5(),
+    FortalDialogSize.size4 => FortalTokens.space6(),
+  };
+
   return RemixDialogStyler()
       .title(
-        TextStyler()
-            .fontSize(18)
-            .fontWeight(.w600)
+        .style(FortalTokens.text5.mix())
+            .fontWeight(FortalTokens.fontWeightBold())
             .color(FortalTokens.gray12())
             .wrap(
-              .padding(EdgeInsetsMix.fromLTRB(0, 0, 0, FortalTokens.space4())),
+              .padding(EdgeInsetsMix.fromLTRB(0, 0, 0, FortalTokens.space3())),
             ),
       )
-      .description(TextStyler().fontSize(14).color(FortalTokens.gray11()))
+      .description(
+        TextStyler(
+          style: FortalTokens.text3.mix(),
+        ).color(FortalTokens.gray12()),
+      )
       .actions(
         FlexBoxStyler()
             .mainAxisAlignment(.end)
@@ -25,23 +47,14 @@ RemixDialogStyler fortalDialogStyler() {
             .spacing(FortalTokens.space3())
             .marginTop(FortalTokens.space5()),
       )
-      .padding(.all(FortalTokens.space5()))
-      .constraints(BoxConstraintsMix(maxWidth: 450))
-      .border(
-        .all(
-          BorderSideMix()
-              .color(FortalTokens.gray6())
-              .width(FortalTokens.borderWidth1()),
-        ),
+      .padding(.all(padding))
+      .borderRadius(.all(radius))
+      .color(FortalTokens.colorPanel())
+      .decoration(
+        BoxDecorationMix.create(boxShadow: FortalTokens.shadow6.mix()),
       )
-      .borderRadius(.all(FortalTokens.radius3()))
-      .backgroundColor(FortalTokens.gray1())
-      .shadow(
-        BoxShadowMix()
-            .color(FortalTokens.blackA3())
-            .offset(x: 0, y: 8)
-            .blurRadius(16)
-            .spreadRadius(0),
+      .containerEffects(
+        RemixBoxEffectsMix(backdropBlur: FortalTokens.panelBlur()),
       );
 }
 

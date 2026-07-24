@@ -25,8 +25,8 @@ class AccountPopover extends StatelessWidget {
     return FortalPopover(
       semanticLabel: 'Show account details',
       positioning: const OverlayPositionConfig(
-        targetAnchor: Alignment.bottomCenter,
-        followerAnchor: Alignment.topCenter,
+        side: OverlaySide.bottom,
+        alignment: OverlayAlignment.center,
       ),
       popoverChild: const SizedBox(
         width: 240,
@@ -85,15 +85,15 @@ callback to complete the state change.
 
 ## Positioning
 
-`OverlayPositionConfig` aligns one point on the trigger with one point on the
-overlay and can apply an additional offset.
+`OverlayPositionConfig` places the overlay on a trigger side, aligns it along
+that side, and can apply an additional offset.
 
 ```dart
 const OverlayPositionConfig(
-  targetAnchor: Alignment.topRight,
-  followerAnchor: Alignment.bottomRight,
-  offset: Offset(0, -8),
-)
+  side: OverlaySide.top,
+  alignment: OverlayAlignment.end,
+  sideOffset: 8,
+);
 ```
 
 The overlay is clamped to the available screen bounds.
@@ -109,10 +109,10 @@ RemixPopover(
       .paddingAll(16)
       .constraints(BoxConstraintsMix(maxWidth: 320))
       .backgroundColor(Colors.white)
-      .borderRadiusAll(12),
+      .borderRadiusAll(const Radius.circular(12)),
   popoverChild: const Text('Custom popover'),
   child: const Text('Open'),
-)
+);
 ```
 
 The `FortalPopover` preset adds Fortal spacing, border, radius, surface color,

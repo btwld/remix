@@ -183,12 +183,17 @@ class RemixDialog extends StatelessWidget {
 
         // Skip the default column so a fully custom body keeps its layout.
         if (isLoneChild) {
-          return Box(styleSpec: spec.container, child: child!);
+          return RemixBoxWithEffects(
+            styleSpec: spec.container,
+            containerEffects: spec.containerEffects,
+            child: child!,
+          );
         }
 
         // title → description → child → actions; never discard provided content.
-        return Box(
+        return RemixBoxWithEffects(
           styleSpec: spec.container,
+          containerEffects: spec.containerEffects,
           child: Column(
             mainAxisAlignment: .start,
             mainAxisSize: .min,

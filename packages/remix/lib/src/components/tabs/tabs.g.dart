@@ -229,6 +229,9 @@ typedef _$RemixTabViewSpecMethods = _$RemixTabViewSpec; // ignore: unused_elemen
 // **************************************************************************
 
 /// Fortal-themed preset for [RemixTabBar].
+///
+/// The tab-list bottom border is a single hairline at every Radix size, so this
+/// preset takes no `size` — unlike [fortalTabStyler], whose per-tab metrics vary.
 class FortalTabBar extends StatelessWidget {
   const FortalTabBar({super.key, required this.child});
 
@@ -267,6 +270,7 @@ class FortalTabView extends StatelessWidget {
 class FortalTab extends StatelessWidget {
   const FortalTab({
     super.key,
+    this.size = FortalTabsSize.size2,
     required this.tabId,
     this.child,
     this.label,
@@ -282,6 +286,8 @@ class FortalTab extends StatelessWidget {
     this.builder,
     this.semanticLabel,
   });
+
+  final FortalTabsSize size;
 
   final String tabId;
 
@@ -315,7 +321,7 @@ class FortalTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixTab(
       key: this.key,
-      style: fortalTabStyler(),
+      style: fortalTabStyler(size: this.size),
       tabId: this.tabId,
       child: this.child,
       label: this.label,

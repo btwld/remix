@@ -1,28 +1,39 @@
 part of 'popover.dart';
 
+/// Fortal popover size presets matching Radix Themes 3.3.0.
+enum FortalPopoverSize { size1, size2, size3, size4 }
+
 /// Fortal-themed preset for [RemixPopover].
 @MixWidget(
   name: 'FortalPopover',
   target: RemixPopover.new,
-  factoryParameters: .only({}),
+  factoryParameters: .only({'size'}),
 )
-RemixPopoverStyler fortalPopoverStyler() {
+RemixPopoverStyler fortalPopoverStyler({
+  FortalPopoverSize size = FortalPopoverSize.size2,
+}) {
+  final radius = switch (size) {
+    FortalPopoverSize.size1 ||
+    FortalPopoverSize.size2 => FortalTokens.radius4(),
+    FortalPopoverSize.size3 ||
+    FortalPopoverSize.size4 => FortalTokens.radius5(),
+  };
+  final padding = switch (size) {
+    FortalPopoverSize.size1 => FortalTokens.space3(),
+    FortalPopoverSize.size2 => FortalTokens.space4(),
+    FortalPopoverSize.size3 => FortalTokens.space5(),
+    FortalPopoverSize.size4 => FortalTokens.space6(),
+  };
+
   return RemixPopoverStyler()
-      .paddingAll(FortalTokens.space4())
-      .marginTop(FortalTokens.space2())
-      .constraints(BoxConstraintsMix(maxWidth: 360))
-      .borderAll(
-        color: FortalTokens.gray6(),
-        width: FortalTokens.borderWidth1(),
+      .paddingAll(padding)
+      .borderRadiusAll(radius)
+      .color(FortalTokens.colorPanel())
+      .decoration(
+        BoxDecorationMix.create(boxShadow: FortalTokens.shadow5.mix()),
       )
-      .borderRadiusAll(FortalTokens.radius3())
-      .backgroundColor(FortalTokens.gray1())
-      .shadow(
-        BoxShadowMix()
-            .color(FortalTokens.blackA3())
-            .offset(x: 0, y: 4)
-            .blurRadius(12)
-            .spreadRadius(0),
+      .containerEffects(
+        RemixBoxEffectsMix(backdropBlur: FortalTokens.panelBlur()),
       );
 }
 

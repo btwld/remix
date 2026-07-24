@@ -94,12 +94,12 @@ typedef _$RemixAvatarSpecMethods = _$RemixAvatarSpec; // ignore: unused_element
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Fortal-themed preset for [RemixAvatar].
+/// Fortal recipe for [RemixAvatar].
 class FortalAvatar extends StatelessWidget {
   const FortalAvatar({
     super.key,
     this.variant = .soft,
-    this.size = .size2,
+    this.size = .size3,
     this.backgroundImage,
     this.foregroundImage,
     this.onBackgroundImageError,
@@ -113,7 +113,7 @@ class FortalAvatar extends StatelessWidget {
 
   const FortalAvatar.soft({
     super.key,
-    this.size = .size2,
+    this.size = .size3,
     this.backgroundImage,
     this.foregroundImage,
     this.onBackgroundImageError,
@@ -127,7 +127,7 @@ class FortalAvatar extends StatelessWidget {
 
   const FortalAvatar.solid({
     super.key,
-    this.size = .size2,
+    this.size = .size3,
     this.backgroundImage,
     this.foregroundImage,
     this.onBackgroundImageError,

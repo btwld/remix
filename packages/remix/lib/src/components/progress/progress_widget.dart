@@ -47,7 +47,10 @@ class RemixProgress extends StatelessWidget {
           child: Stack(
             children: [
               // Track background
-              Box(styleSpec: spec.track),
+              RemixBoxWithEffects(
+                styleSpec: spec.track,
+                containerEffects: spec.trackEffects,
+              ),
               // Indicator foreground based on value
               LayoutBuilder(
                 builder: (context, constraints) {
@@ -55,7 +58,10 @@ class RemixProgress extends StatelessWidget {
 
                   return SizedBox(
                     width: biggestSize.width * value.clamp(0.0, 1.0),
-                    child: Box(styleSpec: spec.indicator),
+                    child: RemixBoxWithEffects(
+                      styleSpec: spec.indicator,
+                      containerEffects: spec.indicatorEffects,
+                    ),
                   );
                 },
               ),
