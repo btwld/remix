@@ -169,7 +169,7 @@ While Remix gives you complete freedom to build any design system, it also inclu
 
 ### Quick Start with Fortal
 
-To use Fortal widgets, wrap your app with `FortalScope` to provide the design tokens, then use the generated `Fortal*` widgets. Named constructors select a fixed variant; use the unnamed constructor with `variant:` when the choice is dynamic:
+To use Fortal widgets, wrap your app with `FortalScope` to provide the design tokens, then use the `Fortal*` widgets. Named constructors select a fixed variant; use the unnamed constructor with `variant:` when the choice is dynamic:
 
 ```dart
 import 'package:flutter/material.dart';
@@ -178,10 +178,10 @@ import 'package:remix/remix.dart';
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: FortalScope(
-          child: Center(
+    return FortalScope(
+      child: MaterialApp(
+        home: Scaffold(
+          body: Center(
             child: FortalButton.solid(
               onPressed: () {},
               label: 'Fortal Button',
@@ -196,7 +196,7 @@ class MyApp extends StatelessWidget {
 
 ### Customizing Fortal Styles
 
-Generated Fortal widgets call the matching `fortal*Styler` internally. Use those stylers directly when you need a custom Remix widget composition:
+Fortal widgets call the matching `fortal*Styler` internally. Use those stylers directly when you need a custom Remix widget composition:
 
 ```dart
 final style = fortalButtonStyler(variant: FortalButtonVariant.solid)

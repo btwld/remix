@@ -10,6 +10,7 @@ mixin _$RemixCalloutSpec implements Spec<RemixCalloutSpec>, Diagnosticable {
   StyleSpec<FlexBoxSpec> get container;
   StyleSpec<TextSpec> get text;
   StyleSpec<IconSpec> get icon;
+  RemixBoxEffectsSpec? get containerEffects;
 
   @override
   Type get type => RemixCalloutSpec;
@@ -19,11 +20,13 @@ mixin _$RemixCalloutSpec implements Spec<RemixCalloutSpec>, Diagnosticable {
     StyleSpec<FlexBoxSpec>? container,
     StyleSpec<TextSpec>? text,
     StyleSpec<IconSpec>? icon,
+    RemixBoxEffectsSpec? containerEffects,
   }) {
     return RemixCalloutSpec(
       container: container ?? this.container,
       text: text ?? this.text,
       icon: icon ?? this.icon,
+      containerEffects: containerEffects ?? this.containerEffects,
     );
   }
 
@@ -33,11 +36,16 @@ mixin _$RemixCalloutSpec implements Spec<RemixCalloutSpec>, Diagnosticable {
       container: container.lerp(other?.container, t),
       text: text.lerp(other?.text, t),
       icon: icon.lerp(other?.icon, t),
+      containerEffects: MixOps.lerpSnap(
+        containerEffects,
+        other?.containerEffects,
+        t,
+      ),
     );
   }
 
   @override
-  List<Object?> get props => [container, text, icon];
+  List<Object?> get props => [container, text, icon, containerEffects];
 
   @override
   bool operator ==(Object other) {
@@ -81,7 +89,8 @@ mixin _$RemixCalloutSpec implements Spec<RemixCalloutSpec>, Diagnosticable {
     properties
       ..add(DiagnosticsProperty('container', container))
       ..add(DiagnosticsProperty('text', text))
-      ..add(DiagnosticsProperty('icon', icon));
+      ..add(DiagnosticsProperty('icon', icon))
+      ..add(DiagnosticsProperty('containerEffects', containerEffects));
   }
 }
 
@@ -94,24 +103,24 @@ typedef _$RemixCalloutSpecMethods = _$RemixCalloutSpec; // ignore: unused_elemen
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Fortal-themed preset for [RemixCallout].
+/// Fortal recipe for [RemixCallout].
 class FortalCallout extends StatelessWidget {
   const FortalCallout({
     super.key,
-    this.variant = .surface,
+    this.variant = .soft,
     this.size = .size2,
     this.text,
     this.icon,
     this.child,
   });
 
-  const FortalCallout.outline({
+  const FortalCallout.soft({
     super.key,
     this.size = .size2,
     this.text,
     this.icon,
     this.child,
-  }) : variant = FortalCalloutVariant.outline;
+  }) : variant = FortalCalloutVariant.soft;
 
   const FortalCallout.surface({
     super.key,
@@ -121,13 +130,13 @@ class FortalCallout extends StatelessWidget {
     this.child,
   }) : variant = FortalCalloutVariant.surface;
 
-  const FortalCallout.soft({
+  const FortalCallout.outline({
     super.key,
     this.size = .size2,
     this.text,
     this.icon,
     this.child,
-  }) : variant = FortalCalloutVariant.soft;
+  }) : variant = FortalCalloutVariant.outline;
 
   final FortalCalloutVariant variant;
 
@@ -162,22 +171,26 @@ class RemixCalloutStyler extends MixStyler<RemixCalloutStyler, RemixCalloutSpec>
   final Prop<StyleSpec<FlexBoxSpec>>? $container;
   final Prop<StyleSpec<TextSpec>>? $text;
   final Prop<StyleSpec<IconSpec>>? $icon;
+  final Prop<RemixBoxEffectsSpec>? $containerEffects;
 
   const RemixCalloutStyler.create({
     Prop<StyleSpec<FlexBoxSpec>>? container,
     Prop<StyleSpec<TextSpec>>? text,
     Prop<StyleSpec<IconSpec>>? icon,
+    Prop<RemixBoxEffectsSpec>? containerEffects,
     super.variants,
     super.modifier,
     super.animation,
   }) : $container = container,
        $text = text,
-       $icon = icon;
+       $icon = icon,
+       $containerEffects = containerEffects;
 
   RemixCalloutStyler({
     FlexBoxStyler? container,
     TextStyler? text,
     IconStyler? icon,
+    RemixBoxEffectsMix? containerEffects,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<RemixCalloutSpec>>? variants,
@@ -185,6 +198,7 @@ class RemixCalloutStyler extends MixStyler<RemixCalloutStyler, RemixCalloutSpec>
          container: Prop.maybeMix(container),
          text: Prop.maybeMix(text),
          icon: Prop.maybeMix(icon),
+         containerEffects: Prop.maybeMix(containerEffects),
          variants: variants,
          modifier: modifier,
          animation: animation,
@@ -196,6 +210,8 @@ class RemixCalloutStyler extends MixStyler<RemixCalloutStyler, RemixCalloutSpec>
       RemixCalloutStyler().text(value);
   factory RemixCalloutStyler.icon(IconStyler value) =>
       RemixCalloutStyler().icon(value);
+  factory RemixCalloutStyler.containerEffects(RemixBoxEffectsMix value) =>
+      RemixCalloutStyler().containerEffects(value);
   factory RemixCalloutStyler.color(Color value) =>
       RemixCalloutStyler().color(value);
   factory RemixCalloutStyler.gradient(GradientMix value) =>
@@ -742,6 +758,11 @@ class RemixCalloutStyler extends MixStyler<RemixCalloutStyler, RemixCalloutSpec>
     return merge(RemixCalloutStyler(icon: value));
   }
 
+  /// Sets the containerEffects.
+  RemixCalloutStyler containerEffects(RemixBoxEffectsMix value) {
+    return merge(RemixCalloutStyler(containerEffects: value));
+  }
+
   /// Sets the animation configuration.
   @override
   RemixCalloutStyler animate(AnimationConfig value) {
@@ -772,6 +793,10 @@ class RemixCalloutStyler extends MixStyler<RemixCalloutStyler, RemixCalloutSpec>
       container: MixOps.merge($container, other?.$container),
       text: MixOps.merge($text, other?.$text),
       icon: MixOps.merge($icon, other?.$icon),
+      containerEffects: MixOps.merge(
+        $containerEffects,
+        other?.$containerEffects,
+      ),
       variants: MixOps.mergeVariants($variants, other?.$variants),
       modifier: MixOps.mergeModifier($modifier, other?.$modifier),
       animation: MixOps.mergeAnimation($animation, other?.$animation),
@@ -785,6 +810,7 @@ class RemixCalloutStyler extends MixStyler<RemixCalloutStyler, RemixCalloutSpec>
       container: MixOps.resolve(context, $container),
       text: MixOps.resolve(context, $text),
       icon: MixOps.resolve(context, $icon),
+      containerEffects: MixOps.resolve(context, $containerEffects),
     );
 
     return StyleSpec(
@@ -800,7 +826,8 @@ class RemixCalloutStyler extends MixStyler<RemixCalloutStyler, RemixCalloutSpec>
     properties
       ..add(DiagnosticsProperty('container', $container))
       ..add(DiagnosticsProperty('text', $text))
-      ..add(DiagnosticsProperty('icon', $icon));
+      ..add(DiagnosticsProperty('icon', $icon))
+      ..add(DiagnosticsProperty('containerEffects', $containerEffects));
   }
 
   @override
@@ -808,6 +835,7 @@ class RemixCalloutStyler extends MixStyler<RemixCalloutStyler, RemixCalloutSpec>
     $container,
     $text,
     $icon,
+    $containerEffects,
     $animation,
     $modifier,
     $variants,

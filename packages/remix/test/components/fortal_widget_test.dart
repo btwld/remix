@@ -78,7 +78,7 @@ void main() {
         final label = tester.widget<Text>(find.text(variant.name));
         expect(
           label.style?.color,
-          colors.accent.scale.step(12),
+          colors.accent.scale.alphaStep(11),
           reason: '${variant.name} badges use the accent text step',
         );
       }

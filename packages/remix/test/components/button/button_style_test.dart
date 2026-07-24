@@ -513,9 +513,16 @@ void main() {
       final spacings = resolvedBySize.values
           .map((spec) => spec.spec.container.spec.flex?.spec.spacing)
           .toSet();
+      final heights = resolvedBySize.values
+          .map(
+            (spec) =>
+                spec.spec.container.spec.box?.spec.constraints?.minHeight,
+          )
+          .toSet();
 
       expect(paddings, hasLength(FortalButtonSize.values.length));
-      expect(spacings, hasLength(FortalButtonSize.values.length));
+      expect(heights, hasLength(FortalButtonSize.values.length));
+      expect(spacings, hasLength(3));
     });
   });
 }

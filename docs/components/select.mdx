@@ -97,7 +97,7 @@ class _SelectExampleState extends State<SelectExample> {
 
 ## Fortal widgets
 
-Remix includes a generated Fortal-themed widget for this component:
+Remix includes a Fortal-themed widget for this component:
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
@@ -165,8 +165,8 @@ const RemixSelect({
   required List<RemixSelectItem<T>> items,
   T? selectedValue,
   OverlayPositionConfig positioning = const OverlayPositionConfig(
-    targetAnchor: Alignment.bottomCenter,
-    followerAnchor: Alignment.topCenter,
+    side: OverlaySide.bottom,
+    alignment: OverlayAlignment.center,
   ),
   ValueChanged<T?>? onChanged,
   VoidCallback? onOpen,

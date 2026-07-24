@@ -94,6 +94,7 @@ typedef _$RemixMenuTriggerSpecMethods = _$RemixMenuTriggerSpec; // ignore: unuse
 mixin _$RemixMenuSpec implements Spec<RemixMenuSpec>, Diagnosticable {
   StyleSpec<RemixMenuTriggerSpec> get trigger;
   StyleSpec<FlexBoxSpec> get overlay;
+  RemixBoxEffectsSpec? get containerEffects;
   StyleSpec<RemixMenuItemSpec> get item;
   StyleSpec<RemixDividerSpec> get divider;
 
@@ -104,12 +105,14 @@ mixin _$RemixMenuSpec implements Spec<RemixMenuSpec>, Diagnosticable {
   RemixMenuSpec copyWith({
     StyleSpec<RemixMenuTriggerSpec>? trigger,
     StyleSpec<FlexBoxSpec>? overlay,
+    RemixBoxEffectsSpec? containerEffects,
     StyleSpec<RemixMenuItemSpec>? item,
     StyleSpec<RemixDividerSpec>? divider,
   }) {
     return RemixMenuSpec(
       trigger: trigger ?? this.trigger,
       overlay: overlay ?? this.overlay,
+      containerEffects: containerEffects ?? this.containerEffects,
       item: item ?? this.item,
       divider: divider ?? this.divider,
     );
@@ -120,13 +123,24 @@ mixin _$RemixMenuSpec implements Spec<RemixMenuSpec>, Diagnosticable {
     return RemixMenuSpec(
       trigger: trigger.lerp(other?.trigger, t),
       overlay: overlay.lerp(other?.overlay, t),
+      containerEffects: MixOps.lerpSnap(
+        containerEffects,
+        other?.containerEffects,
+        t,
+      ),
       item: item.lerp(other?.item, t),
       divider: divider.lerp(other?.divider, t),
     );
   }
 
   @override
-  List<Object?> get props => [trigger, overlay, item, divider];
+  List<Object?> get props => [
+    trigger,
+    overlay,
+    containerEffects,
+    item,
+    divider,
+  ];
 
   @override
   bool operator ==(Object other) {
@@ -170,6 +184,7 @@ mixin _$RemixMenuSpec implements Spec<RemixMenuSpec>, Diagnosticable {
     properties
       ..add(DiagnosticsProperty('trigger', trigger))
       ..add(DiagnosticsProperty('overlay', overlay))
+      ..add(DiagnosticsProperty('containerEffects', containerEffects))
       ..add(DiagnosticsProperty('item', item))
       ..add(DiagnosticsProperty('divider', divider));
   }
@@ -273,7 +288,7 @@ typedef _$RemixMenuItemSpecMethods = _$RemixMenuItemSpec; // ignore: unused_elem
 // MixWidgetGenerator
 // **************************************************************************
 
-/// Fortal-themed preset for [RemixMenu].
+/// Fortal recipe for the established data-driven menu.
 class FortalMenu<T> extends StatelessWidget {
   const FortalMenu({
     super.key,
@@ -295,7 +310,6 @@ class FortalMenu<T> extends StatelessWidget {
     this.positioning = const OverlayPositionConfig(),
   });
 
-  /// High-emphasis menu trigger and item hover treatment.
   const FortalMenu.solid({
     super.key,
     this.size = .size2,
@@ -315,7 +329,6 @@ class FortalMenu<T> extends StatelessWidget {
     this.positioning = const OverlayPositionConfig(),
   }) : variant = FortalMenuVariant.solid;
 
-  /// Subtle accent-backed menu trigger and item hover treatment.
   const FortalMenu.soft({
     super.key,
     this.size = .size2,
@@ -1070,12 +1083,14 @@ class RemixMenuTriggerStyler
 class RemixMenuStyler extends MixStyler<RemixMenuStyler, RemixMenuSpec> {
   final Prop<StyleSpec<RemixMenuTriggerSpec>>? $trigger;
   final Prop<StyleSpec<FlexBoxSpec>>? $overlay;
+  final Prop<RemixBoxEffectsSpec>? $containerEffects;
   final Prop<StyleSpec<RemixMenuItemSpec>>? $item;
   final Prop<StyleSpec<RemixDividerSpec>>? $divider;
 
   const RemixMenuStyler.create({
     Prop<StyleSpec<RemixMenuTriggerSpec>>? trigger,
     Prop<StyleSpec<FlexBoxSpec>>? overlay,
+    Prop<RemixBoxEffectsSpec>? containerEffects,
     Prop<StyleSpec<RemixMenuItemSpec>>? item,
     Prop<StyleSpec<RemixDividerSpec>>? divider,
     super.variants,
@@ -1083,12 +1098,14 @@ class RemixMenuStyler extends MixStyler<RemixMenuStyler, RemixMenuSpec> {
     super.animation,
   }) : $trigger = trigger,
        $overlay = overlay,
+       $containerEffects = containerEffects,
        $item = item,
        $divider = divider;
 
   RemixMenuStyler({
     RemixMenuTriggerStyler? trigger,
     FlexBoxStyler? overlay,
+    RemixBoxEffectsMix? containerEffects,
     RemixMenuItemStyler? item,
     RemixDividerStyler? divider,
     AnimationConfig? animation,
@@ -1097,6 +1114,7 @@ class RemixMenuStyler extends MixStyler<RemixMenuStyler, RemixMenuSpec> {
   }) : this.create(
          trigger: Prop.maybeMix(trigger),
          overlay: Prop.maybeMix(overlay),
+         containerEffects: Prop.maybeMix(containerEffects),
          item: Prop.maybeMix(item),
          divider: Prop.maybeMix(divider),
          variants: variants,
@@ -1108,6 +1126,8 @@ class RemixMenuStyler extends MixStyler<RemixMenuStyler, RemixMenuSpec> {
       RemixMenuStyler().trigger(value);
   factory RemixMenuStyler.overlay(FlexBoxStyler value) =>
       RemixMenuStyler().overlay(value);
+  factory RemixMenuStyler.containerEffects(RemixBoxEffectsMix value) =>
+      RemixMenuStyler().containerEffects(value);
   factory RemixMenuStyler.item(RemixMenuItemStyler value) =>
       RemixMenuStyler().item(value);
   factory RemixMenuStyler.divider(RemixDividerStyler value) =>
@@ -1121,6 +1141,11 @@ class RemixMenuStyler extends MixStyler<RemixMenuStyler, RemixMenuSpec> {
   /// Sets the overlay.
   RemixMenuStyler overlay(FlexBoxStyler value) {
     return merge(RemixMenuStyler(overlay: value));
+  }
+
+  /// Sets the containerEffects.
+  RemixMenuStyler containerEffects(RemixBoxEffectsMix value) {
+    return merge(RemixMenuStyler(containerEffects: value));
   }
 
   /// Sets the item.
@@ -1162,6 +1187,10 @@ class RemixMenuStyler extends MixStyler<RemixMenuStyler, RemixMenuSpec> {
     return RemixMenuStyler.create(
       trigger: MixOps.merge($trigger, other?.$trigger),
       overlay: MixOps.merge($overlay, other?.$overlay),
+      containerEffects: MixOps.merge(
+        $containerEffects,
+        other?.$containerEffects,
+      ),
       item: MixOps.merge($item, other?.$item),
       divider: MixOps.merge($divider, other?.$divider),
       variants: MixOps.mergeVariants($variants, other?.$variants),
@@ -1176,6 +1205,7 @@ class RemixMenuStyler extends MixStyler<RemixMenuStyler, RemixMenuSpec> {
     final spec = RemixMenuSpec(
       trigger: MixOps.resolve(context, $trigger),
       overlay: MixOps.resolve(context, $overlay),
+      containerEffects: MixOps.resolve(context, $containerEffects),
       item: MixOps.resolve(context, $item),
       divider: MixOps.resolve(context, $divider),
     );
@@ -1193,6 +1223,7 @@ class RemixMenuStyler extends MixStyler<RemixMenuStyler, RemixMenuSpec> {
     properties
       ..add(DiagnosticsProperty('trigger', $trigger))
       ..add(DiagnosticsProperty('overlay', $overlay))
+      ..add(DiagnosticsProperty('containerEffects', $containerEffects))
       ..add(DiagnosticsProperty('item', $item))
       ..add(DiagnosticsProperty('divider', $divider));
   }
@@ -1201,6 +1232,7 @@ class RemixMenuStyler extends MixStyler<RemixMenuStyler, RemixMenuSpec> {
   List<Object?> get props => [
     $trigger,
     $overlay,
+    $containerEffects,
     $item,
     $divider,
     $animation,

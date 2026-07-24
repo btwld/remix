@@ -33,7 +33,7 @@ melos:
 
     generate:check:
       exec: dart run tool/check_generated.dart
-      description: Delete and reproducibly regenerate committed Remix artifacts
+      description: Regenerate Remix sources and fail only on generated drift
       packageFilters:
         scope: remix
 
@@ -46,5 +46,19 @@ melos:
     ci:
       steps:
         - generate:check
+        - docs:check
+        - fortal:parity:check
         - test:flutter
-      description: Verify generated sources, then run Flutter and Dart tests
+      description: Verify generated sources, docs, Fortal parity, and tests
+
+    fortal:parity:check:
+      exec: dart run tool/fortal_parity/check.dart
+      description: Verify the pinned Radix Themes 3.3.0 parity contract and coverage
+      packageFilters:
+        scope: remix
+
+    docs:check:
+      exec: dart run tool/validate_docs.dart
+      description: Reject retired APIs in docs and examples, then analyze MDX Dart snippets
+      packageFilters:
+        scope: remix

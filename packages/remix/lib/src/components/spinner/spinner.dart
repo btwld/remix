@@ -1,7 +1,6 @@
 library remix_spinner;
 
 import 'dart:math';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
