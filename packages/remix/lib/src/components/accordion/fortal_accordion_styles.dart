@@ -7,6 +7,11 @@ enum FortalAccordionSize { size1, size2, size3 }
 enum FortalAccordionVariant { surface, soft }
 
 /// Fortal-themed preset for [RemixAccordion].
+@MixWidget(
+  name: 'FortalAccordion',
+  target: RemixAccordion.new,
+  factoryParameters: .only({'variant', 'size'}),
+)
 RemixAccordionStyler fortalAccordionStyler({
   FortalAccordionVariant variant = .surface,
   FortalAccordionSize size = .size2,
@@ -98,130 +103,3 @@ RemixAccordionStyler _fortalAccordionSizeStyler(FortalAccordionSize size) {
 }
 
 /// Fortal-themed preset for [RemixAccordion].
-class FortalAccordion<T> extends StatelessWidget {
-  const FortalAccordion({
-    super.key,
-    this.variant = .surface,
-    this.size = .size2,
-    required this.value,
-    required this.child,
-    this.title,
-    this.leadingIcon,
-    this.trailingIcon,
-    this.builder,
-    this.enabled = true,
-    this.mouseCursor = SystemMouseCursors.click,
-    this.enableFeedback = true,
-    this.autofocus = false,
-    this.focusNode,
-    this.onFocusChange,
-    this.onHoverChange,
-    this.onPressChange,
-    this.semanticLabel,
-    this.transitionBuilder,
-  });
-
-  const FortalAccordion.surface({
-    super.key,
-    this.size = .size2,
-    required this.value,
-    required this.child,
-    this.title,
-    this.leadingIcon,
-    this.trailingIcon,
-    this.builder,
-    this.enabled = true,
-    this.mouseCursor = SystemMouseCursors.click,
-    this.enableFeedback = true,
-    this.autofocus = false,
-    this.focusNode,
-    this.onFocusChange,
-    this.onHoverChange,
-    this.onPressChange,
-    this.semanticLabel,
-    this.transitionBuilder,
-  }) : variant = FortalAccordionVariant.surface;
-
-  const FortalAccordion.soft({
-    super.key,
-    this.size = .size2,
-    required this.value,
-    required this.child,
-    this.title,
-    this.leadingIcon,
-    this.trailingIcon,
-    this.builder,
-    this.enabled = true,
-    this.mouseCursor = SystemMouseCursors.click,
-    this.enableFeedback = true,
-    this.autofocus = false,
-    this.focusNode,
-    this.onFocusChange,
-    this.onHoverChange,
-    this.onPressChange,
-    this.semanticLabel,
-    this.transitionBuilder,
-  }) : variant = FortalAccordionVariant.soft;
-
-  final FortalAccordionVariant variant;
-
-  final FortalAccordionSize size;
-
-  final T value;
-
-  final Widget child;
-
-  final String? title;
-
-  final IconData? leadingIcon;
-
-  final IconData? trailingIcon;
-
-  final NakedAccordionTriggerBuilder<T>? builder;
-
-  final bool enabled;
-
-  final MouseCursor mouseCursor;
-
-  final bool enableFeedback;
-
-  final bool autofocus;
-
-  final FocusNode? focusNode;
-
-  final ValueChanged<bool>? onFocusChange;
-
-  final ValueChanged<bool>? onHoverChange;
-
-  final ValueChanged<bool>? onPressChange;
-
-  final String? semanticLabel;
-
-  final Widget Function(Widget, Animation<double>)? transitionBuilder;
-
-  @override
-  Widget build(BuildContext context) {
-    return fortalAccordionStyler(
-      variant: this.variant,
-      size: this.size,
-    ).call<T>(
-      key: this.key,
-      value: this.value,
-      title: this.title,
-      leadingIcon: this.leadingIcon,
-      trailingIcon: this.trailingIcon,
-      enabled: this.enabled,
-      mouseCursor: this.mouseCursor,
-      enableFeedback: this.enableFeedback,
-      autofocus: this.autofocus,
-      focusNode: this.focusNode,
-      onFocusChange: this.onFocusChange,
-      onHoverChange: this.onHoverChange,
-      onPressChange: this.onPressChange,
-      semanticLabel: this.semanticLabel,
-      transitionBuilder: this.transitionBuilder,
-      child: this.child,
-      builder: this.builder,
-    );
-  }
-}

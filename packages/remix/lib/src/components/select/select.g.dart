@@ -261,6 +261,138 @@ mixin _$RemixSelectMenuItemSpec
 typedef _$RemixSelectMenuItemSpecMethods = _$RemixSelectMenuItemSpec; // ignore: unused_element
 
 // **************************************************************************
+// MixWidgetGenerator
+// **************************************************************************
+
+/// Fortal-themed preset for [RemixSelect].
+class FortalSelect<T> extends StatelessWidget {
+  const FortalSelect({
+    super.key,
+    this.variant = .surface,
+    this.size = .size2,
+    required this.trigger,
+    required this.items,
+    this.selectedValue,
+    this.positioning = const OverlayPositionConfig(
+      targetAnchor: .bottomCenter,
+      followerAnchor: .topCenter,
+    ),
+    this.onChanged,
+    this.onOpen,
+    this.onClose,
+    this.enabled = true,
+    this.semanticLabel,
+    this.closeOnSelect = true,
+    this.focusNode,
+  });
+
+  /// Surface-backed trigger with border.
+  const FortalSelect.surface({
+    super.key,
+    this.size = .size2,
+    required this.trigger,
+    required this.items,
+    this.selectedValue,
+    this.positioning = const OverlayPositionConfig(
+      targetAnchor: .bottomCenter,
+      followerAnchor: .topCenter,
+    ),
+    this.onChanged,
+    this.onOpen,
+    this.onClose,
+    this.enabled = true,
+    this.semanticLabel,
+    this.closeOnSelect = true,
+    this.focusNode,
+  }) : variant = FortalSelectVariant.surface;
+
+  /// Soft accent trigger.
+  const FortalSelect.soft({
+    super.key,
+    this.size = .size2,
+    required this.trigger,
+    required this.items,
+    this.selectedValue,
+    this.positioning = const OverlayPositionConfig(
+      targetAnchor: .bottomCenter,
+      followerAnchor: .topCenter,
+    ),
+    this.onChanged,
+    this.onOpen,
+    this.onClose,
+    this.enabled = true,
+    this.semanticLabel,
+    this.closeOnSelect = true,
+    this.focusNode,
+  }) : variant = FortalSelectVariant.soft;
+
+  /// Transparent trigger.
+  const FortalSelect.ghost({
+    super.key,
+    this.size = .size2,
+    required this.trigger,
+    required this.items,
+    this.selectedValue,
+    this.positioning = const OverlayPositionConfig(
+      targetAnchor: .bottomCenter,
+      followerAnchor: .topCenter,
+    ),
+    this.onChanged,
+    this.onOpen,
+    this.onClose,
+    this.enabled = true,
+    this.semanticLabel,
+    this.closeOnSelect = true,
+    this.focusNode,
+  }) : variant = FortalSelectVariant.ghost;
+
+  final FortalSelectVariant variant;
+
+  final FortalSelectSize size;
+
+  final RemixSelectTrigger trigger;
+
+  final List<RemixSelectItem<T>> items;
+
+  final T? selectedValue;
+
+  final OverlayPositionConfig positioning;
+
+  final ValueChanged<T?>? onChanged;
+
+  final VoidCallback? onOpen;
+
+  final VoidCallback? onClose;
+
+  final bool enabled;
+
+  final String? semanticLabel;
+
+  final bool closeOnSelect;
+
+  final FocusNode? focusNode;
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixSelect<T>(
+      key: this.key,
+      style: fortalSelectStyler(variant: this.variant, size: this.size),
+      trigger: this.trigger,
+      items: this.items,
+      selectedValue: this.selectedValue,
+      positioning: this.positioning,
+      onChanged: this.onChanged,
+      onOpen: this.onOpen,
+      onClose: this.onClose,
+      enabled: this.enabled,
+      semanticLabel: this.semanticLabel,
+      closeOnSelect: this.closeOnSelect,
+      focusNode: this.focusNode,
+    );
+  }
+}
+
+// **************************************************************************
 // SpecStylerGenerator
 // **************************************************************************
 

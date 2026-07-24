@@ -86,6 +86,91 @@ mixin _$RemixSwitchSpec implements Spec<RemixSwitchSpec>, Diagnosticable {
 typedef _$RemixSwitchSpecMethods = _$RemixSwitchSpec; // ignore: unused_element
 
 // **************************************************************************
+// MixWidgetGenerator
+// **************************************************************************
+
+/// Fortal-themed preset for [RemixSwitch].
+class FortalSwitch extends StatelessWidget {
+  const FortalSwitch({
+    super.key,
+    this.variant = .surface,
+    this.size = .size2,
+    required this.selected,
+    this.onChanged,
+    this.enabled = true,
+    this.enableFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
+    this.semanticLabel,
+    this.mouseCursor = SystemMouseCursors.click,
+  });
+
+  /// Surface treatment with a visible border.
+  const FortalSwitch.surface({
+    super.key,
+    this.size = .size2,
+    required this.selected,
+    this.onChanged,
+    this.enabled = true,
+    this.enableFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
+    this.semanticLabel,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = FortalSwitchVariant.surface;
+
+  /// Softer accent treatment.
+  const FortalSwitch.soft({
+    super.key,
+    this.size = .size2,
+    required this.selected,
+    this.onChanged,
+    this.enabled = true,
+    this.enableFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
+    this.semanticLabel,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = FortalSwitchVariant.soft;
+
+  final FortalSwitchVariant variant;
+
+  final FortalSwitchSize size;
+
+  final bool selected;
+
+  final ValueChanged<bool>? onChanged;
+
+  final bool enabled;
+
+  final bool enableFeedback;
+
+  final FocusNode? focusNode;
+
+  final bool autofocus;
+
+  final String? semanticLabel;
+
+  final MouseCursor mouseCursor;
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixSwitch(
+      key: this.key,
+      style: fortalSwitchStyler(variant: this.variant, size: this.size),
+      selected: this.selected,
+      onChanged: this.onChanged,
+      enabled: this.enabled,
+      enableFeedback: this.enableFeedback,
+      focusNode: this.focusNode,
+      autofocus: this.autofocus,
+      semanticLabel: this.semanticLabel,
+      mouseCursor: this.mouseCursor,
+    );
+  }
+}
+
+// **************************************************************************
 // SpecStylerGenerator
 // **************************************************************************
 

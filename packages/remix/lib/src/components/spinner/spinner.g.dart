@@ -117,6 +117,25 @@ mixin _$RemixSpinnerSpec implements Spec<RemixSpinnerSpec>, Diagnosticable {
 typedef _$RemixSpinnerSpecMethods = _$RemixSpinnerSpec; // ignore: unused_element
 
 // **************************************************************************
+// MixWidgetGenerator
+// **************************************************************************
+
+/// Fortal-themed preset for [RemixSpinner].
+class FortalSpinner extends StatelessWidget {
+  const FortalSpinner({super.key, this.size = .size2});
+
+  final FortalSpinnerSize size;
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixSpinner(
+      key: this.key,
+      style: fortalSpinnerStyler(size: this.size),
+    );
+  }
+}
+
+// **************************************************************************
 // SpecStylerGenerator
 // **************************************************************************
 

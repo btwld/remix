@@ -32,10 +32,10 @@ melos:
         scope: remix
 
     generate:check:
-      steps:
-        - generate
-        - git diff --exit-code -- packages/remix/lib
-      description: Regenerate Remix sources and fail on generated drift
+      exec: dart run tool/check_generated.dart
+      description: Delete and reproducibly regenerate committed Remix artifacts
+      packageFilters:
+        scope: remix
 
     test:flutter:
       exec: flutter test --reporter=failures-only

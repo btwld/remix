@@ -74,6 +74,44 @@ mixin _$RemixCardSpec implements Spec<RemixCardSpec>, Diagnosticable {
 typedef _$RemixCardSpecMethods = _$RemixCardSpec; // ignore: unused_element
 
 // **************************************************************************
+// MixWidgetGenerator
+// **************************************************************************
+
+/// Fortal-themed preset for [RemixCard].
+class FortalCard extends StatelessWidget {
+  const FortalCard({
+    super.key,
+    this.variant = .surface,
+    this.size = .size2,
+    this.child,
+  });
+
+  const FortalCard.surface({super.key, this.size = .size2, this.child})
+    : variant = FortalCardVariant.surface;
+
+  const FortalCard.classic({super.key, this.size = .size2, this.child})
+    : variant = FortalCardVariant.classic;
+
+  const FortalCard.ghost({super.key, this.size = .size2, this.child})
+    : variant = FortalCardVariant.ghost;
+
+  final FortalCardVariant variant;
+
+  final FortalCardSize size;
+
+  final Widget? child;
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixCard(
+      key: this.key,
+      style: fortalCardStyler(variant: this.variant, size: this.size),
+      child: this.child,
+    );
+  }
+}
+
+// **************************************************************************
 // SpecStylerGenerator
 // **************************************************************************
 

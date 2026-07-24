@@ -86,6 +86,75 @@ mixin _$RemixBadgeSpec implements Spec<RemixBadgeSpec>, Diagnosticable {
 typedef _$RemixBadgeSpecMethods = _$RemixBadgeSpec; // ignore: unused_element
 
 // **************************************************************************
+// MixWidgetGenerator
+// **************************************************************************
+
+/// Fortal-themed preset for [RemixBadge].
+class FortalBadge extends StatelessWidget {
+  const FortalBadge({
+    super.key,
+    this.variant = .solid,
+    this.size = .size2,
+    this.label,
+    this.child,
+    this.labelBuilder,
+  });
+
+  const FortalBadge.solid({
+    super.key,
+    this.size = .size2,
+    this.label,
+    this.child,
+    this.labelBuilder,
+  }) : variant = FortalBadgeVariant.solid;
+
+  const FortalBadge.soft({
+    super.key,
+    this.size = .size2,
+    this.label,
+    this.child,
+    this.labelBuilder,
+  }) : variant = FortalBadgeVariant.soft;
+
+  const FortalBadge.surface({
+    super.key,
+    this.size = .size2,
+    this.label,
+    this.child,
+    this.labelBuilder,
+  }) : variant = FortalBadgeVariant.surface;
+
+  const FortalBadge.outline({
+    super.key,
+    this.size = .size2,
+    this.label,
+    this.child,
+    this.labelBuilder,
+  }) : variant = FortalBadgeVariant.outline;
+
+  final FortalBadgeVariant variant;
+
+  final FortalBadgeSize size;
+
+  final String? label;
+
+  final Widget? child;
+
+  final RemixBadgeLabelBuilder? labelBuilder;
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixBadge(
+      key: this.key,
+      style: fortalBadgeStyler(variant: this.variant, size: this.size),
+      label: this.label,
+      child: this.child,
+      labelBuilder: this.labelBuilder,
+    );
+  }
+}
+
+// **************************************************************************
 // SpecStylerGenerator
 // **************************************************************************
 

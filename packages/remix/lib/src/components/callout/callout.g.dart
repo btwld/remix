@@ -91,6 +91,67 @@ mixin _$RemixCalloutSpec implements Spec<RemixCalloutSpec>, Diagnosticable {
 typedef _$RemixCalloutSpecMethods = _$RemixCalloutSpec; // ignore: unused_element
 
 // **************************************************************************
+// MixWidgetGenerator
+// **************************************************************************
+
+/// Fortal-themed preset for [RemixCallout].
+class FortalCallout extends StatelessWidget {
+  const FortalCallout({
+    super.key,
+    this.variant = .surface,
+    this.size = .size2,
+    this.text,
+    this.icon,
+    this.child,
+  });
+
+  const FortalCallout.outline({
+    super.key,
+    this.size = .size2,
+    this.text,
+    this.icon,
+    this.child,
+  }) : variant = FortalCalloutVariant.outline;
+
+  const FortalCallout.surface({
+    super.key,
+    this.size = .size2,
+    this.text,
+    this.icon,
+    this.child,
+  }) : variant = FortalCalloutVariant.surface;
+
+  const FortalCallout.soft({
+    super.key,
+    this.size = .size2,
+    this.text,
+    this.icon,
+    this.child,
+  }) : variant = FortalCalloutVariant.soft;
+
+  final FortalCalloutVariant variant;
+
+  final FortalCalloutSize size;
+
+  final String? text;
+
+  final IconData? icon;
+
+  final Widget? child;
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixCallout(
+      key: this.key,
+      style: fortalCalloutStyler(variant: this.variant, size: this.size),
+      text: this.text,
+      icon: this.icon,
+      child: this.child,
+    );
+  }
+}
+
+// **************************************************************************
 // SpecStylerGenerator
 // **************************************************************************
 

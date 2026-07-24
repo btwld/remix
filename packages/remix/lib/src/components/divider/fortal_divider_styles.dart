@@ -13,6 +13,11 @@ enum FortalDividerSize {
 }
 
 /// Fortal-themed preset for [RemixDivider].
+@MixWidget(
+  name: 'FortalDivider',
+  target: RemixDivider.new,
+  factoryParameters: .only({'size'}),
+)
 RemixDividerStyler fortalDividerStyler({FortalDividerSize size = .size1}) {
   return RemixDividerStyler()
       .color(FortalTokens.gray6())
@@ -28,13 +33,3 @@ RemixDividerStyler _fortalDividerSizeStyler(FortalDividerSize size) {
 }
 
 /// Fortal-themed preset for [RemixDivider].
-class FortalDivider extends StatelessWidget {
-  const FortalDivider({super.key, this.size = .size1});
-
-  final FortalDividerSize size;
-
-  @override
-  Widget build(BuildContext context) {
-    return fortalDividerStyler(size: this.size).call(key: this.key);
-  }
-}
