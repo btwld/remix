@@ -7,6 +7,11 @@ enum FortalAvatarSize { size1, size2, size3, size4 }
 enum FortalAvatarVariant { soft, solid }
 
 /// Fortal-themed preset for [RemixAvatar].
+@MixWidget(
+  name: 'FortalAvatar',
+  target: RemixAvatar.new,
+  factoryParameters: .only({'variant', 'size'}),
+)
 RemixAvatarStyler fortalAvatarStyler({
   FortalAvatarVariant variant = .soft,
   FortalAvatarSize size = .size2,
@@ -62,85 +67,3 @@ RemixAvatarStyler _fortalAvatarSizeStyler(FortalAvatarSize size) {
 }
 
 /// Fortal-themed preset for [RemixAvatar].
-class FortalAvatar extends StatelessWidget {
-  const FortalAvatar({
-    super.key,
-    this.variant = .soft,
-    this.size = .size2,
-    this.backgroundImage,
-    this.foregroundImage,
-    this.onBackgroundImageError,
-    this.onForegroundImageError,
-    this.child,
-    this.label,
-    this.labelBuilder,
-    this.icon,
-    this.iconBuilder,
-  });
-
-  const FortalAvatar.soft({
-    super.key,
-    this.size = .size2,
-    this.backgroundImage,
-    this.foregroundImage,
-    this.onBackgroundImageError,
-    this.onForegroundImageError,
-    this.child,
-    this.label,
-    this.labelBuilder,
-    this.icon,
-    this.iconBuilder,
-  }) : variant = FortalAvatarVariant.soft;
-
-  const FortalAvatar.solid({
-    super.key,
-    this.size = .size2,
-    this.backgroundImage,
-    this.foregroundImage,
-    this.onBackgroundImageError,
-    this.onForegroundImageError,
-    this.child,
-    this.label,
-    this.labelBuilder,
-    this.icon,
-    this.iconBuilder,
-  }) : variant = FortalAvatarVariant.solid;
-
-  final FortalAvatarVariant variant;
-
-  final FortalAvatarSize size;
-
-  final ImageProvider<Object>? backgroundImage;
-
-  final ImageProvider<Object>? foregroundImage;
-
-  final ImageErrorListener? onBackgroundImageError;
-
-  final ImageErrorListener? onForegroundImageError;
-
-  final Widget? child;
-
-  final String? label;
-
-  final RemixAvatarLabelBuilder? labelBuilder;
-
-  final IconData? icon;
-
-  final RemixAvatarIconBuilder? iconBuilder;
-
-  @override
-  Widget build(BuildContext context) {
-    return fortalAvatarStyler(variant: this.variant, size: this.size).call(
-      key: this.key,
-      backgroundImage: this.backgroundImage,
-      foregroundImage: this.foregroundImage,
-      onBackgroundImageError: this.onBackgroundImageError,
-      onForegroundImageError: this.onForegroundImageError,
-      label: this.label,
-      labelBuilder: this.labelBuilder,
-      icon: this.icon,
-      iconBuilder: this.iconBuilder,
-      child: this.child,
-    );
-  }
-}

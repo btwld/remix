@@ -92,6 +92,182 @@ mixin _$RemixIconButtonSpec
 typedef _$RemixIconButtonSpecMethods = _$RemixIconButtonSpec; // ignore: unused_element
 
 // **************************************************************************
+// MixWidgetGenerator
+// **************************************************************************
+
+/// Fortal-themed preset for [RemixIconButton].
+class FortalIconButton extends StatelessWidget {
+  const FortalIconButton({
+    super.key,
+    this.variant = .solid,
+    this.size = .size2,
+    required this.icon,
+    this.iconBuilder,
+    this.loadingBuilder,
+    this.loading = false,
+    this.enabled = true,
+    this.enableFeedback = true,
+    this.onPressed,
+    this.onLongPress,
+    this.focusNode,
+    this.autofocus = false,
+    this.semanticLabel,
+    this.semanticHint,
+    this.excludeSemantics = false,
+    this.mouseCursor = SystemMouseCursors.click,
+  });
+
+  const FortalIconButton.solid({
+    super.key,
+    this.size = .size2,
+    required this.icon,
+    this.iconBuilder,
+    this.loadingBuilder,
+    this.loading = false,
+    this.enabled = true,
+    this.enableFeedback = true,
+    this.onPressed,
+    this.onLongPress,
+    this.focusNode,
+    this.autofocus = false,
+    this.semanticLabel,
+    this.semanticHint,
+    this.excludeSemantics = false,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = FortalIconButtonVariant.solid;
+
+  const FortalIconButton.soft({
+    super.key,
+    this.size = .size2,
+    required this.icon,
+    this.iconBuilder,
+    this.loadingBuilder,
+    this.loading = false,
+    this.enabled = true,
+    this.enableFeedback = true,
+    this.onPressed,
+    this.onLongPress,
+    this.focusNode,
+    this.autofocus = false,
+    this.semanticLabel,
+    this.semanticHint,
+    this.excludeSemantics = false,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = FortalIconButtonVariant.soft;
+
+  const FortalIconButton.surface({
+    super.key,
+    this.size = .size2,
+    required this.icon,
+    this.iconBuilder,
+    this.loadingBuilder,
+    this.loading = false,
+    this.enabled = true,
+    this.enableFeedback = true,
+    this.onPressed,
+    this.onLongPress,
+    this.focusNode,
+    this.autofocus = false,
+    this.semanticLabel,
+    this.semanticHint,
+    this.excludeSemantics = false,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = FortalIconButtonVariant.surface;
+
+  const FortalIconButton.outline({
+    super.key,
+    this.size = .size2,
+    required this.icon,
+    this.iconBuilder,
+    this.loadingBuilder,
+    this.loading = false,
+    this.enabled = true,
+    this.enableFeedback = true,
+    this.onPressed,
+    this.onLongPress,
+    this.focusNode,
+    this.autofocus = false,
+    this.semanticLabel,
+    this.semanticHint,
+    this.excludeSemantics = false,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = FortalIconButtonVariant.outline;
+
+  const FortalIconButton.ghost({
+    super.key,
+    this.size = .size2,
+    required this.icon,
+    this.iconBuilder,
+    this.loadingBuilder,
+    this.loading = false,
+    this.enabled = true,
+    this.enableFeedback = true,
+    this.onPressed,
+    this.onLongPress,
+    this.focusNode,
+    this.autofocus = false,
+    this.semanticLabel,
+    this.semanticHint,
+    this.excludeSemantics = false,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = FortalIconButtonVariant.ghost;
+
+  final FortalIconButtonVariant variant;
+
+  final FortalIconButtonSize size;
+
+  final IconData icon;
+
+  final RemixIconButtonIconBuilder? iconBuilder;
+
+  final RemixIconButtonLoadingBuilder? loadingBuilder;
+
+  final bool loading;
+
+  final bool enabled;
+
+  final bool enableFeedback;
+
+  final VoidCallback? onPressed;
+
+  final VoidCallback? onLongPress;
+
+  final FocusNode? focusNode;
+
+  final bool autofocus;
+
+  final String? semanticLabel;
+
+  final String? semanticHint;
+
+  final bool excludeSemantics;
+
+  final MouseCursor mouseCursor;
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixIconButton(
+      key: this.key,
+      style: fortalIconButtonStyler(variant: this.variant, size: this.size),
+      icon: this.icon,
+      iconBuilder: this.iconBuilder,
+      loadingBuilder: this.loadingBuilder,
+      loading: this.loading,
+      enabled: this.enabled,
+      enableFeedback: this.enableFeedback,
+      onPressed: this.onPressed,
+      onLongPress: this.onLongPress,
+      focusNode: this.focusNode,
+      autofocus: this.autofocus,
+      semanticLabel: this.semanticLabel,
+      semanticHint: this.semanticHint,
+      excludeSemantics: this.excludeSemantics,
+      mouseCursor: this.mouseCursor,
+    );
+  }
+}
+
+// **************************************************************************
 // SpecStylerGenerator
 // **************************************************************************
 

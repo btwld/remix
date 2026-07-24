@@ -86,6 +86,115 @@ mixin _$RemixCheckboxSpec implements Spec<RemixCheckboxSpec>, Diagnosticable {
 typedef _$RemixCheckboxSpecMethods = _$RemixCheckboxSpec; // ignore: unused_element
 
 // **************************************************************************
+// MixWidgetGenerator
+// **************************************************************************
+
+/// Fortal-themed preset for [RemixCheckbox].
+class FortalCheckbox extends StatelessWidget {
+  const FortalCheckbox({
+    super.key,
+    this.variant = .surface,
+    this.size = .size2,
+    required this.selected,
+    this.onChanged,
+    this.enabled = true,
+    this.tristate = false,
+    this.checkedIcon = Icons.check_rounded,
+    this.uncheckedIcon,
+    this.indeterminateIcon = Icons.horizontal_rule,
+    this.focusNode,
+    this.autofocus = false,
+    this.enableFeedback = true,
+    this.semanticLabel,
+    this.mouseCursor = SystemMouseCursors.click,
+  });
+
+  /// Surface treatment with neutral border.
+  const FortalCheckbox.surface({
+    super.key,
+    this.size = .size2,
+    required this.selected,
+    this.onChanged,
+    this.enabled = true,
+    this.tristate = false,
+    this.checkedIcon = Icons.check_rounded,
+    this.uncheckedIcon,
+    this.indeterminateIcon = Icons.horizontal_rule,
+    this.focusNode,
+    this.autofocus = false,
+    this.enableFeedback = true,
+    this.semanticLabel,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = FortalCheckboxVariant.surface;
+
+  /// Soft accent treatment.
+  const FortalCheckbox.soft({
+    super.key,
+    this.size = .size2,
+    required this.selected,
+    this.onChanged,
+    this.enabled = true,
+    this.tristate = false,
+    this.checkedIcon = Icons.check_rounded,
+    this.uncheckedIcon,
+    this.indeterminateIcon = Icons.horizontal_rule,
+    this.focusNode,
+    this.autofocus = false,
+    this.enableFeedback = true,
+    this.semanticLabel,
+    this.mouseCursor = SystemMouseCursors.click,
+  }) : variant = FortalCheckboxVariant.soft;
+
+  final FortalCheckboxVariant variant;
+
+  final FortalCheckboxSize size;
+
+  final bool? selected;
+
+  final ValueChanged<bool?>? onChanged;
+
+  final bool enabled;
+
+  final bool tristate;
+
+  final IconData checkedIcon;
+
+  final IconData? uncheckedIcon;
+
+  final IconData indeterminateIcon;
+
+  final FocusNode? focusNode;
+
+  final bool autofocus;
+
+  final bool enableFeedback;
+
+  final String? semanticLabel;
+
+  final MouseCursor mouseCursor;
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixCheckbox(
+      key: this.key,
+      style: fortalCheckboxStyler(variant: this.variant, size: this.size),
+      selected: this.selected,
+      onChanged: this.onChanged,
+      enabled: this.enabled,
+      tristate: this.tristate,
+      checkedIcon: this.checkedIcon,
+      uncheckedIcon: this.uncheckedIcon,
+      indeterminateIcon: this.indeterminateIcon,
+      focusNode: this.focusNode,
+      autofocus: this.autofocus,
+      enableFeedback: this.enableFeedback,
+      semanticLabel: this.semanticLabel,
+      mouseCursor: this.mouseCursor,
+    );
+  }
+}
+
+// **************************************************************************
 // SpecStylerGenerator
 // **************************************************************************
 

@@ -7,6 +7,11 @@ enum FortalBadgeSize { size1, size2, size3 }
 enum FortalBadgeVariant { solid, soft, surface, outline }
 
 /// Fortal-themed preset for [RemixBadge].
+@MixWidget(
+  name: 'FortalBadge',
+  target: RemixBadge.new,
+  factoryParameters: .only({'variant', 'size'}),
+)
 RemixBadgeStyler fortalBadgeStyler({
   FortalBadgeVariant variant = .solid,
   FortalBadgeSize size = .size2,
@@ -82,65 +87,3 @@ RemixBadgeStyler _fortalBadgeSizeStyler(FortalBadgeSize size) {
 }
 
 /// Fortal-themed preset for [RemixBadge].
-class FortalBadge extends StatelessWidget {
-  const FortalBadge({
-    super.key,
-    this.variant = .solid,
-    this.size = .size2,
-    this.label,
-    this.child,
-    this.labelBuilder,
-  });
-
-  const FortalBadge.solid({
-    super.key,
-    this.size = .size2,
-    this.label,
-    this.child,
-    this.labelBuilder,
-  }) : variant = FortalBadgeVariant.solid;
-
-  const FortalBadge.soft({
-    super.key,
-    this.size = .size2,
-    this.label,
-    this.child,
-    this.labelBuilder,
-  }) : variant = FortalBadgeVariant.soft;
-
-  const FortalBadge.surface({
-    super.key,
-    this.size = .size2,
-    this.label,
-    this.child,
-    this.labelBuilder,
-  }) : variant = FortalBadgeVariant.surface;
-
-  const FortalBadge.outline({
-    super.key,
-    this.size = .size2,
-    this.label,
-    this.child,
-    this.labelBuilder,
-  }) : variant = FortalBadgeVariant.outline;
-
-  final FortalBadgeVariant variant;
-
-  final FortalBadgeSize size;
-
-  final String? label;
-
-  final Widget? child;
-
-  final RemixBadgeLabelBuilder? labelBuilder;
-
-  @override
-  Widget build(BuildContext context) {
-    return fortalBadgeStyler(variant: this.variant, size: this.size).call(
-      key: this.key,
-      label: this.label,
-      labelBuilder: this.labelBuilder,
-      child: this.child,
-    );
-  }
-}

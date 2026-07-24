@@ -107,6 +107,109 @@ mixin _$RemixSliderSpec implements Spec<RemixSliderSpec>, Diagnosticable {
 typedef _$RemixSliderSpecMethods = _$RemixSliderSpec; // ignore: unused_element
 
 // **************************************************************************
+// MixWidgetGenerator
+// **************************************************************************
+
+/// Fortal-themed preset for [RemixSlider].
+class FortalSlider extends StatelessWidget {
+  const FortalSlider({
+    super.key,
+    this.variant = .surface,
+    this.size = .size2,
+    required this.value,
+    this.onChanged,
+    this.onChangeStart,
+    this.onChangeEnd,
+    this.min = 0.0,
+    this.max = 1.0,
+    this.enabled = true,
+    this.enableFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
+    this.snapDivisions,
+  });
+
+  /// Neutral track with the active accent indicator.
+  const FortalSlider.surface({
+    super.key,
+    this.size = .size2,
+    required this.value,
+    this.onChanged,
+    this.onChangeStart,
+    this.onChangeEnd,
+    this.min = 0.0,
+    this.max = 1.0,
+    this.enabled = true,
+    this.enableFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
+    this.snapDivisions,
+  }) : variant = FortalSliderVariant.surface;
+
+  /// Softer accent treatment for lower-emphasis controls.
+  const FortalSlider.soft({
+    super.key,
+    this.size = .size2,
+    required this.value,
+    this.onChanged,
+    this.onChangeStart,
+    this.onChangeEnd,
+    this.min = 0.0,
+    this.max = 1.0,
+    this.enabled = true,
+    this.enableFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
+    this.snapDivisions,
+  }) : variant = FortalSliderVariant.soft;
+
+  final FortalSliderVariant variant;
+
+  final FortalSliderSize size;
+
+  final double value;
+
+  final ValueChanged<double>? onChanged;
+
+  final ValueChanged<double>? onChangeStart;
+
+  final ValueChanged<double>? onChangeEnd;
+
+  final double min;
+
+  final double max;
+
+  final bool enabled;
+
+  final bool enableFeedback;
+
+  final FocusNode? focusNode;
+
+  final bool autofocus;
+
+  final int? snapDivisions;
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixSlider(
+      key: this.key,
+      style: fortalSliderStyler(variant: this.variant, size: this.size),
+      value: this.value,
+      onChanged: this.onChanged,
+      onChangeStart: this.onChangeStart,
+      onChangeEnd: this.onChangeEnd,
+      min: this.min,
+      max: this.max,
+      enabled: this.enabled,
+      enableFeedback: this.enableFeedback,
+      focusNode: this.focusNode,
+      autofocus: this.autofocus,
+      snapDivisions: this.snapDivisions,
+    );
+  }
+}
+
+// **************************************************************************
 // SpecStylerGenerator
 // **************************************************************************
 

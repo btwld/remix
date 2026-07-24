@@ -7,6 +7,11 @@ enum FortalCalloutSize { size1, size2, size3 }
 enum FortalCalloutVariant { outline, surface, soft }
 
 /// Fortal-themed preset for [RemixCallout].
+@MixWidget(
+  name: 'FortalCallout',
+  target: RemixCallout.new,
+  factoryParameters: .only({'variant', 'size'}),
+)
 RemixCalloutStyler fortalCalloutStyler({
   FortalCalloutVariant variant = .surface,
   FortalCalloutSize size = .size2,
@@ -94,55 +99,3 @@ RemixCalloutStyler _fortalCalloutSizeStyler(FortalCalloutSize size) {
 }
 
 /// Fortal-themed preset for [RemixCallout].
-class FortalCallout extends StatelessWidget {
-  const FortalCallout({
-    super.key,
-    this.variant = .surface,
-    this.size = .size2,
-    this.text,
-    this.icon,
-    this.child,
-  });
-
-  const FortalCallout.outline({
-    super.key,
-    this.size = .size2,
-    this.text,
-    this.icon,
-    this.child,
-  }) : variant = FortalCalloutVariant.outline;
-
-  const FortalCallout.surface({
-    super.key,
-    this.size = .size2,
-    this.text,
-    this.icon,
-    this.child,
-  }) : variant = FortalCalloutVariant.surface;
-
-  const FortalCallout.soft({
-    super.key,
-    this.size = .size2,
-    this.text,
-    this.icon,
-    this.child,
-  }) : variant = FortalCalloutVariant.soft;
-
-  final FortalCalloutVariant variant;
-
-  final FortalCalloutSize size;
-
-  final String? text;
-
-  final IconData? icon;
-
-  final Widget? child;
-
-  @override
-  Widget build(BuildContext context) {
-    return fortalCalloutStyler(
-      variant: this.variant,
-      size: this.size,
-    ).call(key: this.key, text: this.text, icon: this.icon, child: this.child);
-  }
-}

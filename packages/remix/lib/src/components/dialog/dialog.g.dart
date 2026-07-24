@@ -96,6 +96,49 @@ mixin _$RemixDialogSpec implements Spec<RemixDialogSpec>, Diagnosticable {
 typedef _$RemixDialogSpecMethods = _$RemixDialogSpec; // ignore: unused_element
 
 // **************************************************************************
+// MixWidgetGenerator
+// **************************************************************************
+
+/// Fortal-themed preset for [RemixDialog].
+class FortalDialog extends StatelessWidget {
+  const FortalDialog({
+    super.key,
+    this.child,
+    this.title,
+    this.description,
+    this.actions,
+    this.modal = true,
+    this.semanticLabel,
+  });
+
+  final Widget? child;
+
+  final String? title;
+
+  final String? description;
+
+  final List<Widget>? actions;
+
+  final bool modal;
+
+  final String? semanticLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixDialog(
+      key: this.key,
+      style: fortalDialogStyler(),
+      child: this.child,
+      title: this.title,
+      description: this.description,
+      actions: this.actions,
+      modal: this.modal,
+      semanticLabel: this.semanticLabel,
+    );
+  }
+}
+
+// **************************************************************************
 // SpecStylerGenerator
 // **************************************************************************
 
