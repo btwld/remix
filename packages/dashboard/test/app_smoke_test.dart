@@ -6,6 +6,7 @@ import 'package:dashboard/theme/theme_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
+import 'package:remix_chart/remix_chart.dart';
 
 void main() {
   testWidgets('renders the dashboard inside one app and one shell', (
@@ -157,16 +158,23 @@ void main() {
     expect(find.text('1–10 of 24'), findsOneWidget);
   });
 
-  testWidgets('overview presents metrics, activity, and recent orders', (
-    tester,
-  ) async {
-    await tester.pumpWidget(const DashboardApp());
+  testWidgets(
+    'overview presents metrics, charts, activity, and recent orders',
+    (tester) async {
+      await tester.pumpWidget(const DashboardApp());
 
-    expect(find.text('\$84,420'), findsOneWidget);
-    expect(find.text('Recent activity'), findsOneWidget);
-    expect(find.text('Recent orders'), findsOneWidget);
-    expect(find.text('View all'), findsOneWidget);
-  });
+      expect(find.text('\$84,420'), findsOneWidget);
+      expect(find.text('Revenue trend'), findsOneWidget);
+      expect(find.text('Order volume'), findsOneWidget);
+      expect(find.text('Channel mix'), findsOneWidget);
+      expect(find.byType(FortalLineChart), findsOneWidget);
+      expect(find.byType(FortalBarChart), findsOneWidget);
+      expect(find.byType(FortalPieChart), findsOneWidget);
+      expect(find.text('Recent activity'), findsOneWidget);
+      expect(find.text('Recent orders'), findsOneWidget);
+      expect(find.text('View all'), findsOneWidget);
+    },
+  );
 
   testWidgets('settings exposes the complete live theme controls', (
     tester,

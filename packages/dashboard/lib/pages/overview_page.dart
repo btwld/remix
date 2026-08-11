@@ -4,6 +4,7 @@ import 'package:remix/remix.dart';
 import '../data/activity.dart';
 import '../data/models.dart';
 import '../data/orders.dart';
+import '../widgets/analytics_charts.dart';
 import '../widgets/data_grid.dart';
 import '../widgets/page_header.dart';
 import '../widgets/stat_card.dart';
@@ -57,6 +58,7 @@ class OverviewPage extends StatelessWidget {
                 ),
               ],
             ),
+            const AnalyticsCharts(),
             if (constraints.maxWidth >= 1050)
               Row(
                 crossAxisAlignment: .start,

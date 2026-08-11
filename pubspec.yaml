@@ -16,6 +16,7 @@ workspace:
   - packages/example
   - packages/playground
   - packages/remix
+  - packages/remix_chart
 
 melos:
   packages:
@@ -29,16 +30,44 @@ melos:
 
   scripts:
     generate:
+      steps:
+        - generate:remix
+        - generate:remix-chart
+      description: Regenerate Remix and remix_chart sources
+
+    generate:remix:
       exec: dart run build_runner build
       description: Regenerate Remix sources
       packageFilters:
         scope: remix
+      private: true
+
+    generate:remix-chart:
+      exec: dart run build_runner build
+      description: Regenerate remix_chart sources
+      packageFilters:
+        scope: remix_chart
+      private: true
 
     generate:check:
+      steps:
+        - generate:check:remix
+        - generate:check:remix-chart
+      description: Regenerate committed sources and reject drift
+
+    generate:check:remix:
       exec: dart run tool/check_generated.dart
-      description: Regenerate Remix sources and fail only on generated drift
+      description: Regenerate Remix sources and reject drift
       packageFilters:
         scope: remix
+      private: true
+
+    generate:check:remix-chart:
+      exec: dart run tool/check_generated.dart
+      description: Regenerate remix_chart sources and reject drift
+      packageFilters:
+        scope: remix_chart
+      private: true
 
     test:flutter:
       exec: flutter test --reporter=failures-only
