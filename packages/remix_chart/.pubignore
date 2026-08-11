@@ -1,0 +1,6 @@
+.dart_tool/
+build/
+coverage/
+pubspec_overrides.yaml
+test/
+tool/
