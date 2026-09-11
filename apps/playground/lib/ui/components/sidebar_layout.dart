@@ -175,6 +175,10 @@ class _PlaygroundSidebarLayoutState extends State<PlaygroundSidebarLayout> {
       context: context,
       barrierDismissible: true,
       barrierLabel: _closeNavigationLabel,
+      // Omitting this falls back to Remix's own constant, leaving the one
+      // full-screen surface this shell paints outside the application's theme
+      // and identical in both brightnesses.
+      barrierColor: MixScope.tokenOf(PlaygroundTokens.overlay, context),
       transitionDuration: reduceMotion
           ? Duration.zero
           : const Duration(milliseconds: 250),

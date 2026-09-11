@@ -27,6 +27,7 @@ class PlaygroundThemeData {
     required this.destructiveForeground,
     required this.border,
     required this.focusRing,
+    required this.overlay,
     required this.chart1,
     required this.chart2,
     required this.chart3,
@@ -51,6 +52,7 @@ class PlaygroundThemeData {
       destructiveForeground = const Color(0xFFFFFFFF),
       border = const Color(0xFFE5E5E5),
       focusRing = const Color(0xFF4F46E5),
+      overlay = const Color(0x8A000000),
       chart1 = const Color(0xFF2563EB),
       chart2 = const Color(0xFFC2410C),
       chart3 = const Color(0xFF047857),
@@ -74,6 +76,7 @@ class PlaygroundThemeData {
       destructiveForeground = const Color(0xFFFFFFFF),
       border = const Color(0xFF404040),
       focusRing = const Color(0xFFA3A3A3),
+      overlay = const Color(0xB3000000),
       chart1 = const Color(0xFF60A5FA),
       chart2 = const Color(0xFFFB923C),
       chart3 = const Color(0xFF34D399),
@@ -123,6 +126,12 @@ class PlaygroundThemeData {
   /// Value for [PlaygroundTokens.focusRing].
   final Color focusRing;
 
+  /// Value for [PlaygroundTokens.overlay].
+  ///
+  /// Heavier in the dark theme on purpose: a black scrim separates less
+  /// from a dark page than from a light one.
+  final Color overlay;
+
   /// Value for [PlaygroundTokens.chart1].
   final Color chart1;
 
@@ -161,6 +170,7 @@ class PlaygroundThemeData {
         PlaygroundTokens.destructiveForeground: destructiveForeground,
         PlaygroundTokens.border: border,
         PlaygroundTokens.focusRing: focusRing,
+        PlaygroundTokens.overlay: overlay,
         PlaygroundTokens.chart1: chart1,
         PlaygroundTokens.chart2: chart2,
         PlaygroundTokens.chart3: chart3,
@@ -185,6 +195,7 @@ class PlaygroundThemeData {
     Color? destructiveForeground,
     Color? border,
     Color? focusRing,
+    Color? overlay,
     Color? chart1,
     Color? chart2,
     Color? chart3,
@@ -206,6 +217,7 @@ class PlaygroundThemeData {
     destructiveForeground: destructiveForeground ?? this.destructiveForeground,
     border: border ?? this.border,
     focusRing: focusRing ?? this.focusRing,
+    overlay: overlay ?? this.overlay,
     chart1: chart1 ?? this.chart1,
     chart2: chart2 ?? this.chart2,
     chart3: chart3 ?? this.chart3,
@@ -229,6 +241,7 @@ class PlaygroundThemeData {
     destructiveForeground,
     border,
     focusRing,
+    overlay,
     chart1,
     chart2,
     chart3,

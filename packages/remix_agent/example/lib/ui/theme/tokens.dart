@@ -70,6 +70,15 @@ abstract final class UiTokens {
   /// follows; nothing else reads this token.
   static const focusRing = ColorToken('ui.color.focus-ring');
 
+  /// Scrim painted behind a modal surface.
+  ///
+  /// Passed as the `barrierColor` of every modal this layer opens. Remix falls
+  /// back to an opaque-ish black when a caller omits one, which is the same
+  /// value in both brightnesses; routing it through a token is what lets the
+  /// dark theme use a heavier scrim, since black separates less from a dark
+  /// page than from a light one.
+  static const overlay = ColorToken('ui.color.overlay');
+
   /// First categorical chart series color.
   ///
   /// Charts assign [chart1] through [chart5] to series in order; see [chart].
@@ -115,6 +124,7 @@ abstract final class UiTokens {
     destructiveForeground,
     border,
     focusRing,
+    overlay,
     chart1,
     chart2,
     chart3,
