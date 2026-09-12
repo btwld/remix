@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_agent/remix_agent.dart';
+import 'package:remix_agent/src/style/live_edge.dart';
 
 import '../helpers/pump.dart';
 
@@ -17,6 +18,29 @@ int _coloredItems(WidgetTester tester, Finder root, Color color) => tester
     .length;
 
 void main() {
+  test('followThreshold defaults to 48 everywhere it is declared', () {
+    // `specs/components/transcript.yaml` records "followThreshold default 48
+    // logical pixels". That worksheet read 56 while the code shipped 48, and
+    // `public_api_test.dart` compares worksheet filenames only, so nothing
+    // caught it. Pin the constant here; the worksheet stays prose.
+    expect(const AgentTranscript(children: []).followThreshold, 48);
+    expect(
+      AgentTranscript.builder(
+        itemCount: 0,
+        itemBuilder: (_, _) => const SizedBox.shrink(),
+      ).followThreshold,
+      48,
+    );
+    expect(const AgentPlan(items: []).followThreshold, 48);
+    expect(const AgentActivity(items: []).followThreshold, 48);
+    // Plan and Activity always pass their own value down, so this default is
+    // reachable only by a host that uses the scroll view directly.
+    expect(
+      const AgentLiveEdgeScrollView(child: SizedBox.shrink()).followThreshold,
+      48,
+    );
+  });
+
   testWidgets('transcript follows growth, releases, and reattaches', (
     tester,
   ) async {
