@@ -98,7 +98,7 @@ const _disabledOpacity = 0.5;
 
 /// The lift that separates the panel from whatever it covers.
 final _shadow = RemixBoxShadowMix(
-  color: const Color(0x1A000000),
+  color: PlaygroundTokens.shadow(),
   offset: const Offset(0, 4),
   blurRadius: 12,
 );

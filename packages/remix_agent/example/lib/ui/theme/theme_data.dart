@@ -28,6 +28,8 @@ class UiThemeData {
     required this.border,
     required this.focusRing,
     required this.overlay,
+    required this.shadow,
+    required this.shadowStrong,
     required this.chart1,
     required this.chart2,
     required this.chart3,
@@ -53,6 +55,8 @@ class UiThemeData {
       border = const Color(0xFFE5E5E5),
       focusRing = const Color(0xFF737373),
       overlay = const Color(0x8A000000),
+      shadow = const Color(0x1A000000),
+      shadowStrong = const Color(0x26000000),
       chart1 = const Color(0xFF2563EB),
       chart2 = const Color(0xFFC2410C),
       chart3 = const Color(0xFF047857),
@@ -77,6 +81,8 @@ class UiThemeData {
       border = const Color(0xFF404040),
       focusRing = const Color(0xFFA3A3A3),
       overlay = const Color(0xB3000000),
+      shadow = const Color(0x1A000000),
+      shadowStrong = const Color(0x26000000),
       chart1 = const Color(0xFF60A5FA),
       chart2 = const Color(0xFFFB923C),
       chart3 = const Color(0xFF34D399),
@@ -132,6 +138,15 @@ class UiThemeData {
   /// from a dark page than from a light one.
   final Color overlay;
 
+  /// Value for [UiTokens.shadow].
+  ///
+  /// The same value in both themes, which the dark page does not really
+  /// earn; see the token for why the panels' outlines cover for it.
+  final Color shadow;
+
+  /// Value for [UiTokens.shadowStrong].
+  final Color shadowStrong;
+
   /// Value for [UiTokens.chart1].
   final Color chart1;
 
@@ -171,6 +186,8 @@ class UiThemeData {
         UiTokens.border: border,
         UiTokens.focusRing: focusRing,
         UiTokens.overlay: overlay,
+        UiTokens.shadow: shadow,
+        UiTokens.shadowStrong: shadowStrong,
         UiTokens.chart1: chart1,
         UiTokens.chart2: chart2,
         UiTokens.chart3: chart3,
@@ -196,6 +213,8 @@ class UiThemeData {
     Color? border,
     Color? focusRing,
     Color? overlay,
+    Color? shadow,
+    Color? shadowStrong,
     Color? chart1,
     Color? chart2,
     Color? chart3,
@@ -218,6 +237,8 @@ class UiThemeData {
     border: border ?? this.border,
     focusRing: focusRing ?? this.focusRing,
     overlay: overlay ?? this.overlay,
+    shadow: shadow ?? this.shadow,
+    shadowStrong: shadowStrong ?? this.shadowStrong,
     chart1: chart1 ?? this.chart1,
     chart2: chart2 ?? this.chart2,
     chart3: chart3 ?? this.chart3,
@@ -242,6 +263,8 @@ class UiThemeData {
     border,
     focusRing,
     overlay,
+    shadow,
+    shadowStrong,
     chart1,
     chart2,
     chart3,

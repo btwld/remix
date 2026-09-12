@@ -28,6 +28,8 @@ class {{typePrefix}}ThemeData {
     required this.border,
     required this.focusRing,
     required this.overlay,
+    required this.card,
+    required this.popover,
     required this.chart1,
     required this.chart2,
     required this.chart3,
@@ -53,6 +55,8 @@ class {{typePrefix}}ThemeData {
       border = const Color(0xFFE5E5E5),
       focusRing = const Color(0xFF737373),
       overlay = const Color(0x8A000000),
+      card = const Color(0xFFFFFFFF),
+      popover = const Color(0xFFFFFFFF),
       chart1 = const Color(0xFF2563EB),
       chart2 = const Color(0xFFC2410C),
       chart3 = const Color(0xFF047857),
@@ -77,6 +81,8 @@ class {{typePrefix}}ThemeData {
       border = const Color(0xFF404040),
       focusRing = const Color(0xFFA3A3A3),
       overlay = const Color(0xB3000000),
+      card = const Color(0xFF262626),
+      popover = const Color(0xFF262626),
       chart1 = const Color(0xFF60A5FA),
       chart2 = const Color(0xFFFB923C),
       chart3 = const Color(0xFF34D399),
@@ -132,6 +138,15 @@ class {{typePrefix}}ThemeData {
   /// from a dark page than from a light one.
   final Color overlay;
 
+  /// Value for [{{typePrefix}}Tokens.card].
+  ///
+  /// Equal to [background] on the light page and a step above it on the dark
+  /// one, where a shadow cannot do the separating.
+  final Color card;
+
+  /// Value for [{{typePrefix}}Tokens.popover].
+  final Color popover;
+
   /// Value for [{{typePrefix}}Tokens.chart1].
   final Color chart1;
 
@@ -171,6 +186,8 @@ class {{typePrefix}}ThemeData {
         {{typePrefix}}Tokens.border: border,
         {{typePrefix}}Tokens.focusRing: focusRing,
         {{typePrefix}}Tokens.overlay: overlay,
+        {{typePrefix}}Tokens.card: card,
+        {{typePrefix}}Tokens.popover: popover,
         {{typePrefix}}Tokens.chart1: chart1,
         {{typePrefix}}Tokens.chart2: chart2,
         {{typePrefix}}Tokens.chart3: chart3,
@@ -196,6 +213,8 @@ class {{typePrefix}}ThemeData {
     Color? border,
     Color? focusRing,
     Color? overlay,
+    Color? card,
+    Color? popover,
     Color? chart1,
     Color? chart2,
     Color? chart3,
@@ -218,6 +237,8 @@ class {{typePrefix}}ThemeData {
     border: border ?? this.border,
     focusRing: focusRing ?? this.focusRing,
     overlay: overlay ?? this.overlay,
+    card: card ?? this.card,
+    popover: popover ?? this.popover,
     chart1: chart1 ?? this.chart1,
     chart2: chart2 ?? this.chart2,
     chart3: chart3 ?? this.chart3,
@@ -242,6 +263,8 @@ class {{typePrefix}}ThemeData {
     border,
     focusRing,
     overlay,
+    card,
+    popover,
     chart1,
     chart2,
     chart3,

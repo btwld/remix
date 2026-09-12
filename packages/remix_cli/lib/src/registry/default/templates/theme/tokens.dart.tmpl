@@ -72,12 +72,31 @@ abstract final class {{typePrefix}}Tokens {
 
   /// Scrim painted behind a modal surface.
   ///
-  /// Passed as the `barrierColor` of every modal this layer opens. Remix falls
-  /// back to an opaque-ish black when a caller omits one, which is the same
-  /// value in both brightnesses; routing it through a token is what lets the
-  /// dark theme use a heavier scrim, since black separates less from a dark
-  /// page than from a light one.
+  /// Pass this as the `barrierColor` whenever this layer or the application
+  /// opens a route: `sidebar_layout` is the only recipe here that opens one, so
+  /// a `showRemixDialog` call in application code has to pass it too. Remix
+  /// falls back to its own black at the light theme's opacity, so omitting it
+  /// looks right on the light page and silently ignores the dark one.
+  ///
+  /// A token rather than a constant because the value is an argument at a call
+  /// site, not a style property, so no recipe can carry it for the caller.
   static const overlay = ColorToken('ui.color.overlay');
+
+  /// Raised surface for content framed against [background].
+  ///
+  /// Cards read this. It matches [background] on the light page and lifts above
+  /// it on the dark one, which is the only elevation a dark theme gets: a black
+  /// shadow separates almost nothing from a near-black page. Recipes derive
+  /// their shadow from [foreground] for the same reason.
+  static const card = ColorToken('ui.color.card');
+
+  /// Raised surface for a panel that floats over the page.
+  ///
+  /// The menu, popover, select, dialog, and toast panels read this. Shipped at
+  /// the same value as [card] — the distinction is which surface a consumer
+  /// retunes, since a floating panel and an inline card answer to different
+  /// parts of a design language.
+  static const popover = ColorToken('ui.color.popover');
 
   /// First categorical chart series color.
   ///
@@ -125,6 +144,8 @@ abstract final class {{typePrefix}}Tokens {
     border,
     focusRing,
     overlay,
+    card,
+    popover,
     chart1,
     chart2,
     chart3,

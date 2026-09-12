@@ -79,6 +79,21 @@ abstract final class UiTokens {
   /// page than from a light one.
   static const overlay = ColorToken('ui.color.overlay');
 
+  /// Lift under a panel that floats above the page.
+  ///
+  /// The menu, popover, and select panels read this. The shipped themes give
+  /// both brightnesses the same value, which is a starting point rather than a
+  /// good answer: a black shadow separates far less from a dark page than from
+  /// a light one, which is why those panels also carry an outline. Darken this
+  /// for the dark theme and every floating panel follows at once.
+  static const shadow = ColorToken('ui.color.shadow');
+
+  /// Heavier [shadow] for a surface meant to stop the reader.
+  ///
+  /// The dialog panel and the toast read this. Both float over content that
+  /// keeps scrolling beneath them, so they lift further than a popover.
+  static const shadowStrong = ColorToken('ui.color.shadow-strong');
+
   /// First categorical chart series color.
   ///
   /// Charts assign [chart1] through [chart5] to series in order; see [chart].
@@ -125,6 +140,8 @@ abstract final class UiTokens {
     border,
     focusRing,
     overlay,
+    shadow,
+    shadowStrong,
     chart1,
     chart2,
     chart3,

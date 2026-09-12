@@ -91,7 +91,7 @@ const _disabledOpacity = 0.5;
 /// A shadow is nearly invisible on a dark page, so it is a *second* cue; the
 /// panel's outline is what has to carry the boundary in both themes.
 final _shadow = RemixBoxShadowMix(
-  color: const Color(0x1A000000),
+  color: PlaygroundTokens.shadow(),
   offset: const Offset(0, 4),
   blurRadius: 12,
 );

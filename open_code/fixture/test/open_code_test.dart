@@ -26,6 +26,9 @@ void main() {
       expect(theme.destructiveForeground, const Color(0xFFFFFFFF));
       expect(theme.border, const Color(0xFFE5E5E5));
       expect(theme.focusRing, const Color(0xFF737373));
+      expect(theme.overlay, const Color(0x8A000000));
+      expect(theme.shadow, const Color(0x1A000000));
+      expect(theme.shadowStrong, const Color(0x26000000));
       expect(theme.chart1, const Color(0xFF2563EB));
       expect(theme.chart2, const Color(0xFFC2410C));
       expect(theme.chart3, const Color(0xFF047857));
@@ -51,6 +54,9 @@ void main() {
       expect(theme.destructiveForeground, const Color(0xFFFFFFFF));
       expect(theme.border, const Color(0xFF404040));
       expect(theme.focusRing, const Color(0xFFA3A3A3));
+      expect(theme.overlay, const Color(0xB3000000));
+      expect(theme.shadow, const Color(0x1A000000));
+      expect(theme.shadowStrong, const Color(0x26000000));
       expect(theme.chart1, const Color(0xFF60A5FA));
       expect(theme.chart2, const Color(0xFFFB923C));
       expect(theme.chart3, const Color(0xFF34D399));
@@ -63,7 +69,7 @@ void main() {
       for (final theme in const [AcmeThemeData.light(), AcmeThemeData.dark()]) {
         final tokens = theme.tokens;
 
-        expect(AcmeTokens.colors, hasLength(19));
+        expect(AcmeTokens.colors, hasLength(22));
         expect(tokens, hasLength(AcmeTokens.colors.length + 1));
         expect(tokens.keys.toSet(), <MixToken<Object?>>{
           ...AcmeTokens.colors,
