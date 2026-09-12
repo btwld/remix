@@ -153,6 +153,50 @@ items:
     },
   );
 
+  test('template prose states the theme vocabulary\'s real size', () async {
+    final catalog = await RegistryCatalog.loadBundled(preset: 'default');
+
+    // The real size is one required parameter per token on the theme data
+    // constructor. Counting `required this.` is enough: the template declares
+    // them nowhere else.
+    final themeData = catalog.items['theme']!.files.singleWhere(
+      (file) => file.source.endsWith('theme_data.dart.tmpl'),
+    );
+    final tokenCount = RegExp(
+      r'^\s+required this\.',
+      multiLine: true,
+    ).allMatches(await catalog.readTemplate(themeData)).length;
+    expect(tokenCount, 20);
+
+    // Two templates state that size in prose, and templates are copied verbatim
+    // into consumer source. `chart1`-`chart5` were added for the chart item and
+    // both sentences stayed at fifteen, because nothing compared them.
+    const spellings = {
+      15: 'fifteen',
+      16: 'sixteen',
+      17: 'seventeen',
+      18: 'eighteen',
+      19: 'nineteen',
+      20: 'twenty',
+    };
+    final expected = spellings[tokenCount];
+    expect(expected, isNotNull, reason: 'spell $tokenCount in `spellings`');
+    final spelled = RegExp('\\b(${spellings.values.join('|')})\\b');
+
+    for (final name in const ['card', 'textfield']) {
+      final source = await catalog.readTemplate(
+        catalog.items[name]!.files.single,
+      );
+      expect(
+        spelled.allMatches(source).map((match) => match[1]).toSet(),
+        {expected},
+        reason:
+            "$name's prose must say the vocabulary has $tokenCount tokens, and "
+            'say it once',
+      );
+    }
+  });
+
   test(
     'sidebar_layout is a plain layout with no Spec or generated adapter',
     () async {

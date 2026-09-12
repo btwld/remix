@@ -177,7 +177,7 @@ melos:
 
     open-code:dogfood:check:
       run: dart run tool/check_open_code_dogfood.dart
-      description: Verify the playground's installed source still mirrors the registry
+      description: Verify both dogfood consumers' installed source still mirrors the registry
 
     icons:generate:
       steps:

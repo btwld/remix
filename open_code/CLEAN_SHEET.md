@@ -30,7 +30,8 @@ order, adds its hosted dependencies, exports the authored files, and generates
 **Since:** the styled component catalog has grown on the same two mechanisms —
 one authored file plus one generated part per item, every item depending on
 `theme`. Nothing in the decision below changed to accommodate them: no schema
-field, no installer branch, and no addition to the fifteen theme tokens.
+field and no installer branch. The token vocabulary moved once, when the chart
+item added `chart1`-`chart5` to reach the current twenty.
 Compound components (a checkbox group option, a tab bar with its tabs and
 panels) fit by declaring more than one `@MixWidget` in the same file. The
 current catalog is listed in `docs/open-code.mdx`.
@@ -113,9 +114,11 @@ it never adds `remix_fortal`. Development dependencies are `build_runner` and
 `mix_generator`.
 
 Chart is deliberately one item with three adapters. `mix_chart` owns the hard
-chart contract. The installed file owns presentation and resolves only the
-existing fifteen theme tokens. This keeps `remix add chart` compatible with a
-theme installed and customized before chart support existed.
+chart contract. The installed file owns presentation and resolves theme
+tokens only: `background`, `foreground`, `mutedForeground`, `border`, `radius`,
+and the five `chart1`-`chart5` entries the chart item added to the vocabulary.
+A theme installed before those five existed does not carry them, and authored
+files are preserved on normal runs, so such a theme needs them added by hand.
 
 The recurring costs are visible:
 

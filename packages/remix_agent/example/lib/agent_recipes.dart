@@ -81,7 +81,7 @@ UiAgentComposerRecipe uiAgentComposerRecipe({
     style: IconButtonStyler().size(48, 48).merge(submitStyle),
   ),
   // `destructive` is the vocabulary's interrupt colour, and stop interrupts a
-  // run. Reusing it keeps the composer inside the fifteen theme tokens.
+  // run. Reusing it keeps the composer inside the twenty theme tokens.
   stopStyle: uiIconButtonStyle(
     variant: .destructive,
     size: .small,

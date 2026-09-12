@@ -5,7 +5,7 @@
 
 ## The problem
 
-`remix_cli` installs one registry: a 15-token `theme` item and one authored
+`remix_cli` installs one registry: a 20-token `theme` item and one authored
 recipe per component. Fortal is a second, complete design language on Remix,
 with 277 tokens, Radix color data, 35 recipes, and a parity contract against
 Radix Themes 3.3.0. Today an application can adopt Fortal only as a hosted
