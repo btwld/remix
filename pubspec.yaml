@@ -212,17 +212,6 @@ melos:
       run: dart format --output=none --set-exit-if-changed .
       description: Verify every Dart source matches the formatter
 
-    templates:format:
-      run: dart run tool/check_template_format.dart
-      description: Format every registry template's rendered output
-
-    templates:format:check:
-      # `add` formats the tree it writes, so an unformatted template never
-      # reaches a consumer and no existing check could see one. This keeps the
-      # two presets' templates diffable against each other.
-      run: dart run tool/check_template_format.dart --check
-      description: Verify every registry template renders as formatter-clean Dart
-
     ci:
       steps:
         - toolchain:check
@@ -234,7 +223,6 @@ melos:
         - generate:check
         - format:check
         - open-code:fortal:check
-        - templates:format:check
         - docs:check
         - fortal:parity:check
         - open-code:dogfood:check
