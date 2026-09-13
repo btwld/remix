@@ -29,7 +29,7 @@ void main(List<String> arguments) {
   }
 
   try {
-    final builder = FortalPresetBuilder.forRepository(repositoryRoot);
+    final builder = PresetBuilder.forRepository(repositoryRoot);
     final output = builder.derive();
     if (!check) {
       builder.write(output);
@@ -58,12 +58,174 @@ void main(List<String> arguments) {
   }
 }
 
-/// A deterministic snapshot of every file owned by the Fortal preset.
-final class FortalPresetOutput {
-  const FortalPresetOutput({
-    required this.files,
-    required this.sourceByTemplate,
+/// One derivable source package, and everything that distinguishes it.
+///
+/// The builder below turns analyzer-checked Dart source into a bundled
+/// registry tree. It does not know which package it is reading, what word
+/// stands in for the consumer's prefix, or which items exist outside the
+/// component directory. Those live here, so a second source package is a new
+/// [PresetSpec] rather than a second copy of the builder.
+final class PresetSpec {
+  const PresetSpec({
+    required this.name,
+    required this.sourcePackage,
+    required this.typeWord,
+    required this.valueWord,
+    required this.componentDirectory,
+    required this.sharedItems,
+    required this.copiedItems,
+    required this.ignoredSourceFiles,
+    required this.floorPackages,
+    required this.detectedPackages,
+    required this.composedRegistryDependencies,
   });
+
+  /// Preset name, and the directory it occupies under the bundled registry.
+  final String name;
+
+  /// Package whose `lib/src` is the authored source, e.g. `remix_fortal`.
+  ///
+  /// Installed source may never import it: an item ships the source itself.
+  final String sourcePackage;
+
+  /// Identifier casing replaced by `{{typePrefix}}`, e.g. `Fortal`.
+  final String typeWord;
+
+  /// Lowercase casing replaced by `{{valuePrefix}}`, e.g. `fortal`.
+  final String valueWord;
+
+  /// Source directory holding one file per component item.
+  final String componentDirectory;
+
+  /// Items assembled from a source directory that components may import.
+  final List<SharedItemSpec> sharedItems;
+
+  /// Items copied verbatim from the default preset rather than derived.
+  final List<CopiedItemSpec> copiedItems;
+
+  /// Source files that are legal to author but own no registry item.
+  final Set<String> ignoredSourceFiles;
+
+  /// Packages whose constraint must be readable from the default registry.
+  final Set<String> floorPackages;
+
+  /// Packages declared on an item when its source imports them.
+  final List<String> detectedPackages;
+
+  /// Registry dependencies a component composes but never imports.
+  ///
+  /// Import inference misses `sidebar_layout` -> `sidebar`: its `sidebar`
+  /// field is typed `Widget`, not `FortalSidebar`, so nothing imports
+  /// `components/sidebar.dart`. The default preset's hand-authored
+  /// registry.yaml declares the same dependency for the same reason.
+  final Map<String, List<String>> composedRegistryDependencies;
+
+  /// Source directories this preset reads, shared items first.
+  List<String> get sourceDirectories => [
+    for (final item in sharedItems) item.directory,
+    componentDirectory,
+  ];
+
+  /// Item name owning each shared source directory.
+  Map<String, String> get itemsByDirectory => {
+    for (final item in sharedItems) item.directory: item.name,
+  };
+
+  /// Package imports that must never appear in installed source.
+  List<String> get forbiddenImportPrefixes => [
+    'package:$sourcePackage/',
+    'package:mix/',
+    'package:naked_ui/',
+  ];
+}
+
+/// An item derived from every file in one source directory.
+final class SharedItemSpec {
+  const SharedItemSpec({
+    required this.name,
+    required this.directory,
+    required this.requiredFile,
+    required this.packages,
+    required this.exports,
+  });
+
+  final String name;
+
+  /// Source directory, also the installed target directory under `@ui/`.
+  final String directory;
+
+  /// Source path that must exist, or the preset is not derivable.
+  final String requiredFile;
+
+  final Set<String> packages;
+  final List<String> exports;
+}
+
+/// An item taken verbatim from the default preset instead of from source.
+final class CopiedItemSpec {
+  const CopiedItemSpec({
+    required this.name,
+    required this.templatePath,
+    required this.target,
+    required this.registryDependencies,
+    required this.packages,
+    required this.exports,
+  });
+
+  final String name;
+  final String templatePath;
+  final String target;
+  final List<String> registryDependencies;
+  final Set<String> packages;
+  final List<String> exports;
+}
+
+/// The Fortal design system as application-owned registry source.
+const fortalPreset = PresetSpec(
+  name: 'fortal',
+  sourcePackage: 'remix_fortal',
+  typeWord: 'Fortal',
+  valueWord: 'fortal',
+  componentDirectory: 'components',
+  sharedItems: [
+    SharedItemSpec(
+      name: 'theme',
+      directory: 'theme',
+      requiredFile: 'theme/theme.dart',
+      packages: {'remix'},
+      exports: ['theme/theme.dart'],
+    ),
+  ],
+  copiedItems: [
+    CopiedItemSpec(
+      name: 'icons',
+      templatePath: 'templates/icons/icons.dart.tmpl',
+      target: '@ui/icons.dart',
+      registryDependencies: ['theme'],
+      packages: {'remix_ui_icons'},
+      exports: ['icons.dart'],
+    ),
+  ],
+  // Authored for the package's own use. The registry item copies the default
+  // preset's icons template instead, so this file owns no item.
+  ignoredSourceFiles: {'icons.dart'},
+  floorPackages: {
+    'remix',
+    'mix_annotations',
+    'build_runner',
+    'mix_generator',
+    'mix_chart',
+    'remix_ui_icons',
+  },
+  detectedPackages: ['mix_chart', 'remix_ui_icons'],
+  composedRegistryDependencies: {
+    'sidebar_layout': ['sidebar'],
+  },
+);
+
+/// A deterministic snapshot of every file owned by one derived preset.
+final class PresetOutput {
+  const PresetOutput({required this.files, required this.sourceByTemplate});
 
   /// Output paths relative to the preset root, including `registry.yaml`.
   final Map<String, String> files;
@@ -75,15 +237,19 @@ final class FortalPresetOutput {
   final Map<String, String> sourceByTemplate;
 }
 
-/// Builds one bundled registry tree from analyzer-checked Fortal Dart source.
-final class FortalPresetBuilder {
-  const FortalPresetBuilder({
+/// Builds one bundled registry tree from analyzer-checked Dart source.
+final class PresetBuilder {
+  const PresetBuilder({
+    required this.spec,
     required this.sourceRoot,
     required this.defaultRegistryRoot,
     required this.outputRoot,
   });
 
-  factory FortalPresetBuilder.forRepository(Directory repositoryRoot) {
+  factory PresetBuilder.forRepository(
+    Directory repositoryRoot, {
+    PresetSpec spec = fortalPreset,
+  }) {
     final registryRoot = Directory(
       p.join(
         repositoryRoot.path,
@@ -94,23 +260,31 @@ final class FortalPresetBuilder {
         'registry',
       ),
     );
-    return FortalPresetBuilder(
+    return PresetBuilder(
+      spec: spec,
       sourceRoot: Directory(
-        p.join(repositoryRoot.path, 'packages', 'remix_fortal', 'lib', 'src'),
+        p.join(
+          repositoryRoot.path,
+          'packages',
+          spec.sourcePackage,
+          'lib',
+          'src',
+        ),
       ),
       defaultRegistryRoot: Directory(p.join(registryRoot.path, 'default')),
-      outputRoot: Directory(p.join(registryRoot.path, 'fortal')),
+      outputRoot: Directory(p.join(registryRoot.path, spec.name)),
     );
   }
 
+  final PresetSpec spec;
   final Directory sourceRoot;
   final Directory defaultRegistryRoot;
   final Directory outputRoot;
 
-  FortalPresetOutput derive() {
+  PresetOutput derive() {
     if (!sourceRoot.existsSync()) {
       throw FormatException(
-        'Fortal source root is missing: ${sourceRoot.path}',
+        '${spec.name} source root is missing: ${sourceRoot.path}',
       );
     }
 
@@ -122,60 +296,77 @@ final class FortalPresetBuilder {
     final sourceByTemplate = <String, String>{};
     final items = <String, _RegistryItemDraft>{};
 
-    final themeSources = sources.entries
-        .where((entry) => entry.key.startsWith('theme/'))
-        .toList();
-    if (themeSources.isEmpty ||
-        !themeSources.any((entry) => entry.key == 'theme/theme.dart')) {
-      throw const FormatException(
-        'Fortal source must contain theme/theme.dart and its theme files.',
+    for (final shared in spec.sharedItems) {
+      final sharedSources = sources.entries
+          .where((entry) => entry.key.startsWith('${shared.directory}/'))
+          .toList();
+      if (!sharedSources.any((entry) => entry.key == shared.requiredFile)) {
+        throw FormatException(
+          '${spec.name} source must contain ${shared.requiredFile} and the '
+          'rest of ${shared.directory}/.',
+        );
+      }
+
+      final files = <_RegistryFileDraft>[];
+      for (final entry in sharedSources) {
+        final name = p.posix.basename(entry.key);
+        final templatePath = 'templates/${shared.directory}/$name.tmpl';
+        output[templatePath] = _templateFor(entry.key, entry.value);
+        sourceByTemplate[templatePath] = entry.value;
+        files.add(
+          _RegistryFileDraft(
+            source: templatePath,
+            target: '@ui/${shared.directory}/$name',
+          ),
+        );
+      }
+      items[shared.name] = _RegistryItemDraft(
+        name: shared.name,
+        dependencies: {
+          for (final package in shared.packages) package: floors[package]!,
+        },
+        files: files,
+        exports: shared.exports,
       );
     }
 
-    final themeFiles = <_RegistryFileDraft>[];
-    for (final entry in themeSources) {
-      final name = p.posix.basename(entry.key);
-      final templatePath = 'templates/theme/$name.tmpl';
-      output[templatePath] = _templateFor(entry.key, entry.value);
-      sourceByTemplate[templatePath] = entry.value;
-      themeFiles.add(
-        _RegistryFileDraft(source: templatePath, target: '@ui/theme/$name'),
+    for (final copied in spec.copiedItems) {
+      final template = File(
+        p.joinAll([
+          defaultRegistryRoot.path,
+          ...p.posix.split(copied.templatePath),
+        ]),
+      );
+      if (!template.existsSync()) {
+        throw FormatException(
+          'Default ${copied.name} template is missing: ${template.path}',
+        );
+      }
+      output[copied.templatePath] = template.readAsStringSync();
+      items[copied.name] = _RegistryItemDraft(
+        name: copied.name,
+        registryDependencies: copied.registryDependencies,
+        dependencies: {
+          for (final package in copied.packages) package: floors[package]!,
+        },
+        files: [
+          _RegistryFileDraft(
+            source: copied.templatePath,
+            target: copied.target,
+          ),
+        ],
+        exports: copied.exports,
       );
     }
-    items['theme'] = _RegistryItemDraft(
-      name: 'theme',
-      dependencies: {'remix': floors['remix']!},
-      files: themeFiles,
-      exports: const ['theme/theme.dart'],
-    );
 
-    final defaultIcons = File(
-      p.join(defaultRegistryRoot.path, 'templates', 'icons', 'icons.dart.tmpl'),
-    );
-    if (!defaultIcons.existsSync()) {
-      throw FormatException(
-        'Default icons template is missing: ${defaultIcons.path}',
-      );
-    }
-    const iconsTemplate = 'templates/icons/icons.dart.tmpl';
-    output[iconsTemplate] = defaultIcons.readAsStringSync();
-    items['icons'] = _RegistryItemDraft(
-      name: 'icons',
-      registryDependencies: const ['theme'],
-      dependencies: {'remix_ui_icons': floors['remix_ui_icons']!},
-      files: const [
-        _RegistryFileDraft(source: iconsTemplate, target: '@ui/icons.dart'),
-      ],
-      exports: const ['icons.dart'],
-    );
-
+    final componentPrefix = '${spec.componentDirectory}/';
     final componentNames = {
       for (final path in sources.keys)
-        if (path.startsWith('components/'))
+        if (path.startsWith(componentPrefix))
           p.posix.basenameWithoutExtension(path),
     };
     for (final entry in sources.entries.where(
-      (entry) => entry.key.startsWith('components/'),
+      (entry) => entry.key.startsWith(componentPrefix),
     )) {
       final name = p.posix.basenameWithoutExtension(entry.key);
       final templatePath = 'templates/$name/$name.dart.tmpl';
@@ -194,7 +385,7 @@ final class FortalPresetBuilder {
           ..['build_runner'] = floors['build_runner']!
           ..['mix_generator'] = floors['mix_generator']!;
       }
-      for (final package in const ['mix_chart', 'remix_ui_icons']) {
+      for (final package in spec.detectedPackages) {
         if (imports.any((uri) => uri.startsWith('package:$package/'))) {
           dependencies[package] = floors[package]!;
         }
@@ -210,27 +401,33 @@ final class FortalPresetBuilder {
         files: [
           _RegistryFileDraft(
             source: templatePath,
-            target: '@ui/components/$name.dart',
+            target: '@ui/$componentPrefix$name.dart',
           ),
         ],
-        generated: generated == null ? const [] : ['@ui/components/$generated'],
-        exports: ['components/$name.dart'],
+        generated: generated == null
+            ? const []
+            : ['@ui/$componentPrefix$generated'],
+        exports: ['$componentPrefix$name.dart'],
       );
     }
 
-    if (items.length != componentNames.length + 2) {
-      throw StateError('Fortal registry item names collided.');
+    final expected =
+        componentNames.length +
+        spec.sharedItems.length +
+        spec.copiedItems.length;
+    if (items.length != expected) {
+      throw StateError('${spec.name} registry item names collided.');
     }
 
     output['registry.yaml'] = _renderRegistry(items);
-    return FortalPresetOutput(
+    return PresetOutput(
       files: Map.unmodifiable(_sortedMap(output)),
       sourceByTemplate: Map.unmodifiable(_sortedMap(sourceByTemplate)),
     );
   }
 
   /// Synchronizes only the files owned beneath [outputRoot].
-  void write(FortalPresetOutput output) {
+  void write(PresetOutput output) {
     outputRoot.createSync(recursive: true);
     final expected = output.files.keys.toSet();
     for (final file in _outputFiles()) {
@@ -248,7 +445,7 @@ final class FortalPresetBuilder {
   }
 
   /// Returns stable, human-readable differences without mutating output.
-  List<String> drift(FortalPresetOutput output) {
+  List<String> drift(PresetOutput output) {
     final differences = <String>[];
     final actual = {
       for (final file in _outputFiles()) _relative(file, outputRoot): file,
@@ -292,28 +489,30 @@ final class FortalPresetBuilder {
       final content = entry.value;
       if (p.posix
           .split(path)
-          .any((segment) => segment.toLowerCase().contains('fortal'))) {
-        failures.add('$path: a path segment contains "fortal"');
+          .any((segment) => segment.toLowerCase().contains(spec.valueWord))) {
+        failures.add('$path: a path segment contains "${spec.valueWord}"');
       }
       if (content.contains('{{')) {
         failures.add('$path: source contains the reserved template token "{{"');
       }
       for (final match in _importPattern.allMatches(content)) {
         final uri = match.group(1)!;
-        if (_forbiddenImportPrefixes.any(uri.startsWith)) {
+        if (spec.forbiddenImportPrefixes.any(uri.startsWith)) {
           failures.add('$path: forbidden installed-source import $uri');
         }
       }
-      if (path != 'icons.dart' &&
-          !path.startsWith('theme/') &&
-          !path.startsWith('components/')) {
-        failures.add('$path: unsupported Fortal source placement');
+      if (!spec.ignoredSourceFiles.contains(path) &&
+          !spec.sourceDirectories.any(
+            (directory) => path.startsWith('$directory/'),
+          )) {
+        failures.add('$path: unsupported ${spec.name} source placement');
       }
     }
     if (failures.isNotEmpty) {
       failures.sort();
       throw FormatException(
-        'Cannot derive the Fortal preset:\n${failures.map((failure) => '  - $failure').join('\n')}',
+        'Cannot derive the ${spec.name} preset:\n'
+        '${failures.map((failure) => '  - $failure').join('\n')}',
       );
     }
   }
@@ -343,16 +542,8 @@ final class FortalPresetBuilder {
       }
     }
 
-    const required = {
-      'remix',
-      'mix_annotations',
-      'build_runner',
-      'mix_generator',
-      'mix_chart',
-      'remix_ui_icons',
-    };
     final floors = <String, String>{};
-    for (final package in required) {
+    for (final package in spec.floorPackages) {
       final values = constraints[package];
       if (values == null || values.length != 1) {
         throw FormatException(
@@ -363,6 +554,112 @@ final class FortalPresetBuilder {
       floors[package] = values.single;
     }
     return floors;
+  }
+
+  /// Swaps the preset's own naming for the consumer prefix placeholders.
+  ///
+  /// The round trip is asserted rather than assumed: a substitution that does
+  /// not reverse exactly means the source says the preset's name somewhere the
+  /// consumer's prefix does not belong.
+  String _templateFor(String path, String source) {
+    final template = source
+        .replaceAll(spec.typeWord, '{{typePrefix}}')
+        .replaceAll(spec.valueWord, '{{valuePrefix}}');
+    final roundTrip = template
+        .replaceAll('{{typePrefix}}', spec.typeWord)
+        .replaceAll('{{valuePrefix}}', spec.valueWord);
+    if (roundTrip != source) {
+      throw StateError('$path did not survive the template round trip.');
+    }
+    return template;
+  }
+
+  /// Infers one item's registry dependencies from its relative imports.
+  List<String> _registryDependencies({
+    required String sourcePath,
+    required List<String> imports,
+    required Set<String> componentNames,
+  }) {
+    final owners = spec.itemsByDirectory;
+    final dependencies = <String>{};
+    for (final uri in imports) {
+      if (uri.startsWith('package:') || uri.startsWith('dart:')) continue;
+      final resolved = p.posix.normalize(
+        p.posix.join(p.posix.dirname(sourcePath), uri),
+      );
+      final directory = p.posix.split(resolved).first;
+      final owner = owners[directory];
+      if (owner != null) {
+        dependencies.add(owner);
+        continue;
+      }
+      if (directory != spec.componentDirectory) continue;
+      final component = p.posix.basenameWithoutExtension(resolved);
+      if (component == p.posix.basenameWithoutExtension(sourcePath)) continue;
+      if (!componentNames.contains(component)) {
+        throw FormatException(
+          '$sourcePath imports missing component source $uri.',
+        );
+      }
+      dependencies.add(component);
+    }
+    final name = p.posix.basenameWithoutExtension(sourcePath);
+    for (final component
+        in spec.composedRegistryDependencies[name] ?? const []) {
+      if (!componentNames.contains(component)) {
+        throw FormatException(
+          '$sourcePath declares missing component dependency $component.',
+        );
+      }
+      dependencies.add(component);
+    }
+    // Shared items lead, in spec order, so a graph reads foundation-first the
+    // way the hand-authored default registry does.
+    return [
+      for (final shared in spec.sharedItems)
+        if (dependencies.remove(shared.name)) shared.name,
+      ...dependencies.toList()..sort(),
+    ];
+  }
+
+  /// Renders `registry.yaml`: shared items, then copied, then components.
+  String _renderRegistry(Map<String, _RegistryItemDraft> items) {
+    final leading = [
+      for (final shared in spec.sharedItems) shared.name,
+      for (final copied in spec.copiedItems) copied.name,
+    ];
+    final ordered = <_RegistryItemDraft>[
+      for (final name in leading) items[name]!,
+      ...items.entries
+          .where((entry) => !leading.contains(entry.key))
+          .map((entry) => entry.value)
+          .toList()
+        ..sort((left, right) => left.name.compareTo(right.name)),
+    ];
+    final buffer = StringBuffer()
+      ..writeln('# Generated by tool/build_fortal_preset.dart. Do not edit.')
+      ..writeln('schema: 1')
+      ..writeln('items:');
+    for (final item in ordered) {
+      buffer.writeln('  ${item.name}:');
+      _writeStringList(
+        buffer,
+        'registryDependencies',
+        item.registryDependencies,
+      );
+      _writeConstraintMap(buffer, 'dependencies', item.dependencies);
+      _writeConstraintMap(buffer, 'devDependencies', item.devDependencies);
+      buffer.writeln('    files:');
+      for (final file in item.files) {
+        buffer
+          ..writeln('      - source: ${file.source}')
+          ..writeln('        target: "${file.target}"');
+      }
+      _writeStringList(buffer, 'generated', item.generated, quote: true);
+      _writeStringList(buffer, 'exports', item.exports);
+      buffer.writeln();
+    }
+    return '${buffer.toString().trimRight()}\n';
   }
 
   List<File> _outputFiles() {
@@ -404,75 +701,9 @@ final class _RegistryFileDraft {
   final String target;
 }
 
-String _templateFor(String path, String source) {
-  final template = source
-      .replaceAll('Fortal', '{{typePrefix}}')
-      .replaceAll('fortal', '{{valuePrefix}}');
-  final roundTrip = template
-      .replaceAll('{{typePrefix}}', 'Fortal')
-      .replaceAll('{{valuePrefix}}', 'fortal');
-  if (roundTrip != source) {
-    throw StateError('$path did not survive the template round trip.');
-  }
-  return template;
-}
-
 List<String> _imports(String source) => [
   for (final match in _importPattern.allMatches(source)) match.group(1)!,
 ];
-
-/// Registry dependencies a component composes but never imports.
-///
-/// [_registryDependencies] otherwise infers the graph from `import`
-/// statements, which misses `sidebar_layout` -> `sidebar`: its `sidebar`
-/// field is typed `Widget`, not `FortalSidebar`, so nothing imports
-/// `components/sidebar.dart`. The default preset's hand-authored
-/// registry.yaml declares the same dependency for the same reason.
-const _uninferredRegistryDependencies = <String, List<String>>{
-  'sidebar_layout': ['sidebar'],
-};
-
-List<String> _registryDependencies({
-  required String sourcePath,
-  required List<String> imports,
-  required Set<String> componentNames,
-}) {
-  final dependencies = <String>{};
-  for (final uri in imports) {
-    if (uri.startsWith('package:') || uri.startsWith('dart:')) continue;
-    final resolved = p.posix.normalize(
-      p.posix.join(p.posix.dirname(sourcePath), uri),
-    );
-    if (resolved.startsWith('theme/')) {
-      dependencies.add('theme');
-      continue;
-    }
-    if (resolved.startsWith('components/')) {
-      final component = p.posix.basenameWithoutExtension(resolved);
-      if (component != p.posix.basenameWithoutExtension(sourcePath)) {
-        if (!componentNames.contains(component)) {
-          throw FormatException(
-            '$sourcePath imports missing component source $uri.',
-          );
-        }
-        dependencies.add(component);
-      }
-    }
-  }
-  final name = p.posix.basenameWithoutExtension(sourcePath);
-  for (final component in _uninferredRegistryDependencies[name] ?? const []) {
-    if (!componentNames.contains(component)) {
-      throw FormatException(
-        '$sourcePath declares missing component dependency $component.',
-      );
-    }
-    dependencies.add(component);
-  }
-  return [
-    if (dependencies.remove('theme')) 'theme',
-    ...(dependencies.toList()..sort()),
-  ];
-}
 
 String? _generatedPart(String source) {
   final matches = RegExp(
@@ -485,38 +716,6 @@ String? _generatedPart(String source) {
     );
   }
   return matches.singleOrNull?.group(1);
-}
-
-String _renderRegistry(Map<String, _RegistryItemDraft> items) {
-  final ordered = <_RegistryItemDraft>[
-    items['theme']!,
-    items['icons']!,
-    ...items.entries
-        .where((entry) => entry.key != 'theme' && entry.key != 'icons')
-        .map((entry) => entry.value)
-        .toList()
-      ..sort((left, right) => left.name.compareTo(right.name)),
-  ];
-  final buffer = StringBuffer()
-    ..writeln('# Generated by tool/build_fortal_preset.dart. Do not edit.')
-    ..writeln('schema: 1')
-    ..writeln('items:');
-  for (final item in ordered) {
-    buffer.writeln('  ${item.name}:');
-    _writeStringList(buffer, 'registryDependencies', item.registryDependencies);
-    _writeConstraintMap(buffer, 'dependencies', item.dependencies);
-    _writeConstraintMap(buffer, 'devDependencies', item.devDependencies);
-    buffer.writeln('    files:');
-    for (final file in item.files) {
-      buffer
-        ..writeln('      - source: ${file.source}')
-        ..writeln('        target: "${file.target}"');
-    }
-    _writeStringList(buffer, 'generated', item.generated, quote: true);
-    _writeStringList(buffer, 'exports', item.exports);
-    buffer.writeln();
-  }
-  return '${buffer.toString().trimRight()}\n';
 }
 
 void _writeStringList(
@@ -556,9 +755,3 @@ final _importPattern = RegExp(
   r'''^\s*import\s+['"]([^'"]+)['"]''',
   multiLine: true,
 );
-
-const _forbiddenImportPrefixes = <String>[
-  'package:remix_fortal/',
-  'package:mix/',
-  'package:naked_ui/',
-];

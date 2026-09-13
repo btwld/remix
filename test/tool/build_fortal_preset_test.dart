@@ -18,9 +18,7 @@ void main() {
   });
 
   test('every authored template round-trips and removes Fortal names', () {
-    final output = FortalPresetBuilder.forRepository(
-      Directory.current,
-    ).derive();
+    final output = PresetBuilder.forRepository(Directory.current).derive();
 
     expect(output.sourceByTemplate, isNotEmpty);
     for (final entry in output.sourceByTemplate.entries) {
@@ -36,9 +34,7 @@ void main() {
   });
 
   test('registry dependencies and package floors are inferred', () {
-    final output = FortalPresetBuilder.forRepository(
-      Directory.current,
-    ).derive();
+    final output = PresetBuilder.forRepository(Directory.current).derive();
     final document = loadYaml(output.files['registry.yaml']!) as YamlMap;
     final items = document['items'] as YamlMap;
 
@@ -61,8 +57,8 @@ void main() {
     // sidebar_layout's `sidebar` field is typed `Widget`, not
     // `FortalSidebar`, so its source never imports components/sidebar.dart
     // and import inference alone would miss this dependency. It comes from
-    // _uninferredRegistryDependencies instead, mirroring the same manual
-    // dependency the default preset's hand-authored registry.yaml declares.
+    // the spec's composedRegistryDependencies instead, mirroring the same
+    // manual dependency the default preset's registry.yaml declares.
     expect(
       _strings((items['sidebar_layout'] as YamlMap)['registryDependencies']),
       ['theme', 'sidebar'],
@@ -151,6 +147,77 @@ void main() {
     }
   });
 
+  test('a second spec derives without any Fortal naming', () {
+    // Without this, "generalized" is unverified: every other test here runs
+    // the one spec whose values the builder used to hardcode.
+    final builder = _emptyBuilder(sandbox, spec: _acmePreset);
+    _write(builder.sourceRoot, 'core/core.dart', "export 'tokens.dart';\n");
+    _write(
+      builder.sourceRoot,
+      'core/tokens.dart',
+      "import 'package:remix/remix.dart';\nabstract class AcmeTokens {}\n",
+    );
+    _write(
+      builder.sourceRoot,
+      'widgets/dial.dart',
+      """import 'package:remix/remix.dart';
+
+import '../core/core.dart';
+
+void acmeDialStyle() {}
+""",
+    );
+    _writeDefaultRegistry(builder.defaultRegistryRoot);
+
+    final output = builder.derive();
+    final items =
+        (loadYaml(output.files['registry.yaml']!) as YamlMap)['items']
+            as YamlMap;
+
+    // The spec's directories, not Fortal's, decide layout and item names.
+    expect(items.keys, ['core', 'dial']);
+    expect(_strings((items['dial'] as YamlMap)['registryDependencies']), [
+      'core',
+    ]);
+    expect(_strings((items['dial'] as YamlMap)['exports']), [
+      'widgets/dial.dart',
+    ]);
+    // One directory per component, as Fortal's `templates/button/` is.
+    expect(
+      output.files['templates/dial/dial.dart.tmpl'],
+      contains('void {{valuePrefix}}DialStyle()'),
+    );
+    expect(
+      output.files['templates/core/tokens.dart.tmpl'],
+      contains('abstract class {{typePrefix}}Tokens'),
+    );
+    // `Fortal` is not a reserved word to this builder any more; `Acme` is.
+    expect(
+      output.files['templates/core/tokens.dart.tmpl'],
+      isNot(contains('Acme')),
+    );
+  });
+
+  test('a second spec forbids importing its own source package', () {
+    final builder = _emptyBuilder(sandbox, spec: _acmePreset);
+    _write(
+      builder.sourceRoot,
+      'widgets/dial.dart',
+      "import 'package:remix_acme/remix_acme.dart';\n",
+    );
+
+    expect(
+      builder.derive,
+      throwsA(
+        isA<FormatException>().having(
+          (error) => error.message,
+          'message',
+          contains('package:remix_acme/'),
+        ),
+      ),
+    );
+  });
+
   test('check mode reports planted changed and stale output', () {
     final builder = _fixtureBuilder(sandbox);
     final output = builder.derive();
@@ -174,13 +241,38 @@ void main() {
   });
 }
 
-FortalPresetBuilder _emptyBuilder(Directory root) => FortalPresetBuilder(
-  sourceRoot: Directory(p.join(root.path, 'source')),
-  defaultRegistryRoot: Directory(p.join(root.path, 'default')),
-  outputRoot: Directory(p.join(root.path, 'output')),
+/// A deliberately un-Fortal spec: different word, directories, and package.
+const _acmePreset = PresetSpec(
+  name: 'acme',
+  sourcePackage: 'remix_acme',
+  typeWord: 'Acme',
+  valueWord: 'acme',
+  componentDirectory: 'widgets',
+  sharedItems: [
+    SharedItemSpec(
+      name: 'core',
+      directory: 'core',
+      requiredFile: 'core/core.dart',
+      packages: {'remix'},
+      exports: ['core/core.dart'],
+    ),
+  ],
+  copiedItems: [],
+  ignoredSourceFiles: {},
+  floorPackages: {'remix'},
+  detectedPackages: [],
+  composedRegistryDependencies: {},
 );
 
-FortalPresetBuilder _fixtureBuilder(Directory root) {
+PresetBuilder _emptyBuilder(Directory root, {PresetSpec spec = fortalPreset}) =>
+    PresetBuilder(
+      spec: spec,
+      sourceRoot: Directory(p.join(root.path, 'source')),
+      defaultRegistryRoot: Directory(p.join(root.path, 'default')),
+      outputRoot: Directory(p.join(root.path, 'output')),
+    );
+
+PresetBuilder _fixtureBuilder(Directory root) {
   final builder = _emptyBuilder(root);
   _write(builder.sourceRoot, 'theme/theme.dart', "export 'tokens.dart';\n");
   _write(
