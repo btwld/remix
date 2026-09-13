@@ -8,7 +8,7 @@ This branch is a draft stacked on the open-code workflow. See
 runtime/recipe split. Agent is not yet an installable CLI registry item.
 
 This private workspace package depends on [remix](https://pub.dev/packages/remix),
-Mix's styling runtime, and Lucide's icon font. It ships no theme, token scope,
+Mix's styling runtime, and remix_ui_icons. It ships no theme, token scope,
 Fortal dependency, or model SDK. Every visual surface exposes a generated
 `Agent*Spec` and `Agent*Styler`; every visual field is empty until the host
 supplies a style.
@@ -18,7 +18,7 @@ and `disclosureStyle`, so their hover, press, focus, selected variants,
 animations, and modifiers resolve against the child control's own state.
 
 Functional glyphs (send, stop, copy, retry, disclosure, tool, and statuses)
-have neutral Material-free Lucide defaults. Their public builders remain the
+have neutral Material-free `remix_ui_icons` defaults. Their public builders remain the
 replacement point; visual color and size still come from host styles.
 
 A `MixScope` is not an Agent requirement. Add one only when the host's own

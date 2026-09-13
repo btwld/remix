@@ -25,10 +25,8 @@ vocabulary benchmark. The pinned local checkout is:
 The benchmark informed workflow questions such as component boundaries,
 disclosure placement, lifecycle states, live-edge behavior, and functional icon
 choices. It is not an API, branding, or pixel-parity target. The implementation
-uses Flutter, Naked UI behavior, Remix controls, generated Mix specs, and the
-independently licensed `lucide_icons_flutter` dependency. That dependency is
-exactly pinned because the implementation references a small, web-safe subset
-of its font codepoints instead of importing its full generated catalog. It
+uses Flutter, Naked UI behavior, Remix controls, generated Mix specs, and
+this repository's own `remix_ui_icons` font for its functional glyphs. It
 deliberately ships empty visual defaults; the example's light/dark appearance
 is local and non-exported. Remix Agent also defines its own
 controlled/uncontrolled contracts, accessibility tree, keyboard behavior,

@@ -1,91 +1,25 @@
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
+import 'package:remix_ui_icons/remix_ui_icons.dart';
 
-abstract final class _LucideGlyphs {
-  static const _family = 'Lucide';
-  static const _package = 'lucide_icons_flutter';
-
-  static const arrowUp = IconData(
-    57418,
-    fontFamily: _family,
-    fontPackage: _package,
-  );
-  static const square = IconData(
-    57703,
-    fontFamily: _family,
-    fontPackage: _package,
-  );
-  static const copy = IconData(
-    57502,
-    fontFamily: _family,
-    fontPackage: _package,
-  );
-  static const rotateCcw = IconData(
-    57672,
-    fontFamily: _family,
-    fontPackage: _package,
-  );
-  static const chevronUp = IconData(
-    57456,
-    fontFamily: _family,
-    fontPackage: _package,
-  );
-  static const chevronDown = IconData(
-    57453,
-    fontFamily: _family,
-    fontPackage: _package,
-  );
-  static const circle = IconData(
-    57462,
-    fontFamily: _family,
-    fontPackage: _package,
-  );
-  static const circleDot = IconData(
-    58181,
-    fontFamily: _family,
-    fontPackage: _package,
-  );
-  static const check = IconData(
-    57452,
-    fontFamily: _family,
-    fontPackage: _package,
-  );
-  static const x = IconData(57778, fontFamily: _family, fontPackage: _package);
-  static const circleAlert = IconData(
-    57463,
-    fontFamily: _family,
-    fontPackage: _package,
-  );
-  static const squareTerminal = IconData(
-    57866,
-    fontFamily: _family,
-    fontPackage: _package,
-  );
-  static const loaderCircle = IconData(
-    57610,
-    fontFamily: _family,
-    fontPackage: _package,
-  );
-  static const circleCheck = IconData(
-    57894,
-    fontFamily: _family,
-    fontPackage: _package,
-  );
-  static const ban = IconData(
-    57425,
-    fontFamily: _family,
-    fontPackage: _package,
-  );
-  static const circleX = IconData(
-    57476,
-    fontFamily: _family,
-    fontPackage: _package,
-  );
-  static const shieldCheck = IconData(
-    57855,
-    fontFamily: _family,
-    fontPackage: _package,
-  );
+abstract final class _Glyphs {
+  static const arrowUp = RemixIcons.arrowUp;
+  static const square = RemixIcons.square;
+  static const copy = RemixIcons.copy;
+  static const rotateCcw = RemixIcons.reload;
+  static const chevronUp = RemixIcons.chevronUp;
+  static const chevronDown = RemixIcons.chevronDown;
+  static const circle = RemixIcons.circle;
+  static const circleDot = RemixIcons.dotFilled;
+  static const check = RemixIcons.check;
+  static const x = RemixIcons.cross2;
+  static const circleAlert = RemixIcons.exclamationTriangle;
+  static const squareTerminal = RemixIcons.code;
+  static const loaderCircle = RemixIcons.update;
+  static const circleCheck = RemixIcons.checkCircled;
+  static const ban = RemixIcons.circleBackslash;
+  static const circleX = RemixIcons.crossCircled;
+  static const shieldCheck = RemixIcons.lockClosed;
 }
 
 /// Builds the chevron that reports a collapsible surface's state.
@@ -148,22 +82,22 @@ class AgentFunctionalGlyph extends StatelessWidget {
   final bool expanded;
 
   IconData get _icon => switch (kind) {
-    .send => _LucideGlyphs.arrowUp,
-    .stop => _LucideGlyphs.square,
-    .copy => _LucideGlyphs.copy,
-    .retry => _LucideGlyphs.rotateCcw,
-    .chevron => expanded ? _LucideGlyphs.chevronUp : _LucideGlyphs.chevronDown,
-    .pending => _LucideGlyphs.circle,
-    .active => _LucideGlyphs.circleDot,
-    .completed => _LucideGlyphs.check,
-    .cancelled => _LucideGlyphs.x,
-    .error => _LucideGlyphs.circleAlert,
-    .tool => _LucideGlyphs.squareTerminal,
-    .loading => _LucideGlyphs.loaderCircle,
-    .completedCircle => _LucideGlyphs.circleCheck,
-    .cancelledCircle => _LucideGlyphs.ban,
-    .errorCircle => _LucideGlyphs.circleX,
-    .permission => _LucideGlyphs.shieldCheck,
+    .send => _Glyphs.arrowUp,
+    .stop => _Glyphs.square,
+    .copy => _Glyphs.copy,
+    .retry => _Glyphs.rotateCcw,
+    .chevron => expanded ? _Glyphs.chevronUp : _Glyphs.chevronDown,
+    .pending => _Glyphs.circle,
+    .active => _Glyphs.circleDot,
+    .completed => _Glyphs.check,
+    .cancelled => _Glyphs.x,
+    .error => _Glyphs.circleAlert,
+    .tool => _Glyphs.squareTerminal,
+    .loading => _Glyphs.loaderCircle,
+    .completedCircle => _Glyphs.circleCheck,
+    .cancelledCircle => _Glyphs.ban,
+    .errorCircle => _Glyphs.circleX,
+    .permission => _Glyphs.shieldCheck,
   };
 
   @override

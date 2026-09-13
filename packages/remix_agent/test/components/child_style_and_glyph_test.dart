@@ -6,11 +6,10 @@ import 'package:remix_agent/remix_agent.dart';
 
 import '../helpers/pump.dart';
 
-Finder _findLucideIcon(int codePoint) => find.byWidgetPredicate(
-  (widget) =>
-      widget is Icon &&
-      widget.icon?.codePoint == codePoint &&
-      widget.icon?.fontFamily == 'Lucide',
+import 'package:remix_ui_icons/remix_ui_icons.dart';
+
+Finder _findIcon(IconData expected) => find.byWidgetPredicate(
+  (widget) => widget is Icon && widget.icon == expected,
 );
 
 Iterable<Color> _decorationColors(WidgetTester tester, Finder root) sync* {
@@ -42,7 +41,7 @@ void main() {
     expect(
       find.descendant(
         of: find.byKey(const ValueKey('agent-composer-send')),
-        matching: _findLucideIcon(57418),
+        matching: _findIcon(RemixIcons.arrowUp),
       ),
       findsOneWidget,
     );
@@ -61,11 +60,11 @@ void main() {
 
     final answer = find.byType(AgentAnswer);
     expect(
-      find.descendant(of: answer, matching: _findLucideIcon(57502)),
+      find.descendant(of: answer, matching: _findIcon(RemixIcons.copy)),
       findsOneWidget,
     );
     expect(
-      find.descendant(of: answer, matching: _findLucideIcon(57672)),
+      find.descendant(of: answer, matching: _findIcon(RemixIcons.reload)),
       findsOneWidget,
     );
   });
@@ -87,15 +86,15 @@ void main() {
     );
 
     final execution = find.byType(AgentExecution);
-    for (final codePoint in [
-      57866, // SquareTerminal
-      57894, // CircleCheck
-      57456, // ChevronUp
-      57502, // Copy
-      57672, // RotateCcw
+    for (final icon in [
+      RemixIcons.code,
+      RemixIcons.checkCircled,
+      RemixIcons.chevronUp,
+      RemixIcons.copy,
+      RemixIcons.reload,
     ]) {
       expect(
-        find.descendant(of: execution, matching: _findLucideIcon(codePoint)),
+        find.descendant(of: execution, matching: _findIcon(icon)),
         findsOneWidget,
       );
     }

@@ -26,7 +26,7 @@ actions. Composer controls add 48px touch geometry through the recipe override
 slots; the installed source remains unchanged.
 
 The catalog recipes pass Remix child stylers separately from structural Agent
-stylers. A shared Lucide chevron builder adds Mix rotation to disclosure
+stylers. A shared chevron builder adds Mix rotation to disclosure
 indicators; other glyphs use Agent's defaults. Top-bar and rail actions are
 Remix controls, so the same catalog can be reviewed with pointer or keyboard.
 

@@ -2,14 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
-
-// Same font-backed Lucide glyph as Agent's default. Importing the generated
-// LucideIcons catalog retains thousands of unused font glyphs in a web build.
-const _chevronDown = IconData(
-  57453,
-  fontFamily: 'Lucide',
-  fontPackage: 'lucide_icons_flutter',
-);
+import 'package:remix_ui_icons/remix_ui_icons.dart';
 
 /// Application motion policy. Remix still owns disclosure size/fade behavior.
 AnimationConfig? catalogMotion(BuildContext context, {bool quick = false}) =>
@@ -26,7 +19,7 @@ Widget catalogChevron(BuildContext context, bool expanded) => ExcludeSemantics(
       animation: catalogMotion(context),
     ).rotate(expanded ? math.pi : 0),
     child: Icon(
-      _chevronDown,
+      RemixIcons.chevronDown,
       size: 16,
       color: DefaultTextStyle.of(context).style.color,
     ),
