@@ -36,6 +36,10 @@ const _consumers = <String, List<String>?>{
 };
 
 /// What `remix add --diff` prints when the installed source is up to date.
+///
+/// The CLI prints a preamble and then exactly one verdict: this line, or a
+/// `git diff`. Both are recognized below so that a third shape can be reported
+/// as itself rather than silently read as divergence.
 const _clean = 'No authored-source differences.';
 
 Future<void> main(List<String> arguments) async {
@@ -97,7 +101,24 @@ Future<String?> _run(Directory root) async {
         continue;
       }
 
-      final edited = !(result.stdout as String).contains(_clean);
+      // Classifying on the sentinel alone means any reword of it reports all
+      // 40 items as diverged and sends the reader to `--overwrite`, which
+      // cannot fix a change in the CLI's own output. Recognize both verdicts
+      // instead, and name the case where neither or both appear.
+      final lines = (result.stdout as String).split('\n');
+      final clean = lines.any((line) => line.trimRight() == _clean);
+      final diffed = lines.any((line) => line.startsWith('diff --git '));
+      if (clean == diffed) {
+        problems.add(
+          '$label: `remix add $key --diff` printed '
+          '${clean ? 'both a clean verdict and a diff' : 'no recognizable verdict'}'
+          '. The CLI output contract moved; update `_clean` in this check to '
+          'match `installer.dart`.',
+        );
+        continue;
+      }
+
+      final edited = diffed;
       final reason = _customized[label];
       if (!edited && reason != null) {
         problems.add(
