@@ -125,7 +125,7 @@ A full review page lives in `example/`. It is unpublished and meant for
 walking every surface:
 
 ```bash
-cd packages/remix_agent/example
+cd registry_source/agent/example
 fvm flutter run -d chrome
 ```
 

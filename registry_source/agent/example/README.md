@@ -4,7 +4,7 @@ Local review surface for every unpublished `remix_agent` widget. Host chrome
 only — the package still ships no theme.
 
 ```bash
-cd packages/remix_agent/example
+cd registry_source/agent/example
 fvm flutter run -d chrome
 # or
 fvm flutter run -d web-server --web-hostname localhost --web-port 7388

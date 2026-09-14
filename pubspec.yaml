@@ -17,16 +17,16 @@ workspace:
   - apps/playground
   - packages/remix
   - packages/remix_cli
-  - packages/remix_agent
-  - packages/remix_agent/example
   - packages/remix_ui_icons
+  - registry_source/agent
+  - registry_source/agent/example
   - registry_source/fortal
 
 melos:
   packages:
     - apps/*
     - packages/*
-    - packages/remix_agent/example
+    - registry_source/agent/example
     - registry_source/*
 
   # No `command.bootstrap.environment` here on purpose. It rewrites one
@@ -109,7 +109,7 @@ melos:
       description: Regenerate Remix sources and fail only on generated drift
       exec:
         # `$MELOS_ROOT_PATH`, not a fixed `../../`: the scope below spans two
-        # directory depths, and `packages/remix_agent/example` is three levels
+        # directory depths, and `registry_source/agent/example` is three levels
         # down.
         command: dart run $MELOS_ROOT_PATH/tool/check_generated.dart
         concurrency: 1

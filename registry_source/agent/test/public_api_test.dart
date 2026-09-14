@@ -43,7 +43,7 @@ void main() {
   test('library sources do not import Material', () {
     final lib = Directory('lib').existsSync()
         ? Directory('lib')
-        : Directory('packages/remix_agent/lib');
+        : Directory('registry_source/agent/lib');
     expect(lib.existsSync(), isTrue);
     final hits = <String>[];
     for (final entity in lib.listSync(recursive: true)) {
@@ -60,7 +60,7 @@ void main() {
   });
 
   test('every component ships a worksheet', () {
-    final root = Directory('lib').existsSync() ? '' : 'packages/remix_agent/';
+    final root = Directory('lib').existsSync() ? '' : 'registry_source/agent/';
     final components = Directory('${root}lib/src/components')
         .listSync()
         .whereType<File>()
@@ -86,7 +86,7 @@ void main() {
   test('barrel exports exactly the pinned public surface', () {
     final barrel = File('lib/remix_agent.dart').existsSync()
         ? File('lib/remix_agent.dart')
-        : File('packages/remix_agent/lib/remix_agent.dart');
+        : File('registry_source/agent/lib/remix_agent.dart');
     final exported = RegExp(r"^export '([^']+)';", multiLine: true)
         .allMatches(barrel.readAsStringSync())
         .map((match) => match.group(1)!)

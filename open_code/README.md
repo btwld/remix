@@ -272,7 +272,7 @@ its surfaces inside the application's design language instead of adding a
 second one.
 
 `remix_agent` is the worked example. Its catalog app,
-`packages/remix_agent/example/`, installs Theme, Card, TextField, and
+`registry_source/agent/example/`, installs Theme, Card, TextField, and
 IconButton the way any consumer does, then composes them into one recipe bundle
 for the installed `UiComposer`:
 
@@ -331,7 +331,7 @@ All three dogfood consumers are checked against the templates they installed:
 fvm dart run tool/check_open_code_dogfood.dart
 ```
 
-`apps/playground` holds every default item; `packages/remix_agent/example` and
+`apps/playground` holds every default item; `registry_source/agent/example` and
 `apps/dashboard` install the eight Agent recipe closures from default and Fortal
 respectively. The checker declares those expected items
 explicitly, so missing files are checked too. The CLI reads each consumer's

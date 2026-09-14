@@ -297,7 +297,7 @@ const fortalPreset = PresetSpec(
 /// preset. The full Fortal writer remains the sole owner of that preset.
 const fortalAgentExtension = PresetSpec(
   name: 'fortal',
-  sourceRoot: 'packages/remix_agent',
+  sourceRoot: 'registry_source/agent',
   sourcePackage: 'remix_agent',
   typeWord: 'Agent',
   valueWord: 'agent',
@@ -340,7 +340,7 @@ const fortalAgentExtension = PresetSpec(
 /// Agent behavior source joins the existing default catalog, not a new preset.
 const defaultAgentExtension = PresetSpec(
   name: 'default',
-  sourceRoot: 'packages/remix_agent',
+  sourceRoot: 'registry_source/agent',
   sourcePackage: 'remix_agent',
   typeWord: 'Agent',
   valueWord: 'agent',

@@ -294,7 +294,7 @@ class _PermissionDemoState extends State<PermissionDemo> {
             RemixDataListItem(label: 'Command', value: 'flutter test'),
             RemixDataListItem(
               label: 'Directory',
-              value: 'packages/remix_agent',
+              value: 'registry_source/agent',
             ),
           ],
           onAllowOnce: () =>

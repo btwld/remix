@@ -16,13 +16,13 @@ void main() {
     sandbox = Directory.systemTemp.createTempSync('agent_registry_test_');
     final source = Directory('${sandbox.path}/source');
     for (final file in Directory(
-      'packages/remix_agent/lib/src',
+      'registry_source/agent/lib/src',
     ).listSync(recursive: true).whereType<File>()) {
       if (!file.path.endsWith('.dart') || file.path.endsWith('.g.dart'))
         continue;
       _write(
         source,
-        p.relative(file.path, from: 'packages/remix_agent/lib/src'),
+        p.relative(file.path, from: 'registry_source/agent/lib/src'),
         file.readAsStringSync(),
       );
     }

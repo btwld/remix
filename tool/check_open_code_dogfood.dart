@@ -26,7 +26,7 @@ const _customized = <String, String>{
 /// Expected items per consumer; null means the entire default registry.
 const _consumers = <String, List<String>?>{
   'apps/playground': null,
-  'packages/remix_agent/example': [
+  'registry_source/agent/example': [
     'theme',
     'models',
     'support',

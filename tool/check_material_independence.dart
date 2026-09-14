@@ -4,7 +4,7 @@ import 'dart:io';
 // either installed from the registry or resolved as a hosted dependency.
 const _consumerSourcePackages = [
   'packages/remix',
-  'packages/remix_agent',
+  'registry_source/agent',
   'registry_source/fortal',
 ];
 
