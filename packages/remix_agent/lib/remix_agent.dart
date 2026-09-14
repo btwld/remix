@@ -4,7 +4,7 @@
 /// theme, no token scope, and no model SDK. Import
 /// `package:remix/remix.dart` alongside this library when a host needs base
 /// Remix widgets or stylers. This barrel does not re-export Remix.
-library remix_agent;
+library;
 
 export 'src/components/activity.dart';
 export 'src/components/answer.dart';

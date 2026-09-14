@@ -4,7 +4,8 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../models/statuses.dart';
-import '../style/functional_glyph.dart';
+import '../support/disclosure.dart';
+import '../support/functional_glyph.dart';
 
 part 'answer.g.dart';
 
@@ -71,24 +72,23 @@ class AgentAnswer extends StatefulWidget {
 }
 
 class _AgentAnswerState extends State<AgentAnswer> {
-  late bool _uncontrolledSourcesExpanded;
+  late final AgentDisclosureEngine _disclosure;
 
-  bool get _sourcesExpanded =>
-      widget.sourcesExpanded ?? _uncontrolledSourcesExpanded;
+  bool get _sourcesExpanded => _disclosure.value;
 
   @override
   void initState() {
     super.initState();
-    _uncontrolledSourcesExpanded =
-        widget.sourcesExpanded ?? widget.defaultSourcesExpanded;
+    _disclosure = AgentDisclosureEngine(
+      value: widget.sourcesExpanded,
+      defaultValue: widget.defaultSourcesExpanded,
+    );
   }
 
   @override
   void didUpdateWidget(AgentAnswer oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.sourcesExpanded != null && widget.sourcesExpanded == null) {
-      _uncontrolledSourcesExpanded = oldWidget.sourcesExpanded!;
-    }
+    _disclosure.reconcile(widget.sourcesExpanded);
     final beganStreaming =
         !oldWidget.status.isStreaming && widget.status.isStreaming;
     final newStreamingIdentity =
@@ -97,23 +97,9 @@ class _AgentAnswerState extends State<AgentAnswer> {
   }
 
   void _requestSources(bool next) {
-    if (widget.sourcesExpanded == null &&
-        next != _uncontrolledSourcesExpanded) {
-      setState(() => _uncontrolledSourcesExpanded = next);
-    }
+    if (_disclosure.request(next)) setState(() {});
     widget.onSourcesExpandedChanged?.call(next);
   }
-
-  Widget _indicator(
-    BuildContext context,
-    AgentAnswerSpec spec,
-    bool expanded,
-  ) => agentDisclosureIndicator(
-    context,
-    styleSpec: spec.indicator,
-    expanded: expanded,
-    builder: widget.sourcesIndicatorBuilder,
-  );
 
   @override
   Widget build(BuildContext context) {
@@ -146,7 +132,11 @@ class _AgentAnswerState extends State<AgentAnswer> {
                   triggerBuilder: (context, state, trigger) => Row(
                     children: [
                       Expanded(child: trigger!),
-                      _indicator(context, spec, state.isExpanded),
+                      AgentDisclosureIndicator(
+                        styleSpec: spec.indicator,
+                        expanded: state.isExpanded,
+                        builder: widget.sourcesIndicatorBuilder,
+                      ),
                     ],
                   ),
                   trigger: StyledText(

@@ -1,7 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:path/path.dart' as p;
 import 'package:yaml/yaml.dart';
+
+import '../packages/remix_cli/lib/src/registry.dart';
 
 /// Derives the application-owned Fortal registry from `remix_fortal` source.
 ///
@@ -30,7 +33,11 @@ void main(List<String> arguments) {
 
   try {
     final builder = PresetBuilder.forRepository(repositoryRoot);
-    final output = builder.derive();
+    final agentBuilder = PresetBuilder.forRepository(
+      repositoryRoot,
+      spec: fortalAgentExtension,
+    );
+    final output = mergePresetOutputs(builder.derive(), agentBuilder.derive());
     if (!check) {
       builder.write(output);
       stdout.writeln(
@@ -78,10 +85,18 @@ final class PresetSpec {
     required this.floorPackages,
     required this.detectedPackages,
     required this.composedRegistryDependencies,
+    this.recipeItems = const [],
+    this.ownedTemplateDirectory,
   });
 
   /// Preset name, and the directory it occupies under the bundled registry.
   final String name;
+
+  /// A partially owned template subtree inside [name]. Null owns the whole
+  /// preset, including registry.yaml. Partial output only asserts that file.
+  final String? ownedTemplateDirectory;
+
+  String get templateDirectory => ownedTemplateDirectory ?? 'templates';
 
   /// Package whose `lib/src` is the authored source, e.g. `remix_fortal`.
   ///
@@ -120,6 +135,10 @@ final class PresetSpec {
   /// registry.yaml declares the same dependency for the same reason.
   final Map<String, List<String>> composedRegistryDependencies;
 
+  /// Hand-authored, preset-specific Agent recipes. Their canonical templates
+  /// live outside either runtime package under `open_code/agent_recipes/`.
+  final List<RecipeItemSpec> recipeItems;
+
   /// Source directories this preset reads, shared items first.
   List<String> get sourceDirectories => [
     for (final item in sharedItems) item.directory,
@@ -147,6 +166,7 @@ final class SharedItemSpec {
     required this.requiredFile,
     required this.packages,
     required this.exports,
+    this.registryDependencies = const [],
   });
 
   final String name;
@@ -159,6 +179,7 @@ final class SharedItemSpec {
 
   final Set<String> packages;
   final List<String> exports;
+  final List<String> registryDependencies;
 }
 
 /// An item taken verbatim from the default preset instead of from source.
@@ -178,6 +199,16 @@ final class CopiedItemSpec {
   final List<String> registryDependencies;
   final Set<String> packages;
   final List<String> exports;
+}
+
+final class RecipeItemSpec {
+  const RecipeItemSpec({
+    required this.name,
+    required this.registryDependencies,
+  });
+
+  final String name;
+  final List<String> registryDependencies;
 }
 
 /// The Fortal design system as application-owned registry source.
@@ -223,11 +254,162 @@ const fortalPreset = PresetSpec(
   },
 );
 
+/// Agent behavior and Fortal-specific recipes merged into the existing Fortal
+/// preset. The full Fortal writer remains the sole owner of that preset.
+const fortalAgentExtension = PresetSpec(
+  name: 'fortal',
+  sourcePackage: 'remix_agent',
+  typeWord: 'Agent',
+  valueWord: 'agent',
+  componentDirectory: 'components',
+  ownedTemplateDirectory: 'templates/agent',
+  sharedItems: [
+    SharedItemSpec(
+      name: 'models',
+      directory: 'models',
+      requiredFile: 'models/statuses.dart',
+      packages: {},
+      exports: [
+        'models/activity_item.dart',
+        'models/plan_item.dart',
+        'models/statuses.dart',
+      ],
+    ),
+    SharedItemSpec(
+      name: 'support',
+      directory: 'support',
+      requiredFile: 'support/functional_glyph.dart',
+      packages: {},
+      registryDependencies: ['theme'],
+      exports: [],
+    ),
+  ],
+  copiedItems: [],
+  ignoredSourceFiles: {},
+  floorPackages: {
+    'mix_annotations',
+    'build_runner',
+    'mix_generator',
+    'remix_ui_icons',
+  },
+  detectedPackages: ['remix_ui_icons'],
+  composedRegistryDependencies: {},
+  recipeItems: [
+    RecipeItemSpec(
+      name: 'activity_recipe',
+      registryDependencies: ['activity', 'disclosure'],
+    ),
+    RecipeItemSpec(
+      name: 'answer_recipe',
+      registryDependencies: ['answer', 'card', 'disclosure', 'icon_button'],
+    ),
+    RecipeItemSpec(
+      name: 'composer_recipe',
+      registryDependencies: ['composer', 'card', 'textfield', 'icon_button'],
+    ),
+    RecipeItemSpec(
+      name: 'execution_recipe',
+      registryDependencies: ['execution', 'card', 'disclosure', 'icon_button'],
+    ),
+    RecipeItemSpec(
+      name: 'message_recipe',
+      registryDependencies: ['message', 'card', 'button'],
+    ),
+    RecipeItemSpec(
+      name: 'permission_recipe',
+      registryDependencies: [
+        'permission',
+        'card',
+        'disclosure',
+        'data_list',
+        'button',
+      ],
+    ),
+    RecipeItemSpec(
+      name: 'plan_recipe',
+      registryDependencies: ['plan', 'disclosure'],
+    ),
+    RecipeItemSpec(
+      name: 'transcript_recipe',
+      registryDependencies: ['transcript'],
+    ),
+  ],
+);
+
+PresetOutput mergePresetOutputs(PresetOutput base, PresetOutput extension) {
+  final files = <String, String>{...base.files};
+  for (final entry in extension.files.entries) {
+    if (entry.key == 'registry.yaml') continue;
+    if (files.containsKey(entry.key)) {
+      throw StateError('Preset outputs collide at ${entry.key}.');
+    }
+    files[entry.key] = entry.value;
+  }
+  final items = <String, YamlMap>{};
+  final targets = <String, String>{};
+  for (final output in [base, extension]) {
+    final document = loadYaml(output.files['registry.yaml']!) as YamlMap;
+    final entries = document['items'] as YamlMap?;
+    if (entries == null) continue;
+    for (final entry in entries.entries) {
+      final name = entry.key as String;
+      if (items.containsKey(name)) {
+        throw StateError('Preset items collide at $name.');
+      }
+      final item = entry.value as YamlMap;
+      items[name] = item;
+      final sources = item['files'] as YamlList? ?? const [];
+      for (final source in sources) {
+        if (!files.containsKey(source['source'])) {
+          throw StateError(
+            'Preset item $name references missing template ${source['source']}.',
+          );
+        }
+      }
+      final paths = [
+        for (final source in sources) source['target'] as String,
+        ...?item['generated'] as YamlList?,
+      ];
+      for (final target in paths.cast<String>()) {
+        final previous = targets[target];
+        if (previous != null) {
+          throw StateError(
+            'Preset targets collide at $target ($previous and $name).',
+          );
+        }
+        targets[target] = name;
+      }
+    }
+  }
+  for (final entry in items.entries) {
+    for (final dependency
+        in entry.value['registryDependencies'] as YamlList? ?? const []) {
+      if (!items.containsKey(dependency)) {
+        throw StateError(
+          'Preset item ${entry.key} has missing dependency $dependency.',
+        );
+      }
+    }
+  }
+  String body(String yaml) =>
+      yaml.substring(yaml.indexOf('items:') + 7).trimRight();
+  files['registry.yaml'] =
+      '${base.files['registry.yaml']!.split('items:').first}items:\n${body(base.files['registry.yaml']!)}\n\n${body(extension.files['registry.yaml']!)}\n';
+  return PresetOutput(
+    files: Map.unmodifiable(files),
+    sourceByTemplate: Map.unmodifiable({
+      ...base.sourceByTemplate,
+      ...extension.sourceByTemplate,
+    }),
+  );
+}
+
 /// A deterministic snapshot of every file owned by one derived preset.
 final class PresetOutput {
   const PresetOutput({required this.files, required this.sourceByTemplate});
 
-  /// Output paths relative to the preset root, including `registry.yaml`.
+  /// Output paths relative to the preset root. `registry.yaml` is an in-memory
+  /// metadata snapshot; partial-preset writers assert it instead of writing it.
   final Map<String, String> files;
 
   /// Original authored source keyed by its derived template output path.
@@ -244,6 +426,7 @@ final class PresetBuilder {
     required this.sourceRoot,
     required this.defaultRegistryRoot,
     required this.outputRoot,
+    this.recipeRoot,
   });
 
   factory PresetBuilder.forRepository(
@@ -273,6 +456,9 @@ final class PresetBuilder {
       ),
       defaultRegistryRoot: Directory(p.join(registryRoot.path, 'default')),
       outputRoot: Directory(p.join(registryRoot.path, spec.name)),
+      recipeRoot: Directory(
+        p.join(repositoryRoot.path, 'open_code', 'agent_recipes', spec.name),
+      ),
     );
   }
 
@@ -280,6 +466,7 @@ final class PresetBuilder {
   final Directory sourceRoot;
   final Directory defaultRegistryRoot;
   final Directory outputRoot;
+  final Directory? recipeRoot;
 
   PresetOutput derive() {
     if (!sourceRoot.existsSync()) {
@@ -295,6 +482,12 @@ final class PresetBuilder {
     final output = <String, String>{};
     final sourceByTemplate = <String, String>{};
     final items = <String, _RegistryItemDraft>{};
+    final componentPrefix = '${spec.componentDirectory}/';
+    final componentNames = {
+      for (final path in sources.keys)
+        if (path.startsWith(componentPrefix))
+          p.posix.basenameWithoutExtension(path),
+    };
 
     for (final shared in spec.sharedItems) {
       final sharedSources = sources.entries
@@ -310,7 +503,8 @@ final class PresetBuilder {
       final files = <_RegistryFileDraft>[];
       for (final entry in sharedSources) {
         final name = p.posix.basename(entry.key);
-        final templatePath = 'templates/${shared.directory}/$name.tmpl';
+        final templatePath =
+            '${spec.templateDirectory}/${shared.directory}/$name.tmpl';
         output[templatePath] = _templateFor(entry.key, entry.value);
         sourceByTemplate[templatePath] = entry.value;
         files.add(
@@ -322,8 +516,24 @@ final class PresetBuilder {
       }
       items[shared.name] = _RegistryItemDraft(
         name: shared.name,
+        registryDependencies: {
+          ...shared.registryDependencies,
+          for (final entry in sharedSources)
+            ..._registryDependencies(
+              sourcePath: entry.key,
+              imports: _imports(entry.value),
+              componentNames: componentNames,
+            ),
+        }.toList(),
         dependencies: {
           for (final package in shared.packages) package: floors[package]!,
+          for (final package in spec.detectedPackages)
+            if (sharedSources.any(
+              (entry) => _imports(
+                entry.value,
+              ).any((uri) => uri.startsWith('package:$package/')),
+            ))
+              package: floors[package]!,
         },
         files: files,
         exports: shared.exports,
@@ -359,17 +569,11 @@ final class PresetBuilder {
       );
     }
 
-    final componentPrefix = '${spec.componentDirectory}/';
-    final componentNames = {
-      for (final path in sources.keys)
-        if (path.startsWith(componentPrefix))
-          p.posix.basenameWithoutExtension(path),
-    };
     for (final entry in sources.entries.where(
       (entry) => entry.key.startsWith(componentPrefix),
     )) {
       final name = p.posix.basenameWithoutExtension(entry.key);
-      final templatePath = 'templates/$name/$name.dart.tmpl';
+      final templatePath = '${spec.templateDirectory}/$name/$name.dart.tmpl';
       final generated = _generatedPart(entry.value);
       final imports = _imports(entry.value);
       final registryDependencies = _registryDependencies(
@@ -411,15 +615,53 @@ final class PresetBuilder {
       );
     }
 
+    for (final recipe in spec.recipeItems) {
+      final root = recipeRoot;
+      if (root == null) {
+        throw StateError('${spec.name} recipe root was not configured.');
+      }
+      final source = File(p.join(root.path, '${recipe.name}.dart.tmpl'));
+      if (!source.existsSync()) {
+        throw FormatException('Missing canonical recipe: ${source.path}');
+      }
+      final contents = source.readAsStringSync();
+      if (contents.contains('package:remix_agent')) {
+        throw FormatException(
+          '${recipe.name} imports the private Agent package.',
+        );
+      }
+      final templatePath =
+          '${spec.templateDirectory}/recipes/${recipe.name}.dart.tmpl';
+      output[templatePath] = contents;
+      sourceByTemplate[templatePath] = contents
+          .replaceAll('{{typePrefix}}', spec.typeWord)
+          .replaceAll('{{valuePrefix}}', spec.valueWord);
+      items[recipe.name] = _RegistryItemDraft(
+        name: recipe.name,
+        registryDependencies: recipe.registryDependencies,
+        files: [
+          _RegistryFileDraft(
+            source: templatePath,
+            target: '@ui/recipes/${recipe.name}.dart',
+          ),
+        ],
+        exports: ['recipes/${recipe.name}.dart'],
+      );
+    }
+
     final expected =
         componentNames.length +
         spec.sharedItems.length +
-        spec.copiedItems.length;
+        spec.copiedItems.length +
+        spec.recipeItems.length;
     if (items.length != expected) {
       throw StateError('${spec.name} registry item names collided.');
     }
 
     output['registry.yaml'] = _renderRegistry(items);
+    if (spec.ownedTemplateDirectory != null) {
+      _validateDefaultSeam(output['registry.yaml']!);
+    }
     return PresetOutput(
       files: Map.unmodifiable(_sortedMap(output)),
       sourceByTemplate: Map.unmodifiable(_sortedMap(sourceByTemplate)),
@@ -428,13 +670,22 @@ final class PresetBuilder {
 
   /// Synchronizes only the files owned beneath [outputRoot].
   void write(PresetOutput output) {
+    _validateOutput(output);
+    final metadata = _metadataDrift(output);
+    if (metadata.isNotEmpty) {
+      throw StateError(
+        '${metadata.join('\n')}\n'
+        'Update the owned entries in registry.yaml to match derivation.',
+      );
+    }
     outputRoot.createSync(recursive: true);
-    final expected = output.files.keys.toSet();
+    final writable = _writableFiles(output);
+    final expected = writable.keys.toSet();
     for (final file in _outputFiles()) {
       final relative = _relative(file, outputRoot);
       if (!expected.contains(relative)) file.deleteSync();
     }
-    for (final entry in output.files.entries) {
+    for (final entry in writable.entries) {
       final file = File(
         p.joinAll([outputRoot.path, ...p.posix.split(entry.key)]),
       );
@@ -446,11 +697,12 @@ final class PresetBuilder {
 
   /// Returns stable, human-readable differences without mutating output.
   List<String> drift(PresetOutput output) {
-    final differences = <String>[];
+    _validateOutput(output);
+    final differences = _metadataDrift(output);
     final actual = {
       for (final file in _outputFiles()) _relative(file, outputRoot): file,
     };
-    for (final entry in output.files.entries) {
+    for (final entry in _writableFiles(output).entries) {
       final file = actual.remove(entry.key);
       if (file == null) {
         differences.add('missing ${entry.key}');
@@ -463,6 +715,131 @@ final class PresetBuilder {
     }
     differences.sort();
     return differences;
+  }
+
+  Map<String, String> _writableFiles(PresetOutput output) => {
+    for (final entry in output.files.entries)
+      if (spec.ownedTemplateDirectory == null || entry.key != 'registry.yaml')
+        entry.key: entry.value,
+  };
+
+  /// Reject the entire write before pruning, including links already on disk.
+  void _validateOutput(PresetOutput output) {
+    final owned = spec.ownedTemplateDirectory;
+    if (owned != null) {
+      _validateRelativeOutput(owned);
+      if (!owned.startsWith('templates/')) {
+        throw FormatException(
+          'Partial ownership must be below templates/: $owned',
+        );
+      }
+    }
+    for (final path in _writableFiles(output).keys) {
+      _validateRelativeOutput(path);
+      if (owned != null && !path.startsWith('$owned/')) {
+        throw FormatException('Output escapes owned subtree $owned: $path');
+      }
+      _rejectOutputLinks(path);
+    }
+    // Validate even when the derived output is empty.
+    _rejectOutputLinks(owned ?? '.');
+    _outputFiles();
+    if (owned != null) {
+      final registry = output.files['registry.yaml'];
+      if (registry == null)
+        throw const FormatException('Missing derived registry metadata.');
+      _validateDefaultSeam(registry);
+    }
+  }
+
+  void _validateRelativeOutput(String path) {
+    if (path.isEmpty ||
+        path == '.' ||
+        path.contains('\\') ||
+        p.posix.isAbsolute(path) ||
+        p.windows.isAbsolute(path) ||
+        p.posix.normalize(path) != path ||
+        p.posix.split(path).contains('..')) {
+      throw FormatException('Unsafe output path: $path');
+    }
+  }
+
+  void _rejectOutputLinks(String relative) {
+    var current = outputRoot.path;
+    for (final segment in ['', ...p.posix.split(relative)]) {
+      if (segment.isNotEmpty) current = p.join(current, segment);
+      if (FileSystemEntity.typeSync(current, followLinks: false) ==
+          FileSystemEntityType.link) {
+        throw FormatException('Output path contains a symbolic link: $current');
+      }
+    }
+  }
+
+  YamlMap _registryItems(String source) {
+    final document = loadYaml(source);
+    if (document is! YamlMap || document['items'] is! YamlMap) {
+      throw const FormatException('Registry must contain an items map.');
+    }
+    return document['items'] as YamlMap;
+  }
+
+  YamlMap _defaultItems() {
+    final root = spec.name == 'default' ? defaultRegistryRoot : outputRoot;
+    return _registryItems(
+      File(p.join(root.path, 'registry.yaml')).readAsStringSync(),
+    );
+  }
+
+  bool _ownsItem(Object? item) {
+    if (item is! Map || item['files'] is! List) return false;
+    final files = item['files'] as List;
+    return files.isNotEmpty &&
+        files.every(
+          (file) =>
+              file is Map &&
+              file['source'] is String &&
+              (file['source'] as String).startsWith(
+                '${spec.ownedTemplateDirectory}/',
+              ),
+        );
+  }
+
+  /// Reuse the shipped validator for dependency cycles and target collisions.
+  /// Existing items with a colliding name must already belong to this subtree.
+  void _validateDefaultSeam(String registry) {
+    final actual = _defaultItems();
+    final derived = _registryItems(registry);
+    for (final name in derived.keys) {
+      if (actual.containsKey(name) && !_ownsItem(actual[name])) {
+        throw FormatException(
+          'Derived item $name collides with an existing default item.',
+        );
+      }
+    }
+    RegistryCatalog.parse(
+      jsonEncode({
+        'schema': 1,
+        'items': {...actual, ...derived},
+      }),
+      preset: spec.name,
+      rootUri: defaultRegistryRoot.uri,
+    );
+  }
+
+  List<String> _metadataDrift(PresetOutput output) {
+    if (spec.ownedTemplateDirectory == null) return [];
+    final actual = _defaultItems();
+    final derived = _registryItems(output.files['registry.yaml']!);
+    return [
+      for (final name in derived.keys)
+        if (!actual.containsKey(name))
+          'missing registry item $name'
+        else if (!_sameYaml(actual[name], derived[name]))
+          'changed registry item $name',
+      for (final entry in actual.entries)
+        if (_ownsItem(entry.value) && !derived.containsKey(entry.key))
+          'stale registry item ${entry.key}',
+    ];
   }
 
   Map<String, String> _readSources() {
@@ -495,8 +872,20 @@ final class PresetBuilder {
       if (content.contains('{{')) {
         failures.add('$path: source contains the reserved template token "{{"');
       }
-      for (final match in _importPattern.allMatches(content)) {
-        final uri = match.group(1)!;
+      for (final match in _directivePattern.allMatches(content)) {
+        final uri = match.group(2)!;
+        if (uri.contains(spec.typeWord) || uri.contains(spec.valueWord)) {
+          failures.add('$path: directive URI would be rewritten: $uri');
+        }
+        if (!uri.startsWith('package:') && !uri.startsWith('dart:')) {
+          final resolved = p.posix.normalize(
+            p.posix.join(p.posix.dirname(path), uri),
+          );
+          final generated = match.group(1) == 'part' && uri.endsWith('.g.dart');
+          if (!generated && !sources.containsKey(resolved)) {
+            failures.add('$path: missing relative source $uri');
+          }
+        }
         if (spec.forbiddenImportPrefixes.any(uri.startsWith)) {
           failures.add('$path: forbidden installed-source import $uri');
         }
@@ -590,6 +979,7 @@ final class PresetBuilder {
       final directory = p.posix.split(resolved).first;
       final owner = owners[directory];
       if (owner != null) {
+        if (owner == owners[p.posix.split(sourcePath).first]) continue;
         dependencies.add(owner);
         continue;
       }
@@ -663,14 +1053,20 @@ final class PresetBuilder {
   }
 
   List<File> _outputFiles() {
-    if (!outputRoot.existsSync()) return const [];
-    final files =
-        outputRoot
-            .listSync(recursive: true, followLinks: false)
-            .whereType<File>()
-            .toList()
-          ..sort((left, right) => left.path.compareTo(right.path));
-    return files;
+    final owned = spec.ownedTemplateDirectory;
+    final root = owned == null
+        ? outputRoot
+        : Directory(p.join(outputRoot.path, owned));
+    _rejectOutputLinks(owned ?? '.');
+    if (!root.existsSync()) return const [];
+    final entries = root.listSync(recursive: true, followLinks: false);
+    for (final link in entries.whereType<Link>()) {
+      throw FormatException(
+        'Owned output contains a symbolic link: ${link.path}',
+      );
+    }
+    return entries.whereType<File>().toList()
+      ..sort((left, right) => left.path.compareTo(right.path));
   }
 }
 
@@ -753,5 +1149,27 @@ String _relative(File file, Directory root) =>
 
 final _importPattern = RegExp(
   r'''^\s*import\s+['"]([^'"]+)['"]''',
+  multiLine: true,
+);
+
+bool _sameYaml(Object? left, Object? right) {
+  if (left is Map && right is Map) {
+    return left.length == right.length &&
+        left.keys.every(
+          (key) => right.containsKey(key) && _sameYaml(left[key], right[key]),
+        );
+  }
+  if (left is List && right is List) {
+    return left.length == right.length &&
+        List.generate(
+          left.length,
+          (index) => index,
+        ).every((index) => _sameYaml(left[index], right[index]));
+  }
+  return left == right;
+}
+
+final _directivePattern = RegExp(
+  r'''^\s*(import|export|part)\s+['"]([^'"]+)['"]''',
   multiLine: true,
 );

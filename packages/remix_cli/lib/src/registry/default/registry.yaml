@@ -569,3 +569,220 @@ items:
         target: "@ui/components/sidebar_layout.dart"
     exports:
       - components/sidebar_layout.dart
+
+  # Agent source: metadata asserted by tool/build_agent_registry.dart.
+  models:
+    files:
+      - source: templates/agent/models/activity_item.dart.tmpl
+        target: "@ui/models/activity_item.dart"
+      - source: templates/agent/models/plan_item.dart.tmpl
+        target: "@ui/models/plan_item.dart"
+      - source: templates/agent/models/statuses.dart.tmpl
+        target: "@ui/models/statuses.dart"
+    exports:
+      - models/activity_item.dart
+      - models/plan_item.dart
+      - models/statuses.dart
+
+  support:
+    registryDependencies:
+      - theme
+    dependencies:
+      remix_ui_icons: ^0.1.0
+    files:
+      - source: templates/agent/support/disclosure.dart.tmpl
+        target: "@ui/support/disclosure.dart"
+      - source: templates/agent/support/functional_glyph.dart.tmpl
+        target: "@ui/support/functional_glyph.dart"
+      - source: templates/agent/support/live_edge.dart.tmpl
+        target: "@ui/support/live_edge.dart"
+
+  activity:
+    registryDependencies:
+      - models
+      - support
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/agent/activity/activity.dart.tmpl
+        target: "@ui/components/activity.dart"
+    generated:
+      - "@ui/components/activity.g.dart"
+    exports:
+      - components/activity.dart
+
+  answer:
+    registryDependencies:
+      - models
+      - support
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/agent/answer/answer.dart.tmpl
+        target: "@ui/components/answer.dart"
+    generated:
+      - "@ui/components/answer.g.dart"
+    exports:
+      - components/answer.dart
+
+  composer:
+    registryDependencies:
+      - support
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/agent/composer/composer.dart.tmpl
+        target: "@ui/components/composer.dart"
+    generated:
+      - "@ui/components/composer.g.dart"
+    exports:
+      - components/composer.dart
+
+  execution:
+    registryDependencies:
+      - models
+      - support
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/agent/execution/execution.dart.tmpl
+        target: "@ui/components/execution.dart"
+    generated:
+      - "@ui/components/execution.g.dart"
+    exports:
+      - components/execution.dart
+
+  message:
+    registryDependencies:
+      - models
+      - support
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/agent/message/message.dart.tmpl
+        target: "@ui/components/message.dart"
+    generated:
+      - "@ui/components/message.g.dart"
+    exports:
+      - components/message.dart
+
+  permission:
+    registryDependencies:
+      - models
+      - support
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/agent/permission/permission.dart.tmpl
+        target: "@ui/components/permission.dart"
+    generated:
+      - "@ui/components/permission.g.dart"
+    exports:
+      - components/permission.dart
+
+  plan:
+    registryDependencies:
+      - models
+      - support
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/agent/plan/plan.dart.tmpl
+        target: "@ui/components/plan.dart"
+    generated:
+      - "@ui/components/plan.g.dart"
+    exports:
+      - components/plan.dart
+
+  transcript:
+    registryDependencies:
+      - support
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/agent/transcript/transcript.dart.tmpl
+        target: "@ui/components/transcript.dart"
+    generated:
+      - "@ui/components/transcript.g.dart"
+    exports:
+      - components/transcript.dart
+
+  activity_recipe:
+    registryDependencies: [activity, disclosure]
+    files:
+      - source: templates/agent/recipes/activity_recipe.dart.tmpl
+        target: "@ui/recipes/activity_recipe.dart"
+    exports: [recipes/activity_recipe.dart]
+
+  answer_recipe:
+    registryDependencies: [answer, card, disclosure, icon_button]
+    files:
+      - source: templates/agent/recipes/answer_recipe.dart.tmpl
+        target: "@ui/recipes/answer_recipe.dart"
+    exports: [recipes/answer_recipe.dart]
+
+  composer_recipe:
+    registryDependencies: [composer, card, textfield, icon_button]
+    files:
+      - source: templates/agent/recipes/composer_recipe.dart.tmpl
+        target: "@ui/recipes/composer_recipe.dart"
+    exports: [recipes/composer_recipe.dart]
+
+  execution_recipe:
+    registryDependencies: [execution, card, disclosure, icon_button]
+    files:
+      - source: templates/agent/recipes/execution_recipe.dart.tmpl
+        target: "@ui/recipes/execution_recipe.dart"
+    exports: [recipes/execution_recipe.dart]
+
+  message_recipe:
+    registryDependencies: [message, card, button]
+    files:
+      - source: templates/agent/recipes/message_recipe.dart.tmpl
+        target: "@ui/recipes/message_recipe.dart"
+    exports: [recipes/message_recipe.dart]
+
+  permission_recipe:
+    registryDependencies: [permission, card, disclosure, data_list, button]
+    files:
+      - source: templates/agent/recipes/permission_recipe.dart.tmpl
+        target: "@ui/recipes/permission_recipe.dart"
+    exports: [recipes/permission_recipe.dart]
+
+  plan_recipe:
+    registryDependencies: [plan, disclosure]
+    files:
+      - source: templates/agent/recipes/plan_recipe.dart.tmpl
+        target: "@ui/recipes/plan_recipe.dart"
+    exports: [recipes/plan_recipe.dart]
+
+  transcript_recipe:
+    registryDependencies: [transcript]
+    files:
+      - source: templates/agent/recipes/transcript_recipe.dart.tmpl
+        target: "@ui/recipes/transcript_recipe.dart"
+    exports: [recipes/transcript_recipe.dart]

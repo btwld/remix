@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
-import '../style/live_edge.dart';
+import '../support/live_edge.dart';
 
 part 'transcript.g.dart';
 

@@ -2,7 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_agent/remix_agent.dart';
+import 'package:remix_agent_example/ui/ui.dart';
 import 'package:remix_agent_example/demos.dart';
 import 'package:remix_agent_example/main.dart';
 import 'package:remix_agent_example/showcase.dart';
@@ -24,14 +24,14 @@ void main() {
       expect(find.text(entry.title), findsWidgets, reason: entry.id);
     }
 
-    expect(find.byType(AgentComposer), findsWidgets);
-    expect(find.byType(AgentMessage), findsWidgets);
-    expect(find.byType(AgentTranscript), findsWidgets);
-    expect(find.byType(AgentPermission), findsWidgets);
-    expect(find.byType(AgentExecution), findsWidgets);
-    expect(find.byType(AgentPlan), findsWidgets);
-    expect(find.byType(AgentActivity), findsWidgets);
-    expect(find.byType(AgentAnswer), findsWidgets);
+    expect(find.byType(UiComposer), findsWidgets);
+    expect(find.byType(UiMessage), findsWidgets);
+    expect(find.byType(UiTranscript), findsWidgets);
+    expect(find.byType(UiPermission), findsWidgets);
+    expect(find.byType(UiExecution), findsWidgets);
+    expect(find.byType(UiPlan), findsWidgets);
+    expect(find.byType(UiActivity), findsWidgets);
+    expect(find.byType(UiAnswer), findsWidgets);
   });
 
   testWidgets('permission deny in the catalog updates the shipped card', (
@@ -56,7 +56,9 @@ void main() {
     expect(find.text('Denied'), findsWidgets);
   });
 
-  testWidgets('hero transcript does not auto-follow', (tester) async {
+  testWidgets('interactive transcript follows new output initially', (
+    tester,
+  ) async {
     tester.view.physicalSize = const Size(1200, 900);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
@@ -65,14 +67,14 @@ void main() {
     await tester.pump();
 
     final hero = tester
-        .widgetList<AgentTranscript>(
+        .widgetList<UiTranscript>(
           find.descendant(
             of: find.byType(ComposedRunDemo),
-            matching: find.byType(AgentTranscript),
+            matching: find.byType(UiTranscript),
           ),
         )
         .first;
-    expect(hero.followOutput, isFalse);
+    expect(hero.followOutput, isTrue);
   });
 
   testWidgets('catalog surfaces honor the polish contracts', (tester) async {
@@ -89,7 +91,7 @@ void main() {
     expect(find.text('Commandflutter test'), findsNothing);
     expect(
       find.descendant(
-        of: find.byType(AgentComposer),
+        of: find.byType(UiComposer),
         matching: find.byType(RemixCard),
       ),
       findsWidgets,

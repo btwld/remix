@@ -4,7 +4,8 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../models/statuses.dart';
-import '../style/functional_glyph.dart';
+import '../support/disclosure.dart';
+import '../support/functional_glyph.dart';
 
 part 'permission.g.dart';
 
@@ -87,26 +88,25 @@ class AgentPermission extends StatefulWidget {
 }
 
 class _AgentPermissionState extends State<AgentPermission> {
-  late bool _uncontrolledDetailsExpanded;
+  late final AgentDisclosureEngine _disclosure;
   bool _decisionSubmitted = false;
 
-  bool get _detailsExpanded =>
-      widget.detailsExpanded ?? _uncontrolledDetailsExpanded;
+  bool get _detailsExpanded => _disclosure.value;
 
   @override
   void initState() {
     super.initState();
-    _uncontrolledDetailsExpanded =
-        widget.detailsExpanded ??
-        (widget.status.keepsDetailsOpen || widget.defaultDetailsExpanded);
+    _disclosure = AgentDisclosureEngine(
+      value: widget.detailsExpanded,
+      defaultValue:
+          widget.status.keepsDetailsOpen || widget.defaultDetailsExpanded,
+    );
   }
 
   @override
   void didUpdateWidget(AgentPermission oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.detailsExpanded != null && widget.detailsExpanded == null) {
-      _uncontrolledDetailsExpanded = oldWidget.detailsExpanded!;
-    }
+    _disclosure.reconcile(widget.detailsExpanded);
     final returnedToPending =
         oldWidget.status != AgentPermissionStatus.pending &&
         widget.status == AgentPermissionStatus.pending;
@@ -123,10 +123,7 @@ class _AgentPermissionState extends State<AgentPermission> {
   }
 
   void _requestDetails(bool next) {
-    if (widget.detailsExpanded == null &&
-        next != _uncontrolledDetailsExpanded) {
-      setState(() => _uncontrolledDetailsExpanded = next);
-    }
+    if (_disclosure.request(next)) setState(() {});
     widget.onDetailsExpandedChanged?.call(next);
   }
 
@@ -172,17 +169,6 @@ class _AgentPermissionState extends State<AgentPermission> {
         AgentPermissionStatus.denied => spec.deniedStatus,
         AgentPermissionStatus.error => spec.errorStatus,
       };
-
-  Widget _indicator(
-    BuildContext context,
-    AgentPermissionSpec spec,
-    bool expanded,
-  ) => agentDisclosureIndicator(
-    context,
-    styleSpec: spec.indicator,
-    expanded: expanded,
-    builder: widget.indicatorBuilder,
-  );
 
   // Horizontal by default; callers may stack actions without losing the
   // action slot's box, modifiers, or nested style resolution.
@@ -247,7 +233,9 @@ class _AgentPermissionState extends State<AgentPermission> {
                                   spec: iconSpec,
                                 ),
                           ),
-                      StyledText(_statusLabel, styleSpec: spec.status),
+                      Flexible(
+                        child: StyledText(_statusLabel, styleSpec: spec.status),
+                      ),
                     ],
                   ),
                 ),
@@ -260,7 +248,11 @@ class _AgentPermissionState extends State<AgentPermission> {
                     triggerBuilder: (context, state, trigger) => Row(
                       children: [
                         Expanded(child: trigger!),
-                        _indicator(context, spec, state.isExpanded),
+                        AgentDisclosureIndicator(
+                          styleSpec: spec.indicator,
+                          expanded: state.isExpanded,
+                          builder: widget.indicatorBuilder,
+                        ),
                       ],
                     ),
                     trigger: StyledText(

@@ -4,12 +4,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_agent/remix_agent.dart';
-import 'package:remix_agent_example/agent_recipes.dart';
 import 'package:remix_agent_example/ui/ui.dart';
 
-const _sendKey = ValueKey('agent-composer-send');
-const _stopKey = ValueKey('agent-composer-stop');
+const _sendKey = ValueKey('ui-composer-send');
+const _stopKey = ValueKey('ui-composer-stop');
 
 const _light = UiThemeData.light();
 const _dark = UiThemeData.dark();
@@ -82,7 +80,7 @@ Widget _composer({
 }) {
   final resolved = recipe ?? uiAgentComposerRecipe();
 
-  return AgentComposer(
+  return UiComposer(
     controller: controller,
     focusNode: focusNode,
     initialValue: initialValue,
@@ -264,7 +262,7 @@ void main() {
     const toolbar = Color(0xFF345678);
     const stop = Color(0xFF456789);
     final recipe = uiAgentComposerRecipe(
-      style: AgentComposerStyler(
+      style: UiComposerStyler(
         toolbar: FlexBoxStyler().color(toolbar).padding(.all(20)),
       ),
       surfaceStyle: CardStyler().color(surface),

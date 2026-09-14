@@ -393,45 +393,108 @@ items:
     },
   );
 
-  test('every item resolves theme first and owns its expected files', () async {
-    final catalog = await RegistryCatalog.loadBundled(preset: 'default');
+  test(
+    'every item resolves its foundations and owns its expected files',
+    () async {
+      final catalog = await RegistryCatalog.loadBundled(preset: 'default');
 
-    // Both directions. Checking only that each listed name exists would let a
-    // new registry item ship with no surface pinned and no rendering asserted.
-    expect(
-      catalog.items.keys.where((name) => name != 'theme').toSet(),
-      _componentSurfaces.keys.toSet(),
-    );
+      // Both directions. Checking only that each listed name exists would let a
+      // new registry item ship with no surface pinned and no rendering asserted.
+      expect(catalog.items.keys.toSet(), {
+        'theme',
+        'models',
+        'support',
+        ..._componentSurfaces.keys,
+        ..._agentSurfaces.keys,
+        ..._agentRecipeNames,
+      });
 
-    for (final name in _componentSurfaces.keys) {
-      final item = catalog.items[name];
-      expect(item, isNotNull, reason: name);
-      // Dependency-first order, and `theme` always leads because every
-      // component declares it. Compound items retain their dependency-first
-      // order, including both toast controls and the sidebar layout's panel.
-      expect(catalog.resolve(name).map((item) => item.name), switch (name) {
-        'data_table' => ['theme', 'checkbox', 'icon_button', 'select', name],
-        'sidebar' => ['theme', 'toggle', 'tooltip', name],
-        'sidebar_layout' => ['theme', 'toggle', 'tooltip', 'sidebar', name],
-        'toast' => ['theme', 'button', 'icon_button', name],
-        _ => ['theme', name],
-      }, reason: name);
-      if (name == 'icons') {
-        expect(item!.files.single.target, '@ui/icons.dart');
-        expect(item.generated, isEmpty);
-        expect(item.exports, ['icons.dart']);
-      } else if (name == 'sidebar_layout') {
-        // A layout, not a styled component: no Spec, no generated adapter.
-        expect(item!.files.single.target, '@ui/components/$name.dart');
-        expect(item.generated, isEmpty);
-        expect(item.exports, ['components/$name.dart']);
-      } else {
-        expect(item!.files.single.target, '@ui/components/$name.dart');
-        expect(item.generated, ['@ui/components/$name.g.dart']);
-        expect(item.exports, ['components/$name.dart']);
+      for (final name in [..._componentSurfaces.keys, ..._agentSurfaces.keys]) {
+        final item = catalog.items[name];
+        expect(item, isNotNull, reason: name);
+        // Agent model foundations can precede theme. Every component still
+        // reaches the single Remix floor through theme, in dependency order.
+        expect(catalog.resolve(name).map((item) => item.name), switch (name) {
+          'composer' || 'transcript' => ['theme', 'support', name],
+          'activity' ||
+          'answer' ||
+          'execution' ||
+          'message' ||
+          'permission' ||
+          'plan' => ['models', 'theme', 'support', name],
+          'data_table' => ['theme', 'checkbox', 'icon_button', 'select', name],
+          'sidebar' => ['theme', 'toggle', 'tooltip', name],
+          'sidebar_layout' => ['theme', 'toggle', 'tooltip', 'sidebar', name],
+          'toast' => ['theme', 'button', 'icon_button', name],
+          _ => ['theme', name],
+        }, reason: name);
+        if (name == 'icons') {
+          expect(item!.files.single.target, '@ui/icons.dart');
+          expect(item.generated, isEmpty);
+          expect(item.exports, ['icons.dart']);
+        } else if (name == 'sidebar_layout') {
+          // A layout, not a styled component: no Spec, no generated adapter.
+          expect(item!.files.single.target, '@ui/components/$name.dart');
+          expect(item.generated, isEmpty);
+          expect(item.exports, ['components/$name.dart']);
+        } else {
+          expect(item!.files.single.target, '@ui/components/$name.dart');
+          expect(item.generated, ['@ui/components/$name.g.dart']);
+          expect(item.exports, ['components/$name.dart']);
+        }
       }
-    }
-  });
+      for (final name in _agentRecipeNames) {
+        final item = catalog.items[name]!;
+        expect(item.files.single.target, '@ui/recipes/$name.dart');
+        expect(item.generated, isEmpty);
+        expect(item.exports, ['recipes/$name.dart']);
+        expect(catalog.resolve(name).map((item) => item.name), contains(name));
+      }
+    },
+  );
+
+  test(
+    'Agent foundations export only public models and preserve source layout',
+    () async {
+      final catalog = await RegistryCatalog.loadBundled(preset: 'default');
+      expect(catalog.items['models']!.files.map((file) => file.target), [
+        '@ui/models/activity_item.dart',
+        '@ui/models/plan_item.dart',
+        '@ui/models/statuses.dart',
+      ]);
+      expect(catalog.items['support']!.files.map((file) => file.target), [
+        '@ui/support/disclosure.dart',
+        '@ui/support/functional_glyph.dart',
+        '@ui/support/live_edge.dart',
+      ]);
+      expect(catalog.items['support']!.exports, isEmpty);
+      expect(catalog.items['models']!.exports, [
+        'models/activity_item.dart',
+        'models/plan_item.dart',
+        'models/statuses.dart',
+      ]);
+      for (final entry in _agentSurfaces.entries) {
+        final source = await catalog.readTemplate(
+          catalog.items[entry.key]!.files.single,
+        );
+        for (final prefix in ['Acme', 'Ui']) {
+          final rendered = const TemplateRenderer().render(
+            source,
+            typePrefix: prefix,
+            valuePrefix: prefix.toLowerCase(),
+          );
+          for (final widget in entry.value) {
+            expect(
+              rendered,
+              contains(
+                RegExp('^class $prefix$widget extends ', multiLine: true),
+              ),
+            );
+          }
+        }
+      }
+    },
+  );
 
   test('both prefixes render every configured public surface', () async {
     final catalog = await RegistryCatalog.loadBundled(preset: 'default');
@@ -481,6 +544,27 @@ items:
         }
         expect(rendered, isNot(contains('{{')), reason: reason);
         expect(rendered, isNot(contains('}}')), reason: reason);
+      }
+    }
+  });
+
+  test('both presets render prefixed Agent recipe bundles', () async {
+    for (final preset in ['default', 'fortal']) {
+      final catalog = await RegistryCatalog.loadBundled(preset: preset);
+      for (final name in _agentRecipeNames) {
+        final source = await catalog.readTemplate(
+          catalog.items[name]!.files.single,
+        );
+        final rendered = const TemplateRenderer().render(
+          source,
+          typePrefix: 'Acme',
+          valuePrefix: 'acme',
+        );
+        final component = name.split('_').first;
+        final type = '${component[0].toUpperCase()}${component.substring(1)}';
+        expect(rendered, contains('class AcmeAgent${type}Recipe'));
+        expect(rendered, contains('acmeAgent${type}Recipe('));
+        expect(rendered, isNot(contains('package:remix_agent')));
       }
     }
   });
@@ -597,3 +681,25 @@ final class _NoopLoader implements RegistryAssetLoader {
   @override
   Future<String> read(Uri uri) => throw StateError('Unexpected read of $uri');
 }
+
+const _agentRecipeNames = <String>{
+  'activity_recipe',
+  'answer_recipe',
+  'composer_recipe',
+  'execution_recipe',
+  'message_recipe',
+  'permission_recipe',
+  'plan_recipe',
+  'transcript_recipe',
+};
+
+const _agentSurfaces = <String, List<String>>{
+  'activity': ['Activity'],
+  'answer': ['Answer'],
+  'composer': ['Composer'],
+  'execution': ['Execution'],
+  'message': ['Message', 'MessageGroup', 'MessageCollapsible'],
+  'permission': ['Permission'],
+  'plan': ['Plan'],
+  'transcript': ['Transcript'],
+};

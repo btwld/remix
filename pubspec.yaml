@@ -113,13 +113,11 @@ melos:
         command: dart run $MELOS_ROOT_PATH/tool/check_generated.dart
         concurrency: 1
         orderDependents: true
-      # The playground and the Agent example are in scope because each holds a
-      # committed, CLI-installed copy of registry source. Nothing renders those
-      # files in the playground, so a `.g.dart` left behind by a recipe edit
-      # would compile and ship green.
+      # Installed-source applications regenerate their own adapters. This also
+      # checks dashboard's explicit chat closure, not the full Fortal catalog.
       packageFilters:
         scope:
-          [remix, remix_agent, remix_fortal, playground, remix_agent_example]
+          [remix, remix_agent, remix_fortal, playground, remix_agent_example, dashboard]
 
     test:flutter:
       exec: flutter test --reporter=failures-only
@@ -150,7 +148,7 @@ melos:
 
     material:check:
       run: dart run tool/check_material_independence.dart
-      description: Verify Remix and Fortal consumer sources contain no direct Material usage
+      description: Verify Remix, Fortal, and Agent consumer sources contain no direct Material usage
 
     open-code:check:
       steps:
@@ -174,6 +172,16 @@ melos:
         - dart test test/tool/build_fortal_preset_test.dart
         - dart run tool/build_fortal_preset.dart --check
       description: Test Fortal derivation and fail on committed preset drift
+
+    open-code:agent:build:
+      run: dart run tool/build_agent_registry.dart
+      description: Derive Agent templates within the default registry
+
+    open-code:agent:check:
+      steps:
+        - dart test test/tool/build_agent_registry_test.dart
+        - dart run tool/build_agent_registry.dart --check
+      description: Verify Agent ownership, metadata, and committed template drift
 
     open-code:dogfood:check:
       run: dart run tool/check_open_code_dogfood.dart
@@ -222,6 +230,7 @@ melos:
         - generate:check
         - format:check
         - open-code:fortal:check
+        - open-code:agent:check
         - docs:check
         - fortal:parity:check
         - open-code:dogfood:check

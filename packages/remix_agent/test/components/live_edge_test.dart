@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 import 'package:remix_agent/remix_agent.dart';
-import 'package:remix_agent/src/style/live_edge.dart';
+import 'package:remix_agent/src/support/live_edge.dart';
 
 import '../helpers/pump.dart';
 

@@ -140,3 +140,20 @@ hosted consumer check.
 The first public release still requires package bootstrap and hosted CLI
 verification. Until then, use a checkout or staged package with checkout Remix.
 The [release instructions](RELEASING.md) define the order and required checks.
+
+
+## Agent source distribution
+
+The default catalog now also includes eight domain-specific Agent surfaces.
+Unlike visual `@MixWidget` recipes, these copy the private authoring package's
+behavior and empty anatomy specs into the application. They still compose the
+public Remix primitives; they do not copy Remix internals or introduce a
+private runtime dependency. Applications own the installed domain behavior as
+well as its appearance. The scope of future source-update diffs includes that
+behavior.
+
+The supported Mix spec-styler builder is opt-in, so these installs enable it
+for their source paths in consumer `build.yaml`. This is a deliberate extension
+to the original recipe-only, no-build-config contract. Existing configuration
+is preserved, conflicts are rejected during preflight, and configuration changes
+appear in dry-run/diff. Registry schema and preset selection are unchanged.

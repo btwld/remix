@@ -57,6 +57,92 @@ void main() {
   });
   tearDown(() => root.deleteSync(recursive: true));
 
+  test(
+    'Agent install configures generation and repairs a missing config',
+    () async {
+      writeRequiredPubspec(root, remixUiIcons: '^0.1.0');
+      writeRequiredLock(root, remixUiIcons: '0.1.0');
+      final runner = happyRunner(root, writeLockOnPubGet: false);
+      final installer = Installer(
+        projectRoot: root,
+        writeOut: (_) {},
+        processRunner: runner,
+      );
+      await installer.add(
+        const AddOptions(item: 'activity', mode: AddMode.write),
+      );
+      final config = File(p.join(root.path, 'build.yaml'));
+      expect(
+        config.readAsStringSync(),
+        contains('lib/ui/components/activity.dart'),
+      );
+      final before = snapshotFiles(root);
+      await installer.add(
+        const AddOptions(item: 'activity', mode: AddMode.write),
+      );
+      expect(snapshotFiles(root), before);
+      config.deleteSync();
+      final buildsBefore = runner.calls
+          .where((call) => call.arguments.contains('build_runner'))
+          .length;
+      await installer.add(
+        const AddOptions(item: 'activity', mode: AddMode.write),
+      );
+      expect(config.existsSync(), isTrue);
+      expect(
+        runner.calls
+            .where((call) => call.arguments.contains('build_runner'))
+            .length,
+        buildsBefore + 1,
+      );
+    },
+  );
+
+  test('Agent dry-run and diff show config without writing it', () async {
+    final output = <String>[];
+    final before = snapshotFiles(root);
+    final installer = Installer(
+      projectRoot: root,
+      writeOut: output.add,
+      processRunner: happyRunner(
+        root,
+        runRealFormatter: true,
+        runRealGit: true,
+      ),
+    );
+    await installer.add(
+      const AddOptions(item: 'activity', mode: AddMode.dryRun),
+    );
+    expect(output.join('\n'), contains('build.yaml'));
+    expect(snapshotFiles(root), before);
+    output.clear();
+    await installer.add(const AddOptions(item: 'activity', mode: AddMode.diff));
+    expect(output.join('\n'), contains('mix_generator:spec_styler_generator'));
+    expect(snapshotFiles(root), before);
+  });
+
+  test(
+    'disabled Agent generation fails preflight without processes or writes',
+    () async {
+      File(p.join(root.path, 'build.yaml')).writeAsStringSync(
+        r'targets: {$default: {builders: {mix_generator:spec_styler_generator: {enabled: false}}}}',
+      );
+      final before = snapshotFiles(root);
+      final runner = happyRunner(root);
+      final installer = Installer(
+        projectRoot: root,
+        writeOut: (_) {},
+        processRunner: runner,
+      );
+      await expectLater(
+        installer.add(const AddOptions(item: 'activity', mode: AddMode.write)),
+        throwsFormatException,
+      );
+      expect(runner.calls, isEmpty);
+      expect(snapshotFiles(root), before);
+    },
+  );
+
   test('add loads the registry selected by project configuration', () async {
     File(p.join(root.path, 'remix.yaml')).writeAsStringSync('''schema: 2
 prefix: Ui
@@ -534,7 +620,14 @@ packages:
             uiPath: 'lib/ui',
           ),
         );
-        final remixUiIcons = item == 'icons' ? '0.1.0' : null;
+        final remixUiIcons =
+            catalog
+                .resolve(item)
+                .any(
+                  (entry) => entry.dependencies.containsKey('remix_ui_icons'),
+                )
+            ? '0.1.0'
+            : null;
         final mixChart = item == 'chart' ? '0.0.1-beta.1' : null;
         writeRequiredPubspec(
           caseRoot,

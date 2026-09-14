@@ -2,14 +2,14 @@
 
 A clean-sheet review of this package against the open-code workflow retained
 the behavior boundary below and proposed registry-distributed,
-application-owned recipes instead of an Agent theme. That integration is
-planned, not implemented by this package decision. What the first consumer
-established, and what is still gated, is recorded under
+application-owned recipes instead of an Agent theme. The eight surfaces are now derived into both existing registries. The private
+package remains the single authoring/test source. Distribution and remaining
+release checks are recorded under
 [Runtime and recipe split](#runtime-and-recipe-split).
 
 ## Decision
 
-Ship agent-run surfaces as `remix_agent`, a private workspace package that
+Author and test agent-run surfaces in `remix_agent`, a private workspace package that
 depends on `remix` plus Mix's generator/runtime. Do not add these widgets to
 `remix` or `remix_fortal`, and do not create an `AgentScope`.
 
@@ -66,9 +66,9 @@ installed `remix_cli` source rather than as an Agent theme.
 | Accessibility semantics and keyboard rules | Per-instance overrides at the call site |
 | `Agent*Spec` slot names, empty by default | Which installed recipes a surface reuses |
 
-One surface has a proven consumer, and it is the catalog app rather than a
-purpose-built fixture. `example/` runs `remix init` and installs Theme, Card,
-TextField, and IconButton exactly as any application does; the installed source
+The example installs all eight surfaces plus Theme, Card, TextField,
+IconButton, and Button from the default registry. Its Composer recipe is the
+worked styling integration; the installed source
 is committed, and `tool/check_open_code_dogfood.dart` holds it against the
 templates. `example/test/composer_recipe_test.dart` then proves:
 
@@ -82,8 +82,10 @@ templates. `example/test/composer_recipe_test.dart` then proves:
 - the semantic tree holds one field and one action;
 - the light and dark themes both reach Agent through the same recipe.
 
-The example resolves `remix_agent` as a workspace sibling. That is development
-evidence; nothing here claims hosted installation works.
+The example imports installed `Ui*` source and no longer depends on
+`remix_agent`. Fresh consumer checks exercise both complete catalogs and each
+Agent component and recipe independently. These checkout checks are distinct
+from hosted-release verification.
 
 The recipe is a **bundle**, not a single styler. `AgentComposer` takes
 `style`, `surfaceStyle`, `fieldStyle`, `submitStyle`, and `stopStyle`, and
@@ -92,19 +94,28 @@ supply the other four. `uiAgentComposerRecipe()` returns all five and the call
 site spreads them. The four child stylers stay unresolved, for the reason the
 section above gives.
 
-Two things remain gated, and neither is claimed anywhere in this package:
+## Source distribution and remaining boundaries
 
-1. **Publication.** The package is `publish_to: none`. A registry item's
-   dependency is a hosted version constraint, not a way to publish a private
-   workspace sibling, so there is no Agent registry item and hosted
-   installation is not advertised. Resolving the publication metadata,
-   dependency floors, provenance, and release checks is the next decision, and
-   it is not a code change.
-2. **The other seven surfaces.** Message, transcript, answer, permission,
-   execution, plan, and activity have no proven recipe yet. Their worksheets
-   record the benchmark measurements, not shipped defaults.
+Each registry contains eight component items, eight opt-in recipe items, plus shared `models` and
+`support`. Source comes from this package; generated adapters come from the
+consumer's resolved Mix generator. No installed item depends on this private
+package. Public model files are exported; internal support helpers stay out of
+the managed barrel. The existing theme item owns the single Remix dependency
+floor, inherited through support.
 
-Local Chrome checks cover the catalog in light, dark, narrow, wide, and
-reduced-motion states, including Composer submit/stop and permission and
-disclosure interactions. Hosted-consumer verification remains open and depends
-on publication; local browser and widget tests do not establish installability.
+`tool/build_agent_registry.dart` owns only `default/templates/agent/**` and
+asserts the hand-authored registry entries. It never rewrites the default
+manifest or unrelated templates. The full Fortal writer merges an Agent
+extension before synchronizing its own preset, so regeneration cannot prune it.
+
+Mix's spec-styler builder is opt-in at the current supported version. The CLI
+therefore enables it for installed spec sources in application `build.yaml`,
+preserving unrelated settings and refusing explicit exclusions or disabled
+builders. This is a discovered prerequisite to distribution, not a new theme,
+registry schema, or copied generated implementation.
+
+All eight surfaces expose preset-specific recipe bundles sourced from
+`open_code/agent_recipes/`. The example uses those installed bundles; its chat
+orchestration remains application-owned rather than a runtime API.
+Hosted release validation remains a separate release gate. Private-package
+publication is neither required nor planned for these source-distributed items.

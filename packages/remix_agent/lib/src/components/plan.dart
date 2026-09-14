@@ -5,8 +5,9 @@ import 'package:remix/remix.dart';
 
 import '../models/plan_item.dart';
 import '../models/statuses.dart';
-import '../style/functional_glyph.dart';
-import '../style/live_edge.dart';
+import '../support/disclosure.dart';
+import '../support/functional_glyph.dart';
+import '../support/live_edge.dart';
 
 part 'plan.g.dart';
 
@@ -65,22 +66,23 @@ class AgentPlan extends StatefulWidget {
 }
 
 class _AgentPlanState extends State<AgentPlan> {
-  late bool _uncontrolledExpanded;
+  late final AgentDisclosureEngine _disclosure;
 
-  bool get _expanded => widget.expanded ?? _uncontrolledExpanded;
+  bool get _expanded => _disclosure.value;
 
   @override
   void initState() {
     super.initState();
-    _uncontrolledExpanded = widget.expanded ?? widget.defaultExpanded;
+    _disclosure = AgentDisclosureEngine(
+      value: widget.expanded,
+      defaultValue: widget.defaultExpanded,
+    );
   }
 
   @override
   void didUpdateWidget(AgentPlan oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.expanded != null && widget.expanded == null) {
-      _uncontrolledExpanded = oldWidget.expanded!;
-    }
+    _disclosure.reconcile(widget.expanded);
     final wasWorking = oldWidget.isWorking;
     final working = widget.isWorking;
     if (wasWorking && !working && widget.collapseOnComplete) {
@@ -91,9 +93,7 @@ class _AgentPlanState extends State<AgentPlan> {
   }
 
   void _request(bool next) {
-    if (widget.expanded == null && next != _uncontrolledExpanded) {
-      setState(() => _uncontrolledExpanded = next);
-    }
+    if (_disclosure.request(next)) setState(() {});
     widget.onExpandedChanged?.call(next);
   }
 
@@ -146,14 +146,6 @@ class _AgentPlanState extends State<AgentPlan> {
     );
   }
 
-  Widget _indicator(BuildContext context, AgentPlanSpec spec, bool expanded) =>
-      agentDisclosureIndicator(
-        context,
-        styleSpec: spec.indicator,
-        expanded: expanded,
-        builder: widget.indicatorBuilder,
-      );
-
   @override
   Widget build(BuildContext context) {
     return RemixStyleSpecBuilder<AgentPlanSpec>(
@@ -171,7 +163,11 @@ class _AgentPlanState extends State<AgentPlan> {
           triggerBuilder: (context, state, trigger) => Row(
             children: [
               Expanded(child: trigger!),
-              _indicator(context, spec, state.isExpanded),
+              AgentDisclosureIndicator(
+                styleSpec: spec.indicator,
+                expanded: state.isExpanded,
+                builder: widget.indicatorBuilder,
+              ),
             ],
           ),
           trigger: Row(

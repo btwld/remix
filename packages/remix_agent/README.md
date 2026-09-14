@@ -3,9 +3,10 @@
 Unstyled Flutter widgets for long-running agent work: compose a prompt, follow
 a transcript, pause for permission, and inspect execution and plans.
 
-This branch is a draft stacked on the open-code workflow. See
-[ADR 0001](docs/adr/0001-package-boundary.md) for the package boundary and the
-runtime/recipe split. Agent is not yet an installable CLI registry item.
+The eight surfaces are application-owned source in the default CLI registry.
+See [ADR 0001](docs/adr/0001-package-boundary.md) for the private authoring
+package boundary and the runtime/recipe split. They are available from both
+existing presets; there is no separate Agent preset.
 
 This private workspace package depends on [remix](https://pub.dev/packages/remix),
 Mix's styling runtime, and remix_ui_icons. It ships no theme, token scope,
@@ -27,8 +28,31 @@ styles resolve scoped Mix tokens. The catalog's Composer uses the installed
 
 ## Install
 
-The package is unpublished. Use it as a workspace member or a local path
-dependency, then:
+The package remains unpublished authoring/test source. Install individual
+surfaces through the project-local checkout CLI (see [open-code setup](../../open_code/README.md)):
+
+```shell
+dart run remix_cli:remix init --prefix Ui --preset default
+dart run remix_cli:remix add composer
+```
+
+The CLI installs shared `models` and `support` when needed, enables Mix's
+spec-styler builder for the installed source in `build.yaml`, and generates
+adapters in the application. Existing builder settings are preserved; explicit
+exclusions or disabled generation must be resolved by the host. Public models
+are exported from the UI barrel, internal support helpers are not.
+
+Consumers import their local barrel, not the private package. Authoring names
+in the table below use `Agent`; installed names follow the chosen prefix:
+`AgentComposer` becomes `UiComposer`.
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+import 'ui/ui.dart';
+```
+
+For work on the private authoring package itself, its barrel remains:
 
 ```dart
 import 'package:flutter/widgets.dart';
@@ -56,8 +80,9 @@ does not. A model picker built with `RemixSelect` needs the same `Overlay`.
 | `AgentPlan` | Task plan with pending / in-progress / completed / cancelled and a completion count. |
 | `AgentActivity` | Slim activity ledger. Hosts supply each item’s child. |
 
-There is no chat shell, sidebar, or file tree. Compose these widgets in the
-host.
+There is no runtime chat shell, sidebar, or file tree. The example and dashboard
+compose them into an interactive simulated chat; applications retain ownership
+of that orchestration.
 
 ## What this is not
 
@@ -70,14 +95,14 @@ host.
 An application styles these surfaces with the same `remix_cli` source it
 installs for the rest of its UI. There is no Agent theme and no Agent preset.
 
-A surface takes more than one styler, so a recipe returns a **bundle** and the
-call site spreads it. `AgentComposer` takes five: its own anatomy, plus
+A surface can take more than one styler, so each opt-in recipe returns a
+**bundle** and the call site spreads it. `AgentComposer` takes five: its own anatomy, plus
 unresolved stylers for the card, the field, and the two buttons.
 
 ```dart
 final recipe = uiAgentComposerRecipe();
 
-AgentComposer(
+UiComposer(
   onSubmit: submit,
   style: recipe.style,
   surfaceStyle: recipe.surfaceStyle,
@@ -89,10 +114,10 @@ AgentComposer(
 
 The bundle calls the application's installed `uiCardStyle`, `uiTextAreaStyle`,
 and `uiIconButtonStyle` and adds only Agent-specific geometry, so editing one
-of those files changes the composer with it. A working recipe lives in
-[`example/lib/agent_recipes.dart`](example/lib/agent_recipes.dart), against
-source the CLI installed into `example/lib/ui/`. The other seven surfaces still
-use the catalog's local review-only stylers.
+of those files changes the composer with it. Install a bundle with
+`remix add composer_recipe`; all eight follow the same `<component>_recipe`
+convention. Default recipes use default tokens and Fortal recipes use Fortal
+tokens and controls without crossing presets.
 
 ## Local catalog
 

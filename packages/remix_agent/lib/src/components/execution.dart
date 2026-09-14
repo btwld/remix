@@ -4,8 +4,9 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../models/statuses.dart';
-import '../style/functional_glyph.dart';
-import '../style/live_edge.dart';
+import '../support/disclosure.dart';
+import '../support/functional_glyph.dart';
+import '../support/live_edge.dart';
 
 part 'execution.g.dart';
 
@@ -84,22 +85,23 @@ class AgentExecution extends StatefulWidget {
 }
 
 class _AgentExecutionState extends State<AgentExecution> {
-  late bool _uncontrolledExpanded;
+  late final AgentDisclosureEngine _disclosure;
 
-  bool get _expanded => widget.expanded ?? _uncontrolledExpanded;
+  bool get _expanded => _disclosure.value;
 
   @override
   void initState() {
     super.initState();
-    _uncontrolledExpanded = widget.expanded ?? widget.defaultExpanded;
+    _disclosure = AgentDisclosureEngine(
+      value: widget.expanded,
+      defaultValue: widget.defaultExpanded,
+    );
   }
 
   @override
   void didUpdateWidget(AgentExecution oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.expanded != null && widget.expanded == null) {
-      _uncontrolledExpanded = oldWidget.expanded!;
-    }
+    _disclosure.reconcile(widget.expanded);
     if (!oldWidget.status.isWorking && widget.status.isWorking) {
       _request(true);
     } else if (oldWidget.status.isWorking &&
@@ -110,9 +112,7 @@ class _AgentExecutionState extends State<AgentExecution> {
   }
 
   void _request(bool next) {
-    if (widget.expanded == null && next != _uncontrolledExpanded) {
-      setState(() => _uncontrolledExpanded = next);
-    }
+    if (_disclosure.request(next)) setState(() {});
     widget.onExpandedChanged?.call(next);
   }
 
@@ -139,17 +139,6 @@ class _AgentExecutionState extends State<AgentExecution> {
     AgentExecutionStatus.error => .errorCircle,
     AgentExecutionStatus.cancelled => .cancelledCircle,
   };
-
-  Widget _indicator(
-    BuildContext context,
-    AgentExecutionSpec spec,
-    bool expanded,
-  ) => agentDisclosureIndicator(
-    context,
-    styleSpec: spec.indicator,
-    expanded: expanded,
-    builder: widget.indicatorBuilder,
-  );
 
   Widget _toolIcon(AgentExecutionSpec spec) {
     final icon = widget.icon;
@@ -181,7 +170,11 @@ class _AgentExecutionState extends State<AgentExecution> {
             triggerBuilder: (context, state, trigger) => Row(
               children: [
                 Expanded(child: trigger!),
-                _indicator(context, spec, state.isExpanded),
+                AgentDisclosureIndicator(
+                  styleSpec: spec.indicator,
+                  expanded: state.isExpanded,
+                  builder: widget.indicatorBuilder,
+                ),
               ],
             ),
             trigger: RowBox(

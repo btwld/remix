@@ -6,6 +6,7 @@ import 'package:path/path.dart' as p;
 import 'package:pub_semver/pub_semver.dart';
 import 'package:yaml/yaml.dart';
 
+import 'builder_config.dart';
 import 'cli.dart';
 import 'process_runner.dart';
 import 'project_config.dart';
@@ -135,6 +136,11 @@ final class Installer {
       states: plan.states,
     );
 
+    if (plan.builderConfiguration != null) {
+      _writeOut(
+        'build.yaml: enable spec-styler generation for installed source.',
+      );
+    }
     if (options.mode == AddMode.dryRun) return;
     if (options.mode == AddMode.diff) {
       // The diff has to predict what `add` would write, and `add` formats with
@@ -153,6 +159,7 @@ final class Installer {
         barrelRelative: plan.barrelRelative,
         currentBarrel: plan.currentBarrel,
         proposedBarrel: plan.proposedBarrel,
+        builderConfiguration: plan.builderConfiguration,
       );
       return;
     }
@@ -243,6 +250,34 @@ final class Installer {
             _resolveTarget(config, target),
     }.toList(growable: false);
 
+    // Spec stylers are opt-in in the supported Mix generator. Detect the
+    // authored annotation, not Agent item names or consumer prefixes.
+    final specInputs = <String>[];
+    for (final item in catalog.items.values) {
+      for (final file in item.files) {
+        final relative = _resolveTarget(config, file.target);
+        final existing = _projectFile(root, relative);
+        final proposed = rendered[relative];
+        final source =
+            existing.existsSync() &&
+                !(item.name == requested.name &&
+                    options.mode == AddMode.overwrite)
+            ? existing.readAsStringSync()
+            : proposed;
+        if (source != null && RegExp(r'@MixableSpec\s*\(').hasMatch(source)) {
+          specInputs.add(relative);
+        }
+      }
+    }
+    String? builderConfiguration;
+    if (specInputs.isNotEmpty) {
+      validateProjectFilePath(root, 'build.yaml');
+      final file = _projectFile(root, 'build.yaml');
+      final before = file.existsSync() ? file.readAsStringSync() : '';
+      final after = configureSpecStylers(before, specInputs);
+      if (before != after) builderConfiguration = after;
+    }
+
     return _InstallPlan(
       root: root,
       config: config,
@@ -260,6 +295,7 @@ final class Installer {
       generated: generated,
       generationTargets: generationTargets,
       pubspec: pubspec,
+      builderConfiguration: builderConfiguration,
     );
   }
 
@@ -364,9 +400,17 @@ final class Installer {
         completed.add('format');
       }
 
+      if (plan.builderConfiguration != null) {
+        _fileWriter.write(
+          _projectFile(root, 'build.yaml'),
+          plan.builderConfiguration!,
+        );
+        completed.add('builder configuration');
+      }
       final needsGeneration =
           generated.isNotEmpty &&
-          (pathsToWrite.any((path) => path.endsWith('.dart')) ||
+          (plan.builderConfiguration != null ||
+              pathsToWrite.any((path) => path.endsWith('.dart')) ||
               generated.any((path) => !_projectFile(root, path).existsSync()));
       if (needsGeneration) {
         final packageName =
@@ -500,11 +544,23 @@ final class Installer {
     required String barrelRelative,
     required String currentBarrel,
     required String proposedBarrel,
+    required String? builderConfiguration,
   }) async {
     final parent = Directory.systemTemp.createTempSync('remix_cli_diff_');
     final current = Directory(p.join(parent.path, 'current'))..createSync();
     final proposed = Directory(p.join(parent.path, 'proposed'))..createSync();
     try {
+      if (builderConfiguration != null) {
+        final existingConfig = _projectFile(root, 'build.yaml');
+        if (existingConfig.existsSync()) {
+          _writeDiffFile(
+            current,
+            'build.yaml',
+            existingConfig.readAsStringSync(),
+          );
+        }
+        _writeDiffFile(proposed, 'build.yaml', builderConfiguration);
+      }
       final proposedDartPaths = <String>{};
       for (final item in items) {
         final include =
@@ -977,6 +1033,7 @@ final class _InstallPlan {
     required this.generated,
     required this.generationTargets,
     required this.pubspec,
+    required this.builderConfiguration,
   });
 
   final Directory root;
@@ -999,6 +1056,7 @@ final class _InstallPlan {
   final List<String> generated;
   final List<String> generationTargets;
   final File pubspec;
+  final String? builderConfiguration;
 
   /// The item the user asked for; [items] resolves its dependencies ahead of it.
   RegistryItem get requested => items.last;

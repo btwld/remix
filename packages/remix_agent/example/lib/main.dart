@@ -26,7 +26,7 @@ class RemixAgentExampleApp extends StatelessWidget {
         color: const Color(0xFFE8EDF2),
         debugShowCheckedModeBanner: false,
         builder: (_, _) {
-          return Overlay.wrap(child: const DarkHost(child: AgentCatalog()));
+          return Overlay.wrap(child: const DarkHost(child: UiCatalog()));
         },
       ),
     );

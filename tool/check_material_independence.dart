@@ -1,8 +1,7 @@
 import 'dart:io';
 
-// Fortal stays here because these sources are copied into consumer apps even
-// though the authoring package itself is no longer published.
-const _consumerSourcePackages = ['remix', 'remix_fortal'];
+// Private authoring packages stay here because their source ships to apps.
+const _consumerSourcePackages = ['remix', 'remix_fortal', 'remix_agent'];
 
 final _forbiddenLibraryDirective = RegExp(
   r'''^\s*(?:import|export)\s+['"]package:(?:flutter/(?:material\.dart|src/material/[^'"]+)|material_ui/[^'"]+)['"]''',
@@ -58,7 +57,7 @@ void main() {
 
   if (failures.isEmpty) {
     stdout.writeln(
-      'Remix and application-owned Fortal sources have no direct Material '
+      'Remix and application-owned Fortal/Agent sources have no direct Material '
       'usage.',
     );
     return;

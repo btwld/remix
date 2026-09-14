@@ -1,15 +1,15 @@
+import 'dart:async';
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_agent/remix_agent.dart';
 
-import 'agent_recipes.dart';
-import 'host.dart';
-import 'motion.dart';
 import 'ui/ui.dart';
 
-/// Example-only light/dark recipes. They are deliberately not exported by the
-/// headless package.
+import 'host.dart';
+import 'motion.dart';
+
+/// Application-owned catalog controls; Agent surfaces use installed recipes.
 final class _AgentDemoStyles {
   _AgentDemoStyles(this.theme, {required this.narrow, required this.feedback});
 
@@ -51,154 +51,6 @@ final class _AgentDemoStyles {
 
   ButtonStyler decision(ButtonStyler style) =>
       narrow ? style.width(double.infinity) : style;
-
-  IconButtonStyler get utilityIconButton => uiIconButtonStyle(
-    variant: .ghost,
-    style: IconButtonStyler(animation: feedback).size(48, 48),
-  );
-
-  DataListStyler get dataList =>
-      DataListStyler().rowSpacing(6).columnSpacing(12);
-
-  DisclosureStyler get disclosure => DisclosureStyler()
-      .trigger(BoxStyler().minHeight(48).padding(.symmetric(vertical: 8)))
-      .content(BoxStyler().padding(.only(top: 8)));
-
-  // The trigger already reserves 48px. Avoid stacking another content inset
-  // above the first row; keep the row spacing and outer card inset intact.
-  DisclosureStyler get ledger => disclosure
-      .content(BoxStyler().padding(.all(0)))
-      .container(
-        BoxStyler()
-            .color(paper)
-            .border(.all(.color(line).width(1)))
-            .borderRadius(.circular(12))
-            .padding(.symmetric(horizontal: 16, vertical: 8)),
-      );
-
-  AgentMessageStyler get message => AgentMessageStyler(
-    row: FlexBoxStyler().mainAxisSize(.max).spacing(8),
-    avatar: BoxStyler().size(28, 28),
-    header: BoxStyler().padding(.only(bottom: 6)),
-    body: BoxStyler(),
-    footer: BoxStyler().padding(.only(top: 4)),
-    maxWidth: 560,
-  );
-
-  AgentMessageCollapsibleStyler get collapsible =>
-      AgentMessageCollapsibleStyler(
-        collapsedHeight: 72,
-        container: BoxStyler(),
-        clipped: BoxStyler(),
-      );
-
-  AgentPlanStyler get plan => AgentPlanStyler(
-    viewport: BoxStyler().maxHeight(220),
-    item: FlexBoxStyler().spacing(6).padding(.symmetric(vertical: 6)),
-    summaryTitle: TextStyler()
-        .color(ink)
-        .fontSize(14)
-        .fontWeight(FontWeight.w600),
-    itemTitle: TextStyler().color(ink).fontSize(14),
-    itemDetail: TextStyler().color(ink.withValues(alpha: 0.62)).fontSize(12),
-    count: TextStyler()
-        .color(ink.withValues(alpha: 0.62))
-        .fontSize(12)
-        .wrap(.padding(.only(right: 8))),
-    indicator: IconStyler().color(ink).size(16),
-    // 0.5 rather than 0.45: these marks carry state, and the lighter value
-    // measured 2.94:1 on the light card, under the 3:1 floor for non-text.
-    pendingStatus: IconStyler().color(ink.withValues(alpha: 0.5)).size(18),
-    activeStatus: IconStyler().color(theme.live).size(18),
-    completedStatus: IconStyler().color(theme.live).size(18),
-    cancelledStatus: IconStyler().color(ink.withValues(alpha: 0.5)).size(18),
-  );
-
-  // Keep 12px status marks centered in the same 18px slot as Plan's glyphs.
-  // With the 6px row gap, both ledgers share the tool headers' 24px text gutter.
-  IconStyler _leadingStatus(Color color) =>
-      IconStyler().color(color).size(12).wrap(.padding(.horizontal(3)));
-
-  AgentActivityStyler get activity => AgentActivityStyler(
-    viewport: BoxStyler().maxHeight(200),
-    item: FlexBoxStyler().spacing(6).padding(.symmetric(vertical: 6)),
-    summaryTitle: TextStyler()
-        .color(ink)
-        .fontSize(14)
-        .fontWeight(FontWeight.w600),
-    itemTitle: TextStyler().color(ink).fontSize(14),
-    itemDetail: TextStyler().color(ink.withValues(alpha: 0.62)).fontSize(12),
-    // Same styler as Plan's count, and Activity reserves the chevron's slot
-    // even while working, so the two ledgers' counts share one right edge.
-    count: TextStyler()
-        .color(ink.withValues(alpha: 0.62))
-        .fontSize(12)
-        .wrap(.padding(.only(right: 8))),
-    indicator: IconStyler().color(ink).size(16),
-    pendingStatus: _leadingStatus(ink.withValues(alpha: 0.5)),
-    activeStatus: _leadingStatus(theme.live),
-    completedStatus: _leadingStatus(theme.live),
-  );
-
-  AgentExecutionStyler get execution => AgentExecutionStyler(
-    header: FlexBoxStyler().spacing(8),
-    output: BoxStyler()
-        .color(ink.withValues(alpha: 0.05))
-        .borderRadius(.circular(6))
-        .padding(.all(12)),
-    actions: FlexBoxStyler().spacing(6).padding(.only(top: 8)),
-    tool: TextStyler()
-        .color(ink.withValues(alpha: 0.62))
-        .fontSize(12)
-        .wrap(.padding(.only(top: 4))),
-    title: TextStyler().color(ink).fontWeight(FontWeight.w600),
-    meta: TextStyler().color(ink.withValues(alpha: 0.62)).fontSize(12),
-    status: TextStyler()
-        .color(ink.withValues(alpha: 0.72))
-        .fontSize(12)
-        .wrap(.padding(.symmetric(horizontal: 6))),
-    toolIcon: IconStyler().color(ink).size(16),
-    statusIcon: IconStyler().color(theme.live).size(12),
-    indicator: IconStyler().color(ink).size(16),
-  );
-
-  AgentPermissionStyler get permission => AgentPermissionStyler(
-    header: FlexBoxStyler().spacing(8),
-    actions: FlexBoxStyler()
-        .direction(narrow ? .vertical : .horizontal)
-        .crossAxisAlignment(narrow ? .stretch : .center)
-        .spacing(8)
-        .padding(.only(top: 8)),
-    title: TextStyler().color(ink).fontWeight(FontWeight.w600),
-    tool: TextStyler()
-        .color(ink.withValues(alpha: 0.62))
-        .fontSize(12)
-        .wrap(.padding(.directional(start: 24, top: 4))),
-    description: TextStyler()
-        .color(ink.withValues(alpha: 0.72))
-        .wrap(.padding(.symmetric(vertical: 8))),
-    status: TextStyler()
-        .color(ink.withValues(alpha: 0.72))
-        .fontSize(12)
-        .wrap(.padding(.symmetric(horizontal: 6))),
-    detailsLabel: TextStyler().color(ink).fontSize(13),
-    toolIcon: IconStyler().color(ink).size(16),
-    statusIcon: _leadingStatus(theme.live),
-    indicator: IconStyler().color(ink).size(16),
-  );
-
-  AgentAnswerStyler get answer => AgentAnswerStyler(
-    body: BoxStyler(),
-    actions: FlexBoxStyler().spacing(6).padding(.only(top: 8)),
-    sourcesLabel: TextStyler().color(ink).fontSize(13),
-    indicator: IconStyler().color(ink).size(16),
-  );
-
-  AgentTranscriptStyler get transcript => AgentTranscriptStyler(
-    viewport: BoxStyler().padding(.only(right: 12)),
-    item: BoxStyler(),
-    spacing: 16,
-  );
 }
 
 _AgentDemoStyles _styles(BuildContext context) => _AgentDemoStyles(
@@ -256,7 +108,7 @@ Widget _installedComposer(
     stopStyle: IconButtonStyler(animation: feedback),
   );
 
-  return AgentComposer(
+  return UiComposer(
     style: recipe.style,
     surfaceStyle: recipe.surfaceStyle,
     fieldStyle: recipe.fieldStyle,
@@ -306,25 +158,25 @@ class MessageDemo extends StatelessWidget {
   const MessageDemo({super.key});
   @override
   Widget build(BuildContext context) {
-    final styles = _styles(context);
-    return AgentMessageGroup(
+    final recipe = uiAgentMessageRecipe();
+    return UiMessageGroup(
       spacing: 16,
       children: [
-        AgentMessage(
-          role: AgentRole.user,
-          style: styles.message,
-          surfaceStyle: styles.card,
+        UiMessage(
+          role: UiRole.user,
+          style: recipe.style,
+          surfaceStyle: recipe.surfaceStyle,
           header: Text('You', style: HostTheme.of(context).meta),
           child: const Text('Review the checkout flow and pause before tests.'),
         ),
-        AgentMessage(
-          role: AgentRole.assistant,
-          style: styles.message,
-          surfaceStyle: styles.card,
+        UiMessage(
+          role: UiRole.assistant,
+          style: recipe.style,
+          surfaceStyle: recipe.surfaceStyle,
           header: Text('Agent', style: HostTheme.of(context).meta),
-          child: AgentMessageCollapsible(
-            style: styles.collapsible,
-            toggleStyle: styles.ghostButton,
+          child: UiMessageCollapsible(
+            style: recipe.collapsibleStyle,
+            toggleStyle: recipe.toggleStyle,
             child: const Text(
               'I will inspect the checkout flow, map the payment path, verify the shared cart model, and pause before running focused checks. '
               'This longer message demonstrates explicit opt-in clipping: the host asks for it, the collapsed height is the host\'s number, '
@@ -379,9 +231,9 @@ class _TranscriptDemoState extends State<TranscriptDemo> {
                   controller: _scroll,
                   thumbVisibility: true,
                   thumbColor: HostTheme.of(context).ink.withValues(alpha: 0.45),
-                  child: AgentTranscript.builder(
+                  child: UiTranscript.builder(
                     controller: _scroll,
-                    style: _styles(context).transcript,
+                    style: uiAgentTranscriptRecipe().style,
                     itemCount: lines,
                     itemBuilder: (_, i) =>
                         Text('Line ${i + 1} of the growing log.'),
@@ -409,23 +261,30 @@ class PermissionDemo extends StatefulWidget {
 }
 
 class _PermissionDemoState extends State<PermissionDemo> {
-  var status = AgentPermissionStatus.pending;
+  var status = UiPermissionStatus.pending;
   var request = 0;
   @override
   Widget build(BuildContext context) {
     final styles = _styles(context);
+    final recipe = uiAgentPermissionRecipe(
+      style: UiPermissionStyler(
+        actions: FlexBoxStyler()
+            .direction(styles.narrow ? .vertical : .horizontal)
+            .crossAxisAlignment(styles.narrow ? .stretch : .center),
+      ),
+    );
     return Column(
       children: [
-        AgentPermission(
+        UiPermission(
           requestId: request,
-          style: styles.permission,
+          style: recipe.style,
           indicatorBuilder: catalogChevron,
-          surfaceStyle: styles.card,
-          detailsStyle: styles.disclosure,
-          parametersStyle: styles.dataList,
-          allowOnceStyle: styles.decision(styles.button),
-          alwaysAllowStyle: styles.decision(styles.quietButton),
-          denyStyle: styles.decision(styles.ghostButton),
+          surfaceStyle: recipe.surfaceStyle,
+          detailsStyle: recipe.detailsStyle,
+          parametersStyle: recipe.parametersStyle,
+          allowOnceStyle: styles.decision(recipe.allowOnceStyle),
+          alwaysAllowStyle: styles.decision(recipe.alwaysAllowStyle),
+          denyStyle: styles.decision(recipe.denyStyle),
           tool: 'terminal.run',
           status: status,
           description:
@@ -439,16 +298,16 @@ class _PermissionDemoState extends State<PermissionDemo> {
             ),
           ],
           onAllowOnce: () =>
-              setState(() => status = AgentPermissionStatus.complete),
+              setState(() => status = UiPermissionStatus.complete),
           onAlwaysAllow: () =>
-              setState(() => status = AgentPermissionStatus.complete),
-          onDeny: () => setState(() => status = AgentPermissionStatus.denied),
+              setState(() => status = UiPermissionStatus.complete),
+          onDeny: () => setState(() => status = UiPermissionStatus.denied),
         ),
         CatalogAction(
           label: 'Replay',
           onPressed: () => setState(() {
             request++;
-            status = AgentPermissionStatus.pending;
+            status = UiPermissionStatus.pending;
           }),
         ),
       ],
@@ -456,7 +315,7 @@ class _PermissionDemoState extends State<PermissionDemo> {
   }
 }
 
-String _executionOutput(AgentExecutionStatus status) => switch (status) {
+String _executionOutput(UiExecutionStatus status) => switch (status) {
   .running => 'Running the focused test suite…',
   .success => '12 passed · 0 failed',
   .error => 'Checkout validation failed. Review the output and retry.',
@@ -470,40 +329,40 @@ class ExecutionDemo extends StatefulWidget {
 }
 
 class _ExecutionDemoState extends State<ExecutionDemo> {
-  var status = AgentExecutionStatus.running;
+  var status = UiExecutionStatus.running;
   @override
   Widget build(BuildContext context) {
-    final styles = _styles(context);
+    final recipe = uiAgentExecutionRecipe();
     return Column(
       children: [
-        AgentExecution(
-          style: styles.execution,
+        UiExecution(
+          style: recipe.style,
           indicatorBuilder: catalogChevron,
-          surfaceStyle: styles.card,
-          disclosureStyle: styles.disclosure,
-          copyStyle: styles.utilityIconButton,
-          retryStyle: styles.utilityIconButton,
+          surfaceStyle: recipe.surfaceStyle,
+          disclosureStyle: recipe.disclosureStyle,
+          copyStyle: recipe.copyStyle,
+          retryStyle: recipe.retryStyle,
           tool: 'terminal.run',
           title: 'Focused checks',
           status: status,
           onCopy: () =>
               Clipboard.setData(ClipboardData(text: _executionOutput(status))),
-          onRetry: () => setState(() => status = AgentExecutionStatus.running),
+          onRetry: () => setState(() => status = UiExecutionStatus.running),
           child: Text(_executionOutput(status)),
         ),
         // Cycles through the failure state too. It was the one status with
         // copy written for it that no control in the catalog could reach.
         CatalogAction(
           label: switch (status) {
-            AgentExecutionStatus.running => 'Succeed',
-            AgentExecutionStatus.success => 'Fail',
+            UiExecutionStatus.running => 'Succeed',
+            UiExecutionStatus.success => 'Fail',
             _ => 'Replay',
           },
           onPressed: () => setState(
             () => status = switch (status) {
-              AgentExecutionStatus.running => AgentExecutionStatus.success,
-              AgentExecutionStatus.success => AgentExecutionStatus.error,
-              _ => AgentExecutionStatus.running,
+              UiExecutionStatus.running => UiExecutionStatus.success,
+              UiExecutionStatus.success => UiExecutionStatus.error,
+              _ => UiExecutionStatus.running,
             },
           ),
         ),
@@ -518,20 +377,20 @@ class PlanDemo extends StatefulWidget {
   State<PlanDemo> createState() => _PlanDemoState();
 }
 
-AgentPlanItemStatus _planItemStatus(int index, int currentStep) {
-  if (index < currentStep) return AgentPlanItemStatus.completed;
-  if (index == currentStep) return AgentPlanItemStatus.inProgress;
-  return AgentPlanItemStatus.pending;
+UiPlanItemStatus _planItemStatus(int index, int currentStep) {
+  if (index < currentStep) return UiPlanItemStatus.completed;
+  if (index == currentStep) return UiPlanItemStatus.inProgress;
+  return UiPlanItemStatus.pending;
 }
 
 class _PlanDemoState extends State<PlanDemo> {
   var step = 0;
   @override
   Widget build(BuildContext context) {
-    final styles = _styles(context);
+    final recipe = uiAgentPlanRecipe();
     final items = List.generate(
       3,
-      (i) => AgentPlanItem(
+      (i) => UiPlanItem(
         id: '$i',
         title: ['Read the brief', 'Map the path', 'Run checks'][i],
         status: _planItemStatus(i, step),
@@ -539,10 +398,10 @@ class _PlanDemoState extends State<PlanDemo> {
     );
     return Column(
       children: [
-        AgentPlan(
-          style: styles.plan,
+        UiPlan(
+          style: recipe.style,
+          disclosureStyle: recipe.disclosureStyle,
           indicatorBuilder: catalogChevron,
-          disclosureStyle: styles.ledger,
           items: items,
         ),
         CatalogAction(
@@ -561,38 +420,38 @@ class ActivityDemo extends StatefulWidget {
 }
 
 class _ActivityDemoState extends State<ActivityDemo> {
-  var status = AgentRunStatus.working;
+  var status = UiRunStatus.working;
   @override
   Widget build(BuildContext context) {
-    final styles = _styles(context);
+    final recipe = uiAgentActivityRecipe();
     return Column(
       children: [
-        AgentActivity(
-          style: styles.activity,
+        UiActivity(
+          style: recipe.style,
+          disclosureStyle: recipe.disclosureStyle,
           indicatorBuilder: catalogChevron,
-          disclosureStyle: styles.ledger,
           status: status,
           items: [
-            const AgentActivityItem(
+            const UiActivityItem(
               id: 'read',
               title: 'Reading the brief',
-              status: AgentActivityItemStatus.complete,
+              status: UiActivityItemStatus.complete,
             ),
-            AgentActivityItem(
+            UiActivityItem(
               id: 'map',
               title: 'Mapping the path',
-              status: status == AgentRunStatus.working
-                  ? AgentActivityItemStatus.active
-                  : AgentActivityItemStatus.complete,
+              status: status == UiRunStatus.working
+                  ? UiActivityItemStatus.active
+                  : UiActivityItemStatus.complete,
             ),
           ],
         ),
         CatalogAction(
-          label: status == AgentRunStatus.working ? 'Complete' : 'Replay',
+          label: status == UiRunStatus.working ? 'Complete' : 'Replay',
           onPressed: () => setState(
-            () => status = status == AgentRunStatus.working
-                ? AgentRunStatus.complete
-                : AgentRunStatus.working,
+            () => status = status == UiRunStatus.working
+                ? UiRunStatus.complete
+                : UiRunStatus.working,
           ),
         ),
       ],
@@ -607,20 +466,20 @@ class AnswerDemo extends StatefulWidget {
 }
 
 class _AnswerDemoState extends State<AnswerDemo> {
-  var status = AgentAnswerStatus.streaming;
+  var status = UiAnswerStatus.streaming;
   var stream = 0;
   @override
   Widget build(BuildContext context) {
-    final styles = _styles(context);
+    final recipe = uiAgentAnswerRecipe();
     return Column(
       children: [
-        AgentAnswer(
-          style: styles.answer,
+        UiAnswer(
+          style: recipe.style,
           sourcesIndicatorBuilder: catalogChevron,
-          surfaceStyle: styles.card,
-          sourcesStyle: styles.disclosure,
-          copyStyle: styles.utilityIconButton,
-          retryStyle: styles.utilityIconButton,
+          surfaceStyle: recipe.surfaceStyle,
+          sourcesStyle: recipe.sourcesStyle,
+          copyStyle: recipe.copyStyle,
+          retryStyle: recipe.retryStyle,
           streamId: stream,
           status: status,
           onCopy: () => Clipboard.setData(
@@ -628,7 +487,7 @@ class _AnswerDemoState extends State<AnswerDemo> {
           ),
           onRetry: () => setState(() {
             stream++;
-            status = AgentAnswerStatus.streaming;
+            status = UiAnswerStatus.streaming;
           }),
           sourcesContent: status.isStreaming
               ? null
@@ -642,7 +501,7 @@ class _AnswerDemoState extends State<AnswerDemo> {
         CatalogAction(
           label: 'Complete',
           onPressed: status.isStreaming
-              ? () => setState(() => status = AgentAnswerStatus.complete)
+              ? () => setState(() => status = UiAnswerStatus.complete)
               : null,
         ),
       ],
@@ -650,180 +509,428 @@ class _AnswerDemoState extends State<AnswerDemo> {
   }
 }
 
-enum _RunStage { permission, running, complete, denied, cancelled }
+enum _RunStage { idle, permission, running, complete, error, denied, cancelled }
+
+enum _RunScenario { success, permission, failure }
 
 /// A deterministic host-owned run; no model or terminal is contacted.
 class ComposedRunDemo extends StatefulWidget {
-  const ComposedRunDemo({super.key});
+  const ComposedRunDemo({
+    super.key,
+    this.stepDelay = const Duration(milliseconds: 280),
+  });
+
+  final Duration stepDelay;
 
   @override
   State<ComposedRunDemo> createState() => _ComposedRunDemoState();
 }
 
 class _ComposedRunDemoState extends State<ComposedRunDemo> {
-  var stage = _RunStage.permission;
-  var request = 0;
-  var prompt = 'Review the checkout flow.';
+  static const _chunks = [
+    'I inspected the checkout flow. ',
+    'The shared cart state is correct. ',
+    'All 12 focused checks passed.',
+  ];
 
-  void _start(String value) => setState(() {
-    prompt = value;
-    request++;
-    stage = _RunStage.permission;
-  });
+  final _scroll = ScrollController();
+  Timer? _timer;
+  var stage = _RunStage.idle;
+  var scenario = _RunScenario.success;
+  var request = 0;
+  var prompt = '';
+  var answer = '';
+  var following = true;
+  var alwaysAllow = false;
+  var toolStarted = false;
+  final history = <({String prompt, String answer})>[];
+
+  String get visibleAnswer => answer.isNotEmpty
+      ? answer
+      : stage == _RunStage.denied
+      ? 'Permission denied. No checks were run.'
+      : !toolStarted
+      ? 'Stopped before running the tool. No checks were run.'
+      : 'Run stopped. Submit another message to try again.';
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _scroll.dispose();
+    super.dispose();
+  }
+
+  void _start(
+    String value, {
+    _RunScenario nextScenario = _RunScenario.success,
+    bool keepMessage = false,
+  }) {
+    if (stage == .permission || stage == .running) return;
+    _timer?.cancel();
+    setState(() {
+      if (!keepMessage && prompt.isNotEmpty) {
+        history.add((prompt: prompt, answer: visibleAnswer));
+      }
+      if (!keepMessage) prompt = value;
+      scenario = nextScenario;
+      answer = '';
+      following = true;
+      toolStarted = false;
+      request++;
+      stage = nextScenario == .permission && !alwaysAllow
+          ? _RunStage.permission
+          : _RunStage.running;
+    });
+    if (stage == .running) _stream(request);
+  }
+
+  void _stream(int id) {
+    if (!mounted || id != request) return;
+    var index = 0;
+    setState(() {
+      toolStarted = true;
+      stage = .running;
+    });
+    _timer = Timer.periodic(widget.stepDelay, (timer) {
+      if (!mounted || id != request) {
+        timer.cancel();
+        return;
+      }
+      if (scenario == .failure && index == 1) {
+        timer.cancel();
+        setState(() {
+          stage = .error;
+          answer =
+              'The simulated command failed. Retry runs the recovery path.';
+        });
+        return;
+      }
+      setState(() => answer += _chunks[index++]);
+      if (index == _chunks.length) {
+        timer.cancel();
+        setState(() => stage = .complete);
+      }
+    });
+  }
+
+  void _retry() => _start(
+    prompt,
+    nextScenario: scenario == .failure ? .success : scenario,
+    keepMessage: true,
+  );
+
+  void _reset() {
+    _timer?.cancel();
+    setState(() {
+      request++;
+      stage = .idle;
+      prompt = '';
+      answer = '';
+      following = true;
+      alwaysAllow = false;
+      toolStarted = false;
+      history.clear();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final styles = _styles(context);
+    final messageRecipe = uiAgentMessageRecipe();
+    final transcriptRecipe = uiAgentTranscriptRecipe();
+    final planRecipe = uiAgentPlanRecipe();
+    final activityRecipe = uiAgentActivityRecipe();
+    final permissionRecipe = uiAgentPermissionRecipe(
+      style: UiPermissionStyler(
+        actions: FlexBoxStyler()
+            .direction(styles.narrow ? .vertical : .horizontal)
+            .crossAxisAlignment(styles.narrow ? .stretch : .center),
+      ),
+    );
+    final executionRecipe = uiAgentExecutionRecipe();
+    final answerRecipe = uiAgentAnswerRecipe();
     final working = stage == _RunStage.running;
+    final requestId = request;
     final complete = stage == _RunStage.complete;
+    final active = stage == _RunStage.permission || working;
     final stopped = stage == _RunStage.denied || stage == _RunStage.cancelled;
     final output = _executionOutput(
       complete
-          ? AgentExecutionStatus.success
+          ? UiExecutionStatus.success
+          : stage == _RunStage.error
+          ? UiExecutionStatus.error
           : stopped
-          ? AgentExecutionStatus.cancelled
-          : AgentExecutionStatus.running,
+          ? UiExecutionStatus.cancelled
+          : UiExecutionStatus.running,
     );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        AgentTranscript(
-          style: styles.transcript.viewport(BoxStyler().padding(.all(0))),
-          followOutput: false,
+        Row(
           children: [
-            AgentMessage(
-              key: ValueKey('message-$request'),
-              role: AgentRole.user,
-              style: styles.message,
-              surfaceStyle: styles.card,
-              child: Text(prompt),
-            ),
-            AgentPlan(
-              key: ValueKey('plan-$request'),
-              style: styles.plan,
-              indicatorBuilder: catalogChevron,
-              disclosureStyle: styles.ledger,
-              items: [
-                const AgentPlanItem(
-                  id: 'inspect',
-                  title: 'Inspect checkout',
-                  status: .completed,
-                ),
-                AgentPlanItem(
-                  id: 'checks',
-                  title: 'Run focused checks',
-                  status: complete
-                      ? .completed
-                      : stopped
-                      ? .cancelled
-                      : stage == _RunStage.permission
-                      ? .pending
-                      : .inProgress,
-                ),
-              ],
-            ),
-            AgentActivity(
-              key: ValueKey('activity-$request'),
-              style: styles.activity,
-              indicatorBuilder: catalogChevron,
-              disclosureStyle: styles.ledger,
-              status: complete || stopped ? .complete : .working,
-              items: [
-                const AgentActivityItem(
-                  id: 'read',
-                  title: 'Read the checkout flow',
-                  status: .complete,
-                ),
-                AgentActivityItem(
-                  id: 'checks',
-                  title: stage == _RunStage.permission
-                      ? 'Waiting for permission'
-                      : stopped
-                      ? 'Checks stopped'
-                      : complete
-                      ? 'Finished focused checks'
-                      : 'Running focused checks',
-                  status: complete || stopped ? .complete : .active,
-                ),
-              ],
-            ),
-            AgentPermission(
-              key: ValueKey('permission-$request'),
-              requestId: request,
-              style: styles.permission,
-              indicatorBuilder: catalogChevron,
-              surfaceStyle: styles.card,
-              detailsStyle: styles.disclosure,
-              parametersStyle: styles.dataList,
-              allowOnceStyle: styles.decision(styles.button),
-              alwaysAllowStyle: styles.decision(styles.quietButton),
-              denyStyle: styles.decision(styles.ghostButton),
-              tool: 'terminal.run',
-              description:
-                  'Run the focused test suite. This demo never executes a command.',
-              status: stage == _RunStage.permission
-                  ? .pending
-                  : stage == _RunStage.denied
-                  ? .denied
-                  : working
-                  ? .running
-                  : .complete,
-              parameters: const [
-                RemixDataListItem(label: 'Command', value: 'flutter test'),
-              ],
-              onAllowOnce: () => setState(() => stage = _RunStage.running),
-              onAlwaysAllow: () => setState(() => stage = _RunStage.running),
-              onDeny: () => setState(() => stage = _RunStage.denied),
-            ),
-            if (working || complete || stage == _RunStage.cancelled)
-              AgentExecution(
-                key: ValueKey('execution-$request'),
-                style: styles.execution,
-                indicatorBuilder: catalogChevron,
-                surfaceStyle: styles.card,
-                disclosureStyle: styles.disclosure,
-                copyStyle: styles.utilityIconButton,
-                retryStyle: styles.utilityIconButton,
-                tool: 'terminal.run',
-                title: 'Focused checks',
-                status: complete
-                    ? .success
-                    : working
-                    ? .running
-                    : .cancelled,
-                onCopy: () => Clipboard.setData(ClipboardData(text: output)),
-                onRetry: () => _start(prompt),
-                child: Text(output),
-              ),
-            if (complete || stopped)
-              AgentAnswer(
-                key: ValueKey('answer-$request'),
-                style: styles.answer,
-                sourcesIndicatorBuilder: catalogChevron,
-                surfaceStyle: styles.card,
-                sourcesStyle: styles.disclosure,
-                status: .complete,
-                child: Text(
-                  complete
-                      ? 'All 12 checks passed. The checkout flow is ready for review.'
-                      : stage == _RunStage.denied
-                      ? 'Permission denied. No checks were run.'
-                      : 'Run stopped. Submit another message to try again.',
-                ),
-              ),
-          ].map((child) => CatalogEntrance(key: child.key, child: child)).toList(),
+            const Expanded(child: Text('Interactive demo')),
+            CatalogAction(label: 'New chat', onPressed: _reset),
+          ],
         ),
-        if (working)
+        const SizedBox(height: 8),
+        const Text(
+          'Simulated responses and tools — no backend or credentials.',
+        ),
+        const SizedBox(height: 16),
+        if (!active)
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              RemixButton(
+                style: uiButtonStyle(
+                  variant: .outline,
+                  style: ButtonStyler().minHeight(48),
+                ),
+                label: 'Successful task',
+                onPressed: () => _start('Review the checkout flow.'),
+              ),
+              RemixButton(
+                style: uiButtonStyle(
+                  variant: .outline,
+                  style: ButtonStyler().minHeight(48),
+                ),
+                label: 'Permission task',
+                onPressed: () => _start(
+                  'Run the focused checks.',
+                  nextScenario: .permission,
+                ),
+              ),
+              RemixButton(
+                style: uiButtonStyle(
+                  variant: .outline,
+                  style: ButtonStyler().minHeight(48),
+                ),
+                label: 'Recoverable failure',
+                onPressed: () => _start(
+                  'Recover the failed command.',
+                  nextScenario: .failure,
+                ),
+              ),
+            ],
+          ),
+        if (!active) const SizedBox(height: 20),
+        SizedBox(
+          height:
+              MediaQuery.sizeOf(context).height * (styles.narrow ? 0.34 : 0.40),
+          child: UiTranscript(
+            controller: _scroll,
+            style: transcriptRecipe.style.viewport(
+              BoxStyler().padding(.all(0)),
+            ),
+            followOutput: following,
+            busy: active,
+            onFollowChanged: (value) {
+              if (following != value) setState(() => following = value);
+            },
+            children: [
+              for (final turn in history) ...[
+                UiMessage(
+                  role: .user,
+                  style: messageRecipe.style,
+                  surfaceStyle: messageRecipe.surfaceStyle,
+                  child: Text(turn.prompt),
+                ),
+                UiAnswer(
+                  status: .complete,
+                  style: answerRecipe.style,
+                  surfaceStyle: answerRecipe.surfaceStyle,
+                  child: Text(turn.answer),
+                ),
+              ],
+              if (stage != _RunStage.idle)
+                UiMessage(
+                  key: ValueKey('message-$request'),
+                  role: UiRole.user,
+                  style: messageRecipe.style,
+                  surfaceStyle: messageRecipe.surfaceStyle,
+                  child: Text(prompt),
+                ),
+              if (stage != _RunStage.idle)
+                UiPlan(
+                  key: ValueKey('plan-$request'),
+                  style: planRecipe.style,
+                  indicatorBuilder: catalogChevron,
+                  disclosureStyle: planRecipe.disclosureStyle,
+                  items: [
+                    const UiPlanItem(
+                      id: 'inspect',
+                      title: 'Inspect checkout',
+                      status: .completed,
+                    ),
+                    UiPlanItem(
+                      id: 'checks',
+                      title: stage == _RunStage.error
+                          ? 'Focused checks failed'
+                          : 'Run focused checks',
+                      status: complete
+                          ? .completed
+                          : stopped || stage == _RunStage.error
+                          ? .cancelled
+                          : stage == _RunStage.permission
+                          ? .pending
+                          : .inProgress,
+                    ),
+                  ],
+                ),
+              if (stage != _RunStage.idle)
+                UiActivity(
+                  key: ValueKey('activity-$request'),
+                  style: activityRecipe.style,
+                  indicatorBuilder: catalogChevron,
+                  disclosureStyle: activityRecipe.disclosureStyle,
+                  status: complete || stopped || stage == _RunStage.error
+                      ? .complete
+                      : .working,
+                  items: [
+                    const UiActivityItem(
+                      id: 'read',
+                      title: 'Read the checkout flow',
+                      status: .complete,
+                    ),
+                    UiActivityItem(
+                      id: 'checks',
+                      title: stage == _RunStage.permission
+                          ? 'Waiting for permission'
+                          : stage == _RunStage.error
+                          ? 'Focused checks failed'
+                          : stopped
+                          ? 'Checks stopped'
+                          : complete
+                          ? 'Finished focused checks'
+                          : 'Running focused checks',
+                      status: complete || stopped || stage == _RunStage.error
+                          ? .complete
+                          : .active,
+                    ),
+                  ],
+                ),
+              if (scenario == _RunScenario.permission &&
+                  stage != _RunStage.idle &&
+                  (stage != _RunStage.cancelled || toolStarted))
+                UiPermission(
+                  key: ValueKey('permission-$request'),
+                  requestId: request,
+                  style: permissionRecipe.style,
+                  indicatorBuilder: catalogChevron,
+                  surfaceStyle: permissionRecipe.surfaceStyle,
+                  detailsStyle: permissionRecipe.detailsStyle,
+                  parametersStyle: permissionRecipe.parametersStyle,
+                  allowOnceStyle: styles.decision(
+                    permissionRecipe.allowOnceStyle,
+                  ),
+                  alwaysAllowStyle: styles.decision(
+                    permissionRecipe.alwaysAllowStyle,
+                  ),
+                  denyStyle: styles.decision(permissionRecipe.denyStyle),
+                  tool: 'terminal.run',
+                  description:
+                      'Run the focused test suite. This demo never executes a command.',
+                  status: stage == _RunStage.permission
+                      ? .pending
+                      : stage == _RunStage.denied
+                      ? .denied
+                      : stage == _RunStage.cancelled
+                      ? .allowed
+                      : stage == _RunStage.error
+                      ? .error
+                      : working
+                      ? .running
+                      : .complete,
+                  parameters: const [
+                    RemixDataListItem(label: 'Command', value: 'flutter test'),
+                  ],
+                  onAllowOnce: () {
+                    if (requestId != request || stage != .permission) return;
+                    _stream(requestId);
+                  },
+                  onAlwaysAllow: () {
+                    if (requestId != request || stage != .permission) return;
+                    alwaysAllow = true;
+                    _stream(requestId);
+                  },
+                  onDeny: () {
+                    if (requestId != request || stage != .permission) return;
+                    setState(() => stage = _RunStage.denied);
+                  },
+                ),
+              if (toolStarted &&
+                  (working ||
+                      complete ||
+                      stage == _RunStage.error ||
+                      stage == _RunStage.cancelled))
+                UiExecution(
+                  key: ValueKey('execution-$request'),
+                  style: executionRecipe.style,
+                  indicatorBuilder: catalogChevron,
+                  surfaceStyle: executionRecipe.surfaceStyle,
+                  disclosureStyle: executionRecipe.disclosureStyle,
+                  copyStyle: executionRecipe.copyStyle,
+                  retryStyle: executionRecipe.retryStyle,
+                  tool: 'terminal.run',
+                  title: 'Focused checks',
+                  status: complete
+                      ? .success
+                      : working
+                      ? .running
+                      : stage == _RunStage.error
+                      ? .error
+                      : .cancelled,
+                  onCopy: () => Clipboard.setData(ClipboardData(text: output)),
+                  onRetry: _retry,
+                  child: Text(output),
+                ),
+              if (answer.isNotEmpty || complete || stopped)
+                UiAnswer(
+                  key: ValueKey('answer-$request'),
+                  style: answerRecipe.style,
+                  sourcesIndicatorBuilder: catalogChevron,
+                  surfaceStyle: answerRecipe.surfaceStyle,
+                  sourcesStyle: answerRecipe.sourcesStyle,
+                  copyStyle: answerRecipe.copyStyle,
+                  retryStyle: answerRecipe.retryStyle,
+                  sourcesContent: const Text(
+                    'Local simulated checkout fixture.',
+                  ),
+                  status: working
+                      ? .streaming
+                      : stage == _RunStage.error
+                      ? .error
+                      : .complete,
+                  onCopy: () =>
+                      Clipboard.setData(ClipboardData(text: visibleAnswer)),
+                  onRetry: _retry,
+                  child: Text(visibleAnswer),
+                ),
+            ].map((child) => CatalogEntrance(key: child.key, child: child)).toList(),
+          ),
+        ),
+        if (!following)
           CatalogAction(
-            label: 'Finish checks',
-            onPressed: () => setState(() => stage = _RunStage.complete),
+            label: 'Return to latest',
+            onPressed: () {
+              setState(() => following = true);
+              if (_scroll.hasClients)
+                _scroll.jumpTo(_scroll.position.maxScrollExtent);
+            },
           ),
         const SizedBox(height: 16),
         _installedComposer(
           context,
           onSubmit: _start,
-          running: working,
-          onStop: () => setState(() => stage = _RunStage.cancelled),
+          running: active,
+          onStop: () {
+            _timer?.cancel();
+            setState(() {
+              request++;
+              stage = _RunStage.cancelled;
+            });
+          },
         ),
       ],
     );

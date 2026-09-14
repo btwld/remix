@@ -5,6 +5,7 @@ import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
 import '../models/statuses.dart';
+import '../support/disclosure.dart';
 
 part 'message.g.dart';
 
@@ -168,30 +169,29 @@ class AgentMessageCollapsible extends StatefulWidget {
 }
 
 class _AgentMessageCollapsibleState extends State<AgentMessageCollapsible> {
-  late bool _uncontrolledExpanded;
+  late final AgentDisclosureEngine _disclosure;
   bool _overflows = false;
 
-  bool get _expanded => widget.expanded ?? _uncontrolledExpanded;
+  bool get _expanded => _disclosure.value;
 
   @override
   void initState() {
     super.initState();
-    _uncontrolledExpanded = widget.expanded ?? widget.defaultExpanded;
+    _disclosure = AgentDisclosureEngine(
+      value: widget.expanded,
+      defaultValue: widget.defaultExpanded,
+    );
   }
 
   @override
   void didUpdateWidget(AgentMessageCollapsible oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.expanded != null && widget.expanded == null) {
-      _uncontrolledExpanded = oldWidget.expanded!;
-    }
+    _disclosure.reconcile(widget.expanded);
   }
 
   void _toggle() {
     final next = !_expanded;
-    if (widget.expanded == null) {
-      setState(() => _uncontrolledExpanded = next);
-    }
+    if (_disclosure.request(next)) setState(() {});
     widget.onExpandedChanged?.call(next);
   }
 

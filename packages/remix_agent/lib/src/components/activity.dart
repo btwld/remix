@@ -5,8 +5,9 @@ import 'package:remix/remix.dart';
 
 import '../models/activity_item.dart';
 import '../models/statuses.dart';
-import '../style/functional_glyph.dart';
-import '../style/live_edge.dart';
+import '../support/disclosure.dart';
+import '../support/functional_glyph.dart';
+import '../support/live_edge.dart';
 
 part 'activity.g.dart';
 
@@ -70,23 +71,23 @@ class AgentActivity extends StatefulWidget {
 }
 
 class _AgentActivityState extends State<AgentActivity> {
-  late bool _uncontrolledExpanded;
+  late final AgentDisclosureEngine _disclosure;
 
-  bool get _expanded =>
-      widget.isWorking ? true : (widget.expanded ?? _uncontrolledExpanded);
+  bool get _expanded => widget.isWorking ? true : (_disclosure.value);
 
   @override
   void initState() {
     super.initState();
-    _uncontrolledExpanded = widget.expanded ?? widget.defaultExpanded;
+    _disclosure = AgentDisclosureEngine(
+      value: widget.expanded,
+      defaultValue: widget.defaultExpanded,
+    );
   }
 
   @override
   void didUpdateWidget(AgentActivity oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.expanded != null && widget.expanded == null) {
-      _uncontrolledExpanded = oldWidget.expanded!;
-    }
+    _disclosure.reconcile(widget.expanded);
     if (!oldWidget.isWorking && widget.isWorking) {
       _request(true, lifecycle: true);
     } else if (oldWidget.isWorking &&
@@ -98,9 +99,7 @@ class _AgentActivityState extends State<AgentActivity> {
 
   void _request(bool next, {bool lifecycle = false}) {
     if (widget.isWorking && !lifecycle) return;
-    if (widget.expanded == null && next != _uncontrolledExpanded) {
-      setState(() => _uncontrolledExpanded = next);
-    }
+    if (_disclosure.request(next)) setState(() {});
     widget.onExpandedChanged?.call(next);
   }
 
@@ -147,17 +146,6 @@ class _AgentActivityState extends State<AgentActivity> {
         AgentFunctionalGlyph(kind: _statusGlyph(item.status), spec: iconSpec),
   );
 
-  Widget _indicator(
-    BuildContext context,
-    AgentActivitySpec spec,
-    bool expanded,
-  ) => agentDisclosureIndicator(
-    context,
-    styleSpec: spec.indicator,
-    expanded: expanded,
-    builder: widget.indicatorBuilder,
-  );
-
   @override
   Widget build(BuildContext context) {
     return RemixStyleSpecBuilder<AgentActivitySpec>(
@@ -178,7 +166,11 @@ class _AgentActivityState extends State<AgentActivity> {
               Expanded(child: trigger!),
               // Preserve the count alignment and expansion cue while working.
               // RemixDisclosure keeps the forced-open header non-toggleable.
-              _indicator(context, spec, state.isExpanded),
+              AgentDisclosureIndicator(
+                styleSpec: spec.indicator,
+                expanded: state.isExpanded,
+                builder: widget.indicatorBuilder,
+              ),
             ],
           ),
           trigger: Row(

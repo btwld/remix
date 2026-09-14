@@ -14,7 +14,9 @@ import 'package:test/test.dart';
 const _referencePrefix = 'Playground';
 
 void main() {
-  // Only the hand-authored preset needs this. `fortal` is generated from
+  // Hand-authored templates use the playground prefix. Derived Agent
+  // templates use their source prefix, so every default template participates.
+  // `fortal` is generated from
   // `remix_fortal`'s formatted source by `tool/build_fortal_preset.dart`, which
   // holds it byte-identical through a round-trip assertion, so its templates are
   // formatter-clean by construction.
@@ -23,7 +25,7 @@ void main() {
   // installed source is formatted regardless of what the template looked like.
   // This keeps the committed templates diffable instead of differing by pure
   // whitespace, which nothing else could see.
-  test('every default-preset template renders as formatter-clean Dart', () {
+  test('every default template is formatter-clean at its authoring prefix', () {
     // `dart test` runs with the package root as the current directory.
     final templates = Directory(
       p.join('lib', 'src', 'registry', 'default', 'templates'),
@@ -57,8 +59,14 @@ void main() {
       File(p.join(staging.path, name)).writeAsStringSync(
         renderer.render(
           template.readAsStringSync(),
-          typePrefix: config.prefix,
-          valuePrefix: config.valuePrefix,
+          // Derived Agent templates round-trip the formatted authoring source.
+          // Long-prefix consumer formatting is separately tested by Installer.
+          typePrefix: relative.startsWith('agent${p.separator}')
+              ? 'Agent'
+              : config.prefix,
+          valuePrefix: relative.startsWith('agent${p.separator}')
+              ? 'agent'
+              : config.valuePrefix,
         ),
       );
       sources[name] = template;
@@ -92,7 +100,7 @@ void main() {
       isEmpty,
       reason:
           'these templates do not match the formatter when rendered with '
-          'prefix $_referencePrefix. Render one, format it, and reverse the '
+          'its authoring prefix (Agent for derived source, $_referencePrefix otherwise). Render one, format it, and reverse the '
           'prefix substitution to update it.',
     );
   });

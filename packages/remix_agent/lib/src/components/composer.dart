@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 import 'package:remix/remix.dart';
 
-import '../style/functional_glyph.dart';
+import '../support/functional_glyph.dart';
 
 part 'composer.g.dart';
 

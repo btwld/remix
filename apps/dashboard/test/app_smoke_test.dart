@@ -687,9 +687,11 @@ void main() {
   ) async {
     await tester.pumpWidget(const DashboardApp());
 
-    await tester.tap(
-      find.byKey(const ValueKey(DashboardPage.galleryActions)).first,
-    );
+    final actions = find
+        .byKey(const ValueKey(DashboardPage.galleryActions))
+        .first;
+    await tester.ensureVisible(actions);
+    await tester.tap(actions);
     await tester.pump();
 
     expect(find.text('Button'), findsWidgets);
@@ -1077,9 +1079,11 @@ void main() {
       await tester.pump(const Duration(milliseconds: 100));
     }
 
-    await tester.tap(
-      find.byKey(const ValueKey(DashboardPage.galleryTypography)).first,
-    );
+    final typography = find
+        .byKey(const ValueKey(DashboardPage.galleryTypography))
+        .first;
+    await tester.ensureVisible(typography);
+    await tester.tap(typography);
     for (var frame = 0; frame < 5; frame++) {
       await tester.pump(const Duration(milliseconds: 100));
     }

@@ -24,7 +24,7 @@ final catalogEntries = <CatalogEntry>[
     id: 'run',
     title: 'A full turn',
     lede:
-        'A mock run: allow or deny checks, finish or stop the run, then submit another message.',
+        'Try a simulated conversation: approve tools, stop streaming, recover a failure, or start another turn.',
     builder: (_) => const ComposedRunDemo(),
   ),
   CatalogEntry(
@@ -84,14 +84,14 @@ final catalogEntries = <CatalogEntry>[
   ),
 ];
 
-class AgentCatalog extends StatefulWidget {
-  const AgentCatalog({super.key});
+class UiCatalog extends StatefulWidget {
+  const UiCatalog({super.key});
 
   @override
-  State<AgentCatalog> createState() => _AgentCatalogState();
+  State<UiCatalog> createState() => _AgentCatalogState();
 }
 
-class _AgentCatalogState extends State<AgentCatalog> {
+class _AgentCatalogState extends State<UiCatalog> {
   final _keys = {for (final entry in catalogEntries) entry.id: GlobalKey()};
   var _active = catalogEntries.first.id;
   late final ScrollController _scroll;
@@ -164,14 +164,14 @@ class _AgentCatalogState extends State<AgentCatalog> {
               Text('Remix Agent', style: theme.display),
               const SizedBox(height: 8),
               Text(
-                'Surfaces for a long-running run. No theme. No model SDK. '
-                'Compose them in the host.',
+                'Eight conversation surfaces, styled with the default recipes. '
+                'Try the chat or explore each component below.',
                 style: theme.body.copyWith(
                   color: theme.ink.withValues(alpha: 0.72),
                 ),
               ),
               const SizedBox(height: 8),
-              Text('UNPUBLISHED REVIEW CATALOG', style: theme.meta),
+              Text('INTERACTIVE COMPONENT SHOWCASE', style: theme.meta),
               for (final entry in catalogEntries)
                 KeyedSubtree(
                   key: _keys[entry.id],

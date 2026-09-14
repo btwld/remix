@@ -133,7 +133,16 @@ without a generated adapter. Add or rename aliases there as the application
 evolves. The complete 318-icon catalog is one direct
 `package:remix_ui_icons/remix_ui_icons.dart` import away.
 
-The CLI does not create or modify `build.yaml`.
+Recipe-only installs need no `build.yaml`. Agent surfaces use `@MixableSpec`,
+whose styler builder is opt-in in the supported Mix generator. The CLI enables
+that builder for the installed source paths in `build.yaml`, preserving other
+settings and comments. Explicit disabled builders or excluded source fail in
+preflight instead of being overridden. Dry-run/diff remain read-only.
+
+Agent behavior is available in both bundled presets. Add a bare surface for
+behavior-only source, or `<component>_recipe` for the surface plus its complete
+preset-specific styling bundle. Canonical recipe templates live in
+`open_code/agent_recipes/`; derivation checks keep registry copies aligned.
 
 ## Charts without Fortal
 
@@ -265,12 +274,12 @@ second one.
 `remix_agent` is the worked example. Its catalog app,
 `packages/remix_agent/example/`, installs Theme, Card, TextField, and
 IconButton the way any consumer does, then composes them into one recipe bundle
-for `AgentComposer`:
+for the installed `UiComposer`:
 
 ```dart
 final recipe = uiAgentComposerRecipe();
 
-AgentComposer(
+UiComposer(
   onSubmit: submit,
   style: recipe.style,
   surfaceStyle: recipe.surfaceStyle,
@@ -284,15 +293,17 @@ A bundle rather than a single styler, because the widget takes five stylers and
 its own spec covers one of them. The four child stylers are passed on
 unresolved, so each control resolves its own hover, focus, and disabled state.
 
-`remix_agent` has no registry item. It is `publish_to: none`, and a registry
-item's dependency is a hosted version constraint, so there is nothing to
-install and nothing to advertise. The example resolves it as a workspace
-sibling, which is development evidence rather than proof of hosted
-installation.
+The eight Agent surfaces now install as `activity`, `answer`, `composer`,
+`execution`, `message`, `permission`, `plan`, and `transcript` in both existing
+presets. Shared `models` and `support` install through dependency closure. The
+private `remix_agent` package remains authoring/test source, not a consumer
+dependency. The example imports installed `Ui*` classes. Fortal recipes use only the installed Fortal theme and controls. Checkout verification does not replace the
+hosted checks required before a release.
 
-Only the composer is wired this way. The catalog's other seven surfaces still
-use local review-only stylers, which is the intermediate state the package's
-ADR describes: prove one surface before converting eight.
+All eight surfaces have equivalent immutable recipe bundles. Call-site overrides
+merge last, and child-control stylers remain unresolved until rendered. The
+conversation shell and simulated runner belong to the example applications,
+not the registry or a runtime package.
 
 ## Repository proof
 
@@ -314,13 +325,18 @@ sources. Select `--source checkout` or `--source hosted` for one source.
 Use `--hosted-cli --source hosted` after CLI publication to verify its hosted
 assets. Pass `--keep` to retain a generated application for inspection.
 
-Both dogfood consumers are checked against the templates they installed:
+All three dogfood consumers are checked against the templates they installed:
 
 ```shell
 fvm dart run tool/check_open_code_dogfood.dart
 ```
 
-`apps/playground` holds every item; `packages/remix_agent/example` holds the
-four its composer recipe composes. The checker declares those expected items
+`apps/playground` holds every default item; `packages/remix_agent/example` and
+`apps/dashboard` install the eight Agent recipe closures from default and Fortal
+respectively. The checker declares those expected items
 explicitly, so missing files are checked too. The CLI reads each consumer's
 `remix.yaml` to locate its installed source.
+
+Available styled items: `activity_recipe`, `answer_recipe`, `composer_recipe`,
+`execution_recipe`, `message_recipe`, `permission_recipe`, `plan_recipe`, and
+`transcript_recipe`. Each installs only its component and styled-control closure.

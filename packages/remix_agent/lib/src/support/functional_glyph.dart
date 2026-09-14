@@ -29,13 +29,21 @@ abstract final class _Glyphs {
 /// that builder under its own name, because a permission card discloses
 /// *details* and an answer discloses *sources*, so the shared part is this
 /// body and not the parameter.
-Widget agentDisclosureIndicator(
-  BuildContext context, {
-  required StyleSpec<IconSpec> styleSpec,
-  required bool expanded,
-  Widget Function(BuildContext context, bool expanded)? builder,
-}) {
-  return builder?.call(context, expanded) ??
+class AgentDisclosureIndicator extends StatelessWidget {
+  const AgentDisclosureIndicator({
+    super.key,
+    required this.styleSpec,
+    required this.expanded,
+    this.builder,
+  });
+
+  final StyleSpec<IconSpec> styleSpec;
+  final bool expanded;
+  final Widget Function(BuildContext context, bool expanded)? builder;
+
+  @override
+  Widget build(BuildContext context) =>
+      builder?.call(context, expanded) ??
       StyleSpecBuilder<IconSpec>(
         styleSpec: styleSpec,
         builder: (context, iconSpec) => AgentFunctionalGlyph(

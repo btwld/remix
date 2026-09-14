@@ -2,18 +2,29 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
 /// Shared private-package live-edge state machine.
-class AgentLiveEdgeEngine {
-  AgentLiveEdgeEngine({
-    required this.enabled,
+class {{typePrefix}}LiveEdgeEngine {
+  {{typePrefix}}LiveEdgeEngine({
+    required this._enabled,
     required this.threshold,
     this.onChanged,
   });
 
-  bool enabled;
+  bool _enabled;
+  bool get enabled => _enabled;
+
+  set enabled(bool value) {
+    // An explicit false-to-true transition is the host's resume action.
+    // Ordinary rebuilds with follow enabled must preserve a reader's release.
+    if (value && !_enabled) _following = true;
+    _enabled = value;
+  }
+
   double threshold;
   ValueChanged<bool>? onChanged;
-  bool following = true;
+  bool _following = true;
   bool _programmatic = false;
+
+  bool get following => _following;
 
   void handleScroll(
     ScrollNotification notification,
@@ -45,14 +56,14 @@ class AgentLiveEdgeEngine {
 
   void _setFollowing(bool next) {
     if (following == next) return;
-    following = next;
+    _following = next;
     onChanged?.call(next);
   }
 }
 
 /// Small non-lazy scroll view used by plan and activity ledgers.
-class AgentLiveEdgeScrollView extends StatefulWidget {
-  const AgentLiveEdgeScrollView({
+class {{typePrefix}}LiveEdgeScrollView extends StatefulWidget {
+  const {{typePrefix}}LiveEdgeScrollView({
     super.key,
     required this.child,
     this.followOutput = true,
@@ -66,19 +77,19 @@ class AgentLiveEdgeScrollView extends StatefulWidget {
   final ValueChanged<bool>? onFollowChanged;
 
   @override
-  State<AgentLiveEdgeScrollView> createState() =>
-      _AgentLiveEdgeScrollViewState();
+  State<{{typePrefix}}LiveEdgeScrollView> createState() =>
+      _{{typePrefix}}LiveEdgeScrollViewState();
 }
 
-class _AgentLiveEdgeScrollViewState extends State<AgentLiveEdgeScrollView> {
+class _{{typePrefix}}LiveEdgeScrollViewState extends State<{{typePrefix}}LiveEdgeScrollView> {
   late final ScrollController _controller;
-  late final AgentLiveEdgeEngine _liveEdge;
+  late final {{typePrefix}}LiveEdgeEngine _liveEdge;
 
   @override
   void initState() {
     super.initState();
     _controller = ScrollController();
-    _liveEdge = AgentLiveEdgeEngine(
+    _liveEdge = {{typePrefix}}LiveEdgeEngine(
       enabled: widget.followOutput,
       threshold: widget.followThreshold,
       onChanged: widget.onFollowChanged,
@@ -87,7 +98,7 @@ class _AgentLiveEdgeScrollViewState extends State<AgentLiveEdgeScrollView> {
   }
 
   @override
-  void didUpdateWidget(AgentLiveEdgeScrollView oldWidget) {
+  void didUpdateWidget({{typePrefix}}LiveEdgeScrollView oldWidget) {
     super.didUpdateWidget(oldWidget);
     _liveEdge
       ..enabled = widget.followOutput

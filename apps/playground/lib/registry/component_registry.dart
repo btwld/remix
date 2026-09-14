@@ -4,6 +4,7 @@ import 'package:remix_fortal/remix_fortal.dart';
 import '../preview_shell/preview_shell.dart';
 import '../routes/all_components.dart';
 import 'entries/avatar_entry.dart';
+import 'entries/agent_entries.dart';
 import 'entries/badge_entry.dart';
 import 'entries/button_entry.dart';
 import 'entries/callout_entry.dart';
@@ -29,6 +30,26 @@ import 'entries/typography_entry.dart';
 
 // Map component slugs to a builder that returns the component inside FortalScope.
 final Map<String, WidgetBuilder> components = {
+  'agent-activity': (context) =>
+      PreviewShell(child: Builder(builder: buildAgentActivity)),
+  'agent-answer': (context) =>
+      PreviewShell(child: Builder(builder: buildAgentAnswer)),
+  'agent-composer': (context) =>
+      PreviewShell(child: Builder(builder: buildAgentComposer)),
+  'agent-execution': (context) =>
+      PreviewShell(child: Builder(builder: buildAgentExecution)),
+  'agent-message': (context) =>
+      PreviewShell(child: Builder(builder: buildAgentMessage)),
+  'agent-permission': (context) =>
+      PreviewShell(child: Builder(builder: buildAgentPermission)),
+  'agent-plan': (context) =>
+      PreviewShell(child: Builder(builder: buildAgentPlan)),
+  'agent-transcript': (context) =>
+      PreviewShell(child: Builder(builder: buildAgentTranscript)),
+  'chat': (context) => PreviewShell(
+    initialSize: const Size(900, 720),
+    child: Builder(builder: buildAgentChat),
+  ),
   'button': (context) => FortalScope(
     brightness: Theme.of(context).brightness,
     child: PreviewShell(child: buildButtonExample()),

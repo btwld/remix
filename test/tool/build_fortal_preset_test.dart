@@ -7,6 +7,78 @@ import 'package:yaml/yaml.dart';
 import '../../tool/build_fortal_preset.dart';
 
 void main() {
+  test(
+    'Fortal merges Agent behavior and recipes without changing base output',
+    () {
+      final root = Directory.current.absolute;
+      final baseBuilder = PresetBuilder.forRepository(root);
+      final agentBuilder = PresetBuilder.forRepository(
+        root,
+        spec: fortalAgentExtension,
+      );
+      final base = baseBuilder.derive();
+      final merged = mergePresetOutputs(base, agentBuilder.derive());
+
+      for (final entry in base.files.entries) {
+        if (entry.key == 'registry.yaml') continue;
+        expect(merged.files[entry.key], entry.value, reason: entry.key);
+      }
+      final registry = merged.files['registry.yaml']!;
+      expect(registry, contains('  composer_recipe:'));
+      expect(registry, contains('  transcript_recipe:'));
+      expect(
+        merged.files,
+        contains('templates/agent/composer/composer.dart.tmpl'),
+      );
+      expect(
+        merged.files,
+        contains('templates/agent/recipes/composer_recipe.dart.tmpl'),
+      );
+    },
+  );
+
+  test('preset output merge rejects file collisions', () {
+    const left = PresetOutput(
+      files: {'registry.yaml': 'schema: 1\nitems:\n', 'templates/a': 'a'},
+      sourceByTemplate: {},
+    );
+    const right = PresetOutput(
+      files: {'registry.yaml': 'schema: 1\nitems:\n', 'templates/a': 'b'},
+      sourceByTemplate: {},
+    );
+    expect(() => mergePresetOutputs(left, right), throwsStateError);
+  });
+
+  test('preset merge rejects item and target collisions before writing', () {
+    PresetOutput fixture(
+      String name,
+      String target,
+      String source,
+    ) => PresetOutput(
+      files: {
+        'registry.yaml':
+            'schema: 1\nitems:\n  $name:\n    files:\n      - source: $source\n        target: "$target"\n',
+        source: 'fixture',
+      },
+      sourceByTemplate: const {},
+    );
+    final base = fixture('one', '@ui/one.dart', 'templates/one');
+    expect(
+      () => mergePresetOutputs(
+        base,
+        fixture('one', '@ui/two.dart', 'templates/two'),
+      ),
+      throwsStateError,
+    );
+    expect(
+      () => mergePresetOutputs(
+        base,
+        fixture('two', '@ui/one.dart', 'templates/two'),
+      ),
+      throwsStateError,
+    );
+  });
+
   late Directory sandbox;
 
   setUp(() {
