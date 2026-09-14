@@ -17,16 +17,17 @@ workspace:
   - apps/playground
   - packages/remix
   - packages/remix_cli
-  - packages/remix_fortal
   - packages/remix_agent
   - packages/remix_agent/example
   - packages/remix_ui_icons
+  - registry_source/fortal
 
 melos:
   packages:
     - apps/*
     - packages/*
     - packages/remix_agent/example
+    - registry_source/*
 
   # No `command.bootstrap.environment` here on purpose. It rewrites one
   # `environment:` into every package it manages, and this workspace has two

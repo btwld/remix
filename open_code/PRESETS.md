@@ -32,7 +32,7 @@ with the reason, so a reviewer does not reopen it by accident.
    (`classic`, `solid`, `soft`, `surface`, `outline`, `ghost`) is not the
    default's (`primary`, `secondary`, `outline`, `ghost`, `destructive`), so
    a shared recipe with swappable data is not possible between these two.
-3. **Fortal is authored once, as Dart, in `packages/remix_fortal`.** The
+3. **Fortal is authored once, as Dart, in `registry_source/fortal`.** The
    `remix_cli` templates are derived from that source and committed. A check
    fails when they drift. The alternative, hand-authored `.tmpl` files, means
    editing 36 files without an analyzer, and running the 50 test files and
@@ -55,7 +55,7 @@ with the reason, so a reviewer does not reopen it by accident.
    downloads at `1.0.0-beta.7`. pub.dev cannot delete a package, so the
    package is marked discontinued with `remix init --preset fortal` named as
    the replacement, after Commit 4 proves that path. The directory
-   `packages/remix_fortal` is not deleted. It is the authored source the
+   `registry_source/fortal` is not deleted. It is the authored source the
    templates derive from, the target of 50 test files and the parity
    checker, and a dependency of `apps/dashboard`, `apps/demo`, and
    `apps/playground`. The source and template check detects byte drift: `--check` fails CI on any byte of difference, the same way
@@ -156,7 +156,7 @@ boundary.
 `tool/build_registry.dart` at the workspace root, next to
 `check_open_code.dart`, does the following.
 
-**Input.** Every `.dart` file under `packages/remix_fortal/lib/src` except
+**Input.** Every `.dart` file under `registry_source/fortal/lib/src` except
 `*.g.dart`. The application generates its own parts.
 
 **Refusals, checked first.** Any path segment containing `fortal`. Any file
@@ -412,7 +412,7 @@ installation check. Follow [the release instructions](RELEASING.md). Keep
 - Authoring the default preset as Dart with the same derivation. The default
   has no parity contract, so the pressure is lower. Reconsider after Commit 4
   shows the tool's cost.
-- Deleting `packages/remix_fortal` from the repository. That would make the
+- Deleting `registry_source/fortal` from the repository. That would make the
   `.tmpl` files the only form of Fortal, move the parity suite behind a
   temporary-app render, and force `apps/dashboard`, `apps/demo`,
   `apps/playground`, and 39 doc pages to migrate to installed source.

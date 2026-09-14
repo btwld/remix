@@ -28,7 +28,7 @@ const _pureDartFloor = {'sdk': '>=3.12.0 <4.0.0'};
 /// application-owned Fortal preset. Every other member gets [_workspaceFloor].
 const _consumerFloorPackages = {
   'packages/remix',
-  'packages/remix_fortal',
+  'registry_source/fortal',
   'packages/remix_ui_icons',
 };
 

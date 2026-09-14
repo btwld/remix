@@ -13,8 +13,9 @@ topics:
   - styling
   - mix
 
-# Retained for workspace package resolution; releases now ship through the
-# application-owned Fortal registry in remix_cli.
+# Retained only so `apps/*` can still declare `remix_fortal: ^1.0.0-beta.9`
+# while they migrate to installed source. It goes with the last of those
+# dependencies; this package is never published.
 version: 1.0.0-beta.9
 
 environment:

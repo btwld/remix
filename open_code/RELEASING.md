@@ -96,7 +96,7 @@ After the published CLI checks pass, mark `remix_fortal` discontinued in its
 pub.dev Admin tab. Name `remix_cli` as the replacement package. The migration
 instructions use `remix init --preset fortal` and application-owned imports.
 
-Keep `packages/remix_fortal` in the repository as the analyzed authoring source.
+Keep `registry_source/fortal` in the repository as the analyzed authoring source.
 Keep `publish_to: none` and its tests. Existing hosted installations remain
 available; discontinuation does not delete their package versions.
 

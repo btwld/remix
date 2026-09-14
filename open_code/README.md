@@ -95,7 +95,7 @@ the application owns the copied Radix color table, 277-token theme, component
 recipes, and generated adapters.
 
 The Fortal templates are derived from analyzed Dart in
-`packages/remix_fortal/lib/src/`; do not edit the committed `.tmpl` files by
+`registry_source/fortal/lib/src/`; do not edit the committed `.tmpl` files by
 hand. `tool/build_registry.dart --check` makes source/template drift a CI
 failure.
 

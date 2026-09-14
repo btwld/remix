@@ -1,7 +1,7 @@
 # Fortal Scripts
 
 Development utilities for regenerating Fortal's Radix color data. Both scripts
-are run from this package root (`packages/remix_fortal/`) and write paths
+are run from this package root (`registry_source/fortal/`) and write paths
 relative to it.
 
 These are **not** part of `melos run ci`. The Radix color table is pinned to

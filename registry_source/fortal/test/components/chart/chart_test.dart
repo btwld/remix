@@ -195,7 +195,9 @@ void main() {
 
     test('mix_chart belongs to Fortal rather than core Remix', () {
       final fortalPubspec = File('pubspec.yaml').readAsStringSync();
-      final remixPubspec = File('../remix/pubspec.yaml').readAsStringSync();
+      final remixPubspec = File(
+        '../../packages/remix/pubspec.yaml',
+      ).readAsStringSync();
 
       expect(
         fortalPubspec,

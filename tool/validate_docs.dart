@@ -143,14 +143,14 @@ const _exampleSourceDirectories = <String>[
   'apps/demo/lib',
   'apps/playground/lib',
   'packages/remix/example',
-  'packages/remix_fortal/example',
+  'registry_source/fortal/example',
 ];
 
 // Package library sources aren't examples, but the same retired-API sweep
 // applies: doc comments quote call sites and drift the same way prose does.
 const _packageLibraryDirectories = <String>[
   'packages/remix/lib',
-  'packages/remix_fortal/lib',
+  'registry_source/fortal/lib',
 ];
 
 // Test code is part of the canonical-styler contract too. Mix still exposes
@@ -162,7 +162,7 @@ const _testSourceDirectories = <String>[
   'apps/demo/test',
   'apps/playground/test',
   'packages/remix/test',
-  'packages/remix_fortal/test',
+  'registry_source/fortal/test',
 ];
 
 const _publishedSkillDirectories = <String>[
@@ -172,7 +172,7 @@ const _publishedSkillDirectories = <String>[
 const _consumerDocumentationFiles = <String>[
   'README.md',
   'packages/remix/README.md',
-  'packages/remix_fortal/README.md',
+  'registry_source/fortal/README.md',
   'packages/remix_cli/README.md',
   'open_code/README.md',
   'open_code/CLEAN_SHEET.md',

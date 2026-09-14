@@ -70,7 +70,7 @@ void main() {
         r'^name:\s*remix_fortal\s*$',
         multiLine: true,
       ).hasMatch(pubspec.readAsStringSync())) {
-    stderr.writeln('Run this checker from packages/remix_fortal.');
+    stderr.writeln('Run this checker from registry_source/fortal.');
     exitCode = 64;
     return;
   }

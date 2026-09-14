@@ -252,7 +252,7 @@ final class RecipeItemSpec {
 /// The Fortal design system as application-owned registry source.
 const fortalPreset = PresetSpec(
   name: 'fortal',
-  sourceRoot: 'packages/remix_fortal',
+  sourceRoot: 'registry_source/fortal',
   sourcePackage: 'remix_fortal',
   typeWord: 'Fortal',
   valueWord: 'fortal',
