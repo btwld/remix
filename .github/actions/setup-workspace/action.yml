@@ -1,0 +1,38 @@
+name: Set up the Remix workspace
+description: >-
+  Install the pinned Flutter SDK and resolve the pub workspace, with both caches
+  warm. Shared by every CI job so the split pipeline pays setup once per job
+  instead of re-deriving it in five places.
+
+runs:
+  using: composite
+  steps:
+    # The Flutter version comes from .fvmrc so this action and the local
+    # toolchain cannot disagree. Hardcoding it here would make .fvmrc advisory.
+    - uses: kuhnroyal/flutter-fvm-config-action@v2
+      id: fvm-config-action
+
+    - uses: subosito/flutter-action@v2
+      with:
+        flutter-version: ${{ steps.fvm-config-action.outputs.FLUTTER_VERSION }}
+        channel: ${{ steps.fvm-config-action.outputs.FLUTTER_CHANNEL }}
+        cache: true
+
+    # Caching the SDK alone leaves the slowest downloads uncached. The
+    # open-code checks build throwaway consumer apps that resolve from pub.dev
+    # on every run, and those downloads are why a cold pipeline ran ~30 minutes
+    # against a warm one's ~20. The key is the lockfile: any dependency change
+    # invalidates it, so a stale cache cannot hide a real resolution failure.
+    - uses: actions/cache@v4
+      with:
+        path: ~/.pub-cache
+        key: pub-${{ runner.os }}-${{ hashFiles('pubspec.lock') }}
+        restore-keys: pub-${{ runner.os }}-
+
+    # `melos` is a dev_dependency, so resolving the workspace is also what puts
+    # it on `dart run`. Deliberately not `dart pub global activate melos`: a
+    # global install cannot honour the version the workspace pins, and only
+    # prints a reassuring, wrong one into the log.
+    - name: Resolve the workspace
+      shell: bash
+      run: flutter pub get
