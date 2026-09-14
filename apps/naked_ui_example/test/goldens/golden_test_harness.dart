@@ -12,7 +12,7 @@ const goldenFontFamily = 'GoldenRoboto';
 Future<void> loadGoldenTestFont() async {
   final packageRelative = File('test/goldens/fonts/Roboto-Regular.ttf');
   final workspaceRelative = File(
-    'packages/example/test/goldens/fonts/Roboto-Regular.ttf',
+    'apps/naked_ui_example/test/goldens/fonts/Roboto-Regular.ttf',
   );
   final fontFile = packageRelative.existsSync()
       ? packageRelative
