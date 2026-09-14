@@ -1,4 +1,4 @@
-/// Status of a long-running agent turn or activity ledger.
+/// Status of a long-running turn or activity ledger.
 enum AgentRunStatus {
   /// Work is in progress. Disclosures stay open.
   working,
@@ -93,7 +93,7 @@ enum AgentRole {
   /// The human operator.
   user,
 
-  /// The agent.
+  /// The assistant replying to the operator.
   assistant,
 }
 
