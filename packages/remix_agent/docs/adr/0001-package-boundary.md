@@ -103,7 +103,7 @@ package. Public model files are exported; internal support helpers stay out of
 the managed barrel. The existing theme item owns the single Remix dependency
 floor, inherited through support.
 
-`tool/build_agent_registry.dart` owns only `default/templates/agent/**` and
+`tool/build_registry.dart` owns only `default/templates/agent/**` and
 asserts the hand-authored registry entries. It never rewrites the default
 manifest or unrelated templates. The full Fortal writer merges an Agent
 extension before synchronizing its own preset, so regeneration cannot prune it.

@@ -17,7 +17,7 @@ void main() {
   // Hand-authored templates use the playground prefix. Derived Agent
   // templates use their source prefix, so every default template participates.
   // `fortal` is generated from
-  // `remix_fortal`'s formatted source by `tool/build_fortal_preset.dart`, which
+  // `remix_fortal`'s formatted source by `tool/build_registry.dart`, which
   // holds it byte-identical through a round-trip assertion, so its templates are
   // formatter-clean by construction.
   //

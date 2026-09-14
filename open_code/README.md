@@ -96,7 +96,7 @@ recipes, and generated adapters.
 
 The Fortal templates are derived from analyzed Dart in
 `packages/remix_fortal/lib/src/`; do not edit the committed `.tmpl` files by
-hand. `tool/build_fortal_preset.dart --check` makes source/template drift a CI
+hand. `tool/build_registry.dart --check` makes source/template drift a CI
 failure.
 
 The prefixes `Remix` and `Mix` are reserved for runtime dependencies.

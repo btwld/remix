@@ -6,8 +6,7 @@ import 'package:test/test.dart';
 import 'package:yaml/yaml.dart';
 
 import '../../packages/remix_cli/lib/src/registry.dart';
-import '../../tool/build_agent_registry.dart';
-import '../../tool/build_fortal_preset.dart';
+import '../../tool/build_registry.dart';
 
 void main() {
   late Directory sandbox;
@@ -36,7 +35,7 @@ void main() {
       ).readAsStringSync(),
     );
     builder = PresetBuilder(
-      spec: agentRegistry,
+      spec: defaultAgentExtension,
       sourceRoot: source,
       defaultRegistryRoot: registry,
       outputRoot: registry,

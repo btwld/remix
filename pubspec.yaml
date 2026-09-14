@@ -163,25 +163,15 @@ melos:
         - dart run tool/check_open_code.dart --preset fortal --source hosted
       description: Verify both presets against the required published Remix release
 
-    open-code:fortal:build:
-      run: dart run tool/build_fortal_preset.dart
-      description: Derive the Fortal registry from analyzer-checked package source
+    open-code:registry:build:
+      run: dart run tool/build_registry.dart
+      description: Derive every bundled preset from analyzer-checked package source
 
-    open-code:fortal:check:
+    open-code:registry:check:
       steps:
-        - dart test test/tool/build_fortal_preset_test.dart
-        - dart run tool/build_fortal_preset.dart --check
-      description: Test Fortal derivation and fail on committed preset drift
-
-    open-code:agent:build:
-      run: dart run tool/build_agent_registry.dart
-      description: Derive Agent templates within the default registry
-
-    open-code:agent:check:
-      steps:
-        - dart test test/tool/build_agent_registry_test.dart
-        - dart run tool/build_agent_registry.dart --check
-      description: Verify Agent ownership, metadata, and committed template drift
+        - dart test test/tool/build_registry_test.dart test/tool/build_registry_agent_test.dart
+        - dart run tool/build_registry.dart --check
+      description: Test preset derivation and fail on committed registry drift
 
     open-code:dogfood:check:
       run: dart run tool/check_open_code_dogfood.dart
@@ -229,8 +219,7 @@ melos:
         - material:check
         - generate:check
         - format:check
-        - open-code:fortal:check
-        - open-code:agent:check
+        - open-code:registry:check
         - docs:check
         - fortal:parity:check
         - open-code:dogfood:check

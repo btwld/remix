@@ -144,7 +144,7 @@ const _versionAlignedPackages = {'remix'};
 ///
 /// These are data, not pubspec dependencies, so `melos bootstrap` never
 /// rewrites them and the pubspec walk above cannot see them. Nothing else
-/// compares them to the workspace either: `build_fortal_preset.dart` requires
+/// compares them to the workspace either: `build_registry.dart` requires
 /// only that a package resolve to one distinct value *within* a registry, so
 /// all 32 copies of a generator floor can agree with each other while having
 /// drifted from the toolchain the templates are actually built against.

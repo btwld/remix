@@ -67,7 +67,7 @@ void main() {
     // sidebar_layout composes an already-installed sidebar into its row and
     // compact sheet without ever importing components/sidebar.dart (its
     // `sidebar` field stays generically typed as `Widget`), so this
-    // dependency comes from build_fortal_preset.dart's manual override, not
+    // dependency comes from build_registry.dart's manual override, not
     // from import inference. Regression coverage for that gap: a fresh
     // `remix add sidebar_layout` on the fortal preset must still pull in a
     // working Sidebar, matching the default preset's registry.yaml.

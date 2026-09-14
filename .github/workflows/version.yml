@@ -108,7 +108,7 @@ jobs:
           # The Fortal preset copies its dependency floors from the default
           # registry. Rebuild it immediately after the default floor moves so
           # the two committed registry trees cannot disagree.
-          dart run tool/build_fortal_preset.dart
+          dart run tool/build_registry.dart
 
           # Verify the released Remix version and registry floor agree. This
           # also fails when the sync step above did not run.

@@ -153,7 +153,7 @@ boundary.
 
 ## Derivation
 
-`tool/build_fortal_preset.dart` at the workspace root, next to
+`tool/build_registry.dart` at the workspace root, next to
 `check_open_code.dart`, does the following.
 
 **Input.** Every `.dart` file under `packages/remix_fortal/lib/src` except
@@ -330,8 +330,8 @@ independent of Commit 1 and Commit 2.
 Depends on Commit 1, 2, and 3. The diff is mostly derived content; review the
 tool, the registry rules, and the check.
 
-- `tool/build_fortal_preset.dart` as specified above, and
-  `test/tool/build_fortal_preset_test.dart` covering the refusals, the round
+- `tool/build_registry.dart` as specified above, and
+  `test/tool/build_registry_test.dart` covering the refusals, the round
   trip, the dependency inference, and `--check` on a planted drift.
 - The committed output: `registry/fortal/registry.yaml` and every template.
 - `bundledPresets` gains `fortal`. The `remix_cli` unit tests load the

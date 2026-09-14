@@ -4,7 +4,7 @@ import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 import 'package:yaml/yaml.dart';
 
-import '../../tool/build_fortal_preset.dart';
+import '../../tool/build_registry.dart';
 
 void main() {
   test(
@@ -316,6 +316,7 @@ void acmeDialStyle() {}
 /// A deliberately un-Fortal spec: different word, directories, and package.
 const _acmePreset = PresetSpec(
   name: 'acme',
+  sourceRoot: 'registry_source/acme',
   sourcePackage: 'remix_acme',
   typeWord: 'Acme',
   valueWord: 'acme',

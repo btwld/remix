@@ -570,7 +570,7 @@ items:
     exports:
       - components/sidebar_layout.dart
 
-  # Agent source: metadata asserted by tool/build_agent_registry.dart.
+  # Agent source: metadata asserted by tool/build_registry.dart.
   models:
     files:
       - source: templates/agent/models/activity_item.dart.tmpl

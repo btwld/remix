@@ -6,15 +6,28 @@ import 'package:yaml/yaml.dart';
 
 import '../packages/remix_cli/lib/src/registry.dart';
 
-/// Derives the application-owned Fortal registry from `remix_fortal` source.
+/// Derives the bundled registry presets from analyzer-checked Dart source.
 ///
-/// Run without arguments to synchronize committed output. Pass `--check` to
-/// compare in memory and fail on drift without writing.
+/// Run without arguments to synchronize every committed preset. Pass `--check`
+/// to compare in memory and fail on drift without writing, and `--preset` to
+/// narrow the run to one preset.
 void main(List<String> arguments) {
+  final usage =
+      'Usage: dart run tool/build_registry.dart '
+      '[--preset ${presetSpecs.keys.join('|')}|all] [--check]';
   final check = arguments.contains('--check');
-  final unknown = arguments.where((argument) => argument != '--check').toList();
-  if (unknown.isNotEmpty || arguments.length != (check ? 1 : 0)) {
-    stderr.writeln('Usage: dart run tool/build_fortal_preset.dart [--check]');
+  final rest = arguments.where((argument) => argument != '--check').toList();
+  var preset = 'all';
+  if (rest.isNotEmpty) {
+    if (rest.first != '--preset' || rest.length != 2) {
+      stderr.writeln(usage);
+      exitCode = 64;
+      return;
+    }
+    preset = rest[1];
+  }
+  if (preset != 'all' && !presetSpecs.containsKey(preset)) {
+    stderr.writeln(usage);
     exitCode = 64;
     return;
   }
@@ -31,37 +44,57 @@ void main(List<String> arguments) {
     return;
   }
 
-  try {
-    final builder = PresetBuilder.forRepository(repositoryRoot);
-    final agentBuilder = PresetBuilder.forRepository(
-      repositoryRoot,
-      spec: fortalAgentExtension,
-    );
-    final output = mergePresetOutputs(builder.derive(), agentBuilder.derive());
-    if (!check) {
-      builder.write(output);
-      stdout.writeln(
-        'Wrote the Fortal preset: ${output.files.length - 1} templates and '
-        'registry.yaml.',
-      );
-      return;
-    }
-
-    final drift = builder.drift(output);
-    if (drift.isNotEmpty) {
-      stderr
-        ..writeln('The committed Fortal preset is stale:')
-        ..writeln(drift.map((entry) => '  - $entry').join('\n'))
-        ..writeln(
-          'Run `dart run tool/build_fortal_preset.dart` and commit the result.',
-        );
+  final selected = preset == 'all' ? presetSpecs.keys : [preset];
+  for (final name in selected) {
+    if (!_runPreset(repositoryRoot, name, check: check)) {
       exitCode = 1;
       return;
     }
-    stdout.writeln('The committed Fortal preset matches authored source.');
+  }
+}
+
+/// Derives one preset and either writes or verifies its committed output.
+///
+/// A preset is a list of specs rather than a single one because the writer
+/// may merge a partially owned extension into the tree it owns. Returns false
+/// once the preset is stale or underivable, having already reported why.
+bool _runPreset(Directory repositoryRoot, String name, {required bool check}) {
+  try {
+    final builders = [
+      for (final spec in presetSpecs[name]!)
+        PresetBuilder.forRepository(repositoryRoot, spec: spec),
+    ];
+    final writer = builders.first;
+    var output = writer.derive();
+    for (final builder in builders.skip(1)) {
+      output = mergePresetOutputs(output, builder.derive());
+    }
+    if (!check) {
+      writer.write(output);
+      final owned = writer.spec.ownedTemplateDirectory;
+      stdout.writeln(
+        'Wrote the $name preset: ${output.files.length - 1} templates'
+        '${owned == null ? ' and registry.yaml' : ' under $owned'}.',
+      );
+      return true;
+    }
+
+    final drift = writer.drift(output);
+    if (drift.isNotEmpty) {
+      stderr
+        ..writeln('The committed $name preset is stale:')
+        ..writeln(drift.map((entry) => '  - $entry').join('\n'))
+        ..writeln(
+          'Run `dart run tool/build_registry.dart --preset $name` and commit '
+          'the result.',
+        );
+      return false;
+    }
+    stdout.writeln('The committed $name preset matches authored source.');
+    return true;
   } on Object catch (error) {
     stderr.writeln(error);
-    exitCode = 1;
+    return false;
   }
 }
 
@@ -75,6 +108,7 @@ void main(List<String> arguments) {
 final class PresetSpec {
   const PresetSpec({
     required this.name,
+    required this.sourceRoot,
     required this.sourcePackage,
     required this.typeWord,
     required this.valueWord,
@@ -98,7 +132,11 @@ final class PresetSpec {
 
   String get templateDirectory => ownedTemplateDirectory ?? 'templates';
 
-  /// Package whose `lib/src` is the authored source, e.g. `remix_fortal`.
+  /// Repository-relative directory of the Dart package holding the authored
+  /// source, e.g. `registry_source/fortal`. Its `lib/src` is what derives.
+  final String sourceRoot;
+
+  /// Package name whose source this is, e.g. `remix_fortal`.
   ///
   /// Installed source may never import it: an item ships the source itself.
   final String sourcePackage;
@@ -214,6 +252,7 @@ final class RecipeItemSpec {
 /// The Fortal design system as application-owned registry source.
 const fortalPreset = PresetSpec(
   name: 'fortal',
+  sourceRoot: 'packages/remix_fortal',
   sourcePackage: 'remix_fortal',
   typeWord: 'Fortal',
   valueWord: 'fortal',
@@ -258,6 +297,7 @@ const fortalPreset = PresetSpec(
 /// preset. The full Fortal writer remains the sole owner of that preset.
 const fortalAgentExtension = PresetSpec(
   name: 'fortal',
+  sourceRoot: 'packages/remix_agent',
   sourcePackage: 'remix_agent',
   typeWord: 'Agent',
   valueWord: 'agent',
@@ -294,47 +334,104 @@ const fortalAgentExtension = PresetSpec(
   },
   detectedPackages: ['remix_ui_icons'],
   composedRegistryDependencies: {},
-  recipeItems: [
-    RecipeItemSpec(
-      name: 'activity_recipe',
-      registryDependencies: ['activity', 'disclosure'],
-    ),
-    RecipeItemSpec(
-      name: 'answer_recipe',
-      registryDependencies: ['answer', 'card', 'disclosure', 'icon_button'],
-    ),
-    RecipeItemSpec(
-      name: 'composer_recipe',
-      registryDependencies: ['composer', 'card', 'textfield', 'icon_button'],
-    ),
-    RecipeItemSpec(
-      name: 'execution_recipe',
-      registryDependencies: ['execution', 'card', 'disclosure', 'icon_button'],
-    ),
-    RecipeItemSpec(
-      name: 'message_recipe',
-      registryDependencies: ['message', 'card', 'button'],
-    ),
-    RecipeItemSpec(
-      name: 'permission_recipe',
-      registryDependencies: [
-        'permission',
-        'card',
-        'disclosure',
-        'data_list',
-        'button',
+  recipeItems: _agentRecipeItems,
+);
+
+/// Agent behavior source joins the existing default catalog, not a new preset.
+const defaultAgentExtension = PresetSpec(
+  name: 'default',
+  sourceRoot: 'packages/remix_agent',
+  sourcePackage: 'remix_agent',
+  typeWord: 'Agent',
+  valueWord: 'agent',
+  componentDirectory: 'components',
+  ownedTemplateDirectory: 'templates/agent',
+  sharedItems: [
+    SharedItemSpec(
+      name: 'models',
+      directory: 'models',
+      requiredFile: 'models/statuses.dart',
+      packages: {},
+      exports: [
+        'models/activity_item.dart',
+        'models/plan_item.dart',
+        'models/statuses.dart',
       ],
     ),
-    RecipeItemSpec(
-      name: 'plan_recipe',
-      registryDependencies: ['plan', 'disclosure'],
-    ),
-    RecipeItemSpec(
-      name: 'transcript_recipe',
-      registryDependencies: ['transcript'],
+    SharedItemSpec(
+      name: 'support',
+      directory: 'support',
+      requiredFile: 'support/functional_glyph.dart',
+      packages: {},
+      // The source imports Remix primitives, not the installed theme, but the
+      // existing theme item is the sole owner of the default Remix floor.
+      registryDependencies: ['theme'],
+      exports: [],
     ),
   ],
+  copiedItems: [],
+  ignoredSourceFiles: {},
+  floorPackages: {
+    'mix_annotations',
+    'build_runner',
+    'mix_generator',
+    'remix_ui_icons',
+  },
+  detectedPackages: ['remix_ui_icons'],
+  composedRegistryDependencies: {},
+  recipeItems: _agentRecipeItems,
 );
+
+/// The eight Agent surfaces each preset styles, and what each recipe composes.
+const _agentRecipeItems = [
+  RecipeItemSpec(
+    name: 'activity_recipe',
+    registryDependencies: ['activity', 'disclosure'],
+  ),
+  RecipeItemSpec(
+    name: 'answer_recipe',
+    registryDependencies: ['answer', 'card', 'disclosure', 'icon_button'],
+  ),
+  RecipeItemSpec(
+    name: 'composer_recipe',
+    registryDependencies: ['composer', 'card', 'textfield', 'icon_button'],
+  ),
+  RecipeItemSpec(
+    name: 'execution_recipe',
+    registryDependencies: ['execution', 'card', 'disclosure', 'icon_button'],
+  ),
+  RecipeItemSpec(
+    name: 'message_recipe',
+    registryDependencies: ['message', 'card', 'button'],
+  ),
+  RecipeItemSpec(
+    name: 'permission_recipe',
+    registryDependencies: [
+      'permission',
+      'card',
+      'disclosure',
+      'data_list',
+      'button',
+    ],
+  ),
+  RecipeItemSpec(
+    name: 'plan_recipe',
+    registryDependencies: ['plan', 'disclosure'],
+  ),
+  RecipeItemSpec(
+    name: 'transcript_recipe',
+    registryDependencies: ['transcript'],
+  ),
+];
+
+/// Every bundled preset and the specs that derive it, writer first.
+///
+/// A preset lists more than one spec only while part of its tree comes from a
+/// second source package; the first spec owns the write.
+const presetSpecs = <String, List<PresetSpec>>{
+  'default': [defaultAgentExtension],
+  'fortal': [fortalPreset, fortalAgentExtension],
+};
 
 PresetOutput mergePresetOutputs(PresetOutput base, PresetOutput extension) {
   final files = <String, String>{...base.files};
@@ -446,13 +543,12 @@ final class PresetBuilder {
     return PresetBuilder(
       spec: spec,
       sourceRoot: Directory(
-        p.join(
+        p.joinAll([
           repositoryRoot.path,
-          'packages',
-          spec.sourcePackage,
+          ...p.posix.split(spec.sourceRoot),
           'lib',
           'src',
-        ),
+        ]),
       ),
       defaultRegistryRoot: Directory(p.join(registryRoot.path, 'default')),
       outputRoot: Directory(p.join(registryRoot.path, spec.name)),
@@ -1027,7 +1123,7 @@ final class PresetBuilder {
         ..sort((left, right) => left.name.compareTo(right.name)),
     ];
     final buffer = StringBuffer()
-      ..writeln('# Generated by tool/build_fortal_preset.dart. Do not edit.')
+      ..writeln('# Generated by tool/build_registry.dart. Do not edit.')
       ..writeln('schema: 1')
       ..writeln('items:');
     for (final item in ordered) {
