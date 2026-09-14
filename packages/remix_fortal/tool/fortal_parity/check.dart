@@ -9,16 +9,7 @@ const _expectedNakedUiVersion = '1.0.0';
 /// The parity contract validates one exact Naked UI resolution through Remix.
 /// The range is Remix's consumer constraint; the packages/naked_ui workspace
 /// member is the byte-exact tested resolution.
-///
-/// The constraint stays on the beta floor while the member above is 1.0.0, and
-/// that gap is deliberate. `^1.0.0-beta.15` resolves to `>=1.0.0-beta.15
-/// <2.0.0`, so it already admits 1.0.0 -- raising it buys no resolution
-/// accuracy. What it would cost is real: remix_cli's installer test builds a
-/// throwaway consumer that path-overrides only `remix`, so its `naked_ui` is
-/// resolved from pub.dev. A `^1.0.0` floor makes that app unresolvable until
-/// 1.0.0 is actually published, which fails CI on the very commit that
-/// releases it. Raise this floor in a later Remix release, once 1.0.0 is live.
-const _expectedNakedUiConstraint = '^1.0.0-beta.15';
+const _expectedNakedUiConstraint = '^1.0.0';
 const _expectedMappedFamilies = <String>{
   'avatar',
   'badge',
