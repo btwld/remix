@@ -1,15 +1,22 @@
 name: Publish to pub.dev
 
-# Three tag-gated jobs keep each package aligned with its configured pub.dev
+# Four tag-gated jobs keep each package aligned with its configured pub.dev
 # automated-publishing tag pattern.
 #
-# THE THREE PACKAGES PUBLISH FROM DIFFERENT TAG PATTERNS. This is not a style
+# THE FOUR PACKAGES PUBLISH FROM DIFFERENT TAG PATTERNS. This is not a style
 # choice — it is each package's "Automated publishing" tag pattern on pub.dev,
 # and the OIDC token is rejected if the pushed tag does not match:
 #
 #   remix          ->  v<version>               (bare, e.g. v1.0.0-beta.5)
 #   remix_ui_icons ->  remix_ui_icons-v<version>
 #   remix_cli      ->  remix_cli-v<version>
+#   naked_ui       ->  naked_ui-v<version>
+#
+# naked_ui released from its own repository on the BARE `v<version>` pattern.
+# That pattern belongs to remix here, so naked_ui moves to the prefixed form
+# above. Its pub.dev "Automated publishing" tag pattern must be changed to
+# `naked_ui-v{{version}}` before the first release from this monorepo; until
+# that is done the job below authenticates against the old pattern and fails.
 #
 # Pushing `remix-v<version>` therefore does NOT publish remix. It fails
 # authentication with "this token has 'refs/tags/remix-v...' ref for which
@@ -22,7 +29,8 @@ name: Publish to pub.dev
 # publishes, `remix-v<version>` is what melos reads. Only the first triggers
 # this workflow.
 #
-# remix_cli and remix_ui_icons are versioned independently from Remix.
+# remix_cli, remix_ui_icons, and naked_ui are versioned independently from
+# Remix.
 # The CLI consumer check requires its bundled Remix version to exist before
 # the CLI can publish. remix_fortal is not publishable; its
 # source remains in the repository as the Fortal preset's analyzed authoring
@@ -32,6 +40,7 @@ on:
     tags:
       - 'remix_cli-v[0-9]+.[0-9]+.[0-9]+*'
       - 'remix_ui_icons-v[0-9]+.[0-9]+.[0-9]+*'
+      - 'naked_ui-v[0-9]+.[0-9]+.[0-9]+*'
       - 'v[0-9]+.[0-9]+.[0-9]+*'
 
 # Match the SDK used by version preparation and local validation. Floating to
@@ -83,6 +92,17 @@ jobs:
     with:
       packages_folder_path: "packages"
       packages: "remix_cli"
+      flutter_version_file: ".fvmrc"
+    permissions:
+      id-token: write
+      contents: read
+
+  publish-naked-ui:
+    if: startsWith(github.ref, 'refs/tags/naked_ui-v')
+    uses: conceptadev/dart-actions/.github/workflows/publish.yml@9bb0b129ef4984963f9df9e03733eb2851e413ad
+    with:
+      packages_folder_path: "packages"
+      packages: "naked_ui"
       flutter_version_file: ".fvmrc"
     permissions:
       id-token: write

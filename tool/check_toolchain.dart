@@ -27,6 +27,7 @@ const _pureDartFloor = {'sdk': '>=3.12.0 <4.0.0'};
 /// Packages whose sources reach consumers, either through pub.dev or the
 /// application-owned Fortal preset. Every other member gets [_workspaceFloor].
 const _consumerFloorPackages = {
+  'packages/naked_ui',
   'packages/remix',
   'packages/remix_fortal',
   'packages/remix_ui_icons',
