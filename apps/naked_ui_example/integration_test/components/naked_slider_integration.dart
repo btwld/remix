@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:naked_ui/naked_ui.dart';
-import 'package:example/api/naked_slider.0.dart' as slider_example;
+import 'package:naked_ui_example/api/naked_slider.0.dart' as slider_example;
 
 import '../helpers/test_helpers.dart';
 

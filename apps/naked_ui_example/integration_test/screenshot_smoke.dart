@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:example/api/naked_dialog.0.dart' as dialog_example;
-import 'package:example/api/naked_toast.0.dart' as toast_example;
-import 'package:example/api/naked_toggle.0.dart' as toggle_example;
-import 'package:example/src/testing/screenshot_evidence.dart';
+import 'package:naked_ui_example/api/naked_dialog.0.dart' as dialog_example;
+import 'package:naked_ui_example/api/naked_toast.0.dart' as toast_example;
+import 'package:naked_ui_example/api/naked_toggle.0.dart' as toggle_example;
+import 'package:naked_ui_example/src/testing/screenshot_evidence.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';

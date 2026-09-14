@@ -1,4 +1,4 @@
-import 'package:example/api/naked_checkbox.0.dart' as checkbox_example;
+import 'package:naked_ui_example/api/naked_checkbox.0.dart' as checkbox_example;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';

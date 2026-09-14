@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:example/api/naked_toast.0.dart' as toast_example;
+import 'package:naked_ui_example/api/naked_toast.0.dart' as toast_example;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

@@ -1,7 +1,7 @@
 import 'dart:ui' show CheckedState, Tristate;
 
-import 'package:example/api/naked_semantics_playground.dart';
-import 'package:example/registry.dart';
+import 'package:naked_ui_example/api/naked_semantics_playground.dart';
+import 'package:naked_ui_example/registry.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter_test/flutter_test.dart';

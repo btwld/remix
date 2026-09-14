@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:example/api/naked_toggle.0.dart' as toggle_example;
+import 'package:naked_ui_example/api/naked_toggle.0.dart' as toggle_example;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:naked_ui/naked_ui.dart';

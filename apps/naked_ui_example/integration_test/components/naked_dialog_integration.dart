@@ -1,4 +1,4 @@
-import 'package:example/api/naked_dialog.0.dart' as dialog_example;
+import 'package:naked_ui_example/api/naked_dialog.0.dart' as dialog_example;
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';

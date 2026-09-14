@@ -1,4 +1,4 @@
-import 'package:example/api/naked_tooltip.0.dart' as tooltip_example;
+import 'package:naked_ui_example/api/naked_tooltip.0.dart' as tooltip_example;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';

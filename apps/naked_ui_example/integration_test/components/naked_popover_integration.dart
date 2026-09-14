@@ -1,4 +1,4 @@
-import 'package:example/api/naked_popover.0.dart' as popover_example;
+import 'package:naked_ui_example/api/naked_popover.0.dart' as popover_example;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';

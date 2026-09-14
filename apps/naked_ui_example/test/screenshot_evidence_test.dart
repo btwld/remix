@@ -1,4 +1,4 @@
-import 'package:example/src/testing/screenshot_evidence.dart';
+import 'package:naked_ui_example/src/testing/screenshot_evidence.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
