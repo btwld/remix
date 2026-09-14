@@ -1,3 +1,12 @@
+## 1.0.0
+
+First stable release. The API is unchanged from `1.0.0-beta.15`; this release
+declares it stable and commits to semantic versioning for future changes.
+
+Development moves to the Remix monorepo
+(https://github.com/conceptadev/remix), where `naked_ui` now lives at
+`packages/naked_ui`. The package remains independently versioned and published.
+
 ## 1.0.0-beta.15
 
 ### Features

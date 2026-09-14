@@ -3,7 +3,7 @@ description: A library of behavior-first UI components for Flutter that separate
 repository: https://github.com/conceptadev/remix/tree/main/packages/naked_ui
 issue_tracker: https://github.com/conceptadev/remix/issues
 license: BSD-3-Clause
-version: 1.0.0-beta.15
+version: 1.0.0
 resolution: workspace
 
 environment:
