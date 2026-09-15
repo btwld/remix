@@ -134,11 +134,11 @@ final class PresetSpec {
 
   String get templateDirectory => extensionDirectory ?? 'templates';
 
-  /// Repository-relative directory of the Dart package holding the authored
-  /// source, e.g. `registry_source/fortal`. Its `lib/src` is what derives.
+  /// Repository-relative directory of the authored source, e.g.
+  /// `registry_source/lib/src/fortal`. Everything under it derives.
   final String sourceRoot;
 
-  /// Package name whose source this is, e.g. `remix_fortal`.
+  /// Name of the package [sourceRoot] belongs to.
   ///
   /// Installed source may never import it: an item ships the source itself.
   final String sourcePackage;
@@ -271,34 +271,35 @@ final class FileItemSpec {
   final List<String> exports;
 }
 
-/// Behavior a preset's recipes style: where it is imported from while
-/// authoring, and the word its installed source is authored under.
+/// Behavior a preset's recipes style: the sibling source directory it is
+/// authored in, and the word that source is authored under.
 ///
-/// A recipe is analyzed against the behavior package, so its source names
-/// `AgentComposerStyler` and imports `package:remix_agent/src/components/`.
+/// A recipe is analyzed against that source, so it names
+/// `AgentComposerStyler` and imports `../../agent/components/composer.dart`.
 /// The installed recipe sits beside the installed behavior instead, so the
-/// derivation rewrites that import to the relative path and the identifier
+/// derivation rewrites that import to `../components/` and the identifier
 /// prefix `Agent` to the consumer prefix, before the preset's own word goes.
 final class BehaviorSpec {
   const BehaviorSpec({
-    required this.package,
+    required this.directory,
     required this.typeWord,
     required this.valueWord,
     required this.componentDirectory,
   });
 
-  final String package;
+  /// Directory beside the preset's [PresetSpec.sourceRoot], e.g. `agent`.
+  final String directory;
   final String typeWord;
   final String valueWord;
   final String componentDirectory;
 
   /// The authoring import prefix that becomes `../` in installed source.
-  String get importPrefix => 'package:$package/src/';
+  String get importPrefix => '../../$directory/';
 }
 
-/// Agent behavior as recipes reach it: `registry_source/agent`.
+/// Agent behavior as recipes reach it: `registry_source/lib/src/agent`.
 const agentBehavior = BehaviorSpec(
-  package: 'remix_agent',
+  directory: 'agent',
   typeWord: 'Agent',
   valueWord: 'agent',
   componentDirectory: 'components',
@@ -323,8 +324,8 @@ const agentRecipes = [
 /// appears nowhere else in the source, so plain substitution is exact.
 const defaultPreset = PresetSpec(
   name: 'default',
-  sourceRoot: 'registry_source/default',
-  sourcePackage: 'remix_vanilla',
+  sourceRoot: 'registry_source/lib/src/default',
+  sourcePackage: 'registry_source',
   typeWord: 'Vanilla',
   valueWord: 'vanilla',
   componentDirectory: 'components',
@@ -374,8 +375,8 @@ const defaultPreset = PresetSpec(
 /// The Fortal design system as application-owned registry source.
 const fortalPreset = PresetSpec(
   name: 'fortal',
-  sourceRoot: 'registry_source/fortal',
-  sourcePackage: 'remix_fortal',
+  sourceRoot: 'registry_source/lib/src/fortal',
+  sourcePackage: 'registry_source',
   typeWord: 'Fortal',
   valueWord: 'fortal',
   componentDirectory: 'components',
@@ -421,8 +422,8 @@ const fortalPreset = PresetSpec(
 /// tree; this extension only derives into `templates/agent/`.
 const fortalAgentExtension = PresetSpec(
   name: 'fortal',
-  sourceRoot: 'registry_source/agent',
-  sourcePackage: 'remix_agent',
+  sourceRoot: 'registry_source/lib/src/agent',
+  sourcePackage: 'registry_source',
   typeWord: 'Agent',
   valueWord: 'agent',
   componentDirectory: 'components',
@@ -463,8 +464,8 @@ const fortalAgentExtension = PresetSpec(
 /// Agent behavior merged into the default preset, as above.
 const defaultAgentExtension = PresetSpec(
   name: 'default',
-  sourceRoot: 'registry_source/agent',
-  sourcePackage: 'remix_agent',
+  sourceRoot: 'registry_source/lib/src/agent',
+  sourcePackage: 'registry_source',
   typeWord: 'Agent',
   valueWord: 'agent',
   componentDirectory: 'components',
@@ -622,12 +623,7 @@ final class PresetBuilder {
     return PresetBuilder(
       spec: spec,
       sourceRoot: Directory(
-        p.joinAll([
-          repositoryRoot.path,
-          ...p.posix.split(spec.sourceRoot),
-          'lib',
-          'src',
-        ]),
+        p.joinAll([repositoryRoot.path, ...p.posix.split(spec.sourceRoot)]),
       ),
       defaultRegistryRoot: Directory(p.join(registryRoot.path, 'default')),
       outputRoot: Directory(p.join(registryRoot.path, spec.name)),
@@ -1036,26 +1032,30 @@ final class PresetBuilder {
         if (uri.contains(spec.typeWord) || uri.contains(spec.valueWord)) {
           failures.add('$path: directive URI would be rewritten: $uri');
         }
-        if (behavior != null &&
-            uri.startsWith('package:${behavior.package}/')) {
-          final components =
-              '${behavior.importPrefix}${behavior.componentDirectory}/';
-          if (!recipe) {
-            failures.add('$path: only recipes may import $uri');
-          } else if (!uri.startsWith(components) ||
-              uri.contains('/', components.length)) {
-            failures.add(
-              '$path: recipes import behavior components only: $uri',
-            );
-          }
-          continue;
-        }
         if (!uri.startsWith('package:') && !uri.startsWith('dart:')) {
           final resolved = p.posix.normalize(
             p.posix.join(p.posix.dirname(path), uri),
           );
           final generated = match.group(1) == 'part' && uri.endsWith('.g.dart');
-          if (!generated && !sources.containsKey(resolved)) {
+          if (resolved.startsWith('../')) {
+            // Only a recipe may leave the preset, and only for the behavior
+            // components it styles. Anything else would install an import
+            // that points outside the application's own tree.
+            final components =
+                '${behavior?.importPrefix}${behavior?.componentDirectory}/';
+            if (behavior == null || !recipe) {
+              failures.add('$path: only recipes may import $uri');
+            } else if (!uri.startsWith(components) ||
+                uri.contains('/', components.length)) {
+              failures.add(
+                '$path: recipes import behavior components only: $uri',
+              );
+            } else if (!File(
+              p.joinAll([sourceRoot.path, ...p.posix.split(resolved)]),
+            ).existsSync()) {
+              failures.add('$path: missing behavior source $uri');
+            }
+          } else if (!generated && !sources.containsKey(resolved)) {
             failures.add('$path: missing relative source $uri');
           }
         }

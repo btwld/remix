@@ -8,7 +8,7 @@ import 'package:yaml/yaml.dart';
 import '../../packages/remix_cli/lib/src/registry.dart';
 import '../../tool/build_registry.dart';
 
-/// The Agent extension: `registry_source/agent` deriving into a preset's
+/// The Agent extension: `registry_source/lib/src/agent` deriving into a preset's
 /// `templates/agent/` subtree. It never writes; the preset's own spec merges
 /// and owns the result, which is what `build_registry_test.dart` covers.
 void main() {
@@ -19,13 +19,13 @@ void main() {
     sandbox = Directory.systemTemp.createTempSync('agent_registry_test_');
     final source = Directory('${sandbox.path}/source');
     for (final file in Directory(
-      'registry_source/agent/lib/src',
+      'registry_source/lib/src/agent',
     ).listSync(recursive: true).whereType<File>()) {
       if (!file.path.endsWith('.dart') || file.path.endsWith('.g.dart'))
         continue;
       _write(
         source,
-        p.relative(file.path, from: 'registry_source/agent/lib/src'),
+        p.relative(file.path, from: 'registry_source/lib/src/agent'),
         file.readAsStringSync(),
       );
     }

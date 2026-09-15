@@ -307,7 +307,7 @@ class _UiSidebarLayoutState extends State<UiSidebarLayout> {
 /// destination's `onSelected` callback closing the sheet after navigating),
 /// since the layout re-provides this scope inside the sheet route.
 class UiSidebarLayoutScope extends InheritedWidget {
-  // `remix_ui` floors at Dart 3.11, one release before private named
+  // Ui source floors at Dart 3.11, one release before private named
   // parameters, so this assigns the private fields explicitly instead of
   // naming the parameters after them.
   const UiSidebarLayoutScope._({

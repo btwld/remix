@@ -26,11 +26,7 @@ const _pureDartFloor = {'sdk': '>=3.12.0 <4.0.0'};
 
 /// Packages whose sources reach consumers, either through pub.dev or the
 /// application-owned Fortal preset. Every other member gets [_workspaceFloor].
-const _consumerFloorPackages = {
-  'packages/remix',
-  'packages/remix_ui_icons',
-  'registry_source/fortal',
-};
+const _consumerFloorPackages = {'packages/remix', 'packages/remix_ui_icons'};
 
 /// Workspace tools that intentionally declare no Flutter environment key.
 const _pureDartPackages = {'packages/remix_cli'};

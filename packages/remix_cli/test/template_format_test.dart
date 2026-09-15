@@ -9,16 +9,16 @@ import 'package:test/test.dart';
 ///
 /// "Formatter-clean" is only meaningful at a stated prefix, because the
 /// formatter wraps on line width and the prefix is substituted into type names.
-/// This is the authoring word of `registry_source/default`, whose formatted
+/// This is the authoring word of `registry_source/lib/src/default`, whose formatted
 /// source every default template derives from.
 const _referencePrefix = 'Vanilla';
 
 void main() {
   // Every default template is derived from formatted source by
   // `tool/build_registry.dart`, which holds it byte-identical through a
-  // round-trip assertion: the Agent subtree from `registry_source/agent`, the
-  // rest from `registry_source/default`. So is `fortal`, from
-  // `registry_source/fortal`. This test is what makes that claim checkable
+  // round-trip assertion: the Agent subtree from `registry_source/lib/src/agent`,
+  // the rest from `lib/src/default`. So is `fortal`, from `lib/src/fortal`.
+  // This test is what makes that claim checkable
   // from the CLI package alone.
   //
   // No consumer is affected either way: `add` formats the tree it writes, so

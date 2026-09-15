@@ -221,12 +221,7 @@ const _requiredRuntimeDependencies = <String>[
   'remix_ui_icons',
 ];
 const _requiredDevDependencies = <String>['build_runner', 'mix_generator'];
-const _forbiddenDependencies = <String>[
-  'mix',
-  'naked_ui',
-  'remix_fortal',
-  'remix_agent',
-];
+const _forbiddenDependencies = <String>['mix', 'naked_ui', 'registry_source'];
 const _allowedImportPackages = <String>[
   'flutter',
   'remix',

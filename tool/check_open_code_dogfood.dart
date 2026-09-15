@@ -249,7 +249,7 @@ Future<String?> _run(Directory root) async {
 /// file may reach the authoring packages the registry derives from.
 Iterable<String> _sourcePackageImports(Directory root) sync* {
   final forbidden = RegExp(
-    r"""^\s*(?:import|export)\s+['"]package:(remix_fortal|remix_agent|remix_vanilla)/""",
+    r"""^\s*(?:import|export)\s+['"]package:(registry_source)/""",
     multiLine: true,
   );
   for (final consumer in _consumers.keys) {

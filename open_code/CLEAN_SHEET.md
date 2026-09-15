@@ -146,7 +146,7 @@ The [release instructions](RELEASING.md) define the order and required checks.
 
 Both catalogs include eight domain-specific Agent surfaces. Unlike visual
 `@MixWidget` recipes, these copy the private authoring package's
-(`registry_source/agent`) behavior and empty anatomy specs into the
+(`registry_source/lib/src/agent`) behavior and empty anatomy specs into the
 application, and each preset styles them through recipes authored in its own
 source package. They still compose the
 public Remix primitives; they do not copy Remix internals or introduce a

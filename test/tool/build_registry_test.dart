@@ -335,7 +335,7 @@ void acmeDialStyle() {}
       builder.sourceRoot,
       'recipes/dial_recipe.dart',
       """import 'package:remix/remix.dart';
-import 'package:remix_bot/src/components/dial.dart';
+import '../../bot/components/dial.dart';
 
 import '../core/core.dart';
 import '../widgets/dial.dart';
@@ -384,12 +384,12 @@ final class {{typePrefix}}BotDialRecipe {
       _write(
         builder.sourceRoot,
         'widgets/gauge.dart',
-        "import 'package:remix_bot/src/components/dial.dart';\n",
+        "import '../../bot/components/dial.dart';\n",
       );
       _write(
         builder.sourceRoot,
         'recipes/dial_recipe.dart',
-        "import 'package:remix_bot/src/support/glyph.dart';\n",
+        "import '../../bot/support/glyph.dart';\n",
       );
       expect(
         builder.derive,
@@ -443,7 +443,7 @@ final class {{typePrefix}}BotDialRecipe {
     _write(
       builder.sourceRoot,
       'recipes/dial_recipe.dart',
-      "import 'package:remix_bot/src/components/dial.dart';\n",
+      "import '../../bot/components/dial.dart';\n",
     );
     // Derivation defers the behavior component to the merge; validation of
     // the un-merged preset is where it surfaces.
@@ -531,7 +531,7 @@ const _acmeWithRecipes = PresetSpec(
   composedRegistryDependencies: {},
   recipeItems: ['dial_recipe'],
   behavior: BehaviorSpec(
-    package: 'remix_bot',
+    directory: 'bot',
     typeWord: 'Bot',
     valueWord: 'bot',
     componentDirectory: 'components',
@@ -539,6 +539,17 @@ const _acmeWithRecipes = PresetSpec(
 );
 
 void _writeAcmeSources(PresetBuilder builder) {
+  // The behavior the recipe styles, a sibling of the preset source.
+  _write(
+    Directory(p.join(builder.sourceRoot.parent.path, 'bot')),
+    'components/dial.dart',
+    'class BotDialStyler {}\n',
+  );
+  _write(
+    Directory(p.join(builder.sourceRoot.parent.path, 'bot')),
+    'support/glyph.dart',
+    '',
+  );
   _write(builder.sourceRoot, 'core/core.dart', "export 'tokens.dart';\n");
   _write(
     builder.sourceRoot,

@@ -32,7 +32,7 @@ with the reason, so a reviewer does not reopen it by accident.
    (`classic`, `solid`, `soft`, `surface`, `outline`, `ghost`) is not the
    default's (`primary`, `secondary`, `outline`, `ghost`, `destructive`), so
    a shared recipe with swappable data is not possible between these two.
-3. **Fortal is authored once, as Dart, in `registry_source/fortal`.** The
+3. **Fortal is authored once, as Dart, in `registry_source/lib/src/fortal`.** The
    `remix_cli` templates are derived from that source and committed. A check
    fails when they drift. The alternative, hand-authored `.tmpl` files, means
    editing 36 files without an analyzer, and running the 50 test files and
@@ -56,12 +56,12 @@ with the reason, so a reviewer does not reopen it by accident.
    discontinued with `remix init --preset fortal` named as the replacement. The
    source is not deleted: it is what the templates derive from, the target of
    the parity checker and its test suite. It is a private workspace package
-   with no version, sitting beside the default and Agent sources under
-   `registry_source/`, and no application depends on it — they install. The
+   with no version, `registry_source`, holding the default and Agent sources
+   beside it, and no application depends on it — they install. The
    source and template check detects byte drift: `--check` fails CI on any byte
    of difference, the same way `docs/fortal/catalog.mdx` and the dogfood
    consumers are checked today. See
-   `registry_source/fortal/docs/adr/0002-registry-source.md`.
+   `registry_source/docs/adr/fortal/0002-registry-source.md`.
 
 ## What the application gets
 

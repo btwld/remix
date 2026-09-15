@@ -2,11 +2,7 @@ import 'dart:io';
 
 // Repository-relative package directories whose source ships to applications,
 // either installed from the registry or resolved as a hosted dependency.
-const _consumerSourcePackages = [
-  'packages/remix',
-  'registry_source/agent',
-  'registry_source/fortal',
-];
+const _consumerSourcePackages = ['packages/remix', 'registry_source'];
 
 final _forbiddenLibraryDirective = RegExp(
   r'''^\s*(?:import|export)\s+['"]package:(?:flutter/(?:material\.dart|src/material/[^'"]+)|material_ui/[^'"]+)['"]''',

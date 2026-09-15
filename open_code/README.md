@@ -142,8 +142,8 @@ preflight instead of being overridden. Dry-run/diff remain read-only.
 Agent behavior is available in both bundled presets. Add a bare surface for
 behavior-only source, or `<component>_recipe` for the surface plus its complete
 preset-specific styling bundle. Each recipe is authored as Dart in its preset's
-source package (`registry_source/default/lib/src/recipes/`,
-`registry_source/fortal/lib/src/recipes/`) against the Agent behavior source,
+source (`registry_source/lib/src/{default,fortal}/recipes/`) against the Agent
+behavior source beside it,
 and derives into the registry like every other item.
 
 ## Charts without Fortal
