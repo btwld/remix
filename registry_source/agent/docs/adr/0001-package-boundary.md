@@ -9,7 +9,8 @@ release checks are recorded under
 
 ## Decision
 
-Author and test agent-run surfaces in `remix_agent`, a private workspace package that
+Author and test agent-run surfaces in `remix_agent`, a private workspace package
+(`registry_source/agent`) that
 depends on `remix` plus Mix's generator/runtime. Do not add these widgets to
 `remix` or `remix_fortal`, and do not create an `AgentScope`.
 
@@ -103,10 +104,10 @@ package. Public model files are exported; internal support helpers stay out of
 the managed barrel. The existing theme item owns the single Remix dependency
 floor, inherited through support.
 
-`tool/build_registry.dart` owns only `default/templates/agent/**` and
-asserts the hand-authored registry entries. It never rewrites the default
-manifest or unrelated templates. The full Fortal writer merges an Agent
-extension before synchronizing its own preset, so regeneration cannot prune it.
+`tool/build_registry.dart` derives this package into `templates/agent/**` of
+both presets as an extension of each preset's own source; the preset writer
+merges it and owns the whole tree, so regeneration cannot prune it and a
+whole-tree drift check covers it.
 
 Mix's spec-styler builder is opt-in at the current supported version. The CLI
 therefore enables it for installed spec sources in application `build.yaml`,
@@ -114,8 +115,11 @@ preserving unrelated settings and refusing explicit exclusions or disabled
 builders. This is a discovered prerequisite to distribution, not a new theme,
 registry schema, or copied generated implementation.
 
-All eight surfaces expose preset-specific recipe bundles sourced from
-`open_code/agent_recipes/`. The example uses those installed bundles; its chat
-orchestration remains application-owned rather than a runtime API.
+All eight surfaces expose preset-specific recipe bundles, authored as Dart in
+`registry_source/default/lib/src/recipes/` and
+`registry_source/fortal/lib/src/recipes/` against this package's components,
+and derived into each preset. The dashboard and playground use those installed
+bundles; their chat orchestration remains application-owned rather than a
+runtime API.
 Hosted release validation remains a separate release gate. Private-package
 publication is neither required nor planned for these source-distributed items.

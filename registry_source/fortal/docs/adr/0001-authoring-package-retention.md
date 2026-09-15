@@ -1,6 +1,7 @@
 # ADR 0001 — Retain the private Fortal authoring package
 
-Date: 2026-09-14. Status: accepted for the current boundary; migration deferred.
+Date: 2026-09-14. Status: superseded by [ADR 0002](0002-registry-source.md) — the
+trigger below fired and the source moved to `registry_source/fortal`.
 
 ## Decision
 

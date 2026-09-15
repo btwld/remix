@@ -50,16 +50,18 @@ with the reason, so a reviewer does not reopen it by accident.
 6. **`mix_chart` stays a hosted dependency of the `chart` item.** It is the
    chart engine the recipe styles, as `remix` is the button engine. The
    default `chart` item already declares it.
-7. **`remix_fortal` leaves pub.dev after the published replacement works; the directory
-   stays.** Hosted Fortal has no consumer base to protect: 0 likes and 438
-   downloads at `1.0.0-beta.7`. pub.dev cannot delete a package, so the
-   package is marked discontinued with `remix init --preset fortal` named as
-   the replacement, after Commit 4 proves that path. The directory
-   `registry_source/fortal` is not deleted. It is the authored source the
-   templates derive from, the target of 50 test files and the parity
-   checker, and a dependency of `apps/dashboard`, `apps/demo`, and
-   `apps/playground`. The source and template check detects byte drift: `--check` fails CI on any byte of difference, the same way
-   `docs/fortal/catalog.mdx` and the playground dogfood are checked today.
+7. **`remix_fortal` leaves pub.dev; its source lives in `registry_source/fortal`.**
+   Hosted Fortal has no consumer base to protect: 0 likes and 438 downloads at
+   `1.0.0-beta.7`. pub.dev cannot delete a package, so the package is marked
+   discontinued with `remix init --preset fortal` named as the replacement. The
+   source is not deleted: it is what the templates derive from, the target of
+   the parity checker and its test suite. It is a private workspace package
+   with no version, sitting beside the default and Agent sources under
+   `registry_source/`, and no application depends on it — they install. The
+   source and template check detects byte drift: `--check` fails CI on any byte
+   of difference, the same way `docs/fortal/catalog.mdx` and the dogfood
+   consumers are checked today. See
+   `registry_source/fortal/docs/adr/0002-registry-source.md`.
 
 ## What the application gets
 

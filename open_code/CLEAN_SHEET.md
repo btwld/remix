@@ -144,9 +144,11 @@ The [release instructions](RELEASING.md) define the order and required checks.
 
 ## Agent source distribution
 
-The default catalog now also includes eight domain-specific Agent surfaces.
-Unlike visual `@MixWidget` recipes, these copy the private authoring package's
-behavior and empty anatomy specs into the application. They still compose the
+Both catalogs include eight domain-specific Agent surfaces. Unlike visual
+`@MixWidget` recipes, these copy the private authoring package's
+(`registry_source/agent`) behavior and empty anatomy specs into the
+application, and each preset styles them through recipes authored in its own
+source package. They still compose the
 public Remix primitives; they do not copy Remix internals or introduce a
 private runtime dependency. Applications own the installed domain behavior as
 well as its appearance. The scope of future source-update diffs includes that
