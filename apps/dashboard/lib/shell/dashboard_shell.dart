@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import '../ui/ui.dart';
 
 import '../pages/charts_page.dart';
 import '../pages/chat_page.dart';
@@ -54,14 +54,14 @@ class _DashboardShellState extends State<DashboardShell> {
       const GalleryTypographyPage(),
     ];
 
-    return FortalSidebarLayout(
+    return UiSidebarLayout(
       compactBreakpoint: dashboardCompactBreakpoint,
       sidebarWidth: dashboardSidebarWidth,
       collapsedWidth: dashboardSidebarCollapsedWidth,
       collapsed: _sidebarCollapsed,
       sidebar: Builder(
         builder: (context) {
-          final scope = FortalSidebarLayoutScope.of(context);
+          final scope = UiSidebarLayoutScope.of(context);
           return Sidebar(
             key: const ValueKey('dashboard-sidebar'),
             selected: _selected,
@@ -82,7 +82,7 @@ class _DashboardShellState extends State<DashboardShell> {
       ),
       header: Builder(
         builder: (context) {
-          final scope = FortalSidebarLayoutScope.of(context);
+          final scope = UiSidebarLayoutScope.of(context);
           return TopBar(
             page: _selected,
             onMenuPressed: scope.isCompact ? scope.openCompact : null,

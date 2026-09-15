@@ -6,9 +6,8 @@ import 'package:remix/remix.dart';
 /// Covers the application-owned theme this app installs from the default
 /// registry preset.
 ///
-/// Nothing outside `lib/ui/` imports that source: the playground's own previews
-/// render `remix_fortal`, so the installed mirror was only ever analyzed, never
-/// built. `dart analyze` proves it compiles and
+/// The previews render the installed components, but nothing renders the
+/// theme values themselves. `dart analyze` proves the theme compiles and
 /// `tool/check_open_code_dogfood.dart` proves it still matches the templates,
 /// but neither one runs it.
 void main() {

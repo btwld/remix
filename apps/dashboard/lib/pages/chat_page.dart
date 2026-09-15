@@ -3,9 +3,7 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
 
-import '../theme/theme_scope.dart';
 import '../ui/ui.dart';
 
 enum _Scenario { success, permission, failure }
@@ -191,64 +189,52 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    final settings = ThemeScope.of(context).settings;
-    final brightness = Theme.of(context).brightness;
-    return UiScope(
-      accent: _accent(settings.accentColor),
-      gray: _gray(settings.grayColor),
-      brightness: brightness,
-      panelBackground: _panel(settings.panelBackground),
-      radius: _radius(settings.radius),
-      scaling: _scaling(settings.scaling),
-      child: Padding(
-        padding: EdgeInsets.all(
-          MediaQuery.sizeOf(context).width < 600 ? 16 : 32,
-        ),
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 800),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  children: [
-                    const Expanded(
-                      child: Text(
-                        'Agent chat',
-                        style: TextStyle(
-                          fontSize: 26,
-                          fontWeight: FontWeight.w700,
-                        ),
+    return Padding(
+      padding: EdgeInsets.all(MediaQuery.sizeOf(context).width < 600 ? 16 : 32),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 800),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                children: [
+                  const Expanded(
+                    child: Text(
+                      'Agent chat',
+                      style: TextStyle(
+                        fontSize: 26,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
-                    RemixButton(
-                      label: 'New chat',
-                      onPressed: _reset,
-                      style: uiButtonStyle(variant: .outline),
-                    ),
-                  ],
-                ),
-                const Text('Interactive demo'),
-                const SizedBox(height: 8),
-                const Text(
-                  'Simulated responses and tools — no backend or credentials.',
-                ),
-                const SizedBox(height: 16),
-                if (!_active) ...[_starters(), const SizedBox(height: 16)],
-                Expanded(child: _transcript()),
-                if (!_following)
-                  Align(
-                    alignment: Alignment.center,
-                    child: RemixButton(
-                      label: 'Return to latest',
-                      onPressed: _returnToLatest,
-                      style: uiButtonStyle(variant: .soft),
-                    ),
                   ),
-                const SizedBox(height: 12),
-                _composer(),
-              ],
-            ),
+                  RemixButton(
+                    label: 'New chat',
+                    onPressed: _reset,
+                    style: uiButtonStyle(variant: .outline),
+                  ),
+                ],
+              ),
+              const Text('Interactive demo'),
+              const SizedBox(height: 8),
+              const Text(
+                'Simulated responses and tools — no backend or credentials.',
+              ),
+              const SizedBox(height: 16),
+              if (!_active) ...[_starters(), const SizedBox(height: 16)],
+              Expanded(child: _transcript()),
+              if (!_following)
+                Align(
+                  alignment: Alignment.center,
+                  child: RemixButton(
+                    label: 'Return to latest',
+                    onPressed: _returnToLatest,
+                    style: uiButtonStyle(variant: .soft),
+                  ),
+                ),
+              const SizedBox(height: 12),
+              _composer(),
+            ],
           ),
         ),
       ),
@@ -501,63 +487,3 @@ class _ChatPageState extends State<ChatPage> {
     .idle => 'Ready',
   };
 }
-
-UiAccentColor _accent(FortalAccentColor value) => switch (value) {
-  .gray => .gray,
-  .mauve => .mauve,
-  .slate => .slate,
-  .sage => .sage,
-  .olive => .olive,
-  .sand => .sand,
-  .gold => .gold,
-  .bronze => .bronze,
-  .brown => .brown,
-  .yellow => .yellow,
-  .amber => .amber,
-  .orange => .orange,
-  .tomato => .tomato,
-  .red => .red,
-  .ruby => .ruby,
-  .crimson => .crimson,
-  .pink => .pink,
-  .plum => .plum,
-  .purple => .purple,
-  .violet => .violet,
-  .iris => .iris,
-  .indigo => .indigo,
-  .blue => .blue,
-  .cyan => .cyan,
-  .teal => .teal,
-  .jade => .jade,
-  .green => .green,
-  .grass => .grass,
-  .lime => .lime,
-  .mint => .mint,
-  .sky => .sky,
-};
-UiGrayColor _gray(FortalGrayColor value) => switch (value) {
-  .gray => .gray,
-  .mauve => .mauve,
-  .slate => .slate,
-  .sage => .sage,
-  .olive => .olive,
-  .sand => .sand,
-};
-UiPanelBackground _panel(FortalPanelBackground value) => switch (value) {
-  .solid => .solid,
-  .translucent => .translucent,
-};
-UiRadius _radius(FortalRadius value) => switch (value) {
-  .none => .none,
-  .small => .small,
-  .medium => .medium,
-  .large => .large,
-  .full => .full,
-};
-UiScaling _scaling(FortalScaling value) => switch (value) {
-  .percent90 => .percent90,
-  .percent95 => .percent95,
-  .percent100 => .percent100,
-  .percent105 => .percent105,
-  .percent110 => .percent110,
-};

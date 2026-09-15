@@ -319,8 +319,8 @@ class {{typePrefix}}SidebarLayoutScope extends InheritedWidget {
     required VoidCallback openCompact,
     required VoidCallback closeCompact,
     required super.child,
-  }) : _openCompact = openCompact,
-       _closeCompact = closeCompact;
+  }) : _openCompact = openCompact, // ignore: prefer_initializing_formals
+       _closeCompact = closeCompact; // ignore: prefer_initializing_formals
 
   /// Whether the layout is currently in its compact presentation.
   final bool isCompact;
