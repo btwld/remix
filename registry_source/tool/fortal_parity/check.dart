@@ -4,12 +4,12 @@ import 'dart:typed_data';
 
 const _expectedIntegrity =
     'sha512-I0/h2CRNTpYNB7Mi3xFIvSsQq5a108d7kK8dTO5zp5b9HR5QJXKag6B8tjpz2ITkVYkFdkGk45doNkSr7OxwNw==';
-const _expectedNakedUiVersion = '1.0.0-beta.15';
+const _expectedNakedUiVersion = '1.0.0';
 
-/// The parity contract validates one exact hosted Naked UI resolution through
-/// Remix. The range is Remix's consumer constraint; the workspace lockfile is
-/// the byte-exact tested resolution.
-const _expectedNakedUiConstraint = '^1.0.0-beta.15';
+/// The parity contract validates one exact Naked UI resolution through Remix.
+/// The range is Remix's consumer constraint; the packages/naked_ui workspace
+/// member is the byte-exact tested resolution.
+const _expectedNakedUiConstraint = '^1.0.0';
 const _expectedMappedFamilies = <String>{
   'avatar',
   'badge',
@@ -124,7 +124,7 @@ void main() {
   _checkNakedResolution(
     remixPubspec,
     File('${workspaceRoot.path}/pubspec.yaml'),
-    File('${workspaceRoot.path}/pubspec.lock'),
+    File('${workspaceRoot.path}/packages/naked_ui/pubspec.yaml'),
     failures,
   );
   _checkVariantConstructors(packageRoot, failures);
@@ -992,12 +992,21 @@ void _checkFixtures(
 void _checkNakedResolution(
   File remixPubspec,
   File workspacePubspec,
-  File workspaceLock,
+  File nakedUiPubspec,
   List<String> failures,
 ) {
-  // Remix owns the Naked UI behavior boundary. Its hosted constraint must
-  // admit the release used by this parity contract, and the workspace lockfile
-  // below pins that resolution exactly.
+  // Remix owns the Naked UI behavior boundary. Its constraint must admit the
+  // release used by this parity contract, and the resolved Naked UI must be
+  // that exact version.
+  //
+  // naked_ui used to resolve from pub.dev, and this checked the workspace
+  // lockfile for `source: hosted` at the expected version. It is now a
+  // workspace member (packages/naked_ui), so pub resolves it from source and
+  // writes no lockfile entry at all -- the hosted assertion could no longer
+  // pass by construction. The guarantee it existed for is unchanged and is
+  // enforced below against the member's own pubspec: parity is measured
+  // against one known Naked UI version, never an arbitrary local checkout.
+  // The dependency_overrides guard still matters and is kept as-is.
   final pinned = RegExp(
     '^  naked_ui: ${RegExp.escape(_expectedNakedUiConstraint)}\\s*\$',
     multiLine: true,
@@ -1010,24 +1019,17 @@ void _checkNakedResolution(
   final workspaceSource = workspacePubspec.readAsStringSync();
   _expect(
     !_hasDependencyOverride(workspaceSource, 'naked_ui'),
-    'The workspace must resolve naked_ui $_expectedNakedUiVersion from '
-    'pub.dev without a dependency override.',
+    'The workspace must resolve naked_ui $_expectedNakedUiVersion from the '
+    'packages/naked_ui workspace member without a dependency override.',
     failures,
   );
-  final lockSource = workspaceLock.readAsStringSync();
-  final nakedUiLockEntry = _lockEntry(lockSource, 'naked_ui');
   _expect(
-    nakedUiLockEntry != null &&
-        RegExp(
-          r'^    source: hosted$',
-          multiLine: true,
-        ).hasMatch(nakedUiLockEntry) &&
-        RegExp(
-          '^    version: "${RegExp.escape(_expectedNakedUiVersion)}"\\s*\$',
-          multiLine: true,
-        ).hasMatch(nakedUiLockEntry),
-    'The workspace lockfile must resolve naked_ui '
-    '$_expectedNakedUiVersion from pub.dev.',
+    RegExp(
+      '^version: ${RegExp.escape(_expectedNakedUiVersion)}\\s*\$',
+      multiLine: true,
+    ).hasMatch(nakedUiPubspec.readAsStringSync()),
+    'The packages/naked_ui workspace member must be version '
+    '$_expectedNakedUiVersion.',
     failures,
   );
 }
@@ -1049,20 +1051,6 @@ bool _hasDependencyOverride(String source, String dependency) {
     }
   }
   return false;
-}
-
-String? _lockEntry(String source, String dependency) {
-  final lines = const LineSplitter().convert(source);
-  final start = lines.indexOf('  $dependency:');
-  if (start == -1) return null;
-  var end = lines.length;
-  for (var index = start + 1; index < lines.length; index++) {
-    if (RegExp(r'^  [^ ]').hasMatch(lines[index])) {
-      end = index;
-      break;
-    }
-  }
-  return lines.sublist(start, end).join('\n');
 }
 
 /// The Dart enum names a family's `kind` could publish, most specific first.
@@ -1318,7 +1306,7 @@ Never _finish(List<String> failures) {
     'Verified @radix-ui/themes 3.3.0 contract: '
     '30 mapped families, 4 Fortal extensions, 1 audited unmapped family, '
     'Chromium fixtures, '
-    'coverage ledger, hosted Naked $_expectedNakedUiVersion resolution, and no '
+    'coverage ledger, workspace Naked $_expectedNakedUiVersion resolution, and no '
     'undocumented approximations.',
   );
   exit(0);
