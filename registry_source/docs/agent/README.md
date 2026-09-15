@@ -57,7 +57,7 @@ For work on the private authoring package itself, its barrel remains:
 ```dart
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_agent/remix_agent.dart';
+import 'package:registry_source/agent.dart';
 ```
 
 Ordinary surfaces need only a normal Flutter host. `AgentComposer` is the one

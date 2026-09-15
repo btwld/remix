@@ -110,7 +110,7 @@ the MVP has an update system.
 Runtime dependencies are `remix` and `mix_annotations`. Mix and Naked UI arrive
 through Remix, which avoids choosing a direct Mix version that Remix was not
 compiled against. Installing the optional chart item adds `mix_chart` directly;
-it never adds `remix_fortal`. Development dependencies are `build_runner` and
+it never adds the authoring source package. Development dependencies are `build_runner` and
 `mix_generator`.
 
 Chart is deliberately one item with three adapters. `mix_chart` owns the hard

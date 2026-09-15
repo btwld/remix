@@ -27,7 +27,7 @@ update command, registry lockfile, or content-hash protocol.
 Both presets additionally distribute the unstyled Agent items:
 `activity`, `answer`, `composer`, `execution`, `message`, `permission`, `plan`,
 and `transcript`, with shared `models` and `support` dependencies. These are
-application-owned source, not a dependency on the private `remix_agent` package.
+application-owned source, not a dependency on the private authoring source.
 Each surface has an opt-in `<component>_recipe` item that installs a complete,
 preset-specific styler bundle under `lib/ui/recipes/`; bare components remain
 unstyled and backward compatible.

@@ -50,7 +50,7 @@ with the reason, so a reviewer does not reopen it by accident.
 6. **`mix_chart` stays a hosted dependency of the `chart` item.** It is the
    chart engine the recipe styles, as `remix` is the button engine. The
    default `chart` item already declares it.
-7. **`remix_fortal` leaves pub.dev; its source lives in `registry_source/fortal`.**
+7. **`remix_fortal` leaves pub.dev; its source lives in `registry_source/lib/src/fortal`.**
    Hosted Fortal has no consumer base to protect: 0 likes and 438 downloads at
    `1.0.0-beta.7`. pub.dev cannot delete a package, so the package is marked
    discontinued with `remix init --preset fortal` named as the replacement. The
@@ -147,8 +147,8 @@ import it today, so the move is one path change per file instead of a
 does not export `radix_colors.dart`; `computed.dart` and `theme_data.dart`
 import that file directly.
 
-The public barrel `lib/remix_fortal.dart` keeps every export, so the public
-API does not change. `test/public_api_test.dart` proves it. Remix's own public
+The barrel `registry_source/lib/fortal.dart` keeps every export, so the parity
+suite's imports do not change. Remix's own public
 barrel also re-exports the six Naked constructor/state types referenced by
 generated adapters, keeping installed recipes on the `package:remix/remix.dart`
 boundary.
@@ -163,7 +163,7 @@ boundary.
 
 **Refusals, checked first.** Any path segment containing `fortal`. Any file
 containing `{{`, because the renderer treats that as a template token. Any
-`package:remix_fortal`, `package:mix`, or `package:naked_ui` import, because
+`package:registry_source`, `package:mix`, or `package:naked_ui` import, because
 installed source must import the public `remix` surface. Each refusal names
 the file.
 

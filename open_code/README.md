@@ -273,7 +273,7 @@ package that takes unresolved stylers can be styled from them too, which keeps
 its surfaces inside the application's design language instead of adding a
 second one.
 
-`remix_agent` is the worked example. Its `composer_recipe` item, authored in
+Agent is the worked example. Its `composer_recipe` item, authored in
 each preset's source and installed like any other recipe, composes the
 installed Theme, Card, TextField, and IconButton into one recipe bundle for
 the installed `UiComposer`:
@@ -298,7 +298,7 @@ unresolved, so each control resolves its own hover, focus, and disabled state.
 The eight Agent surfaces now install as `activity`, `answer`, `composer`,
 `execution`, `message`, `permission`, `plan`, and `transcript` in both existing
 presets. Shared `models` and `support` install through dependency closure. The
-private `remix_agent` package remains authoring/test source, not a consumer
+private authoring source (`registry_source/lib/src/agent`) is not a consumer
 dependency. The dashboard imports installed `Ui*` classes. Fortal recipes use
 only the installed Fortal theme and controls. Checkout verification does not
 replace the hosted checks required before a release.

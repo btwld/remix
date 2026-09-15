@@ -231,7 +231,7 @@ void main() {
   });
 
   test('refuses every package import outside the installed boundary', () {
-    for (final package in ['remix_fortal', 'mix', 'naked_ui']) {
+    for (final package in ['registry_source', 'mix', 'naked_ui']) {
       final root = Directory(p.join(sandbox.path, package));
       final builder = _emptyBuilder(root);
       _write(
@@ -570,7 +570,7 @@ void _writeAcmeSources(PresetBuilder builder) {
 const _fortalFixture = PresetSpec(
   name: 'fortal',
   sourceRoot: 'registry_source/fortal',
-  sourcePackage: 'remix_fortal',
+  sourcePackage: 'registry_source',
   typeWord: 'Fortal',
   valueWord: 'fortal',
   componentDirectory: 'components',
