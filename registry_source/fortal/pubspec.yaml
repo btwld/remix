@@ -13,10 +13,9 @@ topics:
   - styling
   - mix
 
-# Retained only so `apps/*` can still declare `remix_fortal: ^1.0.0-beta.9`
-# while they migrate to installed source. It goes with the last of those
-# dependencies; this package is never published.
-version: 1.0.0-beta.9
+# No `version:` on purpose. This package is never published: it is the
+# authored, analyzer-checked source the bundled Fortal preset derives from.
+# Applications consume that installed source, not this package.
 
 environment:
   sdk: ">=3.11.0 <4.0.0"
@@ -32,6 +31,10 @@ dependencies:
   mix_annotations: ^2.2.0-beta.1
   mix_chart: ^0.0.1-beta.1
   remix_ui_icons: ^0.1.0
+  # Recipes style Agent behavior. The workspace resolves this to the sibling
+  # source package; installed recipes import the same behavior as installed
+  # source, so the constraint carries no version.
+  remix_agent: any
 
 dev_dependencies:
   flutter_test:

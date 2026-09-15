@@ -141,8 +141,10 @@ preflight instead of being overridden. Dry-run/diff remain read-only.
 
 Agent behavior is available in both bundled presets. Add a bare surface for
 behavior-only source, or `<component>_recipe` for the surface plus its complete
-preset-specific styling bundle. Canonical recipe templates live in
-`open_code/agent_recipes/`; derivation checks keep registry copies aligned.
+preset-specific styling bundle. Each recipe is authored as Dart in its preset's
+source package (`registry_source/default/lib/src/recipes/`,
+`registry_source/fortal/lib/src/recipes/`) against the Agent behavior source,
+and derives into the registry like every other item.
 
 ## Charts without Fortal
 
@@ -271,10 +273,10 @@ package that takes unresolved stylers can be styled from them too, which keeps
 its surfaces inside the application's design language instead of adding a
 second one.
 
-`remix_agent` is the worked example. Its catalog app,
-`registry_source/agent/example/`, installs Theme, Card, TextField, and
-IconButton the way any consumer does, then composes them into one recipe bundle
-for the installed `UiComposer`:
+`remix_agent` is the worked example. Its `composer_recipe` item, authored in
+each preset's source and installed like any other recipe, composes the
+installed Theme, Card, TextField, and IconButton into one recipe bundle for
+the installed `UiComposer`:
 
 ```dart
 final recipe = uiAgentComposerRecipe();
@@ -297,13 +299,14 @@ The eight Agent surfaces now install as `activity`, `answer`, `composer`,
 `execution`, `message`, `permission`, `plan`, and `transcript` in both existing
 presets. Shared `models` and `support` install through dependency closure. The
 private `remix_agent` package remains authoring/test source, not a consumer
-dependency. The example imports installed `Ui*` classes. Fortal recipes use only the installed Fortal theme and controls. Checkout verification does not replace the
-hosted checks required before a release.
+dependency. The dashboard imports installed `Ui*` classes. Fortal recipes use
+only the installed Fortal theme and controls. Checkout verification does not
+replace the hosted checks required before a release.
 
 All eight surfaces have equivalent immutable recipe bundles. Call-site overrides
 merge last, and child-control stylers remain unresolved until rendered. The
-conversation shell and simulated runner belong to the example applications,
-not the registry or a runtime package.
+conversation shell and simulated runner belong to the applications, not the
+registry or a source package.
 
 ## Repository proof
 
@@ -331,9 +334,8 @@ All three dogfood consumers are checked against the templates they installed:
 fvm dart run tool/check_open_code_dogfood.dart
 ```
 
-`apps/playground` holds every default item; `registry_source/agent/example` and
-`apps/dashboard` install the eight Agent recipe closures from default and Fortal
-respectively. The checker declares those expected items
+`apps/playground` holds every default item; `apps/dashboard` installs the
+eight Agent recipe closures from Fortal. The checker declares those expected items
 explicitly, so missing files are checked too. The CLI reads each consumer's
 `remix.yaml` to locate its installed source.
 

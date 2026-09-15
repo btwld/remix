@@ -80,9 +80,9 @@ does not. A model picker built with `RemixSelect` needs the same `Overlay`.
 | `AgentPlan` | Task plan with pending / in-progress / completed / cancelled and a completion count. |
 | `AgentActivity` | Slim activity ledger. Hosts supply each item’s child. |
 
-There is no runtime chat shell, sidebar, or file tree. The example and dashboard
-compose them into an interactive simulated chat; applications retain ownership
-of that orchestration.
+There is no runtime chat shell, sidebar, or file tree. The dashboard and
+playground compose them into an interactive simulated chat; applications retain
+ownership of that orchestration.
 
 ## What this is not
 
@@ -118,16 +118,6 @@ of those files changes the composer with it. Install a bundle with
 `remix add composer_recipe`; all eight follow the same `<component>_recipe`
 convention. Default recipes use default tokens and Fortal recipes use Fortal
 tokens and controls without crossing presets.
-
-## Local catalog
-
-A full review page lives in `example/`. It is unpublished and meant for
-walking every surface:
-
-```bash
-cd registry_source/agent/example
-fvm flutter run -d chrome
-```
 
 ## Host
 

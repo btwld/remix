@@ -177,9 +177,7 @@ ChartFrameStyler _chartFrameStyle() => ChartFrameStyler()
 ChartAxisStyler _chartAxisStyle() => ChartAxisStyler()
     .showLabels(true)
     .label(
-      TextStyler()
-          .fontSize(_labelSize)
-          .color({{typePrefix}}Tokens.mutedForeground()),
+      TextStyler().fontSize(_labelSize).color({{typePrefix}}Tokens.mutedForeground()),
     )
     .labelSpace(8)
     .fitInside(true)

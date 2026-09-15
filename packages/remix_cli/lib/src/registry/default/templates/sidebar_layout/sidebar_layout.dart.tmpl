@@ -110,8 +110,7 @@ class {{typePrefix}}SidebarLayout extends StatefulWidget {
   final ValueChanged<bool>? onCompactOpenChanged;
 
   @override
-  State<{{typePrefix}}SidebarLayout> createState() =>
-      _{{typePrefix}}SidebarLayoutState();
+  State<{{typePrefix}}SidebarLayout> createState() => _{{typePrefix}}SidebarLayoutState();
 }
 
 class _{{typePrefix}}SidebarLayoutState extends State<{{typePrefix}}SidebarLayout> {
@@ -348,8 +347,8 @@ class {{typePrefix}}SidebarLayoutScope extends InheritedWidget {
 
   /// Reads the nearest [{{typePrefix}}SidebarLayoutScope], or null outside a
   /// [{{typePrefix}}SidebarLayout].
-  static {{typePrefix}}SidebarLayoutScope? maybeOf(BuildContext context) => context
-      .dependOnInheritedWidgetOfExactType<{{typePrefix}}SidebarLayoutScope>();
+  static {{typePrefix}}SidebarLayoutScope? maybeOf(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<{{typePrefix}}SidebarLayoutScope>();
 
   @override
   bool updateShouldNotify({{typePrefix}}SidebarLayoutScope oldWidget) =>

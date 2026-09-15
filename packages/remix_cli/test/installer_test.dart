@@ -183,9 +183,9 @@ paths:
       );
 
       expect(writer.paths, [
-        'lib/ui/theme/tokens.dart',
         'lib/ui/theme/theme_data.dart',
         'lib/ui/theme/theme_scope.dart',
+        'lib/ui/theme/tokens.dart',
         'lib/ui/components/button.dart',
         'lib/ui/ui.dart',
       ]);

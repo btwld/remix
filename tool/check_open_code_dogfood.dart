@@ -4,8 +4,8 @@
 /// dart run tool/check_open_code_dogfood.dart
 /// ```
 ///
-/// Playground expects the full default registry; the Agent example and
-/// dashboard explicitly exercise the eight styled Agent recipes.
+/// Playground expects the full default registry; the dashboard explicitly
+/// exercises the eight styled Agent recipes.
 /// Check expected items even when their files are missing. The CLI owns config parsing, template rendering, and diffing.
 ///
 /// Application-owned source may be customized. Each deliberate edit belongs in
@@ -26,31 +26,6 @@ const _customized = <String, String>{
 /// Expected items per consumer; null means the entire default registry.
 const _consumers = <String, List<String>?>{
   'apps/playground': null,
-  'registry_source/agent/example': [
-    'theme',
-    'models',
-    'support',
-    'activity',
-    'answer',
-    'composer',
-    'execution',
-    'message',
-    'permission',
-    'plan',
-    'transcript',
-    'card',
-    'textfield',
-    'icon_button',
-    'button',
-    'activity_recipe',
-    'answer_recipe',
-    'composer_recipe',
-    'execution_recipe',
-    'message_recipe',
-    'permission_recipe',
-    'plan_recipe',
-    'transcript_recipe',
-  ],
   'apps/dashboard': [
     'activity_recipe',
     'answer_recipe',

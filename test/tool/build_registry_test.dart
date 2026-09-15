@@ -32,8 +32,46 @@ void main() {
       );
       expect(
         merged.files,
-        contains('templates/agent/recipes/composer_recipe.dart.tmpl'),
+        contains('templates/recipes/composer_recipe.dart.tmpl'),
       );
+      expect(
+        merged.files.keys.where((path) => path.startsWith('templates/agent/')),
+        isNot(anyElement(contains('/recipes/'))),
+      );
+    },
+  );
+
+  test(
+    'recipes derive against installed behavior, not the authoring import',
+    () {
+      for (final spec in [defaultPreset, fortalPreset]) {
+        final output = PresetBuilder.forRepository(
+          Directory.current.absolute,
+          spec: spec,
+        ).derive();
+        final items =
+            loadYaml(output.files['registry.yaml']!)['items'] as YamlMap;
+        for (final name in agentRecipes) {
+          final template = output.files['templates/recipes/$name.dart.tmpl']!;
+          expect(
+            template,
+            isNot(contains('package:remix_agent')),
+            reason: name,
+          );
+          expect(
+            RegExp(r'(?<![A-Za-z0-9_}])Agent[A-Z]').hasMatch(template),
+            isFalse,
+            reason: '$name still names a behavior type by its authoring word',
+          );
+          // The domain name survives: the recipe is the Agent composer recipe.
+          expect(template, contains('{{typePrefix}}Agent'), reason: name);
+          final dependencies = _strings(
+            (items[name] as YamlMap)['registryDependencies'],
+          );
+          expect(dependencies, contains(name.replaceAll('_recipe', '')));
+          expect(dependencies, isNot(contains('models')));
+        }
+      }
     },
   );
 
@@ -290,6 +328,138 @@ void acmeDialStyle() {}
     );
   });
 
+  test('a recipe rewrites the behavior import and word, then sorts', () {
+    final builder = _emptyBuilder(sandbox, spec: _acmeWithRecipes);
+    _writeAcmeSources(builder);
+    _write(
+      builder.sourceRoot,
+      'recipes/dial_recipe.dart',
+      """import 'package:remix/remix.dart';
+import 'package:remix_bot/src/components/dial.dart';
+
+import '../core/core.dart';
+import '../widgets/dial.dart';
+
+final class AcmeBotDialRecipe {
+  const AcmeBotDialRecipe(this.style);
+  final BotDialStyler style;
+}
+
+AcmeBotDialRecipe acmeBotDialRecipe() =>
+    AcmeBotDialRecipe(BotDialStyler().merge(acmeDialStyle()));
+""",
+    );
+    final output = builder.derive();
+    final template = output.files['templates/recipes/dial_recipe.dart.tmpl']!;
+    expect(template, """import 'package:remix/remix.dart';
+
+import '../components/dial.dart';
+import '../core/core.dart';
+import '../widgets/dial.dart';
+
+final class {{typePrefix}}BotDialRecipe {
+  const {{typePrefix}}BotDialRecipe(this.style);
+  final {{typePrefix}}DialStyler style;
+}
+
+{{typePrefix}}BotDialRecipe {{valuePrefix}}BotDialRecipe() =>
+    {{typePrefix}}BotDialRecipe({{typePrefix}}DialStyler().merge({{valuePrefix}}DialStyle()));
+""");
+    final items = loadYaml(output.files['registry.yaml']!)['items'] as YamlMap;
+    expect(
+      _strings((items['dial_recipe'] as YamlMap)['registryDependencies']),
+      ['core', 'dial'],
+    );
+    expect(
+      (items['dial_recipe'] as YamlMap)['files'].first['target'],
+      '@ui/recipes/dial_recipe.dart',
+    );
+  });
+
+  test(
+    'behavior imports are refused outside recipes and beyond components',
+    () {
+      final builder = _emptyBuilder(sandbox, spec: _acmeWithRecipes);
+      _writeAcmeSources(builder);
+      _write(
+        builder.sourceRoot,
+        'widgets/gauge.dart',
+        "import 'package:remix_bot/src/components/dial.dart';\n",
+      );
+      _write(
+        builder.sourceRoot,
+        'recipes/dial_recipe.dart',
+        "import 'package:remix_bot/src/support/glyph.dart';\n",
+      );
+      expect(
+        builder.derive,
+        throwsA(
+          isA<FormatException>().having(
+            (error) => error.message,
+            'message',
+            allOf(
+              contains('widgets/gauge.dart: only recipes may import'),
+              contains(
+                'recipes/dial_recipe.dart: recipes import behavior '
+                'components only',
+              ),
+            ),
+          ),
+        ),
+      );
+    },
+  );
+
+  test('recipes and declared recipe items must agree', () {
+    final builder = _emptyBuilder(sandbox, spec: _acmeWithRecipes);
+    _writeAcmeSources(builder);
+    expect(
+      builder.derive,
+      throwsA(
+        isA<FormatException>().having(
+          (error) => error.message,
+          'message',
+          contains('recipes/dial_recipe.dart'),
+        ),
+      ),
+    );
+    _write(builder.sourceRoot, 'recipes/dial_recipe.dart', '');
+    _write(builder.sourceRoot, 'recipes/extra_recipe.dart', '');
+    expect(
+      builder.derive,
+      throwsA(
+        isA<FormatException>().having(
+          (error) => error.message,
+          'message',
+          contains('extra_recipe.dart is not a declared acme recipe'),
+        ),
+      ),
+    );
+  });
+
+  test('a recipe importing something the preset never installs is refused', () {
+    final builder = _emptyBuilder(sandbox, spec: _acmeWithRecipes);
+    _writeAcmeSources(builder);
+    _write(
+      builder.sourceRoot,
+      'recipes/dial_recipe.dart',
+      "import 'package:remix_bot/src/components/dial.dart';\n",
+    );
+    // Derivation defers the behavior component to the merge; validation of
+    // the un-merged preset is where it surfaces.
+    final output = builder.derive();
+    expect(
+      () => builder.validate(output),
+      throwsA(
+        isA<FormatException>().having(
+          (error) => error.message,
+          'message',
+          contains('dial_recipe imports ../components/dial.dart'),
+        ),
+      ),
+    );
+  });
+
   test('check mode reports planted changed and stale output', () {
     final builder = _fixtureBuilder(sandbox);
     final output = builder.derive();
@@ -337,13 +507,103 @@ const _acmePreset = PresetSpec(
   composedRegistryDependencies: {},
 );
 
-PresetBuilder _emptyBuilder(Directory root, {PresetSpec spec = fortalPreset}) =>
-    PresetBuilder(
-      spec: spec,
-      sourceRoot: Directory(p.join(root.path, 'source')),
-      defaultRegistryRoot: Directory(p.join(root.path, 'default')),
-      outputRoot: Directory(p.join(root.path, 'output')),
-    );
+/// [_acmePreset] styling a `remix_bot` behavior through one recipe.
+const _acmeWithRecipes = PresetSpec(
+  name: 'acme',
+  sourceRoot: 'registry_source/acme',
+  sourcePackage: 'remix_acme',
+  typeWord: 'Acme',
+  valueWord: 'acme',
+  componentDirectory: 'widgets',
+  sharedItems: [
+    SharedItemSpec(
+      name: 'core',
+      directory: 'core',
+      requiredFile: 'core/core.dart',
+      packages: {'remix'},
+      exports: ['core/core.dart'],
+    ),
+  ],
+  copiedItems: [],
+  ignoredSourceFiles: {},
+  floorPackages: {'remix'},
+  detectedPackages: [],
+  composedRegistryDependencies: {},
+  recipeItems: ['dial_recipe'],
+  behavior: BehaviorSpec(
+    package: 'remix_bot',
+    typeWord: 'Bot',
+    valueWord: 'bot',
+    componentDirectory: 'components',
+  ),
+);
+
+void _writeAcmeSources(PresetBuilder builder) {
+  _write(builder.sourceRoot, 'core/core.dart', "export 'tokens.dart';\n");
+  _write(
+    builder.sourceRoot,
+    'core/tokens.dart',
+    "import 'package:remix/remix.dart';\nabstract class AcmeTokens {}\n",
+  );
+  _write(
+    builder.sourceRoot,
+    'widgets/dial.dart',
+    "import 'package:remix/remix.dart';\n\nimport '../core/core.dart';\n\n"
+        'void acmeDialStyle() {}\n',
+  );
+  _writeDefaultRegistry(builder.defaultRegistryRoot);
+}
+
+/// [fortalPreset] as the sandbox fixtures author it: theme and components
+/// only, no recipes, so every refusal below is about the file under test.
+const _fortalFixture = PresetSpec(
+  name: 'fortal',
+  sourceRoot: 'registry_source/fortal',
+  sourcePackage: 'remix_fortal',
+  typeWord: 'Fortal',
+  valueWord: 'fortal',
+  componentDirectory: 'components',
+  sharedItems: [
+    SharedItemSpec(
+      name: 'theme',
+      directory: 'theme',
+      requiredFile: 'theme/theme.dart',
+      packages: {'remix'},
+      exports: ['theme/theme.dart'],
+    ),
+  ],
+  copiedItems: [
+    CopiedItemSpec(
+      name: 'icons',
+      templatePath: 'templates/icons/icons.dart.tmpl',
+      target: '@ui/icons.dart',
+      registryDependencies: ['theme'],
+      packages: {'remix_ui_icons'},
+      exports: ['icons.dart'],
+    ),
+  ],
+  ignoredSourceFiles: {'icons.dart'},
+  floorPackages: {
+    'remix',
+    'mix_annotations',
+    'build_runner',
+    'mix_generator',
+    'mix_chart',
+    'remix_ui_icons',
+  },
+  detectedPackages: ['mix_chart', 'remix_ui_icons'],
+  composedRegistryDependencies: {},
+);
+
+PresetBuilder _emptyBuilder(
+  Directory root, {
+  PresetSpec spec = _fortalFixture,
+}) => PresetBuilder(
+  spec: spec,
+  sourceRoot: Directory(p.join(root.path, 'source')),
+  defaultRegistryRoot: Directory(p.join(root.path, 'default')),
+  outputRoot: Directory(p.join(root.path, 'output')),
+);
 
 PresetBuilder _fixtureBuilder(Directory root) {
   final builder = _emptyBuilder(root);

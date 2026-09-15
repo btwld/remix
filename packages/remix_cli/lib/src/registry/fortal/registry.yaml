@@ -51,6 +51,30 @@ items:
     exports:
       - components/accordion.dart
 
+  activity_recipe:
+    registryDependencies:
+      - theme
+      - activity
+      - disclosure
+    files:
+      - source: templates/recipes/activity_recipe.dart.tmpl
+        target: "@ui/recipes/activity_recipe.dart"
+    exports:
+      - recipes/activity_recipe.dart
+
+  answer_recipe:
+    registryDependencies:
+      - theme
+      - answer
+      - card
+      - disclosure
+      - icon_button
+    files:
+      - source: templates/recipes/answer_recipe.dart.tmpl
+        target: "@ui/recipes/answer_recipe.dart"
+    exports:
+      - recipes/answer_recipe.dart
+
   avatar:
     registryDependencies:
       - theme
@@ -184,6 +208,19 @@ items:
     exports:
       - components/code.dart
 
+  composer_recipe:
+    registryDependencies:
+      - theme
+      - card
+      - composer
+      - icon_button
+      - textfield
+    files:
+      - source: templates/recipes/composer_recipe.dart.tmpl
+        target: "@ui/recipes/composer_recipe.dart"
+    exports:
+      - recipes/composer_recipe.dart
+
   data_list:
     registryDependencies:
       - theme
@@ -267,6 +304,19 @@ items:
     exports:
       - components/divider.dart
 
+  execution_recipe:
+    registryDependencies:
+      - theme
+      - card
+      - disclosure
+      - execution
+      - icon_button
+    files:
+      - source: templates/recipes/execution_recipe.dart.tmpl
+        target: "@ui/recipes/execution_recipe.dart"
+    exports:
+      - recipes/execution_recipe.dart
+
   heading:
     registryDependencies:
       - theme
@@ -329,6 +379,42 @@ items:
       - "@ui/components/menu.g.dart"
     exports:
       - components/menu.dart
+
+  message_recipe:
+    registryDependencies:
+      - button
+      - card
+      - message
+    files:
+      - source: templates/recipes/message_recipe.dart.tmpl
+        target: "@ui/recipes/message_recipe.dart"
+    exports:
+      - recipes/message_recipe.dart
+
+  permission_recipe:
+    registryDependencies:
+      - theme
+      - button
+      - card
+      - data_list
+      - disclosure
+      - permission
+    files:
+      - source: templates/recipes/permission_recipe.dart.tmpl
+        target: "@ui/recipes/permission_recipe.dart"
+    exports:
+      - recipes/permission_recipe.dart
+
+  plan_recipe:
+    registryDependencies:
+      - theme
+      - disclosure
+      - plan
+    files:
+      - source: templates/recipes/plan_recipe.dart.tmpl
+        target: "@ui/recipes/plan_recipe.dart"
+    exports:
+      - recipes/plan_recipe.dart
 
   popover:
     registryDependencies:
@@ -618,6 +704,15 @@ items:
     exports:
       - components/tooltip.dart
 
+  transcript_recipe:
+    registryDependencies:
+      - transcript
+    files:
+      - source: templates/recipes/transcript_recipe.dart.tmpl
+        target: "@ui/recipes/transcript_recipe.dart"
+    exports:
+      - recipes/transcript_recipe.dart
+
   typography:
     registryDependencies:
       - theme
@@ -670,16 +765,6 @@ items:
     exports:
       - components/activity.dart
 
-  activity_recipe:
-    registryDependencies:
-      - activity
-      - disclosure
-    files:
-      - source: templates/agent/recipes/activity_recipe.dart.tmpl
-        target: "@ui/recipes/activity_recipe.dart"
-    exports:
-      - recipes/activity_recipe.dart
-
   answer:
     registryDependencies:
       - models
@@ -697,18 +782,6 @@ items:
     exports:
       - components/answer.dart
 
-  answer_recipe:
-    registryDependencies:
-      - answer
-      - card
-      - disclosure
-      - icon_button
-    files:
-      - source: templates/agent/recipes/answer_recipe.dart.tmpl
-        target: "@ui/recipes/answer_recipe.dart"
-    exports:
-      - recipes/answer_recipe.dart
-
   composer:
     registryDependencies:
       - support
@@ -724,18 +797,6 @@ items:
       - "@ui/components/composer.g.dart"
     exports:
       - components/composer.dart
-
-  composer_recipe:
-    registryDependencies:
-      - composer
-      - card
-      - textfield
-      - icon_button
-    files:
-      - source: templates/agent/recipes/composer_recipe.dart.tmpl
-        target: "@ui/recipes/composer_recipe.dart"
-    exports:
-      - recipes/composer_recipe.dart
 
   execution:
     registryDependencies:
@@ -754,18 +815,6 @@ items:
     exports:
       - components/execution.dart
 
-  execution_recipe:
-    registryDependencies:
-      - execution
-      - card
-      - disclosure
-      - icon_button
-    files:
-      - source: templates/agent/recipes/execution_recipe.dart.tmpl
-        target: "@ui/recipes/execution_recipe.dart"
-    exports:
-      - recipes/execution_recipe.dart
-
   message:
     registryDependencies:
       - models
@@ -782,17 +831,6 @@ items:
       - "@ui/components/message.g.dart"
     exports:
       - components/message.dart
-
-  message_recipe:
-    registryDependencies:
-      - message
-      - card
-      - button
-    files:
-      - source: templates/agent/recipes/message_recipe.dart.tmpl
-        target: "@ui/recipes/message_recipe.dart"
-    exports:
-      - recipes/message_recipe.dart
 
   permission:
     registryDependencies:
@@ -811,19 +849,6 @@ items:
     exports:
       - components/permission.dart
 
-  permission_recipe:
-    registryDependencies:
-      - permission
-      - card
-      - disclosure
-      - data_list
-      - button
-    files:
-      - source: templates/agent/recipes/permission_recipe.dart.tmpl
-        target: "@ui/recipes/permission_recipe.dart"
-    exports:
-      - recipes/permission_recipe.dart
-
   plan:
     registryDependencies:
       - models
@@ -841,16 +866,6 @@ items:
     exports:
       - components/plan.dart
 
-  plan_recipe:
-    registryDependencies:
-      - plan
-      - disclosure
-    files:
-      - source: templates/agent/recipes/plan_recipe.dart.tmpl
-        target: "@ui/recipes/plan_recipe.dart"
-    exports:
-      - recipes/plan_recipe.dart
-
   transcript:
     registryDependencies:
       - support
@@ -866,12 +881,3 @@ items:
       - "@ui/components/transcript.g.dart"
     exports:
       - components/transcript.dart
-
-  transcript_recipe:
-    registryDependencies:
-      - transcript
-    files:
-      - source: templates/agent/recipes/transcript_recipe.dart.tmpl
-        target: "@ui/recipes/transcript_recipe.dart"
-    exports:
-      - recipes/transcript_recipe.dart

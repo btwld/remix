@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
+
 import '../components/activity.dart';
 import '../components/disclosure.dart';
 import '../theme/theme.dart';
