@@ -1,5 +1,20 @@
 name: CI
 
+# The verification work is defined by the `ci` script in the root pubspec, and
+# each of its steps runs below as its own job. They are independent, so running
+# them in parallel costs the slowest job rather than their sum -- which is what
+# took this pipeline from ~20 minutes to roughly the length of `open-code`.
+#
+# Jobs are sized by cost, not by theme: `checks` bundles nine contract checkers
+# that together take seconds, while the two open-code presets get a job each
+# purely because they are ~5 minutes apiece and were half the old wall clock.
+#
+# The workflow restates the `ci` steps instead of deriving them, which is the
+# one hazard of this layout: a step added to `ci` but not wired in here would
+# never run, and would look green because nothing reports a job that does not
+# exist. tool/check_ci_coverage.dart fails on that drift and runs inside the
+# `checks` job.
+
 on:
   push:
     branches: [main]
@@ -10,6 +25,57 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  checks:
+    name: Contract checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-workspace
+      - uses: invertase/github-action-dart-analyzer@v1
+        with:
+          fatal-infos: false
+      - run: dart run melos run ci:checks
+
+  codegen:
+    name: Generated source drift
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-workspace
+      - run: dart run melos run ci:codegen
+
+  flutter-tests:
+    name: Flutter package tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-workspace
+      - run: dart run melos run ci:flutter
+
+  cli-tests:
+    name: CLI tests and dogfood mirror
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-workspace
+      - run: dart run melos run ci:cli
+
+  # Both presets install every registry item into a throwaway consumer app, and
+  # neither reads the other's output. Sequentially they were ~10 of the old ~20
+  # minutes; as a matrix they cost one preset. `fail-fast: false` so a break in
+  # one preset still reports the other rather than masking it.
+  open-code:
+    name: Open-code consumers (${{ matrix.preset }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        preset: [default, fortal]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-workspace
+      - run: dart run melos run ci:open-code:${{ matrix.preset }}
+
   cli-windows:
     name: Verify the CLI with the Windows Flutter SDK
     runs-on: windows-latest
@@ -27,14 +93,6 @@ jobs:
       - name: Verify real SDK execution and source preservation
         working-directory: packages/remix_cli
         run: dart test test/installer_sdk_test.dart
-
-  test:
-    uses: conceptadev/dart-actions/.github/workflows/ci.yml@9075ce1232ec77b8747953f2ff4a349190e5a805
-    secrets:
-      token: ${{ secrets.GITHUB_TOKEN }}
-    with:
-      flutter-version: "3.44.0"
-      run-dcm: false
 
   icons:
     runs-on: ubuntu-latest

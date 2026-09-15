@@ -199,26 +199,78 @@ melos:
       run: dart run tool/check_dependency_constraints.dart
       description: Verify shared dependency constraints match the melos bootstrap config
 
+    # `ci` is the whole verification surface, and every step below is one CI
+    # job. Running it here executes them in sequence; .github/workflows/ci.yaml
+    # runs the same six scripts as parallel jobs, which is what took the
+    # pipeline from ~20 minutes of sequential work to roughly its slowest job.
+    #
+    # The split is therefore a contract, not a convenience: a step added here
+    # but not wired into the workflow would never run on CI, and would look
+    # green because nothing reports a job that does not exist.
+    # tool/check_ci_coverage.dart fails when the two drift, and runs inside
+    # `ci:checks` so it cannot be forgotten.
+    #
+    # Group by cost, not by theme. The two open-code presets are separate steps
+    # purely because they are ~5 minutes each and independent, and together
+    # they were half the old wall clock.
     ci:
       steps:
+        - ci:checks
+        - ci:codegen
+        - ci:cli
+        - ci:flutter
+        - ci:open-code:default
+        - ci:open-code:fortal
+      description: >-
+        Verify generated sources, docs, Fortal parity, tests, and the
+        open-code consumer boundary
+
+    ci:checks:
+      steps:
+        - ci:coverage:check
         - toolchain:check
         - constraints:check
         - version:align:check
         - mix:consumer:check
         - material:check
-        - generate:check
-        - open-code:fortal:check
         - docs:check
         - fortal:parity:check
-        - open-code:dogfood:check
-        - test:cli
-        - test:flutter
-        # Fresh consumers use checkout Remix and hosted supporting packages.
-        # The release check separately requires the published Remix version.
-        - open-code:check
+        - open-code:fortal:check
       description: >-
-        Verify generated sources, docs, Fortal parity, tests, and the
-        open-code consumer boundary
+        Every cheap contract checker; seconds in total, so they share one job
+
+    ci:codegen:
+      steps:
+        - generate:check
+      description: Regenerate Remix sources and fail on generated drift
+
+    ci:cli:
+      steps:
+        - test:cli
+        - open-code:dogfood:check
+      description: The pure-Dart CLI suite and the playground dogfood mirror
+
+    ci:flutter:
+      steps:
+        - test:flutter
+      description: Every Flutter package test suite
+
+    # Fresh consumers use checkout Remix and hosted supporting packages.
+    # The release check separately requires the published Remix version.
+    ci:open-code:default:
+      steps:
+        - dart test test/tool/check_open_code_test.dart
+        - dart run tool/check_open_code.dart --source checkout
+      description: Install every default-preset item against the Remix checkout
+
+    ci:open-code:fortal:
+      steps:
+        - dart run tool/check_open_code.dart --preset fortal --source checkout
+      description: Install every Fortal-preset item against the Remix checkout
+
+    ci:coverage:check:
+      run: dart run tool/check_ci_coverage.dart
+      description: Fail when `melos run ci` and the CI workflow disagree
 
     fortal:parity:check:
       exec: dart run tool/fortal_parity/check.dart
