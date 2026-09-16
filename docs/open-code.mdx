@@ -552,7 +552,9 @@ and page-size control *are* those components; adding it installs all four;
 and a collapsed rail labels it with a tooltip. `toast` pulls in `button`
 and `icon_button` for its action and close control. `sidebar_layout` is a
 layout with no `Spec` or generated adapter; it pulls in `sidebar` to compose
-into its row and compact sheet.
+into its row and compact sheet. `dashboard_shell` composes those existing
+primitives into a host-controlled responsive shell. It installs no charts,
+tables, sample data, routes, or application entry point.
 
 The registry requires Remix beta.10, which includes `RemixSidebar` and the Toast APIs.
 The installer rejects older resolved versions before it writes source.
@@ -568,6 +570,7 @@ The installer rejects older resolved versions before it writes source.
 | `card` | `UiCard` | — |
 | `chart` | `UiLineChart`, `UiBarChart`, `UiPieChart` | — |
 | `checkbox` | `UiCheckbox`, `UiCheckboxGroupItem` | — |
+| `dashboard_shell` | `UiDashboardShell` | — |
 | `data_list` | `UiDataList` | — |
 | `data_table` | `UiDataTable` | — |
 | `dialog` | `UiDialog` | — |

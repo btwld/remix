@@ -238,13 +238,25 @@ final class GroupedRecipeItemSpec {
 
 /// One authored source and its installed path within a grouped recipe item.
 final class GroupedRecipeFileSpec {
-  const GroupedRecipeFileSpec({required this.source, required this.target});
+  const GroupedRecipeFileSpec({
+    required this.source,
+    required this.target,
+    this.sourceTypeWord,
+    this.sourceValueWord,
+  }) : assert((sourceTypeWord == null) == (sourceValueWord == null));
 
   /// Path relative to the preset's [PresetSpec.sourceRoot].
   final String source;
 
   /// Installed path relative to `@ui/`.
   final String target;
+
+  /// Optional authoring prefixes for preset-neutral shared source.
+  ///
+  /// The pair is first rewritten to the preset prefix, then converted to the
+  /// consumer placeholders by the normal template round trip.
+  final String? sourceTypeWord;
+  final String? sourceValueWord;
 }
 
 /// An item derived from every file in one source directory.
@@ -408,6 +420,26 @@ const defaultPreset = PresetSpec(
     'sidebar_layout': ['sidebar'],
   },
   recipeItems: agentRecipes,
+  groupedRecipeItems: [
+    GroupedRecipeItemSpec(
+      name: 'dashboard_shell',
+      files: [
+        GroupedRecipeFileSpec(
+          source: '../dashboard/dashboard_shell_base.dart',
+          target: 'recipes/dashboard/dashboard_shell_base.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
+          source: 'recipes/dashboard/dashboard_shell.dart',
+          target: 'recipes/dashboard/dashboard_shell.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+      ],
+      exports: ['recipes/dashboard/dashboard_shell.dart'],
+    ),
+  ],
   behavior: agentBehavior,
 );
 
@@ -454,6 +486,26 @@ const fortalPreset = PresetSpec(
     'sidebar_layout': ['sidebar'],
   },
   recipeItems: agentRecipes,
+  groupedRecipeItems: [
+    GroupedRecipeItemSpec(
+      name: 'dashboard_shell',
+      files: [
+        GroupedRecipeFileSpec(
+          source: '../dashboard/dashboard_shell_base.dart',
+          target: 'recipes/dashboard/dashboard_shell_base.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
+          source: 'recipes/dashboard/dashboard_shell.dart',
+          target: 'recipes/dashboard/dashboard_shell.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+      ],
+      exports: ['recipes/dashboard/dashboard_shell.dart'],
+    ),
+  ],
   behavior: agentBehavior,
 );
 
@@ -916,6 +968,8 @@ final class PresetBuilder {
           targetPath: file.target,
           authored: authored,
           installedTargets: installedTargets,
+          sourceTypeWord: file.sourceTypeWord,
+          sourceValueWord: file.sourceValueWord,
         );
         final templatePath =
             '${spec.templateDirectory}/${item.name}/'
@@ -1241,6 +1295,12 @@ final class PresetBuilder {
     for (final item in spec.fileItems) {
       if (sources.containsKey(item.file)) own(item.file, item.name);
     }
+    for (final item in spec.copiedItems) {
+      const uiPrefix = '@ui/';
+      if (!item.target.startsWith(uiPrefix)) continue;
+      final source = item.target.substring(uiPrefix.length);
+      if (sources.containsKey(source)) own(source, item.name);
+    }
     final componentPrefix = '${spec.componentDirectory}/';
     for (final source in sources.keys.where(
       (path) => path.startsWith(componentPrefix),
@@ -1434,8 +1494,10 @@ final class PresetBuilder {
     required String targetPath,
     required String authored,
     required Map<String, String> installedTargets,
+    required String? sourceTypeWord,
+    required String? sourceValueWord,
   }) {
-    final rewritten = authored.replaceAllMapped(_directivePattern, (match) {
+    var rewritten = authored.replaceAllMapped(_directivePattern, (match) {
       final uri = match.group(2)!;
       if (uri.startsWith('package:') || uri.startsWith('dart:')) {
         return match.group(0)!;
@@ -1457,6 +1519,11 @@ final class PresetBuilder {
       return '${whole.substring(0, uriStart)}$rebased'
           '${whole.substring(uriEnd)}';
     });
+    if (sourceTypeWord != null && sourceValueWord != null) {
+      rewritten = rewritten
+          .replaceAll(sourceTypeWord, spec.typeWord)
+          .replaceAll(sourceValueWord, spec.valueWord);
+    }
     return _sortDirectives(sourcePath, rewritten);
   }
 
