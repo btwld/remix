@@ -40,7 +40,7 @@ List<RemixDataTableColumn<_Record>> _columns({bool sortable = false}) {
     RemixDataTableColumn<_Record>(
       id: 'amount',
       label: 'Amount',
-      alignment: RemixDataTableCellAlignment.end,
+      alignment: AlignmentDirectional.centerEnd,
       cellBuilder: (context, row) => Text('${row.amount}'),
     ),
   ];
@@ -81,6 +81,64 @@ SemanticsNode _tableNode(WidgetTester tester) {
 }
 
 void main() {
+  for (final direction in TextDirection.values) {
+    for (final alignment in <AlignmentGeometry?>[
+      null,
+      AlignmentDirectional.centerStart,
+      Alignment.center,
+      AlignmentDirectional.centerEnd,
+      Alignment.topLeft,
+      AlignmentDirectional.bottomEnd,
+    ]) {
+      testWidgets('cell geometry $alignment in $direction', (tester) async {
+        const key = ValueKey('positioned-cell');
+        await tester.pumpRemixApp(
+          Directionality(
+            textDirection: direction,
+            child: SizedBox(
+              width: 400,
+              child: RemixDataTable<int>(
+                rows: const [1],
+                style: DataTableStyler().rowMinHeight(60),
+                columns: [
+                  RemixDataTableColumn<int>(
+                    id: 'position',
+                    label: 'Position',
+                    alignment: alignment ?? AlignmentDirectional.centerStart,
+                    cellBuilder: (_, _) =>
+                        const SizedBox(key: key, width: 20, height: 10),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+        final parent = find
+            .ancestor(of: find.byKey(key), matching: find.byType(Align))
+            .first;
+        final bounds = tester.getRect(parent);
+        final child = tester.getRect(find.byKey(key));
+        final resolved = (alignment ?? AlignmentDirectional.centerStart)
+            .resolve(direction);
+        expect(
+          child.left,
+          closeTo(
+            bounds.left + (bounds.width - child.width) * (resolved.x + 1) / 2,
+            0.01,
+          ),
+        );
+        expect(
+          child.top,
+          closeTo(
+            bounds.top + (bounds.height - child.height) * (resolved.y + 1) / 2,
+            0.01,
+          ),
+        );
+        expect(bounds.height, greaterThan(child.height));
+      });
+    }
+  }
+
   group('RemixDataTable structure', () {
     testWidgets('renders one header row plus one row per record', (
       tester,

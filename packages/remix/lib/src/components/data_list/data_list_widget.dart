@@ -1,8 +1,5 @@
 part of 'data_list.dart';
 
-/// How a [RemixDataListItem] aligns its label and value against each other.
-enum RemixDataListItemAlignment { start, center, end, baseline, stretch }
-
 /// One label/value pair displayed by a [RemixDataList].
 ///
 /// Exactly one of [value] or [child] must be provided. This data-driven item
@@ -18,7 +15,7 @@ class RemixDataListItem {
     this.value,
     this.child,
     this.semanticValue,
-    this.alignment = RemixDataListItemAlignment.baseline,
+    this.alignment = CrossAxisAlignment.baseline,
   }) : assert(
          (value == null) != (child == null),
          'Provide exactly one of value or child to RemixDataListItem.',
@@ -71,11 +68,11 @@ class RemixDataListItem {
 
   /// Cross-cell alignment for this row.
   ///
-  /// [RemixDataListItemAlignment.baseline] is meaningful for string values,
+  /// [CrossAxisAlignment.baseline] is meaningful for string values,
   /// where both cells expose a text baseline. A [child] row requesting
   /// baseline deterministically maps to top/start, and vertical orientation
   /// maps baseline to start; both adaptations are documented Radix deltas.
-  final RemixDataListItemAlignment alignment;
+  final CrossAxisAlignment alignment;
 }
 
 /// A semantic label/value list with a shared horizontal label column or a
@@ -340,18 +337,18 @@ class _HorizontalDataListLayout extends StatelessWidget {
 
   static TableCellVerticalAlignment _cellAlignment(RemixDataListItem item) {
     switch (item.alignment) {
-      case RemixDataListItemAlignment.start:
+      case CrossAxisAlignment.start:
         return TableCellVerticalAlignment.top;
-      case RemixDataListItemAlignment.center:
+      case CrossAxisAlignment.center:
         return TableCellVerticalAlignment.middle;
-      case RemixDataListItemAlignment.end:
+      case CrossAxisAlignment.end:
         return TableCellVerticalAlignment.bottom;
-      case RemixDataListItemAlignment.stretch:
+      case CrossAxisAlignment.stretch:
         // Deliberate: `fill` on every cell of a row leaves RenderTable no
         // height source and collapses the row to zero height, so stretch maps
         // to intrinsicHeight, which sizes both cells to the tallest cell.
         return TableCellVerticalAlignment.intrinsicHeight;
-      case RemixDataListItemAlignment.baseline:
+      case CrossAxisAlignment.baseline:
         // Deliberate: an arbitrary child may expose no text baseline, so a
         // custom-child baseline row maps to top instead of relying on
         // RenderTable's silent per-cell fallback.
@@ -722,15 +719,15 @@ class _VerticalDataListLayout extends StatelessWidget {
 
   static CrossAxisAlignment _itemAlignment(RemixDataListItem item) {
     switch (item.alignment) {
-      case RemixDataListItemAlignment.start:
+      case CrossAxisAlignment.start:
         return CrossAxisAlignment.start;
-      case RemixDataListItemAlignment.center:
+      case CrossAxisAlignment.center:
         return CrossAxisAlignment.center;
-      case RemixDataListItemAlignment.end:
+      case CrossAxisAlignment.end:
         return CrossAxisAlignment.end;
-      case RemixDataListItemAlignment.stretch:
+      case CrossAxisAlignment.stretch:
         return CrossAxisAlignment.stretch;
-      case RemixDataListItemAlignment.baseline:
+      case CrossAxisAlignment.baseline:
         // Deliberate: stacked label/value share no horizontal text baseline,
         // so vertical baseline maps to start.
         return CrossAxisAlignment.start;

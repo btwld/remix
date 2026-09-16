@@ -273,10 +273,8 @@ void main() {
 
       final dialogSection = _sectionChild(tester, 'Dialog');
       final dialogMatrix = tester
-          .widget<GalleryEnumMatrix<UiDialogAlign, UiDialogSize>>(
-            dialogSection,
-          );
-      expect(dialogMatrix.rows, UiDialogAlign.values);
+          .widget<GalleryMatrix<Alignment, UiDialogSize>>(dialogSection);
+      expect(dialogMatrix.rows, const [Alignment.topCenter, Alignment.center]);
       expect(dialogMatrix.columns, UiDialogSize.values);
       expect(
         tester
@@ -289,9 +287,9 @@ void main() {
             .map((button) => button.semanticLabel)
             .toSet(),
         {
-          for (final align in UiDialogAlign.values)
+          for (final align in const [Alignment.topCenter, Alignment.center])
             for (final size in UiDialogSize.values)
-              'Open ${enumLabel(align)} ${enumLabel(size)} dialog',
+              'Open ${align == Alignment.topCenter ? 'Top' : 'Center'} ${enumLabel(size)} dialog',
         },
       );
     });
@@ -342,7 +340,7 @@ void main() {
     ) async {
       await _pumpPage(tester, const GalleryOverlaysPage());
 
-      final trigger = find.bySemanticsLabel('Open Start Size1 dialog');
+      final trigger = find.bySemanticsLabel('Open Top Size1 dialog');
       await tester.ensureVisible(trigger);
       await tester.tap(trigger);
       for (var frame = 0; frame < 5; frame++) {
@@ -350,7 +348,7 @@ void main() {
       }
 
       final dialog = tester.widget<UiDialog>(find.byType(UiDialog));
-      expect(dialog.align, UiDialogAlign.start);
+      expect(dialog.align, Alignment.topCenter);
       expect(dialog.size, UiDialogSize.size1);
     });
   });

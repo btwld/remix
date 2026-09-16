@@ -333,7 +333,7 @@ class PlaygroundMessageStyler
     Key? key,
     required PlaygroundRole role,
     required Widget child,
-    PlaygroundMessageAlign? align,
+    RemixPlacement? align,
     Widget? avatar,
     bool showAvatar = false,
     bool placeholderAvatar = false,

@@ -11,9 +11,6 @@ part 'dialog.g.dart';
 /// Fortal dialog size presets matching Radix Themes 3.3.0.
 enum FortalDialogSize { size1, size2, size3, size4 }
 
-/// Fortal dialog vertical alignment matching Radix Themes 3.3.0.
-enum FortalDialogAlign { start, center }
-
 final _dialogViewportInsets = ContextToken<EdgeInsetsGeometry>((context) {
   final safeArea = MediaQuery.paddingOf(context);
   final viewportHeight = MediaQuery.sizeOf(context).height;
@@ -31,12 +28,12 @@ final _dialogViewportInsets = ContextToken<EdgeInsetsGeometry>((context) {
 /// Fortal-themed preset for [RemixDialog].
 ///
 /// The generated [FortalDialog] defaults to [FortalDialogSize.size3],
-/// [FortalDialogAlign.center], fills up to 600 logical pixels, preserves safe
+/// [Alignment.center], fills up to 600 logical pixels, preserves safe
 /// viewport insets, and is modal.
 @MixWidget(target: RemixDialog.new)
 DialogStyler fortalDialogStyle({
   FortalDialogSize size = FortalDialogSize.size3,
-  FortalDialogAlign align = FortalDialogAlign.center,
+  AlignmentGeometry align = Alignment.center,
   DialogStyler style = const DialogStyler.create(),
 }) {
   final radius = switch (size) {
@@ -49,16 +46,12 @@ DialogStyler fortalDialogStyle({
     FortalDialogSize.size3 => FortalTokens.space5(),
     FortalDialogSize.size4 => FortalTokens.space6(),
   };
-  final alignment = switch (align) {
-    FortalDialogAlign.start => Alignment.topCenter,
-    FortalDialogAlign.center => Alignment.center,
-  };
 
   return DialogStyler()
       .wrap(
         .modifier(
           PaddingModifierMix.create(padding: Prop.token(_dialogViewportInsets)),
-        ).align(alignment: alignment).orderOfModifiers([
+        ).align(alignment: align).orderOfModifiers([
           PaddingModifier,
           AlignModifier,
         ]),

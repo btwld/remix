@@ -10,6 +10,81 @@ import '../helpers/pump.dart';
 
 void main() {
   for (final direction in TextDirection.values) {
+    for (final placement in RemixPlacement.values) {
+      for (final placeholder in [false, true]) {
+        testWidgets(
+          'message override $placement placeholder $placeholder in $direction',
+          (tester) async {
+            await pumpAgent(
+              tester,
+              Directionality(
+                textDirection: direction,
+                child: SizedBox(
+                  width: 500,
+                  child: AgentMessage(
+                    role: placement == RemixPlacement.start
+                        ? AgentRole.user
+                        : AgentRole.assistant,
+                    align: placement,
+                    showAvatar: true,
+                    placeholderAvatar: placeholder,
+                    avatar: const SizedBox(
+                      key: ValueKey('avatar'),
+                      width: 30,
+                      height: 30,
+                    ),
+                    style: AgentMessageStyler().avatar(
+                      BoxStyler().size(30, 30),
+                    ),
+                    header: const SizedBox(
+                      key: ValueKey('header'),
+                      width: 40,
+                      height: 10,
+                    ),
+                    footer: const SizedBox(
+                      key: ValueKey('footer'),
+                      width: 40,
+                      height: 10,
+                    ),
+                    child: const SizedBox(
+                      key: ValueKey('body'),
+                      width: 100,
+                      height: 20,
+                    ),
+                  ),
+                ),
+              ),
+            );
+            final body = tester.getRect(find.byKey(const ValueKey('body')));
+            final left =
+                (placement == RemixPlacement.start) ==
+                (direction == TextDirection.ltr);
+            for (final key in ['header', 'footer']) {
+              final slot = tester.getRect(find.byKey(ValueKey(key)));
+              expect(
+                left ? slot.left : slot.right,
+                left ? body.left : body.right,
+              );
+            }
+            expect(left ? body.left : body.right, left ? 30 : 470);
+            if (placeholder) {
+              expect(find.byKey(const ValueKey('avatar')), findsNothing);
+            } else {
+              final avatar = tester.getRect(
+                find.byKey(const ValueKey('avatar')),
+              );
+              expect(
+                avatar.center.dx,
+                left ? lessThan(body.left) : greaterThan(body.right),
+              );
+            }
+          },
+        );
+      }
+    }
+  }
+
+  for (final direction in TextDirection.values) {
     testWidgets('message roles align to opposite edges in $direction', (
       tester,
     ) async {

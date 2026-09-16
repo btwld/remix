@@ -325,7 +325,7 @@ class UiMessageStyler extends MixStyler<UiMessageStyler, UiMessageSpec>
     Key? key,
     required UiRole role,
     required Widget child,
-    UiMessageAlign? align,
+    RemixPlacement? align,
     Widget? avatar,
     bool showAvatar = false,
     bool placeholderAvatar = false,

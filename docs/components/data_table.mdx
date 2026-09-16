@@ -230,7 +230,7 @@ class ActionCellExample extends StatelessWidget {
           header: const SizedBox.shrink(),
           semanticLabel: 'Actions',
           width: const FixedColumnWidth(72),
-          alignment: RemixDataTableCellAlignment.end,
+          alignment: AlignmentDirectional.centerEnd,
           cellBuilder: (context, row) => FortalIconButton.ghost(
             icon: Icons.more_horiz,
             semanticLabel: 'Actions for $row',
@@ -420,9 +420,12 @@ Accessible name of the column header. Defaults to `label`.
 Optional. Width shared by this column's header and body cells. Defaults to
 `FlexColumnWidth()`.
 
-#### `alignment` → `RemixDataTableCellAlignment`
+#### `alignment` → `AlignmentGeometry`
 
-Optional. Directional placement of this column's content. Defaults to `start`.
+Optional. Position of this column's content. Defaults to
+`AlignmentDirectional.centerStart`. Any `AlignmentGeometry` is accepted, including
+vertical positions such as `Alignment.bottomLeft`. Physical `Alignment` values
+stay fixed in RTL; `AlignmentDirectional` values follow text direction.
 
 #### `sortable` → `bool`
 
@@ -490,3 +493,6 @@ Applies widget modifiers such as clipping, opacity, or scaling.
 #### `animate(AnimationConfig value)`
 
 Configures implicit animation for style transitions.
+
+See the [alignment API migration table](/components/dialog#alignment-api-migration)
+for source-breaking type replacements.

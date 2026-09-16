@@ -11,9 +11,6 @@ part 'dialog.g.dart';
 /// Ui dialog size presets matching Radix Themes 3.3.0.
 enum UiDialogSize { size1, size2, size3, size4 }
 
-/// Ui dialog vertical alignment matching Radix Themes 3.3.0.
-enum UiDialogAlign { start, center }
-
 final _dialogViewportInsets = ContextToken<EdgeInsetsGeometry>((context) {
   final safeArea = MediaQuery.paddingOf(context);
   final viewportHeight = MediaQuery.sizeOf(context).height;
@@ -31,12 +28,12 @@ final _dialogViewportInsets = ContextToken<EdgeInsetsGeometry>((context) {
 /// Ui-themed preset for [RemixDialog].
 ///
 /// The generated [UiDialog] defaults to [UiDialogSize.size3],
-/// [UiDialogAlign.center], fills up to 600 logical pixels, preserves safe
+/// [Alignment.center], fills up to 600 logical pixels, preserves safe
 /// viewport insets, and is modal.
 @MixWidget(target: RemixDialog.new)
 DialogStyler uiDialogStyle({
   UiDialogSize size = UiDialogSize.size3,
-  UiDialogAlign align = UiDialogAlign.center,
+  AlignmentGeometry align = Alignment.center,
   DialogStyler style = const DialogStyler.create(),
 }) {
   final radius = switch (size) {
@@ -49,16 +46,12 @@ DialogStyler uiDialogStyle({
     UiDialogSize.size3 => UiTokens.space5(),
     UiDialogSize.size4 => UiTokens.space6(),
   };
-  final alignment = switch (align) {
-    UiDialogAlign.start => Alignment.topCenter,
-    UiDialogAlign.center => Alignment.center,
-  };
 
   return DialogStyler()
       .wrap(
         .modifier(
           PaddingModifierMix.create(padding: Prop.token(_dialogViewportInsets)),
-        ).align(alignment: alignment).orderOfModifiers([
+        ).align(alignment: align).orderOfModifiers([
           PaddingModifier,
           AlignModifier,
         ]),

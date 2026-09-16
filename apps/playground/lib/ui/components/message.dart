@@ -9,8 +9,6 @@ import '../support/disclosure.dart';
 
 part 'message.g.dart';
 
-enum PlaygroundMessageAlign { start, end }
-
 /// Groups chronological message rows without imposing visual chrome.
 class PlaygroundMessageGroup extends StatelessWidget {
   const PlaygroundMessageGroup({
@@ -52,7 +50,7 @@ class PlaygroundMessage extends StatelessWidget {
 
   final PlaygroundRole role;
   final Widget child;
-  final PlaygroundMessageAlign? align;
+  final RemixPlacement? align;
   final Widget? avatar;
   final bool showAvatar;
   final bool placeholderAvatar;
@@ -67,9 +65,9 @@ class PlaygroundMessage extends StatelessWidget {
   bool get _alignEnd =>
       (align ??
           (role == PlaygroundRole.user
-              ? PlaygroundMessageAlign.end
-              : PlaygroundMessageAlign.start)) ==
-      PlaygroundMessageAlign.end;
+              ? RemixPlacement.end
+              : RemixPlacement.start)) ==
+      RemixPlacement.end;
 
   @override
   Widget build(BuildContext context) {

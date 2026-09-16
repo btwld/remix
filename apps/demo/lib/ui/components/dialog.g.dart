@@ -9,13 +9,13 @@ part of 'dialog.dart';
 /// Fortal-themed preset for [RemixDialog].
 ///
 /// The generated [FortalDialog] defaults to [FortalDialogSize.size3],
-/// [FortalDialogAlign.center], fills up to 600 logical pixels, preserves safe
+/// [Alignment.center], fills up to 600 logical pixels, preserves safe
 /// viewport insets, and is modal.
 class FortalDialog extends StatelessWidget {
   const FortalDialog({
     super.key,
     this.size = FortalDialogSize.size3,
-    this.align = FortalDialogAlign.center,
+    this.align = Alignment.center,
     this.style = const DialogStyler.create(),
     this.child,
     this.title,
@@ -28,7 +28,7 @@ class FortalDialog extends StatelessWidget {
 
   final FortalDialogSize size;
 
-  final FortalDialogAlign align;
+  final AlignmentGeometry align;
 
   final DialogStyler style;
 

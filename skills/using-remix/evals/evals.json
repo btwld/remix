@@ -37,10 +37,10 @@
     {
       "id": 4,
       "prompt": "I have a RemixButton with one icon and need the icon after the label without changing the widget arguments. Can styling do that? What happens if the button later gets both a leading and trailing icon?",
-      "expected_output": "Uses ButtonStyler().iconAlignment(RemixIconAlignment.end) and explains that the style controls placement whenever exactly one icon exists, regardless of which icon argument supplied it. Explains that with both icons Remix preserves leading -> label -> trailing order instead of allowing the alignment override to collapse or reorder the pair.",
+      "expected_output": "Uses ButtonStyler().iconAlignment(RemixPlacement.end) and explains that the style controls placement whenever exactly one icon exists, regardless of which icon argument supplied it. Explains that with both icons Remix preserves leading -> label -> trailing order instead of allowing the alignment override to collapse or reorder the pair.",
       "files": [],
       "expectations": [
-        "Uses ButtonStyler().iconAlignment(RemixIconAlignment.end).",
+        "Uses ButtonStyler().iconAlignment(RemixPlacement.end).",
         "Explains that the style repositions whichever single icon is present.",
         "Explains that two icons retain leading-label-trailing order."
       ]

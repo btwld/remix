@@ -222,7 +222,7 @@ class _CustomersPageState extends State<CustomersPage> {
       header: const SizedBox.shrink(),
       semanticLabel: 'Actions',
       width: const FixedColumnWidth(64),
-      alignment: .end,
+      alignment: AlignmentDirectional.centerEnd,
       cellBuilder: (context, customer) => DashboardActionMenu(
         key: ValueKey('customer-actions-${customer.id}'),
         semanticLabel: 'Actions for ${customer.name}',

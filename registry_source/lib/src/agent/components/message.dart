@@ -9,8 +9,6 @@ import '../support/disclosure.dart';
 
 part 'message.g.dart';
 
-enum AgentMessageAlign { start, end }
-
 /// Groups chronological message rows without imposing visual chrome.
 class AgentMessageGroup extends StatelessWidget {
   const AgentMessageGroup({
@@ -52,7 +50,7 @@ class AgentMessage extends StatelessWidget {
 
   final AgentRole role;
   final Widget child;
-  final AgentMessageAlign? align;
+  final RemixPlacement? align;
   final Widget? avatar;
   final bool showAvatar;
   final bool placeholderAvatar;
@@ -67,9 +65,9 @@ class AgentMessage extends StatelessWidget {
   bool get _alignEnd =>
       (align ??
           (role == AgentRole.user
-              ? AgentMessageAlign.end
-              : AgentMessageAlign.start)) ==
-      AgentMessageAlign.end;
+              ? RemixPlacement.end
+              : RemixPlacement.start)) ==
+      RemixPlacement.end;
 
   @override
   Widget build(BuildContext context) {

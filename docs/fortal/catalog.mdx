@@ -472,6 +472,7 @@ Radix `Dialog.Content` · recipe `registry_source/lib/src/fortal/components/dial
 
 **Flutter differences:**
 
+- The mapped upstream align values start and center use Alignment.topCenter and Alignment.center in Flutter. The align parameter accepts any AlignmentGeometry, including physical and directional bottom positions, while preserving viewport insets.
 - Logical-pixel BoxConstraints replace CSS width and height strings; inherited Fortal and Mix scopes are replayed through Navigator overlays; modal controls accessibility route scoping while the Flutter Navigator route remains pointer-modal.
 
 **Documented approximations:**

@@ -96,9 +96,9 @@ Future<void> showDeleteDialog(BuildContext context) async {
 The application-owned Fortal preset provides a themed widget for this component:
 
 `FortalDialog` defaults to `FortalDialogSize.size3`,
-`FortalDialogAlign.center`, fills the available width up to 600 logical pixels,
+`Alignment.center`, fills the available width up to 600 logical pixels,
 preserves safe viewport insets, and uses `modal: true`. Set
-`align: FortalDialogAlign.start` to place the surface at the safe top inset.
+`align: Alignment.topCenter` to place the surface at the safe top inset.
 
 <CodeGroup title="Fortal widget" defaultLanguage="dart">
 ```dart
@@ -111,7 +111,7 @@ class FortalDialogExample extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FortalDialog(
-      align: FortalDialogAlign.center,
+      align: Alignment.center,
       title: 'Confirm changes',
       description: 'Save these settings before leaving?',
       actions: [
@@ -274,3 +274,28 @@ Applies widget modifiers such as clipping, opacity, or scaling.
 #### `call({Key? key, Widget? child, String? title, String? description, List<Widget>? actions, bool modal = true, String? semanticLabel})`
 
 Creates a `RemixDialog` widget with this style applied.
+
+## Alignment API migration
+
+These are source-breaking replacements with no deprecated aliases. Parameter
+names (`alignment`, `align`, and `iconAlignment`) are unchanged.
+
+| Previous API | Replacement |
+|---|---|
+| `RemixDataListItemAlignment.*` | `CrossAxisAlignment.*` (same five values) |
+| `RemixDataTableCellAlignment.start` | `AlignmentDirectional.centerStart` |
+| `RemixDataTableCellAlignment.center` | `Alignment.center` |
+| `RemixDataTableCellAlignment.end` | `AlignmentDirectional.centerEnd` |
+| `FortalDialogAlign.start` | `Alignment.topCenter` |
+| `FortalDialogAlign.center` | `Alignment.center` |
+| `RemixIconAlignment.start/end` | `RemixPlacement.start/end` |
+| `AgentMessageAlign.start/end` (including installed prefixes) | `RemixPlacement.start/end` |
+
+Import Flutter alignment types from `package:flutter/widgets.dart` and shared
+`RemixPlacement` from `package:remix/remix.dart`. Refresh installed dialog and
+message components with the CLI, preserving any application-owned customizations.
+The shared placement type is not renamed with the installed component prefix.
+
+Dialog `align` accepts any `AlignmentGeometry`, such as `Alignment.bottomCenter`
+or `AlignmentDirectional.bottomEnd`. Directional positions follow RTL; physical
+positions do not. All positions retain the same safe-area and viewport insets.

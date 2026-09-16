@@ -220,7 +220,7 @@ class _RecentOrders extends StatelessWidget {
                 id: 'amount',
                 label: 'Amount',
                 width: const FixedColumnWidth(100),
-                alignment: .end,
+                alignment: AlignmentDirectional.centerEnd,
                 cellBuilder: (_, order) => DataTableCellText(
                   '\$${order.amount.toStringAsFixed(2)}',
                   primary: true,

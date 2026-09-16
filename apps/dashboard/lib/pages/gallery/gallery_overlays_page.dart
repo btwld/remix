@@ -27,13 +27,16 @@ class _GalleryOverlaysPageState extends State<GalleryOverlaysPage> {
           label: 'Dialog',
           description:
               'Both viewport alignments across the complete four-size scale.',
-          child: GalleryEnumMatrix(
-            rows: UiDialogAlign.values,
+          child: GalleryMatrix<Alignment, UiDialogSize>(
+            rows: const [Alignment.topCenter, Alignment.center],
+            rowLabelBuilder: (align) =>
+                align == Alignment.topCenter ? 'Top' : 'Center',
+            columnLabelBuilder: enumLabel,
             columns: UiDialogSize.values,
             cellBuilder: (context, align, size) => UiButton.soft(
               size: .size1,
               semanticLabel:
-                  'Open ${enumLabel(align)} ${enumLabel(size)} dialog',
+                  'Open ${align == Alignment.topCenter ? 'Top' : 'Center'} ${enumLabel(size)} dialog',
               onPressed: () => showRemixDialog<void>(
                 context: context,
                 barrierLabel: 'Dismiss',

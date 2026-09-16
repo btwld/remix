@@ -9,13 +9,13 @@ part of 'dialog.dart';
 /// Ui-themed preset for [RemixDialog].
 ///
 /// The generated [UiDialog] defaults to [UiDialogSize.size3],
-/// [UiDialogAlign.center], fills up to 600 logical pixels, preserves safe
+/// [Alignment.center], fills up to 600 logical pixels, preserves safe
 /// viewport insets, and is modal.
 class UiDialog extends StatelessWidget {
   const UiDialog({
     super.key,
     this.size = UiDialogSize.size3,
-    this.align = UiDialogAlign.center,
+    this.align = Alignment.center,
     this.style = const DialogStyler.create(),
     this.child,
     this.title,
@@ -28,7 +28,7 @@ class UiDialog extends StatelessWidget {
 
   final UiDialogSize size;
 
-  final UiDialogAlign align;
+  final AlignmentGeometry align;
 
   final DialogStyler style;
 

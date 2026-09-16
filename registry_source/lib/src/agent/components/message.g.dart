@@ -328,7 +328,7 @@ class AgentMessageStyler extends MixStyler<AgentMessageStyler, AgentMessageSpec>
     Key? key,
     required AgentRole role,
     required Widget child,
-    AgentMessageAlign? align,
+    RemixPlacement? align,
     Widget? avatar,
     bool showAvatar = false,
     bool placeholderAvatar = false,

@@ -286,8 +286,13 @@
   "dialog": [
     {
       "test": "test/components/dialog/dialog_widget_test.dart",
-      "case": "public contract has the pinned align order and default",
-      "covers": ["enum:align.start", "enum:align.center"]
+      "case": "public contract defaults to center",
+      "covers": ["enum:align.center"]
+    },
+    {
+      "test": "test/components/dialog/dialog_widget_test.dart",
+      "case": "start alignment respects the safe top inset",
+      "covers": ["enum:align.start"]
     },
     {
       "test": "test/components/dialog/dialog_widget_test.dart",

@@ -161,7 +161,7 @@ class _OrdersPageState extends State<OrdersPage> {
       id: 'amount',
       label: 'Amount',
       width: const FixedColumnWidth(120),
-      alignment: .end,
+      alignment: AlignmentDirectional.centerEnd,
       sortable: true,
       cellBuilder: (_, order) => DataTableCellText(
         '\$${order.amount.toStringAsFixed(2)}',
@@ -179,7 +179,7 @@ class _OrdersPageState extends State<OrdersPage> {
       header: const SizedBox.shrink(),
       semanticLabel: 'Actions',
       width: const FixedColumnWidth(64),
-      alignment: .end,
+      alignment: AlignmentDirectional.centerEnd,
       cellBuilder: (context, order) => DashboardActionMenu(
         key: ValueKey('order-actions-${order.id}'),
         semanticLabel: 'Actions for ${order.id}',

@@ -10,12 +10,13 @@ Future<Rect> _pumpDialogSurface(
   WidgetTester tester,
   FortalDialog dialog, {
   MediaQueryData? mediaQueryData,
+  TextDirection textDirection = TextDirection.ltr,
 }) async {
   Widget child = SizedBox.expand(child: dialog);
   if (mediaQueryData != null) {
     child = MediaQuery(data: mediaQueryData, child: child);
   }
-  await tester.pumpRemixApp(child);
+  await tester.pumpRemixApp(child, textDirection: textDirection);
   await tester.pumpAndSettle();
 
   final align = find.descendant(
@@ -28,6 +29,27 @@ Future<Rect> _pumpDialogSurface(
 }
 
 void main() {
+  for (final direction in TextDirection.values) {
+    for (final alignment in <AlignmentGeometry>[
+      Alignment.bottomLeft,
+      AlignmentDirectional.bottomEnd,
+    ]) {
+      testWidgets('dialog supports $alignment in $direction', (tester) async {
+        final rect = await _pumpDialogSurface(
+          tester,
+          FortalDialog(align: alignment, title: 'Positioned'),
+          textDirection: direction,
+          mediaQueryData: const MediaQueryData(
+            size: Size(800, 600),
+            padding: EdgeInsets.fromLTRB(24, 48, 28, 40),
+          ),
+        );
+        expect(rect.bottom, 560);
+        expect(rect.left, alignment.resolve(direction).x == -1 ? 24 : 172);
+      });
+    }
+  }
+
   testWidgets('default surface fills available width up to 600 pixels', (
     tester,
   ) async {
@@ -39,23 +61,16 @@ void main() {
     expect(rect.width, 600);
   });
 
-  test('public contract has the pinned align order and default', () {
+  test('public contract defaults to center', () {
     const dialog = FortalDialog(title: 'Defaults');
 
-    expect(FortalDialogAlign.values, const [
-      FortalDialogAlign.start,
-      FortalDialogAlign.center,
-    ]);
-    expect(dialog.align, FortalDialogAlign.center);
+    expect(dialog.align, Alignment.center);
   });
 
   testWidgets('start alignment respects the safe top inset', (tester) async {
     final rect = await _pumpDialogSurface(
       tester,
-      const FortalDialog(
-        align: FortalDialogAlign.start,
-        title: 'Start aligned',
-      ),
+      const FortalDialog(align: Alignment.topCenter, title: 'Start aligned'),
       mediaQueryData: const MediaQueryData(
         size: Size(800, 600),
         padding: EdgeInsets.fromLTRB(24, 48, 28, 40),
