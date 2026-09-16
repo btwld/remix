@@ -204,61 +204,73 @@ class _ChatPageState extends State<ChatPage> {
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 800),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Row(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              // Preserve room for the transcript and actions when the keyboard
+              // or a short viewport reduces the available height. The field
+              // scrolls longer drafts without changing their contents.
+              final compact = constraints.maxHeight < 500;
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const Expanded(
-                    child: Text(
-                      'Agent chat',
-                      style: TextStyle(
-                        fontSize: 26,
-                        fontWeight: FontWeight.w700,
+                  Row(
+                    children: [
+                      const Expanded(
+                        child: Text(
+                          'Agent chat',
+                          style: TextStyle(
+                            fontSize: 26,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                      RemixButton(
+                        label: 'New chat',
+                        onPressed: _reset,
+                        style: uiButtonStyle(variant: .outline),
+                      ),
+                    ],
+                  ),
+                  const Text('Interactive demo'),
+                  if (!compact) ...[
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Simulated responses and tools — no backend or credentials.',
+                    ),
+                    const SizedBox(height: 16),
+                    if (!_active) ...[_starters(), const SizedBox(height: 16)],
+                  ],
+                  Expanded(child: _transcript()),
+                  if (!_following)
+                    Align(
+                      alignment: Alignment.center,
+                      child: RemixButton(
+                        label: 'Return to latest',
+                        onPressed: _returnToLatest,
+                        style: uiButtonStyle(variant: .soft),
                       ),
                     ),
-                  ),
-                  RemixButton(
-                    label: 'New chat',
-                    onPressed: _reset,
-                    style: uiButtonStyle(variant: .outline),
-                  ),
+                  const SizedBox(height: 12),
+                  _composer(maxLines: compact ? 2 : 8),
                 ],
-              ),
-              const Text('Interactive demo'),
-              const SizedBox(height: 8),
-              const Text(
-                'Simulated responses and tools — no backend or credentials.',
-              ),
-              const SizedBox(height: 16),
-              if (!_active) ...[_starters(), const SizedBox(height: 16)],
-              Expanded(child: _transcript()),
-              if (!_following)
-                Align(
-                  alignment: Alignment.center,
-                  child: RemixButton(
-                    label: 'Return to latest',
-                    onPressed: _returnToLatest,
-                    style: uiButtonStyle(variant: .soft),
-                  ),
-                ),
-              const SizedBox(height: 12),
-              _composer(),
-            ],
+              );
+            },
           ),
         ),
       ),
     );
   }
 
-  Widget _starters() => Wrap(
-    spacing: 8,
-    runSpacing: 8,
-    children: [
-      _starter('Review checkout', _Scenario.success),
-      _starter('Run terminal checks', _Scenario.permission),
-      _starter('Recover a failed command', _Scenario.failure),
-    ],
+  Widget _starters() => SingleChildScrollView(
+    scrollDirection: Axis.horizontal,
+    child: Row(
+      spacing: 8,
+      children: [
+        _starter('Review checkout', _Scenario.success),
+        _starter('Run terminal checks', _Scenario.permission),
+        _starter('Recover a failed command', _Scenario.failure),
+      ],
+    ),
   );
 
   Widget _starter(String label, _Scenario scenario) => RemixButton(
@@ -471,10 +483,11 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  Widget _composer() {
+  Widget _composer({required int maxLines}) {
     final recipe = uiAgentComposerRecipe();
     return UiComposer(
       controller: _draft,
+      maxLines: maxLines,
       running: _active,
       onSubmit: _start,
       onStop: _stop,

@@ -22,7 +22,11 @@ reinitialize an existing application with a different preset. Installing
 `answer_recipe` includes its component and required theme/control dependencies.
 Use `add answer` instead when you want the bare component and will provide styles.
 
-Import `ui/ui.dart` from your application and render under its `UiScope`.
+Import `ui/ui.dart` from your application and use the scope for your preset:
+
+- **Fortal:** `UiScope(child: ...)`.
+- **Default:** `UiThemeScope(data: const UiThemeData.light(), child: ...)` (or
+  `UiThemeData.dark()` for a dark theme).
 
 ## Behavior
 

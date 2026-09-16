@@ -8,6 +8,69 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
 void main() {
+  for (final scenario in [
+    (width: 390.0, height: 844.0, lines: 1),
+    (width: 390.0, height: 844.0, lines: 8),
+    (width: 430.0, height: 844.0, lines: 8),
+    (width: 375.0, height: 667.0, lines: 1),
+  ]) {
+    testWidgets('draft and actions fit above keyboard $scenario', (
+      tester,
+    ) async {
+      tester.view.devicePixelRatio = 1;
+      tester.view.physicalSize = const Size(1280, 844);
+      addTearDown(tester.view.reset);
+      await tester.pumpWidget(const DashboardApp());
+      await tester.tap(find.text('Chat').first);
+      await tester.pump();
+      tester.view.physicalSize = Size(scenario.width, scenario.height);
+      await tester.pump();
+      final field = find.descendant(
+        of: find.byType(UiComposer),
+        matching: find.byType(EditableText),
+      );
+      await tester.enterText(
+        field,
+        List.generate(
+          scenario.lines,
+          (index) => 'Draft line $index',
+        ).join('\n'),
+      );
+      await tester.pump();
+      expect(tester.takeException(), isNull);
+      tester.view.viewInsets = const FakeViewPadding(bottom: 300);
+      await tester.pump();
+      await tester.pump();
+      expect(tester.takeException(), isNull);
+      expect(tester.widget<EditableText>(field).focusNode.hasFocus, isTrue);
+      expect(
+        tester.widget<EditableText>(field).controller.text,
+        List.generate(
+          scenario.lines,
+          (index) => 'Draft line $index',
+        ).join('\n'),
+      );
+      expect(
+        tester.getRect(find.byType(UiComposer)).bottom,
+        lessThanOrEqualTo(scenario.height - 300),
+      );
+      await tester.tap(find.bySemanticsLabel('Send'));
+      await tester.pump();
+      final stop = find.bySemanticsLabel('Stop');
+      expect(
+        tester.getRect(stop).bottom,
+        lessThanOrEqualTo(scenario.height - 300),
+      );
+      await tester.tap(stop);
+      await tester.pump();
+      expect(tester.takeException(), isNull);
+      expect(
+        tester.widget<UiComposer>(find.byType(UiComposer)).running,
+        isFalse,
+      );
+    });
+  }
+
   testWidgets(
     'focused composer stays above the keyboard and restores its layout',
     (tester) async {
