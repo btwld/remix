@@ -14,10 +14,12 @@ implementation.
 ## Registry ownership
 
 The dashboard selects the Fortal preset with prefix `Ui` in `remix.yaml`.
-Its full component catalog and eight Agent recipe bundles are installed under
-`lib/ui/`; the dogfood check compares them with the bundled registry. The pages,
-shell, and local simulated runner remain application-owned, not a standalone
-installable dashboard template.
+Its full component catalog, eight Agent recipe bundles, and the Fortal
+`dashboard_shell` recipe are installed under `lib/ui/`; the dogfood check
+compares them with the bundled registry. The app supplies its existing pages,
+navigation state, search behavior, theme/account actions, and local simulated
+runner through the shell's host-owned callbacks and slots. The separate
+`dashboard` item remains the minimal overview starter for new consumers.
 
 Open **Workspace → Chat** to review the Agent surfaces together. No model or
 tool service is contacted. The [Agent component docs](../../docs/agent/transcript.mdx)

@@ -12,6 +12,7 @@ import 'entries/card_entry.dart';
 import 'entries/checkbox_entry.dart';
 import 'entries/checkbox_group_entry.dart';
 import 'entries/divider_entry.dart';
+import 'entries/dashboard_entry.dart';
 import 'entries/dashboard_shell_entry.dart';
 import 'entries/progress_entry.dart';
 import 'entries/radio_entry.dart';
@@ -59,6 +60,10 @@ final Map<String, WidgetBuilder> components = {
   'chat': (context) => PreviewShell(
     initialSize: const Size(900, 720),
     child: Builder(builder: buildAgentChat),
+  ),
+  'dashboard': (context) => const PreviewShell(
+    initialSize: Size(1280, 800),
+    child: Builder(builder: buildDashboardExample),
   ),
   'button': (context) =>
       _scope(context, PreviewShell(child: buildButtonExample())),
