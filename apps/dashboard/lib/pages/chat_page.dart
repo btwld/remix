@@ -42,6 +42,7 @@ class _ChatPageState extends State<ChatPage> {
   ];
 
   final _scroll = ScrollController();
+  final _draft = TextEditingController();
   Timer? _timer;
   var _runId = 0;
   var _stage = _Stage.idle;
@@ -74,6 +75,7 @@ class _ChatPageState extends State<ChatPage> {
   void dispose() {
     _cancelPending();
     _scroll.dispose();
+    _draft.dispose();
     super.dispose();
   }
 
@@ -85,6 +87,7 @@ class _ChatPageState extends State<ChatPage> {
 
   void _reset() {
     _cancelPending();
+    _draft.clear();
     setState(() {
       _stage = _Stage.idle;
       _prompt = '';
@@ -189,8 +192,15 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
+    final gutter = MediaQuery.sizeOf(context).width < 600 ? 16.0 : 32.0;
+    // The dashboard shell has no Scaffold to resize its body for the keyboard.
     return Padding(
-      padding: EdgeInsets.all(MediaQuery.sizeOf(context).width < 600 ? 16 : 32),
+      padding: EdgeInsets.fromLTRB(
+        gutter,
+        gutter,
+        gutter,
+        gutter + MediaQuery.viewInsetsOf(context).bottom,
+      ),
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 800),
@@ -464,6 +474,7 @@ class _ChatPageState extends State<ChatPage> {
   Widget _composer() {
     final recipe = uiAgentComposerRecipe();
     return UiComposer(
+      controller: _draft,
       running: _active,
       onSubmit: _start,
       onStop: _stop,

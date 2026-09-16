@@ -8,6 +8,73 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
 
 void main() {
+  testWidgets(
+    'focused composer stays above the keyboard and restores its layout',
+    (tester) async {
+      tester.view.devicePixelRatio = 1;
+      tester.view.physicalSize = const Size(1280, 844);
+      addTearDown(tester.view.reset);
+      await tester.pumpWidget(const DashboardApp());
+      await tester.tap(find.text('Chat').first);
+      await tester.pump();
+      tester.view.physicalSize = const Size(430, 844);
+      await tester.pump();
+      final field = find.descendant(
+        of: find.byType(UiComposer),
+        matching: find.byType(EditableText),
+      );
+      await tester.enterText(field, 'A mobile draft');
+      await tester.pump();
+      final bottom = tester.getRect(find.byType(UiComposer)).bottom;
+      tester.view.viewInsets = const FakeViewPadding(bottom: 300);
+      await tester.pump();
+      await tester.pump();
+      expect(tester.widget<EditableText>(field).focusNode.hasFocus, isTrue);
+      expect(tester.getRect(field).bottom, lessThanOrEqualTo(544));
+      expect(
+        tester.getRect(find.byType(UiComposer)).bottom,
+        lessThanOrEqualTo(544),
+      );
+      expect(tester.takeException(), isNull);
+      tester.view.viewInsets = const FakeViewPadding();
+      await tester.pump();
+      expect(
+        tester.getRect(find.byType(UiComposer)).bottom,
+        closeTo(bottom, 0.1),
+      );
+      expect(
+        tester.widget<EditableText>(field).controller.text,
+        'A mobile draft',
+      );
+    },
+  );
+
+  testWidgets('New chat clears an unsent draft and accepts a fresh message', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1280, 900);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(const DashboardApp());
+    await tester.tap(find.text('Chat').first);
+    await tester.pump();
+    final field = find.descendant(
+      of: find.byType(UiComposer),
+      matching: find.byType(EditableText),
+    );
+    await tester.enterText(field, 'Old unsent draft');
+    await tester.tap(find.text('New chat'));
+    await tester.pump();
+    expect(tester.widget<EditableText>(field).controller.text, isEmpty);
+    await tester.enterText(field, 'Fresh conversation');
+    await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+    await tester.pump();
+    expect(find.text('Fresh conversation'), findsOneWidget);
+    expect(find.text('Old unsent draft'), findsNothing);
+    await tester.tap(find.text('New chat'));
+    await tester.pump();
+  });
+
   testWidgets('copy matches the visible stopped answer and execution output', (
     tester,
   ) async {

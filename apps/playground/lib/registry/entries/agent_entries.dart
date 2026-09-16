@@ -210,6 +210,15 @@ class _CompactChat extends StatefulWidget {
 }
 
 class _CompactChatState extends State<_CompactChat> {
+  static const _executionOutput = '\$ flutter test\nSimulated output';
+  final _draft = TextEditingController();
+
+  @override
+  void dispose() {
+    _draft.dispose();
+    super.dispose();
+  }
+
   var stage = _ChatStage.ready;
   var prompt = 'Run the focused checks.';
   var attempt = 0;
@@ -236,6 +245,7 @@ class _CompactChatState extends State<_CompactChat> {
   }
 
   void _reset() => setState(() {
+    _draft.clear();
     attempt++;
     alwaysAllow = false;
     ranTool = false;
@@ -328,10 +338,10 @@ class _CompactChatState extends State<_CompactChat> {
                     copyStyle: execution.copyStyle,
                     retryStyle: execution.retryStyle,
                     onCopy: () => Clipboard.setData(
-                      const ClipboardData(text: 'simulated output'),
+                      const ClipboardData(text: _executionOutput),
                     ),
                     onRetry: () => _begin(prompt),
-                    child: const Text('\$ flutter test\nSimulated output'),
+                    child: const Text(_executionOutput),
                   ),
                 if ({
                   _ChatStage.denied,
@@ -378,6 +388,7 @@ class _CompactChatState extends State<_CompactChat> {
             ),
           const SizedBox(height: 16),
           PlaygroundComposer(
+            controller: _draft,
             running: active,
             onSubmit: _begin,
             onStop: () => setState(() => stage = .stopped),
