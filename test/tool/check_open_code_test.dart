@@ -72,6 +72,29 @@ void main() {
     });
   });
 
+  test('explicit item inventories support grouped non-generated recipes', () {
+    expect(
+      checker.registryItemInventoryForTest(
+        'dashboard_shell',
+        explicitFiles: [
+          'recipes/dashboard/dashboard_navigation.dart',
+          'recipes/dashboard/dashboard_shell_base.dart',
+          'recipes/dashboard/dashboard_shell.dart',
+        ],
+        nonGenerated: true,
+      ),
+      [
+        'recipes/dashboard/dashboard_navigation.dart',
+        'recipes/dashboard/dashboard_shell_base.dart',
+        'recipes/dashboard/dashboard_shell.dart',
+      ],
+    );
+    expect(checker.registryItemInventoryForTest('button'), [
+      'components/button.dart',
+      'components/button.g.dart',
+    ]);
+  });
+
   test('the committed fixture is the minimal pre-install contract', () {
     final fixture = Directory('${Directory.current.path}/open_code/fixture');
 

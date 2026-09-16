@@ -460,6 +460,142 @@ final class {{typePrefix}}BotDialRecipe {
     );
   });
 
+  test(
+    'grouped recipes compose shared and preset sources with exact rewrites',
+    () {
+      final builder = _emptyBuilder(sandbox, spec: _acmeWithGroupedRecipes);
+      _writeGroupedAcmeSources(builder);
+
+      final first = builder.derive();
+      final second = builder.derive();
+      expect(second.files, first.files);
+      expect(second.sourceByTemplate, first.sourceByTemplate);
+
+      final items = loadYaml(first.files['registry.yaml']!)['items'] as YamlMap;
+      final shell = items['dashboard_shell'] as YamlMap;
+      expect(shell['files'], hasLength(3));
+      expect(_strings(shell['registryDependencies']), ['sidebar_layout']);
+      expect(_strings(shell['exports']), [
+        'recipes/dashboard/dashboard_navigation.dart',
+        'recipes/dashboard/dashboard_shell.dart',
+      ]);
+      final dashboard = items['dashboard'] as YamlMap;
+      expect(_strings(dashboard['registryDependencies']), [
+        'card',
+        'dashboard_shell',
+      ]);
+
+      final wrapper =
+          first.files['templates/dashboard_shell/dashboard_shell.dart.tmpl']!;
+      expect(wrapper, contains("import 'dashboard_shell_base.dart';"));
+      expect(wrapper, contains('final class {{typePrefix}}DashboardShell'));
+      expect(wrapper, isNot(contains("import '../../../dashboard/")));
+      expect(
+        wrapper,
+        contains("const marker = '../../../dashboard/not-an-import.dart';"),
+      );
+      final rendered = wrapper
+          .replaceAll('{{typePrefix}}', 'Acme')
+          .replaceAll('{{valuePrefix}}', 'acme');
+      expect(
+        rendered,
+        first
+            .sourceByTemplate['templates/dashboard_shell/dashboard_shell.dart.tmpl'],
+      );
+
+      builder.validate(first);
+      builder.write(first);
+      expect(builder.drift(first), isEmpty);
+      final before = File(
+        p.join(
+          builder.outputRoot.path,
+          'templates/dashboard_shell/dashboard_shell.dart.tmpl',
+        ),
+      ).readAsStringSync();
+      expect(builder.drift(first), isEmpty);
+      expect(
+        File(
+          p.join(
+            builder.outputRoot.path,
+            'templates/dashboard_shell/dashboard_shell.dart.tmpl',
+          ),
+        ).readAsStringSync(),
+        before,
+      );
+    },
+  );
+
+  test('grouped recipes reject missing sources and imports', () {
+    final missingSource = _emptyBuilder(
+      Directory(p.join(sandbox.path, 'missing_source')),
+      spec: _acmeWithGroupedRecipes,
+    );
+    _writeGroupedAcmeSources(missingSource, omitNavigation: true);
+    expect(
+      missingSource.derive,
+      throwsA(
+        isA<FormatException>().having(
+          (error) => error.message,
+          'message',
+          contains('grouped recipe source is missing'),
+        ),
+      ),
+    );
+
+    final missingImport = _emptyBuilder(
+      Directory(p.join(sandbox.path, 'missing_import')),
+      spec: _acmeWithGroupedRecipes,
+    );
+    _writeGroupedAcmeSources(missingImport, brokenImport: true);
+    expect(
+      missingImport.derive,
+      throwsA(
+        isA<FormatException>().having(
+          (error) => error.message,
+          'message',
+          contains('missing relative source missing.dart'),
+        ),
+      ),
+    );
+  });
+
+  test('grouped recipes reject target collisions', () {
+    final builder = _emptyBuilder(sandbox, spec: _acmeWithGroupedCollision);
+    _writeGroupedAcmeSources(builder);
+    expect(
+      builder.derive,
+      throwsA(
+        isA<FormatException>().having(
+          (error) => error.message,
+          'message',
+          contains('has multiple writers'),
+        ),
+      ),
+    );
+  });
+
+  test('grouped dependency cycles are rejected before output changes', () {
+    final builder = _emptyBuilder(sandbox, spec: _acmeWithGroupedCycle);
+    _writeDefaultRegistry(builder.defaultRegistryRoot);
+    _write(
+      builder.sourceRoot,
+      'recipes/dashboard/one.dart',
+      "import 'two.dart';\n",
+    );
+    _write(
+      builder.sourceRoot,
+      'recipes/dashboard/two.dart',
+      "import 'one.dart';\n",
+    );
+    final output = builder.derive();
+    final sentinel = File(p.join(builder.outputRoot.path, 'sentinel.txt'));
+    sentinel.parent.createSync(recursive: true);
+    sentinel.writeAsStringSync('unchanged');
+
+    expect(() => builder.write(output), throwsFormatException);
+    expect(sentinel.readAsStringSync(), 'unchanged');
+  });
+
   test('check mode reports planted changed and stale output', () {
     final builder = _fixtureBuilder(sandbox);
     final output = builder.derive();
@@ -538,6 +674,127 @@ const _acmeWithRecipes = PresetSpec(
   ),
 );
 
+const _acmeWithGroupedRecipes = PresetSpec(
+  name: 'acme',
+  sourceRoot: 'registry_source/acme',
+  sourcePackage: 'remix_acme',
+  typeWord: 'Acme',
+  valueWord: 'acme',
+  componentDirectory: 'widgets',
+  sharedItems: [],
+  copiedItems: [],
+  ignoredSourceFiles: {},
+  floorPackages: {'remix'},
+  detectedPackages: [],
+  composedRegistryDependencies: {},
+  groupedRecipeItems: [
+    GroupedRecipeItemSpec(
+      name: 'dashboard_shell',
+      files: [
+        GroupedRecipeFileSpec(
+          source: '../dashboard/dashboard_navigation.dart',
+          target: 'recipes/dashboard/dashboard_navigation.dart',
+        ),
+        GroupedRecipeFileSpec(
+          source: '../dashboard/dashboard_shell_base.dart',
+          target: 'recipes/dashboard/dashboard_shell_base.dart',
+        ),
+        GroupedRecipeFileSpec(
+          source: 'recipes/dashboard/dashboard_shell.dart',
+          target: 'recipes/dashboard/dashboard_shell.dart',
+        ),
+      ],
+      exports: [
+        'recipes/dashboard/dashboard_navigation.dart',
+        'recipes/dashboard/dashboard_shell.dart',
+      ],
+      registryDependencies: ['sidebar_layout'],
+    ),
+    GroupedRecipeItemSpec(
+      name: 'dashboard',
+      files: [
+        GroupedRecipeFileSpec(
+          source: '../dashboard/dashboard_overview_base.dart',
+          target: 'recipes/dashboard/dashboard_overview_base.dart',
+        ),
+        GroupedRecipeFileSpec(
+          source: 'recipes/dashboard/dashboard.dart',
+          target: 'recipes/dashboard/dashboard.dart',
+        ),
+      ],
+      exports: ['recipes/dashboard/dashboard.dart'],
+    ),
+  ],
+);
+
+const _acmeWithGroupedCollision = PresetSpec(
+  name: 'acme',
+  sourceRoot: 'registry_source/acme',
+  sourcePackage: 'remix_acme',
+  typeWord: 'Acme',
+  valueWord: 'acme',
+  componentDirectory: 'widgets',
+  sharedItems: [],
+  copiedItems: [],
+  ignoredSourceFiles: {},
+  floorPackages: {'remix'},
+  detectedPackages: [],
+  composedRegistryDependencies: {},
+  groupedRecipeItems: [
+    GroupedRecipeItemSpec(
+      name: 'dashboard_shell',
+      files: [
+        GroupedRecipeFileSpec(
+          source: '../dashboard/dashboard_navigation.dart',
+          target: 'recipes/dashboard/shared.dart',
+        ),
+        GroupedRecipeFileSpec(
+          source: '../dashboard/dashboard_shell_base.dart',
+          target: 'recipes/dashboard/shared.dart',
+        ),
+      ],
+      exports: [],
+    ),
+  ],
+);
+
+const _acmeWithGroupedCycle = PresetSpec(
+  name: 'acme',
+  sourceRoot: 'registry_source/acme',
+  sourcePackage: 'remix_acme',
+  typeWord: 'Acme',
+  valueWord: 'acme',
+  componentDirectory: 'widgets',
+  sharedItems: [],
+  copiedItems: [],
+  ignoredSourceFiles: {},
+  floorPackages: {'remix'},
+  detectedPackages: [],
+  composedRegistryDependencies: {},
+  groupedRecipeItems: [
+    GroupedRecipeItemSpec(
+      name: 'one',
+      files: [
+        GroupedRecipeFileSpec(
+          source: 'recipes/dashboard/one.dart',
+          target: 'recipes/dashboard/one.dart',
+        ),
+      ],
+      exports: ['recipes/dashboard/one.dart'],
+    ),
+    GroupedRecipeItemSpec(
+      name: 'two',
+      files: [
+        GroupedRecipeFileSpec(
+          source: 'recipes/dashboard/two.dart',
+          target: 'recipes/dashboard/two.dart',
+        ),
+      ],
+      exports: ['recipes/dashboard/two.dart'],
+    ),
+  ],
+);
+
 void _writeAcmeSources(PresetBuilder builder) {
   // The behavior the recipe styles, a sibling of the preset source.
   _write(
@@ -563,6 +820,54 @@ void _writeAcmeSources(PresetBuilder builder) {
         'void acmeDialStyle() {}\n',
   );
   _writeDefaultRegistry(builder.defaultRegistryRoot);
+}
+
+void _writeGroupedAcmeSources(
+  PresetBuilder builder, {
+  bool omitNavigation = false,
+  bool brokenImport = false,
+}) {
+  _writeDefaultRegistry(builder.defaultRegistryRoot);
+  _write(builder.sourceRoot, 'widgets/card.dart', 'class AcmeCard {}\n');
+  _write(
+    builder.sourceRoot,
+    'widgets/sidebar_layout.dart',
+    'class AcmeSidebarLayout {}\n',
+  );
+  final sharedRoot = builder.sourceRoot.parent;
+  if (!omitNavigation) {
+    _write(
+      sharedRoot,
+      'dashboard/dashboard_navigation.dart',
+      'final class AcmeDashboardDestination {}\n',
+    );
+  }
+  _write(
+    sharedRoot,
+    'dashboard/dashboard_shell_base.dart',
+    "import '${brokenImport ? 'missing.dart' : 'dashboard_navigation.dart'}';\n"
+        'final class AcmeDashboardShellBase {}\n',
+  );
+  _write(
+    sharedRoot,
+    'dashboard/dashboard_overview_base.dart',
+    'final class AcmeDashboardOverviewBase {}\n',
+  );
+  _write(
+    builder.sourceRoot,
+    'recipes/dashboard/dashboard_shell.dart',
+    "import '../../../dashboard/dashboard_shell_base.dart';\n\n"
+        "const marker = '../../../dashboard/not-an-import.dart';\n"
+        'final class AcmeDashboardShell {}\n',
+  );
+  _write(
+    builder.sourceRoot,
+    'recipes/dashboard/dashboard.dart',
+    "import '../../widgets/card.dart';\n"
+        "import 'dashboard_shell.dart';\n"
+        "import '../../../dashboard/dashboard_overview_base.dart';\n\n"
+        'final class AcmeDashboard {}\n',
+  );
 }
 
 /// [fortalPreset] as the sandbox fixtures author it: theme and components

@@ -120,6 +120,7 @@ final class PresetSpec {
     required this.detectedPackages,
     required this.composedRegistryDependencies,
     this.recipeItems = const [],
+    this.groupedRecipeItems = const [],
     this.behavior,
     this.extensionDirectory,
   });
@@ -182,6 +183,12 @@ final class PresetSpec {
   /// [behavior], composed from this preset's own components and theme.
   final List<String> recipeItems;
 
+  /// Multi-file recipe items assembled from explicitly mapped authored files.
+  ///
+  /// Sources are relative to [sourceRoot] and may name a sibling source tree.
+  /// Targets and exports are relative to the installed `@ui/` directory.
+  final List<GroupedRecipeItemSpec> groupedRecipeItems;
+
   /// The behavior the recipes style while authoring, and how its import lands
   /// in installed source. Required once [recipeItems] is non-empty.
   final BehaviorSpec? behavior;
@@ -206,6 +213,38 @@ final class PresetSpec {
     'package:mix/',
     'package:naked_ui/',
   ];
+}
+
+/// One registry item composed from multiple authored recipe sources.
+final class GroupedRecipeItemSpec {
+  const GroupedRecipeItemSpec({
+    required this.name,
+    required this.files,
+    required this.exports,
+    this.registryDependencies = const [],
+    this.packages = const {},
+  });
+
+  final String name;
+  final List<GroupedRecipeFileSpec> files;
+  final List<String> exports;
+
+  /// Dependencies used through composition callbacks rather than imports.
+  final List<String> registryDependencies;
+
+  /// Direct package floors not discoverable through [PresetSpec.detectedPackages].
+  final Set<String> packages;
+}
+
+/// One authored source and its installed path within a grouped recipe item.
+final class GroupedRecipeFileSpec {
+  const GroupedRecipeFileSpec({required this.source, required this.target});
+
+  /// Path relative to the preset's [PresetSpec.sourceRoot].
+  final String source;
+
+  /// Installed path relative to `@ui/`.
+  final String target;
 }
 
 /// An item derived from every file in one source directory.
@@ -643,7 +682,14 @@ final class PresetBuilder {
     }
 
     final sources = _readSources();
-    _validateSources(sources);
+    final groupedSources = _readGroupedSources(sources);
+    final sourceOwners = _sourceOwners(sources);
+    final installedTargets = _installedTargets(sourceOwners);
+    _validateSources(
+      sources,
+      groupedSources: groupedSources,
+      sourceOwners: sourceOwners,
+    );
 
     final floors = _readDefaultFloors();
     final output = <String, String>{};
@@ -690,6 +736,8 @@ final class PresetBuilder {
               sourcePath: entry.key,
               imports: _imports(entry.value),
               componentNames: componentNames,
+              sourceOwners: sourceOwners,
+              itemName: shared.name,
             ),
         }.toList(),
         dependencies: {
@@ -754,6 +802,8 @@ final class PresetBuilder {
             sourcePath: item.file,
             imports: imports,
             componentNames: componentNames,
+            sourceOwners: sourceOwners,
+            itemName: item.name,
           ),
         }.toList(),
         dependencies: {
@@ -780,6 +830,8 @@ final class PresetBuilder {
         sourcePath: entry.key,
         imports: imports,
         componentNames: componentNames,
+        sourceOwners: sourceOwners,
+        itemName: name,
       );
       final dependencies = <String, String>{};
       final devDependencies = <String, String>{};
@@ -817,7 +869,7 @@ final class PresetBuilder {
 
     final recipePrefix = '${PresetSpec.recipeDirectory}/';
     final recipeSources = sources.keys.where(
-      (path) => path.startsWith(recipePrefix),
+      (path) => p.posix.dirname(path) == PresetSpec.recipeDirectory,
     );
     for (final path in recipeSources) {
       final name = p.posix.basenameWithoutExtension(path);
@@ -841,6 +893,8 @@ final class PresetBuilder {
           sourcePath: path,
           imports: _imports(source),
           componentNames: componentNames,
+          sourceOwners: sourceOwners,
+          itemName: name,
           // The behavior components live in the extension, so they are
           // validated when the preset outputs merge rather than here.
           allowForeignComponents: true,
@@ -850,12 +904,71 @@ final class PresetBuilder {
       );
     }
 
+    for (final item in spec.groupedRecipeItems) {
+      final files = <_RegistryFileDraft>[];
+      final registryDependencies = <String>{...item.registryDependencies};
+      final importedPackages = <String>{};
+      for (final file in item.files) {
+        final sourcePath = p.posix.normalize(file.source);
+        final authored = groupedSources[sourcePath]!;
+        final rewritten = _groupedRecipeSource(
+          sourcePath: sourcePath,
+          targetPath: file.target,
+          authored: authored,
+          installedTargets: installedTargets,
+        );
+        final templatePath =
+            '${spec.templateDirectory}/${item.name}/'
+            '${p.posix.basename(file.target)}.tmpl';
+        if (output.containsKey(templatePath)) {
+          throw StateError(
+            '${spec.name} grouped recipe templates collide at $templatePath.',
+          );
+        }
+        output[templatePath] = _templateFor(sourcePath, rewritten);
+        sourceByTemplate[templatePath] = rewritten;
+        files.add(
+          _RegistryFileDraft(
+            source: templatePath,
+            target: '@ui/${file.target}',
+          ),
+        );
+        registryDependencies.addAll(
+          _registryDependencies(
+            sourcePath: sourcePath,
+            imports: _imports(authored),
+            componentNames: componentNames,
+            sourceOwners: sourceOwners,
+            itemName: item.name,
+          ),
+        );
+        for (final package in spec.detectedPackages) {
+          if (_imports(
+            authored,
+          ).any((uri) => uri.startsWith('package:$package/'))) {
+            importedPackages.add(package);
+          }
+        }
+      }
+      items[item.name] = _RegistryItemDraft(
+        name: item.name,
+        registryDependencies: _orderRegistryDependencies(registryDependencies),
+        dependencies: {
+          for (final package in {...item.packages, ...importedPackages})
+            package: floors[package]!,
+        },
+        files: files,
+        exports: item.exports,
+      );
+    }
+
     final expected =
         componentNames.length +
         spec.sharedItems.length +
         spec.copiedItems.length +
         spec.fileItems.length +
-        spec.recipeItems.length;
+        spec.recipeItems.length +
+        spec.groupedRecipeItems.length;
     if (items.length != expected) {
       throw StateError('${spec.name} registry item names collided.');
     }
@@ -1012,9 +1125,158 @@ final class PresetBuilder {
     };
   }
 
-  void _validateSources(Map<String, String> sources) {
+  Map<String, String> _readGroupedSources(Map<String, String> sources) {
+    final grouped = <String, String>{};
+    final targets = <String>{};
+    final itemNames = <String>{};
+    final allowedRoot = sourceRoot.parent.absolute.path;
+    for (final item in spec.groupedRecipeItems) {
+      if (!itemNames.add(item.name)) {
+        throw FormatException(
+          '${spec.name} declares grouped recipe ${item.name} more than once.',
+        );
+      }
+      if (item.files.isEmpty) {
+        throw FormatException(
+          '${spec.name} grouped recipe ${item.name} declares no files.',
+        );
+      }
+      final itemTargets = <String>{};
+      for (final file in item.files) {
+        final sourcePath = p.posix.normalize(file.source);
+        if (file.source.isEmpty ||
+            file.source.contains('\\') ||
+            p.posix.isAbsolute(file.source) ||
+            p.windows.isAbsolute(file.source)) {
+          throw FormatException(
+            '${spec.name} grouped recipe ${item.name} has unsafe source '
+            '${file.source}.',
+          );
+        }
+        final target = file.target;
+        if (target.isEmpty ||
+            target.contains('\\') ||
+            p.posix.isAbsolute(target) ||
+            p.windows.isAbsolute(target) ||
+            p.posix.normalize(target) != target ||
+            p.posix.split(target).contains('..')) {
+          throw FormatException(
+            '${spec.name} grouped recipe ${item.name} has unsafe target '
+            '$target.',
+          );
+        }
+        if (!target.startsWith('${PresetSpec.recipeDirectory}/')) {
+          throw FormatException(
+            '${spec.name} grouped recipe ${item.name} must install beneath '
+            '@ui/${PresetSpec.recipeDirectory}/: $target.',
+          );
+        }
+        if (!targets.add(target)) {
+          throw FormatException(
+            '${spec.name} grouped recipe target $target has multiple writers.',
+          );
+        }
+        itemTargets.add(target);
+
+        final authored = File(
+          p.joinAll([sourceRoot.path, ...p.posix.split(sourcePath)]),
+        ).absolute;
+        if (authored.path != allowedRoot &&
+            !p.isWithin(allowedRoot, authored.path)) {
+          throw FormatException(
+            '${spec.name} grouped recipe source ${file.source} escapes '
+            '${sourceRoot.parent.path}.',
+          );
+        }
+        if (!authored.existsSync()) {
+          throw FormatException(
+            '${spec.name} grouped recipe source is missing: ${file.source}.',
+          );
+        }
+        final content = authored.readAsStringSync();
+        final existing = grouped[sourcePath];
+        if (existing != null) {
+          throw FormatException(
+            '${spec.name} grouped recipe source ${file.source} has multiple '
+            'owners.',
+          );
+        }
+        final local = sources[sourcePath];
+        if (local != null && local != content) {
+          throw StateError('$sourcePath changed while deriving the registry.');
+        }
+        grouped[sourcePath] = content;
+      }
+      for (final export in item.exports) {
+        if (!itemTargets.contains(export)) {
+          throw FormatException(
+            '${spec.name} grouped recipe ${item.name} exports unmapped target '
+            '$export.',
+          );
+        }
+      }
+    }
+    return grouped;
+  }
+
+  Map<String, String> _sourceOwners(Map<String, String> sources) {
+    final owners = <String, String>{};
+    void own(String source, String item) {
+      final previous = owners[source];
+      if (previous != null && previous != item) {
+        throw FormatException(
+          '${spec.name} source $source is owned by both $previous and $item.',
+        );
+      }
+      owners[source] = item;
+    }
+
+    for (final shared in spec.sharedItems) {
+      for (final source in sources.keys.where(
+        (path) => path.startsWith('${shared.directory}/'),
+      )) {
+        own(source, shared.name);
+      }
+    }
+    for (final item in spec.fileItems) {
+      if (sources.containsKey(item.file)) own(item.file, item.name);
+    }
+    final componentPrefix = '${spec.componentDirectory}/';
+    for (final source in sources.keys.where(
+      (path) => path.startsWith(componentPrefix),
+    )) {
+      own(source, p.posix.basenameWithoutExtension(source));
+    }
+    for (final name in spec.recipeItems) {
+      final source = '${PresetSpec.recipeDirectory}/$name.dart';
+      if (sources.containsKey(source)) own(source, name);
+    }
+    for (final item in spec.groupedRecipeItems) {
+      for (final file in item.files) {
+        own(p.posix.normalize(file.source), item.name);
+      }
+    }
+    return owners;
+  }
+
+  Map<String, String> _installedTargets(Map<String, String> sourceOwners) {
+    final targets = {for (final source in sourceOwners.keys) source: source};
+    for (final item in spec.groupedRecipeItems) {
+      for (final file in item.files) {
+        targets[p.posix.normalize(file.source)] = file.target;
+      }
+    }
+    return targets;
+  }
+
+  void _validateSources(
+    Map<String, String> sources, {
+    required Map<String, String> groupedSources,
+    required Map<String, String> sourceOwners,
+  }) {
     final failures = <String>[];
-    for (final entry in sources.entries) {
+    final allSources = {...sources, ...groupedSources};
+    for (final entry in allSources.entries) {
       final path = entry.key;
       final content = entry.value;
       if (p.posix
@@ -1026,7 +1288,13 @@ final class PresetBuilder {
         failures.add('$path: source contains the reserved template token "{{"');
       }
       final behavior = spec.behavior;
-      final recipe = path.startsWith('${PresetSpec.recipeDirectory}/');
+      final recipe =
+          p.posix.dirname(path) == PresetSpec.recipeDirectory &&
+          spec.recipeItems.contains(p.posix.basenameWithoutExtension(path));
+      final groupedRecipe = spec.groupedRecipeItems.any(
+        (item) =>
+            item.files.any((file) => p.posix.normalize(file.source) == path),
+      );
       for (final match in _directivePattern.allMatches(content)) {
         final uri = match.group(2)!;
         if (uri.contains(spec.typeWord) || uri.contains(spec.valueWord)) {
@@ -1037,7 +1305,13 @@ final class PresetBuilder {
             p.posix.join(p.posix.dirname(path), uri),
           );
           final generated = match.group(1) == 'part' && uri.endsWith('.g.dart');
-          if (resolved.startsWith('../')) {
+          if (generated || sourceOwners.containsKey(resolved)) {
+            // Generated parts are produced beside their source. Every other
+            // accepted relative directive resolves to an explicitly owned
+            // source, including grouped sources in a sibling directory.
+          } else if (groupedRecipe) {
+            failures.add('$path: missing relative source $uri');
+          } else if (resolved.startsWith('../')) {
             // Only a recipe may leave the preset, and only for the behavior
             // components it styles. Anything else would install an import
             // that points outside the application's own tree.
@@ -1055,7 +1329,7 @@ final class PresetBuilder {
             ).existsSync()) {
               failures.add('$path: missing behavior source $uri');
             }
-          } else if (!generated && !sources.containsKey(resolved)) {
+          } else {
             failures.add('$path: missing relative source $uri');
           }
         }
@@ -1066,7 +1340,8 @@ final class PresetBuilder {
       if (recipe && behavior == null) {
         failures.add('$path: ${spec.name} declares no behavior to style');
       }
-      if (!spec.ignoredSourceFiles.contains(path) &&
+      if (!groupedRecipe &&
+          !spec.ignoredSourceFiles.contains(path) &&
           !spec.fileItems.any((item) => item.file == path) &&
           !spec.sourceDirectories.any(
             (directory) => path.startsWith('$directory/'),
@@ -1150,6 +1425,41 @@ final class PresetBuilder {
     return _sortDirectives(path, rewritten);
   }
 
+  /// Rebase each mapped relative directive from authored to installed paths.
+  ///
+  /// Only the directive URI is replaced. Identical text in comments, strings,
+  /// or identifiers remains untouched.
+  String _groupedRecipeSource({
+    required String sourcePath,
+    required String targetPath,
+    required String authored,
+    required Map<String, String> installedTargets,
+  }) {
+    final rewritten = authored.replaceAllMapped(_directivePattern, (match) {
+      final uri = match.group(2)!;
+      if (uri.startsWith('package:') || uri.startsWith('dart:')) {
+        return match.group(0)!;
+      }
+      final generated = match.group(1) == 'part' && uri.endsWith('.g.dart');
+      if (generated) return match.group(0)!;
+      final resolved = p.posix.normalize(
+        p.posix.join(p.posix.dirname(sourcePath), uri),
+      );
+      final installed = installedTargets[resolved];
+      if (installed == null) return match.group(0)!;
+      final rebased = p.posix.relative(
+        installed,
+        from: p.posix.dirname(targetPath),
+      );
+      final whole = match.group(0)!;
+      final uriStart = whole.indexOf(uri);
+      final uriEnd = uriStart + uri.length;
+      return '${whole.substring(0, uriStart)}$rebased'
+          '${whole.substring(uriEnd)}';
+    });
+    return _sortDirectives(sourcePath, rewritten);
+  }
+
   /// Swaps the preset's own naming for the consumer prefix placeholders.
   ///
   /// The round trip is asserted rather than assumed: a substitution that does
@@ -1173,22 +1483,23 @@ final class PresetBuilder {
     required String sourcePath,
     required List<String> imports,
     required Set<String> componentNames,
+    required Map<String, String> sourceOwners,
+    required String itemName,
     bool allowForeignComponents = false,
   }) {
-    final owners = spec.itemsByDirectory;
     final dependencies = <String>{};
     for (final uri in imports) {
       if (uri.startsWith('package:') || uri.startsWith('dart:')) continue;
       final resolved = p.posix.normalize(
         p.posix.join(p.posix.dirname(sourcePath), uri),
       );
-      final directory = p.posix.split(resolved).first;
-      final owner = owners[directory];
+      final owner = sourceOwners[resolved];
       if (owner != null) {
-        if (owner == owners[p.posix.split(sourcePath).first]) continue;
+        if (owner == itemName) continue;
         dependencies.add(owner);
         continue;
       }
+      final directory = p.posix.split(resolved).first;
       if (directory != spec.componentDirectory) continue;
       final component = p.posix.basenameWithoutExtension(resolved);
       if (component == p.posix.basenameWithoutExtension(sourcePath)) continue;
@@ -1199,9 +1510,8 @@ final class PresetBuilder {
       }
       dependencies.add(component);
     }
-    final name = p.posix.basenameWithoutExtension(sourcePath);
     for (final component
-        in spec.composedRegistryDependencies[name] ?? const []) {
+        in spec.composedRegistryDependencies[itemName] ?? const []) {
       if (!componentNames.contains(component)) {
         throw FormatException(
           '$sourcePath declares missing component dependency $component.',
@@ -1209,12 +1519,17 @@ final class PresetBuilder {
       }
       dependencies.add(component);
     }
-    // Shared items lead, in spec order, so a graph reads foundation-first the
-    // way the hand-authored default registry does.
+    return _orderRegistryDependencies(dependencies);
+  }
+
+  /// Shared items lead, in spec order, so a graph reads foundation-first the
+  /// way the hand-authored default registry does.
+  List<String> _orderRegistryDependencies(Iterable<String> dependencies) {
+    final remaining = dependencies.toSet();
     return [
       for (final shared in spec.sharedItems)
-        if (dependencies.remove(shared.name)) shared.name,
-      ...dependencies.toList()..sort(),
+        if (remaining.remove(shared.name)) shared.name,
+      ...remaining.toList()..sort(),
     ];
   }
 
