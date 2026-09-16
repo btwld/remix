@@ -150,6 +150,10 @@ melos:
     open-code:check:
       steps:
         - dart test test/tool/check_open_code_test.dart
+        - dart run tool/check_open_code.dart --source checkout --item dashboard_shell
+        - dart run tool/check_open_code.dart --source checkout --item dashboard_demo
+        - dart run tool/check_open_code.dart --preset fortal --source checkout --item dashboard_shell
+        - dart run tool/check_open_code.dart --preset fortal --source checkout --item dashboard_demo
         - dart run tool/check_open_code.dart --source checkout
         - dart run tool/check_open_code.dart --preset fortal --source checkout
       description: Install every item from both presets against the Remix checkout
@@ -270,11 +274,15 @@ melos:
     ci:open-code:default:
       steps:
         - dart test test/tool/check_open_code_test.dart
+        - dart run tool/check_open_code.dart --source checkout --item dashboard_shell
+        - dart run tool/check_open_code.dart --source checkout --item dashboard_demo
         - dart run tool/check_open_code.dart --source checkout
       description: Install every default-preset item against the Remix checkout
 
     ci:open-code:fortal:
       steps:
+        - dart run tool/check_open_code.dart --preset fortal --source checkout --item dashboard_shell
+        - dart run tool/check_open_code.dart --preset fortal --source checkout --item dashboard_demo
         - dart run tool/check_open_code.dart --preset fortal --source checkout
       description: Install every Fortal-preset item against the Remix checkout
 

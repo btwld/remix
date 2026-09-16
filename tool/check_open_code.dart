@@ -3,7 +3,8 @@
 ///
 /// ```shell
 /// dart run tool/check_open_code.dart [--preset default|fortal]
-///     [--source both|hosted|checkout] [--hosted-cli] [--keep]
+///     [--source both|hosted|checkout] [--item dashboard_demo|dashboard_shell]
+///     [--hosted-cli] [--keep]
 /// ```
 ///
 /// The checker writes only to a guarded system-temporary directory. It installs
@@ -38,6 +39,7 @@ const _defaultRegistryItems = <String>[
   'callout',
   'card',
   'chart',
+  'dashboard_demo',
   'dashboard_shell',
   'checkbox',
   'data_list',
@@ -97,12 +99,22 @@ const _agentRegistryItems = <String>[
 
 const _independentRegistryItems = <String>[
   ..._agentRegistryItems,
+  'dashboard_demo',
   'dashboard_shell',
 ];
 
 const _dashboardShellFiles = <String>[
   'recipes/dashboard/dashboard_shell_base.dart',
   'recipes/dashboard/dashboard_shell.dart',
+];
+
+const _dashboardFiles = <String>[
+  'recipes/dashboard/dashboard_sample_data.dart',
+  'recipes/dashboard/dashboard_overview_base.dart',
+  'recipes/dashboard/dashboard_demo_base.dart',
+  'recipes/dashboard/dashboard_demo_content.dart',
+  'recipes/dashboard/dashboard_overview.dart',
+  'recipes/dashboard/dashboard_demo.dart',
 ];
 
 /// Generated adapters compared byte-for-byte against a committed snapshot.
@@ -133,6 +145,7 @@ const _fortalRegistryItems = <String>[
   'callout',
   'card',
   'chart',
+  'dashboard_demo',
   'dashboard_shell',
   'checkbox',
   'code',
@@ -174,8 +187,49 @@ const _defaultPreset = _PresetContract(
   registryItems: _defaultRegistryItems,
   themeFiles: ['tokens.dart', 'theme_data.dart', 'theme_scope.dart'],
   generatedSnapshots: _generatedSnapshots,
-  nonGeneratedItems: {'sidebar_layout', 'dashboard_shell'},
-  itemFileOverrides: {'dashboard_shell': _dashboardShellFiles},
+  nonGeneratedItems: {'sidebar_layout', 'dashboard_shell', 'dashboard_demo'},
+  itemFileOverrides: {
+    'dashboard_shell': _dashboardShellFiles,
+    'dashboard_demo': _dashboardFiles,
+  },
+  focusedClosures: {
+    'dashboard_shell': [
+      'theme',
+      'icon_button',
+      'icons',
+      'toggle',
+      'tooltip',
+      'sidebar',
+      'sidebar_layout',
+      'textfield',
+      'dashboard_shell',
+    ],
+    'dashboard_demo': [
+      'theme',
+      'badge',
+      'button',
+      'card',
+      'chart',
+      'icon_button',
+      'icons',
+      'toggle',
+      'tooltip',
+      'sidebar',
+      'sidebar_layout',
+      'textfield',
+      'dashboard_shell',
+      'checkbox',
+      'select',
+      'data_table',
+      'disclosure',
+      'link',
+      'popover',
+      'progress',
+      'switch',
+      'tabs',
+      'dashboard_demo',
+    ],
+  },
   sharedItems: {
     'models': [
       'models/activity_item.dart',
@@ -213,8 +267,59 @@ const _fortalPreset = _PresetContract(
     'sidebar_layout',
     'typography',
     'dashboard_shell',
+    'dashboard_demo',
   },
-  itemFileOverrides: {'dashboard_shell': _dashboardShellFiles},
+  itemFileOverrides: {
+    'dashboard_shell': _dashboardShellFiles,
+    'dashboard_demo': _dashboardFiles,
+  },
+  focusedClosures: {
+    'dashboard_shell': [
+      'theme',
+      'base_button',
+      'icon_button',
+      'icons',
+      'typography',
+      'text',
+      'toggle',
+      'tooltip',
+      'sidebar',
+      'sidebar_layout',
+      'textfield',
+      'dashboard_shell',
+    ],
+    'dashboard_demo': [
+      'theme',
+      'badge',
+      'button',
+      'card',
+      'chart',
+      'base_button',
+      'icon_button',
+      'icons',
+      'typography',
+      'text',
+      'toggle',
+      'tooltip',
+      'sidebar',
+      'sidebar_layout',
+      'textfield',
+      'dashboard_shell',
+      'checkbox',
+      'code',
+      'select',
+      'data_table',
+      'disclosure',
+      'heading',
+      'kbd',
+      'link',
+      'popover',
+      'progress',
+      'switch',
+      'tabs',
+      'dashboard_demo',
+    ],
+  },
   sharedItems: {
     'models': [
       'models/activity_item.dart',
@@ -255,6 +360,7 @@ final class _PresetContract {
     this.generatedSnapshots = const {},
     this.sharedItems = const {},
     this.itemFileOverrides = const {},
+    this.focusedClosures = const {},
   });
 
   final String name;
@@ -265,6 +371,16 @@ final class _PresetContract {
   final Map<String, String> generatedSnapshots;
   final Map<String, List<String>> sharedItems;
   final Map<String, List<String>> itemFileOverrides;
+  final Map<String, List<String>> focusedClosures;
+
+  List<String> focusedUiFiles(String item) => [
+    'ui.dart',
+    for (final name in focusedClosures[item] ?? const <String>[])
+      if (name == 'theme')
+        for (final file in themeFiles) 'theme/$file'
+      else
+        ..._itemFiles(name),
+  ];
 
   List<String> get installedUiFiles => [
     'ui.dart',
@@ -302,12 +418,14 @@ final class ConsumerCheckOptions {
     required this.preset,
     required this.source,
     required this.hostedCli,
+    required this.item,
   });
 
   final bool keep;
   final String preset;
   final RemixSource source;
   final bool hostedCli;
+  final String? item;
 }
 
 ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
@@ -317,6 +435,7 @@ ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
   var preset = _defaultPreset;
   var source = RemixSource.both;
   var hostedCli = false;
+  String? item;
   for (var index = 0; index < arguments.length; index += 1) {
     final argument = arguments[index];
     if (argument == '--hosted-cli') {
@@ -327,6 +446,15 @@ ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
     if (argument == '--keep') {
       if (keep) return null;
       keep = true;
+      continue;
+    }
+    if (argument == '--item') {
+      if (item != null || index + 1 >= arguments.length) return null;
+      final selected = arguments[++index];
+      if (selected != 'dashboard_demo' && selected != 'dashboard_shell') {
+        return null;
+      }
+      item = selected;
       continue;
     }
     if (argument == '--preset') {
@@ -355,11 +483,13 @@ ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
     return null;
   }
   if (hostedCli && source != RemixSource.hosted) return null;
+  if (item != null && source != RemixSource.checkout) return null;
   return ConsumerCheckOptions(
     keep: keep,
     preset: preset.name,
     source: source,
     hostedCli: hostedCli,
+    item: item,
   );
 }
 
@@ -369,6 +499,7 @@ Future<void> main(List<String> arguments) async {
     stderr.writeln(
       'Usage: dart run tool/check_open_code.dart '
       '[--preset default|fortal] [--source both|hosted|checkout] '
+      '[--item dashboard_demo|dashboard_shell (requires --source checkout)] '
       '[--hosted-cli (requires --source hosted)] [--keep]',
     );
     exitCode = 64;
@@ -382,6 +513,7 @@ Future<void> main(List<String> arguments) async {
     preset: _presetByName(parsed.preset),
     source: parsed.source,
     hostedCli: parsed.hostedCli,
+    item: parsed.item,
   );
   if (failure != null) {
     stderr.writeln('open-code check failed: ${failure.message}');
@@ -395,6 +527,7 @@ Future<_Failure?> _run(
   required _PresetContract preset,
   required RemixSource source,
   required bool hostedCli,
+  required String? item,
 }) async {
   final rootFailure = _verifyRepositoryRoot(repositoryRoot);
   if (rootFailure != null) return rootFailure;
@@ -435,6 +568,7 @@ Future<_Failure?> _run(
       preset: preset,
       source: source,
       hostedCli: hostedCli,
+      item: item,
     );
     if (checkFailure != null) {
       return _retainedFailure(parent, checkFailure);
@@ -470,7 +604,7 @@ Future<_Failure?> _run(
       ..writeln('Review local source against the registry:')
       ..writeln(
         '  cd ${app.path} && ${sdk.dart} run remix_cli:remix add '
-        '${preset.registryItems.first} --diff',
+        '${item ?? preset.registryItems.first} --diff',
       );
   }
 
@@ -486,6 +620,7 @@ Future<_Failure?> _checkInTemporaryApp({
   required _PresetContract preset,
   required RemixSource source,
   required bool hostedCli,
+  required String? item,
 }) async {
   final environment = _toolchainEnvironment(sdk);
 
@@ -554,6 +689,20 @@ Future<_Failure?> _checkInTemporaryApp({
     environment: environment,
   );
   if (init != null) return _Failure('remix init failed in the fresh app');
+
+  if (item != null) {
+    return _checkFocusedItem(
+      sdk: sdk,
+      repositoryRoot: repositoryRoot,
+      fixtureRoot: fixtureRoot,
+      app: app,
+      preset: preset,
+      item: item,
+      cliRoot: cliRoot,
+      remixSource: remixSource,
+      environment: environment,
+    );
+  }
 
   final independent = await _checkIndependentItems(
     sdk: sdk,
@@ -704,6 +853,164 @@ Future<_Failure?> _checkInTemporaryApp({
     app: app,
     dependencySource: 'current checkout',
     environment: environment,
+  );
+}
+
+Future<_Failure?> _checkFocusedItem({
+  required _Toolchain sdk,
+  required Directory repositoryRoot,
+  required Directory fixtureRoot,
+  required Directory app,
+  required _PresetContract preset,
+  required String item,
+  required Directory cliRoot,
+  required Directory remixSource,
+  required Map<String, String> environment,
+}) async {
+  final fixtureFailure = _applyFocusedFixture(
+    app: app,
+    fixtureRoot: fixtureRoot,
+    item: item,
+  );
+  if (fixtureFailure != null) return fixtureFailure;
+
+  final add = await _runProcess(
+    sdk.dart,
+    ['run', 'remix_cli:remix', 'add', item],
+    workingDirectory: app.path,
+    environment: environment,
+  );
+  if (add != null) return _Failure('remix add $item failed in the fresh app');
+
+  final uiRoot = Directory('${app.path}/lib/ui');
+  final found = uiRoot
+      .listSync(recursive: true, followLinks: false)
+      .whereType<File>()
+      .map((file) => _relativePath(uiRoot, file))
+      .toSet();
+  final expected = preset.focusedUiFiles(item).toSet();
+  final inventoryProblems = <String>[
+    ..._focusedInventoryProblems(expected: expected, found: found),
+    ..._installedReferenceProblems(uiRoot, expected),
+  ];
+  if (inventoryProblems.isNotEmpty) {
+    return _Failure(
+      'focused $item inventory is invalid:\n'
+      '${inventoryProblems.map((problem) => '  - $problem').join('\n')}',
+    );
+  }
+
+  final forbiddenRecipeFiles = <String>{
+    for (final agent in _agentRegistryItems)
+      agent.endsWith('_recipe')
+          ? 'recipes/$agent.dart'
+          : 'components/$agent.dart',
+  };
+  if (found.intersection(forbiddenRecipeFiles).isNotEmpty) {
+    return _Failure('focused $item unexpectedly installed Agent source');
+  }
+  if (item == 'dashboard_shell' &&
+      (found.contains('components/chart.dart') ||
+          found.contains('components/data_table.dart') ||
+          found.contains('recipes/dashboard/dashboard_demo.dart'))) {
+    return _Failure(
+      'dashboard_shell unexpectedly installed dashboard_demo-only source',
+    );
+  }
+  _step('Focused $item inventory matches its explicit dependency closure.');
+
+  final dependencyFailure = _verifyFocusedDependencies(app, item: item);
+  if (dependencyFailure != null) return dependencyFailure;
+
+  final packageConfig = _readPackageConfig(app);
+  if (packageConfig is _Failure) return packageConfig;
+  final checkoutFailure = _verifyCheckoutPackages(
+    packages: packageConfig as Map<String, String>,
+    repositoryRoot: repositoryRoot,
+    expected: {'remix_cli': cliRoot, 'remix': remixSource},
+  );
+  if (checkoutFailure != null) return checkoutFailure;
+
+  final verification = await _analyzeAndTest(
+    sdk: sdk,
+    app: app,
+    dependencySource: 'current checkout',
+    environment: environment,
+  );
+  if (verification != null) return verification;
+
+  final build = await _runProcess(
+    sdk.flutter,
+    ['build', 'web'],
+    workingDirectory: app.path,
+    environment: environment,
+  );
+  if (build != null || !File('${app.path}/build/web/index.html').existsSync()) {
+    return _Failure('focused $item did not produce a Flutter web build');
+  }
+  _step('Focused $item built for web.');
+  return null;
+}
+
+List<String> _focusedInventoryProblems({
+  required Set<String> expected,
+  required Set<String> found,
+}) => [
+  for (final file in expected.difference(found)) 'focused install lacks $file',
+  for (final file in found.difference(expected))
+    'focused install has unexpected $file',
+];
+
+_Failure? _applyFocusedFixture({
+  required Directory app,
+  required Directory fixtureRoot,
+  required String item,
+}) {
+  final sources = {
+    '${item}_main.dart': 'lib/main.dart',
+    '${item}_test.dart': 'test/open_code_test.dart',
+  };
+  for (final entry in sources.entries) {
+    final source = File('${fixtureRoot.path}/focused/${entry.key}');
+    if (!source.existsSync()) {
+      return _Failure(
+        'open_code/${fixtureRoot.path.split('/').last}/focused/'
+        '${entry.key} is missing',
+      );
+    }
+    final target = File('${app.path}/${entry.value}');
+    target.parent.createSync(recursive: true);
+    source.copySync(target.path);
+  }
+  return null;
+}
+
+_Failure? _verifyFocusedDependencies(Directory app, {required String item}) {
+  final sections = _dependencySections(
+    File('${app.path}/pubspec.yaml').readAsStringSync(),
+  );
+  final runtime = sections['dependencies'] ?? const <String, Object?>{};
+  final development = sections['dev_dependencies'] ?? const <String, Object?>{};
+  final runtimeExpected = {
+    'flutter',
+    'remix',
+    'mix_annotations',
+    'remix_ui_icons',
+    if (item == 'dashboard_demo') 'mix_chart',
+  };
+  final developmentExpected = {
+    'flutter_test',
+    'remix_cli',
+    'build_runner',
+    'mix_generator',
+  };
+  final problems = <String>[];
+  _expectExactKeys(runtime, runtimeExpected, 'runtime', problems);
+  _expectExactKeys(development, developmentExpected, 'development', problems);
+  if (problems.isEmpty) return null;
+  return _Failure(
+    'focused $item dependency manifest is invalid:\n'
+    '${problems.map((problem) => '  - $problem').join('\n')}',
   );
 }
 
@@ -1466,6 +1773,20 @@ List<String> registryItemInventoryForTest(
   nonGeneratedItems: nonGenerated ? {item} : const {},
   itemFileOverrides: explicitFiles == null ? const {} : {item: explicitFiles},
 ).installedUiFiles.where((file) => file != 'ui.dart').toList();
+
+/// Returns exact focused-install inventory errors for checker regression tests.
+List<String> focusedInventoryProblemsForTest(
+  String item,
+  Set<String> found, {
+  String preset = 'default',
+}) => _focusedInventoryProblems(
+  expected: _presetByName(preset).focusedUiFiles(item).toSet(),
+  found: found,
+);
+
+/// Returns the independent expected inventory for a focused consumer check.
+Set<String> focusedInventoryForTest(String item, {String preset = 'default'}) =>
+    _presetByName(preset).focusedUiFiles(item).toSet();
 
 /// Formats a post-creation failure so the retained directory is always named.
 String retainedFailureMessage(

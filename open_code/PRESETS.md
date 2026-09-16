@@ -53,6 +53,12 @@ Agent surfaces (`activity`, `answer`, `composer`, `execution`, `message`,
 The `dashboard_shell` grouped recipe combines shared composition with one
 preset adapter and installs only its shell dependency closure. It leaves the
 host entry point, routes, page body, authentication, and persistence alone.
+The `dashboard_demo` grouped recipe adds the full twelve-destination reference
+application: Overview, Chat, Customers, Orders, Settings, Charts, Actions,
+Forms & Inputs, Data Display, Overlays, Navigation, and Typography. Both
+presets share the information architecture and product content; component
+galleries render each preset's own public variants. The host still owns the
+entry point, theme scope, routes, authentication, and persistence.
 
 Installed Dart imports the public `remix` API, not `registry_source`.
 `mix_chart` and `remix_ui_icons` remain opt-in hosted dependencies of the items
@@ -98,9 +104,10 @@ compares the complete output trees, including unexpected or missing files.
 - `apps/dashboard`: full Fortal catalog including Agent surfaces and recipes,
   prefix `Ui`. Workspace → Chat demonstrates the eight surfaces together.
 
-All three consume installed source. Dashboard pages and its simulated runner
-remain application-owned. A reusable dashboard shell is bundled; a complete
-dashboard starter and a composed `chat` item are still separate work.
+All three consume installed source. The repository dashboard pages and its
+simulated runner remain application-owned. The reusable `dashboard_shell` and
+full `dashboard_demo` are bundled as separate stacked registry items; a
+standalone composed `chat` item is still separate work.
 
 ## Verification and release
 
@@ -121,7 +128,7 @@ of the source-tree migration.
 ## Separate follow-ups
 
 - In-place preset switching and initialization theme knobs.
-- A composed chat registry item or a full-dashboard template.
+- A standalone composed chat registry item.
 - Deliberate visual changes beyond the existing Agent recipes. The
   [worksheet reconciliation](../registry_source/specs/README.md) distinguishes
   reference measurements from shipped defaults.

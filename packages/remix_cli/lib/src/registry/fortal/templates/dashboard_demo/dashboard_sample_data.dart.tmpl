@@ -1,0 +1,109 @@
+/// One headline value shown by the dashboard overview.
+final class {{typePrefix}}DashboardMetric {
+  const {{typePrefix}}DashboardMetric({
+    required this.label,
+    required this.value,
+    required this.change,
+  });
+
+  final String label;
+  final String value;
+  final String change;
+}
+
+/// One point in the overview's primary time series.
+final class {{typePrefix}}DashboardPoint {
+  const {{typePrefix}}DashboardPoint({required this.label, required this.value});
+
+  final String label;
+  final double value;
+}
+
+/// One row in the overview's recent-records table.
+final class {{typePrefix}}DashboardRecord {
+  const {{typePrefix}}DashboardRecord({
+    required this.id,
+    required this.customer,
+    required this.status,
+    required this.amount,
+  });
+
+  final String id;
+  final String customer;
+  final String status;
+  final String amount;
+}
+
+/// Local, deterministic starter content intended to be edited after install.
+final class {{typePrefix}}DashboardSampleData {
+  const {{typePrefix}}DashboardSampleData({
+    required this.metrics,
+    required this.revenue,
+    required this.records,
+  });
+
+  final List<{{typePrefix}}DashboardMetric> metrics;
+  final List<{{typePrefix}}DashboardPoint> revenue;
+  final List<{{typePrefix}}DashboardRecord> records;
+}
+
+/// The editable data rendered by [{{typePrefix}}DashboardOverview] by default.
+const {{valuePrefix}}DashboardSampleData = {{typePrefix}}DashboardSampleData(
+  metrics: [
+    {{typePrefix}}DashboardMetric(
+      label: 'Revenue',
+      value: r'$84,420',
+      change: '+12.4% this month',
+    ),
+    {{typePrefix}}DashboardMetric(
+      label: 'Active customers',
+      value: '2,420',
+      change: '+8.2% this month',
+    ),
+    {{typePrefix}}DashboardMetric(
+      label: 'Open orders',
+      value: '184',
+      change: '12 awaiting review',
+    ),
+    {{typePrefix}}DashboardMetric(
+      label: 'Fulfillment',
+      value: '94.2%',
+      change: '+4.1% this month',
+    ),
+  ],
+  revenue: [
+    {{typePrefix}}DashboardPoint(label: 'Mon', value: 42),
+    {{typePrefix}}DashboardPoint(label: 'Tue', value: 54),
+    {{typePrefix}}DashboardPoint(label: 'Wed', value: 48),
+    {{typePrefix}}DashboardPoint(label: 'Thu', value: 66),
+    {{typePrefix}}DashboardPoint(label: 'Fri', value: 62),
+    {{typePrefix}}DashboardPoint(label: 'Sat', value: 78),
+    {{typePrefix}}DashboardPoint(label: 'Sun', value: 84),
+  ],
+  records: [
+    {{typePrefix}}DashboardRecord(
+      id: 'ORD-1048',
+      customer: 'Avery Stone',
+      status: 'Fulfilled',
+      amount: r'$1,280',
+    ),
+    {{typePrefix}}DashboardRecord(
+      id: 'ORD-1047',
+      customer: 'Mina Patel',
+      status: 'Processing',
+      amount: r'$860',
+    ),
+    {{typePrefix}}DashboardRecord(
+      id: 'ORD-1046',
+      customer: 'Jordan Lee',
+      status: 'Review',
+      amount: r'$2,140',
+    ),
+    {{typePrefix}}DashboardRecord(
+      id: 'ORD-1045',
+      customer: 'Riley Chen',
+      status: 'Fulfilled',
+      amount: r'$640',
+    ),
+  ],
+);

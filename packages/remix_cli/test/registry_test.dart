@@ -276,6 +276,44 @@ items:
   );
 
   test(
+    'dashboard_demo is a complete grouped starter in both presets',
+    () async {
+      for (final preset in const ['default', 'fortal']) {
+        final catalog = await RegistryCatalog.loadBundled(preset: preset);
+        final item = catalog.items['dashboard_demo']!;
+        final closure = catalog
+            .resolve('dashboard_demo')
+            .map((dependency) => dependency.name)
+            .toList();
+
+        expect(item.files, hasLength(6), reason: preset);
+        expect(item.generated, isEmpty, reason: preset);
+        expect(item.exports, [
+          'recipes/dashboard/dashboard_sample_data.dart',
+          'recipes/dashboard/dashboard_overview.dart',
+          'recipes/dashboard/dashboard_demo.dart',
+        ]);
+        expect(closure.last, 'dashboard_demo');
+        expect(
+          closure,
+          containsAll(['dashboard_shell', 'card', 'chart', 'data_table']),
+        );
+        expect(closure, everyElement(isNot(isIn(_agentRecipeNames))));
+
+        final joined = (await Future.wait(
+          item.files.map(catalog.readTemplate),
+        )).join('\n');
+        expect(joined, contains('class {{typePrefix}}DashboardDemo'));
+        expect(joined, contains('enum {{typePrefix}}DashboardDemoPage'));
+        expect(joined, contains('class {{typePrefix}}DashboardOverview'));
+        expect(joined, contains('{{valuePrefix}}DashboardSampleData'));
+        expect(joined, isNot(contains('package:flutter/material.dart')));
+        expect(joined, isNot(contains('registry_source')));
+      }
+    },
+  );
+
+  test(
     'dependency resolution de-duplicates in stable dependency-first order',
     () {
       final catalog = parse('''schema: 1
@@ -444,6 +482,7 @@ items:
         ..._componentSurfaces.keys,
         ..._agentSurfaces.keys,
         ..._agentRecipeNames,
+        'dashboard_demo',
         'dashboard_shell',
       });
 

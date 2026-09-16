@@ -439,6 +439,52 @@ const defaultPreset = PresetSpec(
       ],
       exports: ['recipes/dashboard/dashboard_shell.dart'],
     ),
+    GroupedRecipeItemSpec(
+      name: 'dashboard_demo',
+      files: [
+        GroupedRecipeFileSpec(
+          source: '../dashboard/dashboard_sample_data.dart',
+          target: 'recipes/dashboard/dashboard_sample_data.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
+          source: '../dashboard/dashboard_overview_base.dart',
+          target: 'recipes/dashboard/dashboard_overview_base.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
+          source: '../dashboard/dashboard_demo_base.dart',
+          target: 'recipes/dashboard/dashboard_demo_base.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
+          source: '../dashboard/dashboard_demo_content.dart',
+          target: 'recipes/dashboard/dashboard_demo_content.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
+          source: 'recipes/dashboard/dashboard_overview.dart',
+          target: 'recipes/dashboard/dashboard_overview.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
+          source: 'recipes/dashboard/dashboard_demo.dart',
+          target: 'recipes/dashboard/dashboard_demo.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+      ],
+      exports: [
+        'recipes/dashboard/dashboard_sample_data.dart',
+        'recipes/dashboard/dashboard_overview.dart',
+        'recipes/dashboard/dashboard_demo.dart',
+      ],
+    ),
   ],
   behavior: agentBehavior,
 );
@@ -504,6 +550,52 @@ const fortalPreset = PresetSpec(
         ),
       ],
       exports: ['recipes/dashboard/dashboard_shell.dart'],
+    ),
+    GroupedRecipeItemSpec(
+      name: 'dashboard_demo',
+      files: [
+        GroupedRecipeFileSpec(
+          source: '../dashboard/dashboard_sample_data.dart',
+          target: 'recipes/dashboard/dashboard_sample_data.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
+          source: '../dashboard/dashboard_overview_base.dart',
+          target: 'recipes/dashboard/dashboard_overview_base.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
+          source: '../dashboard/dashboard_demo_base.dart',
+          target: 'recipes/dashboard/dashboard_demo_base.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
+          source: '../dashboard/dashboard_demo_content.dart',
+          target: 'recipes/dashboard/dashboard_demo_content.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
+          source: 'recipes/dashboard/dashboard_overview.dart',
+          target: 'recipes/dashboard/dashboard_overview.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
+          source: 'recipes/dashboard/dashboard_demo.dart',
+          target: 'recipes/dashboard/dashboard_demo.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+      ],
+      exports: [
+        'recipes/dashboard/dashboard_sample_data.dart',
+        'recipes/dashboard/dashboard_overview.dart',
+        'recipes/dashboard/dashboard_demo.dart',
+      ],
     ),
   ],
   behavior: agentBehavior,

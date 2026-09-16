@@ -29,7 +29,7 @@ dart run remix_cli:remix add button
 
 One `add` installs one item. The catalog is `theme`, the opt-in `icons` seam,
 the optional `chart` extension, plus `accordion`, `avatar`, `badge`, `button`,
-`callout`, `card`, `checkbox`, `dashboard_shell`, `data_list`, `data_table`, `dialog`,
+`callout`, `card`, `checkbox`, `dashboard_demo`, `dashboard_shell`, `data_list`, `data_table`, `dialog`,
 `disclosure`, `divider`, `icon_button`, `link`, `menu`, `popover`, `progress`,
 `radio`, `segmented_control`, `select`, `sidebar`, `sidebar_layout`,
 `skeleton`, `slider`, `spinner`, `switch`, `tabs`, `textfield`, `toast`,
@@ -41,6 +41,14 @@ layout with no `Spec` and no generated adapter, pairing an installed
 composition source. It pulls in the existing sidebar layout, sidebar,
 icon-button, icon, and text-field items; it does not install charts, tables,
 sample data, routes, or an application entry point.
+
+`dashboard_demo` installs that shell plus the same twelve destinations as the
+Fortal reference dashboard: Overview, Chat, Customers, Orders, Settings,
+Charts, Actions, Forms & Inputs, Data Display, Overlays, Navigation, and
+Typography. It uses the same `UiDashboardDemo` API in both presets, renders
+each preset's native component variants, and still leaves the host's app,
+theme scope, routes, authentication, persistence, and real search behavior in
+the application.
 
 The `fortal` preset contains that complete surface plus `base_button`, `code`,
 `heading`, `kbd`, `text`, and `typography`.

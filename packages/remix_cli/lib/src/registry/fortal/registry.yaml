@@ -221,6 +221,48 @@ items:
     exports:
       - recipes/composer_recipe.dart
 
+  dashboard_demo:
+    registryDependencies:
+      - badge
+      - button
+      - card
+      - chart
+      - checkbox
+      - code
+      - dashboard_shell
+      - data_table
+      - disclosure
+      - heading
+      - kbd
+      - link
+      - popover
+      - progress
+      - switch
+      - tabs
+      - text
+      - textfield
+      - typography
+    dependencies:
+      mix_chart: ^0.0.1-beta.1
+      remix_ui_icons: ^0.1.0
+    files:
+      - source: templates/dashboard_demo/dashboard_sample_data.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_sample_data.dart"
+      - source: templates/dashboard_demo/dashboard_overview_base.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_overview_base.dart"
+      - source: templates/dashboard_demo/dashboard_demo_base.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo_base.dart"
+      - source: templates/dashboard_demo/dashboard_demo_content.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo_content.dart"
+      - source: templates/dashboard_demo/dashboard_overview.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_overview.dart"
+      - source: templates/dashboard_demo/dashboard_demo.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo.dart"
+    exports:
+      - recipes/dashboard/dashboard_sample_data.dart
+      - recipes/dashboard/dashboard_overview.dart
+      - recipes/dashboard/dashboard_demo.dart
+
   dashboard_shell:
     registryDependencies:
       - theme
