@@ -1,10 +1,10 @@
-# This package ships no value for any measurement in this worksheet.
-# `Agent*Spec` names the slots; the application's recipe fills them. The
-# numbers below are the benchmark the anatomy was read from, not a default
-# this package resolves. See ../../docs/adr/0001-package-boundary.md.
+# Agent behavior supplies slots, not visual defaults. These measurements are
+# reference benchmarks, not the shipped default/Fortal recipe contract.
+# See ../README.md for reconciliation with the authored recipes and
+# ../../docs/adr/agent/0001-package-boundary.md for the behavior boundary.
 component: Composer
 flutter_name: AgentComposer
-status: behavior complete; no visual defaults shipped
+status: behavior complete; reference worksheet (recipes are separate)
 
 source:
   ref: industry agent-run composer contract
@@ -44,10 +44,10 @@ recipe_measurements:
   - hint 14/24 ink@0.55
   - empty/disabled send opacity 0.5
   - disabled opacity 0.6
-# The first proven application recipe for this anatomy. It composes the
-# installed card, text-area, and icon-button recipes and adds only the toolbar
-# row and the card inset; example/test/composer_recipe_test.dart exercises it.
-reference_recipe: example/lib/agent_recipes.dart
+# Current authored recipe bundles, relative to this worksheet.
+reference_recipes:
+  default: ../../lib/src/default/recipes/composer_recipe.dart
+  fortal: ../../lib/src/fortal/recipes/composer_recipe.dart
 
 behavior:
   - Field and send/stop share one card

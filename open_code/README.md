@@ -334,8 +334,9 @@ All three dogfood consumers are checked against the templates they installed:
 fvm dart run tool/check_open_code_dogfood.dart
 ```
 
-`apps/playground` holds every default item; `apps/dashboard` installs the
-eight Agent recipe closures from Fortal. The checker declares those expected items
+`apps/playground` holds every default item; `apps/demo` installs the non-Agent
+Fortal catalog; `apps/dashboard` installs the full Fortal catalog, including all
+eight Agent surfaces and recipes. The checker declares the Fortal items
 explicitly, so missing files are checked too. The CLI reads each consumer's
 `remix.yaml` to locate its installed source.
 

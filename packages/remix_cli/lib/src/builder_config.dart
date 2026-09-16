@@ -6,16 +6,20 @@ import 'package:yaml_edit/yaml_edit.dart';
 
 const specStylerBuilder = 'mix_generator:spec_styler_generator';
 
-/// Enables spec-styler generation only for the installed source that needs it.
+/// Enables generation for installed source without narrowing an existing builder.
 /// Existing settings and comments remain application-owned. Explicit opt-outs
 /// and split targets require the host to resolve the conflict, not an overwrite.
-String configureSpecStylers(String source, List<String> inputs) {
+String configureSpecStylers(
+  String source,
+  List<String> inputs, {
+  required String packageName,
+}) {
   final document = loadYaml(source);
   if (document != null && document is! YamlMap) {
     throw const FormatException('build.yaml must contain a map.');
   }
   if (document == null) {
-    final paths = inputs.toList()..sort();
+    final paths = inputs.map(Glob.quote).toList()..sort();
     final prefix = source.isEmpty || source.endsWith('\n')
         ? source
         : '$source\n';
@@ -32,9 +36,24 @@ String configureSpecStylers(String source, List<String> inputs) {
   if (targets != null && targets is! YamlMap) {
     throw const FormatException('build.yaml targets must be a map.');
   }
+  var targetKey = r'$default';
   if (targets is YamlMap) {
+    final defaultKeys = [
+      for (final key in targets.keys)
+        if (key == r'$default' ||
+            key == packageName ||
+            key == ':$packageName' ||
+            key == '$packageName:$packageName')
+          key as String,
+    ];
+    if (defaultKeys.length > 1) {
+      throw const FormatException(
+        'build.yaml declares the default target twice.',
+      );
+    }
+    if (defaultKeys.isNotEmpty) targetKey = defaultKeys.single;
     for (final entry in targets.entries) {
-      if (entry.key == r'$default') continue;
+      if (entry.key == targetKey) continue;
       if (entry.value is! YamlMap ||
           inputs.any((input) => _includes(entry.value['sources'], input))) {
         throw const FormatException(
@@ -44,7 +63,7 @@ String configureSpecStylers(String source, List<String> inputs) {
       }
     }
   }
-  final target = targets?[r'$default'];
+  final target = targets?[targetKey];
   if (target != null && target is! YamlMap) {
     throw const FormatException('build.yaml default target must be a map.');
   }
@@ -80,7 +99,7 @@ String configureSpecStylers(String source, List<String> inputs) {
     );
   }
   final editor = YamlEditor(source);
-  final path = <String>['targets', r'$default', 'builders', key];
+  final path = <String>['targets', targetKey, 'builders', key];
   for (var length = 1; length <= path.length; length++) {
     final prefix = path.take(length).toList();
     if (editor.parseAt(prefix, orElse: () => wrapAsYamlNode(null)).value ==
@@ -90,9 +109,11 @@ String configureSpecStylers(String source, List<String> inputs) {
   }
   editor.update([...path, 'enabled'], true);
   final generateFor = existing?['generate_for'];
-  if (existing == null ||
-      (existing['enabled'] != true && generateFor == null)) {
-    editor.update([...path, 'generate_for'], inputs.toList()..sort());
+  if (existing == null) {
+    editor.update([
+      ...path,
+      'generate_for',
+    ], inputs.map(Glob.quote).toList()..sort());
   } else if (generateFor != null) {
     final missing = inputs
         .where((input) => !_includes(generateFor, input))
@@ -110,14 +131,17 @@ String configureSpecStylers(String source, List<String> inputs) {
       if (missing.isNotEmpty) {
         editor.update(
           [...path, 'generate_for', 'include'],
-          [...generateFor['include'] as List? ?? const [], ...missing..sort()],
+          [
+            ...generateFor['include'] as List? ?? const [],
+            ...missing.map(Glob.quote).toList()..sort(),
+          ],
         );
       }
     } else if (generateFor is YamlList) {
       if (missing.isNotEmpty) {
         editor.update(
           [...path, 'generate_for'],
-          [...generateFor, ...missing..sort()],
+          [...generateFor, ...missing.map(Glob.quote).toList()..sort()],
         );
       }
     } else {
@@ -144,5 +168,6 @@ bool _matches(Object? patterns, String input, {required bool defaultValue}) {
       'build.yaml source patterns must be lists of strings.',
     );
   }
+  if (patterns.isEmpty) return defaultValue;
   return patterns.cast<String>().any((pattern) => Glob(pattern).matches(input));
 }

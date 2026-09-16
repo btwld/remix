@@ -121,6 +121,50 @@ void main() {
     expect(snapshotFiles(root), before);
   });
 
+  for (final target in ['consumer', ':consumer', 'consumer:consumer']) {
+    test(
+      'Agent install preserves named default $target in every mode',
+      () async {
+        writeRequiredPubspec(root, remixUiIcons: '^0.1.0');
+        writeRequiredLock(root, remixUiIcons: '0.1.0');
+        final config = File(p.join(root.path, 'build.yaml'));
+        config.writeAsStringSync('targets: {$target: {sources: []}}');
+        final output = <String>[];
+        final runner = happyRunner(
+          root,
+          writeLockOnPubGet: false,
+          runRealFormatter: true,
+          runRealGit: true,
+        );
+        final installer = Installer(
+          projectRoot: root,
+          writeOut: output.add,
+          processRunner: runner,
+        );
+        final before = snapshotFiles(root);
+        for (final mode in [AddMode.dryRun, AddMode.diff]) {
+          await installer.add(AddOptions(item: 'activity', mode: mode));
+          expect(snapshotFiles(root), before);
+        }
+        await installer.add(
+          const AddOptions(item: 'activity', mode: AddMode.write),
+        );
+        expect(config.readAsStringSync(), contains(target));
+        expect(config.readAsStringSync(), isNot(contains(r'$default')));
+        final installed = snapshotFiles(root);
+        output.clear();
+        await installer.add(
+          const AddOptions(item: 'activity', mode: AddMode.diff),
+        );
+        expect(output.join('\n'), contains('No authored-source differences.'));
+        await installer.add(
+          const AddOptions(item: 'activity', mode: AddMode.write),
+        );
+        expect(snapshotFiles(root), installed);
+      },
+    );
+  }
+
   test(
     'disabled Agent generation fails preflight without processes or writes',
     () async {

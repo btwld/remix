@@ -274,7 +274,12 @@ final class Installer {
       validateProjectFilePath(root, 'build.yaml');
       final file = _projectFile(root, 'build.yaml');
       final before = file.existsSync() ? file.readAsStringSync() : '';
-      final after = configureSpecStylers(before, specInputs);
+      final after = configureSpecStylers(
+        before,
+        specInputs,
+        packageName:
+            (loadYaml(pubspec.readAsStringSync()) as YamlMap)['name'] as String,
+      );
       if (before != after) builderConfiguration = after;
     }
 
