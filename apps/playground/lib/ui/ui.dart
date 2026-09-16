@@ -49,6 +49,7 @@ export 'models/statuses.dart';
 export 'recipes/activity_recipe.dart';
 export 'recipes/answer_recipe.dart';
 export 'recipes/composer_recipe.dart';
+export 'recipes/dashboard/dashboard_shell.dart';
 export 'recipes/execution_recipe.dart';
 export 'recipes/message_recipe.dart';
 export 'recipes/permission_recipe.dart';
