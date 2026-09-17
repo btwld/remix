@@ -12,6 +12,7 @@ import 'entries/card_entry.dart';
 import 'entries/checkbox_entry.dart';
 import 'entries/checkbox_group_entry.dart';
 import 'entries/divider_entry.dart';
+import 'entries/dashboard_shell_entry.dart';
 import 'entries/progress_entry.dart';
 import 'entries/radio_entry.dart';
 import 'entries/select_entry.dart';
@@ -33,6 +34,12 @@ Widget _scope(BuildContext context, Widget child) => PlaygroundThemeScope(
 );
 
 final Map<String, WidgetBuilder> components = {
+  'dashboard_shell': (context) => PreviewShell(
+    initialSize: const Size(1200, 800),
+    child: Builder(
+      builder: (context) => _scope(context, const DashboardShellExample()),
+    ),
+  ),
   'agent-activity': (context) =>
       PreviewShell(child: Builder(builder: buildAgentActivity)),
   'agent-answer': (context) =>
