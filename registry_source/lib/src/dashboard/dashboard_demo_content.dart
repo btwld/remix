@@ -246,11 +246,7 @@ class _RegistryDashboardDemoContentState
     ],
   );
 
-  Widget _charts() => kit.section(
-    'Analytics collection',
-    'Line, grouped bar, and donut patterns for real dashboard data.',
-    kit.charts(widget.data),
-  );
+  Widget _charts() => kit.charts(widget.data);
 
   Widget _actions() => Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,

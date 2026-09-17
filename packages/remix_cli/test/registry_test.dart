@@ -286,7 +286,11 @@ items:
             .map((dependency) => dependency.name)
             .toList();
 
-        expect(item.files, hasLength(6), reason: preset);
+        expect(
+          item.files,
+          hasLength(preset == 'default' ? 12 : 22),
+          reason: preset,
+        );
         expect(item.generated, isEmpty, reason: preset);
         expect(item.exports, [
           'recipes/dashboard/dashboard_sample_data.dart',
@@ -298,7 +302,7 @@ items:
           closure,
           containsAll(['dashboard_shell', 'card', 'chart', 'data_table']),
         );
-        expect(closure, everyElement(isNot(isIn(_agentRecipeNames))));
+        expect(closure, containsAll(_agentRecipeNames));
 
         final joined = (await Future.wait(
           item.files.map(catalog.readTemplate),
@@ -307,6 +311,9 @@ items:
         expect(joined, contains('enum {{typePrefix}}DashboardDemoPage'));
         expect(joined, contains('class {{typePrefix}}DashboardOverview'));
         expect(joined, contains('{{valuePrefix}}DashboardSampleData'));
+        expect(joined, contains('{{typePrefix}}DashboardChatPage'));
+        expect(joined, contains('{{typePrefix}}Message('));
+        expect(joined, contains("import '../../components/message.dart';"));
         expect(joined, isNot(contains('package:flutter/material.dart')));
         expect(joined, isNot(contains('registry_source')));
       }

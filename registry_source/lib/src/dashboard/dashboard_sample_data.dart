@@ -34,17 +34,32 @@ final class RegistryDashboardRecord {
   final String amount;
 }
 
+/// One event in the overview activity feed.
+final class RegistryDashboardActivity {
+  const RegistryDashboardActivity({
+    required this.title,
+    required this.detail,
+    required this.relativeTime,
+  });
+
+  final String title;
+  final String detail;
+  final String relativeTime;
+}
+
 /// Local, deterministic starter content intended to be edited after install.
 final class RegistryDashboardSampleData {
   const RegistryDashboardSampleData({
     required this.metrics,
     required this.revenue,
     required this.records,
+    this.activities = const [],
   });
 
   final List<RegistryDashboardMetric> metrics;
   final List<RegistryDashboardPoint> revenue;
   final List<RegistryDashboardRecord> records;
+  final List<RegistryDashboardActivity> activities;
 }
 
 /// The editable data rendered by [RegistryDashboardOverview] by default.
@@ -104,6 +119,38 @@ const registryDashboardSampleData = RegistryDashboardSampleData(
       customer: 'Riley Chen',
       status: 'Fulfilled',
       amount: r'$640',
+    ),
+  ],
+  activities: [
+    RegistryDashboardActivity(
+      title: 'New customer',
+      detail: 'Camila joined the Business plan',
+      relativeTime: '12 min ago',
+    ),
+    RegistryDashboardActivity(
+      title: 'Payment received',
+      detail: r'ORD-1048 · $1,249.00',
+      relativeTime: '38 min ago',
+    ),
+    RegistryDashboardActivity(
+      title: 'Order requires review',
+      detail: 'ORD-1047 is awaiting confirmation',
+      relativeTime: '1 hr ago',
+    ),
+    RegistryDashboardActivity(
+      title: 'Order fulfilled',
+      detail: 'ORD-1046 shipped to Ava Wilson',
+      relativeTime: '3 hrs ago',
+    ),
+    RegistryDashboardActivity(
+      title: 'New customer',
+      detail: 'Henry accepted his invitation',
+      relativeTime: '5 hrs ago',
+    ),
+    RegistryDashboardActivity(
+      title: 'Refund processed',
+      detail: r'ORD-1045 · $189.00',
+      relativeTime: 'Yesterday',
     ),
   ],
 );

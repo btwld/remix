@@ -72,6 +72,107 @@ enum RegistryDashboardDemoPage {
   final IconData icon;
 }
 
+/// Stable screen inventory shared by both presets and parity tests.
+const registryDashboardDemoSectionIds =
+    <RegistryDashboardDemoPage, List<String>>{
+      RegistryDashboardDemoPage.overview: [
+        'metrics',
+        'analytics',
+        'activity',
+        'recent-orders',
+      ],
+      RegistryDashboardDemoPage.chat: [
+        'starters',
+        'transcript',
+        'plan',
+        'activity',
+        'permission',
+        'execution',
+        'answer',
+        'composer',
+      ],
+      RegistryDashboardDemoPage.customers: [
+        'search',
+        'selection-actions',
+        'customer-table',
+      ],
+      RegistryDashboardDemoPage.orders: ['status-filters', 'order-table'],
+      RegistryDashboardDemoPage.settings: [
+        'profile',
+        'preferences',
+        'appearance',
+        'danger-zone',
+      ],
+      RegistryDashboardDemoPage.charts: [
+        'line-area',
+        'bar-charts',
+        'pie-donut',
+      ],
+      RegistryDashboardDemoPage.actions: [
+        'button',
+        'icon-button',
+        'toggle',
+        'states',
+      ],
+      RegistryDashboardDemoPage.forms: [
+        'text-field',
+        'text-area',
+        'segmented-control',
+        'select',
+        'toggle-group',
+        'checkbox',
+        'checkbox-group',
+        'radio',
+        'switch',
+        'slider',
+        'states',
+      ],
+      RegistryDashboardDemoPage.dataDisplay: [
+        'avatar',
+        'badge',
+        'card',
+        'callout',
+        'data-list',
+        'skeleton',
+        'progress',
+        'spinner',
+        'divider',
+      ],
+      RegistryDashboardDemoPage.overlays: [
+        'dialog',
+        'popover',
+        'tooltip',
+        'menu',
+      ],
+      RegistryDashboardDemoPage.navigation: [
+        'sidebar',
+        'tabs',
+        'disclosure',
+        'accordion',
+      ],
+      RegistryDashboardDemoPage.typography: [
+        'text-scale',
+        'weights',
+        'heading-level-size',
+        'code',
+        'keyboard-keys',
+        'links',
+        'accent-contrast',
+        'wrapping-truncation',
+      ],
+    };
+
+/// Deterministic behaviors exercised by the parity fixture suite.
+const registryDashboardDemoInteractionIds = <String>[
+  'navigate-and-retain-page-state',
+  'search-local-and-global',
+  'sort-select-bulk-undo-paginate',
+  'filter-export-row-actions',
+  'agent-success-permission-failure-retry-stop-copy-follow',
+  'dialog-popover-tooltip-menu-toast',
+  'appearance-notifications-theme-account',
+];
+
 /// The complete sidebar inventory used by both registry presets.
 final registryDashboardDemoSections =
     <RemixSidebarSection<RegistryDashboardDemoPage>>[

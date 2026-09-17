@@ -441,6 +441,29 @@ const defaultPreset = PresetSpec(
     ),
     GroupedRecipeItemSpec(
       name: 'dashboard_demo',
+      registryDependencies: [
+        'accordion',
+        'activity',
+        'activity_recipe',
+        'answer',
+        'answer_recipe',
+        'composer',
+        'composer_recipe',
+        'execution',
+        'execution_recipe',
+        'message',
+        'message_recipe',
+        'permission',
+        'permission_recipe',
+        'plan',
+        'plan_recipe',
+        'radio',
+        'skeleton',
+        'spinner',
+        'toggle_group',
+        'transcript',
+        'transcript_recipe',
+      ],
       files: [
         GroupedRecipeFileSpec(
           source: '../dashboard/dashboard_sample_data.dart',
@@ -467,8 +490,44 @@ const defaultPreset = PresetSpec(
           sourceValueWord: 'registry',
         ),
         GroupedRecipeFileSpec(
+          source: '../dashboard/dashboard_demo_chat.dart',
+          target: 'recipes/dashboard/dashboard_demo_chat.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
+          source: '../dashboard/dashboard_demo_charts.dart',
+          target: 'recipes/dashboard/dashboard_demo_charts.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
+          source: '../dashboard/dashboard_demo_records.dart',
+          target: 'recipes/dashboard/dashboard_demo_records.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
           source: 'recipes/dashboard/dashboard_overview.dart',
           target: 'recipes/dashboard/dashboard_overview.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
+          source: 'recipes/dashboard/dashboard_demo_galleries.dart',
+          target: 'recipes/dashboard/dashboard_demo_galleries.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
+          source: 'recipes/dashboard/dashboard_demo_records.dart',
+          target: 'recipes/dashboard/dashboard_demo_records_page.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
+          source: 'recipes/dashboard/dashboard_demo_settings.dart',
+          target: 'recipes/dashboard/dashboard_demo_settings.dart',
           sourceTypeWord: 'Registry',
           sourceValueWord: 'registry',
         ),
@@ -553,6 +612,29 @@ const fortalPreset = PresetSpec(
     ),
     GroupedRecipeItemSpec(
       name: 'dashboard_demo',
+      registryDependencies: [
+        'activity',
+        'activity_recipe',
+        'answer',
+        'answer_recipe',
+        'composer',
+        'composer_recipe',
+        'execution',
+        'execution_recipe',
+        'message',
+        'message_recipe',
+        'permission',
+        'permission_recipe',
+        'plan',
+        'plan_recipe',
+        'accordion',
+        'radio',
+        'skeleton',
+        'spinner',
+        'toggle_group',
+        'transcript',
+        'transcript_recipe',
+      ],
       files: [
         GroupedRecipeFileSpec(
           source: '../dashboard/dashboard_sample_data.dart',
@@ -579,8 +661,104 @@ const fortalPreset = PresetSpec(
           sourceValueWord: 'registry',
         ),
         GroupedRecipeFileSpec(
+          source: '../dashboard/dashboard_demo_chat.dart',
+          target: 'recipes/dashboard/dashboard_demo_chat.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
+          source: '../dashboard/dashboard_demo_charts.dart',
+          target: 'recipes/dashboard/dashboard_demo_charts.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
+          source: '../dashboard/dashboard_demo_records.dart',
+          target: 'recipes/dashboard/dashboard_demo_records.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
           source: 'recipes/dashboard/dashboard_overview.dart',
           target: 'recipes/dashboard/dashboard_overview.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
+          source: 'recipes/dashboard/dashboard_demo_ui.dart',
+          target: 'recipes/dashboard/dashboard_demo_ui.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
+          source: 'recipes/dashboard/dashboard_demo_text.dart',
+          target: 'recipes/dashboard/dashboard_demo_text.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
+          source: 'recipes/dashboard/dashboard_demo_typography.dart',
+          target: 'recipes/dashboard/dashboard_demo_typography.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
+          source: 'recipes/dashboard/dashboard_demo_page_header.dart',
+          target: 'recipes/dashboard/dashboard_demo_page_header.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
+          source: 'recipes/dashboard/dashboard_demo_gallery_scaffold.dart',
+          target: 'recipes/dashboard/dashboard_demo_gallery_scaffold.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
+          source: 'recipes/dashboard/dashboard_demo_gallery_actions.dart',
+          target: 'recipes/dashboard/dashboard_demo_gallery_actions.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
+          source: 'recipes/dashboard/dashboard_demo_gallery_forms.dart',
+          target: 'recipes/dashboard/dashboard_demo_gallery_forms.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
+          source: 'recipes/dashboard/dashboard_demo_gallery_display.dart',
+          target: 'recipes/dashboard/dashboard_demo_gallery_display.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
+          source: 'recipes/dashboard/dashboard_demo_gallery_overlays.dart',
+          target: 'recipes/dashboard/dashboard_demo_gallery_overlays.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
+          source: 'recipes/dashboard/dashboard_demo_gallery_navigation.dart',
+          target: 'recipes/dashboard/dashboard_demo_gallery_navigation.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
+          source: 'recipes/dashboard/dashboard_demo_gallery_typography.dart',
+          target: 'recipes/dashboard/dashboard_demo_gallery_typography.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
+          source: 'recipes/dashboard/dashboard_demo_records.dart',
+          target: 'recipes/dashboard/dashboard_demo_records_page.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
+        ),
+        GroupedRecipeFileSpec(
+          source: 'recipes/dashboard/dashboard_demo_settings.dart',
+          target: 'recipes/dashboard/dashboard_demo_settings.dart',
           sourceTypeWord: 'Registry',
           sourceValueWord: 'registry',
         ),
@@ -1462,7 +1640,18 @@ final class PresetBuilder {
             // accepted relative directive resolves to an explicitly owned
             // source, including grouped sources in a sibling directory.
           } else if (groupedRecipe) {
-            failures.add('$path: missing relative source $uri');
+            final behaviorPrefix = behavior == null
+                ? null
+                : '../${behavior.directory}/';
+            final behaviorSource =
+                behaviorPrefix != null &&
+                resolved.startsWith(behaviorPrefix) &&
+                File(
+                  p.joinAll([sourceRoot.path, ...p.posix.split(resolved)]),
+                ).existsSync();
+            if (!behaviorSource) {
+              failures.add('$path: missing relative source $uri');
+            }
           } else if (resolved.startsWith('../')) {
             // Only a recipe may leave the preset, and only for the behavior
             // components it styles. Anything else would install an import
@@ -1589,6 +1778,7 @@ final class PresetBuilder {
     required String? sourceTypeWord,
     required String? sourceValueWord,
   }) {
+    final behavior = spec.behavior;
     var rewritten = authored.replaceAllMapped(_directivePattern, (match) {
       final uri = match.group(2)!;
       if (uri.startsWith('package:') || uri.startsWith('dart:')) {
@@ -1599,7 +1789,15 @@ final class PresetBuilder {
       final resolved = p.posix.normalize(
         p.posix.join(p.posix.dirname(sourcePath), uri),
       );
-      final installed = installedTargets[resolved];
+      var installed = installedTargets[resolved];
+      final behaviorPrefix = behavior == null
+          ? null
+          : '../${behavior.directory}/';
+      if (installed == null &&
+          behaviorPrefix != null &&
+          resolved.startsWith(behaviorPrefix)) {
+        installed = resolved.substring(behaviorPrefix.length);
+      }
       if (installed == null) return match.group(0)!;
       final rebased = p.posix.relative(
         installed,
@@ -1611,6 +1809,17 @@ final class PresetBuilder {
       return '${whole.substring(0, uriStart)}$rebased'
           '${whole.substring(uriEnd)}';
     });
+    if (behavior != null) {
+      rewritten = rewritten
+          .replaceAllMapped(
+            RegExp('(?<![A-Za-z0-9_])${behavior.typeWord}(?=[A-Z])'),
+            (_) => spec.typeWord,
+          )
+          .replaceAllMapped(
+            RegExp('(?<![A-Za-z0-9_])${behavior.valueWord}(?=[A-Z])'),
+            (_) => spec.valueWord,
+          );
+    }
     if (sourceTypeWord != null && sourceValueWord != null) {
       rewritten = rewritten
           .replaceAll(sourceTypeWord, spec.typeWord)

@@ -108,12 +108,43 @@ const _dashboardShellFiles = <String>[
   'recipes/dashboard/dashboard_shell.dart',
 ];
 
-const _dashboardFiles = <String>[
+const _defaultDashboardFiles = <String>[
   'recipes/dashboard/dashboard_sample_data.dart',
   'recipes/dashboard/dashboard_overview_base.dart',
   'recipes/dashboard/dashboard_demo_base.dart',
   'recipes/dashboard/dashboard_demo_content.dart',
+  'recipes/dashboard/dashboard_demo_chat.dart',
+  'recipes/dashboard/dashboard_demo_charts.dart',
+  'recipes/dashboard/dashboard_demo_records.dart',
   'recipes/dashboard/dashboard_overview.dart',
+  'recipes/dashboard/dashboard_demo_galleries.dart',
+  'recipes/dashboard/dashboard_demo_records_page.dart',
+  'recipes/dashboard/dashboard_demo_settings.dart',
+  'recipes/dashboard/dashboard_demo.dart',
+];
+
+const _fortalDashboardFiles = <String>[
+  'recipes/dashboard/dashboard_sample_data.dart',
+  'recipes/dashboard/dashboard_overview_base.dart',
+  'recipes/dashboard/dashboard_demo_base.dart',
+  'recipes/dashboard/dashboard_demo_content.dart',
+  'recipes/dashboard/dashboard_demo_chat.dart',
+  'recipes/dashboard/dashboard_demo_charts.dart',
+  'recipes/dashboard/dashboard_demo_records.dart',
+  'recipes/dashboard/dashboard_overview.dart',
+  'recipes/dashboard/dashboard_demo_ui.dart',
+  'recipes/dashboard/dashboard_demo_text.dart',
+  'recipes/dashboard/dashboard_demo_typography.dart',
+  'recipes/dashboard/dashboard_demo_page_header.dart',
+  'recipes/dashboard/dashboard_demo_gallery_scaffold.dart',
+  'recipes/dashboard/dashboard_demo_gallery_actions.dart',
+  'recipes/dashboard/dashboard_demo_gallery_forms.dart',
+  'recipes/dashboard/dashboard_demo_gallery_display.dart',
+  'recipes/dashboard/dashboard_demo_gallery_overlays.dart',
+  'recipes/dashboard/dashboard_demo_gallery_navigation.dart',
+  'recipes/dashboard/dashboard_demo_gallery_typography.dart',
+  'recipes/dashboard/dashboard_demo_records_page.dart',
+  'recipes/dashboard/dashboard_demo_settings.dart',
   'recipes/dashboard/dashboard_demo.dart',
 ];
 
@@ -190,7 +221,7 @@ const _defaultPreset = _PresetContract(
   nonGeneratedItems: {'sidebar_layout', 'dashboard_shell', 'dashboard_demo'},
   itemFileOverrides: {
     'dashboard_shell': _dashboardShellFiles,
-    'dashboard_demo': _dashboardFiles,
+    'dashboard_demo': _defaultDashboardFiles,
   },
   focusedClosures: {
     'dashboard_shell': [
@@ -206,8 +237,17 @@ const _defaultPreset = _PresetContract(
     ],
     'dashboard_demo': [
       'theme',
+      'models',
+      'support',
+      'accordion',
+      'activity',
+      'activity_recipe',
+      'answer',
+      'answer_recipe',
+      'avatar',
       'badge',
       'button',
+      'callout',
       'card',
       'chart',
       'icon_button',
@@ -219,14 +259,37 @@ const _defaultPreset = _PresetContract(
       'textfield',
       'dashboard_shell',
       'checkbox',
+      'composer',
+      'composer_recipe',
+      'data_list',
       'select',
       'data_table',
+      'dialog',
       'disclosure',
+      'divider',
+      'execution',
+      'execution_recipe',
       'link',
+      'menu',
+      'message',
+      'message_recipe',
+      'permission',
+      'permission_recipe',
+      'plan',
+      'plan_recipe',
       'popover',
       'progress',
+      'radio',
+      'segmented_control',
+      'skeleton',
+      'slider',
+      'spinner',
       'switch',
       'tabs',
+      'toast',
+      'toggle_group',
+      'transcript',
+      'transcript_recipe',
       'dashboard_demo',
     ],
   },
@@ -271,7 +334,7 @@ const _fortalPreset = _PresetContract(
   },
   itemFileOverrides: {
     'dashboard_shell': _dashboardShellFiles,
-    'dashboard_demo': _dashboardFiles,
+    'dashboard_demo': _fortalDashboardFiles,
   },
   focusedClosures: {
     'dashboard_shell': [
@@ -290,8 +353,17 @@ const _fortalPreset = _PresetContract(
     ],
     'dashboard_demo': [
       'theme',
+      'models',
+      'support',
+      'accordion',
+      'activity',
+      'activity_recipe',
+      'answer',
+      'answer_recipe',
+      'avatar',
       'badge',
       'button',
+      'callout',
       'card',
       'chart',
       'base_button',
@@ -307,16 +379,39 @@ const _fortalPreset = _PresetContract(
       'dashboard_shell',
       'checkbox',
       'code',
+      'composer',
+      'composer_recipe',
+      'data_list',
       'select',
       'data_table',
+      'dialog',
       'disclosure',
+      'divider',
+      'execution',
+      'execution_recipe',
       'heading',
       'kbd',
       'link',
+      'menu',
+      'message',
+      'message_recipe',
+      'permission',
+      'permission_recipe',
+      'plan',
+      'plan_recipe',
       'popover',
       'progress',
+      'radio',
+      'segmented_control',
+      'skeleton',
+      'slider',
+      'spinner',
       'switch',
       'tabs',
+      'toast',
+      'toggle_group',
+      'transcript',
+      'transcript_recipe',
       'dashboard_demo',
     ],
   },
@@ -390,6 +485,8 @@ final class _PresetContract {
   ];
 
   List<String> _itemFiles(String item) {
+    final shared = sharedItems[item];
+    if (shared != null) return shared;
     final explicit = itemFileOverrides[item];
     if (explicit != null) return explicit;
     if (item == 'icons') return const ['icons.dart'];
@@ -906,7 +1003,8 @@ Future<_Failure?> _checkFocusedItem({
           ? 'recipes/$agent.dart'
           : 'components/$agent.dart',
   };
-  if (found.intersection(forbiddenRecipeFiles).isNotEmpty) {
+  if (item == 'dashboard_shell' &&
+      found.intersection(forbiddenRecipeFiles).isNotEmpty) {
     return _Failure('focused $item unexpectedly installed Agent source');
   }
   if (item == 'dashboard_shell' &&

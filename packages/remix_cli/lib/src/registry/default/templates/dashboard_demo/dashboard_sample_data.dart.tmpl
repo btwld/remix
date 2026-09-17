@@ -34,17 +34,32 @@ final class {{typePrefix}}DashboardRecord {
   final String amount;
 }
 
+/// One event in the overview activity feed.
+final class {{typePrefix}}DashboardActivity {
+  const {{typePrefix}}DashboardActivity({
+    required this.title,
+    required this.detail,
+    required this.relativeTime,
+  });
+
+  final String title;
+  final String detail;
+  final String relativeTime;
+}
+
 /// Local, deterministic starter content intended to be edited after install.
 final class {{typePrefix}}DashboardSampleData {
   const {{typePrefix}}DashboardSampleData({
     required this.metrics,
     required this.revenue,
     required this.records,
+    this.activities = const [],
   });
 
   final List<{{typePrefix}}DashboardMetric> metrics;
   final List<{{typePrefix}}DashboardPoint> revenue;
   final List<{{typePrefix}}DashboardRecord> records;
+  final List<{{typePrefix}}DashboardActivity> activities;
 }
 
 /// The editable data rendered by [{{typePrefix}}DashboardOverview] by default.
@@ -104,6 +119,38 @@ const {{valuePrefix}}DashboardSampleData = {{typePrefix}}DashboardSampleData(
       customer: 'Riley Chen',
       status: 'Fulfilled',
       amount: r'$640',
+    ),
+  ],
+  activities: [
+    {{typePrefix}}DashboardActivity(
+      title: 'New customer',
+      detail: 'Camila joined the Business plan',
+      relativeTime: '12 min ago',
+    ),
+    {{typePrefix}}DashboardActivity(
+      title: 'Payment received',
+      detail: r'ORD-1048 · $1,249.00',
+      relativeTime: '38 min ago',
+    ),
+    {{typePrefix}}DashboardActivity(
+      title: 'Order requires review',
+      detail: 'ORD-1047 is awaiting confirmation',
+      relativeTime: '1 hr ago',
+    ),
+    {{typePrefix}}DashboardActivity(
+      title: 'Order fulfilled',
+      detail: 'ORD-1046 shipped to Ava Wilson',
+      relativeTime: '3 hrs ago',
+    ),
+    {{typePrefix}}DashboardActivity(
+      title: 'New customer',
+      detail: 'Henry accepted his invitation',
+      relativeTime: '5 hrs ago',
+    ),
+    {{typePrefix}}DashboardActivity(
+      title: 'Refund processed',
+      detail: r'ORD-1045 · $189.00',
+      relativeTime: 'Yesterday',
     ),
   ],
 );

@@ -679,9 +679,29 @@ packages:
         final demoContent = File(
           p.join(dashboardDirectory.path, 'dashboard_demo_content.dart'),
         );
+        final demoChat = File(
+          p.join(dashboardDirectory.path, 'dashboard_demo_chat.dart'),
+        );
+        final demoCharts = File(
+          p.join(dashboardDirectory.path, 'dashboard_demo_charts.dart'),
+        );
+        final demoRecords = File(
+          p.join(dashboardDirectory.path, 'dashboard_demo_records.dart'),
+        );
+        final demoRecordsPage = File(
+          p.join(dashboardDirectory.path, 'dashboard_demo_records_page.dart'),
+        );
+        final demoSettings = File(
+          p.join(dashboardDirectory.path, 'dashboard_demo_settings.dart'),
+        );
         expect(dashboardDemo.existsSync(), isTrue);
         expect(demoBase.existsSync(), isTrue);
         expect(demoContent.existsSync(), isTrue);
+        expect(demoChat.existsSync(), isTrue);
+        expect(demoCharts.existsSync(), isTrue);
+        expect(demoRecords.existsSync(), isTrue);
+        expect(demoRecordsPage.existsSync(), isTrue);
+        expect(demoSettings.existsSync(), isTrue);
         expect(overview.existsSync(), isTrue);
         expect(overviewBase.existsSync(), isTrue);
         expect(

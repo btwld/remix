@@ -136,12 +136,18 @@ void main() {
           'recipes/dashboard/dashboard_overview_base.dart',
           'recipes/dashboard/dashboard_demo_base.dart',
           'recipes/dashboard/dashboard_demo_content.dart',
+          'recipes/dashboard/dashboard_demo_chat.dart',
+          'recipes/dashboard/dashboard_demo_charts.dart',
+          'recipes/dashboard/dashboard_demo_records.dart',
           'recipes/dashboard/dashboard_overview.dart',
+          'recipes/dashboard/dashboard_demo_galleries.dart',
+          'recipes/dashboard/dashboard_demo_records_page.dart',
+          'recipes/dashboard/dashboard_demo_settings.dart',
           'recipes/dashboard/dashboard_demo.dart',
         ],
         nonGenerated: true,
       ),
-      hasLength(6),
+      hasLength(12),
     );
   });
 
@@ -449,7 +455,13 @@ void _writeInstalledUi(Directory app) {
               'recipes/dashboard/dashboard_overview_base.dart',
               'recipes/dashboard/dashboard_demo_base.dart',
               'recipes/dashboard/dashboard_demo_content.dart',
+              'recipes/dashboard/dashboard_demo_chat.dart',
+              'recipes/dashboard/dashboard_demo_charts.dart',
+              'recipes/dashboard/dashboard_demo_records.dart',
               'recipes/dashboard/dashboard_overview.dart',
+              'recipes/dashboard/dashboard_demo_galleries.dart',
+              'recipes/dashboard/dashboard_demo_records_page.dart',
+              'recipes/dashboard/dashboard_demo_settings.dart',
               'recipes/dashboard/dashboard_demo.dart',
             ]
           : item == 'dashboard_shell'

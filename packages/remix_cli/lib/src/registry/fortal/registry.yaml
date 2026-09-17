@@ -223,24 +223,56 @@ items:
 
   dashboard_demo:
     registryDependencies:
+      - theme
+      - accordion
+      - activity
+      - activity_recipe
+      - answer
+      - answer_recipe
+      - avatar
       - badge
       - button
+      - callout
       - card
       - chart
       - checkbox
       - code
+      - composer
+      - composer_recipe
       - dashboard_shell
       - data_table
+      - dialog
       - disclosure
+      - divider
+      - execution
+      - execution_recipe
       - heading
+      - icon_button
       - kbd
       - link
+      - menu
+      - message
+      - message_recipe
+      - permission
+      - permission_recipe
+      - plan
+      - plan_recipe
       - popover
       - progress
+      - radio
+      - segmented_control
+      - select
+      - skeleton
+      - slider
+      - spinner
       - switch
       - tabs
       - text
       - textfield
+      - toast
+      - toggle_group
+      - transcript
+      - transcript_recipe
       - typography
     dependencies:
       mix_chart: ^0.0.1-beta.1
@@ -254,8 +286,40 @@ items:
         target: "@ui/recipes/dashboard/dashboard_demo_base.dart"
       - source: templates/dashboard_demo/dashboard_demo_content.dart.tmpl
         target: "@ui/recipes/dashboard/dashboard_demo_content.dart"
+      - source: templates/dashboard_demo/dashboard_demo_chat.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo_chat.dart"
+      - source: templates/dashboard_demo/dashboard_demo_charts.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo_charts.dart"
+      - source: templates/dashboard_demo/dashboard_demo_records.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo_records.dart"
       - source: templates/dashboard_demo/dashboard_overview.dart.tmpl
         target: "@ui/recipes/dashboard/dashboard_overview.dart"
+      - source: templates/dashboard_demo/dashboard_demo_ui.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo_ui.dart"
+      - source: templates/dashboard_demo/dashboard_demo_text.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo_text.dart"
+      - source: templates/dashboard_demo/dashboard_demo_typography.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo_typography.dart"
+      - source: templates/dashboard_demo/dashboard_demo_page_header.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo_page_header.dart"
+      - source: templates/dashboard_demo/dashboard_demo_gallery_scaffold.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo_gallery_scaffold.dart"
+      - source: templates/dashboard_demo/dashboard_demo_gallery_actions.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo_gallery_actions.dart"
+      - source: templates/dashboard_demo/dashboard_demo_gallery_forms.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo_gallery_forms.dart"
+      - source: templates/dashboard_demo/dashboard_demo_gallery_display.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo_gallery_display.dart"
+      - source: templates/dashboard_demo/dashboard_demo_gallery_overlays.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo_gallery_overlays.dart"
+      - source: templates/dashboard_demo/dashboard_demo_gallery_navigation.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo_gallery_navigation.dart"
+      - source: templates/dashboard_demo/dashboard_demo_gallery_typography.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo_gallery_typography.dart"
+      - source: templates/dashboard_demo/dashboard_demo_records_page.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo_records_page.dart"
+      - source: templates/dashboard_demo/dashboard_demo_settings.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo_settings.dart"
       - source: templates/dashboard_demo/dashboard_demo.dart.tmpl
         target: "@ui/recipes/dashboard/dashboard_demo.dart"
     exports:
