@@ -21,12 +21,20 @@ runs:
     # Caching the SDK alone leaves the slowest downloads uncached. The
     # open-code checks build throwaway consumer apps that resolve from pub.dev
     # on every run, and those downloads are why a cold pipeline ran ~30 minutes
-    # against a warm one's ~20. The key is the lockfile: any dependency change
-    # invalidates it, so a stale cache cannot hide a real resolution failure.
+    # against a warm one's ~20.
+    #
+    # The key covers both resolutions the cache actually serves. `pubspec.lock`
+    # is this workspace's; the registry manifests are where the throwaway apps'
+    # dependencies come from, and keying on the workspace lockfile alone left
+    # every registry-only change re-downloading against a partial restore. Any
+    # change to either invalidates the key, so a stale cache still cannot hide
+    # a real resolution failure.
     - uses: actions/cache@v4
       with:
         path: ~/.pub-cache
-        key: pub-${{ runner.os }}-${{ hashFiles('pubspec.lock') }}
+        key: >-
+          pub-${{ runner.os }}-${{ hashFiles('pubspec.lock',
+          'packages/remix_cli/lib/src/registry/*/registry.yaml') }}
         restore-keys: pub-${{ runner.os }}-
 
     # `melos` is a dev_dependency, so resolving the workspace is also what puts

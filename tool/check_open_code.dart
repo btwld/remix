@@ -15,6 +15,7 @@ library;
 
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:yaml/yaml.dart';
 
@@ -688,6 +689,17 @@ Future<_Failure?> _checkInTemporaryApp({
 
 /// Each surface must compile with only its own dependency closure. The full
 /// gallery installs every item and would otherwise mask an omitted dependency.
+///
+/// The items share nothing: each gets its own directory, its own resolution and
+/// its own generator run, so they are run through a small pool rather than one
+/// at a time -- this loop was the longest stretch of the open-code job. The
+/// pool is bounded by the core count because every worker is a `pub get` or a
+/// `build_runner` build, and oversubscribing those makes the whole thing
+/// slower rather than faster.
+///
+/// Output is buffered per item instead of inherited, because interleaved
+/// process output from a dozen concurrent installs is unreadable; each item's
+/// log is written as one block when it finishes.
 Future<_Failure?> _checkIndependentAgentItems({
   required _Toolchain sdk,
   required Directory app,
@@ -696,7 +708,9 @@ Future<_Failure?> _checkIndependentAgentItems({
 }) async {
   final pubspec = File('${app.path}/pubspec.yaml').readAsStringSync();
   final override = File('${app.path}/pubspec_overrides.yaml');
-  for (final item in _agentRegistryItems) {
+
+  Future<_Failure?> checkItem(String item) async {
+    final log = StringBuffer();
     final isolated = Directory('${app.parent.path}/independent_$item')
       ..createSync();
     File('${isolated.path}/pubspec.yaml').writeAsStringSync(pubspec);
@@ -725,9 +739,12 @@ Future<_Failure?> _checkIndependentAgentItems({
         command,
         workingDirectory: isolated.path,
         environment: environment,
+        log: log,
       );
-      if (failure != null)
+      if (failure != null) {
+        stdout.write(log);
         return _Failure('Independent $item install failed: ${failure.message}');
+      }
     }
     final ui = Directory('${isolated.path}/lib/ui');
     final files = ui
@@ -739,13 +756,44 @@ Future<_Failure?> _checkIndependentAgentItems({
         )
         .toSet();
     final problems = _installedReferenceProblems(ui, files);
-    if (problems.isNotEmpty)
+    if (problems.isNotEmpty) {
+      stdout.write(log);
       return _Failure('Independent $item: ${problems.join('; ')}');
-    _step(
-      'Independent $item installed, generated, and analyzed with its own dependencies.',
+    }
+    log.writeln(
+      '✓ Independent $item installed, generated, and analyzed with its own '
+      'dependencies.',
     );
+    stdout.write(log);
+    return null;
   }
-  return null;
+
+  return _runPooled(_agentRegistryItems, checkItem);
+}
+
+/// Runs [work] over [inputs] with at most one task per core in flight.
+///
+/// Returns the first failure reported, after every in-flight task has settled
+/// so no orphaned process outlives the check. Remaining inputs are not started
+/// once a failure is seen -- the check reports one failure either way, and the
+/// rest of the work would only delay it.
+Future<_Failure?> _runPooled<T>(
+  List<T> inputs,
+  Future<_Failure?> Function(T) work,
+) async {
+  final limit = min(inputs.length, max(2, Platform.numberOfProcessors));
+  final queue = inputs.toList();
+  _Failure? firstFailure;
+
+  Future<void> worker() async {
+    while (queue.isNotEmpty && firstFailure == null) {
+      final failure = await work(queue.removeAt(0));
+      firstFailure ??= failure;
+    }
+  }
+
+  await Future.wait([for (var i = 0; i < limit; i += 1) worker()]);
+  return firstFailure;
 }
 
 void _writeCheckoutOverride(Directory app, Directory remixSource) {
@@ -1354,13 +1402,25 @@ bool _isWithin(String path, String parent) =>
 
 String _basename(String path) => path.split(Platform.pathSeparator).last;
 
+/// Runs a process, streaming its output to this process' stdio.
+///
+/// Pass [log] to collect the output into a buffer instead. Concurrent callers
+/// must do that: inherited stdio from several processes at once interleaves
+/// into an unreadable log, and the buffer lets each caller emit its own run as
+/// one block.
 Future<_Failure?> _runProcess(
   String executable,
   List<String> arguments, {
   required String workingDirectory,
   Map<String, String>? environment,
+  StringBuffer? log,
 }) async {
-  stdout.writeln('\$ $executable ${arguments.join(' ')}');
+  final banner = '\$ $executable ${arguments.join(' ')}';
+  if (log == null) {
+    stdout.writeln(banner);
+  } else {
+    log.writeln(banner);
+  }
   final Process process;
   try {
     process = await Process.start(
@@ -1368,12 +1428,23 @@ Future<_Failure?> _runProcess(
       arguments,
       workingDirectory: workingDirectory,
       environment: environment,
-      mode: ProcessStartMode.inheritStdio,
+      mode: log == null
+          ? ProcessStartMode.inheritStdio
+          : ProcessStartMode.normal,
     );
   } on ProcessException catch (error) {
     return _Failure('could not start `$executable`: ${error.message}');
   }
+  // Drain both pipes before awaiting the exit code: a process that fills a
+  // pipe buffer nobody is reading blocks forever instead of exiting.
+  final drained = log == null
+      ? Future<void>.value()
+      : Future.wait([
+          process.stdout.transform(utf8.decoder).forEach(log.write),
+          process.stderr.transform(utf8.decoder).forEach(log.write),
+        ]);
   final code = await process.exitCode;
+  await drained;
   if (code == 0) return null;
   return _Failure('`$executable ${arguments.join(' ')}` exited $code');
 }
