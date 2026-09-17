@@ -30,6 +30,7 @@ enum RegistryDashboardDemoPage {
     RemixIcons.mixerHorizontal,
   ),
   charts(
+    // Keep this destination expanded at every generated preset prefix.
     RegistryDashboardDemoSection.components,
     'Charts',
     RemixIcons.barChart,
@@ -73,94 +74,98 @@ enum RegistryDashboardDemoPage {
 }
 
 /// Stable screen inventory shared by both presets and parity tests.
-const registryDashboardDemoSectionIds =
-    <RegistryDashboardDemoPage, List<String>>{
-      RegistryDashboardDemoPage.overview: [
-        'metrics',
-        'analytics',
-        'activity',
-        'recent-orders',
-      ],
-      RegistryDashboardDemoPage.chat: [
-        'starters',
-        'transcript',
-        'plan',
-        'activity',
-        'permission',
-        'execution',
-        'answer',
-        'composer',
-      ],
-      RegistryDashboardDemoPage.customers: [
-        'search',
-        'selection-actions',
-        'customer-table',
-      ],
-      RegistryDashboardDemoPage.orders: ['status-filters', 'order-table'],
-      RegistryDashboardDemoPage.settings: [
-        'profile',
-        'preferences',
-        'appearance',
-        'danger-zone',
-      ],
-      RegistryDashboardDemoPage.charts: [
-        'line-area',
-        'bar-charts',
-        'pie-donut',
-      ],
-      RegistryDashboardDemoPage.actions: [
-        'button',
-        'icon-button',
-        'toggle',
-        'states',
-      ],
-      RegistryDashboardDemoPage.forms: [
-        'text-field',
-        'text-area',
-        'segmented-control',
-        'select',
-        'toggle-group',
-        'checkbox',
-        'checkbox-group',
-        'radio',
-        'switch',
-        'slider',
-        'states',
-      ],
-      RegistryDashboardDemoPage.dataDisplay: [
-        'avatar',
-        'badge',
-        'card',
-        'callout',
-        'data-list',
-        'skeleton',
-        'progress',
-        'spinner',
-        'divider',
-      ],
-      RegistryDashboardDemoPage.overlays: [
-        'dialog',
-        'popover',
-        'tooltip',
-        'menu',
-      ],
-      RegistryDashboardDemoPage.navigation: [
-        'sidebar',
-        'tabs',
-        'disclosure',
-        'accordion',
-      ],
-      RegistryDashboardDemoPage.typography: [
-        'text-scale',
-        'weights',
-        'heading-level-size',
-        'code',
-        'keyboard-keys',
-        'links',
-        'accent-contrast',
-        'wrapping-truncation',
-      ],
-    };
+typedef _RegistryDashboardSectionInventory =
+    Map<RegistryDashboardDemoPage, List<String>>;
+
+const _RegistryDashboardSectionInventory registryDashboardDemoSectionIds = {
+  RegistryDashboardDemoPage.overview: [
+    'metrics',
+    'analytics',
+    'activity',
+    'recent-orders',
+  ],
+  RegistryDashboardDemoPage.chat: [
+    'starters',
+    'transcript',
+    'plan',
+    'activity',
+    'permission',
+    'execution',
+    'answer',
+    'composer',
+  ],
+  RegistryDashboardDemoPage.customers: [
+    'search',
+    'selection-actions',
+    'customer-table',
+  ],
+  RegistryDashboardDemoPage.orders: ['status-filters', 'order-table'],
+  RegistryDashboardDemoPage.settings: [
+    'profile',
+    'preferences',
+    'appearance',
+    'danger-zone',
+  ],
+  RegistryDashboardDemoPage.charts: [
+    // All three chart families remain distinct parity sections.
+    'line-area',
+    'bar-charts',
+    'pie-donut',
+  ],
+  RegistryDashboardDemoPage.actions: [
+    'button',
+    'icon-button',
+    'toggle',
+    'states',
+  ],
+  RegistryDashboardDemoPage.forms: [
+    'text-field',
+    'text-area',
+    'segmented-control',
+    'select',
+    'toggle-group',
+    'checkbox',
+    'checkbox-group',
+    'radio',
+    'switch',
+    'slider',
+    'states',
+  ],
+  RegistryDashboardDemoPage.dataDisplay: [
+    'avatar',
+    'badge',
+    'card',
+    'callout',
+    'data-list',
+    'skeleton',
+    'progress',
+    'spinner',
+    'divider',
+  ],
+  RegistryDashboardDemoPage.overlays: [
+    // Compound overlays share one ordered gallery contract.
+    'dialog',
+    'popover',
+    'tooltip',
+    'menu',
+  ],
+  RegistryDashboardDemoPage.navigation: [
+    'sidebar',
+    'tabs',
+    'disclosure',
+    'accordion',
+  ],
+  RegistryDashboardDemoPage.typography: [
+    'text-scale',
+    'weights',
+    'heading-level-size',
+    'code',
+    'keyboard-keys',
+    'links',
+    'accent-contrast',
+    'wrapping-truncation',
+  ],
+};
 
 /// Deterministic behaviors exercised by the parity fixture suite.
 const registryDashboardDemoInteractionIds = <String>[

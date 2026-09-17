@@ -516,19 +516,21 @@ class _RegistryDashboardChatPageState extends State<RegistryDashboardChatPage> {
     child: Text(value),
   );
 
-  Widget _answerWidget(String value, AgentAnswerStatus status) => AgentAnswer(
-    streamId: _runId,
-    status: status,
-    style: styles.answerStyle,
-    surfaceStyle: styles.answerSurfaceStyle,
-    sourcesStyle: styles.answerSourcesStyle,
-    copyStyle: styles.answerCopyStyle,
-    retryStyle: styles.answerRetryStyle,
-    onCopy: () => Clipboard.setData(ClipboardData(text: value)),
-    onRetry: _retry,
-    sourcesContent: const Text('Deterministic local fixture · no network'),
-    child: Text(value),
-  );
+  Widget _answerWidget(String value, AgentAnswerStatus status) {
+    return AgentAnswer(
+      streamId: _runId,
+      status: status,
+      style: styles.answerStyle,
+      surfaceStyle: styles.answerSurfaceStyle,
+      sourcesStyle: styles.answerSourcesStyle,
+      copyStyle: styles.answerCopyStyle,
+      retryStyle: styles.answerRetryStyle,
+      onCopy: () => Clipboard.setData(ClipboardData(text: value)),
+      onRetry: _retry,
+      sourcesContent: const Text('Deterministic local fixture · no network'),
+      child: Text(value),
+    );
+  }
 
   Widget _composer({required int maxLines}) => AgentComposer(
     controller: _draft,

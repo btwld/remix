@@ -115,13 +115,7 @@ class _DefaultDashboardCustomersPageState
                       ],
                     ],
                   )
-                : Row(
-                    children: [
-                      search,
-                      const Spacer(),
-                      ?selection,
-                    ],
-                  );
+                : Row(children: [search, const Spacer(), ?selection]);
           },
         ),
         VanillaDataTable<RegistryDashboardCustomer>(
@@ -308,8 +302,9 @@ List<RemixDataTableColumn<RegistryDashboardCustomer>> _customerColumns(
     label: 'Joined',
     sortable: true,
     width: const FixedColumnWidth(118),
-    cellBuilder: (_, value) =>
-        _Text(registryDashboardShortDate(value.joinedAt)),
+    cellBuilder: (_, value) {
+      return _Text(registryDashboardShortDate(value.joinedAt));
+    },
   ),
   RemixDataTableColumn(
     id: 'actions',

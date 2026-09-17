@@ -119,8 +119,9 @@ class {{typePrefix}}DashboardCharts extends StatefulWidget {
   final {{typePrefix}}DashboardChartSectionBuilder sectionBuilder;
 
   @override
-  State<{{typePrefix}}DashboardCharts> createState() =>
-      _{{typePrefix}}DashboardChartsState();
+  State<{{typePrefix}}DashboardCharts> createState() {
+    return _{{typePrefix}}DashboardChartsState();
+  }
 }
 
 class _{{typePrefix}}DashboardChartsState extends State<{{typePrefix}}DashboardCharts> {

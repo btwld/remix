@@ -30,6 +30,7 @@ enum {{typePrefix}}DashboardDemoPage {
     RemixIcons.mixerHorizontal,
   ),
   charts(
+    // Keep this destination expanded at every generated preset prefix.
     {{typePrefix}}DashboardDemoSection.components,
     'Charts',
     RemixIcons.barChart,
@@ -73,94 +74,98 @@ enum {{typePrefix}}DashboardDemoPage {
 }
 
 /// Stable screen inventory shared by both presets and parity tests.
-const {{valuePrefix}}DashboardDemoSectionIds =
-    <{{typePrefix}}DashboardDemoPage, List<String>>{
-      {{typePrefix}}DashboardDemoPage.overview: [
-        'metrics',
-        'analytics',
-        'activity',
-        'recent-orders',
-      ],
-      {{typePrefix}}DashboardDemoPage.chat: [
-        'starters',
-        'transcript',
-        'plan',
-        'activity',
-        'permission',
-        'execution',
-        'answer',
-        'composer',
-      ],
-      {{typePrefix}}DashboardDemoPage.customers: [
-        'search',
-        'selection-actions',
-        'customer-table',
-      ],
-      {{typePrefix}}DashboardDemoPage.orders: ['status-filters', 'order-table'],
-      {{typePrefix}}DashboardDemoPage.settings: [
-        'profile',
-        'preferences',
-        'appearance',
-        'danger-zone',
-      ],
-      {{typePrefix}}DashboardDemoPage.charts: [
-        'line-area',
-        'bar-charts',
-        'pie-donut',
-      ],
-      {{typePrefix}}DashboardDemoPage.actions: [
-        'button',
-        'icon-button',
-        'toggle',
-        'states',
-      ],
-      {{typePrefix}}DashboardDemoPage.forms: [
-        'text-field',
-        'text-area',
-        'segmented-control',
-        'select',
-        'toggle-group',
-        'checkbox',
-        'checkbox-group',
-        'radio',
-        'switch',
-        'slider',
-        'states',
-      ],
-      {{typePrefix}}DashboardDemoPage.dataDisplay: [
-        'avatar',
-        'badge',
-        'card',
-        'callout',
-        'data-list',
-        'skeleton',
-        'progress',
-        'spinner',
-        'divider',
-      ],
-      {{typePrefix}}DashboardDemoPage.overlays: [
-        'dialog',
-        'popover',
-        'tooltip',
-        'menu',
-      ],
-      {{typePrefix}}DashboardDemoPage.navigation: [
-        'sidebar',
-        'tabs',
-        'disclosure',
-        'accordion',
-      ],
-      {{typePrefix}}DashboardDemoPage.typography: [
-        'text-scale',
-        'weights',
-        'heading-level-size',
-        'code',
-        'keyboard-keys',
-        'links',
-        'accent-contrast',
-        'wrapping-truncation',
-      ],
-    };
+typedef _{{typePrefix}}DashboardSectionInventory =
+    Map<{{typePrefix}}DashboardDemoPage, List<String>>;
+
+const _{{typePrefix}}DashboardSectionInventory {{valuePrefix}}DashboardDemoSectionIds = {
+  {{typePrefix}}DashboardDemoPage.overview: [
+    'metrics',
+    'analytics',
+    'activity',
+    'recent-orders',
+  ],
+  {{typePrefix}}DashboardDemoPage.chat: [
+    'starters',
+    'transcript',
+    'plan',
+    'activity',
+    'permission',
+    'execution',
+    'answer',
+    'composer',
+  ],
+  {{typePrefix}}DashboardDemoPage.customers: [
+    'search',
+    'selection-actions',
+    'customer-table',
+  ],
+  {{typePrefix}}DashboardDemoPage.orders: ['status-filters', 'order-table'],
+  {{typePrefix}}DashboardDemoPage.settings: [
+    'profile',
+    'preferences',
+    'appearance',
+    'danger-zone',
+  ],
+  {{typePrefix}}DashboardDemoPage.charts: [
+    // All three chart families remain distinct parity sections.
+    'line-area',
+    'bar-charts',
+    'pie-donut',
+  ],
+  {{typePrefix}}DashboardDemoPage.actions: [
+    'button',
+    'icon-button',
+    'toggle',
+    'states',
+  ],
+  {{typePrefix}}DashboardDemoPage.forms: [
+    'text-field',
+    'text-area',
+    'segmented-control',
+    'select',
+    'toggle-group',
+    'checkbox',
+    'checkbox-group',
+    'radio',
+    'switch',
+    'slider',
+    'states',
+  ],
+  {{typePrefix}}DashboardDemoPage.dataDisplay: [
+    'avatar',
+    'badge',
+    'card',
+    'callout',
+    'data-list',
+    'skeleton',
+    'progress',
+    'spinner',
+    'divider',
+  ],
+  {{typePrefix}}DashboardDemoPage.overlays: [
+    // Compound overlays share one ordered gallery contract.
+    'dialog',
+    'popover',
+    'tooltip',
+    'menu',
+  ],
+  {{typePrefix}}DashboardDemoPage.navigation: [
+    'sidebar',
+    'tabs',
+    'disclosure',
+    'accordion',
+  ],
+  {{typePrefix}}DashboardDemoPage.typography: [
+    'text-scale',
+    'weights',
+    'heading-level-size',
+    'code',
+    'keyboard-keys',
+    'links',
+    'accent-contrast',
+    'wrapping-truncation',
+  ],
+};
 
 /// Deterministic behaviors exercised by the parity fixture suite.
 const {{valuePrefix}}DashboardDemoInteractionIds = <String>[

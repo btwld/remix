@@ -115,13 +115,7 @@ class _DefaultDashboardCustomersPageState
                       ],
                     ],
                   )
-                : Row(
-                    children: [
-                      search,
-                      const Spacer(),
-                      ?selection,
-                    ],
-                  );
+                : Row(children: [search, const Spacer(), ?selection]);
           },
         ),
         {{typePrefix}}DataTable<{{typePrefix}}DashboardCustomer>(
@@ -308,8 +302,9 @@ List<RemixDataTableColumn<{{typePrefix}}DashboardCustomer>> _customerColumns(
     label: 'Joined',
     sortable: true,
     width: const FixedColumnWidth(118),
-    cellBuilder: (_, value) =>
-        _Text({{valuePrefix}}DashboardShortDate(value.joinedAt)),
+    cellBuilder: (_, value) {
+      return _Text({{valuePrefix}}DashboardShortDate(value.joinedAt));
+    },
   ),
   RemixDataTableColumn(
     id: 'actions',

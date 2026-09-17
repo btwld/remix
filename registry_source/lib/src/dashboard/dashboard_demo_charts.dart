@@ -119,8 +119,9 @@ class RegistryDashboardCharts extends StatefulWidget {
   final RegistryDashboardChartSectionBuilder sectionBuilder;
 
   @override
-  State<RegistryDashboardCharts> createState() =>
-      _RegistryDashboardChartsState();
+  State<RegistryDashboardCharts> createState() {
+    return _RegistryDashboardChartsState();
+  }
 }
 
 class _RegistryDashboardChartsState extends State<RegistryDashboardCharts> {

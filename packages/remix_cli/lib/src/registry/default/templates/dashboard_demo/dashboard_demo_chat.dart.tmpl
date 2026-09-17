@@ -516,19 +516,21 @@ class _{{typePrefix}}DashboardChatPageState extends State<{{typePrefix}}Dashboar
     child: Text(value),
   );
 
-  Widget _answerWidget(String value, {{typePrefix}}AnswerStatus status) => {{typePrefix}}Answer(
-    streamId: _runId,
-    status: status,
-    style: styles.answerStyle,
-    surfaceStyle: styles.answerSurfaceStyle,
-    sourcesStyle: styles.answerSourcesStyle,
-    copyStyle: styles.answerCopyStyle,
-    retryStyle: styles.answerRetryStyle,
-    onCopy: () => Clipboard.setData(ClipboardData(text: value)),
-    onRetry: _retry,
-    sourcesContent: const Text('Deterministic local fixture · no network'),
-    child: Text(value),
-  );
+  Widget _answerWidget(String value, {{typePrefix}}AnswerStatus status) {
+    return {{typePrefix}}Answer(
+      streamId: _runId,
+      status: status,
+      style: styles.answerStyle,
+      surfaceStyle: styles.answerSurfaceStyle,
+      sourcesStyle: styles.answerSourcesStyle,
+      copyStyle: styles.answerCopyStyle,
+      retryStyle: styles.answerRetryStyle,
+      onCopy: () => Clipboard.setData(ClipboardData(text: value)),
+      onRetry: _retry,
+      sourcesContent: const Text('Deterministic local fixture · no network'),
+      child: Text(value),
+    );
+  }
 
   Widget _composer({required int maxLines}) => {{typePrefix}}Composer(
     controller: _draft,
