@@ -119,7 +119,7 @@ class _DefaultDashboardCustomersPageState
                     children: [
                       search,
                       const Spacer(),
-                      if (selection != null) selection,
+                      ?selection,
                     ],
                   );
           },
