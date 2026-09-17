@@ -163,6 +163,7 @@ const _defaultPreset = _PresetContract(
   themeFiles: ['tokens.dart', 'theme_data.dart', 'theme_scope.dart'],
   generatedSnapshots: _generatedSnapshots,
   nonGeneratedItems: {'sidebar_layout'},
+  itemFileOverrides: {},
   sharedItems: {
     'models': [
       'models/activity_item.dart',
@@ -200,6 +201,7 @@ const _fortalPreset = _PresetContract(
     'sidebar_layout',
     'typography',
   },
+  itemFileOverrides: {},
   sharedItems: {
     'models': [
       'models/activity_item.dart',
@@ -239,6 +241,7 @@ final class _PresetContract {
     this.nonGeneratedItems = const {},
     this.generatedSnapshots = const {},
     this.sharedItems = const {},
+    this.itemFileOverrides = const {},
   });
 
   final String name;
@@ -248,26 +251,31 @@ final class _PresetContract {
   final Set<String> nonGeneratedItems;
   final Map<String, String> generatedSnapshots;
   final Map<String, List<String>> sharedItems;
+  final Map<String, List<String>> itemFileOverrides;
 
   List<String> get installedUiFiles => [
     'ui.dart',
     for (final file in themeFiles) 'theme/$file',
     for (final files in sharedItems.values) ...files,
-    for (final item in registryItems)
-      ...(item == 'icons'
-          ? const ['icons.dart']
-          : item.endsWith('_recipe')
-          ? ['recipes/$item.dart']
-          : [
-              'components/$item.dart',
-              if (!nonGeneratedItems.contains(item)) 'components/$item.g.dart',
-            ]),
+    for (final item in registryItems) ..._itemFiles(item),
   ];
+
+  List<String> _itemFiles(String item) {
+    final explicit = itemFileOverrides[item];
+    if (explicit != null) return explicit;
+    if (item == 'icons') return const ['icons.dart'];
+    if (item.endsWith('_recipe')) return ['recipes/$item.dart'];
+    return [
+      'components/$item.dart',
+      if (!nonGeneratedItems.contains(item)) 'components/$item.g.dart',
+    ];
+  }
 
   List<String> get generatedAppFiles => [
     for (final item in registryItems)
       if (item != 'icons' &&
           !item.endsWith('_recipe') &&
+          !itemFileOverrides.containsKey(item) &&
           !nonGeneratedItems.contains(item))
         'lib/ui/components/$item.g.dart',
   ];
@@ -1431,6 +1439,20 @@ String? registryCoverageProblem(
 /// Returns installed inventory/import errors for focused regression tests.
 String? installedUiProblem(Directory app, {String preset = 'default'}) =>
     _verifyInstalledUi(app, _presetByName(preset))?.message;
+
+/// Returns the explicit-or-conventional file inventory for focused tests.
+List<String> registryItemInventoryForTest(
+  String item, {
+  List<String>? explicitFiles,
+  bool nonGenerated = false,
+}) => _PresetContract(
+  name: 'test',
+  fixtureDirectory: 'test',
+  registryItems: [item],
+  themeFiles: const [],
+  nonGeneratedItems: nonGenerated ? {item} : const {},
+  itemFileOverrides: explicitFiles == null ? const {} : {item: explicitFiles},
+).installedUiFiles.where((file) => file != 'ui.dart').toList();
 
 /// Formats a post-creation failure so the retained directory is always named.
 String retainedFailureMessage(
