@@ -25,6 +25,7 @@ class FortalDashboardShell<T extends Object> extends StatelessWidget {
     required this.body,
     required this.title,
     required this.brand,
+    this.headerTitle,
     this.account,
     this.headerActions = const [],
     this.onSearchChanged,
@@ -42,6 +43,7 @@ class FortalDashboardShell<T extends Object> extends StatelessWidget {
   final ValueChanged<T> onSelected;
   final Widget body;
   final String title;
+  final Widget? headerTitle;
   final Widget brand;
   final Widget? account;
   final List<Widget> headerActions;
@@ -75,6 +77,7 @@ class FortalDashboardShell<T extends Object> extends StatelessWidget {
       onSelected: onSelected,
       body: body,
       title: title,
+      headerTitle: headerTitle,
       brand: brand,
       account: account,
       headerActions: headerActions,

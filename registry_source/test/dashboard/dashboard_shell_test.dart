@@ -103,6 +103,31 @@ void main() {
         expect(queries.last, 'orders');
       });
 
+      testWidgets('custom header title replaces the visible fallback', (
+        tester,
+      ) async {
+        await _pump(
+          tester,
+          preset: preset,
+          width: 1100,
+          headerTitle: const Row(
+            children: [Text('Workspace'), Text(' / '), Text('Overview')],
+          ),
+        );
+
+        expect(find.text('Workspace'), findsWidgets);
+        expect(find.text(' / '), findsOneWidget);
+        expect(
+          find.descendant(
+            of: find.byKey(const ValueKey('dashboard-title')),
+            matching: find.text('Overview'),
+          ),
+          findsOneWidget,
+        );
+        expect(find.bySemanticsLabel('Overview'), findsWidgets);
+        expect(tester.takeException(), isNull);
+      });
+
       testWidgets('page state survives the responsive reparent', (
         tester,
       ) async {
@@ -196,6 +221,7 @@ Future<void> _pump(
   Brightness brightness = Brightness.light,
   TextDirection textDirection = TextDirection.ltr,
   List<Widget> headerActions = const [],
+  Widget? headerTitle,
 }) async {
   tester.view.devicePixelRatio = 1;
   tester.view.physicalSize = const Size(1200, 800);
@@ -212,6 +238,7 @@ Future<void> _pump(
       collapsed: collapsed,
       body: body,
       headerActions: headerActions,
+      headerTitle: headerTitle,
     ),
   );
 
@@ -251,6 +278,7 @@ class _ShellHarness extends StatefulWidget {
     required this.collapsed,
     required this.body,
     required this.headerActions,
+    required this.headerTitle,
   });
 
   final _Preset preset;
@@ -259,6 +287,7 @@ class _ShellHarness extends StatefulWidget {
   final ValueNotifier<bool>? collapsed;
   final Widget body;
   final List<Widget> headerActions;
+  final Widget? headerTitle;
 
   @override
   State<_ShellHarness> createState() => _ShellHarnessState();
@@ -285,6 +314,7 @@ class _ShellHarnessState extends State<_ShellHarness> {
           onSelected: select,
           body: body,
           title: 'Overview',
+          headerTitle: widget.headerTitle,
           brand: const Text('Acme brand'),
           account: const Text('Workspace account'),
           headerActions: widget.headerActions,
@@ -298,6 +328,7 @@ class _ShellHarnessState extends State<_ShellHarness> {
           onSelected: select,
           body: body,
           title: 'Overview',
+          headerTitle: widget.headerTitle,
           brand: const Text('Acme brand'),
           account: const Text('Workspace account'),
           headerActions: widget.headerActions,
