@@ -159,7 +159,7 @@ void main() {
       key: ValueKey<String>('status'),
       label: 'Status',
       value: 'Active',
-      alignment: RemixDataListItemAlignment.center,
+      alignment: CrossAxisAlignment.center,
     );
     const rawStyleSpec = StyleSpec<DataListSpec>(
       spec: DataListSpec(
@@ -218,7 +218,7 @@ void main() {
         label: 'Value',
         sortable: true,
         width: const FixedColumnWidth(120),
-        alignment: RemixDataTableCellAlignment.end,
+        alignment: AlignmentDirectional.centerEnd,
         cellBuilder: (context, row) => Text(row),
       ),
     ];

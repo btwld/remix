@@ -8,6 +8,47 @@ import '../../helpers/test_helpers.dart';
 import '../../helpers/test_methods.dart';
 
 void main() {
+  for (final direction in TextDirection.values) {
+    for (final placement in <RemixPlacement?>[null, ...RemixPlacement.values]) {
+      for (final icons in ['leading', 'trailing', 'both']) {
+        testWidgets('button $icons placement $placement in $direction', (
+          tester,
+        ) async {
+          await tester.pumpRemixApp(
+            Directionality(
+              textDirection: direction,
+              child: RemixButton(
+                label: 'Label',
+                leadingIcon: icons != 'trailing' ? Icons.add : null,
+                trailingIcon: icons != 'leading' ? Icons.remove : null,
+                style: ButtonStyler(iconAlignment: placement),
+                onPressed: () {},
+              ),
+            ),
+          );
+          final label = tester.getCenter(find.text('Label')).dx;
+          for (final icon in [
+            if (icons != 'trailing') Icons.add,
+            if (icons != 'leading') Icons.remove,
+          ]) {
+            final start = icons == 'both'
+                ? icon == Icons.add
+                : (placement ??
+                          (icons == 'leading'
+                              ? RemixPlacement.start
+                              : RemixPlacement.end)) ==
+                      RemixPlacement.start;
+            final left = start == (direction == TextDirection.ltr);
+            expect(
+              tester.getCenter(find.byIcon(icon)).dx,
+              left ? lessThan(label) : greaterThan(label),
+            );
+          }
+        });
+      }
+    }
+  }
+
   group('RemixButton Widget Tests', () {
     group('Basic Rendering', () {
       testWidgets('renders button with label only', (tester) async {

@@ -3,12 +3,6 @@ part of 'data_table.dart';
 /// Direction of a [RemixDataTable]'s single active sort.
 enum RemixDataTableSortDirection { ascending, descending }
 
-/// Directional placement of a column's content inside its cells.
-///
-/// [start] and [end] follow [Directionality]; numeric columns opt into [end]
-/// explicitly rather than receiving a locale guess.
-enum RemixDataTableCellAlignment { start, center, end }
-
 /// Formats the footer's visible page range.
 ///
 /// Receives the one-based [start] and [end] of the visible page (both zero
@@ -66,7 +60,7 @@ final class RemixDataTableColumn<T> {
     this.header,
     this.semanticLabel,
     this.width = const FlexColumnWidth(),
-    this.alignment = RemixDataTableCellAlignment.start,
+    this.alignment = AlignmentDirectional.centerStart,
     this.sortable = false,
   }) : assert(id != '', 'RemixDataTableColumn.id must be nonempty.'),
        assert(
@@ -104,8 +98,11 @@ final class RemixDataTableColumn<T> {
   /// Width of this column, shared by its header and body cells.
   final TableColumnWidth width;
 
-  /// Directional placement of this column's content.
-  final RemixDataTableCellAlignment alignment;
+  /// Position of this column's content, resolved using the text direction.
+  ///
+  /// Defaults to [AlignmentDirectional.centerStart]. Physical [Alignment]
+  /// values stay fixed in RTL; directional values follow [Directionality].
+  final AlignmentGeometry alignment;
 
   /// Whether activating this column's header emits a new sort descriptor.
   final bool sortable;
@@ -777,7 +774,7 @@ class _RemixDataTableViewState<T> extends State<_RemixDataTableView<T>> {
           _DataTableHeaderCell(
             styles: widget.styles,
             minHeight: _spec.headerMinHeight,
-            alignment: RemixDataTableCellAlignment.center,
+            alignment: Alignment.center,
             useSelectionCell: true,
             child: _checkbox(
               RemixCheckbox(
@@ -1012,7 +1009,7 @@ class _DataTableHeaderCell extends StatelessWidget {
     required this.styles,
     required this.minHeight,
     this.semanticLabel,
-    this.alignment = RemixDataTableCellAlignment.start,
+    this.alignment = AlignmentDirectional.centerStart,
     this.label,
     this.child,
     this.sortState,
@@ -1025,7 +1022,7 @@ class _DataTableHeaderCell extends StatelessWidget {
   final _DataTableStyles styles;
   final double? minHeight;
   final String? semanticLabel;
-  final RemixDataTableCellAlignment alignment;
+  final AlignmentGeometry alignment;
   final String? label;
   final Widget? child;
   final RemixDataTableSortDirection? sortState;
@@ -1130,7 +1127,7 @@ class _DataTableBodyCell extends StatelessWidget {
     required this.minHeight,
     required this.onHoverChanged,
     required this.child,
-    this.alignment = RemixDataTableCellAlignment.start,
+    this.alignment = AlignmentDirectional.centerStart,
     this.useSelectionCell = false,
   });
 
@@ -1140,7 +1137,7 @@ class _DataTableBodyCell extends StatelessWidget {
   final double? minHeight;
   final ValueChanged<bool> onHoverChanged;
   final Widget child;
-  final RemixDataTableCellAlignment alignment;
+  final AlignmentGeometry alignment;
   final bool useSelectionCell;
 
   @override
@@ -1186,17 +1183,9 @@ class _DataTableCellSurface extends StatelessWidget {
 
   final StyleSpec<BoxSpec> row;
   final StyleSpec<BoxSpec> cell;
-  final RemixDataTableCellAlignment alignment;
+  final AlignmentGeometry alignment;
   final double? minHeight;
   final Widget child;
-
-  static AlignmentGeometry _alignmentOf(RemixDataTableCellAlignment value) {
-    return switch (value) {
-      RemixDataTableCellAlignment.start => AlignmentDirectional.centerStart,
-      RemixDataTableCellAlignment.center => AlignmentDirectional.center,
-      RemixDataTableCellAlignment.end => AlignmentDirectional.centerEnd,
-    };
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -1208,7 +1197,7 @@ class _DataTableCellSurface extends StatelessWidget {
         constraints: BoxConstraints(minHeight: minHeight ?? 0.0),
         child: Box(
           styleSpec: cell,
-          child: Align(alignment: _alignmentOf(alignment), child: child),
+          child: Align(alignment: alignment, child: child),
         ),
       ),
     );

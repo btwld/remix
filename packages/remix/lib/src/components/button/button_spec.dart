@@ -1,8 +1,5 @@
 part of 'button.dart';
 
-/// Placement used when a button contains exactly one icon.
-enum RemixIconAlignment { start, end }
-
 /// Resolved visual properties for a [RemixButton].
 @MixableSpec(
   target: RemixButton.new,
@@ -37,7 +34,7 @@ class ButtonSpec with _$ButtonSpec {
 
   /// Placement used when exactly one icon is present.
   @override
-  final RemixIconAlignment? iconAlignment;
+  final RemixPlacement? iconAlignment;
 
   const ButtonSpec({
     StyleSpec<FlexBoxSpec>? container,

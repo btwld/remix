@@ -149,12 +149,12 @@ class DataListCustomValueExample extends StatelessWidget {
         const RemixDataListItem(
           label: 'Status',
           semanticValue: 'Authorized',
-          alignment: RemixDataListItemAlignment.center,
+          alignment: CrossAxisAlignment.center,
           child: RemixBadge(label: 'Authorized'),
         ),
         RemixDataListItem(
           label: 'API key',
-          alignment: RemixDataListItemAlignment.center,
+          alignment: CrossAxisAlignment.center,
           child: RemixButton(label: 'Reveal key', onPressed: () {}),
         ),
       ],
@@ -223,7 +223,7 @@ RemixDataListItem remixDataListItemConstructor({
   String? value,
   Widget? child,
   String? semanticValue,
-  RemixDataListItemAlignment alignment = RemixDataListItemAlignment.baseline,
+  CrossAxisAlignment alignment = CrossAxisAlignment.baseline,
 }) => throw UnimplementedError();
 ```
 </CodeGroup>
@@ -301,10 +301,10 @@ Optional noninteractive summary announced instead of the child's semantics.
 Valid only together with `child`; when provided it must be nonempty and not
 whitespace-only.
 
-#### `alignment` → `RemixDataListItemAlignment`
+#### `alignment` → `CrossAxisAlignment`
 
 Optional. Cross-cell alignment for this row, defaulting to
-`RemixDataListItemAlignment.baseline`.
+`CrossAxisAlignment.baseline`.
 
 ### Style Methods
 
@@ -360,3 +360,6 @@ Configures implicit animation for style transitions.
 #### `call({Key? key, required List<RemixDataListItem> items, Axis orientation, String? semanticLabel, bool excludeSemantics})`
 
 Creates a `RemixDataList` widget with this style applied.
+
+See the [alignment API migration table](/components/dialog#alignment-api-migration)
+for source-breaking type replacements.

@@ -1009,7 +1009,7 @@ void main() {
                   RemixDataListItem(label: 'A', value: 'text value'),
                   RemixDataListItem(
                     label: 'B',
-                    alignment: RemixDataListItemAlignment.start,
+                    alignment: CrossAxisAlignment.start,
                     child: SizedBox(key: probeKey, width: 20, height: 10),
                   ),
                 ],
@@ -1069,7 +1069,7 @@ void main() {
 
       Future<void> pumpAligned(
         WidgetTester tester,
-        RemixDataListItemAlignment alignment,
+        CrossAxisAlignment alignment,
       ) async {
         await tester.pumpRemixApp(
           SizedBox(
@@ -1090,7 +1090,7 @@ void main() {
       }
 
       testWidgets('start aligns both cells to the row top', (tester) async {
-        await pumpAligned(tester, RemixDataListItemAlignment.start);
+        await pumpAligned(tester, CrossAxisAlignment.start);
 
         expect(
           tester.getTopLeft(find.text('L')).dy,
@@ -1099,7 +1099,7 @@ void main() {
       });
 
       testWidgets('center aligns both cell centers', (tester) async {
-        await pumpAligned(tester, RemixDataListItemAlignment.center);
+        await pumpAligned(tester, CrossAxisAlignment.center);
 
         expect(
           tester.getCenter(find.text('L')).dy,
@@ -1108,7 +1108,7 @@ void main() {
       });
 
       testWidgets('end aligns both cell bottoms', (tester) async {
-        await pumpAligned(tester, RemixDataListItemAlignment.end);
+        await pumpAligned(tester, CrossAxisAlignment.end);
 
         expect(
           tester.getBottomLeft(find.text('L')).dy,
@@ -1119,7 +1119,7 @@ void main() {
       testWidgets('stretch sizes both cells to the tallest cell', (
         tester,
       ) async {
-        await pumpAligned(tester, RemixDataListItemAlignment.stretch);
+        await pumpAligned(tester, CrossAxisAlignment.stretch);
 
         expect(tester.getSize(find.text('L')).height, equals(60.0));
         expect(tester.getSize(find.byKey(probeKey)).height, equals(60.0));
@@ -1135,7 +1135,7 @@ void main() {
                 RemixDataListItem(
                   label: 'L',
                   value: 'V',
-                  alignment: RemixDataListItemAlignment.baseline,
+                  alignment: CrossAxisAlignment.baseline,
                 ),
               ],
             ),
@@ -1152,7 +1152,7 @@ void main() {
       testWidgets('custom-child baseline row deterministically maps to top', (
         tester,
       ) async {
-        await pumpAligned(tester, RemixDataListItemAlignment.baseline);
+        await pumpAligned(tester, CrossAxisAlignment.baseline);
 
         expect(
           tester.getTopLeft(find.text('L')).dy,
@@ -1170,7 +1170,7 @@ void main() {
               items: const [
                 RemixDataListItem(
                   label: 'L',
-                  alignment: RemixDataListItemAlignment.baseline,
+                  alignment: CrossAxisAlignment.baseline,
                   child: probe,
                 ),
               ],
@@ -1227,7 +1227,7 @@ void main() {
               items: const [
                 RemixDataListItem(
                   label: 'C',
-                  alignment: RemixDataListItemAlignment.center,
+                  alignment: CrossAxisAlignment.center,
                   child: SizedBox(key: probeKey, width: 40, height: 10),
                 ),
               ],
@@ -1250,7 +1250,7 @@ void main() {
               items: const [
                 RemixDataListItem(
                   label: 'E',
-                  alignment: RemixDataListItemAlignment.end,
+                  alignment: CrossAxisAlignment.end,
                   child: SizedBox(key: probeKey, width: 40, height: 10),
                 ),
               ],
@@ -1276,7 +1276,7 @@ void main() {
               items: const [
                 RemixDataListItem(
                   label: 'S',
-                  alignment: RemixDataListItemAlignment.stretch,
+                  alignment: CrossAxisAlignment.stretch,
                   child: SizedBox(key: probeKey, width: 40, height: 10),
                 ),
               ],
