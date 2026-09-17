@@ -125,6 +125,15 @@ void main() {
         expect(tester.takeException(), isNull);
       });
 
+      testWidgets('compact demo chrome fits a 375 pixel viewport', (
+        tester,
+      ) async {
+        await _pumpDashboard(tester, preset: preset, width: 375, height: 812);
+
+        expect(find.byKey(const ValueKey('dashboard-menu')), findsWidgets);
+        expect(tester.takeException(), isNull);
+      });
+
       testWidgets('full demo exposes and navigates all showcase destinations', (
         tester,
       ) async {
@@ -492,11 +501,13 @@ Future<void> _pumpDashboard(
   Duration chatStepDelay = const Duration(milliseconds: 320),
   bool builtInChrome = true,
   Widget? account,
+  double width = 1200,
+  double height = 800,
 }) => _pump(
   tester,
   preset: preset,
-  width: 1200,
-  height: 800,
+  width: width,
+  height: height,
   child: switch (preset) {
     .defaultPreset => VanillaDashboardDemo(
       key: ValueKey(initialPage),

@@ -243,7 +243,12 @@ class _VanillaBreadcrumb extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Row(
     children: [
-      StyledText(page.section.label, style: _textStyle(muted: true)),
+      Flexible(
+        child: StyledText(
+          page.section.label,
+          style: _textStyle(muted: true).maxLines(1).softWrap(false),
+        ),
+      ),
       const Padding(
         padding: EdgeInsets.symmetric(horizontal: 8),
         child: Text('/'),
@@ -251,7 +256,10 @@ class _VanillaBreadcrumb extends StatelessWidget {
       Flexible(
         child: StyledText(
           page.label,
-          style: _textStyle(size: 16, weight: FontWeight.w600),
+          style: _textStyle(
+            size: 16,
+            weight: FontWeight.w600,
+          ).maxLines(1).softWrap(false),
         ),
       ),
     ],

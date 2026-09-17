@@ -244,13 +244,27 @@ class _FortalBreadcrumb extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Row(
     children: [
-      FortalText(page.section.label, size: .size2, highContrast: false),
+      Flexible(
+        child: FortalText(
+          page.section.label,
+          size: .size2,
+          highContrast: false,
+          softWrap: false,
+          truncate: true,
+        ),
+      ),
       const Padding(
         padding: EdgeInsets.symmetric(horizontal: 8),
         child: Text('/'),
       ),
       Flexible(
-        child: FortalText(page.label, size: .size3, weight: .bold),
+        child: FortalText(
+          page.label,
+          size: .size3,
+          weight: .bold,
+          softWrap: false,
+          truncate: true,
+        ),
       ),
     ],
   );
