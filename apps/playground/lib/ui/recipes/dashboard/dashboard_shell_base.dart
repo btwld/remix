@@ -80,6 +80,7 @@ class PlaygroundDashboardShellBase<T extends Object> extends StatefulWidget {
     required this.searchIcon,
     required this.backwardIcon,
     required this.forwardIcon,
+    this.headerTitle,
     this.account,
     this.headerActions = const [],
     this.onSearchChanged,
@@ -100,6 +101,10 @@ class PlaygroundDashboardShellBase<T extends Object> extends StatefulWidget {
   final ValueChanged<T> onSelected;
   final Widget body;
   final String title;
+
+  /// Optional visible title composition. [title] remains the accessible label
+  /// and the fallback when this is null.
+  final Widget? headerTitle;
   final Widget brand;
   final Widget? account;
   final List<Widget> headerActions;
@@ -230,10 +235,17 @@ class _PlaygroundDashboardShellBaseState<T extends Object>
                   onPressed: controls.openCompact,
                 ),
               Expanded(
-                child: StyledText(
-                  widget.title,
+                child: Semantics(
                   key: const ValueKey('dashboard-title'),
-                  style: widget.titleStyle.maxLines(1).softWrap(false),
+                  header: true,
+                  label: widget.title,
+                  excludeSemantics: widget.headerTitle != null,
+                  child:
+                      widget.headerTitle ??
+                      StyledText(
+                        widget.title,
+                        style: widget.titleStyle.maxLines(1).softWrap(false),
+                      ),
                 ),
               ),
               if (showSearch)
