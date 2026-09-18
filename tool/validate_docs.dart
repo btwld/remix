@@ -218,7 +218,7 @@ const _openCodeCatalogDocuments = <String>[
   'open_code/README.md',
 ];
 
-/// Fails when an item in either bundled preset is missing from a catalog
+/// Fails when an item in any bundled preset is missing from a catalog
 /// document.
 ///
 /// Deliberately one-directional: a document may mention `theme` or discuss an
@@ -227,11 +227,22 @@ const _openCodeCatalogDocuments = <String>[
 /// wrote down.
 void _checkOpenCodeCatalog(Directory workspaceRoot, List<String> failures) {
   final items = <String>{};
-  for (final preset in ['default', 'fortal']) {
-    final registry = File(
-      '${workspaceRoot.path}/packages/remix_cli/lib/src/registry/'
-      '$preset/registry.yaml',
-    );
+  final registryRoot = Directory(
+    '${workspaceRoot.path}/packages/remix_cli/lib/src/registry',
+  );
+  final presets =
+      registryRoot
+          .listSync(followLinks: false)
+          .whereType<Directory>()
+          .map((directory) => directory.path.split(Platform.pathSeparator).last)
+          .where(
+            (preset) =>
+                File('${registryRoot.path}/$preset/registry.yaml').existsSync(),
+          )
+          .toList()
+        ..sort();
+  for (final preset in presets) {
+    final registry = File('${registryRoot.path}/$preset/registry.yaml');
     if (!registry.existsSync()) {
       failures.add('packages/remix_cli is missing its $preset registry.yaml.');
       continue;

@@ -130,6 +130,7 @@ void main() {
 const _registryPaths = [
   'packages/remix_cli/lib/src/registry/default/registry.yaml',
   'packages/remix_cli/lib/src/registry/fortal/registry.yaml',
+  'packages/remix_cli/lib/src/registry/carbon/registry.yaml',
 ];
 
 /// `remix`, whose registry floor records the tested release rather than the

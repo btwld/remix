@@ -26,8 +26,8 @@ void main() {
       expect(options.item, isNull);
     });
 
-    test('either preset can select an explicit source', () {
-      for (final preset in ['default', 'fortal']) {
+    test('every preset can select an explicit source', () {
+      for (final preset in ['default', 'fortal', 'carbon']) {
         for (final source in checker.RemixSource.values) {
           final options = checker.parseConsumerCheckOptions([
             '--preset',
@@ -100,6 +100,14 @@ void main() {
           'dashboard_demo',
           '--item',
           'dashboard_shell',
+        ],
+        [
+          '--source',
+          'checkout',
+          '--preset',
+          'carbon',
+          '--item',
+          'dashboard_demo',
         ],
       ]) {
         expect(checker.parseConsumerCheckOptions(arguments), isNull);
@@ -175,6 +183,14 @@ void main() {
     expect(checker.fixtureContractProblem(fixture, preset: 'fortal'), isNull);
   });
 
+  test('the Carbon fixture is a minimal pre-install contract', () {
+    final fixture = Directory(
+      '${Directory.current.path}/open_code/carbon_fixture',
+    );
+
+    expect(checker.fixtureContractProblem(fixture, preset: 'carbon'), isNull);
+  });
+
   group('registry coverage', () {
     test('the checkout catalog and the checker agree', () {
       expect(checker.registryCoverageProblem(Directory.current), isNull);
@@ -185,6 +201,22 @@ void main() {
         checker.registryCoverageProblem(Directory.current, preset: 'fortal'),
         isNull,
       );
+    });
+
+    test('the Carbon catalog contains only its initial slice', () {
+      expect(
+        checker.registryCoverageProblem(Directory.current, preset: 'carbon'),
+        isNull,
+      );
+      expect(checker.installedInventoryForTest(preset: 'carbon'), {
+        'ui.dart',
+        'theme/theme.dart',
+        'theme/theme_data.dart',
+        'theme/theme_scope.dart',
+        'theme/tokens.dart',
+        'components/button.dart',
+        'components/button.g.dart',
+      });
     });
 
     test('an item the checker never installs is reported', () {
@@ -337,6 +369,20 @@ import 'package:flutter/widgets.dart'
       expect(problem, contains('imports package:unexpected_package'));
       expect(problem, contains('`../../outside.dart` escapes lib/ui'));
     });
+
+    test('Carbon passes without Agent, chart, icon, or build config files', () {
+      final app = Directory('${sandbox.path}/carbon_app');
+      _writeCarbonInstalledUi(app);
+
+      expect(checker.installedUiProblem(app, preset: 'carbon'), isNull);
+      expect(checker.installedDependencyProblem(app, preset: 'carbon'), isNull);
+
+      File('${app.path}/build.yaml').writeAsStringSync('targets: {}\n');
+      expect(
+        checker.installedUiProblem(app, preset: 'carbon'),
+        contains('carbon unexpectedly created a consumer build.yaml'),
+      );
+    });
   });
 
   test('retained failure reporting includes the temporary directory', () {
@@ -348,6 +394,31 @@ import 'package:flutter/widgets.dart'
       ),
     );
   });
+}
+
+void _writeCarbonInstalledUi(Directory app) {
+  for (final relative in checker.installedInventoryForTest(preset: 'carbon')) {
+    final file = File('${app.path}/lib/ui/$relative');
+    file.parent.createSync(recursive: true);
+    file.writeAsStringSync('library;\n');
+  }
+  File('${app.path}/pubspec.yaml')
+    ..parent.createSync(recursive: true)
+    ..writeAsStringSync('''
+name: carbon_consumer
+dependencies:
+  flutter:
+    sdk: flutter
+  remix: ^1.0.0-beta.10
+  mix_annotations: ^2.2.0-beta.1
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  remix_cli:
+    path: /tmp/remix_cli
+  build_runner: ^2.10.1
+  mix_generator: ^2.2.0-beta.3
+''');
 }
 
 void _writeValidFixture(Directory fixture) {

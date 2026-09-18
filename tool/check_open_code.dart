@@ -2,7 +2,7 @@
 /// Flutter application.
 ///
 /// ```shell
-/// dart run tool/check_open_code.dart [--preset default|fortal]
+/// dart run tool/check_open_code.dart [--preset default|fortal|carbon]
 ///     [--source both|hosted|checkout] [--item dashboard_demo|dashboard_shell]
 ///     [--hosted-cli] [--keep]
 /// ```
@@ -102,6 +102,17 @@ const _independentRegistryItems = <String>[
   'dashboard_demo',
   'dashboard_shell',
 ];
+
+const _standardRuntimeDependencies = <String>[
+  'remix',
+  'mix_annotations',
+  'mix_chart',
+  'remix_ui_icons',
+];
+
+const _carbonRuntimeDependencies = <String>['remix', 'mix_annotations'];
+
+const _generatorDependencies = <String>['build_runner', 'mix_generator'];
 
 const _dashboardShellFiles = <String>[
   'recipes/dashboard/dashboard_shell_base.dart',
@@ -218,6 +229,10 @@ const _defaultPreset = _PresetContract(
   registryItems: _defaultRegistryItems,
   themeFiles: ['tokens.dart', 'theme_data.dart', 'theme_scope.dart'],
   generatedSnapshots: _generatedSnapshots,
+  runtimeDependencies: _standardRuntimeDependencies,
+  devDependencies: _generatorDependencies,
+  independentRegistryItems: _independentRegistryItems,
+  requiresAgentBuildConfig: true,
   nonGeneratedItems: {'sidebar_layout', 'dashboard_shell', 'dashboard_demo'},
   itemFileOverrides: {
     'dashboard_shell': _dashboardShellFiles,
@@ -321,6 +336,10 @@ const _fortalPreset = _PresetContract(
     'theme_scope.dart',
     'tokens.dart',
   ],
+  runtimeDependencies: _standardRuntimeDependencies,
+  devDependencies: _generatorDependencies,
+  independentRegistryItems: _independentRegistryItems,
+  requiresAgentBuildConfig: true,
   nonGeneratedItems: {
     'base_button',
     'code',
@@ -429,21 +448,22 @@ const _fortalPreset = _PresetContract(
   },
 );
 
-const _requiredRuntimeDependencies = <String>[
-  'remix',
-  'mix_annotations',
-  'mix_chart',
-  'remix_ui_icons',
-];
-const _requiredDevDependencies = <String>['build_runner', 'mix_generator'];
+const _carbonPreset = _PresetContract(
+  name: 'carbon',
+  fixtureDirectory: 'carbon_fixture',
+  registryItems: ['button'],
+  themeFiles: [
+    'theme.dart',
+    'theme_data.dart',
+    'theme_scope.dart',
+    'tokens.dart',
+  ],
+  runtimeDependencies: _carbonRuntimeDependencies,
+  devDependencies: _generatorDependencies,
+  independentRegistryItems: ['button'],
+);
+
 const _forbiddenDependencies = <String>['mix', 'naked_ui', 'registry_source'];
-const _allowedImportPackages = <String>[
-  'flutter',
-  'remix',
-  'mix_annotations',
-  'mix_chart',
-  'remix_ui_icons',
-];
 
 final class _PresetContract {
   const _PresetContract({
@@ -451,6 +471,10 @@ final class _PresetContract {
     required this.fixtureDirectory,
     required this.registryItems,
     required this.themeFiles,
+    required this.runtimeDependencies,
+    required this.devDependencies,
+    required this.independentRegistryItems,
+    this.requiresAgentBuildConfig = false,
     this.nonGeneratedItems = const {},
     this.generatedSnapshots = const {},
     this.sharedItems = const {},
@@ -462,11 +486,17 @@ final class _PresetContract {
   final String fixtureDirectory;
   final List<String> registryItems;
   final List<String> themeFiles;
+  final List<String> runtimeDependencies;
+  final List<String> devDependencies;
+  final List<String> independentRegistryItems;
+  final bool requiresAgentBuildConfig;
   final Set<String> nonGeneratedItems;
   final Map<String, String> generatedSnapshots;
   final Map<String, List<String>> sharedItems;
   final Map<String, List<String>> itemFileOverrides;
   final Map<String, List<String>> focusedClosures;
+
+  Set<String> get allowedImportPackages => {'flutter', ...runtimeDependencies};
 
   List<String> focusedUiFiles(String item) => [
     'ui.dart',
@@ -563,6 +593,8 @@ ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
           preset = _defaultPreset;
         case 'fortal':
           preset = _fortalPreset;
+        case 'carbon':
+          preset = _carbonPreset;
         default:
           return null;
       }
@@ -581,6 +613,7 @@ ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
   }
   if (hostedCli && source != RemixSource.hosted) return null;
   if (item != null && source != RemixSource.checkout) return null;
+  if (item != null && !preset.focusedClosures.containsKey(item)) return null;
   return ConsumerCheckOptions(
     keep: keep,
     preset: preset.name,
@@ -595,7 +628,7 @@ Future<void> main(List<String> arguments) async {
   if (parsed == null) {
     stderr.writeln(
       'Usage: dart run tool/check_open_code.dart '
-      '[--preset default|fortal] [--source both|hosted|checkout] '
+      '[--preset default|fortal|carbon] [--source both|hosted|checkout] '
       '[--item dashboard_demo|dashboard_shell (requires --source checkout)] '
       '[--hosted-cli (requires --source hosted)] [--keep]',
     );
@@ -804,7 +837,7 @@ Future<_Failure?> _checkInTemporaryApp({
   final independent = await _checkIndependentItems(
     sdk: sdk,
     app: app,
-    preset: preset.name,
+    preset: preset,
     environment: environment,
   );
   if (independent != null) return independent;
@@ -826,6 +859,7 @@ Future<_Failure?> _checkInTemporaryApp({
 
   final dependencyFailure = _verifyInstalledDependencies(
     app,
+    preset: preset,
     hostedCli: hostedCli,
   );
   if (dependencyFailure != null) return dependencyFailure;
@@ -834,8 +868,8 @@ Future<_Failure?> _checkInTemporaryApp({
   if (installedConfig is _Failure) return installedConfig;
   final installedPackages = installedConfig as Map<String, String>;
   for (final package in [
-    ..._requiredRuntimeDependencies,
-    ..._requiredDevDependencies,
+    ...preset.runtimeDependencies,
+    ...preset.devDependencies,
     if (hostedCli) 'remix_cli',
   ]) {
     if (startsWithCheckout && package == 'remix') continue;
@@ -931,7 +965,8 @@ Future<_Failure?> _checkInTemporaryApp({
   if (regenerate != null) {
     return _Failure('build_runner failed against current Remix source');
   }
-  if (File('${app.path}/build.yaml').existsSync()) {
+  if (!preset.requiresAgentBuildConfig &&
+      File('${app.path}/build.yaml').existsSync()) {
     return _Failure('generation created an app-level build.yaml');
   }
 
@@ -988,7 +1023,11 @@ Future<_Failure?> _checkFocusedItem({
   final expected = preset.focusedUiFiles(item).toSet();
   final inventoryProblems = <String>[
     ..._focusedInventoryProblems(expected: expected, found: found),
-    ..._installedReferenceProblems(uiRoot, expected),
+    ..._installedReferenceProblems(
+      uiRoot,
+      expected,
+      allowedImportPackages: preset.allowedImportPackages,
+    ),
   ];
   if (inventoryProblems.isNotEmpty) {
     return _Failure(
@@ -1117,12 +1156,12 @@ _Failure? _verifyFocusedDependencies(Directory app, {required String item}) {
 Future<_Failure?> _checkIndependentItems({
   required _Toolchain sdk,
   required Directory app,
-  required String preset,
+  required _PresetContract preset,
   required Map<String, String> environment,
 }) async {
   final pubspec = File('${app.path}/pubspec.yaml').readAsStringSync();
   final override = File('${app.path}/pubspec_overrides.yaml');
-  for (final item in _independentRegistryItems) {
+  for (final item in preset.independentRegistryItems) {
     final isolated = Directory('${app.parent.path}/independent_$item')
       ..createSync();
     File('${isolated.path}/pubspec.yaml').writeAsStringSync(pubspec);
@@ -1142,7 +1181,7 @@ Future<_Failure?> _checkIndependentItems({
         '--prefix',
         'Solo',
         '--preset',
-        preset,
+        preset.name,
       ],
       ['run', 'remix_cli:remix', 'add', item],
     ]) {
@@ -1164,7 +1203,11 @@ Future<_Failure?> _checkIndependentItems({
               file.path.substring(ui.path.length + 1).replaceAll('\\', '/'),
         )
         .toSet();
-    final problems = _installedReferenceProblems(ui, files);
+    final problems = _installedReferenceProblems(
+      ui,
+      files,
+      allowedImportPackages: preset.allowedImportPackages,
+    );
     if (problems.isNotEmpty)
       return _Failure('Independent $item: ${problems.join('; ')}');
     _step(
@@ -1445,6 +1488,7 @@ _Failure? _verifyFixtureContract(
 
 _Failure? _verifyInstalledDependencies(
   Directory app, {
+  required _PresetContract preset,
   required bool hostedCli,
 }) {
   final sections = _dependencySections(
@@ -1456,19 +1500,19 @@ _Failure? _verifyInstalledDependencies(
 
   _expectExactKeys(
     runtime,
-    {'flutter', ..._requiredRuntimeDependencies},
+    {'flutter', ...preset.runtimeDependencies},
     'runtime',
     problems,
   );
   _expectExactKeys(
     development,
-    {'flutter_test', 'remix_cli', ..._requiredDevDependencies},
+    {'flutter_test', 'remix_cli', ...preset.devDependencies},
     'development',
     problems,
   );
   for (final package in [
-    ..._requiredRuntimeDependencies,
-    ..._requiredDevDependencies,
+    ...preset.runtimeDependencies,
+    ...preset.devDependencies,
   ]) {
     final declaration = runtime[package] ?? development[package];
     if (declaration is! String) {
@@ -1531,11 +1575,17 @@ _Failure? _verifyInstalledUi(Directory app, _PresetContract preset) {
       },
     },
   };
-  if (!buildConfig.existsSync() ||
-      _canonicalYaml(loadYaml(buildConfig.readAsStringSync())) !=
-          _canonicalYaml(expected)) {
+  if (preset.requiresAgentBuildConfig) {
+    if (!buildConfig.existsSync() ||
+        _canonicalYaml(loadYaml(buildConfig.readAsStringSync())) !=
+            _canonicalYaml(expected)) {
+      return _Failure(
+        'consumer build.yaml does not match the scoped Agent builder contract',
+      );
+    }
+  } else if (buildConfig.existsSync()) {
     return _Failure(
-      'consumer build.yaml does not match the scoped Agent builder contract',
+      '${preset.name} unexpectedly created a consumer build.yaml',
     );
   }
   final uiRoot = Directory('${app.path}/lib/ui');
@@ -1561,7 +1611,11 @@ _Failure? _verifyInstalledUi(Directory app, _PresetContract preset) {
     }
   }
   problems.addAll(
-    _installedReferenceProblems(uiRoot, preset.installedUiFiles.toSet()),
+    _installedReferenceProblems(
+      uiRoot,
+      preset.installedUiFiles.toSet(),
+      allowedImportPackages: preset.allowedImportPackages,
+    ),
   );
 
   if (problems.isEmpty) return null;
@@ -1573,8 +1627,9 @@ _Failure? _verifyInstalledUi(Directory app, _PresetContract preset) {
 
 List<String> _installedReferenceProblems(
   Directory uiRoot,
-  Set<String> installedUiFiles,
-) {
+  Set<String> installedUiFiles, {
+  required Set<String> allowedImportPackages,
+}) {
   final directive = RegExp(
     r'''^\s*(?:import|export|part(?:\s+of)?)\s+([^;]+);''',
     multiLine: true,
@@ -1595,6 +1650,7 @@ List<String> _installedReferenceProblems(
           uri,
           from: relative,
           installedUiFiles: installedUiFiles,
+          allowedImportPackages: allowedImportPackages,
         );
         if (problem != null) problems.add('$relative: $problem');
       }
@@ -1607,11 +1663,12 @@ String? _referenceProblem(
   String uri, {
   required String from,
   required Set<String> installedUiFiles,
+  required Set<String> allowedImportPackages,
 }) {
   if (uri.startsWith('dart:')) return null;
   if (uri.startsWith('package:')) {
     final package = uri.substring('package:'.length).split('/').first;
-    if (_allowedImportPackages.contains(package)) return null;
+    if (allowedImportPackages.contains(package)) return null;
     return 'imports package:$package, which is outside the registry contract';
   }
   if (uri.contains(':')) return 'uses the non-relative URI `$uri`';
@@ -1839,7 +1896,12 @@ bool _sameBytes(List<int> left, List<int> right) {
 _PresetContract _presetByName(String name) => switch (name) {
   'default' => _defaultPreset,
   'fortal' => _fortalPreset,
-  _ => throw ArgumentError.value(name, 'preset', 'must be default or fortal'),
+  'carbon' => _carbonPreset,
+  _ => throw ArgumentError.value(
+    name,
+    'preset',
+    'must be default, fortal, or carbon',
+  ),
 };
 
 /// Returns the fixture contract error for focused regression tests.
@@ -1858,6 +1920,17 @@ String? registryCoverageProblem(
 String? installedUiProblem(Directory app, {String preset = 'default'}) =>
     _verifyInstalledUi(app, _presetByName(preset))?.message;
 
+/// Returns installed dependency-manifest errors for focused regression tests.
+String? installedDependencyProblem(
+  Directory app, {
+  String preset = 'default',
+  bool hostedCli = false,
+}) => _verifyInstalledDependencies(
+  app,
+  preset: _presetByName(preset),
+  hostedCli: hostedCli,
+)?.message;
+
 /// Returns the explicit-or-conventional file inventory for focused tests.
 List<String> registryItemInventoryForTest(
   String item, {
@@ -1868,6 +1941,9 @@ List<String> registryItemInventoryForTest(
   fixtureDirectory: 'test',
   registryItems: [item],
   themeFiles: const [],
+  runtimeDependencies: const [],
+  devDependencies: const [],
+  independentRegistryItems: const [],
   nonGeneratedItems: nonGenerated ? {item} : const {},
   itemFileOverrides: explicitFiles == null ? const {} : {item: explicitFiles},
 ).installedUiFiles.where((file) => file != 'ui.dart').toList();
@@ -1885,6 +1961,10 @@ List<String> focusedInventoryProblemsForTest(
 /// Returns the independent expected inventory for a focused consumer check.
 Set<String> focusedInventoryForTest(String item, {String preset = 'default'}) =>
     _presetByName(preset).focusedUiFiles(item).toSet();
+
+/// Returns the full expected installed inventory for a preset.
+Set<String> installedInventoryForTest({String preset = 'default'}) =>
+    _presetByName(preset).installedUiFiles.toSet();
 
 /// Formats a post-creation failure so the retained directory is always named.
 String retainedFailureMessage(
