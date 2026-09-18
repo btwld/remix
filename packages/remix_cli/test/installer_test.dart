@@ -616,6 +616,150 @@ packages:
       );
       expect(snapshotFiles(caseRoot), beforePartial);
     });
+
+    test(
+      '$preset dashboard_demo installs as a complete editable starter',
+      () async {
+        final caseRoot = createFlutterPackage();
+        addTearDown(() => caseRoot.deleteSync(recursive: true));
+        const uiPath = 'lib/design system [owned]';
+        await Installer(projectRoot: caseRoot, writeOut: (_) {}).initialize(
+          InitOptions(prefix: 'Acme', preset: preset, uiPath: uiPath),
+        );
+        final main = File(p.join(caseRoot.path, 'lib', 'main.dart'))
+          ..writeAsStringSync('void main() {}\n');
+        final routes = File(p.join(caseRoot.path, 'lib', 'routes.dart'))
+          ..writeAsStringSync('const routes = <String>[];\n');
+        final hostBefore = {
+          main.path: main.readAsBytesSync(),
+          routes.path: routes.readAsBytesSync(),
+        };
+        writeRequiredPubspec(
+          caseRoot,
+          mixChart: '^0.0.1-beta.1',
+          remixUiIcons: '^0.1.0',
+        );
+        writeRequiredLock(
+          caseRoot,
+          mixChart: '0.0.1-beta.1',
+          remixUiIcons: '0.1.0',
+        );
+
+        final installer = Installer(
+          projectRoot: caseRoot,
+          writeOut: (_) {},
+          processRunner: happyRunner(caseRoot, writeLockOnPubGet: false),
+        );
+        await installer.add(
+          const AddOptions(item: 'dashboard_demo', mode: AddMode.dryRun),
+        );
+        final dashboardDirectory = Directory(
+          p.join(caseRoot.path, uiPath, 'recipes', 'dashboard'),
+        );
+        expect(dashboardDirectory.existsSync(), isFalse);
+
+        await installer.add(
+          const AddOptions(item: 'dashboard_demo', mode: AddMode.write),
+        );
+        final dashboardDemo = File(
+          p.join(dashboardDirectory.path, 'dashboard_demo.dart'),
+        );
+        final overview = File(
+          p.join(dashboardDirectory.path, 'dashboard_overview.dart'),
+        );
+        final overviewBase = File(
+          p.join(dashboardDirectory.path, 'dashboard_overview_base.dart'),
+        );
+        final sampleData = File(
+          p.join(dashboardDirectory.path, 'dashboard_sample_data.dart'),
+        );
+        final demoBase = File(
+          p.join(dashboardDirectory.path, 'dashboard_demo_base.dart'),
+        );
+        final demoContent = File(
+          p.join(dashboardDirectory.path, 'dashboard_demo_content.dart'),
+        );
+        final demoChat = File(
+          p.join(dashboardDirectory.path, 'dashboard_demo_chat.dart'),
+        );
+        final demoCharts = File(
+          p.join(dashboardDirectory.path, 'dashboard_demo_charts.dart'),
+        );
+        final demoRecords = File(
+          p.join(dashboardDirectory.path, 'dashboard_demo_records.dart'),
+        );
+        final demoRecordsPage = File(
+          p.join(dashboardDirectory.path, 'dashboard_demo_records_page.dart'),
+        );
+        final demoSettings = File(
+          p.join(dashboardDirectory.path, 'dashboard_demo_settings.dart'),
+        );
+        expect(dashboardDemo.existsSync(), isTrue);
+        expect(demoBase.existsSync(), isTrue);
+        expect(demoContent.existsSync(), isTrue);
+        expect(demoChat.existsSync(), isTrue);
+        expect(demoCharts.existsSync(), isTrue);
+        expect(demoRecords.existsSync(), isTrue);
+        expect(demoRecordsPage.existsSync(), isTrue);
+        expect(demoSettings.existsSync(), isTrue);
+        expect(overview.existsSync(), isTrue);
+        expect(overviewBase.existsSync(), isTrue);
+        expect(
+          sampleData.readAsStringSync(),
+          contains('AcmeDashboardSampleData'),
+        );
+        expect(
+          File(
+            p.join(caseRoot.path, uiPath, 'components', 'chart.dart'),
+          ).existsSync(),
+          isTrue,
+        );
+        expect(
+          File(
+            p.join(caseRoot.path, uiPath, 'components', 'data_table.dart'),
+          ).existsSync(),
+          isTrue,
+        );
+        expect(
+          File(p.join(caseRoot.path, uiPath, 'ui.dart')).readAsStringSync(),
+          allOf(
+            contains("export 'recipes/dashboard/dashboard_demo.dart';"),
+            contains("export 'recipes/dashboard/dashboard_overview.dart';"),
+            contains("export 'recipes/dashboard/dashboard_sample_data.dart';"),
+          ),
+        );
+        for (final entry in hostBefore.entries) {
+          expect(File(entry.key).readAsBytesSync(), entry.value);
+        }
+
+        sampleData.writeAsStringSync(
+          '${sampleData.readAsStringSync()}// retained local metric\n',
+        );
+        final edited = sampleData.readAsBytesSync();
+        await installer.add(
+          const AddOptions(item: 'dashboard_demo', mode: AddMode.write),
+        );
+        expect(sampleData.readAsBytesSync(), edited);
+
+        await installer.add(
+          const AddOptions(item: 'dashboard_demo', mode: AddMode.overwrite),
+        );
+        expect(
+          sampleData.readAsStringSync(),
+          isNot(contains('retained local metric')),
+        );
+
+        overviewBase.deleteSync();
+        final beforePartial = snapshotFiles(caseRoot);
+        await expectLater(
+          installer.add(
+            const AddOptions(item: 'dashboard_demo', mode: AddMode.write),
+          ),
+          throwsFormatException,
+        );
+        expect(snapshotFiles(caseRoot), beforePartial);
+      },
+    );
   }
 
   test(
@@ -762,7 +906,12 @@ packages:
                 )
             ? '0.1.0'
             : null;
-        final mixChart = item == 'chart' ? '0.0.1-beta.1' : null;
+        final mixChart =
+            catalog
+                .resolve(item)
+                .any((entry) => entry.dependencies.containsKey('mix_chart'))
+            ? '0.0.1-beta.1'
+            : null;
         writeRequiredPubspec(
           caseRoot,
           mixChart: mixChart == null ? null : '^$mixChart',

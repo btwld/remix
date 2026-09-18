@@ -23,6 +23,7 @@ void main() {
       expect(options.preset, 'default');
       expect(options.keep, isFalse);
       expect(options.hostedCli, isFalse);
+      expect(options.item, isNull);
     });
 
     test('either preset can select an explicit source', () {
@@ -70,6 +71,40 @@ void main() {
       expect(options.source, checker.RemixSource.hosted);
       expect(options.preset, 'fortal');
     });
+
+    test('focused dashboard_demo checks require the checkout source', () {
+      for (final item in ['dashboard_demo', 'dashboard_shell']) {
+        final options = checker.parseConsumerCheckOptions([
+          '--source',
+          'checkout',
+          '--item',
+          item,
+          '--preset',
+          'fortal',
+          '--keep',
+        ])!;
+        expect(options.item, item);
+        expect(options.source, checker.RemixSource.checkout);
+        expect(options.keep, isTrue);
+      }
+
+      for (final arguments in [
+        ['--item', 'dashboard_demo'],
+        ['--source', 'hosted', '--item', 'dashboard_demo'],
+        ['--source', 'checkout', '--item', 'missing'],
+        ['--source', 'checkout', '--item'],
+        [
+          '--source',
+          'checkout',
+          '--item',
+          'dashboard_demo',
+          '--item',
+          'dashboard_shell',
+        ],
+      ]) {
+        expect(checker.parseConsumerCheckOptions(arguments), isNull);
+      }
+    });
   });
 
   test('explicit item inventories support grouped non-generated recipes', () {
@@ -93,6 +128,37 @@ void main() {
       'components/button.dart',
       'components/button.g.dart',
     ]);
+    expect(
+      checker.registryItemInventoryForTest(
+        'dashboard_demo',
+        explicitFiles: [
+          'recipes/dashboard/dashboard_sample_data.dart',
+          'recipes/dashboard/dashboard_overview_base.dart',
+          'recipes/dashboard/dashboard_demo_base.dart',
+          'recipes/dashboard/dashboard_demo_content.dart',
+          'recipes/dashboard/dashboard_demo_chat.dart',
+          'recipes/dashboard/dashboard_demo_charts.dart',
+          'recipes/dashboard/dashboard_demo_records.dart',
+          'recipes/dashboard/dashboard_overview.dart',
+          'recipes/dashboard/dashboard_demo_galleries.dart',
+          'recipes/dashboard/dashboard_demo_records_page.dart',
+          'recipes/dashboard/dashboard_demo_settings.dart',
+          'recipes/dashboard/dashboard_demo.dart',
+        ],
+        nonGenerated: true,
+      ),
+      hasLength(12),
+    );
+  });
+
+  test('focused dashboard_demo inventory rejects a missing recipe file', () {
+    final installed = checker.focusedInventoryForTest('dashboard_demo');
+    installed.remove('recipes/dashboard/dashboard_overview_base.dart');
+
+    expect(
+      checker.focusedInventoryProblemsForTest('dashboard_demo', installed),
+      ['focused install lacks recipes/dashboard/dashboard_overview_base.dart'],
+    );
   });
 
   test('the committed fixture is the minimal pre-install contract', () {
@@ -320,6 +386,7 @@ const _registryItems = <String>[
   'callout',
   'card',
   'chart',
+  'dashboard_demo',
   'dashboard_shell',
   'checkbox',
   'data_list',
@@ -382,7 +449,22 @@ void _writeInstalledUi(Directory app) {
     'support/functional_glyph.dart',
     'support/live_edge.dart',
     for (final item in _registryItems)
-      ...(item == 'dashboard_shell'
+      ...(item == 'dashboard_demo'
+          ? const [
+              'recipes/dashboard/dashboard_sample_data.dart',
+              'recipes/dashboard/dashboard_overview_base.dart',
+              'recipes/dashboard/dashboard_demo_base.dart',
+              'recipes/dashboard/dashboard_demo_content.dart',
+              'recipes/dashboard/dashboard_demo_chat.dart',
+              'recipes/dashboard/dashboard_demo_charts.dart',
+              'recipes/dashboard/dashboard_demo_records.dart',
+              'recipes/dashboard/dashboard_overview.dart',
+              'recipes/dashboard/dashboard_demo_galleries.dart',
+              'recipes/dashboard/dashboard_demo_records_page.dart',
+              'recipes/dashboard/dashboard_demo_settings.dart',
+              'recipes/dashboard/dashboard_demo.dart',
+            ]
+          : item == 'dashboard_shell'
           ? const [
               'recipes/dashboard/dashboard_shell_base.dart',
               'recipes/dashboard/dashboard_shell.dart',

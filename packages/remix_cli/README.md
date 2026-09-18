@@ -199,6 +199,41 @@ persistence mechanism. Place it below the preset theme scope and keep those
 host responsibilities in the application. A normal reinstall preserves edits;
 use `--diff` and explicit `--overwrite` for template updates.
 
+### Add the full dashboard demo
+
+Initialize either preset, then use the same item and public dashboard API:
+
+```shell
+dart run remix_cli:remix init --prefix Ui --preset default
+# Or initialize a separate app with: --preset fortal
+dart run remix_cli:remix add dashboard_demo
+```
+
+`dashboard_demo` installs `UiDashboardDemo`, `UiDashboardOverview`, the
+reusable shell, and all twelve destinations from the Fortal reference
+dashboard. Product pages and gallery categories match across presets while
+their specimens use each preset's native variants. The overview's four
+metrics, revenue series, and recent records live in editable
+`lib/ui/recipes/dashboard/dashboard_sample_data.dart`; replace them there or
+pass a `RegistryDashboardSampleData` to `UiDashboardDemo(data: ...)`.
+
+The host supplies its Flutter application, directionality, brand, and theme
+scope. Default uses `UiThemeScope(data: UiThemeData.light(), child: ...)`;
+Fortal uses `UiScope(child: ...)`. The installer does not rewrite `main.dart`,
+routes, authentication, persistence, or search behavior. Pass a real
+`onSearchChanged` callback to show search; omit it to remove the field.
+
+Installed recipe source follows the normal update contract. Re-running `add
+dashboard_demo` preserves local edits. Inspect a newer template with `--diff`, and
+use `--overwrite` only when deliberately replacing the installed recipe.
+
+Contributors can reproduce the isolated consumer gates for either preset:
+
+```shell
+dart run tool/check_open_code.dart --preset default --source checkout --item dashboard_demo --keep
+dart run tool/check_open_code.dart --preset fortal --source checkout --item dashboard_demo --keep
+```
+
 `dart run remix_cli:remix add icons` is the deliberate exception. It adds
 `lib/ui/icons.dart`, declares `remix_ui_icons`, and exposes a small,
 application-owned `UiIcons` alias set with no generated adapter. Add or rename

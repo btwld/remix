@@ -555,6 +555,16 @@ layout with no `Spec` or generated adapter; it pulls in `sidebar` to compose
 into its row and compact sheet. `dashboard_shell` composes those existing
 primitives into a host-controlled responsive shell. It installs no charts,
 tables, sample data, routes, or application entry point.
+`dashboard_demo` adds the full twelve-destination reference application:
+Overview, Chat, Customers, Orders, Settings, Charts, Actions, Forms & Inputs,
+Data Display, Overlays, Navigation, and Typography. Product content and
+navigation match across presets; each component gallery uses that preset's own
+public variants. The starter includes deterministic Agent flows, complete
+customer and order tables, all twelve chart cases, interactive galleries,
+appearance and notification chrome, and local toast feedback. Built-in chrome
+can be disabled; caller actions append to it and caller account content replaces
+the default. It leaves the application, routes, authentication, persistence,
+and backend search behavior with the host.
 
 The registry requires Remix beta.10, which includes `RemixSidebar` and the Toast APIs.
 The installer rejects older resolved versions before it writes source.
@@ -570,6 +580,7 @@ The installer rejects older resolved versions before it writes source.
 | `card` | `UiCard` | — |
 | `chart` | `UiLineChart`, `UiBarChart`, `UiPieChart` | — |
 | `checkbox` | `UiCheckbox`, `UiCheckboxGroupItem` | — |
+| `dashboard_demo` | `UiDashboardDemo`, `UiDashboardOverview` | — |
 | `dashboard_shell` | `UiDashboardShell` | — |
 | `data_list` | `UiDataList` | — |
 | `data_table` | `UiDataTable` | — |

@@ -192,6 +192,91 @@ items:
     exports:
       - recipes/composer_recipe.dart
 
+  dashboard_demo:
+    registryDependencies:
+      - theme
+      - accordion
+      - activity
+      - activity_recipe
+      - answer
+      - answer_recipe
+      - avatar
+      - badge
+      - button
+      - callout
+      - card
+      - chart
+      - checkbox
+      - composer
+      - composer_recipe
+      - dashboard_shell
+      - data_list
+      - data_table
+      - dialog
+      - disclosure
+      - divider
+      - execution
+      - execution_recipe
+      - icon_button
+      - link
+      - menu
+      - message
+      - message_recipe
+      - permission
+      - permission_recipe
+      - plan
+      - plan_recipe
+      - popover
+      - progress
+      - radio
+      - segmented_control
+      - select
+      - sidebar
+      - skeleton
+      - slider
+      - spinner
+      - switch
+      - tabs
+      - textfield
+      - toast
+      - toggle
+      - toggle_group
+      - tooltip
+      - transcript
+      - transcript_recipe
+    dependencies:
+      mix_chart: ^0.0.1-beta.1
+      remix_ui_icons: ^0.1.0
+    files:
+      - source: templates/dashboard_demo/dashboard_sample_data.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_sample_data.dart"
+      - source: templates/dashboard_demo/dashboard_overview_base.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_overview_base.dart"
+      - source: templates/dashboard_demo/dashboard_demo_base.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo_base.dart"
+      - source: templates/dashboard_demo/dashboard_demo_content.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo_content.dart"
+      - source: templates/dashboard_demo/dashboard_demo_chat.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo_chat.dart"
+      - source: templates/dashboard_demo/dashboard_demo_charts.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo_charts.dart"
+      - source: templates/dashboard_demo/dashboard_demo_records.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo_records.dart"
+      - source: templates/dashboard_demo/dashboard_overview.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_overview.dart"
+      - source: templates/dashboard_demo/dashboard_demo_galleries.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo_galleries.dart"
+      - source: templates/dashboard_demo/dashboard_demo_records_page.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo_records_page.dart"
+      - source: templates/dashboard_demo/dashboard_demo_settings.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo_settings.dart"
+      - source: templates/dashboard_demo/dashboard_demo.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_demo.dart"
+    exports:
+      - recipes/dashboard/dashboard_sample_data.dart
+      - recipes/dashboard/dashboard_overview.dart
+      - recipes/dashboard/dashboard_demo.dart
+
   dashboard_shell:
     registryDependencies:
       - theme

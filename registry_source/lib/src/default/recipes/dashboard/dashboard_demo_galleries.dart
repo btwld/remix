@@ -1,0 +1,1158 @@
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+import 'package:remix_ui_icons/remix_ui_icons.dart';
+
+import '../../components/accordion.dart';
+import '../../components/avatar.dart';
+import '../../components/badge.dart';
+import '../../components/button.dart';
+import '../../components/callout.dart';
+import '../../components/card.dart';
+import '../../components/checkbox.dart';
+import '../../components/data_list.dart';
+import '../../components/dialog.dart';
+import '../../components/disclosure.dart';
+import '../../components/divider.dart';
+import '../../components/icon_button.dart';
+import '../../components/link.dart';
+import '../../components/menu.dart';
+import '../../components/popover.dart';
+import '../../components/progress.dart';
+import '../../components/radio.dart';
+import '../../components/segmented_control.dart';
+import '../../components/select.dart';
+import '../../components/sidebar.dart';
+import '../../components/skeleton.dart';
+import '../../components/slider.dart';
+import '../../components/spinner.dart';
+import '../../components/switch.dart';
+import '../../components/tabs.dart';
+import '../../components/textfield.dart';
+import '../../components/toggle.dart';
+import '../../components/toggle_group.dart';
+import '../../components/tooltip.dart';
+import '../../theme/tokens.dart';
+
+class DefaultGalleryPage extends StatelessWidget {
+  const DefaultGalleryPage({
+    super.key,
+    required this.title,
+    required this.intro,
+    required this.sections,
+  });
+
+  final String title;
+  final String intro;
+  final List<Widget> sections;
+
+  @override
+  Widget build(BuildContext context) => SingleChildScrollView(
+    padding: const EdgeInsets.all(32),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _Heading(title, size: 28, weight: FontWeight.w700),
+        const SizedBox(height: 6),
+        _Text(intro, muted: true),
+        const SizedBox(height: 20),
+        for (final (index, section) in sections.indexed) ...[
+          if (index > 0) const SizedBox(height: 20),
+          section,
+        ],
+      ],
+    ),
+  );
+}
+
+class _Section extends StatelessWidget {
+  const _Section({
+    required this.label,
+    required this.description,
+    required this.child,
+  });
+
+  final String label;
+  final String description;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => VanillaCard(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _Heading(label, size: 17, weight: FontWeight.w600),
+        const SizedBox(height: 4),
+        _Text(description, muted: true, size: 13),
+        const SizedBox(height: 16),
+        child,
+      ],
+    ),
+  );
+}
+
+class _Matrix<R, C> extends StatelessWidget {
+  const _Matrix({
+    required this.rows,
+    required this.columns,
+    required this.rowLabel,
+    required this.columnLabel,
+    required this.cell,
+    this.cellWidth = 190,
+  });
+
+  final List<R> rows;
+  final List<C> columns;
+  final String Function(R) rowLabel;
+  final String Function(C) columnLabel;
+  final Widget Function(R, C) cell;
+  final double cellWidth;
+
+  @override
+  Widget build(BuildContext context) => SingleChildScrollView(
+    scrollDirection: Axis.horizontal,
+    child: Table(
+      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+      border: TableBorder.all(color: VanillaTokens.border.resolve(context)),
+      columnWidths: {
+        0: const FixedColumnWidth(112),
+        for (var index = 0; index < columns.length; index++)
+          index + 1: FixedColumnWidth(cellWidth),
+      },
+      children: [
+        TableRow(
+          children: [
+            const SizedBox(height: 48),
+            for (final column in columns)
+              _MatrixCell(child: _Text(columnLabel(column), muted: true)),
+          ],
+        ),
+        for (final row in rows)
+          TableRow(
+            children: [
+              _MatrixCell(child: _Text(rowLabel(row), muted: true)),
+              for (final column in columns)
+                _MatrixCell(child: cell(row, column)),
+            ],
+          ),
+      ],
+    ),
+  );
+}
+
+class _MatrixCell extends StatelessWidget {
+  const _MatrixCell({required this.child});
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.all(10),
+    child: Center(child: child),
+  );
+}
+
+class DefaultGalleryActionsPage extends StatefulWidget {
+  const DefaultGalleryActionsPage({super.key});
+
+  @override
+  State<DefaultGalleryActionsPage> createState() =>
+      _DefaultGalleryActionsPageState();
+}
+
+class _DefaultGalleryActionsPageState extends State<DefaultGalleryActionsPage> {
+  bool _selected = true;
+
+  @override
+  Widget build(BuildContext context) => DefaultGalleryPage(
+    title: 'Actions',
+    intro: 'Interactive actions across every native variant and size.',
+    sections: [
+      _Section(
+        label: 'Button',
+        description:
+            'Primary, secondary, outline, ghost, and destructive actions.',
+        child: _Matrix(
+          rows: VanillaButtonVariant.values,
+          columns: VanillaButtonSize.values,
+          rowLabel: _enumLabel,
+          columnLabel: _enumLabel,
+          cell: (variant, size) => VanillaButton(
+            variant: variant,
+            size: size,
+            onPressed: () => _toast(context, 'Button pressed'),
+            label: 'Button',
+          ),
+        ),
+      ),
+      _Section(
+        label: 'Icon button',
+        description:
+            'Compact icon-only controls with complete focus semantics.',
+        child: _Matrix(
+          rows: VanillaIconButtonVariant.values,
+          columns: VanillaIconButtonSize.values,
+          rowLabel: _enumLabel,
+          columnLabel: _enumLabel,
+          cell: (variant, size) => VanillaIconButton(
+            variant: variant,
+            size: size,
+            icon: RemixIcons.plus,
+            semanticLabel: 'Add item',
+            onPressed: () => _toast(context, 'Item added'),
+          ),
+        ),
+      ),
+      _Section(
+        label: 'Toggle',
+        description: 'Ghost and outline toggles remain fully interactive.',
+        child: _Matrix(
+          rows: VanillaToggleVariant.values,
+          columns: VanillaToggleSize.values,
+          rowLabel: _enumLabel,
+          columnLabel: _enumLabel,
+          cell: (variant, size) => VanillaToggle(
+            variant: variant,
+            size: size,
+            selected: _selected,
+            icon: RemixIcons.fontBold,
+            label: 'Bold',
+            onChanged: (value) => setState(() => _selected = value),
+          ),
+        ),
+      ),
+      _Section(
+        label: 'States',
+        description:
+            'Disabled and loading behavior uses the same component API.',
+        child: Wrap(
+          spacing: 12,
+          runSpacing: 12,
+          children: [
+            const VanillaButton(label: 'Disabled', enabled: false),
+            VanillaButton(label: 'Saving', loading: true, onPressed: () {}),
+            const VanillaIconButton(
+              icon: RemixIcons.heart,
+              semanticLabel: 'Disabled favorite',
+              enabled: false,
+            ),
+          ],
+        ),
+      ),
+    ],
+  );
+}
+
+class DefaultGalleryFormsPage extends StatefulWidget {
+  const DefaultGalleryFormsPage({super.key});
+
+  @override
+  State<DefaultGalleryFormsPage> createState() =>
+      _DefaultGalleryFormsPageState();
+}
+
+class _DefaultGalleryFormsPageState extends State<DefaultGalleryFormsPage> {
+  bool _checked = true;
+  bool _switched = true;
+  int _radio = 1;
+  String _alignment = 'left';
+  String _density = 'comfortable';
+  Set<String> _channels = {'email'};
+  double _slider = 58;
+
+  @override
+  Widget build(BuildContext context) => DefaultGalleryPage(
+    title: 'Forms & Inputs',
+    intro: 'Production-ready fields and selection controls in every preset.',
+    sections: [
+      const _Section(
+        label: 'Text field',
+        description: 'The native field with a leading icon and placeholder.',
+        child: SizedBox(
+          width: 300,
+          child: VanillaTextField(
+            hintText: 'Type something…',
+            leading: Icon(RemixIcons.magnifyingGlass, size: 16),
+          ),
+        ),
+      ),
+      const _Section(
+        label: 'Text area',
+        description: 'Multi-line input sharing the text field treatment.',
+        child: SizedBox(
+          width: 360,
+          child: VanillaTextArea(hintText: 'Add a note…'),
+        ),
+      ),
+      _Section(
+        label: 'Segmented control',
+        description: 'Exclusive selection using the native treatment.',
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: VanillaSegmentedControl<String>(
+            selectedValue: _density,
+            semanticLabel: 'Row density',
+            items: const [
+              RemixSegmentedControlItem(value: 'compact', label: 'Compact'),
+              RemixSegmentedControlItem(value: 'comfortable', label: 'Cozy'),
+            ],
+            onChanged: (value) => setState(() => _density = value),
+          ),
+        ),
+      ),
+      _Section(
+        label: 'Select',
+        description: 'A keyboard-accessible native select.',
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: SizedBox(
+            width: 220,
+            child: VanillaSelect<String>(
+              trigger: const RemixSelectTrigger(placeholder: 'Fruit'),
+              items: const [
+                RemixSelectItem(value: 'apple', label: 'Apple'),
+                RemixSelectItem(value: 'orange', label: 'Orange'),
+                RemixSelectItem(value: 'pear', label: 'Pear'),
+              ],
+              selectedValue: 'apple',
+              onChanged: (_) {},
+            ),
+          ),
+        ),
+      ),
+      _Section(
+        label: 'Toggle group',
+        description: 'Every native group variant and size.',
+        child: _Matrix(
+          rows: VanillaToggleGroupVariant.values,
+          columns: VanillaToggleGroupSize.values,
+          rowLabel: _enumLabel,
+          columnLabel: _enumLabel,
+          cellWidth: 230,
+          cell: (variant, size) => VanillaToggleGroup<String>(
+            variant: variant,
+            size: size,
+            selectedValue: _alignment,
+            semanticLabel: 'Text alignment',
+            items: const [
+              RemixToggleGroupItem(
+                value: 'left',
+                icon: RemixIcons.alignLeft,
+                semanticLabel: 'Left',
+              ),
+              RemixToggleGroupItem(
+                value: 'center',
+                icon: RemixIcons.alignCenterHorizontally,
+                semanticLabel: 'Center',
+              ),
+              RemixToggleGroupItem(
+                value: 'right',
+                icon: RemixIcons.alignRight,
+                semanticLabel: 'Right',
+              ),
+            ],
+            onChanged: (value) {
+              if (value != null) setState(() => _alignment = value);
+            },
+          ),
+        ),
+      ),
+      _Section(
+        label: 'Checkbox',
+        description: 'The native tri-state checkbox recipe.',
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: VanillaCheckbox(
+            selected: _checked,
+            label: 'Example checkbox',
+            onChanged: (value) => setState(() => _checked = value ?? false),
+          ),
+        ),
+      ),
+      _Section(
+        label: 'Checkbox group',
+        description: 'Labelled options share the checkbox tap target.',
+        child: RemixCheckboxGroup<String>(
+          values: _channels,
+          semanticLabel: 'Notification channels',
+          onChanged: (values) => setState(() => _channels = values),
+          child: Wrap(
+            spacing: 18,
+            runSpacing: 6,
+            children: [
+              for (final (value, label) in const [
+                ('email', 'Email'),
+                ('sms', 'SMS'),
+                ('push', 'Push'),
+              ])
+                VanillaCheckboxGroupItem<String>(value: value, label: label),
+            ],
+          ),
+        ),
+      ),
+      _Section(
+        label: 'Radio',
+        description: 'Exclusive radio selection.',
+        child: RemixRadioGroup<int>(
+          groupValue: _radio,
+          onChanged: (value) {
+            if (value != null) setState(() => _radio = value);
+          },
+          child: const Wrap(
+            spacing: 20,
+            children: [
+              VanillaRadio<int>(value: 1, semanticLabel: 'First option'),
+              VanillaRadio<int>(value: 2, semanticLabel: 'Second option'),
+            ],
+          ),
+        ),
+      ),
+      _Section(
+        label: 'Switch',
+        description: 'The native binary setting control.',
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: VanillaSwitch(
+            selected: _switched,
+            semanticLabel: 'Example switch',
+            onChanged: (value) => setState(() => _switched = value),
+          ),
+        ),
+      ),
+      _Section(
+        label: 'Slider',
+        description: 'A discrete single-thumb slider.',
+        child: SizedBox(
+          width: 300,
+          child: VanillaSlider(
+            value: _slider,
+            min: 0,
+            max: 100,
+            snapDivisions: 100,
+            onChanged: (value) => setState(() => _slider = value),
+          ),
+        ),
+      ),
+      const _Section(
+        label: 'States',
+        description: 'Validation, disabled, and indeterminate states.',
+        child: Wrap(
+          spacing: 16,
+          runSpacing: 16,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            SizedBox(
+              width: 240,
+              child: VanillaTextField(
+                error: true,
+                label: 'Workspace slug',
+                hintText: 'remix',
+                helperText: 'That slug is already in use.',
+              ),
+            ),
+            VanillaCheckbox(
+              selected: null,
+              tristate: true,
+              semanticLabel: 'Indeterminate checkbox',
+            ),
+            VanillaCheckbox(selected: true, label: 'Labelled'),
+            VanillaSwitch(
+              selected: false,
+              enabled: false,
+              semanticLabel: 'Disabled switch',
+            ),
+          ],
+        ),
+      ),
+    ],
+  );
+}
+
+class DefaultGalleryDisplayPage extends StatefulWidget {
+  const DefaultGalleryDisplayPage({super.key});
+
+  @override
+  State<DefaultGalleryDisplayPage> createState() =>
+      _DefaultGalleryDisplayPageState();
+}
+
+class _DefaultGalleryDisplayPageState extends State<DefaultGalleryDisplayPage> {
+  bool _spinnersRunning = false;
+  bool _skeletonLoading = false;
+
+  @override
+  Widget build(BuildContext context) => DefaultGalleryPage(
+    title: 'Data Display',
+    intro: 'Rich surfaces and status components for product interfaces.',
+    sections: [
+      const _Section(
+        label: 'Avatar',
+        description: 'The native avatar treatment with image and fallback.',
+        child: Wrap(
+          spacing: 16,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            VanillaAvatar(label: 'RF'),
+            VanillaAvatar(icon: RemixIcons.person),
+          ],
+        ),
+      ),
+      _Section(
+        label: 'Badge',
+        description: 'Status labels in every native variant.',
+        child: Wrap(
+          spacing: 12,
+          runSpacing: 12,
+          children: [
+            for (final variant in VanillaBadgeVariant.values)
+              VanillaBadge(variant: variant, label: _enumLabel(variant)),
+          ],
+        ),
+      ),
+      const _Section(
+        label: 'Card',
+        description: 'The native surface and spacing treatment.',
+        child: SizedBox(
+          width: 240,
+          child: VanillaCard(child: _Text('Card content')),
+        ),
+      ),
+      _Section(
+        label: 'Callout',
+        description: 'Contextual information in every native variant.',
+        child: Wrap(
+          spacing: 12,
+          runSpacing: 12,
+          children: [
+            for (final variant in VanillaCalloutVariant.values)
+              SizedBox(
+                width: 280,
+                child: VanillaCallout(
+                  variant: variant,
+                  icon: variant == VanillaCalloutVariant.destructive
+                      ? RemixIcons.exclamationTriangle
+                      : RemixIcons.infoCircled,
+                  text: 'A helpful ${_enumLabel(variant)} callout.',
+                ),
+              ),
+          ],
+        ),
+      ),
+      const _Section(
+        label: 'Data list',
+        description: 'Label and value pairs in both orientations.',
+        child: Wrap(
+          spacing: 32,
+          runSpacing: 20,
+          children: [
+            VanillaDataList(
+              items: [
+                RemixDataListItem(label: 'Status', value: 'Active'),
+                RemixDataListItem(label: 'Plan', value: 'Enterprise'),
+                RemixDataListItem(label: 'Seats', value: '48'),
+              ],
+            ),
+            VanillaDataList(
+              orientation: Axis.vertical,
+              items: [
+                RemixDataListItem(label: 'Status', value: 'Active'),
+                RemixDataListItem(label: 'Plan', value: 'Enterprise'),
+                RemixDataListItem(label: 'Seats', value: '48'),
+              ],
+            ),
+          ],
+        ),
+      ),
+      _Section(
+        label: 'Skeleton',
+        description: 'Placeholder shapes preserve loaded measurements.',
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            VanillaButton.secondary(
+              size: .small,
+              label: _skeletonLoading ? 'Show content' : 'Show skeleton',
+              onPressed: () =>
+                  setState(() => _skeletonLoading = !_skeletonLoading),
+            ),
+            const SizedBox(height: 14),
+            VanillaSkeleton(
+              loading: _skeletonLoading,
+              child: const VanillaAvatar(label: 'RF'),
+            ),
+            const SizedBox(height: 10),
+            VanillaSkeleton(
+              loading: _skeletonLoading,
+              child: const _Text('Loaded content replaces the placeholder.'),
+            ),
+          ],
+        ),
+      ),
+      const _Section(
+        label: 'Progress',
+        description: 'Determinate progress using the native treatment.',
+        child: SizedBox(
+          width: 320,
+          child: VanillaProgress(
+            value: .68,
+            semanticsLabel: '68 percent complete',
+          ),
+        ),
+      ),
+      _Section(
+        label: 'Spinner',
+        description:
+            'Animation is stopped by default so automated tests settle.',
+        child: Row(
+          children: [
+            VanillaButton.secondary(
+              size: .small,
+              label: _spinnersRunning ? 'Stop' : 'Start',
+              onPressed: () =>
+                  setState(() => _spinnersRunning = !_spinnersRunning),
+            ),
+            const SizedBox(width: 18),
+            if (_spinnersRunning)
+              const VanillaSpinner(semanticsLabel: 'Loading example')
+            else
+              const Icon(RemixIcons.check, size: 16),
+          ],
+        ),
+      ),
+      const _Section(
+        label: 'Divider',
+        description: 'Horizontal and vertical native dividers.',
+        child: Column(
+          children: [
+            VanillaDivider(),
+            SizedBox(height: 14),
+            SizedBox(
+              height: 48,
+              child: VanillaDivider(orientation: Axis.vertical),
+            ),
+          ],
+        ),
+      ),
+    ],
+  );
+}
+
+class DefaultGalleryOverlaysPage extends StatefulWidget {
+  const DefaultGalleryOverlaysPage({super.key});
+
+  @override
+  State<DefaultGalleryOverlaysPage> createState() =>
+      _DefaultGalleryOverlaysPageState();
+}
+
+class _DefaultGalleryOverlaysPageState
+    extends State<DefaultGalleryOverlaysPage> {
+  bool _showArchived = true;
+  String _sort = 'newest';
+
+  @override
+  Widget build(BuildContext context) => DefaultGalleryPage(
+    title: 'Overlays',
+    intro: 'Real dialog, popover, tooltip, and menu triggers for every recipe.',
+    sections: [
+      _Section(
+        label: 'Dialog',
+        description: 'A modal, focus-trapped confirmation surface.',
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: VanillaButton.secondary(
+            label: 'Open',
+            onPressed: () => showRemixDialog<void>(
+              context: context,
+              barrierLabel: 'Dismiss',
+              builder: (dialogContext) => VanillaDialog(
+                title: 'Invite teammates',
+                description: 'Share this workspace with your collaborators.',
+                actions: [
+                  VanillaButton.secondary(
+                    label: 'Cancel',
+                    onPressed: () => Navigator.of(dialogContext).pop(),
+                  ),
+                  VanillaButton(
+                    label: 'Send invite',
+                    onPressed: () => Navigator.of(dialogContext).pop(),
+                  ),
+                ],
+                child: const Padding(
+                  padding: EdgeInsets.only(top: 12),
+                  child: VanillaTextField(hintText: 'teammate@example.com'),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+      const _Section(
+        label: 'Popover',
+        description: 'Anchored content using the native padding treatment.',
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: VanillaPopover(
+            semanticLabel: 'Open quick note popover',
+            popoverChild: SizedBox(
+              width: 250,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _Text('Quick note', emphasized: true),
+                  SizedBox(height: 8),
+                  _Text('Popover content inherits the active theme.'),
+                ],
+              ),
+            ),
+            child: _OverlayTrigger('Open popover'),
+          ),
+        ),
+      ),
+      const _Section(
+        label: 'Tooltip',
+        description: 'Hover or long-press to reveal contextual help.',
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: VanillaTooltip(
+            tooltipSemantics: 'Keyboard shortcut Command K',
+            tooltipChild: Text('Search · ⌘K'),
+            child: _OverlayTrigger('Hover for shortcut'),
+          ),
+        ),
+      ),
+      _Section(
+        label: 'Menu',
+        description:
+            'Submenus, checkbox and radio items use real menu behavior.',
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: VanillaMenu<String>(
+            trigger: const RemixMenuTrigger(
+              label: 'Open menu',
+              icon: RemixIcons.dotsHorizontal,
+            ),
+            items: [
+              const RemixMenuItem(value: 'duplicate', label: 'Duplicate'),
+              const RemixMenuSubmenu(
+                label: 'Share',
+                items: [
+                  RemixMenuItem(value: 'share-link', label: 'Copy link'),
+                  RemixMenuItem(value: 'share-email', label: 'Email'),
+                ],
+              ),
+              const RemixMenuDivider(),
+              RemixMenuCheckboxItem(
+                value: 'archived',
+                label: 'Show archived',
+                checked: _showArchived,
+                onChanged: (checked) => setState(() => _showArchived = checked),
+              ),
+              const RemixMenuDivider(),
+              RemixMenuRadioGroup(
+                value: _sort,
+                onChanged: (value) => setState(() => _sort = value),
+                items: const [
+                  RemixMenuRadioItem(value: 'newest', label: 'Newest'),
+                  RemixMenuRadioItem(value: 'oldest', label: 'Oldest'),
+                ],
+              ),
+            ],
+            onSelected: (value) => _toast(context, '$value selected'),
+          ),
+        ),
+      ),
+    ],
+  );
+}
+
+class DefaultGalleryNavigationPage extends StatefulWidget {
+  const DefaultGalleryNavigationPage({super.key});
+
+  @override
+  State<DefaultGalleryNavigationPage> createState() =>
+      _DefaultGalleryNavigationPageState();
+}
+
+class _DefaultGalleryNavigationPageState
+    extends State<DefaultGalleryNavigationPage> {
+  String _sidebar = 'overview';
+  String _tab = 'overview';
+  final _accordion = RemixAccordionController<String>(max: 1);
+
+  @override
+  void dispose() {
+    _accordion.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => DefaultGalleryPage(
+    title: 'Navigation',
+    intro:
+        'Sectioned navigation, tabs, disclosures, and accordions for organizing dense interfaces.',
+    sections: [
+      _Section(
+        label: 'Sidebar',
+        description:
+            'A controlled native sidebar with fixed header and footer.',
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: SizedBox(
+            width: 280,
+            height: 320,
+            child: VanillaSidebar<String>(
+              header: const Padding(
+                padding: EdgeInsets.all(14),
+                child: _Heading('Acme', size: 16, weight: FontWeight.w700),
+              ),
+              sections: const [
+                RemixSidebarSection(
+                  label: 'Workspace',
+                  destinations: [
+                    RemixSidebarDestination(
+                      value: 'overview',
+                      label: 'Overview',
+                      icon: RemixIcons.dashboard,
+                    ),
+                    RemixSidebarDestination(
+                      value: 'activity',
+                      label: 'Activity',
+                      icon: RemixIcons.activityLog,
+                    ),
+                  ],
+                ),
+                RemixSidebarSection(
+                  label: 'Manage',
+                  destinations: [
+                    RemixSidebarDestination(
+                      value: 'settings',
+                      label: 'Settings',
+                      icon: RemixIcons.mixerHorizontal,
+                    ),
+                  ],
+                ),
+              ],
+              selectedValue: _sidebar,
+              onSelected: (value) => setState(() => _sidebar = value),
+              footer: const _Text('Ada Chen', emphasized: true),
+              semanticLabel: 'Gallery navigation example',
+            ),
+          ),
+        ),
+      ),
+      _Section(
+        label: 'Tabs',
+        description: 'Live keyboard and pointer selection.',
+        child: RemixTabs(
+          selectedTabId: _tab,
+          onChanged: (value) => setState(() => _tab = value),
+          child: const Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              VanillaTabBar(
+                child: Row(
+                  children: [
+                    VanillaTab(tabId: 'overview', label: 'Overview'),
+                    VanillaTab(tabId: 'activity', label: 'Activity'),
+                  ],
+                ),
+              ),
+              VanillaTabView(
+                tabId: 'overview',
+                child: Padding(
+                  padding: EdgeInsets.all(12),
+                  child: _Text('Overview content'),
+                ),
+              ),
+              VanillaTabView(
+                tabId: 'activity',
+                child: Padding(
+                  padding: EdgeInsets.all(12),
+                  child: _Text('Activity content'),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      const _Section(
+        label: 'Disclosure',
+        description: 'An independent expandable native panel.',
+        child: VanillaDisclosure(
+          defaultExpanded: true,
+          semanticLabel: 'Shipping details',
+          trigger: _Text('Shipping details', emphasized: true),
+          content: _Text('Delivery takes 3–5 business days.'),
+        ),
+      ),
+      _Section(
+        label: 'Accordion',
+        description: 'Coordinated panels keep one section open.',
+        child: RemixAccordionGroup<String>(
+          controller: _accordion,
+          child: const Column(
+            children: [
+              VanillaAccordion<String>(
+                value: 'details',
+                title: 'What is Fortal?',
+                child: _Text(
+                  'A Radix-inspired theme and component system for Flutter.',
+                ),
+              ),
+              VanillaAccordion<String>(
+                value: 'tokens',
+                title: 'Does it support tokens?',
+                child: _Text(
+                  'Every recipe resolves through the active Mix scope.',
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ],
+  );
+}
+
+class DefaultGalleryTypographyPage extends StatelessWidget {
+  const DefaultGalleryTypographyPage({super.key});
+
+  @override
+  Widget build(BuildContext context) => DefaultGalleryPage(
+    title: 'Typography',
+    intro: 'Text, headings, code, keys, and links on one shared scale.',
+    sections: [
+      _Section(
+        label: 'Text scale',
+        description: 'The native scale from caption to display.',
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (final size in const [12.0, 14.0, 16.0, 20.0, 24.0, 32.0])
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 3),
+                child: _Text(
+                  'The quick brown fox · ${size.toInt()}px',
+                  size: size,
+                ),
+              ),
+          ],
+        ),
+      ),
+      _Section(
+        label: 'Weights',
+        description: 'The complete native font-weight range.',
+        child: Wrap(
+          spacing: 24,
+          runSpacing: 12,
+          children: [
+            for (final (label, weight) in const [
+              ('Regular', FontWeight.w400),
+              ('Medium', FontWeight.w500),
+              ('Semibold', FontWeight.w600),
+              ('Bold', FontWeight.w700),
+            ])
+              _Text(label, size: 18, weight: weight),
+          ],
+        ),
+      ),
+      _Section(
+        label: 'Heading level and size',
+        description:
+            'Semantic heading levels remain independent of visual scale.',
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Semantics(
+              header: true,
+              child: const _Heading('Level 1 heading at 28px', size: 28),
+            ),
+            const SizedBox(height: 8),
+            Semantics(
+              header: true,
+              child: const _Heading('Level 2 heading at 20px', size: 20),
+            ),
+            const SizedBox(height: 8),
+            Semantics(
+              header: true,
+              child: const _Heading('Level 3 heading at 16px', size: 16),
+            ),
+          ],
+        ),
+      ),
+      const _Section(
+        label: 'Code',
+        description: 'Inline code uses a distinct monospace surface.',
+        child: Wrap(
+          spacing: 12,
+          children: [_Code('const x = 1;'), _Code('remix add dashboard_demo')],
+        ),
+      ),
+      const _Section(
+        label: 'Keyboard keys',
+        description: 'Keyboard caps remain readable beside body copy.',
+        child: Wrap(
+          spacing: 8,
+          children: [_Keycap('⌘'), _Keycap('K'), _Keycap('Enter')],
+        ),
+      ),
+      _Section(
+        label: 'Links',
+        description: 'Interactive, disabled, and destination-bearing links.',
+        child: Wrap(
+          spacing: 20,
+          runSpacing: 12,
+          children: [
+            VanillaLink(
+              label: 'Interactive',
+              onPressed: () => _toast(context, 'Link activated'),
+            ),
+            const VanillaLink(label: 'Disabled'),
+            VanillaLink(
+              label: 'Documentation',
+              linkUrl: Uri.parse('https://docs.page/btwld/remix'),
+              onPressed: () => _toast(context, 'Navigation is the caller\'s'),
+            ),
+          ],
+        ),
+      ),
+      const _Section(
+        label: 'Accent and high contrast',
+        description: 'Foreground and muted roles preserve useful contrast.',
+        child: Wrap(
+          spacing: 20,
+          runSpacing: 12,
+          children: [
+            _Text('Foreground'),
+            _Text('Muted foreground', muted: true),
+            _Heading('Strong heading', size: 16),
+          ],
+        ),
+      ),
+      const _Section(
+        label: 'Wrapping and truncation',
+        description: 'Long text demonstrates both wrapping strategies.',
+        child: Wrap(
+          spacing: 32,
+          runSpacing: 16,
+          children: [
+            SizedBox(
+              width: 260,
+              child: _Text(
+                'Wrap keeps the complete sentence, across as many lines as it needs.',
+              ),
+            ),
+            SizedBox(
+              width: 260,
+              child: _Text(
+                'Truncate keeps exactly one line, across as many lines as it needs.',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ],
+  );
+}
+
+class _OverlayTrigger extends StatelessWidget {
+  const _OverlayTrigger(this.label);
+  final String label;
+
+  @override
+  Widget build(BuildContext context) => VanillaBadge.outline(label: label);
+}
+
+class _Text extends StatelessWidget {
+  const _Text(
+    this.value, {
+    this.size = 14,
+    this.weight = FontWeight.w400,
+    this.muted = false,
+    this.emphasized = false,
+    this.maxLines,
+    this.overflow,
+  });
+
+  final String value;
+  final double size;
+  final FontWeight weight;
+  final bool muted;
+  final bool emphasized;
+  final int? maxLines;
+  final TextOverflow? overflow;
+
+  @override
+  Widget build(BuildContext context) {
+    var style = TextStyler()
+        .fontSize(size)
+        .fontWeight(emphasized ? FontWeight.w600 : weight)
+        .color(
+          muted ? VanillaTokens.mutedForeground() : VanillaTokens.foreground(),
+        );
+    if (maxLines != null) style = style.maxLines(maxLines!);
+    if (overflow != null) style = style.overflow(overflow!);
+    return StyledText(value, style: style);
+  }
+}
+
+class _Heading extends _Text {
+  const _Heading(
+    super.value, {
+    super.size = 18,
+    super.weight = FontWeight.w600,
+  });
+}
+
+class _Code extends StatelessWidget {
+  const _Code(this.value);
+  final String value;
+
+  @override
+  Widget build(BuildContext context) => DecoratedBox(
+    decoration: BoxDecoration(
+      color: VanillaTokens.muted.resolve(context),
+      borderRadius: BorderRadius.circular(6),
+    ),
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      child: StyledText(
+        value,
+        style: TextStyler()
+            .fontFamily('monospace')
+            .fontSize(13)
+            .color(VanillaTokens.foreground()),
+      ),
+    ),
+  );
+}
+
+class _Keycap extends StatelessWidget {
+  const _Keycap(this.value);
+  final String value;
+
+  @override
+  Widget build(BuildContext context) => DecoratedBox(
+    decoration: BoxDecoration(
+      color: VanillaTokens.background.resolve(context),
+      border: Border.all(color: VanillaTokens.border.resolve(context)),
+      borderRadius: BorderRadius.circular(5),
+    ),
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
+      child: _Text(value, size: 12, emphasized: true),
+    ),
+  );
+}
+
+String _enumLabel(Enum value) {
+  final name = value.name;
+  return '${name[0].toUpperCase()}${name.substring(1)}';
+}
+
+void _toast(BuildContext context, String title) => showRemixToast(
+  context,
+  RemixToastData(title: title, icon: RemixIcons.checkCircled),
+);
