@@ -1,141 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import '../ui/ui.dart';
 
+import '../ui/ui.dart';
 import '../utils/text.dart';
 import '../widgets/action_menu.dart';
 import '../widgets/typography.dart';
-import 'dashboard_page.dart';
-import 'dashboard_shell_layout.dart';
-import 'sidebar_sections.dart';
 
-class Sidebar extends StatelessWidget {
-  const Sidebar({
-    super.key,
-    required this.selected,
-    required this.onSelected,
-    this.collapsed = false,
-    this.onToggle,
-  });
-
-  final bool collapsed;
-
-  /// Collapses or expands the desktop panel; null hides the control (drawer).
-  final VoidCallback? onToggle;
-
-  final DashboardPage selected;
-  final ValueChanged<DashboardPage> onSelected;
+/// Product brand supplied through the installed shell's brand slot.
+class DashboardBrand extends StatelessWidget {
+  const DashboardBrand({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // Placement stays here: UiSidebar owns no display edge. Passing the
-    // device insets into the generated wrapper keeps them inside its painted
-    // surface instead of putting a SafeArea around that surface.
-    final insets = MediaQuery.paddingOf(context);
-
-    // `Sidebar` stays self-sizing (rather than deferring width entirely to
-    // `UiSidebarLayout`'s row) so it keeps working the way `sidebar_test`
-    // exercises it: standalone, in a bare `Row` with no imposed width. The
-    // shell's own row wraps this same width in an `AnimatedContainer` using
-    // the identical constants and the identical `collapsed` trigger, so the
-    // two transitions move together.
-    return UiSidebar<DashboardPage>(
-      collapsed: collapsed,
-      expandedWidth: dashboardSidebarWidth,
-      collapsedWidth: dashboardSidebarCollapsedWidth,
-      panelPadding: insets,
-      header: _Brand(collapsed: collapsed, onToggle: onToggle),
-      sections: dashboardSidebarSections,
-      selectedValue: selected,
-      onSelected: onSelected,
-      footer: const _Profile(),
-      semanticLabel: 'Dashboard navigation',
-    );
-  }
+  Widget build(BuildContext context) => Semantics(
+    key: const ValueKey('dashboard-brand'),
+    label: 'Dashboard',
+    excludeSemantics: true,
+    child: const UiText('Dashboard', size: .size5, weight: .bold),
+  );
 }
 
-class _Brand extends StatelessWidget {
-  const _Brand({required this.collapsed, required this.onToggle});
-
-  final bool collapsed;
-  final VoidCallback? onToggle;
+/// Product account menu supplied through the installed shell's footer slot.
+class DashboardSidebarAccount extends StatelessWidget {
+  const DashboardSidebarAccount({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final motion = RemixSidebar.animationOf(context);
-    final inset = UiTokens.space3.resolve(context);
-    final label = collapsed ? 'Expand navigation' : 'Collapse navigation';
-    return DashboardShellHeader(
-      key: const ValueKey('dashboard-brand'),
-      horizontalPadding: UiTokens.space3(),
-      child: RowBox(
-        children: [
-          Expanded(
-            child: Semantics(
-              label: 'Dashboard',
-              excludeSemantics: true,
-              // The wordmark starts where expanded destination icons start.
-              child: Padding(
-                padding: EdgeInsetsDirectional.only(
-                  start: UiTokens.space4.resolve(context),
-                ),
-                child: _SidebarTextReveal(
-                  motion: motion,
-                  child: const UiText('Dashboard', size: .size5, weight: .bold),
-                ),
-              ),
-            ),
-          ),
-          if (onToggle case final onToggle?) ...[
-            UiTooltip(
-              positioning: OverlayPositionConfig(
-                side: Directionality.of(context) == TextDirection.ltr
-                    ? OverlaySide.right
-                    : OverlaySide.left,
-                alignment: OverlayAlignment.center,
-              ),
-              tooltipChild: ExcludeSemantics(child: Text(label)),
-              child: RemixIconButton(
-                key: const ValueKey('dashboard-sidebar-toggle'),
-                semanticLabel: label,
-                style: dashboardToolbarButtonStyle,
-                onPressed: onToggle,
-                icon: collapsed ? Icons.menu : Icons.menu_open,
-              ),
-            ),
-            // The toggle rides the trailing edge and settles on the rail's
-            // center line with the destination icons.
-            SizedBox(
-              width:
-                  (_railCenter(context) -
-                          inset -
-                          dashboardToolbarButtonSize / 2)
-                      .clamp(0.0, double.infinity),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-}
-
-/// Center line of the collapsed rail, where destination icons settle.
-double _railCenter(BuildContext context) =>
-    (dashboardSidebarCollapsedWidth - UiTokens.borderWidth1.resolve(context)) /
-    2;
-
-class _Profile extends StatelessWidget {
-  const _Profile();
-
-  @override
-  Widget build(BuildContext context) {
-    final motion = RemixSidebar.animationOf(context);
-    final inset = UiTokens.space2.resolve(context);
-    // The avatar stays on the rail's center line in both presentations.
-    final lead =
-        (_railCenter(context) - inset - UiTokens.space6.resolve(context) / 2)
-            .clamp(0.0, double.infinity);
-    return Box(
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, constraints) => Box(
       style: BoxStyler().padding(
         .symmetric(horizontal: UiTokens.space2(), vertical: UiTokens.space3()),
       ),
@@ -144,41 +34,42 @@ class _Profile extends StatelessWidget {
         semanticLabel: 'Workspace account menu',
         trigger: ConstrainedBox(
           constraints: const BoxConstraints(minHeight: 48),
-          child: RowBox(
-            children: [
-              SizedBox(width: lead),
-              const UiAvatar(label: 'LF', size: .size2),
-              SizedBox(width: 10 * motion.expansion),
-              Expanded(
-                child: _SidebarTextReveal(
-                  motion: motion,
-                  child: ColumnBox(
-                    style: FlexBoxStyler()
-                        .mainAxisSize(.min)
-                        .crossAxisAlignment(.start),
-                    children: [
-                      const UiText('Leo Farias', size: .size2, weight: .medium),
-                      StyledText(
-                        'leo@remix.dev',
-                        style: dashboardText(
-                          .size1,
-                          tone: .muted,
-                        ).maxLines(1).softWrap(false),
+          child: constraints.maxWidth < 180
+              ? const Center(
+                  child: UiAvatar(label: 'LF', size: .size2),
+                )
+              : RowBox(
+                  style: FlexBoxStyler().spacing(10),
+                  children: [
+                    const UiAvatar(label: 'LF', size: .size2),
+                    Expanded(
+                      child: ColumnBox(
+                        style: FlexBoxStyler()
+                            .mainAxisSize(.min)
+                            .crossAxisAlignment(.start),
+                        children: [
+                          const UiText(
+                            'Leo Farias',
+                            size: .size2,
+                            weight: .medium,
+                          ),
+                          StyledText(
+                            'leo@remix.dev',
+                            style: dashboardText(
+                              .size1,
+                              tone: .muted,
+                            ).maxLines(1).softWrap(false),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                    Icon(
+                      Icons.more_horiz,
+                      size: 18,
+                      color: MixScope.tokenOf(UiTokens.gray11, context),
+                    ),
+                  ],
                 ),
-              ),
-              _SidebarTextReveal(
-                motion: motion,
-                child: Icon(
-                  Icons.more_horiz,
-                  size: 18,
-                  color: MixScope.tokenOf(UiTokens.gray11, context),
-                ),
-              ),
-            ],
-          ),
         ),
         actions: const [
           DashboardAction(value: 'profile', label: 'View profile'),
@@ -198,25 +89,6 @@ class _Profile extends StatelessWidget {
             icon: Icons.check_circle_outline,
           ),
         ),
-      ),
-    );
-  }
-}
-
-/// Clips only non-interactive text; the surrounding menu and focus ring remain.
-class _SidebarTextReveal extends StatelessWidget {
-  const _SidebarTextReveal({required this.motion, required this.child});
-  final SidebarAnimation motion;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) => ClipRect(
-    child: Align(
-      alignment: AlignmentDirectional.centerStart,
-      widthFactor: motion.expansion,
-      child: Opacity(
-        opacity: motion.labelOpacity,
-        child: Offstage(offstage: motion.expansion == 0, child: child),
       ),
     ),
   );

@@ -26,4 +26,7 @@ abstract final class FortalIcons {
 
   /// Moves a start-edge panel toward the right.
   static const IconData doubleArrowRight = RemixIcons.doubleArrowRight;
+
+  /// Represents the dashboard overview destination.
+  static const IconData dashboard = RemixIcons.dashboard;
 }

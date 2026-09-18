@@ -135,7 +135,7 @@ void main() {
     expect(find.byKey(const ValueKey('dashboard-menu')), findsWidgets);
     expect(tester.takeException(), isNull);
 
-    await tester.tap(find.byIcon(Icons.menu));
+    await tester.tap(find.byKey(const ValueKey('dashboard-menu')).first);
     for (var frame = 0; frame < 5; frame++) {
       await tester.pump(const Duration(milliseconds: 100));
     }
@@ -225,7 +225,7 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
 
     await tester.pumpWidget(const DashboardApp());
-    await tester.tap(find.byIcon(Icons.menu));
+    await tester.tap(find.byKey(const ValueKey('dashboard-menu')).first);
     for (var frame = 0; frame < 5; frame++) {
       await tester.pump(const Duration(milliseconds: 100));
     }
@@ -1064,7 +1064,7 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
 
     await tester.pumpWidget(const DashboardApp());
-    await tester.tap(find.byIcon(Icons.menu));
+    await tester.tap(find.byKey(const ValueKey('dashboard-menu')).first);
     for (var frame = 0; frame < 5; frame++) {
       await tester.pump(const Duration(milliseconds: 100));
     }
@@ -1158,7 +1158,7 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
 
     await tester.pumpWidget(const DashboardApp());
-    await tester.tap(find.byIcon(Icons.menu));
+    await tester.tap(find.byKey(const ValueKey('dashboard-menu')).first);
     for (var frame = 0; frame < 5; frame++) {
       await tester.pump(const Duration(milliseconds: 100));
     }
@@ -1185,7 +1185,7 @@ void main() {
     await tester.tap(find.byKey(const ValueKey(DashboardPage.customers)).first);
     await tester.pump();
 
-    final search = find.byKey(const ValueKey('global-search'));
+    final search = find.byKey(const ValueKey('dashboard-search'));
     expect(search, findsWidgets);
     await tester.enterText(
       find.descendant(of: search, matching: find.byType(EditableText)),

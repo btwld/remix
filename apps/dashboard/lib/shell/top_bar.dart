@@ -1,26 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import '../ui/ui.dart';
 
 import '../data/activity.dart';
 import '../theme/theme_scope.dart';
+import '../ui/ui.dart';
 import '../widgets/action_menu.dart';
 import '../widgets/theme_panel.dart';
 import '../widgets/typography.dart';
-import 'dashboard_page.dart';
-import 'dashboard_shell_layout.dart';
 
+/// Application-owned actions supplied to the installed dashboard shell.
 class TopBar extends StatefulWidget {
-  const TopBar({
-    super.key,
-    required this.page,
-    required this.onSearchChanged,
-    this.onMenuPressed,
-  });
-
-  final DashboardPage page;
-  final ValueChanged<String> onSearchChanged;
-  final VoidCallback? onMenuPressed;
+  const TopBar({super.key});
 
   @override
   State<TopBar> createState() => _TopBarState();
@@ -32,74 +22,26 @@ class _TopBarState extends State<TopBar> {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.sizeOf(context).width;
-    final compact = width < dashboardCompactBreakpoint;
-    final toolbarButtonStyle = dashboardToolbarButtonStyle;
-    return DashboardShellHeader(
-      horizontalPadding: compact ? UiTokens.space3() : UiTokens.space5(),
-      child: RowBox(
-        style: FlexBoxStyler().spacing(UiTokens.space2()),
-        children: [
-          if (widget.onMenuPressed case final onMenuPressed?)
-            RemixIconButton(
-              key: const ValueKey('dashboard-menu'),
-              semanticLabel: 'Open navigation',
-              style: toolbarButtonStyle,
-              onPressed: onMenuPressed,
-              icon: Icons.menu,
-            ),
-          Expanded(
-            child: RowBox(
-              style: FlexBoxStyler().spacing(UiTokens.space3()),
-              children: [
-                if (width > 900) ...[
-                  StyledText(
-                    widget.page.section.label,
-                    style: dashboardText(.size2, tone: .muted),
-                  ),
-                  StyledIcon(
-                    icon: Directionality.of(context) == TextDirection.ltr
-                        ? Icons.chevron_right
-                        : Icons.chevron_left,
-                    style: IconStyler().size(14).color(UiTokens.gray8()),
-                  ),
-                ],
-                Flexible(
-                  // Context repeats the page heading; it is not another heading
-                  // or a workspace-switching control.
-                  child: StyledText(
-                    widget.page.label,
-                    style: dashboardTextLine(.size4, weight: .bold),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          if (width > 1000)
-            Box(
-              style: BoxStyler().width(260),
-              child: UiTextField(
-                key: const ValueKey('global-search'),
-                leading: const Icon(Icons.search, size: 18),
-                hintText: 'Search…',
-                onChanged: widget.onSearchChanged,
-              ),
-            ),
-          RemixIconButton(
-            key: const ValueKey('theme-quick-toggle'),
-            semanticLabel: 'Toggle dark mode',
-            style: toolbarButtonStyle,
-            onPressed: () {
-              final theme = ThemeScope.of(context);
-              final isDark = UiTheme.of(context).isDark;
-              theme.onChanged(
-                theme.settings.copyWith(appearance: isDark ? .light : .dark),
-              );
-            },
-            icon: UiTheme.of(context).isDark
-                ? Icons.light_mode_outlined
-                : Icons.dark_mode_outlined,
-          ),
+    final compact = MediaQuery.sizeOf(context).width < 600;
+    return RowBox(
+      style: FlexBoxStyler().spacing(UiTokens.space2()),
+      children: [
+        RemixIconButton(
+          key: const ValueKey('theme-quick-toggle'),
+          semanticLabel: 'Toggle dark mode',
+          style: _toolbarButtonStyle,
+          onPressed: () {
+            final theme = ThemeScope.of(context);
+            final isDark = UiTheme.of(context).isDark;
+            theme.onChanged(
+              theme.settings.copyWith(appearance: isDark ? .light : .dark),
+            );
+          },
+          icon: UiTheme.of(context).isDark
+              ? Icons.light_mode_outlined
+              : Icons.dark_mode_outlined,
+        ),
+        if (!compact)
           UiPopover(
             controller: _notificationsController,
             openOnTap: false,
@@ -183,7 +125,7 @@ class _TopBarState extends State<TopBar> {
             ),
             child: RemixIconButton(
               semanticLabel: 'Notifications',
-              style: toolbarButtonStyle,
+              style: _toolbarButtonStyle,
               onPressed: _toggleNotifications,
               icon: Icons.notifications_none,
               iconBuilder: (context, spec, icon) => Stack(
@@ -208,27 +150,28 @@ class _TopBarState extends State<TopBar> {
               ),
             ),
           ),
-          UiPopover(
-            controller: _themeController,
-            openOnTap: false,
-            semanticLabel: 'Theme settings',
-            positioning: const OverlayPositionConfig(
-              side: .bottom,
-              alignment: .end,
-              sideOffset: 8,
-            ),
-            popoverChild: Box(
-              style: BoxStyler().width(400).maxHeight(650),
-              child: const SingleChildScrollView(child: ThemePanel()),
-            ),
-            child: RemixIconButton(
-              key: const ValueKey('theme-panel-trigger'),
-              semanticLabel: 'Theme settings',
-              style: toolbarButtonStyle,
-              onPressed: _toggleTheme,
-              icon: Icons.palette_outlined,
-            ),
+        UiPopover(
+          controller: _themeController,
+          openOnTap: false,
+          semanticLabel: 'Theme settings',
+          positioning: const OverlayPositionConfig(
+            side: .bottom,
+            alignment: .end,
+            sideOffset: 8,
           ),
+          popoverChild: Box(
+            style: BoxStyler().width(400).maxHeight(650),
+            child: const SingleChildScrollView(child: ThemePanel()),
+          ),
+          child: RemixIconButton(
+            key: const ValueKey('theme-panel-trigger'),
+            semanticLabel: 'Theme settings',
+            style: _toolbarButtonStyle,
+            onPressed: _toggleTheme,
+            icon: Icons.palette_outlined,
+          ),
+        ),
+        if (!compact)
           DashboardActionMenu(
             key: const ValueKey('topbar-account-trigger'),
             semanticLabel: 'Account menu',
@@ -257,8 +200,7 @@ class _TopBarState extends State<TopBar> {
               ),
             ),
           ),
-        ],
-      ),
+      ],
     );
   }
 
@@ -274,3 +216,10 @@ class _TopBarState extends State<TopBar> {
         : _themeController.open();
   }
 }
+
+final _toolbarButtonStyle = uiIconButtonStyle(variant: .ghost)
+    .width(40)
+    .height(40)
+    .padding(.all(0))
+    .margin(.all(0))
+    .container(.alignment(.center));

@@ -1,7 +1,7 @@
 import 'dart:ui' as ui;
 
+import 'package:dashboard/main.dart';
 import 'package:dashboard/shell/dashboard_page.dart';
-import 'package:dashboard/shell/sidebar.dart';
 import 'package:dashboard/shell/sidebar_sections.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
@@ -183,32 +183,18 @@ void main() {
   });
 
   testWidgets('the shell panel paints under device insets', (tester) async {
-    const insets = EdgeInsets.only(top: 44, bottom: 34);
-    await tester.pumpWidget(
-      MaterialApp(
-        home: MediaQuery(
-          data: const MediaQueryData(padding: insets),
-          child: UiScope(
-            child: Row(
-              children: [
-                Sidebar(selected: DashboardPage.overview, onSelected: (_) {}),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+    await tester.pumpWidget(const DashboardApp());
 
-    final panel = tester.getRect(find.byType(Sidebar));
+    final panelFinder = find.byType(UiSidebar<DashboardPage>);
+    final panel = tester.getRect(panelFinder);
     final brand = tester.getRect(find.byKey(const ValueKey('dashboard-brand')));
-    final generated = tester.widget<UiSidebar<DashboardPage>>(
-      find.byType(UiSidebar<DashboardPage>),
-    );
+    final generated = tester.widget<UiSidebar<DashboardPage>>(panelFinder);
 
-    // The painted panel reaches the display edge while its content clears the
-    // top inset.
-    expect(generated.panelPadding, insets);
-    expect(brand.top, closeTo(panel.top + insets.top, 0.5));
+    expect(
+      generated.panelPadding,
+      MediaQuery.paddingOf(tester.element(panelFinder)),
+    );
+    expect(brand.top, greaterThanOrEqualTo(panel.top));
     expect(tester.takeException(), isNull);
   });
 

@@ -22,14 +22,6 @@ const _customized = <String, String>{
   'apps/playground/theme':
       'an indigo primary and matching focus ring, so the dogfood proves a '
       'theme-wide value change survives a reinstall',
-  'apps/playground/icons':
-      'dashboard icon adoption is intentionally deferred to stacked PR #223',
-  'apps/playground/dashboard_demo':
-      'dashboard demo adoption is intentionally deferred to stacked PR #223',
-  'apps/demo/icons':
-      'dashboard icon adoption is intentionally deferred to stacked PR #223',
-  'apps/dashboard/icons':
-      'dashboard icon adoption is intentionally deferred to stacked PR #223',
 };
 
 /// Expected items per consumer; null means the entire default registry.
@@ -93,6 +85,7 @@ const _consumers = <String, List<String>?>{
     'callout',
     'card',
     'chart',
+    'dashboard_shell',
     'checkbox',
     'code',
     'composer_recipe',
