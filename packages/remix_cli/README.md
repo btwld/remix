@@ -20,6 +20,10 @@ action and close control. The default `sidebar` item uses the application's
 `toggle` recipe for destinations. `sidebar_layout` is a plain shell layout
 with no `Spec` or generated adapter: it composes an installed `sidebar` into
 a row above its compact breakpoint and a start-edge sheet below it.
+The grouped `dashboard_shell` recipe builds on those pieces with host-owned
+navigation, page content, optional search, and brand/account/action slots. It
+has no generated adapter and does not install charts, tables, Agent surfaces,
+or an application entry point.
 The catalog also offers `chart` as an optional extension over
 `mix_chart`; it does not depend on `remix_fortal`. There is no remote registry,
 update command, registry lockfile, or content-hash protocol.
@@ -174,6 +178,26 @@ generated parts, such as `base_button` and `typography`.
 Existing authored source stays untouched. When generation runs, the build
 includes every installed adapter. This protects earlier generated parts when
 dependencies change.
+
+### Add a dashboard shell
+
+```shell
+dart run remix_cli:remix add dashboard_shell
+```
+
+This installs the preset's sidebar, responsive sidebar layout, icon button,
+textfield, icons, and theme dependency closure plus two editable files under
+`lib/ui/recipes/dashboard/`. The public `UiDashboardShell<T>` API is the same
+for `default` and `fortal`. The host supplies `RemixSidebarSection<T>` values,
+the selected value and callback, the current page body, title, and brand slot.
+Account and header-action slots are optional. Search is absent unless the host
+provides `onSearchChanged`.
+
+The shell composes inside the existing application. It does not create a
+`MaterialApp`, `WidgetsApp`, `Navigator`, route table, authentication layer, or
+persistence mechanism. Place it below the preset theme scope and keep those
+host responsibilities in the application. A normal reinstall preserves edits;
+use `--diff` and explicit `--overwrite` for template updates.
 
 `dart run remix_cli:remix add icons` is the deliberate exception. It adds
 `lib/ui/icons.dart`, declares `remix_ui_icons`, and exposes a small,

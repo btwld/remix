@@ -11,6 +11,7 @@ registry_source/                 one private workspace package
   lib/src/default/              default theme, components, Agent recipes
   lib/src/fortal/               Fortal theme, components, Agent recipes
   lib/src/agent/                shared Agent behavior, models, support
+  lib/src/dashboard/            shared dashboard composition
 packages/remix_cli/lib/src/registry/
   default/                     derived registry.yaml and templates/
   fortal/                      derived registry.yaml and templates/
@@ -49,6 +50,9 @@ A recipe installs its dependency closure, not the entire catalog. The eight
 Agent surfaces (`activity`, `answer`, `composer`, `execution`, `message`,
 `permission`, `plan`, `transcript`) can install bare or through their
 `*_recipe` bundles. Shared `models` and `support` install transitively.
+The `dashboard_shell` grouped recipe combines shared composition with one
+preset adapter and installs only its shell dependency closure. It leaves the
+host entry point, routes, page body, authentication, and persistence alone.
 
 Installed Dart imports the public `remix` API, not `registry_source`.
 `mix_chart` and `remix_ui_icons` remain opt-in hosted dependencies of the items
@@ -95,8 +99,8 @@ compares the complete output trees, including unexpected or missing files.
   prefix `Ui`. Workspace → Chat demonstrates the eight surfaces together.
 
 All three consume installed source. Dashboard pages and its simulated runner
-remain application-owned; neither a full dashboard template nor a composed
-`chat` item is currently bundled.
+remain application-owned. A reusable dashboard shell is bundled; a complete
+dashboard starter and a composed `chat` item are still separate work.
 
 ## Verification and release
 

@@ -487,6 +487,10 @@ final class {{typePrefix}}BotDialRecipe {
 
       final wrapper =
           first.files['templates/dashboard_shell/dashboard_shell.dart.tmpl']!;
+      final base = first
+          .files['templates/dashboard_shell/dashboard_shell_base.dart.tmpl']!;
+      expect(base, contains('final class {{typePrefix}}DashboardShellBase'));
+      expect(base, isNot(contains('RegistryDashboardShellBase')));
       expect(wrapper, contains("import 'dashboard_shell_base.dart';"));
       expect(wrapper, contains('final class {{typePrefix}}DashboardShell'));
       expect(wrapper, isNot(contains("import '../../../dashboard/")));
@@ -694,14 +698,20 @@ const _acmeWithGroupedRecipes = PresetSpec(
         GroupedRecipeFileSpec(
           source: '../dashboard/dashboard_navigation.dart',
           target: 'recipes/dashboard/dashboard_navigation.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
         ),
         GroupedRecipeFileSpec(
           source: '../dashboard/dashboard_shell_base.dart',
           target: 'recipes/dashboard/dashboard_shell_base.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
         ),
         GroupedRecipeFileSpec(
           source: 'recipes/dashboard/dashboard_shell.dart',
           target: 'recipes/dashboard/dashboard_shell.dart',
+          sourceTypeWord: 'Registry',
+          sourceValueWord: 'registry',
         ),
       ],
       exports: [
@@ -839,14 +849,14 @@ void _writeGroupedAcmeSources(
     _write(
       sharedRoot,
       'dashboard/dashboard_navigation.dart',
-      'final class AcmeDashboardDestination {}\n',
+      'final class RegistryDashboardDestination {}\n',
     );
   }
   _write(
     sharedRoot,
     'dashboard/dashboard_shell_base.dart',
     "import '${brokenImport ? 'missing.dart' : 'dashboard_navigation.dart'}';\n"
-        'final class AcmeDashboardShellBase {}\n',
+        'final class RegistryDashboardShellBase {}\n',
   );
   _write(
     sharedRoot,
@@ -858,7 +868,7 @@ void _writeGroupedAcmeSources(
     'recipes/dashboard/dashboard_shell.dart',
     "import '../../../dashboard/dashboard_shell_base.dart';\n\n"
         "const marker = '../../../dashboard/not-an-import.dart';\n"
-        'final class AcmeDashboardShell {}\n',
+        'final class AcmeDashboardShell extends RegistryDashboardShellBase {}\n',
   );
   _write(
     builder.sourceRoot,

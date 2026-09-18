@@ -239,6 +239,43 @@ items:
   );
 
   test(
+    'dashboard_shell is a grouped, independently installable recipe',
+    () async {
+      for (final preset in const ['default', 'fortal']) {
+        final catalog = await RegistryCatalog.loadBundled(preset: preset);
+        final item = catalog.items['dashboard_shell']!;
+        final closure = catalog
+            .resolve('dashboard_shell')
+            .map((dependency) => dependency.name)
+            .toList();
+
+        expect(item.files, hasLength(2), reason: preset);
+        expect(item.generated, isEmpty, reason: preset);
+        expect(item.exports, ['recipes/dashboard/dashboard_shell.dart']);
+        expect(closure.last, 'dashboard_shell');
+        expect(closure, containsAll(['sidebar', 'sidebar_layout']));
+        expect(
+          closure,
+          everyElement(
+            isNot(
+              anyOf(equals('chart'), equals('data_table'), equals('activity')),
+            ),
+          ),
+        );
+
+        final sources = <String>[];
+        for (final file in item.files) {
+          sources.add(await catalog.readTemplate(file));
+        }
+        final joined = sources.join('\n');
+        expect(joined, contains('class {{typePrefix}}DashboardShell'));
+        expect(joined, isNot(contains('package:flutter/material.dart')));
+        expect(joined, isNot(contains('registry_source')));
+      }
+    },
+  );
+
+  test(
     'dependency resolution de-duplicates in stable dependency-first order',
     () {
       final catalog = parse('''schema: 1
@@ -407,6 +444,7 @@ items:
         ..._componentSurfaces.keys,
         ..._agentSurfaces.keys,
         ..._agentRecipeNames,
+        'dashboard_shell',
       });
 
       for (final name in [..._componentSurfaces.keys, ..._agentSurfaces.keys]) {

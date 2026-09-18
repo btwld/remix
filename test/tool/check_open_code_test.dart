@@ -320,6 +320,7 @@ const _registryItems = <String>[
   'callout',
   'card',
   'chart',
+  'dashboard_shell',
   'checkbox',
   'data_list',
   'data_table',
@@ -381,7 +382,12 @@ void _writeInstalledUi(Directory app) {
     'support/functional_glyph.dart',
     'support/live_edge.dart',
     for (final item in _registryItems)
-      ...(item == 'icons'
+      ...(item == 'dashboard_shell'
+          ? const [
+              'recipes/dashboard/dashboard_shell_base.dart',
+              'recipes/dashboard/dashboard_shell.dart',
+            ]
+          : item == 'icons'
           ? const ['icons.dart']
           : item.endsWith('_recipe')
           ? ['recipes/$item.dart']

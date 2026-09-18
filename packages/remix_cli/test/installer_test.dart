@@ -528,6 +528,96 @@ packages:
     expect(writer.paths, isEmpty);
   });
 
+  for (final preset in const ['default', 'fortal']) {
+    test('$preset dashboard_shell installs to a custom bracketed path without '
+        'touching host entry points', () async {
+      final caseRoot = createFlutterPackage();
+      addTearDown(() => caseRoot.deleteSync(recursive: true));
+      const uiPath = 'lib/design system [owned]';
+      await Installer(
+        projectRoot: caseRoot,
+        writeOut: (_) {},
+      ).initialize(InitOptions(prefix: 'Acme', preset: preset, uiPath: uiPath));
+      final main = File(p.join(caseRoot.path, 'lib', 'main.dart'))
+        ..writeAsStringSync('void main() {}\n');
+      final routes = File(p.join(caseRoot.path, 'lib', 'routes.dart'))
+        ..writeAsStringSync('const routes = <String>[];\n');
+      final hostBefore = {
+        main.path: main.readAsBytesSync(),
+        routes.path: routes.readAsBytesSync(),
+      };
+      writeRequiredPubspec(caseRoot, remixUiIcons: '^0.1.0');
+      writeRequiredLock(caseRoot, remixUiIcons: '0.1.0');
+
+      final installer = Installer(
+        projectRoot: caseRoot,
+        writeOut: (_) {},
+        processRunner: happyRunner(caseRoot, writeLockOnPubGet: false),
+      );
+      await installer.add(
+        const AddOptions(item: 'dashboard_shell', mode: AddMode.write),
+      );
+
+      final shell = File(
+        p.join(
+          caseRoot.path,
+          uiPath,
+          'recipes',
+          'dashboard',
+          'dashboard_shell.dart',
+        ),
+      );
+      final base = File(
+        p.join(
+          caseRoot.path,
+          uiPath,
+          'recipes',
+          'dashboard',
+          'dashboard_shell_base.dart',
+        ),
+      );
+      expect(shell.existsSync(), isTrue);
+      expect(base.existsSync(), isTrue);
+      expect(shell.readAsStringSync(), contains('class AcmeDashboardShell'));
+      expect(
+        File(p.join(caseRoot.path, uiPath, 'ui.dart')).readAsStringSync(),
+        contains("export 'recipes/dashboard/dashboard_shell.dart';"),
+      );
+      expect(
+        File(
+          p.join(caseRoot.path, uiPath, 'components', 'chart.dart'),
+        ).existsSync(),
+        isFalse,
+      );
+      expect(
+        File(
+          p.join(caseRoot.path, uiPath, 'components', 'activity.dart'),
+        ).existsSync(),
+        isFalse,
+      );
+      for (final entry in hostBefore.entries) {
+        expect(File(entry.key).readAsBytesSync(), entry.value);
+      }
+
+      shell.writeAsStringSync('${shell.readAsStringSync()}// local edit\n');
+      final edited = shell.readAsBytesSync();
+      await installer.add(
+        const AddOptions(item: 'dashboard_shell', mode: AddMode.write),
+      );
+      expect(shell.readAsBytesSync(), edited);
+
+      base.deleteSync();
+      final beforePartial = snapshotFiles(caseRoot);
+      await expectLater(
+        installer.add(
+          const AddOptions(item: 'dashboard_shell', mode: AddMode.write),
+        ),
+        throwsFormatException,
+      );
+      expect(snapshotFiles(caseRoot), beforePartial);
+    });
+  }
+
   test(
     'a directory target collision fails before processes or writes',
     () async {

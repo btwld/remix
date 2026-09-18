@@ -221,6 +221,23 @@ items:
     exports:
       - recipes/composer_recipe.dart
 
+  dashboard_shell:
+    registryDependencies:
+      - theme
+      - icon_button
+      - icons
+      - sidebar
+      - sidebar_layout
+      - text
+      - textfield
+    files:
+      - source: templates/dashboard_shell/dashboard_shell_base.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_shell_base.dart"
+      - source: templates/dashboard_shell/dashboard_shell.dart.tmpl
+        target: "@ui/recipes/dashboard/dashboard_shell.dart"
+    exports:
+      - recipes/dashboard/dashboard_shell.dart
+
   data_list:
     registryDependencies:
       - theme

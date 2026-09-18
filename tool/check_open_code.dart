@@ -38,6 +38,7 @@ const _defaultRegistryItems = <String>[
   'callout',
   'card',
   'chart',
+  'dashboard_shell',
   'checkbox',
   'data_list',
   'data_table',
@@ -94,6 +95,16 @@ const _agentRegistryItems = <String>[
   ..._agentRecipeItems,
 ];
 
+const _independentRegistryItems = <String>[
+  ..._agentRegistryItems,
+  'dashboard_shell',
+];
+
+const _dashboardShellFiles = <String>[
+  'recipes/dashboard/dashboard_shell_base.dart',
+  'recipes/dashboard/dashboard_shell.dart',
+];
+
 /// Generated adapters compared byte-for-byte against a committed snapshot.
 ///
 /// Representative shapes rather than every component: `button` is the
@@ -122,6 +133,7 @@ const _fortalRegistryItems = <String>[
   'callout',
   'card',
   'chart',
+  'dashboard_shell',
   'checkbox',
   'code',
   'data_list',
@@ -162,8 +174,8 @@ const _defaultPreset = _PresetContract(
   registryItems: _defaultRegistryItems,
   themeFiles: ['tokens.dart', 'theme_data.dart', 'theme_scope.dart'],
   generatedSnapshots: _generatedSnapshots,
-  nonGeneratedItems: {'sidebar_layout'},
-  itemFileOverrides: {},
+  nonGeneratedItems: {'sidebar_layout', 'dashboard_shell'},
+  itemFileOverrides: {'dashboard_shell': _dashboardShellFiles},
   sharedItems: {
     'models': [
       'models/activity_item.dart',
@@ -200,8 +212,9 @@ const _fortalPreset = _PresetContract(
     'link',
     'sidebar_layout',
     'typography',
+    'dashboard_shell',
   },
-  itemFileOverrides: {},
+  itemFileOverrides: {'dashboard_shell': _dashboardShellFiles},
   sharedItems: {
     'models': [
       'models/activity_item.dart',
@@ -542,7 +555,7 @@ Future<_Failure?> _checkInTemporaryApp({
   );
   if (init != null) return _Failure('remix init failed in the fresh app');
 
-  final independent = await _checkIndependentAgentItems(
+  final independent = await _checkIndependentItems(
     sdk: sdk,
     app: app,
     preset: preset.name,
@@ -696,7 +709,7 @@ Future<_Failure?> _checkInTemporaryApp({
 
 /// Each surface must compile with only its own dependency closure. The full
 /// gallery installs every item and would otherwise mask an omitted dependency.
-Future<_Failure?> _checkIndependentAgentItems({
+Future<_Failure?> _checkIndependentItems({
   required _Toolchain sdk,
   required Directory app,
   required String preset,
@@ -704,7 +717,7 @@ Future<_Failure?> _checkIndependentAgentItems({
 }) async {
   final pubspec = File('${app.path}/pubspec.yaml').readAsStringSync();
   final override = File('${app.path}/pubspec_overrides.yaml');
-  for (final item in _agentRegistryItems) {
+  for (final item in _independentRegistryItems) {
     final isolated = Directory('${app.parent.path}/independent_$item')
       ..createSync();
     File('${isolated.path}/pubspec.yaml').writeAsStringSync(pubspec);
