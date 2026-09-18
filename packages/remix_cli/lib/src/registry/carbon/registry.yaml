@@ -5,14 +5,38 @@ items:
     dependencies:
       remix: ^1.0.0-beta.10
     files:
+      - source: templates/theme/generated/carbon_component_tokens.dart.tmpl
+        target: "@ui/theme/generated/carbon_component_tokens.dart"
+      - source: templates/theme/generated/carbon_layout.dart.tmpl
+        target: "@ui/theme/generated/carbon_layout.dart"
+      - source: templates/theme/generated/carbon_motion.dart.tmpl
+        target: "@ui/theme/generated/carbon_motion.dart"
+      - source: templates/theme/generated/carbon_palette.dart.tmpl
+        target: "@ui/theme/generated/carbon_palette.dart"
+      - source: templates/theme/generated/carbon_source_manifest.dart.tmpl
+        target: "@ui/theme/generated/carbon_source_manifest.dart"
+      - source: templates/theme/generated/carbon_themes.dart.tmpl
+        target: "@ui/theme/generated/carbon_themes.dart"
+      - source: templates/theme/generated/carbon_tokens.dart.tmpl
+        target: "@ui/theme/generated/carbon_tokens.dart"
+      - source: templates/theme/generated/carbon_type.dart.tmpl
+        target: "@ui/theme/generated/carbon_type.dart"
+      - source: templates/theme/layer.dart.tmpl
+        target: "@ui/theme/layer.dart"
+      - source: templates/theme/layout.dart.tmpl
+        target: "@ui/theme/layout.dart"
+      - source: templates/theme/motion.dart.tmpl
+        target: "@ui/theme/motion.dart"
       - source: templates/theme/theme.dart.tmpl
         target: "@ui/theme/theme.dart"
       - source: templates/theme/theme_data.dart.tmpl
         target: "@ui/theme/theme_data.dart"
       - source: templates/theme/theme_scope.dart.tmpl
         target: "@ui/theme/theme_scope.dart"
-      - source: templates/theme/tokens.dart.tmpl
-        target: "@ui/theme/tokens.dart"
+      - source: templates/theme/token_types.dart.tmpl
+        target: "@ui/theme/token_types.dart"
+      - source: templates/theme/type.dart.tmpl
+        target: "@ui/theme/type.dart"
     exports:
       - theme/theme.dart
 

@@ -158,6 +158,23 @@ void main() {
     final theme = items['theme'] as YamlMap;
     final button = items['button'] as YamlMap;
     expect((theme['dependencies'] as YamlMap).keys, ['remix']);
+    final themeTargets = <String>{
+      for (final file in theme['files'] as YamlList) file['target'] as String,
+    };
+    expect(
+      themeTargets,
+      containsAll({
+        '@ui/theme/generated/carbon_component_tokens.dart',
+        '@ui/theme/generated/carbon_layout.dart',
+        '@ui/theme/generated/carbon_motion.dart',
+        '@ui/theme/generated/carbon_palette.dart',
+        '@ui/theme/generated/carbon_source_manifest.dart',
+        '@ui/theme/generated/carbon_themes.dart',
+        '@ui/theme/generated/carbon_tokens.dart',
+        '@ui/theme/generated/carbon_type.dart',
+      }),
+    );
+    expect(themeTargets.where((path) => path.endsWith('.g.dart')), isEmpty);
     expect(_strings(button['registryDependencies']), ['theme']);
     expect((button['dependencies'] as YamlMap).keys, ['mix_annotations']);
     expect((button['devDependencies'] as YamlMap).keys, [
@@ -171,6 +188,11 @@ void main() {
     expect(template, contains('{{valuePrefix}}ButtonStyle'));
     expect(template, contains('IBM Carbon Design'));
     expect(template, contains('SPDX-License-Identifier: Apache-2.0'));
+    expect(
+      output
+          .files['templates/theme/generated/carbon_source_manifest.dart.tmpl'],
+      contains('IBM Carbon Design System'),
+    );
     expect(output.files.values, everyElement(isNot(contains('Carbide'))));
     expect(output.files.values, everyElement(isNot(contains('carbide'))));
     expect(output.files.keys, isNot(anyElement(contains('agent'))));

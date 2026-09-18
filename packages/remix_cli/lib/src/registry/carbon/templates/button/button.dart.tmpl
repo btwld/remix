@@ -26,6 +26,13 @@ const _{{valuePrefix}}ButtonFocusBorder = ContextToken(
   _resolve{{typePrefix}}ButtonFocusBorder,
 );
 
+const _{{valuePrefix}}ButtonHeight = ContextToken(_resolve{{typePrefix}}ButtonHeight);
+
+double _resolve{{typePrefix}}ButtonHeight(BuildContext context) =>
+    ({{typePrefix}}LayoutScope.maybeSizeOf(context) ?? {{typePrefix}}Size.lg)
+        .clampTo(.sm, .x2l)
+        .height;
+
 ShapeBorder _resolve{{typePrefix}}ButtonFocusBorder(BuildContext context) {
   final outer = RoundedRectangleBorder(
     side: BorderSide(color: {{typePrefix}}Tokens.focus.resolve(context), width: 2.0),
@@ -42,10 +49,10 @@ ShapeBorder _resolve{{typePrefix}}ButtonFocusBorder(BuildContext context) {
   return inner + outer;
 }
 
-/// A fixed-height Carbon Button recipe and generated [RemixButton] wrapper.
+/// A Carbon Button recipe and generated [RemixButton] wrapper.
 ///
-/// The initial registry slice is deliberately fixed at Carbon's large 48px
-/// height. Contextual sizing arrives with the generated foundation in Wave 2.
+/// When [size] is null, height comes from [{{typePrefix}}LayoutScope], falling back to
+/// Carbon's large 48px default and clamping to the supported small–2xl range.
 /// Loading is non-interactive but retains the selected kind's treatment rather
 /// than taking the ordinary disabled colors.
 @MixWidget(
@@ -68,9 +75,13 @@ ShapeBorder _resolve{{typePrefix}}ButtonFocusBorder(BuildContext context) {
 )
 ButtonStyler {{valuePrefix}}ButtonStyle({
   {{typePrefix}}ButtonKind kind = .primary,
+  {{typePrefix}}Size? size,
   bool loading = false,
 }) {
-  final base = _{{valuePrefix}}ButtonBaseStyle(kind);
+  final height = size == null
+      ? _{{valuePrefix}}ButtonHeight()
+      : size.clampTo(.sm, .x2l).height;
+  final base = _{{valuePrefix}}ButtonBaseStyle(height, kind);
 
   return switch (kind) {
     .primary => _fillStyle(
@@ -135,9 +146,9 @@ ButtonStyler {{valuePrefix}}ButtonStyle({
   };
 }
 
-ButtonStyler _{{valuePrefix}}ButtonBaseStyle({{typePrefix}}ButtonKind kind) {
+ButtonStyler _{{valuePrefix}}ButtonBaseStyle(double height, {{typePrefix}}ButtonKind kind) {
   return ButtonStyler()
-      .height(48.0)
+      .height(height)
       .padding(.horizontal({{typePrefix}}Tokens.spacing05()))
       .spacing(switch (kind) {
         .ghost || .dangerGhost => {{typePrefix}}Tokens.spacing03(),

@@ -40,7 +40,7 @@ void main() {
     expect(presses, 1);
   });
 
-  testWidgets('every kind renders at the fixed 48px initial height', (
+  testWidgets('every kind defaults to the 48px Carbon large height', (
     tester,
   ) async {
     for (final theme in CarbideTheme.values) {
@@ -61,6 +61,52 @@ void main() {
         expect(tester.takeException(), isNull, reason: '$theme $kind');
       }
     }
+  });
+
+  testWidgets('supports explicit and contextual Carbon sizing', (tester) async {
+    await tester.pumpWidget(
+      _host(
+        CarbideButton(
+          label: 'Explicit',
+          size: CarbideSize.xl,
+          onPressed: () {},
+        ),
+      ),
+    );
+    expect(tester.getSize(find.byType(CarbideButton)).height, 64.0);
+
+    await tester.pumpWidget(
+      _host(
+        CarbideLayoutScope(
+          size: CarbideSize.sm,
+          child: CarbideButton(label: 'Contextual', onPressed: () {}),
+        ),
+      ),
+    );
+    expect(tester.getSize(find.byType(CarbideButton)).height, 32.0);
+  });
+
+  testWidgets('supports explicit and contextual Carbon sizing', (tester) async {
+    await tester.pumpWidget(
+      _host(
+        CarbideButton(
+          label: 'Explicit',
+          size: CarbideSize.xl,
+          onPressed: () {},
+        ),
+      ),
+    );
+    expect(tester.getSize(find.byType(CarbideButton)).height, 64.0);
+
+    await tester.pumpWidget(
+      _host(
+        CarbideLayoutScope(
+          size: CarbideSize.sm,
+          child: CarbideButton(label: 'Contextual', onPressed: () {}),
+        ),
+      ),
+    );
+    expect(tester.getSize(find.byType(CarbideButton)).height, 32.0);
   });
 
   testWidgets('loading preserves primary fill while disabled uses gray', (

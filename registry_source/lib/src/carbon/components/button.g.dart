@@ -6,16 +6,17 @@ part of 'button.dart';
 // MixWidgetGenerator
 // **************************************************************************
 
-/// A fixed-height Carbon Button recipe and generated [RemixButton] wrapper.
+/// A Carbon Button recipe and generated [RemixButton] wrapper.
 ///
-/// The initial registry slice is deliberately fixed at Carbon's large 48px
-/// height. Contextual sizing arrives with the generated foundation in Wave 2.
+/// When [size] is null, height comes from [CarbideLayoutScope], falling back to
+/// Carbon's large 48px default and clamping to the supported small–2xl range.
 /// Loading is non-interactive but retains the selected kind's treatment rather
 /// than taking the ordinary disabled colors.
 class CarbideButton extends StatelessWidget {
   const CarbideButton({
     super.key,
     this.kind = .primary,
+    this.size,
     this.loading = false,
     required this.label,
     this.trailingIcon,
@@ -32,6 +33,8 @@ class CarbideButton extends StatelessWidget {
   });
 
   final CarbideButtonKind kind;
+
+  final CarbideSize? size;
 
   final bool loading;
 
@@ -63,7 +66,11 @@ class CarbideButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return RemixButton(
       key: this.key,
-      style: carbideButtonStyle(kind: this.kind, loading: this.loading),
+      style: carbideButtonStyle(
+        kind: this.kind,
+        size: this.size,
+        loading: this.loading,
+      ),
       label: this.label,
       trailingIcon: this.trailingIcon,
       loading: this.loading,

@@ -7,27 +7,52 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 
-import 'tokens.dart';
+import 'generated/carbon_component_tokens.dart';
+import 'generated/carbon_themes.dart';
+import 'generated/carbon_layout.dart';
+import 'generated/carbon_motion.dart';
+import 'generated/carbon_type.dart';
 
-/// The IBM Carbon themes supported by the initial registry slice.
+/// The four official IBM Carbon themes.
 ///
-/// Gray 90 and Gray 100 join these themes with the generated token foundation
-/// in the next rollout wave.
+/// White and Gray 10 are light; Gray 90 and Gray 100 are dark. The names mirror
+/// Carbon's own theme identifiers so documentation and design hand-offs line up.
 enum CarbideTheme {
+  /// White theme (lightest).
   white,
-  g10;
 
-  Brightness get brightness => Brightness.light;
+  /// Gray 10 theme (light).
+  g10,
 
-  bool get isDark => false;
+  /// Gray 90 theme (dark).
+  g90,
+
+  /// Gray 100 theme (darkest).
+  g100;
+
+  /// The Flutter [Brightness] that matches this theme.
+  Brightness get brightness => switch (this) {
+    .white || .g10 => .light,
+    .g90 || .g100 => .dark,
+  };
+
+  /// Whether this is one of Carbon's dark themes.
+  bool get isDark => brightness == .dark;
 }
 
-/// Optional typed overrides applied after a Carbon theme's pinned values.
+/// Optional, typed overrides applied on top of a theme's generated maps.
+///
+/// Overrides are merged when the scope's token map is built; the generated
+/// theme maps themselves are never mutated.
 @immutable
 class CarbideThemeOverrides {
   const CarbideThemeOverrides({this.colors = const {}, this.fontFamily});
 
+  /// Role or component color tokens to override.
   final Map<ColorToken, Color> colors;
+
+  /// Font family applied to every text style token (e.g. an `IBM Plex Sans`
+  /// family the app has bundled). When null the platform default font is used.
   final String? fontFamily;
 
   @override
@@ -41,78 +66,63 @@ class CarbideThemeOverrides {
   int get hashCode => Object.hash(
     fontFamily,
     Object.hashAllUnordered(
-      colors.entries.map((entry) => Object.hash(entry.key, entry.value)),
+      colors.entries.map((e) => Object.hash(e.key, e.value)),
     ),
   );
 }
 
-Map<MixToken<Object?>, Object> _baseTokenMap(CarbideTheme theme) {
-  // White and Gray 10 resolve to the same official values for the token subset
-  // consumed by Button. Keep the theme switch explicit so Wave 2 can replace
-  // each branch with its complete generated map without changing this API.
-  final colors = switch (theme) {
-    .white || .g10 => <ColorToken, Color>{
-      CarbideTokens.backgroundActive: const Color(0x808D8D8D),
-      CarbideTokens.backgroundHover: const Color(0x1F8D8D8D),
-      CarbideTokens.borderDisabled: const Color(0xFFC6C6C6),
-      CarbideTokens.focus: const Color(0xFF0F62FE),
-      CarbideTokens.focusInset: const Color(0xFFFFFFFF),
-      CarbideTokens.linkPrimary: const Color(0xFF0F62FE),
-      CarbideTokens.linkPrimaryHover: const Color(0xFF0043CE),
-      CarbideTokens.textDisabled: const Color(0x40161616),
-      CarbideTokens.textInverse: const Color(0xFFFFFFFF),
-      CarbideTokens.textOnColor: const Color(0xFFFFFFFF),
-      CarbideTokens.textOnColorDisabled: const Color(0xFF8D8D8D),
-      CarbideComponentTokens.buttonDangerActive: const Color(0xFF750E13),
-      CarbideComponentTokens.buttonDangerHover: const Color(0xFFB81921),
-      CarbideComponentTokens.buttonDangerPrimary: const Color(0xFFDA1E28),
-      CarbideComponentTokens.buttonDangerSecondary: const Color(0xFFDA1E28),
-      CarbideComponentTokens.buttonDisabled: const Color(0xFFC6C6C6),
-      CarbideComponentTokens.buttonPrimary: const Color(0xFF0F62FE),
-      CarbideComponentTokens.buttonPrimaryActive: const Color(0xFF002D9C),
-      CarbideComponentTokens.buttonPrimaryHover: const Color(0xFF0050E6),
-      CarbideComponentTokens.buttonSecondary: const Color(0xFF393939),
-      CarbideComponentTokens.buttonSecondaryActive: const Color(0xFF6F6F6F),
-      CarbideComponentTokens.buttonSecondaryHover: const Color(0xFF474747),
-      CarbideComponentTokens.buttonTertiary: const Color(0xFF0F62FE),
-      CarbideComponentTokens.buttonTertiaryActive: const Color(0xFF002D9C),
-      CarbideComponentTokens.buttonTertiaryHover: const Color(0xFF0050E6),
-    },
-  };
+// Base token maps are pure functions of the theme, so they are built once per
+// theme and shared. Returning the identical instance also lets MixScope's
+// dependents short-circuit equality checks on rebuilds that change nothing.
+final Map<CarbideTheme, Map<MixToken<Object?>, Object>> _baseTokenMaps = {};
 
-  return Map<MixToken<Object?>, Object>.unmodifiable({
-    ...colors,
-    CarbideTokens.spacing03: 8.0,
-    CarbideTokens.spacing05: 16.0,
-    CarbideTokens.spacing07: 32.0,
-    CarbideTokens.iconSize01: 16.0,
-    CarbideTokens.bodyCompact01: const TextStyle(
-      fontSize: 14.0,
-      fontWeight: FontWeight.w400,
-      height: 1.2857,
-      letterSpacing: 0.16,
-    ),
+Map<MixToken<Object?>, Object> _baseTokenMapFor(CarbideTheme theme) {
+  return _baseTokenMaps.putIfAbsent(theme, () {
+    final roleColors = switch (theme) {
+      .white => carbideRoleColorsWhite,
+      .g10 => carbideRoleColorsG10,
+      .g90 => carbideRoleColorsG90,
+      .g100 => carbideRoleColorsG100,
+    };
+    final componentColors = switch (theme) {
+      .white => carbideComponentColorsWhite,
+      .g10 => carbideComponentColorsG10,
+      .g90 => carbideComponentColorsG90,
+      .g100 => carbideComponentColorsG100,
+    };
+
+    return Map.unmodifiable(<MixToken<Object?>, Object>{
+      ...roleColors,
+      ...componentColors,
+      ...carbideSpacingValues,
+      ...carbideTextStyleTokens,
+      ...carbideDurationValues,
+      ...carbideFontWeightValues,
+    });
   });
 }
 
-final Map<CarbideTheme, Map<MixToken<Object?>, Object>> _baseTokenMaps = {};
-
-/// Builds the complete token map needed by the initial Carbon Button slice.
+/// Builds the full `MixScope` token map for [theme].
+///
+/// Combines theme-dependent role and component colors with theme-independent
+/// spacing, type, motion and font-weight values, then applies [overrides].
+/// With no overrides this returns a cached, unmodifiable map, so repeated
+/// scope rebuilds are allocation-free.
 Map<MixToken<Object?>, Object> buildCarbideTokenMap(
   CarbideTheme theme, {
   CarbideThemeOverrides overrides = const CarbideThemeOverrides(),
 }) {
-  final base = _baseTokenMaps.putIfAbsent(theme, () => _baseTokenMap(theme));
+  final base = _baseTokenMapFor(theme);
   final fontFamily = overrides.fontFamily;
   if (fontFamily == null && overrides.colors.isEmpty) return base;
 
-  return Map<MixToken<Object?>, Object>.unmodifiable({
+  return {
     ...base,
     if (fontFamily != null)
-      CarbideTokens.bodyCompact01:
-          (base[CarbideTokens.bodyCompact01]! as TextStyle).copyWith(
-            fontFamily: fontFamily,
-          ),
+      ...carbideTextStyleTokens.map(
+        (k, v) => MapEntry(k, v.copyWith(fontFamily: fontFamily)),
+      ),
+    // Overrides win over generated values.
     ...overrides.colors,
-  });
+  };
 }

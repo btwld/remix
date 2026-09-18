@@ -3,19 +3,24 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:registry_source/carbon.dart';
 
 void main() {
-  test('white and g10 expose pinned Carbon button values', () {
+  test('all four themes expose pinned Carbon values', () {
+    const backgrounds = {
+      CarbideTheme.white: Color(0xFFFFFFFF),
+      CarbideTheme.g10: Color(0xFFF4F4F4),
+      CarbideTheme.g90: Color(0xFF262626),
+      CarbideTheme.g100: Color(0xFF161616),
+    };
     for (final theme in CarbideTheme.values) {
       final tokens = buildCarbideTokenMap(theme);
 
-      expect(tokens[CarbideTokens.focus], const Color(0xFF0F62FE));
-      expect(tokens[CarbideTokens.focusInset], const Color(0xFFFFFFFF));
+      expect(tokens[CarbideTokens.background], backgrounds[theme]);
+      expect(
+        tokens[CarbideTokens.focus],
+        theme.isDark ? const Color(0xFFFFFFFF) : const Color(0xFF0F62FE),
+      );
       expect(
         tokens[CarbideComponentTokens.buttonPrimary],
         const Color(0xFF0F62FE),
-      );
-      expect(
-        tokens[CarbideComponentTokens.buttonDisabled],
-        const Color(0xFFC6C6C6),
       );
       expect(tokens[CarbideTokens.spacing05], 16.0);
       expect(tokens[CarbideTokens.bodyCompact01], isA<TextStyle>());
@@ -26,7 +31,7 @@ void main() {
     late BuildContext scopedContext;
     await tester.pumpWidget(
       CarbideScope(
-        theme: CarbideTheme.g10,
+        theme: CarbideTheme.g100,
         child: Builder(
           builder: (context) {
             scopedContext = context;
@@ -36,6 +41,6 @@ void main() {
       ),
     );
 
-    expect(CarbideScope.themeOf(scopedContext), CarbideTheme.g10);
+    expect(CarbideScope.themeOf(scopedContext), CarbideTheme.g100);
   });
 }
