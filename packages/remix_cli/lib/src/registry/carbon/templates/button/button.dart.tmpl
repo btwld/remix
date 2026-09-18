@@ -1,0 +1,248 @@
+// Adapted from remix_carbon at commit 606bfbb36 and from the IBM Carbon Design
+// System Button. Copyright 2026 the Remix authors; IBM Carbon Design System
+// copyright IBM Corp. and the Carbon authors. Apache-2.0.
+// SPDX-License-Identifier: Apache-2.0
+
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/theme.dart';
+
+part 'button.g.dart';
+
+/// Carbon Button kinds.
+enum {{typePrefix}}ButtonKind {
+  primary,
+  secondary,
+  tertiary,
+  ghost,
+  danger,
+  dangerTertiary,
+  dangerGhost,
+}
+
+const _{{valuePrefix}}ButtonFocusBorder = ContextToken(
+  _resolve{{typePrefix}}ButtonFocusBorder,
+);
+
+ShapeBorder _resolve{{typePrefix}}ButtonFocusBorder(BuildContext context) {
+  final outer = RoundedRectangleBorder(
+    side: BorderSide(color: {{typePrefix}}Tokens.focus.resolve(context), width: 2.0),
+  );
+  final inner = RoundedRectangleBorder(
+    side: BorderSide(
+      color: {{typePrefix}}Tokens.focusInset.resolve(context),
+      width: 1.0,
+    ),
+  );
+
+  // Flutter lists compound shape borders outside-in. The left operand is the
+  // inner border and the right operand is the outer border.
+  return inner + outer;
+}
+
+/// A fixed-height Carbon Button recipe and generated [RemixButton] wrapper.
+///
+/// The initial registry slice is deliberately fixed at Carbon's large 48px
+/// height. Contextual sizing arrives with the generated foundation in Wave 2.
+/// Loading is non-interactive but retains the selected kind's treatment rather
+/// than taking the ordinary disabled colors.
+@MixWidget(
+  target: RemixButton.new,
+  widgetParameters: .only({
+    'label',
+    'trailingIcon',
+    'loading',
+    'enabled',
+    'onPressed',
+    'onLongPress',
+    'focusNode',
+    'autofocus',
+    'enableFeedback',
+    'semanticLabel',
+    'semanticHint',
+    'excludeSemantics',
+    'mouseCursor',
+  }),
+)
+ButtonStyler {{valuePrefix}}ButtonStyle({
+  {{typePrefix}}ButtonKind kind = .primary,
+  bool loading = false,
+}) {
+  final base = _{{valuePrefix}}ButtonBaseStyle(kind);
+
+  return switch (kind) {
+    .primary => _fillStyle(
+      base,
+      fill: {{typePrefix}}ComponentTokens.buttonPrimary,
+      hover: {{typePrefix}}ComponentTokens.buttonPrimaryHover,
+      active: {{typePrefix}}ComponentTokens.buttonPrimaryActive,
+      loading: loading,
+    ),
+    .secondary => _fillStyle(
+      base,
+      fill: {{typePrefix}}ComponentTokens.buttonSecondary,
+      hover: {{typePrefix}}ComponentTokens.buttonSecondaryHover,
+      active: {{typePrefix}}ComponentTokens.buttonSecondaryActive,
+      loading: loading,
+    ),
+    .danger => _fillStyle(
+      base,
+      fill: {{typePrefix}}ComponentTokens.buttonDangerPrimary,
+      hover: {{typePrefix}}ComponentTokens.buttonDangerHover,
+      active: {{typePrefix}}ComponentTokens.buttonDangerActive,
+      loading: loading,
+    ),
+    .tertiary => _outlineStyle(
+      base,
+      line: {{typePrefix}}ComponentTokens.buttonTertiary,
+      hover: {{typePrefix}}ComponentTokens.buttonTertiaryHover,
+      active: {{typePrefix}}ComponentTokens.buttonTertiaryActive,
+      interactionText: {{typePrefix}}Tokens.textInverse,
+      focusFill: {{typePrefix}}ComponentTokens.buttonTertiary,
+      focusText: {{typePrefix}}Tokens.textInverse,
+      loading: loading,
+    ),
+    .dangerTertiary => _outlineStyle(
+      base,
+      line: {{typePrefix}}ComponentTokens.buttonDangerSecondary,
+      hover: {{typePrefix}}ComponentTokens.buttonDangerHover,
+      active: {{typePrefix}}ComponentTokens.buttonDangerActive,
+      interactionText: {{typePrefix}}Tokens.textOnColor,
+      focusFill: {{typePrefix}}ComponentTokens.buttonDangerPrimary,
+      focusText: {{typePrefix}}Tokens.textOnColor,
+      loading: loading,
+    ),
+    .ghost => _ghostStyle(
+      base,
+      text: {{typePrefix}}Tokens.linkPrimary,
+      hoverFill: {{typePrefix}}Tokens.backgroundHover,
+      hoverText: {{typePrefix}}Tokens.linkPrimaryHover,
+      activeFill: {{typePrefix}}Tokens.backgroundActive,
+      activeText: {{typePrefix}}Tokens.linkPrimaryHover,
+      loading: loading,
+    ),
+    .dangerGhost => _ghostStyle(
+      base,
+      text: {{typePrefix}}ComponentTokens.buttonDangerSecondary,
+      hoverFill: {{typePrefix}}ComponentTokens.buttonDangerHover,
+      hoverText: {{typePrefix}}Tokens.textOnColor,
+      activeFill: {{typePrefix}}ComponentTokens.buttonDangerActive,
+      activeText: {{typePrefix}}Tokens.textOnColor,
+      loading: loading,
+    ),
+  };
+}
+
+ButtonStyler _{{valuePrefix}}ButtonBaseStyle({{typePrefix}}ButtonKind kind) {
+  return ButtonStyler()
+      .height(48.0)
+      .padding(.horizontal({{typePrefix}}Tokens.spacing05()))
+      .spacing(switch (kind) {
+        .ghost || .dangerGhost => {{typePrefix}}Tokens.spacing03(),
+        .primary ||
+        .secondary ||
+        .tertiary ||
+        .danger ||
+        .dangerTertiary => {{typePrefix}}Tokens.spacing07(),
+      })
+      .mainAxisAlignment(.spaceBetween)
+      .borderRadius(.all(.zero))
+      .label(TextStyler().style({{typePrefix}}Tokens.bodyCompact01.mix()))
+      .icon(IconStyler().size({{typePrefix}}Tokens.iconSize01()))
+      .spinner(.size({{typePrefix}}Tokens.iconSize01()).strokeWidth(2.0))
+      .onFocusVisible(
+        .foregroundDecoration(
+          ShapeDecorationMix.create(
+            shape: Prop.token(_{{valuePrefix}}ButtonFocusBorder),
+          ),
+        ),
+      );
+}
+
+ButtonStyler _fillStyle(
+  ButtonStyler base, {
+  required ColorToken fill,
+  required ColorToken hover,
+  required ColorToken active,
+  required bool loading,
+}) {
+  final disabledStyle = loading
+      ? ButtonStyler()
+            .color(fill())
+            .spinner(.indicatorColor({{typePrefix}}Tokens.textOnColor()))
+      : _disabledFill();
+
+  return _foreground(base, {{typePrefix}}Tokens.textOnColor())
+      .color(fill())
+      .spinner(.indicatorColor({{typePrefix}}Tokens.textOnColor()))
+      .onHovered(.color(hover()))
+      .onPressed(.color(active()))
+      .onDisabled(disabledStyle);
+}
+
+ButtonStyler _outlineStyle(
+  ButtonStyler base, {
+  required ColorToken line,
+  required ColorToken hover,
+  required ColorToken active,
+  required ColorToken interactionText,
+  required ColorToken focusFill,
+  required ColorToken focusText,
+  required bool loading,
+}) {
+  final disabledStyle = loading
+      ? ButtonStyler()
+            .color(const Color(0x00000000))
+            .border(.color(line()).width(1.0))
+            .spinner(.indicatorColor(line()))
+      : _foreground(
+          ButtonStyler()
+              .color(const Color(0x00000000))
+              .border(.color({{typePrefix}}Tokens.borderDisabled()).width(1.0)),
+          {{typePrefix}}Tokens.textDisabled(),
+        );
+
+  return _foreground(base, line())
+      .color(const Color(0x00000000))
+      .border(.color(line()).width(1.0))
+      .spinner(.indicatorColor(line()))
+      .onHovered(_foreground(.color(hover()), interactionText()))
+      .onPressed(_foreground(.color(active()), interactionText()))
+      .onFocusVisible(_foreground(.color(focusFill()), focusText()))
+      .onDisabled(disabledStyle);
+}
+
+ButtonStyler _ghostStyle(
+  ButtonStyler base, {
+  required ColorToken text,
+  required ColorToken hoverFill,
+  required ColorToken hoverText,
+  required ColorToken activeFill,
+  required ColorToken activeText,
+  required bool loading,
+}) {
+  final disabledStyle = loading
+      ? ButtonStyler().spinner(.indicatorColor(text()))
+      : _foreground(ButtonStyler(), {{typePrefix}}Tokens.textDisabled());
+
+  return _foreground(base, text())
+      .color(const Color(0x00000000))
+      .spinner(.indicatorColor(text()))
+      .onHovered(_foreground(.color(hoverFill()), hoverText()))
+      .onPressed(_foreground(.color(activeFill()), activeText()))
+      .onDisabled(disabledStyle);
+}
+
+ButtonStyler _disabledFill() => _foreground(
+  ButtonStyler()
+      .color({{typePrefix}}ComponentTokens.buttonDisabled())
+      .spinner(
+        .indicatorColor({{typePrefix}}Tokens.textOnColorDisabled()).strokeWidth(1.0),
+      ),
+  {{typePrefix}}Tokens.textOnColorDisabled(),
+);
+
+ButtonStyler _foreground(ButtonStyler style, Color color) =>
+    style.label(.color(color)).icon(.color(color));

@@ -1,0 +1,118 @@
+// Adapted from remix_carbon at commit 606bfbb36 and from design tokens in the
+// IBM Carbon Design System. Copyright 2026 the Remix authors; IBM Carbon
+// Design System copyright IBM Corp. and the Carbon authors. Apache-2.0.
+// SPDX-License-Identifier: Apache-2.0
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+import 'tokens.dart';
+
+/// The IBM Carbon themes supported by the initial registry slice.
+///
+/// Gray 90 and Gray 100 join these themes with the generated token foundation
+/// in the next rollout wave.
+enum {{typePrefix}}Theme {
+  white,
+  g10;
+
+  Brightness get brightness => Brightness.light;
+
+  bool get isDark => false;
+}
+
+/// Optional typed overrides applied after a Carbon theme's pinned values.
+@immutable
+class {{typePrefix}}ThemeOverrides {
+  const {{typePrefix}}ThemeOverrides({this.colors = const {}, this.fontFamily});
+
+  final Map<ColorToken, Color> colors;
+  final String? fontFamily;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is {{typePrefix}}ThemeOverrides &&
+          other.fontFamily == fontFamily &&
+          mapEquals(other.colors, colors);
+
+  @override
+  int get hashCode => Object.hash(
+    fontFamily,
+    Object.hashAllUnordered(
+      colors.entries.map((entry) => Object.hash(entry.key, entry.value)),
+    ),
+  );
+}
+
+Map<MixToken<Object?>, Object> _baseTokenMap({{typePrefix}}Theme theme) {
+  // White and Gray 10 resolve to the same official values for the token subset
+  // consumed by Button. Keep the theme switch explicit so Wave 2 can replace
+  // each branch with its complete generated map without changing this API.
+  final colors = switch (theme) {
+    .white || .g10 => <ColorToken, Color>{
+      {{typePrefix}}Tokens.backgroundActive: const Color(0x808D8D8D),
+      {{typePrefix}}Tokens.backgroundHover: const Color(0x1F8D8D8D),
+      {{typePrefix}}Tokens.borderDisabled: const Color(0xFFC6C6C6),
+      {{typePrefix}}Tokens.focus: const Color(0xFF0F62FE),
+      {{typePrefix}}Tokens.focusInset: const Color(0xFFFFFFFF),
+      {{typePrefix}}Tokens.linkPrimary: const Color(0xFF0F62FE),
+      {{typePrefix}}Tokens.linkPrimaryHover: const Color(0xFF0043CE),
+      {{typePrefix}}Tokens.textDisabled: const Color(0x40161616),
+      {{typePrefix}}Tokens.textInverse: const Color(0xFFFFFFFF),
+      {{typePrefix}}Tokens.textOnColor: const Color(0xFFFFFFFF),
+      {{typePrefix}}Tokens.textOnColorDisabled: const Color(0xFF8D8D8D),
+      {{typePrefix}}ComponentTokens.buttonDangerActive: const Color(0xFF750E13),
+      {{typePrefix}}ComponentTokens.buttonDangerHover: const Color(0xFFB81921),
+      {{typePrefix}}ComponentTokens.buttonDangerPrimary: const Color(0xFFDA1E28),
+      {{typePrefix}}ComponentTokens.buttonDangerSecondary: const Color(0xFFDA1E28),
+      {{typePrefix}}ComponentTokens.buttonDisabled: const Color(0xFFC6C6C6),
+      {{typePrefix}}ComponentTokens.buttonPrimary: const Color(0xFF0F62FE),
+      {{typePrefix}}ComponentTokens.buttonPrimaryActive: const Color(0xFF002D9C),
+      {{typePrefix}}ComponentTokens.buttonPrimaryHover: const Color(0xFF0050E6),
+      {{typePrefix}}ComponentTokens.buttonSecondary: const Color(0xFF393939),
+      {{typePrefix}}ComponentTokens.buttonSecondaryActive: const Color(0xFF6F6F6F),
+      {{typePrefix}}ComponentTokens.buttonSecondaryHover: const Color(0xFF474747),
+      {{typePrefix}}ComponentTokens.buttonTertiary: const Color(0xFF0F62FE),
+      {{typePrefix}}ComponentTokens.buttonTertiaryActive: const Color(0xFF002D9C),
+      {{typePrefix}}ComponentTokens.buttonTertiaryHover: const Color(0xFF0050E6),
+    },
+  };
+
+  return Map<MixToken<Object?>, Object>.unmodifiable({
+    ...colors,
+    {{typePrefix}}Tokens.spacing03: 8.0,
+    {{typePrefix}}Tokens.spacing05: 16.0,
+    {{typePrefix}}Tokens.spacing07: 32.0,
+    {{typePrefix}}Tokens.iconSize01: 16.0,
+    {{typePrefix}}Tokens.bodyCompact01: const TextStyle(
+      fontSize: 14.0,
+      fontWeight: FontWeight.w400,
+      height: 1.2857,
+      letterSpacing: 0.16,
+    ),
+  });
+}
+
+final Map<{{typePrefix}}Theme, Map<MixToken<Object?>, Object>> _baseTokenMaps = {};
+
+/// Builds the complete token map needed by the initial Carbon Button slice.
+Map<MixToken<Object?>, Object> build{{typePrefix}}TokenMap(
+  {{typePrefix}}Theme theme, {
+  {{typePrefix}}ThemeOverrides overrides = const {{typePrefix}}ThemeOverrides(),
+}) {
+  final base = _baseTokenMaps.putIfAbsent(theme, () => _baseTokenMap(theme));
+  final fontFamily = overrides.fontFamily;
+  if (fontFamily == null && overrides.colors.isEmpty) return base;
+
+  return Map<MixToken<Object?>, Object>.unmodifiable({
+    ...base,
+    if (fontFamily != null)
+      {{typePrefix}}Tokens.bodyCompact01:
+          (base[{{typePrefix}}Tokens.bodyCompact01]! as TextStyle).copyWith(
+            fontFamily: fontFamily,
+          ),
+    ...overrides.colors,
+  });
+}

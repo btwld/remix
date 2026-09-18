@@ -143,6 +143,41 @@ void main() {
     }
   });
 
+  test('Carbon derives only theme and button with collision-free prefixes', () {
+    expect(presetSpecs, contains('carbon'));
+    expect(presetSpecs['carbon'], [carbonPreset]);
+
+    final output = PresetBuilder.forRepository(
+      Directory.current,
+      spec: carbonPreset,
+    ).derive();
+    final document = loadYaml(output.files['registry.yaml']!) as YamlMap;
+    final items = document['items'] as YamlMap;
+
+    expect(items.keys, ['theme', 'button']);
+    final theme = items['theme'] as YamlMap;
+    final button = items['button'] as YamlMap;
+    expect((theme['dependencies'] as YamlMap).keys, ['remix']);
+    expect(_strings(button['registryDependencies']), ['theme']);
+    expect((button['dependencies'] as YamlMap).keys, ['mix_annotations']);
+    expect((button['devDependencies'] as YamlMap).keys, [
+      'build_runner',
+      'mix_generator',
+    ]);
+    expect(_strings(button['generated']), ['@ui/components/button.g.dart']);
+
+    final template = output.files['templates/button/button.dart.tmpl']!;
+    expect(template, contains('enum {{typePrefix}}ButtonKind'));
+    expect(template, contains('{{valuePrefix}}ButtonStyle'));
+    expect(template, contains('IBM Carbon Design'));
+    expect(template, contains('SPDX-License-Identifier: Apache-2.0'));
+    expect(output.files.values, everyElement(isNot(contains('Carbide'))));
+    expect(output.files.values, everyElement(isNot(contains('carbide'))));
+    expect(output.files.keys, isNot(anyElement(contains('agent'))));
+    expect(output.files.keys, isNot(anyElement(contains('chart'))));
+    expect(output.files.keys, isNot(anyElement(contains('icons'))));
+  });
+
   test('registry dependencies and package floors are inferred', () {
     final output = PresetBuilder.forRepository(Directory.current).derive();
     final document = loadYaml(output.files['registry.yaml']!) as YamlMap;
