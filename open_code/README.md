@@ -4,12 +4,14 @@ This example is installed by `remix_cli`. It gives an application editable
 theme and component source while Remix continues to own rendering, interaction,
 focus, loading, disabled behavior, and accessibility.
 
-The two registry trees live in
+The three registry trees live in
 `packages/remix_cli/lib/src/registry/default/` and
-`packages/remix_cli/lib/src/registry/fortal/`. There is no second registry copy
-under `open_code/`. `open_code/fixture/` proves the default preset, while
-`open_code/fortal_fixture/` proves Fortal with every generated widget and
-known Radix Themes 3.3.0 color values. A behavioral package can be styled from
+`packages/remix_cli/lib/src/registry/fortal/`, and
+`packages/remix_cli/lib/src/registry/carbon/`. There is no second registry copy
+under `open_code/`. `open_code/fixture/` proves the default preset,
+`open_code/fortal_fixture/` proves Fortal with every generated widget and known
+Radix Themes 3.3.0 color values, and `open_code/carbon_fixture/` proves the
+initial Carbon theme-and-button slice. A behavioral package can be styled from
 the same installed source; see
 [Styling a package on top of the catalog](#styling-a-package-on-top-of-the-catalog).
 
@@ -27,15 +29,16 @@ dart run remix_cli:remix init --prefix Acme --preset default
 dart run remix_cli:remix add button
 ```
 
-One `add` installs one item. The catalog is `theme`, the opt-in `icons` seam,
-the optional `chart` extension, plus `accordion`, `avatar`, `badge`, `button`,
-`callout`, `card`, `checkbox`, `dashboard_demo`, `dashboard_shell`, `data_list`, `data_table`, `dialog`,
-`disclosure`, `divider`, `icon_button`, `link`, `menu`, `popover`, `progress`,
-`radio`, `segmented_control`, `select`, `sidebar`, `sidebar_layout`,
-`skeleton`, `slider`, `spinner`, `switch`, `tabs`, `textfield`, `toast`,
-`toggle`, `toggle_group`, and `tooltip`. `sidebar_layout` is a plain shell
-layout with no `Spec` and no generated adapter, pairing an installed
-`sidebar` with a header and body.
+One `add` installs one item. The default and Fortal catalogs contain `theme`,
+the opt-in `icons` seam, the optional `chart` extension, plus `accordion`,
+`avatar`, `badge`, `button`, `callout`, `card`, `checkbox`, `dashboard_demo`,
+`dashboard_shell`, `data_list`, `data_table`, `dialog`, `disclosure`, `divider`,
+`icon_button`, `link`, `menu`, `popover`, `progress`, `radio`,
+`segmented_control`, `select`, `sidebar`, `sidebar_layout`, `skeleton`,
+`slider`, `spinner`, `switch`, `tabs`, `textfield`, `toast`, `toggle`,
+`toggle_group`, and `tooltip`. `sidebar_layout` is a plain shell layout with no
+`Spec` and no generated adapter, pairing an installed `sidebar` with a header
+and body.
 
 `dashboard_shell` installs a reusable, host-controlled shell plus its shared
 composition source. It pulls in the existing sidebar layout, sidebar,
@@ -53,6 +56,9 @@ the application.
 The `fortal` preset contains that complete surface plus `base_button`, `code`,
 `heading`, `kbd`, `text`, and `typography`.
 
+The initial `carbon` preset contains only `theme` and `button`. It is a first
+vertical slice, not a complete component catalog.
+
 `chart` is the one optional extension outside the core Remix component
 surface. It builds directly on `mix_chart`, installs no Fortal code, and
 generates `AcmeLineChart`, `AcmeBarChart`, and `AcmePieChart` from one editable
@@ -65,8 +71,8 @@ at a checkout or staged package:
 dart pub add "dev:remix_cli@{path: /path/to/remix/packages/remix_cli}"
 ```
 
-Both presets require Remix `^1.0.0-beta.10`. Until that release is available,
-add a temporary `pubspec_overrides.yaml` to the application:
+All three presets require Remix `^1.0.0-beta.10`. Until that release is
+available, add a temporary `pubspec_overrides.yaml` to the application:
 
 ```yaml
 dependency_overrides:
@@ -115,6 +121,22 @@ failure.
 The prefixes `Remix` and `Mix` are reserved for runtime dependencies.
 Use an application prefix such as `Ui` or `Acme`.
 
+## Carbon as application-owned source
+
+```shell
+dart run remix_cli:remix init --prefix Acme --preset carbon
+dart run remix_cli:remix add button
+```
+
+This installs the theme required by Button and the generated Button adapter as
+prefixed local source, including `AcmeScope`, `AcmeTheme`, `AcmeButton`, and
+`acmeButtonStyle`. The initial Wave 1 theme supported Carbon White and Gray 10
+through the `white` and `g10` values, and its button was fixed at 48 px with no
+size parameter.
+
+This is an initial Carbon slice, not a complete component catalog. It does not
+include an icon button, charts, icons, Agent surfaces, or dashboards.
+
 The default preset installs Theme before Button. The command adds missing
 dependency constraints, writes source, updates the barrel, and generates the
 adapter:
@@ -152,12 +174,12 @@ that builder for the installed source paths in `build.yaml`, preserving other
 settings and comments. Explicit disabled builders or excluded source fail in
 preflight instead of being overridden. Dry-run/diff remain read-only.
 
-Agent behavior is available in both bundled presets. Add a bare surface for
-behavior-only source, or `<component>_recipe` for the surface plus its complete
-preset-specific styling bundle. Each recipe is authored as Dart in its preset's
-source (`registry_source/lib/src/{default,fortal}/recipes/`) against the Agent
-behavior source beside it,
-and derives into the registry like every other item.
+Agent behavior is available in the default and Fortal presets. Add a bare
+surface for behavior-only source, or `<component>_recipe` for the surface plus
+its complete preset-specific styling bundle. Each recipe is authored as Dart
+in its preset's source (`registry_source/lib/src/{default,fortal}/recipes/`)
+against the Agent behavior source beside it, and derives into the registry
+like every other item.
 
 ## Charts without Fortal
 

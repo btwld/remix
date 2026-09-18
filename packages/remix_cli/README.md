@@ -1,16 +1,16 @@
 # remix_cli
 
 `remix_cli` installs editable component source into a Flutter application.
-Choose the compact `default` preset or the Radix Themes-inspired `fortal`
-preset at initialization. Remix remains the behavior dependency; the
-application owns its tokens, theme values, component recipes, and generated
-adapters.
+Choose the compact `default` preset, the Radix Themes-inspired `fortal`
+preset, or the initial IBM Carbon-inspired `carbon` slice at initialization.
+Remix remains the behavior dependency; the application owns its tokens, theme
+values, component recipes, and generated adapters.
 
-The 0.1.0 catalog includes an opt-in `icons` seam and covers the core Remix
-component surface: `accordion`, `avatar`, `badge`, `button`, `callout`, `card`,
-`checkbox`, `data_list`, `data_table`, `dialog`, `disclosure`, `divider`,
-`icon_button`, `link`, `menu`, `popover`, `progress`, `radio`,
-`segmented_control`, `select`, `sidebar`, `sidebar_layout`, `skeleton`,
+The default and Fortal catalogs include an opt-in `icons` seam and cover the
+core Remix component surface: `accordion`, `avatar`, `badge`, `button`,
+`callout`, `card`, `checkbox`, `data_list`, `data_table`, `dialog`,
+`disclosure`, `divider`, `icon_button`, `link`, `menu`, `popover`, `progress`,
+`radio`, `segmented_control`, `select`, `sidebar`, `sidebar_layout`, `skeleton`,
 `slider`, `spinner`, `switch`, `tabs`, `textfield`, `toast`, `toggle`,
 `toggle_group`, and `tooltip`, each with a `theme` dependency. The Fortal
 preset also includes `base_button`, `code`, `heading`, `kbd`, `text`, and
@@ -18,8 +18,8 @@ preset also includes `base_button`, `code`, `heading`, `kbd`, `text`, and
 `select` for its controls; `toast` uses `button` and `icon_button` for its
 action and close control. The default `sidebar` item uses the application's
 `toggle` recipe for destinations. `sidebar_layout` is a plain shell layout
-with no `Spec` or generated adapter: it composes an installed `sidebar` into
-a row above its compact breakpoint and a start-edge sheet below it.
+with no `Spec` or generated adapter: it composes an installed `sidebar` into a
+row above its compact breakpoint and a start-edge sheet below it.
 The grouped `dashboard_shell` recipe builds on those pieces with host-owned
 navigation, page content, optional search, and brand/account/action slots. It
 has no generated adapter and does not install charts, tables, Agent surfaces,
@@ -28,13 +28,16 @@ The catalog also offers `chart` as an optional extension over
 `mix_chart`; it does not depend on `remix_fortal`. There is no remote registry,
 update command, registry lockfile, or content-hash protocol.
 
-Both presets additionally distribute the unstyled Agent items:
-`activity`, `answer`, `composer`, `execution`, `message`, `permission`, `plan`,
-and `transcript`, with shared `models` and `support` dependencies. These are
-application-owned source, not a dependency on the private authoring source.
-Each surface has an opt-in `<component>_recipe` item that installs a complete,
-preset-specific styler bundle under `lib/ui/recipes/`; bare components remain
-unstyled and backward compatible.
+Carbon starts with a deliberately smaller vertical slice: `theme` and
+`button`. It is not yet a complete component catalog.
+
+The default and Fortal presets additionally distribute the unstyled Agent
+items: `activity`, `answer`, `composer`, `execution`, `message`, `permission`,
+`plan`, and `transcript`, with shared `models` and `support` dependencies.
+These are application-owned source, not a dependency on the private authoring
+source. Each surface has an opt-in `<component>_recipe` item that installs a
+complete, preset-specific styler bundle under `lib/ui/recipes/`; bare
+components remain unstyled and backward compatible.
 
 ## Install project-locally
 
@@ -59,8 +62,8 @@ To run an unreleased build, point at a checkout or staged package path:
 dart pub add "dev:remix_cli@{path: /path/to/remix/packages/remix_cli}"
 ```
 
-Both presets require Remix `^1.0.0-beta.10`. Before that release is available,
-add this `pubspec_overrides.yaml` to the application:
+All three presets require Remix `^1.0.0-beta.10`. Before that release is
+available, add this `pubspec_overrides.yaml` to the application:
 
 ```yaml
 dependency_overrides:
@@ -129,6 +132,26 @@ the scope example.
 
 The prefixes `Remix` and `Mix` are reserved for runtime dependencies.
 Use an application prefix such as `Ui` or `Acme`.
+
+### Carbon as owned source
+
+Initialize Carbon and install its initial button slice with:
+
+```shell
+dart run remix_cli:remix init --prefix Acme --preset carbon
+dart run remix_cli:remix add button
+```
+
+The command installs the theme before Button and produces prefixed,
+application-owned source such as `AcmeScope`, `AcmeTheme`, `AcmeButton`, and
+`acmeButtonStyle`. The initial Wave 1 theme supported Carbon White and Gray 10
+through the `white` and `g10` values, and its button was fixed at 48 px with no
+size parameter.
+
+This is an initial Carbon vertical slice, not a complete component catalog.
+It includes only the theme surface required by `button` and the button itself;
+it does not include an icon button, charts, icons, Agent surfaces, or
+dashboards.
 
 ## Add a component
 
