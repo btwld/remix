@@ -99,8 +99,6 @@ class RemixAccordion<T> extends StatelessWidget {
     this.title,
     this.leadingIcon,
     this.trailingIcon,
-    this.collapsedIcon,
-    this.expandedIcon,
     this.builder,
     this.enabled = true,
     this.mouseCursor = SystemMouseCursors.click,
@@ -158,20 +156,7 @@ class RemixAccordion<T> extends StatelessWidget {
   final IconData? leadingIcon;
 
   /// Optional trailing icon for the trigger.
-  ///
-  /// When set, this fixed icon takes precedence over [collapsedIcon] and
-  /// [expandedIcon].
   final IconData? trailingIcon;
-
-  /// Optional state-specific icon shown while the item is collapsed.
-  ///
-  /// When omitted, Remix renders its default plus glyph.
-  final IconData? collapsedIcon;
-
-  /// Optional state-specific icon shown while the item is expanded.
-  ///
-  /// When omitted, Remix renders its default minus glyph.
-  final IconData? expandedIcon;
 
   /// Custom builder for the trigger.
   final NakedAccordionTriggerBuilder<T>? builder;
@@ -295,11 +280,6 @@ class _RemixAccordionBodyState<T> extends State<_RemixAccordionBody<T>> {
         if (title != null)
           Expanded(child: StyledText(title, styleSpec: spec.title)),
         if (_config.trailingIcon case final icon?)
-          StyledIcon(icon: icon, styleSpec: spec.trailingIcon)
-        else if ((state.isExpanded
-                ? _config.expandedIcon
-                : _config.collapsedIcon)
-            case final icon?)
           StyledIcon(icon: icon, styleSpec: spec.trailingIcon)
         else
           RemixPathIcon(

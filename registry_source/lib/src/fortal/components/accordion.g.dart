@@ -18,8 +18,6 @@ class FortalAccordion<T> extends StatelessWidget {
     this.title,
     this.leadingIcon,
     this.trailingIcon,
-    this.collapsedIcon,
-    this.expandedIcon,
     this.builder,
     this.enabled = true,
     this.mouseCursor = SystemMouseCursors.click,
@@ -42,8 +40,6 @@ class FortalAccordion<T> extends StatelessWidget {
     this.title,
     this.leadingIcon,
     this.trailingIcon,
-    this.collapsedIcon,
-    this.expandedIcon,
     this.builder,
     this.enabled = true,
     this.mouseCursor = SystemMouseCursors.click,
@@ -66,8 +62,6 @@ class FortalAccordion<T> extends StatelessWidget {
     this.title,
     this.leadingIcon,
     this.trailingIcon,
-    this.collapsedIcon,
-    this.expandedIcon,
     this.builder,
     this.enabled = true,
     this.mouseCursor = SystemMouseCursors.click,
@@ -96,10 +90,6 @@ class FortalAccordion<T> extends StatelessWidget {
   final IconData? leadingIcon;
 
   final IconData? trailingIcon;
-
-  final IconData? collapsedIcon;
-
-  final IconData? expandedIcon;
 
   final NakedAccordionTriggerBuilder<T>? builder;
 
@@ -137,8 +127,6 @@ class FortalAccordion<T> extends StatelessWidget {
       title: this.title,
       leadingIcon: this.leadingIcon,
       trailingIcon: this.trailingIcon,
-      collapsedIcon: this.collapsedIcon,
-      expandedIcon: this.expandedIcon,
       builder: this.builder,
       enabled: this.enabled,
       mouseCursor: this.mouseCursor,
