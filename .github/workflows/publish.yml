@@ -58,7 +58,7 @@ jobs:
           cache: true
       - name: Resolve the workspace
         run: flutter pub get
-      - name: Verify both presets with hosted Remix
+      - name: Verify all presets with hosted Remix
         run: dart run melos run open-code:release:check
 
   publish-remix:

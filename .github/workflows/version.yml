@@ -152,7 +152,7 @@ jobs:
             echo
             echo "### CI on this branch"
             echo
-            echo 'CI installs both presets against checkout Remix.'
+            echo 'CI installs all presets against checkout Remix.'
             echo 'After pub.dev serves step 1, run'
             echo '`dart run melos run open-code:release:check`.'
             echo 'The CLI publish workflow requires this hosted check.'

@@ -176,6 +176,10 @@ melos:
         - dart run tool/build_registry.dart --check
       description: Test preset derivation and fail on committed registry drift
 
+    carbon:tokens:check:
+      run: npm --prefix registry_source/tool/carbon run tokens:verify
+      description: Verify Carbon token output is deterministic and matches its pinned provenance
+
     open-code:dogfood:check:
       run: dart run tool/check_open_code_dogfood.dart
       description: Verify both dogfood consumers' installed source still mirrors the registry
@@ -223,9 +227,8 @@ melos:
     # tool/check_ci_coverage.dart fails when the two drift, and runs inside
     # `ci:checks` so it cannot be forgotten.
     #
-    # Group by cost, not by theme. The two open-code presets are separate steps
-    # purely because they are ~5 minutes each and independent, and together
-    # they were half the old wall clock.
+    # Group by cost, not by theme. The three open-code presets are separate
+    # steps because they are slow and independent.
     ci:
       steps:
         - ci:checks
@@ -257,9 +260,10 @@ melos:
     ci:codegen:
       steps:
         - generate:check
+        - carbon:tokens:check
         - format:check
       description: >-
-        Regenerate Remix sources, then fail on generated or formatting drift
+        Regenerate Remix sources, then fail on generated, token, or formatting drift
 
     ci:cli:
       steps:

@@ -203,21 +203,36 @@ void main() {
       );
     });
 
-    test('the Carbon catalog contains only its initial slice', () {
-      expect(
-        checker.registryCoverageProblem(Directory.current, preset: 'carbon'),
-        isNull,
-      );
-      expect(checker.installedInventoryForTest(preset: 'carbon'), {
-        'ui.dart',
-        'theme/theme.dart',
-        'theme/theme_data.dart',
-        'theme/theme_scope.dart',
-        'theme/tokens.dart',
-        'components/button.dart',
-        'components/button.g.dart',
-      });
-    });
+    test(
+      'the Carbon catalog contains only its foundation and button slice',
+      () {
+        expect(
+          checker.registryCoverageProblem(Directory.current, preset: 'carbon'),
+          isNull,
+        );
+        expect(checker.installedInventoryForTest(preset: 'carbon'), {
+          'ui.dart',
+          'theme/theme.dart',
+          'theme/theme_data.dart',
+          'theme/theme_scope.dart',
+          'theme/layer.dart',
+          'theme/layout.dart',
+          'theme/motion.dart',
+          'theme/token_types.dart',
+          'theme/type.dart',
+          'theme/generated/carbon_component_tokens.dart',
+          'theme/generated/carbon_layout.dart',
+          'theme/generated/carbon_motion.dart',
+          'theme/generated/carbon_palette.dart',
+          'theme/generated/carbon_source_manifest.dart',
+          'theme/generated/carbon_themes.dart',
+          'theme/generated/carbon_tokens.dart',
+          'theme/generated/carbon_type.dart',
+          'components/button.dart',
+          'components/button.g.dart',
+        });
+      },
+    );
 
     test('an item the checker never installs is reported', () {
       final root = Directory('${sandbox.path}/repo');
