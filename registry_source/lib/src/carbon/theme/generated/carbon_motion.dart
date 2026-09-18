@@ -6,6 +6,7 @@
 //   @carbon/motion 11.50.0
 // Regenerate: node registry_source/tool/carbon/generate_tokens.mjs
 // SPDX-License-Identifier: Apache-2.0
+// dart format off
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 

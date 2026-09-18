@@ -6,6 +6,7 @@
 //   @carbon/layout 11.57.0
 // Regenerate: node registry_source/tool/carbon/generate_tokens.mjs
 // SPDX-License-Identifier: Apache-2.0
+// dart format off
 import 'package:remix/remix.dart';
 
 import '../token_types.dart';

@@ -6,6 +6,7 @@
 //   @carbon/themes 11.79.0, @carbon/layout 11.57.0, @carbon/type 11.65.0, @carbon/motion 11.50.0
 // Regenerate: node registry_source/tool/carbon/generate_tokens.mjs
 // SPDX-License-Identifier: Apache-2.0
+// dart format off
 import 'package:remix/remix.dart';
 
 /// Strongly-typed handles for every Carbon design token.

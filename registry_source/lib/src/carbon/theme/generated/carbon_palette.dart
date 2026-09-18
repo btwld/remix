@@ -6,6 +6,7 @@
 //   @carbon/colors 11.56.0 (246 scalar colors)
 // Regenerate: node registry_source/tool/carbon/generate_tokens.mjs
 // SPDX-License-Identifier: Apache-2.0
+// dart format off
 import 'package:flutter/widgets.dart';
 
 /// The IBM Design Language primitive palette (scalar colors).

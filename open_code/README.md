@@ -130,9 +130,9 @@ dart run remix_cli:remix add button
 
 This installs the theme required by Button and the generated Button adapter as
 prefixed local source, including `AcmeScope`, `AcmeTheme`, `AcmeButton`, and
-`acmeButtonStyle`. The initial Wave 1 theme supported Carbon White and Gray 10
-through the `white` and `g10` values, and its button was fixed at 48 px with no
-size parameter.
+`acmeButtonStyle`. The foundation supports Carbon White, Gray 10, Gray 90, and
+Gray 100 through `white`, `g10`, `g90`, and `g100`. Button defaults to Carbon's
+large 48 px height and accepts an explicit size or an `AcmeLayoutScope` size.
 
 This is an initial Carbon slice, not a complete component catalog. It does not
 include an icon button, charts, icons, Agent surfaces, or dashboards.

@@ -29,8 +29,8 @@ Fortal preset does not add a `remix_fortal` dependency.
 | | `default` | `fortal` | `carbon` |
 |---|---|---|---|
 | Design language | Compact neutral starting point | Radix Themes 3.3.0 parity surface | Initial IBM Carbon-inspired slice |
-| Theme | 15 semantic tokens | 277 tokens, Radix color scales, scaling, radius, and panel modes | White and Gray 10 |
-| Component axes | Small default vocabulary | Fortal's `classic`, `solid`, `soft`, `surface`, `outline`, and `ghost` vocabulary where applicable | Carbon button kinds at a fixed 48 px height |
+| Theme | 15 semantic tokens | 277 tokens, Radix color scales, scaling, radius, and panel modes | White, Gray 10, Gray 90, and Gray 100 with generated layer, layout, type, and motion foundations |
+| Component axes | Small default vocabulary | Fortal's `classic`, `solid`, `soft`, `surface`, `outline`, and `ghost` vocabulary where applicable | Carbon button kinds and optional sizing, defaulting to 48 px |
 | Best for | A house system you intend to shape | Starting from a complete Radix-like system | Trying the first Carbon theme-and-button vertical slice |
 
 All three choices install local Dart under `lib/`, use Remix for behavior, and
@@ -387,9 +387,9 @@ remix add button
 
 Button installs the theme first and produces prefixed, application-owned
 source such as `AcmeScope`, `AcmeTheme`, `AcmeButton`, and
-`acmeButtonStyle`. The initial Wave 1 theme supported Carbon White and Gray 10
-through the `white` and `g10` values, and its button was fixed at 48 px with no
-size parameter.
+`acmeButtonStyle`. The foundation supports Carbon White, Gray 10, Gray 90, and
+Gray 100 through `white`, `g10`, `g90`, and `g100`. Button defaults to Carbon's
+large 48 px height and accepts an explicit size or an `AcmeLayoutScope` size.
 
 This is the first Carbon vertical slice, not a complete Carbon component
 catalog. It contains only the theme surface required by `button` and the

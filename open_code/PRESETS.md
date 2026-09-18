@@ -10,7 +10,7 @@ registry manifest and template is derived from analyzer-checked Dart by
 registry_source/                 one private workspace package
   lib/src/default/              default theme, components, Agent recipes
   lib/src/fortal/               Fortal theme, components, Agent recipes
-  lib/src/carbon/               initial Carbon theme and button slice
+  lib/src/carbon/               Carbon foundation and button slice
   lib/src/agent/                shared Agent behavior, models, support
   lib/src/dashboard/            shared dashboard composition
 packages/remix_cli/lib/src/registry/
@@ -49,9 +49,11 @@ token IDs use the consumer prefix, for example `AcmeButton` and `acme.accent.9`.
 catalog deliberately chooses it as its consumer prefix.
 
 Carbon uses the collision-free authoring prefix `Carbide`, which is likewise
-replaced by the consumer prefix. Its initial slice supports Carbon White and
-Gray 10 and a fixed-height 48 px `button`. It intentionally has no Agent,
-dashboard, chart, or icon items and is not a complete component catalog.
+replaced by the consumer prefix. Its foundation supports Carbon White, Gray 10,
+Gray 90, and Gray 100 with generated layer, layout, type, and motion values.
+Its `button` defaults to 48 px and supports explicit or contextual sizing. It
+intentionally has no Agent, dashboard, chart, or icon items and is not a
+complete component catalog.
 
 A recipe installs its dependency closure, not the entire catalog. The eight
 Agent surfaces (`activity`, `answer`, `composer`, `execution`, `message`,

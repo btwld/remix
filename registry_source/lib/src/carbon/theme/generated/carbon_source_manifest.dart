@@ -6,6 +6,7 @@
 //   source manifest
 // Regenerate: node registry_source/tool/carbon/generate_tokens.mjs
 // SPDX-License-Identifier: Apache-2.0
+// dart format off
 /// Records exactly which upstream sources produced the generated tokens.
 class CarbideSourceManifest {
   CarbideSourceManifest._();

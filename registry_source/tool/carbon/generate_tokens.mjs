@@ -62,6 +62,7 @@ function header(title, sourceLine) {
     `//   ${sourceLine}`,
     '// Regenerate: node registry_source/tool/carbon/generate_tokens.mjs',
     '// SPDX-License-Identifier: Apache-2.0',
+    '// dart format off',
     '',
   ].join('\n');
 }
