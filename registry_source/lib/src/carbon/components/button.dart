@@ -26,6 +26,13 @@ const _carbideButtonFocusBorder = ContextToken(
   _resolveCarbideButtonFocusBorder,
 );
 
+const _carbideButtonHeight = ContextToken(_resolveCarbideButtonHeight);
+
+double _resolveCarbideButtonHeight(BuildContext context) =>
+    (CarbideLayoutScope.maybeSizeOf(context) ?? CarbideSize.lg)
+        .clampTo(.sm, .x2l)
+        .height;
+
 ShapeBorder _resolveCarbideButtonFocusBorder(BuildContext context) {
   final outer = RoundedRectangleBorder(
     side: BorderSide(color: CarbideTokens.focus.resolve(context), width: 2.0),
@@ -42,10 +49,10 @@ ShapeBorder _resolveCarbideButtonFocusBorder(BuildContext context) {
   return inner + outer;
 }
 
-/// A fixed-height Carbon Button recipe and generated [RemixButton] wrapper.
+/// A Carbon Button recipe and generated [RemixButton] wrapper.
 ///
-/// The initial registry slice is deliberately fixed at Carbon's large 48px
-/// height. Contextual sizing arrives with the generated foundation in Wave 2.
+/// When [size] is null, height comes from [CarbideLayoutScope], falling back to
+/// Carbon's large 48px default and clamping to the supported small–2xl range.
 /// Loading is non-interactive but retains the selected kind's treatment rather
 /// than taking the ordinary disabled colors.
 @MixWidget(
@@ -68,9 +75,13 @@ ShapeBorder _resolveCarbideButtonFocusBorder(BuildContext context) {
 )
 ButtonStyler carbideButtonStyle({
   CarbideButtonKind kind = .primary,
+  CarbideSize? size,
   bool loading = false,
 }) {
-  final base = _carbideButtonBaseStyle(kind);
+  final height = size == null
+      ? _carbideButtonHeight()
+      : size.clampTo(.sm, .x2l).height;
+  final base = _carbideButtonBaseStyle(height, kind);
 
   return switch (kind) {
     .primary => _fillStyle(
@@ -135,9 +146,12 @@ ButtonStyler carbideButtonStyle({
   };
 }
 
-ButtonStyler _carbideButtonBaseStyle(CarbideButtonKind kind) {
+ButtonStyler _carbideButtonBaseStyle(
+  double height,
+  CarbideButtonKind kind,
+) {
   return ButtonStyler()
-      .height(48.0)
+      .height(height)
       .padding(.horizontal(CarbideTokens.spacing05()))
       .spacing(switch (kind) {
         .ghost || .dangerGhost => CarbideTokens.spacing03(),

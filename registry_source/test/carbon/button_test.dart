@@ -63,6 +63,29 @@ void main() {
     }
   });
 
+  testWidgets('supports explicit and contextual Carbon sizing', (tester) async {
+    await tester.pumpWidget(
+      _host(
+        CarbideButton(
+          label: 'Explicit',
+          size: CarbideSize.xl,
+          onPressed: () {},
+        ),
+      ),
+    );
+    expect(tester.getSize(find.byType(CarbideButton)).height, 64.0);
+
+    await tester.pumpWidget(
+      _host(
+        CarbideLayoutScope(
+          size: CarbideSize.sm,
+          child: CarbideButton(label: 'Contextual', onPressed: () {}),
+        ),
+      ),
+    );
+    expect(tester.getSize(find.byType(CarbideButton)).height, 32.0);
+  });
+
   testWidgets('loading preserves primary fill while disabled uses gray', (
     tester,
   ) async {
