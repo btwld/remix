@@ -91,6 +91,21 @@ void main() {
     expect(source, isNot(contains('remix_fortal')));
   });
 
+  test('Carbon button resolves exactly through its theme', () async {
+    final catalog = await RegistryCatalog.loadBundled(preset: 'carbon');
+
+    expect(catalog.preset, 'carbon');
+    expect(catalog.resolve('button').map((item) => item.name), [
+      'theme',
+      'button',
+    ]);
+
+    final button = catalog.items['button']!;
+    final source = await catalog.readTemplate(button.files.single);
+    expect(source, contains('{{typePrefix}}Button'));
+    expect(source, contains('{{valuePrefix}}ButtonStyle'));
+  });
+
   test('unknown preset fails before reading an asset and lists bundles', () {
     expect(
       RegistryCatalog.loadBundled(
@@ -101,7 +116,12 @@ void main() {
         isA<FormatException>().having(
           (error) => error.message,
           'message',
-          allOf(contains('missing'), contains('default'), contains('fortal')),
+          allOf(
+            contains('missing'),
+            contains('default'),
+            contains('fortal'),
+            contains('carbon'),
+          ),
         ),
       ),
     );

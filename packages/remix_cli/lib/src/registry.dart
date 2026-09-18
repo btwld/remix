@@ -5,7 +5,7 @@ import 'package:path/path.dart' as p;
 import 'package:pub_semver/pub_semver.dart';
 import 'package:yaml/yaml.dart';
 
-const bundledPresets = <String>{'default', 'fortal'};
+const bundledPresets = <String>{'default', 'fortal', 'carbon'};
 
 /// Stands in for the consumer's configured UI path in every registry target.
 ///
