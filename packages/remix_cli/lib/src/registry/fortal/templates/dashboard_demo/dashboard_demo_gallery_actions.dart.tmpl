@@ -1,0 +1,109 @@
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+import 'package:remix_ui_icons/remix_ui_icons.dart';
+
+import 'dashboard_demo_gallery_scaffold.dart';
+import 'dashboard_demo_ui.dart';
+
+class GalleryActionsPage extends StatefulWidget {
+  const GalleryActionsPage({super.key});
+
+  @override
+  State<GalleryActionsPage> createState() => _GalleryActionsPageState();
+}
+
+class _GalleryActionsPageState extends State<GalleryActionsPage> {
+  bool _selected = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return GalleryPage(
+      title: 'Actions',
+      intro: 'Interactive actions across every native variant and size.',
+      sections: [
+        GallerySection(
+          label: 'Button',
+          description:
+              'Classic, solid, soft, surface, outline, and ghost actions.',
+          child: GalleryEnumMatrix(
+            rows: {{typePrefix}}ButtonVariant.values,
+            columns: {{typePrefix}}ButtonSize.values,
+            cellBuilder: (context, variant, size) => {{typePrefix}}Button(
+              variant: variant,
+              size: size,
+              onPressed: () => showRemixToast(
+                context,
+                const RemixToastData(
+                  title: 'Button pressed',
+                  icon: RemixIcons.checkCircled,
+                ),
+              ),
+              label: 'Button',
+            ),
+          ),
+        ),
+        GallerySection(
+          label: 'Icon button',
+          description:
+              'Compact icon-only controls with complete focus semantics.',
+          child: GalleryEnumMatrix(
+            rows: {{typePrefix}}IconButtonVariant.values,
+            columns: {{typePrefix}}IconButtonSize.values,
+            cellBuilder: (context, variant, size) => {{typePrefix}}IconButton(
+              variant: variant,
+              size: size,
+              semanticLabel: 'Add item',
+              onPressed: () => showRemixToast(
+                context,
+                const RemixToastData(
+                  title: 'Item added',
+                  icon: RemixIcons.checkCircled,
+                ),
+              ),
+              icon: RemixIcons.plus,
+            ),
+          ),
+        ),
+        GallerySection(
+          label: 'Toggle',
+          description: 'Ghost and outline toggles remain fully interactive.',
+          child: GalleryEnumMatrix(
+            rows: {{typePrefix}}ToggleVariant.values,
+            columns: {{typePrefix}}ToggleSize.values,
+            cellBuilder: (_, variant, size) => {{typePrefix}}Toggle(
+              variant: variant,
+              size: size,
+              selected: _selected,
+              icon: RemixIcons.fontBold,
+              label: 'Bold',
+              onChanged: (value) => setState(() => _selected = value),
+            ),
+          ),
+        ),
+        GallerySection(
+          label: 'States',
+          description:
+              'Disabled and loading behavior uses the same component API.',
+          child: Wrap(
+            spacing: 12,
+            runSpacing: 12,
+            children: [
+              const {{typePrefix}}Button(
+                enabled: false,
+                onPressed: null,
+                label: 'Disabled',
+              ),
+              {{typePrefix}}Button(loading: true, onPressed: () {}, label: 'Saving'),
+              {{typePrefix}}IconButton(
+                enabled: false,
+                semanticLabel: 'Disabled favorite',
+                onPressed: () {},
+                icon: RemixIcons.heart,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}

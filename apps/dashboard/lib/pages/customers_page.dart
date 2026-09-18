@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import '../ui/ui.dart';
 
 import '../data/customers.dart';
 import '../data/models.dart';
@@ -11,7 +11,6 @@ import '../widgets/data_table_cell_text.dart';
 import '../widgets/empty_state.dart';
 import '../widgets/page_header.dart';
 import '../widgets/status_badge.dart';
-import '../widgets/toast.dart';
 
 class CustomersPage extends StatefulWidget {
   const CustomersPage({super.key, this.globalQuery = ''});
@@ -56,9 +55,14 @@ class _CustomersPageState extends State<CustomersPage> {
           PageHeader(
             title: 'Customers',
             description: 'Manage customer access, plans, and account status.',
-            actions: FortalButton(
-              onPressed: () =>
-                  showToast(context, message: 'Customer invitation started'),
+            actions: UiButton(
+              onPressed: () => showRemixToast(
+                context,
+                RemixToastData(
+                  title: 'Customer invitation started',
+                  icon: Icons.check_circle_outline,
+                ),
+              ),
               label: 'Add customer',
               leadingIcon: Icons.add,
             ),
@@ -67,7 +71,7 @@ class _CustomersPageState extends State<CustomersPage> {
             builder: (context, constraints) {
               final search = SizedBox(
                 width: constraints.maxWidth < 320 ? constraints.maxWidth : 300,
-                child: FortalTextField(
+                child: UiTextField(
                   key: const ValueKey('customer-search'),
                   leading: const Icon(Icons.search, size: 18),
                   hintText: 'Search customers…',
@@ -84,27 +88,36 @@ class _CustomersPageState extends State<CustomersPage> {
                       runSpacing: 6,
                       crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
-                        FortalBadge(
+                        UiBadge(
                           size: .size2,
                           highContrast: true,
                           label: '${_selectedIds.length} selected',
                         ),
-                        FortalButton.ghost(
+                        UiButton.ghost(
                           size: .size1,
-                          onPressed: () => showToast(
+                          onPressed: () => showRemixToast(
                             context,
-                            message:
-                                'Export prepared for ${_selectedIds.length} customers',
+                            RemixToastData(
+                              title:
+                                  'Export prepared for ${_selectedIds.length} customers',
+                              icon: Icons.check_circle_outline,
+                            ),
                           ),
                           label: 'Export',
                         ),
-                        FortalButton.ghost(
+                        UiButton.ghost(
                           size: .size1,
-                          onPressed: () => showToast(
+                          onPressed: () => showRemixToast(
                             context,
-                            message:
-                                '${_selectedIds.length} customers archived',
-                            actionLabel: 'Undo',
+                            RemixToastData(
+                              title:
+                                  '${_selectedIds.length} customers archived',
+                              icon: Icons.check_circle_outline,
+                              action: RemixToastAction(
+                                label: 'Undo',
+                                onPressed: () {},
+                              ),
+                            ),
                           ),
                           label: 'Archive',
                         ),
@@ -120,7 +133,7 @@ class _CustomersPageState extends State<CustomersPage> {
               return Row(children: [search, const Spacer(), ?selection]);
             },
           ),
-          FortalDataTable<Customer>.surface(
+          UiDataTable<Customer>.surface(
             key: const ValueKey('data-grid-customers'),
             rows: visible,
             columns: _columns,
@@ -172,7 +185,7 @@ class _CustomersPageState extends State<CustomersPage> {
         mainAxisSize: .min,
         spacing: 9,
         children: [
-          FortalAvatar(size: .size2, label: customer.initials),
+          UiAvatar(size: .size2, label: customer.initials),
           Flexible(child: DataTableCellText(customer.name, primary: true)),
         ],
       ),
@@ -209,7 +222,7 @@ class _CustomersPageState extends State<CustomersPage> {
       header: const SizedBox.shrink(),
       semanticLabel: 'Actions',
       width: const FixedColumnWidth(64),
-      alignment: .end,
+      alignment: AlignmentDirectional.centerEnd,
       cellBuilder: (context, customer) => DashboardActionMenu(
         key: ValueKey('customer-actions-${customer.id}'),
         semanticLabel: 'Actions for ${customer.name}',
@@ -224,8 +237,13 @@ class _CustomersPageState extends State<CustomersPage> {
             dividerBefore: true,
           ),
         ],
-        onSelected: (value) =>
-            showToast(context, message: '$value selected for ${customer.name}'),
+        onSelected: (value) => showRemixToast(
+          context,
+          RemixToastData(
+            title: '$value selected for ${customer.name}',
+            icon: Icons.check_circle_outline,
+          ),
+        ),
       ),
     ),
   ];

@@ -1,0 +1,281 @@
+import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
+
+import 'mixins/naked_mixins.dart';
+import 'utilities/intents.dart';
+import 'utilities/naked_focusable_detector.dart';
+import 'utilities/naked_state_scope.dart';
+import 'utilities/state.dart';
+
+/// Immutable view passed to [NakedCheckbox.builder].
+class NakedCheckboxState extends NakedState {
+  /// The current checked state (null for tristate intermediate).
+  final bool? isChecked;
+
+  /// Whether the checkbox is in tristate mode.
+  final bool tristate;
+
+  /// Creates an immutable snapshot of checkbox state.
+  NakedCheckboxState({
+    required super.states,
+    required this.isChecked,
+    required this.tristate,
+  });
+
+  /// Returns the nearest [NakedCheckboxState] provided by [NakedStateScope].
+  static NakedCheckboxState of(BuildContext context) => NakedState.of(context);
+
+  /// Returns the nearest [NakedCheckboxState] if one is available.
+  static NakedCheckboxState? maybeOf(BuildContext context) =>
+      NakedState.maybeOf(context);
+
+  /// Returns the [WidgetStatesController] from the nearest scope.
+  static WidgetStatesController controllerOf(BuildContext context) =>
+      NakedState.controllerOf<NakedCheckboxState>(context);
+
+  /// Returns the [WidgetStatesController] from the nearest scope, if any.
+  static WidgetStatesController? maybeControllerOf(BuildContext context) =>
+      NakedState.maybeControllerOf<NakedCheckboxState>(context);
+
+  /// Whether the checkbox is in intermediate/mixed state.
+  bool get isIntermediate => tristate && isChecked == null;
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is NakedCheckboxState &&
+        statesEqual(other) &&
+        other.isChecked == isChecked &&
+        other.tristate == tristate;
+  }
+
+  @override
+  int get hashCode => Object.hash(statesHashCode, isChecked, tristate);
+}
+
+/// A headless checkbox without visuals.
+///
+/// The [builder] receives a [NakedCheckboxState] with the checked value,
+/// tristate mode, and interaction states for custom styling.
+///
+/// ```dart
+/// NakedCheckbox(
+///   value: isChecked,
+///   onChanged: (value) => setState(() => isChecked = value),
+///   child: MyCustomCheckboxUI(),
+/// )
+/// ```
+///
+/// See also:
+/// - [Checkbox], the Material-styled checkbox for typical apps.
+/// - [NakedToggle], for a headless binary toggle alternative.
+
+class NakedCheckbox extends StatefulWidget {
+  /// Creates a headless checkbox controlled by [value].
+  const NakedCheckbox({
+    super.key,
+    this.child,
+    this.value = false,
+    this.tristate = false,
+    this.onChanged,
+    this.enabled = true,
+    this.mouseCursor,
+    this.enableFeedback = true,
+    this.focusNode,
+    this.autofocus = false,
+    this.onFocusChange,
+    this.onHoverChange,
+    this.onPressChange,
+    this.builder,
+    this.semanticLabel,
+    this.excludeSemantics = false,
+  }) : assert(
+         (tristate || value != null),
+         'Non-tristate checkbox must have a non-null value',
+       );
+
+  /// The visual representation of the checkbox.
+  final Widget? child;
+
+  /// The current checked state.
+  ///
+  /// When [tristate] is true, null represents mixed state.
+  final bool? value;
+
+  /// Whether tristate is supported.
+  ///
+  /// When true, tapping cycles through false → true → null → false.
+  /// When false, [value] must not be null.
+  final bool tristate;
+
+  /// Called when the checkbox value changes.
+  final ValueChanged<bool?>? onChanged;
+
+  /// Called when focus changes.
+  final ValueChanged<bool>? onFocusChange;
+
+  /// Called when hover changes.
+  final ValueChanged<bool>? onHoverChange;
+
+  /// Called when press state changes.
+  final ValueChanged<bool>? onPressChange;
+
+  /// Whether the checkbox is enabled.
+  final bool enabled;
+
+  /// The mouse cursor for the checkbox.
+  final MouseCursor? mouseCursor;
+
+  /// Whether to provide haptic feedback on interactions.
+  final bool enableFeedback;
+
+  /// The focus node for the checkbox.
+  final FocusNode? focusNode;
+
+  /// Whether to autofocus.
+  final bool autofocus;
+
+  /// Builds the checkbox using the current [NakedCheckboxState].
+  final ValueWidgetBuilder<NakedCheckboxState>? builder;
+
+  /// Semantic label for accessibility.
+  final String? semanticLabel;
+
+  /// Whether to exclude this widget from the semantic tree.
+  ///
+  /// When true, the widget and its children are hidden from accessibility services.
+  final bool excludeSemantics;
+
+  bool get _effectiveEnabled => enabled && onChanged != null;
+
+  @override
+  State<NakedCheckbox> createState() => _NakedCheckboxState();
+}
+
+class _NakedCheckboxState extends State<NakedCheckbox>
+    with WidgetStatesMixin<NakedCheckbox> {
+  void _handleKeyboardActivation() {
+    if (!widget._effectiveEnabled) return;
+
+    _handleActivation();
+  }
+
+  void _handleActivation() {
+    if (!widget._effectiveEnabled || widget.onChanged == null) return;
+
+    if (widget.enableFeedback) {
+      HapticFeedback.selectionClick();
+    }
+
+    final bool? nextValue;
+    if (widget.tristate) {
+      if (widget.value == null) {
+        nextValue = false;
+      } else if (widget.value == false) {
+        nextValue = true;
+      } else {
+        nextValue = null; // true → null
+      }
+    } else {
+      final current = widget.value ?? false;
+      nextValue = !current;
+    }
+
+    widget.onChanged!(nextValue);
+  }
+
+  Widget _buildContent() {
+    final checkboxState = NakedCheckboxState(
+      states: widgetStates,
+      isChecked: widget.value,
+      tristate: widget.tristate,
+    );
+
+    return NakedStateScopeBuilder(
+      value: checkboxState,
+      child: widget.child,
+      builder: widget.builder,
+    );
+  }
+
+  Widget _buildCheckbox() {
+    Widget gestureDetector = GestureDetector(
+      onTapDown: widget._effectiveEnabled
+          ? (details) {
+              updatePressState(true, widget.onPressChange);
+            }
+          : null,
+      onTapUp: widget._effectiveEnabled
+          ? (details) {
+              updatePressState(false, widget.onPressChange);
+            }
+          : null,
+      onTap: widget._effectiveEnabled ? _handleActivation : null,
+      onTapCancel: widget._effectiveEnabled
+          ? () {
+              updatePressState(false, widget.onPressChange);
+            }
+          : null,
+      behavior: HitTestBehavior.opaque,
+      excludeFromSemantics: true,
+      child: _buildContent(),
+    );
+
+    return widget.excludeSemantics
+        ? ExcludeSemantics(child: gestureDetector)
+        : Semantics(
+            enabled: widget._effectiveEnabled,
+            checked: widget.value == true,
+            mixed: widget.tristate && widget.value == null,
+            label: widget.semanticLabel,
+            onTap: _semanticsTapHandler,
+            child: gestureDetector,
+          );
+  }
+
+  MouseCursor get _effectiveCursor => widget._effectiveEnabled
+      ? (widget.mouseCursor ?? SystemMouseCursors.click)
+      : SystemMouseCursors.basic;
+
+  VoidCallback? get _semanticsTapHandler =>
+      widget._effectiveEnabled ? _handleActivation : null;
+
+  @override
+  void initializeWidgetStates() {
+    updateDisabledState(!widget._effectiveEnabled);
+    updateSelectedState(widget.value == true, null);
+  }
+
+  @override
+  void didUpdateWidget(covariant NakedCheckbox oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    syncWidgetStates();
+    if (oldWidget.value != widget.value) {
+      updateSelectedState(widget.value == true, null);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MergeSemantics(
+      child: NakedFocusableDetector(
+        enabled: widget._effectiveEnabled,
+        autofocus: widget.autofocus,
+        onFocusChange: (focused) {
+          updateFocusState(focused, widget.onFocusChange);
+        },
+        onHoverChange: (hovered) {
+          updateHoverState(hovered, widget.onHoverChange);
+        },
+        focusNode: widget.focusNode,
+        mouseCursor: _effectiveCursor,
+        shortcuts: NakedIntentActions.checkbox.shortcuts,
+        actions: NakedIntentActions.checkbox.actions(
+          onToggle: () => _handleKeyboardActivation(),
+        ),
+        child: _buildCheckbox(),
+      ),
+    );
+  }
+}

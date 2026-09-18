@@ -1,3 +1,23 @@
+## 1.0.0-beta.10
+
+- **BREAKING**: Align Fortal icon button sizes to 12/16/20 pixels and apply tab container styling to custom tab children; use the builder escape hatch for fully custom tab rendering.
+- Preserve inherited menu item styles, root menu and table variants, and tooltip text defaults.
+
+- Add controlled sidebar collapse, coordinated width/content transitions configured with AnimationStyle, accessible icon-only destinations, and styled tooltips.
+- Add controlled tooltip visibility and preserve enclosing dismissal actions when closed.
+- Add `RemixToastScope`, `showRemixToast`, and the stateless `RemixToast`: queued, nonmodal notifications over `NakedToastScope` with six directional placements, same-id replacement, pause on hover, focus, and background, status or alert announcements, and composed action and close buttons styled through `ToastSpec`. Requires `naked_ui` 1.0.0-beta.15.
+- Export `RemixStyleSpecBuilder`, the builder every Remix component already uses to accept either a fluent style or a resolved `styleSpec`. Packages that compose Remix into their own surfaces previously had to reimplement that either/or, and the copies dropped the `controller` and focus-highlight plumbing that makes state variants resolve.
+
+## 1.0.0-beta.9
+
+- Export the Naked UI constructor and state types required by generated
+  application-owned Accordion, Disclosure, Slider, and Tabs recipes.
+ - **FIX**(data_list): bound minimum intrinsic width by maximum (#185).
+
+## 1.0.0-beta.8
+
+ - **FEAT**(sidebar): publish a Remix sidebar panel (#168).
+
 ## 1.0.0-beta.7
 
  - **REFACTOR**(remix): simplify composite surface rendering (#165).

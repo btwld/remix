@@ -1,3 +1,6 @@
+# Local reference checkouts (not part of Remix)
+.local/
+
 # Miscellaneous
 *.class
 *.log
@@ -21,8 +24,6 @@ align_ui_flutter/
 **/example/android/
 **/example/ios/
 **/example/web/
-!packages/remix_carbon/example/web/
-!packages/remix_carbon/example/web/**
 **/example/windows/
 **/example/macos/
 **/example/linux/
@@ -295,3 +296,6 @@ app.*.symbols
 component_patterns_analysis.md
 /.cursor
 **/.venv/
+
+# Local design review output
+.impeccable/

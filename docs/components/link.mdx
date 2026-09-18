@@ -82,7 +82,7 @@ class LinkUrlExample extends StatelessWidget {
       label: 'Remix on GitHub',
       // Safe here: the callback hands off to the platform rather than routing
       // in-app, so the web anchor and the callback agree on the destination.
-      linkUrl: Uri.parse('https://github.com/btwld/remix'),
+      linkUrl: Uri.parse('https://github.com/conceptadev/remix'),
       semanticHint: 'Opens in a new window',
       onPressed: () => debugPrint('launch'),
     );
@@ -102,12 +102,12 @@ link with no callback.
 
 ## Fortal widgets
 
-Remix includes a Fortal-themed widget for this component:
+The application-owned Fortal preset provides a themed widget for this component:
 
 <CodeGroup title="Fortal variants" defaultLanguage="dart">
 ```dart
 import 'package:flutter/material.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import 'ui/ui.dart';
 
 class FortalLinkExample extends StatelessWidget {
   const FortalLinkExample({super.key});
@@ -141,7 +141,7 @@ class FortalLinkExample extends StatelessWidget {
 </CodeGroup>
 
 <Info>
-  See the [fortalLinkStyle source code](https://github.com/btwld/remix/blob/main/packages/remix_fortal/lib/src/recipes/link.dart) for all available options.
+  See the [fortalLinkStyle source code](https://github.com/conceptadev/remix/blob/main/registry_source/lib/src/fortal/components/link.dart) for all available options.
 </Info>
 
 ## Constructor

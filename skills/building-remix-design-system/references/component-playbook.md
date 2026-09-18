@@ -109,7 +109,7 @@ below is validated against them and should move with them:
 
 ```yaml
 dependencies:
-  remix: ^1.0.0-beta.7
+  remix: ^1.0.0-beta.10
   mix: ^2.2.0-beta.5
   mix_annotations: ^2.2.0-beta.1
 
@@ -204,7 +204,7 @@ specifies it, and don't fight the min-size default.
 
 ### One-icon alignment is style-driven
 
-`ButtonStyler.iconAlignment(RemixIconAlignment.start|end)` controls which
+`ButtonStyler.iconAlignment(RemixPlacement.start|end)` controls which
 side of the label a **single** icon occupies. It applies regardless of whether
 the caller supplied `leadingIcon` or `trailingIcon`. When both icons are
 present, Remix deliberately preserves leading → label → trailing order. Test

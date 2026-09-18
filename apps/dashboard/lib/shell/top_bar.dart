@@ -1,27 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
 
 import '../data/activity.dart';
 import '../theme/theme_scope.dart';
+import '../ui/ui.dart';
 import '../widgets/action_menu.dart';
 import '../widgets/theme_panel.dart';
-import '../widgets/toast.dart';
 import '../widgets/typography.dart';
-import 'dashboard_page.dart';
-import 'dashboard_shell_layout.dart';
 
+/// Application-owned actions supplied to the installed dashboard shell.
 class TopBar extends StatefulWidget {
-  const TopBar({
-    super.key,
-    required this.page,
-    required this.onSearchChanged,
-    this.onMenuPressed,
-  });
-
-  final DashboardPage page;
-  final ValueChanged<String> onSearchChanged;
-  final VoidCallback? onMenuPressed;
+  const TopBar({super.key});
 
   @override
   State<TopBar> createState() => _TopBarState();
@@ -33,67 +22,27 @@ class _TopBarState extends State<TopBar> {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.sizeOf(context).width;
-    final compact = width < dashboardCompactBreakpoint;
-    return DashboardShellHeader(
-      horizontalPadding: compact
-          ? FortalTokens.space3()
-          : FortalTokens.space5(),
-      child: Row(
-        spacing: 12,
-        children: [
-          if (widget.onMenuPressed case final onMenuPressed?)
-            FortalIconButton.ghost(
-              key: const ValueKey('dashboard-menu'),
-              semanticLabel: 'Open navigation',
-              onPressed: onMenuPressed,
-              icon: Icons.menu,
-            ),
-          if (width > 900) ...[
-            StyledText(
-              widget.page.section.label,
-              style: dashboardText(.size2, tone: .muted),
-            ),
-            Icon(
-              Icons.chevron_right,
-              size: 14,
-              color: MixScope.tokenOf(FortalTokens.gray8, context),
-            ),
-          ],
-          Flexible(
-            // The breadcrumb repeats the page title the page header already
-            // publishes as a heading, so it stays plain truncating text.
-            child: StyledText(
-              widget.page.label,
-              style: dashboardTextLine(.size4, weight: .bold),
-            ),
-          ),
-          const Spacer(),
-          if (width > 1000)
-            SizedBox(
-              width: 260,
-              child: FortalTextField(
-                key: const ValueKey('global-search'),
-                leading: const Icon(Icons.search, size: 18),
-                hintText: 'Search…',
-                onChanged: widget.onSearchChanged,
-              ),
-            ),
-          FortalIconButton.ghost(
-            key: const ValueKey('theme-quick-toggle'),
-            semanticLabel: 'Toggle dark mode',
-            onPressed: () {
-              final theme = ThemeScope.of(context);
-              final isDark = FortalTheme.of(context).isDark;
-              theme.onChanged(
-                theme.settings.copyWith(appearance: isDark ? .light : .dark),
-              );
-            },
-            icon: FortalTheme.of(context).isDark
-                ? Icons.light_mode_outlined
-                : Icons.dark_mode_outlined,
-          ),
-          FortalPopover(
+    final compact = MediaQuery.sizeOf(context).width < 600;
+    return RowBox(
+      style: FlexBoxStyler().spacing(UiTokens.space2()),
+      children: [
+        RemixIconButton(
+          key: const ValueKey('theme-quick-toggle'),
+          semanticLabel: 'Toggle dark mode',
+          style: _toolbarButtonStyle,
+          onPressed: () {
+            final theme = ThemeScope.of(context);
+            final isDark = UiTheme.of(context).isDark;
+            theme.onChanged(
+              theme.settings.copyWith(appearance: isDark ? .light : .dark),
+            );
+          },
+          icon: UiTheme.of(context).isDark
+              ? Icons.light_mode_outlined
+              : Icons.dark_mode_outlined,
+        ),
+        if (!compact)
+          UiPopover(
             controller: _notificationsController,
             openOnTap: false,
             semanticLabel: 'Notifications',
@@ -102,30 +51,35 @@ class _TopBarState extends State<TopBar> {
               alignment: .end,
               sideOffset: 8,
             ),
-            popoverChild: SizedBox(
-              width: 330,
-              child: Column(
-                mainAxisSize: .min,
-                crossAxisAlignment: .stretch,
-                spacing: 10,
+            popoverChild: Box(
+              key: const ValueKey('topbar-notifications-content'),
+              style: BoxStyler().width(330),
+              child: ColumnBox(
+                style: FlexBoxStyler()
+                    .mainAxisSize(.min)
+                    .crossAxisAlignment(.stretch)
+                    .spacing(10),
                 children: [
-                  Row(
+                  RowBox(
                     children: [
                       const Expanded(
-                        child: FortalHeading(
+                        child: UiHeading(
                           'Notifications',
                           headingLevel: 2,
                           size: .size3,
                           weight: .medium,
                         ),
                       ),
-                      FortalButton.ghost(
+                      UiButton.ghost(
                         size: .size1,
                         onPressed: () {
                           _notificationsController.close();
-                          showToast(
+                          showRemixToast(
                             context,
-                            message: 'All notifications marked read',
+                            RemixToastData(
+                              title: 'All notifications marked read',
+                              icon: Icons.check_circle_outline,
+                            ),
                           );
                         },
                         label: 'Mark all read',
@@ -133,28 +87,26 @@ class _TopBarState extends State<TopBar> {
                     ],
                   ),
                   for (final event in activityEvents.take(4))
-                    Row(
-                      crossAxisAlignment: .start,
-                      spacing: 9,
+                    RowBox(
+                      style: FlexBoxStyler()
+                          .crossAxisAlignment(.start)
+                          .spacing(9),
                       children: [
-                        Container(
-                          width: 7,
-                          height: 7,
-                          margin: const EdgeInsets.only(top: 6),
-                          decoration: BoxDecoration(
-                            color: MixScope.tokenOf(
-                              FortalTokens.accent9,
-                              context,
-                            ),
-                            shape: .circle,
-                          ),
+                        Box(
+                          style: BoxStyler()
+                              .width(7)
+                              .height(7)
+                              .margin(.top(6))
+                              .color(UiTokens.accent9())
+                              .borderRadius(.circular(4)),
                         ),
                         Expanded(
-                          child: Column(
-                            crossAxisAlignment: .start,
-                            spacing: 2,
+                          child: ColumnBox(
+                            style: FlexBoxStyler()
+                                .crossAxisAlignment(.start)
+                                .spacing(2),
                             children: [
-                              FortalText(
+                              UiText(
                                 event.title,
                                 size: .size2,
                                 weight: .medium,
@@ -171,8 +123,9 @@ class _TopBarState extends State<TopBar> {
                 ],
               ),
             ),
-            child: FortalIconButton.ghost(
+            child: RemixIconButton(
               semanticLabel: 'Notifications',
+              style: _toolbarButtonStyle,
               onPressed: _toggleNotifications,
               icon: Icons.notifications_none,
               iconBuilder: (context, spec, icon) => Stack(
@@ -185,42 +138,40 @@ class _TopBarState extends State<TopBar> {
                   Positioned(
                     right: -1,
                     top: -1,
-                    child: Container(
-                      width: 7,
-                      height: 7,
-                      decoration: BoxDecoration(
-                        color: MixScope.tokenOf(FortalTokens.accent9, context),
-                        shape: .circle,
-                      ),
+                    child: Box(
+                      style: BoxStyler()
+                          .width(7)
+                          .height(7)
+                          .color(UiTokens.accent9())
+                          .borderRadius(.circular(4)),
                     ),
                   ),
                 ],
               ),
             ),
           ),
-          FortalPopover(
-            controller: _themeController,
-            openOnTap: false,
-            semanticLabel: 'Theme settings',
-            positioning: const OverlayPositionConfig(
-              side: .bottom,
-              alignment: .end,
-              sideOffset: 8,
-            ),
-            popoverChild: SizedBox(
-              width: 400,
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxHeight: 650),
-                child: const SingleChildScrollView(child: ThemePanel()),
-              ),
-            ),
-            child: FortalIconButton.ghost(
-              key: const ValueKey('theme-panel-trigger'),
-              semanticLabel: 'Theme settings',
-              onPressed: _toggleTheme,
-              icon: Icons.palette_outlined,
-            ),
+        UiPopover(
+          controller: _themeController,
+          openOnTap: false,
+          semanticLabel: 'Theme settings',
+          positioning: const OverlayPositionConfig(
+            side: .bottom,
+            alignment: .end,
+            sideOffset: 8,
           ),
+          popoverChild: Box(
+            style: BoxStyler().width(400).maxHeight(650),
+            child: const SingleChildScrollView(child: ThemePanel()),
+          ),
+          child: RemixIconButton(
+            key: const ValueKey('theme-panel-trigger'),
+            semanticLabel: 'Theme settings',
+            style: _toolbarButtonStyle,
+            onPressed: _toggleTheme,
+            icon: Icons.palette_outlined,
+          ),
+        ),
+        if (!compact)
           DashboardActionMenu(
             key: const ValueKey('topbar-account-trigger'),
             semanticLabel: 'Account menu',
@@ -229,7 +180,7 @@ class _TopBarState extends State<TopBar> {
               alignment: .end,
               sideOffset: 8,
             ),
-            trigger: const FortalAvatar(label: 'LF', size: .size2),
+            trigger: const UiAvatar(label: 'LF', size: .size2),
             actions: const [
               DashboardAction(value: 'profile', label: 'Profile'),
               DashboardAction(value: 'preferences', label: 'Preferences'),
@@ -239,15 +190,17 @@ class _TopBarState extends State<TopBar> {
                 dividerBefore: true,
               ),
             ],
-            onSelected: (value) => showToast(
+            onSelected: (value) => showRemixToast(
               context,
-              message: value == 'signout'
-                  ? 'Signed out of demo'
-                  : 'Opened $value',
+              RemixToastData(
+                title: value == 'signout'
+                    ? 'Signed out of demo'
+                    : 'Opened $value',
+                icon: Icons.check_circle_outline,
+              ),
             ),
           ),
-        ],
-      ),
+      ],
     );
   }
 
@@ -263,3 +216,10 @@ class _TopBarState extends State<TopBar> {
         : _themeController.open();
   }
 }
+
+final _toolbarButtonStyle = uiIconButtonStyle(variant: .ghost)
+    .width(40)
+    .height(40)
+    .padding(.all(0))
+    .margin(.all(0))
+    .container(.alignment(.center));

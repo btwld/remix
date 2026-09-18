@@ -101,10 +101,7 @@ void main() {
     expect(dataList.items.single, isA<RemixDataListItem>());
     expect(dataList.items.single.label, 'Status');
     expect(dataList.items.single.value, 'Active');
-    expect(
-      dataList.items.single.alignment,
-      RemixDataListItemAlignment.baseline,
-    );
+    expect(dataList.items.single.alignment, CrossAxisAlignment.baseline);
     expect(dataList.orientation, Axis.horizontal);
     expect(dataList.style, isA<DataListStyler>());
     expect(dataList.styleSpec, isNull);

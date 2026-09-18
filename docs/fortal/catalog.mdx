@@ -7,11 +7,11 @@ description: Every Fortal widget with its sizes, variants, defaults, and parity 
 
 Every widget below is generated from the parity manifest that `melos fortal:parity:check` holds against the Dart recipes, so the sizes, variants, and defaults on this page are the ones a caller actually gets.
 
-<Card>
-  <img src="/assets/fortal-catalog.png" alt="Fortal components across their variants" />
-</Card>
+This is the API reference. Start with the [Fortal overview](/fortal) for installation and theming. For live examples and source, choose a component in the sidebar, such as [Button](/components/button).
 
 A `—` value means the widget does not expose that axis. When values are listed but their default is `—`, the parameter is nullable with no pinned value. That is the typography path: an omitted size or weight resolves from the active scope's tokens (`text3`, regular) rather than from an enum, so a host text run cannot resize Fortal text. See [Typography](/fortal/typography).
+
+<CatalogSearch items={["FortalAccordion","FortalAvatar","FortalBadge","FortalButton","FortalCallout","FortalCard","FortalCheckbox","FortalCode","FortalDataList","FortalDataTable","FortalDialog","FortalDisclosure","FortalDivider","FortalHeading","FortalIconButton","FortalKbd","FortalLink","FortalMenu","FortalPopover","FortalProgress","FortalRadio","FortalSegmentedControl","FortalSelect","FortalSkeleton","FortalSlider","FortalSpinner","FortalSwitch","FortalTabBar","FortalText","FortalTextArea","FortalTextField","FortalToggle","FortalToggleGroup","FortalTooltip"]} />
 
 ## At a glance
 
@@ -52,75 +52,12 @@ A `—` value means the widget does not expose that axis. When values are listed
 | `FortalToggleGroup` | `size1`, `size2`, `size3` | `size2` | `soft`, `surface` | `soft` |
 | `FortalTooltip` | — | — | — | — |
 
-## Widgets
-
-### FortalAccordion
-
-Fortal extension (no Radix counterpart) · recipe `packages/remix_fortal/lib/src/recipes/accordion.dart`
-
-| Parameter | Values | Default |
-| --- | --- | --- |
-| `size` | `size1`, `size2`, `size3` | `size2` |
-| `variant` | `surface`, `soft` | `surface` |
-
-**Named constructors:** `FortalAccordion.soft`, `FortalAccordion.surface`
-
-**Other defaults:** `enabled: true`
-
-**Style props:** `color`, `radius`
-
-**States:** `collapsed`, `expanded`, `hovered`, `pressed`, `focused`, `disabled`
-
-**Flutter differences:**
-
-- Fortal extension: excluded from the Radix parity score and styled from shared Fortal tokens.
-- Panel anatomy (container radius, border, fill, and clipping) has no Radix Accordion source of its own — Radix Themes ships none — and instead derives from the mapped Table family's container/row-divider treatment (see data_table.dart).
-
-### FortalAvatar
-
-Radix `Avatar` · recipe `packages/remix_fortal/lib/src/recipes/avatar.dart`
-
-| Parameter | Values | Default |
-| --- | --- | --- |
-| `size` | `size1`, `size2`, `size3`, `size4`, `size5`, `size6`, `size7`, `size8`, `size9` | `size3` |
-| `variant` | `solid`, `soft` | `soft` |
-
-**Named constructors:** `FortalAvatar.soft`, `FortalAvatar.solid`
-
-**Other defaults:** `highContrast: false`
-
-**Style props:** `color`, `radius`, `highContrast`
-
-**States:** `idle`, `loading`, `loaded`, `error`, `highContrast`
-
-**Flutter differences:**
-
-- ImageProvider and Widget fallback replace DOM src/fallback nodes; no ring prop is exposed.
-
-### FortalBadge
-
-Radix `Badge` · recipe `packages/remix_fortal/lib/src/recipes/badge.dart`
-
-| Parameter | Values | Default |
-| --- | --- | --- |
-| `size` | `size1`, `size2`, `size3` | `size1` |
-| `variant` | `solid`, `soft`, `surface`, `outline` | `soft` |
-
-**Named constructors:** `FortalBadge.outline`, `FortalBadge.soft`, `FortalBadge.solid`, `FortalBadge.surface`
-
-**Other defaults:** `highContrast: false`
-
-**Style props:** `color`, `radius`, `highContrast`
-
-**States:** `idle`, `highContrast`
-
-**Flutter differences:**
-
-- Arbitrary Widget content uses DefaultTextStyle and IconTheme; there is no dedicated icon API.
+<span id="widgets" />
+## Actions and inputs
 
 ### FortalButton
 
-Radix `Button` · recipe `packages/remix_fortal/lib/src/recipes/button.dart`
+Radix `Button` · recipe `registry_source/lib/src/fortal/components/button.dart`
 
 | Parameter | Values | Default |
 | --- | --- | --- |
@@ -143,272 +80,9 @@ Radix `Button` · recipe `packages/remix_fortal/lib/src/recipes/button.dart`
 
 - arbitrary child content
 
-### FortalCallout
-
-Radix `Callout.Root` · recipe `packages/remix_fortal/lib/src/recipes/callout.dart`
-
-| Parameter | Values | Default |
-| --- | --- | --- |
-| `size` | `size1`, `size2`, `size3` | `size2` |
-| `variant` | `soft`, `surface`, `outline` | `soft` |
-
-**Named constructors:** `FortalCallout.outline`, `FortalCallout.soft`, `FortalCallout.surface`
-
-**Other defaults:** `highContrast: false`
-
-**Style props:** `color`, `highContrast`
-
-**States:** `idle`, `highContrast`
-
-**Flutter differences:**
-
-- Widget icon/content slots replace the upstream compound React nodes.
-
-### FortalCard
-
-Radix `Card` · recipe `packages/remix_fortal/lib/src/recipes/card.dart`
-
-| Parameter | Values | Default |
-| --- | --- | --- |
-| `size` | `size1`, `size2`, `size3`, `size4`, `size5` | `size1` |
-| `variant` | `surface`, `classic`, `ghost` | `surface` |
-
-**Named constructors:** `FortalCard.classic`, `FortalCard.ghost`, `FortalCard.surface`
-
-**Other defaults:** `enabled: true`
-
-**States:** `idle`, `passive`
-
-**Flutter differences:**
-
-- The visual recipe maps Radix size and variant onto the established passive Remix card.
-
-**Not covered:**
-
-- interactive card behavior
-
-### FortalCheckbox
-
-Radix `Checkbox` · recipe `packages/remix_fortal/lib/src/recipes/checkbox.dart`
-
-| Parameter | Values | Default |
-| --- | --- | --- |
-| `size` | `size1`, `size2`, `size3` | `size2` |
-| `variant` | `classic`, `surface`, `soft` | `surface` |
-
-**Named constructors:** `FortalCheckbox.classic`, `FortalCheckbox.soft`, `FortalCheckbox.surface`
-
-**Other defaults:** `enabled: true`, `highContrast: false`, `selected: false`, `tristate: false`
-
-**Style props:** `color`, `highContrast`
-
-**States:** `unchecked`, `checked`, `indeterminate`, `hovered`, `pressed`, `focused`, `disabled`, `highContrast`
-
-**Flutter differences:**
-
-- Nullable bool plus tristate maps the Radix indeterminate checked state.
-
-### FortalCode
-
-Radix `Code` · recipe `packages/remix_fortal/lib/src/recipes/code.dart`
-
-| Parameter | Values | Default |
-| --- | --- | --- |
-| `size` | `size1`, `size2`, `size3`, `size4`, `size5`, `size6`, `size7`, `size8`, `size9` | — |
-| `variant` | `solid`, `soft`, `outline`, `ghost` | `soft` |
-| `weight` | `light`, `regular`, `medium`, `bold` | — |
-
-**Named constructors:** `FortalCode.ghost`, `FortalCode.outline`, `FortalCode.soft`, `FortalCode.solid`
-
-**Other defaults:** `accent: false`, `highContrast: false`, `softWrap: true`, `truncate: false`
-
-**Style props:** `color`, `radius`, `highContrast`
-
-**States:** `idle`, `accent`, `highContrast`, `truncated`
-
-**Flutter differences:**
-
-- Radix renders Code as an inline element inside a text run; RemixBadge paints a standalone box, so a Code inside a wrapped sentence is a sibling widget rather than an inline span.
-- An omitted size anchors the upstream Code factors to the text3 token rather than the ambient 1em run.
-- `--code-font-weight: inherit` becomes an optional weight argument. When omitted, the non-inheriting Flutter TextStyle leaves weight unset and therefore uses the engine's regular weight rather than the ambient weight.
-- Ghost uses the ambient foreground as a post-composition fallback unless the caller opts into the local accent, matching the upstream `[data-accent-color]` gate while allowing an explicit recipe foreground to win.
-- The Link-nested hover, solid high-contrast hover filter, and ::selection rules need an actionable ancestor FortalCode never has.
-- Radix `wrap` covers pretty and balance line breaking; Flutter exposes no equivalent line breaker, so the recipe maps only the wrap/nowrap pair onto softWrap and folds truncate into one ellipsized line.
-- CSS leading trim has no Flutter primitive, so the token line box is painted untrimmed.
-
-**Not covered:**
-
-- asChild element polymorphism
-- responsive size and wrap objects
-- pretty and balance text wrapping
-- per-instance color prop: callers re-scope FortalScope.accent
-- inline flow inside a surrounding text run
-- actionable Code hover, filter, and ::selection treatments
-
-### FortalDataList
-
-Radix `DataList.Root` · recipe `packages/remix_fortal/lib/src/recipes/data_list.dart`
-
-| Parameter | Values | Default |
-| --- | --- | --- |
-| `alignment` | `start`, `center`, `end`, `baseline`, `stretch` | `baseline` |
-| `orientation` | `horizontal`, `vertical` | `horizontal` |
-| `size` | `size1`, `size2`, `size3` | `size2` |
-
-**Other defaults:** `highContrast: false`
-
-**Style props:** `highContrast`
-
-**States:** `idle`, `highContrast`, `customChild`, `rtl`
-
-**Flutter differences:**
-
-- A data-driven RemixDataList maps Radix's shared horizontal label column, vertical stacking, row and column gaps, item alignment, label minimum, typography, and high-contrast label role without claiming the upstream compositional child API.
-- The constructor owns orientation and each RemixDataListItem owns alignment; the recipe exposes only size and global highContrast.
-
-**Not covered:**
-
-- compositional Root, Item, Label, and Value child API
-- per-label color, highContrast, and width props
-- responsive orientation, size, align, trim, and width objects
-- CSS leading trim and value-edge negative margins
-
-**Documented approximations:**
-
-- The Remix API guarantees one shared label column and deterministic list semantics through a data model rather than arbitrary child anatomy.
-- The data-driven RemixDataList has one shared label styler and shared column width, with no per-label visual-prop surface.
-- Responsive CSS-object syntax is a framework-level adaptation already owned by Flutter layout builders.
-- Flutter has no CSS leading-trim primitive, and offset arithmetic is outside the plain-styler recipe contract.
-
-### FortalDataTable
-
-Radix `Table` · recipe `packages/remix_fortal/lib/src/recipes/data_table.dart`
-
-| Parameter | Values | Default |
-| --- | --- | --- |
-| `size` | `size1`, `size2`, `size3` | `size2` |
-| `variant` | `surface`, `ghost` | `ghost` |
-
-**Named constructors:** `FortalDataTable.ghost`, `FortalDataTable.surface`
-
-**Other defaults:** `enabled: true`
-
-**States:** `idle`, `passive`, `hovered`, `selected`
-
-**Flutter differences:**
-
-- The mapped family is named data_table publicly but cites Radix Table. The recipe maps size and variant onto cell padding, minimum cell height, typography, radius, the gray-a5 row divider, bold column headers, and the surface panel, border, gray-a2 header background, and suppressed last-row divider.
-- Radix Table is a passive layout. Controlled sorting, page-scoped selection, pagination, row hover, arbitrary row actions, and horizontal scrolling are Flutter and Fortal extensions with no Radix counterpart, built from existing accent and gray control tokens.
-- Radix row-header cells use normal weight, but Flutter 3.44 exposes no row-header semantics role and the v1 data-driven API carries no row-header model, so .rt-TableRowHeaderCell is cited and deferred instead of fabricated.
-- Row background and divider are painted per cell exactly as .rt-TableCell does upstream, because Flutter's Table has no widget between the table and its cells.
-
-**Not covered:**
-
-- row-header cells (.rt-TableRowHeaderCell): Flutter has no row-header semantics role and the v1 data-driven API has no row-header model
-- responsive size and layout objects: Radix resolves breakpoints in CSS while Flutter callers rebuild with a different size
-- per-row align and per-cell width, min-width, max-width, and padding props: expressed as column-level TableColumnWidth, column alignment, and cell widgets instead
-- layout auto versus fixed: RenderTable always negotiates one shared column map
-
-### FortalDialog
-
-Radix `Dialog.Content` · recipe `packages/remix_fortal/lib/src/recipes/dialog.dart`
-
-| Parameter | Values | Default |
-| --- | --- | --- |
-| `align` | `start`, `center` | `center` |
-| `size` | `size1`, `size2`, `size3`, `size4` | `size3` |
-
-**Other defaults:** `maxWidth: 600`, `modal: true`, `width: infinity`
-
-**States:** `closed`, `open`, `modal`
-
-**Flutter differences:**
-
-- Logical-pixel BoxConstraints replace CSS width and height strings; inherited Fortal and Mix scopes are replayed through Navigator overlays; modal controls accessibility route scoping while the Flutter Navigator route remains pointer-modal.
-
-**Documented approximations:**
-
-- Flutter Navigator dialog routes are modal routes; non-modal pointer interaction requires a separate OverlayEntry lifecycle rather than the current dialog route API.
-
-### FortalDisclosure
-
-Radix `Collapsible` · recipe `packages/remix_fortal/lib/src/recipes/disclosure.dart`
-
-| Parameter | Values | Default |
-| --- | --- | --- |
-| `size` | `size1`, `size2`, `size3` | `size2` |
-| `variant` | `surface`, `soft` | `surface` |
-
-**Named constructors:** `FortalDisclosure.soft`, `FortalDisclosure.surface`
-
-**Other defaults:** `defaultExpanded: false`, `enabled: true`, `expanded: null`
-
-**Style props:** `color`, `radius`
-
-**States:** `collapsed`, `expanded`, `hovered`, `pressed`, `focused`, `disabled`
-
-**Flutter differences:**
-
-- Radix Primitives calls this component Collapsible; Remix uses the WAI-ARIA/Naked UI name Disclosure with trigger and content slots on one widget.
-- Radix Themes 3.3.0 ships no styled Collapsible, so Fortal treats the recipe as an extension and derives its panel treatment from the mapped Table family.
-
-**Not covered:**
-
-- Radix Collapsible.Content forceMount has no NakedDisclosure equivalent.
-
-### FortalDivider
-
-Radix `Separator` · recipe `packages/remix_fortal/lib/src/recipes/divider.dart`
-
-| Parameter | Values | Default |
-| --- | --- | --- |
-| `orientation` | `horizontal`, `vertical` | `horizontal` |
-| `size` | `size1`, `size2`, `size3`, `size4` | `size1` |
-
-**Other defaults:** `color: gray`, `decorative: true`, `lengths: [16, 32, 64, full]`, `thickness: 1`
-
-**Style props:** `color`
-
-**States:** `decorative`, `semantic`
-
-**Flutter differences:**
-
-- Axis and separator Semantics replace DOM orientation and role attributes.
-
-### FortalHeading
-
-Radix `Heading` · recipe `packages/remix_fortal/lib/src/recipes/heading.dart`
-
-| Parameter | Values | Default |
-| --- | --- | --- |
-| `size` | `size1`, `size2`, `size3`, `size4`, `size5`, `size6`, `size7`, `size8`, `size9` | `size6` |
-| `weight` | `light`, `regular`, `medium`, `bold` | `bold` |
-
-**Other defaults:** `accent: false`, `align: null`, `excludeSemantics: false`, `headingLevel: 1`, `highContrast: false`, `softWrap: true`, `truncate: false`
-
-**Style props:** `color`, `highContrast`
-
-**States:** `idle`, `accent`, `highContrast`, `truncated`, `semantic`
-
-**Flutter differences:**
-
-- Radix `as` selects an h1–h6 element that carries the visual and the semantic level together; Flutter splits them, so headingLevel drives a Semantics header node while size stays purely visual.
-- `--heading-font-size-adjust` is 1, so headings reuse the raw token size and differ from body text only in the pinned line box.
-- A neutral FortalHeading resolves gray-12 rather than inheriting the ambient foreground; accent is an explicit opt-in.
-- Radix `wrap` covers pretty and balance line breaking; Flutter exposes no equivalent line breaker, so the recipe maps only the wrap/nowrap pair onto softWrap and folds truncate into one ellipsized line.
-- CSS leading trim has no Flutter primitive, so the token line box is painted untrimmed.
-
-**Not covered:**
-
-- as and asChild element polymorphism
-- responsive size, weight, align, trim, and wrap objects
-- pretty and balance text wrapping
-- leading trim
-- per-instance color prop: callers re-scope FortalScope.accent
-
 ### FortalIconButton
 
-Radix `IconButton` · recipe `packages/remix_fortal/lib/src/recipes/icon_button.dart`
+Radix `IconButton` · recipe `registry_source/lib/src/fortal/components/icon_button.dart`
 
 | Parameter | Values | Default |
 | --- | --- | --- |
@@ -427,45 +101,226 @@ Radix `IconButton` · recipe `packages/remix_fortal/lib/src/recipes/icon_button.
 
 - A required semanticLabel supplies the accessible name that icon-only DOM buttons receive from aria-label.
 
-### FortalKbd
+### FortalCheckbox
 
-Radix `Kbd` · recipe `packages/remix_fortal/lib/src/recipes/kbd.dart`
+Radix `Checkbox` · recipe `registry_source/lib/src/fortal/components/checkbox.dart`
 
 | Parameter | Values | Default |
 | --- | --- | --- |
-| `size` | `size1`, `size2`, `size3`, `size4`, `size5`, `size6`, `size7`, `size8`, `size9` | — |
-| `variant` | `classic`, `soft` | `classic` |
+| `size` | `size1`, `size2`, `size3` | `size2` |
+| `variant` | `classic`, `surface`, `soft` | `surface` |
 
-**Named constructors:** `FortalKbd.classic`, `FortalKbd.soft`
+**Named constructors:** `FortalCheckbox.classic`, `FortalCheckbox.soft`, `FortalCheckbox.surface`
 
-**Other defaults:** `excludeSemantics: false`
+**Other defaults:** `enabled: true`, `highContrast: false`, `selected: false`, `tristate: false`
 
-**Style props:** `radius`
+**Style props:** `color`, `highContrast`
 
-**States:** `idle`, `explicitDark`, `semantic`
+**States:** `unchecked`, `checked`, `indeterminate`, `hovered`, `pressed`, `focused`, `disabled`, `highContrast`
 
 **Flutter differences:**
 
-- Radix uses two type-scale factors: an explicit size multiplies its token by 0.8, while an unsized Kbd renders at 0.75em. Fortal keeps those factors but anchors an omitted size to the text3 token rather than the ambient DefaultTextStyle. Because `--letter-spacing-N` is an em, an explicit size also re-resolves its letter spacing against Kbd's own 0.8 font size.
-- The unsized path keeps the text3 token's resolved letter spacing instead of inheriting the ambient DefaultTextStyle's absolute value.
-- `vertical-align: text-top` positions the cap inside a surrounding text run; a standalone Flutter box has no inline baseline to align against.
-- The hover, open, active, and focus-visible rules apply only when Kbd is nested in an anchor or button, which FortalKbd never is.
-- Kbd publishes one native keyboardKey Semantics node and no tap action, because it is inert upstream.
+- Nullable bool plus tristate maps the Radix indeterminate checked state.
+
+### FortalRadio
+
+Radix `RadioGroup.Item` · recipe `registry_source/lib/src/fortal/components/radio.dart`
+
+| Parameter | Values | Default |
+| --- | --- | --- |
+| `size` | `size1`, `size2`, `size3` | `size2` |
+| `variant` | `classic`, `surface`, `soft` | `surface` |
+
+**Named constructors:** `FortalRadio.classic`, `FortalRadio.soft`, `FortalRadio.surface`
+
+**Other defaults:** `enabled: true`, `highContrast: false`
+
+**Style props:** `color`, `highContrast`
+
+**States:** `unchecked`, `checked`, `hovered`, `pressed`, `focused`, `disabled`, `highContrast`, `group`
+
+**Flutter differences:**
+
+- RemixRadioGroup provides typed Flutter group semantics and selection coordination.
+
+### FortalSelect
+
+Radix `Select` · recipe `registry_source/lib/src/fortal/components/select.dart`
+
+| Parameter | Values | Default |
+| --- | --- | --- |
+| `size` | `size1`, `size2`, `size3` | `size2` |
+| `variant` | `surface`, `soft`, `ghost` | `surface` |
+
+**Named constructors:** `FortalSelect.ghost`, `FortalSelect.soft`, `FortalSelect.surface`
+
+**Other defaults:** `contentHighContrast: false`, `open: null`
+
+**Style props:** `color`, `radius`, `highContrast`
+
+**States:** `closed`, `open`, `placeholder`, `selected`, `highlighted`, `disabled`, `highContrast`
+
+**Flutter differences:**
+
+- The visual recipe maps supported Radix states onto the established data-driven RemixSelectItem list and single historical variant.
 
 **Not covered:**
 
-- asChild element polymorphism
-- responsive size objects
-- the -0.03em vertical nudge and text-top inline alignment
-- actionable Kbd hover, open, active, and focus-visible treatments
+- structured content
+- independent trigger/content variants
+
+### FortalSlider
+
+Radix `Slider` · recipe `registry_source/lib/src/fortal/components/slider.dart`
+
+| Parameter | Values | Default |
+| --- | --- | --- |
+| `size` | `size1`, `size2`, `size3` | `size2` |
+| `variant` | `classic`, `surface`, `soft` | `surface` |
+
+**Named constructors:** `FortalSlider.classic`, `FortalSlider.soft`, `FortalSlider.surface`
+
+**Other defaults:** `highContrast: false`, `inverted: false`, `max: 100`, `min: 0`, `minSpacing: 0`, `step: 1`
+
+**Style props:** `color`, `radius`, `highContrast`
+
+**States:** `idle`, `hovered`, `pressed`, `focused`, `disabled`, `highContrast`, `rtl`
+
+**Flutter differences:**
+
+- The visual recipe maps Radix styling onto the established scalar horizontal slider; range and multi-thumb behavior is deferred.
+
+**Not covered:**
+
+- multiple thumbs
+- range values
+- vertical orientation
+- inversion
+
+### FortalSwitch
+
+Radix `Switch` · recipe `registry_source/lib/src/fortal/components/switch.dart`
+
+| Parameter | Values | Default |
+| --- | --- | --- |
+| `size` | `size1`, `size2`, `size3` | `size2` |
+| `variant` | `classic`, `surface`, `soft` | `surface` |
+
+**Named constructors:** `FortalSwitch.classic`, `FortalSwitch.soft`, `FortalSwitch.surface`
+
+**Other defaults:** `enabled: true`, `highContrast: false`, `selected: false`
+
+**Style props:** `color`, `radius`, `highContrast`
+
+**States:** `unchecked`, `checked`, `hovered`, `pressed`, `focused`, `disabled`, `highContrast`
+
+**Flutter differences:**
+
+- Boolean selection and Flutter focus/feedback APIs replace DOM checked attributes and events.
+
+### FortalTextArea
+
+Radix `TextArea` · recipe `registry_source/lib/src/fortal/components/textfield.dart`
+
+| Parameter | Values | Default |
+| --- | --- | --- |
+| `size` | `size1`, `size2`, `size3` | `size2` |
+| `variant` | `classic`, `surface`, `soft` | `surface` |
+
+**Named constructors:** `FortalTextArea.classic`, `FortalTextArea.soft`, `FortalTextArea.surface`
+
+**Other defaults:** `enabled: true`, `error: false`, `maxLines: null`, `readOnly: false`
+
+**Style props:** `color`, `radius`
+
+**States:** `idle`, `hovered`, `focused`, `disabled`, `readOnly`, `invalid`
+
+**Flutter differences:**
+
+- TextArea reuses the shared TextField visual-state helpers while retaining multiline minimum heights, start alignment, and distinct padding; its soft placeholder remains accent-12 at 0.65 opacity.
+- Native invalid semantics remain in parity coverage. Remix's red error treatment is a Fortal extension rather than an upstream TextArea visual state.
+- Flutter text-editing flags, constraints, and platform scrolling replace textarea DOM attributes, CSS sizing, the themed 12px browser scrollbar, and the browser resize handle.
+
+**Not covered:**
+
+- browser resize handle and resize-axis prop
+- themed 12px browser scrollbar and fixed CSS textarea overflow behavior
+- responsive size, radius, and resize objects
 
 **Documented approximations:**
 
-- A transform wrapper for a sub-pixel baseline tweak sits outside the plain-styler recipe contract, and a standalone Flutter box has no inline text run to align against.
+- Flutter's editable text contract has no cross-platform browser resize-handle primitive.
+- Flutter's line and constraint model replaces CSS block sizing and native textarea overflow behavior.
+
+### FortalTextField
+
+Radix `TextField.Root` · recipe `registry_source/lib/src/fortal/components/textfield.dart`
+
+| Parameter | Values | Default |
+| --- | --- | --- |
+| `size` | `size1`, `size2`, `size3` | `size2` |
+| `variant` | `classic`, `surface`, `soft` | `surface` |
+
+**Named constructors:** `FortalTextField.classic`, `FortalTextField.soft`, `FortalTextField.surface`
+
+**Other defaults:** `enabled: true`, `error: false`, `readOnly: false`
+
+**Style props:** `color`, `radius`
+
+**States:** `idle`, `hovered`, `focused`, `disabled`, `readOnly`, `invalid`, `leading`, `trailing`
+
+**Flutter differences:**
+
+- Native invalid semantics remain part of the upstream coverage. Remix's error flag is a Fortal extension that adds red error and focus roles while setting those invalid semantics; Flutter text editing APIs replace input DOM props.
+
+### FortalToggle
+
+Fortal extension (no Radix counterpart) · recipe `registry_source/lib/src/fortal/components/toggle.dart`
+
+| Parameter | Values | Default |
+| --- | --- | --- |
+| `size` | `size1`, `size2`, `size3` | `size2` |
+| `variant` | `ghost`, `outline` | `ghost` |
+
+**Named constructors:** `FortalToggle.ghost`, `FortalToggle.outline`
+
+**Other defaults:** `enabled: true`, `highContrast: false`, `selected: false`
+
+**Style props:** `color`, `radius`, `highContrast`
+
+**States:** `off`, `on`, `hovered`, `pressed`, `focused`, `disabled`, `highContrast`
+
+**Flutter differences:**
+
+- Fortal extension: excluded from the Radix parity score and styled from shared Fortal tokens.
+
+### FortalToggleGroup
+
+Fortal extension (no Radix counterpart) · recipe `registry_source/lib/src/fortal/components/toggle_group.dart`
+
+| Parameter | Values | Default |
+| --- | --- | --- |
+| `orientation` | `horizontal`, `vertical` | `horizontal` |
+| `size` | `size1`, `size2`, `size3` | `size2` |
+| `variant` | `soft`, `surface` | `soft` |
+
+**Named constructors:** `FortalToggleGroup.soft`, `FortalToggleGroup.surface`
+
+**Other defaults:** `enabled: true`, `highContrast: false`, `loop: true`
+
+**Style props:** `color`, `radius`, `highContrast`
+
+**States:** `unselected`, `selected`, `hovered`, `pressed`, `focused`, `disabled`, `highContrast`, `rtl`
+
+**Flutter differences:**
+
+- Fortal extension: excluded from the Radix parity score and styled from shared Fortal tokens.
+
+## Navigation
 
 ### FortalLink
 
-Radix `Link` · recipe `packages/remix_fortal/lib/src/recipes/link.dart`
+Radix `Link` · recipe `registry_source/lib/src/fortal/components/link.dart`
 
 | Parameter | Values | Default |
 | --- | --- | --- |
@@ -511,7 +366,7 @@ Radix `Link` · recipe `packages/remix_fortal/lib/src/recipes/link.dart`
 
 ### FortalMenu
 
-Radix `DropdownMenu` · recipe `packages/remix_fortal/lib/src/recipes/menu.dart`
+Radix `DropdownMenu` · recipe `registry_source/lib/src/fortal/components/menu.dart`
 
 | Parameter | Values | Default |
 | --- | --- | --- |
@@ -538,73 +393,9 @@ Radix `DropdownMenu` · recipe `packages/remix_fortal/lib/src/recipes/menu.dart`
 
 - Standard MenuItemStyler flex, padding, and spacing keep the layout reusable and avoid menu-only public gutter and offset APIs.
 
-### FortalPopover
-
-Radix `Popover.Content` · recipe `packages/remix_fortal/lib/src/recipes/popover.dart`
-
-| Parameter | Values | Default |
-| --- | --- | --- |
-| `size` | `size1`, `size2`, `size3`, `size4` | `size2` |
-
-**Other defaults:** `arrow: false`, `maxWidth: 480`
-
-**States:** `closed`, `open`, `escape`, `outsideTap`, `focusRestored`
-
-**Flutter differences:**
-
-- A separate anchor Widget and OverlayPositionConfig replace Radix anchor and collision props; Fortal intentionally renders no Popover arrow.
-
-### FortalProgress
-
-Radix `Progress` · recipe `packages/remix_fortal/lib/src/recipes/progress.dart`
-
-| Parameter | Values | Default |
-| --- | --- | --- |
-| `size` | `size1`, `size2`, `size3` | `size2` |
-| `variant` | `classic`, `surface`, `soft` | `surface` |
-
-**Named constructors:** `FortalProgress.classic`, `FortalProgress.soft`, `FortalProgress.surface`
-
-**Other defaults:** `durationMilliseconds: 5000`, `highContrast: false`, `max: 100`, `value: null`
-
-**Style props:** `color`, `radius`, `highContrast`
-
-**States:** `determinate`, `highContrast`
-
-**Flutter differences:**
-
-- The visual recipe maps Radix styling onto the established normalized determinate progress value.
-
-**Not covered:**
-
-- indeterminate mode
-- custom maximum
-- animation controls
-
-### FortalRadio
-
-Radix `RadioGroup.Item` · recipe `packages/remix_fortal/lib/src/recipes/radio.dart`
-
-| Parameter | Values | Default |
-| --- | --- | --- |
-| `size` | `size1`, `size2`, `size3` | `size2` |
-| `variant` | `classic`, `surface`, `soft` | `surface` |
-
-**Named constructors:** `FortalRadio.classic`, `FortalRadio.soft`, `FortalRadio.surface`
-
-**Other defaults:** `enabled: true`, `highContrast: false`
-
-**Style props:** `color`, `highContrast`
-
-**States:** `unchecked`, `checked`, `hovered`, `pressed`, `focused`, `disabled`, `highContrast`, `group`
-
-**Flutter differences:**
-
-- RemixRadioGroup provides typed Flutter group semantics and selection coordination.
-
 ### FortalSegmentedControl
 
-Radix `SegmentedControl.Root` · recipe `packages/remix_fortal/lib/src/recipes/segmented_control.dart`
+Radix `SegmentedControl.Root` · recipe `registry_source/lib/src/fortal/components/segmented_control.dart`
 
 | Parameter | Values | Default |
 | --- | --- | --- |
@@ -639,126 +430,9 @@ Radix `SegmentedControl.Root` · recipe `packages/remix_fortal/lib/src/recipes/s
 - Conditional between-item pseudo-elements are not expressible through the standard item styler without a segmented-control-specific widget API.
 - The equal-segment render layout shrinks to the incoming constraints rather than forcing an overflow, so a wrapped label would be clipped by the pinned track height.
 
-### FortalSelect
-
-Radix `Select` · recipe `packages/remix_fortal/lib/src/recipes/select.dart`
-
-| Parameter | Values | Default |
-| --- | --- | --- |
-| `size` | `size1`, `size2`, `size3` | `size2` |
-| `variant` | `surface`, `soft`, `ghost` | `surface` |
-
-**Named constructors:** `FortalSelect.ghost`, `FortalSelect.soft`, `FortalSelect.surface`
-
-**Other defaults:** `contentHighContrast: false`, `open: null`
-
-**Style props:** `color`, `radius`, `highContrast`
-
-**States:** `closed`, `open`, `placeholder`, `selected`, `highlighted`, `disabled`, `highContrast`
-
-**Flutter differences:**
-
-- The visual recipe maps supported Radix states onto the established data-driven RemixSelectItem list and single historical variant.
-
-**Not covered:**
-
-- structured content
-- independent trigger/content variants
-
-### FortalSkeleton
-
-Radix `Skeleton` · recipe `packages/remix_fortal/lib/src/recipes/skeleton.dart`
-
-**Other defaults:** `loading: true`
-
-**States:** `loading`, `loaded`, `animationDisabled`
-
-**Flutter differences:**
-
-- Responsive CSS width and height props map to caller-owned Flutter constraints or child geometry; the Fortal recipe supplies only the pinned childless minimum height, surface, radius, and pulse timing.
-- RemixSkeleton owns loading semantics and reduced-motion behavior, so the recipe adds no semantic or motion logic.
-
-**Not covered:**
-
-- responsive width and height props: callers use Flutter constraints, responsive builders, or child geometry
-
-**Documented approximations:**
-
-- The shared Flutter phase controller uses the resolved container color as its stable initial and resting value.
-
-### FortalSlider
-
-Radix `Slider` · recipe `packages/remix_fortal/lib/src/recipes/slider.dart`
-
-| Parameter | Values | Default |
-| --- | --- | --- |
-| `size` | `size1`, `size2`, `size3` | `size2` |
-| `variant` | `classic`, `surface`, `soft` | `surface` |
-
-**Named constructors:** `FortalSlider.classic`, `FortalSlider.soft`, `FortalSlider.surface`
-
-**Other defaults:** `highContrast: false`, `inverted: false`, `max: 100`, `min: 0`, `minSpacing: 0`, `step: 1`
-
-**Style props:** `color`, `radius`, `highContrast`
-
-**States:** `idle`, `hovered`, `pressed`, `focused`, `disabled`, `highContrast`, `rtl`
-
-**Flutter differences:**
-
-- The visual recipe maps Radix styling onto the established scalar horizontal slider; range and multi-thumb behavior is deferred.
-
-**Not covered:**
-
-- multiple thumbs
-- range values
-- vertical orientation
-- inversion
-
-### FortalSpinner
-
-Radix `Spinner` · recipe `packages/remix_fortal/lib/src/recipes/spinner.dart`
-
-| Parameter | Values | Default |
-| --- | --- | --- |
-| `size` | `size1`, `size2`, `size3` | `size2` |
-
-**Other defaults:** `color: currentColor`, `leafCount: 8`, `loading: true`
-
-**States:** `spinning`, `animationDisabled`
-
-**Flutter differences:**
-
-- A leaf painter maps the Radix spinner geometry; loading gates and child overlays are deferred.
-
-**Not covered:**
-
-- loading gate
-- child overlay
-
-### FortalSwitch
-
-Radix `Switch` · recipe `packages/remix_fortal/lib/src/recipes/switch.dart`
-
-| Parameter | Values | Default |
-| --- | --- | --- |
-| `size` | `size1`, `size2`, `size3` | `size2` |
-| `variant` | `classic`, `surface`, `soft` | `surface` |
-
-**Named constructors:** `FortalSwitch.classic`, `FortalSwitch.soft`, `FortalSwitch.surface`
-
-**Other defaults:** `enabled: true`, `highContrast: false`, `selected: false`
-
-**Style props:** `color`, `radius`, `highContrast`
-
-**States:** `unchecked`, `checked`, `hovered`, `pressed`, `focused`, `disabled`, `highContrast`
-
-**Flutter differences:**
-
-- Boolean selection and Flutter focus/feedback APIs replace DOM checked attributes and events.
-
 ### FortalTabBar
 
-Radix `Tabs` · recipe `packages/remix_fortal/lib/src/recipes/tabs.dart`
+Radix `Tabs` · recipe `registry_source/lib/src/fortal/components/tabs.dart`
 
 | Parameter | Values | Default |
 | --- | --- | --- |
@@ -781,9 +455,386 @@ Radix `Tabs` · recipe `packages/remix_fortal/lib/src/recipes/tabs.dart`
 - wrapping tab bars
 - tab-bar justification
 
+## Overlays
+
+### FortalDialog
+
+Radix `Dialog.Content` · recipe `registry_source/lib/src/fortal/components/dialog.dart`
+
+| Parameter | Values | Default |
+| --- | --- | --- |
+| `align` | `start`, `center` | `center` |
+| `size` | `size1`, `size2`, `size3`, `size4` | `size3` |
+
+**Other defaults:** `maxWidth: 600`, `modal: true`, `width: infinity`
+
+**States:** `closed`, `open`, `modal`
+
+**Flutter differences:**
+
+- The mapped upstream align values start and center use Alignment.topCenter and Alignment.center in Flutter. The align parameter accepts any AlignmentGeometry, including physical and directional bottom positions, while preserving viewport insets.
+- Logical-pixel BoxConstraints replace CSS width and height strings; inherited Fortal and Mix scopes are replayed through Navigator overlays; modal controls accessibility route scoping while the Flutter Navigator route remains pointer-modal.
+
+**Documented approximations:**
+
+- Flutter Navigator dialog routes are modal routes; non-modal pointer interaction requires a separate OverlayEntry lifecycle rather than the current dialog route API.
+
+### FortalPopover
+
+Radix `Popover.Content` · recipe `registry_source/lib/src/fortal/components/popover.dart`
+
+| Parameter | Values | Default |
+| --- | --- | --- |
+| `size` | `size1`, `size2`, `size3`, `size4` | `size2` |
+
+**Other defaults:** `arrow: false`, `maxWidth: 480`
+
+**States:** `closed`, `open`, `escape`, `outsideTap`, `focusRestored`
+
+**Flutter differences:**
+
+- A separate anchor Widget and OverlayPositionConfig replace Radix anchor and collision props; Fortal intentionally renders no Popover arrow.
+
+### FortalTooltip
+
+Radix `Tooltip` · recipe `registry_source/lib/src/fortal/components/tooltip.dart`
+
+**Other defaults:** `arrow: true`, `collisionPadding: 10`, `delayMilliseconds: 200`, `disableHoverableContent: false`, `maxWidth: 360`, `sideOffset: 4`
+
+**States:** `closed`, `delayedOpen`, `triggerHovered`, `focused`, `touch`, `escape`
+
+**Flutter differences:**
+
+- OverlayPositionConfig and resolved OverlayPlacement drive a CustomPaint arrow after collision resolution; width constraints use logical pixels.
+
+## Feedback
+
+### FortalCallout
+
+Radix `Callout.Root` · recipe `registry_source/lib/src/fortal/components/callout.dart`
+
+| Parameter | Values | Default |
+| --- | --- | --- |
+| `size` | `size1`, `size2`, `size3` | `size2` |
+| `variant` | `soft`, `surface`, `outline` | `soft` |
+
+**Named constructors:** `FortalCallout.outline`, `FortalCallout.soft`, `FortalCallout.surface`
+
+**Other defaults:** `highContrast: false`
+
+**Style props:** `color`, `highContrast`
+
+**States:** `idle`, `highContrast`
+
+**Flutter differences:**
+
+- Widget icon/content slots replace the upstream compound React nodes.
+
+### FortalProgress
+
+Radix `Progress` · recipe `registry_source/lib/src/fortal/components/progress.dart`
+
+| Parameter | Values | Default |
+| --- | --- | --- |
+| `size` | `size1`, `size2`, `size3` | `size2` |
+| `variant` | `classic`, `surface`, `soft` | `surface` |
+
+**Named constructors:** `FortalProgress.classic`, `FortalProgress.soft`, `FortalProgress.surface`
+
+**Other defaults:** `durationMilliseconds: 5000`, `highContrast: false`, `max: 100`, `value: null`
+
+**Style props:** `color`, `radius`, `highContrast`
+
+**States:** `determinate`, `highContrast`
+
+**Flutter differences:**
+
+- The visual recipe maps Radix styling onto the established normalized determinate progress value.
+
+**Not covered:**
+
+- indeterminate mode
+- custom maximum
+- animation controls
+
+### FortalSkeleton
+
+Radix `Skeleton` · recipe `registry_source/lib/src/fortal/components/skeleton.dart`
+
+**Other defaults:** `loading: true`
+
+**States:** `loading`, `loaded`, `animationDisabled`
+
+**Flutter differences:**
+
+- Responsive CSS width and height props map to caller-owned Flutter constraints or child geometry; the Fortal recipe supplies only the pinned childless minimum height, surface, radius, and pulse timing.
+- RemixSkeleton owns loading semantics and reduced-motion behavior, so the recipe adds no semantic or motion logic.
+
+**Not covered:**
+
+- responsive width and height props: callers use Flutter constraints, responsive builders, or child geometry
+
+**Documented approximations:**
+
+- The shared Flutter phase controller uses the resolved container color as its stable initial and resting value.
+
+### FortalSpinner
+
+Radix `Spinner` · recipe `registry_source/lib/src/fortal/components/spinner.dart`
+
+| Parameter | Values | Default |
+| --- | --- | --- |
+| `size` | `size1`, `size2`, `size3` | `size2` |
+
+**Other defaults:** `color: currentColor`, `leafCount: 8`, `loading: true`
+
+**States:** `spinning`, `animationDisabled`
+
+**Flutter differences:**
+
+- A leaf painter maps the Radix spinner geometry; loading gates and child overlays are deferred.
+
+**Not covered:**
+
+- loading gate
+- child overlay
+
+## Layout
+
+### FortalAccordion
+
+Fortal extension (no Radix counterpart) · recipe `registry_source/lib/src/fortal/components/accordion.dart`
+
+| Parameter | Values | Default |
+| --- | --- | --- |
+| `size` | `size1`, `size2`, `size3` | `size2` |
+| `variant` | `surface`, `soft` | `surface` |
+
+**Named constructors:** `FortalAccordion.soft`, `FortalAccordion.surface`
+
+**Other defaults:** `enabled: true`
+
+**Style props:** `color`, `radius`
+
+**States:** `collapsed`, `expanded`, `hovered`, `pressed`, `focused`, `disabled`
+
+**Flutter differences:**
+
+- Fortal extension: excluded from the Radix parity score and styled from shared Fortal tokens.
+- Panel anatomy (container radius, border, fill, and clipping) has no Radix Accordion source of its own — Radix Themes ships none — and instead derives from the mapped Table family's container/row-divider treatment (see data_table.dart).
+
+### FortalCard
+
+Radix `Card` · recipe `registry_source/lib/src/fortal/components/card.dart`
+
+| Parameter | Values | Default |
+| --- | --- | --- |
+| `size` | `size1`, `size2`, `size3`, `size4`, `size5` | `size1` |
+| `variant` | `surface`, `classic`, `ghost` | `surface` |
+
+**Named constructors:** `FortalCard.classic`, `FortalCard.ghost`, `FortalCard.surface`
+
+**Other defaults:** `enabled: true`
+
+**States:** `idle`, `passive`
+
+**Flutter differences:**
+
+- The visual recipe maps Radix size and variant onto the established passive Remix card.
+
+**Not covered:**
+
+- interactive card behavior
+
+### FortalDisclosure
+
+Radix `Collapsible` · recipe `registry_source/lib/src/fortal/components/disclosure.dart`
+
+| Parameter | Values | Default |
+| --- | --- | --- |
+| `size` | `size1`, `size2`, `size3` | `size2` |
+| `variant` | `surface`, `soft` | `surface` |
+
+**Named constructors:** `FortalDisclosure.soft`, `FortalDisclosure.surface`
+
+**Other defaults:** `defaultExpanded: false`, `enabled: true`, `expanded: null`
+
+**Style props:** `color`, `radius`
+
+**States:** `collapsed`, `expanded`, `hovered`, `pressed`, `focused`, `disabled`
+
+**Flutter differences:**
+
+- Radix Primitives calls this component Collapsible; Remix uses the WAI-ARIA/Naked UI name Disclosure with trigger and content slots on one widget.
+- Radix Themes 3.3.0 ships no styled Collapsible, so Fortal treats the recipe as an extension and derives its panel treatment from the mapped Table family.
+
+**Not covered:**
+
+- Radix Collapsible.Content forceMount has no NakedDisclosure equivalent.
+
+### FortalDivider
+
+Radix `Separator` · recipe `registry_source/lib/src/fortal/components/divider.dart`
+
+| Parameter | Values | Default |
+| --- | --- | --- |
+| `orientation` | `horizontal`, `vertical` | `horizontal` |
+| `size` | `size1`, `size2`, `size3`, `size4` | `size1` |
+
+**Other defaults:** `color: gray`, `decorative: true`, `lengths: [16, 32, 64, full]`, `thickness: 1`
+
+**Style props:** `color`
+
+**States:** `decorative`, `semantic`
+
+**Flutter differences:**
+
+- Axis and separator Semantics replace DOM orientation and role attributes.
+
+## Data display
+
+### FortalAvatar
+
+Radix `Avatar` · recipe `registry_source/lib/src/fortal/components/avatar.dart`
+
+| Parameter | Values | Default |
+| --- | --- | --- |
+| `size` | `size1`, `size2`, `size3`, `size4`, `size5`, `size6`, `size7`, `size8`, `size9` | `size3` |
+| `variant` | `solid`, `soft` | `soft` |
+
+**Named constructors:** `FortalAvatar.soft`, `FortalAvatar.solid`
+
+**Other defaults:** `highContrast: false`
+
+**Style props:** `color`, `radius`, `highContrast`
+
+**States:** `idle`, `loading`, `loaded`, `error`, `highContrast`
+
+**Flutter differences:**
+
+- ImageProvider and Widget fallback replace DOM src/fallback nodes; no ring prop is exposed.
+
+### FortalBadge
+
+Radix `Badge` · recipe `registry_source/lib/src/fortal/components/badge.dart`
+
+| Parameter | Values | Default |
+| --- | --- | --- |
+| `size` | `size1`, `size2`, `size3` | `size1` |
+| `variant` | `solid`, `soft`, `surface`, `outline` | `soft` |
+
+**Named constructors:** `FortalBadge.outline`, `FortalBadge.soft`, `FortalBadge.solid`, `FortalBadge.surface`
+
+**Other defaults:** `highContrast: false`
+
+**Style props:** `color`, `radius`, `highContrast`
+
+**States:** `idle`, `highContrast`
+
+**Flutter differences:**
+
+- Arbitrary Widget content uses DefaultTextStyle and IconTheme; there is no dedicated icon API.
+
+### FortalDataList
+
+Radix `DataList.Root` · recipe `registry_source/lib/src/fortal/components/data_list.dart`
+
+| Parameter | Values | Default |
+| --- | --- | --- |
+| `alignment` | `start`, `center`, `end`, `baseline`, `stretch` | `baseline` |
+| `orientation` | `horizontal`, `vertical` | `horizontal` |
+| `size` | `size1`, `size2`, `size3` | `size2` |
+
+**Other defaults:** `highContrast: false`
+
+**Style props:** `highContrast`
+
+**States:** `idle`, `highContrast`, `customChild`, `rtl`
+
+**Flutter differences:**
+
+- A data-driven RemixDataList maps Radix's shared horizontal label column, vertical stacking, row and column gaps, item alignment, label minimum, typography, and high-contrast label role without claiming the upstream compositional child API.
+- The constructor owns orientation and each RemixDataListItem owns alignment; the recipe exposes only size and global highContrast.
+
+**Not covered:**
+
+- compositional Root, Item, Label, and Value child API
+- per-label color, highContrast, and width props
+- responsive orientation, size, align, trim, and width objects
+- CSS leading trim and value-edge negative margins
+
+**Documented approximations:**
+
+- The Remix API guarantees one shared label column and deterministic list semantics through a data model rather than arbitrary child anatomy.
+- The data-driven RemixDataList has one shared label styler and shared column width, with no per-label visual-prop surface.
+- Responsive CSS-object syntax is a framework-level adaptation already owned by Flutter layout builders.
+- Flutter has no CSS leading-trim primitive, and offset arithmetic is outside the plain-styler recipe contract.
+
+### FortalDataTable
+
+Radix `Table` · recipe `registry_source/lib/src/fortal/components/data_table.dart`
+
+| Parameter | Values | Default |
+| --- | --- | --- |
+| `size` | `size1`, `size2`, `size3` | `size2` |
+| `variant` | `surface`, `ghost` | `ghost` |
+
+**Named constructors:** `FortalDataTable.ghost`, `FortalDataTable.surface`
+
+**Other defaults:** `enabled: true`
+
+**States:** `idle`, `passive`, `hovered`, `selected`
+
+**Flutter differences:**
+
+- The mapped family is named data_table publicly but cites Radix Table. The recipe maps size and variant onto cell padding, minimum cell height, typography, radius, the gray-a5 row divider, bold column headers, and the surface panel, border, gray-a2 header background, and suppressed last-row divider.
+- Radix Table is a passive layout. Controlled sorting, page-scoped selection, pagination, row hover, arbitrary row actions, and horizontal scrolling are Flutter and Fortal extensions with no Radix counterpart, built from existing accent and gray control tokens.
+- Radix row-header cells use normal weight, but Flutter 3.44 exposes no row-header semantics role and the v1 data-driven API carries no row-header model, so .rt-TableRowHeaderCell is cited and deferred instead of fabricated.
+- Row background and divider are painted per cell exactly as .rt-TableCell does upstream, because Flutter's Table has no widget between the table and its cells.
+
+**Not covered:**
+
+- row-header cells (.rt-TableRowHeaderCell): Flutter has no row-header semantics role and the v1 data-driven API has no row-header model
+- responsive size and layout objects: Radix resolves breakpoints in CSS while Flutter callers rebuild with a different size
+- per-row align and per-cell width, min-width, max-width, and padding props: expressed as column-level TableColumnWidth, column alignment, and cell widgets instead
+- layout auto versus fixed: RenderTable always negotiates one shared column map
+
+## Typography
+
+### FortalHeading
+
+Radix `Heading` · recipe `registry_source/lib/src/fortal/components/heading.dart`
+
+| Parameter | Values | Default |
+| --- | --- | --- |
+| `size` | `size1`, `size2`, `size3`, `size4`, `size5`, `size6`, `size7`, `size8`, `size9` | `size6` |
+| `weight` | `light`, `regular`, `medium`, `bold` | `bold` |
+
+**Other defaults:** `accent: false`, `align: null`, `excludeSemantics: false`, `headingLevel: 1`, `highContrast: false`, `softWrap: true`, `truncate: false`
+
+**Style props:** `color`, `highContrast`
+
+**States:** `idle`, `accent`, `highContrast`, `truncated`, `semantic`
+
+**Flutter differences:**
+
+- Radix `as` selects an h1–h6 element that carries the visual and the semantic level together; Flutter splits them, so headingLevel drives a Semantics header node while size stays purely visual.
+- `--heading-font-size-adjust` is 1, so headings reuse the raw token size and differ from body text only in the pinned line box.
+- A neutral FortalHeading resolves gray-12 rather than inheriting the ambient foreground; accent is an explicit opt-in.
+- Radix `wrap` covers pretty and balance line breaking; Flutter exposes no equivalent line breaker, so the recipe maps only the wrap/nowrap pair onto softWrap and folds truncate into one ellipsized line.
+- CSS leading trim has no Flutter primitive, so the token line box is painted untrimmed.
+
+**Not covered:**
+
+- as and asChild element polymorphism
+- responsive size, weight, align, trim, and wrap objects
+- pretty and balance text wrapping
+- leading trim
+- per-instance color prop: callers re-scope FortalScope.accent
+
 ### FortalText
 
-Radix `Text` · recipe `packages/remix_fortal/lib/src/recipes/text.dart`
+Radix `Text` · recipe `registry_source/lib/src/fortal/components/text.dart`
 
 | Parameter | Values | Default |
 | --- | --- | --- |
@@ -812,115 +863,78 @@ Radix `Text` · recipe `packages/remix_fortal/lib/src/recipes/text.dart`
 - leading trim
 - per-instance color prop: callers re-scope FortalScope.accent
 
-### FortalTextArea
+### FortalCode
 
-Radix `TextArea` · recipe `packages/remix_fortal/lib/src/recipes/textfield.dart`
+Radix `Code` · recipe `registry_source/lib/src/fortal/components/code.dart`
 
 | Parameter | Values | Default |
 | --- | --- | --- |
-| `size` | `size1`, `size2`, `size3` | `size2` |
-| `variant` | `classic`, `surface`, `soft` | `surface` |
+| `size` | `size1`, `size2`, `size3`, `size4`, `size5`, `size6`, `size7`, `size8`, `size9` | — |
+| `variant` | `solid`, `soft`, `outline`, `ghost` | `soft` |
+| `weight` | `light`, `regular`, `medium`, `bold` | — |
 
-**Named constructors:** `FortalTextArea.classic`, `FortalTextArea.soft`, `FortalTextArea.surface`
+**Named constructors:** `FortalCode.ghost`, `FortalCode.outline`, `FortalCode.soft`, `FortalCode.solid`
 
-**Other defaults:** `enabled: true`, `error: false`, `maxLines: null`, `readOnly: false`
+**Other defaults:** `accent: false`, `highContrast: false`, `softWrap: true`, `truncate: false`
 
-**Style props:** `color`, `radius`
+**Style props:** `color`, `radius`, `highContrast`
 
-**States:** `idle`, `hovered`, `focused`, `disabled`, `readOnly`, `invalid`
+**States:** `idle`, `accent`, `highContrast`, `truncated`
 
 **Flutter differences:**
 
-- TextArea reuses the shared TextField visual-state helpers while retaining multiline minimum heights, start alignment, and distinct padding; its soft placeholder remains accent-12 at 0.65 opacity.
-- Native invalid semantics remain in parity coverage. Remix's red error treatment is a Fortal extension rather than an upstream TextArea visual state.
-- Flutter text-editing flags, constraints, and platform scrolling replace textarea DOM attributes, CSS sizing, the themed 12px browser scrollbar, and the browser resize handle.
+- Radix renders Code as an inline element inside a text run; RemixBadge paints a standalone box, so a Code inside a wrapped sentence is a sibling widget rather than an inline span.
+- An omitted size anchors the upstream Code factors to the text3 token rather than the ambient 1em run.
+- `--code-font-weight: inherit` becomes an optional weight argument. When omitted, the non-inheriting Flutter TextStyle leaves weight unset and therefore uses the engine's regular weight rather than the ambient weight.
+- Ghost uses the ambient foreground as a post-composition fallback unless the caller opts into the local accent, matching the upstream `[data-accent-color]` gate while allowing an explicit recipe foreground to win.
+- The Link-nested hover, solid high-contrast hover filter, and ::selection rules need an actionable ancestor FortalCode never has.
+- Radix `wrap` covers pretty and balance line breaking; Flutter exposes no equivalent line breaker, so the recipe maps only the wrap/nowrap pair onto softWrap and folds truncate into one ellipsized line.
+- CSS leading trim has no Flutter primitive, so the token line box is painted untrimmed.
 
 **Not covered:**
 
-- browser resize handle and resize-axis prop
-- themed 12px browser scrollbar and fixed CSS textarea overflow behavior
-- responsive size, radius, and resize objects
+- asChild element polymorphism
+- responsive size and wrap objects
+- pretty and balance text wrapping
+- per-instance color prop: callers re-scope FortalScope.accent
+- inline flow inside a surrounding text run
+- actionable Code hover, filter, and ::selection treatments
+
+### FortalKbd
+
+Radix `Kbd` · recipe `registry_source/lib/src/fortal/components/kbd.dart`
+
+| Parameter | Values | Default |
+| --- | --- | --- |
+| `size` | `size1`, `size2`, `size3`, `size4`, `size5`, `size6`, `size7`, `size8`, `size9` | — |
+| `variant` | `classic`, `soft` | `classic` |
+
+**Named constructors:** `FortalKbd.classic`, `FortalKbd.soft`
+
+**Other defaults:** `excludeSemantics: false`
+
+**Style props:** `radius`
+
+**States:** `idle`, `explicitDark`, `semantic`
+
+**Flutter differences:**
+
+- Radix uses two type-scale factors: an explicit size multiplies its token by 0.8, while an unsized Kbd renders at 0.75em. Fortal keeps those factors but anchors an omitted size to the text3 token rather than the ambient DefaultTextStyle. Because `--letter-spacing-N` is an em, an explicit size also re-resolves its letter spacing against Kbd's own 0.8 font size.
+- The unsized path keeps the text3 token's resolved letter spacing instead of inheriting the ambient DefaultTextStyle's absolute value.
+- `vertical-align: text-top` positions the cap inside a surrounding text run; a standalone Flutter box has no inline baseline to align against.
+- The hover, open, active, and focus-visible rules apply only when Kbd is nested in an anchor or button, which FortalKbd never is.
+- Kbd publishes one native keyboardKey Semantics node and no tap action, because it is inert upstream.
+
+**Not covered:**
+
+- asChild element polymorphism
+- responsive size objects
+- the -0.03em vertical nudge and text-top inline alignment
+- actionable Kbd hover, open, active, and focus-visible treatments
 
 **Documented approximations:**
 
-- Flutter's editable text contract has no cross-platform browser resize-handle primitive.
-- Flutter's line and constraint model replaces CSS block sizing and native textarea overflow behavior.
-
-### FortalTextField
-
-Radix `TextField.Root` · recipe `packages/remix_fortal/lib/src/recipes/textfield.dart`
-
-| Parameter | Values | Default |
-| --- | --- | --- |
-| `size` | `size1`, `size2`, `size3` | `size2` |
-| `variant` | `classic`, `surface`, `soft` | `surface` |
-
-**Named constructors:** `FortalTextField.classic`, `FortalTextField.soft`, `FortalTextField.surface`
-
-**Other defaults:** `enabled: true`, `error: false`, `readOnly: false`
-
-**Style props:** `color`, `radius`
-
-**States:** `idle`, `hovered`, `focused`, `disabled`, `readOnly`, `invalid`, `leading`, `trailing`
-
-**Flutter differences:**
-
-- Native invalid semantics remain part of the upstream coverage. Remix's error flag is a Fortal extension that adds red error and focus roles while setting those invalid semantics; Flutter text editing APIs replace input DOM props.
-
-### FortalToggle
-
-Fortal extension (no Radix counterpart) · recipe `packages/remix_fortal/lib/src/recipes/toggle.dart`
-
-| Parameter | Values | Default |
-| --- | --- | --- |
-| `size` | `size1`, `size2`, `size3` | `size2` |
-| `variant` | `ghost`, `outline` | `ghost` |
-
-**Named constructors:** `FortalToggle.ghost`, `FortalToggle.outline`
-
-**Other defaults:** `enabled: true`, `highContrast: false`, `selected: false`
-
-**Style props:** `color`, `radius`, `highContrast`
-
-**States:** `off`, `on`, `hovered`, `pressed`, `focused`, `disabled`, `highContrast`
-
-**Flutter differences:**
-
-- Fortal extension: excluded from the Radix parity score and styled from shared Fortal tokens.
-
-### FortalToggleGroup
-
-Fortal extension (no Radix counterpart) · recipe `packages/remix_fortal/lib/src/recipes/toggle_group.dart`
-
-| Parameter | Values | Default |
-| --- | --- | --- |
-| `orientation` | `horizontal`, `vertical` | `horizontal` |
-| `size` | `size1`, `size2`, `size3` | `size2` |
-| `variant` | `soft`, `surface` | `soft` |
-
-**Named constructors:** `FortalToggleGroup.soft`, `FortalToggleGroup.surface`
-
-**Other defaults:** `enabled: true`, `highContrast: false`, `loop: true`
-
-**Style props:** `color`, `radius`, `highContrast`
-
-**States:** `unselected`, `selected`, `hovered`, `pressed`, `focused`, `disabled`, `highContrast`, `rtl`
-
-**Flutter differences:**
-
-- Fortal extension: excluded from the Radix parity score and styled from shared Fortal tokens.
-
-### FortalTooltip
-
-Radix `Tooltip` · recipe `packages/remix_fortal/lib/src/recipes/tooltip.dart`
-
-**Other defaults:** `arrow: true`, `collisionPadding: 10`, `delayMilliseconds: 200`, `disableHoverableContent: false`, `maxWidth: 360`, `sideOffset: 4`
-
-**States:** `closed`, `delayedOpen`, `triggerHovered`, `focused`, `touch`, `escape`
-
-**Flutter differences:**
-
-- OverlayPositionConfig and resolved OverlayPlacement drive a CustomPaint arrow after collision resolution; width constraints use logical pixels.
+- A transform wrapper for a sub-pixel baseline tweak sits outside the plain-styler recipe contract, and a standalone Flutter box has no inline text run to align against.
 
 ## Audited, not mapped
 

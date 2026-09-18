@@ -1,6 +1,8 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import '../ui/ui.dart';
 
 import '../pages/charts_page.dart';
+import '../pages/chat_page.dart';
 import '../pages/customers_page.dart';
 import '../pages/gallery/gallery_actions_page.dart';
 import '../pages/gallery/gallery_display_page.dart';
@@ -12,8 +14,8 @@ import '../pages/orders_page.dart';
 import '../pages/overview_page.dart';
 import '../pages/settings_page.dart';
 import 'dashboard_page.dart';
-import 'dashboard_shell_layout.dart';
 import 'sidebar.dart';
+import 'sidebar_sections.dart';
 import 'top_bar.dart';
 
 class DashboardShell extends StatefulWidget {
@@ -24,23 +26,22 @@ class DashboardShell extends StatefulWidget {
 }
 
 class _DashboardShellState extends State<DashboardShell> {
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
   DashboardPage _selected = .overview;
   String _searchQuery = '';
+  bool _sidebarCollapsed = false;
+  // The sidebar layout reparents its body when crossing the compact breakpoint.
+  // Keep page state (including an active conversation) through that move.
+  final _pageStackKey = GlobalKey();
 
-  void _select(DashboardPage page) {
-    setState(() => _selected = page);
-    _scaffoldKey.currentState?.closeDrawer();
-  }
+  void _select(DashboardPage page) => setState(() => _selected = page);
 
   @override
   Widget build(BuildContext context) {
-    final compact =
-        MediaQuery.sizeOf(context).width < dashboardCompactBreakpoint;
     // IndexedStack is keyed by DashboardPage.index, so this list must stay in
     // enum order.
     final pages = <Widget>[
       OverviewPage(onViewOrders: () => _select(.orders)),
+      const ChatPage(),
       CustomersPage(globalQuery: _searchQuery),
       OrdersPage(globalQuery: _searchQuery),
       const SettingsPage(),
@@ -53,36 +54,22 @@ class _DashboardShellState extends State<DashboardShell> {
       const GalleryTypographyPage(),
     ];
 
-    return Scaffold(
-      key: _scaffoldKey,
-      backgroundColor: Colors.transparent,
-      drawer: compact
-          ? Drawer(
-              width: dashboardSidebarWidth,
-              child: Sidebar(selected: _selected, onSelected: _select),
-            )
-          : null,
-      body: Row(
-        children: [
-          if (!compact) Sidebar(selected: _selected, onSelected: _select),
-          Expanded(
-            child: Column(
-              children: [
-                TopBar(
-                  page: _selected,
-                  onMenuPressed: compact
-                      ? () => _scaffoldKey.currentState?.openDrawer()
-                      : null,
-                  onSearchChanged: (value) =>
-                      setState(() => _searchQuery = value.trim().toLowerCase()),
-                ),
-                Expanded(
-                  child: IndexedStack(index: _selected.index, children: pages),
-                ),
-              ],
-            ),
-          ),
-        ],
+    return UiDashboardShell<DashboardPage>(
+      sections: dashboardSidebarSections,
+      selectedValue: _selected,
+      onSelected: _select,
+      title: _selected.label,
+      brand: const DashboardBrand(),
+      account: const DashboardSidebarAccount(),
+      headerActions: const [TopBar()],
+      onSearchChanged: (value) =>
+          setState(() => _searchQuery = value.trim().toLowerCase()),
+      collapsed: _sidebarCollapsed,
+      onCollapsedChanged: (value) => setState(() => _sidebarCollapsed = value),
+      body: IndexedStack(
+        key: _pageStackKey,
+        index: _selected.index,
+        children: pages,
       ),
     );
   }

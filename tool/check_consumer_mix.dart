@@ -3,12 +3,12 @@ import 'dart:io';
 import 'package:pub_semver/pub_semver.dart';
 import 'package:yaml/yaml.dart';
 
-/// Library packages whose runtime Mix constraints are a consumer contract.
+/// Published packages whose runtime Mix constraints are a consumer contract.
 ///
-/// Both are checked because the workspace resolves a single Mix version for
-/// everything; a constraint bumped in one package and forgotten in the other
-/// still resolves locally and only fails once a consumer installs them.
-const _libraryPackages = ['remix', 'remix_fortal', 'remix_carbon'];
+/// Fortal is installed as application-owned source and inherits these floors
+/// from the Remix registry entry, so only the hosted Remix package belongs in
+/// this check.
+const _publishedPackages = ['remix'];
 
 /// Runtime Mix dependencies a consumer resolves alongside those packages.
 ///
@@ -29,9 +29,8 @@ void main() {
   final lock = loadYaml(lockfile.readAsStringSync()) as YamlMap;
   final lockedPackages = lock['packages'] as YamlMap;
   final failures = <String>[];
-  final declarations = <String, Map<String, String>>{};
 
-  for (final package in _libraryPackages) {
+  for (final package in _publishedPackages) {
     final pubspecFile = File(
       '${workspaceRoot.path}/packages/$package/pubspec.yaml',
     );
@@ -42,16 +41,12 @@ void main() {
 
     final pubspec = loadYaml(pubspecFile.readAsStringSync()) as YamlMap;
     final dependencies = pubspec['dependencies'] as YamlMap;
-    declarations[package] = {};
-
     for (final dependency in _runtimeDependencies) {
       final declared = dependencies[dependency];
       if (declared is! String) {
         failures.add('$package does not declare a $dependency constraint');
         continue;
       }
-      declarations[package]![dependency] = declared;
-
       final resolved = lockedPackages[dependency];
       if (resolved is! YamlMap) {
         failures.add('$dependency is absent from pubspec.lock');
@@ -78,23 +73,6 @@ void main() {
       stdout.writeln(
         '$package -> $dependency: $source $version ($kind); '
         'declared $constraint.',
-      );
-    }
-  }
-
-  // The published packages ship together, so a floor raised in one and not the
-  // other is a publishing hazard the single workspace lockfile cannot surface.
-  for (final dependency in _runtimeDependencies) {
-    final declared = {
-      for (final package in _libraryPackages)
-        if (declarations[package]?[dependency] case final constraint?)
-          package: constraint,
-    };
-    final distinct = declared.values.toSet();
-    if (distinct.length > 1) {
-      failures.add(
-        '$dependency constraints diverge across library packages: '
-        '${declared.entries.map((e) => '${e.key} ${e.value}').join(', ')}',
       );
     }
   }

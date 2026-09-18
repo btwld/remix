@@ -15,7 +15,16 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import 'package:dashboard/ui/ui.dart';
+
+/// Whether the shell's compact navigation sheet is currently open.
+///
+/// `TopBar` sits inside `UiSidebarLayout`'s `header` slot in both the
+/// wide and compact presentations, so its element is always a descendant of
+/// the scope the layout re-provides — unlike `DashboardShell`'s own element,
+/// which sits above the layout it returns.
+bool _isCompactSheetOpen(WidgetTester tester) =>
+    UiSidebarLayoutScope.of(tester.element(find.byType(TopBar))).isCompactOpen;
 
 void main() {
   testWidgets('renders the dashboard inside one app and one shell', (
@@ -24,7 +33,11 @@ void main() {
     await tester.pumpWidget(const DashboardApp());
 
     expect(find.byType(MaterialApp), findsOneWidget);
-    expect(find.byType(Scaffold), findsOneWidget);
+    // The shell replaced Material's Scaffold/Drawer with the open-code
+    // UiSidebarLayout template; see `compact layout uses a sheet
+    // without rendering overflows` below for its compact-sheet behavior.
+    expect(find.byType(Scaffold), findsNothing);
+    expect(find.byType(UiSidebarLayout), findsOneWidget);
     expect(
       find.byKey(const ValueKey('dashboard-fortal-scope')),
       findsOneWidget,
@@ -109,7 +122,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('compact layout uses a drawer without rendering overflows', (
+  testWidgets('compact layout uses a sheet without rendering overflows', (
     tester,
   ) async {
     tester.view.physicalSize = const Size(390, 844);
@@ -122,14 +135,11 @@ void main() {
     expect(find.byKey(const ValueKey('dashboard-menu')), findsWidgets);
     expect(tester.takeException(), isNull);
 
-    await tester.tap(find.byIcon(Icons.menu));
+    await tester.tap(find.byKey(const ValueKey('dashboard-menu')).first);
     for (var frame = 0; frame < 5; frame++) {
       await tester.pump(const Duration(milliseconds: 100));
     }
-    expect(
-      tester.state<ScaffoldState>(find.byType(Scaffold)).isDrawerOpen,
-      isTrue,
-    );
+    expect(_isCompactSheetOpen(tester), isTrue);
 
     await tester.tap(
       find.byKey(const ValueKey(DashboardPage.galleryForms)).first,
@@ -144,14 +154,11 @@ void main() {
       ),
       findsOneWidget,
     );
-    expect(
-      tester.state<ScaffoldState>(find.byType(Scaffold)).isDrawerOpen,
-      isFalse,
-    );
+    expect(_isCompactSheetOpen(tester), isFalse);
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('compact drawer exposes one dashboard navigation name', (
+  testWidgets('compact sheet exposes one dashboard navigation name', (
     tester,
   ) async {
     final semantics = tester.ensureSemantics();
@@ -195,10 +202,7 @@ void main() {
     for (var frame = 0; frame < 5; frame++) {
       await tester.pump(const Duration(milliseconds: 100));
     }
-    expect(
-      tester.state<ScaffoldState>(find.byType(Scaffold)).isDrawerOpen,
-      isTrue,
-    );
+    expect(_isCompactSheetOpen(tester), isTrue);
 
     await tester.tap(
       find.byKey(const ValueKey(DashboardPage.galleryForms)).first,
@@ -207,10 +211,7 @@ void main() {
       await tester.pump(const Duration(milliseconds: 100));
     }
 
-    expect(
-      tester.state<ScaffoldState>(find.byType(Scaffold)).isDrawerOpen,
-      isFalse,
-    );
+    expect(_isCompactSheetOpen(tester), isFalse);
     expect(menuFocusState(), ui.Tristate.isTrue);
     semantics.dispose();
   });
@@ -224,7 +225,7 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
 
     await tester.pumpWidget(const DashboardApp());
-    await tester.tap(find.byIcon(Icons.menu));
+    await tester.tap(find.byKey(const ValueKey('dashboard-menu')).first);
     for (var frame = 0; frame < 5; frame++) {
       await tester.pump(const Duration(milliseconds: 100));
     }
@@ -323,7 +324,7 @@ void main() {
     await tester.tap(find.byKey(const ValueKey(DashboardPage.customers)).first);
     await tester.pump();
 
-    // FortalDataTable forwards the key to the Remix widget it builds, so the
+    // UiDataTable forwards the key to the Remix widget it builds, so the
     // key matches both.
     expect(find.byKey(const ValueKey('data-grid-customers')), findsWidgets);
     expect(find.text('1–10 of 24'), findsOneWidget);
@@ -338,8 +339,8 @@ void main() {
       expect(find.text('Revenue trend'), findsOneWidget);
       expect(find.text('Order volume'), findsOneWidget);
       expect(find.text('Channel mix'), findsOneWidget);
-      expect(find.byType(FortalLineChart), findsOneWidget);
-      expect(find.byType(FortalBarChart), findsOneWidget);
+      expect(find.byType(UiLineChart), findsOneWidget);
+      expect(find.byType(UiBarChart), findsOneWidget);
       expect(find.byType(PieChart), findsOneWidget);
       expect(find.text('Recent activity'), findsOneWidget);
       expect(find.text('Recent orders'), findsOneWidget);
@@ -401,10 +402,8 @@ void main() {
     await tester.pump();
 
     expect(
-      FortalTheme.of(
-        tester.element(find.byType(DashboardShell)),
-      ).panelBackground,
-      FortalPanelBackground.translucent,
+      UiTheme.of(tester.element(find.byType(DashboardShell))).panelBackground,
+      UiPanelBackground.translucent,
     );
   });
 
@@ -417,8 +416,8 @@ void main() {
     await tester.tap(nav);
     await tester.pump();
 
-    expect(find.byType(FortalTextArea), findsWidgets);
-    expect(find.byType(FortalSegmentedControl<String>), findsWidgets);
+    expect(find.byType(UiTextArea), findsWidgets);
+    expect(find.byType(UiSegmentedControl<String>), findsWidgets);
     expect(find.byType(RemixCheckboxGroupItem<String>), findsNWidgets(3));
     expect(find.text('Labelled'), findsOneWidget);
   });
@@ -432,8 +431,8 @@ void main() {
     await tester.tap(nav);
     await tester.pump();
 
-    expect(find.byType(FortalDataList), findsWidgets);
-    expect(find.byType(FortalSkeleton), findsNWidgets(2));
+    expect(find.byType(UiDataList), findsWidgets);
+    expect(find.byType(UiSkeleton), findsNWidgets(2));
 
     final showContent = find.text('Show content');
     await tester.ensureVisible(showContent);
@@ -457,8 +456,7 @@ void main() {
     await tester.pump();
 
     final largestAvatars = find.byWidgetPredicate(
-      (widget) =>
-          widget is FortalAvatar && widget.size == FortalAvatarSize.size9,
+      (widget) => widget is UiAvatar && widget.size == UiAvatarSize.size9,
     );
     expect(largestAvatars, findsNWidgets(2));
     for (var index = 0; index < 2; index++) {
@@ -586,7 +584,7 @@ void main() {
         .first;
     expect(tester.getSize(overlay).width, 180);
     expect(tester.getSize(overlay).height, lessThan(180));
-    final contentInset = FortalTokens.space1.resolve(
+    final contentInset = UiTokens.space1.resolve(
       tester.element(find.text('View profile')),
     );
     expect(
@@ -616,13 +614,9 @@ void main() {
     await tester.tap(find.byIcon(Icons.notifications_none));
     await tester.pump();
 
-    final content = find.ancestor(
-      of: find.text('Mark all read'),
-      matching: find.byWidgetPredicate(
-        (widget) => widget is SizedBox && widget.width == 330,
-      ),
-    );
+    final content = find.byKey(const ValueKey('topbar-notifications-content'));
     expect(content, findsOneWidget);
+    expect(tester.getSize(content).width, 330);
     expect(tester.getSize(content).height, lessThan(300));
   });
 
@@ -689,9 +683,11 @@ void main() {
   ) async {
     await tester.pumpWidget(const DashboardApp());
 
-    await tester.tap(
-      find.byKey(const ValueKey(DashboardPage.galleryActions)).first,
-    );
+    final actions = find
+        .byKey(const ValueKey(DashboardPage.galleryActions))
+        .first;
+    await tester.ensureVisible(actions);
+    await tester.tap(actions);
     await tester.pump();
 
     expect(find.text('Button'), findsWidgets);
@@ -717,7 +713,7 @@ void main() {
 
     expect(items.spacing, 8);
     expect(items.children, hasLength(2));
-    expect(items.children, everyElement(isA<FortalAccordion<String>>()));
+    expect(items.children, everyElement(isA<UiAccordion<String>>()));
   });
 
   testWidgets('navigation gallery disclosure collapses independently', (
@@ -734,10 +730,10 @@ void main() {
     final gallery = find.byType(GalleryNavigationPage);
     final disclosureFinder = find.descendant(
       of: gallery,
-      matching: find.byType(FortalDisclosure),
+      matching: find.byType(UiDisclosure),
     );
     final disclosureCount = tester
-        .widgetList<FortalDisclosure>(disclosureFinder)
+        .widgetList<UiDisclosure>(disclosureFinder)
         .length;
 
     final panelCopy = find.descendant(
@@ -771,12 +767,9 @@ void main() {
     final gallery = find.byType(GalleryNavigationPage);
     final example = find.descendant(
       of: gallery,
-      matching: find.byType(FortalSidebar<String>),
+      matching: find.byType(UiSidebar<String>),
     );
-    expect(
-      tester.widget<FortalSidebar<String>>(example).selectedValue,
-      'overview',
-    );
+    expect(tester.widget<UiSidebar<String>>(example).selectedValue, 'overview');
 
     final activity = find.descendant(
       of: gallery,
@@ -786,10 +779,7 @@ void main() {
     await tester.tap(activity);
     await tester.pump();
 
-    expect(
-      tester.widget<FortalSidebar<String>>(example).selectedValue,
-      'activity',
-    );
+    expect(tester.widget<UiSidebar<String>>(example).selectedValue, 'activity');
   });
 
   testWidgets('every sidebar destination renders without replacing the shell', (
@@ -837,17 +827,17 @@ void main() {
       await tester.pumpWidget(const DashboardApp());
       final shell = tester.element(find.byType(DashboardShell));
 
-      expect(Theme.of(shell).brightness, FortalTheme.of(shell).brightness);
-      final before = FortalTheme.of(shell).isDark;
+      expect(Theme.of(shell).brightness, UiTheme.of(shell).brightness);
+      final before = UiTheme.of(shell).isDark;
 
       await tester.tap(find.byKey(const ValueKey('theme-quick-toggle')).first);
       await tester.pump();
 
       final updatedShell = tester.element(find.byType(DashboardShell));
-      expect(FortalTheme.of(updatedShell).isDark, isNot(before));
+      expect(UiTheme.of(updatedShell).isDark, isNot(before));
       expect(
         Theme.of(updatedShell).brightness,
-        FortalTheme.of(updatedShell).brightness,
+        UiTheme.of(updatedShell).brightness,
       );
     },
   );
@@ -858,7 +848,7 @@ void main() {
     );
 
     final shell = tester.element(find.byType(DashboardShell));
-    expect(FortalTheme.of(shell).isDark, isTrue);
+    expect(UiTheme.of(shell).isDark, isTrue);
     expect(Theme.of(shell).brightness, Brightness.dark);
   });
 
@@ -873,7 +863,7 @@ void main() {
     await tester.pump();
 
     final shell = tester.element(find.byType(DashboardShell));
-    expect(FortalTheme.of(shell).accent, FortalAccentColor.grass);
+    expect(UiTheme.of(shell).accent, UiAccentColor.grass);
   });
 
   testWidgets('theme swatch centers its selected checkmark', (tester) async {
@@ -908,6 +898,8 @@ void main() {
       of: topBar,
       matching: find.byKey(const ValueKey('remix-icon-button-surface')),
     );
+    // Theme, notifications, and theme panel; the collapse control lives in
+    // the sidebar header.
     expect(surfaces, findsNWidgets(3));
 
     void expectSquareSurfaces() {
@@ -1017,12 +1009,12 @@ void main() {
 
     // The nine-step scale, four weights, and every Code and Kbd variant are on
     // the page at once, so each family appears many times over.
-    expect(find.byType(FortalText), findsWidgets);
-    expect(find.byType(FortalHeading), findsWidgets);
-    expect(find.byType(FortalCode), findsWidgets);
-    expect(find.byType(FortalKbd), findsWidgets);
-    expect(find.byType(FortalLink), findsWidgets);
-    for (final underline in FortalLinkUnderline.values) {
+    expect(find.byType(UiText), findsWidgets);
+    expect(find.byType(UiHeading), findsWidgets);
+    expect(find.byType(UiCode), findsWidgets);
+    expect(find.byType(UiKbd), findsWidgets);
+    expect(find.byType(UiLink), findsWidgets);
+    for (final underline in UiLinkUnderline.values) {
       expect(find.text(enumLabel(underline)), findsOneWidget);
     }
     expect(find.text('Disabled'), findsOneWidget);
@@ -1072,14 +1064,16 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
 
     await tester.pumpWidget(const DashboardApp());
-    await tester.tap(find.byIcon(Icons.menu));
+    await tester.tap(find.byKey(const ValueKey('dashboard-menu')).first);
     for (var frame = 0; frame < 5; frame++) {
       await tester.pump(const Duration(milliseconds: 100));
     }
 
-    await tester.tap(
-      find.byKey(const ValueKey(DashboardPage.galleryTypography)).first,
-    );
+    final typography = find
+        .byKey(const ValueKey(DashboardPage.galleryTypography))
+        .first;
+    await tester.ensureVisible(typography);
+    await tester.tap(typography);
     for (var frame = 0; frame < 5; frame++) {
       await tester.pump(const Duration(milliseconds: 100));
     }
@@ -1135,7 +1129,7 @@ void main() {
     Color painted(Finder finder) =>
         tester.renderObject<RenderParagraph>(finder).text.style!.color!;
     Color gray12() => MixScope.tokenOf(
-      FortalTokens.gray12,
+      UiTokens.gray12,
       tester.element(find.byType(DashboardShell)),
     );
 
@@ -1145,7 +1139,7 @@ void main() {
 
     final themeScope = tester.widget<ThemeScope>(find.byType(ThemeScope));
     themeScope.onChanged(
-      themeScope.settings.copyWith(grayColor: FortalGrayColor.mauve),
+      themeScope.settings.copyWith(grayColor: UiGrayColor.mauve),
     );
     await tester.pump();
 
@@ -1155,14 +1149,16 @@ void main() {
     expect(painted(activityTitle), mauve);
   });
 
-  testWidgets('drawer sidebar text follows the gray theme too', (tester) async {
+  testWidgets('compact sheet sidebar text follows the gray theme too', (
+    tester,
+  ) async {
     tester.view.physicalSize = const Size(390, 844);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
 
     await tester.pumpWidget(const DashboardApp());
-    await tester.tap(find.byIcon(Icons.menu));
+    await tester.tap(find.byKey(const ValueKey('dashboard-menu')).first);
     for (var frame = 0; frame < 5; frame++) {
       await tester.pump(const Duration(milliseconds: 100));
     }
@@ -1174,7 +1170,7 @@ void main() {
     expect(
       tester.renderObject<RenderParagraph>(brand).text.style!.color,
       MixScope.tokenOf(
-        FortalTokens.gray12,
+        UiTokens.gray12,
         tester.element(find.byType(DashboardShell)),
       ),
     );
@@ -1189,7 +1185,7 @@ void main() {
     await tester.tap(find.byKey(const ValueKey(DashboardPage.customers)).first);
     await tester.pump();
 
-    final search = find.byKey(const ValueKey('global-search'));
+    final search = find.byKey(const ValueKey('dashboard-search'));
     expect(search, findsWidgets);
     await tester.enterText(
       find.descendant(of: search, matching: find.byType(EditableText)),
@@ -1204,7 +1200,7 @@ void main() {
 
 /// The bounds of the dialog panel itself.
 ///
-/// `FortalDialog` wraps its surface in padding and align modifiers that carry
+/// `UiDialog` wraps its surface in padding and align modifiers that carry
 /// the safe viewport insets, so the widget's own rect is the whole viewport.
 /// The panel is the align's child, which is what the size and centring
 /// assertions are about.

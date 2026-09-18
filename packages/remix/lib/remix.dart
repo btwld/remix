@@ -1,7 +1,7 @@
 /// Remix design system widgets and styles.
 ///
-/// Remix ships no theme. For a ready-made Radix Themes-inspired preset, add the
-/// companion `remix_fortal` package.
+/// Remix ships no theme. For a ready-made Radix Themes-inspired starting point,
+/// initialize the application-owned `fortal` preset with `remix_cli`.
 library remix;
 
 /// COMPONENTS
@@ -32,6 +32,7 @@ export 'src/components/spinner/spinner.dart';
 export 'src/components/switch/switch.dart';
 export 'src/components/tabs/tabs.dart';
 export 'src/components/textfield/textfield.dart';
+export 'src/components/toast/toast.dart';
 export 'src/components/toggle/toggle.dart';
 export 'src/components/toggle_group/toggle_group.dart';
 export 'src/components/tooltip/tooltip.dart';
@@ -40,6 +41,12 @@ export 'src/components/tooltip/tooltip.dart';
 export 'package:mix/mix.dart';
 export 'package:naked_ui/naked_ui.dart'
     show
+        NakedAccordionTriggerBuilder,
+        NakedAccordionItemState,
+        NakedDisclosureState,
+        NakedDisclosureTransitionBuilder,
+        NakedSliderSemanticFormatterCallback,
+        NakedTabState,
         NakedMenuState,
         OverlayAlignment,
         OverlayPlacement,
@@ -65,9 +72,11 @@ export 'src/rendering/remix_box_effects.dart'
         RemixBoxEffectsSpec,
         RemixBoxEffectsMix;
 
+export 'src/utilities/remix_placement.dart' show RemixPlacement;
+
 /// STYLER CONVENIENCES
 export 'src/utilities/remix_style.dart'
-    show RemixBoxStylerAnchors, RemixBoxStylerMixin;
+    show RemixBoxStylerAnchors, RemixBoxStylerMixin, RemixStyleSpecBuilder;
 export 'src/utilities/selected_mixin.dart'
     show SelectedWidgetStateVariantExtension;
 

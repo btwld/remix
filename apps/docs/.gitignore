@@ -1,0 +1,10 @@
+node_modules/
+.next/
+.source/
+.generated/
+public/assets/
+public/previews/
+*.tsbuildinfo
+next-env.d.ts
+public/catalog/
+out/

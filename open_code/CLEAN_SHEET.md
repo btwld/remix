@@ -1,0 +1,161 @@
+# Clean-sheet decision: application-owned UI on Remix
+
+## The problem
+
+Remix deliberately ships behavior without a theme. An application can use the
+opinionated `remix_fortal` preset, or it can own a design language. Owning the
+design language used to require copying a theme and hand-maintaining wrappers
+that could fall behind the Remix constructor surface.
+
+The MVP asks a narrower question: can an application own Theme and Button
+source, keep Remix as the maintained behavior dependency, and receive a
+generated forwarding adapter without adopting Fortal?
+
+## Decision
+
+Yes. `remix_cli` installs authored Theme and Button source into the application,
+and `@MixWidget` generates the forwarding adapter there. The application edits
+the visual recipe; Remix still handles the difficult behavioral contract.
+
+The initial catalog contained only two items:
+
+```text
+theme -> button
+```
+
+Button depends on Theme. Installing Button resolves that graph in a stable
+order, adds its hosted dependencies, exports the authored files, and generates
+`button.g.dart` in the consumer.
+
+**Since:** the styled component catalog has grown on the same two mechanisms —
+one authored file plus one generated part per item, every item depending on
+`theme`. Nothing in the decision below changed to accommodate them: no schema
+field and no installer branch. The token vocabulary moved once, when the chart
+item added `chart1`-`chart5` to reach the current twenty.
+Compound components (a checkbox group option, a tab bar with its tabs and
+panels) fit by declaring more than one `@MixWidget` in the same file. The
+current catalog is listed in `docs/open-code.mdx`.
+
+## Ownership boundary
+
+| Remix owns | The application owns |
+|---|---|
+| Rendering and layout machinery | Semantic tokens and light/dark values |
+| Pointer, keyboard, focus, and feedback behavior | Button variants, sizes, and visual recipe |
+| Accessibility semantics | Theme, recipe, and instance customization |
+| Loading and disabled interaction rules | Installed authored files |
+| Naked UI delegation | The generated adapter committed by the app |
+| Mix specs, stylers, variants, and resolution | |
+
+Nothing installed by the CLI copies Remix internals or depends on Fortal.
+Core component source imports the public `package:remix/remix.dart` surface.
+The optional chart item also imports the public `package:mix_chart/mix_chart.dart`
+surface for its data, rendering, interaction, and semantics contract.
+
+## Why generation is part of the consumer
+
+The recipe is a normal function returning `ButtonStyler`:
+
+```dart
+@MixWidget(name: 'AcmeButton', target: RemixButton.new)
+ButtonStyler acmeButtonStyle({
+  AcmeButtonVariant variant = .primary,
+  AcmeButtonSize size = .medium,
+  ButtonStyler style = const ButtonStyler.create(),
+}) { /* recipe */ }
+```
+
+The generator combines the recipe parameters with the complete safe
+`RemixButton` constructor surface. A non-nullable variant enum also produces
+named constructors such as `AcmeButton.destructive`.
+
+Default-all forwarding is intentional. A handwritten wrapper or parameter
+allowlist can silently miss a new Remix capability. Regeneration instead turns
+constructor changes into generated diffs that an application can review.
+
+Two target parameters are not exposed as ordinary overrides:
+
+- `style` is supplied by the recipe. The recipe's own `style` argument merges
+  last and is the application-level override.
+- `styleSpec` bypasses style resolution, including the recipe and its tokens,
+  so it is not a useful visual customization hook here.
+
+Generated source is not bundled in the registry. It is emitted from the
+consumer's resolved Remix and generator versions, then compared with a
+committed Acme fixture in this repository to make drift visible.
+
+## Why a small local catalog
+
+The MVP has one registry YAML file and one canonical template tree inside
+`remix_cli`. It has no remote registry, cache, lockfile, content hashes, update
+protocol, or per-component manifest format. Those features need evidence from
+more components and real consumers before they earn their maintenance cost.
+
+The installer still protects application source:
+
+- existing authored files are preserved on normal runs;
+- `--diff` is read-only;
+- `--overwrite` applies only to the item explicitly requested;
+- dependency declarations that already resolve compatibly are preserved;
+- validation and dependency failures happen before authored-source writes;
+- generation targets the parts declared by resolved items, plus every
+  already-installed adapter, so adding one item cannot delete another
+  item's generated part.
+
+This is enough distribution machinery for a growing catalog without pretending
+the MVP has an update system.
+
+## Dependency cost
+
+Runtime dependencies are `remix` and `mix_annotations`. Mix and Naked UI arrive
+through Remix, which avoids choosing a direct Mix version that Remix was not
+compiled against. Installing the optional chart item adds `mix_chart` directly;
+it never adds the authoring source package. Development dependencies are `build_runner` and
+`mix_generator`.
+
+Chart is deliberately one item with three adapters. `mix_chart` owns the hard
+chart contract. The installed file owns presentation and resolves theme
+tokens only: `background`, `foreground`, `mutedForeground`, `border`, `radius`,
+and the five `chart1`-`chart5` entries the chart item added to the vocabulary.
+A theme installed before those five existed does not carry them, and authored
+files are preserved on normal runs, so such a theme needs them added by hand.
+
+The recurring costs are visible:
+
+- recipe, Remix constructor, or generator changes require regeneration;
+- Remix prerelease changes can rewrite the generated adapter;
+- the installed layer intentionally relies on Remix's Mix re-export;
+- compact 32/36/40px sizes suit web density but are below common mobile touch
+  target guidance, so adopting apps must make their own density decision.
+
+## What remains outside this MVP
+
+**Since 2026-09-04:** Fortal is available as a second application-owned preset.
+Its separate source tree, derivation contract, and publication transition are
+recorded in [Presets: Fortal as application-owned source](PRESETS.md). There is
+still no general component marketplace, remote registry, automatic migration,
+or source lockfile. The CLI now has a tag-based publish workflow with a
+hosted consumer check.
+
+The first public release still requires package bootstrap and hosted CLI
+verification. Until then, use a checkout or staged package with checkout Remix.
+The [release instructions](RELEASING.md) define the order and required checks.
+
+
+## Agent source distribution
+
+Both catalogs include eight domain-specific Agent surfaces. Unlike visual
+`@MixWidget` recipes, these copy the private authoring package's
+(`registry_source/lib/src/agent`) behavior and empty anatomy specs into the
+application, and each preset styles them through recipes authored in its own
+source package. They still compose the
+public Remix primitives; they do not copy Remix internals or introduce a
+private runtime dependency. Applications own the installed domain behavior as
+well as its appearance. The scope of future source-update diffs includes that
+behavior.
+
+The supported Mix spec-styler builder is opt-in, so these installs enable it
+for their source paths in consumer `build.yaml`. This is a deliberate extension
+to the original recipe-only, no-build-config contract. Existing configuration
+is preserved, conflicts are rejected during preflight, and configuration changes
+appear in dry-run/diff. Registry schema and preset selection are unchanged.

@@ -17,6 +17,8 @@ import 'package:demo/components/button.dart' as _demo_components_button;
 import 'package:demo/components/callout.dart' as _demo_components_callout;
 import 'package:demo/components/card.dart' as _demo_components_card;
 import 'package:demo/components/checkbox.dart' as _demo_components_checkbox;
+import 'package:demo/components/checkbox_group.dart'
+    as _demo_components_checkbox_group;
 import 'package:demo/components/code.dart' as _demo_components_code;
 import 'package:demo/components/data_list.dart' as _demo_components_data_list;
 import 'package:demo/components/data_table.dart' as _demo_components_data_table;
@@ -35,6 +37,8 @@ import 'package:demo/components/radio.dart' as _demo_components_radio;
 import 'package:demo/components/segmented_control.dart'
     as _demo_components_segmented_control;
 import 'package:demo/components/select.dart' as _demo_components_select;
+import 'package:demo/components/sidebar.dart' as _demo_components_sidebar;
+import 'package:demo/components/skeleton.dart' as _demo_components_skeleton;
 import 'package:demo/components/slider.dart' as _demo_components_slider;
 import 'package:demo/components/spinner.dart' as _demo_components_spinner;
 import 'package:demo/components/switch.dart' as _demo_components_switch;
@@ -42,6 +46,7 @@ import 'package:demo/components/tabs.dart' as _demo_components_tabs;
 import 'package:demo/components/text.dart' as _demo_components_text;
 import 'package:demo/components/textarea.dart' as _demo_components_textarea;
 import 'package:demo/components/textfield.dart' as _demo_components_textfield;
+import 'package:demo/components/toast.dart' as _demo_components_toast;
 import 'package:demo/components/toggle.dart' as _demo_components_toggle;
 import 'package:demo/components/toggle_group.dart'
     as _demo_components_toggle_group;
@@ -198,6 +203,15 @@ final directories = <_widgetbook.WidgetbookNode>[
         ],
       ),
       _widgetbook.WidgetbookComponent(
+        name: 'RemixCheckboxGroup<Object>',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Interests',
+            builder: _demo_components_checkbox_group.buildCheckboxGroupUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
         name: 'RemixDataList',
         useCases: [
           _widgetbook.WidgetbookUseCase(
@@ -343,6 +357,24 @@ final directories = <_widgetbook.WidgetbookNode>[
         ],
       ),
       _widgetbook.WidgetbookComponent(
+        name: 'RemixSidebar<Object>',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Workspace navigation',
+            builder: _demo_components_sidebar.buildSidebarUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'RemixSkeleton',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Loading content',
+            builder: _demo_components_skeleton.buildSkeletonUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
         name: 'RemixSlider',
         useCases: [
           _widgetbook.WidgetbookUseCase(
@@ -404,6 +436,19 @@ final directories = <_widgetbook.WidgetbookNode>[
           _widgetbook.WidgetbookUseCase(
             name: 'TextField Component',
             builder: _demo_components_textfield.buildTextFieldUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'RemixToast',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Catalog',
+            builder: _demo_components_toast.buildToastCatalogUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Stacked notifications',
+            builder: _demo_components_toast.buildToastUseCase,
           ),
         ],
       ),

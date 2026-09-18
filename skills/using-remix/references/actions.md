@@ -1,6 +1,7 @@
 # Action Components
 
-Constructor details for Remix buttons and toggles. Fortal widgets mentioned here live in the separate `remix_fortal` package; see [Fortal](fortal.md).
+Constructor details for Remix buttons and toggles. Fortal widgets mentioned
+here come from the application-owned Fortal preset; see [Fortal](fortal.md).
 
 ## Table of Contents
 
@@ -39,7 +40,7 @@ loading, content stays laid out (invisible) with a spinner overlay to prevent
 layout shift.
 
 Icon placement is style-driven when exactly one icon is present:
-`ButtonStyler().iconAlignment(RemixIconAlignment.end)` places it after the
+`ButtonStyler().iconAlignment(RemixPlacement.end)` places it after the
 label, regardless of whether the value came from `leadingIcon` or
 `trailingIcon`. With both icons present, Remix preserves
 leading → label → trailing order.
@@ -61,7 +62,7 @@ Fortal preset: `FortalButton` — all params above plus
 | `enableFeedback` | `bool` | `true` | no |
 | `focusNode` | `FocusNode?` | `null` | no |
 | `mouseCursor` | `MouseCursor` | `SystemMouseCursors.click` | no |
-| `semanticLabel` | `String?` | `null` | no |
+| `semanticLabel` | `String` | — | yes (nonblank) |
 | `semanticHint` | `String?` | `null` | no |
 | `excludeSemantics` | `bool` | `false` | no |
 | `iconBuilder` | `RemixIconButtonIconBuilder?` | `null` | no |

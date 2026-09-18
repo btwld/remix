@@ -320,9 +320,7 @@ final class RemixMenuDivider<T> extends RemixMenuItemData<T> {
 // REMIX MENU - Main menu widget
 // ============================================================================
 
-/// A customizable menu component with data-driven API.
-///
-/// Uses a simple, declarative API with data classes for trigger and items.
+/// An overlay menu configured with trigger and item data.
 /// All styling is centralized in [MenuStyler] and passed directly to children.
 ///
 /// ## Example
@@ -504,6 +502,10 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
           style: style,
           styleSpec: widget.styleSpec,
           builder: (context, spec) {
+            final inherited = Style.maybeOf<MenuSpec>(context);
+            final effectiveStyle = inherited is MenuStyler
+                ? inherited.merge(style)
+                : style;
             return _RemixMenuItemsPanel<T>(
               items: widget.items,
               overlayStyleSpec: spec.overlay,
@@ -511,7 +513,7 @@ class _RemixMenuState<T> extends State<RemixMenu<T>> {
               dividerStyleSpec: spec.divider,
               hasRootSelectionCallback: widget.onSelected != null,
               itemStyles: widget.styleSpec == null
-                  ? _RemixMenuItemStyles.fromStyler(style)
+                  ? _RemixMenuItemStyles.fromStyler(effectiveStyle)
                   : _RemixMenuItemStyles.fromSpec(spec),
             );
           },
@@ -590,22 +592,50 @@ final class _RemixMenuItemStyles {
       };
     }
 
-    final fluentStyle = styler!;
+    return _MenuItemProjection(
+      styler!,
+      kind,
+      itemStyle,
+    ).build(context).spec.item;
+  }
+}
+
+/// Projects an item only after Mix has merged the menu's active variants.
+final class _MenuItemProjection extends MenuStyler {
+  _MenuItemProjection(this.source, this.kind, this.itemStyle)
+    : super.create(variants: source.$variants);
+
+  final MenuStyler source;
+  final _RemixMenuItemKind kind;
+  final MenuItemStyler itemStyle;
+
+  @override
+  MenuStyler merge(MenuStyler? other) =>
+      _MenuItemProjection(source.merge(other), kind, itemStyle);
+
+  @override
+  StyleSpec<MenuSpec> resolve(BuildContext context) {
     final semanticStyle = switch (kind) {
       .ordinary => null,
-      .checkbox => fluentStyle.$checkboxItem,
-      .radio => fluentStyle.$radioItem,
-      .submenu => fluentStyle.$submenuItem,
+      .checkbox => source.$checkboxItem,
+      .radio => source.$radioItem,
+      .submenu => source.$submenuItem,
     };
-    final menuStyle = MixOps.merge(fluentStyle.$item, semanticStyle);
     final mergedStyle = MixOps.merge(
-      menuStyle,
+      MixOps.merge(source.$item, semanticStyle),
       Prop.maybeMix<StyleSpec<MenuItemSpec>>(itemStyle),
     );
-
-    return MixOps.resolve(context, mergedStyle) ??
-        const StyleSpec(spec: MenuItemSpec());
+    return StyleSpec(
+      spec: MenuSpec(
+        item:
+            MixOps.resolve(context, mergedStyle) ??
+            const StyleSpec(spec: MenuItemSpec()),
+      ),
+    );
   }
+
+  @override
+  List<Object?> get props => [source, kind, itemStyle];
 }
 
 /// One renderer intentionally serves root and recursive submenu overlays so

@@ -1,0 +1,789 @@
+import 'dart:io';
+
+import 'package:path/path.dart' as p;
+import 'package:remix_cli/src/registry.dart';
+import 'package:remix_cli/src/template_renderer.dart';
+import 'package:test/test.dart';
+
+void main() {
+  test('bundledPresets matches the preset trees on disk', () {
+    // `dart test` runs with the package root as the current directory.
+    final onDisk = Directory(p.join('lib', 'src', 'registry'))
+        .listSync()
+        .whereType<Directory>()
+        .map((directory) => p.basename(directory.path))
+        .toSet();
+
+    // bundledPresets gates both loadBundled and `--preset` validation, so a
+    // tree shipped without an entry here is unreachable behind "Unknown
+    // preset", and an entry without a tree fails only once someone selects it.
+    expect(onDisk, bundledPresets);
+  });
+
+  test(
+    'bundled registry resolves theme before button and loads assets',
+    () async {
+      final catalog = await RegistryCatalog.loadBundled(preset: 'default');
+
+      expect(catalog.preset, 'default');
+      expect(catalog.resolve('button').map((item) => item.name), [
+        'theme',
+        'button',
+      ]);
+      final button = catalog.items['button']!;
+      final source = await catalog.readTemplate(button.files.single);
+      // The loader returns the raw template, placeholders and all.
+      expect(source, contains('@MixWidget(target: RemixButton.new)'));
+      expect(source, contains('{{valuePrefix}}ButtonStyle'));
+    },
+  );
+
+  test('Fortal registry loads its inferred dependency graph', () async {
+    final catalog = await RegistryCatalog.loadBundled(preset: 'fortal');
+
+    expect(catalog.preset, 'fortal');
+    expect(catalog.resolve('button').map((item) => item.name), [
+      'theme',
+      'base_button',
+      'button',
+    ]);
+    expect(catalog.items['data_table']!.registryDependencies, [
+      'theme',
+      'checkbox',
+      'icon_button',
+      'select',
+    ]);
+    expect(catalog.resolve('data_table').map((item) => item.name), [
+      'theme',
+      'checkbox',
+      'base_button',
+      'icon_button',
+      'select',
+      'data_table',
+    ]);
+    expect(catalog.items['theme']!.files, hasLength(8));
+    expect(catalog.items['theme']!.exports, ['theme/theme.dart']);
+
+    // sidebar_layout composes an already-installed sidebar into its row and
+    // compact sheet without ever importing components/sidebar.dart (its
+    // `sidebar` field stays generically typed as `Widget`), so this
+    // dependency comes from build_registry.dart's manual override, not
+    // from import inference. Regression coverage for that gap: a fresh
+    // `remix add sidebar_layout` on the fortal preset must still pull in a
+    // working Sidebar, matching the default preset's registry.yaml.
+    expect(catalog.items['sidebar_layout']!.registryDependencies, [
+      'theme',
+      'sidebar',
+    ]);
+    expect(catalog.resolve('sidebar_layout').map((item) => item.name), [
+      'theme',
+      'typography',
+      'text',
+      'toggle',
+      'tooltip',
+      'sidebar',
+      'sidebar_layout',
+    ]);
+
+    final button = catalog.items['button']!;
+    final source = await catalog.readTemplate(button.files.single);
+    expect(source, contains('{{typePrefix}}Button'));
+    expect(source, isNot(contains('remix_fortal')));
+  });
+
+  test('unknown preset fails before reading an asset and lists bundles', () {
+    expect(
+      RegistryCatalog.loadBundled(
+        preset: 'missing',
+        loader: const _NoopLoader(),
+      ),
+      throwsA(
+        isA<FormatException>().having(
+          (error) => error.message,
+          'message',
+          allOf(contains('missing'), contains('default'), contains('fortal')),
+        ),
+      ),
+    );
+  });
+
+  test('unknown item error identifies its preset', () {
+    final catalog = parse('''schema: 1
+items:
+  button:
+    files:
+      - source: templates/button.dart.tmpl
+        target: "@ui/button.dart"
+''');
+
+    expect(
+      () => catalog.resolve('missing'),
+      throwsA(
+        isA<FormatException>().having(
+          (error) => error.message,
+          'message',
+          contains('test preset'),
+        ),
+      ),
+    );
+  });
+
+  test(
+    'chart is a theme-only extension backed directly by mix_chart',
+    () async {
+      final catalog = await RegistryCatalog.loadBundled(preset: 'default');
+      final chart = catalog.items['chart']!;
+      final source = await catalog.readTemplate(chart.files.single);
+
+      expect(catalog.resolve('chart').map((item) => item.name), [
+        'theme',
+        'chart',
+      ]);
+      expect(chart.dependencies.keys, {'mix_annotations', 'mix_chart'});
+      expect('${chart.dependencies['mix_chart']}', '^0.0.1-beta.1');
+      expect(source, contains("import 'package:mix_chart/mix_chart.dart';"));
+      expect(source, isNot(contains('remix_fortal')));
+      expect(
+        RegExp(
+          r'^@MixWidget\(target: (?:Line|Bar|Pie)Chart\.new\)$',
+          multiLine: true,
+        ).allMatches(source),
+        hasLength(3),
+      );
+    },
+  );
+
+  test('template prose states the theme vocabulary\'s real size', () async {
+    final catalog = await RegistryCatalog.loadBundled(preset: 'default');
+
+    // The real size is one required parameter per token on the theme data
+    // constructor. Counting `required this.` is enough: the template declares
+    // them nowhere else.
+    final themeData = catalog.items['theme']!.files.singleWhere(
+      (file) => file.source.endsWith('theme_data.dart.tmpl'),
+    );
+    final tokenCount = RegExp(
+      r'^\s+required this\.',
+      multiLine: true,
+    ).allMatches(await catalog.readTemplate(themeData)).length;
+    expect(tokenCount, 20);
+
+    // Two templates state that size in prose, and templates are copied verbatim
+    // into consumer source. `chart1`-`chart5` were added for the chart item and
+    // both sentences stayed at fifteen, because nothing compared them.
+    const spellings = {
+      15: 'fifteen',
+      16: 'sixteen',
+      17: 'seventeen',
+      18: 'eighteen',
+      19: 'nineteen',
+      20: 'twenty',
+    };
+    final expected = spellings[tokenCount];
+    expect(expected, isNotNull, reason: 'spell $tokenCount in `spellings`');
+    final spelled = RegExp('\\b(${spellings.values.join('|')})\\b');
+
+    for (final name in const ['card', 'textfield']) {
+      final source = await catalog.readTemplate(
+        catalog.items[name]!.files.single,
+      );
+      expect(
+        spelled.allMatches(source).map((match) => match[1]).toSet(),
+        {expected},
+        reason:
+            "$name's prose must say the vocabulary has $tokenCount tokens, and "
+            'say it once',
+      );
+    }
+  });
+
+  test(
+    'sidebar_layout is a plain layout with no Spec or generated adapter',
+    () async {
+      final catalog = await RegistryCatalog.loadBundled(preset: 'default');
+      final item = catalog.items['sidebar_layout']!;
+
+      expect(item.registryDependencies, ['theme', 'sidebar']);
+      expect(item.dependencies, isEmpty);
+      expect(item.devDependencies, isEmpty);
+      expect(item.generated, isEmpty);
+
+      final source = await catalog.readTemplate(item.files.single);
+      expect(source, isNot(contains('part \'')));
+      expect(source, isNot(contains('@MixWidget')));
+      expect(source, isNot(contains('package:flutter/material.dart')));
+
+      for (final prefix in const [
+        (type: 'Acme', value: 'acme'),
+        (type: 'Ui', value: 'ui'),
+      ]) {
+        final rendered = const TemplateRenderer().render(
+          source,
+          typePrefix: prefix.type,
+          valuePrefix: prefix.value,
+        );
+        expect(
+          rendered,
+          contains('class ${prefix.type}SidebarLayout extends StatefulWidget'),
+        );
+        expect(
+          rendered,
+          contains(
+            'class ${prefix.type}SidebarLayoutScope extends InheritedWidget',
+          ),
+        );
+        expect(rendered, isNot(contains('{{')));
+        expect(rendered, isNot(contains('}}')));
+      }
+    },
+  );
+
+  test(
+    'dashboard_shell is a grouped, independently installable recipe',
+    () async {
+      for (final preset in const ['default', 'fortal']) {
+        final catalog = await RegistryCatalog.loadBundled(preset: preset);
+        final item = catalog.items['dashboard_shell']!;
+        final closure = catalog
+            .resolve('dashboard_shell')
+            .map((dependency) => dependency.name)
+            .toList();
+
+        expect(item.files, hasLength(2), reason: preset);
+        expect(item.generated, isEmpty, reason: preset);
+        expect(item.exports, ['recipes/dashboard/dashboard_shell.dart']);
+        expect(closure.last, 'dashboard_shell');
+        expect(closure, containsAll(['sidebar', 'sidebar_layout']));
+        expect(
+          closure,
+          everyElement(
+            isNot(
+              anyOf(equals('chart'), equals('data_table'), equals('activity')),
+            ),
+          ),
+        );
+
+        final sources = <String>[];
+        for (final file in item.files) {
+          sources.add(await catalog.readTemplate(file));
+        }
+        final joined = sources.join('\n');
+        expect(joined, contains('class {{typePrefix}}DashboardShell'));
+        expect(joined, isNot(contains('package:flutter/material.dart')));
+        expect(joined, isNot(contains('registry_source')));
+      }
+    },
+  );
+
+  test(
+    'dashboard_demo is a complete grouped starter in both presets',
+    () async {
+      for (final preset in const ['default', 'fortal']) {
+        final catalog = await RegistryCatalog.loadBundled(preset: preset);
+        final item = catalog.items['dashboard_demo']!;
+        final closure = catalog
+            .resolve('dashboard_demo')
+            .map((dependency) => dependency.name)
+            .toList();
+
+        expect(
+          item.files,
+          hasLength(preset == 'default' ? 12 : 22),
+          reason: preset,
+        );
+        expect(item.generated, isEmpty, reason: preset);
+        expect(item.exports, [
+          'recipes/dashboard/dashboard_sample_data.dart',
+          'recipes/dashboard/dashboard_overview.dart',
+          'recipes/dashboard/dashboard_demo.dart',
+        ]);
+        expect(closure.last, 'dashboard_demo');
+        expect(
+          closure,
+          containsAll(['dashboard_shell', 'card', 'chart', 'data_table']),
+        );
+        expect(closure, containsAll(_agentRecipeNames));
+
+        final joined = (await Future.wait(
+          item.files.map(catalog.readTemplate),
+        )).join('\n');
+        expect(joined, contains('class {{typePrefix}}DashboardDemo'));
+        expect(joined, contains('enum {{typePrefix}}DashboardDemoPage'));
+        expect(joined, contains('class {{typePrefix}}DashboardOverview'));
+        expect(joined, contains('{{valuePrefix}}DashboardSampleData'));
+        expect(joined, contains('{{typePrefix}}DashboardChatPage'));
+        expect(joined, contains('{{typePrefix}}Message('));
+        expect(joined, contains("import '../../components/message.dart';"));
+        expect(joined, isNot(contains('package:flutter/material.dart')));
+        expect(joined, isNot(contains('registry_source')));
+      }
+    },
+  );
+
+  test(
+    'dependency resolution de-duplicates in stable dependency-first order',
+    () {
+      final catalog = parse('''schema: 1
+items:
+  foundation:
+    files:
+      - source: templates/foundation.dart.tmpl
+        target: "@ui/foundation.dart"
+  theme:
+    registryDependencies: [foundation]
+    files:
+      - source: templates/theme.dart.tmpl
+        target: "@ui/theme.dart"
+  button:
+    registryDependencies: [foundation, theme]
+    files:
+      - source: templates/button.dart.tmpl
+        target: "@ui/button.dart"
+''');
+
+      expect(catalog.resolve('button').map((item) => item.name), [
+        'foundation',
+        'theme',
+        'button',
+      ]);
+    },
+  );
+
+  test('rejects schema, key, path, and constraint failures', () {
+    final invalid = <String>[
+      'schema: 2\nitems: {}\n',
+      'schema: 1\nitems: {}\nextra: true\n',
+      '''schema: 1
+items:
+  button:
+    unknown: true
+    files:
+      - source: templates/button.dart.tmpl
+        target: "@ui/button.dart"
+''',
+      '''schema: 1
+items:
+  button:
+    files:
+      - source: ../button.dart.tmpl
+        target: "@ui/button.dart"
+''',
+      '''schema: 1
+items:
+  button:
+    files:
+      - source: templates/button.dart.tmpl
+        target: "../button.dart"
+''',
+      '''schema: 1
+items:
+  button:
+    dependencies:
+      remix: not a constraint!
+    files:
+      - source: templates/button.dart.tmpl
+        target: "@ui/button.dart"
+''',
+      '''schema: 1
+items:
+  button:
+    generated: ["/button.g.dart"]
+    files:
+      - source: templates/button.dart.tmpl
+        target: "@ui/button.dart"
+''',
+      '''schema: 1
+items:
+  button:
+    exports: ["../button.dart"]
+    files:
+      - source: templates/button.dart.tmpl
+        target: "@ui/button.dart"
+''',
+    ];
+
+    for (final source in invalid) {
+      expect(() => parse(source), throwsFormatException, reason: source);
+    }
+  });
+
+  test(
+    'rejects duplicate dependencies, missing items, cycles, and collisions',
+    () {
+      final invalid = <String>[
+        '''schema: 1
+items:
+  button:
+    registryDependencies: [theme, theme]
+    files:
+      - source: templates/button.dart.tmpl
+        target: "@ui/button.dart"
+  theme:
+    files:
+      - source: templates/theme.dart.tmpl
+        target: "@ui/theme.dart"
+''',
+        '''schema: 1
+items:
+  button:
+    registryDependencies: [theme]
+    files:
+      - source: templates/button.dart.tmpl
+        target: "@ui/button.dart"
+''',
+        '''schema: 1
+items:
+  button:
+    registryDependencies: [theme]
+    files:
+      - source: templates/button.dart.tmpl
+        target: "@ui/button.dart"
+  theme:
+    registryDependencies: [button]
+    files:
+      - source: templates/theme.dart.tmpl
+        target: "@ui/theme.dart"
+''',
+        '''schema: 1
+items:
+  first:
+    files:
+      - source: templates/first.dart.tmpl
+        target: "@ui/same.dart"
+  second:
+    files:
+      - source: templates/second.dart.tmpl
+        target: "@ui/same.dart"
+''',
+        '''schema: 1
+items:
+  first:
+    files:
+      - source: templates/first.dart.tmpl
+        target: "@ui/same.dart"
+  second:
+    generated: ["@ui/same.dart"]
+    files:
+      - source: templates/second.dart.tmpl
+        target: "@ui/second.dart"
+''',
+      ];
+
+      for (final source in invalid) {
+        expect(() => parse(source), throwsFormatException, reason: source);
+      }
+    },
+  );
+
+  test(
+    'every item resolves its foundations and owns its expected files',
+    () async {
+      final catalog = await RegistryCatalog.loadBundled(preset: 'default');
+
+      // Both directions. Checking only that each listed name exists would let a
+      // new registry item ship with no surface pinned and no rendering asserted.
+      expect(catalog.items.keys.toSet(), {
+        'theme',
+        'models',
+        'support',
+        ..._componentSurfaces.keys,
+        ..._agentSurfaces.keys,
+        ..._agentRecipeNames,
+        'dashboard_demo',
+        'dashboard_shell',
+      });
+
+      for (final name in [..._componentSurfaces.keys, ..._agentSurfaces.keys]) {
+        final item = catalog.items[name];
+        expect(item, isNotNull, reason: name);
+        // Agent model foundations can precede theme. Every component still
+        // reaches the single Remix floor through theme, in dependency order.
+        expect(catalog.resolve(name).map((item) => item.name), switch (name) {
+          'composer' || 'transcript' => ['theme', 'support', name],
+          'activity' ||
+          'answer' ||
+          'execution' ||
+          'message' ||
+          'permission' ||
+          'plan' => ['models', 'theme', 'support', name],
+          'data_table' => ['theme', 'checkbox', 'icon_button', 'select', name],
+          'sidebar' => ['theme', 'toggle', 'tooltip', name],
+          'sidebar_layout' => ['theme', 'toggle', 'tooltip', 'sidebar', name],
+          'toast' => ['theme', 'button', 'icon_button', name],
+          _ => ['theme', name],
+        }, reason: name);
+        if (name == 'icons') {
+          expect(item!.files.single.target, '@ui/icons.dart');
+          expect(item.generated, isEmpty);
+          expect(item.exports, ['icons.dart']);
+        } else if (name == 'sidebar_layout') {
+          // A layout, not a styled component: no Spec, no generated adapter.
+          expect(item!.files.single.target, '@ui/components/$name.dart');
+          expect(item.generated, isEmpty);
+          expect(item.exports, ['components/$name.dart']);
+        } else {
+          expect(item!.files.single.target, '@ui/components/$name.dart');
+          expect(item.generated, ['@ui/components/$name.g.dart']);
+          expect(item.exports, ['components/$name.dart']);
+        }
+      }
+      for (final name in _agentRecipeNames) {
+        final item = catalog.items[name]!;
+        expect(item.files.single.target, '@ui/recipes/$name.dart');
+        expect(item.generated, isEmpty);
+        expect(item.exports, ['recipes/$name.dart']);
+        expect(catalog.resolve(name).map((item) => item.name), contains(name));
+      }
+    },
+  );
+
+  test(
+    'Agent foundations export only public models and preserve source layout',
+    () async {
+      final catalog = await RegistryCatalog.loadBundled(preset: 'default');
+      expect(catalog.items['models']!.files.map((file) => file.target), [
+        '@ui/models/activity_item.dart',
+        '@ui/models/plan_item.dart',
+        '@ui/models/statuses.dart',
+      ]);
+      expect(catalog.items['support']!.files.map((file) => file.target), [
+        '@ui/support/disclosure.dart',
+        '@ui/support/functional_glyph.dart',
+        '@ui/support/live_edge.dart',
+      ]);
+      expect(catalog.items['support']!.exports, isEmpty);
+      expect(catalog.items['models']!.exports, [
+        'models/activity_item.dart',
+        'models/plan_item.dart',
+        'models/statuses.dart',
+      ]);
+      for (final entry in _agentSurfaces.entries) {
+        final source = await catalog.readTemplate(
+          catalog.items[entry.key]!.files.single,
+        );
+        for (final prefix in ['Acme', 'Ui']) {
+          final rendered = const TemplateRenderer().render(
+            source,
+            typePrefix: prefix,
+            valuePrefix: prefix.toLowerCase(),
+          );
+          for (final widget in entry.value) {
+            expect(
+              rendered,
+              contains(
+                RegExp('^class $prefix$widget extends ', multiLine: true),
+              ),
+            );
+          }
+        }
+      }
+    },
+  );
+
+  test('both prefixes render every configured public surface', () async {
+    final catalog = await RegistryCatalog.loadBundled(preset: 'default');
+
+    for (final entry in _componentSurfaces.entries) {
+      final source = await catalog.readTemplate(
+        catalog.items[entry.key]!.files.single,
+      );
+
+      for (final prefix in const [
+        (type: 'Acme', value: 'acme'),
+        (type: 'Ui', value: 'ui'),
+      ]) {
+        final rendered = const TemplateRenderer().render(
+          source,
+          typePrefix: prefix.type,
+          valuePrefix: prefix.value,
+        );
+        final reason = '${entry.key}/${prefix.type}';
+
+        for (final widget in entry.value.widgets) {
+          // The recipe is what the generator reads the widget name from, so
+          // this is the widget's name too. Matched as a declaration rather
+          // than a bare substring, because the templates mention their own
+          // identifiers in prose and a doc comment must not satisfy this.
+          expect(
+            rendered,
+            contains(
+              RegExp('^\\w+ ${prefix.value}${widget}Style\\(', multiLine: true),
+            ),
+            reason: '$reason: ${prefix.type}$widget',
+          );
+        }
+        for (final type in entry.value.types) {
+          expect(
+            rendered,
+            contains(RegExp('^enum ${prefix.type}$type ', multiLine: true)),
+            reason: '$reason: $type',
+          );
+        }
+        if (entry.key == 'icons') {
+          expect(
+            rendered,
+            contains('abstract final class ${prefix.type}Icons'),
+            reason: reason,
+          );
+        }
+        expect(rendered, isNot(contains('{{')), reason: reason);
+        expect(rendered, isNot(contains('}}')), reason: reason);
+      }
+    }
+  });
+
+  test('both presets render prefixed Agent recipe bundles', () async {
+    for (final preset in ['default', 'fortal']) {
+      final catalog = await RegistryCatalog.loadBundled(preset: preset);
+      for (final name in _agentRecipeNames) {
+        final source = await catalog.readTemplate(
+          catalog.items[name]!.files.single,
+        );
+        final rendered = const TemplateRenderer().render(
+          source,
+          typePrefix: 'Acme',
+          valuePrefix: 'acme',
+        );
+        final component = name.split('_').first;
+        final type = '${component[0].toUpperCase()}${component.substring(1)}';
+        expect(rendered, contains('class AcmeAgent${type}Recipe'));
+        expect(rendered, contains('acmeAgent${type}Recipe('));
+        expect(rendered, isNot(contains('package:remix_agent')));
+      }
+    }
+  });
+
+  test('bundled templates stay inside the allowed import boundary', () async {
+    final catalog = await RegistryCatalog.loadBundled(preset: 'default');
+    const allowedPackages = {
+      'flutter',
+      'remix',
+      'mix_annotations',
+      'mix_chart',
+      'remix_ui_icons',
+    };
+    final directive = RegExp(r'''(?:import|export|part)\s+['"]([^'"]+)['"]''');
+
+    for (final item in catalog.items.values) {
+      for (final file in item.files) {
+        final source = await catalog.readTemplate(file);
+        for (final match in directive.allMatches(source)) {
+          final uri = match.group(1)!;
+          if (uri.startsWith('package:')) {
+            expect(
+              allowedPackages,
+              contains(uri.substring(8).split('/').first),
+              reason: '${file.source}: $uri',
+            );
+          } else if (!uri.startsWith('dart:')) {
+            expect(uri, isNot(startsWith('/')), reason: file.source);
+            final resolved = p.posix.normalize(
+              p.posix.join(
+                p.posix.dirname(file.target.substring(uiTargetPrefix.length)),
+                uri,
+              ),
+            );
+            expect(resolved, isNot(startsWith('../')), reason: file.source);
+          }
+        }
+      }
+    }
+  });
+}
+
+/// The public surface each component template must publish.
+///
+/// `widgets` are the adapters `@MixWidget` generates. Their names are not
+/// written anywhere: the generator drops a trailing `Style` from the recipe
+/// function's own name and capitalises what is left, so `uiTabBarStyle`
+/// produces `UiTabBar`. Pinning the recipe name therefore pins the widget
+/// name, and the test below asserts exactly that derivation rather than
+/// searching for a string that no longer appears in the template.
+///
+/// `types` are the enums and other names written with the type prefix.
+///
+/// Renaming or dropping any of these breaks a consumer's source, so they are
+/// pinned here rather than left to the fixture, which only ever sees the
+/// `Acme` rendering.
+const _componentSurfaces =
+    <String, ({List<String> widgets, List<String> types})>{
+      'icons': (widgets: [], types: []),
+      'accordion': (widgets: ['Accordion'], types: []),
+      'avatar': (widgets: ['Avatar'], types: []),
+      'badge': (widgets: ['Badge'], types: ['BadgeVariant']),
+      'button': (widgets: ['Button'], types: ['ButtonVariant', 'ButtonSize']),
+      'callout': (widgets: ['Callout'], types: ['CalloutVariant']),
+      'card': (widgets: ['Card'], types: []),
+      'chart': (widgets: ['LineChart', 'BarChart', 'PieChart'], types: []),
+      'checkbox': (widgets: ['Checkbox', 'CheckboxGroupItem'], types: []),
+      'data_list': (widgets: ['DataList'], types: []),
+      'data_table': (widgets: ['DataTable'], types: []),
+      'dialog': (widgets: ['Dialog'], types: []),
+      'disclosure': (widgets: ['Disclosure'], types: []),
+      'divider': (widgets: ['Divider'], types: []),
+      'icon_button': (
+        widgets: ['IconButton'],
+        types: ['IconButtonVariant', 'IconButtonSize'],
+      ),
+      'link': (widgets: ['Link'], types: []),
+      'menu': (widgets: ['Menu'], types: []),
+      'popover': (widgets: ['Popover'], types: []),
+      'progress': (widgets: ['Progress'], types: []),
+      'radio': (widgets: ['Radio'], types: []),
+      'segmented_control': (widgets: ['SegmentedControl'], types: []),
+      'select': (widgets: ['Select'], types: []),
+      'sidebar': (widgets: ['Sidebar'], types: []),
+      // A layout, not a styled component: it has no `@MixWidget` recipe
+      // function, so it contributes no widgets or types here. Its own class
+      // declaration is pinned separately below.
+      'sidebar_layout': (widgets: [], types: []),
+      'skeleton': (widgets: ['Skeleton'], types: []),
+      'slider': (widgets: ['Slider'], types: []),
+      'spinner': (widgets: ['Spinner'], types: []),
+      'switch': (widgets: ['Switch'], types: []),
+      'tabs': (widgets: ['TabBar', 'Tab', 'TabView'], types: []),
+      'textfield': (widgets: ['TextField', 'TextArea'], types: []),
+      'toast': (widgets: ['Toast'], types: ['ToastVariant']),
+      'toggle': (widgets: ['Toggle'], types: ['ToggleVariant', 'ToggleSize']),
+      'tooltip': (widgets: ['Tooltip'], types: []),
+      'toggle_group': (
+        widgets: ['ToggleGroup'],
+        types: ['ToggleGroupVariant', 'ToggleGroupSize'],
+      ),
+    };
+
+RegistryCatalog parse(String source) => RegistryCatalog.parse(
+  source,
+  preset: 'test',
+  rootUri: Uri.parse('package:remix_cli/src/registry/test/'),
+  loader: const _NoopLoader(),
+);
+
+final class _NoopLoader implements RegistryAssetLoader {
+  const _NoopLoader();
+
+  @override
+  Future<String> read(Uri uri) => throw StateError('Unexpected read of $uri');
+}
+
+const _agentRecipeNames = <String>{
+  'activity_recipe',
+  'answer_recipe',
+  'composer_recipe',
+  'execution_recipe',
+  'message_recipe',
+  'permission_recipe',
+  'plan_recipe',
+  'transcript_recipe',
+};
+
+const _agentSurfaces = <String, List<String>>{
+  'activity': ['Activity'],
+  'answer': ['Answer'],
+  'composer': ['Composer'],
+  'execution': ['Execution'],
+  'message': ['Message', 'MessageGroup', 'MessageCollapsible'],
+  'permission': ['Permission'],
+  'plan': ['Plan'],
+  'transcript': ['Transcript'],
+};

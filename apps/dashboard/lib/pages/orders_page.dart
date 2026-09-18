@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import '../ui/ui.dart';
 
 import '../data/models.dart';
 import '../data/orders.dart';
@@ -11,7 +11,6 @@ import '../widgets/data_table_cell_text.dart';
 import '../widgets/empty_state.dart';
 import '../widgets/page_header.dart';
 import '../widgets/status_badge.dart';
-import '../widgets/toast.dart';
 
 enum _OrderFilter { all, paid, pending, refunded, cancelled }
 
@@ -59,9 +58,14 @@ class _OrdersPageState extends State<OrdersPage> {
           PageHeader(
             title: 'Orders',
             description: 'Review transactions and fulfillment status.',
-            actions: FortalButton(
-              onPressed: () =>
-                  showToast(context, message: 'Order export prepared'),
+            actions: UiButton(
+              onPressed: () => showRemixToast(
+                context,
+                RemixToastData(
+                  title: 'Order export prepared',
+                  icon: Icons.check_circle_outline,
+                ),
+              ),
               label: 'Export',
               leadingIcon: Icons.download_outlined,
             ),
@@ -70,7 +74,7 @@ class _OrdersPageState extends State<OrdersPage> {
             alignment: .centerLeft,
             child: SingleChildScrollView(
               scrollDirection: .horizontal,
-              child: FortalSegmentedControl<_OrderFilter>(
+              child: UiSegmentedControl<_OrderFilter>(
                 semanticLabel: 'Filter orders by status',
                 selectedValue: _filter,
                 items: const [
@@ -93,7 +97,7 @@ class _OrdersPageState extends State<OrdersPage> {
               ),
             ),
           ),
-          FortalDataTable<Order>.surface(
+          UiDataTable<Order>.surface(
             key: const ValueKey('data-grid-orders'),
             rows: visible,
             columns: _columns,
@@ -157,7 +161,7 @@ class _OrdersPageState extends State<OrdersPage> {
       id: 'amount',
       label: 'Amount',
       width: const FixedColumnWidth(120),
-      alignment: .end,
+      alignment: AlignmentDirectional.centerEnd,
       sortable: true,
       cellBuilder: (_, order) => DataTableCellText(
         '\$${order.amount.toStringAsFixed(2)}',
@@ -175,7 +179,7 @@ class _OrdersPageState extends State<OrdersPage> {
       header: const SizedBox.shrink(),
       semanticLabel: 'Actions',
       width: const FixedColumnWidth(64),
-      alignment: .end,
+      alignment: AlignmentDirectional.centerEnd,
       cellBuilder: (context, order) => DashboardActionMenu(
         key: ValueKey('order-actions-${order.id}'),
         semanticLabel: 'Actions for ${order.id}',
@@ -190,8 +194,13 @@ class _OrdersPageState extends State<OrdersPage> {
             dividerBefore: true,
           ),
         ],
-        onSelected: (value) =>
-            showToast(context, message: '$value selected for ${order.id}'),
+        onSelected: (value) => showRemixToast(
+          context,
+          RemixToastData(
+            title: '$value selected for ${order.id}',
+            icon: Icons.check_circle_outline,
+          ),
+        ),
       ),
     ),
   ];

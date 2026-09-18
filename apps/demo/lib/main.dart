@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart' hide Scaffold;
-import 'package:remix_fortal/remix_fortal.dart';
+import 'package:demo/ui/ui.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
@@ -24,7 +24,6 @@ class HotReload extends StatelessWidget {
 }
 
 class FortalThemeAddon extends ThemeAddon<ThemeData> {
-  /// Creates a new instance of [MaterialThemeAddon].
   FortalThemeAddon()
     : super(
         themes: [

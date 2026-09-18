@@ -37,7 +37,7 @@ and cell editing are out of scope.
 ```dart
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import 'ui/ui.dart';
 
 class Person {
   const Person(this.id, this.name, this.role);
@@ -90,7 +90,7 @@ reorders the rows it was given.
 ```dart
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import 'ui/ui.dart';
 
 class SortableTableExample extends StatefulWidget {
   const SortableTableExample({super.key, required this.names});
@@ -146,7 +146,7 @@ scoped to the visible page and preserves selections made on other pages.
 ```dart
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import 'ui/ui.dart';
 
 class PagedTableExample extends StatefulWidget {
   const PagedTableExample({super.key, required this.allRows});
@@ -204,7 +204,7 @@ body rows while the column header and pagination footer stay in place.
 ```dart
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import 'ui/ui.dart';
 
 class ActionCellExample extends StatelessWidget {
   const ActionCellExample({super.key, required this.rows});
@@ -230,7 +230,7 @@ class ActionCellExample extends StatelessWidget {
           header: const SizedBox.shrink(),
           semanticLabel: 'Actions',
           width: const FixedColumnWidth(72),
-          alignment: RemixDataTableCellAlignment.end,
+          alignment: AlignmentDirectional.centerEnd,
           cellBuilder: (context, row) => FortalIconButton.ghost(
             icon: Icons.more_horiz,
             semanticLabel: 'Actions for $row',
@@ -256,7 +256,7 @@ range without a Material host. `start` and `end` alignments follow
 ```dart
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import 'ui/ui.dart';
 
 class LocalizedTableExample extends StatelessWidget {
   const LocalizedTableExample({super.key, required this.rows});
@@ -420,9 +420,12 @@ Accessible name of the column header. Defaults to `label`.
 Optional. Width shared by this column's header and body cells. Defaults to
 `FlexColumnWidth()`.
 
-#### `alignment` → `RemixDataTableCellAlignment`
+#### `alignment` → `AlignmentGeometry`
 
-Optional. Directional placement of this column's content. Defaults to `start`.
+Optional. Position of this column's content. Defaults to
+`AlignmentDirectional.centerStart`. Any `AlignmentGeometry` is accepted, including
+vertical positions such as `Alignment.bottomLeft`. Physical `Alignment` values
+stay fixed in RTL; `AlignmentDirectional` values follow text direction.
 
 #### `sortable` → `bool`
 
@@ -490,3 +493,6 @@ Applies widget modifiers such as clipping, opacity, or scaling.
 #### `animate(AnimationConfig value)`
 
 Configures implicit animation for style transitions.
+
+See the [alignment API migration table](/components/dialog#alignment-api-migration)
+for source-breaking type replacements.

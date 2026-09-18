@@ -8,17 +8,54 @@ import '../../helpers/test_helpers.dart';
 import '../../helpers/test_methods.dart';
 
 void main() {
+  for (final direction in TextDirection.values) {
+    for (final placement in <RemixPlacement?>[null, ...RemixPlacement.values]) {
+      for (final icons in ['leading', 'trailing', 'both']) {
+        testWidgets('button $icons placement $placement in $direction', (
+          tester,
+        ) async {
+          await tester.pumpRemixApp(
+            Directionality(
+              textDirection: direction,
+              child: RemixButton(
+                label: 'Label',
+                leadingIcon: icons != 'trailing' ? Icons.add : null,
+                trailingIcon: icons != 'leading' ? Icons.remove : null,
+                style: ButtonStyler(iconAlignment: placement),
+                onPressed: () {},
+              ),
+            ),
+          );
+          final label = tester.getCenter(find.text('Label')).dx;
+          for (final icon in [
+            if (icons != 'trailing') Icons.add,
+            if (icons != 'leading') Icons.remove,
+          ]) {
+            final start = icons == 'both'
+                ? icon == Icons.add
+                : (placement ??
+                          (icons == 'leading'
+                              ? RemixPlacement.start
+                              : RemixPlacement.end)) ==
+                      RemixPlacement.start;
+            final left = start == (direction == TextDirection.ltr);
+            expect(
+              tester.getCenter(find.byIcon(icon)).dx,
+              left ? lessThan(label) : greaterThan(label),
+            );
+          }
+        });
+      }
+    }
+  }
+
   group('RemixButton Widget Tests', () {
     group('Basic Rendering', () {
       testWidgets('renders button with label only', (tester) async {
         await tester.pumpRemixApp(RemixButton(label: 'Click Me'));
 
         await tester.pumpAndSettle();
-
-        // Verify text is rendered
         expect(find.text('Click Me'), findsOneWidget);
-
-        // Verify NakedButton is used internally
         expect(find.byType(NakedButton), findsOneWidget);
       });
 
@@ -28,8 +65,6 @@ void main() {
         );
 
         await tester.pumpAndSettle();
-
-        // Verify both text and icon are rendered
         expect(find.text('Save'), findsOneWidget);
         expect(find.byIcon(Icons.save), findsOneWidget);
       });
@@ -127,12 +162,8 @@ void main() {
         );
 
         await tester.pumpAndSettle();
-
-        // Verify custom text widget is rendered
         expect(find.byKey(const ValueKey('custom_text')), findsOneWidget);
         expect(find.text('Custom: Original Label'), findsOneWidget);
-
-        // Verify original label is not rendered as StyledText
         expect(find.text('Original Label'), findsNothing);
       });
 
@@ -152,11 +183,7 @@ void main() {
         );
 
         await tester.pumpAndSettle();
-
-        // Verify custom icon widget is rendered
         expect(find.byKey(const ValueKey('custom_icon')), findsOneWidget);
-
-        // Verify icon has custom color
         final icon = tester.widget<Icon>(find.byIcon(Icons.star));
         expect(icon.color, equals(Colors.red));
       });
@@ -180,12 +207,8 @@ void main() {
 
         await tester
             .pump(); // Use pump() instead of pumpAndSettle() to avoid timeout
-
-        // Verify custom loading widget is rendered
         expect(find.byKey(const ValueKey('custom_loading')), findsOneWidget);
         expect(find.byType(CircularProgressIndicator), findsOneWidget);
-
-        // Verify default spinner is not rendered
         expect(find.byType(RemixSpinner), findsNothing);
       });
 
@@ -216,8 +239,6 @@ void main() {
         );
 
         await tester.pumpAndSettle();
-
-        // Verify builders received correct spec parameters
         expect(receivedTextSpec, isNotNull);
         expect(receivedIconSpec, isNotNull);
         expect(receivedSpinnerSpec, isNotNull);
@@ -239,11 +260,7 @@ void main() {
 
         await tester
             .pump(); // Use pump() instead of pumpAndSettle() to avoid timeout
-
-        // Verify spinner is present
         expect(find.byType(RemixSpinner), findsOneWidget);
-
-        // Verify content is hidden but maintains size
         final VisibilityWidgets = tester.widgetList<Visibility>(
           find.byType(Visibility),
         );
@@ -731,6 +748,74 @@ void main() {
           await tester.pumpAndSettle();
 
           expect(find.semantics.byLabel('Save'), findsOne);
+        } finally {
+          semantics.dispose();
+        }
+      });
+
+      // `pump`, not `pumpAndSettle`: the loading spinner animates forever, so
+      // settling never returns.
+      testWidgets('loading keeps one button and a separate live announcement', (
+        tester,
+      ) async {
+        final semantics = tester.ensureSemantics();
+        try {
+          await tester.pumpRemixApp(
+            RemixButton(
+              label: 'Save',
+              semanticHint: 'Saves the current document',
+              loading: true,
+              onPressed: () {},
+              onLongPress: () {},
+            ),
+          );
+          await tester.pump();
+
+          expect(collectButtons(tester), hasLength(1));
+          final button = find.semantics.byLabel('Save');
+          expect(button, findsOne);
+          expect(
+            button.evaluate().single,
+            isSemantics(
+              label: 'Save',
+              hint: 'Saves the current document',
+              isButton: true,
+              hasEnabledState: true,
+              isEnabled: false,
+              hasTapAction: false,
+              hasLongPressAction: false,
+            ),
+          );
+
+          final announcement = find.semantics.byLabel('Save, loading');
+          expect(announcement, findsOne);
+          expect(
+            announcement.evaluate().single,
+            isSemantics(label: 'Save, loading', isLiveRegion: true),
+          );
+        } finally {
+          semantics.dispose();
+        }
+      });
+
+      testWidgets('excludeSemantics also hides the loading announcement', (
+        tester,
+      ) async {
+        final semantics = tester.ensureSemantics();
+        try {
+          await tester.pumpRemixApp(
+            RemixButton(
+              label: 'Save',
+              loading: true,
+              excludeSemantics: true,
+              onPressed: () {},
+            ),
+          );
+          await tester.pump();
+
+          expect(find.semantics.byLabel('Save'), findsNothing);
+          expect(find.semantics.byLabel('Save, loading'), findsNothing);
+          expect(collectButtons(tester), isEmpty);
         } finally {
           semantics.dispose();
         }

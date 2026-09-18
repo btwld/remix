@@ -1,0 +1,259 @@
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+import 'package:remix_ui_icons/remix_ui_icons.dart';
+
+import '../../components/button.dart';
+import '../../components/callout.dart';
+import '../../components/card.dart';
+import '../../components/checkbox.dart';
+import '../../components/dialog.dart';
+import '../../components/disclosure.dart';
+import '../../components/segmented_control.dart';
+import '../../components/select.dart';
+import '../../components/slider.dart';
+import '../../components/switch.dart';
+import '../../components/textfield.dart';
+import '../../theme/tokens.dart';
+
+enum _Appearance { light, dark, system }
+
+class DefaultDashboardSettingsPage extends StatefulWidget {
+  const DefaultDashboardSettingsPage({super.key});
+
+  @override
+  State<DefaultDashboardSettingsPage> createState() =>
+      _DefaultDashboardSettingsPageState();
+}
+
+class _DefaultDashboardSettingsPageState
+    extends State<DefaultDashboardSettingsPage> {
+  bool _productUpdates = true;
+  bool _weeklyDigest = false;
+  String _language = 'en';
+  _Appearance _appearance = .system;
+  double _radius = 8;
+
+  @override
+  Widget build(BuildContext context) => SingleChildScrollView(
+    padding: const EdgeInsets.all(32),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const _Text('Settings', size: 28, emphasized: true),
+        const SizedBox(height: 4),
+        const _Text(
+          'Manage your profile, preferences, and workspace.',
+          muted: true,
+        ),
+        const SizedBox(height: 20),
+        _section(
+          'Profile',
+          'This information appears across your workspace.',
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const VanillaTextField(label: 'Full name', hintText: 'Ada Chen'),
+              const SizedBox(height: 12),
+              const VanillaTextField(
+                label: 'Email address',
+                hintText: 'ada@northstar.co',
+              ),
+              const SizedBox(height: 12),
+              VanillaSelect<String>(
+                trigger: const RemixSelectTrigger(placeholder: 'Language'),
+                items: const [
+                  RemixSelectItem(value: 'en', label: 'English'),
+                  RemixSelectItem(value: 'es', label: 'Spanish'),
+                  RemixSelectItem(value: 'fr', label: 'French'),
+                ],
+                selectedValue: _language,
+                onChanged: (value) {
+                  if (value != null) setState(() => _language = value);
+                },
+              ),
+              const SizedBox(height: 16),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: VanillaButton(
+                  label: 'Save changes',
+                  onPressed: () => _toast(context, 'Profile settings saved'),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 16),
+        _section(
+          'Preferences',
+          'Choose which workspace activity reaches your inbox.',
+          Column(
+            children: [
+              _preference(
+                'Product updates',
+                'News about features and improvements.',
+                VanillaSwitch(
+                  selected: _productUpdates,
+                  semanticLabel: 'Receive product updates',
+                  onChanged: (value) => setState(() => _productUpdates = value),
+                ),
+              ),
+              const SizedBox(height: 16),
+              _preference(
+                'Weekly digest',
+                'A summary of workspace activity each Monday.',
+                VanillaCheckbox(
+                  selected: _weeklyDigest,
+                  semanticLabel: 'Receive weekly digest',
+                  onChanged: (value) =>
+                      setState(() => _weeklyDigest = value ?? false),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 16),
+        _section(
+          'Appearance',
+          'Tune the default preset theme with meaningful native values.',
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const VanillaCallout(
+                icon: RemixIcons.magicWand,
+                text: 'Changes are deterministic and remain local to the demo.',
+              ),
+              const SizedBox(height: 16),
+              const _Text('Color mode', emphasized: true),
+              const SizedBox(height: 8),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: VanillaSegmentedControl<_Appearance>(
+                  semanticLabel: 'Color mode',
+                  selectedValue: _appearance,
+                  items: const [
+                    RemixSegmentedControlItem(value: .light, label: 'Light'),
+                    RemixSegmentedControlItem(value: .dark, label: 'Dark'),
+                    RemixSegmentedControlItem(value: .system, label: 'System'),
+                  ],
+                  onChanged: (value) => setState(() => _appearance = value),
+                ),
+              ),
+              const SizedBox(height: 16),
+              _Text('Control radius · ${_radius.round()}px', emphasized: true),
+              const SizedBox(height: 8),
+              VanillaSlider(
+                value: _radius,
+                min: 0,
+                max: 16,
+                snapDivisions: 16,
+                onChanged: (value) => setState(() => _radius = value),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 16),
+        VanillaDisclosure(
+          key: const ValueKey('settings-danger-zone'),
+          semanticHint: 'Shows destructive workspace actions',
+          trigger: const _Text('Danger zone', emphasized: true),
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const _Text('Destructive workspace actions cannot be undone.'),
+              const SizedBox(height: 12),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: VanillaButton.destructive(
+                  label: 'Delete workspace',
+                  onPressed: _confirmDelete,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+
+  Future<void> _confirmDelete() async {
+    final confirmed = await showRemixDialog<bool>(
+      context: context,
+      barrierLabel: 'Dismiss',
+      builder: (dialogContext) => VanillaDialog(
+        title: 'Delete workspace?',
+        description:
+            'This demo keeps your data safe, but a real action would be permanent.',
+        actions: [
+          VanillaButton.secondary(
+            label: 'Cancel',
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+          ),
+          VanillaButton.destructive(
+            label: 'Delete',
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+          ),
+        ],
+      ),
+    );
+    if (!mounted || confirmed != true) return;
+    _toast(context, 'Demo workspace was not deleted');
+  }
+}
+
+Widget _section(String title, String description, Widget child) => VanillaCard(
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+      _Text(title, size: 17, emphasized: true),
+      const SizedBox(height: 4),
+      _Text(description, size: 13, muted: true),
+      const SizedBox(height: 16),
+      child,
+    ],
+  ),
+);
+
+Widget _preference(String title, String description, Widget trailing) => Row(
+  children: [
+    Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _Text(title, emphasized: true),
+          const SizedBox(height: 2),
+          _Text(description, size: 13, muted: true),
+        ],
+      ),
+    ),
+    trailing,
+  ],
+);
+
+class _Text extends StatelessWidget {
+  const _Text(
+    this.value, {
+    this.size = 14,
+    this.emphasized = false,
+    this.muted = false,
+  });
+  final String value;
+  final double size;
+  final bool emphasized;
+  final bool muted;
+
+  @override
+  Widget build(BuildContext context) => StyledText(
+    value,
+    style: TextStyler()
+        .fontSize(size)
+        .fontWeight(emphasized ? FontWeight.w600 : FontWeight.w400)
+        .color(
+          muted ? VanillaTokens.mutedForeground() : VanillaTokens.foreground(),
+        ),
+  );
+}
+
+void _toast(BuildContext context, String title) => showRemixToast(
+  context,
+  RemixToastData(title: title, icon: RemixIcons.checkCircled),
+);

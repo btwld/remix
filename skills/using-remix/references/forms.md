@@ -1,6 +1,7 @@
 # Form Components
 
-Constructor details for Remix form controls. Fortal widgets mentioned here live in the separate `remix_fortal` package; see [Fortal](fortal.md).
+Constructor details for Remix form controls. Fortal widgets mentioned here come
+from the application-owned Fortal preset; see [Fortal](fortal.md).
 
 ## Table of Contents
 
@@ -109,6 +110,7 @@ Must be a descendant of `RemixRadioGroup<T>` (throws otherwise).
 | Parameter | Type | Default | Required |
 |-----------|------|---------|----------|
 | `value` | `T` | — | yes |
+| `semanticLabel` | `String` | — | yes (nonblank) |
 | `enabled` | `bool` | `true` | no |
 | `toggleable` | `bool` | `false` | no |
 | `autofocus` | `bool` | `false` | no |
@@ -128,7 +130,7 @@ Fortal preset: `FortalRadio<T>` — `variant` (`classic|surface|soft`), `size`
 | `enableFeedback` | `bool` | `true` | no |
 | `focusNode` | `FocusNode?` | `null` | no |
 | `autofocus` | `bool` | `false` | no |
-| `semanticLabel` | `String?` | `null` | no |
+| `semanticLabel` | `String` | — | yes (nonblank) |
 | `mouseCursor` | `MouseCursor` | `SystemMouseCursors.click` | no |
 
 Fortal preset: `FortalSwitch` — `variant` (`classic|surface|soft`), `size`
@@ -229,8 +231,7 @@ widgets:
   `enabled` (default true), `style` (a `SelectMenuItemStyler`),
   `semanticLabel`.
 
-`onChanged: null` does not disable the Select. When `enabled` is true it can
-still open for inspection; choosing an item simply does not report a change.
+Select is enabled only when `enabled` is true and `onChanged` is non-null.
 
 Fortal preset: `FortalSelect<T>` — `variant` (`surface|soft|ghost`), `size`
 (`size1–size3`). The preset includes a matching default item style; an

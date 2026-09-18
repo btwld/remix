@@ -1,6 +1,8 @@
 import 'dart:io';
 
-const _libraryPackages = ['remix', 'remix_fortal', 'remix_carbon'];
+// Repository-relative package directories whose source ships to applications,
+// either installed from the registry or resolved as a hosted dependency.
+const _consumerSourcePackages = ['packages/remix', 'registry_source'];
 
 final _forbiddenLibraryDirective = RegExp(
   r'''^\s*(?:import|export)\s+['"]package:(?:flutter/(?:material\.dart|src/material/[^'"]+)|material_ui/[^'"]+)['"]''',
@@ -21,13 +23,13 @@ void main() {
   final workspace = Directory.current.absolute;
   final failures = <String>[];
 
-  for (final package in _libraryPackages) {
-    final packageDirectory = Directory('${workspace.path}/packages/$package');
+  for (final package in _consumerSourcePackages) {
+    final packageDirectory = Directory('${workspace.path}/$package');
     final libraryDirectory = Directory('${packageDirectory.path}/lib');
     final pubspec = File('${packageDirectory.path}/pubspec.yaml');
 
     if (!libraryDirectory.existsSync() || !pubspec.existsSync()) {
-      failures.add('packages/$package is missing its lib directory or pubspec');
+      failures.add('$package is missing its lib directory or pubspec');
       continue;
     }
 
@@ -45,17 +47,18 @@ void main() {
 
     final manifest = pubspec.readAsStringSync();
     if (_materialUiDependency.hasMatch(manifest)) {
-      failures.add('packages/$package/pubspec.yaml declares material_ui');
+      failures.add('$package/pubspec.yaml declares material_ui');
     }
     if (_materialFontFlag.hasMatch(manifest)) {
-      failures.add(
-        'packages/$package/pubspec.yaml declares uses-material-design',
-      );
+      failures.add('$package/pubspec.yaml declares uses-material-design');
     }
   }
 
   if (failures.isEmpty) {
-    stdout.writeln('Remix libraries have no direct Material usage.');
+    stdout.writeln(
+      'Remix and application-owned Fortal/Agent sources have no direct Material '
+      'usage.',
+    );
     return;
   }
 

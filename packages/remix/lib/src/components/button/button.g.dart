@@ -12,7 +12,7 @@ mixin _$ButtonSpec implements Spec<ButtonSpec>, Diagnosticable {
   StyleSpec<IconSpec> get icon;
   StyleSpec<SpinnerSpec> get spinner;
   RemixBoxEffectsSpec? get containerEffects;
-  RemixIconAlignment? get iconAlignment;
+  RemixPlacement? get iconAlignment;
 
   @override
   Type get type => ButtonSpec;
@@ -24,7 +24,7 @@ mixin _$ButtonSpec implements Spec<ButtonSpec>, Diagnosticable {
     StyleSpec<IconSpec>? icon,
     StyleSpec<SpinnerSpec>? spinner,
     RemixBoxEffectsSpec? containerEffects,
-    RemixIconAlignment? iconAlignment,
+    RemixPlacement? iconAlignment,
   }) {
     return ButtonSpec(
       container: container ?? this.container,
@@ -132,7 +132,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
   final Prop<StyleSpec<IconSpec>>? $icon;
   final Prop<StyleSpec<SpinnerSpec>>? $spinner;
   final Prop<RemixBoxEffectsSpec>? $containerEffects;
-  final Prop<RemixIconAlignment>? $iconAlignment;
+  final Prop<RemixPlacement>? $iconAlignment;
 
   const ButtonStyler.create({
     Prop<StyleSpec<FlexBoxSpec>>? container,
@@ -140,7 +140,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
     Prop<StyleSpec<IconSpec>>? icon,
     Prop<StyleSpec<SpinnerSpec>>? spinner,
     Prop<RemixBoxEffectsSpec>? containerEffects,
-    Prop<RemixIconAlignment>? iconAlignment,
+    Prop<RemixPlacement>? iconAlignment,
     super.variants,
     super.modifier,
     super.animation,
@@ -157,7 +157,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
     IconStyler? icon,
     SpinnerStyler? spinner,
     RemixBoxEffectsMix? containerEffects,
-    RemixIconAlignment? iconAlignment,
+    RemixPlacement? iconAlignment,
     AnimationConfig? animation,
     WidgetModifierConfig? modifier,
     List<VariantStyle<ButtonSpec>>? variants,
@@ -181,7 +181,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
       ButtonStyler().spinner(value);
   factory ButtonStyler.containerEffects(RemixBoxEffectsMix value) =>
       ButtonStyler().containerEffects(value);
-  factory ButtonStyler.iconAlignment(RemixIconAlignment value) =>
+  factory ButtonStyler.iconAlignment(RemixPlacement value) =>
       ButtonStyler().iconAlignment(value);
   factory ButtonStyler.color(Color value) => ButtonStyler().color(value);
   factory ButtonStyler.gradient(GradientMix value) =>
@@ -746,7 +746,7 @@ class ButtonStyler extends MixStyler<ButtonStyler, ButtonSpec>
   }
 
   /// Sets the iconAlignment.
-  ButtonStyler iconAlignment(RemixIconAlignment value) {
+  ButtonStyler iconAlignment(RemixPlacement value) {
     return merge(ButtonStyler(iconAlignment: value));
   }
 

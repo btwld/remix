@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
+
 import 'controls_bar.dart';
+import 'presets.dart';
 
 class PreviewShell extends StatefulWidget {
   final Widget child;
@@ -10,7 +12,7 @@ class PreviewShell extends StatefulWidget {
   const PreviewShell({
     super.key,
     required this.child,
-    this.initialSize = const Size(375, 812),
+    this.initialSize = ViewportPresets.mobile,
     this.initialBrightness = .light,
   });
 
@@ -91,7 +93,7 @@ class _ViewportFrame extends StatelessWidget {
       ),
     );
 
-    // Note: FortalScope is applied by the component registry wrapper.
+    // Note: the theme scope is applied by the component registry wrapper.
     return Stack(
       children: [
         frame,

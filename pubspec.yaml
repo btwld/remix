@@ -5,36 +5,36 @@ environment:
 
 dev_dependencies:
   melos: ^8.5.0
-  dart_code_metrics_presets: ^2.32.0
   flutter_lints: ^6.0.0
   build_runner: ^2.10.1
   pub_semver: ^2.2.0
+  test: ^1.31.0
   yaml: ^3.1.3
 
 workspace:
   - apps/dashboard
   - apps/demo
+  - apps/naked_ui_example
   - apps/playground
-  - packages/remix_carbon
-  - packages/remix_carbon/example
+  - packages/naked_ui
   - packages/remix
-  - packages/remix_fortal
+  - packages/remix_cli
   - packages/remix_ui_icons
+  - registry_source
 
 melos:
   packages:
     - apps/*
     - packages/*
-    # `packages/*` does not cross path separators; nested workspace members
-    # must be listed explicitly or melos scripts silently skip them.
-    - packages/remix_carbon/example
+    - registry_source
 
   # No `command.bootstrap.environment` here on purpose. It rewrites one
   # `environment:` into every package it manages, and this workspace has two
-  # legitimate floors: the published libraries ship code that runs on Mix's
-  # Flutter 3.41, while the dev toolchain (analyzer, via build_runner) needs
-  # meta 1.18 and therefore Flutter 3.44. Melos offers no per-package
-  # exemption, so a single managed value could only be wrong for one group.
+  # legitimate floors: published libraries and application-owned Fortal source
+  # run on Mix's Flutter 3.41, while the dev toolchain (analyzer, via
+  # build_runner) needs meta 1.18 and therefore Flutter 3.44. Melos offers no
+  # per-package exemption, so a single managed value could only be wrong for
+  # one group.
   # tool/check_toolchain.dart owns both floors and enforces them instead.
 
   command:
@@ -44,16 +44,30 @@ melos:
       workspaceChangelog: false
 
     bootstrap:
-      # Mix floors are managed here so `remix` and `remix_fortal` cannot drift
-      # apart. Unlike `environment` above, this is safe to manage centrally:
-      # melos skips any package that does not already declare the dependency
-      # (see `_updateDependencies` in melos), so the apps keep resolving Mix
-      # transitively and never gain a direct dependency.
+      # Every dependency that more than one workspace pubspec declares takes
+      # its constraint from here, so one edit plus `dart run melos bootstrap`
+      # moves it everywhere; that keeps the Fortal authoring source analyzed
+      # against the same Mix as Remix. Unlike `environment` above, this is safe
+      # to manage centrally: melos skips any package that does not already
+      # declare the dependency (see `_updateDependencies` in melos), so the
+      # apps keep resolving Mix transitively and never gain a direct dependency.
+      # A dependency that only one pubspec declares stays local to it.
+      #
+      # Bootstrap never rewrites the root pubspec, which is not a melos
+      # package. tool/check_dependency_constraints.dart holds the root and
+      # every member to these values, and fails on a shared dependency missing
+      # from this list.
+      #
+      # Workspace packages are listed too. Workspace resolution always uses the
+      # local source, but these hosted constraints keep each manifest
+      # deployable outside the workspace. Release versioning runs with
+      # `--no-dependent-constraints`, so a floor moves only when edited here.
       #
       # Keep these at the versions actually exercised by CI. Declaring an older
       # floor than we test would claim support for a Mix we never build against.
-      # tool/check_consumer_mix.dart enforces the same equality for anyone who
-      # edits a pubspec without bootstrapping.
+      # tool/check_consumer_mix.dart verifies the hosted Remix consumer
+      # contract; Fortal registry generation copies its floors from the default
+      # registry rather than publishing this internal manifest.
       dependencies:
         # beta.5 is the floor, not a preference: mix_generator 2.2.0-beta.3
         # emits `implements StylerFieldMetadata`, and that symbol first ships
@@ -61,90 +75,69 @@ melos:
         # breaks any consumer that resolves beta.4.
         mix: ^2.2.0-beta.5
         mix_annotations: ^2.2.0-beta.1
+        mix_chart: ^0.0.1-beta.1
+        cupertino_icons: ^1.0.8
+        pub_semver: ^2.2.0
+        yaml: ^3.1.3
+        remix: ^1.0.0-beta.10
+        remix_ui_icons: ^0.1.0
       dev_dependencies:
+        build_runner: ^2.10.1
+        meta: ^1.18.0
         mix_generator: ^2.2.0-beta.3
+        remix_cli: ^0.1.0
+        test: ^1.31.0
 
   scripts:
-    # No `release:*` versioning scripts here on purpose. They used to wrap
-    # `melos version --prerelease` / `--graduate`, both of which derive a
-    # version per package from that package's own commits — which is exactly
-    # the drift `version:align:check` now rejects. Run against this workspace
-    # they produce `remix 1.0.0-beta.5` and `remix_fortal 0.1.0-beta.4`.
-    #
-    # `.github/workflows/version.yml` is the only supported path: it takes one
-    # version and applies it to both packages with `-V`.
+    # No `release:*` versioning scripts here on purpose. The version workflow
+    # is the supported path for the published Remix package; registry_source is
+    # the internal authoring and parity package whose source derives the bundled
+    # presets, so release automation must not version it.
     generate:
-      description: Regenerate library sources
-      # remix_fortal's generator resolves package:remix, so it must not build
+      description: Regenerate Remix sources
+      # registry_source's generator resolves package:remix, so it must not build
       # while remix is rewriting its own lib/.
       exec:
         command: dart run build_runner build
         concurrency: 1
         orderDependents: true
       packageFilters:
-        scope: [remix, remix_fortal, remix_carbon]
+        scope: [remix, registry_source]
 
     generate:check:
-      description: Regenerate library sources and fail only on generated drift
+      description: Regenerate Remix sources and fail only on generated drift
       exec:
-        command: dart run ../../tool/check_generated.dart
+        command: dart run $MELOS_ROOT_PATH/tool/check_generated.dart
         concurrency: 1
         orderDependents: true
+      # Installed-source applications regenerate their own adapters. This also
+      # checks dashboard's explicit chat closure, not the full Fortal catalog.
       packageFilters:
-        scope: [remix, remix_fortal, remix_carbon]
-
-    remix_carbon:tokens:check:
-      run: node packages/remix_carbon/tool/verify_generated.mjs
-      description: Verify Carbon token sources reproduce committed Dart output
-
-    remix_carbon:icons:generate:
-      steps:
-        - uv run --frozen --project packages/remix_carbon/tool/carbon_icons python packages/remix_carbon/tool/carbon_icons/prepare.py
-        - uv run --frozen --project packages/remix_carbon/tool/carbon_icons glyphpact --config packages/remix_carbon/tool/carbon_icons/glyphpact.json
-      description: Regenerate the locked CarbonIcons font and Dart provider
-
-    remix_carbon:icons:check:
-      steps:
-        - uv run --frozen --project packages/remix_carbon/tool/carbon_icons python packages/remix_carbon/tool/carbon_icons/prepare.py
-        - uv run --frozen --project packages/remix_carbon/tool/carbon_icons glyphpact --config packages/remix_carbon/tool/carbon_icons/glyphpact.json --check
-        - uv run --frozen --project packages/remix_carbon/tool/carbon_icons python packages/remix_carbon/tool/carbon_icons/verify.py
-      description: Verify the complete pinned Carbon icon catalog and generated artifacts
-
-    dcm:check:
-      exec: dcm analyze lib --fatal-style --fatal-warnings --no-congratulate
-      description: Run Remix Dart Code Metrics with all severities fatal
-      packageFilters:
-        scope: [remix, remix_fortal]
-
-    dcm:check:remix_carbon:
-      exec: dcm analyze lib --fatal-style --fatal-warnings --no-congratulate
-      description: Run Carbon Dart Code Metrics with all severities fatal
-      packageFilters:
-        scope: [remix_carbon, remix_carbon_example]
-
-    remix_carbon:catalog:web:
-      exec: flutter build web --release
-      description: Build the Remix Carbon component catalog for the web
-      packageFilters:
-        scope: remix_carbon_example
+        scope:
+          [remix, registry_source, playground, dashboard]
 
     test:flutter:
       exec: flutter test --reporter=failures-only
       description: Run flutter test
       packageFilters:
         dirExists: test
+        flutter: true
+
+    test:cli:
+      description: Run the pure-Dart remix_cli test suite
+      exec:
+        command: dart test
+        concurrency: 1
+      packageFilters:
+        scope: remix_cli
 
     version:align:check:
       run: dart run tool/check_version_alignment.dart
-      description: Verify remix and remix_fortal carry the identical version
+      description: Verify the remix_cli registry floors at the Remix version
 
     mix:consumer:check:
       run: dart run tool/check_consumer_mix.dart
       description: Verify consumer tests resolve the declared hosted Mix release
-
-    remix_carbon:consumer:check:
-      run: dart run tool/check_remix_carbon_consumer.dart
-      description: Analyze Remix Carbon against its exact declared hosted Remix floor
 
     toolchain:check:
       run: dart run tool/check_toolchain.dart
@@ -152,7 +145,38 @@ melos:
 
     material:check:
       run: dart run tool/check_material_independence.dart
-      description: Verify published Remix libraries contain no direct Material usage
+      description: Verify Remix, Fortal, and Agent consumer sources contain no direct Material usage
+
+    open-code:check:
+      steps:
+        - dart test test/tool/check_open_code_test.dart
+        - dart run tool/check_open_code.dart --source checkout --item dashboard_shell
+        - dart run tool/check_open_code.dart --source checkout --item dashboard_demo
+        - dart run tool/check_open_code.dart --preset fortal --source checkout --item dashboard_shell
+        - dart run tool/check_open_code.dart --preset fortal --source checkout --item dashboard_demo
+        - dart run tool/check_open_code.dart --source checkout
+        - dart run tool/check_open_code.dart --preset fortal --source checkout
+      description: Install every item from both presets against the Remix checkout
+
+    open-code:release:check:
+      steps:
+        - dart run tool/check_open_code.dart --source hosted
+        - dart run tool/check_open_code.dart --preset fortal --source hosted
+      description: Verify both presets against the required published Remix release
+
+    open-code:registry:build:
+      run: dart run tool/build_registry.dart
+      description: Derive every bundled preset from analyzer-checked package source
+
+    open-code:registry:check:
+      steps:
+        - dart test test/tool/build_registry_test.dart test/tool/build_registry_agent_test.dart
+        - dart run tool/build_registry.dart --check
+      description: Test preset derivation and fail on committed registry drift
+
+    open-code:dogfood:check:
+      run: dart run tool/check_open_code_dogfood.dart
+      description: Verify both dogfood consumers' installed source still mirrors the registry
 
     icons:generate:
       steps:
@@ -167,29 +191,110 @@ melos:
         - uv run --frozen --project packages/remix_ui_icons/tool/radix_icons python packages/remix_ui_icons/tool/radix_icons/verify.py
       description: Verify the pinned Radix snapshot, generated icon artifacts, and opt-in index
 
+    constraints:check:
+      run: dart run tool/check_dependency_constraints.dart
+      description: Verify shared dependency constraints match the melos bootstrap config
+
+    analyze:
+      # The shared `dart-actions` workflow already runs an analyzer step, so
+      # this is not what guards `main`. It exists so `melos run ci` -- the
+      # documented local gate -- reports the same failures a pull request
+      # would, instead of deferring them to a push.
+      run: dart analyze
+      description: Analyze every workspace package
+
+    format:check:
+      # The analyzer does not check formatting, so nothing else here would.
+      # Generated sources are covered too, which is why this runs after
+      # `generate:check` rather than before it.
+      run: dart format --output=none --set-exit-if-changed .
+      description: Verify every Dart source matches the formatter
+
+    # `ci` is the whole verification surface, and every step below is one CI
+    # job. Running it here executes them in sequence; .github/workflows/ci.yaml
+    # runs the same six scripts as parallel jobs, which is what took the
+    # pipeline from ~20 minutes of sequential work to roughly its slowest job.
+    #
+    # The split is therefore a contract, not a convenience: a step added here
+    # but not wired into the workflow would never run on CI, and would look
+    # green because nothing reports a job that does not exist.
+    # tool/check_ci_coverage.dart fails when the two drift, and runs inside
+    # `ci:checks` so it cannot be forgotten.
+    #
+    # Group by cost, not by theme. The two open-code presets are separate steps
+    # purely because they are ~5 minutes each and independent, and together
+    # they were half the old wall clock.
     ci:
       steps:
+        - ci:checks
+        - ci:codegen
+        - ci:cli
+        - ci:flutter
+        - ci:open-code:default
+        - ci:open-code:fortal
+      description: >-
+        Verify generated sources, docs, Fortal parity, tests, and the
+        open-code consumer boundary
+
+    ci:checks:
+      steps:
+        - ci:coverage:check
         - toolchain:check
+        - constraints:check
+        - analyze
         - version:align:check
         - mix:consumer:check
-        - remix_carbon:consumer:check
         - material:check
-        - remix_carbon:tokens:check
-        - remix_carbon:icons:check
-        - generate:check
         - docs:check
         - fortal:parity:check
-        - dcm:check
-        - dcm:check:remix_carbon
-        - remix_carbon:catalog:web
+        - open-code:registry:check
+      description: >-
+        Every cheap contract checker; seconds in total, so they share one job
+
+    ci:codegen:
+      steps:
+        - generate:check
+        - format:check
+      description: >-
+        Regenerate Remix sources, then fail on generated or formatting drift
+
+    ci:cli:
+      steps:
+        - test:cli
+        - open-code:dogfood:check
+      description: The pure-Dart CLI suite and the playground dogfood mirror
+
+    ci:flutter:
+      steps:
         - test:flutter
-      description: Verify dependencies, generated sources, docs, parity, DCM, and tests
+      description: Every Flutter package test suite
+
+    # Fresh consumers use checkout Remix and hosted supporting packages.
+    # The release check separately requires the published Remix version.
+    ci:open-code:default:
+      steps:
+        - dart test test/tool/check_open_code_test.dart
+        - dart run tool/check_open_code.dart --source checkout --item dashboard_shell
+        - dart run tool/check_open_code.dart --source checkout --item dashboard_demo
+        - dart run tool/check_open_code.dart --source checkout
+      description: Install every default-preset item against the Remix checkout
+
+    ci:open-code:fortal:
+      steps:
+        - dart run tool/check_open_code.dart --preset fortal --source checkout --item dashboard_shell
+        - dart run tool/check_open_code.dart --preset fortal --source checkout --item dashboard_demo
+        - dart run tool/check_open_code.dart --preset fortal --source checkout
+      description: Install every Fortal-preset item against the Remix checkout
+
+    ci:coverage:check:
+      run: dart run tool/check_ci_coverage.dart
+      description: Fail when `melos run ci` and the CI workflow disagree
 
     fortal:parity:check:
       exec: dart run tool/fortal_parity/check.dart
       description: Verify the pinned Radix Themes 3.3.0 parity contract and coverage
       packageFilters:
-        scope: remix_fortal
+        scope: registry_source
 
     docs:catalog:
       run: dart run tool/generate_fortal_catalog.dart
@@ -201,4 +306,6 @@ melos:
       steps:
         - dart run tool/validate_docs.dart
         - dart run tool/generate_fortal_catalog.dart --check
+        - python3 tool/check_tutorial_assets.py
+        - python3 -m unittest discover -s tool -p 'test_tutorial_assets.py'
       description: Validate docs, reject retired APIs, and fail on catalog drift

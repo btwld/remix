@@ -1,7 +1,7 @@
 import 'package:demo/helpers/catalog.dart';
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import 'package:demo/ui/ui.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 final _key = GlobalKey();
@@ -83,13 +83,17 @@ Widget buildDialogCatalogUseCase(BuildContext context) {
   return CatalogMatrix(
     cellWidth: 340,
     columns: labelsOf(FortalDialogSize.values),
-    rows: labelsOf(FortalDialogAlign.values),
+    rows: const ['top', 'center', 'bottom'],
     // Built inline rather than through showRemixDialog: routed modal dialogs
-    // cannot be shown side by side, and the surface metrics these two enums
+    // cannot be shown side by side, and the surface metrics these size and alignment values
     // drive are visible without the route.
     cell: (row, column) => FortalDialog(
       size: FortalDialogSize.values[column],
-      align: FortalDialogAlign.values[row],
+      align: const [
+        Alignment.topCenter,
+        Alignment.center,
+        Alignment.bottomCenter,
+      ][row],
       title: 'Title',
       description: 'Description',
       child: const FortalText('Body'),

@@ -311,7 +311,7 @@ void main() {
         semantics.dispose();
       });
 
-      testWidgets('loading updates that owner without duplicating it', (
+      testWidgets('loading keeps one button and a separate live announcement', (
         tester,
       ) async {
         final semantics = tester.ensureSemantics();
@@ -341,6 +341,12 @@ void main() {
             hasTapAction: false,
             hasLongPressAction: false,
           ),
+        );
+        final announcement = find.semantics.byLabel('Save item, loading');
+        expect(announcement, findsOne);
+        expect(
+          announcement.evaluate().single,
+          isSemantics(label: 'Save item, loading', isLiveRegion: true),
         );
         semantics.dispose();
       });
@@ -477,50 +483,25 @@ void main() {
         semantics.dispose();
       });
 
-      testWidgets('renders correctly in enabled state', (tester) async {
+      testWidgets('excludeSemantics also hides the loading announcement', (
+        tester,
+      ) async {
+        final semantics = tester.ensureSemantics();
+
         await tester.pumpRemixApp(
           RemixIconButton(
-            semanticLabel: 'Action',
-            icon: Icons.add,
+            icon: Icons.save,
             onPressed: () {},
+            loading: true,
+            excludeSemantics: true,
+            semanticLabel: 'Save item',
           ),
         );
-        await tester.pumpAndSettle();
+        await tester.pump();
 
-        expect(find.byType(RemixIconButton), findsOneWidget);
-        expect(find.byType(Box), findsOneWidget);
-        expect(find.byType(StyledIcon), findsOneWidget);
-      });
-
-      testWidgets('renders correctly in disabled state', (tester) async {
-        await tester.pumpRemixApp(
-          RemixIconButton(
-            semanticLabel: 'Action',
-            icon: Icons.add,
-            onPressed: null,
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixIconButton), findsOneWidget);
-        expect(find.byType(Box), findsOneWidget);
-        expect(find.byType(StyledIcon), findsOneWidget);
-      });
-
-      testWidgets('renders correctly when enabled is false', (tester) async {
-        await tester.pumpRemixApp(
-          RemixIconButton(
-            semanticLabel: 'Action',
-            icon: Icons.add,
-            enabled: false,
-            onPressed: () {},
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        expect(find.byType(RemixIconButton), findsOneWidget);
-        expect(find.byType(Box), findsOneWidget);
-        expect(find.byType(StyledIcon), findsOneWidget);
+        expect(find.semantics.byLabel('Save item'), findsNothing);
+        expect(find.semantics.byLabel('Save item, loading'), findsNothing);
+        semantics.dispose();
       });
     });
 
@@ -549,6 +530,15 @@ void main() {
         expect(find.byType(RemixIconButton), findsOneWidget);
         expect(find.byType(Box), findsOneWidget);
         expect(find.byType(StyledIcon), findsOneWidget);
+        final box = tester.widget<Box>(find.byType(Box)).styleSpec!.spec;
+        expect(box.padding, const EdgeInsets.all(16));
+        expect(
+          box.decoration,
+          BoxDecoration(
+            color: Colors.lightBlue,
+            borderRadius: BorderRadius.circular(8),
+          ),
+        );
       });
 
       testWidgets('applies custom icon style', (tester) async {
@@ -568,6 +558,9 @@ void main() {
 
         expect(find.byType(RemixIconButton), findsOneWidget);
         expect(find.byType(StyledIcon), findsOneWidget);
+        final icon = tester.widget<Icon>(find.byIcon(Icons.add));
+        expect(icon.color, Colors.red);
+        expect(icon.size, 24);
       });
 
       testWidgets('applies custom spinner style', (tester) async {
