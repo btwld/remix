@@ -561,7 +561,7 @@ packages:
         processRunner: happyRunner(caseRoot, writeLockOnPubGet: false),
       );
       await installer.add(
-        const AddOptions(item: 'dashboard_shell', mode: AddMode.write),
+        const AddOptions(items: ['dashboard_shell'], mode: AddMode.write),
       );
 
       final shell = File(
@@ -608,7 +608,7 @@ packages:
       shell.writeAsStringSync('${shell.readAsStringSync()}// local edit\n');
       final edited = shell.readAsBytesSync();
       await installer.add(
-        const AddOptions(item: 'dashboard_shell', mode: AddMode.write),
+        const AddOptions(items: ['dashboard_shell'], mode: AddMode.write),
       );
       expect(shell.readAsBytesSync(), edited);
 
@@ -616,7 +616,7 @@ packages:
       final beforePartial = snapshotFiles(caseRoot);
       await expectLater(
         installer.add(
-          const AddOptions(item: 'dashboard_shell', mode: AddMode.write),
+          const AddOptions(items: ['dashboard_shell'], mode: AddMode.write),
         ),
         throwsFormatException,
       );
@@ -657,7 +657,7 @@ packages:
           processRunner: happyRunner(caseRoot, writeLockOnPubGet: false),
         );
         await installer.add(
-          const AddOptions(item: 'dashboard_demo', mode: AddMode.dryRun),
+          const AddOptions(items: ['dashboard_demo'], mode: AddMode.dryRun),
         );
         final dashboardDirectory = Directory(
           p.join(caseRoot.path, uiPath, 'recipes', 'dashboard'),
@@ -665,7 +665,7 @@ packages:
         expect(dashboardDirectory.existsSync(), isFalse);
 
         await installer.add(
-          const AddOptions(item: 'dashboard_demo', mode: AddMode.write),
+          const AddOptions(items: ['dashboard_demo'], mode: AddMode.write),
         );
         final dashboardDemo = File(
           p.join(dashboardDirectory.path, 'dashboard_demo.dart'),
@@ -743,12 +743,12 @@ packages:
         );
         final edited = sampleData.readAsBytesSync();
         await installer.add(
-          const AddOptions(item: 'dashboard_demo', mode: AddMode.write),
+          const AddOptions(items: ['dashboard_demo'], mode: AddMode.write),
         );
         expect(sampleData.readAsBytesSync(), edited);
 
         await installer.add(
-          const AddOptions(item: 'dashboard_demo', mode: AddMode.overwrite),
+          const AddOptions(items: ['dashboard_demo'], mode: AddMode.overwrite),
         );
         expect(
           sampleData.readAsStringSync(),
@@ -759,7 +759,7 @@ packages:
         final beforePartial = snapshotFiles(caseRoot);
         await expectLater(
           installer.add(
-            const AddOptions(item: 'dashboard_demo', mode: AddMode.write),
+            const AddOptions(items: ['dashboard_demo'], mode: AddMode.write),
           ),
           throwsFormatException,
         );
