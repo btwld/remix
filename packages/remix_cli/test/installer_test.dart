@@ -1605,15 +1605,13 @@ dev_dependencies:
         // Theme is Button's dependency *and* named in the same invocation.
         // Requested-vs-dependency is a name set, not a last-item check, so
         // --overwrite must rewrite Theme rather than preserve it.
-        await Installer(
-          projectRoot: root,
-          writeOut: (_) {},
-          processRunner: happyRunner(root),
-        ).add(const AddOptions(items: ['button'], mode: AddMode.write));
+        await installButton(root);
         final theme = File(p.join(root.path, 'lib/ui/theme/tokens.dart'));
         final button = File(p.join(root.path, 'lib/ui/components/button.dart'));
-        theme.writeAsStringSync('// edited theme\n');
-        button.writeAsStringSync('// edited button\n');
+        theme.writeAsStringSync('${theme.readAsStringSync()}// edited theme\n');
+        button.writeAsStringSync(
+          '${button.readAsStringSync()}// edited button\n',
+        );
         final output = <String>[];
 
         await Installer(
@@ -1627,8 +1625,8 @@ dev_dependencies:
         expect(output, contains('Updated theme.'));
         expect(output, contains('Updated button.'));
         expect(output, isNot(contains('Preserved theme.')));
-        expect(theme.readAsStringSync(), isNot('// edited theme\n'));
-        expect(button.readAsStringSync(), isNot('// edited button\n'));
+        expect(theme.readAsStringSync(), isNot(contains('// edited theme')));
+        expect(button.readAsStringSync(), isNot(contains('// edited button')));
       },
     );
 
@@ -1637,26 +1635,28 @@ dev_dependencies:
       // must not be enough to start writing.
       writeRequiredPubspec(root);
       writeRequiredLock(root);
+      final output = <String>[];
       final before = snapshotFiles(root);
-      final dryRunner = happyRunner(root);
-
-      await Installer(
+      final runner = happyRunner(root);
+      final installer = Installer(
         projectRoot: root,
-        writeOut: (_) {},
-        processRunner: dryRunner,
-      ).add(const AddOptions(items: ['button', 'card'], mode: AddMode.dryRun));
+        writeOut: output.add,
+        processRunner: runner,
+      );
 
+      await installer.add(
+        const AddOptions(items: ['button', 'card'], mode: AddMode.dryRun),
+      );
+      expect(output.join('\n'), contains('Items: theme -> button -> card'));
       expect(snapshotFiles(root), before);
-      expect(dryRunner.calls, isEmpty);
+      expect(runner.calls, isEmpty);
 
-      final diffRunner = happyRunner(root);
-      await Installer(
-        projectRoot: root,
-        writeOut: (_) {},
-        processRunner: diffRunner,
-      ).add(const AddOptions(items: ['button', 'card'], mode: AddMode.diff));
-
+      output.clear();
+      await installer.add(
+        const AddOptions(items: ['button', 'card'], mode: AddMode.diff),
+      );
       expect(snapshotFiles(root), before);
+      expect(runner.calls.any((call) => call.executable == 'git'), isTrue);
     });
 
     test('an unknown item in the batch fails before any write', () async {
