@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import '../ui/ui.dart';
 
 @immutable
@@ -12,19 +12,16 @@ class ThemeSettings {
     this.scaling = .percent100,
   });
 
-  final ThemeMode appearance;
+  final UiThemeMode appearance;
   final UiAccentColor accentColor;
   final UiGrayColor grayColor;
   final UiPanelBackground panelBackground;
   final UiRadius radius;
   final UiScaling scaling;
 
-  ThemeMode get themeMode => appearance;
-
-  // ThemeMode.system is app state rather than a UiThemeConfig value, so the
-  // dashboard keeps a concrete settings object that can be copied atomically.
+  // The scope resolves system appearance; the dashboard owns the preference.
   ThemeSettings copyWith({
-    ThemeMode? appearance,
+    UiThemeMode? appearance,
     UiAccentColor? accentColor,
     UiGrayColor? grayColor,
     UiPanelBackground? panelBackground,

@@ -5,9 +5,9 @@ import 'package:remix/remix.dart';
 import '../../ui/ui.dart';
 
 Widget _scope(BuildContext context, Widget child) => PlaygroundThemeScope(
-  data: Theme.of(context).brightness == Brightness.dark
-      ? const PlaygroundThemeData.dark()
-      : const PlaygroundThemeData.light(),
+  mode: Theme.of(context).brightness == Brightness.dark
+      ? PlaygroundThemeMode.dark
+      : PlaygroundThemeMode.light,
   child: DefaultTextStyle.merge(
     style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
     child: child,

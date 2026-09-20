@@ -193,7 +193,7 @@ Future<BuildContext> _pumpDashboard(WidgetTester tester) async {
   await tester.pumpWidget(
     const DashboardApp(
       initialSettings: ThemeSettings(
-        appearance: ThemeMode.light,
+        appearance: UiThemeMode.light,
         accentColor: UiAccentColor.blue,
       ),
     ),

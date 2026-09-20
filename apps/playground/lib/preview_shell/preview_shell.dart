@@ -38,7 +38,7 @@ class _PreviewShellState extends State<PreviewShell> {
         // Pinned light on purpose — the light/dark control below it drives the
         // preview, not the toolbar around it.
         PlaygroundThemeScope(
-          data: const PlaygroundThemeData.light(),
+          mode: PlaygroundThemeMode.light,
           child: ControlsBar(
             brightness: _brightness,
             size: _size,
