@@ -127,10 +127,22 @@ void main() {
 }
 
 /// Registry files whose pub constraints a consumer inherits on `remix add`.
-const _registryPaths = [
-  'registry/vanilla/registry.yaml',
-  'registry/fortal/registry.yaml',
-];
+///
+/// Derived from the published index rather than listed here, so a preset added
+/// to or held back from the distribution needs no matching edit.
+List<String> _registryPaths(Directory workspaceRoot, List<String> failures) {
+  final index = File('${workspaceRoot.path}/registry/index.yaml');
+  if (!index.existsSync()) {
+    failures.add('registry/index.yaml is missing.');
+    return const [];
+  }
+  final paths = RegExp(r'^  [a-z][a-z0-9_]*: (\S+)', multiLine: true)
+      .allMatches(index.readAsStringSync())
+      .map((match) => 'registry/${match.group(1)!}')
+      .toList();
+  if (paths.isEmpty) failures.add('registry/index.yaml declares no presets.');
+  return paths;
+}
 
 /// `remix`, whose registry floor records the tested release rather than the
 /// workspace constraint.
@@ -154,7 +166,7 @@ int _checkRegistryConstraints(
   List<String> failures,
 ) {
   var compared = 0;
-  for (final relativePath in _registryPaths) {
+  for (final relativePath in _registryPaths(workspaceRoot, failures)) {
     final registry = File('${workspaceRoot.path}/$relativePath');
     if (!registry.existsSync()) {
       failures.add('$relativePath is missing.');
