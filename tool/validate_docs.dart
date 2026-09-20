@@ -218,7 +218,7 @@ const _openCodeCatalogDocuments = <String>[
   'open_code/README.md',
 ];
 
-/// Fails when an item in either bundled preset is missing from a catalog
+/// Fails when an item in either remote preset is missing from a catalog
 /// document.
 ///
 /// Deliberately one-directional: a document may mention `theme` or discuss an
@@ -227,13 +227,28 @@ const _openCodeCatalogDocuments = <String>[
 /// wrote down.
 void _checkOpenCodeCatalog(Directory workspaceRoot, List<String> failures) {
   final items = <String>{};
-  for (final preset in ['default', 'fortal']) {
+  // The published index is the source of truth for which presets ship, so a
+  // preset added or held back there needs no matching edit here.
+  final index = File('${workspaceRoot.path}/registry/index.yaml');
+  if (!index.existsSync()) {
+    failures.add('registry/index.yaml is missing.');
+    return;
+  }
+  final presets = RegExp(r'^  ([a-z][a-z0-9_]*):', multiLine: true)
+      .allMatches(index.readAsStringSync())
+      .map((match) => match.group(1)!)
+      .toList();
+  if (presets.isEmpty) {
+    failures.add('registry/index.yaml declares no presets.');
+    return;
+  }
+  for (final preset in presets) {
     final registry = File(
-      '${workspaceRoot.path}/packages/remix_cli/lib/src/registry/'
+      '${workspaceRoot.path}/registry/'
       '$preset/registry.yaml',
     );
     if (!registry.existsSync()) {
-      failures.add('packages/remix_cli is missing its $preset registry.yaml.');
+      failures.add('registry/$preset/registry.yaml is missing.');
       continue;
     }
 
@@ -246,7 +261,7 @@ void _checkOpenCodeCatalog(Directory workspaceRoot, List<String> failures) {
     );
   }
   if (items.isEmpty) {
-    failures.add('bundled registries declared no component items.');
+    failures.add('remote registries declared no component items.');
     return;
   }
 

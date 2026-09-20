@@ -22,6 +22,10 @@
         {
           "title": "Open Code",
           "href": "/open-code"
+        },
+        {
+          "title": "Registries",
+          "href": "/guides/registries"
         }
       ]
     },

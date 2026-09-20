@@ -14,6 +14,8 @@ const failureExitCode = 1;
 typedef LineWriter = void Function(String line);
 
 typedef InitHandler = Future<void> Function(InitOptions options);
+typedef RegistryHandler = Future<void> Function(RegistryOptions options);
+
 typedef AddHandler = Future<void> Function(AddOptions options);
 
 final class InitOptions {
@@ -42,12 +44,30 @@ final class AddOptions {
   final AddMode mode;
 }
 
+enum RegistryAction { add, update, migrate }
+
+final class RegistryOptions {
+  const RegistryOptions({
+    required this.action,
+    this.namespace,
+    this.repository,
+    this.path = 'registry',
+    this.ref,
+  });
+  final RegistryAction action;
+  final String? namespace;
+  final String? repository;
+  final String path;
+  final String? ref;
+}
+
 Future<int> runRemixCli(
   List<String> arguments, {
   required LineWriter writeOut,
   required LineWriter writeError,
   InitHandler? onInit,
   AddHandler? onAdd,
+  RegistryHandler? onRegistry,
 }) async {
   final runner =
       CommandRunner<int>('remix', 'Install editable Remix UI source.')
@@ -57,7 +77,8 @@ Future<int> runRemixCli(
           help: 'Print the remix_cli version.',
         )
         ..addCommand(_InitCommand(onInit))
-        ..addCommand(_AddCommand(onAdd));
+        ..addCommand(_AddCommand(onAdd))
+        ..addCommand(_RegistryCommand(onRegistry));
 
   final helpCode = _writeRequestedHelp(
     arguments,
@@ -132,7 +153,7 @@ final class _InitCommand extends Command<int> {
   _InitCommand(this._handler) {
     argParser
       ..addOption('prefix', defaultsTo: 'Ui')
-      ..addOption('preset', defaultsTo: 'default')
+      ..addOption('preset', defaultsTo: 'vanilla')
       ..addOption('ui-path', defaultsTo: 'lib/ui');
   }
 
@@ -178,7 +199,7 @@ final class _AddCommand extends Command<int> {
   String get name => 'add';
 
   @override
-  String get description => 'Install bundled registry items.';
+  String get description => 'Install registry items and their dependencies.';
 
   @override
   Future<int> run() async {
@@ -212,6 +233,73 @@ final class _AddCommand extends Command<int> {
       AddOptions(
         items: List.unmodifiable(positional),
         mode: modes.isEmpty ? AddMode.write : modes.single,
+      ),
+    );
+    return successExitCode;
+  }
+}
+
+final class _RegistryCommand extends Command<int> {
+  _RegistryCommand(RegistryHandler? handler) {
+    for (final action in RegistryAction.values) {
+      addSubcommand(_RegistryActionCommand(action, handler));
+    }
+  }
+  @override
+  String get name => 'registry';
+  @override
+  String get description =>
+      'Register, pin, or migrate GitHub registry sources.';
+}
+
+final class _RegistryActionCommand extends Command<int> {
+  _RegistryActionCommand(this.action, this.handler) {
+    argParser.addOption('ref');
+    if (action == RegistryAction.add) {
+      argParser.addOption('repository');
+      argParser.addOption('path', defaultsTo: 'registry');
+    }
+  }
+  final RegistryAction action;
+  final RegistryHandler? handler;
+  @override
+  String get name => action.name;
+  @override
+  String get description => switch (action) {
+    RegistryAction.add =>
+      'Register a public GitHub registry and pin its commit.',
+    RegistryAction.update =>
+      'Update one registry pin without changing installed source.',
+    RegistryAction.migrate =>
+      'Migrate bundled configuration to a pinned GitHub registry.',
+  };
+  @override
+  Future<int> run() async {
+    final rest = argResults!.rest;
+    if (rest.length != (action == RegistryAction.migrate ? 0 : 1)) {
+      usageException(
+        action == RegistryAction.migrate
+            ? 'migrate accepts no positional arguments.'
+            : '$name requires exactly one namespace.',
+      );
+    }
+    if (action == RegistryAction.add &&
+        argResults!.option('repository') == null) {
+      usageException('registry add requires --repository owner/repo.');
+    }
+    if (handler == null)
+      throw StateError('The registry command is not available.');
+    await handler!(
+      RegistryOptions(
+        action: action,
+        namespace: rest.isEmpty ? null : rest.single,
+        repository: action == RegistryAction.add
+            ? argResults!.option('repository')
+            : null,
+        path: action == RegistryAction.add
+            ? argResults!.option('path')!
+            : 'registry',
+        ref: argResults!.option('ref'),
       ),
     );
     return successExitCode;

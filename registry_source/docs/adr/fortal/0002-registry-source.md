@@ -5,7 +5,7 @@ Date: 2026-09-14. Status: accepted. Supersedes
 
 ## Decision
 
-Every file under `packages/remix_cli/lib/src/registry/**/templates/` is build
+Every file under `registry/**/templates/` is build
 output. One builder, `tool/build_registry.dart`, derives it from analyzer-checked
 Dart under `registry_source/`, and a drift check over the whole tree fails CI on
 any hand edit. Applications consume installed source only.
@@ -21,6 +21,32 @@ registry_source/    one private package: the authored catalog
 `registry_source` is one package, not three, so nothing in it is a dependency
 of anything: the recipes reach Agent behavior by relative path. It has no
 version and no publish target. `packages/` now reads as "published".
+
+## Distribution revision — 2026-09-19
+
+Registry output publishes independently through GitHub `registry-v*` releases.
+`registry/index.yaml` schema 1 selects preset catalogs; catalog schema 2 adds
+qualified dependencies while preserving the existing Dart template contract.
+New projects store schema-3 named sources and full commit pins in `remix.yaml`.
+Every fetch uses the pinned commit, and changing a pin is explicit and does not
+change installed source. The CLI remains a generic installer.
+
+`packages/remix_cli/lib/src/registry/` is now a frozen compatibility snapshot
+for schema-1/2 projects, not builder output to refresh. Its byte-level regression
+coverage is separate from current-source drift and dependency-floor checks,
+which target `registry/`. Migration is explicit and configuration-only.
+No remote error falls back to the bundle. Cross-registry dependencies require
+project registration, and conflicting target ownership fails before writes.
+
+See [registry contract](../../../../open_code/REGISTRIES.md) and
+[release ordering](../../../../open_code/RELEASING.md). This revises the former
+bundled-only distribution decision; it does not change authoring ownership,
+prefix rendering, preset contents, or installed-source ownership.
+
+The CLI-internal structure behind that contract — how the installer obtains
+catalogs and template bytes — is superseded by
+[the registry port lockdown](../../../../open_code/REGISTRY_PORT.md). The
+published schemas described above are unchanged.
 
 ## What this reverses
 

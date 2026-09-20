@@ -19,7 +19,7 @@ void main() {
         writeOut: output.add,
         processRunner: runner,
       );
-      await installer.initialize(
+      await installer.initializeBundled(
         const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
       );
 
@@ -47,7 +47,7 @@ void main() {
       writeOut: (_) {},
       processRunner: runner,
     );
-    await installer.initialize(
+    await installer.initializeBundled(
       const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
     );
     final before = snapshotFiles(root);

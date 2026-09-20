@@ -19,7 +19,7 @@ void main() {
   // round-trip assertion: the Agent subtree from `registry_source/lib/src/agent`,
   // the rest from `lib/src/default`. So is `fortal`, from `lib/src/fortal`.
   // This test is what makes that claim checkable
-  // from the CLI package alone.
+  // for the current remote distribution. Frozen bundles have separate regression coverage.
   //
   // No consumer is affected either way: `add` formats the tree it writes, so
   // installed source is formatted regardless of what the template looked like.
@@ -28,13 +28,13 @@ void main() {
   test('every default template is formatter-clean at its authoring prefix', () {
     // `dart test` runs with the package root as the current directory.
     final templates = Directory(
-      p.join('lib', 'src', 'registry', 'default', 'templates'),
+      p.join('..', '..', 'registry', 'vanilla', 'templates'),
     );
     expect(templates.existsSync(), isTrue, reason: templates.path);
 
     // Both prefixes come from the code the installer itself uses, so this can
     // never drift from what `add` writes.
-    final config = ProjectConfig.create(
+    final config = LegacyProject(
       packageRoot: Directory.current,
       prefix: _referencePrefix,
       preset: 'default',
@@ -101,7 +101,7 @@ void main() {
       reason:
           'these templates do not match the formatter when rendered with '
           'its authoring prefix (Agent for derived source, $_referencePrefix otherwise). Render one, format it, and reverse the '
-          'prefix substitution to update it.',
+          'prefix substitution in registry_source, then rebuild the remote distribution.',
     );
   });
 }

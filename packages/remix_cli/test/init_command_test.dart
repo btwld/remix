@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:path/path.dart' as p;
 import 'package:remix_cli/src/cli.dart';
 import 'package:remix_cli/src/installer.dart';
+import 'package:remix_cli/src/project_config.dart';
+import 'package:remix_cli/src/registry_source.dart';
 import 'package:test/test.dart';
 
 import 'test_support.dart';
@@ -15,21 +17,156 @@ void main() {
   setUp(() {
     root = createFlutterPackage();
     output = <String>[];
-    installer = Installer(projectRoot: root, writeOut: output.add);
+    installer = Installer(
+      projectRoot: root,
+      writeOut: output.add,
+      sources: const FixtureOfficialResolver(),
+    );
   });
   tearDown(() => root.deleteSync(recursive: true));
 
+  // The omitted `--preset` is the path most consumers take, so these drive the
+  // installer through the command line rather than calling it directly.
+  test('init without --preset selects vanilla for a new project', () async {
+    expect(
+      await runRemixCli(
+        ['init'],
+        writeOut: output.add,
+        writeError: fail,
+        onInit: installer.initialize,
+      ),
+      successExitCode,
+    );
+    expect(
+      ProjectConfig.parse(
+        File(p.join(root.path, 'remix.yaml')).readAsStringSync(),
+        packageRoot: root,
+      ).preset,
+      'vanilla',
+    );
+  });
+
+  for (final schema in [1, 2]) {
+    test(
+      'init without --preset preserves legacy default schema $schema',
+      () async {
+        File(p.join(root.path, 'remix.yaml')).writeAsStringSync(
+          'schema: $schema\nprefix: Ui\n'
+          '${schema == 2 ? 'preset: default\n' : ''}'
+          'paths:\n  ui: lib/ui\n',
+        );
+        File(p.join(root.path, 'lib/ui/ui.dart'))
+          ..createSync(recursive: true)
+          ..writeAsStringSync(emptyManagedBarrel);
+        final before = snapshotFiles(root);
+        expect(
+          await runRemixCli(
+            ['init'],
+            writeOut: output.add,
+            writeError: fail,
+            onInit: installer.initialize,
+          ),
+          successExitCode,
+        );
+        expect(snapshotFiles(root), before);
+        expect(output.last, 'Remix is already initialized.');
+      },
+    );
+  }
+
+  test('schema 3 requires exact preset identity', () async {
+    final source = await const FixtureOfficialResolver().latestOfficial();
+    final config = PinnedProject(
+      packageRoot: root,
+      prefix: 'Ui',
+      preset: 'default',
+      uiPath: 'lib/ui',
+      defaultRegistry: '@remix',
+      registries: {'@remix': source},
+    );
+    File(p.join(root.path, 'remix.yaml')).writeAsStringSync(config.encode());
+    File(p.join(root.path, 'lib/ui/ui.dart'))
+      ..createSync(recursive: true)
+      ..writeAsStringSync(emptyManagedBarrel);
+    final before = snapshotFiles(root);
+    await expectLater(
+      installer.initialize(
+        const InitOptions(prefix: 'Ui', preset: 'vanilla', uiPath: 'lib/ui'),
+      ),
+      throwsFormatException,
+    );
+    expect(snapshotFiles(root), before);
+  });
+
+  test('schema 3 custom registries require exact preset identity', () async {
+    // Third-party registries name their own presets, so `default` and
+    // `vanilla` are two unrelated names here rather than a legacy rename.
+    final custom = RegistrySource(
+      repository: 'owner/company',
+      path: 'registry',
+      ref: 'v1',
+      revision: 'b' * 40,
+    );
+    final offline = Installer(
+      projectRoot: root,
+      writeOut: output.add,
+      sources: GitHubSources(
+        transport: (_) async {
+          fail('existing init contacted GitHub');
+        },
+      ),
+    );
+    for (final (configured, requested, matches) in [
+      ('default', 'vanilla', false),
+      ('vanilla', 'default', false),
+      ('acme_dark', 'acme_dark', true),
+    ]) {
+      File(p.join(root.path, 'remix.yaml')).writeAsStringSync(
+        PinnedProject(
+          packageRoot: root,
+          prefix: 'Ui',
+          preset: configured,
+          uiPath: 'lib/ui',
+          defaultRegistry: '@company',
+          registries: {'@company': custom},
+        ).encode(),
+      );
+      File(p.join(root.path, 'lib/ui/ui.dart'))
+        ..createSync(recursive: true)
+        ..writeAsStringSync(emptyManagedBarrel);
+      final before = snapshotFiles(root);
+      final reason = '$configured accepted $requested';
+      final run = offline.initialize(
+        InitOptions(prefix: 'Ui', preset: requested, uiPath: 'lib/ui'),
+      );
+      if (matches) {
+        await run;
+        expect(output.last, 'Remix is already initialized.', reason: reason);
+      } else {
+        await expectLater(run, throwsFormatException, reason: reason);
+      }
+      expect(snapshotFiles(root), before, reason: reason);
+    }
+  });
+
   test('initializes defaults and an identical second run is a no-op', () async {
     await installer.initialize(
-      const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
+      const InitOptions(prefix: 'Ui', preset: 'vanilla', uiPath: 'lib/ui'),
     );
     expect(
       File(p.join(root.path, 'remix.yaml')).readAsStringSync(),
-      '''schema: 2
+      '''schema: 3
 prefix: Ui
-preset: default
+preset: vanilla
 paths:
   ui: lib/ui
+defaultRegistry: "@remix"
+registries:
+  "@remix":
+    repository: "conceptadev/remix"
+    path: "registry"
+    ref: "registry-v1"
+    revision: "${'a' * 40}"
 ''',
     );
     expect(
@@ -40,7 +177,7 @@ paths:
     final first = snapshotFiles(root);
 
     await installer.initialize(
-      const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
+      const InitOptions(prefix: 'Ui', preset: 'vanilla', uiPath: 'lib/ui'),
     );
 
     expect(snapshotFiles(root), first);
@@ -51,13 +188,13 @@ paths:
     'repairs only a missing config and names the barrel preserved',
     () async {
       await installer.initialize(
-        const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
+        const InitOptions(prefix: 'Ui', preset: 'vanilla', uiPath: 'lib/ui'),
       );
       File(p.join(root.path, 'remix.yaml')).deleteSync();
       output.clear();
 
       await installer.initialize(
-        const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
+        const InitOptions(prefix: 'Ui', preset: 'vanilla', uiPath: 'lib/ui'),
       );
 
       expect(output, ['Created remix.yaml; preserved lib/ui/ui.dart.']);
@@ -68,13 +205,13 @@ paths:
     'repairs only a missing barrel and names the config preserved',
     () async {
       await installer.initialize(
-        const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
+        const InitOptions(prefix: 'Ui', preset: 'vanilla', uiPath: 'lib/ui'),
       );
       File(p.join(root.path, 'lib', 'ui', 'ui.dart')).deleteSync();
       output.clear();
 
       await installer.initialize(
-        const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
+        const InitOptions(prefix: 'Ui', preset: 'vanilla', uiPath: 'lib/ui'),
       );
 
       expect(output, ['Created lib/ui/ui.dart; preserved remix.yaml.']);
@@ -85,7 +222,7 @@ paths:
     await installer.initialize(
       const InitOptions(
         prefix: 'Acme',
-        preset: 'default',
+        preset: 'vanilla',
         uiPath: 'lib/design_system',
       ),
     );
@@ -194,7 +331,7 @@ paths:
 
   test('rejects changing the preset of an initialized project', () async {
     await installer.initialize(
-      const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
+      const InitOptions(prefix: 'Ui', preset: 'vanilla', uiPath: 'lib/ui'),
     );
     final before = snapshotFiles(root);
 

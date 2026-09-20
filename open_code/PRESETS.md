@@ -1,19 +1,22 @@
 # Presets: application-owned source
 
+See [pinned GitHub registries](REGISTRIES.md) for namespaces, revision updates,
+migration, and independent registry releases.
+
 ## Current implementation
 
-`remix_cli` bundles two presets, `default` and `fortal`. Both registry manifests
+The GitHub distribution provides two presets, `vanilla` and `fortal`. Both registry manifests
 and all templates are derived from analyzer-checked Dart by
 `tool/build_registry.dart`; none of the templates are hand-authored.
 
 ```text
 registry_source/                 one private workspace package
-  lib/src/default/              default theme, components, Agent recipes
+  lib/src/default/              Vanilla theme, components, Agent recipes
   lib/src/fortal/               Fortal theme, components, Agent recipes
   lib/src/agent/                shared Agent behavior, models, support
   lib/src/dashboard/            shared dashboard composition
-packages/remix_cli/lib/src/registry/
-  default/                     derived registry.yaml and templates/
+registry/
+  vanilla/                     derived registry.yaml and templates/
   fortal/                      derived registry.yaml and templates/
 ```
 
@@ -34,14 +37,21 @@ dart run remix_cli:remix add composer_recipe
 ```
 
 ```yaml
-schema: 2
+schema: 3
 prefix: Acme
 preset: fortal
 paths:
   ui: lib/ui
+defaultRegistry: "@remix"
+registries:
+  "@remix":
+    repository: conceptadev/remix
+    path: registry
+    ref: registry-v1
+    revision: "<resolved-full-commit-sha>"
 ```
 
-Schema 1 configurations continue to select `default`. Installed type names and
+Schema 1 configurations continue to select the legacy `default`. Installed type names and
 token IDs use the consumer prefix, for example `AcmeButton` and `acme.accent.9`.
 `Fortal` is an authoring prefix, not a required installed prefix; the review
 catalog deliberately chooses it as its consumer prefix.
@@ -75,7 +85,7 @@ diff show proposed changes without writing them.
 
 ## Authoring and derivation
 
-Edit Dart under `registry_source/lib/src/`, never `.tmpl` output. Default uses
+Edit Dart under `registry_source/lib/src/`, never `.tmpl` output. Vanilla uses
 the authoring word `Vanilla`, Fortal uses `Fortal`, and shared behavior uses
 `Agent`. The builder checks prefix round trips and rewrites shared Agent
 imports to their installed relative paths. Relative source imports determine
@@ -84,7 +94,7 @@ registry dependencies; generated parts determine adapter targets.
 Fortal's Radix color table remains pinned source with a parity contract. Its
 internal theme barrel excludes the unprefixed color-table globals from the
 consumer's public barrel. Hosted dependency floors are shared through the
-default registry and checked for drift.
+Vanilla registry and checked for drift.
 
 ```shell
 dart run melos run open-code:registry:build
@@ -93,12 +103,12 @@ dart run melos run open-code:registry:check
 
 The build command derives both presets. The check runs builder tests and
 compares the complete output trees, including unexpected or missing files.
-`--preset default` or `--preset fortal` selects one preset when invoking
+`--preset vanilla` or `--preset fortal` selects one preset when invoking
 `tool/build_registry.dart` directly.
 
 ## Repository consumers
 
-- `apps/playground`: full default catalog, prefix `Playground`; its indigo
+- `apps/playground`: full Vanilla catalog, prefix `Playground`; its indigo
   theme customization is declared in the dogfood checker.
 - `apps/demo`: non-Agent Fortal review catalog, prefix `Fortal`.
 - `apps/dashboard`: full Fortal catalog including Agent surfaces and recipes,
@@ -106,7 +116,7 @@ compares the complete output trees, including unexpected or missing files.
 
 All three consume installed source. The repository dashboard pages and its
 simulated runner remain application-owned. The reusable `dashboard_shell` and
-full `dashboard_demo` are bundled as separate stacked registry items; a
+full `dashboard_demo` are distributed as separate stacked registry items; a
 standalone composed `chat` item is still separate work.
 
 ## Verification and release

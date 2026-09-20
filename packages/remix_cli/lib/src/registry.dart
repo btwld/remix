@@ -1,6 +1,3 @@
-import 'dart:io';
-import 'dart:isolate';
-
 import 'package:path/path.dart' as p;
 import 'package:pub_semver/pub_semver.dart';
 import 'package:yaml/yaml.dart';
@@ -15,41 +12,10 @@ const bundledPresets = <String>{'default', 'fortal'};
 /// swap also needs its length.
 const uiTargetPrefix = '@ui/';
 
-abstract interface class RegistryAssetLoader {
-  Future<String> read(Uri uri);
-}
-
-final class PackageRegistryAssetLoader implements RegistryAssetLoader {
-  const PackageRegistryAssetLoader();
-
-  @override
-  Future<String> read(Uri uri) async {
-    final resolved = await Isolate.resolvePackageUri(uri);
-    if (resolved == null) {
-      throw StateError('Could not resolve bundled registry asset $uri.');
-    }
-    if (resolved.scheme != 'file') {
-      throw StateError('Registry asset $uri did not resolve to a file.');
-    }
-    return File.fromUri(resolved).readAsString();
-  }
-}
-
 final class RegistryCatalog {
-  RegistryCatalog._({
-    required this.preset,
-    required this.items,
-    required Uri rootUri,
-    required RegistryAssetLoader loader,
-  }) : _rootUri = rootUri,
-       _loader = loader;
+  RegistryCatalog._({required this.preset, required this.items});
 
-  factory RegistryCatalog.parse(
-    String source, {
-    required String preset,
-    required Uri rootUri,
-    RegistryAssetLoader loader = const PackageRegistryAssetLoader(),
-  }) {
+  factory RegistryCatalog.parse(String source, {required String preset}) {
     final Object? document;
     try {
       document = loadYaml(source);
@@ -58,9 +24,10 @@ final class RegistryCatalog {
     }
     final root = _map(document, 'registry');
     _exactKeys(root, {'schema', 'items'}, 'registry');
-    if (root['schema'] != 1) {
+    if (root['schema'] is! int ||
+        (root['schema'] != 1 && root['schema'] != 2)) {
       throw FormatException(
-        'Unsupported registry schema ${root['schema']}; remix_cli supports schema 1.',
+        'Unsupported registry schema ${root['schema']}; remix_cli supports schemas 1 and 2.',
       );
     }
     final itemMap = _map(root['items'], 'registry.items');
@@ -71,43 +38,28 @@ final class RegistryCatalog {
         throw FormatException('Invalid registry item name $name.');
       }
       items[name] = _parseItem(name, entry.value.value);
+      for (final dependency in items[name]!.registryDependencies) {
+        if (!_packageName.hasMatch(dependency) &&
+            !(root['schema'] == 2 &&
+                RegExp(
+                  r'^@[a-z][a-z0-9_-]*/[a-z][a-z0-9_]*$',
+                ).hasMatch(dependency))) {
+          throw FormatException(
+            'Invalid registry dependency $dependency for catalog schema ${root['schema']}.',
+          );
+        }
+      }
     }
     final catalog = RegistryCatalog._(
       preset: preset,
       items: Map.unmodifiable(items),
-      rootUri: rootUri,
-      loader: loader,
     );
     catalog._validateGraphAndTargets();
     return catalog;
   }
 
-  static Future<RegistryCatalog> loadBundled({
-    required String preset,
-    RegistryAssetLoader loader = const PackageRegistryAssetLoader(),
-  }) async {
-    if (!bundledPresets.contains(preset)) {
-      throw FormatException(
-        'Unknown preset $preset. Bundled presets: '
-        '${bundledPresets.join(', ')}.',
-      );
-    }
-    final uri = Uri.parse(
-      'package:remix_cli/src/registry/$preset/registry.yaml',
-    );
-    final source = await loader.read(uri);
-    return RegistryCatalog.parse(
-      source,
-      preset: preset,
-      rootUri: uri.resolve('.'),
-      loader: loader,
-    );
-  }
-
   final String preset;
   final Map<String, RegistryItem> items;
-  final Uri _rootUri;
-  final RegistryAssetLoader _loader;
 
   List<RegistryItem> resolve(String requested) => resolveAll([requested]);
 
@@ -140,6 +92,10 @@ final class RegistryCatalog {
       if (!visited.add(name)) return;
       final item = items[name]!;
       for (final dependency in item.registryDependencies) {
+        if (dependency.startsWith('@'))
+          throw const FormatException(
+            'Namespaced dependencies require a configured multi-registry project.',
+          );
         visit(dependency);
       }
       ordered.add(item);
@@ -150,9 +106,6 @@ final class RegistryCatalog {
     }
     return List.unmodifiable(ordered);
   }
-
-  Future<String> readTemplate(RegistryFile file) =>
-      _loader.read(_rootUri.resolve(file.source));
 
   void _validateGraphAndTargets() {
     final visiting = <String>{};
@@ -166,6 +119,7 @@ final class RegistryCatalog {
       if (!visited.add(name)) return;
       visiting.add(name);
       for (final dependency in items[name]!.registryDependencies) {
+        if (dependency.startsWith('@')) continue;
         if (!items.containsKey(dependency)) {
           throw FormatException('$name depends on missing item $dependency.');
         }
@@ -364,7 +318,10 @@ void _validateTarget(String target) {
 }
 
 void _validateRelative(String value, {required String label, String? prefix}) {
-  if (value.contains('\\') ||
+  if (value.isEmpty ||
+      value == '.' ||
+      RegExp(r'''[%?#:'"\x00-\x1f]''').hasMatch(value) ||
+      value.contains('\\') ||
       p.posix.isAbsolute(value) ||
       p.posix.normalize(value) != value ||
       value == '..' ||
