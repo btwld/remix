@@ -1,0 +1,798 @@
+import 'package:flutter/widgets.dart';
+import 'package:mix_chart/mix_chart.dart';
+import 'package:remix/remix.dart';
+import 'package:remix_ui_icons/remix_ui_icons.dart';
+
+import '../../components/badge.dart';
+import '../../components/button.dart';
+import '../../components/card.dart';
+import '../../components/chart.dart';
+import '../../components/checkbox.dart';
+import '../../components/code.dart';
+import '../../components/data_table.dart';
+import '../../components/disclosure.dart';
+import '../../components/heading.dart';
+import '../../components/icon_button.dart';
+import '../../components/kbd.dart';
+import '../../components/link.dart';
+import '../../components/menu.dart';
+import '../../components/popover.dart';
+import '../../components/progress.dart';
+import '../../components/switch.dart';
+import '../../components/tabs.dart';
+import '../../components/text.dart';
+import '../../components/textfield.dart';
+import '../../components/toast.dart';
+import '../../theme/theme.dart';
+import '../activity_recipe.dart';
+import '../answer_recipe.dart';
+import '../composer_recipe.dart';
+import '../execution_recipe.dart';
+import '../message_recipe.dart';
+import '../permission_recipe.dart';
+import '../plan_recipe.dart';
+import '../transcript_recipe.dart';
+import 'dashboard_demo_base.dart';
+import 'dashboard_demo_charts.dart';
+import 'dashboard_demo_chat.dart';
+import 'dashboard_demo_content.dart';
+import 'dashboard_demo_gallery_actions.dart';
+import 'dashboard_demo_gallery_display.dart';
+import 'dashboard_demo_gallery_forms.dart';
+import 'dashboard_demo_gallery_navigation.dart';
+import 'dashboard_demo_gallery_overlays.dart';
+import 'dashboard_demo_gallery_typography.dart';
+import 'dashboard_demo_records_page.dart';
+import 'dashboard_demo_settings.dart';
+import 'dashboard_overview.dart';
+import 'dashboard_sample_data.dart';
+import 'dashboard_shell.dart';
+
+/// Full {{typePrefix}} dashboard demo.
+///
+/// This is the open-code equivalent of the repository's {{typePrefix}} showcase: it
+/// includes the same Workspace, Data, Manage, and Components destinations,
+/// while demonstrating the Radix-aligned {{typePrefix}} vocabulary honestly.
+class {{typePrefix}}DashboardDemo extends StatefulWidget {
+  const {{typePrefix}}DashboardDemo({
+    super.key,
+    this.brand = const Text('Northstar'),
+    this.account,
+    this.headerActions = const [],
+    this.onSearchChanged,
+    this.data = {{valuePrefix}}DashboardSampleData,
+    this.initialPage = {{typePrefix}}DashboardDemoPage.overview,
+    this.collapsed,
+    this.initiallyCollapsed = false,
+    this.onCollapsedChanged,
+    this.builtInChrome = true,
+    this.chatStepDelay = const Duration(milliseconds: 320),
+  });
+
+  final Widget brand;
+  final Widget? account;
+  final List<Widget> headerActions;
+  final ValueChanged<String>? onSearchChanged;
+  final {{typePrefix}}DashboardSampleData data;
+  final {{typePrefix}}DashboardDemoPage initialPage;
+  final bool? collapsed;
+  final bool initiallyCollapsed;
+  final ValueChanged<bool>? onCollapsedChanged;
+  final bool builtInChrome;
+  final Duration chatStepDelay;
+
+  @override
+  State<{{typePrefix}}DashboardDemo> createState() => _{{typePrefix}}DashboardDemoState();
+}
+
+class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDemo> {
+  bool _dark = false;
+
+  @override
+  Widget build(BuildContext context) {
+    const kit = _{{typePrefix}}DashboardDemoKit();
+    final demo = {{typePrefix}}DashboardDemoBase(
+      initialPage: widget.initialPage,
+      shellBuilder:
+          (
+            context, {
+            required sections,
+            required selectedValue,
+            required onSelected,
+            required body,
+            required title,
+            required onSearchChanged,
+          }) => {{typePrefix}}DashboardShell<{{typePrefix}}DashboardDemoPage>(
+            sections: sections,
+            selectedValue: selectedValue,
+            onSelected: onSelected,
+            body: body,
+            title: title,
+            headerTitle: widget.builtInChrome
+                ? _{{typePrefix}}Breadcrumb(page: selectedValue)
+                : null,
+            brand: widget.brand,
+            account:
+                widget.account ??
+                (widget.builtInChrome ? const _{{typePrefix}}Account() : null),
+            headerActions: [
+              if (widget.builtInChrome) ..._chromeActions(),
+              ...widget.headerActions,
+            ],
+            onSearchChanged:
+                widget.builtInChrome || widget.onSearchChanged != null
+                ? (value) {
+                    onSearchChanged(value);
+                    widget.onSearchChanged?.call(value);
+                  }
+                : null,
+            collapsed: widget.collapsed,
+            initiallyCollapsed: widget.initiallyCollapsed,
+            onCollapsedChanged: widget.onCollapsedChanged,
+          ),
+      pageBuilder: (context, page, query, onSelected) => switch (page) {
+        .overview => {{typePrefix}}DashboardOverview(
+          data: widget.data,
+          onViewOrders: () => onSelected({{typePrefix}}DashboardDemoPage.orders),
+        ),
+        .chat => {{typePrefix}}DashboardChatPage(
+          styles: _{{valuePrefix}}AgentStyles(),
+          stepDelay: widget.chatStepDelay,
+        ),
+        .customers => {{typePrefix}}DashboardCustomersPage(globalQuery: query),
+        .orders => {{typePrefix}}DashboardOrdersPage(globalQuery: query),
+        .settings => const {{typePrefix}}DashboardSettingsPage(),
+        .actions => const GalleryActionsPage(),
+        .forms => const GalleryFormsPage(),
+        .dataDisplay => const GalleryDisplayPage(),
+        .overlays => const GalleryOverlaysPage(),
+        .navigation => const GalleryNavigationPage(),
+        .typography => const GalleryTypographyPage(),
+        _ => {{typePrefix}}DashboardDemoContent(
+          page: page,
+          searchQuery: query,
+          kit: kit,
+          onSelected: onSelected,
+          data: widget.data,
+        ),
+      },
+    );
+    if (!widget.builtInChrome) return demo;
+    return {{typePrefix}}Scope(
+      brightness: _dark ? Brightness.dark : Brightness.light,
+      child: RemixToastScope(style: {{valuePrefix}}ToastStyle(), child: demo),
+    );
+  }
+
+  List<Widget> _chromeActions() => [
+    {{typePrefix}}IconButton.ghost(
+      key: const ValueKey('dashboard-appearance-toggle'),
+      icon: _dark ? RemixIcons.sun : RemixIcons.moon,
+      semanticLabel: _dark ? 'Use light appearance' : 'Use dark appearance',
+      onPressed: () => setState(() => _dark = !_dark),
+    ),
+    const {{typePrefix}}Popover(
+      semanticLabel: 'Notifications',
+      popoverChild: SizedBox(
+        width: 280,
+        child: Padding(
+          padding: EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              {{typePrefix}}Text('Notifications', weight: .bold),
+              SizedBox(height: 8),
+              {{typePrefix}}Text('Order ORD-1047 requires review.', size: .size2),
+              SizedBox(height: 6),
+              {{typePrefix}}Text(
+                'Three customer invitations are pending.',
+                size: .size2,
+              ),
+            ],
+          ),
+        ),
+      ),
+      child: {{typePrefix}}IconButton.ghost(
+        icon: RemixIcons.bell,
+        semanticLabel: 'Open notifications',
+      ),
+    ),
+    {{typePrefix}}Popover(
+      semanticLabel: 'Theme settings',
+      popoverChild: SizedBox(
+        width: 300,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const {{typePrefix}}Text('Theme settings', size: .size4, weight: .bold),
+              const SizedBox(height: 12),
+              _settingLine('Appearance', _dark ? 'Dark' : 'Light'),
+              _settingLine('Accent color', 'Indigo'),
+              _settingLine('Gray color', 'Slate'),
+              _settingLine('Radius', 'Medium'),
+              _settingLine('Scaling', '100%'),
+            ],
+          ),
+        ),
+      ),
+      child: const {{typePrefix}}IconButton.ghost(
+        icon: RemixIcons.gear,
+        semanticLabel: 'Open theme settings',
+      ),
+    ),
+  ];
+
+  Widget _settingLine(String label, String value) => Padding(
+    padding: const EdgeInsets.symmetric(vertical: 5),
+    child: Row(
+      children: [
+        Expanded(child: {{typePrefix}}Text(label, size: .size2)),
+        {{typePrefix}}Text(value, size: .size1, highContrast: false),
+      ],
+    ),
+  );
+}
+
+class _{{typePrefix}}Breadcrumb extends StatelessWidget {
+  const _{{typePrefix}}Breadcrumb({required this.page});
+  final {{typePrefix}}DashboardDemoPage page;
+
+  @override
+  Widget build(BuildContext context) => Row(
+    children: [
+      Flexible(
+        child: {{typePrefix}}Text(
+          page.section.label,
+          size: .size2,
+          highContrast: false,
+          softWrap: false,
+          truncate: true,
+        ),
+      ),
+      const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 8),
+        child: Text('/'),
+      ),
+      Flexible(
+        child: {{typePrefix}}Text(
+          page.label,
+          size: .size3,
+          weight: .bold,
+          softWrap: false,
+          truncate: true,
+        ),
+      ),
+    ],
+  );
+}
+
+class _{{typePrefix}}Account extends StatelessWidget {
+  const _{{typePrefix}}Account();
+
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+      const {{typePrefix}}Text(
+        'Northstar workspace',
+        size: .size1,
+        highContrast: false,
+      ),
+      const SizedBox(height: 8),
+      {{typePrefix}}Menu<String>(
+        trigger: const RemixMenuTrigger(
+          label: 'Ada Chen',
+          icon: RemixIcons.person,
+        ),
+        items: const [
+          RemixMenuItem(value: 'account', label: 'Account settings'),
+          RemixMenuItem(value: 'workspace', label: 'Switch workspace'),
+          RemixMenuDivider(),
+          RemixMenuItem(value: 'sign-out', label: 'Sign out'),
+        ],
+        onSelected: (value) =>
+            showRemixToast(context, RemixToastData(title: '$value selected')),
+      ),
+    ],
+  );
+}
+
+final class _{{typePrefix}}DashboardDemoKit implements {{typePrefix}}DashboardDemoKit {
+  const _{{typePrefix}}DashboardDemoKit();
+
+  @override
+  Widget pageHeader(String title, String description) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      {{typePrefix}}Heading(title, size: .size7),
+      const SizedBox(height: 6),
+      {{typePrefix}}Text(description, size: .size2, highContrast: false),
+    ],
+  );
+
+  @override
+  Widget section(String title, String description, Widget child) =>
+      {{typePrefix}}Card.surface(
+        size: .size2,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            {{typePrefix}}Heading(title, headingLevel: 2, size: .size4),
+            const SizedBox(height: 4),
+            {{typePrefix}}Text(description, size: .size2, highContrast: false),
+            const SizedBox(height: 16),
+            child,
+          ],
+        ),
+      );
+
+  @override
+  Widget surface(Widget child) =>
+      {{typePrefix}}Card.surface(size: .size2, child: child);
+
+  @override
+  Widget text(String value, {bool emphasized = false, bool muted = false}) =>
+      {{typePrefix}}Text(
+        value,
+        size: .size2,
+        weight: emphasized ? .bold : .regular,
+        highContrast: !muted,
+      );
+
+  @override
+  Widget button(String label, {int emphasis = 0, VoidCallback? onPressed}) =>
+      switch (emphasis) {
+        1 => {{typePrefix}}Button.soft(label: label, onPressed: onPressed),
+        2 => {{typePrefix}}Button.outline(label: label, onPressed: onPressed),
+        3 => {{typePrefix}}Button.ghost(label: label, onPressed: onPressed),
+        4 => {{typePrefix}}Button.classic(label: label, onPressed: onPressed),
+        _ => {{typePrefix}}Button.solid(label: label, onPressed: onPressed),
+      };
+
+  @override
+  Widget badge(String label, {int emphasis = 0}) => switch (emphasis) {
+    1 => {{typePrefix}}Badge.soft(label: label),
+    2 => {{typePrefix}}Badge.surface(label: label),
+    3 => {{typePrefix}}Badge.outline(label: label),
+    _ => {{typePrefix}}Badge.solid(label: label),
+  };
+
+  @override
+  Widget textField({
+    required String hintText,
+    ValueChanged<String>? onChanged,
+  }) => {{typePrefix}}TextField(hintText: hintText, onChanged: onChanged);
+
+  @override
+  Widget checkbox({
+    required bool value,
+    required ValueChanged<bool> onChanged,
+  }) => {{typePrefix}}Checkbox(
+    selected: value,
+    semanticLabel: 'Receive account alerts',
+    onChanged: (next) => onChanged(next ?? false),
+  );
+
+  @override
+  Widget switchControl({
+    required bool value,
+    required ValueChanged<bool> onChanged,
+  }) => {{typePrefix}}Switch(
+    selected: value,
+    semanticLabel: 'Toggle setting',
+    onChanged: onChanged,
+  );
+
+  @override
+  Widget progress(double value) => {{typePrefix}}Progress(
+    value: value,
+    semanticsLabel: 'Completion',
+    semanticsValue: '${(value * 100).round()} percent',
+  );
+
+  @override
+  Widget charts({{typePrefix}}DashboardSampleData data) =>
+      _{{typePrefix}}DashboardCharts(data: data);
+
+  @override
+  Widget records({required bool orders, required String query}) {
+    final rows = {{valuePrefix}}DashboardSampleData.records.where((record) {
+      if (query.isEmpty) return true;
+      return record.id.toLowerCase().contains(query) ||
+          record.customer.toLowerCase().contains(query) ||
+          record.status.toLowerCase().contains(query);
+    }).toList();
+    return {{typePrefix}}DataTable<{{typePrefix}}DashboardRecord>.surface(
+      semanticLabel: orders ? 'Orders' : 'Customers',
+      rows: rows,
+      minimumWidth: 620,
+      columns: [
+        RemixDataTableColumn(
+          id: orders ? 'order' : 'customer',
+          label: orders ? 'Order' : 'Customer',
+          width: const FlexColumnWidth(2),
+          cellBuilder: (_, record) =>
+              text(orders ? record.id : record.customer, emphasized: true),
+        ),
+        RemixDataTableColumn(
+          id: 'status',
+          label: 'Status',
+          width: const FixedColumnWidth(140),
+          cellBuilder: (_, record) => badge(record.status, emphasis: 1),
+        ),
+        RemixDataTableColumn(
+          id: orders ? 'amount' : 'plan',
+          label: orders ? 'Amount' : 'Plan',
+          width: const FixedColumnWidth(120),
+          cellBuilder: (_, record) =>
+              text(orders ? record.amount : _planFor(record.id)),
+        ),
+      ],
+    );
+  }
+
+  @override
+  Widget overlays(VoidCallback onAction) => Wrap(
+    spacing: 12,
+    runSpacing: 12,
+    children: [
+      {{typePrefix}}Popover(
+        semanticLabel: 'Invite teammates',
+        popoverChild: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              text('Invite teammates', emphasized: true),
+              const SizedBox(height: 8),
+              text('Share this workspace with collaborators.', muted: true),
+              const SizedBox(height: 12),
+              button('Copy invite link', onPressed: onAction),
+            ],
+          ),
+        ),
+        child: const {{typePrefix}}Button.outline(label: 'Open popover'),
+      ),
+      button('Show toast', emphasis: 1, onPressed: onAction),
+      button('Open menu', emphasis: 3, onPressed: onAction),
+    ],
+  );
+
+  @override
+  Widget navigation() => const _{{typePrefix}}NavigationDemo();
+
+  @override
+  Widget typography(VoidCallback onAction) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const {{typePrefix}}Heading(
+        'Build products with owned source',
+        headingLevel: 2,
+        size: .size6,
+      ),
+      const SizedBox(height: 8),
+      const {{typePrefix}}Text(
+        'Body copy inherits the application theme and remains editable.',
+        size: .size3,
+      ),
+      const SizedBox(height: 12),
+      {{typePrefix}}Link('Interactive link', onPressed: onAction),
+      const SizedBox(height: 12),
+      const Wrap(
+        spacing: 10,
+        runSpacing: 10,
+        children: [
+          {{typePrefix}}Code('remix add dashboard_demo'),
+          {{typePrefix}}Kbd('⌘'),
+          {{typePrefix}}Kbd('K'),
+        ],
+      ),
+    ],
+  );
+}
+
+class _{{typePrefix}}NavigationDemo extends StatefulWidget {
+  const _{{typePrefix}}NavigationDemo();
+
+  @override
+  State<_{{typePrefix}}NavigationDemo> createState() => _{{typePrefix}}NavigationDemoState();
+}
+
+class _{{typePrefix}}NavigationDemoState extends State<_{{typePrefix}}NavigationDemo> {
+  String _selected = 'overview';
+
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+      RemixTabs(
+        selectedTabId: _selected,
+        onChanged: (value) => setState(() => _selected = value),
+        child: const Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            {{typePrefix}}TabBar(
+              child: Row(
+                children: [
+                  {{typePrefix}}Tab(tabId: 'overview', label: 'Overview'),
+                  {{typePrefix}}Tab(tabId: 'activity', label: 'Activity'),
+                ],
+              ),
+            ),
+            {{typePrefix}}TabView(
+              tabId: 'overview',
+              child: {{typePrefix}}Text('Overview content'),
+            ),
+            {{typePrefix}}TabView(
+              tabId: 'activity',
+              child: {{typePrefix}}Text('Activity content'),
+            ),
+          ],
+        ),
+      ),
+      const SizedBox(height: 12),
+      const {{typePrefix}}Disclosure.surface(
+        trigger: {{typePrefix}}Text('What is the dashboard demo?'),
+        content: {{typePrefix}}Text(
+          'A complete, editable reference app installed into your project.',
+        ),
+      ),
+    ],
+  );
+}
+
+class _{{typePrefix}}DashboardCharts extends StatelessWidget {
+  const _{{typePrefix}}DashboardCharts({required this.data});
+
+  final {{typePrefix}}DashboardSampleData data;
+
+  @override
+  Widget build(BuildContext context) => {{typePrefix}}DashboardCharts(
+    cardBuilder: _chartCard,
+    sectionBuilder: (title, description, cards) => Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        {{typePrefix}}Heading(title, headingLevel: 2, size: .size4),
+        const SizedBox(height: 4),
+        {{typePrefix}}Text(description, size: .size2, highContrast: false),
+        const SizedBox(height: 12),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final width = constraints.maxWidth < 760
+                ? constraints.maxWidth
+                : (constraints.maxWidth - 16) / 2;
+            return Wrap(
+              spacing: 16,
+              runSpacing: 16,
+              children: [
+                for (final card in cards) SizedBox(width: width, child: card),
+              ],
+            );
+          },
+        ),
+      ],
+    ),
+    chartBuilder: (context, chart, selected, onSelected) => switch (chart) {
+      .revenueMomentum => {{typePrefix}}LineChart(
+        showMarkers: true,
+        semanticsLabel: 'Weekly revenue momentum',
+        series: [
+          LineSeries(
+            id: 'revenue',
+            label: 'Revenue',
+            points: {{valuePrefix}}DashboardRevenuePoints(data),
+          ),
+        ],
+        xAxis: {{valuePrefix}}DashboardWeekdayAxis(),
+        yAxis: {{valuePrefix}}DashboardNumericAxis(max: 100),
+      ),
+      .linePatterns => {{typePrefix}}LineChart(
+        showMarkers: true,
+        semanticsLabel: 'Weekly actual and planned revenue',
+        series: [
+          LineSeries(
+            id: 'actual',
+            label: 'Actual',
+            points: {{valuePrefix}}DashboardPoints('actual', const [
+              18,
+              24,
+              22,
+              34,
+              31,
+              42,
+              48,
+            ]),
+          ),
+          LineSeries(
+            id: 'plan',
+            label: 'Plan',
+            points: {{valuePrefix}}DashboardPoints('plan', const [
+              16,
+              20,
+              25,
+              28,
+              34,
+              37,
+              41,
+            ]),
+            style: LineSeriesStyler()
+                .stroke(ChartStrokeStyler().dashArray([6, 4]))
+                .marker(ChartMarkerStyler().show(true).shape(.square)),
+          ),
+        ],
+        xAxis: {{valuePrefix}}DashboardWeekdayAxis(),
+      ),
+      .stepGaps => {{typePrefix}}LineChart(
+        showMarkers: true,
+        semanticsLabel: 'Inventory levels with missing observations',
+        series: [
+          LineSeries(
+            id: 'inventory',
+            label: 'Inventory',
+            points: {{valuePrefix}}DashboardPoints('inventory', const [
+              32,
+              27,
+              null,
+              null,
+              19,
+              25,
+              22,
+            ]),
+            style: LineSeriesStyler().curve(.stepAfter),
+          ),
+        ],
+        xAxis: {{valuePrefix}}DashboardWeekdayAxis(),
+      ),
+      .viewportLabels => {{typePrefix}}LineChart(
+        showMarkers: true,
+        semanticsLabel: 'Revenue chart with scalable horizontal viewport',
+        viewport: ChartViewport(axis: .horizontal, maxScale: 3),
+        series: [
+          LineSeries(
+            id: 'viewport',
+            label: 'Revenue',
+            points: {{valuePrefix}}DashboardPoints('viewport', const [
+              18,
+              24,
+              22,
+              34,
+              31,
+              42,
+              48,
+            ]),
+          ),
+        ],
+        xAxis: {{valuePrefix}}DashboardWeekdayAxis(),
+      ),
+      .groupedBars => {{typePrefix}}BarChart(
+        semanticsLabel: 'Monthly actual and planned revenue',
+        groups: {{valuePrefix}}DashboardGroupedBars(),
+      ),
+      .stackedBars => {{typePrefix}}BarChart(
+        semanticsLabel: 'Monthly product and services revenue',
+        groups: {{valuePrefix}}DashboardStackedBars(),
+      ),
+      .floatingBars => {{typePrefix}}BarChart(
+        semanticsLabel: 'Monthly floating inventory changes',
+        groups: {{valuePrefix}}DashboardFloatingBars(),
+      ),
+      .trackedBars => {{typePrefix}}BarChart(
+        semanticsLabel: 'Monthly revenue against full-scale tracks',
+        groups: {{valuePrefix}}DashboardTrackedBars(),
+        yAxis: {{valuePrefix}}DashboardNumericAxis(max: 70),
+      ),
+      .trafficPie => {{typePrefix}}PieChart(
+        semanticsLabel: 'Traffic share by device',
+        slices: {{valuePrefix}}DashboardChannelSlices(),
+        valueFormatter: (value) => '${value.toInt()}%',
+      ),
+      .interactivePie => {{typePrefix}}PieChart(
+        centerRadius: 40,
+        semanticsLabel: 'Product mix',
+        slices: {{valuePrefix}}DashboardProductSlices(),
+        selectedSliceIds: {?selected},
+        onSliceTap: (hit) => onSelected(hit.sliceId),
+        valueFormatter: (value) => '${value.toInt()}%',
+      ),
+      .badgePie => {{typePrefix}}PieChart(
+        centerRadius: 34,
+        semanticsLabel: 'Device traffic with badge markers',
+        slices: {{valuePrefix}}DashboardChannelSlices(badges: true),
+      ),
+      .emptyPie => Stack(
+        alignment: Alignment.center,
+        children: [
+          {{typePrefix}}PieChart(
+            centerRadius: 52,
+            semanticsLabel: 'No channel data',
+            slices: {{valuePrefix}}DashboardEmptySlices(),
+          ),
+          const Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(RemixIcons.box, size: 20),
+              SizedBox(height: 6),
+              {{typePrefix}}Text('No data yet', size: .size1),
+            ],
+          ),
+        ],
+      ),
+    },
+  );
+}
+
+Widget _chartCard(String title, String description, Widget chart) =>
+    {{typePrefix}}Card.surface(
+      size: .size2,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          {{typePrefix}}Heading(title, headingLevel: 3, size: .size3),
+          const SizedBox(height: 4),
+          {{typePrefix}}Text(description, size: .size1, highContrast: false),
+          const SizedBox(height: 12),
+          SizedBox(height: 240, child: chart),
+        ],
+      ),
+    );
+
+String _planFor(String id) => switch (id) {
+  'ORD-1048' => 'Enterprise',
+  'ORD-1047' => 'Pro',
+  'ORD-1046' => 'Pro',
+  _ => 'Starter',
+};
+
+{{typePrefix}}DashboardAgentStyles _{{valuePrefix}}AgentStyles() {
+  final message = {{valuePrefix}}AgentMessageRecipe();
+  final answer = {{valuePrefix}}AgentAnswerRecipe();
+  final transcript = {{valuePrefix}}AgentTranscriptRecipe();
+  final plan = {{valuePrefix}}AgentPlanRecipe();
+  final activity = {{valuePrefix}}AgentActivityRecipe();
+  final permission = {{valuePrefix}}AgentPermissionRecipe();
+  final execution = {{valuePrefix}}AgentExecutionRecipe();
+  final composer = {{valuePrefix}}AgentComposerRecipe();
+  return {{typePrefix}}DashboardAgentStyles(
+    buttonBuilder: (label, onPressed, tone) => switch (tone) {
+      .primary => {{typePrefix}}Button(label: label, onPressed: onPressed),
+      .soft => {{typePrefix}}Button.soft(label: label, onPressed: onPressed),
+      .outline => {{typePrefix}}Button.outline(label: label, onPressed: onPressed),
+    },
+    heading: {{valuePrefix}}TextStyle(size: .size6, weight: .bold),
+    body: {{valuePrefix}}TextStyle(size: .size2, highContrast: false),
+    messageStyle: message.style,
+    messageSurfaceStyle: message.surfaceStyle,
+    answerStyle: answer.style,
+    answerSurfaceStyle: answer.surfaceStyle,
+    answerSourcesStyle: answer.sourcesStyle,
+    answerCopyStyle: answer.copyStyle,
+    answerRetryStyle: answer.retryStyle,
+    transcriptStyle: transcript.style,
+    planStyle: plan.style,
+    planDisclosureStyle: plan.disclosureStyle,
+    activityStyle: activity.style,
+    activityDisclosureStyle: activity.disclosureStyle,
+    permissionStyle: permission.style,
+    permissionSurfaceStyle: permission.surfaceStyle,
+    permissionDetailsStyle: permission.detailsStyle,
+    permissionParametersStyle: permission.parametersStyle,
+    permissionAllowOnceStyle: permission.allowOnceStyle,
+    permissionAlwaysAllowStyle: permission.alwaysAllowStyle,
+    permissionDenyStyle: permission.denyStyle,
+    executionStyle: execution.style,
+    executionSurfaceStyle: execution.surfaceStyle,
+    executionDisclosureStyle: execution.disclosureStyle,
+    executionCopyStyle: execution.copyStyle,
+    executionRetryStyle: execution.retryStyle,
+    composerStyle: composer.style,
+    composerSurfaceStyle: composer.surfaceStyle,
+    composerFieldStyle: composer.fieldStyle,
+    composerSubmitStyle: composer.submitStyle,
+    composerStopStyle: composer.stopStyle,
+  );
+}

@@ -903,6 +903,7 @@ const defaultAgentExtension = PresetSpec(
 /// items derive from a second source package into the same tree.
 const presetSpecs = <String, List<PresetSpec>>{
   'vanilla': [defaultPreset, defaultAgentExtension],
+  'fortal': [fortalPreset, fortalAgentExtension],
 };
 
 PresetOutput mergePresetOutputs(PresetOutput base, PresetOutput extension) {

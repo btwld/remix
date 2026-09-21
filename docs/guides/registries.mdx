@@ -14,7 +14,7 @@ Five words carry the whole system.
 | term | what it is |
 | --- | --- |
 | **Registry** | A public GitHub repository holding a directory of component source. |
-| **Preset** | One design language inside a registry — `vanilla` officially. A project picks exactly one. |
+| **Preset** | One design language inside a registry — `vanilla` or `fortal` officially. A project picks exactly one. |
 | **Catalog** | The `registry.yaml` for one preset. It lists items. |
 | **Item** | One installable unit: its templates, its dependencies, what it exports. |
 | **Pin** | The exact commit your project reads from, recorded in `remix.yaml`. |
@@ -37,11 +37,11 @@ dart run remix_cli:remix add button
 preset exists in it, and writes `remix.yaml`. If no compatible release is
 published, initialization fails and creates no files.
 
-Omitting `--preset` selects `vanilla`. Use `--prefix` and `--ui-path` to
-control naming and location:
+Omitting `--preset` selects `vanilla`. Pass `--preset fortal` for Fortal, and
+`--prefix`/`--ui-path` to control naming and location:
 
 ```shell
-dart run remix_cli:remix init --prefix Acme --ui-path lib/design_system
+dart run remix_cli:remix init --prefix Acme --preset fortal --ui-path lib/design_system
 ```
 
 The result:
@@ -49,7 +49,7 @@ The result:
 ```yaml
 schema: 3
 prefix: Acme
-preset: vanilla
+preset: fortal
 paths:
   ui: lib/design_system
 defaultRegistry: "@remix"
@@ -107,7 +107,7 @@ dart run remix_cli:remix add button --diff
 
 Migration changes configuration only. Your prefix, UI path, installed files,
 and generated adapters are untouched. A legacy `default` preset is recorded as
-`vanilla`; other preset names are unchanged. Add `--ref registry-v4` to pin a specific
+`vanilla`; `fortal` is unchanged. Add `--ref registry-v4` to pin a specific
 release instead of the newest stable one.
 
 Migration does not claim your installed source matches the new pin. That is
