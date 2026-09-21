@@ -18,9 +18,10 @@ void main() {
         projectRoot: root,
         writeOut: output.add,
         processRunner: runner,
+        sources: const FixtureOfficialResolver(),
       );
-      await installer.initializeBundled(
-        const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
+      await installer.initialize(
+        const InitOptions(prefix: 'Ui', preset: 'vanilla', uiPath: 'lib/ui'),
       );
 
       final code = await runRemixCli(
@@ -31,7 +32,10 @@ void main() {
       );
 
       expect(code, successExitCode);
-      expect(output.join('\n'), contains('Items: theme -> button'));
+      expect(
+        output.join('\n'),
+        contains('Items: @remix/theme -> @remix/button'),
+      );
       expect(runner.calls, isEmpty);
     },
   );
@@ -46,9 +50,10 @@ void main() {
       projectRoot: root,
       writeOut: (_) {},
       processRunner: runner,
+      sources: const FixtureOfficialResolver(),
     );
-    await installer.initializeBundled(
-      const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
+    await installer.initialize(
+      const InitOptions(prefix: 'Ui', preset: 'vanilla', uiPath: 'lib/ui'),
     );
     final before = snapshotFiles(root);
     final errors = <String>[];

@@ -13,55 +13,35 @@ void main() {
   setUp(() => root = createFlutterPackage());
   tearDown(() => root.deleteSync(recursive: true));
 
-  test('reads schema 1 as default without rewriting its schema', () {
-    final config = ProjectConfig.parse('''schema: 1
+  final source = RegistrySource(
+    repository: 'owner/repo',
+    path: 'registry',
+    ref: 'v1',
+    revision: 'b' * 40,
+  );
+
+  ProjectConfig configure({
+    required Directory packageRoot,
+    String prefix = 'Ui',
+    String preset = 'vanilla',
+    String uiPath = 'lib/ui',
+    String defaultRegistry = '@company',
+    Map<String, RegistrySource>? registries,
+  }) => ProjectConfig(
+    packageRoot: packageRoot,
+    prefix: prefix,
+    preset: preset,
+    uiPath: uiPath,
+    defaultRegistry: defaultRegistry,
+    registries: registries ?? {'@company': source},
+  );
+
+  test('parses the exact schema 3 shape', () {
+    final config = ProjectConfig.parse('''schema: 3
 prefix: Acme
-paths:
-  ui: lib/design_system
-''', packageRoot: root);
-
-    expect(config.prefix, 'Acme');
-    expect(config.valuePrefix, 'acme');
-    expect(config.preset, 'default');
-    expect(config.uiPath, 'lib/design_system');
-    expect(config.encode(), '''schema: 1
-prefix: Acme
-paths:
-  ui: lib/design_system
-''');
-  });
-
-  test('parses the exact schema 2 shape', () {
-    final config = ProjectConfig.parse('''schema: 2
-prefix: Acme
-preset: default
-paths:
-  ui: lib/design_system
-''', packageRoot: root);
-
-    expect(config.prefix, 'Acme');
-    expect(config.preset, 'default');
-    expect(config.uiPath, 'lib/design_system');
-  });
-
-  test('parse returns the shape each schema actually has', () {
-    Directory(p.join(root.path, 'lib', 'ui')).createSync(recursive: true);
-    for (final (schema, source) in [
-      (1, 'schema: 1\nprefix: Ui\npaths:\n  ui: lib/ui\n'),
-      (2, 'schema: 2\nprefix: Ui\npreset: default\npaths:\n  ui: lib/ui\n'),
-    ]) {
-      expect(
-        ProjectConfig.parse(source, packageRoot: root),
-        isA<LegacyProject>().having((c) => c.schema, 'schema', schema),
-        reason: source,
-      );
-    }
-
-    final pinned = ProjectConfig.parse('''schema: 3
-prefix: Ui
 preset: vanilla
 paths:
-  ui: lib/ui
+  ui: lib/design_system
 defaultRegistry: "@remix"
 registries:
   "@remix":
@@ -71,10 +51,36 @@ registries:
     revision: "${'a' * 40}"
 ''', packageRoot: root);
 
-    expect(pinned, isA<PinnedProject>());
-    expect((pinned as PinnedProject).defaultRegistry, '@remix');
-    expect(pinned.registries.keys, ['@remix']);
-    expect(pinned.schema, supportedProjectSchema);
+    expect(config.prefix, 'Acme');
+    expect(config.valuePrefix, 'acme');
+    expect(config.preset, 'vanilla');
+    expect(config.uiPath, 'lib/design_system');
+    expect(config.defaultRegistry, '@remix');
+    expect(config.registries.keys, ['@remix']);
+    expect(config.registries['@remix']!.ref, 'registry-v1');
+    expect(config.schema, supportedProjectSchema);
+  });
+
+  // Schemas 1 and 2 shipped in prereleases and read from a snapshot inside the
+  // CLI. That snapshot is gone, so there is no source such a project could be
+  // served from -- the parse has to say so instead of failing on a missing key.
+  test('rejects the prerelease schemas by naming the way forward', () {
+    for (final source in [
+      'schema: 1\nprefix: Ui\npaths:\n  ui: lib/ui\n',
+      'schema: 2\nprefix: Ui\npreset: vanilla\npaths:\n  ui: lib/ui\n',
+    ]) {
+      expect(
+        () => ProjectConfig.parse(source, packageRoot: root),
+        throwsA(
+          isA<FormatException>().having(
+            (error) => error.message,
+            'message',
+            allOf(contains('schema'), contains('remix init')),
+          ),
+        ),
+        reason: source,
+      );
+    }
   });
 
   test('preset and prefix names YAML reads as keywords round-trip', () {
@@ -82,23 +88,9 @@ registries:
     // reads them back as a boolean or null and the parser rejects the project,
     // so a successful rewrite would leave it unreadable.
     Directory(p.join(root.path, 'lib', 'ui')).createSync(recursive: true);
-    final source = RegistrySource(
-      repository: 'owner/repo',
-      path: 'registry',
-      ref: 'v1',
-      revision: 'b' * 40,
-    );
 
     for (final preset in ['true', 'false', 'null', 'acme_dark']) {
-      final encoded = PinnedProject(
-        packageRoot: root,
-        prefix: 'Ui',
-        preset: preset,
-        uiPath: 'lib/ui',
-        defaultRegistry: '@company',
-        registries: {'@company': source},
-      ).encode();
-
+      final encoded = configure(packageRoot: root, preset: preset).encode();
       expect(
         ProjectConfig.parse(encoded, packageRoot: root).preset,
         preset,
@@ -107,85 +99,35 @@ registries:
     }
 
     for (final prefix in ['TRUE', 'FALSE', 'NULL', 'Acme']) {
-      for (final encoded in [
-        PinnedProject(
-          packageRoot: root,
-          prefix: prefix,
-          preset: 'acme_dark',
-          uiPath: 'lib/ui',
-          defaultRegistry: '@company',
-          registries: {'@company': source},
-        ).encode(),
-        LegacyProject(
-          packageRoot: root,
-          prefix: prefix,
-          preset: 'default',
-          uiPath: 'lib/ui',
-        ).encode(),
-      ]) {
-        expect(
-          ProjectConfig.parse(encoded, packageRoot: root).prefix,
-          prefix,
-          reason: encoded,
-        );
-      }
+      final encoded = configure(packageRoot: root, prefix: prefix).encode();
+      expect(
+        ProjectConfig.parse(encoded, packageRoot: root).prefix,
+        prefix,
+        reason: encoded,
+      );
     }
   });
 
-  test('a pinned default registry must name a configured one', () {
+  test('the default registry must name a configured one', () {
     Directory(p.join(root.path, 'lib', 'ui')).createSync(recursive: true);
-    final source = RegistrySource(
-      repository: 'owner/repo',
-      path: 'registry',
-      ref: 'v1',
-      revision: 'b' * 40,
-    );
 
     expect(
-      () => PinnedProject(
-        packageRoot: root,
-        prefix: 'Ui',
-        preset: 'vanilla',
-        uiPath: 'lib/ui',
-        defaultRegistry: '@missing',
-        registries: {'@company': source},
-      ),
+      () => configure(packageRoot: root, defaultRegistry: '@missing'),
       throwsFormatException,
     );
 
-    // A third-party registry names its own presets, so a pinned project is not
-    // held to the bundled list the way a legacy project is.
+    // A registry names its own presets, so the CLI holds a preset to its
+    // grammar and leaves membership to the registry that serves it.
     expect(
-      PinnedProject(
-        packageRoot: root,
-        prefix: 'Ui',
-        preset: 'acme_dark',
-        uiPath: 'lib/ui',
-        defaultRegistry: '@company',
-        registries: {'@company': source},
-      ).preset,
+      configure(packageRoot: root, preset: 'acme_dark').preset,
       'acme_dark',
-    );
-    expect(
-      () => LegacyProject(
-        packageRoot: root,
-        prefix: 'Ui',
-        preset: 'acme_dark',
-        uiPath: 'lib/ui',
-      ),
-      throwsFormatException,
     );
   });
 
   test('rejects invalid and reserved prefixes', () {
     for (final prefix in ['', 'ui', '_Ui', 'Ui-name', 'Üi', 'Class', 'Is']) {
       expect(
-        () => LegacyProject(
-          packageRoot: root,
-          prefix: prefix,
-          preset: 'default',
-          uiPath: 'lib/ui',
-        ),
+        () => configure(packageRoot: root, prefix: prefix),
         throwsFormatException,
         reason: prefix,
       );
@@ -194,11 +136,13 @@ registries:
 
   test('rejects unknown, missing, and unsupported config fields', () {
     for (final source in [
-      'schema: 3\nprefix: Ui\npreset: default\npaths:\n  ui: lib/ui\n',
-      'schema: 2\nprefix: Ui\npaths:\n  ui: lib/ui\n',
-      'schema: 1\npaths:\n  ui: lib/ui\n',
-      'schema: 1\nprefix: Ui\npaths:\n  ui: lib/ui\nstyle: new\n',
-      'schema: 1\nprefix: Ui\npaths:\n  ui: lib/ui\n  extra: lib/x\n',
+      // No `registries`, so nothing says where the source came from.
+      'schema: 3\nprefix: Ui\npreset: vanilla\npaths:\n  ui: lib/ui\n',
+      'schema: 4\nprefix: Ui\npreset: vanilla\npaths:\n  ui: lib/ui\n',
+      'schema: 3\npreset: vanilla\npaths:\n  ui: lib/ui\n',
+      'schema: 3\nprefix: Ui\npreset: vanilla\npaths:\n  ui: lib/ui\nstyle: new\n',
+      'schema: 3\nprefix: Ui\npreset: vanilla\npaths:\n'
+          '  ui: lib/ui\n  extra: lib/x\n',
     ]) {
       expect(
         () => ProjectConfig.parse(source, packageRoot: root),
@@ -208,15 +152,10 @@ registries:
     }
   });
 
-  test('rejects invalid and unbundled presets', () {
-    for (final preset in ['', 'Default', 'default-name', 'missing']) {
+  test('rejects preset names outside the identifier grammar', () {
+    for (final preset in ['', 'Default', 'default-name', 'acme dark']) {
       expect(
-        () => LegacyProject(
-          packageRoot: root,
-          prefix: 'Ui',
-          preset: preset,
-          uiPath: 'lib/ui',
-        ),
+        () => configure(packageRoot: root, preset: preset),
         throwsFormatException,
         reason: preset,
       );
@@ -234,12 +173,7 @@ registries:
       'lib',
     ]) {
       expect(
-        () => LegacyProject(
-          packageRoot: root,
-          prefix: 'Ui',
-          preset: 'default',
-          uiPath: uiPath,
-        ),
+        () => configure(packageRoot: root, uiPath: uiPath),
         throwsFormatException,
         reason: uiPath,
       );
@@ -251,26 +185,12 @@ registries:
     addTearDown(() => outside.deleteSync(recursive: true));
     Link(p.join(root.path, 'lib', 'ui')).createSync(outside.path);
 
-    expect(
-      () => LegacyProject(
-        packageRoot: root,
-        prefix: 'Ui',
-        preset: 'default',
-        uiPath: 'lib/ui',
-      ),
-      throwsFormatException,
-    );
+    expect(() => configure(packageRoot: root), throwsFormatException);
   });
 
   test('encoded configuration round-trips YAML-significant UI paths', () {
     for (final uiPath in ['lib/ui #brand', 'lib/ui: brand']) {
-      final encoded = LegacyProject(
-        packageRoot: root,
-        prefix: 'Acme',
-        preset: 'default',
-        uiPath: uiPath,
-      ).encode();
-
+      final encoded = configure(packageRoot: root, uiPath: uiPath).encode();
       final reparsed = ProjectConfig.parse(encoded, packageRoot: root);
 
       expect(reparsed.uiPath, uiPath, reason: encoded);

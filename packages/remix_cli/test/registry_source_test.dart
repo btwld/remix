@@ -157,7 +157,7 @@ void main() {
     () {
       final root = createFlutterPackage();
       addTearDown(() => root.deleteSync(recursive: true));
-      final config = PinnedProject(
+      final config = ProjectConfig(
         packageRoot: root,
         prefix: 'Acme',
         preset: 'custom',
@@ -176,7 +176,7 @@ void main() {
       expect(parsed.encode(), config.encode());
       for (final namespace in ['company', '@', '@UPPER', '@a/b', '@a b']) {
         expect(
-          () => PinnedProject(
+          () => ProjectConfig(
             packageRoot: root,
             prefix: 'Ui',
             preset: 'default',

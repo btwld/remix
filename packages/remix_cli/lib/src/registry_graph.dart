@@ -8,27 +8,13 @@ import 'registry_source.dart';
 final class RegistryGraph {
   RegistryGraph._(this.items, this.catalogs, this._owners, this.requestedNames);
 
-  /// The graph a schema-1/2 project resolves from its bundled preset, where a
-  /// single registry owns every item and namespaces never reach the caller.
-  factory RegistryGraph.bundled(
-    RegistryReader reader,
-    RegistryCatalog catalog,
-    List<RegistryItem> items,
-    Set<String> requestedNames,
-  ) => RegistryGraph._(
-    List.unmodifiable(items),
-    {'bundled': catalog},
-    {for (final item in items) item.name: reader},
-    Set.unmodifiable(requestedNames),
-  );
-
   final List<RegistryItem> items;
   final Map<String, RegistryCatalog> catalogs;
 
-  /// What the caller asked for, in the same naming [items] uses: qualified for
-  /// a pinned project, bare for a legacy one. `add --overwrite` replaces only
-  /// these, so comparing an unqualified request against a qualified item would
-  /// silently preserve the very file the caller asked to replace.
+  /// What the caller asked for, in the same qualified naming [items] uses.
+  /// `add --overwrite` replaces only these, so comparing an unqualified
+  /// request against a qualified item would silently preserve the very file
+  /// the caller asked to replace.
   final Set<String> requestedNames;
 
   /// The registry each item came from, so a template is always read back
@@ -39,7 +25,7 @@ final class RegistryGraph {
       _owners[item.name]!.template(file);
 
   static Future<RegistryGraph> resolve(
-    PinnedProject config,
+    ProjectConfig config,
     List<String> requested,
     RegistrySources sources,
   ) async {

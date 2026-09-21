@@ -18,7 +18,6 @@ void main() {
       RegistryAction.add,
     ),
     (['registry', 'update', '@company', '--ref', 'v2'], RegistryAction.update),
-    (['registry', 'migrate', '--ref', 'registry-v1'], RegistryAction.migrate),
   ]) {
     test('routes registry ${action.name} options', () async {
       RegistryOptions? received;
@@ -34,10 +33,7 @@ void main() {
         successExitCode,
       );
       expect(received!.action, action);
-      expect(
-        received!.namespace,
-        action == RegistryAction.migrate ? null : '@company',
-      );
+      expect(received!.namespace, '@company');
       expect(received!.ref, arguments.last);
       if (action == RegistryAction.add) {
         expect(received!.repository, 'owner/repo');
@@ -49,6 +45,7 @@ void main() {
     ['registry', 'add', '@company'],
     ['registry', 'update'],
     ['registry', 'migrate', '@company'],
+    ['registry', 'migrate'],
     ['registry', 'update', '@company', '--repository', 'different/repo'],
   ]) {
     test(

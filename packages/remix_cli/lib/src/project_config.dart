@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:path/path.dart' as p;
 import 'package:yaml/yaml.dart';
 
-import 'registry.dart';
 import 'registry_source.dart';
 
 const projectConfigFileName = 'remix.yaml';
@@ -12,20 +11,33 @@ const supportedProjectSchema = 3;
 
 /// A parsed `remix.yaml`.
 ///
-/// The two shapes differ enough to be different types. A legacy project reads
-/// the frozen bundled snapshot and names no registries; a pinned project names
-/// registries and a default among them. Splitting them makes the invalid
-/// combinations unrepresentable instead of rejected at runtime.
-sealed class ProjectConfig {
-  ProjectConfig._({
+/// One shape: every project names its registries and a default among them.
+/// A configuration that cannot say where its source came from is not a
+/// configuration this CLI can act on, so that combination is unrepresentable
+/// rather than rejected at runtime.
+final class ProjectConfig {
+  ProjectConfig({
     required Directory packageRoot,
     required this.prefix,
     required this.preset,
     required this.uiPath,
-  }) {
-    // Invariants both shapes share. Each subclass adds only its preset rule.
+    required this.defaultRegistry,
+    required Map<String, RegistrySource> registries,
+  }) : registries = Map.unmodifiable(registries) {
     _validatePrefix(prefix);
     _validateUiPath(packageRoot, uiPath);
+    // A third-party registry names its own presets, so only the shape is
+    // checked here; the registry itself rejects a preset it does not carry.
+    _validatePresetName(preset);
+    validateNamespace(defaultRegistry);
+    for (final namespace in this.registries.keys) {
+      validateNamespace(namespace);
+    }
+    if (!this.registries.containsKey(defaultRegistry)) {
+      throw const FormatException(
+        'defaultRegistry must name a configured registry.',
+      );
+    }
   }
 
   factory ProjectConfig.parse(String source, {required Directory packageRoot}) {
@@ -39,32 +51,26 @@ sealed class ProjectConfig {
       throw const FormatException('$projectConfigFileName must contain a map.');
     }
     final schema = document['schema'];
-    if (schema is! int ||
-        (schema != 1 && schema != 2 && schema != supportedProjectSchema)) {
+    if (schema is! int || schema != supportedProjectSchema) {
       throw FormatException(
         'Unsupported remix.yaml schema $schema; '
-        'remix_cli supports schemas 1, 2 and $supportedProjectSchema.',
+        'remix_cli supports schema $supportedProjectSchema. Projects written '
+        'by an earlier prerelease must be reinitialized with remix init.',
       );
     }
-    _requireExactKeys(
-      document,
-      schema == 1
-          ? {'schema', 'prefix', 'paths'}
-          : {
-              'schema',
-              'prefix',
-              'preset',
-              'paths',
-              if (schema == 3) ...['defaultRegistry', 'registries'],
-            },
-      'configuration',
-    );
+    _requireExactKeys(document, {
+      'schema',
+      'prefix',
+      'preset',
+      'paths',
+      'defaultRegistry',
+      'registries',
+    }, 'configuration');
     final prefix = document['prefix'];
     if (prefix is! String) {
       throw const FormatException('remix.yaml prefix must be a string.');
     }
-    // Schema 1 predates the key and always meant the bundled default preset.
-    final preset = schema == 1 ? 'default' : document['preset'];
+    final preset = document['preset'];
     if (preset is! String) {
       throw const FormatException('remix.yaml preset must be a string.');
     }
@@ -76,15 +82,6 @@ sealed class ProjectConfig {
     final uiPath = paths['ui'];
     if (uiPath is! String) {
       throw const FormatException('remix.yaml paths.ui must be a string.');
-    }
-    if (schema != supportedProjectSchema) {
-      return LegacyProject(
-        packageRoot: packageRoot,
-        prefix: prefix,
-        preset: preset,
-        uiPath: uiPath,
-        schema: schema,
-      );
     }
     final configured = document['registries'];
     final defaultRegistry = document['defaultRegistry'];
@@ -112,7 +109,7 @@ sealed class ProjectConfig {
         revision: value['revision'] as String,
       );
     }
-    return PinnedProject(
+    return ProjectConfig(
       packageRoot: packageRoot,
       prefix: prefix,
       preset: preset,
@@ -125,91 +122,14 @@ sealed class ProjectConfig {
   final String prefix;
   final String preset;
   final String uiPath;
+  final String defaultRegistry;
+  final Map<String, RegistrySource> registries;
 
-  /// The `schema:` value this configuration writes.
-  int get schema;
+  int get schema => supportedProjectSchema;
 
   String get valuePrefix =>
       '${prefix.substring(0, 1).toLowerCase()}${prefix.substring(1)}';
 
-  String encode();
-}
-
-/// A schema-1 or schema-2 project, reading the frozen bundled snapshot.
-///
-/// Upgrading the CLI never rewrites one of these. `remix registry migrate`
-/// converts it to a [PinnedProject] explicitly.
-final class LegacyProject extends ProjectConfig {
-  LegacyProject({
-    required Directory packageRoot,
-    required String prefix,
-    required String preset,
-    required String uiPath,
-    this.schema = 2,
-  }) : super._(
-         packageRoot: packageRoot,
-         prefix: prefix,
-         preset: preset,
-         uiPath: uiPath,
-       ) {
-    if (schema != 1 && schema != 2) {
-      throw FormatException('Unsupported remix.yaml schema $schema.');
-    }
-    _validateBundledPreset(preset);
-  }
-
-  @override
-  final int schema;
-
-  @override
-  String encode() {
-    final buffer = StringBuffer(
-      'schema: $schema\nprefix: ${_encodeYamlScalar(prefix)}\n',
-    );
-    // Schema 1 has no preset key; writing one would change its shape.
-    if (schema > 1) buffer.writeln('preset: ${_encodeYamlScalar(preset)}');
-    buffer.writeln('paths:\n  ui: ${_encodeYamlPath(uiPath)}');
-    return buffer.toString();
-  }
-}
-
-/// A schema-3 project, reading pinned registries.
-final class PinnedProject extends ProjectConfig {
-  PinnedProject({
-    required Directory packageRoot,
-    required String prefix,
-    required String preset,
-    required String uiPath,
-    required this.defaultRegistry,
-    required Map<String, RegistrySource> registries,
-  }) : registries = Map.unmodifiable(registries),
-       super._(
-         packageRoot: packageRoot,
-         prefix: prefix,
-         preset: preset,
-         uiPath: uiPath,
-       ) {
-    // A third-party registry names its own presets, so only the shape is
-    // checked here; the registry itself rejects a preset it does not carry.
-    _validatePresetName(preset);
-    validateNamespace(defaultRegistry);
-    for (final namespace in this.registries.keys) {
-      validateNamespace(namespace);
-    }
-    if (!this.registries.containsKey(defaultRegistry)) {
-      throw const FormatException(
-        'defaultRegistry must name a configured registry.',
-      );
-    }
-  }
-
-  final String defaultRegistry;
-  final Map<String, RegistrySource> registries;
-
-  @override
-  int get schema => supportedProjectSchema;
-
-  @override
   String encode() {
     final buffer =
         StringBuffer('schema: $schema\nprefix: ${_encodeYamlScalar(prefix)}\n')
@@ -369,15 +289,6 @@ void _validatePrefix(String prefix) {
 void _validatePresetName(String preset) {
   if (!RegExp(r'^[a-z][a-z0-9_]*$').hasMatch(preset)) {
     throw const FormatException('preset must be a lowercase ASCII identifier.');
-  }
-}
-
-void _validateBundledPreset(String preset) {
-  _validatePresetName(preset);
-  if (!bundledPresets.contains(preset)) {
-    throw FormatException(
-      'Unknown preset $preset. Bundled presets: ${bundledPresets.join(', ')}.',
-    );
   }
 }
 

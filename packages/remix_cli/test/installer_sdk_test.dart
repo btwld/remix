@@ -16,14 +16,18 @@ void main() {
       final root = createFlutterPackage();
       addTearDown(() => root.deleteSync(recursive: true));
       final output = <String>[];
-      final installer = Installer(projectRoot: root, writeOut: output.add);
+      final installer = Installer(
+        projectRoot: root,
+        writeOut: output.add,
+        sources: const FixtureOfficialResolver(),
+      );
 
       expect(
         await runRemixCli(
           [
             'init',
             '--preset',
-            'default',
+            'vanilla',
             '--prefix',
             'Acme',
             '--ui-path',
@@ -31,7 +35,7 @@ void main() {
           ],
           writeOut: output.add,
           writeError: fail,
-          onInit: installer.initializeBundled,
+          onInit: installer.initialize,
         ),
         successExitCode,
       );
