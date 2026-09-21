@@ -329,6 +329,13 @@ class _ToggleGroupExampleState extends State<ToggleGroupExample> {
           ),
         ),
         const SizedBox(height: 8),
+        // These two stay on Material while the rest of this app hosts on
+        // WidgetsApp. `naked_toggle_group_golden_test` pins this widget to an
+        // Ubuntu baseline (`skip: !Platform.isLinux`), and substituting them
+        // moved it by 7.7% -- a diff no one can regenerate off Linux. The
+        // golden pumps ToggleGroupExample inside its own MaterialApp, so they
+        // resolve there; `demo_hosts_test` covers the hostless path, which
+        // this widget is not registered for.
         Wrap(
           alignment: WrapAlignment.center,
           spacing: 8,
