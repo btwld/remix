@@ -86,7 +86,16 @@ void main() {
           isA<FlutterError>().having(
             (error) => error.toString(),
             'message',
-            allOf(contains('RemixToastScope'), contains('No Scaffold')),
+            allOf(
+              contains('RemixToastScope'),
+              contains('No Scaffold'),
+              // The hint must stay copy-pasteable and host-neutral: a
+              // developer hitting this needs the placement, not a description
+              // of it, and the scope works under any app host.
+              contains('Overlay.wrap(child: RemixToastScope(child: child!))'),
+              contains('builder:'),
+              contains('MaterialApp'),
+            ),
           ),
         ),
       );

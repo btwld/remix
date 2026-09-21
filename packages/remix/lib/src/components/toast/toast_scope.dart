@@ -144,8 +144,10 @@ RemixToastHandle showRemixToast(BuildContext context, RemixToastData toast) {
       ),
       ErrorHint(
         'Place one RemixToastScope above the app Navigator so every route, '
-        'including dialogs, can reach it. In WidgetsApp.builder, wrap the '
-        'Navigator child in Overlay.wrap and RemixToastScope. '
+        'including dialogs, can reach it, for example:\n'
+        '  WidgetsApp(builder: (context, child) => '
+        'Overlay.wrap(child: RemixToastScope(child: child!)))\n'
+        'Any app host works; MaterialApp takes the same builder placement. '
         'No Scaffold is required.',
       ),
       context.describeElement('The context used was'),
