@@ -325,7 +325,7 @@ paths:
       final pubAdd = runner.calls.singleWhere(
         (call) => call.arguments.take(2).join(' ') == 'pub add',
       );
-      expect(pubAdd.arguments, ['pub', 'add', 'mix_chart@^0.0.1-beta.3']);
+      expect(pubAdd.arguments, ['pub', 'add', 'mix_chart@^0.0.1-beta.1']);
       final build = runner.calls.singleWhere(
         (call) => call.arguments.take(3).join(' ') == 'run build_runner build',
       );
@@ -648,12 +648,12 @@ packages:
         };
         writeRequiredPubspec(
           caseRoot,
-          mixChart: '^0.0.1-beta.3',
+          mixChart: '^0.0.1-beta.1',
           remixUiIcons: '^0.1.0',
         );
         writeRequiredLock(
           caseRoot,
-          mixChart: '0.0.1-beta.3',
+          mixChart: '0.0.1-beta.1',
           remixUiIcons: '0.1.0',
         );
 
@@ -925,7 +925,7 @@ packages:
             catalog
                 .resolve(item)
                 .any((entry) => entry.dependencies.containsKey('mix_chart'))
-            ? '0.0.1-beta.3'
+            ? '0.0.1-beta.1'
             : null;
         writeRequiredPubspec(
           caseRoot,
@@ -1348,11 +1348,11 @@ dependencies:
   remix: $registryRemixConstraint
   mix_annotations: ^2.2.0-beta.1
 dev_dependencies:
-  mix_chart: ^0.0.1-beta.3
+  mix_chart: ^0.0.1-beta.1
   build_runner: ^2.10.1
   mix_generator: ^2.2.0-beta.3
 ''');
-      writeRequiredLock(caseRoot, mixChart: '0.0.1-beta.3');
+      writeRequiredLock(caseRoot, mixChart: '0.0.1-beta.1');
       final before = snapshotFiles(caseRoot);
       final runner = happyRunner(caseRoot);
       final writer = RecordingFileWriter(caseRoot);
@@ -1789,7 +1789,7 @@ RecordingProcessRunner happyRunner(
     if (addMissingDependencies) {
       writeRequiredPubspec(
         root,
-        mixChart: addChartDependency ? '^0.0.1-beta.3' : null,
+        mixChart: addChartDependency ? '^0.0.1-beta.1' : null,
       );
     }
     return successProcessOutput;
@@ -1806,7 +1806,7 @@ RecordingProcessRunner happyRunner(
       writeRequiredLock(
         root,
         remix: lockedRemix,
-        mixChart: addChartDependency ? '0.0.1-beta.3' : null,
+        mixChart: addChartDependency ? '0.0.1-beta.1' : null,
       );
     }
     return successProcessOutput;
