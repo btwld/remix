@@ -1117,8 +1117,10 @@ void main() {
   ) async {
     await tester.pumpWidget(const DashboardApp());
 
-    // Both titles sit inside a Material surface, whose own `DefaultTextStyle`
-    // would otherwise supply the foreground instead of Fortal's `gray12`.
+    // Both titles are Fortal typography, which resolves `gray12` from the
+    // active scope's tokens rather than from any inherited `DefaultTextStyle`.
+    // That is what makes them repaint when the gray family changes, and it is
+    // why the assertion reads the painted colour rather than the widget's.
     final pageTitle = find.descendant(
       of: find.byType(PageHeader),
       matching: find.text('Overview'),
