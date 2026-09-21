@@ -137,7 +137,10 @@ Widget _revenueCard({{typePrefix}}DashboardSampleData data) => {{typePrefix}}Car
             interval: 1,
             labelFormatter: (value) => _pointLabel(data.revenue, value),
           ),
-          yAxis: ChartAxis.numeric(min: 0, interval: 20),
+          // An explicit max that is a whole number of intervals: the top
+          // gridline label and the axis maximum then coincide instead of
+          // rendering two labels at almost the same height.
+          yAxis: ChartAxis.numeric(min: 0, max: 100, interval: 20),
         ),
       ),
     ],
@@ -173,6 +176,9 @@ Widget _customerChartCard() => {{typePrefix}}Card(
                 ],
               ),
           ],
+          // Customers peak at 44; see the revenue chart above for why the
+          // maximum is pinned to a whole number of intervals.
+          yAxis: ChartAxis.numeric(min: 0, max: 50, interval: 10),
         ),
       ),
     ],
