@@ -4,7 +4,6 @@ import 'package:path/path.dart' as p;
 import 'package:remix_cli/src/cli.dart';
 import 'package:remix_cli/src/installer.dart';
 import 'package:remix_cli/src/process_runner.dart';
-import 'package:remix_cli/src/registry_reader.dart';
 import 'package:test/test.dart';
 
 import 'checkout_registry.dart';

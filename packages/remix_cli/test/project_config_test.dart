@@ -75,7 +75,14 @@ registries:
           isA<FormatException>().having(
             (error) => error.message,
             'message',
-            allOf(contains('schema'), contains('remix init')),
+            // `remix init` alone is not an instruction: it parses the
+            // existing file and fails the same way. Removing it first is the
+            // part that makes the message actionable.
+            allOf(
+              contains('schema'),
+              contains('delete remix.yaml'),
+              contains('remix init'),
+            ),
           ),
         ),
         reason: source,

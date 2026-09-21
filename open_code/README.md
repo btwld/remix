@@ -8,9 +8,9 @@ theme and component source while Remix continues to own rendering, interaction,
 focus, loading, disabled behavior, and accessibility.
 
 The two registry trees live in
-`registry/vanilla/` and `registry/fortal/`. The CLI retains a separate frozen
-snapshot only for schema-1/2 compatibility. There is no second registry copy
-under `open_code/`. `open_code/fixture/` proves the Vanilla preset, while
+`registry/vanilla/` and `registry/fortal/`, and they are the only ones: the CLI
+ships no catalog of its own, and there is no second registry copy under
+`open_code/`. `open_code/fixture/` proves the Vanilla preset, while
 `open_code/fortal_fixture/` proves Fortal with every generated widget and
 known Radix Themes 3.3.0 color values. A behavioral package can be styled from
 the same installed source; see

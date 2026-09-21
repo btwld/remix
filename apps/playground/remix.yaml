@@ -1,4 +1,12 @@
-schema: 1
+schema: 3
 prefix: Playground
+preset: vanilla
 paths:
   ui: lib/ui
+defaultRegistry: "@remix"
+registries:
+  "@remix":
+    repository: "conceptadev/remix"
+    path: "registry"
+    ref: "main"
+    revision: "30a7a7ab18d28a6ba505eb7496c3d73132ae6d49"

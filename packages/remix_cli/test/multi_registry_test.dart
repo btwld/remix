@@ -149,7 +149,7 @@ void main() {
       final updated = File('${root.path}/remix.yaml').readAsStringSync();
       expect(updated, isNot(configBefore));
       expect(
-        parsePinned(updated, root).registries['@remix']!.revision,
+        parseConfig(updated, root).registries['@remix']!.revision,
         'a' * 40,
       );
       final beforeDiff = snapshotFiles(root);
@@ -337,7 +337,7 @@ void main() {
     );
     expect(await run(['add', '@acme/button']), successExitCode);
 
-    final config = parsePinned(null, consumer);
+    final config = parseConfig(null, consumer);
     expect(config.preset, 'vanilla');
     expect(config.registries.keys, containsAll(['@remix', '@acme']));
     expect(
@@ -412,7 +412,7 @@ void main() {
         ),
       );
 
-      final rewritten = parsePinned(null, root);
+      final rewritten = parseConfig(null, root);
       expect(rewritten.preset, 'true');
       expect(rewritten.registries['@remix']!.revision, 'c' * 40);
     },
@@ -440,7 +440,7 @@ void main() {
           repository: 'owner/company',
         ),
       );
-      expect(parsePinned(null, root).registries['@other']!.ref, 'main');
+      expect(parseConfig(null, root).registries['@other']!.ref, 'main');
       await expectLater(
         installer.registry(
           const RegistryOptions(
@@ -455,14 +455,13 @@ void main() {
   );
 }
 
-/// Parses `remix.yaml` as a pinned project. Every command under test here has
-/// to leave one behind, so the cast is part of the assertion.
-ProjectConfig parsePinned(String? source, Directory root) =>
+/// Parses `remix.yaml`, from [source] or from the project every command under
+/// test has to leave one behind in.
+ProjectConfig parseConfig(String? source, Directory root) =>
     ProjectConfig.parse(
-          source ?? File('${root.path}/remix.yaml').readAsStringSync(),
-          packageRoot: root,
-        )
-        as ProjectConfig;
+      source ?? File('${root.path}/remix.yaml').readAsStringSync(),
+      packageRoot: root,
+    );
 
 /// The newest stable registry release the fixture publishes.
 const stableRegistryTag = 'registry-v3';

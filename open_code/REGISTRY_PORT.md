@@ -1,5 +1,14 @@
 # Registry port — design lockdown
 
+> **Partly superseded.** The frozen bundled snapshot this record reasons about
+> was removed when `remix.yaml` schemas 1 and 2 were dropped: there is no
+> `BundledRegistry`, no `packages/remix_cli/lib/src/registry/` tree, and no
+> `registry migrate`. The decisions below are kept as written, because the
+> reasons are what they were at the time and rewriting them would misreport the
+> history. Read L3, L5, L7 and the inventory tables as a record of a shape the
+> code has since left; the checkout harness and the test fixture remain the
+> non-HTTP implementations they cite.
+
 Working record for the registry-source redesign. Locked decisions (L*) carry a
 reason; open items (O*) carry the scenario that settles them. Supersedes the
 internal-structure parts of [ADR 0002](../registry_source/docs/adr/fortal/0002-registry-source.md)

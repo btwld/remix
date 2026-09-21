@@ -3,8 +3,6 @@ import 'dart:io';
 import 'package:path/path.dart' as p;
 import 'package:pub_semver/pub_semver.dart';
 import 'package:remix_cli/src/installer.dart';
-import 'package:remix_cli/src/cli.dart';
-import 'package:remix_cli/src/project_config.dart';
 import 'package:remix_cli/src/registry_reader.dart';
 import 'package:remix_cli/src/registry_source.dart';
 import 'package:remix_cli/src/process_runner.dart';

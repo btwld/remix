@@ -99,14 +99,9 @@ Global options:
     --version    Print the remix_cli version.
 
 Available commands:
-<<<<<<< HEAD
-  add    Install bundled registry items.
-  init   Initialize Remix source installation settings.
-=======
-  add       Install one registry item and its dependencies.
-  init      Initialize Remix source installation settings.
-  registry  Register, pin, or migrate GitHub registry sources.
->>>>>>> 7afd6fa46 (feat(registry): publish a pinned GitHub registry and the Vanilla preset)
+  add        Install registry items and their dependencies.
+  init       Initialize Remix source installation settings.
+  registry   Register and pin GitHub registry sources.
 
 Run "remix help <command>" for more information about a command.
 ```
@@ -247,7 +242,7 @@ registries:
 
 | Key | Default | Rules |
 |---|---|---|
-| `schema` | `3` | New files pin remote registries. Schemas 1–2 retain the frozen bundled snapshot until explicitly migrated. |
+| `schema` | `3` | The only readable schema. Schemas 1–2 shipped in earlier prereleases and named no registry; such a project is reinitialized, not migrated. |
 | `prefix` | `Ui` | ASCII UpperCamel Dart identifier. Its lowercased form must not be a Dart reserved word. `Remix` and `Mix` are reserved for runtime dependencies. |
 | `preset` | `vanilla` | Preset selected across every configured registry. Choose `vanilla` or `fortal` at `init`. |
 | `defaultRegistry` | `@remix` | Configured namespace for bare item names. |
@@ -455,11 +450,12 @@ Bare dependencies resolve within their owning registry. Qualified dependencies
 require explicit registration; they cannot add or redirect sources. Cross-registry
 cycles, conflicting targets and incompatible package requirements fail before writes.
 
-Schema-1/2 projects retain their frozen bundle. Migrate configuration only with
-`remix registry migrate --ref registry-v1`, then review with `remix add button --diff`.
-Migration preserves prefix, preset, UI path, authored files and generated adapters.
-Restore a previously committed `remix.yaml` pin to roll back the source selection;
-installed files are not reverted.
+A project on schema 1 or 2 named no registry at all, so there is no pin to
+migrate. Delete `remix.yaml`, rerun `remix init` with the prefix, preset and UI
+path it recorded, then review with `remix add button --diff`; authored files and
+generated adapters are untouched either way. Restore a previously committed
+`remix.yaml` pin to roll back the source selection; installed files are not
+reverted.
 
 `--diff` renders the new template, formats it, and runs a real `git diff`
 against what is on disk. If the output is empty you are current:
@@ -475,7 +471,7 @@ installed, or run the diff in a scratch project that has never been edited.
 
 CLI updates do not change registry pins. `add`, `--diff`, and `--dry-run`
 fetch only the configured commits and never update configuration. Remote failures
-never substitute bundled or newer content. Private repositories, arbitrary HTTP
+never substitute older or newer content. Private repositories, arbitrary HTTP
 sources, local registries and persistent offline caching are not supported.
 
 If you like the upstream version, take it wholesale:

@@ -54,8 +54,10 @@ final class ProjectConfig {
     if (schema is! int || schema != supportedProjectSchema) {
       throw FormatException(
         'Unsupported remix.yaml schema $schema; '
-        'remix_cli supports schema $supportedProjectSchema. Projects written '
-        'by an earlier prerelease must be reinitialized with remix init.',
+        'remix_cli supports schema $supportedProjectSchema. A project written '
+        'by an earlier prerelease names no registry to read from: delete '
+        'remix.yaml and run remix init to pin one. Installed source is yours '
+        'and is left alone; review it afterwards with add --diff.',
       );
     }
     _requireExactKeys(document, {
