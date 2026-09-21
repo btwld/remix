@@ -287,9 +287,11 @@ final class _RegistryActionCommand extends Command<int> {
         argResults!.option('repository') == null) {
       usageException('registry add requires --repository owner/repo.');
     }
-    if (handler == null)
+    final handler = this.handler;
+    if (handler == null) {
       throw StateError('The registry command is not available.');
-    await handler!(
+    }
+    await handler(
       RegistryOptions(
         action: action,
         namespace: rest.isEmpty ? null : rest.single,
