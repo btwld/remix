@@ -31,9 +31,9 @@ name: Publish to pub.dev
 #
 # remix_cli, remix_ui_icons, and naked_ui are versioned independently from
 # Remix.
-# The CLI consumer check requires its bundled Remix version to exist before
-# the CLI can publish. Nothing under `registry_source/` is publishable; it is
-# the private authored catalog the bundled presets derive from.
+# The CLI release requires a published stable registry release and its hosted
+# runtime dependencies. registry_source/ is private authoring source; registry/
+# is published independently through registry-v* GitHub releases.
 on:
   push:
     tags:
@@ -58,7 +58,9 @@ jobs:
           cache: true
       - name: Resolve the workspace
         run: flutter pub get
-      - name: Verify both presets with hosted Remix
+      - name: Verify both presets from the published registry with hosted Remix
+        env:
+          REMIX_REGISTRY_RELEASE_SMOKE: '1'
         run: dart run melos run open-code:release:check
 
   publish-remix:

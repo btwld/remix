@@ -1,0 +1,50 @@
+name: Validate registry release
+
+on:
+  push:
+    tags:
+      - 'registry-v*'
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    if: github.event_name != 'release' || startsWith(github.event.release.tag_name, 'registry-v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.0'
+          cache: true
+      - run: flutter pub get
+      # The triggers above are deliberately broad. A release only counts once
+      # its tag is one `remix init` will actually find, so gate on the CLI's
+      # own predicate rather than a second copy of the grammar.
+      - name: Require a discoverable release tag
+        if: github.event_name == 'release' || github.event_name == 'push'
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name || github.ref_name }}
+        run: dart run tool/check_release_tag.dart "$RELEASE_TAG"
+      - name: Validate generated output and dependency floors
+        run: |
+          dart run tool/build_registry.dart --check
+          dart run tool/check_dependency_constraints.dart
+          dart run tool/check_version_alignment.dart
+          dart test test/tool/build_registry_test.dart test/tool/build_registry_agent_test.dart
+      - name: Test CLI and frozen compatibility snapshot
+        working-directory: packages/remix_cli
+        run: dart test
+      - name: Install both committed presets with hosted dependencies
+        run: dart run melos run open-code:release:check
+      - name: Smoke-test published revision with the same CLI
+        if: github.event_name == 'release' && !github.event.release.prerelease
+        env:
+          REMIX_REGISTRY_RELEASE_REF: ${{ github.event.release.tag_name }}
+        run: |
+          dart run tool/check_open_code.dart --source hosted
+          dart run tool/check_open_code.dart --preset fortal --source hosted
