@@ -77,6 +77,61 @@ registries:
     expect(pinned.schema, supportedProjectSchema);
   });
 
+  test('preset and prefix names YAML reads as keywords round-trip', () {
+    // Both grammars admit `true`, `NULL` and friends. Written unquoted, YAML
+    // reads them back as a boolean or null and the parser rejects the project,
+    // so a successful rewrite would leave it unreadable.
+    Directory(p.join(root.path, 'lib', 'ui')).createSync(recursive: true);
+    final source = RegistrySource(
+      repository: 'owner/repo',
+      path: 'registry',
+      ref: 'v1',
+      revision: 'b' * 40,
+    );
+
+    for (final preset in ['true', 'false', 'null', 'acme_dark']) {
+      final encoded = PinnedProject(
+        packageRoot: root,
+        prefix: 'Ui',
+        preset: preset,
+        uiPath: 'lib/ui',
+        defaultRegistry: '@company',
+        registries: {'@company': source},
+      ).encode();
+
+      expect(
+        ProjectConfig.parse(encoded, packageRoot: root).preset,
+        preset,
+        reason: encoded,
+      );
+    }
+
+    for (final prefix in ['TRUE', 'FALSE', 'NULL', 'Acme']) {
+      for (final encoded in [
+        PinnedProject(
+          packageRoot: root,
+          prefix: prefix,
+          preset: 'acme_dark',
+          uiPath: 'lib/ui',
+          defaultRegistry: '@company',
+          registries: {'@company': source},
+        ).encode(),
+        LegacyProject(
+          packageRoot: root,
+          prefix: prefix,
+          preset: 'default',
+          uiPath: 'lib/ui',
+        ).encode(),
+      ]) {
+        expect(
+          ProjectConfig.parse(encoded, packageRoot: root).prefix,
+          prefix,
+          reason: encoded,
+        );
+      }
+    }
+  });
+
   test('a pinned default registry must name a configured one', () {
     Directory(p.join(root.path, 'lib', 'ui')).createSync(recursive: true);
     final source = RegistrySource(

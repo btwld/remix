@@ -123,7 +123,7 @@ service to run, no account, no publishing step beyond `git push`.
 ```text
 registry/
   index.yaml                        # presets -> catalog paths
-  acme/
+  vanilla/
     registry.yaml                   # the catalog
     templates/
       button/button.dart.tmpl
@@ -134,12 +134,27 @@ registry/
 ```yaml
 schema: 1
 presets:
-  acme: acme/registry.yaml
+  vanilla: vanilla/registry.yaml
 ```
 
-The preset names are yours. A consuming project must select a preset your
-registry provides — if a project is on `preset: acme`, every registry it uses
-must offer `acme`.
+### Namespace and preset are different things
+
+This trips people up, so it is worth being precise:
+
+- A **namespace** (`@acme`) identifies *your registry*. You choose it, and the
+  consumer records it when they register you.
+- A **preset** (`vanilla`) identifies *a design language*. The consuming
+  project selects exactly one, at `remix init`, and it stays fixed.
+
+`remix registry add` validates your registry against the preset the project
+**already** selected. So **every registry a project uses must offer that
+project's preset.** Publishing only a `acme` preset means no project that
+initialized against the official registry can add you — `remix init` always
+resolves the official registry, which has no `acme`.
+
+Until a preset can be introduced by a third-party registry, publish under a
+preset name the consuming projects already use — `vanilla` here. Your
+namespace is what keeps your items distinct, not your preset name.
 
 ### The catalog
 
@@ -229,9 +244,11 @@ code is installed from.
 
 ### Publish and consume
 
-Commit the `registry/` directory and push. Consumers then register it:
+Commit the `registry/` directory and push. A consumer with a `vanilla` project
+then registers you and installs:
 
 ```shell
+dart run remix_cli:remix init                 # selects vanilla
 dart run remix_cli:remix registry add @acme \
   --repository your-org/your-repo \
   --path registry \

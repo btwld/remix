@@ -37,11 +37,9 @@ void main() {
         '@remix/button',
         '@remix/theme',
       ]);
-      final graph = await RegistryGraph.resolve(
-        fixture.config(root),
-        const ['@company/button'],
-        fixture.resolver,
-      );
+      final graph = await RegistryGraph.resolve(fixture.config(root), const [
+        '@company/button',
+      ], fixture.resolver);
       expect(graph.items.map((i) => i.name), [
         '@remix/theme',
         '@remix/button',
@@ -406,6 +404,122 @@ void main() {
     );
   }
 
+  test('the published third-party walkthrough runs end to end', () async {
+    // Follows docs/guides/registries.mdx exactly, through the public CLI
+    // handlers: init, register the namespace, install from it. A custom
+    // registry has to offer the preset `init` already selected, and this is
+    // what proves the documented flow can actually be completed.
+    final consumer = createFlutterPackage();
+    addTearDown(() => consumer.deleteSync(recursive: true));
+    writeRequiredPubspec(consumer);
+    final guided = Installer(
+      projectRoot: consumer,
+      writeOut: output.add,
+      sources: fixture.resolver,
+      processRunner: happyRunner(consumer, runRealGit: true),
+    );
+    Future<int> run(List<String> arguments) => runRemixCli(
+      arguments,
+      writeOut: output.add,
+      writeError: fail,
+      onInit: guided.initialize,
+      onAdd: guided.add,
+      onRegistry: guided.registry,
+    );
+
+    expect(await run(['init']), successExitCode);
+    expect(
+      await run([
+        'registry',
+        'add',
+        '@acme',
+        '--repository',
+        'owner/company',
+        '--ref',
+        'v1',
+      ]),
+      successExitCode,
+    );
+    expect(await run(['add', '@acme/button']), successExitCode);
+
+    final config = parsePinned(null, consumer);
+    expect(config.preset, 'vanilla');
+    expect(config.registries.keys, containsAll(['@remix', '@acme']));
+    expect(
+      File('${consumer.path}/lib/ui/company.dart').readAsStringSync(),
+      contains('class UiCompany'),
+    );
+  });
+
+  test(
+    'drift guidance on a pinned project names the pin, not the CLI',
+    () async {
+      // The pinned counterpart of the legacy notice in installer_test: a CLI
+      // upgrade cannot move a recorded revision, so it must not be suggested.
+      fixture.official['button'] = {
+        ...item('button'),
+        'dependencies': {'remix': '^1.0.0'},
+      };
+      writeRequiredPubspec(root, remix: '^1.0.0');
+      writeRequiredLock(root, remix: '1.2.0');
+
+      await Installer(
+        projectRoot: root,
+        writeOut: output.add,
+        sources: fixture.resolver,
+        processRunner: happyRunner(root, lockedRemix: '1.2.0'),
+      ).add(const AddOptions(items: ['button'], mode: AddMode.write));
+
+      expect(
+        output,
+        contains(
+          allOf(
+            startsWith('Resolved remix 1.2.0;'),
+            contains('remix registry update @remix'),
+            isNot(contains('pub upgrade')),
+          ),
+        ),
+      );
+    },
+  );
+
+  test(
+    'registry update preserves a preset YAML would read as a keyword',
+    () async {
+      // The encoder is what `registry update` writes, so the round-trip has to
+      // hold on the real rewrite path and not just in isolation.
+      File('${root.path}/remix.yaml').writeAsStringSync(
+        PinnedProject(
+          packageRoot: root,
+          prefix: 'Ui',
+          preset: 'true',
+          uiPath: 'lib/ui',
+          defaultRegistry: '@remix',
+          registries: {
+            '@remix': RegistrySource(
+              repository: officialRepository,
+              path: 'registry',
+              ref: 'registry-v1',
+              revision: 'a' * 40,
+            ),
+          },
+        ).encode(),
+      );
+
+      await installer.registry(
+        const RegistryOptions(
+          action: RegistryAction.update,
+          namespace: '@remix',
+          ref: 'v2',
+        ),
+      );
+
+      final rewritten = parsePinned(null, root);
+      expect(rewritten.preset, 'true');
+      expect(rewritten.registries['@remix']!.revision, 'c' * 40);
+    },
+  );
+
   test(
     'registration validates preset before saving and does not replace a namespace',
     () async {
@@ -506,7 +620,7 @@ final class FixtureRegistries {
       if (uri.path.endsWith('index.yaml'))
         return const RegistryResponse(
           200,
-          'schema: 1\npresets:\n  vanilla: vanilla/registry.yaml\n  fortal: fortal/registry.yaml',
+          'schema: 1\npresets:\n  vanilla: vanilla/registry.yaml\n  fortal: fortal/registry.yaml\n  "true": vanilla/registry.yaml',
         );
       if (uri.path.endsWith('registry.yaml'))
         return RegistryResponse(

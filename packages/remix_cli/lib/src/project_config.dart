@@ -163,9 +163,11 @@ final class LegacyProject extends ProjectConfig {
 
   @override
   String encode() {
-    final buffer = StringBuffer('schema: $schema\nprefix: $prefix\n');
+    final buffer = StringBuffer(
+      'schema: $schema\nprefix: ${_encodeYamlScalar(prefix)}\n',
+    );
     // Schema 1 has no preset key; writing one would change its shape.
-    if (schema > 1) buffer.writeln('preset: $preset');
+    if (schema > 1) buffer.writeln('preset: ${_encodeYamlScalar(preset)}');
     buffer.writeln('paths:\n  ui: ${_encodeYamlPath(uiPath)}');
     return buffer.toString();
   }
@@ -209,11 +211,12 @@ final class PinnedProject extends ProjectConfig {
 
   @override
   String encode() {
-    final buffer = StringBuffer('schema: $schema\nprefix: $prefix\n')
-      ..writeln('preset: $preset')
-      ..writeln('paths:\n  ui: ${_encodeYamlPath(uiPath)}')
-      ..writeln('defaultRegistry: ${jsonEncode(defaultRegistry)}')
-      ..writeln('registries:');
+    final buffer =
+        StringBuffer('schema: $schema\nprefix: ${_encodeYamlScalar(prefix)}\n')
+          ..writeln('preset: ${_encodeYamlScalar(preset)}')
+          ..writeln('paths:\n  ui: ${_encodeYamlPath(uiPath)}')
+          ..writeln('defaultRegistry: ${jsonEncode(defaultRegistry)}')
+          ..writeln('registries:');
     for (final entry in registries.entries) {
       final source = entry.value;
       buffer
@@ -387,6 +390,24 @@ void _validateUiPath(Directory packageRoot, String uiPath) {
 
 String _encodeYamlPath(String value) =>
     _plainYamlPath.hasMatch(value) ? value : jsonEncode(value);
+
+/// Quotes a scalar YAML would otherwise read back as something other than the
+/// string that was written.
+///
+/// The prefix and preset grammars admit `TRUE`, `true` and `NULL`, which YAML
+/// reads as a boolean or null and the parser then rejects as "must be a
+/// string". Without this, a successful rewrite turns a readable project into
+/// an unreadable one. Asking the parser beats listing keywords, which would
+/// drift from whatever schema the YAML package implements.
+String _encodeYamlScalar(String value) {
+  final Object? parsed;
+  try {
+    parsed = loadYaml(value);
+  } on YamlException {
+    return jsonEncode(value);
+  }
+  return parsed is String && parsed == value ? value : jsonEncode(value);
+}
 
 void _requireExactKeys(YamlMap map, Set<String> expected, String location) {
   final keys = map.keys.whereType<String>().toSet();

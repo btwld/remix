@@ -1231,6 +1231,10 @@ dev_dependencies:
         allOf(
           startsWith('Resolved remix $drifted;'),
           contains('authored against $registryRemixFloor'),
+          // A legacy project reads a frozen snapshot, so the way forward is
+          // migration. Upgrading the CLI would not move it.
+          contains('remix registry migrate'),
+          isNot(contains('pub upgrade')),
         ),
       ),
     );

@@ -541,11 +541,19 @@ final class Installer {
       final floor = _snapshotFloor(requirements);
       final lockedRemix = locked['remix'];
       if (floor != null && lockedRemix != null && lockedRemix > floor) {
-        _writeOut(
-          'Resolved remix $lockedRemix; this remix_cli registry was authored '
-          'against $floor. Run flutter pub upgrade remix_cli, then review '
-          'with --diff.',
-        );
+        // Upgrading the CLI moves neither a pin nor the frozen snapshot, so
+        // naming it here would send the reader after a command that cannot
+        // change the source they are being asked to review.
+        _writeOut(switch (config) {
+          PinnedProject(:final defaultRegistry) =>
+            'Resolved remix $lockedRemix; this registry revision was authored '
+                'against $floor. Your pin does not move on its own — run '
+                'remix registry update $defaultRegistry, then review with --diff.',
+          LegacyProject() =>
+            'Resolved remix $lockedRemix; the bundled registry was authored '
+                'against $floor. It is frozen for this project — run '
+                'remix registry migrate, then review with --diff.',
+        });
       }
 
       final pathsToWrite = <String>[];
