@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:naked_ui/naked_ui.dart';
 
+import '../src/example_app.dart';
+
+import '../src/example_button.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -10,8 +14,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(body: SafeArea(child: LinkExample())),
+    return ExampleApp(
+      background: Colors.white,
+      child: SafeArea(child: LinkExample()),
     );
   }
 }
@@ -56,9 +61,9 @@ class _LinkExampleState extends State<LinkExample> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 'NakedLink',
-                style: Theme.of(context).textTheme.headlineSmall,
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w400),
               ),
               const SizedBox(height: 12),
               const Text(
@@ -99,22 +104,22 @@ class _LinkExampleState extends State<LinkExample> {
                 spacing: 12,
                 runSpacing: 12,
                 children: [
-                  OutlinedButton(
+                  ExampleButton(
                     key: const ValueKey('link.next-focus'),
+                    label: 'Next focus target',
                     onPressed: () => setState(() => _result = 'next-focus'),
-                    child: const Text('Next focus target'),
                   ),
-                  OutlinedButton(
+                  ExampleButton(
                     key: const ValueKey('link.disable-primary'),
+                    label: 'Disable Link',
                     onPressed: _enabled
                         ? () => setState(() => _enabled = false)
                         : null,
-                    child: const Text('Disable Link'),
                   ),
-                  OutlinedButton(
+                  ExampleButton(
                     key: const ValueKey('link.reset'),
+                    label: 'Reset',
                     onPressed: _reset,
-                    child: const Text('Reset'),
                   ),
                 ],
               ),

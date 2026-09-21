@@ -13,7 +13,17 @@ void main() {
   // `takeException` below is deliberately strict. Several other examples
   // overflow at that width on `main` already; that is a layout question for
   // those examples, not a host question for this test.
-  for (final component in ['avatar', 'skeleton', 'dashboard_shell']) {
+  for (final component in [
+    'avatar',
+    'skeleton',
+    'dashboard_shell',
+    // Previously overflowed the default mobile preset; ComparisonView now
+    // stacks its two panes below the side-by-side breakpoint.
+    'button',
+    'checkbox_group',
+    'divider',
+    'progress',
+  ]) {
     testWidgets('$component comparison works under WidgetsApp', (tester) async {
       tester.view.physicalSize = const Size(2400, 1600);
       tester.view.devicePixelRatio = 1;

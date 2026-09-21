@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:naked_ui/naked_ui.dart';
 
+import '../src/example_app.dart';
+
 /// Main function
 void main() {
   runApp(const MyApp());
@@ -12,25 +14,22 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.grey.shade50,
-        body: const SafeArea(
-          child: Column(
-            children: [
-              SizedBox(height: 24),
-              Text(
-                'Toggle Button Example',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 8),
-              Text(
-                'Interact with the toggle button to see its states',
-                style: TextStyle(color: Colors.grey),
-              ),
-              Expanded(child: ToggleButtonExample()),
-            ],
-          ),
+    return ExampleApp(
+      child: const SafeArea(
+        child: Column(
+          children: [
+            SizedBox(height: 24),
+            Text(
+              'Toggle Button Example',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Interact with the toggle button to see its states',
+              style: TextStyle(color: Colors.grey),
+            ),
+            Expanded(child: ToggleButtonExample()),
+          ],
         ),
       ),
     );

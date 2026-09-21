@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:naked_ui/naked_ui.dart';
 
+import '../src/example_app.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -10,11 +12,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.white,
-        body: Center(child: SimpleBuilderExample()),
-      ),
+    return ExampleApp(
+      background: Colors.white,
+      child: Center(child: SimpleBuilderExample()),
     );
   }
 }

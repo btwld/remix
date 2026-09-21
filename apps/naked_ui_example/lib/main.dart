@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import 'registry.dart';
 import 'shell/shell.dart';
@@ -12,9 +12,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return WidgetsApp(
       title: 'Naked Kitchen Sink',
-      theme: ThemeData(colorSchemeSeed: Colors.blue, useMaterial3: true),
+      color: const Color(0xFFFFFBFE),
+      textStyle: const TextStyle(fontSize: 14, color: Color(0xFF1C1B1F)),
+      pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+        settings: settings,
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            builder(context),
+      ),
       onGenerateRoute: (settings) {
         final name = settings.name ?? '/';
         // Expecting hash URLs on web (/#/component/<id>)
@@ -22,7 +28,7 @@ class MyApp extends StatelessWidget {
         final parts = path.split('/').where((p) => p.isNotEmpty).toList();
 
         if (parts.isEmpty) {
-          return MaterialPageRoute(builder: (_) => const KitchenShell());
+          return _route(const KitchenShell());
         }
 
         if (parts.length >= 2 &&
@@ -30,17 +36,21 @@ class MyApp extends StatelessWidget {
           final id = parts[1];
           final demo = DemoRegistry.find(id);
           if (demo != null) {
-            return MaterialPageRoute(
-              builder: (_) =>
-                  KitchenShell(initialDemoId: id, embed: parts[0] == 'embed'),
+            return _route(
+              KitchenShell(initialDemoId: id, embed: parts[0] == 'embed'),
             );
           }
         }
 
         // Fallback to index shell
-        return MaterialPageRoute(builder: (_) => const KitchenShell());
+        return _route(const KitchenShell());
       },
       home: const KitchenShell(),
     );
   }
 }
+
+/// WidgetsApp has no MaterialPageRoute; this is the plain equivalent.
+PageRoute<void> _route(Widget child) => PageRouteBuilder<void>(
+  pageBuilder: (context, animation, secondaryAnimation) => child,
+);

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:naked_ui/naked_ui.dart';
 
+import '../src/example_app.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -10,59 +12,56 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.grey.shade50,
-        body: const Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Simple Popover',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+    return ExampleApp(
+      child: const Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Simple Popover',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Click the button to show the popover',
+              style: TextStyle(color: Colors.grey),
+            ),
+            SizedBox(height: 24),
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      PopoverExample(),
+                      PopoverExample(),
+                      PopoverExample(),
+                    ],
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      PopoverExample(),
+                      PopoverExample(),
+                      PopoverExample(),
+                    ],
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      PopoverExample(),
+                      PopoverExample(),
+                      PopoverExample(),
+                    ],
+                  ),
+                ],
               ),
-              SizedBox(height: 8),
-              Text(
-                'Click the button to show the popover',
-                style: TextStyle(color: Colors.grey),
-              ),
-              SizedBox(height: 24),
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        PopoverExample(),
-                        PopoverExample(),
-                        PopoverExample(),
-                      ],
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        PopoverExample(),
-                        PopoverExample(),
-                        PopoverExample(),
-                      ],
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        PopoverExample(),
-                        PopoverExample(),
-                        PopoverExample(),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
