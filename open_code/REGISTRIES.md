@@ -130,8 +130,7 @@ require a registry release, not a new CLI release.
 ## Vanilla preset naming
 
 New projects select `vanilla` when `--preset` is omitted. The official remote
-index exposes only `vanilla`; `default` is not a remote alias. Fortal
-publishes to the same index in a follow-up change.
+index exposes only `vanilla` and `fortal`; `default` is not a remote alias.
 Schema-1/2 projects retain their frozen bundled `default` snapshot, and
 initializing again preserves their configuration without migrating it. An
 explicit migration records `vanilla` in schema 3. The internal authoring

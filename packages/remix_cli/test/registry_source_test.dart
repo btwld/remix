@@ -12,35 +12,40 @@ import 'package:test/test.dart';
 import 'test_support.dart';
 
 void main() {
-  test('official index loads vanilla but rejects legacy default', () async {
-    final source = RegistrySource(
-      repository: officialRepository,
-      path: 'registry',
-      ref: 'registry-v1',
-      revision: 'a' * 40,
-    );
-    final resolver = GitHubSources(
-      transport: (uri) async {
-        final relative = uri.path.split('/registry/').last;
-        return RegistryResponse(
-          200,
-          File('../../registry/$relative').readAsStringSync(),
-        );
-      },
-    );
-    final vanillaRegistry = resolver.open(source, 'vanilla');
-    final vanilla = await vanillaRegistry.catalog();
-    expect(vanilla.preset, 'vanilla');
-    final template = await vanillaRegistry.template(
-      vanilla.items['button']!.files.first,
-    );
-    expect(template, isNotEmpty);
-    // `default` is a frozen bundled name, never a published preset.
-    await expectLater(
-      resolver.open(source, 'default').catalog(),
-      throwsFormatException,
-    );
-  });
+  test(
+    'official index loads vanilla and fortal but rejects legacy default',
+    () async {
+      final source = RegistrySource(
+        repository: officialRepository,
+        path: 'registry',
+        ref: 'registry-v1',
+        revision: 'a' * 40,
+      );
+      final resolver = GitHubSources(
+        transport: (uri) async {
+          final relative = uri.path.split('/registry/').last;
+          return RegistryResponse(
+            200,
+            File('../../registry/$relative').readAsStringSync(),
+          );
+        },
+      );
+      final vanillaRegistry = resolver.open(source, 'vanilla');
+      final vanilla = await vanillaRegistry.catalog();
+      final fortal = await resolver.open(source, 'fortal').catalog();
+      expect(vanilla.preset, 'vanilla');
+      expect(fortal.preset, 'fortal');
+      final template = await vanillaRegistry.template(
+        vanilla.items['button']!.files.first,
+      );
+      expect(template, isNotEmpty);
+      expect(fortal.items, isNotEmpty);
+      await expectLater(
+        resolver.open(source, 'default').catalog(),
+        throwsFormatException,
+      );
+    },
+  );
 
   final sha = 'a' * 40;
   test(

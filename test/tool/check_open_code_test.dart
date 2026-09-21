@@ -220,6 +220,13 @@ void main() {
       expect(checker.registryCoverageProblem(Directory.current), isNull);
     });
 
+    test('the Fortal catalog and the checker agree', () {
+      expect(
+        checker.registryCoverageProblem(Directory.current, preset: 'fortal'),
+        isNull,
+      );
+    });
+
     test('an item the checker never installs is reported', () {
       final root = Directory('${sandbox.path}/repo');
       final registry = File('${root.path}/registry/vanilla/registry.yaml');

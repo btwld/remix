@@ -152,13 +152,17 @@ melos:
         - dart test test/tool/check_open_code_test.dart
         - dart run tool/check_open_code.dart --source checkout --item dashboard_shell
         - dart run tool/check_open_code.dart --source checkout --item dashboard_demo
+        - dart run tool/check_open_code.dart --preset fortal --source checkout --item dashboard_shell
+        - dart run tool/check_open_code.dart --preset fortal --source checkout --item dashboard_demo
         - dart run tool/check_open_code.dart --source checkout
-      description: Install every item from the published presets against the Remix checkout
+        - dart run tool/check_open_code.dart --preset fortal --source checkout
+      description: Install every item from both presets against the Remix checkout
 
     open-code:release:check:
       steps:
         - dart run tool/check_open_code.dart --source hosted
-      description: Verify the published presets against the required Remix release
+        - dart run tool/check_open_code.dart --preset fortal --source hosted
+      description: Verify both presets against the required published Remix release
 
     open-code:registry:build:
       run: dart run tool/build_registry.dart
@@ -227,6 +231,7 @@ melos:
         - ci:cli
         - ci:flutter
         - ci:open-code:vanilla
+        - ci:open-code:fortal
       description: >-
         Verify generated sources, docs, Fortal parity, tests, and the
         open-code consumer boundary
@@ -273,6 +278,13 @@ melos:
         - dart run tool/check_open_code.dart --source checkout --item dashboard_demo
         - dart run tool/check_open_code.dart --source checkout
       description: Install every Vanilla-preset item against the Remix checkout
+
+    ci:open-code:fortal:
+      steps:
+        - dart run tool/check_open_code.dart --preset fortal --source checkout --item dashboard_shell
+        - dart run tool/check_open_code.dart --preset fortal --source checkout --item dashboard_demo
+        - dart run tool/check_open_code.dart --preset fortal --source checkout
+      description: Install every Fortal-preset item against the Remix checkout
 
     ci:coverage:check:
       run: dart run tool/check_ci_coverage.dart
