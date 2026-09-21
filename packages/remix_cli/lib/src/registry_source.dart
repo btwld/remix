@@ -9,6 +9,13 @@ import 'registry_reader.dart';
 
 const officialRepository = 'conceptadev/remix';
 
+/// The release tags `latestOfficial` will discover.
+///
+/// Release validation reuses this rather than restating it, so a tag that
+/// passes the gate is one a new project can actually find.
+bool isDiscoverableReleaseTag(String tag) =>
+    RegExp(r'^registry-v[0-9]+(?:\.[0-9]+)*$').hasMatch(tag);
+
 void validateNamespace(String value) {
   if (!RegExp(r'^@[a-z][a-z0-9_-]*$').hasMatch(value)) {
     throw FormatException('Invalid registry namespace $value; use @name.');
@@ -248,7 +255,7 @@ final class GitHubSources implements RegistrySources {
         if (release['draft'] == false &&
             release['prerelease'] == false &&
             tag is String &&
-            RegExp(r'^registry-v[0-9]+(?:\.[0-9]+)*$').hasMatch(tag)) {
+            isDiscoverableReleaseTag(tag)) {
           return resolve(repository: officialRepository, ref: tag);
         }
       }

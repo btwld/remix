@@ -348,4 +348,26 @@ void main() {
       }
     },
   );
+
+  // `tool/check_release_tag.dart` gates a real registry release on this same
+  // predicate, and the release workflow triggers on a broad `registry-v*`
+  // pattern, so a tag outside the grammar could report green while no new
+  // project could ever find it. These cases live in the CLI suite because that
+  // is what CI actually runs; a root `test/tool/` file is never swept.
+  test('discoverable release tags are the ones remix init resolves', () {
+    for (final tag in ['registry-v1', 'registry-v1.2', 'registry-v1.2.3']) {
+      expect(isDiscoverableReleaseTag(tag), isTrue, reason: tag);
+    }
+    for (final tag in [
+      'registry-v',
+      'registry-v1-beta',
+      'registry-v1.0.0+build.1',
+      'registry-vlatest',
+      'registry-1',
+      'v1.2.3',
+      '',
+    ]) {
+      expect(isDiscoverableReleaseTag(tag), isFalse, reason: tag);
+    }
+  });
 }

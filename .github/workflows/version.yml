@@ -98,7 +98,7 @@ jobs:
             --yes \
             -V "remix:$version" < /dev/null
 
-          # remix_cli's registry.yaml is data, not a pubspec, so melos never
+          # The remote registry.yaml is data, not a pubspec, so melos never
           # reaches it and its `remix: ^<floor>` would keep pointing at the
           # previous release.
           # That floor is what the CLI reports as the tested version, so this
