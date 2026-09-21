@@ -163,34 +163,29 @@ final class Installer {
     );
     final namespace = options.namespace!;
     validateNamespace(namespace);
-    final sources = <String, RegistrySource>{};
-    final String defaultRegistry;
+    final sources = <String, RegistrySource>{...config.registries};
     final RegistrySource source;
-    {
-      sources.addAll(config.registries);
-      defaultRegistry = config.defaultRegistry;
-      if (options.action == RegistryAction.add) {
-        if (sources.containsKey(namespace))
-          throw FormatException(
-            '$namespace is already registered; use remix registry update.',
-          );
-        source = await _sources.resolve(
-          repository: options.repository!,
-          path: options.path,
-          ref: options.ref,
+    if (options.action == RegistryAction.add) {
+      if (sources.containsKey(namespace))
+        throw FormatException(
+          '$namespace is already registered; use remix registry update.',
         );
-      } else {
-        final previous = sources[namespace];
-        if (previous == null)
-          throw FormatException(
-            'Unknown registry $namespace; register it with remix registry add.',
-          );
-        source = await _sources.resolve(
-          repository: previous.repository,
-          path: previous.path,
-          ref: options.ref ?? previous.ref,
+      source = await _sources.resolve(
+        repository: options.repository!,
+        path: options.path,
+        ref: options.ref,
+      );
+    } else {
+      final previous = sources[namespace];
+      if (previous == null)
+        throw FormatException(
+          'Unknown registry $namespace; register it with remix registry add.',
         );
-      }
+      source = await _sources.resolve(
+        repository: previous.repository,
+        path: previous.path,
+        ref: options.ref ?? previous.ref,
+      );
     }
     await _sources.open(source, config.preset).catalog();
     sources[namespace] = source;
@@ -199,7 +194,7 @@ final class Installer {
       prefix: config.prefix,
       preset: config.preset,
       uiPath: config.uiPath,
-      defaultRegistry: defaultRegistry,
+      defaultRegistry: config.defaultRegistry,
       registries: sources,
     );
     _fileWriter.write(file, updated.encode());
