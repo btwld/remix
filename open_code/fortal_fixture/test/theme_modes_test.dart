@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import '../lib/ui/ui.dart';
+import 'package:open_code_fixture/ui/ui.dart';
 
 void main() {
   Widget host(Widget child) => WidgetsApp(
