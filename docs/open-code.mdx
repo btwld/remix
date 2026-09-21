@@ -10,7 +10,7 @@ command and configuration reference.
 **Open code** copies a theme and component recipes **into your application**.
 From that moment your team owns those files: no wrapper, no subclass, and no
 package-level theme override standing between you and the source. Choose the
-small `default` preset or the full Radix Themes-inspired `fortal` preset when
+small `vanilla` preset or the full Radix Themes-inspired `fortal` preset when
 you initialize the project.
 
 Remix keeps everything that is genuinely hard: rendering, pointer and keyboard
@@ -26,7 +26,7 @@ Fortal preset does not add a `remix_fortal` dependency.
 
 ## Choose a preset
 
-| | `default` | `fortal` |
+| | `vanilla` | `fortal` |
 |---|---|---|
 | Design language | Compact neutral starting point | Radix Themes 3.3.0 parity surface |
 | Theme | 15 semantic tokens | 277 tokens, Radix color scales, scaling, radius, and panel modes |
@@ -78,9 +78,9 @@ dart pub global activate remix_cli
 remix <command>
 ```
 
-Prefer the project-local form: it pins the CLI *and* its bundled registry
-snapshot per project, so two apps on different Remix versions cannot install
-each other's templates.
+Prefer the project-local form to pin the CLI. Registry content is pinned
+independently to a GitHub commit in `remix.yaml`. Neither CLI upgrades nor
+ordinary installs advance that pin.
 
 <Note>
 The examples below are written as `remix <command>` to match the tool's own
@@ -99,8 +99,14 @@ Global options:
     --version    Print the remix_cli version.
 
 Available commands:
+<<<<<<< HEAD
   add    Install bundled registry items.
   init   Initialize Remix source installation settings.
+=======
+  add       Install one registry item and its dependencies.
+  init      Initialize Remix source installation settings.
+  registry  Register, pin, or migrate GitHub registry sources.
+>>>>>>> 7afd6fa46 (feat(registry): publish a pinned GitHub registry and the Vanilla preset)
 
 Run "remix help <command>" for more information about a command.
 ```
@@ -108,7 +114,7 @@ Run "remix help <command>" for more information about a command.
 ## 1. Initialize
 
 ```bash
-remix init --preset default
+remix init --preset vanilla
 ```
 
 This writes two files and nothing else:
@@ -118,11 +124,18 @@ This writes two files and nothing else:
 
 ```yaml
 # remix.yaml
-schema: 2
+schema: 3
 prefix: Ui
-preset: default
+preset: vanilla
 paths:
   ui: lib/ui
+defaultRegistry: "@remix"
+registries:
+  "@remix":
+    repository: conceptadev/remix
+    path: registry
+    ref: registry-v1
+    revision: "<resolved-full-commit-sha>"
 ```
 
 Choose the naming and location up front, because the prefix is baked into every
@@ -136,7 +149,7 @@ remix init --prefix Acme --preset fortal --ui-path lib/design_system
 `acmeButtonStyle`. The prefix must be an UpperCamel Dart identifier whose
 lowercased form is not a reserved word, and the UI path must live under `lib/`.
 The prefixes `Remix` and `Mix` are reserved for runtime dependencies.
-The preset defaults to `default` when omitted.
+The preset defaults to `vanilla` when omitted.
 
 `init` is also a repair command. Run it again and it recreates whichever of the
 two files is missing, telling you exactly which one it touched:
@@ -215,22 +228,30 @@ class SignUpButton extends StatelessWidget {
 
 ## Configuration
 
-`remix.yaml` is the entire configuration surface: three settings, no plugins
-and no per-component overrides:
+`remix.yaml` contains project settings and pinned named registry sources:
 
 ```yaml
-schema: 2
+schema: 3
 prefix: Ui       # type prefix for every generated identifier
-preset: default  # bundled recipe tree selected at init
+preset: vanilla  # selected across every configured registry
 paths:
   ui: lib/ui     # where installed source lives
+defaultRegistry: "@remix"
+registries:
+  "@remix":
+    repository: conceptadev/remix
+    path: registry
+    ref: registry-v1
+    revision: "<resolved-full-commit-sha>"
 ```
 
 | Key | Default | Rules |
 |---|---|---|
-| `schema` | `2` | New files use schema 2. Schema 1 remains readable as `preset: default`; anything else is rejected. |
+| `schema` | `3` | New files pin remote registries. Schemas 1–2 retain the frozen bundled snapshot until explicitly migrated. |
 | `prefix` | `Ui` | ASCII UpperCamel Dart identifier. Its lowercased form must not be a Dart reserved word. `Remix` and `Mix` are reserved for runtime dependencies. |
-| `preset` | `default` | Bundled registry selected for every later `add`. Choose `default` or `fortal` at `init`. |
+| `preset` | `vanilla` | Preset selected across every configured registry. Choose `vanilla` or `fortal` at `init`. |
+| `defaultRegistry` | `@remix` | Configured namespace for bare item names. |
+| `registries` | official GitHub source | Each namespace records repository, path, requested ref and full commit revision. |
 | `paths.ui` | `lib/ui` | Project-relative, normalized, no traversal, must be under `lib/`. Symlinks that escape the package root are rejected. |
 
 Unknown keys are an error rather than a warning, so a typo fails loudly instead
@@ -414,17 +435,31 @@ recipe's hover fill has to be declared as a hover fragment too; a bare
 
 ## Updating
 
-There is no update protocol, and that is the deliberate trade you accept with
-open code. The CLI tracks no versions, no content hashes, and no lockfile for
-installed source. It cannot tell an upstream improvement from your intentional
-edit, so it will never merge for you.
-
-What you get instead is a repeatable review loop. Bump the CLI, then diff:
+Registry content releases independently of the CLI. Update a pin explicitly,
+then review installed source; no automatic merge or installed-source lockfile
+is used.
 
 ```bash
-flutter pub upgrade remix_cli     # new CLI = new bundled registry snapshot
-remix add button --diff           # your file vs. the new template
+remix registry update @remix --ref registry-v2
+remix add button --diff
 ```
+
+Register additional public GitHub sources with the same preset:
+
+```bash
+remix registry add @company --repository owner/repo --path registry --ref v1
+remix add @company/button
+```
+
+Bare dependencies resolve within their owning registry. Qualified dependencies
+require explicit registration; they cannot add or redirect sources. Cross-registry
+cycles, conflicting targets and incompatible package requirements fail before writes.
+
+Schema-1/2 projects retain their frozen bundle. Migrate configuration only with
+`remix registry migrate --ref registry-v1`, then review with `remix add button --diff`.
+Migration preserves prefix, preset, UI path, authored files and generated adapters.
+Restore a previously committed `remix.yaml` pin to roll back the source selection;
+installed files are not reverted.
 
 `--diff` renders the new template, formats it, and runs a real `git diff`
 against what is on disk. If the output is empty you are current:
@@ -438,10 +473,10 @@ own edits every time, whether or not the template moved. Read the hunks, not the
 exit state. To see the template alone, compare against a copy of the file you
 installed, or run the diff in a scratch project that has never been edited.
 
-A `remix_cli` release that only changes the tool, and not a template, produces
-an empty diff. That is the expected result, not a failed upgrade: the CLI and
-its bundled registry snapshot share one version number, so every CLI release
-looks like a registry release even when no template moved.
+CLI updates do not change registry pins. `add`, `--diff`, and `--dry-run`
+fetch only the configured commits and never update configuration. Remote failures
+never substitute bundled or newer content. Private repositories, arbitrary HTTP
+sources, local registries and persistent offline caching are not supported.
 
 If you like the upstream version, take it wholesale:
 
@@ -535,9 +570,9 @@ No source was written.
 Declaring the same package in both sections is rejected the same way. Fix your
 manifest and rerun; the CLI will not edit it for you.
 
-## Default preset catalog
+## Vanilla preset catalog
 
-The bundled registry is deliberately small, and every item after `theme`
+The official registry is deliberately small, and every item after `theme`
 depends on it:
 
 `theme` installs `tokens.dart`, `theme_data.dart`, and `theme_scope.dart`,
@@ -625,9 +660,9 @@ A parameter is not an axis. `UiDivider` takes an `orientation`, but it is a
 plain Flutter `Axis` the recipe accepts rather than an enum of its own, so it
 generates no named constructors.
 
-### Charts in the default preset
+### Charts in the Vanilla preset
 
-The default preset's `chart` is an optional extension with its own compact
+The Vanilla preset's `chart` is an optional extension with its own compact
 recipe:
 
 ```bash
@@ -711,7 +746,7 @@ on disk for inspection. Fix the reported problem and rerun the same command.
 
 `activity`, `answer`, `composer`, `execution`, `message`, `permission`, `plan`,
 and `transcript` install unstyled, application-owned behavior source in either
-the default or Fortal preset. Each `<component>_recipe` item adds a complete
+the Vanilla or Fortal preset. Each `<component>_recipe` item adds a complete
 preset-specific recipe bundle. The
 private authoring source (`registry_source`) is not a consumer dependency. The shared `models` files
 are exported from the local UI barrel; `support` helpers install transitively

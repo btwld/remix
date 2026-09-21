@@ -4,7 +4,7 @@ import 'package:path/path.dart' as p;
 import 'package:remix_cli/src/cli.dart';
 import 'package:remix_cli/src/installer.dart';
 import 'package:remix_cli/src/process_runner.dart';
-import 'package:remix_cli/src/registry.dart';
+import 'package:remix_cli/src/registry_reader.dart';
 import 'package:test/test.dart';
 
 import 'test_support.dart';
@@ -51,7 +51,7 @@ void main() {
 
   setUp(() async {
     root = createFlutterPackage();
-    await Installer(projectRoot: root, writeOut: (_) {}).initialize(
+    await Installer(projectRoot: root, writeOut: (_) {}).initializeBundled(
       const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
     );
   });
@@ -198,21 +198,19 @@ preset: fortal
 paths:
   ui: lib/ui
 ''');
-    String? loadedPreset;
+    final output = <String>[];
     final installer = Installer(
       projectRoot: root,
-      writeOut: (_) {},
-      registryLoader: (preset) async {
-        loadedPreset = preset;
-        return RegistryCatalog.loadBundled(preset: 'default');
-      },
+      writeOut: output.add,
+      processRunner: happyRunner(root),
     );
 
     await installer.add(
       const AddOptions(items: ['button'], mode: AddMode.dryRun),
     );
 
-    expect(loadedPreset, 'fortal');
+    // The Fortal graph, not the default one: base_button is Fortal-only.
+    expect(output.join('\n'), contains('base_button'));
   });
 
   test(
@@ -452,7 +450,10 @@ packages:
   ]
 }
 ''');
-        await Installer(projectRoot: member, writeOut: (_) {}).initialize(
+        await Installer(
+          projectRoot: member,
+          writeOut: (_) {},
+        ).initializeBundled(
           const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
         );
 
@@ -543,7 +544,9 @@ packages:
       await Installer(
         projectRoot: caseRoot,
         writeOut: (_) {},
-      ).initialize(InitOptions(prefix: 'Acme', preset: preset, uiPath: uiPath));
+      ).initializeBundled(
+        InitOptions(prefix: 'Acme', preset: preset, uiPath: uiPath),
+      );
       final main = File(p.join(caseRoot.path, 'lib', 'main.dart'))
         ..writeAsStringSync('void main() {}\n');
       final routes = File(p.join(caseRoot.path, 'lib', 'routes.dart'))
@@ -629,7 +632,10 @@ packages:
         final caseRoot = createFlutterPackage();
         addTearDown(() => caseRoot.deleteSync(recursive: true));
         const uiPath = 'lib/design system [owned]';
-        await Installer(projectRoot: caseRoot, writeOut: (_) {}).initialize(
+        await Installer(
+          projectRoot: caseRoot,
+          writeOut: (_) {},
+        ).initializeBundled(
           InitOptions(prefix: 'Acme', preset: preset, uiPath: uiPath),
         );
         final main = File(p.join(caseRoot.path, 'lib', 'main.dart'))
@@ -890,14 +896,17 @@ packages:
       // the formatter would then rewrite the file the CLI just wrote — which
       // shows up for a consumer as an `add --diff` that never comes back
       // clean.
-      final catalog = await RegistryCatalog.loadBundled(preset: 'default');
+      final catalog = await BundledRegistry('default').catalog();
       final items = catalog.items.keys.where((name) => name != 'theme');
       expect(items, isNotEmpty);
 
       for (final item in items) {
         final caseRoot = createFlutterPackage();
         addTearDown(() => caseRoot.deleteSync(recursive: true));
-        await Installer(projectRoot: caseRoot, writeOut: (_) {}).initialize(
+        await Installer(
+          projectRoot: caseRoot,
+          writeOut: (_) {},
+        ).initializeBundled(
           const InitOptions(
             prefix: 'Playground',
             preset: 'default',
@@ -1012,7 +1021,10 @@ packages:
     for (final stage in ['build', 'analyze']) {
       final caseRoot = createFlutterPackage();
       addTearDown(() => caseRoot.deleteSync(recursive: true));
-      await Installer(projectRoot: caseRoot, writeOut: (_) {}).initialize(
+      await Installer(
+        projectRoot: caseRoot,
+        writeOut: (_) {},
+      ).initializeBundled(
         const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
       );
       writeRequiredPubspec(caseRoot);
@@ -1085,7 +1097,10 @@ packages:
       for (final declaration in declarations) {
         final caseRoot = createFlutterPackage();
         addTearDown(() => caseRoot.deleteSync(recursive: true));
-        await Installer(projectRoot: caseRoot, writeOut: (_) {}).initialize(
+        await Installer(
+          projectRoot: caseRoot,
+          writeOut: (_) {},
+        ).initializeBundled(
           const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
         );
         final pubspec = File(p.join(caseRoot.path, 'pubspec.yaml'))
@@ -1167,7 +1182,10 @@ dev_dependencies:
         for (final preset in ['default', 'fortal']) {
           final caseRoot = createFlutterPackage();
           addTearDown(() => caseRoot.deleteSync(recursive: true));
-          await Installer(projectRoot: caseRoot, writeOut: (_) {}).initialize(
+          await Installer(
+            projectRoot: caseRoot,
+            writeOut: (_) {},
+          ).initializeBundled(
             InitOptions(prefix: 'Ui', preset: preset, uiPath: 'lib/ui'),
           );
           writeRequiredPubspec(caseRoot, remix: '^$version');
@@ -1213,6 +1231,10 @@ dev_dependencies:
         allOf(
           startsWith('Resolved remix $drifted;'),
           contains('authored against $registryRemixFloor'),
+          // A legacy project reads a frozen snapshot, so the way forward is
+          // migration. Upgrading the CLI would not move it.
+          contains('remix registry migrate'),
+          isNot(contains('pub upgrade')),
         ),
       ),
     );
@@ -1238,7 +1260,10 @@ dev_dependencies:
       for (final runtime in ['remix', 'mix_annotations']) {
         final caseRoot = createFlutterPackage();
         addTearDown(() => caseRoot.deleteSync(recursive: true));
-        await Installer(projectRoot: caseRoot, writeOut: (_) {}).initialize(
+        await Installer(
+          projectRoot: caseRoot,
+          writeOut: (_) {},
+        ).initializeBundled(
           const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
         );
         File(p.join(caseRoot.path, 'pubspec.yaml')).writeAsStringSync(
@@ -1307,7 +1332,10 @@ dev_dependencies:
     () async {
       final caseRoot = createFlutterPackage();
       addTearDown(() => caseRoot.deleteSync(recursive: true));
-      await Installer(projectRoot: caseRoot, writeOut: (_) {}).initialize(
+      await Installer(
+        projectRoot: caseRoot,
+        writeOut: (_) {},
+      ).initializeBundled(
         const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
       );
       File(p.join(caseRoot.path, 'pubspec.yaml')).writeAsStringSync('''
@@ -1499,7 +1527,10 @@ dev_dependencies:
 
         final sequential = createFlutterPackage();
         addTearDown(() => sequential.deleteSync(recursive: true));
-        await Installer(projectRoot: sequential, writeOut: (_) {}).initialize(
+        await Installer(
+          projectRoot: sequential,
+          writeOut: (_) {},
+        ).initializeBundled(
           const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
         );
         writeRequiredPubspec(sequential);

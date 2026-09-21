@@ -1,7 +1,10 @@
 # remix_cli
 
+See [pinned GitHub registries](../../open_code/REGISTRIES.md) for namespaces, revision updates,
+migration, and independent registry releases.
+
 `remix_cli` installs editable component source into a Flutter application.
-Choose the compact `default` preset or the Radix Themes-inspired `fortal`
+Choose the compact `vanilla` preset or the Radix Themes-inspired `fortal`
 preset at initialization. Remix remains the behavior dependency; the
 application owns its tokens, theme values, component recipes, and generated
 adapters.
@@ -25,8 +28,8 @@ navigation, page content, optional search, and brand/account/action slots. It
 has no generated adapter and does not install charts, tables, Agent surfaces,
 or an application entry point.
 The catalog also offers `chart` as an optional extension over
-`mix_chart`; it does not depend on `remix_fortal`. There is no remote registry,
-update command, registry lockfile, or content-hash protocol.
+`mix_chart`; it does not depend on `remix_fortal`. Registry content is published independently on GitHub and pinned in `remix.yaml`.
+Registry updates change pins only; installed source remains application-owned.
 
 Both presets additionally distribute the unstyled Agent items:
 `activity`, `answer`, `composer`, `execution`, `message`, `permission`, `plan`,
@@ -45,7 +48,7 @@ The CLI requires Flutter 3.44 or later (Dart 3.12). With an older SDK, adding
 the dependency fails during version solving.
 
 A project-local development dependency is preferred because the app's lockfile
-pins the CLI version and its bundled templates:
+pins the CLI version; `remix.yaml` separately pins registry content:
 
 ```shell
 flutter pub add dev:remix_cli
@@ -71,8 +74,8 @@ dependency_overrides:
 Replace the path with your checkout. Remove the override after beta.10 is
 published and run `flutter pub get` to use hosted Remix.
 
-Global activation is convenient for experiments, but it does not pin the
-template version per project:
+Global activation is convenient for experiments. Registry content remains
+pinned per project in `remix.yaml`:
 
 ```shell
 dart pub global activate remix_cli
@@ -93,11 +96,18 @@ dart run remix_cli:remix init
 The default configuration is:
 
 ```yaml
-schema: 2
+schema: 3
 prefix: Ui
-preset: default
+preset: vanilla
 paths:
   ui: lib/ui
+defaultRegistry: "@remix"
+registries:
+  "@remix":
+    repository: conceptadev/remix
+    path: registry
+    ref: registry-v1
+    revision: "<resolved-full-commit-sha>"
 ```
 
 Customize it only at initialization:
@@ -109,7 +119,7 @@ dart run remix_cli:remix init --prefix Acme --preset fortal --ui-path lib/design
 `init` validates the Flutter project, writes `remix.yaml`, and creates a barrel
 with a managed export block. Repeating the same command is safe. A different
 configuration is refused instead of silently rewriting an existing project.
-The preset defaults to `default` when omitted and cannot be changed after
+The preset defaults to `vanilla` when omitted and cannot be changed after
 initialization.
 
 ### Fortal as owned source
@@ -169,7 +179,7 @@ analyzer:
     - lib/ui/**/*.g.dart
 ```
 
-With the default preset and path, the application receives:
+With the Vanilla preset and path, the application receives:
 
 ```text
 lib/ui/
@@ -200,7 +210,7 @@ dart run remix_cli:remix add dashboard_shell
 This installs the preset's sidebar, responsive sidebar layout, icon button,
 textfield, icons, and theme dependency closure plus two editable files under
 `lib/ui/recipes/dashboard/`. The public `UiDashboardShell<T>` API is the same
-for `default` and `fortal`. The host supplies `RemixSidebarSection<T>` values,
+for `vanilla` and `fortal`. The host supplies `RemixSidebarSection<T>` values,
 the selected value and callback, the current page body, title, and brand slot.
 Account and header-action slots are optional. Search is absent unless the host
 provides `onSearchChanged`.
@@ -216,7 +226,7 @@ use `--diff` and explicit `--overwrite` for template updates.
 Initialize either preset, then use the same item and public dashboard API:
 
 ```shell
-dart run remix_cli:remix init --prefix Ui --preset default
+dart run remix_cli:remix init --prefix Ui --preset vanilla
 # Or initialize a separate app with: --preset fortal
 dart run remix_cli:remix add dashboard_demo
 ```
@@ -242,7 +252,7 @@ use `--overwrite` only when deliberately replacing the installed recipe.
 Contributors can reproduce the isolated consumer gates for either preset:
 
 ```shell
-dart run tool/check_open_code.dart --preset default --source checkout --item dashboard_demo --keep
+dart run tool/check_open_code.dart --preset vanilla --source checkout --item dashboard_demo --keep
 dart run tool/check_open_code.dart --preset fortal --source checkout --item dashboard_demo --keep
 ```
 
@@ -252,7 +262,7 @@ application-owned `UiIcons` alias set with no generated adapter. Add or rename
 aliases there as your interface evolves. The complete 318-icon catalog remains
 one direct `package:remix_ui_icons/remix_ui_icons.dart` import away.
 
-Most default component items generate one widget. Four generate several:
+Most Vanilla component items generate one widget. Four generate several:
 `checkbox` also generates
 `UiCheckboxGroupItem`, `textfield` generates `UiTextField` and `UiTextArea`,
 `tabs` generates `UiTabBar`, `UiTab`, and `UiTabView`, and `chart` generates
@@ -320,7 +330,7 @@ Preview a new install without changing the project or running package tools:
 dart run remix_cli:remix add button --dry-run
 ```
 
-Compare the requested item with the bundled source using Git's no-index diff:
+Compare the requested item with the pinned registry source using Git's no-index diff:
 
 ```shell
 dart run remix_cli:remix add button --diff

@@ -3,22 +3,24 @@ import 'dart:io';
 import 'package:path/path.dart' as p;
 import 'package:pub_semver/pub_semver.dart';
 import 'package:remix_cli/src/installer.dart';
+import 'package:remix_cli/src/cli.dart';
+import 'package:remix_cli/src/project_config.dart';
+import 'package:remix_cli/src/registry_reader.dart';
+import 'package:remix_cli/src/registry_source.dart';
 import 'package:remix_cli/src/process_runner.dart';
 import 'package:yaml/yaml.dart';
 
 /// The `remix` constraint the bundled registry declares, read from the file
 /// itself rather than restated here.
 ///
-/// A literal copy would go stale on the next `remix` bump and fail every
-/// fixture in this suite with `does not satisfy`, inside the release pull
-/// request a bot opened. Deriving it means the bump moves one line.
+/// These fixtures exercise the frozen schema-1/2 snapshot. They intentionally
+/// follow its dependency floor rather than the current remote distribution.
 final String registryRemixConstraint = _readRegistryRemixConstraint();
 
 /// The lowest `remix` version [registryRemixConstraint] admits.
 ///
-/// `tool/check_version_alignment.dart` holds this equal to the version in
-/// `packages/remix/pubspec.yaml`, so it is also the version the registry
-/// templates were authored against.
+/// This is the version the frozen bundled templates were authored against;
+/// current-source alignment checks apply separately to the remote distribution.
 final Version registryRemixFloor =
     (VersionConstraint.parse(registryRemixConstraint) as VersionRange).min!;
 
@@ -146,5 +148,55 @@ final class RecordingFileWriter implements ProjectFileWriter {
   void write(File target, String contents) {
     paths.add(p.relative(target.path, from: root.path));
     _delegate.write(target, contents);
+  }
+}
+
+/// Existing schema-2 consumers remain covered independently of remote init.
+extension BundledProjectFixture on Installer {
+  Future<void> initializeBundled(InitOptions options) async {
+    final config = LegacyProject(
+      packageRoot: projectRoot,
+      prefix: options.prefix,
+      preset: options.preset,
+      uiPath: options.uiPath,
+    );
+    File(
+      p.join(projectRoot.path, 'remix.yaml'),
+    ).writeAsStringSync(config.encode());
+    await initialize(options);
+  }
+}
+
+/// Serves the frozen bundle as if it were the published distribution, so
+/// installer tests get real catalog content without a network.
+final class FixtureOfficialResolver implements RegistrySources {
+  const FixtureOfficialResolver();
+
+  @override
+  Future<RegistrySource> latestOfficial() async => RegistrySource(
+    repository: officialRepository,
+    path: 'registry',
+    ref: 'registry-v1',
+    revision: 'a' * 40,
+  );
+
+  @override
+  Future<RegistrySource> resolve({
+    required String repository,
+    String path = 'registry',
+    String? ref,
+  }) async => RegistrySource(
+    repository: repository,
+    path: path,
+    ref: ref ?? 'main',
+    revision: 'a' * 40,
+  );
+
+  @override
+  RegistryReader open(RegistrySource pin, String preset) {
+    if (preset != 'vanilla' && preset != 'fortal') {
+      throw FormatException('Official registry has no $preset preset.');
+    }
+    return BundledRegistry(preset == 'vanilla' ? 'default' : preset);
   }
 }

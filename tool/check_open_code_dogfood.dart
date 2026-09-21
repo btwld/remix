@@ -1,11 +1,11 @@
-/// Verifies that the workspace dogfood apps still mirror the bundled registry.
+/// Verifies that the workspace dogfood apps still mirror the remote registry.
 ///
 /// ```shell
 /// dart run tool/check_open_code_dogfood.dart
 /// ```
 ///
-/// Playground expects the full default registry; demo and dashboard list the
-/// Fortal items they install explicitly, since only the default manifest is
+/// Playground expects the full Vanilla registry; demo and dashboard list the
+/// Fortal items they install explicitly, since only the Vanilla manifest is
 /// read here.
 /// Check expected items even when their files are missing. The CLI owns config parsing, template rendering, and diffing.
 ///
@@ -163,10 +163,8 @@ Future<void> main(List<String> arguments) async {
 }
 
 Future<String?> _run(Directory root) async {
-  final registry = File(
-    '${root.path}/packages/remix_cli/lib/src/registry/default/registry.yaml',
-  );
-  if (!registry.existsSync()) return 'the bundled registry is missing.';
+  final registry = File('${root.path}/registry/vanilla/registry.yaml');
+  if (!registry.existsSync()) return 'the remote registry is missing.';
 
   final document = loadYaml(registry.readAsStringSync());
   if (document is! YamlMap || document['items'] is! YamlMap) {

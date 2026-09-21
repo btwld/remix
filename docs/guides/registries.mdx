@@ -1,0 +1,291 @@
+---
+title: Registries
+description: Install component source from the official registry, pin it to a commit, and publish a registry of your own
+---
+
+The `remix` CLI copies component source into your application and leaves you
+owning it. A **registry** is where that source comes from. This guide covers
+using the official one, and publishing your own.
+
+## The model
+
+Five words carry the whole system.
+
+| term | what it is |
+| --- | --- |
+| **Registry** | A public GitHub repository holding a directory of component source. |
+| **Preset** | One design language inside a registry — `vanilla` officially. A project picks exactly one. |
+| **Catalog** | The `registry.yaml` for one preset. It lists items. |
+| **Item** | One installable unit: its templates, its dependencies, what it exports. |
+| **Pin** | The exact commit your project reads from, recorded in `remix.yaml`. |
+
+Two rules follow from this and explain most of the CLI's behavior:
+
+- **Every read goes through the pin.** Never a branch, never a tag — the commit
+  SHA recorded in your `remix.yaml`. Moving to newer source is an explicit act.
+- **A network failure never falls back to bundled content.** If the registry is
+  unreachable, the command fails and writes nothing.
+
+## Install from the official registry
+
+```shell
+dart run remix_cli:remix init
+dart run remix_cli:remix add button
+```
+
+`init` resolves the newest stable `registry-v*` release, checks that your
+preset exists in it, and writes `remix.yaml`. If no compatible release is
+published, initialization fails and creates no files.
+
+Omitting `--preset` selects `vanilla`. Use `--prefix` and `--ui-path` to
+control naming and location:
+
+```shell
+dart run remix_cli:remix init --prefix Acme --ui-path lib/design_system
+```
+
+The result:
+
+```yaml
+schema: 3
+prefix: Acme
+preset: vanilla
+paths:
+  ui: lib/design_system
+defaultRegistry: "@remix"
+registries:
+  "@remix":
+    repository: "conceptadev/remix"
+    path: "registry"
+    ref: "registry-v4"
+    revision: "<full commit sha>"
+```
+
+Commit `remix.yaml`. There is no separate lockfile.
+
+`add` resolves the item's full dependency graph, renders every template, checks
+your `pubspec.yaml`, and only then writes. Your edits to already-installed
+files are preserved.
+
+```shell
+dart run remix_cli:remix add button --dry-run   # print the plan, write nothing
+dart run remix_cli:remix add button --diff      # show what would change
+dart run remix_cli:remix add button --overwrite # replace just this item
+```
+
+`--overwrite` replaces only the item you name. It never touches a dependency
+you have customized.
+
+## Move to newer source
+
+Changing a pin and installing source are separate steps, on purpose.
+
+```shell
+dart run remix_cli:remix registry update @remix --ref registry-v5
+dart run remix_cli:remix add button --diff
+dart run remix_cli:remix add button --overwrite
+```
+
+`registry update` validates the new pin and rewrites `remix.yaml`. It does not
+touch a single installed file. You then review with `--diff` and adopt with
+`--overwrite`, item by item.
+
+Rolling back a pin is `git checkout` on `remix.yaml`. That restores the pin,
+not your source — installed files are yours, so review and restore them through
+your own version control.
+
+## Migrate an existing project
+
+Projects on `remix.yaml` schema 1 or 2 read from a frozen snapshot shipped
+inside the CLI. Upgrading the CLI never rewrites them and never updates their
+templates. Migration is explicit:
+
+```shell
+dart run remix_cli:remix registry migrate
+dart run remix_cli:remix add button --diff
+```
+
+Migration changes configuration only. Your prefix, UI path, installed files,
+and generated adapters are untouched. A legacy `default` preset is recorded as
+`vanilla`; other preset names are unchanged. Add `--ref registry-v4` to pin a specific
+release instead of the newest stable one.
+
+Migration does not claim your installed source matches the new pin. That is
+what the `--diff` on the second line is for.
+
+## Publish your own registry
+
+A registry is a directory in a public GitHub repository. Nothing else — no
+service to run, no account, no publishing step beyond `git push`.
+
+### Layout
+
+```text
+registry/
+  index.yaml                        # presets -> catalog paths
+  vanilla/
+    registry.yaml                   # the catalog
+    templates/
+      button/button.dart.tmpl
+```
+
+`index.yaml` is schema 1 and maps each preset name to its catalog:
+
+```yaml
+schema: 1
+presets:
+  vanilla: vanilla/registry.yaml
+```
+
+### Namespace and preset are different things
+
+This trips people up, so it is worth being precise:
+
+- A **namespace** (`@acme`) identifies *your registry*. You choose it, and the
+  consumer records it when they register you.
+- A **preset** (`vanilla`) identifies *a design language*. The consuming
+  project selects exactly one, at `remix init`, and it stays fixed.
+
+`remix registry add` validates your registry against the preset the project
+**already** selected. So **every registry a project uses must offer that
+project's preset.** Publishing only a `acme` preset means no project that
+initialized against the official registry can add you — `remix init` always
+resolves the official registry, which has no `acme`.
+
+Until a preset can be introduced by a third-party registry, publish under a
+preset name the consuming projects already use — `vanilla` here. Your
+namespace is what keeps your items distinct, not your preset name.
+
+### The catalog
+
+`registry.yaml` is schema 2. Each key under `items` is an item name, matching
+`^[a-z][a-z0-9_]*$`:
+
+```yaml
+schema: 2
+items:
+  theme:
+    files:
+      - source: templates/theme/tokens.dart.tmpl
+        target: "@ui/theme/tokens.dart"
+    exports:
+      - theme/tokens.dart
+
+  button:
+    registryDependencies:
+      - theme
+    dependencies:
+      mix_annotations: ^2.2.0-beta.1
+    devDependencies:
+      build_runner: ^2.10.1
+      mix_generator: ^2.2.0-beta.3
+    files:
+      - source: templates/button/button.dart.tmpl
+        target: "@ui/components/button.dart"
+    generated:
+      - "@ui/components/button.g.dart"
+    exports:
+      - components/button.dart
+```
+
+| field | required | meaning |
+| --- | --- | --- |
+| `files` | yes | Template `source` to installed `target`. |
+| `registryDependencies` | no | Other items to install first. |
+| `dependencies` | no | Pub constraints the installed source needs at runtime. |
+| `devDependencies` | no | Pub constraints needed only to build. |
+| `generated` | no | Files the consumer's `build_runner` will produce. |
+| `exports` | no | Paths added to the managed UI barrel. |
+
+Path rules the CLI enforces before writing anything:
+
+- `source` is relative and starts with `templates/`.
+- `target` starts with `@ui/`, which stands in for the consumer's configured
+  `paths.ui`. Storing targets this way is what lets one registry serve every
+  project regardless of where it installs.
+- `exports` are relative to that same UI directory.
+- No traversal, no absolute paths, no URI escapes, in any of them.
+
+### Templates
+
+A template is ordinary Dart with two placeholders:
+
+| placeholder | becomes | example |
+| --- | --- | --- |
+| `{{typePrefix}}` | the project's `prefix` | `AcmeButton` |
+| `{{valuePrefix}}` | its lower-camel form | `acmeButtonStyle` |
+
+Any other `{{...}}` token is rejected — an unresolved placeholder is a
+registry bug, not something to install.
+
+### Two invariants worth knowing before you design items
+
+**No two items may own the same target.** If two components need the same
+file, that file is a third item both depend on. The CLI rejects overlapping
+ownership before it writes, across every registry in the graph.
+
+**No item may own `@ui/ui.dart`.** That barrel is managed by the CLI, assembled
+from every installed item's `exports`.
+
+### Depending on another registry
+
+Within a schema-2 catalog, a dependency may name another registry:
+
+```yaml
+    registryDependencies:
+      - theme
+      - "@company/icons"
+```
+
+A bare name means the owning registry's own item. A qualified name means a
+registry the *consuming project* has configured. An item cannot register a
+registry or redirect one — the consumer stays in control of every source their
+code is installed from.
+
+### Publish and consume
+
+Commit the `registry/` directory and push. A consumer with a `vanilla` project
+then registers you and installs:
+
+```shell
+dart run remix_cli:remix init                 # selects vanilla
+dart run remix_cli:remix registry add @acme \
+  --repository your-org/your-repo \
+  --path registry \
+  --ref v1
+
+dart run remix_cli:remix add @acme/button
+```
+
+`registry add` resolves the ref to a commit and records both. Without `--ref`
+it resolves the repository's default branch once and records its name and
+commit. Namespaces match `^@[a-z][a-z0-9_-]*$`.
+
+Bare item names resolve through `defaultRegistry`; `@acme/button` names yours
+explicitly. Tag releases if you want consumers to pin something more meaningful
+than a branch commit.
+
+### What is not supported
+
+Public `github.com` repositories only. Private repositories, GitHub Enterprise,
+arbitrary HTTP endpoints, and local paths are outside the current release.
+There is no persistent offline cache.
+
+## Troubleshooting
+
+| message | cause |
+| --- | --- |
+| `Registry <repo> has no <preset> preset.` | The registry's `index.yaml` does not list your project's preset. |
+| `<a> and <b> both target <path>.` | Two items claim the same installed file. Extract it into a shared item. |
+| `Unknown registry @ns.` | A dependency names a registry the project has not configured. Add it with `registry add`. |
+| `Registry dependency cycle: ...` | Items depend on each other in a loop. |
+| `GitHub rate limit exceeded` | Unauthenticated GitHub API limits are per IP; shared CI runners hit them. Retry after the reset. |
+| `Registry constraints for <pkg> do not intersect.` | Two items in one graph require incompatible versions of the same package. |
+| `<item> is partially installed` | Some of an item's files exist and some do not. Use `--diff` or `--overwrite`. |
+
+## Reference
+
+- [Open Code](/open-code) — what the CLI installs and why you own it.
+- `remix.yaml` schema 3, `index.yaml` schema 1, and catalog schema 2 are the
+  stable contract. The CLI supports reading schemas 1 and 2 of `remix.yaml` for
+  existing projects.

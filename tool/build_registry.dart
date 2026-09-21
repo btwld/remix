@@ -6,7 +6,7 @@ import 'package:yaml/yaml.dart';
 
 import '../packages/remix_cli/lib/src/registry.dart';
 
-/// Derives the bundled registry presets from analyzer-checked Dart source.
+/// Derives the remote registry presets from analyzer-checked Dart source.
 ///
 /// Run without arguments to synchronize every committed preset. Pass `--check`
 /// to compare in memory and fail on drift without writing, and `--preset` to
@@ -44,6 +44,37 @@ void main(List<String> arguments) {
     return;
   }
 
+  final index = File(p.join(repositoryRoot.path, 'registry', 'index.yaml'));
+  final indexSource =
+      'schema: 1\npresets:\n${presetSpecs.keys.map((name) => '  $name: $name/registry.yaml\n').join()}';
+  if (check) {
+    if (!index.existsSync() || index.readAsStringSync() != indexSource) {
+      stderr.writeln(
+        'Registry index is stale. Run dart run tool/build_registry.dart.',
+      );
+      exitCode = 1;
+      return;
+    }
+  } else {
+    index.parent.createSync(recursive: true);
+    index.writeAsStringSync(indexSource);
+  }
+  if (check) {
+    final distribution = index.parent;
+    final expected = {'index.yaml', ...presetSpecs.keys};
+    final unexpected = distribution
+        .listSync()
+        .map((entry) => p.basename(entry.path))
+        .where((name) => !expected.contains(name))
+        .toList();
+    if (unexpected.isNotEmpty) {
+      stderr.writeln(
+        'Unexpected registry distribution entries: ${unexpected.join(', ')}',
+      );
+      exitCode = 1;
+      return;
+    }
+  }
   final selected = preset == 'all' ? presetSpecs.keys : [preset];
   for (final name in selected) {
     if (!_runPreset(repositoryRoot, name, check: check)) {
@@ -99,7 +130,7 @@ bool _runPreset(Directory repositoryRoot, String name, {required bool check}) {
 
 /// One derivable source package, and everything that distinguishes it.
 ///
-/// The builder below turns analyzer-checked Dart source into a bundled
+/// The builder below turns analyzer-checked Dart source into a remote
 /// registry tree. It does not know which package it is reading, what word
 /// stands in for the consumer's prefix, or which items exist outside the
 /// component directory. Those live here, so a second source package is a new
@@ -125,7 +156,7 @@ final class PresetSpec {
     this.extensionDirectory,
   });
 
-  /// Preset name, and the directory it occupies under the bundled registry.
+  /// Preset name, and the directory it occupies under the remote registry.
   final String name;
 
   /// Set on an extension: a second source package whose items derive into
@@ -374,7 +405,7 @@ const agentRecipes = [
 /// `Vanilla` is the authoring word: it stands in for the consumer prefix and
 /// appears nowhere else in the source, so plain substitution is exact.
 const defaultPreset = PresetSpec(
-  name: 'default',
+  name: 'vanilla',
   sourceRoot: 'registry_source/lib/src/default',
   sourcePackage: 'registry_source',
   typeWord: 'Vanilla',
@@ -824,7 +855,7 @@ const fortalAgentExtension = PresetSpec(
 
 /// Agent behavior merged into the default preset, as above.
 const defaultAgentExtension = PresetSpec(
-  name: 'default',
+  name: 'vanilla',
   sourceRoot: 'registry_source/lib/src/agent',
   sourcePackage: 'registry_source',
   typeWord: 'Agent',
@@ -866,13 +897,12 @@ const defaultAgentExtension = PresetSpec(
   composedRegistryDependencies: {},
 );
 
-/// Every bundled preset and the specs that derive it, writer first.
+/// Every remote preset and the specs that derive it, writer first.
 ///
 /// The first spec owns the preset. Any spec after it is an extension whose
 /// items derive from a second source package into the same tree.
 const presetSpecs = <String, List<PresetSpec>>{
-  'default': [defaultPreset, defaultAgentExtension],
-  'fortal': [fortalPreset, fortalAgentExtension],
+  'vanilla': [defaultPreset, defaultAgentExtension],
 };
 
 PresetOutput mergePresetOutputs(PresetOutput base, PresetOutput extension) {
@@ -958,7 +988,7 @@ final class PresetOutput {
   final Map<String, String> sourceByTemplate;
 }
 
-/// Builds one bundled registry tree from analyzer-checked Dart source.
+/// Builds one remote registry tree from analyzer-checked Dart source.
 final class PresetBuilder {
   const PresetBuilder({
     required this.spec,
@@ -971,22 +1001,13 @@ final class PresetBuilder {
     Directory repositoryRoot, {
     PresetSpec spec = fortalPreset,
   }) {
-    final registryRoot = Directory(
-      p.join(
-        repositoryRoot.path,
-        'packages',
-        'remix_cli',
-        'lib',
-        'src',
-        'registry',
-      ),
-    );
+    final registryRoot = Directory(p.join(repositoryRoot.path, 'registry'));
     return PresetBuilder(
       spec: spec,
       sourceRoot: Directory(
         p.joinAll([repositoryRoot.path, ...p.posix.split(spec.sourceRoot)]),
       ),
-      defaultRegistryRoot: Directory(p.join(registryRoot.path, 'default')),
+      defaultRegistryRoot: Directory(p.join(registryRoot.path, 'vanilla')),
       outputRoot: Directory(p.join(registryRoot.path, spec.name)),
     );
   }
@@ -1378,11 +1399,7 @@ final class PresetBuilder {
     if (document is! YamlMap || document['items'] is! YamlMap) {
       throw const FormatException('Registry must contain an items map.');
     }
-    RegistryCatalog.parse(
-      jsonEncode(document),
-      preset: spec.name,
-      rootUri: outputRoot.uri,
-    );
+    RegistryCatalog.parse(jsonEncode(document), preset: spec.name);
     final items = document['items'] as YamlMap;
     final targets = <String>{
       for (final item in items.values)
@@ -1918,7 +1935,7 @@ final class PresetBuilder {
     ];
     final buffer = StringBuffer()
       ..writeln('# Generated by tool/build_registry.dart. Do not edit.')
-      ..writeln('schema: 1')
+      ..writeln('schema: 2')
       ..writeln('items:');
     for (final item in ordered) {
       buffer.writeln('  ${item.name}:');

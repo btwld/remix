@@ -70,7 +70,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        preset: [default, fortal]
+        preset: [vanilla]
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-workspace

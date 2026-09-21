@@ -8,8 +8,7 @@ const _remixPubspecPath = 'packages/remix/pubspec.yaml';
 
 /// The registry file whose `remix` constraint must floor at the released
 /// `remix` version.
-const _registryPath =
-    'packages/remix_cli/lib/src/registry/default/registry.yaml';
+const _registryPath = 'registry/vanilla/registry.yaml';
 
 void main() {
   final workspaceRoot = Directory.current.absolute;
@@ -45,7 +44,7 @@ void main() {
   exitCode = 1;
 }
 
-/// Holds `remix_cli`'s bundled registry constraint to the released `remix`.
+/// Holds the remote registry constraint to the released `remix`.
 ///
 /// The registry is data, not a pubspec dependency, so `melos version` never
 /// rewrites it. Left alone, `remix: ^1.0.0-beta.7` would keep admitting every
@@ -124,7 +123,7 @@ void _checkRegistryFloor(
   }
 
   stdout.writeln(
-    'Registry floor aligned: remix_cli item $item declares remix "$declared" '
+    'Registry floor aligned: remote item $item declares remix "$declared" '
     'against remix $remixVersion.',
   );
 }

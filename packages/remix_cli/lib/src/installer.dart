@@ -11,6 +11,9 @@ import 'cli.dart';
 import 'process_runner.dart';
 import 'project_config.dart';
 import 'registry.dart';
+import 'registry_reader.dart';
+import 'registry_source.dart';
+import 'registry_graph.dart';
 import 'template_renderer.dart';
 
 const managedExportsStart = '// remix_cli:exports:start';
@@ -22,10 +25,23 @@ $managedExportsStart
 $managedExportsEnd
 ''';
 
-typedef RegistryLoader = Future<RegistryCatalog> Function(String preset);
-
-Future<RegistryCatalog> _loadBundledRegistry(String preset) =>
-    RegistryCatalog.loadBundled(preset: preset);
+/// Runs the CLI against [installer].
+///
+/// Shared with the consumer harness so a new command reaches it automatically
+/// rather than only `bin/remix.dart`.
+Future<int> runInstallerCli(
+  List<String> arguments,
+  Installer installer, {
+  required LineWriter writeOut,
+  required LineWriter writeError,
+}) => runRemixCli(
+  arguments,
+  writeOut: writeOut,
+  writeError: writeError,
+  onInit: installer.initialize,
+  onAdd: installer.add,
+  onRegistry: installer.registry,
+);
 
 abstract interface class ProjectFileWriter {
   void write(File target, String contents);
@@ -58,30 +74,30 @@ final class Installer {
     required LineWriter writeOut,
     ProcessRunner processRunner = const SystemProcessRunner(),
     ProjectFileWriter fileWriter = const AtomicProjectFileWriter(),
-    RegistryLoader registryLoader = _loadBundledRegistry,
+    RegistrySources sources = const GitHubSources(),
   }) : projectRoot = projectRoot.absolute,
        _writeOut = writeOut,
        _processRunner = processRunner,
        _fileWriter = fileWriter,
-       _registryLoader = registryLoader;
+       _sources = sources;
 
   final Directory projectRoot;
   final LineWriter _writeOut;
   final ProcessRunner _processRunner;
   final ProjectFileWriter _fileWriter;
-  final RegistryLoader _registryLoader;
+  final RegistrySources _sources;
   final TemplateRenderer _renderer = const TemplateRenderer();
 
   Future<void> initialize(InitOptions options) async {
     final root = validateFlutterPackageRoot(projectRoot);
-    final requested = ProjectConfig.create(
-      packageRoot: root,
+    validateProjectSettings(
+      root,
       prefix: options.prefix,
       preset: options.preset,
       uiPath: options.uiPath,
     );
     final configFile = File(p.join(root.path, projectConfigFileName));
-    final barrelRelative = p.posix.join(requested.uiPath, 'ui.dart');
+    final barrelRelative = p.posix.join(options.uiPath, 'ui.dart');
     validateProjectFilePath(root, projectConfigFileName);
     validateProjectFilePath(root, barrelRelative);
     final barrelFile = _projectFile(root, barrelRelative);
@@ -92,9 +108,14 @@ final class Installer {
         configFile.readAsStringSync(),
         packageRoot: root,
       );
-      if (existing.prefix != requested.prefix ||
-          existing.preset != requested.preset ||
-          existing.uiPath != requested.uiPath) {
+      final matchesPreset =
+          existing.preset == options.preset ||
+          (existing is LegacyProject &&
+              {'default', 'vanilla'}.contains(existing.preset) &&
+              {'default', 'vanilla'}.contains(options.preset));
+      if (existing.prefix != options.prefix ||
+          !matchesPreset ||
+          existing.uiPath != options.uiPath) {
         throw const FormatException(
           'Existing remix.yaml does not match the requested prefix, preset, '
           'and UI path.',
@@ -109,7 +130,19 @@ final class Installer {
       writeBarrel = false;
     }
 
-    if (writeConfig) _fileWriter.write(configFile, requested.encode());
+    if (writeConfig) {
+      final source = await _sources.latestOfficial();
+      await _sources.open(source, options.preset).catalog();
+      final requested = PinnedProject(
+        packageRoot: root,
+        prefix: options.prefix,
+        preset: options.preset,
+        uiPath: options.uiPath,
+        defaultRegistry: '@remix',
+        registries: {'@remix': source},
+      );
+      _fileWriter.write(configFile, requested.encode());
+    }
     if (writeBarrel) _fileWriter.write(barrelFile, emptyManagedBarrel);
 
     // Report the transition that actually happened. `init` doubles as a repair
@@ -122,6 +155,91 @@ final class Installer {
         'Created $barrelRelative; preserved $projectConfigFileName.',
       (false, false) => 'Remix is already initialized.',
     });
+  }
+
+  Future<void> registry(RegistryOptions options) async {
+    final root = validateFlutterPackageRoot(projectRoot);
+    validateProjectFilePath(root, projectConfigFileName);
+    final file = _projectFile(root, projectConfigFileName);
+    if (!file.existsSync())
+      throw const FormatException('Run remix init first.');
+    final config = ProjectConfig.parse(
+      file.readAsStringSync(),
+      packageRoot: root,
+    );
+    final namespace = options.action == RegistryAction.migrate
+        ? '@remix'
+        : options.namespace!;
+    validateNamespace(namespace);
+    final sources = <String, RegistrySource>{};
+    final String defaultRegistry;
+    final RegistrySource source;
+    if (options.action == RegistryAction.migrate) {
+      if (config is! LegacyProject)
+        throw const FormatException(
+          'Project already uses pinned registries; use remix registry update.',
+        );
+      defaultRegistry = namespace;
+      source = options.ref == null
+          ? await _sources.latestOfficial()
+          : await _sources.resolve(
+              repository: officialRepository,
+              ref: options.ref,
+            );
+    } else {
+      if (config is! PinnedProject)
+        throw const FormatException(
+          'Run remix registry migrate before configuring registries.',
+        );
+      sources.addAll(config.registries);
+      defaultRegistry = config.defaultRegistry;
+      if (options.action == RegistryAction.add) {
+        if (sources.containsKey(namespace))
+          throw FormatException(
+            '$namespace is already registered; use remix registry update.',
+          );
+        source = await _sources.resolve(
+          repository: options.repository!,
+          path: options.path,
+          ref: options.ref,
+        );
+      } else {
+        final previous = sources[namespace];
+        if (previous == null)
+          throw FormatException(
+            'Unknown registry $namespace; register it with remix registry add.',
+          );
+        source = await _sources.resolve(
+          repository: previous.repository,
+          path: previous.path,
+          ref: options.ref ?? previous.ref,
+        );
+      }
+    }
+    final targetPreset =
+        options.action == RegistryAction.migrate && config.preset == 'default'
+        ? 'vanilla'
+        : config.preset;
+    await _sources.open(source, targetPreset).catalog();
+    sources[namespace] = source;
+    final updated = PinnedProject(
+      packageRoot: root,
+      prefix: config.prefix,
+      preset: targetPreset,
+      uiPath: config.uiPath,
+      defaultRegistry: defaultRegistry,
+      registries: sources,
+    );
+    _fileWriter.write(file, updated.encode());
+    if (targetPreset != config.preset) {
+      _writeOut('Renamed legacy preset default to vanilla.');
+    }
+    _writeOut(
+      '$namespace pinned to ${source.revision}. Installed source was not changed.',
+    );
+    _writeOut(
+      'Review an installed item next: remix add $namespace/<item> --diff',
+    );
   }
 
   Future<void> add(AddOptions options) async {
@@ -193,9 +311,50 @@ final class Installer {
     final currentBarrel = barrel.readAsStringSync();
     validateManagedBarrel(currentBarrel);
 
-    final catalog = await _registryLoader(config.preset);
-    final items = catalog.resolveAll(options.items);
-    final requestedNames = Set<String>.unmodifiable(options.items);
+    final RegistryGraph graph;
+    switch (config) {
+      case PinnedProject():
+        graph = await RegistryGraph.resolve(config, options.items, _sources);
+        for (final namespace in graph.catalogs.keys) {
+          _writeOut(
+            '$namespace (${config.preset}) revision '
+            '${config.registries[namespace]!.revision}',
+          );
+        }
+      case LegacyProject():
+        final bundled = BundledRegistry(config.preset);
+        final catalog = await bundled.catalog();
+        graph = RegistryGraph.bundled(
+          bundled,
+          catalog,
+          catalog.resolveAll(options.items),
+          Set<String>.unmodifiable(options.items),
+        );
+    }
+    final items = graph.items;
+    // Requested names are qualified for a pinned project, so they compare
+    // against the qualified names `items` carries. The graph does the
+    // qualifying, because it is the only thing that knows each item's owner.
+    final requestedNames = graph.requestedNames;
+    final availableItems = graph.catalogs.entries
+        .expand(
+          (entry) => entry.value.items.values.map(
+            (item) => RegistryItem(
+              // Legacy projects have one unnamed registry, so their output
+              // stays unqualified: `button`, never `bundled/button`.
+              name: config is PinnedProject
+                  ? '${entry.key}/${item.name}'
+                  : item.name,
+              registryDependencies: item.registryDependencies,
+              dependencies: item.dependencies,
+              devDependencies: item.devDependencies,
+              files: item.files,
+              generated: item.generated,
+              exports: item.exports,
+            ),
+          ),
+        )
+        .toList();
     final rendered = <String, String>{};
     final filesByItem = <String, List<String>>{};
     for (final item in items) {
@@ -207,7 +366,7 @@ final class Installer {
           throw FormatException('Multiple registry files target $relative.');
         }
         rendered[relative] = _renderer.render(
-          await catalog.readTemplate(registryFile),
+          await graph.template(item, registryFile),
           typePrefix: config.prefix,
           valuePrefix: config.valuePrefix,
         );
@@ -229,7 +388,7 @@ final class Installer {
     final proposedBarrel = updateManagedBarrel(currentBarrel, exports);
     final requirements = _collectRequirements(items);
     final pubspec = File(p.join(root.path, 'pubspec.yaml'));
-    final dependencies = _inspectDependencies(
+    final missingDependencies = _inspectDependencies(
       pubspec.readAsStringSync(),
       requirements,
     );
@@ -242,9 +401,11 @@ final class Installer {
     // stale even when their authored inputs did not change. Keep every
     // already-installed registry adapter in the focused build so adding one
     // optional item cannot delete another item's generated part.
+    final installedDart = _installedDartFiles(root, config.uiPath);
     final generationTargets = <String>{
       ...generated,
-      for (final item in catalog.items.values)
+      ..._installedAdapters(root, config.uiPath, installedDart),
+      for (final item in availableItems)
         for (final target in item.generated)
           if (_projectFile(root, _resolveTarget(config, target)).existsSync())
             _resolveTarget(config, target),
@@ -253,9 +414,10 @@ final class Installer {
     // Spec stylers are opt-in in the supported Mix generator. Detect the
     // authored annotation, not Agent item names or consumer prefixes.
     final specInputs = <String>[];
-    for (final item in catalog.items.values) {
+    for (final item in availableItems) {
       for (final file in item.files) {
         final relative = _resolveTarget(config, file.target);
+        validateProjectFilePath(root, relative);
         final existing = _projectFile(root, relative);
         final proposed = rendered[relative];
         final source =
@@ -268,6 +430,13 @@ final class Installer {
           specInputs.add(relative);
         }
       }
+    }
+    for (final relative in installedDart) {
+      if (relative.endsWith('.g.dart') || specInputs.contains(relative))
+        continue;
+      final source = _projectFile(root, relative).readAsStringSync();
+      if (RegExp(r'@MixableSpec\s*\(').hasMatch(source))
+        specInputs.add(relative);
     }
     String? builderConfiguration;
     if (specInputs.isNotEmpty) {
@@ -297,7 +466,7 @@ final class Installer {
       currentBarrel: currentBarrel,
       proposedBarrel: proposedBarrel,
       requirements: requirements,
-      dependencies: dependencies,
+      missingDependencies: missingDependencies,
       generated: generated,
       generationTargets: generationTargets,
       pubspec: pubspec,
@@ -310,34 +479,36 @@ final class Installer {
   /// Every step appends to `completed` before the next one starts, so a failure
   /// can tell the reader how far the install got.
   Future<void> _install(_InstallPlan plan, AddOptions options) async {
-    // Unpacked in one place so the steps below read as prose. The plan stays
-    // the only description of what gets installed: nothing past this point
-    // re-reads the project, so no step can act on a different answer than the
-    // one already printed.
-    final root = plan.root;
-    final config = plan.config;
-    final items = plan.items;
-    final requestedNames = plan.requestedNames;
-    final rendered = plan.rendered;
-    final filesByItem = plan.filesByItem;
-    final states = plan.states;
-    final barrel = plan.barrel;
-    final barrelRelative = plan.barrelRelative;
-    final currentBarrel = plan.currentBarrel;
-    final proposedBarrel = plan.proposedBarrel;
-    final requirements = plan.requirements;
-    final dependencies = plan.dependencies;
-    final generated = plan.generated;
-    final generationTargets = plan.generationTargets;
-    final pubspec = plan.pubspec;
+    // Destructured in one place so the steps below read as prose. The plan
+    // stays the only description of what gets installed: nothing past this
+    // point re-reads the project, so no step can act on a different answer
+    // than the one already printed.
+    final _InstallPlan(
+      :root,
+      :config,
+      :items,
+      :requestedNames,
+      :rendered,
+      :filesByItem,
+      :states,
+      :barrel,
+      :barrelRelative,
+      :currentBarrel,
+      :proposedBarrel,
+      :requirements,
+      :missingDependencies,
+      :generated,
+      :generationTargets,
+      :pubspec,
+    ) = plan;
 
     final toolchain = await _resolveFlutter(root);
     final completed = <String>[];
     var regenerated = false;
     try {
-      if (dependencies.missing.isNotEmpty) {
+      if (missingDependencies.isNotEmpty) {
         final arguments = <String>['pub', 'add'];
-        for (final requirement in dependencies.missing) {
+        for (final requirement in missingDependencies) {
           final descriptor = '${requirement.name}@${requirement.constraint}';
           arguments.add(requirement.dev ? 'dev:$descriptor' : descriptor);
         }
@@ -370,11 +541,20 @@ final class Installer {
       final floor = _snapshotFloor(requirements);
       final lockedRemix = locked['remix'];
       if (floor != null && lockedRemix != null && lockedRemix > floor) {
-        _writeOut(
-          'Resolved remix $lockedRemix; this remix_cli registry was authored '
-          'against $floor. Run flutter pub upgrade remix_cli, then review '
-          'with --diff.',
-        );
+        // Upgrading the CLI moves neither a pin nor the frozen snapshot, so
+        // naming it here would send the reader after a command that cannot
+        // change the source they are being asked to review.
+        _writeOut(switch (config) {
+          PinnedProject(:final defaultRegistry) =>
+            'Resolved remix $lockedRemix; this registry revision was authored '
+                'against $floor. Your pin does not move on its own — run '
+                'remix registry update $defaultRegistry --ref <newer release>, '
+                'then review with --diff.',
+          LegacyProject() =>
+            'Resolved remix $lockedRemix; the bundled registry was authored '
+                'against $floor. It is frozen for this project — run '
+                'remix registry migrate, then review with --diff.',
+        });
       }
 
       final pathsToWrite = <String>[];
@@ -786,7 +966,7 @@ List<_DependencyRequirement> _collectRequirements(List<RegistryItem> items) {
   return List.unmodifiable(requirements.values);
 }
 
-_DependencyInspection _inspectDependencies(
+List<_DependencyRequirement> _inspectDependencies(
   String pubspecSource,
   List<_DependencyRequirement> requirements,
 ) {
@@ -839,7 +1019,7 @@ _DependencyInspection _inspectDependencies(
       );
     }
   }
-  return _DependencyInspection(List.unmodifiable(missing));
+  return List.unmodifiable(missing);
 }
 
 VersionConstraint? _hostedConstraint(Object? declaration) {
@@ -989,6 +1169,59 @@ String _generationFilter(String packageName, String target) => Uri(
 String _resolveTarget(ProjectConfig config, String target) =>
     p.posix.join(config.uiPath, target.substring(uiTargetPrefix.length));
 
+Set<String> _installedAdapters(
+  Directory root,
+  String uiPath,
+  List<String> files,
+) {
+  final adapters = <String>{...files.where((path) => path.endsWith('.g.dart'))};
+  final partDirective = RegExp(
+    r'''^\s*part\s+['"]([^'"]+)['"]\s*;''',
+    multiLine: true,
+  );
+  for (final relative in files) {
+    for (final match in partDirective.allMatches(
+      _projectFile(root, relative).readAsStringSync(),
+    )) {
+      final target = p.posix.normalize(
+        p.posix.join(p.posix.dirname(relative), match.group(1)!),
+      );
+      if (!target.startsWith('$uiPath/')) continue;
+      validateProjectFilePath(root, target);
+      if (_projectFile(root, target).existsSync()) adapters.add(target);
+    }
+  }
+  return adapters;
+}
+
+List<String> _installedDartFiles(Directory root, String uiPath) {
+  final result = <String>[];
+  final seen = <String>{};
+  void visit(Directory directory) {
+    if (!directory.existsSync() ||
+        !seen.add(directory.resolveSymbolicLinksSync()))
+      return;
+    for (final entity in directory.listSync(followLinks: false)) {
+      final relative = p
+          .relative(entity.path, from: root.path)
+          .split(p.separator)
+          .join('/');
+      final type = FileSystemEntity.typeSync(entity.path);
+      if (type == FileSystemEntityType.directory) {
+        // Validate through a prospective child to include directory links.
+        validateProjectFilePath(root, '$relative/.remix-path-check');
+        visit(Directory(entity.path));
+      } else if (relative.endsWith('.dart')) {
+        validateProjectFilePath(root, relative);
+        result.add(relative);
+      }
+    }
+  }
+
+  visit(Directory(p.join(root.path, uiPath)));
+  return result;
+}
+
 File _projectFile(Directory root, String relative) =>
     File(p.joinAll([root.path, ...p.posix.split(relative)]));
 
@@ -1012,12 +1245,6 @@ final class _DependencyRequirement {
   final bool dev;
 }
 
-final class _DependencyInspection {
-  const _DependencyInspection(this.missing);
-
-  final List<_DependencyRequirement> missing;
-}
-
 /// Everything `add` resolved before it was allowed to change anything.
 ///
 /// This exists to keep the preflight honest: the planning phase hands back one
@@ -1038,7 +1265,7 @@ final class _InstallPlan {
     required this.currentBarrel,
     required this.proposedBarrel,
     required this.requirements,
-    required this.dependencies,
+    required this.missingDependencies,
     required this.generated,
     required this.generationTargets,
     required this.pubspec,
@@ -1064,7 +1291,7 @@ final class _InstallPlan {
   final String currentBarrel;
   final String proposedBarrel;
   final List<_DependencyRequirement> requirements;
-  final _DependencyInspection dependencies;
+  final List<_DependencyRequirement> missingDependencies;
   final List<String> generated;
   final List<String> generationTargets;
   final File pubspec;

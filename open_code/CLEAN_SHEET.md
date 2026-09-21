@@ -87,9 +87,10 @@ committed Acme fixture in this repository to make drift visible.
 ## Why a small local catalog
 
 The MVP has one registry YAML file and one canonical template tree inside
-`remix_cli`. It has no remote registry, cache, lockfile, content hashes, update
-protocol, or per-component manifest format. Those features need evidence from
-more components and real consumers before they earn their maintenance cost.
+`remix_cli`. Registry content now publishes independently on GitHub, and
+schema-3 projects pin full revisions in `remix.yaml`. Schemas 1–2 retain the
+frozen bundle until explicit migration. See [the registry contract](REGISTRIES.md)
+for namespaces, dependency resolution, updates and source ownership.
 
 The installer still protects application source:
 

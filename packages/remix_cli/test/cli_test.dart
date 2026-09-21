@@ -113,7 +113,7 @@ void main() {
       successExitCode,
     );
     expect(received!.prefix, 'Ui');
-    expect(received!.preset, 'default');
+    expect(received!.preset, 'vanilla');
     expect(received!.uiPath, 'lib/ui');
 
     await runRemixCli(

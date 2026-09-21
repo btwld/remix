@@ -22,6 +22,8 @@ void main() {
         await runRemixCli(
           [
             'init',
+            '--preset',
+            'default',
             '--prefix',
             'Acme',
             '--ui-path',
@@ -29,7 +31,7 @@ void main() {
           ],
           writeOut: output.add,
           writeError: fail,
-          onInit: installer.initialize,
+          onInit: installer.initializeBundled,
         ),
         successExitCode,
       );

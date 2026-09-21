@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:path/path.dart' as p;
 import 'package:remix_cli/src/project_config.dart';
+import 'package:remix_cli/src/registry_source.dart';
 import 'package:test/test.dart';
 
 import 'test_support.dart';
@@ -12,7 +13,7 @@ void main() {
   setUp(() => root = createFlutterPackage());
   tearDown(() => root.deleteSync(recursive: true));
 
-  test('reads schema 1 as default and encodes schema 2', () {
+  test('reads schema 1 as default without rewriting its schema', () {
     final config = ProjectConfig.parse('''schema: 1
 prefix: Acme
 paths:
@@ -23,9 +24,8 @@ paths:
     expect(config.valuePrefix, 'acme');
     expect(config.preset, 'default');
     expect(config.uiPath, 'lib/design_system');
-    expect(config.encode(), '''schema: 2
+    expect(config.encode(), '''schema: 1
 prefix: Acme
-preset: default
 paths:
   ui: lib/design_system
 ''');
@@ -44,10 +44,143 @@ paths:
     expect(config.uiPath, 'lib/design_system');
   });
 
+  test('parse returns the shape each schema actually has', () {
+    Directory(p.join(root.path, 'lib', 'ui')).createSync(recursive: true);
+    for (final (schema, source) in [
+      (1, 'schema: 1\nprefix: Ui\npaths:\n  ui: lib/ui\n'),
+      (2, 'schema: 2\nprefix: Ui\npreset: default\npaths:\n  ui: lib/ui\n'),
+    ]) {
+      expect(
+        ProjectConfig.parse(source, packageRoot: root),
+        isA<LegacyProject>().having((c) => c.schema, 'schema', schema),
+        reason: source,
+      );
+    }
+
+    final pinned = ProjectConfig.parse('''schema: 3
+prefix: Ui
+preset: vanilla
+paths:
+  ui: lib/ui
+defaultRegistry: "@remix"
+registries:
+  "@remix":
+    repository: "conceptadev/remix"
+    path: "registry"
+    ref: "registry-v1"
+    revision: "${'a' * 40}"
+''', packageRoot: root);
+
+    expect(pinned, isA<PinnedProject>());
+    expect((pinned as PinnedProject).defaultRegistry, '@remix');
+    expect(pinned.registries.keys, ['@remix']);
+    expect(pinned.schema, supportedProjectSchema);
+  });
+
+  test('preset and prefix names YAML reads as keywords round-trip', () {
+    // Both grammars admit `true`, `NULL` and friends. Written unquoted, YAML
+    // reads them back as a boolean or null and the parser rejects the project,
+    // so a successful rewrite would leave it unreadable.
+    Directory(p.join(root.path, 'lib', 'ui')).createSync(recursive: true);
+    final source = RegistrySource(
+      repository: 'owner/repo',
+      path: 'registry',
+      ref: 'v1',
+      revision: 'b' * 40,
+    );
+
+    for (final preset in ['true', 'false', 'null', 'acme_dark']) {
+      final encoded = PinnedProject(
+        packageRoot: root,
+        prefix: 'Ui',
+        preset: preset,
+        uiPath: 'lib/ui',
+        defaultRegistry: '@company',
+        registries: {'@company': source},
+      ).encode();
+
+      expect(
+        ProjectConfig.parse(encoded, packageRoot: root).preset,
+        preset,
+        reason: encoded,
+      );
+    }
+
+    for (final prefix in ['TRUE', 'FALSE', 'NULL', 'Acme']) {
+      for (final encoded in [
+        PinnedProject(
+          packageRoot: root,
+          prefix: prefix,
+          preset: 'acme_dark',
+          uiPath: 'lib/ui',
+          defaultRegistry: '@company',
+          registries: {'@company': source},
+        ).encode(),
+        LegacyProject(
+          packageRoot: root,
+          prefix: prefix,
+          preset: 'default',
+          uiPath: 'lib/ui',
+        ).encode(),
+      ]) {
+        expect(
+          ProjectConfig.parse(encoded, packageRoot: root).prefix,
+          prefix,
+          reason: encoded,
+        );
+      }
+    }
+  });
+
+  test('a pinned default registry must name a configured one', () {
+    Directory(p.join(root.path, 'lib', 'ui')).createSync(recursive: true);
+    final source = RegistrySource(
+      repository: 'owner/repo',
+      path: 'registry',
+      ref: 'v1',
+      revision: 'b' * 40,
+    );
+
+    expect(
+      () => PinnedProject(
+        packageRoot: root,
+        prefix: 'Ui',
+        preset: 'vanilla',
+        uiPath: 'lib/ui',
+        defaultRegistry: '@missing',
+        registries: {'@company': source},
+      ),
+      throwsFormatException,
+    );
+
+    // A third-party registry names its own presets, so a pinned project is not
+    // held to the bundled list the way a legacy project is.
+    expect(
+      PinnedProject(
+        packageRoot: root,
+        prefix: 'Ui',
+        preset: 'acme_dark',
+        uiPath: 'lib/ui',
+        defaultRegistry: '@company',
+        registries: {'@company': source},
+      ).preset,
+      'acme_dark',
+    );
+    expect(
+      () => LegacyProject(
+        packageRoot: root,
+        prefix: 'Ui',
+        preset: 'acme_dark',
+        uiPath: 'lib/ui',
+      ),
+      throwsFormatException,
+    );
+  });
+
   test('rejects invalid and reserved prefixes', () {
     for (final prefix in ['', 'ui', '_Ui', 'Ui-name', 'Üi', 'Class', 'Is']) {
       expect(
-        () => ProjectConfig.create(
+        () => LegacyProject(
           packageRoot: root,
           prefix: prefix,
           preset: 'default',
@@ -78,7 +211,7 @@ paths:
   test('rejects invalid and unbundled presets', () {
     for (final preset in ['', 'Default', 'default-name', 'missing']) {
       expect(
-        () => ProjectConfig.create(
+        () => LegacyProject(
           packageRoot: root,
           prefix: 'Ui',
           preset: preset,
@@ -101,7 +234,7 @@ paths:
       'lib',
     ]) {
       expect(
-        () => ProjectConfig.create(
+        () => LegacyProject(
           packageRoot: root,
           prefix: 'Ui',
           preset: 'default',
@@ -119,7 +252,7 @@ paths:
     Link(p.join(root.path, 'lib', 'ui')).createSync(outside.path);
 
     expect(
-      () => ProjectConfig.create(
+      () => LegacyProject(
         packageRoot: root,
         prefix: 'Ui',
         preset: 'default',
@@ -131,7 +264,7 @@ paths:
 
   test('encoded configuration round-trips YAML-significant UI paths', () {
     for (final uiPath in ['lib/ui #brand', 'lib/ui: brand']) {
-      final encoded = ProjectConfig.create(
+      final encoded = LegacyProject(
         packageRoot: root,
         prefix: 'Acme',
         preset: 'default',
