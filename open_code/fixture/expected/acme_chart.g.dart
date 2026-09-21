@@ -80,31 +80,31 @@ class AcmeLineChart extends StatelessWidget {
   final bool excludeFromSemantics;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return LineChart(
-      key: this.key,
+      key: key,
       style: acmeLineChartStyle(
-        showMarkers: this.showMarkers,
-        palette: this.palette,
-        style: this.style,
+        showMarkers: showMarkers,
+        palette: palette,
+        style: style,
       ),
-      series: this.series,
-      xAxis: this.xAxis,
-      yAxis: this.yAxis,
-      topAxis: this.topAxis,
-      rightAxis: this.rightAxis,
-      viewport: this.viewport,
-      dataTransition: this.dataTransition,
-      selectedPoints: this.selectedPoints,
-      onPointHover: this.onPointHover,
-      onPointTap: this.onPointTap,
-      onPointLongPress: this.onPointLongPress,
-      tooltipBuilder: this.tooltipBuilder,
-      hitTestRadius: this.hitTestRadius,
-      mouseCursorResolver: this.mouseCursorResolver,
-      semanticsLabel: this.semanticsLabel,
-      semanticsValue: this.semanticsValue,
-      excludeFromSemantics: this.excludeFromSemantics,
+      series: series,
+      xAxis: xAxis,
+      yAxis: yAxis,
+      topAxis: topAxis,
+      rightAxis: rightAxis,
+      viewport: viewport,
+      dataTransition: dataTransition,
+      selectedPoints: selectedPoints,
+      onPointHover: onPointHover,
+      onPointTap: onPointTap,
+      onPointLongPress: onPointLongPress,
+      tooltipBuilder: tooltipBuilder,
+      hitTestRadius: hitTestRadius,
+      mouseCursorResolver: mouseCursorResolver,
+      semanticsLabel: semanticsLabel,
+      semanticsValue: semanticsValue,
+      excludeFromSemantics: excludeFromSemantics,
     );
   }
 }
@@ -179,27 +179,27 @@ class AcmeBarChart extends StatelessWidget {
   final bool excludeFromSemantics;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return BarChart(
-      key: this.key,
-      style: acmeBarChartStyle(palette: this.palette, style: this.style),
-      groups: this.groups,
-      xAxis: this.xAxis,
-      yAxis: this.yAxis,
-      topAxis: this.topAxis,
-      rightAxis: this.rightAxis,
-      viewport: this.viewport,
-      dataTransition: this.dataTransition,
-      selectedItems: this.selectedItems,
-      onBarHover: this.onBarHover,
-      onBarTap: this.onBarTap,
-      onBarLongPress: this.onBarLongPress,
-      tooltipBuilder: this.tooltipBuilder,
-      hitTestPadding: this.hitTestPadding,
-      mouseCursorResolver: this.mouseCursorResolver,
-      semanticsLabel: this.semanticsLabel,
-      semanticsValue: this.semanticsValue,
-      excludeFromSemantics: this.excludeFromSemantics,
+      key: key,
+      style: acmeBarChartStyle(palette: palette, style: style),
+      groups: groups,
+      xAxis: xAxis,
+      yAxis: yAxis,
+      topAxis: topAxis,
+      rightAxis: rightAxis,
+      viewport: viewport,
+      dataTransition: dataTransition,
+      selectedItems: selectedItems,
+      onBarHover: onBarHover,
+      onBarTap: onBarTap,
+      onBarLongPress: onBarLongPress,
+      tooltipBuilder: tooltipBuilder,
+      hitTestPadding: hitTestPadding,
+      mouseCursorResolver: mouseCursorResolver,
+      semanticsLabel: semanticsLabel,
+      semanticsValue: semanticsValue,
+      excludeFromSemantics: excludeFromSemantics,
     );
   }
 }
@@ -266,27 +266,27 @@ class AcmePieChart extends StatelessWidget {
   final bool excludeFromSemantics;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return PieChart(
-      key: this.key,
+      key: key,
       style: acmePieChartStyle(
-        centerRadius: this.centerRadius,
-        showLabels: this.showLabels,
-        palette: this.palette,
-        style: this.style,
+        centerRadius: centerRadius,
+        showLabels: showLabels,
+        palette: palette,
+        style: style,
       ),
-      slices: this.slices,
-      dataTransition: this.dataTransition,
-      selectedSliceIds: this.selectedSliceIds,
-      onSliceHover: this.onSliceHover,
-      onSliceTap: this.onSliceTap,
-      onSliceLongPress: this.onSliceLongPress,
-      tooltipBuilder: this.tooltipBuilder,
-      mouseCursorResolver: this.mouseCursorResolver,
-      valueFormatter: this.valueFormatter,
-      semanticsLabel: this.semanticsLabel,
-      semanticsValue: this.semanticsValue,
-      excludeFromSemantics: this.excludeFromSemantics,
+      slices: slices,
+      dataTransition: dataTransition,
+      selectedSliceIds: selectedSliceIds,
+      onSliceHover: onSliceHover,
+      onSliceTap: onSliceTap,
+      onSliceLongPress: onSliceLongPress,
+      tooltipBuilder: tooltipBuilder,
+      mouseCursorResolver: mouseCursorResolver,
+      valueFormatter: valueFormatter,
+      semanticsLabel: semanticsLabel,
+      semanticsValue: semanticsValue,
+      excludeFromSemantics: excludeFromSemantics,
     );
   }
 }
