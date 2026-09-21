@@ -1,6 +1,14 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' show Icons;
+import 'package:flutter/widgets.dart';
+
+import 'package:naked_ui/naked_ui.dart';
 
 import '../registry.dart';
+import '../src/example_button.dart';
+
+const _chrome = Color(0xFFE7E0EC);
+const _border = Color(0xFFCAC4D0);
+const _selectedTint = Color(0x143D3D3D);
 
 class KitchenShell extends StatefulWidget {
   const KitchenShell({super.key, this.initialDemoId, this.embed = false});
@@ -32,61 +40,137 @@ class _KitchenShellState extends State<KitchenShell> {
     }
 
     final categories = DemoRegistry.byCategory();
-    final theme = Theme.of(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Naked Kitchen Sink'),
-        backgroundColor: theme.colorScheme.inversePrimary,
-      ),
-      body: Row(
-        children: [
-          SizedBox(
-            width: 320,
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: TextField(
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.search),
-                      hintText: 'Search demos...',
-                    ),
-                    onChanged: (v) => setState(() => _filter = v.toLowerCase()),
-                  ),
-                ),
-                Expanded(
-                  child: ListView(
-                    children: [
-                      for (final entry in categories.entries)
-                        _CategoryList(
-                          title: entry.key,
-                          demos: entry.value
-                              .where(
-                                (d) =>
-                                    _filter.isEmpty ||
-                                    d.title.toLowerCase().contains(_filter) ||
-                                    d.tags.any((t) => t.contains(_filter)),
-                              )
-                              .toList(),
-                          onTap: (demo) {
-                            setState(() => _selected = demo);
-                          },
-                          selectedId: _selected?.id,
-                        ),
-                    ],
-                  ),
-                ),
-              ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        // The shell hosts on WidgetsApp, so this stands in for AppBar.
+        ColoredBox(
+          color: _chrome,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            child: const Text(
+              'Naked Kitchen Sink',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
             ),
           ),
-          const VerticalDivider(width: 1),
-          Expanded(
-            child: _DemoScaffold(demo: _selected ?? DemoRegistry.demos.first),
+        ),
+        Expanded(
+          child: Row(
+            children: [
+              SizedBox(
+                width: 320,
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: _border),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 4,
+                          ),
+                          child: Row(
+                            children: [
+                              const Icon(Icons.search, size: 18),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 12,
+                                  ),
+                                  child: NakedTextField(
+                                    onChanged: (v) => setState(
+                                      () => _filter = v.toLowerCase(),
+                                    ),
+                                    style: const TextStyle(fontSize: 14),
+                                    cursorColor: const Color(0xFF3D3D3D),
+                                    // InputDecoration used to name this field
+                                    // for screen readers and draw the
+                                    // placeholder; NakedTextField decorates
+                                    // nothing, so both are supplied here.
+                                    semanticLabel: 'Search demos',
+                                    builder: (context, state, editableText) =>
+                                        Stack(
+                                          children: [
+                                            if (!state.hasText)
+                                              const Positioned.fill(
+                                                child: IgnorePointer(
+                                                  child: ExcludeSemantics(
+                                                    child: Align(
+                                                      alignment:
+                                                          AlignmentDirectional
+                                                              .centerStart,
+                                                      child: Text(
+                                                        'Search demos...',
+                                                        style: TextStyle(
+                                                          fontSize: 14,
+                                                          color: Color(
+                                                            0xFF616161,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            editableText,
+                                          ],
+                                        ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: ListView(
+                        children: [
+                          for (final entry in categories.entries)
+                            _CategoryList(
+                              title: entry.key,
+                              demos: entry.value
+                                  .where(
+                                    (d) =>
+                                        _filter.isEmpty ||
+                                        d.title.toLowerCase().contains(
+                                          _filter,
+                                        ) ||
+                                        d.tags.any((t) => t.contains(_filter)),
+                                  )
+                                  .toList(),
+                              onTap: (demo) {
+                                setState(() => _selected = demo);
+                              },
+                              selectedId: _selected?.id,
+                            ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // SizedBox.expand is load-bearing: a childless box constrained
+              // only in width collapses to zero height and paints nothing.
+              const SizedBox(
+                width: 1,
+                child: ColoredBox(color: _border, child: SizedBox.expand()),
+              ),
+              Expanded(
+                child: _DemoScaffold(
+                  demo: _selected ?? DemoRegistry.demos.first,
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -107,16 +191,33 @@ class _CategoryList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (demos.isEmpty) return const SizedBox.shrink();
-    return ExpansionTile(
-      title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
-      initiallyExpanded: true,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+          child: Text(
+            title,
+            style: const TextStyle(fontWeight: FontWeight.w600),
+          ),
+        ),
         for (final d in demos)
-          ListTile(
-            title: Text(d.title),
-            onTap: () => onTap(d),
-            selected: d.id == selectedId,
-            dense: true,
+          NakedButton(
+            onPressed: () => onTap(d),
+            builder: (context, state, child) => ColoredBox(
+              color: d.id == selectedId
+                  ? _selectedTint
+                  : state.isHovered
+                  ? const Color(0x0A3D3D3D)
+                  : const Color(0x00000000),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 10,
+                ),
+                child: Text(d.title, style: const TextStyle(fontSize: 14)),
+              ),
+            ),
           ),
       ],
     );
@@ -137,26 +238,29 @@ class _DemoScaffold extends StatelessWidget {
         if (!embed)
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            color: Theme.of(context).colorScheme.surfaceContainerHighest,
+            color: _chrome,
             child: Row(
               children: [
-                Text(demo.title, style: const TextStyle(fontSize: 16)),
-                const Spacer(),
-                IconButton(
-                  tooltip: 'Open fullscreen',
-                  icon: const Icon(Icons.open_in_full),
+                Expanded(
+                  child: Text(
+                    demo.title,
+                    style: const TextStyle(fontSize: 16),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                ExampleButton(
+                  label: 'Fullscreen',
+                  subtle: true,
                   onPressed: () {
                     final uri = Uri(path: '/#/${'component'}/${demo.id}');
                     // On the web this opens the gh-pages URL; locally it’s fine.
-                    // ignore: deprecated_member_use
-                    // Navigator logic not used here; rely on copy for now.
                     debugPrint(uri.toString());
                   },
                 ),
                 if (demo.sourceUrl != null)
-                  IconButton(
-                    tooltip: 'View source',
-                    icon: const Icon(Icons.code),
+                  ExampleButton(
+                    label: 'Source',
+                    subtle: true,
                     onPressed: () {
                       // A real app might use url_launcher; we avoid runtime deps here.
                       debugPrint('Source: ${demo.sourceUrl}');

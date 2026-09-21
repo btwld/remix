@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:naked_ui/naked_ui.dart';
 
+import '../src/example_app.dart';
+
 // Simple fruit data class for type safety
 class Fruit {
   const Fruit({required this.value, required this.label, required this.emoji});
@@ -19,27 +21,23 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        backgroundColor: Colors.grey.shade50,
-        body: const Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Simple Select',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 8),
-              Text(
-                'Choose from a dropdown list',
-                style: TextStyle(color: Colors.grey),
-              ),
-              SizedBox(height: 24),
-              SimpleSelectExample(),
-            ],
-          ),
+    return ExampleApp(
+      child: const Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Simple Select',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Choose from a dropdown list',
+              style: TextStyle(color: Color(0xFF616161)),
+            ),
+            SizedBox(height: 24),
+            SimpleSelectExample(),
+          ],
         ),
       ),
     );

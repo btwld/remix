@@ -17,18 +17,9 @@ REMOVED = {'data': 'theme', 'brightness': 'mode', 'lightTheme': 'theme'}
 # applications.
 SCANNED = ['docs', 'skills', 'apps', 'packages', 'open_code', 'registry_source']
 
-# naked_ui is headless: it ships behavior and no design system, so its examples
-# have to borrow one and they borrow Material. That is the library's premise
-# rather than an oversight -- a Material application is a supported naked_ui
-# host, and an example showing that integration is doing its job.
-#
-# The coupling is also structural, not cosmetic. `Scaffold`, `SnackBar` and
-# `TextButton` assert a Material ancestor, so the host cannot be swapped
-# without rewriting the surrounding example chrome as well.
-#
-# This guard exists for source a Remix consumer reads or installs. Nothing
-# under these two paths is installed by `remix add`.
-EXEMPT = {'apps/naked_ui_example', 'packages/naked_ui'}
+# There are no exemptions. Every scanned tree is held to the rule: naked_ui's
+# examples host on WidgetsApp now, and the frozen CLI bundles that once had to
+# be excused -- installable but byte-pinned, so unfixable -- no longer exist.
 
 
 def tokens(text):
@@ -187,14 +178,13 @@ def check_hosts(root):
     sources = []
     for directory in SCANNED:
         for parent, directories, files in os.walk(root / directory):
-            directories[:] = [part for part in directories
-                              if not part.startswith('.') and part not in
-                              ({'node_modules', 'build', 'out'} |
-                               (set() if directory == 'open_code' else {'test', 'integration_test'}))
-                              and f'{Path(parent).relative_to(root)}/{part}' not in EXEMPT
-                              and str(Path(parent).relative_to(root)) not in EXEMPT]
-            if str(Path(parent).relative_to(root)) in EXEMPT:
-                continue
+            relative = str(Path(parent).relative_to(root))
+            directories[:] = [
+                part for part in directories
+                if not part.startswith('.') and part not in
+                ({'node_modules', 'build', 'out'} |
+                 (set() if directory == 'open_code' else {'test', 'integration_test'}))
+            ]
             if 'remix.yaml' in files:
                 config = (Path(parent) / 'remix.yaml').read_text()
                 match = re.search(r'(?m)^\s*prefix:\s*[\"\']?(\w+)', config)

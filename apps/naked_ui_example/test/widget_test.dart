@@ -6,7 +6,8 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 import 'package:naked_ui_example/main.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' show MaterialApp;
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -17,7 +18,10 @@ void main() {
     // Verify that the app title is shown.
     expect(find.text('Naked Kitchen Sink'), findsOneWidget);
 
-    // Verify that the app loads without crashing.
-    expect(find.byType(MaterialApp), findsOneWidget);
+    // Verify that the app loads without crashing, on a neutral host.
+    // MaterialApp builds a WidgetsApp of its own, so finding one proves
+    // nothing on its own; the absence of MaterialApp is the real assertion.
+    expect(find.byType(WidgetsApp), findsOneWidget);
+    expect(find.byType(MaterialApp), findsNothing);
   });
 }

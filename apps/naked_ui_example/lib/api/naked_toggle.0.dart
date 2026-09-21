@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:naked_ui/naked_ui.dart';
 
+import '../src/example_app.dart';
+
 /// Main function
 void main() {
   runApp(const MyApp());
@@ -12,25 +14,22 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.grey.shade50,
-        body: const SafeArea(
-          child: Column(
-            children: [
-              SizedBox(height: 24),
-              Text(
-                'Toggle Button Example',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 8),
-              Text(
-                'Interact with the toggle button to see its states',
-                style: TextStyle(color: Colors.grey),
-              ),
-              Expanded(child: ToggleButtonExample()),
-            ],
-          ),
+    return ExampleApp(
+      child: const SafeArea(
+        child: Column(
+          children: [
+            SizedBox(height: 24),
+            Text(
+              'Toggle Button Example',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Interact with the toggle button to see its states',
+              style: TextStyle(color: Color(0xFF616161)),
+            ),
+            Expanded(child: ToggleButtonExample()),
+          ],
         ),
       ),
     );
@@ -116,7 +115,7 @@ class _ToggleButtonExampleState extends State<ToggleButtonExample> {
           const SizedBox(height: 4),
           const Text(
             'Bold, Italic, and Underline can be combined.',
-            style: TextStyle(color: Colors.grey),
+            style: TextStyle(color: Color(0xFF616161)),
           ),
           const SizedBox(height: 12),
           Row(
@@ -330,6 +329,13 @@ class _ToggleGroupExampleState extends State<ToggleGroupExample> {
           ),
         ),
         const SizedBox(height: 8),
+        // These two stay on Material while the rest of this app hosts on
+        // WidgetsApp. `naked_toggle_group_golden_test` pins this widget to an
+        // Ubuntu baseline (`skip: !Platform.isLinux`), and substituting them
+        // moved it by 7.7% -- a diff no one can regenerate off Linux. The
+        // golden pumps ToggleGroupExample inside its own MaterialApp, so they
+        // resolve there; `demo_hosts_test` covers the hostless path, which
+        // this widget is not registered for.
         Wrap(
           alignment: WrapAlignment.center,
           spacing: 8,

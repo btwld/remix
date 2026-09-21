@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:naked_ui/naked_ui.dart';
 
+import '../src/example_app.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -10,26 +12,23 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.grey.shade50,
-        body: const Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Simple Accordion',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 8),
-              Text(
-                'Interact with the accordion to see sections expand and collapse',
-                style: TextStyle(color: Colors.grey),
-              ),
-              SizedBox(height: 24),
-              AccordionExample(),
-            ],
-          ),
+    return ExampleApp(
+      child: const Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Simple Accordion',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Interact with the accordion to see sections expand and collapse',
+              style: TextStyle(color: Color(0xFF616161)),
+            ),
+            SizedBox(height: 24),
+            AccordionExample(),
+          ],
         ),
       ),
     );

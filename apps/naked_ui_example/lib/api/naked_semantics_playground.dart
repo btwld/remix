@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:naked_ui/naked_ui.dart';
 
+import '../src/example_app.dart';
+
 void main() {
   runApp(const SemanticsPlaygroundApp());
 }
@@ -11,10 +13,7 @@ class SemanticsPlaygroundApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(body: SemanticsPlayground()),
-    );
+    return ExampleApp(background: Colors.white, child: SemanticsPlayground());
   }
 }
 
