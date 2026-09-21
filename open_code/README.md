@@ -236,7 +236,7 @@ Theme-wide changes use `copyWith`:
 
 ```dart
 AcmeThemeScope(
-  data: const AcmeThemeData.light().copyWith(
+  theme: const AcmeThemeData.light().copyWith(
     primary: const Color(0xFF4F46E5),
     primaryForeground: const Color(0xFFFFFFFF),
     radius: const Radius.circular(999),

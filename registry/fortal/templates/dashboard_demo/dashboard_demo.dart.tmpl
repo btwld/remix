@@ -159,7 +159,7 @@ class _{{typePrefix}}DashboardDemoState extends State<{{typePrefix}}DashboardDem
     );
     if (!widget.builtInChrome) return demo;
     return {{typePrefix}}Scope(
-      brightness: _dark ? Brightness.dark : Brightness.light,
+      mode: _dark ? {{typePrefix}}ThemeMode.dark : {{typePrefix}}ThemeMode.light,
       child: RemixToastScope(style: {{valuePrefix}}ToastStyle(), child: demo),
     );
   }

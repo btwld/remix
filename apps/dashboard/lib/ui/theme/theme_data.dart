@@ -66,6 +66,10 @@ enum UiScaling {
   final double factor;
 }
 
+/// Appearance selection for a Ui scope. A root defaults to system;
+/// a nested scope inherits its parent's selection when mode is omitted.
+enum UiThemeMode { system, light, dark }
+
 /// Partial theme values applied by a [UiScope].
 @immutable
 class UiThemeConfig {
@@ -129,19 +133,6 @@ class UiThemeConfig {
     scaling,
     hasBackground,
   );
-
-  Widget createScope({List<Type>? orderOfModifiers, required Widget child}) =>
-      UiScope(
-        accent: accent,
-        gray: gray,
-        brightness: brightness,
-        panelBackground: panelBackground,
-        radius: radius,
-        scaling: scaling,
-        hasBackground: hasBackground,
-        orderOfModifiers: orderOfModifiers,
-        child: child,
-      );
 }
 
 /// Fully resolved theme values inherited by a Ui subtree.
@@ -156,6 +147,42 @@ class UiThemeData extends UiThemeConfig {
     required UiScaling super.scaling,
     required bool super.hasBackground,
   });
+
+  /// The preset's light appearance, with editable design options.
+  const UiThemeData.light({
+    UiAccentColor accent = UiAccentColor.indigo,
+    UiGrayColor gray = UiGrayColor.slate,
+    UiPanelBackground panelBackground = UiPanelBackground.translucent,
+    UiRadius radius = UiRadius.medium,
+    UiScaling scaling = UiScaling.percent100,
+    bool hasBackground = true,
+  }) : this(
+         accent: accent,
+         gray: gray,
+         brightness: Brightness.light,
+         panelBackground: panelBackground,
+         radius: radius,
+         scaling: scaling,
+         hasBackground: hasBackground,
+       );
+
+  /// The preset's dark appearance, with editable design options.
+  const UiThemeData.dark({
+    UiAccentColor accent = UiAccentColor.indigo,
+    UiGrayColor gray = UiGrayColor.slate,
+    UiPanelBackground panelBackground = UiPanelBackground.translucent,
+    UiRadius radius = UiRadius.medium,
+    UiScaling scaling = UiScaling.percent100,
+    bool hasBackground = true,
+  }) : this(
+         accent: accent,
+         gray: gray,
+         brightness: Brightness.dark,
+         panelBackground: panelBackground,
+         radius: radius,
+         scaling: scaling,
+         hasBackground: hasBackground,
+       );
 
   @override
   UiAccentColor get accent => super.accent!;

@@ -33,10 +33,8 @@ class _App extends StatelessWidget {
         pageBuilder: (context, animation, secondaryAnimation) =>
             builder(context),
       ),
-      builder: (context, child) => PlaygroundThemeScope(
-        data: const PlaygroundThemeData.light(),
-        child: child!,
-      ),
+      builder: (context, child) =>
+          PlaygroundThemeScope(mode: PlaygroundThemeMode.light, child: child!),
       home: builder != null
           ? Builder(builder: builder)
           : const PlaygroundHome(),

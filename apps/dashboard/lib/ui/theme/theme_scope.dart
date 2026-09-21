@@ -62,9 +62,11 @@ Widget _uiRootTextStyle({
 class UiScope extends StatelessWidget {
   const UiScope({
     super.key,
+    this.theme,
+    this.darkTheme,
+    this.mode,
     this.accent,
     this.gray,
-    this.brightness,
     this.panelBackground,
     this.radius,
     this.scaling,
@@ -73,9 +75,16 @@ class UiScope extends StatelessWidget {
     required this.child,
   });
 
+  /// Base appearance. Without either theme, the preset provides both defaults.
+  /// If only [theme] is supplied, it is also the dark-mode fallback.
+  final UiThemeConfig? theme;
+  final UiThemeConfig? darkTheme;
+
+  /// Omitted at a root follows the system; omitted below a scope inherits it.
+  final UiThemeMode? mode;
+
   final UiAccentColor? accent;
   final UiGrayColor? gray;
-  final Brightness? brightness;
   final UiPanelBackground? panelBackground;
   final UiRadius? radius;
   final UiScaling? scaling;
@@ -85,17 +94,56 @@ class UiScope extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final config = UiThemeConfig(
-      accent: accent,
-      gray: gray,
-      brightness: brightness,
-      panelBackground: panelBackground,
-      radius: radius,
-      scaling: scaling,
-      hasBackground: hasBackground,
-    );
-    final parent = UiTheme.maybeOf(context);
-    final data = _resolveUiTheme(config, parent: parent);
+    final view = View.maybeOf(context);
+    if (MediaQuery.maybeOf(context) == null && view != null) {
+      return MediaQuery.fromView(
+        view: view,
+        child: Builder(builder: _build),
+      );
+    }
+    return _build(context);
+  }
+
+  Widget _build(BuildContext context) {
+    final inherited = context.dependOnInheritedWidgetOfExactType<UiTheme>();
+    final parent = inherited?.data;
+    final baseParent = inherited?.baseTheme ?? parent;
+    final darkParent = inherited?.darkTheme ?? parent;
+    UiThemeData resolve(
+      UiThemeConfig? supplied,
+      UiThemeData? ancestor,
+      Brightness fallback,
+    ) {
+      final config = supplied ?? const UiThemeConfig();
+      return _resolveUiTheme(
+        UiThemeConfig(
+          accent: accent ?? config.accent,
+          gray: gray ?? config.gray,
+          brightness: config.brightness ?? ancestor?.brightness ?? fallback,
+          panelBackground: panelBackground ?? config.panelBackground,
+          radius: radius ?? config.radius,
+          scaling: scaling ?? config.scaling,
+          hasBackground: hasBackground ?? config.hasBackground,
+        ),
+        parent: ancestor,
+      );
+    }
+
+    final base = resolve(theme, baseParent, Brightness.light);
+    final dark = darkTheme == null && theme != null
+        ? base
+        : resolve(darkTheme, darkParent, Brightness.dark);
+    final useDark = mode == null && inherited != null
+        ? inherited.usesDarkTheme
+        : switch (mode ?? UiThemeMode.system) {
+            UiThemeMode.light => false,
+            UiThemeMode.dark => true,
+            UiThemeMode.system =>
+              (MediaQuery.maybePlatformBrightnessOf(context) ??
+                      Brightness.light) ==
+                  Brightness.dark,
+          };
+    final data = useDark ? dark : base;
     final tokens = buildUiScopeTokens(data);
     Widget result = MixScope(
       tokens: tokens,
@@ -117,6 +165,9 @@ class UiScope extends StatelessWidget {
 
     return UiTheme(
       data: data,
+      baseTheme: base,
+      darkTheme: dark,
+      useDarkTheme: useDark,
       orderOfModifiers: orderOfModifiers,
       child: result,
     );
@@ -145,11 +196,18 @@ class UiTheme extends InheritedTheme {
   const UiTheme({
     super.key,
     required this.data,
+    this.baseTheme,
+    this.darkTheme,
+    this.useDarkTheme,
     this.orderOfModifiers,
     required super.child,
   });
 
   final UiThemeData data;
+  final UiThemeData? baseTheme;
+  final UiThemeData? darkTheme;
+  final bool? useDarkTheme;
+  bool get usesDarkTheme => useDarkTheme ?? data.isDark;
   final List<Type>? orderOfModifiers;
 
   /// Returns the closest resolved Ui theme.
@@ -179,6 +237,9 @@ class UiTheme extends InheritedTheme {
   @override
   Widget wrap(BuildContext context, Widget child) => UiTheme(
     data: data,
+    baseTheme: baseTheme,
+    darkTheme: darkTheme,
+    useDarkTheme: useDarkTheme,
     orderOfModifiers: orderOfModifiers,
     child: MixScope(
       tokens: buildUiScopeTokens(data),
@@ -188,5 +249,9 @@ class UiTheme extends InheritedTheme {
   );
 
   @override
-  bool updateShouldNotify(UiTheme oldWidget) => data != oldWidget.data;
+  bool updateShouldNotify(UiTheme oldWidget) =>
+      data != oldWidget.data ||
+      baseTheme != oldWidget.baseTheme ||
+      darkTheme != oldWidget.darkTheme ||
+      useDarkTheme != oldWidget.useDarkTheme;
 }

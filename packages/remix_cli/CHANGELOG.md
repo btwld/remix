@@ -9,6 +9,7 @@
 - Item names are qualified with their registry namespace in every `add`,
   `--dry-run` and `--diff` report, since every project now names its sources.
 
+- Generate `theme`, `darkTheme`, and `mode` scope parameters for both presets, including light/dark defaults and live system appearance. **Breaking:** remove the default scope `data` parameter; use `theme`.
 - Restructure the internal registry source layer behind one `RegistrySources`
   seam and a `RegistryReader` port. No `remix.yaml`, registry index, or catalog
   schema change from this restructuring; `lib/src` is not a supported

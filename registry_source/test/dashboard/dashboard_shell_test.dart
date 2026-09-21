@@ -260,12 +260,17 @@ Future<void> _pump(
   );
   await tester.pumpWidget(switch (preset) {
     .defaultPreset => VanillaThemeScope(
-      data: brightness == Brightness.light
-          ? const VanillaThemeData.light()
-          : const VanillaThemeData.dark(),
+      mode: brightness == Brightness.light
+          ? VanillaThemeMode.light
+          : VanillaThemeMode.dark,
       child: app,
     ),
-    .fortal => FortalScope(brightness: brightness, child: app),
+    .fortal => FortalScope(
+      mode: brightness == Brightness.light
+          ? FortalThemeMode.light
+          : FortalThemeMode.dark,
+      child: app,
+    ),
   });
   await tester.pump();
 }

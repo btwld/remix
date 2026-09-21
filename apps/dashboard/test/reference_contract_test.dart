@@ -368,7 +368,7 @@ void main() {
         ),
       );
 
-      expect(_segmentedValues<ThemeMode>(tester), ThemeMode.values);
+      expect(_segmentedValues<UiThemeMode>(tester), UiThemeMode.values);
       expect(
         _segmentedValues<UiPanelBackground>(tester),
         UiPanelBackground.values,

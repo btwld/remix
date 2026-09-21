@@ -56,7 +56,7 @@ Future<void> _pump(
     WidgetsApp(
       color: const Color(0xFF0A0A0A),
       builder: (_, _) => AcmeThemeScope(
-        data: theme,
+        theme: theme,
         child: Overlay.wrap(
           child: DefaultTextStyle(
             style: const TextStyle(fontSize: 14),
