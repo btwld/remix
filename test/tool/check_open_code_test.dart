@@ -24,8 +24,13 @@ void main() {
     final sources = [
       'pubspec.yaml',
       'open_code/RELEASING.md',
+      // Both extensions: the repository uses `.yml` and `.yaml`, and a
+      // workflow this skipped would be exactly the blind spot the test exists
+      // to remove.
       for (final file in Directory('.github/workflows').listSync())
-        if (file is File && file.path.endsWith('.yml')) file.path,
+        if (file is File &&
+            (file.path.endsWith('.yml') || file.path.endsWith('.yaml')))
+          file.path,
     ];
     final invocation = RegExp(r'check_open_code\.dart([^\n]*)');
     var checked = 0;

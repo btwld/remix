@@ -548,7 +548,8 @@ final class Installer {
           PinnedProject(:final defaultRegistry) =>
             'Resolved remix $lockedRemix; this registry revision was authored '
                 'against $floor. Your pin does not move on its own — run '
-                'remix registry update $defaultRegistry, then review with --diff.',
+                'remix registry update $defaultRegistry --ref <newer release>, '
+                'then review with --diff.',
           LegacyProject() =>
             'Resolved remix $lockedRemix; the bundled registry was authored '
                 'against $floor. It is frozen for this project — run '

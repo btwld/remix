@@ -456,6 +456,9 @@ void main() {
     () async {
       // The pinned counterpart of the legacy notice in installer_test: a CLI
       // upgrade cannot move a recorded revision, so it must not be suggested.
+      // Neither can a bare `registry update`: the official pin always records
+      // an immutable `registry-v*` tag, so re-resolving it returns the same
+      // commit. The notice has to name the ref to be actionable.
       fixture.official['button'] = {
         ...item('button'),
         'dependencies': {'remix': '^1.0.0'},
@@ -475,7 +478,7 @@ void main() {
         contains(
           allOf(
             startsWith('Resolved remix 1.2.0;'),
-            contains('remix registry update @remix'),
+            contains('remix registry update @remix --ref'),
             isNot(contains('pub upgrade')),
           ),
         ),
