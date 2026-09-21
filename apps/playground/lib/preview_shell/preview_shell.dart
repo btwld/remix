@@ -1,5 +1,9 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'
+    show DefaultMaterialLocalizations, Material, MaterialType, Theme, ThemeData;
+import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
+
+import '../ui/ui.dart';
 
 import 'controls_bar.dart';
 import 'presets.dart';
@@ -28,15 +32,23 @@ class _PreviewShellState extends State<PreviewShell> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        ControlsBar(
-          brightness: _brightness,
-          size: _size,
-          onChange: ({Brightness? brightness, Size? size}) {
-            setState(() {
-              if (brightness != null) _brightness = brightness;
-              if (size != null) _size = size;
-            });
-          },
+        // The chrome is built from the installed recipes, so it needs its own
+        // scope: it sits above the viewport's app host, and a registry entry
+        // that resolves its scope inside PreviewShell leaves nothing here.
+        // Pinned light on purpose — the light/dark control below it drives the
+        // preview, not the toolbar around it.
+        PlaygroundThemeScope(
+          data: const PlaygroundThemeData.light(),
+          child: ControlsBar(
+            brightness: _brightness,
+            size: _size,
+            onChange: ({Brightness? brightness, Size? size}) {
+              setState(() {
+                if (brightness != null) _brightness = brightness;
+                if (size != null) _size = size;
+              });
+            },
+          ),
         ),
         Expanded(
           child: Center(
@@ -83,12 +95,24 @@ class _ViewportFrame extends StatelessWidget {
         platformBrightness: brightness,
         devicePixelRatio: 1.0,
       ),
-      child: MaterialApp(
+      child: WidgetsApp(
+        color: const Color(0xFFFAFAFA),
+        pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+          settings: settings,
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              builder(context),
+        ),
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(brightness: brightness),
-        home: Scaffold(
-          backgroundColor: MixColors.transparent,
-          body: Center(child: child),
+        // Existing comparison panes include Material controls. Supply their
+        // localization and theme explicitly; the app host remains WidgetsApp.
+        localizationsDelegates: const [DefaultMaterialLocalizations.delegate],
+        builder: (context, navigator) => Theme(
+          data: ThemeData(brightness: brightness),
+          child: navigator!,
+        ),
+        home: Material(
+          type: MaterialType.transparency,
+          child: Center(child: child),
         ),
       ),
     );

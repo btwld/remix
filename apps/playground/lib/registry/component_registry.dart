@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import '../preview_shell/preview_shell.dart';
 import '../ui/ui.dart';
@@ -27,8 +27,12 @@ import 'entries/tooltip_entry.dart';
 // Map component slugs to a builder that returns the component inside the
 // installed theme scope, resolved for the preview's current brightness.
 
+// Read brightness from MediaQuery, not Theme: the app host is WidgetsApp and
+// installs no Material Theme. PreviewShell publishes its light/dark control
+// through `MediaQuery(platformBrightness: ...)`, so an entry that resolves the
+// scope inside the shell follows that control.
 Widget _scope(BuildContext context, Widget child) => PlaygroundThemeScope(
-  data: Theme.of(context).brightness == Brightness.dark
+  data: MediaQuery.platformBrightnessOf(context) == Brightness.dark
       ? const PlaygroundThemeData.dark()
       : const PlaygroundThemeData.light(),
   child: child,

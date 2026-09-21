@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter/rendering.dart';
 import 'package:remix/remix.dart';
 import 'ui/ui.dart';
@@ -57,21 +57,20 @@ class _DashboardAppState extends State<DashboardApp>
     return ThemeScope(
       settings: _settings,
       onChanged: (settings) => setState(() => _settings = settings),
-      child: MaterialApp(
+      child: WidgetsApp(
         title: 'Dashboard',
         debugShowCheckedModeBanner: false,
-        scrollBehavior: const AppScrollBehavior(),
-        themeMode: _settings.themeMode,
-        theme: ThemeData(brightness: .light, useMaterial3: true),
-        darkTheme: ThemeData(brightness: .dark, useMaterial3: true),
-        themeAnimationDuration: Duration.zero,
-        // UiScope goes *below* MaterialApp and *above* the Navigator.
+        color: const Color(0xFFF8FAFC),
+        pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+          settings: settings,
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              builder(context),
+        ),
+        // UiScope goes *below* WidgetsApp and *above* the Navigator.
         //
-        // MaterialApp installs its fallback DefaultTextStyle below its widget
-        // tree, so a scope placed above it would be overridden. `builder` wraps
-        // the whole Navigator, so this placement reaches pushed routes and
-        // dialogs. A nearer DefaultTextStyle retains its normal priority
-        // through Flutter's inheritance.
+        // `builder` wraps the whole Navigator, so this placement reaches
+        // pushed routes and dialogs. A nearer DefaultTextStyle retains its
+        // normal priority through Flutter's inheritance.
         builder: (context, child) => UiScope(
           key: const ValueKey('dashboard-fortal-scope'),
           accent: _settings.accentColor,
@@ -84,8 +83,14 @@ class _DashboardAppState extends State<DashboardApp>
           // showRemixToast() works from every route, including dialogs and
           // the compact navigation sheet. It inherits the live Fortal tokens
           // UiScope publishes above.
-          child: Overlay.wrap(
-            child: RemixToastScope(style: uiToastStyle(), child: child!),
+          //
+          // WidgetsApp has no `scrollBehavior`, so the behavior MaterialApp
+          // used to install is applied explicitly here.
+          child: ScrollConfiguration(
+            behavior: const AppScrollBehavior(),
+            child: Overlay.wrap(
+              child: RemixToastScope(style: uiToastStyle(), child: child!),
+            ),
           ),
         ),
         home: const DashboardShell(),
