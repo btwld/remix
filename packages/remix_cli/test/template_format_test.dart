@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:path/path.dart' as p;
 import 'package:remix_cli/src/project_config.dart';
+import 'package:remix_cli/src/registry_source.dart';
 import 'package:remix_cli/src/template_renderer.dart';
 import 'package:test/test.dart';
 
@@ -34,11 +35,20 @@ void main() {
 
     // Both prefixes come from the code the installer itself uses, so this can
     // never drift from what `add` writes.
-    final config = LegacyProject(
+    final config = ProjectConfig(
       packageRoot: Directory.current,
       prefix: _referencePrefix,
-      preset: 'default',
+      preset: 'vanilla',
       uiPath: p.join('lib', 'ui'),
+      defaultRegistry: '@remix',
+      registries: {
+        '@remix': RegistrySource(
+          repository: officialRepository,
+          path: 'registry',
+          ref: 'checkout',
+          revision: '0' * 40,
+        ),
+      },
     );
     const renderer = TemplateRenderer();
 

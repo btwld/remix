@@ -149,7 +149,7 @@ void main() {
       final updated = File('${root.path}/remix.yaml').readAsStringSync();
       expect(updated, isNot(configBefore));
       expect(
-        parsePinned(updated, root).registries['@remix']!.revision,
+        parseConfig(updated, root).registries['@remix']!.revision,
         'a' * 40,
       );
       final beforeDiff = snapshotFiles(root);
@@ -299,111 +299,6 @@ void main() {
     });
   }
 
-  /// Writes a legacy schema-1/2 project: its configuration, authored source,
-  /// generated adapters, and the dependency files migration must not touch.
-  void writeLegacyProject(int schema, String preset) {
-    File('${root.path}/remix.yaml').writeAsStringSync(
-      LegacyProject(
-        packageRoot: root,
-        prefix: 'Acme',
-        preset: preset,
-        uiPath: 'lib/custom',
-        schema: schema,
-      ).encode(),
-    );
-    File('${root.path}/lib/custom/button.dart')
-      ..parent.createSync(recursive: true)
-      ..writeAsStringSync('// authored');
-    File(
-      '${root.path}/lib/custom/button.g.dart',
-    ).writeAsStringSync('// adapter');
-    File('${root.path}/build.yaml').writeAsStringSync(
-      'targets:\n'
-      r'  $default:'
-      '\n    builders:\n'
-      '      mix_generator:spec_styler_generator:\n'
-      '        generate_for:\n'
-      '          - lib/custom/button.dart\n',
-    );
-    writeRequiredPubspec(root);
-    writeRequiredLock(root);
-  }
-
-  for (final (schema, beforePreset, afterPreset, ref) in [
-    (1, 'default', 'vanilla', 'registry-v1'),
-    (2, 'default', 'vanilla', 'registry-v1'),
-    (2, 'fortal', 'fortal', 'registry-v1'),
-    (2, 'default', 'vanilla', null),
-  ]) {
-    test('schema $schema $beforePreset migration '
-        '${ref ?? 'without a ref'} changes configuration only', () async {
-      writeLegacyProject(schema, beforePreset);
-      final before = snapshotFiles(root)..remove('remix.yaml');
-      await installer.registry(
-        RegistryOptions(action: RegistryAction.migrate, ref: ref),
-      );
-      final parsed = parsePinned(null, root);
-      expect(parsed.prefix, 'Acme');
-      expect(parsed.uiPath, 'lib/custom');
-      expect(parsed.preset, afterPreset);
-      expect(parsed.schema, 3);
-      // Omitting the ref pins the newest stable registry release instead.
-      final source = parsed.registries['@remix']!;
-      expect(source.repository, officialRepository);
-      expect(source.ref, ref ?? stableRegistryTag);
-      expect(source.revision, (ref == null ? 'd' : 'b') * 40);
-      expect(snapshotFiles(root)..remove('remix.yaml'), before);
-      expect(
-        output.contains('Renamed legacy preset default to vanilla.'),
-        beforePreset == 'default',
-      );
-      expect(output.last, contains('--diff'));
-    });
-  }
-
-  for (final schema in [1, 2]) {
-    test(
-      'schema $schema migration without a remote vanilla preset writes nothing',
-      () async {
-        writeLegacyProject(schema, 'default');
-        final before = snapshotFiles(root);
-        await expectLater(
-          Installer(
-            projectRoot: root,
-            writeOut: output.add,
-            sources: GitHubSources(
-              transport: (uri) async => uri.host == 'api.github.com'
-                  ? RegistryResponse(
-                      200,
-                      uri.path.contains('/commits/')
-                          ? jsonEncode({'sha': 'e' * 40})
-                          : '{"default_branch":"main"}',
-                    )
-                  : const RegistryResponse(
-                      200,
-                      'schema: 1\npresets:\n  fortal: fortal/registry.yaml',
-                    ),
-            ),
-          ).registry(
-            const RegistryOptions(
-              action: RegistryAction.migrate,
-              ref: 'registry-v1',
-            ),
-          ),
-          throwsA(
-            isA<FormatException>().having(
-              (error) => error.message,
-              'message',
-              contains('no vanilla preset'),
-            ),
-          ),
-        );
-        expect(snapshotFiles(root), before);
-        expect(output, isEmpty);
-      },
-    );
-  }
-
   test('the published third-party walkthrough runs end to end', () async {
     // Follows docs/guides/registries.mdx exactly, through the public CLI
     // handlers: init, register the namespace, install from it. A custom
@@ -442,7 +337,7 @@ void main() {
     );
     expect(await run(['add', '@acme/button']), successExitCode);
 
-    final config = parsePinned(null, consumer);
+    final config = parseConfig(null, consumer);
     expect(config.preset, 'vanilla');
     expect(config.registries.keys, containsAll(['@remix', '@acme']));
     expect(
@@ -492,7 +387,7 @@ void main() {
       // The encoder is what `registry update` writes, so the round-trip has to
       // hold on the real rewrite path and not just in isolation.
       File('${root.path}/remix.yaml').writeAsStringSync(
-        PinnedProject(
+        ProjectConfig(
           packageRoot: root,
           prefix: 'Ui',
           preset: 'true',
@@ -517,7 +412,7 @@ void main() {
         ),
       );
 
-      final rewritten = parsePinned(null, root);
+      final rewritten = parseConfig(null, root);
       expect(rewritten.preset, 'true');
       expect(rewritten.registries['@remix']!.revision, 'c' * 40);
     },
@@ -545,7 +440,7 @@ void main() {
           repository: 'owner/company',
         ),
       );
-      expect(parsePinned(null, root).registries['@other']!.ref, 'main');
+      expect(parseConfig(null, root).registries['@other']!.ref, 'main');
       await expectLater(
         installer.registry(
           const RegistryOptions(
@@ -560,14 +455,13 @@ void main() {
   );
 }
 
-/// Parses `remix.yaml` as a pinned project. Every command under test here has
-/// to leave one behind, so the cast is part of the assertion.
-PinnedProject parsePinned(String? source, Directory root) =>
+/// Parses `remix.yaml`, from [source] or from the project every command under
+/// test has to leave one behind in.
+ProjectConfig parseConfig(String? source, Directory root) =>
     ProjectConfig.parse(
-          source ?? File('${root.path}/remix.yaml').readAsStringSync(),
-          packageRoot: root,
-        )
-        as PinnedProject;
+      source ?? File('${root.path}/remix.yaml').readAsStringSync(),
+      packageRoot: root,
+    );
 
 /// The newest stable registry release the fixture publishes.
 const stableRegistryTag = 'registry-v3';
@@ -644,7 +538,7 @@ final class FixtureRegistries {
       );
     },
   );
-  PinnedProject config(Directory root) => PinnedProject(
+  ProjectConfig config(Directory root) => ProjectConfig(
     packageRoot: root,
     prefix: 'Ui',
     preset: 'fortal',

@@ -11,11 +11,20 @@
 ///
 /// Application-owned source may be customized. Each deliberate edit belongs in
 /// [_customized]; an entry that matches the template again is also an error.
+///
+/// Every diff runs through [_harness], the checkout-only consumer seam, so the
+/// comparison is against the registry bytes in *this* working tree. The apps'
+/// own `remix.yaml` pins a published commit, and reading through that pin
+/// would check the apps against source the change has not proposed -- a
+/// registry edit and its consumer update could never land together.
 library;
 
 import 'dart:io';
 
 import 'package:yaml/yaml.dart';
+
+/// The consumer CLI that serves the committed `registry/` instead of GitHub.
+const _harness = 'tool/registry_consumer_cli.dart';
 
 /// Deliberate source edits, keyed by `consumer/item`.
 const _customized = <String, String>{
@@ -175,8 +184,31 @@ Future<String?> _run(Directory root) async {
   final problems = <String>[];
   final unknown = _customized.keys.toSet();
 
+  final staging = Directory.systemTemp.createTempSync('remix_dogfood_');
+  try {
+    problems.addAll(await _compare(root, items, staging, unknown: unknown));
+  } finally {
+    staging.deleteSync(recursive: true);
+  }
+  for (final item in unknown) {
+    problems.add('$item is listed as customized but is not an expected item.');
+  }
+  problems.addAll(_sourcePackageImports(root));
+
+  if (problems.isEmpty) return null;
+  return 'a consumer and the registry disagree:\n'
+      '${problems.map((problem) => '  - $problem').join('\n')}';
+}
+
+Future<List<String>> _compare(
+  Directory root,
+  YamlMap items,
+  Directory staging, {
+  required Set<String> unknown,
+}) async {
+  final problems = <String>[];
   for (final consumer in _consumers.keys) {
-    final directory = Directory('${root.path}/$consumer');
+    final directory = _stage(root, consumer, staging);
     final expected = _consumers[consumer] ?? items.keys.cast<String>();
     for (final key in expected) {
       final label = '$consumer/$key';
@@ -184,7 +216,7 @@ Future<String?> _run(Directory root) async {
 
       final result = await Process.run(Platform.resolvedExecutable, [
         'run',
-        'remix_cli:remix',
+        '${root.path}/$_harness',
         'add',
         key,
         '--diff',
@@ -234,14 +266,44 @@ Future<String?> _run(Directory root) async {
     }
   }
 
-  for (final item in unknown) {
-    problems.add('$item is listed as customized but is not an expected item.');
-  }
-  problems.addAll(_sourcePackageImports(root));
+  return problems;
+}
 
-  if (problems.isEmpty) return null;
-  return 'a consumer and the registry disagree:\n'
-      '${problems.map((problem) => '  - $problem').join('\n')}';
+/// Copies the parts of [consumer] a diff reads into [staging].
+///
+/// The comparison is read-only, but it runs the real installer against a real
+/// project, and a check that can write into the working tree is one bug away
+/// from silently repairing the drift it exists to report.
+Directory _stage(Directory root, String consumer, Directory staging) {
+  final source = Directory('${root.path}/$consumer');
+  final target = Directory('${staging.path}/${consumer.split('/').last}')
+    ..createSync(recursive: true);
+
+  for (final name in ['remix.yaml', 'build.yaml', 'analysis_options.yaml']) {
+    final file = File('${source.path}/$name');
+    if (file.existsSync()) file.copySync('${target.path}/$name');
+  }
+  // Workspace resolution has no meaning outside the workspace, and pub says so
+  // on stderr for every item. The diff reads declared constraints only.
+  File('${target.path}/pubspec.yaml').writeAsStringSync(
+    File('${source.path}/pubspec.yaml')
+        .readAsLinesSync()
+        .where((line) => line.trim() != 'resolution: workspace')
+        .join('\n'),
+  );
+  for (final entity in Directory(
+    '${source.path}/lib',
+  ).listSync(recursive: true)) {
+    final relative = entity.path.substring(source.path.length + 1);
+    if (entity is Directory) {
+      Directory('${target.path}/$relative').createSync(recursive: true);
+    } else if (entity is File) {
+      File('${target.path}/$relative')
+        ..parent.createSync(recursive: true)
+        ..writeAsBytesSync(entity.readAsBytesSync());
+    }
+  }
+  return target;
 }
 
 /// Applications consume installed source only. Outside their `lib/ui/`, no

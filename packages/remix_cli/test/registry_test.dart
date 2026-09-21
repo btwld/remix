@@ -2,32 +2,39 @@ import 'dart:io';
 
 import 'package:path/path.dart' as p;
 import 'package:remix_cli/src/registry.dart';
-import 'package:remix_cli/src/registry_reader.dart';
+import 'package:remix_cli/src/registry_source.dart';
 import 'package:remix_cli/src/template_renderer.dart';
 import 'package:test/test.dart';
 
+import 'checkout_registry.dart';
+
 void main() {
-  test('bundledPresets matches the preset trees on disk', () {
-    // `dart test` runs with the package root as the current directory.
-    final onDisk = Directory(p.join('lib', 'src', 'registry'))
+  final distribution = findCheckoutRegistry();
+
+  test('every committed preset tree is reachable through the index', () {
+    final onDisk = distribution
         .listSync()
         .whereType<Directory>()
         .map((directory) => p.basename(directory.path))
         .toSet();
 
-    // bundledPresets gates both BundledRegistry and `--preset` validation, so a
-    // tree shipped without an entry here is unreachable behind "Unknown
-    // preset", and an entry without a tree fails only once someone selects it.
-    expect(onDisk, bundledPresets);
+    // `index.yaml` is the only way a reader finds a preset, so a tree with no
+    // entry is unreachable, and an entry with no tree fails only once someone
+    // selects it. Neither is visible without comparing the two.
+    final indexed = {
+      for (final preset in onDisk)
+        if (_isIndexed(distribution, preset)) preset,
+    };
+    expect(indexed, onDisk);
   });
 
   test(
-    'bundled registry resolves theme before button and loads assets',
+    'the Vanilla catalog resolves theme before button and loads assets',
     () async {
-      final registry = BundledRegistry('default');
+      final registry = CheckoutRegistry(distribution, 'vanilla');
       final catalog = await registry.catalog();
 
-      expect(catalog.preset, 'default');
+      expect(catalog.preset, 'vanilla');
       expect(catalog.resolve('button').map((item) => item.name), [
         'theme',
         'button',
@@ -41,7 +48,7 @@ void main() {
   );
 
   test('Fortal registry loads its inferred dependency graph', () async {
-    final registry = BundledRegistry('fortal');
+    final registry = CheckoutRegistry(distribution, 'fortal');
     final catalog = await registry.catalog();
 
     expect(catalog.preset, 'fortal');
@@ -96,7 +103,7 @@ void main() {
 
   group('resolveAll', () {
     test('orders several roots with each shared dependency once', () async {
-      final catalog = await BundledRegistry('default').catalog();
+      final catalog = await CheckoutRegistry(distribution, 'vanilla').catalog();
 
       final ordered = catalog
           .resolveAll(['button', 'card', 'dialog'])
@@ -119,7 +126,7 @@ void main() {
     });
 
     test('one root resolves exactly as resolve does', () async {
-      final catalog = await BundledRegistry('default').catalog();
+      final catalog = await CheckoutRegistry(distribution, 'vanilla').catalog();
 
       expect(
         catalog.resolveAll(['data_table']).map((item) => item.name),
@@ -128,7 +135,7 @@ void main() {
     });
 
     test('a repeated root fails', () async {
-      final catalog = await BundledRegistry('default').catalog();
+      final catalog = await CheckoutRegistry(distribution, 'vanilla').catalog();
 
       expect(
         () => catalog.resolveAll(['button', 'card', 'button']),
@@ -143,7 +150,7 @@ void main() {
     });
 
     test('an empty request fails', () async {
-      final catalog = await BundledRegistry('default').catalog();
+      final catalog = await CheckoutRegistry(distribution, 'vanilla').catalog();
 
       expect(
         () => catalog.resolveAll(const []),
@@ -152,14 +159,14 @@ void main() {
     });
   });
 
-  test('unknown preset fails before reading an asset and lists bundles', () {
+  test('a preset the index does not list is named in the failure', () {
     expect(
-      () => BundledRegistry('missing'),
+      CheckoutRegistry(distribution, 'missing').catalog(),
       throwsA(
         isA<FormatException>().having(
           (error) => error.message,
           'message',
-          allOf(contains('missing'), contains('default'), contains('fortal')),
+          allOf(contains('missing'), contains('preset')),
         ),
       ),
     );
@@ -189,7 +196,7 @@ items:
   test(
     'chart is a theme-only extension backed directly by mix_chart',
     () async {
-      final registry = BundledRegistry('default');
+      final registry = CheckoutRegistry(distribution, 'vanilla');
       final catalog = await registry.catalog();
       final chart = catalog.items['chart']!;
       final source = await registry.template(chart.files.single);
@@ -199,7 +206,7 @@ items:
         'chart',
       ]);
       expect(chart.dependencies.keys, {'mix_annotations', 'mix_chart'});
-      expect('${chart.dependencies['mix_chart']}', '^0.0.1-beta.1');
+      expect('${chart.dependencies['mix_chart']}', '^0.0.1-beta.3');
       expect(source, contains("import 'package:mix_chart/mix_chart.dart';"));
       expect(source, isNot(contains('remix_fortal')));
       expect(
@@ -213,7 +220,7 @@ items:
   );
 
   test('template prose states the theme vocabulary\'s real size', () async {
-    final registry = BundledRegistry('default');
+    final registry = CheckoutRegistry(distribution, 'vanilla');
     final catalog = await registry.catalog();
 
     // The real size is one required parameter per token on the theme data
@@ -258,7 +265,7 @@ items:
   test(
     'sidebar_layout is a plain layout with no Spec or generated adapter',
     () async {
-      final registry = BundledRegistry('default');
+      final registry = CheckoutRegistry(distribution, 'vanilla');
       final catalog = await registry.catalog();
       final item = catalog.items['sidebar_layout']!;
 
@@ -300,8 +307,8 @@ items:
   test(
     'dashboard_shell is a grouped, independently installable recipe',
     () async {
-      for (final preset in const ['default', 'fortal']) {
-        final registry = BundledRegistry(preset);
+      for (final preset in const ['vanilla', 'fortal']) {
+        final registry = CheckoutRegistry(distribution, preset);
         final catalog = await registry.catalog();
         final item = catalog.items['dashboard_shell']!;
         final closure = catalog
@@ -338,8 +345,8 @@ items:
   test(
     'dashboard_demo is a complete grouped starter in both presets',
     () async {
-      for (final preset in const ['default', 'fortal']) {
-        final registry = BundledRegistry(preset);
+      for (final preset in const ['vanilla', 'fortal']) {
+        final registry = CheckoutRegistry(distribution, preset);
         final catalog = await registry.catalog();
         final item = catalog.items['dashboard_demo']!;
         final closure = catalog
@@ -349,7 +356,7 @@ items:
 
         expect(
           item.files,
-          hasLength(preset == 'default' ? 12 : 22),
+          hasLength(preset == 'vanilla' ? 12 : 22),
           reason: preset,
         );
         expect(item.generated, isEmpty, reason: preset);
@@ -564,7 +571,7 @@ items:
   test(
     'every item resolves its foundations and owns its expected files',
     () async {
-      final registry = BundledRegistry('default');
+      final registry = CheckoutRegistry(distribution, 'vanilla');
       final catalog = await registry.catalog();
 
       // Both directions. Checking only that each listed name exists would let a
@@ -627,7 +634,7 @@ items:
   test(
     'Agent foundations export only public models and preserve source layout',
     () async {
-      final registry = BundledRegistry('default');
+      final registry = CheckoutRegistry(distribution, 'vanilla');
       final catalog = await registry.catalog();
       expect(catalog.items['models']!.files.map((file) => file.target), [
         '@ui/models/activity_item.dart',
@@ -669,7 +676,7 @@ items:
   );
 
   test('both prefixes render every configured public surface', () async {
-    final registry = BundledRegistry('default');
+    final registry = CheckoutRegistry(distribution, 'vanilla');
     final catalog = await registry.catalog();
 
     for (final entry in _componentSurfaces.entries) {
@@ -722,8 +729,8 @@ items:
   });
 
   test('both presets render prefixed Agent recipe bundles', () async {
-    for (final preset in ['default', 'fortal']) {
-      final registry = BundledRegistry(preset);
+    for (final preset in ['vanilla', 'fortal']) {
+      final registry = CheckoutRegistry(distribution, preset);
       final catalog = await registry.catalog();
       for (final name in _agentRecipeNames) {
         final source = await registry.template(
@@ -744,7 +751,7 @@ items:
   });
 
   test('bundled templates stay inside the allowed import boundary', () async {
-    final registry = BundledRegistry('default');
+    final registry = CheckoutRegistry(distribution, 'vanilla');
     final catalog = await registry.catalog();
     const allowedPackages = {
       'flutter',
@@ -867,3 +874,17 @@ const _agentSurfaces = <String, List<String>>{
   'plan': ['Plan'],
   'transcript': ['Transcript'],
 };
+
+/// Whether `index.yaml` maps [preset] to a catalog, without reading it.
+bool _isIndexed(Directory distribution, String preset) {
+  try {
+    catalogPathForPreset(
+      File(p.join(distribution.path, 'index.yaml')).readAsStringSync(),
+      preset: preset,
+      origin: 'checkout',
+    );
+    return true;
+  } on FormatException {
+    return false;
+  }
+}

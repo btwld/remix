@@ -25,7 +25,8 @@ registries:
 commit used for every index, catalog, and template read. Commit `remix.yaml`;
 there is no separate source lockfile. `add`, `--diff`, and `--dry-run` never
 resolve a newer ref or change the configuration. Network or source failures
-never fall back to bundled content. No persistent offline cache is provided.
+never fall back to other content; the CLI ships none. No persistent offline
+cache is provided.
 
 ## Register and install
 
@@ -75,23 +76,24 @@ the application. Restoring a previously committed configuration pin is the
 registry rollback; it does not revert installed source. Review and restore that
 source separately through the application's version control.
 
-## Migrate existing projects
+## Projects from an earlier prerelease
 
-Schemas 1 and 2 keep using the frozen CLI-bundled snapshot. They are never
-silently rewritten, and upgrading the CLI does not update their templates.
-Schema 1 retains the default preset.
+Schema 3 is the only readable shape. Schemas 1 and 2 shipped in earlier
+prereleases and recorded no registry: they read from a snapshot that lived
+inside the CLI, which no longer exists. There is no pin to migrate, so such a
+project is reinitialized.
 
 ```shell
-remix registry migrate --ref registry-v1
+rm remix.yaml
+remix init --prefix Acme --preset vanilla
 remix add button --diff
 ```
 
-Omit `--ref` to select the latest stable registry release. Migration translates
-the frozen `default` preset to `vanilla`, validates that canonical preset, and
-changes configuration only: prefix, UI path, installed files, and generated
-adapters are preserved. `fortal` remains unchanged. The command reports a
-preset rename, prints the next review command, and does not claim existing
-source matches the new snapshot.
+Pass the prefix, preset and UI path the old file recorded; a schema-1 project
+recorded no preset and its `default` corresponds to `vanilla`. `init` rewrites
+configuration only: installed files and generated adapters are preserved, and
+nothing claims they still match the newly pinned source. That is what the
+`--diff` is for.
 
 ## Author and publish
 
@@ -103,8 +105,7 @@ dart run tool/build_registry.dart --check
 dart run tool/check_dependency_constraints.dart
 ```
 
-Commit the entire `registry/` output. Never update
-`packages/remix_cli/lib/src/registry/`: it is a frozen compatibility snapshot.
+Commit the entire `registry/` output; it is the only catalog the CLI reads.
 The root `registry/index.yaml` uses schema 1 and maps presets to relative
 catalog paths. Catalog schema 2 permits qualified dependencies; schema 1
 remains readable and permits only local dependency names.
@@ -131,7 +132,5 @@ require a registry release, not a new CLI release.
 
 New projects select `vanilla` when `--preset` is omitted. The official remote
 index exposes only `vanilla` and `fortal`; `default` is not a remote alias.
-Schema-1/2 projects retain their frozen bundled `default` snapshot, and
-initializing again preserves their configuration without migrating it. An
-explicit migration records `vanilla` in schema 3. The internal authoring
-directory remains `registry_source/lib/src/default/`.
+A project reinitialized from schema 1 or 2 records `vanilla` in its place. The
+internal authoring directory remains `registry_source/lib/src/default/`.

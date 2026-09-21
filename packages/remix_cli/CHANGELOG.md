@@ -1,26 +1,31 @@
 ## Unreleased
 
+- **Breaking.** `remix.yaml` schema 3 is the only readable configuration.
+  Schemas 1 and 2 named no registry and read from a catalog frozen inside the
+  CLI; both that catalog and `remix registry migrate` are gone. A project still
+  on an earlier schema deletes `remix.yaml` and runs `remix init` to pin a
+  registry; installed source and generated adapters are untouched. The registry
+  index (schema 1) and catalog (schema 2) formats are unchanged.
+- Item names are qualified with their registry namespace in every `add`,
+  `--dry-run` and `--diff` report, since every project now names its sources.
+
 - Restructure the internal registry source layer behind one `RegistrySources`
-  seam and a `RegistryReader` port, and split project configuration into sealed
-  `LegacyProject` and `PinnedProject` shapes. No CLI, `remix.yaml`, registry
-  index, or catalog schema change; `lib/src` is not a supported programmatic
-  API. See `open_code/REGISTRY_PORT.md`.
-- Document registries, pinning, migration, and publishing your own registry at
+  seam and a `RegistryReader` port. No `remix.yaml`, registry index, or catalog
+  schema change from this restructuring; `lib/src` is not a supported
+  programmatic API. See `open_code/REGISTRY_PORT.md`.
+- Document registries, pinning, and publishing your own registry at
   `docs/guides/registries.mdx`.
 
-- Name the active starter preset `vanilla` and select it by default. Preserve
-  `default` only in frozen schema-1/2 projects and canonicalize it during an
-  explicit registry migration.
+- Name the active starter preset `vanilla` and select it by default.
 
 - Publish catalogs independently under `registry/` with a versioned preset
   index and schema-2 namespaced dependencies.
 - Initialize schema-3 projects from stable GitHub registry releases, pinned to
-  full commits. Add explicit registry registration, pin updates and migration.
+  full commits. Add explicit registry registration and pin updates.
 - Resolve cross-registry dependency graphs before writes; reject cycles,
   conflicting targets and incompatible package requirements while preserving
   application-owned source and installed generated adapters.
-- Freeze bundled catalogs for schema-1/2 compatibility. Migration changes only
-  configuration; diff and overwrite remain explicit source-review actions.
+- Diff and overwrite remain explicit source-review actions.
 
 ## 0.1.0
 

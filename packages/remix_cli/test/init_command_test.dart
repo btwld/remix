@@ -48,38 +48,41 @@ void main() {
 
   for (final schema in [1, 2]) {
     test(
-      'init without --preset preserves legacy default schema $schema',
+      'init refuses a prerelease schema $schema project untouched',
       () async {
         File(p.join(root.path, 'remix.yaml')).writeAsStringSync(
           'schema: $schema\nprefix: Ui\n'
-          '${schema == 2 ? 'preset: default\n' : ''}'
+          '${schema == 2 ? 'preset: vanilla\n' : ''}'
           'paths:\n  ui: lib/ui\n',
         );
         File(p.join(root.path, 'lib/ui/ui.dart'))
           ..createSync(recursive: true)
           ..writeAsStringSync(emptyManagedBarrel);
         final before = snapshotFiles(root);
+        final errors = <String>[];
         expect(
           await runRemixCli(
             ['init'],
             writeOut: output.add,
-            writeError: fail,
+            writeError: errors.add,
             onInit: installer.initialize,
           ),
-          successExitCode,
+          failureExitCode,
         );
+        // Reinitializing is the only way forward, and it is destructive enough
+        // that the CLI must not choose it on the project's behalf.
+        expect(errors.single, contains('remix init'));
         expect(snapshotFiles(root), before);
-        expect(output.last, 'Remix is already initialized.');
       },
     );
   }
 
   test('schema 3 requires exact preset identity', () async {
     final source = await const FixtureOfficialResolver().latestOfficial();
-    final config = PinnedProject(
+    final config = ProjectConfig(
       packageRoot: root,
       prefix: 'Ui',
-      preset: 'default',
+      preset: 'fortal',
       uiPath: 'lib/ui',
       defaultRegistry: '@remix',
       registries: {'@remix': source},
@@ -117,12 +120,12 @@ void main() {
       ),
     );
     for (final (configured, requested, matches) in [
-      ('default', 'vanilla', false),
-      ('vanilla', 'default', false),
+      ('acme_light', 'vanilla', false),
+      ('vanilla', 'acme_light', false),
       ('acme_dark', 'acme_dark', true),
     ]) {
       File(p.join(root.path, 'remix.yaml')).writeAsStringSync(
-        PinnedProject(
+        ProjectConfig(
           packageRoot: root,
           prefix: 'Ui',
           preset: configured,
@@ -282,7 +285,7 @@ registries:
         installer.initialize(
           const InitOptions(
             prefix: 'Acme',
-            preset: 'default',
+            preset: 'vanilla',
             uiPath: 'lib/design_system',
           ),
         ),
@@ -301,7 +304,7 @@ registries:
 
     await expectLater(
       installer.initialize(
-        const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
+        const InitOptions(prefix: 'Ui', preset: 'vanilla', uiPath: 'lib/ui'),
       ),
       throwsFormatException,
     );
@@ -320,7 +323,7 @@ paths:
 
     await expectLater(
       installer.initialize(
-        const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
+        const InitOptions(prefix: 'Ui', preset: 'vanilla', uiPath: 'lib/ui'),
       ),
       throwsFormatException,
     );
@@ -365,7 +368,7 @@ paths:
 
       await expectLater(
         installer.initialize(
-          const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
+          const InitOptions(prefix: 'Ui', preset: 'vanilla', uiPath: 'lib/ui'),
         ),
         throwsFormatException,
         reason: source,
@@ -380,7 +383,7 @@ paths:
     File(p.join(root.path, 'pubspec.yaml')).writeAsStringSync('name: plain\n');
     await expectLater(
       installer.initialize(
-        const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
+        const InitOptions(prefix: 'Ui', preset: 'vanilla', uiPath: 'lib/ui'),
       ),
       throwsFormatException,
     );
@@ -388,7 +391,7 @@ paths:
     File(p.join(root.path, 'pubspec.yaml')).deleteSync();
     await expectLater(
       installer.initialize(
-        const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
+        const InitOptions(prefix: 'Ui', preset: 'vanilla', uiPath: 'lib/ui'),
       ),
       throwsFormatException,
     );

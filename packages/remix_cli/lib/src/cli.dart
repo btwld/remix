@@ -44,7 +44,7 @@ final class AddOptions {
   final AddMode mode;
 }
 
-enum RegistryAction { add, update, migrate }
+enum RegistryAction { add, update }
 
 final class RegistryOptions {
   const RegistryOptions({
@@ -248,8 +248,7 @@ final class _RegistryCommand extends Command<int> {
   @override
   String get name => 'registry';
   @override
-  String get description =>
-      'Register, pin, or migrate GitHub registry sources.';
+  String get description => 'Register and pin GitHub registry sources.';
 }
 
 final class _RegistryActionCommand extends Command<int> {
@@ -270,18 +269,12 @@ final class _RegistryActionCommand extends Command<int> {
       'Register a public GitHub registry and pin its commit.',
     RegistryAction.update =>
       'Update one registry pin without changing installed source.',
-    RegistryAction.migrate =>
-      'Migrate bundled configuration to a pinned GitHub registry.',
   };
   @override
   Future<int> run() async {
     final rest = argResults!.rest;
-    if (rest.length != (action == RegistryAction.migrate ? 0 : 1)) {
-      usageException(
-        action == RegistryAction.migrate
-            ? 'migrate accepts no positional arguments.'
-            : '$name requires exactly one namespace.',
-      );
+    if (rest.length != 1) {
+      usageException('$name requires exactly one namespace.');
     }
     if (action == RegistryAction.add &&
         argResults!.option('repository') == null) {

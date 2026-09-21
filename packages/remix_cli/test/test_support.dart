@@ -3,42 +3,45 @@ import 'dart:io';
 import 'package:path/path.dart' as p;
 import 'package:pub_semver/pub_semver.dart';
 import 'package:remix_cli/src/installer.dart';
-import 'package:remix_cli/src/cli.dart';
-import 'package:remix_cli/src/project_config.dart';
 import 'package:remix_cli/src/registry_reader.dart';
 import 'package:remix_cli/src/registry_source.dart';
 import 'package:remix_cli/src/process_runner.dart';
 import 'package:yaml/yaml.dart';
 
-/// The `remix` constraint the bundled registry declares, read from the file
-/// itself rather than restated here.
-///
-/// These fixtures exercise the frozen schema-1/2 snapshot. They intentionally
-/// follow its dependency floor rather than the current remote distribution.
-final String registryRemixConstraint = _readRegistryRemixConstraint();
+import 'checkout_registry.dart';
 
-/// The lowest `remix` version [registryRemixConstraint] admits.
-///
-/// This is the version the frozen bundled templates were authored against;
-/// current-source alignment checks apply separately to the remote distribution.
-final Version registryRemixFloor =
-    (VersionConstraint.parse(registryRemixConstraint) as VersionRange).min!;
+/// The `remix` constraint the committed Vanilla catalog declares, read from
+/// the file itself rather than restated here.
+final String registryRemixConstraint = _readRegistryConstraint('remix');
 
-String _readRegistryRemixConstraint() {
-  // `dart test` runs with the package root as the current directory.
+/// The lowest `remix` version [registryRemixConstraint] admits, which is the
+/// version the committed templates are authored against.
+final Version registryRemixFloor = _floorOf(registryRemixConstraint);
+
+/// The same, for the `mix_chart` release the `chart` item is built against.
+final String registryMixChartConstraint = _readRegistryConstraint('mix_chart');
+final Version registryMixChartFloor = _floorOf(registryMixChartConstraint);
+
+Version _floorOf(String constraint) =>
+    (VersionConstraint.parse(constraint) as VersionRange).min!;
+
+/// The constraint the catalog declares for [package], from the first item that
+/// depends on it. Reading it back is what keeps these fixtures honest: a floor
+/// raised in `registry/` moves here without an edit.
+String _readRegistryConstraint(String package) {
   final document = loadYaml(
     File(
-      p.join('lib', 'src', 'registry', 'default', 'registry.yaml'),
+      p.join(findCheckoutRegistry().path, 'vanilla', 'registry.yaml'),
     ).readAsStringSync(),
   );
   final items = (document as YamlMap)['items'] as YamlMap;
   for (final item in items.values) {
     final dependencies = (item as YamlMap)['dependencies'];
-    if (dependencies is YamlMap && dependencies['remix'] is String) {
-      return dependencies['remix'] as String;
+    if (dependencies is YamlMap && dependencies[package] is String) {
+      return dependencies[package] as String;
     }
   }
-  throw StateError('registry.yaml declares no remix constraint.');
+  throw StateError('registry.yaml declares no $package constraint.');
 }
 
 Directory createFlutterPackage() {
@@ -151,24 +154,9 @@ final class RecordingFileWriter implements ProjectFileWriter {
   }
 }
 
-/// Existing schema-2 consumers remain covered independently of remote init.
-extension BundledProjectFixture on Installer {
-  Future<void> initializeBundled(InitOptions options) async {
-    final config = LegacyProject(
-      packageRoot: projectRoot,
-      prefix: options.prefix,
-      preset: options.preset,
-      uiPath: options.uiPath,
-    );
-    File(
-      p.join(projectRoot.path, 'remix.yaml'),
-    ).writeAsStringSync(config.encode());
-    await initialize(options);
-  }
-}
-
-/// Serves the frozen bundle as if it were the published distribution, so
-/// installer tests get real catalog content without a network.
+/// Serves the committed `registry/` tree as if it were the published
+/// distribution, so installer tests get real catalog content without a
+/// network -- and get the content this checkout is proposing.
 final class FixtureOfficialResolver implements RegistrySources {
   const FixtureOfficialResolver();
 
@@ -197,6 +185,6 @@ final class FixtureOfficialResolver implements RegistrySources {
     if (preset != 'vanilla' && preset != 'fortal') {
       throw FormatException('Official registry has no $preset preset.');
     }
-    return BundledRegistry(preset == 'vanilla' ? 'default' : preset);
+    return CheckoutRegistry(findCheckoutRegistry(), preset);
   }
 }

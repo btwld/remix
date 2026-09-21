@@ -43,6 +43,25 @@ See [registry contract](../../../../open_code/REGISTRIES.md) and
 bundled-only distribution decision; it does not change authoring ownership,
 prefix rendering, preset contents, or installed-source ownership.
 
+## Configuration revision — 2026-09-21
+
+`packages/remix_cli/lib/src/registry/` is removed, along with `remix.yaml`
+schemas 1 and 2 and `remix registry migrate`. Remix is pre-1.0 and does not owe
+those prereleases a compatibility path, and keeping one cost more than it
+bought: the snapshot was a second catalog that drifted from `registry/` in
+silence, it let `add` bypass the pin for projects that named none, and it made
+a registry edit and its consumer update unlandable in one commit.
+
+Schema 3 is now the only readable configuration, so every read goes through a
+pin the project recorded. A project on an earlier schema deletes `remix.yaml`
+and reruns `remix init`; installed source is untouched, which is what the
+subsequent `add --diff` is for.
+
+This supersedes the preceding revision's frozen-snapshot paragraph only.
+`registry/index.yaml` schema 1 and catalog schema 2 are unchanged, as are
+authoring ownership, the derivation invariant, prefix rendering, preset
+contents, and installed-source ownership.
+
 The CLI-internal structure behind that contract — how the installer obtains
 catalogs and template bytes — is superseded by
 [the registry port lockdown](../../../../open_code/REGISTRY_PORT.md). The

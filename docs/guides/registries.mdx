@@ -94,24 +94,24 @@ Rolling back a pin is `git checkout` on `remix.yaml`. That restores the pin,
 not your source — installed files are yours, so review and restore them through
 your own version control.
 
-## Migrate an existing project
+## Projects from an earlier prerelease
 
-Projects on `remix.yaml` schema 1 or 2 read from a frozen snapshot shipped
-inside the CLI. Upgrading the CLI never rewrites them and never updates their
-templates. Migration is explicit:
+`remix.yaml` schema 3 is the only shape this CLI reads. Schemas 1 and 2 shipped
+in earlier prereleases and named no registry at all — they read from a snapshot
+that once shipped inside the CLI, and that snapshot is gone. There is nothing to
+migrate a pin *from*, so such a project is reinitialized:
 
 ```shell
-dart run remix_cli:remix registry migrate
+rm remix.yaml
+dart run remix_cli:remix init --prefix Acme --preset vanilla
 dart run remix_cli:remix add button --diff
 ```
 
-Migration changes configuration only. Your prefix, UI path, installed files,
-and generated adapters are untouched. A legacy `default` preset is recorded as
-`vanilla`; `fortal` is unchanged. Add `--ref registry-v4` to pin a specific
-release instead of the newest stable one.
-
-Migration does not claim your installed source matches the new pin. That is
-what the `--diff` on the second line is for.
+Pass the `--prefix`, `--preset` and `--ui-path` the old file recorded; `init`
+writes the new configuration and leaves everything else alone. Your installed
+source and generated adapters are yours and stay where they are, which is why
+the `--diff` on the third line is the part that matters: it is what tells you
+whether the source you own still matches the registry you just pinned.
 
 ## Publish your own registry
 
@@ -287,5 +287,4 @@ There is no persistent offline cache.
 
 - [Open Code](/open-code) — what the CLI installs and why you own it.
 - `remix.yaml` schema 3, `index.yaml` schema 1, and catalog schema 2 are the
-  stable contract. The CLI supports reading schemas 1 and 2 of `remix.yaml` for
-  existing projects.
+  stable contract. No other `remix.yaml` schema is readable.

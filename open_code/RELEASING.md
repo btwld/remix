@@ -14,10 +14,8 @@ fvm flutter pub get
 fvm dart run melos run ci
 ```
 
-The registry builder and dependency-floor checkers now target `registry/`.
-The CLI's bundled trees are frozen schema-1/2 compatibility snapshots, protected
-by a separate byte-for-byte regression test. Do not regenerate those bundles
-or move their dependency floors with a runtime release.
+The registry builder and dependency-floor checkers target `registry/`, which is
+the only catalog the CLI reads. It ships no trees of its own.
 
 The isolated consumer checker injects a test-only transport for the committed
 `registry/` distribution. It exercises schema 3, the real installer, package
@@ -65,15 +63,15 @@ not move. Keep schema compatibility with released CLI versions.
 
 ## Release the CLI only for installer changes
 
-Before publishing, run `dart pub publish --dry-run` in `packages/remix_cli` and
-confirm its archive retains both frozen compatibility bundles. Update its
-version, `lib/src/version.dart` and changelog according to the package release
-workflow; do not infer a new CLI version from a registry version.
+Before publishing, run `dart pub publish --dry-run` in `packages/remix_cli`.
+Update its version, `lib/src/version.dart` and changelog according to the
+package release workflow; do not infer a new CLI version from a registry
+version.
 
 The CLI publish workflow requires a stable published registry release and runs
 both consumer presets against its GitHub content with hosted runtime packages.
-A missing registry release must fail; do not substitute bundled content to
-bypass the bootstrap order.
+A missing registry release must fail; there is no local content to substitute,
+and nothing may be added to bypass the bootstrap order.
 
 If the CLI has never been published, the authorized uploader must perform the
 first pub.dev publication and configure automated publishing for repository
@@ -93,5 +91,6 @@ Restore the previously committed `remix.yaml` revision to select an older
 registry snapshot. This does not revert installed, application-owned source;
 review or restore that source separately through application version control.
 
-Schemas 1 and 2 continue to use their frozen bundled snapshot until an explicit
-`remix registry migrate`. See [registry migration and source ownership](REGISTRIES.md).
+Schemas 1 and 2 are not readable. A project still on one names no registry, so
+it is reinitialized rather than migrated. See [the registry contract](REGISTRIES.md)
+for source ownership.

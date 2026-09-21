@@ -51,8 +51,10 @@ registries:
     revision: "<resolved-full-commit-sha>"
 ```
 
-Schema 1 configurations continue to select the legacy `default`. Installed type names and
-token IDs use the consumer prefix, for example `AcmeButton` and `acme.accent.9`.
+The index exposes `vanilla` and `fortal`; `default` was the name an earlier
+prerelease used for `vanilla` and is not a preset any registry serves.
+Installed type names and token IDs use the consumer prefix, for example
+`AcmeButton` and `acme.accent.9`.
 `Fortal` is an authoring prefix, not a required installed prefix; the review
 catalog deliberately chooses it as its consumer prefix.
 

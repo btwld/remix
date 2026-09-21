@@ -11,7 +11,6 @@ import 'cli.dart';
 import 'process_runner.dart';
 import 'project_config.dart';
 import 'registry.dart';
-import 'registry_reader.dart';
 import 'registry_source.dart';
 import 'registry_graph.dart';
 import 'template_renderer.dart';
@@ -108,13 +107,8 @@ final class Installer {
         configFile.readAsStringSync(),
         packageRoot: root,
       );
-      final matchesPreset =
-          existing.preset == options.preset ||
-          (existing is LegacyProject &&
-              {'default', 'vanilla'}.contains(existing.preset) &&
-              {'default', 'vanilla'}.contains(options.preset));
       if (existing.prefix != options.prefix ||
-          !matchesPreset ||
+          existing.preset != options.preset ||
           existing.uiPath != options.uiPath) {
         throw const FormatException(
           'Existing remix.yaml does not match the requested prefix, preset, '
@@ -133,7 +127,7 @@ final class Installer {
     if (writeConfig) {
       final source = await _sources.latestOfficial();
       await _sources.open(source, options.preset).catalog();
-      final requested = PinnedProject(
+      final requested = ProjectConfig(
         packageRoot: root,
         prefix: options.prefix,
         preset: options.preset,
@@ -167,73 +161,43 @@ final class Installer {
       file.readAsStringSync(),
       packageRoot: root,
     );
-    final namespace = options.action == RegistryAction.migrate
-        ? '@remix'
-        : options.namespace!;
+    final namespace = options.namespace!;
     validateNamespace(namespace);
-    final sources = <String, RegistrySource>{};
-    final String defaultRegistry;
+    final sources = <String, RegistrySource>{...config.registries};
     final RegistrySource source;
-    if (options.action == RegistryAction.migrate) {
-      if (config is! LegacyProject)
-        throw const FormatException(
-          'Project already uses pinned registries; use remix registry update.',
+    if (options.action == RegistryAction.add) {
+      if (sources.containsKey(namespace))
+        throw FormatException(
+          '$namespace is already registered; use remix registry update.',
         );
-      defaultRegistry = namespace;
-      source = options.ref == null
-          ? await _sources.latestOfficial()
-          : await _sources.resolve(
-              repository: officialRepository,
-              ref: options.ref,
-            );
+      source = await _sources.resolve(
+        repository: options.repository!,
+        path: options.path,
+        ref: options.ref,
+      );
     } else {
-      if (config is! PinnedProject)
-        throw const FormatException(
-          'Run remix registry migrate before configuring registries.',
+      final previous = sources[namespace];
+      if (previous == null)
+        throw FormatException(
+          'Unknown registry $namespace; register it with remix registry add.',
         );
-      sources.addAll(config.registries);
-      defaultRegistry = config.defaultRegistry;
-      if (options.action == RegistryAction.add) {
-        if (sources.containsKey(namespace))
-          throw FormatException(
-            '$namespace is already registered; use remix registry update.',
-          );
-        source = await _sources.resolve(
-          repository: options.repository!,
-          path: options.path,
-          ref: options.ref,
-        );
-      } else {
-        final previous = sources[namespace];
-        if (previous == null)
-          throw FormatException(
-            'Unknown registry $namespace; register it with remix registry add.',
-          );
-        source = await _sources.resolve(
-          repository: previous.repository,
-          path: previous.path,
-          ref: options.ref ?? previous.ref,
-        );
-      }
+      source = await _sources.resolve(
+        repository: previous.repository,
+        path: previous.path,
+        ref: options.ref ?? previous.ref,
+      );
     }
-    final targetPreset =
-        options.action == RegistryAction.migrate && config.preset == 'default'
-        ? 'vanilla'
-        : config.preset;
-    await _sources.open(source, targetPreset).catalog();
+    await _sources.open(source, config.preset).catalog();
     sources[namespace] = source;
-    final updated = PinnedProject(
+    final updated = ProjectConfig(
       packageRoot: root,
       prefix: config.prefix,
-      preset: targetPreset,
+      preset: config.preset,
       uiPath: config.uiPath,
-      defaultRegistry: defaultRegistry,
+      defaultRegistry: config.defaultRegistry,
       registries: sources,
     );
     _fileWriter.write(file, updated.encode());
-    if (targetPreset != config.preset) {
-      _writeOut('Renamed legacy preset default to vanilla.');
-    }
     _writeOut(
       '$namespace pinned to ${source.revision}. Installed source was not changed.',
     );
@@ -311,25 +275,12 @@ final class Installer {
     final currentBarrel = barrel.readAsStringSync();
     validateManagedBarrel(currentBarrel);
 
-    final RegistryGraph graph;
-    switch (config) {
-      case PinnedProject():
-        graph = await RegistryGraph.resolve(config, options.items, _sources);
-        for (final namespace in graph.catalogs.keys) {
-          _writeOut(
-            '$namespace (${config.preset}) revision '
-            '${config.registries[namespace]!.revision}',
-          );
-        }
-      case LegacyProject():
-        final bundled = BundledRegistry(config.preset);
-        final catalog = await bundled.catalog();
-        graph = RegistryGraph.bundled(
-          bundled,
-          catalog,
-          catalog.resolveAll(options.items),
-          Set<String>.unmodifiable(options.items),
-        );
+    final graph = await RegistryGraph.resolve(config, options.items, _sources);
+    for (final namespace in graph.catalogs.keys) {
+      _writeOut(
+        '$namespace (${config.preset}) revision '
+        '${config.registries[namespace]!.revision}',
+      );
     }
     final items = graph.items;
     // Requested names are qualified for a pinned project, so they compare
@@ -340,11 +291,7 @@ final class Installer {
         .expand(
           (entry) => entry.value.items.values.map(
             (item) => RegistryItem(
-              // Legacy projects have one unnamed registry, so their output
-              // stays unqualified: `button`, never `bundled/button`.
-              name: config is PinnedProject
-                  ? '${entry.key}/${item.name}'
-                  : item.name,
+              name: '${entry.key}/${item.name}',
               registryDependencies: item.registryDependencies,
               dependencies: item.dependencies,
               devDependencies: item.devDependencies,
@@ -541,20 +488,15 @@ final class Installer {
       final floor = _snapshotFloor(requirements);
       final lockedRemix = locked['remix'];
       if (floor != null && lockedRemix != null && lockedRemix > floor) {
-        // Upgrading the CLI moves neither a pin nor the frozen snapshot, so
-        // naming it here would send the reader after a command that cannot
-        // change the source they are being asked to review.
-        _writeOut(switch (config) {
-          PinnedProject(:final defaultRegistry) =>
-            'Resolved remix $lockedRemix; this registry revision was authored '
-                'against $floor. Your pin does not move on its own — run '
-                'remix registry update $defaultRegistry --ref <newer release>, '
-                'then review with --diff.',
-          LegacyProject() =>
-            'Resolved remix $lockedRemix; the bundled registry was authored '
-                'against $floor. It is frozen for this project — run '
-                'remix registry migrate, then review with --diff.',
-        });
+        // Upgrading the CLI does not move a pin, so naming it here would send
+        // the reader after a command that cannot change the source they are
+        // being asked to review.
+        _writeOut(
+          'Resolved remix $lockedRemix; this registry revision was authored '
+          'against $floor. Your pin does not move on its own — run '
+          'remix registry update ${config.defaultRegistry} '
+          '--ref <newer release>, then review with --diff.',
+        );
       }
 
       final pathsToWrite = <String>[];

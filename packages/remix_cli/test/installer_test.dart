@@ -4,9 +4,9 @@ import 'package:path/path.dart' as p;
 import 'package:remix_cli/src/cli.dart';
 import 'package:remix_cli/src/installer.dart';
 import 'package:remix_cli/src/process_runner.dart';
-import 'package:remix_cli/src/registry_reader.dart';
 import 'package:test/test.dart';
 
+import 'checkout_registry.dart';
 import 'test_support.dart';
 
 void main() {
@@ -51,8 +51,12 @@ void main() {
 
   setUp(() async {
     root = createFlutterPackage();
-    await Installer(projectRoot: root, writeOut: (_) {}).initializeBundled(
-      const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
+    await Installer(
+      projectRoot: root,
+      writeOut: (_) {},
+      sources: const FixtureOfficialResolver(),
+    ).initialize(
+      const InitOptions(prefix: 'Ui', preset: 'vanilla', uiPath: 'lib/ui'),
     );
   });
   tearDown(() => root.deleteSync(recursive: true));
@@ -67,6 +71,7 @@ void main() {
         projectRoot: root,
         writeOut: (_) {},
         processRunner: runner,
+        sources: const FixtureOfficialResolver(),
       );
       await installer.add(
         const AddOptions(items: ['activity'], mode: AddMode.write),
@@ -109,6 +114,7 @@ void main() {
         runRealFormatter: true,
         runRealGit: true,
       ),
+      sources: const FixtureOfficialResolver(),
     );
     await installer.add(
       const AddOptions(items: ['activity'], mode: AddMode.dryRun),
@@ -142,6 +148,7 @@ void main() {
           projectRoot: root,
           writeOut: output.add,
           processRunner: runner,
+          sources: const FixtureOfficialResolver(),
         );
         final before = snapshotFiles(root);
         for (final mode in [AddMode.dryRun, AddMode.diff]) {
@@ -179,6 +186,7 @@ void main() {
         projectRoot: root,
         writeOut: (_) {},
         processRunner: runner,
+        sources: const FixtureOfficialResolver(),
       );
       await expectLater(
         installer.add(
@@ -192,17 +200,25 @@ void main() {
   );
 
   test('add loads the registry selected by project configuration', () async {
-    File(p.join(root.path, 'remix.yaml')).writeAsStringSync('''schema: 2
+    File(p.join(root.path, 'remix.yaml')).writeAsStringSync('''schema: 3
 prefix: Ui
 preset: fortal
 paths:
   ui: lib/ui
+defaultRegistry: "@remix"
+registries:
+  "@remix":
+    repository: "conceptadev/remix"
+    path: "registry"
+    ref: "registry-v1"
+    revision: "${'a' * 40}"
 ''');
     final output = <String>[];
     final installer = Installer(
       projectRoot: root,
       writeOut: output.add,
       processRunner: happyRunner(root),
+      sources: const FixtureOfficialResolver(),
     );
 
     await installer.add(
@@ -224,6 +240,7 @@ paths:
         writeOut: output.add,
         processRunner: runner,
         fileWriter: writer,
+        sources: const FixtureOfficialResolver(),
       );
 
       await installer.add(
@@ -282,6 +299,7 @@ paths:
         projectRoot: root,
         writeOut: (_) {},
         processRunner: firstRunner,
+        sources: const FixtureOfficialResolver(),
       ).add(const AddOptions(items: ['button'], mode: AddMode.write));
       final before = snapshotFiles(root);
 
@@ -293,6 +311,7 @@ paths:
         writeOut: output.add,
         processRunner: runner,
         fileWriter: writer,
+        sources: const FixtureOfficialResolver(),
       ).add(const AddOptions(items: ['button'], mode: AddMode.write));
 
       expect(snapshotFiles(root), before);
@@ -320,12 +339,17 @@ paths:
         projectRoot: root,
         writeOut: (_) {},
         processRunner: runner,
+        sources: const FixtureOfficialResolver(),
       ).add(const AddOptions(items: ['chart'], mode: AddMode.write));
 
       final pubAdd = runner.calls.singleWhere(
         (call) => call.arguments.take(2).join(' ') == 'pub add',
       );
-      expect(pubAdd.arguments, ['pub', 'add', 'mix_chart@^0.0.1-beta.1']);
+      expect(pubAdd.arguments, [
+        'pub',
+        'add',
+        'mix_chart@$registryMixChartConstraint',
+      ]);
       final build = runner.calls.singleWhere(
         (call) => call.arguments.take(3).join(' ') == 'run build_runner build',
       );
@@ -358,6 +382,7 @@ paths:
         root,
         flutterPreamble: 'Resolving dependencies...\n',
       ),
+      sources: const FixtureOfficialResolver(),
     ).add(const AddOptions(items: ['button'], mode: AddMode.write));
 
     expect(
@@ -453,14 +478,16 @@ packages:
         await Installer(
           projectRoot: member,
           writeOut: (_) {},
-        ).initializeBundled(
-          const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
+          sources: const FixtureOfficialResolver(),
+        ).initialize(
+          const InitOptions(prefix: 'Ui', preset: 'vanilla', uiPath: 'lib/ui'),
         );
 
         final installer = Installer(
           projectRoot: member,
           writeOut: (_) {},
           processRunner: happyRunner(member, writeLockOnPubGet: false),
+          sources: const FixtureOfficialResolver(),
         );
         if (unrelated || incompatible) {
           final before = snapshotFiles(member);
@@ -508,6 +535,7 @@ packages:
       writeOut: (_) {},
       processRunner: happyRunner(root),
       fileWriter: writer,
+      sources: const FixtureOfficialResolver(),
     ).add(const AddOptions(items: ['button'], mode: AddMode.overwrite));
 
     expect(theme.readAsBytesSync(), themeBytes);
@@ -527,6 +555,7 @@ packages:
         writeOut: (_) {},
         processRunner: runner,
         fileWriter: writer,
+        sources: const FixtureOfficialResolver(),
       ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
       throwsFormatException,
     );
@@ -535,7 +564,7 @@ packages:
     expect(writer.paths, isEmpty);
   });
 
-  for (final preset in const ['default', 'fortal']) {
+  for (final preset in const ['vanilla', 'fortal']) {
     test('$preset dashboard_shell installs to a custom bracketed path without '
         'touching host entry points', () async {
       final caseRoot = createFlutterPackage();
@@ -544,9 +573,8 @@ packages:
       await Installer(
         projectRoot: caseRoot,
         writeOut: (_) {},
-      ).initializeBundled(
-        InitOptions(prefix: 'Acme', preset: preset, uiPath: uiPath),
-      );
+        sources: const FixtureOfficialResolver(),
+      ).initialize(InitOptions(prefix: 'Acme', preset: preset, uiPath: uiPath));
       final main = File(p.join(caseRoot.path, 'lib', 'main.dart'))
         ..writeAsStringSync('void main() {}\n');
       final routes = File(p.join(caseRoot.path, 'lib', 'routes.dart'))
@@ -562,6 +590,7 @@ packages:
         projectRoot: caseRoot,
         writeOut: (_) {},
         processRunner: happyRunner(caseRoot, writeLockOnPubGet: false),
+        sources: const FixtureOfficialResolver(),
       );
       await installer.add(
         const AddOptions(items: ['dashboard_shell'], mode: AddMode.write),
@@ -635,7 +664,8 @@ packages:
         await Installer(
           projectRoot: caseRoot,
           writeOut: (_) {},
-        ).initializeBundled(
+          sources: const FixtureOfficialResolver(),
+        ).initialize(
           InitOptions(prefix: 'Acme', preset: preset, uiPath: uiPath),
         );
         final main = File(p.join(caseRoot.path, 'lib', 'main.dart'))
@@ -648,12 +678,12 @@ packages:
         };
         writeRequiredPubspec(
           caseRoot,
-          mixChart: '^0.0.1-beta.1',
+          mixChart: registryMixChartConstraint,
           remixUiIcons: '^0.1.0',
         );
         writeRequiredLock(
           caseRoot,
-          mixChart: '0.0.1-beta.1',
+          mixChart: '$registryMixChartFloor',
           remixUiIcons: '0.1.0',
         );
 
@@ -661,6 +691,7 @@ packages:
           projectRoot: caseRoot,
           writeOut: (_) {},
           processRunner: happyRunner(caseRoot, writeLockOnPubGet: false),
+          sources: const FixtureOfficialResolver(),
         );
         await installer.add(
           const AddOptions(items: ['dashboard_demo'], mode: AddMode.dryRun),
@@ -788,6 +819,7 @@ packages:
           writeOut: (_) {},
           processRunner: runner,
           fileWriter: writer,
+          sources: const FixtureOfficialResolver(),
         ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
         throwsFormatException,
       );
@@ -810,6 +842,7 @@ packages:
         writeOut: (_) {},
         processRunner: runner,
         fileWriter: writer,
+        sources: const FixtureOfficialResolver(),
       ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
       throwsFormatException,
     );
@@ -830,11 +863,15 @@ packages:
         projectRoot: root,
         writeOut: output.add,
         processRunner: runner,
+        sources: const FixtureOfficialResolver(),
       ).add(const AddOptions(items: ['button'], mode: AddMode.dryRun));
 
       expect(snapshotFiles(root), before);
       expect(runner.calls, isEmpty);
-      expect(output.join('\n'), contains('Items: theme -> button'));
+      expect(
+        output.join('\n'),
+        contains('Items: @remix/theme -> @remix/button'),
+      );
       expect(
         output.join('\n'),
         contains('Generated: lib/ui/components/button.g.dart'),
@@ -881,6 +918,7 @@ packages:
       projectRoot: root,
       writeOut: output.add,
       processRunner: runner,
+      sources: const FixtureOfficialResolver(),
     ).add(const AddOptions(items: ['button'], mode: AddMode.diff));
 
     expect(snapshotFiles(root), before);
@@ -896,7 +934,10 @@ packages:
       // the formatter would then rewrite the file the CLI just wrote — which
       // shows up for a consumer as an `add --diff` that never comes back
       // clean.
-      final catalog = await BundledRegistry('default').catalog();
+      final catalog = await CheckoutRegistry(
+        findCheckoutRegistry(),
+        'vanilla',
+      ).catalog();
       final items = catalog.items.keys.where((name) => name != 'theme');
       expect(items, isNotEmpty);
 
@@ -906,10 +947,11 @@ packages:
         await Installer(
           projectRoot: caseRoot,
           writeOut: (_) {},
-        ).initializeBundled(
+          sources: const FixtureOfficialResolver(),
+        ).initialize(
           const InitOptions(
             prefix: 'Playground',
-            preset: 'default',
+            preset: 'vanilla',
             uiPath: 'lib/ui',
           ),
         );
@@ -925,7 +967,7 @@ packages:
             catalog
                 .resolve(item)
                 .any((entry) => entry.dependencies.containsKey('mix_chart'))
-            ? '0.0.1-beta.1'
+            ? '$registryMixChartFloor'
             : null;
         writeRequiredPubspec(
           caseRoot,
@@ -945,6 +987,7 @@ packages:
             writeLockOnPubGet: false,
             runRealFormatter: true,
           ),
+          sources: const FixtureOfficialResolver(),
         ).add(AddOptions(items: [item], mode: AddMode.write));
         final before = snapshotFiles(caseRoot);
         final output = <String>[];
@@ -957,6 +1000,7 @@ packages:
             runRealFormatter: true,
             runRealGit: true,
           ),
+          sources: const FixtureOfficialResolver(),
         ).add(AddOptions(items: [item], mode: AddMode.diff));
 
         expect(snapshotFiles(caseRoot), before, reason: item);
@@ -989,6 +1033,7 @@ packages:
         projectRoot: root,
         writeOut: (_) {},
         processRunner: runner,
+        sources: const FixtureOfficialResolver(),
       ).add(const AddOptions(items: ['theme'], mode: AddMode.diff)),
       throwsFormatException,
     );
@@ -1006,6 +1051,7 @@ packages:
         writeOut: (_) {},
         processRunner: runner,
         fileWriter: writer,
+        sources: const FixtureOfficialResolver(),
       ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
       throwsStateError,
     );
@@ -1024,8 +1070,9 @@ packages:
       await Installer(
         projectRoot: caseRoot,
         writeOut: (_) {},
-      ).initializeBundled(
-        const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
+        sources: const FixtureOfficialResolver(),
+      ).initialize(
+        const InitOptions(prefix: 'Ui', preset: 'vanilla', uiPath: 'lib/ui'),
       );
       writeRequiredPubspec(caseRoot);
       writeRequiredLock(caseRoot);
@@ -1035,6 +1082,7 @@ packages:
           projectRoot: caseRoot,
           writeOut: (_) {},
           processRunner: happyRunner(caseRoot, failStage: stage),
+          sources: const FixtureOfficialResolver(),
         ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
         throwsStateError,
         reason: stage,
@@ -1060,6 +1108,7 @@ packages:
           projectRoot: root,
           writeOut: (_) {},
           processRunner: runner,
+          sources: const FixtureOfficialResolver(),
         ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
         throwsFormatException,
       );
@@ -1072,6 +1121,7 @@ packages:
           projectRoot: root,
           writeOut: (_) {},
           processRunner: runner,
+          sources: const FixtureOfficialResolver(),
         ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
         throwsFormatException,
       );
@@ -1100,8 +1150,9 @@ packages:
         await Installer(
           projectRoot: caseRoot,
           writeOut: (_) {},
-        ).initializeBundled(
-          const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
+          sources: const FixtureOfficialResolver(),
+        ).initialize(
+          const InitOptions(prefix: 'Ui', preset: 'vanilla', uiPath: 'lib/ui'),
         );
         final pubspec = File(p.join(caseRoot.path, 'pubspec.yaml'))
           ..writeAsStringSync('''name: consumer
@@ -1126,6 +1177,7 @@ dependency_overrides:
           projectRoot: caseRoot,
           writeOut: (_) {},
           processRunner: runner,
+          sources: const FixtureOfficialResolver(),
         ).add(const AddOptions(items: ['button'], mode: AddMode.write));
 
         expect(pubspec.readAsBytesSync(), before, reason: declaration);
@@ -1166,6 +1218,7 @@ dev_dependencies:
           writeOut: (_) {},
           processRunner: happyRunner(root, writeLockOnPubGet: false),
           fileWriter: writer,
+          sources: const FixtureOfficialResolver(),
         ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
         throwsStateError,
       );
@@ -1179,13 +1232,14 @@ dev_dependencies:
     test(
       'both presets reject resolved $version before writing source',
       () async {
-        for (final preset in ['default', 'fortal']) {
+        for (final preset in ['vanilla', 'fortal']) {
           final caseRoot = createFlutterPackage();
           addTearDown(() => caseRoot.deleteSync(recursive: true));
           await Installer(
             projectRoot: caseRoot,
             writeOut: (_) {},
-          ).initializeBundled(
+            sources: const FixtureOfficialResolver(),
+          ).initialize(
             InitOptions(prefix: 'Ui', preset: preset, uiPath: 'lib/ui'),
           );
           writeRequiredPubspec(caseRoot, remix: '^$version');
@@ -1199,6 +1253,7 @@ dev_dependencies:
               writeOut: (_) {},
               processRunner: happyRunner(caseRoot, writeLockOnPubGet: false),
               fileWriter: writer,
+              sources: const FixtureOfficialResolver(),
             ).add(const AddOptions(items: ['accordion'], mode: AddMode.write)),
             throwsStateError,
             reason: preset,
@@ -1223,6 +1278,7 @@ dev_dependencies:
       projectRoot: root,
       writeOut: output.add,
       processRunner: happyRunner(root, lockedRemix: '$drifted'),
+      sources: const FixtureOfficialResolver(),
     ).add(const AddOptions(items: ['button'], mode: AddMode.write));
 
     expect(
@@ -1231,9 +1287,9 @@ dev_dependencies:
         allOf(
           startsWith('Resolved remix $drifted;'),
           contains('authored against $registryRemixFloor'),
-          // A legacy project reads a frozen snapshot, so the way forward is
-          // migration. Upgrading the CLI would not move it.
-          contains('remix registry migrate'),
+          // The pin is what selects the source, so the way forward is moving
+          // it. Upgrading the CLI would not.
+          contains('remix registry update @remix'),
           isNot(contains('pub upgrade')),
         ),
       ),
@@ -1249,6 +1305,7 @@ dev_dependencies:
       projectRoot: root,
       writeOut: output.add,
       processRunner: happyRunner(root),
+      sources: const FixtureOfficialResolver(),
     ).add(const AddOptions(items: ['button'], mode: AddMode.write));
 
     expect(output, everyElement(isNot(startsWith('Resolved remix'))));
@@ -1263,8 +1320,9 @@ dev_dependencies:
         await Installer(
           projectRoot: caseRoot,
           writeOut: (_) {},
-        ).initializeBundled(
-          const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
+          sources: const FixtureOfficialResolver(),
+        ).initialize(
+          const InitOptions(prefix: 'Ui', preset: 'vanilla', uiPath: 'lib/ui'),
         );
         File(p.join(caseRoot.path, 'pubspec.yaml')).writeAsStringSync(
           runtime == 'remix'
@@ -1304,6 +1362,7 @@ dev_dependencies:
             writeOut: (_) {},
             processRunner: runner,
             fileWriter: writer,
+            sources: const FixtureOfficialResolver(),
           ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
           throwsA(
             isFormatException.having(
@@ -1335,8 +1394,9 @@ dev_dependencies:
       await Installer(
         projectRoot: caseRoot,
         writeOut: (_) {},
-      ).initializeBundled(
-        const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
+        sources: const FixtureOfficialResolver(),
+      ).initialize(
+        const InitOptions(prefix: 'Ui', preset: 'vanilla', uiPath: 'lib/ui'),
       );
       File(p.join(caseRoot.path, 'pubspec.yaml')).writeAsStringSync('''
 name: consumer
@@ -1352,7 +1412,7 @@ dev_dependencies:
   build_runner: ^2.10.1
   mix_generator: ^2.2.0-beta.3
 ''');
-      writeRequiredLock(caseRoot, mixChart: '0.0.1-beta.1');
+      writeRequiredLock(caseRoot, mixChart: '$registryMixChartFloor');
       final before = snapshotFiles(caseRoot);
       final runner = happyRunner(caseRoot);
       final writer = RecordingFileWriter(caseRoot);
@@ -1363,6 +1423,7 @@ dev_dependencies:
           writeOut: (_) {},
           processRunner: runner,
           fileWriter: writer,
+          sources: const FixtureOfficialResolver(),
         ).add(const AddOptions(items: ['chart'], mode: AddMode.write)),
         throwsA(
           isFormatException.having(
@@ -1407,6 +1468,7 @@ dependencies:
         projectRoot: root,
         writeOut: (_) {},
         processRunner: runner,
+        sources: const FixtureOfficialResolver(),
       ).add(const AddOptions(items: ['button'], mode: AddMode.write));
 
       expect(pubspec.readAsBytesSync(), before);
@@ -1444,6 +1506,7 @@ dev_dependencies:
         writeOut: (_) {},
         processRunner: runner,
         fileWriter: writer,
+        sources: const FixtureOfficialResolver(),
       ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
       throwsA(
         isFormatException.having(
@@ -1472,9 +1535,13 @@ dev_dependencies:
       projectRoot: root,
       writeOut: output.add,
       processRunner: happyRunner(root),
+      sources: const FixtureOfficialResolver(),
     ).add(const AddOptions(items: ['button'], mode: AddMode.overwrite));
 
-    expect(output, containsAll(['Added theme.', 'Added button.']));
+    expect(
+      output,
+      containsAll(['Added @remix/theme.', 'Added @remix/button.']),
+    );
   });
 
   test(
@@ -1487,9 +1554,13 @@ dev_dependencies:
         projectRoot: root,
         writeOut: output.add,
         processRunner: happyRunner(root),
+        sources: const FixtureOfficialResolver(),
       ).add(const AddOptions(items: ['button'], mode: AddMode.overwrite));
 
-      expect(output, containsAll(['Preserved theme.', 'Updated button.']));
+      expect(
+        output,
+        containsAll(['Preserved @remix/theme.', 'Updated @remix/button.']),
+      );
     },
   );
 
@@ -1504,9 +1575,10 @@ dev_dependencies:
         projectRoot: root,
         writeOut: output.add,
         processRunner: happyRunner(root),
+        sources: const FixtureOfficialResolver(),
       ).add(const AddOptions(items: ['theme'], mode: AddMode.overwrite));
 
-      expect(output, contains('Updated theme.'));
+      expect(output, contains('Updated @remix/theme.'));
     },
   );
 
@@ -1522,6 +1594,7 @@ dev_dependencies:
           projectRoot: root,
           writeOut: (_) {},
           processRunner: happyRunner(root),
+          sources: const FixtureOfficialResolver(),
         ).add(const AddOptions(items: ['button', 'card'], mode: AddMode.write));
         final batched = snapshotFiles(root);
 
@@ -1530,8 +1603,9 @@ dev_dependencies:
         await Installer(
           projectRoot: sequential,
           writeOut: (_) {},
-        ).initializeBundled(
-          const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
+          sources: const FixtureOfficialResolver(),
+        ).initialize(
+          const InitOptions(prefix: 'Ui', preset: 'vanilla', uiPath: 'lib/ui'),
         );
         writeRequiredPubspec(sequential);
         writeRequiredLock(sequential);
@@ -1540,6 +1614,7 @@ dev_dependencies:
             projectRoot: sequential,
             writeOut: (_) {},
             processRunner: happyRunner(sequential),
+            sources: const FixtureOfficialResolver(),
           ).add(AddOptions(items: [item], mode: AddMode.write));
         }
 
@@ -1558,6 +1633,7 @@ dev_dependencies:
         projectRoot: root,
         writeOut: (_) {},
         processRunner: runner,
+        sources: const FixtureOfficialResolver(),
       ).add(
         const AddOptions(
           items: ['activity', 'answer', 'message'],
@@ -1594,11 +1670,15 @@ dev_dependencies:
           projectRoot: root,
           writeOut: output.add,
           processRunner: happyRunner(root),
+          sources: const FixtureOfficialResolver(),
         ).add(const AddOptions(items: ['button', 'card'], mode: AddMode.write));
 
-        expect(output.where((line) => line == 'Added theme.'), hasLength(1));
-        expect(output, contains('Added button.'));
-        expect(output, contains('Added card.'));
+        expect(
+          output.where((line) => line == 'Added @remix/theme.'),
+          hasLength(1),
+        );
+        expect(output, contains('Added @remix/button.'));
+        expect(output, contains('Added @remix/card.'));
         final barrel = File(
           p.join(root.path, 'lib/ui/ui.dart'),
         ).readAsStringSync();
@@ -1611,6 +1691,7 @@ dev_dependencies:
         projectRoot: root,
         writeOut: (_) {},
         processRunner: happyRunner(root),
+        sources: const FixtureOfficialResolver(),
       ).add(const AddOptions(items: ['button', 'card'], mode: AddMode.write));
       final theme = File(p.join(root.path, 'lib/ui/theme/tokens.dart'));
       theme.writeAsStringSync('// edited by the consumer\n');
@@ -1620,13 +1701,14 @@ dev_dependencies:
         projectRoot: root,
         writeOut: output.add,
         processRunner: happyRunner(root),
+        sources: const FixtureOfficialResolver(),
       ).add(
         const AddOptions(items: ['button', 'card'], mode: AddMode.overwrite),
       );
 
-      expect(output, contains('Updated button.'));
-      expect(output, contains('Updated card.'));
-      expect(output, contains('Preserved theme.'));
+      expect(output, contains('Updated @remix/button.'));
+      expect(output, contains('Updated @remix/card.'));
+      expect(output, contains('Preserved @remix/theme.'));
       expect(theme.readAsStringSync(), '// edited by the consumer\n');
     });
 
@@ -1649,13 +1731,14 @@ dev_dependencies:
           projectRoot: root,
           writeOut: output.add,
           processRunner: happyRunner(root),
+          sources: const FixtureOfficialResolver(),
         ).add(
           const AddOptions(items: ['theme', 'button'], mode: AddMode.overwrite),
         );
 
-        expect(output, contains('Updated theme.'));
-        expect(output, contains('Updated button.'));
-        expect(output, isNot(contains('Preserved theme.')));
+        expect(output, contains('Updated @remix/theme.'));
+        expect(output, contains('Updated @remix/button.'));
+        expect(output, isNot(contains('Preserved @remix/theme.')));
         expect(theme.readAsStringSync(), isNot(contains('// edited theme')));
         expect(button.readAsStringSync(), isNot(contains('// edited button')));
       },
@@ -1673,12 +1756,16 @@ dev_dependencies:
         projectRoot: root,
         writeOut: output.add,
         processRunner: runner,
+        sources: const FixtureOfficialResolver(),
       );
 
       await installer.add(
         const AddOptions(items: ['button', 'card'], mode: AddMode.dryRun),
       );
-      expect(output.join('\n'), contains('Items: theme -> button -> card'));
+      expect(
+        output.join('\n'),
+        contains('Items: @remix/theme -> @remix/button -> @remix/card'),
+      );
       expect(snapshotFiles(root), before);
       expect(runner.calls, isEmpty);
 
@@ -1704,6 +1791,7 @@ dev_dependencies:
             projectRoot: root,
             writeOut: (_) {},
             processRunner: happyRunner(root, failStage: 'analyze'),
+            sources: const FixtureOfficialResolver(),
           ).add(
             const AddOptions(items: ['button', 'card'], mode: AddMode.write),
           ),
@@ -1731,6 +1819,7 @@ dev_dependencies:
           projectRoot: root,
           writeOut: (_) {},
           processRunner: runner,
+          sources: const FixtureOfficialResolver(),
         ).add(
           const AddOptions(items: ['button', 'missing'], mode: AddMode.write),
         ),
@@ -1750,6 +1839,7 @@ Future<void> installButton(Directory root) async {
     projectRoot: root,
     writeOut: (_) {},
     processRunner: happyRunner(root),
+    sources: const FixtureOfficialResolver(),
   ).add(const AddOptions(items: ['button'], mode: AddMode.write));
 }
 
@@ -1789,7 +1879,7 @@ RecordingProcessRunner happyRunner(
     if (addMissingDependencies) {
       writeRequiredPubspec(
         root,
-        mixChart: addChartDependency ? '^0.0.1-beta.1' : null,
+        mixChart: addChartDependency ? registryMixChartConstraint : null,
       );
     }
     return successProcessOutput;
@@ -1806,7 +1896,7 @@ RecordingProcessRunner happyRunner(
       writeRequiredLock(
         root,
         remix: lockedRemix,
-        mixChart: addChartDependency ? '0.0.1-beta.1' : null,
+        mixChart: addChartDependency ? '$registryMixChartFloor' : null,
       );
     }
     return successProcessOutput;
