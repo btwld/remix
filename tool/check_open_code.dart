@@ -28,8 +28,11 @@ const _fixtureAppFiles = <String>[
 
 /// The registry items the CLI installs, in invocation order.
 ///
-/// Each is added by its own `remix add`, which is the only supported call
-/// shape. Theme arrives as the first item's registry dependency.
+/// Each is added by its own `remix add` on purpose, even though one
+/// invocation can now name several: installing them one at a time is what
+/// exercises the incremental path a consumer actually takes, where each item
+/// meets an application that already has the previous ones. Theme arrives as
+/// the first item's registry dependency.
 const _defaultRegistryItems = <String>[
   'icons',
   'accordion',
