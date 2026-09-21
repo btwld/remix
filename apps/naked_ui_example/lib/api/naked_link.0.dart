@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:naked_ui/naked_ui.dart';
 
 import '../src/example_app.dart';
-
 import '../src/example_button.dart';
 
 void main() {

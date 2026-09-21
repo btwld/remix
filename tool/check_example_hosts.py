@@ -179,11 +179,12 @@ def check_hosts(root):
     for directory in SCANNED:
         for parent, directories, files in os.walk(root / directory):
             relative = str(Path(parent).relative_to(root))
-            directories[:] = [part for part in directories
-                              if not part.startswith('.') and part not in
-                              ({'node_modules', 'build', 'out'} |
-                               (set() if directory == 'open_code' else {'test', 'integration_test'}))
-]
+            directories[:] = [
+                part for part in directories
+                if not part.startswith('.') and part not in
+                ({'node_modules', 'build', 'out'} |
+                 (set() if directory == 'open_code' else {'test', 'integration_test'}))
+            ]
             if 'remix.yaml' in files:
                 config = (Path(parent) / 'remix.yaml').read_text()
                 match = re.search(r'(?m)^\s*prefix:\s*[\"\']?(\w+)', config)
