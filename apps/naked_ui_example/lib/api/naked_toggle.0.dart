@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
             SizedBox(height: 8),
             Text(
               'Interact with the toggle button to see its states',
-              style: TextStyle(color: Colors.grey),
+              style: TextStyle(color: Color(0xFF616161)),
             ),
             Expanded(child: ToggleButtonExample()),
           ],
@@ -115,7 +115,7 @@ class _ToggleButtonExampleState extends State<ToggleButtonExample> {
           const SizedBox(height: 4),
           const Text(
             'Bold, Italic, and Underline can be combined.',
-            style: TextStyle(color: Colors.grey),
+            style: TextStyle(color: Color(0xFF616161)),
           ),
           const SizedBox(height: 12),
           Row(

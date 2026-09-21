@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
             SizedBox(height: 8),
             Text(
               'Interact with the button to see its states',
-              style: TextStyle(color: Colors.grey),
+              style: TextStyle(color: Color(0xFF616161)),
             ),
             SizedBox(height: 24),
             ButtonExample(),

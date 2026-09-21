@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
             SizedBox(height: 8),
             Text(
               'Hover the button to see the tooltip',
-              style: TextStyle(color: Colors.grey),
+              style: TextStyle(color: Color(0xFF616161)),
             ),
             SizedBox(height: 24),
             TooltipExample(),

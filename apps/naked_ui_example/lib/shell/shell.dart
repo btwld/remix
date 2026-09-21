@@ -89,8 +89,38 @@ class _KitchenShellState extends State<KitchenShell> {
                                     ),
                                     style: const TextStyle(fontSize: 14),
                                     cursorColor: const Color(0xFF3D3D3D),
+                                    // InputDecoration used to name this field
+                                    // for screen readers and draw the
+                                    // placeholder; NakedTextField decorates
+                                    // nothing, so both are supplied here.
+                                    semanticLabel: 'Search demos',
                                     builder: (context, state, editableText) =>
-                                        editableText,
+                                        Stack(
+                                          children: [
+                                            if (!state.hasText)
+                                              const Positioned.fill(
+                                                child: IgnorePointer(
+                                                  child: ExcludeSemantics(
+                                                    child: Align(
+                                                      alignment:
+                                                          AlignmentDirectional
+                                                              .centerStart,
+                                                      child: Text(
+                                                        'Search demos...',
+                                                        style: TextStyle(
+                                                          fontSize: 14,
+                                                          color: Color(
+                                                            0xFF616161,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            editableText,
+                                          ],
+                                        ),
                                   ),
                                 ),
                               ),
@@ -126,6 +156,8 @@ class _KitchenShellState extends State<KitchenShell> {
                   ],
                 ),
               ),
+              // SizedBox.expand is load-bearing: a childless box constrained
+              // only in width collapses to zero height and paints nothing.
               const SizedBox(
                 width: 1,
                 child: ColoredBox(color: _border, child: SizedBox.expand()),
