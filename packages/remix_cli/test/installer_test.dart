@@ -1659,6 +1659,34 @@ dev_dependencies:
       expect(runner.calls.any((call) => call.executable == 'git'), isTrue);
     });
 
+    test(
+      'a failed batch names every requested item in the rerun hint',
+      () async {
+        // The hint is how a user recovers from a half-installed batch, so it has
+        // to reproduce the command they ran. Naming only the first or last item
+        // would send them back with a different install.
+        writeRequiredPubspec(root);
+        writeRequiredLock(root);
+
+        await expectLater(
+          Installer(
+            projectRoot: root,
+            writeOut: (_) {},
+            processRunner: happyRunner(root, failStage: 'analyze'),
+          ).add(
+            const AddOptions(items: ['button', 'card'], mode: AddMode.write),
+          ),
+          throwsA(
+            isA<StateError>().having(
+              (error) => error.message,
+              'message',
+              contains('remix add button card'),
+            ),
+          ),
+        );
+      },
+    );
+
     test('an unknown item in the batch fails before any write', () async {
       writeRequiredPubspec(root);
       writeRequiredLock(root);
