@@ -388,7 +388,8 @@ in place for inspection. Fix the reported issue and rerun the same command.
 The MVP's update workflow is explicit. Upgrading `remix_cli` does not change
 the source you install; the registry pin in `remix.yaml` does:
 
-1. run `registry update @remix` to move the pin to the newest promoted commit;
+1. run `registry update @remix` to move the pin to the newest promoted commit
+   (`@remix` is the namespace `init` gives the official registry);
 2. run `add button --diff`;
 3. review the template changes against local customizations;
 4. use `add button --overwrite` only when replacement is intended;

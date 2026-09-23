@@ -9,11 +9,12 @@ using the official one, and publishing your own.
 
 ## The model
 
-Five words carry the whole system.
+Six words carry the whole system.
 
 | term | what it is |
 | --- | --- |
 | **Registry** | A public GitHub repository holding a directory of component source. |
+| **Namespace** | The name your project gives a registry, like `@remix`. Commands and dependencies use it to say which registry they mean. |
 | **Preset** | One design language inside a registry — `vanilla` or `fortal` officially. A project picks exactly one. |
 | **Catalog** | The `registry.yaml` for one preset. It lists items. |
 | **Item** | One installable unit: its templates, its dependencies, what it exports. |
@@ -65,6 +66,11 @@ registries:
 ```
 
 Commit `remix.yaml`. There is no separate lockfile.
+
+`init` registers the official registry under the namespace `@remix` and makes
+it `defaultRegistry`, so bare names like `add button` install from it. Keep
+that name: other registries can depend on official items as `@remix/theme`,
+and those dependencies resolve through your project's `@remix`.
 
 `add` resolves the item's full dependency graph, renders every template, checks
 your `pubspec.yaml`, and only then writes. Your edits to already-installed
@@ -156,8 +162,10 @@ presets:
 
 This trips people up, so it is worth being precise:
 
-- A **namespace** (`@acme`) identifies *your registry*. You choose it, and the
-  consumer records it when they register you.
+- A **namespace** (`@acme`) identifies *your registry* inside a consuming
+  project. Your registry files do not declare it; the consumer types it in
+  `registry add`. Pick one and tell consumers to use it, because any catalog
+  that depends on your items names it too.
 - A **preset** (`vanilla`) identifies *a design language*. The consuming
   project selects exactly one, at `remix init`, and it stays fixed.
 
