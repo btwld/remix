@@ -199,7 +199,7 @@ void main() {
   );
 
   test(
-    'existing schema-3 initialization does not resolve releases again',
+    'existing schema-3 initialization does not resolve the registry again',
     () async {
       final before = snapshotFiles(root);
       final offline = GitHubSources(
@@ -351,9 +351,8 @@ void main() {
     () async {
       // The pinned counterpart of the legacy notice in installer_test: a CLI
       // upgrade cannot move a recorded revision, so it must not be suggested.
-      // Neither can a bare `registry update`: the official pin always records
-      // an immutable `registry-v*` tag, so re-resolving it returns the same
-      // commit. The notice has to name the ref to be actionable.
+      // Re-resolving the recorded ref is what moves a registry-stable pin;
+      // `add` never does it, so the notice names `registry update`.
       fixture.official['button'] = {
         ...item('button'),
         'dependencies': {'remix': '^1.0.0'},
@@ -373,11 +372,91 @@ void main() {
         contains(
           allOf(
             startsWith('Resolved remix 1.2.0;'),
-            contains('remix registry update @remix --ref'),
+            contains('remix registry update @remix'),
+            isNot(contains('--ref')),
+            isNot(contains('newer release')),
             isNot(contains('pub upgrade')),
           ),
         ),
       );
+    },
+  );
+
+  test('drift guidance on a SHA pin names --ref', () async {
+    // A SHA or tag re-resolves to itself, so a bare `registry update` would
+    // leave the pin where it is. Only registry-stable advances without --ref.
+    final pinned = fixture.config(root);
+    File('${root.path}/remix.yaml').writeAsStringSync(
+      ProjectConfig(
+        packageRoot: root,
+        prefix: pinned.prefix,
+        preset: pinned.preset,
+        uiPath: pinned.uiPath,
+        defaultRegistry: pinned.defaultRegistry,
+        registries: {
+          ...pinned.registries,
+          '@remix': RegistrySource(
+            repository: officialRepository,
+            path: 'registry',
+            ref: 'a' * 40,
+            revision: 'a' * 40,
+          ),
+        },
+      ).encode(),
+    );
+    fixture.official['button'] = {
+      ...item('button'),
+      'dependencies': {'remix': '^1.0.0'},
+    };
+    writeRequiredPubspec(root, remix: '^1.0.0');
+    writeRequiredLock(root, remix: '1.2.0');
+
+    await Installer(
+      projectRoot: root,
+      writeOut: output.add,
+      sources: fixture.resolver,
+      processRunner: happyRunner(root, lockedRemix: '1.2.0'),
+    ).add(const AddOptions(items: ['button'], mode: AddMode.write));
+
+    expect(
+      output,
+      contains(
+        allOf(
+          startsWith('Resolved remix 1.2.0;'),
+          contains('remix registry update @remix --ref <newer ref>'),
+        ),
+      ),
+    );
+  });
+
+  test(
+    'registry update re-resolves registry-stable to the promoted commit',
+    () async {
+      final before = snapshotFiles(root);
+
+      await installer.registry(
+        const RegistryOptions(
+          action: RegistryAction.update,
+          namespace: '@remix',
+        ),
+      );
+
+      final updated = parseConfig(null, root);
+      expect(updated.registries['@remix']!.ref, 'registry-stable');
+      expect(updated.registries['@remix']!.revision, 'd' * 40);
+      expect(updated.registries['@company']!.revision, 'b' * 40);
+      expect(
+        fixture.requests.any(
+          (uri) => uri.path.endsWith('/commits/registry-stable'),
+        ),
+        isTrue,
+      );
+      expect(
+        fixture.requests.any((uri) => uri.path.contains('/releases')),
+        isFalse,
+      );
+      before.remove('remix.yaml');
+      expect(snapshotFiles(root)..remove('remix.yaml'), before);
     },
   );
 
@@ -397,7 +476,7 @@ void main() {
             '@remix': RegistrySource(
               repository: officialRepository,
               path: 'registry',
-              ref: 'registry-v1',
+              ref: 'registry-stable',
               revision: 'a' * 40,
             ),
           },
@@ -463,8 +542,8 @@ ProjectConfig parseConfig(String? source, Directory root) =>
       packageRoot: root,
     );
 
-/// The newest stable registry release the fixture publishes.
-const stableRegistryTag = 'registry-v3';
+/// The branch CI promotes, which `latestOfficial` resolves.
+const stableRegistryRef = 'registry-stable';
 
 Map<String, Object> item(
   String target, [
@@ -492,24 +571,11 @@ final class FixtureRegistries {
           final tag = uri.pathSegments.last;
           final sha = tag == 'v2'
               ? 'c'
-              : tag == stableRegistryTag
+              : tag == stableRegistryRef
               ? 'd'
               : 'b';
           return RegistryResponse(200, jsonEncode({'sha': sha * 40}));
         }
-        if (uri.path.endsWith('/releases'))
-          return RegistryResponse(
-            200,
-            jsonEncode([
-              // An unrelated package release must not hide the registry one.
-              {'tag_name': 'v9.0.0', 'draft': false, 'prerelease': false},
-              {
-                'tag_name': stableRegistryTag,
-                'draft': false,
-                'prerelease': false,
-              },
-            ]),
-          );
         return const RegistryResponse(200, '{"default_branch":"main"}');
       }
       if (uri.path.contains('no-preset'))
@@ -548,7 +614,7 @@ final class FixtureRegistries {
       '@remix': RegistrySource(
         repository: officialRepository,
         path: 'registry',
-        ref: 'registry-v1',
+        ref: 'registry-stable',
         revision: 'a' * 40,
       ),
       '@company': RegistrySource(

@@ -18,7 +18,7 @@ void main() {
       final source = RegistrySource(
         repository: officialRepository,
         path: 'registry',
-        ref: 'registry-v1',
+        ref: 'registry-stable',
         revision: 'a' * 40,
       );
       final resolver = GitHubSources(
@@ -49,7 +49,7 @@ void main() {
 
   final sha = 'a' * 40;
   test(
-    'incompatible latest release fails instead of falling back to an older release',
+    'incompatible registry-stable fails closed without another ref',
     () async {
       final root = createFlutterPackage();
       addTearDown(() => root.deleteSync(recursive: true));
@@ -58,22 +58,6 @@ void main() {
       final resolver = GitHubSources(
         transport: (uri) async {
           requests.add(uri);
-          if (uri.path.endsWith('/releases'))
-            return RegistryResponse(
-              200,
-              jsonEncode([
-                {
-                  'tag_name': 'registry-v2',
-                  'draft': false,
-                  'prerelease': false,
-                },
-                {
-                  'tag_name': 'registry-v1',
-                  'draft': false,
-                  'prerelease': false,
-                },
-              ]),
-            );
           if (uri.host == 'api.github.com')
             return RegistryResponse(200, jsonEncode({'sha': sha}));
           return const RegistryResponse(200, 'schema: 99');
@@ -90,7 +74,13 @@ void main() {
         throwsFormatException,
       );
       expect(snapshotFiles(root), before);
-      expect(requests.any((uri) => uri.path.endsWith('/registry-v1')), isFalse);
+      expect(
+        requests
+            .where((uri) => uri.path.contains('/commits/'))
+            .map((uri) => uri.pathSegments.last),
+        ['registry-stable'],
+      );
+      expect(requests.any((uri) => uri.path.contains('/releases')), isFalse);
     },
   );
 
@@ -123,34 +113,58 @@ void main() {
     },
   );
 
-  test(
-    'missing stable releases fail initialization without writes or fallback',
-    () async {
-      final root = createFlutterPackage();
-      addTearDown(() => root.deleteSync(recursive: true));
-      final before = snapshotFiles(root);
-      final resolver = GitHubSources(
-        transport: (_) async => const RegistryResponse(200, '[]'),
-      );
-      await expectLater(
-        Installer(
-          projectRoot: root,
-          writeOut: (_) {},
-          sources: resolver,
-        ).initialize(
-          const InitOptions(prefix: 'Ui', preset: 'fortal', uiPath: 'lib/ui'),
-        ),
-        throwsA(
-          isA<FormatException>().having(
-            (e) => e.message,
-            'message',
-            contains('No stable registry-v* release'),
+  // GitHub answers a commit lookup for an unknown ref with this 422, not 404.
+  RegistryResponse missingCommit(String ref) => RegistryResponse(
+    422,
+    jsonEncode({
+      'message': 'No commit found for SHA: $ref',
+      'documentation_url':
+          'https://docs.github.com/rest/commits/commits#get-a-commit',
+      'status': '422',
+    }),
+  );
+
+  test('missing registry-stable fails initialization without writes', () async {
+    final root = createFlutterPackage();
+    addTearDown(() => root.deleteSync(recursive: true));
+    final before = snapshotFiles(root);
+    final requests = <Uri>[];
+    final resolver = GitHubSources(
+      transport: (uri) async {
+        requests.add(uri);
+        if (uri.path.endsWith('/commits/registry-stable')) {
+          return missingCommit('registry-stable');
+        }
+        return const RegistryResponse(200, '{"default_branch":"main"}');
+      },
+    );
+    await expectLater(
+      Installer(
+        projectRoot: root,
+        writeOut: (_) {},
+        sources: resolver,
+      ).initialize(
+        const InitOptions(prefix: 'Ui', preset: 'fortal', uiPath: 'lib/ui'),
+      ),
+      throwsA(
+        isA<FormatException>().having(
+          (e) => e.message,
+          'message',
+          contains(
+            'No registry-stable branch is published for conceptadev/remix',
           ),
         ),
-      );
-      expect(snapshotFiles(root), before);
-    },
-  );
+      ),
+    );
+    expect(snapshotFiles(root), before);
+    expect(
+      requests.any(
+        (uri) => uri.path == '/repos/conceptadev/remix/commits/registry-stable',
+      ),
+      isTrue,
+    );
+    expect(requests.any((uri) => uri.path.contains('/releases')), isFalse);
+  });
 
   test(
     'schema 3 round-trip preserves coordinates and permits remote presets',
@@ -244,30 +258,95 @@ void main() {
     );
   }
 
-  test('latest stable release ignores package tags and prereleases', () async {
-    final resolver = GitHubSources(
-      transport: (uri) async => RegistryResponse(
-        200,
-        jsonEncode(
-          uri.path.endsWith('/releases')
-              ? [
-                  {
-                    'tag_name': 'registry-v3',
-                    'draft': false,
-                    'prerelease': true,
-                  },
-                  {'tag_name': 'v9', 'draft': false, 'prerelease': false},
-                  {
-                    'tag_name': 'registry-v2',
-                    'draft': false,
-                    'prerelease': false,
-                  },
-                ]
-              : {'sha': sha},
+  test(
+    'latestOfficial resolves registry-stable and never scans releases',
+    () async {
+      final requests = <Uri>[];
+      final resolver = GitHubSources(
+        transport: (uri) async {
+          requests.add(uri);
+          return RegistryResponse(200, jsonEncode({'sha': sha}));
+        },
+      );
+      final source = await resolver.latestOfficial();
+      expect(source.repository, 'conceptadev/remix');
+      expect(source.ref, 'registry-stable');
+      expect(source.revision, sha);
+      expect(
+        requests.any(
+          (uri) =>
+              uri.host == 'api.github.com' &&
+              uri.path == '/repos/conceptadev/remix/commits/registry-stable',
+        ),
+        isTrue,
+      );
+      expect(requests.any((uri) => uri.path.contains('/releases')), isFalse);
+    },
+  );
+
+  test(
+    'latestOfficial keeps transport failures distinct from a missing branch',
+    () async {
+      for (final entry in <String, RegistryTransport>{
+        'not found': (_) async => const RegistryResponse(404, ''),
+        'rate limit': (_) async => const RegistryResponse(
+          403,
+          '',
+          headers: {'x-ratelimit-remaining': '0'},
+        ),
+        'timed out': (_) async => throw TimeoutException('timeout'),
+        'network failure': (_) async => throw const SocketException('offline'),
+        'failed (422)': (uri) async => uri.path.contains('/commits/')
+            ? const RegistryResponse(422, '{"message":"Validation Failed"}')
+            : const RegistryResponse(200, '{"default_branch":"main"}'),
+      }.entries) {
+        await expectLater(
+          GitHubSources(transport: entry.value).latestOfficial(),
+          throwsA(
+            isA<FormatException>().having(
+              (e) => e.message,
+              'message',
+              allOf(
+                contains(entry.key),
+                isNot(contains('No registry-stable branch is published')),
+              ),
+            ),
+          ),
+        );
+      }
+    },
+  );
+
+  test('a missing ref reads as not found; other 422s stay failures', () async {
+    Future<RegistrySource> resolveWith(RegistryResponse commit) =>
+        GitHubSources(
+          transport: (uri) async => uri.path.contains('/commits/')
+              ? commit
+              : const RegistryResponse(200, '{"default_branch":"main"}'),
+        ).resolve(repository: 'owner/repo', ref: 'typo');
+
+    await expectLater(
+      resolveWith(missingCommit('typo')),
+      throwsA(
+        isA<FormatException>().having(
+          (e) => e.message,
+          'message',
+          contains('GitHub ref typo not found'),
         ),
       ),
     );
-    expect((await resolver.latestOfficial()).ref, 'registry-v2');
+    await expectLater(
+      resolveWith(
+        const RegistryResponse(422, '{"message":"Validation Failed"}'),
+      ),
+      throwsA(
+        isA<FormatException>().having(
+          (e) => e.message,
+          'message',
+          allOf(contains('failed (422)'), isNot(contains('not found'))),
+        ),
+      ),
+    );
   });
 
   for (final entry in <String, RegistryTransport>{
@@ -348,26 +427,4 @@ void main() {
       }
     },
   );
-
-  // `tool/check_release_tag.dart` gates a real registry release on this same
-  // predicate, and the release workflow triggers on a broad `registry-v*`
-  // pattern, so a tag outside the grammar could report green while no new
-  // project could ever find it. These cases live in the CLI suite because that
-  // is what CI actually runs; a root `test/tool/` file is never swept.
-  test('discoverable release tags are the ones remix init resolves', () {
-    for (final tag in ['registry-v1', 'registry-v1.2', 'registry-v1.2.3']) {
-      expect(isDiscoverableReleaseTag(tag), isTrue, reason: tag);
-    }
-    for (final tag in [
-      'registry-v',
-      'registry-v1-beta',
-      'registry-v1.0.0+build.1',
-      'registry-vlatest',
-      'registry-1',
-      'v1.2.3',
-      '',
-    ]) {
-      expect(isDiscoverableReleaseTag(tag), isFalse, reason: tag);
-    }
-  });
 }

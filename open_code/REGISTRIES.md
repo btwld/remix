@@ -1,9 +1,9 @@
 # Pinned GitHub registries
 
-Registry releases are independent of CLI releases. New projects use schema 3;
-`init` selects the latest stable GitHub `registry-v*` release from
-`conceptadev/remix`, validates the selected preset, and stores its full commit
-SHA. No compatible release means initialization fails without creating files.
+Registry publication is independent of CLI releases. New projects use schema 3;
+`init` resolves the `registry-stable` branch of `conceptadev/remix` and stores
+its full commit SHA. It validates the selected preset. No published
+`registry-stable` branch means initialization fails without creating files.
 Repeating initialization preserves the existing configuration and pin.
 
 ```yaml
@@ -17,7 +17,7 @@ registries:
   "@remix":
     repository: conceptadev/remix
     path: registry
-    ref: registry-v1
+    ref: registry-stable
     revision: "<resolved-full-commit-sha>"
 ```
 
@@ -125,8 +125,8 @@ under `templates/`, destinations under `@ui/`, package constraints, generated
 adapters and exports using the existing catalog format.
 
 See [release instructions](RELEASING.md) for the independent registry gate,
-bootstrap order and published-revision smoke check. Component-only changes
-require a registry release, not a new CLI release.
+bootstrap order and promoted-branch smoke check. Component-only changes
+require promoting `registry-stable`, not a new CLI release.
 
 ## Vanilla preset naming
 

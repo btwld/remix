@@ -9,11 +9,12 @@ using the official one, and publishing your own.
 
 ## The model
 
-Five words carry the whole system.
+Six words carry the whole system.
 
 | term | what it is |
 | --- | --- |
 | **Registry** | A public GitHub repository holding a directory of component source. |
+| **Namespace** | The name your project gives a registry, like `@remix`. Commands and dependencies use it to say which registry they mean. |
 | **Preset** | One design language inside a registry — `vanilla` or `fortal` officially. A project picks exactly one. |
 | **Catalog** | The `registry.yaml` for one preset. It lists items. |
 | **Item** | One installable unit: its templates, its dependencies, what it exports. |
@@ -22,7 +23,9 @@ Five words carry the whole system.
 Two rules follow from this and explain most of the CLI's behavior:
 
 - **Every read goes through the pin.** Never a branch, never a tag — the commit
-  SHA recorded in your `remix.yaml`. Moving to newer source is an explicit act.
+  SHA recorded in your `remix.yaml`. The `ref` recorded next to it is resolved
+  again only when you run `registry update`. Moving to newer source is an
+  explicit act.
 - **A network failure never falls back to bundled content.** If the registry is
   unreachable, the command fails and writes nothing.
 
@@ -33,9 +36,10 @@ dart run remix_cli:remix init
 dart run remix_cli:remix add button
 ```
 
-`init` resolves the newest stable `registry-v*` release, checks that your
-preset exists in it, and writes `remix.yaml`. If no compatible release is
-published, initialization fails and creates no files.
+`init` resolves the `registry-stable` branch of `conceptadev/remix` and stores
+its full commit SHA. It checks that your preset exists in that branch and
+writes `remix.yaml`. If the branch is not published, initialization fails and
+creates no files.
 
 Omitting `--preset` selects `vanilla`. Pass `--preset fortal` for Fortal, and
 `--prefix`/`--ui-path` to control naming and location:
@@ -57,11 +61,16 @@ registries:
   "@remix":
     repository: "conceptadev/remix"
     path: "registry"
-    ref: "registry-v4"
+    ref: "registry-stable"
     revision: "<full commit sha>"
 ```
 
 Commit `remix.yaml`. There is no separate lockfile.
+
+`init` registers the official registry under the namespace `@remix` and makes
+it `defaultRegistry`, so bare names like `add button` install from it. Keep
+that name: other registries can depend on official items as `@remix/theme`,
+and those dependencies resolve through your project's `@remix`.
 
 `add` resolves the item's full dependency graph, renders every template, checks
 your `pubspec.yaml`, and only then writes. Your edits to already-installed
@@ -81,10 +90,22 @@ you have customized.
 Changing a pin and installing source are separate steps, on purpose.
 
 ```shell
-dart run remix_cli:remix registry update @remix --ref registry-v5
+dart run remix_cli:remix registry update @remix
 dart run remix_cli:remix add button --diff
 dart run remix_cli:remix add button --overwrite
 ```
+
+`registry update` resolves the recorded `ref` again. For the official registry
+that is `registry-stable`, so it moves the pin to the newest promoted commit.
+Pass `--ref` to choose something else:
+
+```shell
+dart run remix_cli:remix registry update @remix --ref <sha>            # pin that exact commit
+dart run remix_cli:remix registry update @remix --ref registry-stable  # follow the branch again
+```
+
+A pin recorded with a SHA or a tag resolves to the same commit every time, so a
+bare `registry update` leaves it where it is. Pass `--ref` to move it.
 
 `registry update` validates the new pin and rewrites `remix.yaml`. It does not
 touch a single installed file. You then review with `--diff` and adopt with
@@ -141,8 +162,10 @@ presets:
 
 This trips people up, so it is worth being precise:
 
-- A **namespace** (`@acme`) identifies *your registry*. You choose it, and the
-  consumer records it when they register you.
+- A **namespace** (`@acme`) identifies *your registry* inside a consuming
+  project. Your registry files do not declare it; the consumer types it in
+  `registry add`. Pick one and tell consumers to use it, because any catalog
+  that depends on your items names it too.
 - A **preset** (`vanilla`) identifies *a design language*. The consuming
   project selects exactly one, at `remix init`, and it stays fixed.
 
@@ -244,15 +267,15 @@ code is installed from.
 
 ### Publish and consume
 
-Commit the `registry/` directory and push. A consumer with a `vanilla` project
-then registers you and installs:
+Commit the `registry/` directory and push it to the ref your consumers follow.
+A consumer with a `vanilla` project then registers you and installs:
 
 ```shell
 dart run remix_cli:remix init                 # selects vanilla
 dart run remix_cli:remix registry add @acme \
   --repository your-org/your-repo \
   --path registry \
-  --ref v1
+  --ref stable
 
 dart run remix_cli:remix add @acme/button
 ```
@@ -262,8 +285,45 @@ it resolves the repository's default branch once and records its name and
 commit. Namespaces match `^@[a-z][a-z0-9_-]*$`.
 
 Bare item names resolve through `defaultRegistry`; `@acme/button` names yours
-explicitly. Tag releases if you want consumers to pin something more meaningful
-than a branch commit.
+explicitly.
+
+### Choose the ref consumers follow
+
+The ref a consumer registers decides what a later bare `registry update` does:
+
+| consumer registered | `registry update @acme` | to move on |
+| --- | --- | --- |
+| a branch, such as `stable` | moves to the branch's newest commit | nothing extra |
+| a tag, such as `v1` | resolves the same commit again | `--ref v2` |
+| a commit SHA | resolves the same commit again | `--ref <newer sha>` |
+
+The official registry follows a branch, `registry-stable`, that CI moves only
+after a commit passes its checks. Do the same: keep a branch you advance only
+after testing a commit, and tell consumers to register that branch. Tags still
+work as labels, and for consumers who only want to move when they choose a
+version.
+
+### Test a change before consumers see it
+
+The CLI reads registries from GitHub only, never from a local path. Push the
+change to a working branch, then install it in a scratch app initialized with
+the preset your consumers use:
+
+```shell
+dart run remix_cli:remix registry add @acme \
+  --repository your-org/your-repo \
+  --path registry \
+  --ref my-change
+dart run remix_cli:remix add @acme/button --dry-run
+dart run remix_cli:remix add @acme/button
+```
+
+`--dry-run` resolves the whole dependency graph and renders every template
+without writing, so catalog and template errors surface there. The real `add`
+then installs the source and its package dependencies; build the app to confirm
+it compiles. Push fixes to the same branch, run `registry update @acme`, and
+reinstall with `add @acme/button --overwrite`. Advance the branch consumers
+follow once the scratch app is clean.
 
 ### What is not supported
 
@@ -275,6 +335,9 @@ There is no persistent offline cache.
 
 | message | cause |
 | --- | --- |
+| `No registry-stable branch is published for conceptadev/remix.` | The official registry has not been promoted yet, so `init` has no commit to pin. Nothing was written; retry once it is published. |
+| `GitHub ref <ref> not found` | The branch, tag or commit does not exist in that repository. Check the `--ref` value. |
+| `GitHub repository not found` | The `--repository` is misspelled, or the repository is private. |
 | `Registry <repo> has no <preset> preset.` | The registry's `index.yaml` does not list your project's preset. |
 | `<a> and <b> both target <path>.` | Two items claim the same installed file. Extract it into a shared item. |
 | `Unknown registry @ns.` | A dependency names a registry the project has not configured. Add it with `registry add`. |

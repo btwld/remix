@@ -1,35 +1,31 @@
-name: Validate registry release
+name: Promote registry
 
 on:
   push:
-    tags:
-      - 'registry-v*'
-  release:
-    types: [published]
+    branches: [main]
   workflow_dispatch:
 
-permissions:
-  contents: read
+# Per ref, so a dispatch from another branch cannot replace a queued `main`
+# run. Only `main` promotes, so runs on other refs never race the branch.
+concurrency:
+  group: registry-promote-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   validate:
-    if: github.event_name != 'release' || startsWith(github.event.release.tag_name, 'registry-v')
+    name: Validate registry
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.44.0'
           cache: true
       - run: flutter pub get
-      # The triggers above are deliberately broad. A release only counts once
-      # its tag is one `remix init` will actually find, so gate on the CLI's
-      # own predicate rather than a second copy of the grammar.
-      - name: Require a discoverable release tag
-        if: github.event_name == 'release' || github.event_name == 'push'
-        env:
-          RELEASE_TAG: ${{ github.event.release.tag_name || github.ref_name }}
-        run: dart run tool/check_release_tag.dart "$RELEASE_TAG"
       - name: Validate generated output and dependency floors
         run: |
           dart run tool/build_registry.dart --check
@@ -41,10 +37,27 @@ jobs:
         run: dart test
       - name: Install both committed presets with hosted dependencies
         run: dart run melos run open-code:release:check
-      - name: Smoke-test published revision with the same CLI
-        if: github.event_name == 'release' && !github.event.release.prerelease
+      # A dispatch from another branch must not treat that commit as the
+      # promotion candidate. The smoke reads the commit directly so a failure
+      # stops the push below.
+      - name: Smoke-test this commit with the same CLI
+        if: github.ref == 'refs/heads/main'
         env:
-          REMIX_REGISTRY_RELEASE_REF: ${{ github.event.release.tag_name }}
+          REMIX_REGISTRY_RELEASE_REF: ${{ github.sha }}
         run: |
           dart run tool/check_open_code.dart --source hosted
           dart run tool/check_open_code.dart --preset fortal --source hosted
+
+  promote:
+    name: Promote registry
+    needs: validate
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Promote registry-stable
+        run: git push origin HEAD:refs/heads/registry-stable

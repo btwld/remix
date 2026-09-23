@@ -106,7 +106,7 @@ registries:
   "@remix":
     repository: conceptadev/remix
     path: registry
-    ref: registry-v1
+    ref: registry-stable
     revision: "<resolved-full-commit-sha>"
 ```
 
@@ -385,14 +385,16 @@ in place for inspection. Fix the reported issue and rerun the same command.
 
 ## Manual updates
 
-The MVP's update workflow is explicit:
+The MVP's update workflow is explicit. Upgrading `remix_cli` does not change
+the source you install; the registry pin in `remix.yaml` does:
 
-1. update the project-local `remix_cli` constraint;
+1. run `registry update @remix` to move the pin to the newest promoted commit
+   (`@remix` is the namespace `init` gives the official registry);
 2. run `add button --diff`;
 3. review the template changes against local customizations;
 4. use `add button --overwrite` only when replacement is intended;
-5. reapply or refine application-specific changes and commit the regenerated
-   adapter.
+5. reapply or refine application-specific changes and commit `remix.yaml`
+   and the regenerated adapter.
 
 There is no automatic merge or migration layer in 0.1.0.
 

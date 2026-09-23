@@ -1,5 +1,5 @@
-/// Test-only entry point that points the installer at a registry other than a
-/// published GitHub release. The shipped CLI deliberately has no such mode.
+/// Test-only entry point that points the installer at a registry other than
+/// the promoted stable branch. The shipped CLI deliberately has no such mode.
 import 'dart:io';
 
 import 'package:remix_cli/src/installer.dart';
@@ -26,7 +26,7 @@ Future<void> main(List<String> arguments) async {
   );
 }
 
-/// A real published release, used by the post-release smoke check.
+/// A promoted ref, the stable branch or a commit SHA, used by the hosted smoke.
 final class _PublishedSources implements RegistrySources {
   const _PublishedSources(this.ref);
 

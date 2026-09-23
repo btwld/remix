@@ -67,6 +67,14 @@ catalogs and template bytes — is superseded by
 [the registry port lockdown](../../../../open_code/REGISTRY_PORT.md). The
 published schemas described above are unchanged.
 
+## Distribution revision — 2026-09-23
+
+The registry version is the commit hash already pinned in `remix.yaml`.
+Distribution is the CI-promoted `registry-stable` branch: merging to `main`
+validates against hosted runtimes and fast-forwards that branch. This
+supersedes the `registry-v*` sentence of the 2026-09-19 distribution revision.
+Moving `registry-stable` does not move a pin a project has already recorded.
+
 ## What this reverses
 
 | record | it said | now |

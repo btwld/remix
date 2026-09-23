@@ -31,9 +31,9 @@ name: Publish to pub.dev
 #
 # remix_cli, remix_ui_icons, and naked_ui are versioned independently from
 # Remix.
-# The CLI release requires a published stable registry release and its hosted
+# The CLI release requires `registry-stable` to resolve and its hosted
 # runtime dependencies. registry_source/ is private authoring source; registry/
-# is published independently through registry-v* GitHub releases.
+# is published independently through the CI-promoted `registry-stable` branch.
 on:
   push:
     tags:

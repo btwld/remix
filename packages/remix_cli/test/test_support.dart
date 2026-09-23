@@ -164,7 +164,7 @@ final class FixtureOfficialResolver implements RegistrySources {
   Future<RegistrySource> latestOfficial() async => RegistrySource(
     repository: officialRepository,
     path: 'registry',
-    ref: 'registry-v1',
+    ref: 'registry-stable',
     revision: 'a' * 40,
   );
 

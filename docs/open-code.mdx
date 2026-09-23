@@ -129,7 +129,7 @@ registries:
   "@remix":
     repository: conceptadev/remix
     path: registry
-    ref: registry-v1
+    ref: registry-stable
     revision: "<resolved-full-commit-sha>"
 ```
 
@@ -236,7 +236,7 @@ registries:
   "@remix":
     repository: conceptadev/remix
     path: registry
-    ref: registry-v1
+    ref: registry-stable
     revision: "<resolved-full-commit-sha>"
 ```
 
@@ -497,9 +497,14 @@ then review installed source; no automatic merge or installed-source lockfile
 is used.
 
 ```bash
-remix registry update @remix --ref registry-v2
+remix registry update @remix
 remix add button --diff
 ```
+
+`registry update` resolves the recorded `ref` again; for the official registry
+that is `registry-stable`, the newest promoted commit. A SHA or tag pin
+resolves to the same commit, so move it with `--ref <sha>`, or return to the
+branch with `--ref registry-stable`.
 
 Register additional public GitHub sources with the same preset:
 
@@ -556,14 +561,19 @@ That is the intended workflow. The file is yours.
 
 ### The Remix drift notice
 
-Each registry snapshot is authored against one `remix` version, and the
+Each registry revision is authored against one `remix` version, and the
 constraint it installs is a caret, so `flutter pub upgrade` can move you onto
 a later `remix` that these templates were never tested against. `add` reports
 that after it resolves your lockfile:
 
 ```
-Resolved remix 1.0.0; this remix_cli registry was authored against 1.0.0-beta.10. Run flutter pub upgrade remix_cli, then review with --diff.
+Resolved remix 1.0.0; this registry revision was authored against 1.0.0-beta.10. Your pin does not move on its own — run remix registry update @remix, then review with --diff.
 ```
+
+Upgrading the CLI does not change the pin, so the notice names
+`registry update`. When the pin is a SHA or tag rather than
+`registry-stable`, it adds `--ref <newer ref>`, since a bare update would
+resolve the same commit.
 
 It is a notice, not a failure. The install completes. A `remix` *below* the
 authored version is a different case and still fails outright, because the

@@ -153,9 +153,13 @@ jobs:
             echo "### CI on this branch"
             echo
             echo 'CI installs both presets against checkout Remix.'
-            echo 'After pub.dev serves step 1, run'
-            echo '`dart run melos run open-code:release:check`.'
-            echo 'The CLI publish workflow requires this hosted check.'
+            echo 'Merging starts **Promote registry**. If this Remix version'
+            echo 'is not on pub.dev yet, that run fails and `registry-stable`'
+            echo 'does not move. After pub.dev serves step 1, run'
+            echo '`dart run melos run open-code:release:check`, then re-run'
+            echo '**Promote registry** on `main` (Actions → Promote registry'
+            echo '→ Run workflow). Do not force-push `registry-stable`.'
+            echo 'The CLI publish workflow requires that branch to resolve.'
             echo 'Do not lower the registry floor to bypass a missing release.'
             echo
             echo "### remix_cli"

@@ -69,7 +69,7 @@ final class CheckoutRegistry implements RegistryReader {
   }
 }
 
-/// Serves the on-disk distribution in place of a published release.
+/// Serves the on-disk distribution in place of the promoted GitHub registry.
 final class CheckoutSources implements RegistrySources {
   CheckoutSources(this.distribution);
 
