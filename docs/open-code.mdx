@@ -129,7 +129,7 @@ registries:
   "@remix":
     repository: conceptadev/remix
     path: registry
-    ref: registry-v1
+    ref: registry-stable
     revision: "<resolved-full-commit-sha>"
 ```
 
@@ -236,7 +236,7 @@ registries:
   "@remix":
     repository: conceptadev/remix
     path: registry
-    ref: registry-v1
+    ref: registry-stable
     revision: "<resolved-full-commit-sha>"
 ```
 
@@ -496,8 +496,12 @@ Registry content releases independently of the CLI. Update a pin explicitly,
 then review installed source; no automatic merge or installed-source lockfile
 is used.
 
+`--ref registry-stable` moves to the newest promoted commit. `--ref <sha>`
+pins that commit.
+
 ```bash
-remix registry update @remix --ref registry-v2
+remix registry update @remix --ref registry-stable
+remix registry update @remix --ref <sha>
 remix add button --diff
 ```
 

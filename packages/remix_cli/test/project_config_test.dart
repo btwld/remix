@@ -47,7 +47,7 @@ registries:
   "@remix":
     repository: "conceptadev/remix"
     path: "registry"
-    ref: "registry-v1"
+    ref: "registry-stable"
     revision: "${'a' * 40}"
 ''', packageRoot: root);
 
@@ -57,7 +57,7 @@ registries:
     expect(config.uiPath, 'lib/design_system');
     expect(config.defaultRegistry, '@remix');
     expect(config.registries.keys, ['@remix']);
-    expect(config.registries['@remix']!.ref, 'registry-v1');
+    expect(config.registries['@remix']!.ref, 'registry-stable');
     expect(config.schema, supportedProjectSchema);
   });
 

@@ -21,8 +21,9 @@
 
 - Publish catalogs independently under `registry/` with a versioned preset
   index and schema-2 namespaced dependencies.
-- Initialize schema-3 projects from stable GitHub registry releases, pinned to
-  full commits. Add explicit registry registration and pin updates.
+- Initialize schema-3 projects from the CI-promoted `registry-stable`
+  branch, pinned to full commits. Add explicit registry registration and
+  pin updates.
 - Resolve cross-registry dependency graphs before writes; reject cycles,
   conflicting targets and incompatible package requirements while preserving
   application-owned source and installed generated adapters.

@@ -33,9 +33,10 @@ dart run remix_cli:remix init
 dart run remix_cli:remix add button
 ```
 
-`init` resolves the newest stable `registry-v*` release, checks that your
-preset exists in it, and writes `remix.yaml`. If no compatible release is
-published, initialization fails and creates no files.
+`init` resolves the `registry-stable` branch of `conceptadev/remix` and stores
+its full commit SHA. It checks that your preset exists in that branch and
+writes `remix.yaml`. If the branch is not published, initialization fails and
+creates no files.
 
 Omitting `--preset` selects `vanilla`. Pass `--preset fortal` for Fortal, and
 `--prefix`/`--ui-path` to control naming and location:
@@ -57,7 +58,7 @@ registries:
   "@remix":
     repository: "conceptadev/remix"
     path: "registry"
-    ref: "registry-v4"
+    ref: "registry-stable"
     revision: "<full commit sha>"
 ```
 
@@ -80,8 +81,12 @@ you have customized.
 
 Changing a pin and installing source are separate steps, on purpose.
 
+`--ref registry-stable` moves to the newest promoted commit. `--ref <sha>`
+pins that commit.
+
 ```shell
-dart run remix_cli:remix registry update @remix --ref registry-v5
+dart run remix_cli:remix registry update @remix --ref registry-stable
+dart run remix_cli:remix registry update @remix --ref <sha>
 dart run remix_cli:remix add button --diff
 dart run remix_cli:remix add button --overwrite
 ```

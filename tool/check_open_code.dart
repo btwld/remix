@@ -11,7 +11,8 @@
 /// this checkout's `remix_cli`, lets the CLI install every registry item, then
 /// tests the installed source with the selected Remix source. The default runs
 /// hosted Remix first, then regenerates against the checkout. CI selects the
-/// checkout explicitly so an unpublished release can be validated before tagging.
+/// checkout explicitly so a registry can be validated before its Remix version
+/// is on pub.dev.
 library;
 
 import 'dart:convert';

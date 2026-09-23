@@ -142,10 +142,14 @@ Rules that have already cost a release here:
 - `remix-v<version>` publishes **nothing** — `melos version` reads it to derive
   the next changelog. A remix release wants both `v<version>` (publishes) and
   `remix-v<version>` (melos reads).
+- A `remix` release raises the registry floor, so the **Promote registry** run
+  for its merge fails until pub.dev serves that version. Once it does, re-run
+  **Promote registry** on `main` (Actions → Promote registry → Run workflow)
+  or `registry-stable` stays on the previous floor.
 - `naked_ui` published from its own repo on the bare `v<version>` pattern. Its
   pub.dev tag pattern must be `naked_ui-v{{version}}` before the first release
   from this monorepo, or the job authenticates against the old pattern and
   fails.
-- A `remix_cli` release additionally requires a published stable registry
-  release; its publish job gates on `melos run open-code:release:check` against
-  hosted packages.
+- A `remix_cli` release additionally requires `registry-stable` to resolve and
+  pass the hosted check; its publish job gates on
+  `melos run open-code:release:check` against hosted packages.

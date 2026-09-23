@@ -37,29 +37,39 @@ fvm dart run melos run open-code:release:check
 
 ## Publish the registry before the GitHub-first CLI
 
-1. Commit generated `registry/index.yaml`, both catalogs, and all templates.
-2. Tag the reviewed commit `registry-v1` for bootstrap, or the next unused
-   stable `registry-v*` version for later releases.
-3. Push that tag and require the **Validate registry release** workflow to pass.
-   It checks generation drift, dependency constraints, CLI compatibility, and
-   isolated Vanilla/Fortal installs against hosted runtimes.
-4. Publish a non-draft, non-prerelease GitHub release for that tag. A tag alone
-   is not discoverable by new-project initialization. The tag must read
-   `registry-v<major>[.<minor>[.<patch>]]` — `remix init` skips anything else,
-   so the release workflow rejects a tag it could not find.
-5. Require the release-event smoke checks to pass. They resolve the published
-   tag to a commit and read its actual GitHub index, catalogs and templates.
+Merge the reviewed commit to `main`. **Promote registry** validates
+generation drift, dependency constraints, CLI compatibility, and both
+presets against hosted runtimes. It smoke-tests that commit, then
+fast-forwards `registry-stable`. A hand-started run promotes only when it
+is executing `main`.
 
-To repeat a published-revision check locally:
+If the registry's Remix floor is not on pub.dev yet, the run fails and
+`registry-stable` does not move. `main` shows that failure until the floor
+is published. Publish the runtime, wait until pub.dev serves it, then
+re-run **Promote registry** on `main` (Actions → Promote registry → Run
+workflow). Another push to `main` retries the same way. Promotion always
+takes the head of `main`, so while an unpublished floor is on `main`, no
+registry change is promoted until that publish and re-run.
+
+After the first promotion creates `registry-stable`, protect that branch:
+only GitHub Actions may push, and force pushes and deletion are disabled.
+
+Roll a bad promotion back by reverting that commit on `main` and letting
+the workflow fast-forward `registry-stable` to the revert. Moving the
+branch back by hand takes a force push, which that protection rejects, and
+the next push to `main` would advance the branch over the reset. Projects
+that already pinned a revision stay on it either way.
+
+To repeat the promoted-branch check locally:
 
 ```shell
-REMIX_REGISTRY_RELEASE_REF=registry-v1 fvm dart run tool/check_open_code.dart --source hosted
-REMIX_REGISTRY_RELEASE_REF=registry-v1 fvm dart run tool/check_open_code.dart --preset fortal --source hosted
+REMIX_REGISTRY_RELEASE_REF=registry-stable fvm dart run tool/check_open_code.dart --source hosted
+REMIX_REGISTRY_RELEASE_REF=registry-stable fvm dart run tool/check_open_code.dart --preset fortal --source hosted
 ```
 
-Normal component changes require only a registry release. The same CLI can
-install the new release after an explicit `registry update`; existing pins do
-not move. Keep schema compatibility with released CLI versions.
+Normal component changes require only that promotion. The same CLI installs
+the new commit after an explicit `registry update`; existing pins do not
+move. Keep schema compatibility with released CLI versions.
 
 ## Release the CLI only for installer changes
 
@@ -68,10 +78,10 @@ Update its version, `lib/src/version.dart` and changelog according to the
 package release workflow; do not infer a new CLI version from a registry
 version.
 
-The CLI publish workflow requires a stable published registry release and runs
+The CLI publish workflow requires `registry-stable` to resolve and runs
 both consumer presets against its GitHub content with hosted runtime packages.
-A missing registry release must fail; there is no local content to substitute,
-and nothing may be added to bypass the bootstrap order.
+A missing `registry-stable` branch must fail; there is no local content to
+substitute, and nothing may be added to bypass the bootstrap order.
 
 If the CLI has never been published, the authorized uploader must perform the
 first pub.dev publication and configure automated publishing for repository

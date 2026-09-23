@@ -490,12 +490,15 @@ final class Installer {
       if (floor != null && lockedRemix != null && lockedRemix > floor) {
         // Upgrading the CLI does not move a pin, so naming it here would send
         // the reader after a command that cannot change the source they are
-        // being asked to review.
+        // being asked to review. A bare update re-resolves the recorded ref,
+        // which only advances for registry-stable; a SHA or tag needs --ref.
+        final advances =
+            config.registries[config.defaultRegistry]!.ref == officialStableRef;
         _writeOut(
           'Resolved remix $lockedRemix; this registry revision was authored '
           'against $floor. Your pin does not move on its own — run '
-          'remix registry update ${config.defaultRegistry} '
-          '--ref <newer release>, then review with --diff.',
+          'remix registry update ${config.defaultRegistry}'
+          '${advances ? '' : ' --ref <newer ref>'}, then review with --diff.',
         );
       }
 

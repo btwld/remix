@@ -168,7 +168,7 @@ registries:
   "@remix":
     repository: "conceptadev/remix"
     path: "registry"
-    ref: "registry-v1"
+    ref: "registry-stable"
     revision: "${'a' * 40}"
 ''',
     );

@@ -9,12 +9,10 @@ import 'registry_reader.dart';
 
 const officialRepository = 'conceptadev/remix';
 
-/// The release tags `latestOfficial` will discover.
+/// The branch CI fast-forwards after the hosted registry checks pass.
 ///
-/// Release validation reuses this rather than restating it, so a tag that
-/// passes the gate is one a new project can actually find.
-bool isDiscoverableReleaseTag(String tag) =>
-    RegExp(r'^registry-v[0-9]+(?:\.[0-9]+)*$').hasMatch(tag);
+/// A single path segment, so it is a valid `commits/{ref}` lookup.
+const officialStableRef = 'registry-stable';
 
 void validateNamespace(String value) {
   if (!RegExp(r'^@[a-z][a-z0-9_-]*$').hasMatch(value)) {
@@ -105,6 +103,20 @@ Future<RegistryResponse> _send(HttpClient client, Uri uri) async {
   );
 }
 
+/// GitHub answers a commit lookup for an unknown ref with 422, not 404. Only
+/// that message means missing; any other 422 stays a request failure.
+bool _isUnknownCommit(RegistryResponse response) {
+  if (response.statusCode != 422) return false;
+  final Object? body;
+  try {
+    body = jsonDecode(response.body);
+  } on FormatException {
+    return false;
+  }
+  final message = body is Map ? body['message'] : null;
+  return message is String && message.startsWith('No commit found for SHA');
+}
+
 /// Resolves [preset] to its catalog path through a published `index.yaml`.
 ///
 /// Shared by every reader serving the published layout. The frozen bundle
@@ -135,7 +147,8 @@ String catalogPathForPreset(
 /// frozen bundle reads without a pin, and `remix registry update` pins without
 /// reading. They share one interface so the installer keeps a single seam.
 abstract interface class RegistrySources {
-  /// The newest stable official `registry-v*` release, resolved to a commit.
+  /// The official registry at its CI-promoted stable branch, resolved to a
+  /// commit.
   Future<RegistrySource> latestOfficial();
 
   /// Resolve [repository] at [ref] to an immutable commit pin.
@@ -172,7 +185,7 @@ final class GitHubSources implements RegistrySources {
         'GitHub rate limit exceeded for $uri. Retry after the limit resets.',
       );
     }
-    if (response.statusCode == 404) {
+    if (response.statusCode == 404 || _isUnknownCommit(response)) {
       throw FormatException(
         'GitHub $missing not found: $uri. Check that the repository is public and the source exists.',
       );
@@ -236,34 +249,21 @@ final class GitHubSources implements RegistrySources {
 
   @override
   Future<RegistrySource> latestOfficial() async {
-    // GitHub returns releases newest first. Paginate so unrelated package
-    // releases cannot hide the latest independent registry release.
-    for (var page = 1; ; page++) {
-      final releases = jsonDecode(
-        await _read(
-          Uri.https('api.github.com', '/repos/$officialRepository/releases', {
-            'per_page': '100',
-            'page': '$page',
-          }),
-          missing: 'releases',
-        ),
+    try {
+      return await resolve(
+        repository: officialRepository,
+        ref: officialStableRef,
       );
-      if (releases is! List)
-        throw const FormatException('Invalid GitHub releases response.');
-      for (final release in releases.whereType<Map>()) {
-        final tag = release['tag_name'];
-        if (release['draft'] == false &&
-            release['prerelease'] == false &&
-            tag is String &&
-            isDiscoverableReleaseTag(tag)) {
-          return resolve(repository: officialRepository, ref: tag);
-        }
+    } on FormatException catch (error) {
+      final message = error.message;
+      if (message.startsWith('GitHub ref $officialStableRef not found:')) {
+        throw FormatException(
+          'No $officialStableRef branch is published for $officialRepository. '
+          '$message',
+        );
       }
-      if (releases.length < 100) break;
+      rethrow;
     }
-    throw const FormatException(
-      'No stable registry-v* release is published. Publish a compatible registry release before initializing with this CLI.',
-    );
   }
 
   @override
