@@ -1,3 +1,10 @@
+## 1.0.1
+
+### Fixes
+
+- Reword the `NakedToastScope` missing-scope error hint to use `WidgetsApp` and
+  note that any app host works. Message-only change; no API or behavior change.
+
 ## 1.0.0
 
 First stable release. The API is unchanged from `1.0.0-beta.15`; this release
