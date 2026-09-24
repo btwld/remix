@@ -7,6 +7,12 @@ Prop resolution, the full fluent surface (`.color()`, `.border()`,
 call-form mechanics — see the `mix` skill. This reference covers only what is
 specific to Remix component stylers.
 
+Sections: [Component-part stylers](#component-part-stylers) ·
+[.onSelected()](#onselected) · [Callable styles](#callable-styles) ·
+[Styling with installed tokens](#styling-with-installed-tokens) ·
+[Canonical spellings](#canonical-spellings) ·
+[Reusable and dynamic app styles](#reusable-and-dynamic-app-styles).
+
 ## Component-part stylers
 
 Remix component stylers add part-specific fluent methods beyond the generic
@@ -30,8 +36,9 @@ ButtonStyler()
 `onSelected()` is a generic extension available on every `MixStyler`, not a
 method scoped to selection components — but it only has an effect on a
 widget that actually reports `WidgetState.selected` (Checkbox, Radio,
-Switch, Toggle, Tab, TabView). Calling it on, say, a `ButtonStyler` compiles
-but never resolves, because `RemixButton` never enters that state.
+Switch, Toggle, Tab). Calling it on, say, a `ButtonStyler` compiles but never
+resolves, because `RemixButton` never enters that state — the same is true of
+`RemixTabView`, which never reports `selected` itself.
 
 ```dart
 CheckboxStyler()
@@ -81,24 +88,50 @@ Call the token inside a styler chain, `.mix()` for text-style tokens,
 resolution rules, and the `mix` skill for general token/`Prop` call-form
 mechanics.
 
+## Canonical spellings
+
+Some retired spellings below still compile on plain Mix stylers, so the
+analyzer does not always catch them. These override the `mix` skill where it
+differs:
+
+| Use | Not |
+| --- | --- |
+| `.padding(.all(...))`, `.padding(.horizontal(...))` | `paddingAll`, `paddingX`, `paddingY` |
+| `.margin(...)` shorthands | `marginAll`, `marginX`, `marginY` |
+| `.borderRadius(.circular(x))`, `.borderRadius(.all(...))` | `borderRounded*` |
+| `.border(.all(...))` | `borderAll` |
+| `.color()` | `.backgroundColor()` |
+| `items:` (Menu/Select) | `entries:` |
+| `ButtonStyler` | the deprecated `RemixButtonStyler` alias |
+
 ## Reusable and dynamic app styles
 
 ```dart
 class AppStyles {
   static ButtonStyler get primaryButton => fortalButtonStyle(variant: .solid)
       .animate(AnimationConfig.spring(200.ms));
-
-  static ButtonStyler get dangerButton => fortalButtonStyle(variant: .solid)
-      .color(const Color(0xFFE5484D))
-      .onHovered(ButtonStyler().color(const Color(0xFFDC3D43)));
 }
 
 RemixButton(label: 'Save', onPressed: save, style: AppStyles.primaryButton)
 ```
 
+A destructive action needs the accent itself to change, not just the idle
+fill: overriding `.color()`/`.onHovered()` alone misses the Fortal recipe's
+own `.onPressed` fill, so the button flashes the theme accent on press. Scope
+the accent instead of hard-coding palette values:
+
+```dart
+// Fortal
+FortalScope(
+  accent: .red,
+  child: FortalButton.solid(label: 'Delete', onPressed: delete),
+)
+
+// Vanilla
+UiButton.destructive(label: 'Delete', onPressed: delete)
+```
+
 Keep an appearance preference as `FortalThemeMode` (or `<Prefix>ThemeMode`
-for the Vanilla preset), initially `.system`, and pass it to the scope's
-`mode` in `WidgetsApp.builder` — see
-[theme selection](../SKILL.md#place-the-theme-scope). The scope handles live
-platform brightness changes while `.system` is selected; only persistence and
-the System/Light/Dark choice are the app's job.
+for the Vanilla preset) and pass it to the scope's `mode` — see
+[theme selection](../SKILL.md#place-the-theme-scope) for persistence and
+system-brightness rules.

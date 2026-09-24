@@ -5,17 +5,20 @@ alone. This is not a parameter reference — read the installed source or the
 linked doc page for the full constructor surface.
 
 Every styled leaf `Remix*` widget accepts `style` (a `*Styler`) and
-`styleSpec` (an optional resolved spec such as `ButtonSpec`; use the
-canonical `*Spec` names, not the older `Remix*Spec` aliases). Behavioral
-roots and groups —
+`styleSpec` (an optional resolved spec such as `ButtonSpec`; use canonical
+`*Spec` names). Behavioral roots and groups —
 `RemixTabs`, `RemixRadioGroup`, `RemixCheckboxGroup`, `RemixAccordionGroup` —
 have no styler. See [Styling](styling.md) for `.call()`/`call<T>()` and other
 fluent mechanics.
 
 Fortal cross-references name APIs from the installed Fortal preset. Read
-[Fortal](fortal.md) for install, config, typography, and token rules, and the
-[generated catalog](https://github.com/conceptadev/remix/blob/main/docs/fortal/catalog.mdx)
-for every component's variant/size family.
+[Fortal](fortal.md) for config, typography, and token rules, and
+[Vanilla](vanilla.md) for the Vanilla preset's own rules.
+
+Sections: [Actions](#actions) · [Forms](#forms) · [Data display](#data-display) ·
+[Layout and dashboard recipes](#layout-and-dashboard-recipes) ·
+[Agent surfaces](#agent-surfaces) · [Overlays](#overlays) ·
+[Navigation](#navigation) · [Typography](#typography).
 
 ## Actions
 
@@ -24,9 +27,9 @@ for every component's variant/size family.
 [toggle.mdx](https://github.com/conceptadev/remix/blob/main/docs/components/toggle.mdx) ·
 [toggle_group.mdx](https://github.com/conceptadev/remix/blob/main/docs/components/toggle_group.mdx)
 
-- **Button** — effective enabled state is `enabled && !loading && onPressed
-  != null`. While `loading`, content stays laid out via
-  `Visibility(visible: false, maintainSize: true)` and a spinner is layered
+- **Button** — effective enabled state is `enabled && !loading &&
+  (onPressed != null || onLongPress != null)`. While `loading`, content stays
+  laid out via `Visibility(visible: false, maintainSize: true)` and a spinner is layered
   over it in a `Stack`, so the button never changes size. Icon placement is
   style-driven when exactly one icon is present —
   `ButtonStyler().iconAlignment(RemixPlacement.end)` moves it after the
@@ -64,7 +67,7 @@ for every component's variant/size family.
   unchanged; check the doc page rather than assuming a param is missing.
   `TextArea` is a multiline facade with `minLines: 2`, `maxLines: null`,
   `expands`/`obscureText` fixed to `false`.
-- **Select** — is interactively enabled only when `enabled == true` **and**
+- **Select** — is interactively enabled only when `enabled == true` and
   `onChanged != null`; either condition alone leaves it visually present but
   inert. `positioning` defaults to
   `OverlayPositionConfig(side: .bottom, alignment: .center)`.
@@ -124,12 +127,13 @@ Both presets also ship layout items beyond the core component set:
 [plan.mdx](https://github.com/conceptadev/remix/blob/main/docs/agent/plan.mdx) ·
 [transcript.mdx](https://github.com/conceptadev/remix/blob/main/docs/agent/transcript.mdx)
 
-`activity`, `answer`, `composer`, `execution`, `message`, `permission`,
-`plan`, and `transcript` are unstyled by default; add the matching
-`<item>_recipe` for a complete, preset-specific styler bundle. Even a bare
-item is not Remix-only: through the shared `support` item it installs the
-preset `theme` and `remix_ui_icons`, plus `mix_annotations` and the
-`build_runner`/`mix_generator` codegen pair.
+For agent-run surfaces — `activity`, `answer`, `composer`, `execution`,
+`message`, `permission`, `plan`, `transcript` — install either preset's bare
+item, which is unstyled by default, plus the matching `<item>_recipe` for a
+complete, preset-specific styler bundle. Even a bare item is not Remix-only:
+the shared `support` item brings in the preset `theme` and `remix_ui_icons`.
+Each agent item also declares its own `mix_annotations` dependency and
+`build_runner`/`mix_generator` dev dependencies for codegen.
 
 ## Overlays
 
@@ -192,8 +196,11 @@ routes and require a caller-provided `Navigator`; toasts require a
   `maintainState` (default `true`) lives on `RemixTabView`, a different
   widget, not on `RemixTabs`.
 - **RemixAccordionGroup\<T\>** — purely behavioral; `controller` is
-  **required** (unlike Tabs/Menu, there is no auto-created default):
-  `RemixAccordionController<String>(min: 0, max: 1)`.
+  **required**: `RemixAccordionController<String>(min: 0, max: 1)`. Menu
+  auto-creates a `MenuController` when its own `controller` is omitted.
+  `RemixTabs` takes either a `controller` or `selectedTabId` plus
+  `onChanged` (the caller holds the selection); with neither `controller`
+  nor `onChanged` the tabs are disabled.
 - **RemixAccordion\<T\>** — anatomy is one panel, two parts: `container`
   owns the shared frame (fill, border, radius, clipping), `trigger` owns the
   header row, `content` owns the expanded body. The top-level Box shorthand

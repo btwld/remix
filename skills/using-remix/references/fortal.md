@@ -1,45 +1,26 @@
 # Fortal Reference
 
 Rules for the Fortal preset that are easy to get wrong from a widget's name
-or dartdoc alone. For component variants, sizes, and defaults, use the
-[generated catalog](https://github.com/conceptadev/remix/blob/main/docs/fortal/catalog.mdx) —
-do not hand-copy a variant/size table here; it drifts. For install commands,
-scope placement, and theme selection shared with the Vanilla preset, see the
+or dartdoc alone. For component variants, sizes, and defaults, the installed
+recipe's enum in `lib/ui/components/<name>.dart` is authoritative — this
+source is owned and may be edited. The
+[generated catalog](https://github.com/conceptadev/remix/blob/main/docs/fortal/catalog.mdx)
+describes the unedited upstream family. For install commands, scope
+placement, and theme selection shared with the Vanilla preset, see the
 [main skill](../SKILL.md).
 
-## Choose Fortal or base Remix / Vanilla
-
-Use Fortal when the UI should follow its ready-made Radix Themes-inspired
-visual system. Use base Remix or the Vanilla preset when the user wants a
-distinct visual language, does not want Fortal's token scales, or needs a
-fully custom `*Styler`. Fortal is optional and never required for ordinary
-`Remix*` widgets.
-
-## Install
-
-```bash
-flutter pub add dev:remix_cli
-dart run remix_cli:remix init --preset fortal
-dart run remix_cli:remix add button
-```
-
-```dart
-import 'ui/ui.dart';
-```
-
-The owned barrel does not re-export `remix`; import `package:remix/remix.dart`
-too when a file also uses base `Remix*` widgets or `*Styler` types. `add
-chart` installs the chart recipe and its `mix_chart` dependency — import
-`mix_chart` directly for its data models, since the owned barrel does not
-re-export it either.
+Sections: [Presets and recipes](#presets-and-recipes) ·
+[Typography](#typography) · [Scope and theme config](#scope-and-theme-config) ·
+[Token rules](#token-rules).
 
 ## Presets and recipes
 
 Each component ships a `fortal<Name>Style(...)` function that returns the
-component's `*Styler`, plus a `Fortal<Name>` preset widget that applies it:
+component's `*Styler`, plus a `Fortal<Name>` generated widget that applies
+it:
 
 ```dart
-// Preset widget — Remix widget params + fixed variant/size
+// Generated widget — Remix widget params + fixed variant/size
 FortalButton.soft(label: 'Save', onPressed: save, size: .size3)
 
 // Styler function — returns a ButtonStyler to extend
@@ -56,6 +37,9 @@ required. Every variant has a matching named constructor; reserve the
 unnamed constructor's `variant:` parameter for runtime-selected values.
 Generic presets infer their type from required values and item lists, so
 `FortalRadio.soft(value: 'option')` does not need an explicit `<String>`.
+`add chart` additionally installs the chart recipe's own `mix_chart`
+dependency; import `mix_chart` directly for its data models, since the owned
+barrel does not re-export it.
 
 Components that expose `highContrast` use it to strengthen their active or
 foreground treatment — do not assume the option exists on every family; check
@@ -69,8 +53,10 @@ composited over `colorPanelSolid`; pass `highContrast: true` for AA.
 Fortal — base Remix ships no equivalent. `FortalLink` is Fortal's themed
 wrapper over `RemixLink`, which is base Remix (the Vanilla preset also ships
 a `link` item generating `<Prefix>Link`). All five typography widgets share
-one `FortalTextSize` (`size1`–`size9`) and one `FortalTextWeight` (`light`,
-`regular`, `medium`, `bold`).
+one `FortalTextSize` (`size1`–`size9`). `FortalTextWeight` (`light`,
+`regular`, `medium`, `bold`) is shared by `FortalText`, `FortalHeading`,
+`FortalCode`, and `FortalLink` only — `FortalKbd` pins its own weight and
+takes no `weight` parameter.
 
 Rules that matter when writing code:
 
@@ -103,10 +89,13 @@ the shared `theme`/`darkTheme`/`mode` rules. `FortalThemeConfig` is the
 immutable config object form (`FortalThemeData extends FortalThemeConfig`):
 
 ```dart
-const theme = FortalThemeConfig(accent: .green, gray: .sage, brightness: .dark);
-final light = theme.copyWith(brightness: .light);
-FortalScope(theme: theme, child: child)
+const brand = FortalThemeConfig(accent: .green, gray: .sage);
+FortalScope(theme: brand, darkTheme: brand, mode: mode, child: child)
 ```
+
+Leave `brightness` unset on `brand` itself: the scope fills it per slot,
+light for `theme` and dark for `darkTheme`, so the same config object works
+in both places without forcing one brightness onto the other.
 
 `panelBackground` selects solid or translucent floating surfaces; `radius`
 selects `none|small|medium|large|full`; `scaling` selects 90–110%; and
@@ -133,6 +122,5 @@ the rules that are not obvious from a token's name:
   `radiusCircle`, and `focusA5` all exist alongside the documented accent,
   gray, space, radius, text, shadow, border, and animation token families.
 
-Call the token inside styler chains; use `.mix()` for text-style tokens and
-`.resolve(context)` for a direct value in widget code — see
-[Styling](styling.md).
+See [Styling](styling.md#styling-with-installed-tokens) for the token
+call-form mechanics (`.mix()`, `.resolve(context)`).

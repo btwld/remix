@@ -1,15 +1,18 @@
 ---
 name: using-remix
 description: >-
-  Use when building Flutter UI with the Remix component library or its
-  installed Vanilla or Fortal preset theme: choosing base Remix vs a preset,
-  setting up `remix_cli`, moving registry pins, placing the generated theme
-  scope, composing overlays/routes/toasts, choosing components, or styling
-  `Remix*` widgets with stylers, states, variants, recipes, and tokens. Also
-  trigger when building or auditing a Remix/Fortal reference showcase or
-  component gallery, for Remix/Fortal widget names, or for a UI request in a
-  project that already contains `remix` or `remix.yaml`. Do not trigger for
-  generic Flutter UI work when none of those are present or requested.
+  Builds Flutter UI with the Remix component library: hand-styled `Remix*`
+  widgets or an app-installed Vanilla or Fortal preset (`remix_cli`,
+  `remix.yaml`, generated `<Prefix>Button`,
+  `<Prefix>ThemeScope`/`<Prefix>Scope`). Use when setting up or updating
+  preset items and registry pins, placing the theme scope, wiring overlays,
+  dialogs, and toasts, choosing or styling components with stylers,
+  variants, and tokens, restyling this app's installed recipes and theme, or
+  building a Remix component gallery. Also use for UI requests in projects
+  whose pubspec or `remix.yaml` references Remix. Not for authoring or
+  publishing a reusable design-system registry (use
+  `building-remix-design-system`) or for Flutter UI in projects without
+  Remix.
 ---
 
 # Using Remix
@@ -20,24 +23,36 @@ preset. To build a reusable design system for other applications and
 publish it as a Remix registry, use `building-remix-design-system`;
 restyling this application's own installed source stays here.
 
+## Glossary
+
+| Term | Meaning |
+| --- | --- |
+| preset | Vanilla or Fortal — the installed starter theme and recipes `remix_cli` copies into the app |
+| prefix | The app-chosen name (`Ui`, `Fortal`, `Acme`, ...) substituted into every generated type; recorded in `remix.yaml` |
+| recipe function | `<prefix>ButtonStyle(...)` — returns the component's `*Styler`, the source of truth for one component's look |
+| generated widget | `<Prefix>Button` — the `@MixWidget` adapter that calls the recipe function and wraps a `Remix*` widget |
+| `<item>_recipe` | A registry item bundling an unstyled agent surface (`activity`, `composer`, ...) with its preset-specific styler |
+
 ## Choose base Remix, Vanilla, or Fortal
 
 Inspect `pubspec.yaml` and `remix.yaml` before assuming how a project is set
-up; `remix.yaml`'s `preset` field records the choice already made.
+up; `remix.yaml`'s `preset` field records the choice already made. A project
+has exactly one preset and prefix: `init` refuses a different one while
+`remix.yaml` exists, and both presets install into the same `theme/` and
+`components/` files. In a Vanilla project, restyle Vanilla recipes (even per
+screen, with a nested themed scope) rather than adding Fortal.
 
 | Need | Source and API |
 | --- | --- |
-| Fully custom visual system, no starter theme | `remix` only; hand-write `Remix*` widgets and `*Styler`s |
-| A compact, editable starter theme and recipes (CLI default) | `remix_cli --preset vanilla`; generated `<Prefix>Button` etc. wrap `Remix*` widgets, plus `<Prefix>ThemeScope`/`<Prefix>Tokens` |
-| Ready-made Radix Themes-inspired visuals | `remix_cli --preset fortal`; `<Prefix>Scope` plus prefixed `<Prefix>*` widgets |
-| Agent-run surfaces (composer, transcript, permission, plan, activity, answer, execution, message) | either preset's bare item (unstyled) plus its `<item>_recipe` for a styled bundle |
-| A visual system unrelated to either preset | base `remix`; do not run `remix_cli` or initialize a preset |
+| No generated source or codegen wanted | base `remix`; hand-write `Remix*` widgets and `*Styler`s |
+| A compact, editable starter theme and recipes (CLI default) | `remix init --preset vanilla`; generated `<Prefix>Button` etc. wrap `Remix*` widgets, plus `<Prefix>ThemeScope`/`<Prefix>Tokens` |
+| Ready-made Radix Themes-inspired visuals | `remix init --prefix Fortal --preset fortal`; `<Prefix>Scope` plus prefixed `<Prefix>*` widgets |
+| Own brand in one app, want editable tokens and recipes | Vanilla, then customize — see [Customize installed source](#customize-installed-source) |
 
-Both presets install **editable application source**, not a package
-dependency: `remix_cli` copies analyzer-checked Dart from a pinned GitHub
-registry into `lib/ui` (or `--ui-path`). It is your source to edit —
-component recipes, enum variants, and tokens are not vendor-fixed. Neither
-preset adds any published theme package as a dependency.
+Both presets install editable application source, not a package dependency:
+`remix_cli` copies analyzer-checked Dart from a pinned GitHub registry into
+`lib/ui` (or `--ui-path`). Component recipes, enum variants, and tokens are
+yours to edit; nothing here is vendor-fixed.
 
 ## Set up dependencies and imports
 
@@ -61,7 +76,7 @@ dart run remix_cli:remix add button textfield
 ```
 
 ```bash
-dart run remix_cli:remix init --preset fortal   # Radix Themes preset
+dart run remix_cli:remix init --prefix Fortal --preset fortal   # Radix Themes preset
 ```
 
 ```dart
@@ -70,47 +85,35 @@ import 'ui/ui.dart';
 ```
 
 `init` resolves the `registry-stable` branch of `conceptadev/remix` and pins
-its full commit SHA into `remix.yaml` (schema 3). `add` also pulls each
+its full commit SHA into `remix.yaml` (schema 3); see [CLI](references/cli.md)
+to move that pin later. `add` also pulls each
 item's own `registryDependencies` (its `theme` item, etc.), so a fresh
 project does not need a separate `add theme`. Import
 `package:remix/remix.dart` too when the file also uses base `Remix*`
 widgets, `*Styler` types, or Remix data classes the owned barrel does not
 re-export.
 
-Examples in this skill use the `Ui` prefix for Vanilla and `Fortal` for the
-Fortal preset, matching the project's own docs convention. Use the prefix
-already recorded in an initialized project's `remix.yaml` instead.
+`import 'ui/ui.dart'` is a relative import: it only resolves as written from
+a file at the `lib/` root, such as `lib/main.dart`. A file nested deeper
+needs `package:<app>/ui/ui.dart` (or the equivalent relative path) instead,
+substituting the configured `--ui-path` if it is not `lib/ui`.
 
-## Move a registry pin
+| Preset | Scope class | Theme values and mode | Generated widget | Recipe function | Tokens |
+| --- | --- | --- | --- | --- | --- |
+| Vanilla | `<Prefix>ThemeScope` | `<Prefix>ThemeData`, `<Prefix>ThemeMode` | `<Prefix>Button` | `<prefix>ButtonStyle` | `<Prefix>Tokens` |
+| Fortal | `<Prefix>Scope` | `<Prefix>ThemeData`, `<Prefix>ThemeMode` | `<Prefix>Button` | `<prefix>ButtonStyle` | `<Prefix>Tokens` |
 
-```bash
-dart run remix_cli:remix registry update @remix                  # move to the newest promoted commit
-dart run remix_cli:remix registry update @remix --ref <sha|branch>
-dart run remix_cli:remix add button --diff                       # review what changed
-dart run remix_cli:remix add button --overwrite                  # adopt the new source
-```
-
-`registry update` only rewrites the pin in `remix.yaml`; it never touches
-installed files. Adopt new source item by item with `--diff` then
-`--overwrite` — there is no automatic merge. `--overwrite` replaces the named
-item's files wholesale, discarding local edits to them, and never touches a
-dependency you have customized; re-apply deliberate edits from the diff.
-Rolling back is `git checkout remix.yaml`, which restores the pin but not
-installed source. `registry add @ns --repository
-owner/repo --path registry --ref <ref>` registers a second registry
-namespace under `@ns`.
-
-`remix.yaml` schema 3 is the only readable configuration; an older file fails
-to read with an explicit error. Recover a schema 1 or 2 project by deleting
-`remix.yaml`, running `remix init` again with its old `--prefix`/`--preset`/
-`--ui-path`, then re-adopting installed source with `add <item> --diff`.
+The prefix is independent of the preset; read both from `remix.yaml` and
+substitute. Examples in this skill use `Ui` for Vanilla and `Fortal` for
+Fortal.
 
 ## Place the theme scope
 
 Both presets' generated scope takes `theme`, `darkTheme`, `mode`, and
 `child`; Fortal's also takes `accent`, `gray`, `panelBackground`, `radius`,
-`scaling`, `hasBackground`, `orderOfModifiers`. There is no `data`,
-`brightness`, `lightTheme`, or `createScope` — those were removed.
+`scaling`, `hasBackground`, `orderOfModifiers`. Do not pass `data`,
+`brightness`, `lightTheme`, or `createScope` — the constructors don't accept
+them.
 
 Install the scope in `WidgetsApp.builder`, above the Navigator, so pushed
 routes, dialogs, and overlays inherit it:
@@ -142,7 +145,7 @@ take their Remix widget's parameters (`UiButton.primary(label: ...,
 onPressed: ...)`); their variants and sizes are the enums in the installed
 recipe, for example `UiButtonVariant` and `UiButtonSize` in
 `lib/ui/components/button.dart`. Read the installed file rather than
-assuming Fortal's families.
+assuming Fortal's families — see [Vanilla](references/vanilla.md).
 
 - A root with neither `theme` nor `darkTheme` supplies the preset's light/dark
   defaults and follows the system.
@@ -159,6 +162,33 @@ assuming Fortal's families.
   typography's own token defaults. A nested scope re-scopes tokens only and
   does not restate that fallback.
 
+## Customize installed source
+
+Installed source has three levels of override, in order of scope:
+
+- **One instance** — pass `style:` to the generated widget; it merges last.
+  State fragments merge by state, so an override that must beat the recipe's
+  hover or pressed fill has to declare that state's fragment too
+  (`.onHovered(...)`, `.onPressed(...)`) — a bare `.color(...)` only replaces
+  the idle one.
+- **A subtree** — retheme with `copyWith` or a preset config:
+
+  ```dart
+  UiThemeScope(
+    theme: const UiThemeData.light().copyWith(primary: const Color(0xFF4F46E5)),
+    child: child,
+  )
+  ```
+
+  ```dart
+  FortalScope(accent: .red, child: child)
+  ```
+
+- **App-wide** — edit `lib/ui/components/<item>.dart` or `lib/ui/theme/*`
+  directly; it is application source, not a package. After changing a
+  recipe's parameters, enums, or `@MixWidget` annotation, run
+  `dart run build_runner build` to regenerate its `.g.dart`.
+
 ## Provide only the host capabilities in use
 
 Remix composes inside the caller's host; do not invent an app, scaffold, or
@@ -167,8 +197,9 @@ overlay-host wrapper.
 | UI | Caller must provide |
 | --- | --- |
 | Ordinary widgets | Normal inherited Flutter services for that subtree |
-| Preset widgets or recipes | The preset's scope plus normal Flutter services |
+| Generated widgets or recipes | The preset's scope plus normal Flutter services |
 | Menu, select, popover, tooltip | An `Overlay`; use `Overlay.wrap` when no navigator is needed |
+| Text field / text area once focused | An `Overlay` for selection handles; a routed `WidgetsApp` provides one, a builder-only host needs `Overlay.wrap` |
 | `showRemixDialog`/`showRemixAlertDialog` | A caller-owned `Navigator` |
 | `showRemixToast`/`RemixToast` | One `RemixToastScope` above the app's `Navigator`, inside the same builder, below the theme scope |
 
@@ -191,9 +222,11 @@ callback; a per-toast `style:` merges over the scope's.
    fixed.
 2. Use the unnamed preset constructor with `variant:` only when the variant
    is selected at runtime.
-3. Start from the preset's styler function (`fortalButtonStyle(...)`,
-   `uiButtonStyle(...)`) and pass the result to a `Remix*` widget when the
-   preset is the baseline but the composition or styling needs overrides.
+3. Prefer `style:` on the generated widget (`FortalButton(style: ...)`,
+   `UiButton(style: ...)`) to override the preset's recipe when the preset is
+   the baseline. Use a preset's styler function (`fortalButtonStyle(...)`,
+   `uiButtonStyle(...)`) directly on a `Remix*` widget only when the
+   composition itself differs from the generated widget.
 4. Build a `*Styler` from scratch when the design should not use either
    preset.
 
@@ -219,9 +252,11 @@ RemixButton(
 )
 ```
 
-Do not infer that every component shares the same variants or sizes; check
-[the Fortal catalog](https://github.com/conceptadev/remix/blob/main/docs/fortal/catalog.mdx)
-or the installed recipe's enum for the exact family.
+Do not infer that every component shares the same variants or sizes: the
+installed recipe's enum in `lib/ui/components/<name>.dart` is authoritative,
+since that source is owned and may be edited.
+[The Fortal catalog](https://github.com/conceptadev/remix/blob/main/docs/fortal/catalog.mdx)
+describes the unedited upstream family.
 
 ## Preserve behavioral roots
 
@@ -229,8 +264,8 @@ or the installed recipe's enum for the exact family.
   `FortalTab`, and `FortalTabView` — there is no `FortalTabs`.
 - Keep `RemixRadioGroup`, `RemixCheckboxGroup`, and `RemixAccordionGroup` as
   roots around their preset-styled children.
-- `RemixAccordionGroup.controller` is required; Tabs and Menu manage
-  optional controllers.
+- `RemixAccordionGroup.controller` is required; see
+  [Components](references/components.md#navigation) for Menu and Tabs.
 
 ## Route to references
 
@@ -238,8 +273,10 @@ Read only the references needed for the task:
 
 | Task | Reference |
 | --- | --- |
+| Moving registry pins, adopting new source, other registries, old `remix.yaml` files | [CLI](references/cli.md) |
 | Behavior rules for a component category and doc links | [Components](references/components.md) |
-| Fortal install, scope/config, typography, and token rules | [Fortal](references/fortal.md) |
+| Fortal scope/config, typography, and token rules | [Fortal](references/fortal.md) |
+| Vanilla tokens, theme values, and per-component rules | [Vanilla](references/vanilla.md) |
 | Fluent styling, state/context variants, animation, callable styles | [Styling](references/styling.md) |
 | Reference apps, product examples, variant matrices, and showcase audits | [Reference showcases](references/reference-showcases.md) |
 | A reusable design system published as a Remix registry | `building-remix-design-system` |
@@ -251,7 +288,12 @@ Read only the references needed for the task:
   scope, and a `RemixToastScope` sits below it too when toasts are used.
 - Confirm overlays and dialogs have the required caller-owned host
   capability.
-- For showcases, verify product examples and exhaustive coverage use their
-  respective rules instead of forcing one abstraction or contrast policy onto
-  both.
+- After editing a recipe's parameters, enums, or `@MixWidget` annotation, run
+  `dart run build_runner build` and confirm the regenerated `.g.dart` looks
+  right.
+- For showcases, verify product examples follow the
+  [product-example rules](references/reference-showcases.md#product-examples)
+  and coverage galleries follow the
+  [coverage-gallery rules](references/reference-showcases.md#coverage-galleries)
+  instead of forcing one policy onto both.
 - Run the project's formatter, analyzer, and relevant Flutter tests.
