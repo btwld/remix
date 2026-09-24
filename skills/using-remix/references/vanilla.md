@@ -59,11 +59,16 @@ families carry over.
 ## Styling with tokens
 
 ```dart
-ButtonStyler()
-    .color(UiTokens.primary())
-    .label(TextStyler().color(UiTokens.primaryForeground()))
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+import 'ui/ui.dart';
 
-Container(color: UiTokens.background.resolve(context))
+final primaryButton = ButtonStyler()
+    .color(UiTokens.primary())
+    .label(TextStyler().color(UiTokens.primaryForeground()));
+
+Widget background(BuildContext context) =>
+    Container(color: UiTokens.background.resolve(context));
 ```
 
 Call the token inside a styler chain, `.resolve(context)` for a direct value

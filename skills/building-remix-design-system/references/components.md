@@ -47,6 +47,8 @@ resolves a token missing from the active scope throws at runtime. Mix tokens
 override `==`, so a `const` map keyed by them does not compile; build it at
 runtime.
 
+<!-- dart-excerpt: theme/theme_data.dart in the multi-file layout -->
+
 ```dart
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
@@ -125,6 +127,8 @@ A component is a top-level recipe function annotated with
 `<Prefix><Component>` into the file's `.g.dart` part: a widget whose
 constructor is the recipe's parameters plus the Remix widget's parameters,
 and whose `build` calls the Remix widget with the resolved style.
+
+<!-- dart-excerpt: components/button.dart in the multi-file layout -->
 
 ```dart
 import 'package:flutter/widgets.dart';
@@ -288,6 +292,8 @@ fails generation.
 replaces the variant's border and shifts layout by the border width. Paint the
 ring outside the box on keyboard focus only:
 
+<!-- dart-excerpt: continuation of components/button.dart -->
+
 ```dart
 ButtonStyler _focusRing() => ButtonStyler().containerEffects(
   .outline(
@@ -303,6 +309,8 @@ ButtonStyler _focusRing() => ButtonStyler().containerEffects(
 survives every later merge, so a caller who replaces the hover fill still gets
 the alpha on top. Resolve the arithmetic instead, as top-level finals
 (`ContextToken` equality is resolver identity):
+
+<!-- dart-excerpt: continuation of components/button.dart -->
 
 ```dart
 ContextToken<Color> _dimmed(ColorToken source, double alpha) =>

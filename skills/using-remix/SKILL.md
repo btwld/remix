@@ -62,6 +62,8 @@ Base Remix, no preset:
 flutter pub add remix
 ```
 
+<!-- dart-excerpt: imports only -->
+
 ```dart
 import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
@@ -78,6 +80,8 @@ dart run remix_cli:remix add button textfield
 ```bash
 dart run remix_cli:remix init --prefix Fortal --preset fortal   # Radix Themes preset
 ```
+
+<!-- dart-excerpt: imports only -->
 
 ```dart
 import 'package:flutter/widgets.dart';
@@ -122,7 +126,7 @@ routes, dialogs, and overlays inherit it:
 import 'package:flutter/widgets.dart';
 import 'ui/ui.dart';
 
-WidgetsApp(
+Widget app(Widget home) => WidgetsApp(
   color: const Color(0xFFFFFFFF),
   pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
     settings: settings,
@@ -134,8 +138,8 @@ WidgetsApp(
     mode: FortalThemeMode.system,
     child: child!,
   ),
-  home: const MyScreen(),
-)
+  home: home,
+);
 ```
 
 For the Vanilla preset the builder is
@@ -174,14 +178,20 @@ Installed source has three levels of override, in order of scope:
 - **A subtree** — retheme with `copyWith` or a preset config:
 
   ```dart
-  UiThemeScope(
+  import 'package:flutter/widgets.dart';
+  import 'ui/ui.dart';
+
+  Widget rethemed(Widget child) => UiThemeScope(
     theme: const UiThemeData.light().copyWith(primary: const Color(0xFF4F46E5)),
     child: child,
-  )
+  );
   ```
 
   ```dart
-  FortalScope(accent: .red, child: child)
+  import 'package:flutter/widgets.dart';
+  import 'ui/ui.dart';
+
+  Widget rethemed(Widget child) => FortalScope(accent: .red, child: child);
   ```
 
 - **App-wide** — edit `lib/ui/components/<item>.dart` or `lib/ui/theme/*`
@@ -204,11 +214,15 @@ overlay-host wrapper.
 | `showRemixToast`/`RemixToast` | One `RemixToastScope` above the app's `Navigator`, inside the same builder, below the theme scope |
 
 ```dart
-builder: (context, child) => FortalScope(
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+import 'ui/ui.dart';
+
+Widget builder(BuildContext context, Widget? child) => FortalScope(
   child: Overlay.wrap(
     child: RemixToastScope(style: fortalToastStyle(), child: child!),
   ),
-),
+);
 ```
 
 Feature code then calls
@@ -231,6 +245,9 @@ callback; a per-toast `style:` merges over the scope's.
    preset.
 
 ```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
 final submitStyle = ButtonStyler()
     .color(const Color(0xFF3E63DD))
     .padding(.horizontal(16))
@@ -239,17 +256,22 @@ final submitStyle = ButtonStyler()
     .labelColor(const Color(0xFFFFFFFF))
     .onHovered(ButtonStyler().color(const Color(0xFF3358D4)));
 
-RemixButton(label: 'Submit', style: submitStyle, onPressed: submit)
+Widget submitButton(VoidCallback submit) =>
+    RemixButton(label: 'Submit', style: submitStyle, onPressed: submit);
 ```
 
 ```dart
-RemixButton(
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+import 'ui/ui.dart';
+
+Widget saveButton(VoidCallback save) => RemixButton(
   label: 'Save',
   onPressed: save,
   style: fortalButtonStyle(variant: .solid)
       .padding(.horizontal(32))
       .borderRadius(.circular(8)),
-)
+);
 ```
 
 Do not infer that every component shares the same variants or sizes: the

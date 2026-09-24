@@ -63,6 +63,8 @@ Derive axes from the public enum values whenever the gallery promises complete
 coverage. Keep values, labels, and cells connected through typed data instead
 of parallel lists:
 
+<!-- dart-excerpt: GalleryMatrix is apps/dashboard source -->
+
 ```dart
 GalleryMatrix<FortalButtonVariant, FortalButtonSize>(
   rows: FortalButtonVariant.values,

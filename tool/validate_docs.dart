@@ -129,14 +129,35 @@ final _retiredApis = <(RegExp, String)>[
 final _iconButtonInvocation = RegExp(
   r'\b(?:RemixIconButton|FortalIconButton)(?:\.[A-Za-z0-9_]+)?\s*\(',
 );
-final _remixImport = RegExp(
-  r'''import\s+['"]package:remix/remix\.dart['"]\s*;''',
-);
-final _applicationOwnedFortalImport = RegExp(
+final _applicationBarrelImport = RegExp(
   r'''import\s+['"]ui/ui\.dart['"]\s*;''',
 );
-final _remixApiReference = RegExp(r'\b(?:Remix|Fortal)[A-Z]\w*');
-final _fortalApiReference = RegExp(r'\bFortal[A-Z]\w*');
+
+/// A fenced Dart block, indented or not, optionally preceded by an excerpt
+/// marker: `{/* dart-excerpt: reason */}` in MDX or
+/// `<!-- dart-excerpt: reason -->` in Markdown, on its own line, with only blank
+/// lines or other MDX comments between it and the fence.
+///
+/// Group 1 is the excerpt reason (null when unmarked), group 2 the fence
+/// indent, group 3 the raw body.
+final _dartFence = RegExp(
+  r'^(?:[ \t]*(?:\{/\*|<!--)[ \t]*dart-excerpt:[ \t]*(.+?)[ \t]*(?:\*/\}|-->)[ \t]*\n'
+  r'(?:[ \t]*(?:\{/\*.*?\*/\})?[ \t]*\n)*)?'
+  r'( *)```dart[ \t]*\n([\s\S]*?)\n\2```[ \t]*$',
+  multiLine: true,
+);
+final _excerptMarker = RegExp(r'dart-excerpt:');
+// A placeholder ellipsis, as opposed to a spread (`...items`, `...?items`).
+final _placeholderEllipsis = RegExp(r'\.\.\.(?![\w\[({?])');
+final _fortalApiReference = RegExp(r'\b(?:Fortal|fortal)[A-Z]\w*');
+final _fortalScopeReference = RegExp(r'\bUiScope\b');
+final _applicationTypeName = RegExp(r'\bUi([A-Z]\w*)');
+final _applicationValueName = RegExp(r'\bui([A-Z]\w*)');
+final _agentTypeDeclaration = RegExp(
+  r'^(?:(?:abstract|final|sealed|base|mixin)\s+)*'
+  r'(?:class|enum|typedef|extension type|mixin)\s+Agent(\w+)',
+  multiLine: true,
+);
 
 const _exampleSourceDirectories = <String>[
   'apps/dashboard/lib',
@@ -205,6 +226,10 @@ final _staleConsumerDocumentationClaims = <(RegExp, String)>[
       caseSensitive: false,
     ),
     'stale component backgroundColor alias claim',
+  ),
+  (
+    RegExp(r'ThemeScope\s*\(\s*data\s*:'),
+    'retired theme scope data argument; use theme',
   ),
 ];
 
@@ -359,7 +384,18 @@ Future<void> main() async {
     return;
   }
 
-  final extraction = _extractAnalyzableSnippets(docs, workspaceRoot, failures);
+  final skillDocuments = [
+    for (final relativeDirectory in _publishedSkillDirectories)
+      ...Directory('${workspaceRoot.path}/$relativeDirectory')
+          .listSync(recursive: true)
+          .whereType<File>()
+          .where((file) => file.path.endsWith('.md')),
+  ]..sort((a, b) => a.path.compareTo(b.path));
+  final extraction = _extractAnalyzableSnippets(
+    [...docs, ...skillDocuments],
+    workspaceRoot,
+    failures,
+  );
   final snippets = extraction.snippets;
   if (failures.isNotEmpty) {
     _finish(failures);
@@ -371,19 +407,12 @@ Future<void> main() async {
   );
   tempRoot.createSync(recursive: true);
   try {
+    final agentTypes = _agentTypeNames(workspaceRoot);
     for (final (index, snippet) in snippets.indexed) {
       final file = File('${tempRoot.path}/snippet_$index.dart');
-      // Fortal docs show the barrel an initialized application owns. The
-      // temporary validation directory has no application package, so map only
-      // that import to the analyzer-checked authoring source. The Fortal
-      // derivation round trip separately proves that the prefixed APIs match.
-      final validationSource = snippet.source.replaceAll(
-        _applicationOwnedFortalImport,
-        "import 'package:registry_source/fortal.dart';",
-      );
       file.writeAsStringSync(
         '// Generated temporarily by tool/validate_docs.dart.\n'
-        '$validationSource\n',
+        '${_validationSource(snippet.source, agentTypes)}\n',
       );
     }
 
@@ -409,10 +438,16 @@ Future<void> main() async {
     return;
   }
 
+  if (extraction.excerpts.isNotEmpty) {
+    stdout.writeln('Dart excerpts left uncompiled, each with its reason:');
+    for (final excerpt in extraction.excerpts) {
+      stdout.writeln('  $excerpt');
+    }
+  }
   stdout.writeln(
     'Documentation validation passed: ${docs.length} MDX files, '
-    '${snippets.length} analyzable Dart examples, and '
-    '${extraction.skipped} skipped Dart examples, plus '
+    '${snippets.length} analyzable Dart examples (docs and published skills), and '
+    '${extraction.excerpts.length} marked Dart excerpts, plus '
     '$exampleSourceCount app/example Dart sources, plus '
     '$packageLibrarySourceCount package library Dart sources, plus '
     '$testSourceCount test Dart sources, plus '
@@ -450,7 +485,6 @@ int _checkConsumerDocumentation(
   }
   documents.sort((a, b) => a.path.compareTo(b.path));
 
-  final dartFence = RegExp(r'```dart\s*\n([\s\S]*?)\n```');
   for (final file in documents) {
     final relativePath = _relativePath(workspaceRoot, file);
     final source = file.readAsStringSync();
@@ -465,9 +499,9 @@ int _checkConsumerDocumentation(
         );
       }
     }
-    for (final (index, match) in dartFence.allMatches(source).indexed) {
+    for (final (index, match) in _dartFence.allMatches(source).indexed) {
       _checkRetiredApis(
-        match.group(1)!,
+        _fenceBody(match),
         '$relativePath Dart example ${index + 1}',
         failures,
       );
@@ -767,54 +801,127 @@ void _checkFortalScopeTopology(Directory workspaceRoot, List<String> failures) {
   }
 }
 
-({List<({String path, String source})> snippets, int skipped})
+/// Collects every fenced Dart block that must analyze.
+///
+/// Every block is compiled unless it carries a `dart-excerpt` marker naming why
+/// it cannot stand alone (a section of a multi-file layout, a signature
+/// listing, a pinned tutorial). Marked blocks are counted and reported, never
+/// silently dropped, and the retired-API sweep still reads them. An unmarked
+/// block that cannot compile is a documentation bug, whatever it imports.
+({List<({String path, String source})> snippets, List<String> excerpts})
 _extractAnalyzableSnippets(
   List<File> docs,
   Directory workspaceRoot,
   List<String> failures,
 ) {
   final snippets = <({String path, String source})>[];
-  var skipped = 0;
-  final fence = RegExp(r'```dart\s*\n([\s\S]*?)\n```');
+  final excerpts = <String>[];
   for (final file in docs) {
     final relativePath = _relativePath(workspaceRoot, file);
     final source = file.readAsStringSync();
-    for (final (index, match) in fence.allMatches(source).indexed) {
-      final snippet = match.group(1)!;
-      final importsApplicationUi = _applicationOwnedFortalImport.hasMatch(
-        snippet,
+    final matches = _dartFence.allMatches(source).toList();
+    final markers = _excerptMarker.allMatches(source).length;
+    final claimed = matches.where((match) => match.group(1) != null).length;
+    if (markers != claimed) {
+      failures.add(
+        '$relativePath has a dart-excerpt marker that is not directly above a '
+        '```dart fence.',
       );
-      // Default-preset snippets use the same application-relative barrel but
-      // have no package source to analyze against here. Fortal snippets use a
-      // known prefix and can be mapped to the authoring package byte-for-byte.
-      if (importsApplicationUi && !_fortalApiReference.hasMatch(snippet)) {
-        skipped += 1;
+    }
+    for (final (index, match) in matches.indexed) {
+      final label = '$relativePath#${index + 1}';
+      final reason = match.group(1);
+      if (reason != null) {
+        excerpts.add('$label ($reason)');
         continue;
       }
-      final importsRemix =
-          _remixImport.hasMatch(snippet) || importsApplicationUi;
-      if (!importsRemix) {
-        skipped += 1;
-        if (_remixApiReference.hasMatch(snippet)) {
-          failures.add(
-            '$relativePath Dart example ${index + 1} uses Remix or Fortal APIs '
-            'but imports neither package:remix/remix.dart nor the '
-            'application-owned ui/ui.dart barrel.',
-          );
-        }
-        continue;
-      }
-      if (snippet.contains('...')) {
+      final snippet = _fenceBody(match);
+      if (_placeholderEllipsis.hasMatch(snippet)) {
         failures.add(
-          '$relativePath Dart example ${index + 1} uses Remix but contains an '
-          'ellipsis and cannot be compile-validated.',
+          '$relativePath Dart example ${index + 1} contains an ellipsis and '
+          'cannot be compile-validated; mark it with dart-excerpt or complete it.',
         );
         continue;
       }
-      snippets.add((path: '$relativePath#${index + 1}', source: snippet));
+      snippets.add((path: label, source: snippet));
     }
   }
-  return (snippets: snippets, skipped: skipped);
+  return (snippets: snippets, excerpts: excerpts);
+}
+
+/// The fence body with the fence's own indent removed from every line.
+String _fenceBody(RegExpMatch match) {
+  final indent = match.group(2)!;
+  final body = match.group(3)!;
+  if (indent.isEmpty) return body;
+  return body
+      .split('\n')
+      .map(
+        (line) =>
+            line.startsWith(indent) ? line.substring(indent.length) : line,
+      )
+      .join('\n');
+}
+
+/// The suffixes of every type the Agent surfaces declare under their
+/// authoring word, so `UiMessage` can be told apart from `UiButton`.
+Set<String> _agentTypeNames(Directory workspaceRoot) {
+  final names = <String>{};
+  final agentSource = Directory(
+    '${workspaceRoot.path}/registry_source/lib/src/agent',
+  );
+  for (final file in agentSource.listSync(recursive: true).whereType<File>()) {
+    if (!file.path.endsWith('.dart') || file.path.endsWith('.g.dart')) continue;
+    for (final match in _agentTypeDeclaration.allMatches(
+      file.readAsStringSync(),
+    )) {
+      names.add(match.group(1)!);
+    }
+  }
+  return names;
+}
+
+/// Points a snippet that imports the application-owned `ui/ui.dart` barrel at
+/// the analyzer-checked authoring source that barrel is installed from.
+///
+/// The temporary validation directory has no application package. `Fortal*`
+/// and `fortal*` names match `package:registry_source/fortal.dart`
+/// byte-for-byte. `Ui*` is the prefix `remix init` installs under, so each
+/// such name is renamed back to its authoring word: an Agent surface's word is
+/// `Agent`; every other name belongs to the preset, which is Fortal when the
+/// snippet names anything Fortal or wraps its tree in `UiScope`, and the
+/// default Vanilla preset otherwise. The derivation round trip separately
+/// proves that the prefixed APIs match.
+String _validationSource(String snippet, Set<String> agentTypes) {
+  if (!_applicationBarrelImport.hasMatch(snippet)) return snippet;
+  final preset =
+      _fortalApiReference.hasMatch(snippet) ||
+          _fortalScopeReference.hasMatch(snippet)
+      ? 'fortal'
+      : 'vanilla';
+  final typeWord = '${preset[0].toUpperCase()}${preset.substring(1)}';
+  var usesAgent = false;
+  var usesPreset = preset == 'fortal';
+  final renamed = snippet
+      .replaceAllMapped(_applicationTypeName, (match) {
+        final name = match.group(1)!;
+        if (agentTypes.contains(name)) {
+          usesAgent = true;
+          return 'Agent$name';
+        }
+        usesPreset = true;
+        return '$typeWord$name';
+      })
+      .replaceAllMapped(_applicationValueName, (match) {
+        usesPreset = true;
+        return '$preset${match.group(1)}';
+      });
+  final imports = [
+    if (usesPreset || !usesAgent)
+      "import 'package:registry_source/$preset.dart';",
+    if (usesAgent) "import 'package:registry_source/agent.dart';",
+  ];
+  return renamed.replaceAll(_applicationBarrelImport, imports.join('\n'));
 }
 
 String _relativePath(Directory root, File file) => _relative(file.path, root);

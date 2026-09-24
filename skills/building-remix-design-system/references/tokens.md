@@ -127,6 +127,8 @@ tokens:
 A test in the authoring package keeps the two in step. It fails when a theme
 token has no entry or a value differs; add encoders as token types grow.
 
+<!-- dart-excerpt: test in the authoring package, imports design_source -->
+
 ```dart
 // source/test/tokens_test.dart (dev dependency: yaml)
 import 'dart:io';

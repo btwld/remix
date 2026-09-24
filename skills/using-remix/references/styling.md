@@ -23,12 +23,15 @@ size, strokeWidth, …) where the component has those parts. Use the canonical
 methods for the corresponding part.
 
 ```dart
-ButtonStyler()
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+final style = ButtonStyler()
     .color(const Color(0xFF3E63DD))
     .labelColor(const Color(0xFFFFFFFF))
     .labelFontWeight(FontWeight.w600)
     .iconColor(const Color(0xFFFFFFFF))
-    .spacing(8)                      // icon↔label gap
+    .spacing(8); // icon↔label gap
 ```
 
 ## `.onSelected()`
@@ -41,9 +44,12 @@ resolves, because `RemixButton` never enters that state — the same is true of
 `RemixTabView`, which never reports `selected` itself.
 
 ```dart
-CheckboxStyler()
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+final style = CheckboxStyler()
     .color(const Color(0xFFE0E0E0))
-    .onSelected(CheckboxStyler().color(const Color(0xFF3E63DD)))
+    .onSelected(CheckboxStyler().color(const Color(0xFF3E63DD)));
 ```
 
 ## Callable styles
@@ -52,13 +58,17 @@ Every leaf component styler has a `call()` method that builds the widget
 directly:
 
 ```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
 final primaryButton = ButtonStyler()
     .color(const Color(0xFF3E63DD))
     .labelColor(const Color(0xFFFFFFFF))
     .padding(.horizontal(24))
     .borderRadius(.circular(8));
 
-primaryButton(label: 'Save', onPressed: save)   // → RemixButton
+Widget saveButton(VoidCallback save) =>
+    primaryButton(label: 'Save', onPressed: save); // → RemixButton
 ```
 
 Eight stylers use a generic `call<T>()` instead: Accordion, Radio,
@@ -74,12 +84,17 @@ Reference the installed theme's tokens in custom styles so they respect the
 active theme, whichever preset is installed:
 
 ```dart
-ButtonStyler()
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+import 'ui/ui.dart';
+
+final accentButton = ButtonStyler()
     .color(FortalTokens.accent9())
     .label(TextStyler().style(FortalTokens.text2.mix())
-        .color(FortalTokens.accentContrast()))
+        .color(FortalTokens.accentContrast()));
 
-Container(color: FortalTokens.colorBackground.resolve(context))
+Widget background(BuildContext context) =>
+    Container(color: FortalTokens.colorBackground.resolve(context));
 ```
 
 Call the token inside a styler chain, `.mix()` for text-style tokens,
@@ -107,12 +122,17 @@ differs:
 ## Reusable and dynamic app styles
 
 ```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+import 'ui/ui.dart';
+
 class AppStyles {
   static ButtonStyler get primaryButton => fortalButtonStyle(variant: .solid)
       .animate(AnimationConfig.spring(200.ms));
 }
 
-RemixButton(label: 'Save', onPressed: save, style: AppStyles.primaryButton)
+Widget saveButton(VoidCallback save) =>
+    RemixButton(label: 'Save', onPressed: save, style: AppStyles.primaryButton);
 ```
 
 A destructive action needs the accent itself to change, not just the idle
@@ -122,13 +142,22 @@ the accent instead of hard-coding palette values:
 
 ```dart
 // Fortal
-FortalScope(
+import 'package:flutter/widgets.dart';
+import 'ui/ui.dart';
+
+Widget deleteButton(VoidCallback delete) => FortalScope(
   accent: .red,
   child: FortalButton.solid(label: 'Delete', onPressed: delete),
-)
+);
+```
 
+```dart
 // Vanilla
-UiButton.destructive(label: 'Delete', onPressed: delete)
+import 'package:flutter/widgets.dart';
+import 'ui/ui.dart';
+
+Widget deleteButton(VoidCallback delete) =>
+    UiButton.destructive(label: 'Delete', onPressed: delete);
 ```
 
 Keep an appearance preference as `FortalThemeMode` (or `<Prefix>ThemeMode`

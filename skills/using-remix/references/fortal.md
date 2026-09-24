@@ -20,16 +20,21 @@ component's `*Styler`, plus a `Fortal<Name>` generated widget that applies
 it:
 
 ```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+import 'ui/ui.dart';
+
 // Generated widget — Remix widget params + fixed variant/size
-FortalButton.soft(label: 'Save', onPressed: save, size: .size3)
+Widget generated(VoidCallback save) =>
+    FortalButton.soft(label: 'Save', onPressed: save, size: .size3);
 
 // Styler function — returns a ButtonStyler to extend
-RemixButton(
+Widget styled(VoidCallback save) => RemixButton(
   label: 'Save',
   onPressed: save,
   style: fortalButtonStyle(variant: .soft, size: .size3)
       .onHovered(ButtonStyler().scale(1.02)),
-)
+);
 ```
 
 Fortal preset styles resolve `FortalTokens`, so a `FortalScope` ancestor is
@@ -89,8 +94,13 @@ the shared `theme`/`darkTheme`/`mode` rules. `FortalThemeConfig` is the
 immutable config object form (`FortalThemeData extends FortalThemeConfig`):
 
 ```dart
+import 'package:flutter/widgets.dart';
+import 'ui/ui.dart';
+
 const brand = FortalThemeConfig(accent: .green, gray: .sage);
-FortalScope(theme: brand, darkTheme: brand, mode: mode, child: child)
+
+Widget branded(FortalThemeMode mode, Widget child) =>
+    FortalScope(theme: brand, darkTheme: brand, mode: mode, child: child);
 ```
 
 Leave `brightness` unset on `brand` itself: the scope fills it per slot,
