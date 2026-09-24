@@ -150,9 +150,7 @@ final _excerptMarker = RegExp(r'dart-excerpt:');
 // A placeholder ellipsis, as opposed to a spread (`...items`, `...?items`).
 final _placeholderEllipsis = RegExp(r'\.\.\.(?![\w\[({?])');
 final _fortalApiReference = RegExp(r'\b(?:Fortal|fortal)[A-Z]\w*');
-final _fortalScopeReference = RegExp(r'\bUiScope\b');
 final _applicationTypeName = RegExp(r'\bUi([A-Z]\w*)');
-final _applicationValueName = RegExp(r'\bui([A-Z]\w*)');
 final _agentTypeDeclaration = RegExp(
   r'^(?:(?:abstract|final|sealed|base|mixin)\s+)*'
   r'(?:class|enum|typedef|extension type|mixin)\s+Agent(\w+)',
@@ -308,9 +306,9 @@ void _checkOpenCodeCatalog(Directory workspaceRoot, List<String> failures) {
 }
 
 Future<void> main() async {
-  // This validator owns root `docs/`, root `docs.json`, the root README, and
-  // both package READMEs, so it lives at the workspace root rather than inside
-  // a package.
+  // This validator owns root `docs/`, root `docs.json`, the root README, both
+  // package READMEs, and the published skills, so it lives at the workspace
+  // root rather than inside a package.
   final workspaceRoot = Directory.current.absolute;
   final pubspec = File('${workspaceRoot.path}/pubspec.yaml');
   if (!pubspec.existsSync() ||
@@ -887,35 +885,27 @@ Set<String> _agentTypeNames(Directory workspaceRoot) {
 /// The temporary validation directory has no application package. `Fortal*`
 /// and `fortal*` names match `package:registry_source/fortal.dart`
 /// byte-for-byte. `Ui*` is the prefix `remix init` installs under, so each
-/// such name is renamed back to its authoring word: an Agent surface's word is
-/// `Agent`; every other name belongs to the preset, which is Fortal when the
-/// snippet names anything Fortal or wraps its tree in `UiScope`, and the
-/// default Vanilla preset otherwise. The derivation round trip separately
-/// proves that the prefixed APIs match.
+/// such type name is renamed back to its authoring word: an Agent surface's
+/// word is `Agent`; every other name belongs to the preset, which is Fortal
+/// when the snippet names anything Fortal and the default Vanilla preset
+/// otherwise. Value names under `ui*` have no example yet, so they are left
+/// alone and fail as undefined. The derivation round trip separately proves
+/// that the prefixed APIs match.
 String _validationSource(String snippet, Set<String> agentTypes) {
   if (!_applicationBarrelImport.hasMatch(snippet)) return snippet;
-  final preset =
-      _fortalApiReference.hasMatch(snippet) ||
-          _fortalScopeReference.hasMatch(snippet)
-      ? 'fortal'
-      : 'vanilla';
+  final preset = _fortalApiReference.hasMatch(snippet) ? 'fortal' : 'vanilla';
   final typeWord = '${preset[0].toUpperCase()}${preset.substring(1)}';
   var usesAgent = false;
   var usesPreset = preset == 'fortal';
-  final renamed = snippet
-      .replaceAllMapped(_applicationTypeName, (match) {
-        final name = match.group(1)!;
-        if (agentTypes.contains(name)) {
-          usesAgent = true;
-          return 'Agent$name';
-        }
-        usesPreset = true;
-        return '$typeWord$name';
-      })
-      .replaceAllMapped(_applicationValueName, (match) {
-        usesPreset = true;
-        return '$preset${match.group(1)}';
-      });
+  final renamed = snippet.replaceAllMapped(_applicationTypeName, (match) {
+    final name = match.group(1)!;
+    if (agentTypes.contains(name)) {
+      usesAgent = true;
+      return 'Agent$name';
+    }
+    usesPreset = true;
+    return '$typeWord$name';
+  });
   final imports = [
     if (usesPreset || !usesAgent)
       "import 'package:registry_source/$preset.dart';",
