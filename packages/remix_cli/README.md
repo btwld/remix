@@ -1,16 +1,20 @@
 # remix_cli
 
-`remix_cli` installs editable component source into a Flutter application.
-Choose the compact `default` preset, the Radix Themes-inspired `fortal`
-preset, or the initial IBM Carbon-inspired `carbon` slice at initialization.
-Remix remains the behavior dependency; the application owns its tokens, theme
-values, component recipes, and generated adapters.
+See [pinned GitHub registries](../../open_code/REGISTRIES.md) for namespaces, revision updates,
+migration, and independent registry releases.
 
-The default and Fortal catalogs include an opt-in `icons` seam and cover the
-core Remix component surface: `accordion`, `avatar`, `badge`, `button`,
-`callout`, `card`, `checkbox`, `data_list`, `data_table`, `dialog`,
-`disclosure`, `divider`, `icon_button`, `link`, `menu`, `popover`, `progress`,
-`radio`, `segmented_control`, `select`, `sidebar`, `sidebar_layout`, `skeleton`,
+`remix_cli` installs editable component source into a Flutter application.
+Choose the compact `vanilla` preset, the Radix Themes-inspired `fortal`
+preset, or the initial IBM Carbon-inspired `carbon` slice at initialization.
+Remix remains the behavior dependency; the
+application owns its tokens, theme values, component recipes, and generated
+adapters.
+
+The 0.1.0 catalog includes an opt-in `icons` seam and covers the core Remix
+component surface: `accordion`, `avatar`, `badge`, `button`, `callout`, `card`,
+`checkbox`, `data_list`, `data_table`, `dialog`, `disclosure`, `divider`,
+`icon_button`, `link`, `menu`, `popover`, `progress`, `radio`,
+`segmented_control`, `select`, `sidebar`, `sidebar_layout`, `skeleton`,
 `slider`, `spinner`, `switch`, `tabs`, `textfield`, `toast`, `toggle`,
 `toggle_group`, and `tooltip`, each with a `theme` dependency. The Fortal
 preset also includes `base_button`, `code`, `heading`, `kbd`, `text`, and
@@ -18,26 +22,23 @@ preset also includes `base_button`, `code`, `heading`, `kbd`, `text`, and
 `select` for its controls; `toast` uses `button` and `icon_button` for its
 action and close control. The default `sidebar` item uses the application's
 `toggle` recipe for destinations. `sidebar_layout` is a plain shell layout
-with no `Spec` or generated adapter: it composes an installed `sidebar` into a
-row above its compact breakpoint and a start-edge sheet below it.
+with no `Spec` or generated adapter: it composes an installed `sidebar` into
+a row above its compact breakpoint and a start-edge sheet below it.
 The grouped `dashboard_shell` recipe builds on those pieces with host-owned
 navigation, page content, optional search, and brand/account/action slots. It
 has no generated adapter and does not install charts, tables, Agent surfaces,
 or an application entry point.
 The catalog also offers `chart` as an optional extension over
-`mix_chart`; it does not depend on `remix_fortal`. There is no remote registry,
-update command, registry lockfile, or content-hash protocol.
+`mix_chart`; it does not depend on `remix_fortal`. Registry content is published independently on GitHub and pinned in `remix.yaml`.
+Registry updates change pins only; installed source remains application-owned.
 
-Carbon starts with a deliberately smaller vertical slice: `theme` and
-`button`. It is not yet a complete component catalog.
-
-The default and Fortal presets additionally distribute the unstyled Agent
-items: `activity`, `answer`, `composer`, `execution`, `message`, `permission`,
-`plan`, and `transcript`, with shared `models` and `support` dependencies.
-These are application-owned source, not a dependency on the private authoring
-source. Each surface has an opt-in `<component>_recipe` item that installs a
-complete, preset-specific styler bundle under `lib/ui/recipes/`; bare
-components remain unstyled and backward compatible.
+Vanilla and Fortal additionally distribute the unstyled Agent items:
+`activity`, `answer`, `composer`, `execution`, `message`, `permission`, `plan`,
+and `transcript`, with shared `models` and `support` dependencies. These are
+application-owned source, not a dependency on the private authoring source.
+Each surface has an opt-in `<component>_recipe` item that installs a complete,
+preset-specific styler bundle under `lib/ui/recipes/`; bare components remain
+unstyled and backward compatible.
 
 ## Install project-locally
 
@@ -48,7 +49,7 @@ The CLI requires Flutter 3.44 or later (Dart 3.12). With an older SDK, adding
 the dependency fails during version solving.
 
 A project-local development dependency is preferred because the app's lockfile
-pins the CLI version and its bundled templates:
+pins the CLI version; `remix.yaml` separately pins registry content:
 
 ```shell
 flutter pub add dev:remix_cli
@@ -62,8 +63,8 @@ To run an unreleased build, point at a checkout or staged package path:
 dart pub add "dev:remix_cli@{path: /path/to/remix/packages/remix_cli}"
 ```
 
-All three presets require Remix `^1.0.0-beta.10`. Before that release is
-available, add this `pubspec_overrides.yaml` to the application:
+All three presets require Remix `^1.0.0-beta.10`. Before that release is available,
+add this `pubspec_overrides.yaml` to the application:
 
 ```yaml
 dependency_overrides:
@@ -74,8 +75,8 @@ dependency_overrides:
 Replace the path with your checkout. Remove the override after beta.10 is
 published and run `flutter pub get` to use hosted Remix.
 
-Global activation is convenient for experiments, but it does not pin the
-template version per project:
+Global activation is convenient for experiments. Registry content remains
+pinned per project in `remix.yaml`:
 
 ```shell
 dart pub global activate remix_cli
@@ -96,11 +97,18 @@ dart run remix_cli:remix init
 The default configuration is:
 
 ```yaml
-schema: 2
+schema: 3
 prefix: Ui
-preset: default
+preset: vanilla
 paths:
   ui: lib/ui
+defaultRegistry: "@remix"
+registries:
+  "@remix":
+    repository: conceptadev/remix
+    path: registry
+    ref: registry-stable
+    revision: "<resolved-full-commit-sha>"
 ```
 
 Customize it only at initialization:
@@ -112,7 +120,7 @@ dart run remix_cli:remix init --prefix Acme --preset fortal --ui-path lib/design
 `init` validates the Flutter project, writes `remix.yaml`, and creates a barrel
 with a managed export block. Repeating the same command is safe. A different
 configuration is refused instead of silently rewriting an existing project.
-The preset defaults to `default` when omitted and cannot be changed after
+The preset defaults to `vanilla` when omitted and cannot be changed after
 initialization.
 
 ### Fortal as owned source
@@ -125,39 +133,58 @@ does not depend directly on `mix`, `naked_ui`, or `remix_fortal`; it can edit
 the Radix color data, tokens, recipes, and instance overrides as ordinary app
 source.
 
-Place `AcmeScope` below the application host. For a routed Material app, wrap
-the child of `MaterialApp.builder` with `AcmeScope`. Routes and dialogs then
+Place `AcmeScope` below the application host. For a routed `WidgetsApp`, wrap
+the child of `WidgetsApp.builder` with `AcmeScope`. Routes and dialogs then
 inherit its tokens and text defaults. See `lib/ui/theme/theme_scope.dart` for
 the scope example.
+
+Vanilla and Fortal support `theme`, `darkTheme`, and `mode` on their generated scope.
+The old scope `data` and `brightness` parameters and config `createScope`
+shortcut are removed. Update application-owned callers to this API.
+With no configuration, roots use the generated light/dark pair and follow the
+system. Nested scopes inherit the pair and active selection. A custom `theme`
+without `darkTheme` is used in both modes; supplying `darkTheme` alone keeps the
+base default. Both presets generate `AcmeThemeData.light()`, `.dark()`, and
+`AcmeThemeMode` (`system`, `light`, `dark`). Use `AcmeThemeScope` for default and
+`AcmeScope` for Fortal, with your configured prefix.
+
+Place the scope in `WidgetsApp.builder` above the Navigator. The CLI installs
+theme files, not a complete app host or appearance picker. See the
+[application host standard](../../docs/open-code.mdx#application-host-and-appearance).
 
 The prefixes `Remix` and `Mix` are reserved for runtime dependencies.
 Use an application prefix such as `Ui` or `Acme`.
 
 ### Carbon as owned source
 
-Initialize Carbon and install its initial button slice with:
-
 ```shell
 dart run remix_cli:remix init --prefix Acme --preset carbon
 dart run remix_cli:remix add button
 ```
 
-The command installs the theme before Button and produces prefixed,
-application-owned source such as `AcmeScope`, `AcmeTheme`, `AcmeButton`, and
-`acmeButtonStyle`. The foundation supports Carbon White, Gray 10, Gray 90, and
-Gray 100 through `white`, `g10`, `g90`, and `g100`. Button defaults to Carbon's
-large 48 px height and accepts an explicit size or an `AcmeLayoutScope` size.
-
-This is an initial Carbon vertical slice, not a complete component catalog.
-It includes only the theme surface required by `button` and the button itself;
-it does not include an icon button, charts, icons, Agent surfaces, or
-dashboards.
+Carbon currently installs its theme foundation and Button only. The configured
+prefix produces `AcmeScope`, `AcmeTheme`, `AcmeButton`, and
+`acmeButtonStyle`. Select `AcmeTheme.white`, `.g10`, `.g90`, or `.g100` on the
+scope. This slice has no icon button, charts, icons, Agent surfaces, or
+dashboard recipes.
 
 ## Add a component
 
 ```shell
 dart run remix_cli:remix add button
 ```
+
+Several items can be named in one command:
+
+```shell
+dart run remix_cli:remix add button card dialog
+```
+
+A batch installs as one unit. The items and everything they depend on are
+ordered once, so a dependency two of them share is written once, and the
+resolve, format, generation, and analysis steps run once for the whole batch
+rather than once per item. Naming an unknown item, or the same item twice,
+fails before anything is written.
 
 The command installs Theme before Button, adds missing compatible hosted
 dependencies, formats the authored files, runs generation only for the
@@ -180,7 +207,7 @@ analyzer:
     - lib/ui/**/*.g.dart
 ```
 
-With the default preset and path, the application receives:
+With the Vanilla preset and path, the application receives:
 
 ```text
 lib/ui/
@@ -194,8 +221,8 @@ lib/ui/
     button.g.dart
 ```
 
-One `add` installs one item and its registry dependencies. Repeat it for each
-component you need. Default component items add an authored file and a
+One `add` installs every named item plus shared dependencies once.
+Default component items add an authored file and a
 generated part to `components/`. Fortal also has shared source items without
 generated parts, such as `base_button` and `typography`.
 Existing authored source stays untouched. When generation runs, the build
@@ -211,7 +238,7 @@ dart run remix_cli:remix add dashboard_shell
 This installs the preset's sidebar, responsive sidebar layout, icon button,
 textfield, icons, and theme dependency closure plus two editable files under
 `lib/ui/recipes/dashboard/`. The public `UiDashboardShell<T>` API is the same
-for `default` and `fortal`. The host supplies `RemixSidebarSection<T>` values,
+for `vanilla` and `fortal`. The host supplies `RemixSidebarSection<T>` values,
 the selected value and callback, the current page body, title, and brand slot.
 Account and header-action slots are optional. Search is absent unless the host
 provides `onSearchChanged`.
@@ -227,7 +254,7 @@ use `--diff` and explicit `--overwrite` for template updates.
 Initialize either preset, then use the same item and public dashboard API:
 
 ```shell
-dart run remix_cli:remix init --prefix Ui --preset default
+dart run remix_cli:remix init --prefix Ui --preset vanilla
 # Or initialize a separate app with: --preset fortal
 dart run remix_cli:remix add dashboard_demo
 ```
@@ -253,7 +280,7 @@ use `--overwrite` only when deliberately replacing the installed recipe.
 Contributors can reproduce the isolated consumer gates for either preset:
 
 ```shell
-dart run tool/check_open_code.dart --preset default --source checkout --item dashboard_demo --keep
+dart run tool/check_open_code.dart --preset vanilla --source checkout --item dashboard_demo --keep
 dart run tool/check_open_code.dart --preset fortal --source checkout --item dashboard_demo --keep
 ```
 
@@ -263,7 +290,7 @@ application-owned `UiIcons` alias set with no generated adapter. Add or rename
 aliases there as your interface evolves. The complete 318-icon catalog remains
 one direct `package:remix_ui_icons/remix_ui_icons.dart` import away.
 
-Most default component items generate one widget. Four generate several:
+Most Vanilla component items generate one widget. Four generate several:
 `checkbox` also generates
 `UiCheckboxGroupItem`, `textfield` generates `UiTextField` and `UiTextArea`,
 `tabs` generates `UiTabBar`, `UiTab`, and `UiTabView`, and `chart` generates
@@ -331,7 +358,7 @@ Preview a new install without changing the project or running package tools:
 dart run remix_cli:remix add button --dry-run
 ```
 
-Compare the requested item with the bundled source using Git's no-index diff:
+Compare the requested item with the pinned registry source using Git's no-index diff:
 
 ```shell
 dart run remix_cli:remix add button --diff
@@ -344,7 +371,9 @@ files:
 dart run remix_cli:remix add button --overwrite
 ```
 
-Overwriting Button preserves locally edited Theme files. Compatible existing
+Overwriting Button preserves locally edited Theme files. With several items
+named, `--overwrite` covers each of them and still preserves every dependency
+that came in behind them; overwrite a dependency by naming it explicitly. Compatible existing
 hosted, path, Git, custom-hosted, and override dependency declarations are also
 preserved. An incompatible resolved dependency fails before authored-source
 writes.
@@ -370,14 +399,16 @@ in place for inspection. Fix the reported issue and rerun the same command.
 
 ## Manual updates
 
-The MVP's update workflow is explicit:
+The MVP's update workflow is explicit. Upgrading `remix_cli` does not change
+the source you install; the registry pin in `remix.yaml` does:
 
-1. update the project-local `remix_cli` constraint;
+1. run `registry update @remix` to move the pin to the newest promoted commit
+   (`@remix` is the namespace `init` gives the official registry);
 2. run `add button --diff`;
 3. review the template changes against local customizations;
 4. use `add button --overwrite` only when replacement is intended;
-5. reapply or refine application-specific changes and commit the regenerated
-   adapter.
+5. reapply or refine application-specific changes and commit `remix.yaml`
+   and the regenerated adapter.
 
 There is no automatic merge or migration layer in 0.1.0.
 

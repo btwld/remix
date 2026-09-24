@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:naked_ui/naked_ui.dart';
 
+import '../src/example_app.dart';
+
 // Simple fruit data class for type safety
 class Fruit {
   const Fruit({required this.value, required this.label, required this.emoji});
@@ -19,36 +21,33 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        backgroundColor: Color(0xFF0D0D0D),
-        body: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'CYBER SELECT',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF00FF41),
-                  fontFamily: 'monospace',
-                  letterSpacing: 2,
-                ),
+    return ExampleApp(
+      background: const Color(0xFF0D0D0D),
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'CYBER SELECT',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF00FF41),
+                fontFamily: 'monospace',
+                letterSpacing: 2,
               ),
-              SizedBox(height: 8),
-              Text(
-                '> INITIALIZE DATA STREAM_',
-                style: TextStyle(
-                  color: Color(0xFF00AA33),
-                  fontFamily: 'monospace',
-                ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              '> INITIALIZE DATA STREAM_',
+              style: TextStyle(
+                color: Color(0xFF00AA33),
+                fontFamily: 'monospace',
               ),
-              SizedBox(height: 24),
-              CyberpunkSelectExample(),
-            ],
-          ),
+            ),
+            SizedBox(height: 24),
+            CyberpunkSelectExample(),
+          ],
         ),
       ),
     );

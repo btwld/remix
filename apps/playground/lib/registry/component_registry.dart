@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import '../preview_shell/preview_shell.dart';
 import '../ui/ui.dart';
@@ -27,12 +27,12 @@ import 'entries/tooltip_entry.dart';
 // Map component slugs to a builder that returns the component inside the
 // installed theme scope, resolved for the preview's current brightness.
 
-Widget _scope(BuildContext context, Widget child) => PlaygroundThemeScope(
-  data: Theme.of(context).brightness == Brightness.dark
-      ? const PlaygroundThemeData.dark()
-      : const PlaygroundThemeData.light(),
-  child: child,
-);
+// `mode: system` lets the scope resolve appearance itself, from the platform
+// brightness PreviewShell publishes through `MediaQuery`. An entry that
+// resolves the scope inside the shell therefore follows its light/dark
+// control; one that resolves it above follows the real platform.
+Widget _scope(BuildContext context, Widget child) =>
+    PlaygroundThemeScope(mode: PlaygroundThemeMode.system, child: child);
 
 final Map<String, WidgetBuilder> components = {
   'dashboard_shell': (context) => PreviewShell(

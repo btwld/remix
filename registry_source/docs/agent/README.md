@@ -32,7 +32,7 @@ The package remains unpublished authoring/test source. Install individual
 surfaces through the project-local checkout CLI (see [open-code setup](../../open_code/README.md)):
 
 ```shell
-dart run remix_cli:remix init --prefix Ui --preset default
+dart run remix_cli:remix init --prefix Ui --preset vanilla
 dart run remix_cli:remix add composer
 ```
 

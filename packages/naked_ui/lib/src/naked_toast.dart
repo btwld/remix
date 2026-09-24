@@ -667,8 +667,9 @@ class NakedToastScope<T> extends StatefulWidget {
         ErrorHint(
           'Place a NakedToastScope<$T> below the app Overlay in a subtree that '
           'stays mounted, for example:\n'
-          '  MaterialApp(home: NakedToastScope<$T>(toastBuilder: ..., '
-          'child: Shell()))',
+          '  WidgetsApp(home: NakedToastScope<$T>(toastBuilder: ..., '
+          'child: Shell()))\n'
+          'Any app host works; MaterialApp takes the same placement.',
         ),
         context.describeElement('The context used was'),
       ]);

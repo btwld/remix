@@ -377,7 +377,7 @@ void main() {
                 }
               }),
               AcmeThemeScope(
-                data: const AcmeThemeData.dark(),
+                theme: const AcmeThemeData.dark(),
                 child: _Probe((context) {
                   insideMaybe = AcmeTheme.maybeOf(context);
                   insideOf = AcmeTheme.of(context);
@@ -410,7 +410,7 @@ void main() {
       await tester.pumpWidget(
         _host(
           AcmeThemeScope(
-            data: const AcmeThemeData.light(),
+            theme: const AcmeThemeData.light(),
             child: Column(
               children: [
                 _Probe((context) {
@@ -418,7 +418,7 @@ void main() {
                   outerPrimary = AcmeTokens.primary.resolve(context);
                 }),
                 AcmeThemeScope(
-                  data: inner,
+                  theme: inner,
                   child: _Probe((context) {
                     innerTheme = AcmeTheme.of(context);
                     innerPrimary = AcmeTokens.primary.resolve(context);
@@ -460,7 +460,7 @@ void main() {
 
       Widget app(AcmeThemeData data) => _host(
         AcmeThemeScope(
-          data: data,
+          theme: data,
           child: _Probe((context) {
             builds += 1;
             primary = AcmeTokens.primary.resolve(context);
@@ -488,7 +488,7 @@ void main() {
       await tester.pumpWidget(
         _host(
           AcmeThemeScope(
-            data: const AcmeThemeData.dark(),
+            theme: const AcmeThemeData.dark(),
             child: _Probe((context) {
               captured ??= InheritedTheme.captureAll(
                 context,
@@ -1800,7 +1800,7 @@ void main() {
 
       await tester.pumpWidget(
         AcmeThemeScope(
-          data: const AcmeThemeData.light(),
+          theme: const AcmeThemeData.light(),
           child: _host(
             StatefulBuilder(
               builder: (context, setState) => RemixCheckboxGroup<String>(
@@ -2616,7 +2616,7 @@ void main() {
 
         await tester.pumpWidget(
           AcmeThemeScope(
-            data: theme.data,
+            theme: theme.data,
             child: _host(
               _Probe((context) => palette = resolveAcmeChartPalette(context)),
             ),
@@ -2653,7 +2653,7 @@ void main() {
 
       await tester.pumpWidget(
         AcmeThemeScope(
-          data: theme,
+          theme: theme,
           child: _host(
             _Probe((context) => palette = resolveAcmeChartPalette(context)),
           ),
@@ -3662,7 +3662,7 @@ void main() {
 
       await tester.pumpWidget(
         AcmeThemeScope(
-          data: const AcmeThemeData.light(),
+          theme: const AcmeThemeData.light(),
           child: _host(
             StatefulBuilder(
               builder: (context, setState) => RemixRadioGroup<String>(
@@ -4030,7 +4030,7 @@ void main() {
 
       await tester.pumpWidget(
         AcmeThemeScope(
-          data: const AcmeThemeData.light(),
+          theme: const AcmeThemeData.light(),
           child: _host(
             StatefulBuilder(
               builder: (context, setState) => AcmeToggleGroup<String>(
@@ -4419,7 +4419,7 @@ void main() {
 
       await tester.pumpWidget(
         AcmeThemeScope(
-          data: const AcmeThemeData.light(),
+          theme: const AcmeThemeData.light(),
           child: _host(
             StatefulBuilder(
               builder: (context, setState) =>
@@ -5986,7 +5986,7 @@ Future<void> _pumpInScope(
 }) {
   return tester.pumpWidget(
     AcmeThemeScope(
-      data: theme,
+      theme: theme,
       child: _host(Center(child: child)),
     ),
   );
@@ -6059,7 +6059,7 @@ Future<StyleSpec<S>> _resolve<S extends Spec<S>>(
   late StyleSpec<S> resolved;
   await tester.pumpWidget(
     AcmeThemeScope(
-      data: theme,
+      theme: theme,
       child: _host(
         WidgetStateProvider(
           states: states,
@@ -6205,7 +6205,7 @@ Future<void> _pumpTabs(
 }) {
   return tester.pumpWidget(
     AcmeThemeScope(
-      data: theme,
+      theme: theme,
       child: _host(
         RemixTabs(
           selectedTabId: selected,

@@ -144,10 +144,10 @@ RemixToastHandle showRemixToast(BuildContext context, RemixToastData toast) {
       ),
       ErrorHint(
         'Place one RemixToastScope above the app Navigator so every route, '
-        'including dialogs, can reach it. With MaterialApp, put it in '
-        'builder:\n'
-        '  MaterialApp(builder: (context, child) => '
+        'including dialogs, can reach it, for example:\n'
+        '  WidgetsApp(builder: (context, child) => '
         'Overlay.wrap(child: RemixToastScope(child: child!)))\n'
+        'Any app host works; MaterialApp takes the same builder placement. '
         'No Scaffold is required.',
       ),
       context.describeElement('The context used was'),
@@ -160,8 +160,8 @@ RemixToastHandle showRemixToast(BuildContext context, RemixToastData toast) {
 /// Hosts queued, nonmodal toasts styled with [RemixToast].
 ///
 /// Place one scope above the app's `Navigator` so every route, including
-/// dialogs, can reach it: with `MaterialApp`, in `builder` inside
-/// [Overlay.wrap]. A scope in `MaterialApp.home` only reaches the home route.
+/// dialogs, can reach it: with `WidgetsApp`, in `builder` inside
+/// [Overlay.wrap]. A scope in `WidgetsApp.home` only reaches the home route.
 /// Toasts render through one overlay portal, so they inherit the scope's
 /// [MixScope] tokens and [Directionality] and update live when those change.
 ///

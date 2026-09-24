@@ -17,7 +17,7 @@ preset: widgets, variants, sizes, and tokens.
 
 Use Fortal when the UI should follow its ready-made Radix-inspired visual system. Use base Remix when the user wants a distinct visual language, does not want Fortal's token scales, or needs a fully custom `*Styler`. Fortal is optional and never required for ordinary `Remix*` widgets.
 
-Place `FortalScope` above every subtree that renders Fortal styles. Put it above the application or router when overlay entries and pushed routes must inherit Fortal tokens — **except** under `MaterialApp` or `CupertinoApp`, where it belongs in `builder:`. See [Scope placement](#fortalscope--theme-config).
+Place `FortalScope` above every subtree that renders Fortal styles. For routed `WidgetsApp` examples, use `builder` above the Navigator so routes and overlays inherit the scope. See [Scope placement](#fortalscope--theme-config).
 
 ## Install and import
 
@@ -200,7 +200,7 @@ Rules that matter when writing code:
 FortalScope(
   accent: FortalAccentColor.indigo,   // default .indigo
   gray: FortalGrayColor.slate,        // default .slate
-  brightness: Brightness.light,       // default .light
+  mode: FortalThemeMode.system,       // root default; nested scopes inherit
   panelBackground: FortalPanelBackground.translucent,
   radius: FortalRadius.medium,
   scaling: FortalScaling.percent100,
@@ -222,6 +222,15 @@ selects `none|small|medium|large|full`; `scaling` selects 90%, 95%, 100%, 105%,
 or 110%; and `hasBackground` controls whether the scope paints the resolved
 page background behind its child.
 
+### Appearance selection
+
+Use `theme: const FortalThemeData.light()` and
+`darkTheme: const FortalThemeData.dark()` to configure a pair. With neither,
+the preset supplies both defaults. With only `theme`, both modes use that
+fallback. With only `darkTheme`, the base remains inherited or default.
+Nested scopes inherit the pair and current selection unless `mode` is explicit.
+The app owns preference persistence. Scope `brightness` is removed; use `mode`.
+
 ### Scope placement
 
 The **outermost** `FortalScope` establishes a courtesy `DefaultTextStyle` for
@@ -231,10 +240,10 @@ This is analogous to Material's `bodyMedium`; it is not the source of a Fortal
 typography run, which is always pinned from Fortal tokens. Placement therefore
 matters for bare `Text`:
 
-| Host | Put the scope |
-| --- | --- |
-| `WidgetsApp`, router, or a custom host | Above the app |
-| `MaterialApp`, `CupertinoApp` | In `builder:` |
+For a simple `WidgetsApp` builder, the scope can wrap the app. For a routed app,
+put it in `builder` above the Navigator. A default WidgetsApp preserves the
+outer scope’s text defaults; an explicit `textStyle` overrides them. A scope
+inside the app builder establishes its defaults below that override.
 
 A **nested** scope re-scopes tokens only. It does not restate the courtesy
 bare-`Text` run, so wrapping a subtree in
@@ -242,18 +251,18 @@ bare-`Text` run, so wrapping a subtree in
 without changing the surrounding Flutter text inheritance.
 
 ```dart
-// MaterialApp / CupertinoApp
-MaterialApp(
+WidgetsApp(
+  color: const Color(0xFFFFFFFF),
+  pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+    settings: settings,
+    pageBuilder: (context, animation, secondaryAnimation) => builder(context),
+  ),
   builder: (context, child) => FortalScope(child: child!),
   home: const MyScreen(),
 )
 ```
 
-Those apps pass `WidgetsApp` their own root `DefaultTextStyle`, which lands
-below anything wrapping the app. A scope placed above `MaterialApp` still
-supplies tokens, but its courtesy bare-`Text` fallback is overridden.
-`builder:` sits below that style and above the `Navigator`, so pushed routes
-and raw `Overlay` entries receive the Fortal fallback.
+The builder wraps the Navigator so routes and overlays inherit the scope.
 
 Normal Flutter inheritance still applies to bare `Text` below the scope. A
 nearer `DefaultTextStyle`, including one from `Material` or `Scaffold`, wins
@@ -272,7 +281,7 @@ typography children pin their own token run.
 ```dart
 const theme = FortalThemeConfig(accent: .green, gray: .sage, brightness: .dark);
 final light = theme.copyWith(brightness: .light);
-theme.createScope(child: MyApp())
+FortalScope(theme: theme, child: MyApp())
 ```
 
 ---

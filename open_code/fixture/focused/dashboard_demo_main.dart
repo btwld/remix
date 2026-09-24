@@ -31,7 +31,7 @@ class _AcmeDashboardHostState extends State<AcmeDashboardHost> {
 
   @override
   Widget build(BuildContext context) => AcmeThemeScope(
-    data: _dark ? const AcmeThemeData.dark() : const AcmeThemeData.light(),
+    mode: _dark ? AcmeThemeMode.dark : AcmeThemeMode.light,
     child: ColoredBox(
       color: _dark ? const Color(0xFF0A0A0A) : const Color(0xFFFFFFFF),
       child: DefaultTextStyle(

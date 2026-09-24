@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:path/path.dart' as p;
 import 'package:remix_cli/src/project_config.dart';
+import 'package:remix_cli/src/registry_source.dart';
 import 'package:test/test.dart';
 
 import 'test_support.dart';
@@ -12,47 +13,128 @@ void main() {
   setUp(() => root = createFlutterPackage());
   tearDown(() => root.deleteSync(recursive: true));
 
-  test('reads schema 1 as default and encodes schema 2', () {
-    final config = ProjectConfig.parse('''schema: 1
+  final source = RegistrySource(
+    repository: 'owner/repo',
+    path: 'registry',
+    ref: 'v1',
+    revision: 'b' * 40,
+  );
+
+  ProjectConfig configure({
+    required Directory packageRoot,
+    String prefix = 'Ui',
+    String preset = 'vanilla',
+    String uiPath = 'lib/ui',
+    String defaultRegistry = '@company',
+    Map<String, RegistrySource>? registries,
+  }) => ProjectConfig(
+    packageRoot: packageRoot,
+    prefix: prefix,
+    preset: preset,
+    uiPath: uiPath,
+    defaultRegistry: defaultRegistry,
+    registries: registries ?? {'@company': source},
+  );
+
+  test('parses the exact schema 3 shape', () {
+    final config = ProjectConfig.parse('''schema: 3
 prefix: Acme
+preset: vanilla
 paths:
   ui: lib/design_system
+defaultRegistry: "@remix"
+registries:
+  "@remix":
+    repository: "conceptadev/remix"
+    path: "registry"
+    ref: "registry-stable"
+    revision: "${'a' * 40}"
 ''', packageRoot: root);
 
     expect(config.prefix, 'Acme');
     expect(config.valuePrefix, 'acme');
-    expect(config.preset, 'default');
+    expect(config.preset, 'vanilla');
     expect(config.uiPath, 'lib/design_system');
-    expect(config.encode(), '''schema: 2
-prefix: Acme
-preset: default
-paths:
-  ui: lib/design_system
-''');
+    expect(config.defaultRegistry, '@remix');
+    expect(config.registries.keys, ['@remix']);
+    expect(config.registries['@remix']!.ref, 'registry-stable');
+    expect(config.schema, supportedProjectSchema);
   });
 
-  test('parses the exact schema 2 shape', () {
-    final config = ProjectConfig.parse('''schema: 2
-prefix: Acme
-preset: default
-paths:
-  ui: lib/design_system
-''', packageRoot: root);
+  // Schemas 1 and 2 shipped in prereleases and read from a snapshot inside the
+  // CLI. That snapshot is gone, so there is no source such a project could be
+  // served from -- the parse has to say so instead of failing on a missing key.
+  test('rejects the prerelease schemas by naming the way forward', () {
+    for (final source in [
+      'schema: 1\nprefix: Ui\npaths:\n  ui: lib/ui\n',
+      'schema: 2\nprefix: Ui\npreset: vanilla\npaths:\n  ui: lib/ui\n',
+    ]) {
+      expect(
+        () => ProjectConfig.parse(source, packageRoot: root),
+        throwsA(
+          isA<FormatException>().having(
+            (error) => error.message,
+            'message',
+            // `remix init` alone is not an instruction: it parses the
+            // existing file and fails the same way. Removing it first is the
+            // part that makes the message actionable.
+            allOf(
+              contains('schema'),
+              contains('delete remix.yaml'),
+              contains('remix init'),
+            ),
+          ),
+        ),
+        reason: source,
+      );
+    }
+  });
 
-    expect(config.prefix, 'Acme');
-    expect(config.preset, 'default');
-    expect(config.uiPath, 'lib/design_system');
+  test('preset and prefix names YAML reads as keywords round-trip', () {
+    // Both grammars admit `true`, `NULL` and friends. Written unquoted, YAML
+    // reads them back as a boolean or null and the parser rejects the project,
+    // so a successful rewrite would leave it unreadable.
+    Directory(p.join(root.path, 'lib', 'ui')).createSync(recursive: true);
+
+    for (final preset in ['true', 'false', 'null', 'acme_dark']) {
+      final encoded = configure(packageRoot: root, preset: preset).encode();
+      expect(
+        ProjectConfig.parse(encoded, packageRoot: root).preset,
+        preset,
+        reason: encoded,
+      );
+    }
+
+    for (final prefix in ['TRUE', 'FALSE', 'NULL', 'Acme']) {
+      final encoded = configure(packageRoot: root, prefix: prefix).encode();
+      expect(
+        ProjectConfig.parse(encoded, packageRoot: root).prefix,
+        prefix,
+        reason: encoded,
+      );
+    }
+  });
+
+  test('the default registry must name a configured one', () {
+    Directory(p.join(root.path, 'lib', 'ui')).createSync(recursive: true);
+
+    expect(
+      () => configure(packageRoot: root, defaultRegistry: '@missing'),
+      throwsFormatException,
+    );
+
+    // A registry names its own presets, so the CLI holds a preset to its
+    // grammar and leaves membership to the registry that serves it.
+    expect(
+      configure(packageRoot: root, preset: 'acme_dark').preset,
+      'acme_dark',
+    );
   });
 
   test('rejects invalid and reserved prefixes', () {
     for (final prefix in ['', 'ui', '_Ui', 'Ui-name', 'Üi', 'Class', 'Is']) {
       expect(
-        () => ProjectConfig.create(
-          packageRoot: root,
-          prefix: prefix,
-          preset: 'default',
-          uiPath: 'lib/ui',
-        ),
+        () => configure(packageRoot: root, prefix: prefix),
         throwsFormatException,
         reason: prefix,
       );
@@ -61,11 +143,13 @@ paths:
 
   test('rejects unknown, missing, and unsupported config fields', () {
     for (final source in [
-      'schema: 3\nprefix: Ui\npreset: default\npaths:\n  ui: lib/ui\n',
-      'schema: 2\nprefix: Ui\npaths:\n  ui: lib/ui\n',
-      'schema: 1\npaths:\n  ui: lib/ui\n',
-      'schema: 1\nprefix: Ui\npaths:\n  ui: lib/ui\nstyle: new\n',
-      'schema: 1\nprefix: Ui\npaths:\n  ui: lib/ui\n  extra: lib/x\n',
+      // No `registries`, so nothing says where the source came from.
+      'schema: 3\nprefix: Ui\npreset: vanilla\npaths:\n  ui: lib/ui\n',
+      'schema: 4\nprefix: Ui\npreset: vanilla\npaths:\n  ui: lib/ui\n',
+      'schema: 3\npreset: vanilla\npaths:\n  ui: lib/ui\n',
+      'schema: 3\nprefix: Ui\npreset: vanilla\npaths:\n  ui: lib/ui\nstyle: new\n',
+      'schema: 3\nprefix: Ui\npreset: vanilla\npaths:\n'
+          '  ui: lib/ui\n  extra: lib/x\n',
     ]) {
       expect(
         () => ProjectConfig.parse(source, packageRoot: root),
@@ -75,15 +159,10 @@ paths:
     }
   });
 
-  test('rejects invalid and unbundled presets', () {
-    for (final preset in ['', 'Default', 'default-name', 'missing']) {
+  test('rejects preset names outside the identifier grammar', () {
+    for (final preset in ['', 'Default', 'default-name', 'acme dark']) {
       expect(
-        () => ProjectConfig.create(
-          packageRoot: root,
-          prefix: 'Ui',
-          preset: preset,
-          uiPath: 'lib/ui',
-        ),
+        () => configure(packageRoot: root, preset: preset),
         throwsFormatException,
         reason: preset,
       );
@@ -101,12 +180,7 @@ paths:
       'lib',
     ]) {
       expect(
-        () => ProjectConfig.create(
-          packageRoot: root,
-          prefix: 'Ui',
-          preset: 'default',
-          uiPath: uiPath,
-        ),
+        () => configure(packageRoot: root, uiPath: uiPath),
         throwsFormatException,
         reason: uiPath,
       );
@@ -118,26 +192,12 @@ paths:
     addTearDown(() => outside.deleteSync(recursive: true));
     Link(p.join(root.path, 'lib', 'ui')).createSync(outside.path);
 
-    expect(
-      () => ProjectConfig.create(
-        packageRoot: root,
-        prefix: 'Ui',
-        preset: 'default',
-        uiPath: 'lib/ui',
-      ),
-      throwsFormatException,
-    );
+    expect(() => configure(packageRoot: root), throwsFormatException);
   });
 
   test('encoded configuration round-trips YAML-significant UI paths', () {
     for (final uiPath in ['lib/ui #brand', 'lib/ui: brand']) {
-      final encoded = ProjectConfig.create(
-        packageRoot: root,
-        prefix: 'Acme',
-        preset: 'default',
-        uiPath: uiPath,
-      ).encode();
-
+      final encoded = configure(packageRoot: root, uiPath: uiPath).encode();
       final reparsed = ProjectConfig.parse(encoded, packageRoot: root);
 
       expect(reparsed.uiPath, uiPath, reason: encoded);

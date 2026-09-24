@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:naked_ui/naked_ui.dart';
 
+import '../src/example_app.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -10,27 +12,23 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        backgroundColor: Colors.grey.shade50,
-        body: const Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Simple Menu',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 8),
-              Text(
-                'Click the button to see a context menu',
-                style: TextStyle(color: Colors.grey),
-              ),
-              SizedBox(height: 24),
-              SimpleMenuExample(),
-            ],
-          ),
+    return ExampleApp(
+      child: const Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Simple Menu',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Click the button to see a context menu',
+              style: TextStyle(color: Color(0xFF616161)),
+            ),
+            SizedBox(height: 24),
+            SimpleMenuExample(),
+          ],
         ),
       ),
     );
@@ -48,6 +46,7 @@ class _SimpleMenuExampleState extends State<SimpleMenuExample>
     with SingleTickerProviderStateMixin {
   final _controller = MenuController();
   late final AnimationController _animationController;
+  String? _selected;
 
   @override
   void initState() {
@@ -66,18 +65,16 @@ class _SimpleMenuExampleState extends State<SimpleMenuExample>
 
   @override
   Widget build(BuildContext context) {
-    return NakedMenu<String>(
+    final menu = NakedMenu<String>(
       controller: _controller,
       onCloseRequested: (hide) {
         _animationController.reverse(from: 1).then((_) {
           hide();
         });
       },
-      onSelected: (item) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Selected: $item')));
-      },
+      // Material's SnackBar needs a Scaffold; this example hosts on WidgetsApp,
+      // so the selection is reported inline instead.
+      onSelected: (item) => setState(() => _selected = item),
       builder: (context, state, _) {
         final isPressed = state.isPressed;
         return Container(
@@ -191,6 +188,20 @@ class _SimpleMenuExampleState extends State<SimpleMenuExample>
           ),
         );
       },
+    );
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        menu,
+        const SizedBox(height: 12),
+        Text(
+          _selected == null ? 'Nothing selected' : 'Selected: $_selected',
+          key: const ValueKey('menu.result'),
+          // Colors.grey is 2.55:1 here; WCAG AA wants 4.5:1 for body text.
+          style: const TextStyle(color: Color(0xFF616161)),
+        ),
+      ],
     );
   }
 }

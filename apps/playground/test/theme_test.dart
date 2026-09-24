@@ -48,7 +48,7 @@ void main() {
     late BuildContext inner;
     await tester.pumpWidget(
       PlaygroundThemeScope(
-        data: const PlaygroundThemeData.light(),
+        mode: PlaygroundThemeMode.light,
         child: Builder(
           builder: (context) {
             inner = context;

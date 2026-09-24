@@ -113,6 +113,8 @@ pubspec.lock
 !/.agents/skills/mix/**
 /.claude/skills/*
 !/.claude/skills/mix
+!/.claude/skills/releasing-a-package/
+!/.claude/skills/releasing-a-package/**
 
 # Miscellaneous
 *.class

@@ -10,7 +10,7 @@ command and configuration reference.
 **Open code** copies a theme and component recipes **into your application**.
 From that moment your team owns those files: no wrapper, no subclass, and no
 package-level theme override standing between you and the source. Choose the
-small `default` preset, the full Radix Themes-inspired `fortal` preset, or the
+small `vanilla` preset, the full Radix Themes-inspired `fortal` preset, or the
 initial IBM Carbon-inspired `carbon` slice when you initialize the project.
 
 Remix keeps everything that is genuinely hard: rendering, pointer and keyboard
@@ -26,17 +26,17 @@ Fortal preset does not add a `remix_fortal` dependency.
 
 ## Choose a preset
 
-| | `default` | `fortal` | `carbon` |
+| | `vanilla` | `fortal` | `carbon` |
 |---|---|---|---|
-| Design language | Compact neutral starting point | Radix Themes 3.3.0 parity surface | Initial IBM Carbon-inspired slice |
-| Theme | 15 semantic tokens | 277 tokens, Radix color scales, scaling, radius, and panel modes | White, Gray 10, Gray 90, and Gray 100 with generated layer, layout, type, and motion foundations |
-| Component axes | Small default vocabulary | Fortal's `classic`, `solid`, `soft`, `surface`, `outline`, and `ghost` vocabulary where applicable | Carbon button kinds and optional sizing, defaulting to 48 px |
-| Best for | A house system you intend to shape | Starting from a complete Radix-like system | Trying the first Carbon theme-and-button vertical slice |
+| Design language | Compact neutral starting point | Radix Themes 3.3.0 parity surface | IBM Carbon foundation |
+| Theme | 15 semantic tokens | 277 tokens, Radix color scales, scaling, radius, and panel modes | White, Gray 10, Gray 90, and Gray 100 token maps |
+| Component axes | Small default vocabulary | Fortal's `classic`, `solid`, `soft`, `surface`, `outline`, and `ghost` vocabulary where applicable | Carbon button kinds and sizes |
+| Best for | A house system you intend to shape | Starting from a complete Radix-like system | Adopting the first Carbon theme-and-button slice |
 
-All three choices install local Dart under `lib/`, use Remix for behavior, and
-use the same `add --diff` / `add --overwrite` review workflow. They cannot be
-mixed inside one initialized source tree because their tokens and variant
-vocabularies are different. Carbon is not yet a complete component catalog.
+All three choices install local Dart under `lib/`, use Remix for behavior, and use
+the same `add --diff` / `add --overwrite` review workflow. They cannot be mixed
+inside one initialized source tree because their tokens and variant
+vocabularies are different.
 
 ## Install
 
@@ -78,9 +78,9 @@ dart pub global activate remix_cli
 remix <command>
 ```
 
-Prefer the project-local form: it pins the CLI *and* its bundled registry
-snapshot per project, so two apps on different Remix versions cannot install
-each other's templates.
+Prefer the project-local form to pin the CLI. Registry content is pinned
+independently to a GitHub commit in `remix.yaml`. Neither CLI upgrades nor
+ordinary installs advance that pin.
 
 <Note>
 The examples below are written as `remix <command>` to match the tool's own
@@ -99,8 +99,9 @@ Global options:
     --version    Print the remix_cli version.
 
 Available commands:
-  add    Install one bundled registry item.
-  init   Initialize Remix source installation settings.
+  add        Install registry items and their dependencies.
+  init       Initialize Remix source installation settings.
+  registry   Register and pin GitHub registry sources.
 
 Run "remix help <command>" for more information about a command.
 ```
@@ -108,7 +109,7 @@ Run "remix help <command>" for more information about a command.
 ## 1. Initialize
 
 ```bash
-remix init --preset default
+remix init --preset vanilla
 ```
 
 This writes two files and nothing else:
@@ -118,11 +119,18 @@ This writes two files and nothing else:
 
 ```yaml
 # remix.yaml
-schema: 2
+schema: 3
 prefix: Ui
-preset: default
+preset: vanilla
 paths:
   ui: lib/ui
+defaultRegistry: "@remix"
+registries:
+  "@remix":
+    repository: conceptadev/remix
+    path: registry
+    ref: registry-stable
+    revision: "<resolved-full-commit-sha>"
 ```
 
 Choose the naming and location up front, because the prefix is baked into every
@@ -136,7 +144,7 @@ remix init --prefix Acme --preset fortal --ui-path lib/design_system
 `acmeButtonStyle`. The prefix must be an UpperCamel Dart identifier whose
 lowercased form is not a reserved word, and the UI path must live under `lib/`.
 The prefixes `Remix` and `Mix` are reserved for runtime dependencies.
-The preset defaults to `default` when omitted.
+The preset defaults to `vanilla` when omitted.
 
 `init` is also a repair command. Run it again and it recreates whichever of the
 two files is missing, telling you exactly which one it touched:
@@ -215,22 +223,30 @@ class SignUpButton extends StatelessWidget {
 
 ## Configuration
 
-`remix.yaml` is the entire configuration surface: three settings, no plugins
-and no per-component overrides:
+`remix.yaml` contains project settings and pinned named registry sources:
 
 ```yaml
-schema: 2
+schema: 3
 prefix: Ui       # type prefix for every generated identifier
-preset: default  # bundled recipe tree selected at init
+preset: vanilla  # selected across every configured registry
 paths:
   ui: lib/ui     # where installed source lives
+defaultRegistry: "@remix"
+registries:
+  "@remix":
+    repository: conceptadev/remix
+    path: registry
+    ref: registry-stable
+    revision: "<resolved-full-commit-sha>"
 ```
 
 | Key | Default | Rules |
 |---|---|---|
-| `schema` | `2` | New files use schema 2. Schema 1 remains readable as `preset: default`; anything else is rejected. |
+| `schema` | `3` | The only readable schema. Schemas 1–2 shipped in earlier prereleases and named no registry; such a project is reinitialized, not migrated. |
 | `prefix` | `Ui` | ASCII UpperCamel Dart identifier. Its lowercased form must not be a Dart reserved word. `Remix` and `Mix` are reserved for runtime dependencies. |
-| `preset` | `default` | Bundled registry selected for every later `add`. Choose `default`, `fortal`, or `carbon` at `init`. |
+| `preset` | `vanilla` | Preset selected across every configured registry. Choose `vanilla`, `fortal`, or `carbon` at `init`. |
+| `defaultRegistry` | `@remix` | Configured namespace for bare item names. |
+| `registries` | official GitHub source | Each namespace records repository, path, requested ref and full commit revision. |
 | `paths.ui` | `lib/ui` | Project-relative, normalized, no traversal, must be under `lib/`. Symlinks that escape the package root are rejected. |
 
 Unknown keys are an error rather than a warning, so a typo fails loudly instead
@@ -357,8 +373,8 @@ lib/ui/
     └── button.g.dart
 ```
 
-Place `AcmeScope` below the application host. For a routed Material app, wrap
-the child of `MaterialApp.builder` with `AcmeScope`. Routes and dialogs then
+Place `AcmeScope` below the application host. For a routed `WidgetsApp`, wrap
+the child of `WidgetsApp.builder` with `AcmeScope`. Routes and dialogs then
 inherit its tokens and text defaults. The scope example lives in
 `lib/ui/theme/theme_scope.dart`.
 
@@ -378,23 +394,87 @@ use `--overwrite` only when you want the new authored file wholesale.
 
 ## The Carbon preset
 
-Initialize Carbon once, then install its initial button slice:
+Carbon begins as a deliberately narrow remote-registry slice: its complete
+theme foundation and `button`. Initialize it and install Button with the same
+pinned-source workflow:
 
 ```bash
 remix init --prefix Acme --preset carbon
 remix add button
 ```
 
-Button installs the theme first and produces prefixed, application-owned
-source such as `AcmeScope`, `AcmeTheme`, `AcmeButton`, and
-`acmeButtonStyle`. The foundation supports Carbon White, Gray 10, Gray 90, and
-Gray 100 through `white`, `g10`, `g90`, and `g100`. Button defaults to Carbon's
-large 48 px height and accepts an explicit size or an `AcmeLayoutScope` size.
+The application receives `AcmeScope`, `AcmeTheme`, `AcmeButton`, and
+`acmeButtonStyle` as editable local source. `AcmeTheme.white`, `.g10`, `.g90`,
+and `.g100` select Carbon's four themes. Button supports Carbon's primary,
+secondary, tertiary, ghost, and danger treatments; its default 48 px height can
+be overridden directly or inherited from `AcmeLayoutScope`.
 
-This is the first Carbon vertical slice, not a complete Carbon component
-catalog. It contains only the theme surface required by `button` and the
-button itself; it does not include an icon button, charts, icons, Agent
-surfaces, or dashboards.
+This preset intentionally does not claim catalog parity yet. It contains no
+icon button, chart, icons, Agent surface, or dashboard item. The generated
+distribution is derived from `registry_source/lib/src/carbon` and published
+beside the other presets; the CLI does not bundle a second Carbon catalog.
+
+## Application host and appearance
+
+Open Code documentation and runnable examples use `WidgetsApp`. For a routed
+application, install the generated theme scope in `WidgetsApp.builder` and pass
+its `child` through. That child is the Navigator; keeping the scope above it
+makes the active theme available to routes, dialogs, and overlays. See the
+[complete routed host example](/fortal#scope-placement).
+
+The Vanilla and Fortal generated scopes expose `theme`, `darkTheme`, and `mode`. A root without
+arguments supplies the preset's light and dark defaults and follows the system.
+A nested scope inherits its parent's configured pair and active selection.
+
+| Preset | Scope | Theme values and modes |
+| --- | --- | --- |
+| `vanilla` | `AcmeThemeScope` | `AcmeThemeData.light()`, `.dark()`, and `AcmeThemeMode` |
+| `fortal` | `AcmeScope` | `AcmeThemeData.light()`, `.dark()`, and `AcmeThemeMode` |
+
+Use your configured prefix in place of `Acme`. The same parameters apply to
+Vanilla and Fortal:
+
+```dart
+AcmeThemeScope(
+  theme: const AcmeThemeData.light(),
+  darkTheme: const AcmeThemeData.dark(),
+  mode: AcmeThemeMode.system,
+  child: child,
+)
+```
+
+For Fortal, use `AcmeScope` in that example. Its theme constructors also accept
+accent, gray, radius, scaling, panel background, and background visibility.
+Set shared design options on both appearances when customizing the pair.
+
+`mode` accepts `system`, `light`, and `dark`. The root reacts to platform
+brightness changes in system mode. An explicit mode overrides the system;
+a nested scope with no mode inherits the parent's active selection, even if a
+nearer `MediaQuery` reports a different system brightness. Nested scopes can
+explicitly select another mode from the inherited pair.
+
+`theme` is the base and fallback. When you supply a custom `theme` without a
+`darkTheme`, it is used in both modes; colors are not automatically inverted.
+Supplying only `darkTheme` retains the inherited or generated light theme and
+does not force dark mode. Supplying neither retains both preset defaults.
+
+Generated scopes take a `child`. Keep `WidgetsApp.builder` above the Navigator
+and use its child; no scope-specific builder constructor is required. To read
+the newly installed theme while building, put Flutter's `Builder` below the
+scope and use that callback's context.
+
+The [downloadable tutorial apps](/tutorials/settings-screen) show the same API
+in the Vanilla and Fortal presets. Their generated theme files are editable application source;
+regeneration still preserves existing authored files unless you explicitly use
+`--overwrite`. The CLI installs the theme layer, not a complete app host or
+appearance picker. Selection controls and persistence belong to the application.
+The dashboard is a reference consumer of the same scope behavior.
+
+The theme API has a hard cutoff: scope constructors accept `theme`, `darkTheme`,
+and `mode`. The default scope's `data` parameter, FortalScope's `brightness`
+parameter, and the config `createScope` shortcut have been removed. Use `theme`
+for a fixed theme and `mode` for appearance selection. Direct Fortal design
+options such as `accent` still override the supplied theme values.
 
 ## The three levels of customization
 
@@ -405,7 +485,7 @@ the recipe reads tokens and the scope decides what tokens resolve to:
 
 ```dart
 UiThemeScope(
-  data: const UiThemeData.light().copyWith(
+  theme: const UiThemeData.light().copyWith(
     primary: const Color(0xFF4F46E5),
     radius: const Radius.circular(999),
   ),
@@ -434,17 +514,37 @@ recipe's hover fill has to be declared as a hover fragment too; a bare
 
 ## Updating
 
-There is no update protocol, and that is the deliberate trade you accept with
-open code. The CLI tracks no versions, no content hashes, and no lockfile for
-installed source. It cannot tell an upstream improvement from your intentional
-edit, so it will never merge for you.
-
-What you get instead is a repeatable review loop. Bump the CLI, then diff:
+Registry content releases independently of the CLI. Update a pin explicitly,
+then review installed source; no automatic merge or installed-source lockfile
+is used.
 
 ```bash
-flutter pub upgrade remix_cli     # new CLI = new bundled registry snapshot
-remix add button --diff           # your file vs. the new template
+remix registry update @remix
+remix add button --diff
 ```
+
+`registry update` resolves the recorded `ref` again; for the official registry
+that is `registry-stable`, the newest promoted commit. A SHA or tag pin
+resolves to the same commit, so move it with `--ref <sha>`, or return to the
+branch with `--ref registry-stable`.
+
+Register additional public GitHub sources with the same preset:
+
+```bash
+remix registry add @company --repository owner/repo --path registry --ref v1
+remix add @company/button
+```
+
+Bare dependencies resolve within their owning registry. Qualified dependencies
+require explicit registration; they cannot add or redirect sources. Cross-registry
+cycles, conflicting targets and incompatible package requirements fail before writes.
+
+A project on schema 1 or 2 named no registry at all, so there is no pin to
+migrate. Delete `remix.yaml`, rerun `remix init` with the prefix, preset and UI
+path it recorded, then review with `remix add button --diff`; authored files and
+generated adapters are untouched either way. Restore a previously committed
+`remix.yaml` pin to roll back the source selection; installed files are not
+reverted.
 
 `--diff` renders the new template, formats it, and runs a real `git diff`
 against what is on disk. If the output is empty you are current:
@@ -458,10 +558,10 @@ own edits every time, whether or not the template moved. Read the hunks, not the
 exit state. To see the template alone, compare against a copy of the file you
 installed, or run the diff in a scratch project that has never been edited.
 
-A `remix_cli` release that only changes the tool, and not a template, produces
-an empty diff. That is the expected result, not a failed upgrade: the CLI and
-its bundled registry snapshot share one version number, so every CLI release
-looks like a registry release even when no template moved.
+CLI updates do not change registry pins. `add`, `--diff`, and `--dry-run`
+fetch only the configured commits and never update configuration. Remote failures
+never substitute older or newer content. Private repositories, arbitrary HTTP
+sources, local registries and persistent offline caching are not supported.
 
 If you like the upstream version, take it wholesale:
 
@@ -469,7 +569,7 @@ If you like the upstream version, take it wholesale:
 remix add button --overwrite
 ```
 
-`--overwrite` replaces **only the item you named**. Already-installed registry
+`--overwrite` replaces **only the items you named**. Already-installed registry
 dependencies are untouched, so updating Button never silently rewrites a Theme
 you have customized:
 
@@ -483,14 +583,19 @@ That is the intended workflow. The file is yours.
 
 ### The Remix drift notice
 
-Each registry snapshot is authored against one `remix` version, and the
+Each registry revision is authored against one `remix` version, and the
 constraint it installs is a caret, so `flutter pub upgrade` can move you onto
 a later `remix` that these templates were never tested against. `add` reports
 that after it resolves your lockfile:
 
 ```
-Resolved remix 1.0.0; this remix_cli registry was authored against 1.0.0-beta.10. Run flutter pub upgrade remix_cli, then review with --diff.
+Resolved remix 1.0.0; this registry revision was authored against 1.0.0-beta.10. Your pin does not move on its own — run remix registry update @remix, then review with --diff.
 ```
+
+Upgrading the CLI does not change the pin, so the notice names
+`registry update`. When the pin is a SHA or tag rather than
+`registry-stable`, it adds `--ref <newer ref>`, since a bare update would
+resolve the same commit.
 
 It is a notice, not a failure. The install completes. A `remix` *below* the
 authored version is a different case and still fails outright, because the
@@ -555,9 +660,9 @@ No source was written.
 Declaring the same package in both sections is rejected the same way. Fix your
 manifest and rerun; the CLI will not edit it for you.
 
-## Default preset catalog
+## Vanilla preset catalog
 
-The bundled registry is deliberately small, and every item after `theme`
+The official registry is deliberately small, and every item after `theme`
 depends on it:
 
 `theme` installs `tokens.dart`, `theme_data.dart`, and `theme_scope.dart`,
@@ -635,7 +740,12 @@ components that use them. Fortal's component names use the configured prefix,
 so an Acme installation exposes `AcmeSidebar`, `AcmeHeading`, and
 `AcmeText` alongside its generated controls.
 
-One `add` installs one item. The names above use the default `Ui` prefix;
+The `carbon` catalog is intentionally smaller: it contains `theme` and
+`button` only. Adding Button installs both, generates `AcmeButton`, and exposes
+the four Carbon theme maps through `AcmeScope`. Carbon does not inherit the
+Vanilla/Fortal catalog merely because the item names share one registry index.
+
+One `add` installs every named item plus shared dependencies once. The names above use the default `Ui` prefix;
 `--prefix Acme` gives you `AcmeButton` and friends. An axis is an enum the
 recipe declares, and a recipe whose axis is named `variant` also gets one
 named constructor per value, so `UiBadge.destructive(label: 'Failing')` works
@@ -645,9 +755,9 @@ A parameter is not an axis. `UiDivider` takes an `orientation`, but it is a
 plain Flutter `Axis` the recipe accepts rather than an enum of its own, so it
 generates no named constructors.
 
-### Charts in the default preset
+### Charts in the Vanilla preset
 
-The default preset's `chart` is an optional extension with its own compact
+The Vanilla preset's `chart` is an optional extension with its own compact
 recipe:
 
 ```bash
@@ -727,11 +837,11 @@ If generation or analysis fails *after* installation, the authored source stays
 on disk for inspection. Fix the reported problem and rerun the same command.
 
 
-## Agent surfaces in both presets
+## Agent surfaces in Vanilla and Fortal
 
 `activity`, `answer`, `composer`, `execution`, `message`, `permission`, `plan`,
 and `transcript` install unstyled, application-owned behavior source in either
-the default or Fortal preset. Each `<component>_recipe` item adds a complete
+the Vanilla or Fortal preset. Each `<component>_recipe` item adds a complete
 preset-specific recipe bundle. The
 private authoring source (`registry_source`) is not a consumer dependency. The shared `models` files
 are exported from the local UI barrel; `support` helpers install transitively
@@ -745,8 +855,8 @@ These surfaces use `@MixableSpec`. The CLI enables the supported Mix generator's
 opt-in spec-styler builder for their installed source paths in `build.yaml`,
 preserving other builder settings and comments. Explicit exclusions or disabled
 generation are reported before writes. `--dry-run` and `--diff` remain read-only.
-Agent recipes extend both existing presets; they do not constitute a third preset
-or claim Radix component parity.
+Agent recipes extend Vanilla and Fortal; they are not included in the Carbon
+slice and do not claim Radix component parity.
 
 Available styled items: `activity_recipe`, `answer_recipe`, `composer_recipe`,
 `execution_recipe`, `message_recipe`, `permission_recipe`, `plan_recipe`, and

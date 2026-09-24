@@ -317,7 +317,7 @@ void main() {
     final theme = ThemeScope.of(tester.element(find.byType(ChatPage)));
     theme.onChanged(
       theme.settings.copyWith(
-        appearance: ThemeMode.dark,
+        appearance: UiThemeMode.dark,
         accentColor: .jade,
         grayColor: .sage,
         panelBackground: .translucent,
@@ -328,7 +328,7 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 300));
     final scope = tester.widget<UiScope>(find.byType(UiScope));
-    expect(scope.brightness, Brightness.dark);
+    expect(scope.mode, UiThemeMode.dark);
     expect(scope.accent, UiAccentColor.jade);
     expect(scope.gray, UiGrayColor.sage);
     expect(scope.panelBackground, UiPanelBackground.translucent);

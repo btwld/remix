@@ -233,32 +233,28 @@ class AcmeButton extends StatelessWidget {
   final MouseCursor mouseCursor;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixButton(
-      key: this.key,
-      style: acmeButtonStyle(
-        variant: this.variant,
-        size: this.size,
-        style: this.style,
-      ),
-      label: this.label,
-      leadingIcon: this.leadingIcon,
-      trailingIcon: this.trailingIcon,
-      textBuilder: this.textBuilder,
-      leadingIconBuilder: this.leadingIconBuilder,
-      trailingIconBuilder: this.trailingIconBuilder,
-      loadingBuilder: this.loadingBuilder,
-      loading: this.loading,
-      enabled: this.enabled,
-      onPressed: this.onPressed,
-      onLongPress: this.onLongPress,
-      focusNode: this.focusNode,
-      autofocus: this.autofocus,
-      enableFeedback: this.enableFeedback,
-      semanticLabel: this.semanticLabel,
-      semanticHint: this.semanticHint,
-      excludeSemantics: this.excludeSemantics,
-      mouseCursor: this.mouseCursor,
+      key: key,
+      style: acmeButtonStyle(variant: variant, size: size, style: style),
+      label: label,
+      leadingIcon: leadingIcon,
+      trailingIcon: trailingIcon,
+      textBuilder: textBuilder,
+      leadingIconBuilder: leadingIconBuilder,
+      trailingIconBuilder: trailingIconBuilder,
+      loadingBuilder: loadingBuilder,
+      loading: loading,
+      enabled: enabled,
+      onPressed: onPressed,
+      onLongPress: onLongPress,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      enableFeedback: enableFeedback,
+      semanticLabel: semanticLabel,
+      semanticHint: semanticHint,
+      excludeSemantics: excludeSemantics,
+      mouseCursor: mouseCursor,
     );
   }
 }

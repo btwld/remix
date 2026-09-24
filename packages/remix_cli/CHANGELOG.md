@@ -1,4 +1,44 @@
+## Unreleased
+
+- **Breaking.** `remix.yaml` schema 3 is the only readable configuration.
+  Schemas 1 and 2 named no registry and read from a catalog frozen inside the
+  CLI; both that catalog and `remix registry migrate` are gone. A project still
+  on an earlier schema deletes `remix.yaml` and runs `remix init` to pin a
+  registry; installed source and generated adapters are untouched. The registry
+  index (schema 1) and catalog (schema 2) formats are unchanged.
+- Item names are qualified with their registry namespace in every `add`,
+  `--dry-run` and `--diff` report, since every project now names its sources.
+
+- Generate `theme`, `darkTheme`, and `mode` scope parameters for both presets, including light/dark defaults and live system appearance. **Breaking:** remove the default scope `data` parameter; use `theme`.
+- Restructure the internal registry source layer behind one `RegistrySources`
+  seam and a `RegistryReader` port. No `remix.yaml`, registry index, or catalog
+  schema change from this restructuring; `lib/src` is not a supported
+  programmatic API. See `open_code/REGISTRY_PORT.md`.
+- Document registries, pinning, and publishing your own registry at
+  `docs/guides/registries.mdx`.
+
+- Name the active starter preset `vanilla` and select it by default.
+
+- Publish catalogs independently under `registry/` with a versioned preset
+  index and schema-2 namespaced dependencies.
+- Initialize schema-3 projects from the CI-promoted `registry-stable`
+  branch, pinned to full commits. Add explicit registry registration and
+  pin updates.
+- Resolve cross-registry dependency graphs before writes; reject cycles,
+  conflicting targets and incompatible package requirements while preserving
+  application-owned source and installed generated adapters.
+- Diff and overwrite remain explicit source-review actions.
+
 ## 0.1.0
+
+- `remix add` accepts several items in one invocation, as in
+  `remix add button card dialog`. The batch resolves to a single ordered
+  install, so a shared dependency is written once and the dependency
+  resolution, formatting, code generation, and analysis steps each run once
+  for the whole batch instead of once per item. `--overwrite` applies to every
+  requested item and still never to a dependency pulled in behind one. An
+  unknown or repeated item fails before any write. Single-item invocations are
+  unchanged.
 
 - Adds `sidebar_layout` to both presets: an open-code shell layout, not a
   styled component, that rows an installed `sidebar` beside a header and body
@@ -12,7 +52,8 @@
   application's own `button` and `icon_button` recipes, so adding it installs
   both. It needs the Remix release that ships `RemixToastScope`.
 
-- Require Remix `^1.0.0-beta.9` for the generated Fortal adapters. CI checks
+- Require Remix `^1.0.0-beta.10` for the generated adapters and `mix_chart`
+  `^0.0.1-beta.3` for the optional chart recipe. CI checks
   both presets with checkout Remix. Publication requires the hosted check.
 
 - Adds the `fortal` preset as application-owned source derived from the

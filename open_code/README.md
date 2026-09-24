@@ -1,17 +1,19 @@
 # Application-owned Remix UI
 
+See [pinned GitHub registries](REGISTRIES.md) for namespaces, revision updates,
+migration, and independent registry releases.
+
 This example is installed by `remix_cli`. It gives an application editable
 theme and component source while Remix continues to own rendering, interaction,
 focus, loading, disabled behavior, and accessibility.
 
-The three registry trees live in
-`packages/remix_cli/lib/src/registry/default/` and
-`packages/remix_cli/lib/src/registry/fortal/`, and
-`packages/remix_cli/lib/src/registry/carbon/`. There is no second registry copy
-under `open_code/`. `open_code/fixture/` proves the default preset,
-`open_code/fortal_fixture/` proves Fortal with every generated widget and known
-Radix Themes 3.3.0 color values, and `open_code/carbon_fixture/` proves the
-initial Carbon theme-and-button slice. A behavioral package can be styled from
+The registry trees live in `registry/vanilla/`, `registry/fortal/`, and
+`registry/carbon/`: the CLI
+ships no catalog of its own, and there is no second registry copy under
+`open_code/`. `open_code/fixture/` proves the Vanilla preset, while
+`open_code/fortal_fixture/` proves Fortal with every generated widget and
+known Radix Themes 3.3.0 color values. `open_code/carbon_fixture/` proves the
+Carbon theme-and-button slice. A behavioral package can be styled from
 the same installed source; see
 [Styling a package on top of the catalog](#styling-a-package-on-top-of-the-catalog).
 
@@ -21,24 +23,23 @@ The CLI has not been published. The hosted commands below apply after its
 first release. Until then, use the checkout command in this section.
 
 Use a project-local development dependency so the application's lockfile pins
-the CLI version and its bundled templates:
+the CLI version; `remix.yaml` separately pins registry content:
 
 ```shell
 flutter pub add dev:remix_cli
-dart run remix_cli:remix init --prefix Acme --preset default
+dart run remix_cli:remix init --prefix Acme --preset vanilla
 dart run remix_cli:remix add button
 ```
 
-One `add` installs one item. The default and Fortal catalogs contain `theme`,
-the opt-in `icons` seam, the optional `chart` extension, plus `accordion`,
-`avatar`, `badge`, `button`, `callout`, `card`, `checkbox`, `dashboard_demo`,
-`dashboard_shell`, `data_list`, `data_table`, `dialog`, `disclosure`, `divider`,
-`icon_button`, `link`, `menu`, `popover`, `progress`, `radio`,
-`segmented_control`, `select`, `sidebar`, `sidebar_layout`, `skeleton`,
-`slider`, `spinner`, `switch`, `tabs`, `textfield`, `toast`, `toggle`,
-`toggle_group`, and `tooltip`. `sidebar_layout` is a plain shell layout with no
-`Spec` and no generated adapter, pairing an installed `sidebar` with a header
-and body.
+One `add` installs every named item plus shared dependencies once. The catalog is `theme`, the opt-in `icons` seam,
+the optional `chart` extension, plus `accordion`, `avatar`, `badge`, `button`,
+`callout`, `card`, `checkbox`, `dashboard_demo`, `dashboard_shell`, `data_list`, `data_table`, `dialog`,
+`disclosure`, `divider`, `icon_button`, `link`, `menu`, `popover`, `progress`,
+`radio`, `segmented_control`, `select`, `sidebar`, `sidebar_layout`,
+`skeleton`, `slider`, `spinner`, `switch`, `tabs`, `textfield`, `toast`,
+`toggle`, `toggle_group`, and `tooltip`. `sidebar_layout` is a plain shell
+layout with no `Spec` and no generated adapter, pairing an installed
+`sidebar` with a header and body.
 
 `dashboard_shell` installs a reusable, host-controlled shell plus its shared
 composition source. It pulls in the existing sidebar layout, sidebar,
@@ -48,7 +49,7 @@ sample data, routes, or an application entry point.
 `dashboard_demo` installs that shell plus the same twelve destinations as the
 Fortal reference dashboard: Overview, Chat, Customers, Orders, Settings,
 Charts, Actions, Forms & Inputs, Data Display, Overlays, Navigation, and
-Typography. It uses the same `UiDashboardDemo` API in both presets, renders
+Typography. It uses the same `UiDashboardDemo` API in Vanilla and Fortal, renders
 each preset's native component variants, and still leaves the host's app,
 theme scope, routes, authentication, persistence, and real search behavior in
 the application.
@@ -56,8 +57,8 @@ the application.
 The `fortal` preset contains that complete surface plus `base_button`, `code`,
 `heading`, `kbd`, `text`, and `typography`.
 
-The initial `carbon` preset contains only `theme` and `button`. It is a first
-vertical slice, not a complete component catalog.
+The `carbon` preset is deliberately smaller: it contains the complete Carbon
+theme foundation and `button`, with no icon, chart, Agent, or dashboard items.
 
 `chart` is the one optional extension outside the core Remix component
 surface. It builds directly on `mix_chart`, installs no Fortal code, and
@@ -71,8 +72,8 @@ at a checkout or staged package:
 dart pub add "dev:remix_cli@{path: /path/to/remix/packages/remix_cli}"
 ```
 
-All three presets require Remix `^1.0.0-beta.10`. Until that release is
-available, add a temporary `pubspec_overrides.yaml` to the application:
+All three presets require Remix `^1.0.0-beta.10`. Until that release is available,
+add a temporary `pubspec_overrides.yaml` to the application:
 
 ```yaml
 dependency_overrides:
@@ -96,7 +97,7 @@ installed adapters inside them.
 default prefix is `Ui`; `--prefix Acme` produces names such as
 `AcmeThemeScope`, `AcmeButton`, and `acmeButtonStyle`. A different source root
 can be chosen once with `--ui-path`. The preset also is chosen once: existing
-projects default to `default`, and changing a configured preset is refused.
+projects default to `vanilla`, and changing a configured preset is refused.
 
 ## Fortal as application-owned source
 
@@ -114,7 +115,7 @@ the application owns the copied Radix color table, 277-token theme, component
 recipes, and generated adapters.
 
 The Fortal templates are derived from analyzed Dart in
-`registry_source/fortal/lib/src/`; do not edit the committed `.tmpl` files by
+`registry_source/lib/src/fortal/`; do not edit the committed `.tmpl` files by
 hand. `tool/build_registry.dart --check` makes source/template drift a CI
 failure.
 
@@ -128,16 +129,12 @@ dart run remix_cli:remix init --prefix Acme --preset carbon
 dart run remix_cli:remix add button
 ```
 
-This installs the theme required by Button and the generated Button adapter as
-prefixed local source, including `AcmeScope`, `AcmeTheme`, `AcmeButton`, and
-`acmeButtonStyle`. The foundation supports Carbon White, Gray 10, Gray 90, and
-Gray 100 through `white`, `g10`, `g90`, and `g100`. Button defaults to Carbon's
-large 48 px height and accepts an explicit size or an `AcmeLayoutScope` size.
+This installs `AcmeScope`, `AcmeTheme`, `AcmeButton`, and
+`acmeButtonStyle` as local source. The four themes are `white`, `g10`, `g90`,
+and `g100`; Button supports the Carbon kind and size vocabulary. The preset is
+an initial vertical slice, not a complete Carbon component catalog.
 
-This is an initial Carbon slice, not a complete component catalog. It does not
-include an icon button, charts, icons, Agent surfaces, or dashboards.
-
-The default preset installs Theme before Button. The command adds missing
+The Vanilla preset installs Theme before Button. The command adds missing
 dependency constraints, writes source, updates the barrel, and generates the
 adapter:
 
@@ -153,7 +150,7 @@ lib/ui/
     button.g.dart     generated; do not hand-edit
 ```
 
-Each later default component `add` adds another pair to `components/` and extends
+Each later Vanilla component `add` adds another pair to `components/` and extends
 the barrel's managed block. Existing authored source stays untouched. The
 focused build also includes every installed generated adapter, so a dependency
 change cannot remove an earlier generated part.
@@ -174,12 +171,12 @@ that builder for the installed source paths in `build.yaml`, preserving other
 settings and comments. Explicit disabled builders or excluded source fail in
 preflight instead of being overridden. Dry-run/diff remain read-only.
 
-Agent behavior is available in the default and Fortal presets. Add a bare
-surface for behavior-only source, or `<component>_recipe` for the surface plus
-its complete preset-specific styling bundle. Each recipe is authored as Dart
-in its preset's source (`registry_source/lib/src/{default,fortal}/recipes/`)
-against the Agent behavior source beside it, and derives into the registry
-like every other item.
+Agent behavior is available in Vanilla and Fortal. Add a bare surface for
+behavior-only source, or `<component>_recipe` for the surface plus its complete
+preset-specific styling bundle. Each recipe is authored as Dart in its preset's
+source (`registry_source/lib/src/{default,fortal}/recipes/`) against the Agent
+behavior source beside it,
+and derives into the registry like every other item.
 
 ## Charts without Fortal
 
@@ -205,7 +202,7 @@ rerun preserves existing authored files. It can recreate a missing generated
 part, refresh the managed export block, and run the focused checks without
 resetting local work.
 
-Use `--diff` to compare the requested item with the bundled template. This is
+Use `--diff` to compare the requested item with the pinned template. This is
 read-only and requires Git:
 
 ```shell
@@ -219,9 +216,9 @@ dart run remix_cli:remix add button --overwrite
 ```
 
 Overwrite is requested-item-only. Overwriting Button does not overwrite its
-Theme dependency. The CLI has no registry lockfile, content hash, remote
-registry, or automatic update command in this MVP; updates are an explicit
-diff-and-overwrite decision.
+Theme dependency. The CLI has no separate registry lockfile or automatic
+source merge. `registry update` moves the selected pin; reviewing with
+`--diff` and opting into `--overwrite` remain explicit decisions.
 
 ## Generated source
 
@@ -255,7 +252,7 @@ Theme-wide changes use `copyWith`:
 
 ```dart
 AcmeThemeScope(
-  data: const AcmeThemeData.light().copyWith(
+  theme: const AcmeThemeData.light().copyWith(
     primary: const Color(0xFF4F46E5),
     primaryForeground: const Color(0xFFFFFFFF),
     radius: const Radius.circular(999),
@@ -296,10 +293,9 @@ Mix merges state fragments by state. To replace a hover value, provide an
 
 ## Project-local versus global use
 
-Project-local use is the supported default. It pins the CLI alongside the app
-and makes template changes reviewable in ordinary dependency updates. A global
-activation is convenient for experiments, but it can silently move every
-project to a different template version.
+Project-local use pins the CLI alongside the app. Registry revisions are
+pinned independently in `remix.yaml`, including with global CLI activation.
+Only an explicit registry update advances a project to new content.
 
 ## Styling a package on top of the catalog
 
@@ -331,8 +327,8 @@ its own spec covers one of them. The four child stylers are passed on
 unresolved, so each control resolves its own hover, focus, and disabled state.
 
 The eight Agent surfaces now install as `activity`, `answer`, `composer`,
-`execution`, `message`, `permission`, `plan`, and `transcript` in both existing
-presets. Shared `models` and `support` install through dependency closure. The
+`execution`, `message`, `permission`, `plan`, and `transcript` in the Vanilla
+and Fortal presets. Shared `models` and `support` install through dependency closure. The
 private authoring source (`registry_source/lib/src/agent`) is not a consumer
 dependency. The dashboard imports installed `Ui*` classes. Fortal recipes use
 only the installed Fortal theme and controls. Checkout verification does not
@@ -358,7 +354,7 @@ checkout CLI with prefix `Acme`, adds every item, and verifies generation,
 analysis, and consumer tests against checkout Remix.
 
 After Remix is published, run `fvm dart run melos run open-code:release:check`
-to verify both presets with hosted Remix. The direct checker defaults to both
+to verify all three presets with hosted Remix. The direct checker defaults to both
 sources. Select `--source checkout` or `--source hosted` for one source.
 Use `--hosted-cli --source hosted` after CLI publication to verify its hosted
 assets. Pass `--keep` to retain a generated application for inspection.
@@ -369,7 +365,7 @@ All three dogfood consumers are checked against the templates they installed:
 fvm dart run tool/check_open_code_dogfood.dart
 ```
 
-`apps/playground` holds every default item; `apps/demo` installs the non-Agent
+`apps/playground` holds every Vanilla item; `apps/demo` installs the non-Agent
 Fortal catalog; `apps/dashboard` installs the full Fortal catalog, including all
 eight Agent surfaces and recipes. The checker declares the Fortal items
 explicitly, so missing files are checked too. The CLI reads each consumer's

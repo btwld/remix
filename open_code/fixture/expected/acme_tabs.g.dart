@@ -61,11 +61,11 @@ class AcmeTabBar extends StatelessWidget {
   final Widget child;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixTabBar(
-      key: this.key,
-      style: acmeTabBarStyle(style: this.style),
-      child: this.child,
+      key: key,
+      style: acmeTabBarStyle(style: style),
+      child: child,
     );
   }
 }
@@ -139,23 +139,23 @@ class AcmeTab extends StatelessWidget {
   final String? semanticLabel;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixTab(
-      key: this.key,
-      style: acmeTabStyle(style: this.style),
-      tabId: this.tabId,
-      child: this.child,
-      label: this.label,
-      icon: this.icon,
-      enabled: this.enabled,
-      mouseCursor: this.mouseCursor,
-      enableFeedback: this.enableFeedback,
-      focusNode: this.focusNode,
-      autofocus: this.autofocus,
-      onFocusChange: this.onFocusChange,
-      onHoverChange: this.onHoverChange,
-      onPressChange: this.onPressChange,
-      semanticLabel: this.semanticLabel,
+      key: key,
+      style: acmeTabStyle(style: style),
+      tabId: tabId,
+      child: child,
+      label: label,
+      icon: icon,
+      enabled: enabled,
+      mouseCursor: mouseCursor,
+      enableFeedback: enableFeedback,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      onFocusChange: onFocusChange,
+      onHoverChange: onHoverChange,
+      onPressChange: onPressChange,
+      semanticLabel: semanticLabel,
     );
   }
 }
@@ -183,13 +183,13 @@ class AcmeTabView extends StatelessWidget {
   final bool maintainState;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return RemixTabView(
-      key: this.key,
-      style: acmeTabViewStyle(style: this.style),
-      tabId: this.tabId,
-      child: this.child,
-      maintainState: this.maintainState,
+      key: key,
+      style: acmeTabViewStyle(style: style),
+      tabId: tabId,
+      child: child,
+      maintainState: maintainState,
     );
   }
 }

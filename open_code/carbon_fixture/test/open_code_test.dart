@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:open_code_fixture/main.dart';
 import 'package:open_code_fixture/ui/ui.dart';
@@ -43,8 +43,9 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(
-      MaterialApp(
-        home: AcmeScope(
+      WidgetsApp(
+        color: const Color(0xFFFFFFFF),
+        builder: (context, _) => AcmeScope(
           child: Center(
             child: AcmeButton(
               label: 'Explicit',
@@ -58,8 +59,9 @@ void main() {
     expect(tester.getSize(find.byType(AcmeButton)).height, 64.0);
 
     await tester.pumpWidget(
-      MaterialApp(
-        home: AcmeScope(
+      WidgetsApp(
+        color: const Color(0xFFFFFFFF),
+        builder: (context, _) => AcmeScope(
           child: AcmeLayoutScope(
             size: AcmeSize.sm,
             child: Center(

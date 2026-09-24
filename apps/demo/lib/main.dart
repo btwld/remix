@@ -15,7 +15,7 @@ class HotReload extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Widgetbook.material(
+    return Widgetbook(
       addons: [FortalThemeAddon()],
       appBuilder: (context, child) => child,
       directories: directories,
@@ -46,7 +46,7 @@ class FortalThemeAddon extends ThemeAddon<ThemeData> {
           return Theme(
             data: theme,
             child: FortalScope(
-              brightness: theme.brightness,
+              mode: theme.brightness == Brightness.dark ? .dark : .light,
               child: ColoredBox(
                 color: theme.scaffoldBackgroundColor,
                 child: DefaultTextStyle(

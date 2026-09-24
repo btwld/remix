@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:naked_ui/naked_ui.dart';
 
+import '../src/example_app.dart';
+
 // Simple fruit data class for type safety
 class Fruit {
   const Fruit({required this.value, required this.label, required this.emoji});
@@ -19,29 +21,25 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        backgroundColor: Colors.grey.shade50,
-        body: Center(
-          child: Container(
-            padding: const EdgeInsets.all(24),
-            child: const Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Select with Checkmarks',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  'Options show checkmarks when selected',
-                  style: TextStyle(color: Colors.grey),
-                ),
-                SizedBox(height: 32),
-                CheckmarkSelectExample(),
-              ],
-            ),
+    return ExampleApp(
+      child: Center(
+        child: Container(
+          padding: const EdgeInsets.all(24),
+          child: const Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Select with Checkmarks',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 8),
+              Text(
+                'Options show checkmarks when selected',
+                style: TextStyle(color: Color(0xFF616161)),
+              ),
+              SizedBox(height: 32),
+              CheckmarkSelectExample(),
+            ],
           ),
         ),
       ),

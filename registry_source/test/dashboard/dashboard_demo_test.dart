@@ -556,7 +556,7 @@ Future<void> _pump(
 
   await tester.pumpWidget(switch (preset) {
     .defaultPreset => VanillaThemeScope(
-      data: const VanillaThemeData.light(),
+      mode: VanillaThemeMode.light,
       child: app,
     ),
     .fortal => FortalScope(child: app),

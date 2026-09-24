@@ -152,9 +152,7 @@ class _VanillaDashboardDemoState extends State<VanillaDashboardDemo> {
     );
     if (!widget.builtInChrome) return demo;
     return VanillaThemeScope(
-      data: _dark
-          ? const VanillaThemeData.dark()
-          : const VanillaThemeData.light(),
+      mode: _dark ? VanillaThemeMode.dark : VanillaThemeMode.light,
       child: Builder(
         builder: (context) => ColoredBox(
           color: VanillaTokens.background.resolve(context),

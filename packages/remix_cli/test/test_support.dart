@@ -3,40 +3,45 @@ import 'dart:io';
 import 'package:path/path.dart' as p;
 import 'package:pub_semver/pub_semver.dart';
 import 'package:remix_cli/src/installer.dart';
+import 'package:remix_cli/src/registry_reader.dart';
+import 'package:remix_cli/src/registry_source.dart';
 import 'package:remix_cli/src/process_runner.dart';
 import 'package:yaml/yaml.dart';
 
-/// The `remix` constraint the bundled registry declares, read from the file
-/// itself rather than restated here.
-///
-/// A literal copy would go stale on the next `remix` bump and fail every
-/// fixture in this suite with `does not satisfy`, inside the release pull
-/// request a bot opened. Deriving it means the bump moves one line.
-final String registryRemixConstraint = _readRegistryRemixConstraint();
+import 'checkout_registry.dart';
 
-/// The lowest `remix` version [registryRemixConstraint] admits.
-///
-/// `tool/check_version_alignment.dart` holds this equal to the version in
-/// `packages/remix/pubspec.yaml`, so it is also the version the registry
-/// templates were authored against.
-final Version registryRemixFloor =
-    (VersionConstraint.parse(registryRemixConstraint) as VersionRange).min!;
+/// The `remix` constraint the committed Vanilla catalog declares, read from
+/// the file itself rather than restated here.
+final String registryRemixConstraint = _readRegistryConstraint('remix');
 
-String _readRegistryRemixConstraint() {
-  // `dart test` runs with the package root as the current directory.
+/// The lowest `remix` version [registryRemixConstraint] admits, which is the
+/// version the committed templates are authored against.
+final Version registryRemixFloor = _floorOf(registryRemixConstraint);
+
+/// The same, for the `mix_chart` release the `chart` item is built against.
+final String registryMixChartConstraint = _readRegistryConstraint('mix_chart');
+final Version registryMixChartFloor = _floorOf(registryMixChartConstraint);
+
+Version _floorOf(String constraint) =>
+    (VersionConstraint.parse(constraint) as VersionRange).min!;
+
+/// The constraint the catalog declares for [package], from the first item that
+/// depends on it. Reading it back is what keeps these fixtures honest: a floor
+/// raised in `registry/` moves here without an edit.
+String _readRegistryConstraint(String package) {
   final document = loadYaml(
     File(
-      p.join('lib', 'src', 'registry', 'default', 'registry.yaml'),
+      p.join(findCheckoutRegistry().path, 'vanilla', 'registry.yaml'),
     ).readAsStringSync(),
   );
   final items = (document as YamlMap)['items'] as YamlMap;
   for (final item in items.values) {
     final dependencies = (item as YamlMap)['dependencies'];
-    if (dependencies is YamlMap && dependencies['remix'] is String) {
-      return dependencies['remix'] as String;
+    if (dependencies is YamlMap && dependencies[package] is String) {
+      return dependencies[package] as String;
     }
   }
-  throw StateError('registry.yaml declares no remix constraint.');
+  throw StateError('registry.yaml declares no $package constraint.');
 }
 
 Directory createFlutterPackage() {
@@ -146,5 +151,40 @@ final class RecordingFileWriter implements ProjectFileWriter {
   void write(File target, String contents) {
     paths.add(p.relative(target.path, from: root.path));
     _delegate.write(target, contents);
+  }
+}
+
+/// Serves the committed `registry/` tree as if it were the published
+/// distribution, so installer tests get real catalog content without a
+/// network -- and get the content this checkout is proposing.
+final class FixtureOfficialResolver implements RegistrySources {
+  const FixtureOfficialResolver();
+
+  @override
+  Future<RegistrySource> latestOfficial() async => RegistrySource(
+    repository: officialRepository,
+    path: 'registry',
+    ref: 'registry-stable',
+    revision: 'a' * 40,
+  );
+
+  @override
+  Future<RegistrySource> resolve({
+    required String repository,
+    String path = 'registry',
+    String? ref,
+  }) async => RegistrySource(
+    repository: repository,
+    path: path,
+    ref: ref ?? 'main',
+    revision: 'a' * 40,
+  );
+
+  @override
+  RegistryReader open(RegistrySource pin, String preset) {
+    if (preset != 'vanilla' && preset != 'fortal') {
+      throw FormatException('Official registry has no $preset preset.');
+    }
+    return CheckoutRegistry(findCheckoutRegistry(), preset);
   }
 }

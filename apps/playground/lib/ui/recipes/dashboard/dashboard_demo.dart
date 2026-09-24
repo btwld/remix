@@ -153,9 +153,7 @@ class _PlaygroundDashboardDemoState extends State<PlaygroundDashboardDemo> {
     );
     if (!widget.builtInChrome) return demo;
     return PlaygroundThemeScope(
-      data: _dark
-          ? const PlaygroundThemeData.dark()
-          : const PlaygroundThemeData.light(),
+      mode: _dark ? PlaygroundThemeMode.dark : PlaygroundThemeMode.light,
       child: Builder(
         builder: (context) => ColoredBox(
           color: PlaygroundTokens.background.resolve(context),

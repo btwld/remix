@@ -1,20 +1,24 @@
 # Presets: application-owned source
 
+See [pinned GitHub registries](REGISTRIES.md) for namespaces, revision updates,
+migration, and independent registry releases.
+
 ## Current implementation
 
-`remix_cli` bundles three presets: `default`, `fortal`, and `carbon`. Every
-registry manifest and template is derived from analyzer-checked Dart by
+The GitHub distribution provides three presets: `vanilla`, `fortal`, and the
+initial `carbon` vertical slice. All registry manifests
+and all templates are derived from analyzer-checked Dart by
 `tool/build_registry.dart`; none of the templates are hand-authored.
 
 ```text
 registry_source/                 one private workspace package
-  lib/src/default/              default theme, components, Agent recipes
+  lib/src/default/              Vanilla theme, components, Agent recipes
   lib/src/fortal/               Fortal theme, components, Agent recipes
-  lib/src/carbon/               Carbon foundation and button slice
+  lib/src/carbon/               Carbon theme foundation and Button
   lib/src/agent/                shared Agent behavior, models, support
   lib/src/dashboard/            shared dashboard composition
-packages/remix_cli/lib/src/registry/
-  default/                     derived registry.yaml and templates/
+registry/
+  vanilla/                     derived registry.yaml and templates/
   fortal/                      derived registry.yaml and templates/
   carbon/                      derived registry.yaml and templates/
 ```
@@ -27,7 +31,7 @@ it is not a separately published runtime package.
 ## Consumer contract
 
 A preset is chosen once at initialization. Theme tokens and component variants
-belong to that preset, so a consumer cannot mix preset trees.
+belong to that preset, so a consumer cannot mix the preset trees.
 
 ```shell
 dart run remix_cli:remix init --prefix Acme --preset fortal
@@ -36,24 +40,26 @@ dart run remix_cli:remix add composer_recipe
 ```
 
 ```yaml
-schema: 2
+schema: 3
 prefix: Acme
 preset: fortal
 paths:
   ui: lib/ui
+defaultRegistry: "@remix"
+registries:
+  "@remix":
+    repository: conceptadev/remix
+    path: registry
+    ref: registry-stable
+    revision: "<resolved-full-commit-sha>"
 ```
 
-Schema 1 configurations continue to select `default`. Installed type names and
-token IDs use the consumer prefix, for example `AcmeButton` and `acme.accent.9`.
+The index exposes `vanilla`, `fortal`, and `carbon`; `default` was the name an earlier
+prerelease used for `vanilla` and is not a preset any registry serves.
+Installed type names and token IDs use the consumer prefix, for example
+`AcmeButton` and `acme.accent.9`.
 `Fortal` is an authoring prefix, not a required installed prefix; the review
 catalog deliberately chooses it as its consumer prefix.
-
-Carbon uses the collision-free authoring prefix `Carbide`, which is likewise
-replaced by the consumer prefix. Its foundation supports Carbon White, Gray 10,
-Gray 90, and Gray 100 with generated layer, layout, type, and motion values.
-Its `button` defaults to 48 px and supports explicit or contextual sizing. It
-intentionally has no Agent, dashboard, chart, or icon items and is not a
-complete component catalog.
 
 A recipe installs its dependency closure, not the entire catalog. The eight
 Agent surfaces (`activity`, `answer`, `composer`, `execution`, `message`,
@@ -65,7 +71,7 @@ host entry point, routes, page body, authentication, and persistence alone.
 The `dashboard_demo` grouped recipe adds the full twelve-destination reference
 application: Overview, Chat, Customers, Orders, Settings, Charts, Actions,
 Forms & Inputs, Data Display, Overlays, Navigation, and Typography. Both
-presets share the information architecture and product content; component
+Vanilla and Fortal share the information architecture and product content; component
 galleries render each preset's own public variants. The host still owns the
 entry point, theme scope, routes, authentication, and persistence.
 
@@ -73,6 +79,11 @@ Installed Dart imports the public `remix` API, not `registry_source`.
 `mix_chart` and `remix_ui_icons` remain opt-in hosted dependencies of the items
 that use them. Items with generated parts declare the generation dependencies;
 the consumer generates its own adapters rather than copying authoring outputs.
+
+Carbon currently exposes only `theme` and `button`. Its installed source uses
+the consumer prefix, includes the four official Carbon theme maps, and has no
+Agent, chart, icon, or dashboard items. It remains a preset in the same pinned
+GitHub distribution rather than a bundled CLI exception.
 
 When installed source uses `@MixableSpec`, the CLI enables the supported
 spec-styler builder in the consumer's `build.yaml`. A new builder is scoped to
@@ -84,7 +95,7 @@ diff show proposed changes without writing them.
 
 ## Authoring and derivation
 
-Edit Dart under `registry_source/lib/src/`, never `.tmpl` output. Default uses
+Edit Dart under `registry_source/lib/src/`, never `.tmpl` output. Vanilla uses
 the authoring word `Vanilla`, Fortal uses `Fortal`, Carbon uses `Carbide`, and
 shared behavior uses `Agent`. The builder checks prefix round trips and rewrites shared Agent
 imports to their installed relative paths. Relative source imports determine
@@ -93,21 +104,21 @@ registry dependencies; generated parts determine adapter targets.
 Fortal's Radix color table remains pinned source with a parity contract. Its
 internal theme barrel excludes the unprefixed color-table globals from the
 consumer's public barrel. Hosted dependency floors are shared through the
-default registry and checked for drift.
+Vanilla registry and checked for drift.
 
 ```shell
 dart run melos run open-code:registry:build
 dart run melos run open-code:registry:check
 ```
 
-The build command derives all presets. The check runs builder tests and
+The build command derives all three presets. The check runs builder tests and
 compares the complete output trees, including unexpected or missing files.
-`--preset default`, `--preset fortal`, or `--preset carbon` selects one preset when invoking
+`--preset vanilla`, `--preset fortal`, or `--preset carbon` selects one preset when invoking
 `tool/build_registry.dart` directly.
 
 ## Repository consumers
 
-- `apps/playground`: full default catalog, prefix `Playground`; its indigo
+- `apps/playground`: full Vanilla catalog, prefix `Playground`; its indigo
   theme customization is declared in the dogfood checker.
 - `apps/demo`: non-Agent Fortal review catalog, prefix `Fortal`.
 - `apps/dashboard`: full Fortal catalog including Agent surfaces and recipes,
@@ -115,7 +126,7 @@ compares the complete output trees, including unexpected or missing files.
 
 All three consume installed source. The repository dashboard pages and its
 simulated runner remain application-owned. The reusable `dashboard_shell` and
-full `dashboard_demo` are bundled as separate stacked registry items; a
+full `dashboard_demo` are distributed as separate stacked registry items; a
 standalone composed `chat` item is still separate work.
 
 ## Verification and release
@@ -126,7 +137,7 @@ dart run melos run ci
 
 CI includes analysis, clean generation, formatting, registry derivation,
 parity, docs, package tests, installed-source comparisons, and fresh checkout
-consumers for all presets. Passing checkout checks does not establish hosted
+consumers for all three presets. Passing checkout checks does not establish hosted
 release installability.
 
 [RELEASING.md](RELEASING.md) describes package dry-runs, hosted runtime checks,

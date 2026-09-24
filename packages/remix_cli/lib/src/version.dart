@@ -1,2 +1,2 @@
-/// The version of the bundled CLI and registry snapshot.
+/// The version of the CLI.
 const remixCliVersion = '0.1.0';

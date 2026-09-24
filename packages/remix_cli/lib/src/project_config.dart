@@ -4,28 +4,40 @@ import 'dart:io';
 import 'package:path/path.dart' as p;
 import 'package:yaml/yaml.dart';
 
-import 'registry.dart';
+import 'registry_source.dart';
 
 const projectConfigFileName = 'remix.yaml';
-const supportedProjectSchema = 2;
+const supportedProjectSchema = 3;
 
+/// A parsed `remix.yaml`.
+///
+/// One shape: every project names its registries and a default among them.
+/// A configuration that cannot say where its source came from is not a
+/// configuration this CLI can act on, so that combination is unrepresentable
+/// rather than rejected at runtime.
 final class ProjectConfig {
-  ProjectConfig._({
+  ProjectConfig({
+    required Directory packageRoot,
     required this.prefix,
     required this.preset,
     required this.uiPath,
-  });
-
-  factory ProjectConfig.create({
-    required Directory packageRoot,
-    required String prefix,
-    required String preset,
-    required String uiPath,
-  }) {
+    required this.defaultRegistry,
+    required Map<String, RegistrySource> registries,
+  }) : registries = Map.unmodifiable(registries) {
     _validatePrefix(prefix);
-    _validatePreset(preset);
     _validateUiPath(packageRoot, uiPath);
-    return ProjectConfig._(prefix: prefix, preset: preset, uiPath: uiPath);
+    // A third-party registry names its own presets, so only the shape is
+    // checked here; the registry itself rejects a preset it does not carry.
+    _validatePresetName(preset);
+    validateNamespace(defaultRegistry);
+    for (final namespace in this.registries.keys) {
+      validateNamespace(namespace);
+    }
+    if (!this.registries.containsKey(defaultRegistry)) {
+      throw const FormatException(
+        'defaultRegistry must name a configured registry.',
+      );
+    }
   }
 
   factory ProjectConfig.parse(String source, {required Directory packageRoot}) {
@@ -39,24 +51,28 @@ final class ProjectConfig {
       throw const FormatException('$projectConfigFileName must contain a map.');
     }
     final schema = document['schema'];
-    if (schema != 1 && schema != supportedProjectSchema) {
+    if (schema is! int || schema != supportedProjectSchema) {
       throw FormatException(
         'Unsupported remix.yaml schema $schema; '
-        'remix_cli supports schemas 1 and $supportedProjectSchema.',
+        'remix_cli supports schema $supportedProjectSchema. A project written '
+        'by an earlier prerelease names no registry to read from: delete '
+        'remix.yaml and run remix init to pin one. Installed source is yours '
+        'and is left alone; review it afterwards with add --diff.',
       );
     }
-    _requireExactKeys(
-      document,
-      schema == 1
-          ? {'schema', 'prefix', 'paths'}
-          : {'schema', 'prefix', 'preset', 'paths'},
-      'configuration',
-    );
+    _requireExactKeys(document, {
+      'schema',
+      'prefix',
+      'preset',
+      'paths',
+      'defaultRegistry',
+      'registries',
+    }, 'configuration');
     final prefix = document['prefix'];
     if (prefix is! String) {
       throw const FormatException('remix.yaml prefix must be a string.');
     }
-    final preset = schema == 1 ? 'default' : document['preset'];
+    final preset = document['preset'];
     if (preset is! String) {
       throw const FormatException('remix.yaml preset must be a string.');
     }
@@ -69,28 +85,82 @@ final class ProjectConfig {
     if (uiPath is! String) {
       throw const FormatException('remix.yaml paths.ui must be a string.');
     }
-    return ProjectConfig.create(
+    final configured = document['registries'];
+    final defaultRegistry = document['defaultRegistry'];
+    if (configured is! YamlMap || defaultRegistry is! String)
+      throw const FormatException(
+        'registries must be a map and defaultRegistry a string.',
+      );
+    final sources = <String, RegistrySource>{};
+    for (final entry in configured.entries) {
+      if (entry.key is! String || entry.value is! YamlMap)
+        throw const FormatException('Invalid registry source.');
+      final value = entry.value as YamlMap;
+      _requireExactKeys(value, {
+        'repository',
+        'path',
+        'ref',
+        'revision',
+      }, 'registry source');
+      if (value.values.any((v) => v is! String))
+        throw const FormatException('Registry source fields must be strings.');
+      sources[entry.key as String] = RegistrySource(
+        repository: value['repository'] as String,
+        path: value['path'] as String,
+        ref: value['ref'] as String,
+        revision: value['revision'] as String,
+      );
+    }
+    return ProjectConfig(
       packageRoot: packageRoot,
       prefix: prefix,
       preset: preset,
       uiPath: uiPath,
+      defaultRegistry: defaultRegistry,
+      registries: sources,
     );
   }
 
   final String prefix;
   final String preset;
   final String uiPath;
+  final String defaultRegistry;
+  final Map<String, RegistrySource> registries;
+
+  int get schema => supportedProjectSchema;
 
   String get valuePrefix =>
       '${prefix.substring(0, 1).toLowerCase()}${prefix.substring(1)}';
 
-  String encode() =>
-      '''schema: 2
-prefix: $prefix
-preset: $preset
-paths:
-  ui: ${_encodeYamlPath(uiPath)}
-''';
+  String encode() {
+    final buffer =
+        StringBuffer('schema: $schema\nprefix: ${_encodeYamlScalar(prefix)}\n')
+          ..writeln('preset: ${_encodeYamlScalar(preset)}')
+          ..writeln('paths:\n  ui: ${_encodeYamlPath(uiPath)}')
+          ..writeln('defaultRegistry: ${jsonEncode(defaultRegistry)}')
+          ..writeln('registries:');
+    for (final entry in registries.entries) {
+      final source = entry.value;
+      buffer
+        ..writeln('  ${jsonEncode(entry.key)}:')
+        ..writeln('    repository: ${jsonEncode(source.repository)}')
+        ..writeln('    path: ${jsonEncode(source.path)}')
+        ..writeln('    ref: ${jsonEncode(source.ref)}')
+        ..writeln('    revision: ${jsonEncode(source.revision)}');
+    }
+    return buffer.toString();
+  }
+}
+
+void validateProjectSettings(
+  Directory root, {
+  required String prefix,
+  required String preset,
+  required String uiPath,
+}) {
+  _validatePrefix(prefix);
+  _validatePresetName(preset);
+  _validateUiPath(root, uiPath);
 }
 
 void validateProjectFilePath(Directory packageRoot, String relativePath) {
@@ -218,14 +288,9 @@ void _validatePrefix(String prefix) {
   }
 }
 
-void _validatePreset(String preset) {
+void _validatePresetName(String preset) {
   if (!RegExp(r'^[a-z][a-z0-9_]*$').hasMatch(preset)) {
     throw const FormatException('preset must be a lowercase ASCII identifier.');
-  }
-  if (!bundledPresets.contains(preset)) {
-    throw FormatException(
-      'Unknown preset $preset. Bundled presets: ${bundledPresets.join(', ')}.',
-    );
   }
 }
 
@@ -238,6 +303,24 @@ void _validateUiPath(Directory packageRoot, String uiPath) {
 
 String _encodeYamlPath(String value) =>
     _plainYamlPath.hasMatch(value) ? value : jsonEncode(value);
+
+/// Quotes a scalar YAML would otherwise read back as something other than the
+/// string that was written.
+///
+/// The prefix and preset grammars admit `TRUE`, `true` and `NULL`, which YAML
+/// reads as a boolean or null and the parser then rejects as "must be a
+/// string". Without this, a successful rewrite turns a readable project into
+/// an unreadable one. Asking the parser beats listing keywords, which would
+/// drift from whatever schema the YAML package implements.
+String _encodeYamlScalar(String value) {
+  final Object? parsed;
+  try {
+    parsed = loadYaml(value);
+  } on YamlException {
+    return jsonEncode(value);
+  }
+  return parsed is String && parsed == value ? value : jsonEncode(value);
+}
 
 void _requireExactKeys(YamlMap map, Set<String> expected, String location) {
   final keys = map.keys.whereType<String>().toSet();

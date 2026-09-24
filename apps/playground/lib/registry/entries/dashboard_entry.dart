@@ -6,9 +6,7 @@ import '../../ui/ui.dart';
 Widget buildDashboardExample(BuildContext context) {
   final dark = Theme.of(context).brightness == Brightness.dark;
   return PlaygroundThemeScope(
-    data: dark
-        ? const PlaygroundThemeData.dark()
-        : const PlaygroundThemeData.light(),
+    mode: dark ? PlaygroundThemeMode.dark : PlaygroundThemeMode.light,
     child: ColoredBox(
       color: dark ? const Color(0xFF111827) : const Color(0xFFF8FAFC),
       child: const PlaygroundDashboardDemo(

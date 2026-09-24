@@ -33,9 +33,7 @@ void main() {
     _write(
       registry,
       'registry.yaml',
-      File(
-        'packages/remix_cli/lib/src/registry/default/registry.yaml',
-      ).readAsStringSync(),
+      File('registry/vanilla/registry.yaml').readAsStringSync(),
     );
     builder = PresetBuilder(
       spec: defaultAgentExtension,
@@ -78,7 +76,6 @@ void main() {
     final catalog = RegistryCatalog.parse(
       _merged(builder.outputRoot, output),
       preset: 'default',
-      rootUri: builder.outputRoot.uri,
     );
     for (final name in items.keys.where(
       (name) => name != 'models' && name != 'support',
@@ -175,7 +172,6 @@ void main() {
       () => RegistryCatalog.parse(
         _merged(builder.outputRoot, output),
         preset: 'default',
-        rootUri: builder.outputRoot.uri,
       ),
       throwsFormatException,
     );

@@ -2,36 +2,45 @@ import 'dart:io';
 
 import 'package:path/path.dart' as p;
 import 'package:remix_cli/src/registry.dart';
+import 'package:remix_cli/src/registry_source.dart';
 import 'package:remix_cli/src/template_renderer.dart';
 import 'package:test/test.dart';
 
+import 'checkout_registry.dart';
+
 void main() {
-  test('bundledPresets matches the preset trees on disk', () {
-    // `dart test` runs with the package root as the current directory.
-    final onDisk = Directory(p.join('lib', 'src', 'registry'))
+  final distribution = findCheckoutRegistry();
+
+  test('every committed preset tree is reachable through the index', () {
+    final onDisk = distribution
         .listSync()
         .whereType<Directory>()
         .map((directory) => p.basename(directory.path))
         .toSet();
 
-    // bundledPresets gates both loadBundled and `--preset` validation, so a
-    // tree shipped without an entry here is unreachable behind "Unknown
-    // preset", and an entry without a tree fails only once someone selects it.
-    expect(onDisk, bundledPresets);
+    // `index.yaml` is the only way a reader finds a preset, so a tree with no
+    // entry is unreachable, and an entry with no tree fails only once someone
+    // selects it. Neither is visible without comparing the two.
+    final indexed = {
+      for (final preset in onDisk)
+        if (_isIndexed(distribution, preset)) preset,
+    };
+    expect(indexed, onDisk);
   });
 
   test(
-    'bundled registry resolves theme before button and loads assets',
+    'the Vanilla catalog resolves theme before button and loads assets',
     () async {
-      final catalog = await RegistryCatalog.loadBundled(preset: 'default');
+      final registry = CheckoutRegistry(distribution, 'vanilla');
+      final catalog = await registry.catalog();
 
-      expect(catalog.preset, 'default');
+      expect(catalog.preset, 'vanilla');
       expect(catalog.resolve('button').map((item) => item.name), [
         'theme',
         'button',
       ]);
       final button = catalog.items['button']!;
-      final source = await catalog.readTemplate(button.files.single);
+      final source = await registry.template(button.files.single);
       // The loader returns the raw template, placeholders and all.
       expect(source, contains('@MixWidget(target: RemixButton.new)'));
       expect(source, contains('{{valuePrefix}}ButtonStyle'));
@@ -39,7 +48,8 @@ void main() {
   );
 
   test('Fortal registry loads its inferred dependency graph', () async {
-    final catalog = await RegistryCatalog.loadBundled(preset: 'fortal');
+    final registry = CheckoutRegistry(distribution, 'fortal');
+    final catalog = await registry.catalog();
 
     expect(catalog.preset, 'fortal');
     expect(catalog.resolve('button').map((item) => item.name), [
@@ -86,13 +96,14 @@ void main() {
     ]);
 
     final button = catalog.items['button']!;
-    final source = await catalog.readTemplate(button.files.single);
+    final source = await registry.template(button.files.single);
     expect(source, contains('{{typePrefix}}Button'));
     expect(source, isNot(contains('remix_fortal')));
   });
 
   test('Carbon button resolves exactly through its theme', () async {
-    final catalog = await RegistryCatalog.loadBundled(preset: 'carbon');
+    final registry = CheckoutRegistry(distribution, 'carbon');
+    final catalog = await registry.catalog();
 
     expect(catalog.preset, 'carbon');
     expect(catalog.resolve('button').map((item) => item.name), [
@@ -101,27 +112,77 @@ void main() {
     ]);
 
     final button = catalog.items['button']!;
-    final source = await catalog.readTemplate(button.files.single);
+    final source = await registry.template(button.files.single);
     expect(source, contains('{{typePrefix}}Button'));
     expect(source, contains('{{valuePrefix}}ButtonStyle'));
   });
 
-  test('unknown preset fails before reading an asset and lists bundles', () {
+  group('resolveAll', () {
+    test('orders several roots with each shared dependency once', () async {
+      final catalog = await CheckoutRegistry(distribution, 'vanilla').catalog();
+
+      final ordered = catalog
+          .resolveAll(['button', 'card', 'dialog'])
+          .map((item) => item.name)
+          .toList();
+
+      expect(ordered.toSet(), hasLength(ordered.length));
+      expect(ordered.where((name) => name == 'theme'), hasLength(1));
+      expect(ordered, containsAll(['button', 'card', 'dialog']));
+      // Dependencies still precede every dependent that names them.
+      for (final item in catalog.resolveAll(['button', 'card', 'dialog'])) {
+        for (final dependency in item.registryDependencies) {
+          expect(
+            ordered.indexOf(dependency),
+            lessThan(ordered.indexOf(item.name)),
+            reason: '$dependency must precede ${item.name}',
+          );
+        }
+      }
+    });
+
+    test('one root resolves exactly as resolve does', () async {
+      final catalog = await CheckoutRegistry(distribution, 'vanilla').catalog();
+
+      expect(
+        catalog.resolveAll(['data_table']).map((item) => item.name),
+        catalog.resolve('data_table').map((item) => item.name),
+      );
+    });
+
+    test('a repeated root fails', () async {
+      final catalog = await CheckoutRegistry(distribution, 'vanilla').catalog();
+
+      expect(
+        () => catalog.resolveAll(['button', 'card', 'button']),
+        throwsA(
+          isA<FormatException>().having(
+            (error) => error.message,
+            'message',
+            contains('requested twice'),
+          ),
+        ),
+      );
+    });
+
+    test('an empty request fails', () async {
+      final catalog = await CheckoutRegistry(distribution, 'vanilla').catalog();
+
+      expect(
+        () => catalog.resolveAll(const []),
+        throwsA(isA<FormatException>()),
+      );
+    });
+  });
+
+  test('a preset the index does not list is named in the failure', () {
     expect(
-      RegistryCatalog.loadBundled(
-        preset: 'missing',
-        loader: const _NoopLoader(),
-      ),
+      CheckoutRegistry(distribution, 'missing').catalog(),
       throwsA(
         isA<FormatException>().having(
           (error) => error.message,
           'message',
-          allOf(
-            contains('missing'),
-            contains('default'),
-            contains('fortal'),
-            contains('carbon'),
-          ),
+          allOf(contains('missing'), contains('preset')),
         ),
       ),
     );
@@ -151,16 +212,17 @@ items:
   test(
     'chart is a theme-only extension backed directly by mix_chart',
     () async {
-      final catalog = await RegistryCatalog.loadBundled(preset: 'default');
+      final registry = CheckoutRegistry(distribution, 'vanilla');
+      final catalog = await registry.catalog();
       final chart = catalog.items['chart']!;
-      final source = await catalog.readTemplate(chart.files.single);
+      final source = await registry.template(chart.files.single);
 
       expect(catalog.resolve('chart').map((item) => item.name), [
         'theme',
         'chart',
       ]);
       expect(chart.dependencies.keys, {'mix_annotations', 'mix_chart'});
-      expect('${chart.dependencies['mix_chart']}', '^0.0.1-beta.1');
+      expect('${chart.dependencies['mix_chart']}', '^0.0.1-beta.3');
       expect(source, contains("import 'package:mix_chart/mix_chart.dart';"));
       expect(source, isNot(contains('remix_fortal')));
       expect(
@@ -174,7 +236,8 @@ items:
   );
 
   test('template prose states the theme vocabulary\'s real size', () async {
-    final catalog = await RegistryCatalog.loadBundled(preset: 'default');
+    final registry = CheckoutRegistry(distribution, 'vanilla');
+    final catalog = await registry.catalog();
 
     // The real size is one required parameter per token on the theme data
     // constructor. Counting `required this.` is enough: the template declares
@@ -185,7 +248,7 @@ items:
     final tokenCount = RegExp(
       r'^\s+required this\.',
       multiLine: true,
-    ).allMatches(await catalog.readTemplate(themeData)).length;
+    ).allMatches(await registry.template(themeData)).length;
     expect(tokenCount, 20);
 
     // Two templates state that size in prose, and templates are copied verbatim
@@ -204,9 +267,7 @@ items:
     final spelled = RegExp('\\b(${spellings.values.join('|')})\\b');
 
     for (final name in const ['card', 'textfield']) {
-      final source = await catalog.readTemplate(
-        catalog.items[name]!.files.single,
-      );
+      final source = await registry.template(catalog.items[name]!.files.single);
       expect(
         spelled.allMatches(source).map((match) => match[1]).toSet(),
         {expected},
@@ -220,7 +281,8 @@ items:
   test(
     'sidebar_layout is a plain layout with no Spec or generated adapter',
     () async {
-      final catalog = await RegistryCatalog.loadBundled(preset: 'default');
+      final registry = CheckoutRegistry(distribution, 'vanilla');
+      final catalog = await registry.catalog();
       final item = catalog.items['sidebar_layout']!;
 
       expect(item.registryDependencies, ['theme', 'sidebar']);
@@ -228,7 +290,7 @@ items:
       expect(item.devDependencies, isEmpty);
       expect(item.generated, isEmpty);
 
-      final source = await catalog.readTemplate(item.files.single);
+      final source = await registry.template(item.files.single);
       expect(source, isNot(contains('part \'')));
       expect(source, isNot(contains('@MixWidget')));
       expect(source, isNot(contains('package:flutter/material.dart')));
@@ -261,8 +323,9 @@ items:
   test(
     'dashboard_shell is a grouped, independently installable recipe',
     () async {
-      for (final preset in const ['default', 'fortal']) {
-        final catalog = await RegistryCatalog.loadBundled(preset: preset);
+      for (final preset in const ['vanilla', 'fortal']) {
+        final registry = CheckoutRegistry(distribution, preset);
+        final catalog = await registry.catalog();
         final item = catalog.items['dashboard_shell']!;
         final closure = catalog
             .resolve('dashboard_shell')
@@ -285,7 +348,7 @@ items:
 
         final sources = <String>[];
         for (final file in item.files) {
-          sources.add(await catalog.readTemplate(file));
+          sources.add(await registry.template(file));
         }
         final joined = sources.join('\n');
         expect(joined, contains('class {{typePrefix}}DashboardShell'));
@@ -298,8 +361,9 @@ items:
   test(
     'dashboard_demo is a complete grouped starter in both presets',
     () async {
-      for (final preset in const ['default', 'fortal']) {
-        final catalog = await RegistryCatalog.loadBundled(preset: preset);
+      for (final preset in const ['vanilla', 'fortal']) {
+        final registry = CheckoutRegistry(distribution, preset);
+        final catalog = await registry.catalog();
         final item = catalog.items['dashboard_demo']!;
         final closure = catalog
             .resolve('dashboard_demo')
@@ -308,7 +372,7 @@ items:
 
         expect(
           item.files,
-          hasLength(preset == 'default' ? 12 : 22),
+          hasLength(preset == 'vanilla' ? 12 : 22),
           reason: preset,
         );
         expect(item.generated, isEmpty, reason: preset);
@@ -325,7 +389,7 @@ items:
         expect(closure, containsAll(_agentRecipeNames));
 
         final joined = (await Future.wait(
-          item.files.map(catalog.readTemplate),
+          item.files.map(registry.template),
         )).join('\n');
         expect(joined, contains('class {{typePrefix}}DashboardDemo'));
         expect(joined, contains('enum {{typePrefix}}DashboardDemoPage'));
@@ -371,7 +435,7 @@ items:
 
   test('rejects schema, key, path, and constraint failures', () {
     final invalid = <String>[
-      'schema: 2\nitems: {}\n',
+      'schema: 3\nitems: {}\n',
       'schema: 1\nitems: {}\nextra: true\n',
       '''schema: 1
 items:
@@ -425,6 +489,31 @@ items:
     for (final source in invalid) {
       expect(() => parse(source), throwsFormatException, reason: source);
     }
+  });
+
+  test('a namespaced dependency needs a configured multi-registry project', () {
+    // Schema 2 admits qualified dependencies, but a schema-1/2 project has no
+    // registries map to resolve the namespace against, so the single-catalog
+    // closure has to refuse rather than silently treat it as a local name.
+    final catalog = parse('''schema: 2
+items:
+  button:
+    registryDependencies: ["@company/theme"]
+    files:
+      - source: templates/button.dart.tmpl
+        target: "@ui/button.dart"
+''');
+
+    expect(
+      () => catalog.resolve('button'),
+      throwsA(
+        isA<FormatException>().having(
+          (error) => error.message,
+          'message',
+          contains('Namespaced dependencies require'),
+        ),
+      ),
+    );
   });
 
   test(
@@ -498,7 +587,8 @@ items:
   test(
     'every item resolves its foundations and owns its expected files',
     () async {
-      final catalog = await RegistryCatalog.loadBundled(preset: 'default');
+      final registry = CheckoutRegistry(distribution, 'vanilla');
+      final catalog = await registry.catalog();
 
       // Both directions. Checking only that each listed name exists would let a
       // new registry item ship with no surface pinned and no rendering asserted.
@@ -560,7 +650,8 @@ items:
   test(
     'Agent foundations export only public models and preserve source layout',
     () async {
-      final catalog = await RegistryCatalog.loadBundled(preset: 'default');
+      final registry = CheckoutRegistry(distribution, 'vanilla');
+      final catalog = await registry.catalog();
       expect(catalog.items['models']!.files.map((file) => file.target), [
         '@ui/models/activity_item.dart',
         '@ui/models/plan_item.dart',
@@ -578,7 +669,7 @@ items:
         'models/statuses.dart',
       ]);
       for (final entry in _agentSurfaces.entries) {
-        final source = await catalog.readTemplate(
+        final source = await registry.template(
           catalog.items[entry.key]!.files.single,
         );
         for (final prefix in ['Acme', 'Ui']) {
@@ -601,10 +692,11 @@ items:
   );
 
   test('both prefixes render every configured public surface', () async {
-    final catalog = await RegistryCatalog.loadBundled(preset: 'default');
+    final registry = CheckoutRegistry(distribution, 'vanilla');
+    final catalog = await registry.catalog();
 
     for (final entry in _componentSurfaces.entries) {
-      final source = await catalog.readTemplate(
+      final source = await registry.template(
         catalog.items[entry.key]!.files.single,
       );
 
@@ -653,10 +745,11 @@ items:
   });
 
   test('both presets render prefixed Agent recipe bundles', () async {
-    for (final preset in ['default', 'fortal']) {
-      final catalog = await RegistryCatalog.loadBundled(preset: preset);
+    for (final preset in ['vanilla', 'fortal']) {
+      final registry = CheckoutRegistry(distribution, preset);
+      final catalog = await registry.catalog();
       for (final name in _agentRecipeNames) {
-        final source = await catalog.readTemplate(
+        final source = await registry.template(
           catalog.items[name]!.files.single,
         );
         final rendered = const TemplateRenderer().render(
@@ -674,7 +767,8 @@ items:
   });
 
   test('bundled templates stay inside the allowed import boundary', () async {
-    final catalog = await RegistryCatalog.loadBundled(preset: 'default');
+    final registry = CheckoutRegistry(distribution, 'vanilla');
+    final catalog = await registry.catalog();
     const allowedPackages = {
       'flutter',
       'remix',
@@ -686,7 +780,7 @@ items:
 
     for (final item in catalog.items.values) {
       for (final file in item.files) {
-        final source = await catalog.readTemplate(file);
+        final source = await registry.template(file);
         for (final match in directive.allMatches(source)) {
           final uri = match.group(1)!;
           if (uri.startsWith('package:')) {
@@ -772,19 +866,8 @@ const _componentSurfaces =
       ),
     };
 
-RegistryCatalog parse(String source) => RegistryCatalog.parse(
-  source,
-  preset: 'test',
-  rootUri: Uri.parse('package:remix_cli/src/registry/test/'),
-  loader: const _NoopLoader(),
-);
-
-final class _NoopLoader implements RegistryAssetLoader {
-  const _NoopLoader();
-
-  @override
-  Future<String> read(Uri uri) => throw StateError('Unexpected read of $uri');
-}
+RegistryCatalog parse(String source) =>
+    RegistryCatalog.parse(source, preset: 'test');
 
 const _agentRecipeNames = <String>{
   'activity_recipe',
@@ -807,3 +890,17 @@ const _agentSurfaces = <String, List<String>>{
   'plan': ['Plan'],
   'transcript': ['Transcript'],
 };
+
+/// Whether `index.yaml` maps [preset] to a catalog, without reading it.
+bool _isIndexed(Directory distribution, String preset) {
+  try {
+    catalogPathForPreset(
+      File(p.join(distribution.path, 'index.yaml')).readAsStringSync(),
+      preset: preset,
+      origin: 'checkout',
+    );
+    return true;
+  } on FormatException {
+    return false;
+  }
+}

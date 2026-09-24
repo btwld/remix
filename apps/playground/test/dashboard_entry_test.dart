@@ -35,25 +35,19 @@ void main() {
         MaterialApp(home: Builder(builder: components['dashboard']!)),
       );
 
-      tester
-          .widget<SegmentedButton<Brightness>>(
-            find.descendant(
-              of: find.byType(ControlsBar),
-              matching: find.byType(SegmentedButton<Brightness>),
-            ),
-          )
-          .onSelectionChanged!({Brightness.dark});
+      final control = find.descendant(
+        of: find.byType(ControlsBar),
+        matching: find.byType(PlaygroundSegmentedControl<Brightness>),
+      );
+      tester.widget<PlaygroundSegmentedControl<Brightness>>(control).onChanged!(
+        Brightness.dark,
+      );
       await tester.pump(const Duration(milliseconds: 300));
       expect(
         tester
-            .widget<SegmentedButton<Brightness>>(
-              find.descendant(
-                of: find.byType(ControlsBar),
-                matching: find.byType(SegmentedButton<Brightness>),
-              ),
-            )
-            .selected,
-        {Brightness.dark},
+            .widget<PlaygroundSegmentedControl<Brightness>>(control)
+            .selectedValue,
+        Brightness.dark,
       );
 
       await tester.tap(

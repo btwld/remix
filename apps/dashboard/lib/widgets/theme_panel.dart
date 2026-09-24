@@ -40,10 +40,10 @@ class ThemePanel extends StatelessWidget {
         crossAxisAlignment: .stretch,
         spacing: 18,
         children: [
-          choice<ThemeMode>(
+          choice<UiThemeMode>(
             label: 'Appearance',
             selectedValue: settings.appearance,
-            items: _enumSegmentedItems(ThemeMode.values),
+            items: _enumSegmentedItems(UiThemeMode.values),
             apply: (value) => settings.copyWith(appearance: value),
           ),
           _Control(

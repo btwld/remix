@@ -1,97 +1,106 @@
-# Release the Open Code presets
+# Release runtime, registry, and CLI independently
 
-## Release boundary
+Use the reviewed merge commit as the candidate. Do not infer publication from
+checkout version numbers. Runtime package publication, registry publication,
+and CLI publication have separate gates. Publishing tags/releases is a release
+operator action, not something the builder performs.
 
-The checkout declares Remix `1.0.0-beta.10` and `remix_cli` `0.1.0`.
-Do not infer publication status from these version numbers or historical PR
-stacks. Check pub.dev and the corresponding publish workflow before a release;
-never republish a version that already exists.
+## Validate the candidate
 
-Use the final reviewed merge commit as the release candidate. Checkout CI,
-package dry-runs, hosted runtime installation, and published CLI installation
-are separate gates. Source migration into `registry_source/` does not imply
-that the hosted replacement has been released.
-
-## Validate the release candidate
-
-Run these commands from the final checkout with Flutter 3.44.0:
+With the pinned Flutter 3.44.0 SDK:
 
 ```shell
 fvm flutter pub get
 fvm dart run melos run ci
-fvm dart analyze
 ```
 
-CI installs every item from both presets in fresh applications. It uses
-checkout Remix and hosted supporting packages. The source and template checks
-also verify generated files, the Radix contract, and the catalog.
+The registry builder and dependency-floor checkers target `registry/`, which is
+the only catalog the CLI reads. It ships no trees of its own.
 
-Run `fvm dart pub publish --dry-run` inside `packages/remix` and
-`packages/remix_cli`. Confirm that the CLI archive includes both registry trees
-and their templates. Resolve every publication error before continuing.
+The isolated consumer checker injects a test-only transport for the committed
+`registry/` distribution. It exercises schema 3, the real installer, package
+resolution, generation, analysis and consumers without requiring unpublished
+content on GitHub. This is not a local-registry feature of the shipped CLI.
 
-The version and changelog for beta.10 are already prepared in this stack.
-Future releases use `.github/workflows/version.yml` to update Remix and both
-registry minimum versions together.
+## Publish the required runtimes first
 
-## Publish Remix first
+Confirm every hosted dependency floor exists on pub.dev. Runtime releases use
+the existing package publishing workflows. Remix uses `v<version>` for pub.dev
+and `remix-v<version>` for Melos history. Runtime version preparation updates
+the remote catalog floor and regenerates both remote presets.
 
-After release approval, tag the validated merge commit as `v1.0.0-beta.10` and
-push that tag alone. The existing publish workflow publishes Remix.
-After success, record `remix-v1.0.0-beta.10` on the same commit for Melos history.
-
-Wait until pub.dev serves beta.10. Then run:
+Validate against hosted runtimes, without checkout substitution:
 
 ```shell
 fvm dart run melos run open-code:release:check
 ```
 
-This command installs both presets with hosted Remix and the checkout CLI.
-It must pass before CLI publication. It never substitutes checkout Remix for
-a missing hosted release. Keep the registry minimum at beta.10 if resolution fails.
+## Publish the registry before the GitHub-first CLI
 
-## Bootstrap the CLI package
+Merge the reviewed commit to `main`. **Promote registry** validates
+generation drift, dependency constraints, CLI compatibility, and both
+presets against hosted runtimes. It smoke-tests that commit, then
+fast-forwards `registry-stable`. A hand-started run promotes only when it
+is executing `main`.
 
-The first CLI publication requires an authorized uploader to run
-`fvm dart pub publish` inside `packages/remix_cli` after the hosted checks pass.
-Pub.dev requires a manual first publication before automated publishing can
-be configured. See the [Dart publication instructions](https://dart.dev/tools/pub/automated-publishing).
+If the registry's Remix floor is not on pub.dev yet, the run fails and
+`registry-stable` does not move. `main` shows that failure until the floor
+is published. Publish the runtime, wait until pub.dev serves it, then
+re-run **Promote registry** on `main` (Actions → Promote registry → Run
+workflow). Another push to `main` retries the same way. Promotion always
+takes the head of `main`, so while an unpublished floor is on `main`, no
+registry change is promoted until that publish and re-run.
 
-Confirm the intended publisher. Then configure automated publishing in the
-package Admin tab with repository `conceptadev/remix` and tag pattern
-`remix_cli-v{{version}}`.
+After the first promotion creates `registry-stable`, protect that branch:
+only GitHub Actions may push, and force pushes and deletion are disabled.
 
-Do not push `remix_cli-v0.1.0` to publish the same version again. Future CLI
-releases update the package version, `lib/src/version.dart`, and the changelog.
-Their tag starts the hosted consumer checks before the publish job.
+Roll a bad promotion back by reverting that commit on `main` and letting
+the workflow fast-forward `registry-stable` to the revert. Moving the
+branch back by hand takes a force push, which that protection rejects, and
+the next push to `main` would advance the branch over the reset. Projects
+that already pinned a revision stay on it either way.
 
-## Verify the published CLI
+To repeat the promoted-branch check locally:
 
-After pub.dev serves CLI `0.1.0`, run:
+```shell
+REMIX_REGISTRY_RELEASE_REF=registry-stable fvm dart run tool/check_open_code.dart --source hosted
+REMIX_REGISTRY_RELEASE_REF=registry-stable fvm dart run tool/check_open_code.dart --preset fortal --source hosted
+```
+
+Normal component changes require only that promotion. The same CLI installs
+the new commit after an explicit `registry update`; existing pins do not
+move. Keep schema compatibility with released CLI versions.
+
+## Release the CLI only for installer changes
+
+Before publishing, run `dart pub publish --dry-run` in `packages/remix_cli`.
+Update its version, `lib/src/version.dart` and changelog according to the
+package release workflow; do not infer a new CLI version from a registry
+version.
+
+The CLI publish workflow requires `registry-stable` to resolve and runs
+both consumer presets against its GitHub content with hosted runtime packages.
+A missing `registry-stable` branch must fail; there is no local content to
+substitute, and nothing may be added to bypass the bootstrap order.
+
+If the CLI has never been published, the authorized uploader must perform the
+first pub.dev publication and configure automated publishing for repository
+`conceptadev/remix`, tag pattern `remix_cli-v{{version}}`. Later releases use
+that tag pattern. Never republish an existing version.
+
+After publication, verify the exact hosted CLI:
 
 ```shell
 fvm dart run tool/check_open_code.dart --source hosted --hosted-cli
 fvm dart run tool/check_open_code.dart --preset fortal --source hosted --hosted-cli
 ```
 
-These checks install the exact CLI version declared in the checkout from
-pub.dev. They require hosted runtime packages and reject checkout package
-dependencies. They exercise the published registry assets, generation, analyzer,
-and consumer tests.
+## Rollback and migration
 
-Remove the pending-publication notices from the installation guides after
-these checks pass.
+Restore the previously committed `remix.yaml` revision to select an older
+registry snapshot. This does not revert installed, application-owned source;
+review or restore that source separately through application version control.
 
-## Discontinue the old Fortal package
-
-After the published CLI checks pass, mark `remix_fortal` discontinued in its
-pub.dev Admin tab. Name `remix_cli` as the replacement package. The migration
-instructions use `remix init --preset fortal` and application-owned imports.
-
-Keep `registry_source/lib/src/fortal` in the private `registry_source`
-workspace package as the analyzed authoring source.
-Keep `publish_to: none` and its tests. Existing hosted installations remain
-available; discontinuation does not delete their package versions.
-
-If either published consumer check fails, keep `remix_fortal` active and fix
-the replacement before completing the transition.
+Schemas 1 and 2 are not readable. A project still on one names no registry, so
+it is reinitialized rather than migrated. See [the registry contract](REGISTRIES.md)
+for source ownership.

@@ -32,7 +32,8 @@ void main() {
   ) async {
     await tester.pumpWidget(const DashboardApp());
 
-    expect(find.byType(MaterialApp), findsOneWidget);
+    expect(find.byType(WidgetsApp), findsOneWidget);
+    expect(find.byType(MaterialApp), findsNothing);
     // The shell replaced Material's Scaffold/Drawer with the open-code
     // UiSidebarLayout template; see `compact layout uses a sheet
     // without rendering overflows` below for its compact-sheet behavior.
@@ -48,7 +49,7 @@ void main() {
   testWidgets('uses a text-only Dashboard brand', (tester) async {
     await tester.pumpWidget(const DashboardApp());
 
-    final app = tester.widget<MaterialApp>(find.byType(MaterialApp));
+    final app = tester.widget<WidgetsApp>(find.byType(WidgetsApp));
     expect(app.title, 'Dashboard');
 
     final brand = find.byKey(const ValueKey('dashboard-brand'));
@@ -822,12 +823,12 @@ void main() {
   });
 
   testWidgets(
-    'quick toggle keeps Material and Fortal brightness synchronized',
+    'quick toggle changes Fortal brightness without a Material host',
     (tester) async {
       await tester.pumpWidget(const DashboardApp());
       final shell = tester.element(find.byType(DashboardShell));
 
-      expect(Theme.of(shell).brightness, UiTheme.of(shell).brightness);
+      expect(find.byType(MaterialApp), findsNothing);
       final before = UiTheme.of(shell).isDark;
 
       await tester.tap(find.byKey(const ValueKey('theme-quick-toggle')).first);
@@ -835,10 +836,48 @@ void main() {
 
       final updatedShell = tester.element(find.byType(DashboardShell));
       expect(UiTheme.of(updatedShell).isDark, isNot(before));
-      expect(
-        Theme.of(updatedShell).brightness,
-        UiTheme.of(updatedShell).brightness,
+      expect(find.byType(MaterialApp), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'system appearance follows the platform and resumes after reset',
+    (tester) async {
+      final platform = tester.binding.platformDispatcher;
+      addTearDown(platform.clearPlatformBrightnessTestValue);
+      platform.platformBrightnessTestValue = Brightness.light;
+      await tester.pumpWidget(const DashboardApp());
+
+      bool isDark() =>
+          UiTheme.of(tester.element(find.byType(DashboardShell))).isDark;
+      expect(isDark(), isFalse);
+
+      platform.platformBrightnessTestValue = Brightness.dark;
+      await tester.pump();
+      expect(isDark(), isTrue);
+
+      await tester.tap(find.byKey(const ValueKey('theme-quick-toggle')).first);
+      await tester.pump();
+      expect(isDark(), isFalse);
+      platform.platformBrightnessTestValue = Brightness.light;
+      await tester.pump();
+      platform.platformBrightnessTestValue = Brightness.dark;
+      await tester.pump();
+      expect(isDark(), isFalse);
+
+      await tester.tap(
+        find.byKey(const ValueKey(DashboardPage.settings)).first,
       );
+      await tester.pump();
+      final reset = find.byKey(const ValueKey('theme-reset')).first;
+      await tester.ensureVisible(reset);
+      await tester.tap(reset);
+      await tester.pump();
+      expect(isDark(), isTrue);
+      platform.platformBrightnessTestValue = Brightness.light;
+      await tester.pump();
+      expect(isDark(), isFalse);
+      expect(tester.takeException(), isNull);
     },
   );
 
@@ -849,7 +888,7 @@ void main() {
 
     final shell = tester.element(find.byType(DashboardShell));
     expect(UiTheme.of(shell).isDark, isTrue);
-    expect(Theme.of(shell).brightness, Brightness.dark);
+    expect(find.byType(MaterialApp), findsNothing);
   });
 
   testWidgets('theme panel changes the resolved accent live', (tester) async {
@@ -1119,8 +1158,10 @@ void main() {
   ) async {
     await tester.pumpWidget(const DashboardApp());
 
-    // Both titles sit inside a Material surface, whose own `DefaultTextStyle`
-    // would otherwise supply the foreground instead of Fortal's `gray12`.
+    // Both titles are Fortal typography, which resolves `gray12` from the
+    // active scope's tokens rather than from any inherited `DefaultTextStyle`.
+    // That is what makes them repaint when the gray family changes, and it is
+    // why the assertion reads the painted colour rather than the widget's.
     final pageTitle = find.descendant(
       of: find.byType(PageHeader),
       matching: find.text('Overview'),

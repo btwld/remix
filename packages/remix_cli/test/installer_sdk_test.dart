@@ -16,12 +16,18 @@ void main() {
       final root = createFlutterPackage();
       addTearDown(() => root.deleteSync(recursive: true));
       final output = <String>[];
-      final installer = Installer(projectRoot: root, writeOut: output.add);
+      final installer = Installer(
+        projectRoot: root,
+        writeOut: output.add,
+        sources: const FixtureOfficialResolver(),
+      );
 
       expect(
         await runRemixCli(
           [
             'init',
+            '--preset',
+            'vanilla',
             '--prefix',
             'Acme',
             '--ui-path',
@@ -36,7 +42,9 @@ void main() {
       final before = snapshotFiles(root);
       output.clear();
 
-      await installer.add(const AddOptions(item: 'button', mode: AddMode.diff));
+      await installer.add(
+        const AddOptions(items: ['button'], mode: AddMode.diff),
+      );
 
       expect(output.join('\n'), contains('AcmeButton'));
       expect(output.join('\n'), contains('components/button.dart'));
@@ -49,7 +57,7 @@ dependency_overrides:
     path: ${jsonEncode(remixRoot)}
 ''');
       await installer.add(
-        const AddOptions(item: 'button', mode: AddMode.write),
+        const AddOptions(items: ['button'], mode: AddMode.write),
       );
 
       final pubspec =
@@ -81,7 +89,7 @@ dependency_overrides:
       );
       final edited = button.readAsBytesSync();
       await installer.add(
-        const AddOptions(item: 'button', mode: AddMode.write),
+        const AddOptions(items: ['button'], mode: AddMode.write),
       );
       expect(button.readAsBytesSync(), edited);
     },

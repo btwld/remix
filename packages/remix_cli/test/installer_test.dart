@@ -4,9 +4,9 @@ import 'package:path/path.dart' as p;
 import 'package:remix_cli/src/cli.dart';
 import 'package:remix_cli/src/installer.dart';
 import 'package:remix_cli/src/process_runner.dart';
-import 'package:remix_cli/src/registry.dart';
 import 'package:test/test.dart';
 
+import 'checkout_registry.dart';
 import 'test_support.dart';
 
 void main() {
@@ -51,8 +51,12 @@ void main() {
 
   setUp(() async {
     root = createFlutterPackage();
-    await Installer(projectRoot: root, writeOut: (_) {}).initialize(
-      const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
+    await Installer(
+      projectRoot: root,
+      writeOut: (_) {},
+      sources: const FixtureOfficialResolver(),
+    ).initialize(
+      const InitOptions(prefix: 'Ui', preset: 'vanilla', uiPath: 'lib/ui'),
     );
   });
   tearDown(() => root.deleteSync(recursive: true));
@@ -67,9 +71,10 @@ void main() {
         projectRoot: root,
         writeOut: (_) {},
         processRunner: runner,
+        sources: const FixtureOfficialResolver(),
       );
       await installer.add(
-        const AddOptions(item: 'activity', mode: AddMode.write),
+        const AddOptions(items: ['activity'], mode: AddMode.write),
       );
       final config = File(p.join(root.path, 'build.yaml'));
       expect(
@@ -78,7 +83,7 @@ void main() {
       );
       final before = snapshotFiles(root);
       await installer.add(
-        const AddOptions(item: 'activity', mode: AddMode.write),
+        const AddOptions(items: ['activity'], mode: AddMode.write),
       );
       expect(snapshotFiles(root), before);
       config.deleteSync();
@@ -86,7 +91,7 @@ void main() {
           .where((call) => call.arguments.contains('build_runner'))
           .length;
       await installer.add(
-        const AddOptions(item: 'activity', mode: AddMode.write),
+        const AddOptions(items: ['activity'], mode: AddMode.write),
       );
       expect(config.existsSync(), isTrue);
       expect(
@@ -109,14 +114,17 @@ void main() {
         runRealFormatter: true,
         runRealGit: true,
       ),
+      sources: const FixtureOfficialResolver(),
     );
     await installer.add(
-      const AddOptions(item: 'activity', mode: AddMode.dryRun),
+      const AddOptions(items: ['activity'], mode: AddMode.dryRun),
     );
     expect(output.join('\n'), contains('build.yaml'));
     expect(snapshotFiles(root), before);
     output.clear();
-    await installer.add(const AddOptions(item: 'activity', mode: AddMode.diff));
+    await installer.add(
+      const AddOptions(items: ['activity'], mode: AddMode.diff),
+    );
     expect(output.join('\n'), contains('mix_generator:spec_styler_generator'));
     expect(snapshotFiles(root), before);
   });
@@ -140,25 +148,26 @@ void main() {
           projectRoot: root,
           writeOut: output.add,
           processRunner: runner,
+          sources: const FixtureOfficialResolver(),
         );
         final before = snapshotFiles(root);
         for (final mode in [AddMode.dryRun, AddMode.diff]) {
-          await installer.add(AddOptions(item: 'activity', mode: mode));
+          await installer.add(AddOptions(items: ['activity'], mode: mode));
           expect(snapshotFiles(root), before);
         }
         await installer.add(
-          const AddOptions(item: 'activity', mode: AddMode.write),
+          const AddOptions(items: ['activity'], mode: AddMode.write),
         );
         expect(config.readAsStringSync(), contains(target));
         expect(config.readAsStringSync(), isNot(contains(r'$default')));
         final installed = snapshotFiles(root);
         output.clear();
         await installer.add(
-          const AddOptions(item: 'activity', mode: AddMode.diff),
+          const AddOptions(items: ['activity'], mode: AddMode.diff),
         );
         expect(output.join('\n'), contains('No authored-source differences.'));
         await installer.add(
-          const AddOptions(item: 'activity', mode: AddMode.write),
+          const AddOptions(items: ['activity'], mode: AddMode.write),
         );
         expect(snapshotFiles(root), installed);
       },
@@ -177,9 +186,12 @@ void main() {
         projectRoot: root,
         writeOut: (_) {},
         processRunner: runner,
+        sources: const FixtureOfficialResolver(),
       );
       await expectLater(
-        installer.add(const AddOptions(item: 'activity', mode: AddMode.write)),
+        installer.add(
+          const AddOptions(items: ['activity'], mode: AddMode.write),
+        ),
         throwsFormatException,
       );
       expect(runner.calls, isEmpty);
@@ -188,25 +200,33 @@ void main() {
   );
 
   test('add loads the registry selected by project configuration', () async {
-    File(p.join(root.path, 'remix.yaml')).writeAsStringSync('''schema: 2
+    File(p.join(root.path, 'remix.yaml')).writeAsStringSync('''schema: 3
 prefix: Ui
 preset: fortal
 paths:
   ui: lib/ui
+defaultRegistry: "@remix"
+registries:
+  "@remix":
+    repository: "conceptadev/remix"
+    path: "registry"
+    ref: "registry-stable"
+    revision: "${'a' * 40}"
 ''');
-    String? loadedPreset;
+    final output = <String>[];
     final installer = Installer(
       projectRoot: root,
-      writeOut: (_) {},
-      registryLoader: (preset) async {
-        loadedPreset = preset;
-        return RegistryCatalog.loadBundled(preset: 'default');
-      },
+      writeOut: output.add,
+      processRunner: happyRunner(root),
+      sources: const FixtureOfficialResolver(),
     );
 
-    await installer.add(const AddOptions(item: 'button', mode: AddMode.dryRun));
+    await installer.add(
+      const AddOptions(items: ['button'], mode: AddMode.dryRun),
+    );
 
-    expect(loadedPreset, 'fortal');
+    // The Fortal graph, not the default one: base_button is Fortal-only.
+    expect(output.join('\n'), contains('base_button'));
   });
 
   test(
@@ -220,10 +240,11 @@ paths:
         writeOut: output.add,
         processRunner: runner,
         fileWriter: writer,
+        sources: const FixtureOfficialResolver(),
       );
 
       await installer.add(
-        const AddOptions(item: 'button', mode: AddMode.write),
+        const AddOptions(items: ['button'], mode: AddMode.write),
       );
 
       expect(writer.paths, [
@@ -278,7 +299,8 @@ paths:
         projectRoot: root,
         writeOut: (_) {},
         processRunner: firstRunner,
-      ).add(const AddOptions(item: 'button', mode: AddMode.write));
+        sources: const FixtureOfficialResolver(),
+      ).add(const AddOptions(items: ['button'], mode: AddMode.write));
       final before = snapshotFiles(root);
 
       final writer = RecordingFileWriter(root);
@@ -289,7 +311,8 @@ paths:
         writeOut: output.add,
         processRunner: runner,
         fileWriter: writer,
-      ).add(const AddOptions(item: 'button', mode: AddMode.write));
+        sources: const FixtureOfficialResolver(),
+      ).add(const AddOptions(items: ['button'], mode: AddMode.write));
 
       expect(snapshotFiles(root), before);
       expect(writer.paths, isEmpty);
@@ -316,12 +339,17 @@ paths:
         projectRoot: root,
         writeOut: (_) {},
         processRunner: runner,
-      ).add(const AddOptions(item: 'chart', mode: AddMode.write));
+        sources: const FixtureOfficialResolver(),
+      ).add(const AddOptions(items: ['chart'], mode: AddMode.write));
 
       final pubAdd = runner.calls.singleWhere(
         (call) => call.arguments.take(2).join(' ') == 'pub add',
       );
-      expect(pubAdd.arguments, ['pub', 'add', 'mix_chart@^0.0.1-beta.1']);
+      expect(pubAdd.arguments, [
+        'pub',
+        'add',
+        'mix_chart@$registryMixChartConstraint',
+      ]);
       final build = runner.calls.singleWhere(
         (call) => call.arguments.take(3).join(' ') == 'run build_runner build',
       );
@@ -354,7 +382,8 @@ paths:
         root,
         flutterPreamble: 'Resolving dependencies...\n',
       ),
-    ).add(const AddOptions(item: 'button', mode: AddMode.write));
+      sources: const FixtureOfficialResolver(),
+    ).add(const AddOptions(items: ['button'], mode: AddMode.write));
 
     expect(
       File(p.join(root.path, 'lib/ui/components/button.g.dart')).existsSync(),
@@ -446,20 +475,25 @@ packages:
   ]
 }
 ''');
-        await Installer(projectRoot: member, writeOut: (_) {}).initialize(
-          const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
+        await Installer(
+          projectRoot: member,
+          writeOut: (_) {},
+          sources: const FixtureOfficialResolver(),
+        ).initialize(
+          const InitOptions(prefix: 'Ui', preset: 'vanilla', uiPath: 'lib/ui'),
         );
 
         final installer = Installer(
           projectRoot: member,
           writeOut: (_) {},
           processRunner: happyRunner(member, writeLockOnPubGet: false),
+          sources: const FixtureOfficialResolver(),
         );
         if (unrelated || incompatible) {
           final before = snapshotFiles(member);
           await expectLater(
             installer.add(
-              const AddOptions(item: 'button', mode: AddMode.write),
+              const AddOptions(items: ['button'], mode: AddMode.write),
             ),
             throwsA(
               isA<StateError>().having(
@@ -473,7 +507,7 @@ packages:
           return;
         }
         await installer.add(
-          const AddOptions(item: 'button', mode: AddMode.write),
+          const AddOptions(items: ['button'], mode: AddMode.write),
         );
 
         expect(
@@ -501,7 +535,8 @@ packages:
       writeOut: (_) {},
       processRunner: happyRunner(root),
       fileWriter: writer,
-    ).add(const AddOptions(item: 'button', mode: AddMode.overwrite));
+      sources: const FixtureOfficialResolver(),
+    ).add(const AddOptions(items: ['button'], mode: AddMode.overwrite));
 
     expect(theme.readAsBytesSync(), themeBytes);
     expect(button.readAsStringSync(), isNot(contains('// local button')));
@@ -520,7 +555,8 @@ packages:
         writeOut: (_) {},
         processRunner: runner,
         fileWriter: writer,
-      ).add(const AddOptions(item: 'button', mode: AddMode.write)),
+        sources: const FixtureOfficialResolver(),
+      ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
       throwsFormatException,
     );
 
@@ -528,7 +564,7 @@ packages:
     expect(writer.paths, isEmpty);
   });
 
-  for (final preset in const ['default', 'fortal']) {
+  for (final preset in const ['vanilla', 'fortal']) {
     test('$preset dashboard_shell installs to a custom bracketed path without '
         'touching host entry points', () async {
       final caseRoot = createFlutterPackage();
@@ -537,6 +573,7 @@ packages:
       await Installer(
         projectRoot: caseRoot,
         writeOut: (_) {},
+        sources: const FixtureOfficialResolver(),
       ).initialize(InitOptions(prefix: 'Acme', preset: preset, uiPath: uiPath));
       final main = File(p.join(caseRoot.path, 'lib', 'main.dart'))
         ..writeAsStringSync('void main() {}\n');
@@ -553,9 +590,10 @@ packages:
         projectRoot: caseRoot,
         writeOut: (_) {},
         processRunner: happyRunner(caseRoot, writeLockOnPubGet: false),
+        sources: const FixtureOfficialResolver(),
       );
       await installer.add(
-        const AddOptions(item: 'dashboard_shell', mode: AddMode.write),
+        const AddOptions(items: ['dashboard_shell'], mode: AddMode.write),
       );
 
       final shell = File(
@@ -602,7 +640,7 @@ packages:
       shell.writeAsStringSync('${shell.readAsStringSync()}// local edit\n');
       final edited = shell.readAsBytesSync();
       await installer.add(
-        const AddOptions(item: 'dashboard_shell', mode: AddMode.write),
+        const AddOptions(items: ['dashboard_shell'], mode: AddMode.write),
       );
       expect(shell.readAsBytesSync(), edited);
 
@@ -610,7 +648,7 @@ packages:
       final beforePartial = snapshotFiles(caseRoot);
       await expectLater(
         installer.add(
-          const AddOptions(item: 'dashboard_shell', mode: AddMode.write),
+          const AddOptions(items: ['dashboard_shell'], mode: AddMode.write),
         ),
         throwsFormatException,
       );
@@ -623,7 +661,11 @@ packages:
         final caseRoot = createFlutterPackage();
         addTearDown(() => caseRoot.deleteSync(recursive: true));
         const uiPath = 'lib/design system [owned]';
-        await Installer(projectRoot: caseRoot, writeOut: (_) {}).initialize(
+        await Installer(
+          projectRoot: caseRoot,
+          writeOut: (_) {},
+          sources: const FixtureOfficialResolver(),
+        ).initialize(
           InitOptions(prefix: 'Acme', preset: preset, uiPath: uiPath),
         );
         final main = File(p.join(caseRoot.path, 'lib', 'main.dart'))
@@ -636,12 +678,12 @@ packages:
         };
         writeRequiredPubspec(
           caseRoot,
-          mixChart: '^0.0.1-beta.1',
+          mixChart: registryMixChartConstraint,
           remixUiIcons: '^0.1.0',
         );
         writeRequiredLock(
           caseRoot,
-          mixChart: '0.0.1-beta.1',
+          mixChart: '$registryMixChartFloor',
           remixUiIcons: '0.1.0',
         );
 
@@ -649,9 +691,10 @@ packages:
           projectRoot: caseRoot,
           writeOut: (_) {},
           processRunner: happyRunner(caseRoot, writeLockOnPubGet: false),
+          sources: const FixtureOfficialResolver(),
         );
         await installer.add(
-          const AddOptions(item: 'dashboard_demo', mode: AddMode.dryRun),
+          const AddOptions(items: ['dashboard_demo'], mode: AddMode.dryRun),
         );
         final dashboardDirectory = Directory(
           p.join(caseRoot.path, uiPath, 'recipes', 'dashboard'),
@@ -659,7 +702,7 @@ packages:
         expect(dashboardDirectory.existsSync(), isFalse);
 
         await installer.add(
-          const AddOptions(item: 'dashboard_demo', mode: AddMode.write),
+          const AddOptions(items: ['dashboard_demo'], mode: AddMode.write),
         );
         final dashboardDemo = File(
           p.join(dashboardDirectory.path, 'dashboard_demo.dart'),
@@ -737,12 +780,12 @@ packages:
         );
         final edited = sampleData.readAsBytesSync();
         await installer.add(
-          const AddOptions(item: 'dashboard_demo', mode: AddMode.write),
+          const AddOptions(items: ['dashboard_demo'], mode: AddMode.write),
         );
         expect(sampleData.readAsBytesSync(), edited);
 
         await installer.add(
-          const AddOptions(item: 'dashboard_demo', mode: AddMode.overwrite),
+          const AddOptions(items: ['dashboard_demo'], mode: AddMode.overwrite),
         );
         expect(
           sampleData.readAsStringSync(),
@@ -753,7 +796,7 @@ packages:
         final beforePartial = snapshotFiles(caseRoot);
         await expectLater(
           installer.add(
-            const AddOptions(item: 'dashboard_demo', mode: AddMode.write),
+            const AddOptions(items: ['dashboard_demo'], mode: AddMode.write),
           ),
           throwsFormatException,
         );
@@ -776,7 +819,8 @@ packages:
           writeOut: (_) {},
           processRunner: runner,
           fileWriter: writer,
-        ).add(const AddOptions(item: 'button', mode: AddMode.write)),
+          sources: const FixtureOfficialResolver(),
+        ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
         throwsFormatException,
       );
 
@@ -798,7 +842,8 @@ packages:
         writeOut: (_) {},
         processRunner: runner,
         fileWriter: writer,
-      ).add(const AddOptions(item: 'button', mode: AddMode.write)),
+        sources: const FixtureOfficialResolver(),
+      ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
       throwsFormatException,
     );
 
@@ -818,11 +863,15 @@ packages:
         projectRoot: root,
         writeOut: output.add,
         processRunner: runner,
-      ).add(const AddOptions(item: 'button', mode: AddMode.dryRun));
+        sources: const FixtureOfficialResolver(),
+      ).add(const AddOptions(items: ['button'], mode: AddMode.dryRun));
 
       expect(snapshotFiles(root), before);
       expect(runner.calls, isEmpty);
-      expect(output.join('\n'), contains('Items: theme -> button'));
+      expect(
+        output.join('\n'),
+        contains('Items: @remix/theme -> @remix/button'),
+      );
       expect(
         output.join('\n'),
         contains('Generated: lib/ui/components/button.g.dart'),
@@ -869,7 +918,8 @@ packages:
       projectRoot: root,
       writeOut: output.add,
       processRunner: runner,
-    ).add(const AddOptions(item: 'button', mode: AddMode.diff));
+      sources: const FixtureOfficialResolver(),
+    ).add(const AddOptions(items: ['button'], mode: AddMode.diff));
 
     expect(snapshotFiles(root), before);
     expect(runner.calls, hasLength(3));
@@ -884,17 +934,24 @@ packages:
       // the formatter would then rewrite the file the CLI just wrote — which
       // shows up for a consumer as an `add --diff` that never comes back
       // clean.
-      final catalog = await RegistryCatalog.loadBundled(preset: 'default');
+      final catalog = await CheckoutRegistry(
+        findCheckoutRegistry(),
+        'vanilla',
+      ).catalog();
       final items = catalog.items.keys.where((name) => name != 'theme');
       expect(items, isNotEmpty);
 
       for (final item in items) {
         final caseRoot = createFlutterPackage();
         addTearDown(() => caseRoot.deleteSync(recursive: true));
-        await Installer(projectRoot: caseRoot, writeOut: (_) {}).initialize(
+        await Installer(
+          projectRoot: caseRoot,
+          writeOut: (_) {},
+          sources: const FixtureOfficialResolver(),
+        ).initialize(
           const InitOptions(
             prefix: 'Playground',
-            preset: 'default',
+            preset: 'vanilla',
             uiPath: 'lib/ui',
           ),
         );
@@ -910,7 +967,7 @@ packages:
             catalog
                 .resolve(item)
                 .any((entry) => entry.dependencies.containsKey('mix_chart'))
-            ? '0.0.1-beta.1'
+            ? '$registryMixChartFloor'
             : null;
         writeRequiredPubspec(
           caseRoot,
@@ -930,7 +987,8 @@ packages:
             writeLockOnPubGet: false,
             runRealFormatter: true,
           ),
-        ).add(AddOptions(item: item, mode: AddMode.write));
+          sources: const FixtureOfficialResolver(),
+        ).add(AddOptions(items: [item], mode: AddMode.write));
         final before = snapshotFiles(caseRoot);
         final output = <String>[];
 
@@ -942,7 +1000,8 @@ packages:
             runRealFormatter: true,
             runRealGit: true,
           ),
-        ).add(AddOptions(item: item, mode: AddMode.diff));
+          sources: const FixtureOfficialResolver(),
+        ).add(AddOptions(items: [item], mode: AddMode.diff));
 
         expect(snapshotFiles(caseRoot), before, reason: item);
         expect(output.last, 'No authored-source differences.', reason: item);
@@ -974,7 +1033,8 @@ packages:
         projectRoot: root,
         writeOut: (_) {},
         processRunner: runner,
-      ).add(const AddOptions(item: 'theme', mode: AddMode.diff)),
+        sources: const FixtureOfficialResolver(),
+      ).add(const AddOptions(items: ['theme'], mode: AddMode.diff)),
       throwsFormatException,
     );
     expect(snapshotFiles(root), before);
@@ -991,7 +1051,8 @@ packages:
         writeOut: (_) {},
         processRunner: runner,
         fileWriter: writer,
-      ).add(const AddOptions(item: 'button', mode: AddMode.write)),
+        sources: const FixtureOfficialResolver(),
+      ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
       throwsStateError,
     );
 
@@ -1006,8 +1067,12 @@ packages:
     for (final stage in ['build', 'analyze']) {
       final caseRoot = createFlutterPackage();
       addTearDown(() => caseRoot.deleteSync(recursive: true));
-      await Installer(projectRoot: caseRoot, writeOut: (_) {}).initialize(
-        const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
+      await Installer(
+        projectRoot: caseRoot,
+        writeOut: (_) {},
+        sources: const FixtureOfficialResolver(),
+      ).initialize(
+        const InitOptions(prefix: 'Ui', preset: 'vanilla', uiPath: 'lib/ui'),
       );
       writeRequiredPubspec(caseRoot);
       writeRequiredLock(caseRoot);
@@ -1017,7 +1082,8 @@ packages:
           projectRoot: caseRoot,
           writeOut: (_) {},
           processRunner: happyRunner(caseRoot, failStage: stage),
-        ).add(const AddOptions(item: 'button', mode: AddMode.write)),
+          sources: const FixtureOfficialResolver(),
+        ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
         throwsStateError,
         reason: stage,
       );
@@ -1042,7 +1108,8 @@ packages:
           projectRoot: root,
           writeOut: (_) {},
           processRunner: runner,
-        ).add(const AddOptions(item: 'button', mode: AddMode.write)),
+          sources: const FixtureOfficialResolver(),
+        ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
         throwsFormatException,
       );
       expect(runner.calls, isEmpty);
@@ -1054,7 +1121,8 @@ packages:
           projectRoot: root,
           writeOut: (_) {},
           processRunner: runner,
-        ).add(const AddOptions(item: 'button', mode: AddMode.write)),
+          sources: const FixtureOfficialResolver(),
+        ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
         throwsFormatException,
       );
       expect(runner.calls, isEmpty);
@@ -1079,8 +1147,12 @@ packages:
       for (final declaration in declarations) {
         final caseRoot = createFlutterPackage();
         addTearDown(() => caseRoot.deleteSync(recursive: true));
-        await Installer(projectRoot: caseRoot, writeOut: (_) {}).initialize(
-          const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
+        await Installer(
+          projectRoot: caseRoot,
+          writeOut: (_) {},
+          sources: const FixtureOfficialResolver(),
+        ).initialize(
+          const InitOptions(prefix: 'Ui', preset: 'vanilla', uiPath: 'lib/ui'),
         );
         final pubspec = File(p.join(caseRoot.path, 'pubspec.yaml'))
           ..writeAsStringSync('''name: consumer
@@ -1105,7 +1177,8 @@ dependency_overrides:
           projectRoot: caseRoot,
           writeOut: (_) {},
           processRunner: runner,
-        ).add(const AddOptions(item: 'button', mode: AddMode.write));
+          sources: const FixtureOfficialResolver(),
+        ).add(const AddOptions(items: ['button'], mode: AddMode.write));
 
         expect(pubspec.readAsBytesSync(), before, reason: declaration);
         expect(
@@ -1145,7 +1218,8 @@ dev_dependencies:
           writeOut: (_) {},
           processRunner: happyRunner(root, writeLockOnPubGet: false),
           fileWriter: writer,
-        ).add(const AddOptions(item: 'button', mode: AddMode.write)),
+          sources: const FixtureOfficialResolver(),
+        ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
         throwsStateError,
       );
 
@@ -1158,10 +1232,14 @@ dev_dependencies:
     test(
       'both presets reject resolved $version before writing source',
       () async {
-        for (final preset in ['default', 'fortal']) {
+        for (final preset in ['vanilla', 'fortal']) {
           final caseRoot = createFlutterPackage();
           addTearDown(() => caseRoot.deleteSync(recursive: true));
-          await Installer(projectRoot: caseRoot, writeOut: (_) {}).initialize(
+          await Installer(
+            projectRoot: caseRoot,
+            writeOut: (_) {},
+            sources: const FixtureOfficialResolver(),
+          ).initialize(
             InitOptions(prefix: 'Ui', preset: preset, uiPath: 'lib/ui'),
           );
           writeRequiredPubspec(caseRoot, remix: '^$version');
@@ -1175,7 +1253,8 @@ dev_dependencies:
               writeOut: (_) {},
               processRunner: happyRunner(caseRoot, writeLockOnPubGet: false),
               fileWriter: writer,
-            ).add(const AddOptions(item: 'accordion', mode: AddMode.write)),
+              sources: const FixtureOfficialResolver(),
+            ).add(const AddOptions(items: ['accordion'], mode: AddMode.write)),
             throwsStateError,
             reason: preset,
           );
@@ -1199,7 +1278,8 @@ dev_dependencies:
       projectRoot: root,
       writeOut: output.add,
       processRunner: happyRunner(root, lockedRemix: '$drifted'),
-    ).add(const AddOptions(item: 'button', mode: AddMode.write));
+      sources: const FixtureOfficialResolver(),
+    ).add(const AddOptions(items: ['button'], mode: AddMode.write));
 
     expect(
       output,
@@ -1207,6 +1287,10 @@ dev_dependencies:
         allOf(
           startsWith('Resolved remix $drifted;'),
           contains('authored against $registryRemixFloor'),
+          // The pin is what selects the source, so the way forward is moving
+          // it. Upgrading the CLI would not.
+          contains('remix registry update @remix'),
+          isNot(contains('pub upgrade')),
         ),
       ),
     );
@@ -1221,7 +1305,8 @@ dev_dependencies:
       projectRoot: root,
       writeOut: output.add,
       processRunner: happyRunner(root),
-    ).add(const AddOptions(item: 'button', mode: AddMode.write));
+      sources: const FixtureOfficialResolver(),
+    ).add(const AddOptions(items: ['button'], mode: AddMode.write));
 
     expect(output, everyElement(isNot(startsWith('Resolved remix'))));
   });
@@ -1232,8 +1317,12 @@ dev_dependencies:
       for (final runtime in ['remix', 'mix_annotations']) {
         final caseRoot = createFlutterPackage();
         addTearDown(() => caseRoot.deleteSync(recursive: true));
-        await Installer(projectRoot: caseRoot, writeOut: (_) {}).initialize(
-          const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
+        await Installer(
+          projectRoot: caseRoot,
+          writeOut: (_) {},
+          sources: const FixtureOfficialResolver(),
+        ).initialize(
+          const InitOptions(prefix: 'Ui', preset: 'vanilla', uiPath: 'lib/ui'),
         );
         File(p.join(caseRoot.path, 'pubspec.yaml')).writeAsStringSync(
           runtime == 'remix'
@@ -1273,7 +1362,8 @@ dev_dependencies:
             writeOut: (_) {},
             processRunner: runner,
             fileWriter: writer,
-          ).add(const AddOptions(item: 'button', mode: AddMode.write)),
+            sources: const FixtureOfficialResolver(),
+          ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
           throwsA(
             isFormatException.having(
               (error) => error.message,
@@ -1301,8 +1391,12 @@ dev_dependencies:
     () async {
       final caseRoot = createFlutterPackage();
       addTearDown(() => caseRoot.deleteSync(recursive: true));
-      await Installer(projectRoot: caseRoot, writeOut: (_) {}).initialize(
-        const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
+      await Installer(
+        projectRoot: caseRoot,
+        writeOut: (_) {},
+        sources: const FixtureOfficialResolver(),
+      ).initialize(
+        const InitOptions(prefix: 'Ui', preset: 'vanilla', uiPath: 'lib/ui'),
       );
       File(p.join(caseRoot.path, 'pubspec.yaml')).writeAsStringSync('''
 name: consumer
@@ -1318,7 +1412,7 @@ dev_dependencies:
   build_runner: ^2.10.1
   mix_generator: ^2.2.0-beta.3
 ''');
-      writeRequiredLock(caseRoot, mixChart: '0.0.1-beta.1');
+      writeRequiredLock(caseRoot, mixChart: '$registryMixChartFloor');
       final before = snapshotFiles(caseRoot);
       final runner = happyRunner(caseRoot);
       final writer = RecordingFileWriter(caseRoot);
@@ -1329,7 +1423,8 @@ dev_dependencies:
           writeOut: (_) {},
           processRunner: runner,
           fileWriter: writer,
-        ).add(const AddOptions(item: 'chart', mode: AddMode.write)),
+          sources: const FixtureOfficialResolver(),
+        ).add(const AddOptions(items: ['chart'], mode: AddMode.write)),
         throwsA(
           isFormatException.having(
             (error) => error.message,
@@ -1373,7 +1468,8 @@ dependencies:
         projectRoot: root,
         writeOut: (_) {},
         processRunner: runner,
-      ).add(const AddOptions(item: 'button', mode: AddMode.write));
+        sources: const FixtureOfficialResolver(),
+      ).add(const AddOptions(items: ['button'], mode: AddMode.write));
 
       expect(pubspec.readAsBytesSync(), before);
       expect(
@@ -1410,7 +1506,8 @@ dev_dependencies:
         writeOut: (_) {},
         processRunner: runner,
         fileWriter: writer,
-      ).add(const AddOptions(item: 'button', mode: AddMode.write)),
+        sources: const FixtureOfficialResolver(),
+      ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
       throwsA(
         isFormatException.having(
           (error) => error.message,
@@ -1438,9 +1535,13 @@ dev_dependencies:
       projectRoot: root,
       writeOut: output.add,
       processRunner: happyRunner(root),
-    ).add(const AddOptions(item: 'button', mode: AddMode.overwrite));
+      sources: const FixtureOfficialResolver(),
+    ).add(const AddOptions(items: ['button'], mode: AddMode.overwrite));
 
-    expect(output, containsAll(['Added theme.', 'Added button.']));
+    expect(
+      output,
+      containsAll(['Added @remix/theme.', 'Added @remix/button.']),
+    );
   });
 
   test(
@@ -1453,9 +1554,13 @@ dev_dependencies:
         projectRoot: root,
         writeOut: output.add,
         processRunner: happyRunner(root),
-      ).add(const AddOptions(item: 'button', mode: AddMode.overwrite));
+        sources: const FixtureOfficialResolver(),
+      ).add(const AddOptions(items: ['button'], mode: AddMode.overwrite));
 
-      expect(output, containsAll(['Preserved theme.', 'Updated button.']));
+      expect(
+        output,
+        containsAll(['Preserved @remix/theme.', 'Updated @remix/button.']),
+      );
     },
   );
 
@@ -1470,11 +1575,261 @@ dev_dependencies:
         projectRoot: root,
         writeOut: output.add,
         processRunner: happyRunner(root),
-      ).add(const AddOptions(item: 'theme', mode: AddMode.overwrite));
+        sources: const FixtureOfficialResolver(),
+      ).add(const AddOptions(items: ['theme'], mode: AddMode.overwrite));
 
-      expect(output, contains('Updated theme.'));
+      expect(output, contains('Updated @remix/theme.'));
     },
   );
+
+  group('installing several items in one invocation', () {
+    test(
+      'writes the same tree the same items written one at a time do',
+      () async {
+        // The batch is only worth having if it is indistinguishable from the
+        // sequence it replaces. Compare the whole project, not a file list.
+        writeRequiredPubspec(root);
+        writeRequiredLock(root);
+        await Installer(
+          projectRoot: root,
+          writeOut: (_) {},
+          processRunner: happyRunner(root),
+          sources: const FixtureOfficialResolver(),
+        ).add(const AddOptions(items: ['button', 'card'], mode: AddMode.write));
+        final batched = snapshotFiles(root);
+
+        final sequential = createFlutterPackage();
+        addTearDown(() => sequential.deleteSync(recursive: true));
+        await Installer(
+          projectRoot: sequential,
+          writeOut: (_) {},
+          sources: const FixtureOfficialResolver(),
+        ).initialize(
+          const InitOptions(prefix: 'Ui', preset: 'vanilla', uiPath: 'lib/ui'),
+        );
+        writeRequiredPubspec(sequential);
+        writeRequiredLock(sequential);
+        for (final item in ['button', 'card']) {
+          await Installer(
+            projectRoot: sequential,
+            writeOut: (_) {},
+            processRunner: happyRunner(sequential),
+            sources: const FixtureOfficialResolver(),
+          ).add(AddOptions(items: [item], mode: AddMode.write));
+        }
+
+        expect(batched, snapshotFiles(sequential));
+      },
+    );
+
+    test('resolves, formats, and generates once for the whole batch', () async {
+      // This is the reason the batch exists: the expensive tail runs per
+      // invocation, so four items in one call must not pay it four times.
+      writeRequiredPubspec(root, remixUiIcons: '^0.1.0');
+      writeRequiredLock(root, remixUiIcons: '0.1.0');
+      final runner = happyRunner(root, writeLockOnPubGet: false);
+
+      await Installer(
+        projectRoot: root,
+        writeOut: (_) {},
+        processRunner: runner,
+        sources: const FixtureOfficialResolver(),
+      ).add(
+        const AddOptions(
+          items: ['activity', 'answer', 'message'],
+          mode: AddMode.write,
+        ),
+      );
+
+      int callsMatching(bool Function(ProcessInvocation) test) =>
+          runner.calls.where(test).length;
+      expect(callsMatching((call) => call.arguments.join(' ') == 'pub get'), 1);
+      expect(
+        callsMatching((call) => call.arguments.contains('build_runner')),
+        1,
+      );
+      expect(callsMatching((call) => call.arguments.first == 'format'), 1);
+      expect(callsMatching((call) => call.arguments.first == 'analyze'), 1);
+      for (final item in ['activity', 'answer', 'message']) {
+        expect(
+          File(p.join(root.path, 'lib/ui/components/$item.dart')).existsSync(),
+          isTrue,
+          reason: item,
+        );
+      }
+    });
+
+    test(
+      'a dependency two requests share is installed and reported once',
+      () async {
+        writeRequiredPubspec(root);
+        writeRequiredLock(root);
+        final output = <String>[];
+
+        await Installer(
+          projectRoot: root,
+          writeOut: output.add,
+          processRunner: happyRunner(root),
+          sources: const FixtureOfficialResolver(),
+        ).add(const AddOptions(items: ['button', 'card'], mode: AddMode.write));
+
+        expect(
+          output.where((line) => line == 'Added @remix/theme.'),
+          hasLength(1),
+        );
+        expect(output, contains('Added @remix/button.'));
+        expect(output, contains('Added @remix/card.'));
+        final barrel = File(
+          p.join(root.path, 'lib/ui/ui.dart'),
+        ).readAsStringSync();
+        expect("export 'theme/tokens.dart';".allMatches(barrel), hasLength(1));
+      },
+    );
+
+    test('overwrite covers every requested item and no dependency', () async {
+      await Installer(
+        projectRoot: root,
+        writeOut: (_) {},
+        processRunner: happyRunner(root),
+        sources: const FixtureOfficialResolver(),
+      ).add(const AddOptions(items: ['button', 'card'], mode: AddMode.write));
+      final theme = File(p.join(root.path, 'lib/ui/theme/tokens.dart'));
+      theme.writeAsStringSync('// edited by the consumer\n');
+      final output = <String>[];
+
+      await Installer(
+        projectRoot: root,
+        writeOut: output.add,
+        processRunner: happyRunner(root),
+        sources: const FixtureOfficialResolver(),
+      ).add(
+        const AddOptions(items: ['button', 'card'], mode: AddMode.overwrite),
+      );
+
+      expect(output, contains('Updated @remix/button.'));
+      expect(output, contains('Updated @remix/card.'));
+      expect(output, contains('Preserved @remix/theme.'));
+      expect(theme.readAsStringSync(), '// edited by the consumer\n');
+    });
+
+    test(
+      'overwrite updates a requested item that is also a dependency',
+      () async {
+        // Theme is Button's dependency *and* named in the same invocation.
+        // Requested-vs-dependency is a name set, not a last-item check, so
+        // --overwrite must rewrite Theme rather than preserve it.
+        await installButton(root);
+        final theme = File(p.join(root.path, 'lib/ui/theme/tokens.dart'));
+        final button = File(p.join(root.path, 'lib/ui/components/button.dart'));
+        theme.writeAsStringSync('${theme.readAsStringSync()}// edited theme\n');
+        button.writeAsStringSync(
+          '${button.readAsStringSync()}// edited button\n',
+        );
+        final output = <String>[];
+
+        await Installer(
+          projectRoot: root,
+          writeOut: output.add,
+          processRunner: happyRunner(root),
+          sources: const FixtureOfficialResolver(),
+        ).add(
+          const AddOptions(items: ['theme', 'button'], mode: AddMode.overwrite),
+        );
+
+        expect(output, contains('Updated @remix/theme.'));
+        expect(output, contains('Updated @remix/button.'));
+        expect(output, isNot(contains('Preserved @remix/theme.')));
+        expect(theme.readAsStringSync(), isNot(contains('// edited theme')));
+        expect(button.readAsStringSync(), isNot(contains('// edited button')));
+      },
+    );
+
+    test('dry-run and diff leave the tree unchanged', () async {
+      // Preview modes share the same plan as a real install. Naming two items
+      // must not be enough to start writing.
+      writeRequiredPubspec(root);
+      writeRequiredLock(root);
+      final output = <String>[];
+      final before = snapshotFiles(root);
+      final runner = happyRunner(root);
+      final installer = Installer(
+        projectRoot: root,
+        writeOut: output.add,
+        processRunner: runner,
+        sources: const FixtureOfficialResolver(),
+      );
+
+      await installer.add(
+        const AddOptions(items: ['button', 'card'], mode: AddMode.dryRun),
+      );
+      expect(
+        output.join('\n'),
+        contains('Items: @remix/theme -> @remix/button -> @remix/card'),
+      );
+      expect(snapshotFiles(root), before);
+      expect(runner.calls, isEmpty);
+
+      output.clear();
+      await installer.add(
+        const AddOptions(items: ['button', 'card'], mode: AddMode.diff),
+      );
+      expect(snapshotFiles(root), before);
+      expect(runner.calls.any((call) => call.executable == 'git'), isTrue);
+    });
+
+    test(
+      'a failed batch names every requested item in the rerun hint',
+      () async {
+        // The hint is how a user recovers from a half-installed batch, so it has
+        // to reproduce the command they ran. Naming only the first or last item
+        // would send them back with a different install.
+        writeRequiredPubspec(root);
+        writeRequiredLock(root);
+
+        await expectLater(
+          Installer(
+            projectRoot: root,
+            writeOut: (_) {},
+            processRunner: happyRunner(root, failStage: 'analyze'),
+            sources: const FixtureOfficialResolver(),
+          ).add(
+            const AddOptions(items: ['button', 'card'], mode: AddMode.write),
+          ),
+          throwsA(
+            isA<StateError>().having(
+              (error) => error.message,
+              'message',
+              contains('remix add button card'),
+            ),
+          ),
+        );
+      },
+    );
+
+    test('an unknown item in the batch fails before any write', () async {
+      writeRequiredPubspec(root);
+      writeRequiredLock(root);
+      final before = snapshotFiles(root);
+      final runner = RecordingProcessRunner(
+        (invocation) => throw StateError('Unexpected ${invocation.display}'),
+      );
+
+      await expectLater(
+        Installer(
+          projectRoot: root,
+          writeOut: (_) {},
+          processRunner: runner,
+          sources: const FixtureOfficialResolver(),
+        ).add(
+          const AddOptions(items: ['button', 'missing'], mode: AddMode.write),
+        ),
+        throwsA(isA<FormatException>()),
+      );
+
+      expect(snapshotFiles(root), before);
+      expect(runner.calls, isEmpty);
+    });
+  });
 }
 
 Future<void> installButton(Directory root) async {
@@ -1484,7 +1839,8 @@ Future<void> installButton(Directory root) async {
     projectRoot: root,
     writeOut: (_) {},
     processRunner: happyRunner(root),
-  ).add(const AddOptions(item: 'button', mode: AddMode.write));
+    sources: const FixtureOfficialResolver(),
+  ).add(const AddOptions(items: ['button'], mode: AddMode.write));
 }
 
 /// The Dart the installer resolves from [fakeFlutterMachineJson]'s SDK root.
@@ -1523,7 +1879,7 @@ RecordingProcessRunner happyRunner(
     if (addMissingDependencies) {
       writeRequiredPubspec(
         root,
-        mixChart: addChartDependency ? '^0.0.1-beta.1' : null,
+        mixChart: addChartDependency ? registryMixChartConstraint : null,
       );
     }
     return successProcessOutput;
@@ -1540,7 +1896,7 @@ RecordingProcessRunner happyRunner(
       writeRequiredLock(
         root,
         remix: lockedRemix,
-        mixChart: addChartDependency ? '0.0.1-beta.1' : null,
+        mixChart: addChartDependency ? '$registryMixChartFloor' : null,
       );
     }
     return successProcessOutput;

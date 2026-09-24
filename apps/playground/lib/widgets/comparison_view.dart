@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'spaced_column.dart';
 
+const _sideBySideBreakpoint = 520.0;
+
 class ComparisonView extends StatelessWidget {
   final List<Widget> remix;
   final List<Widget> material;
@@ -17,18 +19,42 @@ class ComparisonView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: .min,
-      crossAxisAlignment: .start,
-      children: [
-        _ComparisonSection(title: 'Remix', spacing: spacing, children: remix),
-        SizedBox(width: sectionSpacing),
-        _ComparisonSection(
-          title: 'Material',
-          spacing: spacing,
-          children: material,
-        ),
-      ],
+    final sections = [
+      _ComparisonSection(title: 'Remix', spacing: spacing, children: remix),
+      _ComparisonSection(
+        title: 'Material',
+        spacing: spacing,
+        children: material,
+      ),
+    ];
+
+    // Side by side needs room for both columns. The mobile preset is 375
+    // logical pixels, which several entries overflow, so stack there instead
+    // of clipping content the preview exists to show.
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth < _sideBySideBreakpoint) {
+          return Column(
+            mainAxisSize: .min,
+            crossAxisAlignment: .start,
+            children: [
+              sections.first,
+              SizedBox(height: sectionSpacing),
+              sections.last,
+            ],
+          );
+        }
+
+        return Row(
+          mainAxisSize: .min,
+          crossAxisAlignment: .start,
+          children: [
+            sections.first,
+            SizedBox(width: sectionSpacing),
+            sections.last,
+          ],
+        );
+      },
     );
   }
 }

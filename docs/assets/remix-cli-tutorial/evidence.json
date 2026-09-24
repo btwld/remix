@@ -53,16 +53,16 @@
   "source": [
     {
       "preset": "default",
-      "main_sha256": "3363bee62ba14a4dcf7ca554424038ef1de5cdf663ca9f392e367497afc1dada",
-      "test_sha256": "4e658d39ca93c2a63259ec6bacd55aeef1aaa87660f3b7457a34069f0f0354f6"
+      "main_sha256": "483ac622b3f6ead7e69997044ff2872f1201ba1ae4ea06c4ef741b0269243547",
+      "test_sha256": "c480e6f5b025bad32d236dc22ae66403e45ab946953a0f2d70b78f7b533b4d92"
     },
     {
       "preset": "fortal",
-      "main_sha256": "06f6da57e236173a36a8fd1356040ef8e9e62e209cfe975bd2ec83b3b7c50e97",
-      "test_sha256": "cd0d26434ccc79e629f95e89ce1e42b4985d2e180d00ea4bdee0990b329222a4"
+      "main_sha256": "a91813b55f594f6941a3970fb5305d3da211ba1708eaa1efddcacfcd36e696c6",
+      "test_sha256": "37b7be5ce79290a951544184372a618b969f5ba5f3af27da4bacf0932f50701f"
     }
   ],
-  "archive_sha256": "119bfedd657e6933736875d8b70909e049aa5f9c3f882da9eece0c08c062716a",
+  "archive_sha256": "08f242b5f82ccd248600d93c218d0b8c0d5071a5cea7cc1a4e1abf26b456c1c2",
   "first_render_source_sha256": "f8f43244e34277e0c7b27d92def68ced08fa93b0852e56dd20beb5a33821f10e",
   "validation": {
     "fresh_default_replay": "Passed project creation, installation, first render, composition, customization, diff preservation, ordinary add preservation, analysis, four tests, and release web builds.",
@@ -430,5 +430,21 @@
       "file": "tutorial-preview.jpg",
       "sha256": "0a841b84199550677fda1ca7345da17103e6a60a73648f7d9065140f09ea315c"
     }
+  },
+  "widgets_app_migration": {
+    "date": "2026-09-12",
+    "changes": "Both downloadable apps now use WidgetsApp with PageRouteBuilder and inherited theme scopes. Workflow tests assert no MaterialApp host.",
+    "screenshots": "Original captures retained; not recaptured for this host migration.",
+    "validation": "Both downloaded projects passed dependency resolution, analysis, and all four workflow tests against the local Remix checkout."
+  },
+  "theme_mode_migration": {
+    "date": "2026-09-12",
+    "changes": "Updated both theme layers and application hosts to theme/darkTheme/mode, with generated appearance tests. Original screenshot captures are unchanged and predate this revision. Hard cutoff removes scope data/brightness and config createScope.",
+    "validation": "After the hard cutoff, both downloaded projects passed analysis and all 12 tests against the current local Remix checkout."
+  },
+  "review_followup": {
+    "date": "2026-09-13",
+    "changes": "Added resolved-token, custom-color, and text-inheritance regression tests. Screenshots unchanged.",
+    "validation": "Both downloadable projects passed their suites against the local checkout: 13 default tests and 14 Fortal tests, including actual inherited colors and Fortal text-style placement."
   }
 }

@@ -64,16 +64,19 @@ re-scopes those tokens without restating the courtesy bare-`Text` run. The one
 deliberate foreground exception is transparent, non-accent `FortalCode.ghost`,
 which blends with its surrounding text unless explicitly restyled.
 
-Place it above your app widget so that overlay and route content inherits the
-tokens — **except** under `MaterialApp` or `CupertinoApp`, which install their
-own root text style below anything wrapping the app. There, put the scope in
-`builder:` so it still covers routes and overlays:
+Use `WidgetsApp` as the application host. Put the scope in `builder` above the
+Navigator so routes, dialogs, and overlays inherit the same theme:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'ui/ui.dart';
 
-final app = MaterialApp(
+final app = WidgetsApp(
+  color: const Color(0xFFF8FAFC),
+  pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
+    settings: settings,
+    pageBuilder: (context, animation, secondaryAnimation) => builder(context),
+  ),
   builder: (context, child) => FortalScope(child: child!),
   home: const Center(child: FortalText('Themed')),
 );
@@ -86,6 +89,30 @@ and default roles: an omitted size uses `text3`, while an explicit `size:`
 selects another token size. This is a deliberate deviation from Radix's
 ambient CSS `1em` behavior. The sole ambient field retained by Fortal
 typography is the foreground of transparent, non-accent `FortalCode.ghost`.
+
+## Light, dark, and system appearance
+
+`FortalScope` supplies light and dark preset defaults and follows the system at
+the root. Nested scopes inherit the configured pair and active selection.
+Customize the pair with `theme` and `darkTheme`, or force `mode` to `.light` or
+`.dark`. `mode: .system` follows live platform brightness changes.
+
+```dart
+FortalScope(
+  theme: const FortalThemeData.light(accent: FortalAccentColor.indigo),
+  darkTheme: const FortalThemeData.dark(accent: FortalAccentColor.indigo),
+  mode: FortalThemeMode.system,
+  child: child,
+)
+```
+
+Supplying only `theme` makes it the fallback for both modes. Supplying only
+`darkTheme` retains the default or inherited base theme. Direct scope options
+such as `accent` apply to both appearances. Appearance selection uses `mode`;
+the scope no longer accepts a `brightness` parameter.
+
+Installed Fortal source uses your prefix: `AcmeScope`, `AcmeThemeData`, and
+`AcmeThemeMode` expose the same behavior. No Material application host is needed.
 
 ## Customizing Fortal styles
 

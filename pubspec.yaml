@@ -75,7 +75,7 @@ melos:
         # breaks any consumer that resolves beta.4.
         mix: ^2.2.0-beta.5
         mix_annotations: ^2.2.0-beta.1
-        mix_chart: ^0.0.1-beta.1
+        mix_chart: ^0.0.1-beta.3
         cupertino_icons: ^1.0.8
         pub_semver: ^2.2.0
         yaml: ^3.1.3
@@ -91,7 +91,7 @@ melos:
   scripts:
     # No `release:*` versioning scripts here on purpose. The version workflow
     # is the supported path for the published Remix package; registry_source is
-    # the internal authoring and parity package whose source derives the bundled
+    # the internal authoring and parity package whose source derives the remote
     # presets, so release automation must not version it.
     generate:
       description: Regenerate Remix sources
@@ -133,7 +133,7 @@ melos:
 
     version:align:check:
       run: dart run tool/check_version_alignment.dart
-      description: Verify the remix_cli registry floors at the Remix version
+      description: Verify the remote registry floors at the Remix version
 
     mix:consumer:check:
       run: dart run tool/check_consumer_mix.dart
@@ -168,7 +168,7 @@ melos:
 
     open-code:registry:build:
       run: dart run tool/build_registry.dart
-      description: Derive every bundled preset from analyzer-checked package source
+      description: Derive every remote preset from analyzer-checked package source
 
     open-code:registry:check:
       steps:
@@ -235,7 +235,7 @@ melos:
         - ci:codegen
         - ci:cli
         - ci:flutter
-        - ci:open-code:default
+        - ci:open-code:vanilla
         - ci:open-code:fortal
         - ci:open-code:carbon
       description: >-
@@ -278,13 +278,13 @@ melos:
 
     # Fresh consumers use checkout Remix and hosted supporting packages.
     # The release check separately requires the published Remix version.
-    ci:open-code:default:
+    ci:open-code:vanilla:
       steps:
         - dart test test/tool/check_open_code_test.dart
         - dart run tool/check_open_code.dart --source checkout --item dashboard_shell
         - dart run tool/check_open_code.dart --source checkout --item dashboard_demo
         - dart run tool/check_open_code.dart --source checkout
-      description: Install every default-preset item against the Remix checkout
+      description: Install every Vanilla-preset item against the Remix checkout
 
     ci:open-code:fortal:
       steps:
@@ -318,6 +318,8 @@ melos:
       steps:
         - dart run tool/validate_docs.dart
         - dart run tool/generate_fortal_catalog.dart --check
+        - python3 tool/check_example_hosts.py
+        - python3 -m unittest discover -s tool -p 'test_example_hosts.py'
         - python3 tool/check_tutorial_assets.py
         - python3 -m unittest discover -s tool -p 'test_tutorial_assets.py'
       description: Validate docs, reject retired APIs, and fail on catalog drift

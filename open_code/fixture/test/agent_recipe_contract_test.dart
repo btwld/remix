@@ -27,7 +27,7 @@ void main() {
       WidgetsApp(
         color: const Color(0xFFFFFFFF),
         builder: (_, _) =>
-            AcmeThemeScope(data: const AcmeThemeData.light(), child: answer),
+            AcmeThemeScope(mode: AcmeThemeMode.light, child: answer),
       ),
     );
     final copy = find.byWidgetPredicate(
@@ -142,7 +142,7 @@ Future<StyleSpec<S>> _resolve<S extends Spec<S>>(
     WidgetsApp(
       color: const Color(0xFFFFFFFF),
       builder: (_, _) =>
-          AcmeThemeScope(data: const AcmeThemeData.light(), child: child),
+          AcmeThemeScope(mode: AcmeThemeMode.light, child: child),
     ),
   );
   return result;

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import 'ui/ui.dart';
 
@@ -12,14 +12,12 @@ class AcmeApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: AcmeScope(
-        theme: AcmeTheme.g10,
-        child: Scaffold(
-          body: Center(
-            child: AcmeButton(label: 'Continue', onPressed: () {}),
-          ),
+    return AcmeScope(
+      theme: AcmeTheme.g10,
+      child: WidgetsApp(
+        color: const Color(0xFFF4F4F4),
+        builder: (context, _) => Center(
+          child: AcmeButton(label: 'Continue', onPressed: () {}),
         ),
       ),
     );

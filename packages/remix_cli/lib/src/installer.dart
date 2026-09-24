@@ -11,6 +11,8 @@ import 'cli.dart';
 import 'process_runner.dart';
 import 'project_config.dart';
 import 'registry.dart';
+import 'registry_source.dart';
+import 'registry_graph.dart';
 import 'template_renderer.dart';
 
 const managedExportsStart = '// remix_cli:exports:start';
@@ -22,10 +24,23 @@ $managedExportsStart
 $managedExportsEnd
 ''';
 
-typedef RegistryLoader = Future<RegistryCatalog> Function(String preset);
-
-Future<RegistryCatalog> _loadBundledRegistry(String preset) =>
-    RegistryCatalog.loadBundled(preset: preset);
+/// Runs the CLI against [installer].
+///
+/// Shared with the consumer harness so a new command reaches it automatically
+/// rather than only `bin/remix.dart`.
+Future<int> runInstallerCli(
+  List<String> arguments,
+  Installer installer, {
+  required LineWriter writeOut,
+  required LineWriter writeError,
+}) => runRemixCli(
+  arguments,
+  writeOut: writeOut,
+  writeError: writeError,
+  onInit: installer.initialize,
+  onAdd: installer.add,
+  onRegistry: installer.registry,
+);
 
 abstract interface class ProjectFileWriter {
   void write(File target, String contents);
@@ -58,30 +73,30 @@ final class Installer {
     required LineWriter writeOut,
     ProcessRunner processRunner = const SystemProcessRunner(),
     ProjectFileWriter fileWriter = const AtomicProjectFileWriter(),
-    RegistryLoader registryLoader = _loadBundledRegistry,
+    RegistrySources sources = const GitHubSources(),
   }) : projectRoot = projectRoot.absolute,
        _writeOut = writeOut,
        _processRunner = processRunner,
        _fileWriter = fileWriter,
-       _registryLoader = registryLoader;
+       _sources = sources;
 
   final Directory projectRoot;
   final LineWriter _writeOut;
   final ProcessRunner _processRunner;
   final ProjectFileWriter _fileWriter;
-  final RegistryLoader _registryLoader;
+  final RegistrySources _sources;
   final TemplateRenderer _renderer = const TemplateRenderer();
 
   Future<void> initialize(InitOptions options) async {
     final root = validateFlutterPackageRoot(projectRoot);
-    final requested = ProjectConfig.create(
-      packageRoot: root,
+    validateProjectSettings(
+      root,
       prefix: options.prefix,
       preset: options.preset,
       uiPath: options.uiPath,
     );
     final configFile = File(p.join(root.path, projectConfigFileName));
-    final barrelRelative = p.posix.join(requested.uiPath, 'ui.dart');
+    final barrelRelative = p.posix.join(options.uiPath, 'ui.dart');
     validateProjectFilePath(root, projectConfigFileName);
     validateProjectFilePath(root, barrelRelative);
     final barrelFile = _projectFile(root, barrelRelative);
@@ -92,9 +107,9 @@ final class Installer {
         configFile.readAsStringSync(),
         packageRoot: root,
       );
-      if (existing.prefix != requested.prefix ||
-          existing.preset != requested.preset ||
-          existing.uiPath != requested.uiPath) {
+      if (existing.prefix != options.prefix ||
+          existing.preset != options.preset ||
+          existing.uiPath != options.uiPath) {
         throw const FormatException(
           'Existing remix.yaml does not match the requested prefix, preset, '
           'and UI path.',
@@ -109,7 +124,19 @@ final class Installer {
       writeBarrel = false;
     }
 
-    if (writeConfig) _fileWriter.write(configFile, requested.encode());
+    if (writeConfig) {
+      final source = await _sources.latestOfficial();
+      await _sources.open(source, options.preset).catalog();
+      final requested = ProjectConfig(
+        packageRoot: root,
+        prefix: options.prefix,
+        preset: options.preset,
+        uiPath: options.uiPath,
+        defaultRegistry: '@remix',
+        registries: {'@remix': source},
+      );
+      _fileWriter.write(configFile, requested.encode());
+    }
     if (writeBarrel) _fileWriter.write(barrelFile, emptyManagedBarrel);
 
     // Report the transition that actually happened. `init` doubles as a repair
@@ -122,6 +149,61 @@ final class Installer {
         'Created $barrelRelative; preserved $projectConfigFileName.',
       (false, false) => 'Remix is already initialized.',
     });
+  }
+
+  Future<void> registry(RegistryOptions options) async {
+    final root = validateFlutterPackageRoot(projectRoot);
+    validateProjectFilePath(root, projectConfigFileName);
+    final file = _projectFile(root, projectConfigFileName);
+    if (!file.existsSync())
+      throw const FormatException('Run remix init first.');
+    final config = ProjectConfig.parse(
+      file.readAsStringSync(),
+      packageRoot: root,
+    );
+    final namespace = options.namespace!;
+    validateNamespace(namespace);
+    final sources = <String, RegistrySource>{...config.registries};
+    final RegistrySource source;
+    if (options.action == RegistryAction.add) {
+      if (sources.containsKey(namespace))
+        throw FormatException(
+          '$namespace is already registered; use remix registry update.',
+        );
+      source = await _sources.resolve(
+        repository: options.repository!,
+        path: options.path,
+        ref: options.ref,
+      );
+    } else {
+      final previous = sources[namespace];
+      if (previous == null)
+        throw FormatException(
+          'Unknown registry $namespace; register it with remix registry add.',
+        );
+      source = await _sources.resolve(
+        repository: previous.repository,
+        path: previous.path,
+        ref: options.ref ?? previous.ref,
+      );
+    }
+    await _sources.open(source, config.preset).catalog();
+    sources[namespace] = source;
+    final updated = ProjectConfig(
+      packageRoot: root,
+      prefix: config.prefix,
+      preset: config.preset,
+      uiPath: config.uiPath,
+      defaultRegistry: config.defaultRegistry,
+      registries: sources,
+    );
+    _fileWriter.write(file, updated.encode());
+    _writeOut(
+      '$namespace pinned to ${source.revision}. Installed source was not changed.',
+    );
+    _writeOut(
+      'Review an installed item next: remix add $namespace/<item> --diff',
+    );
   }
 
   Future<void> add(AddOptions options) async {
@@ -151,7 +233,7 @@ final class Installer {
       await _printDiff(
         dart: diffToolchain.dart,
         root: plan.root,
-        requestedName: plan.requested.name,
+        requestedNames: plan.requestedNames,
         items: plan.items,
         states: plan.states,
         filesByItem: plan.filesByItem,
@@ -193,9 +275,33 @@ final class Installer {
     final currentBarrel = barrel.readAsStringSync();
     validateManagedBarrel(currentBarrel);
 
-    final catalog = await _registryLoader(config.preset);
-    final items = catalog.resolve(options.item);
-    final requested = items.last;
+    final graph = await RegistryGraph.resolve(config, options.items, _sources);
+    for (final namespace in graph.catalogs.keys) {
+      _writeOut(
+        '$namespace (${config.preset}) revision '
+        '${config.registries[namespace]!.revision}',
+      );
+    }
+    final items = graph.items;
+    // Requested names are qualified for a pinned project, so they compare
+    // against the qualified names `items` carries. The graph does the
+    // qualifying, because it is the only thing that knows each item's owner.
+    final requestedNames = graph.requestedNames;
+    final availableItems = graph.catalogs.entries
+        .expand(
+          (entry) => entry.value.items.values.map(
+            (item) => RegistryItem(
+              name: '${entry.key}/${item.name}',
+              registryDependencies: item.registryDependencies,
+              dependencies: item.dependencies,
+              devDependencies: item.devDependencies,
+              files: item.files,
+              generated: item.generated,
+              exports: item.exports,
+            ),
+          ),
+        )
+        .toList();
     final rendered = <String, String>{};
     final filesByItem = <String, List<String>>{};
     for (final item in items) {
@@ -207,7 +313,7 @@ final class Installer {
           throw FormatException('Multiple registry files target $relative.');
         }
         rendered[relative] = _renderer.render(
-          await catalog.readTemplate(registryFile),
+          await graph.template(item, registryFile),
           typePrefix: config.prefix,
           valuePrefix: config.valuePrefix,
         );
@@ -223,13 +329,13 @@ final class Installer {
     for (final item in items) {
       states[item.name] = _classify(root, filesByItem[item.name]!);
     }
-    _validateInstallStates(states, requested.name, options.mode);
+    _validateInstallStates(states, requestedNames, options.mode);
 
     final exports = [for (final item in items) ...item.exports];
     final proposedBarrel = updateManagedBarrel(currentBarrel, exports);
     final requirements = _collectRequirements(items);
     final pubspec = File(p.join(root.path, 'pubspec.yaml'));
-    final dependencies = _inspectDependencies(
+    final missingDependencies = _inspectDependencies(
       pubspec.readAsStringSync(),
       requirements,
     );
@@ -242,9 +348,11 @@ final class Installer {
     // stale even when their authored inputs did not change. Keep every
     // already-installed registry adapter in the focused build so adding one
     // optional item cannot delete another item's generated part.
+    final installedDart = _installedDartFiles(root, config.uiPath);
     final generationTargets = <String>{
       ...generated,
-      for (final item in catalog.items.values)
+      ..._installedAdapters(root, config.uiPath, installedDart),
+      for (final item in availableItems)
         for (final target in item.generated)
           if (_projectFile(root, _resolveTarget(config, target)).existsSync())
             _resolveTarget(config, target),
@@ -253,14 +361,15 @@ final class Installer {
     // Spec stylers are opt-in in the supported Mix generator. Detect the
     // authored annotation, not Agent item names or consumer prefixes.
     final specInputs = <String>[];
-    for (final item in catalog.items.values) {
+    for (final item in availableItems) {
       for (final file in item.files) {
         final relative = _resolveTarget(config, file.target);
+        validateProjectFilePath(root, relative);
         final existing = _projectFile(root, relative);
         final proposed = rendered[relative];
         final source =
             existing.existsSync() &&
-                !(item.name == requested.name &&
+                !(requestedNames.contains(item.name) &&
                     options.mode == AddMode.overwrite)
             ? existing.readAsStringSync()
             : proposed;
@@ -268,6 +377,13 @@ final class Installer {
           specInputs.add(relative);
         }
       }
+    }
+    for (final relative in installedDart) {
+      if (relative.endsWith('.g.dart') || specInputs.contains(relative))
+        continue;
+      final source = _projectFile(root, relative).readAsStringSync();
+      if (RegExp(r'@MixableSpec\s*\(').hasMatch(source))
+        specInputs.add(relative);
     }
     String? builderConfiguration;
     if (specInputs.isNotEmpty) {
@@ -287,6 +403,7 @@ final class Installer {
       root: root,
       config: config,
       items: items,
+      requestedNames: requestedNames,
       rendered: rendered,
       filesByItem: filesByItem,
       states: states,
@@ -296,7 +413,7 @@ final class Installer {
       currentBarrel: currentBarrel,
       proposedBarrel: proposedBarrel,
       requirements: requirements,
-      dependencies: dependencies,
+      missingDependencies: missingDependencies,
       generated: generated,
       generationTargets: generationTargets,
       pubspec: pubspec,
@@ -309,34 +426,36 @@ final class Installer {
   /// Every step appends to `completed` before the next one starts, so a failure
   /// can tell the reader how far the install got.
   Future<void> _install(_InstallPlan plan, AddOptions options) async {
-    // Unpacked in one place so the steps below read as prose. The plan stays
-    // the only description of what gets installed: nothing past this point
-    // re-reads the project, so no step can act on a different answer than the
-    // one already printed.
-    final root = plan.root;
-    final config = plan.config;
-    final items = plan.items;
-    final requested = plan.requested;
-    final rendered = plan.rendered;
-    final filesByItem = plan.filesByItem;
-    final states = plan.states;
-    final barrel = plan.barrel;
-    final barrelRelative = plan.barrelRelative;
-    final currentBarrel = plan.currentBarrel;
-    final proposedBarrel = plan.proposedBarrel;
-    final requirements = plan.requirements;
-    final dependencies = plan.dependencies;
-    final generated = plan.generated;
-    final generationTargets = plan.generationTargets;
-    final pubspec = plan.pubspec;
+    // Destructured in one place so the steps below read as prose. The plan
+    // stays the only description of what gets installed: nothing past this
+    // point re-reads the project, so no step can act on a different answer
+    // than the one already printed.
+    final _InstallPlan(
+      :root,
+      :config,
+      :items,
+      :requestedNames,
+      :rendered,
+      :filesByItem,
+      :states,
+      :barrel,
+      :barrelRelative,
+      :currentBarrel,
+      :proposedBarrel,
+      :requirements,
+      :missingDependencies,
+      :generated,
+      :generationTargets,
+      :pubspec,
+    ) = plan;
 
     final toolchain = await _resolveFlutter(root);
     final completed = <String>[];
     var regenerated = false;
     try {
-      if (dependencies.missing.isNotEmpty) {
+      if (missingDependencies.isNotEmpty) {
         final arguments = <String>['pub', 'add'];
-        for (final requirement in dependencies.missing) {
+        for (final requirement in missingDependencies) {
           final descriptor = '${requirement.name}@${requirement.constraint}';
           arguments.add(requirement.dev ? 'dev:$descriptor' : descriptor);
         }
@@ -369,10 +488,17 @@ final class Installer {
       final floor = _snapshotFloor(requirements);
       final lockedRemix = locked['remix'];
       if (floor != null && lockedRemix != null && lockedRemix > floor) {
+        // Upgrading the CLI does not move a pin, so naming it here would send
+        // the reader after a command that cannot change the source they are
+        // being asked to review. A bare update re-resolves the recorded ref,
+        // which only advances for registry-stable; a SHA or tag needs --ref.
+        final advances =
+            config.registries[config.defaultRegistry]!.ref == officialStableRef;
         _writeOut(
-          'Resolved remix $lockedRemix; this remix_cli registry was authored '
-          'against $floor. Run flutter pub upgrade remix_cli, then review '
-          'with --diff.',
+          'Resolved remix $lockedRemix; this registry revision was authored '
+          'against $floor. Your pin does not move on its own — run '
+          'remix registry update ${config.defaultRegistry}'
+          '${advances ? '' : ' --ref <newer ref>'}, then review with --diff.',
         );
       }
 
@@ -381,7 +507,8 @@ final class Installer {
         final state = states[item.name]!;
         final shouldWrite =
             state == _ItemState.missing ||
-            (item.name == requested.name && options.mode == AddMode.overwrite);
+            (requestedNames.contains(item.name) &&
+                options.mode == AddMode.overwrite);
         if (!shouldWrite) continue;
         for (final relative in filesByItem[item.name]!) {
           _fileWriter.write(_projectFile(root, relative), rendered[relative]!);
@@ -456,7 +583,7 @@ final class Installer {
       final done = completed.isEmpty ? 'none' : completed.join(', ');
       throw StateError(
         '$error\nCompleted steps: $done. Fix the reported problem, then rerun '
-        'remix add ${options.item}.',
+        'remix add ${options.items.join(' ')}.',
       );
     }
 
@@ -467,7 +594,8 @@ final class Installer {
       final action = switch (states[item.name]!) {
         _ItemState.missing => 'Added',
         _ =>
-          item.name == requested.name && options.mode == AddMode.overwrite
+          requestedNames.contains(item.name) &&
+                  options.mode == AddMode.overwrite
               ? 'Updated'
               : 'Preserved',
       };
@@ -541,7 +669,7 @@ final class Installer {
   Future<void> _printDiff({
     required String dart,
     required Directory root,
-    required String requestedName,
+    required Set<String> requestedNames,
     required List<RegistryItem> items,
     required Map<String, _ItemState> states,
     required Map<String, List<String>> filesByItem,
@@ -569,7 +697,7 @@ final class Installer {
       final proposedDartPaths = <String>{};
       for (final item in items) {
         final include =
-            item.name == requestedName ||
+            requestedNames.contains(item.name) ||
             states[item.name] == _ItemState.missing;
         if (!include) continue;
         for (final relative in filesByItem[item.name]!) {
@@ -735,19 +863,19 @@ _ItemState _classify(Directory root, List<String> targets) {
 
 void _validateInstallStates(
   Map<String, _ItemState> states,
-  String requested,
+  Set<String> requestedNames,
   AddMode mode,
 ) {
   for (final entry in states.entries) {
     if (entry.value != _ItemState.partial) continue;
-    if (entry.key != requested) {
+    if (!requestedNames.contains(entry.key)) {
       throw FormatException(
         'Registry dependency ${entry.key} is partially installed; repair it or add it explicitly.',
       );
     }
     if (mode == AddMode.write) {
       throw FormatException(
-        'Requested item $requested is partially installed; use --diff or --overwrite.',
+        'Requested item ${entry.key} is partially installed; use --diff or --overwrite.',
       );
     }
   }
@@ -783,7 +911,7 @@ List<_DependencyRequirement> _collectRequirements(List<RegistryItem> items) {
   return List.unmodifiable(requirements.values);
 }
 
-_DependencyInspection _inspectDependencies(
+List<_DependencyRequirement> _inspectDependencies(
   String pubspecSource,
   List<_DependencyRequirement> requirements,
 ) {
@@ -836,7 +964,7 @@ _DependencyInspection _inspectDependencies(
       );
     }
   }
-  return _DependencyInspection(List.unmodifiable(missing));
+  return List.unmodifiable(missing);
 }
 
 VersionConstraint? _hostedConstraint(Object? declaration) {
@@ -986,6 +1114,59 @@ String _generationFilter(String packageName, String target) => Uri(
 String _resolveTarget(ProjectConfig config, String target) =>
     p.posix.join(config.uiPath, target.substring(uiTargetPrefix.length));
 
+Set<String> _installedAdapters(
+  Directory root,
+  String uiPath,
+  List<String> files,
+) {
+  final adapters = <String>{...files.where((path) => path.endsWith('.g.dart'))};
+  final partDirective = RegExp(
+    r'''^\s*part\s+['"]([^'"]+)['"]\s*;''',
+    multiLine: true,
+  );
+  for (final relative in files) {
+    for (final match in partDirective.allMatches(
+      _projectFile(root, relative).readAsStringSync(),
+    )) {
+      final target = p.posix.normalize(
+        p.posix.join(p.posix.dirname(relative), match.group(1)!),
+      );
+      if (!target.startsWith('$uiPath/')) continue;
+      validateProjectFilePath(root, target);
+      if (_projectFile(root, target).existsSync()) adapters.add(target);
+    }
+  }
+  return adapters;
+}
+
+List<String> _installedDartFiles(Directory root, String uiPath) {
+  final result = <String>[];
+  final seen = <String>{};
+  void visit(Directory directory) {
+    if (!directory.existsSync() ||
+        !seen.add(directory.resolveSymbolicLinksSync()))
+      return;
+    for (final entity in directory.listSync(followLinks: false)) {
+      final relative = p
+          .relative(entity.path, from: root.path)
+          .split(p.separator)
+          .join('/');
+      final type = FileSystemEntity.typeSync(entity.path);
+      if (type == FileSystemEntityType.directory) {
+        // Validate through a prospective child to include directory links.
+        validateProjectFilePath(root, '$relative/.remix-path-check');
+        visit(Directory(entity.path));
+      } else if (relative.endsWith('.dart')) {
+        validateProjectFilePath(root, relative);
+        result.add(relative);
+      }
+    }
+  }
+
+  visit(Directory(p.join(root.path, uiPath)));
+  return result;
+}
+
 File _projectFile(Directory root, String relative) =>
     File(p.joinAll([root.path, ...p.posix.split(relative)]));
 
@@ -1009,12 +1190,6 @@ final class _DependencyRequirement {
   final bool dev;
 }
 
-final class _DependencyInspection {
-  const _DependencyInspection(this.missing);
-
-  final List<_DependencyRequirement> missing;
-}
-
 /// Everything `add` resolved before it was allowed to change anything.
 ///
 /// This exists to keep the preflight honest: the planning phase hands back one
@@ -1025,6 +1200,7 @@ final class _InstallPlan {
     required this.root,
     required this.config,
     required this.items,
+    required this.requestedNames,
     required this.rendered,
     required this.filesByItem,
     required this.states,
@@ -1034,7 +1210,7 @@ final class _InstallPlan {
     required this.currentBarrel,
     required this.proposedBarrel,
     required this.requirements,
-    required this.dependencies,
+    required this.missingDependencies,
     required this.generated,
     required this.generationTargets,
     required this.pubspec,
@@ -1044,8 +1220,11 @@ final class _InstallPlan {
   final Directory root;
   final ProjectConfig config;
 
-  /// The requested item and its dependencies, dependencies first.
+  /// Every requested item and its dependencies, dependencies first.
   final List<RegistryItem> items;
+
+  /// The names the caller asked for, as opposed to what came in behind them.
+  final Set<String> requestedNames;
 
   /// Rendered source keyed by the project-relative path it belongs at.
   final Map<String, String> rendered;
@@ -1057,14 +1236,11 @@ final class _InstallPlan {
   final String currentBarrel;
   final String proposedBarrel;
   final List<_DependencyRequirement> requirements;
-  final _DependencyInspection dependencies;
+  final List<_DependencyRequirement> missingDependencies;
   final List<String> generated;
   final List<String> generationTargets;
   final File pubspec;
   final String? builderConfiguration;
-
-  /// The item the user asked for; [items] resolves its dependencies ahead of it.
-  RegistryItem get requested => items.last;
 }
 
 enum _ItemState { missing, partial, complete }

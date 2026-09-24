@@ -7,7 +7,7 @@ name: CI
 #
 # Jobs are sized by cost, not by theme: `checks` bundles nine contract checkers
 # that together take seconds, while the three open-code presets get a job each
-# purely because they are ~5 minutes apiece and were half the old wall clock.
+# because the consumer checks are slow and independent.
 #
 # The workflow restates the `ci` steps instead of deriving them, which is the
 # one hazard of this layout: a step added to `ci` but not wired in here would
@@ -62,15 +62,14 @@ jobs:
 
   # All three presets install every registry item into a throwaway consumer app,
   # and none reads another's output. As a matrix they cost only the slowest
-  # preset. `fail-fast: false` ensures a break in one preset still reports the
-  # others rather than masking them.
+  # preset. `fail-fast: false` ensures one break does not mask the others.
   open-code:
     name: Open-code consumers (${{ matrix.preset }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        preset: [default, fortal, carbon]
+        preset: [vanilla, fortal, carbon]
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-workspace

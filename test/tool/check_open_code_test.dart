@@ -15,19 +15,59 @@ void main() {
     if (sandbox.existsSync()) sandbox.deleteSync(recursive: true);
   });
 
+  test('every invocation shipped in CI and docs actually parses', () {
+    // The parser is the gate for combinations the checker cannot honour -- a
+    // focused --item asserts the checkout resolves Remix locally, so it cannot
+    // pair with --source hosted. A release workflow that names an impossible
+    // pair only fails when a real release fires, so assert the shipped
+    // commands here instead.
+    final sources = [
+      'pubspec.yaml',
+      'open_code/RELEASING.md',
+      // Both extensions: the repository uses `.yml` and `.yaml`, and a
+      // workflow this skipped would be exactly the blind spot the test exists
+      // to remove.
+      for (final file in Directory('.github/workflows').listSync())
+        if (file is File &&
+            (file.path.endsWith('.yml') || file.path.endsWith('.yaml')))
+          file.path,
+    ];
+    final invocation = RegExp(r'check_open_code\.dart([^\n]*)');
+    var checked = 0;
+    for (final path in sources) {
+      final file = File(path);
+      if (!file.existsSync()) continue;
+      for (final match in invocation.allMatches(file.readAsStringSync())) {
+        final arguments = match
+            .group(1)!
+            .trim()
+            .split(RegExp(r'\s+'))
+            .where((argument) => argument.isNotEmpty)
+            .toList();
+        expect(
+          checker.parseConsumerCheckOptions(arguments),
+          isNotNull,
+          reason: '$path: check_open_code.dart ${arguments.join(' ')}',
+        );
+        checked += 1;
+      }
+    }
+    expect(checked, greaterThan(4), reason: 'found no invocations to check');
+  });
+
   group('consumer source selection', () {
     test('the default retains hosted and checkout validation', () {
       final options = checker.parseConsumerCheckOptions([])!;
 
       expect(options.source, checker.RemixSource.both);
-      expect(options.preset, 'default');
+      expect(options.preset, 'vanilla');
       expect(options.keep, isFalse);
       expect(options.hostedCli, isFalse);
       expect(options.item, isNull);
     });
 
     test('every preset can select an explicit source', () {
-      for (final preset in ['default', 'fortal', 'carbon']) {
+      for (final preset in ['vanilla', 'fortal', 'carbon']) {
         for (final source in checker.RemixSource.values) {
           final options = checker.parseConsumerCheckOptions([
             '--preset',
@@ -203,42 +243,37 @@ void main() {
       );
     });
 
-    test(
-      'the Carbon catalog contains only its foundation and button slice',
-      () {
-        expect(
-          checker.registryCoverageProblem(Directory.current, preset: 'carbon'),
-          isNull,
-        );
-        expect(checker.installedInventoryForTest(preset: 'carbon'), {
-          'ui.dart',
-          'theme/theme.dart',
-          'theme/theme_data.dart',
-          'theme/theme_scope.dart',
-          'theme/layer.dart',
-          'theme/layout.dart',
-          'theme/motion.dart',
-          'theme/token_types.dart',
-          'theme/type.dart',
-          'theme/generated/carbon_component_tokens.dart',
-          'theme/generated/carbon_layout.dart',
-          'theme/generated/carbon_motion.dart',
-          'theme/generated/carbon_palette.dart',
-          'theme/generated/carbon_source_manifest.dart',
-          'theme/generated/carbon_themes.dart',
-          'theme/generated/carbon_tokens.dart',
-          'theme/generated/carbon_type.dart',
-          'components/button.dart',
-          'components/button.g.dart',
-        });
-      },
-    );
+    test('the Carbon catalog contains only its foundation and button', () {
+      expect(
+        checker.registryCoverageProblem(Directory.current, preset: 'carbon'),
+        isNull,
+      );
+      expect(checker.installedInventoryForTest(preset: 'carbon'), {
+        'ui.dart',
+        'theme/theme.dart',
+        'theme/theme_data.dart',
+        'theme/theme_scope.dart',
+        'theme/layer.dart',
+        'theme/layout.dart',
+        'theme/motion.dart',
+        'theme/token_types.dart',
+        'theme/type.dart',
+        'theme/generated/carbon_component_tokens.dart',
+        'theme/generated/carbon_layout.dart',
+        'theme/generated/carbon_motion.dart',
+        'theme/generated/carbon_palette.dart',
+        'theme/generated/carbon_source_manifest.dart',
+        'theme/generated/carbon_themes.dart',
+        'theme/generated/carbon_tokens.dart',
+        'theme/generated/carbon_type.dart',
+        'components/button.dart',
+        'components/button.g.dart',
+      });
+    });
 
     test('an item the checker never installs is reported', () {
       final root = Directory('${sandbox.path}/repo');
-      final registry = File(
-        '${root.path}/packages/remix_cli/lib/src/registry/default/registry.yaml',
-      );
+      final registry = File('${root.path}/registry/vanilla/registry.yaml');
       registry.parent.createSync(recursive: true);
       registry.writeAsStringSync('''
 schema: 1

@@ -2,7 +2,7 @@
 /// Flutter application.
 ///
 /// ```shell
-/// dart run tool/check_open_code.dart [--preset default|fortal|carbon]
+/// dart run tool/check_open_code.dart [--preset vanilla|fortal|carbon]
 ///     [--source both|hosted|checkout] [--item dashboard_demo|dashboard_shell]
 ///     [--hosted-cli] [--keep]
 /// ```
@@ -11,7 +11,8 @@
 /// this checkout's `remix_cli`, lets the CLI install every registry item, then
 /// tests the installed source with the selected Remix source. The default runs
 /// hosted Remix first, then regenerates against the checkout. CI selects the
-/// checkout explicitly so an unpublished release can be validated before tagging.
+/// checkout explicitly so a registry can be validated before its Remix version
+/// is on pub.dev.
 library;
 
 import 'dart:convert';
@@ -24,12 +25,16 @@ const _fixtureAppFiles = <String>[
   'analysis_options.yaml',
   'lib/main.dart',
   'test/open_code_test.dart',
+  'test/theme_modes_test.dart',
 ];
 
 /// The registry items the CLI installs, in invocation order.
 ///
-/// Each is added by its own `remix add`, which is the only supported call
-/// shape. Theme arrives as the first item's registry dependency.
+/// Each is added by its own `remix add` on purpose, even though one
+/// invocation can now name several: installing them one at a time is what
+/// exercises the incremental path a consumer actually takes, where each item
+/// meets an application that already has the previous ones. Theme arrives as
+/// the first item's registry dependency.
 const _defaultRegistryItems = <String>[
   'icons',
   'accordion',
@@ -224,7 +229,7 @@ const _fortalRegistryItems = <String>[
 ];
 
 const _defaultPreset = _PresetContract(
-  name: 'default',
+  name: 'vanilla',
   fixtureDirectory: 'fixture',
   registryItems: _defaultRegistryItems,
   themeFiles: ['tokens.dart', 'theme_data.dart', 'theme_scope.dart'],
@@ -601,7 +606,7 @@ ConsumerCheckOptions? parseConsumerCheckOptions(List<String> arguments) {
       sawPreset = true;
       final name = arguments[++index];
       switch (name) {
-        case 'default':
+        case 'vanilla':
           preset = _defaultPreset;
         case 'fortal':
           preset = _fortalPreset;
@@ -640,7 +645,7 @@ Future<void> main(List<String> arguments) async {
   if (parsed == null) {
     stderr.writeln(
       'Usage: dart run tool/check_open_code.dart '
-      '[--preset default|fortal|carbon] [--source both|hosted|checkout] '
+      '[--preset vanilla|fortal|carbon] [--source both|hosted|checkout] '
       '[--item dashboard_demo|dashboard_shell (requires --source checkout)] '
       '[--hosted-cli (requires --source hosted)] [--keep]',
     );
@@ -686,7 +691,7 @@ Future<_Failure?> _run(
 
   final coverageFailure = _verifyRegistryCoverage(repositoryRoot, preset);
   if (coverageFailure != null) return coverageFailure;
-  _step('Every bundled registry item is installed by this check.');
+  _step('Every remote registry item is installed by this check.');
 
   final fixtureRoot = Directory(
     '${repositoryRoot.path}/open_code/${preset.fixtureDirectory}',
@@ -765,6 +770,11 @@ Future<_Failure?> _checkInTemporaryApp({
   required String? item,
 }) async {
   final environment = _toolchainEnvironment(sdk);
+  if (!hostedCli &&
+      Platform.environment['REMIX_REGISTRY_RELEASE_SMOKE'] != '1') {
+    environment['REMIX_REGISTRY_CONSUMER_CLI'] =
+        '${repositoryRoot.path}/tool/registry_consumer_cli.dart';
+  }
 
   final create = await _runProcess(
     sdk.flutter,
@@ -1352,7 +1362,7 @@ Future<Object> _resolveToolchain(Directory root, String pinned) async {
   );
 }
 
-/// Fails when the checked item list and bundled registry have drifted apart.
+/// Fails when the checked item list and remote registry have drifted apart.
 ///
 /// This check exists because the failure it prevents is silent: an item added
 /// to `registry.yaml` but not to the preset contract is never installed, never
@@ -1363,11 +1373,11 @@ _Failure? _verifyRegistryCoverage(
   _PresetContract preset,
 ) {
   final file = File(
-    '${repositoryRoot.path}/packages/remix_cli/lib/src/registry/'
+    '${repositoryRoot.path}/registry/'
     '${preset.name}/registry.yaml',
   );
   if (!file.existsSync()) {
-    return _Failure('packages/remix_cli is missing its registry.yaml.');
+    return _Failure('registry/${preset.name}/registry.yaml is missing.');
   }
 
   final document = loadYaml(file.readAsStringSync());
@@ -1377,7 +1387,7 @@ _Failure? _verifyRegistryCoverage(
 
   // Foundations arrive through dependency closure. Their exact files are
   // still asserted by the installed inventory, not exempted from coverage.
-  final bundled = {
+  final catalogItems = {
     for (final key in (document['items'] as YamlMap).keys)
       if (key is String) key,
   };
@@ -1387,15 +1397,15 @@ _Failure? _verifyRegistryCoverage(
     ...preset.registryItems,
   };
   final problems = <String>[
-    for (final item in bundled.difference(installed))
+    for (final item in catalogItems.difference(installed))
       'registry.yaml has $item, which this check never installs',
-    for (final item in installed.difference(bundled))
+    for (final item in installed.difference(catalogItems))
       'this check installs $item, which registry.yaml does not define',
   ]..sort();
 
   if (problems.isEmpty) return null;
   return _Failure(
-    'the checker and the bundled registry disagree on the catalog:\n'
+    'the checker and the remote registry disagree on the catalog:\n'
     '${problems.map((problem) => '  - $problem').join('\n')}',
   );
 }
@@ -1414,7 +1424,7 @@ _Failure? _verifyResolvedRemixFloor({
   required _PresetContract preset,
 }) {
   final registry = File(
-    '${repositoryRoot.path}/packages/remix_cli/lib/src/registry/'
+    '${repositoryRoot.path}/registry/'
     '${preset.name}/registry.yaml',
   );
   final document = loadYaml(registry.readAsStringSync());
@@ -1855,6 +1865,13 @@ Future<_Failure?> _runProcess(
   required String workingDirectory,
   Map<String, String>? environment,
 }) async {
+  final harness = environment?['REMIX_REGISTRY_CONSUMER_CLI'];
+  if (harness != null &&
+      arguments.length >= 2 &&
+      arguments[0] == 'run' &&
+      arguments[1] == 'remix_cli:remix') {
+    arguments = ['run', harness, ...arguments.skip(2)];
+  }
   stdout.writeln('\$ $executable ${arguments.join(' ')}');
   final Process process;
   try {
@@ -1906,36 +1923,36 @@ bool _sameBytes(List<int> left, List<int> right) {
 }
 
 _PresetContract _presetByName(String name) => switch (name) {
-  'default' => _defaultPreset,
+  'vanilla' => _defaultPreset,
   'fortal' => _fortalPreset,
   'carbon' => _carbonPreset,
   _ => throw ArgumentError.value(
     name,
     'preset',
-    'must be default, fortal, or carbon',
+    'must be vanilla, fortal, or carbon',
   ),
 };
 
 /// Returns the fixture contract error for focused regression tests.
 String? fixtureContractProblem(
   Directory fixtureRoot, {
-  String preset = 'default',
+  String preset = 'vanilla',
 }) => _verifyFixtureContract(fixtureRoot, _presetByName(preset))?.message;
 
 /// Returns the catalog-drift error for focused regression tests.
 String? registryCoverageProblem(
   Directory repositoryRoot, {
-  String preset = 'default',
+  String preset = 'vanilla',
 }) => _verifyRegistryCoverage(repositoryRoot, _presetByName(preset))?.message;
 
 /// Returns installed inventory/import errors for focused regression tests.
-String? installedUiProblem(Directory app, {String preset = 'default'}) =>
+String? installedUiProblem(Directory app, {String preset = 'vanilla'}) =>
     _verifyInstalledUi(app, _presetByName(preset))?.message;
 
 /// Returns installed dependency-manifest errors for focused regression tests.
 String? installedDependencyProblem(
   Directory app, {
-  String preset = 'default',
+  String preset = 'vanilla',
   bool hostedCli = false,
 }) => _verifyInstalledDependencies(
   app,
@@ -1964,18 +1981,18 @@ List<String> registryItemInventoryForTest(
 List<String> focusedInventoryProblemsForTest(
   String item,
   Set<String> found, {
-  String preset = 'default',
+  String preset = 'vanilla',
 }) => _focusedInventoryProblems(
   expected: _presetByName(preset).focusedUiFiles(item).toSet(),
   found: found,
 );
 
 /// Returns the independent expected inventory for a focused consumer check.
-Set<String> focusedInventoryForTest(String item, {String preset = 'default'}) =>
+Set<String> focusedInventoryForTest(String item, {String preset = 'vanilla'}) =>
     _presetByName(preset).focusedUiFiles(item).toSet();
 
 /// Returns the full expected installed inventory for a preset.
-Set<String> installedInventoryForTest({String preset = 'default'}) =>
+Set<String> installedInventoryForTest({String preset = 'vanilla'}) =>
     _presetByName(preset).installedUiFiles.toSet();
 
 /// Formats a post-creation failure so the retained directory is always named.

@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:yaml/yaml.dart';
 
-/// Rewrites `remix_cli`'s bundled registry constraint to floor at the current
+/// Rewrites the remote registry constraint to floor at the current
 /// `packages/remix` version.
 ///
 /// ```shell
@@ -49,9 +49,7 @@ void main(List<String> arguments) {
     return;
   }
 
-  final registry = File(
-    '${workspaceRoot.path}/packages/remix_cli/lib/src/registry/default/registry.yaml',
-  );
+  final registry = File('${workspaceRoot.path}/registry/vanilla/registry.yaml');
   if (!registry.existsSync()) {
     stderr.writeln('Missing ${registry.path}.');
     exitCode = 1;
