@@ -48,7 +48,7 @@ List<Color> resolveFortalChartPalette(
 /// Fortal presentation for a Mix line or area chart.
 ///
 /// Generates [FortalLineChart] through `mix_generator`. The plot remains
-/// transparent so callers can compose it inside any Fortal surface.
+/// transparent so callers can compose it inside any surface.
 @MixWidget(target: LineChart.new)
 LineChartStyler fortalLineChartStyle({
   bool highContrast = false,

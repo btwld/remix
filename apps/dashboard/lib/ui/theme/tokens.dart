@@ -619,7 +619,7 @@ class UiTokens {
 
   /// Exact layered shadow level 1, including inset layers.
   ///
-  /// This additive token powers Ui's Radix-compatible rendering while
+  /// This additive token powers the preset's Radix-compatible rendering while
   /// [shadow1] retains the original Remix public token type.
   static const shadow1Layers = RemixBoxShadowListToken('ui.shadow.1.layers');
 

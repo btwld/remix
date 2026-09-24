@@ -653,7 +653,7 @@ class FortalTokens {
 
   /// Exact layered shadow level 1, including inset layers.
   ///
-  /// This additive token powers Fortal's Radix-compatible rendering while
+  /// This additive token powers the preset's Radix-compatible rendering while
   /// [shadow1] retains the original Remix public token type.
   static const shadow1Layers = RemixBoxShadowListToken(
     'fortal.shadow.1.layers',

@@ -48,7 +48,7 @@ List<Color> resolveUiChartPalette(
 /// Ui presentation for a Mix line or area chart.
 ///
 /// Generates [UiLineChart] through `mix_generator`. The plot remains
-/// transparent so callers can compose it inside any Ui surface.
+/// transparent so callers can compose it inside any surface.
 @MixWidget(target: LineChart.new)
 LineChartStyler uiLineChartStyle({
   bool highContrast = false,
