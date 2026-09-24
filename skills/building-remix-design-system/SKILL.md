@@ -56,7 +56,7 @@ Follow its shape; do not clone its values.
 ## Constraints that shape every decision
 
 These are enforced by the CLI; design around them rather than discovering
-them at publish time. Three names are easy to confuse:
+them at publish time. Four names are easy to confuse:
 
 | Name | Who picks it | Example | Meaning |
 | --- | --- | --- | --- |
@@ -69,9 +69,9 @@ them at publish time. Three names are easy to confuse:
   `remix init`, and every registry it registers must offer that preset. A
   third-party registry cannot introduce a new preset such as `acme`.
   `vanilla` is the default preset. Do not also map `fortal`: a Fortal project
-  that already installed Fortal items owns `@ui/theme/*`, and your theme item
-  would collide with those files. Your namespace, not the preset, identifies your
-  system. Recommend a namespace and a prefix in your README (for example
+  already owns `@ui/theme/*`, so your theme item would be skipped as installed
+  and your recipes would then fail against Fortal's tokens. Your namespace,
+  not the preset, identifies your system. Recommend a namespace and a prefix in your README (for example
   `@acme` and `--prefix Acme`).
 - **Make the registry self-contained.** Ship your own `theme` item and depend
   on no `@remix/*` items. Official and third-party items render the same
@@ -81,8 +81,8 @@ them at publish time. Three names are easy to confuse:
 - **Public github.com only.** There is no private, enterprise, HTTP, or local
   registry, so every test of catalog changes goes through a pushed branch.
 - **Templates are Dart with two placeholders**: `{{typePrefix}}` (the
-  consumer's prefix, `Acme`) and `{{valuePrefix}}` (its lower-camel form,
-  `acme`). Any other `{{...}}` fails installation.
+  consumer's prefix, `Shop`) and `{{valuePrefix}}` (its lower-camel form,
+  `shop`). Any other `{{...}}` fails installation.
 - **Consumers generate code.** A template's `part '*.g.dart'` is produced by
   the consumer's `build_runner`, declared in the catalog's `generated` list.
 

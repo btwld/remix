@@ -70,10 +70,10 @@
     {
       "id": 7,
       "prompt": "This Flutter app already depends on remix. I want to switch one screen to FortalButton and FortalTextField. Which dependency and imports do I need?",
-      "expected_output": "Initializes the Fortal preset with remix_cli when remix.yaml is absent, adds button and textfield, imports the installed ui/ui.dart barrel, and retains an explicit package:remix/remix.dart import only when the file also uses base Remix widgets, stylers, or data classes.",
+      "expected_output": "Initializes the Fortal preset with remix_cli (init --prefix Fortal --preset fortal) when remix.yaml is absent, adds button and textfield, imports the installed ui/ui.dart barrel, and retains an explicit package:remix/remix.dart import only when the file also uses base Remix widgets, stylers, or data classes.",
       "files": [],
       "expectations": [
-        "Initializes the Fortal preset, adds the needed items, and imports the owned UI barrel.",
+        "Initializes the Fortal preset with --prefix Fortal --preset fortal, adds the needed items, and imports the owned UI barrel.",
         "Keeps a remix import only when base Remix APIs are used in the file.",
         "Does not claim a new published theme package dependency is required."
       ]
@@ -197,12 +197,13 @@
     {
       "id": 18,
       "prompt": "Our project's remix.yaml is pinned to an older registry-stable commit. Move the pin to the latest promoted commit and safely adopt the new source for just the button item.",
-      "expected_output": "Runs remix registry update @remix, explaining that it only rewrites the pin in remix.yaml and never touches installed files. Then reviews the change with remix add button --diff before adopting it with remix add button --overwrite, explaining there is no automatic merge and adoption happens item by item.",
+      "expected_output": "Runs remix registry update @remix, explaining that it only rewrites the pin in remix.yaml and never touches installed files. Then reviews the change with remix add button --diff before adopting it with remix add button --overwrite, explaining there is no automatic merge and adoption happens item by item. Notes that --overwrite refreshes only the named item, so theme and other dependencies stay as installed unless named too.",
       "files": [],
       "expectations": [
         "Runs remix registry update @remix and explains it only rewrites the pin, not installed source.",
         "Reviews the change with add button --diff before adopting it.",
-        "Adopts the new source with add button --overwrite rather than assuming an automatic merge."
+        "Adopts the new source with add button --overwrite rather than assuming an automatic merge.",
+        "Notes that dependencies such as theme are not refreshed unless named on the command line."
       ]
     },
     {

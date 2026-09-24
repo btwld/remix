@@ -29,6 +29,7 @@ acme-design-system/            public github.com repository
   docs/adr/                    scope, sources, theme model decisions
   tool/
     derive_templates.dart      source/lib → registry/vanilla/templates
+    extract/                   tier 1–2 token extraction, if any (references/tokens.md)
   registry/
     index.yaml                 presets → catalog paths
     vanilla/registry.yaml      the catalog
@@ -279,8 +280,8 @@ Item design rules:
 
 The CLI reads registries from GitHub only. Test every catalog or template
 change from a pushed branch in a scratch application initialized with the
-`vanilla` preset (the CLI stops with its minimum Flutter version if the
-installed one is older):
+`vanilla` preset (the CLI refuses a Flutter older than its minimum and names
+the version it needs):
 
 ```shell
 flutter create --empty scratch && cd scratch
