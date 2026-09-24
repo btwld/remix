@@ -254,7 +254,7 @@ metrics, revenue series, and recent records live in editable
 pass a `RegistryDashboardSampleData` to `UiDashboardDemo(data: ...)`.
 
 The host supplies its Flutter application, directionality, brand, and theme
-scope. Default uses `UiThemeScope(data: UiThemeData.light(), child: ...)`;
+scope. Default uses `UiThemeScope(theme: UiThemeData.light(), child: ...)`;
 Fortal uses `UiScope(child: ...)`. The installer does not rewrite `main.dart`,
 routes, authentication, persistence, or search behavior. Pass a real
 `onSearchChanged` callback to show search; omit it to remove the field.

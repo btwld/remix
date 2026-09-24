@@ -111,7 +111,7 @@ the application owns the copied Radix color table, 277-token theme, component
 recipes, and generated adapters.
 
 The Fortal templates are derived from analyzed Dart in
-`registry_source/fortal/lib/src/`; do not edit the committed `.tmpl` files by
+`registry_source/lib/src/fortal/`; do not edit the committed `.tmpl` files by
 hand. `tool/build_registry.dart --check` makes source/template drift a CI
 failure.
 
@@ -209,7 +209,7 @@ diff-and-overwrite decision.
 `components/button.dart` declares:
 
 ```dart
-@MixWidget(name: 'AcmeButton', target: RemixButton.new)
+@MixWidget(target: RemixButton.new)
 ButtonStyler acmeButtonStyle({
   AcmeButtonVariant variant = .primary,
   AcmeButtonSize size = .medium,

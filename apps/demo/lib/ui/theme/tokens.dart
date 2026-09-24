@@ -9,11 +9,7 @@ import 'theme_scope.dart' show FortalScope;
 ///
 /// Example:
 /// ```dart
-/// Style(
-///   $box.color.ref(FortalTokens.accent9),
-///   $text.style.ref(FortalTokens.text3),
-///   $box.padding.ref(FortalTokens.space4),
-/// )
+/// ButtonStyler().color(FortalTokens.accent9())
 /// ```
 ///
 /// Must be used within [FortalScope] to resolve actual values.

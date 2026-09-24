@@ -32,7 +32,7 @@ jobs:
           dart run tool/check_dependency_constraints.dart
           dart run tool/check_version_alignment.dart
           dart test test/tool/build_registry_test.dart test/tool/build_registry_agent_test.dart
-      - name: Test CLI and frozen compatibility snapshot
+      - name: Test CLI
         working-directory: packages/remix_cli
         run: dart test
       - name: Install both committed presets with hosted dependencies

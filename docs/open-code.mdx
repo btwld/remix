@@ -310,7 +310,7 @@ enum UiButtonVariant { primary, secondary, outline, ghost, destructive }
 
 enum UiButtonSize { small, medium, large }
 
-@MixWidget(name: 'UiButton', target: RemixButton.new)
+@MixWidget(target: RemixButton.new)
 ButtonStyler uiButtonStyle({
   UiButtonVariant variant = UiButtonVariant.primary,
   UiButtonSize size = UiButtonSize.medium,

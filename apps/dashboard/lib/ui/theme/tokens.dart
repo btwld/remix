@@ -9,11 +9,7 @@ import 'theme_scope.dart' show UiScope;
 ///
 /// Example:
 /// ```dart
-/// Style(
-///   $box.color.ref(UiTokens.accent9),
-///   $text.style.ref(UiTokens.text3),
-///   $box.padding.ref(UiTokens.space4),
-/// )
+/// ButtonStyler().color(UiTokens.accent9())
 /// ```
 ///
 /// Must be used within [UiScope] to resolve actual values.

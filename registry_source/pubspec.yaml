@@ -2,7 +2,7 @@ name: registry_source
 description: >
   The authored source of the bundled Remix registry: the default and Fortal
   presets and the Agent behavior they style. Never published; it exists to be
-  analyzed, tested, and derived into remix_cli's templates.
+  analyzed, tested, and derived into `registry/`.
 publish_to: none
 resolution: workspace
 

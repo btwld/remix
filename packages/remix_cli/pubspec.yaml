@@ -1,6 +1,6 @@
 name: remix_cli
 description: Install editable Remix design-system source into Flutter applications.
-repository: https://github.com/btwld/remix
+repository: https://github.com/conceptadev/remix
 issue_tracker: https://github.com/btwld/remix/issues
 license: BSD-3-Clause
 resolution: workspace

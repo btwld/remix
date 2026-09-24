@@ -9,11 +9,7 @@ import 'theme_scope.dart' show {{typePrefix}}Scope;
 ///
 /// Example:
 /// ```dart
-/// Style(
-///   $box.color.ref({{typePrefix}}Tokens.accent9),
-///   $text.style.ref({{typePrefix}}Tokens.text3),
-///   $box.padding.ref({{typePrefix}}Tokens.space4),
-/// )
+/// ButtonStyler().color({{typePrefix}}Tokens.accent9())
 /// ```
 ///
 /// Must be used within [{{typePrefix}}Scope] to resolve actual values.
