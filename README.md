@@ -44,20 +44,15 @@ npx skills ls
 npx skills update
 ```
 
-### Vendored Mix skill
+### Working in this repository
 
-This repository commits the project-scoped Mix skill and its lockfile so Codex
-and Claude Code use the same reviewed instructions. Install or refresh the
-canonical copy and Claude symlink with:
-
-```bash
-npx skills add btwld/mix --skill mix --agent codex --agent claude-code -y
-```
-
-Update the committed installation from its locked project source with:
+[`AGENTS.md`](AGENTS.md) indexes the skills agents should read here: this
+repository's own skills, the Mix skill on GitHub, and the release workflow.
+`CLAUDE.md` imports it for Claude Code. Installed skills are not committed; to
+give your own agents the Mix skill, install it globally:
 
 ```bash
-npx skills update mix --project -y
+npx skills add btwld/mix --skill mix -g -y
 ```
 
 ## Styling a button
