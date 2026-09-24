@@ -2,7 +2,7 @@
   "version": 1,
   "skills": {
     "mix": {
-      "source": "conceptadev/mix",
+      "source": "btwld/mix",
       "sourceType": "github",
       "skillPath": "skills/mix/SKILL.md",
       "computedHash": "1a7ac252b50f8f19451ee2b8a2af667cb229a8abcb4aa241176f9aeeb8d464ec"

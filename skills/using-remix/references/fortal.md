@@ -4,7 +4,7 @@ Rules for the Fortal preset that are easy to get wrong from a widget's name
 or dartdoc alone. For component variants, sizes, and defaults, the installed
 recipe's enum in `lib/ui/components/<name>.dart` is authoritative — this
 source is owned and may be edited. The
-[generated catalog](https://github.com/conceptadev/remix/blob/main/docs/fortal/catalog.mdx)
+[generated catalog](https://github.com/btwld/remix/blob/main/docs/fortal/catalog.mdx)
 describes the unedited upstream family. For install commands, scope
 placement, and theme selection shared with the Vanilla preset, see the
 [main skill](../SKILL.md).

@@ -88,7 +88,7 @@ import 'package:flutter/widgets.dart';
 import 'ui/ui.dart';
 ```
 
-`init` resolves the `registry-stable` branch of `conceptadev/remix` and pins
+`init` resolves the `registry-stable` branch of `btwld/remix` and pins
 its full commit SHA into `remix.yaml` (schema 3); see [CLI](references/cli.md)
 to move that pin later. `add` also pulls each
 item's own `registryDependencies` (its `theme` item, etc.), so a fresh
@@ -277,7 +277,7 @@ Widget saveButton(VoidCallback save) => RemixButton(
 Do not infer that every component shares the same variants or sizes: the
 installed recipe's enum in `lib/ui/components/<name>.dart` is authoritative,
 since that source is owned and may be edited.
-[The Fortal catalog](https://github.com/conceptadev/remix/blob/main/docs/fortal/catalog.mdx)
+[The Fortal catalog](https://github.com/btwld/remix/blob/main/docs/fortal/catalog.mdx)
 describes the unedited upstream family.
 
 ## Preserve behavioral roots

@@ -57,7 +57,7 @@ application.
 - Dependencies: `remix` and `mix_annotations`; dev dependencies `build_runner`,
   `mix_generator`, `flutter_test`. Use the **same constraints as the official
   Vanilla catalog** at the revision you test against — read them from
-  [`registry/vanilla/registry.yaml` on `registry-stable`](https://github.com/conceptadev/remix/blob/registry-stable/registry/vanilla/registry.yaml)
+  [`registry/vanilla/registry.yaml` on `registry-stable`](https://github.com/btwld/remix/blob/registry-stable/registry/vanilla/registry.yaml)
   rather than copying a version from memory. Upgrade them together.
 - `@MixWidget` recipes need no `build.yaml`; consumers do not get one either.
   Keep recipes on `@MixWidget` so installation stays build-config-free.

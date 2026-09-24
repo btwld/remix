@@ -48,9 +48,9 @@ rendering, interaction, accessibility, and loading/disabled rules; never
 reimplement them.
 
 The official Vanilla preset is the reference implementation for every layer:
-its [catalog](https://github.com/conceptadev/remix/blob/registry-stable/registry/vanilla/registry.yaml),
-[theme templates](https://github.com/conceptadev/remix/tree/registry-stable/registry/vanilla/templates/theme),
-and [button recipe](https://github.com/conceptadev/remix/blob/registry-stable/registry/vanilla/templates/button/button.dart.tmpl).
+its [catalog](https://github.com/btwld/remix/blob/registry-stable/registry/vanilla/registry.yaml),
+[theme templates](https://github.com/btwld/remix/tree/registry-stable/registry/vanilla/templates/theme),
+and [button recipe](https://github.com/btwld/remix/blob/registry-stable/registry/vanilla/templates/button/button.dart.tmpl).
 Follow its shape; do not clone its values.
 
 ## Constraints that shape every decision

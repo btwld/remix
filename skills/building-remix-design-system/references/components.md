@@ -4,8 +4,8 @@ The shapes a registry's installed source takes, and the Remix and Mix
 behaviors that have produced real bugs. The sketches use the authoring word
 `Acme` and agree with each other; the official Vanilla preset is the complete
 reference
-([theme](https://github.com/conceptadev/remix/tree/registry-stable/registry/vanilla/templates/theme),
-[button](https://github.com/conceptadev/remix/blob/registry-stable/registry/vanilla/templates/button/button.dart.tmpl)).
+([theme](https://github.com/btwld/remix/tree/registry-stable/registry/vanilla/templates/theme),
+[button](https://github.com/btwld/remix/blob/registry-stable/registry/vanilla/templates/button/button.dart.tmpl)).
 
 ## Table of Contents
 
@@ -256,7 +256,7 @@ const _noFill = Color(0x00000000);
 
 The `mix` skill's code-generation reference owns the rest of the `@MixWidget`
 contract (`name`, `widgetParameters`, `factoryParameters`, generic targets).
-Install it with `npx skills add conceptadev/mix --skill mix`; without it, read
+Install it with `npx skills add btwld/mix --skill mix`; without it, read
 `mix_widget_generator.dart` in the `mix_generator` package source.
 
 **Hand-written facade instead** only when the public widget needs structure

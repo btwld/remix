@@ -85,7 +85,7 @@ substitute, and nothing may be added to bypass the bootstrap order.
 
 If the CLI has never been published, the authorized uploader must perform the
 first pub.dev publication and configure automated publishing for repository
-`conceptadev/remix`, tag pattern `remix_cli-v{{version}}`. Later releases use
+`btwld/remix`, tag pattern `remix_cli-v{{version}}`. Later releases use
 that tag pattern. Never republish an existing version.
 
 After publication, verify the exact hosted CLI:
