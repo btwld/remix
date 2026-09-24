@@ -1,31 +1,25 @@
-# Fortal Theme Reference
+# Fortal Reference
 
-Complete reference for Fortal — the Radix-inspired, application-owned Remix
-preset: widgets, variants, sizes, and tokens.
+Rules for the Fortal preset that are easy to get wrong from a widget's name
+or dartdoc alone. For component variants, sizes, and defaults, use the
+[generated catalog](https://github.com/conceptadev/remix/blob/main/docs/fortal/catalog.mdx) —
+do not hand-copy a variant/size table here; it drifts. For install commands,
+scope placement, and theme selection shared with the Vanilla preset, see the
+[main skill](../SKILL.md).
 
-## Table of Contents
+## Choose Fortal or base Remix / Vanilla
 
-- [Choose Fortal or base Remix](#choose-fortal-or-base-remix)
-- [Install and import](#install-and-import)
-- [Presets and recipes](#presets-and-recipes)
-- [Component variants and sizes](#component-variants--sizes)
-- [Typography](#typography)
-- [Scope and theme configuration](#fortalscope--theme-config)
-- [Tokens](#using-tokens)
+Use Fortal when the UI should follow its ready-made Radix Themes-inspired
+visual system. Use base Remix or the Vanilla preset when the user wants a
+distinct visual language, does not want Fortal's token scales, or needs a
+fully custom `*Styler`. Fortal is optional and never required for ordinary
+`Remix*` widgets.
 
-## Choose Fortal or base Remix
-
-Use Fortal when the UI should follow its ready-made Radix-inspired visual system. Use base Remix when the user wants a distinct visual language, does not want Fortal's token scales, or needs a fully custom `*Styler`. Fortal is optional and never required for ordinary `Remix*` widgets.
-
-Place `FortalScope` above every subtree that renders Fortal styles. For routed `WidgetsApp` examples, use `builder` above the Navigator so routes and overlays inherit the scope. See [Scope placement](#fortalscope--theme-config).
-
-## Install and import
-
-Initialize the Fortal registry and add the items the application uses:
+## Install
 
 ```bash
 flutter pub add dev:remix_cli
-dart run remix_cli:remix init --prefix Fortal --preset fortal
+dart run remix_cli:remix init --preset fortal
 dart run remix_cli:remix add button
 ```
 
@@ -33,26 +27,22 @@ dart run remix_cli:remix add button
 import 'ui/ui.dart';
 ```
 
-The examples use the `Fortal` prefix; use the prefix already recorded in
-`remix.yaml` for an initialized project. Add every recipe before using it. The
-owned barrel does not re-export `remix`, so import `package:remix/remix.dart`
-when a file also uses base `Remix*` widgets or `*Styler` types.
-
-`dart run remix_cli:remix add chart` installs the chart recipe and its
-`mix_chart` dependency. Import `mix_chart` directly for its data models because
-the owned barrel does not re-export it.
+The owned barrel does not re-export `remix`; import `package:remix/remix.dart`
+too when a file also uses base `Remix*` widgets or `*Styler` types. `add
+chart` installs the chart recipe and its `mix_chart` dependency — import
+`mix_chart` directly for its data models, since the owned barrel does not
+re-export it either.
 
 ## Presets and recipes
 
 Each component ships a `fortal<Name>Style(...)` function that returns the
-component's `*Styler`, plus a `Fortal<Name>` preset widget that applies
-it. Two equivalent ways to use a preset:
+component's `*Styler`, plus a `Fortal<Name>` preset widget that applies it:
 
 ```dart
-// 1. Preset widget — Remix widget params + fixed variant/size
+// Preset widget — Remix widget params + fixed variant/size
 FortalButton.soft(label: 'Save', onPressed: save, size: .size3)
 
-// 2. Styler function — returns a ButtonStyler to extend
+// Styler function — returns a ButtonStyler to extend
 RemixButton(
   label: 'Save',
   onPressed: save,
@@ -62,385 +52,87 @@ RemixButton(
 ```
 
 Fortal preset styles resolve `FortalTokens`, so a `FortalScope` ancestor is
-required.
+required. Every variant has a matching named constructor; reserve the
+unnamed constructor's `variant:` parameter for runtime-selected values.
+Generic presets infer their type from required values and item lists, so
+`FortalRadio.soft(value: 'option')` does not need an explicit `<String>`.
 
-Every variant has a matching named constructor. Prefer a named constructor
-when the variant is fixed and reserve the unnamed constructor's `variant:`
-parameter for runtime-selected values. Generic presets infer their type from
-required values and item lists, so `FortalRadio.soft(value: 'option')`,
-`FortalMenu.solid(items: items, ...)`, and similar calls do not need an
-explicit `<String>`.
-
-## Component Variants & Sizes
-
-| Component | Preset widget | Variants | Sizes |
-|-----------|--------------|----------|-------|
-| Button | `FortalButton` | `classic`, `solid`, `soft`, `surface`, `outline`, `ghost` | `size1`–`size4` |
-| IconButton | `FortalIconButton` | `classic`, `solid`, `soft`, `surface`, `outline`, `ghost` | `size1`–`size4` |
-| Toggle | `FortalToggle` | `ghost`, `outline` | `size1`–`size3` |
-| ToggleGroup | `FortalToggleGroup<T>` | `soft`, `surface` | `size1`–`size3` |
-| Checkbox | `FortalCheckbox` | `classic`, `surface`, `soft` | `size1`–`size3` (14/16/20 px) |
-| Radio | `FortalRadio<T>` | `classic`, `surface`, `soft` | `size1`–`size3` |
-| Switch | `FortalSwitch` | `classic`, `surface`, `soft` | `size1`–`size3` |
-| Slider | `FortalSlider` | `classic`, `surface`, `soft` | `size1`–`size3` (13/16/19 px thumb) |
-| TextField | `FortalTextField` | `classic`, `surface`, `soft` | `size1`–`size3` |
-| TextArea | `FortalTextArea` | `classic`, `surface`, `soft` | `size1`–`size3` |
-| Select | `FortalSelect<T>` | `surface`, `soft`, `ghost` | `size1`–`size3` |
-| SegmentedControl | `FortalSegmentedControl<T>` | `surface`, `classic` | `size1`–`size3` |
-| Menu | `FortalMenu<T>` | `solid`, `soft` | `size1`–`size2` |
-| Popover | `FortalPopover` | — | `size1`–`size4` |
-| Avatar | `FortalAvatar` | `soft`, `solid` | `size1`–`size9` |
-| Badge | `FortalBadge` | `solid`, `soft`, `surface`, `outline` | `size1`–`size3` |
-| Card | `FortalCard` | `surface`, `classic`, `ghost` | `size1`–`size5` |
-| Callout | `FortalCallout` | `outline`, `surface`, `soft` | `size1`–`size3` |
-| DataList | `FortalDataList` | — | `size1`–`size3` |
-| DataTable | `FortalDataTable<T>` | `surface`, `ghost` | `size1`–`size3` |
-| LineChart | `FortalLineChart` | — | — |
-| BarChart | `FortalBarChart` | — | — |
-| PieChart | `FortalPieChart` | — | — |
-| Progress | `FortalProgress` | `classic`, `surface`, `soft` | `size1`–`size3` (4/8/12 px) |
-| Accordion | `FortalAccordion<T>` | `surface`, `soft` | `size1`–`size3` |
-| Disclosure | `FortalDisclosure` | `surface`, `soft` | `size1`–`size3` |
-| Spinner | `FortalSpinner` | — | `size1`–`size3` |
-| Skeleton | `FortalSkeleton` | — | — |
-| Divider | `FortalDivider` | — | `size1`–`size4` |
-| Dialog | `FortalDialog` | — | `size1`–`size4` |
-| Tooltip | `FortalTooltip` | — | — |
-| Tabs | `FortalTabBar` / `FortalTab` / `FortalTabView` | — | `FortalTab`: `size1`–`size2` |
-| Text | `FortalText` | — | `FortalTextSize.size1`–`size9` |
-| Heading | `FortalHeading` | — | `FortalTextSize.size1`–`size9` (default `size6`) |
-| Code | `FortalCode` | `solid`, `soft`, `outline`, `ghost` | `FortalTextSize.size1`–`size9` |
-| Kbd | `FortalKbd` | `classic`, `soft` | `FortalTextSize.size1`–`size9` |
-| Link | `FortalLink` | — | `FortalTextSize.size1`–`size9` |
-
-Variant meanings (consistent across components):
-
-| Variant | Description |
-|---------|-------------|
-| `solid` | Filled accent background, high-contrast foreground |
-| `soft` | Subtle accent surface, accent foreground |
-| `surface` | Neutral surface with border |
-| `outline` | Transparent with border |
-| `ghost` | Transparent, no persistent border |
-| `classic` | Raised treatment with component-specific gradients or shadows |
-
-Notes:
-
-- Enum names are per component: `FortalButtonVariant`, `FortalButtonSize`,
-  `FortalCheckboxVariant`, etc.
-- Components that expose `highContrast` use it to strengthen their active or
-  foreground treatment; do not assume the option exists on every family.
-  Soft badges pair `accentA3` / `accentA11` (Radix low-contrast text). That
-  pairing is not WCAG AA 4.5:1 in light mode for every accent when composited
-  over `colorPanelSolid`; pass `highContrast: true` (`accent12`) for AA.
-- There is no `FortalTabs` — use `RemixTabs` as the behavioral root.
-- `FortalIconButton` forwards the complete `RemixIconButton` behavior surface,
-  including builders, long press, focus, semantics, and cursor options.
-- Every installed preset widget accepts its component styler through `style`,
-  merged after the recipe. For custom one-icon placement, use
-  `FortalButton.solid(style: ButtonStyler().iconAlignment(.end), ...)` or
-  compose a `RemixButton` from `fortalButtonStyle(...)`. With two icons,
-  leading → label → trailing order remains stable.
-- `FortalSelect` and `FortalMenu` both include matching default item styles.
-  Set an individual item's `style` only when that row needs an override.
-
----
+Components that expose `highContrast` use it to strengthen their active or
+foreground treatment — do not assume the option exists on every family; check
+the catalog. Soft badges pair `accentA3`/`accentA11` (Radix low-contrast
+text), which is not WCAG AA 4.5:1 in light mode for every accent when
+composited over `colorPanelSolid`; pass `highContrast: true` for AA.
 
 ## Typography
 
-`FortalText`, `FortalHeading`, `FortalCode`, `FortalKbd`, and `FortalLink` exist
-only in Fortal — base Remix ships no `RemixText`. All five share one
-`FortalTextSize` (`size1`–`size9`) and one `FortalTextWeight` (`light`,
-`regular`, `medium`, `bold`) instead of five parallel enums.
-
-```dart
-FortalHeading('Overview', size: .size6)                    // level 1 by default
-FortalHeading('Recent activity', headingLevel: 2, size: .size4, weight: .medium)
-FortalText('Body copy', size: .size3)
-FortalCode.soft('FortalScope', size: .size2)
-FortalKbd.classic('⌘K', semanticLabel: 'Command K')
-FortalLink('Read the docs', onPressed: openDocs)
-```
+`FortalText`, `FortalHeading`, `FortalCode`, and `FortalKbd` exist only in
+Fortal — base Remix ships no equivalent. `FortalLink` is Fortal's themed
+wrapper over `RemixLink`, which is base Remix (the Vanilla preset also ships
+a `link` item generating `<Prefix>Link`). All five typography widgets share
+one `FortalTextSize` (`size1`–`size9`) and one `FortalTextWeight` (`light`,
+`regular`, `medium`, `bold`).
 
 Rules that matter when writing code:
 
-- Omitting `size` on `FortalText`, `FortalCode`, `FortalKbd`, or `FortalLink`
-  pins the `text3` token metrics. `FortalText` also pins regular weight and
-  neutral `gray-12`; `FortalHeading` pins neutral `gray-12` and defaults to
-  `size6` and `bold`. Fortal typography never derives its token run from the
-  ambient `DefaultTextStyle`; transparent, non-accent `FortalCode.ghost`
-  retains only that style's foreground.
-- This deliberately differs from Radix CSS, where an unsized `Text` is `1em`.
-  Pass an explicit `size:` to select another token size, such as
-  `FortalText('Body copy', size: .size3)` or
-  `FortalHeading('Overview', size: .size6)`.
-- `headingLevel` drives accessibility only; it never changes the visual `size`.
-  Page titles are level 1, sections and cards below them level 2.
-- Colour is opt-in: `accent: true` gives `accent-a11` and adding
+- Omitting `size` pins the `text3` token metrics. `FortalText` also pins
+  regular weight and neutral `gray-12`; `FortalHeading` pins neutral
+  `gray-12` and defaults to `size6`/`bold`. Fortal typography never derives
+  its token run from the ambient `DefaultTextStyle` — this deliberately
+  differs from Radix CSS, where an unsized `Text` is `1em`. Transparent,
+  non-accent `FortalCode.ghost` is the deliberate exception and retains only
+  the ambient foreground, so it can blend into surrounding text.
+- `headingLevel` drives accessibility only; it never changes the visual
+  `size`. Page titles are level 1, sections and cards below them level 2.
+- Colour is opt-in: `accent: true` gives `accent-a11`, and adding
   `highContrast: true` promotes it to `accent-12`. `highContrast` alone does
-  nothing. `FortalKbd` pins `gray-12` and its own regular weight.
+  nothing.
 - `truncate: true` wins over `softWrap` and forces one ellipsized line.
 - A `FortalLink` **without** `onPressed` is disabled, exactly like one with
   `enabled: false`: no focus stop, no link role, no activation. Only an
-  actionable link underlines. For accent text that never navigates, use
-  `FortalText(accent: true)`.
-- An actionable link activates on pointer and **Enter**, not Space. Use
-  `FortalButton` when Space should activate.
-- `linkUrl` is assistive metadata and is never launched; navigation belongs in
-  `onPressed`. Passing `linkUrl` without `onPressed` asserts.
-- No leading trim, `pretty`/`balance` wrapping, responsive prop objects, or
-  per-instance colour prop. Re-scope `FortalScope.accent` for a coloured
-  subtree.
+  actionable link underlines. It activates on pointer and **Enter**, not
+  Space; use `FortalButton` when Space should activate. `linkUrl` is
+  assistive metadata and is never launched — navigation belongs in
+  `onPressed`, and passing `linkUrl` without `onPressed` asserts.
 
----
+## Scope and theme config
 
-## FortalScope & Theme Config
-
-```dart
-FortalScope(
-  accent: FortalAccentColor.indigo,   // default .indigo
-  gray: FortalGrayColor.slate,        // default .slate
-  mode: FortalThemeMode.system,       // root default; nested scopes inherit
-  panelBackground: FortalPanelBackground.translucent,
-  radius: FortalRadius.medium,
-  scaling: FortalScaling.percent100,
-  hasBackground: true,
-  orderOfModifiers: null,             // optional List<Type>
-  child: MyApp(),
-)
-```
-
-**Accent colors** (31): amber, blue, bronze, brown, crimson, cyan, gold,
-grass, green, indigo, iris, jade, lime, mint, orange, pink, plum, purple,
-red, ruby, sky, teal, tomato, violet, yellow — plus the neutrals gray,
-mauve, slate, sage, olive, sand.
-
-**Gray scales** (6): gray, mauve, slate, sage, olive, sand.
-
-`panelBackground` selects solid or translucent floating surfaces; `radius`
-selects `none|small|medium|large|full`; `scaling` selects 90%, 95%, 100%, 105%,
-or 110%; and `hasBackground` controls whether the scope paints the resolved
-page background behind its child.
-
-### Appearance selection
-
-Use `theme: const FortalThemeData.light()` and
-`darkTheme: const FortalThemeData.dark()` to configure a pair. With neither,
-the preset supplies both defaults. With only `theme`, both modes use that
-fallback. With only `darkTheme`, the base remains inherited or default.
-Nested scopes inherit the pair and current selection unless `mode` is explicit.
-The app owns preference persistence. Scope `brightness` is removed; use `mode`.
-
-### Scope placement
-
-The **outermost** `FortalScope` establishes a courtesy `DefaultTextStyle` for
-bare Flutter `Text`: the Radix theme root run — `text3` (16px, 1.5 line height,
-0 letter spacing) at `gray-12`, regular weight, and no pinned font family.
-This is analogous to Material's `bodyMedium`; it is not the source of a Fortal
-typography run, which is always pinned from Fortal tokens. Placement therefore
-matters for bare `Text`:
-
-For a simple `WidgetsApp` builder, the scope can wrap the app. For a routed app,
-put it in `builder` above the Navigator. A default WidgetsApp preserves the
-outer scope’s text defaults; an explicit `textStyle` overrides them. A scope
-inside the app builder establishes its defaults below that override.
-
-A **nested** scope re-scopes tokens only. It does not restate the courtesy
-bare-`Text` run, so wrapping a subtree in
-`FortalScope(accent: .red, hasBackground: false, ...)` re-themes its tokens
-without changing the surrounding Flutter text inheritance.
-
-```dart
-WidgetsApp(
-  color: const Color(0xFFFFFFFF),
-  pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
-    settings: settings,
-    pageBuilder: (context, animation, secondaryAnimation) => builder(context),
-  ),
-  builder: (context, child) => FortalScope(child: child!),
-  home: const MyScreen(),
-)
-```
-
-The builder wraps the Navigator so routes and overlays inherit the scope.
-
-Normal Flutter inheritance still applies to bare `Text` below the scope. A
-nearer `DefaultTextStyle`, including one from `Material` or `Scaffold`, wins
-for that bare text. Fortal typography does not inherit that run: its unsized
-components use their documented token defaults, and `size:` selects another
-token size. Transparent, non-accent `FortalCode.ghost` deliberately keeps only
-the ambient foreground so it can blend into surrounding text.
-
-If **bare Flutter `Text`** inside a hand-rolled `OverlayEntry` renders red and
-monospace with a yellow double underline, the scope is in the wrong place:
-that is Flutter's "put your text in a Material" fallback style. Fortal
-typography children pin their own token run.
-
-`FortalThemeConfig` is the immutable config object form:
+`FortalScope` takes `theme`, `darkTheme`, `mode`, `accent`, `gray`,
+`panelBackground`, `radius`, `scaling`, `hasBackground`, `orderOfModifiers`,
+and `child` — see [theme selection](../SKILL.md#place-the-theme-scope) for
+the shared `theme`/`darkTheme`/`mode` rules. `FortalThemeConfig` is the
+immutable config object form (`FortalThemeData extends FortalThemeConfig`):
 
 ```dart
 const theme = FortalThemeConfig(accent: .green, gray: .sage, brightness: .dark);
 final light = theme.copyWith(brightness: .light);
-FortalScope(theme: theme, child: MyApp())
+FortalScope(theme: theme, child: child)
 ```
 
----
+`panelBackground` selects solid or translucent floating surfaces; `radius`
+selects `none|small|medium|large|full`; `scaling` selects 90–110%; and
+`hasBackground` controls whether the scope paints the resolved page
+background behind its child.
 
-## Using Tokens
+## Token rules
 
-Inside styler chains, call the token to get a resolvable value; in plain
-widgets, resolve against context:
+Full token catalog lives in the installed `ui/theme/tokens.dart` — these are
+the rules that are not obvious from a token's name:
 
-```dart
-// In a styler chain:
-ButtonStyler()
-    .color(FortalTokens.accent9())
-    .borderRadius(.all(FortalTokens.radius3()))
+- `radiusFull` resolves to **zero** unless the active theme's `radius` is
+  `.full`; it is not a fixed pill radius. Use `radiusCircle` instead for a
+  shape that must stay circular regardless of the theme's radius setting.
+- `colorPanel` follows `panelBackground`: it resolves to `colorPanelSolid`
+  when `panelBackground == .solid`, otherwise to `colorPanelTranslucent`.
+- `colorBackground` and `colorPanelSolid` are **white** in light mode, not a
+  gray step — they only resolve to `gray1`/`gray2` in dark mode.
+- Component sizing frequently reuses space tokens rather than fixed
+  literals and does not always step evenly — e.g. `FortalProgress` heights
+  are `space1`/`progressHeight2`/`space2` (4/6/8px) × the theme's `scaling`,
+  not an evenly-stepped 4/8/12.
+- `blackA1`–`blackA12` and `whiteA1`–`whiteA12` (alpha scales), `colorPanel`,
+  `radiusCircle`, and `focusA5` all exist alongside the documented accent,
+  gray, space, radius, text, shadow, border, and animation token families.
 
-// In a widget build:
-Container(color: FortalTokens.colorBackground.resolve(context))
-
-// Text style token into a TextStyler:
-TextStyler().style(FortalTokens.text2.mix())
-```
-
-## Color Tokens
-
-### Accent Scale (12 steps)
-
-| Token | Semantic Role |
-|-------|---------------|
-| `FortalTokens.accent1` | App background (subtle) |
-| `FortalTokens.accent2` | Subtle component background |
-| `FortalTokens.accent3` | Component background (rest) |
-| `FortalTokens.accent4` | Component background (hover) |
-| `FortalTokens.accent5` | Component background (active) |
-| `FortalTokens.accent6` | Subtle border |
-| `FortalTokens.accent7` | Component border |
-| `FortalTokens.accent8` | Border (hover/focus) |
-| `FortalTokens.accent9` | Solid background (default) |
-| `FortalTokens.accent10` | Solid background (hover) |
-| `FortalTokens.accent11` | Low-contrast text |
-| `FortalTokens.accent12` | High-contrast text |
-
-### Gray Scale (12 steps)
-
-Same semantic structure: `FortalTokens.gray1` through `FortalTokens.gray12`.
-
-### Alpha Variants
-
-- Accent alpha: `FortalTokens.accentA1` – `accentA12`
-- Gray alpha: `FortalTokens.grayA1` – `grayA12`
-- Black alpha (shadows): `blackA3`, `blackA4`, `blackA5`, `blackA6`,
-  `blackA7`, `blackA11`
-
-### Functional Colors
-
-| Token | Role |
-|-------|------|
-| `FortalTokens.colorBackground` | Page background (gray1) |
-| `FortalTokens.colorSurface` | Input/control surface |
-| `FortalTokens.colorPanelSolid` | Solid panel (gray2) |
-| `FortalTokens.colorPanelTranslucent` | Translucent panel with alpha |
-| `FortalTokens.colorOverlay` | Dark overlay for modals |
-| `FortalTokens.accentSurface` | Subtle accent (soft variants) |
-| `FortalTokens.accentIndicator` | Active indicator (sliders, progress) |
-| `FortalTokens.accentTrack` | Track background |
-| `FortalTokens.accentContrast` | High-contrast text on accent solid |
-| `FortalTokens.graySurface` | Neutral surface |
-| `FortalTokens.grayIndicator` | Neutral indicator |
-| `FortalTokens.grayTrack` | Neutral track |
-| `FortalTokens.grayContrast` | Text on neutral solid |
-| `FortalTokens.focus8` | Solid focus ring (accent step 8) |
-| `FortalTokens.focusA8` | Translucent focus ring |
-| `FortalTokens.shadowStroke` | OKLab-mixed shadow stroke blend |
-
----
-
-## Space Tokens
-
-4px-increment scale (`SpaceToken`):
-
-| Token | Value |
-|-------|-------|
-| `FortalTokens.space1` | 4px |
-| `FortalTokens.space2` | 8px |
-| `FortalTokens.space3` | 12px |
-| `FortalTokens.space4` | 16px |
-| `FortalTokens.space5` | 24px |
-| `FortalTokens.space6` | 32px |
-| `FortalTokens.space7` | 40px |
-| `FortalTokens.space8` | 48px |
-| `FortalTokens.space9` | 64px |
-
----
-
-## Radius Tokens
-
-| Token | Value |
-|-------|-------|
-| `FortalTokens.radius1` | 3px |
-| `FortalTokens.radius2` | 4px |
-| `FortalTokens.radius3` | 6px |
-| `FortalTokens.radius4` | 8px |
-| `FortalTokens.radius5` | 12px |
-| `FortalTokens.radius6` | 16px |
-| `FortalTokens.radiusFull` | 9999px (pill/circle) |
-
----
-
-## Typography Tokens
-
-`TextStyleToken`s with tuned line height and letter spacing:
-
-| Token | Size | Typical use |
-|-------|------|-------------|
-| `FortalTokens.text1` | 12px | Small labels, metadata |
-| `FortalTokens.text2` | 14px | Standard UI text, buttons |
-| `FortalTokens.text3` | 16px | Body text |
-| `FortalTokens.text4` | 18px | Prominent body |
-| `FortalTokens.text5` | 20px | Small headings |
-| `FortalTokens.text6` | 24px | Medium headings |
-| `FortalTokens.text7` | 28px | Large headings |
-| `FortalTokens.text8` | 35px | Extra-large headings |
-| `FortalTokens.text9` | 60px | Display/hero text |
-
----
-
-## Shadow Tokens
-
-`BoxShadowToken`s, six elevation levels: `FortalTokens.shadow1` (subtle,
-resting cards) through `FortalTokens.shadow6` (maximum elevation, critical
-dialogs). `shadow3` suits dropdowns/tooltips; `shadow4`–`shadow5` suit
-modals.
-
----
-
-## Border & Focus Tokens
-
-| Token | Value |
-|-------|-------|
-| `FortalTokens.borderWidth1` | 1px |
-| `FortalTokens.borderWidth2` | 2px |
-| `FortalTokens.focusRingWidth` | 2px |
-| `FortalTokens.focusRingOffset` | 2px |
-
----
-
-## Animation Tokens
-
-| Token | Value |
-|-------|-------|
-| `FortalTokens.transitionFast` | 100ms (hover, press micro-interactions) |
-| `FortalTokens.transitionSlow` | 300ms (modals, larger transitions) |
-
----
-
-## Font Weight Tokens
-
-| Token | Value |
-|-------|-------|
-| `FortalTokens.fontWeightLight` | 300 |
-| `FortalTokens.fontWeightRegular` | 400 |
-| `FortalTokens.fontWeightMedium` | 500 |
-| `FortalTokens.fontWeightBold` | 700 |
+Call the token inside styler chains; use `.mix()` for text-style tokens and
+`.resolve(context)` for a direct value in widget code — see
+[Styling](styling.md).

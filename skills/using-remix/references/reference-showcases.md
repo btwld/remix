@@ -35,9 +35,9 @@ parallel component library inside the example.
 ## Theme and contrast
 
 Keep one correctly placed outer `FortalScope` around the showcase's Navigator
-and Overlay, following the host-specific placement in the main skill. Resolve
-showcase chrome from `FortalTokens` or other active Mix tokens rather than
-choosing parallel hard-coded palette values.
+and Overlay, following the [scope placement guidance](../SKILL.md#place-the-theme-scope)
+in the main skill. Resolve showcase chrome from `FortalTokens` or other
+active Mix tokens rather than choosing parallel hard-coded palette values.
 
 Use a nested `FortalScope(accent: ..., hasBackground: false)` when a product
 concept carries a semantic accent. Let it inherit brightness, gray, radius,
@@ -79,10 +79,17 @@ away from the specimens. Use named Fortal constructors in product code when a
 variant is fixed; the unnamed constructor is appropriate here because a
 matrix deliberately selects variants at runtime.
 
+`GalleryMatrix` itself is not a Remix or Fortal library API — it is an
+app-owned widget (`apps/dashboard/lib/widgets/gallery_scaffold.dart:62`)
+shipped as copied source by the Fortal `dashboard_demo` registry recipe, the
+same way any other recipe file becomes application-owned once installed.
+Treat it as a pattern to reproduce in the target app, not a type to import
+from a package.
+
 A two-dimensional comparison is a good use of Mix `GridBox`: declare the
 label column and specimen columns explicitly and allow implicit rows to size
-to their content. Use the project's Mix skill or installed Mix source for the
-exact `GridBox` API. A `Wrap` remains better for a simple one-dimensional set.
+to their content. Use the `mix` skill for the exact `GridBox` API. A `Wrap`
+remains better for a simple one-dimensional set.
 
 Render the underlying `Fortal*` widget directly in coverage cells. Product
 wrappers belong in a separate section so they do not obscure the component's
