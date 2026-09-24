@@ -8,12 +8,12 @@ with Mix styling.
 
 ## Agent skills
 
-[![skills.sh](https://skills.sh/b/conceptadev/remix)](https://skills.sh/conceptadev/remix)
+[![skills.sh](https://skills.sh/b/btwld/remix)](https://skills.sh/btwld/remix)
 
 This repository publishes two skills from its [`skills/`](skills) catalog:
 
-- [`using-remix`](https://skills.sh/conceptadev/remix/using-remix) helps agents build Flutter interfaces with base Remix or the optional Fortal theme.
-- [`building-remix-design-system`](https://skills.sh/conceptadev/remix/building-remix-design-system) helps agents create standalone design-system packages on Remix.
+- [`using-remix`](https://skills.sh/btwld/remix/using-remix) helps agents build Flutter interfaces with base Remix or the optional Fortal theme.
+- [`building-remix-design-system`](https://skills.sh/btwld/remix/building-remix-design-system) helps agents create standalone design-system packages on Remix.
 
 List the available skills without installing them:
 
@@ -34,7 +34,7 @@ globally or use a skill ephemerally:
 
 ```bash
 npx skills add conceptadev/remix --skill using-remix -g -y
-npx skills use conceptadev/remix@using-remix
+npx skills use btwld/remix@using-remix
 ```
 
 List installed skills and update them later:
@@ -175,7 +175,7 @@ final style = ButtonStyler()
 
 This example animates both the color on hover and the scale on press, creating a smooth interactive experience for your users. 
 
-See the [Mix repository](https://github.com/conceptadev/mix) for keyframe and phase animation APIs.
+See the [Mix repository](https://github.com/btwld/mix) for keyframe and phase animation APIs.
 
 ### Style Composition and Reuse
 
@@ -306,8 +306,8 @@ Remix is ideal for:
 
 Live examples:
 
-- [Fortal dashboard](https://conceptadev.github.io/remix/dashboard/) — a polished product dashboard with responsive layouts, charts, data, and live theme controls.
-- [Component catalog](https://conceptadev.github.io/remix/catalog/) — the Widgetbook catalog for reviewing Remix and Fortal components, variants, and states.
+- [Fortal dashboard](https://btwld.github.io/remix/dashboard/) — a polished product dashboard with responsive layouts, charts, data, and live theme controls.
+- [Component catalog](https://btwld.github.io/remix/catalog/) — the Widgetbook catalog for reviewing Remix and Fortal components, variants, and states.
 
 Check out `apps/dashboard`, `apps/demo`, and the per-package examples in
 `packages/remix/example` and `registry_source/example` for complete working examples demonstrating:

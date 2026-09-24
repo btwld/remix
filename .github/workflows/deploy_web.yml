@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       NEXT_PUBLIC_BASE_PATH: /remix
-      NEXT_PUBLIC_SITE_URL: https://conceptadev.github.io
+      NEXT_PUBLIC_SITE_URL: https://btwld.github.io
       NEXT_TELEMETRY_DISABLED: 1
 
     steps:

@@ -43,7 +43,7 @@ describe installation and host responsibilities.
 
 ## Live demo
 
-[Open the Fortal dashboard](https://conceptadev.github.io/remix/dashboard/).
+[Open the Fortal dashboard](https://btwld.github.io/remix/dashboard/).
 
 ## Preview
 

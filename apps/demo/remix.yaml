@@ -6,7 +6,7 @@ paths:
 defaultRegistry: "@remix"
 registries:
   "@remix":
-    repository: "conceptadev/remix"
+    repository: "btwld/remix"
     path: "registry"
     ref: "main"
     revision: "30a7a7ab18d28a6ba505eb7496c3d73132ae6d49"

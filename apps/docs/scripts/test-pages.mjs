@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = resolve(process.env.DOCS_OUTPUT ?? fileURLToPath(new URL('../../../build/pages/', import.meta.url)));
 const base = process.env.NEXT_PUBLIC_BASE_PATH ?? '/remix';
-const origin = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://conceptadev.github.io';
+const origin = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://btwld.github.io';
 const docsOnly = process.argv.includes('--docs-only');
 async function exists(path) { return stat(path).then(() => true, () => false); }
 async function* files(path) {

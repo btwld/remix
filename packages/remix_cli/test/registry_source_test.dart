@@ -151,7 +151,7 @@ void main() {
           (e) => e.message,
           'message',
           contains(
-            'No registry-stable branch is published for conceptadev/remix',
+            'No registry-stable branch is published for btwld/remix',
           ),
         ),
       ),
@@ -159,7 +159,7 @@ void main() {
     expect(snapshotFiles(root), before);
     expect(
       requests.any(
-        (uri) => uri.path == '/repos/conceptadev/remix/commits/registry-stable',
+        (uri) => uri.path == '/repos/btwld/remix/commits/registry-stable',
       ),
       isTrue,
     );
@@ -269,14 +269,14 @@ void main() {
         },
       );
       final source = await resolver.latestOfficial();
-      expect(source.repository, 'conceptadev/remix');
+      expect(source.repository, 'btwld/remix');
       expect(source.ref, 'registry-stable');
       expect(source.revision, sha);
       expect(
         requests.any(
           (uri) =>
               uri.host == 'api.github.com' &&
-              uri.path == '/repos/conceptadev/remix/commits/registry-stable',
+              uri.path == '/repos/btwld/remix/commits/registry-stable',
         ),
         isTrue,
       );
