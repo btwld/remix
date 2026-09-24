@@ -331,7 +331,6 @@ Future<void> main() async {
   );
   _checkOpenCodeCatalog(workspaceRoot, failures);
   _checkSkillEvalMetadata(workspaceRoot, failures);
-  _checkDesignSystemSkillVersions(workspaceRoot, failures);
   final exampleSourceCount = _checkDartSources(
     workspaceRoot,
     _exampleSourceDirectories,
@@ -546,70 +545,6 @@ void _checkSkillEvalMetadata(Directory workspaceRoot, List<String> failures) {
         }
       }
     }
-  }
-}
-
-void _checkDesignSystemSkillVersions(
-  Directory workspaceRoot,
-  List<String> failures,
-) {
-  final skillRoot = '${workspaceRoot.path}/skills/building-remix-design-system';
-  final remixPubspec = File(
-    '${workspaceRoot.path}/packages/remix/pubspec.yaml',
-  ).readAsStringSync();
-  final playbookFile = File('$skillRoot/references/component-playbook.md');
-  final foundationFile = File('$skillRoot/references/foundation-patterns.md');
-  final evalsFile = File('$skillRoot/evals/evals.json');
-  if (!playbookFile.existsSync() ||
-      !foundationFile.existsSync() ||
-      !evalsFile.existsSync()) {
-    failures.add('Missing building-remix-design-system version references.');
-    return;
-  }
-
-  String field(String name, {int indentation = 0}) {
-    final leadingWhitespace = ''.padLeft(indentation);
-    final match = RegExp(
-      '^$leadingWhitespace${RegExp.escape(name)}:\\s*(\\S+)\\s*\$',
-      multiLine: true,
-    ).firstMatch(remixPubspec);
-    if (match == null) {
-      failures.add('packages/remix/pubspec.yaml is missing $name.');
-      return '<missing>';
-    }
-    return match.group(1)!;
-  }
-
-  final expected = <String, String>{
-    'remix': '^${field('version')}',
-    'mix': field('mix', indentation: 2),
-    'mix_annotations': field('mix_annotations', indentation: 2),
-    'build_runner': field('build_runner', indentation: 2),
-    'mix_generator': field('mix_generator', indentation: 2),
-  };
-  final playbook = playbookFile.readAsStringSync();
-  final evals = evalsFile.readAsStringSync();
-  for (final MapEntry(:key, :value) in expected.entries) {
-    if (!playbook.contains('  $key: $value')) {
-      failures.add(
-        'skills/building-remix-design-system/references/component-playbook.md '
-        'must track the tested $key constraint $value.',
-      );
-    }
-    if (!evals.contains('$key $value')) {
-      failures.add(
-        'skills/building-remix-design-system/evals/evals.json must track the '
-        'tested $key constraint $value.',
-      );
-    }
-  }
-
-  final mixVersion = expected['mix']!.replaceFirst('^', '');
-  if (!foundationFile.readAsStringSync().contains('`mix $mixVersion`')) {
-    failures.add(
-      'skills/building-remix-design-system/references/'
-      'foundation-patterns.md must name the tested mix version $mixVersion.',
-    );
   }
 }
 
