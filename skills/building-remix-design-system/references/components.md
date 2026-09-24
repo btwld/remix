@@ -1,8 +1,9 @@
 # Theme and components reference
 
-The shapes a design-system registry's installed source should take, and the
-Remix and Mix behaviors that have produced real bugs. Sketches use the
-authoring word `Acme`; the official Vanilla preset is the complete reference
+The shapes a registry's installed source takes, and the Remix and Mix
+behaviors that have produced real bugs. The sketches use the authoring word
+`Acme` and agree with each other; the official Vanilla preset is the complete
+reference
 ([theme](https://github.com/conceptadev/remix/tree/registry-stable/registry/vanilla/templates/theme),
 [button](https://github.com/conceptadev/remix/blob/registry-stable/registry/vanilla/templates/button/button.dart.tmpl)).
 
@@ -26,9 +27,13 @@ import 'package:remix/remix.dart';
 
 abstract final class AcmeTokens {
   static const background = ColorToken('acme.color.background');
+  static const text = ColorToken('acme.color.text');
   static const interactivePrimary = ColorToken(
     'acme.color.interactive-primary',
   );
+  static const onInteractive = ColorToken('acme.color.on-interactive');
+  static const hoverSurface = ColorToken('acme.color.hover-surface');
+  static const pressedSurface = ColorToken('acme.color.pressed-surface');
   static const focus = ColorToken('acme.color.focus');
   static const radius = RadiusToken('acme.radius');
 }
@@ -37,8 +42,10 @@ abstract final class AcmeTokens {
 **`theme_data.dart` — values per mode.** An immutable class with one field per
 token, `const` named constructors per mode, `copyWith`, value equality over
 every field, and a `tokens` getter returning an unmodifiable
-`Map<MixToken<Object?>, Object>`. Mix tokens override `==`, so a `const` map
-keyed by them does not compile; build it at runtime.
+`Map<MixToken<Object?>, Object>`. Every token needs an entry: a recipe that
+resolves a token missing from the active scope throws at runtime. Mix tokens
+override `==`, so a `const` map keyed by them does not compile; build it at
+runtime.
 
 ```dart
 import 'package:flutter/widgets.dart';
@@ -53,22 +60,38 @@ class AcmeThemeData {
   const AcmeThemeData.light()
     : brightness = Brightness.light,
       background = const Color(0xFFFFFFFF),
+      text = const Color(0xFF1C1C1E),
       interactivePrimary = const Color(0xFF0B5FFF),
+      onInteractive = const Color(0xFFFFFFFF),
+      hoverSurface = const Color(0xFFF2F2F7),
+      pressedSurface = const Color(0xFFE5E5EA),
+      focus = const Color(0xFF0B5FFF),
       radius = const Radius.circular(4);
 
   final Brightness brightness;
   final Color background;
+  final Color text;
   final Color interactivePrimary;
+  final Color onInteractive;
+  final Color hoverSurface;
+  final Color pressedSurface;
+  final Color focus;
   final Radius radius;
 
   Map<MixToken<Object?>, Object> get tokens =>
       Map<MixToken<Object?>, Object>.unmodifiable(<MixToken<Object?>, Object>{
         AcmeTokens.background: background,
+        AcmeTokens.text: text,
         AcmeTokens.interactivePrimary: interactivePrimary,
+        AcmeTokens.onInteractive: onInteractive,
+        AcmeTokens.hoverSurface: hoverSurface,
+        AcmeTokens.pressedSurface: pressedSurface,
+        AcmeTokens.focus: focus,
         AcmeTokens.radius: radius,
       });
 
-  // A default constructor, copyWith, ==, and hashCode over every field.
+  // A .dark() constructor, a default constructor, copyWith, and == and
+  // hashCode over every field, as in Vanilla's theme_data.dart.
 }
 ```
 
@@ -91,7 +114,9 @@ set up every Remix design system the same way:
   Document that in the README.
 
 Add a token only with its value in every mode; add a mode only if the source
-defines it.
+defines it. A single-mode system ships one constructor, and its scope falls
+back to that theme for both slots; say in the README that `mode` has no
+visible effect.
 
 ## 2. Recipes
 
@@ -201,22 +226,19 @@ ButtonStyler _disabled() => ButtonStyler()
 const _noFill = Color(0x00000000);
 ```
 
-`_focusRing` and the `_primary*Fill` context tokens are in §3; the token
-names stand for whatever the system's `tokens.dart` defines.
+`_focusRing` and the `_primary*Fill` context tokens are in §3.
 
 - **Return the target's own styler type**: `RemixButton` takes a
-  `ButtonStyler`, `RemixBadge` a `BadgeStyler`. A styler's methods are listed
-  in the `remix` package's `lib/src/components/<name>/<name>.g.dart`; read
-  them there instead of guessing.
-- **Naming**: `lib/components/<name>.dart` holds
-  `<valueWord><Component>Style` (`acmeButtonStyle`) and
-  `part '<name>.g.dart'`. The generated widget is the function name minus
-  `Style`, capitalized (`AcmeButton`), so renaming the recipe renames the
-  widget. No placeholder or authoring word in file names.
-- **Variants**: a named, non-nullable enum parameter called exactly `variant`
-  generates one named constructor per value (`AcmeButton.primary(...)`). Keep
-  the parameter name `variant` and put the system's vocabulary in the enum
-  (`AcmeBadgeTone { neutral, info }` gives `AcmeBadge.info(...)`). Size names
+  `ButtonStyler`, `RemixBadge` a `BadgeStyler`. A styler's methods are in the
+  `remix` package source, `lib/src/components/<name>/<name>.g.dart` (find the
+  package root in `.dart_tool/package_config.json`); read them there instead
+  of guessing.
+- **Naming**: `lib/components/<name>.dart` holds `acme<Component>Style` and
+  `part '<name>.g.dart'`; the generated widget is `Acme<Component>`. File
+  names never contain the authoring word.
+- **Variants**: keep the parameter named `variant` so the generator emits
+  named constructors, and put the system's vocabulary in the enum:
+  `AcmeBadgeTone { neutral, info }` gives `AcmeBadge.info(...)`. Size names
   come from the source; if it has none, record the chosen names in the ADR.
 - Merge the caller's `style` **last** so one call site can override anything
   without forking the recipe.
@@ -228,14 +250,26 @@ names stand for whatever the system's `tokens.dart` defines.
 - Display components (badge, card, callout) need only tokens, variants, and
   geometry; the state pitfalls in §3 apply to interactive components.
 
-The `mix` skill's code-generation reference owns the full `@MixWidget`
+The `mix` skill's code-generation reference owns the rest of the `@MixWidget`
 contract (`name`, `widgetParameters`, `factoryParameters`, generic targets).
+Install it with `npx skills add conceptadev/mix --skill mix`; without it, read
+`mix_widget_generator.dart` in the `mix_generator` package source.
 
 **Hand-written facade instead** only when the public widget needs structure
 the Remix widget cannot take, or a generated parameter would expose a
 Remix-only type the target system has no word for. A facade is a
 `StatelessWidget` in the target vocabulary that builds the recipe and passes
 it to the Remix widget's `style`.
+
+**No Remix widget for the component.** In order of preference:
+
+1. Compose existing Remix widgets and Mix primitives (`Box`, `FlexBox`,
+   `StyledText`, all re-exported by `remix`) in a facade.
+2. Add behavior from Naked UI, declaring `naked_ui` on the item with the
+   constraint `remix` uses.
+3. Author a `@MixableSpec(target: ...)` spec. The CLI then writes the
+   consumer's `build.yaml` to enable that generator; record this in the ADR
+   and the README.
 
 ## 3. Pitfalls
 
@@ -265,7 +299,7 @@ ButtonStyler _focusRing() => ButtonStyler().containerEffects(
 ```
 
 **Derived colors: `ContextToken`, not `withValues`.**
-`AcmeTokens.primary().withValues(alpha: 0.9)` records a Mix directive that
+`AcmeTokens.interactivePrimary().withValues(alpha: 0.9)` records a Mix directive that
 survives every later merge, so a caller who replaces the hover fill still gets
 the alpha on top. Resolve the arithmetic instead, as top-level finals
 (`ContextToken` equality is resolver identity):
@@ -277,6 +311,7 @@ ContextToken<Color> _dimmed(ColorToken source, double alpha) =>
     );
 
 final _primaryHoverFill = _dimmed(AcmeTokens.interactivePrimary, 0.9);
+final _primaryPressedFill = _dimmed(AcmeTokens.interactivePrimary, 0.8);
 ```
 
 **State fragments merge by state.** A caller override that must beat the
@@ -298,9 +333,6 @@ the parent forces a width; set it for that case and leave the min default.
 **`InheritedTheme.wrap` must rebuild the `MixScope`.** Routes and overlays
 capture `InheritedTheme`s only. A `wrap` that rebuilds just the theme keeps
 theme values but loses the token values every recipe resolves.
-
-**No invented scales.** If the system defines no radius or elevation scale,
-`Radius.zero` and no shadow are the correct values.
 
 **Widgets layer only.** Recipes and tests use `WidgetsApp`, never Material;
 consumers may not have a Material ancestor.
@@ -328,14 +360,13 @@ tokens: [interactive-primary, text-on-interactive, focus, radius]
 measurements:                     # non-token values, each with a source
   - {what: medium height, value: 36, cite: "button spec p.3"}
 behavior: <keyboard, focus, screen reader, RTL notes>
-approximations: <every deviation from the source, stated honestly>
+approximations: <every deviation from the source>
 ```
 
 ## 5. Tests
 
-In the authoring package, pumping inside
-`AcmeThemeScope(child: WidgetsApp(...))` or the placement the README
-documents:
+In the authoring package, pumping a `WidgetsApp` whose `builder` installs
+`AcmeThemeScope`, the placement the README documents:
 
 - every variant × size builds in every theme mode;
 - measured default geometry (`tester.getSize(...)`), with and without an

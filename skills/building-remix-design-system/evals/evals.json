@@ -7,10 +7,13 @@
       "expected_output": "Scaffolds a public registry repository rather than a pub package: an analyzer-checked authoring package (publish_to: none) mirroring the installed layout (lib/theme, lib/components), specs/tokens.yaml, an ADR, a derivation script with --check, and registry/index.yaml offering only the vanilla preset plus registry/vanilla/registry.yaml. Treats the npm package as a tier-1 source: an extraction script pins the exact package version in one manifest, asserts inventory counts, and writes specs/tokens.yaml deterministically; the Dart theme values are tested against that file. Takes package constraints from the official vanilla catalog instead of restating versions from memory. Tells consumers to register the repository under a namespace such as @polaris and install only @polaris items.",
       "files": [],
       "expectations": [
-        "Produces a registry repository with an authoring package, derivation script, index.yaml offering vanilla, and a schema-2 catalog, not a standalone pub package.",
-        "Pins the exact token package version and extracts deterministically into specs/tokens.yaml with inventory assertions.",
-        "Checks the Dart theme values against specs/tokens.yaml with a test and copies package constraints from the official vanilla catalog.",
-        "Documents a namespace and self-contained installation for consumers."
+        "Produces a registry repository with an authoring package, derivation script, and catalogs, not a standalone pub package.",
+        "Offers only the vanilla preset in registry/index.yaml.",
+        "Pins the exact token package version in one manifest and extracts deterministically into specs/tokens.yaml.",
+        "Adds inventory-count assertions to the extraction script.",
+        "Tests the Dart theme values against specs/tokens.yaml.",
+        "Copies package constraints from the official vanilla catalog instead of restating versions.",
+        "Documents a namespace for consumers and that they install only its items."
       ]
     },
     {
@@ -27,15 +30,17 @@
     },
     {
       "id": 3,
-      "prompt": "Add a Button to our Remix design-system registry. The upstream system has primary/secondary/plain variants, three sizes (28/36/44px), a 3px focus ring, and loading buttons keep their variant color with a white spinner.",
-      "expected_output": "Writes specs/components/button.yaml first. Implements a top-level @MixWidget(target: RemixButton.new) recipe in the authoring package with a non-nullable enum parameter named variant (values primary, secondary, plain), a size enum mapped to 28/36/44 through a metrics switch, a caller style merged last, and token-only styling. Because RemixButton folds loading into the disabled state, declares bool loading on the recipe (shared with RemixButton's loading parameter) and keeps the variant fill in the disabled fragment when loading. Draws the focus ring with containerEffects outline in onFocusVisible so layout does not shift. Adds widget tests for measured heights, focus ring size stability, and loading fill using pump instead of pumpAndSettle, then derives the template and adds a catalog item with registryDependencies theme, a generated button.g.dart entry, and codegen constraints.",
+      "prompt": "Add a Button to our Remix design-system registry. The upstream system has primary/secondary/plain variants, three sizes (32/40/48px), a 2px focus ring offset by 1px, and loading buttons keep their fill but swap the label for a spinner in the label color.",
+      "expected_output": "Writes specs/components/button.yaml first. Implements a top-level @MixWidget(target: RemixButton.new) recipe in the authoring package with a non-nullable enum parameter named variant (values primary, secondary, plain), a size enum mapped to 32/40/48 through a metrics switch, a caller style merged last, and token-only styling. Because RemixButton folds loading into the disabled state, declares bool loading on the recipe (shared with RemixButton's loading parameter) and keeps the fill in the disabled fragment when loading, with the spinner colored like the label. Draws the 2px ring with a containerEffects outline in onFocusVisible, outlineOffset 1, so layout does not shift. Adds widget tests for measured heights, focus ring size stability, and loading fill using pump instead of pumpAndSettle, then derives the template and adds a catalog item with registryDependencies theme, a generated button.g.dart entry, and codegen constraints.",
       "files": [],
       "expectations": [
         "Writes the component worksheet before code.",
-        "Uses an @MixWidget(target: RemixButton.new) recipe with a variant enum in the upstream vocabulary and merges caller style last.",
-        "Handles loading as the disabled state with a shared bool loading parameter that keeps the variant fill.",
-        "Uses an outline effect in onFocusVisible for the focus ring and tests with pump rather than pumpAndSettle.",
-        "Derives the template and adds a catalog item with the theme dependency, generated part, and codegen constraints."
+        "Uses a top-level @MixWidget(target: RemixButton.new) recipe with a non-nullable variant enum in the upstream vocabulary.",
+        "Merges the caller's style last.",
+        "Declares a bool loading recipe parameter shared with RemixButton and keeps the fill in the disabled fragment when loading.",
+        "Draws the focus ring with a containerEffects outline inside onFocusVisible.",
+        "Uses pump rather than pumpAndSettle in loading tests.",
+        "Adds a catalog item with the theme dependency, the generated part, and codegen constraints."
       ]
     },
     {
@@ -47,29 +52,32 @@
         "Classifies the PDF as tier 3 and screenshots as tier 4 and inventories tokens before values.",
         "Records a citation and confidence for every value in specs/tokens.yaml, with assumptions echoed in worksheets.",
         "Calibrates screenshot scale and samples flat color regions.",
-        "Tests theme_data values against specs/tokens.yaml without building an extraction pipeline or inventing scales."
+        "Tests theme_data values against specs/tokens.yaml.",
+        "Builds no OCR pipeline or generator and invents no scales the sources do not define."
       ]
     },
     {
       "id": 5,
       "prompt": "We have no design assets at all. Our brand is 'calm, premium, dark-first', primary color is teal #0D9488, and we use Inter. Build a Remix design system registry from that.",
-      "expected_output": "Commits the brief verbatim as the pinned source, asks about or confirms missing constraints (modes, density, gray temperature) instead of silently deciding them, decides the token inventory and theme model first and records them in an ADR, then authors specs/tokens.yaml with designed or derived values produced by documented rules (for example a perceptually even teal ramp, a modular type scale, a 4px spacing base), each citing the brief or the rule. Builds the vanilla-shaped theme item with dark as a first-class mode and publishes through the standard registry repository and scratch-app loop.",
+      "expected_output": "Commits the brief verbatim as the pinned source, asks about missing constraints (modes, density, gray temperature) when the user is available, or records each choice as designed with its rationale in the ADR, decides the token inventory and theme model first and records them in an ADR, then authors specs/tokens.yaml with designed or derived values produced by documented rules (for example a perceptually even teal ramp, a modular type scale, a 4px spacing base), each citing the brief or the rule. Builds the vanilla-shaped theme item with dark as a first-class mode and publishes through the standard registry repository and scratch-app loop. Plans how Inter reaches consumers — a font package declared on an item or a documented pubspec step — because the CLI cannot add fonts or assets.",
       "files": [],
       "expectations": [
-        "Commits the brief and surfaces missing product constraints rather than inventing them.",
+        "Commits the brief and asks about missing product constraints, or records each choice as designed with ADR rationale.",
         "Defines the token inventory and theme model in an ADR before authoring values.",
         "Marks values designed or derived with citations to the brief or documented rules.",
-        "Uses the standard theme item shape and registry repository workflow."
+        "Uses the standard theme item shape and registry repository workflow.",
+        "Plans Inter delivery through a declared font package or a documented consumer pubspec step, since the CLI cannot add fonts."
       ]
     },
     {
       "id": 6,
       "prompt": "Our design-system registry change is ready on the branch fix-select. How do we test it before our apps get it, and how should our apps follow releases?",
-      "expected_output": "Pushes the branch and tests from a scratch Flutter app initialized with the vanilla preset and a prefix different from the authoring word: registry add @acme --repository <owner/repo> --path registry --ref fix-select, add @acme/select --dry-run to catch catalog and placeholder errors, then add to install, generate, and analyze, and runs the app. Iterates with registry update @acme and add --overwrite. Recommends a stable branch fast-forwarded only after the scratch app passes, explains that tags and SHAs stay fixed until consumers pass --ref, and that moving the branch never changes an app until it updates its pin. Notes that local and private registries are not supported.",
+      "expected_output": "Pushes the branch and tests from a scratch Flutter app initialized with the vanilla preset and a prefix different from the authoring word: registry add @acme --repository <owner/repo> --path registry --ref fix-select, add @acme/select --dry-run to catch catalog and placeholder errors, then add to install, generate, and analyze, and runs the app. Iterates with registry update @acme and add --overwrite, naming theme too after token changes because --overwrite never refreshes installed dependencies. Recommends a stable branch fast-forwarded only after the scratch app passes, explains that tags and SHAs stay fixed until consumers pass --ref, and that moving the branch never changes an app until it updates its pin. Notes that local and private registries are not supported.",
       "files": [],
       "expectations": [
         "Tests through a pushed branch in a scratch vanilla app, using a prefix different from the authoring word.",
         "Uses add --dry-run before a real add, and registry update plus add --overwrite to iterate.",
+        "Re-tests after a theme or token change by overwriting theme along with the component, or recreating the scratch app.",
         "Recommends a stable branch advanced only after testing and explains branch versus tag or SHA pins.",
         "States that local and private registries are not supported."
       ]
@@ -77,13 +85,16 @@
     {
       "id": 7,
       "prompt": "Review this template from our registry before we publish it:\n\n```dart\nimport 'package:flutter/material.dart';\nimport 'package:mix/mix.dart';\nimport 'package:remix/remix.dart';\n\n/// Implements the Acme brand guide v2.\n@MixWidget(target: RemixBadge.new)\nBoxStyler {{typePrefix}}BadgeStyle({ {{typePrefix}}BadgeTone tone = .neutral }) => BoxStyler().color(Colors.teal);\n```",
-      "expected_output": "Flags that templates should be derived from an analyzer-checked authoring package rather than hand-written; that package:flutter/material.dart and Colors must go (widgets layer only, token-based color); that package:mix must be reached through package:remix/remix.dart; that mix_annotations must be imported with a part directive for the generated file and a generated entry plus codegen constraints in the catalog; that the recipe must return the Remix widget's own styler type rather than BoxStyler; that the doc comment leaks the authoring word or brand name into consumer source; and that the enum parameter should be named variant (non-nullable) if named constructors are wanted. Styling should use theme tokens, not a hard-coded color.",
+      "expected_output": "Flags that templates should be derived from an analyzer-checked authoring package rather than hand-written; that package:flutter/material.dart and Colors must go (widgets layer only, token-based color); that package:mix must be reached through package:remix/remix.dart; that mix_annotations must be imported with a part directive for the generated file and a generated entry plus codegen constraints in the catalog; that the recipe must return the Remix widget's own styler type rather than BoxStyler; that the doc comment leaks the authoring word or brand name into consumer source; and that the enum parameter should be named variant (non-nullable) if named constructors are wanted. Styling should use theme tokens, not a hard-coded color. The recipe must also be named in lower camel with the value placeholder ({{valuePrefix}}BadgeStyle, so the widget is {{typePrefix}}Badge), and the tone enum it references is never declared.",
       "files": [],
       "expectations": [
         "Rejects the Material import and hard-coded Colors in favor of widgets-only code and theme tokens.",
-        "Requires reaching Mix through package:remix/remix.dart and adding mix_annotations with a part directive and generated catalog entry.",
+        "Requires reaching Mix through package:remix/remix.dart.",
+        "Requires mix_annotations, a part directive, and a generated catalog entry with codegen constraints.",
+        "Requires the recipe to return BadgeStyler, the styler RemixBadge takes, not BoxStyler.",
+        "Flags the recipe name: it must be the lower-camel {{valuePrefix}}BadgeStyle form.",
         "Flags the authoring word or brand name leaking through the doc comment.",
-        "Recommends deriving templates from an analyzed authoring package instead of hand-editing .tmpl files."
+        "Recommends fixing the analyzed authoring source and re-deriving instead of hand-editing the .tmpl file."
       ]
     },
     {
@@ -95,6 +106,52 @@
         "Routes single-application restyling of installed source to using-remix.",
         "Does not scaffold a registry repository, authoring package, or token pipeline.",
         "Does not rename or regenerate the installed component catalog."
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "Our design system lives in a Figma file — variables for colors and text styles, components laid out in frames. We have an API token. Build the token layer for our Remix registry from it.",
+      "expected_output": "Checks first whether a higher-tier source exists (a published tokens package or a variables export). Otherwise treats Figma as tier 2: pins the file version so harvests are reproducible, maps variables and styles to color and type tokens, reads spacing from frame layout values, and cites node links. Writes specs/tokens.yaml keyed by token id with specified or derived confidence, then hand-copies values into theme_data.dart and tests them against the YAML.",
+      "files": [],
+      "expectations": [
+        "Checks for a higher-tier published token source before harvesting Figma.",
+        "Pins the Figma file version for reproducible harvests.",
+        "Cites node links for harvested variables, styles, and spacing.",
+        "Writes specs/tokens.yaml and tests theme_data values against it."
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "Our company publishes an @acme Remix registry on GitHub. Register it in this Flutter app and use its button on the checkout screen.",
+      "expected_output": "Routes to using-remix: this is consuming a registry in one application, not authoring or publishing one. Does not scaffold a registry repository, authoring package, derivation script, or token pipeline.",
+      "files": [],
+      "expectations": [
+        "Routes consuming a published registry to using-remix.",
+        "Does not scaffold a registry repository, authoring package, or derivation script."
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "Carbon has a Breadcrumb component. Remix has no breadcrumb widget. Add it to our Carbon-on-Remix registry.",
+      "expected_output": "Writes the worksheet first, then composes existing Remix widgets and Mix primitives (RemixLink items separated by styled FlexBox/StyledText separators) in a facade in the target vocabulary, styled through tokens, rather than reaching for Material or a hand-rolled gesture stack. Uses Naked UI only for behavior Remix does not wrap, declaring naked_ui on the item, and treats @MixableSpec as a last resort that edits the consumer's build.yaml and must be recorded in the ADR. Adds the catalog item with any dependencies it imports.",
+      "files": [],
+      "expectations": [
+        "Writes the worksheet before code.",
+        "Composes existing Remix widgets and Mix primitives before considering Naked UI or @MixableSpec.",
+        "Declares any extra package the template imports on the catalog item.",
+        "Does not use Material widgets."
+      ]
+    },
+    {
+      "id": 12,
+      "prompt": "Add dark mode to our Remix design-system registry. Our select menus and dialogs render with light colors even when the app is dark.",
+      "expected_output": "Adds a dark constructor to the theme data with a value for every token (none left missing, or recipes throw), keeps the scope's theme/darkTheme/mode contract, and records dark values in specs/tokens.yaml per mode. Diagnoses the overlay problem as the theme's InheritedTheme.wrap rebuilding only itself: wrap must rebuild the MixScope too, because routes and overlays capture InheritedThemes only. Adds tests that render an overlay in dark mode.",
+      "files": [],
+      "expectations": [
+        "Adds dark values for every token and records them per mode in specs/tokens.yaml.",
+        "Keeps the theme, darkTheme, and mode scope contract.",
+        "Fixes InheritedTheme.wrap so it rebuilds the MixScope for routes and overlays.",
+        "Adds a test that renders an overlay in dark mode."
       ]
     }
   ]

@@ -75,6 +75,10 @@ have an export or API, vendors often publish a tokens package.
 
 ## 4. Where values land
 
+Key `specs/tokens.yaml` by token id without the value word: the token
+`ColorToken('acme.color.interactive-primary')` is `color.interactive-primary`.
+Mode-dependent tokens hold one entry per mode; the rest hold one value.
+
 ```yaml
 # specs/tokens.yaml
 sources:
@@ -83,37 +87,83 @@ sources:
     title: Brand Guidelines v2.3
     sha256: "…"
     retrieved: 2026-07-11
+  - id: tokens-package
+    type: npm
+    package: "@vendor/tokens"
+    version: "<exact version>"
+    integrity: "<lockfile integrity hash>"
 modes: [light, dark]
-color:
-  interactivePrimary:
+tokens:
+  color.interactive-primary:
     light: {value: "#0B5FFF", cite: "brandbook p.14", confidence: specified}
     dark: {value: "#4589FF", cite: "brandbook p.15", confidence: specified}
-  interactivePrimaryHover:
+  color.interactive-primary-hover:
     light: {status: missing-in-source}
-spacing:
-  step04: {value: 12, cite: "brandbook p.20", confidence: specified}
+    dark: {status: missing-in-source}
+  radius: {value: 4, cite: "brandbook p.20", confidence: specified}
 ```
 
 - **Tier 1 and 2** sources get a small extraction script that writes this
   file: exact pinned versions read from one manifest (never restated in the
   script), inventory-count assertions so upstream drift fails loudly, and
-  deterministic output (sorted keys, no timestamps or randomness).
+  deterministic output (sorted keys, no timestamps or randomness). Write it
+  in whatever runtime reads the source — Node for an npm tokens package — in
+  its own `tool/` directory with a committed lockfile. Only a source upgrade
+  runs it; everything else, including CI, reads the committed YAML.
 - **Tier 3, 4, and briefs** are authored into this file by hand; human review
   of it against the source is the extraction test.
 - **The Dart theme holds the values**: `theme_data.dart` constructors in the
-  shape of `references/components.md` §1. A test in the authoring package
-  reads `specs/tokens.yaml` (a `yaml` dev dependency) and asserts every entry
-  equals the corresponding `ThemeData` value per mode, and that every token
-  identity has an entry. Hand-copy while the inventory is small; when it runs
-  to hundreds of values (full palettes), generate the value file from the
-  YAML with a deterministic script that has a `--check` mode, like
-  derivation.
-- Normalize while writing: colors as `#RRGGBB` or `#AARRGGBB`, rem converted
-  once by a stated base, durations in milliseconds, curves as four numbers.
-  Parse both legacy and CSS Color 4 color syntax (`rgb(141 141 141 / 30%)`),
-  and reject NaN.
+  shape of `references/components.md` §1, hand-copied while the inventory is
+  small. When it runs to hundreds of values (full palettes), generate the
+  value file from the YAML with a deterministic script that has a `--check`
+  mode, like derivation.
+- Normalize while writing: colors as `#RRGGBB` (opaque) or `#AARRGGBB`, rem
+  converted once by a stated base, durations in milliseconds, curves as four
+  numbers. Parse both legacy and CSS Color 4 color syntax
+  (`rgb(141 141 141 / 30%)`), and reject NaN.
 - Keep provenance in `specs/`, not in shipped Dart comments: shipped source
   must not contain the authoring word (`references/registry.md` §3).
+
+A test in the authoring package keeps the two in step. It fails when a theme
+token has no entry or a value differs; add encoders as token types grow.
+
+```dart
+// source/test/tokens_test.dart (dev dependency: yaml)
+import 'dart:io';
+
+import 'package:design_source/theme/theme_data.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:yaml/yaml.dart';
+
+final spec =
+    (loadYaml(File('../specs/tokens.yaml').readAsStringSync()) as YamlMap)['tokens']
+        as YamlMap;
+
+/// A theme value in the notation specs/tokens.yaml uses.
+Object encode(Object value) => switch (value) {
+  Color c when c.a == 1.0 =>
+    '#${(c.toARGB32() & 0xFFFFFF).toRadixString(16).padLeft(6, '0').toUpperCase()}',
+  Color c => '#${c.toARGB32().toRadixString(16).padLeft(8, '0').toUpperCase()}',
+  Radius r => r.x,
+  _ => value,
+};
+
+void main() {
+  const modes = {'light': AcmeThemeData.light(), 'dark': AcmeThemeData.dark()};
+  for (final MapEntry(key: mode, value: theme) in modes.entries) {
+    test('$mode theme matches specs/tokens.yaml', () {
+      for (final MapEntry(key: token, value: value) in theme.tokens.entries) {
+        final id = token.name.substring('acme.'.length);
+        final entry = spec[id] as YamlMap?;
+        expect(entry, isNotNull, reason: '$id has no entry');
+        final expected = (entry![mode] as YamlMap? ?? entry)['value'];
+        expect(encode(value), expected, reason: '$mode $id');
+      }
+    });
+  }
+}
+```
 
 ## 5. Extraction modes
 

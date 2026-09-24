@@ -45,7 +45,10 @@ Author real, analyzed Dart and derive templates from it. Hand-written `.tmpl`
 files have no analyzer behind them, and their first compiler is a consumer's
 application.
 
-- `publish_to: none`, no version. Nothing depends on it.
+- `publish_to: none`, no version. Nothing depends on it. Name it without the
+  authoring word (for example `design_source`), and import between its
+  `lib/` files relatively: a `package:design_source/...` import would install
+  as a URI the consumer cannot resolve.
 - **Mirror the installed layout.** Consumers receive `@ui/theme/*.dart` and
   `@ui/components/*.dart`; author under `source/lib/theme/` and
   `source/lib/components/` so relative imports (`../theme/tokens.dart`)
@@ -62,34 +65,49 @@ application.
 
 ## 3. Authoring rules
 
-**One authoring word.** Pick a PascalCase word, for example `Acme`. Derivation
-replaces every `Acme` with `{{typePrefix}}` and every `acme` with
-`{{valuePrefix}}`, comments and strings included. A consumer initialized with
-`--prefix Ui` receives `UiButton`, `uiButtonStyle`, and token ids such as
-`'ui.color.primary'`. So the word must appear **only** at the start of an
-identifier or a token id:
+**One authoring word.** Pick a PascalCase word that is not part of any
+ordinary word or other identifier, for example `Acme`; its lower-camel form
+(`acme`) is the value word. Derivation replaces every `Acme` with
+`{{typePrefix}}` and every `acme` with `{{valuePrefix}}`, comments and strings
+included. A consumer initialized with `--prefix Shop` receives `ShopButton`,
+`shopButtonStyle`, and token ids such as `'shop.color.primary'`. So the word
+belongs only inside identifiers and at the start of quoted ids, never as a
+word of its own:
 
-| Source | Installed for `--prefix Ui` | OK? |
+| Source | Installed for `--prefix Shop` | OK? |
 | --- | --- | --- |
-| `class AcmeButton` | `class UiButton` | yes |
-| `ButtonStyler acmeButtonStyle(...)` | `ButtonStyler uiButtonStyle(...)` | yes |
-| `ColorToken('acme.color.primary')` | `ColorToken('ui.color.primary')` | yes |
-| `/// Follows the Acme brand guide.` | `/// Follows the Ui brand guide.` | **no** |
-| `// Generated from @acme/tokens 3.1.0` | `// Generated from @ui/tokens 3.1.0` | **no** |
-| file `acme_button.dart` | file name is not rendered | **no** |
+| `class AcmeButton` | `class ShopButton` | yes |
+| `ButtonStyler acmeButtonStyle(...)` | `ButtonStyler shopButtonStyle(...)` | yes |
+| `Color resolveAcmePalette()` | `Color resolveShopPalette()` | yes |
+| `/// Wraps [AcmeButton].` | `/// Wraps [ShopButton].` | yes |
+| `ColorToken('acme.color.primary')`, `ValueKey('acme-row')` | `'shop.color.primary'`, `'shop-row'` | yes |
+| `/// Follows the Acme brand guide.` | `/// Follows the Shop brand guide.` | **no** |
+| `// Generated from @acme/tokens 3.1.0` | `// Generated from @shop/tokens 3.1.0` | **no** |
+| `const title = 'ACME';` | not replaced; ships as written | **no** |
+| file `acme_button.dart` or `AcmeButton.dart` | file names are not rendered | **no** |
 
 Write prose as "this design system"; keep upstream package names and
 provenance out of shipped source (they belong in `specs/` and the ADR).
 
-**Imports.** Templates may import only:
+**Imports.** Templates may import:
 
-- `package:flutter/widgets.dart` (and `foundation.dart`/`services.dart`) —
-  never Material or Cupertino;
-- `package:remix/remix.dart`, which re-exports Mix — never `package:mix` or
-  `package:naked_ui` directly, since consumers do not declare them;
+- widgets-layer Flutter (`widgets.dart`, `foundation.dart`, `services.dart`)
+  — never Material or Cupertino, which consumers may not have as ancestors;
+- `package:remix/remix.dart`, which re-exports Mix — never `package:mix`
+  directly;
 - `package:mix_annotations/mix_annotations.dart` in files with a generated
   part;
+- any other package the item declares under `dependencies`, as the official
+  Vanilla catalog does for `remix_ui_icons` and `mix_chart` (declare
+  `naked_ui` with the constraint `remix` uses when a component needs behavior
+  Remix does not wrap);
 - relative imports of files the same item or its dependencies install.
+
+**Fonts, icons, and assets.** The CLI writes Dart files into the UI folder
+and adds package dependencies; it cannot add `fonts:` or `assets:` to a
+consumer's pubspec. Ship icons and fonts as a pub package an item declares
+(Vanilla's `icons` item declares `remix_ui_icons`), or document the
+consumer's pubspec step in the README. Record the choice in the ADR.
 
 **No literal `{{`** anywhere in source; the CLI rejects any placeholder other
 than the two it renders.
@@ -104,8 +122,9 @@ itself a finding.
 A short script owned by the repository. Its contract:
 
 - Walks `source/lib`, skipping `.g.dart` files.
-- Rejects the authoring word in a file path, a literal `{{`, and any
-  occurrence of the word that does not start an identifier or a token id.
+- Rejects the word (any case) in a file path, a literal `{{`, the word
+  standing on its own (the "no" rows above), and any other spelling such as
+  `ACME` that substitution would leave behind.
 - Writes `registry/vanilla/templates/<same relative path>.tmpl`, deleting
   templates whose source is gone.
 - `--check` compares instead of writing and fails on any missing, changed, or
@@ -121,9 +140,15 @@ const valueWord = 'acme';
 const sourceRoot = 'source/lib';
 const templateRoot = 'registry/vanilla/templates';
 
-// The word may only start an identifier (AcmeButton, acmeButtonStyle) or a
-// token id ('acme.color.primary'); anywhere else it becomes the prefix.
-final leak = RegExp('(?<![A-Za-z0-9_])(?:$typeWord|$valueWord)(?![A-Z.])');
+// A leak is the word standing on its own instead of inside an identifier
+// (AcmeButton, resolveAcmePalette, acmeButtonStyle) or opening a quoted id
+// ('acme.color.primary', 'acme-row').
+final leak = RegExp(
+  '(?<![A-Za-z0-9_])$typeWord(?![A-Z0-9_])'
+  "|(?<![A-Za-z0-9_'\"])$valueWord(?![A-Z0-9_])"
+  "|(?<=['\"])$valueWord(?![A-Z0-9_.-])",
+);
+final anySpelling = RegExp(typeWord, caseSensitive: false);
 
 void main(List<String> args) {
   final expected = <String, String>{};
@@ -134,13 +159,20 @@ void main(List<String> args) {
   for (final file in sources) {
     final relative = file.path.substring(sourceRoot.length + 1);
     final source = file.readAsStringSync();
-    final hit = leak.firstMatch(source);
-    if (relative.contains(valueWord) || source.contains('{{') || hit != null) {
-      throw StateError('$relative: authoring word or "{{" at ${hit?.start}');
-    }
-    expected['$templateRoot/$relative.tmpl'] = source
+    final template = source
         .replaceAll(typeWord, '{{typePrefix}}')
         .replaceAll(valueWord, '{{valuePrefix}}');
+    final problem = anySpelling.hasMatch(relative)
+        ? 'authoring word in the file path'
+        : source.contains('{{')
+        ? 'literal "{{"'
+        : leak.hasMatch(source)
+        ? 'authoring word at offset ${leak.firstMatch(source)!.start}'
+        : anySpelling.hasMatch(template)
+        ? 'another spelling of the authoring word'
+        : null;
+    if (problem != null) throw StateError('$relative: $problem');
+    expected['$templateRoot/$relative.tmpl'] = template;
   }
 
   final root = Directory(templateRoot);
@@ -247,7 +279,8 @@ Item design rules:
 
 The CLI reads registries from GitHub only. Test every catalog or template
 change from a pushed branch in a scratch application initialized with the
-`vanilla` preset (the CLI requires Flutter 3.44 or newer):
+`vanilla` preset (the CLI stops with its minimum Flutter version if the
+installed one is older):
 
 ```shell
 flutter create --empty scratch && cd scratch
@@ -269,8 +302,13 @@ Iterate by pushing to the same branch, then:
 
 ```shell
 dart run remix_cli:remix registry update @acme
-dart run remix_cli:remix add @acme/button --overwrite
+dart run remix_cli:remix add @acme/theme @acme/button --overwrite
 ```
+
+`--overwrite` rewrites only the items you name; installed dependencies are
+kept exactly as they are. Name every item the change touched — `theme` after
+any token change — or recreate the scratch app, otherwise the check runs
+against stale source.
 
 Use a prefix other than your authoring word in the scratch app; that is what
 exposes a leaked word.

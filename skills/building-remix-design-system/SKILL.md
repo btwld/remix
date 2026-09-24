@@ -1,18 +1,16 @@
 ---
 name: building-remix-design-system
 description: >-
-  Use this skill when the user wants to build, port, or scaffold a reusable
-  design system on Remix (Mix + Naked UI) and distribute it to applications
-  through a Remix registry — for example implementing Material, Polaris,
-  Fluent, Carbon, or a company brand as installable `remix_cli` source. Also
-  trigger for authoring or publishing a Remix registry repository
-  (`registry/index.yaml`, `registry.yaml` catalogs, `.dart.tmpl` templates,
-  `{{typePrefix}}` placeholders, `remix registry add @namespace`), for
-  extracting or designing tokens for such a system, and for writing its theme
-  item or component recipes. Sources can be token packages, Figma files,
-  documentation, PDFs, screenshots, or only a written brand brief. Do not
-  trigger for restyling one application's already-installed Remix source;
-  use `using-remix` for that.
+  Builds reusable design systems on Remix (Mix + Naked UI) and publishes them
+  as Remix registries that applications install with `remix_cli`: registry
+  repository scaffolding, `index.yaml` and `registry.yaml` catalogs,
+  `.dart.tmpl` derivation with `{{typePrefix}}`/`{{valuePrefix}}`, cited token
+  extraction, the theme item, and `@MixWidget` component recipes. Use when
+  porting Material, Polaris, Fluent, Carbon, or a brand to Remix as
+  installable source (even if one app consumes it first), from token
+  packages, Figma, docs, PDFs, screenshots, or a brief; or when authoring,
+  reviewing, or publishing a Remix registry. Not for consuming a registry or
+  restyling installed Remix source inside one application; use `using-remix`.
 ---
 
 # Building a Design System Registry on Remix
@@ -64,13 +62,15 @@ them at publish time. Three names are easy to confuse:
 | --- | --- | --- | --- |
 | Preset | fixed by the official registry | `vanilla`, `fortal` | the design language a project selects once at `remix init` |
 | Namespace | the consumer, at `registry add` | `@acme` | how a project refers to your registry |
-| Prefix | the consumer, at `remix init` | `Acme` | the word rendered into every installed name (`AcmeButton`) |
+| Prefix | the consumer, at `remix init` | `Shop` | the word rendered into every installed name (`ShopButton`) |
+| Authoring word | you, once | `Acme` (value form `acme`) | the word your source uses where the prefix goes; derivation turns it into the placeholders |
 
 - **Publish under the `vanilla` preset.** A project selects one preset at
   `remix init`, and every registry it registers must offer that preset. A
   third-party registry cannot introduce a new preset such as `acme`.
-  `vanilla` is the default preset; a project initialized with `fortal` cannot
-  register your registry. Your namespace, not the preset, identifies your
+  `vanilla` is the default preset. Do not also map `fortal`: a Fortal project
+  that already installed Fortal items owns `@ui/theme/*`, and your theme item
+  would collide with those files. Your namespace, not the preset, identifies your
   system. Recommend a namespace and a prefix in your README (for example
   `@acme` and `--prefix Acme`).
 - **Make the registry self-contained.** Ship your own `theme` item and depend
@@ -88,7 +88,7 @@ them at publish time. Three names are easy to confuse:
 
 ## Workflow
 
-Work through the phases in order. Each ends with something verifiable.
+Work through the phases in order; each ends with a check.
 
 ### Phase 0 — Sources and decisions
 
@@ -106,14 +106,17 @@ Work through the phases in order. Each ends with something verifiable.
    vocabulary. When designing from a brief, pick one deliberately and record
    why.
 
+Done when the ADR exists and every token domain has a tier and a pinned
+source.
+
 ### Phase 1 — Registry repository
 
 Scaffold the repository described in `references/registry.md`: an
 analyzer-checked authoring package that mirrors the installed layout, a
 derivation script that turns it into `registry/vanilla/templates/`, and the
 `index.yaml` and `registry.yaml` catalog. Choose the authoring word (for
-example `Acme`) now; it must appear nowhere in authored source except as the
-prefix.
+example `Acme`) now; it may appear only inside identifiers and at the start of
+token ids (`references/registry.md` §3).
 
 Done when the empty theme item derives, `--check` passes, and the catalog
 validates in a scratch application.
@@ -126,9 +129,12 @@ mode with value equality, and a scope taking `theme`, `darkTheme`, and `mode`.
 Record every value's source in `specs/tokens.yaml` and test the Dart values
 against it (`references/tokens.md` §4).
 
+Done when the theme renders in every mode and the token test passes.
+
 ### Phase 3 — Components
 
-Per component, in `references/components.md` order:
+Per component — display components first, then buttons and inputs, overlays
+last (they depend on `wrap` carrying the scope):
 
 1. Write the worksheet `specs/components/<component>.yaml` first: anatomy,
    variants, sizes, states, consumed tokens, sourced measurements, behavior,
@@ -140,12 +146,14 @@ Per component, in `references/components.md` order:
 3. Add widget tests in the authoring package, derive, and add the catalog
    item with its `generated` part and package constraints.
 
+Done when the component's tests pass and `--check` is clean.
+
 ### Phase 4 — Publish and verify
 
 Push a working branch, register it from a scratch application initialized
 with the `vanilla` preset, and install every item (`references/registry.md`
-§6). Advance the branch consumers follow only after that application builds
-and its tests pass.
+§6). Advance the branch consumers follow only after that application builds,
+analyzes clean, and renders every component.
 
 ## Definition of done (per release)
 
@@ -166,24 +174,26 @@ and its tests pass.
 
 Each is explained where it applies.
 
-1. Publishing a new preset name, or depending on `@remix/*` items — both break
-   consumers (constraints above).
-2. The authoring word leaking into prose, provenance headers, or file names —
-   it becomes the consumer's prefix (`references/registry.md` §3).
-3. Importing `package:mix` or Material in a template — reach Mix through
+1. The authoring word standing on its own in prose, provenance, or a file
+   name — it becomes the consumer's prefix (`references/registry.md` §3).
+2. Importing `package:mix` or Material in a template — reach Mix through
    `package:remix/remix.dart` and use only widgets-layer Flutter
    (`references/registry.md` §3).
-4. Loading is Remix's disabled state; a recipe `bool loading` shared with the
+3. Re-testing with `add <item> --overwrite` after a theme change — installed
+   dependencies are not refreshed (`references/registry.md` §6).
+4. A token without a value in the active theme — recipes throw when they
+   resolve it (`references/components.md` §1).
+5. Loading is Remix's disabled state; a recipe `bool loading` shared with the
    target keeps both in step (`references/components.md` §3).
-5. Enum values or widget names borrowed from Vanilla or Fortal instead of the
+6. Enum values or widget names borrowed from Vanilla or Fortal instead of the
    target system's vocabulary (`references/components.md` §2).
-6. Focus rings drawn with a border shift layout (`references/components.md` §3).
-7. `token().withValues(...)` accumulates through merges; use a `ContextToken`
+7. Focus rings drawn with a border shift layout (`references/components.md` §3).
+8. `token().withValues(...)` accumulates through merges; use a `ContextToken`
    (`references/components.md` §3).
-8. `InheritedTheme.wrap` must rebuild the `MixScope`, or overlays lose tokens
+9. `InheritedTheme.wrap` must rebuild the `MixScope`, or overlays lose tokens
    (`references/components.md` §1).
-9. Invented values for tokens the source does not define
-   (`references/tokens.md` §2).
+10. Invented values for tokens the source does not define
+    (`references/tokens.md` §2).
 
 ## References
 
