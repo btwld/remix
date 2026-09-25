@@ -34,24 +34,29 @@ class _ScrollbarExampleState extends State<ScrollbarExample> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 240,
-      width: 280,
-      child: NakedScrollbar(
-        thumbVisibility: true,
-        thickness: const WidgetStatePropertyAll(8),
-        radius: const Radius.circular(8),
-        thumbColor: WidgetStateProperty.resolveWith((states) {
-          if (states.contains(WidgetState.dragged)) return Colors.blue.shade700;
-          if (states.contains(WidgetState.hovered)) return Colors.blue;
-          return Colors.blue.shade200;
-        }),
-        child: ListView.builder(
-          controller: _controller,
-          itemCount: 30,
-          itemBuilder: (context, index) => Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-            child: Text('Row $index'),
+    return PrimaryScrollController(
+      controller: _controller,
+      child: SizedBox(
+        height: 240,
+        width: 280,
+        child: NakedScrollbar(
+          thumbVisibility: true,
+          thickness: const WidgetStatePropertyAll(8),
+          radius: const Radius.circular(8),
+          thumbColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.dragged)) {
+              return Colors.blue.shade700;
+            }
+            if (states.contains(WidgetState.hovered)) return Colors.blue;
+            return Colors.blue.shade200;
+          }),
+          child: ListView.builder(
+            primary: true,
+            itemCount: 30,
+            itemBuilder: (context, index) => Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              child: Text('Row $index'),
+            ),
           ),
         ),
       ),
