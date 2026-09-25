@@ -28,6 +28,7 @@ The complete documentation covers detailed component APIs and examples, guides a
 - NakedAccordion — expandable/collapsible sections
 - NakedDisclosure — standalone show/hide button and panel
 - NakedMenu — anchored menu with checkbox/radio items + recursive submenus
+- NakedMenubar — menu bar that closes sibling menus and moves with the arrow keys
 - NakedDialog — normal and alert dialog semantics + modal focus trap
 - NakedTooltip — controlled, hoverable, collision-aware tooltip
 - NakedPopover — anchored, dismissible overlay with optional separate anchor
