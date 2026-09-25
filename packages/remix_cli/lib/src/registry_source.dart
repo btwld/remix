@@ -91,6 +91,10 @@ Future<RegistryResponse> _send(HttpClient client, Uri uri) async {
     'Accept',
     uri.host == 'api.github.com' ? 'application/vnd.github+json' : 'text/plain',
   );
+  final token = Platform.environment['GITHUB_TOKEN'];
+  if (uri.host == 'api.github.com' && token != null && token.isNotEmpty) {
+    request.headers.set('Authorization', 'Bearer $token');
+  }
   final response = await request.close();
   return RegistryResponse(
     response.statusCode,

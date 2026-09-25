@@ -35,6 +35,11 @@ Validate against hosted runtimes, without checkout substitution:
 fvm dart run melos run open-code:release:check
 ```
 
+The hosted consumer checks make many fresh GitHub API requests. In Actions,
+pass the job's read-only `GITHUB_TOKEN` to these checks so the public API's
+unauthenticated rate limit cannot cut a passing run short. The CLI sends it
+only to `api.github.com`; normal public-registry use does not require a token.
+
 ## Publish the registry before the GitHub-first CLI
 
 Merge the reviewed commit to `main`. **Promote registry** validates

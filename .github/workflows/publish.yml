@@ -61,6 +61,7 @@ jobs:
       - name: Verify both official presets from the published registry with hosted Remix
         env:
           REMIX_REGISTRY_RELEASE_SMOKE: '1'
+          GITHUB_TOKEN: ${{ github.token }}
         run: dart run melos run open-code:release:check
 
   publish-remix:
