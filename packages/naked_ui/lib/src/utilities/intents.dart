@@ -30,6 +30,9 @@ class NakedIntentActions {
   /// Intent bindings for menu dismissal and navigation.
   static const _MenuIntentActions menu = _MenuIntentActions();
 
+  /// Intent bindings for menu-bar traversal.
+  static const _MenubarIntentActions menubar = _MenubarIntentActions();
+
   /// Intent bindings for select dismissal and navigation.
   static const _SelectIntentActions select = _SelectIntentActions();
 
@@ -171,6 +174,95 @@ class _MenuIntentActions {
 
     return map;
   }
+}
+
+// Intent helpers for menu bars
+
+class _MenubarIntentActions {
+  const _MenubarIntentActions();
+
+  /// Left/right (direction-aware) move between bar triggers.
+  Map<ShortcutActivator, Intent> traversalShortcuts(TextDirection direction) {
+    final nextKey = direction == TextDirection.ltr
+        ? LogicalKeyboardKey.arrowRight
+        : LogicalKeyboardKey.arrowLeft;
+    final previousKey = direction == TextDirection.ltr
+        ? LogicalKeyboardKey.arrowLeft
+        : LogicalKeyboardKey.arrowRight;
+
+    return <ShortcutActivator, Intent>{
+      SingleActivator(nextKey): _MenubarNextIntent(),
+      SingleActivator(previousKey): _MenubarPreviousIntent(),
+    };
+  }
+
+  /// Bar traversal plus Home/End. Overlay panels use [traversalShortcuts] so
+  /// Home/End still move inside the open menu.
+  Map<ShortcutActivator, Intent> barShortcuts(TextDirection direction) {
+    return <ShortcutActivator, Intent>{
+      ...traversalShortcuts(direction),
+      SingleActivator(LogicalKeyboardKey.home): _FirstFocusIntent(),
+      SingleActivator(LogicalKeyboardKey.end): _LastFocusIntent(),
+    };
+  }
+
+  /// Up/Down on a bar trigger opens that menu.
+  Map<ShortcutActivator, Intent> get triggerShortcuts =>
+      <ShortcutActivator, Intent>{
+        SingleActivator(LogicalKeyboardKey.arrowDown): _OpenOverlayIntent(),
+        SingleActivator(LogicalKeyboardKey.arrowUp): _OpenOverlayIntent(),
+      };
+
+  /// Actions for [traversalShortcuts].
+  Map<Type, Action<Intent>> traversalActions({
+    required VoidCallback onNext,
+    required VoidCallback onPrevious,
+  }) {
+    return <Type, Action<Intent>>{
+      _MenubarNextIntent: CallbackAction<_MenubarNextIntent>(
+        onInvoke: (_) => onNext(),
+      ),
+      _MenubarPreviousIntent: CallbackAction<_MenubarPreviousIntent>(
+        onInvoke: (_) => onPrevious(),
+      ),
+    };
+  }
+
+  /// Actions for [barShortcuts].
+  Map<Type, Action<Intent>> barActions({
+    required VoidCallback onNext,
+    required VoidCallback onPrevious,
+    required VoidCallback onFirst,
+    required VoidCallback onLast,
+  }) {
+    return <Type, Action<Intent>>{
+      ...traversalActions(onNext: onNext, onPrevious: onPrevious),
+      _FirstFocusIntent: CallbackAction<_FirstFocusIntent>(
+        onInvoke: (_) => onFirst(),
+      ),
+      _LastFocusIntent: CallbackAction<_LastFocusIntent>(
+        onInvoke: (_) => onLast(),
+      ),
+    };
+  }
+
+  Map<Type, Action<Intent>> triggerActions({required VoidCallback onOpen}) {
+    return <Type, Action<Intent>>{
+      _OpenOverlayIntent: CallbackAction<_OpenOverlayIntent>(
+        onInvoke: (_) => onOpen(),
+      ),
+    };
+  }
+}
+
+/// Intent: move to the next menu-bar trigger.
+class _MenubarNextIntent extends Intent {
+  const _MenubarNextIntent();
+}
+
+/// Intent: move to the previous menu-bar trigger.
+class _MenubarPreviousIntent extends Intent {
+  const _MenubarPreviousIntent();
 }
 
 // Intent helpers for select and combobox widgets
