@@ -1,0 +1,564 @@
+{
+  "schemaVersion": 1,
+  "family": "Vector UI",
+  "pack": "technical",
+  "nameStatus": "working-name",
+  "version": "0.1.0-technical-pilot",
+  "status": "calibration-pilot-not-public",
+  "counts": {
+    "icons": 12,
+    "drawings": 72
+  },
+  "packs": {
+    "technical": {
+      "available": true,
+      "nativeSizes": [
+        12,
+        16,
+        24
+      ],
+      "status": "calibration-pilot"
+    },
+    "angular": {
+      "available": false,
+      "status": "not-in-this-pilot-package",
+      "note": "Angular remains in design/icons/angular; this package does not re-export or edit it."
+    },
+    "rounded": {
+      "available": false,
+      "status": "not-drawn"
+    },
+    "soft": {
+      "available": false,
+      "status": "not-drawn"
+    }
+  },
+  "releaseApproval": {
+    "owner": null,
+    "designReviewer": null,
+    "publicReleaseApproved": false,
+    "promotedToPublicCatalog": false
+  },
+  "icons": [
+    {
+      "id": "home",
+      "label": "Home",
+      "category": "navigation",
+      "pairModel": "silhouette",
+      "meaning": "Home or top-level destination. Do not substitute for Back.",
+      "keywords": [
+        "dashboard",
+        "main"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Overview",
+      "availability": {
+        "technical": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-technical-construction",
+        "source": "source/icons.py",
+        "externalArtworkUsed": false,
+        "angularGeometryCopied": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Calibration drawing. Independent design approval is not implied.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "search",
+      "label": "Search",
+      "category": "navigation",
+      "pairModel": "weight",
+      "meaning": "Find content. A heavier lens still has an open center.",
+      "keywords": [
+        "find",
+        "lookup"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Search workspace",
+      "availability": {
+        "technical": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-technical-construction",
+        "source": "source/icons.py",
+        "externalArtworkUsed": false,
+        "angularGeometryCopied": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Calibration drawing. Independent design approval is not implied.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "plus",
+      "label": "Plus",
+      "category": "actions",
+      "pairModel": "weight",
+      "meaning": "Add or create. Distinct from expand and zoom-in.",
+      "keywords": [
+        "add",
+        "new",
+        "create"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Create item",
+      "availability": {
+        "technical": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-technical-construction",
+        "source": "source/icons.py",
+        "externalArtworkUsed": false,
+        "angularGeometryCopied": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Calibration drawing. Independent design approval is not implied.",
+        "exceptions": [
+          "plus-12-outline-centered-odd-width"
+        ],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "arrow-right",
+      "label": "Arrow right",
+      "category": "navigation",
+      "pairModel": "weight",
+      "meaning": "A literal right arrow. Navigation direction must be chosen by the application.",
+      "keywords": [
+        "next",
+        "forward"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Next step",
+      "availability": {
+        "technical": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-technical-construction",
+        "source": "source/icons.py",
+        "externalArtworkUsed": false,
+        "angularGeometryCopied": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Calibration drawing. Independent design approval is not implied.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "user",
+      "label": "User",
+      "category": "people-communication",
+      "pairModel": "silhouette",
+      "meaning": "A person or profile.",
+      "keywords": [
+        "person",
+        "account"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Your profile",
+      "availability": {
+        "technical": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-technical-construction",
+        "source": "source/icons.py",
+        "externalArtworkUsed": false,
+        "angularGeometryCopied": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Calibration drawing. Independent design approval is not implied.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "file",
+      "label": "File",
+      "category": "content",
+      "pairModel": "silhouette",
+      "meaning": "A document. Not a duplicate action.",
+      "keywords": [
+        "document",
+        "page"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Read document",
+      "availability": {
+        "technical": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-technical-construction",
+        "source": "source/icons.py",
+        "externalArtworkUsed": false,
+        "angularGeometryCopied": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Calibration drawing. Independent design approval is not implied.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "calendar",
+      "label": "Calendar",
+      "category": "content",
+      "pairModel": "silhouette",
+      "meaning": "A date or calendar.",
+      "keywords": [
+        "date",
+        "schedule"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Choose date",
+      "availability": {
+        "technical": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-technical-construction",
+        "source": "source/icons.py",
+        "externalArtworkUsed": false,
+        "angularGeometryCopied": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Calibration drawing. Independent design approval is not implied.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "sliders",
+      "label": "Sliders",
+      "category": "actions",
+      "pairModel": "silhouette",
+      "meaning": "Adjust parameters. Not a funnel filter or gear glyph.",
+      "keywords": [
+        "settings",
+        "adjust",
+        "controls"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Adjust view",
+      "availability": {
+        "technical": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-technical-construction",
+        "source": "source/icons.py",
+        "externalArtworkUsed": false,
+        "angularGeometryCopied": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Calibration drawing. Independent design approval is not implied.",
+        "exceptions": [
+          "sliders-chamfer-12",
+          "sliders-chamfer-16",
+          "sliders-chamfer-24"
+        ],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "warning",
+      "label": "Warning",
+      "category": "status-security",
+      "pairModel": "silhouette",
+      "meaning": "A warning requiring a visible text label in every supported appearance and native size.",
+      "keywords": [
+        "caution",
+        "attention"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Needs attention",
+      "availability": {
+        "technical": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-technical-construction",
+        "source": "source/icons.py",
+        "externalArtworkUsed": false,
+        "angularGeometryCopied": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Calibration drawing. Independent design approval is not implied.",
+        "exceptions": [
+          "warning-gap-16",
+          "warning-gap-24"
+        ],
+        "usage": "Visible text label required for outline and filled Warning at 12 / 16 / 24 px, including scaled uses of those masters.",
+        "usageRestriction": "warning-visible-label"
+      }
+    },
+    {
+      "id": "link",
+      "label": "Link",
+      "category": "content",
+      "pairModel": "weight",
+      "meaning": "A link or related resource. Not external navigation by itself.",
+      "keywords": [
+        "url",
+        "chain"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Copy link",
+      "availability": {
+        "technical": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-technical-construction",
+        "source": "source/icons.py",
+        "externalArtworkUsed": false,
+        "angularGeometryCopied": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Calibration drawing. Independent design approval is not implied.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "branch",
+      "label": "Branch",
+      "category": "system-data",
+      "pairModel": "silhouette",
+      "meaning": "A branching relationship. Use a visible label, especially at 12 px.",
+      "keywords": [
+        "workflow",
+        "fork"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Workflow branch",
+      "availability": {
+        "technical": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-technical-construction",
+        "source": "source/icons.py",
+        "externalArtworkUsed": false,
+        "angularGeometryCopied": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Calibration drawing. Independent design approval is not implied.",
+        "exceptions": [
+          "branch-chamfer-12",
+          "branch-chamfer-16",
+          "branch-chamfer-24"
+        ],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    },
+    {
+      "id": "star",
+      "label": "Star",
+      "category": "content",
+      "pairModel": "silhouette",
+      "meaning": "Favorite or rating, with context. Distinct from Focus.",
+      "keywords": [
+        "favorite",
+        "rating"
+      ],
+      "aliases": [],
+      "rtlPolicy": "literal-no-automatic-mirroring",
+      "example": "Favorite",
+      "availability": {
+        "technical": {
+          "appearances": [
+            "outline",
+            "filled"
+          ],
+          "opticalSizes": [
+            12,
+            16,
+            24
+          ]
+        }
+      },
+      "provenance": {
+        "method": "original-technical-construction",
+        "source": "source/icons.py",
+        "externalArtworkUsed": false,
+        "angularGeometryCopied": false
+      },
+      "review": {
+        "technical": "checked-by-build-and-validation",
+        "optical": "pilot-local-review",
+        "recognition": "not-user-tested",
+        "independentApproval": "pending",
+        "note": "Calibration drawing. Independent design approval is not implied.",
+        "exceptions": [],
+        "usage": "Use the action name on the enclosing control; 12 px is for labeled information."
+      }
+    }
+  ]
+}
