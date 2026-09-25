@@ -11,13 +11,13 @@ import 'package:flutter/gestures.dart';
 // but we intentionally *opt in* to OS-adaptive selection/magnifier.
 import 'package:flutter/material.dart'
     show
-        TextMagnifier,
         materialTextSelectionHandleControls,
         desktopTextSelectionHandleControls;
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 import 'mixins/naked_mixins.dart';
+import 'naked_text_magnifier.dart';
 import 'utilities/naked_state_scope.dart';
 import 'utilities/state.dart';
 
@@ -797,7 +797,7 @@ class _NakedTextFieldState extends State<NakedTextField>
 
     final TextMagnifierConfiguration magnifier =
         widget.magnifierConfiguration ??
-        TextMagnifier.adaptiveMagnifierConfiguration;
+        NakedTextMagnifier.adaptiveConfiguration();
 
     Widget editable = Builder(
       builder: (context) {

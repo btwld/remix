@@ -9,6 +9,10 @@
   siblings, switch on hover while one is open, and move with the arrow keys.
 - Add `NakedScrollbar` on `RawScrollbar`, with thumb and track colors resolved
   from hovered and dragged states.
+- Add `NakedTextMagnifier` on `RawMagnifier`. `NakedTextField` now uses it on
+  touch platforms instead of Material's `TextMagnifier`. Pass
+  `magnifierConfiguration` to keep the previous Material or Cupertino lens.
+  Selection handles still come from Material and Cupertino.
 
 ### Docs
 
