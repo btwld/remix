@@ -18,12 +18,11 @@ handling, focus management, accessibility semantics, and the loading/disabled
 interaction rules. The installed file only decides what things look like.
 
 <Info>
-`remix_cli` has not been published. The hosted installation commands below
-apply after its first release. Until then, use the checkout installation
-described in the CLI README. The CLI has its own version and release schedule.
-The standalone Carbon registry's `stable` ref has not yet been promoted, so
-its bare `--preset carbon` command is not available to consumers yet. Fortal
-preset does not add a `remix_fortal` dependency.
+The hosted installation commands below require `remix_cli 0.0.1-beta.1` on
+pub.dev. Until it is available, use the checkout installation described in
+the CLI README. The CLI has its own version and release schedule. Bare
+`--preset carbon` additionally requires the standalone Carbon registry's
+`stable` ref to be promoted. Fortal does not add a `remix_fortal` dependency.
 </Info>
 
 ## Choose a preset
@@ -64,7 +63,7 @@ Add the CLI as a project-local dev dependency so its version is pinned in your
 lockfile, not in a machine-global install:
 
 ```bash
-flutter pub add dev:remix_cli
+flutter pub add "dev:remix_cli@0.0.1-beta.1"
 ```
 
 ## Running the CLI
@@ -76,7 +75,7 @@ The command is called `remix`. How you reach it depends on how it is installed:
 dart run remix_cli:remix <command>
 
 # Global install
-dart pub global activate remix_cli
+dart pub global activate remix_cli 0.0.1-beta.1
 remix <command>
 ```
 

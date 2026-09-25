@@ -67,7 +67,7 @@ A project-local development dependency is preferred because the app's lockfile
 pins the CLI version; `remix.yaml` separately pins registry content:
 
 ```shell
-flutter pub add dev:remix_cli
+flutter pub add "dev:remix_cli@0.0.1-beta.1"
 dart run remix_cli:remix init --prefix Acme --preset fortal
 dart run remix_cli:remix add button
 ```
