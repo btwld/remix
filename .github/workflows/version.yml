@@ -152,7 +152,7 @@ jobs:
             echo
             echo "### CI on this branch"
             echo
-            echo 'CI installs both presets against checkout Remix.'
+            echo 'CI installs both official presets against checkout Remix.'
             echo 'Merging starts **Promote registry**. If this Remix version'
             echo 'is not on pub.dev yet, that run fails and `registry-stable`'
             echo 'does not move. After pub.dev serves step 1, run'

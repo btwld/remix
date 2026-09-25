@@ -203,7 +203,7 @@ starting point instead of authoring every style yourself, initialize the
 application-owned Fortal preset:
 
 ```bash
-flutter pub add dev:remix_cli
+flutter pub add "dev:remix_cli@0.0.1-beta.1"
 dart run remix_cli:remix init --prefix Fortal --preset fortal
 dart run remix_cli:remix add button
 ```

@@ -85,7 +85,7 @@ melos:
         build_runner: ^2.10.1
         meta: ^1.18.0
         mix_generator: ^2.2.0-beta.3
-        remix_cli: ^0.1.0
+        remix_cli: ^0.0.1-beta.1
         test: ^1.31.0
 
   scripts:
@@ -156,13 +156,13 @@ melos:
         - dart run tool/check_open_code.dart --preset fortal --source checkout --item dashboard_demo
         - dart run tool/check_open_code.dart --source checkout
         - dart run tool/check_open_code.dart --preset fortal --source checkout
-      description: Install every item from both presets against the Remix checkout
+      description: Install every official preset item against the Remix checkout
 
     open-code:release:check:
       steps:
         - dart run tool/check_open_code.dart --source hosted
         - dart run tool/check_open_code.dart --preset fortal --source hosted
-      description: Verify both presets against the required published Remix release
+      description: Verify both official presets against the required published Remix release
 
     open-code:registry:build:
       run: dart run tool/build_registry.dart
@@ -221,9 +221,8 @@ melos:
     # tool/check_ci_coverage.dart fails when the two drift, and runs inside
     # `ci:checks` so it cannot be forgotten.
     #
-    # Group by cost, not by theme. The two open-code presets are separate steps
-    # purely because they are ~5 minutes each and independent, and together
-    # they were half the old wall clock.
+    # Group by cost, not by theme. The two official open-code presets are separate
+    # steps because they are slow and independent.
     ci:
       steps:
         - ci:checks
