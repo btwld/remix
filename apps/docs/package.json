@@ -1,5 +1,5 @@
 {
-  "name": "@conceptadev/remix-docs",
+  "name": "@btwld/remix-docs",
   "private": true,
   "type": "module",
   "packageManager": "pnpm@11.5.3",

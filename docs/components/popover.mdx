@@ -93,7 +93,9 @@ callback to complete the state change.
 that side, and can apply an additional offset.
 
 ```dart
-const OverlayPositionConfig(
+import 'package:remix/remix.dart';
+
+const positioning = OverlayPositionConfig(
   side: OverlaySide.top,
   alignment: OverlayAlignment.end,
   sideOffset: 8,

@@ -67,8 +67,8 @@ class _PlaygroundTranscriptState extends State<PlaygroundTranscript> {
 
   /// Publishes this surface's focus to the styles resolved above it.
   ///
-  /// `focused` has no other source here: Playground's slots resolve above any Naked
-  /// control, so without this the `focus-visible` state the transcript
+  /// `focused` has no other source here: this preset's slots resolve above any
+  /// Naked control, so without this the `focus-visible` state the transcript
   /// worksheet documents could never activate.
   ///
   /// Only `focused`. The pointer-driven states do not resolve on this slot, and

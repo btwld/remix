@@ -2,10 +2,11 @@
 
 > **Partly superseded.** The frozen bundled snapshot this record reasons about
 > was removed when `remix.yaml` schemas 1 and 2 were dropped: there is no
-> `BundledRegistry`, no `packages/remix_cli/lib/src/registry/` tree, and no
-> `registry migrate`. The decisions below are kept as written, because the
-> reasons are what they were at the time and rewriting them would misreport the
-> history. Read L3, L5, L7 and the inventory tables as a record of a shape the
+> `BundledRegistry`, no `packages/remix_cli/lib/src/registry/` tree, no
+> `registry migrate`, and `ProjectConfig` is one class rather than L11's sealed
+> pair. The decisions below are kept as written, because the reasons are what
+> they were at the time and rewriting them would misreport the history. Read
+> L3, L5, L7, L11 and the inventory tables as a record of a shape the
 > code has since left; the checkout harness and the test fixture remain the
 > non-HTTP implementations they cite.
 

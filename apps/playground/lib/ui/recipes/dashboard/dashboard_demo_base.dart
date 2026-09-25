@@ -178,7 +178,7 @@ const playgroundDashboardDemoInteractionIds = <String>[
   'appearance-notifications-theme-account',
 ];
 
-/// The complete sidebar inventory used by both playground presets.
+/// The complete sidebar inventory used by the presets.
 final playgroundDashboardDemoSections =
     <RemixSidebarSection<PlaygroundDashboardDemoPage>>[
       for (final section in PlaygroundDashboardDemoSection.values)

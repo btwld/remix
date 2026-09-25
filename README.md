@@ -8,24 +8,24 @@ with Mix styling.
 
 ## Agent skills
 
-[![skills.sh](https://skills.sh/b/btwld/remix)](https://skills.sh/btwld/remix)
+[![skills.sh](https://skills.sh/b/conceptadev/remix)](https://skills.sh/conceptadev/remix)
 
 This repository publishes two skills from its [`skills/`](skills) catalog:
 
-- [`using-remix`](https://skills.sh/btwld/remix/using-remix) helps agents build Flutter interfaces with base Remix or the optional Fortal theme.
-- [`building-remix-design-system`](https://skills.sh/btwld/remix/building-remix-design-system) helps agents create standalone design-system packages on Remix.
+- [`using-remix`](https://skills.sh/conceptadev/remix/using-remix) helps agents build Flutter interfaces with base Remix or the Vanilla and Fortal presets installed by `remix_cli`.
+- [`building-remix-design-system`](https://skills.sh/conceptadev/remix/building-remix-design-system) helps agents build design systems on Remix and publish them as registries that applications install with `remix_cli`.
 
 List the available skills without installing them:
 
 ```bash
-npx skills add conceptadev/remix --list
+npx skills add btwld/remix --list
 ```
 
 Install both skills, or select one:
 
 ```bash
-npx skills add conceptadev/remix
-npx skills add conceptadev/remix --skill using-remix -y
+npx skills add btwld/remix
+npx skills add btwld/remix --skill using-remix -y
 ```
 
 Project installs create a local agent-skills directory such as `.agents/`.
@@ -33,7 +33,7 @@ Contributors who do not want that directory in their checkout can install
 globally or use a skill ephemerally:
 
 ```bash
-npx skills add conceptadev/remix --skill using-remix -g -y
+npx skills add btwld/remix --skill using-remix -g -y
 npx skills use btwld/remix@using-remix
 ```
 
@@ -44,20 +44,15 @@ npx skills ls
 npx skills update
 ```
 
-### Vendored Mix skill
+### Working in this repository
 
-This repository commits the project-scoped Mix skill and its lockfile so Codex
-and Claude Code use the same reviewed instructions. Install or refresh the
-canonical copy and Claude symlink with:
-
-```bash
-npx skills add conceptadev/mix --skill mix --agent codex --agent claude-code -y
-```
-
-Update the committed installation from its locked project source with:
+[`AGENTS.md`](AGENTS.md) indexes the skills agents should read here: this
+repository's own skills, the Mix skill on GitHub, and the release workflow.
+`CLAUDE.md` imports it for Claude Code. Installed skills are not committed; to
+give your own agents the Mix skill, install it globally:
 
 ```bash
-npx skills update mix --project -y
+npx skills add btwld/mix --skill mix -g -y
 ```
 
 ## Styling a button

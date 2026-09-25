@@ -1,190 +1,166 @@
 # Styling Remix
 
-Use this reference when a task needs a custom `*Styler`, interaction or context variants, animation, callable styles, Fortal-token overrides, or reusable app styles.
+Remix-specific styling only. For the general Mix mental model — Spec/Styler/
+Prop resolution, the full fluent surface (`.color()`, `.border()`,
+`.padding()`, `.shadow()`, ...), context variants (`.onDark()`,
+`.onMobile()`, ...), animation (`.animate(AnimationConfig...)`), and token
+call-form mechanics — see the `mix` skill. This reference covers only what is
+specific to Remix component stylers.
 
-## Table of Contents
+Sections: [Component-part stylers](#component-part-stylers) ·
+[.onSelected()](#onselected) · [Callable styles](#callable-styles) ·
+[Styling with installed tokens](#styling-with-installed-tokens) ·
+[Canonical spellings](#canonical-spellings) ·
+[Reusable and dynamic app styles](#reusable-and-dynamic-app-styles).
 
-- [Fluent stylers](#fluent-stylers)
-- [Interaction states](#interaction-states)
-- [Context variants](#context-variants)
-- [Animation](#animation)
-- [Callable styles](#callable-styles)
-- [Fortal tokens](#styling-with-fortal-tokens)
-- [Reusable styles](#common-patterns)
+## Component-part stylers
 
-## Fluent stylers
-
-Every component's style is a chainable, immutable `*Styler`:
+Remix component stylers add part-specific fluent methods beyond the generic
+Mix surface: `.label*()` (color, fontSize, fontWeight, letterSpacing, …),
+`.icon*()` (color, size, opacity, …), and `.spinner*()` (indicatorColor,
+size, strokeWidth, …) where the component has those parts. Use the canonical
+`.color()` for the component's own surface fill; keep the slot-specific
+methods for the corresponding part.
 
 ```dart
-ButtonStyler()
-    .color(Colors.blue)              // container fill (universal primitive)
-    .borderRadius(.circular(12))     // circular radius shortcut
-    .padding(.horizontal(24))
-    .padding(.vertical(12))
-    .labelColor(Colors.white)
-    .labelFontSize(16)
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+final style = ButtonStyler()
+    .color(const Color(0xFF3E63DD))
+    .labelColor(const Color(0xFFFFFFFF))
     .labelFontWeight(FontWeight.w600)
-    .iconColor(Colors.white)
-    .iconSize(20)
-    .spacing(8)                  // icon↔label gap (flex-based components)
+    .iconColor(const Color(0xFFFFFFFF))
+    .spacing(8); // icon↔label gap
 ```
 
-Fluent surface shared by container-based stylers: `.color()`, `.gradient()`,
-`.border()` / `.borderRadius()`, `.shadow()` /
-`.shadows()` / `.elevation()`, `.padding()` / `.margin()` (compound forms,
-e.g. `.padding(.horizontal(x))`), `.width()` / `.height()` / `.size()`, `.scale()` /
-`.rotate()` / `.translate()`. Flex-based ones add `.spacing()`,
-`.direction()`, `.mainAxisAlignment()`, `.crossAxisAlignment()`, `.row()`,
-`.column()`. Component-part mixins add `.label*()` (color, fontSize,
-fontWeight, letterSpacing, …), `.icon*()` (color, size, opacity, …), and
-`.spinner*()` (indicatorColor, size, strokeWidth, …) where the component has
-those parts. Use the canonical `.color()` method for component surfaces and
-check the per-component reference for exact surface area. Keep slot-specific
-color methods such as `.labelColor()`, `.iconColor()`, and `.textColor()` for
-the corresponding component parts.
+## `.onSelected()`
 
-### Interaction States
-
-State variants take a styler of the same type and merge it over the base:
+`onSelected()` is a generic extension available on every `MixStyler`, not a
+method scoped to selection components — but it only has an effect on a
+widget that actually reports `WidgetState.selected` (Checkbox, Radio,
+Switch, Toggle, Tab). Calling it on, say, a `ButtonStyler` compiles but never
+resolves, because `RemixButton` never enters that state — the same is true of
+`RemixTabView`, which never reports `selected` itself.
 
 ```dart
-ButtonStyler()
-    .color(Colors.blue)
-    .labelColor(Colors.white)
-    .onHovered(ButtonStyler().color(Colors.blue.shade700))
-    .onPressed(ButtonStyler().scale(0.97))
-    .onFocused(ButtonStyler().border(.all(.color(Colors.white).width(2))))
-    .onDisabled(ButtonStyler().color(Colors.grey))
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+final style = CheckboxStyler()
+    .color(const Color(0xFFE0E0E0))
+    .onSelected(CheckboxStyler().color(const Color(0xFF3E63DD)));
 ```
 
-`.onSelected()` exists on the selection components only — Checkbox, Radio,
-Switch, Toggle, Tab, and TabView stylers:
-
-```dart
-CheckboxStyler()
-    .color(Colors.grey.shade200)
-    .onSelected(CheckboxStyler().color(Colors.blue))
-```
-
-### Context Variants
-
-Respond to platform, brightness, and form factor:
-
-```dart
-ButtonStyler()
-    .padding(.horizontal(24))
-    .onMobile(ButtonStyler().padding(.horizontal(16)).labelFontSize(14))
-    .onDark(ButtonStyler().color(Colors.blue.shade800))
-```
-
-Available: `.onDark()`, `.onLight()`, `.onMobile()`, `.onTablet()`,
-`.onDesktop()`, `.onPortrait()`, `.onLandscape()`, `.onLtr()`, `.onRtl()`,
-`.onIos()`, `.onAndroid()`, `.onMacos()`, `.onWindows()`, `.onLinux()`,
-`.onWeb()`, `.onBreakpoint(...)`, `.onNot(...)`, `.onBuilder(...)`.
-
-### Animation
-
-Add transitions between states with `.animate(AnimationConfig)`:
-
-```dart
-ButtonStyler()
-    .color(Colors.blue)
-    .onHovered(ButtonStyler().color(Colors.blue.shade800))
-    .animate(AnimationConfig.spring(300.ms))
-```
-
-`AnimationConfig` factories: `.spring(duration, {bounce})`,
-`.curve({duration, curve})`, and shortcuts like `.easeOut(200.ms)`,
-`.easeIn(...)`, `.linear(...)`, `.decelerate(...)`. The `.ms` / `.s`
-duration extensions come from Mix.
-
-### Callable Styles
+## Callable styles
 
 Every leaf component styler has a `call()` method that builds the widget
 directly:
 
 ```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
 final primaryButton = ButtonStyler()
-    .color(Colors.blue)
-    .labelColor(Colors.white)
+    .color(const Color(0xFF3E63DD))
+    .labelColor(const Color(0xFFFFFFFF))
     .padding(.horizontal(24))
     .borderRadius(.circular(8));
 
-primaryButton(label: 'Save', onPressed: save)   // → RemixButton
+Widget saveButton(VoidCallback save) =>
+    primaryButton(label: 'Save', onPressed: save); // → RemixButton
 ```
 
-Generic surfaces use `call<T>()`: Accordion, Menu, Radio, SegmentedControl,
-Select, and ToggleGroup. Dart can usually infer `T` from the required values or
-item lists. All other leaf component stylers use a non-generic `call()` method.
-Behavioral group/root widgets such as `RemixAccordionGroup`, `RemixRadioGroup`,
-and `RemixTabs` are constructed directly because they do not have stylers.
+Eight stylers use a generic `call<T>()` instead: Accordion, Radio,
+SegmentedControl, Select, Menu, ToggleGroup, DataTable, and Sidebar. Dart
+usually infers `T` from the required values or item/row lists. Every other
+leaf component styler uses a non-generic `call()`. Behavioral group/root
+widgets — `RemixAccordionGroup`, `RemixRadioGroup`, `RemixTabs`,
+`RemixCheckboxGroup` — are constructed directly; they have no styler.
 
-### Styling with Fortal Tokens
+## Styling with installed tokens
 
-Reference Fortal tokens in custom styles so they respect the active theme.
-Call the token inside styler chains; `.mix()` for text-style tokens;
-`.resolve(context)` for direct values in widget code:
+Reference the installed theme's tokens in custom styles so they respect the
+active theme, whichever preset is installed:
 
 ```dart
-ButtonStyler()
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+import 'ui/ui.dart';
+
+final accentButton = ButtonStyler()
     .color(FortalTokens.accent9())
-    .padding(.all(FortalTokens.space4()))
-    .borderRadius(.all(FortalTokens.radius3()))
     .label(TextStyler().style(FortalTokens.text2.mix())
-        .color(FortalTokens.accentContrast()))
+        .color(FortalTokens.accentContrast()));
 
-Container(color: FortalTokens.colorBackground.resolve(context))
+Widget background(BuildContext context) =>
+    Container(color: FortalTokens.colorBackground.resolve(context));
 ```
 
-Token families: `accent1–12`, `gray1–12` (+ `accentA*`/`grayA*` alpha),
-functional colors (`accentContrast`, `colorSurface`, …), `space1–9`,
-`radius1–6` + `radiusFull`, `text1–9`, `shadow1–6`, font weights, and
-transition durations. Full catalog: `fortal.md`.
+Call the token inside a styler chain, `.mix()` for text-style tokens,
+`.resolve(context)` for a direct value in widget code. See
+[Fortal token rules](fortal.md#token-rules) for the catalog and non-obvious
+resolution rules, and the `mix` skill for general token/`Prop` call-form
+mechanics.
 
-## Common Patterns
+## Canonical spellings
 
-### Reusable App Styles
+Some retired spellings below still compile on plain Mix stylers, so the
+analyzer does not always catch them. These override the `mix` skill where it
+differs:
+
+| Use | Not |
+| --- | --- |
+| `.padding(.all(...))`, `.padding(.horizontal(...))` | `paddingAll`, `paddingX`, `paddingY` |
+| `.margin(...)` shorthands | `marginAll`, `marginX`, `marginY` |
+| `.borderRadius(.circular(x))`, `.borderRadius(.all(...))` | `borderRounded*` |
+| `.border(.all(...))` | `borderAll` |
+| `.color()` | `.backgroundColor()` |
+| `items:` (Menu/Select) | `entries:` |
+| `ButtonStyler` | the deprecated `RemixButtonStyler` alias |
+
+## Reusable and dynamic app styles
 
 ```dart
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+import 'ui/ui.dart';
+
 class AppStyles {
   static ButtonStyler get primaryButton => fortalButtonStyle(variant: .solid)
       .animate(AnimationConfig.spring(200.ms));
-
-  static ButtonStyler get dangerButton => fortalButtonStyle(variant: .solid)
-      .color(Colors.red)
-      .onHovered(ButtonStyler().color(Colors.red.shade700))
-      .animate(AnimationConfig.spring(200.ms));
 }
 
-RemixButton(label: 'Save', onPressed: save, style: AppStyles.primaryButton)
+Widget saveButton(VoidCallback save) =>
+    RemixButton(label: 'Save', onPressed: save, style: AppStyles.primaryButton);
 ```
 
-### Dynamic appearance
-
-Keep the preference as `FortalThemeMode`, initially `.system`, and pass it to
-`FortalScope.mode` in the `WidgetsApp.builder` above the Navigator. Offer
-System, Light, and Dark choices; update the preference with `setState`.
-The scope handles live platform brightness changes while System is selected.
+A destructive action needs the accent itself to change, not just the idle
+fill: overriding `.color()`/`.onHovered()` alone misses the Fortal recipe's
+own `.onPressed` fill, so the button flashes the theme accent on press. Scope
+the accent instead of hard-coding palette values:
 
 ```dart
-WidgetsApp(
-  color: const Color(0xFFFFFFFF),
-  pageRouteBuilder: <T>(settings, builder) => PageRouteBuilder<T>(
-    settings: settings,
-    pageBuilder: (context, animation, secondaryAnimation) => builder(context),
-  ),
-  builder: (context, child) => FortalScope(
-    theme: const FortalThemeData.light(accent: FortalAccentColor.indigo),
-    darkTheme: const FortalThemeData.dark(accent: FortalAccentColor.indigo),
-    mode: selectedMode,
-    child: child!,
-  ),
-  home: const MyScreen(),
-)
+// Fortal
+import 'package:flutter/widgets.dart';
+import 'ui/ui.dart';
+
+Widget deleteButton(VoidCallback delete) => FortalScope(
+  accent: .red,
+  child: FortalButton.solid(label: 'Delete', onPressed: delete),
+);
 ```
 
-Read `FortalTheme.of(context).brightness` below the scope when UI needs the
-resolved appearance. A custom `theme` without `darkTheme` is the fallback in
-both modes. Use `theme` for a fixed configuration; the config `createScope` shortcut has
-been removed.
+```dart
+// Vanilla
+import 'package:flutter/widgets.dart';
+import 'ui/ui.dart';
+
+Widget deleteButton(VoidCallback delete) =>
+    UiButton.destructive(label: 'Delete', onPressed: delete);
+```
+
+Keep an appearance preference as `FortalThemeMode` (or `<Prefix>ThemeMode`
+for the Vanilla preset) and pass it to the scope's `mode` — see
+[theme selection](../SKILL.md#place-the-theme-scope) for persistence and
+system-brightness rules.

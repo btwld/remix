@@ -178,7 +178,7 @@ const registryDashboardDemoInteractionIds = <String>[
   'appearance-notifications-theme-account',
 ];
 
-/// The complete sidebar inventory used by both registry presets.
+/// The complete sidebar inventory used by the presets.
 final registryDashboardDemoSections =
     <RemixSidebarSection<RegistryDashboardDemoPage>>[
       for (final section in RegistryDashboardDemoSection.values)

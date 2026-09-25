@@ -25,7 +25,7 @@ Use `add message` instead when you want the bare component and will provide styl
 Import `ui/ui.dart` from your application and use the scope for your preset:
 
 - **Fortal:** `UiScope(child: ...)`.
-- **Default:** `UiThemeScope(data: const UiThemeData.light(), child: ...)` (or
+- **Default:** `UiThemeScope(theme: const UiThemeData.light(), child: ...)` (or
   `UiThemeData.dark()` for a dark theme).
 
 ## Behavior
@@ -43,11 +43,11 @@ import 'package:flutter/widgets.dart';
 import 'package:remix/remix.dart';
 import 'ui/ui.dart';
 
-UiMessage(
+final message = UiMessage(
   role: UiRole.assistant,
   align: RemixPlacement.end,
   child: const Text('Explicitly end-aligned'),
-)
+);
 ```
 
 The shared type is never prefixed or copied into installed source. See the

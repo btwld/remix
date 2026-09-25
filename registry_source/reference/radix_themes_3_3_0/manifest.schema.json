@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/conceptadev/remix/fortal-radix-themes-3.3.0-parity.schema.json",
+  "$id": "https://github.com/btwld/remix/fortal-radix-themes-3.3.0-parity.schema.json",
   "title": "Fortal / Radix Themes parity manifest",
   "type": "object",
   "additionalProperties": false,

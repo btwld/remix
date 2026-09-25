@@ -136,6 +136,7 @@ class FortalDialogExample extends StatelessWidget {
 
 ## Show function
 <CodeGroup title="showRemixDialog" defaultLanguage="dart">
+{/* dart-excerpt: signature listing */}
 ```dart
 Future<T?> showRemixDialog<T>({
   required BuildContext context,
@@ -155,6 +156,7 @@ Future<T?> showRemixDialog<T>({
 </CodeGroup>
 
 <CodeGroup title="showRemixAlertDialog" defaultLanguage="dart">
+{/* dart-excerpt: signature listing */}
 ```dart
 Future<T?> showRemixAlertDialog<T>({
   required BuildContext context,
@@ -195,6 +197,7 @@ RemixDialog remixDialogConstructor({
   String? description,
   List<Widget>? actions,
   bool modal = true,
+  bool scrollable = false,
   String? semanticLabel,
   DialogStyler style = const DialogStyler.create(),
   DialogSpec? styleSpec,
@@ -224,6 +227,10 @@ Optional. Action widgets rendered in the dialog actions row.
 #### `modal` -> `bool`
 
 Optional. Whether the dialog blocks interaction with background content.
+
+#### `scrollable` -> `bool`
+
+Optional. When true, `description` and `child` share a vertical scroll region while `title` and `actions` remain outside it. A lone `child` is never wrapped in the scroll region.
 
 #### `semanticLabel` → `String?`
 

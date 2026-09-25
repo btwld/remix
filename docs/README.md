@@ -14,7 +14,7 @@ See [the app README](../apps/docs/README.md) for run commands.
 - `components/` and `fortal/`: the existing component and preset references.
 
 The introduction/setup/styling revision draws on the explanations in
-`conceptadev/website` at `fb1c11e928144ff8a6e4ad9df22bc55a268d064f`, under
+`btwld/website` at `fb1c11e928144ff8a6e4ad9df22bc55a268d064f`, under
 `src/content/documentation/remix/index.mdx`. Its content was adapted, not
 mirrored: obsolete convenience methods, the `{latest_version}` placeholder,
 and package-owned Fortal installation assumptions were not imported. The local

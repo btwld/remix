@@ -9,11 +9,7 @@ import 'theme_scope.dart' show FortalScope;
 ///
 /// Example:
 /// ```dart
-/// Style(
-///   $box.color.ref(FortalTokens.accent9),
-///   $text.style.ref(FortalTokens.text3),
-///   $box.padding.ref(FortalTokens.space4),
-/// )
+/// ButtonStyler().color(FortalTokens.accent9())
 /// ```
 ///
 /// Must be used within [FortalScope] to resolve actual values.
@@ -653,7 +649,7 @@ class FortalTokens {
 
   /// Exact layered shadow level 1, including inset layers.
   ///
-  /// This additive token powers Fortal's Radix-compatible rendering while
+  /// This additive token powers the preset's Radix-compatible rendering while
   /// [shadow1] retains the original Remix public token type.
   static const shadow1Layers = RemixBoxShadowListToken(
     'fortal.shadow.1.layers',

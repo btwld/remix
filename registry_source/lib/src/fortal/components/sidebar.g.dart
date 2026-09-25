@@ -10,7 +10,7 @@ part of 'sidebar.dart';
 ///
 /// The recipe paints the solid panel surface with a trailing edge border,
 /// pads the scrolling destination region, keeps section labels compact and
-/// muted, separates sections with Fortal's `space3` token, and reuses the
+/// muted, separates sections with the `space3` token, and reuses the
 /// ghost `size2` toggle treatment inside full-width destinations with a
 /// 48-logical-pixel minimum height. The footer carries the divider that
 /// separates account content from navigation. [highContrast] strengthens

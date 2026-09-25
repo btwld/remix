@@ -24,7 +24,7 @@ abstract final class _Glyphs {
 
 /// Builds the chevron that reports a collapsible surface's state.
 ///
-/// Every collapsible Playground surface offers the host the same escape hatch — a
+/// Every collapsible surface offers the host the same escape hatch — a
 /// builder that replaces the glyph outright — over the same default. Each takes
 /// that builder under its own name, because a permission card discloses
 /// *details* and an answer discloses *sources*, so the shared part is this
@@ -54,7 +54,7 @@ class PlaygroundDisclosureIndicator extends StatelessWidget {
       );
 }
 
-/// Internal Material-free glyph set used by Playground's functional defaults.
+/// Internal Material-free glyph set used by this preset's functional defaults.
 ///
 /// The types are intentionally not exported from the package barrel. Public
 /// icon/status builders remain the replacement mechanism.

@@ -9,11 +9,7 @@ import 'theme_scope.dart' show {{typePrefix}}Scope;
 ///
 /// Example:
 /// ```dart
-/// Style(
-///   $box.color.ref({{typePrefix}}Tokens.accent9),
-///   $text.style.ref({{typePrefix}}Tokens.text3),
-///   $box.padding.ref({{typePrefix}}Tokens.space4),
-/// )
+/// ButtonStyler().color({{typePrefix}}Tokens.accent9())
 /// ```
 ///
 /// Must be used within [{{typePrefix}}Scope] to resolve actual values.
@@ -653,7 +649,7 @@ class {{typePrefix}}Tokens {
 
   /// Exact layered shadow level 1, including inset layers.
   ///
-  /// This additive token powers {{typePrefix}}'s Radix-compatible rendering while
+  /// This additive token powers the preset's Radix-compatible rendering while
   /// [shadow1] retains the original Remix public token type.
   static const shadow1Layers = RemixBoxShadowListToken(
     '{{valuePrefix}}.shadow.1.layers',
