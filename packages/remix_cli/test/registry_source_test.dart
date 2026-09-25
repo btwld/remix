@@ -285,6 +285,79 @@ void main() {
   );
 
   test(
+    'follows same-host GitHub repository redirects without changing pins',
+    () async {
+      final requests = <Uri>[];
+      final resolver = GitHubSources(
+        transport: (uri) async {
+          requests.add(uri);
+          if (uri.path.startsWith('/repos/conceptadev/remix')) {
+            return RegistryResponse(
+              301,
+              '',
+              headers: {
+                'location': uri.path.endsWith('/commits/registry-stable')
+                    ? 'https://api.github.com/repositories/1012065150/commits/registry-stable'
+                    : 'https://api.github.com/repositories/1012065150',
+              },
+            );
+          }
+          return RegistryResponse(200, jsonEncode({'sha': sha}));
+        },
+      );
+      final source = await resolver.latestOfficial();
+      expect(source.repository, officialRepository);
+      expect(source.ref, officialStableRef);
+      expect(source.revision, sha);
+      expect(requests.map((uri) => uri.path), [
+        '/repos/conceptadev/remix',
+        '/repositories/1012065150',
+        '/repos/conceptadev/remix/commits/registry-stable',
+        '/repositories/1012065150/commits/registry-stable',
+      ]);
+    },
+  );
+
+  test('rejects off-host and looping GitHub redirects', () async {
+    for (final location in [
+      'https://example.com/repository',
+      'http://api.github.com/repository',
+      'https://api.github.com:8443/repository',
+    ]) {
+      await expectLater(
+        GitHubSources(
+          transport: (_) async =>
+              RegistryResponse(301, '', headers: {'location': location}),
+        ).resolve(repository: 'owner/repo'),
+        throwsA(
+          isA<FormatException>().having(
+            (error) => error.message,
+            'message',
+            contains('trusted host'),
+          ),
+        ),
+      );
+    }
+    var requests = 0;
+    await expectLater(
+      GitHubSources(
+        transport: (uri) async {
+          requests++;
+          return RegistryResponse(301, '', headers: {'location': '$uri'});
+        },
+      ).resolve(repository: 'owner/repo'),
+      throwsA(
+        isA<FormatException>().having(
+          (error) => error.message,
+          'message',
+          contains('could not be followed'),
+        ),
+      ),
+    );
+    expect(requests, 5);
+  });
+
+  test(
     'latestOfficial keeps transport failures distinct from a missing branch',
     () async {
       for (final entry in <String, RegistryTransport>{
