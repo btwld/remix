@@ -91,12 +91,16 @@ Future<RegistryResponse> _send(HttpClient client, Uri uri) async {
     'Accept',
     uri.host == 'api.github.com' ? 'application/vnd.github+json' : 'text/plain',
   );
+  final token = Platform.environment['GITHUB_TOKEN'];
+  if (uri.host == 'api.github.com' && token != null && token.isNotEmpty) {
+    request.headers.set('Authorization', 'Bearer $token');
+  }
   final response = await request.close();
   return RegistryResponse(
     response.statusCode,
     await utf8.decoder.bind(response).join(),
     headers: {
-      for (final name in ['x-ratelimit-remaining', 'retry-after'])
+      for (final name in ['location', 'x-ratelimit-remaining', 'retry-after'])
         if (response.headers.value(name) != null)
           name: response.headers.value(name)!,
     },
@@ -167,32 +171,54 @@ final class GitHubSources implements RegistrySources {
   final RegistryTransport transport;
 
   Future<String> _read(Uri uri, {String missing = 'file'}) async {
-    final RegistryResponse response;
-    try {
-      response = await transport(uri);
-    } on TimeoutException {
-      throw FormatException(
-        'GitHub request timed out: $uri. Retry when the network is available.',
-      );
-    } on IOException catch (error) {
-      throw FormatException('GitHub network failure for $uri: $error');
+    var current = uri;
+    late RegistryResponse response;
+    // Renamed GitHub repositories redirect to numeric repository URLs. Keep
+    // every hop on the original HTTPS host and cap the chain.
+    for (var redirects = 0; ; redirects++) {
+      try {
+        response = await transport(current);
+      } on TimeoutException {
+        throw FormatException(
+          'GitHub request timed out: $current. Retry when the network is available.',
+        );
+      } on IOException catch (error) {
+        throw FormatException('GitHub network failure for $current: $error');
+      }
+      if (![301, 302, 307, 308].contains(response.statusCode)) break;
+      final location = response.headers['location'];
+      if (location == null || redirects == 4) {
+        throw FormatException(
+          'GitHub redirect could not be followed: $current.',
+        );
+      }
+      final target = current.resolve(location);
+      if (target.scheme != 'https' ||
+          target.host != current.host ||
+          target.hasPort ||
+          target.userInfo.isNotEmpty) {
+        throw FormatException(
+          'GitHub redirect leaves its trusted host: $target.',
+        );
+      }
+      current = target;
     }
     if (response.statusCode == 429 ||
         (response.statusCode == 403 &&
             (response.headers['x-ratelimit-remaining'] == '0' ||
                 response.headers.containsKey('retry-after')))) {
       throw FormatException(
-        'GitHub rate limit exceeded for $uri. Retry after the limit resets.',
+        'GitHub rate limit exceeded for $current. Retry after the limit resets.',
       );
     }
     if (response.statusCode == 404 || _isUnknownCommit(response)) {
       throw FormatException(
-        'GitHub $missing not found: $uri. Check that the repository is public and the source exists.',
+        'GitHub $missing not found: $current. Check that the repository is public and the source exists.',
       );
     }
     if (response.statusCode != 200) {
       throw FormatException(
-        'GitHub request failed (${response.statusCode}): $uri.',
+        'GitHub request failed (${response.statusCode}): $current.',
       );
     }
     return response.body;
@@ -212,9 +238,9 @@ final class GitHubSources implements RegistrySources {
     validateRegistryPath(path);
     if (ref != null && ref.isEmpty)
       throw const FormatException('Registry ref must not be empty.');
-    final metadata = await _api('/repos/$repository');
     var requested = ref;
     if (requested == null) {
+      final metadata = await _api('/repos/$repository');
       final branch = metadata is Map ? metadata['default_branch'] : null;
       if (branch is! String || branch.isEmpty) {
         throw const FormatException('GitHub repository has no default branch.');
