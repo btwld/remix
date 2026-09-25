@@ -47,7 +47,7 @@ paths:
 defaultRegistry: "@remix"
 registries:
   "@remix":
-    repository: conceptadev/remix
+    repository: btwld/remix
     path: registry
     ref: registry-stable
     revision: "<resolved-full-commit-sha>"

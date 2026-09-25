@@ -121,7 +121,7 @@ final style = ButtonStyler()
 
 This example animates both the color on hover and the scale on press, creating a smooth interactive experience for your users. 
 
-See the [Mix repository](https://github.com/conceptadev/mix) for keyframe and phase animation APIs.
+See the [Mix repository](https://github.com/btwld/mix) for keyframe and phase animation APIs.
 
 ### Style Composition and Reuse
 

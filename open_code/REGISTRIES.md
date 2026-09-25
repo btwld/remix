@@ -2,7 +2,7 @@
 
 Registry publication is independent of CLI releases. New projects use schema 3.
 For `vanilla` and `fortal`, `init` resolves the `registry-stable` branch of
-`conceptadev/remix`; for `carbon`, the CLI selects `btwld/flutter-carbon` at
+`btwld/remix`; for `carbon`, the CLI selects `btwld/flutter-carbon` at
 `stable` under `@carbon`. It stores the selected source's full commit SHA and
 validates that its index offers the preset. An unpublished ref fails without
 creating files. Repeating initialization preserves the existing configuration
@@ -17,7 +17,7 @@ paths:
 defaultRegistry: "@remix"
 registries:
   "@remix":
-    repository: conceptadev/remix
+    repository: btwld/remix
     path: registry
     ref: registry-stable
     revision: "<resolved-full-commit-sha>"

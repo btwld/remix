@@ -6,7 +6,7 @@ import test from 'node:test';
 test('old catalog worker retires and refreshes its controlled clients', async () => {
   const events = new Map();
   const calls = [];
-  const url = 'https://conceptadev.github.io/remix/#/?path=components/button';
+  const url = 'https://btwld.github.io/remix/#/?path=components/button';
   const self = {
     addEventListener: (type, handler) => events.set(type, handler),
     skipWaiting: () => calls.push('skipWaiting'),

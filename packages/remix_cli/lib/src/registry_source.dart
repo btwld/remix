@@ -7,7 +7,7 @@ import 'package:yaml/yaml.dart';
 import 'registry.dart';
 import 'registry_reader.dart';
 
-const officialRepository = 'conceptadev/remix';
+const officialRepository = 'btwld/remix';
 
 /// The branch CI fast-forwards after the hosted registry checks pass.
 ///

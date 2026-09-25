@@ -19,7 +19,7 @@ abstract interface class RemixCustomPainterPaintBounds {
 /// and semantics are unchanged. Composited descendants such as
 /// [RepaintBoundary] are rejected because Flutter's retained layers cannot be
 /// enclosed by a canvas `saveLayer`.
-// TODO(https://github.com/conceptadev/mix/issues/994): Remove this local
+// TODO(https://github.com/btwld/mix/issues/994): Remove this local
 // implementation once Mix provides an equivalent subtree blend-mode modifier.
 class RemixBlendMode extends SingleChildRenderObjectWidget {
   const RemixBlendMode({

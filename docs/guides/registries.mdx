@@ -43,7 +43,7 @@ remix add button
 For a project-local dev dependency, use `dart run remix_cli:remix` in place of
 `remix`; `remix_cli` is the package name because `remix` is the runtime package.
 
-`init` resolves the `registry-stable` branch of `conceptadev/remix` and stores
+`init` resolves the `registry-stable` branch of `btwld/remix` and stores
 its full commit SHA. It checks that your preset exists in that branch and
 writes `remix.yaml`. If the branch is not published, initialization fails and
 creates no files.
@@ -66,7 +66,7 @@ paths:
 defaultRegistry: "@remix"
 registries:
   "@remix":
-    repository: "conceptadev/remix"
+    repository: "btwld/remix"
     path: "registry"
     ref: "registry-stable"
     revision: "<full commit sha>"
@@ -377,7 +377,7 @@ There is no persistent offline cache.
 
 | message | cause |
 | --- | --- |
-| `No registry-stable branch is published for conceptadev/remix.` | The official registry has not been promoted yet, so `init` has no commit to pin. Nothing was written; retry once it is published. |
+| `No registry-stable branch is published for btwld/remix.` | The official registry has not been promoted yet, so `init` has no commit to pin. Nothing was written; retry once it is published. |
 | `GitHub ref <ref> not found` | The branch, tag or commit does not exist in that repository. Check the `--ref` value. |
 | `GitHub repository not found` | The `--repository` is misspelled, or the repository is private. |
 | `Registry <repo> has no <preset> preset.` | The registry's `index.yaml` does not list your project's preset. |

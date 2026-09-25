@@ -658,9 +658,7 @@ final class FixtureRegistries {
           200,
           jsonEncode({
             'schema': 2,
-            'items': uri.path.contains('conceptadev/remix')
-                ? official
-                : company,
+            'items': uri.path.contains('btwld/remix') ? official : company,
           }),
         );
       if (uri.path.endsWith('missing.dart.tmpl'))
