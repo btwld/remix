@@ -1059,15 +1059,15 @@ final class PresetBuilder {
 
       final files = <_RegistryFileDraft>[];
       for (final entry in sharedSources) {
-        final name = p.posix.basename(entry.key);
+        final relative = entry.key.substring(shared.directory.length + 1);
         final templatePath =
-            '${spec.templateDirectory}/${shared.directory}/$name.tmpl';
+            '${spec.templateDirectory}/${shared.directory}/$relative.tmpl';
         output[templatePath] = _templateFor(entry.key, entry.value);
         sourceByTemplate[templatePath] = entry.value;
         files.add(
           _RegistryFileDraft(
             source: templatePath,
-            target: '@ui/${shared.directory}/$name',
+            target: '@ui/${shared.directory}/$relative',
           ),
         );
       }

@@ -35,7 +35,9 @@ jobs:
       - name: Test CLI
         working-directory: packages/remix_cli
         run: dart test
-      - name: Install both committed presets with hosted dependencies
+      - name: Install both official presets with hosted dependencies
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: dart run melos run open-code:release:check
       # A dispatch from another branch must not treat that commit as the
       # promotion candidate. The smoke reads the commit directly so a failure
@@ -44,9 +46,8 @@ jobs:
         if: github.ref == 'refs/heads/main'
         env:
           REMIX_REGISTRY_RELEASE_REF: ${{ github.sha }}
-        run: |
-          dart run tool/check_open_code.dart --source hosted
-          dart run tool/check_open_code.dart --preset fortal --source hosted
+          GITHUB_TOKEN: ${{ github.token }}
+        run: dart run melos run open-code:release:check
 
   promote:
     name: Promote registry
