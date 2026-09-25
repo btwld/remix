@@ -1,0 +1,20 @@
+{
+  "soft": {
+    "outlineWidth": {"12": 1, "16": 1.5, "24": 2},
+    "openGlyphFilledWidth": {"12": 2, "16": 2.5, "24": 3},
+    "meaningfulGapTarget": {"12": 1, "16": 1.5, "24": 2},
+    "productPathCommands": ["M", "L", "Z"],
+    "validatorPathCommands": ["M", "L", "C", "Q", "A", "Z"],
+    "masterSelection": {"12": 12, "14": 16, "16": 16, "20": 24, "24": 24, "32": 24},
+    "objectCornerToken": {"12": 1.6, "16": 2.4, "24": 3.4},
+    "acuteJoin": {"12": 1.0, "16": 1.5, "24": 2.0},
+    "starJoin": {"12": 0.65, "16": 0.85, "24": 1.0},
+    "corners": "object outer corners use CORNER_TOKEN (~1.6–1.7× outline); acute cues use ACUTE_JOIN; star uses STAR_JOIN (~0.5×) so five-point mass survives",
+    "terminals": "round",
+    "productRepresentation": "expanded-mlz-flattening-of-round-construction",
+    "flatteningTolerancePx": 0.05,
+    "quadSegs": 8,
+    "notRounded": "Rounded is a planned fillet-on-Angular pack (0.5–1×) and is not drawn here",
+    "notAngularFilter": "Soft icons are constructed from Soft primitives, not offset Angular paths"
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "records": [
+    {
+      "id": "warning-visible-label",
+      "icon": "warning",
+      "pack": "soft",
+      "status": "concept-level-restriction-pilot",
+      "owner": null,
+      "reviewer": null,
+      "reason": "The Warning visible-label rule is a family concept, not an Angular-only leftover. Soft inherits the meaning; hashes bind to Soft artwork after build.",
+      "sizes": {
+        "12": {
+          "outline": {
+            "visibleLabelRequired": true,
+            "geometrySha256": "7b4b84365acf60cf87b7f7e579f1adb69f668d25cb0d6005ad04d3bdf8fa1242",
+            "exceptionIds": [
+              "warning-outline-12"
+            ]
+          },
+          "filled": {
+            "visibleLabelRequired": true,
+            "geometrySha256": "08dbf2ec0fe74556ee95c509258d984f265a5375b7caf02fca85437ef320d8c4",
+            "exceptionIds": [
+              "warning-filled-12"
+            ]
+          }
+        },
+        "16": {
+          "outline": {
+            "visibleLabelRequired": true,
+            "geometrySha256": "69473a4a17ddf09244945ee8afdf0db931fb6b41561f86d08bbab1cce5e30dae",
+            "exceptionIds": [
+              "warning-outline-16"
+            ]
+          },
+          "filled": {
+            "visibleLabelRequired": true,
+            "geometrySha256": "f2d7608c93fd4426028550cc67c17726d256f23e5179ef913ada45b559935975",
+            "exceptionIds": [
+              "warning-filled-16"
+            ]
+          }
+        },
+        "24": {
+          "outline": {
+            "visibleLabelRequired": true,
+            "geometrySha256": "f7fa7feda2fda0c8b0d060922cb8d616973f85105e9584190b6985d594a9fbb2",
+            "exceptionIds": [
+              "warning-outline-24"
+            ]
+          },
+          "filled": {
+            "visibleLabelRequired": true,
+            "geometrySha256": "e12fc3666f57cbeba5215a2aae2cb1a2337acecb1e039862745cc480c4830653",
+            "exceptionIds": [
+              "warning-filled-24"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

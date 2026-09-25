@@ -1,0 +1,4 @@
+shapely==2.1.2
+cairosvg==2.8.2
+pillow==12.3.0
+jsonschema==4.26.0
